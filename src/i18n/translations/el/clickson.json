@@ -63,10 +63,10 @@
         "validatorEmailDescription": "Ως μαθητής, έχω πρόσβαση ως συνεισφέρων σε μία ή περισσότερες θέσεις εκπομπών.",
         "duplicationOptionsDescription": "Κατά την αντιγραφή μιας μελέτης, μπορείτε να επιλέξετε να προσκαλέσετε τα ίδια μέλη της ομάδας και μαθητές από την αρχική μελέτη στη νέα. Αυτό βοηθά στη διατήρηση της συνέχειας της συνεργασίας."
       },
-      "etp": "Nombre de personnels (enseignants et non-éducatifs)",
-      "goToDataEntry": "Passer à la saisie des données",
-      "studentNumber": "Nombre d'élèves",
-      "superficy": "Superficie de l'établissement"
+      "etp": "Αριθμός προσωπικού (εκπαιδευτικό και μη εκπαιδευτικό προσωπικό)",
+      "goToDataEntry": "Μετάβαση στην εισαγωγή δεδομένων",
+      "studentNumber": "Αριθμός μαθητών",
+      "superficy": "Επιφάνεια του ιδρύματος"
     },
     "role": {
       "Contributor": "Μαθητής"
@@ -88,71 +88,71 @@
       }
     },
     "export": {
-      "export": "Exporter mon empreinte"
+      "export": "Εξαγωγή του αποτυπώματός μου"
     },
     "pdf": {
-      "loading": "Chargement des données...",
-      "title": "Synthèse des émissions {year}",
+      "loading": "Φόρτωση δεδομένων...",
+      "title": "Σύνοψη εκπομπών {year}",
       "results": {
-        "all": "Résultats"
+        "all": "Αποτελέσματα"
       },
       "labels": {
-        "studentNumber": "Nombre d'élèves",
-        "etp": "Nombre de personnels",
-        "superficy": "Superficie",
-        "establishmentYear": "Année d'ouverture"
+        "studentNumber": "Αριθμός μαθητών",
+        "etp": "Αριθμός προσωπικού",
+        "superficy": "Επιφάνεια",
+        "establishmentYear": "Έτος ίδρυσης"
       },
       "charts": {
-        "siteEmissions": "Émissions en tCO2e de l'établissement scolaire {site} en {year}"
+        "siteEmissions": "Εκπομπές σε tCO2e του σχολείου {site} το {year}"
       },
       "questions": {
-        "goals-title": "OBJECTIFS",
-        "goals-subtitle": "Présente les objectifs visés par ton action (sensibilisation, réduction des émissions...). Est-ce une action à court terme ou stratégique ?",
-        "shareholders-title": "PORTEURS DE L'ACTION",
-        "shareholders-subtitle": "As-tu désigné une équipe qui portera l'action au quotidien et sur le long terme ? Indique leurs noms et rôle/fonction",
-        "otherStakeholders-title": "AUTRES PARTIES PRENANTES",
-        "otherStakeholders-subtitle": "Pense à distinguer ici les parties prenantes internes et externes. Ils ne porteront pas l'action au quotidien mais t'aideront pour te fournir des factures d'électricité, par exemple.  Cela peut être le gestionnaire de ton établissement ou encore ta collectivité.",
-        "ressourcesToBeImplemented-title": "MOYENS A METTRE EN OEUVRE",
-        "ressourcesToBeImplemented-subtitle": "Quelles sont les étapes et moyens à employer ? Cela peut être des moyens humains, matériels, financiers... Construis-bien cette partie, elle est essentielle !",
-        "monitoringIndicators-title": "INDICATEURS DE SUIVI",
-        "monitoringIndicators-subtitle": "Inscris ici des indicateurs sur lesquels tu pourras te baser dans 6 mois / 1 an pour évaluer le succès de ton action. Un exemple : % de baisse des GES",
-        "estimatedCarbonImpacts-title": "IMPACTS CARBONE ESTIMES",
-        "estimatedCarbonImpacts-subtitle": "Dans quelle mesure ton action permet de réduire les émissions de GES ? ",
-        "otherEstimatedEnvironmentalImpacts-title": "AUTRES IMPACTS ENVIRONNEMENTAUX ESTIMES",
-        "otherEstimatedEnvironmentalImpacts-subtitle": "Pense ici aux impacts positifs ou négatifs de ton action sur la biodiversité, l'eau, les déchets...",
-        "estimatedSocialImpacts-title": "IMPACTS SOCIAUX ESTIMES",
-        "estimatedSocialImpacts-subtitle": "On essaie ici de savoir si l'action permet de réduire l'éco-anxiété, favoriser l'apprentissage, réduire le décrochage scolaire, favoriser l'insertion de jeunes...",
-        "calendar-title": "CALENDRIER",
-        "calendar-subtitle": "Inscris ici les grandes étapes de ton action, choisis bien ton échelle de temps !"
+        "goals-title": "ΣΤΟΧΟΙ",
+        "goals-subtitle": "Παρουσίασε τους στόχους της δράσης σου (ευαισθητοποίηση, μείωση εκπομπών...). Είναι βραχυπρόθεσμη ή στρατηγική δράση;",
+        "shareholders-title": "ΥΠΕΥΘΥΝΟΙ ΔΡΑΣΗΣ",
+        "shareholders-subtitle": "Έχεις ορίσει ομάδα που θα υλοποιεί τη δράση καθημερινά και μακροπρόθεσμα; Αναφέρετε ονόματα και ρόλο/λειτουργία",
+        "otherStakeholders-title": "ΑΛΛΟΙ ΕΝΕΡΓΟΙ ΦΟΡΕΙΣ",
+        "otherStakeholders-subtitle": "Ξεχώρισε εδώ εσωτερικούς και εξωτερικούς φορείς. Δεν θα υλοποιούν τη δράση καθημερινά αλλά θα βοηθήσουν, π.χ. με τιμολόγια ηλεκτρικού. Μπορεί να είναι ο διαχειριστής του σχολείου ή η κοινότητα.",
+        "ressourcesToBeImplemented-title": "ΜΕΣΑ ΠΟΥ ΘΑ ΧΡΗΣΙΜΟΠΟΙΗΘΟΥΝ",
+        "ressourcesToBeImplemented-subtitle": "Ποιες είναι οι ενέργειες και τα μέσα που θα χρησιμοποιηθούν; Μπορεί να είναι ανθρώπινα, υλικά, οικονομικά... Δόμησε καλά αυτό το μέρος, είναι ουσιώδες!",
+        "monitoringIndicators-title": "ΔΕΙΚΤΕΣ ΠΑΡΑΚΟΛΟΥΘΗΣΗΣ",
+        "monitoringIndicators-subtitle": "Γράψε δείκτες που θα χρησιμοποιήσεις σε 6 μήνες / 1 χρόνο για να αξιολογήσεις την επιτυχία της δράσης. Παράδειγμα: % μείωσης των εκπομπών αερίων θερμοκηπίου",
+        "estimatedCarbonImpacts-title": "ΕΚΤΙΜΩΜΕΝΕΣ ΕΠΙΠΤΩΣΕΙΣ ΑΝΘΡΑΚΑ",
+        "estimatedCarbonImpacts-subtitle": "Σε ποιο βαθμό η δράση σου μειώνει τις εκπομπές αερίων θερμοκηπίου;",
+        "otherEstimatedEnvironmentalImpacts-title": "ΑΛΛΕΣ ΕΚΤΙΜΩΜΕΝΕΣ ΠΕΡΙΒΑΛΛΟΝΤΙΚΕΣ ΕΠΙΠΤΩΣΕΙΣ",
+        "otherEstimatedEnvironmentalImpacts-subtitle": "Σκέψου θετικές ή αρνητικές επιπτώσεις στη βιοποικιλότητα, το νερό, τα απόβλητα...",
+        "estimatedSocialImpacts-title": "ΕΚΤΙΜΩΜΕΝΕΣ ΚΟΙΝΩΝΙΚΕΣ ΕΠΙΠΤΩΣΕΙΣ",
+        "estimatedSocialImpacts-subtitle": "Εξετάζουμε αν η δράση μειώνει το οικολογικό άγχος, ενισχύει τη μάθηση, μειώνει τη σχολική διαρροή, ενισχύει την ένταξη νέων...",
+        "calendar-title": "ΧΡΟΝΟΔΙΑΓΡΑΜΜΑ",
+        "calendar-subtitle": "Γράψε τα βασικά στάδια της δράσης σου, διάλεξε σωστά την χρονική κλίμακα!"
       },
-      "additionalInfo": "Les résultats que vous obtenez ici sont un calcul simplifié de l'empreinte carbone de votre établissement et ne répondent par aux exigences du Bilan Carbone®, ni de la réglementation en vigueur.  Ces résultats ont pour objet de vous accompagner dans la compréhension des enjeux climatiques et l'identification de vos priorités d'action.  Portant donc une valeur essentiellement pédagogique, le calcul de l'empreinte carbone de votre établissement via notre outil constitue donc une première étape dans votre adaptation aux conséquences du changement climatique."
+      "additionalInfo": "Τα αποτελέσματα που λαμβάνετε εδώ είναι μια απλοποιημένη εκτίμηση του ανθρακικού αποτυπώματος του σχολείου σας και δεν ανταποκρίνονται στις απαιτήσεις του Bilan Carbone® ή της ισχύουσας νομοθεσίας. Σκοπός τους είναι να σας βοηθήσουν να κατανοήσετε τα κλιματικά ζητήματα και να εντοπίσετε τις προτεραιότητες δράσης σας. Έχοντας κυρίως εκπαιδευτική αξία, ο υπολογισμός του ανθρακικού αποτυπώματος του σχολείου σας μέσω του εργαλείου μας αποτελεί ένα πρώτο βήμα στην προσαρμογή σας στις συνέπειες της κλιματικής αλλαγής."
     },
     "results": {
-      "carbonIntensities": "Empreinte carbone individuelle"
+      "carbonIntensities": "Ατομικό ανθρακικό αποτύπωμα"
     }
   },
   "emissionFactors": {
     "post": {
       "Restauration": "Εστίαση / Εστιατόρια",
-      "AutresGaz": "Autres gaz",
-      "Combustibles": "Combustibles",
-      "Construction": "Construction",
-      "DechetsRecyclables": "Déchets recyclables",
-      "DeplacementsClickson": "Déplacements",
-      "DistributeursAutomatiques": "Distributeurs automatiques",
-      "EnergiesClickson": "Énergie",
-      "EquipementsDeSport": "Équipements de sport",
-      "EquipementsDivers": "Equipements divers (électroménager, équipements professionnels...)",
-      "EquipementsInformatiqueAudiovisuel": "Équipements informatiques / audiovisuel",
-      "Fournitures": "Fournitures",
-      "ImmobilisationsClickson": "Immobilisations",
-      "OrduresMenageresResiduelles": "Ordures ménagères résiduelles",
-      "ProduitsChimiques": "Produits chimiques",
-      "Renovation": "Rénovation",
-      "TransportDesEleves": "Transport des élèves",
-      "TransportDuPersonnel": "Transport du personnel",
-      "TypesDeRepasServis": "Types de repas servis",
-      "VoyagesScolaires": "Voyages scolaires"
+      "AutresGaz": "Άλλα αέρια",
+      "Combustibles": "Καύσιμα",
+      "Construction": "Κατασκευές",
+      "DechetsRecyclables": "Ανακυκλώσιμα απόβλητα",
+      "DeplacementsClickson": "Μετακινήσεις",
+      "DistributeursAutomatiques": "Αυτόματοι πωλητές",
+      "EnergiesClickson": "Ενέργεια",
+      "EquipementsDeSport": "Αθλητικός εξοπλισμός",
+      "EquipementsDivers": "Διάφορος εξοπλισμός (οικιακές συσκευές, επαγγελματικός εξοπλισμός...)",
+      "EquipementsInformatiqueAudiovisuel": "Εξοπλισμός πληροφορικής / οπτικοακουστικός",
+      "Fournitures": "Είδη γραφείου",
+      "ImmobilisationsClickson": "Πάγια",
+      "OrduresMenageresResiduelles": "Υπολειμματικά οικιακά απορρίμματα",
+      "ProduitsChimiques": "Χημικά προϊόντα",
+      "Renovation": "Ανακαίνιση",
+      "TransportDesEleves": "Μεταφορά μαθητών",
+      "TransportDuPersonnel": "Μεταφορά προσωπικού",
+      "TypesDeRepasServis": "Τύποι σερβιρισμένων γευμάτων",
+      "VoyagesScolaires": "Σχολικά ταξίδια"
     }
   },
   "organization": {
@@ -161,32 +161,32 @@
     },
     "form": {
       "editTitle": "Επεξεργασία των ιδρυμάτων μου",
-      "name": "Nom de l'établissement"
+      "name": "Όνομα ιδρύματος"
     },
     "sites": {
       "title": "Ποια ιδρύματα πρέπει να καλύψει το αποτύπωμα;",
       "noSites": "Δεν υπάρχουν ρυθμισμένα ιδρύματα",
       "namePlaceholder": "Όνομα ιδρύματος",
       "add": "Προσθήκη ιδρύματος",
-      "academy": "Académie",
-      "academyPlaceholder": "Académie de l'établissement",
+      "academy": "Ακαδημία",
+      "academyPlaceholder": "Ακαδημία του ιδρύματος",
       "establishmentType": {
-        "title": "Type d'établissement",
-        "COLLEGE": "Collège",
-        "LYCEE_GENERAL": "Lycée Général et Technologique",
-        "LYCEE_PRO": "Lycée Professionnel",
-        "LYCEE_PRO_AGRICOLE": "Lycée Professionnel Agricole",
-        "ETABLISSEMENT_FR_ETRANGER": "Etablissement d'enseignement français à l'étranger"
+        "title": "Τύπος ιδρύματος",
+        "COLLEGE": "Γυμνάσιο",
+        "LYCEE_GENERAL": "Γενικό και Τεχνολογικό Λύκειο",
+        "LYCEE_PRO": "Επαγγελματικό Λύκειο",
+        "LYCEE_PRO_AGRICOLE": "Γεωργικό Επαγγελματικό Λύκειο",
+        "ETABLISSEMENT_FR_ETRANGER": "Γαλλικό εκπαιδευτικό ίδρυμα στο εξωτερικό"
       },
-      "establishmentYear": "Année de construction",
-      "establishmentYearPlaceholder": "Année de construction de l'établissement",
-      "etp": "Nombre de personnels",
-      "etpPlaceholder": "Nombre total de personnels",
+      "establishmentYear": "Έτος ίδρυσης",
+      "establishmentYearPlaceholder": "Έτος ίδρυσης του ιδρύματος",
+      "etp": "Αριθμός προσωπικού",
+      "etpPlaceholder": "Συνολικός αριθμός προσωπικού",
       "glossary": {
-        "informations": "Il est nécessaire de renseigner ces informations avant d'aller plus loin dans votre démarche. Ces informations impactent effectivement le calcul de votre empreinte carbone (en particulier, le poste immobilisations)"
+        "informations": "Είναι απαραίτητο να συμπληρώσετε αυτές τις πληροφορίες πριν προχωρήσετε. Αυτές οι πληροφορίες επηρεάζουν τον υπολογισμό του ανθρακικού σας αποτυπώματος (ιδιαίτερα το πεδίο των παγίων)."
       },
-      "studentNumber": "Nombre d'élèves",
-      "studentNumberPlaceholder": "Nombre total d'élèves"
+      "studentNumber": "Αριθμός μαθητών",
+      "studentNumberPlaceholder": "Συνολικός αριθμός μαθητών"
     }
   },
   "login": {
@@ -211,11 +211,11 @@
     "validation": {
       "schoolPostalCodeOrName": "Παρακαλώ εισάγετε ταχυδρομικό κωδικό ή όνομα σχολείου"
     },
-    "city": "Ville",
-    "cityPlaceholder": "Ville où se situe l'établissement scolaire",
-    "country": "Votre pays",
-    "schoolName": "Nom de l'établissement scolaire",
-    "schoolNamePlaceholder": "Nom de l'établissement scolaire"
+    "city": "Πόλη",
+    "cityPlaceholder": "Πόλη όπου βρίσκεται το σχολείο",
+    "country": "Χώρα σας",
+    "schoolName": "Όνομα σχολείου",
+    "schoolNamePlaceholder": "Όνομα σχολείου"
   },
   "email": {
     "subject": {
@@ -226,22 +226,22 @@
     }
   },
   "comments": {
-    "title": "Gestion des commentaires",
-    "noComments": "Vous n'avez aucun commentaire à traiter",
-    "yourComment": "Votre commentaire...",
-    "validated": "Validé",
-    "pending": "En attente",
-    "addComment": "Ajouter un commentaire"
+    "title": "Διαχείριση σχολίων",
+    "noComments": "Δεν έχετε σχόλια προς επεξεργασία",
+    "yourComment": "Το σχόλιό σας...",
+    "validated": "Επικυρωμένο",
+    "pending": "Σε εκκρεμότητα",
+    "addComment": "Προσθήκη σχολίου"
   },
   "error": {
-    "Too many comments": "Vous avez déjà trop de commentaire en attente"
+    "Too many comments": "Έχετε ήδη πάρα πολλά σχόλια σε εκκρεμότητα"
   },
   "ressources": {
-    "knowMoreDataCollect": "Pour savoir comment collecter les données de son établissement :",
-    "guideDataCollect": "Guide de collecte de données",
-    "toolsDataCollect": "Les outils de collecte de données :",
-    "modelsDataCollect": "Modèles de supports de collecte de données",
-    "game": "Jeu : initiation à la négociation de son plan d'action :",
-    "classEarth": "Ma Terre en classe"
+    "knowMoreDataCollect": "Για να μάθετε πώς να συλλέγετε δεδομένα για το ίδρυμά σας:",
+    "guideDataCollect": "Οδηγός συλλογής δεδομένων",
+    "toolsDataCollect": "Εργαλεία συλλογής δεδομένων:",
+    "modelsDataCollect": "Υποδείγματα υποστηρικτικών συλλογής δεδομένων",
+    "game": "Παιχνίδι: εισαγωγή στη διαπραγμάτευση του σχεδίου δράσης σας:",
+    "classEarth": "Η Γη μου στην τάξη"
   }
 }

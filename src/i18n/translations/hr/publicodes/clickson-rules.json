@@ -2,75 +2,75 @@
   "publicodes-rules": {
     "général": {
       "nombre étudiant": {
-        "question": "[TO_TRANSLATE] Nombre d'étudiants"
+        "question": "Broj studenata"
       },
       "nombre personnel": {
-        "question": "[TO_TRANSLATE] Nombre de personnel (enseignants et non enseignants)"
+        "question": "Broj osoblja (nastavno i nenastavno)"
       },
       "année de construction": {
-        "question": "[TO_TRANSLATE] Année de construction du bâtiment principal"
+        "question": "Godina izgradnje glavne zgrade"
       },
       "année de rénovation": {
-        "question": "[TO_TRANSLATE] Année de rénovation du bâtiment principal"
+        "question": "Godina obnove glavne zgrade"
       },
       "pays": {
-        "question": "[TO_TRANSLATE] Pays de l'établissement",
+        "question": "Zemlja ustanove",
         "options": {
-          "FRANCE": "[TO_TRANSLATE] FRANCE",
-          "HONGRIE": "[TO_TRANSLATE] HONGRIE",
-          "ROUMANIE": "[TO_TRANSLATE] ROUMANIE",
-          "CROATIE": "[TO_TRANSLATE] CROATIE"
+          "FRANCE": "FRANCUSKA",
+          "HONGRIE": "MAĐARSKA",
+          "ROUMANIE": "RUMUNJSKA",
+          "CROATIE": "HRVATSKA"
         }
       }
     },
     "énergie": {
       "électricité": {
         "consommation": {
-          "question": "[TO_TRANSLATE] Consommation annuelle d'électricité"
+          "question": "Consommation annuelle d'électricité"
         },
         "FE": {
-          "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          "question": "Faktor emisije električne energije"
         }
       },
       "combustibles": {
         "fioul domestique": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de fioul domestique"
+            "question": "Godišnja potrošnja lož ulja"
           }
         },
         "fioul lourd": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de fioul lourd/commercial"
+            "question": "Godišnja potrošnja teškog/komercijalnog lož ulja"
           }
         },
         "gaz naturel": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de gaz naturel"
+            "question": "Godišnja potrošnja prirodnog plina"
           }
         },
-        "granulés de bois": {
+        "granulés bois": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de granulés de bois"
+            "question": "Godišnja potrošnja drvnih peleta"
           }
         },
         "biopropane": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de biopropane"
+            "question": "Godišnja potrošnja biopropana"
           }
         },
         "réseau de chaleur": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de réseau de chaleur"
+            "question": "Godišnja potrošnja toplinske mreže"
           }
         }
       },
       "autres gaz": {
         "gaz hfc spécifique": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de ce gaz HFC"
+            "question": "Godišnja potrošnja ovog HFC plina"
           },
           "PRG": {
-            "question": "[TO_TRANSLATE] Pouvoir de Réchauffement Global (PRG) du gaz HFC"
+            "question": "Globalni potencijal zagrijavanja (PRG) HFC plina"
           }
         }
       }
@@ -79,155 +79,155 @@
       "types de repas servis": {
         "moyen": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de repas moyens annuels"
+            "question": "Godišnji broj srednjih obroka"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par repas moyen"
+            "question": "Faktor emisije po srednjem obroku"
           }
         },
         "végétarien": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de repas végétariens annuels"
+            "question": "Godišnji broj vegetarijanskih obroka"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par repas végétarien"
+            "question": "Faktor emisije po vegetarijanskom obroku"
           }
         },
         "végétalien": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de repas végétaliens annuels"
+            "question": "Godišnji broj veganskih obroka"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par repas végétalien"
+            "question": "Faktor emisije po veganskom obroku"
           }
         },
         "viande rouge": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de repas à base de viande rouge annuels"
+            "question": "Godišnji broj obroka s crvenim mesom"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par repas à base de viande rouge"
+            "question": "Faktor emisije po obroku s crvenim mesom"
           }
         },
         "viande blanche": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de repas à base de viande blanche annuels"
+            "question": "Godišnji broj obroka s bijelim mesom"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par repas à base de viande blanche"
+            "question": "Faktor emisije po obroku s bijelim mesom"
           }
         },
         "poisson": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de repas à base de poisson blanc annuels"
+            "question": "Godišnji broj obroka s bijelom ribom"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par repas à base de poisson blanc"
+            "question": "Faktor emisije po obroku s bijelom ribom"
           }
         }
       },
       "fret": {
         "routier": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Distance parcourue en fret routier"
+            "question": "Prijeđena udaljenost cestovnim prijevozom tereta"
           }
         },
         "ferroviaire": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Distance parcourue en fret ferroviaire"
+            "question": "Prijeđena udaljenost željezničkim prijevozom tereta"
           }
         },
         "maritime": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Distance parcourue en fret maritime"
+            "question": "Prijeđena udaljenost pomorskim prijevozom tereta"
           }
         }
       },
       "distributeur automatiques": {
         "bouteille d'eau": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de bouteille d'eau consommées annuellement"
+            "question": "Godišnji broj potrošenih boca vode"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par bouteille d'eau"
+            "question": "Faktor emisije po boci vode"
           }
         },
         "soda": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de sodas consommés annuellement"
+            "question": "Godišnji broj potrošenih sokova"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par soda"
+            "question": "Faktor emisije po soku"
           }
         },
         "biscuits": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de paquets de biscuits consommés annuellement"
+            "question": "Godišnji broj potrošenih paketa keksa"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par paquet de biscuits"
+            "question": "Faktor emisije po paketu keksa"
           }
         },
         "paquet de chips": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de paquets de chips consommés annuellement"
+            "question": "Godišnji broj potrošenih paketa čipsa"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par paquet de chips"
+            "question": "Faktor emisije po paketu čipsa"
           }
         },
         "café noir": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de cafés noirs consommés annuellement"
+            "question": "Godišnji broj potrošenih crnih kava"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par café noir"
+            "question": "Faktor emisije po crnoj kavi"
           }
         },
         "thé infusé": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de thés infusés consommés annuellement"
+            "question": "Godišnji broj potrošenih infuziranih čajeva"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par thé infusé"
+            "question": "Faktor emisije po infuziranom čaju"
           }
         },
-        "sandwich pain de mie": {
+        "sandwich toasté": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de sandwichs pain de mie consommés annuellement"
+            "question": "Godišnji broj potrošenih sendviča od tosta"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par sandwich pain de mie"
+            "question": "Faktor emisije po sendviču od tosta"
           }
         },
         "barre chocolatée": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de barres chocolatées consommées annuellement"
+            "question": "Godišnji broj potrošenih čokoladnih pločica"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par barre chocolatée"
+            "question": "Faktor emisije po čokoladnoj pločici"
           }
         }
       },
       "déchets organiques": {
         "biodéchets compostés": {
           "quantité": {
-            "question": "[TO_TRANSLATE] Quantité de biodéchets compostés"
+            "question": "Količina kompostiranog biootpada"
           }
         },
         "biodéchets méthanisés": {
           "quantité": {
-            "question": "[TO_TRANSLATE] Quantité de biodéchets méthanisés"
+            "question": "Količina metaniziranog biootpada"
           }
         },
         "biodéchets incinérés": {
           "quantité": {
-            "question": "[TO_TRANSLATE] Quantité de biodéchets incinérés"
+            "question": "Količina spaljenog biootpada"
           }
         },
         "biodéchets enfouis": {
           "quantité": {
-            "question": "[TO_TRANSLATE] Quantité de biodéchets enfouis"
+            "question": "Količina zakopanog biootpada"
           }
         }
       }
@@ -236,270 +236,270 @@
       "rénovation": {
         "bâtiment scolaire structure béton rénové": {
           "surface": {
-            "question": "[TO_TRANSLATE] Quelle surface de bâtiment scolaire (structure béton) avez-vous rénovée ?"
+            "question": "Koja površina školskog objekta (betonska konstrukcija) je renovirana?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par m² de bâtiment scolaire rénové (structure béton)"
+            "question": "Faktor emisije po m² renoviranog školskog objekta (betonska konstrukcija)"
           }
         },
         "parking bâtiment structure béton rénové": {
           "surface": {
-            "question": "[TO_TRANSLATE] Quelle surface de parking (bâtiment - structure béton) avez-vous rénovée ?"
+            "question": "Koja površina parkirališta (zgrada - betonska konstrukcija) je renovirana?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par m² de parking rénové (bâtiment - structure béton)"
+            "question": "Faktor emisije po m² renoviranog parkirališta (zgrada - betonska konstrukcija)"
           }
         },
         "parking surface bitume rénové": {
           "surface": {
-            "question": "[TO_TRANSLATE] Quelle surface de parking (surface bitume) avez-vous rénovée ?"
+            "question": "Koja površina parkirališta (asfaltna površina) je renovirana?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par m² de parking rénové (surface bitume)"
+            "question": "Faktor emisije po m² renoviranog parkirališta (asfaltna površina)"
           }
         },
         "parking surface semi-dure rénové": {
           "surface": {
-            "question": "[TO_TRANSLATE] Quelle surface de parking (surface semi-dure) avez-vous rénovée ?"
+            "question": "Koja površina parkirališta (polutvrda površina) je renovirana?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par m² de parking rénové (surface semi-dure)"
+            "question": "Faktor emisije po m² renoviranog parkirališta (polutvrda površina)"
           }
         },
         "garage structure béton rénové": {
           "surface": {
-            "question": "[TO_TRANSLATE] Quelle surface de garage (structure béton) avez-vous rénovée ?"
+            "question": "Koja površina garaže (betonska konstrukcija) je renovirana?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par m² de garage rénové (structure béton)"
+            "question": "Faktor emisije po m² renovirane garaže (betonska konstrukcija)"
           }
         },
         "garage structure métal rénové": {
           "surface": {
-            "question": "[TO_TRANSLATE] Quelle surface de garage (structure métal) avez-vous rénovée ?"
+            "question": "Koja površina garaže (metalna konstrukcija) je renovirana?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par m² de garage rénové (structure métal)"
+            "question": "Faktor emisije po m² renovirane garaže (metalna konstrukcija)"
           }
         }
       },
       "équipements informatique audiovisuel": {
         "ordinateur de bureau": {
-          "titre": "[TO_TRANSLATE] Ordinateur de bureau",
+          "titre": "Stolno računalo",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien d'ordinateurs de bureau avez-vous achetés ?"
+            "question": "Koliko ste stolnih računala kupili?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par ordinateur de bureau"
+            "question": "Faktor emisije po stolnom računalu"
           }
         },
         "ordinateur portable": {
-          "titre": "[TO_TRANSLATE] Ordinateur portable",
+          "titre": "Prijenosno računalo",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien d'ordinateurs portables avez-vous achetés ?"
+            "question": "Koliko ste prijenosnih računala kupili?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par ordinateur portable"
+            "question": "Faktor emisije po prijenosnom računalu"
           }
         },
         "tablette": {
-          "titre": "[TO_TRANSLATE] Tablette",
+          "titre": "Tablet",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de tablettes avez-vous achetées ?"
+            "question": "Koliko ste tableta kupili?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par tablette"
+            "question": "Faktor emisije po tabletu"
           }
         },
         "imprimante": {
-          "titre": "[TO_TRANSLATE] Imprimante",
+          "titre": "Printer",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien d'imprimantes avez-vous achetées ?"
+            "question": "Koliko ste printera kupili?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par imprimante"
+            "question": "Faktor emisije po printeru"
           }
         },
         "photocopieur": {
-          "titre": "[TO_TRANSLATE] Photocopieur",
+          "titre": "Fotokopirni uređaj",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de photocopieurs avez-vous achetés ?"
+            "question": "Koliko ste fotokopirnih uređaja kupili?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par photocopieur"
+            "question": "Faktor emisije po fotokopirnom uređaju"
           }
         },
         "vidéoprojecteur": {
-          "titre": "[TO_TRANSLATE] Vidéoprojecteur",
+          "titre": "Projektor",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de vidéoprojecteurs avez-vous achetés ?"
+            "question": "Koliko ste projektora kupili?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par vidéoprojecteur"
+            "question": "Faktor emisije po projektoru"
           }
         },
         "serveur informatique": {
-          "titre": "[TO_TRANSLATE] Serveur informatique",
+          "titre": "Informatički poslužitelj",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de serveurs informatiques avez-vous achetés ?"
+            "question": "Koliko ste informatičkih poslužitelja kupili?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par serveur informatique"
+            "question": "Faktor emisije po informatičkom poslužitelju"
           }
         },
         "télévision 40-49 pouces": {
-          "titre": "[TO_TRANSLATE] Télévision 40-49 pouces",
+          "titre": "Televizor 40-49 inča",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de télévisions 40-49 pouces avez-vous achetées ?"
+            "question": "Koliko ste televizora 40-49 inča kupili?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par télévision 40-49 pouces"
+            "question": "Faktor emisije po televizoru 40-49 inča"
           }
         },
         "rack de serveur": {
-          "titre": "[TO_TRANSLATE] Rack de serveur",
+          "titre": "Server rack",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de racks de serveur avez-vous achetés ?"
+            "question": "Koliko ste server rackova kupili?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par rack de serveur"
+            "question": "Faktor emisije po server racku"
           }
         },
         "télécommande universelle sans piles 80g": {
-          "titre": "[TO_TRANSLATE] Télécommande universelle sans piles 80g",
+          "titre": "Univerzalni daljinski upravljač bez baterija 80g",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de télécommandes universelles sans piles (80g) avez-vous achetées ?"
+            "question": "Koliko ste univerzalnih daljinskih upravljača bez baterija (80g) kupili?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par télécommande universelle sans piles 80g"
+            "question": "Faktor emisije po univerzalnom daljinskom upravljaču bez baterija 80g"
           }
         },
         "stéréo classique": {
-          "titre": "[TO_TRANSLATE] Stéréo classique",
+          "titre": "Klasična stereo",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de stéréos classiques avez-vous achetées ?"
+            "question": "Koliko ste klasičnih stereo uređaja kupili?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par stéréo classique"
+            "question": "Faktor emisije po klasičnoj stereo"
           }
         },
         "enceinte Bluetooth": {
-          "titre": "[TO_TRANSLATE] Enceinte Bluetooth",
+          "titre": "Bluetooth zvučnik",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien d'enceintes Bluetooth avez-vous achetées ?"
+            "question": "Koliko ste Bluetooth zvučnika kupili?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par enceinte Bluetooth"
+            "question": "Faktor emisije po Bluetooth zvučniku"
           }
         },
         "smartphone 5 pouces": {
-          "titre": "[TO_TRANSLATE] Smartphone 5 pouces",
+          "titre": "Pametni telefon 5 inča",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de smartphones 5 pouces avez-vous achetés ?"
+            "question": "Koliko ste pametnih telefona 5 inča kupili?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par smartphone 5 pouces"
+            "question": "Faktor emisije po pametnom telefonu 5 inča"
           }
         },
         "écran 23,8 pouces": {
-          "titre": "[TO_TRANSLATE] Écran 23,8 pouces",
+          "titre": "Ekran 23,8 inča",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien d'écrans 23,8 pouces avez-vous achetés ?"
+            "question": "Koliko ste ekrana 23,8 inča kupili?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par écran 23,8 pouces"
+            "question": "Faktor emisije po ekranu 23,8 inča"
           }
         }
       },
       "équipements divers": {
         "chaise de bureau": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de chaises de bureau avez-vous achetées ?"
+            "question": "Koliko ste uredskih stolica kupili?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par chaise de bureau"
+            "question": "Faktor emisije po uredskog stolici"
           }
         },
         "table de réunion": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de tables de réunion avez-vous achetées ?"
+            "question": "Koliko ste konferencijskih stolova kupili?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par table de réunion"
+            "question": "Faktor emisije po konferencijskom stolu"
           }
         },
         "armoire de rangement": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien d'armoires de rangement avez-vous achetées ?"
+            "question": "Koliko ste ormara za pohranu kupili?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par armoire de rangement"
+            "question": "Faktor emisije po ormaru za pohranu"
           }
         },
         "fauteuil d'accueil": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de fauteuils d'accueil avez-vous achetés ?"
+            "question": "Koliko ste prijemnih fotelja kupili?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par fauteuil d'accueil"
+            "question": "Faktor emisije po prijemnoj fotelji"
           }
         },
         "étagère": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien d'étagères avez-vous achetées ?"
+            "question": "Koliko ste polica kupili?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par étagère"
+            "question": "Faktor emisije po polici"
           }
         }
       },
       "construction": {
         "bâtiment scolaire structure béton": {
           "surface": {
-            "question": "[UPDATED] Quelle surface de bâtiment scolaire (structure béton) comporte votre enceinte scolaire ?"
+            "question": "Koja površina školskog objekta (betonska konstrukcija) se nalazi u vašem školskom kompleksu?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par m² de bâtiment scolaire (structure béton)"
+            "question": "Faktor emisije po m² školskog objekta (betonska konstrukcija)"
           }
         },
         "parking bâtiment structure béton": {
           "surface": {
-            "question": "[UPDATED] Quelle surface de parking (bâtiment - structure béton) comporte votre enceinte scolaire ?"
+            "question": "Koja površina parkirališta (zgrada - betonska konstrukcija) se nalazi u vašem školskom kompleksu?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par m² de parking (bâtiment - structure béton)"
+            "question": "Faktor emisije po m² parkirališta (zgrada - betonska konstrukcija)"
           }
         },
         "parking surface bitume": {
           "surface": {
-            "question": "[UPDATED] Quelle surface de parking (surface bitume) comporte votre enceinte scolaire ?"
+            "question": "Koja površina parkirališta (asfaltna površina) se nalazi u vašem školskom kompleksu?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par m² de parking (surface bitume)"
+            "question": "Faktor emisije po m² parkirališta (asfaltna površina)"
           }
         },
         "parking surface semi-dure": {
           "surface": {
-            "question": "[UPDATED] Quelle surface de parking (surface semi-dure) comporte votre enceinte scolaire ?"
+            "question": "Koja površina parkirališta (polutvrda površina) se nalazi u vašem školskom kompleksu?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par m² de parking (surface semi-dure)"
+            "question": "Faktor emisije po m² parkirališta (polutvrda površina)"
           }
         },
         "garage structure béton": {
           "surface": {
-            "question": "[UPDATED] Quelle surface de garage (structure béton) comporte votre enceinte scolaire ?"
+            "question": "Koja površina garaže (betonska konstrukcija) se nalazi u vašem školskom kompleksu?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par m² de garage (structure béton)"
+            "question": "Faktor emisije po m² garaže (betonska konstrukcija)"
           }
         },
         "garage structure métal": {
           "surface": {
-            "question": "[UPDATED] Quelle surface de garage (structure métal) comporte votre enceinte scolaire ?"
+            "question": "Koja površina garaže (metalna konstrukcija) se nalazi u vašem školskom kompleksu?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par m² de garage (structure métal)"
+            "question": "Faktor emisije po m² garaže (metalna konstrukcija)"
           }
         }
       }
@@ -507,259 +507,259 @@
     "déplacements": {
       "voyages scolaires": {
         "RER et transilien": {
-          "titre": "[TO_TRANSLATE] RER et transilien",
+          "titre": "RER i transilien",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "métro ou tram": {
-          "titre": "[TO_TRANSLATE] Métro, tramway",
+          "titre": "Metro, tramvaj",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "vélo électrique": {
-          "titre": "[TO_TRANSLATE] Vélo électrique",
+          "titre": "Električni bicikl",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "trottinette électrique": {
-          "titre": "[TO_TRANSLATE] Trottinette électrique",
+          "titre": "Električni romobil",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "moto essence": {
-          "titre": "[TO_TRANSLATE] Moto essence",
+          "titre": "Motocikl na benzin",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "véhicule compact électrique": {
-          "titre": "[TO_TRANSLATE] Véhicule compact électrique",
+          "titre": "Kompaktno električno vozilo",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "voiture individuelle essence": {
-          "titre": "[TO_TRANSLATE] Voiture individuelle essence",
+          "titre": "Osobni automobil na benzin",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "voiture individuelle diesel": {
-          "titre": "[TO_TRANSLATE] Voiture individuelle diesel",
+          "titre": "Osobni automobil na dizel",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "bus": {
-          "titre": "[TO_TRANSLATE] Autobus",
+          "titre": "Autobus",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "TER": {
-          "titre": "[TO_TRANSLATE] TER",
+          "titre": "TER",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "TGV": {
-          "titre": "[TO_TRANSLATE] TGV",
+          "titre": "TGV",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "avion court courrier": {
-          "titre": "[TO_TRANSLATE] Avion Court courrier",
+          "titre": "Zrakoplov - kratka relacija",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "avion moyen courrier": {
-          "titre": "[TO_TRANSLATE] Avion Moyen courrier",
+          "titre": "Zrakoplov - srednja relacija",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "avion long courrier": {
-          "titre": "[TO_TRANSLATE] Avion Long courrier",
+          "titre": "Zrakoplov - duga relacija",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         }
       },
       "transport des élèves": {
         "RER et transilien": {
-          "titre": "[TO_TRANSLATE] RER et transilien",
+          "titre": "RER i transilien",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "métro ou tram": {
-          "titre": "[TO_TRANSLATE] Métro, tramway",
+          "titre": "Metro, tramvaj",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "vélo électrique": {
-          "titre": "[TO_TRANSLATE] Vélo électrique",
+          "titre": "Električni bicikl",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "trottinette électrique": {
-          "titre": "[TO_TRANSLATE] Trottinette électrique",
+          "titre": "Električni romobil",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "moto essence": {
-          "titre": "[TO_TRANSLATE] Moto essence",
+          "titre": "Motocikl na benzin",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "véhicule compact électrique": {
-          "titre": "[TO_TRANSLATE] Véhicule compact électrique",
+          "titre": "Kompaktno električno vozilo",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "voiture individuelle essence": {
-          "titre": "[TO_TRANSLATE] Voiture individuelle essence",
+          "titre": "Osobni automobil na benzin",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "voiture individuelle diesel": {
-          "titre": "[TO_TRANSLATE] Voiture individuelle diesel",
+          "titre": "Osobni automobil na dizel",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "bus": {
-          "titre": "[TO_TRANSLATE] Autobus",
+          "titre": "Autobus",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "TER": {
-          "titre": "[TO_TRANSLATE] TER",
+          "titre": "TER",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "TGV": {
-          "titre": "[TO_TRANSLATE] TGV",
+          "titre": "TGV",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "avion court courrier": {
-          "titre": "[TO_TRANSLATE] Avion Court courrier",
+          "titre": "Zrakoplov - kratka relacija",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "avion moyen courrier": {
-          "titre": "[TO_TRANSLATE] Avion Moyen courrier",
+          "titre": "Zrakoplov - srednja relacija",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "avion long courrier": {
-          "titre": "[TO_TRANSLATE] Avion Long courrier",
+          "titre": "Zrakoplov - duga relacija",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         }
       },
       "transport du personnel": {
         "RER et transilien": {
-          "titre": "[TO_TRANSLATE] RER et transilien",
+          "titre": "RER i transilien",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "métro ou tram": {
-          "titre": "[TO_TRANSLATE] Métro, tramway",
+          "titre": "Metro, tramvaj",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "vélo électrique": {
-          "titre": "[TO_TRANSLATE] Vélo électrique",
+          "titre": "Električni bicikl",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "trottinette électrique": {
-          "titre": "[TO_TRANSLATE] Trottinette électrique",
+          "titre": "Električni romobil",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "moto essence": {
-          "titre": "[TO_TRANSLATE] Moto essence",
+          "titre": "Motocikl na benzin",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "véhicule compact électrique": {
-          "titre": "[TO_TRANSLATE] Véhicule compact électrique",
+          "titre": "Kompaktno električno vozilo",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "voiture individuelle essence": {
-          "titre": "[TO_TRANSLATE] Voiture individuelle essence",
+          "titre": "Osobni automobil na benzin",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "voiture individuelle diesel": {
-          "titre": "[TO_TRANSLATE] Voiture individuelle diesel",
+          "titre": "Osobni automobil na dizel",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "bus": {
-          "titre": "[TO_TRANSLATE] Autobus",
+          "titre": "Autobus",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "TER": {
-          "titre": "[TO_TRANSLATE] TER",
+          "titre": "TER",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "TGV": {
-          "titre": "[TO_TRANSLATE] TGV",
+          "titre": "TGV",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "avion court courrier": {
-          "titre": "[TO_TRANSLATE] Avion Court courrier",
+          "titre": "Zrakoplov - kratka relacija",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "avion moyen courrier": {
-          "titre": "[TO_TRANSLATE] Avion Moyen courrier",
+          "titre": "Zrakoplov - srednja relacija",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         },
         "avion long courrier": {
-          "titre": "[TO_TRANSLATE] Avion Long courrier",
+          "titre": "Zrakoplov - duga relacija",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Udaljenost (km)"
           }
         }
       }
@@ -768,326 +768,326 @@
       "produits chimiques": {
         "produit vaisselle liquide": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de produit vaisselle liquide"
+            "question": "Godišnja potrošnja tekućeg sredstva za pranje posuđa"
           }
         },
         "savon liquide": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de savon liquide"
+            "question": "Godišnja potrošnja tekućeg sapuna"
           }
         },
         "produit vitre": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de produit vitre"
+            "question": "Godišnja potrošnja sredstva za čišćenje stakla"
           }
         },
         "nettoyant sols": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de nettoyant sols"
+            "question": "Godišnja potrošnja sredstva za čišćenje podova"
           }
         },
         "nettoyant multi-usages": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de nettoyant multi-usages"
+            "question": "Godišnja potrošnja višenamjenskog sredstva za čišćenje"
           }
         },
         "détergent sanitaire": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de détergent sanitaire"
+            "question": "Godišnja potrošnja sredstva za čišćenje sanitarija"
           }
         },
         "désinfectant": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de désinfectant"
+            "question": "Godišnja potrošnja dezinfekcijskog sredstva"
           }
         },
         "chlore": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de chlore"
+            "question": "Godišnja potrošnja klora"
           }
         },
         "bicarbonate de soude": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de bicarbonate de soude"
+            "question": "Godišnja potrošnja sode bikarbone"
           }
         },
         "peinture revêtement mural intérieur": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de peinture - revêtement mural intérieur"
+            "question": "Godišnja potrošnja boje - unutarnja zidna obloga"
           }
         },
         "peinture revêtement mural extérieur": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de peinture - revêtement mural extérieur"
+            "question": "Godišnja potrošnja boje - vanjska zidna obloga"
           }
         },
         "savon solide": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de savon solide"
+            "question": "Godišnja potrošnja čvrstog sapuna"
           }
         },
         "vinaigre blanc": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de vinaigre blanc"
+            "question": "Godišnja potrošnja bijelog octa"
           }
         },
         "soude solide": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de soude solide (poudre, granulés)"
+            "question": "Godišnja potrošnja čvrste sode (prah, granule)"
           }
         },
         "acide sulfurique": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle d'acide sulfurique"
+            "question": "Godišnja potrošnja sumporne kiseline"
           }
         },
         "acide chlorhydrique": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle d'acide chlorhydrique"
+            "question": "Godišnja potrošnja klorovodične kiseline"
           }
         }
       },
       "ordures ménagères résiduelles": {
         "ordures ménagères résiduelles": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de kg d'ordures ménagères résiduelles avez-vous achetés ou générés ?"
+            "question": "Koliko kg preostalih kućnih otpada ste kupili ili generirali?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission des ordures ménagères résiduelles"
+            "question": "Faktor emisije preostalih kućnih otpada"
           }
         }
       },
       "fournitures": {
         "petites fournitures": {
           "montant": {
-            "question": "[TO_TRANSLATE] Quel est le montant dépensé en petites fournitures (stylos, etc.) ?"
+            "question": "Koliki je iznos potrošen na male uredske potrepštine (olovke, itd.)?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par euro de petites fournitures"
+            "question": "Faktor emisije po euru malih uredskih potrepština"
           }
         },
         "livres": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de livres avez-vous achetés ?"
+            "question": "Koliko ste knjiga kupili?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par livre"
+            "question": "Faktor emisije po knjizi"
           }
         },
         "papier ramette": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de ramettes de papier avez-vous achetées ?"
+            "question": "Koliko ste paketa papira kupili?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par ramette de papier"
+            "question": "Faktor emisije po paketu papira"
           }
         },
         "consommables": {
           "montant": {
-            "question": "[TO_TRANSLATE] Quel est le montant dépensé en consommables (cartouches d'encre, etc.) ?"
+            "question": "Koliki je iznos potrošen na potrošni materijal (tinte, itd.)?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par euro de consommables"
+            "question": "Faktor emisije po euru potrošnog materijala"
           }
         },
         "piles aaa": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de piles AAA (alcalines) avez-vous achetées ?"
+            "question": "Koliko ste AAA (alkalnih) baterija kupili?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par pile AAA"
+            "question": "Faktor emisije po AAA bateriji"
           }
         },
         "piles aa": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de piles AA (alcalines) avez-vous achetées ?"
+            "question": "Koliko ste AA (alkalnih) baterija kupili?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par pile AA"
+            "question": "Faktor emisije po AA bateriji"
           }
         }
       },
       "équipements de sport": {
         "ballon de volley": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de ballons de volley avez-vous achetés ?"
+            "question": "Koliko ste odbojkaških lopti kupili?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par ballon de volley"
+            "question": "Faktor emisije po odbojkaškoj lopti"
           }
         },
         "ballon de handball": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de ballons de handball avez-vous achetés ?"
+            "question": "Koliko ste rukometnih lopti kupili?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par ballon de handball"
+            "question": "Faktor emisije po rukometnoj lopti"
           }
         },
         "kimono judo": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de kimonos de judo avez-vous achetés ?"
+            "question": "Koliko ste judo kimona kupili?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par kimono (judo)"
+            "question": "Faktor emisije po judo kimonu"
           }
         },
         "shorts tous sports": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de shorts tous sports avez-vous achetés ?"
+            "question": "Koliko ste sportskih kratkih hlača kupili?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par short tous sports"
+            "question": "Faktor emisije po sportskim kratkim hlačama"
           }
         },
         "maillots tous sports": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de maillots tous sports avez-vous achetés ?"
+            "question": "Koliko ste sportskih majica kupili?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par maillot tous sports"
+            "question": "Faktor emisije po sportskoj majici"
           }
         },
         "t-shirt polyester": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de t-shirts en polyester avez-vous achetés ?"
+            "question": "Koliko ste poliesterskih majica kupili?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par t-shirt en polyester"
+            "question": "Faktor emisije po poliesterskoj majici"
           }
         },
         "ballon de rugby": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de ballons de rugby avez-vous achetés ?"
+            "question": "Koliko ste ragbi lopti kupili?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par ballon de rugby"
+            "question": "Faktor emisije po ragbi lopti"
           }
         },
         "ballon de basket": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de ballons de basket avez-vous achetés ?"
+            "question": "Koliko ste košarkaških lopti kupili?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par ballon de basket"
+            "question": "Faktor emisije po košarkaškoj lopti"
           }
         },
         "ballon de football": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de ballons de football avez-vous achetés ?"
+            "question": "Koliko ste nogometnih lopti kupili?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par ballon de football"
+            "question": "Faktor emisije po nogometnoj lopti"
           }
         }
       },
       "déchets recyclables": {
         "papier": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Quantité de papier recyclé (en kg) ?"
+            "question": "Količina recikliranog papira (u kg)?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission du papier recyclé"
+            "question": "Faktor emisije recikliranog papira"
           }
         },
         "carton": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Quantité de carton recyclé (en kg) ?"
+            "question": "Količina recikliranog kartona (u kg)?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission du carton recyclé"
+            "question": "Faktor emisije recikliranog kartona"
           }
         },
         "plastique": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Quantité de plastique recyclé (en kg) ?"
+            "question": "Količina reciklirane plastike (u kg)?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission du plastique recyclé"
+            "question": "Faktor emisije reciklirane plastike"
           }
         },
         "verre": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Quantité de verre recyclé (en kg) ?"
+            "question": "Količina recikliranog stakla (u kg)?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission du verre recyclé"
+            "question": "Faktor emisije recikliranog stakla"
           }
         },
         "métal": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Quantité de métal recyclé (en kg) ?"
+            "question": "Količina recikliranog metala (u kg)?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission du métal recyclé"
+            "question": "Faktor emisije recikliranog metala"
           }
         },
         "bois": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Quantité de bois recyclé (en kg) ?"
+            "question": "Količina recikliranog drva (u kg)?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission du bois recyclé"
+            "question": "Faktor emisije recikliranog drva"
           }
         },
         "textiles": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Quantité de textiles recyclés (en kg) ?"
+            "question": "Količina recikliranih tekstila (u kg)?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission des textiles recyclés"
+            "question": "Faktor emisije recikliranih tekstila"
           }
         },
         "DEEE": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Quantité de DEEE recyclés (en kg) ?"
+            "question": "Količina recikliranih EE otpada (u kg)?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission des DEEE recyclés"
+            "question": "Faktor emisije recikliranih EE otpada"
           }
         },
         "autres": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Quantité d'autres déchets recyclés (en kg) ?"
+            "question": "Količina ostalog recikliranog otpada (u kg)?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission des autres déchets recyclés"
+            "question": "Faktor emisije ostalog recikliranog otpada"
           }
         }
       }
     }
   },
   "publicodes-units": {
-    "étudiant": "[TO_TRANSLATE] étudiant",
-    "personne": "[TO_TRANSLATE] personne",
-    "année": "[TO_TRANSLATE] année",
-    "pays": "[TO_TRANSLATE] pays",
-    "kWh": "[TO_TRANSLATE] kWh",
-    "litre": "[UPDATED] litre",
-    "kg": "[TO_TRANSLATE] kg",
-    "kgCO2e/kg": "[TO_TRANSLATE] kgCO2e/kg",
-    "repas": "[UPDATED] repas",
-    "kgCO2e/repas": "[UPDATED] kgCO2e/repas",
-    "t/km": "[TO_TRANSLATE] t.km",
-    "bouteille": "[TO_TRANSLATE] bouteille",
-    "kgCO2e/bouteille": "[TO_TRANSLATE] kgCO2e/bouteille",
-    "canette": "[TO_TRANSLATE] canette",
-    "kgCO2e/canette": "[TO_TRANSLATE] kgCO2e/canette",
-    "paquet": "[UPDATED] paquet",
-    "kgCO2e/paquet": "[UPDATED] kgCO2e/paquet",
-    "tasse": "[TO_TRANSLATE] tasse",
-    "kgCO2e/tasse": "[TO_TRANSLATE] kgCO2e/tasse",
-    "sandwich": "[TO_TRANSLATE] sandwich",
-    "kgCO2e/sandwich": "[TO_TRANSLATE] kgCO2e/sandwich",
-    "barre": "[TO_TRANSLATE] barre",
-    "kgCO2e/barre": "[TO_TRANSLATE] kgCO2e/barre",
-    "m2": "[TO_TRANSLATE] m2",
-    "kgCO2e/m2": "[TO_TRANSLATE] kgCO2e/m2",
-    "kgCO2e": "[TO_TRANSLATE] kgCO2e",
-    "unité": "[UPDATED] unité",
-    "kgCO2e/unité": "[UPDATED] kgCO2e/unité",
-    "km": "[TO_TRANSLATE] km",
-    "€": "[TO_TRANSLATE] €",
-    "kgCO2e/€": "[TO_TRANSLATE] kgCO2e/€"
+    "étudiant": "student",
+    "personne": "osoba",
+    "année": "godina",
+    "pays": "zemlja",
+    "kWh": "kWh",
+    "litre": "litra",
+    "kg": "kg",
+    "kgCO2e/kg": "kgCO2e/kg",
+    "repas": "obrok",
+    "kgCO2e/repas": "kgCO2e/obrok",
+    "t/km": "t.km",
+    "bouteille": "boca",
+    "kgCO2e/bouteille": "kgCO2e/boca",
+    "canette": "limenka",
+    "kgCO2e/canette": "kgCO2e/limenka",
+    "paquet": "paket",
+    "kgCO2e/paquet": "kgCO2e/paket",
+    "tasse": "šalica",
+    "kgCO2e/tasse": "kgCO2e/šalica",
+    "sandwich": "sendvič",
+    "kgCO2e/sandwich": "kgCO2e/sendvič",
+    "barre": "pločica",
+    "kgCO2e/barre": "kgCO2e/pločica",
+    "m2": "m2",
+    "kgCO2e/m2": "kgCO2e/m2",
+    "kgCO2e": "kgCO2e",
+    "unité": "jedinica",
+    "kgCO2e/unité": "kgCO2e/jedinica",
+    "km": "km",
+    "€": "€",
+    "kgCO2e/€": "kgCO2e/€"
   }
 }

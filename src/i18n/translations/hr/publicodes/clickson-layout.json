@@ -2,24 +2,24 @@
   "publicodes-layout": {
     "table": {
       "EquipementsInformatiqueAudiovisuel": {
-        "question": "Équipements informatiques et audiovisuels utilisés",
-        "equipement": "Équipement",
-        "nombre": "Nombre"
+        "question": "Korištena informatička i audiovizualna oprema",
+        "equipement": "Oprema",
+        "nombre": "Broj"
       },
       "TransportDesEleves": {
-        "question": "Distance parcourue par les élèves pour se rendre à l'établissement",
-        "moyenTransport": "Moyen de transport",
-        "distance": "Distance aller-retour en km"
+        "question": "Udaljenost koju učenici prelaze dolazeći u ustanovu",
+        "moyenTransport": "Prijevozno sredstvo",
+        "distance": "Udaljenost povratka u km"
       },
       "TransportDuPersonnel": {
-        "question": "Distance parcourue par le personnel pour se rendre à l'établissement",
-        "moyenTransport": "Moyen de transport",
-        "distance": "Distance aller-retour en km"
+        "question": "Udaljenost koju osoblje prelazi dolazeći u ustanovu",
+        "moyenTransport": "Prijevozno sredstvo",
+        "distance": "Udaljenost povratka u km"
       },
       "VoyagesScolaires": {
-        "question": "Distance parcourue lors des voyages scolaires",
-        "moyenTransport": "Moyen de transport",
-        "distance": "Distance (km)"
+        "question": "Udaljenost prijeđena tijekom školskih putovanja",
+        "moyenTransport": "Prijevozno sredstvo",
+        "distance": "Udaljenost (km)"
       }
     }
   }
