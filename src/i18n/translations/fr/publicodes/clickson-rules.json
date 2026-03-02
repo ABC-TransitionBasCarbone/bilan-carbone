@@ -453,6 +453,217 @@
           }
         }
       },
+      "divers": {
+        "tondeuse à gazon thermique": {
+          "nombre": {
+            "question": "Combien de tondeuse à gazon thermique possédez-vous ?"
+          },
+          "FE": {
+            "question": "Facteur d'émission par unité de tondeuse à gazon"
+          },
+          "immo": {
+            "question": "Immobilisation de tondeuse à gazon"
+          }
+        },
+        "tondeuse à gazon électrique": {
+          "nombre": {
+            "question": "Combien de tondeuse à gazon électrique possédez-vous ?"
+          },
+          "FE": {
+            "question": "Facteur d'émission par unité de tondeuse à gazon électrique"
+          },
+          "immo": {
+            "question": "Immobilisation de xx"
+          }
+        },
+        "bouilloire": {
+          "nombre": {
+            "question": "Combien de bouilloire possédez-vous ?"
+          },
+          "FE": {
+            "question": "Facteur d'émission par unité de bouilloire"
+          },
+          "immo": {
+            "question": "Immobilisation de bouilloire"
+          }
+        },
+        "micro-onde": {
+          "nombre": {
+            "question": "Combien de micro-onde possédez-vous ?"
+          },
+          "FE": {
+            "question": "Facteur d'émission par unité de micro-onde"
+          },
+          "immo": {
+            "question": "Immobilisation de micro-onde"
+          }
+        },
+        "aspirateur professionnel": {
+          "nombre": {
+            "question": "Combien de aspirateur professionnel possédez-vous ?"
+          },
+          "FE": {
+            "question": "Facteur d'émission par unité de aspirateur professionnel"
+          },
+          "immo": {
+            "question": "Immobilisation de xx"
+          }
+        },
+        "ballon chauffe-eau électrique": {
+          "nombre": {
+            "question": "Combien de ballon chauffe-eau électrique - 200l possédez-vous ?"
+          },
+          "FE": {
+            "question": "Facteur d'émission par unité de ballon chauffe-eau électrique - 200l"
+          },
+          "immo": {
+            "question": "Immobilisation de ballon chaffe-eau electrique - 200l"
+          }
+        },
+        "machine à café filtre": {
+          "nombre": {
+            "question": "Combien de machine à café - filtre possédez-vous ?"
+          },
+          "FE": {
+            "question": "Facteur d'émission par unité de machine à café - filtre"
+          },
+          "immo": {
+            "question": "Immobilisation de machine à café - filtre"
+          }
+        },
+        "machine à café dosettes": {
+          "nombre": {
+            "question": "Combien de machine à café - dosettes possédez-vous ?"
+          },
+          "FE": {
+            "question": "Facteur d'émission par unité de machine à café - dosettes"
+          },
+          "immo": {
+            "question": "Immobilisation de machine à café - dosettes"
+          }
+        },
+        "lave-vaiselle professionnel": {
+          "nombre": {
+            "question": "Combien de lave-vaiselle professionnel possédez-vous ?"
+          },
+          "FE": {
+            "question": "Facteur d'émission par unité de lave-vaiselle professionnel"
+          },
+          "immo": {
+            "question": "Immobilisation de lave-vaiselle professionnel"
+          }
+        },
+        "four professionnel": {
+          "nombre": {
+            "question": "Combien de four professionnel possédez-vous ?"
+          },
+          "FE": {
+            "question": "Facteur d'émission par unité de four professionnel"
+          },
+          "immo": {
+            "question": "Immobilisation de four professionnel"
+          }
+        },
+        "lave-vaiselle standard": {
+          "nombre": {
+            "question": "Combien de lave-vaiselle standard possédez-vous ?"
+          },
+          "FE": {
+            "question": "Facteur d'émission par unité de lave-vaiselle standard"
+          },
+          "immo": {
+            "question": "Immobilisation de lave-vaiselle standard"
+          }
+        },
+        "lave-linge": {
+          "nombre": {
+            "question": "Combien de lave-linge (capacité 7kg) possédez-vous ?"
+          },
+          "FE": {
+            "question": "Facteur d'émission par unité de lave-linge (capacité 7kg)"
+          },
+          "immo": {
+            "question": "Immobilisation de lave-linge (capacité 7kg)"
+          }
+        },
+        "congélateur coffre": {
+          "nombre": {
+            "question": "Combien de congélateur (coffre) - 261l possédez-vous ?"
+          },
+          "FE": {
+            "question": "Facteur d'émission par unité de congélateur (coffre) - 261l"
+          },
+          "immo": {
+            "question": "Immobilisation de congélateur (coffre) - 261l"
+          }
+        },
+        "congélateur armoire": {
+          "nombre": {
+            "question": "Combien de congélateur - armoire - 205l possédez-vous ?"
+          },
+          "FE": {
+            "question": "Facteur d'émission par unité de congélateur - armoire - 205l"
+          },
+          "immo": {
+            "question": "Immobilisation de congélateur - armoire - 205l"
+          }
+        },
+        "réfrigérateur": {
+          "nombre": {
+            "question": "Combien de réfrigérateur - 250l possédez-vous ?"
+          },
+          "FE": {
+            "question": "Facteur d'émission par unité de réfrigérateur - 250l"
+          },
+          "immo": {
+            "question": "Immobilisation de réfrigérateur - 250l"
+          }
+        },
+        "plaques de cuisson au gaz": {
+          "nombre": {
+            "question": "Combien de plaques de cuisson/au gaz 9000W possédez-vous ?"
+          },
+          "FE": {
+            "question": "Facteur d'émission par unité de plaques de cuisson/au gaz 9000W"
+          },
+          "immo": {
+            "question": "Immobilisation de plaques de cuisson/au gaz 9000W"
+          }
+        },
+        "tatami": {
+          "nombre": {
+            "question": "Combien de tatami possédez-vous ?"
+          },
+          "FE": {
+            "question": "Facteur d'émission par unité de tatami"
+          },
+          "immo": {
+            "question": "Immobilisation de tatami"
+          }
+        },
+        "gymnastique agré barre fixe": {
+          "nombre": {
+            "question": "Combien de gymnastique, agrès barre fixe possédez-vous ?"
+          },
+          "FE": {
+            "question": "Facteur d'émission par unité de gymnastique, agrès barre fixe"
+          },
+          "immo": {
+            "question": "Immobilisation de gymnastique, agrès barre fixe"
+          }
+        },
+        "gymnastique agré barres parallèles": {
+          "nombre": {
+            "question": "Combien de gymnastique, agrès barres parallèles possédez-vous ?"
+          },
+          "FE": {
+            "question": "Facteur d'émission par unité de gymnastique, agrès barres parallèles"
+          },
+          "immo": {
+            "question": "Immobilisation de gymnastique, agrès barres parallèles"
+          }
+        }
+      },
       "construction": {
         "bâtiment scolaire structure béton": {
           "surface": {
