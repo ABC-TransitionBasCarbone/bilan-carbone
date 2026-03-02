@@ -281,6 +281,21 @@
     "game": "Juego: iniciación a la negociación de su plan de acción:",
     "classEarth": "Mi Tierra en clase"
   },
+  "onboarding": {
+    "title-1": "¡Bienvenido al calculador Clicks On! Antes de comenzar, configure su centro.",
+    "titleDescription-1": "Hemos rellenado previamente cierta información que puede modificar ahora o en cualquier momento a través de la sección \"Mi establecimiento\".",
+    "title-2": "Gestión de su equipo piloto",
+    "titleDescription-2": "Ya puede añadir a sus colaboradores (alumnos, profesores y personal no educativo) a su equipo. Siempre podrá añadir más personas más adelante a través de la sección \"El equipo piloto\".",
+    "step1": {
+      "name": "Nombre de mi centro",
+      "role": "Mi rol en el centro",
+      "information": "Mis datos",
+      "firstName": "Nombre",
+      "lastName": "Apellido",
+      "adminDescription": "El rol que se le ha asignado es el de administrador de su centro.",
+      "gestionnaireDescription": "El rol que se le ha asignado es el de colaborador de su centro."
+    }
+  },
   "error": {
     "Too many comments": "Ya existen demasiados comentarios pendientes."
   },

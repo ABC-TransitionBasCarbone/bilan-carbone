@@ -1,6 +1,6 @@
 import { Environment } from '@prisma/client'
 
-export const environmentWithOnboarding: Environment[] = [Environment.BC]
+export const environmentWithOnboarding: Environment[] = [Environment.BC, Environment.CLICKSON]
 export const environmentsWithChecklist: Environment[] = [Environment.BC]
 export const EnvironmentNames = {
   [Environment.BC]: 'BC+ 2.0',
