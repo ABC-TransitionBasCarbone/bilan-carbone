@@ -25,11 +25,101 @@
     },
     "énergie": {
       "électricité": {
-        "consommation": {
-          "question": "Consommation annuelle d'électricité"
+        "janvier": {
+          "consommation": {
+            "question": "Consommation d'électricité en janvier"
+          },
+          "FE": {
+            "question": "Facteur d'émission de l'électricité"
+          }
         },
-        "FE": {
-          "question": "Facteur d'émission de l'électricité"
+        "février": {
+          "consommation": {
+            "question": "Consommation d'électricité en février"
+          },
+          "FE": {
+            "question": "Facteur d'émission de l'électricité"
+          }
+        },
+        "mars": {
+          "consommation": {
+            "question": "Consommation d'électricité en mars"
+          },
+          "FE": {
+            "question": "Facteur d'émission de l'électricité"
+          }
+        },
+        "avril": {
+          "consommation": {
+            "question": "Consommation d'électricité en avril"
+          },
+          "FE": {
+            "question": "Facteur d'émission de l'électricité"
+          }
+        },
+        "mai": {
+          "consommation": {
+            "question": "Consommation d'électricité en mai"
+          },
+          "FE": {
+            "question": "Facteur d'émission de l'électricité"
+          }
+        },
+        "juin": {
+          "consommation": {
+            "question": "Consommation d'électricité en juin"
+          },
+          "FE": {
+            "question": "Facteur d'émission de l'électricité"
+          }
+        },
+        "juillet": {
+          "consommation": {
+            "question": "Consommation d'électricité en juillet"
+          },
+          "FE": {
+            "question": "Facteur d'émission de l'électricité"
+          }
+        },
+        "août": {
+          "consommation": {
+            "question": "Consommation d'électricité en août"
+          },
+          "FE": {
+            "question": "Facteur d'émission de l'électricité"
+          }
+        },
+        "septembre": {
+          "consommation": {
+            "question": "Consommation d'électricité en septembre"
+          },
+          "FE": {
+            "question": "Facteur d'émission de l'électricité"
+          }
+        },
+        "octobre": {
+          "consommation": {
+            "question": "Consommation d'électricité en octobre"
+          },
+          "FE": {
+            "question": "Facteur d'émission de l'électricité"
+          }
+        },
+        "novembre": {
+          "consommation": {
+            "question": "Consommation d'électricité en novembre"
+          },
+          "FE": {
+            "question": "Facteur d'émission de l'électricité"
+          }
+        },
+        "décembre": {
+          "consommation": {
+            "question": "Consommation d'électricité en décembre"
+          },
+          "FE": {
+            "question": "Facteur d'émission de l'électricité"
+          }
         }
       },
       "combustibles": {
@@ -65,12 +155,40 @@
         }
       },
       "autres gaz": {
-        "gaz hfc spécifique": {
+        "gaz réfrigérant": {
+          "titre": "Gaz réfrigérant",
+          "question": "Consommation annuelle de gaz réfrigérant",
           "consommation": {
-            "question": "Consommation annuelle de ce gaz HFC"
+            "question": "Consommation annuelle de ce gaz"
           },
-          "PRG": {
-            "question": "Pouvoir de Réchauffement Global (PRG) du gaz HFC"
+          "type": {
+            "titre": "Gaz réfrigérant",
+            "question": "Gaz réfrigérant",
+            "options": {
+              "R134a": "R134a",
+              "R32": "R32",
+              "R407c": "R407c",
+              "R410a": "R410a"
+            }
+          }
+        },
+        "gaz à effet de serre principal": {
+          "titre": "Gaz à effet de serre principal",
+          "question": "Consommation annuelle de Gaz à effet de serre principal",
+          "consommation": {
+            "question": "Consommation annuelle de ce gaz"
+          },
+          "type": {
+            "titre": "Gaz à effet de serre principal",
+            "question": "Gaz à effet de serre principal",
+            "options": {
+              "CO2": "CO2",
+              "CH4 fossile": "CH4 fossile",
+              "CH4 biogénique": "CH4 biogénique",
+              "N2O": "N2O",
+              "SF6": "SF6",
+              "NF3": "NF3"
+            }
           }
         }
       }
@@ -136,10 +254,17 @@
           "consommation": {
             "question": "Distance parcourue en fret ferroviaire"
           }
+        }
+      },
+      "fin de vie moyenne": {
+        "déchets résiduels": {
+          "quantité": {
+            "question": "Quantité de déchets résiduels"
+          }
         },
-        "maritime": {
-          "consommation": {
-            "question": "Distance parcourue en fret maritime"
+        "déchets organiques": {
+          "quantité": {
+            "question": "Quantité de déchets organiques"
           }
         }
       },
@@ -162,10 +287,10 @@
         },
         "biscuits": {
           "nombre": {
-            "question": "Nombre de paquets de biscuits consommés annuellement"
+            "question": "Quantité de biscuit consommée annuellement"
           },
           "FE": {
-            "question": "Facteur d'émission par paquet de biscuits"
+            "question": "Facteur d'émission par kg de poids net de biscuits"
           }
         },
         "paquet de chips": {
@@ -178,18 +303,26 @@
         },
         "café noir": {
           "nombre": {
-            "question": "Nombre de cafés noirs consommés annuellement"
+            "question": "Quantité de café noir consommée annuellement"
           },
           "FE": {
-            "question": "Facteur d'émission par café noir"
+            "question": "Facteur d'émission par kg de poids net de café noir"
+          }
+        },
+        "café au lait": {
+          "nombre": {
+            "question": "Quantité de café au lait consommée annuellement"
+          },
+          "FE": {
+            "question": "Facteur d'émission par kg de poids net de café a lait"
           }
         },
         "thé infusé": {
           "nombre": {
-            "question": "Nombre de thés infusés consommés annuellement"
+            "question": "Quantité de thé infusé consommée annuellement"
           },
           "FE": {
-            "question": "Facteur d'émission par thé infusé"
+            "question": "Facteur d'émission par kg de poids net de thé infusé"
           }
         },
         "sandwich pain de mie": {
@@ -197,37 +330,15 @@
             "question": "Nombre de sandwichs pain de mie consommés annuellement"
           },
           "FE": {
-            "question": "Facteur d'émission par sandwich pain de mie"
+            "question": "Facteur d'émission par kg de poids net de sandwich pain de mie"
           }
         },
         "barre chocolatée": {
           "nombre": {
-            "question": "Nombre de barres chocolatées consommées annuellement"
+            "question": "Quantité de barres chocolatées consommée annuellement"
           },
           "FE": {
-            "question": "Facteur d'émission par barre chocolatée"
-          }
-        }
-      },
-      "déchets organiques": {
-        "biodéchets compostés": {
-          "quantité": {
-            "question": "Quantité de biodéchets compostés"
-          }
-        },
-        "biodéchets méthanisés": {
-          "quantité": {
-            "question": "Quantité de biodéchets méthanisés"
-          }
-        },
-        "biodéchets incinérés": {
-          "quantité": {
-            "question": "Quantité de biodéchets incinérés"
-          }
-        },
-        "biodéchets enfouis": {
-          "quantité": {
-            "question": "Quantité de biodéchets enfouis"
+            "question": "Facteur d'émission par kg de poids net de barre chocolatée"
           }
         }
       }
@@ -240,46 +351,6 @@
           },
           "FE": {
             "question": "Facteur d'émission par m² de bâtiment scolaire rénové (structure béton)"
-          }
-        },
-        "parking bâtiment structure béton rénové": {
-          "surface": {
-            "question": "Quelle surface de parking (bâtiment - structure béton) avez-vous rénovée ?"
-          },
-          "FE": {
-            "question": "Facteur d'émission par m² de parking rénové (bâtiment - structure béton)"
-          }
-        },
-        "parking surface bitume rénové": {
-          "surface": {
-            "question": "Quelle surface de parking (surface bitume) avez-vous rénovée ?"
-          },
-          "FE": {
-            "question": "Facteur d'émission par m² de parking rénové (surface bitume)"
-          }
-        },
-        "parking surface semi-dure rénové": {
-          "surface": {
-            "question": "Quelle surface de parking (surface semi-dure) avez-vous rénovée ?"
-          },
-          "FE": {
-            "question": "Facteur d'émission par m² de parking rénové (surface semi-dure)"
-          }
-        },
-        "garage structure béton rénové": {
-          "surface": {
-            "question": "Quelle surface de garage (structure béton) avez-vous rénovée ?"
-          },
-          "FE": {
-            "question": "Facteur d'émission par m² de garage rénové (structure béton)"
-          }
-        },
-        "garage structure métal rénové": {
-          "surface": {
-            "question": "Quelle surface de garage (structure métal) avez-vous rénovée ?"
-          },
-          "FE": {
-            "question": "Facteur d'émission par m² de garage rénové (structure métal)"
           }
         }
       },
@@ -412,44 +483,36 @@
         }
       },
       "équipements divers": {
-        "chaise de bureau": {
+        "chaise bois": {
           "nombre": {
-            "question": "Combien de chaises de bureau avez-vous achetées ?"
+            "question": "Combien de chaises (bois) avez-vous achetées ?"
           },
           "FE": {
-            "question": "Facteur d'émission par chaise de bureau"
+            "question": "Facteur d'émission par chaise (bois)"
           }
         },
-        "table de réunion": {
+        "chaise plastique": {
+          "nombre": {
+            "question": "Combien de chaises (plastique) avez-vous achetées ?"
+          },
+          "FE": {
+            "question": "Facteur d'émission par chaise (plastique)"
+          }
+        },
+        "table standard": {
           "nombre": {
             "question": "Combien de tables de réunion avez-vous achetées ?"
           },
           "FE": {
-            "question": "Facteur d'émission par table de réunion"
+            "question": "Facteur d'émission par table (standard)"
           }
         },
-        "armoire de rangement": {
+        "armoire standard": {
           "nombre": {
-            "question": "Combien d'armoires de rangement avez-vous achetées ?"
+            "question": "Combien d'armoires (standard) avez-vous achetées ?"
           },
           "FE": {
-            "question": "Facteur d'émission par armoire de rangement"
-          }
-        },
-        "fauteuil d'accueil": {
-          "nombre": {
-            "question": "Combien de fauteuils d'accueil avez-vous achetés ?"
-          },
-          "FE": {
-            "question": "Facteur d'émission par fauteuil d'accueil"
-          }
-        },
-        "étagère": {
-          "nombre": {
-            "question": "Combien d'étagères avez-vous achetées ?"
-          },
-          "FE": {
-            "question": "Facteur d'émission par étagère"
+            "question": "Facteur d'émission par armoire (standard)"
           }
         }
       },
@@ -755,102 +818,60 @@
     },
     "déplacements": {
       "voyages scolaires": {
-        "RER et transilien": {
-          "titre": "RER et transilien",
+        "RER transilien métro tram": {
+          "titre": "Transilien, RER, Métro, Tramway",
           "distance": {
-            "question": "Distance (km)"
-          }
-        },
-        "métro ou tram": {
-          "titre": "Métro, tramway",
-          "distance": {
-            "question": "Distance (km)"
-          }
-        },
-        "vélo électrique": {
-          "titre": "Vélo électrique",
-          "distance": {
-            "question": "Distance (km)"
-          }
-        },
-        "trottinette électrique": {
-          "titre": "Trottinette électrique",
-          "distance": {
-            "question": "Distance (km)"
-          }
-        },
-        "moto essence": {
-          "titre": "Moto essence",
-          "distance": {
-            "question": "Distance (km)"
-          }
-        },
-        "véhicule compact électrique": {
-          "titre": "Véhicule compact électrique",
-          "distance": {
-            "question": "Distance (km)"
-          }
-        },
-        "voiture individuelle essence": {
-          "titre": "Voiture individuelle essence",
-          "distance": {
-            "question": "Distance (km)"
-          }
-        },
-        "voiture individuelle diesel": {
-          "titre": "Voiture individuelle diesel",
-          "distance": {
-            "question": "Distance (km)"
+            "question": "Passagers (par km)"
           }
         },
         "bus": {
           "titre": "Autobus",
           "distance": {
-            "question": "Distance (km)"
+            "question": "Passagers (par km)"
+          }
+        },
+        "bus électrique": {
+          "titre": "Autobus",
+          "distance": {
+            "question": "Passagers (par km)"
           }
         },
         "TER": {
           "titre": "TER",
           "distance": {
-            "question": "Distance (km)"
+            "question": "Passagers (par km)"
           }
         },
         "TGV": {
           "titre": "TGV",
           "distance": {
-            "question": "Distance (km)"
+            "question": "Passagers (par km)"
           }
         },
         "avion court courrier": {
           "titre": "Avion Court courrier",
           "distance": {
-            "question": "Distance (km)"
+            "question": "Passagers (par km)"
           }
         },
         "avion moyen courrier": {
           "titre": "Avion Moyen courrier",
           "distance": {
-            "question": "Distance (km)"
+            "question": "Passagers (par km)"
           }
         },
         "avion long courrier": {
           "titre": "Avion Long courrier",
           "distance": {
-            "question": "Distance (km)"
+            "question": "Passagers (par km)"
           }
         }
       },
       "transport des élèves": {
-        "RER et transilien": {
-          "titre": "RER et transilien",
+        "RER transilien métro tram": {
+          "titre": "Transilien, RER, Métro, Tramway",
           "distance": {
-            "question": "Distance (km)"
-          }
-        },
-        "métro ou tram": {
-          "titre": "Métro, tramway",
-          "distance": {
-            "question": "Distance (km)"
+            "question": "Passagers (par km)"
           }
         },
         "vélo électrique": {
@@ -892,51 +913,33 @@
         "bus": {
           "titre": "Autobus",
           "distance": {
-            "question": "Distance (km)"
+            "question": "Passagers (par km)"
+          }
+        },
+        "bus électrique": {
+          "titre": "Autobus",
+          "distance": {
+            "question": "Passagers (par km)"
           }
         },
         "TER": {
           "titre": "TER",
           "distance": {
-            "question": "Distance (km)"
+            "question": "Passagers (par km)"
           }
         },
         "TGV": {
           "titre": "TGV",
           "distance": {
-            "question": "Distance (km)"
-          }
-        },
-        "avion court courrier": {
-          "titre": "Avion Court courrier",
-          "distance": {
-            "question": "Distance (km)"
-          }
-        },
-        "avion moyen courrier": {
-          "titre": "Avion Moyen courrier",
-          "distance": {
-            "question": "Distance (km)"
-          }
-        },
-        "avion long courrier": {
-          "titre": "Avion Long courrier",
-          "distance": {
-            "question": "Distance (km)"
+            "question": "Passagers (par km)"
           }
         }
       },
       "transport du personnel": {
-        "RER et transilien": {
-          "titre": "RER et transilien",
+        "RER transilien métro tram": {
+          "titre": "Transilien, RER, Métro, Tramway",
           "distance": {
-            "question": "Distance (km)"
-          }
-        },
-        "métro ou tram": {
-          "titre": "Métro, tramway",
-          "distance": {
-            "question": "Distance (km)"
+            "question": "Passagers (par km)"
           }
         },
         "vélo électrique": {
@@ -978,37 +981,25 @@
         "bus": {
           "titre": "Autobus",
           "distance": {
-            "question": "Distance (km)"
+            "question": "Passagers (par km)"
+          }
+        },
+        "bus électrique": {
+          "titre": "Autobus",
+          "distance": {
+            "question": "Passagers (par km)"
           }
         },
         "TER": {
           "titre": "TER",
           "distance": {
-            "question": "Distance (km)"
+            "question": "Passagers (par km)"
           }
         },
         "TGV": {
           "titre": "TGV",
           "distance": {
-            "question": "Distance (km)"
-          }
-        },
-        "avion court courrier": {
-          "titre": "Avion Court courrier",
-          "distance": {
-            "question": "Distance (km)"
-          }
-        },
-        "avion moyen courrier": {
-          "titre": "Avion Moyen courrier",
-          "distance": {
-            "question": "Distance (km)"
-          }
-        },
-        "avion long courrier": {
-          "titre": "Avion Long courrier",
-          "distance": {
-            "question": "Distance (km)"
+            "question": "Passagers (par km)"
           }
         }
       }
@@ -1096,16 +1087,6 @@
           }
         }
       },
-      "ordures ménagères résiduelles": {
-        "ordures ménagères résiduelles": {
-          "nombre": {
-            "question": "Combien de kg d'ordures ménagères résiduelles avez-vous achetés ou générés ?"
-          },
-          "FE": {
-            "question": "Facteur d'émission des ordures ménagères résiduelles"
-          }
-        }
-      },
       "fournitures": {
         "petites fournitures": {
           "montant": {
@@ -1153,6 +1134,40 @@
           },
           "FE": {
             "question": "Facteur d'émission par pile AA"
+          }
+        }
+      },
+      "fin de vie moyenne": {
+        "carton": {
+          "nombre": {
+            "question": "Quantité de carton (en tonne) ?"
+          },
+          "FE": {
+            "question": "Facteur d'émission du carton"
+          }
+        },
+        "plastique moyen": {
+          "nombre": {
+            "question": "Quantité de plastique moyen (en tonne) ?"
+          },
+          "FE": {
+            "question": "Facteur d'émission du plastique moyen"
+          }
+        },
+        "verre": {
+          "nombre": {
+            "question": "Quantité de verre (en tonne) ?"
+          },
+          "FE": {
+            "question": "Facteur d'émission du verre"
+          }
+        },
+        "bois": {
+          "nombre": {
+            "question": "Quantité de bois (en tonne) ?"
+          },
+          "FE": {
+            "question": "Facteur d'émission du bois"
           }
         }
       },
@@ -1205,14 +1220,6 @@
             "question": "Facteur d'émission par t-shirt en polyester"
           }
         },
-        "ballon de rugby": {
-          "nombre": {
-            "question": "Combien de ballons de rugby avez-vous achetés ?"
-          },
-          "FE": {
-            "question": "Facteur d'émission par ballon de rugby"
-          }
-        },
         "ballon de basket": {
           "nombre": {
             "question": "Combien de ballons de basket avez-vous achetés ?"
@@ -1229,80 +1236,6 @@
             "question": "Facteur d'émission par ballon de football"
           }
         }
-      },
-      "déchets recyclables": {
-        "papier": {
-          "nombre": {
-            "question": "Quantité de papier recyclé (en kg) ?"
-          },
-          "FE": {
-            "question": "Facteur d'émission du papier recyclé"
-          }
-        },
-        "carton": {
-          "nombre": {
-            "question": "Quantité de carton recyclé (en kg) ?"
-          },
-          "FE": {
-            "question": "Facteur d'émission du carton recyclé"
-          }
-        },
-        "plastique": {
-          "nombre": {
-            "question": "Quantité de plastique recyclé (en kg) ?"
-          },
-          "FE": {
-            "question": "Facteur d'émission du plastique recyclé"
-          }
-        },
-        "verre": {
-          "nombre": {
-            "question": "Quantité de verre recyclé (en kg) ?"
-          },
-          "FE": {
-            "question": "Facteur d'émission du verre recyclé"
-          }
-        },
-        "métal": {
-          "nombre": {
-            "question": "Quantité de métal recyclé (en kg) ?"
-          },
-          "FE": {
-            "question": "Facteur d'émission du métal recyclé"
-          }
-        },
-        "bois": {
-          "nombre": {
-            "question": "Quantité de bois recyclé (en kg) ?"
-          },
-          "FE": {
-            "question": "Facteur d'émission du bois recyclé"
-          }
-        },
-        "textiles": {
-          "nombre": {
-            "question": "Quantité de textiles recyclés (en kg) ?"
-          },
-          "FE": {
-            "question": "Facteur d'émission des textiles recyclés"
-          }
-        },
-        "DEEE": {
-          "nombre": {
-            "question": "Quantité de DEEE recyclés (en kg) ?"
-          },
-          "FE": {
-            "question": "Facteur d'émission des DEEE recyclés"
-          }
-        },
-        "autres": {
-          "nombre": {
-            "question": "Quantité d'autres déchets recyclés (en kg) ?"
-          },
-          "FE": {
-            "question": "Facteur d'émission des autres déchets recyclés"
-          }
-        }
       }
     }
   },
@@ -1313,30 +1246,31 @@
     "pays": "pays",
     "kWh": "kWh",
     "litre": "litre",
-    "kg": "kg",
+    "kWh PCI": "kWh PCI",
     "kgCO2e/kg": "kgCO2e/kg",
     "repas": "repas",
     "kgCO2e/repas": "kgCO2e/repas",
+    "m3/km": "m3.km",
     "t/km": "t.km",
+    "t": "t",
     "bouteille": "bouteille",
     "kgCO2e/bouteille": "kgCO2e/bouteille",
     "canette": "canette",
     "kgCO2e/canette": "kgCO2e/canette",
+    "kg de poids net": "kg de poids net",
+    "kgCO2e/kg de poids net": "kgCO2e/kg de poids net",
     "paquet": "paquet",
     "kgCO2e/paquet": "kgCO2e/paquet",
-    "tasse": "tasse",
-    "kgCO2e/tasse": "kgCO2e/tasse",
-    "sandwich": "sandwich",
-    "kgCO2e/sandwich": "kgCO2e/sandwich",
     "barre": "barre",
-    "kgCO2e/barre": "kgCO2e/barre",
     "m2": "m2",
     "kgCO2e/m2": "kgCO2e/m2",
     "kgCO2e": "kgCO2e",
     "unité": "unité",
     "kgCO2e/unité": "kgCO2e/unité",
     "km": "km",
+    "kg": "kg",
     "€": "€",
-    "kgCO2e/€": "kgCO2e/€"
+    "kgCO2e/€": "kgCO2e/€",
+    "kgCO2e/t": "kgCO2e/t"
   }
 }

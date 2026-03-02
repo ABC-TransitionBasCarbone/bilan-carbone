@@ -5,6 +5,6 @@ achats:
       - équipements de sport
       - fournitures
       - produits chimiques
-      - déchets recyclables
+      - fin de vie moyenne
   unité: kgCO2e
   par défaut: 0

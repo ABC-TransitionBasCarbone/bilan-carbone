@@ -3,6 +3,7 @@ déplacements . transport du personnel:
   formule:
     somme:
       - bus
+      - bus électrique
       - moto essence
       - RER transilien métro tram
       - TER
@@ -95,6 +96,17 @@ déplacements . transport du personnel:
     bus:
       titre: Autobus
       formule: distance * commun . FE . moyen de transport . autobus moyen
+      form:
+        à traduire: oui
+      avec:
+        distance:
+          question: Passagers (par km)
+          unité: km
+          par défaut: 0
+
+    bus électrique:
+      titre: Autobus
+      formule: distance * commun . FE . moyen de transport . autobus électrique
       form:
         à traduire: oui
       avec:

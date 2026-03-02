@@ -6,6 +6,7 @@ déplacements . voyages scolaires:
       - avion long courrier
       - avion moyen courrier
       - bus
+      - bus électrique
       - RER transilien métro tram
       - TER
       - TGV
@@ -26,6 +27,17 @@ déplacements . voyages scolaires:
     bus:
       titre: Autobus
       formule: distance * commun . FE . moyen de transport . autobus moyen
+      form:
+        à traduire: oui
+      avec:
+        distance:
+          question: Passagers (par km)
+          unité: km
+          par défaut: 0
+
+    bus électrique:
+      titre: Autobus
+      formule: distance * commun . FE . moyen de transport . autobus électrique
       form:
         à traduire: oui
       avec:

@@ -1,84 +1,84 @@
-achats . déchets recyclables:
-  titre: Déchets recyclables
+achats . fin de vie moyenne:
+  titre: Fin de vie moyenne
   formule:
     somme:
       - carton
-      - plastique
+      - plastique moyen
       - verre
       - bois
-  unité: kgCO2e
+  unité: kgCO2e/t
   par défaut: 0
   avec:
     carton:
-      titre: "Carton recyclé"
+      titre: "Carton"
       formule: nombre * FE
       unité: kgCO2e
       par défaut: 0
       avec:
         nombre:
-          question: "Quantité de carton recyclé (en kg) ?"
-          unité: kg
+          question: "Quantité de carton (en tonne) ?"
+          unité: t
           par défaut: 0
         FE:
-          question: "Facteur d'émission du carton recyclé"
-          valeur: 0.04
-          unité: kgCO2e/kg
+          question: "Facteur d'émission du carton"
+          valeur: 41
+          unité: kgCO2e/t
           note: |
             Source: Base Carbone®
           meta:
 
-    plastique:
-      titre: "Plastique recyclé"
+    plastique moyen:
+      titre: "Plastique moyen"
       formule: nombre * FE
       unité: kgCO2e
       par défaut: 0
       avec:
         nombre:
-          question: "Quantité de plastique recyclé (en kg) ?"
-          unité: kg
+          question: "Quantité de plastique moyen (en tonne) ?"
+          unité: t
           par défaut: 0
         FE:
-          question: "Facteur d'émission du plastique recyclé"
-          valeur: 0.08
-          unité: kgCO2e/kg
+          question: "Facteur d'émission du plastique moyen"
+          valeur: 41
+          unité: kgCO2e/t
           par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
 
     verre:
-      titre: "Verre recyclé"
+      titre: "Verre"
       formule: nombre * FE
       unité: kgCO2e
       par défaut: 0
       avec:
         nombre:
-          question: "Quantité de verre recyclé (en kg) ?"
-          unité: kg
+          question: "Quantité de verre (en tonne) ?"
+          unité: t
           par défaut: 0
         FE:
-          question: "Facteur d'émission du verre recyclé"
-          valeur: 0.02
-          unité: kgCO2e/kg
+          question: "Facteur d'émission du verre"
+          valeur: 41
+          unité: kgCO2e/t
           par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
 
     bois:
-      titre: "Bois recyclé"
+      titre: "Bois"
       formule: nombre * FE
       unité: kgCO2e
       par défaut: 0
       avec:
         nombre:
-          question: "Quantité de bois recyclé (en kg) ?"
-          unité: kg
+          question: "Quantité de bois (en tonne) ?"
+          unité: t
           par défaut: 0
         FE:
-          question: "Facteur d'émission du bois recyclé"
-          valeur: 0.03
-          unité: kgCO2e/kg
+          question: "Facteur d'émission du bois"
+          valeur: 41
+          unité: kgCO2e/t
           par défaut: 0
           note: |
             Source: Base Carbone®

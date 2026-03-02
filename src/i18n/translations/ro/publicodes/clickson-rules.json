@@ -26,10 +26,10 @@
     "énergie": {
       "électricité": {
         "consommation": {
-          "question": "Consumul anual de energie electrică"
+          "question": "[TO_TRANSLATE] Consommation annuelle d'électricité"
         },
         "FE": {
-          "question": "Factorul de emisii al energiei electrice"
+          "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
         }
       },
       "combustibles": {
@@ -65,12 +65,14 @@
         }
       },
       "autres gaz": {
-        "gaz hfc spécifique": {
+        "gaz réfrigérant": {
+          "titre": "[TO_TRANSLATE] Gaz réfrigérant",
+          "question": "[TO_TRANSLATE] Consommation annuelle de gaz réfrigérant",
           "consommation": {
-            "question": "Consumul anual de acest gaz HFC"
+            "question": "[TO_TRANSLATE] Consommation annuelle de ce gaz HFC"
           },
           "PRG": {
-            "question": "Potencialul de încălzire globală (PRG) al gazului HFC"
+            "question": "[TO_TRANSLATE] Pouvoir de Réchauffement Global (PRG) du gaz HFC"
           }
         }
       }
@@ -136,10 +138,17 @@
           "consommation": {
             "question": "Distanța parcursă prin transport feroviar de marfă"
           }
+        }
+      },
+      "fin de vie moyenne": {
+        "déchets résiduels": {
+          "quantité": {
+            "question": "[TO_TRANSLATE] Quantité de déchets résiduels"
+          }
         },
         "maritime": {
           "consommation": {
-            "question": "Distanța parcursă prin transport maritim de marfă"
+            "question": "[TO_TRANSLATE] Distance parcourue en fret maritime"
           }
         }
       },
@@ -162,10 +171,10 @@
         },
         "biscuits": {
           "nombre": {
-            "question": "Numărul anual de pachete de biscuiți consumate"
+            "question": "[TO_TRANSLATE] Nombre de paquets de biscuits consommés annuellement"
           },
           "FE": {
-            "question": "Factorul de emisii per pachet de biscuiți"
+            "question": "[TO_TRANSLATE] Facteur d'émission par paquet de biscuits"
           }
         },
         "paquet de chips": {
@@ -178,18 +187,18 @@
         },
         "café noir": {
           "nombre": {
-            "question": "Numărul anual de cafele negre consumate"
+            "question": "[TO_TRANSLATE] Nombre de cafés noirs consommés annuellement"
           },
           "FE": {
-            "question": "Factorul de emisii per cafea neagră"
+            "question": "[TO_TRANSLATE] Facteur d'émission par café noir"
           }
         },
         "thé infusé": {
           "nombre": {
-            "question": "Numărul anual de ceaiuri infuzate consumate"
+            "question": "[TO_TRANSLATE] Nombre de thés infusés consommés annuellement"
           },
           "FE": {
-            "question": "Factorul de emisii per ceai infuzat"
+            "question": "[TO_TRANSLATE] Facteur d'émission par thé infusé"
           }
         },
         "sandwich pain de mie": {
@@ -197,37 +206,37 @@
             "question": "Numărul anual de sandwich-uri cu pâine toast consumate"
           },
           "FE": {
-            "question": "Factorul de emisii per sandwich cu pâine toast"
+            "question": "[TO_TRANSLATE] Facteur d'émission par sandwich pain de mie"
           }
         },
         "barre chocolatée": {
           "nombre": {
-            "question": "Numărul anual de batoane de ciocolată consumate"
+            "question": "[TO_TRANSLATE] Nombre de barres chocolatées consommées annuellement"
           },
           "FE": {
-            "question": "Factorul de emisii per baton de ciocolată"
+            "question": "[TO_TRANSLATE] Facteur d'émission par barre chocolatée"
           }
         }
       },
       "déchets organiques": {
         "biodéchets compostés": {
           "quantité": {
-            "question": "Cantitatea de biodeșeuri compostate"
+            "question": "[TO_TRANSLATE] Quantité de biodéchets compostés"
           }
         },
         "biodéchets méthanisés": {
           "quantité": {
-            "question": "Cantitatea de biodeșeuri metanizate"
+            "question": "[TO_TRANSLATE] Quantité de biodéchets méthanisés"
           }
         },
         "biodéchets incinérés": {
           "quantité": {
-            "question": "Cantitatea de biodeșeuri incinerate"
+            "question": "[TO_TRANSLATE] Quantité de biodéchets incinérés"
           }
         },
         "biodéchets enfouis": {
           "quantité": {
-            "question": "Cantitatea de biodeșeuri îngropate"
+            "question": "[TO_TRANSLATE] Quantité de biodéchets enfouis"
           }
         }
       }
@@ -244,42 +253,42 @@
         },
         "parking bâtiment structure béton rénové": {
           "surface": {
-            "question": "Ce suprafață de parcare (clădire - structură beton) ați renovat?"
+            "question": "[TO_TRANSLATE] Quelle surface de parking (bâtiment - structure béton) avez-vous rénovée ?"
           },
           "FE": {
-            "question": "Factorul de emisii per m² de parcare renovată (clădire - structură beton)"
+            "question": "[TO_TRANSLATE] Facteur d'émission par m² de parking rénové (bâtiment - structure béton)"
           }
         },
         "parking surface bitume rénové": {
           "surface": {
-            "question": "Ce suprafață de parcare (suprafață bitum) ați renovat?"
+            "question": "[TO_TRANSLATE] Quelle surface de parking (surface bitume) avez-vous rénovée ?"
           },
           "FE": {
-            "question": "Factorul de emisii per m² de parcare renovată (suprafață bitum)"
+            "question": "[TO_TRANSLATE] Facteur d'émission par m² de parking rénové (surface bitume)"
           }
         },
         "parking surface semi-dure rénové": {
           "surface": {
-            "question": "Ce suprafață de parcare (suprafață semi-dură) ați renovat?"
+            "question": "[TO_TRANSLATE] Quelle surface de parking (surface semi-dure) avez-vous rénovée ?"
           },
           "FE": {
-            "question": "Factorul de emisii per m² de parcare renovată (suprafață semi-dură)"
+            "question": "[TO_TRANSLATE] Facteur d'émission par m² de parking rénové (surface semi-dure)"
           }
         },
         "garage structure béton rénové": {
           "surface": {
-            "question": "Ce suprafață de garaj (structură beton) ați renovat?"
+            "question": "[TO_TRANSLATE] Quelle surface de garage (structure béton) avez-vous rénovée ?"
           },
           "FE": {
-            "question": "Factorul de emisii per m² de garaj renovat (structură beton)"
+            "question": "[TO_TRANSLATE] Facteur d'émission par m² de garage rénové (structure béton)"
           }
         },
         "garage structure métal rénové": {
           "surface": {
-            "question": "Ce suprafață de garaj (structură metal) ați renovat?"
+            "question": "[TO_TRANSLATE] Quelle surface de garage (structure métal) avez-vous rénovée ?"
           },
           "FE": {
-            "question": "Factorul de emisii per m² de garaj renovat (structură metal)"
+            "question": "[TO_TRANSLATE] Facteur d'émission par m² de garage rénové (structure métal)"
           }
         }
       },
@@ -412,293 +421,44 @@
         }
       },
       "équipements divers": {
-        "chaise de bureau": {
+        "chaise bois": {
           "nombre": {
-            "question": "Câte scaune de birou ați achiziționat?"
+            "question": "[TO_TRANSLATE] Combien de chaises de bureau avez-vous achetées ?"
           },
           "FE": {
-            "question": "Factorul de emisii per scaun de birou"
+            "question": "[TO_TRANSLATE] Facteur d'émission par chaise de bureau"
           }
         },
-        "table de réunion": {
+        "chaise plastique": {
           "nombre": {
-            "question": "Câte mese de ședință ați achiziționat?"
+            "question": "[TO_TRANSLATE] Combien de tables de réunion avez-vous achetées ?"
           },
           "FE": {
-            "question": "Factorul de emisii per masă de ședință"
+            "question": "[TO_TRANSLATE] Facteur d'émission par table de réunion"
           }
         },
-        "armoire de rangement": {
+        "table standard": {
           "nombre": {
-            "question": "Câte dulapuri de depozitare ați achiziționat?"
+            "question": "[TO_TRANSLATE] Combien d'armoires de rangement avez-vous achetées ?"
           },
           "FE": {
-            "question": "Factorul de emisii per dulap de depozitare"
+            "question": "[TO_TRANSLATE] Facteur d'émission par armoire de rangement"
           }
         },
-        "fauteuil d'accueil": {
+        "armoire standard": {
           "nombre": {
-            "question": "Câte fotolii de recepție ați achiziționat?"
+            "question": "[TO_TRANSLATE] Combien de fauteuils d'accueil avez-vous achetés ?"
           },
           "FE": {
-            "question": "Factorul de emisii per fotoliu de recepție"
+            "question": "[TO_TRANSLATE] Facteur d'émission par fauteuil d'accueil"
           }
         },
         "étagère": {
           "nombre": {
-            "question": "Câte rafturi ați achiziționat?"
+            "question": "[TO_TRANSLATE] Combien d'étagères avez-vous achetées ?"
           },
           "FE": {
-            "question": "Factorul de emisii per raft"
-          }
-        }
-      },
-      "divers": {
-        "tondeuse gazon thermique": {
-          "titre": "[TO_TRANSLATE] Tondeuse à gazon thermique",
-          "question": "[TO_TRANSLATE] Combien de tondeuse à gazon thermique possédez-vous ?",
-          "nombre": {
-            "question": "[UPDATED] Combien de tondeuse à gazon thermique possédez-vous ?"
-          },
-          "FE": {
-            "question": "[UPDATED] Facteur d'émission par unité de tondeuse à gazon"
-          },
-          "immo": {
-            "question": "[UPDATED] Immobilisation de tondeuse à gazon"
-          }
-        },
-        "tondeuse gazon électrique": {
-          "titre": "[UPDATED] Tondeuse à gazon électrique",
-          "question": "[UPDATED] Combien de tondeuse à gazon électrique possédez-vous ?",
-          "nombre": {
-            "question": "[UPDATED] Combien de tondeuse à gazon électrique possédez-vous ?"
-          },
-          "FE": {
-            "question": "[UPDATED] Facteur d'émission par unité de tondeuse à gazon électrique"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de xx"
-          }
-        },
-        "bouilloire": {
-          "titre": "[TO_TRANSLATE] Bouilloire",
-          "question": "[TO_TRANSLATE] Combien de bouilloire possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de bouilloire possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de bouilloire"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de bouilloire"
-          }
-        },
-        "micro-onde": {
-          "titre": "[TO_TRANSLATE] Micro-onde",
-          "question": "[TO_TRANSLATE] Combien de micro-onde possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de micro-onde possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de micro-onde"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de micro-onde"
-          }
-        },
-        "aspirateur professionnel": {
-          "titre": "[TO_TRANSLATE] Aspirateur professionnel",
-          "question": "[TO_TRANSLATE] Combien de aspirateur professionnel possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de aspirateur professionnel possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de aspirateur professionnel"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de xx"
-          }
-        },
-        "ballon chauffe-eau électrique": {
-          "titre": "[TO_TRANSLATE] Ballon chauffe-eau électrique - 200l",
-          "question": "[TO_TRANSLATE] Combien de ballon chauffe-eau électrique - 200l possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de ballon chauffe-eau électrique - 200l possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de ballon chauffe-eau électrique - 200l"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de ballon chaffe-eau electrique - 200l"
-          }
-        },
-        "machine café filtre": {
-          "titre": "[UPDATED] Machine à café - filtre",
-          "question": "[UPDATED] Combien de machine à café - filtre possédez-vous ?",
-          "nombre": {
-            "question": "[UPDATED] Combien de machine à café - filtre possédez-vous ?"
-          },
-          "FE": {
-            "question": "[UPDATED] Facteur d'émission par unité de machine à café - filtre"
-          },
-          "immo": {
-            "question": "[UPDATED] Immobilisation de machine à café - filtre"
-          }
-        },
-        "machine café dosettes": {
-          "titre": "[UPDATED] Machine à café - dosettes",
-          "question": "[UPDATED] Combien de machine à café - dosettes possédez-vous ?",
-          "nombre": {
-            "question": "[UPDATED] Combien de machine à café - dosettes possédez-vous ?"
-          },
-          "FE": {
-            "question": "[UPDATED] Facteur d'émission par unité de machine à café - dosettes"
-          },
-          "immo": {
-            "question": "[UPDATED] Immobilisation de machine à café - dosettes"
-          }
-        },
-        "lave-vaiselle professionnel": {
-          "titre": "[TO_TRANSLATE] Lave-vaisselle professionnel",
-          "question": "[TO_TRANSLATE] Combien de lave-vaiselle professionnel possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de lave-vaiselle professionnel possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de lave-vaiselle professionnel"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de lave-vaiselle professionnel"
-          }
-        },
-        "four professionnel": {
-          "titre": "[TO_TRANSLATE] Four professionnel",
-          "question": "[TO_TRANSLATE] Combien de four professionnel possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de four professionnel possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de four professionnel"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de four professionnel"
-          }
-        },
-        "lave-vaiselle standard": {
-          "titre": "[TO_TRANSLATE] Lave-vaiselle standard",
-          "question": "[TO_TRANSLATE] Combien de lave-vaiselle standard possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de lave-vaiselle standard possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de lave-vaiselle standard"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de lave-vaiselle standard"
-          }
-        },
-        "lave-linge": {
-          "titre": "[TO_TRANSLATE] Lave-linge (capacité 7kg)",
-          "question": "[TO_TRANSLATE] Combien de lave-linge (capacité 7kg) possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de lave-linge (capacité 7kg) possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de lave-linge (capacité 7kg)"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de lave-linge (capacité 7kg)"
-          }
-        },
-        "congélateur coffre": {
-          "titre": "[TO_TRANSLATE] Congélateur (coffre) - 261l",
-          "question": "[TO_TRANSLATE] Combien de congélateur (coffre) - 261l possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de congélateur (coffre) - 261l possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de congélateur (coffre) - 261l"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de congélateur (coffre) - 261l"
-          }
-        },
-        "congélateur armoire": {
-          "titre": "[TO_TRANSLATE] Congélateur - armoire - 205l",
-          "question": "[TO_TRANSLATE] Combien de congélateur - armoire - 205l possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de congélateur - armoire - 205l possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de congélateur - armoire - 205l"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de congélateur - armoire - 205l"
-          }
-        },
-        "réfrigérateur": {
-          "titre": "[TO_TRANSLATE] Réfrigérateur - 250l",
-          "question": "[TO_TRANSLATE] Combien de réfrigérateur - 250l possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de réfrigérateur - 250l possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de réfrigérateur - 250l"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de réfrigérateur - 250l"
-          }
-        },
-        "plaques de cuisson au gaz": {
-          "titre": "[TO_TRANSLATE] Plaques de cuisson/au gaz 9000W",
-          "question": "[TO_TRANSLATE] Combien de plaques de cuisson/au gaz 9000W possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de plaques de cuisson/au gaz 9000W possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de plaques de cuisson/au gaz 9000W"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de plaques de cuisson/au gaz 9000W"
-          }
-        },
-        "tatami": {
-          "titre": "[TO_TRANSLATE] Tatami",
-          "question": "[TO_TRANSLATE] Combien de tatami possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de tatami possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de tatami"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de tatami"
-          }
-        },
-        "gymnastique agré barre fixe": {
-          "titre": "[TO_TRANSLATE] Gymnastique, agrès barre fixe",
-          "question": "[TO_TRANSLATE] Combien de gymnastique, agrès barre fixe possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de gymnastique, agrès barre fixe possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de gymnastique, agrès barre fixe"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de gymnastique, agrès barre fixe"
-          }
-        },
-        "gymnastique agré barres parallèles": {
-          "titre": "[TO_TRANSLATE] Gymnastique, agrès barres parallèles",
-          "question": "[TO_TRANSLATE] Combien de gymnastique, agrès barres parallèles possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de gymnastique, agrès barres parallèles possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de gymnastique, agrès barres parallèles"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de gymnastique, agrès barres parallèles"
+            "question": "[TO_TRANSLATE] Facteur d'émission par étagère"
           }
         }
       },
@@ -756,101 +516,101 @@
     "déplacements": {
       "voyages scolaires": {
         "RER et transilien": {
-          "titre": "RER și transilien",
+          "titre": "[TO_TRANSLATE] RER et transilien",
           "distance": {
-            "question": "Distanța (km)"
+            "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "métro ou tram": {
-          "titre": "Metrou, tramvai",
+          "titre": "[TO_TRANSLATE] Métro, tramway",
           "distance": {
-            "question": "Distanța (km)"
+            "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "vélo électrique": {
-          "titre": "Bicicletă electrică",
+          "titre": "[TO_TRANSLATE] Vélo électrique",
           "distance": {
-            "question": "Distanța (km)"
+            "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "trottinette électrique": {
-          "titre": "Trotinetă electrică",
+          "titre": "[TO_TRANSLATE] Trottinette électrique",
           "distance": {
-            "question": "Distanța (km)"
+            "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "moto essence": {
-          "titre": "Motocicletă pe benzină",
+          "titre": "[TO_TRANSLATE] Moto essence",
           "distance": {
-            "question": "Distanța (km)"
+            "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "véhicule compact électrique": {
-          "titre": "Vehicul compact electric",
+          "titre": "[TO_TRANSLATE] Véhicule compact électrique",
           "distance": {
-            "question": "Distanța (km)"
+            "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "voiture individuelle essence": {
-          "titre": "Mașină individuală pe benzină",
+          "titre": "[TO_TRANSLATE] Voiture individuelle essence",
           "distance": {
-            "question": "Distanța (km)"
+            "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "voiture individuelle diesel": {
-          "titre": "Mașină individuală diesel",
+          "titre": "[TO_TRANSLATE] Voiture individuelle diesel",
           "distance": {
-            "question": "Distanța (km)"
+            "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "bus": {
-          "titre": "Autobuz",
+          "titre": "[TO_TRANSLATE] Autobus",
           "distance": {
-            "question": "Distanța (km)"
+            "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "TER": {
           "titre": "TER",
           "distance": {
-            "question": "Distanța (km)"
+            "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "TGV": {
           "titre": "TGV",
           "distance": {
-            "question": "Distanța (km)"
+            "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "avion court courrier": {
           "titre": "Avion zbor scurt",
           "distance": {
-            "question": "Distanța (km)"
+            "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "avion moyen courrier": {
           "titre": "Avion zbor mediu",
           "distance": {
-            "question": "Distanța (km)"
+            "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "avion long courrier": {
           "titre": "Avion zbor lung",
           "distance": {
-            "question": "Distanța (km)"
+            "question": "[TO_TRANSLATE] Distance (km)"
           }
         }
       },
       "transport des élèves": {
         "RER et transilien": {
-          "titre": "RER și transilien",
+          "titre": "[TO_TRANSLATE] RER et transilien",
           "distance": {
-            "question": "Distanța (km)"
+            "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "métro ou tram": {
-          "titre": "Metrou, tramvai",
+          "titre": "[TO_TRANSLATE] Métro, tramway",
           "distance": {
-            "question": "Distanța (km)"
+            "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "vélo électrique": {
@@ -892,51 +652,51 @@
         "bus": {
           "titre": "Autobuz",
           "distance": {
-            "question": "Distanța (km)"
+            "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "TER": {
           "titre": "TER",
           "distance": {
-            "question": "Distanța (km)"
+            "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "TGV": {
           "titre": "TGV",
           "distance": {
-            "question": "Distanța (km)"
+            "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "avion court courrier": {
-          "titre": "Avion zbor scurt",
+          "titre": "[TO_TRANSLATE] Avion Court courrier",
           "distance": {
-            "question": "Distanța (km)"
+            "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "avion moyen courrier": {
-          "titre": "Avion zbor mediu",
+          "titre": "[TO_TRANSLATE] Avion Moyen courrier",
           "distance": {
-            "question": "Distanța (km)"
+            "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "avion long courrier": {
-          "titre": "Avion zbor lung",
+          "titre": "[TO_TRANSLATE] Avion Long courrier",
           "distance": {
-            "question": "Distanța (km)"
+            "question": "[TO_TRANSLATE] Distance (km)"
           }
         }
       },
       "transport du personnel": {
         "RER et transilien": {
-          "titre": "RER și transilien",
+          "titre": "[TO_TRANSLATE] RER et transilien",
           "distance": {
-            "question": "Distanța (km)"
+            "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "métro ou tram": {
-          "titre": "Metrou, tramvai",
+          "titre": "[TO_TRANSLATE] Métro, tramway",
           "distance": {
-            "question": "Distanța (km)"
+            "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "vélo électrique": {
@@ -978,37 +738,37 @@
         "bus": {
           "titre": "Autobuz",
           "distance": {
-            "question": "Distanța (km)"
+            "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "TER": {
           "titre": "TER",
           "distance": {
-            "question": "Distanța (km)"
+            "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "TGV": {
           "titre": "TGV",
           "distance": {
-            "question": "Distanța (km)"
+            "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "avion court courrier": {
-          "titre": "Avion zbor scurt",
+          "titre": "[TO_TRANSLATE] Avion Court courrier",
           "distance": {
-            "question": "Distanța (km)"
+            "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "avion moyen courrier": {
-          "titre": "Avion zbor mediu",
+          "titre": "[TO_TRANSLATE] Avion Moyen courrier",
           "distance": {
-            "question": "Distanța (km)"
+            "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "avion long courrier": {
-          "titre": "Avion zbor lung",
+          "titre": "[TO_TRANSLATE] Avion Long courrier",
           "distance": {
-            "question": "Distanța (km)"
+            "question": "[TO_TRANSLATE] Distance (km)"
           }
         }
       }
@@ -1099,10 +859,10 @@
       "ordures ménagères résiduelles": {
         "ordures ménagères résiduelles": {
           "nombre": {
-            "question": "Câți kg de deșeuri menajere reziduale ați achiziționat sau generat?"
+            "question": "[TO_TRANSLATE] Combien de kg d'ordures ménagères résiduelles avez-vous achetés ou générés ?"
           },
           "FE": {
-            "question": "Factorul de emisii al deșeurilor menajere reziduale"
+            "question": "[TO_TRANSLATE] Facteur d'émission des ordures ménagères résiduelles"
           }
         }
       },
@@ -1153,6 +913,40 @@
           },
           "FE": {
             "question": "Factorul de emisii per baterie AA"
+          }
+        }
+      },
+      "fin de vie moyenne": {
+        "carton": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Quantité de carton (en tonne) ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission du carton"
+          }
+        },
+        "plastique moyen": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Quantité de plastique moyen (en tonne) ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission du plastique moyen"
+          }
+        },
+        "verre": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Quantité de verre (en tonne) ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission du verre"
+          }
+        },
+        "bois": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Quantité de bois (en tonne) ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission du bois"
           }
         }
       },
@@ -1207,10 +1001,10 @@
         },
         "ballon de rugby": {
           "nombre": {
-            "question": "Câte mingi de rugby ați achiziționat?"
+            "question": "[TO_TRANSLATE] Combien de ballons de rugby avez-vous achetés ?"
           },
           "FE": {
-            "question": "Factorul de emisii per minge de rugby"
+            "question": "[TO_TRANSLATE] Facteur d'émission par ballon de rugby"
           }
         },
         "ballon de basket": {
@@ -1233,110 +1027,110 @@
       "déchets recyclables": {
         "papier": {
           "nombre": {
-            "question": "Ce cantitate de hârtie reciclată (în kg)?"
+            "question": "[TO_TRANSLATE] Quantité de papier recyclé (en kg) ?"
           },
           "FE": {
-            "question": "Factorul de emisii al hârtiei reciclate"
+            "question": "[TO_TRANSLATE] Facteur d'émission du papier recyclé"
           }
         },
         "carton": {
           "nombre": {
-            "question": "Ce cantitate de carton reciclat (în kg)?"
+            "question": "[TO_TRANSLATE] Quantité de carton recyclé (en kg) ?"
           },
           "FE": {
-            "question": "Factorul de emisii al cartonului reciclat"
+            "question": "[TO_TRANSLATE] Facteur d'émission du carton recyclé"
           }
         },
         "plastique": {
           "nombre": {
-            "question": "Ce cantitate de plastic reciclat (în kg)?"
+            "question": "[TO_TRANSLATE] Quantité de plastique recyclé (en kg) ?"
           },
           "FE": {
-            "question": "Factorul de emisii al plasticului reciclat"
+            "question": "[TO_TRANSLATE] Facteur d'émission du plastique recyclé"
           }
         },
         "verre": {
           "nombre": {
-            "question": "Ce cantitate de sticlă reciclată (în kg)?"
+            "question": "[TO_TRANSLATE] Quantité de verre recyclé (en kg) ?"
           },
           "FE": {
-            "question": "Factorul de emisii al sticlei reciclate"
+            "question": "[TO_TRANSLATE] Facteur d'émission du verre recyclé"
           }
         },
         "métal": {
           "nombre": {
-            "question": "Ce cantitate de metal reciclat (în kg)?"
+            "question": "[TO_TRANSLATE] Quantité de métal recyclé (en kg) ?"
           },
           "FE": {
-            "question": "Factorul de emisii al metalului reciclat"
+            "question": "[TO_TRANSLATE] Facteur d'émission du métal recyclé"
           }
         },
         "bois": {
           "nombre": {
-            "question": "Ce cantitate de lemn reciclat (în kg)?"
+            "question": "[TO_TRANSLATE] Quantité de bois recyclé (en kg) ?"
           },
           "FE": {
-            "question": "Factorul de emisii al lemnului reciclat"
+            "question": "[TO_TRANSLATE] Facteur d'émission du bois recyclé"
           }
         },
         "textiles": {
           "nombre": {
-            "question": "Ce cantitate de textile reciclate (în kg)?"
+            "question": "[TO_TRANSLATE] Quantité de textiles recyclés (en kg) ?"
           },
           "FE": {
-            "question": "Factorul de emisii al textilelor reciclate"
+            "question": "[TO_TRANSLATE] Facteur d'émission des textiles recyclés"
           }
         },
         "DEEE": {
           "nombre": {
-            "question": "Ce cantitate de DEEE reciclate (în kg)?"
+            "question": "[TO_TRANSLATE] Quantité de DEEE recyclés (en kg) ?"
           },
           "FE": {
-            "question": "Factorul de emisii al DEEE reciclate"
+            "question": "[TO_TRANSLATE] Facteur d'émission des DEEE recyclés"
           }
         },
         "autres": {
           "nombre": {
-            "question": "Ce cantitate de alte deșeuri reciclate (în kg)?"
+            "question": "[TO_TRANSLATE] Quantité d'autres déchets recyclés (en kg) ?"
           },
           "FE": {
-            "question": "Factorul de emisii al altor deșeuri reciclate"
+            "question": "[TO_TRANSLATE] Facteur d'émission des autres déchets recyclés"
           }
         }
       }
     }
   },
   "publicodes-units": {
-    "étudiant": "student",
-    "personne": "persoană",
-    "année": "an",
-    "pays": "țară",
-    "kWh": "kWh",
-    "litre": "litru",
-    "kg": "kg",
-    "kgCO2e/kg": "kgCO2e/kg",
-    "repas": "masă",
-    "kgCO2e/repas": "kgCO2e/masă",
-    "t/km": "t.km",
-    "bouteille": "sticlă",
-    "kgCO2e/bouteille": "kgCO2e/sticlă",
-    "canette": "doză",
-    "kgCO2e/canette": "kgCO2e/doză",
-    "paquet": "pachet",
-    "kgCO2e/paquet": "kgCO2e/pachet",
-    "tasse": "ceașcă",
-    "kgCO2e/tasse": "kgCO2e/ceașcă",
-    "sandwich": "sandviș",
-    "kgCO2e/sandwich": "kgCO2e/sandviș",
-    "barre": "baton",
-    "kgCO2e/barre": "kgCO2e/baton",
-    "m2": "m2",
-    "kgCO2e/m2": "kgCO2e/m2",
-    "kgCO2e": "kgCO2e",
-    "unité": "unitate",
-    "kgCO2e/unité": "kgCO2e/unitate",
-    "km": "km",
-    "€": "€",
-    "kgCO2e/€": "kgCO2e/€"
+    "étudiant": "[TO_TRANSLATE] étudiant",
+    "personne": "[TO_TRANSLATE] personne",
+    "année": "[TO_TRANSLATE] année",
+    "pays": "[TO_TRANSLATE] pays",
+    "kWh": "[TO_TRANSLATE] kWh",
+    "litre": "[UPDATED] litre",
+    "kg": "[TO_TRANSLATE] kg",
+    "kgCO2e/kg": "[TO_TRANSLATE] kgCO2e/kg",
+    "repas": "[UPDATED] repas",
+    "kgCO2e/repas": "[UPDATED] kgCO2e/repas",
+    "t/km": "[TO_TRANSLATE] t.km",
+    "bouteille": "[TO_TRANSLATE] bouteille",
+    "kgCO2e/bouteille": "[TO_TRANSLATE] kgCO2e/bouteille",
+    "canette": "[TO_TRANSLATE] canette",
+    "kgCO2e/canette": "[TO_TRANSLATE] kgCO2e/canette",
+    "paquet": "[UPDATED] paquet",
+    "kgCO2e/paquet": "[UPDATED] kgCO2e/paquet",
+    "tasse": "[TO_TRANSLATE] tasse",
+    "kgCO2e/tasse": "[TO_TRANSLATE] kgCO2e/tasse",
+    "sandwich": "[TO_TRANSLATE] sandwich",
+    "kgCO2e/sandwich": "[TO_TRANSLATE] kgCO2e/sandwich",
+    "barre": "[TO_TRANSLATE] barre",
+    "kgCO2e/barre": "[TO_TRANSLATE] kgCO2e/barre",
+    "m2": "[TO_TRANSLATE] m2",
+    "kgCO2e/m2": "[TO_TRANSLATE] kgCO2e/m2",
+    "kgCO2e": "[TO_TRANSLATE] kgCO2e",
+    "unité": "[UPDATED] unité",
+    "kgCO2e/unité": "[UPDATED] kgCO2e/unité",
+    "km": "[TO_TRANSLATE] km",
+    "€": "[TO_TRANSLATE] €",
+    "kgCO2e/€": "[TO_TRANSLATE] kgCO2e/€"
   }
 }

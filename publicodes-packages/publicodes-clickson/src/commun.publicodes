@@ -100,6 +100,13 @@ commun . FE . moyen de transport:
       par défaut: 0
       meta:
         id: 27999
+    autobus électrique:
+      titre: Facteur d'émission Autobus moyen
+      valeur: 0.0217
+      unité: kgCO2e/passagers.km
+      par défaut: 0
+      meta:
+        id: 28003
     TER:
       titre: Facteur d'émission TER
       valeur: 0.0277

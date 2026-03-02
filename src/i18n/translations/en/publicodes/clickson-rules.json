@@ -25,11 +25,101 @@
     },
     "énergie": {
       "électricité": {
-        "consommation": {
-          "question": "Annual electricity consumption"
+        "janvier": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en janvier"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
         },
-        "FE": {
-          "question": "Electricity emission factor"
+        "février": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en février"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
+        },
+        "mars": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en mars"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
+        },
+        "avril": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en avril"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
+        },
+        "mai": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en mai"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
+        },
+        "juin": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en juin"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
+        },
+        "juillet": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en juillet"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
+        },
+        "août": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en août"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
+        },
+        "septembre": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en septembre"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
+        },
+        "octobre": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en octobre"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
+        },
+        "novembre": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en novembre"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
+        },
+        "décembre": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en décembre"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
         }
       },
       "combustibles": {
@@ -65,12 +155,40 @@
         }
       },
       "autres gaz": {
-        "gaz hfc spécifique": {
+        "gaz réfrigérant": {
+          "titre": "[TO_TRANSLATE] Gaz réfrigérant",
+          "question": "[TO_TRANSLATE] Consommation annuelle de gaz réfrigérant",
           "consommation": {
-            "question": "Annual consumption of this HFC gas"
+            "question": "[TO_TRANSLATE] Consommation annuelle de ce gaz"
           },
-          "PRG": {
-            "question": "Global Warming Potential (GWP) of the HFC gas"
+          "type": {
+            "titre": "[TO_TRANSLATE] Gaz réfrigérant",
+            "question": "[TO_TRANSLATE] Gaz réfrigérant",
+            "options": {
+              "R134a": "[TO_TRANSLATE] R134a",
+              "R32": "[TO_TRANSLATE] R32",
+              "R407c": "[TO_TRANSLATE] R407c",
+              "R410a": "[TO_TRANSLATE] R410a"
+            }
+          }
+        },
+        "gaz à effet de serre principal": {
+          "titre": "[TO_TRANSLATE] Gaz à effet de serre principal",
+          "question": "[TO_TRANSLATE] Consommation annuelle de Gaz à effet de serre principal",
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation annuelle de ce gaz"
+          },
+          "type": {
+            "titre": "[TO_TRANSLATE] Gaz à effet de serre principal",
+            "question": "[TO_TRANSLATE] Gaz à effet de serre principal",
+            "options": {
+              "CO2": "[TO_TRANSLATE] CO2",
+              "CH4 fossile": "[TO_TRANSLATE] CH4 fossile",
+              "CH4 biogénique": "[TO_TRANSLATE] CH4 biogénique",
+              "N2O": "[TO_TRANSLATE] N2O",
+              "SF6": "[TO_TRANSLATE] SF6",
+              "NF3": "[TO_TRANSLATE] NF3"
+            }
           }
         }
       }
@@ -134,12 +252,19 @@
         },
         "ferroviaire": {
           "consommation": {
-            "question": "Distance traveled by rail freight"
+            "question": "[TO_TRANSLATE] Distance parcourue en fret ferroviaire"
+          }
+        }
+      },
+      "fin de vie moyenne": {
+        "déchets résiduels": {
+          "quantité": {
+            "question": "[TO_TRANSLATE] Quantité de déchets résiduels"
           }
         },
-        "maritime": {
-          "consommation": {
-            "question": "Distance traveled by maritime freight"
+        "déchets organiques": {
+          "quantité": {
+            "question": "[TO_TRANSLATE] Quantité de déchets organiques"
           }
         }
       },
@@ -162,10 +287,10 @@
         },
         "biscuits": {
           "nombre": {
-            "question": "Number of biscuit packs consumed annually"
+            "question": "[UPDATED] Quantité de biscuit consommée annuellement"
           },
           "FE": {
-            "question": "Emission factor per biscuit pack"
+            "question": "[UPDATED] Facteur d'émission par kg de poids net de biscuits"
           }
         },
         "paquet de chips": {
@@ -178,18 +303,26 @@
         },
         "café noir": {
           "nombre": {
-            "question": "Number of black coffees consumed annually"
+            "question": "[UPDATED] Quantité de café noir consommée annuellement"
           },
           "FE": {
-            "question": "Emission factor per black coffee"
+            "question": "[UPDATED] Facteur d'émission par kg de poids net de café noir"
+          }
+        },
+        "café au lait": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Quantité de café au lait consommée annuellement"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par kg de poids net de café a lait"
           }
         },
         "thé infusé": {
           "nombre": {
-            "question": "Number of infused teas consumed annually"
+            "question": "[UPDATED] Quantité de thé infusé consommée annuellement"
           },
           "FE": {
-            "question": "Emission factor per infused tea"
+            "question": "[UPDATED] Facteur d'émission par kg de poids net de thé infusé"
           }
         },
         "sandwich pain de mie": {
@@ -197,37 +330,15 @@
             "question": "Number of sandwich loaf breads consumed annually"
           },
           "FE": {
-            "question": "Emission factor per sandwich loaf bread"
+            "question": "[UPDATED] Facteur d'émission par kg de poids net de sandwich pain de mie"
           }
         },
         "barre chocolatée": {
           "nombre": {
-            "question": "Number of chocolate bars consumed annually"
+            "question": "[UPDATED] Quantité de barres chocolatées consommée annuellement"
           },
           "FE": {
-            "question": "Emission factor per chocolate bar"
-          }
-        }
-      },
-      "déchets organiques": {
-        "biodéchets compostés": {
-          "quantité": {
-            "question": "Quantity of composted biowaste"
-          }
-        },
-        "biodéchets méthanisés": {
-          "quantité": {
-            "question": "Quantity of methanized biowaste"
-          }
-        },
-        "biodéchets incinérés": {
-          "quantité": {
-            "question": "Quantity of incinerated biowaste"
-          }
-        },
-        "biodéchets enfouis": {
-          "quantité": {
-            "question": "Quantity of landfilled biowaste"
+            "question": "[UPDATED] Facteur d'émission par kg de poids net de barre chocolatée"
           }
         }
       }
@@ -240,46 +351,6 @@
           },
           "FE": {
             "question": "Emission factor per m² of renovated school building (concrete structure)"
-          }
-        },
-        "parking bâtiment structure béton rénové": {
-          "surface": {
-            "question": "What surface area of parking (building - concrete structure) did you renovate?"
-          },
-          "FE": {
-            "question": "Emission factor per m² of renovated parking (building - concrete structure)"
-          }
-        },
-        "parking surface bitume rénové": {
-          "surface": {
-            "question": "What surface area of parking (asphalt surface) did you renovate?"
-          },
-          "FE": {
-            "question": "Emission factor per m² of renovated parking (asphalt surface)"
-          }
-        },
-        "parking surface semi-dure rénové": {
-          "surface": {
-            "question": "What surface area of parking (semi-hard surface) did you renovate?"
-          },
-          "FE": {
-            "question": "Emission factor per m² of renovated parking (semi-hard surface)"
-          }
-        },
-        "garage structure béton rénové": {
-          "surface": {
-            "question": "What surface area of garage (concrete structure) did you renovate?"
-          },
-          "FE": {
-            "question": "Emission factor per m² of renovated garage (concrete structure)"
-          }
-        },
-        "garage structure métal rénové": {
-          "surface": {
-            "question": "What surface area of garage (metal structure) did you renovate?"
-          },
-          "FE": {
-            "question": "Emission factor per m² of renovated garage (metal structure)"
           }
         }
       },
@@ -412,293 +483,36 @@
         }
       },
       "équipements divers": {
-        "chaise de bureau": {
+        "chaise bois": {
           "nombre": {
-            "question": "How many office chairs did you purchase?"
+            "question": "[TO_TRANSLATE] Combien de chaises (bois) avez-vous achetées ?"
           },
           "FE": {
-            "question": "Emission factor per office chair"
+            "question": "[TO_TRANSLATE] Facteur d'émission par chaise (bois)"
           }
         },
-        "table de réunion": {
+        "chaise plastique": {
           "nombre": {
-            "question": "How many meeting tables did you purchase?"
+            "question": "[TO_TRANSLATE] Combien de chaises (plastique) avez-vous achetées ?"
           },
           "FE": {
-            "question": "Emission factor per meeting table"
+            "question": "[TO_TRANSLATE] Facteur d'émission par chaise (plastique)"
           }
         },
-        "armoire de rangement": {
+        "table standard": {
           "nombre": {
-            "question": "How many storage cabinets did you purchase?"
+            "question": "[TO_TRANSLATE] Combien de tables de réunion avez-vous achetées ?"
           },
           "FE": {
-            "question": "Emission factor per storage cabinet"
+            "question": "[TO_TRANSLATE] Facteur d'émission par table (standard)"
           }
         },
-        "fauteuil d'accueil": {
+        "armoire standard": {
           "nombre": {
-            "question": "How many reception armchairs did you purchase?"
+            "question": "[TO_TRANSLATE] Combien d'armoires (standard) avez-vous achetées ?"
           },
           "FE": {
-            "question": "Emission factor per reception armchair"
-          }
-        },
-        "étagère": {
-          "nombre": {
-            "question": "How many shelves did you purchase?"
-          },
-          "FE": {
-            "question": "Emission factor per shelf"
-          }
-        }
-      },
-      "divers": {
-        "tondeuse gazon thermique": {
-          "titre": "[TO_TRANSLATE] Tondeuse à gazon thermique",
-          "question": "[TO_TRANSLATE] Combien de tondeuse à gazon thermique possédez-vous ?",
-          "nombre": {
-            "question": "[UPDATED] Combien de tondeuse à gazon thermique possédez-vous ?"
-          },
-          "FE": {
-            "question": "[UPDATED] Facteur d'émission par unité de tondeuse à gazon"
-          },
-          "immo": {
-            "question": "[UPDATED] Immobilisation de tondeuse à gazon"
-          }
-        },
-        "tondeuse gazon électrique": {
-          "titre": "[UPDATED] Tondeuse à gazon électrique",
-          "question": "[UPDATED] Combien de tondeuse à gazon électrique possédez-vous ?",
-          "nombre": {
-            "question": "[UPDATED] Combien de tondeuse à gazon électrique possédez-vous ?"
-          },
-          "FE": {
-            "question": "[UPDATED] Facteur d'émission par unité de tondeuse à gazon électrique"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de xx"
-          }
-        },
-        "bouilloire": {
-          "titre": "[TO_TRANSLATE] Bouilloire",
-          "question": "[TO_TRANSLATE] Combien de bouilloire possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de bouilloire possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de bouilloire"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de bouilloire"
-          }
-        },
-        "micro-onde": {
-          "titre": "[TO_TRANSLATE] Micro-onde",
-          "question": "[TO_TRANSLATE] Combien de micro-onde possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de micro-onde possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de micro-onde"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de micro-onde"
-          }
-        },
-        "aspirateur professionnel": {
-          "titre": "[TO_TRANSLATE] Aspirateur professionnel",
-          "question": "[TO_TRANSLATE] Combien de aspirateur professionnel possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de aspirateur professionnel possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de aspirateur professionnel"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de xx"
-          }
-        },
-        "ballon chauffe-eau électrique": {
-          "titre": "[TO_TRANSLATE] Ballon chauffe-eau électrique - 200l",
-          "question": "[TO_TRANSLATE] Combien de ballon chauffe-eau électrique - 200l possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de ballon chauffe-eau électrique - 200l possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de ballon chauffe-eau électrique - 200l"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de ballon chaffe-eau electrique - 200l"
-          }
-        },
-        "machine café filtre": {
-          "titre": "[UPDATED] Machine à café - filtre",
-          "question": "[UPDATED] Combien de machine à café - filtre possédez-vous ?",
-          "nombre": {
-            "question": "[UPDATED] Combien de machine à café - filtre possédez-vous ?"
-          },
-          "FE": {
-            "question": "[UPDATED] Facteur d'émission par unité de machine à café - filtre"
-          },
-          "immo": {
-            "question": "[UPDATED] Immobilisation de machine à café - filtre"
-          }
-        },
-        "machine café dosettes": {
-          "titre": "[UPDATED] Machine à café - dosettes",
-          "question": "[UPDATED] Combien de machine à café - dosettes possédez-vous ?",
-          "nombre": {
-            "question": "[UPDATED] Combien de machine à café - dosettes possédez-vous ?"
-          },
-          "FE": {
-            "question": "[UPDATED] Facteur d'émission par unité de machine à café - dosettes"
-          },
-          "immo": {
-            "question": "[UPDATED] Immobilisation de machine à café - dosettes"
-          }
-        },
-        "lave-vaiselle professionnel": {
-          "titre": "[TO_TRANSLATE] Lave-vaisselle professionnel",
-          "question": "[TO_TRANSLATE] Combien de lave-vaiselle professionnel possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de lave-vaiselle professionnel possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de lave-vaiselle professionnel"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de lave-vaiselle professionnel"
-          }
-        },
-        "four professionnel": {
-          "titre": "[TO_TRANSLATE] Four professionnel",
-          "question": "[TO_TRANSLATE] Combien de four professionnel possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de four professionnel possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de four professionnel"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de four professionnel"
-          }
-        },
-        "lave-vaiselle standard": {
-          "titre": "[TO_TRANSLATE] Lave-vaiselle standard",
-          "question": "[TO_TRANSLATE] Combien de lave-vaiselle standard possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de lave-vaiselle standard possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de lave-vaiselle standard"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de lave-vaiselle standard"
-          }
-        },
-        "lave-linge": {
-          "titre": "[TO_TRANSLATE] Lave-linge (capacité 7kg)",
-          "question": "[TO_TRANSLATE] Combien de lave-linge (capacité 7kg) possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de lave-linge (capacité 7kg) possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de lave-linge (capacité 7kg)"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de lave-linge (capacité 7kg)"
-          }
-        },
-        "congélateur coffre": {
-          "titre": "[TO_TRANSLATE] Congélateur (coffre) - 261l",
-          "question": "[TO_TRANSLATE] Combien de congélateur (coffre) - 261l possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de congélateur (coffre) - 261l possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de congélateur (coffre) - 261l"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de congélateur (coffre) - 261l"
-          }
-        },
-        "congélateur armoire": {
-          "titre": "[TO_TRANSLATE] Congélateur - armoire - 205l",
-          "question": "[TO_TRANSLATE] Combien de congélateur - armoire - 205l possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de congélateur - armoire - 205l possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de congélateur - armoire - 205l"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de congélateur - armoire - 205l"
-          }
-        },
-        "réfrigérateur": {
-          "titre": "[TO_TRANSLATE] Réfrigérateur - 250l",
-          "question": "[TO_TRANSLATE] Combien de réfrigérateur - 250l possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de réfrigérateur - 250l possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de réfrigérateur - 250l"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de réfrigérateur - 250l"
-          }
-        },
-        "plaques de cuisson au gaz": {
-          "titre": "[TO_TRANSLATE] Plaques de cuisson/au gaz 9000W",
-          "question": "[TO_TRANSLATE] Combien de plaques de cuisson/au gaz 9000W possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de plaques de cuisson/au gaz 9000W possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de plaques de cuisson/au gaz 9000W"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de plaques de cuisson/au gaz 9000W"
-          }
-        },
-        "tatami": {
-          "titre": "[TO_TRANSLATE] Tatami",
-          "question": "[TO_TRANSLATE] Combien de tatami possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de tatami possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de tatami"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de tatami"
-          }
-        },
-        "gymnastique agré barre fixe": {
-          "titre": "[TO_TRANSLATE] Gymnastique, agrès barre fixe",
-          "question": "[TO_TRANSLATE] Combien de gymnastique, agrès barre fixe possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de gymnastique, agrès barre fixe possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de gymnastique, agrès barre fixe"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de gymnastique, agrès barre fixe"
-          }
-        },
-        "gymnastique agré barres parallèles": {
-          "titre": "[TO_TRANSLATE] Gymnastique, agrès barres parallèles",
-          "question": "[TO_TRANSLATE] Combien de gymnastique, agrès barres parallèles possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de gymnastique, agrès barres parallèles possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de gymnastique, agrès barres parallèles"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de gymnastique, agrès barres parallèles"
+            "question": "[TO_TRANSLATE] Facteur d'émission par armoire (standard)"
           }
         }
       },
@@ -755,102 +569,60 @@
     },
     "déplacements": {
       "voyages scolaires": {
-        "RER et transilien": {
-          "titre": "RER and Transilien",
+        "RER transilien métro tram": {
+          "titre": "[TO_TRANSLATE] Transilien, RER, Métro, Tramway",
           "distance": {
-            "question": "Distance (km)"
-          }
-        },
-        "métro ou tram": {
-          "titre": "Metro, tramway",
-          "distance": {
-            "question": "Distance (km)"
-          }
-        },
-        "vélo électrique": {
-          "titre": "Electric bicycle",
-          "distance": {
-            "question": "Distance (km)"
-          }
-        },
-        "trottinette électrique": {
-          "titre": "Electric scooter",
-          "distance": {
-            "question": "Distance (km)"
-          }
-        },
-        "moto essence": {
-          "titre": "Petrol motorcycle",
-          "distance": {
-            "question": "Distance (km)"
-          }
-        },
-        "véhicule compact électrique": {
-          "titre": "Compact electric vehicle",
-          "distance": {
-            "question": "Distance (km)"
-          }
-        },
-        "voiture individuelle essence": {
-          "titre": "Individual petrol car",
-          "distance": {
-            "question": "Distance (km)"
-          }
-        },
-        "voiture individuelle diesel": {
-          "titre": "Individual diesel car",
-          "distance": {
-            "question": "Distance (km)"
+            "question": "[TO_TRANSLATE] Passagers (par km)"
           }
         },
         "bus": {
-          "titre": "Bus",
+          "titre": "[TO_TRANSLATE] Autobus",
           "distance": {
-            "question": "Distance (km)"
+            "question": "[UPDATED] Passagers (par km)"
+          }
+        },
+        "bus électrique": {
+          "titre": "[TO_TRANSLATE] Autobus",
+          "distance": {
+            "question": "[TO_TRANSLATE] Passagers (par km)"
           }
         },
         "TER": {
           "titre": "TER",
           "distance": {
-            "question": "Distance (km)"
+            "question": "[UPDATED] Passagers (par km)"
           }
         },
         "TGV": {
           "titre": "TGV",
           "distance": {
-            "question": "Distance (km)"
+            "question": "[UPDATED] Passagers (par km)"
           }
         },
         "avion court courrier": {
           "titre": "Short-haul flight",
           "distance": {
-            "question": "Distance (km)"
+            "question": "[UPDATED] Passagers (par km)"
           }
         },
         "avion moyen courrier": {
           "titre": "Medium-haul flight",
           "distance": {
-            "question": "Distance (km)"
+            "question": "[UPDATED] Passagers (par km)"
           }
         },
         "avion long courrier": {
           "titre": "Long-haul flight",
           "distance": {
-            "question": "Distance (km)"
+            "question": "[UPDATED] Passagers (par km)"
           }
         }
       },
       "transport des élèves": {
-        "RER et transilien": {
-          "titre": "RER and Transilien",
+        "RER transilien métro tram": {
+          "titre": "[TO_TRANSLATE] Transilien, RER, Métro, Tramway",
           "distance": {
-            "question": "Distance (km)"
-          }
-        },
-        "métro ou tram": {
-          "titre": "Metro, tramway",
-          "distance": {
-            "question": "Distance (km)"
+            "question": "[TO_TRANSLATE] Passagers (par km)"
           }
         },
         "vélo électrique": {
@@ -892,51 +664,33 @@
         "bus": {
           "titre": "Bus",
           "distance": {
-            "question": "Distance (km)"
+            "question": "[UPDATED] Passagers (par km)"
+          }
+        },
+        "bus électrique": {
+          "titre": "[TO_TRANSLATE] Autobus",
+          "distance": {
+            "question": "[TO_TRANSLATE] Passagers (par km)"
           }
         },
         "TER": {
           "titre": "TER",
           "distance": {
-            "question": "Distance (km)"
+            "question": "[UPDATED] Passagers (par km)"
           }
         },
         "TGV": {
           "titre": "TGV",
           "distance": {
-            "question": "Distance (km)"
-          }
-        },
-        "avion court courrier": {
-          "titre": "Short-haul flight",
-          "distance": {
-            "question": "Distance (km)"
-          }
-        },
-        "avion moyen courrier": {
-          "titre": "Medium-haul flight",
-          "distance": {
-            "question": "Distance (km)"
-          }
-        },
-        "avion long courrier": {
-          "titre": "Long-haul flight",
-          "distance": {
-            "question": "Distance (km)"
+            "question": "[UPDATED] Passagers (par km)"
           }
         }
       },
       "transport du personnel": {
-        "RER et transilien": {
-          "titre": "RER and Transilien",
+        "RER transilien métro tram": {
+          "titre": "[TO_TRANSLATE] Transilien, RER, Métro, Tramway",
           "distance": {
-            "question": "Distance (km)"
-          }
-        },
-        "métro ou tram": {
-          "titre": "Metro, tramway",
-          "distance": {
-            "question": "Distance (km)"
+            "question": "[TO_TRANSLATE] Passagers (par km)"
           }
         },
         "vélo électrique": {
@@ -978,37 +732,25 @@
         "bus": {
           "titre": "Bus",
           "distance": {
-            "question": "Distance (km)"
+            "question": "[UPDATED] Passagers (par km)"
+          }
+        },
+        "bus électrique": {
+          "titre": "[TO_TRANSLATE] Autobus",
+          "distance": {
+            "question": "[TO_TRANSLATE] Passagers (par km)"
           }
         },
         "TER": {
           "titre": "TER",
           "distance": {
-            "question": "Distance (km)"
+            "question": "[UPDATED] Passagers (par km)"
           }
         },
         "TGV": {
           "titre": "TGV",
           "distance": {
-            "question": "Distance (km)"
-          }
-        },
-        "avion court courrier": {
-          "titre": "Short-haul flight",
-          "distance": {
-            "question": "Distance (km)"
-          }
-        },
-        "avion moyen courrier": {
-          "titre": "Medium-haul flight",
-          "distance": {
-            "question": "Distance (km)"
-          }
-        },
-        "avion long courrier": {
-          "titre": "Long-haul flight",
-          "distance": {
-            "question": "Distance (km)"
+            "question": "[UPDATED] Passagers (par km)"
           }
         }
       }
@@ -1096,16 +838,6 @@
           }
         }
       },
-      "ordures ménagères résiduelles": {
-        "ordures ménagères résiduelles": {
-          "nombre": {
-            "question": "How many kg of residual household waste did you purchase or generate?"
-          },
-          "FE": {
-            "question": "Emission factor for residual household waste"
-          }
-        }
-      },
       "fournitures": {
         "petites fournitures": {
           "montant": {
@@ -1152,7 +884,41 @@
             "question": "How many AA (alkaline) batteries did you purchase?"
           },
           "FE": {
-            "question": "Emission factor per AA battery"
+            "question": "[TO_TRANSLATE] Facteur d'émission par pile AA"
+          }
+        }
+      },
+      "fin de vie moyenne": {
+        "carton": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Quantité de carton (en tonne) ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission du carton"
+          }
+        },
+        "plastique moyen": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Quantité de plastique moyen (en tonne) ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission du plastique moyen"
+          }
+        },
+        "verre": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Quantité de verre (en tonne) ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission du verre"
+          }
+        },
+        "bois": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Quantité de bois (en tonne) ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission du bois"
           }
         }
       },
@@ -1205,14 +971,6 @@
             "question": "Emission factor per polyester t-shirt"
           }
         },
-        "ballon de rugby": {
-          "nombre": {
-            "question": "How many rugby balls did you purchase?"
-          },
-          "FE": {
-            "question": "Emission factor per rugby ball"
-          }
-        },
         "ballon de basket": {
           "nombre": {
             "question": "How many basketballs did you purchase?"
@@ -1229,114 +987,41 @@
             "question": "Emission factor per football"
           }
         }
-      },
-      "déchets recyclables": {
-        "papier": {
-          "nombre": {
-            "question": "Quantity of recycled paper (in kg)?"
-          },
-          "FE": {
-            "question": "Emission factor for recycled paper"
-          }
-        },
-        "carton": {
-          "nombre": {
-            "question": "Quantity of recycled cardboard (in kg)?"
-          },
-          "FE": {
-            "question": "Emission factor for recycled cardboard"
-          }
-        },
-        "plastique": {
-          "nombre": {
-            "question": "Quantity of recycled plastic (in kg)?"
-          },
-          "FE": {
-            "question": "Emission factor for recycled plastic"
-          }
-        },
-        "verre": {
-          "nombre": {
-            "question": "Quantity of recycled glass (in kg)?"
-          },
-          "FE": {
-            "question": "Emission factor for recycled glass"
-          }
-        },
-        "métal": {
-          "nombre": {
-            "question": "Quantity of recycled metal (in kg)?"
-          },
-          "FE": {
-            "question": "Emission factor for recycled metal"
-          }
-        },
-        "bois": {
-          "nombre": {
-            "question": "Quantity of recycled wood (in kg)?"
-          },
-          "FE": {
-            "question": "Emission factor for recycled wood"
-          }
-        },
-        "textiles": {
-          "nombre": {
-            "question": "Quantity of recycled textiles (in kg)?"
-          },
-          "FE": {
-            "question": "Emission factor for recycled textiles"
-          }
-        },
-        "DEEE": {
-          "nombre": {
-            "question": "Quantity of recycled WEEE (in kg)?"
-          },
-          "FE": {
-            "question": "Emission factor for recycled WEEE"
-          }
-        },
-        "autres": {
-          "nombre": {
-            "question": "Quantity of other recycled waste (in kg)?"
-          },
-          "FE": {
-            "question": "Emission factor for other recycled waste"
-          }
-        }
       }
     }
   },
   "publicodes-units": {
-    "étudiant": "student",
-    "personne": "person",
-    "année": "year",
-    "pays": "country",
-    "kWh": "kWh",
-    "litre": "liter",
-    "kg": "kg",
-    "kgCO2e/kg": "kgCO2e/kg",
-    "repas": "meal",
-    "kgCO2e/repas": "kgCO2e/meal",
-    "t/km": "t.km",
-    "bouteille": "bottle",
-    "kgCO2e/bouteille": "kgCO2e/bottle",
-    "canette": "can",
-    "kgCO2e/canette": "kgCO2e/can",
-    "paquet": "pack",
-    "kgCO2e/paquet": "kgCO2e/pack",
-    "tasse": "cup",
-    "kgCO2e/tasse": "kgCO2e/cup",
-    "sandwich": "sandwich",
-    "kgCO2e/sandwich": "kgCO2e/sandwich",
-    "barre": "bar",
-    "kgCO2e/barre": "kgCO2e/bar",
-    "m2": "m2",
-    "kgCO2e/m2": "kgCO2e/m2",
-    "kgCO2e": "kgCO2e",
-    "unité": "unit",
-    "kgCO2e/unité": "kgCO2e/unit",
-    "km": "km",
-    "€": "€",
-    "kgCO2e/€": "kgCO2e/€"
+    "étudiant": "[TO_TRANSLATE] étudiant",
+    "personne": "[TO_TRANSLATE] personne",
+    "année": "[TO_TRANSLATE] année",
+    "pays": "[TO_TRANSLATE] pays",
+    "kWh": "[TO_TRANSLATE] kWh",
+    "litre": "[UPDATED] litre",
+    "kWh PCI": "[TO_TRANSLATE] kWh PCI",
+    "kgCO2e/kg": "[TO_TRANSLATE] kgCO2e/kg",
+    "repas": "[UPDATED] repas",
+    "kgCO2e/repas": "[UPDATED] kgCO2e/repas",
+    "m3/km": "[TO_TRANSLATE] m3.km",
+    "t/km": "[TO_TRANSLATE] t.km",
+    "t": "[TO_TRANSLATE] t",
+    "bouteille": "[TO_TRANSLATE] bouteille",
+    "kgCO2e/bouteille": "[TO_TRANSLATE] kgCO2e/bouteille",
+    "canette": "[TO_TRANSLATE] canette",
+    "kgCO2e/canette": "[TO_TRANSLATE] kgCO2e/canette",
+    "kg de poids net": "[TO_TRANSLATE] kg de poids net",
+    "kgCO2e/kg de poids net": "[TO_TRANSLATE] kgCO2e/kg de poids net",
+    "paquet": "[UPDATED] paquet",
+    "kgCO2e/paquet": "[UPDATED] kgCO2e/paquet",
+    "barre": "[TO_TRANSLATE] barre",
+    "m2": "[TO_TRANSLATE] m2",
+    "kgCO2e/m2": "[TO_TRANSLATE] kgCO2e/m2",
+    "kgCO2e": "[TO_TRANSLATE] kgCO2e",
+    "unité": "[UPDATED] unité",
+    "kgCO2e/unité": "[UPDATED] kgCO2e/unité",
+    "km": "[TO_TRANSLATE] km",
+    "kg": "[TO_TRANSLATE] kg",
+    "€": "[TO_TRANSLATE] €",
+    "kgCO2e/€": "[TO_TRANSLATE] kgCO2e/€",
+    "kgCO2e/t": "[TO_TRANSLATE] kgCO2e/t"
   }
 }

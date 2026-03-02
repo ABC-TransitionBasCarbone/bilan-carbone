@@ -25,11 +25,101 @@
     },
     "énergie": {
       "électricité": {
-        "consommation": {
-          "question": "Ετήσια κατανάλωση ηλεκτρικής ενέργειας"
+        "janvier": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en janvier"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
         },
-        "FE": {
-          "question": "Συντελεστής εκπομπών ηλεκτρικής ενέργειας"
+        "février": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en février"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
+        },
+        "mars": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en mars"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
+        },
+        "avril": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en avril"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
+        },
+        "mai": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en mai"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
+        },
+        "juin": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en juin"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
+        },
+        "juillet": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en juillet"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
+        },
+        "août": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en août"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
+        },
+        "septembre": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en septembre"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
+        },
+        "octobre": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en octobre"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
+        },
+        "novembre": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en novembre"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
+        },
+        "décembre": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en décembre"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
         }
       },
       "combustibles": {
@@ -65,12 +155,40 @@
         }
       },
       "autres gaz": {
-        "gaz hfc spécifique": {
+        "gaz réfrigérant": {
+          "titre": "[TO_TRANSLATE] Gaz réfrigérant",
+          "question": "[TO_TRANSLATE] Consommation annuelle de gaz réfrigérant",
           "consommation": {
-            "question": "Ετήσια κατανάλωση αυτού του αερίου HFC"
+            "question": "[TO_TRANSLATE] Consommation annuelle de ce gaz"
           },
-          "PRG": {
-            "question": "Δυναμικό Παγκόσμιας Θέρμανσης (PRG) του αερίου HFC"
+          "type": {
+            "titre": "[TO_TRANSLATE] Gaz réfrigérant",
+            "question": "[TO_TRANSLATE] Gaz réfrigérant",
+            "options": {
+              "R134a": "[TO_TRANSLATE] R134a",
+              "R32": "[TO_TRANSLATE] R32",
+              "R407c": "[TO_TRANSLATE] R407c",
+              "R410a": "[TO_TRANSLATE] R410a"
+            }
+          }
+        },
+        "gaz à effet de serre principal": {
+          "titre": "[TO_TRANSLATE] Gaz à effet de serre principal",
+          "question": "[TO_TRANSLATE] Consommation annuelle de Gaz à effet de serre principal",
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation annuelle de ce gaz"
+          },
+          "type": {
+            "titre": "[TO_TRANSLATE] Gaz à effet de serre principal",
+            "question": "[TO_TRANSLATE] Gaz à effet de serre principal",
+            "options": {
+              "CO2": "[TO_TRANSLATE] CO2",
+              "CH4 fossile": "[TO_TRANSLATE] CH4 fossile",
+              "CH4 biogénique": "[TO_TRANSLATE] CH4 biogénique",
+              "N2O": "[TO_TRANSLATE] N2O",
+              "SF6": "[TO_TRANSLATE] SF6",
+              "NF3": "[TO_TRANSLATE] NF3"
+            }
           }
         }
       }
@@ -134,12 +252,19 @@
         },
         "ferroviaire": {
           "consommation": {
-            "question": "Απόσταση που διανύθηκε με σιδηροδρομική μεταφορά εμπορευμάτων"
+            "question": "[TO_TRANSLATE] Distance parcourue en fret ferroviaire"
+          }
+        }
+      },
+      "fin de vie moyenne": {
+        "déchets résiduels": {
+          "quantité": {
+            "question": "[TO_TRANSLATE] Quantité de déchets résiduels"
           }
         },
-        "maritime": {
-          "consommation": {
-            "question": "Απόσταση που διανύθηκε με θαλάσσια μεταφορά εμπορευμάτων"
+        "déchets organiques": {
+          "quantité": {
+            "question": "[TO_TRANSLATE] Quantité de déchets organiques"
           }
         }
       },
@@ -162,10 +287,10 @@
         },
         "biscuits": {
           "nombre": {
-            "question": "Ετήσιος αριθμός καταναλωμένων πακέτων μπισκότων"
+            "question": "[UPDATED] Quantité de biscuit consommée annuellement"
           },
           "FE": {
-            "question": "Συντελεστής εκπομπών ανά πακέτο μπισκότων"
+            "question": "[UPDATED] Facteur d'émission par kg de poids net de biscuits"
           }
         },
         "paquet de chips": {
@@ -178,18 +303,26 @@
         },
         "café noir": {
           "nombre": {
-            "question": "Ετήσιος αριθμός καταναλωμένων μαύρων καφέδων"
+            "question": "[UPDATED] Quantité de café noir consommée annuellement"
           },
           "FE": {
-            "question": "Συντελεστής εκπομπών ανά μαύρο καφέ"
+            "question": "[UPDATED] Facteur d'émission par kg de poids net de café noir"
+          }
+        },
+        "café au lait": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Quantité de café au lait consommée annuellement"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par kg de poids net de café a lait"
           }
         },
         "thé infusé": {
           "nombre": {
-            "question": "Ετήσιος αριθμός καταναλωμένων τσαγιών"
+            "question": "[UPDATED] Quantité de thé infusé consommée annuellement"
           },
           "FE": {
-            "question": "Συντελεστής εκπομπών ανά τσάι"
+            "question": "[UPDATED] Facteur d'émission par kg de poids net de thé infusé"
           }
         },
         "sandwich pain de mie": {
@@ -197,37 +330,15 @@
             "question": "Ετήσιος αριθμός καταναλωμένων σάντουιτς με ψωμί του τοστ"
           },
           "FE": {
-            "question": "Συντελεστής εκπομπών ανά σάντουιτς με ψωμί του τοστ"
+            "question": "[UPDATED] Facteur d'émission par kg de poids net de sandwich pain de mie"
           }
         },
         "barre chocolatée": {
           "nombre": {
-            "question": "Ετήσιος αριθμός καταναλωμένων σοκολατένιων μπαρών"
+            "question": "[UPDATED] Quantité de barres chocolatées consommée annuellement"
           },
           "FE": {
-            "question": "Συντελεστής εκπομπών ανά σοκολατένια μπάρα"
-          }
-        }
-      },
-      "déchets organiques": {
-        "biodéchets compostés": {
-          "quantité": {
-            "question": "Ποσότητα κομποστοποιημένων βιοαποβλήτων"
-          }
-        },
-        "biodéchets méthanisés": {
-          "quantité": {
-            "question": "Ποσότητα βιοαποβλήτων που έχουν υποστεί μεθανιοποίηση"
-          }
-        },
-        "biodéchets incinérés": {
-          "quantité": {
-            "question": "Ποσότητα βιοαποβλήτων που έχουν αποτεφρωθεί"
-          }
-        },
-        "biodéchets enfouis": {
-          "quantité": {
-            "question": "Ποσότητα βιοαποβλήτων που έχουν ταφεί"
+            "question": "[UPDATED] Facteur d'émission par kg de poids net de barre chocolatée"
           }
         }
       }
@@ -240,46 +351,6 @@
           },
           "FE": {
             "question": "Συντελεστής εκπομπών ανά m² ανακαινισμένου σχολικού κτιρίου (κατασκευή από σκυρόδεμα)"
-          }
-        },
-        "parking bâtiment structure béton rénové": {
-          "surface": {
-            "question": "Ποια είναι η επιφάνεια του ανακαινισμένου χώρου στάθμευσης (κτίριο - κατασκευή από σκυρόδεμα);"
-          },
-          "FE": {
-            "question": "Συντελεστής εκπομπών ανά m² ανακαινισμένου χώρου στάθμευσης (κτίριο - κατασκευή από σκυρόδεμα)"
-          }
-        },
-        "parking surface bitume rénové": {
-          "surface": {
-            "question": "Ποια είναι η επιφάνεια του ανακαινισμένου χώρου στάθμευσης (επιφάνεια ασφάλτου);"
-          },
-          "FE": {
-            "question": "Συντελεστής εκπομπών ανά m² ανακαινισμένου χώρου στάθμευσης (επιφάνεια ασφάλτου)"
-          }
-        },
-        "parking surface semi-dure rénové": {
-          "surface": {
-            "question": "Ποια είναι η επιφάνεια του ανακαινισμένου χώρου στάθμευσης (ημι-σκληρή επιφάνεια);"
-          },
-          "FE": {
-            "question": "Συντελεστής εκπομπών ανά m² ανακαινισμένου χώρου στάθμευσης (ημι-σκληρή επιφάνεια)"
-          }
-        },
-        "garage structure béton rénové": {
-          "surface": {
-            "question": "Ποια είναι η επιφάνεια του ανακαινισμένου γκαράζ (κατασκευή από σκυρόδεμα);"
-          },
-          "FE": {
-            "question": "Συντελεστής εκπομπών ανά m² ανακαινισμένου γκαράζ (κατασκευή από σκυρόδεμα)"
-          }
-        },
-        "garage structure métal rénové": {
-          "surface": {
-            "question": "Ποια είναι η επιφάνεια του ανακαινισμένου γκαράζ (κατασκευή από μέταλλο);"
-          },
-          "FE": {
-            "question": "Συντελεστής εκπομπών ανά m² ανακαινισμένου γκαράζ (κατασκευή από μέταλλο)"
           }
         }
       },
@@ -412,293 +483,36 @@
         }
       },
       "équipements divers": {
-        "chaise de bureau": {
+        "chaise bois": {
           "nombre": {
-            "question": "Πόσες καρέκλες γραφείου αγοράσατε;"
+            "question": "[TO_TRANSLATE] Combien de chaises (bois) avez-vous achetées ?"
           },
           "FE": {
-            "question": "Συντελεστής εκπομπών ανά καρέκλα γραφείου"
+            "question": "[TO_TRANSLATE] Facteur d'émission par chaise (bois)"
           }
         },
-        "table de réunion": {
+        "chaise plastique": {
           "nombre": {
-            "question": "Πόσα τραπέζια συνεδριάσεων αγοράσατε;"
+            "question": "[TO_TRANSLATE] Combien de chaises (plastique) avez-vous achetées ?"
           },
           "FE": {
-            "question": "Συντελεστής εκπομπών ανά τραπέζι συνεδριάσεων"
+            "question": "[TO_TRANSLATE] Facteur d'émission par chaise (plastique)"
           }
         },
-        "armoire de rangement": {
+        "table standard": {
           "nombre": {
-            "question": "Πόσες ντουλάπες αποθήκευσης αγοράσατε;"
+            "question": "[TO_TRANSLATE] Combien de tables de réunion avez-vous achetées ?"
           },
           "FE": {
-            "question": "Συντελεστής εκπομπών ανά ντουλάπα αποθήκευσης"
+            "question": "[TO_TRANSLATE] Facteur d'émission par table (standard)"
           }
         },
-        "fauteuil d'accueil": {
+        "armoire standard": {
           "nombre": {
-            "question": "Πόσες πολυθρόνες υποδοχής αγοράσατε;"
+            "question": "[TO_TRANSLATE] Combien d'armoires (standard) avez-vous achetées ?"
           },
           "FE": {
-            "question": "Συντελεστής εκπομπών ανά πολυθρόνα υποδοχής"
-          }
-        },
-        "étagère": {
-          "nombre": {
-            "question": "Πόσα ράφια αγοράσατε;"
-          },
-          "FE": {
-            "question": "Συντελεστής εκπομπών ανά ράφι"
-          }
-        }
-      },
-      "divers": {
-        "tondeuse gazon thermique": {
-          "titre": "[TO_TRANSLATE] Tondeuse à gazon thermique",
-          "question": "[TO_TRANSLATE] Combien de tondeuse à gazon thermique possédez-vous ?",
-          "nombre": {
-            "question": "[UPDATED] Combien de tondeuse à gazon thermique possédez-vous ?"
-          },
-          "FE": {
-            "question": "[UPDATED] Facteur d'émission par unité de tondeuse à gazon"
-          },
-          "immo": {
-            "question": "[UPDATED] Immobilisation de tondeuse à gazon"
-          }
-        },
-        "tondeuse gazon électrique": {
-          "titre": "[UPDATED] Tondeuse à gazon électrique",
-          "question": "[UPDATED] Combien de tondeuse à gazon électrique possédez-vous ?",
-          "nombre": {
-            "question": "[UPDATED] Combien de tondeuse à gazon électrique possédez-vous ?"
-          },
-          "FE": {
-            "question": "[UPDATED] Facteur d'émission par unité de tondeuse à gazon électrique"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de xx"
-          }
-        },
-        "bouilloire": {
-          "titre": "[TO_TRANSLATE] Bouilloire",
-          "question": "[TO_TRANSLATE] Combien de bouilloire possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de bouilloire possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de bouilloire"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de bouilloire"
-          }
-        },
-        "micro-onde": {
-          "titre": "[TO_TRANSLATE] Micro-onde",
-          "question": "[TO_TRANSLATE] Combien de micro-onde possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de micro-onde possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de micro-onde"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de micro-onde"
-          }
-        },
-        "aspirateur professionnel": {
-          "titre": "[TO_TRANSLATE] Aspirateur professionnel",
-          "question": "[TO_TRANSLATE] Combien de aspirateur professionnel possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de aspirateur professionnel possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de aspirateur professionnel"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de xx"
-          }
-        },
-        "ballon chauffe-eau électrique": {
-          "titre": "[TO_TRANSLATE] Ballon chauffe-eau électrique - 200l",
-          "question": "[TO_TRANSLATE] Combien de ballon chauffe-eau électrique - 200l possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de ballon chauffe-eau électrique - 200l possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de ballon chauffe-eau électrique - 200l"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de ballon chaffe-eau electrique - 200l"
-          }
-        },
-        "machine café filtre": {
-          "titre": "[UPDATED] Machine à café - filtre",
-          "question": "[UPDATED] Combien de machine à café - filtre possédez-vous ?",
-          "nombre": {
-            "question": "[UPDATED] Combien de machine à café - filtre possédez-vous ?"
-          },
-          "FE": {
-            "question": "[UPDATED] Facteur d'émission par unité de machine à café - filtre"
-          },
-          "immo": {
-            "question": "[UPDATED] Immobilisation de machine à café - filtre"
-          }
-        },
-        "machine café dosettes": {
-          "titre": "[UPDATED] Machine à café - dosettes",
-          "question": "[UPDATED] Combien de machine à café - dosettes possédez-vous ?",
-          "nombre": {
-            "question": "[UPDATED] Combien de machine à café - dosettes possédez-vous ?"
-          },
-          "FE": {
-            "question": "[UPDATED] Facteur d'émission par unité de machine à café - dosettes"
-          },
-          "immo": {
-            "question": "[UPDATED] Immobilisation de machine à café - dosettes"
-          }
-        },
-        "lave-vaiselle professionnel": {
-          "titre": "[TO_TRANSLATE] Lave-vaisselle professionnel",
-          "question": "[TO_TRANSLATE] Combien de lave-vaiselle professionnel possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de lave-vaiselle professionnel possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de lave-vaiselle professionnel"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de lave-vaiselle professionnel"
-          }
-        },
-        "four professionnel": {
-          "titre": "[TO_TRANSLATE] Four professionnel",
-          "question": "[TO_TRANSLATE] Combien de four professionnel possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de four professionnel possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de four professionnel"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de four professionnel"
-          }
-        },
-        "lave-vaiselle standard": {
-          "titre": "[TO_TRANSLATE] Lave-vaiselle standard",
-          "question": "[TO_TRANSLATE] Combien de lave-vaiselle standard possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de lave-vaiselle standard possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de lave-vaiselle standard"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de lave-vaiselle standard"
-          }
-        },
-        "lave-linge": {
-          "titre": "[TO_TRANSLATE] Lave-linge (capacité 7kg)",
-          "question": "[TO_TRANSLATE] Combien de lave-linge (capacité 7kg) possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de lave-linge (capacité 7kg) possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de lave-linge (capacité 7kg)"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de lave-linge (capacité 7kg)"
-          }
-        },
-        "congélateur coffre": {
-          "titre": "[TO_TRANSLATE] Congélateur (coffre) - 261l",
-          "question": "[TO_TRANSLATE] Combien de congélateur (coffre) - 261l possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de congélateur (coffre) - 261l possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de congélateur (coffre) - 261l"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de congélateur (coffre) - 261l"
-          }
-        },
-        "congélateur armoire": {
-          "titre": "[TO_TRANSLATE] Congélateur - armoire - 205l",
-          "question": "[TO_TRANSLATE] Combien de congélateur - armoire - 205l possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de congélateur - armoire - 205l possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de congélateur - armoire - 205l"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de congélateur - armoire - 205l"
-          }
-        },
-        "réfrigérateur": {
-          "titre": "[TO_TRANSLATE] Réfrigérateur - 250l",
-          "question": "[TO_TRANSLATE] Combien de réfrigérateur - 250l possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de réfrigérateur - 250l possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de réfrigérateur - 250l"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de réfrigérateur - 250l"
-          }
-        },
-        "plaques de cuisson au gaz": {
-          "titre": "[TO_TRANSLATE] Plaques de cuisson/au gaz 9000W",
-          "question": "[TO_TRANSLATE] Combien de plaques de cuisson/au gaz 9000W possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de plaques de cuisson/au gaz 9000W possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de plaques de cuisson/au gaz 9000W"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de plaques de cuisson/au gaz 9000W"
-          }
-        },
-        "tatami": {
-          "titre": "[TO_TRANSLATE] Tatami",
-          "question": "[TO_TRANSLATE] Combien de tatami possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de tatami possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de tatami"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de tatami"
-          }
-        },
-        "gymnastique agré barre fixe": {
-          "titre": "[TO_TRANSLATE] Gymnastique, agrès barre fixe",
-          "question": "[TO_TRANSLATE] Combien de gymnastique, agrès barre fixe possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de gymnastique, agrès barre fixe possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de gymnastique, agrès barre fixe"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de gymnastique, agrès barre fixe"
-          }
-        },
-        "gymnastique agré barres parallèles": {
-          "titre": "[TO_TRANSLATE] Gymnastique, agrès barres parallèles",
-          "question": "[TO_TRANSLATE] Combien de gymnastique, agrès barres parallèles possédez-vous ?",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de gymnastique, agrès barres parallèles possédez-vous ?"
-          },
-          "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de gymnastique, agrès barres parallèles"
-          },
-          "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de gymnastique, agrès barres parallèles"
+            "question": "[TO_TRANSLATE] Facteur d'émission par armoire (standard)"
           }
         }
       },
@@ -755,102 +569,60 @@
     },
     "déplacements": {
       "voyages scolaires": {
-        "RER et transilien": {
-          "titre": "RER και προαστιακός",
+        "RER transilien métro tram": {
+          "titre": "[TO_TRANSLATE] Transilien, RER, Métro, Tramway",
           "distance": {
-            "question": "Απόσταση (χλμ)"
-          }
-        },
-        "métro ou tram": {
-          "titre": "Μετρό, τραμ",
-          "distance": {
-            "question": "Απόσταση (χλμ)"
-          }
-        },
-        "vélo électrique": {
-          "titre": "Ηλεκτρικό ποδήλατο",
-          "distance": {
-            "question": "Απόσταση (χλμ)"
-          }
-        },
-        "trottinette électrique": {
-          "titre": "Ηλεκτρικό πατίνι",
-          "distance": {
-            "question": "Απόσταση (χλμ)"
-          }
-        },
-        "moto essence": {
-          "titre": "Μοτοσικλέτα βενζίνης",
-          "distance": {
-            "question": "Απόσταση (χλμ)"
-          }
-        },
-        "véhicule compact électrique": {
-          "titre": "Μικρό ηλεκτρικό όχημα",
-          "distance": {
-            "question": "Απόσταση (χλμ)"
-          }
-        },
-        "voiture individuelle essence": {
-          "titre": "Ατομικό αυτοκίνητο βενζίνης",
-          "distance": {
-            "question": "Απόσταση (χλμ)"
-          }
-        },
-        "voiture individuelle diesel": {
-          "titre": "Ατομικό αυτοκίνητο πετρελαίου",
-          "distance": {
-            "question": "Απόσταση (χλμ)"
+            "question": "[TO_TRANSLATE] Passagers (par km)"
           }
         },
         "bus": {
-          "titre": "Λεωφορείο",
+          "titre": "[TO_TRANSLATE] Autobus",
           "distance": {
-            "question": "Απόσταση (χλμ)"
+            "question": "[UPDATED] Passagers (par km)"
+          }
+        },
+        "bus électrique": {
+          "titre": "[TO_TRANSLATE] Autobus",
+          "distance": {
+            "question": "[TO_TRANSLATE] Passagers (par km)"
           }
         },
         "TER": {
           "titre": "Περιφερειακό τρένο (TER)",
           "distance": {
-            "question": "Απόσταση (χλμ)"
+            "question": "[UPDATED] Passagers (par km)"
           }
         },
         "TGV": {
           "titre": "Υπερταχύ τρένο (TGV)",
           "distance": {
-            "question": "Απόσταση (χλμ)"
+            "question": "[UPDATED] Passagers (par km)"
           }
         },
         "avion court courrier": {
           "titre": "Αεροπλάνο μικρών αποστάσεων",
           "distance": {
-            "question": "Απόσταση (χλμ)"
+            "question": "[UPDATED] Passagers (par km)"
           }
         },
         "avion moyen courrier": {
           "titre": "Αεροπλάνο μεσαίων αποστάσεων",
           "distance": {
-            "question": "Απόσταση (χλμ)"
+            "question": "[UPDATED] Passagers (par km)"
           }
         },
         "avion long courrier": {
           "titre": "Αεροπλάνο μεγάλων αποστάσεων",
           "distance": {
-            "question": "Απόσταση (χλμ)"
+            "question": "[UPDATED] Passagers (par km)"
           }
         }
       },
       "transport des élèves": {
-        "RER et transilien": {
-          "titre": "RER και προαστιακός",
+        "RER transilien métro tram": {
+          "titre": "[TO_TRANSLATE] Transilien, RER, Métro, Tramway",
           "distance": {
-            "question": "Απόσταση (χλμ)"
-          }
-        },
-        "métro ou tram": {
-          "titre": "Μετρό, τραμ",
-          "distance": {
-            "question": "Απόσταση (χλμ)"
+            "question": "[TO_TRANSLATE] Passagers (par km)"
           }
         },
         "vélo électrique": {
@@ -892,51 +664,33 @@
         "bus": {
           "titre": "Λεωφορείο",
           "distance": {
-            "question": "Απόσταση (χλμ)"
+            "question": "[UPDATED] Passagers (par km)"
+          }
+        },
+        "bus électrique": {
+          "titre": "[TO_TRANSLATE] Autobus",
+          "distance": {
+            "question": "[TO_TRANSLATE] Passagers (par km)"
           }
         },
         "TER": {
           "titre": "Περιφερειακό τρένο (TER)",
           "distance": {
-            "question": "Απόσταση (χλμ)"
+            "question": "[UPDATED] Passagers (par km)"
           }
         },
         "TGV": {
           "titre": "Υπερταχύ τρένο (TGV)",
           "distance": {
-            "question": "Απόσταση (χλμ)"
-          }
-        },
-        "avion court courrier": {
-          "titre": "Αεροπλάνο μικρών αποστάσεων",
-          "distance": {
-            "question": "Απόσταση (χλμ)"
-          }
-        },
-        "avion moyen courrier": {
-          "titre": "Αεροπλάνο μεσαίων αποστάσεων",
-          "distance": {
-            "question": "Απόσταση (χλμ)"
-          }
-        },
-        "avion long courrier": {
-          "titre": "Αεροπλάνο μεγάλων αποστάσεων",
-          "distance": {
-            "question": "Απόσταση (χλμ)"
+            "question": "[UPDATED] Passagers (par km)"
           }
         }
       },
       "transport du personnel": {
-        "RER et transilien": {
-          "titre": "RER και προαστιακός",
+        "RER transilien métro tram": {
+          "titre": "[TO_TRANSLATE] Transilien, RER, Métro, Tramway",
           "distance": {
-            "question": "Απόσταση (χλμ)"
-          }
-        },
-        "métro ou tram": {
-          "titre": "Μετρό, τραμ",
-          "distance": {
-            "question": "Απόσταση (χλμ)"
+            "question": "[TO_TRANSLATE] Passagers (par km)"
           }
         },
         "vélo électrique": {
@@ -978,37 +732,25 @@
         "bus": {
           "titre": "Λεωφορείο",
           "distance": {
-            "question": "Απόσταση (χλμ)"
+            "question": "[UPDATED] Passagers (par km)"
+          }
+        },
+        "bus électrique": {
+          "titre": "[TO_TRANSLATE] Autobus",
+          "distance": {
+            "question": "[TO_TRANSLATE] Passagers (par km)"
           }
         },
         "TER": {
           "titre": "Περιφερειακό τρένο (TER)",
           "distance": {
-            "question": "Απόσταση (χλμ)"
+            "question": "[UPDATED] Passagers (par km)"
           }
         },
         "TGV": {
           "titre": "Υπερταχύ τρένο (TGV)",
           "distance": {
-            "question": "Απόσταση (χλμ)"
-          }
-        },
-        "avion court courrier": {
-          "titre": "Αεροπλάνο μικρών αποστάσεων",
-          "distance": {
-            "question": "Απόσταση (χλμ)"
-          }
-        },
-        "avion moyen courrier": {
-          "titre": "Αεροπλάνο μεσαίων αποστάσεων",
-          "distance": {
-            "question": "Απόσταση (χλμ)"
-          }
-        },
-        "avion long courrier": {
-          "titre": "Αεροπλάνο μεγάλων αποστάσεων",
-          "distance": {
-            "question": "Απόσταση (χλμ)"
+            "question": "[UPDATED] Passagers (par km)"
           }
         }
       }
@@ -1096,16 +838,6 @@
           }
         }
       },
-      "ordures ménagères résiduelles": {
-        "ordures ménagères résiduelles": {
-          "nombre": {
-            "question": "Πόσα κιλά υπολειμματικών οικιακών απορριμμάτων αγοράσατε ή παράξατε;"
-          },
-          "FE": {
-            "question": "Συντελεστής εκπομπών υπολειμματικών οικιακών απορριμμάτων"
-          }
-        }
-      },
       "fournitures": {
         "petites fournitures": {
           "montant": {
@@ -1152,7 +884,41 @@
             "question": "Πόσες μπαταρίες AA (αλκαλικές) αγοράσατε;"
           },
           "FE": {
-            "question": "Συντελεστής εκπομπών ανά μπαταρία AA"
+            "question": "[TO_TRANSLATE] Facteur d'émission par pile AA"
+          }
+        }
+      },
+      "fin de vie moyenne": {
+        "carton": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Quantité de carton (en tonne) ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission du carton"
+          }
+        },
+        "plastique moyen": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Quantité de plastique moyen (en tonne) ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission du plastique moyen"
+          }
+        },
+        "verre": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Quantité de verre (en tonne) ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission du verre"
+          }
+        },
+        "bois": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Quantité de bois (en tonne) ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission du bois"
           }
         }
       },
@@ -1205,14 +971,6 @@
             "question": "Συντελεστής εκπομπών ανά μπλουζάκι από πολυεστέρα"
           }
         },
-        "ballon de rugby": {
-          "nombre": {
-            "question": "Πόσες μπάλες ράγκμπι αγοράσατε;"
-          },
-          "FE": {
-            "question": "Συντελεστής εκπομπών ανά μπάλα ράγκμπι"
-          }
-        },
         "ballon de basket": {
           "nombre": {
             "question": "Πόσες μπάλες μπάσκετ αγοράσατε;"
@@ -1229,114 +987,41 @@
             "question": "Συντελεστής εκπομπών ανά μπάλα ποδοσφαίρου"
           }
         }
-      },
-      "déchets recyclables": {
-        "papier": {
-          "nombre": {
-            "question": "Ποσότητα ανακυκλωμένου χαρτιού (σε κιλά);"
-          },
-          "FE": {
-            "question": "Συντελεστής εκπομπών ανακυκλωμένου χαρτιού"
-          }
-        },
-        "carton": {
-          "nombre": {
-            "question": "Ποσότητα ανακυκλωμένου χαρτονιού (σε κιλά);"
-          },
-          "FE": {
-            "question": "Συντελεστής εκπομπών ανακυκλωμένου χαρτονιού"
-          }
-        },
-        "plastique": {
-          "nombre": {
-            "question": "Ποσότητα ανακυκλωμένου πλαστικού (σε κιλά);"
-          },
-          "FE": {
-            "question": "Συντελεστής εκπομπών ανακυκλωμένου πλαστικού"
-          }
-        },
-        "verre": {
-          "nombre": {
-            "question": "Ποσότητα ανακυκλωμένου γυαλιού (σε κιλά);"
-          },
-          "FE": {
-            "question": "Συντελεστής εκπομπών ανακυκλωμένου γυαλιού"
-          }
-        },
-        "métal": {
-          "nombre": {
-            "question": "Ποσότητα ανακυκλωμένου μετάλλου (σε κιλά);"
-          },
-          "FE": {
-            "question": "Συντελεστής εκπομπών ανακυκλωμένου μετάλλου"
-          }
-        },
-        "bois": {
-          "nombre": {
-            "question": "Ποσότητα ανακυκλωμένου ξύλου (σε κιλά);"
-          },
-          "FE": {
-            "question": "Συντελεστής εκπομπών ανακυκλωμένου ξύλου"
-          }
-        },
-        "textiles": {
-          "nombre": {
-            "question": "Ποσότητα ανακυκλωμένων υφασμάτων (σε κιλά);"
-          },
-          "FE": {
-            "question": "Συντελεστής εκπομπών ανακυκλωμένων υφασμάτων"
-          }
-        },
-        "DEEE": {
-          "nombre": {
-            "question": "Ποσότητα ανακυκλωμένων ΗΗΕΕ (σε κιλά);"
-          },
-          "FE": {
-            "question": "Συντελεστής εκπομπών ανακυκλωμένων ΗΗΕΕ"
-          }
-        },
-        "autres": {
-          "nombre": {
-            "question": "Ποσότητα άλλων ανακυκλωμένων αποβλήτων (σε κιλά);"
-          },
-          "FE": {
-            "question": "Συντελεστής εκπομπών άλλων ανακυκλωμένων αποβλήτων"
-          }
-        }
       }
     }
   },
   "publicodes-units": {
-    "étudiant": "φοιτητής",
-    "personne": "άτομο",
-    "année": "έτος",
-    "pays": "χώρα",
-    "kWh": "kWh",
-    "litre": "λίτρο",
-    "kg": "κιλό",
-    "kgCO2e/kg": "kgCO2e/κιλό",
-    "repas": "γεύμα",
-    "kgCO2e/repas": "kgCO2e/γεύμα",
-    "t/km": "τ.χλμ",
-    "bouteille": "μπουκάλι",
-    "kgCO2e/bouteille": "kgCO2e/μπουκάλι",
-    "canette": "κουτί",
-    "kgCO2e/canette": "kgCO2e/κουτί",
-    "paquet": "πακέτο",
-    "kgCO2e/paquet": "kgCO2e/πακέτο",
-    "tasse": "φλιτζάνι",
-    "kgCO2e/tasse": "kgCO2e/φλιτζάνι",
-    "sandwich": "σάντουιτς",
-    "kgCO2e/sandwich": "kgCO2e/σάντουιτς",
-    "barre": "μπάρα",
-    "kgCO2e/barre": "kgCO2e/μπάρα",
-    "m2": "μ²",
-    "kgCO2e/m2": "kgCO2e/μ²",
-    "kgCO2e": "kgCO2e",
-    "unité": "μονάδα",
-    "kgCO2e/unité": "kgCO2e/μονάδα",
-    "km": "χλμ",
-    "€": "€",
-    "kgCO2e/€": "kgCO2e/€"
+    "étudiant": "[TO_TRANSLATE] étudiant",
+    "personne": "[TO_TRANSLATE] personne",
+    "année": "[TO_TRANSLATE] année",
+    "pays": "[TO_TRANSLATE] pays",
+    "kWh": "[TO_TRANSLATE] kWh",
+    "litre": "[TO_TRANSLATE] litre",
+    "kWh PCI": "[TO_TRANSLATE] kWh PCI",
+    "kgCO2e/kg": "[TO_TRANSLATE] kgCO2e/kg",
+    "repas": "[TO_TRANSLATE] repas",
+    "kgCO2e/repas": "[TO_TRANSLATE] kgCO2e/repas",
+    "m3/km": "[TO_TRANSLATE] m3.km",
+    "t/km": "[TO_TRANSLATE] t.km",
+    "t": "[TO_TRANSLATE] t",
+    "bouteille": "[TO_TRANSLATE] bouteille",
+    "kgCO2e/bouteille": "[TO_TRANSLATE] kgCO2e/bouteille",
+    "canette": "[TO_TRANSLATE] canette",
+    "kgCO2e/canette": "[TO_TRANSLATE] kgCO2e/canette",
+    "kg de poids net": "[TO_TRANSLATE] kg de poids net",
+    "kgCO2e/kg de poids net": "[TO_TRANSLATE] kgCO2e/kg de poids net",
+    "paquet": "[TO_TRANSLATE] paquet",
+    "kgCO2e/paquet": "[TO_TRANSLATE] kgCO2e/paquet",
+    "barre": "[TO_TRANSLATE] barre",
+    "m2": "[TO_TRANSLATE] m2",
+    "kgCO2e/m2": "[TO_TRANSLATE] kgCO2e/m2",
+    "kgCO2e": "[TO_TRANSLATE] kgCO2e",
+    "unité": "[TO_TRANSLATE] unité",
+    "kgCO2e/unité": "[TO_TRANSLATE] kgCO2e/unité",
+    "km": "[TO_TRANSLATE] km",
+    "kg": "[TO_TRANSLATE] kg",
+    "€": "[TO_TRANSLATE] €",
+    "kgCO2e/€": "[TO_TRANSLATE] kgCO2e/€",
+    "kgCO2e/t": "[TO_TRANSLATE] kgCO2e/t"
   }
 }

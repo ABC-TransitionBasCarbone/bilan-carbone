@@ -7,6 +7,7 @@ restauration . distributeur automatiques:
       - biscuits
       - paquet de chips
       - café noir
+      - café au lait
       - thé infusé
       - sandwich pain de mie
       - barre chocolatée
@@ -109,6 +110,26 @@ restauration . distributeur automatiques:
             Source: Base Carbone®
           meta:
             id: 44749
+
+    café au lait:
+      titre: Café a lait
+      formule: nombre * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        nombre:
+          question: Quantité de café au lait consommée annuellement
+          unité: kg de poids net
+          par défaut: 0
+        FE:
+          question: Facteur d'émission par kg de poids net de café a lait
+          valeur: 2.24
+          unité: kgCO2e/kg de poids net
+          par défaut: 0
+          note: |
+            Source: Base Carbone®
+          meta:
+            id: 44750
 
     thé infusé:
       titre: Thé infusé

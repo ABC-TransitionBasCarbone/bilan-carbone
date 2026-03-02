@@ -1,16 +1,40 @@
 restauration . fin de vie moyenne:
   titre: Fin de vie moyenne
-  formule: quantité * FE
+  formule:
+    somme:
+      - déchets résiduels
   unité: kgCO2e
   par défaut: 0
   avec:
-    quantité:
-      question: Quantité de déchets organiques
+    déchets résiduels:
+      titre: déchet résiduels
+      formule: quantité * FE
+      unité: kgCO2e
       par défaut: 0
-      unité: kg
-    FE:
-      valeur: 386
-      unité: kgCO2e/kg
+      avec:
+        quantité:
+          question: Quantité de déchets résiduels
+          par défaut: 0
+          unité: t
+        FE:
+          valeur: 386
+          unité: kgCO2e/t
+          par défaut: 0
+          meta:
+            id: 34654
+    déchets organiques:
+      titre: déchet organiques
+      formule: quantité * FE
+      unité: kgCO2e
       par défaut: 0
-      meta:
-        id: 34654
+      avec:
+        quantité:
+          question: Quantité de déchets organiques
+          par défaut: 0
+          unité: t
+        FE:
+          valeur: 28
+          unité: kgCO2e/t
+          par défaut: 0
+          meta:
+            id: 34642
