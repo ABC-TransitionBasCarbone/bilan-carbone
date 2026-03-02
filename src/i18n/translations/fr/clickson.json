@@ -281,6 +281,21 @@
     "game": "Jeu : initiation à la négociation de son plan d'action :",
     "classEarth": "Ma Terre en classe"
   },
+  "onboarding": {
+    "title-1": "Bienvenue sur le calculateur Clicks On ! Avant de commencer, veuillez configurer votre établissement.",
+    "titleDescription-1": "Nous avons pré-rempli certaines informations que vous pouvez modifier dès maintenant ou à tout moment via la rubrique \"Mon établissement\".",
+    "title-2": "Gestion de votre équipe pilote",
+    "titleDescription-2": "Vous pouvez d'ores et déjà ajouter vos collaborateur·rices (élèves, enseignants et personnels non-éducatifs) au sein de votre équipe ! Vous pourrez toujours ajouter de nouvelles personnes plus tard via la rubrique \"L'équipe pilote\".",
+    "step1": {
+      "name": "Nom de mon établissement",
+      "role": "Mon rôle au sein de l'établissement",
+      "information": "Mes informations",
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "adminDescription": "Le rôle qui vous a été attribué est celui d'administrateur de votre établissement.",
+      "gestionnaireDescription": "Le rôle qui vous a été attribué est celui de collaborateur de votre établissement."
+    }
+  },
   "error": {
     "Too many comments": "Vous avez déjà trop de commentaire en attente"
   },
