@@ -36,7 +36,6 @@ achats . produits chimiques:
           unité: kgCO2e/litre
           par défaut: 0
           meta:
-            incertitude: 5
 
     savon liquide:
       titre: Savon liquide
@@ -53,7 +52,6 @@ achats . produits chimiques:
           unité: kgCO2e/litre
           par défaut: 0
           meta:
-            incertitude: 5
 
     produit vitre:
       titre: Produit vitre
@@ -70,7 +68,6 @@ achats . produits chimiques:
           unité: kgCO2e/litre
           par défaut: 0
           meta:
-            incertitude: 5
 
     nettoyant sols:
       titre: Nettoyant sols
@@ -87,7 +84,6 @@ achats . produits chimiques:
           unité: kgCO2e/litre
           par défaut: 0
           meta:
-            incertitude: 5
 
     nettoyant multi-usages:
       titre: Nettoyant multi-usages
@@ -104,7 +100,6 @@ achats . produits chimiques:
           unité: kgCO2e/litre
           par défaut: 0
           meta:
-            incertitude: 5
 
     détergent sanitaire:
       titre: Détergent sanitaire
@@ -121,7 +116,6 @@ achats . produits chimiques:
           unité: kgCO2e/litre
           par défaut: 0
           meta:
-            incertitude: 5
 
     désinfectant:
       titre: Désinfectant
@@ -138,7 +132,6 @@ achats . produits chimiques:
           unité: kgCO2e/litre
           par défaut: 0
           meta:
-            incertitude: 5
 
     chlore:
       titre: Chlore
@@ -155,7 +148,6 @@ achats . produits chimiques:
           unité: kgCO2e/litre
           par défaut: 0
           meta:
-            incertitude: 5
 
     bicarbonate de soude:
       titre: Bicarbonate de soude
@@ -173,7 +165,6 @@ achats . produits chimiques:
           par défaut: 0
           meta:
             id: 44396
-            incertitude: 5
 
     peinture revêtement mural intérieur:
       titre: Peinture - revêtement mural intérieur
@@ -190,7 +181,6 @@ achats . produits chimiques:
           unité: kgCO2e/kg
           par défaut: 0
           meta:
-            incertitude: 5
 
     peinture revêtement mural extérieur:
       titre: Peinture - revêtement mural extérieur
@@ -207,7 +197,6 @@ achats . produits chimiques:
           unité: kgCO2e/kg
           par défaut: 0
           meta:
-            incertitude: 5
 
     savon solide:
       titre: Savon solide
@@ -224,7 +213,6 @@ achats . produits chimiques:
           unité: kgCO2e/kg
           par défaut: 0
           meta:
-            incertitude: 5
 
     vinaigre blanc:
       titre: Vinaigre blanc
@@ -242,7 +230,6 @@ achats . produits chimiques:
           par défaut: 0
           meta:
             id: 46691
-            incertitude: 5
 
     soude solide:
       titre: Soude solide (poudre, granulés)
@@ -260,7 +247,6 @@ achats . produits chimiques:
           par défaut: 0
           meta:
             id: 20667
-            incertitude: 5
 
     acide sulfurique:
       titre: Acide sulfurique
@@ -278,7 +264,6 @@ achats . produits chimiques:
           par défaut: 0
           meta:
             id: 20850
-            incertitude: 4
 
     acide chlorhydrique:
       titre: Acide chlorhydrique
@@ -296,4 +281,3 @@ achats . produits chimiques:
           par défaut: 0
           meta:
             id: 20851
-            incertitude: 4

@@ -50,7 +50,6 @@ restauration . types de repas servis:
             Source: Base Carbone®
           meta:
             id: 20683
-            incertitude: 4
 
     végétalien:
       titre: Repas - Végétalien

@@ -32,7 +32,6 @@ achats . déchets recyclables:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 10
 
     carton:
       titre: "Carton recyclé"
@@ -51,7 +50,6 @@ achats . déchets recyclables:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 10
 
     plastique:
       titre: "Plastique recyclé"
@@ -71,7 +69,6 @@ achats . déchets recyclables:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 15
 
     verre:
       titre: "Verre recyclé"
@@ -91,7 +88,6 @@ achats . déchets recyclables:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 10
 
     métal:
       titre: "Métal recyclé"
@@ -111,7 +107,6 @@ achats . déchets recyclables:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 12
 
     bois:
       titre: "Bois recyclé"
@@ -131,7 +126,6 @@ achats . déchets recyclables:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 10
 
     textiles:
       titre: "Textiles recyclés"
@@ -151,7 +145,6 @@ achats . déchets recyclables:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 15
 
     DEEE:
       titre: "DEEE recyclés"
@@ -171,7 +164,6 @@ achats . déchets recyclables:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 20
 
     autres:
       titre: "Autres déchets recyclés"
@@ -191,4 +183,3 @@ achats . déchets recyclables:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 20

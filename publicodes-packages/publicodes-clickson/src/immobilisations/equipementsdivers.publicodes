@@ -30,7 +30,6 @@ immobilisations . équipements divers:
             Source: Base Carbone®
           meta:
             id: 26958
-            incertitude: 10
 
     chaise plastique:
       titre: "Chaise (plastique)"
@@ -51,7 +50,6 @@ immobilisations . équipements divers:
             Source: Base Carbone®
           meta:
             id: 26959
-            incertitude: 10
 
     table standard:
       titre: "Table (standard)"
@@ -72,7 +70,6 @@ immobilisations . équipements divers:
             Source: Base Carbone® (exemple)
           meta:
             id: 26962
-            incertitude: 15
 
     armoire standard:
       titre: "Armoire (standard)"
@@ -93,7 +90,6 @@ immobilisations . équipements divers:
             Source: Base Carbone® (exemple)
           meta:
             id: 26963
-            incertitude: 20
 
     fauteuil d'accueil:
       titre: "Fauteuil d'accueil"
@@ -113,7 +109,6 @@ immobilisations . équipements divers:
           note: |
             Source: Base Carbone® (exemple)
           meta:
-            incertitude: 12
 
     étagère:
       titre: "Étagère"
@@ -133,4 +128,3 @@ immobilisations . équipements divers:
           note: |
             Source: Base Carbone® (exemple)
           meta:
-            incertitude: 15

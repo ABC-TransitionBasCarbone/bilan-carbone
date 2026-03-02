@@ -43,7 +43,6 @@ immobilisations . rénovation:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 4
 
     parking bâtiment structure béton rénové:
       titre: "Parking rénové (bâtiment - structure béton)"
@@ -63,7 +62,6 @@ immobilisations . rénovation:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 2
 
     parking surface bitume rénové:
       titre: "Parking rénové (surface bitume)"
@@ -83,7 +81,6 @@ immobilisations . rénovation:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 2
 
     parking surface semi-dure rénové:
       titre: "Parking rénové (surface semi-dure)"
@@ -103,7 +100,6 @@ immobilisations . rénovation:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 2
 
     garage structure béton rénové:
       titre: "Garage rénové (structure béton)"
@@ -123,7 +119,6 @@ immobilisations . rénovation:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 4
 
     garage structure métal rénové:
       titre: "Garage rénové (structure métal)"
@@ -143,4 +138,3 @@ immobilisations . rénovation:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 4

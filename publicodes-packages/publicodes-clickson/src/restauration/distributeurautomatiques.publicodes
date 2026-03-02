@@ -31,7 +31,6 @@ restauration . distributeur automatiques:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 3
 
     soda:
       titre: Soda
@@ -51,7 +50,6 @@ restauration . distributeur automatiques:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 2
 
     biscuits:
       titre: Biscuits
@@ -72,7 +70,6 @@ restauration . distributeur automatiques:
             Source: Base Carbone®
           meta:
             id: 44428
-            incertitude: 1
 
     paquet de chips:
       titre: Paquet de chips
@@ -92,7 +89,6 @@ restauration . distributeur automatiques:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 3
 
     café noir:
       titre: Café noir
@@ -113,7 +109,6 @@ restauration . distributeur automatiques:
             Source: Base Carbone®
           meta:
             id: 44749
-            incertitude: 3
 
     thé infusé:
       titre: Thé infusé
@@ -134,7 +129,6 @@ restauration . distributeur automatiques:
             Source: Base Carbone®
           meta:
             id: 46580
-            incertitude: 3
 
     sandwich pain de mie:
       titre: Sandwich pain de mie
@@ -155,7 +149,6 @@ restauration . distributeur automatiques:
             Source: Base Carbone®
           meta:
             id: 46326
-            incertitude: 3
 
     barre chocolatée:
       titre: Barre chocolatée
@@ -176,4 +169,3 @@ restauration . distributeur automatiques:
             Source: Base Carbone®
           meta:
             id: 44360
-            incertitude: 2

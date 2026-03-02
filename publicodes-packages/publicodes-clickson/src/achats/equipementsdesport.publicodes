@@ -32,7 +32,6 @@ achats . équipements de sport:
             Source: Base Carbone®
           meta:
             id: 27040
-            incertitude: 3
 
     ballon de handball:
       titre: "Ballon de handball"
@@ -53,7 +52,6 @@ achats . équipements de sport:
             Source: Base Carbone®
           meta:
             id: 20765
-            incertitude: 3
 
     kimono judo:
       titre: "Kimono (judo)"
@@ -73,7 +71,6 @@ achats . équipements de sport:
             Source: Base Carbone®
           meta:
             id: 20767
-            incertitude: 3
 
     shorts tous sports:
       titre: "Shorts tous sports"
@@ -94,7 +91,6 @@ achats . équipements de sport:
             Source: Base Carbone®
           meta:
             id: 20635
-            incertitude: 3
 
     maillots tous sports:
       titre: "Maillots tous sports"
@@ -115,7 +111,6 @@ achats . équipements de sport:
             Source: Base Carbone®
           meta:
             id: 20634
-            incertitude: 3
 
     t-shirt polyester:
       titre: "T-shirt en polyester"
@@ -136,7 +131,6 @@ achats . équipements de sport:
             Source: Base Carbone®
           meta:
             id: 27045
-            incertitude: 2
 
     ballon de basket:
       titre: "Ballon de basket"
@@ -157,7 +151,6 @@ achats . équipements de sport:
             Source: Base Carbone®
           meta:
             id: 27039
-            incertitude: 3
 
     ballon de football:
       titre: "Ballon de football"
@@ -178,4 +171,3 @@ achats . équipements de sport:
             Source: Base Carbone®
           meta:
             id: 27038
-            incertitude: 3

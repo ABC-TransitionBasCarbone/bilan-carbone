@@ -24,7 +24,6 @@ restauration . déchets organiques:
           unité: kgCO2e/kg
           par défaut: 0
           meta:
-            incertitude: 10
 
     biodéchets méthanisés:
       titre: Biodéchets méthanisés
@@ -41,7 +40,6 @@ restauration . déchets organiques:
           unité: kgCO2e/kg
           par défaut: 0
           meta:
-            incertitude: 10
 
     biodéchets incinérés:
       titre: Biodéchets incinérés
@@ -58,7 +56,6 @@ restauration . déchets organiques:
           unité: kgCO2e/kg
           par défaut: 0
           meta:
-            incertitude: 15
 
     biodéchets enfouis:
       titre: Biodéchets enfouis
@@ -75,4 +72,3 @@ restauration . déchets organiques:
           unité: kgCO2e/kg
           par défaut: 0
           meta:
-            incertitude: 20
