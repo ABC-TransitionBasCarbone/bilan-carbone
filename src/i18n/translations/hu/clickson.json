@@ -45,8 +45,8 @@
     "see": "Lábnyom megtekintése",
     "selectSite": "Adatok kitöltése előtt kérjük, válassz intézményt",
     "lastStudyTitle": "Legutóbbi lábnyom",
-    "createFirstSimplifiedStudy": "Create",
-    "firstSimplifiedStudyMessage": "It's time to get started! We invite you to create your first simplified carbon footprint.",
+    "createFirstSimplifiedStudy": "Első egyszerűsített lábnyom létrehozása",
+    "firstSimplifiedStudyMessage": "Ideje elkezdeni! Meghívunk, hogy hozd létre az első egyszerűsített karbonlábnyomodat.",
     "navigation": {
       "framing": "Általános adatok",
       "organizations": "Intézményeim",
@@ -63,10 +63,10 @@
         "validatorEmailDescription": "Diákként hozzáférésem van, mint közreműködő, egy vagy több kibocsátási ponthoz.",
         "duplicationOptionsDescription": "Tanulmány másolásakor kiválaszthatod, hogy az eredeti tanulmányból ugyanazokat a csapattagokat és diákokat hívd meg az új tanulmányhoz. Ez segít a kollaboráció folytonosságának fenntartásában."
       },
-      "etp": "Nombre de personnels (enseignants et non-éducatifs)",
-      "goToDataEntry": "Passer à la saisie des données",
-      "studentNumber": "Nombre d'élèves",
-      "superficy": "Superficie de l'établissement"
+      "etp": "Dolgozók száma (tanárok és nem oktatók)",
+      "goToDataEntry": "Adatok kitöltése",
+      "studentNumber": "Diákok száma",
+      "superficy": "Intézmény területe"
     },
     "role": {
       "Contributor": "Diák"
@@ -88,71 +88,71 @@
       }
     },
     "export": {
-      "export": "Exporter mon empreinte"
+      "export": "Lábnyomom exportálása"
     },
     "pdf": {
-      "loading": "Chargement des données...",
-      "title": "Synthèse des émissions {year}",
+      "loading": "Adatok betöltése...",
+      "title": "Kibocsátási összefoglaló {year}",
       "results": {
-        "all": "Résultats"
+        "all": "Eredmények"
       },
       "labels": {
-        "studentNumber": "Nombre d'élèves",
-        "etp": "Nombre de personnels",
-        "superficy": "Superficie",
-        "establishmentYear": "Année d'ouverture"
+        "studentNumber": "Diákok száma",
+        "etp": "Dolgozók száma",
+        "superficy": "Terület",
+        "establishmentYear": "Megnyitás éve"
       },
       "charts": {
-        "siteEmissions": "Émissions en tCO2e de l'établissement scolaire {site} en {year}"
+        "siteEmissions": "{site} intézmény kibocsátása tCO2e-ben {year}-ban"
       },
       "questions": {
-        "goals-title": "OBJECTIFS",
-        "goals-subtitle": "Présente les objectifs visés par ton action (sensibilisation, réduction des émissions...). Est-ce une action à court terme ou stratégique ?",
-        "shareholders-title": "PORTEURS DE L'ACTION",
-        "shareholders-subtitle": "As-tu désigné une équipe qui portera l'action au quotidien et sur le long terme ? Indique leurs noms et rôle/fonction",
-        "otherStakeholders-title": "AUTRES PARTIES PRENANTES",
-        "otherStakeholders-subtitle": "Pense à distinguer ici les parties prenantes internes et externes. Ils ne porteront pas l'action au quotidien mais t'aideront pour te fournir des factures d'électricité, par exemple.  Cela peut être le gestionnaire de ton établissement ou encore ta collectivité.",
-        "ressourcesToBeImplemented-title": "MOYENS A METTRE EN OEUVRE",
-        "ressourcesToBeImplemented-subtitle": "Quelles sont les étapes et moyens à employer ? Cela peut être des moyens humains, matériels, financiers... Construis-bien cette partie, elle est essentielle !",
-        "monitoringIndicators-title": "INDICATEURS DE SUIVI",
-        "monitoringIndicators-subtitle": "Inscris ici des indicateurs sur lesquels tu pourras te baser dans 6 mois / 1 an pour évaluer le succès de ton action. Un exemple : % de baisse des GES",
-        "estimatedCarbonImpacts-title": "IMPACTS CARBONE ESTIMES",
-        "estimatedCarbonImpacts-subtitle": "Dans quelle mesure ton action permet de réduire les émissions de GES ? ",
-        "otherEstimatedEnvironmentalImpacts-title": "AUTRES IMPACTS ENVIRONNEMENTAUX ESTIMES",
-        "otherEstimatedEnvironmentalImpacts-subtitle": "Pense ici aux impacts positifs ou négatifs de ton action sur la biodiversité, l'eau, les déchets...",
-        "estimatedSocialImpacts-title": "IMPACTS SOCIAUX ESTIMES",
-        "estimatedSocialImpacts-subtitle": "On essaie ici de savoir si l'action permet de réduire l'éco-anxiété, favoriser l'apprentissage, réduire le décrochage scolaire, favoriser l'insertion de jeunes...",
-        "calendar-title": "CALENDRIER",
-        "calendar-subtitle": "Inscris ici les grandes étapes de ton action, choisis bien ton échelle de temps !"
+        "goals-title": "CÉLOK",
+        "goals-subtitle": "Mutasd be, milyen célokat szolgál az intézkedésed (érzékenyítés, kibocsátáscsökkentés stb.). Rövid távú vagy stratégiai akció?",
+        "shareholders-title": "AZ AKCIÓ FELELŐSEI",
+        "shareholders-subtitle": "Megneveztél-e egy csapatot, akik napi szinten és hosszú távon viszik az akciót? Írd le nevüket és szerepüket/funkciójukat.",
+        "otherStakeholders-title": "EGYÉB ÉRINTETT FELEK",
+        "otherStakeholders-subtitle": "Különböztesd meg a belső és külső érintetteket. Ők nem viszik az akciót napi szinten, de segítenek például villanyszámlák beszerzésében. Lehetnek intézményvezetők vagy önkormányzat.",
+        "ressourcesToBeImplemented-title": "MEGVALÓSÍTANDÓ ESZKÖZÖK",
+        "ressourcesToBeImplemented-subtitle": "Milyen lépéseket és eszközöket kell alkalmazni? Lehetnek humán, anyagi, pénzügyi erőforrások... Ez a rész kulcsfontosságú!",
+        "monitoringIndicators-title": "NYOMONKÖVETÉSI MUTATÓK",
+        "monitoringIndicators-subtitle": "Írj ide olyan mutatókat, amelyek alapján 6 hónap/1 év múlva értékelheted az akció sikerét. Példa: ÜHG csökkenés százaléka.",
+        "estimatedCarbonImpacts-title": "BECSÜLT SZÉN-DIOXID HATÁSOK",
+        "estimatedCarbonImpacts-subtitle": "Mennyiben csökkenti az akció az ÜHG kibocsátást?",
+        "otherEstimatedEnvironmentalImpacts-title": "EGYÉB BECSÜLT KÖRNYEZETI HATÁSOK",
+        "otherEstimatedEnvironmentalImpacts-subtitle": "Gondolj az akció pozitív vagy negatív hatásaira a biodiverzitásra, vízre, hulladékra...",
+        "estimatedSocialImpacts-title": "BECSÜLT TÁRSADALMI HATÁSOK",
+        "estimatedSocialImpacts-subtitle": "Itt azt vizsgáljuk, hogy az akció csökkenti-e az öko-szorongást, segíti-e a tanulást, csökkenti-e a lemorzsolódást, segíti-e a fiatalok beilleszkedését...",
+        "calendar-title": "NAPTÁR",
+        "calendar-subtitle": "Írd le az akció főbb lépéseit, válaszd meg jól az időskálát!"
       },
-      "additionalInfo": "Les résultats que vous obtenez ici sont un calcul simplifié de l'empreinte carbone de votre établissement et ne répondent par aux exigences du Bilan Carbone®, ni de la réglementation en vigueur.  Ces résultats ont pour objet de vous accompagner dans la compréhension des enjeux climatiques et l'identification de vos priorités d'action.  Portant donc une valeur essentiellement pédagogique, le calcul de l'empreinte carbone de votre établissement via notre outil constitue donc une première étape dans votre adaptation aux conséquences du changement climatique."
+      "additionalInfo": "Az itt kapott eredmények az intézményed karbonlábnyomának egyszerűsített számításai, nem felelnek meg a Bilan Carbone® vagy a hatályos szabályozás követelményeinek. Ezek az eredmények segítenek megérteni a klímaváltozás kihívásait és azonosítani a cselekvési prioritásokat. Elsősorban oktatási célúak, az eszközünkön keresztül végzett karbonlábnyom-számítás az első lépés az alkalmazkodásban a klímaváltozás következményeihez."
     },
     "results": {
-      "carbonIntensities": "Empreinte carbone individuelle"
+      "carbonIntensities": "Egyéni karbonlábnyom"
     }
   },
   "emissionFactors": {
     "post": {
       "Restauration": "Ételkészítés / Vendéglátás",
-      "AutresGaz": "Autres gaz",
-      "Combustibles": "Combustibles",
-      "Construction": "Construction",
-      "DechetsRecyclables": "Déchets recyclables",
-      "DeplacementsClickson": "Déplacements",
-      "DistributeursAutomatiques": "Distributeurs automatiques",
-      "EnergiesClickson": "Énergie",
-      "EquipementsDeSport": "Équipements de sport",
-      "EquipementsDivers": "Equipements divers (électroménager, équipements professionnels...)",
-      "EquipementsInformatiqueAudiovisuel": "Équipements informatiques / audiovisuel",
-      "Fournitures": "Fournitures",
-      "ImmobilisationsClickson": "Immobilisations",
-      "OrduresMenageresResiduelles": "Ordures ménagères résiduelles",
-      "ProduitsChimiques": "Produits chimiques",
-      "Renovation": "Rénovation",
-      "TransportDesEleves": "Transport des élèves",
-      "TransportDuPersonnel": "Transport du personnel",
-      "TypesDeRepasServis": "Types de repas servis",
-      "VoyagesScolaires": "Voyages scolaires"
+      "AutresGaz": "Egyéb gázok",
+      "Combustibles": "Üzemanyagok",
+      "Construction": "Építés",
+      "DechetsRecyclables": "Újrahasznosítható hulladék",
+      "DeplacementsClickson": "Közlekedés",
+      "DistributeursAutomatiques": "Automata kioszkok",
+      "EnergiesClickson": "Energia",
+      "EquipementsDeSport": "Sportfelszerelések",
+      "EquipementsDivers": "Egyéb felszerelések (háztartási gépek, szakmai felszerelések...)",
+      "EquipementsInformatiqueAudiovisuel": "Informatikai / audiovizuális felszerelések",
+      "Fournitures": "Irodaszerek",
+      "ImmobilisationsClickson": "Immobilizációk",
+      "OrduresMenageresResiduelles": "Háztartási hulladék",
+      "ProduitsChimiques": "Vegyi anyagok",
+      "Renovation": "Felújítás",
+      "TransportDesEleves": "Diákok szállítása",
+      "TransportDuPersonnel": "Személyzet szállítása",
+      "TypesDeRepasServis": "Tálalt ételek típusai",
+      "VoyagesScolaires": "Iskolai utazások"
     }
   },
   "organization": {
@@ -161,32 +161,32 @@
     },
     "form": {
       "editTitle": "Intézményeim szerkesztése",
-      "name": "Nom de l'établissement"
+      "name": "Intézmény neve"
     },
     "sites": {
       "title": "Mely intézményeket kell lefednie a lábnyomnak?",
       "noSites": "Nincs beállított intézmény",
       "namePlaceholder": "Intézmény neve",
       "add": "Intézmény hozzáadása",
-      "academy": "Académie",
-      "academyPlaceholder": "Académie de l'établissement",
+      "academy": "Akadémia",
+      "academyPlaceholder": "Az intézmény akadémiája",
       "establishmentType": {
-        "title": "Type d'établissement",
-        "COLLEGE": "Collège",
-        "LYCEE_GENERAL": "Lycée Général et Technologique",
-        "LYCEE_PRO": "Lycée Professionnel",
-        "LYCEE_PRO_AGRICOLE": "Lycée Professionnel Agricole",
-        "ETABLISSEMENT_FR_ETRANGER": "Etablissement d'enseignement français à l'étranger"
+        "title": "Intézmény típusa",
+        "COLLEGE": "Középiskola",
+        "LYCEE_GENERAL": "Általános és technológiai gimnázium",
+        "LYCEE_PRO": "Szakgimnázium",
+        "LYCEE_PRO_AGRICOLE": "Mezőgazdasági szakgimnázium",
+        "ETABLISSEMENT_FR_ETRANGER": "Francia oktatási intézmény külföldön"
       },
-      "establishmentYear": "Année de construction",
-      "establishmentYearPlaceholder": "Année de construction de l'établissement",
-      "etp": "Nombre de personnels",
-      "etpPlaceholder": "Nombre total de personnels",
+      "establishmentYear": "Építés éve",
+      "establishmentYearPlaceholder": "Az intézmény építésének éve",
+      "etp": "Személyzet száma",
+      "etpPlaceholder": "Teljes személyzetszám",
       "glossary": {
-        "informations": "Il est nécessaire de renseigner ces informations avant d'aller plus loin dans votre démarche. Ces informations impactent effectivement le calcul de votre empreinte carbone (en particulier, le poste immobilisations)"
+        "informations": "Ezeket az információkat meg kell adni, mielőtt továbblépne. Ezek az adatok hatással vannak a karbonlábnyom számítására (különösen az immobilizációs tételre)."
       },
-      "studentNumber": "Nombre d'élèves",
-      "studentNumberPlaceholder": "Nombre total d'élèves"
+      "studentNumber": "Diákok száma",
+      "studentNumberPlaceholder": "Diákok teljes száma"
     }
   },
   "login": {
@@ -211,11 +211,11 @@
     "validation": {
       "schoolPostalCodeOrName": "Kérjük, add meg az iskola irányítószámát vagy nevét"
     },
-    "city": "Ville",
-    "cityPlaceholder": "Ville où se situe l'établissement scolaire",
-    "country": "Votre pays",
-    "schoolName": "Nom de l'établissement scolaire",
-    "schoolNamePlaceholder": "Nom de l'établissement scolaire"
+    "city": "Város",
+    "cityPlaceholder": "Az iskola városa",
+    "country": "Ország",
+    "schoolName": "Iskola neve",
+    "schoolNamePlaceholder": "Az iskola neve"
   },
   "email": {
     "subject": {
@@ -226,22 +226,22 @@
     }
   },
   "comments": {
-    "title": "Gestion des commentaires",
-    "noComments": "Vous n'avez aucun commentaire à traiter",
-    "yourComment": "Votre commentaire...",
-    "validated": "Validé",
-    "pending": "En attente",
-    "addComment": "Ajouter un commentaire"
+    "title": "Hozzászólások kezelése",
+    "noComments": "Nincs feldolgozandó hozzászólásod",
+    "yourComment": "A hozzászólásod...",
+    "validated": "Jóváhagyva",
+    "pending": "Függőben",
+    "addComment": "Hozzászólás hozzáadása"
   },
   "error": {
-    "Too many comments": "Vous avez déjà trop de commentaire en attente"
+    "Too many comments": "Már túl sok függőben lévő hozzászólásod van"
   },
   "ressources": {
-    "knowMoreDataCollect": "Pour savoir comment collecter les données de son établissement :",
-    "guideDataCollect": "Guide de collecte de données",
-    "toolsDataCollect": "Les outils de collecte de données :",
-    "modelsDataCollect": "Modèles de supports de collecte de données",
-    "game": "Jeu : initiation à la négociation de son plan d'action :",
-    "classEarth": "Ma Terre en classe"
+    "knowMoreDataCollect": "Tudj meg többet az intézmény adatgyűjtéséről:",
+    "guideDataCollect": "Adatgyűjtési útmutató",
+    "toolsDataCollect": "Adatgyűjtési eszközök:",
+    "modelsDataCollect": "Adatgyűjtési segédanyagok mintái",
+    "game": "Játék: saját intézkedési terv tárgyalásának bevezetése:",
+    "classEarth": "Földem az osztályban"
   }
 }

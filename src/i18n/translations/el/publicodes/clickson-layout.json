@@ -2,24 +2,24 @@
   "publicodes-layout": {
     "table": {
       "EquipementsInformatiqueAudiovisuel": {
-        "question": "Équipements informatiques et audiovisuels utilisés",
-        "equipement": "Équipement",
-        "nombre": "Nombre"
+        "question": "Χρησιμοποιούμενος εξοπλισμός πληροφορικής και οπτικοακουστικών μέσων",
+        "equipement": "Εξοπλισμός",
+        "nombre": "Αριθμός"
       },
       "TransportDesEleves": {
-        "question": "Distance parcourue par les élèves pour se rendre à l'établissement",
-        "moyenTransport": "Moyen de transport",
-        "distance": "Distance aller-retour en km"
+        "question": "Απόσταση που διανύουν οι μαθητές για να φτάσουν στο ίδρυμα",
+        "moyenTransport": "Μέσο μεταφοράς",
+        "distance": "Απόσταση μετ' επιστροφής σε χλμ"
       },
       "TransportDuPersonnel": {
-        "question": "Distance parcourue par le personnel pour se rendre à l'établissement",
-        "moyenTransport": "Moyen de transport",
-        "distance": "Distance aller-retour en km"
+        "question": "Απόσταση που διανύει το προσωπικό για να φτάσει στο ίδρυμα",
+        "moyenTransport": "Μέσο μεταφοράς",
+        "distance": "Απόσταση μετ' επιστροφής σε χλμ"
       },
       "VoyagesScolaires": {
-        "question": "Distance parcourue lors des voyages scolaires",
-        "moyenTransport": "Moyen de transport",
-        "distance": "Distance (km)"
+        "question": "Απόσταση που διανύεται κατά τη διάρκεια των σχολικών ταξιδιών",
+        "moyenTransport": "Μέσο μεταφοράς",
+        "distance": "Απόσταση (χλμ)"
       }
     }
   }

@@ -2,75 +2,75 @@
   "publicodes-rules": {
     "général": {
       "nombre étudiant": {
-        "question": "[TO_TRANSLATE] Nombre d'étudiants"
+        "question": "Αριθμός φοιτητών"
       },
       "nombre personnel": {
-        "question": "[TO_TRANSLATE] Nombre de personnel (enseignants et non enseignants)"
+        "question": "Αριθμός προσωπικού (διδακτικό και μη διδακτικό)"
       },
       "année de construction": {
-        "question": "[TO_TRANSLATE] Année de construction du bâtiment principal"
+        "question": "Έτος κατασκευής του κύριου κτιρίου"
       },
       "année de rénovation": {
-        "question": "[TO_TRANSLATE] Année de rénovation du bâtiment principal"
+        "question": "Έτος ανακαίνισης του κύριου κτιρίου"
       },
       "pays": {
-        "question": "[TO_TRANSLATE] Pays de l'établissement",
+        "question": "Χώρα του ιδρύματος",
         "options": {
-          "FRANCE": "[TO_TRANSLATE] FRANCE",
-          "HONGRIE": "[TO_TRANSLATE] HONGRIE",
-          "ROUMANIE": "[TO_TRANSLATE] ROUMANIE",
-          "CROATIE": "[TO_TRANSLATE] CROATIE"
+          "FRANCE": "ΓΑΛΛΙΑ",
+          "HONGRIE": "ΟΥΓΓΑΡΙΑ",
+          "ROUMANIE": "ΡΟΥΜΑΝΙΑ",
+          "CROATIE": "ΚΡΟΑΤΙΑ"
         }
       }
     },
     "énergie": {
       "électricité": {
         "consommation": {
-          "question": "[TO_TRANSLATE] Consommation annuelle d'électricité"
+          "question": "Ετήσια κατανάλωση ηλεκτρικής ενέργειας"
         },
         "FE": {
-          "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          "question": "Συντελεστής εκπομπών ηλεκτρικής ενέργειας"
         }
       },
       "combustibles": {
         "fioul domestique": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de fioul domestique"
+            "question": "Ετήσια κατανάλωση οικιακού πετρελαίου θέρμανσης"
           }
         },
         "fioul lourd": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de fioul lourd/commercial"
+            "question": "Ετήσια κατανάλωση βαρέως/εμπορικού πετρελαίου"
           }
         },
         "gaz naturel": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de gaz naturel"
+            "question": "Ετήσια κατανάλωση φυσικού αερίου"
           }
         },
         "granulés de bois": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de granulés de bois"
+            "question": "Ετήσια κατανάλωση ξυλοπέλλετων"
           }
         },
         "biopropane": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de biopropane"
+            "question": "Ετήσια κατανάλωση βιοπροπανίου"
           }
         },
         "réseau de chaleur": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de réseau de chaleur"
+            "question": "Ετήσια κατανάλωση δικτύου θερμότητας"
           }
         }
       },
       "autres gaz": {
         "gaz hfc spécifique": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de ce gaz HFC"
+            "question": "Ετήσια κατανάλωση αυτού του αερίου HFC"
           },
           "PRG": {
-            "question": "[TO_TRANSLATE] Pouvoir de Réchauffement Global (PRG) du gaz HFC"
+            "question": "Δυναμικό Παγκόσμιας Θέρμανσης (PRG) του αερίου HFC"
           }
         }
       }
@@ -79,155 +79,155 @@
       "types de repas servis": {
         "moyen": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de repas moyens annuels"
+            "question": "Ετήσιος αριθμός μέσων γευμάτων"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par repas moyen"
+            "question": "Συντελεστής εκπομπών ανά μέσο γεύμα"
           }
         },
         "végétarien": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de repas végétariens annuels"
+            "question": "Ετήσιος αριθμός χορτοφαγικών γευμάτων"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par repas végétarien"
+            "question": "Συντελεστής εκπομπών ανά χορτοφαγικό γεύμα"
           }
         },
         "végétalien": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de repas végétaliens annuels"
+            "question": "Ετήσιος αριθμός βίγκαν γευμάτων"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par repas végétalien"
+            "question": "Συντελεστής εκπομπών ανά βίγκαν γεύμα"
           }
         },
         "viande rouge": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de repas à base de viande rouge annuels"
+            "question": "Ετήσιος αριθμός γευμάτων με κόκκινο κρέας"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par repas à base de viande rouge"
+            "question": "Συντελεστής εκπομπών ανά γεύμα με κόκκινο κρέας"
           }
         },
         "viande blanche": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de repas à base de viande blanche annuels"
+            "question": "Ετήσιος αριθμός γευμάτων με λευκό κρέας"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par repas à base de viande blanche"
+            "question": "Συντελεστής εκπομπών ανά γεύμα με λευκό κρέας"
           }
         },
         "poisson": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de repas à base de poisson blanc annuels"
+            "question": "Ετήσιος αριθμός γευμάτων με λευκό ψάρι"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par repas à base de poisson blanc"
+            "question": "Συντελεστής εκπομπών ανά γεύμα με λευκό ψάρι"
           }
         }
       },
       "fret": {
         "routier": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Distance parcourue en fret routier"
+            "question": "Απόσταση που διανύθηκε με οδική μεταφορά εμπορευμάτων"
           }
         },
         "ferroviaire": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Distance parcourue en fret ferroviaire"
+            "question": "Απόσταση που διανύθηκε με σιδηροδρομική μεταφορά εμπορευμάτων"
           }
         },
         "maritime": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Distance parcourue en fret maritime"
+            "question": "Απόσταση που διανύθηκε με θαλάσσια μεταφορά εμπορευμάτων"
           }
         }
       },
       "distributeur automatiques": {
         "bouteille d'eau": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de bouteille d'eau consommées annuellement"
+            "question": "Ετήσιος αριθμός καταναλωμένων μπουκαλιών νερού"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par bouteille d'eau"
+            "question": "Συντελεστής εκπομπών ανά μπουκάλι νερού"
           }
         },
         "soda": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de sodas consommés annuellement"
+            "question": "Ετήσιος αριθμός καταναλωμένων αναψυκτικών"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par soda"
+            "question": "Συντελεστής εκπομπών ανά αναψυκτικό"
           }
         },
         "biscuits": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de paquets de biscuits consommés annuellement"
+            "question": "Ετήσιος αριθμός καταναλωμένων πακέτων μπισκότων"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par paquet de biscuits"
+            "question": "Συντελεστής εκπομπών ανά πακέτο μπισκότων"
           }
         },
         "paquet de chips": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de paquets de chips consommés annuellement"
+            "question": "Ετήσιος αριθμός καταναλωμένων πακέτων πατατάκια"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par paquet de chips"
+            "question": "Συντελεστής εκπομπών ανά πακέτο πατατάκια"
           }
         },
         "café noir": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de cafés noirs consommés annuellement"
+            "question": "Ετήσιος αριθμός καταναλωμένων μαύρων καφέδων"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par café noir"
+            "question": "Συντελεστής εκπομπών ανά μαύρο καφέ"
           }
         },
         "thé infusé": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de thés infusés consommés annuellement"
+            "question": "Ετήσιος αριθμός καταναλωμένων τσαγιών"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par thé infusé"
+            "question": "Συντελεστής εκπομπών ανά τσάι"
           }
         },
         "sandwich pain de mie": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de sandwichs pain de mie consommés annuellement"
+            "question": "Ετήσιος αριθμός καταναλωμένων σάντουιτς με ψωμί του τοστ"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par sandwich pain de mie"
+            "question": "Συντελεστής εκπομπών ανά σάντουιτς με ψωμί του τοστ"
           }
         },
         "barre chocolatée": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de barres chocolatées consommées annuellement"
+            "question": "Ετήσιος αριθμός καταναλωμένων σοκολατένιων μπαρών"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par barre chocolatée"
+            "question": "Συντελεστής εκπομπών ανά σοκολατένια μπάρα"
           }
         }
       },
       "déchets organiques": {
         "biodéchets compostés": {
           "quantité": {
-            "question": "[TO_TRANSLATE] Quantité de biodéchets compostés"
+            "question": "Ποσότητα κομποστοποιημένων βιοαποβλήτων"
           }
         },
         "biodéchets méthanisés": {
           "quantité": {
-            "question": "[TO_TRANSLATE] Quantité de biodéchets méthanisés"
+            "question": "Ποσότητα βιοαποβλήτων που έχουν υποστεί μεθανιοποίηση"
           }
         },
         "biodéchets incinérés": {
           "quantité": {
-            "question": "[TO_TRANSLATE] Quantité de biodéchets incinérés"
+            "question": "Ποσότητα βιοαποβλήτων που έχουν αποτεφρωθεί"
           }
         },
         "biodéchets enfouis": {
           "quantité": {
-            "question": "[TO_TRANSLATE] Quantité de biodéchets enfouis"
+            "question": "Ποσότητα βιοαποβλήτων που έχουν ταφεί"
           }
         }
       }
@@ -236,270 +236,270 @@
       "rénovation": {
         "bâtiment scolaire structure béton rénové": {
           "surface": {
-            "question": "[TO_TRANSLATE] Quelle surface de bâtiment scolaire (structure béton) avez-vous rénovée ?"
+            "question": "Ποια είναι η επιφάνεια του ανακαινισμένου σχολικού κτιρίου (κατασκευή από σκυρόδεμα);"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par m² de bâtiment scolaire rénové (structure béton)"
+            "question": "Συντελεστής εκπομπών ανά m² ανακαινισμένου σχολικού κτιρίου (κατασκευή από σκυρόδεμα)"
           }
         },
         "parking bâtiment structure béton rénové": {
           "surface": {
-            "question": "[TO_TRANSLATE] Quelle surface de parking (bâtiment - structure béton) avez-vous rénovée ?"
+            "question": "Ποια είναι η επιφάνεια του ανακαινισμένου χώρου στάθμευσης (κτίριο - κατασκευή από σκυρόδεμα);"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par m² de parking rénové (bâtiment - structure béton)"
+            "question": "Συντελεστής εκπομπών ανά m² ανακαινισμένου χώρου στάθμευσης (κτίριο - κατασκευή από σκυρόδεμα)"
           }
         },
         "parking surface bitume rénové": {
           "surface": {
-            "question": "[TO_TRANSLATE] Quelle surface de parking (surface bitume) avez-vous rénovée ?"
+            "question": "Ποια είναι η επιφάνεια του ανακαινισμένου χώρου στάθμευσης (επιφάνεια ασφάλτου);"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par m² de parking rénové (surface bitume)"
+            "question": "Συντελεστής εκπομπών ανά m² ανακαινισμένου χώρου στάθμευσης (επιφάνεια ασφάλτου)"
           }
         },
         "parking surface semi-dure rénové": {
           "surface": {
-            "question": "[TO_TRANSLATE] Quelle surface de parking (surface semi-dure) avez-vous rénovée ?"
+            "question": "Ποια είναι η επιφάνεια του ανακαινισμένου χώρου στάθμευσης (ημι-σκληρή επιφάνεια);"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par m² de parking rénové (surface semi-dure)"
+            "question": "Συντελεστής εκπομπών ανά m² ανακαινισμένου χώρου στάθμευσης (ημι-σκληρή επιφάνεια)"
           }
         },
         "garage structure béton rénové": {
           "surface": {
-            "question": "[TO_TRANSLATE] Quelle surface de garage (structure béton) avez-vous rénovée ?"
+            "question": "Ποια είναι η επιφάνεια του ανακαινισμένου γκαράζ (κατασκευή από σκυρόδεμα);"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par m² de garage rénové (structure béton)"
+            "question": "Συντελεστής εκπομπών ανά m² ανακαινισμένου γκαράζ (κατασκευή από σκυρόδεμα)"
           }
         },
         "garage structure métal rénové": {
           "surface": {
-            "question": "[TO_TRANSLATE] Quelle surface de garage (structure métal) avez-vous rénovée ?"
+            "question": "Ποια είναι η επιφάνεια του ανακαινισμένου γκαράζ (κατασκευή από μέταλλο);"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par m² de garage rénové (structure métal)"
+            "question": "Συντελεστής εκπομπών ανά m² ανακαινισμένου γκαράζ (κατασκευή από μέταλλο)"
           }
         }
       },
       "équipements informatique audiovisuel": {
         "ordinateur de bureau": {
-          "titre": "[TO_TRANSLATE] Ordinateur de bureau",
+          "titre": "Επιτραπέζιος υπολογιστής",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien d'ordinateurs de bureau avez-vous achetés ?"
+            "question": "Πόσους επιτραπέζιους υπολογιστές αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par ordinateur de bureau"
+            "question": "Συντελεστής εκπομπών ανά επιτραπέζιο υπολογιστή"
           }
         },
         "ordinateur portable": {
-          "titre": "[TO_TRANSLATE] Ordinateur portable",
+          "titre": "Φορητός υπολογιστής",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien d'ordinateurs portables avez-vous achetés ?"
+            "question": "Πόσους φορητούς υπολογιστές αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par ordinateur portable"
+            "question": "Συντελεστής εκπομπών ανά φορητό υπολογιστή"
           }
         },
         "tablette": {
-          "titre": "[TO_TRANSLATE] Tablette",
+          "titre": "Tablet",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de tablettes avez-vous achetées ?"
+            "question": "Πόσες ταμπλέτες αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par tablette"
+            "question": "Συντελεστής εκπομπών ανά ταμπλέτα"
           }
         },
         "imprimante": {
-          "titre": "[TO_TRANSLATE] Imprimante",
+          "titre": "Εκτυπωτής",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien d'imprimantes avez-vous achetées ?"
+            "question": "Πόσους εκτυπωτές αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par imprimante"
+            "question": "Συντελεστής εκπομπών ανά εκτυπωτή"
           }
         },
         "photocopieur": {
-          "titre": "[TO_TRANSLATE] Photocopieur",
+          "titre": "Φωτοτυπικό",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de photocopieurs avez-vous achetés ?"
+            "question": "Πόσα φωτοτυπικά αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par photocopieur"
+            "question": "Συντελεστής εκπομπών ανά φωτοτυπικό"
           }
         },
         "vidéoprojecteur": {
-          "titre": "[TO_TRANSLATE] Vidéoprojecteur",
+          "titre": "Βιντεοπροβολέας",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de vidéoprojecteurs avez-vous achetés ?"
+            "question": "Πόσους βιντεοπροβολείς αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par vidéoprojecteur"
+            "question": "Συντελεστής εκπομπών ανά βιντεοπροβολέα"
           }
         },
         "serveur informatique": {
-          "titre": "[TO_TRANSLATE] Serveur informatique",
+          "titre": "Διακομιστής υπολογιστών",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de serveurs informatiques avez-vous achetés ?"
+            "question": "Πόσους διακομιστές υπολογιστών αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par serveur informatique"
+            "question": "Συντελεστής εκπομπών ανά διακομιστή υπολογιστών"
           }
         },
         "télévision 40-49 pouces": {
-          "titre": "[TO_TRANSLATE] Télévision 40-49 pouces",
+          "titre": "Τηλεόραση 40-49 ίντσες",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de télévisions 40-49 pouces avez-vous achetées ?"
+            "question": "Πόσες τηλεοράσεις 40-49 ίντσες αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par télévision 40-49 pouces"
+            "question": "Συντελεστής εκπομπών ανά τηλεόραση 40-49 ίντσες"
           }
         },
         "rack de serveur": {
-          "titre": "[TO_TRANSLATE] Rack de serveur",
+          "titre": "Ράφι διακομιστή",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de racks de serveur avez-vous achetés ?"
+            "question": "Πόσα ράφια διακομιστή αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par rack de serveur"
+            "question": "Συντελεστής εκπομπών ανά ράφι διακομιστή"
           }
         },
         "télécommande universelle sans piles 80g": {
-          "titre": "[TO_TRANSLATE] Télécommande universelle sans piles 80g",
+          "titre": "Καθολικό τηλεχειριστήριο χωρίς μπαταρίες 80g",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de télécommandes universelles sans piles (80g) avez-vous achetées ?"
+            "question": "Πόσα καθολικά τηλεχειριστήρια χωρίς μπαταρίες (80g) αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par télécommande universelle sans piles 80g"
+            "question": "Συντελεστής εκπομπών ανά καθολικό τηλεχειριστήριο χωρίς μπαταρίες 80g"
           }
         },
         "stéréo classique": {
-          "titre": "[TO_TRANSLATE] Stéréo classique",
+          "titre": "Κλασικό στερεοφωνικό",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de stéréos classiques avez-vous achetées ?"
+            "question": "Πόσα κλασικά στερεοφωνικά αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par stéréo classique"
+            "question": "Συντελεστής εκπομπών ανά κλασικό στερεοφωνικό"
           }
         },
         "enceinte Bluetooth": {
-          "titre": "[TO_TRANSLATE] Enceinte Bluetooth",
+          "titre": "Ηχείο Bluetooth",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien d'enceintes Bluetooth avez-vous achetées ?"
+            "question": "Πόσα ηχεία Bluetooth αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par enceinte Bluetooth"
+            "question": "Συντελεστής εκπομπών ανά ηχείο Bluetooth"
           }
         },
         "smartphone 5 pouces": {
-          "titre": "[TO_TRANSLATE] Smartphone 5 pouces",
+          "titre": "Smartphone 5 ίντσες",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de smartphones 5 pouces avez-vous achetés ?"
+            "question": "Πόσα smartphones 5 ίντσες αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par smartphone 5 pouces"
+            "question": "Συντελεστής εκπομπών ανά smartphone 5 ίντσες"
           }
         },
         "écran 23,8 pouces": {
-          "titre": "[TO_TRANSLATE] Écran 23,8 pouces",
+          "titre": "Οθόνη 23,8 ίντσες",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien d'écrans 23,8 pouces avez-vous achetés ?"
+            "question": "Πόσες οθόνες 23,8 ίντσες αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par écran 23,8 pouces"
+            "question": "Συντελεστής εκπομπών ανά οθόνη 23,8 ίντσες"
           }
         }
       },
       "équipements divers": {
         "chaise de bureau": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de chaises de bureau avez-vous achetées ?"
+            "question": "Πόσες καρέκλες γραφείου αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par chaise de bureau"
+            "question": "Συντελεστής εκπομπών ανά καρέκλα γραφείου"
           }
         },
         "table de réunion": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de tables de réunion avez-vous achetées ?"
+            "question": "Πόσα τραπέζια συνεδριάσεων αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par table de réunion"
+            "question": "Συντελεστής εκπομπών ανά τραπέζι συνεδριάσεων"
           }
         },
         "armoire de rangement": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien d'armoires de rangement avez-vous achetées ?"
+            "question": "Πόσες ντουλάπες αποθήκευσης αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par armoire de rangement"
+            "question": "Συντελεστής εκπομπών ανά ντουλάπα αποθήκευσης"
           }
         },
         "fauteuil d'accueil": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de fauteuils d'accueil avez-vous achetés ?"
+            "question": "Πόσες πολυθρόνες υποδοχής αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par fauteuil d'accueil"
+            "question": "Συντελεστής εκπομπών ανά πολυθρόνα υποδοχής"
           }
         },
         "étagère": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien d'étagères avez-vous achetées ?"
+            "question": "Πόσα ράφια αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par étagère"
+            "question": "Συντελεστής εκπομπών ανά ράφι"
           }
         }
       },
       "construction": {
         "bâtiment scolaire structure béton": {
           "surface": {
-            "question": "[UPDATED] Quelle surface de bâtiment scolaire (structure béton) comporte votre enceinte scolaire ?"
+            "question": "Ποια είναι η επιφάνεια του σχολικού κτιρίου (κατασκευή από σκυρόδεμα) στην εγκατάστασή σας;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par m² de bâtiment scolaire (structure béton)"
+            "question": "Συντελεστής εκπομπών ανά m² σχολικού κτιρίου (κατασκευή από σκυρόδεμα)"
           }
         },
         "parking bâtiment structure béton": {
           "surface": {
-            "question": "[UPDATED] Quelle surface de parking (bâtiment - structure béton) comporte votre enceinte scolaire ?"
+            "question": "Ποια είναι η επιφάνεια του χώρου στάθμευσης (κτίριο - κατασκευή από σκυρόδεμα) στην εγκατάστασή σας;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par m² de parking (bâtiment - structure béton)"
+            "question": "Συντελεστής εκπομπών ανά m² χώρου στάθμευσης (κτίριο - κατασκευή από σκυρόδεμα)"
           }
         },
         "parking surface bitume": {
           "surface": {
-            "question": "[UPDATED] Quelle surface de parking (surface bitume) comporte votre enceinte scolaire ?"
+            "question": "Ποια είναι η επιφάνεια του χώρου στάθμευσης (επιφάνεια ασφάλτου) στην εγκατάστασή σας;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par m² de parking (surface bitume)"
+            "question": "Συντελεστής εκπομπών ανά m² χώρου στάθμευσης (επιφάνεια ασφάλτου)"
           }
         },
         "parking surface semi-dure": {
           "surface": {
-            "question": "[UPDATED] Quelle surface de parking (surface semi-dure) comporte votre enceinte scolaire ?"
+            "question": "Ποια είναι η επιφάνεια του χώρου στάθμευσης (ημι-σκληρή επιφάνεια) στην εγκατάστασή σας;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par m² de parking (surface semi-dure)"
+            "question": "Συντελεστής εκπομπών ανά m² χώρου στάθμευσης (ημι-σκληρή επιφάνεια)"
           }
         },
         "garage structure béton": {
           "surface": {
-            "question": "[UPDATED] Quelle surface de garage (structure béton) comporte votre enceinte scolaire ?"
+            "question": "Ποια είναι η επιφάνεια του γκαράζ (κατασκευή από σκυρόδεμα) στην εγκατάστασή σας;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par m² de garage (structure béton)"
+            "question": "Συντελεστής εκπομπών ανά m² γκαράζ (κατασκευή από σκυρόδεμα)"
           }
         },
         "garage structure métal": {
           "surface": {
-            "question": "[UPDATED] Quelle surface de garage (structure métal) comporte votre enceinte scolaire ?"
+            "question": "Ποια είναι η επιφάνεια του γκαράζ (κατασκευή από μέταλλο) στην εγκατάστασή σας;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par m² de garage (structure métal)"
+            "question": "Συντελεστής εκπομπών ανά m² γκαράζ (κατασκευή από μέταλλο)"
           }
         }
       }
@@ -507,259 +507,259 @@
     "déplacements": {
       "voyages scolaires": {
         "RER et transilien": {
-          "titre": "[TO_TRANSLATE] RER et transilien",
+          "titre": "RER και προαστιακός",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "métro ou tram": {
-          "titre": "[TO_TRANSLATE] Métro, tramway",
+          "titre": "Μετρό, τραμ",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "vélo électrique": {
-          "titre": "[TO_TRANSLATE] Vélo électrique",
+          "titre": "Ηλεκτρικό ποδήλατο",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "trottinette électrique": {
-          "titre": "[TO_TRANSLATE] Trottinette électrique",
+          "titre": "Ηλεκτρικό πατίνι",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "moto essence": {
-          "titre": "[TO_TRANSLATE] Moto essence",
+          "titre": "Μοτοσικλέτα βενζίνης",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "véhicule compact électrique": {
-          "titre": "[TO_TRANSLATE] Véhicule compact électrique",
+          "titre": "Μικρό ηλεκτρικό όχημα",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "voiture individuelle essence": {
-          "titre": "[TO_TRANSLATE] Voiture individuelle essence",
+          "titre": "Ατομικό αυτοκίνητο βενζίνης",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "voiture individuelle diesel": {
-          "titre": "[TO_TRANSLATE] Voiture individuelle diesel",
+          "titre": "Ατομικό αυτοκίνητο πετρελαίου",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "bus": {
-          "titre": "[TO_TRANSLATE] Autobus",
+          "titre": "Λεωφορείο",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "TER": {
-          "titre": "[TO_TRANSLATE] TER",
+          "titre": "Περιφερειακό τρένο (TER)",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "TGV": {
-          "titre": "[TO_TRANSLATE] TGV",
+          "titre": "Υπερταχύ τρένο (TGV)",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "avion court courrier": {
-          "titre": "[TO_TRANSLATE] Avion Court courrier",
+          "titre": "Αεροπλάνο μικρών αποστάσεων",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "avion moyen courrier": {
-          "titre": "[TO_TRANSLATE] Avion Moyen courrier",
+          "titre": "Αεροπλάνο μεσαίων αποστάσεων",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "avion long courrier": {
-          "titre": "[TO_TRANSLATE] Avion Long courrier",
+          "titre": "Αεροπλάνο μεγάλων αποστάσεων",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         }
       },
       "transport des élèves": {
         "RER et transilien": {
-          "titre": "[TO_TRANSLATE] RER et transilien",
+          "titre": "RER και προαστιακός",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "métro ou tram": {
-          "titre": "[TO_TRANSLATE] Métro, tramway",
+          "titre": "Μετρό, τραμ",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "vélo électrique": {
-          "titre": "[TO_TRANSLATE] Vélo électrique",
+          "titre": "Ηλεκτρικό ποδήλατο",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "trottinette électrique": {
-          "titre": "[TO_TRANSLATE] Trottinette électrique",
+          "titre": "Ηλεκτρικό πατίνι",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "moto essence": {
-          "titre": "[TO_TRANSLATE] Moto essence",
+          "titre": "Μοτοσικλέτα βενζίνης",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "véhicule compact électrique": {
-          "titre": "[TO_TRANSLATE] Véhicule compact électrique",
+          "titre": "Μικρό ηλεκτρικό όχημα",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "voiture individuelle essence": {
-          "titre": "[TO_TRANSLATE] Voiture individuelle essence",
+          "titre": "Ατομικό αυτοκίνητο βενζίνης",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "voiture individuelle diesel": {
-          "titre": "[TO_TRANSLATE] Voiture individuelle diesel",
+          "titre": "Ατομικό αυτοκίνητο πετρελαίου",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "bus": {
-          "titre": "[TO_TRANSLATE] Autobus",
+          "titre": "Λεωφορείο",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "TER": {
-          "titre": "[TO_TRANSLATE] TER",
+          "titre": "Περιφερειακό τρένο (TER)",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "TGV": {
-          "titre": "[TO_TRANSLATE] TGV",
+          "titre": "Υπερταχύ τρένο (TGV)",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "avion court courrier": {
-          "titre": "[TO_TRANSLATE] Avion Court courrier",
+          "titre": "Αεροπλάνο μικρών αποστάσεων",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "avion moyen courrier": {
-          "titre": "[TO_TRANSLATE] Avion Moyen courrier",
+          "titre": "Αεροπλάνο μεσαίων αποστάσεων",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "avion long courrier": {
-          "titre": "[TO_TRANSLATE] Avion Long courrier",
+          "titre": "Αεροπλάνο μεγάλων αποστάσεων",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         }
       },
       "transport du personnel": {
         "RER et transilien": {
-          "titre": "[TO_TRANSLATE] RER et transilien",
+          "titre": "RER και προαστιακός",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "métro ou tram": {
-          "titre": "[TO_TRANSLATE] Métro, tramway",
+          "titre": "Μετρό, τραμ",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "vélo électrique": {
-          "titre": "[TO_TRANSLATE] Vélo électrique",
+          "titre": "Ηλεκτρικό ποδήλατο",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "trottinette électrique": {
-          "titre": "[TO_TRANSLATE] Trottinette électrique",
+          "titre": "Ηλεκτρικό πατίνι",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "moto essence": {
-          "titre": "[TO_TRANSLATE] Moto essence",
+          "titre": "Μοτοσικλέτα βενζίνης",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "véhicule compact électrique": {
-          "titre": "[TO_TRANSLATE] Véhicule compact électrique",
+          "titre": "Μικρό ηλεκτρικό όχημα",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "voiture individuelle essence": {
-          "titre": "[TO_TRANSLATE] Voiture individuelle essence",
+          "titre": "Ατομικό αυτοκίνητο βενζίνης",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "voiture individuelle diesel": {
-          "titre": "[TO_TRANSLATE] Voiture individuelle diesel",
+          "titre": "Ατομικό αυτοκίνητο πετρελαίου",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "bus": {
-          "titre": "[TO_TRANSLATE] Autobus",
+          "titre": "Λεωφορείο",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "TER": {
-          "titre": "[TO_TRANSLATE] TER",
+          "titre": "Περιφερειακό τρένο (TER)",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "TGV": {
-          "titre": "[TO_TRANSLATE] TGV",
+          "titre": "Υπερταχύ τρένο (TGV)",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "avion court courrier": {
-          "titre": "[TO_TRANSLATE] Avion Court courrier",
+          "titre": "Αεροπλάνο μικρών αποστάσεων",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "avion moyen courrier": {
-          "titre": "[TO_TRANSLATE] Avion Moyen courrier",
+          "titre": "Αεροπλάνο μεσαίων αποστάσεων",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         },
         "avion long courrier": {
-          "titre": "[TO_TRANSLATE] Avion Long courrier",
+          "titre": "Αεροπλάνο μεγάλων αποστάσεων",
           "distance": {
-            "question": "[TO_TRANSLATE] Distance (km)"
+            "question": "Απόσταση (χλμ)"
           }
         }
       }
@@ -768,326 +768,326 @@
       "produits chimiques": {
         "produit vaisselle liquide": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de produit vaisselle liquide"
+            "question": "Ετήσια κατανάλωση υγρού απορρυπαντικού πιάτων"
           }
         },
         "savon liquide": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de savon liquide"
+            "question": "Ετήσια κατανάλωση υγρού σαπουνιού"
           }
         },
         "produit vitre": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de produit vitre"
+            "question": "Ετήσια κατανάλωση καθαριστικού τζαμιών"
           }
         },
         "nettoyant sols": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de nettoyant sols"
+            "question": "Ετήσια κατανάλωση καθαριστικού δαπέδων"
           }
         },
         "nettoyant multi-usages": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de nettoyant multi-usages"
+            "question": "Ετήσια κατανάλωση πολυκαθαριστικού"
           }
         },
         "détergent sanitaire": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de détergent sanitaire"
+            "question": "Ετήσια κατανάλωση απορρυπαντικού υγιεινής"
           }
         },
         "désinfectant": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de désinfectant"
+            "question": "Ετήσια κατανάλωση απολυμαντικού"
           }
         },
         "chlore": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de chlore"
+            "question": "Ετήσια κατανάλωση χλωρίου"
           }
         },
         "bicarbonate de soude": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de bicarbonate de soude"
+            "question": "Ετήσια κατανάλωση μαγειρικής σόδας"
           }
         },
         "peinture revêtement mural intérieur": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de peinture - revêtement mural intérieur"
+            "question": "Ετήσια κατανάλωση εσωτερικής βαφής τοίχου"
           }
         },
         "peinture revêtement mural extérieur": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de peinture - revêtement mural extérieur"
+            "question": "Ετήσια κατανάλωση εξωτερικής βαφής τοίχου"
           }
         },
         "savon solide": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de savon solide"
+            "question": "Ετήσια κατανάλωση στερεού σαπουνιού"
           }
         },
         "vinaigre blanc": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de vinaigre blanc"
+            "question": "Ετήσια κατανάλωση λευκού ξυδιού"
           }
         },
         "soude solide": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de soude solide (poudre, granulés)"
+            "question": "Ετήσια κατανάλωση στερεής σόδας (σκόνη, κόκκοι)"
           }
         },
         "acide sulfurique": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle d'acide sulfurique"
+            "question": "Ετήσια κατανάλωση θειικού οξέος"
           }
         },
         "acide chlorhydrique": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle d'acide chlorhydrique"
+            "question": "Ετήσια κατανάλωση υδροχλωρικού οξέος"
           }
         }
       },
       "ordures ménagères résiduelles": {
         "ordures ménagères résiduelles": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de kg d'ordures ménagères résiduelles avez-vous achetés ou générés ?"
+            "question": "Πόσα κιλά υπολειμματικών οικιακών απορριμμάτων αγοράσατε ή παράξατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission des ordures ménagères résiduelles"
+            "question": "Συντελεστής εκπομπών υπολειμματικών οικιακών απορριμμάτων"
           }
         }
       },
       "fournitures": {
         "petites fournitures": {
           "montant": {
-            "question": "[TO_TRANSLATE] Quel est le montant dépensé en petites fournitures (stylos, etc.) ?"
+            "question": "Ποιο είναι το ποσό που δαπανήθηκε για μικρά είδη γραφείου (στυλό κ.λπ.);"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par euro de petites fournitures"
+            "question": "Συντελεστής εκπομπών ανά ευρώ μικρών ειδών γραφείου"
           }
         },
         "livres": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de livres avez-vous achetés ?"
+            "question": "Πόσα βιβλία αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par livre"
+            "question": "Συντελεστής εκπομπών ανά βιβλίο"
           }
         },
         "papier ramette": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de ramettes de papier avez-vous achetées ?"
+            "question": "Πόσες δεσμίδες χαρτιού αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par ramette de papier"
+            "question": "Συντελεστής εκπομπών ανά δεσμίδα χαρτιού"
           }
         },
         "consommables": {
           "montant": {
-            "question": "[TO_TRANSLATE] Quel est le montant dépensé en consommables (cartouches d'encre, etc.) ?"
+            "question": "Ποιο είναι το ποσό που δαπανήθηκε για αναλώσιμα (μελάνια κ.λπ.);"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par euro de consommables"
+            "question": "Συντελεστής εκπομπών ανά ευρώ αναλωσίμων"
           }
         },
         "piles aaa": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de piles AAA (alcalines) avez-vous achetées ?"
+            "question": "Πόσες μπαταρίες AAA (αλκαλικές) αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par pile AAA"
+            "question": "Συντελεστής εκπομπών ανά μπαταρία AAA"
           }
         },
         "piles aa": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de piles AA (alcalines) avez-vous achetées ?"
+            "question": "Πόσες μπαταρίες AA (αλκαλικές) αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par pile AA"
+            "question": "Συντελεστής εκπομπών ανά μπαταρία AA"
           }
         }
       },
       "équipements de sport": {
         "ballon de volley": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de ballons de volley avez-vous achetés ?"
+            "question": "Πόσες μπάλες βόλεϊ αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par ballon de volley"
+            "question": "Συντελεστής εκπομπών ανά μπάλα βόλεϊ"
           }
         },
         "ballon de handball": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de ballons de handball avez-vous achetés ?"
+            "question": "Πόσες μπάλες χάντμπολ αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par ballon de handball"
+            "question": "Συντελεστής εκπομπών ανά μπάλα χάντμπολ"
           }
         },
         "kimono judo": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de kimonos de judo avez-vous achetés ?"
+            "question": "Πόσα κιμονό τζούντο αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par kimono (judo)"
+            "question": "Συντελεστής εκπομπών ανά κιμονό (τζούντο)"
           }
         },
         "shorts tous sports": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de shorts tous sports avez-vous achetés ?"
+            "question": "Πόσα σορτς για όλα τα αθλήματα αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par short tous sports"
+            "question": "Συντελεστής εκπομπών ανά σορτς για όλα τα αθλήματα"
           }
         },
         "maillots tous sports": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de maillots tous sports avez-vous achetés ?"
+            "question": "Πόσα φανελάκια για όλα τα αθλήματα αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par maillot tous sports"
+            "question": "Συντελεστής εκπομπών ανά φανελάκι για όλα τα αθλήματα"
           }
         },
         "t-shirt polyester": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de t-shirts en polyester avez-vous achetés ?"
+            "question": "Πόσα μπλουζάκια από πολυεστέρα αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par t-shirt en polyester"
+            "question": "Συντελεστής εκπομπών ανά μπλουζάκι από πολυεστέρα"
           }
         },
         "ballon de rugby": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de ballons de rugby avez-vous achetés ?"
+            "question": "Πόσες μπάλες ράγκμπι αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par ballon de rugby"
+            "question": "Συντελεστής εκπομπών ανά μπάλα ράγκμπι"
           }
         },
         "ballon de basket": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de ballons de basket avez-vous achetés ?"
+            "question": "Πόσες μπάλες μπάσκετ αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par ballon de basket"
+            "question": "Συντελεστής εκπομπών ανά μπάλα μπάσκετ"
           }
         },
         "ballon de football": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de ballons de football avez-vous achetés ?"
+            "question": "Πόσες μπάλες ποδοσφαίρου αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par ballon de football"
+            "question": "Συντελεστής εκπομπών ανά μπάλα ποδοσφαίρου"
           }
         }
       },
       "déchets recyclables": {
         "papier": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Quantité de papier recyclé (en kg) ?"
+            "question": "Ποσότητα ανακυκλωμένου χαρτιού (σε κιλά);"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission du papier recyclé"
+            "question": "Συντελεστής εκπομπών ανακυκλωμένου χαρτιού"
           }
         },
         "carton": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Quantité de carton recyclé (en kg) ?"
+            "question": "Ποσότητα ανακυκλωμένου χαρτονιού (σε κιλά);"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission du carton recyclé"
+            "question": "Συντελεστής εκπομπών ανακυκλωμένου χαρτονιού"
           }
         },
         "plastique": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Quantité de plastique recyclé (en kg) ?"
+            "question": "Ποσότητα ανακυκλωμένου πλαστικού (σε κιλά);"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission du plastique recyclé"
+            "question": "Συντελεστής εκπομπών ανακυκλωμένου πλαστικού"
           }
         },
         "verre": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Quantité de verre recyclé (en kg) ?"
+            "question": "Ποσότητα ανακυκλωμένου γυαλιού (σε κιλά);"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission du verre recyclé"
+            "question": "Συντελεστής εκπομπών ανακυκλωμένου γυαλιού"
           }
         },
         "métal": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Quantité de métal recyclé (en kg) ?"
+            "question": "Ποσότητα ανακυκλωμένου μετάλλου (σε κιλά);"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission du métal recyclé"
+            "question": "Συντελεστής εκπομπών ανακυκλωμένου μετάλλου"
           }
         },
         "bois": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Quantité de bois recyclé (en kg) ?"
+            "question": "Ποσότητα ανακυκλωμένου ξύλου (σε κιλά);"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission du bois recyclé"
+            "question": "Συντελεστής εκπομπών ανακυκλωμένου ξύλου"
           }
         },
         "textiles": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Quantité de textiles recyclés (en kg) ?"
+            "question": "Ποσότητα ανακυκλωμένων υφασμάτων (σε κιλά);"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission des textiles recyclés"
+            "question": "Συντελεστής εκπομπών ανακυκλωμένων υφασμάτων"
           }
         },
         "DEEE": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Quantité de DEEE recyclés (en kg) ?"
+            "question": "Ποσότητα ανακυκλωμένων ΗΗΕΕ (σε κιλά);"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission des DEEE recyclés"
+            "question": "Συντελεστής εκπομπών ανακυκλωμένων ΗΗΕΕ"
           }
         },
         "autres": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Quantité d'autres déchets recyclés (en kg) ?"
+            "question": "Ποσότητα άλλων ανακυκλωμένων αποβλήτων (σε κιλά);"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission des autres déchets recyclés"
+            "question": "Συντελεστής εκπομπών άλλων ανακυκλωμένων αποβλήτων"
           }
         }
       }
     }
   },
   "publicodes-units": {
-    "étudiant": "[TO_TRANSLATE] étudiant",
-    "personne": "[TO_TRANSLATE] personne",
-    "année": "[TO_TRANSLATE] année",
-    "pays": "[TO_TRANSLATE] pays",
-    "kWh": "[TO_TRANSLATE] kWh",
-    "litre": "[TO_TRANSLATE] litre",
-    "kg": "[TO_TRANSLATE] kg",
-    "kgCO2e/kg": "[TO_TRANSLATE] kgCO2e/kg",
-    "repas": "[TO_TRANSLATE] repas",
-    "kgCO2e/repas": "[TO_TRANSLATE] kgCO2e/repas",
-    "t/km": "[TO_TRANSLATE] t.km",
-    "bouteille": "[TO_TRANSLATE] bouteille",
-    "kgCO2e/bouteille": "[TO_TRANSLATE] kgCO2e/bouteille",
-    "canette": "[TO_TRANSLATE] canette",
-    "kgCO2e/canette": "[TO_TRANSLATE] kgCO2e/canette",
-    "paquet": "[TO_TRANSLATE] paquet",
-    "kgCO2e/paquet": "[TO_TRANSLATE] kgCO2e/paquet",
-    "tasse": "[TO_TRANSLATE] tasse",
-    "kgCO2e/tasse": "[TO_TRANSLATE] kgCO2e/tasse",
-    "sandwich": "[TO_TRANSLATE] sandwich",
-    "kgCO2e/sandwich": "[TO_TRANSLATE] kgCO2e/sandwich",
-    "barre": "[TO_TRANSLATE] barre",
-    "kgCO2e/barre": "[TO_TRANSLATE] kgCO2e/barre",
-    "m2": "[TO_TRANSLATE] m2",
-    "kgCO2e/m2": "[TO_TRANSLATE] kgCO2e/m2",
-    "kgCO2e": "[TO_TRANSLATE] kgCO2e",
-    "unité": "[TO_TRANSLATE] unité",
-    "kgCO2e/unité": "[TO_TRANSLATE] kgCO2e/unité",
-    "km": "[TO_TRANSLATE] km",
-    "€": "[TO_TRANSLATE] €",
-    "kgCO2e/€": "[TO_TRANSLATE] kgCO2e/€"
+    "étudiant": "φοιτητής",
+    "personne": "άτομο",
+    "année": "έτος",
+    "pays": "χώρα",
+    "kWh": "kWh",
+    "litre": "λίτρο",
+    "kg": "κιλό",
+    "kgCO2e/kg": "kgCO2e/κιλό",
+    "repas": "γεύμα",
+    "kgCO2e/repas": "kgCO2e/γεύμα",
+    "t/km": "τ.χλμ",
+    "bouteille": "μπουκάλι",
+    "kgCO2e/bouteille": "kgCO2e/μπουκάλι",
+    "canette": "κουτί",
+    "kgCO2e/canette": "kgCO2e/κουτί",
+    "paquet": "πακέτο",
+    "kgCO2e/paquet": "kgCO2e/πακέτο",
+    "tasse": "φλιτζάνι",
+    "kgCO2e/tasse": "kgCO2e/φλιτζάνι",
+    "sandwich": "σάντουιτς",
+    "kgCO2e/sandwich": "kgCO2e/σάντουιτς",
+    "barre": "μπάρα",
+    "kgCO2e/barre": "kgCO2e/μπάρα",
+    "m2": "μ²",
+    "kgCO2e/m2": "kgCO2e/μ²",
+    "kgCO2e": "kgCO2e",
+    "unité": "μονάδα",
+    "kgCO2e/unité": "kgCO2e/μονάδα",
+    "km": "χλμ",
+    "€": "€",
+    "kgCO2e/€": "kgCO2e/€"
   }
 }
