@@ -1,7 +1,6 @@
 'use client'
 
 import Button from '@/components/base/Button'
-import PersistentToast from '@/components/base/PersistentToast'
 import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
 import { FullStudy } from '@/db/study'
 import { TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
@@ -61,7 +60,6 @@ const TrajectoryPage = ({
   const { callServerFunction } = useServerFunction()
   const tStudyNav = useTranslations('study.navigation')
   const [showTrajectoryModal, setShowTrajectoryModal] = useState(false)
-  const [showSuccessToast, setShowSuccessToast] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [searchFilter, setSearchFilter] = useState('')
 
@@ -70,13 +68,6 @@ const TrajectoryPage = ({
       setShowTrajectoryModal(true)
     }
   }, [searchParams])
-
-  const handleCreateTrajectorySuccess = useCallback(() => {
-    if (trajectories.length === 1) {
-      setShowSuccessToast(true)
-    }
-    router.refresh()
-  }, [router, trajectories.length])
 
   const handleConfirmDelete = useCallback(async () => {
     await callServerFunction(() => deleteTransitionPlan(study.id), {
@@ -207,7 +198,7 @@ const TrajectoryPage = ({
               open={showTrajectoryModal}
               onClose={() => setShowTrajectoryModal(false)}
               transitionPlanId={transitionPlan.id}
-              onSuccess={handleCreateTrajectorySuccess}
+              onSuccess={() => router.refresh()}
               trajectory={null}
               isFirstCreation={trajectories.length <= 1} // There is one default SNBC trajectory created when saving sector percentages
               studyYear={study.startDate.getFullYear()}
@@ -216,10 +207,6 @@ const TrajectoryPage = ({
               pastStudies={pastStudies}
               defaultSnbcSectoralPercentages={defaultSnbcSectoralPercentages}
             />
-          )}
-
-          {showSuccessToast && (
-            <PersistentToast title={t('trajectoryModal.success')} onClose={() => setShowSuccessToast(false)} />
           )}
         </div>
 
