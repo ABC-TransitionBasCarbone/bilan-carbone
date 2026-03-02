@@ -17,20 +17,14 @@
         "distance": "Oda-vissza távolság km-ben"
       },
       "VoyagesScolaires": {
-<<<<<<< HEAD
         "question": "Iskolai kirándulások során megtett távolság",
         "moyenTransport": "Közlekedési mód",
         "distance": "Távolság (km)"
-=======
-        "question": "Distance parcourue lors des voyages scolaires",
-        "moyenTransport": "Moyen de transport",
-        "distance": "Distance (km)"
       },
       "EquipementsDivers": {
         "question": "Az iskoládban valószínűleg egy vagy több kazán található fűtésre. Ezek a berendezések különféle fosszilis tüzelőanyagokkal (fűtőolaj, földgáz stb.) működnek. Az ilyen berendezések által termelt üvegházhatású gázok (ÜHG) például a fűtőolaj vagy gáz elégetése során szabadulnak fel.",
         "equipement": "Équipement",
         "nombre": "Nombre"
->>>>>>> 22fe00de1 (add divers questions)
       }
     }
   }
