@@ -397,5 +397,60 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<Clickso
     input('immobilisations . équipements divers . armoire de rangement . nombre'),
     input("immobilisations . équipements divers . fauteuil d'accueil . nombre"),
     input('immobilisations . équipements divers . étagère . nombre'),
+    table(
+      'EquipementsDivers.question',
+      ['EquipementsDivers.equipement', 'EquipementsDivers.nombre'],
+      [
+        [
+          'immobilisations . divers . tondeuse gazon thermique',
+          'immobilisations . divers . tondeuse gazon thermique . nombre',
+        ],
+        [
+          'immobilisations . divers . tondeuse gazon électrique',
+          'immobilisations . divers . tondeuse gazon électrique . nombre',
+        ],
+        ['immobilisations . divers . bouilloire', 'immobilisations . divers . bouilloire'],
+        ['immobilisations . divers . micro-onde', 'immobilisations . divers . micro-onde . nombre'],
+        [
+          'immobilisations . divers . aspirateur professionnel',
+          'immobilisations . divers . aspirateur professionnel . nombre',
+        ],
+        [
+          'immobilisations . divers . ballon chauffe-eau électrique',
+          'immobilisations . divers . ballon chauffe-eau électrique . nombre',
+        ],
+        ['immobilisations . divers . machine café filtre', 'immobilisations . divers . machine café filtre . nombre'],
+        [
+          'immobilisations . divers . machine café dosettes',
+          'immobilisations . divers . machine café dosettes . nombre',
+        ],
+        [
+          'immobilisations . divers . lave-vaiselle professionnel',
+          'immobilisations . divers . lave-vaiselle professionnel . nombre',
+        ],
+        ['immobilisations . divers . four professionnel', 'immobilisations . divers . four professionnel . nombre'],
+        [
+          'immobilisations . divers . lave-vaiselle standard',
+          'immobilisations . divers . lave-vaiselle standard . nombre',
+        ],
+        ['immobilisations . divers . lave-linge', 'immobilisations . divers . lave-linge . nombre'],
+        ['immobilisations . divers . congélateur coffre', 'immobilisations . divers . congélateur coffre . nombre'],
+        ['immobilisations . divers . congélateur armoire', 'immobilisations . divers . congélateur armoire . nombre'],
+        ['immobilisations . divers . réfrigérateur', 'immobilisations . divers . réfrigérateur . nombre'],
+        [
+          'immobilisations . divers . plaques de cuisson au gaz',
+          'immobilisations . divers . plaques de cuisson au gaz . nombre',
+        ],
+        ['immobilisations . divers . tatami', 'immobilisations . divers . tatami . nombre'],
+        [
+          'immobilisations . divers . gymnastique agré barre fixe',
+          'immobilisations . divers . gymnastique agré barre fixe . nombre',
+        ],
+        [
+          'immobilisations . divers . gymnastique agré barres parallèles',
+          'immobilisations . divers . gymnastique agré barres parallèles . nombre',
+        ],
+      ],
+    ),
   ],
 } as const

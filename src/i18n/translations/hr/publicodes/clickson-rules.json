@@ -453,6 +453,255 @@
           }
         }
       },
+      "divers": {
+        "tondeuse gazon thermique": {
+          "titre": "[TO_TRANSLATE] Tondeuse à gazon thermique",
+          "question": "[TO_TRANSLATE] Combien de tondeuse à gazon thermique possédez-vous ?",
+          "nombre": {
+            "question": "[UPDATED] Combien de tondeuse à gazon thermique possédez-vous ?"
+          },
+          "FE": {
+            "question": "[UPDATED] Facteur d'émission par unité de tondeuse à gazon"
+          },
+          "immo": {
+            "question": "[UPDATED] Immobilisation de tondeuse à gazon"
+          }
+        },
+        "tondeuse gazon électrique": {
+          "titre": "[UPDATED] Tondeuse à gazon électrique",
+          "question": "[UPDATED] Combien de tondeuse à gazon électrique possédez-vous ?",
+          "nombre": {
+            "question": "[UPDATED] Combien de tondeuse à gazon électrique possédez-vous ?"
+          },
+          "FE": {
+            "question": "[UPDATED] Facteur d'émission par unité de tondeuse à gazon électrique"
+          },
+          "immo": {
+            "question": "[TO_TRANSLATE] Immobilisation de xx"
+          }
+        },
+        "bouilloire": {
+          "titre": "[TO_TRANSLATE] Bouilloire",
+          "question": "[TO_TRANSLATE] Combien de bouilloire possédez-vous ?",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de bouilloire possédez-vous ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par unité de bouilloire"
+          },
+          "immo": {
+            "question": "[TO_TRANSLATE] Immobilisation de bouilloire"
+          }
+        },
+        "micro-onde": {
+          "titre": "[TO_TRANSLATE] Micro-onde",
+          "question": "[TO_TRANSLATE] Combien de micro-onde possédez-vous ?",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de micro-onde possédez-vous ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par unité de micro-onde"
+          },
+          "immo": {
+            "question": "[TO_TRANSLATE] Immobilisation de micro-onde"
+          }
+        },
+        "aspirateur professionnel": {
+          "titre": "[TO_TRANSLATE] Aspirateur professionnel",
+          "question": "[TO_TRANSLATE] Combien de aspirateur professionnel possédez-vous ?",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de aspirateur professionnel possédez-vous ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par unité de aspirateur professionnel"
+          },
+          "immo": {
+            "question": "[TO_TRANSLATE] Immobilisation de xx"
+          }
+        },
+        "ballon chauffe-eau électrique": {
+          "titre": "[TO_TRANSLATE] Ballon chauffe-eau électrique - 200l",
+          "question": "[TO_TRANSLATE] Combien de ballon chauffe-eau électrique - 200l possédez-vous ?",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de ballon chauffe-eau électrique - 200l possédez-vous ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par unité de ballon chauffe-eau électrique - 200l"
+          },
+          "immo": {
+            "question": "[TO_TRANSLATE] Immobilisation de ballon chaffe-eau electrique - 200l"
+          }
+        },
+        "machine café filtre": {
+          "titre": "[UPDATED] Machine à café - filtre",
+          "question": "[UPDATED] Combien de machine à café - filtre possédez-vous ?",
+          "nombre": {
+            "question": "[UPDATED] Combien de machine à café - filtre possédez-vous ?"
+          },
+          "FE": {
+            "question": "[UPDATED] Facteur d'émission par unité de machine à café - filtre"
+          },
+          "immo": {
+            "question": "[UPDATED] Immobilisation de machine à café - filtre"
+          }
+        },
+        "machine café dosettes": {
+          "titre": "[UPDATED] Machine à café - dosettes",
+          "question": "[UPDATED] Combien de machine à café - dosettes possédez-vous ?",
+          "nombre": {
+            "question": "[UPDATED] Combien de machine à café - dosettes possédez-vous ?"
+          },
+          "FE": {
+            "question": "[UPDATED] Facteur d'émission par unité de machine à café - dosettes"
+          },
+          "immo": {
+            "question": "[UPDATED] Immobilisation de machine à café - dosettes"
+          }
+        },
+        "lave-vaiselle professionnel": {
+          "titre": "[TO_TRANSLATE] Lave-vaisselle professionnel",
+          "question": "[TO_TRANSLATE] Combien de lave-vaiselle professionnel possédez-vous ?",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de lave-vaiselle professionnel possédez-vous ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par unité de lave-vaiselle professionnel"
+          },
+          "immo": {
+            "question": "[TO_TRANSLATE] Immobilisation de lave-vaiselle professionnel"
+          }
+        },
+        "four professionnel": {
+          "titre": "[TO_TRANSLATE] Four professionnel",
+          "question": "[TO_TRANSLATE] Combien de four professionnel possédez-vous ?",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de four professionnel possédez-vous ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par unité de four professionnel"
+          },
+          "immo": {
+            "question": "[TO_TRANSLATE] Immobilisation de four professionnel"
+          }
+        },
+        "lave-vaiselle standard": {
+          "titre": "[TO_TRANSLATE] Lave-vaiselle standard",
+          "question": "[TO_TRANSLATE] Combien de lave-vaiselle standard possédez-vous ?",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de lave-vaiselle standard possédez-vous ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par unité de lave-vaiselle standard"
+          },
+          "immo": {
+            "question": "[TO_TRANSLATE] Immobilisation de lave-vaiselle standard"
+          }
+        },
+        "lave-linge": {
+          "titre": "[TO_TRANSLATE] Lave-linge (capacité 7kg)",
+          "question": "[TO_TRANSLATE] Combien de lave-linge (capacité 7kg) possédez-vous ?",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de lave-linge (capacité 7kg) possédez-vous ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par unité de lave-linge (capacité 7kg)"
+          },
+          "immo": {
+            "question": "[TO_TRANSLATE] Immobilisation de lave-linge (capacité 7kg)"
+          }
+        },
+        "congélateur coffre": {
+          "titre": "[TO_TRANSLATE] Congélateur (coffre) - 261l",
+          "question": "[TO_TRANSLATE] Combien de congélateur (coffre) - 261l possédez-vous ?",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de congélateur (coffre) - 261l possédez-vous ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par unité de congélateur (coffre) - 261l"
+          },
+          "immo": {
+            "question": "[TO_TRANSLATE] Immobilisation de congélateur (coffre) - 261l"
+          }
+        },
+        "congélateur armoire": {
+          "titre": "[TO_TRANSLATE] Congélateur - armoire - 205l",
+          "question": "[TO_TRANSLATE] Combien de congélateur - armoire - 205l possédez-vous ?",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de congélateur - armoire - 205l possédez-vous ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par unité de congélateur - armoire - 205l"
+          },
+          "immo": {
+            "question": "[TO_TRANSLATE] Immobilisation de congélateur - armoire - 205l"
+          }
+        },
+        "réfrigérateur": {
+          "titre": "[TO_TRANSLATE] Réfrigérateur - 250l",
+          "question": "[TO_TRANSLATE] Combien de réfrigérateur - 250l possédez-vous ?",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de réfrigérateur - 250l possédez-vous ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par unité de réfrigérateur - 250l"
+          },
+          "immo": {
+            "question": "[TO_TRANSLATE] Immobilisation de réfrigérateur - 250l"
+          }
+        },
+        "plaques de cuisson au gaz": {
+          "titre": "[TO_TRANSLATE] Plaques de cuisson/au gaz 9000W",
+          "question": "[TO_TRANSLATE] Combien de plaques de cuisson/au gaz 9000W possédez-vous ?",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de plaques de cuisson/au gaz 9000W possédez-vous ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par unité de plaques de cuisson/au gaz 9000W"
+          },
+          "immo": {
+            "question": "[TO_TRANSLATE] Immobilisation de plaques de cuisson/au gaz 9000W"
+          }
+        },
+        "tatami": {
+          "titre": "[TO_TRANSLATE] Tatami",
+          "question": "[TO_TRANSLATE] Combien de tatami possédez-vous ?",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de tatami possédez-vous ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par unité de tatami"
+          },
+          "immo": {
+            "question": "[TO_TRANSLATE] Immobilisation de tatami"
+          }
+        },
+        "gymnastique agré barre fixe": {
+          "titre": "[TO_TRANSLATE] Gymnastique, agrès barre fixe",
+          "question": "[TO_TRANSLATE] Combien de gymnastique, agrès barre fixe possédez-vous ?",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de gymnastique, agrès barre fixe possédez-vous ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par unité de gymnastique, agrès barre fixe"
+          },
+          "immo": {
+            "question": "[TO_TRANSLATE] Immobilisation de gymnastique, agrès barre fixe"
+          }
+        },
+        "gymnastique agré barres parallèles": {
+          "titre": "[TO_TRANSLATE] Gymnastique, agrès barres parallèles",
+          "question": "[TO_TRANSLATE] Combien de gymnastique, agrès barres parallèles possédez-vous ?",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de gymnastique, agrès barres parallèles possédez-vous ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par unité de gymnastique, agrès barres parallèles"
+          },
+          "immo": {
+            "question": "[TO_TRANSLATE] Immobilisation de gymnastique, agrès barres parallèles"
+          }
+        }
+      },
       "construction": {
         "bâtiment scolaire structure béton": {
           "surface": {
