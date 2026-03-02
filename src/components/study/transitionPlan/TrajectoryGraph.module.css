@@ -50,3 +50,12 @@
 .filtersAccordion :global(.MuiAccordionSummary-content) {
   margin: 0;
 }
+
+.chartLegend {
+  gap: 0.25rem 1rem;
+  padding: 0.5rem 0;
+}
+
+.chartLegendIcon {
+  flex-shrink: 0;
+}

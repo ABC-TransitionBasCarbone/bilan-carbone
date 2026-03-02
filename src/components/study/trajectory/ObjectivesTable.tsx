@@ -27,7 +27,7 @@ import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
-import styles from './TrajectoryObjectivesTable.module.css'
+import styles from './ObjectivesTable.module.css'
 
 const ConfirmDeleteModal = dynamic(() => import('../../modals/ConfirmDeleteModal'), { ssr: false })
 const TrajectoryCreationModal = dynamic(() => import('./TrajectoryCreationModal'), { ssr: false })

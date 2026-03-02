@@ -162,12 +162,6 @@ export const getStudyNavbarMenu = (
               },
               {
                 disabled: !hasObjectives,
-                href: hasObjectives ? `/etudes/${studyId}/objectifs` : '#',
-                label: t('objectives'),
-                testId: 'study-objectives-link',
-              },
-              {
-                disabled: !hasObjectives,
                 href: hasObjectives ? `/etudes/${studyId}/actions` : '#',
                 label: t('actionPlan'),
                 testId: 'study-action-plan-link',

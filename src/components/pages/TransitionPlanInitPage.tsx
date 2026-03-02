@@ -372,6 +372,7 @@ const TransitionPlanInitPage = ({
               validatedOnly={validatedOnly}
               showTitle={false}
               showActionTrajectory={false}
+              storageKey={`transition-plan-init-${transitionPlan!.id}`}
             />
           </OnboardingSectionStep>
           {!isComplete && (
