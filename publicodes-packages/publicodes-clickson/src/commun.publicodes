@@ -44,19 +44,13 @@ commun . FE:
 commun . FE . moyen de transport:
   titre: Facteur d'émission moyens de transport
   avec:
-    RER et transilien:
-      titre: Facteur d'émission Transilien, RER
+    RER transilien métro tram:
+      titre: Facteur d'émission Transilien, RER, Métro, Tramway
       valeur: 0.00978
       unité: kgCO2e/passagers.km
       par défaut: 0
       meta:
         id: 43254
-    métro ou tram:
-      titre: Facteur d'émission Métro ou Tram
-      valeur: 0.006
-      unité: kgCO2e/km
-      par défaut: 0
-      meta:
     vélo électrique:
       titre: Facteur d'émission Vélo à assistance électrique
       valeur: 0.011

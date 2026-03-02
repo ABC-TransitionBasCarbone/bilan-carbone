@@ -6,8 +6,6 @@ immobilisations . équipements divers:
       - chaise plastique
       - table standard
       - armoire standard
-      - fauteuil d'accueil
-      - étagère
   unité: kgCO2e
   par défaut: 0
   avec:
@@ -90,41 +88,3 @@ immobilisations . équipements divers:
             Source: Base Carbone® (exemple)
           meta:
             id: 26963
-
-    fauteuil d'accueil:
-      titre: "Fauteuil d'accueil"
-      formule: nombre * FE
-      unité: kgCO2e
-      par défaut: 0
-      avec:
-        nombre:
-          question: "Combien de fauteuils d'accueil avez-vous achetés ?"
-          unité: unité
-          par défaut: 0
-        FE:
-          question: "Facteur d'émission par fauteuil d'accueil"
-          valeur: 50
-          unité: kgCO2e/unité
-          par défaut: 0
-          note: |
-            Source: Base Carbone® (exemple)
-          meta:
-
-    étagère:
-      titre: "Étagère"
-      formule: nombre * FE
-      unité: kgCO2e
-      par défaut: 0
-      avec:
-        nombre:
-          question: "Combien d'étagères avez-vous achetées ?"
-          unité: unité
-          par défaut: 0
-        FE:
-          question: "Facteur d'émission par étagère"
-          valeur: 60
-          unité: kgCO2e/unité
-          par défaut: 0
-          note: |
-            Source: Base Carbone® (exemple)
-          meta:

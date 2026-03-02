@@ -2,13 +2,9 @@ déplacements . transport du personnel:
   titre: Transport du personnel
   formule:
     somme:
-      - avion court courrier
-      - avion long courrier
-      - avion moyen courrier
       - bus
-      - métro ou tram
       - moto essence
-      - RER et transilien
+      - RER transilien métro tram
       - TER
       - TGV
       - trottinette électrique
@@ -19,25 +15,14 @@ déplacements . transport du personnel:
   par défaut: 0
   unité: kgCO2e
   avec:
-    RER et transilien:
-      titre: RER et transilien
-      formule: distance * commun . FE . moyen de transport . RER et transilien
+    RER transilien métro tram:
+      titre: Transilien, RER, Métro, Tramway
+      formule: distance * commun . FE . moyen de transport . RER transilien métro tram
       form:
         à traduire: oui
       avec:
         distance:
           question: Passagers (par km)
-          unité: km
-          par défaut: 0
-
-    métro ou tram:
-      titre: Métro, tramway
-      formule: distance * commun . FE . moyen de transport . métro ou tram
-      form:
-        à traduire: oui
-      avec:
-        distance:
-          question: Distance (km)
           unité: km
           par défaut: 0
 
@@ -132,39 +117,6 @@ déplacements . transport du personnel:
     TGV:
       titre: TGV
       formule: distance * commun . FE . moyen de transport . TGV
-      form:
-        à traduire: oui
-      avec:
-        distance:
-          question: Passagers (par km)
-          unité: km
-          par défaut: 0
-
-    avion court courrier:
-      titre: Avion Court courrier
-      formule: distance * commun . FE . moyen de transport . avion court courrier
-      form:
-        à traduire: oui
-      avec:
-        distance:
-          question: Passagers (par km)
-          unité: km
-          par défaut: 0
-
-    avion moyen courrier:
-      titre: Avion Moyen courrier
-      formule: distance * commun . FE . moyen de transport . avion moyen courrier
-      form:
-        à traduire: oui
-      avec:
-        distance:
-          question: Passagers (par km)
-          unité: km
-          par défaut: 0
-
-    avion long courrier:
-      titre: Avion Long courrier
-      formule: distance * commun . FE . moyen de transport . avion long courrier
       form:
         à traduire: oui
       avec:

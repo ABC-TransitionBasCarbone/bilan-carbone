@@ -1,0 +1,16 @@
+restauration . fin de vie moyenne:
+  titre: Fin de vie moyenne
+  formule: quantité * FE
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    quantité:
+      question: Quantité de déchets organiques
+      par défaut: 0
+      unité: kg
+    FE:
+      valeur: 386
+      unité: kgCO2e/kg
+      par défaut: 0
+      meta:
+        id: 34654

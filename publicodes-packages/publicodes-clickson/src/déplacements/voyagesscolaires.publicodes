@@ -6,104 +6,20 @@ déplacements . voyages scolaires:
       - avion long courrier
       - avion moyen courrier
       - bus
-      - métro ou tram
-      - moto essence
-      - RER et transilien
+      - RER transilien métro tram
       - TER
       - TGV
-      - trottinette électrique
-      - véhicule compact électrique
-      - vélo électrique
-      - voiture individuelle diesel
-      - voiture individuelle essence
   par défaut: 0
   unité: kgCO2e
   avec:
-    RER et transilien:
-      titre: RER et transilien
-      formule: distance * commun . FE . moyen de transport . RER et transilien
+    RER transilien métro tram:
+      titre: Transilien, RER, Métro, Tramway
+      formule: distance * commun . FE . moyen de transport . RER transilien métro tram
       form:
         à traduire: oui
       avec:
         distance:
           question: Passagers (par km)
-          unité: km
-          par défaut: 0
-
-    métro ou tram:
-      titre: Métro, tramway
-      formule: distance * commun . FE . moyen de transport . métro ou tram
-      form:
-        à traduire: oui
-      avec:
-        distance:
-          question: Distance (km)
-          unité: km
-          par défaut: 0
-
-    vélo électrique:
-      titre: Vélo électrique
-      formule: distance * commun . FE . moyen de transport . vélo électrique
-      form:
-        à traduire: oui
-      avec:
-        distance:
-          question: Distance (km)
-          unité: km
-          par défaut: 0
-
-    trottinette électrique:
-      titre: Trottinette électrique
-      formule: distance * commun . FE . moyen de transport . trottinette électrique
-      form:
-        à traduire: oui
-      avec:
-        distance:
-          question: Distance (km)
-          unité: km
-          par défaut: 0
-
-    moto essence:
-      titre: Moto essence
-      formule: distance * commun . FE . moyen de transport . moto essence
-      form:
-        à traduire: oui
-      avec:
-        distance:
-          question: Distance (km)
-          unité: km
-          par défaut: 0
-
-    véhicule compact électrique:
-      titre: Véhicule compact électrique
-      formule: distance * commun . FE . moyen de transport . véhicule compact électrique
-      form:
-        à traduire: oui
-      avec:
-        distance:
-          question: Distance (km)
-          unité: km
-          par défaut: 0
-
-    voiture individuelle essence:
-      titre: Voiture individuelle essence
-      formule: distance * commun . FE . moyen de transport . voiture individuelle essence
-      form:
-        à traduire: oui
-      avec:
-        distance:
-          question: Distance (km)
-          unité: km
-          par défaut: 0
-
-    voiture individuelle diesel:
-      titre: Voiture individuelle diesel
-      formule: distance * commun . FE . moyen de transport . voiture individuelle diesel
-      form:
-        à traduire: oui
-      avec:
-        distance:
-          question: Distance (km)
           unité: km
           par défaut: 0
 

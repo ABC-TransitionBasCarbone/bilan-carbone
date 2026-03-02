@@ -5,6 +5,6 @@ restauration:
       - types de repas servis
       - distributeur automatiques
       - fret
-      - déchets organiques
+      - fin de vie moyenne
   unité: kgCO2e
   par défaut: 0

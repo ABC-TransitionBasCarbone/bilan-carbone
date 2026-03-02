@@ -6,6 +6,5 @@ achats:
       - fournitures
       - produits chimiques
       - déchets recyclables
-      - ordures ménagères résiduelles
   unité: kgCO2e
   par défaut: 0
