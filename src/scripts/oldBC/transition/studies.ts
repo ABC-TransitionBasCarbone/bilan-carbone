@@ -46,11 +46,6 @@ interface StudySite {
   siteOldBCId: string
 }
 
-interface Export {
-  type: StudyExport
-  control: ControlMode
-}
-
 interface EmissionSource {
   siteOldBCId: string
   name: string

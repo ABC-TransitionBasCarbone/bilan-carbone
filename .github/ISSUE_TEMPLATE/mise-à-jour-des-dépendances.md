@@ -6,8 +6,9 @@ labels: Tech
 assignees: ''
 ---
 
-[ ] J'ai mis à jour les dépendances faciles
-[ ] J'ai créé des tickets pour les plus compliqués
-[ ] J'ai résolu les erreurs dépendabots
-[ ] J'ai vérifié et mis à jour si besoin l'image docker des pdfs
-[ ] J'ai vérifié sur les différents environnements qu'il n'y avait pas d'effets de bord
+- [ ] J'ai mis à jour les dépendances faciles
+- [ ] J'ai créé des tickets pour les plus compliqués
+- [ ] J'ai résolu les erreurs dépendabots
+- [ ] J'ai vérifié et mis à jour si besoin l'image docker des pdfs
+- [ ] J'ai vérifié et mis à jour les projets Publicodes et résolu leurs erreurs dépendabots
+- [ ] J'ai vérifié sur les différents environnements qu'il n'y avait pas d'effets de bord
