@@ -37,7 +37,6 @@
       meta:
         id: 26601
 
-
 énergie . électricité . février:
   titre: Électricité
   formule: consommation * FE
@@ -57,7 +56,6 @@
         Source: Base Carbone®
       meta:
         id: 26601
-
 
 énergie . électricité . mars:
   titre: Électricité
@@ -79,7 +77,6 @@
       meta:
         id: 26601
 
-
 énergie . électricité . avril:
   titre: Électricité
   formule: consommation * FE
@@ -99,7 +96,6 @@
         Source: Base Carbone®
       meta:
         id: 26601
-
 
 énergie . électricité . mai:
   titre: Électricité
@@ -121,7 +117,6 @@
       meta:
         id: 26601
 
-
 énergie . électricité . juin:
   titre: Électricité
   formule: consommation * FE
@@ -141,7 +136,6 @@
         Source: Base Carbone®
       meta:
         id: 26601
-
 
 énergie . électricité . juillet:
   titre: Électricité
@@ -163,7 +157,6 @@
       meta:
         id: 26601
 
-
 énergie . électricité . août:
   titre: Électricité
   formule: consommation * FE
@@ -183,7 +176,6 @@
         Source: Base Carbone®
       meta:
         id: 26601
-
 
 énergie . électricité . septembre:
   titre: Électricité
@@ -205,7 +197,6 @@
       meta:
         id: 26601
 
-
 énergie . électricité . octobre:
   titre: Électricité
   formule: consommation * FE
@@ -225,7 +216,6 @@
         Source: Base Carbone®
       meta:
         id: 26601
-
 
 énergie . électricité . novembre:
   titre: Électricité

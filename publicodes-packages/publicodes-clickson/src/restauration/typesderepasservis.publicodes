@@ -28,7 +28,7 @@ restauration . types de repas servis:
           par défaut: 0
           note: |
             Source: Base Carbone®
-          meta: 
+          meta:
             id: 20682
 
     végétarien:
