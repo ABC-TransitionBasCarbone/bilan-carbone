@@ -2,24 +2,24 @@
   "publicodes-layout": {
     "table": {
       "EquipementsInformatiqueAudiovisuel": {
-        "question": "Équipements informatiques et audiovisuels utilisés",
-        "equipement": "Équipement",
-        "nombre": "Nombre"
+        "question": "Használt informatikai és audiovizuális eszközök",
+        "equipement": "Eszköz",
+        "nombre": "Darabszám"
       },
       "TransportDesEleves": {
-        "question": "Distance parcourue par les élèves pour se rendre à l'établissement",
-        "moyenTransport": "Moyen de transport",
-        "distance": "Distance aller-retour en km"
+        "question": "A diákok által az intézménybe megtett távolság",
+        "moyenTransport": "Közlekedési mód",
+        "distance": "Oda-vissza távolság km-ben"
       },
       "TransportDuPersonnel": {
-        "question": "Distance parcourue par le personnel pour se rendre à l'établissement",
-        "moyenTransport": "Moyen de transport",
-        "distance": "Distance aller-retour en km"
+        "question": "A személyzet által az intézménybe megtett távolság",
+        "moyenTransport": "Közlekedési mód",
+        "distance": "Oda-vissza távolság km-ben"
       },
       "VoyagesScolaires": {
-        "question": "Distance parcourue lors des voyages scolaires",
-        "moyenTransport": "Moyen de transport",
-        "distance": "Distance (km)"
+        "question": "Iskolai kirándulások során megtett távolság",
+        "moyenTransport": "Közlekedési mód",
+        "distance": "Távolság (km)"
       }
     }
   }
