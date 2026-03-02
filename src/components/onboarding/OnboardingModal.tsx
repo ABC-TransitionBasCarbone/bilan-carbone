@@ -16,7 +16,6 @@ import { useForm } from 'react-hook-form'
 import Button from '../base/Button'
 import Form from '../base/Form'
 import LoadingButton from '../base/LoadingButton'
-import Stepper from '../base/Stepper'
 import styles from './Onboarding.module.css'
 import Step1 from './OnboardingStep1'
 import Step2 from './OnboardingStep2'
@@ -94,7 +93,6 @@ const OnboardingModal = ({ open, onClose, user, organizationVersion }: Props) =>
           </div>
           <DialogTitle className="noSpacing">
             <>
-              <Stepper activeStep={activeStep} steps={stepCount} fillValidatedSteps />
               <p className={classNames(styles.stepTitle, 'mb2')}>{t(`title-${activeStep}`)}</p>
               <p>{t(`titleDescription-${activeStep}`)}</p>
             </>
