@@ -282,6 +282,21 @@
     "game": "Game: introduction to negotiating your action plan:",
     "classEarth": "My Earth in class"
   },
+  "onboarding": {
+    "title-1": "Welcome to the Clicks On calculator! Before starting, please configure your school.",
+    "titleDescription-1": "We have pre-filled some information that you can modify now or at any time via the \"My establishment\" section.",
+    "title-2": "Management of your pilot team",
+    "titleDescription-2": "You can already add your collaborators (students, teachers and non-teaching staff) to your team! You can always add new people later via the \"Pilot team\" section.",
+    "step1": {
+      "name": "Name of my school",
+      "role": "My role in the school",
+      "information": "My information",
+      "firstName": "Firstname",
+      "lastName": "Lastname",
+      "adminDescription": "The role you have been assigned is that of administrator of your school.",
+      "gestionnaireDescription": "The role you have been assigned is that of collaborator of your school."
+    }
+  },
   "error": {
     "Too many comments": "Too many pending comments already exist."
   },
