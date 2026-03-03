@@ -924,10 +924,12 @@ export const newStudyRight = async (right: NewStudyRightCommand) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
+    const lowerCasedEmail = right.email.toLowerCase()
+
     const [studyWithRights, existingAccount, existingUser] = await Promise.all([
       getStudyById(right.studyId, session.user.organizationVersionId),
-      getAccountByEmailAndOrganizationVersionId(right.email, session.user.organizationVersionId),
-      getUserByEmail(right.email),
+      getAccountByEmailAndOrganizationVersionId(lowerCasedEmail, session.user.organizationVersionId),
+      getUserByEmail(lowerCasedEmail),
     ])
 
     if (!studyWithRights) {
@@ -981,7 +983,7 @@ export const newStudyRight = async (right: NewStudyRightCommand) =>
     }
 
     const accountId = await getOrCreateUserAndSendStudyInvite(
-      right.email,
+      lowerCasedEmail,
       studyWithRights,
       organizationVersion as OrganizationVersionWithOrganization,
       session.user,

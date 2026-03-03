@@ -72,7 +72,7 @@ const NewStudyRightForm = ({ study, accounts, existingAccounts, accountRole }: P
 
   const saveRight = async (command: NewStudyRightCommand) => {
     setLoading(true)
-    await callServerFunction(() => newStudyRight(command), {
+    await callServerFunction(() => newStudyRight({ ...command, email: command.email.toLowerCase().trim() }), {
       getErrorMessage: (error) => t(error),
       onSuccess: () => {
         setOtherOrganizationVersion(false)
