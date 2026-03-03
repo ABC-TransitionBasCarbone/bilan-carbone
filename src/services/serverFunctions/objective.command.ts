@@ -18,21 +18,15 @@ export const createObjectiveFormSchema = () =>
       }
     })
 
-export const createObjectiveModalSchema = () => {
+export const createObjectiveModalSchema = ({ hasTagFamilies = true }: { hasTagFamilies?: boolean } = {}) => {
   const objectiveFormSchema = createObjectiveFormSchema()
   return z
     .object({
-      siteIds: z.array(z.string()),
-      tagIds: z.array(z.string()),
-      subPosts: z.array(z.enum(SubPost)),
+      siteIds: z.array(z.string()).min(1),
+      tagIds: hasTagFamilies ? z.array(z.string()).min(1) : z.array(z.string()).optional(),
+      subPosts: z.array(z.enum(SubPost)).min(1),
       objectives: z.array(objectiveFormSchema),
     })
-    .refine(
-      (data) => {
-        return data.siteIds.length > 0 || data.tagIds.length > 0 || data.subPosts.length > 0
-      },
-      setCustomIssue(['siteIds'], 'scopeRequired'),
-    )
     .refine(
       (data) => {
         return data.objectives.some(

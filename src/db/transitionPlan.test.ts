@@ -124,7 +124,9 @@ const createMockAction = (overrides?: Partial<ActionWithRelations>): ActionWithR
   category: [],
   relevance: [],
   enabled: true,
-  dependenciesOnly: false,
+  sites: [],
+  tags: [],
+  subPosts: [],
   createdAt: new Date('2024-01-01'),
   updatedAt: new Date('2024-01-01'),
   ...overrides,
@@ -216,7 +218,6 @@ describe('TransitionPlan DB', () => {
               category: action.category,
               relevance: action.relevance,
               enabled: action.enabled,
-              dependenciesOnly: action.dependenciesOnly,
               indicators: {
                 create: action.indicators.map((indicator) => ({
                   type: indicator.type,
@@ -228,6 +229,15 @@ describe('TransitionPlan DB', () => {
                   title: step.title,
                   order: step.order,
                 })),
+              },
+              sites: {
+                create: action.sites.map((s) => ({ studySiteId: s.studySiteId })),
+              },
+              tags: {
+                create: action.tags.map((t) => ({ studyTagId: t.studyTagId })),
+              },
+              subPosts: {
+                create: action.subPosts.map((sp) => ({ subPost: sp.subPost })),
               },
             })),
           },
@@ -256,6 +266,9 @@ describe('TransitionPlan DB', () => {
             include: {
               indicators: true,
               steps: true,
+              sites: { include: { studySite: true } },
+              tags: { include: { studyTag: true } },
+              subPosts: true,
             },
           },
           externalStudies: true,

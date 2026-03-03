@@ -91,9 +91,11 @@ model Action {
   category                 ActionCategory[]
   relevance                ActionRelevance[]
   enabled                  Boolean                  @default(true) @map("enabled")
-  dependenciesOnly         Boolean                  @default(false) @map("dependencies_only")
   indicators               ActionIndicator[]
   steps                    ActionStep[]
+  sites                    ActionSite[]
+  tags                     ActionTag[]
+  subPosts                 ActionSubPost[]
   createdAt                DateTime                 @default(now()) @map("created_at")
   updatedAt                DateTime                 @default(now()) @updatedAt @map("updated_at")
 
@@ -126,6 +128,47 @@ model ActionStep {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("action_steps")
+}
+
+model ActionSite {
+  id          String    @id @default(uuid())
+  actionId    String    @map("action_id")
+  studySiteId String    @map("study_site_id")
+  action      Action    @relation(fields: [actionId], references: [id], onDelete: Cascade)
+  studySite   StudySite @relation(fields: [studySiteId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@unique([actionId, studySiteId])
+  @@map("action_sites")
+}
+
+model ActionTag {
+  id         String   @id @default(uuid())
+  actionId   String   @map("action_id")
+  studyTagId String   @map("study_tag_id")
+  action     Action   @relation(fields: [actionId], references: [id], onDelete: Cascade)
+  studyTag   StudyTag @relation(fields: [studyTagId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@unique([actionId, studyTagId])
+  @@map("action_tags")
+}
+
+model ActionSubPost {
+  id       String  @id @default(uuid())
+  actionId String  @map("action_id")
+  subPost  SubPost
+  action   Action  @relation(fields: [actionId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@unique([actionId, subPost])
+  @@map("action_subposts")
 }
 
 enum TrajectoryType {

@@ -1,25 +1,23 @@
 'use client'
 
-import MultiSelectAll from '@/components/base/MultiSelectAll'
-import { PostSubPostFilter } from '@/components/form/PostSubPostFilter'
-import { TagFilter } from '@/components/form/TagFilter'
+import { CustomFormLabel } from '@/components/form/CustomFormLabel'
+import ScopeSelectors, { TagFamily } from '@/components/form/ScopeSelectors'
+import { OTHER_TAG_ID } from '@/components/form/TagFilter'
 import Modal from '@/components/modals/Modal'
 import { ObjectiveWithScope, TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import { environmentPostMapping, environmentSubPostsMapping, Post } from '@/services/posts'
+import { getEnvSubPosts } from '@/services/posts'
 import { createObjectiveModalSchema, ObjectiveModalFormData } from '@/services/serverFunctions/objective.command'
 import { createSubObjectives, updateSubObjective } from '@/services/serverFunctions/objective.serverFunction'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { toScopedValues } from '@/utils/scope.utils'
 import { getYearFromDateStr } from '@/utils/time'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { FormControl, FormLabel, Typography } from '@mui/material'
-import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import AddObjectiveButton from './AddObjectiveButton'
 import ObjectiveCard from './ObjectiveCard'
-import styles from './ObjectiveModal.module.css'
 
 interface Props {
   open: boolean
@@ -28,12 +26,7 @@ interface Props {
   onSuccess: () => void
   objective?: ObjectiveWithScope
   sites?: Array<{ id: string; name: string }>
-  tagFamilies?: Array<{
-    id: string
-    name: string
-    studyId: string
-    tags: Array<{ id: string; name: string; color: string | null }>
-  }>
+  tagFamilies?: TagFamily[]
 }
 
 const ObjectiveModal = ({ open, onClose, trajectory, onSuccess, objective, sites = [], tagFamilies = [] }: Props) => {
@@ -43,11 +36,18 @@ const ObjectiveModal = ({ open, onClose, trajectory, onSuccess, objective, sites
   const { callServerFunction } = useServerFunction()
   const isEditing = !!objective
 
+  const allSiteIds = useMemo(() => sites.map((s) => s.id), [sites])
+  const allTagIds = useMemo(
+    () => [...tagFamilies.flatMap((f) => f.tags.map((tag) => tag.id)), OTHER_TAG_ID],
+    [tagFamilies],
+  )
+  const allEnvSubPosts = useMemo(() => getEnvSubPosts(environment), [environment])
+
   const defaultValues = objective
     ? {
-        siteIds: objective.sites.map((s) => s.studySiteId),
-        tagIds: objective.tags.map((t) => t.studyTagId),
-        subPosts: objective.subPosts.map((sp) => sp.subPost),
+        siteIds: objective.sites.length > 0 ? objective.sites.map((s) => s.studySiteId) : allSiteIds,
+        tagIds: objective.tags.length > 0 ? objective.tags.map((t) => t.studyTagId) : allTagIds,
+        subPosts: objective.subPosts.length > 0 ? objective.subPosts.map((sp) => sp.subPost) : allEnvSubPosts,
         objectives: [
           {
             startYear: objective.startYear?.toString(),
@@ -57,16 +57,16 @@ const ObjectiveModal = ({ open, onClose, trajectory, onSuccess, objective, sites
         ],
       }
     : {
-        siteIds: [],
-        tagIds: [],
-        subPosts: [],
+        siteIds: allSiteIds,
+        tagIds: allTagIds,
+        subPosts: allEnvSubPosts,
         objectives: [{ startYear: '', targetYear: '', reductionRate: 0 }],
       }
 
-  const { control, handleSubmit, watch, reset, formState } = useForm<ObjectiveModalFormData>({
+  const { control, handleSubmit, watch, reset, setValue, formState } = useForm<ObjectiveModalFormData>({
     defaultValues,
     mode: 'onChange',
-    resolver: zodResolver(createObjectiveModalSchema()),
+    resolver: zodResolver(createObjectiveModalSchema({ hasTagFamilies: tagFamilies.length > 0 })),
   })
 
   const {
@@ -80,6 +80,13 @@ const ObjectiveModal = ({ open, onClose, trajectory, onSuccess, objective, sites
 
   const onSubmit = async (data: ObjectiveModalFormData) => {
     setIsLoading(true)
+
+    const siteIds = toScopedValues(data.siteIds, allSiteIds)
+    const tagIds = toScopedValues(
+      data.tagIds?.filter((id) => id !== OTHER_TAG_ID) ?? [],
+      allTagIds.filter((id) => id !== OTHER_TAG_ID),
+    )
+    const subPosts = toScopedValues(data.subPosts, allEnvSubPosts)
 
     if (isEditing && objective) {
       const obj = data.objectives[0]
@@ -95,9 +102,9 @@ const ObjectiveModal = ({ open, onClose, trajectory, onSuccess, objective, sites
             targetYear: getYearFromDateStr(obj.targetYear!),
             startYear: getYearFromDateStr(obj.startYear!),
             reductionRate: Number((obj.reductionRate! / 100).toFixed(4)),
-            siteIds: data.siteIds,
-            tagIds: data.tagIds,
-            subPosts: data.subPosts,
+            siteIds,
+            tagIds,
+            subPosts,
           }),
         {
           onSuccess: () => {
@@ -124,9 +131,9 @@ const ObjectiveModal = ({ open, onClose, trajectory, onSuccess, objective, sites
         targetYear: getYearFromDateStr(obj.targetYear!),
         startYear: getYearFromDateStr(obj.startYear!),
         reductionRate: Number((obj.reductionRate! / 100).toFixed(4)),
-        siteIds: data.siteIds,
-        tagIds: data.tagIds,
-        subPosts: data.subPosts,
+        siteIds,
+        tagIds,
+        subPosts,
       }))
 
       await callServerFunction(() => createSubObjectives(objectivesToCreate), {
@@ -151,13 +158,6 @@ const ObjectiveModal = ({ open, onClose, trajectory, onSuccess, objective, sites
 
   const isValid = formState.isValid
 
-  const envPosts = (environment ? Object.values(environmentPostMapping[environment]) : []) as Post[]
-  const envSubPosts = environment
-    ? Object.values(environmentSubPostsMapping[environment])
-        .flat()
-        .filter((sp, index, self) => self.indexOf(sp) === index)
-    : []
-
   return (
     <Modal
       label={isEditing ? 'edit-objective' : 'add-objective'}
@@ -181,51 +181,26 @@ const ObjectiveModal = ({ open, onClose, trajectory, onSuccess, objective, sites
     >
       <div className={'flex-col gapped15'}>
         <div className={'flex-col gapped-2'}>
-          <Typography variant="h6">{t('scopeSelection')}</Typography>
+          <CustomFormLabel label={t('scopeSelection')} />
 
-          <div className={classNames('grid', 'gapped1', styles.scopeGrid)}>
-            <div className={'flex-col'}>
-              <FormLabel component="legend">{t('sites')}</FormLabel>
-              <FormControl fullWidth disabled={sites.length === 0}>
-                <MultiSelectAll
-                  id="sites"
-                  values={siteIds}
-                  allValues={sites.map((s) => s.id)}
-                  setValues={(value) => reset({ ...watch(), siteIds: value })}
-                  getLabel={(id) => sites.find((s) => s.id === id)?.name || id}
-                />
-              </FormControl>
-            </div>
-
-            <div className={'flex-col'}>
-              <FormControl fullWidth>
-                <PostSubPostFilter
-                  className={classNames('w100', styles.postSubPostFilter)}
-                  envPosts={envPosts}
-                  envSubPosts={envSubPosts}
-                  selectedSubPosts={subPosts}
-                  onChange={(value) => reset({ ...watch(), subPosts: value })}
-                  showSeparateLabel={true}
-                />
-              </FormControl>
-            </div>
-
-            <div className={'flex-col'}>
-              <TagFilter
-                className={classNames('w100', styles.tagFilter)}
-                tagFamilies={tagFamilies}
-                selectedTagIds={tagIds}
-                onChange={(value) => reset({ ...watch(), tagIds: value })}
-                showSeparateLabel={true}
-                hideOtherOption={true}
-              />
-            </div>
-          </div>
+          <ScopeSelectors
+            siteIds={siteIds}
+            tagIds={tagIds ?? []}
+            subPosts={subPosts}
+            sites={sites}
+            tagFamilies={tagFamilies}
+            onSiteIdsChange={(value) => setValue('siteIds', value, { shouldValidate: true })}
+            onTagIdsChange={(value) => setValue('tagIds', value, { shouldValidate: true })}
+            onSubPostsChange={(value) => setValue('subPosts', value, { shouldValidate: true })}
+            isOtherDisabled={true}
+            siteIdsError={formState.errors.siteIds?.message}
+            subPostsError={formState.errors.subPosts?.message}
+            tagIdsError={formState.errors.tagIds?.message}
+          />
         </div>
 
         <div className={'flex-col gapped-2'}>
-          <Typography variant="h6">{t('objectives')}</Typography>
-
+          <CustomFormLabel label={t('objectives')} />
           <div className={'wrap gapped1'}>
             {objectives.map((obj, index) => (
               <ObjectiveCard

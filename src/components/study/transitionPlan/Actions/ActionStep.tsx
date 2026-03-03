@@ -1,5 +1,5 @@
 import { FormTextField } from '@/components/form/TextField'
-import { ActionStepCommand, AddActionFormCommand } from '@/services/serverFunctions/transitionPlan.command'
+import { ActionStepCommand, AddActionFormCommand } from '@/services/serverFunctions/action.command'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { ArrowRight, Delete, DragIndicator } from '@mui/icons-material'
@@ -63,7 +63,6 @@ export const ActionStep = ({ step, index, control, onDelete }: Props) => {
             name={`steps.${index}.title`}
             fullWidth
             placeholder={t('stepTitlePlaceholder')}
-            defaultValue={step.title || ''}
             multiline
             expandable
             maxRows={2}

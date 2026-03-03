@@ -5,6 +5,7 @@ import { FullStudy } from '@/db/study'
 import type { ActionWithRelations } from '@/db/transitionPlan'
 import { customRich } from '@/i18n/customRich'
 import { useTranslations } from 'next-intl'
+import { useMemo } from 'react'
 import Block from '../base/Block'
 import SelectStudySite from '../study/site/SelectStudySite'
 import Actions from '../study/transitionPlan/Actions/Actions'
@@ -21,6 +22,8 @@ const ActionsPage = ({ study, actions, transitionPlanId, canEdit }: Props) => {
   const t = useTranslations('study.transitionPlan.actions')
   const tNav = useTranslations('nav')
   const tStudyNav = useTranslations('study.navigation')
+
+  const sites = useMemo(() => study.sites.map((s) => ({ id: s.id, name: s.site.name })), [study.sites])
 
   return (
     <>
@@ -56,6 +59,8 @@ const ActionsPage = ({ study, actions, transitionPlanId, canEdit }: Props) => {
             canEdit={canEdit}
             studyId={study.id}
             studyRealizationStartDate={study.realizationStartDate?.toISOString() ?? ''}
+            sites={sites}
+            tagFamilies={study.tagFamilies}
           />
         </div>
       </Block>

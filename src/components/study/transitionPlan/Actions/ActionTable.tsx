@@ -30,7 +30,7 @@ import {
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
 
 interface Props {
   actions: ActionWithRelations[]
@@ -39,14 +39,17 @@ interface Props {
   canEdit: boolean
   studyId: string
   studyUnit: StudyResultUnit
+  allSites: Array<{ id: string; name: string }>
 }
 
-const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId, studyUnit }: Props) => {
-  const t = useTranslations('study.transitionPlan.actions.table')
+const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId, studyUnit, allSites }: Props) => {
+  const tActiontable = useTranslations('study.transitionPlan.actions.table')
+  const tCommon = useTranslations('common')
   const tAction = useTranslations('study.transitionPlan.actions')
   const tUnit = useTranslations('study.results.units')
   const tCategory = useTranslations('study.transitionPlan.actions.category')
   const tPotential = useTranslations('study.transitionPlan.actions.potentialDeduction')
+  const tPosts = useTranslations('emissionFactors.post')
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 })
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
@@ -100,6 +103,69 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId
     return `${startYear}-${endYear}`
   }, [])
 
+  const getScopeItemDisplay = useCallback(
+    <T,>(
+      items: T[],
+      allKey: Parameters<typeof tCommon>[0],
+      countKey: Parameters<typeof tCommon>[0],
+      getName: (item: T) => string,
+      isCompact: boolean = false,
+    ) => {
+      if (items.length === 0) {
+        return tCommon(allKey)
+      }
+      if (isCompact && items.length > 1) {
+        return tCommon(countKey, { count: items.length })
+      }
+      return items.map(getName).join(', ')
+    },
+    [tCommon],
+  )
+
+  const getSitesDisplay = useCallback(
+    (action: ActionWithRelations, isCompact: boolean = false) =>
+      getScopeItemDisplay(
+        action.sites,
+        'allSites',
+        'xSites',
+        (site) => allSites.find((s) => s.id === site.studySiteId)?.name ?? site.studySiteId,
+        isCompact,
+      ),
+    [allSites, getScopeItemDisplay],
+  )
+
+  const getSubPostsDisplay = useCallback(
+    (action: ActionWithRelations, isCompact: boolean = false) =>
+      getScopeItemDisplay(action.subPosts, 'allSubPosts', 'xSubPosts', (subPost) => tPosts(subPost.subPost), isCompact),
+    [tPosts, getScopeItemDisplay],
+  )
+
+  const getTagsDisplay = useCallback(
+    (action: ActionWithRelations, isCompact: boolean = false) =>
+      getScopeItemDisplay(action.tags, 'allTags', 'xTags', (tag) => tag.studyTag.name, isCompact),
+    [getScopeItemDisplay],
+  )
+
+  const getScopeCompactDisplay = useCallback(
+    (action: ActionWithRelations) => {
+      const { sites, subPosts, tags } = action
+      const sitesEmpty = sites.length === 0
+      const subPostsEmpty = subPosts.length === 0
+      const tagsEmpty = tags.length === 0
+
+      if (sitesEmpty && subPostsEmpty && tagsEmpty) {
+        return tCommon('all')
+      }
+
+      const sitePart = sitesEmpty ? tCommon('allSites') : getSitesDisplay(action, true)
+      const subPostPart = subPostsEmpty ? tCommon('allSubPosts') : getSubPostsDisplay(action, true)
+      const tagPart = tagsEmpty ? tCommon('allTags') : getTagsDisplay(action, true)
+
+      return [sitePart, subPostPart, tagPart].filter(Boolean).join(' > ')
+    },
+    [tCommon, getSitesDisplay, getSubPostsDisplay, getTagsDisplay],
+  )
+
   const columns = useMemo(
     () =>
       [
@@ -127,7 +193,7 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId
                 tModal="study.transitionPlan.actions.table"
               >
                 <p>
-                  {customRich(t, 'enabledGlossaryDescription', {
+                  {customRich(tActiontable, 'enabledGlossaryDescription', {
                     trajectoryLink: (children) => (
                       <Link href={`/etudes/${studyId}/trajectoires`} target="_blank" rel="noreferrer noopener">
                         {children}
@@ -152,24 +218,28 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId
           ),
         },
         {
-          header: t('title'),
+          header: tActiontable('title'),
           accessorKey: 'title',
         },
         {
-          header: t('priority'),
+          header: tActiontable('scope'),
+          accessorFn: getScopeCompactDisplay,
+        },
+        {
+          header: tActiontable('priority'),
           accessorKey: 'priority',
         },
         {
-          header: t('actionType'),
+          header: tActiontable('actionType'),
           accessorFn: (action) => action.category.map((category) => tCategory(category)).join(', '),
         },
         {
-          header: t('implementation'),
+          header: tActiontable('implementation'),
           accessorFn: getImplementationPeriod,
         },
-        { header: t('potential'), accessorFn: getPotential },
-        { header: t('owner'), accessorKey: 'owner' },
-        { header: `${t('budget')} (k€)`, accessorKey: 'necessaryBudget' },
+        { header: tActiontable('potential'), accessorFn: getPotential },
+        { header: tActiontable('owner'), accessorKey: 'owner' },
+        { header: `${tActiontable('budget')} (k€)`, accessorKey: 'necessaryBudget' },
         {
           id: 'actions',
           header: '',
@@ -186,9 +256,10 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId
         },
       ] as ColumnDef<ActionWithRelations>[],
     [
-      t,
+      tActiontable,
       getImplementationPeriod,
       getPotential,
+      getScopeCompactDisplay,
       studyId,
       canEdit,
       handleToggleEnabled,
@@ -210,15 +281,15 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId
   })
 
   const Row = (row: Row<ActionWithRelations>) => (
-    <>
-      <TableRow key={row.id} className={styles.line} data-testid="actions-table-row">
+    <Fragment key={row.id}>
+      <TableRow key={`${row.id}-main`} className={styles.line} data-testid="actions-table-row">
         {row.getVisibleCells().map((cell) => (
           <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
         ))}
       </TableRow>
 
       {row.getIsExpanded() && (
-        <TableRow>
+        <TableRow key={`${row.id}-expanded`}>
           <TableCell colSpan={row.getVisibleCells().length}>
             <p className="italic mb1">{row.original.detailedDescription}</p>
             <p className="bold">{tAction('addModal.subSteps')} :</p>
@@ -243,15 +314,38 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId
               </p>
             )}
             {!!row.original.relevance.length && (
-              <p>
-                <span className="bold">{t('relevance')} : </span>
+              <p className="mb1">
+                <span className="bold">{tActiontable('relevance')} : </span>
                 {row.original.relevance.map((r) => tAction(`relevance.${r}`)).join(', ')}
               </p>
             )}
+            <div>
+              <span className="bold">{tActiontable('scope')} :</span>
+              {!row.original.sites.length && !row.original.subPosts.length && !row.original.tags.length ? (
+                <p className="ml1">{tCommon('all')}</p>
+              ) : (
+                <>
+                  <p className="ml1">
+                    <span className="bold">{tCommon('sites')} : </span>
+                    {getSitesDisplay(row.original)}
+                  </p>
+
+                  <p className="ml1">
+                    <span className="bold">{tCommon('subPosts')} : </span>
+                    {getSubPostsDisplay(row.original)}
+                  </p>
+
+                  <p className="ml1">
+                    <span className="bold">{tCommon('tags')} : </span>
+                    {getTagsDisplay(row.original)}
+                  </p>
+                </>
+              )}
+            </div>
           </TableCell>
         </TableRow>
       )}
-    </>
+    </Fragment>
   )
 
   return <BaseTable customRow={Row} table={table} paginations={[10, 25, 50, 100]} testId="actions" />
