@@ -340,7 +340,7 @@ const EmissionSourceForm = ({
             <div className="grow">
               <InputLabel id={'type-label'}>{`${t('form.type')} *`}</InputLabel>
               <Select
-                disabled={!canEdit}
+                disabled={!canEdit || isContributor}
                 data-testid="emission-source-type"
                 value={emissionSource.type || ''}
                 onChange={(event) => update('type', event.target.value === '' ? null : (event.target.value as string))}
@@ -348,7 +348,7 @@ const EmissionSourceForm = ({
                 labelId={'type-label'}
                 withLabel={false}
                 fullWidth
-                clearable
+                clearable={!!canEdit && !isContributor}
               >
                 {Object.keys(EmissionSourceType).map((value) => (
                   <MenuItem key={value} value={value}>
@@ -375,7 +375,7 @@ const EmissionSourceForm = ({
               labelId="emission-source-caracterisation-label"
               label={`${t('form.caracterisation')} *`}
               withLabel={false}
-              clearable={!!canEdit && caracterisations.length > 1}
+              clearable={!!canEdit && caracterisations.length > 1 && !isContributor}
             >
               {caracterisations.map((categorisation) => (
                 <MenuItem key={categorisation} value={categorisation}>
