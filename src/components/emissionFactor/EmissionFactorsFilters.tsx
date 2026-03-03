@@ -4,6 +4,7 @@ import { FeFilters } from '@/types/filters'
 import {
   Autocomplete,
   Checkbox,
+  Chip,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -17,7 +18,7 @@ import {
 import { EmissionFactorBase, EmissionFactorImportVersion, SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 import Button from '../base/Button'
 import DebouncedInput from '../base/DebouncedInput'
 import MultiSelectAll from '../base/MultiSelectAll'
@@ -52,12 +53,6 @@ export const EmissionFactorsFilters = ({
   const [displayHideButton, setDisplayHideButton] = useState(false)
 
   const [unitsInputValue, setUnitsInputValue] = useState('')
-  const unitsOptions = ['all', ...initialSelectedUnits.filter((u) => u !== 'all')]
-  const unitsAllSelected = useMemo(
-    () =>
-      filters.units.filter((item) => item !== 'all').length === initialSelectedUnits.filter((u) => u !== 'all').length,
-    [filters.units, initialSelectedUnits],
-  )
   const filtersRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -145,16 +140,16 @@ export const EmissionFactorsFilters = ({
               ))}
             </Select>
           </FormControl>
-          <FormControl className={styles.selector}>
+          <FormControl className={styles.multiSelector}>
             <FormLabel id="emissions-unit-selector" component="legend">
-              {t('units')}
+              {t('unitSearch')}
             </FormLabel>
 
             <Autocomplete
               multiple
               disableCloseOnSelect
-              value={filters.units}
-              options={unitsOptions}
+              value={filters.units.filter((unit) => unit !== 'all')}
+              options={initialSelectedUnits}
               inputValue={unitsInputValue}
               clearOnBlur={false}
               onInputChange={(_, newValue, reason) => {
@@ -162,37 +157,19 @@ export const EmissionFactorsFilters = ({
                   setUnitsInputValue(newValue)
                 }
               }}
-              getOptionLabel={(unit) => (unit === 'all' ? t('all') : tUnit(unit))}
+              getOptionLabel={(unit) => tUnit(unit)}
               getOptionKey={(unit) => unit}
               filterSelectedOptions={false}
               onChange={(_, newValue) => {
-                if (newValue.includes('all')) {
-                  setFilters((prev) => ({
-                    ...prev,
-                    units: unitsAllSelected ? [] : initialSelectedUnits.filter((unit) => unit !== 'all'),
-                  }))
-                  return
-                }
                 setFilters((prev) => ({
                   ...prev,
-                  units: newValue.filter((value) => value !== 'all'),
+                  units: newValue.length === 0 ? ['all'] : newValue,
                 }))
               }}
-              renderValue={() => <></>}
-              renderOption={(props, option, { selected }) => {
+              renderOption={(props, option) => {
                 const { key, ...restProps } = props
-                if (option === 'all') {
-                  return (
-                    <MenuItem key="all" {...restProps}>
-                      <Checkbox checked={unitsAllSelected} />
-                      <ListItemText primary={t('all')} />
-                    </MenuItem>
-                  )
-                }
-
                 return (
                   <MenuItem key={option} {...restProps}>
-                    <Checkbox checked={selected} />
                     <ListItemText primary={tUnit(option)} />
                   </MenuItem>
                 )
@@ -200,6 +177,20 @@ export const EmissionFactorsFilters = ({
               renderInput={(params) => <TextField {...params} placeholder={t('unitSearchPlaceholder')} />}
               slots={{ popper: Popper }}
               slotProps={{ popper: { style: { minWidth: 300 } } }}
+              renderValue={(selected, getItemProps) => {
+                const visible = selected.slice(0, 3)
+                const hiddenCount = selected.length - visible.length
+
+                return (
+                  <>
+                    {visible.map((option, index) => (
+                      <Chip label={tUnit(option)} {...getItemProps({ index })} key={option} />
+                    ))}
+
+                    {hiddenCount > 0 && <Chip label={`+${hiddenCount}`} size="small" sx={{ pointerEvents: 'none' }} />}
+                  </>
+                )
+              }}
             />
           </FormControl>
           {filters.base && (
