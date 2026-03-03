@@ -4,9 +4,9 @@ import PDFSummaryClickson from '@/environments/clickson/study/PDF/PDFSummary'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import PDFSummaryCut from '@/environments/cut/study/PDF/PDFSummary'
 import { LocaleType } from '@/i18n/config'
-import { switchEnvironment } from '@/i18n/environment'
-import { switchLocale } from '@/i18n/locale'
+import { getMessages } from '@/i18n/utils'
 import { Environment } from '@prisma/client'
+import { NextIntlClientProvider } from 'next-intl'
 import { useEffect, useState } from 'react'
 
 interface Props {
@@ -16,26 +16,28 @@ interface Props {
 }
 
 const PDFSummaryContainer = ({ study, environment, locale }: Props) => {
-  const [canRender, setCanRender] = useState(false)
+  const [messages, setMessages] = useState<{ locale: LocaleType; messages: object } | null>(null)
 
   useEffect(() => {
-    const setTranslationCookies = async () => {
-      await switchLocale(locale)
-      await switchEnvironment(environment)
-      setCanRender(true)
+    const setMessagesLocaleEnvironment = async () => {
+      const messages = await getMessages(locale, environment)
+      setMessages(messages)
     }
-    setTranslationCookies()
+    setMessagesLocaleEnvironment()
   }, [environment, locale])
 
-  if (!canRender) {
+  if (!messages) {
     return null
   }
+
   return (
-    <DynamicComponent
-      forceEnvironment={environment}
-      environmentComponents={{ [Environment.CLICKSON]: <PDFSummaryClickson study={study} /> }}
-      defaultComponent={<PDFSummaryCut study={study} />}
-    />
+    <NextIntlClientProvider locale={messages.locale} messages={messages.messages}>
+      <DynamicComponent
+        forceEnvironment={environment}
+        environmentComponents={{ [Environment.CLICKSON]: <PDFSummaryClickson study={study} /> }}
+        defaultComponent={<PDFSummaryCut study={study} />}
+      />
+    </NextIntlClientProvider>
   )
 }
 
