@@ -43,7 +43,7 @@ immobilisations . construction:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 4
+            id: 20738
 
     parking bâtiment structure béton:
       titre: "Parking (bâtiment - structure béton)"
@@ -63,7 +63,7 @@ immobilisations . construction:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 2
+            id: 26009
 
     parking surface bitume:
       titre: "Parking (surface bitume)"
@@ -83,7 +83,7 @@ immobilisations . construction:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 2
+            id: 26011
 
     parking surface semi-dure:
       titre: "Parking (surface semi-dure)"
@@ -103,7 +103,7 @@ immobilisations . construction:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 2
+            id: 26010
 
     garage structure béton:
       titre: "Garage (structure béton)"
@@ -123,7 +123,7 @@ immobilisations . construction:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 4
+            id: 20732
 
     garage structure métal:
       titre: "Garage (structure métal)"
@@ -143,4 +143,4 @@ immobilisations . construction:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 4
+            id: 20733

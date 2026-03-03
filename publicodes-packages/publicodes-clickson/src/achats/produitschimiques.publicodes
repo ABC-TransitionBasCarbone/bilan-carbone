@@ -36,7 +36,6 @@ achats . produits chimiques:
           unité: kgCO2e/litre
           par défaut: 0
           meta:
-            incertitude: 5
 
     savon liquide:
       titre: Savon liquide
@@ -53,7 +52,6 @@ achats . produits chimiques:
           unité: kgCO2e/litre
           par défaut: 0
           meta:
-            incertitude: 5
 
     produit vitre:
       titre: Produit vitre
@@ -70,7 +68,6 @@ achats . produits chimiques:
           unité: kgCO2e/litre
           par défaut: 0
           meta:
-            incertitude: 5
 
     nettoyant sols:
       titre: Nettoyant sols
@@ -87,7 +84,6 @@ achats . produits chimiques:
           unité: kgCO2e/litre
           par défaut: 0
           meta:
-            incertitude: 5
 
     nettoyant multi-usages:
       titre: Nettoyant multi-usages
@@ -104,7 +100,6 @@ achats . produits chimiques:
           unité: kgCO2e/litre
           par défaut: 0
           meta:
-            incertitude: 5
 
     détergent sanitaire:
       titre: Détergent sanitaire
@@ -121,7 +116,6 @@ achats . produits chimiques:
           unité: kgCO2e/litre
           par défaut: 0
           meta:
-            incertitude: 5
 
     désinfectant:
       titre: Désinfectant
@@ -138,7 +132,6 @@ achats . produits chimiques:
           unité: kgCO2e/litre
           par défaut: 0
           meta:
-            incertitude: 5
 
     chlore:
       titre: Chlore
@@ -155,7 +148,6 @@ achats . produits chimiques:
           unité: kgCO2e/litre
           par défaut: 0
           meta:
-            incertitude: 5
 
     bicarbonate de soude:
       titre: Bicarbonate de soude
@@ -166,13 +158,13 @@ achats . produits chimiques:
         consommation:
           question: Consommation annuelle de bicarbonate de soude
           par défaut: 0
-          unité: litre
+          unité: kg de poids net
         FE:
           valeur: 1.18
-          unité: kgCO2e/litre
+          unité: kgCO2e/kg de poids net
           par défaut: 0
           meta:
-            incertitude: 5
+            id: 44396
 
     peinture revêtement mural intérieur:
       titre: Peinture - revêtement mural intérieur
@@ -189,7 +181,6 @@ achats . produits chimiques:
           unité: kgCO2e/kg
           par défaut: 0
           meta:
-            incertitude: 5
 
     peinture revêtement mural extérieur:
       titre: Peinture - revêtement mural extérieur
@@ -206,7 +197,6 @@ achats . produits chimiques:
           unité: kgCO2e/kg
           par défaut: 0
           meta:
-            incertitude: 5
 
     savon solide:
       titre: Savon solide
@@ -223,7 +213,6 @@ achats . produits chimiques:
           unité: kgCO2e/kg
           par défaut: 0
           meta:
-            incertitude: 5
 
     vinaigre blanc:
       titre: Vinaigre blanc
@@ -234,13 +223,13 @@ achats . produits chimiques:
         consommation:
           question: Consommation annuelle de vinaigre blanc
           par défaut: 0
-          unité: litre
+          unité: kg de poids net
         FE:
-          valeur: 0.215
-          unité: kgCO2e/litre
+          valeur: 0.96
+          unité: kgCO2e/kg de poids net
           par défaut: 0
           meta:
-            incertitude: 5
+            id: 46691
 
     soude solide:
       titre: Soude solide (poudre, granulés)
@@ -251,13 +240,13 @@ achats . produits chimiques:
         consommation:
           question: Consommation annuelle de soude solide (poudre, granulés)
           par défaut: 0
-          unité: kg
+          unité: t
         FE:
           valeur: 458
-          unité: kgCO2e/kg
+          unité: kgCO2e/t
           par défaut: 0
           meta:
-            incertitude: 5
+            id: 20667
 
     acide sulfurique:
       titre: Acide sulfurique
@@ -268,13 +257,13 @@ achats . produits chimiques:
         consommation:
           question: Consommation annuelle d'acide sulfurique
           par défaut: 0
-          unité: litre
+          unité: t
         FE:
-          valeur: 2.2
-          unité: kgCO2e/litre
+          valeur: 148
+          unité: kgCO2e/t
           par défaut: 0
           meta:
-            incertitude: 4
+            id: 20850
 
     acide chlorhydrique:
       titre: Acide chlorhydrique
@@ -285,10 +274,10 @@ achats . produits chimiques:
         consommation:
           question: Consommation annuelle d'acide chlorhydrique
           par défaut: 0
-          unité: litre
+          unité: t
         FE:
-          valeur: 1.44
-          unité: kgCO2e/litre
+          valeur: 1199
+          unité: kgCO2e/t
           par défaut: 0
           meta:
-            incertitude: 4
+            id: 20851

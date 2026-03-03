@@ -61,9 +61,10 @@ template:
     immobilisations . équipements informatique audiovisuel . enceinte Bluetooth . nombre: 1
     immobilisations . équipements informatique audiovisuel . smartphone 5 pouces . nombre: 1
     immobilisations . équipements informatique audiovisuel . écran 23,8 pouces . nombre: 1
-    immobilisations . équipements divers . chaise de bureau . nombre: 5
-    immobilisations . équipements divers . table de réunion . nombre: 2
-    immobilisations . équipements divers . armoire de rangement . nombre: 1
+    immobilisations . équipements divers . chaise bois . nombre: 5
+    immobilisations . équipements divers . chaise plastique . nombre: 2
+    immobilisations . équipements divers . table standard . nombre: 2
+    immobilisations . équipements divers . armoire standard . nombre: 1
     immobilisations . équipements divers . fauteuil d'accueil . nombre: 1
     immobilisations . équipements divers . étagère . nombre: 1
 
@@ -80,16 +81,13 @@ template:
     restauration . distributeur automatiques . biscuits . nombre: 30
     restauration . distributeur automatiques . paquet de chips . nombre: 20
     restauration . distributeur automatiques . café noir . nombre: 10
+    restauration . distributeur automatiques . café au lait . nombre: 10
     restauration . distributeur automatiques . thé infusé . nombre: 5
     restauration . distributeur automatiques . sandwich pain de mie . nombre: 15
     restauration . distributeur automatiques . barre chocolatée . nombre: 8
     restauration . fret . routier . consommation: 100
     restauration . fret . ferroviaire . consommation: 20
-    restauration . fret . maritime . consommation: 10
-    restauration . déchets organiques . biodéchets compostés . quantité: 50
-    restauration . déchets organiques . biodéchets méthanisés . quantité: 20
-    restauration . déchets organiques . biodéchets incinérés . quantité: 10
-    restauration . déchets organiques . biodéchets enfouis . quantité: 5
+    restauration . fin de vie moyenne . quantité: 50
 
     # Déplacements
     # inputs
@@ -127,15 +125,9 @@ template:
     achats . équipements de sport . shorts tous sports . nombre: 5
     achats . équipements de sport . maillots tous sports . nombre: 5
     achats . équipements de sport . t-shirt polyester . nombre: 5
-    achats . équipements de sport . ballon de rugby . nombre: 1
     achats . équipements de sport . ballon de basket . nombre: 1
     achats . équipements de sport . ballon de football . nombre: 1
-    achats . déchets recyclables . papier . nombre: 10
-    achats . déchets recyclables . carton . nombre: 5
-    achats . déchets recyclables . plastique . nombre: 3
-    achats . déchets recyclables . verre . nombre: 2
-    achats . déchets recyclables . métal . nombre: 1
-    achats . déchets recyclables . bois . nombre: 1
-    achats . déchets recyclables . textiles . nombre: 1
-    achats . déchets recyclables . DEEE . nombre: 1
-    achats . ordures ménagères résiduelles . ordures ménagères résiduelles . nombre: 10
+    achats . fin de vie moyenne . carton . nombre: 5
+    achats . fin de vie moyenne . plastique moyen . nombre: 3
+    achats . fin de vie moyenne . verre . nombre: 2
+    achats . fin de vie moyenne . bois . nombre: 1

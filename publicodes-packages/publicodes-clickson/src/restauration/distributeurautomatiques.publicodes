@@ -7,6 +7,7 @@ restauration . distributeur automatiques:
       - biscuits
       - paquet de chips
       - café noir
+      - café au lait
       - thé infusé
       - sandwich pain de mie
       - barre chocolatée
@@ -31,7 +32,6 @@ restauration . distributeur automatiques:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 3
 
     soda:
       titre: Soda
@@ -51,7 +51,6 @@ restauration . distributeur automatiques:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 2
 
     biscuits:
       titre: Biscuits
@@ -60,18 +59,18 @@ restauration . distributeur automatiques:
       par défaut: 0
       avec:
         nombre:
-          question: Nombre de paquets de biscuits consommés annuellement
-          unité: paquet
+          question: Quantité de biscuit consommée annuellement
+          unité: kg de poids net
           par défaut: 0
         FE:
-          question: Facteur d'émission par paquet de biscuits
-          valeur: 3.59
-          unité: kgCO2e/paquet
+          question: Facteur d'émission par kg de poids net de biscuits
+          valeur: 6.06
+          unité: kgCO2e/kg de poids net
           par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 1
+            id: 44428
 
     paquet de chips:
       titre: Paquet de chips
@@ -91,7 +90,6 @@ restauration . distributeur automatiques:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 3
 
     café noir:
       titre: Café noir
@@ -100,18 +98,38 @@ restauration . distributeur automatiques:
       par défaut: 0
       avec:
         nombre:
-          question: Nombre de cafés noirs consommés annuellement
-          unité: tasse
+          question: Quantité de café noir consommée annuellement
+          unité: kg de poids net
           par défaut: 0
         FE:
-          question: Facteur d'émission par café noir
-          valeur: 0.6
-          unité: kgCO2e/tasse
+          question: Facteur d'émission par kg de poids net de café noir
+          valeur: 4.48
+          unité: kgCO2e/kg de poids net
           par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 3
+            id: 44749
+
+    café au lait:
+      titre: Café a lait
+      formule: nombre * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        nombre:
+          question: Quantité de café au lait consommée annuellement
+          unité: kg de poids net
+          par défaut: 0
+        FE:
+          question: Facteur d'émission par kg de poids net de café a lait
+          valeur: 2.24
+          unité: kgCO2e/kg de poids net
+          par défaut: 0
+          note: |
+            Source: Base Carbone®
+          meta:
+            id: 44750
 
     thé infusé:
       titre: Thé infusé
@@ -120,18 +138,18 @@ restauration . distributeur automatiques:
       par défaut: 0
       avec:
         nombre:
-          question: Nombre de thés infusés consommés annuellement
-          unité: tasse
+          question: Quantité de thé infusé consommée annuellement
+          unité: kg de poids net
           par défaut: 0
         FE:
-          question: Facteur d'émission par thé infusé
-          valeur: 0.04
-          unité: kgCO2e/tasse
+          question: Facteur d'émission par kg de poids net de thé infusé
+          valeur: 0.0394
+          unité: kgCO2e/kg de poids net
           par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 3
+            id: 46580
 
     sandwich pain de mie:
       titre: Sandwich pain de mie
@@ -141,34 +159,34 @@ restauration . distributeur automatiques:
       avec:
         nombre:
           question: Nombre de sandwichs pain de mie consommés annuellement
-          unité: sandwich
+          unité: kg de poids net
           par défaut: 0
         FE:
-          question: Facteur d'émission par sandwich pain de mie
+          question: Facteur d'émission par kg de poids net de sandwich pain de mie
           valeur: 2.57
-          unité: kgCO2e/sandwich
+          unité: kgCO2e/kg de poids net
           par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 3
+            id: 46326
 
     barre chocolatée:
       titre: Barre chocolatée
       formule: nombre * FE
-      unité: kgCO2e
+      unité: kg de poids net
       par défaut: 0
       avec:
         nombre:
-          question: Nombre de barres chocolatées consommées annuellement
+          question: Quantité de barres chocolatées consommée annuellement
           unité: barre
           par défaut: 0
         FE:
-          question: Facteur d'émission par barre chocolatée
+          question: Facteur d'émission par kg de poids net de barre chocolatée
           valeur: 7.25
-          unité: kgCO2e/barre
+          unité: kgCO2e/kg de poids net
           par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 2
+            id: 44360

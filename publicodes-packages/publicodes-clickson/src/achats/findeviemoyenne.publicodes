@@ -1,0 +1,85 @@
+achats . fin de vie moyenne:
+  titre: Fin de vie moyenne
+  formule:
+    somme:
+      - carton
+      - plastique moyen
+      - verre
+      - bois
+  unité: kgCO2e/t
+  par défaut: 0
+  avec:
+    carton:
+      titre: "Carton"
+      formule: nombre * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        nombre:
+          question: "Quantité de carton (en tonne) ?"
+          unité: t
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission du carton"
+          valeur: 41
+          unité: kgCO2e/t
+          note: |
+            Source: Base Carbone®
+          meta:
+
+    plastique moyen:
+      titre: "Plastique moyen"
+      formule: nombre * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        nombre:
+          question: "Quantité de plastique moyen (en tonne) ?"
+          unité: t
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission du plastique moyen"
+          valeur: 41
+          unité: kgCO2e/t
+          par défaut: 0
+          note: |
+            Source: Base Carbone®
+          meta:
+
+    verre:
+      titre: "Verre"
+      formule: nombre * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        nombre:
+          question: "Quantité de verre (en tonne) ?"
+          unité: t
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission du verre"
+          valeur: 41
+          unité: kgCO2e/t
+          par défaut: 0
+          note: |
+            Source: Base Carbone®
+          meta:
+
+    bois:
+      titre: "Bois"
+      formule: nombre * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        nombre:
+          question: "Quantité de bois (en tonne) ?"
+          unité: t
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission du bois"
+          valeur: 41
+          unité: kgCO2e/t
+          par défaut: 0
+          note: |
+            Source: Base Carbone®
+          meta:

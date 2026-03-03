@@ -8,7 +8,6 @@ achats . équipements de sport:
       - shorts tous sports
       - maillots tous sports
       - t-shirt polyester
-      - ballon de rugby
       - ballon de basket
       - ballon de football
   unité: kgCO2e
@@ -32,7 +31,7 @@ achats . équipements de sport:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 3
+            id: 27040
 
     ballon de handball:
       titre: "Ballon de handball"
@@ -52,7 +51,7 @@ achats . équipements de sport:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 3
+            id: 20765
 
     kimono judo:
       titre: "Kimono (judo)"
@@ -71,7 +70,7 @@ achats . équipements de sport:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 3
+            id: 20767
 
     shorts tous sports:
       titre: "Shorts tous sports"
@@ -91,7 +90,7 @@ achats . équipements de sport:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 3
+            id: 20635
 
     maillots tous sports:
       titre: "Maillots tous sports"
@@ -111,7 +110,7 @@ achats . équipements de sport:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 3
+            id: 20634
 
     t-shirt polyester:
       titre: "T-shirt en polyester"
@@ -131,27 +130,7 @@ achats . équipements de sport:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 2
-
-    ballon de rugby:
-      titre: "Ballon de rugby"
-      formule: nombre * FE
-      unité: kgCO2e
-      par défaut: 0
-      avec:
-        nombre:
-          question: "Combien de ballons de rugby avez-vous achetés ?"
-          unité: unité
-          par défaut: 0
-        FE:
-          question: "Facteur d'émission par ballon de rugby"
-          valeur: 4.12
-          unité: kgCO2e/unité
-          par défaut: 0
-          note: |
-            Source: Base Carbone®
-          meta:
-            incertitude: 3
+            id: 27045
 
     ballon de basket:
       titre: "Ballon de basket"
@@ -171,7 +150,7 @@ achats . équipements de sport:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 3
+            id: 27039
 
     ballon de football:
       titre: "Ballon de football"
@@ -191,4 +170,4 @@ achats . équipements de sport:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 3
+            id: 27038

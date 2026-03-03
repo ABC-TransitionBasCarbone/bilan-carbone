@@ -2,26 +2,183 @@
   titre: Autres gaz
   formule:
     somme:
-      - gaz hfc spécifique
-  unité: kgCO2e
+      - gaz réfrigérant
+      - gaz à effet de serre principal
+  unité: kgCO2e/kg
   par défaut: 0
+
+énergie . autres gaz . gaz réfrigérant:
+  question: Consommation annuelle de gaz réfrigérant
+  titre: Gaz réfrigérant
+  par défaut: 0
+  unité: kgCO2e/kg
   avec:
-    gaz hfc spécifique:
-      titre: Gaz HFC spécifique
-      formule: consommation * PRG
-      unité: kgCO2e
+    consommation:
+      question: Consommation annuelle de ce gaz
+      unité: kgCO2e/kg
       par défaut: 0
-      avec:
-        consommation:
-          question: Consommation annuelle de ce gaz HFC
-          unité: kg
-          par défaut: 0
-        PRG:
-          question: Pouvoir de Réchauffement Global (PRG) du gaz HFC
-          valeur: 1430
-          unité: kgCO2e/kg
-          par défaut: 0
-          note: |
-            À adapter selon le type de HFC (ex : HFC-134a = 1430, HFC-23 = 14800, etc.)
-          meta:
-            incertitude: 10
+    FE:
+      titre: Facteur d'émission du projecteur
+      formule:
+        variations:
+          - si: type = "R134a"
+            alors: type . R134a . FE
+          - si: type = "R32"
+            alors: type . R32 . FE
+          - si: type = "R407c"
+            alors: type . R407c . FE
+          - si: type = "R410a"
+            alors: type . R410a . FE
+      unité: kgCO2e/kg
+
+énergie . autres gaz . gaz réfrigérant . type:
+  titre: Gaz réfrigérant
+  question: Gaz réfrigérant
+  une possibilité:
+    - R134a
+    - R32
+    - R407c
+    - R410a
+  form:
+    saisie: menu déroulant
+  avec:
+    R134a:
+      titre: R134a
+
+    R134a . FE:
+      titre: R134a
+      unité: kgCO2e/kg
+      valeur: 1300
+      meta:
+        id: 22586
+
+    R32:
+      titre: R32
+
+    R32 . FE:
+      titre: R32
+      unité: kgCO2e/kg
+      valeur: 677
+      meta:
+        id: 22584
+
+    R407c:
+      titre: R407c
+
+    R407c . FE:
+      titre: R407c
+      unité: kgCO2e/kg
+      valeur: 1624
+      meta:
+        id: 22598
+
+    R410a:
+      titre: R410a
+
+    R410a . FE:
+      titre: R410a
+      unité: kgCO2e/kg
+      valeur: 2256
+      meta:
+        id: 43632
+
+énergie . autres gaz . gaz à effet de serre principal:
+  question: Consommation annuelle de Gaz à effet de serre principal
+  titre: Gaz à effet de serre principal
+  par défaut: 0
+  unité: kgCO2e/kg
+  avec:
+    consommation:
+      question: Consommation annuelle de ce gaz
+      unité: kgCO2e/kg
+      par défaut: 0
+    FE:
+      titre: Facteur d'émission du projecteur
+      formule:
+        variations:
+          - si: type = "CO2"
+            alors: type . CO2 . FE
+          - si: type = "CH4 fossile"
+            alors: type . CH4 fossile . FE
+          - si: type = "CH4 biogénique"
+            alors: type . CH4 biogénique . FE
+          - si: type = "N2O"
+            alors: type . N2O . FE
+          - si: type = "SF6"
+            alors: type . SF6 . FE
+          - si: type = "NF3"
+            alors: type . NF3 . FE
+      unité: kgCO2e/kg
+
+énergie . autres gaz . gaz à effet de serre principal . type:
+  titre: Gaz à effet de serre principal
+  question: Gaz à effet de serre principal
+  une possibilité:
+    - CO2
+    - CH4 fossile
+    - CH4 biogénique
+    - N2O
+    - SF6
+    - NF3
+  form:
+    saisie: menu déroulant
+  avec:
+    CO2:
+      titre: CO2
+
+    CO2 . FE:
+      titre: CO2
+      unité: kgCO2e/kg
+      valeur: 1
+      meta:
+        id: 22577
+
+    CH4 fossile:
+      titre: CH4 fossile
+
+    CH4 fossile . FE:
+      titre: CH4 fossile
+      unité: kgCO2e/kg
+      valeur: 30
+      meta:
+        id: 22579
+
+    CH4 biogénique:
+      titre: CH4 biogénique
+
+    CH4 biogénique . FE:
+      titre: CH4 biogénique
+      unité: kgCO2e/kg
+      valeur: 28
+      meta:
+        id: 22578
+
+    N2O:
+      titre: N2O
+
+    N2O . FE:
+      titre: N2O
+      unité: kgCO2e/kg
+      valeur: 265
+      meta:
+        id: 22580
+
+    SF6:
+      titre: SF6
+
+    SF6 . FE:
+      titre: SF6
+      unité: kgCO2e/kg
+      valeur: 23500
+      meta:
+        id: 22581
+
+    NF3:
+      titre: NF3
+
+    NF3 . FE:
+      titre: NF3
+      unité: kgCO2e/kg
+      valeur: 16100
+      meta:
+        id: 22582

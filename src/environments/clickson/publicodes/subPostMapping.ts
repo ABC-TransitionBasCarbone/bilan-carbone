@@ -1,4 +1,4 @@
-import { FormLayout, inputLayout, tableLayout } from '@/components/publicodes-form/layouts/formLayout'
+import { FormLayout, inputLayout, listLayout, tableLayout } from '@/components/publicodes-form/layouts/formLayout'
 import { ClicksonPost } from '@/services/posts.enums'
 import { SubPost } from '@prisma/client'
 import { ClicksonRuleName } from './types'
@@ -34,15 +34,14 @@ const SUBPOST_TO_RULENAME: Partial<Record<SubPost, ClicksonRuleName>> = {
   TypesDeRepasServis: 'restauration . types de repas servis',
   DistributeursAutomatiques: 'restauration . distributeur automatiques',
   Fret: 'restauration . fret',
-  DechetsOrganiques: 'restauration . déchets organiques',
+  DechetsOrganiques: 'restauration . fin de vie moyenne',
   TransportDesEleves: 'déplacements . transport des élèves',
   TransportDuPersonnel: 'déplacements . transport du personnel',
   VoyagesScolaires: 'déplacements . voyages scolaires',
   Fournitures: 'achats . fournitures',
   ProduitsChimiques: 'achats . produits chimiques',
   EquipementsDeSport: 'achats . équipements de sport',
-  DechetsRecyclables: 'achats . déchets recyclables',
-  OrduresMenageresResiduelles: 'achats . ordures ménagères résiduelles',
+  DechetsRecyclables: 'achats . fin de vie moyenne',
   Construction: 'immobilisations . construction',
   Renovation: 'immobilisations . rénovation',
   EquipementsInformatiqueAudiovisuel: 'immobilisations . équipements informatique audiovisuel',
@@ -52,9 +51,25 @@ const SUBPOST_TO_RULENAME: Partial<Record<SubPost, ClicksonRuleName>> = {
 const input = (rule: ClicksonRuleName): FormLayout<ClicksonRuleName> => inputLayout<ClicksonRuleName>(rule)
 const table = (title: string, headers: string[], rows: ClicksonRuleName[][]): FormLayout<ClicksonRuleName> =>
   tableLayout<ClicksonRuleName>(title, headers, rows)
+const list = (targetRule: ClicksonRuleName, rules: ClicksonRuleName[]): FormLayout<ClicksonRuleName> =>
+  listLayout<ClicksonRuleName>(targetRule, rules)
 
 export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<ClicksonRuleName>[]>> = {
-  Electricite: [input('énergie . électricité . consommation')],
+  Electricite: [
+    input('énergie . électricité . janvier . consommation'),
+    input('énergie . électricité . février . consommation'),
+    input('énergie . électricité . mars . consommation'),
+    input('énergie . électricité . avril . consommation'),
+    input('énergie . électricité . mai . consommation'),
+    input('énergie . électricité . juin . consommation'),
+    input('énergie . électricité . juillet . consommation'),
+    input('énergie . électricité . août . consommation'),
+    input('énergie . électricité . septembre . consommation'),
+    input('énergie . électricité . octobre . consommation'),
+    input('énergie . électricité . novembre . consommation'),
+    input('énergie . électricité . décembre . consommation'),
+  ],
+
   Combustibles: [
     input('énergie . combustibles . fioul domestique . consommation'),
     input('énergie . combustibles . fioul lourd . consommation'),
@@ -64,8 +79,14 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<Clickso
     input('énergie . combustibles . réseau de chaleur . consommation'),
   ],
   AutresGaz: [
-    input('énergie . autres gaz . gaz hfc spécifique . consommation'),
-    input('énergie . autres gaz . gaz hfc spécifique . PRG'),
+    list('énergie . autres gaz . gaz réfrigérant', [
+      'énergie . autres gaz . gaz réfrigérant . type',
+      'énergie . autres gaz . gaz réfrigérant . consommation',
+    ]),
+    list('énergie . autres gaz . gaz à effet de serre principal', [
+      'énergie . autres gaz . gaz à effet de serre principal . type',
+      'énergie . autres gaz . gaz à effet de serre principal . consommation',
+    ]),
   ],
   TypesDeRepasServis: [
     input('restauration . types de repas servis . moyen . nombre'),
@@ -81,6 +102,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<Clickso
     input('restauration . distributeur automatiques . biscuits . nombre'),
     input('restauration . distributeur automatiques . paquet de chips . nombre'),
     input('restauration . distributeur automatiques . café noir . nombre'),
+    input('restauration . distributeur automatiques . café au lait . nombre'),
     input('restauration . distributeur automatiques . thé infusé . nombre'),
     input('restauration . distributeur automatiques . sandwich pain de mie . nombre'),
     input('restauration . distributeur automatiques . barre chocolatée . nombre'),
@@ -88,43 +110,28 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<Clickso
   Fret: [
     input('restauration . fret . routier . consommation'),
     input('restauration . fret . ferroviaire . consommation'),
-    input('restauration . fret . maritime . consommation'),
   ],
   DechetsOrganiques: [
-    input('restauration . déchets organiques . biodéchets compostés . quantité'),
-    input('restauration . déchets organiques . biodéchets méthanisés . quantité'),
-    input('restauration . déchets organiques . biodéchets incinérés . quantité'),
-    input('restauration . déchets organiques . biodéchets enfouis . quantité'),
+    input('restauration . fin de vie moyenne . déchets résiduels . quantité'),
+    input('restauration . fin de vie moyenne . déchets organiques . quantité'),
   ],
   TransportDesEleves: [
     table(
       'TransportDesEleves.question',
       ['TransportDesEleves.moyenTransport', 'TransportDesEleves.distance'],
       [
-        [
-          'déplacements . transport des élèves . avion court courrier',
-          'déplacements . transport des élèves . avion court courrier . distance',
-        ],
-        [
-          'déplacements . transport des élèves . avion moyen courrier',
-          'déplacements . transport des élèves . avion moyen courrier . distance',
-        ],
-        [
-          'déplacements . transport des élèves . avion long courrier',
-          'déplacements . transport des élèves . avion long courrier . distance',
-        ],
         ['déplacements . transport des élèves . bus', 'déplacements . transport des élèves . bus . distance'],
         [
-          'déplacements . transport des élèves . métro ou tram',
-          'déplacements . transport des élèves . métro ou tram . distance',
+          'déplacements . transport des élèves . bus électrique',
+          'déplacements . transport des élèves . bus électrique . distance',
+        ],
+        [
+          'déplacements . transport des élèves . RER transilien métro tram',
+          'déplacements . transport des élèves . RER transilien métro tram . distance',
         ],
         [
           'déplacements . transport des élèves . moto essence',
           'déplacements . transport des élèves . moto essence . distance',
-        ],
-        [
-          'déplacements . transport des élèves . RER et transilien',
-          'déplacements . transport des élèves . RER et transilien . distance',
         ],
         ['déplacements . transport des élèves . TER', 'déplacements . transport des élèves . TER . distance'],
         ['déplacements . transport des élèves . TGV', 'déplacements . transport des élèves . TGV . distance'],
@@ -156,30 +163,18 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<Clickso
       'TransportDuPersonnel.question',
       ['TransportDuPersonnel.moyenTransport', 'TransportDuPersonnel.distance'],
       [
-        [
-          'déplacements . transport du personnel . avion court courrier',
-          'déplacements . transport du personnel . avion court courrier . distance',
-        ],
-        [
-          'déplacements . transport du personnel . avion moyen courrier',
-          'déplacements . transport du personnel . avion moyen courrier . distance',
-        ],
-        [
-          'déplacements . transport du personnel . avion long courrier',
-          'déplacements . transport du personnel . avion long courrier . distance',
-        ],
         ['déplacements . transport du personnel . bus', 'déplacements . transport du personnel . bus . distance'],
         [
-          'déplacements . transport du personnel . métro ou tram',
-          'déplacements . transport du personnel . métro ou tram . distance',
+          'déplacements . transport du personnel . bus électrique',
+          'déplacements . transport du personnel . bus électrique . distance',
+        ],
+        [
+          'déplacements . transport du personnel . RER transilien métro tram',
+          'déplacements . transport du personnel . RER transilien métro tram . distance',
         ],
         [
           'déplacements . transport du personnel . moto essence',
           'déplacements . transport du personnel . moto essence . distance',
-        ],
-        [
-          'déplacements . transport du personnel . RER et transilien',
-          'déplacements . transport du personnel . RER et transilien . distance',
         ],
         ['déplacements . transport du personnel . TER', 'déplacements . transport du personnel . TER . distance'],
         ['déplacements . transport du personnel . TGV', 'déplacements . transport du personnel . TGV . distance'],
@@ -225,39 +220,15 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<Clickso
         ],
         ['déplacements . voyages scolaires . bus', 'déplacements . voyages scolaires . bus . distance'],
         [
-          'déplacements . voyages scolaires . métro ou tram',
-          'déplacements . voyages scolaires . métro ou tram . distance',
+          'déplacements . voyages scolaires . bus électrique',
+          'déplacements . voyages scolaires . bus électrique . distance',
         ],
         [
-          'déplacements . voyages scolaires . moto essence',
-          'déplacements . voyages scolaires . moto essence . distance',
-        ],
-        [
-          'déplacements . voyages scolaires . RER et transilien',
-          'déplacements . voyages scolaires . RER et transilien . distance',
+          'déplacements . voyages scolaires . RER transilien métro tram',
+          'déplacements . voyages scolaires . RER transilien métro tram . distance',
         ],
         ['déplacements . voyages scolaires . TER', 'déplacements . voyages scolaires . TER . distance'],
         ['déplacements . voyages scolaires . TGV', 'déplacements . voyages scolaires . TGV . distance'],
-        [
-          'déplacements . voyages scolaires . trottinette électrique',
-          'déplacements . voyages scolaires . trottinette électrique . distance',
-        ],
-        [
-          'déplacements . voyages scolaires . véhicule compact électrique',
-          'déplacements . voyages scolaires . véhicule compact électrique . distance',
-        ],
-        [
-          'déplacements . voyages scolaires . vélo électrique',
-          'déplacements . voyages scolaires . vélo électrique . distance',
-        ],
-        [
-          'déplacements . voyages scolaires . voiture individuelle diesel',
-          'déplacements . voyages scolaires . voiture individuelle diesel . distance',
-        ],
-        [
-          'déplacements . voyages scolaires . voiture individuelle essence',
-          'déplacements . voyages scolaires . voiture individuelle essence . distance',
-        ],
       ],
     ),
   ],
@@ -294,22 +265,14 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<Clickso
     input('achats . équipements de sport . shorts tous sports . nombre'),
     input('achats . équipements de sport . maillots tous sports . nombre'),
     input('achats . équipements de sport . t-shirt polyester . nombre'),
-    input('achats . équipements de sport . ballon de rugby . nombre'),
     input('achats . équipements de sport . ballon de basket . nombre'),
     input('achats . équipements de sport . ballon de football . nombre'),
   ],
   DechetsRecyclables: [
-    input('achats . déchets recyclables . papier . nombre'),
-    input('achats . déchets recyclables . carton . nombre'),
-    input('achats . déchets recyclables . plastique . nombre'),
-    input('achats . déchets recyclables . verre . nombre'),
-    input('achats . déchets recyclables . métal . nombre'),
-    input('achats . déchets recyclables . bois . nombre'),
-    input('achats . déchets recyclables . textiles . nombre'),
-    input('achats . déchets recyclables . DEEE . nombre'),
-  ],
-  OrduresMenageresResiduelles: [
-    input('achats . ordures ménagères résiduelles . ordures ménagères résiduelles . nombre'),
+    input('achats . fin de vie moyenne . carton . nombre'),
+    input('achats . fin de vie moyenne . plastique moyen . nombre'),
+    input('achats . fin de vie moyenne . verre . nombre'),
+    input('achats . fin de vie moyenne . bois . nombre'),
   ],
   Construction: [
     input('immobilisations . construction . bâtiment scolaire structure béton . surface'),
@@ -319,14 +282,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<Clickso
     input('immobilisations . construction . garage structure béton . surface'),
     input('immobilisations . construction . garage structure métal . surface'),
   ],
-  Renovation: [
-    input('immobilisations . rénovation . bâtiment scolaire structure béton rénové . surface'),
-    input('immobilisations . rénovation . parking bâtiment structure béton rénové . surface'),
-    input('immobilisations . rénovation . parking surface bitume rénové . surface'),
-    input('immobilisations . rénovation . parking surface semi-dure rénové . surface'),
-    input('immobilisations . rénovation . garage structure béton rénové . surface'),
-    input('immobilisations . rénovation . garage structure métal rénové . surface'),
-  ],
+  Renovation: [input('immobilisations . rénovation . bâtiment scolaire structure béton rénové . surface')],
   EquipementsInformatiqueAudiovisuel: [
     table(
       'EquipementsInformatiqueAudiovisuel.question',
@@ -392,11 +348,10 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<Clickso
     ),
   ],
   EquipementsDivers: [
-    input('immobilisations . équipements divers . chaise de bureau . nombre'),
-    input('immobilisations . équipements divers . table de réunion . nombre'),
-    input('immobilisations . équipements divers . armoire de rangement . nombre'),
-    input("immobilisations . équipements divers . fauteuil d'accueil . nombre"),
-    input('immobilisations . équipements divers . étagère . nombre'),
+    input('immobilisations . équipements divers . chaise bois . nombre'),
+    input('immobilisations . équipements divers . chaise plastique . nombre'),
+    input('immobilisations . équipements divers . table standard . nombre'),
+    input('immobilisations . équipements divers . armoire standard . nombre'),
     table(
       'EquipementsDivers.question',
       ['EquipementsDivers.equipement', 'EquipementsDivers.nombre'],
@@ -452,5 +407,9 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<Clickso
         ],
       ],
     ),
+    input('immobilisations . équipements divers . chaise bois . nombre'),
+    input('immobilisations . équipements divers . chaise plastique . nombre'),
+    input('immobilisations . équipements divers . table standard . nombre'),
+    input('immobilisations . équipements divers . armoire standard . nombre'),
   ],
 } as const

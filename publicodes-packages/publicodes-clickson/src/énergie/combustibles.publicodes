@@ -20,11 +20,11 @@
           par défaut: 0
           unité: litre
         FE:
-          valeur: 3.24
+          valeur: 3.19
           unité: kgCO2e/L
           par défaut: 0
           meta:
-            incertitude: 0
+            id: 14086
 
     fioul lourd:
       titre: Fioul lourd/commercial
@@ -37,11 +37,11 @@
           par défaut: 0
           unité: litre
         FE:
-          valeur: 3.28
+          valeur: 3.25
           unité: kgCO2e/L
           par défaut: 0
           meta:
-            incertitude: 0
+            id: 14092
 
     gaz naturel:
       titre: Gaz naturel
@@ -58,7 +58,7 @@
           unité: kgCO2e/kWh
           par défaut: 0
           meta:
-            incertitude: 0
+            id: 37138
 
     granulés de bois:
       titre: Granulés de bois (8% d'humidité)
@@ -69,13 +69,13 @@
         consommation:
           question: Consommation annuelle de granulés de bois
           par défaut: 0
-          unité: kg
+          unité: kWh
         FE:
           valeur: 0.027
-          unité: kgCO2e/kg
+          unité: kgCO2e/kWh
           par défaut: 0
           meta:
-            incertitude: 4
+            id: 25829
 
     biopropane:
       titre: Biopropane
@@ -86,13 +86,13 @@
         consommation:
           question: Consommation annuelle de biopropane
           par défaut: 0
-          unité: kg
+          unité: kWh PCI
         FE:
-          valeur: 0.944
-          unité: kgCO2e/kg
+          valeur: 0.074
+          unité: kgCO2e/kWh PCI
           par défaut: 0
           meta:
-            incertitude: 1
+            id: 25797
 
     réseau de chaleur:
       titre: Réseau de chaleur
@@ -107,4 +107,4 @@
         FE:
           valeur: commun . FE . réseau de chaleur
           meta:
-            incertitude: 2
+            id: 47952

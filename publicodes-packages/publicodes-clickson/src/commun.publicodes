@@ -44,104 +44,104 @@ commun . FE:
 commun . FE . moyen de transport:
   titre: Facteur d'émission moyens de transport
   avec:
-    RER et transilien:
-      titre: Facteur d'émission Transilien, RER
-      valeur: 0.006
-      unité: kgCO2e/km
+    RER transilien métro tram:
+      titre: Facteur d'émission Transilien, RER, Métro, Tramway
+      valeur: 0.00978
+      unité: kgCO2e/passagers.km
       par défaut: 0
       meta:
-        incertitude: 2
-    métro ou tram:
-      titre: Facteur d'émission Métro ou Tram
-      valeur: 0.006
-      unité: kgCO2e/km
-      par défaut: 0
-      meta:
-        incertitude: 2
+        id: 43254
     vélo électrique:
       titre: Facteur d'émission Vélo à assistance électrique
       valeur: 0.011
       unité: kgCO2e/km
       par défaut: 0
       meta:
-        incertitude: 3
+        id: 28331
     trottinette électrique:
       titre: Facteur d'émission Trottinette électrique
-      valeur: 0.025
+      valeur: 0.0249
       unité: kgCO2e/km
       par défaut: 0
       meta:
-        incertitude: 3
+        id: 28329
     moto essence:
       titre: Facteur d'émission Moto essence
-      valeur: 0.076
+      valeur: 0.087
       unité: kgCO2e/km
       par défaut: 0
       meta:
-        incertitude: 3
+        id: 43779
     véhicule compact électrique:
       titre: Facteur d'émission Véhicule compact électrique
       valeur: 0.103
       unité: kgCO2e/km
       par défaut: 0
       meta:
-        incertitude: 4
+        id: 28007
     voiture individuelle essence:
       titre: Facteur d'émission Voiture individuelle – essence
-      valeur: 0.239
+      valeur: 0.232
       unité: kgCO2e/km
       par défaut: 0
       meta:
-        incertitude: 5
+        id: 28011
     voiture individuelle diesel:
       titre: Facteur d'émission Voiture individuelle – diesel
-      valeur: 0.227
+      valeur: 0.217
       unité: kgCO2e/km
       par défaut: 0
       meta:
-        incertitude: 5
+        id: 28010
     autobus moyen:
       titre: Facteur d'émission Autobus moyen
       valeur: 0.15
-      unité: kgCO2e/km
+      unité: kgCO2e/passagers.km
       par défaut: 0
       meta:
-        incertitude: 5
+        id: 27999
+    autobus électrique:
+      titre: Facteur d'émission Autobus moyen
+      valeur: 0.0217
+      unité: kgCO2e/passagers.km
+      par défaut: 0
+      meta:
+        id: 28003
     TER:
       titre: Facteur d'émission TER
-      valeur: 0.028
-      unité: kgCO2e/km
+      valeur: 0.0277
+      unité: kgCO2e/passagers.km
       par défaut: 0
       meta:
-        incertitude: 5
+        id: 43255
     TGV:
       titre: Facteur d'émission TGV
-      valeur: 0.003
-      unité: kgCO2e/km
+      valeur: 0.00293
+      unité: kgCO2e/passagers.km
       par défaut: 0
       meta:
-        incertitude: 2
+        id: 43256
     avion court courrier:
       titre: Facteur d'émission Avion/Court courrier
-      valeur: 0.258
-      unité: kgCO2e/km
+      valeur: 0.331
+      unité: kgCO2e/passagers.km
       par défaut: 0
       meta:
-        incertitude: 5
+        id: 43767
     avion moyen courrier:
       titre: Facteur d'émission Avion/Moyen courrier
-      valeur: 0.187
-      unité: kgCO2e/km
+      valeur: 0.236
+      unité: kgCO2e/passagers.km
       par défaut: 0
       meta:
-        incertitude: 5
+        id: 43769
     avion long courrier:
       titre: Facteur d'émission Avion/Long courrier
-      valeur: 0.152
-      unité: kgCO2e/km
+      valeur: 0.169
+      unité: kgCO2e/passagers.km
       par défaut: 0
       meta:
-        incertitude: 5
+        id: 43771
 
 commun . FE . électricité:
   valeur:

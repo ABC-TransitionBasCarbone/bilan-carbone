@@ -28,7 +28,7 @@ achats . fournitures:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 3
+            id: 20556
 
     livres:
       titre: "Livres"
@@ -48,7 +48,7 @@ achats . fournitures:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 4
+            id: 20587
 
     papier ramette:
       titre: "Papier (ramette)"
@@ -68,7 +68,7 @@ achats . fournitures:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 2
+            id: 24295
 
     consommables:
       titre: "Consommables (cartouches d'encre…)"
@@ -88,7 +88,7 @@ achats . fournitures:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 1
+            id: 20557
 
     piles aaa:
       titre: "Piles AAA (alcalines)"
@@ -108,7 +108,7 @@ achats . fournitures:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 4
+            id: 24248
 
     piles aa:
       titre: "Piles AA (alcalines)"
@@ -128,4 +128,4 @@ achats . fournitures:
           note: |
             Source: Base Carbone®
           meta:
-            incertitude: 4
+            id: 24247

@@ -90,6 +90,7 @@ const StudyNavbar = ({
                       </button>
                     ) : (
                       <Link
+                        prefetch={false}
                         key={linkIndex}
                         target={link.external ? '_blank' : undefined}
                         className={classNames(styles.link, {
