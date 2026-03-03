@@ -414,7 +414,6 @@ const buildPastTrajectory = (
 export const calculateSNBCTrajectory = (
   params: CalculateTrajectoryParams,
   sector?: SectenSector,
-  isSectoral?: boolean,
 ): TrajectoryDataPoint[] => {
   const {
     studyEmissions,
@@ -595,7 +594,6 @@ export const calculateCustomSNBCSectoralTrajectory = (
             maxYear: params.maxYear,
           },
           sector === 'general' ? undefined : sector,
-          true,
         )
 
         sectorOvershootAdjustment = {
