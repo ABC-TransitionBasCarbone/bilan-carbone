@@ -12,7 +12,7 @@ import {
 export type FeFilters = {
   archived: boolean
   search: string
-  location: string
+  locations: string[]
   sources: string[]
   units: (BCUnit | string)[]
   subPosts: (SubPost | 'all')[]

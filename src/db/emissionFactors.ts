@@ -210,7 +210,9 @@ const getBaseFilterForEmissionFactors = (
           { frontiere: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
         ],
       }),
-      ...(filters.location && { location: { contains: filters.location, mode: Prisma.QueryMode.insensitive } }),
+      ...(filters.locations.length > 0
+        ? { location: { in: filters.locations, mode: Prisma.QueryMode.insensitive } }
+        : {}),
       emissionFactor: {
         AND: [
           {

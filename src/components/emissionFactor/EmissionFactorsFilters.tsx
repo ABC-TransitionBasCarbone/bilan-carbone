@@ -53,6 +53,7 @@ export const EmissionFactorsFilters = ({
   const [displayHideButton, setDisplayHideButton] = useState(false)
 
   const [unitsInputValue, setUnitsInputValue] = useState('')
+  const [locationsInputValue, setLocationsInputValue] = useState('')
   const filtersRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -102,20 +103,55 @@ export const EmissionFactorsFilters = ({
               data-testid="emission-factor-search-input"
             />
           </FormControl>
-          <FormControl>
+          <FormControl className={styles.multiSelector}>
             <FormLabel id="emission-factors-filter-location" component="legend">
               {t('locationSearch')}
             </FormLabel>
+
             <Autocomplete
-              value={filters.location}
+              multiple
+              disableCloseOnSelect
+              value={filters.locations}
               options={locationOptions}
-              onChange={(_, option) => setFilters((prevFilters) => ({ ...prevFilters, location: option || '' }))}
-              onInputChange={(_, newInputValue) =>
-                setFilters((prevFilters) => ({ ...prevFilters, location: newInputValue }))
-              }
-              renderInput={(params) => (
-                <TextField {...params} placeholder={t('locationSearchPlaceholder')} className={styles.locationInput} />
-              )}
+              inputValue={locationsInputValue}
+              clearOnBlur={false}
+              onInputChange={(_, newValue, reason) => {
+                if (reason === 'input') {
+                  setLocationsInputValue(newValue)
+                }
+              }}
+              getOptionKey={(location) => location}
+              filterSelectedOptions={false}
+              onChange={(_, newValue) => {
+                setFilters((prev) => ({
+                  ...prev,
+                  locations: newValue,
+                }))
+              }}
+              renderOption={(props, option) => {
+                const { key, ...restProps } = props
+                return (
+                  <MenuItem key={option} {...restProps}>
+                    <ListItemText primary={option} />
+                  </MenuItem>
+                )
+              }}
+              renderInput={(params) => <TextField {...params} placeholder={t('locationSearchPlaceholder')} />}
+              slots={{ popper: Popper }}
+              slotProps={{ popper: { style: { minWidth: 300 } } }}
+              renderValue={(selected, getItemProps) => {
+                const visible = selected.slice(0, 3)
+                const hiddenCount = selected.length - visible.length
+                return (
+                  <>
+                    {visible.map((option, index) => (
+                      <Chip label={option} {...getItemProps({ index })} key={option} />
+                    ))}
+
+                    {hiddenCount > 0 && <Chip label={`+${hiddenCount}`} size="small" sx={{ pointerEvents: 'none' }} />}
+                  </>
+                )
+              }}
             />
           </FormControl>
           <FormControl className={styles.selector}>
