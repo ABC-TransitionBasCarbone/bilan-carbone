@@ -694,11 +694,13 @@ const TrajectoryGraph = ({
 
   const BottomLeftText = ({ onClick, ...props }: DrawingProps & { onClick: () => void }) => (
     <>
-      <BottomLeftMultilineText {...props} className="bold text-center">
-        <Typography variant="body2" fontWeight={600}>
-          {t('estimatedPast')}
+      <BottomLeftMultilineText {...props} className="bold">
+        <div className={classNames('flex', styles.estimatedPastLabel)}>
+          <Typography variant="body2" fontWeight={600}>
+            {t('estimatedPast')}
+          </Typography>
           <HelpOutlineOutlinedIcon color="secondary" className="ml-4 pointer" onClick={onClick} />
-        </Typography>
+        </div>
       </BottomLeftMultilineText>
     </>
   )

@@ -1,3 +1,9 @@
+.estimatedPastLabel {
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  margin-left: 0.5rem;
+}
+
 .yearRangeSlider {
   margin-top: -2rem;
   height: 2px;
