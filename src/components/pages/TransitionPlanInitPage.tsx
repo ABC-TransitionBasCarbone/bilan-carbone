@@ -67,6 +67,7 @@ const TransitionPlanInitPage = ({
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
   const [showModal, setShowModal] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [currentStep, setCurrentStep] = useState<number | 'complete'>(-1)
   const [selectedSnbcTrajectories, setSelectedSnbcTrajectories] = useState<string[]>([TRAJECTORY_SNBC_GENERAL_ID])
   const [selectedSbtiTrajectories, setSelectedSbtiTrajectories] = useState<string[]>([TRAJECTORY_15_ID])
@@ -83,6 +84,7 @@ const TransitionPlanInitPage = ({
       await callServerFunction(() => initializeTransitionPlan(study.id, selectedPlanId), {
         onSuccess: async () => {
           setShowModal(false)
+          setIsLoading(true)
           router.refresh()
         },
       })
@@ -234,7 +236,7 @@ const TransitionPlanInitPage = ({
             <Image src="/img/CR.png" alt="Transition Plan" width={177} height={119} />
             <h5>{t('emptyState.title')}</h5>
             <p>{customRich(t, 'emptyState.subtitle')}</p>
-            <Button onClick={() => setShowModal(true)} size="large" className={'mt-2'}>
+            <Button onClick={() => setShowModal(true)} size="large" className={'mt-2'} disabled={isLoading}>
               {t('startButton')}
             </Button>
           </Box>
