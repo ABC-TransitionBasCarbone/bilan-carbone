@@ -148,7 +148,7 @@ export const EmissionFactorsFilters = ({
             <Autocomplete
               multiple
               disableCloseOnSelect
-              value={filters.units.filter((unit) => unit !== 'all')}
+              value={filters.units}
               options={initialSelectedUnits}
               inputValue={unitsInputValue}
               clearOnBlur={false}
@@ -163,7 +163,7 @@ export const EmissionFactorsFilters = ({
               onChange={(_, newValue) => {
                 setFilters((prev) => ({
                   ...prev,
-                  units: newValue.length === 0 ? ['all'] : newValue,
+                  units: newValue,
                 }))
               }}
               renderOption={(props, option) => {

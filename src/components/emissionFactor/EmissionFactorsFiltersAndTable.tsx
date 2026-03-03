@@ -59,7 +59,7 @@ const EmissionFactorsFiltersAndTable = ({
     search: '',
     location: '',
     sources: initialImportVersions,
-    units: ['all'],
+    units: [],
     subPosts: defaultSubPost ? [defaultSubPost] : ['all'],
   })
 

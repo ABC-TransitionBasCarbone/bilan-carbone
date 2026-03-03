@@ -181,7 +181,7 @@ const getBaseFilterForEmissionFactors = (
 ) => {
   let importedFromCondition = {}
 
-  if (filters.sources.length === 0 || filters.units.length === 0 || filters.subPosts.length === 0) {
+  if (filters.sources.length === 0 || filters.subPosts.length === 0) {
     importedFromCondition = { id: 'no-fe' }
   } else {
     if (filters.sources.includes(Import.Manual) && filters.sources.length === 1 && organizationId) {
@@ -219,7 +219,7 @@ const getBaseFilterForEmissionFactors = (
               : { hasSome: getEmissionFactorSubPostsMap(filters.subPosts as SubPost[], environment) },
           },
           filters.archived ? {} : { status: { not: EmissionFactorStatus.Archived } },
-          filters.units.length > 0 && !filters.units.includes('all')
+          filters.units.length > 0
             ? {
                 OR: [{ unit: { in: filters.units as Unit[] } }, { customUnit: { in: filters.units as string[] } }],
               }
