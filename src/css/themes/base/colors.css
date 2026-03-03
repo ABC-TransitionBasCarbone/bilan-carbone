@@ -93,5 +93,35 @@
   --trajectory-custom-7: #752c12;
   --trajectory-custom-8: #431505;
 
+  --trajectory-sbti-15-shade-0: #199e73;
+  --trajectory-sbti-15-shade-1: #157d5c;
+  --trajectory-sbti-15-shade-2: #115e45;
+  --trajectory-sbti-15-shade-3: #0d4533;
+  --trajectory-sbti-15-shade-4: #092e22;
+  --trajectory-sbti-15-shade-5: #a8e8d0;
+  --trajectory-sbti-15-shade-6: #7ed6b8;
+  --trajectory-sbti-15-shade-7: #55c4a0;
+  --trajectory-sbti-15-shade-8: #2bb388;
+
+  --trajectory-sbti-wb2c-shade-0: #60e6bc;
+  --trajectory-sbti-wb2c-shade-1: #3edbac;
+  --trajectory-sbti-wb2c-shade-2: #1ec89a;
+  --trajectory-sbti-wb2c-shade-3: #17a07b;
+  --trajectory-sbti-wb2c-shade-4: #10785c;
+  --trajectory-sbti-wb2c-shade-5: #c8f5e8;
+  --trajectory-sbti-wb2c-shade-6: #a0edd8;
+  --trajectory-sbti-wb2c-shade-7: #7de5c9;
+  --trajectory-sbti-wb2c-shade-8: #09503d;
+
+  --trajectory-snbc-shade-0: #03bbe0;
+  --trajectory-snbc-shade-1: #0296b3;
+  --trajectory-snbc-shade-2: #027186;
+  --trajectory-snbc-shade-3: #014d5c;
+  --trajectory-snbc-shade-4: #013038;
+  --trajectory-snbc-shade-5: #a0e8f5;
+  --trajectory-snbc-shade-6: #6ed9ef;
+  --trajectory-snbc-shade-7: #35cae8;
+  --trajectory-snbc-shade-8: #001518;
+
   --trajectory-gray-area: #ddcebf;
 }

@@ -169,6 +169,7 @@ const TrajectoryPage = ({
             studyEmissions={studyTotalEmissions}
             titleAction={addButton}
             storageKey={`trajectory-page-${transitionPlan.id}`}
+            isTrajectoryPage
           />
 
           <div className="flex-col gapped1">

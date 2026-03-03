@@ -20,7 +20,7 @@ import {
   LineSeriesType,
   MarkPlot,
 } from '@mui/x-charts'
-import { Action, SectenInfo } from '@prisma/client'
+import { Action, SectenInfo, TrajectoryType } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -53,6 +53,7 @@ interface Props {
   showActionTrajectory?: boolean
   titleAction?: ReactNode
   storageKey?: string
+  isTrajectoryPage?: boolean
 }
 
 const TrajectoryGraph = ({
@@ -71,6 +72,7 @@ const TrajectoryGraph = ({
   showActionTrajectory = true,
   titleAction,
   storageKey,
+  isTrajectoryPage = false,
 }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectories.graph')
   const tUnit = useTranslations('study.results.units')
@@ -125,6 +127,7 @@ const TrajectoryGraph = ({
         trajectoryData: trajData.data,
         label: traj?.name || '',
         color: undefined,
+        type: traj?.type,
       }
     })
 
@@ -484,10 +487,29 @@ const TrajectoryGraph = ({
       }
     })
 
+    const typeShadeCounters: Partial<Record<TrajectoryType, number>> = {}
+
     data.customTrajectoriesData.forEach((traj, index) => {
       if (traj.trajectoryData) {
         const { previousTrajectory, previousTrajectoryStartYear, currentTrajectory, withinThreshold, isFailed } =
           traj.trajectoryData
+
+        let baseColor: string
+        if (isTrajectoryPage && traj.type) {
+          const shadeIndex = typeShadeCounters[traj.type] ?? 0
+          typeShadeCounters[traj.type] = shadeIndex + 1
+          if (traj.type === TrajectoryType.SBTI_15) {
+            baseColor = `var(--trajectory-sbti-15-shade-${shadeIndex % 9})`
+          } else if (traj.type === TrajectoryType.SBTI_WB2C) {
+            baseColor = `var(--trajectory-sbti-wb2c-shade-${shadeIndex % 9})`
+          } else if (traj.type === TrajectoryType.SNBC_GENERAL || traj.type === TrajectoryType.SNBC_SECTORAL) {
+            baseColor = `var(--trajectory-snbc-shade-${shadeIndex % 9})`
+          } else {
+            baseColor = traj.color || `var(--trajectory-custom-${index % 9})`
+          }
+        } else {
+          baseColor = traj.color || `var(--trajectory-custom-${index % 9})`
+        }
 
         if (previousTrajectory) {
           // Only show mark for the previous trajectory start year, not for past studies
@@ -502,14 +524,13 @@ const TrajectoryGraph = ({
               withinThreshold: true,
               data: mapDataToYears(previousTrajectory, true),
               label: traj.label + ` (${previousTrajectoryStartYear})`,
-              color: traj.color || `var(--trajectory-custom-${index % 9})`,
+              color: baseColor,
               curve: 'linear' as const,
               connectNulls: false,
               showMark: ({ index }: { index: number }) => index === previousTrajectoryStartYearIndex,
               valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
             })
           } else {
-            const baseColor = traj.color || `var(--trajectory-custom-${index % 9})`
             series.push({
               type: 'line',
               dataType: 'previous',
@@ -535,7 +556,7 @@ const TrajectoryGraph = ({
             isFailed,
             data: currentData,
             label: previousTrajectory ? traj.label + ` (${studyStartYear})` : traj.label,
-            color: isFailed ? 'var(--error-100)' : traj.color || `var(--trajectory-custom-${index % 9})`,
+            color: isFailed ? 'var(--error-100)' : baseColor,
             curve: 'linear' as const,
             connectNulls: false,
             showMark: ({ index }: { index: number }) => shouldShowMark(index),
@@ -549,7 +570,7 @@ const TrajectoryGraph = ({
             isFailed,
             data: currentData.map((val, idx) => (idx === studyStartYearIndex ? val : null)),
             label: traj.label + ` (${studyStartYear})`,
-            color: isFailed ? 'var(--error-100)' : traj.color || `var(--trajectory-custom-${index % 9})`,
+            color: isFailed ? 'var(--error-100)' : baseColor,
             curve: 'linear' as const,
             connectNulls: false,
             showMark: true,
@@ -646,6 +667,7 @@ const TrajectoryGraph = ({
     studyStartYearIndex,
     name,
     yearsToDisplay,
+    isTrajectoryPage,
   ])
 
   const failedTrajectories = useMemo(() => {
