@@ -14,6 +14,7 @@ describe('Study Rights', () => {
 
   it('should show not in your orga for CR only when necessary', () => {
     cy.login('bc-cr-admin-1@yopmail.com', 'password-1')
+    cy.getByTestId('organization').first().click()
     cy.getByTestId('new-study').click()
     cy.getByTestId('organization-sites-checkbox').first().click()
     cy.getByTestId('new-study-organization-button').click()
@@ -29,7 +30,7 @@ describe('Study Rights', () => {
     })
     cy.getByTestId('new-study-create-button').click()
     cy.getByTestId('study-cadrage-link').click()
-    cy.getByTestId('study-rights-table-row').contains('bc-gestionnaire-1@yopmail.comValidateur')
+    cy.getByTestId('study-rights-table-row').contains('bc-cr-gestionnaire-1@yopmail.comValidateur')
     // External user
     cy.getByTestId('study-rights-change-button').click()
     cy.getByTestId('study-rights-email').should('be.visible')
@@ -53,18 +54,17 @@ describe('Study Rights', () => {
     cy.get('#new-study-right-other-organization-warning').should('be.visible')
     cy.getByTestId('new-study-right-modal-accept').click()
     cy.wait('@create')
-    cy.getByTestId('study-rights-table-row').eq(2).contains('bc-external@yopmail.comLecteur')
+    cy.getByTestId('study-rights-table-row').contains('bc-external@yopmail.comLecteur')
     // Internal user
     cy.getByTestId('study-rights-change-button').click()
     cy.getByTestId('study-rights-email').should('be.visible')
-    cy.getByTestId('study-rights-email').type('bc-cr-gestionnaire-1@yopmail.com')
+    cy.getByTestId('study-rights-email').type('bc-cr-default-1@yopmail.com')
     cy.getByTestId('study-rights-role').click()
     cy.get('[data-value="Reader"]').click()
     cy.getByTestId('study-rights-create-button').click()
-    cy.get('#new-study-right-modal-title').should('not.be.visible')
-    cy.get('#new-study-right-other-organization-warning').should('not.be.visible')
+    cy.get('#new-study-right-modal-title').should('not.exist')
     cy.wait('@create')
-    cy.getByTestId('study-rights-table-row').eq(2).contains('bc-cr-gestionnaire-1@yopmail.comLecteur')
+    cy.getByTestId('study-rights-table-row').contains('bc-cr-default-1@yopmail.comLecteur')
   })
 
   it('should set user and manage role according to given rights', () => {
@@ -108,7 +108,7 @@ describe('Study Rights', () => {
     cy.get('#new-study-right-other-organization-warning').should('be.visible')
     cy.getByTestId('new-study-right-modal-accept').click()
     cy.wait('@create')
-    cy.getByTestId('study-rights-table-row').eq(2).contains('bc-external@yopmail.comLecteur')
+    cy.getByTestId('study-rights-table-row').contains('bc-external@yopmail.comLecteur')
     // Existing user outside of organization without rights
     cy.getByTestId('study-rights-change-button').click()
     cy.getByTestId('study-rights-email').type('bc-collaborator-2@yopmail.com')
@@ -185,9 +185,9 @@ describe('Study Rights', () => {
     cy.getByTestId('study-rights-table-row')
       .eq(4)
       .within(() => cy.get('input').should('be.disabled'))
-    cy.getByTestId('study-rights-table-row').eq(6).contains('bc-external@yopmail.comLecteur')
+    cy.getByTestId('study-rights-table-row').eq(5).contains('bc-external@yopmail.comLecteur')
     cy.getByTestId('study-rights-table-row')
-      .eq(6)
+      .eq(5)
       .within(() => cy.get('input').should('be.disabled'))
     cy.getByTestId('study-rights-table-row').eq(7).contains('untrained@yopmail.comLecteur')
     cy.getByTestId('study-rights-table-row')
