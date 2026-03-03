@@ -9,12 +9,12 @@ interface Props {
   studyStartYear: number
   title: string
   data: { label: string; dataType: DataType; color: string }[]
-  filteredSeriesLabels: string[]
+  filteredTrajectoryLabels: string[]
   onClick: (label: string) => void
   border?: boolean
 }
 
-const TrajectoryLegendTable = ({ title, data, onClick, studyStartYear, border, filteredSeriesLabels }: Props) => {
+const TrajectoryLegendTable = ({ title, data, onClick, studyStartYear, border, filteredTrajectoryLabels }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectories.graph')
   const previousTrajectories = data.filter((d) => d.dataType === 'previous')
   const currentTrajectories = data.filter((d) => d.dataType === 'current')
@@ -44,7 +44,7 @@ const TrajectoryLegendTable = ({ title, data, onClick, studyStartYear, border, f
                     className={classNames(
                       'bold',
                       styles.chip,
-                      filteredSeriesLabels.includes(item.label) && styles.unselected,
+                      filteredTrajectoryLabels.includes(item.label) && styles.unselected,
                     )}
                     key={item.label as string}
                     name={item.label as string}

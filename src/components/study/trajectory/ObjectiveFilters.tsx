@@ -1,49 +1,16 @@
 'use client'
 
-import Button from '@/components/base/Button'
 import DebouncedInput from '@/components/base/DebouncedInput'
-import { SectorPercentages } from '@/services/serverFunctions/trajectory.command'
-import { PastStudy } from '@/utils/trajectory'
-import { SectenInfo } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import dynamic from 'next/dynamic'
-import { useState } from 'react'
-import styles from './TrajectoryObjectivesTable.module.css'
-
-const TrajectoryCreationModal = dynamic(() => import('./TrajectoryCreationModal'), { ssr: false })
+import styles from './ObjectivesTable.module.css'
 
 interface Props {
   search: string
   setSearch: (search: string) => void
-  transitionPlanId: string
-  onTrajectoryCreation: () => void
-  canEdit: boolean
-  studyYear: number
-  sectenData: SectenInfo[]
-  studyEmissions?: number
-  pastStudies?: PastStudy[]
-  defaultSnbcSectoralPercentages?: SectorPercentages | null
 }
 
-const ObjectiveFilters = ({
-  search,
-  setSearch,
-  transitionPlanId,
-  onTrajectoryCreation,
-  canEdit,
-  studyYear,
-  sectenData,
-  studyEmissions = 0,
-  pastStudies = [],
-  defaultSnbcSectoralPercentages,
-}: Props) => {
+const ObjectiveFilters = ({ search, setSearch }: Props) => {
   const t = useTranslations('study.transitionPlan.objectives')
-  const [creationModalOpened, setCreationModalOpened] = useState(false)
-
-  const handleSuccess = () => {
-    onTrajectoryCreation()
-    setCreationModalOpened(false)
-  }
 
   return (
     <div className="grow justify-between align-center">
@@ -55,27 +22,6 @@ const ObjectiveFilters = ({
         placeholder={t('search')}
         data-testid="objectives-filter"
       />
-      {canEdit && (
-        <Button className={styles.addButton} onClick={() => setCreationModalOpened((prev) => !prev)}>
-          {t('add')}
-        </Button>
-      )}
-
-      {creationModalOpened && (
-        <TrajectoryCreationModal
-          open
-          onClose={() => setCreationModalOpened(false)}
-          transitionPlanId={transitionPlanId}
-          onSuccess={handleSuccess}
-          trajectory={null}
-          isFirstCreation={false}
-          studyYear={studyYear}
-          sectenData={sectenData}
-          studyEmissions={studyEmissions}
-          pastStudies={pastStudies}
-          defaultSnbcSectoralPercentages={defaultSnbcSectoralPercentages}
-        />
-      )}
     </div>
   )
 }
