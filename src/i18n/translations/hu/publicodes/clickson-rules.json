@@ -27,98 +27,98 @@
       "électricité": {
         "janvier": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation d'électricité en janvier"
+            "question": "Januári villamosenergia-fogyasztás"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+            "question": "Villamosenergia kibocsátási tényezője"
           }
         },
         "février": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation d'électricité en février"
+            "question": "Februári villamosenergia-fogyasztás"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+            "question": "Villamosenergia kibocsátási tényezője"
           }
         },
         "mars": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation d'électricité en mars"
+            "question": "Márciusi villamosenergia-fogyasztás"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+            "question": "Villamosenergia kibocsátási tényezője"
           }
         },
         "avril": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation d'électricité en avril"
+            "question": "Áprilisi villamosenergia-fogyasztás"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+            "question": "Villamosenergia kibocsátási tényezője"
           }
         },
         "mai": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation d'électricité en mai"
+            "question": "Májusi villamosenergia-fogyasztás"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+            "question": "Villamosenergia kibocsátási tényezője"
           }
         },
         "juin": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation d'électricité en juin"
+            "question": "Júniusi villamosenergia-fogyasztás"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+            "question": "Villamosenergia kibocsátási tényezője"
           }
         },
         "juillet": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation d'électricité en juillet"
+            "question": "Júliusi villamosenergia-fogyasztás"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+            "question": "Villamosenergia kibocsátási tényezője"
           }
         },
         "août": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation d'électricité en août"
+            "question": "Augusztusi villamosenergia-fogyasztás"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+            "question": "Villamosenergia kibocsátási tényezője"
           }
         },
         "septembre": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation d'électricité en septembre"
+            "question": "Szeptemberi villamosenergia-fogyasztás"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+            "question": "Villamosenergia kibocsátási tényezője"
           }
         },
         "octobre": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation d'électricité en octobre"
+            "question": "Októberi villamosenergia-fogyasztás"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+            "question": "Villamosenergia kibocsátási tényezője"
           }
         },
         "novembre": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation d'électricité en novembre"
+            "question": "Novemberi villamosenergia-fogyasztás"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+            "question": "Villamosenergia kibocsátási tényezője"
           }
         },
         "décembre": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation d'électricité en décembre"
+            "question": "Decemberi villamosenergia-fogyasztás"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+            "question": "Villamosenergia kibocsátási tényezője"
           }
         }
       },
@@ -156,38 +156,38 @@
       },
       "autres gaz": {
         "gaz réfrigérant": {
-          "titre": "[TO_TRANSLATE] Gaz réfrigérant",
-          "question": "[TO_TRANSLATE] Consommation annuelle de gaz réfrigérant",
+          "titre": "Hűtőközeg",
+          "question": "Éves hűtőközeg-fogyasztás",
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de ce gaz"
+            "question": "Éves fogyasztás ebből a gázból"
           },
           "type": {
-            "titre": "[TO_TRANSLATE] Gaz réfrigérant",
-            "question": "[TO_TRANSLATE] Gaz réfrigérant",
+            "titre": "Hűtőközeg",
+            "question": "Hűtőközeg típusa",
             "options": {
-              "R134a": "[TO_TRANSLATE] R134a",
-              "R32": "[TO_TRANSLATE] R32",
-              "R407c": "[TO_TRANSLATE] R407c",
-              "R410a": "[TO_TRANSLATE] R410a"
+              "R134a": "R134a",
+              "R32": "R32",
+              "R407c": "R407c",
+              "R410a": "R410a"
             }
           }
         },
         "gaz à effet de serre principal": {
-          "titre": "[TO_TRANSLATE] Gaz à effet de serre principal",
-          "question": "[TO_TRANSLATE] Consommation annuelle de Gaz à effet de serre principal",
+          "titre": "Fő üvegházhatású gáz",
+          "question": "Éves fő üvegházhatású gáz fogyasztás",
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de ce gaz"
+            "question": "Éves fogyasztás ebből a gázból"
           },
           "type": {
-            "titre": "[TO_TRANSLATE] Gaz à effet de serre principal",
-            "question": "[TO_TRANSLATE] Gaz à effet de serre principal",
+            "titre": "Fő üvegházhatású gáz",
+            "question": "Fő üvegházhatású gáz típusa",
             "options": {
-              "CO2": "[TO_TRANSLATE] CO2",
-              "CH4 fossile": "[TO_TRANSLATE] CH4 fossile",
-              "CH4 biogénique": "[TO_TRANSLATE] CH4 biogénique",
-              "N2O": "[TO_TRANSLATE] N2O",
-              "SF6": "[TO_TRANSLATE] SF6",
-              "NF3": "[TO_TRANSLATE] NF3"
+              "CO2": "CO2",
+              "CH4 fossile": "Fosszilis CH4",
+              "CH4 biogénique": "Biogén CH4",
+              "N2O": "N2O",
+              "SF6": "SF6",
+              "NF3": "NF3"
             }
           }
         }
@@ -200,7 +200,7 @@
             "question": "Éves átlagos étkezések száma"
           },
           "FE": {
-            "question": "Kibocsátási tényező egy átlagos étkezésre"
+            "question": "Egy átlagos étkezés kibocsátási tényezője"
           }
         },
         "végétarien": {
@@ -208,7 +208,7 @@
             "question": "Éves vegetáriánus étkezések száma"
           },
           "FE": {
-            "question": "Kibocsátási tényező egy vegetáriánus étkezésre"
+            "question": "Egy vegetáriánus étkezés kibocsátási tényezője"
           }
         },
         "végétalien": {
@@ -216,7 +216,7 @@
             "question": "Éves vegán étkezések száma"
           },
           "FE": {
-            "question": "Kibocsátási tényező egy vegán étkezésre"
+            "question": "Egy vegán étkezés kibocsátási tényezője"
           }
         },
         "viande rouge": {
@@ -224,7 +224,7 @@
             "question": "Éves vörös húsos étkezések száma"
           },
           "FE": {
-            "question": "Kibocsátási tényező egy vörös húsos étkezésre"
+            "question": "Egy vörös húsos étkezés kibocsátási tényezője"
           }
         },
         "viande blanche": {
@@ -232,7 +232,7 @@
             "question": "Éves fehér húsos étkezések száma"
           },
           "FE": {
-            "question": "Kibocsátási tényező egy fehér húsos étkezésre"
+            "question": "Egy fehér húsos étkezés kibocsátási tényezője"
           }
         },
         "poisson": {
@@ -240,7 +240,7 @@
             "question": "Éves fehér halas étkezések száma"
           },
           "FE": {
-            "question": "Kibocsátási tényező egy fehér halas étkezésre"
+            "question": "Egy fehér halas étkezés kibocsátási tényezője"
           }
         }
       },
@@ -252,19 +252,19 @@
         },
         "ferroviaire": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Distance parcourue en fret ferroviaire"
+            "question": "Vasúti szállítás során megtett távolság"
           }
         }
       },
       "fin de vie moyenne": {
         "déchets résiduels": {
           "quantité": {
-            "question": "[TO_TRANSLATE] Quantité de déchets résiduels"
+            "question": "Maradék hulladék mennyisége"
           }
         },
         "déchets organiques": {
           "quantité": {
-            "question": "[TO_TRANSLATE] Quantité de déchets organiques"
+            "question": "Szerves hulladék mennyisége"
           }
         }
       },
@@ -274,7 +274,7 @@
             "question": "Évente elfogyasztott vízpalackok száma"
           },
           "FE": {
-            "question": "Kibocsátási tényező egy vízpalackra"
+            "question": "Egy vízpalack kibocsátási tényezője"
           }
         },
         "soda": {
@@ -282,15 +282,15 @@
             "question": "Évente elfogyasztott üdítők száma"
           },
           "FE": {
-            "question": "Kibocsátási tényező egy üdítőre"
+            "question": "Egy üdítő kibocsátási tényezője"
           }
         },
         "biscuits": {
           "nombre": {
-            "question": "[UPDATED] Quantité de biscuit consommée annuellement"
+            "question": "Évente elfogyasztott keksz mennyisége"
           },
           "FE": {
-            "question": "[UPDATED] Facteur d'émission par kg de poids net de biscuits"
+            "question": "Kibocsátási tényező kilogramm nettó keksz tömegre"
           }
         },
         "paquet de chips": {
@@ -298,31 +298,31 @@
             "question": "Évente elfogyasztott chips csomagok száma"
           },
           "FE": {
-            "question": "Kibocsátási tényező egy chips csomagra"
+            "question": "Egy chips csomag kibocsátási tényezője"
           }
         },
         "café noir": {
           "nombre": {
-            "question": "[UPDATED] Quantité de café noir consommée annuellement"
+            "question": "Évente elfogyasztott feketekávé mennyisége"
           },
           "FE": {
-            "question": "[UPDATED] Facteur d'émission par kg de poids net de café noir"
+            "question": "Kibocsátási tényező kilogramm nettó feketekávé tömegre"
           }
         },
         "café au lait": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Quantité de café au lait consommée annuellement"
+            "question": "Évente elfogyasztott tejeskávé mennyisége"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par kg de poids net de café a lait"
+            "question": "Kibocsátási tényező kilogramm nettó tejeskávé tömegre"
           }
         },
         "thé infusé": {
           "nombre": {
-            "question": "[UPDATED] Quantité de thé infusé consommée annuellement"
+            "question": "Évente elfogyasztott főzött tea mennyisége"
           },
           "FE": {
-            "question": "[UPDATED] Facteur d'émission par kg de poids net de thé infusé"
+            "question": "Kibocsátási tényező kilogramm nettó főzött tea tömegre"
           }
         },
         "sandwich pain de mie": {
@@ -330,15 +330,15 @@
             "question": "Évente elfogyasztott szendvicsek (toast kenyérrel) száma"
           },
           "FE": {
-            "question": "[UPDATED] Facteur d'émission par kg de poids net de sandwich pain de mie"
+            "question": "Kibocsátási tényező kilogramm nettó toast kenyér szendvics tömegre"
           }
         },
         "barre chocolatée": {
           "nombre": {
-            "question": "[UPDATED] Quantité de barres chocolatées consommée annuellement"
+            "question": "Évente elfogyasztott csokoládészeletek mennyisége"
           },
           "FE": {
-            "question": "[UPDATED] Facteur d'émission par kg de poids net de barre chocolatée"
+            "question": "Kibocsátási tényező kilogramm nettó csokoládészelet tömegre"
           }
         }
       }
@@ -485,34 +485,34 @@
       "équipements divers": {
         "chaise bois": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de chaises (bois) avez-vous achetées ?"
+            "question": "Hány fa széket vásárolt?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par chaise (bois)"
+            "question": "Kibocsátási tényező fa székenként"
           }
         },
         "chaise plastique": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de chaises (plastique) avez-vous achetées ?"
+            "question": "Hány műanyag széket vásárolt?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par chaise (plastique)"
+            "question": "Kibocsátási tényező műanyag székenként"
           }
         },
         "table standard": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de tables de réunion avez-vous achetées ?"
+            "question": "Hány tárgyalóasztalt vásárolt?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par table (standard)"
+            "question": "Kibocsátási tényező standard asztalonként"
           }
         },
         "armoire standard": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien d'armoires (standard) avez-vous achetées ?"
+            "question": "Hány standard szekrényt vásárolt?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par armoire (standard)"
+            "question": "Kibocsátási tényező standard szekrényenként"
           }
         }
       },
@@ -570,59 +570,59 @@
     "déplacements": {
       "voyages scolaires": {
         "RER transilien métro tram": {
-          "titre": "[TO_TRANSLATE] Transilien, RER, Métro, Tramway",
+          "titre": "Transilien, RER, Metró, Villamos",
           "distance": {
-            "question": "[TO_TRANSLATE] Passagers (par km)"
+            "question": "Utasok (km-enként)"
           }
         },
         "bus": {
-          "titre": "[TO_TRANSLATE] Autobus",
+          "titre": "Autóbusz",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Utasok (km-enként)"
           }
         },
         "bus électrique": {
-          "titre": "[TO_TRANSLATE] Autobus",
+          "titre": "Autóbusz (elektromos)",
           "distance": {
-            "question": "[TO_TRANSLATE] Passagers (par km)"
+            "question": "Utasok (km-enként)"
           }
         },
         "TER": {
           "titre": "TER",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Utasok (km-enként)"
           }
         },
         "TGV": {
           "titre": "TGV",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Utasok (km-enként)"
           }
         },
         "avion court courrier": {
           "titre": "Rövid távú repülőjárat",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Utasok (km-enként)"
           }
         },
         "avion moyen courrier": {
           "titre": "Közepes távú repülőjárat",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Utasok (km-enként)"
           }
         },
         "avion long courrier": {
           "titre": "Hosszú távú repülőjárat",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Utasok (km-enként)"
           }
         }
       },
       "transport des élèves": {
         "RER transilien métro tram": {
-          "titre": "[TO_TRANSLATE] Transilien, RER, Métro, Tramway",
+          "titre": "Transilien, RER, Metró, Villamos",
           "distance": {
-            "question": "[TO_TRANSLATE] Passagers (par km)"
+            "question": "Utasok (km-enként)"
           }
         },
         "vélo électrique": {
@@ -664,33 +664,33 @@
         "bus": {
           "titre": "Autóbusz",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Utasok (km-enként)"
           }
         },
         "bus électrique": {
-          "titre": "[TO_TRANSLATE] Autobus",
+          "titre": "Autóbusz (elektromos)",
           "distance": {
-            "question": "[TO_TRANSLATE] Passagers (par km)"
+            "question": "Utasok (km-enként)"
           }
         },
         "TER": {
           "titre": "TER",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Utasok (km-enként)"
           }
         },
         "TGV": {
           "titre": "TGV",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Utasok (km-enként)"
           }
         }
       },
       "transport du personnel": {
         "RER transilien métro tram": {
-          "titre": "[TO_TRANSLATE] Transilien, RER, Métro, Tramway",
+          "titre": "Transilien, RER, Metró, Villamos",
           "distance": {
-            "question": "[TO_TRANSLATE] Passagers (par km)"
+            "question": "Utasok (km-enként)"
           }
         },
         "vélo électrique": {
@@ -732,25 +732,25 @@
         "bus": {
           "titre": "Autóbusz",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Utasok (km-enként)"
           }
         },
         "bus électrique": {
-          "titre": "[TO_TRANSLATE] Autobus",
+          "titre": "Autóbusz (elektromos)",
           "distance": {
-            "question": "[TO_TRANSLATE] Passagers (par km)"
+            "question": "Utasok (km-enként)"
           }
         },
         "TER": {
           "titre": "TER",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Utasok (km-enként)"
           }
         },
         "TGV": {
           "titre": "TGV",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Utasok (km-enként)"
           }
         }
       }
@@ -884,41 +884,41 @@
             "question": "Hány AA (alkáli) elemet vásárolt?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par pile AA"
+            "question": "Kibocsátási tényező AA elemre"
           }
         }
       },
       "fin de vie moyenne": {
         "carton": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Quantité de carton (en tonne) ?"
+            "question": "Mennyi karton (tonnában)?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission du carton"
+            "question": "Karton kibocsátási tényezője"
           }
         },
         "plastique moyen": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Quantité de plastique moyen (en tonne) ?"
+            "question": "Mennyi műanyag (tonnában)?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission du plastique moyen"
+            "question": "Műanyag kibocsátási tényezője"
           }
         },
         "verre": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Quantité de verre (en tonne) ?"
+            "question": "Mennyi üveg (tonnában)?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission du verre"
+            "question": "Üveg kibocsátási tényezője"
           }
         },
         "bois": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Quantité de bois (en tonne) ?"
+            "question": "Mennyi fa (tonnában)?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission du bois"
+            "question": "Fa kibocsátási tényezője"
           }
         }
       },
@@ -991,37 +991,37 @@
     }
   },
   "publicodes-units": {
-    "étudiant": "[TO_TRANSLATE] étudiant",
-    "personne": "[TO_TRANSLATE] personne",
-    "année": "[TO_TRANSLATE] année",
-    "pays": "[TO_TRANSLATE] pays",
-    "kWh": "[TO_TRANSLATE] kWh",
-    "litre": "[UPDATED] litre",
-    "kWh PCI": "[TO_TRANSLATE] kWh PCI",
-    "kgCO2e/kg": "[TO_TRANSLATE] kgCO2e/kg",
-    "repas": "[UPDATED] repas",
-    "kgCO2e/repas": "[UPDATED] kgCO2e/repas",
-    "m3/km": "[TO_TRANSLATE] m3.km",
-    "t/km": "[TO_TRANSLATE] t.km",
-    "t": "[TO_TRANSLATE] t",
-    "bouteille": "[TO_TRANSLATE] bouteille",
-    "kgCO2e/bouteille": "[TO_TRANSLATE] kgCO2e/bouteille",
-    "canette": "[TO_TRANSLATE] canette",
-    "kgCO2e/canette": "[TO_TRANSLATE] kgCO2e/canette",
-    "kg de poids net": "[TO_TRANSLATE] kg de poids net",
-    "kgCO2e/kg de poids net": "[TO_TRANSLATE] kgCO2e/kg de poids net",
-    "paquet": "[UPDATED] paquet",
-    "kgCO2e/paquet": "[UPDATED] kgCO2e/paquet",
-    "barre": "[TO_TRANSLATE] barre",
-    "m2": "[TO_TRANSLATE] m2",
-    "kgCO2e/m2": "[TO_TRANSLATE] kgCO2e/m2",
-    "kgCO2e": "[TO_TRANSLATE] kgCO2e",
-    "unité": "[UPDATED] unité",
-    "kgCO2e/unité": "[UPDATED] kgCO2e/unité",
-    "km": "[TO_TRANSLATE] km",
-    "kg": "[TO_TRANSLATE] kg",
-    "€": "[TO_TRANSLATE] €",
-    "kgCO2e/€": "[TO_TRANSLATE] kgCO2e/€",
-    "kgCO2e/t": "[TO_TRANSLATE] kgCO2e/t"
+    "étudiant": "hallgató",
+    "personne": "személy",
+    "année": "év",
+    "pays": "ország",
+    "kWh": "kilowattóra",
+    "litre": "liter",
+    "kWh PCI": "kilowattóra PCI",
+    "kgCO2e/kg": "kgCO2e/kg",
+    "repas": "étkezés",
+    "kgCO2e/repas": "kgCO2e/étkezés",
+    "m3/km": "m3.km",
+    "t/km": "t.km",
+    "t": "tonna",
+    "bouteille": "palack",
+    "kgCO2e/bouteille": "kgCO2e/palack",
+    "canette": "doboz",
+    "kgCO2e/canette": "kgCO2e/doboz",
+    "kg de poids net": "nettó tömegű kg",
+    "kgCO2e/kg de poids net": "kgCO2e/nettó tömegű kg",
+    "paquet": "csomag",
+    "kgCO2e/paquet": "kgCO2e/csomag",
+    "barre": "szelet",
+    "m2": "m²",
+    "kgCO2e/m2": "kgCO2e/m²",
+    "kgCO2e": "kgCO2e",
+    "unité": "egység",
+    "kgCO2e/unité": "kgCO2e/egység",
+    "km": "km",
+    "kg": "kg",
+    "€": "euró",
+    "kgCO2e/€": "kgCO2e/euró",
+    "kgCO2e/t": "kgCO2e/tonna"
   }
 }

@@ -27,98 +27,98 @@
       "électricité": {
         "janvier": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation d'électricité en janvier"
+            "question": "Κατανάλωση ηλεκτρικής ενέργειας τον Ιανουάριο"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+            "question": "Συντελεστής εκπομπών ηλεκτρικής ενέργειας"
           }
         },
         "février": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation d'électricité en février"
+            "question": "Κατανάλωση ηλεκτρικής ενέργειας τον Φεβρουάριο"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+            "question": "Συντελεστής εκπομπών ηλεκτρικής ενέργειας"
           }
         },
         "mars": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation d'électricité en mars"
+            "question": "Κατανάλωση ηλεκτρικής ενέργειας τον Μάρτιο"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+            "question": "Συντελεστής εκπομπών ηλεκτρικής ενέργειας"
           }
         },
         "avril": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation d'électricité en avril"
+            "question": "Κατανάλωση ηλεκτρικής ενέργειας τον Απρίλιο"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+            "question": "Συντελεστής εκπομπών ηλεκτρικής ενέργειας"
           }
         },
         "mai": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation d'électricité en mai"
+            "question": "Κατανάλωση ηλεκτρικής ενέργειας τον Μάιο"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+            "question": "Συντελεστής εκπομπών ηλεκτρικής ενέργειας"
           }
         },
         "juin": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation d'électricité en juin"
+            "question": "Κατανάλωση ηλεκτρικής ενέργειας τον Ιούνιο"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+            "question": "Συντελεστής εκπομπών ηλεκτρικής ενέργειας"
           }
         },
         "juillet": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation d'électricité en juillet"
+            "question": "Κατανάλωση ηλεκτρικής ενέργειας τον Ιούλιο"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+            "question": "Συντελεστής εκπομπών ηλεκτρικής ενέργειας"
           }
         },
         "août": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation d'électricité en août"
+            "question": "Κατανάλωση ηλεκτρικής ενέργειας τον Αύγουστο"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+            "question": "Συντελεστής εκπομπών ηλεκτρικής ενέργειας"
           }
         },
         "septembre": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation d'électricité en septembre"
+            "question": "Κατανάλωση ηλεκτρικής ενέργειας τον Σεπτέμβριο"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+            "question": "Συντελεστής εκπομπών ηλεκτρικής ενέργειας"
           }
         },
         "octobre": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation d'électricité en octobre"
+            "question": "Κατανάλωση ηλεκτρικής ενέργειας τον Οκτώβριο"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+            "question": "Συντελεστής εκπομπών ηλεκτρικής ενέργειας"
           }
         },
         "novembre": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation d'électricité en novembre"
+            "question": "Κατανάλωση ηλεκτρικής ενέργειας τον Νοέμβριο"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+            "question": "Συντελεστής εκπομπών ηλεκτρικής ενέργειας"
           }
         },
         "décembre": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation d'électricité en décembre"
+            "question": "Κατανάλωση ηλεκτρικής ενέργειας τον Δεκέμβριο"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+            "question": "Συντελεστής εκπομπών ηλεκτρικής ενέργειας"
           }
         }
       },
@@ -156,38 +156,38 @@
       },
       "autres gaz": {
         "gaz réfrigérant": {
-          "titre": "[TO_TRANSLATE] Gaz réfrigérant",
-          "question": "[TO_TRANSLATE] Consommation annuelle de gaz réfrigérant",
+          "titre": "Ψυκτικό αέριο",
+          "question": "Ετήσια κατανάλωση ψυκτικού αερίου",
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de ce gaz"
+            "question": "Ετήσια κατανάλωση αυτού του αερίου"
           },
           "type": {
-            "titre": "[TO_TRANSLATE] Gaz réfrigérant",
-            "question": "[TO_TRANSLATE] Gaz réfrigérant",
+            "titre": "Ψυκτικό αέριο",
+            "question": "Ψυκτικό αέριο",
             "options": {
-              "R134a": "[TO_TRANSLATE] R134a",
-              "R32": "[TO_TRANSLATE] R32",
-              "R407c": "[TO_TRANSLATE] R407c",
-              "R410a": "[TO_TRANSLATE] R410a"
+              "R134a": "R134a",
+              "R32": "R32",
+              "R407c": "R407c",
+              "R410a": "R410a"
             }
           }
         },
         "gaz à effet de serre principal": {
-          "titre": "[TO_TRANSLATE] Gaz à effet de serre principal",
-          "question": "[TO_TRANSLATE] Consommation annuelle de Gaz à effet de serre principal",
+          "titre": "Κύριο αέριο του θερμοκηπίου",
+          "question": "Ετήσια κατανάλωση κύριου αερίου του θερμοκηπίου",
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de ce gaz"
+            "question": "Ετήσια κατανάλωση αυτού του αερίου"
           },
           "type": {
-            "titre": "[TO_TRANSLATE] Gaz à effet de serre principal",
-            "question": "[TO_TRANSLATE] Gaz à effet de serre principal",
+            "titre": "Κύριο αέριο του θερμοκηπίου",
+            "question": "Κύριο αέριο του θερμοκηπίου",
             "options": {
-              "CO2": "[TO_TRANSLATE] CO2",
-              "CH4 fossile": "[TO_TRANSLATE] CH4 fossile",
-              "CH4 biogénique": "[TO_TRANSLATE] CH4 biogénique",
-              "N2O": "[TO_TRANSLATE] N2O",
-              "SF6": "[TO_TRANSLATE] SF6",
-              "NF3": "[TO_TRANSLATE] NF3"
+              "CO2": "CO2",
+              "CH4 fossile": "CH4 ορυκτής προέλευσης",
+              "CH4 biogénique": "CH4 βιογενούς προέλευσης",
+              "N2O": "N2O",
+              "SF6": "SF6",
+              "NF3": "NF3"
             }
           }
         }
@@ -252,19 +252,19 @@
         },
         "ferroviaire": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Distance parcourue en fret ferroviaire"
+            "question": "Απόσταση που διανύθηκε με σιδηροδρομική μεταφορά εμπορευμάτων"
           }
         }
       },
       "fin de vie moyenne": {
         "déchets résiduels": {
           "quantité": {
-            "question": "[TO_TRANSLATE] Quantité de déchets résiduels"
+            "question": "Ποσότητα υπολειμματικών αποβλήτων"
           }
         },
         "déchets organiques": {
           "quantité": {
-            "question": "[TO_TRANSLATE] Quantité de déchets organiques"
+            "question": "Ποσότητα οργανικών αποβλήτων"
           }
         }
       },
@@ -287,10 +287,10 @@
         },
         "biscuits": {
           "nombre": {
-            "question": "[UPDATED] Quantité de biscuit consommée annuellement"
+            "question": "Ετήσια ποσότητα μπισκότων που καταναλώθηκε"
           },
           "FE": {
-            "question": "[UPDATED] Facteur d'émission par kg de poids net de biscuits"
+            "question": "Συντελεστής εκπομπών ανά κιλό καθαρού βάρους μπισκότων"
           }
         },
         "paquet de chips": {
@@ -303,26 +303,26 @@
         },
         "café noir": {
           "nombre": {
-            "question": "[UPDATED] Quantité de café noir consommée annuellement"
+            "question": "Ετήσια ποσότητα μαύρου καφέ που καταναλώθηκε"
           },
           "FE": {
-            "question": "[UPDATED] Facteur d'émission par kg de poids net de café noir"
+            "question": "Συντελεστής εκπομπών ανά κιλό καθαρού βάρους μαύρου καφέ"
           }
         },
         "café au lait": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Quantité de café au lait consommée annuellement"
+            "question": "Ετήσια ποσότητα καφέ με γάλα που καταναλώθηκε"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par kg de poids net de café a lait"
+            "question": "Συντελεστής εκπομπών ανά κιλό καθαρού βάρους καφέ με γάλα"
           }
         },
         "thé infusé": {
           "nombre": {
-            "question": "[UPDATED] Quantité de thé infusé consommée annuellement"
+            "question": "Ετήσια ποσότητα τσαγιού που καταναλώθηκε"
           },
           "FE": {
-            "question": "[UPDATED] Facteur d'émission par kg de poids net de thé infusé"
+            "question": "Συντελεστής εκπομπών ανά κιλό καθαρού βάρους τσαγιού"
           }
         },
         "sandwich pain de mie": {
@@ -330,15 +330,15 @@
             "question": "Ετήσιος αριθμός καταναλωμένων σάντουιτς με ψωμί του τοστ"
           },
           "FE": {
-            "question": "[UPDATED] Facteur d'émission par kg de poids net de sandwich pain de mie"
+            "question": "Συντελεστής εκπομπών ανά κιλό καθαρού βάρους σάντουιτς με ψωμί του τοστ"
           }
         },
         "barre chocolatée": {
           "nombre": {
-            "question": "[UPDATED] Quantité de barres chocolatées consommée annuellement"
+            "question": "Ετήσια ποσότητα σοκολατένιων μπαρών που καταναλώθηκε"
           },
           "FE": {
-            "question": "[UPDATED] Facteur d'émission par kg de poids net de barre chocolatée"
+            "question": "Συντελεστής εκπομπών ανά κιλό καθαρού βάρους σοκολατένιας μπάρας"
           }
         }
       }
@@ -485,34 +485,34 @@
       "équipements divers": {
         "chaise bois": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de chaises (bois) avez-vous achetées ?"
+            "question": "Πόσες ξύλινες καρέκλες αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par chaise (bois)"
+            "question": "Συντελεστής εκπομπών ανά ξύλινη καρέκλα"
           }
         },
         "chaise plastique": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de chaises (plastique) avez-vous achetées ?"
+            "question": "Πόσες πλαστικές καρέκλες αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par chaise (plastique)"
+            "question": "Συντελεστής εκπομπών ανά πλαστική καρέκλα"
           }
         },
         "table standard": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de tables de réunion avez-vous achetées ?"
+            "question": "Πόσα τραπέζια συνεδριάσεων αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par table (standard)"
+            "question": "Συντελεστής εκπομπών ανά τυπικό τραπέζι"
           }
         },
         "armoire standard": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien d'armoires (standard) avez-vous achetées ?"
+            "question": "Πόσες τυπικές ντουλάπες αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par armoire (standard)"
+            "question": "Συντελεστής εκπομπών ανά τυπική ντουλάπα"
           }
         }
       },
@@ -570,59 +570,59 @@
     "déplacements": {
       "voyages scolaires": {
         "RER transilien métro tram": {
-          "titre": "[TO_TRANSLATE] Transilien, RER, Métro, Tramway",
+          "titre": "Προαστιακός, RER, Μετρό, Τραμ",
           "distance": {
-            "question": "[TO_TRANSLATE] Passagers (par km)"
+            "question": "Επιβάτες (ανά χλμ)"
           }
         },
         "bus": {
-          "titre": "[TO_TRANSLATE] Autobus",
+          "titre": "Λεωφορείο",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Επιβάτες (ανά χλμ)"
           }
         },
         "bus électrique": {
-          "titre": "[TO_TRANSLATE] Autobus",
+          "titre": "Ηλεκτρικό λεωφορείο",
           "distance": {
-            "question": "[TO_TRANSLATE] Passagers (par km)"
+            "question": "Επιβάτες (ανά χλμ)"
           }
         },
         "TER": {
           "titre": "Περιφερειακό τρένο (TER)",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Επιβάτες (ανά χλμ)"
           }
         },
         "TGV": {
           "titre": "Υπερταχύ τρένο (TGV)",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Επιβάτες (ανά χλμ)"
           }
         },
         "avion court courrier": {
           "titre": "Αεροπλάνο μικρών αποστάσεων",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Επιβάτες (ανά χλμ)"
           }
         },
         "avion moyen courrier": {
           "titre": "Αεροπλάνο μεσαίων αποστάσεων",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Επιβάτες (ανά χλμ)"
           }
         },
         "avion long courrier": {
           "titre": "Αεροπλάνο μεγάλων αποστάσεων",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Επιβάτες (ανά χλμ)"
           }
         }
       },
       "transport des élèves": {
         "RER transilien métro tram": {
-          "titre": "[TO_TRANSLATE] Transilien, RER, Métro, Tramway",
+          "titre": "Προαστιακός, RER, Μετρό, Τραμ",
           "distance": {
-            "question": "[TO_TRANSLATE] Passagers (par km)"
+            "question": "Επιβάτες (ανά χλμ)"
           }
         },
         "vélo électrique": {
@@ -664,33 +664,33 @@
         "bus": {
           "titre": "Λεωφορείο",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Επιβάτες (ανά χλμ)"
           }
         },
         "bus électrique": {
-          "titre": "[TO_TRANSLATE] Autobus",
+          "titre": "Ηλεκτρικό λεωφορείο",
           "distance": {
-            "question": "[TO_TRANSLATE] Passagers (par km)"
+            "question": "Επιβάτες (ανά χλμ)"
           }
         },
         "TER": {
           "titre": "Περιφερειακό τρένο (TER)",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Επιβάτες (ανά χλμ)"
           }
         },
         "TGV": {
           "titre": "Υπερταχύ τρένο (TGV)",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Επιβάτες (ανά χλμ)"
           }
         }
       },
       "transport du personnel": {
         "RER transilien métro tram": {
-          "titre": "[TO_TRANSLATE] Transilien, RER, Métro, Tramway",
+          "titre": "Προαστιακός, RER, Μετρό, Τραμ",
           "distance": {
-            "question": "[TO_TRANSLATE] Passagers (par km)"
+            "question": "Επιβάτες (ανά χλμ)"
           }
         },
         "vélo électrique": {
@@ -732,25 +732,25 @@
         "bus": {
           "titre": "Λεωφορείο",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Επιβάτες (ανά χλμ)"
           }
         },
         "bus électrique": {
-          "titre": "[TO_TRANSLATE] Autobus",
+          "titre": "Ηλεκτρικό λεωφορείο",
           "distance": {
-            "question": "[TO_TRANSLATE] Passagers (par km)"
+            "question": "Επιβάτες (ανά χλμ)"
           }
         },
         "TER": {
           "titre": "Περιφερειακό τρένο (TER)",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Επιβάτες (ανά χλμ)"
           }
         },
         "TGV": {
           "titre": "Υπερταχύ τρένο (TGV)",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Επιβάτες (ανά χλμ)"
           }
         }
       }
@@ -884,41 +884,41 @@
             "question": "Πόσες μπαταρίες AA (αλκαλικές) αγοράσατε;"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par pile AA"
+            "question": "Συντελεστής εκπομπών ανά μπαταρία AA"
           }
         }
       },
       "fin de vie moyenne": {
         "carton": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Quantité de carton (en tonne) ?"
+            "question": "Ποσότητα χαρτονιού (σε τόνους);"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission du carton"
+            "question": "Συντελεστής εκπομπών χαρτονιού"
           }
         },
         "plastique moyen": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Quantité de plastique moyen (en tonne) ?"
+            "question": "Ποσότητα μέσου πλαστικού (σε τόνους);"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission du plastique moyen"
+            "question": "Συντελεστής εκπομπών μέσου πλαστικού"
           }
         },
         "verre": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Quantité de verre (en tonne) ?"
+            "question": "Ποσότητα γυαλιού (σε τόνους);"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission du verre"
+            "question": "Συντελεστής εκπομπών γυαλιού"
           }
         },
         "bois": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Quantité de bois (en tonne) ?"
+            "question": "Ποσότητα ξύλου (σε τόνους);"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission du bois"
+            "question": "Συντελεστής εκπομπών ξύλου"
           }
         }
       },
@@ -991,37 +991,37 @@
     }
   },
   "publicodes-units": {
-    "étudiant": "[TO_TRANSLATE] étudiant",
-    "personne": "[TO_TRANSLATE] personne",
-    "année": "[TO_TRANSLATE] année",
-    "pays": "[TO_TRANSLATE] pays",
-    "kWh": "[TO_TRANSLATE] kWh",
-    "litre": "[TO_TRANSLATE] litre",
-    "kWh PCI": "[TO_TRANSLATE] kWh PCI",
-    "kgCO2e/kg": "[TO_TRANSLATE] kgCO2e/kg",
-    "repas": "[TO_TRANSLATE] repas",
-    "kgCO2e/repas": "[TO_TRANSLATE] kgCO2e/repas",
-    "m3/km": "[TO_TRANSLATE] m3.km",
-    "t/km": "[TO_TRANSLATE] t.km",
-    "t": "[TO_TRANSLATE] t",
-    "bouteille": "[TO_TRANSLATE] bouteille",
-    "kgCO2e/bouteille": "[TO_TRANSLATE] kgCO2e/bouteille",
-    "canette": "[TO_TRANSLATE] canette",
-    "kgCO2e/canette": "[TO_TRANSLATE] kgCO2e/canette",
-    "kg de poids net": "[TO_TRANSLATE] kg de poids net",
-    "kgCO2e/kg de poids net": "[TO_TRANSLATE] kgCO2e/kg de poids net",
-    "paquet": "[TO_TRANSLATE] paquet",
-    "kgCO2e/paquet": "[TO_TRANSLATE] kgCO2e/paquet",
-    "barre": "[TO_TRANSLATE] barre",
-    "m2": "[TO_TRANSLATE] m2",
-    "kgCO2e/m2": "[TO_TRANSLATE] kgCO2e/m2",
-    "kgCO2e": "[TO_TRANSLATE] kgCO2e",
-    "unité": "[TO_TRANSLATE] unité",
-    "kgCO2e/unité": "[TO_TRANSLATE] kgCO2e/unité",
-    "km": "[TO_TRANSLATE] km",
-    "kg": "[TO_TRANSLATE] kg",
-    "€": "[TO_TRANSLATE] €",
-    "kgCO2e/€": "[TO_TRANSLATE] kgCO2e/€",
-    "kgCO2e/t": "[TO_TRANSLATE] kgCO2e/t"
+    "étudiant": "φοιτητής",
+    "personne": "άτομο",
+    "année": "έτος",
+    "pays": "χώρα",
+    "kWh": "kWh",
+    "litre": "λίτρο",
+    "kWh PCI": "kWh PCI",
+    "kgCO2e/kg": "kgCO2e/kg",
+    "repas": "γεύμα",
+    "kgCO2e/repas": "kgCO2e/γεύμα",
+    "m3/km": "m3.χλμ",
+    "t/km": "τ.χλμ",
+    "t": "τ",
+    "bouteille": "μπουκάλι",
+    "kgCO2e/bouteille": "kgCO2e/μπουκάλι",
+    "canette": "κουτάκι",
+    "kgCO2e/canette": "kgCO2e/κουτάκι",
+    "kg de poids net": "κιλό καθαρού βάρους",
+    "kgCO2e/kg de poids net": "kgCO2e/κιλό καθαρού βάρους",
+    "paquet": "πακέτο",
+    "kgCO2e/paquet": "kgCO2e/πακέτο",
+    "barre": "μπάρα",
+    "m2": "μ²",
+    "kgCO2e/m2": "kgCO2e/μ²",
+    "kgCO2e": "kgCO2e",
+    "unité": "μονάδα",
+    "kgCO2e/unité": "kgCO2e/μονάδα",
+    "km": "χλμ",
+    "kg": "κιλό",
+    "€": "€",
+    "kgCO2e/€": "kgCO2e/€",
+    "kgCO2e/t": "kgCO2e/τ"
   }
 }

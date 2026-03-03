@@ -2,29 +2,29 @@
   "publicodes-layout": {
     "table": {
       "IntrantsServices": {
-        "question": "[TO_TRANSLATE] Quel montant avez-vous dépensé dans les services immatériels suivants ?",
-        "typeService": "[TO_TRANSLATE] Type de service",
-        "montantDepense": "[TO_TRANSLATE] Montant dépensé"
+        "question": "How much did you spend on the following intangible services?",
+        "typeService": "Type of service",
+        "montantDepense": "Amount spent"
       },
       "IntrantsBiensEtMatieresTilt": {
-        "question": "[TO_TRANSLATE] Quel montant avez-vous dépensé dans les biens suivants ?",
-        "typeService": "[TO_TRANSLATE] Type de bien",
-        "montantDepense": "[TO_TRANSLATE] Montant dépensé"
+        "question": "How much did you spend on the following goods?",
+        "typeService": "Type of good",
+        "montantDepense": "Amount spent"
       },
       "TransportDeMarchandises": {
-        "question": "[TO_TRANSLATE] D'où proviennent vos livraisons ?",
-        "typeProvenance": "[TO_TRANSLATE] Provenance",
-        "pourcentageLivraisons": "[TO_TRANSLATE] Pourcentage des livraisons"
+        "question": "Where do your deliveries come from?",
+        "typeProvenance": "Origin",
+        "pourcentageLivraisons": "Percentage of deliveries"
       },
       "DechetsDirects": {
-        "question": "[TO_TRANSLATE] Quelles quantités des déchets suivants sont jetées chaque année ?",
-        "typeDéchets": "[TO_TRANSLATE] Type de déchet",
-        "poids": "[TO_TRANSLATE] Quantité jetée"
+        "question": "What quantities of the following waste are thrown away each year?",
+        "typeDéchets": "Type of waste",
+        "poids": "Quantity discarded"
       },
       "EquipementsEtImmobilisations": {
-        "question": "[TO_TRANSLATE] Pour chacun de ces équipements informatiques, veuillez indiquer combien sont possédés ou loués depuis moins de 3 ans :",
-        "typeEquipement": "[TO_TRANSLATE] Type d'équipement",
-        "nombreEquipement": "[TO_TRANSLATE] Quantité"
+        "question": "For each of these IT equipments, please indicate how many have been owned or leased for less than 3 years:",
+        "typeEquipement": "Type of equipment",
+        "nombreEquipement": "Quantity"
       }
     },
     "group": {},
