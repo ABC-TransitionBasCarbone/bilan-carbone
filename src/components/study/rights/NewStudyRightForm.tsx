@@ -86,9 +86,10 @@ const NewStudyRightForm = ({ study, accounts, existingAccounts, accountRole }: P
   }
 
   const onSubmit = async (command: NewStudyRightCommand) => {
-    if (accounts.some((account) => account.user.email === command.email)) {
+    const lowerCasedEmail = command.email.toLowerCase().trim()
+    if (accounts.some((account) => account.user.email === lowerCasedEmail)) {
       await saveRight(command)
-    } else if (existingAccounts.includes(command.email)) {
+    } else if (existingAccounts.includes(lowerCasedEmail)) {
       showErrorToast(t(ALREADY_IN_STUDY))
     } else {
       setOtherOrganizationVersion(true)
