@@ -179,10 +179,10 @@ fonctionnement . bâtiment . parking:
       unité: place
 
     FE:
-      valeur: 92
+      valeur: 73
       unité: kgCO2e/m2
       meta:
-        id: 26008
+        id: 26011
 
     amortissement:
       valeur: 50

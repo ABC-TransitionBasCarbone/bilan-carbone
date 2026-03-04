@@ -25,10 +25,10 @@ fonctionnement . énergie . électricité:
       unité: kWh
 
     FE:
-      valeur: 0.0791
+      valeur: 0.0519
       unité: kgCO2e/kWh
       meta:
-        id: 15591
+        id: 43642
 
 fonctionnement . énergie . gaz:
   titre: Gaz
