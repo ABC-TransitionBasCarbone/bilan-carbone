@@ -12,6 +12,7 @@ import { isDeactivableFeatureActiveForEnvironment } from '../serverFunctions/dea
 import { getUserActiveAccounts } from '../serverFunctions/user'
 import { hasSufficientLevel } from '../study'
 import {
+  canCreateStudyOnlyAsAdministrator,
   canCreateStudyWithoutSpecificRights,
   hasAccessToDuplicateStudy,
   isTilt,
@@ -87,7 +88,11 @@ export const canCreateAStudy = async (user: UserSession, simplified: boolean = f
   }
 
   const studyIsSimplifiedAndCreationAuthorized = simplified && user.role !== Role.DEFAULT && isTilt(user.environment)
-  const canCreateAdvancedStudy = !!user.level && user.role !== Role.DEFAULT
+  const canCreateAdvancedStudy =
+    !!user.level &&
+    user.role !== Role.DEFAULT &&
+    (!canCreateStudyOnlyAsAdministrator(user.environment) ||
+      (user.role === Role.ADMIN && canCreateStudyOnlyAsAdministrator(user.environment)))
 
   return (
     !!user.organizationVersionId &&
