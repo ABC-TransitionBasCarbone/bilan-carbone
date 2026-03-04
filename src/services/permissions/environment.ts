@@ -92,7 +92,8 @@ export const hasAccessToResultsRatioTab = isCut
 
 export const hasAccessToAdvancedEmissionAnalysis = isTilt
 
-export const hasAlwaysAccessToOrganizationVersion = isTilt
+export const hasAlwaysAccessToOrganizationVersion = (environment: Environment) =>
+  ([TILT, CLICKSON] as Environment[]).includes(environment)
 
 export const hasStartLinkOnFootprints = isTilt
 
