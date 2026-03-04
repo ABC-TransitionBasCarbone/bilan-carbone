@@ -62,7 +62,13 @@ const AllPostsInfographyContainer = ({ study, studySite }: Props) => {
             <AllPostsInfographySimplified study={study} />
           </PublicodesSituationProvider>
         ),
-        [Environment.TILT]: <AllPostsInfographyTilt study={study} data={data} />,
+        [Environment.TILT]: study.simplified ? (
+          <PublicodesSituationProvider environment={Environment.TILT} studyId={study.id} studySiteId={studySite}>
+            <AllPostsInfographySimplified study={study} />
+          </PublicodesSituationProvider>
+        ) : (
+          <AllPostsInfographyTilt study={study} data={data} />
+        ),
       }}
     />
   )
