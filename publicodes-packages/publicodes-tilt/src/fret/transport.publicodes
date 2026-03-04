@@ -4,13 +4,66 @@ fret . transport:
     somme:
       - carburant
       - empreinte
+      - VUL
+      - PL
 
 fret . transport . présent:
   question: Est-ce que votre association possède ou loue des véhicules pour transporter des marchandises ?
 
+fret . transport . VUL:
+  titre: Véhicules utilitaires légers
+  applicable si:
+    toutes ces conditions:
+      - est défini: présent
+      - présent = oui
+  formule: nombre * FE * 3.5 / amortissement
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: Combien de véhicules utilitaires légers possédez-vous ou louez-vous depuis moins de 5 ans ?
+      unité: unité
+
+    FE:
+      valeur: 5500
+      unité: kgCO2e/tonnes
+      meta:
+        id: 20905
+        nom: Véhicules, fabrication
+
+    amortissement:
+      valeur: 5
+      unité: an
+
+fret . transport . PL:
+  titre: Poids lourds
+  applicable si:
+    toutes ces conditions:
+      - est défini: présent
+      - présent = oui
+  formule: nombre * FE * 5.1 / amortissement
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: Combien de véhicules poids lourds possédez-vous ou louez-vous depuis moins de 5 ans ?
+      unité: unité
+
+    FE:
+      valeur: 5500
+      unité: kgCO2e/tonnes
+      meta:
+        id: 20905
+        nom: Véhicules, fabrication
+
+    amortissement:
+      valeur: 5
+      unité: an
+
 fret . transport . carburant:
   titre: consommation de carburant pour le fret possédé
-  applicable si: présent
+  applicable si:
+    toutes ces conditions: 
+      - est défini: présent
+      - présent = oui
   formule: litre * FE
   unité: kgCO2e
   avec:

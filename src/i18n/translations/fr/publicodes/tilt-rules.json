@@ -403,6 +403,16 @@
         "présent": {
           "question": "Est-ce que votre association possède ou loue des véhicules pour transporter des marchandises ?"
         },
+        "VUL": {
+          "nombre": {
+            "question": "Combien de véhicules utilitaires légers possédez-vous ou louez-vous depuis moins de 5 ans ?"
+          }
+        },
+        "PL": {
+          "nombre": {
+            "question": "Combien de véhicules poids lourds possédez-vous ou louez-vous depuis moins de 5 ans ?"
+          }
+        },
         "carburant": {
           "litre": {
             "question": "Combien de litres de carburants ces véhicules ont-ils consommé ?"
@@ -444,25 +454,12 @@
             "question": "Sur ces livraisons, quelle part provient de fournisseurs internationaux (plus de 1500 km) ?"
           }
         }
-      },
-      "fabrication": {
-        "titre": "Fabrication des véhicules",
-        "question": "Combien de véhicules sont possédés ou loués depuis moins de 5 ans parmi les catégories suivantes ?",
-        "VUL": {
-          "nombre": {
-            "question": "Combien de véhicules utilitaires légers possédez-vous ou louez-vous depuis moins de 5 ans ?"
-          }
-        },
-        "PL": {
-          "nombre": {
-            "question": "Combien de véhicules poids lourds possédez-vous ou louez-vous depuis moins de 5 ans ?"
-          }
-        }
       }
     },
     "fin de vie": {
       "déchets": {
         "fin de vie présente": {
+          "description": "Les biens matériels fournis à vos bénéficiaires deviendront un jour des déchets, et devront donc être stockés, incinérés, recyclés, ... C'est ce que l'on appelle la fin de vie des produits, et il faut donc prendre en compte les émissions qui y sont associées.",
           "question": "Fournissez-vous des biens matériels à vos bénéficiaires ?"
         },
         "poids": {
