@@ -91,8 +91,7 @@ export const canCreateAStudy = async (user: UserSession, simplified: boolean = f
   const canCreateAdvancedStudy =
     !!user.level &&
     user.role !== Role.DEFAULT &&
-    (!canCreateStudyOnlyAsAdministrator(user.environment) ||
-      (user.role === Role.ADMIN && canCreateStudyOnlyAsAdministrator(user.environment)))
+    (user.role === Role.ADMIN || !canCreateStudyOnlyAsAdministrator(user.environment))
 
   return (
     !!user.organizationVersionId &&
