@@ -2,7 +2,7 @@ import { situationsAreEqual } from '@/lib/publicodes/utils'
 import { saveSituation as saveSituationInDB } from '@/services/serverFunctions/situation'
 import { Situation } from 'publicodes'
 import { useCallback, useRef, useState } from 'react'
-import { ListLayoutSituations } from '../context'
+import { ListLayoutSituations } from '../context/types'
 
 export interface SituationAutoSaveOptions {
   studyId: string

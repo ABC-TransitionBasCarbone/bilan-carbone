@@ -1,6 +1,6 @@
-import { TrajectoryDataPoint } from '@/components/study/transitionPlan/TrajectoryGraph'
 import { SECTEN_SECTORS, SectenSector, SNBC_SECTOR_TARGET_EMISSIONS } from '@/constants/trajectories'
 import { SectorPercentages } from '@/services/serverFunctions/trajectory.command'
+import { TrajectoryDataPoint } from '@/types/trajectory.types'
 import type { SectenInfo } from '@prisma/client'
 import {
   BaseObjective,

@@ -5,6 +5,7 @@ import { TRAJECTORY_15_ID, TRAJECTORY_SNBC_GENERAL_ID, TRAJECTORY_WB2C_ID } from
 import { FullStudy } from '@/db/study'
 import { TrajectoryWithObjectives } from '@/db/transitionPlan'
 import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
+import { TrajectoryDataPoint } from '@/types/trajectory.types'
 import { calculateTrajectoriesWithHistory, getYearsToDisplay, PastStudy } from '@/utils/trajectory'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import { Alert, Slider, SvgIcon, Typography } from '@mui/material'
@@ -29,11 +30,6 @@ import DrawingAreaBox, { DrawingProps } from '../charts/DrawingArea'
 import CustomTrajectoryLegend from '../trajectory/CustomTrajectoryLegend'
 import styles from './TrajectoryGraph.module.css'
 import { BottomLeftMultilineText } from './TrajectoryGraphDrawingArea'
-
-export interface TrajectoryDataPoint {
-  year: number
-  value: number
-}
 
 export type DataType = 'previous' | 'current'
 
@@ -83,6 +79,8 @@ const TrajectoryGraph = ({
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null)
   const tSnbc = useTranslations('study.transitionPlan.trajectories.snbcCard')
   const tGlossary = useTranslations('study.transitionPlan.trajectories.graph.glossary')
+
+  console.log('salut')
 
   const trajectory15Enabled = selectedSbtiTrajectories.includes(TRAJECTORY_15_ID)
   const trajectoryWB2CEnabled = selectedSbtiTrajectories.includes(TRAJECTORY_WB2C_ID)

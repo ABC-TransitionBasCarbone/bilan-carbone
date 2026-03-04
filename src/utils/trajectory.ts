@@ -1,4 +1,3 @@
-import { TrajectoryDataPoint } from '@/components/study/transitionPlan/TrajectoryGraph'
 import {
   SECTEN_SECTORS,
   SectenSector,
@@ -10,6 +9,7 @@ import { FullStudy } from '@/db/study'
 import { TrajectoryWithObjectives, TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
 import { SectorPercentages } from '@/services/serverFunctions/trajectory.command'
 import { getStudyTotalCo2Emissions } from '@/services/study'
+import { TrajectoryDataPoint } from '@/types/trajectory.types'
 import { Translations } from '@/types/translation'
 import { convertValue } from '@/utils/study'
 import {
