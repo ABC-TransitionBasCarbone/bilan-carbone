@@ -80,9 +80,9 @@ const SubPost = ({
         {
           archived: false,
           search: '',
-          location: '',
+          locations: [],
           sources: importVersions.map((iv) => iv.id),
-          units: ['all'],
+          units: [],
           subPosts: [subPost],
         },
         environment as Environment,

@@ -57,9 +57,9 @@ const EmissionFactorsFiltersAndTable = ({
   const [filters, setFilters] = useState<FeFilters>({
     archived: false,
     search: '',
-    location: '',
+    locations: [],
     sources: initialImportVersions,
-    units: initialSelectedUnits,
+    units: [],
     subPosts: defaultSubPost ? [defaultSubPost] : ['all'],
   })
 
@@ -136,7 +136,7 @@ const EmissionFactorsFiltersAndTable = ({
   }, [
     filters.archived,
     filters.search,
-    filters.location,
+    filters.locations,
     filters.sources,
     filters.units,
     filters.subPosts,

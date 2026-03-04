@@ -1740,6 +1740,7 @@
       "location": "Location",
       "locationSearch": "Search by location",
       "locationSearchPlaceholder": "e.g. Europe",
+      "unitSearch": "Search by unit",
       "unitSearchPlaceholder": "e.g. kg",
       "base": "Scope 2 approach",
       "Manual": "Manual",
