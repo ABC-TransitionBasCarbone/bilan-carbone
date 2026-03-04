@@ -2,16 +2,23 @@
   titre: Autres gaz
   formule:
     somme:
-      - gaz réfrigérant
-      - gaz à effet de serre principal
+      - gaz réfrigérants
+      - gaz effet de serre principaux
   unité: kgCO2e/kg
   par défaut: 0
 
-énergie . autres gaz . gaz réfrigérant:
+énergie . autres gaz . gaz réfrigérants:
+  titre: Gaz réfrigérants
   question: Consommation annuelle de gaz réfrigérant
+  par défaut: 0
+  unité: kgCO2e/kg
+  formule: gaz réfrigérant
+
+énergie . autres gaz . gaz réfrigérant:
   titre: Gaz réfrigérant
   par défaut: 0
   unité: kgCO2e/kg
+  formule: consommation * FE
   avec:
     consommation:
       question: Consommation annuelle de ce gaz
@@ -82,11 +89,18 @@
       meta:
         id: 43632
 
-énergie . autres gaz . gaz à effet de serre principal:
-  question: Consommation annuelle de Gaz à effet de serre principal
+énergie . autres gaz . gaz effet de serre principaux:
+  question: Consommation annuelle de gaz à effet de serre principal
   titre: Gaz à effet de serre principal
   par défaut: 0
   unité: kgCO2e/kg
+  formule: gaz effet de serre principal
+
+énergie . autres gaz . gaz effet de serre principal:
+  titre: Gaz à effet de serre principal
+  par défaut: 0
+  unité: kgCO2e/kg
+  formule: consommation * FE
   avec:
     consommation:
       question: Consommation annuelle de ce gaz
@@ -110,7 +124,7 @@
             alors: type . NF3 . FE
       unité: kgCO2e/kg
 
-énergie . autres gaz . gaz à effet de serre principal . type:
+énergie . autres gaz . gaz effet de serre principal . type:
   titre: Gaz à effet de serre principal
   question: Gaz à effet de serre principal
   une possibilité:

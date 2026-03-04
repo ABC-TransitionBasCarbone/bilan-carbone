@@ -155,9 +155,11 @@
         }
       },
       "autres gaz": {
+        "gaz réfrigérants": {
+          "titre": "Hűtőközegek",
+          "question": "Évesítő hűtőközeg-fogyasztás"
+        },
         "gaz réfrigérant": {
-          "titre": "Hűtőközeg",
-          "question": "Éves hűtőközeg-fogyasztás",
           "consommation": {
             "question": "Éves fogyasztás ebből a gázból"
           },
@@ -172,15 +174,17 @@
             }
           }
         },
-        "gaz à effet de serre principal": {
-          "titre": "Fő üvegházhatású gáz",
-          "question": "Éves fő üvegházhatású gáz fogyasztás",
+        "gaz effet de serre principaux": {
+          "titre": "A fő üvegházhatás gáz",
+          "question": "Évesítő fő üvegházhatás gáz fogyasztás"
+        },
+        "gaz effet de serre principal": {
           "consommation": {
-            "question": "Éves fogyasztás ebből a gázból"
+            "question": "E gáz éves fogyasztása"
           },
           "type": {
-            "titre": "Fő üvegházhatású gáz",
-            "question": "Fő üvegházhatású gáz típusa",
+            "titre": "Fő üvegházhatást okozó gáz",
+            "question": "Fő üvegházhatást okozó gáz",
             "options": {
               "CO2": "CO2",
               "CH4 fossile": "Fosszilis CH4",
@@ -513,6 +517,255 @@
           },
           "FE": {
             "question": "Kibocsátási tényező standard szekrényenként"
+          }
+        }
+      },
+      "divers": {
+        "tondeuse gazon thermique": {
+          "titre": "Termikus fűnyíró",
+          "question": "Hány termikus fűnyírót birtokol?",
+          "nombre": {
+            "question": "Hány termikus fűnyírót birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező fűnyíró egységenként"
+          },
+          "immo": {
+            "question": "Fűnyíró rögzítése"
+          }
+        },
+        "tondeuse gazon électrique": {
+          "titre": "Elektromos fűnyíró",
+          "question": "Hány elektromos fűnyírót birtokol?",
+          "nombre": {
+            "question": "Hány elektromos fűnyírót birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező fűnyíró egységenként électrique"
+          },
+          "immo": {
+            "question": "Rögzítés"
+          }
+        },
+        "bouilloire": {
+          "titre": "Elektromos vízforraló",
+          "question": "Hány elektromos vízforralót birtokol?",
+          "nombre": {
+            "question": "Hány elektromos vízforralót birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező elektromos vízforraló egységenként"
+          },
+          "immo": {
+            "question": "Elektromos vízforraló rögzítése"
+          }
+        },
+        "micro-onde": {
+          "titre": "Mikrohullámú sütő",
+          "question": "Hány mikrohullámú sütőt birtokol?",
+          "nombre": {
+            "question": "Hány mikrohullámú sütőt birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező mikrohullámú sütő egységenként"
+          },
+          "immo": {
+            "question": "Mikrohullámú sütő rögzítése"
+          }
+        },
+        "aspirateur professionnel": {
+          "titre": "Professzionális porszívó",
+          "question": "Hány professzionális porszívót birtokol?",
+          "nombre": {
+            "question": "Hány professzionális porszívót birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező professzionális porszívó egységenként"
+          },
+          "immo": {
+            "question": "Rögzítés"
+          }
+        },
+        "ballon chauffe-eau électrique": {
+          "titre": "Elektromos bojler - 200l",
+          "question": "Hány elektromos bojlert - 200l birtokol?",
+          "nombre": {
+            "question": "Hány elektromos bojlert - 200l birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező elektromos bojler - 200l egységenként"
+          },
+          "immo": {
+            "question": "Elektromos bojler - 200l rögzítése"
+          }
+        },
+        "machine café filtre": {
+          "titre": "Kávéfőző - szűrő",
+          "question": "Hány kávéfőzőt - szűrő birtokol?",
+          "nombre": {
+            "question": "Hány kávéfőzőt - szűrő birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező kávéfőző - szűrő egységenként"
+          },
+          "immo": {
+            "question": "Kávéfőző - szűrő rögzítése"
+          }
+        },
+        "machine café dosettes": {
+          "titre": "Kávéfőző - kapszulák",
+          "question": "Hány kávéfőzőt - kapszulák birtokol?",
+          "nombre": {
+            "question": "Hány kávéfőzőt - kapszulák birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező kávéfőző - kapszulák egységenként"
+          },
+          "immo": {
+            "question": "Kávéfőző - kapszulák rögzítése"
+          }
+        },
+        "lave-vaiselle professionnel": {
+          "titre": "Professzionális mosogatógép",
+          "question": "Hány professzionális mosogatógépet birtokol?",
+          "nombre": {
+            "question": "Hány professzionális mosogatógépet birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező professzionális mosogatógép egységenként"
+          },
+          "immo": {
+            "question": "Professzionális mosogatógép rögzítése"
+          }
+        },
+        "four professionnel": {
+          "titre": "Professzionális sütő",
+          "question": "Hány professzionális sütőt birtokol?",
+          "nombre": {
+            "question": "Hány professzionális sütőt birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező professzionális sütő egységenként"
+          },
+          "immo": {
+            "question": "Professzionális sütő rögzítése"
+          }
+        },
+        "lave-vaiselle standard": {
+          "titre": "Szabványos mosogatógép",
+          "question": "Hány szabványos mosogatógépet birtokol?",
+          "nombre": {
+            "question": "Hány szabványos mosogatógépet birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező szabványos mosogatógép egységenként"
+          },
+          "immo": {
+            "question": "Szabványos mosogatógép rögzítése"
+          }
+        },
+        "lave-linge": {
+          "titre": "Ruhanemű mosógép (7kg kapacitás)",
+          "question": "Hány ruhanemű mosógépet (7kg kapacitás) birtokol?",
+          "nombre": {
+            "question": "Hány ruhanemű mosógépet (7kg kapacitás) birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező ruhanemű mosógép (7kg kapacitás) egységenként"
+          },
+          "immo": {
+            "question": "Ruhanemű mosógép (7kg kapacitás) rögzítése"
+          }
+        },
+        "congélateur coffre": {
+          "titre": "Fagyasztó (láda) - 261l",
+          "question": "Hány fagyasztót (láda) - 261l birtokol?",
+          "nombre": {
+            "question": "Hány fagyasztót (láda) - 261l birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező fagyasztó (láda) - 261l egységenként"
+          },
+          "immo": {
+            "question": "Fagyasztó (láda) - 261l rögzítése"
+          }
+        },
+        "congélateur armoire": {
+          "titre": "Fagyasztó - szekrény - 205l",
+          "question": "Hány fagyasztót - szekrény - 205l birtokol?",
+          "nombre": {
+            "question": "Hány fagyasztót - szekrény - 205l birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező fagyasztó - szekrény - 205l egységenként"
+          },
+          "immo": {
+            "question": "Fagyasztó - szekrény - 205l rögzítése"
+          }
+        },
+        "réfrigérateur": {
+          "titre": "Hűtőszekrény - 250l",
+          "question": "Hány hűtőszekrényt - 250l birtokol?",
+          "nombre": {
+            "question": "Hány hűtőszekrényt - 250l birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező hűtőszekrény - 250l egységenként"
+          },
+          "immo": {
+            "question": "Hűtőszekrény - 250l rögzítése"
+          }
+        },
+        "plaques de cuisson au gaz": {
+          "titre": "Főzőlap/gáz 9000W",
+          "question": "Hány főzőlapot/gáz 9000W birtokol?",
+          "nombre": {
+            "question": "Hány főzőlapot/gáz 9000W birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező főzőlap/gáz 9000W egységenként"
+          },
+          "immo": {
+            "question": "Főzőlap/gáz 9000W rögzítése"
+          }
+        },
+        "tatami": {
+          "titre": "Tatami",
+          "question": "Hány tatamimat birtokol?",
+          "nombre": {
+            "question": "Hány tatamimat birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező tatami egységenként"
+          },
+          "immo": {
+            "question": "Tatami rögzítése"
+          }
+        },
+        "gymnastique agré barre fixe": {
+          "titre": "Tornagyakorlat, vízszintes rúd",
+          "question": "Hány vízszintes rudat birtokol?",
+          "nombre": {
+            "question": "Hány vízszintes rudat birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező vízszintes rúd egységenként"
+          },
+          "immo": {
+            "question": "Vízszintes rúd rögzítése"
+          }
+        },
+        "gymnastique agré barres parallèles": {
+          "titre": "Tornagyakorlat, párhuzamos rúdak",
+          "question": "Hány párhuzamos rudat birtokol?",
+          "nombre": {
+            "question": "Hány párhuzamos rudat birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező párhuzamos rúd egységenként"
+          },
+          "immo": {
+            "question": "Párhuzamos rúd rögzítése"
           }
         }
       },
@@ -991,37 +1244,37 @@
     }
   },
   "publicodes-units": {
-    "étudiant": "hallgató",
-    "personne": "személy",
-    "année": "év",
-    "pays": "ország",
-    "kWh": "kilowattóra",
-    "litre": "liter",
-    "kWh PCI": "kilowattóra PCI",
+    "étudiant": "[UPDATED] étudiant",
+    "personne": "[UPDATED] personne",
+    "année": "[UPDATED] année",
+    "pays": "[UPDATED] pays",
+    "kWh": "[UPDATED] kWh",
+    "litre": "[UPDATED] litre",
+    "kWh PCI": "[UPDATED] kWh PCI",
     "kgCO2e/kg": "kgCO2e/kg",
-    "repas": "étkezés",
-    "kgCO2e/repas": "kgCO2e/étkezés",
+    "repas": "[UPDATED] repas",
+    "kgCO2e/repas": "[UPDATED] kgCO2e/repas",
     "m3/km": "m3.km",
     "t/km": "t.km",
-    "t": "tonna",
-    "bouteille": "palack",
-    "kgCO2e/bouteille": "kgCO2e/palack",
-    "canette": "doboz",
-    "kgCO2e/canette": "kgCO2e/doboz",
-    "kg de poids net": "nettó tömegű kg",
-    "kgCO2e/kg de poids net": "kgCO2e/nettó tömegű kg",
-    "paquet": "csomag",
-    "kgCO2e/paquet": "kgCO2e/csomag",
-    "barre": "szelet",
-    "m2": "m²",
-    "kgCO2e/m2": "kgCO2e/m²",
+    "t": "[UPDATED] t",
+    "bouteille": "[UPDATED] bouteille",
+    "kgCO2e/bouteille": "[UPDATED] kgCO2e/bouteille",
+    "canette": "[UPDATED] canette",
+    "kgCO2e/canette": "[UPDATED] kgCO2e/canette",
+    "kg de poids net": "[UPDATED] kg de poids net",
+    "kgCO2e/kg de poids net": "[UPDATED] kgCO2e/kg de poids net",
+    "paquet": "[UPDATED] paquet",
+    "kgCO2e/paquet": "[UPDATED] kgCO2e/paquet",
+    "barre": "[UPDATED] barre",
+    "m2": "[UPDATED] m2",
+    "kgCO2e/m2": "[UPDATED] kgCO2e/m2",
     "kgCO2e": "kgCO2e",
-    "unité": "egység",
-    "kgCO2e/unité": "kgCO2e/egység",
+    "unité": "[UPDATED] unité",
+    "kgCO2e/unité": "[UPDATED] kgCO2e/unité",
     "km": "km",
     "kg": "kg",
-    "€": "euró",
-    "kgCO2e/€": "kgCO2e/euró",
-    "kgCO2e/t": "kgCO2e/tonna"
+    "€": "[UPDATED] €",
+    "kgCO2e/€": "[UPDATED] kgCO2e/€",
+    "kgCO2e/t": "[UPDATED] kgCO2e/t"
   }
 }

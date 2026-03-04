@@ -79,13 +79,13 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<Clickso
     input('énergie . combustibles . réseau de chaleur . consommation'),
   ],
   AutresGaz: [
-    list('énergie . autres gaz . gaz réfrigérant', [
+    list('énergie . autres gaz . gaz réfrigérants', [
       'énergie . autres gaz . gaz réfrigérant . type',
       'énergie . autres gaz . gaz réfrigérant . consommation',
     ]),
-    list('énergie . autres gaz . gaz à effet de serre principal', [
-      'énergie . autres gaz . gaz à effet de serre principal . type',
-      'énergie . autres gaz . gaz à effet de serre principal . consommation',
+    list('énergie . autres gaz . gaz effet de serre principaux', [
+      'énergie . autres gaz . gaz effet de serre principal . type',
+      'énergie . autres gaz . gaz effet de serre principal . consommation',
     ]),
   ],
   TypesDeRepasServis: [

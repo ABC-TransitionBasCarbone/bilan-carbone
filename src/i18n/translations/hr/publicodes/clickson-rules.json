@@ -138,9 +138,9 @@
             "question": "Godišnja potrošnja prirodnog plina"
           }
         },
-        "granulés bois": {
+        "granulés de bois": {
           "consommation": {
-            "question": "Godišnja potrošnja drvnih peleta"
+            "question": "Godišnja potrošnja cjepanica od drva"
           }
         },
         "biopropane": {
@@ -155,9 +155,11 @@
         }
       },
       "autres gaz": {
+        "gaz réfrigérants": {
+          "titre": "Rashladni plinovi",
+          "question": "Godišnja potrošnja rashladnog plina"
+        },
         "gaz réfrigérant": {
-          "titre": "Rashladni plin",
-          "question": "Godišnja potrošnja rashladnog plina",
           "consommation": {
             "question": "Godišnja potrošnja ovog plina"
           },
@@ -172,19 +174,21 @@
             }
           }
         },
-        "gaz à effet de serre principal": {
-          "titre": "Glavni staklenički plin",
-          "question": "Godišnja potrošnja glavnog stakleničkog plina",
+        "gaz effet de serre principaux": {
+          "titre": "Glavni plin sa staklenom kupolom",
+          "question": "Godišnja potrošnja glavnog plina sa staklenom kupolom"
+        },
+        "gaz effet de serre principal": {
           "consommation": {
             "question": "Godišnja potrošnja ovog plina"
           },
           "type": {
-            "titre": "Glavni staklenički plin",
-            "question": "Glavni staklenički plin",
+            "titre": "Glavni plin staklene kuće",
+            "question": "Glavni plin staklene kuće",
             "options": {
               "CO2": "CO2",
-              "CH4 fossile": "Fosilni CH4",
-              "CH4 biogénique": "Biogeni CH4",
+              "CH4 fossile": "CH4 fosilni",
+              "CH4 biogénique": "CH4 biogeni",
               "N2O": "N2O",
               "SF6": "SF6",
               "NF3": "NF3"
@@ -325,12 +329,12 @@
             "question": "Faktor emisije po kg neto mase infuziranog čaja"
           }
         },
-        "sandwich toasté": {
+        "sandwich pain de mie": {
           "nombre": {
-            "question": "Godišnji broj potrošenih sendviča od tosta"
+            "question": "Broj sendviča od običnog kruha consommés annuellement"
           },
           "FE": {
-            "question": "Faktor emisije po kg neto mase sendviča od tosta"
+            "question": "Faktor emisije po kg neto težine sendviča od običnog kruha"
           }
         },
         "barre chocolatée": {
@@ -513,6 +517,255 @@
           },
           "FE": {
             "question": "Faktor emisije po standardnom ormaru"
+          }
+        }
+      },
+      "divers": {
+        "tondeuse gazon thermique": {
+          "titre": "Termička mulčila za travu",
+          "question": "Koliko termičkih mulčila za travu posjedujete?",
+          "nombre": {
+            "question": "Koliko termičkih mulčila za travu posjedujete?"
+          },
+          "FE": {
+            "question": "Faktor emisije po jedinici mulčila za travu"
+          },
+          "immo": {
+            "question": "Imobilizacija mulčila za travu"
+          }
+        },
+        "tondeuse gazon électrique": {
+          "titre": "Električna mulčila za travu",
+          "question": "Koliko električnih mulčila za travu posjedujete?",
+          "nombre": {
+            "question": "Koliko električnih mulčila za travu posjedujete?"
+          },
+          "FE": {
+            "question": "Faktor emisije po jedinici mulčila za travu électrique"
+          },
+          "immo": {
+            "question": "Imobilizacija"
+          }
+        },
+        "bouilloire": {
+          "titre": "Električni grijač vode",
+          "question": "Koliko grijaču vode posjedujete?",
+          "nombre": {
+            "question": "Koliko grijaču vode posjedujete?"
+          },
+          "FE": {
+            "question": "Faktor emisije po jedinici grijaču vode"
+          },
+          "immo": {
+            "question": "Imobilizacija grijaču vode"
+          }
+        },
+        "micro-onde": {
+          "titre": "Mikrovalovna pećnica",
+          "question": "Koliko mikrovalovalnih pećnica posjedujete?",
+          "nombre": {
+            "question": "Koliko mikrovalovalnih pećnica posjedujete?"
+          },
+          "FE": {
+            "question": "Faktor emisije po jedinici mikrovalne pećnice"
+          },
+          "immo": {
+            "question": "Imobilizacija mikrovalne pećnice"
+          }
+        },
+        "aspirateur professionnel": {
+          "titre": "Industrijski usisavač",
+          "question": "Koliko industrijskih usisavača posjedujete?",
+          "nombre": {
+            "question": "Koliko industrijskih usisavača posjedujete?"
+          },
+          "FE": {
+            "question": "Faktor emisije po jedinici industrijskog usisavača"
+          },
+          "immo": {
+            "question": "Imobilizacija"
+          }
+        },
+        "ballon chauffe-eau électrique": {
+          "titre": "Električni bojler - 200l",
+          "question": "Koliko električnih bojlera - 200l posjedujete?",
+          "nombre": {
+            "question": "Koliko električnih bojlera - 200l posjedujete?"
+          },
+          "FE": {
+            "question": "Faktor emisije po jedinici električnog bojlera - 200l"
+          },
+          "immo": {
+            "question": "Imobilizacija električnog bojlera - 200l"
+          }
+        },
+        "machine café filtre": {
+          "titre": "Kava aparat - filter",
+          "question": "Koliko kavnih aparata - filter posjedujete?",
+          "nombre": {
+            "question": "Koliko kavnih aparata - filter posjedujete?"
+          },
+          "FE": {
+            "question": "Faktor emisije po jedinici kavnog aparata - filter"
+          },
+          "immo": {
+            "question": "Imobilizacija kavnog aparata - filter"
+          }
+        },
+        "machine café dosettes": {
+          "titre": "Kava aparat - kapsule",
+          "question": "Koliko kavnih aparata - kapsule posjedujete?",
+          "nombre": {
+            "question": "Koliko kavnih aparata - kapsule posjedujete?"
+          },
+          "FE": {
+            "question": "Faktor emisije po jedinici kavnog aparata - kapsule"
+          },
+          "immo": {
+            "question": "Imobilizacija kavnog aparata - kapsule"
+          }
+        },
+        "lave-vaiselle professionnel": {
+          "titre": "Industrijska perilica",
+          "question": "Koliko industrijskih perilica posjedujete?",
+          "nombre": {
+            "question": "Koliko industrijskih perilica posjedujete?"
+          },
+          "FE": {
+            "question": "Faktor emisije po jedinici industrijske perilice"
+          },
+          "immo": {
+            "question": "Imobilizacija industrijske perilice"
+          }
+        },
+        "four professionnel": {
+          "titre": "Industrijska pećnica",
+          "question": "Koliko industrijskih pećnica posjedujete?",
+          "nombre": {
+            "question": "Koliko industrijskih pećnica posjedujete?"
+          },
+          "FE": {
+            "question": "Faktor emisije po jedinici industrijske pećnice"
+          },
+          "immo": {
+            "question": "Imobilizacija industrijske pećnice"
+          }
+        },
+        "lave-vaiselle standard": {
+          "titre": "Standardna perilica",
+          "question": "Koliko standardnih perilica posjedujete?",
+          "nombre": {
+            "question": "Koliko standardnih perilica posjedujete?"
+          },
+          "FE": {
+            "question": "Faktor emisije po jedinici standardne perilice"
+          },
+          "immo": {
+            "question": "Imobilizacija standardne perilice"
+          }
+        },
+        "lave-linge": {
+          "titre": "Perilica rublja (kapacitet 7kg)",
+          "question": "Koliko perilica rublja (kapacitet 7kg) posjedujete?",
+          "nombre": {
+            "question": "Koliko perilica rublja (kapacitet 7kg) posjedujete?"
+          },
+          "FE": {
+            "question": "Faktor emisije po jedinici perilice rublja (kapacitet 7kg)"
+          },
+          "immo": {
+            "question": "Imobilizacija perilice rublja (kapacitet 7kg)"
+          }
+        },
+        "congélateur coffre": {
+          "titre": "Zamrzivač (sanduk) - 261l",
+          "question": "Koliko zamrzivača (sanduk) - 261l posjedujete?",
+          "nombre": {
+            "question": "Koliko zamrzivača (sanduk) - 261l posjedujete?"
+          },
+          "FE": {
+            "question": "Faktor emisije po jedinici zamrzivača (sanduk) - 261l"
+          },
+          "immo": {
+            "question": "Imobilizacija zamrzivača (sanduk) - 261l"
+          }
+        },
+        "congélateur armoire": {
+          "titre": "Zamrzivač - vertikalni - 205l",
+          "question": "Koliko zamrzivača - vertikalni - 205l posjedujete?",
+          "nombre": {
+            "question": "Koliko zamrzivača - vertikalni - 205l posjedujete?"
+          },
+          "FE": {
+            "question": "Faktor emisije po jedinici zamrzivača - vertikalni - 205l"
+          },
+          "immo": {
+            "question": "Imobilizacija zamrzivača - vertikalni - 205l"
+          }
+        },
+        "réfrigérateur": {
+          "titre": "Hladnjak - 250l",
+          "question": "Koliko hladnjaka - 250l posjedujete?",
+          "nombre": {
+            "question": "Koliko hladnjaka - 250l posjedujete?"
+          },
+          "FE": {
+            "question": "Faktor emisije po jedinici hladnjaka - 250l"
+          },
+          "immo": {
+            "question": "Imobilizacija hladnjaka - 250l"
+          }
+        },
+        "plaques de cuisson au gaz": {
+          "titre": "Ploče za kuhanje/plin 9000W",
+          "question": "Koliko plochi za kuhanje/plin 9000W posjedujete?",
+          "nombre": {
+            "question": "Koliko plochi za kuhanje/plin 9000W posjedujete?"
+          },
+          "FE": {
+            "question": "Faktor emisije po jedinici ploda za kuhanje/plin 9000W"
+          },
+          "immo": {
+            "question": "Imobilizacija ploda za kuhanje/plin 9000W"
+          }
+        },
+        "tatami": {
+          "titre": "Tatami",
+          "question": "Koliko tatamija posjedujete?",
+          "nombre": {
+            "question": "Koliko tatamija posjedujete?"
+          },
+          "FE": {
+            "question": "Faktor emisije po jedinici tatamija"
+          },
+          "immo": {
+            "question": "Imobilizacija tatamija"
+          }
+        },
+        "gymnastique agré barre fixe": {
+          "titre": "Gimnastika, greda za zrak",
+          "question": "Koliko greda za zrak posjedujete?",
+          "nombre": {
+            "question": "Koliko greda za zrak posjedujete?"
+          },
+          "FE": {
+            "question": "Faktor emisije po jedinici grede za zrak"
+          },
+          "immo": {
+            "question": "Imobilizacija grede za zrak"
+          }
+        },
+        "gymnastique agré barres parallèles": {
+          "titre": "Gimnastika, paralelne grede",
+          "question": "Koliko paralelnih gredi posjedujete?",
+          "nombre": {
+            "question": "Koliko paralelnih gredi posjedujete?"
+          },
+          "FE": {
+            "question": "Faktor emisije po jedinici paralelnih gredi"
+          },
+          "immo": {
+            "question": "Imobilizacija paralelnih gredi"
           }
         }
       },
@@ -991,33 +1244,33 @@
     }
   },
   "publicodes-units": {
-    "étudiant": "student",
-    "personne": "osoba",
-    "année": "godina",
-    "pays": "zemlja",
+    "étudiant": "[UPDATED] étudiant",
+    "personne": "[UPDATED] personne",
+    "année": "[UPDATED] année",
+    "pays": "[UPDATED] pays",
     "kWh": "kWh",
-    "litre": "litra",
+    "litre": "[UPDATED] litre",
     "kWh PCI": "kWh PCI",
     "kgCO2e/kg": "kgCO2e/kg",
-    "repas": "obrok",
-    "kgCO2e/repas": "kgCO2e/obrok",
+    "repas": "[UPDATED] repas",
+    "kgCO2e/repas": "[UPDATED] kgCO2e/repas",
     "m3/km": "m3.km",
     "t/km": "t.km",
     "t": "t",
-    "bouteille": "boca",
-    "kgCO2e/bouteille": "kgCO2e/boca",
-    "canette": "limenka",
-    "kgCO2e/canette": "kgCO2e/limenka",
-    "kg de poids net": "kg neto mase",
-    "kgCO2e/kg de poids net": "kgCO2e/kg neto mase",
-    "paquet": "paket",
-    "kgCO2e/paquet": "kgCO2e/paket",
-    "barre": "pločica",
+    "bouteille": "[UPDATED] bouteille",
+    "kgCO2e/bouteille": "[UPDATED] kgCO2e/bouteille",
+    "canette": "[UPDATED] canette",
+    "kgCO2e/canette": "[UPDATED] kgCO2e/canette",
+    "kg de poids net": "[UPDATED] kg de poids net",
+    "kgCO2e/kg de poids net": "[UPDATED] kgCO2e/kg de poids net",
+    "paquet": "[UPDATED] paquet",
+    "kgCO2e/paquet": "[UPDATED] kgCO2e/paquet",
+    "barre": "[UPDATED] barre",
     "m2": "m2",
     "kgCO2e/m2": "kgCO2e/m2",
     "kgCO2e": "kgCO2e",
-    "unité": "jedinica",
-    "kgCO2e/unité": "kgCO2e/jedinica",
+    "unité": "[UPDATED] unité",
+    "kgCO2e/unité": "[UPDATED] kgCO2e/unité",
     "km": "km",
     "kg": "kg",
     "€": "€",
