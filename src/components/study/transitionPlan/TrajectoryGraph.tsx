@@ -76,11 +76,10 @@ const TrajectoryGraph = ({
   const [glossary, setGlossary] = useState(false)
   const [displayedYearRange, setDisplayedYearRange] = useState<number[] | null>(null)
   const [hiddenTrajectoryLabels, setHiddenTrajectoryLabels] = useState<string[]>([])
+  const [hiddenLabelsLoaded, setHiddenLabelsLoaded] = useState(false)
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null)
   const tSnbc = useTranslations('study.transitionPlan.trajectories.snbcCard')
   const tGlossary = useTranslations('study.transitionPlan.trajectories.graph.glossary')
-
-  console.log('salut')
 
   const trajectory15Enabled = selectedSbtiTrajectories.includes(TRAJECTORY_15_ID)
   const trajectoryWB2CEnabled = selectedSbtiTrajectories.includes(TRAJECTORY_WB2C_ID)
@@ -109,8 +108,8 @@ const TrajectoryGraph = ({
   const data = useMemo(() => {
     const trajectoryResult = calculateTrajectoriesWithHistory({
       study,
+      totalCo2: studyEmissions,
       withDependencies: true,
-      validatedOnly,
       trajectories,
       actions: showActionTrajectory ? actions : [],
       pastStudies,
@@ -140,7 +139,7 @@ const TrajectoryGraph = ({
     }
   }, [
     study,
-    validatedOnly,
+    studyEmissions,
     trajectories,
     actions,
     showActionTrajectory,
@@ -211,8 +210,9 @@ const TrajectoryGraph = ({
     if (stored) {
       setHiddenTrajectoryLabels(JSON.parse(stored))
     }
+    setHiddenLabelsLoaded(true)
   }, [storageKey])
-  useLocalStorageSync(storageKey, hiddenTrajectoryLabels, true)
+  useLocalStorageSync(storageKey, hiddenTrajectoryLabels, hiddenLabelsLoaded)
 
   // Debounce the displayed year range to smooth out chart transitions
   useEffect(() => {
@@ -598,7 +598,11 @@ const TrajectoryGraph = ({
       }
     })
 
-    if (data.actionBasedTrajectoryData && data.actionBasedTrajectoryData.currentTrajectory.length > 0) {
+    if (
+      showActionTrajectory &&
+      data.actionBasedTrajectoryData &&
+      data.actionBasedTrajectoryData.currentTrajectory.length > 0
+    ) {
       const { previousTrajectory, previousTrajectoryStartYear, currentTrajectory, withinThreshold } =
         data.actionBasedTrajectoryData
 
@@ -676,6 +680,7 @@ const TrajectoryGraph = ({
     data.snbcData,
     data.customTrajectoriesData,
     data.actionBasedTrajectoryData,
+    showActionTrajectory,
     mapDataToYears,
     t,
     tSnbc,

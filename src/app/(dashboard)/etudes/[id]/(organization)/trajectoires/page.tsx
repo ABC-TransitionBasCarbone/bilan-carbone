@@ -2,7 +2,9 @@ import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import { StudyProps } from '@/components/hoc/withStudy'
 import withStudyDetails from '@/components/hoc/withStudyDetails'
 import withTransitionPlan, { TransitionPlanProps } from '@/components/hoc/withTransitionPlan'
+import NotFound from '@/components/pages/NotFound'
 import TrajectoryPage from '@/components/pages/TrajectoryPage'
+import { hasTransitionPlan } from '@/db/transitionPlan'
 import { getUserApplicationSettings } from '@/db/user'
 import { getSectenData } from '@/services/serverFunctions/secten'
 import { getTrajectories } from '@/services/serverFunctions/trajectory.serverFunction'
@@ -11,22 +13,21 @@ import {
   getStudyActions,
   getStudyTransitionPlan,
 } from '@/services/serverFunctions/transitionPlan'
+import { redirect } from 'next/navigation'
 
 const TrajectoryReduction = async ({ study, canEdit, user }: StudyProps & UserSessionProps & TransitionPlanProps) => {
+  const studyHasTransitionPlan = await hasTransitionPlan(study.id)
+  if (!studyHasTransitionPlan) {
+    redirect(`/etudes/${study.id}/initialisation`)
+  }
+
   const [transitionPlanResponse, settings] = await Promise.all([
     getStudyTransitionPlan(study.id),
     getUserApplicationSettings(user.accountId),
   ])
 
   if (!transitionPlanResponse.success || !transitionPlanResponse.data) {
-    return (
-      <TrajectoryPage
-        study={study}
-        canEdit={canEdit}
-        transitionPlan={null}
-        validatedOnly={settings.validatedEmissionSourcesOnly}
-      />
-    )
+    return <NotFound />
   }
 
   const transitionPlan = transitionPlanResponse.data

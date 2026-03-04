@@ -4,36 +4,35 @@ import Button from '@/components/base/Button'
 import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
 import { FullStudy } from '@/db/study'
 import { TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
-import { useServerFunction } from '@/hooks/useServerFunction'
-import { deleteTransitionPlan } from '@/services/serverFunctions/transitionPlan'
-import { getStudyTotalCo2Emissions } from '@/services/study'
+import { useTransitionPlanFilters } from '@/hooks/useTransitionPlanFilters'
+import { getFilteredStudyEmissions, getStudyTotalCo2Emissions } from '@/services/study'
+import { matchesScopeFilter } from '@/utils/scopeFilter'
 import {
   convertToPastStudies,
   getDefaultSnbcSectoralPercentages,
   getDefaultSnbcSectoralTrajectory,
 } from '@/utils/trajectory'
 import AddIcon from '@mui/icons-material/Add'
-import DeleteIcon from '@mui/icons-material/Delete'
 import { Tooltip, Typography } from '@mui/material'
 import type { Action, ExternalStudy, SectenInfo, TransitionPlan } from '@prisma/client'
+import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Block from '../base/Block'
-import SelectStudySite from '../study/site/SelectStudySite'
 import ObjectiveFilters from '../study/trajectory/ObjectiveFilters'
 import ObjectivesTable from '../study/trajectory/ObjectivesTable'
 import TrajectoryGraph from '../study/transitionPlan/TrajectoryGraph'
+import TransitionPlanFilters from '../study/transitionPlan/TransitionPlanFilters'
 import TransitionPlanOnboarding from '../study/transitionPlan/TransitionPlanOnboarding'
 
 const TrajectoryCreationModal = dynamic(() => import('@/components/study/trajectory/TrajectoryCreationModal'))
-const ConfirmDeleteModal = dynamic(() => import('@/components/modals/ConfirmDeleteModal'))
 
 interface Props {
   study: FullStudy
   canEdit: boolean
-  transitionPlan: TransitionPlan | null
+  transitionPlan: TransitionPlan
   trajectories?: TrajectoryWithObjectivesAndScope[]
   linkedStudies?: FullStudy[]
   linkedExternalStudies?: ExternalStudy[]
@@ -57,26 +56,24 @@ const TrajectoryPage = ({
   const tNav = useTranslations('nav')
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { callServerFunction } = useServerFunction()
   const tStudyNav = useTranslations('study.navigation')
   const [showTrajectoryModal, setShowTrajectoryModal] = useState(false)
-  const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [searchFilter, setSearchFilter] = useState('')
+  const {
+    selectedSiteIds,
+    selectedPostIds,
+    selectedTagIds,
+    filtersMounted,
+    setSelectedSiteIds,
+    setSelectedPostIds,
+    setSelectedTagIds,
+  } = useTransitionPlanFilters(study.id)
 
   useEffect(() => {
     if (searchParams.get('openModal') === 'true') {
       setShowTrajectoryModal(true)
     }
   }, [searchParams])
-
-  const handleConfirmDelete = useCallback(async () => {
-    await callServerFunction(() => deleteTransitionPlan(study.id), {
-      onSuccess: async () => {
-        setShowDeleteModal(false)
-        router.refresh()
-      },
-    })
-  }, [callServerFunction, study.id, router])
 
   const pastStudies = useMemo(
     () => convertToPastStudies(linkedStudies, linkedExternalStudies, validatedOnly, study.resultsUnit),
@@ -86,6 +83,40 @@ const TrajectoryPage = ({
   const studyTotalEmissions = useMemo(
     () => getStudyTotalCo2Emissions(study, true, validatedOnly),
     [study, validatedOnly],
+  )
+
+  const filteredStudyEmissions = useMemo(() => {
+    const subPosts = selectedPostIds.filter((id): id is SubPost => Object.values(SubPost).includes(id as SubPost))
+    return getFilteredStudyEmissions(study, validatedOnly, selectedSiteIds, subPosts, selectedTagIds)
+  }, [study, validatedOnly, selectedSiteIds, selectedPostIds, selectedTagIds])
+
+  const filterRatio = studyTotalEmissions > 0 ? Math.min(1, filteredStudyEmissions / studyTotalEmissions) : 1
+
+  const filteredPastStudies = useMemo(
+    () => pastStudies.map((ps) => ({ ...ps, totalCo2: ps.totalCo2 * filterRatio })),
+    [pastStudies, filterRatio],
+  )
+
+  const filteredActions = actions
+
+  const filteredTrajectories = useMemo(
+    () =>
+      trajectories.filter((traj) => {
+        if (traj.objectives.length === 0) {
+          return true
+        }
+        return traj.objectives.some((obj) =>
+          matchesScopeFilter(
+            obj.sites?.map((s) => s.studySite.siteId) ?? [],
+            obj.subPosts?.map((sp) => sp.subPost) ?? [],
+            obj.tags?.map((tag) => tag.studyTag.id) ?? [],
+            selectedSiteIds,
+            selectedPostIds,
+            selectedTagIds,
+          ),
+        )
+      }),
+    [trajectories, selectedSiteIds, selectedPostIds, selectedTagIds],
   )
 
   const defaultSnbcSectoralPercentages = useMemo(() => getDefaultSnbcSectoralPercentages(trajectories), [trajectories])
@@ -98,10 +129,6 @@ const TrajectoryPage = ({
   const sites = useMemo(() => study.sites.map((s) => ({ id: s.id, name: s.site.name })), [study.sites])
 
   const canCreateTrajectory = canEdit && studyTotalEmissions > 0
-
-  if (!transitionPlan) {
-    return null
-  }
 
   const addButton = canEdit && (
     <Tooltip title={studyTotalEmissions === 0 ? t('trajectories.graph.noEmissionSourcesDisabledButton') : ''}>
@@ -131,20 +158,17 @@ const TrajectoryPage = ({
       <Block
         title={t('trajectories.title')}
         as="h2"
-        rightComponent={<SelectStudySite sites={study.sites} siteSelectionDisabled isTransitionPlan />}
-        actions={
-          canEdit
-            ? [
-                {
-                  actionType: 'button',
-                  variant: 'contained',
-                  color: 'error',
-                  onClick: () => setShowDeleteModal(true),
-                  title: t('trajectories.delete.title'),
-                  children: <DeleteIcon />,
-                },
-              ]
-            : undefined
+        rightComponent={
+          <TransitionPlanFilters
+            study={study}
+            selectedSiteIds={selectedSiteIds}
+            selectedPostIds={selectedPostIds}
+            selectedTagIds={selectedTagIds}
+            onSiteFilterChange={setSelectedSiteIds}
+            onPostFilterChange={setSelectedPostIds}
+            onTagFilterChange={setSelectedTagIds}
+            filtersMounted={filtersMounted}
+          />
         }
       >
         <div className="flex-col gapped2">
@@ -157,16 +181,16 @@ const TrajectoryPage = ({
 
           <TrajectoryGraph
             study={study}
-            trajectories={trajectories}
-            actions={actions}
+            trajectories={filteredTrajectories}
+            actions={filteredActions}
             linkedStudies={linkedStudies}
             sectenData={sectenData}
             selectedSnbcTrajectories={[]}
             selectedSbtiTrajectories={[]}
-            selectedCustomTrajectories={trajectories.map((t) => t.id)}
-            pastStudies={pastStudies}
+            selectedCustomTrajectories={filteredTrajectories.map((t) => t.id)}
+            pastStudies={filteredPastStudies}
             validatedOnly={validatedOnly}
-            studyEmissions={studyTotalEmissions}
+            studyEmissions={filteredStudyEmissions}
             titleAction={addButton}
             storageKey={`trajectory-page-${transitionPlan.id}`}
             isTrajectoryPage
@@ -179,15 +203,15 @@ const TrajectoryPage = ({
             <ObjectiveFilters search={searchFilter} setSearch={setSearchFilter} />
 
             <ObjectivesTable
-              trajectories={trajectories}
+              trajectories={filteredTrajectories}
               canEdit={canEdit}
               transitionPlanId={transitionPlan.id}
               studyId={study.id}
               studyYear={study.startDate.getFullYear()}
               searchFilter={searchFilter}
               sectenData={sectenData}
-              studyEmissions={studyTotalEmissions}
-              pastStudies={pastStudies}
+              studyEmissions={filteredStudyEmissions}
+              pastStudies={filteredPastStudies}
               sites={sites}
               tagFamilies={study.tagFamilies}
               defaultSnbcSectoralTrajectoryId={defaultSnbcSectoralTrajectoryId}
@@ -204,25 +228,12 @@ const TrajectoryPage = ({
               isFirstCreation={trajectories.length <= 1} // There is one default SNBC trajectory created when saving sector percentages
               studyYear={study.startDate.getFullYear()}
               sectenData={sectenData}
-              studyEmissions={studyTotalEmissions}
-              pastStudies={pastStudies}
+              studyEmissions={filteredStudyEmissions}
+              pastStudies={filteredPastStudies}
               defaultSnbcSectoralPercentages={defaultSnbcSectoralPercentages}
             />
           )}
         </div>
-
-        {showDeleteModal && (
-          <ConfirmDeleteModal
-            open={showDeleteModal}
-            title={t('trajectories.delete.title')}
-            message={t('trajectories.delete.description')}
-            confirmText={t('trajectories.delete.confirm')}
-            cancelText={t('trajectories.delete.cancel')}
-            requireNameMatch={study.name}
-            onConfirm={handleConfirmDelete}
-            onCancel={() => setShowDeleteModal(false)}
-          />
-        )}
       </Block>
     </>
   )

@@ -102,8 +102,8 @@ interface CalculateActionBasedTrajectoryParams {
 
 export interface CalculateTrajectoriesWithHistoryParams {
   study: FullStudy
+  totalCo2: number
   withDependencies: boolean
-  validatedOnly: boolean
   trajectories: TrajectoryWithObjectives[]
   actions: Action[]
   pastStudies: PastStudy[]
@@ -1476,8 +1476,8 @@ export const getActionBasedData = (
 
 export const calculateTrajectoriesWithHistory = ({
   study,
+  totalCo2,
   withDependencies,
-  validatedOnly,
   trajectories,
   actions,
   pastStudies,
@@ -1486,7 +1486,6 @@ export const calculateTrajectoriesWithHistory = ({
   selectedCustomTrajectoryIds,
   sectenData = [],
 }: CalculateTrajectoriesWithHistoryParams): TrajectoryResult => {
-  const totalCo2 = getStudyTotalCo2Emissions(study, withDependencies, validatedOnly)
   const studyStartYear = study.startDate.getFullYear()
   const sbti15Enabled = selectedSbtiTrajectories.includes(TRAJECTORY_15_ID)
   const sbtiWB2CEnabled = selectedSbtiTrajectories.includes(TRAJECTORY_WB2C_ID)
