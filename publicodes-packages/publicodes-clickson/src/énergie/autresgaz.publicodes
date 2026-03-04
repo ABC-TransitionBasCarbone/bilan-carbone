@@ -3,7 +3,7 @@
   formule:
     somme:
       - gaz réfrigérants
-      - gaz effet de serre principeaux
+      - gaz effet de serre principaux
   unité: kgCO2e/kg
   par défaut: 0
 
@@ -89,7 +89,7 @@
       meta:
         id: 43632
 
-énergie . autres gaz . gaz effet de serre principeaux:
+énergie . autres gaz . gaz effet de serre principaux:
   question: Consommation annuelle de gaz à effet de serre principal
   titre: Gaz à effet de serre principal
   par défaut: 0

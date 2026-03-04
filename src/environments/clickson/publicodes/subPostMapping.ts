@@ -83,7 +83,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<Clickso
       'énergie . autres gaz . gaz réfrigérant . type',
       'énergie . autres gaz . gaz réfrigérant . consommation',
     ]),
-    list('énergie . autres gaz . gaz effet de serre principeaux', [
+    list('énergie . autres gaz . gaz effet de serre principaux', [
       'énergie . autres gaz . gaz effet de serre principal . type',
       'énergie . autres gaz . gaz effet de serre principal . consommation',
     ]),
