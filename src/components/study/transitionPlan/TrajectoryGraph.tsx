@@ -52,7 +52,7 @@ interface Props {
   showTitle?: boolean
   showActionTrajectory?: boolean
   titleAction?: ReactNode
-  storageKey?: string
+  storageKey: string
   isTrajectoryPage?: boolean
 }
 
@@ -79,6 +79,7 @@ const TrajectoryGraph = ({
   const [yearRange, setYearRange] = useState<number[] | null>(null)
   const [glossary, setGlossary] = useState(false)
   const [displayedYearRange, setDisplayedYearRange] = useState<number[] | null>(null)
+  const [hiddenTrajectoryLabels, setHiddenTrajectoryLabels] = useState<string[]>([])
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null)
   const tSnbc = useTranslations('study.transitionPlan.trajectories.snbcCard')
   const tGlossary = useTranslations('study.transitionPlan.trajectories.graph.glossary')
@@ -188,13 +189,32 @@ const TrajectoryGraph = ({
     }
   }, [allYearsToDisplay])
 
+  // Local storage related settings
+  const yearRangeStorageKey = `${storageKey}-yearRange`
   useEffect(() => {
     if (minYear && maxYear) {
-      const newRange = [minYear, maxYear]
+      let newRange = [minYear, maxYear]
+      const stored = localStorage.getItem(yearRangeStorageKey)
+      if (stored) {
+        const parsed = JSON.parse(stored) as number[]
+        if (parsed.length === 2 && parsed[0] >= minYear && parsed[1] <= maxYear) {
+          newRange = parsed
+        }
+      }
       setYearRange(newRange)
       setDisplayedYearRange(newRange)
     }
-  }, [minYear, maxYear])
+  }, [minYear, maxYear, yearRangeStorageKey])
+
+  useLocalStorageSync(yearRangeStorageKey, yearRange ?? [], yearRange !== null)
+
+  useEffect(() => {
+    const stored = localStorage.getItem(storageKey)
+    if (stored) {
+      setHiddenTrajectoryLabels(JSON.parse(stored))
+    }
+  }, [storageKey])
+  useLocalStorageSync(storageKey, hiddenTrajectoryLabels, true)
 
   // Debounce the displayed year range to smooth out chart transitions
   useEffect(() => {
@@ -682,16 +702,6 @@ const TrajectoryGraph = ({
     () => yearRange && yearRange[0] < oldestPastStudyYear,
     [yearRange, oldestPastStudyYear],
   )
-
-  const [hiddenTrajectoryLabels, setHiddenTrajectoryLabels] = useState<string[]>(() => {
-    if (!storageKey || typeof window === 'undefined') {
-      return []
-    }
-    const stored = localStorage.getItem(storageKey)
-    return stored ? JSON.parse(stored) : []
-  })
-
-  useLocalStorageSync(storageKey ?? '', hiddenTrajectoryLabels, !!storageKey)
 
   const onToggleFilter = (label: string) =>
     setHiddenTrajectoryLabels((prev) => (prev.includes(label) ? prev.filter((l) => l !== label) : [...prev, label]))
