@@ -155,11 +155,13 @@
         }
       },
       "autres gaz": {
+        "gaz réfrigérants": {
+          "titre": "[TO_TRANSLATE] Gaz réfrigérants",
+          "question": "[TO_TRANSLATE] Consommation annuelle de gaz réfrigérant"
+        },
         "gaz réfrigérant": {
-          "titre": "[TO_TRANSLATE] Gaz réfrigérant",
-          "question": "[TO_TRANSLATE] Consommation annuelle de gaz réfrigérant",
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de ce gaz"
+            "question": "Consumo anual de este gas"
           },
           "type": {
             "titre": "[TO_TRANSLATE] Gaz réfrigérant",
@@ -172,22 +174,24 @@
             }
           }
         },
-        "gaz à effet de serre principal": {
+        "gaz effet de serre principeaux": {
           "titre": "[TO_TRANSLATE] Gaz à effet de serre principal",
-          "question": "[TO_TRANSLATE] Consommation annuelle de Gaz à effet de serre principal",
+          "question": "[TO_TRANSLATE] Consommation annuelle de gaz à effet de serre principal"
+        },
+        "gaz effet de serre principal": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Consommation annuelle de ce gaz"
+            "question": "Consumo anual de este gas"
           },
           "type": {
-            "titre": "[TO_TRANSLATE] Gaz à effet de serre principal",
-            "question": "[TO_TRANSLATE] Gaz à effet de serre principal",
+            "titre": "Gas de efecto invernadero principal",
+            "question": "Gas de efecto invernadero principal",
             "options": {
-              "CO2": "[TO_TRANSLATE] CO2",
-              "CH4 fossile": "[TO_TRANSLATE] CH4 fossile",
-              "CH4 biogénique": "[TO_TRANSLATE] CH4 biogénique",
-              "N2O": "[TO_TRANSLATE] N2O",
-              "SF6": "[TO_TRANSLATE] SF6",
-              "NF3": "[TO_TRANSLATE] NF3"
+              "CO2": "CO2",
+              "CH4 fossile": "CH4 fósil",
+              "CH4 biogénique": "CH4 biogénico",
+              "N2O": "N2O",
+              "SF6": "SF6",
+              "NF3": "NF3"
             }
           }
         }
@@ -518,8 +522,8 @@
       },
       "divers": {
         "tondeuse gazon thermique": {
-          "titre": "[TO_TRANSLATE] Tondeuse à gazon thermique",
-          "question": "[TO_TRANSLATE] Combien de tondeuse à gazon thermique possédez-vous ?",
+          "titre": "Cortadora de césped térmica",
+          "question": "¿Cuántas cortadoras de césped térmicas posee?",
           "nombre": {
             "question": "[UPDATED] Combien de tondeuse à gazon thermique possédez-vous ?"
           },
@@ -540,59 +544,59 @@
             "question": "[UPDATED] Facteur d'émission par unité de tondeuse à gazon électrique"
           },
           "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de xx"
+            "question": "Inmovilización"
           }
         },
         "bouilloire": {
-          "titre": "[TO_TRANSLATE] Bouilloire",
-          "question": "[TO_TRANSLATE] Combien de bouilloire possédez-vous ?",
+          "titre": "Hervidor",
+          "question": "¿Cuántos hervidores posee?",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de bouilloire possédez-vous ?"
+            "question": "¿Cuántos hervidores posee?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de bouilloire"
+            "question": "Factor de emisión por unidad de hervidor"
           },
           "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de bouilloire"
+            "question": "Inmovilización de hervidor"
           }
         },
         "micro-onde": {
-          "titre": "[TO_TRANSLATE] Micro-onde",
-          "question": "[TO_TRANSLATE] Combien de micro-onde possédez-vous ?",
+          "titre": "Horno microondas",
+          "question": "¿Cuántos hornos microondas posee?",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de micro-onde possédez-vous ?"
+            "question": "¿Cuántos hornos microondas posee?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de micro-onde"
+            "question": "Factor de emisión por unidad de horno microondas"
           },
           "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de micro-onde"
+            "question": "Inmovilización de horno microondas"
           }
         },
         "aspirateur professionnel": {
-          "titre": "[TO_TRANSLATE] Aspirateur professionnel",
-          "question": "[TO_TRANSLATE] Combien de aspirateur professionnel possédez-vous ?",
+          "titre": "Aspiradora profesional",
+          "question": "¿Cuántas aspiradoras profesionales posee?",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de aspirateur professionnel possédez-vous ?"
+            "question": "¿Cuántas aspiradoras profesionales posee?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de aspirateur professionnel"
+            "question": "Factor de emisión por unidad de aspiradora profesional"
           },
           "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de xx"
+            "question": "Inmovilización"
           }
         },
         "ballon chauffe-eau électrique": {
-          "titre": "[TO_TRANSLATE] Ballon chauffe-eau électrique - 200l",
-          "question": "[TO_TRANSLATE] Combien de ballon chauffe-eau électrique - 200l possédez-vous ?",
+          "titre": "Calentador de agua eléctrico - 200l",
+          "question": "¿Cuántos calentadores de agua eléctricos - 200l posee?",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de ballon chauffe-eau électrique - 200l possédez-vous ?"
+            "question": "¿Cuántos calentadores de agua eléctricos - 200l posee?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de ballon chauffe-eau électrique - 200l"
+            "question": "Factor de emisión por unidad de calentador de agua eléctrico - 200l"
           },
           "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de ballon chaffe-eau electrique - 200l"
+            "question": "Inmovilización de calentador de agua eléctrico - 200l"
           }
         },
         "machine café filtre": {
@@ -622,146 +626,146 @@
           }
         },
         "lave-vaiselle professionnel": {
-          "titre": "[TO_TRANSLATE] Lave-vaisselle professionnel",
-          "question": "[TO_TRANSLATE] Combien de lave-vaiselle professionnel possédez-vous ?",
+          "titre": "Llavaplatos profesional",
+          "question": "¿Cuántos llavaplatos profesionales posee?",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de lave-vaiselle professionnel possédez-vous ?"
+            "question": "¿Cuántos llavaplatos profesionales posee?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de lave-vaiselle professionnel"
+            "question": "Factor de emisión por unidad de llavaplatos profesional"
           },
           "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de lave-vaiselle professionnel"
+            "question": "Inmovilización de llavaplatos profesional"
           }
         },
         "four professionnel": {
-          "titre": "[TO_TRANSLATE] Four professionnel",
-          "question": "[TO_TRANSLATE] Combien de four professionnel possédez-vous ?",
+          "titre": "Horno profesional",
+          "question": "¿Cuántos hornos profesionales posee?",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de four professionnel possédez-vous ?"
+            "question": "¿Cuántos hornos profesionales posee?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de four professionnel"
+            "question": "Factor de emisión por unidad de horno profesional"
           },
           "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de four professionnel"
+            "question": "Inmovilización de horno profesional"
           }
         },
         "lave-vaiselle standard": {
-          "titre": "[TO_TRANSLATE] Lave-vaiselle standard",
-          "question": "[TO_TRANSLATE] Combien de lave-vaiselle standard possédez-vous ?",
+          "titre": "Llavaplatos estándar",
+          "question": "¿Cuántos llavaplatos estándar posee?",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de lave-vaiselle standard possédez-vous ?"
+            "question": "¿Cuántos llavaplatos estándar posee?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de lave-vaiselle standard"
+            "question": "Factor de emisión por unidad de llavaplatos estándar"
           },
           "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de lave-vaiselle standard"
+            "question": "Inmovilización de llavaplatos estándar"
           }
         },
         "lave-linge": {
-          "titre": "[TO_TRANSLATE] Lave-linge (capacité 7kg)",
-          "question": "[TO_TRANSLATE] Combien de lave-linge (capacité 7kg) possédez-vous ?",
+          "titre": "Lavadora (capacidad 7kg)",
+          "question": "¿Cuántas lavadoras (capacidad 7kg) posee?",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de lave-linge (capacité 7kg) possédez-vous ?"
+            "question": "¿Cuántas lavadoras (capacidad 7kg) posee?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de lave-linge (capacité 7kg)"
+            "question": "Factor de emisión por unidad de lavadora (capacidad 7kg)"
           },
           "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de lave-linge (capacité 7kg)"
+            "question": "Inmovilización de lavadora (capacidad 7kg)"
           }
         },
         "congélateur coffre": {
-          "titre": "[TO_TRANSLATE] Congélateur (coffre) - 261l",
-          "question": "[TO_TRANSLATE] Combien de congélateur (coffre) - 261l possédez-vous ?",
+          "titre": "Congelador (tipo cofre) - 261l",
+          "question": "¿Cuántos congeladores (tipo cofre) - 261l posee?",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de congélateur (coffre) - 261l possédez-vous ?"
+            "question": "¿Cuántos congeladores (tipo cofre) - 261l posee?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de congélateur (coffre) - 261l"
+            "question": "Factor de emisión por unidad de congelador (tipo cofre) - 261l"
           },
           "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de congélateur (coffre) - 261l"
+            "question": "Inmovilización de congelador (tipo cofre) - 261l"
           }
         },
         "congélateur armoire": {
-          "titre": "[TO_TRANSLATE] Congélateur - armoire - 205l",
-          "question": "[TO_TRANSLATE] Combien de congélateur - armoire - 205l possédez-vous ?",
+          "titre": "Congelador - vertical - 205l",
+          "question": "¿Cuántos congeladores - vertical - 205l posee?",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de congélateur - armoire - 205l possédez-vous ?"
+            "question": "¿Cuántos congeladores - vertical - 205l posee?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de congélateur - armoire - 205l"
+            "question": "Factor de emisión por unidad de congelador - vertical - 205l"
           },
           "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de congélateur - armoire - 205l"
+            "question": "Inmovilización de congelador - vertical - 205l"
           }
         },
         "réfrigérateur": {
-          "titre": "[TO_TRANSLATE] Réfrigérateur - 250l",
-          "question": "[TO_TRANSLATE] Combien de réfrigérateur - 250l possédez-vous ?",
+          "titre": "Refrigerador - 250l",
+          "question": "¿Cuántos refrigeradores - 250l posee?",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de réfrigérateur - 250l possédez-vous ?"
+            "question": "¿Cuántos refrigeradores - 250l posee?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de réfrigérateur - 250l"
+            "question": "Factor de emisión por unidad de refrigerador - 250l"
           },
           "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de réfrigérateur - 250l"
+            "question": "Inmovilización de refrigerador - 250l"
           }
         },
         "plaques de cuisson au gaz": {
-          "titre": "[TO_TRANSLATE] Plaques de cuisson/au gaz 9000W",
-          "question": "[TO_TRANSLATE] Combien de plaques de cuisson/au gaz 9000W possédez-vous ?",
+          "titre": "Placas de cocina/gas 9000W",
+          "question": "¿Cuántas placas de cocina/gas 9000W posee?",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de plaques de cuisson/au gaz 9000W possédez-vous ?"
+            "question": "¿Cuántas placas de cocina/gas 9000W posee?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de plaques de cuisson/au gaz 9000W"
+            "question": "Factor de emisión por unidad de placas de cocina/gas 9000W"
           },
           "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de plaques de cuisson/au gaz 9000W"
+            "question": "Inmovilización de placas de cocina/gas 9000W"
           }
         },
         "tatami": {
-          "titre": "[TO_TRANSLATE] Tatami",
-          "question": "[TO_TRANSLATE] Combien de tatami possédez-vous ?",
+          "titre": "Tatami",
+          "question": "¿Cuántos tatami posee?",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de tatami possédez-vous ?"
+            "question": "¿Cuántos tatami posee?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de tatami"
+            "question": "Factor de emisión por unidad de tatami"
           },
           "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de tatami"
+            "question": "Inmovilización de tatami"
           }
         },
         "gymnastique agré barre fixe": {
-          "titre": "[TO_TRANSLATE] Gymnastique, agrès barre fixe",
-          "question": "[TO_TRANSLATE] Combien de gymnastique, agrès barre fixe possédez-vous ?",
+          "titre": "Gimnasia, barra fija",
+          "question": "¿Cuántas barras fijas posee?",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de gymnastique, agrès barre fixe possédez-vous ?"
+            "question": "¿Cuántas barras fijas posee?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de gymnastique, agrès barre fixe"
+            "question": "Factor de emisión por unidad de barra fija"
           },
           "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de gymnastique, agrès barre fixe"
+            "question": "Inmovilización de barra fija"
           }
         },
         "gymnastique agré barres parallèles": {
-          "titre": "[TO_TRANSLATE] Gymnastique, agrès barres parallèles",
-          "question": "[TO_TRANSLATE] Combien de gymnastique, agrès barres parallèles possédez-vous ?",
+          "titre": "Gimnasia, barras paralelas",
+          "question": "¿Cuántas barras paralelas posee?",
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de gymnastique, agrès barres parallèles possédez-vous ?"
+            "question": "¿Cuántas barras paralelas posee?"
           },
           "FE": {
-            "question": "[TO_TRANSLATE] Facteur d'émission par unité de gymnastique, agrès barres parallèles"
+            "question": "Factor de emisión por unidad de barras paralelas"
           },
           "immo": {
-            "question": "[TO_TRANSLATE] Immobilisation de gymnastique, agrès barres parallèles"
+            "question": "Inmovilización de barras paralelas"
           }
         }
       },

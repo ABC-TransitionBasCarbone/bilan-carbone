@@ -155,9 +155,11 @@
         }
       },
       "autres gaz": {
+        "gaz réfrigérants": {
+          "titre": "Refrigerant gases",
+          "question": "Annual refrigerant gas consumption"
+        },
         "gaz réfrigérant": {
-          "titre": "Refrigerant gas",
-          "question": "Annual refrigerant gas consumption",
           "consommation": {
             "question": "Annual consumption of this gas"
           },
@@ -172,9 +174,11 @@
             }
           }
         },
-        "gaz à effet de serre principal": {
+        "gaz effet de serre principeaux": {
           "titre": "Main greenhouse gas",
-          "question": "Annual main greenhouse gas consumption",
+          "question": "Annual main greenhouse gas consumption"
+        },
+        "gaz effet de serre principal": {
           "consommation": {
             "question": "Annual consumption of this gas"
           },
@@ -513,6 +517,255 @@
           },
           "FE": {
             "question": "Emission factor per standard cabinet"
+          }
+        }
+      },
+      "divers": {
+        "tondeuse gazon thermique": {
+          "titre": "Thermal lawn mower",
+          "question": "How many thermal lawn mowers do you own?",
+          "nombre": {
+            "question": "How many thermal lawn mowers do you own?"
+          },
+          "FE": {
+            "question": "Emission factor per lawn mower unit"
+          },
+          "immo": {
+            "question": "Lawn mower immobilization"
+          }
+        },
+        "tondeuse gazon électrique": {
+          "titre": "Electric lawn mower",
+          "question": "How many electric lawn mowers do you own?",
+          "nombre": {
+            "question": "How many electric lawn mowers do you own?"
+          },
+          "FE": {
+            "question": "Emission factor per lawn mower unit électrique"
+          },
+          "immo": {
+            "question": "Immobilization"
+          }
+        },
+        "bouilloire": {
+          "titre": "Kettle",
+          "question": "How many kettles do you own?",
+          "nombre": {
+            "question": "How many kettles do you own?"
+          },
+          "FE": {
+            "question": "Emission factor per kettle"
+          },
+          "immo": {
+            "question": "Kettle immobilization"
+          }
+        },
+        "micro-onde": {
+          "titre": "Microwave",
+          "question": "How many microwaves do you own?",
+          "nombre": {
+            "question": "How many microwaves do you own?"
+          },
+          "FE": {
+            "question": "Emission factor per microwave"
+          },
+          "immo": {
+            "question": "Microwave immobilization"
+          }
+        },
+        "aspirateur professionnel": {
+          "titre": "Professional vacuum",
+          "question": "How many professional vacuums do you own?",
+          "nombre": {
+            "question": "How many professional vacuums do you own?"
+          },
+          "FE": {
+            "question": "Emission factor per professional vacuum"
+          },
+          "immo": {
+            "question": "Immobilization"
+          }
+        },
+        "ballon chauffe-eau électrique": {
+          "titre": "Electric water heater - 200l",
+          "question": "How many electric water heaters - 200l do you own?",
+          "nombre": {
+            "question": "How many electric water heaters - 200l do you own?"
+          },
+          "FE": {
+            "question": "Emission factor per electric water heater - 200l unit"
+          },
+          "immo": {
+            "question": "Electric water heater - 200l immobilization"
+          }
+        },
+        "machine café filtre": {
+          "titre": "Coffee machine - filter",
+          "question": "How many filter coffee machines do you own?",
+          "nombre": {
+            "question": "How many filter coffee machines do you own?"
+          },
+          "FE": {
+            "question": "Emission factor per filter coffee machine unit"
+          },
+          "immo": {
+            "question": "Filter coffee machine immobilization"
+          }
+        },
+        "machine café dosettes": {
+          "titre": "Coffee machine - pods",
+          "question": "How many pod coffee machines do you own?",
+          "nombre": {
+            "question": "How many pod coffee machines do you own?"
+          },
+          "FE": {
+            "question": "Emission factor per pod coffee machine unit"
+          },
+          "immo": {
+            "question": "Pod coffee machine immobilization"
+          }
+        },
+        "lave-vaiselle professionnel": {
+          "titre": "Professional dishwasher",
+          "question": "How many professional dishwashers do you own?",
+          "nombre": {
+            "question": "How many professional dishwashers do you own?"
+          },
+          "FE": {
+            "question": "Emission factor per professional dishwasher unit"
+          },
+          "immo": {
+            "question": "Professional dishwasher immobilization"
+          }
+        },
+        "four professionnel": {
+          "titre": "Professional oven",
+          "question": "How many professional ovens do you own?",
+          "nombre": {
+            "question": "How many professional ovens do you own?"
+          },
+          "FE": {
+            "question": "Emission factor per professional oven unit"
+          },
+          "immo": {
+            "question": "Professional oven immobilization"
+          }
+        },
+        "lave-vaiselle standard": {
+          "titre": "Standard dishwasher",
+          "question": "How many standard dishwashers do you own?",
+          "nombre": {
+            "question": "How many standard dishwashers do you own?"
+          },
+          "FE": {
+            "question": "Emission factor per standard dishwasher unit"
+          },
+          "immo": {
+            "question": "Standard dishwasher immobilization"
+          }
+        },
+        "lave-linge": {
+          "titre": "Washing machine (7kg capacity)",
+          "question": "How many washing machines (7kg capacity) do you own?",
+          "nombre": {
+            "question": "How many washing machines (7kg capacity) do you own?"
+          },
+          "FE": {
+            "question": "Emission factor per washing machine (7kg capacity) unit"
+          },
+          "immo": {
+            "question": "Washing machine (7kg capacity) immobilization"
+          }
+        },
+        "congélateur coffre": {
+          "titre": "Chest freezer - 261l",
+          "question": "How many chest freezers - 261l do you own?",
+          "nombre": {
+            "question": "How many chest freezers - 261l do you own?"
+          },
+          "FE": {
+            "question": "Emission factor per chest freezer - 261l unit"
+          },
+          "immo": {
+            "question": "Chest freezer - 261l immobilization"
+          }
+        },
+        "congélateur armoire": {
+          "titre": "Upright freezer - 205l",
+          "question": "How many upright freezers - 205l do you own?",
+          "nombre": {
+            "question": "How many upright freezers - 205l do you own?"
+          },
+          "FE": {
+            "question": "Emission factor per upright freezer - 205l unit"
+          },
+          "immo": {
+            "question": "Upright freezer - 205l immobilization"
+          }
+        },
+        "réfrigérateur": {
+          "titre": "Refrigerator - 250l",
+          "question": "How many refrigerators - 250l do you own?",
+          "nombre": {
+            "question": "How many refrigerators - 250l do you own?"
+          },
+          "FE": {
+            "question": "Emission factor per refrigerator - 250l unit"
+          },
+          "immo": {
+            "question": "Refrigerator - 250l immobilization"
+          }
+        },
+        "plaques de cuisson au gaz": {
+          "titre": "Cooking plates/gas 9000W",
+          "question": "How many cooking plates/gas 9000W do you own?",
+          "nombre": {
+            "question": "How many cooking plates/gas 9000W do you own?"
+          },
+          "FE": {
+            "question": "Emission factor per cooking plates/gas 9000W unit"
+          },
+          "immo": {
+            "question": "Cooking plates/gas 9000W immobilization"
+          }
+        },
+        "tatami": {
+          "titre": "Tatami",
+          "question": "How many tatami do you own?",
+          "nombre": {
+            "question": "How many tatami do you own?"
+          },
+          "FE": {
+            "question": "Emission factor per tatami unit"
+          },
+          "immo": {
+            "question": "Tatami immobilization"
+          }
+        },
+        "gymnastique agré barre fixe": {
+          "titre": "Gymnastics, horizontal bar",
+          "question": "How many horizontal bars do you own?",
+          "nombre": {
+            "question": "How many horizontal bars do you own?"
+          },
+          "FE": {
+            "question": "Emission factor per horizontal bar unit"
+          },
+          "immo": {
+            "question": "Horizontal bar immobilization"
+          }
+        },
+        "gymnastique agré barres parallèles": {
+          "titre": "Gymnastics, parallel bars",
+          "question": "How many parallel bars do you own?",
+          "nombre": {
+            "question": "How many parallel bars do you own?"
+          },
+          "FE": {
+            "question": "Emission factor per parallel bars unit"
+          },
+          "immo": {
+            "question": "Parallel bars immobilization"
           }
         }
       },
@@ -991,33 +1244,33 @@
     }
   },
   "publicodes-units": {
-    "étudiant": "student",
-    "personne": "person",
-    "année": "year",
-    "pays": "country",
+    "étudiant": "[UPDATED] étudiant",
+    "personne": "[UPDATED] personne",
+    "année": "[UPDATED] année",
+    "pays": "[UPDATED] pays",
     "kWh": "kWh",
-    "litre": "liter",
-    "kWh PCI": "kWh LHV",
+    "litre": "[UPDATED] litre",
+    "kWh PCI": "[UPDATED] kWh PCI",
     "kgCO2e/kg": "kgCO2e/kg",
-    "repas": "meal",
-    "kgCO2e/repas": "kgCO2e/meal",
+    "repas": "[UPDATED] repas",
+    "kgCO2e/repas": "[UPDATED] kgCO2e/repas",
     "m3/km": "m3.km",
     "t/km": "t.km",
     "t": "t",
-    "bouteille": "bottle",
-    "kgCO2e/bouteille": "kgCO2e/bottle",
-    "canette": "can",
-    "kgCO2e/canette": "kgCO2e/can",
-    "kg de poids net": "kg net weight",
-    "kgCO2e/kg de poids net": "kgCO2e/kg net weight",
-    "paquet": "pack",
-    "kgCO2e/paquet": "kgCO2e/pack",
-    "barre": "bar",
-    "m2": "m²",
-    "kgCO2e/m2": "kgCO2e/m²",
+    "bouteille": "[UPDATED] bouteille",
+    "kgCO2e/bouteille": "[UPDATED] kgCO2e/bouteille",
+    "canette": "[UPDATED] canette",
+    "kgCO2e/canette": "[UPDATED] kgCO2e/canette",
+    "kg de poids net": "[UPDATED] kg de poids net",
+    "kgCO2e/kg de poids net": "[UPDATED] kgCO2e/kg de poids net",
+    "paquet": "[UPDATED] paquet",
+    "kgCO2e/paquet": "[UPDATED] kgCO2e/paquet",
+    "barre": "[UPDATED] barre",
+    "m2": "[UPDATED] m2",
+    "kgCO2e/m2": "[UPDATED] kgCO2e/m2",
     "kgCO2e": "kgCO2e",
-    "unité": "unit",
-    "kgCO2e/unité": "kgCO2e/unit",
+    "unité": "[UPDATED] unité",
+    "kgCO2e/unité": "[UPDATED] kgCO2e/unité",
     "km": "km",
     "kg": "kg",
     "€": "€",

@@ -155,9 +155,11 @@
         }
       },
       "autres gaz": {
+        "gaz réfrigérants": {
+          "titre": "[TO_TRANSLATE] Gaz réfrigérants",
+          "question": "[TO_TRANSLATE] Consommation annuelle de gaz réfrigérant"
+        },
         "gaz réfrigérant": {
-          "titre": "Ψυκτικό αέριο",
-          "question": "Ετήσια κατανάλωση ψυκτικού αερίου",
           "consommation": {
             "question": "Ετήσια κατανάλωση αυτού του αερίου"
           },
@@ -172,19 +174,21 @@
             }
           }
         },
-        "gaz à effet de serre principal": {
-          "titre": "Κύριο αέριο του θερμοκηπίου",
-          "question": "Ετήσια κατανάλωση κύριου αερίου του θερμοκηπίου",
+        "gaz effet de serre principeaux": {
+          "titre": "[TO_TRANSLATE] Gaz à effet de serre principal",
+          "question": "[TO_TRANSLATE] Consommation annuelle de gaz à effet de serre principal"
+        },
+        "gaz effet de serre principal": {
           "consommation": {
             "question": "Ετήσια κατανάλωση αυτού του αερίου"
           },
           "type": {
-            "titre": "Κύριο αέριο του θερμοκηπίου",
-            "question": "Κύριο αέριο του θερμοκηπίου",
+            "titre": "Κύριο αέριο θερμοκηπίου",
+            "question": "Κύριο αέριο θερμοκηπίου",
             "options": {
               "CO2": "CO2",
-              "CH4 fossile": "CH4 ορυκτής προέλευσης",
-              "CH4 biogénique": "CH4 βιογενούς προέλευσης",
+              "CH4 fossile": "Ορυκτό CH4",
+              "CH4 biogénique": "Βιογενές CH4",
               "N2O": "N2O",
               "SF6": "SF6",
               "NF3": "NF3"
@@ -513,6 +517,255 @@
           },
           "FE": {
             "question": "Συντελεστής εκπομπών ανά τυπική ντουλάπα"
+          }
+        }
+      },
+      "divers": {
+        "tondeuse gazon thermique": {
+          "titre": "Θερμική κοπτική γρασιδιού",
+          "question": "Πόσες θερμικές κοπτικές γρασιδιού κατέχετε;",
+          "nombre": {
+            "question": "Πόσες θερμικές κοπτικές γρασιδιού κατέχετε;"
+          },
+          "FE": {
+            "question": "Συντελεστής εκπομπών ανά μονάδα κοπτικής γρασιδιού"
+          },
+          "immo": {
+            "question": "Ακινητοποίηση κοπτικής γρασιδιού"
+          }
+        },
+        "tondeuse gazon électrique": {
+          "titre": "Ηλεκτρική κοπτική γρασιδιού",
+          "question": "Πόσες ηλεκτρικές κοπτικές γρασιδιού κατέχετε;",
+          "nombre": {
+            "question": "Πόσες ηλεκτρικές κοπτικές γρασιδιού κατέχετε;"
+          },
+          "FE": {
+            "question": "Συντελεστής εκπομπών ανά μονάδα κοπτικής γρασιδιού électrique"
+          },
+          "immo": {
+            "question": "Ακινητοποίηση"
+          }
+        },
+        "bouilloire": {
+          "titre": "Ηλεκτρικός βραστήρας",
+          "question": "Πόσους ηλεκτρικούς βραστήρες κατέχετε;",
+          "nombre": {
+            "question": "Πόσους ηλεκτρικούς βραστήρες κατέχετε;"
+          },
+          "FE": {
+            "question": "Συντελεστής εκπομπών ανά μονάδα ηλεκτρικού βραστήρα"
+          },
+          "immo": {
+            "question": "Ακινητοποίηση ηλεκτρικού βραστήρα"
+          }
+        },
+        "micro-onde": {
+          "titre": "Φούρνος μικροκυμάτων",
+          "question": "Πόσους φούρνους μικροκυμάτων κατέχετε;",
+          "nombre": {
+            "question": "Πόσους φούρνους μικροκυμάτων κατέχετε;"
+          },
+          "FE": {
+            "question": "Συντελεστής εκπομπών ανά μονάδα φούρνου μικροκυμάτων"
+          },
+          "immo": {
+            "question": "Ακινητοποίηση φούρνου μικροκυμάτων"
+          }
+        },
+        "aspirateur professionnel": {
+          "titre": "Επαγγελματική ηλεκτρική σκούπα",
+          "question": "Πόσες επαγγελματικές ηλεκτρικές σκούπες κατέχετε;",
+          "nombre": {
+            "question": "Πόσες επαγγελματικές ηλεκτρικές σκούπες κατέχετε;"
+          },
+          "FE": {
+            "question": "Συντελεστής εκπομπών ανά μονάδα επαγγελματικής ηλεκτρικής σκούπας"
+          },
+          "immo": {
+            "question": "Ακινητοποίηση"
+          }
+        },
+        "ballon chauffe-eau électrique": {
+          "titre": "Ηλεκτρικός θερμοσίφωνας - 200l",
+          "question": "Πόσους ηλεκτρικούς θερμοσίφωνες - 200l κατέχετε;",
+          "nombre": {
+            "question": "Πόσους ηλεκτρικούς θερμοσίφωνες - 200l κατέχετε;"
+          },
+          "FE": {
+            "question": "Συντελεστής εκπομπών ανά μονάδα ηλεκτρικού θερμοσίφωνα - 200l"
+          },
+          "immo": {
+            "question": "Ακινητοποίηση ηλεκτρικού θερμοσίφωνα - 200l"
+          }
+        },
+        "machine café filtre": {
+          "titre": "Μηχανή καφέ - φίλτρο",
+          "question": "Πόσες μηχανές καφέ - φίλτρο κατέχετε;",
+          "nombre": {
+            "question": "Πόσες μηχανές καφέ - φίλτρο κατέχετε;"
+          },
+          "FE": {
+            "question": "Συντελεστής εκπομπών ανά μονάδα μηχανής καφέ - φίλτρο"
+          },
+          "immo": {
+            "question": "Ακινητοποίηση μηχανής καφέ - φίλτρο"
+          }
+        },
+        "machine café dosettes": {
+          "titre": "Μηχανή καφέ - κάψουλες",
+          "question": "Πόσες μηχανές καφέ - κάψουλες κατέχετε;",
+          "nombre": {
+            "question": "Πόσες μηχανές καφέ - κάψουλες κατέχετε;"
+          },
+          "FE": {
+            "question": "Συντελεστής εκπομπών ανά μονάδα μηχανής καφέ - κάψουλες"
+          },
+          "immo": {
+            "question": "Ακινητοποίηση μηχανής καφέ - κάψουλες"
+          }
+        },
+        "lave-vaiselle professionnel": {
+          "titre": "Επαγγελματικό πλυντήριο πιάτων",
+          "question": "Πόσα επαγγελματικά πλυντήρια πιάτων κατέχετε;",
+          "nombre": {
+            "question": "Πόσα επαγγελματικά πλυντήρια πιάτων κατέχετε;"
+          },
+          "FE": {
+            "question": "Συντελεστής εκπομπών ανά μονάδα επαγγελματικού πλυντηρίου πιάτων"
+          },
+          "immo": {
+            "question": "Ακινητοποίηση επαγγελματικού πλυντηρίου πιάτων"
+          }
+        },
+        "four professionnel": {
+          "titre": "Επαγγελματικός φούρνος",
+          "question": "Πόσους επαγγελματικούς φούρνους κατέχετε;",
+          "nombre": {
+            "question": "Πόσους επαγγελματικούς φούρνους κατέχετε;"
+          },
+          "FE": {
+            "question": "Συντελεστής εκπομπών ανά μονάδα επαγγελματικού φούρνου"
+          },
+          "immo": {
+            "question": "Ακινητοποίηση επαγγελματικού φούρνου"
+          }
+        },
+        "lave-vaiselle standard": {
+          "titre": "Τυπικό πλυντήριο πιάτων",
+          "question": "Πόσα τυπικά πλυντήρια πιάτων κατέχετε;",
+          "nombre": {
+            "question": "Πόσα τυπικά πλυντήρια πιάτων κατέχετε;"
+          },
+          "FE": {
+            "question": "Συντελεστής εκπομπών ανά μονάδα τυπικού πλυντηρίου πιάτων"
+          },
+          "immo": {
+            "question": "Ακινητοποίηση τυπικού πλυντηρίου πιάτων"
+          }
+        },
+        "lave-linge": {
+          "titre": "Πλυντήριο ρούχων (χωρητικότητα 7kg)",
+          "question": "Πόσα πλυντήρια ρούχων (χωρητικότητα 7kg) κατέχετε;",
+          "nombre": {
+            "question": "Πόσα πλυντήρια ρούχων (χωρητικότητα 7kg) κατέχετε;"
+          },
+          "FE": {
+            "question": "Συντελεστής εκπομπών ανά μονάδα πλυντηρίου ρούχων (χωρητικότητα 7kg)"
+          },
+          "immo": {
+            "question": "Ακινητοποίηση πλυντηρίου ρούχων (χωρητικότητα 7kg)"
+          }
+        },
+        "congélateur coffre": {
+          "titre": "Καταψύκτης (κιβώτιο) - 261l",
+          "question": "Πόσους καταψύκτες (κιβώτιο) - 261l κατέχετε;",
+          "nombre": {
+            "question": "Πόσους καταψύκτες (κιβώτιο) - 261l κατέχετε;"
+          },
+          "FE": {
+            "question": "Συντελεστής εκπομπών ανά μονάδα καταψύκτη (κιβώτιο) - 261l"
+          },
+          "immo": {
+            "question": "Ακινητοποίηση καταψύκτη (κιβώτιο) - 261l"
+          }
+        },
+        "congélateur armoire": {
+          "titre": "Καταψύκτης - ντουλάπα - 205l",
+          "question": "Πόσους καταψύκτες - ντουλάπα - 205l κατέχετε;",
+          "nombre": {
+            "question": "Πόσους καταψύκτες - ντουλάπα - 205l κατέχετε;"
+          },
+          "FE": {
+            "question": "Συντελεστής εκπομπών ανά μονάδα καταψύκτη - ντουλάπα - 205l"
+          },
+          "immo": {
+            "question": "Ακινητοποίηση καταψύκτη - ντουλάπα - 205l"
+          }
+        },
+        "réfrigérateur": {
+          "titre": "Ψυγείο - 250l",
+          "question": "Πόσα ψυγεία - 250l κατέχετε;",
+          "nombre": {
+            "question": "Πόσα ψυγεία - 250l κατέχετε;"
+          },
+          "FE": {
+            "question": "Συντελεστής εκπομπών ανά μονάδα ψυγείου - 250l"
+          },
+          "immo": {
+            "question": "Ακινητοποίηση ψυγείου - 250l"
+          }
+        },
+        "plaques de cuisson au gaz": {
+          "titre": "Πλάκες μαγειρέματος/αερίου 9000W",
+          "question": "Πόσες πλάκες μαγειρέματος/αερίου 9000W κατέχετε;",
+          "nombre": {
+            "question": "Πόσες πλάκες μαγειρέματος/αερίου 9000W κατέχετε;"
+          },
+          "FE": {
+            "question": "Συντελεστής εκπομπών ανά μονάδα πλακών μαγειρέματος/αερίου 9000W"
+          },
+          "immo": {
+            "question": "Ακινητοποίηση πλακών μαγειρέματος/αερίου 9000W"
+          }
+        },
+        "tatami": {
+          "titre": "Tatami",
+          "question": "Πόσα tatami κατέχετε;",
+          "nombre": {
+            "question": "Πόσα tatami κατέχετε;"
+          },
+          "FE": {
+            "question": "Συντελεστής εκπομπών ανά μονάδα tatami"
+          },
+          "immo": {
+            "question": "Ακινητοποίηση tatami"
+          }
+        },
+        "gymnastique agré barre fixe": {
+          "titre": "Γυμναστική, δοκός ισορροπίας",
+          "question": "Πόσες δοκούς ισορροπίας κατέχετε;",
+          "nombre": {
+            "question": "Πόσες δοκούς ισορροπίας κατέχετε;"
+          },
+          "FE": {
+            "question": "Συντελεστής εκπομπών ανά μονάδα δοκού ισορροπίας"
+          },
+          "immo": {
+            "question": "Ακινητοποίηση δοκού ισορροπίας"
+          }
+        },
+        "gymnastique agré barres parallèles": {
+          "titre": "Γυμναστική, παράλληλες δοκοί",
+          "question": "Πόσες παράλληλες δοκούς κατέχετε;",
+          "nombre": {
+            "question": "Πόσες παράλληλες δοκούς κατέχετε;"
+          },
+          "FE": {
+            "question": "Συντελεστής εκπομπών ανά μονάδα παράλληλων δοκών"
+          },
+          "immo": {
+            "question": "Ακινητοποίηση παράλληλων δοκών"
           }
         }
       },
@@ -991,37 +1244,37 @@
     }
   },
   "publicodes-units": {
-    "étudiant": "φοιτητής",
-    "personne": "άτομο",
-    "année": "έτος",
-    "pays": "χώρα",
+    "étudiant": "[UPDATED] étudiant",
+    "personne": "[UPDATED] personne",
+    "année": "[UPDATED] année",
+    "pays": "[UPDATED] pays",
     "kWh": "kWh",
-    "litre": "λίτρο",
+    "litre": "[UPDATED] litre",
     "kWh PCI": "kWh PCI",
     "kgCO2e/kg": "kgCO2e/kg",
-    "repas": "γεύμα",
-    "kgCO2e/repas": "kgCO2e/γεύμα",
-    "m3/km": "m3.χλμ",
-    "t/km": "τ.χλμ",
-    "t": "τ",
-    "bouteille": "μπουκάλι",
-    "kgCO2e/bouteille": "kgCO2e/μπουκάλι",
-    "canette": "κουτάκι",
-    "kgCO2e/canette": "kgCO2e/κουτάκι",
-    "kg de poids net": "κιλό καθαρού βάρους",
-    "kgCO2e/kg de poids net": "kgCO2e/κιλό καθαρού βάρους",
-    "paquet": "πακέτο",
-    "kgCO2e/paquet": "kgCO2e/πακέτο",
-    "barre": "μπάρα",
-    "m2": "μ²",
-    "kgCO2e/m2": "kgCO2e/μ²",
+    "repas": "[UPDATED] repas",
+    "kgCO2e/repas": "[UPDATED] kgCO2e/repas",
+    "m3/km": "[TO_TRANSLATE] m3.km",
+    "t/km": "[TO_TRANSLATE] t.km",
+    "t": "[UPDATED] t",
+    "bouteille": "[UPDATED] bouteille",
+    "kgCO2e/bouteille": "[UPDATED] kgCO2e/bouteille",
+    "canette": "[UPDATED] canette",
+    "kgCO2e/canette": "[UPDATED] kgCO2e/canette",
+    "kg de poids net": "[UPDATED] kg de poids net",
+    "kgCO2e/kg de poids net": "[UPDATED] kgCO2e/kg de poids net",
+    "paquet": "[UPDATED] paquet",
+    "kgCO2e/paquet": "[UPDATED] kgCO2e/paquet",
+    "barre": "[UPDATED] barre",
+    "m2": "[UPDATED] m2",
+    "kgCO2e/m2": "[UPDATED] kgCO2e/m2",
     "kgCO2e": "kgCO2e",
-    "unité": "μονάδα",
-    "kgCO2e/unité": "kgCO2e/μονάδα",
-    "km": "χλμ",
-    "kg": "κιλό",
+    "unité": "[UPDATED] unité",
+    "kgCO2e/unité": "[UPDATED] kgCO2e/unité",
+    "km": "[UPDATED] km",
+    "kg": "[UPDATED] kg",
     "€": "€",
     "kgCO2e/€": "kgCO2e/€",
-    "kgCO2e/t": "kgCO2e/τ"
+    "kgCO2e/t": "[UPDATED] kgCO2e/t"
   }
 }
