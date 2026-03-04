@@ -127,6 +127,7 @@ export const EmissionFactorsFilters = ({
                   ...prev,
                   locations: newValue,
                 }))
+                setLocationsInputValue('')
               }}
               renderOption={(props, option) => {
                 const { key, ...restProps } = props
@@ -154,28 +155,6 @@ export const EmissionFactorsFilters = ({
               }}
             />
           </FormControl>
-          <FormControl className={styles.selector}>
-            <FormLabel id="emissions-sources-selector" component="legend">
-              {t('sources')}
-            </FormLabel>
-            <Select
-              id="emissions-sources-selector"
-              labelId="emissions-sources-selector"
-              value={filters.sources}
-              onChange={({ target: { value } }) =>
-                setFilters((prevFilters) => ({ ...prevFilters, sources: value as string[] }))
-              }
-              renderValue={statusSelectorRenderValue}
-              multiple
-            >
-              {importVersions.map((importVersion) => (
-                <MenuItem key={`source-item-${importVersion.id}`} value={importVersion.id}>
-                  <Checkbox checked={filters.sources.includes(importVersion.id)} />
-                  <ListItemText primary={getEmissionVersionLabel(importVersion)} />
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
           <FormControl className={styles.multiSelector}>
             <FormLabel id="emissions-unit-selector" component="legend">
               {t('unitSearch')}
@@ -201,6 +180,7 @@ export const EmissionFactorsFilters = ({
                   ...prev,
                   units: newValue,
                 }))
+                setUnitsInputValue('')
               }}
               renderOption={(props, option) => {
                 const { key, ...restProps } = props
@@ -243,6 +223,28 @@ export const EmissionFactorsFilters = ({
               />
             </FormControl>
           )}
+          <FormControl className={styles.selector}>
+            <FormLabel id="emissions-sources-selector" component="legend">
+              {t('sources')}
+            </FormLabel>
+            <Select
+              id="emissions-sources-selector"
+              labelId="emissions-sources-selector"
+              value={filters.sources}
+              onChange={({ target: { value } }) =>
+                setFilters((prevFilters) => ({ ...prevFilters, sources: value as string[] }))
+              }
+              renderValue={statusSelectorRenderValue}
+              multiple
+            >
+              {importVersions.map((importVersion) => (
+                <MenuItem key={`source-item-${importVersion.id}`} value={importVersion.id}>
+                  <Checkbox checked={filters.sources.includes(importVersion.id)} />
+                  <ListItemText primary={getEmissionVersionLabel(importVersion)} />
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <PostSubPostFilter
             envPosts={envPosts}
             envSubPosts={envSubPosts}
