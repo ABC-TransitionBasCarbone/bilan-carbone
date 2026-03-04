@@ -182,9 +182,9 @@ describe('Create study', () => {
       newSimplifiedStudyTest('Clickson Admin study', { includeEndDate: false })
     })
 
-    it('should create a study as Clickson Collaborator', () => {
+    it('should not be able to create a study as Clickson Collaborator', () => {
       cy.loginForEnv('clickson', 'clickson-env-collaborator-0@yopmail.com', 'password-0')
-      newSimplifiedStudyTest('Clickson Collaborator study', { includeEndDate: false })
+      cy.getByTestId('new-study').should('not.exist')
     })
   })
 })
