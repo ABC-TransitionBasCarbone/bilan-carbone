@@ -3,6 +3,11 @@ import { TiltPost } from '@/services/posts'
 import { createTheme } from '@mui/material/styles'
 
 const tiltTheme = createTheme(theme, {
+  palette: {
+    primary: {
+      contrastText: '#2C303A',
+    },
+  },
   cssVariables: true,
   custom: {
     postColors: {
