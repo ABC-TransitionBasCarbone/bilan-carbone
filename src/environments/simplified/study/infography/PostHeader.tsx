@@ -2,6 +2,7 @@ import PostIcon from '@/components/study/infography/icons/PostIcon'
 import { Post } from '@/services/posts'
 import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
+import styles from './PostHeader.module.css'
 import {
   StyledContentColumn,
   StyledEmissionValue,
@@ -28,7 +29,7 @@ export const SimplifiedPostHeader = ({ post, mainPost, emissionValue, percent }:
   return (
     <StyledPostHeader post={mainPost}>
       <StyledIconColumn>
-        <PostIcon post={mainPost} />
+        <PostIcon className={styles.postIcon} post={mainPost} />
       </StyledIconColumn>
       <StyledContentColumn>
         <StyledTitle>{t(post)}</StyledTitle>
