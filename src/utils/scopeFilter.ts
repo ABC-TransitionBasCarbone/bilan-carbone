@@ -1,33 +1,35 @@
+import { SubPost } from '@prisma/client'
+
 const filtersMatcheScope = (scope: string[], filters: string[]): boolean => {
   return scope.some((id) => filters.includes(id))
 }
 
 /**
- * AND logic across all active filter types.
- * Empty DB scope for a type means "all" → always passes that type.
- * Empty UI filter for a type means "filter has nothing selected" → always fails.
+ * Determines if the scope values match the UI filters.
+ * If a UI filter is empty, it means "filter has nothing selected" → always fails.
+ * If a scope array is empty, it means "all" → always passes.
  */
-export const matchesScopeFilter = (
-  rowSiteIds: string[],
-  rowSubPosts: string[],
-  rowTagIds: string[],
+export const scopeMatchesUIFilters = (
+  scopeSiteIds: string[],
+  scopeSubPosts: SubPost[],
+  scopeTagIds: string[],
   filterSiteIds: string[],
-  filterSubPosts: string[],
+  filterSubPosts: SubPost[],
   filterTagIds: string[],
 ): boolean => {
   if (filterTagIds.length === 0 || filterSubPosts.length === 0 || filterSiteIds.length === 0) {
     return false
   }
 
-  if (rowTagIds.length > 0 && !filtersMatcheScope(rowTagIds, filterTagIds)) {
+  if (scopeTagIds.length > 0 && !filtersMatcheScope(scopeTagIds, filterTagIds)) {
     return false
   }
 
-  if (rowSubPosts.length > 0 && !filtersMatcheScope(rowSubPosts, filterSubPosts)) {
+  if (scopeSubPosts.length > 0 && !filtersMatcheScope(scopeSubPosts, filterSubPosts)) {
     return false
   }
 
-  if (rowSiteIds.length > 0 && !filtersMatcheScope(rowSiteIds, filterSiteIds)) {
+  if (scopeSiteIds.length > 0 && !filtersMatcheScope(scopeSiteIds, filterSiteIds)) {
     return false
   }
 

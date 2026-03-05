@@ -20,7 +20,7 @@ import {
 } from '@prisma/client'
 import { Getter } from '@tanstack/react-table'
 import { UserSession } from 'next-auth'
-import { unique } from './array'
+import { intersectArraysWithFallback, unique } from './array'
 import { formatNumber } from './number'
 import { hasActiveLicence, isInOrgaOrParent } from './organization'
 
@@ -267,16 +267,16 @@ export const getBaseFilteredEmissionSources = <T extends Pick<FullStudy['emissio
 /**
  * Computes emissions after applying filters coming from DB scope or UI selectors.
  */
-const getFilteredEmissions = (
+const getFilteredEmissionTotalValue = (
   study: Pick<FullStudy, 'emissionSources' | 'resultsUnit' | 'organizationVersion'>,
   validatedOnly: boolean,
   siteIds: string[],
   subPosts: SubPost[],
   tagIds: string[],
-  // isActionScope controls empty-array logic which is inverted in DB and in UI:
+  // emptyFilterIncludesAll controls empty-array logic which is inverted for DB scope and UI filters:
   //   - false (UI filters): empty = user selected nothing = no sources match = returns 0
   //   - true (scope from DB): empty = no scope saved = all sources pass
-  isActionScope: boolean,
+  emptyFilterIncludesAll: boolean,
 ): number => {
   const environment = study.organizationVersion.environment
   let filteredSources = study.emissionSources
@@ -285,15 +285,15 @@ const getFilteredEmissions = (
     filteredSources = filteredSources.filter((source) => source.validated)
   }
 
-  if (!isActionScope || siteIds.length > 0) {
+  if (!emptyFilterIncludesAll || siteIds.length > 0) {
     filteredSources = filteredSources.filter((source) => source.studySite && siteIds.includes(source.studySite.site.id))
   }
 
-  if (!isActionScope || subPosts.length > 0) {
+  if (!emptyFilterIncludesAll || subPosts.length > 0) {
     filteredSources = filteredSources.filter((source) => subPosts.includes(source.subPost))
   }
 
-  if (!isActionScope || tagIds.length > 0) {
+  if (!emptyFilterIncludesAll || tagIds.length > 0) {
     filteredSources = filteredSources.filter((source) => {
       const hasNoTags = source.emissionSourceTags.length === 0
       const untaggedSelected = tagIds.includes('other')
@@ -316,7 +316,7 @@ export const getUIFilteredEmissions = (
   siteIds: string[],
   subPosts: SubPost[],
   tagIds: string[],
-): number => getFilteredEmissions(study, validatedOnly, siteIds, subPosts, tagIds, false)
+): number => getFilteredEmissionTotalValue(study, validatedOnly, siteIds, subPosts, tagIds, false)
 
 const getActionFilteredEmissions = (
   study: Pick<FullStudy, 'emissionSources' | 'resultsUnit' | 'organizationVersion'>,
@@ -324,7 +324,7 @@ const getActionFilteredEmissions = (
   siteIds: string[],
   subPosts: SubPost[],
   tagIds: string[],
-): number => getFilteredEmissions(study, validatedOnly, siteIds, subPosts, tagIds, true)
+): number => getFilteredEmissionTotalValue(study, validatedOnly, siteIds, subPosts, tagIds, true)
 
 export const getActionReductionRatio = (
   study: Pick<FullStudy, 'emissionSources' | 'resultsUnit' | 'organizationVersion'>,
@@ -348,24 +348,9 @@ export const getActionReductionRatio = (
     return 1
   }
 
-  const intersectedSiteIds =
-    filterSiteIds.length > 0
-      ? actionSiteIds.length > 0
-        ? actionSiteIds.filter((id) => filterSiteIds.includes(id))
-        : filterSiteIds
-      : actionSiteIds
-  const intersectedSubPosts =
-    filterSubPosts.length > 0
-      ? actionSubPosts.length > 0
-        ? actionSubPosts.filter((sp) => filterSubPosts.includes(sp))
-        : filterSubPosts
-      : actionSubPosts
-  const intersectedTagIds =
-    filterTagIds.length > 0
-      ? actionTagIds.length > 0
-        ? actionTagIds.filter((id) => filterTagIds.includes(id))
-        : filterTagIds
-      : actionTagIds
+  const intersectedSiteIds = intersectArraysWithFallback(actionSiteIds, filterSiteIds)
+  const intersectedSubPosts = intersectArraysWithFallback(actionSubPosts, filterSubPosts)
+  const intersectedTagIds = intersectArraysWithFallback(actionTagIds, filterTagIds)
 
   const emissionsWithActionScopeAndFilters = getActionFilteredEmissions(
     study,

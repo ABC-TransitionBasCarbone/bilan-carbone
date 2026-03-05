@@ -65,6 +65,17 @@ export function sortByCustomOrder<T>(items: T[], customOrder: string[], getKey: 
   })
 }
 
+// If array1 is empty, return array2. If array2 is empty, return array1. Otherwise intersect.
+export const intersectArraysWithFallback = <T>(array1: T[], array2: T[]): T[] => {
+  if (array1.length === 0) {
+    return array2
+  }
+  if (array2.length === 0) {
+    return array1
+  }
+  return array1.filter((item) => array2.includes(item))
+}
+
 export const getTranslatedMapping = <T extends string>(values: T[], translations: Translations) => {
   return values.reduce(
     (acc, value) => {

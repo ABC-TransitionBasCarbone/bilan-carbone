@@ -15,18 +15,17 @@ import { FullStudy } from '@/db/study'
 import { TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
 import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { useTransitionPlan } from '@/hooks/useTransitionPlan'
 import { useTransitionPlanFilters } from '@/hooks/useTransitionPlanFilters'
 import { customRich } from '@/i18n/customRich'
 import { SectorPercentages } from '@/services/serverFunctions/trajectory.command'
 import { createTrajectoryWithObjectives, updateTrajectory } from '@/services/serverFunctions/trajectory.serverFunction'
 import { deleteTransitionPlan, initializeTransitionPlan } from '@/services/serverFunctions/transitionPlan'
-import { getStudyTotalCo2Emissions } from '@/services/study'
 import { calculateSectoralSNBCReductionRates } from '@/utils/snbc'
-import { getUIFilteredEmissions } from '@/utils/study'
-import { convertToPastStudies, getDefaultSnbcSectoralTrajectory } from '@/utils/trajectory'
+import { getDefaultSnbcSectoralTrajectory } from '@/utils/trajectory'
 import DeleteIcon from '@mui/icons-material/Delete'
 import type { ExternalStudy, SectenInfo, TransitionPlan } from '@prisma/client'
-import { SubPost, TrajectoryType } from '@prisma/client'
+import { TrajectoryType } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
@@ -79,11 +78,11 @@ const TransitionPlanInitPage = ({
   const [snbcMounted, setSnbcMounted] = useState(false)
   const {
     selectedSiteIds,
-    selectedPostIds,
+    selectedSubPosts,
     selectedTagIds,
     filtersMounted,
     setSelectedSiteIds,
-    setSelectedPostIds,
+    setSelectedSubPosts,
     setSelectedTagIds,
   } = useTransitionPlanFilters(study.id)
 
@@ -166,26 +165,15 @@ const TransitionPlanInitPage = ({
 
   const defaultSnbcSectoralTrajectory = useMemo(() => getDefaultSnbcSectoralTrajectory(trajectories), [trajectories])
 
-  const pastStudies = useMemo(
-    () => convertToPastStudies(linkedStudies, linkedExternalStudies, validatedOnly, study.resultsUnit),
-    [linkedStudies, linkedExternalStudies, validatedOnly, study.resultsUnit],
-  )
-
-  const studyTotalEmissions = useMemo(() => {
-    return getStudyTotalCo2Emissions(study, true, validatedOnly)
-  }, [study, validatedOnly])
-
-  const filteredStudyEmissions = useMemo(() => {
-    const subPosts = selectedPostIds.filter((id): id is SubPost => Object.values(SubPost).includes(id as SubPost))
-    return getUIFilteredEmissions(study, validatedOnly, selectedSiteIds, subPosts, selectedTagIds)
-  }, [study, validatedOnly, selectedSiteIds, selectedPostIds, selectedTagIds])
-
-  const filterRatio = studyTotalEmissions > 0 ? filteredStudyEmissions / studyTotalEmissions : 1
-
-  const filteredPastStudies = useMemo(
-    () => pastStudies.map((ps) => ({ ...ps, totalCo2: ps.totalCo2 * filterRatio })),
-    [pastStudies, filterRatio],
-  )
+  const { pastStudies, studyTotalEmissions, filteredStudyEmissions, filteredPastStudies } = useTransitionPlan({
+    study,
+    linkedStudies,
+    linkedExternalStudies,
+    validatedOnly,
+    selectedSiteIds,
+    selectedSubPosts,
+    selectedTagIds,
+  })
 
   const handleConfirmDelete = useCallback(async () => {
     await callServerFunction(() => deleteTransitionPlan(study.id), {
@@ -405,10 +393,10 @@ const TransitionPlanInitPage = ({
             <TransitionPlanFilters
               study={study}
               selectedSiteIds={selectedSiteIds}
-              selectedPostIds={selectedPostIds}
+              selectedSubPosts={selectedSubPosts}
               selectedTagIds={selectedTagIds}
               onSiteFilterChange={setSelectedSiteIds}
-              onPostFilterChange={setSelectedPostIds}
+              onSubPostFilterChange={setSelectedSubPosts}
               onTagFilterChange={setSelectedTagIds}
               filtersMounted={filtersMounted}
             />

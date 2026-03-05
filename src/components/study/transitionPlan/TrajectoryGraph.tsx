@@ -106,7 +106,10 @@ const TrajectoryGraph = ({
 
   const data = useMemo(() => {
     const trajectoryResult = calculateTrajectoriesWithHistory({
-      study,
+      studyId: study.id,
+      studyName: study.name,
+      studyStartDate: study.startDate,
+      studyResultsUnit: study.resultsUnit,
       totalCo2: studyEmissions,
       withDependencies: true,
       trajectories,

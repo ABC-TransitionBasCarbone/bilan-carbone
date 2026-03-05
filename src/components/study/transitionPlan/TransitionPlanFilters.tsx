@@ -14,10 +14,10 @@ import styles from './TransitionPlanFilters.module.css'
 interface Props {
   study: Pick<FullStudy, 'tagFamilies' | 'organizationVersion' | 'sites'>
   selectedSiteIds: string[]
-  selectedPostIds: string[]
+  selectedSubPosts: SubPost[]
   selectedTagIds: string[]
   onSiteFilterChange: (ids: string[]) => void
-  onPostFilterChange: (ids: string[]) => void
+  onSubPostFilterChange: (subPosts: SubPost[]) => void
   onTagFilterChange: (ids: string[]) => void
   filtersMounted: boolean
 }
@@ -25,10 +25,10 @@ interface Props {
 const TransitionPlanFilters = ({
   study,
   selectedSiteIds,
-  selectedPostIds,
+  selectedSubPosts,
   selectedTagIds,
   onSiteFilterChange,
-  onPostFilterChange,
+  onSubPostFilterChange,
   onTagFilterChange,
   filtersMounted,
 }: Props) => {
@@ -58,8 +58,8 @@ const TransitionPlanFilters = ({
       return
     }
     initializedRef.current = true
-    if (selectedPostIds.length === 0 && envSubPosts.length > 0) {
-      onPostFilterChange(envSubPosts.map((sp) => String(sp)))
+    if (selectedSubPosts.length === 0 && envSubPosts.length > 0) {
+      onSubPostFilterChange(envSubPosts)
     }
     if (selectedTagIds.length === 0 && allTagIds.length > 0) {
       onTagFilterChange(allTagIds)
@@ -71,19 +71,14 @@ const TransitionPlanFilters = ({
     allTagIds,
     envSubPosts,
     filtersMounted,
-    onPostFilterChange,
+    onSubPostFilterChange,
     onSiteFilterChange,
     onTagFilterChange,
-    selectedPostIds.length,
+    selectedSubPosts.length,
     selectedSiteIds.length,
     selectedTagIds.length,
     study.sites,
   ])
-
-  const selectedSubPosts = useMemo(
-    () => selectedPostIds.filter((id): id is SubPost => Object.values(SubPost).includes(id as SubPost)),
-    [selectedPostIds],
-  )
 
   const sites = useMemo(() => study.sites.map((s) => ({ id: s.site.id, name: s.site.name })), [study.sites])
 
@@ -106,7 +101,7 @@ const TransitionPlanFilters = ({
         envPosts={envPosts}
         envSubPosts={envSubPosts}
         selectedSubPosts={selectedSubPosts}
-        onChange={(subPosts) => onPostFilterChange(subPosts.map((sp) => String(sp)))}
+        onChange={onSubPostFilterChange}
       />
       <TagFilter
         tagFamilies={study.tagFamilies as StudyTagFamilyWithTags[]}

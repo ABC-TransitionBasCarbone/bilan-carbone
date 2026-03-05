@@ -4,13 +4,12 @@ import Block from '@/components/base/Block'
 import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
 import { FullStudy } from '@/db/study'
 import type { ActionWithRelations, TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
+import { useTransitionPlan } from '@/hooks/useTransitionPlan'
 import { useTransitionPlanFilters } from '@/hooks/useTransitionPlanFilters'
-import { getStudyTotalCo2Emissions } from '@/services/study'
-import { matchesScopeFilter } from '@/utils/scopeFilter'
-import { getActionReductionRatio, getUIFilteredEmissions } from '@/utils/study'
-import { convertToPastStudies, PastStudy } from '@/utils/trajectory'
-import type { ExternalStudy, SectenInfo } from '@prisma/client'
-import { SubPost } from '@prisma/client'
+import { scopeMatchesUIFilters } from '@/utils/scopeFilter'
+import { getActionReductionRatio } from '@/utils/study'
+import { PastStudy } from '@/utils/trajectory'
+import type { ExternalStudy, SectenInfo, SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useMemo } from 'react'
 import TrajectoryGraph from './TrajectoryGraph'
@@ -23,7 +22,7 @@ export interface TransitionPlanBaseChildProps {
   filteredTrajectories: TrajectoryWithObjectivesAndScope[]
   filteredActions: ActionWithRelations[]
   selectedSiteIds: string[]
-  selectedPostIds: string[]
+  selectedSubPosts: SubPost[]
   selectedTagIds: string[]
 }
 
@@ -68,35 +67,23 @@ const TransitionPlanBase = ({
   const tNav = useTranslations('nav')
   const {
     selectedSiteIds,
-    selectedPostIds,
+    selectedSubPosts,
     selectedTagIds,
     filtersMounted,
     setSelectedSiteIds,
-    setSelectedPostIds,
+    setSelectedSubPosts,
     setSelectedTagIds,
   } = useTransitionPlanFilters(study.id)
 
-  const pastStudies = useMemo(
-    () => convertToPastStudies(linkedStudies, linkedExternalStudies, validatedOnly, study.resultsUnit),
-    [linkedStudies, linkedExternalStudies, validatedOnly, study.resultsUnit],
-  )
-
-  const studyTotalEmissions = useMemo(
-    () => getStudyTotalCo2Emissions(study, true, validatedOnly),
-    [study, validatedOnly],
-  )
-
-  const filteredStudyEmissions = useMemo(() => {
-    const subPosts = selectedPostIds.filter((id): id is SubPost => Object.values(SubPost).includes(id as SubPost))
-    return getUIFilteredEmissions(study, validatedOnly, selectedSiteIds, subPosts, selectedTagIds)
-  }, [study, validatedOnly, selectedSiteIds, selectedPostIds, selectedTagIds])
-
-  const filterRatio = studyTotalEmissions > 0 ? filteredStudyEmissions / studyTotalEmissions : 1
-
-  const filteredPastStudies = useMemo(
-    () => pastStudies.map((ps) => ({ ...ps, totalCo2: ps.totalCo2 * filterRatio })),
-    [pastStudies, filterRatio],
-  )
+  const { filteredStudyEmissions, filteredPastStudies } = useTransitionPlan({
+    study,
+    linkedStudies,
+    linkedExternalStudies,
+    validatedOnly,
+    selectedSiteIds,
+    selectedSubPosts,
+    selectedTagIds,
+  })
 
   const filteredTrajectories = useMemo(
     () =>
@@ -107,34 +94,32 @@ const TransitionPlanBase = ({
           if (!hasScope) {
             return true
           }
-          return matchesScopeFilter(
+          return scopeMatchesUIFilters(
             obj.sites.map((s) => s.studySite.siteId),
             obj.subPosts.map((sp) => sp.subPost),
             obj.tags.map((tag) => tag.studyTag.id),
             selectedSiteIds,
-            selectedPostIds,
+            selectedSubPosts,
             selectedTagIds,
           )
         }),
       })),
-    [trajectories, selectedSiteIds, selectedPostIds, selectedTagIds],
+    [trajectories, selectedSiteIds, selectedSubPosts, selectedTagIds],
   )
 
   const filteredActions = useMemo(() => {
-    if (selectedSiteIds.length === 0 || selectedPostIds.length === 0 || selectedTagIds.length === 0) {
+    if (selectedSiteIds.length === 0 || selectedSubPosts.length === 0 || selectedTagIds.length === 0) {
       return []
     }
 
-    const filterSubPosts = selectedPostIds.filter((id): id is SubPost => Object.values(SubPost).includes(id as SubPost))
-
     return actions
       .filter((action) =>
-        matchesScopeFilter(
+        scopeMatchesUIFilters(
           action.sites?.map((s) => s.studySite.siteId) ?? [],
           action.subPosts?.map((sp) => sp.subPost) ?? [],
           action.tags?.map((tag) => tag.studyTag.id) ?? [],
           selectedSiteIds,
-          selectedPostIds,
+          selectedSubPosts,
           selectedTagIds,
         ),
       )
@@ -149,12 +134,12 @@ const TransitionPlanBase = ({
           action.subPosts.map((sp) => sp.subPost),
           action.tags.map((tag) => tag.studyTag.id),
           selectedSiteIds,
-          filterSubPosts,
+          selectedSubPosts,
           selectedTagIds,
         )
         return { ...action, reductionValueKg: action.reductionValueKg * ratio }
       })
-  }, [actions, study, validatedOnly, selectedSiteIds, selectedPostIds, selectedTagIds])
+  }, [actions, study, validatedOnly, selectedSiteIds, selectedSubPosts, selectedTagIds])
 
   return (
     <>
@@ -178,10 +163,10 @@ const TransitionPlanBase = ({
           <TransitionPlanFilters
             study={study}
             selectedSiteIds={selectedSiteIds}
-            selectedPostIds={selectedPostIds}
+            selectedSubPosts={selectedSubPosts}
             selectedTagIds={selectedTagIds}
             onSiteFilterChange={setSelectedSiteIds}
-            onPostFilterChange={setSelectedPostIds}
+            onSubPostFilterChange={setSelectedSubPosts}
             onTagFilterChange={setSelectedTagIds}
             filtersMounted={filtersMounted}
           />
@@ -215,7 +200,7 @@ const TransitionPlanBase = ({
             filteredTrajectories,
             filteredActions,
             selectedSiteIds,
-            selectedPostIds,
+            selectedSubPosts,
             selectedTagIds,
           })}
         </div>
