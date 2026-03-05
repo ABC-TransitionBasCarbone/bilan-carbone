@@ -20,7 +20,7 @@ import {
 } from '@prisma/client'
 import { Getter } from '@tanstack/react-table'
 import { UserSession } from 'next-auth'
-import { intersectArraysWithFallback, unique } from './array'
+import { unique } from './array'
 import { formatNumber } from './number'
 import { hasActiveLicence, isInOrgaOrParent } from './organization'
 
@@ -348,11 +348,21 @@ export const getActionReductionRatio = (
     return 1
   }
 
-  const intersectedSiteIds = intersectArraysWithFallback(actionSiteIds, filterSiteIds)
-  const intersectedSubPosts = intersectArraysWithFallback(actionSubPosts, filterSubPosts)
-  const intersectedTagIds = intersectArraysWithFallback(actionTagIds, filterTagIds)
+  const getUiFiltersWithScope = <T>(scope: T[], filters: T[]): T[] => {
+    if (scope.length === 0) {
+      return filters
+    }
+    if (filters.length === 0) {
+      return []
+    }
+    return scope.filter((item) => filters.includes(item))
+  }
 
-  const emissionsWithActionScopeAndFilters = getActionFilteredEmissions(
+  const intersectedSiteIds = getUiFiltersWithScope(actionSiteIds, filterSiteIds)
+  const intersectedSubPosts = getUiFiltersWithScope(actionSubPosts, filterSubPosts)
+  const intersectedTagIds = getUiFiltersWithScope(actionTagIds, filterTagIds)
+
+  const emissionsWithActionScopeAndFilters = getUIFilteredEmissions(
     study,
     validatedOnly,
     intersectedSiteIds,
