@@ -20,8 +20,9 @@ import { customRich } from '@/i18n/customRich'
 import { SectorPercentages } from '@/services/serverFunctions/trajectory.command'
 import { createTrajectoryWithObjectives, updateTrajectory } from '@/services/serverFunctions/trajectory.serverFunction'
 import { deleteTransitionPlan, initializeTransitionPlan } from '@/services/serverFunctions/transitionPlan'
-import { getFilteredStudyEmissions, getStudyTotalCo2Emissions } from '@/services/study'
+import { getStudyTotalCo2Emissions } from '@/services/study'
 import { calculateSectoralSNBCReductionRates } from '@/utils/snbc'
+import { getUIFilteredEmissions } from '@/utils/study'
 import { convertToPastStudies, getDefaultSnbcSectoralTrajectory } from '@/utils/trajectory'
 import DeleteIcon from '@mui/icons-material/Delete'
 import type { ExternalStudy, SectenInfo, TransitionPlan } from '@prisma/client'
@@ -176,7 +177,7 @@ const TransitionPlanInitPage = ({
 
   const filteredStudyEmissions = useMemo(() => {
     const subPosts = selectedPostIds.filter((id): id is SubPost => Object.values(SubPost).includes(id as SubPost))
-    return getFilteredStudyEmissions(study, validatedOnly, selectedSiteIds, subPosts, selectedTagIds)
+    return getUIFilteredEmissions(study, validatedOnly, selectedSiteIds, subPosts, selectedTagIds)
   }, [study, validatedOnly, selectedSiteIds, selectedPostIds, selectedTagIds])
 
   const filterRatio = studyTotalEmissions > 0 ? Math.min(1, filteredStudyEmissions / studyTotalEmissions) : 1
@@ -410,7 +411,6 @@ const TransitionPlanInitPage = ({
               onPostFilterChange={setSelectedPostIds}
               onTagFilterChange={setSelectedTagIds}
               filtersMounted={filtersMounted}
-              showSiteFilter
             />
             <TrajectoryGraph
               study={study}

@@ -1,4 +1,5 @@
 import { FullStudy } from '@/db/study'
+import { getEmissionResults, getEmissionSourcesTotalCo2 } from '@/services/emissionSource'
 import { isAdminOnStudyOrga } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
@@ -262,3 +263,115 @@ export const getBaseFilteredEmissionSources = <T extends Pick<FullStudy['emissio
       !emissionSource.emissionFactor.base ||
       emissionSource.emissionFactor.base === base,
   )
+
+// Computes emissions after applying scope filters.
+// isActionScope controls empty-array logic which is inverted in DB and in UI:
+//   - false (UI filters): empty = user selected nothing = no sources match = returns 0
+//   - true (scope from DB): empty = no scope saved = all sources pass
+const getFilteredEmissions = (
+  study: Pick<FullStudy, 'emissionSources' | 'resultsUnit' | 'organizationVersion'>,
+  validatedOnly: boolean,
+  siteIds: string[],
+  subPosts: SubPost[],
+  tagIds: string[],
+  isActionScope: boolean,
+): number => {
+  const environment = study.organizationVersion.environment
+  let filteredSources = study.emissionSources
+
+  if (validatedOnly) {
+    filteredSources = filteredSources.filter((source) => source.validated)
+  }
+
+  if (!isActionScope || siteIds.length > 0) {
+    filteredSources = filteredSources.filter((source) => source.studySite && siteIds.includes(source.studySite.site.id))
+  }
+
+  if (!isActionScope || subPosts.length > 0) {
+    filteredSources = filteredSources.filter((source) => subPosts.includes(source.subPost))
+  }
+
+  if (!isActionScope || tagIds.length > 0) {
+    filteredSources = filteredSources.filter((source) => {
+      const hasNoTags = source.emissionSourceTags.length === 0
+      const untaggedSelected = tagIds.includes('other')
+      return (hasNoTags && untaggedSelected) || source.emissionSourceTags.some((t) => tagIds.includes(t.tag.id))
+    })
+  }
+
+  const emissionSourcesWithEmission = filteredSources.map((source) => ({
+    ...source,
+    ...getEmissionResults(source, environment),
+  }))
+
+  const totalCo2InKg = getEmissionSourcesTotalCo2(emissionSourcesWithEmission)
+  return totalCo2InKg / STUDY_UNIT_VALUES[study.resultsUnit]
+}
+
+export const getUIFilteredEmissions = (
+  study: Pick<FullStudy, 'emissionSources' | 'resultsUnit' | 'organizationVersion'>,
+  validatedOnly: boolean,
+  siteIds: string[],
+  subPosts: SubPost[],
+  tagIds: string[],
+): number => getFilteredEmissions(study, validatedOnly, siteIds, subPosts, tagIds, false)
+
+const getActionFilteredEmissions = (
+  study: Pick<FullStudy, 'emissionSources' | 'resultsUnit' | 'organizationVersion'>,
+  validatedOnly: boolean,
+  siteIds: string[],
+  subPosts: SubPost[],
+  tagIds: string[],
+): number => getFilteredEmissions(study, validatedOnly, siteIds, subPosts, tagIds, true)
+
+export const getActionReductionRatio = (
+  study: Pick<FullStudy, 'emissionSources' | 'resultsUnit' | 'organizationVersion'>,
+  validatedOnly: boolean,
+  actionSiteIds: string[],
+  actionSubPosts: SubPost[],
+  actionTagIds: string[],
+  filterSiteIds: string[],
+  filterSubPosts: SubPost[],
+  filterTagIds: string[],
+): number => {
+  const emissionsWithActionScope = getActionFilteredEmissions(
+    study,
+    validatedOnly,
+    actionSiteIds,
+    actionSubPosts,
+    actionTagIds,
+  )
+
+  if (emissionsWithActionScope === 0) {
+    return 1
+  }
+
+  const intersectedSiteIds =
+    filterSiteIds.length > 0
+      ? actionSiteIds.length > 0
+        ? actionSiteIds.filter((id) => filterSiteIds.includes(id))
+        : filterSiteIds
+      : actionSiteIds
+  const intersectedSubPosts =
+    filterSubPosts.length > 0
+      ? actionSubPosts.length > 0
+        ? actionSubPosts.filter((sp) => filterSubPosts.includes(sp))
+        : filterSubPosts
+      : actionSubPosts
+  const intersectedTagIds =
+    filterTagIds.length > 0
+      ? actionTagIds.length > 0
+        ? actionTagIds.filter((id) => filterTagIds.includes(id))
+        : filterTagIds
+      : actionTagIds
+
+  const emissionsWithActionScopeAndFilters = getActionFilteredEmissions(
+    study,
+    validatedOnly,
+    intersectedSiteIds,
+    intersectedSubPosts,
+    intersectedTagIds,
+  )
+
+  return emissionsWithActionScopeAndFilters / emissionsWithActionScope
+}

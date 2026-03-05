@@ -955,39 +955,6 @@ export const getStudyTotalCo2Emissions = (
   return totalCo2InKg / STUDY_UNIT_VALUES[study.resultsUnit]
 }
 
-export const getFilteredStudyEmissions = (
-  study: FullStudy,
-  validatedOnly: boolean,
-  siteIds: string[],
-  subPosts: SubPost[],
-  tagIds: string[],
-): number => {
-  const environment = study.organizationVersion.environment
-  let filteredSources = study.emissionSources
-
-  if (validatedOnly) {
-    filteredSources = filteredSources.filter((source) => source.validated)
-  }
-
-  filteredSources = filteredSources.filter((source) => source.studySite && siteIds.includes(source.studySite.site.id))
-
-  filteredSources = filteredSources.filter((source) => subPosts.includes(source.subPost))
-
-  filteredSources = filteredSources.filter((source) => {
-    const hasNoTags = source.emissionSourceTags.length === 0
-    const untaggedSelected = tagIds.includes('other')
-    return (hasNoTags && untaggedSelected) || source.emissionSourceTags.some((t) => tagIds.includes(t.tag.id))
-  })
-
-  const emissionSourcesWithEmission = filteredSources.map((source) => ({
-    ...source,
-    ...getEmissionResults(source, environment),
-  }))
-
-  const totalCo2InKg = getEmissionSourcesTotalCo2(emissionSourcesWithEmission)
-  return totalCo2InKg / STUDY_UNIT_VALUES[study.resultsUnit]
-}
-
 export const getTransEnvironmentSubPost = (source: Environment, target: Environment, subPost: SubPost) => {
   if (source === target) {
     return subPost

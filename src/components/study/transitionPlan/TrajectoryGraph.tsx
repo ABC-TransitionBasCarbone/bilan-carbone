@@ -68,7 +68,6 @@ const TrajectoryGraph = ({
   showActionTrajectory = true,
   titleAction,
   storageKey,
-  isTrajectoryPage = false,
 }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectories.graph')
   const tUnit = useTranslations('study.results.units')
@@ -513,7 +512,7 @@ const TrajectoryGraph = ({
           traj.trajectoryData
 
         let baseColor: string
-        if (isTrajectoryPage && traj.type) {
+        if (traj.type) {
           const shadeIndex = typeShadeCounters[traj.type] ?? 0
           typeShadeCounters[traj.type] = shadeIndex + 1
           if (traj.type === TrajectoryType.SBTI_15) {
@@ -690,7 +689,6 @@ const TrajectoryGraph = ({
     studyStartYearIndex,
     name,
     yearsToDisplay,
-    isTrajectoryPage,
   ])
 
   const failedTrajectories = useMemo(() => {

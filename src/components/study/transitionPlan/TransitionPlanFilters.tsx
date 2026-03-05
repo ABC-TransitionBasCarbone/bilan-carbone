@@ -3,13 +3,13 @@
 import MultiSelectAll from '@/components/base/MultiSelectAll'
 import { PostSubPostFilter } from '@/components/form/PostSubPostFilter'
 import { TagFilter } from '@/components/form/TagFilter'
-import SelectStudySite from '@/components/study/site/SelectStudySite'
 import { FullStudy, StudyTagFamilyWithTags } from '@/db/study'
 import { environmentSubPostsMapping, Post, subPostsByPost } from '@/services/posts'
 import { FormControl, InputLabel } from '@mui/material'
 import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useRef } from 'react'
+import styles from './TransitionPlanFilters.module.css'
 
 interface Props {
   study: Pick<FullStudy, 'tagFamilies' | 'organizationVersion' | 'sites'>
@@ -20,7 +20,6 @@ interface Props {
   onPostFilterChange: (ids: string[]) => void
   onTagFilterChange: (ids: string[]) => void
   filtersMounted: boolean
-  showSiteFilter?: boolean
 }
 
 const TransitionPlanFilters = ({
@@ -32,7 +31,6 @@ const TransitionPlanFilters = ({
   onPostFilterChange,
   onTagFilterChange,
   filtersMounted,
-  showSiteFilter = false,
 }: Props) => {
   const tCommon = useTranslations('common')
   const initializedRef = useRef(false)
@@ -66,10 +64,21 @@ const TransitionPlanFilters = ({
     if (selectedTagIds.length === 0 && allTagIds.length > 0) {
       onTagFilterChange(allTagIds)
     }
-    if (showSiteFilter && selectedSiteIds.length === 0 && study.sites.length > 0) {
+    if (selectedSiteIds.length === 0 && study.sites.length > 0) {
       onSiteFilterChange(study.sites.map((s) => s.site.id))
     }
-  }, [filtersMounted]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [
+    allTagIds,
+    envSubPosts,
+    filtersMounted,
+    onPostFilterChange,
+    onSiteFilterChange,
+    onTagFilterChange,
+    selectedPostIds.length,
+    selectedSiteIds.length,
+    selectedTagIds.length,
+    study.sites,
+  ])
 
   const selectedSubPosts = useMemo(
     () => selectedPostIds.filter((id): id is SubPost => Object.values(SubPost).includes(id as SubPost)),
@@ -80,23 +89,19 @@ const TransitionPlanFilters = ({
 
   return (
     <div className="flex gapped1">
-      {showSiteFilter ? (
-        <FormControl disabled={sites.length === 0}>
-          <InputLabel id="transition-plan-site-filter-label" shrink>
-            {tCommon('sites')}
-          </InputLabel>
-          <MultiSelectAll
-            id="transition-plan-site-filter"
-            values={selectedSiteIds}
-            allValues={sites.map((s) => s.id)}
-            setValues={onSiteFilterChange}
-            getLabel={(id) => sites.find((s) => s.id === id)?.name ?? id}
-            label={tCommon('sites')}
-          />
-        </FormControl>
-      ) : (
-        <SelectStudySite sites={study.sites} siteSelectionDisabled isTransitionPlan />
-      )}
+      <FormControl disabled={sites.length === 0} className={styles.siteFilter}>
+        <InputLabel id="transition-plan-site-filter-label" shrink>
+          {tCommon('sites')}
+        </InputLabel>
+        <MultiSelectAll
+          id="transition-plan-site-filter"
+          values={selectedSiteIds}
+          allValues={sites.map((s) => s.id)}
+          setValues={onSiteFilterChange}
+          getLabel={(id) => sites.find((s) => s.id === id)?.name ?? id}
+          label={tCommon('sites')}
+        />
+      </FormControl>
       <PostSubPostFilter
         envPosts={envPosts}
         envSubPosts={envSubPosts}

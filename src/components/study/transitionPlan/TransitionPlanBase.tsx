@@ -5,8 +5,9 @@ import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
 import { FullStudy } from '@/db/study'
 import type { ActionWithRelations, TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
 import { useTransitionPlanFilters } from '@/hooks/useTransitionPlanFilters'
-import { getFilteredStudyEmissions, getStudyTotalCo2Emissions } from '@/services/study'
+import { getStudyTotalCo2Emissions } from '@/services/study'
 import { matchesScopeFilter } from '@/utils/scopeFilter'
+import { getActionReductionRatio, getUIFilteredEmissions } from '@/utils/study'
 import { convertToPastStudies, PastStudy } from '@/utils/trajectory'
 import type { ExternalStudy, SectenInfo } from '@prisma/client'
 import { SubPost } from '@prisma/client'
@@ -87,7 +88,7 @@ const TransitionPlanBase = ({
 
   const filteredStudyEmissions = useMemo(() => {
     const subPosts = selectedPostIds.filter((id): id is SubPost => Object.values(SubPost).includes(id as SubPost))
-    return getFilteredStudyEmissions(study, validatedOnly, selectedSiteIds, subPosts, selectedTagIds)
+    return getUIFilteredEmissions(study, validatedOnly, selectedSiteIds, subPosts, selectedTagIds)
   }, [study, validatedOnly, selectedSiteIds, selectedPostIds, selectedTagIds])
 
   const filterRatio = studyTotalEmissions > 0 ? Math.min(1, filteredStudyEmissions / studyTotalEmissions) : 1
@@ -117,9 +118,15 @@ const TransitionPlanBase = ({
     [trajectories, selectedSiteIds, selectedPostIds, selectedTagIds],
   )
 
-  const filteredActions = useMemo(
-    () =>
-      actions.filter((action) =>
+  const filteredActions = useMemo(() => {
+    if (selectedSiteIds.length === 0 || selectedPostIds.length === 0 || selectedTagIds.length === 0) {
+      return []
+    }
+
+    const filterSubPosts = selectedPostIds.filter((id): id is SubPost => Object.values(SubPost).includes(id as SubPost))
+
+    return actions
+      .filter((action) =>
         matchesScopeFilter(
           action.sites?.map((s) => s.studySite.siteId) ?? [],
           action.subPosts?.map((sp) => sp.subPost) ?? [],
@@ -128,9 +135,24 @@ const TransitionPlanBase = ({
           selectedPostIds,
           selectedTagIds,
         ),
-      ),
-    [actions, selectedSiteIds, selectedPostIds, selectedTagIds],
-  )
+      )
+      .map((action) => {
+        if (action.reductionValueKg === null) {
+          return action
+        }
+        const ratio = getActionReductionRatio(
+          study,
+          validatedOnly,
+          action.sites.map((s) => s.studySite.siteId),
+          action.subPosts.map((sp) => sp.subPost),
+          action.tags.map((tag) => tag.studyTag.id),
+          selectedSiteIds,
+          filterSubPosts,
+          selectedTagIds,
+        )
+        return { ...action, reductionValueKg: action.reductionValueKg * ratio }
+      })
+  }, [actions, study, validatedOnly, selectedSiteIds, selectedPostIds, selectedTagIds])
 
   return (
     <>
