@@ -62,15 +62,19 @@
       "glossary": {
         "validatorEmailDescription": "Kao učenik imam pristup kao suradnik jednom ili više emisijskih mjesta.",
         "duplicationOptionsDescription": "Pri dupliciranju studije možete odabrati pozvati iste članove tima i učenike iz izvornog studija u novi. To pomaže održati kontinuitet suradnje."
-      }
-    },
-    "newContributor": {
-      "title": "Dodaj učenika u studiju: {name}"
+      },
+      "etp": "Broj osoblja (nastavno i nenastavno)",
+      "goToDataEntry": "Prijelaz na unos podataka",
+      "studentNumber": "Broj učenika",
+      "superficy": "Površina ustanove"
     },
     "role": {
       "Contributor": "Učenik"
     },
     "rights": {
+      "newContributor": {
+        "title": "Dodaj učenika u studiju: {name}"
+      },
       "contributorsTable": {
         "delete": "Ukloni učenika",
         "title": "Učenici",
@@ -82,11 +86,73 @@
           "description": "Ovdje možete upravljati učenicima u svom studiju. Imat će pristup određenim mjestima i podmjestima (koje možete definirati) te će moći popuniti određene informacije za izvore emisija koje ste već kreirali u studiju. Za više informacija o sučelju suradnika pogledajte <link>FAQ</link>."
         }
       }
+    },
+    "export": {
+      "export": "Izvezi moj otisak"
+    },
+    "pdf": {
+      "loading": "Učitavanje podataka...",
+      "title": "Sažetak emisija {year}",
+      "results": {
+        "all": "Rezultati"
+      },
+      "labels": {
+        "studentNumber": "Broj učenika",
+        "etp": "Broj osoblja",
+        "superficy": "Površina",
+        "establishmentYear": "Godina otvaranja"
+      },
+      "charts": {
+        "siteEmissions": "Emisije u tCO2e ustanove {site} u {year}"
+      },
+      "questions": {
+        "goals-title": "CILJEVI",
+        "goals-subtitle": "Predstavlja ciljeve vaše akcije (podizanje svijesti, smanjenje emisija...). Je li to kratkoročna ili strateška akcija?",
+        "shareholders-title": "NOSITELJI AKCIJE",
+        "shareholders-subtitle": "Jeste li odredili tim koji će svakodnevno i dugoročno voditi akciju? Navedite njihova imena i uloge/funkcije.",
+        "otherStakeholders-title": "DRUGE ZAINTERESIRANE STRANE",
+        "otherStakeholders-subtitle": "Ovdje razlikujte interne i eksterne zainteresirane strane. Oni neće svakodnevno voditi akciju, ali će vam pomoći, primjerice, dostaviti račune za električnu energiju. To može biti upravitelj vaše ustanove ili vaša zajednica.",
+        "ressourcesToBeImplemented-title": "SREDSTVA ZA PROVEDBU",
+        "ressourcesToBeImplemented-subtitle": "Koje korake i sredstva treba koristiti? To mogu biti ljudski, materijalni, financijski resursi... Dobro izradite ovaj dio, on je ključan!",
+        "monitoringIndicators-title": "POKAZATELJI PRAĆENJA",
+        "monitoringIndicators-subtitle": "Ovdje upišite pokazatelje na temelju kojih ćete za 6 mjeseci / 1 godinu procijeniti uspjeh vaše akcije. Primjer: % smanjenja emisije stakleničkih plinova",
+        "estimatedCarbonImpacts-title": "PROCJENJENI KARBONSKI UTJECAJI",
+        "estimatedCarbonImpacts-subtitle": "U kojoj mjeri vaša akcija omogućuje smanjenje emisije stakleničkih plinova?",
+        "otherEstimatedEnvironmentalImpacts-title": "DRUGI PROCJENJENI EKOLOŠKI UTJECAJI",
+        "otherEstimatedEnvironmentalImpacts-subtitle": "Razmislite o pozitivnim ili negativnim utjecajima vaše akcije na bioraznolikost, vodu, otpad...",
+        "estimatedSocialImpacts-title": "PROCJENJENI DRUŠTVENI UTJECAJI",
+        "estimatedSocialImpacts-subtitle": "Ovdje pokušavamo saznati omogućuje li akcija smanjenje eko-anksioznosti, poticanje učenja, smanjenje napuštanja škole, poticanje uključivanja mladih...",
+        "calendar-title": "KALENDAR",
+        "calendar-subtitle": "Ovdje upišite glavne korake vaše akcije, pažljivo odaberite vremenski okvir!"
+      },
+      "additionalInfo": "Rezultati koje ovdje dobivate su pojednostavljeni izračun ugljičnog otiska vaše ustanove i ne udovoljavaju zahtjevima Bilan Carbone® niti važećim propisima. Ovi rezultati imaju za cilj pomoći vam u razumijevanju klimatskih izazova i identificiranju vaših prioriteta za djelovanje. Imaju uglavnom obrazovnu vrijednost, izračun ugljičnog otiska vaše ustanove putem našeg alata predstavlja prvi korak u prilagodbi na posljedice klimatskih promjena."
+    },
+    "results": {
+      "carbonIntensities": "Individualni ugljični otisak"
     }
   },
   "emissionFactors": {
     "post": {
-      "Restauration": "Prehrana / Ugostiteljstvo"
+      "Restauration": "Prehrana / Ugostiteljstvo",
+      "AutresGaz": "Ostali plinovi",
+      "Combustibles": "Goriva",
+      "Construction": "Izgradnja",
+      "DechetsRecyclables": "Reciklabilni otpad",
+      "DeplacementsClickson": "Putovanja",
+      "DistributeursAutomatiques": "Automati",
+      "EnergiesClickson": "Energija",
+      "EquipementsDeSport": "Sportska oprema",
+      "EquipementsDivers": "Razna oprema (kućanski aparati, profesionalna oprema...)",
+      "EquipementsInformatiqueAudiovisuel": "Informatička / audiovizualna oprema",
+      "Fournitures": "Potrošni materijal",
+      "ImmobilisationsClickson": "Imobilizacije",
+      "OrduresMenageresResiduelles": "Ostali kućni otpad",
+      "ProduitsChimiques": "Kemijski proizvodi",
+      "Renovation": "Obnova",
+      "TransportDesEleves": "Prijevoz učenika",
+      "TransportDuPersonnel": "Prijevoz osoblja",
+      "TypesDeRepasServis": "Vrste posluženih obroka",
+      "VoyagesScolaires": "Školska putovanja"
     }
   },
   "organization": {
@@ -94,13 +160,33 @@
       "myOrganization": "Moje ustanove"
     },
     "form": {
-      "editTitle": "Uredi moje ustanove"
+      "editTitle": "Uredi moje ustanove",
+      "name": "Naziv ustanove"
     },
     "sites": {
       "title": "Koje ustanove treba pokriti otisak?",
       "noSites": "Nema konfiguriranih ustanova",
       "namePlaceholder": "Naziv ustanove",
-      "add": "Dodaj ustanovu"
+      "add": "Dodaj ustanovu",
+      "academy": "Akademija",
+      "academyPlaceholder": "Akademija ustanove",
+      "establishmentType": {
+        "title": "Vrsta ustanove",
+        "COLLEGE": "Srednja škola",
+        "LYCEE_GENERAL": "Opća i tehnološka srednja škola",
+        "LYCEE_PRO": "Strukovna srednja škola",
+        "LYCEE_PRO_AGRICOLE": "Poljoprivredna strukovna srednja škola",
+        "ETABLISSEMENT_FR_ETRANGER": "Francuska obrazovna ustanova u inozemstvu"
+      },
+      "establishmentYear": "Godina izgradnje",
+      "establishmentYearPlaceholder": "Godina izgradnje ustanove",
+      "etp": "Broj osoblja",
+      "etpPlaceholder": "Ukupan broj osoblja",
+      "glossary": {
+        "informations": "Potrebno je unijeti ove podatke prije nastavka. Ove informacije utječu na izračun vašeg ugljičnog otiska (posebno stavku imobilizacije)"
+      },
+      "studentNumber": "Broj učenika",
+      "studentNumberPlaceholder": "Ukupan broj učenika"
     }
   },
   "login": {
@@ -124,7 +210,12 @@
     "Not known school": "Pronađite i odaberite svoju ustanovu.",
     "validation": {
       "schoolPostalCodeOrName": "Molimo unesite poštanski broj ili ime škole"
-    }
+    },
+    "city": "Grad",
+    "cityPlaceholder": "Grad u kojem se nalazi škola",
+    "country": "Vaša zemlja",
+    "schoolName": "Naziv škole",
+    "schoolNamePlaceholder": "Naziv škole"
   },
   "email": {
     "subject": {
@@ -133,5 +224,24 @@
       "activation": "Aktivirali ste svoj račun na Clicksonu",
       "activationRequest": "Zahtjev za pristup vašoj Clickson organizaciji"
     }
+  },
+  "comments": {
+    "title": "Upravljanje komentarima",
+    "noComments": "Nemate komentara za obradu",
+    "yourComment": "Vaš komentar...",
+    "validated": "Potvrđeno",
+    "pending": "Na čekanju",
+    "addComment": "Dodaj komentar"
+  },
+  "error": {
+    "Too many comments": "Već imate previše komentara na čekanju"
+  },
+  "ressources": {
+    "knowMoreDataCollect": "Za više informacija o prikupljanju podataka vaše ustanove:",
+    "guideDataCollect": "Vodič za prikupljanje podataka",
+    "toolsDataCollect": "Alati za prikupljanje podataka:",
+    "modelsDataCollect": "Predlošci za prikupljanje podataka",
+    "game": "Igra: uvod u pregovaranje o svom planu djelovanja:",
+    "classEarth": "Moja Zemlja u razredu"
   }
 }

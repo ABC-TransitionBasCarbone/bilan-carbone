@@ -1,0 +1,33 @@
+{
+  "publicodes-layout": {
+    "table": {
+      "IntrantsServices": {
+        "question": "How much did you spend on the following intangible services?",
+        "typeService": "Type of service",
+        "montantDepense": "Amount spent"
+      },
+      "IntrantsBiensEtMatieresTilt": {
+        "question": "How much did you spend on the following goods?",
+        "typeService": "Type of good",
+        "montantDepense": "Amount spent"
+      },
+      "TransportDeMarchandises": {
+        "question": "Where do your deliveries come from?",
+        "typeProvenance": "Origin",
+        "pourcentageLivraisons": "Percentage of deliveries"
+      },
+      "DechetsDirects": {
+        "question": "What quantities of the following waste are thrown away each year?",
+        "typeDéchets": "Type of waste",
+        "poids": "Quantity discarded"
+      },
+      "EquipementsEtImmobilisations": {
+        "question": "For each of these IT equipments, please indicate how many have been owned or leased for less than 3 years:",
+        "typeEquipement": "Type of equipment",
+        "nombreEquipement": "Quantity"
+      }
+    },
+    "group": {},
+    "list": {}
+  }
+}

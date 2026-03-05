@@ -1,6 +1,7 @@
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import { customRich } from '@/i18n/customRich'
 import {
+  hasAccessToHomeSubtitle,
   hasHomeAlert,
   hasStartLinkOnFootprints,
   isTilt,
@@ -48,6 +49,11 @@ const UserView = async ({ account }: Props) => {
             <Typography data-testid="title" variant="h4" className={styles.titleInBox}>
               {title}
             </Typography>
+            {hasAccessToHomeSubtitle(account.environment) && (
+              <Typography variant="h5" className={styles.titleInBox}>
+                {t('subtitle')}
+              </Typography>
+            )}
             {Array.from({ length: infoLength }, (_, i) => (
               <Box key={i} className={classNames('flex align-center', styles.bulletPoint)}>
                 <Typography>{i + 1}.</Typography>

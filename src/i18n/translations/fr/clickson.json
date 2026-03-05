@@ -1,42 +1,55 @@
 {
   "nav": {
-    "newStudyContributor": "Ajouter un·e élève"
+    "newStudyContributor": "Ajouter un·e élève",
+    "team": "Équipe pilote"
   },
   "navigation": {
     "organizations": "Mes Empreintes carbone",
-    "organization": "L'équipe pilote",
-    "information": "Mon établissement",
+    "organization": "Mon établissement",
+    "information": "Informations générales",
     "team": "L'équipe pilote"
   },
   "home": {
     "navigation": {
       "collaborators": {
-        "title": "L'équipe Pilote",
-        "message": "Retrouvez ici la liste des enseignants, personnels administratifs et élèves autorisés à modifier les données de l'établissement"
+        "title": "Mon équipe pilote",
+        "message": "Retrouvez ici la liste des élèves, enseignants et personnels non-éducatifs autorisés à modifier les données de l'établissement"
       },
       "footprints": {
-        "title": "Mes Empreintes",
-        "message": "Créer votre première empreinte ici. Vous pourrez ensuite consulter vos empreintes ou en créer de nouvelles à tout moment."
+        "title": "Mes empreintes carbone",
+        "message": "C'est ici que vous renseignez et consultez votre empreinte carbone en cours et celles archivées."
       },
       "sites": {
         "title": "Mon Établissement",
         "message": "Retrouvez ici l'établissement rattaché à votre compte"
       }
     },
-    "title": "Calculer votre empreinte carbone simplifiée vous permettra de :",
+    "title": "Bienvenue dans le calculateur PEBC / Clicks On Act !",
+    "subtitle": "Calculer l'empreinte carbone de votre établissement, c'est :",
     "alert": {
-      "info": "Le calculateur Clickson vous permet d’estimer l’impact sur le climat de votre activité. Il s’agit avant tout d’un outil de sensibilisation. Il ne s'agit pas d'une démarche de transition bas carbone mais d'une empreinte carbone simplifiée — au sens du <link>Guide de communication autour de la comptabilité carbone</link> — centrée sur les principaux postes d’émissions liés à l’activité de l'établissement."
+      "info": "La calculateur PEBC / Clicks On Act est un outil de sensibilisation et vous permet d'estimer les impacts carbone de votre établissement. Il ne s'agit pas d'une démarche de transition bas carbone répondant à la réglementation française mais du calcul d'une empreinte carbone simplifiée — au sens <link>du Guide de communication autour de la comptabilité carbone</link> — centrée sur les principaux postes d'émissions liés à l'activité de l'établissement."
     },
     "info": {
-      "0": "Comprendre la mesure d’impact de votre établissement",
-      "1": "Identifier les priorités d’action",
-      "2": "À long terme, et via un travail plus approfondi, construire une trajectoire de réduction"
+      "0": "Comprendre les impacts de vos émissions de gaz à effet de serre",
+      "1": "Identifier vos priorités d'action",
+      "2": "A long terme, construire une trajectoire de réduction de vos émissions et développer un plan de transition"
     }
   },
   "team": {
+    "delete": "Supprimer l'administrateur·rice / collaborateur·rice",
     "table": {
-      "title": "L'équipe pilote"
+      "title": "L'équipe pilote",
+      "newUser": "Inviter un·e administrateur·rice / collaborateur·rice",
+      "userDeletion": "Suppression d'un·e administrateur·rice / collaborateur·rice",
+      "userDeletionDescription": "Êtes vous sur de vouloir supprimer cet·te administrateur·rice / collaborateur·rice ? Il n'aura plus accès au compte de votre organisation, mais aura toujours accès aux études pour lesquelles il a été invité par d'autres organisations."
     }
+  },
+  "newMember": {
+    "title": "Inviter un·e administrateur·rice / collaborateur·rice",
+    "create": "Inviter l'administrateur·rice / collaborateur·rice",
+    "Not authorized": "Impossible d'inviter cette administrateur·rice / collaborateur·rice. Veuillez contacter le <link>support</link> pour plus d'informations.",
+    "validation": {},
+    "addedMember": "L'administrateur·rice / collaborateur·rice a bien été ajouté à votre organisation"
   },
   "study": {
     "create": "Ajouter une empreinte",
@@ -44,6 +57,7 @@
     "createFirstStudy": "Créer ma première empreinte",
     "createFirstSimplifiedStudy": "Créer ma première Empreinte",
     "firstSimplifiedStudyMessage": "Il est temps de vous lancer ! Nous vous invitons à créer votre première Empreinte.",
+    "firstStudyMessage": "Il est temps de vous lancer ! Nous vous invitons à créer votre première Empreinte.",
     "see": "Voir mon empreinte",
     "selectSite": "Avant de remplir les données, choisissez un établissement",
     "lastStudyTitle": "Dernière empreinte en date",
@@ -55,26 +69,34 @@
     },
     "validatedOnlyDescription": "En tant qu'élèves j'ai accès en tant que contributeurice sur un ou plusieurs postes d'émission.",
     "new": {
+      "title": "Informations sur mon empreinte carbone",
+      "studyDates": "Période de mon étude",
       "suggestion": {
         "name": "Exemple : empreinte carbone Collège Simone Veil"
       },
+      "create": "Créer mon empreinte carbone",
       "inviteContributors": "Inviter les mêmes élèves",
       "glossary": {
         "validatorEmailDescription": "En tant qu'élèves j'ai accès en tant que contributeurice sur un ou plusieurs postes d'émission.",
-        "duplicationOptionsDescription": "Lors de la duplication d'une étude, vous pouvez choisir d'inviter les mêmes membres d'équipe et élèves de l'étude originale dans la nouvelle. Cela permet de maintenir la continuité de la collaboration."
+        "duplicationOptionsDescription": "Lors de la duplication d'une étude, vous pouvez choisir d'inviter les mêmes membres d'équipe et élèves de l'étude originale dans la nouvelle. Cela permet de maintenir la continuité de la collaboration.",
+        "studyDates": "Période de mon étude",
+        "studyDatesDescription": "Il s'agit de la période sur laquelle je vais collecter mes données d'activité. Par défaut, il s'agit de l'année scolaire en cours. Il est possible de modifier les dates de début et de fin."
       },
       "etp": "Nombre de personnels (enseignants et non-éducatifs)",
       "studentNumber": "Nombre d'élèves",
       "superficy": "Superficie de l'établissement",
-      "goToDataEntry": "Passer à la saisie des données"
-    },
-    "newContributor": {
-      "title": "Ajouter un·e élève sur l'étude : {name}"
+      "superficyPlaceholder": "bâti uniquement, en m²",
+      "goToDataEntry": "Passer à la saisie des données",
+      "country": "Pays de l'établissement"
     },
     "role": {
       "Contributor": "Élève"
     },
     "rights": {
+      "newContributor": {
+        "title": "Ajouter un·e élève sur l'étude : {name}",
+        "edit": "Valider"
+      },
       "contributorsTable": {
         "delete": "Supprimer l'élève",
         "title": "Élèves",
@@ -83,9 +105,15 @@
           "confirmation": "Êtes vous sûr de vouloir supprimer {email} des élèves de cette étude ?"
         },
         "role": {
-          "description": "Vous pouvez ici gérer les élèves de votre étude. Ceux-ci auront accès à certains postes et sous postes (que vous pouvez définir) et pourront remplir certaines informations pour des sources d'émission que vous aurez déjà créées dans l'étude. Pour plus d'information sur l'interface des élèves, n'hésitez pas à aller voir notre <link>FAQ</link>"
+          "description": "Vous pouvez gérer ici l'accès de vos élèves à certains postes ou sous-postes d'émissions. Ils pourront ensuite y saisir des données d'activité qu'ils auront collectées. Pour plus d'information sur l'interface des élèves, n'hésitez pas à aller voir notre <link>FAQ</link>"
         }
+      },
+      "versions": {
+        "list": "Source des facteurs d'émissions :"
       }
+    },
+    "perimeter": {
+      "studyDates": "Période de mon étude"
     },
     "export": {
       "export": "Exporter mon empreinte"
@@ -132,6 +160,7 @@
     }
   },
   "emissionFactors": {
+    "underDevelopment": "Cette fonctionnalité est en cours de développement",
     "post": {
       "EnergiesClickson": "Énergie",
       "Combustibles": "Combustibles",
@@ -153,9 +182,20 @@
       "Renovation": "Rénovation",
       "EquipementsInformatiqueAudiovisuel": "Équipements informatiques / audiovisuel",
       "EquipementsDivers": "Equipements divers (électroménager, équipements professionnels...)"
+    },
+    "create": {
+      "glossary": {
+        "post": "",
+        "post_studyContributorDescription": "Assignez ici les postes et sous-postes à vos élèves"
+      }
     }
   },
+  "role": {
+    "ADMIN_description": "Un·e administrateur·rice possède tous les droits sur le compte de l'établissement ainsi que sur l'ensemble des empreintes carbone. Un·e administrateur·rice ne peut changer de rôle. En cas de changement, il vous faudra communiquer les identifiants à la nouvelle personne.",
+    "COLLABORATOR_description": "La ou le collaborateur·rice est toute personne autorisée à saisir des données d'activité pour l'établissement sur un ou plusieurs postes d'émission mais ne possède aucun droit de modification du compte de l'établissement. "
+  },
   "organization": {
+    "myOrganization": "Mon établissement",
     "card": {
       "myOrganization": "Mon établissement"
     },
@@ -241,7 +281,25 @@
     "game": "Jeu : initiation à la négociation de son plan d'action :",
     "classEarth": "Ma Terre en classe"
   },
+  "onboarding": {
+    "title-1": "Bienvenue sur le calculateur Clicks On ! Avant de commencer, veuillez configurer votre établissement.",
+    "titleDescription-1": "Nous avons pré-rempli certaines informations que vous pouvez modifier dès maintenant ou à tout moment via la rubrique \"Mon établissement\".",
+    "title-2": "Gestion de votre équipe pilote",
+    "titleDescription-2": "Vous pouvez d'ores et déjà ajouter vos collaborateur·rices (élèves, enseignants et personnels non-éducatifs) au sein de votre équipe ! Vous pourrez toujours ajouter de nouvelles personnes plus tard via la rubrique \"L'équipe pilote\".",
+    "step1": {
+      "name": "Nom de mon établissement",
+      "role": "Mon rôle au sein de l'établissement",
+      "information": "Mes informations",
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "adminDescription": "Le rôle qui vous a été attribué est celui d'administrateur de votre établissement.",
+      "gestionnaireDescription": "Le rôle qui vous a été attribué est celui de collaborateur de votre établissement."
+    }
+  },
   "error": {
     "Too many comments": "Vous avez déjà trop de commentaire en attente"
+  },
+  "exports": {
+    "env_specific_export": "Empreinte carbone simplifiée"
   }
 }

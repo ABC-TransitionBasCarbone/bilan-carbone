@@ -1,0 +1,5 @@
+intrants-biens-et-matières:
+  titre: Intrants biens et matières
+  formule:
+    somme:
+      - ratios monétaires

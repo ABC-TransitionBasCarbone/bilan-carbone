@@ -1,3 +1,4 @@
+import { isSimplifiedEnvironment } from '@/services/publicodes/simplifiedPublicodesConfig'
 import { ClicksonRoles, CutRoles } from '@/services/roles'
 import { Environment, Prisma, Role, UserStatus } from '@prisma/client'
 import { UserSession } from 'next-auth'
@@ -37,7 +38,7 @@ export const getEnvironmentRoles = (environment: Environment) => {
 }
 
 export const getRoleToSetForUntrained = (role: Exclude<Role, 'SUPER_ADMIN'>, environment: Environment) => {
-  if (environment === Environment.CUT) {
+  if (isSimplifiedEnvironment(environment)) {
     return role
   }
 

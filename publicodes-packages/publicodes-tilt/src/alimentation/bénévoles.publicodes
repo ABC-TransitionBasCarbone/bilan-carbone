@@ -1,0 +1,81 @@
+alimentation . bénévoles:
+  formule:
+    somme:
+      - viande rouge
+      - viande blanche
+      - poisson blanc
+      - poisson gras
+      - végétarien
+      - végétalien
+  unité: kgCO2e
+
+alimentation . bénévoles . viande rouge:
+  formule: FE * nombre de repas
+  avec:
+    FE:
+      formule:
+        somme:
+          - 5.19
+          - déforestation
+      avec:
+        déforestation: 0 ##À compléter cf NGC
+      unité: kgCO2e/repas
+      description: Repas contenant 150g d'une viande rouge moyenne (issue d'un travail de consolidation sur les consommations moyennes de viande rouge de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Pour la partie déforestation, notre alimentation est vectrice de déforestation à l'étranger, à l'impact carbone non négligeable. Cette empreinte n'est pas comprise dans les facteurs d'émission d'Agribalyse. D'après l'étude [Pendril & al.](https://iopscience.iop.org/article/10.1088/1748-9326/ab0d41), une part de cette déforestation est spécifiquement associée à la consommation de viande d'élevage. Nous considérons que cette part associée aux "viandes d'élevage" est majoritairement associée à la consommation de viande rouge, c'est pourquoi nous ajoutons cette part de déforestation aux repas de viande rouge.
+    nombre de repas:
+      question: Combien de repas à base de viande rouge sont consommés par vos bénévoles chaque année ?
+      unité: repas
+
+alimentation . bénévoles . viande blanche:
+  formule: FE * nombre de repas
+  avec:
+    FE:
+      valeur: 1.75
+      unité: kgCO2e/repas
+      description: Repas contenant 150g d'une viande blanche moyenne (issue d'un travail de consolidation sur les consommations moyennes de viande blanche de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+    nombre de repas:
+      question: Combien de repas à base de viande blanche sont consommés par vos bénévoles chaque année ?
+      unité: repas
+
+alimentation . bénévoles . poisson blanc:
+  formule: FE * nombre de repas
+  avec:
+    FE:
+      valeur: 2.29
+      unité: kgCO2e/repas
+      description: Repas contenant 150g d'un poisson blanc moyen (issu d'un travail de consolidation sur les consommations moyennes de poissons blancs de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+    nombre de repas:
+      question: Combien de repas à base de poisson blanc sont consommés par vos bénévoles chaque année ?
+      unité: repas
+
+alimentation . bénévoles . poisson gras:
+  formule: FE * nombre de repas
+  avec:
+    FE:
+      valeur: 1.21
+      unité: kgCO2e/repas
+      description: Repas contenant 150g d'un poisson gras moyen (issu d'un travail de consolidation sur les consommations moyennes de poissons gras de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+    nombre de repas:
+      question: Combien de repas à base de poisson gras sont consommés par vos bénévoles chaque année ?
+      unité: repas
+
+alimentation . bénévoles . végétarien:
+  formule: FE * nombre de repas
+  avec:
+    FE:
+      valeur: 0.97
+      unité: kgCO2e/repas
+      description: Repas contenant des œufs, un accompagnement "moyen" (issu d'un travail de consolidation sur les moyennes de consommation des français tirées de l'étude INCA3 pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+    nombre de repas:
+      question: Combien de repas végétariens sont consommés par vos bénévoles chaque année ?
+      unité: repas
+
+alimentation . bénévoles . végétalien:
+  formule: FE * nombre de repas
+  avec:
+    FE:
+      valeur: 0.66
+      unité: kgCO2e/repas
+      description: Repas contenant du tofu, un accompagnement "moyen" (issu d'un travail de consolidation sur les moyennes de consommation des français tirées de l'étude INCA3 pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+    nombre de repas:
+      question: Combien de repas végétaliens sont consommés par vos bénévoles chaque année ?
+      unité: repas

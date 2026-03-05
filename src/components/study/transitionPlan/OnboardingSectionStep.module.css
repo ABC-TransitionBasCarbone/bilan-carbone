@@ -1,0 +1,42 @@
+.stepWrapper {
+  border-radius: 0.75rem;
+  transition: box-shadow 0.3s ease;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.stepWrapper.active {
+  border: 2px solid var(--mui-palette-primary-main);
+  box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, 0.2);
+}
+
+.stepContent {
+  padding: 0 1.5rem 1.5rem;
+}
+
+.activeHeader {
+  background: var(--mui-palette-primary-main);
+  color: var(--mui-palette-primary-contrastText);
+}
+
+.activeHeaderWithChildren {
+  margin-bottom: 1.5rem;
+}
+
+.activeHeader h3 {
+  color: var(--mui-palette-primary-contrastText);
+  margin: 0;
+}
+
+.activeHeader p {
+  color: var(--mui-palette-primary-contrastText);
+  opacity: 0.85;
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.titleButtons {
+  flex-shrink: 0;
+  white-space: nowrap;
+}

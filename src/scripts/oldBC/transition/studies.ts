@@ -46,11 +46,6 @@ interface StudySite {
   siteOldBCId: string
 }
 
-interface Export {
-  type: StudyExport
-  control: ControlMode
-}
-
 interface EmissionSource {
   siteOldBCId: string
   name: string
@@ -91,6 +86,7 @@ const caracterisationMapping: Record<string, EmissionSourceCaracterisation> = {
   'Détenue, fugitives': EmissionSourceCaracterisation.HeldFugitive,
   'Non détenu, supporté': EmissionSourceCaracterisation.NotHeldSupported,
   'Non détenue, non suporté': EmissionSourceCaracterisation.NotHeldNotSupported,
+  'Non détenue, non supporté': EmissionSourceCaracterisation.NotHeldNotSupported,
   Opéré: EmissionSourceCaracterisation.Operated,
   'Non opéré': EmissionSourceCaracterisation.NotOperated,
   'Non opérée': EmissionSourceCaracterisation.NotOperated,
@@ -242,6 +238,8 @@ const parseStudyExports = (
       if (studiesExport[currentRow.studyOldBCId]) {
         if (studiesExport[currentRow.studyOldBCId].control !== control) {
           console.warn('mode de controle différent pour une même étude', currentRow.studyOldBCId)
+        } else if (!studiesExport[currentRow.studyOldBCId].types.includes(type)) {
+          console.warn('type déjà présent pour une même étude', currentRow.studyOldBCId, type)
         } else {
           studiesExport[currentRow.studyOldBCId].types.push(type)
         }
@@ -360,10 +358,15 @@ const parseEmissionSources = async (
 
   const skippedEmissionSource: { oldPost: string; reason: string }[] = []
   const skippedCaract: Record<string, Record<string, { studyId: string; emissionFactor: string }[]>> = {}
+
   const emissionsSources = studyEmissionSourcesWorkSheet
     .map<[string, EmissionSource] | null>((row) => {
-      if (row.siteOldBCId === '00000000-0000-0000-0000-000000000000' || row.idefType !== 1) {
-        console.log('skipped', row.studyOldBCId)
+      if (
+        row.siteOldBCId === '00000000-0000-0000-0000-000000000000' ||
+        row.idefType !== 1 ||
+        row.siteOldBCId === 'NULL'
+      ) {
+        console.log(`skipped, ${row.studyOldBCId} ${row.idefType}`)
         return null
       }
 
@@ -405,7 +408,6 @@ const parseEmissionSources = async (
             : SubPost.EmissionsLieesAuxProcedesIndustriels
         row.caracterisation = 'Opéré'
       }
-
       if (hasCaract) {
         const subPostRules = begesRules.filter((rule) => rule.subPost === subPost)
         if (subPostRules && subPostRules.length !== 0) {
@@ -842,6 +844,12 @@ export const uploadStudies = async (
       studyEmissionSources.entries().flatMap(([studyOldBCId, studyEmissionSourcesNew]) => {
         // N'importer que les sources d'émission d'études nouvelles.
         if (!newStudies.some((newStudy) => newStudy.oldBCId === studyOldBCId)) {
+          console.log(
+            "Sources d'émission d'une étude déjà existante ou l'étude n'existe plus, elles ne seront pas importées",
+            studyOldBCId,
+            "nombre de sources d'émission :",
+            studyEmissionSourcesNew.length,
+          )
           return []
         }
         const existingStudy = existingStudies.get(studyOldBCId)

@@ -1,0 +1,90 @@
+immobilisations . équipements divers:
+  titre: "Équipements divers"
+  formule:
+    somme:
+      - chaise bois
+      - chaise plastique
+      - table standard
+      - armoire standard
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    chaise bois:
+      titre: "Chaise (bois)"
+      formule: nombre * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        nombre:
+          question: "Combien de chaises (bois) avez-vous achetées ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par chaise (bois)"
+          valeur: 18.6
+          unité: kgCO2e/unité
+          par défaut: 0
+          note: |
+            Source: Base Carbone®
+          meta:
+            id: 26958
+
+    chaise plastique:
+      titre: "Chaise (plastique)"
+      formule: nombre * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        nombre:
+          question: "Combien de chaises (plastique) avez-vous achetées ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par chaise (plastique)"
+          valeur: 34.4
+          unité: kgCO2e/unité
+          par défaut: 0
+          note: |
+            Source: Base Carbone®
+          meta:
+            id: 26959
+
+    table standard:
+      titre: "Table (standard)"
+      formule: nombre * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        nombre:
+          question: "Combien de tables de réunion avez-vous achetées ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par table (standard)"
+          valeur: 60.1
+          unité: kgCO2e/unité
+          par défaut: 0
+          note: |
+            Source: Base Carbone® (exemple)
+          meta:
+            id: 26962
+
+    armoire standard:
+      titre: "Armoire (standard)"
+      formule: nombre * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        nombre:
+          question: "Combien d'armoires (standard) avez-vous achetées ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par armoire (standard)"
+          valeur: 907
+          unité: kgCO2e/unité
+          par défaut: 0
+          note: |
+            Source: Base Carbone® (exemple)
+          meta:
+            id: 26963

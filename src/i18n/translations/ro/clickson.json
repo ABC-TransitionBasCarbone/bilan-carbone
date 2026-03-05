@@ -62,15 +62,19 @@
       "glossary": {
         "validatorEmailDescription": "Ca elev, am acces ca contributor la unul sau mai multe posturi de emisii.",
         "duplicationOptionsDescription": "Când duplici un studiu, poți alege să inviți aceeași echipă și aceiași elevi din studiul original. Acest lucru ajută la menținerea continuității colaborării."
-      }
-    },
-    "newContributor": {
-      "title": "Adaugă un elev în studiu: {name}"
+      },
+      "etp": "Număr de personal (didactic și nedidactic)",
+      "goToDataEntry": "Treci la introducerea datelor",
+      "studentNumber": "Număr de elevi",
+      "superficy": "Suprafața instituției"
     },
     "role": {
       "Contributor": "Elev"
     },
     "rights": {
+      "newContributor": {
+        "title": "Adaugă un elev în studiu: {name}"
+      },
       "contributorsTable": {
         "delete": "Elimină elevul",
         "title": "Elevi",
@@ -82,11 +86,73 @@
           "description": "Aici poți gestiona elevii studiului tău. Ei vor avea acces la anumite posturi și subposturi (pe care le poți defini) și vor putea completa informații pentru anumite surse de emisii pe care le-ai creat deja în studiu. Pentru mai multe informații despre interfața contributorului, consultă <link>FAQ</link>."
         }
       }
+    },
+    "export": {
+      "export": "Exportă amprenta mea"
+    },
+    "pdf": {
+      "loading": "Se încarcă datele...",
+      "title": "Sinteză emisii {year}",
+      "results": {
+        "all": "Rezultate"
+      },
+      "labels": {
+        "studentNumber": "Număr de elevi",
+        "etp": "Număr de personal",
+        "superficy": "Suprafață",
+        "establishmentYear": "Anul deschiderii"
+      },
+      "charts": {
+        "siteEmissions": "Emisiile în tCO2e ale instituției școlare {site} în {year}"
+      },
+      "questions": {
+        "goals-title": "OBIECTIVE",
+        "goals-subtitle": "Prezintă obiectivele acțiunii tale (conștientizare, reducerea emisiilor...). Este o acțiune pe termen scurt sau strategică?",
+        "shareholders-title": "RESPONSABILI DE ACȚIUNE",
+        "shareholders-subtitle": "Ai desemnat o echipă care va coordona acțiunea zilnic și pe termen lung? Indică numele și rolul/functia lor.",
+        "otherStakeholders-title": "ALȚI ACTORI IMPLICAȚI",
+        "otherStakeholders-subtitle": "Distinge aici actorii interni și externi. Ei nu vor coordona acțiunea zilnic, dar te pot ajuta cu facturi de electricitate, de exemplu. Poate fi administratorul instituției sau autoritatea locală.",
+        "ressourcesToBeImplemented-title": "RESURSE DE IMPLEMENTAT",
+        "ressourcesToBeImplemented-subtitle": "Care sunt etapele și resursele necesare? Pot fi resurse umane, materiale, financiare... Construiește bine această parte, este esențială!",
+        "monitoringIndicators-title": "INDICATORI DE MONITORIZARE",
+        "monitoringIndicators-subtitle": "Notează aici indicatori pe care îi vei folosi peste 6 luni / 1 an pentru a evalua succesul acțiunii. Exemplu: % reducere GES",
+        "estimatedCarbonImpacts-title": "IMPACTURI CARBON ESTIMATE",
+        "estimatedCarbonImpacts-subtitle": "În ce măsură acțiunea ta reduce emisiile de GES?",
+        "otherEstimatedEnvironmentalImpacts-title": "ALTE IMPACTURI DE MEDIU ESTIMATE",
+        "otherEstimatedEnvironmentalImpacts-subtitle": "Gândește-te la impacturile pozitive sau negative asupra biodiversității, apei, deșeurilor...",
+        "estimatedSocialImpacts-title": "IMPACTURI SOCIALE ESTIMATE",
+        "estimatedSocialImpacts-subtitle": "Se încearcă să se afle dacă acțiunea reduce eco-anxietatea, favorizează învățarea, reduce abandonul școlar, favorizează integrarea tinerilor...",
+        "calendar-title": "CALENDAR",
+        "calendar-subtitle": "Notează aici etapele principale ale acțiunii, alege bine scara de timp!"
+      },
+      "additionalInfo": "Rezultatele obținute aici reprezintă un calcul simplificat al amprentei de carbon a instituției dumneavoastră și nu respectă cerințele Bilan Carbone® sau reglementările în vigoare. Aceste rezultate au scopul de a vă ajuta să înțelegeți provocările climatice și să identificați prioritățile de acțiune. Având o valoare preponderent pedagogică, calculul amprentei de carbon prin intermediul instrumentului nostru constituie o primă etapă în adaptarea la consecințele schimbărilor climatice."
+    },
+    "results": {
+      "carbonIntensities": "Amprenta de carbon individuală"
     }
   },
   "emissionFactors": {
     "post": {
-      "Restauration": "Restaurante / Alimentație"
+      "Restauration": "Restaurante / Alimentație",
+      "AutresGaz": "Alte gaze",
+      "Combustibles": "Combustibili",
+      "Construction": "Construcție",
+      "DechetsRecyclables": "Deșeuri reciclabile",
+      "DeplacementsClickson": "Deplasări",
+      "DistributeursAutomatiques": "Automate de distribuție",
+      "EnergiesClickson": "Energie",
+      "EquipementsDeSport": "Echipamente sportive",
+      "EquipementsDivers": "Echipamente diverse (electrocasnice, echipamente profesionale...)",
+      "EquipementsInformatiqueAudiovisuel": "Echipamente informatice / audiovizuale",
+      "Fournitures": "Furnituri",
+      "ImmobilisationsClickson": "Imobilizări",
+      "OrduresMenageresResiduelles": "Deșeuri menajere reziduale",
+      "ProduitsChimiques": "Produse chimice",
+      "Renovation": "Renovare",
+      "TransportDesEleves": "Transportul elevilor",
+      "TransportDuPersonnel": "Transportul personalului",
+      "TypesDeRepasServis": "Tipuri de mese servite",
+      "VoyagesScolaires": "Excursii școlare"
     }
   },
   "organization": {
@@ -94,13 +160,33 @@
       "myOrganization": "Instituțiile mele"
     },
     "form": {
-      "editTitle": "Editează instituțiile mele"
+      "editTitle": "Editează instituțiile mele",
+      "name": "Numele instituției"
     },
     "sites": {
       "title": "Ce instituții ar trebui să acopere amprenta?",
       "noSites": "Nicio instituție configurată",
       "namePlaceholder": "Numele instituției",
-      "add": "Adaugă o instituție"
+      "add": "Adaugă o instituție",
+      "academy": "Academie",
+      "academyPlaceholder": "Academia instituției",
+      "establishmentType": {
+        "title": "Tipul instituției",
+        "COLLEGE": "Colegiu",
+        "LYCEE_GENERAL": "Liceu General și Tehnologic",
+        "LYCEE_PRO": "Liceu Profesional",
+        "LYCEE_PRO_AGRICOLE": "Liceu Profesional Agricol",
+        "ETABLISSEMENT_FR_ETRANGER": "Instituție de învățământ franceză în străinătate"
+      },
+      "establishmentYear": "Anul construcției",
+      "establishmentYearPlaceholder": "Anul construcției instituției",
+      "etp": "Numărul de personal",
+      "etpPlaceholder": "Numărul total de personal",
+      "glossary": {
+        "informations": "Este necesar să completați aceste informații înainte de a continua. Aceste informații afectează calculul amprentei de carbon (în special, secțiunea imobilizări)"
+      },
+      "studentNumber": "Numărul de elevi",
+      "studentNumberPlaceholder": "Numărul total de elevi"
     }
   },
   "login": {
@@ -124,7 +210,12 @@
     "Not known school": "Găsește și selectează instituția ta.",
     "validation": {
       "schoolPostalCodeOrName": "Te rugăm să introduci codul poștal sau numele școlii"
-    }
+    },
+    "city": "Oraș",
+    "cityPlaceholder": "Orașul în care se află instituția școlară",
+    "country": "Țara ta",
+    "schoolName": "Numele instituției școlare",
+    "schoolNamePlaceholder": "Numele instituției școlare"
   },
   "email": {
     "subject": {
@@ -133,5 +224,24 @@
       "activation": "Ți-ai activat contul pe Clickson",
       "activationRequest": "Cerere de acces la organizația ta Clickson"
     }
+  },
+  "comments": {
+    "title": "Gestionarea comentariilor",
+    "noComments": "Nu aveți niciun comentariu de procesat",
+    "yourComment": "Comentariul tău...",
+    "validated": "Validat",
+    "pending": "În așteptare",
+    "addComment": "Adaugă un comentariu"
+  },
+  "error": {
+    "Too many comments": "Aveți deja prea multe comentarii în așteptare"
+  },
+  "ressources": {
+    "knowMoreDataCollect": "Pentru a afla cum să colectezi datele instituției tale:",
+    "guideDataCollect": "Ghid de colectare a datelor",
+    "toolsDataCollect": "Instrumente pentru colectarea datelor:",
+    "modelsDataCollect": "Modele de suport pentru colectarea datelor",
+    "game": "Joc: inițiere în negocierea planului de acțiune:",
+    "classEarth": "Pământul meu în clasă"
   }
 }

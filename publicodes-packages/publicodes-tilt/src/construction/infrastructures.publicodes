@@ -1,0 +1,39 @@
+construction . infrastructure:
+  formule:
+    variations:
+      - si:
+          toutes ces conditions:
+            - est défini: parking présent
+            - parking présent = oui
+        alors: nombre de places * surface place * FE / amortissement
+      - sinon: 0
+  unité: kgCO2e
+  avec:
+    amortissement:
+      valeur: 50
+      unité: an
+      note: On amortit sur 50 ans dans tous les cas, sans demander de quand date le parking pour simplifier la saisie de l'utilisateur
+
+    surface place:
+      valeur: 12
+      unité: m2
+      note: On considère qu'une place fait 12 m2
+
+    FE:
+      valeur: 92
+      unité: kgCO2e/m2
+      meta:
+        id: 26008
+        nom: Parking classique, bitume
+        note: Le bitume est normalement le matériau le plus classique
+
+construction . infrastructure . nombre de places:
+  applicable si:
+    toutes ces conditions:
+      - est défini: parking présent
+      - parking présent = oui
+  question: De combien de places dispose ce ou ces parkings ?
+  unité: place
+
+construction . infrastructure . parking présent:
+  question: L'association dispose t'elle d'un (ou plusieurs) parkings artificialisés (béton, bitume, ...) ?

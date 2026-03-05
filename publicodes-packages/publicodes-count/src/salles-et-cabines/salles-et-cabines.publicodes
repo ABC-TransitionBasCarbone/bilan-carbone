@@ -1,0 +1,7 @@
+salles et cabines:
+  titre: Salles et cabines
+  valeur:
+    somme:
+      - matériel technique
+      - autre matériel
+  unité: kgCO2e

@@ -1,0 +1,880 @@
+{
+  "publicodes-units": {
+    "année": "year",
+    "personne": "person",
+    "k€": "k€",
+    "jours": "days",
+    "quantité": "quantity",
+    "kWh": "kWh",
+    "m3": "m3",
+    "litre": "liter",
+    "stères": "stere",
+    "h/semaine": "h/week",
+    "j/semaine": "d/week",
+    "kgCO2e": "kgCO2e",
+    "h": "h",
+    "mail": "email",
+    "Go": "GB",
+    "unité": "unit",
+    "kg": "kg",
+    "%": "%",
+    "tonne": "ton",
+    "km": "km",
+    "place": "seat",
+    "m2": "m2",
+    "repas": "meal"
+  },
+  "publicodes-rules": {
+    "général": {
+      "nom": {
+        "question": "What is the name of the association for which you wish to carry out a carbon impact assessment?"
+      },
+      "code postal": {
+        "question": "What is the postal code of the association?"
+      },
+      "année": {
+        "question": "For which year are you carrying out this impact assessment?"
+      },
+      "salariés": {
+        "question": "How many employees does the association have in [Year]?"
+      },
+      "bénévoles": {
+        "question": "How many volunteers does the association have in [Year]?"
+      },
+      "bénéficiaires": {
+        "question": "How many beneficiaries have benefited from the association's services in [Year]?"
+      },
+      "budget": {
+        "question": "What is the association's operating budget?"
+      },
+      "type": {
+        "question": "Which type of structure does your association most closely resemble?",
+        "options": {
+          "Club de loisirs": "Leisure club",
+          "Association étudiante": "Student association",
+          "Association culturelle": "Cultural association",
+          "Association de voisinage": "Neighborhood association",
+          "Hôpital": "Hospital",
+          "Maison de retraite": "Retirement home",
+          "Association d'aide à domicile": "Home help association",
+          "Association humanitaire": "Humanitarian association",
+          "Autres structures sociales et solidaires": "Other social and solidarity structures",
+          "Association de défense de l'environnement": "Environmental protection association",
+          "Association d'enseignement ou de formation": "Teaching or training association"
+        }
+      },
+      "TT bénévoles": {
+        "question": "How many days per week do your volunteers work remotely?"
+      },
+      "TT salariés": {
+        "question": "How many days per week do your employees work remotely?"
+      }
+    },
+    "équipements et immobilisations": {
+      "infos": {
+        "prise en compte reconditionné": {
+          "description": "Depending on your answer, some of your equipment will be considered as refurbished. Refurbished equipment will be considered as emitting half as much as new equipment. In other words, the first life duration of the equipment is considered to be half of its total lifespan.",
+          "question": "Is your equipment refurbished or second-hand?",
+          "options": {
+            "toujours": "Always",
+            "souvent": "Often",
+            "rarement": "Rarely",
+            "jamais": "Never"
+          }
+        },
+        "ordinateurs fixes": {
+          "titre": "Desktop computers",
+          "quantité": {
+            "question": "Desktop computers"
+          }
+        },
+        "ordinateurs portables": {
+          "titre": "Laptops",
+          "quantité": {
+            "question": "Laptops"
+          }
+        },
+        "photocopieurs": {
+          "titre": "Photocopiers",
+          "quantité": {
+            "question": "Photocopiers"
+          }
+        },
+        "imprimantes": {
+          "titre": "Printers",
+          "quantité": {
+            "question": "Multifunction printer"
+          }
+        },
+        "téléphones fixes": {
+          "titre": "Landline phones",
+          "quantité": {
+            "question": "Landline phones"
+          }
+        },
+        "téléphones portables": {
+          "titre": "Mobile phones",
+          "quantité": {
+            "question": "Mobile phones"
+          }
+        },
+        "vidéoprojecteurs": {
+          "titre": "Video projectors",
+          "quantité": {
+            "question": "Video projectors"
+          }
+        },
+        "autres écrans": {
+          "titre": "Other screens",
+          "quantité": {
+            "question": "Other screens (TV, secondary screen, tablet, ...)"
+          }
+        }
+      }
+    },
+    "énergie": {
+      "titre": "Energy",
+      "question": "What do you use for heating, lighting and other energy consumption in your premises?",
+      "électricité": {
+        "consommation": {
+          "question": "What is your annual electricity consumption? (from your bill and excluding self-consumption and electric vehicle consumption)"
+        },
+        "autoproduction": {
+          "autoproduction": {
+            "question": "What is your annual self-production of electricity?"
+          }
+        }
+      },
+      "réseaux de froid": {
+        "consommation": {
+          "question": "What is your annual consumption of cooling from networks?"
+        }
+      },
+      "réseaux de chaleur": {
+        "consommation": {
+          "question": "What is your annual consumption of heat from networks?"
+        }
+      },
+      "fossiles": {
+        "gaz": {
+          "consommation": {
+            "question": "What is your annual natural gas consumption? (excluding vehicle consumption)"
+          }
+        },
+        "fioul": {
+          "consommation": {
+            "question": "What is your annual fuel oil consumption (excluding vehicle consumption)?"
+          }
+        }
+      },
+      "combustibles organiques": {
+        "choix": {
+          "question": "Do you use logs or pellets?",
+          "options": {
+            "bûches": "Logs",
+            "granulés": "Pellets",
+            "aucun": "None"
+          }
+        },
+        "granulés": {
+          "consommation": {
+            "question": "How many kWh from wood pellet combustion are consumed each year?"
+          }
+        },
+        "bois": {
+          "consommation": {
+            "question": "What is your annual wood consumption?"
+          }
+        }
+      }
+    },
+    "utilisation": {
+      "responsabilite conso energie": {
+        "élec présente": {
+          "question": "Do you provide products or services that result in electricity consumption by your users?"
+        },
+        "élec": {
+          "conso": {
+            "question": "How many kWh do you estimate for this electricity consumption?"
+          }
+        },
+        "fossiles présents": {
+          "question": "Do you provide products or services that result in fossil energy consumption by your users?"
+        },
+        "fioul": {
+          "conso": {
+            "question": "For fuel oil, how many liters do you estimate for this consumption?"
+          }
+        },
+        "essence": {
+          "conso": {
+            "question": "For gasoline, how many liters do you estimate for this consumption?"
+          }
+        },
+        "gazole": {
+          "conso": {
+            "question": "For diesel, how many liters do you estimate for this consumption?"
+          }
+        },
+        "gaz naturel": {
+          "conso": {
+            "question": "For natural gas, how many m3 do you estimate for this consumption?"
+          }
+        }
+      }
+    },
+    "télétravail": {
+      "bénévoles": {
+        "h": {
+          "question": "How many hours of remote work are performed per week by your volunteers?"
+        }
+      },
+      "salariés": {
+        "j": {
+          "question": "How many days of remote work are performed per week by your employees?"
+        }
+      }
+    },
+    "intrants-services": {
+      "services": {
+        "description": "The list is not exhaustive: if you have not accounted for all your expenses, that's perfectly normal. These may be very low-emission expenses or emissions already accounted for in other items or via other questions based on more precise data.",
+        "question": "How much did you spend on the following intangible services in [Year]?",
+        "spectacles-musées": {
+          "titre": "Shows, museums and other cultural services",
+          "montant-dépensé": {
+            "question": "Amount spent on shows, museums and other cultural services"
+          }
+        },
+        "assurance-reassurance": {
+          "titre": "Insurance services",
+          "montant-dépensé": {
+            "question": "Amount spent on insurance and reinsurance services"
+          }
+        },
+        "telecom": {
+          "titre": "Telecommunications services",
+          "montant-dépensé": {
+            "question": "Amount spent on telecommunications services"
+          }
+        },
+        "sante-humaine": {
+          "titre": "Human health services",
+          "montant-dépensé": {
+            "question": "Amount spent on human health services"
+          }
+        },
+        "edition": {
+          "titre": "Publishing services",
+          "montant-dépensé": {
+            "question": "Amount spent on publishing services"
+          }
+        },
+        "poste-courrier": {
+          "titre": "Postal and mail services",
+          "montant-dépensé": {
+            "question": "Amount spent on postal and mail services"
+          }
+        },
+        "restauration": {
+          "titre": "Catering and accommodation services",
+          "montant-dépensé": {
+            "question": "Amount spent on catering and accommodation services"
+          }
+        },
+        "formation": {
+          "titre": "Training services",
+          "montant-dépensé": {
+            "question": "Amount spent on training services"
+          }
+        },
+        "reparation-installation": {
+          "titre": "Repair and installation services",
+          "montant-dépensé": {
+            "question": "Amount spent on repair and installation services"
+          }
+        },
+        "juridique-comptable": {
+          "titre": "Repair and installation services",
+          "montant-dépensé": {
+            "question": "Amount spent on legal, accounting and insurance services"
+          }
+        },
+        "programmation-conseil": {
+          "titre": "Programming and consulting services",
+          "montant-dépensé": {
+            "question": "Amount spent on IT programming and consulting services"
+          }
+        }
+      },
+      "numérique": {
+        "question": "Please indicate the digital usage in [Year] by the employees and volunteers of your association",
+        "streaming": {
+          "heures": {
+            "question": "Over a year, how many hours of video streaming were watched?"
+          }
+        },
+        "visioconférence": {
+          "heures": {
+            "question": "Over a year, how many hours of videoconferencing took place?"
+          }
+        },
+        "mails": {
+          "nombre": {
+            "question": "Over a year, how many emails were sent?"
+          }
+        },
+        "stockage-cloud": {
+          "volume": {
+            "question": "Over a year, how many GB of data were stored on a cloud?"
+          }
+        }
+      }
+    },
+    "intrants-biens-et-matières": {
+      "ratios monétaires": {
+        "titre": "Goods and materials inputs",
+        "question": "What goods and materials did you purchase using the monetary approach?",
+        "petites-fournitures": {
+          "titre": "Small supplies",
+          "nombre": {
+            "question": "Amount spent (k€) on small supplies"
+          }
+        },
+        "meubles": {
+          "titre": "Furniture",
+          "nombre": {
+            "question": "Amount spent (k€) on furniture"
+          }
+        },
+        "machines-équipements": {
+          "titre": "Machines and equipment",
+          "nombre": {
+            "question": "Amount spent (k€) on machines and equipment"
+          }
+        },
+        "textiles": {
+          "titre": "Textiles",
+          "nombre": {
+            "question": "Amount spent (k€) on textiles"
+          }
+        },
+        "produits-pharmaceutiques": {
+          "titre": "Pharmaceutical products",
+          "nombre": {
+            "question": "Amount spent (k€) on pharmaceutical products"
+          }
+        },
+        "produits-chimiques": {
+          "titre": "Chemical products",
+          "nombre": {
+            "question": "Amount spent (k€) on chemical products"
+          }
+        },
+        "papier-carton": {
+          "titre": "Paper and cardboard",
+          "nombre": {
+            "question": "Amount spent (k€) on paper and cardboard"
+          }
+        },
+        "produits-métalliques": {
+          "titre": "Metal products",
+          "nombre": {
+            "question": "Amount spent (k€) on metal products"
+          }
+        },
+        "autres-produits-manufacturés": {
+          "titre": "Other manufactured products",
+          "nombre": {
+            "question": "Amount spent (k€) on other manufactured products"
+          }
+        }
+      }
+    },
+    "froid et clim": {
+      "nombre": {
+        "description": "The electricity consumption of your air conditioners is included in your electricity bills. This question is therefore only intended to take into account the impact of the construction of the air conditioning equipment and refrigerant gas leaks.",
+        "question": "How many air conditioners are used in your premises?"
+      }
+    },
+    "fret": {
+      "transport": {
+        "présent": {
+          "question": "Does your association own or rent vehicles to transport goods?"
+        },
+        "carburant": {
+          "litre": {
+            "question": "How many liters of fuel have these vehicles consumed?"
+          }
+        },
+        "livraisons": {
+          "titre": "Number of deliveries",
+          "question": "On average, how many deliveries take place per year?"
+        },
+        "poids": {
+          "titre": "Average delivery weight",
+          "question": "On average, for a delivery, what is the weight transported?"
+        },
+        "local": {
+          "titre": "Local",
+          "provenance": {
+            "titre": "Local deliveries",
+            "question": "Of these deliveries, what proportion comes from local suppliers (less than 50 km)?"
+          }
+        },
+        "national": {
+          "titre": "France",
+          "provenance": {
+            "titre": "National deliveries",
+            "question": "Of these deliveries, what proportion comes from national suppliers (between 50 km and 500 km)?"
+          }
+        },
+        "europe": {
+          "titre": "Europe",
+          "provenance": {
+            "titre": "European deliveries",
+            "question": "Of these deliveries, what proportion comes from European suppliers (between 500 km and 1500 km)?"
+          }
+        },
+        "international": {
+          "titre": "World",
+          "provenance": {
+            "titre": "International deliveries",
+            "question": "Of these deliveries, what proportion comes from international suppliers (more than 1500 km)?"
+          }
+        }
+      },
+      "fabrication": {
+        "titre": "Vehicle manufacturing",
+        "question": "How many vehicles have been owned or rented for less than 5 years in the following categories?",
+        "VUL": {
+          "nombre": {
+            "question": "How many light commercial vehicles have you owned or rented for less than 5 years?"
+          }
+        },
+        "PL": {
+          "nombre": {
+            "question": "How many heavy goods vehicles have you owned or rented for less than 5 years?"
+          }
+        }
+      }
+    },
+    "fin de vie": {
+      "déchets": {
+        "fin de vie présente": {
+          "question": "Do you provide material goods to your beneficiaries?"
+        },
+        "poids": {
+          "question": "What is the total weight of these goods delivered over a year?"
+        }
+      }
+    },
+    "déplacements": {
+      "fabrication": {
+        "titre": "Vehicle manufacturing",
+        "question": "How many vehicles have been owned or rented for less than 5 years in the following categories?",
+        "voitures": {
+          "nombre": {
+            "question": "How many passenger cars have you owned or rented for less than 5 years?"
+          }
+        }
+      },
+      "DT-salariés": {
+        "MEP présent": {
+          "question": "Have you carried out an awareness campaign via MEP?",
+          "nombre bénévoles": {
+            "question": "How many volunteers responded to MEP?"
+          },
+          "nombre salariés": {
+            "question": "How many employees responded to MEP?"
+          }
+        },
+        "avec": {
+          "distance": {
+            "question": "According to MEP results, what is the average distance traveled per employee per day (round trip) for commuting?"
+          },
+          "réponse MEP": {
+            "question": "According to MEP results, how many kgCO2e are represented by employee business travel?"
+          }
+        },
+        "sans": {
+          "voiture": {
+            "distance": {
+              "question": "How many km are traveled on average per employee by car per day (round trip) for commuting?"
+            }
+          },
+          "train": {
+            "distance": {
+              "question": "How many km are traveled on average per employee by train per day (round trip) for commuting?"
+            }
+          },
+          "transports en commun": {
+            "distance": {
+              "question": "How many km are traveled on average per employee by public transport per day (round trip) for commuting?"
+            }
+          },
+          "deux roues": {
+            "distance": {
+              "question": "How many km are traveled on average per employee by two-wheeler per day (round trip) for commuting?"
+            }
+          }
+        }
+      },
+      "DT-bénévoles": {
+        "avec": {
+          "distance": {
+            "question": "According to MEP results, what is the average distance traveled per day (round trip) by a volunteer for commuting?"
+          },
+          "réponse MEP": {
+            "question": "According to MEP results, how many kgCO2e are represented by volunteer commuting?"
+          }
+        },
+        "sans": {
+          "voiture": {
+            "distance": {
+              "question": "How many km are traveled on average per day (round trip) by a volunteer by car for commuting?"
+            }
+          },
+          "train": {
+            "distance": {
+              "question": "How many km are traveled on average per day (round trip) by a volunteer by train for commuting?"
+            }
+          },
+          "transports en commun": {
+            "distance": {
+              "question": "How many km are traveled on average per day (round trip) by a volunteer by public transport for commuting?"
+            }
+          },
+          "deux roues": {
+            "distance": {
+              "question": "How many km are traveled on average per day (round trip) by a volunteer by two-wheeler for commuting?"
+            }
+          }
+        }
+      },
+      "DM-salariés": {
+        "avec": {
+          "émissions MEP": {
+            "voiture": {
+              "question": "According to MEP, what is the average emissions per employee for business travel by car?"
+            },
+            "train": {
+              "question": "According to MEP, what is the average emissions per employee for business travel by train?"
+            },
+            "avion": {
+              "question": "According to MEP, what is the average emissions per employee for business travel by plane?"
+            },
+            "transports en commun": {
+              "question": "According to MEP, what is the average emissions per employee for business travel by public transport?"
+            },
+            "deux roues": {
+              "question": "According to MEP, what is the average emissions per employee for business travel by two-wheeler?"
+            }
+          }
+        },
+        "sans": {
+          "voiture": {
+            "distance": {
+              "question": "How many km are traveled on average per month per employee by car for business travel?"
+            }
+          },
+          "train": {
+            "distance": {
+              "question": "How many km are traveled on average per month per employee by train for business travel?"
+            }
+          },
+          "transports en commun": {
+            "distance": {
+              "question": "How many km are traveled on average per month per employee by public transport for business travel?"
+            }
+          },
+          "deux roues": {
+            "distance": {
+              "question": "How many km are traveled on average per month per employee by two-wheeler for business travel?"
+            }
+          },
+          "avion": {
+            "court courrier": {
+              "distance": {
+                "question": "How many km were traveled this year per employee by short-haul plane for business travel?"
+              }
+            },
+            "moyen courrier": {
+              "distance": {
+                "question": "How many km were traveled this year per employee by medium-haul plane for business travel?"
+              }
+            },
+            "long courrier": {
+              "distance": {
+                "question": "How many km were traveled this year per employee by long-haul plane for business travel?"
+              }
+            }
+          }
+        }
+      },
+      "DM-bénévoles": {
+        "avec": {
+          "émissions MEP": {
+            "voiture": {
+              "question": "According to MEP, what is the average emissions per volunteer for business travel by car?"
+            },
+            "train": {
+              "question": "According to MEP, what is the average emissions per volunteer for business travel by train?"
+            },
+            "avion": {
+              "question": "According to MEP, what is the average emissions per volunteer for business travel by plane?"
+            },
+            "transports en commun": {
+              "question": "According to MEP, what is the average emissions per volunteer for business travel by public transport?"
+            },
+            "deux roues": {
+              "question": "According to MEP, what is the average emissions per volunteer for business travel by two-wheeler?"
+            }
+          }
+        },
+        "sans": {
+          "voiture": {
+            "distance": {
+              "description": "All types of individual car engines are considered here, based on national averages",
+              "question": "How many km are traveled on average per month per volunteer by car for business travel?"
+            }
+          },
+          "train": {
+            "distance": {
+              "question": "How many km are traveled on average per month per volunteer by train for business travel?"
+            }
+          },
+          "transports en commun": {
+            "distance": {
+              "question": "How many km are traveled on average per month per volunteer by public transport for business travel?"
+            }
+          },
+          "deux roues": {
+            "distance": {
+              "question": "How many km are traveled on average per month per volunteer by two-wheeler for business travel?"
+            }
+          },
+          "avion": {
+            "court courrier": {
+              "distance": {
+                "question": "How many km were traveled this year per volunteer by short-haul plane for business travel?"
+              }
+            },
+            "moyen courrier": {
+              "distance": {
+                "question": "How many km were traveled this year per volunteer by medium-haul plane for business travel?"
+              }
+            },
+            "long courrier": {
+              "distance": {
+                "question": "How many km were traveled this year per volunteer by long-haul plane for business travel?"
+              }
+            }
+          }
+        }
+      },
+      "bénéficiaires": {
+        "se déplacent": {
+          "question": "Do the beneficiaries of your products or services travel to benefit from them?"
+        },
+        "voiture": {
+          "question": "How many km are traveled on average by your beneficiaries by car to access your products or services?"
+        },
+        "part voiture": {
+          "question": "What percentage of trips are by car?"
+        },
+        "actif": {
+          "question": "How many km are traveled on average by your beneficiaries by active modes (on foot, bicycle, scooter) to access your products or services?"
+        },
+        "part actif": {
+          "question": "What percentage of trips are by active modes (on foot, bicycle, scooter)?"
+        },
+        "deux roues": {
+          "question": "How many km are traveled on average by your beneficiaries by two-wheeler (scooter, motorcycle) to access your products or services?"
+        },
+        "part deux roues": {
+          "question": "What percentage of trips are by two-wheeler (scooter, motorcycle)?"
+        },
+        "transport en commun": {
+          "question": "How many km are traveled on average by your beneficiaries by public transport to access your products or services?"
+        },
+        "part transport en commun": {
+          "question": "What percentage of trips are by public transport?"
+        },
+        "train": {
+          "question": "How many km are traveled on average by your beneficiaries by train to access your products or services?"
+        },
+        "part train": {
+          "question": "What percentage of trips are by train?"
+        },
+        "avion": {
+          "question": "How many km are traveled on average by your beneficiaries by plane to access your products or services?"
+        },
+        "part avion": {
+          "question": "What percentage of trips are by plane?"
+        }
+      }
+    },
+    "déchets": {
+      "emballages et plastiques": {
+        "poubelle jaune": {
+          "titre": "Yellow bin",
+          "poids": {
+            "question": "Yellow bin (packaging and plastics)"
+          }
+        },
+        "déchets verre": {
+          "titre": "Glass",
+          "poids": {
+            "question": "Glass waste"
+          }
+        },
+        "poubelle noire": {
+          "titre": "Black bin (household waste, other waste, etc.)",
+          "poids": {
+            "question": "Black bin (household waste)"
+          }
+        },
+        "déchets verts": {
+          "titre": "Green waste, compost and organic waste",
+          "poids": {
+            "question": "Green waste, compost and organic waste"
+          }
+        }
+      }
+    },
+    "construction": {
+      "infrastructure": {
+        "nombre de places": {
+          "question": "How many parking spaces does this or these parking lots have?"
+        },
+        "parking présent": {
+          "question": "Does the association have one (or more) artificialized parking lots (concrete, asphalt, ...)?"
+        }
+      },
+      "bâtiment": {
+        "locaux": {
+          "question": "Regarding your premises, would you say that:",
+          "options": {
+            "locaux seuls": "I use premises that are entirely dedicated to my association",
+            "locaux partagés": "My premises are shared with other structures (co-working, shared open-space, ...)",
+            "pas de locaux": "My association's activities do not require premises (100% remote work, outdoors, ...)"
+          },
+          "locaux seuls": {
+            "surface": {
+              "question": "What is the surface area of these premises? (Only premises owned or rented for less than 50 years are considered)"
+            }
+          },
+          "locaux partagés": {
+            "surface": {
+              "question": "What is the surface area of these premises? (Only premises owned or rented for less than 50 years are considered)"
+            },
+            "pourcentage": {
+              "question": "What proportion of the surface area of these premises is attributable to your association?"
+            }
+          }
+        }
+      }
+    },
+    "alimentation": {
+      "salariés": {
+        "viande rouge": {
+          "nombre de repas": {
+            "question": "How many red meat-based meals are consumed by your employees each year?"
+          }
+        },
+        "viande blanche": {
+          "nombre de repas": {
+            "question": "How many white meat-based meals are consumed by your employees each year?"
+          }
+        },
+        "poisson blanc": {
+          "nombre de repas": {
+            "question": "How many white fish-based meals are consumed by your employees each year?"
+          }
+        },
+        "poisson gras": {
+          "nombre de repas": {
+            "question": "How many oily fish-based meals are consumed by your employees each year?"
+          }
+        },
+        "végétarien": {
+          "nombre de repas": {
+            "question": "How many vegetarian meals are consumed by your employees each year?"
+          }
+        },
+        "végétalien": {
+          "nombre de repas": {
+            "question": "How many vegan meals are consumed by your employees each year?"
+          }
+        }
+      },
+      "bénévoles": {
+        "viande rouge": {
+          "nombre de repas": {
+            "question": "How many red meat-based meals are consumed by your volunteers each year?"
+          }
+        },
+        "viande blanche": {
+          "nombre de repas": {
+            "question": "How many white meat-based meals are consumed by your volunteers each year?"
+          }
+        },
+        "poisson blanc": {
+          "nombre de repas": {
+            "question": "How many white fish-based meals are consumed by your volunteers each year?"
+          }
+        },
+        "poisson gras": {
+          "nombre de repas": {
+            "question": "How many oily fish-based meals are consumed by your volunteers each year?"
+          }
+        },
+        "végétarien": {
+          "nombre de repas": {
+            "question": "How many vegetarian meals are consumed by your volunteers each year?"
+          }
+        },
+        "végétalien": {
+          "nombre de repas": {
+            "question": "How many vegan meals are consumed by your volunteers each year?"
+          }
+        }
+      },
+      "bénéficiaires": {
+        "repas présent": {
+          "question": "Does the service offered by the association involve providing meals to its beneficiaries? (events, humanitarian activities, ...)"
+        },
+        "viande rouge": {
+          "nombre de repas": {
+            "question": "How many red meat-based meals are consumed by your beneficiaries each year?"
+          }
+        },
+        "viande blanche": {
+          "nombre de repas": {
+            "question": "How many white meat-based meals are consumed by your beneficiaries each year?"
+          }
+        },
+        "poisson blanc": {
+          "nombre de repas": {
+            "question": "How many white fish-based meals are consumed by your beneficiaries each year?"
+          }
+        },
+        "poisson gras": {
+          "nombre de repas": {
+            "question": "How many oily fish-based meals are consumed by your beneficiaries each year?"
+          }
+        },
+        "végétarien": {
+          "nombre de repas": {
+            "question": "How many vegetarian meals are consumed by your beneficiaries each year?"
+          }
+        },
+        "végétalien": {
+          "nombre de repas": {
+            "question": "How many vegan meals are consumed by your beneficiaries each year?"
+          }
+        }
+      }
+    }
+  }
+}

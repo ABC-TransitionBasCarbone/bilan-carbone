@@ -1,17 +1,20 @@
 'use client'
 
-import { createContext, ReactNode, useContext, useState } from 'react'
-import Toast from './Toast'
+import { SEC, TIME_IN_MS } from '@/utils/time'
+import { SnackbarCloseReason } from '@mui/material'
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
+import Toast, { ToastColors } from './Toast'
 
-interface ToastData {
-  id: string
+interface SnackbarMessage {
   message: string
-  type: 'success' | 'error'
+  type: ToastColors
+  key: number
+  duration?: number
 }
 
 interface ToastContextType {
-  showErrorToast: (message: string) => void
-  showSuccessToast: (message: string) => void
+  showErrorToast: (message: string, duration?: number) => void
+  showSuccessToast: (message: string, duration?: number) => void
 }
 
 const ToastContext = createContext<ToastContextType | undefined>(undefined)
@@ -21,40 +24,58 @@ interface ToastProviderProps {
 }
 
 export const ToastProvider = ({ children }: ToastProviderProps) => {
-  const [toasts, setToasts] = useState<ToastData[]>([])
+  const [snackPack, setSnackPack] = useState<readonly SnackbarMessage[]>([])
+  const [open, setOpen] = useState(false)
+  const [messageInfo, setMessageInfo] = useState<SnackbarMessage | undefined>(undefined)
 
-  const showErrorToast = (message: string) => {
-    const id = `error-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
-    const newToast: ToastData = { id, message, type: 'error' }
+  useEffect(() => {
+    if (snackPack.length && !messageInfo) {
+      // Set a new snack when we don't have an active one
+      setMessageInfo({ ...snackPack[0] })
+      setSnackPack((prev) => prev.slice(1))
+      setOpen(true)
+    } else if (snackPack.length && messageInfo && open) {
+      // Close an active snack when a new one is added
+      setOpen(false)
+    }
+  }, [snackPack, messageInfo, open])
 
-    setToasts((prev) => [...prev, newToast])
+  const addToast = (message: string, type: ToastColors, duration?: number) => {
+    setSnackPack((prev) => [...prev, { message, type, key: new Date().getTime(), duration }])
   }
 
-  const showSuccessToast = (message: string) => {
-    const id = `success-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
-    const newToast: ToastData = { id, message, type: 'success' }
-
-    setToasts((prev) => [...prev, newToast])
+  const showErrorToast = (message: string, duration?: number) => {
+    addToast(message, 'error', duration)
   }
 
-  const removeToast = (id: string) => {
-    setToasts((prev) => prev.filter((toast) => toast.id !== id))
+  const showSuccessToast = (message: string, duration?: number) => {
+    addToast(message, 'success', duration)
+  }
+
+  const handleClose = (_event?: React.SyntheticEvent | Event, reason?: SnackbarCloseReason) => {
+    if (reason === 'clickaway') {
+      return
+    }
+    setOpen(false)
+  }
+
+  const handleExited = () => {
+    setMessageInfo(undefined)
   }
 
   return (
     <ToastContext.Provider value={{ showErrorToast, showSuccessToast }}>
       {children}
-      {toasts.map((toast) => (
-        <Toast
-          key={toast.id}
-          position={{ vertical: 'bottom', horizontal: 'left' }}
-          open={true}
-          onClose={() => removeToast(toast.id)}
-          message={toast.message}
-          color={toast.type}
-          toastKey={toast.id}
-        />
-      ))}
+      <Toast
+        position={{ vertical: 'bottom', horizontal: 'left' }}
+        open={open}
+        onClose={handleClose}
+        message={messageInfo?.message ?? ''}
+        color={messageInfo?.type ?? 'info'}
+        toastKey={messageInfo?.key.toString() ?? ''}
+        duration={messageInfo?.duration ?? 5 * SEC * TIME_IN_MS}
+        slotProps={{ transition: { onExited: handleExited } }}
+      />
     </ToastContext.Provider>
   )
 }

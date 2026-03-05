@@ -2,9 +2,11 @@
 
 import { Select } from '@/components/base/Select'
 import { environmentPostMapping, Post, subPostsByPost } from '@/services/posts'
+import { getSortedPosts } from '@/utils/post'
 import { Checkbox, ListItemText, ListSubheader, MenuItem, SelectChangeEvent } from '@mui/material'
 import { Environment, SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
+import { useMemo } from 'react'
 import { ALL_SUB_POSTS_VALUE } from './MultiplePosts'
 
 interface Props {
@@ -32,6 +34,12 @@ const SubPostSelector = ({
 }: Props) => {
   const t = useTranslations('emissionFactors.create')
   const tPost = useTranslations('emissionFactors.post')
+
+  const sortedPosts: Post[] = useMemo(() => {
+    const posts = Object.values(environmentPostMapping[environment || Environment.BC])
+
+    return getSortedPosts(posts, tPost, environment)
+  }, [environment, tPost])
 
   const allSubPostsValues = isAllPosts
     ? Object.values(environmentPostMapping[environment]).flatMap((postKey: Post) => subPostsByPost[postKey])
@@ -84,8 +92,7 @@ const SubPostSelector = ({
   )
 
   const renderGroupedMenuItems = () => {
-    return Object.values(environmentPostMapping[environment])
-      .sort((a, b) => tPost(a).localeCompare(tPost(b)))
+    return sortedPosts
       .map((postKey: Post) => [
         <ListSubheader key={`header-${postKey}`} disableSticky>
           {tPost(postKey)}

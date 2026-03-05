@@ -38,7 +38,17 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
    npx prisma db seed
    ```
 
-5. **Run the development server**
+5. **Set up Publicodes local development** (optionnal)
+
+   ```bash
+   # Recompile Publicodes rules (one time)
+   yarn publicodes-count:compile
+
+   # In an other terminal watch changes
+   yarn publicodes-count:watch
+   ```
+
+6. **Run the development server**
 
    ```bash
    yarn dev
@@ -70,6 +80,12 @@ Importer les Donnée cartographie depuis un [CSV du CNC](https://www.cnc.fr/cine
 
 Supprimer les réponses d'une question :
 `npx tsx src/scripts/questions/deleteAnswersWithCleanup.ts -q "question-intern-id-here"`
+
+### Scripts lancés par CRON
+
+Importer les utilisateurs depuis le FTP : `curl -X POST $NEXT_API_URL/cron/import-users -H "Authorization: Bearer $CRON_SECRET"`
+
+Créer les études de formation pour les utilisateurs qui ont commencé ou terminé une formation : `curl -X POST $NEXT_API_URL/cron/assign-training-studies -H "Authorization: Bearer $CRON_SECRET"`
 
 ### Importer les données de Secten
 
@@ -125,6 +141,13 @@ yarn cypress --spec "src/tests/end-to-end/app/auth.cy.ts"
 
 # Open Cypress GUI
 yarn cypress:gui
+```
+
+### Run Publicodes tests
+
+```bash
+# Run tests
+yarn publicodes-count:test
 ```
 
 ## Deploy on Scalingo

@@ -1,0 +1,131 @@
+achats . fournitures:
+  formule:
+    somme:
+      - petites fournitures
+      - livres
+      - papier ramette
+      - consommables
+      - piles aaa
+      - piles aa
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    petites fournitures:
+      titre: "Petites fournitures (stylos...)"
+      formule: montant * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        montant:
+          question: "Quel est le montant dépensé en petites fournitures (stylos, etc.) ?"
+          unité: €
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par euro de petites fournitures"
+          valeur: 0.367
+          unité: kgCO2e/€
+          par défaut: 0
+          note: |
+            Source: Base Carbone®
+          meta:
+            id: 20556
+
+    livres:
+      titre: "Livres"
+      formule: nombre * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        nombre:
+          question: "Combien de livres avez-vous achetés ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par livre"
+          valeur: 1.1
+          unité: kgCO2e/unité
+          par défaut: 0
+          note: |
+            Source: Base Carbone®
+          meta:
+            id: 20587
+
+    papier ramette:
+      titre: "Papier (ramette)"
+      formule: nombre * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        nombre:
+          question: "Combien de ramettes de papier avez-vous achetées ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par ramette de papier"
+          valeur: 2.29
+          unité: kgCO2e/unité
+          par défaut: 0
+          note: |
+            Source: Base Carbone®
+          meta:
+            id: 24295
+
+    consommables:
+      titre: "Consommables (cartouches d'encre…)"
+      formule: montant * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        montant:
+          question: "Quel est le montant dépensé en consommables (cartouches d'encre, etc.) ?"
+          unité: €
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par euro de consommables"
+          valeur: 0.917
+          unité: kgCO2e/€
+          par défaut: 0
+          note: |
+            Source: Base Carbone®
+          meta:
+            id: 20557
+
+    piles aaa:
+      titre: "Piles AAA (alcalines)"
+      formule: nombre * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        nombre:
+          question: "Combien de piles AAA (alcalines) avez-vous achetées ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par pile AAA"
+          valeur: 0.065
+          unité: kgCO2e/unité
+          par défaut: 0
+          note: |
+            Source: Base Carbone®
+          meta:
+            id: 24248
+
+    piles aa:
+      titre: "Piles AA (alcalines)"
+      formule: nombre * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        nombre:
+          question: "Combien de piles AA (alcalines) avez-vous achetées ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par pile AA"
+          valeur: 0.137
+          unité: kgCO2e/unité
+          par défaut: 0
+          note: |
+            Source: Base Carbone®
+          meta:
+            id: 24247

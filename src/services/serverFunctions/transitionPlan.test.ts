@@ -56,6 +56,7 @@ describe('Transition plan Server Functions', () => {
       expect(mockDuplicateTransitionPlanWithRelations).toHaveBeenCalledWith(
         mockedSourceTransitionPlan,
         'mocked-target-study-id',
+        2024,
       )
       expect(mockGetStudyById).toHaveBeenCalledTimes(2)
       expect(mockGetStudyById).toHaveBeenCalledWith('mocked-source-study-id', null)
@@ -76,6 +77,7 @@ describe('Transition plan Server Functions', () => {
       expect(mockDuplicateTransitionPlanWithRelations).toHaveBeenCalledWith(
         mockedSourceTransitionPlan,
         'mocked-target-study-id',
+        2024,
       )
 
       // only two calls, linkOldStudy throw errors because dbActualizedAuth mocked response is not initialized

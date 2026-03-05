@@ -110,6 +110,7 @@ export const mockedStudySite = {
   studentNumber: null,
   address: null,
   establishmentYear: null,
+  country: null,
 }
 
 export const mockedDbStudySite = {
@@ -133,6 +134,7 @@ export const mockedDbFullStudySite = {
     studentNumber: null,
     address: null,
     establishmentYear: null,
+    country: null,
   },
   cncVersion: null,
 }
@@ -238,6 +240,7 @@ export const getMockedDetailedFullStudySite = (
       name,
       postalCode: '12345',
       city: 'Test City',
+      country: null,
       cnc: {
         id: '1',
         numberOfProgrammedFilms: 10,

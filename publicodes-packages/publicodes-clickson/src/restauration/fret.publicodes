@@ -1,0 +1,42 @@
+restauration . fret:
+  titre: Fret
+  formule:
+    somme:
+      - routier
+      - ferroviaire
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    routier:
+      titre: Camion fret 45 m3
+      formule: consommation * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        consommation:
+          question: Distance parcourue en fret routier
+          par défaut: 0
+          unité: m3.km
+        FE:
+          valeur: 0.0578
+          unité: kgCO2e/m3.km
+          par défaut: 0
+          meta:
+            id: 43714
+
+    ferroviaire:
+      titre: Fret ferroviaire
+      formule: consommation * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        consommation:
+          question: Distance parcourue en fret ferroviaire
+          par défaut: 0
+          unité: t.km
+        FE:
+          valeur: 0.0226
+          unité: kgCO2e/t.km
+          par défaut: 0
+          meta:
+            id: 28158

@@ -7,7 +7,7 @@ import {
   TRAJECTORY_WB2C_ID,
 } from '@/constants/trajectories'
 import { FullStudy } from '@/db/study'
-import { TrajectoryWithObjectives } from '@/db/transitionPlan'
+import { TrajectoryWithObjectives, TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
 import { SectorPercentages } from '@/services/serverFunctions/trajectory.command'
 import { getStudyTotalCo2Emissions } from '@/services/study'
 import { Translations } from '@/types/translation'
@@ -96,7 +96,6 @@ interface CalculateActionBasedTrajectoryParams {
   pastStudies?: PastStudy[]
   minYear?: number
   maxYear?: number
-  withDependencies?: boolean
 }
 
 export interface CalculateTrajectoriesWithHistoryParams {
@@ -120,14 +119,13 @@ export interface TrajectoryYearBounds {
 export const convertToPastStudies = (
   linkedStudies: FullStudy[],
   externalStudies: ExternalStudy[],
-  withDependencies: boolean,
   validatedOnly: boolean,
   studyUnit: StudyResultUnit,
 ): PastStudy[] => {
   const pastStudies: PastStudy[] = []
 
   linkedStudies.forEach((study) => {
-    const totalCo2InLinkedUnit = getStudyTotalCo2Emissions(study, withDependencies, validatedOnly)
+    const totalCo2InLinkedUnit = getStudyTotalCo2Emissions(study, true, validatedOnly)
     const totalCo2 = convertValue(totalCo2InLinkedUnit, study.resultsUnit, studyUnit)
 
     pastStudies.push({
@@ -506,6 +504,9 @@ const computeFutureValue = (
           earliestFuturePoint.emissions,
         )
       }
+    } else if (year <= thresholdYear) {
+      // Studies are before threshold: emissions are stable between studyStartYear and thresholdYear
+      return { year, value: studyEmissions }
     }
   }
 
@@ -983,7 +984,13 @@ export const getSNBCData = (
         })
       }
 
-      const isFailed = isFailedTrajectory(maxYear, referenceStudyData.year, referenceTrajectory, currentTrajectory)
+      const isFailed = isFailedTrajectory(
+        maxYear,
+        referenceStudyData.year,
+        referenceTrajectory,
+        currentTrajectory,
+        withinThreshold,
+      )
 
       result[sectorId] = {
         previousTrajectoryStartYear: referenceStudyData.year,
@@ -1126,7 +1133,13 @@ export const getDefaultSBTiData = (
           maxYear,
         })
       }
-      const isFailed = isFailedTrajectory(maxYear, referenceStudyYear, referenceTrajectory, currentTrajectory)
+      const isFailed = isFailedTrajectory(
+        maxYear,
+        referenceStudyYear,
+        referenceTrajectory,
+        currentTrajectory,
+        withinThreshold,
+      )
 
       sbti15Data = {
         previousTrajectoryStartYear: referenceStudyYear,
@@ -1160,7 +1173,13 @@ export const getDefaultSBTiData = (
         maxYear,
       })
 
-      const isFailed = isFailedTrajectory(maxYear, referenceStudyYear, referenceTrajectory, currentTrajectory)
+      const isFailed = isFailedTrajectory(
+        maxYear,
+        referenceStudyYear,
+        referenceTrajectory,
+        currentTrajectory,
+        withinThreshold,
+      )
 
       sbtiWB2CData = {
         previousTrajectoryStartYear: referenceStudyYear,
@@ -1292,7 +1311,13 @@ export const getCustomData = (
         sectorPercentages: customTrajectory.sectorPercentages as SectorPercentages | undefined,
       })
 
-      const isFailed = isFailedTrajectory(maxYear, referenceYear, referenceTrajectory, currentTrajectory)
+      const isFailed = isFailedTrajectory(
+        maxYear,
+        referenceYear,
+        referenceTrajectory,
+        currentTrajectory,
+        withinThreshold,
+      )
       customTrajectoriesData.push({
         id: customTrajectory.id,
         data: {
@@ -1330,7 +1355,6 @@ export const getActionBasedData = (
         studyStartYear,
         actions: enabledActions,
         pastStudies,
-        withDependencies,
         minYear,
         maxYear,
         studyUnit,
@@ -1346,7 +1370,6 @@ export const getActionBasedData = (
       studyStartYear: referenceYear,
       actions: enabledActions,
       pastStudies,
-      withDependencies,
       minYear,
       maxYear,
       studyUnit,
@@ -1360,7 +1383,6 @@ export const getActionBasedData = (
       studyStartYear,
       actions: enabledActions,
       pastStudies,
-      withDependencies,
       minYear,
       maxYear,
       studyUnit,
@@ -1466,19 +1488,11 @@ export const calculateActionBasedTrajectory = ({
   pastStudies = [],
   minYear,
   maxYear,
-  withDependencies = true,
 }: CalculateActionBasedTrajectoryParams): TrajectoryDataPoint[] => {
   const dataPoints: TrajectoryDataPoint[] = []
   addHistoricalDataAndStudyPoint(dataPoints, pastStudies, studyEmissions, studyStartYear, minYear)
 
-  const filteredActions = actions.filter((action) => {
-    if (action.dependenciesOnly && !withDependencies) {
-      return false
-    }
-    return true
-  })
-
-  const quantitativeActions = filteredActions.filter(
+  const quantitativeActions = actions.filter(
     (action) =>
       action.potentialDeduction === ActionPotentialDeduction.Quantity &&
       action.reductionValueKg !== null &&
@@ -1642,8 +1656,9 @@ const isFailedTrajectory = (
   referenceTrajectoryStartYear: number,
   referenceTrajectory: TrajectoryDataPoint[] | null,
   currentTrajectory: TrajectoryDataPoint[],
+  isWithinThreshold?: boolean,
 ): boolean => {
-  if (!referenceTrajectory) {
+  if (!referenceTrajectory || isWithinThreshold) {
     return false
   }
   const referenceBudget = calculateTrajectoryIntegral(referenceTrajectory, referenceTrajectoryStartYear, maxYear)
@@ -1819,4 +1834,17 @@ export const getCorrectedObjectives = (
   }
 
   return null
+}
+
+export const getDefaultSnbcSectoralTrajectory = (
+  trajectories: { type: TrajectoryType; isDefault: boolean }[],
+): TrajectoryWithObjectivesAndScope | null => {
+  const trajectory = trajectories.find((t) => t.type === TrajectoryType.SNBC_SECTORAL && t.isDefault)
+  return (trajectory as TrajectoryWithObjectivesAndScope) ?? null
+}
+
+export const getDefaultSnbcSectoralPercentages = (
+  trajectories: { type: TrajectoryType; sectorPercentages: unknown; isDefault: boolean }[],
+): SectorPercentages | null => {
+  return (getDefaultSnbcSectoralTrajectory(trajectories)?.sectorPercentages as SectorPercentages) ?? null
 }

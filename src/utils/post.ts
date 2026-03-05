@@ -1,6 +1,10 @@
+import { customPostOrder } from '@/environments/clickson/utils/constant'
+import { hasCustomPostOrder } from '@/services/permissions/environment'
 import { BCPost, ClicksonPost, CutPost, Post, subPostsByPost, TiltPost } from '@/services/posts'
 import { AdditionalResultTypes, ResultType } from '@/services/study'
+import { Translations } from '@/types/translation'
 import { Environment, SubPost } from '@prisma/client'
+import { sortByCustomOrder } from './array'
 
 export const getPost = (subPost?: SubPost) =>
   subPost
@@ -77,4 +81,11 @@ export const getPostValues = (environment: Environment | undefined, type?: Resul
     default:
       return BCPost
   }
+}
+
+export const getSortedPosts = (posts: Post[], t: Translations, environment?: Environment) => {
+  if (environment && hasCustomPostOrder(environment)) {
+    return sortByCustomOrder(posts, customPostOrder, (item) => item)
+  }
+  return posts.sort((a, b) => t(a).localeCompare(t(b)))
 }

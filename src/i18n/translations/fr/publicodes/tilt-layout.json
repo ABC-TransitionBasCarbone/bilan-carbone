@@ -1,0 +1,33 @@
+{
+  "publicodes-layout": {
+    "table": {
+      "IntrantsServices": {
+        "question": "Quel montant avez-vous dépensé dans les services immatériels suivants ?",
+        "typeService": "Type de service",
+        "montantDepense": "Montant dépensé"
+      },
+      "IntrantsBiensEtMatieresTilt": {
+        "question": "Quel montant avez-vous dépensé dans les biens suivants ?",
+        "typeBien": "Type de bien",
+        "montantDepense": "Montant dépensé"
+      },
+      "TransportDeMarchandises": {
+        "question": "D'où proviennent vos livraisons ?",
+        "typeProvenance": "Provenance",
+        "pourcentageLivraisons": "Pourcentage des livraisons"
+      },
+      "DechetsDirects": {
+        "question": "Quelles quantités des déchets suivants sont jetées chaque année ?",
+        "typeDéchets": "Type de déchet",
+        "poids": "Quantité jetée"
+      },
+      "EquipementsEtImmobilisations": {
+        "question": "Pour chacun de ces équipements informatiques, veuillez indiquer combien sont possédés ou loués depuis moins de 3 ans :",
+        "typeEquipement": "Type d'équipement",
+        "nombreEquipement": "Quantité"
+      }
+    },
+    "group": {},
+    "list": {}
+  }
+}

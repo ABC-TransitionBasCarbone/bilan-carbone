@@ -1,0 +1,1280 @@
+{
+  "publicodes-rules": {
+    "général": {
+      "nombre étudiant": {
+        "question": "Numărul de studenți"
+      },
+      "nombre personnel": {
+        "question": "Numărul de personal (profesori și non-profesori)"
+      },
+      "année de construction": {
+        "question": "Anul construcției clădirii principale"
+      },
+      "année de rénovation": {
+        "question": "Anul renovării clădirii principale"
+      },
+      "pays": {
+        "question": "Țara instituției",
+        "options": {
+          "FRANCE": "FRANȚA",
+          "HONGRIE": "UNGARIA",
+          "ROUMANIE": "ROMÂNIA",
+          "CROATIE": "CROAȚIA"
+        }
+      }
+    },
+    "énergie": {
+      "électricité": {
+        "janvier": {
+          "consommation": {
+            "question": "Consumul de electricitate în ianuarie"
+          },
+          "FE": {
+            "question": "Factor de emisie al electricității"
+          }
+        },
+        "février": {
+          "consommation": {
+            "question": "Consumul de electricitate în februarie"
+          },
+          "FE": {
+            "question": "Factor de emisie al electricității"
+          }
+        },
+        "mars": {
+          "consommation": {
+            "question": "Consumul de electricitate în martie"
+          },
+          "FE": {
+            "question": "Factor de emisie al electricității"
+          }
+        },
+        "avril": {
+          "consommation": {
+            "question": "Consumul de electricitate în aprilie"
+          },
+          "FE": {
+            "question": "Factor de emisie al electricității"
+          }
+        },
+        "mai": {
+          "consommation": {
+            "question": "Consumul de electricitate în mai"
+          },
+          "FE": {
+            "question": "Factor de emisie al electricității"
+          }
+        },
+        "juin": {
+          "consommation": {
+            "question": "Consumul de electricitate în iunie"
+          },
+          "FE": {
+            "question": "Factor de emisie al electricității"
+          }
+        },
+        "juillet": {
+          "consommation": {
+            "question": "Consumul de electricitate în iulie"
+          },
+          "FE": {
+            "question": "Factor de emisie al electricității"
+          }
+        },
+        "août": {
+          "consommation": {
+            "question": "Consumul de electricitate în august"
+          },
+          "FE": {
+            "question": "Factor de emisie al electricității"
+          }
+        },
+        "septembre": {
+          "consommation": {
+            "question": "Consumul de electricitate în septembrie"
+          },
+          "FE": {
+            "question": "Factor de emisie al electricității"
+          }
+        },
+        "octobre": {
+          "consommation": {
+            "question": "Consumul de electricitate în octombrie"
+          },
+          "FE": {
+            "question": "Factor de emisie al electricității"
+          }
+        },
+        "novembre": {
+          "consommation": {
+            "question": "Consumul de electricitate în noiembrie"
+          },
+          "FE": {
+            "question": "Factor de emisie al electricității"
+          }
+        },
+        "décembre": {
+          "consommation": {
+            "question": "Consumul de electricitate în decembrie"
+          },
+          "FE": {
+            "question": "Factor de emisie al electricității"
+          }
+        }
+      },
+      "combustibles": {
+        "fioul domestique": {
+          "consommation": {
+            "question": "Consumul anual de păcură domestică"
+          }
+        },
+        "fioul lourd": {
+          "consommation": {
+            "question": "Consumul anual de păcură grea/comercială"
+          }
+        },
+        "gaz naturel": {
+          "consommation": {
+            "question": "Consumul anual de gaz natural"
+          }
+        },
+        "granulés de bois": {
+          "consommation": {
+            "question": "Consumul anual de peleți din lemn"
+          }
+        },
+        "biopropane": {
+          "consommation": {
+            "question": "Consumul anual de biopropan"
+          }
+        },
+        "réseau de chaleur": {
+          "consommation": {
+            "question": "Consumul anual de rețea de căldură"
+          }
+        }
+      },
+      "autres gaz": {
+        "gaz réfrigérants": {
+          "titre": "Gaze frigorifice",
+          "question": "Consumul anual de gaz refrigerant"
+        },
+        "gaz réfrigérant": {
+          "consommation": {
+            "question": "Consumul anual de acest gaz HFC"
+          },
+          "type": {
+            "titre": "Gaz refrigerant",
+            "question": "Gaz refrigerant",
+            "options": {
+              "R134a": "R134a",
+              "R32": "R32",
+              "R407c": "R407c",
+              "R410a": "R410a"
+            }
+          }
+        },
+        "gaz effet de serre principaux": {
+          "titre": "Gaz de seră principal",
+          "question": "Consumul anual de gaz de seră principal"
+        },
+        "gaz effet de serre principal": {
+          "consommation": {
+            "question": "Consumul anual al acestui gaz"
+          },
+          "type": {
+            "titre": "Gaz de seră principal",
+            "question": "Gaz de seră principal",
+            "options": {
+              "CO2": "CO2",
+              "CH4 fossile": "CH4 fosil",
+              "CH4 biogénique": "CH4 biogen",
+              "N2O": "N2O",
+              "SF6": "SF6",
+              "NF3": "NF3"
+            }
+          }
+        }
+      }
+    },
+    "restauration": {
+      "types de repas servis": {
+        "moyen": {
+          "nombre": {
+            "question": "Numărul anual de mese medii"
+          },
+          "FE": {
+            "question": "Factorul de emisii per masă medie"
+          }
+        },
+        "végétarien": {
+          "nombre": {
+            "question": "Numărul anual de mese vegetariene"
+          },
+          "FE": {
+            "question": "Factorul de emisii per masă vegetariană"
+          }
+        },
+        "végétalien": {
+          "nombre": {
+            "question": "Numărul anual de mese vegane"
+          },
+          "FE": {
+            "question": "Factorul de emisii per masă vegană"
+          }
+        },
+        "viande rouge": {
+          "nombre": {
+            "question": "Numărul anual de mese cu carne roșie"
+          },
+          "FE": {
+            "question": "Factorul de emisii per masă cu carne roșie"
+          }
+        },
+        "viande blanche": {
+          "nombre": {
+            "question": "Numărul anual de mese cu carne albă"
+          },
+          "FE": {
+            "question": "Factorul de emisii per masă cu carne albă"
+          }
+        },
+        "poisson": {
+          "nombre": {
+            "question": "Numărul anual de mese cu pește alb"
+          },
+          "FE": {
+            "question": "Factorul de emisii per masă cu pește alb"
+          }
+        }
+      },
+      "fret": {
+        "routier": {
+          "consommation": {
+            "question": "Distanța parcursă prin transport rutier de marfă"
+          }
+        },
+        "ferroviaire": {
+          "consommation": {
+            "question": "Distanța parcursă prin transport feroviar de marfă"
+          }
+        }
+      },
+      "fin de vie moyenne": {
+        "déchets résiduels": {
+          "quantité": {
+            "question": "Cantitatea de deșeuri reziduale"
+          }
+        },
+        "déchets organiques": {
+          "quantité": {
+            "question": "Cantitatea de deșeuri organice"
+          }
+        }
+      },
+      "distributeur automatiques": {
+        "bouteille d'eau": {
+          "nombre": {
+            "question": "Numărul anual de sticle de apă consumate"
+          },
+          "FE": {
+            "question": "Factorul de emisii per sticlă de apă"
+          }
+        },
+        "soda": {
+          "nombre": {
+            "question": "Numărul anual de sucuri consumate"
+          },
+          "FE": {
+            "question": "Factorul de emisii per suc"
+          }
+        },
+        "biscuits": {
+          "nombre": {
+            "question": "Numărul anual de pachete de biscuiți consumate"
+          },
+          "FE": {
+            "question": "Factorul de emisii per pachet de biscuiți"
+          }
+        },
+        "paquet de chips": {
+          "nombre": {
+            "question": "Numărul anual de pachete de chipsuri consumate"
+          },
+          "FE": {
+            "question": "Factorul de emisii per pachet de chipsuri"
+          }
+        },
+        "café noir": {
+          "nombre": {
+            "question": "Numărul anual de cafele negre consumate"
+          },
+          "FE": {
+            "question": "Factorul de emisii per cafea neagră"
+          }
+        },
+        "café au lait": {
+          "nombre": {
+            "question": "Cantitatea de cafea cu lapte consumată anual"
+          },
+          "FE": {
+            "question": "Factorul de emisii per kg de cafea cu lapte net"
+          }
+        },
+        "thé infusé": {
+          "nombre": {
+            "question": "Numărul anual de ceaiuri infuzate consumate"
+          },
+          "FE": {
+            "question": "Factorul de emisii per ceai infuzat"
+          }
+        },
+        "sandwich pain de mie": {
+          "nombre": {
+            "question": "Numărul anual de sandwich-uri cu pâine toast consumate"
+          },
+          "FE": {
+            "question": "Factorul de emisii per sandwich cu pâine toast"
+          }
+        },
+        "barre chocolatée": {
+          "nombre": {
+            "question": "Numărul anual de batoane de ciocolată consumate"
+          },
+          "FE": {
+            "question": "Factorul de emisii per baton de ciocolată"
+          }
+        }
+      }
+    },
+    "immobilisations": {
+      "rénovation": {
+        "bâtiment scolaire structure béton rénové": {
+          "surface": {
+            "question": "Ce suprafață de clădire școlară (structură beton) ați renovat?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per m² de clădire școlară renovată (structură beton)"
+          }
+        }
+      },
+      "équipements informatique audiovisuel": {
+        "ordinateur de bureau": {
+          "titre": "Calculator desktop",
+          "nombre": {
+            "question": "Câte calculatoare desktop ați achiziționat?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per calculator desktop"
+          }
+        },
+        "ordinateur portable": {
+          "titre": "Laptop",
+          "nombre": {
+            "question": "Câte laptopuri ați achiziționat?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per laptop"
+          }
+        },
+        "tablette": {
+          "titre": "Tabletă",
+          "nombre": {
+            "question": "Câte tablete ați achiziționat?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per tabletă"
+          }
+        },
+        "imprimante": {
+          "titre": "Imprimantă",
+          "nombre": {
+            "question": "Câte imprimante ați achiziționat?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per imprimantă"
+          }
+        },
+        "photocopieur": {
+          "titre": "Fotocopiator",
+          "nombre": {
+            "question": "Câte fotocopiatoare ați achiziționat?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per fotocopiator"
+          }
+        },
+        "vidéoprojecteur": {
+          "titre": "Videoproiector",
+          "nombre": {
+            "question": "Câte videoproiectoare ați achiziționat?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per videoproiector"
+          }
+        },
+        "serveur informatique": {
+          "titre": "Server informatic",
+          "nombre": {
+            "question": "Câte servere informatice ați achiziționat?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per server informatic"
+          }
+        },
+        "télévision 40-49 pouces": {
+          "titre": "Televizor 40-49 inch",
+          "nombre": {
+            "question": "Câte televizoare 40-49 inch ați achiziționat?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per televizor 40-49 inch"
+          }
+        },
+        "rack de serveur": {
+          "titre": "Rack de server",
+          "nombre": {
+            "question": "Câte rack-uri de server ați achiziționat?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per rack de server"
+          }
+        },
+        "télécommande universelle sans piles 80g": {
+          "titre": "Telecomandă universală fără baterii 80g",
+          "nombre": {
+            "question": "Câte telecomenzi universale fără baterii (80g) ați achiziționat?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per telecomandă universală fără baterii 80g"
+          }
+        },
+        "stéréo classique": {
+          "titre": "Stereo clasic",
+          "nombre": {
+            "question": "Câte sisteme stereo clasice ați achiziționat?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per stereo clasic"
+          }
+        },
+        "enceinte Bluetooth": {
+          "titre": "Boxă Bluetooth",
+          "nombre": {
+            "question": "Câte boxe Bluetooth ați achiziționat?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per boxă Bluetooth"
+          }
+        },
+        "smartphone 5 pouces": {
+          "titre": "Smartphone 5 inch",
+          "nombre": {
+            "question": "Câte smartphone-uri de 5 inch ați achiziționat?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per smartphone 5 inch"
+          }
+        },
+        "écran 23,8 pouces": {
+          "titre": "Ecran 23,8 inch",
+          "nombre": {
+            "question": "Câte ecrane de 23,8 inch ați achiziționat?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per ecran 23,8 inch"
+          }
+        }
+      },
+      "équipements divers": {
+        "chaise bois": {
+          "nombre": {
+            "question": "Câte scaune de birou din lemn ați achiziționat?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per scaun de birou din lemn"
+          }
+        },
+        "chaise plastique": {
+          "nombre": {
+            "question": "Câte mese de ședință ați achiziționat?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per masă de ședință"
+          }
+        },
+        "table standard": {
+          "nombre": {
+            "question": "Câte dulapuri de depozitare ați achiziționat?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per dulap de depozitare"
+          }
+        },
+        "armoire standard": {
+          "nombre": {
+            "question": "Câte fotolii de recepție ați achiziționat?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per fotoliu de recepție"
+          }
+        }
+      },
+      "divers": {
+        "tondeuse gazon thermique": {
+          "titre": "Mतowincă termică pentru iarbă",
+          "question": "Câte mototoare termice pentru iarbă dețineți?",
+          "nombre": {
+            "question": "Câte mototoare termice pentru iarbă dețineți?"
+          },
+          "FE": {
+            "question": "Factor de emisie per unitate de mototoare pentru iarbă"
+          },
+          "immo": {
+            "question": "Imobilizarea mototoarei pentru iarbă"
+          }
+        },
+        "tondeuse gazon électrique": {
+          "titre": "Mototoare electrică pentru iarbă",
+          "question": "Câte mototoare electrice pentru iarbă dețineți?",
+          "nombre": {
+            "question": "Câte mototoare electrice pentru iarbă dețineți?"
+          },
+          "FE": {
+            "question": "Factor de emisie per unitate de mototoare pentru iarbă électrique"
+          },
+          "immo": {
+            "question": "Imobilizare"
+          }
+        },
+        "bouilloire": {
+          "titre": "Fierbător electric",
+          "question": "Câte fierbătoare electrice dețineți?",
+          "nombre": {
+            "question": "Câte fierbătoare electrice dețineți?"
+          },
+          "FE": {
+            "question": "Factor de emisie per unitate de fierbător electric"
+          },
+          "immo": {
+            "question": "Imobilizarea fierbătorului electric"
+          }
+        },
+        "micro-onde": {
+          "titre": "Cuptor cu microunde",
+          "question": "Câte cuptoare cu microunde dețineți?",
+          "nombre": {
+            "question": "Câte cuptoare cu microunde dețineți?"
+          },
+          "FE": {
+            "question": "Factor de emisie per unitate de cuptor cu microunde"
+          },
+          "immo": {
+            "question": "Imobilizarea cuptorului cu microunde"
+          }
+        },
+        "aspirateur professionnel": {
+          "titre": "Aspirator profesional",
+          "question": "Câți aspiratori professionali dețineți?",
+          "nombre": {
+            "question": "Câți aspiratori professionali dețineți?"
+          },
+          "FE": {
+            "question": "Factor de emisie per unitate de aspirator profesional"
+          },
+          "immo": {
+            "question": "Imobilizare"
+          }
+        },
+        "ballon chauffe-eau électrique": {
+          "titre": "Boiler electric - 200l",
+          "question": "Câți boileri electrici - 200l dețineți?",
+          "nombre": {
+            "question": "Câți boileri electrici - 200l dețineți?"
+          },
+          "FE": {
+            "question": "Factor de emisie per unitate de boiler electric - 200l"
+          },
+          "immo": {
+            "question": "Imobilizarea boilerului electric - 200l"
+          }
+        },
+        "machine café filtre": {
+          "titre": "Cafetieră - filtru",
+          "question": "Câte cafetiere - filtru dețineți?",
+          "nombre": {
+            "question": "Câte cafetiere - filtru dețineți?"
+          },
+          "FE": {
+            "question": "Factor de emisie per unitate de cafetieră - filtru"
+          },
+          "immo": {
+            "question": "Imobilizarea cafetierei - filtru"
+          }
+        },
+        "machine café dosettes": {
+          "titre": "Cafetieră - capsule",
+          "question": "Câte cafetiere - capsule dețineți?",
+          "nombre": {
+            "question": "Câte cafetiere - capsule dețineți?"
+          },
+          "FE": {
+            "question": "Factor de emisie per unitate de cafetieră - capsule"
+          },
+          "immo": {
+            "question": "Imobilizarea cafetierei - capsule"
+          }
+        },
+        "lave-vaiselle professionnel": {
+          "titre": "Mașină de spălat vase profesională",
+          "question": "Câte mașini de spălat vase profesionale dețineți?",
+          "nombre": {
+            "question": "Câte mașini de spălat vase profesionale dețineți?"
+          },
+          "FE": {
+            "question": "Factor de emisie per unitate de mașină de spălat vase profesională"
+          },
+          "immo": {
+            "question": "Imobilizarea mașinii de spălat vase profesionale"
+          }
+        },
+        "four professionnel": {
+          "titre": "Cuptor profesional",
+          "question": "Câți cuptoare profesionali dețineți?",
+          "nombre": {
+            "question": "Câți cuptoare profesionali dețineți?"
+          },
+          "FE": {
+            "question": "Factor de emisie per unitate de cuptor profesional"
+          },
+          "immo": {
+            "question": "Imobilizarea cuptorului profesional"
+          }
+        },
+        "lave-vaiselle standard": {
+          "titre": "Mașină de spălat vase standard",
+          "question": "Câte mașini de spălat vase standard dețineți?",
+          "nombre": {
+            "question": "Câte mașini de spălat vase standard dețineți?"
+          },
+          "FE": {
+            "question": "Factor de emisie per unitate de mașină de spălat vase standard"
+          },
+          "immo": {
+            "question": "Imobilizarea mașinii de spălat vase standard"
+          }
+        },
+        "lave-linge": {
+          "titre": "Mașină de spălat rufe (capacitate 7kg)",
+          "question": "Câte mașini de spălat rufe (capacitate 7kg) dețineți?",
+          "nombre": {
+            "question": "Câte mașini de spălat rufe (capacitate 7kg) dețineți?"
+          },
+          "FE": {
+            "question": "Factor de emisie per unitate de mașină de spălat rufe (capacitate 7kg)"
+          },
+          "immo": {
+            "question": "Imobilizarea mașinii de spălat rufe (capacitate 7kg)"
+          }
+        },
+        "congélateur coffre": {
+          "titre": "Congelator (tip cufăr) - 261l",
+          "question": "Câți congatori (tip cufăr) - 261l dețineți?",
+          "nombre": {
+            "question": "Câți congatori (tip cufăr) - 261l dețineți?"
+          },
+          "FE": {
+            "question": "Factor de emisie per unitate de congelator (tip cufăr) - 261l"
+          },
+          "immo": {
+            "question": "Imobilizarea congelatorului (tip cufăr) - 261l"
+          }
+        },
+        "congélateur armoire": {
+          "titre": "Congelator - verticale - 205l",
+          "question": "Câți congatori - verticale - 205l dețineți?",
+          "nombre": {
+            "question": "Câți congatori - verticale - 205l dețineți?"
+          },
+          "FE": {
+            "question": "Factor de emisie per unitate de congelator - verticale - 205l"
+          },
+          "immo": {
+            "question": "Imobilizarea congelatorului - verticale - 205l"
+          }
+        },
+        "réfrigérateur": {
+          "titre": "Frigider - 250l",
+          "question": "Câți frigigeri - 250l dețineți?",
+          "nombre": {
+            "question": "Câți frigigeri - 250l dețineți?"
+          },
+          "FE": {
+            "question": "Factor de emisie per unitate de frigider - 250l"
+          },
+          "immo": {
+            "question": "Imobilizarea frigiderului - 250l"
+          }
+        },
+        "plaques de cuisson au gaz": {
+          "titre": "Plăci de gătit/gaz 9000W",
+          "question": "Câte plăci de gătit/gaz 9000W dețineți?",
+          "nombre": {
+            "question": "Câte plăci de gătit/gaz 9000W dețineți?"
+          },
+          "FE": {
+            "question": "Factor de emisie per unitate de plăci de gătit/gaz 9000W"
+          },
+          "immo": {
+            "question": "Imobilizarea plăcilor de gătit/gaz 9000W"
+          }
+        },
+        "tatami": {
+          "titre": "Tatami",
+          "question": "Câți tatami dețineți?",
+          "nombre": {
+            "question": "Câți tatami dețineți?"
+          },
+          "FE": {
+            "question": "Factor de emisie per unitate de tatami"
+          },
+          "immo": {
+            "question": "Imobilizarea tatamilui"
+          }
+        },
+        "gymnastique agré barre fixe": {
+          "titre": "Gimnastică, bară fixă",
+          "question": "Câte bare fixe dețineți?",
+          "nombre": {
+            "question": "Câte bare fixe dețineți?"
+          },
+          "FE": {
+            "question": "Factor de emisie per unitate de bară fixă"
+          },
+          "immo": {
+            "question": "Imobilizarea barei fixe"
+          }
+        },
+        "gymnastique agré barres parallèles": {
+          "titre": "Gimnastică, bare paralele",
+          "question": "Câte bare paralele dețineți?",
+          "nombre": {
+            "question": "Câte bare paralele dețineți?"
+          },
+          "FE": {
+            "question": "Factor de emisie per unitate de bare paralele"
+          },
+          "immo": {
+            "question": "Imobilizarea barelor paralele"
+          }
+        }
+      },
+      "construction": {
+        "bâtiment scolaire structure béton": {
+          "surface": {
+            "question": "Ce suprafață de clădire școlară (structură beton) are incinta școlii dumneavoastră?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per m² de clădire școlară (structură beton)"
+          }
+        },
+        "parking bâtiment structure béton": {
+          "surface": {
+            "question": "Ce suprafață de parcare (clădire - structură beton) are incinta școlii dumneavoastră?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per m² de parcare (clădire - structură beton)"
+          }
+        },
+        "parking surface bitume": {
+          "surface": {
+            "question": "Ce suprafață de parcare (suprafață bitum) are incinta școlii dumneavoastră?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per m² de parcare (suprafață bitum)"
+          }
+        },
+        "parking surface semi-dure": {
+          "surface": {
+            "question": "Ce suprafață de parcare (suprafață semi-dură) are incinta școlii dumneavoastră?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per m² de parcare (suprafață semi-dură)"
+          }
+        },
+        "garage structure béton": {
+          "surface": {
+            "question": "Ce suprafață de garaj (structură beton) are incinta școlii dumneavoastră?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per m² de garaj (structură beton)"
+          }
+        },
+        "garage structure métal": {
+          "surface": {
+            "question": "Ce suprafață de garaj (structură metal) are incinta școlii dumneavoastră?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per m² de garaj (structură metal)"
+          }
+        }
+      }
+    },
+    "déplacements": {
+      "voyages scolaires": {
+        "RER transilien métro tram": {
+          "titre": "Trenul regional, RER, Metrou, Tramvai",
+          "distance": {
+            "question": "Pasageri (per km)"
+          }
+        },
+        "bus": {
+          "titre": "Autobuz",
+          "distance": {
+            "question": "Distanța (km)"
+          }
+        },
+        "bus électrique": {
+          "titre": "Autobuz electric",
+          "distance": {
+            "question": "Pasageri (per km)"
+          }
+        },
+        "TER": {
+          "titre": "TER",
+          "distance": {
+            "question": "Distanța (km)"
+          }
+        },
+        "TGV": {
+          "titre": "TGV",
+          "distance": {
+            "question": "Distanța (km)"
+          }
+        },
+        "avion court courrier": {
+          "titre": "Avion zbor scurt",
+          "distance": {
+            "question": "Distanța (km)"
+          }
+        },
+        "avion moyen courrier": {
+          "titre": "Avion zbor mediu",
+          "distance": {
+            "question": "Distanța (km)"
+          }
+        },
+        "avion long courrier": {
+          "titre": "Avion zbor lung",
+          "distance": {
+            "question": "Distanța (km)"
+          }
+        }
+      },
+      "transport des élèves": {
+        "RER transilien métro tram": {
+          "titre": "Trenul regional, RER, Metrou, Tramvai",
+          "distance": {
+            "question": "Pasageri (per km)"
+          }
+        },
+        "vélo électrique": {
+          "titre": "Bicicletă electrică",
+          "distance": {
+            "question": "Distanța (km)"
+          }
+        },
+        "trottinette électrique": {
+          "titre": "Trotinetă electrică",
+          "distance": {
+            "question": "Distanța (km)"
+          }
+        },
+        "moto essence": {
+          "titre": "Motocicletă pe benzină",
+          "distance": {
+            "question": "Distanța (km)"
+          }
+        },
+        "véhicule compact électrique": {
+          "titre": "Vehicul compact electric",
+          "distance": {
+            "question": "Distanța (km)"
+          }
+        },
+        "voiture individuelle essence": {
+          "titre": "Mașină individuală pe benzină",
+          "distance": {
+            "question": "Distanța (km)"
+          }
+        },
+        "voiture individuelle diesel": {
+          "titre": "Mașină individuală diesel",
+          "distance": {
+            "question": "Distanța (km)"
+          }
+        },
+        "bus": {
+          "titre": "Autobuz",
+          "distance": {
+            "question": "Distanța (km)"
+          }
+        },
+        "bus électrique": {
+          "titre": "Autobuz electric",
+          "distance": {
+            "question": "Pasageri (per km)"
+          }
+        },
+        "TER": {
+          "titre": "TER",
+          "distance": {
+            "question": "Distanța (km)"
+          }
+        },
+        "TGV": {
+          "titre": "TGV",
+          "distance": {
+            "question": "Distanța (km)"
+          }
+        }
+      },
+      "transport du personnel": {
+        "RER transilien métro tram": {
+          "titre": "Trenul regional, RER, Metrou, Tramvai",
+          "distance": {
+            "question": "Pasageri (per km)"
+          }
+        },
+        "vélo électrique": {
+          "titre": "Bicicletă electrică",
+          "distance": {
+            "question": "Distanța (km)"
+          }
+        },
+        "trottinette électrique": {
+          "titre": "Trotinetă electrică",
+          "distance": {
+            "question": "Distanța (km)"
+          }
+        },
+        "moto essence": {
+          "titre": "Motocicletă pe benzină",
+          "distance": {
+            "question": "Distanța (km)"
+          }
+        },
+        "véhicule compact électrique": {
+          "titre": "Vehicul compact electric",
+          "distance": {
+            "question": "Distanța (km)"
+          }
+        },
+        "voiture individuelle essence": {
+          "titre": "Mașină individuală pe benzină",
+          "distance": {
+            "question": "Distanța (km)"
+          }
+        },
+        "voiture individuelle diesel": {
+          "titre": "Mașină individuală diesel",
+          "distance": {
+            "question": "Distanța (km)"
+          }
+        },
+        "bus": {
+          "titre": "Autobuz",
+          "distance": {
+            "question": "Distanța (km)"
+          }
+        },
+        "bus électrique": {
+          "titre": "Autobuz electric",
+          "distance": {
+            "question": "Pasageri (per km)"
+          }
+        },
+        "TER": {
+          "titre": "TER",
+          "distance": {
+            "question": "Distanța (km)"
+          }
+        },
+        "TGV": {
+          "titre": "TGV",
+          "distance": {
+            "question": "Distanța (km)"
+          }
+        }
+      }
+    },
+    "achats": {
+      "produits chimiques": {
+        "produit vaisselle liquide": {
+          "consommation": {
+            "question": "Consumul anual de detergent lichid pentru vase"
+          }
+        },
+        "savon liquide": {
+          "consommation": {
+            "question": "Consumul anual de săpun lichid"
+          }
+        },
+        "produit vitre": {
+          "consommation": {
+            "question": "Consumul anual de detergent pentru geamuri"
+          }
+        },
+        "nettoyant sols": {
+          "consommation": {
+            "question": "Consumul anual de detergent pentru pardoseli"
+          }
+        },
+        "nettoyant multi-usages": {
+          "consommation": {
+            "question": "Consumul anual de detergent universal"
+          }
+        },
+        "détergent sanitaire": {
+          "consommation": {
+            "question": "Consumul anual de detergent sanitar"
+          }
+        },
+        "désinfectant": {
+          "consommation": {
+            "question": "Consumul anual de dezinfectant"
+          }
+        },
+        "chlore": {
+          "consommation": {
+            "question": "Consumul anual de clor"
+          }
+        },
+        "bicarbonate de soude": {
+          "consommation": {
+            "question": "Consumul anual de bicarbonat de sodiu"
+          }
+        },
+        "peinture revêtement mural intérieur": {
+          "consommation": {
+            "question": "Consumul anual de vopsea - acoperire perete interior"
+          }
+        },
+        "peinture revêtement mural extérieur": {
+          "consommation": {
+            "question": "Consumul anual de vopsea - acoperire perete exterior"
+          }
+        },
+        "savon solide": {
+          "consommation": {
+            "question": "Consumul anual de săpun solid"
+          }
+        },
+        "vinaigre blanc": {
+          "consommation": {
+            "question": "Consumul anual de oțet alb"
+          }
+        },
+        "soude solide": {
+          "consommation": {
+            "question": "Consumul anual de sodă solidă (pudră, granule)"
+          }
+        },
+        "acide sulfurique": {
+          "consommation": {
+            "question": "Consumul anual de acid sulfuric"
+          }
+        },
+        "acide chlorhydrique": {
+          "consommation": {
+            "question": "Consumul anual de acid clorhidric"
+          }
+        }
+      },
+      "fournitures": {
+        "petites fournitures": {
+          "montant": {
+            "question": "Ce sumă ați cheltuit pe rechizite mici (pixuri etc.)?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per euro pentru rechizite mici"
+          }
+        },
+        "livres": {
+          "nombre": {
+            "question": "Câte cărți ați achiziționat?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per carte"
+          }
+        },
+        "papier ramette": {
+          "nombre": {
+            "question": "Câte topuri de hârtie ați achiziționat?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per top de hârtie"
+          }
+        },
+        "consommables": {
+          "montant": {
+            "question": "Ce sumă ați cheltuit pe consumabile (cartușe de cerneală etc.)?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per euro pentru consumabile"
+          }
+        },
+        "piles aaa": {
+          "nombre": {
+            "question": "Câte baterii AAA (alcaline) ați achiziționat?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per baterie AAA"
+          }
+        },
+        "piles aa": {
+          "nombre": {
+            "question": "Câte baterii AA (alcaline) ați achiziționat?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per baterie AA"
+          }
+        }
+      },
+      "fin de vie moyenne": {
+        "carton": {
+          "nombre": {
+            "question": "Cantitatea de carton (în tone)?"
+          },
+          "FE": {
+            "question": "Factorul de emisii pentru carton"
+          }
+        },
+        "plastique moyen": {
+          "nombre": {
+            "question": "Cantitatea de plastic mediu (în tone)?"
+          },
+          "FE": {
+            "question": "Factorul de emisii pentru plastic mediu"
+          }
+        },
+        "verre": {
+          "nombre": {
+            "question": "Cantitatea de sticlă (în tone)?"
+          },
+          "FE": {
+            "question": "Factorul de emisii pentru sticlă"
+          }
+        },
+        "bois": {
+          "nombre": {
+            "question": "Cantitatea de lemn (în tone)?"
+          },
+          "FE": {
+            "question": "Factorul de emisii pentru lemn"
+          }
+        }
+      },
+      "équipements de sport": {
+        "ballon de volley": {
+          "nombre": {
+            "question": "Câte mingi de volei ați achiziționat?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per minge de volei"
+          }
+        },
+        "ballon de handball": {
+          "nombre": {
+            "question": "Câte mingi de handbal ați achiziționat?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per minge de handbal"
+          }
+        },
+        "kimono judo": {
+          "nombre": {
+            "question": "Câte kimono-uri de judo ați achiziționat?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per kimono (judo)"
+          }
+        },
+        "shorts tous sports": {
+          "nombre": {
+            "question": "Câte șorturi pentru toate sporturile ați achiziționat?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per șort pentru toate sporturile"
+          }
+        },
+        "maillots tous sports": {
+          "nombre": {
+            "question": "Câte tricouri pentru toate sporturile ați achiziționat?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per tricou pentru toate sporturile"
+          }
+        },
+        "t-shirt polyester": {
+          "nombre": {
+            "question": "Câte tricouri din poliester ați achiziționat?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per tricou din poliester"
+          }
+        },
+        "ballon de basket": {
+          "nombre": {
+            "question": "Câte mingi de baschet ați achiziționat?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per minge de baschet"
+          }
+        },
+        "ballon de football": {
+          "nombre": {
+            "question": "Câte mingi de fotbal ați achiziționat?"
+          },
+          "FE": {
+            "question": "Factorul de emisii per minge de fotbal"
+          }
+        }
+      }
+    }
+  },
+  "publicodes-units": {
+    "étudiant": "[UPDATED] étudiant",
+    "personne": "[UPDATED] personne",
+    "année": "[UPDATED] année",
+    "pays": "[UPDATED] pays",
+    "kWh": "kWh",
+    "litre": "[UPDATED] litre",
+    "kWh PCI": "kWh PCI",
+    "kgCO2e/kg": "kgCO2e/kg",
+    "repas": "[UPDATED] repas",
+    "kgCO2e/repas": "[UPDATED] kgCO2e/repas",
+    "m3/km": "m3.km",
+    "t/km": "t.km",
+    "t": "t",
+    "bouteille": "[UPDATED] bouteille",
+    "kgCO2e/bouteille": "[UPDATED] kgCO2e/bouteille",
+    "canette": "[UPDATED] canette",
+    "kgCO2e/canette": "[UPDATED] kgCO2e/canette",
+    "kg de poids net": "kg de poids net",
+    "kgCO2e/kg de poids net": "kgCO2e/kg de poids net",
+    "paquet": "[UPDATED] paquet",
+    "kgCO2e/paquet": "[UPDATED] kgCO2e/paquet",
+    "barre": "[UPDATED] barre",
+    "m2": "m2",
+    "kgCO2e/m2": "kgCO2e/m2",
+    "kgCO2e": "kgCO2e",
+    "unité": "[UPDATED] unité",
+    "kgCO2e/unité": "[UPDATED] kgCO2e/unité",
+    "km": "km",
+    "kg": "kg",
+    "€": "€",
+    "kgCO2e/€": "kgCO2e/€",
+    "kgCO2e/t": "kgCO2e/t"
+  }
+}

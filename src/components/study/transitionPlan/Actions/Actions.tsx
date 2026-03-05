@@ -1,5 +1,6 @@
 'use client'
 
+import type { TagFamily } from '@/components/form/ScopeSelectors'
 import type { ActionWithRelations } from '@/db/transitionPlan'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteAction } from '@/services/serverFunctions/transitionPlan'
@@ -22,6 +23,8 @@ interface Props {
   canEdit: boolean
   studyId: string
   studyRealizationStartDate: string
+  sites: Array<{ id: string; name: string }>
+  tagFamilies: TagFamily[]
 }
 
 const fuseOptions = {
@@ -30,7 +33,16 @@ const fuseOptions = {
   isCaseSensitive: false,
 }
 
-const Actions = ({ actions, studyUnit, transitionPlanId, canEdit, studyId, studyRealizationStartDate }: Props) => {
+const Actions = ({
+  actions,
+  studyUnit,
+  transitionPlanId,
+  canEdit,
+  studyId,
+  studyRealizationStartDate,
+  sites,
+  tagFamilies,
+}: Props) => {
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
   const t = useTranslations('study.transitionPlan.actions')
@@ -100,6 +112,7 @@ const Actions = ({ actions, studyUnit, transitionPlanId, canEdit, studyId, study
         canEdit={canEdit}
         studyId={studyId}
         studyUnit={studyUnit}
+        allSites={sites}
       />
       {isEditModalOpen && (
         <ActionModal
@@ -109,6 +122,8 @@ const Actions = ({ actions, studyUnit, transitionPlanId, canEdit, studyId, study
           transitionPlanId={transitionPlanId}
           studyUnit={studyUnit}
           studyRealizationStartDate={studyRealizationStartDate}
+          sites={sites}
+          tagFamilies={tagFamilies}
         />
       )}
       {isDeleteModalOpen && (

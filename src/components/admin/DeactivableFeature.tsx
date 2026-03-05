@@ -71,7 +71,7 @@ const DeactivableFeature = ({ restrictions }: Props) => {
 
   return (
     <>
-      <div className="mt2 align-center">
+      <div className="mt2 align-center" data-testid={`deactivable-feature-${restrictions.feature}`}>
         <h4 className="flex-col mr1">{t(restrictions.feature)}</h4>
         <FormControl>
           <FormControlLabel
@@ -80,6 +80,7 @@ const DeactivableFeature = ({ restrictions }: Props) => {
                 aria-label={t(restrictions.active.toString())}
                 checked={restrictions.active}
                 onChange={(event) => changeFeatureStatus(event.target.checked)}
+                data-testid={`deactivable-feature-${restrictions.feature}-toggle`}
               />
             }
             label={t(restrictions.active.toString())}

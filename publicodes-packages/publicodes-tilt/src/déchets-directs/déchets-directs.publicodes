@@ -1,0 +1,5 @@
+déchets:
+  titre: Déchets directs
+  formule:
+    somme:
+      - emballages et plastiques

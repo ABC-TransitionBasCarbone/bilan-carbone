@@ -1,5 +1,5 @@
 import { FormTextField } from '@/components/form/TextField'
-import { AddActionFormCommand } from '@/services/serverFunctions/transitionPlan.command'
+import { AddActionFormCommand } from '@/services/serverFunctions/action.command'
 import AddIcon from '@mui/icons-material/Add'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { IconButton, Typography } from '@mui/material'

@@ -29,7 +29,7 @@ const ResultFilters = ({
   const tagItems = useMemo(() => {
     return study.tagFamilies.reduce(
       (acc, tagFamily) => {
-        const tagInfos = tagFamily.tags.map((tag) => ({ id: tag.name, label: tag.name }))
+        const tagInfos = tagFamily.tags.map((tag) => ({ id: tag.id, label: tag.name }))
 
         if (tagInfos.length > 0) {
           acc[tagFamily.id] = {

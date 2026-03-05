@@ -1,0 +1,22 @@
+.errorContainer {
+  border: 1px solid var(--error-100);
+  background-color: var(--error-background);
+  border-radius: 0.25rem;
+}
+
+.errorTitle {
+  color: var(--error-200);
+  font-weight: 600;
+}
+
+.errorMessage {
+  color: var(--error-100);
+}
+
+.loadingContainer {
+  text-align: center;
+}
+
+.noQuestionsMessage {
+  color: var(--grayscale-600);
+}

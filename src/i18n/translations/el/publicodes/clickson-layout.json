@@ -1,0 +1,26 @@
+{
+  "publicodes-layout": {
+    "table": {
+      "EquipementsInformatiqueAudiovisuel": {
+        "question": "Χρησιμοποιούμενος εξοπλισμός πληροφορικής και οπτικοακουστικών μέσων",
+        "equipement": "Εξοπλισμός",
+        "nombre": "Αριθμός"
+      },
+      "TransportDesEleves": {
+        "question": "Απόσταση που διανύουν οι μαθητές για να φτάσουν στο ίδρυμα",
+        "moyenTransport": "Μέσο μεταφοράς",
+        "distance": "Απόσταση μετ' επιστροφής σε χλμ"
+      },
+      "TransportDuPersonnel": {
+        "question": "Απόσταση που διανύει το προσωπικό για να φτάσει στο ίδρυμα",
+        "moyenTransport": "Μέσο μεταφοράς",
+        "distance": "Απόσταση μετ' επιστροφής σε χλμ"
+      },
+      "VoyagesScolaires": {
+        "question": "Απόσταση που διανύεται κατά τη διάρκεια των σχολικών ταξιδιών",
+        "moyenTransport": "Μέσο μεταφοράς",
+        "distance": "Απόσταση (χλμ)"
+      }
+    }
+  }
+}

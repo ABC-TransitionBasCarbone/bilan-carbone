@@ -5,17 +5,19 @@ import { Typography } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { Control, useWatch } from 'react-hook-form'
+import { SectorFormData } from '../transitionPlan/SectorAllocationBlock'
 import styles from './SectorPercentageInputs.module.css'
 
 interface Props {
-  control: Control<TrajectoryFormData>
+  canEdit: boolean
+  control: Control<SectorFormData> | Control<TrajectoryFormData>
 }
 
-const SectorPercentageInputs = ({ control }: Props) => {
+const SectorPercentageInputs = ({ canEdit, control }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectoryModal.sectors')
 
   const sectorPercentages = useWatch({
-    control,
+    control: control as Control<SectorFormData>,
     name: 'sectorPercentages',
   })
 
@@ -31,9 +33,10 @@ const SectorPercentageInputs = ({ control }: Props) => {
       <div className={classNames('grid gapped1', styles.sectorGrid)}>
         {SECTEN_SECTORS.map((sector) => (
           <FormTextField
+            disabled={!canEdit}
             key={sector}
             name={`sectorPercentages.${sector}`}
-            control={control}
+            control={control as Control<SectorFormData>}
             label={t(sector)}
             type="number"
             placeholder={t('placeholder')}

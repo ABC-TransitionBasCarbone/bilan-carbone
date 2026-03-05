@@ -36,6 +36,7 @@ import {
   OrganizationVersionWithOrganization,
 } from '@/db/organization'
 import { getAnswerByQuestionId, getQuestionByIdIntern, getQuestionsByIdIntern } from '@/db/question'
+import { updateSituationFields } from '@/db/situation'
 import {
   addSourceToStudy,
   clearEmissionSourceEmissionFactor,
@@ -81,7 +82,7 @@ import {
   upsertStudyExport,
   upsertStudyTemplate,
 } from '@/db/study'
-import { getTransitionPlanByStudyId } from '@/db/transitionPlan'
+import { getTransitionPlanByStudyId, getTransitionPlansWhereStudyIsLinked } from '@/db/transitionPlan'
 import {
   addUser,
   getUserApplicationSettings,
@@ -92,6 +93,7 @@ import {
 } from '@/db/user'
 import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
+import { StudySiteFields, studySiteToSituation } from '@/services/studySiteToSituation'
 import { getNestedValue, groupBy } from '@/utils/array'
 import { mapCncToStudySite } from '@/utils/cnc'
 import { calculateDistanceFromParis } from '@/utils/distance'
@@ -163,10 +165,12 @@ import {
   getEnvironmentsForDuplication,
   isAdminOnStudyOrga,
 } from '../permissions/study'
+import { isSimplifiedEnvironment } from '../publicodes/simplifiedPublicodesConfig'
 import { deleteFileFromBucket, getFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'
 import { getTransEnvironmentSubPost, hasSufficientLevel } from '../study'
 import { UpdateEmissionSourceCommand } from './emissionSource.command'
 import { saveAnswerForQuestion } from './question'
+import { saveSituation as saveSituationInDB } from './situation'
 import {
   AddEngagementActionCommand,
   ChangeStudyCinemaCommand,
@@ -337,6 +341,7 @@ export const createStudyCommand = async (
                 ca: site.ca ? site.ca * caUnit : organizationSite.ca,
                 volunteerNumber: site.volunteerNumber || organizationSite.volunteerNumber,
                 beneficiaryNumber: site.beneficiaryNumber || organizationSite.beneficiaryNumber,
+                country: organizationSite.country || undefined,
               }
 
               if (cncData) {
@@ -361,6 +366,15 @@ export const createStudyCommand = async (
       if (!tx) {
         // This cannot be part of a transaction easily so it is done in the duplication flow after the transaction is committed
         await addUserChecklistItem(UserChecklist.CreateFirstStudy)
+      }
+
+      if (isSimplifiedEnvironment(session.user.environment)) {
+        await Promise.all(
+          createdStudy.sites.map(async (site) => {
+            await saveSituationInDB(createdStudy.id, site.id, {}, {}, '')
+            await updateSituationWithStudySiteData(site.id, site, session.user.environment)
+          }),
+        )
       }
       return { id: createdStudy.id }
     } catch (e) {
@@ -446,7 +460,10 @@ export const changeStudyDates = async ({ studyId, ...command }: ChangeStudyDates
     const currentYear = informations.studyWithRights.startDate.getFullYear()
 
     if (newYear !== currentYear) {
-      const transitionPlan = await getTransitionPlanByStudyId(studyId)
+      const [transitionPlan, transitionPlanLinks] = await Promise.all([
+        getTransitionPlanByStudyId(studyId),
+        getTransitionPlansWhereStudyIsLinked(studyId),
+      ])
 
       if (transitionPlan) {
         const response = await getLinkedAndExternalStudies(transitionPlan.id)
@@ -463,6 +480,14 @@ export const changeStudyDates = async ({ studyId, ...command }: ChangeStudyDates
         if (hasLinkedOrExternalStudySameYearOrAfter) {
           throw new Error('studyYearMustBeAfterLinkedStudies')
         }
+      }
+
+      const blockingLink = transitionPlanLinks.find(
+        (link) => link.transitionPlan.study.startDate.getFullYear() <= newYear,
+      )
+
+      if (blockingLink) {
+        throw new Error(`studyIsLinkedInTransitionPlan:${blockingLink.transitionPlan.study.name}`)
       }
     }
 
@@ -553,6 +578,7 @@ export const changeStudyCinema = async (studySiteId: string, cncId: string, data
     await updateNumberOfProgrammedFilms({ cncId, numberOfProgrammedFilms })
     await updateStudyOpeningHours(studySiteId, openingHours, openingHoursHoliday)
     await updateStudySiteData(studySiteId, finalUpdateData)
+    await updateSituationWithStudySiteData(studySiteId, finalUpdateData, informations.user.environment)
 
     // Recalculate emissions for affected emissions if dependent fields changed
     if (changedFields.length > 0 && informations.user.organizationVersionId) {
@@ -561,28 +587,19 @@ export const changeStudyCinema = async (studySiteId: string, cncId: string, data
     }
   })
 
-export const changeStudyEstablishment = async (studySiteId: string, data: ChangeStudyEstablishmentCommand) =>
-  withServerResponse('changeStudyEstablishment', async () => {
-    const studySites = await getStudiesSitesFromIds([studySiteId])
+async function updateSituationWithStudySiteData(
+  studySiteId: string,
+  siteDependentFields: StudySiteFields,
+  environment: Environment,
+) {
+  if (isSimplifiedEnvironment(environment)) {
+    const situationUpdates = studySiteToSituation(environment, siteDependentFields)
 
-    if (!studySites || studySites.length === 0) {
-      throw new Error(NOT_AUTHORIZED)
+    if (Object.keys(situationUpdates).length > 0) {
+      await updateSituationFields(studySiteId, situationUpdates)
     }
-
-    const study = studySites[0].study
-
-    if (!study) {
-      throw new Error(NOT_AUTHORIZED)
-    }
-
-    const informations = await getStudyRightsInformations(study.id)
-
-    if (informations === null) {
-      throw new Error(NOT_AUTHORIZED)
-    }
-
-    await updateStudySiteData(studySiteId, data)
-  })
+  }
+}
 
 export const hasActivityData = async (
   studyId: string,
@@ -825,6 +842,8 @@ const getOrCreateUserAndSendStudyInvite = async (
   existingUser: UserWithAccounts | null,
   newRoleOnStudy?: StudyRole,
   skipInviteEmail = false,
+  firstName?: string,
+  lastName?: string,
 ) => {
   let accountId = ''
   const t = await getTranslations('study.role')
@@ -833,8 +852,8 @@ const getOrCreateUserAndSendStudyInvite = async (
   if (!existingUser) {
     const newUser = await addUser({
       email: email,
-      firstName: '',
-      lastName: '',
+      firstName: firstName || '',
+      lastName: lastName || '',
       source: creatorDBUser?.source,
       accounts: {
         create: {
@@ -1036,7 +1055,7 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
   })
 
 export const newStudyContributor = async (
-  { email, subPosts, ...command }: NewStudyContributorCommand,
+  { email, firstName, lastName, subPosts, ...command }: NewStudyContributorCommand,
   toDeleteContributors?: StudyContributorDeleteParams[],
 ) =>
   withServerResponse('newStudyContributor', async () => {
@@ -1077,6 +1096,10 @@ export const newStudyContributor = async (
       organizationVersion as OrganizationVersionWithOrganization,
       session.user,
       existingUser,
+      undefined,
+      false,
+      firstName,
+      lastName,
     )
 
     if (
@@ -2526,6 +2549,30 @@ export const editStudyComment = async (commentId: string, newComment: string, st
     return await updateStudyComment(commentId, {
       comment: newComment,
     })
+  })
+
+export const changeStudyEstablishment = async (studySiteId: string, data: ChangeStudyEstablishmentCommand) =>
+  withServerResponse('changeStudyEstablishment', async () => {
+    const studySites = await getStudiesSitesFromIds([studySiteId])
+    if (!studySites || studySites.length === 0) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = studySites[0].study
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const informations = await getStudyRightsInformations(study.id)
+    if (informations === null) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    if (!canChangeOpeningHours(informations.user, informations.studyWithRights)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    await updateStudySiteData(studySiteId, data)
+    await updateSituationWithStudySiteData(studySiteId, data, informations.user.environment)
   })
 
 export const addEngagementAction = async ({ studyId, sites, ...command }: AddEngagementActionCommand) =>

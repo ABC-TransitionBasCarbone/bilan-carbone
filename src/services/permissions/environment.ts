@@ -62,7 +62,9 @@ export const hasAccessToAllLocales = isClickson
 
 export const hasAccessToSimplifiedEmissionAnalysis = isClickson
 
-export const canCreateStudyWithoutSpecificRights = isSimplified
+export const canCreateStudyWithoutSpecificRights = isCut
+
+export const canCreateStudyOnlyAsAdministrator = isClickson
 
 export const hasAccessToStudySiteAddAndSelection = (environment: Environment) =>
   ([BC, TILT, CUT] as Environment[]).includes(environment)
@@ -90,7 +92,8 @@ export const hasAccessToResultsRatioTab = isCut
 
 export const hasAccessToAdvancedEmissionAnalysis = isTilt
 
-export const hasAlwaysAccessToOrganizationVersion = isTilt
+export const hasAlwaysAccessToOrganizationVersion = (environment: Environment) =>
+  ([TILT, CLICKSON] as Environment[]).includes(environment)
 
 export const hasStartLinkOnFootprints = isTilt
 
@@ -105,3 +108,9 @@ export const isTiltSimplifiedFeatureActive = async (environment: Environment) =>
 
   return isFeatureActiveForEnvironment(DeactivatableFeature.TiltSimplified, environment)
 }
+
+export const hasAccessToHomeSubtitle = isClickson
+
+export const hasAccessToNamingInAddContributor = isClickson
+
+export const hasHomeButtonHeader = isClickson

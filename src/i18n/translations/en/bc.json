@@ -23,9 +23,15 @@
     "ISO14069": "ISO 14069",
     "env_specific_export": "Bilan Carbone®",
     "bc": {
-      "title": "Bilan Carbone® Equivalence",
-      "category": "Bilan Carbone® Category",
-      "emissions": "Emissions (tCO2e)"
+      "title": "Export in Carbon Footprint® format",
+      "category": "Carbon Footprint® Category",
+      "emissions": "Emissions (tCO2e)",
+      "disclaimerExcel1": "Attention, the results you obtain here are solely from the Count simplified carbon footprint, and should under no circumstances be used as official Carbon Footprint® results.",
+      "disclaimerExcel2": "The process you followed via the Count tool is NOT an official Carbon Footprint® assessment, even though the results obtained can already help you better understand how to reduce your impact by identifying your most emissive activities.",
+      "disclaimerExcel3": "However, this simplified carbon footprint is the first step towards a more comprehensive approach like the Carbon Footprint®!",
+      "disclaimerExcel4": "For the following years, you can either renew your simplified carbon footprint measurement with the Count tool, or carry out a full Carbon Footprint®.",
+      "disclaimerExcel5": "A Carbon Footprint® follows a very specific methodology and must meet a number of objective criteria. For example, during a Carbon Footprint®, management must be engaged, the organization's various stakeholders must be mobilized, uncertainties must be calculated and associated with emissions, and above all, a solid transition plan must be built to engage the organization in a low-carbon transition.",
+      "disclaimerExcel6": "If you wish to embark on a Carbon Footprint® in the coming years, it all starts with training in the methodology, or by contacting us at count@cut-collectif.fr, or by being supported by a Carbon Footprint® provider!"
     },
     "glossary": {
       "GHGP": {
@@ -385,7 +391,8 @@
       "team": "My team",
       "informationDefinition": "Information definition",
       "dataAccounting": "Accounting of data",
-      "trajectories": "Reduction trajectories",
+      "trajectories": "Trajectories and objectives",
+      "initialization": "Initialization",
       "objectives": "Reduction objectives",
       "actionPlan": "Action plan",
       "commingSoon": "Coming soon",
@@ -559,6 +566,8 @@
         "titleEdit": "Edit contributor on study : {name}",
         "title": "Add on contributor on study : {name}",
         "email": "Email",
+        "firstName": "First name",
+        "lastName": "Last name",
         "post": "Category",
         "subPost": "Subcategory",
         "create": "Add person",
@@ -729,6 +738,7 @@
       "format": "Format",
       "post": "Category",
       "subPost": "Subcategory",
+      "value": "Value",
       "tag": "Tag",
       "download": "Download",
       "downloadResults": "Results",
@@ -756,12 +766,6 @@
       "units": {
         "K": "kgCO₂e",
         "T": "tCO₂e"
-      },
-      "pageFilters": {
-        "title": "Filters",
-        "posts": "Categories and Subcategories",
-        "tags": "Tags",
-        "noFiltersSelected": "No filter selected"
       },
       "tagGlossary": "Double count on charts by tags",
       "tagGlossaryDescription": "Emission sources can have multiple tags, so these are counted in each tag on this graph. It is therefore normal that you have a larger total here than in your study.",
@@ -976,8 +980,50 @@
         "learnMore": "Learn more",
         "hideDetails": "Hide details"
       },
+      "initialization": {
+        "title": "Initialise your transition plan",
+        "onboarding": {
+          "title": "Prepare your transition plan",
+          "description": "Add linked studies and allocate your emissions by sector, then visualise your SBTi and SNBC reference trajectories.",
+          "detailedInfo": "Pour Grabriel"
+        },
+        "createButton": "Create my first custom trajectory",
+        "skipOnboarding": "Skip onboarding",
+        "stepLinkStudy": {
+          "title": "Past studies",
+          "description": "Link your past BC+ studies to reconstruct your emissions history. This data will feed into your reduction trajectories.",
+          "glossaryTitle": "Past studies",
+          "glossaryDescription": "Pour gabriel - description",
+          "linkStudyButton": "Link a study"
+        },
+        "stepSectorAllocation": {
+          "title": "Sector allocation",
+          "description": "Indicate the share of your emissions belonging to each major SNBC sector. This will automatically generate a sector-specific SNBC trajectory tailored to your organisation.",
+          "glossaryTitle": "SNBC sector allocation",
+          "glossaryDescription": "The SNBC sets differentiated reduction targets by sector (energy, industry, buildings, transport…). By entering the share of your emissions in each sector, the platform calculates a weighted SNBC trajectory representative of your activity mix."
+        },
+        "stepSelectReferenceTrajectories": {
+          "title": "Reference trajectories",
+          "description": "Choose the climate reference trajectories to display on your chart: SNBC (national) and/or SBTi (science-based). These trajectories serve as benchmarks for building your own reduction trajectory.",
+          "glossaryTitle": "Reference trajectories",
+          "glossaryDescription": "The SNBC (Stratégie Nationale Bas-Carbone) is France's official emissions reduction trajectory. SBTi (Science Based Targets initiative) trajectories are international standards aligned with the objectives of the Paris Agreement."
+        },
+        "stepVisualization": {
+          "title": "Trajectory visualisation",
+          "description": "Visualise the reference trajectories selected for your organisation. This chart will be enriched over time with your own reduction trajectories.",
+          "glossaryTitle": "Trajectory chart",
+          "glossaryDescription": "This chart shows the evolution of your organisation's emissions over time against the reference trajectories. The vertical axis shows total emissions, the horizontal axis represents years."
+        },
+        "sectorBlock": {
+          "title": "SNBC sector allocation",
+          "description": "Enter the breakdown of your emissions by major activity sector according to the SNBC. This will create a customised sectoral SNBC trajectory as a reference point.",
+          "snbcSectorialName": "Reference SNBC trajectory",
+          "update": "Save changes"
+        }
+      },
       "trajectories": {
-        "title": "Reduction trajectories",
+        "title": "Trajectories and objectives",
+        "tableTitle": "Trajectories and objectives list",
         "snbcButton": "SNBC Trajectory",
         "sbtiButton": "SBTi Trajectories",
         "customButton": "I choose my trajectory",
@@ -1024,11 +1070,14 @@
           "unvalidatedSourcesWarning": "{count, plural, =1 {One emission source is not validated in the current study and is therefore not taken into account in the trajectory calculations.} other {{count} emission sources are not validated in the current study and are therefore not taken into account in the trajectory calculations.}}",
           "unvalidatedSourcesLinkedStudiesWarning": "{count, plural, =1 {One emission source is not validated in the following past study:} other {{count} emission sources are not validated in the following past studies:}}",
           "unvalidatedSourcesLinkedStudyCount": " ({count, plural, =1 {1 unvalidated source} other {{count} unvalidated sources}})",
+          "noEmissionSourcesWarning": "No emission source is greater than 0. Trajectories cannot be calculated.",
+          "noEmissionSourcesDisabledButton": "No emission source is greater than 0. Please fill in at least one emission source before creating a custom trajectory.",
           "yearRangeLabel": "Visualization period",
           "sbtiSnbc": "SBTI/SNBC Trajectories",
           "custom": "My custom Trajectories",
-          "previousTrajectories": "Reference trajectories",
-          "currentTrajectories": "Current trajectories",
+          "legendFilter": "Filter trajectories",
+          "previousTrajectories": "Reference ({year})",
+          "currentTrajectories": "Current ({year})",
           "failedTrajectories": "The following trajectories cannot be displayed correctly in the future because you have already consumed the entire carbon budget provided by these:",
           "estimatedPast": "Estimated Past",
           "glossary": {
@@ -1134,7 +1183,7 @@
         },
         "sectorAllocation": {
           "title": "Sector Allocation",
-          "description": "Define the emission percentage per sector. The rest will be allocated to the general SNBC trajectory."
+          "description": "Percentage of emissions allocated to each sector. To update these values, please go to the initialization page of the transition plan."
         },
         "sectors": {
           "energy": "Energy",
@@ -1191,12 +1240,37 @@
           "correctedRateDescription": "The Year N rate takes into account your desired rate as well as emissions between your reference year and your study year. If your emissions did not follow your desired rate, we calculate the excess emissions (overshoot) and apply a new rate to allow you to catch up on the excess emissions."
         }
       },
+      "scope": {
+        "scopeSelection": "Scope selection"
+      },
+      "objectiveModal": {
+        "title": "Add sub-objectives",
+        "editTitle": "Edit sub-objective",
+        "cancel": "Cancel",
+        "submit": "Add sub-objectives",
+        "update": "Update sub-objective",
+        "scopeSelection": "Scope Selection",
+        "objectives": "Sub-objectives",
+        "sites": "Sites",
+        "tags": "Tags",
+        "subPosts": "Sub-posts"
+      },
+      "conversionWarning": {
+        "title": "Trajectory Type Conversion",
+        "warningTitle": "This action will convert your trajectory to CUSTOM type.",
+        "message": "Adding a scope-specific objective to the trajectory \"{trajectoryName}\" ({trajectoryType}) will automatically convert it to a CUSTOM trajectory type. This action is irreversible.",
+        "explanation": "Once converted to CUSTOM, the trajectory will no longer follow the predefined {trajectoryType} reduction rates. You will have full control over all objectives.",
+        "cancel": "Cancel",
+        "confirm": "Continue"
+      },
       "objectives": {
         "title": "Reduction objectives",
         "custom": "Custom",
         "snbcGeneral": "SNBC General",
         "snbcSectoral": "SNBC Sectoral",
         "objectiveNumber": "Objective {number}",
+        "defaultSnbcTooltip": "This trajectory is linked to the data entered during the transition plan initialization and cannot be modified or deleted",
+        "defaultSnbcSectoral": "Reference trajectory",
         "search": "Search for a trajectory",
         "add": "Add a trajectory",
         "table": {
@@ -1239,7 +1313,7 @@
           "enabled": "Enabled",
           "enabledGlossaryIconLabel": "Enabling and disabling my actions",
           "enabledGlossaryTitle": "Enabling and disabling my actions",
-          "enabledGlossaryDescription": "The reductions linked to actions you have enabled are taken into account on the <trajectoryLink>Reduction trajectories</trajectoryLink> page in your bottom-up trajectory. Reductions linked to disabled actions will not be visible. Enabling or disabling actions allows you to consider different scenarios to achieve your reduction objectives.",
+          "enabledGlossaryDescription": "The reductions linked to actions you have enabled are taken into account on the <trajectoryLink>trajectories and objectives</trajectoryLink> page in your bottom-up trajectory. Reductions linked to disabled actions will not be visible. Enabling or disabling actions allows you to consider different scenarios to achieve your reduction objectives.",
           "close": "Close",
           "title": "Title",
           "priority": "Priority",
@@ -1249,7 +1323,8 @@
           "owner": "Owner",
           "budget": "Budget",
           "errorChangingEnabled": "Error changing action status",
-          "relevance": "Relevance levels"
+          "relevance": "Relevance levels",
+          "scope": "Scope"
         },
         "addModal": {
           "add": "Add an action",
@@ -1272,7 +1347,6 @@
           "reductionDetailsPlaceholder": "Describe the details and assumptions",
           "reductionStartYear": "Year action begins",
           "reductionEndYear": "Year action ends",
-          "dependenciesOnly": "My action only concerns the \"Use in dependence\" sub-item",
           "owner": "Action owner",
           "ownerPlaceholder": "Enter the name of the person leading the action",
           "necessaryBudget": "Budget required for implementation (k€)",
@@ -1655,7 +1729,7 @@
       "Archived": "Archived",
       "selectLine": "Select this emission factor",
       "all": "All",
-      "BaseEmpreinte": "Footprint Base",
+      "BaseEmpreinte": "Base Empreinte®",
       "NegaOctet": "NegaOctet",
       "Legifrance": "Légifrance",
       "AIB": "AIB",
@@ -1666,6 +1740,8 @@
       "location": "Location",
       "locationSearch": "Search by location",
       "locationSearchPlaceholder": "e.g. Europe",
+      "unitSearch": "Search by unit",
+      "unitSearchPlaceholder": "e.g. kg",
       "base": "Scope 2 approach",
       "Manual": "Manual",
       "edit": "Edit emission factor",
@@ -2097,7 +2173,8 @@
       "myClient": "My client",
       "update": "Update my information",
       "updateClient": "Update my client",
-      "renew": "Your {year} licence is about to expire. Remember to renew it to continue using the services in {nextYear}. Without a renewed membership, only read access remains available for your studies on BC+.",
+      "renewUpcoming": "Your {currentYear} licence is about to expire. Remember to renew it to continue using the services in {nextYear}. Without a renewed membership, only read access remains available for your studies on BC+.",
+      "renew": "Your licence has expired. Remember to renew it to continue using the services in {currentYear}. Without a renewed membership, only read access remains available for your studies on BC+.",
       "renewLink": "Renew"
     },
     "delete": {
@@ -2240,7 +2317,8 @@
     "Server error": "A server error occurred, please contact support",
     "default": "Something went wrong ..., please try again. If the problem persists, please contact support",
     "error": "Something went wrong ...",
-    "contactSupport": "A problem has occurred. Try returning to the <link>home page</link>. <p>If this does not work, contact our support at <m></m> or try to <logout>reconnect</logout>.</p>"
+    "contactSupport": "A problem has occurred. Try returning to the <link>home page</link>. <p>If this does not work, contact our support at <m></m> or try to <logout>reconnect</logout>.</p>",
+    "duplicateScopeCombination": "An objective with the same scope (sites, tags, sub-posts) and target year already exists for this trajectory"
   },
   "upload": {
     "fileTooBig": "File too big (max size {size} MB)",
@@ -2406,10 +2484,14 @@
     "tooBig": "Please enter a smaller value",
     "studyYearMustBeBeforeCurrent": "The study year must be before the current study year",
     "studyYearMustBeAfterLinkedStudies": "Cannot set a date earlier than your linked studies in your transition plan",
+    "studyIsLinkedInTransitionPlan": "This study is linked in the transition plan of study \"{studyName}\". The new date must be earlier than that study's date.",
     "maxTwoDecimals": "The reduction rate must have at most 2 decimal places",
+    "startYearMustBeBeforeTargetYear": "Start year must be before target year",
     "referenceYearMustBeBeforeOrEqualToStudyYear": "Reference year must be less than or equal to the study year",
     "sectorPercentagesTotalExceeds100": "Total sector percentages cannot exceed 100%",
-    "sectorPercentagesRequired": "Sector percentages are required"
+    "sectorPercentagesRequired": "Sector percentages are required",
+    "scopeRequired": "Please select at least one site, tag, or sub post",
+    "atLeastOneValidObjective": "Please add at least one valid objective with start year, target year, and reduction rate"
   },
   "documentationUrl": {
     "dependencyMatrix": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/2-scope-of-the-approach/2.5-identification-of-transition-risks-and-opportunities",

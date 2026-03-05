@@ -1,6 +1,7 @@
 import { setCustomIssue, setCustomMessage } from '@/lib/zod.config'
 import {
   ControlMode,
+  Country,
   DayOfWeek,
   EngagementPhase,
   EstablishmentType,
@@ -165,6 +166,7 @@ export const ChangeStudyEstablishmentValidation = z.object({
   etp: z.int().min(0).optional(),
   studentNumber: z.int().min(0).optional(),
   superficy: z.number().optional().nullable(),
+  country: z.enum(Country).optional().nullable(),
 })
 
 export type ChangeStudyEstablishmentCommand = z.infer<typeof ChangeStudyEstablishmentValidation>
@@ -177,15 +179,18 @@ export const NewStudyRightCommandValidation = z.object({
 
 export type NewStudyRightCommand = z.infer<typeof NewStudyRightCommandValidation>
 
-export const NewStudyContributorCommandValidation = z.intersection(
-  z.object({
-    studyId: z.string(),
-    email: z.email().trim(),
-  }),
-  SubPostsCommandValidation,
-)
+export const NewStudyContributorCommandValidation = (requireNaming: boolean) =>
+  z.intersection(
+    z.object({
+      studyId: z.string(),
+      email: z.string().email().trim(),
+      firstName: requireNaming ? z.string().min(1) : z.string().optional(),
+      lastName: z.string().optional(),
+    }),
+    SubPostsCommandValidation,
+  )
 
-export type NewStudyContributorCommand = z.infer<typeof NewStudyContributorCommandValidation>
+export type NewStudyContributorCommand = z.infer<ReturnType<typeof NewStudyContributorCommandValidation>>
 
 export const DeleteCommandValidation = z.object({
   id: z.string(),

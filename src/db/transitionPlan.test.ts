@@ -3,7 +3,6 @@ import {
   ActionIndicatorType,
   ActionPotentialDeduction,
   ExternalStudy,
-  Objective,
   Trajectory,
   TrajectoryType,
   TransitionPlanStudy,
@@ -11,6 +10,7 @@ import {
 import {
   ActionWithRelations,
   duplicateTransitionPlanWithRelations,
+  ObjectiveWithScope,
   TransitionPlanWithRelations,
 } from './transitionPlan'
 
@@ -30,8 +30,8 @@ jest.mock('./client', () => ({
 }))
 
 const createMockTrajectory = (
-  overrides?: Partial<Trajectory & { objectives: Objective[] }>,
-): Trajectory & { objectives: Objective[] } => ({
+  overrides?: Partial<Trajectory & { objectives: ObjectiveWithScope[] }>,
+): Trajectory & { objectives: ObjectiveWithScope[] } => ({
   id: 'trajectory-1',
   transitionPlanId: 'plan-id',
   name: 'Test Trajectory',
@@ -41,32 +41,46 @@ const createMockTrajectory = (
   createdAt: new Date('2024-01-01'),
   updatedAt: new Date('2024-01-01'),
   sectorPercentages: {},
+  isDefault: false,
   objectives: [
     {
       id: 'objective-1',
       trajectoryId: 'trajectory-1',
+      startYear: 2024,
       targetYear: 2030,
       reductionRate: 0.05,
+      isDefault: true,
       createdAt: new Date('2024-01-01'),
       updatedAt: new Date('2024-01-01'),
+      sites: [],
+      tags: [],
+      subPosts: [],
     },
     {
       id: 'objective-2',
       trajectoryId: 'trajectory-1',
+      startYear: 2030,
       targetYear: 2040,
       reductionRate: 0.08,
+      isDefault: true,
       createdAt: new Date('2024-01-01'),
       updatedAt: new Date('2024-01-01'),
+      sites: [],
+      tags: [],
+      subPosts: [],
     },
   ],
   ...overrides,
 })
 
-const createMockTransitionPlanStudy = (overrides?: Partial<TransitionPlanStudy>): Omit<TransitionPlanStudy, 'id'> => ({
+const createMockTransitionPlanStudy = (
+  overrides?: Partial<TransitionPlanStudy & { study: { startDate: Date } }>,
+): Omit<TransitionPlanStudy, 'id'> & { study: { startDate: Date } } => ({
   transitionPlanId: 'plan-id',
   studyId: 'study-id',
   createdAt: new Date('2024-01-01'),
   updatedAt: new Date('2024-01-01'),
+  study: { startDate: new Date('2023-01-01') },
   ...overrides,
 })
 
@@ -110,7 +124,9 @@ const createMockAction = (overrides?: Partial<ActionWithRelations>): ActionWithR
   category: [],
   relevance: [],
   enabled: true,
-  dependenciesOnly: false,
+  sites: [],
+  tags: [],
+  subPosts: [],
   createdAt: new Date('2024-01-01'),
   updatedAt: new Date('2024-01-01'),
   ...overrides,
@@ -150,7 +166,7 @@ describe('TransitionPlan DB', () => {
 
     test('should duplicate transition plan with all relations', async () => {
       const sourceTransitionPlan = createMockTransitionPlan()
-      await duplicateTransitionPlanWithRelations(sourceTransitionPlan, 'target-study-id')
+      await duplicateTransitionPlanWithRelations(sourceTransitionPlan, 'target-study-id', 2025)
 
       expect(mockTx.transitionPlan.create).toHaveBeenCalledWith({
         data: {
@@ -169,6 +185,16 @@ describe('TransitionPlan DB', () => {
                 create: trajectory.objectives.map((objective) => ({
                   targetYear: objective.targetYear,
                   reductionRate: objective.reductionRate,
+                  isDefault: objective.isDefault,
+                  sites: {
+                    create: objective.sites.map((s) => ({ studySiteId: s.studySiteId })),
+                  },
+                  tags: {
+                    create: objective.tags.map((t) => ({ studyTagId: t.studyTagId })),
+                  },
+                  subPosts: {
+                    create: objective.subPosts.map((sp) => ({ subPost: sp.subPost })),
+                  },
                 })),
               },
             })),
@@ -192,7 +218,6 @@ describe('TransitionPlan DB', () => {
               category: action.category,
               relevance: action.relevance,
               enabled: action.enabled,
-              dependenciesOnly: action.dependenciesOnly,
               indicators: {
                 create: action.indicators.map((indicator) => ({
                   type: indicator.type,
@@ -204,6 +229,15 @@ describe('TransitionPlan DB', () => {
                   title: step.title,
                   order: step.order,
                 })),
+              },
+              sites: {
+                create: action.sites.map((s) => ({ studySiteId: s.studySiteId })),
+              },
+              tags: {
+                create: action.tags.map((t) => ({ studyTagId: t.studyTagId })),
+              },
+              subPosts: {
+                create: action.subPosts.map((sp) => ({ subPost: sp.subPost })),
               },
             })),
           },
@@ -218,19 +252,43 @@ describe('TransitionPlan DB', () => {
         include: {
           trajectories: {
             include: {
-              objectives: true,
+              objectives: {
+                include: {
+                  sites: { include: { studySite: true } },
+                  tags: { include: { studyTag: true } },
+                  subPosts: true,
+                },
+              },
             },
           },
-          transitionPlanStudies: true,
+          transitionPlanStudies: { include: { study: { select: { startDate: true } } } },
           actions: {
             include: {
               indicators: true,
               steps: true,
+              sites: { include: { studySite: true } },
+              tags: { include: { studyTag: true } },
+              subPosts: true,
             },
           },
           externalStudies: true,
         },
       })
+    })
+
+    test('should filter out linked studies with startDate >= targetYear', async () => {
+      const sourceTransitionPlan = createMockTransitionPlan({
+        transitionPlanStudies: [
+          createMockTransitionPlanStudy({ studyId: 'old-study', study: { startDate: new Date('2022-01-01') } }),
+          createMockTransitionPlanStudy({ studyId: 'same-year-study', study: { startDate: new Date('2024-01-01') } }),
+          createMockTransitionPlanStudy({ studyId: 'future-study', study: { startDate: new Date('2025-01-01') } }),
+        ],
+      })
+
+      await duplicateTransitionPlanWithRelations(sourceTransitionPlan, 'target-study-id', 2024)
+
+      const createCall = mockTx.transitionPlan.create.mock.calls[0][0]
+      expect(createCall.data.transitionPlanStudies.create).toEqual([{ studyId: 'old-study' }])
     })
   })
 })

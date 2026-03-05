@@ -10,10 +10,19 @@ import { AdditionalResultTypes, ResultType } from '../study'
 import { getSquaredStandardDeviationForEmissionSourceArray } from '../uncertainty'
 import { filterWithDependencies, getSiteEmissionSourcesWithoutMarketBase } from './utils'
 
-export type ResultsByPost = {
+export type BaseResultsByPost = {
   post: Post | SubPost | 'total'
   label: string
   value: number
+  children: BaseResultsByPost[]
+}
+
+export interface BaseResultsBySite {
+  aggregated: BaseResultsByPost[]
+  bySite: Record<string, BaseResultsByPost[]>
+}
+
+export type ResultsByPost = Omit<BaseResultsByPost, 'children'> & {
   monetaryValue: number
   nonSpecificMonetaryValue: number
   numberOfEmissionSource: number
@@ -22,7 +31,7 @@ export type ResultsByPost = {
   children: ResultsByPost[]
 }
 
-export const computeResultsByPost = (
+export const computeResultsByPostFromEmissionSources = (
   study: FullStudy,
   tPost: (key: string) => string,
   studySite: string,
@@ -45,7 +54,7 @@ export const computeResultsByPost = (
     ...getEmissionResults(emissionSource, environment),
   }))
 
-  const postInfos = Object.values(convertToBc ? BCPost : postValues).map((post: Post) => {
+  let postInfos = Object.values(convertToBc ? BCPost : postValues).map((post: Post) => {
     const subPosts = subPostsByPost[post]
       .filter((subPost) => filterWithDependencies(subPost, withDependencies))
       .map((subPost) => {
@@ -97,7 +106,7 @@ export const computeResultsByPost = (
   })
 
   if (hasCustomPostOrder(environment)) {
-    return sortByCustomOrder(postInfos, customPostOrder, (item) => item.post)
+    postInfos = sortByCustomOrder(postInfos, customPostOrder, (item) => item.post)
   } else {
     postInfos.sort((a, b) => a.label.localeCompare(b.label))
   }

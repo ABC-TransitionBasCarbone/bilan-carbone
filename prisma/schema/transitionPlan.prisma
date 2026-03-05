@@ -91,9 +91,11 @@ model Action {
   category                 ActionCategory[]
   relevance                ActionRelevance[]
   enabled                  Boolean                  @default(true) @map("enabled")
-  dependenciesOnly         Boolean                  @default(false) @map("dependencies_only")
   indicators               ActionIndicator[]
   steps                    ActionStep[]
+  sites                    ActionSite[]
+  tags                     ActionTag[]
+  subPosts                 ActionSubPost[]
   createdAt                DateTime                 @default(now()) @map("created_at")
   updatedAt                DateTime                 @default(now()) @updatedAt @map("updated_at")
 
@@ -128,6 +130,47 @@ model ActionStep {
   @@map("action_steps")
 }
 
+model ActionSite {
+  id          String    @id @default(uuid())
+  actionId    String    @map("action_id")
+  studySiteId String    @map("study_site_id")
+  action      Action    @relation(fields: [actionId], references: [id], onDelete: Cascade)
+  studySite   StudySite @relation(fields: [studySiteId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@unique([actionId, studySiteId])
+  @@map("action_sites")
+}
+
+model ActionTag {
+  id         String   @id @default(uuid())
+  actionId   String   @map("action_id")
+  studyTagId String   @map("study_tag_id")
+  action     Action   @relation(fields: [actionId], references: [id], onDelete: Cascade)
+  studyTag   StudyTag @relation(fields: [studyTagId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@unique([actionId, studyTagId])
+  @@map("action_tags")
+}
+
+model ActionSubPost {
+  id       String  @id @default(uuid())
+  actionId String  @map("action_id")
+  subPost  SubPost
+  action   Action  @relation(fields: [actionId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@unique([actionId, subPost])
+  @@map("action_subposts")
+}
+
 enum TrajectoryType {
   SBTI_15
   SBTI_WB2C
@@ -149,6 +192,7 @@ model Trajectory {
   type              TrajectoryType
   referenceYear     Int?           @map("reference_year")
   sectorPercentages Json?          @map("sector_percentages")
+  isDefault         Boolean        @default(false) @map("is_default")
 
   objectives Objective[]
   createdAt  DateTime    @default(now()) @map("created_at")
@@ -178,11 +222,58 @@ model Objective {
   trajectoryId String     @map("trajectory_id")
   trajectory   Trajectory @relation(fields: [trajectoryId], references: [id], onDelete: Cascade)
 
-  targetYear    Int   @map("target_year")
-  reductionRate Float @map("reduction_rate")
+  targetYear    Int     @map("target_year")
+  startYear     Int?    @map("start_year")
+  reductionRate Float   @map("reduction_rate")
+  isDefault     Boolean @default(false) @map("is_default")
+
+  sites    ObjectiveSite[]
+  tags     ObjectiveTag[]
+  subPosts ObjectiveSubPost[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("objectives")
+}
+
+model ObjectiveSite {
+  id          String    @id @default(uuid())
+  objectiveId String    @map("objective_id")
+  studySiteId String    @map("study_site_id")
+  objective   Objective @relation(fields: [objectiveId], references: [id], onDelete: Cascade)
+  studySite   StudySite @relation(fields: [studySiteId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@unique([objectiveId, studySiteId])
+  @@map("objective_sites")
+}
+
+model ObjectiveTag {
+  id          String    @id @default(uuid())
+  objectiveId String    @map("objective_id")
+  studyTagId  String    @map("study_tag_id")
+  objective   Objective @relation(fields: [objectiveId], references: [id], onDelete: Cascade)
+  studyTag    StudyTag  @relation(fields: [studyTagId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@unique([objectiveId, studyTagId])
+  @@map("objective_tags")
+}
+
+model ObjectiveSubPost {
+  id          String    @id @default(uuid())
+  objectiveId String    @map("objective_id")
+  subPost     SubPost
+  objective   Objective @relation(fields: [objectiveId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@unique([objectiveId, subPost])
+  @@map("objective_subposts")
 }

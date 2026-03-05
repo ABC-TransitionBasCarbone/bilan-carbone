@@ -9,7 +9,7 @@ const TiltSimplifiedComingSoon = () => {
 
   return (
     <Block>
-      <Box className={classNames('flex-cc justify-center p2')}>
+      <Box className={classNames('flex-cc justify-center p2')} data-testid="tilt-simplified-coming-soon">
         <Box className={classNames('p3', styles.content)}>
           <Typography variant="h4" className="mb1 bold">
             {t('comingSoon.title')}

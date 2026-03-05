@@ -1,3 +1,4 @@
+import AddIcon from '@mui/icons-material/Add'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
@@ -6,7 +7,7 @@ import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 
 interface Props extends Omit<IconButtonProps, 'type'> {
-  type: 'edit' | 'duplicate' | 'delete'
+  type: 'edit' | 'duplicate' | 'delete' | 'add'
   size?: 'small' | 'medium' | 'large'
 }
 
@@ -21,6 +22,8 @@ export const TableActionButton = ({ type, size = 'medium', ...props }: Props) =>
         return ContentCopyIcon
       case 'delete':
         return DeleteOutlinedIcon
+      case 'add':
+        return AddIcon
       default:
         return null
     }
@@ -34,6 +37,8 @@ export const TableActionButton = ({ type, size = 'medium', ...props }: Props) =>
         return t('duplicate')
       case 'delete':
         return t('delete')
+      case 'add':
+        return t('add')
       default:
         return ''
     }

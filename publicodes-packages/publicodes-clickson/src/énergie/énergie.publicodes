@@ -1,0 +1,9 @@
+énergie:
+  titre: Énergies
+  formule:
+    somme:
+      - électricité
+      - combustibles
+      - autres gaz
+  unité: kgCO2e
+  par défaut: 0

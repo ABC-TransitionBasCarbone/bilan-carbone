@@ -1,8 +1,9 @@
 import { OnboardingCommand } from '@/services/serverFunctions/user.command'
+import { getEnvironmentRoles } from '@/utils/user'
 import AddIcon from '@mui/icons-material/Add'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { MenuItem } from '@mui/material'
-import { Role } from '@prisma/client'
+import { Environment, Role } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { UseFormReturn, useWatch } from 'react-hook-form'
@@ -14,9 +15,10 @@ import styles from './Onboarding.module.css'
 interface Props {
   form: UseFormReturn<OnboardingCommand>
   isCr: boolean
+  environment: Environment
 }
 
-const OnboardingStep = ({ form, isCr }: Props) => {
+const OnboardingStep = ({ form, isCr, environment }: Props) => {
   const t = useTranslations('onboarding.step2')
   const tRole = useTranslations('role')
   const collaborators = useWatch(form).collaborators?.length || 0
@@ -72,12 +74,12 @@ const OnboardingStep = ({ form, isCr }: Props) => {
               renderValue={(role) => tRole(role as string)}
               fullWidth
             >
-              {Object.values(Role)
+              {Object.keys(getEnvironmentRoles(environment))
                 .filter((role) => role !== Role.SUPER_ADMIN)
                 .map((role) => (
                   <MenuItem key={role} value={role} className={classNames(styles.roleItem, 'flex-col')}>
                     <span className={styles.roleTitle}>{tRole(role)}</span>
-                    <span>{t(getDescription(role))}</span>
+                    <span>{t(getDescription(role as Role))}</span>
                   </MenuItem>
                 ))}
             </FormSelect>

@@ -8,7 +8,11 @@ import {
   getStudiesValidatedEmissionsSources,
 } from '@/db/study'
 import { customRich } from '@/i18n/customRich'
-import { isTilt, isTiltSimplifiedFeatureActive } from '@/services/permissions/environment'
+import {
+  canCreateStudyOnlyAsAdministrator,
+  isTilt,
+  isTiltSimplifiedFeatureActive,
+} from '@/services/permissions/environment'
 import { canCreateAStudy } from '@/services/permissions/study'
 import { hasActiveLicence } from '@/utils/organization'
 import AddIcon from '@mui/icons-material/Add'
@@ -139,20 +143,22 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
       </MUIBox>
     )
   ) : (
-    <Block>
-      <Alert className="p0" severity="info">
-        <p>
-          {customRich(t, 'cannotCreateStudy', {
-            link: (children) => <Link href="/ressources">{children}</Link>,
-          })}
-        </p>
-        <p>
-          {customRich(t, 'canCreateFootPrint', {
-            link: (children) => <Link href="/mes-empreintes">{children}</Link>,
-          })}
-        </p>
-      </Alert>
-    </Block>
+    !canCreateStudyOnlyAsAdministrator(user.environment) && (
+      <Block>
+        <Alert className="p0" severity="info">
+          <p>
+            {customRich(t, 'cannotCreateStudy', {
+              link: (children) => <Link href="/ressources">{children}</Link>,
+            })}
+          </p>
+          <p>
+            {customRich(t, 'canCreateFootPrint', {
+              link: (children) => <Link href="/mes-empreintes">{children}</Link>,
+            })}
+          </p>
+        </Alert>
+      </Block>
+    )
   )
 }
 

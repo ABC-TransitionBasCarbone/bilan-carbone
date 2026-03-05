@@ -1,0 +1,519 @@
+immobilisations . divers:
+  titre: Divers
+  formule:
+    somme:
+      - tondeuse gazon thermique
+      - tondeuse gazon électrique
+      - bouilloire
+      - micro-onde
+      - aspirateur professionnel
+      - ballon chauffe-eau électrique
+      - machine café filtre
+      - machine café dosettes
+      - lave-vaiselle professionnel
+      - four professionnel
+      - lave-vaiselle standard
+      - lave-linge
+      - congélateur coffre
+      - congélateur armoire
+      - réfrigérateur
+      - plaques de cuisson au gaz
+      - tatami
+      - gymnastique agré barre fixe
+      - gymnastique agré barres parallèles
+  unité: kgCO2e
+  par défaut: 0
+
+immobilisations . divers . tondeuse gazon thermique:
+  titre: "Tondeuse à gazon thermique"
+  question: "Combien de tondeuse à gazon thermique possédez-vous ?"
+  formule: nombre * FE / immo
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    nombre:
+      question: "Combien de tondeuse à gazon thermique possédez-vous ?"
+      unité: unité
+      par défaut: 0
+    FE:
+      question: "Facteur d'émission par unité de tondeuse à gazon"
+      valeur: 209
+      unité: kgCO2e/unité
+      par défaut: 0
+      note: |
+        Source: Base Carbone®
+      meta:
+        # incertitude: 3
+        id: 28319
+    immo:
+      question: "Immobilisation de tondeuse à gazon"
+      valeur: 10
+      par défaut: 0
+
+immobilisations . divers . tondeuse gazon électrique:
+  titre: "Tondeuse à gazon électrique"
+  question: "Combien de tondeuse à gazon électrique possédez-vous ?"
+  formule: nombre * FE / immo
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    nombre:
+      question: "Combien de tondeuse à gazon électrique possédez-vous ?"
+      unité: unité
+      par défaut: 0
+    FE:
+      question: "Facteur d'émission par unité de tondeuse à gazon électrique"
+      valeur: 70.1
+      unité: kgCO2e/unité
+      par défaut: 0
+      note: |
+        Source: Base Carbone®
+      meta:
+        # incertitude: 3
+        id: 28321
+    immo:
+      question: "Immobilisation de xx"
+      valeur: 10
+      par défaut: 0
+
+immobilisations . divers . bouilloire:
+  titre: "Bouilloire"
+  question: "Combien de bouilloire possédez-vous ?"
+  formule: nombre * FE / immo
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    nombre:
+      question: "Combien de bouilloire possédez-vous ?"
+      unité: unité
+      par défaut: 0
+    FE:
+      question: "Facteur d'émission par unité de bouilloire"
+      valeur: 9.9
+      unité: kgCO2e/unité
+      par défaut: 0
+      note: |
+        Source: Base Carbone®
+      meta:
+        # incertitude: 4
+        id: 28306
+    immo:
+      question: "Immobilisation de bouilloire"
+      valeur: 5
+      par défaut: 0
+
+immobilisations . divers . micro-onde:
+  titre: "Micro-onde"
+  question: "Combien de micro-onde possédez-vous ?"
+  formule: nombre * FE / immo
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    nombre:
+      question: "Combien de micro-onde possédez-vous ?"
+      unité: unité
+      par défaut: 0
+    FE:
+      question: "Facteur d'émission par unité de micro-onde"
+      valeur: 98.4
+      unité: kgCO2e/unité
+      par défaut: 0
+      note: |
+        Source: Base Carbone®
+      meta:
+        # incertitude: 5
+        id: 26989
+    immo:
+      question: "Immobilisation de micro-onde"
+      valeur: 5
+      par défaut: 0
+
+immobilisations . divers . aspirateur professionnel:
+  titre: "Aspirateur professionnel"
+  question: "Combien de aspirateur professionnel possédez-vous ?"
+  formule: nombre * FE / immo
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    nombre:
+      question: "Combien de aspirateur professionnel possédez-vous ?"
+      unité: unité
+      par défaut: 0
+    FE:
+      question: "Facteur d'émission par unité de aspirateur professionnel"
+      valeur: 83
+      unité: kgCO2e/unité
+      par défaut: 0
+      note: |
+        Source: Base Carbone®
+      meta:
+        # incertitude: 3
+        id: 26996
+    immo:
+      question: "Immobilisation de xx"
+      valeur: 5
+      par défaut: 0
+
+immobilisations . divers . ballon chauffe-eau électrique:
+  titre: "Ballon chauffe-eau électrique - 200l"
+  question: "Combien de ballon chauffe-eau électrique - 200l possédez-vous ?"
+  formule: nombre * FE / immo
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    nombre:
+      question: "Combien de ballon chauffe-eau électrique - 200l possédez-vous ?"
+      unité: unité
+      par défaut: 0
+    FE:
+      question: "Facteur d'émission par unité de ballon chauffe-eau électrique - 200l"
+      valeur: 160
+      unité: kgCO2e/unité
+      par défaut: 0
+      note: |
+        Source: Base Carbone®
+      meta:
+        # incertitude: 5
+        id: 28324
+    immo:
+      question: "Immobilisation de ballon chaffe-eau electrique - 200l"
+      valeur: 10
+      par défaut: 0
+
+immobilisations . divers . machine café filtre:
+  titre: "Machine à café - filtre"
+  question: "Combien de machine à café - filtre possédez-vous ?"
+  formule: nombre * FE / immo
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    nombre:
+      question: "Combien de machine à café - filtre possédez-vous ?"
+      unité: unité
+      par défaut: 0
+    FE:
+      question: "Facteur d'émission par unité de machine à café - filtre"
+      valeur: 31.9
+      unité: kgCO2e/unité
+      par défaut: 0
+      note: |
+        Source: Base Carbone®
+      meta:
+        # incertitude: 5
+        id: 28303
+    immo:
+      question: "Immobilisation de machine à café - filtre"
+      valeur: 5
+      par défaut: 0
+
+immobilisations . divers . machine café dosettes:
+  titre: "Machine à café - dosettes"
+  question: "Combien de machine à café - dosettes possédez-vous ?"
+  formule: nombre * FE / immo
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    nombre:
+      question: "Combien de machine à café - dosettes possédez-vous ?"
+      unité: unité
+      par défaut: 0
+    FE:
+      question: "Facteur d'émission par unité de machine à café - dosettes"
+      valeur: 22.5
+      unité: kgCO2e/unité
+      par défaut: 0
+      note: |
+        Source: Base Carbone®
+      meta:
+        # incertitude: 5
+        id: 28304
+    immo:
+      question: "Immobilisation de machine à café - dosettes"
+      valeur: 5
+      par défaut: 0
+
+immobilisations . divers . lave-vaiselle professionnel:
+  titre: "Lave-vaisselle professionnel"
+  question: "Combien de lave-vaiselle professionnel possédez-vous ?"
+  formule: nombre * FE / immo
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    nombre:
+      question: "Combien de lave-vaiselle professionnel possédez-vous ?"
+      unité: unité
+      par défaut: 0
+    FE:
+      question: "Facteur d'émission par unité de lave-vaiselle professionnel"
+      valeur: 961
+      unité: kgCO2e/unité
+      par défaut: 0
+      note: |
+        Source: Base Carbone®
+      meta:
+        # incertitude: 2
+        id: 26997
+    immo:
+      question: "Immobilisation de lave-vaiselle professionnel"
+      valeur: 5
+      par défaut: 0
+
+immobilisations . divers . four professionnel:
+  titre: "Four professionnel"
+  question: "Combien de four professionnel possédez-vous ?"
+  formule: nombre * FE / immo
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    nombre:
+      question: "Combien de four professionnel possédez-vous ?"
+      unité: unité
+      par défaut: 0
+    FE:
+      question: "Facteur d'émission par unité de four professionnel"
+      valeur: 865
+      unité: kgCO2e/unité
+      par défaut: 0
+      note: |
+        Source: Base Carbone®
+      meta:
+        # incertitude: 2
+        id: 26998
+    immo:
+      question: "Immobilisation de four professionnel"
+      valeur: 5
+      par défaut: 0
+
+immobilisations . divers . lave-vaiselle standard:
+  titre: "Lave-vaiselle standard"
+  question: "Combien de lave-vaiselle standard possédez-vous ?"
+  formule: nombre * FE / immo
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    nombre:
+      question: "Combien de lave-vaiselle standard possédez-vous ?"
+      unité: unité
+      par défaut: 0
+    FE:
+      question: "Facteur d'émission par unité de lave-vaiselle standard"
+      valeur: 271
+      unité: kgCO2e/unité
+      par défaut: 0
+      note: |
+        Source: Base Carbone®
+      meta:
+        # incertitude: 2
+        id: 26984
+    immo:
+      question: "Immobilisation de lave-vaiselle standard"
+      valeur: 5
+      par défaut: 0
+
+immobilisations . divers . lave-linge:
+  titre: "Lave-linge (capacité 7kg)"
+  question: "Combien de lave-linge (capacité 7kg) possédez-vous ?"
+  formule: nombre * FE / immo
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    nombre:
+      question: "Combien de lave-linge (capacité 7kg) possédez-vous ?"
+      unité: unité
+      par défaut: 0
+    FE:
+      question: "Facteur d'émission par unité de lave-linge (capacité 7kg)"
+      valeur: 342
+      unité: kgCO2e/unité
+      par défaut: 0
+      note: |
+        Source: Base Carbone®
+      meta:
+        # incertitude: 2
+        id: 26983
+    immo:
+      question: "Immobilisation de lave-linge (capacité 7kg)"
+      valeur: 5
+      par défaut: 0
+
+immobilisations . divers . congélateur coffre:
+  titre: "Congélateur (coffre) - 261l"
+  question: "Combien de congélateur (coffre) - 261l possédez-vous ?"
+  formule: nombre * FE / immo
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    nombre:
+      question: "Combien de congélateur (coffre) - 261l possédez-vous ?"
+      unité: unité
+      par défaut: 0
+    FE:
+      question: "Facteur d'émission par unité de congélateur (coffre) - 261l"
+      valeur: 301
+      unité: kgCO2e/unité
+      par défaut: 0
+      note: |
+        Source: Base Carbone®
+      meta:
+        # incertitude: 2
+        id: 26978
+    immo:
+      question: "Immobilisation de congélateur (coffre) - 261l"
+      valeur: 5
+      par défaut: 0
+
+immobilisations . divers . congélateur armoire:
+  titre: "Congélateur - armoire - 205l"
+  question: "Combien de congélateur - armoire - 205l possédez-vous ?"
+  formule: nombre * FE / immo
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    nombre:
+      question: "Combien de congélateur - armoire - 205l possédez-vous ?"
+      unité: unité
+      par défaut: 0
+    FE:
+      question: "Facteur d'émission par unité de congélateur - armoire - 205l"
+      valeur: 415
+      unité: kgCO2e/unité
+      par défaut: 0
+      note: |
+        Source: Base Carbone®
+      meta:
+        # incertitude: 2
+        id: 26977
+    immo:
+      question: "Immobilisation de congélateur - armoire - 205l"
+      valeur: 5
+      par défaut: 0
+
+immobilisations . divers . réfrigérateur:
+  titre: "Réfrigérateur - 250l"
+  question: "Combien de réfrigérateur - 250l possédez-vous ?"
+  formule: nombre * FE / immo
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    nombre:
+      question: "Combien de réfrigérateur - 250l possédez-vous ?"
+      unité: unité
+      par défaut: 0
+    FE:
+      question: "Facteur d'émission par unité de réfrigérateur - 250l"
+      valeur: 300
+      unité: kgCO2e/unité
+      par défaut: 0
+      note: |
+        Source: Base Carbone®
+      meta:
+        # incertitude: 2
+        id: 26975
+    immo:
+      question: "Immobilisation de réfrigérateur - 250l"
+      valeur: 5
+      par défaut: 0
+
+immobilisations . divers . plaques de cuisson au gaz:
+  titre: "Plaques de cuisson/au gaz 9000W"
+  question: "Combien de plaques de cuisson/au gaz 9000W possédez-vous ?"
+  formule: nombre * FE / immo
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    nombre:
+      question: "Combien de plaques de cuisson/au gaz 9000W possédez-vous ?"
+      unité: unité
+      par défaut: 0
+    FE:
+      question: "Facteur d'émission par unité de plaques de cuisson/au gaz 9000W"
+      valeur: 43.4
+      unité: kgCO2e/unité
+      par défaut: 0
+      note: |
+        Source: Base Carbone®
+      meta:
+        # incertitude: 4
+        id: 28311
+    immo:
+      question: "Immobilisation de plaques de cuisson/au gaz 9000W"
+      valeur: 5
+      par défaut: 0
+
+immobilisations . divers . tatami:
+  titre: "Tatami"
+  question: "Combien de tatami possédez-vous ?"
+  formule: nombre * FE / immo
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    nombre:
+      question: "Combien de tatami possédez-vous ?"
+      unité: unité
+      par défaut: 0
+    FE:
+      question: "Facteur d'émission par unité de tatami"
+      valeur: 62
+      unité: kgCO2e/unité
+      par défaut: 0
+      note: |
+        Source: Base Carbone®
+      meta:
+        # incertitude: 2
+        id: 20764
+    immo:
+      question: "Immobilisation de tatami"
+      valeur: 10
+      par défaut: 0
+
+immobilisations . divers . gymnastique agré barre fixe:
+  titre: "Gymnastique, agrès barre fixe"
+  question: "Combien de gymnastique, agrès barre fixe possédez-vous ?"
+  formule: nombre * FE / immo
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    nombre:
+      question: "Combien de gymnastique, agrès barre fixe possédez-vous ?"
+      unité: unité
+      par défaut: 0
+    FE:
+      question: "Facteur d'émission par unité de gymnastique, agrès barre fixe"
+      valeur: 920
+      unité: kgCO2e/unité
+      par défaut: 0
+      note: |
+        Source: Base Carbone®
+      meta:
+        # incertitude: 2
+        id: 20762
+    immo:
+      question: "Immobilisation de gymnastique, agrès barre fixe"
+      valeur: 10
+      par défaut: 0
+
+immobilisations . divers . gymnastique agré barres parallèles:
+  titre: "Gymnastique, agrès barres parallèles"
+  question: "Combien de gymnastique, agrès barres parallèles possédez-vous ?"
+  formule: nombre * FE / immo
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    nombre:
+      question: "Combien de gymnastique, agrès barres parallèles possédez-vous ?"
+      unité: unité
+      par défaut: 0
+    FE:
+      question: "Facteur d'émission par unité de gymnastique, agrès barres parallèles"
+      valeur: 480
+      unité: kgCO2e/unité
+      par défaut: 0
+      note: |
+        Source: Base Carbone®
+      meta:
+        # incertitude: 2
+        id: 20761
+    immo:
+      question: "Immobilisation de gymnastique, agrès barres parallèles"
+      valeur: 10
+      par défaut: 0

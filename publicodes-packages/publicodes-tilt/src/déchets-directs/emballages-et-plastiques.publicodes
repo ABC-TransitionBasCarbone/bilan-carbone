@@ -1,0 +1,81 @@
+déchets . emballages et plastiques:
+  titre: Déchets emballages et plastiques
+  unité: kgCO2e
+  formule:
+    somme:
+      - poubelle jaune
+      - déchets verre
+      - poubelle noire
+      - déchets verts
+
+déchets . emballages et plastiques . poubelle jaune:
+  titre: Poubelle jaune
+  formule: FE * poids
+  form:
+    à traduire: oui
+  unité: kgCO2e
+  avec:
+    FE:
+      valeur: 41
+      unité: kgCO2e/tonne
+      meta:
+        id: 34565
+        nom: Plastique souple PP pétrosourcé - Fin de vie moyenne filière - Impacts
+
+    poids:
+      question: Poubelle jaune (emballages et plastiques)
+      unité: tonne
+
+déchets . emballages et plastiques . déchets verre:
+  titre: Verre
+  formule: FE * poids
+  form:
+    à traduire: oui
+  unité: kgCO2e
+  avec:
+    FE:
+      valeur: 41
+      unité: kgCO2e/tonne
+      meta:
+        id: 34478
+        nom: Emballages/Verre/Fin de vie moyenne filière - Impacts
+
+    poids:
+      question: Déchets verre
+      unité: tonne
+
+déchets . emballages et plastiques . poubelle noire:
+  titre: Poubelle noire (ordures ménagères, autres déchets, etc)
+  unité: kgCO2e
+  formule: FE * poids
+  form:
+    à traduire: oui
+  avec:
+    FE:
+      valeur: 374
+      unité: kgCO2e/tonne
+      meta:
+        id: 34650
+        nom: Ordures ménagères résiduelles - Incinération - Impacts
+
+    poids:
+      question: Poubelle noire (ordures ménagères)
+      unité: tonne
+
+déchets . emballages et plastiques . déchets verts:
+  titre: Déchets verts, compost et déchets organiques
+  unité: kgCO2e
+  formule: FE * poids
+  form:
+    à traduire: oui
+  avec:
+    FE:
+      valeur: 140
+      unité: kgCO2e/tonne
+      meta:
+        id: 34638
+        nom: Déchets de cuisine et déchets verts - Compostage industriel - Impacts
+
+    poids:
+      question: Déchets verts, compost et déchets organiques
+      unité: tonne

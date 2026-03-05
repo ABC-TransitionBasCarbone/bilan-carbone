@@ -1,0 +1,186 @@
+intrants-biens-et-matières . ratios monétaires:
+  titre: Intrants biens et matières
+  question: Quels biens et matières avez-vous achetés en approche monétaire ?
+  formule:
+    somme:
+      - petites-fournitures
+      - meubles
+      - machines-équipements
+      - textiles
+      - produits-pharmaceutiques
+      - produits-chimiques
+      - papier-carton
+      - produits-métalliques
+      - autres-produits-manufacturés
+  unité: kgCO2e
+
+intrants-biens-et-matières . ratios monétaires . petites-fournitures:
+  formule: nombre * FE
+  form:
+    à traduire: oui
+  titre: Petites fournitures
+  avec:
+    nombre:
+      question: Montant dépensé (k€) en petites fournitures
+      par défaut: 0
+      unité: k€
+
+    FE:
+      valeur: 367
+      unité: kgCO2e/k€ HT
+      meta:
+        nom: Petites Fournitures
+        id: 20556
+  unité: kgCO2e
+
+intrants-biens-et-matières . ratios monétaires . meubles:
+  formule: nombre * FE
+  form:
+    à traduire: oui
+  titre: Meubles
+  avec:
+    nombre:
+      question: Montant dépensé (k€) en meubles
+      par défaut: 0
+      unité: k€
+
+    FE:
+      valeur: 231
+      unité: kgCO2e/k€ HT
+      meta:
+        nom: Meubles - 2023
+        id: 43360
+  unité: kgCO2e
+
+intrants-biens-et-matières . ratios monétaires . machines-équipements:
+  formule: nombre * FE
+  form:
+    à traduire: oui
+  titre: Machines et équipements
+  avec:
+    nombre:
+      question: Montant dépensé (k€) en machines et équipements
+      par défaut: 0
+      unité: k€
+
+    FE:
+      valeur: 273
+      unité: kgCO2e/k€ HT
+      meta:
+        nom: Machines et équipements
+        id: 43355
+  unité: kgCO2e
+
+intrants-biens-et-matières . ratios monétaires . textiles:
+  formule: nombre * FE
+  form:
+    à traduire: oui
+  titre: Textiles
+  avec:
+    nombre:
+      question: Montant dépensé (k€) en textiles
+      par défaut: 0
+      unité: k€
+
+    FE:
+      valeur: 271
+      unité: kgCO2e/k€ HT
+      meta:
+        nom: Produits de l'industrie textile
+        id: 43405
+  unité: kgCO2e
+
+intrants-biens-et-matières . ratios monétaires . produits-pharmaceutiques:
+  formule: nombre * FE
+  form:
+    à traduire: oui
+  titre: Produits pharmaceutiques
+  avec:
+    nombre:
+      question: Montant dépensé (k€) en produits pharmaceutiques
+      par défaut: 0
+      unité: k€
+
+    FE:
+      valeur: 194
+      unité: kgCO2e/k€ HT
+      meta:
+        nom: Produits pharmaceutiques
+        id: 43435
+  unité: kgCO2e
+
+intrants-biens-et-matières . ratios monétaires . produits-chimiques:
+  formule: nombre * FE
+  form:
+    à traduire: oui
+  titre: Produits chimiques
+  avec:
+    nombre:
+      question: Montant dépensé (k€) en produits chimiques
+      par défaut: 0
+      unité: k€
+
+    FE:
+      valeur: 603
+      unité: kgCO2e/k€ HT
+      meta:
+        nom: Produits chimiques - 2023
+        id: 43380
+  unité: kgCO2e
+
+intrants-biens-et-matières . ratios monétaires . papier-carton:
+  formule: nombre * FE
+  form:
+    à traduire: oui
+  titre: Papier et carton
+  avec:
+    nombre:
+      question: Montant dépensé (k€) en papier et carton
+      par défaut: 0
+      unité: k€
+
+    FE:
+      valeur: 357
+      unité: kgCO2e/k€ HT
+      meta:
+        nom: Papier et carton - 2023
+        id: 43370
+  unité: kgCO2e
+
+intrants-biens-et-matières . ratios monétaires . produits-métalliques:
+  formule: nombre * FE
+  form:
+    à traduire: oui
+  titre: Produits métalliques
+  avec:
+    nombre:
+      question: Montant dépensé (k€) en produits métalliques
+      par défaut: 0
+      unité: k€
+
+    FE:
+      valeur: 317
+      unité: kgCO2e/k€ HT
+      meta:
+        nom: Produits métalliques, à l'exclusion des machines et équipements - 2023
+        id: 43425
+  unité: kgCO2e
+
+intrants-biens-et-matières . ratios monétaires . autres-produits-manufacturés:
+  formule: nombre * FE
+  form:
+    à traduire: oui
+  titre: Autres produits manufacturés
+  avec:
+    nombre:
+      question: Montant dépensé (k€) en autres produits manufacturés
+      par défaut: 0
+      unité: k€
+
+    FE:
+      valeur: 231
+      unité: kgCO2e/k€ HT
+      meta:
+        nom: Autres produits manufacturés
+        id: 43365
+  unité: kgCO2e

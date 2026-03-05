@@ -1,0 +1,31 @@
+{
+  "publicodes-layout": {
+    "table": {
+      "EquipementsInformatiqueAudiovisuel": {
+        "question": "Korištena informatička i audiovizualna oprema",
+        "equipement": "Oprema",
+        "nombre": "Broj"
+      },
+      "TransportDesEleves": {
+        "question": "Udaljenost koju učenici prelaze dolazeći u ustanovu",
+        "moyenTransport": "Prijevozno sredstvo",
+        "distance": "Udaljenost povratka u km"
+      },
+      "TransportDuPersonnel": {
+        "question": "Udaljenost koju osoblje prelazi dolazeći u ustanovu",
+        "moyenTransport": "Prijevozno sredstvo",
+        "distance": "Udaljenost povratka u km"
+      },
+      "VoyagesScolaires": {
+        "question": "Udaljenost prijeđena tijekom školskih putovanja",
+        "moyenTransport": "Prijevozno sredstvo",
+        "distance": "Udaljenost (km)"
+      },
+      "EquipementsDivers": {
+        "question": "Vaša škola vjerojatno ima jedan ili više kotlova za grijanje. Za rad ovi uređaji mogu koristiti razne vrste fosilnih goriva (lož ulje, prirodni plin i dr.). Emisije stakleničkih plinova (GHG) koje stvara ova oprema oslobađaju se primjerice izgaranjem loživog ulja ili plina.",
+        "equipement": "Équipement",
+        "nombre": "Nombre"
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+achats:
+  titre: Achats
+  formule:
+    somme:
+      - équipements de sport
+      - fournitures
+      - produits chimiques
+      - fin de vie moyenne
+  unité: kgCO2e
+  par défaut: 0

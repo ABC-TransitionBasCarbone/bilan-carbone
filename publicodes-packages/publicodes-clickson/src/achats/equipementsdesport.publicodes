@@ -1,0 +1,173 @@
+achats . équipements de sport:
+  titre: Équipements de sport
+  formule:
+    somme:
+      - ballon de volley
+      - ballon de handball
+      - kimono judo
+      - shorts tous sports
+      - maillots tous sports
+      - t-shirt polyester
+      - ballon de basket
+      - ballon de football
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    ballon de volley:
+      titre: "Ballon de volley"
+      formule: nombre * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        nombre:
+          question: "Combien de ballons de volley avez-vous achetés ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par ballon de volley"
+          valeur: 2.25
+          unité: kgCO2e/unité
+          par défaut: 0
+          note: |
+            Source: Base Carbone®
+          meta:
+            id: 27040
+
+    ballon de handball:
+      titre: "Ballon de handball"
+      formule: nombre * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        nombre:
+          question: "Combien de ballons de handball avez-vous achetés ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par ballon de handball"
+          valeur: 2.5
+          unité: kgCO2e/unité
+          par défaut: 0
+          note: |
+            Source: Base Carbone®
+          meta:
+            id: 20765
+
+    kimono judo:
+      titre: "Kimono (judo)"
+      formule: nombre * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        nombre:
+          question: "Combien de kimonos de judo avez-vous achetés ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par kimono (judo)"
+          valeur: 16
+          unité: kgCO2e/unité
+          note: |
+            Source: Base Carbone®
+          meta:
+            id: 20767
+
+    shorts tous sports:
+      titre: "Shorts tous sports"
+      formule: nombre * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        nombre:
+          question: "Combien de shorts tous sports avez-vous achetés ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par short tous sports"
+          valeur: 0.8
+          unité: kgCO2e/unité
+          par défaut: 0
+          note: |
+            Source: Base Carbone®
+          meta:
+            id: 20635
+
+    maillots tous sports:
+      titre: "Maillots tous sports"
+      formule: nombre * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        nombre:
+          question: "Combien de maillots tous sports avez-vous achetés ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par maillot tous sports"
+          valeur: 1
+          unité: kgCO2e/unité
+          par défaut: 0
+          note: |
+            Source: Base Carbone®
+          meta:
+            id: 20634
+
+    t-shirt polyester:
+      titre: "T-shirt en polyester"
+      formule: nombre * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        nombre:
+          question: "Combien de t-shirts en polyester avez-vous achetés ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par t-shirt en polyester"
+          valeur: 5.5
+          unité: kgCO2e/unité
+          par défaut: 0
+          note: |
+            Source: Base Carbone®
+          meta:
+            id: 27045
+
+    ballon de basket:
+      titre: "Ballon de basket"
+      formule: nombre * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        nombre:
+          question: "Combien de ballons de basket avez-vous achetés ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par ballon de basket"
+          valeur: 4.6
+          unité: kgCO2e/unité
+          par défaut: 0
+          note: |
+            Source: Base Carbone®
+          meta:
+            id: 27039
+
+    ballon de football:
+      titre: "Ballon de football"
+      formule: nombre * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        nombre:
+          question: "Combien de ballons de football avez-vous achetés ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par ballon de football"
+          valeur: 4.12
+          unité: kgCO2e/unité
+          par défaut: 0
+          note: |
+            Source: Base Carbone®
+          meta:
+            id: 27038

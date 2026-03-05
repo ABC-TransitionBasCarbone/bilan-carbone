@@ -9,7 +9,7 @@ import Modal from './Modal'
 interface Props {
   title: string
   className?: string
-  iconLabel: string
+  iconLabel?: string
   label: string
   tModal: string
   children: React.ReactNode
@@ -28,7 +28,7 @@ const GlossaryIconModal = ({ title, className, iconLabel, label, tModal, childre
           e.preventDefault()
           setOpen((prevOpen) => !prevOpen)
         }}
-        label={t(iconLabel)}
+        label={iconLabel ? t(iconLabel) : tCommon('moreInfo')}
       />
       <Modal
         open={open}

@@ -113,6 +113,8 @@ model StudyTag {
   family   StudyTagFamily @relation(fields: [familyId], references: [id])
 
   emissionSourceTags EmissionSourceTag[]
+  objectiveTags      ObjectiveTag[]
+  actionTags         ActionTag[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -364,11 +366,15 @@ model StudySite {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   superficy     Float?
-  studentNumber Int?   @map("student_number")
+  studentNumber Int?     @map("student_number")
+  country       Country?
 
+  situation    Situation?
   studyAnswers Answer[]
 
   engagementActions EngagementAction[]
+  objectiveSites    ObjectiveSite[]
+  actionSites       ActionSite[]
 
   @@unique([studyId, siteId])
   @@map("study_sites")

@@ -1,0 +1,7 @@
+construction:
+  titre: Construction
+  formule:
+    somme:
+      - bâtiment
+      - infrastructure
+  unité: kgCO2e

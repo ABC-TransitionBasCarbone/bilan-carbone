@@ -45,8 +45,8 @@
     "see": "Lábnyom megtekintése",
     "selectSite": "Adatok kitöltése előtt kérjük, válassz intézményt",
     "lastStudyTitle": "Legutóbbi lábnyom",
-    "createFirstSimplifiedStudy": "Create",
-    "firstSimplifiedStudyMessage": "It's time to get started! We invite you to create your first simplified carbon footprint.",
+    "createFirstSimplifiedStudy": "Első egyszerűsített lábnyom létrehozása",
+    "firstSimplifiedStudyMessage": "Ideje elkezdeni! Meghívunk, hogy hozd létre az első egyszerűsített karbonlábnyomodat.",
     "navigation": {
       "framing": "Általános adatok",
       "organizations": "Intézményeim",
@@ -62,15 +62,19 @@
       "glossary": {
         "validatorEmailDescription": "Diákként hozzáférésem van, mint közreműködő, egy vagy több kibocsátási ponthoz.",
         "duplicationOptionsDescription": "Tanulmány másolásakor kiválaszthatod, hogy az eredeti tanulmányból ugyanazokat a csapattagokat és diákokat hívd meg az új tanulmányhoz. Ez segít a kollaboráció folytonosságának fenntartásában."
-      }
-    },
-    "newContributor": {
-      "title": "Diák hozzáadása a tanulmányhoz: {name}"
+      },
+      "etp": "Dolgozók száma (tanárok és nem oktatók)",
+      "goToDataEntry": "Adatok kitöltése",
+      "studentNumber": "Diákok száma",
+      "superficy": "Intézmény területe"
     },
     "role": {
       "Contributor": "Diák"
     },
     "rights": {
+      "newContributor": {
+        "title": "Diák hozzáadása a tanulmányhoz: {name}"
+      },
       "contributorsTable": {
         "delete": "Diák eltávolítása",
         "title": "Diákok",
@@ -82,11 +86,73 @@
           "description": "Itt kezelheted a tanulmány diákjait. Hozzáférést kapnak bizonyos ponthoz és alponthoz (amit meghatározhatsz), és kitölthetik az általad már létrehozott kibocsátási források adatait. További információkért a közreműködői felületről, lásd a <link>GYIK</link>."
         }
       }
+    },
+    "export": {
+      "export": "Lábnyomom exportálása"
+    },
+    "pdf": {
+      "loading": "Adatok betöltése...",
+      "title": "Kibocsátási összefoglaló {year}",
+      "results": {
+        "all": "Eredmények"
+      },
+      "labels": {
+        "studentNumber": "Diákok száma",
+        "etp": "Dolgozók száma",
+        "superficy": "Terület",
+        "establishmentYear": "Megnyitás éve"
+      },
+      "charts": {
+        "siteEmissions": "{site} intézmény kibocsátása tCO2e-ben {year}-ban"
+      },
+      "questions": {
+        "goals-title": "CÉLOK",
+        "goals-subtitle": "Mutasd be, milyen célokat szolgál az intézkedésed (érzékenyítés, kibocsátáscsökkentés stb.). Rövid távú vagy stratégiai akció?",
+        "shareholders-title": "AZ AKCIÓ FELELŐSEI",
+        "shareholders-subtitle": "Megneveztél-e egy csapatot, akik napi szinten és hosszú távon viszik az akciót? Írd le nevüket és szerepüket/funkciójukat.",
+        "otherStakeholders-title": "EGYÉB ÉRINTETT FELEK",
+        "otherStakeholders-subtitle": "Különböztesd meg a belső és külső érintetteket. Ők nem viszik az akciót napi szinten, de segítenek például villanyszámlák beszerzésében. Lehetnek intézményvezetők vagy önkormányzat.",
+        "ressourcesToBeImplemented-title": "MEGVALÓSÍTANDÓ ESZKÖZÖK",
+        "ressourcesToBeImplemented-subtitle": "Milyen lépéseket és eszközöket kell alkalmazni? Lehetnek humán, anyagi, pénzügyi erőforrások... Ez a rész kulcsfontosságú!",
+        "monitoringIndicators-title": "NYOMONKÖVETÉSI MUTATÓK",
+        "monitoringIndicators-subtitle": "Írj ide olyan mutatókat, amelyek alapján 6 hónap/1 év múlva értékelheted az akció sikerét. Példa: ÜHG csökkenés százaléka.",
+        "estimatedCarbonImpacts-title": "BECSÜLT SZÉN-DIOXID HATÁSOK",
+        "estimatedCarbonImpacts-subtitle": "Mennyiben csökkenti az akció az ÜHG kibocsátást?",
+        "otherEstimatedEnvironmentalImpacts-title": "EGYÉB BECSÜLT KÖRNYEZETI HATÁSOK",
+        "otherEstimatedEnvironmentalImpacts-subtitle": "Gondolj az akció pozitív vagy negatív hatásaira a biodiverzitásra, vízre, hulladékra...",
+        "estimatedSocialImpacts-title": "BECSÜLT TÁRSADALMI HATÁSOK",
+        "estimatedSocialImpacts-subtitle": "Itt azt vizsgáljuk, hogy az akció csökkenti-e az öko-szorongást, segíti-e a tanulást, csökkenti-e a lemorzsolódást, segíti-e a fiatalok beilleszkedését...",
+        "calendar-title": "NAPTÁR",
+        "calendar-subtitle": "Írd le az akció főbb lépéseit, válaszd meg jól az időskálát!"
+      },
+      "additionalInfo": "Az itt kapott eredmények az intézményed karbonlábnyomának egyszerűsített számításai, nem felelnek meg a Bilan Carbone® vagy a hatályos szabályozás követelményeinek. Ezek az eredmények segítenek megérteni a klímaváltozás kihívásait és azonosítani a cselekvési prioritásokat. Elsősorban oktatási célúak, az eszközünkön keresztül végzett karbonlábnyom-számítás az első lépés az alkalmazkodásban a klímaváltozás következményeihez."
+    },
+    "results": {
+      "carbonIntensities": "Egyéni karbonlábnyom"
     }
   },
   "emissionFactors": {
     "post": {
-      "Restauration": "Ételkészítés / Vendéglátás"
+      "Restauration": "Ételkészítés / Vendéglátás",
+      "AutresGaz": "Egyéb gázok",
+      "Combustibles": "Üzemanyagok",
+      "Construction": "Építés",
+      "DechetsRecyclables": "Újrahasznosítható hulladék",
+      "DeplacementsClickson": "Közlekedés",
+      "DistributeursAutomatiques": "Automata kioszkok",
+      "EnergiesClickson": "Energia",
+      "EquipementsDeSport": "Sportfelszerelések",
+      "EquipementsDivers": "Egyéb felszerelések (háztartási gépek, szakmai felszerelések...)",
+      "EquipementsInformatiqueAudiovisuel": "Informatikai / audiovizuális felszerelések",
+      "Fournitures": "Irodaszerek",
+      "ImmobilisationsClickson": "Immobilizációk",
+      "OrduresMenageresResiduelles": "Háztartási hulladék",
+      "ProduitsChimiques": "Vegyi anyagok",
+      "Renovation": "Felújítás",
+      "TransportDesEleves": "Diákok szállítása",
+      "TransportDuPersonnel": "Személyzet szállítása",
+      "TypesDeRepasServis": "Tálalt ételek típusai",
+      "VoyagesScolaires": "Iskolai utazások"
     }
   },
   "organization": {
@@ -94,13 +160,33 @@
       "myOrganization": "Intézményeim"
     },
     "form": {
-      "editTitle": "Intézményeim szerkesztése"
+      "editTitle": "Intézményeim szerkesztése",
+      "name": "Intézmény neve"
     },
     "sites": {
       "title": "Mely intézményeket kell lefednie a lábnyomnak?",
       "noSites": "Nincs beállított intézmény",
       "namePlaceholder": "Intézmény neve",
-      "add": "Intézmény hozzáadása"
+      "add": "Intézmény hozzáadása",
+      "academy": "Akadémia",
+      "academyPlaceholder": "Az intézmény akadémiája",
+      "establishmentType": {
+        "title": "Intézmény típusa",
+        "COLLEGE": "Középiskola",
+        "LYCEE_GENERAL": "Általános és technológiai gimnázium",
+        "LYCEE_PRO": "Szakgimnázium",
+        "LYCEE_PRO_AGRICOLE": "Mezőgazdasági szakgimnázium",
+        "ETABLISSEMENT_FR_ETRANGER": "Francia oktatási intézmény külföldön"
+      },
+      "establishmentYear": "Építés éve",
+      "establishmentYearPlaceholder": "Az intézmény építésének éve",
+      "etp": "Személyzet száma",
+      "etpPlaceholder": "Teljes személyzetszám",
+      "glossary": {
+        "informations": "Ezeket az információkat meg kell adni, mielőtt továbblépne. Ezek az adatok hatással vannak a karbonlábnyom számítására (különösen az immobilizációs tételre)."
+      },
+      "studentNumber": "Diákok száma",
+      "studentNumberPlaceholder": "Diákok teljes száma"
     }
   },
   "login": {
@@ -124,7 +210,12 @@
     "Not known school": "Kérjük, keresd meg és válaszd ki az intézményedet.",
     "validation": {
       "schoolPostalCodeOrName": "Kérjük, add meg az iskola irányítószámát vagy nevét"
-    }
+    },
+    "city": "Város",
+    "cityPlaceholder": "Az iskola városa",
+    "country": "Ország",
+    "schoolName": "Iskola neve",
+    "schoolNamePlaceholder": "Az iskola neve"
   },
   "email": {
     "subject": {
@@ -133,5 +224,24 @@
       "activation": "Aktiváltad a fiókodat a Clicksonon",
       "activationRequest": "Hozzáférési kérelem a Clickson szervezetedhez"
     }
+  },
+  "comments": {
+    "title": "Hozzászólások kezelése",
+    "noComments": "Nincs feldolgozandó hozzászólásod",
+    "yourComment": "A hozzászólásod...",
+    "validated": "Jóváhagyva",
+    "pending": "Függőben",
+    "addComment": "Hozzászólás hozzáadása"
+  },
+  "error": {
+    "Too many comments": "Már túl sok függőben lévő hozzászólásod van"
+  },
+  "ressources": {
+    "knowMoreDataCollect": "Tudj meg többet az intézmény adatgyűjtéséről:",
+    "guideDataCollect": "Adatgyűjtési útmutató",
+    "toolsDataCollect": "Adatgyűjtési eszközök:",
+    "modelsDataCollect": "Adatgyűjtési segédanyagok mintái",
+    "game": "Játék: saját intézkedési terv tárgyalásának bevezetése:",
+    "classEarth": "Földem az osztályban"
   }
 }

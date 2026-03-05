@@ -123,6 +123,33 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
     },
   })
 
+  await prisma.studyTagFamily.create({
+    data: {
+      name: 'Tag Family A',
+      studyId,
+      tags: {
+        createMany: {
+          data: [
+            { name: 'Tag 1', color: '#fea3a3' },
+            { name: 'Tag 2', color: '#fdf87f' },
+          ],
+        },
+      },
+    },
+  })
+
+  await prisma.studyTagFamily.create({
+    data: {
+      name: 'Tag Family B',
+      studyId,
+      tags: {
+        createMany: {
+          data: [{ name: 'Tag 3', color: '#fdf87f' }],
+        },
+      },
+    },
+  })
+
   await prisma.userOnStudy.create({ data: { role: StudyRole.Validator, accountId: creator.id, studyId } })
 
   await prisma.studyEmissionSource.createMany({

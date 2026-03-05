@@ -1,1 +1,1 @@
-postdeploy: yarn prisma migrate deploy 
+postdeploy: cd $APP_HOME && npx --yes prisma@6 migrate deploy

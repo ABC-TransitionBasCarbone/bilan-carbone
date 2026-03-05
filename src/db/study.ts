@@ -42,7 +42,10 @@ export const createStudy = async (
   tx?: Prisma.TransactionClient,
 ) => {
   const client = tx ?? prismaClient
-  const dbStudy = await client.study.create({ data, select: { id: true, exports: { select: { types: true } } } })
+  const dbStudy = await client.study.create({
+    data,
+    select: { id: true, exports: { select: { types: true } }, sites: { select: { id: true, country: true } } },
+  })
 
   if (hasAccessToCreateStudyWithEmissionFactorVersions(environment) || shouldCreateFEVersions) {
     let studyEmissionFactorVersions: Prisma.StudyEmissionFactorVersionCreateManyInput[] = []
@@ -233,6 +236,7 @@ const fullStudyInclude = {
       beneficiaryNumber: true,
       superficy: true,
       studentNumber: true,
+      country: true,
       site: {
         select: {
           id: true,
@@ -244,6 +248,7 @@ const fullStudyInclude = {
           etp: true,
           studentNumber: true,
           superficy: true,
+          country: true,
           cnc: {
             select: {
               id: true,
@@ -1187,6 +1192,37 @@ export const removeSourceToStudy = async (source: Import, studyId: string) => {
     })
     await tx.studyEmissionFactorVersion.delete({
       where: { studyId_source: { studyId, source } },
+    })
+  })
+}
+
+export const removeSourceToAllStudies = async (source: Import) => {
+  await prismaClient.$transaction(async (tx) => {
+    await tx.studyEmissionSource.updateMany({
+      where: {
+        emissionFactor: { importedFrom: source },
+        study: {
+          exports: {
+            NOT: {
+              types: { has: Export.GHGP },
+            },
+          },
+        },
+      },
+      data: { emissionFactorId: null, validated: false },
+    })
+
+    await tx.studyEmissionFactorVersion.deleteMany({
+      where: {
+        source,
+        study: {
+          exports: {
+            NOT: {
+              types: { has: Export.GHGP },
+            },
+          },
+        },
+      },
     })
   })
 }

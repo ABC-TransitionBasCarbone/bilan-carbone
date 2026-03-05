@@ -1,0 +1,10 @@
+restauration:
+  titre: Restauration
+  formule:
+    somme:
+      - types de repas servis
+      - distributeur automatiques
+      - fret
+      - fin de vie moyenne
+  unité: kgCO2e
+  par défaut: 0

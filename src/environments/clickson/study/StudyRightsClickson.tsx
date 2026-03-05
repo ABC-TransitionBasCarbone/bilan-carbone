@@ -2,6 +2,7 @@
 
 import Block from '@/components/base/Block'
 import LinkButton from '@/components/base/LinkButton'
+import { FormAutocomplete } from '@/components/form/Autocomplete'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import { FormTextField } from '@/components/form/TextField'
 import StudyContributorsTable from '@/components/study/rights/StudyContributorsTable'
@@ -21,7 +22,7 @@ import {
 } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Box, CircularProgress } from '@mui/material'
-import { EmissionFactorImportVersion } from '@prisma/client'
+import { Country, EmissionFactorImportVersion } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
@@ -46,6 +47,7 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, us
   const t = useTranslations('study.new')
   const tRights = useTranslations('study.rights')
   const tValidation = useTranslations('validation')
+  const tCountry = useTranslations('country')
   const { callServerFunction } = useServerFunction()
   const { studySite, setSite } = useStudySite(study)
   const [siteData, setSiteData] = useState<FullStudy['sites'][0] | undefined>()
@@ -60,6 +62,7 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, us
     etp: number
     studentNumber: number
     superficy: number | null
+    country: Country | null
   } | null>(null)
 
   const router = useRouter()
@@ -111,6 +114,7 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, us
             etp: newSiteData.etp ?? newSiteData.site.etp ?? 0,
             studentNumber: newSiteData.studentNumber ?? newSiteData.site.studentNumber ?? 0,
             superficy: newSiteData.superficy ?? newSiteData.site.superficy ?? null,
+            country: newSiteData.country ?? newSiteData.site.country ?? null,
           }
 
           // Store original values for change detection
@@ -132,6 +136,7 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, us
         etp: data.etp ?? 0,
         studentNumber: data.studentNumber ?? 0,
         superficy: data.superficy ?? null,
+        country: data.country ?? null,
       })
     },
     [callServerFunction, originalValues, siteData?.site.cnc?.id, studySite],
@@ -153,6 +158,7 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, us
         etp: pendingSiteChanges.pendingData.etp ?? 0,
         studentNumber: pendingSiteChanges.pendingData.studentNumber ?? 0,
         superficy: pendingSiteChanges.pendingData.superficy ?? null,
+        country: pendingSiteChanges.pendingData.country ?? null,
       })
       setPendingSiteChanges(null)
     }
@@ -248,6 +254,21 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, us
                 label={t('superficy')}
                 type="number"
                 className={styles.formTextField}
+                onBlur={onStudyEstablishmentUpdate}
+                disabled={editionDisabled}
+                placeholder={t('superficyPlaceholder')}
+              />
+              <FormAutocomplete
+                control={form.control}
+                translation={t}
+                name="country"
+                label={t('country')}
+                data-testid="activation-country"
+                options={Object.keys(Country).map((country) => ({
+                  label: tCountry(country),
+                  value: country,
+                }))}
+                renderValue={(country) => (country ? tCountry(country as Country) : '')}
                 onBlur={onStudyEstablishmentUpdate}
                 disabled={editionDisabled}
               />

@@ -2,18 +2,18 @@
 
 import LoadingButton from '@/components/base/LoadingButton'
 import Modal from '@/components/modals/Modal'
-import { TrajectoryWithObjectives } from '@/db/transitionPlan'
+import { TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import {
-  CreateTrajectoryInput,
-  createTrajectoryWithObjectives,
-  updateTrajectory,
-} from '@/services/serverFunctions/trajectory'
 import {
   createTrajectorySchema,
   SectorPercentages,
   TrajectoryFormData,
 } from '@/services/serverFunctions/trajectory.command'
+import {
+  CreateTrajectoryInput,
+  createTrajectoryWithObjectives,
+  updateTrajectory,
+} from '@/services/serverFunctions/trajectory.serverFunction'
 import {
   calculateBaseSNBCReductionRates,
   calculateSectoralSNBCReductionRates,
@@ -46,15 +46,16 @@ interface Props {
   onClose: () => void
   transitionPlanId: string
   onSuccess: (trajectoryId: string) => void
-  trajectory: TrajectoryWithObjectives | null
+  trajectory: TrajectoryWithObjectivesAndScope | null
   isFirstCreation?: boolean
   studyYear: number
   sectenData: SectenInfo[]
   studyEmissions?: number
   pastStudies?: PastStudy[]
+  defaultSnbcSectoralPercentages?: SectorPercentages | null
 }
 
-const defaultValues: TrajectoryFormData = {
+const getDefaultValues = (defaultSnbcSectoralPercentages?: SectorPercentages | null): TrajectoryFormData => ({
   trajectoryType: TrajectoryType.SBTI_15,
   name: '',
   description: '',
@@ -63,7 +64,7 @@ const defaultValues: TrajectoryFormData = {
     targetYear: null,
     reductionRate: null,
   })),
-  sectorPercentages: {
+  sectorPercentages: defaultSnbcSectoralPercentages ?? {
     energy: 0,
     industry: 0,
     waste: 0,
@@ -71,7 +72,7 @@ const defaultValues: TrajectoryFormData = {
     agriculture: 0,
     transportation: 0,
   },
-}
+})
 
 const TrajectoryCreationModal = ({
   open,
@@ -84,6 +85,7 @@ const TrajectoryCreationModal = ({
   sectenData,
   studyEmissions = 0,
   pastStudies = [],
+  defaultSnbcSectoralPercentages,
 }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectoryModal')
   const isEditMode = !!trajectory
@@ -100,7 +102,7 @@ const TrajectoryCreationModal = ({
     reset,
     formState: { isValid },
   } = useForm<TrajectoryFormData>({
-    defaultValues,
+    defaultValues: getDefaultValues(defaultSnbcSectoralPercentages),
     resolver: zodResolver(trajectorySchema),
     mode: 'onChange',
   })
@@ -134,12 +136,13 @@ const TrajectoryCreationModal = ({
 
   useEffect(() => {
     if (trajectory) {
+      const defaultObjectives = trajectory.objectives.filter((obj) => obj.isDefault)
       reset({
         trajectoryType: trajectory.type,
         name: trajectory.name,
         description: trajectory.description || '',
         referenceYear: trajectory.referenceYear?.toString(),
-        objectives: trajectory.objectives.map((obj) => ({
+        objectives: defaultObjectives.map((obj) => ({
           targetYear: obj.targetYear.toString(),
           reductionRate: Number((obj.reductionRate * 100).toFixed(2)),
         })),
@@ -258,7 +261,7 @@ const TrajectoryCreationModal = ({
   }
 
   const handleBack = () => {
-    reset({ ...defaultValues, trajectoryType })
+    reset({ ...getDefaultValues(defaultSnbcSectoralPercentages), trajectoryType })
     setActiveStep((prev) => prev - 1)
   }
 
@@ -281,6 +284,8 @@ const TrajectoryCreationModal = ({
     if (isEditMode && trajectory) {
       let objectives
 
+      const defaultObjectives = trajectory.objectives.filter((obj) => obj.isDefault)
+
       if (data.trajectoryType === TrajectoryType.SNBC_SECTORAL || data.trajectoryType === TrajectoryType.SNBC_GENERAL) {
         if (!snbcRates) {
           setIsLoading(false)
@@ -297,7 +302,7 @@ const TrajectoryCreationModal = ({
         objectivesArray.push({ targetYear: 2050, reductionRate: snbcRates.rateTo2050 })
 
         objectives = objectivesArray.map((obj, index) => ({
-          id: trajectory.objectives[index]?.id,
+          id: defaultObjectives[index]?.id,
           targetYear: obj.targetYear,
           reductionRate: Number(obj.reductionRate.toFixed(4)),
         }))
@@ -310,12 +315,12 @@ const TrajectoryCreationModal = ({
 
         objectives = [
           {
-            id: trajectory.objectives[0]?.id,
+            id: defaultObjectives[0]?.id,
             targetYear: 2030,
             reductionRate: Number(baseRate.toFixed(4)),
           },
           {
-            id: trajectory.objectives[1]?.id,
+            id: defaultObjectives[1]?.id,
             targetYear: 2050,
             reductionRate: Number(baseRate.toFixed(4)),
           },
@@ -323,8 +328,8 @@ const TrajectoryCreationModal = ({
       } else {
         objectives = data.objectives
           .filter((obj) => obj.targetYear && obj.reductionRate !== null && obj.reductionRate !== undefined)
-          .map((obj) => ({
-            id: obj.id,
+          .map((obj, index) => ({
+            id: defaultObjectives[index]?.id,
             targetYear: getYearFromDateStr(obj.targetYear!),
             reductionRate: Number((obj.reductionRate! / 100).toFixed(4)),
           }))
@@ -383,7 +388,8 @@ const TrajectoryCreationModal = ({
         { targetYear: 2050, reductionRate: snbcRates.rateTo2050 },
       ]
     } else if (data.trajectoryType === TrajectoryType.SNBC_SECTORAL) {
-      if (!data.sectorPercentages) {
+      const sectorPercentages = data.sectorPercentages ?? defaultSnbcSectoralPercentages
+      if (!sectorPercentages) {
         setIsLoading(false)
         throw new Error('Sector percentages are required')
       }
@@ -393,7 +399,7 @@ const TrajectoryCreationModal = ({
         throw new Error('Unable to calculate SNBC reduction rates')
       }
 
-      input.sectorPercentages = data.sectorPercentages
+      input.sectorPercentages = sectorPercentages
 
       const objectives: { targetYear: number; reductionRate: number }[] = []
 

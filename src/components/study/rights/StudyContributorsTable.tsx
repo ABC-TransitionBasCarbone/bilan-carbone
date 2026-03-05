@@ -94,7 +94,10 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
 
   const ExpandableCell = useCallback(
     ({ email, children, className = '' }: { email: string; children: React.ReactNode; className?: string }) => (
-      <div className={`${styles.expandable} align-center ${className}`} onClick={() => toggleRowExpansion(email)}>
+      <div
+        className={`${styles.expandable} align-center justify-center ${className}`}
+        onClick={() => toggleRowExpansion(email)}
+      >
         {children}
       </div>
     ),

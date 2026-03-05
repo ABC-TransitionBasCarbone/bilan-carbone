@@ -1,0 +1,258 @@
+énergie . électricité:
+  titre: Électricité
+  formule:
+    somme:
+      - janvier
+      - février
+      - mars
+      - avril
+      - mai
+      - juin
+      - juillet
+      - août
+      - septembre
+      - octobre
+      - novembre
+      - décembre
+  unité: kgCO2e
+  par défaut: 0
+
+énergie . électricité . janvier:
+  titre: Électricité
+  formule: consommation * FE
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    consommation:
+      question: Consommation d'électricité en janvier
+      unité: kWh
+      par défaut: 0
+      note: |
+        Indiquez la consommation totale d'électricité de l'établissement sur ce mois.
+    FE:
+      question: Facteur d'émission de l'électricité
+      valeur: commun . FE . électricité
+      note: |
+        Source: Base Carbone®
+      meta:
+        id: 26601
+
+énergie . électricité . février:
+  titre: Électricité
+  formule: consommation * FE
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    consommation:
+      question: Consommation d'électricité en février
+      unité: kWh
+      par défaut: 0
+      note: |
+        Indiquez la consommation totale d'électricité de l'établissement sur ce mois.
+    FE:
+      question: Facteur d'émission de l'électricité
+      valeur: commun . FE . électricité
+      note: |
+        Source: Base Carbone®
+      meta:
+        id: 26601
+
+énergie . électricité . mars:
+  titre: Électricité
+  formule: consommation * FE
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    consommation:
+      question: Consommation d'électricité en mars
+      unité: kWh
+      par défaut: 0
+      note: |
+        Indiquez la consommation totale d'électricité de l'établissement sur ce mois.
+    FE:
+      question: Facteur d'émission de l'électricité
+      valeur: commun . FE . électricité
+      note: |
+        Source: Base Carbone®
+      meta:
+        id: 26601
+
+énergie . électricité . avril:
+  titre: Électricité
+  formule: consommation * FE
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    consommation:
+      question: Consommation d'électricité en avril
+      unité: kWh
+      par défaut: 0
+      note: |
+        Indiquez la consommation totale d'électricité de l'établissement sur ce mois.
+    FE:
+      question: Facteur d'émission de l'électricité
+      valeur: commun . FE . électricité
+      note: |
+        Source: Base Carbone®
+      meta:
+        id: 26601
+
+énergie . électricité . mai:
+  titre: Électricité
+  formule: consommation * FE
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    consommation:
+      question: Consommation d'électricité en mai
+      unité: kWh
+      par défaut: 0
+      note: |
+        Indiquez la consommation totale d'électricité de l'établissement sur ce mois.
+    FE:
+      question: Facteur d'émission de l'électricité
+      valeur: commun . FE . électricité
+      note: |
+        Source: Base Carbone®
+      meta:
+        id: 26601
+
+énergie . électricité . juin:
+  titre: Électricité
+  formule: consommation * FE
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    consommation:
+      question: Consommation d'électricité en juin
+      unité: kWh
+      par défaut: 0
+      note: |
+        Indiquez la consommation totale d'électricité de l'établissement sur ce mois.
+    FE:
+      question: Facteur d'émission de l'électricité
+      valeur: commun . FE . électricité
+      note: |
+        Source: Base Carbone®
+      meta:
+        id: 26601
+
+énergie . électricité . juillet:
+  titre: Électricité
+  formule: consommation * FE
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    consommation:
+      question: Consommation d'électricité en juillet
+      unité: kWh
+      par défaut: 0
+      note: |
+        Indiquez la consommation totale d'électricité de l'établissement sur ce mois.
+    FE:
+      question: Facteur d'émission de l'électricité
+      valeur: commun . FE . électricité
+      note: |
+        Source: Base Carbone®
+      meta:
+        id: 26601
+
+énergie . électricité . août:
+  titre: Électricité
+  formule: consommation * FE
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    consommation:
+      question: Consommation d'électricité en août
+      unité: kWh
+      par défaut: 0
+      note: |
+        Indiquez la consommation totale d'électricité de l'établissement sur ce mois.
+    FE:
+      question: Facteur d'émission de l'électricité
+      valeur: commun . FE . électricité
+      note: |
+        Source: Base Carbone®
+      meta:
+        id: 26601
+
+énergie . électricité . septembre:
+  titre: Électricité
+  formule: consommation * FE
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    consommation:
+      question: Consommation d'électricité en septembre
+      unité: kWh
+      par défaut: 0
+      note: |
+        Indiquez la consommation totale d'électricité de l'établissement sur ce mois.
+    FE:
+      question: Facteur d'émission de l'électricité
+      valeur: commun . FE . électricité
+      note: |
+        Source: Base Carbone®
+      meta:
+        id: 26601
+
+énergie . électricité . octobre:
+  titre: Électricité
+  formule: consommation * FE
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    consommation:
+      question: Consommation d'électricité en octobre
+      unité: kWh
+      par défaut: 0
+      note: |
+        Indiquez la consommation totale d'électricité de l'établissement sur ce mois.
+    FE:
+      question: Facteur d'émission de l'électricité
+      valeur: commun . FE . électricité
+      note: |
+        Source: Base Carbone®
+      meta:
+        id: 26601
+
+énergie . électricité . novembre:
+  titre: Électricité
+  formule: consommation * FE
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    consommation:
+      question: Consommation d'électricité en novembre
+      unité: kWh
+      par défaut: 0
+      note: |
+        Indiquez la consommation totale d'électricité de l'établissement sur ce mois.
+    FE:
+      question: Facteur d'émission de l'électricité
+      valeur: commun . FE . électricité
+      note: |
+        Source: Base Carbone®
+      meta:
+        id: 26601
+
+énergie . électricité . décembre:
+  titre: Électricité
+  formule: consommation * FE
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    consommation:
+      question: Consommation d'électricité en décembre
+      unité: kWh
+      par défaut: 0
+      note: |
+        Indiquez la consommation totale d'électricité de l'établissement sur ce mois.
+    FE:
+      question: Facteur d'émission de l'électricité
+      valeur: commun . FE . électricité
+      note: |
+        Source: Base Carbone®
+      meta:
+        id: 26601

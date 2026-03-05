@@ -1,7 +1,8 @@
 import AllResultsAdvanced from '@/components/study/results/AllResults'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
-import AllResultsSimplified, { ChartType } from '@/environments/simplified/study/results/AllResults'
+import AllResultsPublicodes from '@/environments/simplified/study/results/AllResultsPublicodes'
+import { ChartType } from '@/environments/simplified/study/results/utils'
 import { ExportRule, SiteCAUnit } from '@prisma/client'
 
 interface Props {
@@ -14,26 +15,9 @@ interface Props {
   rules: ExportRule[]
 }
 
-const AllResults = ({
-  emissionFactorsWithParts,
-  study,
-  validatedOnly,
-  chartOrder,
-  caUnit,
-  showSubLevel = false,
-  rules,
-}: Props) => {
+const AllResults = ({ emissionFactorsWithParts, study, validatedOnly, caUnit, rules, chartOrder }: Props) => {
   if (study.simplified) {
-    return (
-      <AllResultsSimplified
-        showSubLevel={showSubLevel}
-        emissionFactorsWithParts={emissionFactorsWithParts}
-        study={study}
-        validatedOnly={validatedOnly}
-        caUnit={caUnit}
-        chartOrder={chartOrder}
-      />
-    )
+    return <AllResultsPublicodes study={study} caUnit={caUnit} chartOrder={chartOrder} />
   }
 
   return (

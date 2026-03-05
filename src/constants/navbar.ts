@@ -150,15 +150,15 @@ export const getStudyNavbarMenu = (
         links: isTransitionPlanActive
           ? [
               {
-                href: `/etudes/${studyId}/trajectoires`,
-                label: t('trajectories'),
-                testId: 'study-trajectories-link',
+                href: `/etudes/${studyId}/initialisation`,
+                label: t('initialization'),
+                testId: 'study-initialization-link',
               },
               {
                 disabled: !hasObjectives,
-                href: hasObjectives ? `/etudes/${studyId}/objectifs` : '#',
-                label: t('objectives'),
-                testId: 'study-objectives-link',
+                href: hasObjectives ? `/etudes/${studyId}/trajectoires` : '#',
+                label: t('trajectories'),
+                testId: 'study-trajectories-link',
               },
               {
                 disabled: !hasObjectives,

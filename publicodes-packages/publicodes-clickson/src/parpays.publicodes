@@ -1,0 +1,53 @@
+commun . FE . électricité . par pays:
+  titre: Par pays électricité
+
+commun . FE . électricité . par pays . FRANCE:
+  titre: FRANCE
+  valeur: 0.0647
+  unité: kgCO2e/kWh
+  par défaut: 0
+
+commun . FE . électricité . par pays . HONGRIE:
+  titre: HONGRIE
+  valeur: 0.043
+  unité: kgCO2e/kWh
+  par défaut: 0
+
+commun . FE . électricité . par pays . ROUMANIE:
+  titre: ROUMANIE
+  valeur: 0.296
+  unité: kgCO2e/kWh
+  par défaut: 0
+
+commun . FE . électricité . par pays . CROATIE:
+  titre: CROATIE
+  valeur: 0.141
+  unité: kgCO2e/kWh
+  par défaut: 0
+
+commun . FE . réseau de chaleur . par pays:
+  titre: Par pays réseau de chaleur
+
+commun . FE . réseau de chaleur . par pays . FRANCE:
+  titre: FRANCE
+  valeur: 0.132
+  unité: kgCO2e/kWh
+  par défaut: 0
+
+commun . FE . réseau de chaleur . par pays . HONGRIE:
+  titre: HONGRIE
+  valeur: 0.374
+  unité: kgCO2e/kWh
+  par défaut: 0
+
+commun . FE . réseau de chaleur . par pays . ROUMANIE:
+  titre: ROUMANIE
+  valeur: 0.220
+  unité: kgCO2e/kWh
+  par défaut: 0
+
+commun . FE . réseau de chaleur . par pays . CROATIE:
+  titre: CROATIE
+  valeur: 0.265
+  unité: kgCO2e/kWh
+  par défaut: 0

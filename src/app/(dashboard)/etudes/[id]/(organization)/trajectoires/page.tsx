@@ -2,10 +2,10 @@ import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import { StudyProps } from '@/components/hoc/withStudy'
 import withStudyDetails from '@/components/hoc/withStudyDetails'
 import withTransitionPlan, { TransitionPlanProps } from '@/components/hoc/withTransitionPlan'
-import TrajectoryReductionPage from '@/components/pages/TrajectoryReductionPage'
+import TrajectoryPage from '@/components/pages/TrajectoryPage'
 import { getUserApplicationSettings } from '@/db/user'
 import { getSectenData } from '@/services/serverFunctions/secten'
-import { getTrajectories } from '@/services/serverFunctions/trajectory'
+import { getTrajectories } from '@/services/serverFunctions/trajectory.serverFunction'
 import {
   getLinkedAndExternalStudies,
   getStudyActions,
@@ -20,7 +20,7 @@ const TrajectoryReduction = async ({ study, canEdit, user }: StudyProps & UserSe
 
   if (!transitionPlanResponse.success || !transitionPlanResponse.data) {
     return (
-      <TrajectoryReductionPage
+      <TrajectoryPage
         study={study}
         canEdit={canEdit}
         transitionPlan={null}
@@ -39,7 +39,7 @@ const TrajectoryReduction = async ({ study, canEdit, user }: StudyProps & UserSe
   ])
 
   return (
-    <TrajectoryReductionPage
+    <TrajectoryPage
       study={study}
       canEdit={canEdit}
       transitionPlan={transitionPlan}

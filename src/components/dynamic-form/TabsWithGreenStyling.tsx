@@ -46,7 +46,7 @@ const StyledTabContent = styled(Box)(() => ({
 interface Props {
   tabs: string[]
   t: Translations
-  content: ReactNode[]
+  content: ReactNode
   activeTab?: number
   setActiveTab?: (n: number) => void
 }
@@ -73,18 +73,14 @@ const TabsWithGreenStyling = ({ tabs, t, content, setActiveTab, activeTab = 0 }:
       </StyledTabs>
 
       <StyledTabContent>
-        {tabs.map((tab, index) => (
-          <Box
-            className="w100"
-            role="tabpanel"
-            hidden={currentTab !== index}
-            id={`green-tab-${index}`}
-            aria-labelledby={`green-tab-${index}`}
-            key={tab}
-          >
-            {currentTab === index && content[index]}
-          </Box>
-        ))}
+        <Box
+          className="w100"
+          role="tabpanel"
+          id={`green-tab-${currentTab}`}
+          aria-labelledby={`green-tab-${currentTab}`}
+        >
+          {content}
+        </Box>
       </StyledTabContent>
     </StyledContainer>
   )

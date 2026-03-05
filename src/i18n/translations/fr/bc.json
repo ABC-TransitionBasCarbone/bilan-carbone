@@ -25,7 +25,13 @@
     "bc": {
       "title": "Export au format Bilan Carbone®",
       "category": "Catégorie Bilan Carbone®",
-      "emissions": "Émissions (tCO2e)"
+      "emissions": "Émissions (tCO2e)",
+      "disclaimerExcel1": "Attention, les résultats que vous obtenez ici sont uniquement issus de l'empreinte carbone simplifiée Count, et ne doivent en aucun cas être utilisés comme des résultats Bilan Carbone®.",
+      "disclaimerExcel2": "La démarche que vous avez suivi via l'outil Count n'est PAS une démarche Bilan Carbone®, même si les résultats obtenus peuvent déjà vous permettre de mieux comprendre comment réduire votre impact, en identifiant vos activités les plus émissives.",
+      "disclaimerExcel3": "En revanche, cette empreinte carbone simplifiée est le premier pas vers une démarche plus complète comme le Bilan Carbone® !",
+      "disclaimerExcel4": "Pour les années suivantes, vous pouvez ainsi soit renouveler votre mesure d'empreinte carbone simplifiée avec l'outil Count, soit réaliser un Bilan Carbone®.",
+      "disclaimerExcel5": "Un Bilan Carbone® suit une méthodologie bien précise, et doit répondre à un certain nombre de critères objectifs. Par exemple, au cours d'un Bilan Carbone®, la direction doit être engagée, les différentes parties prenantes de l'organisation doivent être mobilisées, des incertitudes doivent être calculées et associées aux émissions, et surtout, un plan de transition solide doit être construit pour engager l'organisation dans une transition bas carbone.",
+      "disclaimerExcel6": "Si vous souhaitez vous lancer dans un Bilan Carbone® dans les années qui viennent, tout commence par se faire former à la méthode, ou par nous contacter à l'adresse count@cut-collectif.fr, ou par se faire accompagner par un prestataire Bilan Carbone® !"
     },
     "glossary": {
       "GHGP": {
@@ -385,7 +391,8 @@
       "team": "Mon équipe",
       "informationDefinition": "Définition des informations",
       "dataAccounting": "Comptabilisation des données",
-      "trajectories": "Trajectoires de réduction",
+      "trajectories": "Trajectoires et objectifs",
+      "initialization": "Initialisation",
       "objectives": "Objectifs de réduction",
       "actionPlan": "Plan d'action",
       "commingSoon": "À venir",
@@ -559,10 +566,12 @@
         "titleEdit": "Modifier un·e contributeur·rice sur l'étude : {name}",
         "title": "Ajouter un·e contributeur·rice sur l'étude : {name}",
         "email": "Email",
+        "firstName": "Prénom",
+        "lastName": "Nom",
         "post": "Poste",
         "subPost": "Sous poste",
         "create": "Ajouter la personne",
-        "edit": "Modifer les droits",
+        "edit": "Modifier les droits",
         "Already in study": "Cette personne a déjà accès à l'étude.",
         "Not authorized": "Action non autorisée. N'hésitez pas à consulter la FAQ ou à contacter le support si vous pensez qu'il s'agit d'une erreur.",
         "validation": {
@@ -729,6 +738,7 @@
       "format": "Format",
       "post": "Poste",
       "subPost": "Sous-poste",
+      "value": "Valeur",
       "tag": "Tag",
       "download": "Télécharger",
       "downloadResults": "Résultats",
@@ -754,12 +764,6 @@
       "units": {
         "K": "kgCO₂e",
         "T": "tCO₂e"
-      },
-      "pageFilters": {
-        "title": "Filtres",
-        "posts": "Sous-postes",
-        "tags": "Tags",
-        "noFiltersSelected": "Aucun filtre sélectionné"
       },
       "tagGlossary": "Double compte sur les graphiques par tags",
       "tagGlossaryDescription": "Les sources d'émission peuvent avoir plusieurs tags, celles ci sont donc sur ce graphique comptabilisé dans chacun des tags. Il est donc normal que vous ayez ici un total plus grand que sur votre étude",
@@ -976,8 +980,50 @@
         "learnMore": "En savoir plus",
         "hideDetails": "Masquer les détails"
       },
+      "initialization": {
+        "title": "Initialisation de votre plan de transition",
+        "onboarding": {
+          "title": "Préparer votre plan de transition",
+          "description": "Ajoutez des études liées et répartissez vos émissions par secteur d'activité, puis visualisez vos trajectoires de référence SBTi et SNBC.",
+          "detailedInfo": "Pour Grabriel"
+        },
+        "createButton": "Créer ma première trajectoire personnalisée",
+        "skipOnboarding": "Passer l'onboarding",
+        "stepLinkStudy": {
+          "title": "Études passées",
+          "description": "Liez vos études BC+ passées pour reconstruire l'historique de vos émissions. Ces données alimenteront vos trajectoires de réduction.",
+          "glossaryTitle": "Études passées",
+          "glossaryDescription": "Pour gabriel - description",
+          "linkStudyButton": "Lier une étude"
+        },
+        "stepSectorAllocation": {
+          "title": "Répartition sectorielle",
+          "description": "Indiquez la part de vos émissions relevant de chaque grand secteur SNBC. Cela permettra de générer automatiquement une trajectoire SNBC sectorielle adaptée à votre organisation.",
+          "glossaryTitle": "Répartition sectorielle SNBC",
+          "glossaryDescription": "La SNBC définit des objectifs de réduction différenciés par secteur (énergie, industrie, bâtiments, transports…). En renseignant la part de vos émissions dans chaque secteur, la plateforme calcule une trajectoire SNBC pondérée, représentative de votre mix d'activités."
+        },
+        "stepSelectReferenceTrajectories": {
+          "title": "Trajectoires de référence",
+          "description": "Choisissez les trajectoires de référence climatique à afficher sur votre graphique : SNBC (nationale) et/ou SBTi (science-based). Ces trajectoires servent de repères pour construire votre propre trajectoire de réduction.",
+          "glossaryTitle": "Trajectoires de référence",
+          "glossaryDescription": "La SNBC (Stratégie Nationale Bas-Carbone) est la trajectoire officielle française de réduction des émissions. Les trajectoires SBTi (Science Based Targets initiative) sont des standards internationaux alignés sur les objectifs de l'Accord de Paris."
+        },
+        "stepVisualization": {
+          "title": "Visualisation des trajectoires",
+          "description": "Visualisez les trajectoires de référence sélectionnées pour votre organisation. Ce graphique sera enrichi au fil du temps avec vos propres trajectoires de réduction.",
+          "glossaryTitle": "Graphique des trajectoires",
+          "glossaryDescription": "Ce graphique représente l'évolution des émissions de votre organisation dans le temps, en regard des trajectoires de référence. L'axe vertical indique les émissions totales, l'axe horizontal représente les années."
+        },
+        "sectorBlock": {
+          "title": "Répartition sectorielle SNBC",
+          "description": "Renseignez la répartition de vos émissions par grand secteur d'activité selon la SNBC. Cela permettra de créer une trajectoire SNBC sectorielle personnalisée comme point de référence.",
+          "snbcSectorialName": "Trajectoire SNBC de référence",
+          "update": "Sauvegarder les modifications"
+        }
+      },
       "trajectories": {
-        "title": "Trajectoires de réduction",
+        "title": "Trajectoires et objectifs",
+        "tableTitle": "Liste des trajectoires et objectifs",
         "snbcButton": "Trajectoire SNBC",
         "sbtiButton": "Trajectoires SBTi",
         "customButton": "Je choisis ma trajectoire",
@@ -1024,11 +1070,14 @@
           "unvalidatedSourcesWarning": "{count, plural, =1 {Une source d'émissions n'est pas validée dans l'étude actuelle et n'est donc pas prise en compte dans le calcul des trajectoires.} other {{count} sources d'émissions ne sont pas validées dans l'étude actuelle et ne sont donc pas prises en compte dans le calcul des trajectoires.}}",
           "unvalidatedSourcesLinkedStudiesWarning": "{count, plural, =1 {Une source d'émissions n'est pas validée dans l' étude passée suivante :} other {{count} sources d'émissions ne sont pas validées dans les études passées suivantes :}}",
           "unvalidatedSourcesLinkedStudyCount": " ({count, plural, =1 {1 source non validée} other {{count} sources non validées}})",
+          "noEmissionSourcesWarning": "Aucune source d'émission n'est supérieure à 0. Les trajectoires ne peuvent pas être calculées.",
+          "noEmissionSourcesDisabledButton": "Aucune source d'émission n'est supérieure à 0. Veuillez renseigner au moins une source d'émission avant de créer une trajectoire personnalisée.",
           "yearRangeLabel": "Période de visualisation",
           "sbtiSnbc": "Trajectoires SBTI/SNBC",
           "custom": "Mes trajectoires personnalisées",
-          "previousTrajectories": "Trajectoire de référence",
-          "currentTrajectories": "Trajectoire actuelle",
+          "legendFilter": "Filtrer les trajectoires",
+          "previousTrajectories": "Référence ({year})",
+          "currentTrajectories": "Actuelle ({year})",
           "failedTrajectories": "Les trajectoire suivantes ne peuvent pas s'afficher correctement dans le futur car vous avez déjà consommé l'ensemble du budget carbone prévu par celles-ci :",
           "estimatedPast": "Passé estimé",
           "glossary": {
@@ -1134,7 +1183,7 @@
         },
         "sectorAllocation": {
           "title": "Allocation par secteur",
-          "description": "Définissez le pourcentage d'émissions à attribuer à chaque secteur. Le reste sera attribué à au secteur général."
+          "description": "Pourcentage d'émissions attribué à chaque secteur. Pour mettre à jour ces valeurs, veuillez vous rendre sur la page d'initialisation du plan de transition."
         },
         "sectors": {
           "energy": "Énergie",
@@ -1191,12 +1240,37 @@
           "correctedRateDescription": "Le taux à l'année N prend en compte votre taux voulu ainsi que les émissions entre votre année de référence et l'année de votre étude. Si vos émissions n'ont pas suivi votre taux souhaité, nous calculons les émissions émises en trop (overshoot) et appliquons un nouveau taux pour vous permettre de rattraper les émissions émises en trop."
         }
       },
+      "scope": {
+        "scopeSelection": "Sélection du périmètre"
+      },
+      "objectiveModal": {
+        "title": "Ajouter des sous-objectifs à la trajectoire : ",
+        "editTitle": "Modifier le sous-objectif de la trajectoire : ",
+        "cancel": "Annuler",
+        "submit": "Ajouter les sous-objectifs",
+        "update": "Mettre à jour le sous-objectif",
+        "scopeSelection": "Sélection du périmètre",
+        "objectives": "Sous-objectifs",
+        "sites": "Sites",
+        "tags": "Tags",
+        "subPosts": "Sous-postes"
+      },
+      "conversionWarning": {
+        "title": "Conversion du type de trajectoire",
+        "warningTitle": "Cette action convertira votre trajectoire en type PERSONNALISÉ.",
+        "message": "L'ajout d'un objectif spécifique à la trajectoire \"{trajectoryName}\" de type {trajectoryType} la convertira automatiquement en trajectoire de type PERSONNALISÉ. Cette action est irréversible.",
+        "explanation": "Une fois convertie, la trajectoire conservera les objectifs par défaut déjà définis mais ne suivra plus les règles spécifiques aux trajectoires de type {trajectoryType}.",
+        "cancel": "Annuler",
+        "confirm": "Continuer"
+      },
       "objectives": {
         "title": "Objectifs de réduction",
         "custom": "Personnalisée",
         "snbcGeneral": "SNBC Générale",
         "snbcSectoral": "SNBC Sectorielle",
+        "defaultSnbcSectoral": "Trajectoire de référence",
         "objectiveNumber": "Objectif {number}",
+        "defaultSnbcTooltip": "Cette trajectoire est liée aux données rentrées lors de l'initialisation du plan de transition et ne peut être modifiée ou supprimée",
         "search": "Cherchez une trajectoire",
         "add": "Ajouter une trajectoire",
         "table": {
@@ -1239,7 +1313,7 @@
           "enabled": "Activée",
           "enabledGlossaryIconLabel": "Activation et désactivation de mes actions",
           "enabledGlossaryTitle": "Activation et désactivation de mes actions",
-          "enabledGlossaryDescription": "Les réductions liées aux actions que vous avez activées sont prises en compte sur la page <trajectoryLink>Trajectoires de réduction</trajectoryLink> dans votre trajectoire bottom-up. Les réductions liées aux actions désactivées ne seront pas visibles. Activer ou désactiver des actions vous permet ainsi d'envisager différents scénarios pour atteindre vos objectifs de réduction.",
+          "enabledGlossaryDescription": "Les réductions liées aux actions que vous avez activées sont prises en compte sur la page <trajectoryLink>Trajectoires et objectifs</trajectoryLink> dans votre trajectoire bottom-up. Les réductions liées aux actions désactivées ne seront pas visibles. Activer ou désactiver des actions vous permet ainsi d'envisager différents scénarios pour atteindre vos objectifs de réduction.",
           "close": "Fermer",
           "title": "Titre",
           "priority": "Priorité",
@@ -1249,7 +1323,8 @@
           "owner": "Responsable",
           "budget": "Budget",
           "errorChangingEnabled": "Erreur lors du changement de statut de l'action",
-          "relevance": "Niveaux de pertinence"
+          "relevance": "Niveaux de pertinence",
+          "scope": "Périmètre"
         },
         "addModal": {
           "add": "Ajouter une action",
@@ -1272,7 +1347,6 @@
           "reductionDetailsPlaceholder": "Décrivez les détails et hypothèses",
           "reductionStartYear": "Début de la mise en oeuvre de l'action",
           "reductionEndYear": "Fin de la mise en oeuvre de l'action",
-          "dependenciesOnly": "Mon action concerne uniquement le sous poste \"Utilisation en dépendance\"",
           "owner": "Responsable de l'action",
           "ownerPlaceholder": "Donnez le nom de la personne qui pilote l'action",
           "necessaryBudget": "Budget necessaire à sa mise en place (k€)",
@@ -1655,7 +1729,7 @@
       "Archived": "Archivé",
       "selectLine": "Selectionner ce facteur d'émission",
       "all": "Toutes",
-      "BaseEmpreinte": "Base Empreinte",
+      "BaseEmpreinte": "Base Empreinte®",
       "NegaOctet": "NegaOctet",
       "Legifrance": "Légifrance",
       "AIB": "AIB",
@@ -1666,6 +1740,8 @@
       "location": "Localisation",
       "locationSearch": "Rechercher par localisation",
       "locationSearchPlaceholder": "ex : Europe",
+      "unitSearch": "Rechercher par unité",
+      "unitSearchPlaceholder": "ex: kg",
       "base": "Approche scope 2",
       "Manual": "Manuelle",
       "edit": "Éditer le facteur d'émissions",
@@ -2097,7 +2173,8 @@
       "myClient": "Mon client",
       "update": "Modifier mes informations",
       "updateClient": "Modifier mon client",
-      "renew": "Votre adhésion {year} touche à sa fin, pensez à la renouveler pour continuer à utiliser les services en {nextYear}. Sans adhésion à jour, seul l'accès en lecture reste disponible pour vos études sur le BC+.",
+      "renewUpcoming": "Votre adhésion {currentYear} touche bientôt à sa fin, pensez à la renouveler pour continuer à utiliser les services en {nextYear}. Sans adhésion à jour, seul l'accès en lecture reste disponible pour vos études sur le BC+.",
+      "renew": "Votre adhésion a expiré, pensez à la renouveler pour continuer à utiliser les services en {currentYear}. Sans adhésion à jour, seul l'accès en lecture reste disponible pour vos études sur le BC+.",
       "renewLink": "Renouveler"
     },
     "delete": {
@@ -2240,7 +2317,8 @@
     "Server error": "Une erreur serveur est survenue, veuillez contacter le support",
     "default": "Une erreur s'est produite, veuillez reessayer. Si le problème persiste, contactez le support.",
     "error": "Une erreur s'est produite...",
-    "contactSupport": "Un problème est survenu. Essayez de revenir sur <link>la page d'accueil</link>. <p>Si cela ne fonctionne pas, contactez notre support à <m></m> ou essayez de vous <logout>reconnecter</logout>.</p>"
+    "contactSupport": "Un problème est survenu. Essayez de revenir sur <link>la page d'accueil</link>. <p>Si cela ne fonctionne pas, contactez notre support à <m></m> ou essayez de vous <logout>reconnecter</logout>.</p>",
+    "duplicateScopeCombination": "Un objectif avec le même périmètre (sites, tags, sous-postes) et la même année cible existe déjà pour cette trajectoire"
   },
   "upload": {
     "fileTooBig": "Fichier trop gros (taille maximale {size} MB)",
@@ -2406,10 +2484,14 @@
     "tooBig": "Veuillez saisir une valeur plus petite",
     "studyYearMustBeBeforeCurrent": "L'année de l'étude doit être antérieure à l'année de l'étude actuelle",
     "studyYearMustBeAfterLinkedStudies": "Impossible de renseigner une date antérieure à celles de vos études liées sur votre plan de transition",
+    "studyIsLinkedInTransitionPlan": "Cette étude est liée dans le plan de transition de l'étude « {studyName} ». La nouvelle date doit être antérieure à celle de cette étude.",
     "maxTwoDecimals": "Le taux de réduction doit avoir au maximum 2 décimales",
+    "startYearMustBeBeforeTargetYear": "L'année de début doit être antérieure à l'année cible",
     "referenceYearMustBeBeforeOrEqualToStudyYear": "L'année de référence doit être inférieure ou égale à l'année de l'étude",
     "sectorPercentagesTotalExceeds100": "Le total des pourcentages ne peut pas dépasser 100%",
-    "sectorPercentagesRequired": "Les pourcentages des secteurs sont requis"
+    "sectorPercentagesRequired": "Les pourcentages des secteurs sont requis",
+    "scopeRequired": "Veuillez sélectionner au moins un site, tag ou sous-poste",
+    "atLeastOneValidObjective": "Veuillez ajouter au moins un objectif valide avec année de début, année cible et taux de réduction"
   },
   "documentationUrl": {
     "dependencyMatrix": "https://www.bilancarbone-methode.com/2-perimetre-de-la-demarche/2.5-identification-des-risques-et-opportunites-de-transition",

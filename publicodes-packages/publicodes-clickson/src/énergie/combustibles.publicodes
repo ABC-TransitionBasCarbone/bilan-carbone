@@ -1,0 +1,110 @@
+énergie . combustibles:
+  titre: Combustibles fossiles
+  formule:
+    somme:
+      - fioul domestique
+      - fioul lourd
+      - gaz naturel
+      - granulés de bois
+      - biopropane
+      - réseau de chaleur
+  avec:
+    fioul domestique:
+      titre: Fioul domestique
+      formule: consommation * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        consommation:
+          question: Consommation annuelle de fioul domestique
+          par défaut: 0
+          unité: litre
+        FE:
+          valeur: 3.19
+          unité: kgCO2e/L
+          par défaut: 0
+          meta:
+            id: 14086
+
+    fioul lourd:
+      titre: Fioul lourd/commercial
+      formule: consommation * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        consommation:
+          question: Consommation annuelle de fioul lourd/commercial
+          par défaut: 0
+          unité: litre
+        FE:
+          valeur: 3.25
+          unité: kgCO2e/L
+          par défaut: 0
+          meta:
+            id: 14092
+
+    gaz naturel:
+      titre: Gaz naturel
+      formule: consommation * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        consommation:
+          question: Consommation annuelle de gaz naturel
+          par défaut: 0
+          unité: kWh
+        FE:
+          valeur: 2.32
+          unité: kgCO2e/kWh
+          par défaut: 0
+          meta:
+            id: 37138
+
+    granulés de bois:
+      titre: Granulés de bois (8% d'humidité)
+      formule: consommation * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        consommation:
+          question: Consommation annuelle de granulés de bois
+          par défaut: 0
+          unité: kWh
+        FE:
+          valeur: 0.027
+          unité: kgCO2e/kWh
+          par défaut: 0
+          meta:
+            id: 25829
+
+    biopropane:
+      titre: Biopropane
+      formule: consommation * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        consommation:
+          question: Consommation annuelle de biopropane
+          par défaut: 0
+          unité: kWh PCI
+        FE:
+          valeur: 0.074
+          unité: kgCO2e/kWh PCI
+          par défaut: 0
+          meta:
+            id: 25797
+
+    réseau de chaleur:
+      titre: Réseau de chaleur
+      formule: consommation * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        consommation:
+          question: Consommation annuelle de réseau de chaleur
+          par défaut: 0
+          unité: kWh
+        FE:
+          valeur: commun . FE . réseau de chaleur
+          meta:
+            id: 47952

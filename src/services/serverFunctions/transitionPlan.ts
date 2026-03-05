@@ -22,6 +22,7 @@ import {
   getTransitionPlanById,
   getTransitionPlanByIdWithRelations,
   getTransitionPlanByStudyId,
+  saveActionScope,
   saveIndicatorsOnAction,
   saveStepsOnAction,
   TransitionPlanWithStudies,
@@ -34,7 +35,7 @@ import { dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED, NOT_FOUND } from '../permissions/check'
 import { canReadStudy, hasEditAccessOnStudy, hasReadAccessOnStudy } from '../permissions/study'
 import { canEditTransitionPlan, canReadTransitionPlan } from '../permissions/transitionPlan'
-import { AddActionInputCommand } from './transitionPlan.command'
+import { AddActionInputCommand } from './action.command'
 
 export const getStudyTransitionPlan = async (studyId: string): Promise<ApiResponse<TransitionPlan | null>> =>
   withServerResponse('getStudyTransitionPlan', async () => {
@@ -106,8 +107,6 @@ export const duplicateTransitionPlan = async (sourceTransitionPlanId: string, ta
     throw new Error('Source transition plan not found with id ' + sourceTransitionPlanId)
   }
 
-  const duplicated = await duplicateTransitionPlanWithRelations(sourceTransitionPlan, targetStudyId)
-
   const [sourceStudy, targetStudy] = await Promise.all([
     getStudyById(sourceTransitionPlan.studyId, null),
     getStudyById(targetStudyId, null),
@@ -120,7 +119,10 @@ export const duplicateTransitionPlan = async (sourceTransitionPlanId: string, ta
     return
   }
 
-  if (targetStudy.startDate.getFullYear() > sourceStudy.startDate.getFullYear()) {
+  const targetYear = targetStudy.startDate.getFullYear()
+  const duplicated = await duplicateTransitionPlanWithRelations(sourceTransitionPlan, targetStudyId, targetYear)
+
+  if (targetYear > sourceStudy.startDate.getFullYear()) {
     await linkOldStudy(duplicated.id, sourceStudy.id)
   }
 }
@@ -132,7 +134,9 @@ export const addAction = async (command: AddActionInputCommand) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    await createActionWithRelations(command)
+    const { siteIds, tagIds, subPosts, ...actionCommand } = command
+    const action = await createActionWithRelations(actionCommand)
+    await saveActionScope(action.id, siteIds ?? [], tagIds ?? [], subPosts ?? [])
   })
 
 const isYearAlreadyLinked = async (transitionPlanId: string, year: number) => {
@@ -345,9 +349,10 @@ export const editAction = async (id: string, command: AddActionInputCommand) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const { indicators, steps, ...actionData } = command
+    const { indicators, steps, siteIds, tagIds, subPosts, ...actionData } = command
 
     await updateAction(id, actionData)
+    await saveActionScope(id, siteIds ?? [], tagIds ?? [], subPosts ?? [])
 
     if (indicators) {
       const existingIndicatorIds = action.indicators.map((ind) => ind.id)

@@ -1,10 +1,13 @@
 'use client'
+import { EnvironmentMode } from '@/constants/environments'
 import { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import StudyPostsPageCut from '@/environments/cut/pages/StudyPostsPage'
+import SimplifiedStudyPostsPage from '@/environments/simplified/study/SimplifiedStudyPostsPage'
 import { customRich } from '@/i18n/customRich'
 import { Post, subPostsByPost } from '@/services/posts'
-import { Environment, StudyRole } from '@prisma/client'
+import { SimplifiedEnvironment } from '@/services/publicodes/simplifiedPublicodesConfig'
+import { CircularProgress } from '@mui/material'
+import { StudyRole, SubPost } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -19,16 +22,18 @@ import styles from './StudyPostsPage.module.css'
 
 interface Props {
   post: Post
+  currentSubPost: SubPost | undefined
   study: FullStudy
   userRole: StudyRole
   user: UserSession
 }
 
-const StudyPostsPageContainer = ({ post, study, userRole, user }: Props) => {
+const StudyPostsPageContainer = ({ post, currentSubPost, study, userRole, user }: Props) => {
   const tNav = useTranslations('nav')
   const tPost = useTranslations('emissionFactors.post')
   const { studySite, setSite } = useStudySite(study)
   const [glossary, setGlossary] = useState('')
+  const environment = study.organizationVersion.environment
 
   const emissionSources = useMemo(
     () =>
@@ -59,6 +64,10 @@ const StudyPostsPageContainer = ({ post, study, userRole, user }: Props) => {
     })
   }, [glossary, study.organizationVersion.environment, tPost])
 
+  if (!studySite) {
+    return <CircularProgress />
+  }
+
   return (
     <>
       <Breadcrumbs
@@ -87,18 +96,36 @@ const StudyPostsPageContainer = ({ post, study, userRole, user }: Props) => {
       </Block>
       <DynamicComponent
         defaultComponent={
-          <StudyPostsPage
-            post={post}
-            study={study}
-            userRole={userRole}
-            emissionSources={emissionSources}
-            studySite={studySite}
-            user={user}
-            setGlossary={setGlossary}
-          />
+          !study.simplified ? (
+            <StudyPostsPage
+              post={post}
+              study={study}
+              userRole={userRole}
+              emissionSources={emissionSources}
+              studySite={studySite}
+              user={user}
+              setGlossary={setGlossary}
+            />
+          ) : (
+            <SimplifiedStudyPostsPage
+              environment={environment as SimplifiedEnvironment}
+              currentSubPost={currentSubPost}
+              post={post}
+              study={study}
+              studySiteId={studySite}
+            />
+          )
         }
         environmentComponents={{
-          [Environment.CUT]: <StudyPostsPageCut post={post} study={study} studySiteId={studySite} />,
+          [EnvironmentMode.SIMPLIFIED]: (
+            <SimplifiedStudyPostsPage
+              environment={environment as SimplifiedEnvironment}
+              currentSubPost={currentSubPost}
+              post={post}
+              study={study}
+              studySiteId={studySite}
+            />
+          ),
         }}
       />
 

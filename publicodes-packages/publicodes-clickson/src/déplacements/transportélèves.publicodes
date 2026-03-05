@@ -1,0 +1,140 @@
+# TODO: nous devrions trouver un moyen de factoriser la définition de ces
+# règles avec les autres types de déplacements.
+déplacements . transport des élèves:
+  titre: Transport des élèves
+  formule:
+    somme:
+      - bus
+      - bus électrique
+      - moto essence
+      - RER transilien métro tram
+      - TER
+      - TGV
+      - trottinette électrique
+      - véhicule compact électrique
+      - vélo électrique
+      - voiture individuelle diesel
+      - voiture individuelle essence
+  par défaut: 0
+  unité: kgCO2e
+  avec:
+    RER transilien métro tram:
+      titre: Transilien, RER, Métro, Tramway
+      formule: distance * commun . FE . moyen de transport . RER transilien métro tram
+      form:
+        à traduire: oui
+      avec:
+        distance:
+          question: Passagers (par km)
+          unité: km
+          par défaut: 0
+
+    vélo électrique:
+      titre: Vélo électrique
+      formule: distance * commun . FE . moyen de transport . vélo électrique
+      form:
+        à traduire: oui
+      avec:
+        distance:
+          question: Distance (km)
+          unité: km
+          par défaut: 0
+
+    trottinette électrique:
+      titre: Trottinette électrique
+      formule: distance * commun . FE . moyen de transport . trottinette électrique
+      form:
+        à traduire: oui
+      avec:
+        distance:
+          question: Distance (km)
+          unité: km
+          par défaut: 0
+
+    moto essence:
+      titre: Moto essence
+      formule: distance * commun . FE . moyen de transport . moto essence
+      form:
+        à traduire: oui
+      avec:
+        distance:
+          question: Distance (km)
+          unité: km
+          par défaut: 0
+
+    véhicule compact électrique:
+      titre: Véhicule compact électrique
+      formule: distance * commun . FE . moyen de transport . véhicule compact électrique
+      form:
+        à traduire: oui
+      avec:
+        distance:
+          question: Distance (km)
+          unité: km
+          par défaut: 0
+
+    voiture individuelle essence:
+      titre: Voiture individuelle essence
+      formule: distance * commun . FE . moyen de transport . voiture individuelle essence
+      form:
+        à traduire: oui
+      avec:
+        distance:
+          question: Distance (km)
+          unité: km
+          par défaut: 0
+
+    voiture individuelle diesel:
+      titre: Voiture individuelle diesel
+      formule: distance * commun . FE . moyen de transport . voiture individuelle diesel
+      form:
+        à traduire: oui
+      avec:
+        distance:
+          question: Distance (km)
+          unité: km
+          par défaut: 0
+
+    bus:
+      titre: Autobus
+      formule: distance * commun . FE . moyen de transport . autobus moyen
+      form:
+        à traduire: oui
+      avec:
+        distance:
+          question: Passagers (par km)
+          unité: km
+          par défaut: 0
+
+    bus électrique:
+      titre: Autobus
+      formule: distance * commun . FE . moyen de transport . autobus électrique
+      form:
+        à traduire: oui
+      avec:
+        distance:
+          question: Passagers (par km)
+          unité: km
+          par défaut: 0
+
+    TER:
+      titre: TER
+      formule: distance * commun . FE . moyen de transport . TER
+      form:
+        à traduire: oui
+      avec:
+        distance:
+          question: Passagers (par km)
+          unité: km
+          par défaut: 0
+
+    TGV:
+      titre: TGV
+      formule: distance * commun . FE . moyen de transport . TGV
+      form:
+        à traduire: oui
+      avec:
+        distance:
+          question: Passagers (par km)
+          unité: km
+          par défaut: 0

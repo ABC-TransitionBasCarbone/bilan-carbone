@@ -1,0 +1,102 @@
+déplacements . voyages scolaires:
+  titre: Voyages scolaires
+  formule:
+    somme:
+      - avion court courrier
+      - avion long courrier
+      - avion moyen courrier
+      - bus
+      - bus électrique
+      - RER transilien métro tram
+      - TER
+      - TGV
+  par défaut: 0
+  unité: kgCO2e
+  avec:
+    RER transilien métro tram:
+      titre: Transilien, RER, Métro, Tramway
+      formule: distance * commun . FE . moyen de transport . RER transilien métro tram
+      form:
+        à traduire: oui
+      avec:
+        distance:
+          question: Passagers (par km)
+          unité: km
+          par défaut: 0
+
+    bus:
+      titre: Autobus
+      formule: distance * commun . FE . moyen de transport . autobus moyen
+      form:
+        à traduire: oui
+      avec:
+        distance:
+          question: Passagers (par km)
+          unité: km
+          par défaut: 0
+
+    bus électrique:
+      titre: Autobus
+      formule: distance * commun . FE . moyen de transport . autobus électrique
+      form:
+        à traduire: oui
+      avec:
+        distance:
+          question: Passagers (par km)
+          unité: km
+          par défaut: 0
+
+    TER:
+      titre: TER
+      formule: distance * commun . FE . moyen de transport . TER
+      form:
+        à traduire: oui
+      avec:
+        distance:
+          question: Passagers (par km)
+          unité: km
+          par défaut: 0
+
+    TGV:
+      titre: TGV
+      formule: distance * commun . FE . moyen de transport . TGV
+      form:
+        à traduire: oui
+      avec:
+        distance:
+          question: Passagers (par km)
+          unité: km
+          par défaut: 0
+
+    avion court courrier:
+      titre: Avion Court courrier
+      formule: distance * commun . FE . moyen de transport . avion court courrier
+      form:
+        à traduire: oui
+      avec:
+        distance:
+          question: Passagers (par km)
+          unité: km
+          par défaut: 0
+
+    avion moyen courrier:
+      titre: Avion Moyen courrier
+      formule: distance * commun . FE . moyen de transport . avion moyen courrier
+      form:
+        à traduire: oui
+      avec:
+        distance:
+          question: Passagers (par km)
+          unité: km
+          par défaut: 0
+
+    avion long courrier:
+      titre: Avion Long courrier
+      formule: distance * commun . FE . moyen de transport . avion long courrier
+      form:
+        à traduire: oui
+      avec:
+        distance:
+          question: Passagers (par km)
+          unité: km
+          par défaut: 0

@@ -6,10 +6,24 @@
     "next": "Siguiente",
     "close": "Cerrar",
     "all": "Todos",
+    "allSites": "Todos los sitios",
+    "allSubPosts": "Todos los sub-posts",
+    "allTags": "Todos los tags",
+    "xSites": "{count} sitios",
+    "xSubPosts": "{count} sub-posts",
+    "xTags": "{count} tags",
     "none": "Ninguno",
     "subPosts": "Sub-posts",
     "onDate": "el",
     "by": "por",
+    "scope": "Perímetro",
+    "sites": "Sites",
+    "tags": "Tags",
+    "noTagsAvailable": "No hay tags disponibles",
+    "posts": "Posts",
+    "selectedPlural": "seleccionados",
+    "moreInfo": "Más información",
+    "mandatory": "* obligatorio",
     "action": {
       "create": "Crear",
       "edit": "Editar",
@@ -26,17 +40,33 @@
       "selectAll": "Seleccionar todos",
       "unselectAll": "Deseleccionar todos"
     },
+    "questions": {
+      "glossary": {
+        "title": "Más información sobre el tema",
+        "close": "Cerca"
+      }
+    },
     "label": {
       "start": "Inicio",
       "end": "Fin",
       "sites": "Sitios",
-      "date": "Fecha"
+      "date": "Fecha",
+      "startYear": "Año de inicio",
+      "targetYear": "Año de meta"
     },
     "notAuthorized": "Acción no autorizada",
     "Not authorized": "No tiene permisos para realizar esta acción",
     "typeToConfirm": "Escriba \"{name}\" para confirmar",
     "perPerson": "per persona",
     "carbonIntensities": "Intensidades de carbono"
+  },
+  "saveStatus": {
+    "saving": "Guardando respuestas...",
+    "saved": "Respuestas guardadas",
+    "error": "Error al guardar respuestas",
+    "ready": "Listo para guardar",
+    "at": "a las",
+    "syncedFromOtherUser": "Datos actualizados por otro usuario"
   },
   "signup": {
     "email": "Correo electrónico",
@@ -109,6 +139,32 @@
         "pie": "Gráfico circular",
         "ratio": "Ratios"
       }
+    },
+    "infography": {
+      "form": {
+        "backToInfography": "Afficher les postes"
+      }
+    },
+    "questions": {
+      "actions": "Actions",
+      "add": "Ajouter",
+      "error": "Erreur lors de la mise à jour du champs",
+      "next": "Sous-poste suivant",
+      "previous": "Sous-poste précédent",
+      "numberOfYears": "Nombre d'années",
+      "format": {
+        "text": "Texte",
+        "postalCode": "Code postal",
+        "phone": "Téléphone",
+        "year": "Année",
+        "hour": "Heure",
+        "number": "Nombre"
+      },
+      "errorLoadingQuestions": "Erreur lors du chargement des questions",
+      "retry": "Réessayer",
+      "finish": "Terminer",
+      "noQuestions": "Aucune question trouvée pour ce sous-poste",
+      "autoSaveError": "Certaines réponses n'ont pas pu être sauvegardées automatiquement. Veuillez vérifier votre connexion et réessayer."
     }
   }
 }

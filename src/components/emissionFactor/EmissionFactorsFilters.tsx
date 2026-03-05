@@ -4,11 +4,13 @@ import { FeFilters } from '@/types/filters'
 import {
   Autocomplete,
   Checkbox,
+  Chip,
   FormControl,
   FormControlLabel,
   FormLabel,
   ListItemText,
   MenuItem,
+  Popper,
   Select,
   Switch,
   TextField,
@@ -50,6 +52,8 @@ export const EmissionFactorsFilters = ({
   const [displayFilters, setDisplayFilters] = useState(true)
   const [displayHideButton, setDisplayHideButton] = useState(false)
 
+  const [unitsInputValue, setUnitsInputValue] = useState('')
+  const [locationsInputValue, setLocationsInputValue] = useState('')
   const filtersRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -99,22 +103,126 @@ export const EmissionFactorsFilters = ({
               data-testid="emission-factor-search-input"
             />
           </FormControl>
-          <FormControl>
+          <FormControl className={styles.multiSelector}>
             <FormLabel id="emission-factors-filter-location" component="legend">
               {t('locationSearch')}
             </FormLabel>
+
             <Autocomplete
-              value={filters.location}
+              multiple
+              disableCloseOnSelect
+              value={filters.locations}
               options={locationOptions}
-              onChange={(_, option) => setFilters((prevFilters) => ({ ...prevFilters, location: option || '' }))}
-              onInputChange={(_, newInputValue) =>
-                setFilters((prevFilters) => ({ ...prevFilters, location: newInputValue }))
-              }
-              renderInput={(params) => (
-                <TextField {...params} placeholder={t('locationSearchPlaceholder')} className={styles.locationInput} />
-              )}
+              inputValue={locationsInputValue}
+              clearOnBlur={false}
+              onInputChange={(_, newValue, reason) => {
+                if (reason === 'input') {
+                  setLocationsInputValue(newValue)
+                }
+              }}
+              getOptionKey={(location) => location}
+              filterSelectedOptions={false}
+              onChange={(_, newValue) => {
+                setFilters((prev) => ({
+                  ...prev,
+                  locations: newValue,
+                }))
+                setLocationsInputValue('')
+              }}
+              renderOption={(props, option) => {
+                const { key, ...restProps } = props
+                return (
+                  <MenuItem key={option} {...restProps}>
+                    <ListItemText primary={option} />
+                  </MenuItem>
+                )
+              }}
+              renderInput={(params) => <TextField {...params} placeholder={t('locationSearchPlaceholder')} />}
+              slots={{ popper: Popper }}
+              slotProps={{ popper: { style: { minWidth: 300 } } }}
+              renderValue={(selected, getItemProps) => {
+                const visible = selected.slice(0, 3)
+                const hiddenCount = selected.length - visible.length
+                return (
+                  <>
+                    {visible.map((option, index) => (
+                      <Chip label={option} {...getItemProps({ index })} key={option} />
+                    ))}
+
+                    {hiddenCount > 0 && <Chip label={`+${hiddenCount}`} size="small" sx={{ pointerEvents: 'none' }} />}
+                  </>
+                )
+              }}
             />
           </FormControl>
+          <FormControl className={styles.multiSelector}>
+            <FormLabel id="emissions-unit-selector" component="legend">
+              {t('unitSearch')}
+            </FormLabel>
+
+            <Autocomplete
+              multiple
+              disableCloseOnSelect
+              value={filters.units}
+              options={initialSelectedUnits}
+              inputValue={unitsInputValue}
+              clearOnBlur={false}
+              onInputChange={(_, newValue, reason) => {
+                if (reason === 'input') {
+                  setUnitsInputValue(newValue)
+                }
+              }}
+              getOptionLabel={(unit) => tUnit(unit)}
+              getOptionKey={(unit) => unit}
+              filterSelectedOptions={false}
+              onChange={(_, newValue) => {
+                setFilters((prev) => ({
+                  ...prev,
+                  units: newValue,
+                }))
+                setUnitsInputValue('')
+              }}
+              renderOption={(props, option) => {
+                const { key, ...restProps } = props
+                return (
+                  <MenuItem key={option} {...restProps}>
+                    <ListItemText primary={tUnit(option)} />
+                  </MenuItem>
+                )
+              }}
+              renderInput={(params) => <TextField {...params} placeholder={t('unitSearchPlaceholder')} />}
+              slots={{ popper: Popper }}
+              slotProps={{ popper: { style: { minWidth: 300 } } }}
+              renderValue={(selected, getItemProps) => {
+                const visible = selected.slice(0, 3)
+                const hiddenCount = selected.length - visible.length
+
+                return (
+                  <>
+                    {visible.map((option, index) => (
+                      <Chip label={tUnit(option)} {...getItemProps({ index })} key={option} />
+                    ))}
+
+                    {hiddenCount > 0 && <Chip label={`+${hiddenCount}`} size="small" sx={{ pointerEvents: 'none' }} />}
+                  </>
+                )
+              }}
+            />
+          </FormControl>
+          {filters.base && (
+            <FormControl className={styles.selector}>
+              <FormLabel id="emissions-unit-selector" component="legend">
+                {t('base')}
+              </FormLabel>
+              <MultiSelectAll
+                id="emissions-base"
+                values={filters.base}
+                allValues={Object.values(EmissionFactorBase)}
+                setValues={(values) => setFilters((prevFilters) => ({ ...prevFilters, base: values }))}
+                getLabel={(base) => tBase(base)}
+              />
+            </FormControl>
+          )}
           <FormControl className={styles.selector}>
             <FormLabel id="emissions-sources-selector" component="legend">
               {t('sources')}
@@ -137,32 +245,6 @@ export const EmissionFactorsFilters = ({
               ))}
             </Select>
           </FormControl>
-          <FormControl className={styles.selector}>
-            <FormLabel id="emissions-unit-selector" component="legend">
-              {t('units')}
-            </FormLabel>
-            <MultiSelectAll
-              id="emissions-unit"
-              values={filters.units}
-              allValues={initialSelectedUnits.filter((unit) => unit != 'all')}
-              setValues={(values) => setFilters((prevFilters) => ({ ...prevFilters, units: values }))}
-              getLabel={(unit) => tUnit(unit)}
-            />
-          </FormControl>
-          {filters.base && (
-            <FormControl className={styles.selector}>
-              <FormLabel id="emissions-unit-selector" component="legend">
-                {t('base')}
-              </FormLabel>
-              <MultiSelectAll
-                id="emissions-base"
-                values={filters.base}
-                allValues={Object.values(EmissionFactorBase)}
-                setValues={(values) => setFilters((prevFilters) => ({ ...prevFilters, base: values }))}
-                getLabel={(base) => tBase(base)}
-              />
-            </FormControl>
-          )}
           <PostSubPostFilter
             envPosts={envPosts}
             envSubPosts={envSubPosts}

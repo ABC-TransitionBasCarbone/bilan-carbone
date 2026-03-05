@@ -1,12 +1,13 @@
 'use client'
 
-import TagChip from '@/components/base/TagChip'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { TRAJECTORY_15_ID, TRAJECTORY_SNBC_GENERAL_ID, TRAJECTORY_WB2C_ID } from '@/constants/trajectories'
-import { getYearsToDisplay, PastStudy, TrajectoryData } from '@/utils/trajectory'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import { FullStudy } from '@/db/study'
+import { TrajectoryWithObjectives } from '@/db/transitionPlan'
+import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
+import { calculateTrajectoriesWithHistory, getYearsToDisplay, PastStudy } from '@/utils/trajectory'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
-import { Accordion, AccordionDetails, AccordionSummary, Alert, Slider, Typography } from '@mui/material'
+import { Alert, Slider, SvgIcon, Typography } from '@mui/material'
 import {
   AreaPlot,
   ChartContainer,
@@ -19,17 +20,15 @@ import {
   LineSeriesType,
   MarkPlot,
 } from '@mui/x-charts'
-import { LineSeries } from '@mui/x-charts/LineChart'
-import { StudyResultUnit } from '@prisma/client'
+import { Action, SectenInfo } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import DrawingAreaBox, { DrawingProps } from '../charts/DrawingArea'
-import DependenciesSwitch from '../results/DependenciesSwitch'
+import CustomTrajectoryLegend from '../trajectory/CustomTrajectoryLegend'
 import styles from './TrajectoryGraph.module.css'
 import { BottomLeftMultilineText } from './TrajectoryGraphDrawingArea'
-import TrajectoryLegendTable from './TrajectoryLegendTable'
 
 export interface TrajectoryDataPoint {
   year: number
@@ -39,47 +38,39 @@ export interface TrajectoryDataPoint {
 export type DataType = 'previous' | 'current'
 
 interface Props {
-  studyName: string
-  studyUnit: StudyResultUnit
-  trajectory15Data: TrajectoryData | null
-  trajectoryWB2CData: TrajectoryData | null
-  snbcData: { [sectorId: string]: TrajectoryData | null }
-  customTrajectoriesData: Array<{
-    trajectoryData: TrajectoryData | null
-    label: string
-    color?: string
-  }>
-  actionBasedTrajectoryData: TrajectoryData | null
-  studyStartYear: number
+  study: FullStudy
+  trajectories: TrajectoryWithObjectives[]
+  actions: Action[]
+  linkedStudies: FullStudy[]
+  sectenData: SectenInfo[]
   selectedSnbcTrajectories: string[]
   selectedSbtiTrajectories: string[]
-  withDependencies: boolean
-  setWithDependencies: (value: boolean) => void
+  selectedCustomTrajectories: string[]
   pastStudies: PastStudy[]
   validatedOnly: boolean
-  unvalidatedSourcesInfo: {
-    currentStudyCount: number
-    linkedStudies: Array<{ id: string; name: string; unvalidatedCount: number }>
-    totalCount: number
-  }
+  studyEmissions: number
+  showTitle?: boolean
+  showActionTrajectory?: boolean
+  titleAction?: ReactNode
+  storageKey?: string
 }
 
 const TrajectoryGraph = ({
-  studyName,
-  studyUnit,
-  trajectory15Data,
-  trajectoryWB2CData,
-  snbcData,
-  customTrajectoriesData,
-  actionBasedTrajectoryData,
-  studyStartYear,
+  study,
+  trajectories,
+  actions,
+  linkedStudies,
+  sectenData,
   selectedSnbcTrajectories,
   selectedSbtiTrajectories,
-  withDependencies,
-  setWithDependencies,
+  selectedCustomTrajectories,
   pastStudies = [],
   validatedOnly,
-  unvalidatedSourcesInfo,
+  studyEmissions,
+  showTitle = true,
+  showActionTrajectory = true,
+  titleAction,
+  storageKey,
 }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectories.graph')
   const tUnit = useTranslations('study.results.units')
@@ -92,20 +83,93 @@ const TrajectoryGraph = ({
 
   const trajectory15Enabled = selectedSbtiTrajectories.includes(TRAJECTORY_15_ID)
   const trajectoryWB2CEnabled = selectedSbtiTrajectories.includes(TRAJECTORY_WB2C_ID)
-  const snbcTrajectoryDataArray = useMemo(() => Object.values(snbcData), [snbcData])
+
+  const { name, resultsUnit, startDate, emissionSources } = study
+  const studyStartYear = startDate.getFullYear()
+
+  const unvalidatedSourcesInfo = useMemo(() => {
+    let totalCount = 0
+    const currentStudyUnvalidatedCount = emissionSources.filter((source) => !source.validated).length
+    totalCount += currentStudyUnvalidatedCount
+    const linkedStudiesWithUnvalidatedSources = linkedStudies
+      .map((linkedStudy) => {
+        const unvalidatedCount = linkedStudy.emissionSources.filter((source) => !source.validated).length
+        totalCount += unvalidatedCount
+        return unvalidatedCount > 0 ? { id: linkedStudy.id, name: linkedStudy.name, unvalidatedCount } : null
+      })
+      .filter((s) => s !== null) as Array<{ id: string; name: string; unvalidatedCount: number }>
+    return {
+      currentStudyCount: currentStudyUnvalidatedCount,
+      linkedStudies: linkedStudiesWithUnvalidatedSources,
+      totalCount,
+    }
+  }, [emissionSources, linkedStudies])
+
+  const data = useMemo(() => {
+    const trajectoryResult = calculateTrajectoriesWithHistory({
+      study,
+      withDependencies: true,
+      validatedOnly,
+      trajectories,
+      actions: showActionTrajectory ? actions : [],
+      pastStudies,
+      selectedSnbcTrajectories,
+      selectedSbtiTrajectories,
+      selectedCustomTrajectoryIds: selectedCustomTrajectories,
+      sectenData,
+    })
+
+    const customTrajectoriesData = trajectoryResult.customTrajectories.map((trajData) => {
+      const traj = trajectories.find((t) => t.id === trajData.id)
+      return {
+        trajectoryData: trajData.data,
+        label: traj?.name || '',
+        color: undefined,
+      }
+    })
+
+    return {
+      trajectory15Data: trajectoryResult.sbti15,
+      trajectoryWB2CData: trajectoryResult.sbtiWB2C,
+      snbcData: trajectoryResult.snbc,
+      customTrajectoriesData,
+      actionBasedTrajectoryData: trajectoryResult.actionBased,
+      studyStartYear,
+    }
+  }, [
+    study,
+    validatedOnly,
+    trajectories,
+    actions,
+    showActionTrajectory,
+    pastStudies,
+    selectedSnbcTrajectories,
+    selectedSbtiTrajectories,
+    selectedCustomTrajectories,
+    sectenData,
+    studyStartYear,
+  ])
+
+  const snbcTrajectoryDataArray = Object.values(data.snbcData)
 
   const allYearsToDisplay = useMemo(
     () =>
       getYearsToDisplay(
         [
-          trajectory15Data,
-          trajectoryWB2CData,
+          data.trajectory15Data,
+          data.trajectoryWB2CData,
           ...snbcTrajectoryDataArray,
-          ...customTrajectoriesData.map((values) => values.trajectoryData),
-          actionBasedTrajectoryData,
+          ...data.customTrajectoriesData.map((values) => values.trajectoryData),
+          data.actionBasedTrajectoryData,
         ].filter((traj) => traj !== null),
       ),
-    [trajectory15Data, trajectoryWB2CData, snbcTrajectoryDataArray, customTrajectoriesData, actionBasedTrajectoryData],
+    [
+      data.trajectory15Data,
+      data.trajectoryWB2CData,
+      snbcTrajectoryDataArray,
+      data.customTrajectoriesData,
+      data.actionBasedTrajectoryData,
+    ],
   )
 
   const { minYear, maxYear } = useMemo(() => {
@@ -173,7 +237,7 @@ const TrajectoryGraph = ({
         year <= maxYear ? (dataMap.get(year) ?? null) : isFailed ? null : (dataMap.get(maxYear) ?? null),
       )
     },
-    [yearsToDisplay],
+    [studyStartYear, yearsToDisplay],
   )
 
   const historicalStudyYearIndices = useMemo(() => {
@@ -197,11 +261,16 @@ const TrajectoryGraph = ({
   )
 
   const seriesCreated = useMemo(() => {
-    const series: (LineSeriesType & { dataType: DataType; isFailed?: boolean; isCustom?: boolean })[] = []
+    const series: (LineSeriesType & {
+      dataType: DataType
+      isFailed?: boolean
+      isCustom?: boolean
+      withinThreshold?: boolean
+    })[] = []
 
-    if (trajectory15Enabled && trajectory15Data) {
+    if (trajectory15Enabled && data.trajectory15Data) {
       const { previousTrajectory, previousTrajectoryStartYear, currentTrajectory, withinThreshold, isFailed } =
-        trajectory15Data
+        data.trajectory15Data
 
       if (previousTrajectory) {
         if (withinThreshold) {
@@ -209,6 +278,7 @@ const TrajectoryGraph = ({
             type: 'line',
             dataType: 'previous',
             isCustom: false,
+            withinThreshold: true,
             data: mapDataToYears(previousTrajectory),
             label: t('trajectory15'),
             color: 'var(--trajectory-sbti-15)',
@@ -242,7 +312,9 @@ const TrajectoryGraph = ({
           isCustom: false,
           isFailed,
           data: currentData,
-          label: trajectory15Data.previousTrajectory ? t('trajectory15') + ` (${studyStartYear})` : t('trajectory15'),
+          label: data.trajectory15Data.previousTrajectory
+            ? t('trajectory15') + ` (${studyStartYear})`
+            : t('trajectory15'),
           color: isFailed ? 'var(--error-100)' : 'var(--trajectory-sbti-15)',
           curve: 'linear' as const,
           connectNulls: false,
@@ -266,9 +338,9 @@ const TrajectoryGraph = ({
       }
     }
 
-    if (trajectoryWB2CEnabled && trajectoryWB2CData) {
+    if (trajectoryWB2CEnabled && data.trajectoryWB2CData) {
       const { previousTrajectory, previousTrajectoryStartYear, currentTrajectory, withinThreshold, isFailed } =
-        trajectoryWB2CData
+        data.trajectoryWB2CData
 
       if (previousTrajectory) {
         if (withinThreshold) {
@@ -276,6 +348,7 @@ const TrajectoryGraph = ({
             type: 'line',
             dataType: 'previous',
             isCustom: false,
+            withinThreshold: true,
             data: mapDataToYears(previousTrajectory),
             label: t('trajectoryWB2C'),
             color: 'var(--trajectory-sbti-wb2c)',
@@ -309,7 +382,7 @@ const TrajectoryGraph = ({
           isCustom: false,
           isFailed,
           data: currentData,
-          label: trajectoryWB2CData.previousTrajectory
+          label: data.trajectoryWB2CData.previousTrajectory
             ? t('trajectoryWB2C') + ` (${studyStartYear})`
             : t('trajectoryWB2C'),
           color: isFailed ? 'var(--error-100)' : 'var(--trajectory-sbti-wb2c)',
@@ -335,7 +408,7 @@ const TrajectoryGraph = ({
       }
     }
 
-    Object.entries(snbcData).forEach(([trajectoryId, trajectoryData]) => {
+    Object.entries(data.snbcData).forEach(([trajectoryId, trajectoryData]) => {
       if (selectedSnbcTrajectories.includes(trajectoryId) && trajectoryData) {
         const { previousTrajectory, previousTrajectoryStartYear, currentTrajectory, withinThreshold, isFailed } =
           trajectoryData
@@ -352,6 +425,7 @@ const TrajectoryGraph = ({
               type: 'line',
               dataType: 'previous',
               isCustom: false,
+              withinThreshold: true,
               data: mapDataToYears(previousTrajectory),
               label,
               color,
@@ -410,7 +484,7 @@ const TrajectoryGraph = ({
       }
     })
 
-    customTrajectoriesData.forEach((traj, index) => {
+    data.customTrajectoriesData.forEach((traj, index) => {
       if (traj.trajectoryData) {
         const { previousTrajectory, previousTrajectoryStartYear, currentTrajectory, withinThreshold, isFailed } =
           traj.trajectoryData
@@ -425,6 +499,7 @@ const TrajectoryGraph = ({
               type: 'line',
               dataType: 'previous',
               isCustom: true,
+              withinThreshold: true,
               data: mapDataToYears(previousTrajectory, true),
               label: traj.label + ` (${previousTrajectoryStartYear})`,
               color: traj.color || `var(--trajectory-custom-${index % 9})`,
@@ -484,9 +559,9 @@ const TrajectoryGraph = ({
       }
     })
 
-    if (actionBasedTrajectoryData && actionBasedTrajectoryData.currentTrajectory.length > 0) {
+    if (data.actionBasedTrajectoryData && data.actionBasedTrajectoryData.currentTrajectory.length > 0) {
       const { previousTrajectory, previousTrajectoryStartYear, currentTrajectory, withinThreshold } =
-        actionBasedTrajectoryData
+        data.actionBasedTrajectoryData
 
       if (previousTrajectory) {
         if (withinThreshold) {
@@ -494,9 +569,10 @@ const TrajectoryGraph = ({
             type: 'line',
             dataType: 'previous',
             isCustom: true,
+            withinThreshold: true,
             data: mapDataToYears(previousTrajectory),
             label: t('actionBasedTrajectory') + ` (${previousTrajectoryStartYear})`,
-            color: 'var(--mui-palette-primary-main)',
+            color: 'var(--trajectory-action)',
             curve: 'linear' as const,
             connectNulls: false,
             showMark: ({ index }: { index: number }) => historicalStudyYearIndices.has(index),
@@ -509,7 +585,7 @@ const TrajectoryGraph = ({
             isCustom: true,
             data: mapDataToYears(previousTrajectory),
             label: t('actionBasedTrajectory') + ` (${previousTrajectoryStartYear})`,
-            color: 'color-mix(in srgb, var(--mui-palette-primary-main) 50%, transparent)',
+            color: 'color-mix(in srgb, var(--trajectory-action) 50%, transparent)',
             curve: 'linear' as const,
             connectNulls: false,
             showMark: ({ index }: { index: number }) => historicalStudyYearIndices.has(index),
@@ -526,10 +602,10 @@ const TrajectoryGraph = ({
           dataType: 'current',
           isCustom: true,
           data: currentData,
-          label: actionBasedTrajectoryData.previousTrajectory
+          label: data.actionBasedTrajectoryData.previousTrajectory
             ? t('actionBasedTrajectory') + ` (${studyStartYear})`
             : t('actionBasedTrajectory'),
-          color: 'var(--mui-palette-primary-main)',
+          color: 'var(--trajectory-action)',
           curve: 'linear' as const,
           connectNulls: false,
           showMark: ({ index }: { index: number }) => shouldShowMark(index),
@@ -541,8 +617,8 @@ const TrajectoryGraph = ({
           dataType: 'current',
           isCustom: true,
           data: currentData.map((val, idx) => (idx === studyStartYearIndex ? val : null)),
-          label: studyName + ` (${studyStartYear})`,
-          color: 'var(--mui-palette-primary-main)',
+          label: name + ` (${studyStartYear})`,
+          color: 'var(--trajectory-action)',
           curve: 'linear' as const,
           connectNulls: false,
           showMark: true,
@@ -554,13 +630,13 @@ const TrajectoryGraph = ({
     return series
   }, [
     trajectory15Enabled,
-    trajectory15Data,
+    data.trajectory15Data,
     trajectoryWB2CEnabled,
-    trajectoryWB2CData,
+    data.trajectoryWB2CData,
     selectedSnbcTrajectories,
-    snbcData,
-    customTrajectoriesData,
-    actionBasedTrajectoryData,
+    data.snbcData,
+    data.customTrajectoriesData,
+    data.actionBasedTrajectoryData,
     mapDataToYears,
     t,
     tSnbc,
@@ -568,44 +644,42 @@ const TrajectoryGraph = ({
     shouldShowMark,
     studyStartYear,
     studyStartYearIndex,
-    studyName,
+    name,
     yearsToDisplay,
   ])
-
-  const [expandedFilters, setExpandedFilters] = useState(false)
-  const [filteredSeriesLabels, setFilteredSeriesLabels] = useState<string[]>([])
-  const filteredSeries = useMemo(
-    () => seriesCreated.filter((serie) => !filteredSeriesLabels.includes(serie.label as string)),
-    [filteredSeriesLabels, seriesCreated],
-  )
 
   const failedTrajectories = useMemo(() => {
     return seriesCreated.filter((serie) => serie.isFailed).map((serie) => serie.label as string)
   }, [seriesCreated])
 
   const oldestPastStudyYear = useMemo(() => {
-    if (pastStudies.length === 0) {
-      return 0
-    }
-    return Math.min(...pastStudies.map((study) => study.year))
-  }, [pastStudies])
+    return Math.min(...pastStudies.map((study) => study.year), studyStartYear)
+  }, [pastStudies, studyStartYear])
 
   const displayEstimatedPast = useMemo(
     () => yearRange && yearRange[0] < oldestPastStudyYear,
     [yearRange, oldestPastStudyYear],
   )
 
-  const onFilterSeries = useCallback((label: string) => {
-    setFilteredSeriesLabels((prev) => {
-      if (prev.includes(label)) {
-        return prev.filter((l) => l !== label)
-      } else {
-        return [...prev, label]
-      }
-    })
-  }, [])
+  const [hiddenTrajectoryLabels, setHiddenTrajectoryLabels] = useState<string[]>(() => {
+    if (!storageKey || typeof window === 'undefined') {
+      return []
+    }
+    const stored = localStorage.getItem(storageKey)
+    return stored ? JSON.parse(stored) : []
+  })
 
-  const maxY = Math.max(...filteredSeries.flatMap((s) => s?.data?.filter((v) => v !== null) || 0))
+  useLocalStorageSync(storageKey ?? '', hiddenTrajectoryLabels, !!storageKey)
+
+  const onToggleFilter = (label: string) =>
+    setHiddenTrajectoryLabels((prev) => (prev.includes(label) ? prev.filter((l) => l !== label) : [...prev, label]))
+
+  const displayedSeries = useMemo(
+    () => seriesCreated.filter((serie) => !hiddenTrajectoryLabels.includes(serie.label as string)),
+    [hiddenTrajectoryLabels, seriesCreated],
+  )
+
+  const maxY = Math.max(...displayedSeries.flatMap((s) => s?.data?.filter((v) => v !== null) || 0))
 
   const backgroundForPastInfos: LineSeriesType = {
     type: 'line',
@@ -614,27 +688,33 @@ const TrajectoryGraph = ({
     area: true,
     color: 'var(--trajectory-gray-area)',
     showMark: false,
+    disableHighlight: true,
+    valueFormatter: () => null,
   }
 
   const BottomLeftText = ({ onClick, ...props }: DrawingProps & { onClick: () => void }) => (
     <>
-      <BottomLeftMultilineText {...props} className="bold text-center">
-        <Typography variant="body2" fontWeight={600}>
-          {t('estimatedPast')}
+      <BottomLeftMultilineText {...props} className="bold">
+        <div className={classNames('flex', styles.estimatedPastLabel)}>
+          <Typography variant="body2" fontWeight={600}>
+            {t('estimatedPast')}
+          </Typography>
           <HelpOutlineOutlinedIcon color="secondary" className="ml-4 pointer" onClick={onClick} />
-        </Typography>
+        </div>
       </BottomLeftMultilineText>
     </>
   )
 
   return (
-    <div className="w100 flex-col gapped1 mb2">
-      <div className="flex align-center justify-between">
-        <Typography variant="h5" component="h2" fontWeight={600}>
-          {t('title')}
-        </Typography>
-        <DependenciesSwitch withDependencies={withDependencies} setWithDependencies={setWithDependencies} />
-      </div>
+    <div className="w100 flex-col gapped1">
+      {showTitle && (
+        <div className="flex align-center justify-between">
+          <Typography variant="h5" component="h2" fontWeight={600}>
+            {t('title')}
+          </Typography>
+          {titleAction}
+        </div>
+      )}
       {validatedOnly && unvalidatedSourcesInfo.totalCount > 0 && (
         <Alert severity="warning">
           {unvalidatedSourcesInfo.currentStudyCount > 0 && (
@@ -657,6 +737,7 @@ const TrajectoryGraph = ({
           )}
         </Alert>
       )}
+      {studyEmissions === 0 && <Alert severity="warning">{t('noEmissionSourcesWarning')}</Alert>}
       {!!failedTrajectories.length && (
         <Alert severity="warning" className="mb1">
           <Typography variant="body2">{t('failedTrajectories')}</Typography>
@@ -670,37 +751,68 @@ const TrajectoryGraph = ({
       <Typography variant="body2" color="text.secondary">
         {t('subtitle')}
       </Typography>
-      <ChartContainer
-        series={[backgroundForPastInfos, ...filteredSeries]}
-        xAxis={[
-          {
-            data: yearsToDisplay,
-            scaleType: 'linear',
-            valueFormatter: (value) => value.toString(),
-            tickInterval: (() => {
-              const range = yearsToDisplay[yearsToDisplay.length - 1] - yearsToDisplay[0]
-              const interval = range < 20 ? 1 : 5
-              return [yearsToDisplay[0], ...yearsToDisplay.filter((year) => year % interval === 0)]
-            })(),
-          },
-        ]}
-        yAxis={[{ label: `${t('yAxisLabel')} (${tUnit(studyUnit)})` }]}
-        height={400}
-      >
-        <AreaPlot />
-        <LinePlot />
-        <MarkPlot />
+      <div>
+        <div className="flex align-center justify-between gapped1">
+          <div className={classNames('flex wrap justify-center', styles.chartLegend)}>
+            {displayedSeries
+              .filter((s) => s.label)
+              .map((s) => (
+                <div key={s.label as string} className={classNames('flex align-center gapped025')}>
+                  <SvgIcon className={styles.chartLegendIcon} fontSize="small">
+                    <circle cx="12" cy="12" r="6" fill={s.color as string} />
+                  </SvgIcon>
+                  <Typography variant="body2">{s.label as string}</Typography>
+                </div>
+              ))}
+          </div>
+          <CustomTrajectoryLegend
+            series={seriesCreated.map((s) => ({
+              label: s.label as string,
+              color: s.color as string,
+              dataType: s.dataType,
+              withinThreshold: s.withinThreshold,
+            }))}
+            hiddenLabels={hiddenTrajectoryLabels}
+            onToggle={onToggleFilter}
+            previousLabel={(year: number) => t('previousTrajectories', { year })}
+            currentLabel={(year: number) => t('currentTrajectories', { year })}
+          />
+        </div>
+        <ChartContainer
+          series={[backgroundForPastInfos, ...displayedSeries]}
+          xAxis={[
+            {
+              data: yearsToDisplay,
+              scaleType: 'linear',
+              valueFormatter: (value) => value.toString(),
+              tickInterval: (() => {
+                const range = yearsToDisplay[yearsToDisplay.length - 1] - yearsToDisplay[0]
+                const interval = range < 20 ? 1 : 5
+                return [yearsToDisplay[0], ...yearsToDisplay.filter((year) => year % interval === 0)]
+              })(),
+            },
+          ]}
+          yAxis={[{ label: `${t('yAxisLabel')} (${tUnit(resultsUnit)})` }]}
+          height={400}
+        >
+          <AreaPlot />
+          <LinePlot />
+          <MarkPlot />
 
-        {displayEstimatedPast && (
-          <DrawingAreaBox Text={(props) => <BottomLeftText {...props} onClick={() => setGlossary(true)} />} />
-        )}
+          {displayEstimatedPast && (
+            <DrawingAreaBox
+              showCenterAxes={false}
+              Text={(props) => <BottomLeftText {...props} onClick={() => setGlossary(true)} />}
+            />
+          )}
 
-        <ChartsAxisHighlight x="line" />
-        {displayEstimatedPast && <ChartsReferenceLine x={oldestPastStudyYear} labelAlign="start" />}
-        <ChartsTooltip trigger="axis" />
-        <ChartsXAxis />
-        <ChartsYAxis />
-      </ChartContainer>
+          <ChartsAxisHighlight x="line" />
+          {displayEstimatedPast && <ChartsReferenceLine x={oldestPastStudyYear} labelAlign="start" />}
+          <ChartsTooltip trigger="axis" />
+          <ChartsXAxis />
+          <ChartsYAxis />
+        </ChartContainer>
+      </div>
 
       <div className="flex justify-center w100">
         <Typography variant="body2" color="text.secondary" className={styles.rangeTitle}>
@@ -734,65 +846,6 @@ const TrajectoryGraph = ({
         )}
       </div>
 
-      <Accordion
-        expanded={expandedFilters}
-        onChange={() => setExpandedFilters(!expandedFilters)}
-        className={classNames(styles.filtersAccordion, 'mt1')}
-      >
-        <AccordionSummary expandIcon={<ExpandMoreIcon fontSize="large" />}>
-          <div className="flex gapped-2 wrap">
-            {seriesCreated
-              .filter((serie) => !filteredSeriesLabels.includes(serie.label as string))
-              .map((serie: LineSeries) => (
-                <TagChip
-                  size="small"
-                  circleSize="0.8rem"
-                  fontSize="1rem"
-                  className="bold"
-                  key={serie.label as string}
-                  name={serie.label as string}
-                  color={serie.color}
-                  onDelete={
-                    filteredSeriesLabels.includes(serie.label as string)
-                      ? undefined
-                      : () => onFilterSeries(serie.label as string)
-                  }
-                />
-              ))}
-          </div>
-        </AccordionSummary>
-        <AccordionDetails>
-          <div className="flex justify-between">
-            <TrajectoryLegendTable
-              filteredSeriesLabels={filteredSeriesLabels}
-              studyStartYear={studyStartYear}
-              title={t('sbtiSnbc')}
-              data={seriesCreated
-                .filter((serie) => !serie.isCustom)
-                .map((serie) => ({
-                  label: serie.label as string,
-                  dataType: serie.dataType,
-                  color: serie.color as string,
-                }))}
-              onClick={onFilterSeries}
-              border
-            />
-            <TrajectoryLegendTable
-              filteredSeriesLabels={filteredSeriesLabels}
-              studyStartYear={studyStartYear}
-              title={t('custom')}
-              data={seriesCreated
-                .filter((serie) => serie.isCustom)
-                .map((serie) => ({
-                  label: serie.label as string,
-                  dataType: serie.dataType,
-                  color: serie.color as string,
-                }))}
-              onClick={onFilterSeries}
-            />
-          </div>
-        </AccordionDetails>
-      </Accordion>
       {glossary && (
         <GlossaryModal glossary="title" label="emission-factor-post" t={tGlossary} onClose={() => setGlossary(false)}>
           {tGlossary('description')}

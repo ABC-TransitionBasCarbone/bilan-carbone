@@ -1,0 +1,40 @@
+immobilisations . rénovation:
+  titre: Rénovation
+  formule:
+    somme:
+      - bâtiment scolaire structure béton rénové
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    bâtiment scolaire structure béton rénové:
+      titre: "Bâtiment scolaire rénové (structure béton)"
+      formule:
+        variations:
+          - si: age > amortissement
+            alors: 0
+          - sinon: surface * FE / amortissement
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        age:
+          durée:
+            unité: an
+            par défaut: 0
+            depuis: général . année de rénovation
+            jusqu'à: commun . année actuelle
+          arrondi: oui
+        amortissement:
+          valeur: 20
+          note: Amortissement annuel sous-entendu (rénovation).
+        surface:
+          question: "Quelle surface de bâtiment scolaire (structure béton) avez-vous rénovée ?"
+          unité: m2
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par m² de bâtiment scolaire rénové (structure béton)"
+          valeur: 235
+          unité: kgCO2e/m2
+          par défaut: 0
+          note: |
+            Source: Base Carbone®
+          meta:

@@ -7,6 +7,7 @@ import * as emissionSourcesModule from '../../db/emissionSource'
 import * as organizationModule from '../../db/organization'
 import * as studyDbModule from '../../db/study'
 import { FullStudy } from '../../db/study'
+import * as transitionPlanDbModule from '../../db/transitionPlan'
 import * as userDbModule from '../../db/user'
 import * as authModule from '../../services/auth'
 import * as studyPermissionsModule from '../../services/permissions/study'
@@ -46,6 +47,7 @@ jest.mock('../../db/study', () => ({
   createStudyEmissionSource: jest.fn(),
   createUserOnStudy: jest.fn(),
   createStudy: jest.fn(),
+  updateStudy: jest.fn(),
   updateStudyEmissionFactorVersion: jest.fn(),
   createContributorOnStudy: jest.fn(),
   createEmissionSourceTags: jest.fn(),
@@ -71,6 +73,7 @@ jest.mock('../../services/permissions/study', () => ({
   canCreateSpecificStudy: jest.fn(),
   canDuplicateStudy: jest.fn(),
   canChangeSites: jest.fn(),
+  canChangeDates: jest.fn(),
 }))
 jest.mock('../../utils/study', () => ({
   getAccountRoleOnStudy: jest.fn(),
@@ -150,9 +153,16 @@ jest.mock('../../services/study', () => ({
   hasSufficientLevel: jest.fn(),
 }))
 jest.mock('../results/consolidated', () => ({
-  computeResultsByPost: jest.fn(),
+  computeResultsByPostFromEmissionSources: jest.fn(),
 }))
 jest.mock('./study', () => ({}))
+jest.mock('../../db/transitionPlan', () => ({
+  getTransitionPlanByStudyId: jest.fn(),
+  getTransitionPlansWhereStudyIsLinked: jest.fn(),
+}))
+jest.mock('../../services/serverFunctions/transitionPlan', () => ({
+  getLinkedAndExternalStudies: jest.fn(),
+}))
 
 const mockedMonetaryRatio = 40
 const mockedNonSpecificMonetaryRatio = 10
@@ -162,7 +172,8 @@ const mockedResults = {
   nonSpecificMonetaryRatio: mockedNonSpecificMonetaryRatio,
 }
 
-const { duplicateStudyCommand, mapStudyForReport, duplicateSiteAndEmissionSources } = jest.requireActual('./study')
+const { duplicateStudyCommand, mapStudyForReport, duplicateSiteAndEmissionSources, changeStudyDates } =
+  jest.requireActual('./study')
 
 const mockedSessionValidator = getMockedDbActualizedAuth({}, { email: TEST_EMAILS.validator })
 const mockedSession = getMockedDbActualizedAuth({}, { email: TEST_EMAILS.currentUser })
@@ -200,6 +211,15 @@ const mockIsOrganizationVersionCR = organizationModule.isOrganizationVersionCR a
 const mockCanChangeSites = studyPermissionsModule.canChangeSites as jest.Mock
 const mockCanEditOrganizationVersion = organizationUtilsModule.canEditOrganizationVersion as jest.Mock
 const mockHasSufficientLevel = studyModule.hasSufficientLevel as jest.Mock
+const mockCanChangeDates = studyPermissionsModule.canChangeDates as jest.Mock
+const mockGetTransitionPlanByStudyId = transitionPlanDbModule.getTransitionPlanByStudyId as jest.Mock
+const mockGetTransitionPlansWhereStudyIsLinked =
+  transitionPlanDbModule.getTransitionPlansWhereStudyIsLinked as jest.Mock
+const mockGetLinkedAndExternalStudies = (
+  jest.requireMock('../../services/serverFunctions/transitionPlan') as {
+    getLinkedAndExternalStudies: jest.Mock
+  }
+).getLinkedAndExternalStudies
 
 describe('study', () => {
   describe('duplicateStudyCommand', () => {
@@ -245,7 +265,7 @@ describe('study', () => {
       mockAddUserChecklistItem.mockResolvedValue(undefined)
       mockUpdateStudyEmissionFactorVersion.mockResolvedValue(undefined)
       mockCreateStudyEmissionSource.mockResolvedValue(undefined)
-      mockCreateStudy.mockResolvedValue({ id: TEST_IDS.newStudy })
+      mockCreateStudy.mockResolvedValue({ id: TEST_IDS.newStudy, sites: [] })
       mockCreateContributorOnStudy.mockResolvedValue(undefined)
     }
 
@@ -1143,6 +1163,99 @@ describe('study', () => {
         })
         expect(mockTransaction.studySite.updateMany).toHaveBeenCalledTimes(0)
       })
+    })
+  })
+
+  describe('changeStudyDates', () => {
+    const studyId = 'study-id'
+    const baseCommand = {
+      studyId,
+      startDate: '2025-01-01',
+      endDate: '2025-12-31',
+      realizationStartDate: null,
+      realizationEndDate: null,
+    }
+    const mockedStudy = { id: studyId, startDate: new Date('2024-01-01'), organizationVersionId: 'org-version-id' }
+
+    beforeEach(() => {
+      jest.clearAllMocks()
+      ;(authModule.dbActualizedAuth as jest.Mock).mockResolvedValue(mockedSession)
+      mockGetStudyById.mockResolvedValue(mockedStudy)
+      mockCanChangeDates.mockResolvedValue(true)
+      mockGetTransitionPlanByStudyId.mockResolvedValue(null)
+      mockGetTransitionPlansWhereStudyIsLinked.mockResolvedValue([])
+    })
+
+    it('should return an error if the study is linked in another transition plan at the same year', async () => {
+      mockGetTransitionPlansWhereStudyIsLinked.mockResolvedValue([
+        {
+          transitionPlan: {
+            study: { startDate: new Date('2025-01-01'), name: 'Parent Study' },
+          },
+        },
+      ])
+
+      const result = await changeStudyDates(baseCommand)
+
+      expect(result).toEqual({ success: false, errorMessage: 'studyIsLinkedInTransitionPlan:Parent Study' })
+    })
+
+    it('should return an error if the study is linked in another transition plan with a lower year', async () => {
+      mockGetTransitionPlansWhereStudyIsLinked.mockResolvedValue([
+        {
+          transitionPlan: {
+            study: { startDate: new Date('2024-06-01'), name: 'Parent Study' },
+          },
+        },
+      ])
+
+      const result = await changeStudyDates(baseCommand)
+
+      expect(result).toEqual({ success: false, errorMessage: 'studyIsLinkedInTransitionPlan:Parent Study' })
+    })
+
+    it('should allow the update if the study is linked in a transition plan with a strictly higher year', async () => {
+      mockGetTransitionPlansWhereStudyIsLinked.mockResolvedValue([
+        {
+          transitionPlan: {
+            study: { startDate: new Date('2026-01-01'), name: 'Parent Study' },
+          },
+        },
+      ])
+
+      const result = await changeStudyDates(baseCommand)
+
+      expect(result.success).toBe(true)
+    })
+
+    it('should return an error if the study has a transition plan with linked studies after new year', async () => {
+      mockGetTransitionPlanByStudyId.mockResolvedValue({ id: 'transition-plan-id' })
+      mockGetLinkedAndExternalStudies.mockResolvedValue({
+        success: true,
+        data: {
+          linkedStudies: [{ startDate: new Date('2025-06-01') }],
+          externalStudies: [],
+        },
+      })
+
+      const result = await changeStudyDates(baseCommand)
+
+      expect(result).toEqual({ success: false, errorMessage: 'studyYearMustBeAfterLinkedStudies' })
+    })
+
+    it('should return an error if the study has a transition plan with external studies after new year', async () => {
+      mockGetTransitionPlanByStudyId.mockResolvedValue({ id: 'transition-plan-id' })
+      mockGetLinkedAndExternalStudies.mockResolvedValue({
+        success: true,
+        data: {
+          linkedStudies: [],
+          externalStudies: [{ date: new Date('2025-06-01') }],
+        },
+      })
+
+      const result = await changeStudyDates(baseCommand)
+
+      expect(result).toEqual({ success: false, errorMessage: 'studyYearMustBeAfterLinkedStudies' })
     })
   })
 })

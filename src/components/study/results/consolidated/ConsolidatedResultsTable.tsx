@@ -21,23 +21,15 @@ interface Props<T> {
   isCompact?: boolean
 }
 
-type tableDataType = {
+type TableDataType = {
   label: string
   value: number
-  squaredStandardDeviation: number
   post: string
-  children: tableDataType[]
+  children: TableDataType[]
+  squaredStandardDeviation?: number
 }
 
-const ConsolidatedResultsTable = <
-  T extends {
-    value: number
-    label: string
-    squaredStandardDeviation: number
-    post: string
-    children: { value: number; label: string; squaredStandardDeviation: number; post: string }[]
-  },
->({
+const ConsolidatedResultsTable = <T extends TableDataType>({
   resultsUnit,
   data,
   hiddenUncertainty,
@@ -85,7 +77,7 @@ const ConsolidatedResultsTable = <
           )
         },
       },
-    ] as ColumnDef<tableDataType>[]
+    ] as ColumnDef<TableDataType>[]
 
     if (!hiddenUncertainty) {
       tmpColumns.push({
@@ -108,6 +100,11 @@ const ConsolidatedResultsTable = <
         id: 'confidenceInterval',
         header: t('confidenceIntervalTitle'),
         accessorFn: ({ value, squaredStandardDeviation }) => {
+          // NOTE: it's assumed that if the hiddenUncertainty flag is false,
+          // then the squaredStandardDeviation will be defined.
+          if (squaredStandardDeviation === undefined) {
+            return undefined
+          }
           const confidenceInterval = getConfidenceInterval(value, squaredStandardDeviation)
           return formatConfidenceInterval(confidenceInterval, resultsUnit)
         },

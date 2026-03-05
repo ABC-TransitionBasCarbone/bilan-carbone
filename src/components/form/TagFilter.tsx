@@ -1,5 +1,5 @@
 import { StudyTagFamilyWithTags } from '@/db/study'
-import { Checkbox, FormControl, FormControlLabel, InputLabel, Menu, Select } from '@mui/material'
+import { Checkbox, FormControl, FormControlLabel, FormLabel, InputLabel, Menu, MenuItem, Select } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
@@ -15,10 +15,18 @@ interface TagFilterProps {
   selectedTagIds: string[]
   onChange: (ids: string[]) => void
   className?: string
+  showSeparateLabel?: boolean
+  isOtherDisabled?: boolean
 }
 
-export const TagFilter = ({ tagFamilies, selectedTagIds, onChange, className }: TagFilterProps) => {
-  const t = useTranslations('study.results.pageFilters')
+export const TagFilter = ({
+  tagFamilies,
+  selectedTagIds,
+  onChange,
+  className,
+  showSeparateLabel = false,
+  isOtherDisabled = false,
+}: TagFilterProps) => {
   const tOther = useTranslations('study.results')
   const tCommon = useTranslations('common')
   const [tagFilterAnchorEl, setTagFilterAnchorEl] = useState<HTMLElement | null>(null)
@@ -27,7 +35,7 @@ export const TagFilter = ({ tagFamilies, selectedTagIds, onChange, className }: 
     () =>
       tagFamilies.reduce(
         (acc, tagFamily) => {
-          const tagInfos = tagFamily.tags.map((tag) => ({ id: tag.name, label: tag.name }))
+          const tagInfos = tagFamily.tags.map((tag) => ({ id: tag.id, label: tag.name }))
 
           if (tagInfos.length > 0) {
             acc[tagFamily.id] = {
@@ -44,17 +52,21 @@ export const TagFilter = ({ tagFamilies, selectedTagIds, onChange, className }: 
     [tagFamilies],
   )
 
-  const tagItemsWithOthers = useMemo<Record<string, { id: string; name: string; children: ChildrenType[] }>>(
-    () => ({
+  const studyHasTags = useMemo(() => tagFamilies.some((f) => f.name !== 'DEFAULT_FAMILY_TAG'), [tagFamilies])
+
+  const tagItemsWithOthers = useMemo<Record<string, { id: string; name: string; children: ChildrenType[] }>>(() => {
+    if (!studyHasTags) {
+      return {}
+    }
+    return {
       ...tagItems,
       [OTHER_FAMILY_ID]: {
         id: OTHER_FAMILY_ID,
         name: tOther('other'),
         children: [{ id: OTHER_TAG_ID, label: tOther('other') }],
       },
-    }),
-    [tagItems, tOther],
-  )
+    }
+  }, [studyHasTags, tagItems, tOther])
 
   const allTagIds = useMemo(
     () => Object.values(tagItemsWithOthers).flatMap((family) => family.children.map((child) => child.id)),
@@ -73,7 +85,6 @@ export const TagFilter = ({ tagFamilies, selectedTagIds, onChange, className }: 
     if (selectedTagIds.length === 0) {
       return tCommon('none')
     }
-    // Get the labels for selected tag IDs
     const selectedTagLabels = selectedTagIds
       .map((tagId) => {
         for (const family of Object.values(tagItemsWithOthers)) {
@@ -92,27 +103,76 @@ export const TagFilter = ({ tagFamilies, selectedTagIds, onChange, className }: 
     onChange(allSelectedTags ? [] : allTagIds)
   }
 
+  const handleRealTagChange = (tagId: string) => {
+    if (selectedTagIds.includes(tagId)) {
+      // Deselecting a real tag also removes "other" when isOtherDisabled
+      const next = selectedTagIds.filter((id) => id !== tagId)
+      onChange(isOtherDisabled ? next.filter((id) => id !== OTHER_TAG_ID) : next)
+    } else {
+      onChange([...selectedTagIds, tagId])
+    }
+  }
+
+  const handleFamilyChange = (familyInfo: { children: ChildrenType[] }, isOtherFamily: boolean) => {
+    const allFamilySelected = familyInfo.children.every((child) => selectedTagIds.includes(child.id))
+    if (allFamilySelected) {
+      // Deselecting the family: remove its children + other if isOtherDisabled and this is a real family
+      const next = selectedTagIds.filter((ci) => !familyInfo.children.some((child) => child.id === ci))
+      onChange(isOtherDisabled && !isOtherFamily ? next.filter((id) => id !== OTHER_TAG_ID) : next)
+    } else {
+      const newCheckedItems = [...selectedTagIds]
+      for (const child of familyInfo.children) {
+        if (!newCheckedItems.includes(child.id)) {
+          newCheckedItems.push(child.id)
+        }
+      }
+      onChange(newCheckedItems)
+    }
+  }
+
   return (
     <>
       <FormControl className={classNames(styles.formControl, className)}>
-        <InputLabel id="tag-filter-label">{t('tags')}</InputLabel>
-        <Select
-          labelId="tag-filter-label"
-          label={t('tags')}
-          value="tags-filter-placeholder"
-          open={false}
-          onMouseDown={(event) => {
-            event.preventDefault()
-            setTagFilterAnchorEl(event.currentTarget)
-          }}
-          renderValue={() => {
-            return (
-              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>
-                {tagsSelectorRenderValue}
-              </span>
-            )
-          }}
-        />
+        {showSeparateLabel ? (
+          <FormLabel id="tag-filter-label" component="legend">
+            {tCommon('tags')}
+          </FormLabel>
+        ) : (
+          <InputLabel id="tag-filter-label" shrink={!studyHasTags || undefined}>
+            {tCommon('tags')}
+          </InputLabel>
+        )}
+        {!studyHasTags ? (
+          <Select
+            labelId="tag-filter-label"
+            label={!showSeparateLabel ? tCommon('tags') : undefined}
+            value={''}
+            displayEmpty
+            disabled
+          >
+            <MenuItem value={''} disabled>
+              {tCommon('noTagsAvailable')}
+            </MenuItem>
+          </Select>
+        ) : (
+          <Select
+            labelId="tag-filter-label"
+            label={!showSeparateLabel ? tCommon('tags') : undefined}
+            value="tags-filter-placeholder"
+            open={false}
+            onMouseDown={(event) => {
+              event.preventDefault()
+              setTagFilterAnchorEl(event.currentTarget)
+            }}
+            renderValue={() => {
+              return (
+                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>
+                  {tagsSelectorRenderValue}
+                </span>
+              )
+            }}
+          />
+        )}
       </FormControl>
 
       <Menu
@@ -134,48 +194,46 @@ export const TagFilter = ({ tagFamilies, selectedTagIds, onChange, className }: 
             control={<Checkbox checked={allSelectedTags} onChange={selectAllTags} />}
           />
           {Object.entries(tagItemsWithOthers).map(([parentId, familyInfo]) => {
+            const isOtherFamily = parentId === OTHER_FAMILY_ID
             return (
               <div className="flex flex-col" key={parentId}>
                 <FormControlLabel
                   label={familyInfo.name}
+                  disabled={isOtherDisabled && isOtherFamily}
                   control={
                     <Checkbox
-                      checked={familyInfo.children.some((child) => selectedTagIds.includes(child.id))}
-                      onChange={() => {
-                        if (familyInfo.children.every((child) => selectedTagIds.includes(child.id))) {
-                          onChange(selectedTagIds.filter((ci) => !familyInfo.children.some((child) => child.id === ci)))
-                        } else {
-                          const newCheckedItems = [...selectedTagIds]
-                          for (const child of familyInfo.children) {
-                            if (!newCheckedItems.includes(child.id)) {
-                              newCheckedItems.push(child.id)
-                            }
-                          }
-                          onChange(newCheckedItems)
-                        }
-                      }}
+                      checked={
+                        isOtherDisabled && isOtherFamily
+                          ? allSelectedTags
+                          : familyInfo.children.every((child) => selectedTagIds.includes(child.id))
+                      }
+                      onChange={
+                        isOtherDisabled && isOtherFamily
+                          ? undefined
+                          : () => handleFamilyChange(familyInfo, isOtherFamily)
+                      }
                     />
                   }
                 />
-                {familyInfo.children.map((child) => (
-                  <FormControlLabel
-                    className="ml2"
-                    key={child.label}
-                    label={child.label}
-                    control={
-                      <Checkbox
-                        checked={selectedTagIds.includes(child.id)}
-                        onChange={() => {
-                          if (selectedTagIds.includes(child.id)) {
-                            onChange(selectedTagIds.filter((ci) => ci !== child.id))
-                          } else {
-                            onChange([...selectedTagIds, child.id])
-                          }
-                        }}
-                      />
-                    }
-                  />
-                ))}
+                {familyInfo.children.map((child) => {
+                  const isOtherChild = child.id === OTHER_TAG_ID
+                  const isDisabled = isOtherDisabled && isOtherChild
+                  const isChecked = isDisabled ? allSelectedTags : selectedTagIds.includes(child.id)
+                  return (
+                    <FormControlLabel
+                      className="ml2"
+                      key={child.label}
+                      label={child.label}
+                      disabled={isDisabled}
+                      control={
+                        <Checkbox
+                          checked={isChecked}
+                          onChange={isDisabled ? undefined : () => handleRealTagChange(child.id)}
+                        />
+                      }
+                    />
+                  )
+                })}
               </div>
             )
           })}

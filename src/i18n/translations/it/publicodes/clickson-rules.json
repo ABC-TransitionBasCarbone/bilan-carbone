@@ -1,0 +1,1280 @@
+{
+  "publicodes-rules": {
+    "général": {
+      "nombre étudiant": {
+        "question": "[TO_TRANSLATE] Nombre d'étudiants"
+      },
+      "nombre personnel": {
+        "question": "[TO_TRANSLATE] Nombre de personnel (enseignants et non enseignants)"
+      },
+      "année de construction": {
+        "question": "[TO_TRANSLATE] Année de construction du bâtiment principal"
+      },
+      "année de rénovation": {
+        "question": "[TO_TRANSLATE] Année de rénovation du bâtiment principal"
+      },
+      "pays": {
+        "question": "[TO_TRANSLATE] Pays de l'établissement",
+        "options": {
+          "FRANCE": "[TO_TRANSLATE] FRANCE",
+          "HONGRIE": "[TO_TRANSLATE] HONGRIE",
+          "ROUMANIE": "[TO_TRANSLATE] ROUMANIE",
+          "CROATIE": "[TO_TRANSLATE] CROATIE"
+        }
+      }
+    },
+    "énergie": {
+      "électricité": {
+        "janvier": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en janvier"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
+        },
+        "février": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en février"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
+        },
+        "mars": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en mars"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
+        },
+        "avril": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en avril"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
+        },
+        "mai": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en mai"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
+        },
+        "juin": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en juin"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
+        },
+        "juillet": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en juillet"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
+        },
+        "août": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en août"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
+        },
+        "septembre": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en septembre"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
+        },
+        "octobre": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en octobre"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
+        },
+        "novembre": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en novembre"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
+        },
+        "décembre": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation d'électricité en décembre"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission de l'électricité"
+          }
+        }
+      },
+      "combustibles": {
+        "fioul domestique": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation annuelle de fioul domestique"
+          }
+        },
+        "fioul lourd": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation annuelle de fioul lourd/commercial"
+          }
+        },
+        "gaz naturel": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation annuelle de gaz naturel"
+          }
+        },
+        "granulés de bois": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation annuelle de granulés de bois"
+          }
+        },
+        "biopropane": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation annuelle de biopropane"
+          }
+        },
+        "réseau de chaleur": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation annuelle de réseau de chaleur"
+          }
+        }
+      },
+      "autres gaz": {
+        "gaz réfrigérants": {
+          "titre": "[TO_TRANSLATE] Gaz réfrigérants",
+          "question": "[TO_TRANSLATE] Consommation annuelle de gaz réfrigérant"
+        },
+        "gaz réfrigérant": {
+          "consommation": {
+            "question": "Consumo annuale di questo gas"
+          },
+          "type": {
+            "titre": "[TO_TRANSLATE] Gaz réfrigérant",
+            "question": "[TO_TRANSLATE] Gaz réfrigérant",
+            "options": {
+              "R134a": "[TO_TRANSLATE] R134a",
+              "R32": "[TO_TRANSLATE] R32",
+              "R407c": "[TO_TRANSLATE] R407c",
+              "R410a": "[TO_TRANSLATE] R410a"
+            }
+          }
+        },
+        "gaz effet de serre principaux": {
+          "titre": "[TO_TRANSLATE] Gaz à effet de serre principal",
+          "question": "[TO_TRANSLATE] Consommation annuelle de gaz à effet de serre principal"
+        },
+        "gaz effet de serre principal": {
+          "consommation": {
+            "question": "Consumo annuale di questo gas"
+          },
+          "type": {
+            "titre": "Gas serra principale",
+            "question": "Gas serra principale",
+            "options": {
+              "CO2": "CO2",
+              "CH4 fossile": "CH4 fossile",
+              "CH4 biogénique": "CH4 biogenico",
+              "N2O": "N2O",
+              "SF6": "SF6",
+              "NF3": "NF3"
+            }
+          }
+        }
+      }
+    },
+    "restauration": {
+      "types de repas servis": {
+        "moyen": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de repas moyens annuels"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par repas moyen"
+          }
+        },
+        "végétarien": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de repas végétariens annuels"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par repas végétarien"
+          }
+        },
+        "végétalien": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de repas végétaliens annuels"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par repas végétalien"
+          }
+        },
+        "viande rouge": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de repas à base de viande rouge annuels"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par repas à base de viande rouge"
+          }
+        },
+        "viande blanche": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de repas à base de viande blanche annuels"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par repas à base de viande blanche"
+          }
+        },
+        "poisson": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de repas à base de poisson blanc annuels"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par repas à base de poisson blanc"
+          }
+        }
+      },
+      "fret": {
+        "routier": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Distance parcourue en fret routier"
+          }
+        },
+        "ferroviaire": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Distance parcourue en fret ferroviaire"
+          }
+        }
+      },
+      "fin de vie moyenne": {
+        "déchets résiduels": {
+          "quantité": {
+            "question": "[TO_TRANSLATE] Quantité de déchets résiduels"
+          }
+        },
+        "déchets organiques": {
+          "quantité": {
+            "question": "[TO_TRANSLATE] Quantité de déchets organiques"
+          }
+        }
+      },
+      "distributeur automatiques": {
+        "bouteille d'eau": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de bouteille d'eau consommées annuellement"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par bouteille d'eau"
+          }
+        },
+        "soda": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de sodas consommés annuellement"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par soda"
+          }
+        },
+        "biscuits": {
+          "nombre": {
+            "question": "[UPDATED] Quantité de biscuit consommée annuellement"
+          },
+          "FE": {
+            "question": "[UPDATED] Facteur d'émission par kg de poids net de biscuits"
+          }
+        },
+        "paquet de chips": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de paquets de chips consommés annuellement"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par paquet de chips"
+          }
+        },
+        "café noir": {
+          "nombre": {
+            "question": "[UPDATED] Quantité de café noir consommée annuellement"
+          },
+          "FE": {
+            "question": "[UPDATED] Facteur d'émission par kg de poids net de café noir"
+          }
+        },
+        "café au lait": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Quantité de café au lait consommée annuellement"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par kg de poids net de café a lait"
+          }
+        },
+        "thé infusé": {
+          "nombre": {
+            "question": "[UPDATED] Quantité de thé infusé consommée annuellement"
+          },
+          "FE": {
+            "question": "[UPDATED] Facteur d'émission par kg de poids net de thé infusé"
+          }
+        },
+        "sandwich pain de mie": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de sandwichs pain de mie consommés annuellement"
+          },
+          "FE": {
+            "question": "[UPDATED] Facteur d'émission par kg de poids net de sandwich pain de mie"
+          }
+        },
+        "barre chocolatée": {
+          "nombre": {
+            "question": "[UPDATED] Quantité de barres chocolatées consommée annuellement"
+          },
+          "FE": {
+            "question": "[UPDATED] Facteur d'émission par kg de poids net de barre chocolatée"
+          }
+        }
+      }
+    },
+    "immobilisations": {
+      "rénovation": {
+        "bâtiment scolaire structure béton rénové": {
+          "surface": {
+            "question": "[TO_TRANSLATE] Quelle surface de bâtiment scolaire (structure béton) avez-vous rénovée ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par m² de bâtiment scolaire rénové (structure béton)"
+          }
+        }
+      },
+      "équipements informatique audiovisuel": {
+        "ordinateur de bureau": {
+          "titre": "[TO_TRANSLATE] Ordinateur de bureau",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien d'ordinateurs de bureau avez-vous achetés ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par ordinateur de bureau"
+          }
+        },
+        "ordinateur portable": {
+          "titre": "[TO_TRANSLATE] Ordinateur portable",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien d'ordinateurs portables avez-vous achetés ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par ordinateur portable"
+          }
+        },
+        "tablette": {
+          "titre": "[TO_TRANSLATE] Tablette",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de tablettes avez-vous achetées ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par tablette"
+          }
+        },
+        "imprimante": {
+          "titre": "[TO_TRANSLATE] Imprimante",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien d'imprimantes avez-vous achetées ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par imprimante"
+          }
+        },
+        "photocopieur": {
+          "titre": "[TO_TRANSLATE] Photocopieur",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de photocopieurs avez-vous achetés ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par photocopieur"
+          }
+        },
+        "vidéoprojecteur": {
+          "titre": "[TO_TRANSLATE] Vidéoprojecteur",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de vidéoprojecteurs avez-vous achetés ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par vidéoprojecteur"
+          }
+        },
+        "serveur informatique": {
+          "titre": "[TO_TRANSLATE] Serveur informatique",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de serveurs informatiques avez-vous achetés ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par serveur informatique"
+          }
+        },
+        "télévision 40-49 pouces": {
+          "titre": "[TO_TRANSLATE] Télévision 40-49 pouces",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de télévisions 40-49 pouces avez-vous achetées ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par télévision 40-49 pouces"
+          }
+        },
+        "rack de serveur": {
+          "titre": "[TO_TRANSLATE] Rack de serveur",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de racks de serveur avez-vous achetés ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par rack de serveur"
+          }
+        },
+        "télécommande universelle sans piles 80g": {
+          "titre": "[TO_TRANSLATE] Télécommande universelle sans piles 80g",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de télécommandes universelles sans piles (80g) avez-vous achetées ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par télécommande universelle sans piles 80g"
+          }
+        },
+        "stéréo classique": {
+          "titre": "[TO_TRANSLATE] Stéréo classique",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de stéréos classiques avez-vous achetées ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par stéréo classique"
+          }
+        },
+        "enceinte Bluetooth": {
+          "titre": "[TO_TRANSLATE] Enceinte Bluetooth",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien d'enceintes Bluetooth avez-vous achetées ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par enceinte Bluetooth"
+          }
+        },
+        "smartphone 5 pouces": {
+          "titre": "[TO_TRANSLATE] Smartphone 5 pouces",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de smartphones 5 pouces avez-vous achetés ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par smartphone 5 pouces"
+          }
+        },
+        "écran 23,8 pouces": {
+          "titre": "[TO_TRANSLATE] Écran 23,8 pouces",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien d'écrans 23,8 pouces avez-vous achetés ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par écran 23,8 pouces"
+          }
+        }
+      },
+      "équipements divers": {
+        "chaise bois": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de chaises (bois) avez-vous achetées ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par chaise (bois)"
+          }
+        },
+        "chaise plastique": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de chaises (plastique) avez-vous achetées ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par chaise (plastique)"
+          }
+        },
+        "table standard": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de tables de réunion avez-vous achetées ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par table (standard)"
+          }
+        },
+        "armoire standard": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien d'armoires (standard) avez-vous achetées ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par armoire (standard)"
+          }
+        }
+      },
+      "divers": {
+        "tondeuse gazon thermique": {
+          "titre": "Tagliaerba termico",
+          "question": "Quanti tagliaerba termici possiedi?",
+          "nombre": {
+            "question": "[UPDATED] Combien de tondeuse à gazon thermique possédez-vous ?"
+          },
+          "FE": {
+            "question": "[UPDATED] Facteur d'émission par unité de tondeuse à gazon"
+          },
+          "immo": {
+            "question": "[UPDATED] Immobilisation de tondeuse à gazon"
+          }
+        },
+        "tondeuse gazon électrique": {
+          "titre": "[UPDATED] Tondeuse à gazon électrique",
+          "question": "[UPDATED] Combien de tondeuse à gazon électrique possédez-vous ?",
+          "nombre": {
+            "question": "[UPDATED] Combien de tondeuse à gazon électrique possédez-vous ?"
+          },
+          "FE": {
+            "question": "[UPDATED] Facteur d'émission par unité de tondeuse à gazon électrique"
+          },
+          "immo": {
+            "question": "Immobilizzazione"
+          }
+        },
+        "bouilloire": {
+          "titre": "Bollitore",
+          "question": "Quanti bollitori possiedi?",
+          "nombre": {
+            "question": "Quanti bollitori possiedi?"
+          },
+          "FE": {
+            "question": "Fattore di emissione per unità di bollitore"
+          },
+          "immo": {
+            "question": "Immobilizzazione bollitore"
+          }
+        },
+        "micro-onde": {
+          "titre": "Forno a microonde",
+          "question": "Quanti forni a microonde possiedi?",
+          "nombre": {
+            "question": "Quanti forni a microonde possiedi?"
+          },
+          "FE": {
+            "question": "Fattore di emissione per unità di forno a microonde"
+          },
+          "immo": {
+            "question": "Immobilizzazione forno a microonde"
+          }
+        },
+        "aspirateur professionnel": {
+          "titre": "Aspirapolvere professionale",
+          "question": "Quanti aspirapolvere professionali possiedi?",
+          "nombre": {
+            "question": "Quanti aspirapolvere professionali possiedi?"
+          },
+          "FE": {
+            "question": "Fattore di emissione per unità di aspirapolvere professionale"
+          },
+          "immo": {
+            "question": "Immobilizzazione"
+          }
+        },
+        "ballon chauffe-eau électrique": {
+          "titre": "Scaldabagno elettrico - 200l",
+          "question": "Quanti scaldabagni elettrici - 200l possiedi?",
+          "nombre": {
+            "question": "Quanti scaldabagni elettrici - 200l possiedi?"
+          },
+          "FE": {
+            "question": "Fattore di emissione per unità di scaldabagno elettrico - 200l"
+          },
+          "immo": {
+            "question": "Immobilizzazione scaldabagno elettrico - 200l"
+          }
+        },
+        "machine café filtre": {
+          "titre": "[UPDATED] Machine à café - filtre",
+          "question": "[UPDATED] Combien de machine à café - filtre possédez-vous ?",
+          "nombre": {
+            "question": "[UPDATED] Combien de machine à café - filtre possédez-vous ?"
+          },
+          "FE": {
+            "question": "[UPDATED] Facteur d'émission par unité de machine à café - filtre"
+          },
+          "immo": {
+            "question": "[UPDATED] Immobilisation de machine à café - filtre"
+          }
+        },
+        "machine café dosettes": {
+          "titre": "[UPDATED] Machine à café - dosettes",
+          "question": "[UPDATED] Combien de machine à café - dosettes possédez-vous ?",
+          "nombre": {
+            "question": "[UPDATED] Combien de machine à café - dosettes possédez-vous ?"
+          },
+          "FE": {
+            "question": "[UPDATED] Facteur d'émission par unité de machine à café - dosettes"
+          },
+          "immo": {
+            "question": "[UPDATED] Immobilisation de machine à café - dosettes"
+          }
+        },
+        "lave-vaiselle professionnel": {
+          "titre": "Lavastoviglie professionale",
+          "question": "Quante lavastoviglie professionali possiedi?",
+          "nombre": {
+            "question": "Quante lavastoviglie professionali possiedi?"
+          },
+          "FE": {
+            "question": "Fattore di emissione per unità di lavastoviglie professionale"
+          },
+          "immo": {
+            "question": "Immobilizzazione lavastoviglie professionale"
+          }
+        },
+        "four professionnel": {
+          "titre": "Forno professionale",
+          "question": "Quanti forni professionali possiedi?",
+          "nombre": {
+            "question": "Quanti forni professionali possiedi?"
+          },
+          "FE": {
+            "question": "Fattore di emissione per unità di forno professionale"
+          },
+          "immo": {
+            "question": "Immobilizzazione forno professionale"
+          }
+        },
+        "lave-vaiselle standard": {
+          "titre": "Lavastoviglie standard",
+          "question": "Quante lavastoviglie standard possiedi?",
+          "nombre": {
+            "question": "Quante lavastoviglie standard possiedi?"
+          },
+          "FE": {
+            "question": "Fattore di emissione per unità di lavastoviglie standard"
+          },
+          "immo": {
+            "question": "Immobilizzazione lavastoviglie standard"
+          }
+        },
+        "lave-linge": {
+          "titre": "Lavatrice (capacità 7kg)",
+          "question": "Quante lavatrici (capacità 7kg) possiedi?",
+          "nombre": {
+            "question": "Quante lavatrici (capacità 7kg) possiedi?"
+          },
+          "FE": {
+            "question": "Fattore di emissione per unità di lavatrice (capacità 7kg)"
+          },
+          "immo": {
+            "question": "Immobilizzazione lavatrice (capacità 7kg)"
+          }
+        },
+        "congélateur coffre": {
+          "titre": "Congelatore (tipo a pozzetto) - 261l",
+          "question": "Quanti congelatori (tipo a pozzetto) - 261l possiedi?",
+          "nombre": {
+            "question": "Quanti congelatori (tipo a pozzetto) - 261l possiedi?"
+          },
+          "FE": {
+            "question": "Fattore di emissione per unità di congelatore (tipo a pozzetto) - 261l"
+          },
+          "immo": {
+            "question": "Immobilizzazione congelatore (tipo a pozzetto) - 261l"
+          }
+        },
+        "congélateur armoire": {
+          "titre": "Congelatore - armadio - 205l",
+          "question": "Quanti congelatori - armadio - 205l possiedi?",
+          "nombre": {
+            "question": "Quanti congelatori - armadio - 205l possiedi?"
+          },
+          "FE": {
+            "question": "Fattore di emissione per unità di congelatore - armadio - 205l"
+          },
+          "immo": {
+            "question": "Immobilizzazione congelatore - armadio - 205l"
+          }
+        },
+        "réfrigérateur": {
+          "titre": "Frigorifero - 250l",
+          "question": "Quanti frigoriferi - 250l possiedi?",
+          "nombre": {
+            "question": "Quanti frigoriferi - 250l possiedi?"
+          },
+          "FE": {
+            "question": "Fattore di emissione per unità di frigorifero - 250l"
+          },
+          "immo": {
+            "question": "Immobilizzazione frigorifero - 250l"
+          }
+        },
+        "plaques de cuisson au gaz": {
+          "titre": "Piastre di cottura/gas 9000W",
+          "question": "Quante piastre di cottura/gas 9000W possiedi?",
+          "nombre": {
+            "question": "Quante piastre di cottura/gas 9000W possiedi?"
+          },
+          "FE": {
+            "question": "Fattore di emissione per unità di piastre di cottura/gas 9000W"
+          },
+          "immo": {
+            "question": "Immobilizzazione piastre di cottura/gas 9000W"
+          }
+        },
+        "tatami": {
+          "titre": "Tatami",
+          "question": "Quanti tatami possiedi?",
+          "nombre": {
+            "question": "Quanti tatami possiedi?"
+          },
+          "FE": {
+            "question": "Fattore di emissione per unità di tatami"
+          },
+          "immo": {
+            "question": "Immobilizzazione tatami"
+          }
+        },
+        "gymnastique agré barre fixe": {
+          "titre": "Ginnastica, barra fissa",
+          "question": "Quante barre fisse possiedi?",
+          "nombre": {
+            "question": "Quante barre fisse possiedi?"
+          },
+          "FE": {
+            "question": "Fattore di emissione per unità di barra fissa"
+          },
+          "immo": {
+            "question": "Immobilizzazione barra fissa"
+          }
+        },
+        "gymnastique agré barres parallèles": {
+          "titre": "Ginnastica, barre parallele",
+          "question": "Quante barre parallele possiedi?",
+          "nombre": {
+            "question": "Quante barre parallele possiedi?"
+          },
+          "FE": {
+            "question": "Fattore di emissione per unità di barre parallele"
+          },
+          "immo": {
+            "question": "Immobilizzazione barre parallele"
+          }
+        }
+      },
+      "construction": {
+        "bâtiment scolaire structure béton": {
+          "surface": {
+            "question": "[UPDATED] Quelle surface de bâtiment scolaire (structure béton) comporte votre enceinte scolaire ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par m² de bâtiment scolaire (structure béton)"
+          }
+        },
+        "parking bâtiment structure béton": {
+          "surface": {
+            "question": "[UPDATED] Quelle surface de parking (bâtiment - structure béton) comporte votre enceinte scolaire ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par m² de parking (bâtiment - structure béton)"
+          }
+        },
+        "parking surface bitume": {
+          "surface": {
+            "question": "[UPDATED] Quelle surface de parking (surface bitume) comporte votre enceinte scolaire ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par m² de parking (surface bitume)"
+          }
+        },
+        "parking surface semi-dure": {
+          "surface": {
+            "question": "[UPDATED] Quelle surface de parking (surface semi-dure) comporte votre enceinte scolaire ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par m² de parking (surface semi-dure)"
+          }
+        },
+        "garage structure béton": {
+          "surface": {
+            "question": "[UPDATED] Quelle surface de garage (structure béton) comporte votre enceinte scolaire ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par m² de garage (structure béton)"
+          }
+        },
+        "garage structure métal": {
+          "surface": {
+            "question": "[UPDATED] Quelle surface de garage (structure métal) comporte votre enceinte scolaire ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par m² de garage (structure métal)"
+          }
+        }
+      }
+    },
+    "déplacements": {
+      "voyages scolaires": {
+        "RER transilien métro tram": {
+          "titre": "[TO_TRANSLATE] Transilien, RER, Métro, Tramway",
+          "distance": {
+            "question": "[TO_TRANSLATE] Passagers (par km)"
+          }
+        },
+        "bus": {
+          "titre": "[TO_TRANSLATE] Autobus",
+          "distance": {
+            "question": "[UPDATED] Passagers (par km)"
+          }
+        },
+        "bus électrique": {
+          "titre": "[TO_TRANSLATE] Autobus",
+          "distance": {
+            "question": "[TO_TRANSLATE] Passagers (par km)"
+          }
+        },
+        "TER": {
+          "titre": "[TO_TRANSLATE] TER",
+          "distance": {
+            "question": "[UPDATED] Passagers (par km)"
+          }
+        },
+        "TGV": {
+          "titre": "[TO_TRANSLATE] TGV",
+          "distance": {
+            "question": "[UPDATED] Passagers (par km)"
+          }
+        },
+        "avion court courrier": {
+          "titre": "[TO_TRANSLATE] Avion Court courrier",
+          "distance": {
+            "question": "[UPDATED] Passagers (par km)"
+          }
+        },
+        "avion moyen courrier": {
+          "titre": "[TO_TRANSLATE] Avion Moyen courrier",
+          "distance": {
+            "question": "[UPDATED] Passagers (par km)"
+          }
+        },
+        "avion long courrier": {
+          "titre": "[TO_TRANSLATE] Avion Long courrier",
+          "distance": {
+            "question": "[UPDATED] Passagers (par km)"
+          }
+        }
+      },
+      "transport des élèves": {
+        "RER transilien métro tram": {
+          "titre": "[TO_TRANSLATE] Transilien, RER, Métro, Tramway",
+          "distance": {
+            "question": "[TO_TRANSLATE] Passagers (par km)"
+          }
+        },
+        "vélo électrique": {
+          "titre": "[TO_TRANSLATE] Vélo électrique",
+          "distance": {
+            "question": "[TO_TRANSLATE] Distance (km)"
+          }
+        },
+        "trottinette électrique": {
+          "titre": "[TO_TRANSLATE] Trottinette électrique",
+          "distance": {
+            "question": "[TO_TRANSLATE] Distance (km)"
+          }
+        },
+        "moto essence": {
+          "titre": "[TO_TRANSLATE] Moto essence",
+          "distance": {
+            "question": "[TO_TRANSLATE] Distance (km)"
+          }
+        },
+        "véhicule compact électrique": {
+          "titre": "[TO_TRANSLATE] Véhicule compact électrique",
+          "distance": {
+            "question": "[TO_TRANSLATE] Distance (km)"
+          }
+        },
+        "voiture individuelle essence": {
+          "titre": "[TO_TRANSLATE] Voiture individuelle essence",
+          "distance": {
+            "question": "[TO_TRANSLATE] Distance (km)"
+          }
+        },
+        "voiture individuelle diesel": {
+          "titre": "[TO_TRANSLATE] Voiture individuelle diesel",
+          "distance": {
+            "question": "[TO_TRANSLATE] Distance (km)"
+          }
+        },
+        "bus": {
+          "titre": "[TO_TRANSLATE] Autobus",
+          "distance": {
+            "question": "[UPDATED] Passagers (par km)"
+          }
+        },
+        "bus électrique": {
+          "titre": "[TO_TRANSLATE] Autobus",
+          "distance": {
+            "question": "[TO_TRANSLATE] Passagers (par km)"
+          }
+        },
+        "TER": {
+          "titre": "[TO_TRANSLATE] TER",
+          "distance": {
+            "question": "[UPDATED] Passagers (par km)"
+          }
+        },
+        "TGV": {
+          "titre": "[TO_TRANSLATE] TGV",
+          "distance": {
+            "question": "[UPDATED] Passagers (par km)"
+          }
+        }
+      },
+      "transport du personnel": {
+        "RER transilien métro tram": {
+          "titre": "[TO_TRANSLATE] Transilien, RER, Métro, Tramway",
+          "distance": {
+            "question": "[TO_TRANSLATE] Passagers (par km)"
+          }
+        },
+        "vélo électrique": {
+          "titre": "[TO_TRANSLATE] Vélo électrique",
+          "distance": {
+            "question": "[TO_TRANSLATE] Distance (km)"
+          }
+        },
+        "trottinette électrique": {
+          "titre": "[TO_TRANSLATE] Trottinette électrique",
+          "distance": {
+            "question": "[TO_TRANSLATE] Distance (km)"
+          }
+        },
+        "moto essence": {
+          "titre": "[TO_TRANSLATE] Moto essence",
+          "distance": {
+            "question": "[TO_TRANSLATE] Distance (km)"
+          }
+        },
+        "véhicule compact électrique": {
+          "titre": "[TO_TRANSLATE] Véhicule compact électrique",
+          "distance": {
+            "question": "[TO_TRANSLATE] Distance (km)"
+          }
+        },
+        "voiture individuelle essence": {
+          "titre": "[TO_TRANSLATE] Voiture individuelle essence",
+          "distance": {
+            "question": "[TO_TRANSLATE] Distance (km)"
+          }
+        },
+        "voiture individuelle diesel": {
+          "titre": "[TO_TRANSLATE] Voiture individuelle diesel",
+          "distance": {
+            "question": "[TO_TRANSLATE] Distance (km)"
+          }
+        },
+        "bus": {
+          "titre": "[TO_TRANSLATE] Autobus",
+          "distance": {
+            "question": "[UPDATED] Passagers (par km)"
+          }
+        },
+        "bus électrique": {
+          "titre": "[TO_TRANSLATE] Autobus",
+          "distance": {
+            "question": "[TO_TRANSLATE] Passagers (par km)"
+          }
+        },
+        "TER": {
+          "titre": "[TO_TRANSLATE] TER",
+          "distance": {
+            "question": "[UPDATED] Passagers (par km)"
+          }
+        },
+        "TGV": {
+          "titre": "[TO_TRANSLATE] TGV",
+          "distance": {
+            "question": "[UPDATED] Passagers (par km)"
+          }
+        }
+      }
+    },
+    "achats": {
+      "produits chimiques": {
+        "produit vaisselle liquide": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation annuelle de produit vaisselle liquide"
+          }
+        },
+        "savon liquide": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation annuelle de savon liquide"
+          }
+        },
+        "produit vitre": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation annuelle de produit vitre"
+          }
+        },
+        "nettoyant sols": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation annuelle de nettoyant sols"
+          }
+        },
+        "nettoyant multi-usages": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation annuelle de nettoyant multi-usages"
+          }
+        },
+        "détergent sanitaire": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation annuelle de détergent sanitaire"
+          }
+        },
+        "désinfectant": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation annuelle de désinfectant"
+          }
+        },
+        "chlore": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation annuelle de chlore"
+          }
+        },
+        "bicarbonate de soude": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation annuelle de bicarbonate de soude"
+          }
+        },
+        "peinture revêtement mural intérieur": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation annuelle de peinture - revêtement mural intérieur"
+          }
+        },
+        "peinture revêtement mural extérieur": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation annuelle de peinture - revêtement mural extérieur"
+          }
+        },
+        "savon solide": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation annuelle de savon solide"
+          }
+        },
+        "vinaigre blanc": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation annuelle de vinaigre blanc"
+          }
+        },
+        "soude solide": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation annuelle de soude solide (poudre, granulés)"
+          }
+        },
+        "acide sulfurique": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation annuelle d'acide sulfurique"
+          }
+        },
+        "acide chlorhydrique": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Consommation annuelle d'acide chlorhydrique"
+          }
+        }
+      },
+      "fournitures": {
+        "petites fournitures": {
+          "montant": {
+            "question": "[TO_TRANSLATE] Quel est le montant dépensé en petites fournitures (stylos, etc.) ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par euro de petites fournitures"
+          }
+        },
+        "livres": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de livres avez-vous achetés ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par livre"
+          }
+        },
+        "papier ramette": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de ramettes de papier avez-vous achetées ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par ramette de papier"
+          }
+        },
+        "consommables": {
+          "montant": {
+            "question": "[TO_TRANSLATE] Quel est le montant dépensé en consommables (cartouches d'encre, etc.) ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par euro de consommables"
+          }
+        },
+        "piles aaa": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de piles AAA (alcalines) avez-vous achetées ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par pile AAA"
+          }
+        },
+        "piles aa": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de piles AA (alcalines) avez-vous achetées ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par pile AA"
+          }
+        }
+      },
+      "fin de vie moyenne": {
+        "carton": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Quantité de carton (en tonne) ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission du carton"
+          }
+        },
+        "plastique moyen": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Quantité de plastique moyen (en tonne) ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission du plastique moyen"
+          }
+        },
+        "verre": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Quantité de verre (en tonne) ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission du verre"
+          }
+        },
+        "bois": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Quantité de bois (en tonne) ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission du bois"
+          }
+        }
+      },
+      "équipements de sport": {
+        "ballon de volley": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de ballons de volley avez-vous achetés ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par ballon de volley"
+          }
+        },
+        "ballon de handball": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de ballons de handball avez-vous achetés ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par ballon de handball"
+          }
+        },
+        "kimono judo": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de kimonos de judo avez-vous achetés ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par kimono (judo)"
+          }
+        },
+        "shorts tous sports": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de shorts tous sports avez-vous achetés ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par short tous sports"
+          }
+        },
+        "maillots tous sports": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de maillots tous sports avez-vous achetés ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par maillot tous sports"
+          }
+        },
+        "t-shirt polyester": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de t-shirts en polyester avez-vous achetés ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par t-shirt en polyester"
+          }
+        },
+        "ballon de basket": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de ballons de basket avez-vous achetés ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par ballon de basket"
+          }
+        },
+        "ballon de football": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de ballons de football avez-vous achetés ?"
+          },
+          "FE": {
+            "question": "[TO_TRANSLATE] Facteur d'émission par ballon de football"
+          }
+        }
+      }
+    }
+  },
+  "publicodes-units": {
+    "étudiant": "[TO_TRANSLATE] étudiant",
+    "personne": "[TO_TRANSLATE] personne",
+    "année": "[TO_TRANSLATE] année",
+    "pays": "[TO_TRANSLATE] pays",
+    "kWh": "[TO_TRANSLATE] kWh",
+    "litre": "[TO_TRANSLATE] litre",
+    "kWh PCI": "[TO_TRANSLATE] kWh PCI",
+    "kgCO2e/kg": "[TO_TRANSLATE] kgCO2e/kg",
+    "repas": "[TO_TRANSLATE] repas",
+    "kgCO2e/repas": "[TO_TRANSLATE] kgCO2e/repas",
+    "m3/km": "[TO_TRANSLATE] m3.km",
+    "t/km": "[TO_TRANSLATE] t.km",
+    "t": "[TO_TRANSLATE] t",
+    "bouteille": "[TO_TRANSLATE] bouteille",
+    "kgCO2e/bouteille": "[TO_TRANSLATE] kgCO2e/bouteille",
+    "canette": "[TO_TRANSLATE] canette",
+    "kgCO2e/canette": "[TO_TRANSLATE] kgCO2e/canette",
+    "kg de poids net": "[TO_TRANSLATE] kg de poids net",
+    "kgCO2e/kg de poids net": "[TO_TRANSLATE] kgCO2e/kg de poids net",
+    "paquet": "[TO_TRANSLATE] paquet",
+    "kgCO2e/paquet": "[TO_TRANSLATE] kgCO2e/paquet",
+    "barre": "[TO_TRANSLATE] barre",
+    "m2": "[TO_TRANSLATE] m2",
+    "kgCO2e/m2": "[TO_TRANSLATE] kgCO2e/m2",
+    "kgCO2e": "[TO_TRANSLATE] kgCO2e",
+    "unité": "[TO_TRANSLATE] unité",
+    "kgCO2e/unité": "[TO_TRANSLATE] kgCO2e/unité",
+    "km": "[TO_TRANSLATE] km",
+    "kg": "[TO_TRANSLATE] kg",
+    "€": "[TO_TRANSLATE] €",
+    "kgCO2e/€": "[TO_TRANSLATE] kgCO2e/€",
+    "kgCO2e/t": "[TO_TRANSLATE] kgCO2e/t"
+  }
+}
