@@ -3,9 +3,9 @@ const filtersMatcheScope = (scope: string[], filters: string[]): boolean => {
 }
 
 /**
- * AND logic across all active filter dimensions.
- * Empty stored scope for a dimension means "all" → always passes that dimension.
- * Empty filter for a dimension means "filter is active with nothing selected" → always fails.
+ * AND logic across all active filter types.
+ * Empty DB scope for a type means "all" → always passes that type.
+ * Empty UI filter for a type means "filter has nothing selected" → always fails.
  */
 export const matchesScopeFilter = (
   rowSiteIds: string[],

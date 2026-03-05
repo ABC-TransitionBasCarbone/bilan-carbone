@@ -264,16 +264,18 @@ export const getBaseFilteredEmissionSources = <T extends Pick<FullStudy['emissio
       emissionSource.emissionFactor.base === base,
   )
 
-// Computes emissions after applying scope filters.
-// isActionScope controls empty-array logic which is inverted in DB and in UI:
-//   - false (UI filters): empty = user selected nothing = no sources match = returns 0
-//   - true (scope from DB): empty = no scope saved = all sources pass
+/**
+ * Computes emissions after applying filters coming from DB scope or UI selectors.
+ */
 const getFilteredEmissions = (
   study: Pick<FullStudy, 'emissionSources' | 'resultsUnit' | 'organizationVersion'>,
   validatedOnly: boolean,
   siteIds: string[],
   subPosts: SubPost[],
   tagIds: string[],
+  // isActionScope controls empty-array logic which is inverted in DB and in UI:
+  //   - false (UI filters): empty = user selected nothing = no sources match = returns 0
+  //   - true (scope from DB): empty = no scope saved = all sources pass
   isActionScope: boolean,
 ): number => {
   const environment = study.organizationVersion.environment
