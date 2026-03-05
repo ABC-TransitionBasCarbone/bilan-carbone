@@ -51,7 +51,6 @@ describe('emission scope filtering', () => {
 
     it('returns correct ratio when filtering on one of multiple subposts', () => {
       const study = mockStudy([mockSource(SubPost.Achats, 100), mockSource(SubPost.Electricite, 300)])
-      // action covers both subposts (400 total), filter selects only Achats (100)
       const ratio = getActionReductionRatio(
         study,
         false,
@@ -62,6 +61,7 @@ describe('emission scope filtering', () => {
         [SubPost.Achats],
         [],
       )
+
       expect(ratio).toBeCloseTo(100 / 400)
     })
 
@@ -85,7 +85,7 @@ describe('emission scope filtering', () => {
         mockSource(SubPost.Achats, 100, 'site-a', 'study-site-a'),
         mockSource(SubPost.Achats, 300, 'site-b', 'study-site-b'),
       ])
-      // action covers all sites (empty siteIds), filter selects site-a only
+
       const ratio = getActionReductionRatio(study, false, [], [SubPost.Achats], [], ['site-a'], [SubPost.Achats], [])
       expect(ratio).toBe(100 / 400)
     })
@@ -173,13 +173,11 @@ describe('emission scope filtering', () => {
         makeSource(SubPost.Achats, 100, true, 'site-a', 'study-site-a'),
         makeSource(SubPost.Achats, 200, true, 'site-b', 'study-site-b'),
       ])
-      // only site-a selected: 100, site-b (200) excluded; untagged sources pass with 'other'
       expect(getUIFilteredEmissions(study, false, ['site-a'], [SubPost.Achats], ['other'])).toBe(100)
     })
 
     it('excludes sources not matching the subPost filter', () => {
       const study = makeStudy([makeSource(SubPost.Achats, 100), makeSource(SubPost.Electricite, 200)])
-      // only Achats selected: 100; Electricite (200) excluded
       expect(getUIFilteredEmissions(study, false, ['site-a'], [SubPost.Achats], ['other'])).toBe(100)
     })
 
@@ -198,7 +196,6 @@ describe('emission scope filtering', () => {
         makeSource(SubPost.Achats, 100, true, 'site-a', 'study-site-a', []),
         makeSource(SubPost.Achats, 200, true, 'site-a', 'study-site-a', ['tag-1']),
       ])
-      // 'other' matches untagged only (100), tagged source (200) excluded
       expect(getUIFilteredEmissions(study, false, ['site-a'], [SubPost.Achats], ['other'])).toBe(100)
     })
   })

@@ -1,11 +1,11 @@
-const overlaps = (stored: string[], filter: string[]): boolean => {
-  return stored.some((id) => filter.includes(id))
+const filtersMatcheScope = (scope: string[], filters: string[]): boolean => {
+  return scope.some((id) => filters.includes(id))
 }
 
 /**
  * AND logic across all active filter dimensions.
  * Empty stored scope for a dimension means "all" → always passes that dimension.
- * Empty filter for a dimension means "no filter active" → always passes.
+ * Empty filter for a dimension means "filter is active with nothing selected" → always fails.
  */
 export const matchesScopeFilter = (
   rowSiteIds: string[],
@@ -15,22 +15,20 @@ export const matchesScopeFilter = (
   filterSubPosts: string[],
   filterTagIds: string[],
 ): boolean => {
-  if (filterTagIds.length > 0 && rowTagIds.length > 0) {
-    if (!overlaps(rowTagIds, filterTagIds)) {
-      return false
-    }
+  if (filterTagIds.length === 0 || filterSubPosts.length === 0 || filterSiteIds.length === 0) {
+    return false
   }
 
-  if (filterSubPosts.length > 0 && rowSubPosts.length > 0) {
-    if (!overlaps(rowSubPosts, filterSubPosts)) {
-      return false
-    }
+  if (rowTagIds.length > 0 && !filtersMatcheScope(rowTagIds, filterTagIds)) {
+    return false
   }
 
-  if (filterSiteIds.length > 0 && rowSiteIds.length > 0) {
-    if (!overlaps(rowSiteIds, filterSiteIds)) {
-      return false
-    }
+  if (rowSubPosts.length > 0 && !filtersMatcheScope(rowSubPosts, filterSubPosts)) {
+    return false
+  }
+
+  if (rowSiteIds.length > 0 && !filtersMatcheScope(rowSiteIds, filterSiteIds)) {
+    return false
   }
 
   return true

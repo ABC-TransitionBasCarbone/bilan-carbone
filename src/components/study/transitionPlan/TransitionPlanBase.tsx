@@ -100,21 +100,23 @@ const TransitionPlanBase = ({
 
   const filteredTrajectories = useMemo(
     () =>
-      trajectories.filter((traj) => {
-        if (traj.objectives.length === 0) {
-          return true
-        }
-        return traj.objectives.some((obj) =>
-          matchesScopeFilter(
-            obj.sites?.map((s) => s.studySite.siteId) ?? [],
-            obj.subPosts?.map((sp) => sp.subPost) ?? [],
-            obj.tags?.map((tag) => tag.studyTag.id) ?? [],
+      trajectories.map((traj) => ({
+        ...traj,
+        objectives: traj.objectives.filter((obj) => {
+          const hasScope = obj.sites.length > 0 || obj.subPosts.length > 0 || obj.tags.length > 0
+          if (!hasScope) {
+            return true
+          }
+          return matchesScopeFilter(
+            obj.sites.map((s) => s.studySite.siteId),
+            obj.subPosts.map((sp) => sp.subPost),
+            obj.tags.map((tag) => tag.studyTag.id),
             selectedSiteIds,
             selectedPostIds,
             selectedTagIds,
-          ),
-        )
-      }),
+          )
+        }),
+      })),
     [trajectories, selectedSiteIds, selectedPostIds, selectedTagIds],
   )
 
