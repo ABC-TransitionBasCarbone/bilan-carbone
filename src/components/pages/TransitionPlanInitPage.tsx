@@ -180,7 +180,7 @@ const TransitionPlanInitPage = ({
     return getUIFilteredEmissions(study, validatedOnly, selectedSiteIds, subPosts, selectedTagIds)
   }, [study, validatedOnly, selectedSiteIds, selectedPostIds, selectedTagIds])
 
-  const filterRatio = studyTotalEmissions > 0 ? Math.min(1, filteredStudyEmissions / studyTotalEmissions) : 1
+  const filterRatio = studyTotalEmissions > 0 ? filteredStudyEmissions / studyTotalEmissions : 1
 
   const filteredPastStudies = useMemo(
     () => pastStudies.map((ps) => ({ ...ps, totalCo2: ps.totalCo2 * filterRatio })),
