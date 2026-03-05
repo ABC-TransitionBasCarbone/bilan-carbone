@@ -1,5 +1,5 @@
-import { TrajectoryDataPoint } from '@/components/study/transitionPlan/TrajectoryGraph'
 import { TrajectoryWithObjectives } from '@/db/transitionPlan'
+import { TrajectoryDataPoint } from '@/types/trajectory.types'
 import { expect } from '@jest/globals'
 import { Action, StudyResultUnit, TrajectoryType } from '@prisma/client'
 import { createGeneralSectenData } from './secten.test-utils'
