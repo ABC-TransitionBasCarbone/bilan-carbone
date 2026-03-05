@@ -46,7 +46,7 @@ describe('emission scope filtering', () => {
     it('returns 1 when no UI filters are active', () => {
       const study = mockStudy([mockSource(SubPost.Achats, 100), mockSource(SubPost.Electricite, 200)])
       const ratio = getActionReductionRatio(study, false, [], [SubPost.Achats, SubPost.Electricite], [], [], [], [])
-      expect(ratio).toBe(1)
+      expect(ratio).toBe(0)
     })
 
     it('returns correct ratio when filtering on one of multiple subposts', () => {
@@ -57,9 +57,9 @@ describe('emission scope filtering', () => {
         [],
         [SubPost.Achats, SubPost.Electricite],
         [],
-        [],
+        ['site-a'],
         [SubPost.Achats],
-        [],
+        ['other'],
       )
 
       expect(ratio).toBeCloseTo(100 / 400)
@@ -73,9 +73,9 @@ describe('emission scope filtering', () => {
         [],
         [SubPost.Achats, SubPost.Electricite],
         [],
-        [],
+        ['site-a'],
         [SubPost.Achats, SubPost.Electricite],
-        [],
+        ['other'],
       )
       expect(ratio).toBe(1)
     })
@@ -86,7 +86,16 @@ describe('emission scope filtering', () => {
         mockSource(SubPost.Achats, 300, 'site-b', 'study-site-b'),
       ])
 
-      const ratio = getActionReductionRatio(study, false, [], [SubPost.Achats], [], ['site-a'], [SubPost.Achats], [])
+      const ratio = getActionReductionRatio(
+        study,
+        false,
+        [],
+        [SubPost.Achats],
+        [],
+        ['site-a'],
+        [SubPost.Achats],
+        ['other'],
+      )
       expect(ratio).toBe(100 / 400)
     })
 
@@ -122,9 +131,9 @@ describe('emission scope filtering', () => {
         [],
         [SubPost.Achats, SubPost.Electricite, SubPost.Informatique],
         [],
-        [],
+        ['site-a'],
         [SubPost.Achats],
-        [],
+        ['other'],
       )
       expect(ratioAchats).toBe(100 / 1000)
 
@@ -134,9 +143,9 @@ describe('emission scope filtering', () => {
         [],
         [SubPost.Achats, SubPost.Electricite, SubPost.Informatique],
         [],
-        [],
+        ['site-a'],
         [SubPost.Informatique],
-        [],
+        ['other'],
       )
       expect(ratioInformatique).toBe(800 / 1000)
     })
