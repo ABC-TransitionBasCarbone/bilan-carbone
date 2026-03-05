@@ -62,7 +62,7 @@ const SIMPLIFIED_PUBLICODES_CONFIGS = {
   [Environment.TILT]: {
     posts: POSTS_PUBLICODE_FROM_ENV[Environment.TILT] ?? [],
     subPostsByPost: Object.fromEntries(
-      Object.entries(subPostsByPostTILT)
+      Object.entries(subPostsByPostTILT || {})
         .map(([post, subPosts]) => {
           const allowedSubPosts = subPosts.filter((subPost) =>
             (SUBPOSTS_PUBLICODE_FROM_ENV[Environment.TILT] ?? []).includes(subPost),
