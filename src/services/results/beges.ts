@@ -1,7 +1,7 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { hasDeprecationPeriod } from '@/utils/study'
-import { ExportRule } from '@prisma/client'
+import { Environment, ExportRule } from '@prisma/client'
 import { computeResult, EmissionSource, ExportEmissionFactor, getEmissionTotal, PostInfos } from './exports'
 
 const allRules = [
@@ -83,6 +83,7 @@ export const computeBegesResult = (
   studySite: string,
   withDependencies: boolean,
   validatedOnly: boolean = true,
+  environment: Environment = Environment.BC,
 ): PostInfos[] =>
   computeResult(
     study,
@@ -94,4 +95,7 @@ export const computeBegesResult = (
     allRules,
     getBegesEmissionValue,
     getLine,
+    undefined,
+    undefined,
+    environment,
   )

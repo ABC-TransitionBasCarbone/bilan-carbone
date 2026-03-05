@@ -6,6 +6,7 @@ import {
   EmissionFactorBase,
   EmissionFactorPartType,
   EmissionSourceCaracterisation,
+  Environment,
   ExportRule,
   Import,
 } from '@prisma/client'
@@ -111,6 +112,7 @@ export const computeResult = (
   getLine: GetLineFunctionType,
   base?: EmissionFactorBase,
   isGHGP?: boolean,
+  environment: Environment = Environment.BC,
 ): PostInfos[] => {
   const results: Record<string, Omit<PostInfos, 'rule' | 'PostInfos'>[]> = allRules.reduce(
     (acc, rule) => ({ ...acc, [rule]: [] }),
@@ -122,7 +124,13 @@ export const computeResult = (
   )
 
   siteEmissionSources
-    .map((emissionSource) => ({ ...emissionSource, subPost: convertTiltSubPostToBCSubPost(emissionSource.subPost) }))
+    .map((emissionSource) => ({
+      ...emissionSource,
+      subPost:
+        environment === Environment.TILT
+          ? convertTiltSubPostToBCSubPost(emissionSource.subPost)
+          : emissionSource.subPost,
+    }))
     .filter((emissionSource) => filterWithDependencies(emissionSource.subPost, withDependencies))
     .forEach((emissionSource) => {
       if (!emissionSource.emissionFactor || !emissionSource.value || (validatedOnly && !emissionSource.validated)) {

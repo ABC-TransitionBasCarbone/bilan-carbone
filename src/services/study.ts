@@ -794,7 +794,15 @@ export const downloadStudyResults = async (
         Export.Beges,
         tExport(Export.Beges),
         (siteId: string) =>
-          computeBegesResult(study, begesRules, emissionFactorsWithParts, siteId, true, validatedEmissionSourcesOnly),
+          computeBegesResult(
+            study,
+            begesRules,
+            emissionFactorsWithParts,
+            siteId,
+            true,
+            validatedEmissionSourcesOnly,
+            environment,
+          ),
       ),
     )
   }
@@ -819,6 +827,7 @@ export const downloadStudyResults = async (
             true,
             validatedEmissionSourcesOnly,
             EmissionFactorBase.LocationBased,
+            environment,
           ),
       ),
     )
@@ -841,6 +850,7 @@ export const downloadStudyResults = async (
             true,
             validatedEmissionSourcesOnly,
             EmissionFactorBase.MarketBased,
+            environment,
           ),
       ),
     )

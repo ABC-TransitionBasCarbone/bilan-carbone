@@ -282,13 +282,22 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   }, [study, studySite, selectedSubposts, selectedTags, validatedOnly, t, tPost, type])
 
   const computedBegesData = useMemo(
-    () => computeBegesResult(study, begesRules, emissionFactorsWithParts, studySite, false, validatedOnly),
+    () => computeBegesResult(study, begesRules, emissionFactorsWithParts, studySite, false, validatedOnly, environment),
     [study, begesRules, emissionFactorsWithParts, studySite, validatedOnly],
   )
 
   const computedGHGPData = useMemo(
     () =>
-      computeGHGPResult(study, ghgpRules, emissionFactorsWithParts, studySite, false, validatedOnly, selectedGHGPTable),
+      computeGHGPResult(
+        study,
+        ghgpRules,
+        emissionFactorsWithParts,
+        studySite,
+        false,
+        validatedOnly,
+        selectedGHGPTable,
+        environment,
+      ),
     [study, ghgpRules, emissionFactorsWithParts, studySite, validatedOnly, selectedGHGPTable],
   )
 
