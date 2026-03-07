@@ -1,4 +1,3 @@
-import { TrajectoryDataPoint } from '@/components/study/transitionPlan/TrajectoryGraph'
 import {
   SECTEN_SECTORS,
   SectenSector,
@@ -10,6 +9,7 @@ import { FullStudy } from '@/db/study'
 import { TrajectoryWithObjectives, TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
 import { SectorPercentages } from '@/services/serverFunctions/trajectory.command'
 import { getStudyTotalCo2Emissions } from '@/services/study'
+import { TrajectoryDataPoint } from '@/types/trajectory.types'
 import { Translations } from '@/types/translation'
 import { convertValue } from '@/utils/study'
 import {
@@ -101,9 +101,12 @@ interface CalculateActionBasedTrajectoryParams {
 }
 
 export interface CalculateTrajectoriesWithHistoryParams {
-  study: FullStudy
+  studyId: string
+  studyName: string
+  studyStartDate: Date
+  studyResultsUnit: StudyResultUnit
+  totalCo2: number
   withDependencies: boolean
-  validatedOnly: boolean
   trajectories: TrajectoryWithObjectives[]
   actions: Action[]
   pastStudies: PastStudy[]
@@ -1032,7 +1035,10 @@ export const getSNBCData = (
 }
 
 export const getDefaultSBTiData = (
-  study: FullStudy,
+  studyId: string,
+  studyName: string,
+  studyStartDate: Date,
+  studyResultsUnit: StudyResultUnit,
   referenceStudyData: PastStudy | null,
   pastStudies: PastStudy[],
   sbti15Enabled: boolean,
@@ -1130,7 +1136,7 @@ export const getDefaultSBTiData = (
       referenceStudyYear < SBTI_START_YEAR && studyStartYear > SBTI_START_YEAR && pastStudies.length > 0 // If there are no past studies, we don't need to include the current study
         ? [
             ...pastStudies,
-            { id: study.id, name: study.name, type: 'linked' as PastStudy['type'], year: studyStartYear, totalCo2 },
+            { id: studyId, name: studyName, type: 'linked' as PastStudy['type'], year: studyStartYear, totalCo2 },
           ]
         : pastStudies
 
@@ -1475,9 +1481,12 @@ export const getActionBasedData = (
 }
 
 export const calculateTrajectoriesWithHistory = ({
-  study,
+  studyId,
+  studyName,
+  studyStartDate,
+  studyResultsUnit,
+  totalCo2,
   withDependencies,
-  validatedOnly,
   trajectories,
   actions,
   pastStudies,
@@ -1486,8 +1495,7 @@ export const calculateTrajectoriesWithHistory = ({
   selectedCustomTrajectoryIds,
   sectenData = [],
 }: CalculateTrajectoriesWithHistoryParams): TrajectoryResult => {
-  const totalCo2 = getStudyTotalCo2Emissions(study, withDependencies, validatedOnly)
-  const studyStartYear = study.startDate.getFullYear()
+  const studyStartYear = studyStartDate.getFullYear()
   const sbti15Enabled = selectedSbtiTrajectories.includes(TRAJECTORY_15_ID)
   const sbtiWB2CEnabled = selectedSbtiTrajectories.includes(TRAJECTORY_WB2C_ID)
   const snbcEnabled = selectedSnbcTrajectories.length > 0
@@ -1526,7 +1534,10 @@ export const calculateTrajectoriesWithHistory = ({
 
   const defaultTrajectoryDataPoints = defaultTrajectoryData?.data.previousTrajectory ?? []
   const { sbti15Data, sbtiWB2CData } = getDefaultSBTiData(
-    study,
+    studyId,
+    studyName,
+    studyStartDate,
+    studyResultsUnit,
     referenceStudyData,
     pastStudies,
     sbti15Enabled,
@@ -1543,7 +1554,7 @@ export const calculateTrajectoriesWithHistory = ({
     pastStudies,
     totalCo2,
     studyStartYear,
-    study.resultsUnit,
+    studyResultsUnit,
     referenceStudyData,
     withDependencies,
     minYear,

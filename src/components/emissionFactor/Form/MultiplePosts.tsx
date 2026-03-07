@@ -1,6 +1,7 @@
 import HelpIcon from '@/components/base/HelpIcon'
 import { Select } from '@/components/base/Select'
 import GlossaryModal from '@/components/modals/GlossaryModal'
+import { ALL_POSTS_VALUE } from '@/constants/post.constants'
 import { environmentPostMapping, Post, subPostsByPost } from '@/services/posts'
 import { SubPostsCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
@@ -19,10 +20,6 @@ interface Props<T extends SubPostsCommand> {
   selectAll?: boolean
   defaultSubPosts?: SubPost[]
 }
-
-// Constants
-export const ALL_POSTS_VALUE = 'ALL_POSTS'
-export const ALL_SUB_POSTS_VALUE = 'ALL_SUB_POSTS'
 
 const MultiplePosts = <T extends SubPostsCommand>({ form, context, selectAll = false, defaultSubPosts }: Props<T>) => {
   const t = useTranslations('emissionFactors.create')

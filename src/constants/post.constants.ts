@@ -1,0 +1,2 @@
+export const ALL_POSTS_VALUE = 'ALL_POSTS'
+export const ALL_SUB_POSTS_VALUE = 'ALL_SUB_POSTS'
