@@ -6,6 +6,7 @@ import {
   getPostRuleNameClickson,
   getSubPostRuleNameClickson,
 } from '@/environments/clickson/publicodes/subPostMapping'
+import { POSTS_PUBLICODE_FROM_ENV } from '@/environments/core/publicodes/subposts'
 import { getCutEngine } from '@/environments/cut/publicodes/cut-engine'
 import {
   getFormLayoutsForSubPostCUT,
@@ -20,8 +21,8 @@ import {
 import { getTiltEngine } from '@/environments/tilt/publicodes/tilt-engine'
 import { Environment, SubPost } from '@prisma/client'
 import Engine from 'publicodes'
-import { SimplifiedPost, subPostsByPostClickson, subPostsByPostCUT, subPostsByPostTILT } from '../posts'
-import { ClicksonPost, CutPost, TiltPost } from '../posts.enums'
+import { getSubPostByPostTiltSimplified, SimplifiedPost, subPostsByPostClickson, subPostsByPostCUT } from '../posts'
+import { ClicksonPost, CutPost } from '../posts.enums'
 
 export type SimplifiedEnvironment = 'CUT' | 'CLICKSON' | 'TILT'
 
@@ -59,8 +60,8 @@ const SIMPLIFIED_PUBLICODES_CONFIGS = {
     modelVersion: PUBLICODES_CLICKSON_VERSION,
   } satisfies SimplifiedPublicodesConfig,
   [Environment.TILT]: {
-    posts: Object.values(TiltPost),
-    subPostsByPost: subPostsByPostTILT as Record<SimplifiedPost, SubPost[]>,
+    posts: POSTS_PUBLICODE_FROM_ENV[Environment.TILT] ?? [],
+    subPostsByPost: getSubPostByPostTiltSimplified(),
     getFormLayout: getFormLayoutsForSubPostTILT,
     getPostRuleName: getPostRuleNameTilt as (post: SimplifiedPost) => string,
     getSubPostRuleName: getSubPostRuleNameTilt,

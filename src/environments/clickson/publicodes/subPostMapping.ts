@@ -19,7 +19,7 @@ export const getFormLayoutsForSubPostClickson = (subPost: SubPost): FormLayout<C
   return SUBPOST_TO_FORM_LAYOUTS[subPost] || []
 }
 
-const POST_TO_RULENAME: Record<ClicksonPost, ClicksonRuleName> = {
+export const POST_TO_RULENAME: Record<ClicksonPost, ClicksonRuleName> = {
   EnergiesClickson: 'énergie',
   Restauration: 'restauration',
   DeplacementsClickson: 'déplacements',

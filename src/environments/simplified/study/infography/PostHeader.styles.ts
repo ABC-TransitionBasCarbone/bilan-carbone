@@ -34,8 +34,10 @@ export const StyledContentColumn = styled('div')({
   width: '100%',
 })
 
-export const StyledTitle = styled('div')(({ theme }) => ({
-  color: theme.palette.primary.contrastText,
+export const StyledTitle = styled('div')<{
+  post: Post
+}>(({ theme, post }) => ({
+  color: theme.custom.postColors[post]?.customTitleColor || theme.palette.primary.contrastText,
   fontSize: '1.125rem',
   fontWeight: 700,
   textAlign: 'left',
