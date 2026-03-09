@@ -148,7 +148,7 @@ export const convertToPastStudies = (
       name: study.name,
       type: 'external',
       year: study.date.getFullYear(),
-      totalCo2: convertValue(study.totalCo2Kg, StudyResultUnit.K, studyUnit),
+      totalCo2: convertValue(Number(study.totalCo2Kg), StudyResultUnit.K, studyUnit),
     })
   })
 
