@@ -17,6 +17,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import PublicodesSubPostForm from '../study/PublicodesSubPostForm'
 import SaveStatusIndicator from '../study/SaveStatusIndicator'
+import RealTimeResults from './RealTimeResults'
 
 interface Props {
   environment: SimplifiedEnvironment
@@ -126,6 +127,7 @@ const SimplifiedStudyPostsPage = ({ environment, post, currentSubPost, study, st
           }
         />
       </Block>
+      <RealTimeResults study={study} studySiteId={studySiteId} post={post} subPost={activeSubPost} />
     </PublicodesFormProvider>
   )
 }
