@@ -12,6 +12,7 @@ froid et clim:
 
     amortissement:
       valeur: 6
+  par défaut: 0
 
 froid et clim . nombre:
   question: Combien de climatiseurs sont utilisés dans vos locaux ?
