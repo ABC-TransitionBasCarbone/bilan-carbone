@@ -32,7 +32,7 @@ export const SimplifiedPostHeader = ({ post, mainPost, emissionValue, percent }:
         <PostIcon className={styles.postIcon} post={mainPost} />
       </StyledIconColumn>
       <StyledContentColumn>
-        <StyledTitle>{t(post)}</StyledTitle>
+        <StyledTitle post={post as Post}>{t(post)}</StyledTitle>
         <StyledEmissionValue>{emissionValue}</StyledEmissionValue>
         <div className="mt-2 w100">
           <SimplifiedProgressBar value={percent} />
