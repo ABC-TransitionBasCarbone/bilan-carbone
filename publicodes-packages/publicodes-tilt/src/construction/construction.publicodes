@@ -5,3 +5,4 @@ construction:
       - bâtiment
       - infrastructure
   unité: kgCO2e
+  par défaut: 0

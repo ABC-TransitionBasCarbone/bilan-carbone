@@ -4,3 +4,4 @@ intrants-services:
     somme:
       - numérique
       - services
+  par défaut: 0

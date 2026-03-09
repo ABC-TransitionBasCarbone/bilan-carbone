@@ -2,6 +2,7 @@
   formule:
     somme:
       - équipements et immobilisations . infos
+  par défaut: 0
 
 équipements et immobilisations . infos:
   titre: Équipements et immobilisations
