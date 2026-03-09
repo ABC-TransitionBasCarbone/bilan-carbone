@@ -1,3 +1,4 @@
+import { SUBPOSTS_PUBLICODE_FROM_ENV } from '@/environments/core/publicodes/subposts'
 import { Environment, SubPost } from '@prisma/client'
 import { BCPost, ClicksonPost, CutPost, TiltPost } from './posts.enums'
 import { BaseResultsByPost } from './results/consolidated'
@@ -275,6 +276,20 @@ export const convertSimplifiedEnvToBilanCarbone = (results: BaseResultsByPost[])
   })
 
   return aggregatedResults
+}
+
+export const getSubPostByPostTiltSimplified = (): Record<SimplifiedPost, SubPost[]> => {
+  return Object.fromEntries(
+    Object.entries(subPostsByPostTILT || {})
+      .map(([post, subPosts]) => {
+        const allowedSubPosts = subPosts.filter((subPost) =>
+          (SUBPOSTS_PUBLICODE_FROM_ENV[Environment.TILT] ?? []).includes(subPost),
+        )
+
+        return [post, allowedSubPosts]
+      })
+      .filter(([, subPosts]) => subPosts.length > 0),
+  ) as Record<SimplifiedPost, SubPost[]>
 }
 
 export const subPostToBCPostMapping: Partial<Record<SubPost, BCPost>> = {
