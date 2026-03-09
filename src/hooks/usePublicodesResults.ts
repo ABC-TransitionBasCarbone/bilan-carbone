@@ -11,11 +11,12 @@ import { loadSituations } from '@/services/serverFunctions/situation'
 import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { Situation } from 'publicodes'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 interface UsePublicodesResultsReturn extends BaseResultsBySite {
   isLoading: boolean
   error: string | null
+  refresh: () => void
 }
 
 const computeResultsForAllSitesFromSituations = (
@@ -68,6 +69,9 @@ export function usePublicodesResults(
   }, [study.sites, studySite])
   const studySiteIdsKey = useMemo(() => studySiteIds.join(','), [studySiteIds])
 
+  const [refreshTrigger, setRefreshTrigger] = useState(0)
+  const refresh = useCallback(() => setRefreshTrigger((t) => t + 1), [])
+
   useEffect(() => {
     const load = async () => {
       if (studySiteIds.length === 0 || !config) {
@@ -102,7 +106,7 @@ export function usePublicodesResults(
       }
     }
     load()
-  }, [study.id, studySiteIdsKey, config])
+  }, [study.id, studySiteIdsKey, config, refreshTrigger])
 
   const results = useMemo(() => {
     if (!config || Object.keys(situationBySiteId).length === 0) {
@@ -111,5 +115,5 @@ export function usePublicodesResults(
     return computeResultsForAllSitesFromSituations(situationBySiteId, config, tPost, environment)
   }, [config, situationBySiteId, tPost])
 
-  return { ...results, isLoading, error }
+  return { ...results, isLoading, error, refresh }
 }

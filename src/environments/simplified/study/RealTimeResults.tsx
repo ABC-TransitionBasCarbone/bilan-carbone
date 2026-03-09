@@ -5,7 +5,7 @@ import { Translations } from '@/types/translation'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { StudyResultUnit, SubPost } from '@prisma/client'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslations } from 'use-intl'
 import styles from './RealTimeResults.module.css'
 
@@ -21,7 +21,9 @@ const formatValue = (value: number, unit: StudyResultUnit, t: Translations) => {
 }
 
 const RealTimeResults = ({ post, subPost, study, studySiteId }: Props) => {
-  const { bySite, isLoading } = usePublicodesResults(study, 'all', study.organizationVersion.environment)
+  const { bySite, isLoading, refresh } = usePublicodesResults(study, 'all', study.organizationVersion.environment)
+
+  const [updated, setUpdated] = useState(false)
 
   const results = useMemo(() => {
     const postsResult = bySite[studySiteId]
@@ -35,12 +37,24 @@ const RealTimeResults = ({ post, subPost, study, studySiteId }: Props) => {
   const tResultsUnits = useTranslations('study.results.units')
   const tPost = useTranslations('emissionFactors.post')
 
+  useEffect(() => {
+    if (total === undefined && subValue === undefined) return
+    setUpdated(true)
+    const id = setTimeout(() => setUpdated(false), 1200)
+    return () => clearTimeout(id)
+  }, [total, subValue])
+
+  useEffect(() => {
+    const refetchId = setInterval(refresh, 5000)
+    return () => clearInterval(refetchId)
+  }, [refresh])
+
   return (
-    <div className={styles.panel}>
+    <div className={`${styles.panel} ${updated ? styles.updated : ''}`}>
       <div className={styles.row}>
         <span className={styles.label}>{tPost('total')}</span>
-        <span className={styles.value}>
-          {isLoading ? '…' : total !== undefined ? formatValue(total, study.resultsUnit, tResultsUnits) : '—'}
+        <span className={styles.value} key={total}>
+          {total !== undefined ? formatValue(total, study.resultsUnit, tResultsUnits) : '—'}
         </span>
       </div>
 
@@ -49,8 +63,8 @@ const RealTimeResults = ({ post, subPost, study, studySiteId }: Props) => {
       {subPost && (
         <div className={styles.row}>
           <span className={styles.label}>{tPost(subPost)}</span>
-          <span className={styles.value}>
-            {isLoading ? '…' : subValue !== undefined ? formatValue(subValue, study.resultsUnit, tResultsUnits) : '—'}
+          <span className={styles.value} key={subValue}>
+            {subValue !== undefined ? formatValue(subValue, study.resultsUnit, tResultsUnits) : '—'}
           </span>
         </div>
       )}
