@@ -37,8 +37,6 @@ export const hasAccessToDependencyMatrix = isTilt
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const hasAccessToDependencyMatrixExample = (environment: Environment) => false
 
-export const hasAccessToPerimeterPage = isAdvanced
-
 export const needsLicenceToUseApp = isBC
 
 export const hasAccessToEmissionSourceValidation = isAdvanced
