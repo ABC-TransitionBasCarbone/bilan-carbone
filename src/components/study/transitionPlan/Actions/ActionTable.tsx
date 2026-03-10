@@ -136,7 +136,7 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId
 
   const getSubPostsDisplay = useCallback(
     (action: ActionWithRelations, isCompact: boolean = false) =>
-      getScopeItemDisplay(action.subPosts, 'allSubPosts', 'xSubPosts', (subPost) => tPosts(subPost.subPost), isCompact),
+      getScopeItemDisplay(action.subPosts, 'allPosts', 'xSubPosts', (subPost) => tPosts(subPost.subPost), isCompact),
     [tPosts, getScopeItemDisplay],
   )
 
@@ -158,7 +158,7 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId
       }
 
       const sitePart = sitesEmpty ? tCommon('allSites') : getSitesDisplay(action, true)
-      const subPostPart = subPostsEmpty ? tCommon('allSubPosts') : getSubPostsDisplay(action, true)
+      const subPostPart = subPostsEmpty ? tCommon('allPosts') : getSubPostsDisplay(action, true)
       const tagPart = tagsEmpty ? tCommon('allTags') : getTagsDisplay(action, true)
 
       return [sitePart, subPostPart, tagPart].filter(Boolean).join(' > ')
