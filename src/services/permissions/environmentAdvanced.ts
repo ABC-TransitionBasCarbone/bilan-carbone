@@ -25,3 +25,6 @@ export const hasAccessToCarbonResponsibilityIntensitiesAdvanced = (
 
 export const hasAccessToEngagementActions = (environment: Environment, simplified?: boolean | null) =>
   ([BC, TILT] as Environment[]).includes(environment) && !isTiltSimplified(environment, simplified)
+
+export const hasAccessToPerimeterPage = (environment: Environment, simplified?: boolean | null) =>
+  ([BC, TILT] as Environment[]).includes(environment) && !isTiltSimplified(environment, simplified)

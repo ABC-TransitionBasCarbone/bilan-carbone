@@ -1,4 +1,4 @@
-import { hasAccessToEngagementActions } from '@/services/permissions/environmentAdvanced'
+import { hasAccessToEngagementActions, hasAccessToPerimeterPage } from '@/services/permissions/environmentAdvanced'
 import { Translations } from '@/types/translation'
 import { Environment } from '@prisma/client'
 
@@ -8,6 +8,7 @@ interface MenuLink {
   testId?: string
   disabled?: boolean
   external?: boolean
+  hide?: boolean
 }
 
 interface MenuSection {
@@ -126,6 +127,7 @@ export const getStudyNavbarMenu = (
             testId: 'study-cadrage-link',
           },
           {
+            hide: !hasAccessToPerimeterPage(environment, studySimplified),
             href: `/etudes/${studyId}/perimetre`,
             label: t('scope'),
             testId: 'study-perimetre-link',

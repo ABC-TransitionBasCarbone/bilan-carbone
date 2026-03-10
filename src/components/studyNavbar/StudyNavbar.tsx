@@ -83,26 +83,28 @@ const StudyNavbar = ({
               {sections.map((section, sectionIndex) => (
                 <div key={sectionIndex} className="flex-col">
                   {section.header && <div className={styles.sectionHeader}>{section.header}</div>}
-                  {section.links.map((link, linkIndex) =>
-                    link.disabled ? (
-                      <button key={linkIndex} className={classNames(styles.link, styles.disabled)}>
-                        {link.label}
-                      </button>
-                    ) : (
-                      <Link
-                        prefetch={false}
-                        key={linkIndex}
-                        target={link.external ? '_blank' : undefined}
-                        className={classNames(styles.link, {
-                          [styles.active]: pathName === link.href || pathName.startsWith(`${link.href}/`),
-                        })}
-                        href={link.href || '#'}
-                        {...(link.testId && { 'data-testid': link.testId })}
-                      >
-                        {link.label}
-                      </Link>
-                    ),
-                  )}
+                  {section.links
+                    .filter((link) => !link.hide)
+                    .map((link, linkIndex) =>
+                      link.disabled ? (
+                        <button key={linkIndex} className={classNames(styles.link, styles.disabled)}>
+                          {link.label}
+                        </button>
+                      ) : (
+                        <Link
+                          prefetch={false}
+                          key={linkIndex}
+                          target={link.external ? '_blank' : undefined}
+                          className={classNames(styles.link, {
+                            [styles.active]: pathName === link.href || pathName.startsWith(`${link.href}/`),
+                          })}
+                          href={link.href || '#'}
+                          {...(link.testId && { 'data-testid': link.testId })}
+                        >
+                          {link.label}
+                        </Link>
+                      ),
+                    )}
                 </div>
               ))}
             </div>
