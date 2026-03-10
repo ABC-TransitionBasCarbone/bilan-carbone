@@ -134,10 +134,30 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId
     [allSites, getScopeItemDisplay],
   )
 
+  const getSitesCompactDisplay = useCallback(
+    (action: ActionWithRelations) => {
+      const { sites } = action
+      const sitesEmpty = sites.length === 0
+
+      return sitesEmpty ? tCommon('all') : getSitesDisplay(action, true)
+    },
+    [getSitesDisplay, tCommon],
+  )
+
   const getSubPostsDisplay = useCallback(
     (action: ActionWithRelations, isCompact: boolean = false) =>
       getScopeItemDisplay(action.subPosts, 'allPosts', 'xSubPosts', (subPost) => tPosts(subPost.subPost), isCompact),
     [tPosts, getScopeItemDisplay],
+  )
+
+  const getSubPostsCompactDisplay = useCallback(
+    (action: ActionWithRelations) => {
+      const { subPosts } = action
+      const subPostsEmpty = subPosts.length === 0
+
+      return subPostsEmpty ? tCommon('allPosts') : getSubPostsDisplay(action, true)
+    },
+    [getSubPostsDisplay, tCommon],
   )
 
   const getTagsDisplay = useCallback(
@@ -146,24 +166,14 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId
     [getScopeItemDisplay],
   )
 
-  const getScopeCompactDisplay = useCallback(
+  const getTagsCompactDisplay = useCallback(
     (action: ActionWithRelations) => {
-      const { sites, subPosts, tags } = action
-      const sitesEmpty = sites.length === 0
-      const subPostsEmpty = subPosts.length === 0
+      const { tags } = action
       const tagsEmpty = tags.length === 0
 
-      if (sitesEmpty && subPostsEmpty && tagsEmpty) {
-        return tCommon('all')
-      }
-
-      const sitePart = sitesEmpty ? tCommon('allSites') : getSitesDisplay(action, true)
-      const subPostPart = subPostsEmpty ? tCommon('allPosts') : getSubPostsDisplay(action, true)
-      const tagPart = tagsEmpty ? tCommon('allTags') : getTagsDisplay(action, true)
-
-      return [sitePart, subPostPart, tagPart].filter(Boolean).join(' > ')
+      return tagsEmpty ? tCommon('allTags') : getTagsDisplay(action, true)
     },
-    [tCommon, getSitesDisplay, getSubPostsDisplay, getTagsDisplay],
+    [getTagsDisplay, tCommon],
   )
 
   const columns = useMemo(
@@ -222,8 +232,16 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId
           accessorKey: 'title',
         },
         {
-          header: tActiontable('scope'),
-          accessorFn: getScopeCompactDisplay,
+          header: tActiontable('sites'),
+          accessorFn: getSitesCompactDisplay,
+        },
+        {
+          header: tActiontable('posts'),
+          accessorFn: getSubPostsCompactDisplay,
+        },
+        {
+          header: tActiontable('tags'),
+          accessorFn: getTagsCompactDisplay,
         },
         {
           header: tActiontable('priority'),
@@ -259,8 +277,10 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId
       tActiontable,
       getImplementationPeriod,
       getPotential,
-      getScopeCompactDisplay,
       studyId,
+      getSitesCompactDisplay,
+      getSubPostsCompactDisplay,
+      getTagsCompactDisplay,
       canEdit,
       handleToggleEnabled,
       tCategory,

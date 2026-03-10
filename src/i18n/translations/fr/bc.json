@@ -1324,7 +1324,10 @@
           "budget": "Budget",
           "errorChangingEnabled": "Erreur lors du changement de statut de l'action",
           "relevance": "Niveaux de pertinence",
-          "scope": "Périmètre"
+          "scope": "Périmètre",
+          "sites": "Sites",
+          "posts": "Postes",
+          "tags": "Tags"
         },
         "addModal": {
           "add": "Ajouter une action",
