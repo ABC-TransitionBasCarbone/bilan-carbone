@@ -3,7 +3,8 @@
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
 import { Badge, Checkbox, FormControlLabel, Menu, SvgIcon, Typography } from '@mui/material'
 import classNames from 'classnames'
-import { useState } from 'react'
+import { useTranslations } from 'next-intl'
+import { useCallback, useState } from 'react'
 import styles from './CustomTrajectoryLegend.module.css'
 
 export interface LegendSeries {
@@ -38,10 +39,7 @@ const stripYear = (label: string): string => label.replace(/\s*\(\d{4}\)$/, '')
 
 const CustomTrajectoryLegend = ({ series, hiddenLabels, onToggle, previousLabel, currentLabel }: Props) => {
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null)
-
-  if (series.length === 0) {
-    return null
-  }
+  const tCommon = useTranslations('common')
 
   const groupMap = new Map<string, TrajectoryGroup>()
   const groupsWithThreshold = new Set<string>()
@@ -98,6 +96,25 @@ const CustomTrajectoryLegend = ({ series, hiddenLabels, onToggle, previousLabel,
     })
   }
 
+  const handleSelectAll = useCallback(() => {
+    const allLabels = series.map((s) => s.label)
+    const allHidden = allLabels.every((label) => hiddenLabels.includes(label))
+
+    if (allHidden || hiddenLabels.length === 0) {
+      groups.forEach((group) => handleToggleGroup(group))
+    } else {
+      groups.forEach((group) => {
+        if (!isGroupAllVisible(group)) {
+          handleToggleGroup(group)
+        }
+      })
+    }
+  }, [series, hiddenLabels, handleToggleGroup, groups])
+
+  if (series.length === 0) {
+    return null
+  }
+
   return (
     <>
       <Badge color="primary" invisible={displayedCount === series.length}>
@@ -114,6 +131,17 @@ const CustomTrajectoryLegend = ({ series, hiddenLabels, onToggle, previousLabel,
         transformOrigin={{ vertical: 'top', horizontal: 'left' }}
       >
         <div className={classNames('flex-col gapped025 pr1', styles.menu)}>
+          <FormControlLabel
+            className="m0"
+            control={<Checkbox size="small" checked={hiddenLabels.length === 0} onClick={handleSelectAll} />}
+            label={
+              <div className={classNames('flex align-center gapped025')}>
+                <Typography variant="body2" fontWeight={600}>
+                  {tCommon('action.selectAll')}
+                </Typography>
+              </div>
+            }
+          />
           {groups.map((group) => (
             <div key={group.name} className="flex-col gapped025">
               <FormControlLabel
