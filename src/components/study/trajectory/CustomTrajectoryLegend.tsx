@@ -100,7 +100,7 @@ const CustomTrajectoryLegend = ({ series, hiddenLabels, onToggle, previousLabel,
 
   return (
     <>
-      <Badge color="primary" variant="dot" invisible={displayedCount === series.length}>
+      <Badge color="primary" invisible={displayedCount === series.length}>
         <div onClick={(e) => setAnchorEl(e.currentTarget)} className="pointer ml-2">
           <SettingsOutlinedIcon className="flex-end" color="primary" />
         </div>
