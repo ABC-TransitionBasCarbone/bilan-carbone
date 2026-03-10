@@ -5,6 +5,7 @@ déplacements . DT-bénévoles:
       - avec
       - sans
   unité: kgCO2e
+  par défaut: 0
 
 ## Cette fonction permet de calculer les émissions des bénévoles qui n'ont pas répondu à MEP à partir des kms moyens parcourus par ceux qui ont répondu, on utilise le split moyen français par mode pour les DT comme FE pour extrapoler
 
@@ -27,6 +28,7 @@ déplacements . DT-bénévoles . avec:
   avec:
     distance:
       question: D'après les résultats de MEP, quelle est la distance moyenne parcourue par jour (A/R) par bénévole pour des déplacements domicile-travail ?
+      par défaut: 0
       unité: km
 
     répartition:
@@ -36,24 +38,30 @@ déplacements . DT-bénévoles . avec:
         voiture:
           valeur: déplacements . DM-bénévoles . sans . voiture . split
           unité: kgCO2e/km
+          par défaut: 0
         transports en commun:
           valeur: déplacements . DM-bénévoles . sans . transports en commun . split
           unité: kgCO2e/km
+          par défaut: 0
         deux roues:
           valeur: 0.0851
           unité: kgCO2e/km
+          par défaut: 0
           meta:
             id: 43775
             nom: Cyclomoteur/Mixte/2023
         actif:
           valeur: 0
           unité: kgCO2e/km
+          par défaut: 0
           note: On néglige l'impact des modes actifs (vélo, marche, trottinette...)
 
     réponse MEP:
       question: D'après les résultats MEP, combien de kgCO2e représentent les déplacements domicile-travail des bénévoles ?
+      par défaut: 0
       unité: kgCO2e
   unité: kgCO2e
+  par défaut: 0
 
 ## Ici on calcule les émissions dans le cas ou il n'y pas eu de campagne MEP
 
@@ -66,6 +74,7 @@ déplacements . DT-bénévoles . sans:
       - deux roues
       - transports en commun
   unité: kgCO2e
+  par défaut: 0
 
 déplacements . DT-bénévoles . sans . voiture:
   applicable si:
@@ -76,10 +85,12 @@ déplacements . DT-bénévoles . sans . voiture:
   avec:
     distance:
       question: Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en voiture pour des déplacements domicile-travail ?
+      par défaut: 0
       type: nombre
       unité: km
   description: On considère ici toutes les motorisations de voiture individuelles, basée sur des moyennes nationales
   unité: kgCO2e
+  par défaut: 0
 
 déplacements . DT-bénévoles . sans . voiture . split:
   formule: hybride * 0.072 + électrique * 0.029 + gazole * 0.515 + essence * 0.384
@@ -88,6 +99,7 @@ déplacements . DT-bénévoles . sans . voiture . split:
     hybride:
       valeur: 0.18
       unité: kgCO2e/km
+      par défaut: 0
       meta:
         id: 28008
         nom: Voiture particulière/Coeur de gamme - Véhicule compact/Hybride, full, P2
@@ -95,6 +107,7 @@ déplacements . DT-bénévoles . sans . voiture . split:
     électrique:
       valeur: 0.1
       unité: kgCO2e/km
+      par défaut: 0
       meta:
         id: 28007
         nom: Voiture particulière/Coeur de gamme - Véhicule compact/Electrique
@@ -102,6 +115,7 @@ déplacements . DT-bénévoles . sans . voiture . split:
     gazole:
       valeur: 0.34
       unité: kgCO2e/km
+      par défaut: 0
       meta:
         id: db39062e-4e05-44a7-9d71-9aca18929005
         nom: Transport de passagers en voiture de taille moyenne - gazole - EURO 4
@@ -110,16 +124,19 @@ déplacements . DT-bénévoles . sans . voiture . split:
     essence:
       valeur: 0.37
       unité: kgCO2e/km
+      par défaut: 0
       meta:
         id: fb623fc8-b55b-4d98-ae54-3a83ebed431e
         nom: Transport de passagers en voiture de taille moyenne - essence - EURO 5
         note: Données ECOINVENT
   unité: kgCO2e/km
+  par défaut: 0
 
 déplacements . DT-bénévoles . sans . voiture . occupation:
   formule: 1.08
   note: source pour le taux d'occupation d'une voiture en France pour des trajets D-T https://www.citego.org/bdf_fiche-document-3431_fr.html
   unité: unité
+  par défaut: 0
 
 déplacements . DT-bénévoles . sans . train:
   applicable si:
@@ -130,6 +147,7 @@ déplacements . DT-bénévoles . sans . train:
   avec:
     distance:
       question: Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en train pour des déplacements domicile-travail ?
+      par défaut: 0
       unité: km
 
     FE:
@@ -140,6 +158,7 @@ déplacements . DT-bénévoles . sans . train:
         nom: TER/2022/Traction moyenne
         note: On considère que la majorité des déplacements en train pour du DT est en TER
   unité: kgCO2e
+  par défaut: 0
 
 déplacements . DT-bénévoles . sans . transports en commun:
   applicable si:
@@ -150,9 +169,11 @@ déplacements . DT-bénévoles . sans . transports en commun:
   avec:
     distance:
       question: Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en transports en commun pour des déplacements domicile-travail ?
+      par défaut: 0
       type: nombre
       unité: km
   unité: kgCO2e
+  par défaut: 0
 
 déplacements . DT-bénévoles . sans . transports en commun . split:
   formule: bus * 0.5 + rail * 0.5 ## à challenger
@@ -161,6 +182,7 @@ déplacements . DT-bénévoles . sans . transports en commun . split:
     bus:
       valeur: 0.15
       unité: kgCO2e/km
+      par défaut: 0
       meta:
         id: 28000
         nom: Autobus moyen/Agglomération de plus de 250 000 habitants
@@ -168,6 +190,7 @@ déplacements . DT-bénévoles . sans . transports en commun . split:
     rail:
       valeur: 0.00356
       unité: kgCO2e/km
+      par défaut: 0
       note: source doc NGC https://nosgestesclimat.fr/documentation/transport/transports-commun/m%C3%A9tro-ou-tram
 
 déplacements . DT-bénévoles . sans . deux roues:
@@ -179,13 +202,16 @@ déplacements . DT-bénévoles . sans . deux roues:
   avec:
     distance:
       question: Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en deux roues pour des déplacements domicile-travail ?
+      par défaut: 0
       type: nombre
       unité: km
 
     FE:
       valeur: 0.0851
       unité: kgCO2e/km
+      par défaut: 0
       meta:
         id: 43775
         nom: Cyclomoteur/Mixte/2023
   unité: kgCO2e
+  par défaut: 0

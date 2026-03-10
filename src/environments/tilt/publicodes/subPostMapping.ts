@@ -31,7 +31,7 @@ export const POST_TO_RULENAME: Partial<Record<TiltPost, TiltRuleName>> = {
   [TiltPost.DechetsDirects]: 'déchets',
   [TiltPost.FroidEtClim]: 'froid et clim',
   [TiltPost.DeplacementsDePersonne]: 'déplacements',
-  [TiltPost.TransportDeMarchandises]: 'fret . transport',
+  [TiltPost.TransportDeMarchandises]: 'fret',
   [TiltPost.IntrantsBiensEtMatieresTilt]: 'intrants-biens-et-matières',
   [TiltPost.Alimentation]: 'alimentation',
   [TiltPost.IntrantsServices]: 'intrants-services',
