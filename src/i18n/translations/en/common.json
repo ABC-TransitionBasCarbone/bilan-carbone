@@ -25,6 +25,7 @@
     "selectedPlural": "selected",
     "moreInfo": "More info",
     "mandatory": "* mandatory",
+    "and": "and",
     "action": {
       "create": "Create",
       "edit": "Edit",

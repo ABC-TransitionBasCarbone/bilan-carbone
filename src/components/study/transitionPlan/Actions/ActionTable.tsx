@@ -8,7 +8,9 @@ import commonStyles from '@/components/study/results/commonTable.module.css'
 import { ActionWithRelations } from '@/db/transitionPlan'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
+import { environmentSubPostsMapping } from '@/services/posts'
 import { toggleActionEnabled } from '@/services/serverFunctions/transitionPlan'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
 import { convertValue } from '@/utils/study'
 import { getYearFromDateStr } from '@/utils/time'
@@ -43,6 +45,7 @@ interface Props {
 }
 
 const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId, studyUnit, allSites }: Props) => {
+  const { environment } = useAppEnvironmentStore()
   const tActiontable = useTranslations('study.transitionPlan.actions.table')
   const tCommon = useTranslations('common')
   const tAction = useTranslations('study.transitionPlan.actions')
@@ -153,11 +156,44 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId
   const getSubPostsCompactDisplay = useCallback(
     (action: ActionWithRelations) => {
       const { subPosts } = action
-      const subPostsEmpty = subPosts.length === 0
 
-      return subPostsEmpty ? tCommon('allPosts') : getSubPostsDisplay(action, true)
+      let displaySubPosts = [...subPosts]
+      const displayPosts = []
+
+      if (environment) {
+        const mapping = environmentSubPostsMapping[environment]
+        const subPostSet = new Set(displaySubPosts.map((sp) => sp.subPost))
+
+        for (const [post, mappedSubPosts] of Object.entries(mapping)) {
+          const allPresent = mappedSubPosts.every((sp) => subPostSet.has(sp))
+
+          if (allPresent) {
+            mappedSubPosts.forEach((sp) => subPostSet.delete(sp))
+            displayPosts.push(post)
+          }
+        }
+
+        displaySubPosts = displaySubPosts.filter((sp) => subPostSet.has(sp.subPost))
+      }
+      const subPostsEmpty = displaySubPosts.length === 0
+
+      let display = ''
+      if (displayPosts.length === 0 && subPostsEmpty) {
+        display = tCommon('allPosts')
+      } else if (displayPosts.length > 0) {
+        display = getScopeItemDisplay(displayPosts, 'allPosts', 'xSubPosts', (post) => tPosts(post))
+        if (!subPostsEmpty) {
+          display += ` ${tCommon('and')} `
+        }
+      }
+
+      if (!subPostsEmpty) {
+        display += getSubPostsDisplay({ subPosts: displaySubPosts } as ActionWithRelations, true)
+      }
+
+      return display
     },
-    [getSubPostsDisplay, tCommon],
+    [environment, getSubPostsDisplay, tCommon],
   )
 
   const getTagsDisplay = useCallback(
