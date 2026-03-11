@@ -1324,7 +1324,10 @@
           "budget": "Budget",
           "errorChangingEnabled": "Error changing action status",
           "relevance": "Relevance levels",
-          "scope": "Scope"
+          "scope": "Scope",
+          "sites": "Sites",
+          "posts": "Posts",
+          "tags": "Tags"
         },
         "addModal": {
           "add": "Add an action",
