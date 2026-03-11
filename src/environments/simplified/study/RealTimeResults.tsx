@@ -4,14 +4,14 @@ import { Post } from '@/services/posts'
 import { Translations } from '@/types/translation'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
-import { StudyResultUnit, SubPost } from '@prisma/client'
+import { StudyResultUnit } from '@prisma/client'
+import classNames from 'classnames'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslations } from 'use-intl'
 import styles from './RealTimeResults.module.css'
 
 interface Props {
   post: Post
-  subPost: SubPost | undefined
   study: FullStudy
   studySiteId: string
 }
@@ -20,7 +20,7 @@ const formatValue = (value: number, unit: StudyResultUnit, t: Translations) => {
   return `${formatNumber(value / STUDY_UNIT_VALUES[unit])} ${t(unit)}`
 }
 
-const RealTimeResults = ({ post, subPost, study, studySiteId }: Props) => {
+const RealTimeResults = ({ post, study, studySiteId }: Props) => {
   const { bySite, refresh } = usePublicodesResults(study, 'all', study.organizationVersion.environment)
   const [updated, setUpdated] = useState(false)
   const [diff, setDiff] = useState<number>()
@@ -31,11 +31,10 @@ const RealTimeResults = ({ post, subPost, study, studySiteId }: Props) => {
     const postsResult = bySite[studySiteId]
     const total = postsResult?.find((r) => r.post === 'total')?.value
     const postResult = postsResult?.find((r) => r.post === post)
-    const subPostResult = postResult?.children?.find((r) => r.post === subPost)
-    return { total, subPostValue: subPostResult?.value, postValue: postResult?.value }
-  }, [bySite, studySiteId, post, subPost])
+    return { total, postValue: postResult?.value }
+  }, [bySite, studySiteId, post])
 
-  const { total, subPostValue, postValue } = results
+  const { total, postValue } = results
 
   const tResultsUnits = useTranslations('study.results.units')
   const tPost = useTranslations('emissionFactors.post')
@@ -68,15 +67,6 @@ const RealTimeResults = ({ post, subPost, study, studySiteId }: Props) => {
 
   return (
     <div className={`${styles.panel} ${updated ? styles.updated : ''}`}>
-      {subPost && (
-        <div className={styles.row}>
-          <span className={styles.label}>{tPost(subPost)}</span>
-          <span className={styles.value} key={subPostValue}>
-            {subPostValue !== undefined ? formatValue(subPostValue, study.resultsUnit, tResultsUnits) : '—'}
-          </span>
-        </div>
-      )}
-      <div className={styles.divider} />
       {post && (
         <div className={styles.row}>
           <span className={styles.label}>{tPost(post)}</span>
@@ -87,7 +77,7 @@ const RealTimeResults = ({ post, subPost, study, studySiteId }: Props) => {
       )}
       <div className={styles.divider} />
       <div className={styles.row}>
-        <span className={styles.label}>{tPost('total')}</span>
+        <span className={classNames('bold', styles.label)}>{tPost('total')}</span>
         <span className={styles.value} key={total}>
           {total !== undefined ? formatValue(total, study.resultsUnit, tResultsUnits) : '—'}
           {diff !== undefined && diff !== 0 && (

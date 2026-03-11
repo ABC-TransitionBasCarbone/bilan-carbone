@@ -71,14 +71,14 @@
 
 .diffSuccess {
   font-size: 0.7rem;
-  font-weight: 500;
+  font-weight: bold;
   color: var(--success-100);
   animation: diffFadeIn 0.4s ease;
 }
 
 .diffError {
   font-size: 0.7rem;
-  font-weight: 500;
+  font-weight: bold;
   color: var(--mui-palette-error-main);
   animation: diffFadeIn 0.4s ease;
 }

@@ -127,7 +127,7 @@ const SimplifiedStudyPostsPage = ({ environment, post, currentSubPost, study, st
           }
         />
       </Block>
-      <RealTimeResults study={study} studySiteId={studySiteId} post={post} subPost={activeSubPost} />
+      <RealTimeResults study={study} studySiteId={studySiteId} post={post} />
     </PublicodesFormProvider>
   )
 }
