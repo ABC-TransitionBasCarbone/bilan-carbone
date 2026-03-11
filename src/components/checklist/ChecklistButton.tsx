@@ -6,7 +6,6 @@ import { getUserCheckedItems } from '@/services/serverFunctions/user'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
 import { Drawer, Fab } from '@mui/material'
 import { Level, OrganizationVersion, Role, UserChecklist } from '@prisma/client'
-import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -94,8 +93,10 @@ const ChecklistButton = ({ accountOrganizationVersion, clientId, studyId, userRo
       <Drawer
         open={open}
         anchor="right"
-        PaperProps={{ className: classNames(styles.checklistContainer, styles.drawer) }}
-        SlideProps={{ direction: 'left' }}
+        slotProps={{
+          paper: { className: styles.checklistContainer },
+          transition: { direction: 'left' },
+        }}
         variant="persistent"
       >
         <ChecklistDrawer
