@@ -18,7 +18,6 @@ const logos = ['https://base-empreinte.ademe.fr', 'https://www.legifrance.gouv.f
 const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
 
 export async function middleware(req: NextRequest) {
-
   // Redirect if the request is from https://calculator.clickson.eu/
   if (req.headers.get('host') === 'calculator.clickson.eu') {
     const loginUrl = new URL('/clickson/login', req.url)
