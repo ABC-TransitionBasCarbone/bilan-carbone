@@ -8,6 +8,7 @@
     "all": "Todos",
     "allSites": "Todos los sitios",
     "allSubPosts": "Todos los sub-posts",
+    "allPosts": "Todos los posts",
     "allTags": "Todos los tags",
     "xSites": "{count} sitios",
     "xSubPosts": "{count} sub-posts",
@@ -24,6 +25,7 @@
     "selectedPlural": "seleccionados",
     "moreInfo": "Más información",
     "mandatory": "* obligatorio",
+    "and": "y",
     "action": {
       "create": "Crear",
       "edit": "Editar",
