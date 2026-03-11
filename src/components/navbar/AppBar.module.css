@@ -1,0 +1,19 @@
+.root {
+  position: sticky;
+  top: 0;
+  z-index: 1100;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-primary-contrastText);
+  box-sizing: border-box;
+}
+
+.elevated {
+  box-shadow: var(--mui-shadows-4);
+}
+
+.flat {
+  box-shadow: none;
+}
