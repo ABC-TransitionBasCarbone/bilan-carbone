@@ -97,19 +97,12 @@ const CustomTrajectoryLegend = ({ series, hiddenLabels, onToggle, previousLabel,
   }
 
   const handleSelectAll = useCallback(() => {
-    const allLabels = series.map((s) => s.label)
-    const allHidden = allLabels.every((label) => hiddenLabels.includes(label))
-
-    if (allHidden || hiddenLabels.length === 0) {
-      groups.forEach((group) => handleToggleGroup(group))
+    if (hiddenLabels.length === 0 || hiddenLabels.length === series.length) {
+      groups.forEach(handleToggleGroup)
     } else {
-      groups.forEach((group) => {
-        if (!isGroupAllVisible(group)) {
-          handleToggleGroup(group)
-        }
-      })
+      groups.filter((group) => !isGroupAllVisible(group)).forEach(handleToggleGroup)
     }
-  }, [series, hiddenLabels, handleToggleGroup, groups])
+  }, [series, hiddenLabels, handleToggleGroup, groups, isGroupAllVisible])
 
   if (series.length === 0) {
     return null
