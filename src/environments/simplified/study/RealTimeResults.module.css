@@ -1,9 +1,9 @@
 .panel {
   position: fixed;
-  bottom: 20px;
+  bottom: 2rem;
   left: 0;
   z-index: 99;
-  border-radius: 10px;
+  border-radius: 0.5rem;
   border: 1px solid var(--mui-palette-primary-main);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   padding: 12px 16px;
@@ -17,6 +17,15 @@
 
 .panel.updated {
   animation: borderPulse 1.2s ease;
+}
+
+.clicksonPanel {
+  bottom: 22rem;
+}
+
+.cutPanel {
+  bottom: 32rem;
+  width: 16rem;
 }
 
 @keyframes borderPulse {

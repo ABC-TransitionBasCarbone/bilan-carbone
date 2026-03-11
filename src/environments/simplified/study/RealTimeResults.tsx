@@ -1,5 +1,6 @@
 import { FullStudy } from '@/db/study'
 import { usePublicodesResults } from '@/hooks/usePublicodesResults'
+import { isClickson, isCut } from '@/services/permissions/environment'
 import { Post } from '@/services/posts'
 import { Translations } from '@/types/translation'
 import { formatNumber } from '@/utils/number'
@@ -66,7 +67,14 @@ const RealTimeResults = ({ post, study, studySiteId }: Props) => {
   }, [refresh])
 
   return (
-    <div className={`${styles.panel} ${updated ? styles.updated : ''}`}>
+    <div
+      className={classNames(
+        styles.panel,
+        updated && styles.updated,
+        isCut(study.organizationVersion.environment) && styles.cutPanel,
+        isClickson(study.organizationVersion.environment) && styles.clicksonPanel,
+      )}
+    >
       {post && (
         <div className={styles.row}>
           <span className={styles.label}>{tPost(post)}</span>
