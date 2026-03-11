@@ -61,6 +61,7 @@ const NewStudyFormTilt = ({ user, accounts, form, duplicateStudyId, sourceStudy,
         setGlossary={setGlossary}
         t={t}
         duplicateStudyId={duplicateStudyId}
+        customRouteAfterCreation="/cadrage"
       >
         <div>
           <IconLabel icon={Help('realizationDates')} iconPosition="after" className="mb-2">

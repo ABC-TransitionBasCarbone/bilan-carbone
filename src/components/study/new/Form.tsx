@@ -27,9 +27,19 @@ interface Props {
   t: (key: string) => string
   duplicateStudyId?: string | null
   beforeSubmit?: (createStudyCommand: CreateStudyCommand) => CreateStudyCommand
+  customRouteAfterCreation?: string
 }
 
-const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudyId, beforeSubmit }: Props) => {
+const NewStudyForm = ({
+  form,
+  children,
+  glossary,
+  setGlossary,
+  t,
+  duplicateStudyId,
+  beforeSubmit,
+  customRouteAfterCreation = '',
+}: Props) => {
   const router = useRouter()
   const tLabel = useTranslations('common.label')
   const tError = useTranslations('study.new.error')
@@ -54,7 +64,7 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudy
 
     await callServerFunction(() => serverFunction(), {
       onSuccess: (data) => {
-        router.push(`/etudes/${data.id}`)
+        router.push(`/etudes/${data.id}${customRouteAfterCreation}`)
         router.refresh()
       },
       getErrorMessage: (error) => tError(error),
