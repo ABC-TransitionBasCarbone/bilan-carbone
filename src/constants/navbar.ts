@@ -1,4 +1,4 @@
-import { hasAccessToEngagementActions, hasAccessToPerimeterPage } from '@/services/permissions/environmentAdvanced'
+import { hasAccessToEngagementActions, isTiltSimplified } from '@/services/permissions/environmentAdvanced'
 import { Translations } from '@/types/translation'
 import { Environment } from '@prisma/client'
 
@@ -30,7 +30,7 @@ export const getStudyNavbarMenu = (
   hasObjectives: boolean = false,
   studySimplified: boolean = false,
 ): Menu => {
-  if (environment === Environment.CUT) {
+  if (environment === Environment.CUT || isTiltSimplified(environment, studySimplified)) {
     return {
       title: {
         href: `/etudes/${studyId}`,
@@ -127,7 +127,6 @@ export const getStudyNavbarMenu = (
             testId: 'study-cadrage-link',
           },
           {
-            hide: !hasAccessToPerimeterPage(environment, studySimplified),
             href: `/etudes/${studyId}/perimetre`,
             label: t('scope'),
             testId: 'study-perimetre-link',
