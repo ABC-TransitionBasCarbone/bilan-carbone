@@ -19,9 +19,7 @@ const SaveStatusIndicator = () => {
     const currentStatus = saveStatus
 
     if (previousStatus !== currentStatus) {
-      if (currentStatus === 'saved') {
-        showSuccessToast(t('saved'), TOAST_DURATION)
-      } else if (currentStatus === 'error' && saveError) {
+      if (currentStatus === 'error' && saveError) {
         showErrorToast(saveError, TOAST_DURATION)
       }
     }
