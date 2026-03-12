@@ -14,15 +14,15 @@ général . année:
 
 général . salariés:
   question: Combien de salariés compte l'association en [Année] ?
-  unité: personne
+  unité: salariés
 
 général . bénévoles:
   question: Combien de bénévoles compte l'association en [Année] ?
-  unité: personne
+  unité: bénévoles
 
 général . bénéficiaires:
   question: Combien de bénéficiaires ont profité des services de l'association en  [Année] ?
-  unité: personne
+  unité: bénéficiaires
 
 général . budget:
   question: Quel est le budget de fonctionnement de l'association ?
@@ -58,7 +58,9 @@ général . type:
 général . TT bénévoles:
   question: Combien de jours sont télétravaillées par semaine pour vos bénévoles ?
   unité: jours
+  par défaut: 0
 
 général . TT salariés:
   question: Combien de jours sont télétravaillées par semaine pour vos salariés ?
   unité: jours
+  par défaut: 0

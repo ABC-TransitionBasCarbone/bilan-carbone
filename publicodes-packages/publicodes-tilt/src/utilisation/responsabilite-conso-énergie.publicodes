@@ -36,7 +36,10 @@ utilisation . responsabilite conso energie . élec présente:
   question: Fournissez-vous des produits ou services qui entraînent des consommations d'électricité chez vos usagers ?
 
 utilisation . responsabilite conso energie . élec:
-  applicable si: élec présente = oui
+  applicable si: 
+    toutes ces conditions: 
+      - est défini: élec présente 
+      - élec présente = oui
   formule: FE * conso
   avec:
     FE:
@@ -49,6 +52,7 @@ utilisation . responsabilite conso energie . élec:
     conso:
       question: À combien de kWh estimez-vous ces consommations d'électricité ?
       unité: kWh
+      par défaut: 0
   unité: kgCO2e
 
 utilisation . responsabilite conso energie . fossiles présents:
@@ -76,7 +80,10 @@ utilisation . responsabilite conso energie . fossiles présents:
 #       titre: Gaz naturel
 
 utilisation . responsabilite conso energie . fioul:
-  applicable si: fossiles présents = oui
+  applicable si: 
+    toutes ces conditions:
+      - est défini: fossiles présents
+      - fossiles présents = oui
   formule: FE * conso
   avec:
     FE:
@@ -85,14 +92,17 @@ utilisation . responsabilite conso energie . fioul:
       meta:
         id: 14086
         nom: Fioul domestique
-
     conso:
       question: Pour le fioul, à combien de litres estimez-vous ces consommations ?
       unité: litre
+      par défaut: 0
   unité: kgCO2e
 
 utilisation . responsabilite conso energie . essence:
-  applicable si: fossiles présents = oui
+  applicable si: 
+    toutes ces conditions:
+      - est défini: fossiles présents
+      - fossiles présents = oui
   formule: FE * conso
   avec:
     FE:
@@ -101,14 +111,17 @@ utilisation . responsabilite conso energie . essence:
       meta:
         id: 13988
         nom: Essence/E10
-
     conso:
       question: Pour l'essence, à combien de litres estimez-vous ces consommations ?
       unité: litre
+      par défaut: 0
   unité: kgCO2e
 
 utilisation . responsabilite conso energie . gazole:
-  applicable si: fossiles présents = oui
+  applicable si: 
+    toutes ces conditions:
+      - est défini: fossiles présents
+      - fossiles présents = oui
   formule: FE * conso
   avec:
     FE:
@@ -117,14 +130,17 @@ utilisation . responsabilite conso energie . gazole:
       meta:
         id: 25775
         nom: Gazole routier (B7)
-
     conso:
       question: Pour le gazole, à combien de litres estimez-vous ces consommations ?
       unité: litre
+      par défaut: 0
   unité: kgCO2e
 
 utilisation . responsabilite conso energie . gaz naturel:
-  applicable si: fossiles présents = oui
+  applicable si: 
+    toutes ces conditions:
+      - est défini: fossiles présents
+      - fossiles présents = oui
   formule: FE * conso
   avec:
     FE:
@@ -133,8 +149,8 @@ utilisation . responsabilite conso energie . gaz naturel:
       meta:
         id: 37138
         nom: Gaz naturel consommation mix moyen 2022
-
     conso:
       question: Pour le gaz naturel, à combien de m3 estimez-vous ces consommations ?
       unité: m3
+      par défaut: 0
   unité: kgCO2e

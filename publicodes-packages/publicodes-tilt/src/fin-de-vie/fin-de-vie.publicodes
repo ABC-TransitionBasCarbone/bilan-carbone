@@ -5,7 +5,6 @@ fin de vie:
 
 fin de vie . déchets:
   titre: Fin de vie
-  applicable si: fin de vie présente = oui
   formule:
     variations:
       - si:

@@ -38,6 +38,7 @@
     consommation:
       question: Combien de kWh issus de la combustion de granulés de bois ont été consommés chaque année ?
       unité: kWh
+      par défaut: 0
     FE:
       valeur: 0.5198
       note: 0,0113 kgCO2e/kWh avec 4,6 kWh pour un kg (cf Empreinte Carbone Personnelle)
@@ -53,6 +54,7 @@
     consommation:
       question: Quelle est votre consommation annuelle de bois ?
       unité: stères
+      par défaut: 0
     FE:
       valeur: 74.06
       note: 0,046 kgCO2e/kWh avec 1610 kWh pour un stère (cf Empreinte Carbone Personnelle)

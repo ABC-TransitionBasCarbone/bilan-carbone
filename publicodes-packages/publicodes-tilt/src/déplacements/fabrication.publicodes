@@ -4,23 +4,26 @@ déplacements . fabrication:
   formule:
     somme:
       - voitures
+  unité: kgCO2e
 
 déplacements . fabrication . voitures:
   titre: Voitures
-  formule: nombre * FE * 1.265 / amortissement
+  formule: nombre * FE * poids moyen / amortissement
   unité: kgCO2e
   avec:
     nombre:
       question: Combien de voitures particulières possédez-vous ou louez-vous depuis moins de 5 ans ?
-      unité: unité
-
+      unité: voitures
+      par défaut: 0
+    poids moyen: 
+      valeur: 1.265
+      unité: tonnes/voitures
     FE:
       valeur: 5500
       unité: kgCO2e/tonnes
       meta:
         id: 20905
         nom: Véhicules, fabrication
-
     amortissement:
       valeur: 5
-      unité: an
+      unité: "an"

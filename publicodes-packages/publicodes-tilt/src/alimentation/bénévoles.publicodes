@@ -24,6 +24,7 @@ alimentation . bénévoles . viande rouge:
     nombre de repas:
       question: Combien de repas à base de viande rouge sont consommés par vos bénévoles chaque année ?
       unité: repas
+      par défaut: 0
 
 alimentation . bénévoles . viande blanche:
   formule: FE * nombre de repas
@@ -35,6 +36,7 @@ alimentation . bénévoles . viande blanche:
     nombre de repas:
       question: Combien de repas à base de viande blanche sont consommés par vos bénévoles chaque année ?
       unité: repas
+      par défaut: 0
 
 alimentation . bénévoles . poisson blanc:
   formule: FE * nombre de repas
@@ -46,6 +48,7 @@ alimentation . bénévoles . poisson blanc:
     nombre de repas:
       question: Combien de repas à base de poisson blanc sont consommés par vos bénévoles chaque année ?
       unité: repas
+      par défaut: 0
 
 alimentation . bénévoles . poisson gras:
   formule: FE * nombre de repas
@@ -57,6 +60,7 @@ alimentation . bénévoles . poisson gras:
     nombre de repas:
       question: Combien de repas à base de poisson gras sont consommés par vos bénévoles chaque année ?
       unité: repas
+      par défaut: 0
 
 alimentation . bénévoles . végétarien:
   formule: FE * nombre de repas
@@ -68,6 +72,7 @@ alimentation . bénévoles . végétarien:
     nombre de repas:
       question: Combien de repas végétariens sont consommés par vos bénévoles chaque année ?
       unité: repas
+      par défaut: 0
 
 alimentation . bénévoles . végétalien:
   formule: FE * nombre de repas
@@ -79,3 +84,4 @@ alimentation . bénévoles . végétalien:
     nombre de repas:
       question: Combien de repas végétaliens sont consommés par vos bénévoles chaque année ?
       unité: repas
+      par défaut: 0

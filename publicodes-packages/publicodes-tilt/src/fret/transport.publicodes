@@ -16,23 +16,25 @@ fret . transport . VUL:
     toutes ces conditions:
       - est défini: présent
       - présent = oui
-  formule: nombre * FE * 3.5 / amortissement
+  formule: nombre * FE * poids moyen / amortissement
   unité: kgCO2e
   avec:
     nombre:
       question: Combien de véhicules utilitaires légers possédez-vous ou louez-vous depuis moins de 5 ans ?
-      unité: unité
-
+      unité: VUL
+      par défaut: 0
+    poids moyen:
+      valeur: 3.5
+      unité: tonnes/VUL
     FE:
       valeur: 5500
       unité: kgCO2e/tonnes
       meta:
         id: 20905
         nom: Véhicules, fabrication
-
     amortissement:
       valeur: 5
-      unité: an
+      unité: "an"
 
 fret . transport . PL:
   titre: Poids lourds
@@ -40,23 +42,25 @@ fret . transport . PL:
     toutes ces conditions:
       - est défini: présent
       - présent = oui
-  formule: nombre * FE * 5.1 / amortissement
+  formule: nombre * FE * poids moyen / amortissement
   unité: kgCO2e
   avec:
     nombre:
       question: Combien de véhicules poids lourds possédez-vous ou louez-vous depuis moins de 5 ans ?
-      unité: unité
-
+      unité: poids lourds
+      par défaut: 0
+    poids moyen: 
+      valeur: 5.1 
+      unité: tonnes/poids lourds
     FE:
       valeur: 5500
       unité: kgCO2e/tonnes
       meta:
         id: 20905
         nom: Véhicules, fabrication
-
     amortissement:
       valeur: 5
-      unité: an
+      unité: "an"
 
 fret . transport . carburant:
   titre: consommation de carburant pour le fret possédé
@@ -70,7 +74,7 @@ fret . transport . carburant:
     litre:
       question: Combien de litres de carburants ces véhicules ont-ils consommé ?
       unité: litre
-
+      par défaut: 0
     FE:
       valeur: 3.1
       unité: kgCO2e/litre
@@ -92,11 +96,13 @@ fret . transport . livraisons:
   titre: Nombre de livraisons
   question: En moyenne, combien de livraisons ont lieu par an ?
   unité: livraison
+  par défaut: 0
 
 fret . transport . poids:
   titre: Poids moyen des livraisons
   question: En moyenne, pour une livraison, quel est le poids transporté ?
   unité: kg/livraison
+  par défaut: 0
 
 ##### Fret local #####
 
@@ -127,6 +133,7 @@ fret . transport . local . provenance:
   titre: livraisons locales
   question: Sur ces livraisons, quelle part provient de fournisseurs locaux (moins de 50 km) ?
   unité: "%"
+  par défaut: 0  
 
 ##### Fret national #####
 
@@ -172,6 +179,7 @@ fret . transport . national . provenance:
   titre: livraisons nationales
   question: Sur ces livraisons, quelle part provient de fournisseurs nationaux (entre 50 km et 500 km) ?
   unité: "%"
+  par défaut: 0
 
 ##### Fret europe #####
 
@@ -217,6 +225,7 @@ fret . transport . europe . provenance:
   titre: livraisons européennes
   question: Sur ces livraisons, quelle part provient de fournisseurs européens (entre 500 km et 1500 km) ?
   unité: "%"
+  par défaut: 0
 
 ##### Fret international #####
 
@@ -254,3 +263,4 @@ fret . transport . international . provenance:
   titre: livraisons internationales
   question: Sur ces livraisons, quelle part provient de fournisseurs internationaux (plus de 1500 km) ?
   unité: "%"
+  par défaut: 0

@@ -12,6 +12,7 @@
     consommation:
       question: Quelle est votre consommation annuelle de gaz naturel ? (hors consommation par les véhicules)
       unité: m3
+      par défaut: 0
     FE:
       valeur: 2.32
       unité: kgCO2e/m3
@@ -26,6 +27,7 @@
     consommation:
       question: Quelle est votre consommation annuelle de fioul (hors consommations par les véhicules)
       unité: litre
+      par défaut: 0
 
     FE:
       valeur: 3.18586
