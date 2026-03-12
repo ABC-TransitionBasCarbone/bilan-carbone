@@ -1,6 +1,9 @@
+import { getOrganizationVersionWithSitesById } from '@/db/organization'
 import { FullStudy } from '@/db/study'
+import { getUserApplicationSettings } from '@/db/user'
 import DynamicStudyRights from '@/environments/core/study/DynamicStudyRights'
 import { getEmissionFactorImportVersions } from '@/services/serverFunctions/emissionFactor'
+import { defaultCAUnit } from '@/utils/number'
 import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
@@ -18,6 +21,10 @@ const StudyRightsPage = async ({ study, user }: Props) => {
   const userRoleOnStudy = getAccountRoleOnStudy(user, study)
 
   const editionDisabled = !hasEditionRights(userRoleOnStudy)
+
+  const caUnit = (await getUserApplicationSettings(user.accountId))?.caUnit || defaultCAUnit
+
+  const organizationVersion = await getOrganizationVersionWithSitesById(study.organizationVersionId)
 
   const emissionFactorImportVersionRes = await getEmissionFactorImportVersions(true)
   if (!emissionFactorImportVersionRes.success) {
@@ -51,6 +58,8 @@ const StudyRightsPage = async ({ study, user }: Props) => {
         editionDisabled={editionDisabled}
         userRoleOnStudy={userRoleOnStudy}
         emissionFactorSources={emissionFactorImportVersionRes.data}
+        caUnit={caUnit}
+        organizationVersion={organizationVersion}
       />
     </>
   )
