@@ -1,7 +1,6 @@
 'use client'
 
 import Button from '@/components/base/Button'
-import HelpIcon from '@/components/base/HelpIcon'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { OrganizationWithSites } from '@/db/account'
 import { FullStudy } from '@/db/study'
@@ -187,10 +186,6 @@ const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user 
       },
     )
   }
-
-  const Help = (name: string) => (
-    <HelpIcon className="ml-4" onClick={() => setGlossary(name)} label={tGlossary('title')} />
-  )
 
   return (
     <>

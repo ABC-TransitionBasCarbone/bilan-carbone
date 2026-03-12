@@ -1,34 +1,41 @@
 'use client'
 
 import Block from '@/components/base/Block'
+import { FormAutocomplete } from '@/components/form/Autocomplete'
 import { FormDatePicker } from '@/components/form/DatePicker'
+import { FormTextField } from '@/components/form/TextField'
+import StudySites from '@/components/study/perimeter/StudySites'
 import SelectStudySite from '@/components/study/site/SelectStudySite'
 import useStudySite from '@/components/study/site/useStudySite'
 import { SiteDependentField } from '@/constants/emissionFactorMap'
+import { OrganizationWithSites } from '@/db/account'
 import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import { changeStudyDates, getStudySite } from '@/services/serverFunctions/study'
+import {
+  CustomDataFields,
+  mappedTiltSituationToCustomDataFields,
+  TiltStructureOptions,
+} from '@/services/customDataToSituation'
+import { loadMappedSituation } from '@/services/serverFunctions/situation'
+import { changeStudyDates, changeStudySiteTiltSimplified } from '@/services/serverFunctions/study'
 import {
   ChangeStudyDatesCommand,
   ChangeStudyDatesCommandValidation,
-  ChangeStudySitesCommand,
-  ChangeStudySitesCommandValidation,
   ChangeStudySiteTiltSimplifiedCommand,
   ChangeStudySiteTiltSimplifiedValidation,
 } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CircularProgress } from '@mui/material'
 import { SiteCAUnit, StudyRole } from '@prisma/client'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import Sites from '../organization/Sites'
 import styles from './StudyRightsTiltSimplified.module.css'
-import StudySites from '@/components/study/perimeter/StudySites'
-import { UserSession } from 'next-auth'
-import { OrganizationWithSites } from '@/db/account'
+import GlossaryModal from '@/components/modals/GlossaryModal'
+import HelpIcon from '@/components/base/HelpIcon'
 
 const SiteDataChangeWarningModal = dynamic(() => import('@/components/modals/SiteDataChangeWarningModal'), {
   ssr: false,
@@ -48,12 +55,14 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
   const tRights = useTranslations('study.rights')
   const tValidation = useTranslations('validation')
   const tLabel = useTranslations('common.label')
+  const tStructure = useTranslations('study.structure')
+  const tGlossary = useTranslations('study.new.glossary')
   const { callServerFunction } = useServerFunction()
   const { studySite, setSite } = useStudySite(study)
-  const [siteData, setSiteData] = useState<FullStudy['sites'][0] | undefined>()
+  const [glossary, setGlossary] = useState('')
+  const [siteData, setSiteData] = useState<CustomDataFields | undefined>()
   const [loading, setLoading] = useState(true)
   const [showSiteDataWarning, setShowSiteDataWarning] = useState(false)
-  const [isEditing, setIsEditing] = useState(false)
   const [pendingSiteChanges, setPendingSiteChanges] = useState<{
     changedFields: SiteDependentField[]
     questionsBySubPost: Record<string, Array<{ id: string; label: string; idIntern: string; answer?: string }>>
@@ -61,7 +70,6 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
   } | null>(null)
   const [originalValues, setOriginalValues] = useState<{
     postalCode: string
-    sites: string[]
     structure: string
     numberOfTTVolunteer: number
     numberOfTTEmployee: number
@@ -72,9 +80,10 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
     mode: 'onBlur',
     reValidateMode: 'onBlur',
     defaultValues: {
-      // numberOfOpenDays: siteData?.numberOfOpenDays ?? 0,
-      // numberOfSessions: siteData?.numberOfSessions ?? 0,
-      // numberOfTickets: siteData?.numberOfTickets ?? 0,
+      postalCode: siteData?.postalCode ?? '',
+      structure: siteData?.structure ?? '',
+      numberOfTTVolunteer: siteData?.numberOfTTVolunteer ?? 0,
+      numberOfTTEmployee: siteData?.numberOfTTEmployee ?? 0,
     },
   })
 
@@ -89,41 +98,27 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
     },
   })
 
-  const siteForm = useForm<ChangeStudySitesCommand>({
-    resolver: zodResolver(ChangeStudySitesCommandValidation),
-    mode: 'onBlur',
-    reValidateMode: 'onChange',
-    defaultValues: {
-      organizationId: study.organizationVersion.organization.id,
-      sites: [],
-    },
-  })
-
-  const sites = siteForm.watch('sites')
-
   useEffect(() => {
     async function setStudySiteData() {
       setLoading(true)
       if (studySite && studySite !== 'all') {
-        const studySiteRes = await getStudySite(studySite)
+        const situationRes = await loadMappedSituation(study.id, studySite, mappedTiltSituationToCustomDataFields)
 
-        if (studySiteRes.success && studySiteRes.data) {
-          const newSiteData = studySiteRes.data
+        if (situationRes.success && situationRes.data) {
+          const newSiteData = situationRes.data
           setSiteData(newSiteData)
 
           const initialValues = {
-            // numberOfOpenDays: newSiteData.numberOfOpenDays ?? 0,
-            // numberOfSessions: newSiteData.numberOfSessions ?? 0,
-            // numberOfTickets: newSiteData.numberOfTickets ?? 0,
-            // numberOfProgrammedFilms: newSiteData.site.cnc?.numberOfProgrammedFilms ?? 0,
+            postalCode: String(newSiteData?.postalCode ?? ''),
+            structure: String(newSiteData?.structure ?? ''),
+            numberOfTTVolunteer: Number(newSiteData?.numberOfTTVolunteer ?? 0),
+            numberOfTTEmployee: Number(newSiteData?.numberOfTTEmployee ?? 0),
           }
 
           // Store original values for change detection
-          // setOriginalValues(initialValues)
+          setOriginalValues(initialValues)
 
-          form.reset({
-            ...initialValues,
-          })
+          form.reset(initialValues)
         }
       }
       setLoading(false)
@@ -134,13 +129,13 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
 
   const handleStudySiteUpdate = useCallback(
     async (data: ChangeStudySiteTiltSimplifiedCommand) => {
-      // await callServerFunction(() => changeStudyEstablishment(studySite, data))
-      // setOriginalValues({
-      // etp: data.etp ?? 0,
-      // studentNumber: data.studentNumber ?? 0,
-      // superficy: data.superficy ?? null,
-      // country: data.country ?? null,
-      // })
+      await callServerFunction(() => changeStudySiteTiltSimplified(studySite, data))
+      setOriginalValues({
+        postalCode: data.postalCode ?? '',
+        structure: data.structure ?? '',
+        numberOfTTVolunteer: data.numberOfTTVolunteer ?? 0,
+        numberOfTTEmployee: data.numberOfTTEmployee ?? 0,
+      })
     },
     [callServerFunction, originalValues, studySite],
   )
@@ -156,13 +151,13 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
   const handleSiteDataWarningConfirm = async () => {
     if (pendingSiteChanges) {
       setShowSiteDataWarning(false)
-      // await callServerFunction(() => changeStudyEstablishment(studySite, pendingSiteChanges.pendingData))
-      // setOriginalValues({
-      //   etp: pendingSiteChanges.pendingData.etp ?? 0,
-      //   studentNumber: pendingSiteChanges.pendingData.studentNumber ?? 0,
-      //   superficy: pendingSiteChanges.pendingData.superficy ?? null,
-      //   country: pendingSiteChanges.pendingData.country ?? null,
-      // })
+      await callServerFunction(() => changeStudySiteTiltSimplified(studySite, pendingSiteChanges.pendingData))
+      setOriginalValues({
+        postalCode: pendingSiteChanges.pendingData.postalCode ?? '',
+        structure: pendingSiteChanges.pendingData.structure ?? '',
+        numberOfTTVolunteer: pendingSiteChanges.pendingData.numberOfTTVolunteer ?? 0,
+        numberOfTTEmployee: pendingSiteChanges.pendingData.numberOfTTEmployee ?? 0,
+      })
       setPendingSiteChanges(null)
     }
   }
@@ -194,7 +189,7 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
       return
     }
 
-    // form.handleSubmit(handleStudyCinemaUpdate, (e) => console.log('invalid', e))()
+    form.handleSubmit(handleStudySiteUpdate, (e) => console.log('invalid', e))()
   }, [form, handleStudySiteUpdate, studySite])
 
   return (
@@ -209,10 +204,46 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
           <CircularProgress variant="indeterminate" color="primary" size={100} className="flex mt2" />
         ) : (
           <>
-            {!!organizationVersion && (
-              <StudySites  study={study} caUnit={caUnit} user={user} userRoleOnStudy={userRoleOnStudy} organizationVersion={organizationVersion}/>
-            )}
             <div className="flex-col gapped1 mb1">
+              <FormTextField
+                control={form.control}
+                name="postalCode"
+                data-testid="new-study-postal-code"
+            label={
+              <span className="align-center text-center">
+                {t('postalCode')}
+                <HelpIcon
+                  className="ml-4 pointer"
+                  onClick={() => setGlossary("postalCode")}
+                  label={tGlossary('title')}
+                />
+              </span>
+            }
+                className={styles.formTextField}
+                onBlur={onStudySiteUpdate}
+              />
+              {!!organizationVersion && (
+                <StudySites
+                  study={study}
+                  caUnit={caUnit}
+                  user={user}
+                  userRoleOnStudy={userRoleOnStudy}
+                  organizationVersion={organizationVersion}
+                />
+              )}
+              <FormAutocomplete
+                control={form.control}
+                translation={t}
+                name="structure"
+                label={t('structure')}
+                data-testid="new-study-structure"
+                options={TiltStructureOptions.map((structure) => ({
+                  label: tStructure(structure),
+                  value: structure,
+                }))}
+                renderValue={(structure) => (structure ? tStructure(structure as string) : '')}
+                onBlur={onStudySiteUpdate}
+              />
               <div className={styles.dates}>
                 <FormDatePicker
                   control={dateForm.control}
@@ -228,45 +259,25 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
                   onAccept={handleDateChange}
                 />
               </div>
+              <FormTextField
+                control={form.control}
+                name="numberOfTTVolunteer"
+                data-testid="new-study-number-of-tt-volunteers"
+                label={t('numberOfTTVolunteer')}
+                type="number"
+                className={styles.formTextField}
+                onBlur={onStudySiteUpdate}
+              />
+              <FormTextField
+                control={form.control}
+                name="numberOfTTEmployee"
+                data-testid="new-study-number-of-tt-employees"
+                label={t('numberOfTTEmployee')}
+                type="number"
+                className={styles.formTextField}
+                onBlur={onStudySiteUpdate}
+              />
             </div>
-            {/* <div className="flex-col gapped1">
-              <FormTextField
-                control={form.control}
-                name="numberOfSessions"
-                data-testid="new-study-number-of-sessions"
-                label={t('numberOfSessions')}
-                type="number"
-                className={styles.formTextField}
-                onBlur={onStudyCinemaUpdate}
-              />
-              <FormTextField
-                control={form.control}
-                name="numberOfTickets"
-                data-testid="new-study-number-of-tickets"
-                label={t('numberOfTickets')}
-                type="number"
-                className={styles.formTextField}
-                onBlur={onStudyCinemaUpdate}
-              />
-              <FormTextField
-                control={form.control}
-                name="numberOfOpenDays"
-                data-testid="new-study-number-of-open-days"
-                label={t('numberOfOpenDays')}
-                type="number"
-                className={styles.formTextField}
-                onBlur={onStudyCinemaUpdate}
-              />
-              <FormTextField
-                control={form.control}
-                name="numberOfProgrammedFilms"
-                data-testid="new-study-number-of-programmed-films"
-                label={t('numberOfProgrammedFilms')}
-                type="number"
-                className={styles.formTextField}
-                onBlur={onStudyCinemaUpdate}
-              /> */}
-            {/* </div> */}
           </>
         )}
         {showSiteDataWarning && pendingSiteChanges && (
@@ -278,6 +289,11 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
           />
         )}
       </Block>
+      {glossary && (
+        <GlossaryModal glossary={glossary} onClose={() => setGlossary('')} label="emission-source" t={tGlossary}>
+          <p className="mb-2">{tGlossary(`${glossary}Glossary`)}</p>
+        </GlossaryModal>
+      )}
     </>
   )
 }

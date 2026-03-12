@@ -145,7 +145,7 @@ import { getCaracterisationsBySubPost } from '../emissionSource'
 import { allowedFlowFileTypes, isAllowedFileType } from '../file'
 import { ALREADY_IN_STUDY, NOT_AUTHORIZED, TOO_MANY_COMMENTS } from '../permissions/check'
 import { hasReaderRoleOnStudyAsContributor } from '../permissions/environment'
-import { hasAccessToEngagementActions } from '../permissions/environmentAdvanced'
+import { hasAccessToEngagementActions, isTiltSimplified } from '../permissions/environmentAdvanced'
 import { isInOrgaOrParentFromId } from '../permissions/organization'
 import {
   canAccessFlowFromStudy,
@@ -166,7 +166,7 @@ import {
   getEnvironmentsForDuplication,
   isAdminOnStudyOrga,
 } from '../permissions/study'
-import { isSimplifiedEnvironment } from '../publicodes/simplifiedPublicodesConfig'
+import { isSimplifiedEnvironment, SimplifiedEnvironment } from '../publicodes/simplifiedPublicodesConfig'
 import { deleteFileFromBucket, getFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'
 import { getTransEnvironmentSubPost, hasSufficientLevel } from '../study'
 import { UpdateEmissionSourceCommand } from './emissionSource.command'
@@ -603,10 +603,14 @@ async function updateSituationWithStudySiteData(
   }
 }
 
-async function updateSituationWithCustomData(studySiteId: string, data: CustomDataFields, environment: Environment) {
-  if (isSimplifiedEnvironment(environment)) {
-    const situationUpdates = customDataToSituationByEnvironment(environment, data)
-
+async function updateSituationWithCustomData(
+  studySiteId: string,
+  data: CustomDataFields,
+  environment: Environment,
+  simplified: boolean,
+) {
+  if (isSimplifiedEnvironment(environment) || isTiltSimplified(environment, simplified)) {
+    const situationUpdates = customDataToSituationByEnvironment(environment as SimplifiedEnvironment, data)
     if (Object.keys(situationUpdates).length > 0) {
       await updateSituationFields(studySiteId, situationUpdates)
     }
@@ -2607,7 +2611,10 @@ export const changeStudySiteTiltSimplified = async (studySiteId: string, data: C
       throw new Error(NOT_AUTHORIZED)
     }
 
-    await updateSituationWithCustomData(studySiteId, data, informations.user.environment)
+    if (!studySites[0].situation) {
+      await saveSituationInDB(study.id, studySiteId, {}, {}, '')
+    }
+    await updateSituationWithCustomData(studySiteId, data, informations.user.environment, study.simplified)
   })
 
 export const addEngagementAction = async ({ studyId, sites, ...command }: AddEngagementActionCommand) =>
