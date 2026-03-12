@@ -140,6 +140,7 @@ import { getTranslations } from 'next-intl/server'
 import PizZip from 'pizzip'
 import { v4 as uuidv4 } from 'uuid'
 import { auth, dbActualizedAuth } from '../auth'
+import { CustomDataFields, customDataToSituationByEnvironment } from '../customDataToSituation'
 import { getCaracterisationsBySubPost } from '../emissionSource'
 import { allowedFlowFileTypes, isAllowedFileType } from '../file'
 import { ALREADY_IN_STUDY, NOT_AUTHORIZED, TOO_MANY_COMMENTS } from '../permissions/check'
@@ -181,6 +182,7 @@ import {
   ChangeStudyPublicStatusCommand,
   ChangeStudyResultsUnitCommand,
   ChangeStudySitesCommand,
+  ChangeStudySiteTiltSimplifiedCommand,
   CreateStudyCommand,
   DeleteCommand,
   DuplicateSiteCommand,
@@ -594,6 +596,16 @@ async function updateSituationWithStudySiteData(
 ) {
   if (isSimplifiedEnvironment(environment)) {
     const situationUpdates = studySiteToSituation(environment, siteDependentFields)
+
+    if (Object.keys(situationUpdates).length > 0) {
+      await updateSituationFields(studySiteId, situationUpdates)
+    }
+  }
+}
+
+async function updateSituationWithCustomData(studySiteId: string, data: CustomDataFields, environment: Environment) {
+  if (isSimplifiedEnvironment(environment)) {
+    const situationUpdates = customDataToSituationByEnvironment(environment, data)
 
     if (Object.keys(situationUpdates).length > 0) {
       await updateSituationFields(studySiteId, situationUpdates)
@@ -2575,6 +2587,27 @@ export const changeStudyEstablishment = async (studySiteId: string, data: Change
 
     await updateStudySiteData(studySiteId, data)
     await updateSituationWithStudySiteData(studySiteId, data, informations.user.environment)
+  })
+
+export const changeStudySiteTiltSimplified = async (studySiteId: string, data: ChangeStudySiteTiltSimplifiedCommand) =>
+  withServerResponse('changeStudySiteTiltSimplified', async () => {
+    // this function only updates situation for now not the study site because we don't have the fields
+    const studySites = await getStudiesSitesFromIds([studySiteId])
+    if (!studySites || studySites.length === 0) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = studySites[0].study
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const informations = await getStudyRightsInformations(study.id)
+    if (informations === null) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    await updateSituationWithCustomData(studySiteId, data, informations.user.environment)
   })
 
 export const addEngagementAction = async ({ studyId, sites, ...command }: AddEngagementActionCommand) =>
