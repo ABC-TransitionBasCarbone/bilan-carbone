@@ -14,8 +14,8 @@ import { OrganizationWithSites } from '@/db/account'
 import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import {
-  CustomDataFields,
   mappedTiltSituationToCustomDataFields,
+  TiltCustomDataFields,
   TiltStructureOptions,
 } from '@/services/customDataToSituation'
 import { loadMappedSituation } from '@/services/serverFunctions/situation'
@@ -60,7 +60,7 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
   const { callServerFunction } = useServerFunction()
   const { studySite, setSite } = useStudySite(study)
   const [glossary, setGlossary] = useState('')
-  const [siteData, setSiteData] = useState<CustomDataFields | undefined>()
+  const [siteData, setSiteData] = useState<TiltCustomDataFields | undefined>()
   const [loading, setLoading] = useState(true)
   const [showSiteDataWarning, setShowSiteDataWarning] = useState(false)
   const [pendingSiteChanges, setPendingSiteChanges] = useState<{

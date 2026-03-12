@@ -140,7 +140,7 @@ import { getTranslations } from 'next-intl/server'
 import PizZip from 'pizzip'
 import { v4 as uuidv4 } from 'uuid'
 import { auth, dbActualizedAuth } from '../auth'
-import { CustomDataFields, customDataToSituationByEnvironment } from '../customDataToSituation'
+import { customDataToSituationByEnvironment, TiltCustomDataFields } from '../customDataToSituation'
 import { getCaracterisationsBySubPost } from '../emissionSource'
 import { allowedFlowFileTypes, isAllowedFileType } from '../file'
 import { ALREADY_IN_STUDY, NOT_AUTHORIZED, TOO_MANY_COMMENTS } from '../permissions/check'
@@ -605,7 +605,7 @@ async function updateSituationWithStudySiteData(
 
 async function updateSituationWithCustomData(
   studySiteId: string,
-  data: CustomDataFields,
+  data: TiltCustomDataFields,
   environment: Environment,
   simplified: boolean,
 ) {

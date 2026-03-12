@@ -2,7 +2,7 @@ import { Environment } from '@prisma/client'
 import { Situation } from 'publicodes'
 import { SimplifiedEnvironment } from './publicodes/simplifiedPublicodesConfig'
 
-interface TiltCustomDataFields {
+export interface TiltCustomDataFields {
   postalCode?: string | undefined
   structure?: string | undefined
   numberOfTTVolunteer?: number | null | undefined
@@ -30,11 +30,9 @@ export const TiltStructureOptions: string[] = [
   "'Association d'enseignement ou de formation'",
 ]
 
-export interface CustomDataFields extends TiltCustomDataFields {}
-
 export const customDataToSituationByEnvironment = (
   environment: SimplifiedEnvironment,
-  data: CustomDataFields | undefined,
+  data: TiltCustomDataFields | undefined,
 ): Situation<string> => {
   switch (environment) {
     case Environment.CUT:
