@@ -114,17 +114,26 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
 }
 
 export const processUsers = async (values: Record<string, string>[], importedFileDate: Date) => {
+  const BATCH_SIZE = 20
   const usersWithAccount: (Prisma.UserCreateManyInput & { account: Prisma.AccountCreateInput })[] = []
-  for (let i = 0; i < values.length; i++) {
-    const userWithAccount = await processUser(values[i] as Record<string, string>, importedFileDate)
-    if (userWithAccount) {
-      usersWithAccount.push(userWithAccount)
+
+  for (let i = 0; i < values.length; i += BATCH_SIZE) {
+    const batch = values.slice(i, i + BATCH_SIZE)
+    const results = await Promise.all(batch.map((v) => processUser(v as Record<string, string>, importedFileDate)))
+    for (const userWithAccount of results) {
+      if (userWithAccount) {
+        usersWithAccount.push(userWithAccount)
+      }
     }
-    if (i % 50 === 0) {
-      console.log(`${i}/${values.length}`)
+    if (i % (BATCH_SIZE * 5) === 0 || i + BATCH_SIZE >= values.length) {
+      console.log(`Progress: ${Math.min(i + BATCH_SIZE, values.length)}/${values.length}`)
     }
   }
-  const { newUsers, newAccounts } = await createUsersWithAccount(usersWithAccount)
-  console.log(`${newUsers.count} users created`)
-  console.log(`${newAccounts.count} accounts created`)
+  if (usersWithAccount.length > 0) {
+    const { newUsers, newAccounts } = await createUsersWithAccount(usersWithAccount)
+    console.log(`${newUsers.count} users created`)
+    console.log(`${newAccounts.count} accounts created`)
+  } else {
+    console.log('No new users to create')
+  }
 }
