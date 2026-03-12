@@ -12,7 +12,7 @@ interface TiltCustomDataFields {
 export const mappedTiltSituationToCustomDataFields: Record<string, keyof TiltCustomDataFields> = {
   'général . code postal': 'postalCode',
   'général . type': 'structure',
-  'général . TT bénévole': 'numberOfTTVolunteer',
+  'général . TT bénévoles': 'numberOfTTVolunteer',
   'général . TT salariés': 'numberOfTTEmployee',
 }
 
@@ -61,7 +61,7 @@ const getTiltSituation = (data: TiltCustomDataFields | undefined): Situation<str
     situation['général . type'] = data.structure
   }
   if (data.numberOfTTVolunteer != null) {
-    situation['général . TT bénévole'] = data.numberOfTTVolunteer
+    situation['général . TT bénévoles'] = data.numberOfTTVolunteer
   }
   if (data.numberOfTTEmployee != null) {
     situation['général . TT salariés'] = data.numberOfTTEmployee
