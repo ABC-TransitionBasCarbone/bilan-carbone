@@ -1,9 +1,11 @@
 'use client'
 
 import Block from '@/components/base/Block'
+import HelpIcon from '@/components/base/HelpIcon'
 import { FormAutocomplete } from '@/components/form/Autocomplete'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import { FormTextField } from '@/components/form/TextField'
+import GlossaryModal from '@/components/modals/GlossaryModal'
 import StudySites from '@/components/study/perimeter/StudySites'
 import SelectStudySite from '@/components/study/site/SelectStudySite'
 import useStudySite from '@/components/study/site/useStudySite'
@@ -25,7 +27,7 @@ import {
   ChangeStudySiteTiltSimplifiedValidation,
 } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { CircularProgress } from '@mui/material'
+import { CircularProgress, Typography } from '@mui/material'
 import { SiteCAUnit, StudyRole } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
@@ -34,8 +36,6 @@ import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './StudyRightsTiltSimplified.module.css'
-import GlossaryModal from '@/components/modals/GlossaryModal'
-import HelpIcon from '@/components/base/HelpIcon'
 
 const SiteDataChangeWarningModal = dynamic(() => import('@/components/modals/SiteDataChangeWarningModal'), {
   ssr: false,
@@ -209,16 +209,16 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
                 control={form.control}
                 name="postalCode"
                 data-testid="new-study-postal-code"
-            label={
-              <span className="align-center text-center">
-                {t('postalCode')}
-                <HelpIcon
-                  className="ml-4 pointer"
-                  onClick={() => setGlossary("postalCode")}
-                  label={tGlossary('title')}
-                />
-              </span>
-            }
+                label={
+                  <span className="align-center text-center">
+                    {t('postalCode')}
+                    <HelpIcon
+                      className="ml-4 pointer"
+                      onClick={() => setGlossary('postalCode')}
+                      label={tGlossary('title')}
+                    />
+                  </span>
+                }
                 className={styles.formTextField}
                 onBlur={onStudySiteUpdate}
               />
@@ -244,6 +244,7 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
                 renderValue={(structure) => (structure ? tStructure(structure as string) : '')}
                 onBlur={onStudySiteUpdate}
               />
+              <Typography className="bold">{t('dates')}</Typography>
               <div className={styles.dates}>
                 <FormDatePicker
                   control={dateForm.control}

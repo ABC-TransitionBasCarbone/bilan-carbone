@@ -1,8 +1,4 @@
-import HelpIcon from '@/components/base/HelpIcon'
-import { FormDatePicker } from '@/components/form/DatePicker'
-
 import Block from '@/components/base/Block'
-import IconLabel from '@/components/base/IconLabel'
 import GlobalNewStudyForm from '@/components/study/new/Form'
 import { getOrganizationVersionAccounts } from '@/db/organization'
 import { FullStudy } from '@/db/study'
@@ -24,13 +20,15 @@ interface Props {
 }
 
 const NewStudyFormTilt = ({ user, accounts, form, duplicateStudyId, sourceStudy, simplified }: Props) => {
-  const tLabel = useTranslations('common.label')
   const t = useTranslations('study.new')
-  const tGlossary = useTranslations('study.new.glossary')
   const [glossary, setGlossary] = useState('')
 
   useEffect(() => {
     if (simplified) {
+      const currentYear = new Date().getFullYear()
+      const startYear = currentYear - 1
+      form.setValue('startDate', new Date(`${startYear}-01-01`).toISOString())
+      form.setValue('endDate', new Date(`${startYear}-12-31`).toISOString())
       form.setValue('level', Level.Initial)
       form.setValue('exports', [])
       form.setValue('simplified', simplified)
@@ -49,10 +47,6 @@ const NewStudyFormTilt = ({ user, accounts, form, duplicateStudyId, sourceStudy,
     )
   }
 
-  const Help = (name: string) => (
-    <HelpIcon className="ml-4" onClick={() => setGlossary(name)} label={tGlossary('title')} />
-  )
-
   return (
     <Block title={t('title')} as="h1">
       <GlobalNewStudyForm
@@ -62,23 +56,8 @@ const NewStudyFormTilt = ({ user, accounts, form, duplicateStudyId, sourceStudy,
         t={t}
         duplicateStudyId={duplicateStudyId}
         customRouteAfterCreation="/cadrage"
-      >
-        <div>
-          <IconLabel icon={Help('realizationDates')} iconPosition="after" className="mb-2">
-            <span className="inputLabel bold">{t('realizationDates')}</span>
-          </IconLabel>
-          <div className="flex gapped1">
-            <FormDatePicker control={form.control} name="realizationStartDate" label={tLabel('start')} clearable />
-            <FormDatePicker
-              control={form.control}
-              name="realizationEndDate"
-              label={tLabel('end')}
-              data-testid="new-study-realizationEndDate"
-              clearable
-            />
-          </div>
-        </div>
-      </GlobalNewStudyForm>
+        showStudyDates={false}
+      />
     </Block>
   )
 }

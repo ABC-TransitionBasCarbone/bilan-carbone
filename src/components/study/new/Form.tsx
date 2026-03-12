@@ -28,6 +28,7 @@ interface Props {
   duplicateStudyId?: string | null
   beforeSubmit?: (createStudyCommand: CreateStudyCommand) => CreateStudyCommand
   customRouteAfterCreation?: string
+  showStudyDates?: boolean
 }
 
 const NewStudyForm = ({
@@ -39,6 +40,7 @@ const NewStudyForm = ({
   duplicateStudyId,
   beforeSubmit,
   customRouteAfterCreation = '',
+  showStudyDates = true,
 }: Props) => {
   const router = useRouter()
   const tLabel = useTranslations('common.label')
@@ -97,20 +99,22 @@ const NewStudyForm = ({
           label={t('name')}
           placeholder={studyNamePlaceHolder}
         />
-        <div>
-          <IconLabel icon={Help('studyDates')} iconPosition="after" className="mb-2">
-            <span className="inputLabel bold">{t('studyDates')}</span>
-          </IconLabel>
-          <div className={styles.dates}>
-            <FormDatePicker control={form.control} name="startDate" label={tLabel('start')} />
-            <FormDatePicker
-              control={form.control}
-              name="endDate"
-              label={tLabel('end')}
-              data-testid="new-study-endDate"
-            />
+        {showStudyDates && (
+          <div>
+            <IconLabel icon={Help('studyDates')} iconPosition="after" className="mb-2">
+              <span className="inputLabel bold">{t('studyDates')}</span>
+            </IconLabel>
+            <div className={styles.dates}>
+              <FormDatePicker control={form.control} name="startDate" label={tLabel('start')} />
+              <FormDatePicker
+                control={form.control}
+                name="endDate"
+                label={tLabel('end')}
+                data-testid="new-study-endDate"
+              />
+            </div>
           </div>
-        </div>
+        )}
         {children}
         {duplicateStudyId && (
           <StudyDuplicationForm
