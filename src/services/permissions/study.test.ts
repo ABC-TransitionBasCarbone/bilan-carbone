@@ -16,7 +16,7 @@ import { expect } from '@jest/globals'
 import { Environment, Level, Role, StudyRole } from '@prisma/client'
 import * as authModule from '../auth'
 import * as userModule from '../serverFunctions/user'
-import * as environmentModule from './environment'
+import * as environmentAdvancedModule from './environmentAdvanced'
 import * as organizationModule from './organization'
 import { canCreateSpecificStudy, canDeleteStudy, canDuplicateStudy, getEnvironmentsForDuplication } from './study'
 
@@ -35,7 +35,7 @@ jest.mock('@/db/user', () => ({ getUserByEmail: jest.fn() }))
 jest.mock('@/utils/study', () => ({ getAccountRoleOnStudy: jest.fn(), getDuplicableEnvironments: jest.fn() }))
 jest.mock('@/utils/organization', () => ({ canEditOrganizationVersion: jest.fn(), hasActiveLicence: jest.fn() }))
 jest.mock('./organization', () => ({ isInOrgaOrParentFromId: jest.fn() }))
-jest.mock('./environment', () => ({ hasAccessToDuplicateStudy: jest.fn() }))
+jest.mock('./environmentAdvanced', () => ({ hasAccessToDuplicateStudy: jest.fn() }))
 jest.mock('../auth', () => ({ dbActualizedAuth: jest.fn() }))
 jest.mock('../serverFunctions/user', () => ({ getUserActiveAccounts: jest.fn() }))
 
@@ -54,7 +54,7 @@ const mockGetDuplicableEnvironments = studyUtils.getDuplicableEnvironments as je
 const mockCanEditOrganizationVersion = organizationUtils.canEditOrganizationVersion as jest.Mock
 const mockHasActiveLicence = organizationUtils.hasActiveLicence as jest.Mock
 const mockIsInOrgaOrParentFromId = organizationModule.isInOrgaOrParentFromId as jest.Mock
-const mockHasAccessToDuplicateStudy = environmentModule.hasAccessToDuplicateStudy as jest.Mock
+const mockHasAccessToDuplicateStudy = environmentAdvancedModule.hasAccessToDuplicateStudy as jest.Mock
 const mockGetAccountById = dbAccountModule.getAccountById as jest.Mock
 const mockGetOrganizationVersionsByOrganizationId =
   dbOrganizationModule.getOrganizationVersionsByOrganizationId as jest.Mock

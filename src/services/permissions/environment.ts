@@ -21,8 +21,6 @@ export const hasAccessToStudyCardDetails = isAdvanced
 
 export const hasAccessToCreateOrganization = isAdvanced
 
-export const hasAccessToDuplicateStudy = isAdvanced
-
 export const hasAccessToCreateStudyTag = isAdvanced
 
 export const hasAccessToStudyFlowExample = isAdvanced
