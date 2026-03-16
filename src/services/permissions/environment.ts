@@ -110,3 +110,6 @@ export const hasAccessToHomeSubtitle = isClickson
 export const hasAccessToNamingInAddContributor = isClickson
 
 export const hasHomeButtonHeader = isClickson
+
+export const hasAccessToPDFExport = (environment: Environment) =>
+  ([CUT, CLICKSON] as Environment[]).includes(environment)
