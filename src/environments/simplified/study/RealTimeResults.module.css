@@ -1,6 +1,6 @@
 .panel {
   position: fixed;
-  bottom: 2rem;
+  bottom: 32rem;
   left: 0;
   z-index: 99;
   border-radius: 0.5rem;
@@ -8,11 +8,7 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   padding: 12px 16px;
   margin-left: 1rem;
-  width: 19rem;
-
-  @media screen and (max-width: 1279px) {
-    width: 16rem;
-  }
+  width: 16rem;
 }
 
 .panel.updated {
@@ -20,12 +16,11 @@
 }
 
 .clicksonPanel {
+  width: 19rem;
   bottom: 22rem;
-}
-
-.cutPanel {
-  bottom: 32rem;
-  width: 16rem;
+  @media screen and (max-width: 1279px) {
+    width: 16rem;
+  }
 }
 
 @keyframes borderPulse {

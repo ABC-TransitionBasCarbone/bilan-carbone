@@ -1,6 +1,6 @@
 import { FullStudy } from '@/db/study'
 import { usePublicodesResults } from '@/hooks/usePublicodesResults'
-import { isClickson, isCut } from '@/services/permissions/environment'
+import { isClickson } from '@/services/permissions/environment'
 import { Post } from '@/services/posts'
 import { Translations } from '@/types/translation'
 import { formatNumber } from '@/utils/number'
@@ -71,7 +71,6 @@ const RealTimeResults = ({ post, study, studySiteId }: Props) => {
       className={classNames(
         styles.panel,
         updated && styles.updated,
-        isCut(study.organizationVersion.environment) && styles.cutPanel,
         isClickson(study.organizationVersion.environment) && styles.clicksonPanel,
       )}
     >
