@@ -584,7 +584,7 @@
             }
           },
           "train": {
-            "titre": "[TO_TRANSLATE] Train (TER)",
+            "titre": "Train (TER)",
             "distance": {
               "question": "How many km are traveled on average per day (round trip) by a volunteer by train for commuting?"
             }
@@ -625,47 +625,47 @@
         },
         "sans": {
           "voiture": {
-            "titre": "[TO_TRANSLATE] Voiture, par mois",
-            "description": "[TO_TRANSLATE] On considère ici toutes les motorisations de voiture individuelles, basée sur des moyennes nationales",
+            "titre": "Car, per month",
+            "description": "All types of individual car engines are considered here, based on national averages.",
             "distance": {
               "question": "How many km are traveled on average per month per employee by car for business travel?"
             }
           },
           "train": {
-            "titre": "[TO_TRANSLATE] Train (TER), par mois",
+            "titre": "Train (TER), per month",
             "distance": {
               "question": "How many km are traveled on average per month per employee by train for business travel?"
             }
           },
           "deux roues": {
-            "titre": "[TO_TRANSLATE] Deux roues, par mois",
+            "titre": "Two-wheeler, per month",
             "distance": {
-              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par mois par salarié en transports en commun pour des déplacements liés à des missions ?"
+              "question": "How many km are traveled on average per month per employee by public transport for business travel?"
             }
           },
           "transports en commun": {
-            "titre": "[TO_TRANSLATE] Transports en commun (Métro, tramway, RER, bus, ...), par mois",
+            "titre": "Public transport (Metro, tram, RER, bus, ...), per month",
             "distance": {
-              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par mois par salarié en deux roues pour des déplacements liés à des missions ?"
+              "question": "How many km are traveled on average per month per employee by public transport for business travel?"
             }
           },
           "avion": {
             "court courrier": {
-              "titre": "[TO_TRANSLATE] Avion, court courrier, par an",
+              "titre": "Plane, short-haul, per year",
               "distance": {
-                "question": "[TO_TRANSLATE] Combien de km ont été parcourus cette année par salarié avion court courrier pour des déplacements liés à des missions ?"
+                "question": "How many km were traveled this year per employee by short-haul plane for business travel?"
               }
             },
             "moyen courrier": {
-              "titre": "[TO_TRANSLATE] Avion, moyen courrier, par an",
+              "titre": "Plane, medium-haul, per year",
               "distance": {
-                "question": "[TO_TRANSLATE] Combien de km ont été parcourus cette année par salarié avion moyen courrier pour des déplacements liés à des missions ?"
+                "question": "How many km were traveled this year per employee by medium-haul plane for business travel?"
               }
             },
             "long courrier": {
-              "titre": "[TO_TRANSLATE] Avion, long courrier, par an",
+              "titre": "Plane, long-haul, per year",
               "distance": {
-                "question": "[TO_TRANSLATE] Combien de km ont été parcourus cette année par salarié avion long courrier pour des déplacements liés à des missions ?"
+                "question": "How many km were traveled this year per employee by long-haul plane for business travel?"
               }
             }
           }
@@ -693,45 +693,45 @@
         },
         "sans": {
           "voiture": {
-            "titre": "[TO_TRANSLATE] Voiture, par mois",
+            "titre": "Car, per month",
             "distance": {
-              "description": "All types of individual car engines are considered here, based on national averages",
+              "description": "All types of individual car engines are considered here, based on national averages.",
               "question": "How many km are traveled on average per month per volunteer by car for business travel?"
             }
           },
           "train": {
-            "titre": "[TO_TRANSLATE] Train (TER), par mois",
+            "titre": "Train (TER), per month",
             "distance": {
               "question": "How many km are traveled on average per month per volunteer by train for business travel?"
             }
           },
           "deux roues": {
-            "titre": "[TO_TRANSLATE] Deux roues, par mois",
+            "titre": "Two-wheeler, per month",
             "distance": {
-              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par mois par bénévole en transports en commun pour des déplacements liés à des missions ?"
+              "question": "How many km are traveled on average per month per volunteer by public transport for business travel?"
             }
           },
           "transports en commun": {
-            "titre": "[TO_TRANSLATE] Transports en commun (Métro, tramway, RER, bus, ...), par mois",
+            "titre": "Public transport (Metro, tram, RER, bus, ...), per month",
             "distance": {
-              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par mois par bénévole en deux roues pour des déplacements liés à des missions ?"
+              "question": "How many km are traveled on average per month per volunteer by two-wheeler for business travel?"
             }
           },
           "avion": {
             "court courrier": {
-              "titre": "[TO_TRANSLATE] Avion, court courrier, par an",
+              "titre": "Plane, short-haul, per year",
               "distance": {
                 "question": "How many km were traveled this year per volunteer by short-haul plane for business travel?"
               }
             },
             "moyen courrier": {
-              "titre": "[TO_TRANSLATE] Avion, moyen courrier, par an",
+              "titre": "Plane, medium-haul, per year",
               "distance": {
                 "question": "How many km were traveled this year per volunteer by medium-haul plane for business travel?"
               }
             },
             "long courrier": {
-              "titre": "[TO_TRANSLATE] Avion, long courrier, par an",
+              "titre": "Plane, long-haul, per year",
               "distance": {
                 "question": "How many km were traveled this year per volunteer by long-haul plane for business travel?"
               }

@@ -135,7 +135,6 @@ déplacements . DT-bénévoles . sans . voiture:
   avec:
     distance:
       question: Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en voiture pour des déplacements domicile-travail ?
-      par défaut: 0
       type: nombre
       unité: km/bénévoles.jours
       par défaut: 0
