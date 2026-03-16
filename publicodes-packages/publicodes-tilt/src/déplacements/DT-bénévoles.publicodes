@@ -29,10 +29,8 @@ déplacements . DT-bénévoles . avec:
   avec:
     distance:
       question: D'après les résultats de MEP, quelle est la distance moyenne parcourue par jour (A/R) par bénévole pour des déplacements domicile-travail ?
-      par défaut: 0
       unité: km
       par défaut: 0
-
     répartition:
       formule: voiture * 0.76 + transports en commun * 0.16 + deux roues * 0.02 + actif * 0.09
       note: Source de la répartition https://www.insee.fr/fr/statistiques/6454112
