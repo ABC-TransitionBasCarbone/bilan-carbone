@@ -21,8 +21,6 @@ export const hasAccessToStudyCardDetails = isAdvanced
 
 export const hasAccessToCreateOrganization = isAdvanced
 
-export const hasAccessToDuplicateStudy = isAdvanced
-
 export const hasAccessToCreateStudyTag = isAdvanced
 
 export const hasAccessToStudyFlowExample = isAdvanced
@@ -112,3 +110,6 @@ export const hasAccessToHomeSubtitle = isClickson
 export const hasAccessToNamingInAddContributor = isClickson
 
 export const hasHomeButtonHeader = isClickson
+
+export const hasAccessToPDFExport = (environment: Environment) =>
+  ([CUT, CLICKSON] as Environment[]).includes(environment)

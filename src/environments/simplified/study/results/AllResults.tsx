@@ -30,6 +30,7 @@ import CarbonIntensitiesCut from '@/environments/cut/study/results/CarbonIntensi
 import { customRich } from '@/i18n/customRich'
 import {
   hasAccessToAdvancedEmissionAnalysis,
+  hasAccessToPDFExport,
   hasAccessToResultsRatioTab,
   hasAccessToSimplifiedEmissionAnalysis,
   showResultsInfoText,
@@ -151,16 +152,18 @@ const AllResults = ({
           >
             {tExportButton('export')}
           </Button>
-          <LoadingButton
-            variant="outlined"
-            color="primary"
-            size="large"
-            endIcon={<PictureAsPdfIcon />}
-            onClick={handlePDFDownload}
-            loading={pdfLoading}
-          >
-            {pdfLoading ? tResults('downloadingPDF') : tResults('downloadPDF')}
-          </LoadingButton>
+          {environment && hasAccessToPDFExport(environment) && (
+            <LoadingButton
+              variant="outlined"
+              color="primary"
+              size="large"
+              endIcon={<PictureAsPdfIcon />}
+              onClick={handlePDFDownload}
+              loading={pdfLoading}
+            >
+              {pdfLoading ? tResults('downloadingPDF') : tResults('downloadPDF')}
+            </LoadingButton>
+          )}
           <SelectStudySite sites={study.sites} defaultValue={studySite} setSite={setSite} />
         </div>
       }
