@@ -472,7 +472,7 @@ describe('signUpWithSiretOrCNC', () => {
       const result = await signUpWithSiretOrCNC(testEmail, testSiret, Environment.TILT)
 
       expect(mockUpdateAccount).toHaveBeenCalledWith(mockedAccountId, {
-        role: Role.ADMIN,
+        role: Role.GESTIONNAIRE,
         organizationVersion: { connect: { id: mockedOrganizationVersionId } },
       })
       expect(result.success).toBe(true)
