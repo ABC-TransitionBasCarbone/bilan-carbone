@@ -1,5 +1,6 @@
 'use server'
 
+import { getLatestSectenVersion } from '@/db/secten'
 import { getStudyById, getStudyByIds } from '@/db/study'
 import {
   createActionWithRelations,
@@ -11,6 +12,7 @@ import {
   deleteLinkedStudy as dbDeleteLinkedStudy,
   deleteTransitionPlan as dbDeleteTransitionPlan,
   updateExternalStudy as dbUpdateExternalStudy,
+  updateTransitionPlanSectenVersion as dbUpdateTransitionPlanSectenVersion,
   duplicateTransitionPlanWithRelations,
   getActionById,
   getActions,
@@ -93,10 +95,12 @@ export const initializeTransitionPlan = async (studyId: string, sourceTransition
       throw new Error('Transition plan already exists for this study')
     }
 
+    const latestVersion = await getLatestSectenVersion()
+
     if (sourceTransitionPlanId) {
       await duplicateTransitionPlan(sourceTransitionPlanId, studyId)
     } else {
-      await createTransitionPlan(studyId)
+      await createTransitionPlan(studyId, latestVersion?.id)
     }
   })
 
@@ -429,4 +433,14 @@ export const deleteTransitionPlan = async (studyId: string) =>
     }
 
     await dbDeleteTransitionPlan(transitionPlan.id)
+  })
+
+export const updateTransitionPlanSectenVersion = async (transitionPlanId: string, sectenVersionId: string) =>
+  withServerResponse('updateTransitionPlanSectenVersion', async () => {
+    const hasEditAccess = await canEditTransitionPlan(transitionPlanId)
+    if (!hasEditAccess) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    await dbUpdateTransitionPlanSectenVersion(transitionPlanId, sectenVersionId)
   })

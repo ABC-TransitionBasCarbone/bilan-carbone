@@ -583,20 +583,6 @@ const TrajectoryGraph = ({
             showMark: ({ index }: { index: number }) => shouldShowMark(index),
             valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
           })
-        } else {
-          series.push({
-            type: 'line',
-            dataType: 'current',
-            isCustom: true,
-            isFailed,
-            data: currentData.map((val, idx) => (idx === studyStartYearIndex ? val : null)),
-            label: traj.label + ` (${studyStartYear})`,
-            color: isFailed ? 'var(--error-100)' : baseColor,
-            curve: 'linear' as const,
-            connectNulls: false,
-            showMark: true,
-            valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
-          })
         }
       }
     })

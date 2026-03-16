@@ -146,6 +146,7 @@ const createMockExternalStudy = (overrides?: Partial<ExternalStudy>): ExternalSt
 const createMockTransitionPlan = (overrides?: Partial<TransitionPlanWithRelations>): TransitionPlanWithRelations => ({
   id: 'plan-id',
   studyId: 'study-id',
+  sectenVersionId: 'secten-version-id',
   createdAt: new Date('2024-01-01'),
   updatedAt: new Date('2024-01-01'),
   trajectories: [createMockTrajectory()],
@@ -171,6 +172,7 @@ describe('TransitionPlan DB', () => {
       expect(mockTx.transitionPlan.create).toHaveBeenCalledWith({
         data: {
           studyId: 'target-study-id',
+          sectenVersionId: sourceTransitionPlan.sectenVersionId,
           transitionPlanStudies: {
             create: [{ studyId: sourceTransitionPlan.studyId }, { studyId: 'linked-study-1' }],
           },

@@ -90,7 +90,7 @@ Créer les études de formation pour les utilisateurs qui ont commencé ou termi
 ### Importer les données de Secten
 
 Importer les données de Secten en créant une nouvelle version ou en mettant à jour une version existante si le nom de la version est déjà utilisé :
-`npx tsx src/scripts/secten/importSectenData.ts -n ${versionName} -f ${pathToCSVFileSecten}`
+`npx tsx src/scripts/secten/importSectenData.ts -y ${versionYear} -f ${pathToCSVFileSecten}`
 
 Le CSV est créé manuellement depuis l'excel disponible sur le site de Secten.
 

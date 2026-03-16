@@ -1,0 +1,7 @@
+.increase {
+  color: var(--success-100);
+}
+
+.decrease {
+  color: var(--error-100);
+}

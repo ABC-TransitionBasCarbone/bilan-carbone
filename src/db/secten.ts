@@ -1,9 +1,22 @@
-import type { SectenInfo } from '@prisma/client'
+import type { SectenInfo, SectenVersion } from '@prisma/client'
 import { prismaClient } from './client'
 
-export const getSectenData = async (): Promise<SectenInfo[]> => {
+export const getLatestSectenVersion = async (): Promise<SectenVersion | null> => {
+  return prismaClient.sectenVersion.findFirst({
+    orderBy: { year: 'desc' },
+  })
+}
+
+export const getSectenData = async (versionId?: string): Promise<SectenInfo[]> => {
+  if (versionId) {
+    return prismaClient.sectenInfo.findMany({
+      where: { versionId },
+      orderBy: { year: 'asc' },
+    })
+  }
+
   const latestVersion = await prismaClient.sectenVersion.findFirst({
-    orderBy: { createdAt: 'desc' },
+    orderBy: { year: 'desc' },
     include: {
       sectenInfos: {
         orderBy: { year: 'asc' },

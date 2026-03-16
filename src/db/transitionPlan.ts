@@ -140,11 +140,19 @@ export const getOrganizationTransitionPlans = async (
   })
 }
 
-export const createTransitionPlan = async (studyId: string) => {
+export const createTransitionPlan = async (studyId: string, sectenVersionId?: string) => {
   return prismaClient.transitionPlan.create({
     data: {
       studyId,
+      sectenVersionId,
     },
+  })
+}
+
+export const updateTransitionPlanSectenVersion = async (transitionPlanId: string, sectenVersionId: string) => {
+  return prismaClient.transitionPlan.update({
+    where: { id: transitionPlanId },
+    data: { sectenVersionId },
   })
 }
 
@@ -157,6 +165,7 @@ export const duplicateTransitionPlanWithRelations = async (
     return tx.transitionPlan.create({
       data: {
         studyId: targetStudyId,
+        sectenVersionId: sourceTransitionPlan.sectenVersionId,
         transitionPlanStudies: {
           create: sourceTransitionPlan.transitionPlanStudies
             .filter((tpStudy) => tpStudy.study.startDate.getFullYear() < targetYear)
