@@ -2,28 +2,28 @@
   "publicodes-rules": {
     "général": {
       "nombre séances": {
-        "question": "[TO_TRANSLATE] Nombre de séances"
+        "question": "Number of screenings"
       },
       "nombre entrées": {
-        "question": "[TO_TRANSLATE] Nombre d'entrées"
+        "question": "Number of admissions"
       },
       "nombre de jours ouverture": {
-        "question": "[TO_TRANSLATE] Nombre de jours d'ouverture"
+        "question": "Number of opening days"
       },
       "nombre de films programmés": {
-        "question": "[TO_TRANSLATE] Nombre de films programmés"
+        "question": "Number of scheduled films"
       },
       "distance depuis paris": {
-        "question": "[TO_TRANSLATE] Distance depuis Paris"
+        "question": "Distance from Paris"
       },
       "nombre écrans": {
-        "question": "[TO_TRANSLATE] Nombre d'écrans / salles"
+        "question": "Number of screens / rooms"
       }
     },
     "tournées avant premières": {
       "équipes reçues": {
         "nombre équipes": {
-          "question": "[TO_TRANSLATE] Combien d'équipes de films avez-vous reçues en 2025 ?"
+          "question": "How many film crews did you host in 2025?"
         }
       }
     },
@@ -31,97 +31,97 @@
       "autre matériel": {
         "lunettes 3D": {
           "nombre": {
-            "question": "[TO_TRANSLATE] De combien de lunettes 3D disposez-vous ?"
+            "question": "How many 3D glasses do you have?"
           }
         }
       },
       "matériel technique": {
         "salles": {
-          "titre": "[TO_TRANSLATE] Salles",
-          "question": "[TO_TRANSLATE] Décrivez les différentes salles du cinéma"
+          "titre": "Rooms",
+          "question": "Describe the different rooms in the cinema"
         },
         "salle": {
           "nom": {
-            "question": "[TO_TRANSLATE] Nom de la salle"
+            "question": "Room name"
           },
           "projecteur": {
             "année achat": {
-              "question": "[TO_TRANSLATE] Année d'acquisition projecteur"
+              "question": "Projector acquisition year"
             },
             "type": {
-              "titre": "[TO_TRANSLATE] Type de projecteur",
-              "question": "[TO_TRANSLATE] Projecteurs",
+              "titre": "Projector type",
+              "question": "Projectors",
               "options": {
-                "xénon": "[TO_TRANSLATE] Projecteur xénon",
-                "laser": "[TO_TRANSLATE] Projecteur laser"
+                "xénon": "Xenon projector",
+                "laser": "Laser projector"
               }
             }
           },
           "écran": {
             "année achat": {
-              "question": "[TO_TRANSLATE] Année d'acquisition écran"
+              "question": "Screen acquisition year"
             },
             "surface écran": {
-              "question": "[TO_TRANSLATE] Surface de l'écran"
+              "question": "Screen surface area"
             },
             "type": {
-              "titre": "[TO_TRANSLATE] Type d'écran",
-              "question": "[TO_TRANSLATE] Écrans",
+              "titre": "Screen type",
+              "question": "Screens",
               "options": {
-                "écran 2D": "[TO_TRANSLATE] Écran 2D",
-                "écran 3D": "[TO_TRANSLATE] Écran 3D"
+                "écran 2D": "2D screen",
+                "écran 3D": "3D screen"
               }
             }
           },
           "fauteuils": {
             "année achat": {
-              "question": "[TO_TRANSLATE] Année d'acquisition fauteuils"
+              "question": "Seat acquisition year"
             },
             "nombre": {
-              "question": "[TO_TRANSLATE] Nombre de fauteuils"
+              "question": "Number of seats"
             },
             "type": {
-              "titre": "[TO_TRANSLATE] Type de fauteuils",
-              "question": "[TO_TRANSLATE] Fauteuils",
+              "titre": "Seat type",
+              "question": "Seats",
               "options": {
-                "fauteuils classiques": "[TO_TRANSLATE] Fauteuils classiques",
-                "fauteuils 4DX": "[TO_TRANSLATE] Fauteuils 4DX"
+                "fauteuils classiques": "Classic seats",
+                "fauteuils 4DX": "4DX seats"
               }
             }
           },
           "système son": {
             "année achat": {
-              "question": "[UPDATED] Année d'acquisition système de son"
+              "question": "Sound system acquisition year"
             },
             "type": {
-              "titre": "[TO_TRANSLATE] Type de système son",
-              "question": "[TO_TRANSLATE] Systèmes son",
+              "titre": "Sound system type",
+              "question": "Sound systems",
               "options": {
-                "stéréo": "[TO_TRANSLATE] Son Stéréo",
-                "dolby 51": "[TO_TRANSLATE] Dolby 5.1",
-                "dolby 71": "[TO_TRANSLATE] Dolby 7.1",
-                "dolby atmos": "[TO_TRANSLATE] Dolby Atmos",
-                "imax": "[TO_TRANSLATE] IMAX",
-                "auro 3dIce": "[TO_TRANSLATE] Auro 3D / Ice",
-                "dtsx": "[TO_TRANSLATE] DTS : X"
+                "stéréo": "Stereo sound",
+                "dolby 51": "Dolby 5.1",
+                "dolby 71": "Dolby 7.1",
+                "dolby atmos": "Dolby Atmos",
+                "imax": "IMAX",
+                "auro 3dIce": "Auro 3D / Ice",
+                "dtsx": "DTS : X"
               }
             }
           }
         },
         "cloud": {
           "stockage": {
-            "question": "[TO_TRANSLATE] Combien de données stockez-vous dans un cloud externe ?"
+            "question": "How much data do you store in an external cloud?"
           }
         },
         "disques durs": {
           "nombre": {
-            "question": "[TO_TRANSLATE] De combien de disques durs disposez-vous ?"
+            "question": "How many hard drives do you have?"
           }
         },
         "films": {
           "nombre films dématérialisés": {
-            "description": "[TO_TRANSLATE] Vous pouvez par défaut renseigner 90% des films programmés totaux (ce nombre de films est disponible dans vos données générales), qui est la valeur moyenne issue des Bilans Carbone® qui ont étés réalisés sur plusieurs cinémas français. Si vous détenez une information plus précise pour votre cinéma, nous vous invitons à l'utiliser plutôt que la valeur par défaut.",
-            "question": "[TO_TRANSLATE] Combien de films avez-vous reçu en dématérialisé cette année ?"
+            "description": "By default, you can enter 90% of the total scheduled films (this number is available in your general data), which is the average value from Bilan Carbone® assessments carried out in several French cinemas. If you have more precise information for your cinema, we invite you to use it instead of the default value.",
+            "question": "How many films did you receive digitally this year?"
           }
         }
       }
@@ -130,152 +130,152 @@
       "résultat précis": {
         "empreinte": {
           "RER et transilien": {
-            "titre": "[TO_TRANSLATE] RER et transilien",
+            "titre": "RER and Transilien",
             "distance": {
-              "question": "[TO_TRANSLATE] Distance (km)"
+              "question": "Distance (km)"
             }
           },
           "métro ou tram": {
-            "titre": "[TO_TRANSLATE] Métro, tramway",
+            "titre": "Metro, tramway",
             "distance": {
-              "question": "[TO_TRANSLATE] Distance (km)"
+              "question": "Distance (km)"
             }
           },
           "bus": {
-            "titre": "[TO_TRANSLATE] Bus",
+            "titre": "Bus",
             "distance": {
-              "question": "[TO_TRANSLATE] Distance (km)"
+              "question": "Distance (km)"
             }
           },
           "vélo électrique": {
-            "titre": "[TO_TRANSLATE] Vélo électrique",
+            "titre": "Electric bike",
             "distance": {
-              "question": "[TO_TRANSLATE] Distance (km)"
+              "question": "Distance (km)"
             }
           },
           "vélo classique": {
-            "titre": "[TO_TRANSLATE] Vélo classique",
+            "titre": "Classic bike",
             "distance": {
-              "question": "[TO_TRANSLATE] Distance (km)"
+              "question": "Distance (km)"
             }
           },
           "marche": {
-            "titre": "[TO_TRANSLATE] Marche",
+            "titre": "Walking",
             "distance": {
-              "question": "[TO_TRANSLATE] Distance (km)"
+              "question": "Distance (km)"
             }
           },
           "voiture diesel": {
-            "titre": "[TO_TRANSLATE] Voiture diesel",
+            "titre": "Diesel car",
             "distance": {
-              "question": "[TO_TRANSLATE] Distance (km)"
+              "question": "Distance (km)"
             }
           },
           "voiture essence": {
-            "titre": "[TO_TRANSLATE] Voiture essence",
+            "titre": "Petrol car",
             "distance": {
-              "question": "[TO_TRANSLATE] Distance (km)"
+              "question": "Distance (km)"
             }
           },
           "voiture hybride": {
-            "titre": "[TO_TRANSLATE] Voiture hybride",
+            "titre": "Hybrid car",
             "distance": {
-              "question": "[TO_TRANSLATE] Distance (km)"
+              "question": "Distance (km)"
             }
           },
           "voiture électrique": {
-            "titre": "[TO_TRANSLATE] Voiture électrique",
+            "titre": "Electric car",
             "distance": {
-              "question": "[TO_TRANSLATE] Distance (km)"
+              "question": "Distance (km)"
             }
           },
           "moto": {
-            "titre": "[TO_TRANSLATE] Moto",
+            "titre": "Motorbike",
             "distance": {
-              "question": "[TO_TRANSLATE] Distance (km)"
+              "question": "Distance (km)"
             }
           },
           "scooter": {
-            "titre": "[TO_TRANSLATE] Scooter",
+            "titre": "Scooter",
             "distance": {
-              "question": "[TO_TRANSLATE] Distance (km)"
+              "question": "Distance (km)"
             }
           },
           "trottinette électrique": {
-            "titre": "[TO_TRANSLATE] Trottinette électrique",
+            "titre": "Electric scooter",
             "distance": {
-              "question": "[TO_TRANSLATE] Distance (km)"
+              "question": "Distance (km)"
             }
           }
         }
       },
       "résultat estimé": {
         "proximité spectateurs": {
-          "question": "[TO_TRANSLATE] Vos spectateurs sont-ils majoritairement des habitants \"locaux\", c'est à dire résidant à l'année dans les environs ou attirez-vous aussi une part non négligeable de spectateurs de passage dans la région (touristes notamment)",
+          "question": "Are your spectators mainly \"local\" residents, i.e. living in the area year-round, or do you also attract a significant proportion of passing spectators (including tourists)?",
           "options": {
-            "zone très touristique": "[TO_TRANSLATE] Le cinéma est situé dans une zone touristique et 80% ou + des spectateurs ne résident pas à proximité du cinéma à l'année.",
-            "zone moyennement touristique": "[TO_TRANSLATE] Le cinéma est situé dans une ville de destination de week-end et / ou station balnéaire attirant environ 25% de spectateurs \"non-locaux\".",
-            "majoritairement locaux": "[TO_TRANSLATE] Le cinéma accueille majoritairement des spectateurs locaux"
+            "zone très touristique": "The cinema is located in a tourist area and 80% or more of spectators do not live near the cinema year-round.",
+            "zone moyennement touristique": "The cinema is located in a weekend destination town and/or seaside resort attracting around 25% \"non-local\" spectators.",
+            "majoritairement locaux": "The cinema mainly welcomes local spectators"
           }
         },
         "profil établissement": {
-          "question": "[TO_TRANSLATE] Si vous souhaitez vous identifier à des profils de cinéma comparable, de quel type de cinéma votre établissement se rapproche le plus",
+          "question": "If you wish to identify with comparable cinema profiles, which type of cinema does your establishment most closely resemble?",
           "options": {
-            "distances courtes": "[TO_TRANSLATE] Les spectateurs parcourent des distances très courtes pour venir au cinéma (moins de 10km aller-retour). Très peu viennent en voiture (- de 10%) et la grande majorité des spectateurs vient à pied ou en transports en commun.",
-            "distances moyennes": "[TO_TRANSLATE] Les spectateurs parcourent autour de 10 km aller-retour pour se rendre\nau cinéma. Il s'agit essentiellement d'un public de proximité venant en\ngrande partie en voiture. Autour de 25% d'entre eux viennent à pied.",
-            "distances longues": "[TO_TRANSLATE] Les spectateurs parcourent autour de 20-25 km aller-retour pour se\nrendre au cinéma. Il s'agit essentiellement d'un public de proximité\nvenant en grande partie en voiture. Autour de 25% d'entre eux viennent\nà pied.",
-            "majoritairement en voiture": "[TO_TRANSLATE] Plus de 80% des spectateurs viennent en voiture. Pas ou peu viennent en\ntransports en commun, peu viennent à pied. La distance moyenne\nparcourue est autour de 15 km aller-retour.",
-            "uniquement accessible en voiture": "[TO_TRANSLATE] Le cinéma n'est accessible qu'en voiture."
+            "distances courtes": "Spectators travel very short distances to come to the cinema (less than 10km round trip). Very few come by car (less than 10%) and the vast majority come on foot or by public transport.",
+            "distances moyennes": "Spectators travel around 10 km round trip to come to the cinema. It is mainly a local audience, mostly coming by car. Around 25% come on foot.",
+            "distances longues": "Spectators travel around 20-25 km round trip to come to the cinema. It is mainly a local audience, mostly coming by car. Around 25% come on foot.",
+            "majoritairement en voiture": "More than 80% of spectators come by car. Few or none come by public transport, few come on foot. The average distance travelled is around 15 km round trip.",
+            "uniquement accessible en voiture": "The cinema is only accessible by car."
           }
         }
       },
       "précision": {
-        "question": "[TO_TRANSLATE] Avez-vous déjà réalisé une enquête mobilité spectateurs ?",
+        "question": "Have you already conducted a spectator mobility survey?",
         "options": {
-          "résultat précis": "[TO_TRANSLATE] Oui et je peux entrer les résultats",
-          "besoin": "[TO_TRANSLATE] Non mais je voudrais le faire pour estimer l'impact du cinéma",
-          "estimation": "[TO_TRANSLATE] Non mais je préfère m'identifier dans des profils de cinéma comparables"
+          "résultat précis": "Yes, and I can enter the results",
+          "besoin": "No, but I would like to do it to estimate the cinema's impact",
+          "estimation": "No, but I prefer to identify with comparable cinema profiles"
         }
       },
       "mobilité spectateurs": {
         "contact": {
-          "question": "[TO_TRANSLATE] Si vous souhaitez réaliser une enquête mobilité spectateur, vous pouvez nous envoyer un mail pour récupérer un modèle d'enquête qui vous permettra de remplir d'ici quelques semaines les informations demandées"
+          "question": "If you wish to carry out a spectator mobility survey, you can send us an email to receive a survey template that will allow you to provide the requested information in a few weeks"
         }
       }
     },
     "fonctionnement": {
       "équipe": {
         "collaborateurs": {
-          "titre": "[TO_TRANSLATE] Collaborateurs",
-          "question": "[TO_TRANSLATE] Quel est le rythme de travail des collaborateurs du cinéma ?"
+          "titre": "Staff",
+          "question": "What is the work schedule of the cinema staff?"
         },
         "collaborateur type": {
           "nom": {
-            "question": "[TO_TRANSLATE] Libellé"
+            "question": "Label"
           },
           "nombre de jours par semaine": {
-            "question": "[TO_TRANSLATE] Nombre de jours / semaine"
+            "question": "Number of days per week"
           },
           "transport": {
             "distance": {
-              "question": "[TO_TRANSLATE] Distance domicile travail (aller-retour)"
+              "question": "Home-work distance (round trip)"
             },
             "moyen de transport": {
-              "question": "[TO_TRANSLATE] Moyen de transport",
+              "question": "Means of transport",
               "options": {
-                "RER et transilien": "[TO_TRANSLATE] RER et transilien",
-                "métro ou tram": "[TO_TRANSLATE] Métro ou tram",
-                "bus": "[TO_TRANSLATE] Bus",
-                "vélo électrique": "[TO_TRANSLATE] Vélo électrique",
-                "vélo classique": "[TO_TRANSLATE] Vélo classique",
-                "marche": "[TO_TRANSLATE] Marche",
-                "voiture diesel": "[TO_TRANSLATE] Voiture diesel",
-                "voiture essence": "[TO_TRANSLATE] Voiture essence",
-                "voiture hybride": "[TO_TRANSLATE] Voiture hybride",
-                "voiture électrique": "[TO_TRANSLATE] Voiture électrique",
-                "moto": "[TO_TRANSLATE] Moto",
-                "scooter": "[TO_TRANSLATE] Scooter",
-                "trottinette électrique": "[TO_TRANSLATE] Trottinette électrique"
+                "RER et transilien": "RER and Transilien",
+                "métro ou tram": "Metro or tram",
+                "bus": "Bus",
+                "vélo électrique": "Electric bike",
+                "vélo classique": "Classic bike",
+                "marche": "Walking",
+                "voiture diesel": "Diesel car",
+                "voiture essence": "Petrol car",
+                "voiture hybride": "Hybrid car",
+                "voiture électrique": "Electric car",
+                "moto": "Motorbike",
+                "scooter": "Scooter",
+                "trottinette électrique": "Electric scooter"
               }
             }
           }
@@ -284,102 +284,102 @@
       "énergie": {
         "électricité": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Combien de kWh d'électricité ont étés consommés par le cinéma cette année ?"
+            "question": "How many kWh of electricity were consumed by the cinema this year?"
           }
         },
         "gaz": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Combien de m³ de gaz ont étés consommés par le cinéma cette année ?"
+            "question": "How many m³ of gas were consumed by the cinema this year?"
           }
         },
         "fioul": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Combien de litres de fioul ont étés consommés par le cinéma cette année ?"
+            "question": "How many litres of fuel oil were consumed by the cinema this year?"
           }
         },
         "réseau de chaleur": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Combien de KWh issus de réseau de chaleur ont été consommés par le cinéma cette année ?"
+            "question": "How many kWh from district heating were consumed by the cinema this year?"
           }
         },
         "réseau de froid": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Combien de KWh issus de réseau de froid ont été consommés par le cinéma cette année ?"
+            "question": "How many kWh from district cooling were consumed by the cinema this year?"
           }
         },
         "granulés": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Combien de kWh issus de la combustion de granulés de bois ont étés consommés par le cinéma cette année ?"
+            "question": "How many kWh from wood pellet combustion were consumed by the cinema this year?"
           }
         },
         "est équipé climatisation": {
-          "question": "[TO_TRANSLATE] Votre cinéma est-il équipé de la climatisation ?"
+          "question": "Is your cinema equipped with air conditioning?"
         },
         "groupes électrogènes": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de diesel ?"
+            "question": "What is your annual diesel consumption?"
           }
         },
         "équipement groupes électrogènes": {
-          "question": "[TO_TRANSLATE] Le cinéma dispose-t-il d’un ou plusieurs groupes électrogènes ?",
+          "question": "Does the cinema have one or more generators?",
           "options": {
-            "utilisation régulière": "[TO_TRANSLATE] Oui et je l’utilise plusieurs fois par an",
-            "équipé sans utilisation": "[TO_TRANSLATE] Oui mais je ne l'utilise pas",
-            "aucun": "[TO_TRANSLATE] Non"
+            "utilisation régulière": "Yes, and I use it several times a year",
+            "équipé sans utilisation": "Yes, but I don't use it",
+            "aucun": "No"
           }
         }
       },
       "déplacements pro": {
         "déplacements": {
-          "titre": "[TO_TRANSLATE] Déplacements",
-          "description": "[TO_TRANSLATE] Les déplacements professionnels de vos collaborateurs sont tous les déplacements autres que les déplacements domicile-travail, effectués dans le cadre du travail. Ceux-ci incluent par exemple les déplacements pour se rendre à des congrès, conventions, festivals, prévisionnages, etc.",
-          "question": "[TO_TRANSLATE] Décrivez les déplacements professionnels de vos collaborateurs"
+          "titre": "Business trips",
+          "description": "Business trips by your staff are all trips other than home-work journeys, made as part of their work. These include, for example, trips to congresses, conventions, festivals, previews, etc.",
+          "question": "Describe your staff's business trips"
         },
         "déplacement type": {
           "nom": {
-            "question": "[TO_TRANSLATE] Déplacement"
+            "question": "Trip"
           },
           "nombre participants": {
-            "question": "[TO_TRANSLATE] Nombre de participants"
+            "question": "Number of participants"
           },
           "nombre occurences": {
-            "question": "[TO_TRANSLATE] Nombre d'occurrences"
+            "question": "Number of occurrences"
           },
           "nombre de nuitées": {
-            "question": "[TO_TRANSLATE] Nombre de nuitées"
+            "question": "Number of overnight stays"
           },
           "transport": {
             "distance": {
-              "question": "[TO_TRANSLATE] Distance \"aller-retour\""
+              "question": "Round-trip distance"
             },
             "moyen de transport": {
-              "question": "[TO_TRANSLATE] Moyen de transport",
+              "question": "Means of transport",
               "options": {
-                "RER et transilien": "[TO_TRANSLATE] RER et transilien",
-                "métro ou tram": "[TO_TRANSLATE] Métro ou tram",
-                "bus": "[TO_TRANSLATE] Bus",
-                "vélo électrique": "[TO_TRANSLATE] Vélo électrique",
-                "voiture diesel": "[TO_TRANSLATE] Voiture diesel",
-                "voiture essence": "[TO_TRANSLATE] Voiture essence",
-                "voiture hybride": "[TO_TRANSLATE] Voiture hybride",
-                "voiture électrique": "[TO_TRANSLATE] Voiture électrique",
-                "moto": "[TO_TRANSLATE] Moto",
-                "scooter": "[TO_TRANSLATE] Scooter",
-                "trottinette électrique": "[TO_TRANSLATE] Trottinette électrique",
-                "TGV": "[TO_TRANSLATE] TGV",
-                "avion": "[TO_TRANSLATE] Avion"
+                "RER et transilien": "RER and Transilien",
+                "métro ou tram": "Metro or tram",
+                "bus": "Bus",
+                "vélo électrique": "Electric bike",
+                "voiture diesel": "Diesel car",
+                "voiture essence": "Petrol car",
+                "voiture hybride": "Hybrid car",
+                "voiture électrique": "Electric car",
+                "moto": "Motorbike",
+                "scooter": "Scooter",
+                "trottinette électrique": "Electric scooter",
+                "TGV": "TGV",
+                "avion": "Plane"
               }
             }
           },
           "type hébergement": {
-            "question": "[TO_TRANSLATE] Type d'hébergement",
+            "question": "Type of accommodation",
             "options": {
-              "appartement": "[TO_TRANSLATE] Appartement",
-              "hotel 1 étoile": "[TO_TRANSLATE] Hôtel 1*",
-              "hotel 2 étoiles": "[TO_TRANSLATE] Hôtel 2*",
-              "hotel 3 étoiles": "[TO_TRANSLATE] Hôtel 3*",
-              "hotel 4 étoiles": "[TO_TRANSLATE] Hôtel 4*",
-              "hotel 5 étoiles": "[TO_TRANSLATE] Hôtel 5*"
+              "appartement": "Apartment",
+              "hotel 1 étoile": "1-star hotel",
+              "hotel 2 étoiles": "2-star hotel",
+              "hotel 3 étoiles": "3-star hotel",
+              "hotel 4 étoiles": "4-star hotel",
+              "hotel 5 étoiles": "5-star hotel"
             }
           }
         }
@@ -387,93 +387,93 @@
       "bâtiment": {
         "construction": {
           "année de construction": {
-            "question": "[TO_TRANSLATE] Quand le bâtiment a-t-il été construit ?"
+            "question": "When was the building constructed?"
           },
           "surface": {
-            "question": "[TO_TRANSLATE] Quelle est la surface plancher du cinéma ? (La somme des surfaces des différents niveaux)"
+            "question": "What is the cinema's floor area? (The sum of the areas of the different levels)"
           }
         },
         "rénovation": {
           "type": {
             "rénovation totale": {
-              "question": "[TO_TRANSLATE] Rénovation totale (hors agrandissement)"
+              "question": "Total renovation (excluding extension)"
             },
             "extension": {
-              "question": "[TO_TRANSLATE] Agrandissement - extension"
+              "question": "Extension - enlargement"
             },
             "autres travaux importants": {
-              "question": "[TO_TRANSLATE] Autres travaux importants (par ex : changement moquette, ravalement,peinture etc)"
+              "question": "Other major works (e.g. carpet replacement, facade renovation, painting, etc.)"
             },
             "aucun": {
-              "question": "[TO_TRANSLATE] Je n'ai pas réalisé ces rénovations durant les dix dernières années"
+              "question": "I have not carried out any of these renovations in the last ten years"
             }
           },
           "empreinte travaux": {
             "montant": {
-              "question": "[TO_TRANSLATE] Dans le cas d'une rénovation durant ces 10 dernières années, quel est le montant des dépenses liées à ces travaux de rénovation ?"
+              "question": "If you have carried out a renovation in the last 10 years, what is the amount spent on these renovation works?"
             }
           },
           "empreinte extension": {
             "surface": {
-              "question": "[TO_TRANSLATE] Dans le cas d'un agrandissement durant ces 10 dernières années, quelle est la surface supplémentaire ajoutée ?"
+              "question": "If you have carried out an extension in the last 10 years, what is the additional surface area added?"
             }
           }
         },
         "autre activité": {
           "surface": {
-            "question": "[TO_TRANSLATE] Quelle est la surface totale du bâtiment (cinéma inclus) ?"
+            "question": "What is the total surface area of the building (including the cinema)?"
           }
         },
         "est partagé": {
-          "question": "[TO_TRANSLATE] Le bâtiment est-il partagé avec une autre activité ?"
+          "question": "Is the building shared with another activity?"
         },
         "parking": {
           "nombre de places": {
-            "question": "[TO_TRANSLATE] Si oui, de combien de places ?"
+            "question": "If yes, how many spaces?"
           }
         },
         "parking présent": {
-          "question": "[TO_TRANSLATE] Le cinéma dispose-t-il d’un parking ?"
+          "question": "Does the cinema have a parking lot?"
         }
       },
       "activités de bureau": {
         "petites fournitures": {
           "montant": {
-            "question": "[TO_TRANSLATE] Quel montant avez-vous dépensé en petites fournitures de bureau ? (Exemples: crayon, cartouche d’encre, papier hors programme, cahier, etc.)"
+            "question": "How much did you spend on small office supplies? (Examples: pencil, ink cartridge, paper excluding programs, notebook, etc.)"
           }
         },
         "services": {
           "montant": {
-            "description": "[TO_TRANSLATE] Les services incluent par exemple les dépenses de ménage, sécurité, comptabilité, frais bancaires, etc. Vous pouvez utiliser une valeur par défaut pour cette réponse (25286€) qui est issue des Bilans Carbone® qui ont étés réalisés sur plusieurs cinémas français. Si vous détenez une information plus précise pour votre cinéma, nous vous invitons à l'utiliser plutôt que la valeur par défaut.",
-            "question": "[TO_TRANSLATE] Quel montant avez-vous dépensé en services ?"
+            "description": "Services include, for example, cleaning, security, accounting, bank charges, etc. You can use a default value for this answer (€25,286), which comes from Bilan Carbone® assessments carried out in several French cinemas. If you have more precise information for your cinema, we invite you to use it instead of the default value.",
+            "question": "How much did you spend on services?"
           }
         },
         "informatique": {
-          "titre": "[TO_TRANSLATE] Informatique",
-          "description": "[TO_TRANSLATE] Si l'équipement concerné est acheté, merci de ne pas remplir le champ \"Durée de location\". Si l'équipement concerné est loué de manière ponctuelle, merci de ne pas remplir le champ \"Date d'achat\". Si vous louez un équipement pour de longues durées ou de manière continue, nous vous recommandons de le considérer comme acheté (à la date de la première année de location).",
-          "question": "[TO_TRANSLATE] Pour chacun de ces équipements informatiques, veuillez indiquer leur nombre et leur date d'achat ou durée de location",
+          "titre": "IT equipment",
+          "description": "If the equipment concerned is purchased, please do not fill in the \"Rental period\" field. If the equipment is rented occasionally, please do not fill in the \"Purchase date\" field. If you rent equipment for long periods or continuously, we recommend that you consider it as purchased (from the date of the first year of rental).",
+          "question": "For each of these IT devices, please indicate their number and their purchase date or rental period",
           "appareil": {
             "nombre": {
-              "question": "[TO_TRANSLATE] Nombre d'appareils"
+              "question": "Number of devices"
             },
             "année achat": {
-              "question": "[TO_TRANSLATE] Année d'achat des appareils"
+              "question": "Device purchase year"
             },
             "durée location": {
-              "question": "[TO_TRANSLATE] Durée de location des appareils (jours à l'année)"
+              "question": "Device rental period (days per year)"
             }
           },
           "équipement": {
-            "titre": "[UPDATED] Type d'équipement informatique",
-            "question": "[TO_TRANSLATE] Type d'équipement informatique",
+            "titre": "Type of IT equipment",
+            "question": "Type of IT equipment",
             "options": {
-              "ordinateurs fixes": "[TO_TRANSLATE] Ordinateurs fixes",
-              "ordinateurs portables": "[TO_TRANSLATE] Ordinateurs portables",
-              "photocopieurs": "[TO_TRANSLATE] Photocopieurs",
-              "imprimantes": "[TO_TRANSLATE] Imprimantes",
-              "téléphones fixes": "[TO_TRANSLATE] Téléphones fixes",
-              "téléphones portables": "[TO_TRANSLATE] Téléphones portables",
-              "tablettes": "[TO_TRANSLATE] Tablettes"
+              "ordinateurs fixes": "Desktop computers",
+              "ordinateurs portables": "Laptop computers",
+              "photocopieurs": "Photocopiers",
+              "imprimantes": "Printers",
+              "téléphones fixes": "Landline phones",
+              "téléphones portables": "Mobile phones",
+              "tablettes": "Tablets"
             }
           }
         }
@@ -482,72 +482,72 @@
     "déchets": {
       "ordinaires": {
         "ordures ménagères": {
-          "titre": "[TO_TRANSLATE] Ordures ménagères (déchets non triés / sans filière)",
+          "titre": "Household waste (unsorted waste / without specific channel)",
           "nombre bennes": {
-            "question": "[TO_TRANSLATE] Nombre de bennes"
+            "question": "Number of bins"
           },
           "taille benne": {
-            "description": "[TO_TRANSLATE] Capacité d'une benne à ordures ménagères.",
-            "question": "[TO_TRANSLATE] Taille de la benne"
+            "description": "Capacity of a household waste bin.",
+            "question": "Bin size"
           },
           "fréquence ramassage": {
-            "description": "[TO_TRANSLATE] Fréquence de ramassage des ordures ménagères par semaine.",
-            "question": "[TO_TRANSLATE] Fréquence de ramassage"
+            "description": "Household waste collection frequency per week.",
+            "question": "Collection frequency"
           }
         },
         "emballages et papier": {
-          "titre": "[TO_TRANSLATE] Emballages et papier (plastique, métal, papier et carton)",
+          "titre": "Packaging and paper (plastic, metal, paper and cardboard)",
           "nombre bennes": {
-            "question": "[TO_TRANSLATE] Nombre de bennes"
+            "question": "Number of bins"
           },
           "taille benne": {
-            "description": "[TO_TRANSLATE] Capacité d'une benne à ordures ménagères.",
-            "question": "[TO_TRANSLATE] Taille de la benne"
+            "description": "Capacity of a household waste bin.",
+            "question": "Bin size"
           },
           "fréquence ramassage": {
-            "description": "[TO_TRANSLATE] Fréquence de ramassage des ordures ménagères par semaine.",
-            "question": "[TO_TRANSLATE] Fréquence de ramassage"
+            "description": "Household waste collection frequency per week.",
+            "question": "Collection frequency"
           }
         },
         "biodéchets": {
-          "titre": "[TO_TRANSLATE] Biodéchets (restes alimentaires)",
+          "titre": "Biowaste (food waste)",
           "nombre bennes": {
-            "question": "[TO_TRANSLATE] Nombre de bennes"
+            "question": "Number of bins"
           },
           "taille benne": {
-            "description": "[TO_TRANSLATE] Capacité d'une benne à ordures ménagères.",
-            "question": "[TO_TRANSLATE] Taille de la benne"
+            "description": "Capacity of a household waste bin.",
+            "question": "Bin size"
           },
           "fréquence ramassage": {
-            "description": "[TO_TRANSLATE] Fréquence de ramassage des ordures ménagères par semaine.",
-            "question": "[TO_TRANSLATE] Fréquence de ramassage"
+            "description": "Household waste collection frequency per week.",
+            "question": "Collection frequency"
           }
         },
         "verre": {
-          "titre": "[TO_TRANSLATE] Déchets verre",
+          "titre": "Glass waste",
           "nombre bennes": {
-            "question": "[TO_TRANSLATE] Nombre de bennes"
+            "question": "Number of bins"
           },
           "taille benne": {
-            "description": "[TO_TRANSLATE] Capacité d'une benne à ordures ménagères.",
-            "question": "[TO_TRANSLATE] Taille de la benne"
+            "description": "Capacity of a household waste bin.",
+            "question": "Bin size"
           },
           "fréquence ramassage": {
-            "description": "[TO_TRANSLATE] Fréquence de ramassage des ordures ménagères par semaine.",
-            "question": "[TO_TRANSLATE] Fréquence de ramassage"
+            "description": "Household waste collection frequency per week.",
+            "question": "Collection frequency"
           }
         }
       },
       "exceptionnels": {
         "lampe xenon": {
           "nombre": {
-            "titre": "[TO_TRANSLATE] Nombre de lampes",
-            "question": "[TO_TRANSLATE] Quelle quantité de lampes Xenon avez vous jeté cette année ?"
+            "titre": "Number of lamps",
+            "question": "How many Xenon lamps did you dispose of this year?"
           }
         },
         "matériel technique": {
           "quantité": {
-            "question": "[TO_TRANSLATE] Quelle quantité de matériel technique avez vous jeté cette année ?"
+            "question": "How much technical equipment did you dispose of this year?"
           }
         }
       }
@@ -556,80 +556,80 @@
       "électroménager": {
         "appareil": {
           "nb appareils": {
-            "question": "[TO_TRANSLATE] Nombre d'appareils"
+            "question": "Number of devices"
           },
           "année achat": {
-            "question": "[TO_TRANSLATE] Année d'achat des appareils"
+            "question": "Device purchase year"
           },
           "durée location": {
-            "question": "[TO_TRANSLATE] Durée de location des appareils (jours à l'année)"
+            "question": "Device rental period (days per year)"
           }
         },
         "réfrigérateurs": {
-          "titre": "[TO_TRANSLATE] Réfrigérateurs",
+          "titre": "Refrigerators",
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de réfrigérateurs"
+            "question": "Number of refrigerators"
           },
           "durée location": {
-            "question": "[TO_TRANSLATE] Durée de location des réfrigérateurs (jours à l'année)"
+            "question": "Refrigerator rental period (days per year)"
           },
           "année achat": {
-            "question": "[TO_TRANSLATE] Année d'achat des réfrigérateurs"
+            "question": "Refrigerator purchase year"
           }
         },
         "congélateurs": {
-          "titre": "[TO_TRANSLATE] Congélateurs",
+          "titre": "Freezers",
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de congélateurs"
+            "question": "Number of freezers"
           },
           "durée location": {
-            "question": "[TO_TRANSLATE] Durée de location des congélateurs (jours à l'année)"
+            "question": "Freezer rental period (days per year)"
           },
           "année achat": {
-            "question": "[TO_TRANSLATE] Année d'achat des congélateurs"
+            "question": "Freezer purchase year"
           }
         },
         "warmers": {
-          "titre": "[TO_TRANSLATE] Warmers",
+          "titre": "Warmers",
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de warmers"
+            "question": "Number of warmers"
           },
           "durée location": {
-            "question": "[TO_TRANSLATE] Durée de location des warmers (jours à l'année)"
+            "question": "Warmer rental period (days per year)"
           },
           "année achat": {
-            "question": "[TO_TRANSLATE] Année d'achat des warmers"
+            "question": "Warmer purchase year"
           }
         },
         "distributeurs": {
-          "titre": "[TO_TRANSLATE] Distributeurs snack et boissons",
+          "titre": "Snack and drink dispensers",
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de distributeurs snack et boissons"
+            "question": "Number of snack and drink dispensers"
           },
           "durée location": {
-            "question": "[TO_TRANSLATE] Durée de location des distributeurs snack et boissons (jours à l'année)"
+            "question": "Snack and drink dispenser rental period (days per year)"
           },
           "année achat": {
-            "question": "[TO_TRANSLATE] Année d'achat des distributeurs snack et boissons"
+            "question": "Snack and drink dispenser purchase year"
           }
         }
       },
       "fret": {
         "distance": {
-          "question": "[TO_TRANSLATE] Quelle est la distance entre votre cinéma et votre principal fournisseur ?"
+          "question": "What is the distance between your cinema and your main supplier?"
         }
       },
       "achats": {
         "vente sur place": {
-          "titre": "[TO_TRANSLATE] Vente sur place",
-          "question": "[TO_TRANSLATE] Vendez-vous des boissons et des confiseries ?"
+          "titre": "On-site sales",
+          "question": "Do you sell drinks and confectionery?"
         },
         "achat type": {
-          "question": "[TO_TRANSLATE] Selon vous, en moyenne, un spectateur achète :",
+          "question": "On average, what does a spectator buy:",
           "options": {
-            "un peu": "[TO_TRANSLATE] Un peu de confiseries et de boissons (~30g)",
-            "standard": "[TO_TRANSLATE] Une part standard de confiseries et de boissons (~120g)",
-            "significatif": "[TO_TRANSLATE] Une part significative de confiseries et de boissons (~200g)"
+            "un peu": "A small amount of confectionery and drinks (~30g)",
+            "standard": "A standard portion of confectionery and drinks (~120g)",
+            "significatif": "A significant portion of confectionery and drinks (~200g)"
           }
         }
       }
@@ -638,29 +638,29 @@
       "matériel distributeurs": {
         "affiches": {
           "affiches 120x160": {
-            "titre": "[TO_TRANSLATE] Affiches 120x160",
+            "titre": "Posters 120x160",
             "nombre": {
-              "question": "[TO_TRANSLATE] Quantité"
+              "question": "Quantity"
             }
           },
           "affiches 40x60": {
-            "titre": "[TO_TRANSLATE] Affiches 40x60",
+            "titre": "Posters 40x60",
             "nombre": {
-              "question": "[TO_TRANSLATE] Quantité"
+              "question": "Quantity"
             }
           }
         },
         "PLV": {
           "PLV comptoir": {
-            "titre": "[TO_TRANSLATE] PLV comptoir",
+            "titre": "Counter POS",
             "nombre": {
-              "question": "[TO_TRANSLATE] Quantité"
+              "question": "Quantity"
             }
           },
           "PLV grand format": {
-            "titre": "[TO_TRANSLATE] PLV grand format",
+            "titre": "Large format POS",
             "nombre": {
-              "question": "[TO_TRANSLATE] Quantité"
+              "question": "Quantity"
             }
           }
         }
@@ -668,21 +668,21 @@
       "matériel cinéma": {
         "production": {
           "programme": {
-            "titre": "[TO_TRANSLATE] Programme",
+            "titre": "Program",
             "nombre": {
-              "question": "[TO_TRANSLATE] Quantité"
+              "question": "Quantity"
             }
           },
           "affiches": {
-            "titre": "[TO_TRANSLATE] Affiches",
+            "titre": "Posters",
             "nombre": {
-              "question": "[TO_TRANSLATE] Quantité"
+              "question": "Quantity"
             }
           },
           "flyers": {
-            "titre": "[TO_TRANSLATE] Flyers",
+            "titre": "Flyers",
             "nombre": {
-              "question": "[TO_TRANSLATE] Quantité"
+              "question": "Quantity"
             }
           }
         }
@@ -690,69 +690,69 @@
       "communication digitale": {
         "newsletters": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de newsletters ont été envoyées cette annnée ?"
+            "question": "How many newsletters were sent this year?"
           },
           "destinataires": {
-            "question": "[TO_TRANSLATE] En moyenne, à combien de personnes sont adressées ces newsletters ?"
+            "question": "On average, how many people received these newsletters?"
           }
         },
         "affichage dynamique": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de caissons d’affichage dynamique sont présents dans le cinéma ?"
+            "question": "How many dynamic display boxes are present in the cinema?"
           }
         },
         "écrans": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien d’écrans se trouvent dans les espaces de circulation ?"
+            "question": "How many screens are there in the circulation areas?"
           }
         },
         "affichage extérieur": {
           "surface": {
-            "question": "[TO_TRANSLATE] Si le cinéma dispose d'un affichage extérieur, quelle est sa surface ?"
+            "question": "If the cinema has outdoor signage, what is its surface area?"
           }
         }
       },
       "caisses et bornes": {
         "caisses libre service": {
           "nombre": {
-            "question": "[TO_TRANSLATE] De combien de bornes de caisse libre-service dispose le cinéma ?"
+            "question": "How many self-service checkout terminals does the cinema have?"
           }
         },
         "caisse classique": {
           "nombre": {
-            "question": "[TO_TRANSLATE] De combien de systèmes de caisse classique dispose le cinéma ?"
+            "question": "How many classic checkout systems does the cinema have?"
           }
         }
       }
     }
   },
   "publicodes-units": {
-    "séance": "[TO_TRANSLATE] séance",
-    "entrée": "[TO_TRANSLATE] entrée",
-    "jour": "[TO_TRANSLATE] jour",
-    "film": "[TO_TRANSLATE] film",
-    "km": "[TO_TRANSLATE] km",
-    "écran": "[TO_TRANSLATE] écran",
-    "équipe": "[TO_TRANSLATE] équipe",
-    "unité": "[TO_TRANSLATE] unité",
-    "kgCO2e": "[TO_TRANSLATE] kgCO2e",
-    "m2": "[TO_TRANSLATE] m2",
-    "Go": "[TO_TRANSLATE] Go",
-    "jour/semaine": "[TO_TRANSLATE] jour/semaine",
-    "km/jour": "[TO_TRANSLATE] km/jour",
-    "kWh": "[TO_TRANSLATE] kWh",
-    "m3": "[TO_TRANSLATE] m3",
-    "litre": "[TO_TRANSLATE] litre",
-    "kg": "[TO_TRANSLATE] kg",
-    "nuitée": "[TO_TRANSLATE] nuitée",
-    "€": "[TO_TRANSLATE] €",
-    "place": "[TO_TRANSLATE] place",
-    "benne/ramassage": "[TO_TRANSLATE] benne/ramassage",
-    "l/benne": "[TO_TRANSLATE] l/benne",
-    "ramassage/semaine": "[TO_TRANSLATE] ramassage/semaine",
-    "unité/semaine": "[TO_TRANSLATE] unité/semaine",
-    "unité/mois": "[TO_TRANSLATE] unité/mois",
-    "newsletter/personne": "[TO_TRANSLATE] newsletter/personne",
-    "personne": "[TO_TRANSLATE] personne"
+    "séance": "screening",
+    "entrée": "admission",
+    "jour": "day",
+    "film": "film",
+    "km": "km",
+    "écran": "screen",
+    "équipe": "crew",
+    "unité": "unit",
+    "kgCO2e": "kgCO2e",
+    "m2": "m2",
+    "Go": "GB",
+    "jour/semaine": "day/week",
+    "km/jour": "km/day",
+    "kWh": "kWh",
+    "m3": "m3",
+    "litre": "liter",
+    "kg": "kg",
+    "nuitée": "overnight stay",
+    "€": "€",
+    "place": "seat",
+    "benne/ramassage": "bin/collection",
+    "l/benne": "l/bin",
+    "ramassage/semaine": "collection/week",
+    "unité/semaine": "unit/week",
+    "unité/mois": "unit/month",
+    "newsletter/personne": "newsletter/person",
+    "personne": "person"
   }
 }

@@ -91,18 +91,17 @@ fret . transport . empreinte:
       - europe
       - international
   unité: kgCO2e
+  par défaut: 0
 
 fret . transport . livraisons:
   titre: Nombre de livraisons
   question: En moyenne, combien de livraisons ont lieu par an ?
-  unité: livraison
-  par défaut: 0
+  unité: unité
 
 fret . transport . poids:
   titre: Poids moyen des livraisons
   question: En moyenne, pour une livraison, quel est le poids transporté ?
-  unité: kg/livraison
-  par défaut: 0
+  unité: kg
 
 ##### Fret local #####
 
@@ -112,6 +111,7 @@ fret . transport . local:
     à traduire: oui
   formule: poids * provenance * kmlocal * split * livraisons
   unité: kgCO2e
+  par défaut: 0
   note: Pour les livraisons locales on compte environ 50km
   avec:
     kmlocal:
@@ -122,12 +122,12 @@ fret . transport . local . split:
   formule: routier * 1
   avec:
     routier:
-      valeur: 0.00084
-      unité: kgCO2e/kg.km
+      valeur: 0.84
+      unité: kgCO2e/t.km
       meta:
         id: 43735
         nom: VUL/< 3,5 tonnes/Diesel routier, incorporation 7 % de biodiesel
-  unité: kgCO2e/kg.km
+  unité: kgCO2e/t.km
 
 fret . transport . local . provenance:
   titre: livraisons locales

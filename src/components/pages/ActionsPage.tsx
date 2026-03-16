@@ -1,70 +1,73 @@
 'use client'
 
-import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
+import TransitionPlanBase from '@/components/study/transitionPlan/TransitionPlanBase'
 import { FullStudy } from '@/db/study'
-import type { ActionWithRelations } from '@/db/transitionPlan'
+import type { ActionWithRelations, TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
 import { customRich } from '@/i18n/customRich'
+import type { ExternalStudy, SectenInfo } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
-import Block from '../base/Block'
-import SelectStudySite from '../study/site/SelectStudySite'
 import Actions from '../study/transitionPlan/Actions/Actions'
-import TransitionPlanOnboarding from '../study/transitionPlan/TransitionPlanOnboarding'
 
 interface Props {
   study: FullStudy
   actions: ActionWithRelations[]
   transitionPlanId: string
   canEdit: boolean
+  trajectories?: TrajectoryWithObjectivesAndScope[]
+  linkedStudies?: FullStudy[]
+  linkedExternalStudies?: ExternalStudy[]
+  validatedOnly?: boolean
+  sectenData?: SectenInfo[]
 }
 
-const ActionsPage = ({ study, actions, transitionPlanId, canEdit }: Props) => {
+const ActionsPage = ({
+  study,
+  actions,
+  transitionPlanId,
+  canEdit,
+  trajectories = [],
+  linkedStudies = [],
+  linkedExternalStudies = [],
+  validatedOnly = false,
+  sectenData = [],
+}: Props) => {
   const t = useTranslations('study.transitionPlan.actions')
-  const tNav = useTranslations('nav')
   const tStudyNav = useTranslations('study.navigation')
 
   const sites = useMemo(() => study.sites.map((s) => ({ id: s.id, name: s.site.name })), [study.sites])
 
   return (
-    <>
-      <Breadcrumbs
-        current={tStudyNav('actionPlan')}
-        links={[
-          { label: tNav('home'), link: '/' },
-          study.organizationVersion.isCR
-            ? {
-                label: study.organizationVersion.organization.name,
-                link: `/organisations/${study.organizationVersion.id}`,
-              }
-            : undefined,
-          { label: study.name, link: `/etudes/${study.id}` },
-        ].filter((link) => link !== undefined)}
-      />
-      <Block
-        title={t('title')}
-        as="h2"
-        rightComponent={<SelectStudySite sites={study.sites} siteSelectionDisabled isTransitionPlan />}
-      >
-        <div className="flex-col gapped2">
-          <TransitionPlanOnboarding
-            title={t('onboarding.title')}
-            description={t('onboarding.description')}
-            storageKey="actions"
-            detailedContent={customRich(t, 'onboarding.detailedInfo')}
-          />
-          <Actions
-            actions={actions}
-            studyUnit={study.resultsUnit}
-            transitionPlanId={transitionPlanId}
-            canEdit={canEdit}
-            studyId={study.id}
-            studyRealizationStartDate={study.realizationStartDate?.toISOString() ?? ''}
-            sites={sites}
-            tagFamilies={study.tagFamilies}
-          />
-        </div>
-      </Block>
-    </>
+    <TransitionPlanBase
+      study={study}
+      canEdit={canEdit}
+      transitionPlanId={transitionPlanId}
+      trajectories={trajectories}
+      actions={actions}
+      linkedStudies={linkedStudies}
+      linkedExternalStudies={linkedExternalStudies}
+      validatedOnly={validatedOnly}
+      sectenData={sectenData}
+      breadcrumbCurrent={tStudyNav('actionPlan')}
+      blockTitle={t('title')}
+      onboardingTitle={t('onboarding.title')}
+      onboardingDescription={t('onboarding.description')}
+      onboardingStorageKey="actions"
+      onboardingDetailedContent={customRich(t, 'onboarding.detailedInfo')}
+    >
+      {({ filteredActions }) => (
+        <Actions
+          actions={filteredActions}
+          studyUnit={study.resultsUnit}
+          transitionPlanId={transitionPlanId}
+          canEdit={canEdit}
+          studyId={study.id}
+          studyRealizationStartDate={study.realizationStartDate?.toISOString() ?? ''}
+          sites={sites}
+          tagFamilies={study.tagFamilies}
+        />
+      )}
+    </TransitionPlanBase>
   )
 }
 

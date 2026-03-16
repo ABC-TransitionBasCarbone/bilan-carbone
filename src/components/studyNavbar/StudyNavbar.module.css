@@ -22,6 +22,7 @@
 
 .drawerContainer {
   z-index: 99;
+  position: fixed;
   top: calc(var(--total-header-height) + 1rem) !important;
   max-height: calc(100vh - var(--total-header-height) - 2rem);
   box-sizing: border-box;

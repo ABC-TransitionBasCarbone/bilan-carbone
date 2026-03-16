@@ -1,6 +1,12 @@
 équipements et immobilisations:
-  formule: total sans reconditionné * pondération / amortissement
-  unité: kgCO2e/an
+  formule:
+    somme:
+      - équipements et immobilisations . infos
+
+équipements et immobilisations . infos:
+  titre: Équipements et immobilisations
+  formule: total sans reconditionné * prise en compte reconditionné / amortissement
+  unité: kgCO2e
   avec:
     amortissement:
       valeur: 3
@@ -38,22 +44,8 @@
       titre: Parfois
     jamais:
       titre: Jamais
-
-équipements et immobilisations . pondération . reconditionné . toujours reconditionné:
-  valeur: 0.5
-  note: On divise par 2 les émissions lorsque les appareils sont reconditionnés
-
-équipements et immobilisations . pondération . reconditionné . souvent reconditionné:
-  valeur: 1 - (0.5 * 0.66)
-  note: On divise par 2 les émissions des appareils reconditionnés, considérés ici comme 66% du total
-
-équipements et immobilisations . pondération . reconditionné . parfois reconditionné:
-  valeur: 1 - (0.5 * 0.33)
-  note: On divise par 2 les émissions des appareils reconditionnés, considérés ici comme 33% du total
-
-équipements et immobilisations . pondération . reconditionné . jamais reconditionné:
-  valeur: 1
-  note: Pas d'équipements reconditionnés
+      valeur: 0
+      note: Pas d'équipements reconditionnés
 
 équipements et immobilisations . total sans reconditionné:
   formule:
@@ -67,6 +59,7 @@
       - vidéoprojecteurs
       - autres écrans
   unité: kgCO2e
+  par défaut: 0
 
 équipements et immobilisations . total sans reconditionné . ordinateurs fixes:
   formule: FE * quantité

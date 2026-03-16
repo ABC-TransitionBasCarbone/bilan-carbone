@@ -12,7 +12,7 @@ import styles from './TransitionPlanOnboarding.module.css'
 interface Props {
   title: string
   description: string
-  detailedContent: ReactNode
+  detailedContent: ReactNode | null
   storageKey: string
 }
 
@@ -71,18 +71,20 @@ const TransitionPlanOnboarding = ({ title, description, detailedContent, storage
           {title}
         </Typography>
         <Typography variant="body1">{description}</Typography>
-        <Button
-          variant="outlined"
-          size="small"
-          onClick={(e) => {
-            e.stopPropagation()
-            setShowDetails(!showDetails)
-          }}
-          className={'wfit px1'}
-        >
-          {showDetails ? t('hideDetails') : t('learnMore')}
-        </Button>
-        {showDetails && (
+        {detailedContent && (
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={(e) => {
+              e.stopPropagation()
+              setShowDetails(!showDetails)
+            }}
+            className={'wfit px1'}
+          >
+            {showDetails ? t('hideDetails') : t('learnMore')}
+          </Button>
+        )}
+        {showDetails && detailedContent && (
           <Typography variant="body1" className={classNames('mt1', styles.detailsText)}>
             {detailedContent}
           </Typography>

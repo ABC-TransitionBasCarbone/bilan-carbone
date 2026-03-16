@@ -18,6 +18,12 @@ const logos = ['https://base-empreinte.ademe.fr', 'https://www.legifrance.gouv.f
 const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
 
 export async function middleware(req: NextRequest) {
+  // Redirect if the request is from https://calculator.clickson.eu/
+  if (req.headers.get('host') === 'calculator.clickson.eu') {
+    const loginUrl = new URL('/clickson/login', req.url)
+    return NextResponse.redirect(loginUrl)
+  }
+
   if (ENV_ROUTES.includes(req.nextUrl.pathname)) {
     const countLoginUrl = new URL(`${req.nextUrl}/login`, req.url)
     return NextResponse.redirect(countLoginUrl)
@@ -48,10 +54,13 @@ export async function middleware(req: NextRequest) {
     }
   }
 
+  const nonceRestriction =
+    process.env.NODE_ENV === 'development' ? "'unsafe-inline'" : `'nonce-${nonce}' 'strict-dynamic'`
+
   const cspHeader = `
     default-src 'self';
-    script-src 'self' 'nonce-${nonce}' 'strict-dynamic';
-    style-src 'self' 'nonce-${nonce}' https://fonts.cdnfonts.com https://embed.typeform.com;
+    script-src 'self' ${nonceRestriction};
+    style-src 'self' ${nonceRestriction} https://fonts.cdnfonts.com https://embed.typeform.com;
     img-src 'self' data: ${logos};
     font-src 'self' https://fonts.cdnfonts.com;
     object-src 'none';

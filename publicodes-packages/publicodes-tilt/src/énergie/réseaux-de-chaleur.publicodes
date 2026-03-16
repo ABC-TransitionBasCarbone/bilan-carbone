@@ -2,6 +2,7 @@
   titre: Réseau de chaleur
   formule: consommation * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     consommation:
       question: |

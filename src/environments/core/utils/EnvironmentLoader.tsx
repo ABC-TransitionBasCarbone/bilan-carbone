@@ -1,6 +1,6 @@
 'use client'
 
-import { CircularProgress } from '@mui/material'
+import CircularProgress from '@/components/base/CircularProgress'
 import styles from './EnvironmentLoader.module.css'
 
 const EnvironmentLoader = () => (

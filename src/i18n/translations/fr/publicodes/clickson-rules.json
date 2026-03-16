@@ -155,9 +155,11 @@
         }
       },
       "autres gaz": {
+        "gaz réfrigérants": {
+          "titre": "Gaz réfrigérants",
+          "question": "Consommation annuelle de gaz réfrigérant"
+        },
         "gaz réfrigérant": {
-          "titre": "Gaz réfrigérant",
-          "question": "Consommation annuelle de gaz réfrigérant",
           "consommation": {
             "question": "Consommation annuelle de ce gaz"
           },
@@ -172,9 +174,11 @@
             }
           }
         },
-        "gaz à effet de serre principal": {
+        "gaz effet de serre principaux": {
           "titre": "Gaz à effet de serre principal",
-          "question": "Consommation annuelle de Gaz à effet de serre principal",
+          "question": "Consommation annuelle de gaz à effet de serre principal"
+        },
+        "gaz effet de serre principal": {
           "consommation": {
             "question": "Consommation annuelle de ce gaz"
           },

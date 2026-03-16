@@ -18,6 +18,7 @@ général . salariés:
 
 général . bénévoles:
   question: Combien de bénévoles compte l'association en [Année] ?
+  par défaut: 0
   unité: bénévoles
 
 général . bénéficiaires:

@@ -2,4 +2,7 @@ fret:
   titre: Fret
   formule:
     somme:
+      - fabrication
       - transport
+  unité: kgCO2e
+  par défaut: 0

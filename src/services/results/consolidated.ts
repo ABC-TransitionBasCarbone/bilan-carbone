@@ -45,7 +45,13 @@ export const computeResultsByPostFromEmissionSources = (
   const convertToBc = type === AdditionalResultTypes.CONSOLIDATED && environment !== Environment.BC
   const convertedSiteEmissionSources = convertToBc
     ? siteEmissionSources.map((emissionSource) => {
-        return { ...emissionSource, subPost: convertTiltSubPostToBCSubPost(emissionSource.subPost) }
+        return {
+          ...emissionSource,
+          subPost:
+            environment === Environment.TILT
+              ? convertTiltSubPostToBCSubPost(emissionSource.subPost)
+              : emissionSource.subPost,
+        }
       })
     : siteEmissionSources
 

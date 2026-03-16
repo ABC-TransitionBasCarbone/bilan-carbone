@@ -2,43 +2,43 @@
   "publicodes-layout": {
     "table": {
       "MobiliteSpectateurs": {
-        "question": "[TO_TRANSLATE] Si vous avez réalisé une enquête, quelles sont les distances parcourues au total sur l'année pour chacun des modes de transport suivants :",
-        "moyenTransport": "[TO_TRANSLATE] Mode de transport",
-        "distance": "[TO_TRANSLATE] Distance (km)"
+        "question": "If you have conducted a survey, what are the total distances traveled during the year for each of the following modes of transport:",
+        "moyenTransport": "Mode of transport",
+        "distance": "Distance (km)"
       },
       "Electromenager": {
-        "question": "[TO_TRANSLATE] Pour les différents équipements informatiques utilisés, veuillez indiquer leur nombre et leur date d'achat ou durée de location :",
-        "typeEquipement": "[TO_TRANSLATE] Type d'électroménagers",
-        "nombre": "[TO_TRANSLATE] Nombre",
-        "dateAchat": "[TO_TRANSLATE] Date d'achat",
-        "dureeLocation": "[TO_TRANSLATE] Durée de location (à l'année)"
+        "question": "For the various IT equipment used, please indicate their quantity and their purchase date or rental duration:",
+        "typeEquipement": "Type of appliances",
+        "nombre": "Quantity",
+        "dateAchat": "Purchase date",
+        "dureeLocation": "Rental duration (per year)"
       },
       "DechetsOrdinaires": {
-        "question": "[TO_TRANSLATE] Renseignez ici les quantités de déchets générés chaque semaine",
-        "typeDechet": "[TO_TRANSLATE] Type de déchets",
-        "nbBennes": "[TO_TRANSLATE] Nombre de bennes",
-        "tailleBennes": "[TO_TRANSLATE] Taille des bennes",
-        "frequenceRamassage": "[TO_TRANSLATE] Fréquence de ramassage (par semaine)"
+        "question": "Enter here the quantities of waste generated each week",
+        "typeDechet": "Type of waste",
+        "nbBennes": "Number of bins",
+        "tailleBennes": "Size of bins",
+        "frequenceRamassage": "Collection frequency (per week)"
       },
       "MaterielDistributeursAffiches": {
-        "question": "[TO_TRANSLATE] Quelle quantité de matériel distributeurs recevez-vous en moyenne par semaine ?",
-        "typeMateriel": "[TO_TRANSLATE] Type de matériel",
-        "quantite": "[TO_TRANSLATE] Quantité"
+        "question": "What quantity of distributor materials do you receive on average per week?",
+        "typeMateriel": "Type of material",
+        "quantite": "Quantity"
       },
       "MaterielDistributeursPLV": {
-        "question": "[TO_TRANSLATE] Quelle quantité de matériel distributeurs recevez-vous en moyenne par semaine ?",
-        "typeMateriel": "[TO_TRANSLATE] Type de matériel",
-        "quantite": "[TO_TRANSLATE] Quantité"
+        "question": "What quantity of distributor materials do you receive on average per week?",
+        "typeMateriel": "Type of material",
+        "quantite": "Quantity"
       },
       "MaterielCinema": {
-        "question": "[TO_TRANSLATE] Quelle quantité de matériel produisez-vous chaque mois ?",
-        "typeMateriel": "[TO_TRANSLATE] Type de matériel",
-        "quantite": "[TO_TRANSLATE] Quantité"
+        "question": "What quantity of materials do you produce each month?",
+        "typeMateriel": "Type of material",
+        "quantite": "Quantity"
       }
     },
     "group": {
       "BatimentRenovation": {
-        "question": "[TO_TRANSLATE] Parmi les rénovations suivantes, lesquelles avez-vous réalisées durant les dix dernières années ?"
+        "question": "Among the following renovations, which ones have you carried out in the last ten years?"
       }
     },
     "list": {}

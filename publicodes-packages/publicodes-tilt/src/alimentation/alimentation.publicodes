@@ -6,3 +6,4 @@ alimentation:
       - bénévoles
       - salariés
   unité: kgCO2e
+  par défaut: 0

@@ -10,7 +10,7 @@ export const isSimplified = (environment: Environment) => simplifiedEnvironments
 
 const isBC = (environment: Environment) => environment === BC
 export const isTilt = (environment: Environment) => environment === TILT
-const isCut = (environment: Environment) => environment === CUT
+export const isCut = (environment: Environment) => environment === CUT
 export const isClickson = (environment: Environment) => environment === CLICKSON
 
 export const hasAccessToActualityCards = isBC
@@ -37,8 +37,6 @@ export const hasAccessToDependencyMatrix = isTilt
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const hasAccessToDependencyMatrixExample = (environment: Environment) => false
 
-export const hasAccessToPerimeterPage = isAdvanced
-
 export const needsLicenceToUseApp = isBC
 
 export const hasAccessToEmissionSourceValidation = isAdvanced
@@ -62,7 +60,9 @@ export const hasAccessToAllLocales = isClickson
 
 export const hasAccessToSimplifiedEmissionAnalysis = isClickson
 
-export const canCreateStudyWithoutSpecificRights = isSimplified
+export const canCreateStudyWithoutSpecificRights = isCut
+
+export const canCreateStudyOnlyAsAdministrator = isClickson
 
 export const hasAccessToStudySiteAddAndSelection = (environment: Environment) =>
   ([BC, TILT, CUT] as Environment[]).includes(environment)
@@ -90,7 +90,8 @@ export const hasAccessToResultsRatioTab = isCut
 
 export const hasAccessToAdvancedEmissionAnalysis = isTilt
 
-export const hasAlwaysAccessToOrganizationVersion = isTilt
+export const hasAlwaysAccessToOrganizationVersion = (environment: Environment) =>
+  ([TILT, CLICKSON] as Environment[]).includes(environment)
 
 export const hasStartLinkOnFootprints = isTilt
 

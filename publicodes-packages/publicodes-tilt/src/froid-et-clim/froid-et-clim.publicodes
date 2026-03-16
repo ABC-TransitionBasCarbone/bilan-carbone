@@ -11,7 +11,6 @@ froid et clim:
         nom: Climatiseur mobile
     amortissement:
       valeur: 6
-      unité: an
 
 froid et clim . nombre:
   question: Combien de climatiseurs sont utilisés dans vos locaux ?

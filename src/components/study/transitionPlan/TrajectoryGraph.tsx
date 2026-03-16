@@ -5,6 +5,7 @@ import { TRAJECTORY_15_ID, TRAJECTORY_SNBC_GENERAL_ID, TRAJECTORY_WB2C_ID } from
 import { FullStudy } from '@/db/study'
 import { TrajectoryWithObjectives } from '@/db/transitionPlan'
 import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
+import { TrajectoryDataPoint } from '@/types/trajectory.types'
 import { calculateTrajectoriesWithHistory, getYearsToDisplay, PastStudy } from '@/utils/trajectory'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import { Alert, Slider, SvgIcon, Typography } from '@mui/material'
@@ -20,7 +21,7 @@ import {
   LineSeriesType,
   MarkPlot,
 } from '@mui/x-charts'
-import { Action, SectenInfo } from '@prisma/client'
+import { Action, SectenInfo, TrajectoryType } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -29,11 +30,6 @@ import DrawingAreaBox, { DrawingProps } from '../charts/DrawingArea'
 import CustomTrajectoryLegend from '../trajectory/CustomTrajectoryLegend'
 import styles from './TrajectoryGraph.module.css'
 import { BottomLeftMultilineText } from './TrajectoryGraphDrawingArea'
-
-export interface TrajectoryDataPoint {
-  year: number
-  value: number
-}
 
 export type DataType = 'previous' | 'current'
 
@@ -52,7 +48,8 @@ interface Props {
   showTitle?: boolean
   showActionTrajectory?: boolean
   titleAction?: ReactNode
-  storageKey?: string
+  storageKey: string
+  isTrajectoryPage?: boolean
 }
 
 const TrajectoryGraph = ({
@@ -77,6 +74,8 @@ const TrajectoryGraph = ({
   const [yearRange, setYearRange] = useState<number[] | null>(null)
   const [glossary, setGlossary] = useState(false)
   const [displayedYearRange, setDisplayedYearRange] = useState<number[] | null>(null)
+  const [hiddenTrajectoryLabels, setHiddenTrajectoryLabels] = useState<string[]>([])
+  const [hiddenLabelsLoaded, setHiddenLabelsLoaded] = useState(false)
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null)
   const tSnbc = useTranslations('study.transitionPlan.trajectories.snbcCard')
   const tGlossary = useTranslations('study.transitionPlan.trajectories.graph.glossary')
@@ -107,9 +106,12 @@ const TrajectoryGraph = ({
 
   const data = useMemo(() => {
     const trajectoryResult = calculateTrajectoriesWithHistory({
-      study,
+      studyId: study.id,
+      studyName: study.name,
+      studyStartDate: study.startDate,
+      studyResultsUnit: study.resultsUnit,
+      totalCo2: studyEmissions,
       withDependencies: true,
-      validatedOnly,
       trajectories,
       actions: showActionTrajectory ? actions : [],
       pastStudies,
@@ -125,6 +127,7 @@ const TrajectoryGraph = ({
         trajectoryData: trajData.data,
         label: traj?.name || '',
         color: undefined,
+        type: traj?.type,
       }
     })
 
@@ -138,7 +141,7 @@ const TrajectoryGraph = ({
     }
   }, [
     study,
-    validatedOnly,
+    studyEmissions,
     trajectories,
     actions,
     showActionTrajectory,
@@ -185,13 +188,33 @@ const TrajectoryGraph = ({
     }
   }, [allYearsToDisplay])
 
+  // Local storage related settings
+  const yearRangeStorageKey = `${storageKey}-yearRange`
   useEffect(() => {
     if (minYear && maxYear) {
-      const newRange = [minYear, maxYear]
+      let newRange = [minYear, maxYear]
+      const stored = localStorage.getItem(yearRangeStorageKey)
+      if (stored) {
+        const parsed = JSON.parse(stored) as number[]
+        if (parsed.length === 2 && parsed[0] >= minYear && parsed[1] <= maxYear) {
+          newRange = parsed
+        }
+      }
       setYearRange(newRange)
       setDisplayedYearRange(newRange)
     }
-  }, [minYear, maxYear])
+  }, [minYear, maxYear, yearRangeStorageKey])
+
+  useLocalStorageSync(yearRangeStorageKey, yearRange ?? [], yearRange !== null)
+
+  useEffect(() => {
+    const stored = localStorage.getItem(storageKey)
+    if (stored) {
+      setHiddenTrajectoryLabels(JSON.parse(stored))
+    }
+    setHiddenLabelsLoaded(true)
+  }, [storageKey])
+  useLocalStorageSync(storageKey, hiddenTrajectoryLabels, hiddenLabelsLoaded)
 
   // Debounce the displayed year range to smooth out chart transitions
   useEffect(() => {
@@ -484,10 +507,29 @@ const TrajectoryGraph = ({
       }
     })
 
+    const typeShadeCounters: Partial<Record<TrajectoryType, number>> = {}
+
     data.customTrajectoriesData.forEach((traj, index) => {
       if (traj.trajectoryData) {
         const { previousTrajectory, previousTrajectoryStartYear, currentTrajectory, withinThreshold, isFailed } =
           traj.trajectoryData
+
+        let baseColor: string
+        if (traj.type) {
+          const shadeIndex = typeShadeCounters[traj.type] ?? 0
+          typeShadeCounters[traj.type] = shadeIndex + 1
+          if (traj.type === TrajectoryType.SBTI_15) {
+            baseColor = `var(--trajectory-sbti-15-shade-${shadeIndex % 9})`
+          } else if (traj.type === TrajectoryType.SBTI_WB2C) {
+            baseColor = `var(--trajectory-sbti-wb2c-shade-${shadeIndex % 9})`
+          } else if (traj.type === TrajectoryType.SNBC_GENERAL || traj.type === TrajectoryType.SNBC_SECTORAL) {
+            baseColor = `var(--trajectory-snbc-shade-${shadeIndex % 9})`
+          } else {
+            baseColor = traj.color || `var(--trajectory-custom-${index % 9})`
+          }
+        } else {
+          baseColor = traj.color || `var(--trajectory-custom-${index % 9})`
+        }
 
         if (previousTrajectory) {
           // Only show mark for the previous trajectory start year, not for past studies
@@ -502,14 +544,13 @@ const TrajectoryGraph = ({
               withinThreshold: true,
               data: mapDataToYears(previousTrajectory, true),
               label: traj.label + ` (${previousTrajectoryStartYear})`,
-              color: traj.color || `var(--trajectory-custom-${index % 9})`,
+              color: baseColor,
               curve: 'linear' as const,
               connectNulls: false,
               showMark: ({ index }: { index: number }) => index === previousTrajectoryStartYearIndex,
               valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
             })
           } else {
-            const baseColor = traj.color || `var(--trajectory-custom-${index % 9})`
             series.push({
               type: 'line',
               dataType: 'previous',
@@ -535,7 +576,7 @@ const TrajectoryGraph = ({
             isFailed,
             data: currentData,
             label: previousTrajectory ? traj.label + ` (${studyStartYear})` : traj.label,
-            color: isFailed ? 'var(--error-100)' : traj.color || `var(--trajectory-custom-${index % 9})`,
+            color: isFailed ? 'var(--error-100)' : baseColor,
             curve: 'linear' as const,
             connectNulls: false,
             showMark: ({ index }: { index: number }) => shouldShowMark(index),
@@ -549,7 +590,7 @@ const TrajectoryGraph = ({
             isFailed,
             data: currentData.map((val, idx) => (idx === studyStartYearIndex ? val : null)),
             label: traj.label + ` (${studyStartYear})`,
-            color: isFailed ? 'var(--error-100)' : traj.color || `var(--trajectory-custom-${index % 9})`,
+            color: isFailed ? 'var(--error-100)' : baseColor,
             curve: 'linear' as const,
             connectNulls: false,
             showMark: true,
@@ -559,7 +600,11 @@ const TrajectoryGraph = ({
       }
     })
 
-    if (data.actionBasedTrajectoryData && data.actionBasedTrajectoryData.currentTrajectory.length > 0) {
+    if (
+      showActionTrajectory &&
+      data.actionBasedTrajectoryData &&
+      data.actionBasedTrajectoryData.currentTrajectory.length > 0
+    ) {
       const { previousTrajectory, previousTrajectoryStartYear, currentTrajectory, withinThreshold } =
         data.actionBasedTrajectoryData
 
@@ -637,6 +682,7 @@ const TrajectoryGraph = ({
     data.snbcData,
     data.customTrajectoriesData,
     data.actionBasedTrajectoryData,
+    showActionTrajectory,
     mapDataToYears,
     t,
     tSnbc,
@@ -660,16 +706,6 @@ const TrajectoryGraph = ({
     () => yearRange && yearRange[0] < oldestPastStudyYear,
     [yearRange, oldestPastStudyYear],
   )
-
-  const [hiddenTrajectoryLabels, setHiddenTrajectoryLabels] = useState<string[]>(() => {
-    if (!storageKey || typeof window === 'undefined') {
-      return []
-    }
-    const stored = localStorage.getItem(storageKey)
-    return stored ? JSON.parse(stored) : []
-  })
-
-  useLocalStorageSync(storageKey ?? '', hiddenTrajectoryLabels, !!storageKey)
 
   const onToggleFilter = (label: string) =>
     setHiddenTrajectoryLabels((prev) => (prev.includes(label) ? prev.filter((l) => l !== label) : [...prev, label]))

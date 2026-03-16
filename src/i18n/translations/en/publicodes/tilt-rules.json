@@ -1,9 +1,7 @@
 {
   "publicodes-units": {
     "année": "[TO_TRANSLATE] année",
-    "salariés": "[TO_TRANSLATE] salariés",
-    "bénévoles": "[TO_TRANSLATE] bénévoles",
-    "bénéficiaires": "[TO_TRANSLATE] bénéficiaires",
+    "personne": "[TO_TRANSLATE] personne",
     "k€": "[TO_TRANSLATE] k€",
     "jours": "[TO_TRANSLATE] jours",
     "quantité": "[TO_TRANSLATE] quantité",
@@ -12,32 +10,16 @@
     "litre": "[TO_TRANSLATE] litre",
     "stères": "[TO_TRANSLATE] stères",
     "h/semaine": "[TO_TRANSLATE] h/semaine",
-    "jours/semaine": "[TO_TRANSLATE] jours/semaine",
+    "j/semaine": "[TO_TRANSLATE] j/semaine",
     "kgCO2e": "[TO_TRANSLATE] kgCO2e",
-    "k€ HT": "[TO_TRANSLATE] k€ HT",
     "h": "[TO_TRANSLATE] h",
     "mail": "[TO_TRANSLATE] mail",
     "Go": "[TO_TRANSLATE] Go",
-    "climatiseur": "[TO_TRANSLATE] climatiseur",
-    "VUL": "[TO_TRANSLATE] VUL",
-    "poids lourds": "[TO_TRANSLATE] poids lourds",
-    "livraison": "[TO_TRANSLATE] livraison",
-    "kg/livraison": "[TO_TRANSLATE] kg/livraison",
+    "unité": "[TO_TRANSLATE] unité",
+    "kg": "[TO_TRANSLATE] kg",
     "%": "[TO_TRANSLATE] %",
     "tonne": "[TO_TRANSLATE] tonne",
-    "voitures": "[TO_TRANSLATE] voitures",
-    "unité": "[TO_TRANSLATE] unité",
     "km": "[TO_TRANSLATE] km",
-    "km/salariés/jours": "[TO_TRANSLATE] km/salariés.jours",
-    "km/bénévoles/jours": "[TO_TRANSLATE] km/bénévoles.jours",
-    "km/salariés/mois": "[TO_TRANSLATE] km/salariés.mois",
-    "km/salarié/mois": "[TO_TRANSLATE] km/salarié.mois",
-    "kgCO2e/an": "[TO_TRANSLATE] kgCO2e/an",
-    "km/salarié/an": "[TO_TRANSLATE] km/salarié.an",
-    "km/bénévole/mois": "[TO_TRANSLATE] km/bénévole.mois",
-    "km/bénévoles/mois": "[TO_TRANSLATE] km/bénévoles.mois",
-    "km/bénévoles/an": "[TO_TRANSLATE] km/bénévoles.an",
-    "km/bénéficiaires/an": "[TO_TRANSLATE] km/bénéficiaires.an",
     "place": "[TO_TRANSLATE] place",
     "m2": "[TO_TRANSLATE] m2",
     "repas": "[TO_TRANSLATE] repas"
@@ -45,165 +27,163 @@
   "publicodes-rules": {
     "général": {
       "nom": {
-        "question": "[TO_TRANSLATE] Quel est le nom de l'association pour laquelle vous souhaitez réaliser une estimation d’impact carbone ?"
+        "question": "What is the name of the association for which you wish to carry out a carbon impact assessment?"
       },
       "code postal": {
-        "question": "[TO_TRANSLATE] Quel est le code postal de l'association ?"
+        "question": "What is the postal code of the association?"
       },
       "année": {
-        "question": "[TO_TRANSLATE] Pour quelle année réalisez-vous cette estimation d’impact ?"
+        "question": "For which year are you carrying out this impact assessment?"
       },
       "salariés": {
-        "question": "[TO_TRANSLATE] Combien de salariés compte l'association en [Année] ?"
+        "question": "How many employees does the association have in [Year]?"
       },
       "bénévoles": {
-        "question": "[TO_TRANSLATE] Combien de bénévoles compte l'association en [Année] ?"
+        "question": "How many volunteers does the association have in [Year]?"
       },
       "bénéficiaires": {
-        "question": "[TO_TRANSLATE] Combien de bénéficiaires ont profité des services de l'association en  [Année] ?"
+        "question": "How many beneficiaries have benefited from the association's services in [Year]?"
       },
       "budget": {
-        "question": "[TO_TRANSLATE] Quel est le budget de fonctionnement de l'association ?"
+        "question": "What is the association's operating budget?"
       },
       "type": {
-        "question": "[TO_TRANSLATE] de quel type de structure votre association se rapproche t'elle le plus ?",
+        "question": "Which type of structure does your association most closely resemble?",
         "options": {
-          "Club de loisirs": "[TO_TRANSLATE] Club de loisirs",
-          "Association étudiante": "[TO_TRANSLATE] Association étudiante",
-          "Association culturelle": "[TO_TRANSLATE] Association culturelle",
-          "Association de voisinage": "[TO_TRANSLATE] Association de voisinage",
-          "Hôpital": "[TO_TRANSLATE] Hôpital",
-          "Maison de retraite": "[TO_TRANSLATE] Maison de retraite",
-          "Association d'aide à domicile": "[TO_TRANSLATE] Association d'aide à domicile",
-          "Association humanitaire": "[TO_TRANSLATE] Association humanitaire",
-          "Autres structures sociales et solidaires": "[TO_TRANSLATE] Autres structures sociales et solidaires",
-          "Association de défense de l'environnement": "[TO_TRANSLATE] Association de défense de l'environnement",
-          "Association d'enseignement ou de formation": "[TO_TRANSLATE] Association d'enseignement ou de formation"
+          "Club de loisirs": "Leisure club",
+          "Association étudiante": "Student association",
+          "Association culturelle": "Cultural association",
+          "Association de voisinage": "Neighborhood association",
+          "Hôpital": "Hospital",
+          "Maison de retraite": "Retirement home",
+          "Association d'aide à domicile": "Home help association",
+          "Association humanitaire": "Humanitarian association",
+          "Autres structures sociales et solidaires": "Other social and solidarity structures",
+          "Association de défense de l'environnement": "Environmental protection association",
+          "Association d'enseignement ou de formation": "Teaching or training association"
         }
       },
       "TT bénévoles": {
-        "question": "[TO_TRANSLATE] Combien de jours sont télétravaillées par semaine pour vos bénévoles ?"
+        "question": "How many days per week do your volunteers work remotely?"
       },
       "TT salariés": {
-        "question": "[TO_TRANSLATE] Combien de jours sont télétravaillées par semaine pour vos salariés ?"
+        "question": "How many days per week do your employees work remotely?"
       }
     },
     "équipements et immobilisations": {
-      "pondération": {
-        "reconditionné": {
+      "infos": {
+        "prise en compte reconditionné": {
           "description": "[TO_TRANSLATE] En fonction de votre réponse, une partie de vos équipements seront valorisés comme étant reconditionnés. Un équipement reconditionné sera considéré comme moitié moins émetteur qu'un équipement neuf. Autrement dit, la durée de première vie de l'équipement est considéré comme égale à la moitié de sa durée de vie totale.",
           "question": "[TO_TRANSLATE] Vos équipements sont-ils reconditionné ou issu de seconde main ?",
           "options": {
             "toujours": "[TO_TRANSLATE] Toujours",
             "souvent": "[TO_TRANSLATE] Souvent",
-            "parfois": "[TO_TRANSLATE] Parfois",
+            "rarement": "[TO_TRANSLATE] Rarement",
             "jamais": "[TO_TRANSLATE] Jamais"
           }
-        }
-      },
-      "total sans reconditionné": {
+        },
         "ordinateurs fixes": {
-          "titre": "[TO_TRANSLATE] Ordinateurs fixes",
+          "titre": "Desktop computers",
           "quantité": {
-            "question": "[TO_TRANSLATE] Ordinateurs fixes"
+            "question": "Desktop computers"
           }
         },
         "ordinateurs portables": {
-          "titre": "[TO_TRANSLATE] Ordinateurs portables",
+          "titre": "Laptops",
           "quantité": {
-            "question": "[TO_TRANSLATE] Ordinateurs portables"
+            "question": "Laptops"
           }
         },
         "photocopieurs": {
-          "titre": "[TO_TRANSLATE] Photocopieurs",
+          "titre": "Photocopiers",
           "quantité": {
-            "question": "[TO_TRANSLATE] Photocopieurs"
+            "question": "Photocopiers"
           }
         },
         "imprimantes": {
-          "titre": "[TO_TRANSLATE] Imprimantes",
+          "titre": "Printers",
           "quantité": {
-            "question": "[TO_TRANSLATE] Imprimante multi-fonction"
+            "question": "Multifunction printer"
           }
         },
         "téléphones fixes": {
-          "titre": "[TO_TRANSLATE] Téléphones fixes",
+          "titre": "Landline phones",
           "quantité": {
-            "question": "[TO_TRANSLATE] Téléphones fixes"
+            "question": "Landline phones"
           }
         },
         "téléphones portables": {
-          "titre": "[TO_TRANSLATE] Téléphones portables",
+          "titre": "Mobile phones",
           "quantité": {
-            "question": "[TO_TRANSLATE] Téléphones portables"
+            "question": "Mobile phones"
           }
         },
         "vidéoprojecteurs": {
-          "titre": "[TO_TRANSLATE] Vidéoprojecteurs",
+          "titre": "Video projectors",
           "quantité": {
-            "question": "[TO_TRANSLATE] Vidéoprojecteurs"
+            "question": "Video projectors"
           }
         },
         "autres écrans": {
-          "titre": "[TO_TRANSLATE] Autres écrans",
+          "titre": "Other screens",
           "quantité": {
-            "question": "[TO_TRANSLATE] Autres écrans (TV, écran secondaire, tablette, ...)"
+            "question": "Other screens (TV, secondary screen, tablet, ...)"
           }
         }
       }
     },
     "énergie": {
-      "titre": "[TO_TRANSLATE] Énergie",
-      "question": "[TO_TRANSLATE] Qu'utilisez-vous pour le chauffage, l'éclairage et les autres consommations énergétiques de vos locaux ?",
+      "titre": "Energy",
+      "question": "What do you use for heating, lighting and other energy consumption in your premises?",
       "électricité": {
         "consommation": {
-          "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle d'électricité ? (issue de votre facture et n'incluant pas votre autoconsommation, ni la consommation des véhicules électriques)"
+          "question": "What is your annual electricity consumption? (from your bill and excluding self-consumption and electric vehicle consumption)"
         },
         "autoproduction": {
           "autoproduction": {
-            "question": "[TO_TRANSLATE] Quelle est votre autoproduction annuelle d'électricité ?"
+            "question": "What is your annual self-production of electricity?"
           }
         }
       },
       "réseaux de froid": {
         "consommation": {
-          "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de froid issue de réseaux ?"
+          "question": "What is your annual consumption of cooling from networks?"
         }
       },
       "réseaux de chaleur": {
         "consommation": {
-          "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de chaleur issue de réseaux ?"
+          "question": "What is your annual consumption of heat from networks?"
         }
       },
       "fossiles": {
         "gaz": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de gaz naturel ? (hors consommation par les véhicules)"
+            "question": "What is your annual natural gas consumption? (excluding vehicle consumption)"
           }
         },
         "fioul": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de fioul (hors consommations par les véhicules)"
+            "question": "What is your annual fuel oil consumption (excluding vehicle consumption)?"
           }
         }
       },
       "combustibles organiques": {
         "choix": {
-          "question": "[TO_TRANSLATE] Utilisez-vous des bûches ou des granulés ?",
+          "question": "Do you use logs or pellets?",
           "options": {
-            "bûches": "[TO_TRANSLATE] Bûches",
-            "granulés": "[TO_TRANSLATE] Granulés",
-            "aucun": "[TO_TRANSLATE] Aucun"
+            "bûches": "Logs",
+            "granulés": "Pellets",
+            "aucun": "None"
           }
         },
         "granulés": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Combien de kWh issus de la combustion de granulés de bois ont été consommés chaque année ?"
+            "question": "How many kWh from wood pellet combustion are consumed each year?"
           }
         },
         "bois": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de bois ?"
+            "question": "What is your annual wood consumption?"
           }
         }
       }
@@ -211,34 +191,34 @@
     "utilisation": {
       "responsabilite conso energie": {
         "élec présente": {
-          "question": "[TO_TRANSLATE] Fournissez-vous des produits ou services qui entraînent des consommations d'électricité chez vos usagers ?"
+          "question": "Do you provide products or services that result in electricity consumption by your users?"
         },
         "élec": {
           "conso": {
-            "question": "[TO_TRANSLATE] À combien de kWh estimez-vous ces consommations d'électricité ?"
+            "question": "How many kWh do you estimate for this electricity consumption?"
           }
         },
         "fossiles présents": {
-          "question": "[TO_TRANSLATE] Fournissez-vous des produits ou services qui entraînent des consommations d'énergie fossiles chez vos usagers ?"
+          "question": "Do you provide products or services that result in fossil energy consumption by your users?"
         },
         "fioul": {
           "conso": {
-            "question": "[TO_TRANSLATE] Pour le fioul, à combien de litres estimez-vous ces consommations ?"
+            "question": "For fuel oil, how many liters do you estimate for this consumption?"
           }
         },
         "essence": {
           "conso": {
-            "question": "[TO_TRANSLATE] Pour l'essence, à combien de litres estimez-vous ces consommations ?"
+            "question": "For gasoline, how many liters do you estimate for this consumption?"
           }
         },
         "gazole": {
           "conso": {
-            "question": "[TO_TRANSLATE] Pour le gazole, à combien de litres estimez-vous ces consommations ?"
+            "question": "For diesel, how many liters do you estimate for this consumption?"
           }
         },
         "gaz naturel": {
           "conso": {
-            "question": "[TO_TRANSLATE] Pour le gaz naturel, à combien de m3 estimez-vous ces consommations ?"
+            "question": "For natural gas, how many m3 do you estimate for this consumption?"
           }
         }
       }
@@ -246,180 +226,180 @@
     "télétravail": {
       "bénévoles": {
         "h": {
-          "question": "[UPDATED] Combien d'heures sont en moyenne effectuées en télétravail par semaine pour vos bénévoles ?"
+          "question": "[TO_TRANSLATE] Combien d'heures de télétravail sont effectuées par semaine pour vos bénévoles ?"
         }
       },
       "salariés": {
         "j": {
-          "question": "[UPDATED] Combien de jours sont en moyenne télétravaillés par semaine par vos salariés ?"
+          "question": "[TO_TRANSLATE] Combien de jours télétravail sont effectuées par semaine pour vos salariés ?"
         }
       }
     },
     "intrants-services": {
       "services": {
-        "description": "[TO_TRANSLATE] La liste est non exhaustive : si vous n’avez pas comptabilisé l’ensemble de vos dépenses, c’est tout à fait normal. Il peut s’agir de dépenses très faiblement émissives ou dont les émissions sont déjà prises en compte dans d’autres postes ou via d’autres questions reposant sur des données plus précises.",
-        "question": "[TO_TRANSLATE] Quel montant avez-vous dépensé dans les services immatériels suivants en [Année] ?",
+        "description": "The list is not exhaustive: if you have not accounted for all your expenses, that's perfectly normal. These may be very low-emission expenses or emissions already accounted for in other items or via other questions based on more precise data.",
+        "question": "How much did you spend on the following intangible services in [Year]?",
         "spectacles-musées": {
-          "titre": "[TO_TRANSLATE] Spectacles, musées et autres services culturels",
+          "titre": "Shows, museums and other cultural services",
           "montant-dépensé": {
-            "question": "[TO_TRANSLATE] Montant dépensé en services de spectacles, musées et autres services culturels"
+            "question": "Amount spent on shows, museums and other cultural services"
           }
         },
         "assurance-reassurance": {
-          "titre": "[TO_TRANSLATE] Services d'assurance",
+          "titre": "Insurance services",
           "montant-dépensé": {
-            "question": "[TO_TRANSLATE] Montant dépensé en services d'assurance et réassurance"
+            "question": "Amount spent on insurance and reinsurance services"
           }
         },
         "telecom": {
-          "titre": "[TO_TRANSLATE] Services de télécommunications",
+          "titre": "Telecommunications services",
           "montant-dépensé": {
-            "question": "[TO_TRANSLATE] Montant dépensé en services de télécommunications"
+            "question": "Amount spent on telecommunications services"
           }
         },
         "sante-humaine": {
-          "titre": "[TO_TRANSLATE] Services de santé humaine",
+          "titre": "Human health services",
           "montant-dépensé": {
-            "question": "[TO_TRANSLATE] Montant dépensé en services de santé humaine"
+            "question": "Amount spent on human health services"
           }
         },
         "edition": {
-          "titre": "[TO_TRANSLATE] Services d'édition",
+          "titre": "Publishing services",
           "montant-dépensé": {
-            "question": "[TO_TRANSLATE] Montant dépensé en services d'édition"
+            "question": "Amount spent on publishing services"
           }
         },
         "poste-courrier": {
-          "titre": "[TO_TRANSLATE] Services de poste et de courrier",
+          "titre": "Postal and mail services",
           "montant-dépensé": {
-            "question": "[TO_TRANSLATE] Montant dépensé en services de poste et courrier"
+            "question": "Amount spent on postal and mail services"
           }
         },
         "restauration": {
-          "titre": "[TO_TRANSLATE] Services de restauration et d'hébergement",
+          "titre": "Catering and accommodation services",
           "montant-dépensé": {
-            "question": "[TO_TRANSLATE] Montant dépensé en services de restauration et hébergement"
+            "question": "Amount spent on catering and accommodation services"
           }
         },
         "formation": {
-          "titre": "[TO_TRANSLATE] Services de formation",
+          "titre": "Training services",
           "montant-dépensé": {
-            "question": "[TO_TRANSLATE] Montant dépensé en services de formation"
+            "question": "Amount spent on training services"
           }
         },
         "reparation-installation": {
-          "titre": "[TO_TRANSLATE] Services de réparation et d'installation",
+          "titre": "Repair and installation services",
           "montant-dépensé": {
-            "question": "[TO_TRANSLATE] Montant dépensé en services de réparation et installation"
+            "question": "Amount spent on repair and installation services"
           }
         },
         "juridique-comptable": {
-          "titre": "[UPDATED] Services de réparation et d'installation",
+          "titre": "Repair and installation services",
           "montant-dépensé": {
-            "question": "[TO_TRANSLATE] Montant dépensé en services juridiques, comptables et assurances"
+            "question": "Amount spent on legal, accounting and insurance services"
           }
         },
         "programmation-conseil": {
-          "titre": "[TO_TRANSLATE] Services de programmation et de conseil",
+          "titre": "Programming and consulting services",
           "montant-dépensé": {
-            "question": "[TO_TRANSLATE] Montant dépensé en services de programmation et conseil informatique"
+            "question": "Amount spent on IT programming and consulting services"
           }
         }
       },
       "numérique": {
-        "question": "[TO_TRANSLATE] Veuillez indiquer les usages numériques en [Année] des salariés et bénévoles de votre association",
+        "question": "Please indicate the digital usage in [Year] by the employees and volunteers of your association",
         "streaming": {
           "heures": {
-            "question": "[TO_TRANSLATE] Sur une année, combien d'heures de streaming vidéo ont été regardées ?"
+            "question": "Over a year, how many hours of video streaming were watched?"
           }
         },
         "visioconférence": {
           "heures": {
-            "question": "[TO_TRANSLATE] Sur une année, combien d'heures de visioconférence ont eu lieu ?"
+            "question": "Over a year, how many hours of videoconferencing took place?"
           }
         },
         "mails": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Sur une année, combien de mails ont été envoyés ?"
+            "question": "Over a year, how many emails were sent?"
           }
         },
         "stockage-cloud": {
           "volume": {
-            "question": "[TO_TRANSLATE] Sur une année, combien de Go de données ont été stockées sur un cloud ?"
+            "question": "Over a year, how many GB of data were stored on a cloud?"
           }
         }
       }
     },
     "intrants-biens-et-matières": {
       "ratios monétaires": {
-        "titre": "[TO_TRANSLATE] Intrants biens et matières",
-        "question": "[TO_TRANSLATE] Quels biens et matières avez-vous achetés en approche monétaire ?",
+        "titre": "Goods and materials inputs",
+        "question": "What goods and materials did you purchase using the monetary approach?",
         "petites-fournitures": {
-          "titre": "[TO_TRANSLATE] Petites fournitures",
+          "titre": "Small supplies",
           "nombre": {
-            "question": "[TO_TRANSLATE] Montant dépensé (k€) en petites fournitures"
+            "question": "Amount spent (k€) on small supplies"
           }
         },
         "meubles": {
-          "titre": "[TO_TRANSLATE] Meubles",
+          "titre": "Furniture",
           "nombre": {
-            "question": "[TO_TRANSLATE] Montant dépensé (k€) en meubles"
+            "question": "Amount spent (k€) on furniture"
           }
         },
         "machines-équipements": {
-          "titre": "[TO_TRANSLATE] Machines et équipements",
+          "titre": "Machines and equipment",
           "nombre": {
-            "question": "[TO_TRANSLATE] Montant dépensé (k€) en machines et équipements"
+            "question": "Amount spent (k€) on machines and equipment"
           }
         },
         "textiles": {
-          "titre": "[TO_TRANSLATE] Textiles",
+          "titre": "Textiles",
           "nombre": {
-            "question": "[TO_TRANSLATE] Montant dépensé (k€) en textiles"
+            "question": "Amount spent (k€) on textiles"
           }
         },
         "produits-pharmaceutiques": {
-          "titre": "[TO_TRANSLATE] Produits pharmaceutiques",
+          "titre": "Pharmaceutical products",
           "nombre": {
-            "question": "[TO_TRANSLATE] Montant dépensé (k€) en produits pharmaceutiques"
+            "question": "Amount spent (k€) on pharmaceutical products"
           }
         },
         "produits-chimiques": {
-          "titre": "[TO_TRANSLATE] Produits chimiques",
+          "titre": "Chemical products",
           "nombre": {
-            "question": "[TO_TRANSLATE] Montant dépensé (k€) en produits chimiques"
+            "question": "Amount spent (k€) on chemical products"
           }
         },
         "papier-carton": {
-          "titre": "[TO_TRANSLATE] Papier et carton",
+          "titre": "Paper and cardboard",
           "nombre": {
-            "question": "[TO_TRANSLATE] Montant dépensé (k€) en papier et carton"
+            "question": "Amount spent (k€) on paper and cardboard"
           }
         },
         "produits-métalliques": {
-          "titre": "[TO_TRANSLATE] Produits métalliques",
+          "titre": "Metal products",
           "nombre": {
-            "question": "[TO_TRANSLATE] Montant dépensé (k€) en produits métalliques"
+            "question": "Amount spent (k€) on metal products"
           }
         },
         "autres-produits-manufacturés": {
-          "titre": "[TO_TRANSLATE] Autres produits manufacturés",
+          "titre": "Other manufactured products",
           "nombre": {
-            "question": "[TO_TRANSLATE] Montant dépensé (k€) en autres produits manufacturés"
+            "question": "Amount spent (k€) on other manufactured products"
           }
         }
       }
     },
     "froid et clim": {
       "nombre": {
-        "description": "[TO_TRANSLATE] La consommation d'électricité de vos climatisations est incluse dans vos factures d'électricité. Cette question sert donc uniquement à prendre en compte l'impact de la construction de l'équipement de climatisation, et des fuites de gaz frigorigènes.",
-        "question": "[TO_TRANSLATE] Combien de climatiseurs sont utilisés dans vos locaux ?"
+        "description": "The electricity consumption of your air conditioners is included in your electricity bills. This question is therefore only intended to take into account the impact of the construction of the air conditioning equipment and refrigerant gas leaks.",
+        "question": "How many air conditioners are used in your premises?"
       }
     },
     "fret": {
       "transport": {
         "présent": {
-          "question": "[TO_TRANSLATE] Est-ce que votre association possède ou loue des véhicules pour transporter des marchandises ?"
+          "question": "Does your association own or rent vehicles to transport goods?"
         },
         "VUL": {
           "nombre": {
@@ -433,43 +413,57 @@
         },
         "carburant": {
           "litre": {
-            "question": "[TO_TRANSLATE] Combien de litres de carburants ces véhicules ont-ils consommé ?"
+            "question": "How many liters of fuel have these vehicles consumed?"
           }
         },
         "livraisons": {
-          "titre": "[TO_TRANSLATE] Nombre de livraisons",
-          "question": "[TO_TRANSLATE] En moyenne, combien de livraisons ont lieu par an ?"
+          "titre": "Number of deliveries",
+          "question": "On average, how many deliveries take place per year?"
         },
         "poids": {
-          "titre": "[TO_TRANSLATE] Poids moyen des livraisons",
-          "question": "[TO_TRANSLATE] En moyenne, pour une livraison, quel est le poids transporté ?"
+          "titre": "Average delivery weight",
+          "question": "On average, for a delivery, what is the weight transported?"
         },
         "local": {
-          "titre": "[TO_TRANSLATE] Locale",
+          "titre": "Local",
           "provenance": {
-            "titre": "[TO_TRANSLATE] livraisons locales",
-            "question": "[TO_TRANSLATE] Sur ces livraisons, quelle part provient de fournisseurs locaux (moins de 50 km) ?"
+            "titre": "Local deliveries",
+            "question": "Of these deliveries, what proportion comes from local suppliers (less than 50 km)?"
           }
         },
         "national": {
-          "titre": "[TO_TRANSLATE] France",
+          "titre": "France",
           "provenance": {
-            "titre": "[TO_TRANSLATE] livraisons nationales",
-            "question": "[TO_TRANSLATE] Sur ces livraisons, quelle part provient de fournisseurs nationaux (entre 50 km et 500 km) ?"
+            "titre": "National deliveries",
+            "question": "Of these deliveries, what proportion comes from national suppliers (between 50 km and 500 km)?"
           }
         },
         "europe": {
-          "titre": "[TO_TRANSLATE] Europe",
+          "titre": "Europe",
           "provenance": {
-            "titre": "[TO_TRANSLATE] livraisons européennes",
-            "question": "[TO_TRANSLATE] Sur ces livraisons, quelle part provient de fournisseurs européens (entre 500 km et 1500 km) ?"
+            "titre": "European deliveries",
+            "question": "Of these deliveries, what proportion comes from European suppliers (between 500 km and 1500 km)?"
           }
         },
         "international": {
-          "titre": "[TO_TRANSLATE] Monde",
+          "titre": "World",
           "provenance": {
-            "titre": "[TO_TRANSLATE] livraisons internationales",
-            "question": "[TO_TRANSLATE] Sur ces livraisons, quelle part provient de fournisseurs internationaux (plus de 1500 km) ?"
+            "titre": "International deliveries",
+            "question": "Of these deliveries, what proportion comes from international suppliers (more than 1500 km)?"
+          }
+        }
+      },
+      "fabrication": {
+        "titre": "[TO_TRANSLATE] Fabrication des véhicules",
+        "question": "[TO_TRANSLATE] Combien de véhicules sont possédés ou loués depuis moins de 5 ans parmi les catégories suivantes ?",
+        "VUL": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de véhicules utilitaires légers possédez-vous ou louez-vous depuis moins de 5 ans ?"
+          }
+        },
+        "PL": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de véhicules poids lourds possédez-vous ou louez-vous depuis moins de 5 ans ?"
           }
         }
       }
@@ -477,40 +471,39 @@
     "fin de vie": {
       "déchets": {
         "fin de vie présente": {
-          "description": "[TO_TRANSLATE] Les biens matériels fournis à vos bénéficiaires deviendront un jour des déchets, et devront donc être stockés, incinérés, recyclés, ... C'est ce que l'on appelle la fin de vie des produits, et il faut donc prendre en compte les émissions qui y sont associées.",
           "question": "[TO_TRANSLATE] Fournissez-vous des biens matériels à vos bénéficiaires ?"
         },
         "poids": {
-          "question": "[TO_TRANSLATE] Quel est le poids total de ces biens délivrés sur une année ?"
+          "question": "What is the total weight of these goods delivered over a year?"
         }
       }
     },
     "déplacements": {
       "fabrication": {
-        "titre": "[TO_TRANSLATE] Fabrication des véhicules",
-        "question": "[TO_TRANSLATE] Combien de véhicules sont possédés ou loués depuis moins de 5 ans parmi les catégories suivantes ?",
+        "titre": "Vehicle manufacturing",
+        "question": "How many vehicles have been owned or rented for less than 5 years in the following categories?",
         "voitures": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de voitures particulières possédez-vous ou louez-vous depuis moins de 5 ans ?"
+            "question": "How many passenger cars have you owned or rented for less than 5 years?"
           }
         }
       },
       "DT-salariés": {
         "MEP présent": {
-          "question": "[TO_TRANSLATE] Avez-vous réalisé une campagne de sensibilisation via MEP ?",
+          "question": "Have you carried out an awareness campaign via MEP?",
           "nombre bénévoles": {
-            "question": "[TO_TRANSLATE] Combien de bénévoles ont répondu à MEP ?"
+            "question": "How many volunteers responded to MEP?"
           },
           "nombre salariés": {
-            "question": "[TO_TRANSLATE] Combien de salariés ont répondu à MEP ?"
+            "question": "How many employees responded to MEP?"
           }
         },
         "avec": {
           "distance": {
-            "question": "[TO_TRANSLATE] D'après les résultats de MEP, quelle est la distance moyenne parcourue par salarié par jour (A/R) pour des déplacements domicile-travail ?"
+            "question": "According to MEP results, what is the average distance traveled per employee per day (round trip) for commuting?"
           },
           "réponse MEP": {
-            "question": "[UPDATED] D'après les résultats MEP, combien de kgCO2e représentent les déplacements domicile-travail des salariés ?"
+            "question": "[TO_TRANSLATE] D'après les résultats MEP, combien de kgCO2e représentent les déplacements liés à des missions des salariés ?"
           }
         },
         "sans": {
@@ -534,25 +527,25 @@
             "titre": "[TO_TRANSLATE] Voiture",
             "description": "[TO_TRANSLATE] On considère ici toutes les motorisations de voiture individuelles, basée sur des moyennes nationales",
             "distance": {
-              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par salarié en voiture par jour (A/R) pour des déplacements domicile-travail ?"
+              "question": "How many km are traveled on average per employee by car per day (round trip) for commuting?"
             }
           },
           "train": {
             "titre": "[TO_TRANSLATE] Train (TER)",
             "distance": {
-              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par salarié en train par jour (A/R) pour des déplacements domicile-travail ?"
+              "question": "How many km are traveled on average per employee by train per day (round trip) for commuting?"
             }
           },
           "deux roues": {
             "titre": "[TO_TRANSLATE] Deux roues",
             "distance": {
-              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par salarié en deux roues par jour (A/R) pour des déplacements domicile-travail ?"
+              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par salarié en transports en commun par jour (A/R) pour des déplacements domicile-travail ?"
             }
           },
           "transports en commun": {
             "titre": "[TO_TRANSLATE] Transports en commun (Métro, tramway, RER, bus, ...)",
             "distance": {
-              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par salarié en transports en commun par jour (A/R) pour des déplacements domicile-travail ?"
+              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par salarié en deux roues par jour (A/R) pour des déplacements domicile-travail ?"
             }
           }
         }
@@ -560,10 +553,10 @@
       "DT-bénévoles": {
         "avec": {
           "distance": {
-            "question": "[TO_TRANSLATE] D'après les résultats de MEP, quelle est la distance moyenne parcourue par jour (A/R) par bénévole pour des déplacements domicile-travail ?"
+            "question": "According to MEP results, what is the average distance traveled per day (round trip) by a volunteer for commuting?"
           },
           "réponse MEP": {
-            "question": "[TO_TRANSLATE] D'après les résultats MEP, combien de kgCO2e représentent les déplacements domicile-travail des bénévoles ?"
+            "question": "According to MEP results, how many kgCO2e are represented by volunteer commuting?"
           }
         },
         "sans": {
@@ -587,25 +580,25 @@
             "titre": "[TO_TRANSLATE] Voiture",
             "description": "[TO_TRANSLATE] On considère ici toutes les motorisations de voiture individuelles, basée sur des moyennes nationales",
             "distance": {
-              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en voiture pour des déplacements domicile-travail ?"
+              "question": "How many km are traveled on average per day (round trip) by a volunteer by car for commuting?"
             }
           },
           "train": {
             "titre": "[TO_TRANSLATE] Train (TER)",
             "distance": {
-              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en train pour des déplacements domicile-travail ?"
+              "question": "How many km are traveled on average per day (round trip) by a volunteer by train for commuting?"
             }
           },
           "deux roues": {
             "titre": "[TO_TRANSLATE] Deux roues",
             "distance": {
-              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en deux roues pour des déplacements domicile-travail ?"
+              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en transports en commun pour des déplacements domicile-travail ?"
             }
           },
           "transports en commun": {
             "titre": "[TO_TRANSLATE] Transports en commun (Métro, tramway, RER, bus, ...)",
             "distance": {
-              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en transports en commun pour des déplacements domicile-travail ?"
+              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en deux roues pour des déplacements domicile-travail ?"
             }
           }
         }
@@ -614,19 +607,19 @@
         "avec": {
           "émissions MEP": {
             "voiture": {
-              "question": "[TO_TRANSLATE] D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en voiture liés à des missions ?"
+              "question": "According to MEP, what is the average emissions per employee for business travel by car?"
             },
             "train": {
-              "question": "[TO_TRANSLATE] D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en train liés à des missions ?"
+              "question": "According to MEP, what is the average emissions per employee for business travel by train?"
             },
             "avion": {
-              "question": "[TO_TRANSLATE] D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en avion liés à des missions ?"
+              "question": "According to MEP, what is the average emissions per employee for business travel by plane?"
             },
             "transports en commun": {
-              "question": "[TO_TRANSLATE] D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en transports en commun liés à des missions ?"
+              "question": "According to MEP, what is the average emissions per employee for business travel by public transport?"
             },
             "deux roues": {
-              "question": "[TO_TRANSLATE] D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en deux roues liés à des missions ?"
+              "question": "According to MEP, what is the average emissions per employee for business travel by two-wheeler?"
             }
           }
         },
@@ -635,44 +628,44 @@
             "titre": "[TO_TRANSLATE] Voiture, par mois",
             "description": "[TO_TRANSLATE] On considère ici toutes les motorisations de voiture individuelles, basée sur des moyennes nationales",
             "distance": {
-              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par mois par salarié en voiture pour des déplacements liés à des missions ?"
+              "question": "How many km are traveled on average per month per employee by car for business travel?"
             }
           },
           "train": {
             "titre": "[TO_TRANSLATE] Train (TER), par mois",
             "distance": {
-              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par mois par salarié en train pour des déplacements liés à des missions ?"
+              "question": "How many km are traveled on average per month per employee by train for business travel?"
             }
           },
           "deux roues": {
             "titre": "[TO_TRANSLATE] Deux roues, par mois",
             "distance": {
-              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par mois par salarié en deux roues pour des déplacements liés à des missions ?"
+              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par mois par salarié en transports en commun pour des déplacements liés à des missions ?"
             }
           },
           "transports en commun": {
             "titre": "[TO_TRANSLATE] Transports en commun (Métro, tramway, RER, bus, ...), par mois",
             "distance": {
-              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par mois par salarié en transports en commun pour des déplacements liés à des missions ?"
+              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par mois par salarié en deux roues pour des déplacements liés à des missions ?"
             }
           },
           "avion": {
             "court courrier": {
               "titre": "[TO_TRANSLATE] Avion, court courrier, par an",
               "distance": {
-                "question": "[UPDATED] Combien de km ont été parcourus cette année par salarié en avion court courrier pour des déplacements liés à des missions ?"
+                "question": "[TO_TRANSLATE] Combien de km ont été parcourus cette année par salarié avion court courrier pour des déplacements liés à des missions ?"
               }
             },
             "moyen courrier": {
               "titre": "[TO_TRANSLATE] Avion, moyen courrier, par an",
               "distance": {
-                "question": "[UPDATED] Combien de km ont été parcourus cette année par salarié en avion moyen courrier pour des déplacements liés à des missions ?"
+                "question": "[TO_TRANSLATE] Combien de km ont été parcourus cette année par salarié avion moyen courrier pour des déplacements liés à des missions ?"
               }
             },
             "long courrier": {
               "titre": "[TO_TRANSLATE] Avion, long courrier, par an",
               "distance": {
-                "question": "[UPDATED] Combien de km ont été parcourus cette année par salarié en avion long courrier pour des déplacements liés à des missions ?"
+                "question": "[TO_TRANSLATE] Combien de km ont été parcourus cette année par salarié avion long courrier pour des déplacements liés à des missions ?"
               }
             }
           }
@@ -682,19 +675,19 @@
         "avec": {
           "émissions MEP": {
             "voiture": {
-              "question": "[TO_TRANSLATE] D'après MEP, quelle est la moyenne d'émissions par bénévole pour des déplacements en voiture liés à des missions ?"
+              "question": "According to MEP, what is the average emissions per volunteer for business travel by car?"
             },
             "train": {
-              "question": "[TO_TRANSLATE] D'après MEP, quelle est la moyenne d'émissions par bénévole pour des déplacements en train liés à des missions ?"
+              "question": "According to MEP, what is the average emissions per volunteer for business travel by train?"
             },
             "avion": {
-              "question": "[TO_TRANSLATE] D'après MEP, quelle est la moyenne d'émissions par bénévole pour des déplacements en avion liés à des missions ?"
+              "question": "According to MEP, what is the average emissions per volunteer for business travel by plane?"
             },
             "transports en commun": {
-              "question": "[TO_TRANSLATE] D'après MEP, quelle est la moyenne d'émissions par bénévole pour des déplacements en transports en commun liés à des missions ?"
+              "question": "According to MEP, what is the average emissions per volunteer for business travel by public transport?"
             },
             "deux roues": {
-              "question": "[TO_TRANSLATE] D'après MEP, quelle est la moyenne d'émissions par bénévole pour des déplacements en deux roues liés à des missions ?"
+              "question": "According to MEP, what is the average emissions per volunteer for business travel by two-wheeler?"
             }
           }
         },
@@ -702,45 +695,45 @@
           "voiture": {
             "titre": "[TO_TRANSLATE] Voiture, par mois",
             "distance": {
-              "description": "[TO_TRANSLATE] On considère ici toutes les motorisations de voiture individuelles, basée sur des moyennes nationales",
-              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par mois par bénévole en voiture pour des déplacements liés à des missions ?"
+              "description": "All types of individual car engines are considered here, based on national averages",
+              "question": "How many km are traveled on average per month per volunteer by car for business travel?"
             }
           },
           "train": {
             "titre": "[TO_TRANSLATE] Train (TER), par mois",
             "distance": {
-              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par mois par bénévole en train pour des déplacements liés à des missions ?"
+              "question": "How many km are traveled on average per month per volunteer by train for business travel?"
             }
           },
           "deux roues": {
             "titre": "[TO_TRANSLATE] Deux roues, par mois",
             "distance": {
-              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par mois par bénévole en deux roues pour des déplacements liés à des missions ?"
+              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par mois par bénévole en transports en commun pour des déplacements liés à des missions ?"
             }
           },
           "transports en commun": {
             "titre": "[TO_TRANSLATE] Transports en commun (Métro, tramway, RER, bus, ...), par mois",
             "distance": {
-              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par mois par bénévole en transports en commun pour des déplacements liés à des missions ?"
+              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par mois par bénévole en deux roues pour des déplacements liés à des missions ?"
             }
           },
           "avion": {
             "court courrier": {
               "titre": "[TO_TRANSLATE] Avion, court courrier, par an",
               "distance": {
-                "question": "[TO_TRANSLATE] Combien de km ont été parcourus cette année par bénévole avion court courrier pour des déplacements liés à des missions ?"
+                "question": "How many km were traveled this year per volunteer by short-haul plane for business travel?"
               }
             },
             "moyen courrier": {
               "titre": "[TO_TRANSLATE] Avion, moyen courrier, par an",
               "distance": {
-                "question": "[TO_TRANSLATE] Combien de km ont été parcourus cette année par bénévole avion moyen courrier pour des déplacements liés à des missions ?"
+                "question": "How many km were traveled this year per volunteer by medium-haul plane for business travel?"
               }
             },
             "long courrier": {
               "titre": "[TO_TRANSLATE] Avion, long courrier, par an",
               "distance": {
-                "question": "[TO_TRANSLATE] Combien de km ont été parcourus cette année par bénévole avion long courrier pour des déplacements liés à des missions ?"
+                "question": "How many km were traveled this year per volunteer by long-haul plane for business travel?"
               }
             }
           }
@@ -748,82 +741,70 @@
       },
       "bénéficiaires": {
         "se déplacent": {
-          "question": "[TO_TRANSLATE] Les bénéficiaires de vos produits ou services se déplacent-ils pour en profiter ?"
-        },
-        "part voiture": {
-          "titre": "[TO_TRANSLATE] Voiture",
-          "question": "[UPDATED] Quel pourcentage des trajets se fait en voiture ?"
-        },
-        "part train": {
-          "titre": "[TO_TRANSLATE] Train (TER)",
-          "question": "[UPDATED] Quel pourcentage des trajets se fait en train ?"
-        },
-        "part deux roues": {
-          "titre": "[TO_TRANSLATE] Deux roues",
-          "question": "[UPDATED] Quel pourcentage des trajets se fait en deux roues (scooter, moto) ?"
-        },
-        "part transport en commun": {
-          "titre": "[TO_TRANSLATE] Transport en commun (Métro, tramway, RER, bus, ...)",
-          "question": "[UPDATED] Quel pourcentage des trajets se fait en transport en commun ?"
-        },
-        "part avion": {
-          "titre": "[TO_TRANSLATE] Avion",
-          "question": "[UPDATED] Quel pourcentage des trajets se fait en avion ?"
-        },
-        "part actif": {
-          "titre": "[TO_TRANSLATE] Modes actifs (à pied, trottinette, ...)",
-          "question": "[TO_TRANSLATE] Quel pourcentage des trajets via des modes actifs (à pied, vélo, trottinette) ?"
+          "question": "Do the beneficiaries of your products or services travel to benefit from them?"
         },
         "voiture": {
-          "titre": "[TO_TRANSLATE] Voiture",
-          "question": "[UPDATED] Combien de km parcourent en moyenne sur l'année vos bénéficiaires en voiture ?"
+          "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par vos bénéficiaires en voiture pour se rendre à vos produits ou services ?"
         },
-        "train": {
-          "titre": "[TO_TRANSLATE] Train (TER)",
-          "question": "[UPDATED] Combien de km parcourent en moyenne sur l'année vos bénéficiaires en train ?"
-        },
-        "deux roues": {
-          "titre": "[TO_TRANSLATE] Deux roues",
-          "question": "[UPDATED] Combien de km parcourent en moyenne sur l'année vos bénéficiaires se déplaçant en deux roues (scooter, moto) ?"
-        },
-        "transport en commun": {
-          "titre": "[TO_TRANSLATE] Transport en commun (Métro, tramway, RER, bus, ...)",
-          "question": "[UPDATED] Combien de km parcourent en moyenne sur l'année vos bénéficiaires en transport en commun ?"
-        },
-        "avion": {
-          "titre": "[TO_TRANSLATE] Avion",
-          "question": "[UPDATED] Combien de km parcourent en moyenne sur l'année vos bénéficiaires en avion ?"
+        "part voiture": {
+          "question": "[TO_TRANSLATE] Quel pourcentage des trajets en voiture ?"
         },
         "actif": {
-          "titre": "[TO_TRANSLATE] Modes actifs (à pied, trottinette, ...)",
-          "question": "[UPDATED] Combien de km parcourent en moyenne sur l'année vos bénéficiaires via des modes actifs (à pied, vélo, trottinette) ?"
+          "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par vos bénéficiaires via des modes actifs (à pied, vélo, trottinette) pour se rendre à vos produits ou services ?"
+        },
+        "part actif": {
+          "question": "[TO_TRANSLATE] Quel pourcentage des trajets via des modes actifs (à pied, vélo, trottinette) ?"
+        },
+        "deux roues": {
+          "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par vos bénéficiaires en deux roues (scooter, moto) pour se rendre à vos produits ou services ?"
+        },
+        "part deux roues": {
+          "question": "[TO_TRANSLATE] Quel pourcentage des trajets en deux roues (scooter, moto) ?"
+        },
+        "transport en commun": {
+          "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par vos bénéficiaires en transport en commun pour se rendre à vos produits ou services ?"
+        },
+        "part transport en commun": {
+          "question": "[TO_TRANSLATE] Quel pourcentage des trajets en transport en commun ?"
+        },
+        "train": {
+          "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par vos bénéficiaires en train pour se rendre à vos produits ou services ?"
+        },
+        "part train": {
+          "question": "[TO_TRANSLATE] Quel pourcentage des trajets en train ?"
+        },
+        "avion": {
+          "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par vos bénéficiaires en avion pour se rendre à vos produits ou services ?"
+        },
+        "part avion": {
+          "question": "[TO_TRANSLATE] Quel pourcentage des trajets en avion ?"
         }
       }
     },
     "déchets": {
       "emballages et plastiques": {
         "poubelle jaune": {
-          "titre": "[TO_TRANSLATE] Poubelle jaune",
+          "titre": "Yellow bin",
           "poids": {
-            "question": "[TO_TRANSLATE] Poubelle jaune (emballages et plastiques)"
+            "question": "Yellow bin (packaging and plastics)"
           }
         },
         "déchets verre": {
-          "titre": "[TO_TRANSLATE] Verre",
+          "titre": "Glass",
           "poids": {
-            "question": "[TO_TRANSLATE] Déchets verre"
+            "question": "Glass waste"
           }
         },
         "poubelle noire": {
-          "titre": "[TO_TRANSLATE] Poubelle noire (ordures ménagères, autres déchets, etc)",
+          "titre": "Black bin (household waste, other waste, etc.)",
           "poids": {
-            "question": "[TO_TRANSLATE] Poubelle noire (ordures ménagères)"
+            "question": "Black bin (household waste)"
           }
         },
         "déchets verts": {
-          "titre": "[TO_TRANSLATE] Déchets verts, compost et déchets organiques",
+          "titre": "Green waste, compost and organic waste",
           "poids": {
-            "question": "[TO_TRANSLATE] Déchets verts, compost et déchets organiques"
+            "question": "Green waste, compost and organic waste"
           }
         }
       }
@@ -831,31 +812,31 @@
     "construction": {
       "infrastructure": {
         "nombre de places": {
-          "question": "[TO_TRANSLATE] De combien de places dispose ce ou ces parkings ?"
+          "question": "How many parking spaces does this or these parking lots have?"
         },
         "parking présent": {
-          "question": "[TO_TRANSLATE] L'association dispose t'elle d'un (ou plusieurs) parkings artificialisés (béton, bitume, ...) ?"
+          "question": "Does the association have one (or more) artificialized parking lots (concrete, asphalt, ...)?"
         }
       },
       "bâtiment": {
         "locaux": {
-          "question": "[TO_TRANSLATE] Concernant vos locaux, diriez-vous que :",
+          "question": "Regarding your premises, would you say that:",
           "options": {
-            "locaux seuls": "[TO_TRANSLATE] J'utilise des locaux qui sont entièrement dédiés à mon association",
-            "locaux partagés": "[TO_TRANSLATE] Mes locaux sont partagés avec d'autres stuctures (co-working, open-space partagés, ...)",
-            "pas de locaux": "[TO_TRANSLATE] Mes activités associatives ne nécessitent pas de locaux (télétravail à 100%, extérieur, ...)"
+            "locaux seuls": "I use premises that are entirely dedicated to my association",
+            "locaux partagés": "My premises are shared with other structures (co-working, shared open-space, ...)",
+            "pas de locaux": "My association's activities do not require premises (100% remote work, outdoors, ...)"
           },
           "locaux seuls": {
             "surface": {
-              "question": "[TO_TRANSLATE] Quelle est la surface de ces locaux ? (On considère uniquement les locaux possédés ou loués depuis moins de 50 ans)"
+              "question": "What is the surface area of these premises? (Only premises owned or rented for less than 50 years are considered)"
             }
           },
           "locaux partagés": {
             "surface": {
-              "question": "[TO_TRANSLATE] Quelle est la surface de ces locaux ? (On considère uniquement les locaux possédés ou loués depuis moins de 50 ans)"
+              "question": "What is the surface area of these premises? (Only premises owned or rented for less than 50 years are considered)"
             },
             "pourcentage": {
-              "question": "[TO_TRANSLATE] Quelle est la part de la surface de ces locaux attribuables à votre association ?"
+              "question": "What proportion of the surface area of these premises is attributable to your association?"
             }
           }
         }
@@ -865,99 +846,99 @@
       "salariés": {
         "viande rouge": {
           "nombre de repas": {
-            "question": "[TO_TRANSLATE] Combien de repas à base de viande rouge sont consommés par vos salariés chaque année ?"
+            "question": "How many red meat-based meals are consumed by your employees each year?"
           }
         },
         "viande blanche": {
           "nombre de repas": {
-            "question": "[TO_TRANSLATE] Combien de repas à base de viande blanche sont consommés par vos salariés chaque année ?"
+            "question": "How many white meat-based meals are consumed by your employees each year?"
           }
         },
         "poisson blanc": {
           "nombre de repas": {
-            "question": "[TO_TRANSLATE] Combien de repas à base de poisson blanc sont consommés par vos salariés chaque année ?"
+            "question": "How many white fish-based meals are consumed by your employees each year?"
           }
         },
         "poisson gras": {
           "nombre de repas": {
-            "question": "[TO_TRANSLATE] Combien de repas à base de poisson gras sont consommés par vos salariés chaque année ?"
+            "question": "How many oily fish-based meals are consumed by your employees each year?"
           }
         },
         "végétarien": {
           "nombre de repas": {
-            "question": "[TO_TRANSLATE] Combien de repas végétariens sont consommés par vos salariés chaque année ?"
+            "question": "How many vegetarian meals are consumed by your employees each year?"
           }
         },
         "végétalien": {
           "nombre de repas": {
-            "question": "[TO_TRANSLATE] Combien de repas végétaliens sont consommés par vos salariés chaque année ?"
+            "question": "How many vegan meals are consumed by your employees each year?"
           }
         }
       },
       "bénévoles": {
         "viande rouge": {
           "nombre de repas": {
-            "question": "[TO_TRANSLATE] Combien de repas à base de viande rouge sont consommés par vos bénévoles chaque année ?"
+            "question": "How many red meat-based meals are consumed by your volunteers each year?"
           }
         },
         "viande blanche": {
           "nombre de repas": {
-            "question": "[TO_TRANSLATE] Combien de repas à base de viande blanche sont consommés par vos bénévoles chaque année ?"
+            "question": "How many white meat-based meals are consumed by your volunteers each year?"
           }
         },
         "poisson blanc": {
           "nombre de repas": {
-            "question": "[TO_TRANSLATE] Combien de repas à base de poisson blanc sont consommés par vos bénévoles chaque année ?"
+            "question": "How many white fish-based meals are consumed by your volunteers each year?"
           }
         },
         "poisson gras": {
           "nombre de repas": {
-            "question": "[TO_TRANSLATE] Combien de repas à base de poisson gras sont consommés par vos bénévoles chaque année ?"
+            "question": "How many oily fish-based meals are consumed by your volunteers each year?"
           }
         },
         "végétarien": {
           "nombre de repas": {
-            "question": "[TO_TRANSLATE] Combien de repas végétariens sont consommés par vos bénévoles chaque année ?"
+            "question": "How many vegetarian meals are consumed by your volunteers each year?"
           }
         },
         "végétalien": {
           "nombre de repas": {
-            "question": "[TO_TRANSLATE] Combien de repas végétaliens sont consommés par vos bénévoles chaque année ?"
+            "question": "How many vegan meals are consumed by your volunteers each year?"
           }
         }
       },
       "bénéficiaires": {
         "repas présent": {
-          "question": "[TO_TRANSLATE] Le service proposé par l’association implique t'il de proposer des repas à ses bénéficiaires ? (évènements, activités humanitaires, ...)"
+          "question": "Does the service offered by the association involve providing meals to its beneficiaries? (events, humanitarian activities, ...)"
         },
         "viande rouge": {
           "nombre de repas": {
-            "question": "[TO_TRANSLATE] Combien de repas à base de viande rouge sont consommés par vos bénéficiaires chaque année ?"
+            "question": "How many red meat-based meals are consumed by your beneficiaries each year?"
           }
         },
         "viande blanche": {
           "nombre de repas": {
-            "question": "[TO_TRANSLATE] Combien de repas à base de viande blanche sont consommés par vos bénéficiaires chaque année ?"
+            "question": "How many white meat-based meals are consumed by your beneficiaries each year?"
           }
         },
         "poisson blanc": {
           "nombre de repas": {
-            "question": "[TO_TRANSLATE] Combien de repas à base de poisson blanc sont consommés par vos bénéficiaires chaque année ?"
+            "question": "How many white fish-based meals are consumed by your beneficiaries each year?"
           }
         },
         "poisson gras": {
           "nombre de repas": {
-            "question": "[TO_TRANSLATE] Combien de repas à base de poisson gras sont consommés par vos bénéficiaires chaque année ?"
+            "question": "How many oily fish-based meals are consumed by your beneficiaries each year?"
           }
         },
         "végétarien": {
           "nombre de repas": {
-            "question": "[TO_TRANSLATE] Combien de repas végétariens sont consommés par vos bénéficiaires chaque année ?"
+            "question": "How many vegetarian meals are consumed by your beneficiaries each year?"
           }
         },
         "végétalien": {
           "nombre de repas": {
-            "question": "[TO_TRANSLATE] Combien de repas végétaliens sont consommés par vos bénéficiaires chaque année ?"
+            "question": "How many vegan meals are consumed by your beneficiaries each year?"
           }
         }
       }

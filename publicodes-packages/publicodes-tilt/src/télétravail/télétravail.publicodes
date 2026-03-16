@@ -5,6 +5,7 @@ télétravail:
       - bénévoles
       - salariés
   unité: kgCO2e
+  par défaut: 0
 
 télétravail . FE:
   valeur: 0.39

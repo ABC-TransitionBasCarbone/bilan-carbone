@@ -8,6 +8,7 @@ alimentation . bénévoles:
       - végétarien
       - végétalien
   unité: kgCO2e
+  par défaut: 0
 
 alimentation . bénévoles . viande rouge:
   formule: FE * nombre de repas

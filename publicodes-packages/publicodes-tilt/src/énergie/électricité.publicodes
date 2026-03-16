@@ -2,6 +2,7 @@
   titre: Électricité
   formule: consommation * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     consommation:
       question: Quelle est votre consommation annuelle d'électricité ? (issue de votre facture et n'incluant pas votre autoconsommation, ni la consommation des véhicules électriques)

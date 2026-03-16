@@ -8,6 +8,7 @@
     "all": "All",
     "allSites": "All sites",
     "allSubPosts": "All sub posts",
+    "allPosts": "All posts",
     "allTags": "All tags",
     "xSites": "{count} sites",
     "xSubPosts": "{count} sub posts",
@@ -24,6 +25,7 @@
     "selectedPlural": "selected",
     "moreInfo": "More info",
     "mandatory": "* mandatory",
+    "and": "and",
     "action": {
       "create": "Create",
       "edit": "Edit",

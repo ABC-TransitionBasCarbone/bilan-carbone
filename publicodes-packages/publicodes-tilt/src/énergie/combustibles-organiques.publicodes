@@ -18,6 +18,7 @@
 
 énergie . combustibles organiques . choix:
   question: Utilisez-vous des bûches ou des granulés ?
+  par défaut: 0
   une possibilité:
     - bûches
     - granulés
@@ -34,6 +35,7 @@
   titre: Bois granulés
   formule: consommation * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     consommation:
       question: Combien de kWh issus de la combustion de granulés de bois ont été consommés chaque année ?

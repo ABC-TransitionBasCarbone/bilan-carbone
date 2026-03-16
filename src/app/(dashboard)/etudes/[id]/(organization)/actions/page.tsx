@@ -1,27 +1,39 @@
-import withAuth from '@/components/hoc/withAuth'
+import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import { StudyProps } from '@/components/hoc/withStudy'
 import withStudyDetails from '@/components/hoc/withStudyDetails'
 import withTransitionPlan, { TransitionPlanProps } from '@/components/hoc/withTransitionPlan'
 import ActionsPage from '@/components/pages/ActionsPage'
 import NotFound from '@/components/pages/NotFound'
+import { loadTransitionPlanPageData } from '@/components/study/transitionPlan/transitionPlanPageData'
 import { hasTransitionPlan } from '@/db/transitionPlan'
-import { getStudyActions, getStudyTransitionPlan } from '@/services/serverFunctions/transitionPlan'
 import { redirect } from 'next/navigation'
 
-const Actions = async ({ study, canEdit }: StudyProps & TransitionPlanProps) => {
+const Actions = async ({ study, canEdit, user }: StudyProps & UserSessionProps & TransitionPlanProps) => {
   const studyHasTransitionPlan = await hasTransitionPlan(study.id)
   if (!studyHasTransitionPlan) {
-    redirect(`/etudes/${study.id}/trajectoires`)
+    redirect(`/etudes/${study.id}/initialisation`)
   }
 
-  const [transitionPlan, actions] = await Promise.all([getStudyTransitionPlan(study.id), getStudyActions(study.id)])
-
-  if (!actions.success || !transitionPlan.success || !transitionPlan.data) {
+  const data = await loadTransitionPlanPageData(study.id, user.accountId)
+  if (!data || data.actions === null) {
     return <NotFound />
   }
 
+  const { transitionPlan, validatedOnly, trajectories, linkedStudies, linkedExternalStudies, actions, sectenData } =
+    data
+
   return (
-    <ActionsPage study={study} actions={actions.data} transitionPlanId={transitionPlan.data.id} canEdit={canEdit} />
+    <ActionsPage
+      study={study}
+      actions={actions}
+      transitionPlanId={transitionPlan.id}
+      canEdit={canEdit}
+      trajectories={trajectories}
+      linkedStudies={linkedStudies}
+      linkedExternalStudies={linkedExternalStudies}
+      validatedOnly={validatedOnly}
+      sectenData={sectenData}
+    />
   )
 }
 

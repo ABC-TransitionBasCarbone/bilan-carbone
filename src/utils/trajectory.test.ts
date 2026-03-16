@@ -1,7 +1,9 @@
-import { TrajectoryDataPoint } from '@/components/study/transitionPlan/TrajectoryGraph'
 import { TrajectoryWithObjectives } from '@/db/transitionPlan'
+import { TrajectoryDataPoint } from '@/types/trajectory.types'
 import { expect } from '@jest/globals'
 import { Action, StudyResultUnit, TrajectoryType } from '@prisma/client'
+import { createGeneralSectenData } from './secten.test-utils'
+import { calculateSNBCTrajectory } from './snbc'
 import {
   BaseObjective,
   calculateActionBasedTrajectory,
@@ -35,6 +37,11 @@ const DEFAULT_LINEAR_REDUCTION_WB2C = 25
 const COMPENSATED_LINEAR_REDUCTION_2025_15C = 7.241379310344829
 const COMPENSATED_LINEAR_REDUCTION_2025_WB2C = 3.333333333333333
 const EMISSION_FACTOR_VALUE = 10
+const DEFAULT_TRAJECTORY = [
+  { year: 1990, value: 1200 },
+  { year: 2000, value: 1100 },
+  { year: 2018, value: 1000 },
+]
 
 const createPastStudy = (year: number, totalCo2: number, overrides?: Partial<PastStudy>): PastStudy => ({
   id: `past-study-${year}`,
@@ -86,10 +93,12 @@ describe('calculateTrajectory', () => {
         studyStartYear: 2020,
         reductionRate: SBTI_REDUCTION_RATE_15,
         pastStudies: [],
+        defaultTrajectory: DEFAULT_TRAJECTORY,
       })
 
-      expect(result).toHaveLength(31)
-      expect(result[0]).toEqual({ year: 2020, value: 1000 })
+      expect(result).toHaveLength(31 + DEFAULT_TRAJECTORY.length)
+      expect(result[0]).toEqual({ year: 1990, value: 1200 })
+      expect(result.find((p) => p.year === 2020)?.value).toEqual(1000)
 
       const result2043 = result.find((p) => p.year === 2043)
       expect(result2043?.value).toBeCloseTo(Math.max(0, 1000 - (2043 - 2020) * DEFAULT_LINEAR_REDUCTION_15C), 1)
@@ -104,30 +113,40 @@ describe('calculateTrajectory', () => {
         studyStartYear: 2020,
         reductionRate: SBTI_REDUCTION_RATE_WB2C,
         pastStudies: [],
+        defaultTrajectory: DEFAULT_TRAJECTORY,
       })
 
-      expect(result).toHaveLength(2061 - 2020)
-      expect(result[0]).toEqual({ year: 2020, value: 1000 })
-      expect(result[30].year).toBe(2050)
-      expect(result[30].value).toBeCloseTo(Math.max(0, 1000 - (2050 - 2020) * DEFAULT_LINEAR_REDUCTION_WB2C), 1)
+      expect(result).toHaveLength(2061 - 2020 + DEFAULT_TRAJECTORY.length)
+      expect(result[0]).toEqual({ year: 1990, value: 1200 })
+      expect(result.find((p) => p.year === 2020)?.value).toEqual(1000)
+      expect(result.find((p) => p.year === 2050)?.value).toBeCloseTo(
+        Math.max(0, 1000 - (2050 - 2020) * DEFAULT_LINEAR_REDUCTION_WB2C),
+        1,
+      )
 
       const result2060 = result.find((p) => p.year === 2060)
       expect(result2060?.value).toBeCloseTo(Math.max(0, 1000 - (2060 - 2020) * DEFAULT_LINEAR_REDUCTION_WB2C), 1)
     })
 
-    test('should start graph from study year and keep emissions flat until 2020', () => {
+    test('should start graph from default trajectory year and follow emissions until study start year', () => {
       const result = calculateSBTiTrajectory({
         studyEmissions: 1000,
         studyStartYear: 2018,
         reductionRate: SBTI_REDUCTION_RATE_15,
         pastStudies: [],
+        defaultTrajectory: [
+          { year: 1990, value: 1200 },
+          { year: 2000, value: 1100 },
+          { year: 2018, value: 1000 },
+        ],
       })
 
-      expect(result[0]).toEqual({ year: 2018, value: 1000 })
-      expect(result[1]).toEqual({ year: 2019, value: 1000 })
-      expect(result[2]).toEqual({ year: 2020, value: 1000 })
-      expect(result[3].year).toBe(2021)
-      expect(Math.round(result[3].value)).toBe(958)
+      expect(result[0]).toEqual({ year: 1990, value: 1200 })
+      expect(result[1]).toEqual({ year: 2000, value: 1100 })
+      expect(result[2]).toEqual({ year: 2018, value: 1000 })
+      expect(result[3].year).toBe(2020)
+      expect(result[4].year).toBe(2021)
+      expect(Math.round(result[4].value)).toBe(958)
     })
   })
 
@@ -142,18 +161,17 @@ describe('calculateTrajectory', () => {
         studyStartYear,
         reductionRate,
         pastStudies: [],
+        defaultTrajectory: DEFAULT_TRAJECTORY,
       })
 
-      expect(result[0]).toEqual({ year: 2020, value: 1000 })
-      expect(result[5]).toEqual({ year: 2025, value: 1000 })
+      expect(result[0]).toEqual({ year: 1990, value: 1200 })
+      expect(result.find((p) => p.year === 2025)?.value).toEqual(1000)
 
-      expect(result[6].year).toBe(2026)
-      expect(result[6].value).toBeCloseTo(
+      expect(result.find((p) => p.year === 2026)?.value).toBeCloseTo(
         1000 - (2026 - 2025) * COMPENSATED_LINEAR_REDUCTION_2025_15C * EMISSION_FACTOR_VALUE,
         1,
       )
-      expect(result[7].year).toBe(2027)
-      expect(result[7].value).toBeCloseTo(
+      expect(result.find((p) => p.year === 2027)?.value).toBeCloseTo(
         1000 - (2027 - 2025) * COMPENSATED_LINEAR_REDUCTION_2025_15C * EMISSION_FACTOR_VALUE,
         1,
       )
@@ -178,19 +196,18 @@ describe('calculateTrajectory', () => {
         studyStartYear,
         reductionRate,
         pastStudies: [],
+        defaultTrajectory: DEFAULT_TRAJECTORY,
       })
 
-      expect(result[0]).toEqual({ year: 2020, value: 1000 })
-      expect(result[5]).toEqual({ year: 2025, value: 1000 })
+      expect(result[0]).toEqual({ year: 1990, value: 1200 })
+      expect(result.find((p) => p.year === 2025)?.value).toEqual(1000)
 
-      expect(result[6].year).toBe(2026)
-      expect(result[6].value).toBeCloseTo(
+      expect(result.find((p) => p.year === 2026)?.value).toBeCloseTo(
         1000 - (2026 - 2025) * COMPENSATED_LINEAR_REDUCTION_2025_WB2C * EMISSION_FACTOR_VALUE,
         1,
       )
 
-      expect(result[7].year).toBe(2027)
-      expect(result[7].value).toBeCloseTo(
+      expect(result.find((p) => p.year === 2027)?.value).toBeCloseTo(
         1000 - (2027 - 2025) * COMPENSATED_LINEAR_REDUCTION_2025_WB2C * EMISSION_FACTOR_VALUE,
         1,
       )
@@ -208,6 +225,103 @@ describe('calculateTrajectory', () => {
     })
   })
 
+  describe('SBTi trajectory with SNBC default trajectory', () => {
+    test('without defaultTrajectory - graph starts at earliest past study, no SNBC pre-trajectory', () => {
+      const pastStudies = createPastStudies([2018, 1300])
+      const result = calculateSBTiTrajectory({
+        studyEmissions: 1000,
+        studyStartYear: 2025,
+        reductionRate: SBTI_REDUCTION_RATE_15,
+        pastStudies,
+        defaultTrajectory: [],
+      })
+
+      // Without defaultTrajectory, graph starts at earliest past study year (2018)
+      const firstPoint = result[0]
+      expect(firstPoint.year).toBe(2018)
+      expect(firstPoint.value).toBeCloseTo(1300, 1)
+
+      // No points before 2018
+      const point2017 = result.find((p) => p.year === 2017)
+      expect(point2017).toBeUndefined()
+    })
+
+    test('with defaultTrajectory and past study before 2020 - years before past study use SNBC trajectory', () => {
+      const sectenData = createGeneralSectenData()
+      const pastStudies = createPastStudies([2018, 1300])
+      const snbcTrajectory = calculateSNBCTrajectory({
+        studyEmissions: 1000,
+        studyStartYear: 2025,
+        sectenData,
+        pastStudies,
+      })
+
+      const result = calculateSBTiTrajectory({
+        studyEmissions: 1000,
+        studyStartYear: 2025,
+        reductionRate: SBTI_REDUCTION_RATE_15,
+        pastStudies,
+        defaultTrajectory: snbcTrajectory,
+      })
+
+      // Pivot year = min(2018, 2020) = 2018. Years before 2018 should use SNBC.
+      const point2015 = result.find((p) => p.year === 2015)
+      const snbcPoint2015 = snbcTrajectory.find((p) => p.year === 2015)
+      expect(point2015?.value).toEqual(snbcPoint2015?.value)
+
+      const point2017 = result.find((p) => p.year === 2017)
+      const snbcPoint2017 = snbcTrajectory.find((p) => p.year === 2017)
+      expect(point2017?.value).toEqual(snbcPoint2017?.value)
+
+      // From pivot year (2018) onward, SBTi historical interpolation applies
+      const point2018 = result.find((p) => p.year === 2018)
+      expect(point2018?.value).toEqual(1300)
+
+      // Study start year remains at study emissions
+      const point2025 = result.find((p) => p.year === 2025)
+      expect(point2025?.value).toEqual(1000)
+    })
+
+    test('without defaultTrajectory and no past studies - graph starts at 2020, no SNBC pre-trajectory', () => {
+      const result = calculateSBTiTrajectory({
+        studyEmissions: 1000,
+        studyStartYear: 2025,
+        reductionRate: SBTI_REDUCTION_RATE_15,
+        pastStudies: [],
+        defaultTrajectory: [],
+      })
+
+      // No past studies before 2020, pivot year = 2020, graph starts at 2020 - SNBC not applied before it
+      const firstPoint = result[0]
+      expect(firstPoint.year).toBe(2020)
+
+      // Reduction starts from 2025
+      const point2025 = result.find((p) => p.year === 2025)
+      expect(point2025?.value).toBeCloseTo(1000, 1)
+    })
+
+    test('with defaultTrajectory and studyStartYear before 2020, past study before studyStartYear - years before past study use SNBC', () => {
+      const pastStudies = createPastStudies([2015, 1500])
+
+      const result = calculateSBTiTrajectory({
+        studyEmissions: 1000,
+        studyStartYear: 2019,
+        reductionRate: SBTI_REDUCTION_RATE_15,
+        pastStudies,
+        defaultTrajectory: DEFAULT_TRAJECTORY,
+      })
+
+      // Pivot year = min(2015, 2020) = 2015. Years before 2015 should use SNBC.
+      const point2000 = result.find((p) => p.year === 2000)
+      const snbcPoint2000 = DEFAULT_TRAJECTORY.find((p) => p.year === 2000)
+      expect(point2000?.value).toEqual(snbcPoint2000?.value)
+
+      // At pivot year (2015), historical data applies
+      const point2015 = result.find((p) => p.year === 2015)
+      expect(point2015?.value).toBeCloseTo(1500, 1)
+    })
+  })
+
   describe('custom trajectory calculation', () => {
     test('should calculate trajectory with single objective', () => {
       const studyEmissions = 1000
@@ -219,6 +333,7 @@ describe('calculateTrajectory', () => {
         studyStartYear,
         objectives,
         pastStudies: [],
+        defaultTrajectory: DEFAULT_TRAJECTORY,
       })
 
       expect(result[0]).toEqual({ year: 2020, value: 1000 })
@@ -249,6 +364,7 @@ describe('calculateTrajectory', () => {
         studyStartYear,
         objectives,
         pastStudies: [],
+        defaultTrajectory: DEFAULT_TRAJECTORY,
       })
 
       const yearlyReduction = studyEmissions * 0.05
@@ -283,6 +399,7 @@ describe('calculateTrajectory', () => {
         studyStartYear,
         objectives,
         pastStudies: [],
+        defaultTrajectory: DEFAULT_TRAJECTORY,
       })
 
       const yearlyReduction = studyEmissions * 0.05
@@ -307,6 +424,7 @@ describe('calculateTrajectory', () => {
         studyStartYear,
         objectives,
         pastStudies: [],
+        defaultTrajectory: DEFAULT_TRAJECTORY,
       })
 
       const point2020 = result.find((p) => p.year === 2020)
@@ -333,6 +451,7 @@ describe('calculateTrajectory', () => {
           pastStudies: [],
           trajectoryType: TrajectoryType.CUSTOM,
           minYear: referenceYear,
+          defaultTrajectory: DEFAULT_TRAJECTORY,
         })
 
         const point2015 = result.find((p) => p.year === 2015)
@@ -361,14 +480,8 @@ describe('calculateTrajectory', () => {
           pastStudies: [],
           trajectoryType: TrajectoryType.SBTI_15,
           minYear: referenceYear,
+          defaultTrajectory: DEFAULT_TRAJECTORY,
         })
-
-        const point2015 = result.find((p) => p.year === 2015)
-        expect(point2015?.value).toBeCloseTo(1000, 1)
-
-        // Should stay flat until 2020
-        const point2019 = result.find((p) => p.year === 2019)
-        expect(point2019?.value).toBeCloseTo(1000, 1)
 
         const point2020 = result.find((p) => p.year === 2020)
         expect(point2020?.value).toBeCloseTo(1000, 1)
@@ -395,6 +508,7 @@ describe('calculateTrajectory', () => {
           pastStudies: [],
           trajectoryType: TrajectoryType.CUSTOM,
           minYear: referenceYear,
+          defaultTrajectory: DEFAULT_TRAJECTORY,
         })
 
         const point2022 = result.find((p) => p.year === 2022)
@@ -423,6 +537,7 @@ describe('calculateTrajectory', () => {
           pastStudies: [],
           trajectoryType: TrajectoryType.SBTI_15,
           minYear: referenceYear,
+          defaultTrajectory: DEFAULT_TRAJECTORY,
         })
 
         const point2022 = result.find((p) => p.year === 2022)
@@ -458,6 +573,7 @@ describe('calculateTrajectory', () => {
         studyEmissions: currentEmissions,
         studyStartYear: currentYear,
         objectives,
+        defaultTrajectory: DEFAULT_TRAJECTORY,
       })
 
       const startPoint = trajectory.find((p) => p.year === currentYear)
@@ -675,6 +791,7 @@ describe('calculateTrajectory', () => {
           studyStartYear: 2022,
           reductionRate: SBTI_REDUCTION_RATE_15,
           pastStudies,
+          defaultTrajectory: DEFAULT_TRAJECTORY,
         })
         const expectedValue = getTrajectoryEmissionsAtYear(referenceTrajectory, currentYear)
         expect(expectedValue).not.toBeNull()
@@ -687,6 +804,7 @@ describe('calculateTrajectory', () => {
           studyStartYear: currentYear,
           reductionRate: SBTI_REDUCTION_RATE_15,
           pastStudies,
+          defaultTrajectory: DEFAULT_TRAJECTORY,
         })
 
         verifyTrajectoryInterpolation(currentTrajectory, pastStudies, currentYear)
@@ -704,6 +822,7 @@ describe('calculateTrajectory', () => {
           studyStartYear: 2022,
           reductionRate: SBTI_REDUCTION_RATE_15,
           pastStudies,
+          defaultTrajectory: DEFAULT_TRAJECTORY,
         })
         const expectedValue = getTrajectoryEmissionsAtYear(referenceTrajectory, currentYear)
         expect(expectedValue).not.toBeNull()
@@ -716,6 +835,7 @@ describe('calculateTrajectory', () => {
           studyStartYear: currentYear,
           reductionRate: SBTI_REDUCTION_RATE_15,
           pastStudies,
+          defaultTrajectory: DEFAULT_TRAJECTORY,
         })
 
         verifyTrajectoryInterpolation(currentTrajectory, pastStudies, currentYear)
@@ -746,6 +866,7 @@ describe('calculateTrajectory', () => {
           studyStartYear: referenceYear,
           reductionRate: SBTI_REDUCTION_RATE_15,
           pastStudies,
+          defaultTrajectory: DEFAULT_TRAJECTORY,
         })
 
         const year2018Point = referenceTrajectory.find((p) => p.year === 2018)
@@ -782,6 +903,7 @@ describe('calculateTrajectory', () => {
           objectives,
           pastStudies,
           trajectoryType: TrajectoryType.SBTI_15,
+          defaultTrajectory: DEFAULT_TRAJECTORY,
         })
 
         const year2018Point = referenceTrajectory.find((p) => p.year === 2018)
@@ -811,6 +933,7 @@ describe('calculateTrajectory', () => {
           studyStartYear: 2022,
           objectives,
           pastStudies,
+          defaultTrajectory: DEFAULT_TRAJECTORY,
         })
 
         const expectedValue = getTrajectoryEmissionsAtYear(referenceTrajectory, currentYear)
@@ -824,6 +947,7 @@ describe('calculateTrajectory', () => {
           studyStartYear: currentYear,
           objectives,
           pastStudies,
+          defaultTrajectory: DEFAULT_TRAJECTORY,
         })
 
         verifyTrajectoryInterpolation(currentTrajectory, pastStudies, currentYear)
@@ -845,6 +969,7 @@ describe('calculateTrajectory', () => {
           studyStartYear: 2022,
           objectives,
           pastStudies,
+          defaultTrajectory: DEFAULT_TRAJECTORY,
         })
 
         const expectedValue = getTrajectoryEmissionsAtYear(referenceTrajectory, currentYear)
@@ -862,6 +987,7 @@ describe('calculateTrajectory', () => {
             referenceTrajectory,
             referenceStudyYear: 2022,
           },
+          defaultTrajectory: DEFAULT_TRAJECTORY,
         })
 
         verifyTrajectoryInterpolation(currentTrajectory, pastStudies, currentYear)
@@ -894,6 +1020,7 @@ describe('calculateTrajectory', () => {
           objectives,
           pastStudies,
           trajectoryType: TrajectoryType.SBTI_15,
+          defaultTrajectory: DEFAULT_TRAJECTORY,
         })
 
         const expectedValue = getTrajectoryEmissionsAtYear(referenceTrajectory, currentYear)
@@ -912,6 +1039,7 @@ describe('calculateTrajectory', () => {
             referenceStudyYear: 2022,
           },
           trajectoryType: TrajectoryType.SBTI_15,
+          defaultTrajectory: DEFAULT_TRAJECTORY,
         })
 
         const sbtiTrajectory = calculateSBTiTrajectory({
@@ -919,6 +1047,7 @@ describe('calculateTrajectory', () => {
           studyStartYear: currentYear,
           reductionRate: SBTI_REDUCTION_RATE_15,
           pastStudies,
+          defaultTrajectory: DEFAULT_TRAJECTORY,
         })
 
         const customPoint2026 = currentTrajectory.find((p) => p.year === 2026)
@@ -973,6 +1102,7 @@ describe('calculateTrajectory', () => {
           studyStartYear: currentYear,
           reductionRate: SBTI_REDUCTION_RATE_15,
           pastStudies,
+          defaultTrajectory: DEFAULT_TRAJECTORY,
         })
 
         verifyTrajectoryInterpolation(currentTrajectory, pastStudies, currentYear)
@@ -996,6 +1126,7 @@ describe('calculateTrajectory', () => {
           studyStartYear: 2022,
           reductionRate: SBTI_REDUCTION_RATE_15,
           pastStudies,
+          defaultTrajectory: DEFAULT_TRAJECTORY,
         })
 
         const expectedValue = getTrajectoryEmissionsAtYear(referenceTrajectory, currentYear)
@@ -1009,6 +1140,7 @@ describe('calculateTrajectory', () => {
           studyStartYear: currentYear,
           reductionRate: SBTI_REDUCTION_RATE_15,
           pastStudies,
+          defaultTrajectory: DEFAULT_TRAJECTORY,
         })
 
         verifyTrajectoryInterpolation(currentTrajectory, pastStudies, currentYear)
@@ -1035,6 +1167,7 @@ describe('calculateTrajectory', () => {
           studyStartYear: currentYear,
           objectives,
           pastStudies,
+          defaultTrajectory: DEFAULT_TRAJECTORY,
         })
 
         verifyTrajectoryInterpolation(currentTrajectory, pastStudies, currentYear)
@@ -1090,6 +1223,7 @@ describe('calculateTrajectory', () => {
           studyStartYear: currentYear,
           reductionRate: SBTI_REDUCTION_RATE_15,
           pastStudies,
+          defaultTrajectory: DEFAULT_TRAJECTORY,
         })
 
         verifyTrajectoryInterpolation(currentTrajectory, pastStudies, currentYear)
@@ -1110,6 +1244,7 @@ describe('calculateTrajectory', () => {
           studyStartYear: currentYear,
           reductionRate: SBTI_REDUCTION_RATE_15,
           pastStudies,
+          defaultTrajectory: DEFAULT_TRAJECTORY,
         })
 
         const point2018 = currentTrajectory.find((p) => p.year === 2018)
@@ -1167,6 +1302,7 @@ describe('calculateTrajectory', () => {
         studyStartYear: referenceYear,
         objectives,
         pastStudies,
+        defaultTrajectory: DEFAULT_TRAJECTORY,
       })
 
       const currentTrajectoryWithCompensation = calculateCustomTrajectory({
@@ -1178,6 +1314,7 @@ describe('calculateTrajectory', () => {
           referenceTrajectory,
           referenceStudyYear: referenceYear,
         },
+        defaultTrajectory: DEFAULT_TRAJECTORY,
       })
 
       const refEndYear = referenceTrajectory[referenceTrajectory.length - 1].year
@@ -1238,6 +1375,7 @@ describe('calculateTrajectory', () => {
         studyStartYear: referenceYear,
         reductionRate,
         pastStudies,
+        defaultTrajectory: DEFAULT_TRAJECTORY,
       })
 
       const currentTrajectory = calculateSBTiTrajectory({
@@ -1245,6 +1383,7 @@ describe('calculateTrajectory', () => {
         studyStartYear: currentYear,
         reductionRate,
         pastStudies,
+        defaultTrajectory: DEFAULT_TRAJECTORY,
       })
 
       const referenceTotalBudget = calculateBudgetBySummingTrajectory(referenceTrajectory, referenceYear)

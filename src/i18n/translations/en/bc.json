@@ -1324,7 +1324,10 @@
           "budget": "Budget",
           "errorChangingEnabled": "Error changing action status",
           "relevance": "Relevance levels",
-          "scope": "Scope"
+          "scope": "Scope",
+          "sites": "Sites",
+          "posts": "Posts",
+          "tags": "Tags"
         },
         "addModal": {
           "add": "Add an action",
@@ -1740,6 +1743,7 @@
       "location": "Location",
       "locationSearch": "Search by location",
       "locationSearchPlaceholder": "e.g. Europe",
+      "unitSearch": "Search by unit",
       "unitSearchPlaceholder": "e.g. kg",
       "base": "Scope 2 approach",
       "Manual": "Manual",

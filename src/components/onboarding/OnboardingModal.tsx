@@ -98,7 +98,7 @@ const OnboardingModal = ({ open, onClose, user, organizationVersion }: Props) =>
             </>
           </DialogTitle>
           <DialogContent className="noSpacing">
-            <Step form={form} role={newRole} isCr={organizationVersion.isCR} />
+            <Step form={form} role={newRole} isCr={organizationVersion.isCR} environment={user.environment} />
           </DialogContent>
           <DialogActions className="noSpacing">
             {activeStep > 1 && <Button onClick={goToPreviousStep}>{t('previous')}</Button>}

@@ -2,6 +2,7 @@ fin de vie:
   formule:
     somme:
       - fin de vie . déchets
+  par défaut: 0
 
 fin de vie . déchets:
   titre: Fin de vie

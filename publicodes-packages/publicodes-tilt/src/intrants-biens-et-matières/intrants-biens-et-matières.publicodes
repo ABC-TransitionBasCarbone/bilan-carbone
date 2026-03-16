@@ -3,3 +3,4 @@ intrants-biens-et-matières:
   formule:
     somme:
       - ratios monétaires
+  par défaut: 0

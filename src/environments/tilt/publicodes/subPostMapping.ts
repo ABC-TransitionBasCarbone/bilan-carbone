@@ -25,13 +25,13 @@ export const getFormLayoutsForSubPostTILT = (subPost: SubPost): FormLayout<TiltR
   return SUBPOST_TO_FORM_LAYOUTS[subPost] || []
 }
 
-const POST_TO_RULENAME: Partial<Record<TiltPost, TiltRuleName>> = {
+export const POST_TO_RULENAME: Partial<Record<TiltPost, TiltRuleName>> = {
   [TiltPost.ConstructionDesLocaux]: 'construction',
   [TiltPost.Energies]: 'énergie',
   [TiltPost.DechetsDirects]: 'déchets',
   [TiltPost.FroidEtClim]: 'froid et clim',
   [TiltPost.DeplacementsDePersonne]: 'déplacements',
-  [TiltPost.TransportDeMarchandises]: 'fret . transport',
+  [TiltPost.TransportDeMarchandises]: 'fret',
   [TiltPost.IntrantsBiensEtMatieresTilt]: 'intrants-biens-et-matières',
   [TiltPost.Alimentation]: 'alimentation',
   [TiltPost.IntrantsServices]: 'intrants-services',

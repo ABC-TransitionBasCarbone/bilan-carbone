@@ -137,7 +137,7 @@ const createMockExternalStudy = (overrides?: Partial<ExternalStudy>): ExternalSt
   transitionPlanId: 'plan-id',
   name: 'Test External Study',
   date: new Date('2024-01-01'),
-  totalCo2Kg: 1000,
+  totalCo2Kg: BigInt(1000),
   createdAt: new Date('2024-01-01'),
   updatedAt: new Date('2024-01-01'),
   ...overrides,
