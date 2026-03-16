@@ -208,28 +208,6 @@ déplacements . DT-bénévoles . sans . train:
   unité: kgCO2e
   par défaut: 0
 
-déplacements . DT-bénévoles . sans . deux roues:
-  titre: Deux roues
-  form:
-    à traduire: oui
-  applicable si:
-    toutes ces conditions:
-      - est défini: part deux roues
-      - part deux roues > 0
-  formule: distance * FE * général . bénévoles * commun . nombre de semaines travaillées par an * (5 - télétravail . bénévoles . j)
-  avec:
-    distance:
-      question: Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en deux roues pour des déplacements domicile-travail ?
-      type: nombre
-      unité: km/bénévoles.jours
-      par défaut: 0
-    FE:
-      valeur: 0.0851
-      unité: kgCO2e/km
-      meta:
-        id: 43775
-        nom: Cyclomoteur/Mixte/2023
-  unité: kgCO2e
 
 déplacements . DT-bénévoles . sans . transports en commun:
   titre: Transports en commun (Métro, tramway, RER, bus, ...)
@@ -267,17 +245,20 @@ déplacements . DT-bénévoles . sans . transports en commun . split:
       note: source doc NGC https://nosgestesclimat.fr/documentation/transport/transports-commun/m%C3%A9tro-ou-tram
 
 déplacements . DT-bénévoles . sans . deux roues:
+  titre: Deux roues
+  form:
+    à traduire: oui
   applicable si:
     toutes ces conditions:
-      - est défini: déplacements . DT-salariés . MEP présent
-      - déplacements . DT-salariés . MEP présent = non
-  formule: distance * FE * (5 - télétravail . bénévoles . j) * commun . nombre de semaines travaillées par an * général . bénévoles
+      - est défini: part deux roues
+      - part deux roues > 0
+  formule: distance * FE * général . bénévoles * commun . nombre de semaines travaillées par an * (5 - télétravail . bénévoles . j)
   avec:
     distance:
       question: Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en deux roues pour des déplacements domicile-travail ?
       type: nombre
-      unité: km
-
+      unité: km/bénévoles.jours
+      par défaut: 0
     FE:
       valeur: 0.0851
       unité: kgCO2e/km
