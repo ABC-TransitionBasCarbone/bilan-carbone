@@ -1,28 +1,28 @@
 {
   "publicodes-units": {
-    "année": "[TO_TRANSLATE] année",
-    "personne": "[TO_TRANSLATE] personne",
-    "k€": "[TO_TRANSLATE] k€",
-    "jours": "[TO_TRANSLATE] jours",
-    "quantité": "[TO_TRANSLATE] quantité",
-    "kWh": "[TO_TRANSLATE] kWh",
-    "m3": "[TO_TRANSLATE] m3",
-    "litre": "[TO_TRANSLATE] litre",
-    "stères": "[TO_TRANSLATE] stères",
-    "h/semaine": "[TO_TRANSLATE] h/semaine",
-    "j/semaine": "[TO_TRANSLATE] j/semaine",
-    "kgCO2e": "[TO_TRANSLATE] kgCO2e",
-    "h": "[TO_TRANSLATE] h",
-    "mail": "[TO_TRANSLATE] mail",
-    "Go": "[TO_TRANSLATE] Go",
-    "unité": "[TO_TRANSLATE] unité",
-    "kg": "[TO_TRANSLATE] kg",
-    "%": "[TO_TRANSLATE] %",
-    "tonne": "[TO_TRANSLATE] tonne",
-    "km": "[TO_TRANSLATE] km",
-    "place": "[TO_TRANSLATE] place",
-    "m2": "[TO_TRANSLATE] m2",
-    "repas": "[TO_TRANSLATE] repas"
+    "année": "year",
+    "personne": "person",
+    "k€": "k€",
+    "jours": "days",
+    "quantité": "quantity",
+    "kWh": "kWh",
+    "m3": "m³",
+    "litre": "liter",
+    "stères": "steres",
+    "h/semaine": "h/week",
+    "j/semaine": "d/week",
+    "kgCO2e": "kgCO2e",
+    "h": "h",
+    "mail": "email",
+    "Go": "GB",
+    "unité": "unit",
+    "kg": "kg",
+    "%": "%",
+    "tonne": "ton",
+    "km": "km",
+    "place": "seat",
+    "m2": "m²",
+    "repas": "meal"
   },
   "publicodes-rules": {
     "général": {
@@ -73,13 +73,13 @@
     "équipements et immobilisations": {
       "infos": {
         "prise en compte reconditionné": {
-          "description": "[TO_TRANSLATE] En fonction de votre réponse, une partie de vos équipements seront valorisés comme étant reconditionnés. Un équipement reconditionné sera considéré comme moitié moins émetteur qu'un équipement neuf. Autrement dit, la durée de première vie de l'équipement est considéré comme égale à la moitié de sa durée de vie totale.",
-          "question": "[TO_TRANSLATE] Vos équipements sont-ils reconditionné ou issu de seconde main ?",
+          "description": "Depending on your answer, some of your equipment will be considered as refurbished. Refurbished equipment will be considered as emitting half as much as new equipment. In other words, the first life of the equipment is considered to be half its total lifespan.",
+          "question": "Are your devices refurbished or second-hand?",
           "options": {
-            "toujours": "[TO_TRANSLATE] Toujours",
-            "souvent": "[TO_TRANSLATE] Souvent",
-            "rarement": "[TO_TRANSLATE] Rarement",
-            "jamais": "[TO_TRANSLATE] Jamais"
+            "toujours": "Always",
+            "souvent": "Often",
+            "rarement": "Rarely",
+            "jamais": "Never"
           }
         },
         "ordinateurs fixes": {
@@ -226,12 +226,12 @@
     "télétravail": {
       "bénévoles": {
         "h": {
-          "question": "[TO_TRANSLATE] Combien d'heures de télétravail sont effectuées par semaine pour vos bénévoles ?"
+          "question": "How many hours of remote work are performed per week by your volunteers?"
         }
       },
       "salariés": {
         "j": {
-          "question": "[TO_TRANSLATE] Combien de jours télétravail sont effectuées par semaine pour vos salariés ?"
+          "question": "How many days of remote work are performed per week by your employees?"
         }
       }
     },
@@ -294,7 +294,7 @@
           }
         },
         "juridique-comptable": {
-          "titre": "Repair and installation services",
+          "titre": "Legal, accounting and insurance services",
           "montant-dépensé": {
             "question": "Amount spent on legal, accounting and insurance services"
           }
@@ -403,12 +403,12 @@
         },
         "VUL": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de véhicules utilitaires légers possédez-vous ou louez-vous depuis moins de 5 ans ?"
+            "question": "How many light commercial vehicles do you own or rent for less than 5 years?"
           }
         },
         "PL": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de véhicules poids lourds possédez-vous ou louez-vous depuis moins de 5 ans ?"
+            "question": "How many heavy goods vehicles do you own or rent for less than 5 years?"
           }
         },
         "carburant": {
@@ -454,16 +454,16 @@
         }
       },
       "fabrication": {
-        "titre": "[TO_TRANSLATE] Fabrication des véhicules",
-        "question": "[TO_TRANSLATE] Combien de véhicules sont possédés ou loués depuis moins de 5 ans parmi les catégories suivantes ?",
+        "titre": "Vehicle manufacturing",
+        "question": "How many vehicles are owned or rented for less than 5 years among the following categories?",
         "VUL": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de véhicules utilitaires légers possédez-vous ou louez-vous depuis moins de 5 ans ?"
+            "question": "How many light commercial vehicles do you own or rent for less than 5 years?"
           }
         },
         "PL": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de véhicules poids lourds possédez-vous ou louez-vous depuis moins de 5 ans ?"
+            "question": "How many heavy goods vehicles do you own or rent for less than 5 years?"
           }
         }
       }
@@ -471,7 +471,7 @@
     "fin de vie": {
       "déchets": {
         "fin de vie présente": {
-          "question": "[TO_TRANSLATE] Fournissez-vous des biens matériels à vos bénéficiaires ?"
+          "question": "Do you provide material goods to your beneficiaries?"
         },
         "poids": {
           "question": "What is the total weight of these goods delivered over a year?"
@@ -503,49 +503,49 @@
             "question": "According to MEP results, what is the average distance traveled per employee per day (round trip) for commuting?"
           },
           "réponse MEP": {
-            "question": "[TO_TRANSLATE] D'après les résultats MEP, combien de kgCO2e représentent les déplacements liés à des missions des salariés ?"
+            "question": "According to MEP results, how many kgCO2e are represented by employee business travel?"
           }
         },
         "sans": {
           "part voiture": {
-            "titre": "[TO_TRANSLATE] Voiture",
-            "question": "[TO_TRANSLATE] Quel pourcentage des salariés se rend au travail en voiture ?"
+            "titre": "Car",
+            "question": "What percentage of employees commute to work by car?"
           },
           "part train": {
-            "titre": "[TO_TRANSLATE] Train (TER)",
-            "question": "[TO_TRANSLATE] Quel pourcentage des salariés se rend au travail en train (TER) ?"
+            "titre": "Train (TER)",
+            "question": "What percentage of employees commute to work by train (TER)?"
           },
           "part deux roues": {
-            "titre": "[TO_TRANSLATE] Deux roues",
-            "question": "[TO_TRANSLATE] Quel pourcentage des salariés se rend au travail en deux roues ?"
+            "titre": "Two-wheeler",
+            "question": "What percentage of employees commute to work by two-wheeler?"
           },
           "part transport en commun": {
-            "titre": "[TO_TRANSLATE] Transports en commun (Métro, tramway, RER, bus, ...)",
-            "question": "[TO_TRANSLATE] Quel pourcentage des salariés se rend au travail en transports en commun (Métro, Tramway, Bus) ?"
+            "titre": "Public transport (Metro, tram, RER, bus, ...)",
+            "question": "What percentage of employees commute to work by public transport (Metro, Tramway, Bus)?"
           },
           "voiture": {
-            "titre": "[TO_TRANSLATE] Voiture",
-            "description": "[TO_TRANSLATE] On considère ici toutes les motorisations de voiture individuelles, basée sur des moyennes nationales",
+            "titre": "Car",
+            "description": "All types of individual car engines are considered here, based on national averages.",
             "distance": {
               "question": "How many km are traveled on average per employee by car per day (round trip) for commuting?"
             }
           },
           "train": {
-            "titre": "[TO_TRANSLATE] Train (TER)",
+            "titre": "Train (TER)",
             "distance": {
               "question": "How many km are traveled on average per employee by train per day (round trip) for commuting?"
             }
           },
           "deux roues": {
-            "titre": "[TO_TRANSLATE] Deux roues",
+            "titre": "Two-wheeler",
             "distance": {
-              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par salarié en transports en commun par jour (A/R) pour des déplacements domicile-travail ?"
+              "question": "How many km are traveled on average per employee by public transport per day (round trip) for commuting?"
             }
           },
           "transports en commun": {
-            "titre": "[TO_TRANSLATE] Transports en commun (Métro, tramway, RER, bus, ...)",
+            "titre": "Public transport (Metro, tram, RER, bus, ...)",
             "distance": {
-              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par salarié en deux roues par jour (A/R) pour des déplacements domicile-travail ?"
+              "question": "How many km are traveled on average per employee by two-wheeler per day (round trip) for commuting?"
             }
           }
         }
@@ -561,24 +561,24 @@
         },
         "sans": {
           "part voiture": {
-            "titre": "[TO_TRANSLATE] Voiture",
-            "question": "[TO_TRANSLATE] Quel pourcentage des bénévoles se rend à son lieu habituel de bénévolat en voiture ?"
+            "titre": "Car",
+            "question": "What percentage of volunteers go to their usual volunteering place by car?"
           },
           "part train": {
-            "titre": "[TO_TRANSLATE] Train (TER)",
-            "question": "[TO_TRANSLATE] Quel pourcentage des bénévoles se rend à son lieu habituel de bénévolat en train (TER) ?"
+            "titre": "Train (TER)",
+            "question": "What percentage of volunteers go to their usual volunteering place by train (TER)?"
           },
           "part deux roues": {
-            "titre": "[TO_TRANSLATE] Deux roues",
-            "question": "[TO_TRANSLATE] Quel pourcentage des bénévoles se rend à son lieu habituel de bénévolat en deux roues ?"
+            "titre": "Two-wheeler",
+            "question": "What percentage of volunteers go to their usual volunteering place by two-wheeler?"
           },
           "part transport en commun": {
-            "titre": "[TO_TRANSLATE] Transports en commun (Métro, tramway, RER, bus, ...)",
-            "question": "[TO_TRANSLATE] Quel pourcentage des bénévoles se rend à son lieu habituel de bénévolat en transports en commun (Métro, Tramway, Bus) ?"
+            "titre": "Public transport (Metro, tram, RER, bus, ...)",
+            "question": "What percentage of volunteers go to their usual volunteering place by public transport (Metro, Tramway, Bus)?"
           },
           "voiture": {
-            "titre": "[TO_TRANSLATE] Voiture",
-            "description": "[TO_TRANSLATE] On considère ici toutes les motorisations de voiture individuelles, basée sur des moyennes nationales",
+            "titre": "Car",
+            "description": "All types of individual car engines are considered here, based on national averages.",
             "distance": {
               "question": "How many km are traveled on average per day (round trip) by a volunteer by car for commuting?"
             }
@@ -590,15 +590,15 @@
             }
           },
           "deux roues": {
-            "titre": "[TO_TRANSLATE] Deux roues",
+            "titre": "Two-wheeler",
             "distance": {
-              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en transports en commun pour des déplacements domicile-travail ?"
+              "question": "How many km are traveled on average per day (round trip) by a volunteer by public transport for commuting?"
             }
           },
           "transports en commun": {
-            "titre": "[TO_TRANSLATE] Transports en commun (Métro, tramway, RER, bus, ...)",
+            "titre": "Public transport (Metro, tram, RER, bus, ...)",
             "distance": {
-              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en deux roues pour des déplacements domicile-travail ?"
+              "question": "How many km are traveled on average per day (round trip) by a volunteer by two-wheeler for commuting?"
             }
           }
         }
@@ -744,40 +744,40 @@
           "question": "Do the beneficiaries of your products or services travel to benefit from them?"
         },
         "voiture": {
-          "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par vos bénéficiaires en voiture pour se rendre à vos produits ou services ?"
+          "question": "How many km are traveled on average by your beneficiaries by car to access your products or services?"
         },
         "part voiture": {
-          "question": "[TO_TRANSLATE] Quel pourcentage des trajets en voiture ?"
+          "question": "What percentage of trips are by car?"
         },
         "actif": {
-          "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par vos bénéficiaires via des modes actifs (à pied, vélo, trottinette) pour se rendre à vos produits ou services ?"
+          "question": "How many km are traveled on average by your beneficiaries using active modes (walking, cycling, scooter) to access your products or services?"
         },
         "part actif": {
-          "question": "[TO_TRANSLATE] Quel pourcentage des trajets via des modes actifs (à pied, vélo, trottinette) ?"
+          "question": "What percentage of trips are by active modes (walking, cycling, scooter)?"
         },
         "deux roues": {
-          "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par vos bénéficiaires en deux roues (scooter, moto) pour se rendre à vos produits ou services ?"
+          "question": "How many km are traveled on average by your beneficiaries by two-wheeler (scooter, motorcycle) to access your products or services?"
         },
         "part deux roues": {
-          "question": "[TO_TRANSLATE] Quel pourcentage des trajets en deux roues (scooter, moto) ?"
+          "question": "What percentage of trips are by two-wheeler (scooter, motorcycle)?"
         },
         "transport en commun": {
-          "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par vos bénéficiaires en transport en commun pour se rendre à vos produits ou services ?"
+          "question": "How many km are traveled on average by your beneficiaries by public transport to access your products or services?"
         },
         "part transport en commun": {
-          "question": "[TO_TRANSLATE] Quel pourcentage des trajets en transport en commun ?"
+          "question": "What percentage of trips are by public transport?"
         },
         "train": {
-          "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par vos bénéficiaires en train pour se rendre à vos produits ou services ?"
+          "question": "How many km are traveled on average by your beneficiaries by train to access your products or services?"
         },
         "part train": {
-          "question": "[TO_TRANSLATE] Quel pourcentage des trajets en train ?"
+          "question": "What percentage of trips are by train?"
         },
         "avion": {
-          "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par vos bénéficiaires en avion pour se rendre à vos produits ou services ?"
+          "question": "How many km are traveled on average by your beneficiaries by plane to access your products or services?"
         },
         "part avion": {
-          "question": "[TO_TRANSLATE] Quel pourcentage des trajets en avion ?"
+          "question": "What percentage of trips are by plane?"
         }
       }
     },
