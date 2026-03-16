@@ -39,11 +39,11 @@ froid et clim . fuites . locaux partagés:
         id: 43632
         nom: R410A
     puissance frigorifique par surface:
-        valeur: 0.1
-        unité: kW/m2
+      valeur: 0.1
+      unité: kW/m2
     quantité de fluide par puissance:
-        valeur: 0.3
-        unité: kg/kW
+      valeur: 0.3
+      unité: kg/kW
 
 froid et clim . fuites . locaux seuls:
   titre: Fuites de fluides frigoriègnes

@@ -124,7 +124,6 @@ déplacements . DM-salariés . sans . voiture . split:
         note: Données ECOINVENT
   unité: kgCO2e/km
 
-
 #GC : J'enlève cette partie, car on utilise des FE en kgCO2e/km et non en kgCO2e/passager.km. Les FE en kgCO2e/km prennent déjà en compte le taux d'occupation normalement.
 # déplacements . DM-salariés . sans . voiture . occupation:
 #   formule: 1.08
@@ -231,7 +230,7 @@ déplacements . DM-salariés . sans . avion . court courrier:
       question: Combien de km ont été parcourus cette année par salarié en avion court courrier pour des déplacements liés à des missions ?
       type: nombre
       unité: km/salarié.an
-      par défaut: 0 
+      par défaut: 0
     FE:
       valeur: 0.33
       unité: kgCO2e/km

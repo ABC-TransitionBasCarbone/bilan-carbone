@@ -33,7 +33,7 @@ déplacements . bénéficiaires:
 déplacements . bénéficiaires . se déplacent:
   question: Les bénéficiaires de vos produits ou services se déplacent-ils pour en profiter ?
 
-# GC : Est-ce qu'on ne mettrait pas les parts en % sous forme de tableau, et derrière la complétion des lignes du tableau débloque effectivement les questions par km ? 
+# GC : Est-ce qu'on ne mettrait pas les parts en % sous forme de tableau, et derrière la complétion des lignes du tableau débloque effectivement les questions par km ?
 # Si tableau, en profiter pour repréciser que les questions en km concernent uniquement les km parcourus POUR profiter des produits et services de l'asso, ici j'ai suppr pour éviter la répétition et la longueur.
 
 déplacements . bénéficiaires . part voiture:
@@ -41,7 +41,7 @@ déplacements . bénéficiaires . part voiture:
   form:
     à traduire: oui
   applicable si:
-    toutes ces conditions: 
+    toutes ces conditions:
       - est défini: se déplacent
       - se déplacent = oui
   question: Quel pourcentage des trajets se fait en voiture ?
@@ -53,7 +53,7 @@ déplacements . bénéficiaires . part train:
   form:
     à traduire: oui
   applicable si:
-    toutes ces conditions: 
+    toutes ces conditions:
       - est défini: se déplacent
       - se déplacent = oui
   question: Quel pourcentage des trajets se fait en train ?
@@ -65,7 +65,7 @@ déplacements . bénéficiaires . part deux roues:
   form:
     à traduire: oui
   applicable si:
-    toutes ces conditions: 
+    toutes ces conditions:
       - est défini: se déplacent
       - se déplacent = oui
   question: Quel pourcentage des trajets se fait en deux roues (scooter, moto) ?
@@ -77,7 +77,7 @@ déplacements . bénéficiaires . part transport en commun:
   form:
     à traduire: oui
   applicable si:
-    toutes ces conditions: 
+    toutes ces conditions:
       - est défini: se déplacent
       - se déplacent = oui
   question: Quel pourcentage des trajets se fait en transport en commun ?
@@ -89,7 +89,7 @@ déplacements . bénéficiaires . part avion:
   form:
     à traduire: oui
   applicable si:
-    toutes ces conditions: 
+    toutes ces conditions:
       - est défini: se déplacent
       - se déplacent = oui
   question: Quel pourcentage des trajets se fait en avion ?
@@ -101,7 +101,7 @@ déplacements . bénéficiaires . part actif:
   form:
     à traduire: oui
   applicable si:
-    toutes ces conditions: 
+    toutes ces conditions:
       - est défini: se déplacent
       - se déplacent = oui
   question: Quel pourcentage des trajets via des modes actifs (à pied, vélo, trottinette) ?

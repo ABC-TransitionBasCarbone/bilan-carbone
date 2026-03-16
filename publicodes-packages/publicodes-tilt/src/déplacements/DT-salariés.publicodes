@@ -126,7 +126,7 @@ déplacements . DT-salariés . sans . voiture:
     toutes ces conditions:
       - est défini: part voiture
       - part voiture > 0
-  formule: distance * split * général . salariés * commun . nombre de semaines travaillées par an * (5 - télétravail . salariés . j) 
+  formule: distance * split * général . salariés * commun . nombre de semaines travaillées par an * (5 - télétravail . salariés . j)
   avec:
     distance:
       question: Combien de km sont parcourus en moyenne par salarié en voiture par jour (A/R) pour des déplacements domicile-travail ?
@@ -182,7 +182,7 @@ déplacements . DT-salariés . sans . train:
     toutes ces conditions:
       - est défini: part train
       - part train > 0
-  formule: distance * FE * général . salariés * commun . nombre de semaines travaillées par an * (5 - télétravail . salariés . j) 
+  formule: distance * FE * général . salariés * commun . nombre de semaines travaillées par an * (5 - télétravail . salariés . j)
   avec:
     distance:
       question: Combien de km sont parcourus en moyenne par salarié en train par jour (A/R) pour des déplacements domicile-travail ?
@@ -206,7 +206,7 @@ déplacements . DT-salariés . sans . deux roues:
     toutes ces conditions:
       - est défini: part deux roues
       - part deux roues > 0
-  formule: distance * FE  * général . salariés * commun . nombre de semaines travaillées par an * (5 - télétravail . salariés . j) 
+  formule: distance * FE  * général . salariés * commun . nombre de semaines travaillées par an * (5 - télétravail . salariés . j)
   avec:
     distance:
       question: Combien de km sont parcourus en moyenne par salarié en deux roues par jour (A/R) pour des déplacements domicile-travail ?
@@ -229,7 +229,7 @@ déplacements . DT-salariés . sans . transports en commun:
     toutes ces conditions:
       - est défini: part transport en commun
       - part transport en commun > 0
-  formule: distance * split * général . salariés * commun . nombre de semaines travaillées par an * (5 - télétravail . salariés . j) 
+  formule: distance * split * général . salariés * commun . nombre de semaines travaillées par an * (5 - télétravail . salariés . j)
   avec:
     distance:
       question: Combien de km sont parcourus en moyenne par salarié en transports en commun par jour (A/R) pour des déplacements domicile-travail ?
@@ -252,5 +252,3 @@ déplacements . DT-salariés . sans . transports en commun . split:
       valeur: 0.00356
       unité: kgCO2e/km
       note: source doc NGC https://nosgestesclimat.fr/documentation/transport/transports-commun/m%C3%A9tro-ou-tram
-
-

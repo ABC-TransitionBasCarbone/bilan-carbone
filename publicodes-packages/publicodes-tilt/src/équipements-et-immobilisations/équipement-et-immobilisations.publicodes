@@ -1,24 +1,24 @@
 équipements et immobilisations:
-  formule:  total sans reconditionné * pondération / amortissement
+  formule: total sans reconditionné * pondération / amortissement
   unité: kgCO2e/an
   avec:
     amortissement:
       valeur: 3
       unité: an
       note: On considère les équipements amortis sur trois ans
-  
+
 équipements et immobilisations . pondération:
   titre: Équipements et immobilisations
-  formule: 
-    variations: 
+  formule:
+    variations:
       - si: reconditionné = 'toujours'
-        alors : reconditionné . toujours reconditionné
+        alors: reconditionné . toujours reconditionné
       - si: reconditionné = 'souvent'
-        alors : reconditionné . souvent reconditionné
+        alors: reconditionné . souvent reconditionné
       - si: reconditionné = 'parfois'
-        alors : reconditionné . parfois reconditionné
+        alors: reconditionné . parfois reconditionné
       - si: reconditionné = 'jamais'
-        alors : reconditionné . jamais reconditionné
+        alors: reconditionné . jamais reconditionné
         sinon: 1
 
 équipements et immobilisations . pondération . reconditionné:
@@ -40,7 +40,7 @@
       titre: Jamais
 
 équipements et immobilisations . pondération . reconditionné . toujours reconditionné:
-  valeur : 0.5
+  valeur: 0.5
   note: On divise par 2 les émissions lorsque les appareils sont reconditionnés
 
 équipements et immobilisations . pondération . reconditionné . souvent reconditionné:

@@ -35,4 +35,4 @@ télétravail . salariés . j:
   question: Combien de jours sont en moyenne télétravaillés par semaine par vos salariés ?
   unité: jours/semaine
   type: nombre
-  par défaut: 0 
+  par défaut: 0

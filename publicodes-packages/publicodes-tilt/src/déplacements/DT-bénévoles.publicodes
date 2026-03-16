@@ -127,7 +127,7 @@ déplacements . DT-bénévoles . sans . voiture:
     toutes ces conditions:
       - est défini: part voiture
       - part voiture > 0
-  formule: distance * split * général . bénévoles * commun . nombre de semaines travaillées par an * (5 - télétravail . bénévoles . j) 
+  formule: distance * split * général . bénévoles * commun . nombre de semaines travaillées par an * (5 - télétravail . bénévoles . j)
   avec:
     distance:
       question: Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en voiture pour des déplacements domicile-travail ?
@@ -169,7 +169,7 @@ déplacements . DT-bénévoles . sans . voiture . split:
         note: Données ECOINVENT
   unité: kgCO2e/km
 
-#GC : Même remaruqe que dans les autres postes 
+#GC : Même remaruqe que dans les autres postes
 # déplacements . DT-bénévoles . sans . voiture . occupation:
 #   formule: 1.08
 #   note: source pour le taux d'occupation d'une voiture en France pour des trajets D-T https://www.citego.org/bdf_fiche-document-3431_fr.html
@@ -183,7 +183,7 @@ déplacements . DT-bénévoles . sans . train:
     toutes ces conditions:
       - est défini: part train
       - part train > 0
-  formule: distance * FE * général . bénévoles * commun . nombre de semaines travaillées par an * (5 - télétravail . bénévoles . j) 
+  formule: distance * FE * général . bénévoles * commun . nombre de semaines travaillées par an * (5 - télétravail . bénévoles . j)
   avec:
     distance:
       question: Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en train pour des déplacements domicile-travail ?
@@ -206,7 +206,7 @@ déplacements . DT-bénévoles . sans . deux roues:
     toutes ces conditions:
       - est défini: part deux roues
       - part deux roues > 0
-  formule: distance * FE * général . bénévoles * commun . nombre de semaines travaillées par an * (5 - télétravail . bénévoles . j) 
+  formule: distance * FE * général . bénévoles * commun . nombre de semaines travaillées par an * (5 - télétravail . bénévoles . j)
   avec:
     distance:
       question: Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en deux roues pour des déplacements domicile-travail ?
@@ -229,7 +229,7 @@ déplacements . DT-bénévoles . sans . transports en commun:
     toutes ces conditions:
       - est défini: part transport en commun
       - part transport en commun > 0
-  formule: distance * split * général . bénévoles * commun . nombre de semaines travaillées par an * (5 - télétravail . bénévoles . j) 
+  formule: distance * split * général . bénévoles * commun . nombre de semaines travaillées par an * (5 - télétravail . bénévoles . j)
   avec:
     distance:
       question: Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en transports en commun pour des déplacements domicile-travail ?
@@ -252,5 +252,3 @@ déplacements . DT-bénévoles . sans . transports en commun . split:
       valeur: 0.00356
       unité: kgCO2e/km
       note: source doc NGC https://nosgestesclimat.fr/documentation/transport/transports-commun/m%C3%A9tro-ou-tram
-
-

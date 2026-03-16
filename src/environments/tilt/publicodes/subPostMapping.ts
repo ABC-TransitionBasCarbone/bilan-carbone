@@ -124,9 +124,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('énergie . électricité . consommation'),
     input('énergie . électricité . autoproduction . autoproduction'),
   ],
-  FroidEtClim: [
-    input('froid et clim . nombre'),
-  ],
+  FroidEtClim: [input('froid et clim . nombre')],
   DechetsDEmballagesEtPlastiques: [
     table(
       'DechetsDirects.question',
@@ -193,7 +191,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
           'équipements et immobilisations . total sans reconditionné . téléphones portables',
           'équipements et immobilisations . total sans reconditionné . téléphones portables . quantité',
         ],
-        [ 
+        [
           'équipements et immobilisations . total sans reconditionné . vidéoprojecteurs',
           'équipements et immobilisations . total sans reconditionné . vidéoprojecteurs . quantité',
         ],
@@ -351,7 +349,10 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
         ['déplacements . bénéficiaires . part voiture', 'déplacements . bénéficiaires . part voiture'],
         ['déplacements . bénéficiaires . part train', 'déplacements . bénéficiaires . part train'],
         ['déplacements . bénéficiaires . part deux roues', 'déplacements . bénéficiaires . part deux roues'],
-        ['déplacements . bénéficiaires . part transport en commun', 'déplacements . bénéficiaires . part transport en commun'],
+        [
+          'déplacements . bénéficiaires . part transport en commun',
+          'déplacements . bénéficiaires . part transport en commun',
+        ],
         ['déplacements . bénéficiaires . part avion', 'déplacements . bénéficiaires . part avion'],
         ['déplacements . bénéficiaires . part actif', 'déplacements . bénéficiaires . part actif'],
       ],
@@ -383,7 +384,10 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
         ['déplacements . DT-salariés . sans . part voiture', 'déplacements . DT-salariés . sans . part voiture'],
         ['déplacements . DT-salariés . sans . part train', 'déplacements . DT-salariés . sans . part train'],
         ['déplacements . DT-salariés . sans . part deux roues', 'déplacements . DT-salariés . sans . part deux roues'],
-        ['déplacements . DT-salariés . sans . part transport en commun', 'déplacements . DT-salariés . sans . part transport en commun'],
+        [
+          'déplacements . DT-salariés . sans . part transport en commun',
+          'déplacements . DT-salariés . sans . part transport en commun',
+        ],
       ],
     ),
     table(
@@ -393,7 +397,10 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
         ['déplacements . DT-salariés . sans . voiture', 'déplacements . DT-salariés . sans . voiture . distance'],
         ['déplacements . DT-salariés . sans . train', 'déplacements . DT-salariés . sans . train . distance'],
         ['déplacements . DT-salariés . sans . deux roues', 'déplacements . DT-salariés . sans . deux roues . distance'],
-        ['déplacements . DT-salariés . sans . transports en commun', 'déplacements . DT-salariés . sans . transports en commun . distance'],
+        [
+          'déplacements . DT-salariés . sans . transports en commun',
+          'déplacements . DT-salariés . sans . transports en commun . distance',
+        ],
       ],
     ),
   ],
@@ -407,8 +414,14 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
       [
         ['déplacements . DT-bénévoles . sans . part voiture', 'déplacements . DT-bénévoles . sans . part voiture'],
         ['déplacements . DT-bénévoles . sans . part train', 'déplacements . DT-bénévoles . sans . part train'],
-        ['déplacements . DT-bénévoles . sans . part deux roues', 'déplacements . DT-bénévoles . sans . part deux roues'],
-        ['déplacements . DT-bénévoles . sans . part transport en commun', 'déplacements . DT-bénévoles . sans . part transport en commun'],
+        [
+          'déplacements . DT-bénévoles . sans . part deux roues',
+          'déplacements . DT-bénévoles . sans . part deux roues',
+        ],
+        [
+          'déplacements . DT-bénévoles . sans . part transport en commun',
+          'déplacements . DT-bénévoles . sans . part transport en commun',
+        ],
       ],
     ),
     table(
@@ -417,8 +430,14 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
       [
         ['déplacements . DT-bénévoles . sans . voiture', 'déplacements . DT-bénévoles . sans . voiture . distance'],
         ['déplacements . DT-bénévoles . sans . train', 'déplacements . DT-bénévoles . sans . train . distance'],
-        ['déplacements . DT-bénévoles . sans . deux roues', 'déplacements . DT-bénévoles . sans . deux roues . distance'],
-        ['déplacements . DT-bénévoles . sans . transports en commun', 'déplacements . DT-bénévoles . sans . transports en commun . distance'],
+        [
+          'déplacements . DT-bénévoles . sans . deux roues',
+          'déplacements . DT-bénévoles . sans . deux roues . distance',
+        ],
+        [
+          'déplacements . DT-bénévoles . sans . transports en commun',
+          'déplacements . DT-bénévoles . sans . transports en commun . distance',
+        ],
       ],
     ),
   ],
@@ -430,15 +449,30 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('déplacements . DM-salariés . avec . émissions MEP . deux roues'),
     table(
       'DeplacementsDansLeCadreDUneMissionAssociativeSalaries.question',
-      ['DeplacementsDansLeCadreDUneMissionAssociativeSalaries.ModeTransport', 'DeplacementsDansLeCadreDUneMissionAssociativeSalaries.DistanceMoyenne'],
+      [
+        'DeplacementsDansLeCadreDUneMissionAssociativeSalaries.ModeTransport',
+        'DeplacementsDansLeCadreDUneMissionAssociativeSalaries.DistanceMoyenne',
+      ],
       [
         ['déplacements . DM-salariés . sans . voiture', 'déplacements . DM-salariés . sans . voiture . distance'],
         ['déplacements . DM-salariés . sans . train', 'déplacements . DM-salariés . sans . train . distance'],
         ['déplacements . DM-salariés . sans . deux roues', 'déplacements . DM-salariés . sans . deux roues . distance'],
-        ['déplacements . DM-salariés . sans . transports en commun', 'déplacements . DM-salariés . sans . transports en commun . distance'],
-        ['déplacements . DM-salariés . sans . avion . court courrier', 'déplacements . DM-salariés . sans . avion . court courrier . distance'],
-        ['déplacements . DM-salariés . sans . avion . moyen courrier', 'déplacements . DM-salariés . sans . avion . moyen courrier . distance'],
-        ['déplacements . DM-salariés . sans . avion . long courrier', 'déplacements . DM-salariés . sans . avion . long courrier . distance'],
+        [
+          'déplacements . DM-salariés . sans . transports en commun',
+          'déplacements . DM-salariés . sans . transports en commun . distance',
+        ],
+        [
+          'déplacements . DM-salariés . sans . avion . court courrier',
+          'déplacements . DM-salariés . sans . avion . court courrier . distance',
+        ],
+        [
+          'déplacements . DM-salariés . sans . avion . moyen courrier',
+          'déplacements . DM-salariés . sans . avion . moyen courrier . distance',
+        ],
+        [
+          'déplacements . DM-salariés . sans . avion . long courrier',
+          'déplacements . DM-salariés . sans . avion . long courrier . distance',
+        ],
       ],
     ),
   ],
@@ -450,21 +484,36 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('déplacements . DM-bénévoles . avec . émissions MEP . deux roues'),
     table(
       'DeplacementsDansLeCadreDUneMissionAssociativeBenevoles.question',
-      ['DeplacementsDansLeCadreDUneMissionAssociativeBenevoles.ModeTransport', 'DeplacementsDansLeCadreDUneMissionAssociativeBenevoles.DistanceMoyenne'],
+      [
+        'DeplacementsDansLeCadreDUneMissionAssociativeBenevoles.ModeTransport',
+        'DeplacementsDansLeCadreDUneMissionAssociativeBenevoles.DistanceMoyenne',
+      ],
       [
         ['déplacements . DM-bénévoles . sans . voiture', 'déplacements . DM-bénévoles . sans . voiture . distance'],
         ['déplacements . DM-bénévoles . sans . train', 'déplacements . DM-bénévoles . sans . train . distance'],
-        ['déplacements . DM-bénévoles . sans . deux roues', 'déplacements . DM-bénévoles . sans . deux roues . distance'],
-        ['déplacements . DM-bénévoles . sans . transports en commun', 'déplacements . DM-bénévoles . sans . transports en commun . distance'],
-        ['déplacements . DM-bénévoles . sans . avion . court courrier', 'déplacements . DM-bénévoles . sans . avion . court courrier . distance'],
-        ['déplacements . DM-bénévoles . sans . avion . moyen courrier', 'déplacements . DM-bénévoles . sans . avion . moyen courrier . distance'],
-        ['déplacements . DM-bénévoles . sans . avion . long courrier', 'déplacements . DM-bénévoles . sans . avion . long courrier . distance'],
+        [
+          'déplacements . DM-bénévoles . sans . deux roues',
+          'déplacements . DM-bénévoles . sans . deux roues . distance',
+        ],
+        [
+          'déplacements . DM-bénévoles . sans . transports en commun',
+          'déplacements . DM-bénévoles . sans . transports en commun . distance',
+        ],
+        [
+          'déplacements . DM-bénévoles . sans . avion . court courrier',
+          'déplacements . DM-bénévoles . sans . avion . court courrier . distance',
+        ],
+        [
+          'déplacements . DM-bénévoles . sans . avion . moyen courrier',
+          'déplacements . DM-bénévoles . sans . avion . moyen courrier . distance',
+        ],
+        [
+          'déplacements . DM-bénévoles . sans . avion . long courrier',
+          'déplacements . DM-bénévoles . sans . avion . long courrier . distance',
+        ],
       ],
     ),
   ],
   DeplacementsFabricationDesVehicules: [input('déplacements . fabrication . voitures . nombre')],
-  TeletravailSalaries: [
-    input('télétravail . salariés . j'),
-    input('télétravail . bénévoles . h'),
-  ],
+  TeletravailSalaries: [input('télétravail . salariés . j'), input('télétravail . bénévoles . h')],
 } as const
