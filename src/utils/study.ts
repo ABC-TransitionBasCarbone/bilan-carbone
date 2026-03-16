@@ -1,5 +1,6 @@
 import { FullStudy } from '@/db/study'
 import { getEmissionResults, getEmissionSourcesTotalCo2 } from '@/services/emissionSource'
+import { isTiltSimplified } from '@/services/permissions/environmentAdvanced'
 import { isAdminOnStudyOrga } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
@@ -45,6 +46,7 @@ export type StudyWithRoleFields = {
   id: string
   level: Level
   isPublic: boolean
+  simplified: boolean
   organizationVersion: {
     id: string
     parentId: string | null
@@ -56,6 +58,9 @@ export type StudyWithRoleFields = {
 }
 
 export const getAccountRoleOnStudy = (user: UserSession, study: StudyWithRoleFields) => {
+  if (isTiltSimplified(study.organizationVersion.environment, study.simplified)) {
+    return StudyRole.Editor
+  }
   if (isAdminOnStudyOrga(user, study.organizationVersion)) {
     return hasSufficientLevel(user.level, study.level) && hasActiveLicence(study.organizationVersion)
       ? StudyRole.Validator
