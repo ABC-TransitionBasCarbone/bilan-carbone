@@ -55,10 +55,8 @@ déplacements . DT-bénévoles . avec:
           unité: kgCO2e/km
           par défaut: 0
           note: On néglige l'impact des modes actifs (vélo, marche, trottinette...)
-
     réponse MEP:
       question: D'après les résultats MEP, combien de kgCO2e représentent les déplacements domicile-travail des bénévoles ?
-      par défaut: 0
       unité: kgCO2e
       par défaut: 0
   unité: kgCO2e
@@ -246,7 +244,6 @@ déplacements . DT-bénévoles . sans . transports en commun:
   avec:
     distance:
       question: Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en transports en commun pour des déplacements domicile-travail ?
-      par défaut: 0
       type: nombre
       unité: km/bénévoles.jours
       par défaut: 0
