@@ -1,7 +1,6 @@
 'use client'
 
 import Block from '@/components/base/Block'
-import Button from '@/components/base/Button'
 import Stepper from '@/components/base/Stepper'
 import TabsWithGreenStyling from '@/components/dynamic-form/TabsWithGreenStyling'
 import { FullStudy } from '@/db/study'
@@ -12,6 +11,7 @@ import { SimplifiedEnvironment } from '@/services/publicodes/simplifiedPublicode
 import CheckIcon from '@mui/icons-material/Check'
 import { ArrowLeftIcon, ArrowRightIcon } from '@mui/x-date-pickers'
 import { SubPost } from '@prisma/client'
+import { Button } from '@repo/ui'
 import { useTranslations } from 'next-intl'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'

@@ -2,7 +2,6 @@
 
 import Block from '@/components/base/Block'
 import Box from '@/components/base/Box'
-import Button from '@/components/base/Button'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
@@ -39,6 +38,7 @@ import {
   StudyResultUnit,
   SubPost,
 } from '@prisma/client'
+import { Button } from '@repo/ui'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { MouseEvent, useCallback, useEffect, useMemo, useState } from 'react'

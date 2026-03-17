@@ -1,11 +1,11 @@
 'use client'
 
 import { OrganizationVersionWithOrganization } from '@/db/organization'
+import { Button } from '@repo/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useRef, useState } from 'react'
 import Block from '../base/Block'
-import Button from '../base/Button'
 import ClientCard from './CRClient'
 import styles from './CRClients.module.css'
 

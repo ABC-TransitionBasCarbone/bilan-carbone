@@ -1,9 +1,9 @@
 import { FormControl, InputLabel, ListItemText, MenuItem, OutlinedInput, Select, TextField } from '@mui/material'
+import { Button } from '@repo/ui'
 import { Table } from '@tanstack/react-table'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { ChangeEvent } from 'react'
-import Button from './Button'
 import styles from './Table.module.css'
 
 interface Props<TData> {

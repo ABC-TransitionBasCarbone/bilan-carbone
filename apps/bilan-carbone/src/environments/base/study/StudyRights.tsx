@@ -1,7 +1,6 @@
 'use client'
 
 import Block from '@/components/base/Block'
-import Button from '@/components/base/Button'
 import { FormTextField } from '@/components/form/TextField'
 import Modal from '@/components/modals/Modal'
 import StudyContributorsTable from '@/components/study/rights/StudyContributorsTable'
@@ -15,6 +14,7 @@ import { ChangeStudyNameCommand, ChangeStudyNameValidation } from '@/services/se
 import { zodResolver } from '@hookform/resolvers/zod'
 import EditIcon from '@mui/icons-material/Edit'
 import { EmissionFactorImportVersion, StudyRole } from '@prisma/client'
+import { Button } from '@repo/ui'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'

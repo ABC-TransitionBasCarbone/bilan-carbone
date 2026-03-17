@@ -6,10 +6,10 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import { TextField } from '@mui/material'
 import { CommentStatus } from '@prisma/client'
+import { Button } from '@repo/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
-import Button from '../base/Button'
 import styles from './StudyComment.module.css'
 
 interface Props {

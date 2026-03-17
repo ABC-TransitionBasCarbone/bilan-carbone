@@ -1,9 +1,9 @@
 'use client'
 
-import Button from '@/components/base/Button'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import SchoolIcon from '@mui/icons-material/School'
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material'
+import { Button } from '@repo/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useEffect, useState } from 'react'

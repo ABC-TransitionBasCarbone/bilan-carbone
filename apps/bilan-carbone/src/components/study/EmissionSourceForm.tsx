@@ -35,6 +35,7 @@ import {
   SubPost,
   Unit,
 } from '@prisma/client'
+import { Button } from '@repo/ui'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
@@ -42,7 +43,6 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import { Path } from 'react-hook-form'
-import Button from '../base/Button'
 import HelpIcon from '../base/HelpIcon'
 import LinkButton from '../base/LinkButton'
 import { Select } from '../base/Select'

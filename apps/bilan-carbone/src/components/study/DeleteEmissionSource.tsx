@@ -1,11 +1,11 @@
 'use client'
 
-import Button from '@/components/base/Button'
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteEmissionSource } from '@/services/serverFunctions/emissionSource'
 import { handleWarningText } from '@/utils/components'
 import DeleteIcon from '@mui/icons-material/Delete'
+import { Button } from '@repo/ui'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useCallback, useState } from 'react'

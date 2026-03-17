@@ -1,7 +1,7 @@
 import { ButtonProps, CircularProgress } from '@mui/material'
+import { Button } from '@repo/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import Button from './Button'
 import styles from './LoadingButton.module.css'
 
 export interface Props {
