@@ -62,14 +62,13 @@ const TopLeftNavBar = ({ user, hasFormation, isFootprintsEnabled, hasTrainedUser
                 {t('team')}
               </NavbarLink>
             </MenuItem>
-            {!isTilt(user.environment) ||
-              (hasTrainedUsers && (
-                <MenuItem onClick={handleClose}>
-                  <NavbarLink data-testid="link-organization" href="/organisations" onClick={handleClose}>
-                    {t('organizations')}
-                  </NavbarLink>
-                </MenuItem>
-              ))}
+            {(!isTilt(user.environment) || hasTrainedUsers) && (
+              <MenuItem onClick={handleClose}>
+                <NavbarLink data-testid="link-organization" href="/organisations" onClick={handleClose}>
+                  {t('organizations')}
+                </NavbarLink>
+              </MenuItem>
+            )}
             {isTilt(user.environment) && isFootprintsEnabled && (
               <MenuItem onClick={handleClose}>
                 <NavbarLink data-testid="link-organization" href="/mes-empreintes" onClick={handleClose}>
