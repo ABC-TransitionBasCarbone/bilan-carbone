@@ -22,12 +22,14 @@ déplacements . DT-salariés . avec:
           - (5 - télétravail . salariés . j)
           - commun . nombre de semaines travaillées par an
           - (général . salariés - déplacements . DT-salariés . MEP présent . nombre salariés)
-          - 1 / sans . voiture . occupation
+          # Pour la même raison que plus bas, j'enlève le taux d'occupation ici
+          # - 1 / sans . voiture . occupation
       - réponse MEP
   avec:
     distance:
       question: D'après les résultats de MEP, quelle est la distance moyenne parcourue par salarié par jour (A/R) pour des déplacements domicile-travail ?
       unité: km
+      par défaut: 0
 
     répartition:
       formule: voiture * 0.76 + transports en commun * 0.16 + deux roues * 0.02 + actif * 0.09
@@ -51,8 +53,9 @@ déplacements . DT-salariés . avec:
           note: On néglige l'impact des modes actifs (vélo, marche, trottinette...)
 
     réponse MEP:
-      question: D'après les résultats MEP, combien de kgCO2e représentent les déplacements liés à des missions des salariés ?
+      question: D'après les résultats MEP, combien de kgCO2e représentent les déplacements domicile-travail des salariés ?
       unité: kgCO2e
+      par défaut: 0
   unité: kgCO2e
 
 ## Ici on calcule les émissions dans le cas ou il n'y pas eu de campagne MEP
@@ -61,23 +64,75 @@ déplacements . DT-salariés . sans:
   titre: émissions des trajets domiciles travail des salariés (sans enquête MEP)
   formule:
     somme:
-      - voiture
-      - train
-      - deux roues
-      - transports en commun
+      - voiture * part voiture
+      - train * part train
+      - deux roues * part deux roues
+      - transports en commun * part transport en commun
   unité: kgCO2e
 
-déplacements . DT-salariés . sans . voiture:
+déplacements . DT-salariés . sans . part voiture:
+  titre: Voiture
+  form:
+    à traduire: oui
   applicable si:
     toutes ces conditions:
       - est défini: déplacements . DT-salariés . MEP présent
       - déplacements . DT-salariés . MEP présent = non
-  formule: distance * split / occupation * (5 - télétravail . salariés . j) * commun . nombre de semaines travaillées par an * général . salariés
+  question: Quel pourcentage des salariés se rend au travail en voiture ?
+  unité: "%"
+  par défaut: 0
+
+déplacements . DT-salariés . sans . part train:
+  titre: Train (TER)
+  form:
+    à traduire: oui
+  applicable si:
+    toutes ces conditions:
+      - est défini: déplacements . DT-salariés . MEP présent
+      - déplacements . DT-salariés . MEP présent = non
+  question: Quel pourcentage des salariés se rend au travail en train (TER) ?
+  unité: "%"
+  par défaut: 0
+
+déplacements . DT-salariés . sans . part deux roues:
+  titre: Deux roues
+  form:
+    à traduire: oui
+  applicable si:
+    toutes ces conditions:
+      - est défini: déplacements . DT-salariés . MEP présent
+      - déplacements . DT-salariés . MEP présent = non
+  question: Quel pourcentage des salariés se rend au travail en deux roues ?
+  unité: "%"
+  par défaut: 0
+
+déplacements . DT-salariés . sans . part transport en commun:
+  titre: Transports en commun (Métro, tramway, RER, bus, ...)
+  form:
+    à traduire: oui
+  applicable si:
+    toutes ces conditions:
+      - est défini: déplacements . DT-salariés . MEP présent
+      - déplacements . DT-salariés . MEP présent = non
+  question: Quel pourcentage des salariés se rend au travail en transports en commun (Métro, Tramway, Bus) ?
+  unité: "%"
+  par défaut: 0
+
+déplacements . DT-salariés . sans . voiture:
+  titre: Voiture
+  form:
+    à traduire: oui
+  applicable si:
+    toutes ces conditions:
+      - est défini: part voiture
+      - part voiture > 0
+  formule: distance * split * général . salariés * commun . nombre de semaines travaillées par an * (5 - télétravail . salariés . j)
   avec:
     distance:
       question: Combien de km sont parcourus en moyenne par salarié en voiture par jour (A/R) pour des déplacements domicile-travail ?
       type: nombre
-      unité: km
+      unité: km/salariés.jours
+      par défaut: 0
   description: On considère ici toutes les motorisations de voiture individuelles, basée sur des moyennes nationales
   unité: kgCO2e
 
@@ -91,14 +146,12 @@ déplacements . DT-salariés . sans . voiture . split:
       meta:
         id: 28008
         nom: Voiture particulière/Coeur de gamme - Véhicule compact/Hybride, full, P2
-
     électrique:
       valeur: 0.1
       unité: kgCO2e/km
       meta:
         id: 28007
         nom: Voiture particulière/Coeur de gamme - Véhicule compact/Electrique
-
     gazole:
       valeur: 0.34
       unité: kgCO2e/km
@@ -106,7 +159,6 @@ déplacements . DT-salariés . sans . voiture . split:
         id: db39062e-4e05-44a7-9d71-9aca18929005
         nom: Transport de passagers en voiture de taille moyenne - gazole - EURO 4
         note: Données ECOINVENT
-
     essence:
       valeur: 0.37
       unité: kgCO2e/km
@@ -116,23 +168,27 @@ déplacements . DT-salariés . sans . voiture . split:
         note: Données ECOINVENT
   unité: kgCO2e/km
 
-déplacements . DT-salariés . sans . voiture . occupation:
-  formule: 1.08
-  note: source pour le taux d'occupation d'une voiture en France pour des trajets D-T https://www.citego.org/bdf_fiche-document-3431_fr.html
-  unité: unité
+# GC : J'enlève cette partie, car on utilise des FE en kgCO2e/km et non en kgCO2e/passager.km. Les FE en kgCO2e/km prennent déjà en compte le taux d'occupation normalement.
+# déplacements . DT-salariés . sans . voiture . occupation:
+#   formule: 1.08
+#   note: source pour le taux d'occupation d'une voiture en France pour des trajets D-T https://www.citego.org/bdf_fiche-document-3431_fr.html
+#   unité: unité
 
 déplacements . DT-salariés . sans . train:
+  titre: Train (TER)
+  form:
+    à traduire: oui
   applicable si:
     toutes ces conditions:
-      - est défini: déplacements . DT-salariés . MEP présent
-      - déplacements . DT-salariés . MEP présent = non
-  formule: distance * FE  * (5 - télétravail . salariés . j) * commun . nombre de semaines travaillées par an * général . salariés
+      - est défini: part train
+      - part train > 0
+  formule: distance * FE * général . salariés * commun . nombre de semaines travaillées par an * (5 - télétravail . salariés . j)
   avec:
     distance:
       question: Combien de km sont parcourus en moyenne par salarié en train par jour (A/R) pour des déplacements domicile-travail ?
       type: nombre
-      unité: km
-
+      unité: km/salariés.jours
+      par défaut: 0
     FE:
       valeur: 0.0277
       unité: kgCO2e/km
@@ -142,17 +198,44 @@ déplacements . DT-salariés . sans . train:
         note: On considère que la majorité des déplacements en train pour du DT est en TER
   unité: kgCO2e
 
-déplacements . DT-salariés . sans . transports en commun:
+déplacements . DT-salariés . sans . deux roues:
+  titre: Deux roues
+  form:
+    à traduire: oui
   applicable si:
     toutes ces conditions:
-      - est défini: déplacements . DT-salariés . MEP présent
-      - déplacements . DT-salariés . MEP présent = non
-  formule: distance * split * (5 - télétravail . salariés . j) * commun . nombre de semaines travaillées par an * général . salariés
+      - est défini: part deux roues
+      - part deux roues > 0
+  formule: distance * FE  * général . salariés * commun . nombre de semaines travaillées par an * (5 - télétravail . salariés . j)
+  avec:
+    distance:
+      question: Combien de km sont parcourus en moyenne par salarié en deux roues par jour (A/R) pour des déplacements domicile-travail ?
+      type: nombre
+      unité: km/salariés.jours
+      par défaut: 0
+    FE:
+      valeur: 0.0851
+      unité: kgCO2e/km
+      meta:
+        id: 43775
+        nom: Cyclomoteur/Mixte/2023
+  unité: kgCO2e
+
+déplacements . DT-salariés . sans . transports en commun:
+  titre: Transports en commun (Métro, tramway, RER, bus, ...)
+  form:
+    à traduire: oui
+  applicable si:
+    toutes ces conditions:
+      - est défini: part transport en commun
+      - part transport en commun > 0
+  formule: distance * split * général . salariés * commun . nombre de semaines travaillées par an * (5 - télétravail . salariés . j)
   avec:
     distance:
       question: Combien de km sont parcourus en moyenne par salarié en transports en commun par jour (A/R) pour des déplacements domicile-travail ?
       type: nombre
-      unité: km
+      unité: km/salariés.jours
+      par défaut: 0
   unité: kgCO2e
 
 déplacements . DT-salariés . sans . transports en commun . split:
@@ -165,28 +248,7 @@ déplacements . DT-salariés . sans . transports en commun . split:
       meta:
         id: 28000
         nom: Autobus moyen/Agglomération de plus de 250 000 habitants
-
     rail:
       valeur: 0.00356
       unité: kgCO2e/km
       note: source doc NGC https://nosgestesclimat.fr/documentation/transport/transports-commun/m%C3%A9tro-ou-tram
-
-déplacements . DT-salariés . sans . deux roues:
-  applicable si:
-    toutes ces conditions:
-      - est défini: déplacements . DT-salariés . MEP présent
-      - déplacements . DT-salariés . MEP présent = non
-  formule: distance * FE  * (5 - télétravail . salariés . j) * commun . nombre de semaines travaillées par an * général . salariés
-  avec:
-    distance:
-      question: Combien de km sont parcourus en moyenne par salarié en deux roues par jour (A/R) pour des déplacements domicile-travail ?
-      type: nombre
-      unité: km
-
-    FE:
-      valeur: 0.0851
-      unité: kgCO2e/km
-      meta:
-        id: 43775
-        nom: Cyclomoteur/Mixte/2023
-  unité: kgCO2e

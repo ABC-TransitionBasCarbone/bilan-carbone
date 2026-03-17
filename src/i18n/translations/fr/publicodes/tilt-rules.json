@@ -1,7 +1,9 @@
 {
   "publicodes-units": {
     "année": "année",
-    "personne": "personne",
+    "salariés": "salariés",
+    "bénévoles": "bénévoles",
+    "bénéficiaires": "bénéficiaires",
     "k€": "k€",
     "jours": "jours",
     "quantité": "quantité",
@@ -10,16 +12,32 @@
     "litre": "litre",
     "stères": "stères",
     "h/semaine": "h/semaine",
-    "j/semaine": "j/semaine",
+    "jours/semaine": "jours/semaine",
     "kgCO2e": "kgCO2e",
+    "k€ HT": "k€ HT",
     "h": "h",
     "mail": "mail",
     "Go": "Go",
-    "unité": "unité",
-    "kg": "kg",
+    "climatiseur": "climatiseur",
+    "VUL": "VUL",
+    "poids lourds": "poids lourds",
+    "livraison": "livraison",
+    "kg/livraison": "kg/livraison",
     "%": "%",
     "tonne": "tonne",
+    "voitures": "voitures",
+    "unité": "unité",
     "km": "km",
+    "km/salariés/jours": "km/salariés.jours",
+    "km/bénévoles/jours": "km/bénévoles.jours",
+    "km/salariés/mois": "km/salariés.mois",
+    "km/salarié/mois": "km/salarié.mois",
+    "kgCO2e/an": "kgCO2e/an",
+    "km/salarié/an": "km/salarié.an",
+    "km/bénévole/mois": "km/bénévole.mois",
+    "km/bénévoles/mois": "km/bénévoles.mois",
+    "km/bénévoles/an": "km/bénévoles.an",
+    "km/bénéficiaires/an": "km/bénéficiaires.an",
     "place": "place",
     "m2": "m2",
     "repas": "repas"
@@ -71,17 +89,19 @@
       }
     },
     "équipements et immobilisations": {
-      "infos": {
-        "prise en compte reconditionné": {
+      "pondération": {
+        "reconditionné": {
           "description": "En fonction de votre réponse, une partie de vos équipements seront valorisés comme étant reconditionnés. Un équipement reconditionné sera considéré comme moitié moins émetteur qu'un équipement neuf. Autrement dit, la durée de première vie de l'équipement est considéré comme égale à la moitié de sa durée de vie totale.",
           "question": "Vos équipements sont-ils reconditionné ou issu de seconde main ?",
           "options": {
             "toujours": "Toujours",
             "souvent": "Souvent",
-            "rarement": "Rarement",
+            "parfois": "Parfois",
             "jamais": "Jamais"
           }
-        },
+        }
+      },
+      "total sans reconditionné": {
         "ordinateurs fixes": {
           "titre": "Ordinateurs fixes",
           "quantité": {
@@ -226,12 +246,12 @@
     "télétravail": {
       "bénévoles": {
         "h": {
-          "question": "Combien d'heures de télétravail sont effectuées par semaine pour vos bénévoles ?"
+          "question": "Combien d'heures sont en moyenne effectuées en télétravail par semaine pour vos bénévoles ?"
         }
       },
       "salariés": {
         "j": {
-          "question": "Combien de jours télétravail sont effectuées par semaine pour vos salariés ?"
+          "question": "Combien de jours sont en moyenne télétravaillés par semaine par vos salariés ?"
         }
       }
     },
@@ -401,6 +421,16 @@
         "présent": {
           "question": "Est-ce que votre association possède ou loue des véhicules pour transporter des marchandises ?"
         },
+        "VUL": {
+          "nombre": {
+            "question": "Combien de véhicules utilitaires légers possédez-vous ou louez-vous depuis moins de 5 ans ?"
+          }
+        },
+        "PL": {
+          "nombre": {
+            "question": "Combien de véhicules poids lourds possédez-vous ou louez-vous depuis moins de 5 ans ?"
+          }
+        },
         "carburant": {
           "litre": {
             "question": "Combien de litres de carburants ces véhicules ont-ils consommé ?"
@@ -442,25 +472,12 @@
             "question": "Sur ces livraisons, quelle part provient de fournisseurs internationaux (plus de 1500 km) ?"
           }
         }
-      },
-      "fabrication": {
-        "titre": "Fabrication des véhicules",
-        "question": "Combien de véhicules sont possédés ou loués depuis moins de 5 ans parmi les catégories suivantes ?",
-        "VUL": {
-          "nombre": {
-            "question": "Combien de véhicules utilitaires légers possédez-vous ou louez-vous depuis moins de 5 ans ?"
-          }
-        },
-        "PL": {
-          "nombre": {
-            "question": "Combien de véhicules poids lourds possédez-vous ou louez-vous depuis moins de 5 ans ?"
-          }
-        }
       }
     },
     "fin de vie": {
       "déchets": {
         "fin de vie présente": {
+          "description": "Les biens matériels fournis à vos bénéficiaires deviendront un jour des déchets, et devront donc être stockés, incinérés, recyclés, ... C'est ce que l'on appelle la fin de vie des produits, et il faut donc prendre en compte les émissions qui y sont associées.",
           "question": "Fournissez-vous des biens matériels à vos bénéficiaires ?"
         },
         "poids": {
@@ -493,28 +510,49 @@
             "question": "D'après les résultats de MEP, quelle est la distance moyenne parcourue par salarié par jour (A/R) pour des déplacements domicile-travail ?"
           },
           "réponse MEP": {
-            "question": "D'après les résultats MEP, combien de kgCO2e représentent les déplacements liés à des missions des salariés ?"
+            "question": "D'après les résultats MEP, combien de kgCO2e représentent les déplacements domicile-travail des salariés ?"
           }
         },
         "sans": {
+          "part voiture": {
+            "titre": "Voiture",
+            "question": "Quel pourcentage des salariés se rend au travail en voiture ?"
+          },
+          "part train": {
+            "titre": "Train (TER)",
+            "question": "Quel pourcentage des salariés se rend au travail en train (TER) ?"
+          },
+          "part deux roues": {
+            "titre": "Deux roues",
+            "question": "Quel pourcentage des salariés se rend au travail en deux roues ?"
+          },
+          "part transport en commun": {
+            "titre": "Transports en commun (Métro, tramway, RER, bus, ...)",
+            "question": "Quel pourcentage des salariés se rend au travail en transports en commun (Métro, Tramway, Bus) ?"
+          },
           "voiture": {
+            "titre": "Voiture",
+            "description": "On considère ici toutes les motorisations de voiture individuelles, basée sur des moyennes nationales",
             "distance": {
               "question": "Combien de km sont parcourus en moyenne par salarié en voiture par jour (A/R) pour des déplacements domicile-travail ?"
             }
           },
           "train": {
+            "titre": "Train (TER)",
             "distance": {
               "question": "Combien de km sont parcourus en moyenne par salarié en train par jour (A/R) pour des déplacements domicile-travail ?"
             }
           },
-          "transports en commun": {
-            "distance": {
-              "question": "Combien de km sont parcourus en moyenne par salarié en transports en commun par jour (A/R) pour des déplacements domicile-travail ?"
-            }
-          },
           "deux roues": {
+            "titre": "Deux roues",
             "distance": {
               "question": "Combien de km sont parcourus en moyenne par salarié en deux roues par jour (A/R) pour des déplacements domicile-travail ?"
+            }
+          },
+          "transports en commun": {
+            "titre": "Transports en commun (Métro, tramway, RER, bus, ...)",
+            "distance": {
+              "question": "Combien de km sont parcourus en moyenne par salarié en transports en commun par jour (A/R) pour des déplacements domicile-travail ?"
             }
           }
         }
@@ -529,24 +567,45 @@
           }
         },
         "sans": {
+          "part voiture": {
+            "titre": "Voiture",
+            "question": "Quel pourcentage des bénévoles se rend à son lieu habituel de bénévolat en voiture ?"
+          },
+          "part train": {
+            "titre": "Train (TER)",
+            "question": "Quel pourcentage des bénévoles se rend à son lieu habituel de bénévolat en train (TER) ?"
+          },
+          "part deux roues": {
+            "titre": "Deux roues",
+            "question": "Quel pourcentage des bénévoles se rend à son lieu habituel de bénévolat en deux roues ?"
+          },
+          "part transport en commun": {
+            "titre": "Transports en commun (Métro, tramway, RER, bus, ...)",
+            "question": "Quel pourcentage des bénévoles se rend à son lieu habituel de bénévolat en transports en commun (Métro, Tramway, Bus) ?"
+          },
           "voiture": {
+            "titre": "Voiture",
+            "description": "On considère ici toutes les motorisations de voiture individuelles, basée sur des moyennes nationales",
             "distance": {
               "question": "Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en voiture pour des déplacements domicile-travail ?"
             }
           },
           "train": {
+            "titre": "Train (TER)",
             "distance": {
               "question": "Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en train pour des déplacements domicile-travail ?"
             }
           },
-          "transports en commun": {
-            "distance": {
-              "question": "Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en transports en commun pour des déplacements domicile-travail ?"
-            }
-          },
           "deux roues": {
+            "titre": "Deux roues",
             "distance": {
               "question": "Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en deux roues pour des déplacements domicile-travail ?"
+            }
+          },
+          "transports en commun": {
+            "titre": "Transports en commun (Métro, tramway, RER, bus, ...)",
+            "distance": {
+              "question": "Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en transports en commun pour des déplacements domicile-travail ?"
             }
           }
         }
@@ -573,39 +632,47 @@
         },
         "sans": {
           "voiture": {
+            "titre": "Voiture, par mois",
+            "description": "On considère ici toutes les motorisations de voiture individuelles, basée sur des moyennes nationales",
             "distance": {
               "question": "Combien de km sont parcourus en moyenne par mois par salarié en voiture pour des déplacements liés à des missions ?"
             }
           },
           "train": {
+            "titre": "Train (TER), par mois",
             "distance": {
               "question": "Combien de km sont parcourus en moyenne par mois par salarié en train pour des déplacements liés à des missions ?"
             }
           },
-          "transports en commun": {
-            "distance": {
-              "question": "Combien de km sont parcourus en moyenne par mois par salarié en transports en commun pour des déplacements liés à des missions ?"
-            }
-          },
           "deux roues": {
+            "titre": "Deux roues, par mois",
             "distance": {
               "question": "Combien de km sont parcourus en moyenne par mois par salarié en deux roues pour des déplacements liés à des missions ?"
             }
           },
+          "transports en commun": {
+            "titre": "Transports en commun (Métro, tramway, RER, bus, ...), par mois",
+            "distance": {
+              "question": "Combien de km sont parcourus en moyenne par mois par salarié en transports en commun pour des déplacements liés à des missions ?"
+            }
+          },
           "avion": {
             "court courrier": {
+              "titre": "Avion, court courrier, par an",
               "distance": {
-                "question": "Combien de km ont été parcourus cette année par salarié avion court courrier pour des déplacements liés à des missions ?"
+                "question": "Combien de km ont été parcourus cette année par salarié en avion court courrier pour des déplacements liés à des missions ?"
               }
             },
             "moyen courrier": {
+              "titre": "Avion, moyen courrier, par an",
               "distance": {
-                "question": "Combien de km ont été parcourus cette année par salarié avion moyen courrier pour des déplacements liés à des missions ?"
+                "question": "Combien de km ont été parcourus cette année par salarié en avion moyen courrier pour des déplacements liés à des missions ?"
               }
             },
             "long courrier": {
+              "titre": "Avion, long courrier, par an",
               "distance": {
-                "question": "Combien de km ont été parcourus cette année par salarié avion long courrier pour des déplacements liés à des missions ?"
+                "question": "Combien de km ont été parcourus cette année par salarié en avion long courrier pour des déplacements liés à des missions ?"
               }
             }
           }
@@ -633,38 +700,45 @@
         },
         "sans": {
           "voiture": {
+            "titre": "Voiture, par mois",
             "distance": {
               "description": "On considère ici toutes les motorisations de voiture individuelles, basée sur des moyennes nationales",
               "question": "Combien de km sont parcourus en moyenne par mois par bénévole en voiture pour des déplacements liés à des missions ?"
             }
           },
           "train": {
+            "titre": "Train (TER), par mois",
             "distance": {
               "question": "Combien de km sont parcourus en moyenne par mois par bénévole en train pour des déplacements liés à des missions ?"
             }
           },
-          "transports en commun": {
-            "distance": {
-              "question": "Combien de km sont parcourus en moyenne par mois par bénévole en transports en commun pour des déplacements liés à des missions ?"
-            }
-          },
           "deux roues": {
+            "titre": "Deux roues, par mois",
             "distance": {
               "question": "Combien de km sont parcourus en moyenne par mois par bénévole en deux roues pour des déplacements liés à des missions ?"
             }
           },
+          "transports en commun": {
+            "titre": "Transports en commun (Métro, tramway, RER, bus, ...), par mois",
+            "distance": {
+              "question": "Combien de km sont parcourus en moyenne par mois par bénévole en transports en commun pour des déplacements liés à des missions ?"
+            }
+          },
           "avion": {
             "court courrier": {
+              "titre": "Avion, court courrier, par an",
               "distance": {
                 "question": "Combien de km ont été parcourus cette année par bénévole avion court courrier pour des déplacements liés à des missions ?"
               }
             },
             "moyen courrier": {
+              "titre": "Avion, moyen courrier, par an",
               "distance": {
                 "question": "Combien de km ont été parcourus cette année par bénévole avion moyen courrier pour des déplacements liés à des missions ?"
               }
             },
             "long courrier": {
+              "titre": "Avion, long courrier, par an",
               "distance": {
                 "question": "Combien de km ont été parcourus cette année par bénévole avion long courrier pour des déplacements liés à des missions ?"
               }
@@ -676,41 +750,53 @@
         "se déplacent": {
           "question": "Les bénéficiaires de vos produits ou services se déplacent-ils pour en profiter ?"
         },
-        "voiture": {
-          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en voiture pour se rendre à vos produits ou services ?"
-        },
         "part voiture": {
-          "question": "Quel pourcentage des trajets en voiture ?"
-        },
-        "actif": {
-          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires via des modes actifs (à pied, vélo, trottinette) pour se rendre à vos produits ou services ?"
-        },
-        "part actif": {
-          "question": "Quel pourcentage des trajets via des modes actifs (à pied, vélo, trottinette) ?"
-        },
-        "deux roues": {
-          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en deux roues (scooter, moto) pour se rendre à vos produits ou services ?"
-        },
-        "part deux roues": {
-          "question": "Quel pourcentage des trajets en deux roues (scooter, moto) ?"
-        },
-        "transport en commun": {
-          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en transport en commun pour se rendre à vos produits ou services ?"
-        },
-        "part transport en commun": {
-          "question": "Quel pourcentage des trajets en transport en commun ?"
-        },
-        "train": {
-          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en train pour se rendre à vos produits ou services ?"
+          "titre": "Voiture",
+          "question": "Quel pourcentage des trajets se fait en voiture ?"
         },
         "part train": {
-          "question": "Quel pourcentage des trajets en train ?"
+          "titre": "Train (TER)",
+          "question": "Quel pourcentage des trajets se fait en train ?"
         },
-        "avion": {
-          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en avion pour se rendre à vos produits ou services ?"
+        "part deux roues": {
+          "titre": "Deux roues",
+          "question": "Quel pourcentage des trajets se fait en deux roues (scooter, moto) ?"
+        },
+        "part transport en commun": {
+          "titre": "Transport en commun (Métro, tramway, RER, bus, ...)",
+          "question": "Quel pourcentage des trajets se fait en transport en commun ?"
         },
         "part avion": {
-          "question": "Quel pourcentage des trajets en avion ?"
+          "titre": "Avion",
+          "question": "Quel pourcentage des trajets se fait en avion ?"
+        },
+        "part actif": {
+          "titre": "Modes actifs (à pied, trottinette, ...)",
+          "question": "Quel pourcentage des trajets via des modes actifs (à pied, vélo, trottinette) ?"
+        },
+        "voiture": {
+          "titre": "Voiture",
+          "question": "Combien de km parcourent en moyenne sur l'année vos bénéficiaires en voiture ?"
+        },
+        "train": {
+          "titre": "Train (TER)",
+          "question": "Combien de km parcourent en moyenne sur l'année vos bénéficiaires en train ?"
+        },
+        "deux roues": {
+          "titre": "Deux roues",
+          "question": "Combien de km parcourent en moyenne sur l'année vos bénéficiaires se déplaçant en deux roues (scooter, moto) ?"
+        },
+        "transport en commun": {
+          "titre": "Transport en commun (Métro, tramway, RER, bus, ...)",
+          "question": "Combien de km parcourent en moyenne sur l'année vos bénéficiaires en transport en commun ?"
+        },
+        "avion": {
+          "titre": "Avion",
+          "question": "Combien de km parcourent en moyenne sur l'année vos bénéficiaires en avion ?"
+        },
+        "actif": {
+          "titre": "Modes actifs (à pied, trottinette, ...)",
+          "question": "Combien de km parcourent en moyenne sur l'année vos bénéficiaires via des modes actifs (à pied, vélo, trottinette) ?"
         }
       }
     },

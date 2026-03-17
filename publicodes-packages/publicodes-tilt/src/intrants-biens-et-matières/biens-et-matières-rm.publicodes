@@ -23,7 +23,7 @@ intrants-biens-et-matières . ratios monétaires . petites-fournitures:
     nombre:
       question: Montant dépensé (k€) en petites fournitures
       par défaut: 0
-      unité: k€
+      unité: k€ HT
 
     FE:
       valeur: 367
@@ -42,7 +42,7 @@ intrants-biens-et-matières . ratios monétaires . meubles:
     nombre:
       question: Montant dépensé (k€) en meubles
       par défaut: 0
-      unité: k€
+      unité: k€ HT
 
     FE:
       valeur: 231
@@ -61,7 +61,7 @@ intrants-biens-et-matières . ratios monétaires . machines-équipements:
     nombre:
       question: Montant dépensé (k€) en machines et équipements
       par défaut: 0
-      unité: k€
+      unité: k€ HT
 
     FE:
       valeur: 273
@@ -80,7 +80,7 @@ intrants-biens-et-matières . ratios monétaires . textiles:
     nombre:
       question: Montant dépensé (k€) en textiles
       par défaut: 0
-      unité: k€
+      unité: k€ HT
 
     FE:
       valeur: 271
@@ -99,7 +99,7 @@ intrants-biens-et-matières . ratios monétaires . produits-pharmaceutiques:
     nombre:
       question: Montant dépensé (k€) en produits pharmaceutiques
       par défaut: 0
-      unité: k€
+      unité: k€ HT
 
     FE:
       valeur: 194
@@ -118,7 +118,7 @@ intrants-biens-et-matières . ratios monétaires . produits-chimiques:
     nombre:
       question: Montant dépensé (k€) en produits chimiques
       par défaut: 0
-      unité: k€
+      unité: k€ HT
 
     FE:
       valeur: 603
@@ -137,7 +137,7 @@ intrants-biens-et-matières . ratios monétaires . papier-carton:
     nombre:
       question: Montant dépensé (k€) en papier et carton
       par défaut: 0
-      unité: k€
+      unité: k€ HT
 
     FE:
       valeur: 357
@@ -156,7 +156,7 @@ intrants-biens-et-matières . ratios monétaires . produits-métalliques:
     nombre:
       question: Montant dépensé (k€) en produits métalliques
       par défaut: 0
-      unité: k€
+      unité: k€ HT
 
     FE:
       valeur: 317
@@ -175,7 +175,7 @@ intrants-biens-et-matières . ratios monétaires . autres-produits-manufacturés
     nombre:
       question: Montant dépensé (k€) en autres produits manufacturés
       par défaut: 0
-      unité: k€
+      unité: k€ HT
 
     FE:
       valeur: 231

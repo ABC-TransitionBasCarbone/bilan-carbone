@@ -8,6 +8,7 @@
       question: |
         Quelle est votre consommation annuelle de chaleur issue de réseaux ?
       unité: kWh
+      par défaut: 0
     FE:
       valeur: 0.385
       unité: kgCO2e/kWh

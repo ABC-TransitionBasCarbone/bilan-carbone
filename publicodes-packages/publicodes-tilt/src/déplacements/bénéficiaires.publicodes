@@ -7,12 +7,12 @@ déplacements . bénéficiaires:
             - se déplacent = oui
         alors:
           somme:
-            - voiture * part voiture * déplacements . DT-bénévoles . sans . voiture . split ## on reprend car deja calculé
-            - actif * part actif * 0 ## on néglige l'impact des modes actifs (vélo, marche, trottinette...)
-            - deux roues * part deux roues * FE deux roues
-            - transport en commun * part transport en commun * déplacements . DT-salariés . sans . transports en commun . split ## on reprend car deja calculé
-            - train * part train * FE train
-            - avion * part avion * commun . FE . moyen de transport . avion ## on prend avion moyen courrier
+            - voiture * part voiture * général . bénéficiaires * déplacements . DT-bénévoles . sans . voiture . split ## on reprend car deja calculé
+            - actif * part actif * général . bénéficiaires * 0 ## on néglige l'impact des modes actifs (vélo, marche, trottinette...)
+            - deux roues * part deux roues * général . bénéficiaires * FE deux roues
+            - transport en commun * part transport en commun * général . bénéficiaires * déplacements . DT-salariés . sans . transports en commun . split ## on reprend car deja calculé
+            - train * part train * général . bénéficiaires * FE train
+            - avion * part avion * général . bénéficiaires * commun . FE . moyen de transport . avion ## on prend avion moyen courrier
           avec:
             FE deux roues:
               valeur: 0.0851
@@ -20,7 +20,6 @@ déplacements . bénéficiaires:
               meta:
                 id: 43775
                 nom: Cyclomoteur/Mixte/2023
-
             FE train:
               valeur: 0.0277
               unité: kgCO2e/km
@@ -29,84 +28,154 @@ déplacements . bénéficiaires:
                 nom: TER/2022/Traction moyenne
       - sinon: 0
   unité: kgCO2e
+  par défaut: 0
 
 déplacements . bénéficiaires . se déplacent:
   question: Les bénéficiaires de vos produits ou services se déplacent-ils pour en profiter ?
 
+# GC : Est-ce qu'on ne mettrait pas les parts en % sous forme de tableau, et derrière la complétion des lignes du tableau débloque effectivement les questions par km ?
+# Si tableau, en profiter pour repréciser que les questions en km concernent uniquement les km parcourus POUR profiter des produits et services de l'asso, ici j'ai suppr pour éviter la répétition et la longueur.
+
+déplacements . bénéficiaires . part voiture:
+  titre: Voiture
+  form:
+    à traduire: oui
+  applicable si:
+    toutes ces conditions:
+      - est défini: se déplacent
+      - se déplacent = oui
+  question: Quel pourcentage des trajets se fait en voiture ?
+  unité: "%"
+  par défaut: 0
+
+déplacements . bénéficiaires . part train:
+  titre: Train (TER)
+  form:
+    à traduire: oui
+  applicable si:
+    toutes ces conditions:
+      - est défini: se déplacent
+      - se déplacent = oui
+  question: Quel pourcentage des trajets se fait en train ?
+  unité: "%"
+  par défaut: 0
+
+déplacements . bénéficiaires . part deux roues:
+  titre: Deux roues
+  form:
+    à traduire: oui
+  applicable si:
+    toutes ces conditions:
+      - est défini: se déplacent
+      - se déplacent = oui
+  question: Quel pourcentage des trajets se fait en deux roues (scooter, moto) ?
+  unité: "%"
+  par défaut: 0
+
+déplacements . bénéficiaires . part transport en commun:
+  titre: Transport en commun (Métro, tramway, RER, bus, ...)
+  form:
+    à traduire: oui
+  applicable si:
+    toutes ces conditions:
+      - est défini: se déplacent
+      - se déplacent = oui
+  question: Quel pourcentage des trajets se fait en transport en commun ?
+  unité: "%"
+  par défaut: 0
+
+déplacements . bénéficiaires . part avion:
+  titre: Avion
+  form:
+    à traduire: oui
+  applicable si:
+    toutes ces conditions:
+      - est défini: se déplacent
+      - se déplacent = oui
+  question: Quel pourcentage des trajets se fait en avion ?
+  unité: "%"
+  par défaut: 0
+
+déplacements . bénéficiaires . part actif:
+  titre: Modes actifs (à pied, trottinette, ...)
+  form:
+    à traduire: oui
+  applicable si:
+    toutes ces conditions:
+      - est défini: se déplacent
+      - se déplacent = oui
+  question: Quel pourcentage des trajets via des modes actifs (à pied, vélo, trottinette) ?
+  unité: "%"
+  par défaut: 0
+
 déplacements . bénéficiaires . voiture:
+  titre: Voiture
+  form:
+    à traduire: oui
   applicable si:
     toutes ces conditions:
       - est défini: part voiture
       - part voiture > 0
-  question: Combien de km sont parcourus en moyenne par vos bénéficiaires en voiture pour se rendre à vos produits ou services ?
-  unité: km
-
-déplacements . bénéficiaires . part voiture:
-  question: Quel pourcentage des trajets en voiture ?
-  unité: "%"
-  valeurParDéfaut: 0
-
-déplacements . bénéficiaires . actif:
-  applicable si:
-    toutes ces conditions:
-      - est défini: part actif
-      - part actif > 0
-  question: Combien de km sont parcourus en moyenne par vos bénéficiaires via des modes actifs (à pied, vélo, trottinette) pour se rendre à vos produits ou services ?
-  unité: km
-
-déplacements . bénéficiaires . part actif:
-  question: Quel pourcentage des trajets via des modes actifs (à pied, vélo, trottinette) ?
-  unité: "%"
-  valeurParDéfaut: 0
-
-déplacements . bénéficiaires . deux roues:
-  applicable si:
-    toutes ces conditions:
-      - est défini: part deux roues
-      - part deux roues > 0
-  question: Combien de km sont parcourus en moyenne par vos bénéficiaires en deux roues (scooter, moto) pour se rendre à vos produits ou services ?
-  unité: km
-
-déplacements . bénéficiaires . part deux roues:
-  question: Quel pourcentage des trajets en deux roues (scooter, moto) ?
-  unité: "%"
-  valeurParDéfaut: 0
-
-déplacements . bénéficiaires . transport en commun:
-  applicable si:
-    toutes ces conditions:
-      - est défini: part transport en commun
-      - part transport en commun > 0
-  question: Combien de km sont parcourus en moyenne par vos bénéficiaires en transport en commun pour se rendre à vos produits ou services ?
-  unité: km
-
-déplacements . bénéficiaires . part transport en commun:
-  question: Quel pourcentage des trajets en transport en commun ?
-  unité: "%"
-  valeurParDéfaut: 0
+  question: Combien de km parcourent en moyenne sur l'année vos bénéficiaires en voiture ?
+  unité: km/bénéficiaires.an
+  par défaut: 0
 
 déplacements . bénéficiaires . train:
+  titre: Train (TER)
+  form:
+    à traduire: oui
   applicable si:
     toutes ces conditions:
       - est défini: part train
       - part train > 0
-  question: Combien de km sont parcourus en moyenne par vos bénéficiaires en train pour se rendre à vos produits ou services ?
-  unité: km
+  question: Combien de km parcourent en moyenne sur l'année vos bénéficiaires en train ?
+  unité: km/bénéficiaires.an
+  par défaut: 0
 
-déplacements . bénéficiaires . part train:
-  question: Quel pourcentage des trajets en train ?
-  unité: "%"
-  valeurParDéfaut: 0
+déplacements . bénéficiaires . deux roues:
+  titre: Deux roues
+  form:
+    à traduire: oui
+  applicable si:
+    toutes ces conditions:
+      - est défini: part deux roues
+      - part deux roues > 0
+  question: Combien de km parcourent en moyenne sur l'année vos bénéficiaires se déplaçant en deux roues (scooter, moto) ?
+  unité: km/bénéficiaires.an
+  par défaut: 0
+
+déplacements . bénéficiaires . transport en commun:
+  titre: Transport en commun (Métro, tramway, RER, bus, ...)
+  form:
+    à traduire: oui
+  applicable si:
+    toutes ces conditions:
+      - est défini: part transport en commun
+      - part transport en commun > 0
+  question: Combien de km parcourent en moyenne sur l'année vos bénéficiaires en transport en commun ?
+  unité: km/bénéficiaires.an
+  par défaut: 0
 
 déplacements . bénéficiaires . avion:
+  titre: Avion
+  form:
+    à traduire: oui
   applicable si:
     toutes ces conditions:
       - est défini: part avion
       - part avion > 0
-  question: Combien de km sont parcourus en moyenne par vos bénéficiaires en avion pour se rendre à vos produits ou services ?
-  unité: km
+  question: Combien de km parcourent en moyenne sur l'année vos bénéficiaires en avion ?
+  unité: km/bénéficiaires.an
+  par défaut: 0
 
-déplacements . bénéficiaires . part avion:
-  question: Quel pourcentage des trajets en avion ?
-  unité: "%"
-  valeurParDéfaut: 0
+déplacements . bénéficiaires . actif:
+  titre: Modes actifs (à pied, trottinette, ...)
+  form:
+    à traduire: oui
+  applicable si:
+    toutes ces conditions:
+      - est défini: part actif
+      - part actif > 0
+  question: Combien de km parcourent en moyenne sur l'année vos bénéficiaires via des modes actifs (à pied, vélo, trottinette) ?
+  unité: km/bénéficiaires.an
+  par défaut: 0

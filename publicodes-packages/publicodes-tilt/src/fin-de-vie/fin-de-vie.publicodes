@@ -6,7 +6,6 @@ fin de vie:
 
 fin de vie . déchets:
   titre: Fin de vie
-  applicable si: fin de vie présente = oui
   formule:
     variations:
       - si:
@@ -22,6 +21,7 @@ fin de vie . déchets:
 
 fin de vie . déchets . fin de vie présente:
   question: Fournissez-vous des biens matériels à vos bénéficiaires ?
+  description: Les biens matériels fournis à vos bénéficiaires deviendront un jour des déchets, et devront donc être stockés, incinérés, recyclés, ... C'est ce que l'on appelle la fin de vie des produits, et il faut donc prendre en compte les émissions qui y sont associées.
 
 fin de vie . déchets . poids:
   applicable si:
