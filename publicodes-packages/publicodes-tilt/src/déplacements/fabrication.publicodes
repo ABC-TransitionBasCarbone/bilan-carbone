@@ -15,7 +15,7 @@ déplacements . fabrication . voitures:
       question: Combien de voitures particulières possédez-vous ou louez-vous depuis moins de 5 ans ?
       unité: voitures
       par défaut: 0
-    poids moyen: 
+    poids moyen:
       valeur: 1.265
       unité: tonnes/voitures
     FE:
