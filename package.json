@@ -9,7 +9,10 @@
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
-    "test": "turbo run test"
+    "test": "turbo run test",
+    "ts": "tsc --noEmit",
+    "lint": "prettier --check . && next lint",
+    "format": "prettier --write ."
   },
   "devDependencies": {
     "turbo": "latest"
