@@ -208,7 +208,6 @@ déplacements . DT-bénévoles . sans . train:
   unité: kgCO2e
   par défaut: 0
 
-
 déplacements . DT-bénévoles . sans . transports en commun:
   titre: Transports en commun (Métro, tramway, RER, bus, ...)
   form:
