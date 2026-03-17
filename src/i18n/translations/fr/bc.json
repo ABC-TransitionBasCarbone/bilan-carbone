@@ -984,40 +984,40 @@
         "title": "Initialisation de votre plan de transition",
         "onboarding": {
           "title": "Préparer votre plan de transition",
-          "description": "Ajoutez des études liées et répartissez vos émissions par secteur d'activité, puis visualisez vos trajectoires de référence SBTi et SNBC.",
-          "detailedInfo": "Pour Grabriel"
+          "description": "La construction du plan de transition implique les sous-étapes suivantes : 1 - Visualiser les objectifs et trajectoires de référence dont l'ambition à l'échelle planétaire est celle de l'Accord de Paris. 2 - Sélectionner une trajectoire de décarbonation descendante ou top-down, c'est-à-dire la trajectoire théorique que votre organisation devrait suivre. 3 - Construire votre plan d'action. 4 - Estimer l'impact prévisionnel de la mise en oeuvre de votre plan d'action (en calculant son potentiel de réduction), pour construire votre trajectoire de décarbonation ascendante ou « bottom-up ». 5 - Vérifier la cohérence : la trajectoire bottom-up issue de votre plan d'action justifie la crédibilité de votre trajectoire top-down à plus ou moins long terme selon votre niveau de maturité. Cette page vous permet de visualiser les trajectoires de référence issues de Stratégie Nationale Bas Carbone (SNBC) et de la Science-Based Target initiative (SBTi). Pour cela, vous pouvez paramétrer votre organisation en renseignant vos éventuels bilans passés et en répartissant vos émissions par secteur d'activité de la SNBC.",
+          "detailedInfo": "Deux trajectoires de référence, la SNBC et SBTi, vous sont proposées au bas de cette page. Vous pouvez visualiser la trajectoire de décarbonation que devrait suivre votre organisation selon l'une et l'autre. Ces trajectoires répondent à une logique scientifique robuste, mais elles résultent également de choix socio-économiques (définition des besoins, variation de la demande et de l’offre, orientations politiques, rentabilité, etc.). La SNBC étant déclinée selon les grands secteurs d'activité de l'économie française, vous pouvez sélectionner le secteur qui vous correspond le mieux, ou découper vos émissions sur les différents secteurs (l'outil applique alors les trajectoires sectorielle sur les émissions choisies, et combine ensuite l'ensemble en une trajectoire SNBC pour votre organisation). Si ces secteurs ne conviennent pas à votre activité, il convient d’utiliser la trajectoire générale. Si vous découpez vos émissions sur les différents secteurs, vous pouvez évidemment garder une part d'émissions affectées à la trajectoire générale. Plus d'informations sur la SNBC sont disponibles ici. SBTi fournit une trajectoire visant à limiter le réchauffement climatique à 1,5°C, et une seconde visant à le limiter bien en dessous de 2°C. Vous devez également choisir laquelle de ces deux trajectoires vous souhaitez visualiser. Plus d'informations sur SBTi sont disponibles ici. Les trajectoires de référence ont deux but distincts : - Atteindre la neutralité carbone à l'échelle planétaire à un certain horizon temporel - Conserver un certain budget carbone (une organisation dont les émissions resteraient constantes puis qui se décarbonerait très rapidement juste avant l'horizon temporel fixé dépasserait le budget carbone Ainsi, si vos émissions réelles ne suivent pas la trajectoire choisie, le budget carbone initialement alloué sera dépassé. Il faut alors recalculer la trajectoire à suivre pour réduire d’autant plus et contrebalancer ce dépassement (overshoot). Dans l'outil, la trajectoire est recalculée automatiquement dès que vos émissions réelles sur l'année dépassent les émissions attendues d'au moins 5%.  À chaque nouveau bilan réalisé, vos trajectoires se mettront à jour et vous indiqueront quelles réductions restent à réaliser."
         },
-        "createButton": "Créer ma première trajectoire personnalisée",
+        "createButton": "Créer ma première trajectoire top-down",
         "skipOnboarding": "Passer l'onboarding",
         "stepLinkStudy": {
           "title": "Études passées",
-          "description": "Liez vos études BC+ passées pour reconstruire l'historique de vos émissions. Ces données alimenteront vos trajectoires de réduction.",
+          "description": "Liez vos études passées pour reconstruire l'historique de vos émissions. Dans le cas où certains bilans dateraient d'une année antérieure à l'utilisation du BC+2.0, vous pouvez renseigner l'année de référence et les émissions associées. Ces données alimenteront vos graphiques et trajectoires de réduction. ",
           "glossaryTitle": "Études passées",
           "glossaryDescription": "Pour gabriel - description",
           "linkStudyButton": "Lier une étude"
         },
         "stepSectorAllocation": {
           "title": "Répartition sectorielle",
-          "description": "Indiquez la part de vos émissions relevant de chaque grand secteur SNBC. Cela permettra de générer automatiquement une trajectoire SNBC sectorielle adaptée à votre organisation.",
+          "description": "Indiquez la part de vos émissions relevant des secteurs de la SNBC. L'outil appliquera les trajectoire sectorielles de la SNBC sur les émissions choisies et les combinera pour obtenir la trajectoire SNBC de votre organisation. Si ces secteurs ne conviennet pas à votre activité, il convient d'utiliser la trajectoire générale (il suffit de n'indiquer aucune émission sectorielle)",
           "glossaryTitle": "Répartition sectorielle SNBC",
           "glossaryDescription": "La SNBC définit des objectifs de réduction différenciés par secteur (énergie, industrie, bâtiments, transports…). En renseignant la part de vos émissions dans chaque secteur, la plateforme calcule une trajectoire SNBC pondérée, représentative de votre mix d'activités."
         },
         "stepSelectReferenceTrajectories": {
           "title": "Trajectoires de référence",
-          "description": "Choisissez les trajectoires de référence climatique à afficher sur votre graphique : SNBC (nationale) et/ou SBTi (science-based). Ces trajectoires servent de repères pour construire votre propre trajectoire de réduction.",
+          "description": "Choisissez les trajectoires de référence à afficher sur votre graphique : la Stratégie Nationale Bas Carbone (SNBC) et/ou la Science-Based Target initiative (SBTi). Ces trajectoires servent de repères pour construire votre propre trajectoire top-down.",
           "glossaryTitle": "Trajectoires de référence",
           "glossaryDescription": "La SNBC (Stratégie Nationale Bas-Carbone) est la trajectoire officielle française de réduction des émissions. Les trajectoires SBTi (Science Based Targets initiative) sont des standards internationaux alignés sur les objectifs de l'Accord de Paris."
         },
         "stepVisualization": {
           "title": "Visualisation des trajectoires",
-          "description": "Visualisez les trajectoires de référence sélectionnées pour votre organisation. Ce graphique sera enrichi au fil du temps avec vos propres trajectoires de réduction.",
+          "description": "Visualisez les trajectoires de référence appliquées à organisation. Ce graphique sera enrichi au fil du temps avec vos propres trajectoires de réduction.",
           "glossaryTitle": "Graphique des trajectoires",
           "glossaryDescription": "Ce graphique représente l'évolution des émissions de votre organisation dans le temps, en regard des trajectoires de référence. L'axe vertical indique les émissions totales, l'axe horizontal représente les années."
         },
         "sectorBlock": {
           "title": "Répartition sectorielle SNBC",
-          "description": "Renseignez la répartition de vos émissions par grand secteur d'activité selon la SNBC. Cela permettra de créer une trajectoire SNBC sectorielle personnalisée comme point de référence.",
-          "snbcSectorialName": "Trajectoire SNBC de référence",
+          "description": "Indiquez la part de vos émissions relevant des secteurs de la SNBC. Cela permettra de combiner les trajectoire sectorielles de la SNBC pour obtenir votre trajectoire SNBC.",
+          "snbcSectorialName": "Votre trajectoire SNBC",
           "update": "Sauvegarder les modifications"
         }
       },
@@ -1081,8 +1081,8 @@
           "failedTrajectories": "Les trajectoire suivantes ne peuvent pas s'afficher correctement dans le futur car vous avez déjà consommé l'ensemble du budget carbone prévu par celles-ci :",
           "estimatedPast": "Passé estimé",
           "glossary": {
-            "title": "Reconstruction des émissions passé sur le BC+",
-            "description": "Description Gabriel",
+            "title": "Reconstruction des émissions passées sur le BC+",
+            "description": "Les émissions historiques affichées sont : - Soit issues de vos études passées, que vous avez renseignées dans la page « Initialisation » - Soit reconstituées à partir des inventaires nationaux français pour les années qui précèdent votre premier bilan. L'outil suppose donc que votre organisation s'est décarbonée au même rythme que la France.",
             "close": "Close"
           }
         },
@@ -1131,9 +1131,9 @@
           }
         },
         "onboarding": {
-          "title": "Visualisez plusieurs trajectoire de référence et créez votre première trajectoire descendante",
-          "description": "Comparez votre situation avec les trajectoires de référence qui sont issues de la Stratégie Nationale Bas Carbone (SNBC) et de la Science-Based Target Initiative (SBTi). Vous pouvez choisir de suivre une de ces trajectoires et ses objectifs associés ou créer votre trajectoire personnalisée. Cette trajectoire est votre trajectoire en approche descendante, ou top-down.",
-          "detailedInfo": "Deux trajectoires de référence, la SNBC et SBTi, vous sont proposées ici. Vous pouvez visualiser la trajectoire de décarbonation que devrait suivre votre organisation selon l'une et l'autre.<br></br><br></br>La SNBC étant déclinée selon les grands secteurs d'activité de l'économie française, vous devez sélectionner le secteur qui vous correspond le mieux. Plus d'informations sur la SNBC sont disponibles <snbc>ici</snbc>.<br></br>SBTi fournit une trajectoire visant à limiter le réchauffement climatique à 1,5°C, et une seconde visant à le limiter bien en dessous de 2°C. Vous devez également choisir laquelle de ces deux trajectoires vous souhaitez visualiser. Plus d'informations sur SBTi sont disponibles <sbti>ici</sbti>.<br></br><br></br>Dans le cas où votre bilan de référence daterait d'une année antérieure à l'utilisation du BC+2.0, vous pouvez renseigner l'année de référence et les émissions associées. Si ce bilan est déjà présent sur le BC+2.0, vous pouvez le sélectionner comme bilan de référence.<br></br><br></br>Pour chacune de ces trajectoires, le choix a été fait de conserver le budget carbone associé. Si vos émissions ne suivent pas la trajectoire choisie (la trajectoire est recalculée si vos émissions sont supérieures aux émissions attendues d'au moins 5%), le BC+2.0 recalculera une trajectoire adaptée pour éviter un dépassement du budget carbone initialement alloué. À chaque nouveau bilan réalisé, vos trajectoires se mettront à jour et vous indiqueront quelles réductions restent à réaliser."
+          "title": "Créez vos trajectoires top-down et détaillez vos objectifs de réduction",
+          "description": "La construction du plan de transition implique les sous-étapes suivantes : 1 - Visualiser les objectifs et trajectoires de référence dont l'ambition à l'échelle planétaire est celle de l'Accord de Paris. 2 - Sélectionner une trajectoire de décarbonation descendante ou top-down, c'est-à-dire la trajectoire théorique que votre organisation devrait suivre. 3 - Construire votre plan d'action. 4 - Estimer l'impact prévisionnel de la mise en oeuvre de votre plan d'action (en calculant son potentiel de réduction), pour construire votre trajectoire de décarbonation ascendante ou « bottom-up ». 5 - Vérifier la cohérence : la trajectoire bottom-up issue de votre plan d'action justifie la crédibilité de votre trajectoire top-down à plus ou moins long terme selon votre niveau de maturité. Cette page vous permet de créer vos propres trajectoires top-down, soit en vous basant sur les trajectoires de références, soit en créant vos propres objectifs. Vous pouvez ensuite détailler ces trajectoires en ajoutant des sous-objectifs portants sur vos différents sites, postes ou tags.",
+          "detailedInfo": ""
         }
       },
       "trajectoryModal": {
@@ -1153,23 +1153,23 @@
         "sbti": {
           "title": "SBTi",
           "subtitle": "Je suis la trajectoire de référence SBTi",
-          "benefit1": "Pour s'engager sur une trajectoire <strong>compatible avec les accords de Paris</strong>",
-          "benefit2": "Pour obtenir une <strong>reconnaissance internationale</strong>",
-          "benefit3": "Pour structurer vos objectifs de réduction long terme"
+          "benefit1": "Pour viser une cohérence et une reconnaissance <strong>à l'échelle internationale</strong>",
+          "benefit2": "Pour viser un <strong>niveau de maturité Standard</strong>",
+          "benefit3": ""
         },
         "snbc": {
           "title": "SNBC",
           "subtitle": "Je suis la trajectoire de référence SNBC",
-          "benefit1": "Pour vous positionner par rapport à votre secteur en France",
-          "benefit2": "Pour construire un plan d'actions concret et structuré",
+          "benefit1": "Pour viser une cohérence à l'échelle nationale",
+          "benefit2": "Pour viser un niveau de maturité Initial",
           "benefit3": "Pour comprendre les attentes réglementaires françaises"
         },
         "custom": {
           "title": "PERSONNALISÉE",
           "subtitle": "Je suis ma propre trajectoire",
-          "benefit1": "Je construis ma propre trajectoire descendante",
-          "benefit2": "Je peux personnaliser mes objectifs intermédiaires",
-          "benefit3": "Mon organisation est déjà engagée dans une trajectoire"
+          "benefit1": "Pour adapter l'ensemble des objectifs à ma situation",
+          "benefit2": "Pour détailler des objectifs intermédiaires, par poste, par site, ...",
+          "benefit3": "Pour réutiliser une trajectoire déjà validée au sein de mon organisation"
         },
         "sbtiType": {
           "title": "Type de trajectoire SBTi",
@@ -1418,8 +1418,8 @@
         },
         "onboarding": {
           "title": "Construisez un plan d'action afin d'atteindre vos objectifs",
-          "description": "Vous avez déjà créé votre trajectoire en approche descendante, ou top-down, et détaillé les objectifs associés. Désormais, il vous faut construire un plan d'action pour vous assurer d'atteindre ces objectifs. La somme des potentiels de réduction de vos actions constituera votre trajectoire en approche ascendante, ou bottom-up, le but étant d'aligner cette trajectoire bottom-up avec la trajectoire top-down choisie précédemment.",
-          "detailedInfo": "Une trajectoire top-down est une trajectoire définie de manière macroscopique, et fixant des objectifs de réduction à moyen et long terme. Au contraire, une trajectoire bottom-up est construite à partir d'un plan d'action, c'est-à-dire d'un certain nombre d'actions qui, mises côte à côte, constituent un ensemble cohérent et, s'additionnant, permettent des réductions d'émissions au cours de leur mise en oeuvre. Cette page vous permet de renseigner différentes actions et de les caractériser, en reprenant l'ensemble des informations définies au sein de la méthode Bilan Carbone®. L'ensemble de ces informations doivent être renseignées au sein d'un Bilan Carbone®, mais il est possible d'en remplir certaines ultérieurement, dans le but de tester différentes combinaisons d'actions afin de les sélectionner définitivement. Un toggle dans la première colonne du tableau vous permet ainsi d'activer ou de désactiver les actions renseignées, afin de voir si la trajectoire bottom-up résultante est cohérente avec la trajectoire top-down choisie. Une fois les actions pertinentes sélectionnées, vous pouvez compléter les informations manquantes, afin de mieux caractériser l'action, lui attribuer un budget, renseigner des étapes de mises en oeuvre, et des indicateurs qui vous permettront par la suite de piloter la mise en oeuvre, le suivi et les performances de vos actions."
+          "description": "La construction du plan de transition implique les sous-étapes suivantes : 1 - Visualiser les objectifs et trajectoires de référence dont l'ambition à l'échelle planétaire est celle de l'Accord de Paris. 2 - Sélectionner une trajectoire de décarbonation descendante ou top-down, c'est-à-dire la trajectoire théorique que votre organisation devrait suivre. 3 - Construire votre plan d'action. 4 - Estimer l'impact prévisionnel de la mise en oeuvre de votre plan d'action (en calculant son potentiel de réduction), pour construire votre trajectoire de décarbonation ascendante ou « bottom-up ». 5 - Vérifier la cohérence : la trajectoire bottom-up issue de votre plan d'action justifie la crédibilité de votre trajectoire top-down à plus ou moins long terme selon votre niveau de maturité. Cette page vous permet de créer votre plan d'action et d'estimer son impact prévisionnel, aboutissant à une trajectoire bottom-up. Vous pouvez ensuite vérifier la cohérence entre vos trajectoires top-down et bottom-up sur le graphique disponible sur les différentes pages.",
+          "detailedInfo": "Cette page vous permet de construire votre plan d'action, en renseignant différentes actions et en les caractérisant. Ces fiches actions reprennent l'ensemble des informations définies au sein de la méthode Bilan Carbone®. Toutes ces informations doivent être renseignées au sein d'un Bilan Carbone®, mais il est possible d'en remplir certaines ultérieurement, dans le but de tester différentes combinaisons d'actions avant de les sélectionner définitivement. Un bouton de bascule dans la première colonne du tableau vous permet ainsi d'activer ou de désactiver les actions renseignées, afin de voir si la trajectoire bottom-up résultante est cohérente avec votre trajectoire top-down. Une fois les actions pertinentes sélectionnées, vous pouvez compléter les informations manquantes, afin de mieux caractériser l'action, lui attribuer un budget, renseigner des étapes de mises en oeuvre, et des indicateurs qui vous permettront par la suite de piloter la mise en oeuvre, le suivi et les performances de vos actions."
         },
         "deleteModal": {
           "title": "Supprimer l'action",
