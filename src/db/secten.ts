@@ -1,8 +1,13 @@
 import type { SectenInfo, SectenVersion } from '@prisma/client'
 import { prismaClient } from './client'
 
-export const getLatestSectenVersion = async (): Promise<SectenVersion | null> => {
+export const getLatestSectenVersion = async (): Promise<(SectenVersion & { sectenInfos: SectenInfo[] }) | null> => {
   return prismaClient.sectenVersion.findFirst({
+    include: {
+      sectenInfos: {
+        orderBy: { year: 'asc' },
+      },
+    },
     orderBy: { year: 'desc' },
   })
 }

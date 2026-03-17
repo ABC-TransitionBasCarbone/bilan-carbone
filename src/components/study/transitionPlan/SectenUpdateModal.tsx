@@ -57,7 +57,7 @@ const SectenUpdateModal = ({ open, onClose, onConfirm, diff, isLoading }: Props)
               </TableHead>
               <TableBody>
                 {addedYears.map((year) => (
-                  <TableRow key={`added-${year}`}>
+                  <TableRow key={`added-${year}`} className={styles.tableBody}>
                     <TableCell>
                       <span className={styles.increase}>{year}</span>
                     </TableCell>
@@ -72,7 +72,7 @@ const SectenUpdateModal = ({ open, onClose, onConfirm, diff, isLoading }: Props)
                   </TableRow>
                 ))}
                 {modifiedYears.map((year) => (
-                  <TableRow key={`modified-${year}`}>
+                  <TableRow key={`modified-${year}`} className={styles.tableBody}>
                     <TableCell>{year}</TableCell>
                     {SECTEN_SECTORS.map((sector) => {
                       const entry = diff.modified.find((e) => e.year === year && e.sector === sector)
@@ -87,7 +87,7 @@ const SectenUpdateModal = ({ open, onClose, onConfirm, diff, isLoading }: Props)
                             {entry.newValue / 1000} MtCO2
                             <span>
                               &nbsp;({isIncrease ? '+' : ''}
-                              {diff_val} MtCO2)
+                              {diff_val})
                             </span>
                           </span>
                         </TableCell>

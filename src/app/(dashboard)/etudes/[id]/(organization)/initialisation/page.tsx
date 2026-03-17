@@ -23,6 +23,7 @@ const TransitionPlanInit = async ({ study, canEdit, user }: StudyProps & UserSes
         validatedOnly={settings.validatedEmissionSourcesOnly}
         sectenData={[]}
         latestSectenVersion={null}
+        latestSectenData={[]}
         isSectenOutdated={false}
       />
     )
@@ -39,6 +40,7 @@ const TransitionPlanInit = async ({ study, canEdit, user }: StudyProps & UserSes
       validatedOnly={data.validatedOnly}
       sectenData={data.sectenData}
       latestSectenVersion={data.latestSectenVersion}
+      latestSectenData={data.latestSectenData}
       isSectenOutdated={data.isSectenOutdated}
     />
   )

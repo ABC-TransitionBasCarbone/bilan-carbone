@@ -49,6 +49,7 @@ export const loadTransitionPlanPageData = async (studyId: string, accountId: str
     actions: actionsResponse.success ? actionsResponse.data : null,
     sectenData: sectenDataResponse.success ? sectenDataResponse.data : [],
     latestSectenVersion,
+    latestSectenData: latestSectenVersion?.sectenInfos ?? [],
     isSectenOutdated,
   }
 }

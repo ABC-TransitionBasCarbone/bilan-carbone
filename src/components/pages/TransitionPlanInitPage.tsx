@@ -18,7 +18,6 @@ import { useServerFunction } from '@/hooks/useServerFunction'
 import { useTransitionPlan } from '@/hooks/useTransitionPlan'
 import { useTransitionPlanFilters } from '@/hooks/useTransitionPlanFilters'
 import { customRich } from '@/i18n/customRich'
-import { getSectenData } from '@/services/serverFunctions/secten'
 import { SectorPercentages } from '@/services/serverFunctions/trajectory.command'
 import { createTrajectoryWithObjectives, updateTrajectory } from '@/services/serverFunctions/trajectory.serverFunction'
 import {
@@ -59,6 +58,7 @@ interface Props {
   validatedOnly: boolean
   sectenData: SectenInfo[]
   latestSectenVersion: SectenVersion | null
+  latestSectenData: SectenInfo[]
   isSectenOutdated: boolean
 }
 
@@ -72,6 +72,7 @@ const TransitionPlanInitPage = ({
   validatedOnly,
   sectenData,
   latestSectenVersion,
+  latestSectenData,
   isSectenOutdated,
 }: Props) => {
   const t = useTranslations('study.transitionPlan')
@@ -83,7 +84,6 @@ const TransitionPlanInitPage = ({
   const [showModal, setShowModal] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [showSectenUpdateModal, setShowSectenUpdateModal] = useState(false)
-  const [latestSectenData, setLatestSectenData] = useState<SectenInfo[]>([])
   const [isSectenUpdateLoading, setIsSectenUpdateLoading] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [currentStep, setCurrentStep] = useState<number | 'complete'>(-1)
@@ -198,13 +198,9 @@ const TransitionPlanInitPage = ({
     })
   }, [callServerFunction, study.id, router])
 
-  const handleOpenSectenUpdateModal = useCallback(async () => {
+  const handleOpenSectenUpdateModal = useCallback(() => {
     if (!latestSectenVersion) {
       return
-    }
-    const response = await getSectenData(latestSectenVersion.id)
-    if (response.success && response.data) {
-      setLatestSectenData(response.data)
     }
     setShowSectenUpdateModal(true)
   }, [latestSectenVersion])

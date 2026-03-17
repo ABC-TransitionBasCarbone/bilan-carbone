@@ -9,7 +9,9 @@ export const getSectenData = async (versionId?: string): Promise<ApiResponse<Sec
     return dbGetSectenData(versionId)
   })
 
-export const getLatestSectenVersion = async (): Promise<ApiResponse<SectenVersion | null>> =>
+export const getLatestSectenVersion = async (): Promise<
+  ApiResponse<(SectenVersion & { sectenInfos: SectenInfo[] }) | null>
+> =>
   withServerResponse('getLatestSectenVersion', async () => {
     return dbGetLatestSectenVersion()
   })
