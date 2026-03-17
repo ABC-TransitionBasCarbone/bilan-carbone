@@ -32,7 +32,7 @@ const validateTrajectoryInput = async (input: TrajectoryValidationInput, studyId
   if (isCustom && referenceYear !== undefined && referenceYear !== null) {
     const studyStartDate = await getStudyStartDate(studyId)
     if (studyStartDate) {
-      const studyYear = studyStartDate.getFullYear()
+      const studyYear = studyStartDate.getUTCFullYear()
       if (referenceYear > studyYear) {
         throw new Error('referenceYearMustBeBeforeOrEqualToStudyYear')
       }
@@ -104,7 +104,7 @@ export const createTrajectoryWithObjectives = async (input: CreateTrajectoryInpu
     }
 
     const startDate = await getStudyStartDate(transitionPlan.studyId)
-    const studyStartYear = startDate ? startDate.getFullYear() : new Date().getFullYear()
+    const studyStartYear = startDate ? startDate.getUTCFullYear() : new Date().getUTCFullYear()
 
     const sortedObjectives = [...objectives].sort((a, b) => a.targetYear - b.targetYear)
 

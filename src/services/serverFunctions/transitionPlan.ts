@@ -123,10 +123,10 @@ export const duplicateTransitionPlan = async (sourceTransitionPlanId: string, ta
     return
   }
 
-  const targetYear = targetStudy.startDate.getFullYear()
+  const targetYear = targetStudy.startDate.getUTCFullYear()
   const duplicated = await duplicateTransitionPlanWithRelations(sourceTransitionPlan, targetStudyId, targetYear)
 
-  if (targetYear > sourceStudy.startDate.getFullYear()) {
+  if (targetYear > sourceStudy.startDate.getUTCFullYear()) {
     await linkOldStudy(duplicated.id, sourceStudy.id)
   }
 }

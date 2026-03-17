@@ -168,7 +168,7 @@ export const duplicateTransitionPlanWithRelations = async (
         sectenVersionId: sourceTransitionPlan.sectenVersionId,
         transitionPlanStudies: {
           create: sourceTransitionPlan.transitionPlanStudies
-            .filter((tpStudy) => tpStudy.study.startDate.getFullYear() < targetYear)
+            .filter((tpStudy) => tpStudy.study.startDate.getUTCFullYear() < targetYear)
             .map((tpStudy) => ({ studyId: tpStudy.studyId })),
         },
         trajectories: {
