@@ -27,7 +27,7 @@ construction . bâtiment . amortissement:
 
 construction . bâtiment . FE:
   valeur: 825
-  unité: kgCO2e/m2
+  unité: kgCO2e/m²
   méta:
     id: 20730
     nom: Bâtiment industriel, structure en béton
@@ -50,13 +50,13 @@ construction . bâtiment . locaux:
 construction . bâtiment . locaux . locaux seuls . surface:
   applicable si: locaux = 'locaux seuls'
   question: Quelle est la surface de ces locaux ? (On considère uniquement les locaux possédés ou loués depuis moins de 50 ans)
-  unité: m2
+  unité: m²
   par défaut: 0
 
 construction . bâtiment . locaux . locaux partagés . surface:
   applicable si: locaux = 'locaux partagés'
   question: Quelle est la surface de ces locaux ? (On considère uniquement les locaux possédés ou loués depuis moins de 50 ans)
-  unité: m2
+  unité: m²
   par défaut: 0
 
 construction . bâtiment . locaux . locaux partagés . pourcentage:

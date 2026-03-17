@@ -1,33 +1,29 @@
 déplacements . fabrication:
   titre: Fabrication des véhicules
   question: Combien de véhicules sont possédés ou loués depuis moins de 5 ans parmi les catégories suivantes ?
-  par défaut: 0
   formule:
     somme:
-      - déplacements . fabrication . voitures
+      - voitures
   unité: kgCO2e
 
 déplacements . fabrication . voitures:
   titre: Voitures
-  formule: déplacements . fabrication . voitures . nombre * déplacements . fabrication . voitures . FE * déplacements . fabrication . voitures . poids moyen / déplacements . fabrication . voitures . amortissement
+  formule: nombre * FE * poids moyen / amortissement
   unité: kgCO2e
-  par défaut: 0
   avec:
     nombre:
       question: Combien de voitures particulières possédez-vous ou louez-vous depuis moins de 5 ans ?
-      unité: unité
-
+      unité: voitures
+      par défaut: 0
+    poids moyen: 
+      valeur: 1.265
+      unité: tonnes/voitures
     FE:
       valeur: 5500
       unité: kgCO2e/tonnes
       meta:
         id: 20905
         nom: Véhicules, fabrication
-
-    poids moyen:
-      valeur: 1.3
-      unité: tonnes
-
     amortissement:
       valeur: 5
-      unité: an
+      unité: "an"

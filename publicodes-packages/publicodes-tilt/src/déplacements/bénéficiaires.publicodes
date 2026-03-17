@@ -33,9 +33,6 @@ déplacements . bénéficiaires:
 déplacements . bénéficiaires . se déplacent:
   question: Les bénéficiaires de vos produits ou services se déplacent-ils pour en profiter ?
 
-# GC : Est-ce qu'on ne mettrait pas les parts en % sous forme de tableau, et derrière la complétion des lignes du tableau débloque effectivement les questions par km ?
-# Si tableau, en profiter pour repréciser que les questions en km concernent uniquement les km parcourus POUR profiter des produits et services de l'asso, ici j'ai suppr pour éviter la répétition et la longueur.
-
 déplacements . bénéficiaires . part voiture:
   titre: Voiture
   form:
