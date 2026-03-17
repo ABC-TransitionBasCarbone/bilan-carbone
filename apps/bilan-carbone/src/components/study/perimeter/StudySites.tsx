@@ -1,6 +1,5 @@
 'use client'
 
-import Button from '@/components/base/Button'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { OrganizationWithSites } from '@/db/account'
 import { FullStudy } from '@/db/study'
@@ -22,6 +21,7 @@ import { canEditOrganizationVersion, isInOrgaOrParent } from '@/utils/organizati
 import { hasEditionRights } from '@/utils/study'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Environment, SiteCAUnit, StudyRole } from '@prisma/client'
+import { Button } from '@repo/ui'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
