@@ -5,7 +5,7 @@
 
 équipements et immobilisations . infos:
   titre: Équipements et immobilisations
-  formule: total sans reconditionné * prise en compte reconditionné / amortissement
+  formule: équipements et immobilisations . total sans reconditionné * équipements et immobilisations . infos . prise en compte reconditionné / équipements et immobilisations . infos . amortissement
   unité: kgCO2e
   avec:
     amortissement:
@@ -17,14 +17,14 @@
   titre: Équipements et immobilisations
   formule:
     variations:
-      - si: reconditionné = 'toujours'
-        alors: reconditionné . toujours reconditionné
-      - si: reconditionné = 'souvent'
-        alors: reconditionné . souvent reconditionné
-      - si: reconditionné = 'parfois'
-        alors: reconditionné . parfois reconditionné
-      - si: reconditionné = 'jamais'
-        alors: reconditionné . jamais reconditionné
+      - si: équipements et immobilisations . pondération . reconditionné = 'toujours'
+        alors: équipements et immobilisations . pondération . reconditionné . toujours
+      - si: équipements et immobilisations . pondération . reconditionné = 'souvent'
+        alors: équipements et immobilisations . pondération . reconditionné . souvent
+      - si: équipements et immobilisations . pondération . reconditionné = 'parfois'
+        alors: équipements et immobilisations . pondération . reconditionné . parfois
+      - si: équipements et immobilisations . pondération . reconditionné = 'jamais'
+        alors: équipements et immobilisations . pondération . reconditionné . jamais
         sinon: 1
 
 équipements et immobilisations . pondération . reconditionné:
@@ -204,3 +204,30 @@
       type: nombre
       unité: quantité
       par défaut: 0
+
+équipements et immobilisations . infos . prise en compte reconditionné:
+  question: Vos équipements sont-ils reconditionné ou issu de seconde main ?
+  description: En fonction de votre réponse, une partie de vos équipements seront valorisés comme étant reconditionnés. Un équipement reconditionné sera considéré comme moitié moins émetteur qu'un équipement neuf. Autrement dit, la durée de première vie de l'équipement est considéré comme égale à la moitié de sa durée de vie totale.
+  une possibilité:
+    - toujours
+    - souvent
+    - rarement
+    - jamais
+  avec:
+    toujours:
+      titre: Toujours
+      valeur: 0.5
+      note: On divise par 2 les émissions lorsque les appareils sont reconditionnés
+    souvent:
+      titre: Souvent
+      valeur: 1 - (0.5 * 0.66)
+      note: On divise par 2 les émissions des appareils reconditionnés, considérés ici comme 66% du total
+    rarement:
+      titre: Rarement
+      valeur: 1 - (0.5 * 0.33)
+      note: On divise par 2 les émissions des appareils reconditionnés, considérés ici comme 33% du total
+    jamais:
+      titre: Jamais
+      valeur: 0
+      note: Pas d'équipements reconditionnés
+  par défaut: 0

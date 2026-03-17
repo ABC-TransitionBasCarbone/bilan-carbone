@@ -4,12 +4,12 @@ déplacements . fabrication:
   par défaut: 0
   formule:
     somme:
-      - voitures
+      - déplacements . fabrication . voitures
   unité: kgCO2e
 
 déplacements . fabrication . voitures:
   titre: Voitures
-  formule: nombre * FE * poids moyen / amortissement
+  formule: déplacements . fabrication . voitures . nombre * déplacements . fabrication . voitures . FE * déplacements . fabrication . voitures . poids moyen / déplacements . fabrication . voitures . amortissement
   unité: kgCO2e
   par défaut: 0
   avec:
@@ -23,6 +23,11 @@ déplacements . fabrication . voitures:
       meta:
         id: 20905
         nom: Véhicules, fabrication
+
+    poids moyen:
+      valeur: 1.3
+      unité: tonnes
+
     amortissement:
       valeur: 5
-      unité: "an"
+      unité: an
