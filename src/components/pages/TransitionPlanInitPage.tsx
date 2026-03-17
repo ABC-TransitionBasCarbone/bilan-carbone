@@ -57,8 +57,7 @@ interface Props {
   linkedExternalStudies: ExternalStudy[]
   validatedOnly: boolean
   sectenData: SectenInfo[]
-  latestSectenVersion: SectenVersion | null
-  latestSectenData: SectenInfo[]
+  latestSectenVersion: (SectenVersion & { sectenInfos: SectenInfo[] }) | null
   isSectenOutdated: boolean
 }
 
@@ -72,7 +71,6 @@ const TransitionPlanInitPage = ({
   validatedOnly,
   sectenData,
   latestSectenVersion,
-  latestSectenData,
   isSectenOutdated,
 }: Props) => {
   const t = useTranslations('study.transitionPlan')
@@ -503,7 +501,7 @@ const TransitionPlanInitPage = ({
           open={showSectenUpdateModal}
           onClose={() => setShowSectenUpdateModal(false)}
           onConfirm={handleConfirmSectenUpdate}
-          diff={compareSectenVersions(sectenData, latestSectenData)}
+          diff={compareSectenVersions(sectenData, latestSectenVersion?.sectenInfos ?? [])}
           isLoading={isSectenUpdateLoading}
         />
       )}
