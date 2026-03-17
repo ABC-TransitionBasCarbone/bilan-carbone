@@ -17,6 +17,8 @@ enum EmissionFactorPartType {
   CombustionALaCentrale
   Pertes
   AutresEmissionsLieesALaConsommationDElectriciteBarrage
+
+  @@schema("bilan_carbone")
 }
 
 enum Import {
@@ -27,11 +29,15 @@ enum Import {
   CUT
   CLICKSON
   AIB
+
+  @@schema("bilan_carbone")
 }
 
 enum EmissionFactorStatus {
   Archived
   Valid
+
+  @@schema("bilan_carbone")
 }
 
 enum SubPost {
@@ -206,11 +212,15 @@ enum SubPost {
   Renovation
   EquipementsInformatiqueAudiovisuel
   EquipementsDivers
+
+  @@schema("bilan_carbone")
 }
 
 enum EmissionFactorBase {
   LocationBased
   MarketBased
+
+  @@schema("bilan_carbone")
 }
 
 model EmissionFactorImportVersion {
@@ -229,6 +239,7 @@ model EmissionFactorImportVersion {
 
   @@unique([source, internId])
   @@map("emission_factor_import_version")
+  @@schema("bilan_carbone")
 }
 
 model EmissionFactor {
@@ -280,6 +291,7 @@ model EmissionFactor {
   @@index([organizationId])
   @@index([status])
   @@map("emission_factors")
+  @@schema("bilan_carbone")
 }
 
 model EmissionFactorMetaData {
@@ -300,6 +312,7 @@ model EmissionFactorMetaData {
   @@id([emissionFactorId, language])
   @@index([language, title])
   @@map("emission_metadata")
+  @@schema("bilan_carbone")
 }
 
 model EmissionFactorPart {
@@ -326,6 +339,7 @@ model EmissionFactorPart {
   otherGES Float? @map("other_ges")
 
   @@map("emission_factor_parts")
+  @@schema("bilan_carbone")
 }
 
 model EmissionFactorPartMetaData {
@@ -339,4 +353,5 @@ model EmissionFactorPartMetaData {
 
   @@id([emissionFactorPartId, language])
   @@map("emission_factor_part_metadata")
+  @@schema("bilan_carbone")
 }

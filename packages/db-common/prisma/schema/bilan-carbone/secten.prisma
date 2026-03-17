@@ -8,6 +8,7 @@ model SectenVersion {
 
   @@unique([year])
   @@map("secten_version")
+  @@schema("bilan_carbone")
 }
 
 // Values are stored in tCO2e
@@ -30,4 +31,5 @@ model SectenInfo {
   @@index([versionId])
   @@index([year])
   @@map("secten_info")
+  @@schema("bilan_carbone")
 }

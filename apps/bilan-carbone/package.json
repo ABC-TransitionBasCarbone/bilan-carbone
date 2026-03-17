@@ -39,7 +39,7 @@
     "question:import:excel": "npx tsx src/scripts/cut/question/add.ts -f"
   },
   "prisma": {
-    "schema": "prisma/schema",
+    "schema": "../../packages/db-common/prisma/schema",
     "seed": "tsx prisma/seed/index.ts"
   },
   "dependencies": {

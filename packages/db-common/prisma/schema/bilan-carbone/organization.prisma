@@ -2,6 +2,8 @@ enum SiteCAUnit {
   U // Unit (1)
   K // Kilo (1000)
   M // Million (1000000)
+
+  @@schema("bilan_carbone")
 }
 
 enum Environment {
@@ -9,6 +11,8 @@ enum Environment {
   CUT
   TILT
   CLICKSON
+
+  @@schema("bilan_carbone")
 }
 
 enum Country {
@@ -59,6 +63,8 @@ enum Country {
   UNITED_KINGDOM
   VATICAN_CITY
   OTHER
+
+  @@schema("bilan_carbone")
 }
 
 enum EstablishmentType {
@@ -67,6 +73,8 @@ enum EstablishmentType {
   LYCEE_PRO
   LYCEE_PRO_AGRICOLE
   ETABLISSEMENT_FR_ETRANGER
+
+  @@schema("bilan_carbone")
 }
 
 model Organization {
@@ -85,6 +93,7 @@ model Organization {
   organizationVersions OrganizationVersion[]
 
   @@map("organizations")
+  @@schema("bilan_carbone")
 }
 
 model OrganizationVersion {
@@ -113,6 +122,7 @@ model OrganizationVersion {
 
   @@unique([organizationId, environment])
   @@map("organization_versions")
+  @@schema("bilan_carbone")
 }
 
 model Site {
@@ -151,6 +161,7 @@ model Site {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("sites")
+  @@schema("bilan_carbone")
 }
 
 model CncVersion {
@@ -163,6 +174,7 @@ model CncVersion {
   studySites StudySite[]
 
   @@map("cnc_versions")
+  @@schema("bilan_carbone")
 }
 
 model Cnc {
@@ -199,4 +211,5 @@ model Cnc {
   Site      Site[]
 
   @@map("cncs")
+  @@schema("bilan_carbone")
 }

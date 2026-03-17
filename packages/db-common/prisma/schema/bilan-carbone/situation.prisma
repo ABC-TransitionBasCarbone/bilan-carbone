@@ -13,4 +13,5 @@ model Situation {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("situations")
+  @@schema("bilan_carbone")
 }
