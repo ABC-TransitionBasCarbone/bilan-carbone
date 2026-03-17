@@ -15,9 +15,10 @@ interface Props {
   user: UserSession
   hasFormation: boolean
   isFootprintsEnabled: boolean
+  hasTrainedUsers: boolean
 }
 
-const TopLeftNavBar = ({ user, hasFormation, isFootprintsEnabled }: Props) => {
+const TopLeftNavBar = ({ user, hasFormation, isFootprintsEnabled, hasTrainedUsers }: Props) => {
   const t = useTranslations('navigation')
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
@@ -61,11 +62,13 @@ const TopLeftNavBar = ({ user, hasFormation, isFootprintsEnabled }: Props) => {
                 {t('team')}
               </NavbarLink>
             </MenuItem>
-            <MenuItem onClick={handleClose}>
-              <NavbarLink data-testid="link-organization" href="/organisations" onClick={handleClose}>
-                {t('organizations')}
-              </NavbarLink>
-            </MenuItem>
+            {(!isTilt(user.environment) || hasTrainedUsers) && (
+              <MenuItem onClick={handleClose}>
+                <NavbarLink data-testid="link-organization" href="/organisations" onClick={handleClose}>
+                  {t('organizations')}
+                </NavbarLink>
+              </MenuItem>
+            )}
             {isTilt(user.environment) && isFootprintsEnabled && (
               <MenuItem onClick={handleClose}>
                 <NavbarLink data-testid="link-organization" href="/mes-empreintes" onClick={handleClose}>

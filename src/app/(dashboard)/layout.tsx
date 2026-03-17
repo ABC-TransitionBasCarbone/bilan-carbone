@@ -44,10 +44,17 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
 
   const withOrganizationCard = shouldDisplayOrgaData || !!shouldRenewLicenseText
 
+  const hasTrainedUsers = !!accountOrganizationVersion?.userAccounts.some((account) => account.user.level !== null)
+
   return (
     <DynamicTheme environment={environment}>
       <Box className={classNames('flex-col h100', { [styles.withOrganizationCard]: withOrganizationCard })}>
-        <Navbar user={account} environment={environment} isFootprintsEnabled={isTiltSimplifiedActive} />
+        <Navbar
+          user={account}
+          environment={environment}
+          isFootprintsEnabled={isTiltSimplifiedActive}
+          hasTrainedUsers={hasTrainedUsers}
+        />
         {withOrganizationCard && (
           <OrganizationCard
             account={account}

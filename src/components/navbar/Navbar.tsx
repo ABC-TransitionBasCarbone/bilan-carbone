@@ -32,9 +32,10 @@ interface Props {
   user: UserSession
   environment: Environment
   isFootprintsEnabled: boolean
+  hasTrainedUsers: boolean
 }
 
-const Navbar = ({ user, environment, isFootprintsEnabled }: Props) => {
+const Navbar = ({ user, environment, isFootprintsEnabled, hasTrainedUsers }: Props) => {
   const t = useTranslations('navigation')
   const [hasFormation, setHasFormation] = useState(false)
   const [hasMultipleAccounts, setHasMultipleAccounts] = useState(false)
@@ -81,7 +82,12 @@ const Navbar = ({ user, environment, isFootprintsEnabled }: Props) => {
                 [Environment.CUT]: <CutTopLeftNavBar user={user} />,
               }}
               defaultComponent={
-                <TopLeftNavBar user={user} hasFormation={hasFormation} isFootprintsEnabled={isFootprintsEnabled} />
+                <TopLeftNavBar
+                  user={user}
+                  hasFormation={hasFormation}
+                  isFootprintsEnabled={isFootprintsEnabled}
+                  hasTrainedUsers={hasTrainedUsers}
+                />
               }
             />
           </Box>

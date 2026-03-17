@@ -90,6 +90,15 @@ export const OrganizationVersionWithOrganizationSelect = {
       },
     },
   },
+  userAccounts: {
+    select: {
+      user: {
+        select: {
+          level: true,
+        },
+      },
+    },
+  },
 }
 
 export const getOrgNameByOrgVersionId = async (id: string | null) => {
