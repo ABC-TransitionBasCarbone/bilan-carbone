@@ -11,10 +11,10 @@ import {
 } from '@/services/serverFunctions/study'
 import { Card, CardContent, TextField } from '@mui/material'
 import { CommentStatus, SubPost } from '@prisma/client'
+import { Button } from '@repo/ui'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useState } from 'react'
-import Button from '../base/Button'
 import StudyCommentComponent from './StudyComment'
 
 interface Props {

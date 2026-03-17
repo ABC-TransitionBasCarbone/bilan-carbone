@@ -1,6 +1,5 @@
 'use client'
 
-import Button from '@/components/base/Button'
 import TransitionPlanBase from '@/components/study/transitionPlan/TransitionPlanBase'
 import { FullStudy } from '@/db/study'
 import { customRich } from '@/i18n/customRich'
@@ -10,6 +9,7 @@ import { getDefaultSnbcSectoralPercentages, getDefaultSnbcSectoralTrajectory } f
 import AddIcon from '@mui/icons-material/Add'
 import { Tooltip, Typography } from '@mui/material'
 import type { ExternalStudy, SectenInfo, TransitionPlan } from '@prisma/client'
+import { Button } from '@repo/ui'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import { useRouter, useSearchParams } from 'next/navigation'

@@ -1,4 +1,3 @@
-import Button from '@/components/base/Button'
 import Modal from '@/components/modals/Modal'
 import { wasteEmissionFactors } from '@/constants/wasteEmissionFactors'
 import { FullStudy } from '@/db/study'
@@ -10,6 +9,7 @@ import {
 import { useUnitLabel } from '@/services/unit'
 import { IsSuccess } from '@/utils/serverResponse'
 import { EmissionFactorImportVersion, Import, StudyResultUnit } from '@prisma/client'
+import { Button } from '@repo/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'

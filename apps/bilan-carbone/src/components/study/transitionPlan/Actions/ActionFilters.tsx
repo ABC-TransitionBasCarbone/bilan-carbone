@@ -1,7 +1,7 @@
 'use client'
 
-import Button from '@/components/base/Button'
 import DebouncedInput from '@/components/base/DebouncedInput'
+import { Button } from '@repo/ui'
 import { useTranslations } from 'next-intl'
 import styles from './Actions.module.css'
 

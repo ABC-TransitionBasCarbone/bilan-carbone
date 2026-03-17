@@ -5,10 +5,10 @@ import { createEmissionSource } from '@/services/serverFunctions/emissionSource'
 import AddIcon from '@mui/icons-material/Add'
 import { FormLabel, TextField } from '@mui/material'
 import { EmissionSourceCaracterisation, SubPost } from '@prisma/client'
+import { Button } from '@repo/ui'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { FocusEvent, KeyboardEvent, useCallback, useState } from 'react'
-import Button from '../base/Button'
 import styles from './NewEmissionSource.module.css'
 
 interface Props {

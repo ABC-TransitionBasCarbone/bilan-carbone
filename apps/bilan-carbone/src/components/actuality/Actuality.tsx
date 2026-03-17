@@ -1,12 +1,12 @@
 'use client'
 
 import { Actuality } from '@prisma/client'
+import { Button } from '@repo/ui'
 import classNames from 'classnames'
 import DOMPurify from 'dompurify'
 import { useFormatter, useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import Box from '../base/Box'
-import Button from '../base/Button'
 import styles from './styles.module.css'
 
 interface Props {

@@ -44,6 +44,7 @@
   },
   "dependencies": {
     "@repo/types": "*",
+    "@repo/ui": "*",
     "@abc-transitionbascarbone/publicodes-clickson": "file:./publicodes-packages/publicodes-clickson/",
     "@abc-transitionbascarbone/publicodes-count": "file:./publicodes-packages/publicodes-count/",
     "@abc-transitionbascarbone/publicodes-tilt": "file:./publicodes-packages/publicodes-tilt/",

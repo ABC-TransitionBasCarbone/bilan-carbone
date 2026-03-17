@@ -1,12 +1,12 @@
 'use client'
 
-import Button from '@/components/base/Button'
 import StudyName from '@/components/study/card/StudyName'
 import BarChart from '@/components/study/charts/BarChart'
 import styles from '@/components/study/results/ResultsContainer.module.css'
 import { FullStudy } from '@/db/study'
 import { usePublicodesResults } from '@/hooks/usePublicodesResults'
 import CircularProgress from '@mui/material/CircularProgress'
+import { Button } from '@repo/ui'
 import { useTranslations } from 'next-intl'
 
 interface Props {
