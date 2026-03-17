@@ -860,6 +860,7 @@ export const getStudiesSitesFromIds = async (siteIds: string[]) =>
           allowedUsers: { select: { accountId: true } },
           contributors: { select: { accountId: true } },
           organizationVersionId: true,
+          simplified: true,
           organizationVersion: {
             select: {
               id: true,
@@ -906,6 +907,7 @@ export const getStudiesSitesFromIds = async (siteIds: string[]) =>
           year: true,
         },
       },
+      situation: true,
     },
   })
 

@@ -1,3 +1,4 @@
+import { isCut, isTilt } from '@/services/permissions/environment'
 import { hasAccessToEngagementActions, isTiltSimplified } from '@/services/permissions/environmentAdvanced'
 import { Translations } from '@/types/translation'
 import { Environment } from '@prisma/client'
@@ -30,7 +31,7 @@ export const getStudyNavbarMenu = (
   hasObjectives: boolean = false,
   studySimplified: boolean = false,
 ): Menu => {
-  if (environment === Environment.CUT || isTiltSimplified(environment, studySimplified)) {
+  if (isCut(environment) || isTiltSimplified(environment, studySimplified)) {
     return {
       title: {
         href: `/etudes/${studyId}`,
@@ -41,7 +42,7 @@ export const getStudyNavbarMenu = (
           links: [
             {
               href: `/etudes/${studyId}/cadrage`,
-              label: t('framing'),
+              label: isTilt(environment) ? t('generalData') : t('framing'),
               testId: 'study-cadrage-link',
             },
             {

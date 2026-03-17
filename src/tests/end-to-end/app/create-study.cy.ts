@@ -172,7 +172,7 @@ describe('Create study', () => {
       cy.logout()
 
       cy.loginForEnv('tilt', 'tilt-env-untrained-gestionnaire-0@yopmail.com', 'password-0')
-      newSimplifiedStudyTest('TILT Simplified study', { includeEndDate: true, startPath: '/mes-empreintes' })
+      newSimplifiedStudyTest('TILT Simplified study', { includeEndDate: false, startPath: '/mes-empreintes' })
     })
   })
 
