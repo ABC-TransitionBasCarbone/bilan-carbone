@@ -5,7 +5,6 @@
     "bénévoles": "bénévoles",
     "bénéficiaires": "bénéficiaires",
     "k€": "k€",
-    "jours": "jours",
     "quantité": "quantité",
     "kWh": "kWh",
     "m3": "m3",
@@ -21,12 +20,10 @@
     "climatiseur": "climatiseur",
     "VUL": "VUL",
     "poids lourds": "poids lourds",
-    "livraison": "livraison",
-    "kg/livraison": "kg/livraison",
+    "unité": "unité",
+    "kg": "kg",
     "%": "%",
     "tonne": "tonne",
-    "voitures": "voitures",
-    "unité": "unité",
     "km": "km",
     "km/salariés/jours": "km/salariés.jours",
     "km/bénévoles/jours": "km/bénévoles.jours",
@@ -80,12 +77,6 @@
           "Association de défense de l'environnement": "Association de défense de l'environnement",
           "Association d'enseignement ou de formation": "Association d'enseignement ou de formation"
         }
-      },
-      "TT bénévoles": {
-        "question": "Combien de jours sont télétravaillées par semaine pour vos bénévoles ?"
-      },
-      "TT salariés": {
-        "question": "Combien de jours sont télétravaillées par semaine pour vos salariés ?"
       }
     },
     "équipements et immobilisations": {
@@ -472,6 +463,20 @@
             "question": "Sur ces livraisons, quelle part provient de fournisseurs internationaux (plus de 1500 km) ?"
           }
         }
+      },
+      "fabrication": {
+        "titre": "Fabrication des véhicules",
+        "question": "Combien de véhicules sont possédés ou loués depuis moins de 5 ans parmi les catégories suivantes ?",
+        "VUL": {
+          "nombre": {
+            "question": "Combien de véhicules utilitaires légers possédez-vous ou louez-vous depuis moins de 5 ans ?"
+          }
+        },
+        "PL": {
+          "nombre": {
+            "question": "Combien de véhicules poids lourds possédez-vous ou louez-vous depuis moins de 5 ans ?"
+          }
+        }
       }
     },
     "fin de vie": {
@@ -596,16 +601,16 @@
               "question": "Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en train pour des déplacements domicile-travail ?"
             }
           },
-          "deux roues": {
-            "titre": "Deux roues",
-            "distance": {
-              "question": "Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en deux roues pour des déplacements domicile-travail ?"
-            }
-          },
           "transports en commun": {
             "titre": "Transports en commun (Métro, tramway, RER, bus, ...)",
             "distance": {
               "question": "Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en transports en commun pour des déplacements domicile-travail ?"
+            }
+          },
+          "deux roues": {
+            "titre": "Deux roues",
+            "distance": {
+              "question": "Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en deux roues pour des déplacements domicile-travail ?"
             }
           }
         }

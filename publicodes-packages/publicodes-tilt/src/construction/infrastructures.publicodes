@@ -16,12 +16,12 @@ construction . infrastructure:
 
     surface place:
       valeur: 12
-      unité: m2/place
-      note: On considère qu'une place fait 12 m2
+      unité: m²/place
+      note: On considère qu'une place fait 12 m²
 
     FE:
       valeur: 92
-      unité: kgCO2e/m2
+      unité: kgCO2e/m²
       meta:
         id: 26008
         nom: Parking classique, bitume

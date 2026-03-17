@@ -55,13 +55,3 @@ général . type:
     Autres structures sociales et solidaires:
     Association de défense de l'environnement:
     Association d'enseignement ou de formation:
-
-général . TT bénévoles:
-  question: Combien de jours sont télétravaillées par semaine pour vos bénévoles ?
-  unité: jours
-  par défaut: 0
-
-général . TT salariés:
-  question: Combien de jours sont télétravaillées par semaine pour vos salariés ?
-  unité: jours
-  par défaut: 0
