@@ -1,5 +1,7 @@
 enum DocumentCategory {
   DependencyMatrix
+
+  @@schema("bilan_carbone")
 }
 
 model Document {
@@ -22,4 +24,5 @@ model Document {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("documents")
+  @@schema("bilan_carbone")
 }

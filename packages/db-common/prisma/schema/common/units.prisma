@@ -186,4 +186,6 @@ enum Unit {
   MOVIES
   PERSON
   TEAM
+
+  @@schema("common")
 }

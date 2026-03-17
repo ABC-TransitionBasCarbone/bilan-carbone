@@ -12,6 +12,8 @@ enum QuestionType {
   TEXT
   TITLE
   CUSTOM
+
+  @@schema("bilan_carbone")
 }
 
 model Question {
@@ -29,6 +31,7 @@ model Question {
   updatedAt       DateTime     @default(now()) @updatedAt @map("updated_at")
 
   @@map("questions")
+  @@schema("bilan_carbone")
 }
 
 model Answer {
@@ -48,6 +51,7 @@ model Answer {
 
   @@unique([questionId, studySiteId])
   @@map("answers")
+  @@schema("bilan_carbone")
 }
 
 model AnswerEmissionSource {
@@ -64,4 +68,5 @@ model AnswerEmissionSource {
 
   @@unique([answerId, rowId, emissionType]) // One emission source per row per type
   @@map("answer_emission_sources")
+  @@schema("bilan_carbone")
 }

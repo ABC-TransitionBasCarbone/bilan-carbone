@@ -7,4 +7,5 @@ model Formation {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("formations")
+  @@schema("bilan_carbone")
 }

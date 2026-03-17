@@ -8,4 +8,5 @@ model Actuality {
   language String @default("fr")
 
   @@map("actualities")
+  @@schema("bilan_carbone")
 }

@@ -2,29 +2,39 @@ enum Export {
   Beges
   GHGP
   ISO14069
+
+  @@schema("bilan_carbone")
 }
 
 enum ControlMode {
   CapitalShare
   Financial
   Operational
+
+  @@schema("bilan_carbone")
 }
 
 enum Level {
   Initial
   Standard
   Advanced
+
+  @@schema("bilan_carbone")
 }
 
 enum StudyRole {
   Validator
   Editor
   Reader
+
+  @@schema("bilan_carbone")
 }
 
 enum StudyResultUnit {
   K // kg (1)
   T // t (1000)
+
+  @@schema("bilan_carbone")
 }
 
 enum EmissionSourceCaracterisation {
@@ -46,6 +56,8 @@ enum EmissionSourceCaracterisation {
   UsedByIntermediary
   OperatedCAS
   HeldCAS
+
+  @@schema("bilan_carbone")
 }
 
 enum DayOfWeek {
@@ -56,11 +68,15 @@ enum DayOfWeek {
   Friday
   Saturday
   Sunday
+
+  @@schema("bilan_carbone")
 }
 
 enum CommentStatus {
   PENDING
   VALIDATED
+
+  @@schema("bilan_carbone")
 }
 
 enum EngagementPhase {
@@ -68,6 +84,8 @@ enum EngagementPhase {
   Empowerment
   CoConstruction
   FeedbackAndCommunication
+
+  @@schema("bilan_carbone")
 }
 
 model OpeningHours {
@@ -84,6 +102,7 @@ model OpeningHours {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("opening_hours")
+  @@schema("bilan_carbone")
 }
 
 model StudyTagFamily {
@@ -101,6 +120,7 @@ model StudyTagFamily {
 
   @@unique([name, studyId])
   @@map("study_tag_families")
+  @@schema("bilan_carbone")
 }
 
 model StudyTag {
@@ -121,6 +141,7 @@ model StudyTag {
 
   @@unique([name, familyId])
   @@map("study_tag")
+  @@schema("bilan_carbone")
 }
 
 model EmissionSourceTag {
@@ -137,6 +158,7 @@ model EmissionSourceTag {
   @@index([emissionSourceId], map: "emission_source_tag_emission_source_id_idx")
   @@index([tagId], map: "emission_source_tag_tag_id_idx")
   @@map("emission_source_tag")
+  @@schema("bilan_carbone")
 }
 
 model Study {
@@ -181,6 +203,7 @@ model Study {
   engagementActions EngagementAction[]
 
   @@map("studies")
+  @@schema("bilan_carbone")
 }
 
 model StudyExport {
@@ -195,6 +218,7 @@ model StudyExport {
 
   @@unique([studyId])
   @@map("study_exports")
+  @@schema("bilan_carbone")
 }
 
 model UserOnStudy {
@@ -210,6 +234,7 @@ model UserOnStudy {
 
   @@id([studyId, accountId])
   @@map("users_on_study")
+  @@schema("bilan_carbone")
 }
 
 model Contributors {
@@ -225,6 +250,7 @@ model Contributors {
 
   @@id([studyId, accountId, subPost])
   @@map("contributors")
+  @@schema("bilan_carbone")
 }
 
 enum EmissionSourceType {
@@ -233,6 +259,8 @@ enum EmissionSourceType {
   Extrapolated
   Statistical
   Approched
+
+  @@schema("bilan_carbone")
 }
 
 model StudyEmissionSource {
@@ -284,6 +312,7 @@ model StudyEmissionSource {
   emissionSourceTags EmissionSourceTag[]
 
   @@map("study_emission_sources")
+  @@schema("bilan_carbone")
 }
 
 model ExportRule {
@@ -318,6 +347,7 @@ model ExportRule {
 
   @@unique([export, subPost, type])
   @@map("export_rules")
+  @@schema("bilan_carbone")
 }
 
 model StudyEmissionFactorVersion {
@@ -336,6 +366,7 @@ model StudyEmissionFactorVersion {
 
   @@unique([studyId, source])
   @@map("study_emission_factor_versions")
+  @@schema("bilan_carbone")
 }
 
 model StudySite {
@@ -378,6 +409,7 @@ model StudySite {
 
   @@unique([studyId, siteId])
   @@map("study_sites")
+  @@schema("bilan_carbone")
 }
 
 model StudyTemplate {
@@ -391,6 +423,7 @@ model StudyTemplate {
 
   @@unique([environment, template])
   @@map("study_templates")
+  @@schema("bilan_carbone")
 }
 
 model StudyComment {
@@ -414,6 +447,8 @@ model StudyComment {
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@schema("bilan_carbone")
 }
 
 model EngagementAction {
@@ -435,4 +470,6 @@ model EngagementAction {
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@schema("bilan_carbone")
 }
