@@ -5,11 +5,12 @@ import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
 import { Typography } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
+import { ReactNode } from 'react'
 import styles from './OnboardingSectionStep.module.css'
 
 interface Props {
   title: string
-  description: string
+  description: string | ReactNode | null
   glossaryLabel: string
   glossaryTitleKey: string
   tModal: string
@@ -89,7 +90,7 @@ const OnboardingSectionStep = ({
               {title}
             </Typography>
             <GlossaryIconModal label={glossaryLabel} title={glossaryTitleKey} tModal={tModal}>
-              {description}
+              <Typography variant="body1">{description}</Typography>
             </GlossaryIconModal>
           </div>
           {titleButtonClick && titleButtonLabel && <Button onClick={titleButtonClick}>{titleButtonLabel}</Button>}

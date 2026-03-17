@@ -321,9 +321,9 @@ const TransitionPlanInitPage = ({
         <div className="flex-col gapped15">
           <TransitionPlanOnboarding
             title={t('initialization.onboarding.title')}
-            description={t('initialization.onboarding.description')}
+            description={customRich(t, 'initialization.onboarding.description')}
             storageKey="transition-plan-initialization"
-            detailedContent={t('initialization.onboarding.detailedInfo')}
+            detailedContent={customRich(t, 'initialization.onboarding.detailedInfo')}
           />
 
           {/* Step 1 – Past studies */}
@@ -356,7 +356,7 @@ const TransitionPlanInitPage = ({
           {/* Step 3 – SNBC + SBTI selection */}
           <OnboardingSectionStep
             title={t('initialization.stepSelectReferenceTrajectories.title')}
-            description={t('initialization.stepSelectReferenceTrajectories.description')}
+            description={customRich(t, 'initialization.stepSelectReferenceTrajectories.description')}
             glossaryLabel="init-step-select-reference-trajectories"
             glossaryTitleKey="glossaryTitle"
             tModal="study.transitionPlan.initialization.stepSelectReferenceTrajectories"
@@ -377,7 +377,7 @@ const TransitionPlanInitPage = ({
           {/* Step 4 – Reference graph */}
           <OnboardingSectionStep
             title={t('initialization.stepVisualization.title')}
-            description={t('initialization.stepVisualization.description')}
+            description={customRich(t, 'initialization.stepVisualization.description')}
             glossaryLabel="init-step-visualization"
             glossaryTitleKey="glossaryTitle"
             tModal="study.transitionPlan.initialization.stepVisualization"
@@ -452,7 +452,7 @@ const TransitionPlanInitPage = ({
         <ConfirmDeleteModal
           open={showDeleteModal}
           title={t('trajectories.delete.title')}
-          message={t('trajectories.delete.description')}
+          message={customRich(t, 'trajectories.delete.description')}
           confirmText={t('trajectories.delete.confirm')}
           cancelText={t('trajectories.delete.cancel')}
           requireNameMatch={study.name}

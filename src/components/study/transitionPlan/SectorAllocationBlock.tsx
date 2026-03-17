@@ -3,6 +3,7 @@
 import SectorPercentageInputs from '@/components/study/trajectory/SectorPercentageInputs'
 import { FullStudy } from '@/db/study'
 import { TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
+import { customRich } from '@/i18n/customRich'
 import { SectorPercentages, sectorPercentagesSchema } from '@/services/serverFunctions/trajectory.command'
 import { getStudyTotalCo2Emissions } from '@/services/study'
 import { calculateSectoralSNBCReductionRates } from '@/utils/snbc'
@@ -113,7 +114,7 @@ const SectorAllocationBlock = ({
   return (
     <OnboardingSectionStep
       title={t('title')}
-      description={t('description')}
+      description={customRich(t, 'description')}
       glossaryLabel="init-step-sector-allocation"
       glossaryTitleKey="glossaryTitle"
       tModal="study.transitionPlan.initialization.stepSectorAllocation"
@@ -125,7 +126,7 @@ const SectorAllocationBlock = ({
       nextButtonDisabled={isOverLimit}
     >
       <div className="flex-col gapped1">
-        <Typography variant="body1">{tBlock('description')}</Typography>
+        <Typography variant="body1">{customRich(tBlock, 'description')}</Typography>
         <SectorPercentageInputs canEdit={canEdit} control={control} />
       </div>
     </OnboardingSectionStep>

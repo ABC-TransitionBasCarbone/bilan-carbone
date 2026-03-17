@@ -171,6 +171,7 @@ table {
 }
 
 .error {
+  font-size: inherit;
   color: var(--error-100);
 }
 
@@ -188,10 +189,12 @@ table {
 }
 
 .bold {
+  font-size: inherit;
   font-weight: bold;
 }
 
 .italic {
+  font-size: inherit;
   font-style: italic;
 }
 

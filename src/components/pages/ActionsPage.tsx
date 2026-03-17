@@ -51,7 +51,7 @@ const ActionsPage = ({
       breadcrumbCurrent={tStudyNav('actionPlan')}
       blockTitle={t('title')}
       onboardingTitle={t('onboarding.title')}
-      onboardingDescription={t('onboarding.description')}
+      onboardingDescription={customRich(t, 'onboarding.description')}
       onboardingStorageKey="actions"
       onboardingDetailedContent={customRich(t, 'onboarding.detailedInfo')}
     >

@@ -12,6 +12,7 @@ import {
   TRAJECTORY_WB2C_ID,
 } from '@/constants/trajectories'
 import { TrajectoryWithObjectives } from '@/db/transitionPlan'
+import { customRich } from '@/i18n/customRich'
 import { Typography } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -37,7 +38,7 @@ export const ReferenceTrajectorySelectionSection = ({
   return (
     <div className={classNames('grid gapped1', styles.trajectoryCardsGrid)}>
       <Box className={classNames('p125 flex-col justify-between gapped2', styles.trajectoryCard)}>
-        <Typography variant="body1">{t('snbcCard.description')}</Typography>
+        <Typography variant="body1">{customRich(t, 'snbcCard.description')}</Typography>
         <div className="w100 flex-col gapped-2">
           <MultiSelect
             label={t('snbcCard.methodLabel')}
@@ -60,7 +61,7 @@ export const ReferenceTrajectorySelectionSection = ({
         </div>
       </Box>
       <Box className={classNames('p125 flex-col justify-between gapped2', styles.trajectoryCard)}>
-        <Typography variant="body1">{t('sbtiCard.description')}</Typography>
+        <Typography variant="body1">{customRich(t, 'sbtiCard.description')}</Typography>
         <div className="w100 flex-col gapped-2">
           <MultiSelect
             label={t('sbtiCard.methodLabel')}
