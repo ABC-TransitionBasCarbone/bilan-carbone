@@ -2,6 +2,7 @@
 
 import Modal from '@/components/modals/Modal'
 import { SECTEN_SECTORS } from '@/constants/trajectories'
+import { customRich } from '@/i18n/customRich'
 import { SectenVersionDiff } from '@/utils/secten'
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
@@ -39,7 +40,7 @@ const SectenUpdateModal = ({ open, onClose, onConfirm, diff, isLoading }: Props)
         },
       ]}
     >
-      <Typography className="mb1">{t('snbcCard.sectenUpdateModal.description')}</Typography>
+      <Typography className="mb1">{customRich(t, 'snbcCard.sectenUpdateModal.description')}</Typography>
 
       {(modifiedYears.length > 0 || addedYears.length > 0) && (
         <div className="mb1">
