@@ -51,7 +51,6 @@ const StudyNavbar = ({
       <Drawer
         className={open ? styles.opened : ''}
         open={open}
-        slots={{ paper: 'div' }}
         slotProps={{
           paper: {
             className: classNames('ml1 hauto', styles.drawerContainer),
