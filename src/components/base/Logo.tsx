@@ -17,8 +17,8 @@ const logosPerEnvironment: Record<string, LogoConfig[]> = {
   [Environment.CLICKSON]: [{ src: '/logos/clickson/logo_clickson.png', alt: 'Logo Clickson', width: 65, height: 35 }],
   DEFAULT: [
     {
-      src: '/logos/logo_bc_2025_blanc_nospace.png',
-      alt: 'Logo de bilan carbone 2025',
+      src: '/logos/logo_bc_blanc_nospace.png',
+      alt: 'Logo de bilan carbone',
       width: 100,
       height: 35,
     },
