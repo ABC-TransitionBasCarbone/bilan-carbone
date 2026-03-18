@@ -39,9 +39,9 @@ interface Props {
   breadcrumbCurrent: string
   blockTitle: string
   onboardingTitle: string
-  onboardingDescription: string
+  onboardingDescription: string | ReactNode | null
   onboardingStorageKey: string
-  onboardingDetailedContent: ReactNode
+  onboardingDetailedContent: string | ReactNode | null
   graphTitleAction?: ReactNode
   children: (props: TransitionPlanBaseChildProps) => ReactNode
 }

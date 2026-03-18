@@ -11,8 +11,8 @@ import styles from './TransitionPlanOnboarding.module.css'
 
 interface Props {
   title: string
-  description: string
-  detailedContent: ReactNode | null
+  description: string | ReactNode | null
+  detailedContent: string | ReactNode | null
   storageKey: string
 }
 

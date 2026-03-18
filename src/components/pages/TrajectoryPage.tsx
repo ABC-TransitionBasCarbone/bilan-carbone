@@ -4,6 +4,7 @@ import Button from '@/components/base/Button'
 import TransitionPlanBase from '@/components/study/transitionPlan/TransitionPlanBase'
 import { FullStudy } from '@/db/study'
 import type { ActionWithRelations, TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
+import { customRich } from '@/i18n/customRich'
 import { getStudyTotalCo2Emissions } from '@/services/study'
 import { getDefaultSnbcSectoralPercentages, getDefaultSnbcSectoralTrajectory } from '@/utils/trajectory'
 import AddIcon from '@mui/icons-material/Add'
@@ -94,9 +95,9 @@ const TrajectoryPage = ({
       breadcrumbCurrent={tStudyNav('trajectories')}
       blockTitle={t('trajectories.title')}
       onboardingTitle={t('trajectories.onboarding.title')}
-      onboardingDescription={t('trajectories.onboarding.description')}
+      onboardingDescription={customRich(t, 'trajectories.onboarding.description')}
       onboardingStorageKey="trajectory-reduction"
-      onboardingDetailedContent={null}
+      onboardingDetailedContent={customRich(t, 'trajectories.onboarding.detailedInfo')}
       graphTitleAction={addButton}
     >
       {({ filteredStudyEmissions, filteredPastStudies, filteredTrajectories }) => (

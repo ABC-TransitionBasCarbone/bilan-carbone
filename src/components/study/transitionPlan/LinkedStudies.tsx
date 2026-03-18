@@ -1,5 +1,6 @@
 'use client'
 
+import { customRich } from '@/i18n/customRich'
 import { PastStudy } from '@/utils/trajectory'
 import type { StudyResultUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
@@ -50,7 +51,7 @@ const LinkedStudies = ({
     <>
       <OnboardingSectionStep
         title={tInit('title')}
-        description={tInit('description')}
+        description={customRich(tInit, 'description')}
         glossaryLabel="init-step-link-study"
         glossaryTitleKey="glossaryTitle"
         tModal="study.transitionPlan.initialization.stepLinkStudy"
