@@ -56,7 +56,7 @@ describe('Create study emission source', () => {
       .within(() => {
         cy.get('[data-testid="emission-source-status"] > div')
           .invoke('text')
-          .should('contain', "En attente d'un·e contributeur·rice")
+          .should('contain', 'À vérifier')
       })
 
     cy.getByTestId('emission-source-source').type('My source')
