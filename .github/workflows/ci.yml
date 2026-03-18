@@ -5,6 +5,9 @@ jobs:
   lint-and-typecheck:
     timeout-minutes: 10
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/bilan-carbone
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -13,8 +16,10 @@ jobs:
           cache: 'yarn'
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
+        working-directory: .
       - name: Generate prisma files
-        run: npx prisma generate
+        run: yarn workspace @repo/db-common prisma generate
+        working-directory: .
       - name: Linter
         run: yarn lint
       - name: Prebuild application
@@ -25,6 +30,9 @@ jobs:
   unit-tests:
     timeout-minutes: 10
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/bilan-carbone
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -35,16 +43,21 @@ jobs:
         run: cp .env.dist .env
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
+        working-directory: .
       - name: Prebuild application
         run: yarn prebuild
       - name: Generate prisma files
-        run: npx prisma generate
+        run: yarn workspace @repo/db-common prisma generate
+        working-directory: .
       - name: Launch unit tests
         run: yarn run test
 
   unit-tests-publicodes:
     timeout-minutes: 10
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/bilan-carbone
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -53,6 +66,7 @@ jobs:
           cache: 'yarn'
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
+        working-directory: .
       - name: Prebuild application
         run: yarn prebuild
       - name: Launch unit tests
@@ -62,6 +76,9 @@ jobs:
     timeout-minutes: 30
     runs-on: ubuntu-latest
     needs: [lint-and-typecheck, unit-tests]
+    defaults:
+      run:
+        working-directory: apps/bilan-carbone
     services:
       postgres:
         image: postgres:17
@@ -89,14 +106,18 @@ jobs:
         run: cp .env.dist .env.test
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
+        working-directory: .
       - name: Prebuild application
         run: yarn prebuild
       - name: Generate prisma files
-        run: npx prisma generate
+        run: yarn workspace @repo/db-common prisma generate
+        working-directory: .
       - name: Migrate DB
-        run: npx prisma migrate deploy
+        run: yarn workspace @repo/db-common prisma migrate deploy
+        working-directory: .
       - name: Seed DB
-        run: npx prisma db seed
+        run: yarn workspace bilan-carbone prisma db seed
+        working-directory: .
       - name: Build application
         run: yarn build
       - name: Start server
@@ -118,6 +139,9 @@ jobs:
     timeout-minutes: 10
     runs-on: ubuntu-latest
     needs: [lint-and-typecheck, unit-tests]
+    defaults:
+      run:
+        working-directory: apps/bilan-carbone
     services:
       postgres:
         image: postgres:17
@@ -143,14 +167,18 @@ jobs:
         run: cp .env.dist .env
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
+        working-directory: .
       - name: Prebuild application
         run: yarn prebuild
       - name: Generate prisma files
-        run: npx prisma generate
+        run: yarn workspace @repo/db-common prisma generate
+        working-directory: .
       - name: Migrate DB
-        run: npx prisma migrate deploy
+        run: yarn workspace @repo/db-common prisma migrate deploy
+        working-directory: .
       - name: Seed DB
-        run: npx prisma db seed
+        run: yarn workspace bilan-carbone prisma db seed
+        working-directory: .
       - name: Build application
         run: yarn build
       - name: Start server
