@@ -3,7 +3,7 @@ import nextJest from 'next/jest.js'
 
 const createJestConfig = nextJest({
   // Provide the path to the Next.js app
-  dir: './src',
+  dir: './',
 })
 
 // Add any custom config to be passed to Jest
