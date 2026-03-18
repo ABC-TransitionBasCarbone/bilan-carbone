@@ -1,6 +1,7 @@
 import { environmentsWithChecklist } from '@/constants/environments'
 import { DefaultStudyTags } from '@/constants/studyTags'
 import { reCreateBegesRules, reCreateGHGPRules } from '@/db/exports'
+import { getSectenVersion, updateSectenVersion } from '@/scripts/secten/secten'
 import { signPassword } from '@/services/auth'
 import { getEmissionFactorsFromAPI } from '@/services/importEmissionFactor/baseEmpreinte/getEmissionFactorsFromAPI'
 import { getAllowedLevels } from '@/services/study'
@@ -23,6 +24,7 @@ import {
 } from '@prisma/client'
 import { Command } from 'commander'
 import { ACTUALITIES } from '../legacy_data/actualities'
+import { SECTEN_SEED_DATA } from './sectenSeedData'
 import { createRealStudy } from './study'
 import { getClicksonRoleFromBase, getCutRoleFromBase, getRolesFromEnvironment } from './utils'
 
@@ -1045,8 +1047,15 @@ const actualities = async () => {
   await prisma.actuality.createMany({ data: ACTUALITIES })
 }
 
+const seedSecten = async () => {
+  await prisma.$transaction(async (transaction) => {
+    const versionResult = await getSectenVersion(transaction, 2024)
+    await updateSectenVersion(transaction, versionResult.id, SECTEN_SEED_DATA)
+  })
+}
+
 const main = async (params: Params) => {
-  await Promise.all([actualities(), users(), reCreateBegesRules(), reCreateGHGPRules()])
+  await Promise.all([actualities(), users(), reCreateBegesRules(), reCreateGHGPRules(), seedSecten()])
   if (params.importFactors) {
     await getEmissionFactorsFromAPI(params.importFactors)
   }

@@ -1,0 +1,12 @@
+.increase {
+  color: var(--success-100);
+}
+
+.decrease {
+  color: var(--error-100);
+}
+
+.tableBody td,
+.tableBody td * {
+  font-size: 0.875rem !important;
+}

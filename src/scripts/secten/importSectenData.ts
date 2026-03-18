@@ -11,11 +11,11 @@ program
   .name('import-secten')
   .description('Import Secten emissions data from CSV')
   .version('1.0.0')
-  .requiredOption('-n, --name <value>', 'Version name')
   .requiredOption('-f, --file <value>', 'Path to CSV file')
+  .requiredOption('-y, --year <value>', 'Publication year of the version (e.g. 2024)')
   .parse(process.argv)
 
-const params = program.opts<{ name: string; file: string }>()
+const params = program.opts<{ name: string; file: string; year: string }>()
 
 const main = async () => {
   if (!fs.existsSync(params.file)) {
@@ -23,15 +23,21 @@ const main = async () => {
     process.exit(1)
   }
 
+  const year = parseInt(params.year, 10)
+  if (isNaN(year)) {
+    console.error('Invalid year:', params.year)
+    process.exit(1)
+  }
+
   const existingVersion = await prismaClient.sectenVersion.findUnique({
-    where: { name: params.name },
+    where: { year },
   })
 
   let shouldUpdate = false
 
   if (existingVersion) {
     const rl = readline.createInterface({ input, output })
-    const answer = await rl.question(`Version "${existingVersion.name}" already exists. Update? (yes/no): `)
+    const answer = await rl.question(`Version "${existingVersion.year}" already exists. Update? (yes/no): `)
     rl.close()
 
     shouldUpdate = answer.toLowerCase() === 'yes'
@@ -43,7 +49,7 @@ const main = async () => {
   }
 
   console.log('Importing Secten data...')
-  const result = await importSectenData(params.name, params.file, shouldUpdate)
+  const result = await importSectenData(year, params.file, shouldUpdate)
 
   if (result.success) {
     console.log(`✓ ${result.message} version ${result.versionId}`)

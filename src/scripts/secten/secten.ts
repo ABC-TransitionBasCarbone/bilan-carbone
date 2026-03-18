@@ -115,9 +115,9 @@ export const parseSectenCSV = async (filePath: string): Promise<SectenData[]> =>
   })
 }
 
-export const getSectenVersion = async (transaction: Prisma.TransactionClient, name: string) => {
+export const getSectenVersion = async (transaction: Prisma.TransactionClient, year: number) => {
   const existingVersion = await transaction.sectenVersion.findUnique({
-    where: { name },
+    where: { year },
   })
 
   if (existingVersion) {
@@ -125,7 +125,7 @@ export const getSectenVersion = async (transaction: Prisma.TransactionClient, na
   }
 
   const newVersion = await transaction.sectenVersion.create({
-    data: { name },
+    data: { year },
   })
 
   return { success: true, id: newVersion.id, version: newVersion }
@@ -145,11 +145,11 @@ export const updateSectenVersion = async (
   })
 }
 
-export const importSectenData = async (name: string, filePath: string, shouldUpdate: boolean = false) => {
+export const importSectenData = async (year: number, filePath: string, shouldUpdate: boolean = false) => {
   const data = await parseSectenCSV(filePath)
 
   return prismaClient.$transaction(async (transaction) => {
-    const versionResult = await getSectenVersion(transaction, name)
+    const versionResult = await getSectenVersion(transaction, year)
 
     if (!versionResult.success && !shouldUpdate) {
       console.error('Version already exists:', versionResult.id)

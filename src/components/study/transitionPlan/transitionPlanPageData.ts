@@ -1,5 +1,5 @@
 import { getUserApplicationSettings } from '@/db/user'
-import { getSectenData } from '@/services/serverFunctions/secten'
+import { getLatestSectenVersion, getSectenData } from '@/services/serverFunctions/secten'
 import { getTrajectories } from '@/services/serverFunctions/trajectory.serverFunction'
 import {
   getLinkedAndExternalStudies,
@@ -19,12 +19,26 @@ export const loadTransitionPlanPageData = async (studyId: string, accountId: str
 
   const transitionPlan = transitionPlanResponse.data
 
-  const [trajectoriesResponse, linkedStudiesResponse, actionsResponse, sectenDataResponse] = await Promise.all([
+  const [
+    trajectoriesResponse,
+    linkedStudiesResponse,
+    actionsResponse,
+    sectenDataResponse,
+    latestSectenVersionResponse,
+  ] = await Promise.all([
     getTrajectories(studyId, transitionPlan.id),
     getLinkedAndExternalStudies(transitionPlan.id),
     getStudyActions(studyId),
-    getSectenData(),
+    getSectenData(transitionPlan.sectenVersionId ?? undefined),
+    getLatestSectenVersion(),
   ])
+
+  const latestSectenVersion = latestSectenVersionResponse.success ? latestSectenVersionResponse.data : null
+
+  const isSectenOutdated =
+    latestSectenVersion !== null &&
+    transitionPlan.sectenVersionId !== null &&
+    transitionPlan.sectenVersionId !== latestSectenVersion.id
 
   return {
     transitionPlan,
@@ -34,5 +48,7 @@ export const loadTransitionPlanPageData = async (studyId: string, accountId: str
     linkedExternalStudies: linkedStudiesResponse.success ? linkedStudiesResponse.data.externalStudies : [],
     actions: actionsResponse.success ? actionsResponse.data : null,
     sectenData: sectenDataResponse.success ? sectenDataResponse.data : [],
+    latestSectenVersion,
+    isSectenOutdated,
   }
 }

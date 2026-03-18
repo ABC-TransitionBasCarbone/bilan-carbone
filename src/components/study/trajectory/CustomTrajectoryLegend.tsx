@@ -74,8 +74,10 @@ const CustomTrajectoryLegend = ({ series, hiddenLabels, onToggle, previousLabel,
   const getGroupLabels = (group: TrajectoryGroup) =>
     [group.previous?.label, group.current?.label].filter(Boolean) as string[]
 
-  const isGroupAllVisible = (group: TrajectoryGroup) =>
-    getGroupLabels(group).every((label) => !hiddenLabels.includes(label))
+  const isGroupAllVisible = useCallback(
+    (group: TrajectoryGroup) => getGroupLabels(group).every((label) => !hiddenLabels.includes(label)),
+    [hiddenLabels],
+  )
 
   const isGroupPartiallyVisible = (group: TrajectoryGroup) => {
     const labels = getGroupLabels(group)
@@ -83,18 +85,21 @@ const CustomTrajectoryLegend = ({ series, hiddenLabels, onToggle, previousLabel,
     return visibleCount > 0 && visibleCount < labels.length
   }
 
-  const handleToggleGroup = (group: TrajectoryGroup) => {
-    const labels = getGroupLabels(group)
-    const allVisible = isGroupAllVisible(group)
-    labels.forEach((label) => {
-      const isHidden = hiddenLabels.includes(label)
-      if (allVisible && !isHidden) {
-        onToggle(label)
-      } else if (!allVisible && isHidden) {
-        onToggle(label)
-      }
-    })
-  }
+  const handleToggleGroup = useCallback(
+    (group: TrajectoryGroup) => {
+      const labels = getGroupLabels(group)
+      const allVisible = isGroupAllVisible(group)
+      labels.forEach((label) => {
+        const isHidden = hiddenLabels.includes(label)
+        if (allVisible && !isHidden) {
+          onToggle(label)
+        } else if (!allVisible && isHidden) {
+          onToggle(label)
+        }
+      })
+    },
+    [hiddenLabels, isGroupAllVisible, onToggle],
+  )
 
   const handleSelectAll = useCallback(() => {
     if (hiddenLabels.length === 0 || hiddenLabels.length === series.length) {

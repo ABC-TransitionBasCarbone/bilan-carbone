@@ -1048,7 +1048,12 @@
           "buildings": "Bâtiments",
           "agriculture": "Agriculture",
           "transportation": "Transports",
-          "placeholder": "Aucune trajectoire sélectionnée"
+          "placeholder": "Aucune trajectoire sélectionnée",
+          "sectenUpdateButton": "Mise à jour des sectens disponibles",
+          "sectenUpdateModal": {
+            "title": "Mise à jour des valeurs secten",
+            "description": "Une nouvelle version des valeurs secten est disponible. Vous pouvez mettre à jour ces valeurs pour qu'elles s'appliquent sur vos trajectoires. Voici les modifications :"
+          }
         },
         "sbtiCard": {
           "title": "Trajectoires SBTi",
