@@ -5,10 +5,11 @@ télétravail:
       - bénévoles
       - salariés
   unité: kgCO2e
+  par défaut: 0
 
 télétravail . FE:
   valeur: 0.39
-  unité: kgCO2e/j
+  unité: kgCO2e/jours
 
 télétravail . bénévoles:
   titre: Télétravail - Bénévoles
@@ -16,13 +17,14 @@ télétravail . bénévoles:
   unité: kgCO2e
 
 télétravail . bénévoles . h:
-  question: Combien d'heures de télétravail sont effectuées par semaine pour vos bénévoles ?
+  question: Combien d'heures sont en moyenne effectuées en télétravail par semaine pour vos bénévoles ?
   unité: h/semaine
   type: nombre
+  par défaut: 0
 
 télétravail . bénévoles . j:
   formule: h / 7
-  unité: j/semaine
+  unité: jours/semaine
   type: nombre
 
 télétravail . salariés:
@@ -31,6 +33,7 @@ télétravail . salariés:
   unité: kgCO2e
 
 télétravail . salariés . j:
-  question: Combien de jours télétravail sont effectuées par semaine pour vos salariés ?
-  unité: j/semaine
+  question: Combien de jours sont en moyenne télétravaillés par semaine par vos salariés ?
+  unité: jours/semaine
   type: nombre
+  par défaut: 0

@@ -1,55 +1,62 @@
 équipements et immobilisations:
-  formule:
-    somme:
-      - équipements et immobilisations . infos
-
-équipements et immobilisations . infos:
-  titre: Équipements et immobilisations
-  formule: total sans reconditionné * prise en compte reconditionné / amortissement
-  unité: kgCO2e
+  formule: total sans reconditionné * pondération / amortissement
+  unité: kgCO2e/an
   avec:
     amortissement:
       valeur: 3
       unité: an
       note: On considère les équipements amortis sur trois ans
 
-# équipements et immobilisations . équipements des salariés:
-#   titre: Équipements et immobilisations
-#   formule: total sans reconditionné * prise en compte reconditionné / amortissement
-#   unité: kgCO2e
-#   avec:
-#     amortissement:
-#       valeur: 3
-#       unité: an
-#       note: On considère les équipements amortis sur trois ans
+équipements et immobilisations . pondération:
+  titre: Équipements et immobilisations
+  formule:
+    variations:
+      - si: reconditionné = 'toujours'
+        alors: reconditionné . toujours reconditionné
+      - si: reconditionné = 'souvent'
+        alors: reconditionné . souvent reconditionné
+      - si: reconditionné = 'parfois'
+        alors: reconditionné . parfois reconditionné
+      - si: reconditionné = 'jamais'
+        alors: reconditionné . jamais reconditionné
+        sinon: 1
+  par défaut: 1
 
-équipements et immobilisations . infos . prise en compte reconditionné:
+équipements et immobilisations . pondération . reconditionné:
   question: Vos équipements sont-ils reconditionné ou issu de seconde main ?
   description: En fonction de votre réponse, une partie de vos équipements seront valorisés comme étant reconditionnés. Un équipement reconditionné sera considéré comme moitié moins émetteur qu'un équipement neuf. Autrement dit, la durée de première vie de l'équipement est considéré comme égale à la moitié de sa durée de vie totale.
   une possibilité:
     - toujours
     - souvent
-    - rarement
+    - parfois
     - jamais
   avec:
     toujours:
       titre: Toujours
-      valeur: 0.5
-      note: On divise par 2 les émissions lorsque les appareils sont reconditionnés
     souvent:
       titre: Souvent
-      valeur: 1 - (0.5 * 0.66)
-      note: On divise par 2 les émissions des appareils reconditionnés, considérés ici comme 66% du total
-    rarement:
-      titre: Rarement
-      valeur: 1 - (0.5 * 0.33)
-      note: On divise par 2 les émissions des appareils reconditionnés, considérés ici comme 33% du total
+    parfois:
+      titre: Parfois
     jamais:
       titre: Jamais
-      valeur: 0
-      note: Pas d'équipements reconditionnés
 
-équipements et immobilisations . infos . total sans reconditionné:
+équipements et immobilisations . pondération . reconditionné . toujours reconditionné:
+  valeur: 0.5
+  note: On divise par 2 les émissions lorsque les appareils sont reconditionnés
+
+équipements et immobilisations . pondération . reconditionné . souvent reconditionné:
+  valeur: 1 - (0.5 * 0.66)
+  note: On divise par 2 les émissions des appareils reconditionnés, considérés ici comme 66% du total
+
+équipements et immobilisations . pondération . reconditionné . parfois reconditionné:
+  valeur: 1 - (0.5 * 0.33)
+  note: On divise par 2 les émissions des appareils reconditionnés, considérés ici comme 33% du total
+
+équipements et immobilisations . pondération . reconditionné . jamais reconditionné:
+  valeur: 1
+  note: Pas d'équipements reconditionnés
+
+équipements et immobilisations . total sans reconditionné:
   formule:
     somme:
       - ordinateurs fixes
@@ -62,7 +69,7 @@
       - autres écrans
   unité: kgCO2e
 
-équipements et immobilisations . infos . ordinateurs fixes:
+équipements et immobilisations . total sans reconditionné . ordinateurs fixes:
   formule: FE * quantité
   titre: Ordinateurs fixes
   form:
@@ -78,8 +85,9 @@
       question: Ordinateurs fixes
       type: nombre
       unité: quantité
+      par défaut: 0
 
-équipements et immobilisations . infos . ordinateurs portables:
+équipements et immobilisations . total sans reconditionné . ordinateurs portables:
   formule: FE * quantité
   titre: Ordinateurs portables
   form:
@@ -95,8 +103,9 @@
       question: Ordinateurs portables
       type: nombre
       unité: quantité
+      par défaut: 0
 
-équipements et immobilisations . infos . photocopieurs:
+équipements et immobilisations . total sans reconditionné . photocopieurs:
   formule: FE * quantité
   titre: Photocopieurs
   form:
@@ -112,8 +121,9 @@
       question: Photocopieurs
       type: nombre
       unité: quantité
+      par défaut: 0
 
-équipements et immobilisations . infos . imprimantes:
+équipements et immobilisations . total sans reconditionné . imprimantes:
   formule: FE * quantité
   titre: Imprimantes
   form:
@@ -129,8 +139,9 @@
       question: Imprimante multi-fonction
       type: nombre
       unité: quantité
+      par défaut: 0
 
-équipements et immobilisations . infos . téléphones fixes:
+équipements et immobilisations . total sans reconditionné . téléphones fixes:
   formule: FE * quantité
   titre: Téléphones fixes
   form:
@@ -146,8 +157,9 @@
       question: Téléphones fixes
       type: nombre
       unité: quantité
+      par défaut: 0
 
-équipements et immobilisations . infos . téléphones portables:
+équipements et immobilisations . total sans reconditionné . téléphones portables:
   formule: FE * quantité
   titre: Téléphones portables
   form:
@@ -163,8 +175,9 @@
       question: Téléphones portables
       type: nombre
       unité: quantité
+      par défaut: 0
 
-équipements et immobilisations . infos . vidéoprojecteurs:
+équipements et immobilisations . total sans reconditionné . vidéoprojecteurs:
   formule: FE * quantité
   titre: Vidéoprojecteurs
   form:
@@ -180,8 +193,9 @@
       question: Vidéoprojecteurs
       type: nombre
       unité: quantité
+      par défaut: 0
 
-équipements et immobilisations . infos . autres écrans:
+équipements et immobilisations . total sans reconditionné . autres écrans:
   formule: FE * quantité
   titre: Autres écrans
   form:
@@ -197,3 +211,4 @@
       question: Autres écrans (TV, écran secondaire, tablette, ...)
       type: nombre
       unité: quantité
+      par défaut: 0

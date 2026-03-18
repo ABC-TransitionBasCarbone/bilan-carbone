@@ -15,26 +15,27 @@ import MenuBookIcon from '@mui/icons-material/MenuBook'
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew'
 import SettingsIcon from '@mui/icons-material/Settings'
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz'
-import { AppBar, Box, Container, Toolbar } from '@mui/material'
+import { Box, Container, Toolbar } from '@mui/material'
 import { Environment, Role } from '@prisma/client'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { useLocale, useTranslations } from 'next-intl'
 import Image from 'next/image'
-import { ReactNode, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Logo } from '../base/Logo'
+import AppBar from './AppBar'
 import NavbarButton from './NavbarButton'
 import NavbarComments from './NavbarComments'
 import NavbarLink from './NavbarLink'
 
 interface Props {
-  children?: ReactNode
   user: UserSession
   environment: Environment
   isFootprintsEnabled: boolean
+  hasTrainedUsers: boolean
 }
 
-const Navbar = ({ children, user, environment, isFootprintsEnabled }: Props) => {
+const Navbar = ({ user, environment, isFootprintsEnabled, hasTrainedUsers }: Props) => {
   const t = useTranslations('navigation')
   const [hasFormation, setHasFormation] = useState(false)
   const [hasMultipleAccounts, setHasMultipleAccounts] = useState(false)
@@ -81,7 +82,12 @@ const Navbar = ({ children, user, environment, isFootprintsEnabled }: Props) => 
                 [Environment.CUT]: <CutTopLeftNavBar user={user} />,
               }}
               defaultComponent={
-                <TopLeftNavBar user={user} hasFormation={hasFormation} isFootprintsEnabled={isFootprintsEnabled} />
+                <TopLeftNavBar
+                  user={user}
+                  hasFormation={hasFormation}
+                  isFootprintsEnabled={isFootprintsEnabled}
+                  hasTrainedUsers={hasTrainedUsers}
+                />
               }
             />
           </Box>
@@ -141,7 +147,6 @@ const Navbar = ({ children, user, environment, isFootprintsEnabled }: Props) => 
           </div>
         </Container>
       </Toolbar>
-      {children}
     </AppBar>
   )
 }

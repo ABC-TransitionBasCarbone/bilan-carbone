@@ -4,3 +4,4 @@ utilisation:
     somme:
       - responsabilite conso energie
   unité: kgCO2e
+  par défaut: 0

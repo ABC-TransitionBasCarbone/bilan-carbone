@@ -4,7 +4,8 @@ import { OrganizationWithSites } from '@/db/account'
 import { getDocumentsForStudy } from '@/db/document'
 import { FullStudy } from '@/db/study'
 import { getUserApplicationSettings } from '@/db/user'
-import { hasAccessToDependencyMatrix, hasAccessToPerimeterPage } from '@/services/permissions/environment'
+import { hasAccessToDependencyMatrix } from '@/services/permissions/environment'
+import { hasAccessToPerimeterPage } from '@/services/permissions/environmentAdvanced'
 import { canEditStudyFlows } from '@/services/permissions/study'
 import { defaultCAUnit } from '@/utils/number'
 import { getAccountRoleOnStudy } from '@/utils/study'
@@ -34,7 +35,7 @@ const StudyPerimeterPage = async ({ study, organizationVersion, user }: Props) =
     return null
   }
 
-  if (!hasAccessToPerimeterPage(user.environment)) {
+  if (!hasAccessToPerimeterPage(user.environment, study.simplified)) {
     redirect(`/etudes/${study.id}`)
   }
 

@@ -4,20 +4,77 @@ fret . transport:
     somme:
       - carburant
       - empreinte
+      - VUL
+      - PL
 
 fret . transport . présent:
   question: Est-ce que votre association possède ou loue des véhicules pour transporter des marchandises ?
 
+fret . transport . VUL:
+  titre: Véhicules utilitaires légers
+  applicable si:
+    toutes ces conditions:
+      - est défini: présent
+      - présent = oui
+  formule: nombre * FE * poids moyen / amortissement
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: Combien de véhicules utilitaires légers possédez-vous ou louez-vous depuis moins de 5 ans ?
+      unité: VUL
+      par défaut: 0
+    poids moyen:
+      valeur: 3.5
+      unité: tonnes/VUL
+    FE:
+      valeur: 5500
+      unité: kgCO2e/tonnes
+      meta:
+        id: 20905
+        nom: Véhicules, fabrication
+    amortissement:
+      valeur: 5
+      unité: "an"
+
+fret . transport . PL:
+  titre: Poids lourds
+  applicable si:
+    toutes ces conditions:
+      - est défini: présent
+      - présent = oui
+  formule: nombre * FE * poids moyen / amortissement
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: Combien de véhicules poids lourds possédez-vous ou louez-vous depuis moins de 5 ans ?
+      unité: poids lourds
+      par défaut: 0
+    poids moyen:
+      valeur: 5.1
+      unité: tonnes/poids lourds
+    FE:
+      valeur: 5500
+      unité: kgCO2e/tonnes
+      meta:
+        id: 20905
+        nom: Véhicules, fabrication
+    amortissement:
+      valeur: 5
+      unité: "an"
+
 fret . transport . carburant:
   titre: consommation de carburant pour le fret possédé
-  applicable si: présent
+  applicable si:
+    toutes ces conditions:
+      - est défini: présent
+      - présent = oui
   formule: litre * FE
   unité: kgCO2e
   avec:
     litre:
       question: Combien de litres de carburants ces véhicules ont-ils consommé ?
       unité: litre
-
+      par défaut: 0
     FE:
       valeur: 3.1
       unité: kgCO2e/litre
@@ -34,6 +91,7 @@ fret . transport . empreinte:
       - europe
       - international
   unité: kgCO2e
+  par défaut: 0
 
 fret . transport . livraisons:
   titre: Nombre de livraisons
@@ -51,9 +109,14 @@ fret . transport . local:
   titre: Locale
   form:
     à traduire: oui
-  formule: poids * provenance * 50 * split * livraisons
+  formule: poids * provenance * kmlocal * split * livraisons
   unité: kgCO2e
+  par défaut: 0
   note: Pour les livraisons locales on compte environ 50km
+  avec:
+    kmlocal:
+      valeur: 50
+      unité: km
 
 fret . transport . local . split:
   formule: routier * 1
@@ -70,6 +133,7 @@ fret . transport . local . provenance:
   titre: livraisons locales
   question: Sur ces livraisons, quelle part provient de fournisseurs locaux (moins de 50 km) ?
   unité: "%"
+  par défaut: 0
 
 ##### Fret national #####
 
@@ -77,40 +141,45 @@ fret . transport . national:
   titre: France
   form:
     à traduire: oui
-  formule: poids * provenance * 500 * split * livraisons
+  formule: poids * provenance * kmnational * split * livraisons
   unité: kgCO2e
   note: Pour les livraisons nationales on compte environ 500km (~Paris-Marseille)
+  avec:
+    kmnational:
+      valeur: 500
+      unité: km
 
 fret . transport . national . split:
   formule: routier * 0.87 + ferroviaire * 0.1 + fluvial * 0.03
   note: Split France 82,5% routier, 9,7% ferroviaire, 2,9% fluvial, 5,1% oléoducs - Source https://www.insee.fr/fr/statistiques/2016004#tableau-figure1
   avec:
     routier:
-      valeur: 0.14
-      unité: kgCO2e/t.km
+      valeur: 0.00014
+      unité: kgCO2e/kg.km
       meta:
         id: 43718
         nom: Rigide/20 à 26 tonnes/Diesel routier, incorporation 7 % de biodiesel
 
     ferroviaire:
-      valeur: 0.00604
-      unité: kgCO2e/t.km
+      valeur: 0.00000604
+      unité: kgCO2e/kg.km
       meta:
         id: 47693
         nom: Train/Traction électrique/Chargement dense
 
     fluvial:
-      valeur: 0.0662
-      unité: kgCO2e/t.km
+      valeur: 0.0000662
+      unité: kgCO2e/kg.km
       meta:
         id:
         nom: Transport fluvial par pousseur 2300t (dont flotte, utilisation et infrastructure) [tkm], EU-27
-  unité: kgCO2e/t.km
+  unité: kgCO2e/kg.km
 
 fret . transport . national . provenance:
   titre: livraisons nationales
   question: Sur ces livraisons, quelle part provient de fournisseurs nationaux (entre 50 km et 500 km) ?
   unité: "%"
+  par défaut: 0
 
 ##### Fret europe #####
 
@@ -118,40 +187,45 @@ fret . transport . europe:
   titre: Europe
   form:
     à traduire: oui
-  formule: poids * provenance * 1500 * split * livraisons
+  formule: poids * provenance * kmeurope * split * livraisons
   unité: kgCO2e
   note: Pour les livraisons européeennes on compte environ 1500 km (~Paris-Stockholm/Paris-Varsovie, …)
+  avec:
+    kmeurope:
+      valeur: 1500
+      unité: km
 
 fret . transport . europe . split:
   formule: routier * 0.26 + ferroviaire * 0.06 + maritime * 0.68
   avec:
     routier:
-      valeur: 0.14
-      unité: kgCO2e/t.km
+      valeur: 0.00014
+      unité: kgCO2e/kg.km
       meta:
         id: 43718
         nom: Rigide/20 à 26 tonnes/Diesel routier, incorporation 7 % de biodiesel
 
     ferroviaire:
-      valeur: 0.0367
-      unité: kgCO2e/t.km
+      valeur: 0.0000367
+      unité: kgCO2e/kg.km
       meta:
         id: 37412b82-a5ab-437a-8be1-14d4a15ef7aa
         nom: Transport de marchandises en train électrique
         note: FE ecoinvent,  https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Freight_transport_statistics_-_modal_split
 
     maritime:
-      valeur: 0.00539
-      unité: kgCO2e/t.km
+      valeur: 0.00000539
+      unité: kgCO2e/kg.km
       meta:
         id: 47724
         nom: Porte-conteneurs/> 20 000TEU/GNL
-  unité: kgCO2e/t.km
+  unité: kgCO2e/kg.km
 
 fret . transport . europe . provenance:
   titre: livraisons européennes
   question: Sur ces livraisons, quelle part provient de fournisseurs européens (entre 500 km et 1500 km) ?
   unité: "%"
+  par défaut: 0
 
 ##### Fret international #####
 
@@ -159,29 +233,34 @@ fret . transport . international:
   titre: Monde
   form:
     à traduire: oui
-  formule: poids * provenance * 10000 * split * livraisons
+  formule: poids * provenance * kminternational * split * livraisons
   unité: kgCO2e
   note: Pour les livraisons internationales on compte environ 10000 km (~Paris-Tokyo)
+  avec:
+    kminternational:
+      valeur: 10000
+      unité: km
 
 fret . transport . international . split:
   formule: aérien * 0.2 + maritime * 0.8
   avec:
     aérien:
-      valeur: 1.01
-      unité: kgCO2e/t.km
+      valeur: 0.00101
+      unité: kgCO2e/kg.km
       meta:
         id: 43670
         nom: Avion cargo/Plus de 100 tonnes, >5000 kms, 2023/AVEC trainées
 
     maritime:
-      valeur: 0.00539
-      unité: kgCO2e/t.km
+      valeur: 0.00000539
+      unité: kgCO2e/kg.km
       meta:
         id: 47724
         nom: Porte-conteneurs/> 20 000TEU/GNL
-  unité: kgCO2e/t.km
+  unité: kgCO2e/kg.km
 
 fret . transport . international . provenance:
   titre: livraisons internationales
   question: Sur ces livraisons, quelle part provient de fournisseurs internationaux (plus de 1500 km) ?
   unité: "%"
+  par défaut: 0

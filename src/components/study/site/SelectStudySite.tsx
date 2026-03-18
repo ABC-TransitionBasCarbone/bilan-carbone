@@ -6,6 +6,7 @@ import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { FormControl, InputLabel, MenuItem, Select, Tooltip } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { Dispatch, SetStateAction, useMemo } from 'react'
+import styles from './SelectStudySite.module.css'
 
 interface Props {
   sites: FullStudy['sites']
@@ -60,7 +61,7 @@ const SelectStudySite = ({
   }
 
   return (
-    <FormControl>
+    <FormControl className={styles.select}>
       {withLabel && <InputLabel id="study-site-select">{t('site')}</InputLabel>}
       <Tooltip title={tooltipMessage} placement="right" arrow>
         <Select

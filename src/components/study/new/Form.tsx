@@ -27,9 +27,21 @@ interface Props {
   t: (key: string) => string
   duplicateStudyId?: string | null
   beforeSubmit?: (createStudyCommand: CreateStudyCommand) => CreateStudyCommand
+  customRouteAfterCreation?: string
+  showStudyDates?: boolean
 }
 
-const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudyId, beforeSubmit }: Props) => {
+const NewStudyForm = ({
+  form,
+  children,
+  glossary,
+  setGlossary,
+  t,
+  duplicateStudyId,
+  beforeSubmit,
+  customRouteAfterCreation = '',
+  showStudyDates = true,
+}: Props) => {
   const router = useRouter()
   const tLabel = useTranslations('common.label')
   const tError = useTranslations('study.new.error')
@@ -54,7 +66,7 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudy
 
     await callServerFunction(() => serverFunction(), {
       onSuccess: (data) => {
-        router.push(`/etudes/${data.id}`)
+        router.push(`/etudes/${data.id}${customRouteAfterCreation}`)
         router.refresh()
       },
       getErrorMessage: (error) => tError(error),
@@ -87,20 +99,22 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudy
           label={t('name')}
           placeholder={studyNamePlaceHolder}
         />
-        <div>
-          <IconLabel icon={Help('studyDates')} iconPosition="after" className="mb-2">
-            <span className="inputLabel bold">{t('studyDates')}</span>
-          </IconLabel>
-          <div className={styles.dates}>
-            <FormDatePicker control={form.control} name="startDate" label={tLabel('start')} />
-            <FormDatePicker
-              control={form.control}
-              name="endDate"
-              label={tLabel('end')}
-              data-testid="new-study-endDate"
-            />
+        {showStudyDates && (
+          <div>
+            <IconLabel icon={Help('studyDates')} iconPosition="after" className="mb-2">
+              <span className="inputLabel bold">{t('studyDates')}</span>
+            </IconLabel>
+            <div className={styles.dates}>
+              <FormDatePicker control={form.control} name="startDate" label={tLabel('start')} />
+              <FormDatePicker
+                control={form.control}
+                name="endDate"
+                label={tLabel('end')}
+                data-testid="new-study-endDate"
+              />
+            </div>
           </div>
-        </div>
+        )}
         {children}
         {duplicateStudyId && (
           <StudyDuplicationForm

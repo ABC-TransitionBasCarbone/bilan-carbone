@@ -8,6 +8,7 @@
 }
 
 .checklistContainer {
+  background-color: var(--background-100) !important;
   max-height: 60vh !important;
   height: fit-content !important;
   min-width: 30rem;
@@ -22,10 +23,6 @@
   hr {
     color: var(--neutral-300) !important;
   }
-}
-
-.drawer {
-  background-color: var(--background-100) !important;
 }
 
 .centered {

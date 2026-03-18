@@ -1,13 +1,16 @@
 import { FullStudy } from '@/db/study'
 import EnvironmentLoader from '@/environments/core/utils/EnvironmentLoader'
 import { usePublicodesSituation } from '@/lib/publicodes/context'
+import { mappedTiltSituationToCustomDataFields } from '@/services/customDataToSituation'
+import { isTilt } from '@/services/permissions/environment'
 import { getQuestionProgressBySubPost, StatsResult } from '@/services/publicodes/questionProgress'
 import { BaseResultsByPost } from '@/services/results/consolidated'
 import { computeBaseResultsByPostFromEngine } from '@/services/results/publicodes'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { getEmissionValueString } from '@/utils/study'
-import { styled } from '@mui/material'
+import { styled, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { SimplifiedPostInfography } from './SimplifiedPostInfography'
 
 interface Props {
@@ -26,7 +29,10 @@ const StyledGrid = styled('div')({
 const AllPostsInfography = ({ study }: Props) => {
   const tUnits = useTranslations('study.results.units')
   const tPost = useTranslations('emissionFactors.post')
+  const t = useTranslations('emissionFactors')
   const { engine, situation, listLayoutSituations, config, isLoading } = usePublicodesSituation()
+  const { environment } = useAppEnvironmentStore()
+  const [forbidDataEntry, setForbidDataEntry] = useState(false)
 
   const { questionProgress, publicodesResults } = useMemo<{
     questionProgress: StatsResult
@@ -91,8 +97,25 @@ const AllPostsInfography = ({ study }: Props) => {
     })
   }, [questionProgress, tUnits, study.resultsUnit, study.id, publicodesResults, config])
 
+  useEffect(() => {
+    if (environment && isTilt(environment)) {
+      const mappedKeys = Object.keys(mappedTiltSituationToCustomDataFields)
+      const situationKeys = Object.keys(engine.getSituation())
+      const allMappedKeysUsed = mappedKeys.every((key) => situationKeys.includes(key))
+      if (allMappedKeysUsed) {
+        setForbidDataEntry(false)
+      } else {
+        setForbidDataEntry(true)
+      }
+    }
+  }, [situation, environment])
+
   if (!config || isLoading) {
     return <EnvironmentLoader />
+  }
+
+  if (forbidDataEntry) {
+    return <Typography>{t('forbidden')}</Typography>
   }
 
   return <StyledGrid>{renderedInfographies}</StyledGrid>

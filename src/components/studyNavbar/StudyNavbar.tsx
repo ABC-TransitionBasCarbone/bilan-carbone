@@ -1,7 +1,5 @@
 'use client'
 
-import StudyName from '@/components/study/card/StudyName'
-import { getStudyNavbarMenu } from '@/constants/navbar'
 import MenuIcon from '@mui/icons-material/Menu'
 import MenuOpenIcon from '@mui/icons-material/MenuOpen'
 import { Drawer, Fab } from '@mui/material'
@@ -9,9 +7,8 @@ import { Environment, StudyRole } from '@prisma/client'
 import classNames from 'classnames'
 import { UUID } from 'crypto'
 import { useTranslations } from 'next-intl'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
 import { useState } from 'react'
+import StudyDrawer from './StudyDrawer'
 import styles from './StudyNavbar.module.css'
 
 interface Props {
@@ -33,20 +30,9 @@ const StudyNavbar = ({
   hasObjectives,
   userRole,
 }: Props) => {
-  const pathName = usePathname()
-
   const t = useTranslations('study.navigation')
-  const [open, setOpen] = useState<boolean>(true)
+  const [open, setOpen] = useState(true)
 
-  const { title, sections } = getStudyNavbarMenu(
-    environment,
-    t,
-    studyId,
-    studyName,
-    isTransitionPlanActive,
-    hasObjectives,
-    studySimplified,
-  )
   return (
     <>
       <div className={styles.toggleButtonContainer}>
@@ -65,49 +51,24 @@ const StudyNavbar = ({
       <Drawer
         className={open ? styles.opened : ''}
         open={open}
+        slots={{ paper: 'div' }}
         slotProps={{
           paper: {
-            className: classNames('flex-col ml1 hauto', styles.drawerContainer),
+            className: classNames('ml1 hauto', styles.drawerContainer),
           },
         }}
         variant="persistent"
         transitionDuration={0}
       >
-        <div className={styles.drawerContent}>
-          <div className={classNames(styles.titleContainer, { [styles.hasRole]: userRole })}>
-            <StudyName studyId={studyId} name={title.label} role={userRole} />
-          </div>
-
-          <div className={styles.menuContainer}>
-            <div className={classNames('flex-col', sections.length === 1 && !sections[0].header ? '' : 'gapped15')}>
-              {sections.map((section, sectionIndex) => (
-                <div key={sectionIndex} className="flex-col">
-                  {section.header && <div className={styles.sectionHeader}>{section.header}</div>}
-                  {section.links.map((link, linkIndex) =>
-                    link.disabled ? (
-                      <button key={linkIndex} className={classNames(styles.link, styles.disabled)}>
-                        {link.label}
-                      </button>
-                    ) : (
-                      <Link
-                        prefetch={false}
-                        key={linkIndex}
-                        target={link.external ? '_blank' : undefined}
-                        className={classNames(styles.link, {
-                          [styles.active]: pathName === link.href || pathName.startsWith(`${link.href}/`),
-                        })}
-                        href={link.href || '#'}
-                        {...(link.testId && { 'data-testid': link.testId })}
-                      >
-                        {link.label}
-                      </Link>
-                    ),
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        <StudyDrawer
+          studyId={studyId}
+          studyName={studyName}
+          studySimplified={studySimplified}
+          userRole={userRole}
+          environment={environment}
+          isTransitionPlanActive={isTransitionPlanActive}
+          hasObjectives={hasObjectives}
+        />
       </Drawer>
     </>
   )

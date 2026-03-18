@@ -1,6 +1,7 @@
 fret . fabrication:
   titre: Fabrication des véhicules
   question: Combien de véhicules sont possédés ou loués depuis moins de 5 ans parmi les catégories suivantes ?
+  par défaut: 0
   formule:
     somme:
       - VUL
@@ -10,14 +11,17 @@ fret . fabrication . VUL:
   titre: Véhicules utilitaires légers
   formule: nombre * FE * 3.5 / amortissement
   unité: kgCO2e
+  par défaut: 0
   avec:
     nombre:
       question: Combien de véhicules utilitaires légers possédez-vous ou louez-vous depuis moins de 5 ans ?
       unité: unité
+      par défaut: 0
 
     FE:
       valeur: 5500
       unité: kgCO2e/tonnes
+      par défaut: 0
       meta:
         id: 20905
         nom: Véhicules, fabrication
@@ -25,19 +29,23 @@ fret . fabrication . VUL:
     amortissement:
       valeur: 5
       unité: an
+      par défaut: 0
 
 fret . fabrication . PL:
   titre: Poids lourds
   formule: nombre * FE * 5.1 / amortissement
   unité: kgCO2e
+  par défaut: 0
   avec:
     nombre:
       question: Combien de véhicules poids lourds possédez-vous ou louez-vous depuis moins de 5 ans ?
       unité: unité
+      par défaut: 0
 
     FE:
       valeur: 5500
       unité: kgCO2e/tonnes
+      par défaut: 0
       meta:
         id: 20905
         nom: Véhicules, fabrication
@@ -45,3 +53,4 @@ fret . fabrication . PL:
     amortissement:
       valeur: 5
       unité: an
+      par défaut: 0

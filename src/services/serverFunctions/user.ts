@@ -91,6 +91,7 @@ import {
   UNKNOWN_SCHOOL,
   UNKNOWN_SIRET_OR_CNC,
 } from '../permissions/check'
+import { isTilt } from '../permissions/environment'
 import { canAddMember, canChangeRole, canDeleteMember, canEditSelfRole } from '../permissions/user'
 import { establishmentTypeMap, School } from '../schoolApi'
 import { getDeactivableFeatureRestrictions } from './deactivableFeatures'
@@ -672,8 +673,9 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
       throw new Error(NOT_AUTHORIZED)
     }
 
+    const newOrganizationRole = isTilt(environment) ? Role.GESTIONNAIRE : Role.ADMIN
     await updateAccount(account.id, {
-      role: organization?.id ? Role.DEFAULT : Role.ADMIN,
+      role: organization?.id ? Role.DEFAULT : newOrganizationRole,
       organizationVersion: { connect: { id: organizationVersion.id } },
     })
 

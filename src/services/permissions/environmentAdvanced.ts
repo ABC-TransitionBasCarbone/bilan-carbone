@@ -6,6 +6,9 @@ const { BC, CUT, TILT, CLICKSON } = Environment
 export const isTiltSimplified = (environment: Environment, simplified?: boolean | null) =>
   isTilt(environment) && simplified
 
+export const isAdvancedAndNotTiltSimplified = (environment: Environment, simplified?: boolean | null) =>
+  ([BC, TILT] as Environment[]).includes(environment) && !isTiltSimplified(environment, simplified)
+
 export const hasAccessToEmissionFactors = (environment: Environment, userLevel: Level | null) =>
   ([BC] as Environment[]).includes(environment) || (environment === TILT && !!userLevel)
 
@@ -23,5 +26,8 @@ export const hasAccessToCarbonResponsibilityIntensitiesAdvanced = (
   simplified?: boolean | null,
 ) => !isTiltSimplified(environment, simplified) && hasAccessToCarbonResponsibilityIntensities(environment)
 
-export const hasAccessToEngagementActions = (environment: Environment, simplified?: boolean | null) =>
-  ([BC, TILT] as Environment[]).includes(environment) && !isTiltSimplified(environment, simplified)
+export const hasAccessToEngagementActions = isAdvancedAndNotTiltSimplified
+
+export const hasAccessToPerimeterPage = isAdvancedAndNotTiltSimplified
+
+export const hasAccessToDuplicateStudy = isAdvancedAndNotTiltSimplified

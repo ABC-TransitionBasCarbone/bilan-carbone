@@ -4,3 +4,5 @@ fret:
     somme:
       - fabrication
       - transport
+  unité: kgCO2e
+  par défaut: 0

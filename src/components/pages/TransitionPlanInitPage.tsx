@@ -5,23 +5,25 @@ import Box from '@/components/base/Box'
 import Button from '@/components/base/Button'
 import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
 import Image from '@/components/document/Image'
-import SelectStudySite from '@/components/study/site/SelectStudySite'
 import LinkedStudies from '@/components/study/transitionPlan/LinkedStudies'
 import OnboardingSectionStep from '@/components/study/transitionPlan/OnboardingSectionStep'
 import SectorAllocationBlock from '@/components/study/transitionPlan/SectorAllocationBlock'
 import TrajectoryGraph from '@/components/study/transitionPlan/TrajectoryGraph'
+import TransitionPlanFilters from '@/components/study/transitionPlan/TransitionPlanFilters'
 import { TRAJECTORY_15_ID, TRAJECTORY_SNBC_GENERAL_ID } from '@/constants/trajectories'
 import { FullStudy } from '@/db/study'
 import { TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
 import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { useTransitionPlan } from '@/hooks/useTransitionPlan'
+import { useTransitionPlanFilters } from '@/hooks/useTransitionPlanFilters'
 import { customRich } from '@/i18n/customRich'
 import { SectorPercentages } from '@/services/serverFunctions/trajectory.command'
 import { createTrajectoryWithObjectives, updateTrajectory } from '@/services/serverFunctions/trajectory.serverFunction'
-import { initializeTransitionPlan } from '@/services/serverFunctions/transitionPlan'
-import { getStudyTotalCo2Emissions } from '@/services/study'
+import { deleteTransitionPlan, initializeTransitionPlan } from '@/services/serverFunctions/transitionPlan'
 import { calculateSectoralSNBCReductionRates } from '@/utils/snbc'
-import { convertToPastStudies, getDefaultSnbcSectoralTrajectory } from '@/utils/trajectory'
+import { getDefaultSnbcSectoralTrajectory } from '@/utils/trajectory'
+import DeleteIcon from '@mui/icons-material/Delete'
 import type { ExternalStudy, SectenInfo, TransitionPlan } from '@prisma/client'
 import { TrajectoryType } from '@prisma/client'
 import classNames from 'classnames'
@@ -36,6 +38,7 @@ import styles from './TransitionPlanInitPage.module.css'
 const TransitionPlanSelectionModal = dynamic(
   () => import('@/components/study/transitionPlan/TransitionPlanSelectionModal'),
 )
+const ConfirmDeleteModal = dynamic(() => import('@/components/modals/ConfirmDeleteModal'))
 
 const TOTAL_STEPS = 4
 
@@ -67,11 +70,21 @@ const TransitionPlanInitPage = ({
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
   const [showModal, setShowModal] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [currentStep, setCurrentStep] = useState<number | 'complete'>(-1)
   const [selectedSnbcTrajectories, setSelectedSnbcTrajectories] = useState<string[]>([TRAJECTORY_SNBC_GENERAL_ID])
   const [selectedSbtiTrajectories, setSelectedSbtiTrajectories] = useState<string[]>([TRAJECTORY_15_ID])
   const [snbcMounted, setSnbcMounted] = useState(false)
+  const {
+    selectedSiteIds,
+    selectedSubPosts,
+    selectedTagIds,
+    filtersMounted,
+    setSelectedSiteIds,
+    setSelectedSubPosts,
+    setSelectedTagIds,
+  } = useTransitionPlanFilters(study.id)
 
   const storageKey = `transition-init-step-${study.id}`
   const isComplete = currentStep === 'complete'
@@ -152,14 +165,24 @@ const TransitionPlanInitPage = ({
 
   const defaultSnbcSectoralTrajectory = useMemo(() => getDefaultSnbcSectoralTrajectory(trajectories), [trajectories])
 
-  const pastStudies = useMemo(
-    () => convertToPastStudies(linkedStudies, linkedExternalStudies, validatedOnly, study.resultsUnit),
-    [linkedStudies, linkedExternalStudies, validatedOnly, study.resultsUnit],
-  )
+  const { pastStudies, studyTotalEmissions, filteredStudyEmissions, filteredPastStudies } = useTransitionPlan({
+    study,
+    linkedStudies,
+    linkedExternalStudies,
+    validatedOnly,
+    selectedSiteIds,
+    selectedSubPosts,
+    selectedTagIds,
+  })
 
-  const studyTotalEmissions = useMemo(() => {
-    return getStudyTotalCo2Emissions(study, true, validatedOnly)
-  }, [study, validatedOnly])
+  const handleConfirmDelete = useCallback(async () => {
+    await callServerFunction(() => deleteTransitionPlan(study.id), {
+      onSuccess: async () => {
+        setShowDeleteModal(false)
+        router.refresh()
+      },
+    })
+  }, [callServerFunction, study.id, router])
 
   const handleSaveTrajectory = useCallback(
     async (sectorPercentages: SectorPercentages) => {
@@ -280,14 +303,27 @@ const TransitionPlanInitPage = ({
       <Block
         title={t('initialization.title')}
         as="h2"
-        rightComponent={<SelectStudySite sites={study.sites} siteSelectionDisabled isTransitionPlan />}
+        actions={
+          canEdit && transitionPlan
+            ? [
+                {
+                  actionType: 'button',
+                  variant: 'contained',
+                  color: 'error',
+                  onClick: () => setShowDeleteModal(true),
+                  title: t('trajectories.delete.title'),
+                  children: <DeleteIcon />,
+                },
+              ]
+            : undefined
+        }
       >
         <div className="flex-col gapped15">
           <TransitionPlanOnboarding
             title={t('initialization.onboarding.title')}
-            description={t('initialization.onboarding.description')}
+            description={customRich(t, 'initialization.onboarding.description')}
             storageKey="transition-plan-initialization"
-            detailedContent={t('initialization.onboarding.detailedInfo')}
+            detailedContent={customRich(t, 'initialization.onboarding.detailedInfo')}
           />
 
           {/* Step 1 – Past studies */}
@@ -320,7 +356,7 @@ const TransitionPlanInitPage = ({
           {/* Step 3 – SNBC + SBTI selection */}
           <OnboardingSectionStep
             title={t('initialization.stepSelectReferenceTrajectories.title')}
-            description={t('initialization.stepSelectReferenceTrajectories.description')}
+            description={customRich(t, 'initialization.stepSelectReferenceTrajectories.description')}
             glossaryLabel="init-step-select-reference-trajectories"
             glossaryTitleKey="glossaryTitle"
             tModal="study.transitionPlan.initialization.stepSelectReferenceTrajectories"
@@ -341,7 +377,7 @@ const TransitionPlanInitPage = ({
           {/* Step 4 – Reference graph */}
           <OnboardingSectionStep
             title={t('initialization.stepVisualization.title')}
-            description={t('initialization.stepVisualization.description')}
+            description={customRich(t, 'initialization.stepVisualization.description')}
             glossaryLabel="init-step-visualization"
             glossaryTitleKey="glossaryTitle"
             tModal="study.transitionPlan.initialization.stepVisualization"
@@ -354,9 +390,19 @@ const TransitionPlanInitPage = ({
             nextButtonLabel={t('initialization.createButton')}
             showNextButton={isStepActive(3)}
           >
+            <TransitionPlanFilters
+              study={study}
+              selectedSiteIds={selectedSiteIds}
+              selectedSubPosts={selectedSubPosts}
+              selectedTagIds={selectedTagIds}
+              onSiteFilterChange={setSelectedSiteIds}
+              onSubPostFilterChange={setSelectedSubPosts}
+              onTagFilterChange={setSelectedTagIds}
+              filtersMounted={filtersMounted}
+            />
             <TrajectoryGraph
               study={study}
-              studyEmissions={studyTotalEmissions}
+              studyEmissions={filteredStudyEmissions}
               linkedStudies={linkedStudies}
               sectenData={sectenData}
               trajectories={defaultSnbcSectoralTrajectory ? [defaultSnbcSectoralTrajectory] : []}
@@ -370,7 +416,7 @@ const TransitionPlanInitPage = ({
                   ? [defaultSnbcSectoralTrajectory.id]
                   : []
               }
-              pastStudies={pastStudies}
+              pastStudies={filteredPastStudies}
               validatedOnly={validatedOnly}
               showTitle={false}
               showActionTrajectory={false}
@@ -402,6 +448,18 @@ const TransitionPlanInitPage = ({
           )}
         </div>
       </Block>
+      {showDeleteModal && transitionPlan && (
+        <ConfirmDeleteModal
+          open={showDeleteModal}
+          title={t('trajectories.delete.title')}
+          message={customRich(t, 'trajectories.delete.description')}
+          confirmText={t('trajectories.delete.confirm')}
+          cancelText={t('trajectories.delete.cancel')}
+          requireNameMatch={study.name}
+          onConfirm={handleConfirmDelete}
+          onCancel={() => setShowDeleteModal(false)}
+        />
+      )}
     </>
   )
 }

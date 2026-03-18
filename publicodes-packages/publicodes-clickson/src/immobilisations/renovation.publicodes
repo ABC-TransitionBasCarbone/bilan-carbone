@@ -12,16 +12,15 @@ immobilisations . rénovation:
         variations:
           - si: age > amortissement
             alors: 0
-          - sinon: surface * FE / amortissement
+          - sinon: 45
       unité: kgCO2e
       par défaut: 0
       avec:
         age:
           durée:
-            unité: an
-            par défaut: 0
             depuis: général . année de rénovation
             jusqu'à: commun . année actuelle
+          unité: an
           arrondi: oui
         amortissement:
           valeur: 20

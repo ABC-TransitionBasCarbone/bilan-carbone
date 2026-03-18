@@ -14,10 +14,10 @@ import { hasSufficientLevel } from '../study'
 import {
   canCreateStudyOnlyAsAdministrator,
   canCreateStudyWithoutSpecificRights,
-  hasAccessToDuplicateStudy,
   isTilt,
   isTiltSimplifiedFeatureActive,
 } from './environment'
+import { hasAccessToDuplicateStudy } from './environmentAdvanced'
 import { isInOrgaOrParentFromId } from './organization'
 
 export const isAdminOnStudyOrga = (
@@ -308,13 +308,13 @@ export const canDuplicateStudy = async (studyId: string) => {
     return false
   }
 
-  if (!hasAccessToDuplicateStudy(session.user.environment)) {
-    return false
-  }
-
   const study = await getStudyById(studyId, session.user.organizationVersionId)
 
   if (!study) {
+    return false
+  }
+
+  if (!hasAccessToDuplicateStudy(session.user.environment, study.simplified)) {
     return false
   }
 

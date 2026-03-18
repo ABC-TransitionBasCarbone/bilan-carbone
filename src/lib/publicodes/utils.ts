@@ -1,6 +1,6 @@
 import { convertInputValueToPublicodes } from '@publicodes/forms'
 import Engine, { Situation } from 'publicodes'
-import { ListLayoutSituations } from './context'
+import { ListLayoutSituations } from './context/types'
 
 export function isInNamespace<RuleName extends string>(ruleName: RuleName, namespace: RuleName): boolean {
   return ruleName.startsWith(namespace)

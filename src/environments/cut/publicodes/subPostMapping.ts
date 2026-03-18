@@ -25,7 +25,7 @@ export const getFormLayoutsForSubPostCUT = (subPost: SubPost): FormLayout<CutRul
   return SUBPOST_TO_FORM_LAYOUTS[subPost] || []
 }
 
-const POST_TO_RULENAME: Record<CutPost, CutRuleName> = {
+export const POST_TO_RULENAME: Record<CutPost, CutRuleName> = {
   [CutPost.Fonctionnement]: 'fonctionnement',
   [CutPost.MobiliteSpectateurs]: 'mobilité spectateurs',
   [CutPost.TourneesAvantPremieres]: 'tournées avant premières',

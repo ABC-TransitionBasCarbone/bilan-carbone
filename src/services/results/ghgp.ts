@@ -3,7 +3,7 @@ import { wasteEmissionFactors } from '@/constants/wasteEmissionFactors'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { hasDeprecationPeriod } from '@/utils/study'
-import { EmissionFactorBase, ExportRule, Import } from '@prisma/client'
+import { EmissionFactorBase, Environment, ExportRule, Import } from '@prisma/client'
 import { computeResult, EmissionSource, ExportEmissionFactor, getEmissionTotal, PostInfos } from './exports'
 
 const allRules = [
@@ -115,6 +115,7 @@ export const computeGHGPResult = (
   withDependencies: boolean,
   validatedOnly: boolean = true,
   base?: EmissionFactorBase,
+  environment: Environment = Environment.BC,
 ): PostInfos[] =>
   computeResult(
     study,
@@ -128,4 +129,5 @@ export const computeGHGPResult = (
     getLine,
     base,
     true,
+    environment,
   )

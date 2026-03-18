@@ -2,6 +2,7 @@
 
 import Button from '@/components/base/Button'
 import { Select } from '@/components/base/Select'
+import { ALL_POSTS_VALUE } from '@/constants/post.constants'
 import { environmentPostMapping, Post, subPostsByPost } from '@/services/posts'
 import { SubPostsCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
@@ -12,7 +13,6 @@ import { Environment, SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import { Control, Controller, FieldPath, Path, UseFormReturn, UseFormSetValue } from 'react-hook-form'
-import { ALL_POSTS_VALUE } from './MultiplePosts'
 import styles from './Posts.module.css'
 import SubPostSelector from './SubPostSelector'
 

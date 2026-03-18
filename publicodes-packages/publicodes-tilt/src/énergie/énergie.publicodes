@@ -30,6 +30,7 @@
       - énergie . réseaux de chaleur
       - énergie . réseaux de froid
       - énergie . électricité . autoproduction
+  par défaut: 0
 
 #énergie . électricité . présent:
 #  question: Utilisez-vous de l'électricité pour le chauffage, l'éclairage ou les autres consommations énergétiques de vos locaux ?

@@ -10,7 +10,7 @@ export const isSimplified = (environment: Environment) => simplifiedEnvironments
 
 const isBC = (environment: Environment) => environment === BC
 export const isTilt = (environment: Environment) => environment === TILT
-const isCut = (environment: Environment) => environment === CUT
+export const isCut = (environment: Environment) => environment === CUT
 export const isClickson = (environment: Environment) => environment === CLICKSON
 
 export const hasAccessToActualityCards = isBC
@@ -20,8 +20,6 @@ export const hasAccessToDownloadStudyEmissionSourcesButton = isAdvanced
 export const hasAccessToStudyCardDetails = isAdvanced
 
 export const hasAccessToCreateOrganization = isAdvanced
-
-export const hasAccessToDuplicateStudy = isAdvanced
 
 export const hasAccessToCreateStudyTag = isAdvanced
 
@@ -36,8 +34,6 @@ export const hasAccessToDependencyMatrix = isTilt
 // environnement is not used but kept for consistency
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const hasAccessToDependencyMatrixExample = (environment: Environment) => false
-
-export const hasAccessToPerimeterPage = isAdvanced
 
 export const needsLicenceToUseApp = isBC
 
@@ -114,3 +110,6 @@ export const hasAccessToHomeSubtitle = isClickson
 export const hasAccessToNamingInAddContributor = isClickson
 
 export const hasHomeButtonHeader = isClickson
+
+export const hasAccessToPDFExport = (environment: Environment) =>
+  ([CUT, CLICKSON] as Environment[]).includes(environment)

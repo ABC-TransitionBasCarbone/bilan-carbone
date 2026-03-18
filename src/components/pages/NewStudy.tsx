@@ -8,7 +8,7 @@ import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import NewStudyFormCut from '@/environments/cut/study/new/Form'
 import NewStudyFormTilt from '@/environments/tilt/study/new/Form'
 import { useDuplicateStudy } from '@/hooks/useDuplicateStudy'
-import { hasAccessToDuplicateStudy } from '@/services/permissions/environment'
+import { hasAccessToDuplicateStudy } from '@/services/permissions/environmentAdvanced'
 import { CreateStudyCommand, CreateStudyCommandValidation } from '@/services/serverFunctions/study.command'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -49,14 +49,14 @@ const NewStudyPage = ({
   const tSpinner = useTranslations('spinner')
 
   useEffect(() => {
-    if (!hasAccessToDuplicateStudy(user.environment)) {
+    if (!hasAccessToDuplicateStudy(user.environment, simplified)) {
       const url = new URL(window.location.href)
       if (url.searchParams.has('duplicate')) {
         url.searchParams.delete('duplicate')
         router.replace(url.pathname + (url.search ? `?${url.searchParams}` : ''))
       }
     }
-  }, [user.environment, router])
+  }, [user.environment, router, simplified])
 
   useEffect(() => {
     const url = new URL(window.location.href)

@@ -138,7 +138,7 @@ export const TagFilter = ({
             {tCommon('tags')}
           </FormLabel>
         ) : (
-          <InputLabel id="tag-filter-label" shrink={!studyHasTags || undefined}>
+          <InputLabel id="tag-filter-label" shrink>
             {tCommon('tags')}
           </InputLabel>
         )}
@@ -158,7 +158,8 @@ export const TagFilter = ({
           <Select
             labelId="tag-filter-label"
             label={!showSeparateLabel ? tCommon('tags') : undefined}
-            value="tags-filter-placeholder"
+            value={''}
+            displayEmpty
             open={false}
             onMouseDown={(event) => {
               event.preventDefault()

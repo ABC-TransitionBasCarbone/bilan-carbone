@@ -18,9 +18,7 @@ déplacements . DM-salariés . avec:
   formule:
     produit:
       - émissions MEP ##émissions unitaires par salarié
-      - général . salariés ## pour compter les émissions totales
-      - général . salariés ## partie 1 du produit en croix pour extrapoler les émissions totales à partir des émissions de MEP
-      - 1 / déplacements . DT-salariés . MEP présent . nombre salariés ## partie 2 du produit en croix pour extrapoler les émissions totales à partir des émissions de MEP
+      - général . salariés ##On extrapole les résultats par salarié issus de MEP à tous les salariés
   avec:
     émissions MEP:
       valeur:
@@ -35,22 +33,27 @@ déplacements . DM-salariés . avec:
           question: D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en voiture liés à des missions ?
           type: nombre
           unité: kgCO2e
+          par défaut: 0
         train:
           question: D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en train liés à des missions ?
           type: nombre
           unité: kgCO2e
+          par défaut: 0
         avion:
           question: D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en avion liés à des missions ?
           type: nombre
           unité: kgCO2e
+          par défaut: 0
         transports en commun:
           question: D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en transports en commun liés à des missions ?
           type: nombre
           unité: kgCO2e
+          par défaut: 0
         deux roues:
           question: D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en deux roues liés à des missions ?
           type: nombre
           unité: kgCO2e
+          par défaut: 0
   unité: kgCO2e
   par défaut: 0
 
@@ -67,17 +70,25 @@ déplacements . DM-salariés . sans:
       - avion
   unité: kgCO2e
 
+déplacements . DM-salariés . sans . nombre de mois:
+  valeur: 12
+  unité: mois
+
 déplacements . DM-salariés . sans . voiture:
+  titre: Voiture, par mois
+  form:
+    à traduire: oui
   applicable si:
     toutes ces conditions:
       - est défini: déplacements . DT-salariés . MEP présent
       - déplacements . DT-salariés . MEP présent = non
-  formule: distance * split * 12 * général . salariés / occupation
+  formule: distance * split * nombre de mois * général . salariés
   avec:
     distance:
       question: Combien de km sont parcourus en moyenne par mois par salarié en voiture pour des déplacements liés à des missions ?
       type: nombre
-      unité: km
+      unité: km/salariés.mois
+      par défaut: 0
   description: On considère ici toutes les motorisations de voiture individuelles, basée sur des moyennes nationales
   unité: kgCO2e
 
@@ -91,14 +102,12 @@ déplacements . DM-salariés . sans . voiture . split:
       meta:
         id: 28008
         nom: Voiture particulière/Coeur de gamme - Véhicule compact/Hybride, full, P2
-
     électrique:
       valeur: 0.1
       unité: kgCO2e/km
       meta:
         id: 28007
         nom: Voiture particulière/Coeur de gamme - Véhicule compact/Electrique
-
     gazole:
       valeur: 0.34
       unité: kgCO2e/km
@@ -106,7 +115,6 @@ déplacements . DM-salariés . sans . voiture . split:
         id: db39062e-4e05-44a7-9d71-9aca18929005
         nom: Transport de passagers en voiture de taille moyenne - gazole - EURO 4
         note: Données ECOINVENT
-
     essence:
       valeur: 0.37
       unité: kgCO2e/km
@@ -116,23 +124,27 @@ déplacements . DM-salariés . sans . voiture . split:
         note: Données ECOINVENT
   unité: kgCO2e/km
 
-déplacements . DM-salariés . sans . voiture . occupation:
-  formule: 1.08
-  note: source pour le taux d'occupation d'une voiture en France pour des trajets D-T https://www.citego.org/bdf_fiche-document-3431_fr.html
-  unité: unité
+#GC : J'enlève cette partie, car on utilise des FE en kgCO2e/km et non en kgCO2e/passager.km. Les FE en kgCO2e/km prennent déjà en compte le taux d'occupation normalement.
+# déplacements . DM-salariés . sans . voiture . occupation:
+#   formule: 1.08
+#   note: source pour le taux d'occupation d'une voiture en France pour des trajets D-T https://www.citego.org/bdf_fiche-document-3431_fr.html
+#   unité: unité
 
 déplacements . DM-salariés . sans . train:
+  titre: Train (TER), par mois
+  form:
+    à traduire: oui
   applicable si:
     toutes ces conditions:
       - est défini: déplacements . DT-salariés . MEP présent
       - déplacements . DT-salariés . MEP présent = non
-  formule: distance * FE * 12 * général . salariés
+  formule: distance * FE * nombre de mois * général . salariés
   avec:
     distance:
       question: Combien de km sont parcourus en moyenne par mois par salarié en train pour des déplacements liés à des missions ?
       type: nombre
-      unité: km
-
+      unité: km/salarié.mois
+      par défaut: 0
     FE:
       valeur: 0.0277
       unité: kgCO2e/km
@@ -142,17 +154,44 @@ déplacements . DM-salariés . sans . train:
         note: On considère que la majorité des déplacements en train pour du DM est en TER
   unité: kgCO2e
 
-déplacements . DM-salariés . sans . transports en commun:
+déplacements . DM-salariés . sans . deux roues:
+  titre: Deux roues, par mois
+  form:
+    à traduire: oui
   applicable si:
     toutes ces conditions:
       - est défini: déplacements . DT-salariés . MEP présent
       - déplacements . DT-salariés . MEP présent = non
-  formule: distance * split * 12 * général . salariés
+  formule: distance * FE * nombre de mois * général . salariés
+  avec:
+    distance:
+      question: Combien de km sont parcourus en moyenne par mois par salarié en deux roues pour des déplacements liés à des missions ?
+      type: nombre
+      unité: km/salarié.mois
+      par défaut: 0
+    FE:
+      valeur: 0.0851
+      unité: kgCO2e/km
+      meta:
+        id: 43775
+        nom: Cyclomoteur/Mixte/2023
+  unité: kgCO2e
+
+déplacements . DM-salariés . sans . transports en commun:
+  titre: Transports en commun (Métro, tramway, RER, bus, ...), par mois
+  form:
+    à traduire: oui
+  applicable si:
+    toutes ces conditions:
+      - est défini: déplacements . DT-salariés . MEP présent
+      - déplacements . DT-salariés . MEP présent = non
+  formule: distance * split * nombre de mois * général . salariés
   avec:
     distance:
       question: Combien de km sont parcourus en moyenne par mois par salarié en transports en commun pour des déplacements liés à des missions ?
       type: nombre
-      unité: km
+      unité: km/salarié.mois
+      par défaut: 0
   unité: kgCO2e
 
 déplacements . DM-salariés . sans . transports en commun . split:
@@ -165,31 +204,10 @@ déplacements . DM-salariés . sans . transports en commun . split:
       meta:
         id: 28000
         nom: Autobus moyen/Agglomération de plus de 250 000 habitants
-
     rail:
       valeur: 0.00356
       unité: kgCO2e/km
       note: source doc NGC https://nosgestesclimat.fr/documentation/transport/transports-commun/m%C3%A9tro-ou-tram
-
-déplacements . DM-salariés . sans . deux roues:
-  applicable si:
-    toutes ces conditions:
-      - est défini: déplacements . DT-salariés . MEP présent
-      - déplacements . DT-salariés . MEP présent = non
-  formule: distance * FE * 12 * général . salariés
-  avec:
-    distance:
-      question: Combien de km sont parcourus en moyenne par mois par salarié en deux roues pour des déplacements liés à des missions ?
-      type: nombre
-      unité: km
-
-    FE:
-      valeur: 0.0851
-      unité: kgCO2e/km
-      meta:
-        id: 43775
-        nom: Cyclomoteur/Mixte/2023
-  unité: kgCO2e
 
 déplacements . DM-salariés . sans . avion:
   formule:
@@ -199,61 +217,70 @@ déplacements . DM-salariés . sans . avion:
       - long courrier
 
 déplacements . DM-salariés . sans . avion . court courrier:
+  titre: Avion, court courrier, par an
+  form:
+    à traduire: oui
   applicable si:
     toutes ces conditions:
       - est défini: déplacements . DT-salariés . MEP présent
       - déplacements . DT-salariés . MEP présent = non
-  formule: distance * FE
+  formule: distance * FE * général . salariés
   avec:
     distance:
-      question: Combien de km ont été parcourus cette année par salarié avion court courrier pour des déplacements liés à des missions ?
+      question: Combien de km ont été parcourus cette année par salarié en avion court courrier pour des déplacements liés à des missions ?
       type: nombre
-      unité: km
-
+      unité: km/salarié.an
+      par défaut: 0
     FE:
       valeur: 0.33
       unité: kgCO2e/km
       meta:
         id: 43767
         nom: Avion passagers/>220 sièges, 500-1000 kms, 2023/AVEC trainée
-  unité: kgCO2e
+  unité: kgCO2e/an
 
 déplacements . DM-salariés . sans . avion . moyen courrier:
+  titre: Avion, moyen courrier, par an
+  form:
+    à traduire: oui
   applicable si:
     toutes ces conditions:
       - est défini: déplacements . DT-salariés . MEP présent
       - déplacements . DT-salariés . MEP présent = non
-  formule: distance * FE
+  formule: distance * FE * général . salariés
   avec:
     distance:
-      question: Combien de km ont été parcourus cette année par salarié avion moyen courrier pour des déplacements liés à des missions ?
+      question: Combien de km ont été parcourus cette année par salarié en avion moyen courrier pour des déplacements liés à des missions ?
       type: nombre
-      unité: km
-
+      unité: km/salarié.an
+      par défaut: 0
     FE:
       valeur: 0.24
       unité: kgCO2e/km
       meta:
         id: 43769
         nom: Avion passagers/>220 sièges, 1000-2000 kms, 2023/AVEC trainées
-  unité: kgCO2e
+  unité: kgCO2e/an
 
 déplacements . DM-salariés . sans . avion . long courrier:
+  titre: Avion, long courrier, par an
+  form:
+    à traduire: oui
   applicable si:
     toutes ces conditions:
       - est défini: déplacements . DT-salariés . MEP présent
       - déplacements . DT-salariés . MEP présent = non
-  formule: distance * FE * 12
+  formule: distance * FE * général . salariés
   avec:
     distance:
-      question: Combien de km ont été parcourus cette année par salarié avion long courrier pour des déplacements liés à des missions ?
+      question: Combien de km ont été parcourus cette année par salarié en avion long courrier pour des déplacements liés à des missions ?
       type: nombre
-      unité: km
-
+      unité: km/salarié.an
+      par défaut: 0
     FE:
       valeur: 0.15
       unité: kgCO2e/km
       meta:
         id: 43773
         nom: Avion passagers/>220 sièges, >5000 kms, 2023/AVEC trainées
-  unité: kgCO2e
+  unité: kgCO2e/an

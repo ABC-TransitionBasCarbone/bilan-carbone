@@ -2,10 +2,12 @@
   titre: Électricité
   formule: consommation * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     consommation:
       question: Quelle est votre consommation annuelle d'électricité ? (issue de votre facture et n'incluant pas votre autoconsommation, ni la consommation des véhicules électriques)
       unité: kWh
+      par défaut: 0
     FE:
       valeur: 0.0519
       unité: kgCO2e/kWh
@@ -16,6 +18,7 @@
   titre: Autoproduction d'électricité
   formule: autoproduction * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     autoproduction:
       question: Quelle est votre autoproduction annuelle d'électricité ?

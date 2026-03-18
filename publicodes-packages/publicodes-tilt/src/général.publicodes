@@ -14,15 +14,16 @@ général . année:
 
 général . salariés:
   question: Combien de salariés compte l'association en [Année] ?
-  unité: personne
+  unité: salariés
 
 général . bénévoles:
   question: Combien de bénévoles compte l'association en [Année] ?
-  unité: personne
+  par défaut: 0
+  unité: bénévoles
 
 général . bénéficiaires:
   question: Combien de bénéficiaires ont profité des services de l'association en  [Année] ?
-  unité: personne
+  unité: bénéficiaires
 
 général . budget:
   question: Quel est le budget de fonctionnement de l'association ?
@@ -54,11 +55,3 @@ général . type:
     Autres structures sociales et solidaires:
     Association de défense de l'environnement:
     Association d'enseignement ou de formation:
-
-général . TT bénévoles:
-  question: Combien de jours sont télétravaillées par semaine pour vos bénévoles ?
-  unité: jours
-
-général . TT salariés:
-  question: Combien de jours sont télétravaillées par semaine pour vos salariés ?
-  unité: jours

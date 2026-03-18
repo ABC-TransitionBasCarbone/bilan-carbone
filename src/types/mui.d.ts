@@ -14,7 +14,7 @@ declare module '@mui/material/styles' {
       }
       box: CSSObject
       postColors: {
-        [key in Post]: { light: string; dark?: string }
+        [key in Post]: { light: string; dark?: string; customTitleColor?: string }
       }
       subPostColors: {
         [key in SubPost]: string

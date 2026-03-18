@@ -4,11 +4,12 @@ déplacements:
     somme:
       - DM-bénévoles
       - DM-salariés
-      # - DT-bénéficiaires
+      - bénéficiaires
       - DT-bénévoles
       - DT-salariés
       - fabrication
   unité: kgCO2e
+  par défaut: 0
 
 déplacements . DT-salariés . MEP présent:
   question: Avez-vous réalisé une campagne de sensibilisation via MEP ?

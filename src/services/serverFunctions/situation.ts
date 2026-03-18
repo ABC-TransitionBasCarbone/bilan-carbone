@@ -10,6 +10,21 @@ import { dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { hasEditAccessOnStudy, hasReadAccessOnStudy } from '../permissions/study'
 
+export const loadMappedSituation = async (studyId: string, studySiteId: string, mapping: Record<string, string>) =>
+  withServerResponse('loadMappedSituation', async () => {
+    const situationRes = await loadSituation(studyId, studySiteId)
+    const mappedSituation: Record<string, string | number | boolean> = {}
+
+    if (situationRes.success && situationRes.data && situationRes.data.situation) {
+      for (const [situationKey, mappedKey] of Object.entries(mapping)) {
+        mappedSituation[mappedKey] = (situationRes.data.situation as Record<string, string | number | boolean>)[
+          situationKey
+        ]
+      }
+    }
+    return mappedSituation
+  })
+
 export const loadSituation = async (studyId: string, studySiteId: string) =>
   withServerResponse('getSituationFromDB', async () => {
     const hasAccess = await hasReadAccessOnStudy(studyId)

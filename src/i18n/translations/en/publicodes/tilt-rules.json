@@ -1,28 +1,43 @@
 {
   "publicodes-units": {
-    "année": "year",
-    "personne": "person",
+    "année": "[UPDATED] année",
+    "salariés": "[TO_TRANSLATE] salariés",
+    "bénévoles": "[TO_TRANSLATE] bénévoles",
+    "bénéficiaires": "[TO_TRANSLATE] bénéficiaires",
     "k€": "k€",
-    "jours": "days",
-    "quantité": "quantity",
+    "quantité": "[UPDATED] quantité",
     "kWh": "kWh",
-    "m3": "m3",
-    "litre": "liter",
-    "stères": "stere",
-    "h/semaine": "h/week",
-    "j/semaine": "d/week",
+    "m3": "[UPDATED] m3",
+    "litre": "[UPDATED] litre",
+    "stères": "[UPDATED] stères",
+    "h/semaine": "[UPDATED] h/semaine",
+    "jours/semaine": "[TO_TRANSLATE] jours/semaine",
     "kgCO2e": "kgCO2e",
+    "k€ HT": "[TO_TRANSLATE] k€ HT",
     "h": "h",
-    "mail": "email",
-    "Go": "GB",
-    "unité": "unit",
+    "mail": "[UPDATED] mail",
+    "Go": "[UPDATED] Go",
+    "climatiseur": "[TO_TRANSLATE] climatiseur",
+    "VUL": "[TO_TRANSLATE] VUL",
+    "poids lourds": "[TO_TRANSLATE] poids lourds",
+    "unité": "[UPDATED] unité",
     "kg": "kg",
     "%": "%",
-    "tonne": "ton",
+    "tonne": "[UPDATED] tonne",
     "km": "km",
-    "place": "seat",
-    "m2": "m2",
-    "repas": "meal"
+    "km/salariés/jours": "[TO_TRANSLATE] km/salariés.jours",
+    "km/bénévoles/jours": "[TO_TRANSLATE] km/bénévoles.jours",
+    "km/salariés/mois": "[TO_TRANSLATE] km/salariés.mois",
+    "km/salarié/mois": "[TO_TRANSLATE] km/salarié.mois",
+    "kgCO2e/an": "[TO_TRANSLATE] kgCO2e/an",
+    "km/salarié/an": "[TO_TRANSLATE] km/salarié.an",
+    "km/bénévole/mois": "[TO_TRANSLATE] km/bénévole.mois",
+    "km/bénévoles/mois": "[TO_TRANSLATE] km/bénévoles.mois",
+    "km/bénévoles/an": "[TO_TRANSLATE] km/bénévoles.an",
+    "km/bénéficiaires/an": "[TO_TRANSLATE] km/bénéficiaires.an",
+    "place": "[UPDATED] place",
+    "m2": "[UPDATED] m2",
+    "repas": "[UPDATED] repas"
   },
   "publicodes-rules": {
     "général": {
@@ -62,72 +77,68 @@
           "Association de défense de l'environnement": "Environmental protection association",
           "Association d'enseignement ou de formation": "Teaching or training association"
         }
-      },
-      "TT bénévoles": {
-        "question": "How many days per week do your volunteers work remotely?"
-      },
-      "TT salariés": {
-        "question": "How many days per week do your employees work remotely?"
       }
     },
     "équipements et immobilisations": {
-      "infos": {
-        "prise en compte reconditionné": {
-          "description": "Depending on your answer, some of your equipment will be considered as refurbished. Refurbished equipment will be considered as emitting half as much as new equipment. In other words, the first life duration of the equipment is considered to be half of its total lifespan.",
-          "question": "Is your equipment refurbished or second-hand?",
+      "pondération": {
+        "reconditionné": {
+          "description": "[TO_TRANSLATE] En fonction de votre réponse, une partie de vos équipements seront valorisés comme étant reconditionnés. Un équipement reconditionné sera considéré comme moitié moins émetteur qu'un équipement neuf. Autrement dit, la durée de première vie de l'équipement est considéré comme égale à la moitié de sa durée de vie totale.",
+          "question": "[TO_TRANSLATE] Vos équipements sont-ils reconditionné ou issu de seconde main ?",
           "options": {
-            "toujours": "Always",
-            "souvent": "Often",
-            "rarement": "Rarely",
-            "jamais": "Never"
+            "toujours": "[TO_TRANSLATE] Toujours",
+            "souvent": "[TO_TRANSLATE] Souvent",
+            "parfois": "[TO_TRANSLATE] Parfois",
+            "jamais": "[TO_TRANSLATE] Jamais"
           }
-        },
+        }
+      },
+      "total sans reconditionné": {
         "ordinateurs fixes": {
-          "titre": "Desktop computers",
+          "titre": "[TO_TRANSLATE] Ordinateurs fixes",
           "quantité": {
-            "question": "Desktop computers"
+            "question": "[TO_TRANSLATE] Ordinateurs fixes"
           }
         },
         "ordinateurs portables": {
-          "titre": "Laptops",
+          "titre": "[TO_TRANSLATE] Ordinateurs portables",
           "quantité": {
-            "question": "Laptops"
+            "question": "[TO_TRANSLATE] Ordinateurs portables"
           }
         },
         "photocopieurs": {
-          "titre": "Photocopiers",
+          "titre": "[TO_TRANSLATE] Photocopieurs",
           "quantité": {
-            "question": "Photocopiers"
+            "question": "[TO_TRANSLATE] Photocopieurs"
           }
         },
         "imprimantes": {
-          "titre": "Printers",
+          "titre": "[TO_TRANSLATE] Imprimantes",
           "quantité": {
-            "question": "Multifunction printer"
+            "question": "[TO_TRANSLATE] Imprimante multi-fonction"
           }
         },
         "téléphones fixes": {
-          "titre": "Landline phones",
+          "titre": "[TO_TRANSLATE] Téléphones fixes",
           "quantité": {
-            "question": "Landline phones"
+            "question": "[TO_TRANSLATE] Téléphones fixes"
           }
         },
         "téléphones portables": {
-          "titre": "Mobile phones",
+          "titre": "[TO_TRANSLATE] Téléphones portables",
           "quantité": {
-            "question": "Mobile phones"
+            "question": "[TO_TRANSLATE] Téléphones portables"
           }
         },
         "vidéoprojecteurs": {
-          "titre": "Video projectors",
+          "titre": "[TO_TRANSLATE] Vidéoprojecteurs",
           "quantité": {
-            "question": "Video projectors"
+            "question": "[TO_TRANSLATE] Vidéoprojecteurs"
           }
         },
         "autres écrans": {
-          "titre": "Other screens",
+          "titre": "[TO_TRANSLATE] Autres écrans",
           "quantité": {
-            "question": "Other screens (TV, secondary screen, tablet, ...)"
+            "question": "[TO_TRANSLATE] Autres écrans (TV, écran secondaire, tablette, ...)"
           }
         }
       }
@@ -294,7 +305,7 @@
           }
         },
         "juridique-comptable": {
-          "titre": "Repair and installation services",
+          "titre": "Legal, accounting and insurance services",
           "montant-dépensé": {
             "question": "Amount spent on legal, accounting and insurance services"
           }
@@ -401,6 +412,16 @@
         "présent": {
           "question": "Does your association own or rent vehicles to transport goods?"
         },
+        "VUL": {
+          "nombre": {
+            "question": "How many light commercial vehicles do you own or rent for less than 5 years?"
+          }
+        },
+        "PL": {
+          "nombre": {
+            "question": "How many heavy goods vehicles do you own or rent for less than 5 years?"
+          }
+        },
         "carburant": {
           "litre": {
             "question": "How many liters of fuel have these vehicles consumed?"
@@ -444,16 +465,16 @@
         }
       },
       "fabrication": {
-        "titre": "Vehicle manufacturing",
-        "question": "How many vehicles have been owned or rented for less than 5 years in the following categories?",
+        "titre": "[TO_TRANSLATE] Fabrication des véhicules",
+        "question": "[TO_TRANSLATE] Combien de véhicules sont possédés ou loués depuis moins de 5 ans parmi les catégories suivantes ?",
         "VUL": {
           "nombre": {
-            "question": "How many light commercial vehicles have you owned or rented for less than 5 years?"
+            "question": "[TO_TRANSLATE] Combien de véhicules utilitaires légers possédez-vous ou louez-vous depuis moins de 5 ans ?"
           }
         },
         "PL": {
           "nombre": {
-            "question": "How many heavy goods vehicles have you owned or rented for less than 5 years?"
+            "question": "[TO_TRANSLATE] Combien de véhicules poids lourds possédez-vous ou louez-vous depuis moins de 5 ans ?"
           }
         }
       }
@@ -461,6 +482,7 @@
     "fin de vie": {
       "déchets": {
         "fin de vie présente": {
+          "description": "[TO_TRANSLATE] Les biens matériels fournis à vos bénéficiaires deviendront un jour des déchets, et devront donc être stockés, incinérés, recyclés, ... C'est ce que l'on appelle la fin de vie des produits, et il faut donc prendre en compte les émissions qui y sont associées.",
           "question": "Do you provide material goods to your beneficiaries?"
         },
         "poids": {
@@ -497,22 +519,43 @@
           }
         },
         "sans": {
+          "part voiture": {
+            "titre": "Car",
+            "question": "What percentage of employees commute to work by car?"
+          },
+          "part train": {
+            "titre": "Train (TER)",
+            "question": "What percentage of employees commute to work by train (TER)?"
+          },
+          "part deux roues": {
+            "titre": "Two-wheeler",
+            "question": "What percentage of employees commute to work by two-wheeler?"
+          },
+          "part transport en commun": {
+            "titre": "Public transport (Metro, tram, RER, bus, ...)",
+            "question": "What percentage of employees commute to work by public transport (Metro, Tramway, Bus)?"
+          },
           "voiture": {
+            "titre": "Car",
+            "description": "All types of individual car engines are considered here, based on national averages.",
             "distance": {
               "question": "How many km are traveled on average per employee by car per day (round trip) for commuting?"
             }
           },
           "train": {
+            "titre": "Train (TER)",
             "distance": {
               "question": "How many km are traveled on average per employee by train per day (round trip) for commuting?"
             }
           },
-          "transports en commun": {
+          "deux roues": {
+            "titre": "Two-wheeler",
             "distance": {
               "question": "How many km are traveled on average per employee by public transport per day (round trip) for commuting?"
             }
           },
-          "deux roues": {
+          "transports en commun": {
+            "titre": "Public transport (Metro, tram, RER, bus, ...)",
             "distance": {
               "question": "How many km are traveled on average per employee by two-wheeler per day (round trip) for commuting?"
             }
@@ -529,24 +572,45 @@
           }
         },
         "sans": {
+          "part voiture": {
+            "titre": "Car",
+            "question": "What percentage of volunteers go to their usual volunteering place by car?"
+          },
+          "part train": {
+            "titre": "Train (TER)",
+            "question": "What percentage of volunteers go to their usual volunteering place by train (TER)?"
+          },
+          "part deux roues": {
+            "titre": "Two-wheeler",
+            "question": "What percentage of volunteers go to their usual volunteering place by two-wheeler?"
+          },
+          "part transport en commun": {
+            "titre": "Public transport (Metro, tram, RER, bus, ...)",
+            "question": "What percentage of volunteers go to their usual volunteering place by public transport (Metro, Tramway, Bus)?"
+          },
           "voiture": {
+            "titre": "Car",
+            "description": "All types of individual car engines are considered here, based on national averages.",
             "distance": {
               "question": "How many km are traveled on average per day (round trip) by a volunteer by car for commuting?"
             }
           },
           "train": {
+            "titre": "Train (TER)",
             "distance": {
               "question": "How many km are traveled on average per day (round trip) by a volunteer by train for commuting?"
             }
           },
           "transports en commun": {
+            "titre": "Public transport (Metro, tram, RER, bus, ...)",
             "distance": {
-              "question": "How many km are traveled on average per day (round trip) by a volunteer by public transport for commuting?"
+              "question": "How many km are traveled on average per day (round trip) by a volunteer by two-wheeler for commuting?"
             }
           },
           "deux roues": {
+            "titre": "Two-wheeler",
             "distance": {
-              "question": "How many km are traveled on average per day (round trip) by a volunteer by two-wheeler for commuting?"
+              "question": "How many km are traveled on average per day (round trip) by a volunteer by public transport for commuting?"
             }
           }
         }
@@ -573,37 +637,45 @@
         },
         "sans": {
           "voiture": {
+            "titre": "Car, per month",
+            "description": "All types of individual car engines are considered here, based on national averages.",
             "distance": {
               "question": "How many km are traveled on average per month per employee by car for business travel?"
             }
           },
           "train": {
+            "titre": "Train (TER), per month",
             "distance": {
               "question": "How many km are traveled on average per month per employee by train for business travel?"
             }
           },
-          "transports en commun": {
+          "deux roues": {
+            "titre": "Two-wheeler, per month",
             "distance": {
               "question": "How many km are traveled on average per month per employee by public transport for business travel?"
             }
           },
-          "deux roues": {
+          "transports en commun": {
+            "titre": "Public transport (Metro, tram, RER, bus, ...), per month",
             "distance": {
-              "question": "How many km are traveled on average per month per employee by two-wheeler for business travel?"
+              "question": "How many km are traveled on average per month per employee by public transport for business travel?"
             }
           },
           "avion": {
             "court courrier": {
+              "titre": "Plane, short-haul, per year",
               "distance": {
                 "question": "How many km were traveled this year per employee by short-haul plane for business travel?"
               }
             },
             "moyen courrier": {
+              "titre": "Plane, medium-haul, per year",
               "distance": {
                 "question": "How many km were traveled this year per employee by medium-haul plane for business travel?"
               }
             },
             "long courrier": {
+              "titre": "Plane, long-haul, per year",
               "distance": {
                 "question": "How many km were traveled this year per employee by long-haul plane for business travel?"
               }
@@ -633,38 +705,45 @@
         },
         "sans": {
           "voiture": {
+            "titre": "Car, per month",
             "distance": {
-              "description": "All types of individual car engines are considered here, based on national averages",
+              "description": "All types of individual car engines are considered here, based on national averages.",
               "question": "How many km are traveled on average per month per volunteer by car for business travel?"
             }
           },
           "train": {
+            "titre": "Train (TER), per month",
             "distance": {
               "question": "How many km are traveled on average per month per volunteer by train for business travel?"
             }
           },
-          "transports en commun": {
+          "deux roues": {
+            "titre": "Two-wheeler, per month",
             "distance": {
               "question": "How many km are traveled on average per month per volunteer by public transport for business travel?"
             }
           },
-          "deux roues": {
+          "transports en commun": {
+            "titre": "Public transport (Metro, tram, RER, bus, ...), per month",
             "distance": {
               "question": "How many km are traveled on average per month per volunteer by two-wheeler for business travel?"
             }
           },
           "avion": {
             "court courrier": {
+              "titre": "Plane, short-haul, per year",
               "distance": {
                 "question": "How many km were traveled this year per volunteer by short-haul plane for business travel?"
               }
             },
             "moyen courrier": {
+              "titre": "Plane, medium-haul, per year",
               "distance": {
                 "question": "How many km were traveled this year per volunteer by medium-haul plane for business travel?"
               }
             },
             "long courrier": {
+              "titre": "Plane, long-haul, per year",
               "distance": {
                 "question": "How many km were traveled this year per volunteer by long-haul plane for business travel?"
               }
@@ -676,41 +755,53 @@
         "se déplacent": {
           "question": "Do the beneficiaries of your products or services travel to benefit from them?"
         },
-        "voiture": {
-          "question": "How many km are traveled on average by your beneficiaries by car to access your products or services?"
-        },
         "part voiture": {
+          "titre": "[TO_TRANSLATE] Voiture",
           "question": "What percentage of trips are by car?"
         },
-        "actif": {
-          "question": "How many km are traveled on average by your beneficiaries by active modes (on foot, bicycle, scooter) to access your products or services?"
-        },
-        "part actif": {
-          "question": "What percentage of trips are by active modes (on foot, bicycle, scooter)?"
-        },
-        "deux roues": {
-          "question": "How many km are traveled on average by your beneficiaries by two-wheeler (scooter, motorcycle) to access your products or services?"
-        },
-        "part deux roues": {
-          "question": "What percentage of trips are by two-wheeler (scooter, motorcycle)?"
-        },
-        "transport en commun": {
-          "question": "How many km are traveled on average by your beneficiaries by public transport to access your products or services?"
-        },
-        "part transport en commun": {
-          "question": "What percentage of trips are by public transport?"
-        },
-        "train": {
-          "question": "How many km are traveled on average by your beneficiaries by train to access your products or services?"
-        },
         "part train": {
+          "titre": "[TO_TRANSLATE] Train (TER)",
           "question": "What percentage of trips are by train?"
         },
-        "avion": {
-          "question": "How many km are traveled on average by your beneficiaries by plane to access your products or services?"
+        "part deux roues": {
+          "titre": "[TO_TRANSLATE] Deux roues",
+          "question": "What percentage of trips are by two-wheeler (scooter, motorcycle)?"
+        },
+        "part transport en commun": {
+          "titre": "[TO_TRANSLATE] Transport en commun (Métro, tramway, RER, bus, ...)",
+          "question": "What percentage of trips are by public transport?"
         },
         "part avion": {
+          "titre": "[TO_TRANSLATE] Avion",
           "question": "What percentage of trips are by plane?"
+        },
+        "part actif": {
+          "titre": "[TO_TRANSLATE] Modes actifs (à pied, trottinette, ...)",
+          "question": "What percentage of trips are by active modes (walking, cycling, scooter)?"
+        },
+        "voiture": {
+          "titre": "[TO_TRANSLATE] Voiture",
+          "question": "How many km are traveled on average by your beneficiaries by car to access your products or services?"
+        },
+        "train": {
+          "titre": "[TO_TRANSLATE] Train (TER)",
+          "question": "How many km are traveled on average by your beneficiaries by train to access your products or services?"
+        },
+        "deux roues": {
+          "titre": "[TO_TRANSLATE] Deux roues",
+          "question": "How many km are traveled on average by your beneficiaries by two-wheeler (scooter, motorcycle) to access your products or services?"
+        },
+        "transport en commun": {
+          "titre": "[TO_TRANSLATE] Transport en commun (Métro, tramway, RER, bus, ...)",
+          "question": "How many km are traveled on average by your beneficiaries by public transport to access your products or services?"
+        },
+        "avion": {
+          "titre": "[TO_TRANSLATE] Avion",
+          "question": "How many km are traveled on average by your beneficiaries by plane to access your products or services?"
+        },
+        "actif": {
+          "titre": "[TO_TRANSLATE] Modes actifs (à pied, trottinette, ...)",
+          "question": "How many km are traveled on average by your beneficiaries using active modes (walking, cycling, scooter) to access your products or services?"
         }
       }
     },

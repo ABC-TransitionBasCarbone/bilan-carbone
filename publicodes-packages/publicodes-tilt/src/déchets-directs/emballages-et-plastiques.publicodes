@@ -14,6 +14,7 @@ déchets . emballages et plastiques . poubelle jaune:
   form:
     à traduire: oui
   unité: kgCO2e
+  par défaut: 0
   avec:
     FE:
       valeur: 41
@@ -32,6 +33,7 @@ déchets . emballages et plastiques . déchets verre:
   form:
     à traduire: oui
   unité: kgCO2e
+  par défaut: 0
   avec:
     FE:
       valeur: 41
@@ -46,10 +48,11 @@ déchets . emballages et plastiques . déchets verre:
 
 déchets . emballages et plastiques . poubelle noire:
   titre: Poubelle noire (ordures ménagères, autres déchets, etc)
-  unité: kgCO2e
   formule: FE * poids
   form:
     à traduire: oui
+  unité: kgCO2e
+  par défaut: 0
   avec:
     FE:
       valeur: 374
@@ -64,10 +67,11 @@ déchets . emballages et plastiques . poubelle noire:
 
 déchets . emballages et plastiques . déchets verts:
   titre: Déchets verts, compost et déchets organiques
-  unité: kgCO2e
   formule: FE * poids
   form:
     à traduire: oui
+  unité: kgCO2e
+  par défaut: 0
   avec:
     FE:
       valeur: 140

@@ -1,15 +1,14 @@
 froid et clim:
   titre: Froid et climatisation
   formule: nombre * FE / amortissement + fuites
-  unité: kgCO2e
+  unité: kgCO2e/an
   avec:
     FE:
       valeur: 239
-      unité: kgCO2e/unité
+      unité: kgCO2e/climatiseur
       meta:
         id: 28325
         nom: Climatiseur mobile
-
     amortissement:
       valeur: 6
 
@@ -17,7 +16,7 @@ froid et clim . nombre:
   question: Combien de climatiseurs sont utilisés dans vos locaux ?
   description: La consommation d'électricité de vos climatisations est incluse dans vos factures d'électricité. Cette question sert donc uniquement à prendre en compte l'impact de la construction de l'équipement de climatisation, et des fuites de gaz frigorigènes.
   par défaut: 0
-  unité: unité
+  unité: climatiseur
 
 froid et clim . fuites:
   formule:
@@ -28,8 +27,9 @@ froid et clim . fuites:
 froid et clim . fuites . locaux partagés:
   titre: Fuites de fluides frigoriègnes
   applicable si: nombre > 0
-  formule: 0.1 * 0.3 * 0.1 * construction . bâtiment . locaux . locaux partagés . surface * PRG R410A
-  note: méthode du PCG en fonction des m^2 renseignés plus haut 0.1 kW/m^2*0,3 kg de fluide par kW*10%*m^2*PRG R410a.
+  formule: puissance frigorifique par surface * quantité de fluide par puissance * 0.1 * construction . bâtiment . locaux . locaux partagés . surface * construction . bâtiment . locaux . locaux partagés . pourcentage * PRG R410A
+  note: méthode du PCG en fonction des m^2 renseignés dans les locaux, 0.1 kW/m^2*0,3 kg de fluide par kW*10%*m^2*PRG R410a.
+  unité: kgCO2e
   avec:
     PRG R410A:
       valeur: 2260
@@ -37,6 +37,12 @@ froid et clim . fuites . locaux partagés:
       meta:
         id: 43632
         nom: R410A
+    puissance frigorifique par surface:
+      valeur: 0.1
+      unité: kW/m2
+    quantité de fluide par puissance:
+      valeur: 0.3
+      unité: kg/kW
 
 froid et clim . fuites . locaux seuls:
   titre: Fuites de fluides frigoriègnes
