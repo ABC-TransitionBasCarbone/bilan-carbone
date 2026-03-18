@@ -22,7 +22,7 @@ describe('Create study emission source', () => {
     cy.getByTestId('emission-source-My new emission source')
       .first()
       .within(() => {
-        cy.getByTestId('emission-source-status').should('have.text', "En attente d'un·e contributeur·rice")
+        cy.getByTestId('emission-source-status').should('have.text', 'À vérifier')
         cy.getByTestId('emission-source-quality').should('not.exist')
       })
 
