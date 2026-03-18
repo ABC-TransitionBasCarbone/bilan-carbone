@@ -5,15 +5,11 @@ import { SimplifiedEnvironment } from './publicodes/simplifiedPublicodesConfig'
 export interface TiltCustomDataFields {
   postalCode?: string | undefined
   structure?: string | undefined
-  numberOfTTVolunteer?: number | null | undefined
-  numberOfTTEmployee?: number | null | undefined
 }
 
 export const mappedTiltSituationToCustomDataFields: Record<string, keyof TiltCustomDataFields> = {
   'général . code postal': 'postalCode',
   'général . type': 'structure',
-  'général . TT bénévoles': 'numberOfTTVolunteer',
-  'général . TT salariés': 'numberOfTTEmployee',
 }
 
 export const TiltStructureOptions: string[] = [
@@ -57,12 +53,6 @@ const getTiltSituation = (data: TiltCustomDataFields | undefined): Situation<str
   }
   if (data.structure != null) {
     situation['général . type'] = data.structure
-  }
-  if (data.numberOfTTVolunteer != null) {
-    situation['général . TT bénévoles'] = data.numberOfTTVolunteer
-  }
-  if (data.numberOfTTEmployee != null) {
-    situation['général . TT salariés'] = data.numberOfTTEmployee
   }
 
   return situation
