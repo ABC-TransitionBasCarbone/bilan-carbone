@@ -163,8 +163,6 @@ export type ChangeStudyCinemaCommand = z.infer<typeof ChangeStudyCinemaValidatio
 export const ChangeStudySiteTiltSimplifiedValidation = z.object({
   postalCode: z.string().optional(),
   structure: z.string().optional(),
-  numberOfTTVolunteer: z.number().optional().nullable(),
-  numberOfTTEmployee: z.number().optional().nullable(),
 })
 
 export type ChangeStudySiteTiltSimplifiedCommand = z.infer<typeof ChangeStudySiteTiltSimplifiedValidation>

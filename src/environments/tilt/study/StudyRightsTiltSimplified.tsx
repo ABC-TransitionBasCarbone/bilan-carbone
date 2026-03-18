@@ -71,8 +71,6 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
   const [originalValues, setOriginalValues] = useState<{
     postalCode: string
     structure: string
-    numberOfTTVolunteer: number
-    numberOfTTEmployee: number
   } | null>(null)
 
   const form = useForm<ChangeStudySiteTiltSimplifiedCommand>({
@@ -82,8 +80,6 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
     defaultValues: {
       postalCode: siteData?.postalCode ?? '',
       structure: siteData?.structure ?? '',
-      numberOfTTVolunteer: siteData?.numberOfTTVolunteer ?? 0,
-      numberOfTTEmployee: siteData?.numberOfTTEmployee ?? 0,
     },
   })
 
@@ -111,8 +107,6 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
           const initialValues = {
             postalCode: String(newSiteData?.postalCode ?? ''),
             structure: String(newSiteData?.structure ?? ''),
-            numberOfTTVolunteer: Number(newSiteData?.numberOfTTVolunteer ?? 0),
-            numberOfTTEmployee: Number(newSiteData?.numberOfTTEmployee ?? 0),
           }
 
           // Store original values for change detection
@@ -133,8 +127,6 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
       setOriginalValues({
         postalCode: data.postalCode ?? '',
         structure: data.structure ?? '',
-        numberOfTTVolunteer: data.numberOfTTVolunteer ?? 0,
-        numberOfTTEmployee: data.numberOfTTEmployee ?? 0,
       })
     },
     [callServerFunction, originalValues, studySite],
@@ -155,8 +147,6 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
       setOriginalValues({
         postalCode: pendingSiteChanges.pendingData.postalCode ?? '',
         structure: pendingSiteChanges.pendingData.structure ?? '',
-        numberOfTTVolunteer: pendingSiteChanges.pendingData.numberOfTTVolunteer ?? 0,
-        numberOfTTEmployee: pendingSiteChanges.pendingData.numberOfTTEmployee ?? 0,
       })
       setPendingSiteChanges(null)
     }
@@ -260,24 +250,6 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
                   onAccept={handleDateChange}
                 />
               </div>
-              <FormTextField
-                control={form.control}
-                name="numberOfTTVolunteer"
-                data-testid="new-study-number-of-tt-volunteers"
-                label={t('numberOfTTVolunteer')}
-                type="number"
-                className={styles.formTextField}
-                onBlur={onStudySiteUpdate}
-              />
-              <FormTextField
-                control={form.control}
-                name="numberOfTTEmployee"
-                data-testid="new-study-number-of-tt-employees"
-                label={t('numberOfTTEmployee')}
-                type="number"
-                className={styles.formTextField}
-                onBlur={onStudySiteUpdate}
-              />
             </div>
           </>
         )}

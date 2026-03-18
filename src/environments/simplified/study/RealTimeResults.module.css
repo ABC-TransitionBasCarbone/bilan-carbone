@@ -1,6 +1,6 @@
 .panel {
   position: fixed;
-  bottom: 32rem;
+  top: 20rem;
   left: 0;
   z-index: 99;
   border-radius: 0.5rem;
@@ -17,7 +17,7 @@
 
 .clicksonPanel {
   width: 19rem;
-  bottom: 22rem;
+  top: 30rem;
   @media screen and (max-width: 1279px) {
     width: 16rem;
   }
