@@ -797,7 +797,11 @@ const TrajectoryGraph = ({
           />
         </div>
         <ChartContainer
-          series={[backgroundForPastInfos, ...studyPointsSeries, ...displayedSeries]}
+          series={[
+            ...(displayedSeries.length > 0 ? [backgroundForPastInfos] : []),
+            ...studyPointsSeries,
+            ...displayedSeries,
+          ]}
           xAxis={[
             {
               data: yearsToDisplay,
