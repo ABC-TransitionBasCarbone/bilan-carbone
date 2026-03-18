@@ -39,7 +39,7 @@ const StudyPostsPageContainer = ({ post, currentSubPost, study, userRole, user }
     () =>
       study.emissionSources.filter(
         (emissionSource) =>
-          subPostsByPost[post].includes(emissionSource.subPost) && emissionSource.studySite.id === studySite,
+          subPostsByPost[post].includes(emissionSource.subPost) && emissionSource.studySite.site.id === studySite,
       ) as FullStudy['emissionSources'],
     [study, post, studySite],
   )

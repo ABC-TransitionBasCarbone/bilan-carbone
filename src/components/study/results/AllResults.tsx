@@ -3,8 +3,10 @@
 import Block from '@/components/base/Block'
 import Box from '@/components/base/Box'
 import Button from '@/components/base/Button'
+import { storageKeys } from '@/constants/storage.constants'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
+import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { download } from '@/services/file'
 import { hasAccessToBcExport, hasAccessToDownloadStudyEmissionSourcesButton } from '@/services/permissions/environment'
@@ -84,8 +86,37 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   const [isDownloadReportActive, setIsDownloadReportActive] = useState(false)
   const [selectedSubposts, setSelectedSubposts] = useState<string[]>([])
   const [selectedTags, setSelectedTags] = useState<string[]>([])
+  const [filtersMounted, setFiltersMounted] = useState(false)
   const [selectedGHGPTable, setSelectedGHGPTable] = useState<EmissionFactorBase>(EmissionFactorBase.LocationBased)
   const router = useRouter()
+
+  const subpostsKey = storageKeys.studyFilterSubposts(study.id)
+  const tagsKey = storageKeys.studyFilterTags(study.id)
+
+  useLocalStorageSync(subpostsKey, selectedSubposts, filtersMounted)
+  useLocalStorageSync(tagsKey, selectedTags, filtersMounted)
+
+  useEffect(() => {
+    const storedSubposts = localStorage.getItem(subpostsKey)
+    if (storedSubposts) {
+      const parsed: unknown = JSON.parse(storedSubposts)
+      if (Array.isArray(parsed) && parsed.every((id: unknown) => typeof id === 'string')) {
+        setSelectedSubposts(parsed as string[])
+      }
+    }
+
+    const storedTags = localStorage.getItem(tagsKey)
+    if (storedTags) {
+      const parsed: unknown = JSON.parse(storedTags)
+      if (Array.isArray(parsed) && parsed.every((id: unknown) => typeof id === 'string')) {
+        setSelectedTags(parsed as string[])
+      }
+    }
+
+    setFiltersMounted(true)
+    // This effect is only used to mount the filters, so we don't need to re-run it when the study id changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [study.id])
 
   const displayConsolidatedInfo =
     (type === AdditionalResultTypes.CONSOLIDATED || type === AdditionalResultTypes.ENV_SPECIFIC_EXPORT) &&
@@ -363,7 +394,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     const post = getPost(subPost)
     if (post) {
       const emissionSource = study.emissionSources.find((es) => es.id === emissionSourceId)
-      const targetSite = emissionSource?.studySite.id
+      const targetSite = emissionSource?.studySite.site.id
       const url = `/etudes/${study.id}/comptabilisation/saisie-des-donnees/${post}?site=${targetSite}#emission-source-${emissionSourceId}`
       router.push(url)
     }

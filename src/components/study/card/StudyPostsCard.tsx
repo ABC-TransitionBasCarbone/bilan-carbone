@@ -7,7 +7,6 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import { Environment } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { Dispatch, SetStateAction } from 'react'
 import PostIcon from '../infography/icons/PostIcon'
 import SelectStudySite from '../site/SelectStudySite'
 import styles from './StudyPostsCard.module.css'
@@ -17,7 +16,7 @@ interface Props {
   study: FullStudy
   post: Post
   studySite: string
-  setSite: Dispatch<SetStateAction<string>>
+  setSite: (site: string) => void
   setGlossary: (glossary: string) => void
   environment: Environment
 }
@@ -27,7 +26,7 @@ const StudyPostsCard = ({ study, post, studySite, setSite, setGlossary, environm
 
   const emissionSources = study.emissionSources.filter(
     (emissionSource) =>
-      subPostsByPost[post].includes(emissionSource.subPost) && emissionSource.studySite.id === studySite,
+      subPostsByPost[post].includes(emissionSource.subPost) && emissionSource.studySite.site.id === studySite,
   )
   const validated = emissionSources.filter((emissionSource) => emissionSource.validated).length
   const percent = emissionSources.length ? Math.floor((validated / emissionSources.length) * 100) : 0

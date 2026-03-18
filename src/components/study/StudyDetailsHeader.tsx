@@ -12,7 +12,7 @@ import LockOpenIcon from '@mui/icons-material/LockOpen'
 import { Environment } from '@prisma/client'
 import { useFormatter, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { Dispatch, SetStateAction, useState } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Block, { Props as BlockProps } from '../base/Block'
 import DeletionModal from '../modals/DeletionModal'
@@ -27,7 +27,7 @@ interface Props {
   canDuplicateStudy?: boolean
   duplicableEnvironments: Environment[]
   studySite: string
-  setSite: Dispatch<SetStateAction<string>>
+  setSite: (site: string) => void
 }
 
 const StudyDetailsHeader = ({

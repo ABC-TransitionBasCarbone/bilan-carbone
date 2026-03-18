@@ -11,7 +11,7 @@ export const getSiteEmissionSourcesWithoutMarketBase = <
   getBaseFilteredEmissionSources(
     studySite === 'all'
       ? emissionSources
-      : emissionSources.filter((emissionSource) => emissionSource.studySite.id === studySite),
+      : emissionSources.filter((emissionSource) => emissionSource.studySite.site.id === studySite),
   )
 
 export const getAllSiteEmissionSources = <T extends Pick<FullStudy['emissionSources'][number], 'studySite'>>(
@@ -20,7 +20,7 @@ export const getAllSiteEmissionSources = <T extends Pick<FullStudy['emissionSour
 ): T[] =>
   studySite === 'all'
     ? emissionSources
-    : emissionSources.filter((emissionSource) => emissionSource.studySite.id === studySite)
+    : emissionSources.filter((emissionSource) => emissionSource.studySite.site.id === studySite)
 
 const dependencySubPosts = [
   SubPost.UtilisationEnDependance,

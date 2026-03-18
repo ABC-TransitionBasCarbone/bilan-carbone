@@ -31,7 +31,7 @@ const StudyContributorPage = ({ study, userRole }: Props) => {
   const emissionSources = useMemo(
     () =>
       study.emissionSources.filter(
-        (emissionSource) => emissionSource.studySite.id === studySite,
+        (emissionSource) => emissionSource.studySite.site.id === studySite,
       ) as FullStudy['emissionSources'],
     [study, studySite],
   )

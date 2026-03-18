@@ -6,7 +6,7 @@ import DownloadIcon from '@mui/icons-material/Download'
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
 import { Box, Button, Tab, Tabs, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
-import { Dispatch, SetStateAction, SyntheticEvent, useMemo, useState } from 'react'
+import { SyntheticEvent, useMemo, useState } from 'react'
 
 import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
 import TabPanel from '@/components/tabPanel/tabPanel'
@@ -40,7 +40,7 @@ import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { a11yProps, ChartType, defaultChartOrder, tabsLabels } from './utils'
 
 interface Props {
-  setSite: Dispatch<SetStateAction<string>>
+  setSite: (site: string) => void
   study: FullStudy
   studySite: string
   // equivalent to previous `withDepValue`
