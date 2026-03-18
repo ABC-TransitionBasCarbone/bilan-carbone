@@ -3,6 +3,7 @@
 import MenuIcon from '@mui/icons-material/Menu'
 import MenuOpenIcon from '@mui/icons-material/MenuOpen'
 import { Drawer, Fab } from '@mui/material'
+import DrawerPaper from './DrawerPaper'
 import { Environment, StudyRole } from '@prisma/client'
 import classNames from 'classnames'
 import { UUID } from 'crypto'
@@ -51,7 +52,7 @@ const StudyNavbar = ({
       <Drawer
         className={open ? styles.opened : ''}
         open={open}
-        slots={{ paper: 'div' }}
+        slots={{ paper: DrawerPaper }}
         slotProps={{
           paper: {
             className: classNames('ml1 hauto', styles.drawerContainer),
