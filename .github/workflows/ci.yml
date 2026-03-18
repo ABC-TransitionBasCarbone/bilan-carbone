@@ -102,8 +102,14 @@ jobs:
         run: docker run -d -p 1080:1080 -p 1025:1025 maildev/maildev
       - name: Copy .env
         run: cp .env.dist .env
+      - name: Copy .env to db-common
+        run: cp apps/bilan-carbone/.env.dist packages/db-common/.env
+        working-directory: ${{ github.workspace }}
       - name: Copy .env.test
         run: cp .env.dist .env.test
+      - name: Copy .env.test to db-common
+        run: cp apps/bilan-carbone/.env.dist packages/db-common/.env
+        working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
         working-directory: .
@@ -117,7 +123,6 @@ jobs:
         working-directory: .
       - name: Seed DB
         run: yarn workspace bilan-carbone prisma db seed
-        working-directory: .
       - name: Build application
         run: yarn build
       - name: Start server
@@ -133,7 +138,7 @@ jobs:
         if: failure()
         with:
           name: cypress-screenshots
-          path: /home/runner/work/bilan-carbone/bilan-carbone/cypress/screenshots
+          path: ${{ github.workspace }}/apps/bilan-carbone/cypress/screenshots
 
   lighthouse:
     timeout-minutes: 10
@@ -165,6 +170,9 @@ jobs:
         run: docker run -d -p 1080:1080 -p 1025:1025 maildev/maildev
       - name: Copy .env
         run: cp .env.dist .env
+      - name: Copy .env to db-common
+        run: cp apps/bilan-carbone/.env.dist packages/db-common/.env
+        working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
         working-directory: .

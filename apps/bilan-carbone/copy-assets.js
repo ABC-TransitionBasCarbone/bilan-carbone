@@ -2,10 +2,10 @@ const fs = require('fs').promises
 const path = require('path')
 
 const staticSrcPath = path.join(__dirname, '.next/static')
-const staticDestPath = path.join(__dirname, '.next/standalone/.next/static')
+const staticDestPath = path.join(__dirname, '.next/standalone/apps/bilan-carbone/.next/static')
 
 const publicSrcPath = path.join(__dirname, 'public')
-const publicDestPath = path.join(__dirname, '.next/standalone/public')
+const publicDestPath = path.join(__dirname, '.next/standalone/apps/bilan-carbone/public')
 
 function copyAssets(src, dest) {
   return fs
@@ -35,7 +35,7 @@ const redCross = `\x1b[31m\u274C\x1b[0m`
 
 // Also copy i18n translation files for production i18n support
 const i18nSrcPath = path.join(__dirname, 'src', 'i18n', 'translations')
-const i18nDestPath = path.join(__dirname, '.next/standalone/src/i18n/translations')
+const i18nDestPath = path.join(__dirname, '.next/standalone/apps/bilan-carbone/src/i18n/translations')
 
 Promise.all([
   copyAssets(staticSrcPath, staticDestPath),
