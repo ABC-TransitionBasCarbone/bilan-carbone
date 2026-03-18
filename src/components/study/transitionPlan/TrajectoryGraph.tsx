@@ -264,25 +264,27 @@ const TrajectoryGraph = ({
     [studyStartYear, yearsToDisplay],
   )
 
-  const historicalStudyYearIndices = useMemo(() => {
-    const indices = new Set<number>()
-    pastStudies.forEach((study) => {
-      if (study.year < studyStartYear) {
-        const idx = yearsToDisplay.indexOf(study.year)
-        if (idx !== -1) {
-          indices.add(idx)
-        }
-      }
-    })
-    return indices
-  }, [pastStudies, studyStartYear, yearsToDisplay])
+  const studyPointsSeries: LineSeriesType[] = useMemo(() => {
+    const studyPoints: { year: number; value: number; label: string }[] = pastStudies.map((s) => ({
+      year: s.year,
+      value: s.totalCo2,
+      label: s.name,
+    }))
+    studyPoints.push({ year: studyStartYear, value: studyEmissions, label: name })
 
-  const shouldShowMark = useCallback(
-    (index: number) => {
-      return index === studyStartYearIndex || historicalStudyYearIndices.has(index)
-    },
-    [studyStartYearIndex, historicalStudyYearIndices],
-  )
+    return studyPoints.map(({ year, value, label }) => ({
+      type: 'line' as const,
+      id: `study-point-${year}`,
+      data: yearsToDisplay.map((y) => (y === year ? value : null)),
+      color: 'var(--mui-palette-primary-main)',
+      showMark: true,
+      disableHighlight: true,
+      connectNulls: false,
+      curve: 'linear' as const,
+      label,
+      valueFormatter: (v: number | null) => (v !== null ? Math.round(v).toString() : ''),
+    }))
+  }, [pastStudies, studyStartYear, studyEmissions, yearsToDisplay, name])
 
   const seriesCreated = useMemo(() => {
     const series: (LineSeriesType & {
@@ -308,7 +310,7 @@ const TrajectoryGraph = ({
             color: 'var(--trajectory-sbti-15)',
             curve: 'linear' as const,
             connectNulls: false,
-            showMark: ({ index }: { index: number }) => historicalStudyYearIndices.has(index),
+            showMark: false,
             valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
           })
         } else {
@@ -321,7 +323,7 @@ const TrajectoryGraph = ({
             color: 'color-mix(in srgb, var(--trajectory-sbti-15) 50%, transparent)',
             curve: 'linear' as const,
             connectNulls: false,
-            showMark: ({ index }: { index: number }) => historicalStudyYearIndices.has(index),
+            showMark: false,
             valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
           })
         }
@@ -342,7 +344,7 @@ const TrajectoryGraph = ({
           color: isFailed ? 'var(--error-100)' : 'var(--trajectory-sbti-15)',
           curve: 'linear' as const,
           connectNulls: false,
-          showMark: ({ index }: { index: number }) => shouldShowMark(index),
+          showMark: false,
           valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
         })
       } else {
@@ -356,7 +358,7 @@ const TrajectoryGraph = ({
           color: isFailed ? 'var(--error-100)' : 'var(--trajectory-sbti-15)',
           curve: 'linear' as const,
           connectNulls: false,
-          showMark: true,
+          showMark: false,
           valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
         })
       }
@@ -378,7 +380,7 @@ const TrajectoryGraph = ({
             color: 'var(--trajectory-sbti-wb2c)',
             curve: 'linear' as const,
             connectNulls: false,
-            showMark: ({ index }: { index: number }) => historicalStudyYearIndices.has(index),
+            showMark: false,
             valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
           })
         } else {
@@ -391,7 +393,7 @@ const TrajectoryGraph = ({
             color: 'color-mix(in srgb, var(--trajectory-sbti-wb2c) 50%, transparent)',
             curve: 'linear' as const,
             connectNulls: false,
-            showMark: ({ index }: { index: number }) => historicalStudyYearIndices.has(index),
+            showMark: false,
             valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
           })
         }
@@ -412,7 +414,7 @@ const TrajectoryGraph = ({
           color: isFailed ? 'var(--error-100)' : 'var(--trajectory-sbti-wb2c)',
           curve: 'linear' as const,
           connectNulls: false,
-          showMark: ({ index }: { index: number }) => shouldShowMark(index),
+          showMark: false,
           valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
         })
       } else {
@@ -426,7 +428,7 @@ const TrajectoryGraph = ({
           color: isFailed ? 'var(--error-100)' : 'var(--trajectory-sbti-wb2c)',
           curve: 'linear' as const,
           connectNulls: false,
-          showMark: true,
+          showMark: false,
           valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
         })
       }
@@ -455,7 +457,7 @@ const TrajectoryGraph = ({
               color,
               curve: 'linear' as const,
               connectNulls: false,
-              showMark: ({ index }: { index: number }) => historicalStudyYearIndices.has(index),
+              showMark: false,
               valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
             })
           } else {
@@ -468,7 +470,7 @@ const TrajectoryGraph = ({
               color: `color-mix(in srgb, ${color} 50%, transparent)`,
               curve: 'linear' as const,
               connectNulls: false,
-              showMark: ({ index }: { index: number }) => historicalStudyYearIndices.has(index),
+              showMark: false,
               valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
             })
           }
@@ -487,7 +489,7 @@ const TrajectoryGraph = ({
             color: isFailed ? 'var(--error-50)' : color,
             curve: 'linear' as const,
             connectNulls: false,
-            showMark: ({ index }: { index: number }) => shouldShowMark(index),
+            showMark: false,
             valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
           })
         } else {
@@ -501,7 +503,7 @@ const TrajectoryGraph = ({
             color: isFailed ? 'var(--error-50)' : color,
             curve: 'linear' as const,
             connectNulls: false,
-            showMark: true,
+            showMark: false,
             valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
           })
         }
@@ -533,10 +535,6 @@ const TrajectoryGraph = ({
         }
 
         if (previousTrajectory) {
-          // Only show mark for the previous trajectory start year, not for past studies
-          const previousTrajectoryStartYearIndex =
-            previousTrajectoryStartYear !== null ? yearsToDisplay.indexOf(previousTrajectoryStartYear) : -1
-
           if (withinThreshold) {
             series.push({
               type: 'line',
@@ -548,7 +546,7 @@ const TrajectoryGraph = ({
               color: baseColor,
               curve: 'linear' as const,
               connectNulls: false,
-              showMark: ({ index }: { index: number }) => index === previousTrajectoryStartYearIndex,
+              showMark: false,
               valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
             })
           } else {
@@ -561,7 +559,7 @@ const TrajectoryGraph = ({
               color: `color-mix(in srgb, ${baseColor} 50%, transparent)`,
               curve: 'linear' as const,
               connectNulls: false,
-              showMark: ({ index }: { index: number }) => index === previousTrajectoryStartYearIndex,
+              showMark: false,
               valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
             })
           }
@@ -580,7 +578,7 @@ const TrajectoryGraph = ({
             color: isFailed ? 'var(--error-100)' : baseColor,
             curve: 'linear' as const,
             connectNulls: false,
-            showMark: ({ index }: { index: number }) => shouldShowMark(index),
+            showMark: false,
             valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
           })
         }
@@ -607,7 +605,7 @@ const TrajectoryGraph = ({
             color: 'var(--trajectory-action)',
             curve: 'linear' as const,
             connectNulls: false,
-            showMark: ({ index }: { index: number }) => historicalStudyYearIndices.has(index),
+            showMark: false,
             valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
           })
         } else {
@@ -620,7 +618,7 @@ const TrajectoryGraph = ({
             color: 'color-mix(in srgb, var(--trajectory-action) 50%, transparent)',
             curve: 'linear' as const,
             connectNulls: false,
-            showMark: ({ index }: { index: number }) => historicalStudyYearIndices.has(index),
+            showMark: false,
             valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
           })
         }
@@ -640,7 +638,7 @@ const TrajectoryGraph = ({
           color: 'var(--trajectory-action)',
           curve: 'linear' as const,
           connectNulls: false,
-          showMark: ({ index }: { index: number }) => shouldShowMark(index),
+          showMark: false,
           valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
         })
       } else {
@@ -653,7 +651,7 @@ const TrajectoryGraph = ({
           color: 'var(--trajectory-action)',
           curve: 'linear' as const,
           connectNulls: false,
-          showMark: true,
+          showMark: false,
           valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
         })
       }
@@ -673,12 +671,9 @@ const TrajectoryGraph = ({
     mapDataToYears,
     t,
     tSnbc,
-    historicalStudyYearIndices,
-    shouldShowMark,
     studyStartYear,
     studyStartYearIndex,
     name,
-    yearsToDisplay,
   ])
 
   const failedTrajectories = useMemo(() => {
@@ -802,7 +797,7 @@ const TrajectoryGraph = ({
           />
         </div>
         <ChartContainer
-          series={[backgroundForPastInfos, ...displayedSeries]}
+          series={[backgroundForPastInfos, ...studyPointsSeries, ...displayedSeries]}
           xAxis={[
             {
               data: yearsToDisplay,
