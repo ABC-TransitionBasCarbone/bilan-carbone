@@ -1,15 +1,19 @@
 import { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import AllPostsInfographySimplified from '@/environments/simplified/study/infography/AllPostsInfography'
-import AllPostsInfographyTilt from '@/environments/tilt/study/infography/AllPostsInfography'
 import { PublicodesSituationProvider } from '@/lib/publicodes/context'
 import { CutPost, TiltPost } from '@/services/posts'
 import { computeResultsByPostFromEmissionSources } from '@/services/results/consolidated'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
+import dynamic from 'next/dynamic'
 import { useEffect, useMemo, useState } from 'react'
 import AllPostsInfography from './AllPostsInfography'
+
+const AllPostsInfographySimplified = dynamic(
+  () => import('@/environments/simplified/study/infography/AllPostsInfography'),
+)
+const AllPostsInfographyTilt = dynamic(() => import('@/environments/tilt/study/infography/AllPostsInfography'))
 
 interface Props {
   study: FullStudy
