@@ -1,0 +1,10 @@
+.next/cache
+.cache/Cypress
+apps/bilan-carbone/publicodes-packages/publicodes-clickson/node_modules
+apps/bilan-carbone/publicodes-packages/publicodes-count/node_modules
+apps/bilan-carbone/publicodes-packages/publicodes-tilt/node_modules
+apps/bilan-carbone/.next/cache
+packages/*/node_modules
+node_modules/.cache
+.cache
+cypress
