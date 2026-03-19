@@ -41,7 +41,7 @@ export const useTransitionPlanFilters = (studyId: string) => {
     const storedTags = localStorage.getItem(tagsKey)
     if (storedTags) {
       const parsed: unknown = JSON.parse(storedTags)
-      if (Array.isArray(parsed) && parsed.every((id: unknown) => typeof id === 'string')) {
+      if (Array.isArray(parsed) && parsed.length > 0 && parsed.every((id: unknown) => typeof id === 'string')) {
         setSelectedTagIds(parsed)
       }
     }

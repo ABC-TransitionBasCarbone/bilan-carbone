@@ -16,8 +16,12 @@ export const scopeMatchesUIFilters = (
   filterSiteIds: string[],
   filterSubPosts: SubPost[],
   filterTagIds: string[],
+  allTagIds: string[] = filterTagIds,
 ): boolean => {
-  if (filterTagIds.length === 0 || filterSubPosts.length === 0 || filterSiteIds.length === 0) {
+  if (filterSiteIds.length === 0 || filterSubPosts.length === 0) {
+    return false
+  }
+  if (filterTagIds.length === 0 && allTagIds.length > 0) {
     return false
   }
 

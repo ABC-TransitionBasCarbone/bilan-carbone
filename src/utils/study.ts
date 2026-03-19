@@ -273,7 +273,7 @@ export const getBaseFilteredEmissionSources = <T extends Pick<FullStudy['emissio
  * Computes emissions after applying filters coming from DB scope or UI selectors.
  */
 const getFilteredEmissionTotalValue = (
-  study: Pick<FullStudy, 'emissionSources' | 'resultsUnit' | 'organizationVersion'>,
+  study: Pick<FullStudy, 'emissionSources' | 'resultsUnit' | 'organizationVersion' | 'tagFamilies'>,
   validatedOnly: boolean,
   siteIds: string[],
   subPosts: SubPost[],
@@ -298,7 +298,8 @@ const getFilteredEmissionTotalValue = (
     filteredSources = filteredSources.filter((source) => subPosts.includes(source.subPost))
   }
 
-  if (!emptyFilterIncludesAll || tagIds.length > 0) {
+  const studyHasTags = study.tagFamilies.flatMap((f) => f.tags.map((t) => t.id)).length > 0
+  if (studyHasTags && (!emptyFilterIncludesAll || tagIds.length > 0)) {
     filteredSources = filteredSources.filter((source) => {
       const hasNoTags = source.emissionSourceTags.length === 0
       const untaggedSelected = tagIds.includes('other')
@@ -316,7 +317,7 @@ const getFilteredEmissionTotalValue = (
 }
 
 export const getUIFilteredEmissions = (
-  study: Pick<FullStudy, 'emissionSources' | 'resultsUnit' | 'organizationVersion'>,
+  study: Pick<FullStudy, 'emissionSources' | 'resultsUnit' | 'organizationVersion' | 'tagFamilies'>,
   validatedOnly: boolean,
   siteIds: string[],
   subPosts: SubPost[],
@@ -324,7 +325,7 @@ export const getUIFilteredEmissions = (
 ): number => getFilteredEmissionTotalValue(study, validatedOnly, siteIds, subPosts, tagIds, false)
 
 const getActionFilteredEmissions = (
-  study: Pick<FullStudy, 'emissionSources' | 'resultsUnit' | 'organizationVersion'>,
+  study: Pick<FullStudy, 'emissionSources' | 'resultsUnit' | 'organizationVersion' | 'tagFamilies'>,
   validatedOnly: boolean,
   siteIds: string[],
   subPosts: SubPost[],
@@ -332,7 +333,7 @@ const getActionFilteredEmissions = (
 ): number => getFilteredEmissionTotalValue(study, validatedOnly, siteIds, subPosts, tagIds, true)
 
 export const getActionReductionRatio = (
-  study: Pick<FullStudy, 'emissionSources' | 'resultsUnit' | 'organizationVersion'>,
+  study: Pick<FullStudy, 'emissionSources' | 'resultsUnit' | 'organizationVersion' | 'tagFamilies'>,
   validatedOnly: boolean,
   actionSiteIds: string[],
   actionSubPosts: SubPost[],
