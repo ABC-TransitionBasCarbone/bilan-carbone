@@ -1,5 +1,4 @@
 import Box from '@/components/base/Box'
-import Button from '@/components/base/Button'
 import { MultiSelect } from '@/components/base/MultiSelect'
 import {
   TRAJECTORY_15_ID,
@@ -15,6 +14,7 @@ import {
 import { customRich } from '@/i18n/customRich'
 import { TrajectoryWithObjectives } from '@/types/trajectory.types'
 import { Typography } from '@mui/material'
+import { Button } from '@repo/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import styles from './ReferenceTrajectorySelectionSection.module.css'
