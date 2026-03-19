@@ -3,20 +3,15 @@ import { StudyProps } from '@/components/hoc/withStudy'
 import withStudyDetails from '@/components/hoc/withStudyDetails'
 import withTransitionPlan, { TransitionPlanProps } from '@/components/hoc/withTransitionPlan'
 import TransitionPlanInitPage from '@/components/pages/TransitionPlanInitPage'
+import { loadTransitionPlanPageData } from '@/components/study/transitionPlan/transitionPlanPageData'
 import { getUserApplicationSettings } from '@/db/user'
-import { getSectenData } from '@/services/serverFunctions/secten'
-import { getTrajectories } from '@/services/serverFunctions/trajectory.serverFunction'
-import { getLinkedAndExternalStudies, getStudyTransitionPlan } from '@/services/serverFunctions/transitionPlan'
 
 const TransitionPlanInit = async ({ study, canEdit, user }: StudyProps & UserSessionProps & TransitionPlanProps) => {
-  const [transitionPlanResponse, settings] = await Promise.all([
-    getStudyTransitionPlan(study.id),
-    getUserApplicationSettings(user.accountId),
-  ])
+  const data = await loadTransitionPlanPageData(study.id, user.accountId)
 
-  const transitionPlan = transitionPlanResponse.success ? transitionPlanResponse.data : null
+  if (!data) {
+    const settings = await getUserApplicationSettings(user.accountId)
 
-  if (!transitionPlan) {
     return (
       <TransitionPlanInitPage
         study={study}
@@ -27,26 +22,24 @@ const TransitionPlanInit = async ({ study, canEdit, user }: StudyProps & UserSes
         linkedExternalStudies={[]}
         validatedOnly={settings.validatedEmissionSourcesOnly}
         sectenData={[]}
+        latestSectenVersion={null}
+        isSectenOutdated={false}
       />
     )
   }
-
-  const [trajectoriesResponse, linkedStudiesResponse, sectenDataResponse] = await Promise.all([
-    getTrajectories(study.id, transitionPlan.id),
-    getLinkedAndExternalStudies(transitionPlan.id),
-    getSectenData(),
-  ])
 
   return (
     <TransitionPlanInitPage
       study={study}
       canEdit={canEdit}
-      transitionPlan={transitionPlan}
-      trajectories={trajectoriesResponse.success ? trajectoriesResponse.data : []}
-      linkedStudies={linkedStudiesResponse.success ? linkedStudiesResponse.data.linkedStudies : []}
-      linkedExternalStudies={linkedStudiesResponse.success ? linkedStudiesResponse.data.externalStudies : []}
-      validatedOnly={settings.validatedEmissionSourcesOnly}
-      sectenData={sectenDataResponse.success ? sectenDataResponse.data : []}
+      transitionPlan={data.transitionPlan}
+      trajectories={data.trajectories}
+      linkedStudies={data.linkedStudies}
+      linkedExternalStudies={data.linkedExternalStudies}
+      validatedOnly={data.validatedOnly}
+      sectenData={data.sectenData}
+      latestSectenVersion={data.latestSectenVersion}
+      isSectenOutdated={data.isSectenOutdated}
     />
   )
 }

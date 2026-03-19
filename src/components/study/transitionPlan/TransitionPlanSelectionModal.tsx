@@ -96,7 +96,7 @@ const TransitionPlanSelectionModal = ({ studyId, open, onClose, onConfirm }: Pro
               label={
                 <div className={'flex-col'}>
                   <span className={styles.optionTitle}>{t('createNew')}</span>
-                  <span className={styles.optionDescription}>{t('createNewDescription')}</span>
+                  <span className={styles.optionDescription}>{customRich(t, 'createNewDescription')}</span>
                 </div>
               }
             />

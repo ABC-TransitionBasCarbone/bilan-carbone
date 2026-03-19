@@ -17,5 +17,5 @@ export const formatDateFr = (date: Date) => {
 }
 
 export const getYearFromDateStr = (date: string) => {
-  return new Date(date).getFullYear()
+  return new Date(date).getUTCFullYear()
 }

@@ -5,6 +5,7 @@ import { TRAJECTORY_15_ID, TRAJECTORY_SNBC_GENERAL_ID, TRAJECTORY_WB2C_ID } from
 import { FullStudy } from '@/db/study'
 import { TrajectoryWithObjectives } from '@/db/transitionPlan'
 import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
+import { customRich } from '@/i18n/customRich'
 import { TrajectoryDataPoint } from '@/types/trajectory.types'
 import { calculateTrajectoriesWithHistory, getYearsToDisplay, PastStudy } from '@/utils/trajectory'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
@@ -582,20 +583,6 @@ const TrajectoryGraph = ({
             showMark: ({ index }: { index: number }) => shouldShowMark(index),
             valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
           })
-        } else {
-          series.push({
-            type: 'line',
-            dataType: 'current',
-            isCustom: true,
-            isFailed,
-            data: currentData.map((val, idx) => (idx === studyStartYearIndex ? val : null)),
-            label: traj.label + ` (${studyStartYear})`,
-            color: isFailed ? 'var(--error-100)' : baseColor,
-            curve: 'linear' as const,
-            connectNulls: false,
-            showMark: true,
-            valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
-          })
         }
       }
     })
@@ -754,17 +741,17 @@ const TrajectoryGraph = ({
       {validatedOnly && unvalidatedSourcesInfo.totalCount > 0 && (
         <Alert severity="warning">
           {unvalidatedSourcesInfo.currentStudyCount > 0 && (
-            <div>{t('unvalidatedSourcesWarning', { count: unvalidatedSourcesInfo.currentStudyCount })}</div>
+            <div>{customRich(t, 'unvalidatedSourcesWarning', { count: unvalidatedSourcesInfo.currentStudyCount })}</div>
           )}
           {unvalidatedSourcesInfo.linkedStudies.length > 0 && (
             <div className="mt1">
-              {t('unvalidatedSourcesLinkedStudiesWarning', {
+              {customRich(t, 'unvalidatedSourcesLinkedStudiesWarning', {
                 count: unvalidatedSourcesInfo.linkedStudies.reduce((sum, s) => sum + s.unvalidatedCount, 0),
               })}{' '}
               {unvalidatedSourcesInfo.linkedStudies.map((study, index) => (
                 <span key={study.id}>
                   <Link href={`/etudes/${study.id}`}>{study.name}</Link>
-                  {t('unvalidatedSourcesLinkedStudyCount', { count: study.unvalidatedCount })}
+                  {customRich(t, 'unvalidatedSourcesLinkedStudyCount', { count: study.unvalidatedCount })}
                   {index < unvalidatedSourcesInfo.linkedStudies.length - 1 && ', '}
                 </span>
               ))}
@@ -776,7 +763,7 @@ const TrajectoryGraph = ({
       {studyEmissions === 0 && <Alert severity="warning">{t('noEmissionSourcesWarning')}</Alert>}
       {!!failedTrajectories.length && (
         <Alert severity="warning" className="mb1">
-          <Typography variant="body2">{t('failedTrajectories')}</Typography>
+          <Typography variant="body2">{customRich(t, 'failedTrajectories')}</Typography>
           {failedTrajectories.map((trajectory) => (
             <Typography key={trajectory} variant="body2">
               - {trajectory}
@@ -785,7 +772,7 @@ const TrajectoryGraph = ({
         </Alert>
       )}
       <Typography variant="body2" color="text.secondary">
-        {t('subtitle')}
+        {customRich(t, 'subtitle')}
       </Typography>
       <div>
         <div className="flex align-center justify-between gapped1">

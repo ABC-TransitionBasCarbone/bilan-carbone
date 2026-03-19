@@ -1,4 +1,5 @@
 import Box from '@/components/base/Box'
+import Button from '@/components/base/Button'
 import { MultiSelect } from '@/components/base/MultiSelect'
 import {
   TRAJECTORY_15_ID,
@@ -12,6 +13,7 @@ import {
   TRAJECTORY_WB2C_ID,
 } from '@/constants/trajectories'
 import { TrajectoryWithObjectives } from '@/db/transitionPlan'
+import { customRich } from '@/i18n/customRich'
 import { Typography } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -23,6 +25,9 @@ interface Props {
   selectedSbtiTrajectories: string[]
   setSelectedSbtiTrajectories: (trajectories: string[]) => void
   customSnbcSectoralTrajectory: TrajectoryWithObjectives | null // Default SNBC sectoral trajectory created from percentages
+  isSectenOutdated: boolean
+  canEdit: boolean
+  onOpenSectenUpdateModal: () => void
 }
 
 export const ReferenceTrajectorySelectionSection = ({
@@ -31,13 +36,23 @@ export const ReferenceTrajectorySelectionSection = ({
   selectedSbtiTrajectories,
   setSelectedSbtiTrajectories,
   customSnbcSectoralTrajectory,
+  isSectenOutdated,
+  canEdit,
+  onOpenSectenUpdateModal,
 }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectories')
 
   return (
     <div className={classNames('grid gapped1', styles.trajectoryCardsGrid)}>
       <Box className={classNames('p125 flex-col justify-between gapped2', styles.trajectoryCard)}>
-        <Typography variant="body1">{t('snbcCard.description')}</Typography>
+        <div className="flex-col gapped-2">
+          <Typography variant="body1">{customRich(t, 'snbcCard.description')}</Typography>
+          {isSectenOutdated && canEdit && (
+            <Button variant="outlined" onClick={onOpenSectenUpdateModal}>
+              {t('snbcCard.sectenUpdateButton')}
+            </Button>
+          )}
+        </div>
         <div className="w100 flex-col gapped-2">
           <MultiSelect
             label={t('snbcCard.methodLabel')}
@@ -60,7 +75,7 @@ export const ReferenceTrajectorySelectionSection = ({
         </div>
       </Box>
       <Box className={classNames('p125 flex-col justify-between gapped2', styles.trajectoryCard)}>
-        <Typography variant="body1">{t('sbtiCard.description')}</Typography>
+        <Typography variant="body1">{customRich(t, 'sbtiCard.description')}</Typography>
         <div className="w100 flex-col gapped-2">
           <MultiSelect
             label={t('sbtiCard.methodLabel')}

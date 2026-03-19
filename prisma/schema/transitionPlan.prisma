@@ -43,6 +43,9 @@ model TransitionPlan {
   studyId String @unique @map("study_id")
   study   Study  @relation(fields: [studyId], references: [id])
 
+  sectenVersionId String?        @map("secten_version_id")
+  sectenVersion   SectenVersion? @relation(fields: [sectenVersionId], references: [id])
+
   transitionPlanStudies TransitionPlanStudy[]
   actions               Action[]
   trajectories          Trajectory[]

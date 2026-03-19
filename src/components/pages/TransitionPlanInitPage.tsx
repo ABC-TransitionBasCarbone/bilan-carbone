@@ -20,11 +20,16 @@ import { useTransitionPlanFilters } from '@/hooks/useTransitionPlanFilters'
 import { customRich } from '@/i18n/customRich'
 import { SectorPercentages } from '@/services/serverFunctions/trajectory.command'
 import { createTrajectoryWithObjectives, updateTrajectory } from '@/services/serverFunctions/trajectory.serverFunction'
-import { deleteTransitionPlan, initializeTransitionPlan } from '@/services/serverFunctions/transitionPlan'
+import {
+  deleteTransitionPlan,
+  initializeTransitionPlan,
+  updateTransitionPlanSectenVersion,
+} from '@/services/serverFunctions/transitionPlan'
+import { compareSectenVersions } from '@/utils/secten'
 import { calculateSectoralSNBCReductionRates } from '@/utils/snbc'
 import { getDefaultSnbcSectoralTrajectory } from '@/utils/trajectory'
 import DeleteIcon from '@mui/icons-material/Delete'
-import type { ExternalStudy, SectenInfo, TransitionPlan } from '@prisma/client'
+import type { ExternalStudy, SectenInfo, SectenVersion, TransitionPlan } from '@prisma/client'
 import { TrajectoryType } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -39,6 +44,7 @@ const TransitionPlanSelectionModal = dynamic(
   () => import('@/components/study/transitionPlan/TransitionPlanSelectionModal'),
 )
 const ConfirmDeleteModal = dynamic(() => import('@/components/modals/ConfirmDeleteModal'))
+const SectenUpdateModal = dynamic(() => import('@/components/study/transitionPlan/SectenUpdateModal'))
 
 const TOTAL_STEPS = 4
 
@@ -51,6 +57,8 @@ interface Props {
   linkedExternalStudies: ExternalStudy[]
   validatedOnly: boolean
   sectenData: SectenInfo[]
+  latestSectenVersion: (SectenVersion & { sectenInfos: SectenInfo[] }) | null
+  isSectenOutdated: boolean
 }
 
 const TransitionPlanInitPage = ({
@@ -62,6 +70,8 @@ const TransitionPlanInitPage = ({
   linkedExternalStudies,
   validatedOnly,
   sectenData,
+  latestSectenVersion,
+  isSectenOutdated,
 }: Props) => {
   const t = useTranslations('study.transitionPlan')
   const tBlock = useTranslations('study.transitionPlan.initialization.sectorBlock')
@@ -71,6 +81,8 @@ const TransitionPlanInitPage = ({
   const { callServerFunction } = useServerFunction()
   const [showModal, setShowModal] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [showSectenUpdateModal, setShowSectenUpdateModal] = useState(false)
+  const [isSectenUpdateLoading, setIsSectenUpdateLoading] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [currentStep, setCurrentStep] = useState<number | 'complete'>(-1)
   const [selectedSnbcTrajectories, setSelectedSnbcTrajectories] = useState<string[]>([TRAJECTORY_SNBC_GENERAL_ID])
@@ -183,6 +195,27 @@ const TransitionPlanInitPage = ({
       },
     })
   }, [callServerFunction, study.id, router])
+
+  const handleOpenSectenUpdateModal = useCallback(() => {
+    if (!latestSectenVersion) {
+      return
+    }
+    setShowSectenUpdateModal(true)
+  }, [latestSectenVersion])
+
+  const handleConfirmSectenUpdate = useCallback(async () => {
+    if (!transitionPlan || !latestSectenVersion) {
+      return
+    }
+    setIsSectenUpdateLoading(true)
+    await callServerFunction(() => updateTransitionPlanSectenVersion(transitionPlan.id, latestSectenVersion.id), {
+      onSuccess: () => {
+        setShowSectenUpdateModal(false)
+        router.refresh()
+      },
+    })
+    setIsSectenUpdateLoading(false)
+  }, [transitionPlan, latestSectenVersion, callServerFunction, router])
 
   const handleSaveTrajectory = useCallback(
     async (sectorPercentages: SectorPercentages) => {
@@ -321,9 +354,9 @@ const TransitionPlanInitPage = ({
         <div className="flex-col gapped15">
           <TransitionPlanOnboarding
             title={t('initialization.onboarding.title')}
-            description={t('initialization.onboarding.description')}
+            description={customRich(t, 'initialization.onboarding.description')}
             storageKey="transition-plan-initialization"
-            detailedContent={t('initialization.onboarding.detailedInfo')}
+            detailedContent={customRich(t, 'initialization.onboarding.detailedInfo')}
           />
 
           {/* Step 1 – Past studies */}
@@ -356,7 +389,7 @@ const TransitionPlanInitPage = ({
           {/* Step 3 – SNBC + SBTI selection */}
           <OnboardingSectionStep
             title={t('initialization.stepSelectReferenceTrajectories.title')}
-            description={t('initialization.stepSelectReferenceTrajectories.description')}
+            description={customRich(t, 'initialization.stepSelectReferenceTrajectories.description')}
             glossaryLabel="init-step-select-reference-trajectories"
             glossaryTitleKey="glossaryTitle"
             tModal="study.transitionPlan.initialization.stepSelectReferenceTrajectories"
@@ -371,13 +404,16 @@ const TransitionPlanInitPage = ({
               selectedSbtiTrajectories={selectedSbtiTrajectories}
               setSelectedSbtiTrajectories={setSelectedSbtiTrajectories}
               customSnbcSectoralTrajectory={defaultSnbcSectoralTrajectory}
+              isSectenOutdated={isSectenOutdated}
+              canEdit={canEdit}
+              onOpenSectenUpdateModal={handleOpenSectenUpdateModal}
             />
           </OnboardingSectionStep>
 
           {/* Step 4 – Reference graph */}
           <OnboardingSectionStep
             title={t('initialization.stepVisualization.title')}
-            description={t('initialization.stepVisualization.description')}
+            description={customRich(t, 'initialization.stepVisualization.description')}
             glossaryLabel="init-step-visualization"
             glossaryTitleKey="glossaryTitle"
             tModal="study.transitionPlan.initialization.stepVisualization"
@@ -452,12 +488,21 @@ const TransitionPlanInitPage = ({
         <ConfirmDeleteModal
           open={showDeleteModal}
           title={t('trajectories.delete.title')}
-          message={t('trajectories.delete.description')}
+          message={customRich(t, 'trajectories.delete.description')}
           confirmText={t('trajectories.delete.confirm')}
           cancelText={t('trajectories.delete.cancel')}
           requireNameMatch={study.name}
           onConfirm={handleConfirmDelete}
           onCancel={() => setShowDeleteModal(false)}
+        />
+      )}
+      {showSectenUpdateModal && (
+        <SectenUpdateModal
+          open={showSectenUpdateModal}
+          onClose={() => setShowSectenUpdateModal(false)}
+          onConfirm={handleConfirmSectenUpdate}
+          diff={compareSectenVersions(sectenData, latestSectenVersion?.sectenInfos ?? [])}
+          isLoading={isSectenUpdateLoading}
         />
       )}
     </>

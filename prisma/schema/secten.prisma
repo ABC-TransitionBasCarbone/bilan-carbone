@@ -1,11 +1,12 @@
 model SectenVersion {
-  id          String       @id @default(uuid())
-  name        String
-  sectenInfos SectenInfo[]
-  createdAt   DateTime     @default(now()) @map("created_at")
-  updatedAt   DateTime     @default(now()) @updatedAt @map("updated_at")
+  id              String           @id @default(uuid())
+  year            Int
+  sectenInfos     SectenInfo[]
+  transitionPlans TransitionPlan[]
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @default(now()) @updatedAt @map("updated_at")
 
-  @@unique([name])
+  @@unique([year])
   @@map("secten_version")
 }
 
