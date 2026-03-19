@@ -41,6 +41,7 @@ const DEFAULT_TRAJECTORY = [
   { year: 1990, value: 1200 },
   { year: 2000, value: 1100 },
   { year: 2018, value: 1000 },
+  { year: 2020, value: 1000 },
 ]
 
 const createPastStudy = (year: number, totalCo2: number, overrides?: Partial<PastStudy>): PastStudy => ({
@@ -63,7 +64,7 @@ const verifyTrajectoryInterpolation = (
   pastStudies.forEach((pastStudy) => {
     const point = trajectory.find((p) => p.year === pastStudy.year)
     expect(point).toBeDefined()
-    expect(point?.value).toBeCloseTo(pastStudy.totalCo2, 1)
+    expect(point?.value).toBe(pastStudy.totalCo2)
   })
 
   if (pastStudies.length >= 2) {
@@ -96,7 +97,7 @@ describe('calculateTrajectory', () => {
         defaultTrajectory: DEFAULT_TRAJECTORY,
       })
 
-      expect(result).toHaveLength(31 + DEFAULT_TRAJECTORY.length)
+      expect(result).toHaveLength(34)
       expect(result[0]).toEqual({ year: 1990, value: 1200 })
       expect(result.find((p) => p.year === 2020)?.value).toEqual(1000)
 
@@ -116,7 +117,7 @@ describe('calculateTrajectory', () => {
         defaultTrajectory: DEFAULT_TRAJECTORY,
       })
 
-      expect(result).toHaveLength(2061 - 2020 + DEFAULT_TRAJECTORY.length)
+      expect(result).toHaveLength(44)
       expect(result[0]).toEqual({ year: 1990, value: 1200 })
       expect(result.find((p) => p.year === 2020)?.value).toEqual(1000)
       expect(result.find((p) => p.year === 2050)?.value).toBeCloseTo(
@@ -134,17 +135,13 @@ describe('calculateTrajectory', () => {
         studyStartYear: 2018,
         reductionRate: SBTI_REDUCTION_RATE_15,
         pastStudies: [],
-        defaultTrajectory: [
-          { year: 1990, value: 1200 },
-          { year: 2000, value: 1100 },
-          { year: 2018, value: 1000 },
-        ],
+        defaultTrajectory: DEFAULT_TRAJECTORY,
       })
 
       expect(result[0]).toEqual({ year: 1990, value: 1200 })
       expect(result[1]).toEqual({ year: 2000, value: 1100 })
       expect(result[2]).toEqual({ year: 2018, value: 1000 })
-      expect(result[3].year).toBe(2020)
+      expect(result[3]).toEqual({ year: 2020, value: 1000 })
       expect(result[4].year).toBe(2021)
       expect(Math.round(result[4].value)).toBe(958)
     })
@@ -226,26 +223,6 @@ describe('calculateTrajectory', () => {
   })
 
   describe('SBTi trajectory with SNBC default trajectory', () => {
-    test('without defaultTrajectory - graph starts at earliest past study, no SNBC pre-trajectory', () => {
-      const pastStudies = createPastStudies([2018, 1300])
-      const result = calculateSBTiTrajectory({
-        studyEmissions: 1000,
-        studyStartYear: 2025,
-        reductionRate: SBTI_REDUCTION_RATE_15,
-        pastStudies,
-        defaultTrajectory: [],
-      })
-
-      // Without defaultTrajectory, graph starts at earliest past study year (2018)
-      const firstPoint = result[0]
-      expect(firstPoint.year).toBe(2018)
-      expect(firstPoint.value).toBeCloseTo(1300, 1)
-
-      // No points before 2018
-      const point2017 = result.find((p) => p.year === 2017)
-      expect(point2017).toBeUndefined()
-    })
-
     test('with defaultTrajectory and past study before 2020 - years before past study use SNBC trajectory', () => {
       const sectenData = createGeneralSectenData()
       const pastStudies = createPastStudies([2018, 1300])
@@ -282,33 +259,18 @@ describe('calculateTrajectory', () => {
       expect(point2025?.value).toEqual(1000)
     })
 
-    test('without defaultTrajectory and no past studies - graph starts at 2020, no SNBC pre-trajectory', () => {
-      const result = calculateSBTiTrajectory({
-        studyEmissions: 1000,
-        studyStartYear: 2025,
-        reductionRate: SBTI_REDUCTION_RATE_15,
-        pastStudies: [],
-        defaultTrajectory: [],
-      })
-
-      // No past studies before 2020, pivot year = 2020, graph starts at 2020 - SNBC not applied before it
-      const firstPoint = result[0]
-      expect(firstPoint.year).toBe(2020)
-
-      // Reduction starts from 2025
-      const point2025 = result.find((p) => p.year === 2025)
-      expect(point2025?.value).toBeCloseTo(1000, 1)
-    })
-
     test('with defaultTrajectory and studyStartYear before 2020, past study before studyStartYear - years before past study use SNBC', () => {
       const pastStudies = createPastStudies([2015, 1500])
+      const defaultTrajectoryWithPastStudy = [...DEFAULT_TRAJECTORY, { year: 2015, value: 1500 }].sort(
+        (a, b) => a.year - b.year,
+      )
 
       const result = calculateSBTiTrajectory({
         studyEmissions: 1000,
         studyStartYear: 2019,
         reductionRate: SBTI_REDUCTION_RATE_15,
         pastStudies,
-        defaultTrajectory: DEFAULT_TRAJECTORY,
+        defaultTrajectory: defaultTrajectoryWithPastStudy,
       })
 
       // Pivot year = min(2015, 2020) = 2015. Years before 2015 should use SNBC.
@@ -873,15 +835,13 @@ describe('calculateTrajectory', () => {
         expect(year2018Point?.value).toBeCloseTo(1000, 1)
 
         const year2019Point = referenceTrajectory.find((p) => p.year === 2019)
-        const expectedInterpolated2019 = 1000 + (1 / 6) * (800 - 1000)
-        expect(year2019Point?.value).toBeCloseTo(expectedInterpolated2019, 1)
+        expect(year2019Point?.value).toBeCloseTo(1000, 1)
 
         const year2020Point = referenceTrajectory.find((p) => p.year === 2020)
-        const expectedInterpolated2020 = 1000 + (2 / 6) * (800 - 1000)
-        expect(year2020Point?.value).toBeCloseTo(expectedInterpolated2020, 1)
+        expect(year2020Point?.value).toBeCloseTo(1000, 1)
 
         const year2021Point = referenceTrajectory.find((p) => p.year === 2021)
-        const expectedReduction2021 = expectedInterpolated2020 - 1 * SBTI_REDUCTION_RATE_15 * expectedInterpolated2020
+        const expectedReduction2021 = 1000 - 1 * SBTI_REDUCTION_RATE_15 * 1000
         expect(year2021Point?.value).toBeCloseTo(expectedReduction2021, 1)
       })
 
@@ -910,15 +870,13 @@ describe('calculateTrajectory', () => {
         expect(year2018Point?.value).toBeCloseTo(1000, 1)
 
         const year2019Point = referenceTrajectory.find((p) => p.year === 2019)
-        const expectedInterpolated2019 = 1000 + (1 / 6) * (800 - 1000)
-        expect(year2019Point?.value).toBeCloseTo(expectedInterpolated2019, 1)
+        expect(year2019Point?.value).toBeCloseTo(1000, 1)
 
         const year2020Point = referenceTrajectory.find((p) => p.year === 2020)
-        const expectedInterpolated2020 = 1000 + (2 / 6) * (800 - 1000)
-        expect(year2020Point?.value).toBeCloseTo(expectedInterpolated2020, 1)
+        expect(year2020Point?.value).toBeCloseTo(1000, 1)
 
         const year2021Point = referenceTrajectory.find((p) => p.year === 2021)
-        const expectedReduction2021 = expectedInterpolated2020 - 1 * SBTI_REDUCTION_RATE_15 * expectedInterpolated2020
+        const expectedReduction2021 = 1000 - 1 * SBTI_REDUCTION_RATE_15 * 1000
         expect(year2021Point?.value).toBeCloseTo(expectedReduction2021, 1)
       })
 
@@ -1093,23 +1051,27 @@ describe('calculateTrajectory', () => {
 
     describe('multiple past studies', () => {
       test('SBTi 1.5°C with multiple past studies - interpolation', () => {
-        const pastStudies = createPastStudies([2020, 1200], [2022, 1000])
+        const pastStudies = createPastStudies([2019, 1200], [2022, 1000])
         const currentEmissions = 900
         const currentYear = 2024
+        const defaultTrajectoryWithPastStudy = [
+          { year: 1990, value: 1200 },
+          { year: 2019, value: 1200 },
+        ]
 
         const currentTrajectory = calculateSBTiTrajectory({
           studyEmissions: currentEmissions,
           studyStartYear: currentYear,
           reductionRate: SBTI_REDUCTION_RATE_15,
           pastStudies,
-          defaultTrajectory: DEFAULT_TRAJECTORY,
+          defaultTrajectory: defaultTrajectoryWithPastStudy,
         })
 
         verifyTrajectoryInterpolation(currentTrajectory, pastStudies, currentYear)
 
         const point2021 = currentTrajectory.find((p) => p.year === 2021)
         expect(point2021).toBeDefined()
-        const expected2021 = 1200 + ((2021 - 2020) / (2022 - 2020)) * (1000 - 1200)
+        const expected2021 = 1200 + ((2021 - 2019) / (2022 - 2019)) * (1000 - 1200)
         expect(point2021?.value).toBeCloseTo(expected2021, 1)
 
         const currentPoint = currentTrajectory.find((p) => p.year === currentYear)
@@ -1117,7 +1079,7 @@ describe('calculateTrajectory', () => {
       })
 
       test('SBTi 1.5°C with multiple past studies - overshoot', () => {
-        const pastStudies = createPastStudies([2020, 1200], [2022, 1000])
+        const pastStudies = createPastStudies([2021, 1200], [2022, 1000])
         const currentEmissions = 1100
         const currentYear = 2025
 
@@ -1214,7 +1176,7 @@ describe('calculateTrajectory', () => {
       })
 
       test('Multiple past studies - reference study selection', () => {
-        const pastStudies = createPastStudies([2020, 1200], [2022, 1000], [2023, 950])
+        const pastStudies = createPastStudies([2021, 1200], [2022, 1000], [2023, 950])
         const currentEmissions = 900
         const currentYear = 2025
 
@@ -1248,7 +1210,7 @@ describe('calculateTrajectory', () => {
         })
 
         const point2018 = currentTrajectory.find((p) => p.year === 2018)
-        expect(point2018?.value).toBeCloseTo(1300, 1)
+        expect(point2018?.value).toBe(1000)
 
         const point2019 = currentTrajectory.find((p) => p.year === 2019)
         const point2020 = currentTrajectory.find((p) => p.year === 2020)
