@@ -35,7 +35,7 @@ const Table = <TData,>({
     <>
       {title && <>{title}</>}
       {children}
-      <div className={className}>
+      <div className={classNames(styles.tableContainer, className)}>
         <MuiTable
           aria-labelledby={`${testId}-table-title`}
           className={classNames(styles.tableWrapper, { [styles.small]: size === 'small' })}
