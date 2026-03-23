@@ -1,7 +1,7 @@
 'use server'
 
 import { withServerResponse } from '@/utils/serverResponse'
-import { DocumentCategory } from '@prisma/client'
+import { DocumentCategory } from '@repo/db-common'
 import { canAccessStudyFlows } from '../permissions/study'
 import { getFileUrlFromBucket } from './scaleway'
 

@@ -4,7 +4,7 @@ import withAuth from '@/components/hoc/withAuth'
 import NotFound from '@/components/pages/NotFound'
 import SuperAdminPage from '@/components/pages/SuperAdmin'
 import { auth } from '@/services/auth'
-import { Role } from '@prisma/client'
+import { Role } from '@repo/db-common/enums'
 
 const SuperAdmin = async () => {
   const session = await auth()

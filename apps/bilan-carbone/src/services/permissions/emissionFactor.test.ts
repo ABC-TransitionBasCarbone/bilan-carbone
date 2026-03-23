@@ -1,7 +1,8 @@
 import { AccountWithUser } from '@/db/account'
 import { getMockedDbAccount } from '@/tests/utils/models/user'
 import { expect } from '@jest/globals'
-import { EmissionFactor, Import } from '@prisma/client'
+import { Import } from '@repo/db-common/enums'
+import type { EmissionFactor } from '@repo/db-common'
 import * as emissionFactorModule from '../serverFunctions/emissionFactor'
 import { canEditEmissionFactor, canReadEmissionFactor } from './emissionFactor'
 

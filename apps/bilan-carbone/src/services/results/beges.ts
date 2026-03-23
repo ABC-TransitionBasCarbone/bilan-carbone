@@ -1,7 +1,8 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { hasDeprecationPeriod } from '@/utils/study'
-import { Environment, ExportRule } from '@prisma/client'
+import { Environment } from '@repo/db-common/enums'
+import type { ExportRule } from '@repo/db-common'
 import { computeResult, EmissionSource, ExportEmissionFactor, getEmissionTotal, PostInfos } from './exports'
 
 const allRules = [

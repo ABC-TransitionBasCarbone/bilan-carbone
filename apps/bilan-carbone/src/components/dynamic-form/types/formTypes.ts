@@ -1,4 +1,5 @@
-import { Answer, Question, QuestionType, SubPost } from '@prisma/client'
+import { QuestionType, SubPost } from '@repo/db-common/enums'
+import type { Answer, Question } from '@repo/db-common'
 import { Control, FieldError } from 'react-hook-form'
 import { FieldSaveStatus } from '../../../hooks/useAutoSave'
 

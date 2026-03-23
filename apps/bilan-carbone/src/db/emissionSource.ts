@@ -1,6 +1,7 @@
 import { DefaultStudyTags } from '@/constants/studyTags'
-import { Environment, Prisma } from '@prisma/client'
-import { prismaClient } from './client'
+import { Environment } from '@repo/db-common/enums'
+import type { Prisma } from '@repo/db-common'
+import { prismaClient } from './client.server'
 
 export const getEmissionSourceById = (id: string) =>
   prismaClient.studyEmissionSource.findUnique({ where: { id }, include: { emissionSourceTags: true } })

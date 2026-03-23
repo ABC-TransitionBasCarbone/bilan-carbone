@@ -8,7 +8,7 @@ import {
 } from '@/services/uncertainty'
 import { EmissionSourcesSort } from '@/types/filters'
 import { Translations } from '@/types/translation'
-import { Environment } from '@prisma/client'
+import { Environment } from '@repo/db-common/enums'
 
 export const getEmissionSourcesFuseOptions = (tQuality: Translations, tUnit: Translations, locale: string) => ({
   keys: [

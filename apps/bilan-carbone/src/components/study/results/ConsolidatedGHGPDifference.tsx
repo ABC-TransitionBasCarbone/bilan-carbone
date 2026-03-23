@@ -16,9 +16,11 @@ import {
   EmissionFactorPartType,
   EmissionSourceCaracterisation,
   Export,
-  ExportRule,
   SubPost,
-} from '@prisma/client'
+} from '@repo/db-common/enums'
+import {
+  ExportRule
+} from '@repo/db-common'
 import { useTranslations } from 'next-intl'
 import { useCallback, useMemo } from 'react'
 import { EnergiesIcon } from '../infography/icons/energies'

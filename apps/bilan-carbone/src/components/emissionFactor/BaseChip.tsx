@@ -1,5 +1,5 @@
 import { LocalGroceryStore, LocationOn } from '@mui/icons-material'
-import { EmissionFactorBase } from '@prisma/client'
+import { EmissionFactorBase } from '@repo/db-common/enums'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import styles from './BaseChip.module.css'

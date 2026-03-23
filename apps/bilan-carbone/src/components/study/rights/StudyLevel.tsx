@@ -11,7 +11,7 @@ import { ChangeStudyLevelCommand, ChangeStudyLevelCommandValidation } from '@/se
 import { getAllowedLevels } from '@/services/study'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
-import { Level } from '@prisma/client'
+import { Level } from '@repo/db-common'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'

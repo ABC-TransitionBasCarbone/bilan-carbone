@@ -1,4 +1,4 @@
-import { EstablishmentType } from '@prisma/client'
+import { EstablishmentType } from '@repo/db-common/enums'
 
 export interface School {
   identifiant_de_l_etablissement?: string

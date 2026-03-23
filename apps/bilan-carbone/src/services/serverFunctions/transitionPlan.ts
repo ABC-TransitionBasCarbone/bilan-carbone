@@ -32,7 +32,7 @@ import {
 import type { TransitionPlanWithStudies } from '@/types/trajectory.types'
 import { ApiResponse, withServerResponse } from '@/utils/serverResponse'
 import { getYearFromDateStr } from '@/utils/time'
-import { TransitionPlan } from '@prisma/client'
+import { TransitionPlan } from '@repo/db-common'
 import { dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED, NOT_FOUND } from '../permissions/check'
 import { canReadStudy, hasEditAccessOnStudy, hasReadAccessOnStudy } from '../permissions/study'

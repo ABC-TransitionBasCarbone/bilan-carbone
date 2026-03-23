@@ -1,7 +1,7 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
-import { Document, DocumentCategory } from '@prisma/client'
+import { Document, DocumentCategory } from '@repo/db-common'
 import { useTranslations } from 'next-intl'
 import StudyDocument from './StudyDocument'
 

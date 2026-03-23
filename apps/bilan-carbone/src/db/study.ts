@@ -10,25 +10,20 @@ import { mapCncToStudySite } from '@/utils/cnc'
 import { isAdminOnOrga } from '@/utils/organization'
 import { getUserRoleOnPublicStudy, StudyWithRoleFields } from '@/utils/study'
 import { isAdmin } from '@/utils/user'
-import {
-  CommentStatus,
-  ControlMode,
+import type {
   DuplicableStudy,
-  Environment,
-  Export,
-  Import,
   Level,
-  StudyRole,
   StudyTag,
   StudyTagFamily,
   SubPost,
-  type Prisma,
-} from '@prisma/client'
+  Prisma,
+} from '@repo/db-common'
+import {CommentStatus, Environment, Export, Import, StudyRole , ControlMode} from '@repo/db-common/enums'
 import { UserSession } from 'next-auth'
 import { cache } from 'react'
 import { getAccountOrganizationVersions } from './account'
 import { AccountWithUserSelect } from './account.select'
-import { prismaClient } from './client'
+import { prismaClient } from './client.server'
 import { getOrganizationVersionForRightsCheck } from './organization'
 
 export type StudyTagFamilyWithTags = Omit<StudyTagFamily, 'createdAt' | 'updatedAt'> & {

@@ -3,7 +3,7 @@ import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionS
 import { getMockedFullStudy } from '@/tests/utils/models/study'
 import { expect } from '@jest/globals'
 import { ThemeProvider } from '@mui/material/styles'
-import { ControlMode, EmissionSourceCaracterisation, Export } from '@prisma/client'
+import { ControlMode, EmissionSourceCaracterisation, Export } from '@repo/db-common/enums'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import ExportCheckbox from './ExportCheckbox'

@@ -9,9 +9,9 @@
  * Run with: npx tsx src/scripts/migrations/link-existing-cncs-to-version.ts
  */
 
-import { prismaClient } from '@/db/client'
+import { prismaClient } from '@/db/client.server'
 import { getOrCreateCncVersion } from '@/db/cnc'
-import { Environment } from '@prisma/client'
+import { Environment } from '@repo/db-common/enums'
 
 const MIGRATION_YEAR = 2023
 

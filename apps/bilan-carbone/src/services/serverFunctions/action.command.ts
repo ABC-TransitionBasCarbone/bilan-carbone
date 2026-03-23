@@ -6,7 +6,7 @@ import {
   ActionPotentialDeduction,
   ActionRelevance,
   SubPost,
-} from '@prisma/client'
+} from '@repo/db-common'
 import { z } from 'zod'
 
 const ActionIndicatorSchema = z.object({

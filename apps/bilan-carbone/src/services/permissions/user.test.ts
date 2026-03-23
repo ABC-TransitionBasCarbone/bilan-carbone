@@ -3,7 +3,7 @@ import { mockedOrganizationVersionId } from '@/tests/utils/models/organization'
 import { getMockedAuthUser, getMockedDbAccount, mockedAccountId } from '@/tests/utils/models/user'
 import * as userUtils from '@/utils/user'
 import { expect } from '@jest/globals'
-import { Role, UserStatus } from '@prisma/client'
+import { Role, UserStatus } from '@repo/db-common/enums'
 import { canAddMember, canChangeRole, canDeleteMember, canEditSelfRole } from './user'
 
 jest.mock('@/utils/organization', () => ({}))

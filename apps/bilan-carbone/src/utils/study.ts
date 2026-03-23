@@ -18,7 +18,7 @@ import {
   StudyRole,
   SubPost,
   Unit,
-} from '@prisma/client'
+} from '@repo/db-common/enums'
 import { Getter } from '@tanstack/react-table'
 import { UserSession } from 'next-auth'
 import { unique } from './array'

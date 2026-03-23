@@ -1,13 +1,13 @@
 'use client'
 
-import { getFeaturesRestictions, RestrictionsTypes } from '@/db/deactivableFeatures'
+import { getFeaturesRestictions, RestrictionsTypes } from '@/db/deactivableFeatures.action.server'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import {
   changeDeactivableFeatureRestriction,
   changeDeactivableFeatureStatus,
 } from '@/services/serverFunctions/deactivableFeatures'
 import { FormControl, FormControlLabel, FormLabel, Switch } from '@mui/material'
-import { DeactivatableFeature, Environment, UserSource } from '@prisma/client'
+import { DeactivatableFeature, Environment, UserSource } from '@repo/db-common/enums'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 

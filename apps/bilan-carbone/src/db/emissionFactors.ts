@@ -5,9 +5,10 @@ import { FeFilters } from '@/types/filters'
 import { unique } from '@/utils/array'
 import { getEmissionFactorSubPostsMap, isMonetaryEmissionFactor } from '@/utils/emissionFactors'
 import { flattenSubposts } from '@/utils/post'
-import { EmissionFactorBase, EmissionFactorStatus, Environment, Import, Prisma, SubPost, Unit } from '@prisma/client'
+import { EmissionFactorBase, EmissionFactorStatus, Environment, Import, SubPost, Unit } from '@repo/db-common/enums'
+import type { Prisma } from '@repo/db-common'
 import { Session } from 'next-auth'
-import { prismaClient } from './client'
+import { prismaClient } from './client.server'
 import { getOrgVersionWithOrgId } from './organization'
 
 const otherSelectEmissionFactor = {

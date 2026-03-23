@@ -1,7 +1,7 @@
 'use client'
 
 import { MenuItem, Select } from '@mui/material'
-import { Document } from '@prisma/client'
+import { Document } from '@repo/db-common'
 
 interface Props {
   documents: Document[]

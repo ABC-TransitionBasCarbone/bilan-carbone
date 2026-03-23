@@ -35,11 +35,11 @@ import {
   EmissionFactorBase,
   Environment,
   Export,
-  ExportRule,
   SiteCAUnit,
   StudyResultUnit,
   SubPost,
-} from '@prisma/client'
+} from '@repo/db-common/enums'
+import type {ExportRule } from "@repo/db-common"
 import { Button } from '@repo/ui'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'

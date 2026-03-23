@@ -2,7 +2,7 @@ import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import DynamicAllResults from '@/environments/core/study/results/DynamicAllResults'
 import { addUserChecklistItem } from '@/services/serverFunctions/user'
-import { ExportRule, SiteCAUnit, UserChecklist } from '@prisma/client'
+import { ExportRule, SiteCAUnit, UserChecklist } from '@repo/db-common'
 import { useTranslations } from 'next-intl'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 

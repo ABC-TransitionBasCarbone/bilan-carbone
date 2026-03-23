@@ -17,7 +17,7 @@ import {
   SHORT_DISTANCE_QUESTION_ID,
   XENON_LAMPS_QUESTION_ID,
 } from '@/constants/questions'
-import { prismaClient } from '@/db/client'
+import { prismaClient } from '@/db/client.server'
 import { getEmissionFactorByImportedIdAndStudiesEmissionSource } from '@/db/emissionFactors'
 import {
   createAnswerEmissionSource,
@@ -48,7 +48,8 @@ import {
   hasTableEmissionCalculator,
 } from '@/utils/tableEmissionCalculations'
 import { isTableAnswer } from '@/utils/tableInput'
-import { Answer, Prisma, Question, QuestionType, SubPost } from '@prisma/client'
+import {  QuestionType, SubPost } from '@repo/db-common/enums'
+import type  { Answer, Prisma, Question } from '@repo/db-common'
 import { UserSession } from 'next-auth'
 import { dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
