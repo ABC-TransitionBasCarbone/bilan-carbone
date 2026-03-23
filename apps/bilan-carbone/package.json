@@ -7,7 +7,7 @@
     "yarn": "1.22"
   },
   "scripts": {
-    "postinstall": "yarn install --production=false --cwd publicodes-packages/publicodes-count && yarn install --production=false --cwd publicodes-packages/publicodes-clickson && yarn install --production=false --cwd publicodes-packages/publicodes-tilt && prisma generate",
+    "postinstall": "yarn install --production=false --cwd publicodes-packages/publicodes-count && yarn install --production=false --cwd publicodes-packages/publicodes-clickson && yarn install --production=false --cwd publicodes-packages/publicodes-tilt && prisma generate --config ../../packages/db-common/prisma.config.ts",
     "dev": "next dev --turbopack",
     "dev:test": "dotenv -e .env.test -- next dev --turbopack --port 3001",
     "start:test": "dotenv -e .env.test -- next start --port 3001",
@@ -39,7 +39,6 @@
     "question:import:excel": "npx tsx src/scripts/cut/question/add.ts -f"
   },
   "prisma": {
-    "schema": "../../packages/db-common/prisma/schema",
     "seed": "tsx prisma/seed/index.ts"
   },
   "dependencies": {
@@ -63,7 +62,7 @@
     "@mui/material-nextjs": "^7.3.8",
     "@mui/x-charts": "^8.27.0",
     "@mui/x-date-pickers": "^8.27.2",
-    "@prisma/client": "^6.17.1",
+    "@prisma/client": "^7.5.0",
     "@publicodes/forms": "^0.6.1",
     "@smithy/config-resolver": "^4.4.9",
     "@tanstack/react-table": "^8.21.3",
@@ -97,7 +96,7 @@
     "postcss-nested": "^7.0.2",
     "postcss-preset-env": "^11.2.0",
     "preact": "^10.28.4",
-    "prisma": "^6.17.1",
+    "prisma": "^7.5.0",
     "publicodes": "^1.10.1",
     "react": "19.2.4",
     "react-countdown": "^2.3.6",
