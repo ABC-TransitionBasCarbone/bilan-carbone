@@ -82,10 +82,7 @@ const ObjectiveModal = ({ open, onClose, trajectory, onSuccess, objective, sites
     setIsLoading(true)
 
     const siteIds = toScopedValues(data.siteIds, allSiteIds)
-    const tagIds = toScopedValues(
-      data.tagIds?.filter((id) => id !== OTHER_TAG_ID) ?? [],
-      allTagIds.filter((id) => id !== OTHER_TAG_ID),
-    )
+    const tagIds = toScopedValues(data.tagIds ?? [], allTagIds).filter((id) => id !== OTHER_TAG_ID)
     const subPosts = toScopedValues(data.subPosts, allEnvSubPosts)
 
     if (isEditing && objective) {

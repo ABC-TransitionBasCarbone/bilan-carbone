@@ -552,6 +552,226 @@ describe('calculateTrajectory', () => {
     })
   })
 
+  describe('calculateCustomTrajectory with scope groups', () => {
+    const studyEmissions = 1000
+    const studyStartYear = 2024
+
+    test('basic: sub-objective (30%) + global (70%) → proportional reductions', () => {
+      const objectiveGroups = [
+        {
+          groupId: 'sub',
+          ratio: 0.3,
+          objectives: [{ targetYear: 2030, reductionRate: 0.1 }],
+        },
+        {
+          groupId: 'global',
+          ratio: 0.7,
+          objectives: [{ targetYear: 2030, reductionRate: 0.05 }],
+        },
+      ]
+
+      const result = calculateCustomTrajectory({
+        studyEmissions,
+        studyStartYear,
+        objectives: [{ targetYear: 2030, reductionRate: 0.05 }],
+        objectiveGroups,
+        defaultTrajectory: DEFAULT_TRAJECTORY,
+      })
+
+      // sub group: 300 * 0.1 = 30/yr, global group: 700 * 0.05 = 35/yr → total 65/yr
+      const point2025 = result.find((p) => p.year === 2025)
+      expect(point2025?.value).toBeCloseTo(1000 - 65, 1)
+
+      const point2030 = result.find((p) => p.year === 2030)
+      expect(point2030?.value).toBeCloseTo(1000 - 6 * 65, 1)
+    })
+
+    test('cascade: sub-objective ends in 2030, global continues to 2040', () => {
+      const objectiveGroups = [
+        {
+          groupId: 'sub',
+          ratio: 0.4,
+          objectives: [
+            { targetYear: 2030, reductionRate: 0.1 },
+            { targetYear: 2040, reductionRate: 0.05 }, // cascade after 2030
+          ],
+        },
+        {
+          groupId: 'global',
+          ratio: 0.6,
+          objectives: [{ targetYear: 2040, reductionRate: 0.04 }],
+        },
+      ]
+
+      const result = calculateCustomTrajectory({
+        studyEmissions,
+        studyStartYear,
+        objectives: [{ targetYear: 2040, reductionRate: 0.04 }],
+        objectiveGroups,
+        defaultTrajectory: DEFAULT_TRAJECTORY,
+      })
+
+      // sub: 400 * 0.1 = 40/yr for 2025-2030
+      // global: 600 * 0.04 = 24/yr for 2025-2030
+      const point2030 = result.find((p) => p.year === 2030)
+      expect(point2030?.value).toBeCloseTo(1000 - 6 * (40 + 24), 1)
+
+      // After 2030: sub switches to 0.05, yearlyReduction recalculated on remaining emissions
+      // global yearlyReduction was fixed at 600 * 0.04 = 24 (constant for the whole segment)
+      const subAt2030 = 400 - 6 * 40
+      const globalAt2030 = 600 - 6 * 24
+      const subYearlyAfter = subAt2030 * 0.05
+      const globalYearlyFixed = 600 * 0.04 // fixed at segment start
+      const point2031 = result.find((p) => p.year === 2031)
+      expect(point2031?.value).toBeCloseTo(subAt2030 - subYearlyAfter + globalAt2030 - globalYearlyFixed, 1)
+    })
+
+    test('retro-compatible: without objectiveGroups = identical result to existing', () => {
+      const objectives = [{ targetYear: 2030, reductionRate: 0.05 }]
+
+      const withoutGroups = calculateCustomTrajectory({
+        studyEmissions,
+        studyStartYear,
+        objectives,
+        defaultTrajectory: DEFAULT_TRAJECTORY,
+      })
+
+      const objectiveGroups = [{ groupId: 'global', ratio: 1, objectives }]
+      const withSingleGroup = calculateCustomTrajectory({
+        studyEmissions,
+        studyStartYear,
+        objectives,
+        objectiveGroups,
+        defaultTrajectory: DEFAULT_TRAJECTORY,
+      })
+
+      // Both should have the same future values (objectiveGroups path skips historical points)
+      const futureWithout = withoutGroups.filter((p) => p.year > studyStartYear)
+      const futureWith = withSingleGroup.filter((p) => p.year > studyStartYear)
+      expect(futureWith.length).toBe(futureWithout.length)
+      futureWith.forEach((p, i) => {
+        expect(p.value).toBeCloseTo(futureWithout[i].value, 5)
+      })
+    })
+
+    test('ratio 0: sub-objective filtered out → does not affect emissions', () => {
+      const objectiveGroups = [
+        {
+          groupId: 'filtered',
+          ratio: 0,
+          objectives: [{ targetYear: 2030, reductionRate: 0.5 }],
+        },
+        {
+          groupId: 'global',
+          ratio: 1,
+          objectives: [{ targetYear: 2030, reductionRate: 0.05 }],
+        },
+      ]
+
+      const result = calculateCustomTrajectory({
+        studyEmissions,
+        studyStartYear,
+        objectives: [{ targetYear: 2030, reductionRate: 0.05 }],
+        objectiveGroups,
+        defaultTrajectory: DEFAULT_TRAJECTORY,
+      })
+
+      // Only global group (ratio=1) affects: 1000 * 0.05 = 50/yr
+      const point2025 = result.find((p) => p.year === 2025)
+      expect(point2025?.value).toBeCloseTo(1000 - 50, 1)
+    })
+
+    test('multi-level: specific scope (20%) with 3 objective segments + global (80%)', () => {
+      const objectiveGroups = [
+        {
+          groupId: 'specific', // 20% of total
+          ratio: 0.2,
+          objectives: [
+            { targetYear: 2030, reductionRate: 0.1 },
+            { targetYear: 2040, reductionRate: 0.06 }, // cascades to site level after 2030
+            { targetYear: 2050, reductionRate: 0.04 }, // cascades to global after 2040
+          ],
+        },
+        {
+          groupId: 'global',
+          ratio: 0.8,
+          objectives: [{ targetYear: 2050, reductionRate: 0.03 }],
+        },
+      ]
+
+      const result = calculateCustomTrajectory({
+        studyEmissions,
+        studyStartYear,
+        objectives: [{ targetYear: 2050, reductionRate: 0.03 }],
+        objectiveGroups,
+        defaultTrajectory: DEFAULT_TRAJECTORY,
+      })
+
+      const specificAt2030 = 200 - 6 * (200 * 0.1)
+      const globalAt2030 = 800 - 6 * (800 * 0.03)
+
+      const point2030 = result.find((p) => p.year === 2030)
+      expect(point2030?.value).toBeCloseTo(specificAt2030 + globalAt2030, 1)
+
+      const point2050 = result.find((p) => p.year === 2050)
+      expect(point2050).toBeDefined()
+      expect(point2050!.value).toBeGreaterThan(0)
+    })
+
+    test('Overlapping objectives: 1000 tCO2, energy 10%, global 5% 2030-2050, sub energy 10% 2035-2045', () => {
+      const objectiveGroups = [
+        {
+          groupId: 'energy',
+          ratio: 0.1,
+          objectives: [
+            { targetYear: 2035, reductionRate: 0.05 },
+            { targetYear: 2045, reductionRate: 0.1 },
+            { targetYear: 2050, reductionRate: 0.05 },
+          ],
+        },
+        {
+          groupId: 'DEFAULT',
+          ratio: 0.9,
+          objectives: [{ targetYear: 2050, reductionRate: 0.05 }],
+        },
+      ]
+
+      const result = calculateCustomTrajectory({
+        studyEmissions: 1000,
+        studyStartYear: 2030,
+        objectives: [{ targetYear: 2050, reductionRate: 0.05 }],
+        objectiveGroups,
+        defaultTrajectory: DEFAULT_TRAJECTORY,
+      })
+
+      // Energy: 100 tCO2, -5t/yr (5% of 100) from 2030→2035
+      // Non-energy: 900 tCO2, -45t/yr (5% of 900) from 2030→2050
+      const energyAt2035 = 100 - 5 * 5
+      const globalAt2035 = 900 - 5 * 45
+      const point2035 = result.find((p) => p.year === 2035)
+      expect(point2035?.value).toBeCloseTo(energyAt2035 + globalAt2035, 1)
+
+      // Energy switches to 10% at 2035: yearlyReduction = 75 * 0.1 = 7.5
+      const energyYearly10 = energyAt2035 * 0.1
+      const energyAt2040 = energyAt2035 - 5 * energyYearly10
+      const globalAt2040 = globalAt2035 - 5 * 45
+      const point2040 = result.find((p) => p.year === 2040)
+      expect(point2040?.value).toBeCloseTo(energyAt2040 + globalAt2040, 1)
+
+      // Energy at 2045: fully reduced to 0, non-energy at 675 - 10*45 = 225
+      const energyAt2045 = energyAt2035 - 10 * energyYearly10
+      const globalAt2045 = globalAt2040 - 5 * 45
+      expect(energyAt2045).toBeCloseTo(0, 1)
+      expect(globalAt2045).toBeCloseTo(225, 1)
+      const point2045 = result.find((p) => p.year === 2045)
+      expect(point2045?.value).toBeCloseTo(225, 1)
+
+      // At 2050: non-energy also reaches 0 (900 - 20*45 = 0)
+      const point2050 = result.find((p) => p.year === 2050)
+      expect(point2050?.value).toBeCloseTo(0, 1)
+    })
+  })
+
   describe('getReductionRatePerType', () => {
     test('should return correct reduction rate for SBTI_15', () => {
       const rate = getDefaultSBTIReductionRate(TrajectoryType.SBTI_15)

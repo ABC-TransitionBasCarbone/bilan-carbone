@@ -6,6 +6,7 @@ import { FullStudy } from '@/db/study'
 import type { ActionWithRelations, TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
 import { useTransitionPlan } from '@/hooks/useTransitionPlan'
 import { useTransitionPlanFilters } from '@/hooks/useTransitionPlanFilters'
+import { buildObjectiveGroups, ObjectiveGroup } from '@/utils/scope.utils'
 import { scopeMatchesUIFilters } from '@/utils/scopeFilter'
 import { getActionReductionRatio } from '@/utils/study'
 import { PastStudy } from '@/utils/trajectory'
@@ -107,6 +108,24 @@ const TransitionPlanBase = ({
     [trajectories, selectedSiteIds, selectedSubPosts, selectedTagIds],
   )
 
+  const objectiveGroupsByTrajectoryId = useMemo(() => {
+    const result = new Map<string, ObjectiveGroup[]>()
+    for (const traj of trajectories) {
+      const groups = buildObjectiveGroups({
+        study,
+        validatedOnly,
+        objectives: traj.objectives,
+        filterSiteIds: selectedSiteIds,
+        filterSubPosts: selectedSubPosts,
+        filterTagIds: selectedTagIds,
+      })
+      if (groups) {
+        result.set(traj.id, groups)
+      }
+    }
+    return result.size > 0 ? result : undefined
+  }, [trajectories, study, validatedOnly, selectedSiteIds, selectedSubPosts, selectedTagIds])
+
   const filteredActions = useMemo(() => {
     if (selectedSiteIds.length === 0 || selectedSubPosts.length === 0 || selectedTagIds.length === 0) {
       return []
@@ -193,6 +212,7 @@ const TransitionPlanBase = ({
             studyEmissions={filteredStudyEmissions}
             titleAction={graphTitleAction}
             storageKey={`trajectory-page-${transitionPlanId}`}
+            objectiveGroupsByTrajectoryId={objectiveGroupsByTrajectoryId}
           />
           {children({
             filteredStudyEmissions,
