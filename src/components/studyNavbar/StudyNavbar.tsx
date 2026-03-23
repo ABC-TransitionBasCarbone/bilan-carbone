@@ -8,6 +8,7 @@ import classNames from 'classnames'
 import { UUID } from 'crypto'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
+import DrawerPaper from './DrawerPaper'
 import StudyDrawer from './StudyDrawer'
 import styles from './StudyNavbar.module.css'
 
@@ -51,6 +52,7 @@ const StudyNavbar = ({
       <Drawer
         className={open ? styles.opened : ''}
         open={open}
+        slots={{ paper: DrawerPaper }}
         slotProps={{
           paper: {
             className: classNames('ml1 hauto', styles.drawerContainer),
