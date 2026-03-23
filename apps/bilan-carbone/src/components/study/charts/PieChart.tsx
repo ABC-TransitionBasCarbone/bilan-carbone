@@ -4,7 +4,7 @@ import { BasicTypeCharts, formatValueAndUnit, processPieChartData } from '@/util
 import { formatNumber } from '@/utils/number'
 import { Typography, useMediaQuery, useTheme } from '@mui/material'
 import { PieChart as MuiPieChart, PieChartProps } from '@mui/x-charts'
-import { StudyResultUnit } from '@prisma/client'
+import { StudyResultUnit } from '@repo/db-common'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'

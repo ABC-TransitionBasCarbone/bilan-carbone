@@ -1,4 +1,4 @@
-import { Role } from '@prisma/client'
+import { Role } from '@repo/db-common/enums'
 
 describe('Team', () => {
   before(() => {

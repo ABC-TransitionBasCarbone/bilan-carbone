@@ -3,7 +3,7 @@
 import { customRich } from '@/i18n/customRich'
 import { getEnvironnementRessources } from '@/utils/ressources'
 import { Alert } from '@mui/material'
-import { Environment } from '@prisma/client'
+import { Environment } from '@repo/db-common/enums'
 import classNames from 'classnames'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'

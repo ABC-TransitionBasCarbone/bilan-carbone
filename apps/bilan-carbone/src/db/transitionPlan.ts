@@ -24,8 +24,8 @@ import {
   Trajectory,
   TransitionPlan,
   TransitionPlanStudy,
-} from '@prisma/client'
-import { prismaClient } from './client'
+} from '@repo/db-common'
+import { prismaClient } from './client.server'
 
 export type TransitionPlanWithStudies = TransitionPlan & {
   study: {

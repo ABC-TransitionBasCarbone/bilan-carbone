@@ -13,7 +13,7 @@ import {
 import * as organizationUtils from '@/utils/organization'
 import * as studyUtils from '@/utils/study'
 import { expect } from '@jest/globals'
-import { Environment, Level, Role, StudyRole } from '@prisma/client'
+import { Environment, Level, Role, StudyRole } from '@repo/db-common/enums'
 import * as authModule from '../auth'
 import * as userModule from '../serverFunctions/user'
 import * as environmentAdvancedModule from './environmentAdvanced'

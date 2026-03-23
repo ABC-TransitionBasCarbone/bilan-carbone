@@ -28,7 +28,7 @@ import {
 } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CircularProgress, Typography } from '@mui/material'
-import { SiteCAUnit, StudyRole } from '@prisma/client'
+import { SiteCAUnit, StudyRole } from '@repo/db-common/enums'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'

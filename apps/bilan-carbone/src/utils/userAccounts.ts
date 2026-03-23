@@ -1,5 +1,5 @@
 import { AccountWithUser } from '@/db/account'
-import { User } from '@prisma/client'
+import { User } from '@repo/db-common'
 import { UserSession } from 'next-auth'
 
 export const accountWithUserToUserSession = (account: AccountWithUser) =>

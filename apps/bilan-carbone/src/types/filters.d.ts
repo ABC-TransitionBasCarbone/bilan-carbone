@@ -7,7 +7,7 @@ import {
   EmissionSourceType,
   EngagementPhase,
   SubPost,
-} from '@prisma/client'
+} from '@repo/db-common/enums'
 
 export type FeFilters = {
   archived: boolean

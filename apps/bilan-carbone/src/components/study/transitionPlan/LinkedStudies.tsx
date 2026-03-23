@@ -2,7 +2,7 @@
 
 import { customRich } from '@/i18n/customRich'
 import { PastStudy } from '@/utils/trajectory'
-import type { StudyResultUnit } from '@prisma/client'
+import type { StudyResultUnit } from '@repo/db-common'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import { useState } from 'react'

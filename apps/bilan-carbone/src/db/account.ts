@@ -1,10 +1,11 @@
 import { NOT_AUTHORIZED } from '@/services/permissions/check'
 import { getDeactivableFeatureRestrictions } from '@/services/serverFunctions/deactivableFeatures'
 import { findUserInfo } from '@/utils/user'
-import { Account, DeactivatableFeature, Environment, Prisma, Role, User } from '@prisma/client'
+import type { Account, Prisma, User } from '@repo/db-common'
+import { DeactivatableFeature, Environment, Role } from '@repo/db-common/enums'
 import { UserSession } from 'next-auth'
 import { AccountWithUserSelect } from './account.select'
-import { prismaClient } from './client'
+import { prismaClient } from './client.server'
 import { OrganizationVersionWithOrganizationSelect } from './organization'
 
 export type AccountWithUser = Account & {

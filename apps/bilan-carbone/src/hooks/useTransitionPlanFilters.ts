@@ -1,5 +1,5 @@
 import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
-import { SubPost } from '@prisma/client'
+import { SubPost } from  '@repo/db-common/enums'
 import { useEffect, useState } from 'react'
 
 export const useTransitionPlanFilters = (studyId: string) => {

@@ -1,7 +1,7 @@
 import { TrajectoryWithObjectives } from '@/db/transitionPlan'
 import { TrajectoryDataPoint } from '@/types/trajectory.types'
 import { expect } from '@jest/globals'
-import { Action, StudyResultUnit, TrajectoryType } from '@prisma/client'
+import { Action, StudyResultUnit, TrajectoryType } from '@repo/db-common'
 import { createGeneralSectenData } from './secten.test-utils'
 import { calculateSNBCTrajectory } from './snbc'
 import {

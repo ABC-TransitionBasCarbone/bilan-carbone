@@ -1,5 +1,5 @@
-import { Prisma, TrajectoryType } from '@prisma/client'
-import { prismaClient } from './client'
+import { Prisma, TrajectoryType } from '@repo/db-common'
+import { prismaClient } from './client.server'
 import { TrajectoryWithObjectives } from './transitionPlan'
 
 export const createTrajectoryWithObjectives = async (data: Prisma.TrajectoryCreateInput) => {

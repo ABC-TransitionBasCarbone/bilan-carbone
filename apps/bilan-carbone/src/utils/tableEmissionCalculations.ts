@@ -3,7 +3,7 @@ import { emissionFactorMap } from '@/constants/emissionFactorMap'
 import { SPECTATOR_SHORT_DISTANCE_DETAILS_QUESTION_ID } from '@/constants/questions'
 import { getEmissionFactorByImportedIdAndStudiesEmissionSource } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
-import { Question } from '@prisma/client'
+import {Question} from "@repo/db-common"
 
 const MEAL_EMISSION_FACTOR_ID = '20682'
 const MONTHS_PER_YEAR = 12

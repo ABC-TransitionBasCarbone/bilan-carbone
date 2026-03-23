@@ -1,5 +1,5 @@
 import { removeSourceToAllStudies } from '@/db/study'
-import { Import } from '@prisma/client'
+import { Import } from '@repo/db-common/enums'
 import { Command } from 'commander'
 
 const program = new Command()

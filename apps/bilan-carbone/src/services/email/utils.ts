@@ -1,4 +1,4 @@
-import { Environment } from '@prisma/client'
+import { Environment } from '@repo/db-common/enums'
 
 export const getEnvRoute = (path: string, env?: Environment) => {
   let base = ''

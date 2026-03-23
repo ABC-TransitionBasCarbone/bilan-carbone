@@ -18,7 +18,7 @@ import {
 } from '@/services/serverFunctions/study.command'
 import { hasEditionRights } from '@/utils/study'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ControlMode, Export, SiteCAUnit, StudyRole } from '@prisma/client'
+import { ControlMode, Export, SiteCAUnit, StudyRole } from '@repo/db-common/enums'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { useFormatter, useTranslations } from 'next-intl'

@@ -1,4 +1,4 @@
-import { Environment } from '@repo/db-common/src/enums/environment'
+import { Environment } from '@repo/db-common/enums'
 import { getToken } from 'next-auth/jwt'
 import { NextRequest, NextResponse } from 'next/server'
 

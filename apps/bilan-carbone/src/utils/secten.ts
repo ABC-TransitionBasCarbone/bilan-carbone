@@ -1,5 +1,5 @@
 import { SECTEN_SECTORS, SectenSector } from '@/constants/trajectories'
-import type { SectenInfo } from '@prisma/client'
+import type { SectenInfo } from '@repo/db-common'
 
 export type SectenDiffEntry = {
   year: number

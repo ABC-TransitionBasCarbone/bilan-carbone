@@ -1,7 +1,7 @@
 import { FullStudy } from '@/db/study'
 import { Post } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
-import { SubPost } from '@prisma/client'
+import { SubPost } from  '@repo/db-common/enums'
 import classNames from 'classnames'
 import styles from './AllPostsInfography.module.css'
 import PostInfography from './PostInfography'

@@ -1,6 +1,6 @@
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import InventoryIcon from '@mui/icons-material/Inventory'
-import { EmissionFactorStatus } from '@prisma/client'
+import { EmissionFactorStatus } from '@repo/db-common/enums'
 import { Getter } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 

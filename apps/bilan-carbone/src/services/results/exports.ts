@@ -7,9 +7,11 @@ import {
   EmissionFactorPartType,
   EmissionSourceCaracterisation,
   Environment,
-  ExportRule,
   Import,
-} from '@prisma/client'
+} from '@repo/db-common/enums'
+import type {
+  ExportRule,
+} from '@repo/db-common'
 import { convertTiltSubPostToBCSubPost } from '../posts'
 import {
   getSquaredStandardDeviationForEmissionSource,

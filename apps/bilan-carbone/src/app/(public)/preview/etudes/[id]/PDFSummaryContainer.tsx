@@ -5,7 +5,7 @@ import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import PDFSummaryCut from '@/environments/cut/study/PDF/PDFSummary'
 import { LocaleType } from '@/i18n/config'
 import { getMessages } from '@/i18n/utils'
-import { Environment } from '@prisma/client'
+import { Environment } from '@repo/db-common/enums'
 import { NextIntlClientProvider } from 'next-intl'
 import { useEffect, useState } from 'react'
 

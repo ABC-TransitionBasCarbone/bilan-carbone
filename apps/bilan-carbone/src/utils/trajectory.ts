@@ -19,7 +19,7 @@ import {
   SectenInfo,
   StudyResultUnit,
   TrajectoryType,
-} from '@prisma/client'
+} from '@repo/db-common'
 import {
   calculateCustomSNBCSectoralTrajectory,
   calculateSectoralSNBCReductionRates,

@@ -1,5 +1,5 @@
 import { ID_INTERN_PREFIX_REGEX } from '@/constants/utils'
-import { prismaClient } from './client'
+import { prismaClient } from './client.server'
 
 export const deleteAnswerKeysByRow = async (idIntern: string, indexToDelete: string) => {
   const cleanedIdIntern = idIntern.replace(ID_INTERN_PREFIX_REGEX, '')

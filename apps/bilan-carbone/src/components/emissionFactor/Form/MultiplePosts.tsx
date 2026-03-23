@@ -7,7 +7,7 @@ import { SubPostsCommand } from '@/services/serverFunctions/emissionFactor.comma
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { getSortedPosts } from '@/utils/post'
 import { Box, FormControl, FormHelperText, MenuItem, SelectChangeEvent } from '@mui/material'
-import { Environment, SubPost } from '@prisma/client'
+import { Environment, SubPost } from '@repo/db-common/enums'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
 import { Control, Controller, FieldPath, UseFormReturn, UseFormSetValue } from 'react-hook-form'

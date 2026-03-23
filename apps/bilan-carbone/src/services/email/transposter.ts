@@ -1,5 +1,5 @@
 import { getEnvVar } from '@/lib/environment'
-import { Environment } from '@prisma/client'
+import { Environment } from '@repo/db-common/enums'
 import nodemailer from 'nodemailer'
 import SMTPTransport from 'nodemailer/lib/smtp-transport'
 

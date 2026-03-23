@@ -3,7 +3,7 @@
 import { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import StudyResultsContainerSummaryPublicodes from '@/environments/simplified/study/results/StudyResultsContainerSummaryPublicodes'
-import { Environment } from '@prisma/client'
+import { Environment } from '@repo/db-common/enums'
 import { UserSession } from 'next-auth'
 import Block from '../base/Block'
 import StudyResultsContainerSummary from './results/StudyResultsContainerSummary'

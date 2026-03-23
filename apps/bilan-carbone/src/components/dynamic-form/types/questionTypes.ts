@@ -1,6 +1,6 @@
-import { QuestionType } from '@prisma/client'
+import { QuestionType } from '@repo/db-common/enums'
 
-export { QuestionType, SubPost } from '@prisma/client'
+export { QuestionType, SubPost } from '@repo/db-common/enums'
 
 export enum TextInputFormat {
   Text = 'Text',

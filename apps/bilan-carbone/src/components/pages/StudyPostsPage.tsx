@@ -7,7 +7,7 @@ import { EmissionSourcesStatus, getEmissionSourceStatus } from '@/services/study
 import { EmissionSourcesFilters, EmissionSourcesSort } from '@/types/filters'
 import { unique } from '@/utils/array'
 import { getEmissionSourcesFuseOptions, getSortedEmissionSources } from '@/utils/emissionSources'
-import { ControlMode, EmissionSourceCaracterisation, EmissionSourceType, StudyRole } from '@prisma/client'
+import { ControlMode, EmissionSourceCaracterisation, EmissionSourceType, StudyRole } from '@repo/db-common/enums'
 import Fuse from 'fuse.js'
 import { UserSession } from 'next-auth'
 import { useLocale, useTranslations } from 'next-intl'

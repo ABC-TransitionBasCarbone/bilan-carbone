@@ -32,7 +32,7 @@ import {
   StudyRole,
   SubPost,
   Unit,
-} from '@prisma/client'
+} from '@repo/db-common/enums'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'

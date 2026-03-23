@@ -9,7 +9,7 @@ import FooterClickson from '@/environments/clickson/layout/Footer'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import FooterCut from '@/environments/cut/layout/Footer'
 import SimplifiedUserView from '@/environments/simplified/home/UserView'
-import { Environment } from '@prisma/client'
+import { Environment } from '@repo/db-common/enums'
 
 export const revalidate = 0
 

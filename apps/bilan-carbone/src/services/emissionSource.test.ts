@@ -1,6 +1,6 @@
 import { FullStudy } from '@/db/study'
 import { expect } from '@jest/globals'
-import { EmissionFactorBase, Environment, SubPost, Unit } from '@prisma/client'
+import { EmissionFactorBase, Environment, SubPost, Unit } from '@repo/db-common/enums'
 import { getEmissionResults } from './emissionSource'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not

@@ -3,7 +3,7 @@
 import Modal from '@/components/modals/Modal'
 import { getTrajectoryTypeLabel } from '@/utils/trajectory'
 import { Typography } from '@mui/material'
-import type { TrajectoryType } from '@prisma/client'
+import type { TrajectoryType } from '@repo/db-common'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import styles from './TrajectoryConversionWarningModal.module.css'

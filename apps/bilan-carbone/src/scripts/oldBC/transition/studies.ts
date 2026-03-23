@@ -5,18 +5,20 @@ import { getEmissionQuality } from '@/services/importEmissionFactor/import'
 import { hasDeprecationPeriod } from '@/utils/study'
 import {
   ControlMode,
-  EmissionFactorImportVersion,
-  EmissionFactor as EmissionFactorPrismaModel,
   EmissionSourceCaracterisation,
   Environment,
-  ExportRule,
   Import,
   Level,
-  Prisma,
   Export as StudyExport,
   SubPost,
   Unit,
-} from '@prisma/client'
+} from '@repo/db-common/enums'
+import type {
+  EmissionFactorImportVersion,
+  EmissionFactor as EmissionFactorPrismaModel,
+  ExportRule,
+  Prisma,
+} from '@repo/db-common'
 import { getJsDateFromExcel } from 'excel-date-to-js'
 import { NewPostAndSubPosts, OldNewPostAndSubPostsMapping } from './newPostAndSubPosts'
 import {

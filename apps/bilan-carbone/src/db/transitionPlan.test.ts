@@ -6,7 +6,7 @@ import {
   Trajectory,
   TrajectoryType,
   TransitionPlanStudy,
-} from '@prisma/client'
+} from '@repo/db-common'
 import {
   ActionWithRelations,
   duplicateTransitionPlanWithRelations,
