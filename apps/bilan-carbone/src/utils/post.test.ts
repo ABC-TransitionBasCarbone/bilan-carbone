@@ -1,7 +1,7 @@
 import { BCPost, CutPost, Post, subPostsByPost, TiltPost } from '@/services/posts'
 import { AdditionalResultTypes } from '@/services/study'
 import { expect } from '@jest/globals'
-import { Environment, SubPost } from '@prisma/client'
+import { Environment, SubPost } from '@repo/db-common/enums'
 import { getPost, getPostValues } from './post'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not

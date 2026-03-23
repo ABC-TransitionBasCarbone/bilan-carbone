@@ -8,7 +8,7 @@ import type { ActionWithRelations, TrajectoryWithObjectivesAndScope } from '@/ty
 import { getDefaultSnbcSectoralPercentages, getDefaultSnbcSectoralTrajectory } from '@/utils/trajectory'
 import AddIcon from '@mui/icons-material/Add'
 import { Tooltip, Typography } from '@mui/material'
-import type { ExternalStudy, SectenInfo, TransitionPlan } from '@prisma/client'
+import type { ExternalStudy, SectenInfo, TransitionPlan } from '@repo/db-common'
 import { Button } from '@repo/ui'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'

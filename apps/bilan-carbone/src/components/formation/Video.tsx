@@ -1,6 +1,6 @@
 'use client'
 
-import { Formation } from '@prisma/client'
+import { Formation } from '@repo/db-common'
 import classNames from 'classnames'
 import dynamic from 'next/dynamic'
 import Box from '../base/Box'

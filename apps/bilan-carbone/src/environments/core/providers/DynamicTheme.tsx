@@ -6,7 +6,7 @@ import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import cutTheme from '@/environments/cut/theme/theme'
 import tiltTheme from '@/environments/tilt/theme/theme'
 import { ThemeProvider } from '@mui/material'
-import { Environment } from '@prisma/client'
+import { Environment } from '@repo/db-common/enums'
 import { ReactNode } from 'react'
 
 interface Props {

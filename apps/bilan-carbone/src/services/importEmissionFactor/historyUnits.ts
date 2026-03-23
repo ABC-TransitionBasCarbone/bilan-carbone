@@ -1,4 +1,4 @@
-import { Unit } from '@prisma/client'
+import { Unit } from '@repo/db-common/enums'
 
 export const unitsMatrix: Record<string, Unit> = {
   '100 feuilles A4': Unit.A4_SHEET_100,

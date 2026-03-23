@@ -1,5 +1,5 @@
 import { setCustomIssue } from '@/lib/zod.config'
-import { EmissionFactorBase, EmissionFactorPartType, SubPost, Unit } from '@prisma/client'
+import { EmissionFactorBase, EmissionFactorPartType, SubPost, Unit } from '@repo/db-common/enums'
 import z from 'zod'
 
 export const maxParts = 5

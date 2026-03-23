@@ -6,7 +6,7 @@ import {
   tableLayout,
 } from '@/components/publicodes-form/layouts/formLayout'
 import { TiltPost } from '@/services/posts.enums'
-import { SubPost } from '@prisma/client'
+import { SubPost } from  '@repo/db-common/enums'
 import { TiltRuleName } from './types'
 
 export const getPostRuleNameTilt = (post: TiltPost): TiltRuleName | '' => {

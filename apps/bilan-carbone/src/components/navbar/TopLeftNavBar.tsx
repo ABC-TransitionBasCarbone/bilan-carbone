@@ -5,7 +5,7 @@ import { hasAlwaysAccessToOrganizationVersion, hasHomeButtonHeader, isTilt } fro
 import { hasAccessToEmissionFactors } from '@/services/permissions/environmentAdvanced'
 import { isAdmin } from '@/utils/user'
 import { Box, MenuItem } from '@mui/material'
-import { Role } from '@prisma/client'
+import { Role } from '@repo/db-common/enums'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { MouseEvent, useState } from 'react'

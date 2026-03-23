@@ -25,16 +25,18 @@ import EditIcon from '@mui/icons-material/Edit'
 import HideIcon from '@mui/icons-material/VisibilityOff'
 import { Autocomplete, FormControl, InputLabel, MenuItem, Popper, TextField } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers'
+import type {
+  StudyTag,
+} from '@repo/db-common'
 import {
   EmissionSourceCaracterisation,
   EmissionSourceType,
   Environment,
   StudyResultUnit,
   StudyRole,
-  StudyTag,
   SubPost,
   Unit,
-} from '@prisma/client'
+} from '@repo/db-common/enums'
 import { Button } from '@repo/ui'
 import classNames from 'classnames'
 import dayjs from 'dayjs'

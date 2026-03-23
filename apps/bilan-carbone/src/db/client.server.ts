@@ -1,4 +1,5 @@
-import { PrismaClient } from '@prisma/client'
+import 'server-only'
+import { PrismaClient } from '@repo/db-common'
 import { PrismaPg } from '@prisma/adapter-pg'
 
 // https://www.prisma.io/docs/guides/other/troubleshooting-orm/help-articles/nextjs-prisma-client-dev-practices

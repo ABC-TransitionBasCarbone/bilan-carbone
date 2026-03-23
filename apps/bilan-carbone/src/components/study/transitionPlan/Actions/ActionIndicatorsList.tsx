@@ -3,7 +3,7 @@ import { AddActionFormCommand } from '@/services/serverFunctions/action.command'
 import AddIcon from '@mui/icons-material/Add'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { IconButton, Typography } from '@mui/material'
-import { ActionIndicatorType } from '@prisma/client'
+import { ActionIndicatorType } from '@repo/db-common'
 import { useTranslations } from 'next-intl'
 import { Control, useFieldArray, UseFormSetValue } from 'react-hook-form'
 

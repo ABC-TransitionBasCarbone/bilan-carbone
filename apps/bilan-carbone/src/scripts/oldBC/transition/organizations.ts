@@ -1,5 +1,6 @@
 import { OrganizationVersionWithOrganization, OrganizationVersionWithOrganizationSelect } from '@/db/organization'
-import { Environment, Prisma } from '@prisma/client'
+import { Environment } from '@repo/db-common/enums'
+import { Prisma } from '@repo/db-common'
 import { OrganizationRow, OrganizationsWorkSheet } from './oldBCWorkSheetsReader'
 import { getExistingSitesIds } from './repositories'
 

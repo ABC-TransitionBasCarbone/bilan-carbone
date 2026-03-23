@@ -7,9 +7,14 @@ import {
   Environment,
   Export,
   Import,
-  StudyEmissionSource,
   SubPost,
-} from '@prisma/client'
+} from '@repo/db-common/enums'
+
+import type {
+  StudyEmissionSource
+} from '@repo/db-common'
+
+
 import { StudyWithoutDetail } from './permissions/study'
 import { convertTiltSubPostToBCSubPost } from './posts'
 import { getConfidenceInterval, getSquaredStandardDeviationForEmissionSource } from './uncertainty'

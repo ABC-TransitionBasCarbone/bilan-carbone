@@ -1,6 +1,6 @@
 import { EnvironmentNames } from '@/constants/environments'
 import { getEnvVar } from '@/lib/environment'
-import { Environment } from '@prisma/client'
+import { Environment } from '@repo/db-common/enums'
 import { getTranslations } from 'next-intl/server'
 import { sendEmail } from './send'
 import { getEnvResetLink } from './utils'

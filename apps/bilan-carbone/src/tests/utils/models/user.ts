@@ -1,4 +1,5 @@
-import { Account, Environment, Level, Prisma, Role, User, UserSource, UserStatus } from '@prisma/client'
+import { Environment, Level, Role, UserSource, UserStatus } from '@repo/db-common/enums'
+import type { Account, Prisma, User } from '@repo/db-common'
 import { Session, UserSession } from 'next-auth'
 import { mockedOrganizationId, mockedOrganizationVersionId } from './organization'
 

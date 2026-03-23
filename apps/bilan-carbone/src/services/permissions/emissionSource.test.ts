@@ -3,7 +3,7 @@ import { getMockedFullStudy, getMockedFullStudySite } from '@/tests/utils/models
 import { getMockedDbAccount } from '@/tests/utils/models/user'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import { expect } from '@jest/globals'
-import { StudyRole } from '@prisma/client'
+import { StudyRole } from '@repo/db-common/enums'
 import * as studyUtilsModule from '../../utils/study'
 import { hasStudyBasicRights } from './emissionSource'
 import * as studyModule from './study'

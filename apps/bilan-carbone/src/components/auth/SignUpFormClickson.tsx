@@ -11,7 +11,7 @@ import { SignUpClicksonCommand, SignUpClicksonCommandValidation } from '@/servic
 import { zodResolver } from '@hookform/resolvers/zod'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import { FormControl } from '@mui/material'
-import { Country, Environment } from '@prisma/client'
+import { Country, Environment } from '@repo/db-common/enums'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'

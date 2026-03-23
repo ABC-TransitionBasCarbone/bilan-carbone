@@ -6,7 +6,7 @@ import {
 } from '@/services/serverFunctions/emissionSource.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
-import { StudyTagFamily } from '@prisma/client'
+import { StudyTagFamily } from '@repo/db-common'
 import { Button } from '@repo/ui'
 import { useTranslations } from 'next-intl'
 import { useForm } from 'react-hook-form'

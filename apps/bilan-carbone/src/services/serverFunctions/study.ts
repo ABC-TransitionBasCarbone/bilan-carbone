@@ -16,7 +16,7 @@ import {
   getAccountsFromOrganization,
   getAccountsUserLevel,
 } from '@/db/account'
-import { prismaClient } from '@/db/client'
+import { prismaClient } from '@/db/client.server'
 import { findCncByCncCode, updateNumberOfProgrammedFilms } from '@/db/cnc'
 import { createDocument, deleteDocument } from '@/db/document'
 import {
@@ -111,29 +111,27 @@ import {
 import { formatDateFr } from '@/utils/time'
 import { isAdmin } from '@/utils/user'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
-import {
+
+import type {
   Account,
-  CommentStatus,
-  ControlMode,
   Document,
-  DocumentCategory,
-  DuplicableStudy,
   EmissionFactor,
   EmissionFactorImportVersion,
-  EmissionSourceCaracterisation,
-  Environment,
-  Export,
-  Import,
-  Level,
   Prisma,
-  Role,
   StudyEmissionSource,
+} from '@repo/db-common'
+import {CommentStatus, Environment, Export, Import, StudyRole, SubPost, ControlMode,
   StudyResultUnit,
-  StudyRole,
-  SubPost,
   UserChecklist,
   UserStatus,
-} from '@prisma/client'
+  Role,
+  EmissionSourceCaracterisation,
+  Level,
+  DocumentCategory,
+  DuplicableStudy,
+
+
+} from '@repo/db-common/enums'
 import Docxtemplater from 'docxtemplater'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'

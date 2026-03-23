@@ -8,7 +8,8 @@ import {
   getRawOrganizationBySiret,
 } from '@/db/organization'
 import { createUsersWithAccount, organizationVersionActiveAccountsCount, updateAccount } from '@/db/user'
-import { Environment, Level, Prisma, Role, UserSource, UserStatus } from '@prisma/client'
+import { Prisma } from '@repo/db-common'
+import { Environment, Level, Role, UserSource, UserStatus } from '@repo/db-common/enums'
 import { getCutRoleFromBase } from '../../../prisma/seed/utils'
 
 type Training = {

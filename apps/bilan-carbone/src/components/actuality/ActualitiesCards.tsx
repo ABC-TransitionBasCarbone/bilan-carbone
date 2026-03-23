@@ -1,6 +1,6 @@
 'use server'
 
-import { getMainActualitiesLocale } from '@/db/actuality'
+import { getMainActualitiesLocale } from '@/db/actuality.server'
 import classNames from 'classnames'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'

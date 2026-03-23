@@ -1,9 +1,18 @@
-import { EmissionFactorPartType, PrismaClient } from '@prisma/client'
+import { EmissionFactorPartType } from '@repo/db-common/enums'
+import {PrismaClient} from '@repo/db-common'
+import { PrismaPg } from '@prisma/adapter-pg'
 import { writeFileSync } from 'fs'
 
 // One shot script to get all FE with fabrication part
 
-const prisma = new PrismaClient()
+const adapter = new PrismaPg({
+  connectionString: process.env.POSTGRES_PRISMA_URL,
+  ssl: { rejectUnauthorized: false },
+})
+
+const prisma = new PrismaClient({
+  adapter
+}) as PrismaClient
 
 const findFEs = async () => {
   const FEs = await prisma.emissionFactor.findMany({

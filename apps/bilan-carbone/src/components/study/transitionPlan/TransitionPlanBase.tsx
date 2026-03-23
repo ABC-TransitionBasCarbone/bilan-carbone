@@ -14,7 +14,7 @@ import type {
 import { buildObjectiveGroups } from '@/utils/scope.utils'
 import { scopeMatchesUIFilters } from '@/utils/scopeFilter'
 import { getActionReductionRatio } from '@/utils/study'
-import type { ExternalStudy, SectenInfo, SubPost } from '@prisma/client'
+import type { ExternalStudy, SectenInfo, SubPost } from '@repo/db-common'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useMemo } from 'react'
 import TrajectoryGraph from './TrajectoryGraph'

@@ -1,7 +1,7 @@
 import { CutRoles } from '@/services/roles'
 import { getMockedAuthUser } from '@/tests/utils/models/user'
 import { expect } from '@jest/globals'
-import { Environment, Role, UserStatus } from '@prisma/client'
+import { Environment, Role, UserStatus } from '@repo/db-common/enums'
 import { canBeUntrainedRole, findUserInfo, getEnvironmentRoles, getRoleToSetForUntrained, isAdmin } from './user'
 
 describe('userUtils functions', () => {

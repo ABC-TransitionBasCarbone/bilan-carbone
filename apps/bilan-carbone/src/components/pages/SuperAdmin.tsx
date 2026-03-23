@@ -1,7 +1,7 @@
 'use server'
 
 import { getDeactivableFeaturesRestrictionValues } from '@/services/serverFunctions/deactivableFeatures'
-import { Environment } from '@prisma/client'
+import { Environment } from '@repo/db-common/enums'
 import { getTranslations } from 'next-intl/server'
 import DeactivableFeatures from '../admin/DeactivableFeatures'
 import SuperAdminImport from '../admin/SuperAdminImport'

@@ -12,7 +12,7 @@ import {
   getAccountsFromUser,
 } from '@/db/account'
 import { findCncByCncCode } from '@/db/cnc'
-import { isFeatureActive } from '@/db/deactivableFeatures'
+import { isFeatureActive } from '@/db/deactivableFeatures.action.server'
 import {
   createOrganizationWithVersion,
   getOrganizationVersionByOrganizationIdAndEnvironment,
@@ -59,12 +59,14 @@ import {
   DeactivatableFeature,
   Environment,
   Level,
-  Organization,
   Role,
-  User,
   UserChecklist,
   UserStatus,
-} from '@prisma/client'
+} from '@repo/db-common/enums'
+import {
+  Organization,
+  User,
+} from '@repo/db-common'
 import jwt from 'jsonwebtoken'
 import { UserSession } from 'next-auth'
 import { getCompanyName, getValidAssociationNameBySiret } from '../associationApi'

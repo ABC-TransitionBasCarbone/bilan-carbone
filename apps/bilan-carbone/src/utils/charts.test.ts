@@ -2,7 +2,7 @@ import { Post } from '@/services/posts'
 import { translationMock } from '@/tests/utils/models/translationsMock'
 import { expect } from '@jest/globals'
 import { Theme } from '@mui/material'
-import { StudyResultUnit, SubPost } from '@prisma/client'
+import { StudyResultUnit, SubPost } from '@repo/db-common'
 import {
   BasicTypeCharts,
   formatValueAndUnit,

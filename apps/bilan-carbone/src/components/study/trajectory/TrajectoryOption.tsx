@@ -1,7 +1,7 @@
 import { customRich } from '@/i18n/customRich'
 import CheckIcon from '@mui/icons-material/Check'
 import { Typography } from '@mui/material'
-import { TrajectoryType } from '@prisma/client'
+import { TrajectoryType } from '@repo/db-common'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import styles from './TrajectoryCreationModal.module.css'

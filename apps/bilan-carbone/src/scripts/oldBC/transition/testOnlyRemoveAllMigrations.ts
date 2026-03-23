@@ -1,4 +1,4 @@
-import { prismaClient } from '@/db/client'
+import { prismaClient } from '@/db/client.server'
 import { Command } from 'commander'
 
 const removeAllMigrations = async () => {

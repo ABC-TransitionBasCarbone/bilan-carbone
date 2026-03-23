@@ -3,7 +3,7 @@ import { SubPostInfography } from '@/components/study/infography/SubPostInfograp
 import { Post } from '@/services/posts'
 import { defaultPostColor, postColors } from '@/utils/study'
 import { styled } from '@mui/material/styles'
-import { SubPost } from '@prisma/client'
+import { SubPost } from  '@repo/db-common/enums'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 const StyledLink = styled('div', { shouldForwardProp: (prop) => prop !== 'visible' && prop !== 'post' })<{

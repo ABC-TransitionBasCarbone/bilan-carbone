@@ -1,4 +1,4 @@
-import { ActionRelevance } from '@prisma/client'
+import { ActionRelevance } from '@repo/db-common'
 
 export const RELEVANCE_TO_PRIORITY: Record<ActionRelevance, number> = {
   [ActionRelevance.ReductionWithinOrganisationCoreBusiness]: 1,

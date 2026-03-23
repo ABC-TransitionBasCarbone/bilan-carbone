@@ -1,4 +1,4 @@
-import { Unit } from '@prisma/client'
+import { Unit } from '@repo/db-common/enums'
 import { useTranslations } from 'next-intl'
 
 const UnitCommon = {
