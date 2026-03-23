@@ -1,5 +1,5 @@
 import { getOrCreateCncVersion, upsertCNC } from '@/db/cnc'
-import { Prisma } from '@prisma/client'
+import type { Prisma } from '@repo/db-common'
 import { Command } from 'commander'
 import { parse } from 'csv-parse'
 import fs from 'fs'

@@ -6,7 +6,7 @@ import { EngagementActionSteps, EngagementActionTargets } from '@/constants/enga
 import { FullStudy } from '@/db/study'
 import { EngagementActionWithSites } from '@/services/serverFunctions/study'
 import { formatDateFr } from '@/utils/time'
-import { EngagementPhase } from '@prisma/client'
+import { EngagementPhase } from '@repo/db-common'
 import {
   ColumnDef,
   getCoreRowModel,

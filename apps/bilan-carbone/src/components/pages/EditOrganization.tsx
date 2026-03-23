@@ -1,7 +1,7 @@
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { getUserApplicationSettings } from '@/db/user'
 import { defaultCAUnit } from '@/utils/number'
-import { Environment } from '@prisma/client'
+import { Environment } from '@repo/db-common/enums'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'

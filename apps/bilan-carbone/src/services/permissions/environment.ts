@@ -1,5 +1,6 @@
-import { isFeatureActiveForEnvironment } from '@/db/deactivableFeatures'
-import { DeactivatableFeature, Environment } from '@prisma/client'
+import { isFeatureActiveForEnvironment } from '@/db/deactivableFeatures.action.server'
+import { Environment } from '@repo/db-common/enums'
+import { DeactivatableFeature } from '@repo/db-common/enums'
 
 const { BC, CUT, TILT, CLICKSON } = Environment
 const advancedEnvironments: Environment[] = [BC, TILT]

@@ -1,6 +1,6 @@
 import { FullStudy } from '@/db/study'
 import { customRich } from '@/i18n/customRich'
-import { EmissionFactorBase, Export, Unit } from '@prisma/client'
+import { EmissionFactorBase, Export, Unit } from '@repo/db-common/enums'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import GlossaryIconModal from '../modals/GlossaryIconModal'

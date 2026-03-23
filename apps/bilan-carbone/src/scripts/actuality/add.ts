@@ -1,6 +1,6 @@
-import { createActualities } from '@/db/actuality'
+import { createActualities } from '@/db/actuality.server'
 import { Locale } from '@/i18n/config'
-import { Prisma } from '@prisma/client'
+import type { Prisma } from '@repo/db-common'
 import { Command } from 'commander'
 import { parse } from 'csv-parse'
 import fs from 'fs'

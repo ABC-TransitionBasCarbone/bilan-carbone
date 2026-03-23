@@ -1,6 +1,6 @@
 import { AccountWithUser, getAccountById } from '@/db/account'
 import { getUserByEmailWithSensibleInformations } from '@/db/user'
-import { Environment, Level, Role, UserStatus } from '@prisma/client'
+import { Environment, Level, Role, UserStatus } from '@repo/db-common/enums'
 import bcrypt from 'bcryptjs'
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession, NextAuthOptions, Session } from 'next-auth'

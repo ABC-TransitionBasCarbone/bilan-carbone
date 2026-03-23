@@ -1,7 +1,7 @@
 // Documentation : https://www.bilancarbone-methode.com/4-comptabilisation/4.4-methode-destimation-des-incertitudes/4.4.2-comment-les-determiner
 
 import { FullStudy } from '@/db/study'
-import { EmissionFactor } from '@prisma/client'
+import { EmissionFactor } from '@repo/db-common'
 import { getEmissionSourcesTotalCo2 } from './emissionSource'
 import { StudyWithoutDetail } from './permissions/study'
 

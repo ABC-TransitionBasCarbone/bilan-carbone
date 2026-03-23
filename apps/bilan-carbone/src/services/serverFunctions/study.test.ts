@@ -1,5 +1,5 @@
 import { expect } from '@jest/globals'
-import { Environment, Import, Level, StudyRole, SubPost } from '@prisma/client'
+import { Environment, Import, Level, StudyRole, SubPost } from '@repo/db-common/enums'
 import { v4 as uuidv4 } from 'uuid'
 import * as accountModule from '../../db/account'
 import * as emissionFactorsModule from '../../db/emissionFactors'

@@ -4,7 +4,7 @@ import { ResultsByPost } from '@/services/results/consolidated'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
 import { defaultPostColor, postColors, STUDY_UNIT_VALUES } from '@/utils/study'
 import { ScatterMarkerProps, ScatterSeries } from '@mui/x-charts'
-import { StudyResultUnit } from '@prisma/client'
+import { StudyResultUnit } from '@repo/db-common'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import {

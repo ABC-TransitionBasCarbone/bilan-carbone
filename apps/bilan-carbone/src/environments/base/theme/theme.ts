@@ -1,6 +1,6 @@
 import { Post } from '@/services/posts'
 import { createTheme } from '@mui/material/styles'
-import { SubPost } from '@prisma/client'
+import { SubPost } from '@repo/db-common/enums'
 
 const base = createTheme({
   cssVariables: true,

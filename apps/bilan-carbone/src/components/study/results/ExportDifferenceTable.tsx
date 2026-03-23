@@ -1,7 +1,7 @@
 import { formatDifferenceTableEmissions } from '@/utils/exports'
 import { formatNumber } from '@/utils/number'
 import TrendingUpIcon from '@mui/icons-material/TrendingUpOutlined'
-import { StudyResultUnit, SubPost } from '@prisma/client'
+import { StudyResultUnit, SubPost } from '@repo/db-common'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import styles from './ConsolidatedExportDifference.module.css'

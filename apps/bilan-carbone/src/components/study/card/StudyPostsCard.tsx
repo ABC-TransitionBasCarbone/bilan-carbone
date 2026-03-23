@@ -4,7 +4,7 @@ import { hasAccessToEmissionSourceValidation } from '@/services/permissions/envi
 import { Post, subPostsByPost } from '@/services/posts'
 import { withInfobulle } from '@/utils/post'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
-import { Environment } from '@prisma/client'
+import { Environment } from '@repo/db-common/enums'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import PostIcon from '../infography/icons/PostIcon'

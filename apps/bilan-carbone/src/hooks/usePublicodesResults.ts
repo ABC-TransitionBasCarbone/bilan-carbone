@@ -8,7 +8,7 @@ import {
 import { BaseResultsByPost, BaseResultsBySite } from '@/services/results/consolidated'
 import { aggregateBaseResultsByPost, computeBaseResultsByPostFromEngine } from '@/services/results/publicodes'
 import { loadSituations } from '@/services/serverFunctions/situation'
-import { Environment } from '@prisma/client'
+import { Environment } from '@repo/db-common/enums'
 import { useTranslations } from 'next-intl'
 import { Situation } from 'publicodes'
 import { useCallback, useEffect, useMemo, useState } from 'react'

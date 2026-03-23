@@ -1,5 +1,5 @@
 import { saveAnswerForQuestion } from '@/services/serverFunctions/question'
-import { Prisma, Question } from '@prisma/client'
+import { Prisma, Question } from '@repo/db-common'
 import { useCallback, useMemo, useRef, useState } from 'react'
 
 export interface FieldSaveStatus {

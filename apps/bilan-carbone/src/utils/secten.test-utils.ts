@@ -1,4 +1,4 @@
-import { SectenInfo } from '@prisma/client'
+import { SectenInfo } from '@repo/db-common'
 
 interface CreateSectenInfoParams {
   year: number
