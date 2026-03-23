@@ -7,10 +7,11 @@ import { AddMemberCommand } from '@/services/serverFunctions/user.command'
 import { AuthorizedInOrgaUserStatus } from '@/services/users'
 import { getRoleToSetForUntrained } from '@/utils/user'
 import { userSessionToDbUser } from '@/utils/userAccounts'
-import { DeactivatableFeature, Environment, Prisma, Role, UserChecklist, UserStatus } from '@prisma/client'
+import { DeactivatableFeature, Environment, Role, UserChecklist, UserStatus } from '@repo/db-common/enums'
+import { Prisma } from '@repo/db-common'
 import { UserSession } from 'next-auth'
 import { addAccount, getAccountByEmailAndEnvironment, getAccountByEmailAndOrganizationVersionId } from './account'
-import { prismaClient } from './client'
+import { prismaClient } from './client.server'
 
 export const getUserByEmailWithSensibleInformations = (email: string) =>
   prismaClient.user.findUnique({

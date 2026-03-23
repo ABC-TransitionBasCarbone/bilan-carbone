@@ -1,5 +1,5 @@
 import { StudySiteFields } from '@/services/studySiteToSituation'
-import { Country } from '@prisma/client'
+import { Country } from '@repo/db-common/enums'
 import { ClicksonSituation } from './types'
 
 const publicodesCountriesMapping: Partial<Record<Country, string>> = {

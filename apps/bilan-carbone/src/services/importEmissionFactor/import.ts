@@ -6,10 +6,12 @@ import {
   EmissionFactorStatus,
   Environment,
   Import,
-  Prisma,
   SubPost,
   Unit,
-} from '@prisma/client'
+} from '@repo/db-common/enums'
+import type {
+  Prisma,
+} from '@repo/db-common'
 import { unitsMatrix } from './historyUnits'
 import { additionalParts } from './parts.config'
 

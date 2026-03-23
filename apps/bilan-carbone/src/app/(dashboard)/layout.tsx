@@ -11,7 +11,7 @@ import { getEnvironment } from '@/i18n/environment'
 import { isTiltSimplifiedFeatureActive } from '@/services/permissions/environment'
 import { shouldRenewLicenceText } from '@/utils/organization'
 import { Box } from '@mui/material'
-import { Environment } from '@prisma/client'
+import { Environment } from '@repo/db-common/enums'
 import classNames from 'classnames'
 import styles from './layout.module.css'
 

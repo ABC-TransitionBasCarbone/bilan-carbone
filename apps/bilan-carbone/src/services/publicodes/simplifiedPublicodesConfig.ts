@@ -19,7 +19,7 @@ import {
   getSubPostRuleNameTilt,
 } from '@/environments/tilt/publicodes/subPostMapping'
 import { getTiltEngine } from '@/environments/tilt/publicodes/tilt-engine'
-import { Environment, SubPost } from '@prisma/client'
+import { Environment, SubPost } from '@repo/db-common/enums'
 import Engine from 'publicodes'
 import { getSubPostByPostTiltSimplified, SimplifiedPost, subPostsByPostClickson, subPostsByPostCUT } from '../posts'
 import { ClicksonPost, CutPost } from '../posts.enums'

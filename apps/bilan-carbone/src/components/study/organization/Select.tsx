@@ -10,7 +10,7 @@ import { hasAccessToStudySiteAddAndSelection } from '@/services/permissions/envi
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
 import { FormHelperText, MenuItem } from '@mui/material'
-import { Environment, SiteCAUnit } from '@prisma/client'
+import { Environment, SiteCAUnit } from '@repo/db-common/enums'
 import { Button } from '@repo/ui'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'

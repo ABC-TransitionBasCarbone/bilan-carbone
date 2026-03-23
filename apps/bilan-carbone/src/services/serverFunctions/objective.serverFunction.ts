@@ -1,6 +1,6 @@
 'use server'
 
-import { prismaClient } from '@/db/client'
+import { prismaClient } from '@/db/client.server'
 import {
   createManyObjectiveSites,
   createManyObjectiveSubPosts,
@@ -17,7 +17,7 @@ import {
 import { getTrajectoryType, updateTrajectoryType } from '@/db/trajectory'
 import { getTrajectoryWithTransitionPlan } from '@/db/transitionPlan'
 import { withServerResponse } from '@/utils/serverResponse'
-import { SubPost, TrajectoryType } from '@prisma/client'
+import { SubPost, TrajectoryType } from '@repo/db-common'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { hasEditAccessOnStudy } from '../permissions/study'
 

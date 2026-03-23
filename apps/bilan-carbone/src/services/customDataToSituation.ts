@@ -1,4 +1,4 @@
-import { Environment } from '@prisma/client'
+import { Environment } from '@repo/db-common/enums'
 import { Situation } from 'publicodes'
 import { SimplifiedEnvironment } from './publicodes/simplifiedPublicodesConfig'
 

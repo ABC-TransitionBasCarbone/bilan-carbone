@@ -1,6 +1,6 @@
 import { answersToFormValues } from '@/utils/question'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Answer, Question } from '@prisma/client'
+import { Answer, Question } from '@repo/db-common'
 import { useCallback, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { FormValues } from '../components/dynamic-form/types/formTypes'

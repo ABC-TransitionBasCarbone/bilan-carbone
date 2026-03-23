@@ -1,4 +1,4 @@
-import { Environment } from '@prisma/client'
+import { Environment } from '@repo/db-common/enums'
 import Engine from 'publicodes'
 
 const engineInstances = new Map<Environment, Engine>()

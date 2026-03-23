@@ -1,4 +1,4 @@
-import { EmissionSourceCaracterisation, EmissionSourceType, SubPost } from '@prisma/client'
+import { EmissionSourceCaracterisation, EmissionSourceType, SubPost } from '@repo/db-common'
 import z from 'zod'
 
 export const CreateEmissionSourceCommandValidation = z.object({

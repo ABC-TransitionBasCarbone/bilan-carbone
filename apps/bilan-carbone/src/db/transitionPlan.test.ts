@@ -7,8 +7,10 @@ import {
   Trajectory,
   TrajectoryType,
   TransitionPlanStudy,
-} from '@prisma/client'
-import { duplicateTransitionPlanWithRelations } from './transitionPlan'
+} from '@repo/db-common'
+import {
+  duplicateTransitionPlanWithRelations,
+} from './transitionPlan'
 
 const mockTx = {
   transitionPlan: {

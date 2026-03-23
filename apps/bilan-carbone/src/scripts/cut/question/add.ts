@@ -1,6 +1,6 @@
 import { ID_INTERN_PREFIX_REGEX } from '@/constants/utils'
 import { upsertQuestions } from '@/db/question'
-import { QuestionType } from '@prisma/client'
+import { QuestionType } from '@repo/db-common/enums'
 import { Command } from 'commander'
 import fs from 'fs'
 import path from 'path'

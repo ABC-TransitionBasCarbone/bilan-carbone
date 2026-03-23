@@ -1,4 +1,4 @@
-import { Prisma, SubPost } from '@prisma/client'
+import { Prisma, SubPost } from '@repo/db-common'
 import { parse } from 'csv-parse'
 import fs from 'fs'
 import { validateRow } from './utils'

@@ -14,7 +14,7 @@ import {
   OutlinedInput,
   Select,
 } from '@mui/material'
-import { Environment, StudyResultUnit } from '@prisma/client'
+import { Environment, StudyResultUnit } from '@repo/db-common/enums'
 import {
   ColumnDef,
   flexRender,

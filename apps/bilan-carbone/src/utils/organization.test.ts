@@ -1,6 +1,6 @@
 import { getMockedAuthUser } from '@/tests/utils/models/user'
 import { expect } from '@jest/globals'
-import { Environment, Role } from '@prisma/client'
+import { Environment, Role } from '@repo/db-common/enums'
 import {
   canEditOrganizationVersion,
   hasActiveLicence,

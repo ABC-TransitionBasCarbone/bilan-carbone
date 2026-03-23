@@ -3,7 +3,6 @@ import type {
   ActionStepCommand,
   AddActionInputCommand,
 } from '@/services/serverFunctions/action.command'
-import type { SectorPercentages } from '@/services/serverFunctions/trajectory.command'
 import type {
   ActionWithRelations,
   TrajectoryWithObjectives,
@@ -11,8 +10,13 @@ import type {
   TransitionPlanWithRelations,
   TransitionPlanWithStudies,
 } from '@/types/trajectory.types'
-import type { Prisma, SubPost, TransitionPlan } from '@prisma/client'
-import { prismaClient } from './client'
+import { SectorPercentages } from '@/services/serverFunctions/trajectory.command'
+import {
+  Prisma,
+  SubPost,
+  TransitionPlan,
+} from '@repo/db-common'
+import { prismaClient } from './client.server'
 
 const actionInclude = {
   indicators: true,

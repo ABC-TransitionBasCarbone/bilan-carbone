@@ -8,7 +8,8 @@ import {
   getRawOrganizationBySiret,
 } from '@/db/organization'
 import { createUsersWithAccount, updateAccount } from '@/db/user'
-import { Environment, Level, Prisma, Role, UserSource, UserStatus } from '@prisma/client'
+import { Environment, Level, Role, UserSource, UserStatus } from '@repo/db-common/enums'
+import { Prisma } from '@repo/db-common'
 import { getCutRoleFromBase } from '../../../prisma/seed/utils'
 
 const processUser = async (value: Record<string, string>, importedFileDate: Date) => {

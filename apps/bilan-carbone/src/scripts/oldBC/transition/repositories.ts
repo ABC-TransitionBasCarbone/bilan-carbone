@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client'
+import type { Prisma } from '@repo/db-common'
 
 export interface Delegate {
   findMany(args?: object): Promise<{ id: string; oldBCId: string | null }[]>

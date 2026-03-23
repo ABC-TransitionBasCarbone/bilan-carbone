@@ -22,7 +22,7 @@ import {
   LineSeriesType,
   MarkPlot,
 } from '@mui/x-charts'
-import { Action, SectenInfo, TrajectoryType } from '@prisma/client'
+import { Action, SectenInfo, TrajectoryType } from '@repo/db-common'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'

@@ -10,7 +10,7 @@ import {
   getStudyComments,
 } from '@/services/serverFunctions/study'
 import { Card, CardContent, TextField } from '@mui/material'
-import { CommentStatus, SubPost } from '@prisma/client'
+import {CommentStatus, SubPost} from '@repo/db-common/enums'
 import { Button } from '@repo/ui'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'

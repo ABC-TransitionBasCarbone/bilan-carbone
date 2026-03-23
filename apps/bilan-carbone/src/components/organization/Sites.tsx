@@ -7,7 +7,7 @@ import {
 } from '@/services/permissions/environment'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
 import { defaultCAUnit } from '@/utils/number'
-import { Environment, SiteCAUnit } from '@prisma/client'
+import { Environment, SiteCAUnit } from '@repo/db-common/enums'
 import { Button } from '@repo/ui'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
