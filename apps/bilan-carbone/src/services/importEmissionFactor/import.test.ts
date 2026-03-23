@@ -1,5 +1,5 @@
 import { expect } from '@jest/globals'
-import { Environment, Import } from '@prisma/client'
+import { Environment, Import } from '@repo/db-common/enums'
 import { isSourceForEnv } from './import'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not

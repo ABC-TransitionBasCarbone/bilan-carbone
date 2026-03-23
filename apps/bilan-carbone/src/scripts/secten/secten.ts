@@ -1,8 +1,8 @@
 import { parseFloatString } from '@/utils/number'
-import { Prisma } from '@prisma/client'
+import type { Prisma } from '@repo/db-common'
 import { parse } from 'csv-parse'
 import fs from 'fs'
-import { prismaClient } from '../../db/client'
+import { prismaClient } from '../../db/client.server'
 
 type SectenRow = {
   sector: string

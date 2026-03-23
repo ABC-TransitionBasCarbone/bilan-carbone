@@ -3,7 +3,8 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import { Environment, ExportRule, SiteCAUnit } from '@prisma/client'
+import { Environment, SiteCAUnit } from '@repo/db-common/enums'
+import type { ExportRule } from '@repo/db-common'
 import dynamic from 'next/dynamic'
 
 const AllResults = dynamic(() => import('@/components/study/results/AllResults'))

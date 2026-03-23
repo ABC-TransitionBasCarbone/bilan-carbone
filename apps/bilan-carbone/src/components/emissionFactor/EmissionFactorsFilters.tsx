@@ -15,7 +15,8 @@ import {
   Switch,
   TextField,
 } from '@mui/material'
-import { EmissionFactorBase, EmissionFactorImportVersion, SubPost } from '@prisma/client'
+import { EmissionFactorBase, SubPost } from '@repo/db-common/enums'
+import type { EmissionFactorImportVersion } from '@repo/db-common'
 import { Button } from '@repo/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

@@ -1,7 +1,7 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
-import { EmissionFactorImportVersion } from '@prisma/client'
+import { EmissionFactorImportVersion } from '@repo/db-common'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import StudyLevel from './StudyLevel'

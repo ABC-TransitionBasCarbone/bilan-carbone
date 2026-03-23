@@ -1,6 +1,6 @@
 import { FullStudy } from '@/db/study'
 import TrendingUpIcon from '@mui/icons-material/TrendingUpOutlined'
-import { Export, StudyResultUnit, SubPost } from '@prisma/client'
+import { Export, StudyResultUnit, SubPost } from '@repo/db-common'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { EmissionSourceList } from './ConsolidatedExportDifference'

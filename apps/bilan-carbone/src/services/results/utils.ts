@@ -1,6 +1,6 @@
 import { FullStudy } from '@/db/study'
 import { getBaseFilteredEmissionSources } from '@/utils/study'
-import { SubPost } from '@prisma/client'
+import { SubPost } from  '@repo/db-common/enums'
 
 export const getSiteEmissionSourcesWithoutMarketBase = <
   T extends Pick<FullStudy['emissionSources'][number], 'studySite' | 'emissionFactor'>,

@@ -4,7 +4,7 @@ import { mockedEmissionSourceEmissionFactor } from '@/tests/utils/models/study'
 import { getMockedAuthUser } from '@/tests/utils/models/user'
 import * as UserUtilsModule from '@/utils/user'
 import { expect } from '@jest/globals'
-import { EmissionFactorBase, Environment, Level, Role } from '@prisma/client'
+import { EmissionFactorBase, Environment, Level, Role } from '@repo/db-common/enums'
 import { getBaseFilteredEmissionSources, getDuplicableEnvironments, getUserRoleOnPublicStudy } from './study'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not

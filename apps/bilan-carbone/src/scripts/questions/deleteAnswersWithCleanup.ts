@@ -1,4 +1,4 @@
-import { prismaClient } from '@/db/client'
+import { prismaClient } from '@/db/client.server'
 import { getAnswerCountByQuestionIdIntern, getQuestionByIdIntern } from '@/db/question'
 import { getStudiesAffectedByQuestion } from '@/db/study'
 import { Command } from 'commander'

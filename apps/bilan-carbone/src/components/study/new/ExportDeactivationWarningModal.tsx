@@ -3,7 +3,7 @@
 import Modal from '@/components/modals/Modal'
 import { customRich } from '@/i18n/customRich'
 import { exportSpecificFields, getAllSpecificFieldsForExports } from '@/utils/study'
-import { Export } from '@prisma/client'
+import { Export } from '@repo/db-common'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 

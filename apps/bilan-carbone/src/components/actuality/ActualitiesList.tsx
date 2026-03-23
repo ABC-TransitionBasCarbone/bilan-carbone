@@ -1,6 +1,6 @@
 'use server'
 
-import { getAllActualitiesLocale } from '@/db/actuality'
+import { getAllActualitiesLocale } from '@/db/actuality.server'
 import classNames from 'classnames'
 import ActualityRow from './Actuality'
 import NoActualities from './NoActualities'

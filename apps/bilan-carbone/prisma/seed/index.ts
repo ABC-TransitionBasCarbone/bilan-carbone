@@ -7,21 +7,22 @@ import { getEmissionFactorsFromAPI } from '@/services/importEmissionFactor/baseE
 import { getAllowedLevels } from '@/services/study'
 import { faker } from '@faker-js/faker'
 import {
-  Account,
   EmissionFactorBase,
   EmissionFactorStatus,
   Environment,
   Import,
   Level,
-  PrismaClient,
   Role,
   StudyRole,
   SubPost,
   Unit,
-  User,
   UserChecklist,
   UserStatus,
-} from '@prisma/client'
+} from '@repo/db-common/enums'
+import type {Account, User} from '@repo/db-common'
+import {PrismaClient} from '@repo/db-common'
+import { PrismaPg } from '@prisma/adapter-pg'
+
 import { Command } from 'commander'
 import { ACTUALITIES } from '../legacy_data/actualities'
 import { SECTEN_SEED_DATA } from './sectenSeedData'
@@ -41,7 +42,14 @@ type userAndAccountsAndOrganizationVersion = {
   }[]
 }
 
-const prisma = new PrismaClient()
+const adapter = new PrismaPg({
+  connectionString: process.env.POSTGRES_PRISMA_URL,
+  ssl: { rejectUnauthorized: false },
+})
+
+const prisma = new PrismaClient({
+  adapter
+}) as PrismaClient
 
 const users = async () => {
   await prisma.answer.deleteMany()

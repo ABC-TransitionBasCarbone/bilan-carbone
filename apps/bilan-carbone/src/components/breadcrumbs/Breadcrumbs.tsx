@@ -2,7 +2,7 @@
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { Box, BoxProps, Link, Breadcrumbs as MUIBreadcrumbs, styled, Typography } from '@mui/material'
-import { Environment } from '@prisma/client'
+import { Environment } from '@repo/db-common/enums'
 import { useMemo } from 'react'
 
 interface Props {

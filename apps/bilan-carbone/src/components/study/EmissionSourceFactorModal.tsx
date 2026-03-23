@@ -1,5 +1,5 @@
 import { EmissionFactorWithMetaData, getFELocations } from '@/services/serverFunctions/emissionFactor'
-import { Environment, SubPost } from '@prisma/client'
+import { Environment, SubPost } from '@repo/db-common/enums'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import { ImportVersionForFilters } from '../emissionFactor/EmissionFactorsFilters'

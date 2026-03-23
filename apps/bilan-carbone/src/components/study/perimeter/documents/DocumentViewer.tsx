@@ -1,7 +1,7 @@
 import Image from '@/components/document/Image'
 import PdfViewer from '@/components/document/PDFViewer'
 import { getDocumentUrl } from '@/services/serverFunctions/file'
-import { Document } from '@prisma/client'
+import { Document } from '@repo/db-common'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
 import styles from './StudyFlow.module.css'

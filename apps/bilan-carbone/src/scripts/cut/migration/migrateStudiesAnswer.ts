@@ -4,7 +4,7 @@
 'use server'
 
 import { PUBLICODES_COUNT_VERSION } from '@/constants/versions'
-import { prismaClient } from '@/db/client'
+import { prismaClient } from '@/db/client.server'
 import { upsertSituation } from '@/db/situation'
 import { getCutEngine } from '@/environments/cut/publicodes/cut-engine'
 import { studySiteToCutSituation } from '@/environments/cut/publicodes/studySiteToSituation'
@@ -12,8 +12,9 @@ import { CutRuleName, CutSituation } from '@/environments/cut/publicodes/types'
 import { ListLayoutSituations } from '@/lib/publicodes/context/types'
 import { aggregateSituationValues } from '@/lib/publicodes/utils'
 import { CutStudySiteFields } from '@/services/studySiteToSituation'
-import { Answer, QuestionType, Unit } from '@prisma/client'
-import { InputJsonValue } from '@prisma/client/runtime/library'
+import { QuestionType, Unit } from '@repo/db-common/enums'
+import type { Answer } from '@repo/db-common'
+import type {InputJsonValue} from "@prisma/client/runtime/client"
 import { CutSituationKey, InternQuestionId, questionsPublicodesMapping } from './questionsPublicodesMapping'
 
 // Pour chaque answers:

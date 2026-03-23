@@ -1,7 +1,8 @@
 import { AccountWithUser } from '@/db/account'
 import { getOrganizationVersionForRightsCheck } from '@/db/organization'
 import { hasActiveLicence } from '@/utils/organization'
-import { EmissionFactor, Import } from '@prisma/client'
+import { Import } from '@repo/db-common/enums'
+import type { EmissionFactor } from '@repo/db-common'
 import { isFromEmissionFactorOrganization } from '../serverFunctions/emissionFactor'
 
 export const canReadEmissionFactor = (

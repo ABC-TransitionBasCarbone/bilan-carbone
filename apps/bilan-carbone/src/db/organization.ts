@@ -5,13 +5,11 @@ import { unique } from '@/utils/array'
 import {
   Environment,
   EstablishmentType,
-  Organization,
-  OrganizationVersion,
-  Prisma,
-  Site,
   UserStatus,
-} from '@prisma/client'
-import { prismaClient } from './client'
+} from '@repo/db-common/enums'
+import type { Site, Organization, OrganizationVersion } from '@repo/db-common'
+import { Prisma } from '@repo/db-common'
+import { prismaClient } from './client.server'
 import { deleteStudy } from './study'
 
 export type OrganizationVersionWithOrganization = OrganizationVersion & {

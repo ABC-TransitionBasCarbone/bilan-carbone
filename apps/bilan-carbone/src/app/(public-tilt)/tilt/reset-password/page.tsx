@@ -1,6 +1,6 @@
 import NewPasswordForm from '@/components/auth/NewPasswordForm'
 import { auth } from '@/services/auth'
-import { Environment } from '@prisma/client'
+import { Environment } from '@repo/db-common/enums'
 import { redirect } from 'next/navigation'
 
 const NewPasswordPage = async () => {

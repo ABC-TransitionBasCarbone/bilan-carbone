@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@repo/db-common": ["packages/db-common/src/index.ts"],
+      "@repo/db-common/enums": ["packages/db-common/src/enums.ts"],
+      "@repo/db-common/types": ["packages/db-common/src/types.ts"]
+    }
+  }
+}

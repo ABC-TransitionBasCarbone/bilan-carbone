@@ -17,5 +17,10 @@
   "prisma": {
     "schema": "prisma/schema"
   },
+  "exports": {
+    ".": "./src/index.ts",
+    "./enums": "./src/enums.ts",
+    "./types": "./src/types.ts"
+  },
   "devDependencies": {}
 }

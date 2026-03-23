@@ -15,7 +15,8 @@ import {
   STUDY_UNIT_VALUES,
 } from '@/utils/study'
 import { formatDateFr } from '@/utils/time'
-import { EmissionFactorBase, Environment, Export, ExportRule, Level, StudyResultUnit, SubPost } from '@prisma/client'
+import { EmissionFactorBase, Environment, Export, Level, StudyResultUnit, SubPost } from '@repo/db-common/enums'
+import type { ExportRule } from '@repo/db-common'
 import dayjs from 'dayjs'
 import {
   canBeValidated,

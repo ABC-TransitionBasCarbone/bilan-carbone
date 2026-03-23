@@ -1,4 +1,5 @@
-import { EmissionFactorPartType, ExportRule, SubPost } from '@prisma/client'
+import { EmissionFactorPartType, SubPost } from '@repo/db-common/enums'
+import type { ExportRule } from '@repo/db-common'
 
 export const begesRules = [
   {

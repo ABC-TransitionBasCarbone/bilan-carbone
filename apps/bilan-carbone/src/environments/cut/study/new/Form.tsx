@@ -3,7 +3,7 @@
 import Block from '@/components/base/Block'
 import GlobalNewStudyForm from '@/components/study/new/Form'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
-import { Level } from '@prisma/client'
+import { Level } from '@repo/db-common'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'

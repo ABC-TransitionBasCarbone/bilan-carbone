@@ -2,7 +2,7 @@
 import Image from '@/components/document/Image'
 import { UserSessionProps } from '@/components/hoc/withAuth'
 import { Box } from '@mui/material'
-import { Environment } from '@prisma/client'
+import { Environment } from '@repo/db-common/enums'
 import { useMemo } from 'react'
 import styles from './LogosHome.module.css'
 

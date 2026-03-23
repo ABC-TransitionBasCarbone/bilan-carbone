@@ -30,7 +30,7 @@ import {
   SBTI_START_YEAR,
 } from '@/utils/trajectory'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { SectenInfo, TrajectoryType } from '@prisma/client'
+import { SectenInfo, TrajectoryType } from '@repo/db-common'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import { useEffect, useMemo, useState } from 'react'

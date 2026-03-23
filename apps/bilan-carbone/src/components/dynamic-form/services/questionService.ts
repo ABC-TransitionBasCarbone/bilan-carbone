@@ -1,4 +1,4 @@
-import { QuestionType } from '@prisma/client'
+import { QuestionType } from '@repo/db-common/enums'
 import { FieldType, NumberInputFormat, QUESTION_TYPE_FIELD_MAPPING, TextInputFormat } from '../types/questionTypes'
 
 export const getTextInputFormat = (type: QuestionType): TextInputFormat => {

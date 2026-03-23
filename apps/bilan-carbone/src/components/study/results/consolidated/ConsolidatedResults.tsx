@@ -1,5 +1,5 @@
 import { ResultsByPost } from '@/services/results/consolidated'
-import { StudyResultUnit } from '@prisma/client'
+import { StudyResultUnit } from '@repo/db-common'
 import { useTranslations } from 'next-intl'
 import ResultsTableAndGraphs from '../ResultsTableAndGraphs'
 import ConsolidatedResultsTable from './ConsolidatedResultsTable'

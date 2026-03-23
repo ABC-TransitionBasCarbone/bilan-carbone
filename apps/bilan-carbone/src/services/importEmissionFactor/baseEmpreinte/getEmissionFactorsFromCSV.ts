@@ -1,4 +1,4 @@
-import { Import } from '@prisma/client'
+import { Import } from '@repo/db-common/enums'
 import { getEmissionFactorsFromCSV as getEmissionFactors } from '../getEmissionFactorsFromCSV'
 import { mapBaseEmpreinteEmissionFactors } from './import'
 

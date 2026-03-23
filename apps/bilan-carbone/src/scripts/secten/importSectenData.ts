@@ -2,7 +2,7 @@ import { Command } from 'commander'
 import * as fs from 'fs'
 import { stdin as input, stdout as output } from 'node:process'
 import * as readline from 'node:readline/promises'
-import { prismaClient } from '../../db/client'
+import { prismaClient } from '../../db/client.server'
 import { importSectenData } from './secten'
 
 const program = new Command()

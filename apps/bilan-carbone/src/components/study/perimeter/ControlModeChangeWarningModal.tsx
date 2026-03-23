@@ -2,7 +2,7 @@
 
 import Modal from '@/components/modals/Modal'
 import { customRich } from '@/i18n/customRich'
-import { ControlMode } from '@prisma/client'
+import { ControlMode } from '@repo/db-common/enums'
 import { useTranslations } from 'next-intl'
 
 interface Props {
