@@ -9,7 +9,7 @@ import {
   isFeatureActiveForEnvironment,
   RestrictionsTypes,
   updateFeatureRestictions,
-} from '@/db/deactivableFeatures'
+} from '@/db/deactivableFeatures.action.server'
 import { withServerResponse } from '@/utils/serverResponse'
 import { DeactivatableFeature, Environment, Role, UserSource } from '@repo/db-common/enums'
 import { dbActualizedAuth } from '../auth'

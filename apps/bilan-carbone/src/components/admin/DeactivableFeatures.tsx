@@ -1,6 +1,6 @@
 'use client'
 
-import { getFeaturesRestictions } from '@/db/deactivableFeatures'
+import { getFeaturesRestictions } from '@/db/deactivableFeatures.action.server'
 import { useTranslations } from 'next-intl'
 import DeactivableFeature from './DeactivableFeature'
 
