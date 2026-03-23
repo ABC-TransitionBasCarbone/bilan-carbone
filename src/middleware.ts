@@ -19,7 +19,8 @@ const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
 
 export async function middleware(req: NextRequest) {
   // Redirect if the request is from https://calculator.clickson.eu/
-  if (req.headers.get('host')?.toLowerCase() === 'calculator.clickson.eu') {
+  const host = req.headers.get('host')?.toLowerCase()
+  if (host === 'calculator.clickson.eu' || host === 'pebc.bilancarbone-app.com') {
     return NextResponse.redirect('https://bilancarbone-app.com/clickson', 308)
   }
 
