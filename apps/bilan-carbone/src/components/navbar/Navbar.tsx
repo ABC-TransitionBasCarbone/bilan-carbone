@@ -3,7 +3,7 @@
 import TopLeftNavBar from '@/components/navbar/TopLeftNavBar'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import { Locale } from '@/i18n/config'
-import { signOutEnv } from '@/services/auth'
+import { signOutEnv } from '@/services/auth.utils'
 import { hasAccessToStudyComments, isClickson, isTilt } from '@/services/permissions/environment'
 import { hasAccessToMethodology, hasAccessToSettings } from '@/services/permissions/environmentAdvanced'
 import { hasAccessToFormation } from '@/services/permissions/formations'
