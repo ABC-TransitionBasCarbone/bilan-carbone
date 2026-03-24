@@ -3,7 +3,7 @@
 import { EnvironmentNames } from '@/constants/environments'
 import { getUserWithAccountsAndOrganizationsById } from '@/db/user'
 import { switchEnvironment } from '@/i18n/environment'
-import { accountHandler } from '@/services/auth'
+import { accountHandler } from '@/services/auth.utils'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import PermIdentityIcon from '@mui/icons-material/PermIdentity'
 import { Chip, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
