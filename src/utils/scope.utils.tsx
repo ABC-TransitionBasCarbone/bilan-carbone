@@ -1,17 +1,12 @@
 import { FullStudy } from '@/db/study'
 import { ObjectiveWithScope } from '@/db/transitionPlan'
+import type { BaseObjective, ObjectiveGroup } from '@/types/trajectory.types'
 import { getUIFilteredEmissions } from '@/utils/study'
 import { SubPost } from '@prisma/client'
-import { BaseObjective } from './trajectory'
+import { isSubset } from './array'
 
 export const toScopedValues = <T,>(selected: T[], all: T[]) =>
   selected.length === all.length && all.every((v) => selected.includes(v)) ? [] : selected
-
-export interface ObjectiveGroup {
-  groupId: string
-  ratio: number
-  objectives: BaseObjective[]
-}
 
 export interface BuildObjectiveGroupsParams {
   study: Pick<FullStudy, 'emissionSources' | 'resultsUnit' | 'organizationVersion'>
@@ -22,56 +17,26 @@ export interface BuildObjectiveGroupsParams {
   filterTagIds: string[]
 }
 
-const getObjectiveGroupId = (siteIds: string[], subPosts: SubPost[], tagIds: string[]): string =>
+type ScopeGroup = { siteIds: string[]; subPosts: SubPost[]; tagIds: string[]; objectives: ObjectiveWithScope[] }
+
+// Assign key for uniqueness check
+const scopeKey = (siteIds: string[], subPosts: SubPost[], tagIds: string[]): string =>
   [...siteIds].sort().join(',') + '|' + [...subPosts].sort().join(',') + '|' + [...tagIds].sort().join(',')
 
-type GroupMap = Map<
-  string,
-  { siteIds: string[]; subPosts: SubPost[]; tagIds: string[]; objectives: ObjectiveWithScope[] }
->
+// Check if parentScope strictly contains childScope (wider but not identical).
+const isScopeWiderThan = (parentScope: ScopeGroup, childScope: ScopeGroup): boolean =>
+  scopeKey(parentScope.siteIds, parentScope.subPosts, parentScope.tagIds) !==
+    scopeKey(childScope.siteIds, childScope.subPosts, childScope.tagIds) &&
+  isSubset(parentScope.siteIds, childScope.siteIds) &&
+  isSubset(parentScope.subPosts, childScope.subPosts) &&
+  isSubset(parentScope.tagIds, childScope.tagIds)
 
-const containsAll = <T,>(parent: T[], child: T[]): boolean =>
-  parent.length === 0 || child.every((v) => parent.includes(v))
-
-/**
- * Checks if parentScope is strictly wider than childScope (contains it but is not identical).
- */
-const isScopeWiderThan = (
-  parentScope: { siteIds: string[]; subPosts: SubPost[]; tagIds: string[] },
-  childScope: { siteIds: string[]; subPosts: SubPost[]; tagIds: string[] },
-): boolean => {
-  const parentId = getObjectiveGroupId(parentScope.siteIds, parentScope.subPosts, parentScope.tagIds)
-  const childId = getObjectiveGroupId(childScope.siteIds, childScope.subPosts, childScope.tagIds)
-
-  return (
-    parentId !== childId &&
-    containsAll(parentScope.siteIds, childScope.siteIds) &&
-    containsAll(parentScope.subPosts, childScope.subPosts) &&
-    containsAll(parentScope.tagIds, childScope.tagIds)
-  )
-}
-
-/**
- * Scope specificity = number of non-empty dimensions. Higher = narrower scope.
- */
-const getScopeSpecificity = (scope: { siteIds: string[]; subPosts: SubPost[]; tagIds: string[] }): number =>
+// Scope quantity = number of non-empty dimensions. Higher = narrower scope.
+const scopeQuantity = (scope: ScopeGroup): number =>
   (scope.siteIds.length > 0 ? 1 : 0) + (scope.subPosts.length > 0 ? 1 : 0) + (scope.tagIds.length > 0 ? 1 : 0)
 
-/**
- * Finds parent groups whose scope is strictly wider than the given scope,
- * sorted from narrowest parent to widest (most specific first).
- */
-const findParentGroups = (
-  siteIds: string[],
-  subPosts: SubPost[],
-  tagIds: string[],
-  groupMap: GroupMap,
-): Array<{ siteIds: string[]; subPosts: SubPost[]; tagIds: string[]; objectives: ObjectiveWithScope[] }> => {
-  const childScope = { siteIds, subPosts, tagIds }
-  return [...groupMap.values()]
-    .filter((group) => isScopeWiderThan(group, childScope))
-    .sort((a, b) => getScopeSpecificity(b) - getScopeSpecificity(a))
-}
+const findParentGroups = (childScope: ScopeGroup, groups: ScopeGroup[]): ScopeGroup[] =>
+  groups.filter((g) => isScopeWiderThan(g, childScope)).sort((a, b) => scopeQuantity(b) - scopeQuantity(a))
 
 const getObjectivesBefore = (objectives: BaseObjective[], beforeYear: number): BaseObjective[] => {
   const sorted = objectives.filter((obj) => obj.targetYear <= beforeYear).sort((a, b) => a.targetYear - b.targetYear)
@@ -93,14 +58,12 @@ const getObjectivesBefore = (objectives: BaseObjective[], beforeYear: number): B
  * a synthetic objective is created at beforeYear with that objective's rate.
  */
 const findParentObjectivesBefore = (
-  siteIds: string[],
-  subPosts: SubPost[],
-  tagIds: string[],
-  groupMap: GroupMap,
+  childScope: ScopeGroup,
+  groups: ScopeGroup[],
   beforeYear: number,
   globalObjectives: BaseObjective[],
 ): BaseObjective[] => {
-  for (const parent of findParentGroups(siteIds, subPosts, tagIds, groupMap)) {
+  for (const parent of findParentGroups(childScope, groups)) {
     const parentObjs = parent.objectives.map((obj) => ({
       targetYear: obj.targetYear,
       reductionRate: Number(obj.reductionRate),
@@ -120,14 +83,12 @@ const findParentObjectivesBefore = (
  * Returns only objectives whose targetYear is strictly after afterYear.
  */
 const findParentObjectivesAfter = (
-  siteIds: string[],
-  subPosts: SubPost[],
-  tagIds: string[],
-  groupMap: GroupMap,
+  childScope: ScopeGroup,
+  groups: ScopeGroup[],
   afterYear: number,
   globalObjectives: BaseObjective[],
 ): BaseObjective[] => {
-  for (const parent of findParentGroups(siteIds, subPosts, tagIds, groupMap)) {
+  for (const parent of findParentGroups(childScope, groups)) {
     const parentObjs = [...parent.objectives]
       .sort((a, b) => a.targetYear - b.targetYear)
       .filter((obj) => obj.targetYear > afterYear)
@@ -170,22 +131,25 @@ export const buildObjectiveGroups = ({
     return undefined
   }
 
-  const groupMap: GroupMap = new Map()
+  const groupMap = new Map<string, ScopeGroup>()
   for (const obj of subObjectives) {
     const siteIds = obj.sites.map((s) => s.studySite.siteId)
     const subPostValues = obj.subPosts.map((sp) => sp.subPost)
     const tagIds = obj.tags.map((t) => t.studyTag.id)
-    const groupId = getObjectiveGroupId(siteIds, subPostValues, tagIds)
-    if (!groupMap.has(groupId)) {
-      groupMap.set(groupId, { siteIds, subPosts: subPostValues, tagIds, objectives: [] })
+
+    const key = scopeKey(siteIds, subPostValues, tagIds)
+    if (!groupMap.has(key)) {
+      groupMap.set(key, { siteIds, subPosts: subPostValues, tagIds, objectives: [] })
     }
-    groupMap.get(groupId)!.objectives.push(obj)
+
+    groupMap.get(key)!.objectives.push(obj)
   }
 
+  const allGroups = [...groupMap.values()]
   const objectiveGroups: ObjectiveGroup[] = []
   let totalSubRatio = 0
 
-  for (const [groupId, group] of groupMap) {
+  for (const group of allGroups) {
     const scopeFilteredEmissions = getUIFilteredEmissions(
       study,
       validatedOnly,
@@ -206,17 +170,10 @@ export const buildObjectiveGroups = ({
       const bStart = b.startYear ?? b.targetYear
       return aStart - bStart
     })
+
     const firstSubStartYear = sortedGroupObjectives[0].startYear ?? sortedGroupObjectives[0].targetYear
     const lastTargetYear = sortedGroupObjectives[sortedGroupObjectives.length - 1].targetYear
-
-    const parentPrefix = findParentObjectivesBefore(
-      group.siteIds,
-      group.subPosts,
-      group.tagIds,
-      groupMap,
-      firstSubStartYear,
-      globalObjectives,
-    )
+    const parentPrefix = findParentObjectivesBefore(group, allGroups, firstSubStartYear, globalObjectives)
 
     const cascadedObjectives: BaseObjective[] = [
       ...parentPrefix,
@@ -226,24 +183,17 @@ export const buildObjectiveGroups = ({
       })),
     ]
 
-    const parentSuffix = findParentObjectivesAfter(
-      group.siteIds,
-      group.subPosts,
-      group.tagIds,
-      groupMap,
-      lastTargetYear,
-      globalObjectives,
-    )
+    const parentSuffix = findParentObjectivesAfter(group, allGroups, lastTargetYear, globalObjectives)
     for (const parentObj of parentSuffix) {
       cascadedObjectives.push(parentObj)
     }
 
     totalSubRatio += finalRatio
-    objectiveGroups.push({ groupId, ratio: finalRatio, objectives: cascadedObjectives })
+    objectiveGroups.push({ ratio: finalRatio, objectives: cascadedObjectives })
   }
 
   const globalRatio = Math.max(0, 1 - totalSubRatio)
-  objectiveGroups.push({ groupId: 'DEFAULT', ratio: globalRatio, objectives: globalObjectives })
+  objectiveGroups.push({ ratio: globalRatio, objectives: globalObjectives })
 
   return objectiveGroups
 }

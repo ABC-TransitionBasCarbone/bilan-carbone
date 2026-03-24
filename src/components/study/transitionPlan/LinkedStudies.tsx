@@ -1,7 +1,7 @@
 'use client'
 
 import { customRich } from '@/i18n/customRich'
-import { PastStudy } from '@/utils/trajectory'
+import type { PastStudy } from '@/types/trajectory.types'
 import type { StudyResultUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'

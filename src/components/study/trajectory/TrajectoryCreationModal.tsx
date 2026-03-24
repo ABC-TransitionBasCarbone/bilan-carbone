@@ -14,6 +14,7 @@ import {
   createTrajectoryWithObjectives,
   updateTrajectory,
 } from '@/services/serverFunctions/trajectory.serverFunction'
+import type { BaseObjective, PastStudy } from '@/types/trajectory.types'
 import {
   calculateBaseSNBCReductionRates,
   calculateSectoralSNBCReductionRates,
@@ -22,12 +23,10 @@ import {
 } from '@/utils/snbc'
 import { getYearFromDateStr } from '@/utils/time'
 import {
-  BaseObjective,
   getCorrectedObjectives,
   getDefaultObjectivesForTrajectoryType,
   getDefaultSBTIReductionRate,
   getDisplayedReferenceYearForTrajectoryType,
-  PastStudy,
   SBTI_START_YEAR,
 } from '@/utils/trajectory'
 import { zodResolver } from '@hookform/resolvers/zod'

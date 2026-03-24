@@ -1,15 +1,12 @@
 import { SECTEN_SECTORS, SectenSector, SNBC_SECTOR_TARGET_EMISSIONS } from '@/constants/trajectories'
 import { SectorPercentages } from '@/services/serverFunctions/trajectory.command'
-import { TrajectoryDataPoint } from '@/types/trajectory.types'
+import type { BaseObjective, OvershootAdjustment, PastStudy, TrajectoryDataPoint } from '@/types/trajectory.types'
 import type { SectenInfo } from '@prisma/client'
 import {
-  BaseObjective,
   computePastOrPresentValue,
   getAllHistoricalStudyPoints,
   getGraphStartYear,
   getObjectivesWithOvershootCompensation,
-  OvershootAdjustment,
-  PastStudy,
 } from './trajectory'
 
 // SNBC trajectory constants

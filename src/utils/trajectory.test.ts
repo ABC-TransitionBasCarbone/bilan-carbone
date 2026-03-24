@@ -1,11 +1,10 @@
 import { TrajectoryWithObjectives } from '@/db/transitionPlan'
-import { TrajectoryDataPoint } from '@/types/trajectory.types'
+import type { BaseObjective, PastStudy, TrajectoryDataPoint } from '@/types/trajectory.types'
 import { expect } from '@jest/globals'
 import { Action, StudyResultUnit, TrajectoryType } from '@prisma/client'
 import { createGeneralSectenData } from './secten.test-utils'
 import { calculateSNBCTrajectory } from './snbc'
 import {
-  BaseObjective,
   calculateActionBasedTrajectory,
   calculateCustomTrajectory,
   calculateSBTiTrajectory,
@@ -14,7 +13,6 @@ import {
   getDefaultSBTIReductionRate,
   getTrajectoryEmissionsAtYear,
   isWithinThreshold,
-  PastStudy,
   SBTI_REDUCTION_RATE_15,
   SBTI_REDUCTION_RATE_WB2C,
   TARGET_YEAR,
@@ -559,12 +557,10 @@ describe('calculateTrajectory', () => {
     test('basic: sub-objective (30%) + global (70%) → proportional reductions', () => {
       const objectiveGroups = [
         {
-          groupId: 'sub',
           ratio: 0.3,
           objectives: [{ targetYear: 2030, reductionRate: 0.1 }],
         },
         {
-          groupId: 'global',
           ratio: 0.7,
           objectives: [{ targetYear: 2030, reductionRate: 0.05 }],
         },
@@ -589,7 +585,6 @@ describe('calculateTrajectory', () => {
     test('cascade: sub-objective ends in 2030, global continues to 2040', () => {
       const objectiveGroups = [
         {
-          groupId: 'sub',
           ratio: 0.4,
           objectives: [
             { targetYear: 2030, reductionRate: 0.1 },
@@ -597,7 +592,6 @@ describe('calculateTrajectory', () => {
           ],
         },
         {
-          groupId: 'global',
           ratio: 0.6,
           objectives: [{ targetYear: 2040, reductionRate: 0.04 }],
         },
@@ -636,7 +630,7 @@ describe('calculateTrajectory', () => {
         defaultTrajectory: DEFAULT_TRAJECTORY,
       })
 
-      const objectiveGroups = [{ groupId: 'global', ratio: 1, objectives }]
+      const objectiveGroups = [{ ratio: 1, objectives }]
       const withSingleGroup = calculateCustomTrajectory({
         studyEmissions,
         studyStartYear,
@@ -657,12 +651,10 @@ describe('calculateTrajectory', () => {
     test('ratio 0: sub-objective filtered out → does not affect emissions', () => {
       const objectiveGroups = [
         {
-          groupId: 'filtered',
           ratio: 0,
           objectives: [{ targetYear: 2030, reductionRate: 0.5 }],
         },
         {
-          groupId: 'global',
           ratio: 1,
           objectives: [{ targetYear: 2030, reductionRate: 0.05 }],
         },
@@ -684,8 +676,7 @@ describe('calculateTrajectory', () => {
     test('multi-level: specific scope (20%) with 3 objective segments + global (80%)', () => {
       const objectiveGroups = [
         {
-          groupId: 'specific', // 20% of total
-          ratio: 0.2,
+          ratio: 0.2, // 20% of total
           objectives: [
             { targetYear: 2030, reductionRate: 0.1 },
             { targetYear: 2040, reductionRate: 0.06 }, // cascades to site level after 2030
@@ -693,7 +684,6 @@ describe('calculateTrajectory', () => {
           ],
         },
         {
-          groupId: 'global',
           ratio: 0.8,
           objectives: [{ targetYear: 2050, reductionRate: 0.03 }],
         },
@@ -721,7 +711,6 @@ describe('calculateTrajectory', () => {
     test('Overlapping objectives: 1000 tCO2, energy 10%, global 5% 2030-2050, sub energy 10% 2035-2045', () => {
       const objectiveGroups = [
         {
-          groupId: 'energy',
           ratio: 0.1,
           objectives: [
             { targetYear: 2035, reductionRate: 0.05 },
@@ -730,7 +719,6 @@ describe('calculateTrajectory', () => {
           ],
         },
         {
-          groupId: 'DEFAULT',
           ratio: 0.9,
           objectives: [{ targetYear: 2050, reductionRate: 0.05 }],
         },

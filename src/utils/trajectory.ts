@@ -5,11 +5,17 @@ import {
   TRAJECTORY_SNBC_GENERAL_ID,
   TRAJECTORY_WB2C_ID,
 } from '@/constants/trajectories'
-import { FullStudy } from '@/db/study'
-import { TrajectoryWithObjectives, TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
+import type { FullStudy } from '@/db/study'
+import type { TrajectoryWithObjectives, TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
 import { SectorPercentages } from '@/services/serverFunctions/trajectory.command'
 import { getStudyTotalCo2Emissions } from '@/services/study'
-import { TrajectoryDataPoint } from '@/types/trajectory.types'
+import type {
+  BaseObjective,
+  ObjectiveGroup,
+  OvershootAdjustment,
+  PastStudy,
+  TrajectoryDataPoint,
+} from '@/types/trajectory.types'
 import { Translations } from '@/types/translation'
 import { convertValue } from '@/utils/study'
 import {
@@ -20,15 +26,12 @@ import {
   StudyResultUnit,
   TrajectoryType,
 } from '@prisma/client'
-import type { ObjectiveGroup } from './scope.utils'
 import {
   calculateCustomSNBCSectoralTrajectory,
   calculateSectoralSNBCReductionRates,
   calculateSNBCTrajectory,
 } from './snbc'
 import { getYearFromDateStr } from './time'
-export { buildObjectiveGroups } from './scope.utils'
-export type { BuildObjectiveGroupsParams, ObjectiveGroup } from './scope.utils'
 
 export type SBTIType = 'SBTI_15' | 'SBTI_WB2C'
 export const SBTI_REDUCTION_RATE_15 = 0.042
@@ -38,24 +41,6 @@ export const MID_TARGET_YEAR = 2030
 export const TARGET_YEAR = 2050
 export const OVERSHOOT_THRESHOLD = 0.05
 const SNBC_DISPLAYED_REFERENCE_YEAR = 1990
-
-export interface PastStudy {
-  id: string
-  name: string
-  type: 'linked' | 'external'
-  year: number
-  totalCo2: number
-}
-
-export interface BaseObjective {
-  targetYear: number
-  reductionRate: number
-}
-
-export interface OvershootAdjustment {
-  referenceTrajectory: TrajectoryDataPoint[]
-  referenceStudyYear: number
-}
 
 interface CalculateSbtiTrajectoryParams {
   studyEmissions: number
@@ -69,7 +54,7 @@ interface CalculateSbtiTrajectoryParams {
   defaultTrajectory: TrajectoryDataPoint[]
 }
 
-export interface CalculateTrajectoryParams {
+interface CalculateTrajectoryParams {
   studyEmissions: number
   studyStartYear: number
   sectenData: SectenInfo[]
@@ -104,7 +89,7 @@ interface CalculateActionBasedTrajectoryParams {
   maxYear?: number
 }
 
-export interface CalculateTrajectoriesWithHistoryParams {
+interface CalculateTrajectoriesWithHistoryParams {
   studyId: string
   studyName: string
   studyStartDate: Date
@@ -121,7 +106,7 @@ export interface CalculateTrajectoriesWithHistoryParams {
   objectiveGroupsByTrajectoryId?: Map<string, ObjectiveGroup[]>
 }
 
-export interface TrajectoryYearBounds {
+interface TrajectoryYearBounds {
   minYear: number
   maxYear: number
 }
