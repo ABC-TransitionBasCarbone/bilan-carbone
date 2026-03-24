@@ -9,7 +9,6 @@ const globalForPrisma = global as unknown as {
 
 const adapter = new PrismaPg({
   connectionString: process.env.POSTGRES_PRISMA_URL,
-  ssl: { rejectUnauthorized: false },
 })
 
 // https://www.prisma.io/docs/orm/prisma-client/queries/excluding-fields
