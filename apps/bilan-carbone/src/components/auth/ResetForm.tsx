@@ -1,6 +1,6 @@
 'use client'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import { signOutEnv } from '@/services/auth'
+import { signOutEnv } from '@/services/auth.utils'
 import { getEnvRoute } from '@/services/email/utils'
 import { checkToken, reset } from '@/services/serverFunctions/auth'
 import { ResetPasswordCommand, ResetPasswordCommandValidation } from '@/services/serverFunctions/user.command'
