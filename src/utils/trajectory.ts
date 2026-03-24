@@ -878,7 +878,7 @@ const calculateObjectiveGroupTrajectory = (
  * Computes the average reduction rate per segment so the result can be fed
  * into getObjectivesWithOvershootCompensation.
  */
-const deriveEffectiveObjectives = (
+const extractEffectiveObjectives = (
   studyEmissions: number,
   studyStartYear: number,
   breakpointYears: number[],
@@ -995,7 +995,7 @@ export const calculateCustomTrajectory = ({
     const breakpointYears = [...new Set(objectiveGroups.flatMap((g) => g.objectives.map((o) => o.targetYear)))].sort(
       (a, b) => a - b,
     )
-    const effectiveObjectives = deriveEffectiveObjectives(
+    const effectiveObjectives = extractEffectiveObjectives(
       studyEmissions,
       studyStartYear,
       breakpointYears,
