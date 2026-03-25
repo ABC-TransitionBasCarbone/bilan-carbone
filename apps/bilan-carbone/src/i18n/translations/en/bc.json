@@ -13,6 +13,20 @@
       "1": "Understand the impact assessment of your establishment",
       "2": "Identify priority actions",
       "3": "Build a reduction trajectory"
+    },
+    "navigation": {
+      "collaborators": {
+        "title": "",
+        "message": ""
+      },
+      "footprints": {
+        "title": "",
+        "message": ""
+      },
+      "sites": {
+        "title": "",
+        "message": ""
+      }
     }
   },
   "exports": {
