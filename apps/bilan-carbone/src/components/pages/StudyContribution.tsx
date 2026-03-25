@@ -1,6 +1,6 @@
 'use client'
 
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { StudyRole } from '@repo/db-common/enums'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'

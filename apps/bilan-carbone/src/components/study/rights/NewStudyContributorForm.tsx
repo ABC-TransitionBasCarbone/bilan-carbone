@@ -6,7 +6,7 @@ import MultiplePosts from '@/components/emissionFactor/Form/MultiplePosts'
 import { FormTextField } from '@/components/form/TextField'
 import { AccountWithUser } from '@/db/account'
 import { getOrganizationVersionAccounts } from '@/db/organization'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import {
   displayingStudyRightModalForAddingContributors,
@@ -20,7 +20,7 @@ import {
 } from '@/services/serverFunctions/study.command'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { SubPost } from  '@repo/db-common/enums'
+import { SubPost } from '@repo/db-common/enums'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useCallback, useMemo, useState } from 'react'

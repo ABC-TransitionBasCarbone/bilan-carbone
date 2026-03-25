@@ -1,5 +1,5 @@
 import Title from '@/components/base/Title'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { ResultsByPost } from '@/services/results/consolidated'
 import { getConfidenceInterval } from '@/services/uncertainty'
 import { Environment, StudyResultUnit } from '@repo/db-common/enums'

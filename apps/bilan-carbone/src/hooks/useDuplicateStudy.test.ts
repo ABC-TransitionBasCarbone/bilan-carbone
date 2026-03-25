@@ -1,4 +1,4 @@
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import {
   COMMON_DATES,
   getMockedDetailedFullStudySite,

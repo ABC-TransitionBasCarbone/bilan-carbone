@@ -2,7 +2,7 @@
 
 import { OrganizationWithSites } from '@/db/account'
 import { getDocumentsForStudy } from '@/db/document'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { getUserApplicationSettings } from '@/db/user'
 import { hasAccessToDependencyMatrix } from '@/services/permissions/environment'
 import { hasAccessToPerimeterPage } from '@/services/permissions/environmentAdvanced'

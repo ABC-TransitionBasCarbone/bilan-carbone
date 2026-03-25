@@ -1,5 +1,5 @@
 'use client'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import { LocaleType } from '@/i18n/config'
 import { getMessages } from '@/i18n/utils'

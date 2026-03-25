@@ -162,11 +162,12 @@ import {
   canEditStudyFlows,
   canUpgradeSourceVersion,
   getEnvironmentsForDuplication,
-  isAdminOnStudyOrga,
 } from '../permissions/study'
+import { isAdminOnStudyOrga } from '../permissions/study.utils'
 import { isSimplifiedEnvironment, SimplifiedEnvironment } from '../publicodes/simplifiedPublicodesConfig'
 import { deleteFileFromBucket, getFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'
-import { getTransEnvironmentSubPost, hasSufficientLevel } from '../study'
+import { getTransEnvironmentSubPost } from '../study'
+import { hasSufficientLevel } from '../study'
 import { UpdateEmissionSourceCommand } from './emissionSource.command'
 import { saveAnswerForQuestion } from './question'
 import { saveSituation as saveSituationInDB } from './situation'

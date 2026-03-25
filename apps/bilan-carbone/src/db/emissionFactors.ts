@@ -5,8 +5,8 @@ import { FeFilters } from '@/types/filters'
 import { unique } from '@/utils/array'
 import { getEmissionFactorSubPostsMap, isMonetaryEmissionFactor } from '@/utils/emissionFactors'
 import { flattenSubposts } from '@/utils/post'
-import { EmissionFactorBase, EmissionFactorStatus, Environment, Import, SubPost, Unit } from '@repo/db-common/enums'
 import { Prisma } from '@repo/db-common'
+import { EmissionFactorBase, EmissionFactorStatus, Environment, Import, SubPost, Unit } from '@repo/db-common/enums'
 import { Session } from 'next-auth'
 import { prismaClient } from './client.server'
 import { getOrgVersionWithOrgId } from './organization'
@@ -155,23 +155,6 @@ const getDefaultEmissionFactorsCount = async (
   )
 
   return { count }
-}
-
-export const keepOnlyOneMetadata = <T extends { metaData: EmissionFactorList['metaData'][] }>(
-  emissionFactors: T[],
-  locale: LocaleType,
-): (T & { metaData: EmissionFactorList['metaData'] })[] => {
-  return emissionFactors.map((ef) => ({
-    ...ef,
-    metaData: ef.metaData.find((meta) => meta.language === locale) ?? {
-      language: locale,
-      title: null,
-      attribute: null,
-      comment: null,
-      location: null,
-      frontiere: null,
-    },
-  }))
 }
 
 const getBaseFilterForEmissionFactors = (

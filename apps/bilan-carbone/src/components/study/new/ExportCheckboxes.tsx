@@ -1,4 +1,4 @@
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { adaptFeSourceWithExport, updateStudySpecificExportFields } from '@/services/serverFunctions/study'
 import { sortAlphabetically } from '@/services/utils'

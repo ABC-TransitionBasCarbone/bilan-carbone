@@ -3,7 +3,7 @@
 import HelpIcon from '@/components/base/HelpIcon'
 import { FormSelect } from '@/components/form/Select'
 import GlossaryModal from '@/components/modals/GlossaryModal'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
 import { changeStudyLevel } from '@/services/serverFunctions/study'

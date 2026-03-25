@@ -1,6 +1,6 @@
 'use client'
 
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { environmentPostMapping, Post, subPostsByPost } from '@/services/posts'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { withInfobulle } from '@/utils/post'
