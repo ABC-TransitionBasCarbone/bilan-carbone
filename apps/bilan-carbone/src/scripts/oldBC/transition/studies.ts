@@ -3,6 +3,12 @@ import { getSourceLatestImportVersionId } from '@/db/study'
 import { getCaracterisationsBySubPost } from '@/services/emissionSource'
 import { getEmissionQuality } from '@/services/importEmissionFactor/import'
 import { hasDeprecationPeriod } from '@/utils/study'
+import type {
+  EmissionFactorImportVersion,
+  EmissionFactor as EmissionFactorPrismaModel,
+  ExportRule,
+  Prisma,
+} from '@repo/db-common'
 import {
   ControlMode,
   EmissionSourceCaracterisation,
@@ -13,12 +19,6 @@ import {
   SubPost,
   Unit,
 } from '@repo/db-common/enums'
-import type {
-  EmissionFactorImportVersion,
-  EmissionFactor as EmissionFactorPrismaModel,
-  ExportRule,
-  Prisma,
-} from '@repo/db-common'
 import { getJsDateFromExcel } from 'excel-date-to-js'
 import { NewPostAndSubPosts, OldNewPostAndSubPostsMapping } from './newPostAndSubPosts'
 import {

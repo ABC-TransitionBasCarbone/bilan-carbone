@@ -1,7 +1,7 @@
 import { CutPost, Post } from '@/services/posts'
 import '@mui/material/styles'
 import { CSSObject } from '@mui/material/styles'
-import { SubPost } from  '@repo/db-common/enums'
+import { SubPost } from '@repo/db-common/enums'
 import { CSSProperties } from 'react'
 
 declare module '@mui/material/styles' {

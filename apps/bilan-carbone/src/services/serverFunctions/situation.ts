@@ -4,7 +4,7 @@ import { getSituationByStudySite, getSituationsByStudySites, upsertSituation } f
 import { getStudyById } from '@/db/study'
 import { ListLayoutSituations } from '@/lib/publicodes/context'
 import { withServerResponse } from '@/utils/serverResponse'
-import type {InputJsonValue} from "@prisma/client/runtime/client"
+import type { InputJsonValue } from '@prisma/client/runtime/client'
 import { Situation } from 'publicodes'
 import { dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
