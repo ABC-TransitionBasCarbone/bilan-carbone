@@ -1,6 +1,6 @@
 import CarbonIntensity from '@/components/study/results/consolidated/CarbonIntensity'
 import { FullStudy } from '@/db/study'
-import { StudyResultUnit } from '@repo/db-common'
+import { StudyResultUnit } from '@repo/db-common/enums'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import styles from './ResultsContainer.module.css'

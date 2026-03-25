@@ -6,7 +6,7 @@ import {
   ActionPotentialDeduction,
   ActionRelevance,
   SubPost,
-} from '@repo/db-common'
+} from '@repo/db-common/enums'
 import { z } from 'zod'
 
 const ActionIndicatorSchema = z.object({
