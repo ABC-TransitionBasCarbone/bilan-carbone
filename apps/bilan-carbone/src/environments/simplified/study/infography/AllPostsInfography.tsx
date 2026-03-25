@@ -1,4 +1,4 @@
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import EnvironmentLoader from '@/environments/core/utils/EnvironmentLoader'
 import { usePublicodesSituation } from '@/lib/publicodes/context'
 import { mappedTiltSituationToCustomDataFields } from '@/services/customDataToSituation'

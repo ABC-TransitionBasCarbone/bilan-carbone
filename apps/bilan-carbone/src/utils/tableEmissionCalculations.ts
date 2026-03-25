@@ -2,8 +2,8 @@ import { TableAnswer, TableRow } from '@/components/dynamic-form/types/formTypes
 import { emissionFactorMap } from '@/constants/emissionFactorMap'
 import { SPECTATOR_SHORT_DISTANCE_DETAILS_QUESTION_ID } from '@/constants/questions'
 import { getEmissionFactorByImportedIdAndStudiesEmissionSource } from '@/db/emissionFactors'
-import { FullStudy } from '@/db/study'
-import type {Question} from "@repo/db-common"
+import type { FullStudy } from '@/db/study'
+import type { Question } from '@repo/db-common'
 
 const MEAL_EMISSION_FACTOR_ID = '20682'
 const MONTHS_PER_YEAR = 12

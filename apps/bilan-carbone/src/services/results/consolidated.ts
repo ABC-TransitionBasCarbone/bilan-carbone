@@ -1,4 +1,4 @@
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { customPostOrder } from '@/environments/clickson/utils/constant'
 import { Translations } from '@/types/translation'
 import { sortByCustomOrder } from '@/utils/array'

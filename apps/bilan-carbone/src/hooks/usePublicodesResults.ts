@@ -1,5 +1,5 @@
 'use client'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import {
   getSimplifiedPublicodesConfig,
   SimplifiedEnvironment,

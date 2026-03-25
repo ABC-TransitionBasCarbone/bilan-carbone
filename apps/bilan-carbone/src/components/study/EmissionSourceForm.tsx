@@ -1,7 +1,7 @@
 'use client'
 
 import { EmissionFactorList } from '@/db/emissionFactors'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { customRich } from '@/i18n/customRich'
 import { getEmissionResults } from '@/services/emissionSource'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
@@ -25,9 +25,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import HideIcon from '@mui/icons-material/VisibilityOff'
 import { Autocomplete, FormControl, InputLabel, MenuItem, Popper, TextField } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers'
-import type {
-  StudyTag,
-} from '@repo/db-common'
+import type { StudyTag } from '@repo/db-common'
 import {
   EmissionSourceCaracterisation,
   EmissionSourceType,

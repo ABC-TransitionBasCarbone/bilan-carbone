@@ -2,7 +2,7 @@
 
 import Block from '@/components/base/Block'
 import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { useTransitionPlan } from '@/hooks/useTransitionPlan'
 import { useTransitionPlanFilters } from '@/hooks/useTransitionPlanFilters'
 import type {

@@ -21,16 +21,8 @@ import type {
 } from '@/types/trajectory.types'
 import type { Translations } from '@/types/translation'
 import { convertValue } from '@/utils/study'
-import {
-  ActionPotentialDeduction,
-  StudyResultUnit,
-  TrajectoryType,
-} from '@repo/db-common/enums'
-import {
-  Action,
-  ExternalStudy,
-  SectenInfo,
-} from '@repo/db-common'
+import { Action, ExternalStudy, SectenInfo } from '@repo/db-common'
+import { ActionPotentialDeduction, StudyResultUnit, TrajectoryType } from '@repo/db-common/enums'
 import {
   calculateCustomSNBCSectoralTrajectory,
   calculateSectoralSNBCReductionRates,

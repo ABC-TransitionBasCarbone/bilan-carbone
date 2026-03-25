@@ -1,7 +1,7 @@
 'use client'
 
 import { storageKeys } from '@/constants/storage.constants'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { StudyWithoutDetail } from '@/services/permissions/study'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useRef, useState } from 'react'

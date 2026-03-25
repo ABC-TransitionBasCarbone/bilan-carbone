@@ -1,5 +1,5 @@
 import { getOrganizationVersionAccounts } from '@/db/organization'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { Typography } from '@mui/material'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'

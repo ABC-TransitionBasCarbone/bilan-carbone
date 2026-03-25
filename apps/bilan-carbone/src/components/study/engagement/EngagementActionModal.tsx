@@ -6,7 +6,7 @@ import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
 import Modal from '@/components/modals/Modal'
 import { EngagementActionSteps, EngagementActionTargets } from '@/constants/engagementActions'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { addEngagementAction, editEngagementAction, EngagementActionWithSites } from '@/services/serverFunctions/study'
 import {

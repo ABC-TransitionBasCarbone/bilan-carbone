@@ -1,6 +1,6 @@
 import Modal from '@/components/modals/Modal'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { customRich } from '@/i18n/customRich'
 import { getEmissionResults } from '@/services/emissionSource'
 import { ResultsByPost } from '@/services/results/consolidated'
