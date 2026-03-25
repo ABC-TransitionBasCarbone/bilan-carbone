@@ -1,17 +1,8 @@
 import { getSourceLatestImportVersionId } from '@/db/study'
 import { getEnvVar } from '@/lib/environment'
 import { isMonetaryEmissionFactor } from '@/utils/emissionFactors'
-import {
-  EmissionFactorPartType,
-  EmissionFactorStatus,
-  Environment,
-  Import,
-  SubPost,
-  Unit,
-} from '@repo/db-common/enums'
-import type {
-  Prisma,
-} from '@repo/db-common'
+import type { Prisma } from '@repo/db-common'
+import { EmissionFactorPartType, EmissionFactorStatus, Environment, Import, SubPost, Unit } from '@repo/db-common/enums'
 import { unitsMatrix } from './historyUnits'
 import { additionalParts } from './parts.config'
 

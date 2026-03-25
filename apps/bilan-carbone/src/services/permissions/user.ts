@@ -1,7 +1,7 @@
 import { AccountWithUser } from '@/db/account'
 import { canBeUntrainedRole, canEditMemberRole } from '@/utils/user'
-import { Role, UserStatus } from '@repo/db-common/enums'
 import type { Prisma } from '@repo/db-common'
+import { Role, UserStatus } from '@repo/db-common/enums'
 import { UserSession } from 'next-auth'
 
 export const canEditSelfRole = (userRole: Role) => userRole === Role.ADMIN || userRole === Role.GESTIONNAIRE

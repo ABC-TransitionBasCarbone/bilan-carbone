@@ -7,7 +7,7 @@ import {
 import { FormLayout } from '@/components/publicodes-form/layouts/formLayout'
 import { ListLayoutSituations } from '@/lib/publicodes/context'
 import { typedEntries } from '@/utils/object'
-import { SubPost } from  '@repo/db-common/enums'
+import { SubPost } from '@repo/db-common/enums'
 import Engine from 'publicodes'
 import { SimplifiedPost } from '../posts'
 

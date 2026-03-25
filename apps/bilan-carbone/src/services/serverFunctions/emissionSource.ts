@@ -18,8 +18,8 @@ import {
 import { getStudyById } from '@/db/study'
 import { withServerResponse } from '@/utils/serverResponse'
 import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
-import { Import, SubPost, UserChecklist } from '@repo/db-common/enums'
 import type { Prisma, StudyTag } from '@repo/db-common'
+import { Import, SubPost, UserChecklist } from '@repo/db-common/enums'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import {

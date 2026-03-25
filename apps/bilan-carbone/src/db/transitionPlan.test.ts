@@ -1,14 +1,6 @@
 import { expect } from '@jest/globals'
-import {
-  ActionIndicatorType,
-  ActionPotentialDeduction,
-  TrajectoryType,
-} from '@repo/db-common/enums'
-import type {
-  ExternalStudy,
-  Trajectory,
-  TransitionPlanStudy,
-} from '@repo/db-common'
+import type { ExternalStudy, Trajectory, TransitionPlanStudy } from '@repo/db-common'
+import { ActionIndicatorType, ActionPotentialDeduction, TrajectoryType } from '@repo/db-common/enums'
 import {
   ActionWithRelations,
   duplicateTransitionPlanWithRelations,

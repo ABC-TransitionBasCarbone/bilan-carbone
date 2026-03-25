@@ -2,13 +2,9 @@ import { UpdateOrganizationCommand } from '@/services/serverFunctions/organizati
 import { SitesCommand } from '@/services/serverFunctions/study.command'
 import { OnboardingCommand } from '@/services/serverFunctions/user.command'
 import { unique } from '@/utils/array'
-import {
-  Environment,
-  EstablishmentType,
-  UserStatus,
-} from '@repo/db-common/enums'
-import type { Site, Organization, OrganizationVersion } from '@repo/db-common'
+import type { Organization, OrganizationVersion, Site } from '@repo/db-common'
 import { Prisma } from '@repo/db-common'
+import { Environment, EstablishmentType, UserStatus } from '@repo/db-common/enums'
 import { prismaClient } from './client.server'
 import { deleteStudy } from './study'
 

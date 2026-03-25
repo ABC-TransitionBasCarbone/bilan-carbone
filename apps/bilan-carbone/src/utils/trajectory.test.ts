@@ -1,8 +1,8 @@
 import { TrajectoryWithObjectives } from '@/db/transitionPlan'
 import { TrajectoryDataPoint } from '@/types/trajectory.types'
 import { expect } from '@jest/globals'
-import { StudyResultUnit, TrajectoryType } from '@repo/db-common/enums'
 import { Action } from '@repo/db-common'
+import { StudyResultUnit, TrajectoryType } from '@repo/db-common/enums'
 import { createGeneralSectenData } from './secten.test-utils'
 import { calculateSNBCTrajectory } from './snbc'
 import {

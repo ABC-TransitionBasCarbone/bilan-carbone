@@ -1,5 +1,5 @@
 import { setCustomIssue } from '@/lib/zod.config'
-import { SubPost } from  '@repo/db-common/enums'
+import { SubPost } from '@repo/db-common/enums'
 import { z } from 'zod'
 
 export const createObjectiveFormSchema = () =>

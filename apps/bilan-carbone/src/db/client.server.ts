@@ -1,6 +1,6 @@
-import 'server-only'
-import { PrismaClient } from '@repo/db-common'
 import { PrismaPg } from '@prisma/adapter-pg'
+import { PrismaClient } from '@repo/db-common'
+import 'server-only'
 
 // https://www.prisma.io/docs/guides/other/troubleshooting-orm/help-articles/nextjs-prisma-client-dev-practices
 const globalForPrisma = global as unknown as {

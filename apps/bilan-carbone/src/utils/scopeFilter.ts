@@ -1,4 +1,4 @@
-import { SubPost } from  '@repo/db-common/enums'
+import { SubPost } from '@repo/db-common/enums'
 
 const filtersMatcheScope = (scope: string[], filters: string[]): boolean => {
   return scope.some((id) => filters.includes(id))
