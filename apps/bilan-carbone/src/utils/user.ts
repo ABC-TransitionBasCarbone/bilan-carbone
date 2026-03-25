@@ -1,7 +1,7 @@
 import { isSimplifiedEnvironment } from '@/services/publicodes/simplifiedPublicodesConfig'
 import { ClicksonRoles, CutRoles } from '@/services/roles'
-import { Environment, Role, UserStatus } from '@repo/db-common/enums'
 import type { Prisma } from '@repo/db-common'
+import { Environment, Role, UserStatus } from '@repo/db-common/enums'
 import { UserSession } from 'next-auth'
 
 export const isAdmin = (userRole: Role) => userRole === Role.ADMIN || userRole === Role.SUPER_ADMIN
