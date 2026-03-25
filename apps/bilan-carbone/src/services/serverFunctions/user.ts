@@ -12,7 +12,7 @@ import {
   getAccountsFromUser,
 } from '@/db/account'
 import { findCncByCncCode } from '@/db/cnc'
-import { isFeatureActive } from '@/db/deactivableFeatures.action.server'
+import { isFeatureActive } from '@/db/deactivableFeatures'
 import {
   createOrganizationWithVersion,
   getOrganizationVersionByOrganizationIdAndEnvironment,

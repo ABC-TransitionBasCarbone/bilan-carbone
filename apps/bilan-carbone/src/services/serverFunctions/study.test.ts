@@ -61,7 +61,7 @@ const mockTransaction = {
     updateMany: jest.fn(),
   },
 }
-jest.mock('../../db/client', () => ({
+jest.mock('../../db/client.server', () => ({
   prismaClient: {
     $transaction: jest.fn((callback) => callback(mockTransaction)),
   },
