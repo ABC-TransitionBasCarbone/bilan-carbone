@@ -1,6 +1,6 @@
 'use client'
 
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { Document } from '@repo/db-common'
 import { useTranslations } from 'next-intl'
 import StudyDocument from './StudyDocument'

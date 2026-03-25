@@ -69,11 +69,13 @@ jest.mock('../../db/client', () => ({
 jest.mock('../../services/permissions/study', () => ({
   hasEditionRights: jest.fn(),
   getAccountRoleOnStudy: jest.fn(),
-  isAdminOnStudyOrga: jest.fn(),
   canCreateSpecificStudy: jest.fn(),
   canDuplicateStudy: jest.fn(),
   canChangeSites: jest.fn(),
   canChangeDates: jest.fn(),
+}))
+jest.mock('../../services/permissions/study.utils', () => ({
+  isAdminOnStudyOrga: jest.fn(),
 }))
 jest.mock('../../utils/study', () => ({
   getAccountRoleOnStudy: jest.fn(),

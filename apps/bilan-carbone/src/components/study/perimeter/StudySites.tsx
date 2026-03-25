@@ -2,7 +2,7 @@
 
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { OrganizationWithSites } from '@/db/account'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import Sites from '@/environments/base/organization/Sites'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import { useServerFunction } from '@/hooks/useServerFunction'

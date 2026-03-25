@@ -3,7 +3,7 @@
 import Box from '@/components/base/Box'
 import HelpIcon from '@/components/base/HelpIcon'
 import GlossaryModal from '@/components/modals/GlossaryModal'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { customRich } from '@/i18n/customRich'
 import { hasAccessToStudyResults, hasRoleOnStudy } from '@/services/permissions/environment'
 import { getDetailedEmissionResults } from '@/services/study'

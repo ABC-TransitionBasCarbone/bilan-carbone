@@ -1,7 +1,7 @@
 'use client'
 
 import SelectStudySite from '@/components/study/site/SelectStudySite'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import DownloadIcon from '@mui/icons-material/Download'
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
 import { Box, Button, Tab, Tabs, Typography } from '@mui/material'

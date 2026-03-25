@@ -2,7 +2,7 @@ import { expect } from '@jest/globals'
 import { getQualitativeUncertaintyFromQuality, getSquaredStandardDeviationForQuality } from './uncertainty'
 
 jest.mock('./file', () => ({ download: jest.fn() }))
-jest.mock('./permissions/study', () => ({ isAdminOnStudyOrga: jest.fn() }))
+jest.mock('./permissions/study.utils', () => ({ isAdminOnStudyOrga: jest.fn() }))
 jest.mock('./study', () => ({ hasSufficientLevel: jest.fn() }))
 
 describe('Uncertainty Service', () => {

@@ -1,11 +1,11 @@
 'use client'
 
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { getStudy } from '@/services/serverFunctions/study'
 import { CreateStudyCommand, SitesCommand } from '@/services/serverFunctions/study.command'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
-import{ SiteCAUnit } from '@repo/db-common/enums'
+import { SiteCAUnit } from '@repo/db-common/enums'
 import dayjs from 'dayjs'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'

@@ -1,6 +1,6 @@
 'use client'
 
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { customRich } from '@/i18n/customRich'
 import { getCaracterisationsBySubPost, getEmissionResults } from '@/services/emissionSource'
 import { Post } from '@/services/posts'

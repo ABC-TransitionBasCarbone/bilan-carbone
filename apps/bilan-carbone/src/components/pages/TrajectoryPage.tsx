@@ -1,7 +1,7 @@
 'use client'
 
 import TransitionPlanBase from '@/components/study/transitionPlan/TransitionPlanBase'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { customRich } from '@/i18n/customRich'
 import { getStudyTotalCo2Emissions } from '@/services/study'
 import type { ActionWithRelations, TrajectoryWithObjectivesAndScope } from '@/types/trajectory.types'

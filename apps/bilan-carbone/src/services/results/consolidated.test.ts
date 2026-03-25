@@ -1,4 +1,4 @@
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
 import { getMockeFullStudy } from '@/tests/utils/models/study'
 import { translationMock } from '@/tests/utils/models/translationsMock'

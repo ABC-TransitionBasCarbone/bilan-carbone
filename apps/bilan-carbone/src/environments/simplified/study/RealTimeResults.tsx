@@ -1,4 +1,4 @@
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { usePublicodesResults } from '@/hooks/usePublicodesResults'
 import { isClickson } from '@/services/permissions/environment'
 import { Post } from '@/services/posts'
