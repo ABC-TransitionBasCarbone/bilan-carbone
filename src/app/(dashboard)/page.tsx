@@ -4,12 +4,14 @@ import UserView from '@/components/home/UserView'
 import Onboarding from '@/components/onboarding/Onboarding'
 import { environmentWithOnboarding } from '@/constants/environments'
 import { getOrganizationVersionById } from '@/db/organization'
-import { default as ClicksonUserView } from '@/environments/clickson/home/UserView'
-import FooterClickson from '@/environments/clickson/layout/Footer'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import FooterCut from '@/environments/cut/layout/Footer'
-import SimplifiedUserView from '@/environments/simplified/home/UserView'
 import { Environment } from '@prisma/client'
+import dynamic from 'next/dynamic'
+
+const ClicksonUserView = dynamic(() => import('@/environments/clickson/home/UserView'))
+const FooterClickson = dynamic(() => import('@/environments/clickson/layout/Footer'))
+const FooterCut = dynamic(() => import('@/environments/cut/layout/Footer'))
+const SimplifiedUserView = dynamic(() => import('@/environments/simplified/home/UserView'))
 
 export const revalidate = 0
 

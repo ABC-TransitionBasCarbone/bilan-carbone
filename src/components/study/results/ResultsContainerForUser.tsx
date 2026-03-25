@@ -4,12 +4,16 @@ import Block from '@/components/base/Block'
 import { getOrganizationVersionStudiesOrderedByStartDate } from '@/db/study'
 import { getUserApplicationSettings } from '@/db/user'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import StudyResultsContainerSummaryPublicodes from '@/environments/simplified/study/results/StudyResultsContainerSummaryPublicodes'
 import { canReadStudy } from '@/services/permissions/study'
 import { Environment } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
+import dynamic from 'next/dynamic'
 import StudyResultsContainerSummary from './StudyResultsContainerSummary'
+
+const StudyResultsContainerSummaryPublicodes = dynamic(
+  () => import('@/environments/simplified/study/results/StudyResultsContainerSummaryPublicodes'),
+)
 
 interface Props {
   user: UserSession

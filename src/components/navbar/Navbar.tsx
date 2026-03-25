@@ -2,7 +2,6 @@
 
 import TopLeftNavBar from '@/components/navbar/TopLeftNavBar'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import CutTopLeftNavBar from '@/environments/cut/navbar/TopLeftNavBar'
 import { Locale } from '@/i18n/config'
 import { signOutEnv } from '@/services/auth'
 import { hasAccessToStudyComments, isClickson, isTilt } from '@/services/permissions/environment'
@@ -20,6 +19,7 @@ import { Environment, Role } from '@prisma/client'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { useLocale, useTranslations } from 'next-intl'
+import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import { useEffect, useMemo, useState } from 'react'
 import { Logo } from '../base/Logo'
@@ -27,6 +27,8 @@ import AppBar from './AppBar'
 import NavbarButton from './NavbarButton'
 import NavbarComments from './NavbarComments'
 import NavbarLink from './NavbarLink'
+
+const CutTopLeftNavBar = dynamic(() => import('@/environments/cut/navbar/TopLeftNavBar'))
 
 interface Props {
   user: UserSession

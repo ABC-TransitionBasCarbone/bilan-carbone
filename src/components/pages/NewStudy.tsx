@@ -3,10 +3,7 @@ import SelectOrganization from '@/components/study/organization/Select'
 import { OrganizationWithSites } from '@/db/account'
 import { getOrganizationVersionAccounts } from '@/db/organization'
 import NewStudyForm from '@/environments/base/study/new/Form'
-import NewStudyFormClickson from '@/environments/clickson/study/new/Form'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import NewStudyFormCut from '@/environments/cut/study/new/Form'
-import NewStudyFormTilt from '@/environments/tilt/study/new/Form'
 import { useDuplicateStudy } from '@/hooks/useDuplicateStudy'
 import { hasAccessToDuplicateStudy } from '@/services/permissions/environmentAdvanced'
 import { CreateStudyCommand, CreateStudyCommandValidation } from '@/services/serverFunctions/study.command'
@@ -18,11 +15,16 @@ import { Environment, SiteCAUnit } from '@prisma/client'
 import dayjs from 'dayjs'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
+import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import styles from './NewStudy.module.css'
+
+const NewStudyFormClickson = dynamic(() => import('@/environments/clickson/study/new/Form'))
+const NewStudyFormCut = dynamic(() => import('@/environments/cut/study/new/Form'))
+const NewStudyFormTilt = dynamic(() => import('@/environments/tilt/study/new/Form'))
 
 interface Props {
   user: UserSession

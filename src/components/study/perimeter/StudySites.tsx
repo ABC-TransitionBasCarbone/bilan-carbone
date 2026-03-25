@@ -6,8 +6,6 @@ import { OrganizationWithSites } from '@/db/account'
 import { FullStudy } from '@/db/study'
 import Sites from '@/environments/base/organization/Sites'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import SitesCut from '@/environments/cut/organization/Sites'
-import SitesTilt from '@/environments/tilt/organization/Sites'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import {
   getUpdateOrganizationVersionPermission,
@@ -34,6 +32,9 @@ import { useForm, UseFormReturn } from 'react-hook-form'
 import DeleteStudySiteModal from './DeleteStudySiteModal'
 import { DuplicateFormData } from './DuplicateSiteModal'
 import ReplicateSitesChangesModal from './ReplicateSitesChangesModal'
+
+const SitesCut = dynamic(() => import('@/environments/cut/organization/Sites'))
+const SitesTilt = dynamic(() => import('@/environments/tilt/organization/Sites'))
 
 const DuplicateSiteModal = dynamic(() => import('./DuplicateSiteModal'), { ssr: false })
 
