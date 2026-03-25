@@ -74,3 +74,7 @@ export const getTranslatedMapping = <T extends string>(values: T[], translations
     {} as Record<string, string>,
   )
 }
+
+// Returns true if every element of subset is included in superset (empty superset = universal).
+export const isSubset = <T>(superset: T[], subset: T[]): boolean =>
+  superset.length === 0 || subset.every((v) => superset.includes(v))

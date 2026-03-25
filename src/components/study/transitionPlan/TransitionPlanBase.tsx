@@ -6,9 +6,10 @@ import { FullStudy } from '@/db/study'
 import type { ActionWithRelations, TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
 import { useTransitionPlan } from '@/hooks/useTransitionPlan'
 import { useTransitionPlanFilters } from '@/hooks/useTransitionPlanFilters'
+import type { ObjectiveGroup, PastStudy } from '@/types/trajectory.types'
+import { buildObjectiveGroups } from '@/utils/scope.utils'
 import { scopeMatchesUIFilters } from '@/utils/scopeFilter'
 import { getActionReductionRatio } from '@/utils/study'
-import { PastStudy } from '@/utils/trajectory'
 import type { ExternalStudy, SectenInfo, SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useMemo } from 'react'
@@ -110,6 +111,24 @@ const TransitionPlanBase = ({
     [trajectories, selectedSiteIds, selectedSubPosts, selectedTagIds, allTagIds],
   )
 
+  const objectiveGroupsByTrajectoryId = useMemo(() => {
+    const result = new Map<string, ObjectiveGroup[]>()
+    for (const traj of trajectories) {
+      const groups = buildObjectiveGroups({
+        study,
+        validatedOnly,
+        objectives: traj.objectives,
+        filterSiteIds: selectedSiteIds,
+        filterSubPosts: selectedSubPosts,
+        filterTagIds: selectedTagIds,
+      })
+      if (groups) {
+        result.set(traj.id, groups)
+      }
+    }
+    return result.size > 0 ? result : undefined
+  }, [trajectories, study, validatedOnly, selectedSiteIds, selectedSubPosts, selectedTagIds])
+
   const filteredActions = useMemo(() => {
     const studyHasTags = allTagIds.length > 0
     if (
@@ -201,6 +220,7 @@ const TransitionPlanBase = ({
             studyEmissions={filteredStudyEmissions}
             titleAction={graphTitleAction}
             storageKey={`trajectory-page-${transitionPlanId}`}
+            objectiveGroupsByTrajectoryId={objectiveGroupsByTrajectoryId}
           />
           {children({
             filteredStudyEmissions,

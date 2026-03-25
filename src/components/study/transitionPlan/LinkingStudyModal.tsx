@@ -4,7 +4,7 @@ import { Select } from '@/components/base/Select'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import { FormTextField } from '@/components/form/TextField'
 import Modal from '@/components/modals/Modal'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { getStudyPreviousOccurrences } from '@/services/serverFunctions/study'
 import { addExternalStudy, linkOldStudy, updateExternalStudy } from '@/services/serverFunctions/transitionPlan'
@@ -12,8 +12,8 @@ import {
   createExternalStudyFormValidation,
   ExternalStudyFormInput,
 } from '@/services/serverFunctions/transitionPlan.command'
+import type { PastStudy } from '@/types/trajectory.types'
 import { convertValue } from '@/utils/study'
-import { PastStudy } from '@/utils/trajectory'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
 import { StudyResultUnit } from '@prisma/client'

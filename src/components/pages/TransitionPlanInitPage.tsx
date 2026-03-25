@@ -166,7 +166,15 @@ const TransitionPlanInitPage = ({
     setSnbcMounted(true)
     const storedSnbc = localStorage.getItem(`trajectory-snbc-selected-${study.id}`)
     if (storedSnbc) {
-      setSelectedSnbcTrajectories(JSON.parse(storedSnbc))
+      const parsed = JSON.parse(storedSnbc) as string[]
+      if (parsed.includes('sectoral')) {
+        // Clean up backward compatibility for sectoral trajectory which used to exist
+        const cleaned = parsed.filter((id) => id !== 'sectoral')
+        localStorage.setItem(`trajectory-snbc-selected-${study.id}`, JSON.stringify(cleaned))
+        setSelectedSnbcTrajectories(cleaned)
+      } else {
+        setSelectedSnbcTrajectories(parsed)
+      }
     }
 
     const storedSbti = localStorage.getItem(`trajectory-sbti-selected-${study.id}`)

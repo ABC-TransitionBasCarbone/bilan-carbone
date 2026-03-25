@@ -8,12 +8,12 @@ import { customRich } from '@/i18n/customRich'
 import { deleteObjective } from '@/services/serverFunctions/objective.serverFunction'
 import { SectorPercentages } from '@/services/serverFunctions/trajectory.command'
 import { deleteTrajectory } from '@/services/serverFunctions/trajectory.serverFunction'
+import type { PastStudy } from '@/types/trajectory.types'
 import { formatNumber } from '@/utils/number'
 import {
   getCorrectedObjectives,
   getDisplayedReferenceYearForTrajectoryType,
   getTrajectoryTypeLabel,
-  PastStudy,
 } from '@/utils/trajectory'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'

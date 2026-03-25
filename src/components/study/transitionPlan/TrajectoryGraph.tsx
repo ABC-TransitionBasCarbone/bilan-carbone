@@ -2,12 +2,12 @@
 
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { TRAJECTORY_15_ID, TRAJECTORY_SNBC_GENERAL_ID, TRAJECTORY_WB2C_ID } from '@/constants/trajectories'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { TrajectoryWithObjectives } from '@/db/transitionPlan'
 import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
 import { customRich } from '@/i18n/customRich'
-import { TrajectoryDataPoint } from '@/types/trajectory.types'
-import { calculateTrajectoriesWithHistory, getYearsToDisplay, PastStudy } from '@/utils/trajectory'
+import type { ObjectiveGroup, PastStudy, TrajectoryDataPoint } from '@/types/trajectory.types'
+import { calculateTrajectoriesWithHistory, getYearsToDisplay } from '@/utils/trajectory'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import { Alert, Slider, SvgIcon, Typography } from '@mui/material'
 import {
@@ -51,6 +51,7 @@ interface Props {
   titleAction?: ReactNode
   storageKey: string
   isTrajectoryPage?: boolean
+  objectiveGroupsByTrajectoryId?: Map<string, ObjectiveGroup[]>
 }
 
 const TrajectoryGraph = ({
@@ -69,6 +70,7 @@ const TrajectoryGraph = ({
   showActionTrajectory = true,
   titleAction,
   storageKey,
+  objectiveGroupsByTrajectoryId,
 }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectories.graph')
   const tUnit = useTranslations('study.results.units')
@@ -120,6 +122,7 @@ const TrajectoryGraph = ({
       selectedSbtiTrajectories,
       selectedCustomTrajectoryIds: selectedCustomTrajectories,
       sectenData,
+      objectiveGroupsByTrajectoryId,
     })
 
     const customTrajectoriesData = trajectoryResult.customTrajectories.map((trajData) => {
@@ -141,7 +144,10 @@ const TrajectoryGraph = ({
       studyStartYear,
     }
   }, [
-    study,
+    study.id,
+    study.name,
+    study.startDate,
+    study.resultsUnit,
     studyEmissions,
     trajectories,
     actions,
@@ -152,6 +158,7 @@ const TrajectoryGraph = ({
     selectedCustomTrajectories,
     sectenData,
     studyStartYear,
+    objectiveGroupsByTrajectoryId,
   ])
 
   const snbcTrajectoryDataArray = Object.values(data.snbcData)
