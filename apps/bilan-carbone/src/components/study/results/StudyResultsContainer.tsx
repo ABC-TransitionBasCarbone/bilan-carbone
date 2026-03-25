@@ -1,7 +1,7 @@
 'use client'
 
 import Block from '@/components/base/Block'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { UserSession } from 'next-auth'
 import StudyResultsContainerSummary from './StudyResultsContainerSummary'
 

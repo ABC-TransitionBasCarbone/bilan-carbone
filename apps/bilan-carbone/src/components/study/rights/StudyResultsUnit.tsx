@@ -1,7 +1,7 @@
 'use client'
 
 import { FormSelect } from '@/components/form/Select'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { changeStudyResultsUnit } from '@/services/serverFunctions/study'
 import {

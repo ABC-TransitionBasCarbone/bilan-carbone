@@ -1,5 +1,5 @@
 import HelpIcon from '@/components/base/HelpIcon'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { StudyExportsCommand } from '@/services/serverFunctions/study.command'
 import { Translations } from '@/types/translation'
 import { FormControl, FormGroup, FormLabel } from '@mui/material'

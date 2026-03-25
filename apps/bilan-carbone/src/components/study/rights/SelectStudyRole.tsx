@@ -1,8 +1,8 @@
 'use client'
 
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import { isAdminOnStudyOrga } from '@/services/permissions/study'
+import { isAdminOnStudyOrga } from '@/services/permissions/study.utils'
 import { changeStudyRole } from '@/services/serverFunctions/study'
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { StudyRole } from '@repo/db-common/enums'

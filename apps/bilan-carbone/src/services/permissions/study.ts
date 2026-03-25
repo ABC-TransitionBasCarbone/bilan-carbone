@@ -20,14 +20,7 @@ import {
 } from './environment'
 import { hasAccessToDuplicateStudy } from './environmentAdvanced'
 import { isInOrgaOrParentFromId } from './organization'
-
-export const isAdminOnStudyOrga = (
-  user: UserSession,
-  studyOrganizationVersion: {
-    id: string
-    parentId: string | null
-  },
-) => isAdminOnOrga(user, studyOrganizationVersion)
+import { isAdminOnStudyOrga } from './study.utils'
 
 export const canReadStudy = async (user: UserSession | UserWithAllowedStudies, studyId: string) => {
   if (!user) {

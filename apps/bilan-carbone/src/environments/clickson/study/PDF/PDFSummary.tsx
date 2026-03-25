@@ -3,7 +3,7 @@
 import { ChartsPage } from '@/app/(public)/preview/etudes/[id]/ChartsPage'
 import '@/app/(public)/preview/etudes/[id]/pdf-summary.css'
 import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { usePublicodesResults } from '@/hooks/usePublicodesResults'
 import { BaseResultsByPost } from '@/services/results/consolidated'
 import { ThemeProvider } from '@mui/material/styles'

@@ -1,6 +1,6 @@
 import styles from '@/components/study/infography/AllPostsInfography.module.css'
 import PostInfography from '@/components/study/infography/PostInfography'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import theme from '@/environments/tilt/theme/theme'
 import { TiltPost } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'

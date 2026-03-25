@@ -1,6 +1,6 @@
 'use client'
 import { EnvironmentMode } from '@/constants/environments'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import { customRich } from '@/i18n/customRich'
 import { Post, subPostsByPost } from '@/services/posts'

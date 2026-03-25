@@ -1,8 +1,8 @@
 'use client'
 
 import { AccountWithUser } from '@/db/account'
-import { keepOnlyOneMetadata } from '@/db/emissionFactors'
-import { FullStudy } from '@/db/study'
+import { keepOnlyOneMetadata } from '@/db/emissionFactors.utils'
+import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { Locale } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'

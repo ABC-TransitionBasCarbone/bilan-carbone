@@ -1,7 +1,7 @@
 'use client'
 
 import BaseTable from '@/components/base/Table'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { rulesSpans } from '@/services/results/beges'
 import { PostInfos } from '@/services/results/exports'
 import { getConfidenceInterval, getQualitativeUncertaintyFromSquaredStandardDeviation } from '@/services/uncertainty'
