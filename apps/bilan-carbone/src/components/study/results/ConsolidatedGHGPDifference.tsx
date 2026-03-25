@@ -1,5 +1,5 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { getEmissionResults } from '@/services/emissionSource'
 import { Post } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
@@ -11,6 +11,7 @@ import { computeDifferenceForTableEmissions, formatDifferenceTableEmissions } fr
 import { formatNumber } from '@/utils/number'
 import { hasDeprecationPeriod, hasFabricationPart, STUDY_UNIT_VALUES } from '@/utils/study'
 import WarningAmberIcon from '@mui/icons-material/WarningAmberOutlined'
+import { ExportRule } from '@repo/db-common'
 import {
   EmissionFactorBase,
   EmissionFactorPartType,
@@ -18,9 +19,6 @@ import {
   Export,
   SubPost,
 } from '@repo/db-common/enums'
-import {
-  ExportRule
-} from '@repo/db-common'
 import { useTranslations } from 'next-intl'
 import { useCallback, useMemo } from 'react'
 import { EnergiesIcon } from '../infography/icons/energies'

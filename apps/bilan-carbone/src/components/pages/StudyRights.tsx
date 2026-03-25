@@ -1,5 +1,5 @@
 import { getOrganizationVersionWithSitesById } from '@/db/organization'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { getUserApplicationSettings } from '@/db/user'
 import DynamicStudyRights from '@/environments/core/study/DynamicStudyRights'
 import { getEmissionFactorImportVersions } from '@/services/serverFunctions/emissionFactor'

@@ -27,8 +27,8 @@ import {
   LineSeriesType,
   MarkPlot,
 } from '@mui/x-charts'
-import { TrajectoryType } from '@repo/db-common/enums'
 import { Action, SectenInfo } from '@repo/db-common'
+import { TrajectoryType } from '@repo/db-common/enums'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'

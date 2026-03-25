@@ -1,4 +1,4 @@
-import * as StudyServiceModule from '@/services/study'
+import * as StudyServiceUtilsModule from '@/services/study'
 import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
 import { mockedEmissionSourceEmissionFactor } from '@/tests/utils/models/study'
 import { getMockedAuthUser } from '@/tests/utils/models/user'
@@ -9,12 +9,12 @@ import { getBaseFilteredEmissionSources, getDuplicableEnvironments, getUserRoleO
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('../services/file', () => ({ download: jest.fn() }))
-jest.mock('@/services/permissions/study', () => ({ isAdminOnStudyOrga: jest.fn() }))
+jest.mock('@/services/permissions/study.utils', () => ({ isAdminOnStudyOrga: jest.fn() }))
 
 jest.mock('@/services/study', () => ({ hasSufficientLevel: jest.fn() }))
 jest.mock('@/utils/user', () => ({ isAdmin: jest.fn() }))
 
-const mockHasSufficientLevel = StudyServiceModule.hasSufficientLevel as jest.Mock
+const mockHasSufficientLevel = StudyServiceUtilsModule.hasSufficientLevel as jest.Mock
 const mockIsAdmin = UserUtilsModule.isAdmin as unknown as jest.Mock
 
 const emissionSources = [

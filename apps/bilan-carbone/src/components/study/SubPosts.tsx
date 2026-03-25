@@ -1,6 +1,6 @@
 'use client'
 
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { Post } from '@/services/posts'
 import { StudyRole, SubPost } from '@repo/db-common/enums'
 import classNames from 'classnames'

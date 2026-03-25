@@ -1,4 +1,4 @@
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import TrendingUpIcon from '@mui/icons-material/TrendingUpOutlined'
 import { Export, StudyResultUnit, SubPost } from '@repo/db-common'
 import classNames from 'classnames'

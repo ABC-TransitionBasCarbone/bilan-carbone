@@ -1,11 +1,11 @@
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { expect } from '@jest/globals'
 import { EmissionFactorBase, Environment, SubPost, Unit } from '@repo/db-common/enums'
 import { getEmissionResults } from './emissionSource'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('./file', () => ({ download: jest.fn() }))
-jest.mock('./permissions/study', () => ({ isAdminOnStudyOrga: jest.fn() }))
+jest.mock('./permissions/study.utils', () => ({ isAdminOnStudyOrga: jest.fn() }))
 jest.mock('./study', () => ({ hasSufficientLevel: jest.fn() }))
 
 const defaultEmissionSource = {

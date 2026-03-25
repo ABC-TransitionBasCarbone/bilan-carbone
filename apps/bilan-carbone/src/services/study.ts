@@ -1,7 +1,7 @@
 import { EngagementActionTargets } from '@/constants/engagementActions'
 import { resultsExportHeadersBase, resultsExportHeadersCut } from '@/constants/exports'
-import { EmissionFactorWithParts } from '@/db/emissionFactors'
-import { FullStudy, getStudyById } from '@/db/study'
+import type{  EmissionFactorWithParts } from '@/db/emissionFactors'
+import type { FullStudy} from '@/db/study'
 import { Translations } from '@/types/translation'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { getGHGPRuleName } from '@/utils/ghgp'
@@ -866,17 +866,6 @@ export const downloadStudyResults = async (
   download([buffer], `${study.name}_results.xlsx`, 'xlsx')
 }
 
-export const getStudyParentOrganizationVersionId = async (
-  studyId: string,
-  userOrganizationVersionId: string | null,
-) => {
-  const study = await getStudyById(studyId, userOrganizationVersionId)
-  if (!study) {
-    throw Error("Study doesn't exist")
-  }
-
-  return study.organizationVersion.parentId || study.organizationVersion.id
-}
 
 export const getDetailedEmissionResults = (
   study: FullStudy,

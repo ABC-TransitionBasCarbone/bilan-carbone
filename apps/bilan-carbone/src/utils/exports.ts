@@ -1,5 +1,5 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { getEmissionResults } from '@/services/emissionSource'
 import { getBegesEmissionTotal } from '@/services/results/beges'
 import { getGHGPEmissionTotal } from '@/services/results/ghgp'

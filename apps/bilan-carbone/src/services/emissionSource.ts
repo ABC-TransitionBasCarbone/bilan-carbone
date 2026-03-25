@@ -1,19 +1,9 @@
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { hasDeprecationPeriod } from '@/utils/study'
-import {
-  ControlMode,
-  EmissionSourceCaracterisation,
-  Environment,
-  Export,
-  Import,
-  SubPost,
-} from '@repo/db-common/enums'
+import { ControlMode, EmissionSourceCaracterisation, Environment, Export, Import, SubPost } from '@repo/db-common/enums'
 
-import type {
-  StudyEmissionSource
-} from '@repo/db-common'
-
+import type { StudyEmissionSource } from '@repo/db-common'
 
 import { StudyWithoutDetail } from './permissions/study'
 import { convertTiltSubPostToBCSubPost } from './posts'

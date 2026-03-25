@@ -1,4 +1,4 @@
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { customRich } from '@/i18n/customRich'
 import { EmissionFactorBase, Export, Unit } from '@repo/db-common/enums'
 import classNames from 'classnames'

@@ -1,4 +1,4 @@
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import { PublicodesSituationProvider } from '@/lib/publicodes/context'
 import { CutPost, TiltPost } from '@/services/posts'

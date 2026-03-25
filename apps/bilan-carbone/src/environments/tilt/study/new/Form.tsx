@@ -1,7 +1,7 @@
 import Block from '@/components/base/Block'
 import GlobalNewStudyForm from '@/components/study/new/Form'
 import { getOrganizationVersionAccounts } from '@/db/organization'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import NewStudyForm from '@/environments/base/study/new/Form'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
 import { Level } from '@repo/db-common/enums'

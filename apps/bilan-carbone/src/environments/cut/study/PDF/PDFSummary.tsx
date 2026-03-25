@@ -3,7 +3,7 @@
 import { ChartsPage } from '@/app/(public)/preview/etudes/[id]/ChartsPage'
 import '@/app/(public)/preview/etudes/[id]/pdf-summary.css'
 import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import cutTheme from '@/environments/cut/theme/theme'
 import { usePublicodesResults } from '@/hooks/usePublicodesResults'
 import { convertSimplifiedEnvToBilanCarbone } from '@/services/posts'
