@@ -13,12 +13,14 @@ import { TrajectoryDataPoint } from '@/types/trajectory.types'
 import { Translations } from '@/types/translation'
 import { convertValue } from '@/utils/study'
 import {
-  Action,
   ActionPotentialDeduction,
-  ExternalStudy,
-  SectenInfo,
   StudyResultUnit,
   TrajectoryType,
+} from '@repo/db-common/enums'
+import {
+  Action,
+  ExternalStudy,
+  SectenInfo,
 } from '@repo/db-common'
 import {
   calculateCustomSNBCSectoralTrajectory,

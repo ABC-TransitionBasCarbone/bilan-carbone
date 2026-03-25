@@ -13,7 +13,7 @@ import {
 } from '@/db/transitionPlan'
 import { ApiResponse, withServerResponse } from '@/utils/serverResponse'
 import { getDefaultObjectivesForTrajectoryType } from '@/utils/trajectory'
-import { TrajectoryType } from '@repo/db-common'
+import { TrajectoryType } from '@repo/db-common/enums'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { hasEditAccessOnStudy, hasReadAccessOnStudy } from '../permissions/study'
 import { SectorPercentages } from './trajectory.command'

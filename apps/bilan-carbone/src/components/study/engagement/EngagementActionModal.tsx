@@ -16,7 +16,7 @@ import {
 import { objectWithoutNullAttributes } from '@/utils/object'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ListItemText, MenuItem, TextField } from '@mui/material'
-import { EngagementPhase } from '@repo/db-common'
+import { EngagementPhase } from '@repo/db-common/enums'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { ChangeEvent, useEffect, useMemo, useState } from 'react'
