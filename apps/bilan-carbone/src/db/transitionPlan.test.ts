@@ -14,7 +14,7 @@ const mockTx = {
   },
 }
 
-jest.mock('./client', () => ({
+jest.mock('./client.server', () => ({
   prismaClient: {
     $transaction: jest.fn((callback) => callback(mockTx)),
     transitionPlan: {
