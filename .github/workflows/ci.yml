@@ -14,6 +14,12 @@ jobs:
         with:
           node-version: 22.16.0
           cache: 'yarn'
+      - name: Copy .env
+        run: cp .env.dist .env
+        working-directory: apps/bilan-carbone
+      - name: Copy .env to db-common
+        run: cp apps/bilan-carbone/.env.dist packages/db-common/.env
+        working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
         working-directory: .
@@ -41,6 +47,10 @@ jobs:
           cache: 'yarn'
       - name: Copy .env
         run: cp .env.dist .env
+        working-directory: apps/bilan-carbone
+      - name: Copy .env to db-common
+        run: cp apps/bilan-carbone/.env.dist packages/db-common/.env
+        working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
         working-directory: .
@@ -64,6 +74,12 @@ jobs:
         with:
           node-version: 22.16.0
           cache: 'yarn'
+      - name: Copy .env
+        run: cp .env.dist .env
+        working-directory: apps/bilan-carbone
+      - name: Copy .env to db-common
+        run: cp apps/bilan-carbone/.env.dist packages/db-common/.env
+        working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
         working-directory: .
