@@ -144,7 +144,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     checkDownloadReportFeature()
   }, [environment, callServerFunction])
 
-  const { studySite, setSite } = useStudySite(study, true)
+  const { siteId, setSite } = useStudySite(study, true)
 
   const begesRules = useMemo(() => rules.filter((rule) => rule.export === Export.Beges), [rules])
   const ghgpRules = useMemo(() => rules.filter((rule) => rule.export === Export.GHGP), [rules])
@@ -167,14 +167,14 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     return getDetailedEmissionResults(
       study,
       tPost,
-      studySite,
+      siteId,
       !!validatedOnly,
       study.organizationVersion.environment,
       t,
       true,
       type,
     )
-  }, [study, studySite, t, tPost, type, validatedOnly, exports])
+  }, [study, siteId, t, tPost, type, validatedOnly, exports])
 
   const {
     withDepForced,
@@ -199,7 +199,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     }
 
     // Filter emission sources by selected subposts and tags
-    const siteEmissionSources = getSiteEmissionSourcesWithoutMarketBase(study.emissionSources, studySite)
+    const siteEmissionSources = getSiteEmissionSourcesWithoutMarketBase(study.emissionSources, siteId)
 
     // Helper function to filter emission sources
     const filterEmissionSources = (
@@ -248,7 +248,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     const filteredResultWithDep = computeResultsByPostFromEmissionSources(
       filteredStudyWithDepForced,
       tPost,
-      studySite,
+      siteId,
       true,
       !!validatedOnly,
       environmentPostMapping[study.organizationVersion.environment],
@@ -259,7 +259,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     const filteredResultWithoutDep = computeResultsByPostFromEmissionSources(
       filteredStudyWithoutDepForced,
       tPost,
-      studySite,
+      siteId,
       false,
       !!validatedOnly,
       environmentPostMapping[study.organizationVersion.environment],
@@ -271,7 +271,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     const filteredResult = computeResultsByPostFromEmissionSources(
       filteredStudy,
       tPost,
-      studySite,
+      siteId,
       true,
       !!validatedOnly,
       environmentPostMapping[study.organizationVersion.environment],
@@ -281,7 +281,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
 
     const filteredResultsByTag = computeResultsByTag(
       filteredStudy,
-      studySite,
+      siteId,
       true,
       !!validatedOnly,
       study.organizationVersion.environment,
@@ -310,11 +310,11 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
       monetaryRatio,
       nonSpecificMonetaryRatio,
     }
-  }, [study, studySite, selectedSubposts, selectedTags, validatedOnly, t, tPost, type])
+  }, [study, siteId, selectedSubposts, selectedTags, validatedOnly, t, tPost, type])
 
   const computedBegesData = useMemo(
-    () => computeBegesResult(study, begesRules, emissionFactorsWithParts, studySite, false, validatedOnly, environment),
-    [study, begesRules, emissionFactorsWithParts, studySite, validatedOnly],
+    () => computeBegesResult(study, begesRules, emissionFactorsWithParts, siteId, false, validatedOnly, environment),
+    [study, begesRules, emissionFactorsWithParts, siteId, validatedOnly, environment],
   )
 
   const computedGHGPData = useMemo(
@@ -323,13 +323,13 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
         study,
         ghgpRules,
         emissionFactorsWithParts,
-        studySite,
+        siteId,
         false,
         validatedOnly,
         selectedGHGPTable,
         environment,
       ),
-    [study, ghgpRules, emissionFactorsWithParts, studySite, validatedOnly, selectedGHGPTable],
+    [study, ghgpRules, emissionFactorsWithParts, siteId, validatedOnly, selectedGHGPTable, environment],
   )
 
   const downloadReport = useCallback(async () => {
@@ -434,7 +434,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
               <SummarizeIcon className="mr-2" /> {t('resultsWord')}
             </Button>
           )}
-          <SelectStudySite sites={study.sites} defaultValue={studySite} setSite={setSite} />
+          <SelectStudySite sites={study.sites} defaultValue={siteId} setSite={setSite} />
         </div>
       }
     >
@@ -472,7 +472,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
               validatedOnly={validatedOnly}
               consolidatedResults={filteredResultsByPost}
               begesResults={computedBegesData}
-              studySite={studySite}
+              studySite={siteId}
               navigateToEmissionSource={navigateToEmissionSource}
             />
           )}
@@ -484,7 +484,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
                 validatedOnly={validatedOnly}
                 consolidatedResults={filteredResultsByPost}
                 ghgpResults={computedGHGPData}
-                studySite={studySite}
+                studySite={siteId}
                 ghgpRules={ghgpRules}
                 navigateToEmissionSource={navigateToEmissionSource}
                 base={selectedGHGPTable}
@@ -514,7 +514,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
             <>
               <EmissionsAnalysis
                 study={study}
-                studySite={studySite}
+                studySite={siteId}
                 withDepValue={withDepForced}
                 withoutDepValue={withoutDepForced}
                 monetaryRatio={monetaryRatio}

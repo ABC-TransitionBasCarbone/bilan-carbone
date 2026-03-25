@@ -121,7 +121,7 @@ const EngagementActions = ({ actions, study, studySite }: Props) => {
 
     results = results.filter((action) => filters.phases.includes(action.phase))
 
-    if (studySite !== 'all') {
+    if (studySite) {
       results = results.filter((action) => action.sites?.some((site) => site.id === studySite))
     }
 

@@ -19,7 +19,7 @@ interface Props {
   post: Post
   subPosts: SubPost[]
   userRole: StudyRole | null
-  studySite: string
+  studySiteId: string
   emissionSources: FullStudy['emissionSources']
   setGlossary: (subPost: string) => void
   hasFilter?: boolean
@@ -32,7 +32,7 @@ const SubPosts = ({
   userRole,
   withoutDetail,
   emissionSources,
-  studySite,
+  studySiteId,
   setGlossary,
   hasFilter,
 }: Props & StudyProps) => {
@@ -69,7 +69,7 @@ const SubPosts = ({
             subPost={subPost}
             key={subPost}
             userRoleOnStudy={userRole}
-            studySite={studySite}
+            studySiteId={studySiteId}
             withoutDetail={withoutDetail}
             study={study}
             setGlossary={setGlossary}

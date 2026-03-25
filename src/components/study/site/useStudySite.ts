@@ -7,7 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 export default function useStudySite(study: FullStudy | StudyWithoutDetail, allowAll?: boolean) {
-  const [studySite, setSiteState] = useState('')
+  const [siteId, setSiteState] = useState('')
   const searchParams = useSearchParams()
   const router = useRouter()
   const allSiteIds = useMemo(() => study.sites.map((s) => s.site.id), [study.sites])
@@ -54,15 +54,18 @@ export default function useStudySite(study: FullStudy | StudyWithoutDetail, allo
   }
 
   useEffect(() => {
-    if (!userChangedRef.current || !studySite) {
+    if (!userChangedRef.current || !siteId) {
       return
     }
-    const idsToStore = studySite === 'all' ? allSiteIds : [studySite]
+    const idsToStore = siteId === 'all' ? allSiteIds : [siteId]
     window.localStorage.setItem(storageKey, JSON.stringify(idsToStore))
-  }, [studySite, storageKey, allSiteIds])
+  }, [siteId, storageKey, allSiteIds])
+
+  const studySiteId = useMemo(() => study.sites.find((s) => s.site.id === siteId)?.id ?? '', [study.sites, siteId])
 
   return {
-    studySite,
+    siteId,
+    studySiteId,
     setSite,
   }
 }

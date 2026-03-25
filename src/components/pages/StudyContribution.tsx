@@ -19,7 +19,7 @@ interface Props {
 const StudyContributionPage = ({ study }: Props) => {
   const tNav = useTranslations('nav')
   const tStudyNav = useTranslations('study.navigation')
-  const { studySite, setSite } = useStudySite(study)
+  const { siteId, studySiteId, setSite } = useStudySite(study)
 
   return (
     <>
@@ -41,10 +41,10 @@ const StudyContributionPage = ({ study }: Props) => {
         title={tStudyNav('dataEntry')}
         as="h2"
         rightComponent={
-          <SelectStudySite sites={study.sites} defaultValue={studySite} setSite={setSite} showAllOption={false} />
+          <SelectStudySite sites={study.sites} defaultValue={siteId} setSite={setSite} showAllOption={false} />
         }
       >
-        <AllPostsInfographyContainer study={study} studySite={studySite} />
+        <AllPostsInfographyContainer study={study} studySiteId={studySiteId} siteId={siteId} />
       </Block>
     </>
   )

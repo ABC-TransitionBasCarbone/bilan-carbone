@@ -33,7 +33,7 @@ interface Props {
   subPost: SubPostEnum
   userRoleOnStudy: StudyRole | null
   emissionSources: FullStudy['emissionSources']
-  studySite: string
+  studySiteId: string
   setGlossary: (subPost: string) => void
   count: number
   validated: number
@@ -47,7 +47,7 @@ const SubPost = ({
   study,
   userRoleOnStudy,
   emissionSources,
-  studySite,
+  studySiteId,
   setGlossary,
   count,
   validated,
@@ -238,7 +238,7 @@ const SubPost = ({
                   study={study}
                   subPost={subPost}
                   caracterisations={caracterisations}
-                  studySite={studySite}
+                  studySiteId={studySiteId}
                 />
               </div>
             )}

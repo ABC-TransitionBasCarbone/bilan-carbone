@@ -15,10 +15,10 @@ interface Props {
   study: FullStudy
   subPost: SubPost
   caracterisations: EmissionSourceCaracterisation[]
-  studySite: string
+  studySiteId: string
 }
 
-const NewEmissionSource = ({ study, subPost, caracterisations, studySite }: Props) => {
+const NewEmissionSource = ({ study, subPost, caracterisations, studySiteId }: Props) => {
   const [value, setValue] = useState('')
   const [saving, setSaving] = useState(false)
   const t = useTranslations('study.post')
@@ -42,7 +42,7 @@ const NewEmissionSource = ({ study, subPost, caracterisations, studySite }: Prop
               name: event.target.value,
               subPost,
               studyId: study.id,
-              studySiteId: studySite,
+              studySiteId,
               caracterisation: caracterisations.length === 1 ? caracterisations[0] : undefined,
             }),
           {
@@ -55,7 +55,7 @@ const NewEmissionSource = ({ study, subPost, caracterisations, studySite }: Prop
         setSaving(false)
       }
     },
-    [study, subPost, router, studySite, callServerFunction, caracterisations],
+    [study, subPost, router, studySiteId, callServerFunction, caracterisations],
   )
   return (
     <>

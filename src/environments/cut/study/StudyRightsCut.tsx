@@ -37,7 +37,7 @@ const StudyRightsCut = ({ study }: Props) => {
   const t = useTranslations('study.new')
   const tRights = useTranslations('study.rights')
   const { callServerFunction } = useServerFunction()
-  const { studySite, setSite } = useStudySite(study)
+  const { siteId, studySiteId, setSite } = useStudySite(study)
   const [siteData, setSiteData] = useState<FullStudy['sites'][0] | undefined>()
   const [loading, setLoading] = useState(true)
   const [showSiteDataWarning, setShowSiteDataWarning] = useState(false)
@@ -99,8 +99,8 @@ const StudyRightsCut = ({ study }: Props) => {
   useEffect(() => {
     async function setStudySiteData() {
       setLoading(true)
-      if (studySite && studySite !== 'all') {
-        const studySiteRes = await getStudySite(studySite)
+      if (siteId && siteId !== 'all') {
+        const studySiteRes = await getStudySite(studySiteId)
 
         if (studySiteRes.success && studySiteRes.data) {
           const newSiteData = studySiteRes.data
@@ -127,7 +127,7 @@ const StudyRightsCut = ({ study }: Props) => {
     }
 
     setStudySiteData()
-  }, [form, studySite])
+  }, [form, siteId, studySiteId])
 
   const openingHours = form.watch('openingHours')
   const openingHoursHoliday = form.watch('openingHoursHoliday')
@@ -148,7 +148,7 @@ const StudyRightsCut = ({ study }: Props) => {
           if (changedFields.length > 0) {
             const affectedQuestionIds = getQuestionsAffectedBySiteDataChange(changedFields)
             if (affectedQuestionIds.length > 0) {
-              const questionsBySubPostResponse = await getQuestionsGroupedBySubPost(affectedQuestionIds, studySite)
+              const questionsBySubPostResponse = await getQuestionsGroupedBySubPost(affectedQuestionIds, studySiteId)
               const questionsBySubPost = questionsBySubPostResponse.success ? questionsBySubPostResponse.data : {}
 
               const hasAnswers = Object.values(questionsBySubPost).some((questions) =>
@@ -168,7 +168,7 @@ const StudyRightsCut = ({ study }: Props) => {
           }
         }
 
-        await callServerFunction(() => changeStudyCinema(studySite, cncId, data))
+        await callServerFunction(() => changeStudyCinema(studySiteId, cncId, data))
         setOriginalValues({
           numberOfSessions: data.numberOfSessions ?? 0,
           numberOfTickets: data.numberOfTickets ?? 0,
@@ -177,7 +177,7 @@ const StudyRightsCut = ({ study }: Props) => {
         })
       }
     },
-    [callServerFunction, originalValues, siteData?.site.cnc?.id, studySite],
+    [callServerFunction, originalValues, siteData?.site.cnc?.id, studySiteId],
   )
 
   const handleSiteDataWarningCancel = () => {
@@ -198,7 +198,7 @@ const StudyRightsCut = ({ study }: Props) => {
       setShowSiteDataWarning(false)
       const cncId = siteData?.site.cnc?.id
       if (cncId) {
-        await callServerFunction(() => changeStudyCinema(studySite, cncId, pendingSiteChanges.pendingData))
+        await callServerFunction(() => changeStudyCinema(studySiteId, cncId, pendingSiteChanges.pendingData))
         setOriginalValues({
           numberOfSessions: pendingSiteChanges.pendingData.numberOfSessions ?? 0,
           numberOfTickets: pendingSiteChanges.pendingData.numberOfTickets ?? 0,
@@ -211,12 +211,12 @@ const StudyRightsCut = ({ study }: Props) => {
   }
 
   const onStudyCinemaUpdate = useCallback(() => {
-    if (studySite === 'all') {
+    if (siteId === 'all') {
       return
     }
 
     form.handleSubmit(handleStudyCinemaUpdate, (e) => console.log('invalid', e))()
-  }, [form, handleStudyCinemaUpdate, studySite])
+  }, [form, handleStudyCinemaUpdate, siteId])
 
   useEffect(() => {
     onStudyCinemaUpdate()
@@ -229,7 +229,7 @@ const StudyRightsCut = ({ study }: Props) => {
       <Block
         title={tRights('general')}
         rightComponent={
-          <SelectStudySite sites={study.sites} defaultValue={studySite} setSite={setSite} showAllOption={false} />
+          <SelectStudySite sites={study.sites} defaultValue={siteId} setSite={setSite} showAllOption={false} />
         }
       >
         {loading ? (
