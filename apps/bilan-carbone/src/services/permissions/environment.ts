@@ -1,4 +1,4 @@
-import { isFeatureActiveForEnvironment } from '@/db/deactivableFeatures.action.server'
+import { isFeatureActiveForEnvironment } from '@/db/deactivableFeatures'
 import { DeactivatableFeature, Environment } from '@repo/db-common/enums'
 
 const { BC, CUT, TILT, CLICKSON } = Environment

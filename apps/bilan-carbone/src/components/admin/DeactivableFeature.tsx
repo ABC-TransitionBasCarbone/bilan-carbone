@@ -1,6 +1,6 @@
 'use client'
 
-import { getFeaturesRestictions, RestrictionsTypes } from '@/db/deactivableFeatures.action.server'
+import { getFeaturesRestictions, RestrictionsTypes } from '@/db/deactivableFeatures'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import {
   changeDeactivableFeatureRestriction,
