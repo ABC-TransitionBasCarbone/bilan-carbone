@@ -39,14 +39,14 @@ const ObjectivesInnerTable = ({ rows, canEdit, isDefaultSnbc, title }: Props) =>
         header: t('table.period'),
         accessorKey: 'period',
       },
+      { header: tCommon('sites'), accessorKey: 'sites' },
+      { header: tCommon('posts'), accessorKey: 'posts' },
+      { header: tCommon('tags'), accessorKey: 'tags' },
       {
         header: t('table.rates'),
         accessorKey: 'reductionRate',
         cell: ({ row }) => getDisplayedRates(row.original.reductionRate, row.original.correctedRate),
       },
-      { header: tCommon('sites'), accessorKey: 'sites' },
-      { header: tCommon('posts'), accessorKey: 'posts' },
-      { header: tCommon('tags'), accessorKey: 'tags' },
     ]
 
     if (canEdit) {
