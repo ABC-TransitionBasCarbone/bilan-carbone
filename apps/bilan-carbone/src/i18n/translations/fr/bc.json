@@ -13,6 +13,20 @@
       "1": "Comprendre la mesure d'impact de votre établissement",
       "2": "Identifier les priorités d'action",
       "3": "Construire une trajectoire de réduction"
+    },
+    "navigation": {
+      "collaborators": {
+        "title": "",
+        "message": ""
+      },
+      "footprints": {
+        "title": "",
+        "message": ""
+      },
+      "sites": {
+        "title": "",
+        "message": ""
+      }
     }
   },
   "exports": {
