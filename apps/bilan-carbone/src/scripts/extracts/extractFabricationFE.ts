@@ -1,6 +1,6 @@
-import { EmissionFactorPartType } from '@repo/db-common/enums'
-import {PrismaClient} from '@repo/db-common'
 import { PrismaPg } from '@prisma/adapter-pg'
+import { PrismaClient } from '@repo/db-common'
+import { EmissionFactorPartType } from '@repo/db-common/enums'
 import { writeFileSync } from 'fs'
 
 // One shot script to get all FE with fabrication part
@@ -11,7 +11,7 @@ const adapter = new PrismaPg({
 })
 
 const prisma = new PrismaClient({
-  adapter
+  adapter,
 }) as PrismaClient
 
 const findFEs = async () => {

@@ -1,6 +1,6 @@
 import { emissionFactorMap } from '@/constants/emissionFactorMap'
 import { cleanupHiddenQuestion } from '@/services/serverFunctions/question'
-import type {Question} from "@repo/db-common/types"
+import type { Question } from '@repo/db-common/types'
 import { useEffect, useMemo, useRef } from 'react'
 import { UseFormSetValue, UseFormWatch } from 'react-hook-form'
 

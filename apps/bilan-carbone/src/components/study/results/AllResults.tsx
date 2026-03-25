@@ -18,12 +18,10 @@ import { isDeactivableFeatureActiveForEnvironment } from '@/services/serverFunct
 import { prepareReport } from '@/services/serverFunctions/study'
 import {
   AdditionalResultTypes,
+  downloadStudyEmissionSources,
   downloadStudyResults,
   getDetailedEmissionResults,
   ResultType,
-} from '@/services/study'
-import {
-  downloadStudyEmissionSources,
 } from '@/services/study'
 import { sortAlphabetically } from '@/services/utils'
 import { getPost } from '@/utils/post'

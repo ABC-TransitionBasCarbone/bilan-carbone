@@ -120,17 +120,22 @@ import type {
   Prisma,
   StudyEmissionSource,
 } from '@repo/db-common'
-import {CommentStatus, Environment, Export, Import, StudyRole, SubPost, ControlMode,
-  StudyResultUnit,
-  UserChecklist,
-  UserStatus,
-  Role,
-  EmissionSourceCaracterisation,
-  Level,
+import {
+  CommentStatus,
+  ControlMode,
   DocumentCategory,
   DuplicableStudy,
-
-
+  EmissionSourceCaracterisation,
+  Environment,
+  Export,
+  Import,
+  Level,
+  Role,
+  StudyResultUnit,
+  StudyRole,
+  SubPost,
+  UserChecklist,
+  UserStatus,
 } from '@repo/db-common/enums'
 import Docxtemplater from 'docxtemplater'
 import { UserSession } from 'next-auth'
@@ -166,8 +171,7 @@ import {
 import { isAdminOnStudyOrga } from '../permissions/study.utils'
 import { isSimplifiedEnvironment, SimplifiedEnvironment } from '../publicodes/simplifiedPublicodesConfig'
 import { deleteFileFromBucket, getFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'
-import { getTransEnvironmentSubPost } from '../study'
-import { hasSufficientLevel } from '../study'
+import { getTransEnvironmentSubPost, hasSufficientLevel } from '../study'
 import { UpdateEmissionSourceCommand } from './emissionSource.command'
 import { saveAnswerForQuestion } from './question'
 import { saveSituation as saveSituationInDB } from './situation'

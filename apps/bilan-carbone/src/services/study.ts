@@ -1,7 +1,7 @@
 import { EngagementActionTargets } from '@/constants/engagementActions'
 import { resultsExportHeadersBase, resultsExportHeadersCut } from '@/constants/exports'
-import type{  EmissionFactorWithParts } from '@/db/emissionFactors'
-import type { FullStudy} from '@/db/study'
+import type { EmissionFactorWithParts } from '@/db/emissionFactors'
+import type { FullStudy } from '@/db/study'
 import { Translations } from '@/types/translation'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { getGHGPRuleName } from '@/utils/ghgp'
@@ -15,8 +15,8 @@ import {
   STUDY_UNIT_VALUES,
 } from '@/utils/study'
 import { formatDateFr } from '@/utils/time'
-import { EmissionFactorBase, Environment, Export, Level, StudyResultUnit, SubPost } from '@repo/db-common/enums'
 import type { ExportRule } from '@repo/db-common'
+import { EmissionFactorBase, Environment, Export, Level, StudyResultUnit, SubPost } from '@repo/db-common/enums'
 import dayjs from 'dayjs'
 import {
   canBeValidated,
@@ -865,7 +865,6 @@ export const downloadStudyResults = async (
 
   download([buffer], `${study.name}_results.xlsx`, 'xlsx')
 }
-
 
 export const getDetailedEmissionResults = (
   study: FullStudy,

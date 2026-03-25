@@ -4,7 +4,7 @@ import * as transitionPlanDbModule from '@/db/transitionPlan'
 import * as authModule from '@/services/auth'
 import * as studyPermissionsModule from '@/services/permissions/study'
 import { expect } from '@jest/globals'
-import { SubPost } from  '@repo/db-common/enums'
+import { SubPost } from '@repo/db-common/enums'
 import {
   createSubObjectives,
   deleteObjective,
