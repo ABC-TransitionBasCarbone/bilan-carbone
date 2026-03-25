@@ -3,9 +3,11 @@ import { expect } from '@jest/globals'
 import {
   ActionIndicatorType,
   ActionPotentialDeduction,
+  TrajectoryType,
+} from '@repo/db-common/enums'
+import type {
   ExternalStudy,
   Trajectory,
-  TrajectoryType,
   TransitionPlanStudy,
 } from '@repo/db-common'
 import {

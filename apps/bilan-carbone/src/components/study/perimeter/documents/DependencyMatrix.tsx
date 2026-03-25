@@ -1,7 +1,8 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
-import { Document, DocumentCategory } from '@repo/db-common'
+import { DocumentCategory } from '@repo/db-common/enums'
+import { Document} from '@repo/db-common'
 import { useTranslations } from 'next-intl'
 import StudyDocument from './StudyDocument'
 

@@ -1,6 +1,6 @@
 import { begesRules } from '@/utils/beges.config'
 import { ghgpRules } from '@/utils/ghgp.config'
-import { Export } from '@repo/db-common'
+import { Export } from '@repo/db-common/enums'
 import { prismaClient } from './client.server'
 
 export const reCreateBegesRules = async () => {
