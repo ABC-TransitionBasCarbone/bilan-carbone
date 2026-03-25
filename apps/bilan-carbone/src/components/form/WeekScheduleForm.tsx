@@ -1,4 +1,4 @@
-import { DayOfWeek } from '@repo/db-common'
+import { DayOfWeek } from '@repo/db-common/enums'
 import { Control, FieldPath, FieldValues } from 'react-hook-form'
 import FormDayHours from './FormDayHours'
 

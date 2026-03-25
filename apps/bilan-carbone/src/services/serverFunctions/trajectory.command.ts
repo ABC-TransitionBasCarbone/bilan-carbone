@@ -1,5 +1,5 @@
 import { setCustomIssue, setCustomMessage } from '@/lib/zod.config'
-import { SubPost, TrajectoryType } from '@repo/db-common'
+import { SubPost, TrajectoryType } from '@repo/db-common/enums'
 import { z } from 'zod'
 
 export const sectorPercentagesSchema = z

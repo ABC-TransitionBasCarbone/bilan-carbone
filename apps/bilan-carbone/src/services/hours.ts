@@ -1,4 +1,4 @@
-import { DayOfWeek } from '@repo/db-common'
+import { DayOfWeek } from '@repo/db-common/enums'
 import { z } from 'zod'
 
 export const OpeningHoursValidation = z.object({
