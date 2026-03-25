@@ -3,7 +3,7 @@
 import Modal from '@/components/modals/Modal'
 import { customRich } from '@/i18n/customRich'
 import { exportSpecificFields, getAllSpecificFieldsForExports } from '@/utils/study'
-import { Export } from '@repo/db-common'
+import { Export } from '@repo/db-common/enums'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 

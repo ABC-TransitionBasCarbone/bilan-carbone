@@ -10,7 +10,7 @@ import {
 } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
-import { StudyResultUnit } from '@repo/db-common'
+import { StudyResultUnit } from '@repo/db-common/enums'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect } from 'react'
