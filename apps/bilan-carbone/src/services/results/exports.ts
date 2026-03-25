@@ -1,7 +1,8 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { toCamelCase } from '@/utils/string'
 import { getBaseFilteredEmissionSources } from '@/utils/study'
+import type { ExportRule } from '@repo/db-common'
 import {
   EmissionFactorBase,
   EmissionFactorPartType,
@@ -9,9 +10,6 @@ import {
   Environment,
   Import,
 } from '@repo/db-common/enums'
-import type {
-  ExportRule,
-} from '@repo/db-common'
 import { convertTiltSubPostToBCSubPost } from '../posts'
 import {
   getSquaredStandardDeviationForEmissionSource,

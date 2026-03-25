@@ -5,23 +5,15 @@ import {
   TRAJECTORY_SNBC_GENERAL_ID,
   TRAJECTORY_WB2C_ID,
 } from '@/constants/trajectories'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { TrajectoryWithObjectives, TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
 import { SectorPercentages } from '@/services/serverFunctions/trajectory.command'
 import { getStudyTotalCo2Emissions } from '@/services/study'
 import { TrajectoryDataPoint } from '@/types/trajectory.types'
 import { Translations } from '@/types/translation'
 import { convertValue } from '@/utils/study'
-import {
-  ActionPotentialDeduction,
-  StudyResultUnit,
-  TrajectoryType,
-} from '@repo/db-common/enums'
-import {
-  Action,
-  ExternalStudy,
-  SectenInfo,
-} from '@repo/db-common'
+import { Action, ExternalStudy, SectenInfo } from '@repo/db-common'
+import { ActionPotentialDeduction, StudyResultUnit, TrajectoryType } from '@repo/db-common/enums'
 import {
   calculateCustomSNBCSectoralTrajectory,
   calculateSectoralSNBCReductionRates,

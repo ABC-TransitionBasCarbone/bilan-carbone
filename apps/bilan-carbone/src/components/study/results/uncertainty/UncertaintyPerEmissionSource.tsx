@@ -1,7 +1,7 @@
 import Link from '@/components/base/Link'
 import Title from '@/components/base/Title'
 import Modal from '@/components/modals/Modal'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { getAlpha, getEmissionResults } from '@/services/emissionSource'
 import { Post } from '@/services/posts'
 import { qualityKeys, specificFEQualityKeysLinks } from '@/services/uncertainty'

@@ -10,7 +10,7 @@ import SectorAllocationBlock from '@/components/study/transitionPlan/SectorAlloc
 import TrajectoryGraph from '@/components/study/transitionPlan/TrajectoryGraph'
 import TransitionPlanFilters from '@/components/study/transitionPlan/TransitionPlanFilters'
 import { TRAJECTORY_15_ID, TRAJECTORY_SNBC_GENERAL_ID } from '@/constants/trajectories'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
 import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
 import { useServerFunction } from '@/hooks/useServerFunction'

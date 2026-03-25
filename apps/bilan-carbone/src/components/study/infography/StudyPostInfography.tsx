@@ -1,6 +1,6 @@
 'use client'
 
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import AllPostsInfographyContainer from './AllPostsInfographyContainer'
 import styles from './StudyPostInfography.module.css'
 

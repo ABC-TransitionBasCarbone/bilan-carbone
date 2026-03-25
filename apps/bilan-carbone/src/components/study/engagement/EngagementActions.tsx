@@ -2,7 +2,7 @@
 
 import ConfirmDeleteModal from '@/components/modals/ConfirmDeleteModal'
 import { EngagementActionSteps, EngagementActionTargets } from '@/constants/engagementActions'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteEngagementAction, EngagementActionWithSites } from '@/services/serverFunctions/study'
 import { EngagementActionsFilters } from '@/types/filters'

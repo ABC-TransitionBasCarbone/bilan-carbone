@@ -1,5 +1,5 @@
 'use client'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { createEmissionSource } from '@/services/serverFunctions/emissionSource'
 import AddIcon from '@mui/icons-material/Add'

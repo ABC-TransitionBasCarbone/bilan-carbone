@@ -1,4 +1,4 @@
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { getStudyTotalCo2Emissions } from '@/services/study'
 import { getUIFilteredEmissions } from '@/utils/study'
 import { convertToPastStudies, PastStudy } from '@/utils/trajectory'

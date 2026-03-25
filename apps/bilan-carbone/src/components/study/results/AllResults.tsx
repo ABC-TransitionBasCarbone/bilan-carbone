@@ -3,7 +3,7 @@
 import Block from '@/components/base/Block'
 import Box from '@/components/base/Box'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { download } from '@/services/file'
 import { hasAccessToBcExport, hasAccessToDownloadStudyEmissionSourcesButton } from '@/services/permissions/environment'
@@ -16,10 +16,12 @@ import { isDeactivableFeatureActiveForEnvironment } from '@/services/serverFunct
 import { prepareReport } from '@/services/serverFunctions/study'
 import {
   AdditionalResultTypes,
-  downloadStudyEmissionSources,
   downloadStudyResults,
   getDetailedEmissionResults,
   ResultType,
+} from '@/services/study'
+import {
+  downloadStudyEmissionSources,
 } from '@/services/study'
 import { sortAlphabetically } from '@/services/utils'
 import { getPost } from '@/utils/post'
@@ -27,6 +29,7 @@ import { calculateMonetaryRatio, convertValue } from '@/utils/study'
 import DownloadIcon from '@mui/icons-material/Download'
 import SummarizeIcon from '@mui/icons-material/Summarize'
 import { FormControl, InputLabel, MenuItem, Select, Tab, Tabs } from '@mui/material'
+import type { ExportRule } from '@repo/db-common'
 import {
   ControlMode,
   DeactivatableFeature,
@@ -37,7 +40,6 @@ import {
   StudyResultUnit,
   SubPost,
 } from '@repo/db-common/enums'
-import type {ExportRule } from "@repo/db-common"
 import { Button } from '@repo/ui'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'

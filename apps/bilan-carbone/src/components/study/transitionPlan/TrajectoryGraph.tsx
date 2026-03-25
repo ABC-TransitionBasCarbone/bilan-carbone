@@ -2,7 +2,7 @@
 
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { TRAJECTORY_15_ID, TRAJECTORY_SNBC_GENERAL_ID, TRAJECTORY_WB2C_ID } from '@/constants/trajectories'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { TrajectoryWithObjectives } from '@/db/transitionPlan'
 import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
 import { customRich } from '@/i18n/customRich'
@@ -22,8 +22,8 @@ import {
   LineSeriesType,
   MarkPlot,
 } from '@mui/x-charts'
-import { TrajectoryType } from '@repo/db-common/enums'
 import { Action, SectenInfo } from '@repo/db-common'
+import { TrajectoryType } from '@repo/db-common/enums'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'

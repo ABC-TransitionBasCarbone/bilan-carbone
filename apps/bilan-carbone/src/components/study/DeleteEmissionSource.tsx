@@ -1,6 +1,6 @@
 'use client'
 
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteEmissionSource } from '@/services/serverFunctions/emissionSource'
 import { handleWarningText } from '@/utils/components'

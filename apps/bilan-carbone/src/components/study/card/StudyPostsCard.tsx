@@ -1,4 +1,4 @@
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { customRich } from '@/i18n/customRich'
 import { hasAccessToEmissionSourceValidation } from '@/services/permissions/environment'
 import { Post, subPostsByPost } from '@/services/posts'

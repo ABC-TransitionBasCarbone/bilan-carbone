@@ -1,6 +1,6 @@
 'use client'
 
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { getCaracterisationsBySubPost } from '@/services/emissionSource'
 import { Post, subPostsByPost } from '@/services/posts'
 import { EmissionSourcesStatus, getEmissionSourceStatus } from '@/services/study'

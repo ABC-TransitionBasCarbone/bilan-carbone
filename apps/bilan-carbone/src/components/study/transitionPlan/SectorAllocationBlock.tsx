@@ -1,7 +1,7 @@
 'use client'
 
 import SectorPercentageInputs from '@/components/study/trajectory/SectorPercentageInputs'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
 import { customRich } from '@/i18n/customRich'
 import { SectorPercentages, sectorPercentagesSchema } from '@/services/serverFunctions/trajectory.command'

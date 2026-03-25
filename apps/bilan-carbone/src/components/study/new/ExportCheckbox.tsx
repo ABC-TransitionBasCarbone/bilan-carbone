@@ -1,7 +1,7 @@
 import { Select } from '@/components/base/Select'
 import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
 import ControlModeChangeWarningModal from '@/components/study/perimeter/ControlModeChangeWarningModal'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { updateStudySpecificExportFields } from '@/services/serverFunctions/study'
 import { Checkbox, FormControl, FormControlLabel, MenuItem } from '@mui/material'

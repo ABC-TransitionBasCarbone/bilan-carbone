@@ -1,5 +1,5 @@
 'use client'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import PDFSummaryClickson from '@/environments/clickson/study/PDF/PDFSummary'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import PDFSummaryCut from '@/environments/cut/study/PDF/PDFSummary'

@@ -6,7 +6,8 @@ import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import {  StudyRole } from '@repo/db-common/enums'
 import type { StudyEmissionSource } from '@repo/db-common'
 import { canBeValidated } from '../emissionSource'
-import { canReadStudy, isAdminOnStudyOrga } from './study'
+import { isAdminOnStudyOrga } from './study.utils'
+import { canReadStudy } from './study'
 
 export const hasStudyBasicRights = async (account: AccountWithUser, study: FullStudy) => {
   if (!(await canReadStudy(accountWithUserToUserSession(account), study.id))) {
