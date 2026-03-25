@@ -781,8 +781,8 @@ const TrajectoryGraph = ({
           <div className={classNames('flex wrap justify-center', styles.chartLegend)}>
             {displayedSeries
               .filter((s) => s.label)
-              .map((s) => (
-                <div key={s.label as string} className={classNames('flex align-center gapped025')}>
+              .map((s, index) => (
+                <div key={`${s.label as string}-${index}`} className={classNames('flex align-center gapped025')}>
                   <SvgIcon className={styles.chartLegendIcon} fontSize="small">
                     <circle cx="12" cy="12" r="6" fill={s.color as string} />
                   </SvgIcon>
