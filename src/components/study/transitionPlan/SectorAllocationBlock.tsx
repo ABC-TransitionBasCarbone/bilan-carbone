@@ -2,11 +2,11 @@
 
 import SectorPercentageInputs from '@/components/study/trajectory/SectorPercentageInputs'
 import type { FullStudy } from '@/db/study'
-import { TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
 import { customRich } from '@/i18n/customRich'
 import { SectorPercentages, sectorPercentagesSchema } from '@/services/serverFunctions/trajectory.command'
 import { getStudyTotalCo2Emissions } from '@/services/study'
 import type { PastStudy } from '@/types/trajectory.types'
+import { TrajectoryWithObjectivesAndScope } from '@/types/trajectory.types'
 import { calculateSectoralSNBCReductionRates } from '@/utils/snbc'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Typography } from '@mui/material'

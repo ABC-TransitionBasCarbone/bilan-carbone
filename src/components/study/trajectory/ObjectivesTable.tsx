@@ -1,15 +1,14 @@
 'use client'
 
 import BaseTable from '@/components/base/Table'
+import baseTableStyles from '@/components/base/Table.module.css'
 import { TableActionButton } from '@/components/base/TableActionButton'
-import { ObjectiveWithScope, TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
 import { deleteObjective } from '@/services/serverFunctions/objective.serverFunction'
 import { SectorPercentages } from '@/services/serverFunctions/trajectory.command'
 import { deleteTrajectory } from '@/services/serverFunctions/trajectory.serverFunction'
-import type { PastStudy } from '@/types/trajectory.types'
-import { formatNumber } from '@/utils/number'
+import type { ObjectiveWithScope, PastStudy, TrajectoryWithObjectivesAndScope } from '@/types/trajectory.types'
 import {
   getCorrectedObjectives,
   getDisplayedReferenceYearForTrajectoryType,
@@ -18,7 +17,7 @@ import {
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
-import { Chip, IconButton, TableCell, TableRow, Tooltip, Typography } from '@mui/material'
+import { Chip, IconButton, TableCell, TableRow, Tooltip } from '@mui/material'
 import { SectenInfo, TrajectoryType } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, getExpandedRowModel, Row, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'
@@ -26,13 +25,15 @@ import Fuse from 'fuse.js'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
-import { useMemo, useState } from 'react'
+import { Fragment, useMemo, useState } from 'react'
+import { getDisplayedRates } from './ObjectivesTable.helper'
 import styles from './ObjectivesTable.module.css'
 
 const ConfirmDeleteModal = dynamic(() => import('../../modals/ConfirmDeleteModal'), { ssr: false })
 const TrajectoryCreationModal = dynamic(() => import('./TrajectoryCreationModal'), { ssr: false })
 const ObjectiveModal = dynamic(() => import('./ObjectiveModal'), { ssr: false })
 const TrajectoryConversionWarningModal = dynamic(() => import('./TrajectoryConversionWarningModal'), { ssr: false })
+const ObjectivesSubTable = dynamic(() => import('./ObjectivesExpandedRow'), { ssr: false })
 
 type TrajectoryRow = {
   id: string
@@ -42,24 +43,8 @@ type TrajectoryRow = {
   reductionRate?: number
   referenceYear?: number
   correctedRate?: number
-  isTrajectory: true
   trajectory: TrajectoryWithObjectivesAndScope
-  children: ObjectiveRow[]
 }
-
-type ObjectiveRow = {
-  id: string
-  name: string
-  targetYear: number
-  reductionRate: number
-  referenceYear: number
-  correctedRate?: number
-  isTrajectory: false
-  trajectoryId: string
-  children?: never
-}
-
-type TableDataType = TrajectoryRow | ObjectiveRow
 
 interface Props {
   trajectories: TrajectoryWithObjectivesAndScope[]
@@ -123,7 +108,6 @@ const ObjectivesTable = ({
 
   const fuse = useMemo(() => new Fuse(trajectories, fuseOptions), [trajectories])
 
-  // Calculate corrected rates for all trajectories
   const correctedRatesMap = useMemo(() => {
     const ratesMap = new Map<string, { correctedRate: number }>()
 
@@ -164,11 +148,8 @@ const ObjectivesTable = ({
       )
 
       if (correctedObjectives) {
-        // Map corrected objectives back to original objectives by index
-        // correctedObjectives array maintains the same length and indexing as traj.objectives
         correctedObjectives.forEach((correctedObjective, index) => {
           const originalObjective = traj.objectives[index]
-          // Only process if there's a corrected objective (not null) and a corresponding original objective
           if (correctedObjective && originalObjective) {
             ratesMap.set(originalObjective.id, {
               correctedRate: correctedObjective.reductionRate,
@@ -269,44 +250,31 @@ const ObjectivesTable = ({
         header: '',
         accessorFn: () => '',
         cell: ({ row }) => {
-          const isTrajectory = row.original.isTrajectory
-          const hasChildren = row.getCanExpand()
           const isExpanded = row.getIsExpanded()
+          const rowData = row.original as TrajectoryRow
+          const hasObjectives = rowData.trajectory.objectives.length > 0
 
-          if (isTrajectory && hasChildren) {
-            return (
-              <div onClick={row.getToggleExpandedHandler()} className={classNames('align-center', styles.expandable)}>
-                {isExpanded ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
-              </div>
-            )
+          if (!hasObjectives && !canEdit) {
+            return null
           }
 
-          return null
+          return (
+            <div onClick={row.getToggleExpandedHandler()} className={classNames('align-center', styles.expandable)}>
+              {isExpanded ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
+            </div>
+          )
         },
       },
       {
         header: t('table.name'),
         accessorFn: (row) => row.name,
-        cell: ({ getValue, row }) => {
-          const isTrajectory = row.original.isTrajectory
-
-          if (isTrajectory) {
-            return <span>{getValue<string>()}</span>
-          }
-
-          return null
-        },
+        cell: ({ getValue }) => <span>{getValue<string>()}</span>,
       },
       {
         header: t('table.type'),
         accessorFn: (row) => row,
         cell: ({ getValue }) => {
-          const data = getValue<TableDataType>()
-
-          if (!data.isTrajectory) {
-            return <p className="pl1">{data.name}</p>
-          }
-
+          const data = getValue<TrajectoryRow>()
           const label =
             data.id === defaultSnbcSectoralTrajectoryId
               ? t('defaultSnbcSectoral')
@@ -329,9 +297,8 @@ const ObjectivesTable = ({
         cell: ({ getValue, row }) => {
           const year = getValue<number | undefined>()
           const isExpanded = row.getIsExpanded()
-          const isTrajectory = row.original.isTrajectory
 
-          if (isTrajectory && isExpanded) {
+          if (isExpanded) {
             return null
           }
 
@@ -339,39 +306,14 @@ const ObjectivesTable = ({
         },
       },
       {
-        header: t('table.referenceReduction'),
-        accessorFn: ({ reductionRate }) => reductionRate,
-        cell: ({ getValue, row }) => {
-          const rate = getValue<number | undefined>()
-          const isExpanded = row.getIsExpanded()
-          const isTrajectory = row.original.isTrajectory
-
-          if (isTrajectory && isExpanded) {
-            return null
-          }
-
-          return rate !== undefined ? `-${formatNumber(rate * 100, 1)}%` : null
-        },
-      },
-      {
-        header: t('table.correctedRate'),
+        header: t('table.rates'),
         accessorFn: (row) => row,
-        cell: ({ getValue, row }) => {
-          const data = getValue<TableDataType>()
+        cell: ({ row }) => {
           const isExpanded = row.getIsExpanded()
-          const isTrajectory = data.isTrajectory
-
-          // Hide column content when trajectory is expanded (like other columns)
-          if (isTrajectory && isExpanded) {
+          if (isExpanded) {
             return null
           }
-
-          // Always display if correctedRate exists (even if same as original)
-          if (data.correctedRate === undefined) {
-            return null
-          }
-
-          return <Typography color="warning.main">{`-${formatNumber(data.correctedRate * 100, 1)}%`}</Typography>
+          return getDisplayedRates(row.original.reductionRate, row.original.correctedRate)
         },
       },
       {
@@ -383,147 +325,107 @@ const ObjectivesTable = ({
             return null
           }
 
-          const rowData = row.original
+          const rowData = row.original as TrajectoryRow
 
-          if (rowData.isTrajectory) {
-            if (rowData.id === defaultSnbcSectoralTrajectoryId) {
-              return (
-                <Tooltip title={t('defaultSnbcTooltip')}>
-                  <IconButton size="medium" color="primary">
-                    <HelpOutlineIcon fontSize="medium" color="disabled" />
-                  </IconButton>
-                </Tooltip>
-              )
-            }
-
+          if (rowData.id === defaultSnbcSectoralTrajectoryId) {
             return (
-              <div className="flex">
-                <TableActionButton type="add" onClick={() => handleAddObjectiveClick(rowData.trajectory)} />
-                <TableActionButton type="edit" onClick={() => handleEditClick(rowData.trajectory)} />
-                <TableActionButton
-                  type="delete"
-                  onClick={() => handleDeleteClick('trajectory', rowData.id, rowData.name)}
-                />
-              </div>
+              <Tooltip title={t('defaultSnbcTooltip')}>
+                <IconButton size="medium" color="primary">
+                  <HelpOutlineIcon fontSize="medium" color="disabled" />
+                </IconButton>
+              </Tooltip>
             )
-          }
-
-          const parentTrajectory = trajectories.find((t) => t.id === rowData.trajectoryId)
-          const objective = parentTrajectory?.objectives.find((obj) => obj.id === rowData.id)
-
-          if (!parentTrajectory || !objective) {
-            return null
-          }
-
-          if (rowData.trajectoryId === defaultSnbcSectoralTrajectoryId) {
-            return null
-          }
-
-          const canEditDefaultObjective = parentTrajectory.type === TrajectoryType.CUSTOM && objective.isDefault
-          const canEditSubObjective = !objective.isDefault
-
-          const defaultObjectivesCount = parentTrajectory.objectives.filter((obj) => obj.isDefault).length
-          const canDeleteDefaultObjective =
-            parentTrajectory.type === TrajectoryType.CUSTOM && objective.isDefault && defaultObjectivesCount > 1
-          const canDeleteSubObjective = !objective.isDefault
-
-          const canEditObjective = canEditDefaultObjective || canEditSubObjective
-          const canDeleteObjective = canDeleteDefaultObjective || canDeleteSubObjective
-
-          const handleEdit = () => {
-            if (!objective.isDefault) {
-              handleEditObjectiveClick(objective, parentTrajectory)
-            } else {
-              handleEditClick(parentTrajectory)
-            }
           }
 
           return (
             <div className="flex">
-              {canEditObjective && <TableActionButton type="edit" onClick={handleEdit} />}
-              {canDeleteObjective && (
-                <TableActionButton
-                  type="delete"
-                  onClick={() => handleDeleteClick('objective', rowData.id, rowData.name)}
-                />
-              )}
+              <TableActionButton type="edit" onClick={() => handleEditClick(rowData.trajectory)} />
+              <TableActionButton
+                type="delete"
+                onClick={() => handleDeleteClick('trajectory', rowData.id, rowData.name)}
+              />
             </div>
           )
         },
       },
     ]
-  }, [t, defaultSnbcSectoralTrajectoryId, canEdit, trajectories]) as ColumnDef<TableDataType>[]
+  }, [t, defaultSnbcSectoralTrajectoryId, canEdit]) as ColumnDef<TrajectoryRow>[]
 
   const tableData = useMemo((): TrajectoryRow[] => {
     const filteredTrajectories = searchFilter ? fuse.search(searchFilter).map(({ item }) => item) : trajectories
 
     return filteredTrajectories.map((trajectory) => {
-      const sortedObjectives = [...trajectory.objectives].sort((a, b) => a.targetYear - b.targetYear)
-      const closestObjective = sortedObjectives[0]
+      const defaultObjectives = trajectory.objectives
+        .filter((o) => o.isDefault)
+        .sort((a, b) => a.targetYear - b.targetYear)
+      const closestDefaultObjective = defaultObjectives[0]
 
       const refYear = trajectory.referenceYear || getDisplayedReferenceYearForTrajectoryType(trajectory.type, studyYear)
-
-      // Get corrected rate for closest objective (displayed when collapsed)
-      const closestCorrectedObjective = closestObjective ? correctedRatesMap.get(closestObjective.id) : undefined
+      const closestCorrectedObjective = closestDefaultObjective
+        ? correctedRatesMap.get(closestDefaultObjective.id)
+        : undefined
 
       return {
         id: trajectory.id,
         name: trajectory.name,
         type: trajectory.type,
-        targetYear: closestObjective?.targetYear,
-        reductionRate: closestObjective?.reductionRate,
+        targetYear: closestDefaultObjective?.targetYear,
+        reductionRate: closestDefaultObjective?.reductionRate,
         referenceYear: refYear,
         correctedRate: closestCorrectedObjective?.correctedRate,
-        isTrajectory: true as const,
         trajectory,
-        children: sortedObjectives.map((objective, index) => {
-          const prevObjYear = index > 0 ? sortedObjectives[index - 1].targetYear : refYear
-          const correctedObjective = correctedRatesMap.get(objective.id)
-
-          return {
-            id: objective.id,
-            name: t('objectiveNumber', { number: index + 1 }),
-            targetYear: objective.targetYear,
-            reductionRate: objective.reductionRate,
-            referenceYear: prevObjYear,
-            correctedRate: correctedObjective?.correctedRate,
-            isTrajectory: false as const,
-            trajectoryId: trajectory.id,
-          }
-        }),
       }
     })
-  }, [trajectories, t, searchFilter, fuse, correctedRatesMap, studyYear])
+  }, [trajectories, searchFilter, fuse, correctedRatesMap, studyYear])
 
   const table = useReactTable({
     columns,
     data: tableData,
-    getSubRows: (row) => {
-      if (row.isTrajectory) {
-        return row.children
-      }
-      return undefined
-    },
     getExpandedRowModel: getExpandedRowModel(),
     getCoreRowModel: getCoreRowModel(),
+    getRowCanExpand: (row) => canEdit || row.original.trajectory.objectives.length > 0,
   })
 
-  const renderRow = (row: Row<TableDataType>) => {
+  const renderRow = (row: Row<TrajectoryRow>) => {
     const rowData = row.original
-    const isDefaultSnbc =
-      (rowData.isTrajectory && rowData.id === defaultSnbcSectoralTrajectoryId) ||
-      (!rowData.isTrajectory && rowData.trajectoryId === defaultSnbcSectoralTrajectoryId)
+    const isDefaultSnbc = rowData.id === defaultSnbcSectoralTrajectoryId
+    const isExpanded = row.getIsExpanded()
+    const colCount = row.getVisibleCells().length
+    const refYear = rowData.referenceYear ?? studyYear
 
     return (
-      <TableRow
-        key={row.id}
-        className={classNames({ [styles.defaultSnbcRow]: isDefaultSnbc })}
-        data-testid="trajectory-objectives-table-row"
-      >
-        {row.getVisibleCells().map((cell) => (
-          <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
-        ))}
-      </TableRow>
+      <Fragment key={row.id}>
+        <TableRow
+          key={row.id}
+          className={classNames(baseTableStyles.line, {
+            [styles.defaultSnbcRow]: isDefaultSnbc,
+            [styles.expandedParentRow]: isExpanded,
+          })}
+          data-testid="trajectory-table-row"
+        >
+          {row.getVisibleCells().map((cell) => (
+            <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+          ))}
+        </TableRow>
+        {isExpanded && (
+          <TableRow key={`${row.id}-subtable`} className={styles.expandedRow}>
+            <TableCell colSpan={colCount} className={styles.expandedRowCell}>
+              <ObjectivesSubTable
+                trajectory={rowData.trajectory}
+                canEdit={canEdit && !isDefaultSnbc}
+                isDefaultSnbc={isDefaultSnbc}
+                correctedRatesMap={correctedRatesMap}
+                defaultObjectiveReferenceYear={refYear}
+                sites={sites}
+                onAddObjective={() => handleAddObjectiveClick(rowData.trajectory)}
+                onEditObjective={(objective) => handleEditObjectiveClick(objective, rowData.trajectory)}
+                onDeleteObjective={(id, name) => handleDeleteClick('objective', id, name)}
+                onEditTrajectory={() => handleEditClick(rowData.trajectory)}
+              />
+            </TableCell>
+          </TableRow>
+        )}
+      </Fragment>
     )
   }
 

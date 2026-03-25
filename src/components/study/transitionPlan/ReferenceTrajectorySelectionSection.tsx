@@ -12,8 +12,8 @@ import {
   TRAJECTORY_SNBC_WASTE_ID,
   TRAJECTORY_WB2C_ID,
 } from '@/constants/trajectories'
-import { TrajectoryWithObjectives } from '@/db/transitionPlan'
 import { customRich } from '@/i18n/customRich'
+import { TrajectoryWithObjectives } from '@/types/trajectory.types'
 import { Typography } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

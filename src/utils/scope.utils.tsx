@@ -1,6 +1,5 @@
-import { FullStudy } from '@/db/study'
-import { ObjectiveWithScope } from '@/db/transitionPlan'
-import type { BaseObjective, ObjectiveGroup } from '@/types/trajectory.types'
+import type { FullStudy } from '@/db/study'
+import type { BaseObjective, ObjectiveGroup, ObjectiveWithScope } from '@/types/trajectory.types'
 import { getUIFilteredEmissions } from '@/utils/study'
 import { SubPost } from '@prisma/client'
 import { isSubset } from './array'

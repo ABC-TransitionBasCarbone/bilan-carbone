@@ -2,8 +2,8 @@
 
 import TransitionPlanBase from '@/components/study/transitionPlan/TransitionPlanBase'
 import { FullStudy } from '@/db/study'
-import type { ActionWithRelations, TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
 import { customRich } from '@/i18n/customRich'
+import type { ActionWithRelations, TrajectoryWithObjectivesAndScope } from '@/types/trajectory.types'
 import type { ExternalStudy, SectenInfo } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'

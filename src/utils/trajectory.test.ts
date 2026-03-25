@@ -1,5 +1,4 @@
-import { TrajectoryWithObjectives } from '@/db/transitionPlan'
-import type { BaseObjective, PastStudy, TrajectoryDataPoint } from '@/types/trajectory.types'
+import type { BaseObjective, PastStudy, TrajectoryDataPoint, TrajectoryWithObjectives } from '@/types/trajectory.types'
 import { expect } from '@jest/globals'
 import { Action, StudyResultUnit, TrajectoryType } from '@prisma/client'
 import { createGeneralSectenData } from './secten.test-utils'

@@ -6,8 +6,7 @@ import {
   TRAJECTORY_WB2C_ID,
 } from '@/constants/trajectories'
 import type { FullStudy } from '@/db/study'
-import type { TrajectoryWithObjectives, TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
-import { SectorPercentages } from '@/services/serverFunctions/trajectory.command'
+import type { SectorPercentages } from '@/services/serverFunctions/trajectory.command'
 import { getStudyTotalCo2Emissions } from '@/services/study'
 import type {
   BaseObjective,
@@ -15,8 +14,10 @@ import type {
   OvershootAdjustment,
   PastStudy,
   TrajectoryDataPoint,
+  TrajectoryWithObjectives,
+  TrajectoryWithObjectivesAndScope,
 } from '@/types/trajectory.types'
-import { Translations } from '@/types/translation'
+import type { Translations } from '@/types/translation'
 import { convertValue } from '@/utils/study'
 import {
   Action,

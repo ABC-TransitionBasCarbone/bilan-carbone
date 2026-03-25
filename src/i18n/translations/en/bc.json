@@ -1283,11 +1283,13 @@
           "type": "Type",
           "startYear": "Start year",
           "targetYear": "Target year",
-          "reductionRate": "Annual reduction",
+          "rates": "Annual reduction: reference / corrected",
           "referenceYear": "Reference year",
-          "correctedRate": "Corrected annual reduction",
-          "referenceReduction": "Reference annual reduction",
-          "actions": "Actions"
+          "actions": "Actions",
+          "period": "Period",
+          "defaultObjectives": "Default objectives",
+          "subObjectives": "Sub-objectives",
+          "addSubObjective": "Add sub-objective"
         },
         "cancel": "Cancel",
         "deleteTrajectory": {

@@ -1,9 +1,9 @@
 'use client'
 
 import type { TagFamily } from '@/components/form/ScopeSelectors'
-import type { ActionWithRelations } from '@/db/transitionPlan'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteAction } from '@/services/serverFunctions/transitionPlan'
+import type { ActionWithRelations } from '@/types/trajectory.types'
 import type { StudyResultUnit } from '@prisma/client'
 import Fuse from 'fuse.js'
 import { useTranslations } from 'next-intl'

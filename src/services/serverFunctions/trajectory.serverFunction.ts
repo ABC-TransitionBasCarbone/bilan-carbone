@@ -9,8 +9,8 @@ import {
   getTrajectoriesByTransitionPlanId,
   getTransitionPlanById,
   studyHasObjectives,
-  TrajectoryWithObjectivesAndScope,
 } from '@/db/transitionPlan'
+import { TrajectoryWithObjectivesAndScope } from '@/types/trajectory.types'
 import { ApiResponse, withServerResponse } from '@/utils/serverResponse'
 import { getDefaultObjectivesForTrajectoryType } from '@/utils/trajectory'
 import { TrajectoryType } from '@prisma/client'
