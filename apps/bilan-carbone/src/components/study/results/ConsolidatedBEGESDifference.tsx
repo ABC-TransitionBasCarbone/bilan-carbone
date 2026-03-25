@@ -9,7 +9,7 @@ import { computeDifferenceForTableEmissions, formatDifferenceTableEmissions } fr
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import WarningAmberIcon from '@mui/icons-material/WarningAmberOutlined'
-import { Export, SubPost } from '@repo/db-common'
+import { Export, SubPost } from '@repo/db-common/enums'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import ConsolidatedExportDifference, { calculateEmissionSourcesDifference } from './ConsolidatedExportDifference'

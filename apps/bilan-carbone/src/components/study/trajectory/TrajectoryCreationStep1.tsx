@@ -1,4 +1,4 @@
-import { TrajectoryType } from '@repo/db-common'
+import { TrajectoryType } from '@repo/db-common/enums'
 import TrajectoryOption from './TrajectoryOption'
 
 interface Props {

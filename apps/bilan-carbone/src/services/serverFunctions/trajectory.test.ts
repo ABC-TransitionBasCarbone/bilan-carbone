@@ -3,7 +3,7 @@ import * as transitionPlanDbModule from '@/db/transitionPlan'
 import * as authModule from '@/services/auth'
 import * as studyPermissionsModule from '@/services/permissions/study'
 import { expect } from '@jest/globals'
-import { TrajectoryType } from '@repo/db-common'
+import { TrajectoryType } from '@repo/db-common/enums'
 import { CreateTrajectoryInput, createTrajectoryWithObjectives } from './trajectory.serverFunction'
 
 // TODO: ESM module issue with Jest. Remove these mocks when moving to Vitest

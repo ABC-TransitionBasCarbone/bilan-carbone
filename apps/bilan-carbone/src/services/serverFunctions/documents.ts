@@ -1,7 +1,7 @@
 'use server'
 
 import { withServerResponse } from '@/utils/serverResponse'
-import { DocumentCategory } from '@repo/db-common'
+import { DocumentCategory } from '@repo/db-common/enums'
 import { canAccessStudyFlows } from '../permissions/study'
 import { getFileUrlFromBucket } from './scaleway'
 
