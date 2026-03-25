@@ -58,7 +58,7 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
   const tStructure = useTranslations('study.structure')
   const tGlossary = useTranslations('study.new.glossary')
   const { callServerFunction } = useServerFunction()
-  const { studySite, setSite } = useStudySite(study)
+  const { siteId: studySite, studySiteId, setSite } = useStudySite(study)
   const [glossary, setGlossary] = useState('')
   const [siteData, setSiteData] = useState<TiltCustomDataFields | undefined>()
   const [loading, setLoading] = useState(true)
@@ -98,7 +98,7 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
     async function setStudySiteData() {
       setLoading(true)
       if (studySite && studySite !== 'all') {
-        const situationRes = await loadMappedSituation(study.id, studySite, mappedTiltSituationToCustomDataFields)
+        const situationRes = await loadMappedSituation(study.id, studySiteId, mappedTiltSituationToCustomDataFields)
 
         if (situationRes.success && situationRes.data) {
           const newSiteData = situationRes.data
@@ -119,17 +119,17 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
     }
 
     setStudySiteData()
-  }, [form, studySite])
+  }, [form, study.id, studySite, studySiteId])
 
   const handleStudySiteUpdate = useCallback(
     async (data: ChangeStudySiteTiltSimplifiedCommand) => {
-      await callServerFunction(() => changeStudySiteTiltSimplified(studySite, data))
+      await callServerFunction(() => changeStudySiteTiltSimplified(studySiteId, data))
       setOriginalValues({
         postalCode: data.postalCode ?? '',
         structure: data.structure ?? '',
       })
     },
-    [callServerFunction, originalValues, studySite],
+    [callServerFunction, studySiteId],
   )
 
   const handleSiteDataWarningCancel = () => {
@@ -143,7 +143,7 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
   const handleSiteDataWarningConfirm = async () => {
     if (pendingSiteChanges) {
       setShowSiteDataWarning(false)
-      await callServerFunction(() => changeStudySiteTiltSimplified(studySite, pendingSiteChanges.pendingData))
+      await callServerFunction(() => changeStudySiteTiltSimplified(studySiteId, pendingSiteChanges.pendingData))
       setOriginalValues({
         postalCode: pendingSiteChanges.pendingData.postalCode ?? '',
         structure: pendingSiteChanges.pendingData.structure ?? '',

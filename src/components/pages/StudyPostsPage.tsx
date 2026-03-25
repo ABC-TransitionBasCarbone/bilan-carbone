@@ -21,12 +21,13 @@ interface Props {
   study: FullStudy
   userRole: StudyRole
   emissionSources: FullStudy['emissionSources']
-  studySite: string
+  siteId: string
+  studySiteId: string
   user: UserSession
   setGlossary: (glossary: string) => void
 }
 
-const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite, setGlossary }: Props) => {
+const StudyPostsPage = ({ post, study, userRole, emissionSources, siteId, studySiteId, setGlossary }: Props) => {
   const [showInfography, setShowInfography] = useState(false)
   const tQuality = useTranslations('quality')
   const tUnit = useTranslations('units')
@@ -162,14 +163,14 @@ const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite, set
         sort={sort}
         setSort={updateSort}
       >
-        {showInfography && <StudyPostInfography study={study} studySite={studySite} />}
+        {showInfography && <StudyPostInfography study={study} siteId={siteId} studySiteId={studySiteId} />}
         <SubPosts
           post={post}
           subPosts={filters.subPosts}
           study={study}
           userRole={userRole}
           withoutDetail={false}
-          studySite={studySite}
+          studySiteId={studySiteId}
           emissionSources={filteredSources}
           setGlossary={setGlossary}
           hasFilter={!!filters.search}

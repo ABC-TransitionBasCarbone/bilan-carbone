@@ -349,14 +349,14 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId
           <TableCell colSpan={row.getVisibleCells().length}>
             <p className="italic mb1">{row.original.detailedDescription}</p>
             <p className="bold">{tAction('addModal.subSteps')} :</p>
-            <p className="mb1 flex">
+            <div className="mb1 flex">
               {row.original.steps.map((step, index) => (
                 <div key={step.id} className="flex align-center">
                   <span>{step.title}</span>
                   {index < row.original.steps.length - 1 && <ArrowRight />}
                 </div>
               ))}
-            </p>
+            </div>
             {!!row.original.nature.length && (
               <p className="mb1">
                 <span className="bold">{tAction('addModal.nature')} : </span>

@@ -33,7 +33,7 @@ interface Props {
 const StudyPostsPageContainer = ({ post, currentSubPost, study, userRole, user }: Props) => {
   const tNav = useTranslations('nav')
   const tPost = useTranslations('emissionFactors.post')
-  const { studySite, setSite } = useStudySite(study)
+  const { siteId, studySiteId, setSite } = useStudySite(study)
   const [glossary, setGlossary] = useState('')
   const environment = study.organizationVersion.environment
 
@@ -41,9 +41,9 @@ const StudyPostsPageContainer = ({ post, currentSubPost, study, userRole, user }
     () =>
       study.emissionSources.filter(
         (emissionSource) =>
-          subPostsByPost[post].includes(emissionSource.subPost) && emissionSource.studySite.id === studySite,
+          subPostsByPost[post].includes(emissionSource.subPost) && emissionSource.studySite.site.id === siteId,
       ) as FullStudy['emissionSources'],
-    [study, post, studySite],
+    [study, post, siteId],
   )
 
   const glossaryDescription = useMemo(() => {
@@ -66,7 +66,7 @@ const StudyPostsPageContainer = ({ post, currentSubPost, study, userRole, user }
     })
   }, [glossary, study.organizationVersion.environment, tPost])
 
-  if (!studySite) {
+  if (!siteId) {
     return <CircularProgress />
   }
 
@@ -90,7 +90,7 @@ const StudyPostsPageContainer = ({ post, currentSubPost, study, userRole, user }
         <StudyPostsCard
           study={study}
           post={post}
-          studySite={studySite}
+          studySite={siteId}
           setSite={setSite}
           environment={study.organizationVersion.environment}
           setGlossary={setGlossary}
@@ -104,7 +104,8 @@ const StudyPostsPageContainer = ({ post, currentSubPost, study, userRole, user }
               study={study}
               userRole={userRole}
               emissionSources={emissionSources}
-              studySite={studySite}
+              siteId={siteId}
+              studySiteId={studySiteId}
               user={user}
               setGlossary={setGlossary}
             />
@@ -114,7 +115,7 @@ const StudyPostsPageContainer = ({ post, currentSubPost, study, userRole, user }
               currentSubPost={currentSubPost}
               post={post}
               study={study}
-              studySiteId={studySite}
+              studySiteId={studySiteId}
             />
           )
         }
@@ -125,7 +126,7 @@ const StudyPostsPageContainer = ({ post, currentSubPost, study, userRole, user }
               currentSubPost={currentSubPost}
               post={post}
               study={study}
-              studySiteId={studySite}
+              studySiteId={studySiteId}
             />
           ),
         }}

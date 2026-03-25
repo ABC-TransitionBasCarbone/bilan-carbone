@@ -5,13 +5,13 @@ import { hasAccessToStudySiteAddAndSelection } from '@/services/permissions/envi
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { FormControl, InputLabel, MenuItem, Select, Tooltip } from '@mui/material'
 import { useTranslations } from 'next-intl'
-import { Dispatch, SetStateAction, useMemo } from 'react'
+import { useMemo } from 'react'
 import styles from './SelectStudySite.module.css'
 
 interface Props {
   sites: FullStudy['sites']
   defaultValue?: string
-  setSite?: Dispatch<SetStateAction<string>>
+  setSite?: (site: string) => void
   withLabel?: boolean
   siteSelectionDisabled?: boolean
   isTransitionPlan?: boolean
@@ -44,7 +44,7 @@ const SelectStudySite = ({
 
   const value = useMemo(() => {
     if (sites?.length === 1) {
-      return sites[0].id
+      return sites[0].site.id
     } else if (showAllOption && defaultValue === 'all') {
       return 'all'
     } else {
@@ -74,7 +74,7 @@ const SelectStudySite = ({
         >
           {showAllOption && <MenuItem value={'all'}>{t('allSites')}</MenuItem>}
           {orderedSites.map((site) => (
-            <MenuItem key={site.id} value={site.id}>
+            <MenuItem key={site.site.id} value={site.site.id}>
               {site.site.name}
             </MenuItem>
           ))}

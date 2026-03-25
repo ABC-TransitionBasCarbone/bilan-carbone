@@ -25,15 +25,15 @@ const StudyContributorPage = ({ study, userRole }: Props) => {
   const tNav = useTranslations('nav')
   const tPost = useTranslations('emissionFactors.post')
   const [glossary, setGlossary] = useState('')
-  const { studySite, setSite } = useStudySite(study)
+  const { siteId, studySiteId, setSite } = useStudySite(study)
   const { environment } = useAppEnvironmentStore()
 
   const emissionSources = useMemo(
     () =>
       study.emissionSources.filter(
-        (emissionSource) => emissionSource.studySite.id === studySite,
+        (emissionSource) => emissionSource.studySite.site.id === siteId,
       ) as FullStudy['emissionSources'],
-    [study, studySite],
+    [study, siteId],
   )
 
   return (
@@ -43,7 +43,7 @@ const StudyContributorPage = ({ study, userRole }: Props) => {
         title={study.name}
         as="h2"
         rightComponent={
-          <SelectStudySite sites={study.sites} defaultValue={studySite} setSite={setSite} showAllOption={false} />
+          <SelectStudySite sites={study.sites} defaultValue={siteId} setSite={setSite} showAllOption={false} />
         }
       >
         {Object.values(environmentPostMapping[environment || Environment.BC])
@@ -67,7 +67,7 @@ const StudyContributorPage = ({ study, userRole }: Props) => {
                 subPosts={subPostsByPost[post]}
                 study={study}
                 emissionSources={emissionSources}
-                studySite={studySite}
+                studySiteId={studySiteId}
                 userRole={userRole}
                 setGlossary={setGlossary}
                 withoutDetail={true}

@@ -31,6 +31,29 @@ const makeSource = (
 const makeStudy = (sources: ReturnType<typeof makeSource>[]) =>
   getMockeFullStudy({ emissionSources: sources, resultsUnit: StudyResultUnit.K })
 
+const makeStudyWithTags = (sources: ReturnType<typeof makeSource>[], tagIds: string[]) =>
+  getMockeFullStudy({
+    emissionSources: sources,
+    resultsUnit: StudyResultUnit.K,
+    tagFamilies: [
+      {
+        id: 'family-id',
+        name: 'Test Family',
+        studyId: 'source-study-id',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        tags: tagIds.map((id) => ({
+          id,
+          name: id,
+          color: null,
+          familyId: 'family-id',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        })),
+      },
+    ],
+  })
+
 describe('emission scope filtering', () => {
   describe('getActionReductionRatio', () => {
     const mockSource = (
@@ -41,16 +64,14 @@ describe('emission scope filtering', () => {
       tagIds: string[] = [],
     ) => makeSource(subPost, totalCo2Kg, true, siteId, studySiteId, tagIds)
 
-    const mockStudy = (sources: ReturnType<typeof mockSource>[]) => makeStudy(sources)
-
     it('returns 1 when no UI filters are active', () => {
-      const study = mockStudy([mockSource(SubPost.Achats, 100), mockSource(SubPost.Electricite, 200)])
+      const study = makeStudy([mockSource(SubPost.Achats, 100), mockSource(SubPost.Electricite, 200)])
       const ratio = getActionReductionRatio(study, false, [], [SubPost.Achats, SubPost.Electricite], [], [], [], [])
       expect(ratio).toBe(0)
     })
 
     it('returns correct ratio when filtering on one of multiple subposts', () => {
-      const study = mockStudy([mockSource(SubPost.Achats, 100), mockSource(SubPost.Electricite, 300)])
+      const study = makeStudy([mockSource(SubPost.Achats, 100), mockSource(SubPost.Electricite, 300)])
       const ratio = getActionReductionRatio(
         study,
         false,
@@ -66,7 +87,7 @@ describe('emission scope filtering', () => {
     })
 
     it('returns 1 when all subposts are selected by filter', () => {
-      const study = mockStudy([mockSource(SubPost.Achats, 100), mockSource(SubPost.Electricite, 300)])
+      const study = makeStudy([mockSource(SubPost.Achats, 100), mockSource(SubPost.Electricite, 300)])
       const ratio = getActionReductionRatio(
         study,
         false,
@@ -81,7 +102,7 @@ describe('emission scope filtering', () => {
     })
 
     it('returns correct ratio when action has empty siteIds (= all sites) and filter targets one site', () => {
-      const study = mockStudy([
+      const study = makeStudy([
         mockSource(SubPost.Achats, 100, 'site-a', 'study-site-a'),
         mockSource(SubPost.Achats, 300, 'site-b', 'study-site-b'),
       ])
@@ -100,12 +121,15 @@ describe('emission scope filtering', () => {
     })
 
     it('returns correct ratio combining site, subpost and tag filters', () => {
-      const study = mockStudy([
-        mockSource(SubPost.Achats, 200, 'site-a', 'study-site-a', ['tag-1']),
-        mockSource(SubPost.Achats, 200, 'site-a', 'study-site-a', ['tag-2']),
-        mockSource(SubPost.Electricite, 100, 'site-a', 'study-site-a', ['tag-1']),
-        mockSource(SubPost.Achats, 500, 'site-b', 'study-site-b', ['tag-1']),
-      ])
+      const study = makeStudyWithTags(
+        [
+          mockSource(SubPost.Achats, 200, 'site-a', 'study-site-a', ['tag-1']),
+          mockSource(SubPost.Achats, 200, 'site-a', 'study-site-a', ['tag-2']),
+          mockSource(SubPost.Electricite, 100, 'site-a', 'study-site-a', ['tag-1']),
+          mockSource(SubPost.Achats, 500, 'site-b', 'study-site-b', ['tag-1']),
+        ],
+        ['tag-1', 'tag-2'],
+      )
       const ratio = getActionReductionRatio(
         study,
         false,
@@ -120,7 +144,7 @@ describe('emission scope filtering', () => {
     })
 
     it('applies prorata split correctly across 3 subposts (10/10/80%)', () => {
-      const study = mockStudy([
+      const study = makeStudy([
         mockSource(SubPost.Achats, 100),
         mockSource(SubPost.Electricite, 100),
         mockSource(SubPost.Informatique, 800),
@@ -162,16 +186,27 @@ describe('emission scope filtering', () => {
       expect(getUIFilteredEmissions(study, false, ['site-a'], [], ['other'])).toBe(0)
     })
 
-    it('returns 0 when tagIds is empty and sources have tags (user selected nothing)', () => {
-      const study = makeStudy([makeSource(SubPost.Achats, 100, true, 'site-a', 'study-site-a', ['tag-1'])])
+    it('returns 0 when tagIds is empty and study has tags (user selected nothing)', () => {
+      const study = makeStudyWithTags(
+        [makeSource(SubPost.Achats, 100, true, 'site-a', 'study-site-a', ['tag-1'])],
+        ['tag-1'],
+      )
       expect(getUIFilteredEmissions(study, false, ['site-a'], [SubPost.Achats], [])).toBe(0)
     })
 
+    it('does not filter by tags when study has no tags and tagIds is empty', () => {
+      const study = makeStudy([makeSource(SubPost.Achats, 100, true, 'site-a', 'study-site-a')])
+      expect(getUIFilteredEmissions(study, false, ['site-a'], [SubPost.Achats], [])).toBe(100)
+    })
+
     it('returns correct total when all filters match', () => {
-      const study = makeStudy([
-        makeSource(SubPost.Achats, 100, true, 'site-a', 'study-site-a', ['tag-1']),
-        makeSource(SubPost.Electricite, 200, true, 'site-a', 'study-site-a', ['tag-1']),
-      ])
+      const study = makeStudyWithTags(
+        [
+          makeSource(SubPost.Achats, 100, true, 'site-a', 'study-site-a', ['tag-1']),
+          makeSource(SubPost.Electricite, 200, true, 'site-a', 'study-site-a', ['tag-1']),
+        ],
+        ['tag-1'],
+      )
       expect(getUIFilteredEmissions(study, false, ['site-a'], [SubPost.Achats, SubPost.Electricite], ['tag-1'])).toBe(
         300,
       )
@@ -201,10 +236,13 @@ describe('emission scope filtering', () => {
     })
 
     it('includes untagged sources when "other" is in tagIds', () => {
-      const study = makeStudy([
-        makeSource(SubPost.Achats, 100, true, 'site-a', 'study-site-a', []),
-        makeSource(SubPost.Achats, 200, true, 'site-a', 'study-site-a', ['tag-1']),
-      ])
+      const study = makeStudyWithTags(
+        [
+          makeSource(SubPost.Achats, 100, true, 'site-a', 'study-site-a', []),
+          makeSource(SubPost.Achats, 200, true, 'site-a', 'study-site-a', ['tag-1']),
+        ],
+        ['tag-1'],
+      )
       expect(getUIFilteredEmissions(study, false, ['site-a'], [SubPost.Achats], ['other'])).toBe(100)
     })
   })

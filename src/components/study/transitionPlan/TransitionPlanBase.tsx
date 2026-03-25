@@ -75,6 +75,8 @@ const TransitionPlanBase = ({
     setSelectedTagIds,
   } = useTransitionPlanFilters(study.id)
 
+  const allTagIds = useMemo(() => study.tagFamilies.flatMap((f) => f.tags.map((tag) => tag.id)), [study.tagFamilies])
+
   const { filteredStudyEmissions, filteredPastStudies } = useTransitionPlan({
     study,
     linkedStudies,
@@ -101,14 +103,20 @@ const TransitionPlanBase = ({
             selectedSiteIds,
             selectedSubPosts,
             selectedTagIds,
+            allTagIds,
           )
         }),
       })),
-    [trajectories, selectedSiteIds, selectedSubPosts, selectedTagIds],
+    [trajectories, selectedSiteIds, selectedSubPosts, selectedTagIds, allTagIds],
   )
 
   const filteredActions = useMemo(() => {
-    if (selectedSiteIds.length === 0 || selectedSubPosts.length === 0 || selectedTagIds.length === 0) {
+    const studyHasTags = allTagIds.length > 0
+    if (
+      selectedSiteIds.length === 0 ||
+      selectedSubPosts.length === 0 ||
+      (studyHasTags && selectedTagIds.length === 0)
+    ) {
       return []
     }
 
@@ -139,7 +147,7 @@ const TransitionPlanBase = ({
         )
         return { ...action, reductionValueKg: action.reductionValueKg * ratio }
       })
-  }, [actions, study, validatedOnly, selectedSiteIds, selectedSubPosts, selectedTagIds])
+  }, [allTagIds.length, selectedSiteIds, selectedSubPosts, selectedTagIds, actions, study, validatedOnly])
 
   return (
     <>

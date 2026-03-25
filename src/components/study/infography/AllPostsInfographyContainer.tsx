@@ -17,10 +17,11 @@ const AllPostsInfographyTilt = dynamic(() => import('@/environments/tilt/study/i
 
 interface Props {
   study: FullStudy
-  studySite: string
+  studySiteId: string
+  siteId: string
 }
 
-const AllPostsInfographyContainer = ({ study, studySite }: Props) => {
+const AllPostsInfographyContainer = ({ study, studySiteId, siteId }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
   const [validatedOnly, setValidatedOnly] = useState(true)
 
@@ -43,13 +44,13 @@ const AllPostsInfographyContainer = ({ study, studySite }: Props) => {
       computeResultsByPostFromEmissionSources(
         study,
         tPost,
-        studySite,
+        siteId,
         true,
         validatedOnly,
         environment === Environment.TILT ? TiltPost : environment === Environment.CUT ? CutPost : undefined,
         environment,
       ),
-    [study, tPost, studySite, validatedOnly, environment],
+    [study, tPost, siteId, validatedOnly, environment],
   )
 
   return (
@@ -57,17 +58,17 @@ const AllPostsInfographyContainer = ({ study, studySite }: Props) => {
       defaultComponent={<AllPostsInfography study={study} data={data} />}
       environmentComponents={{
         [Environment.CUT]: (
-          <PublicodesSituationProvider environment={Environment.CUT} studyId={study.id} studySiteId={studySite}>
+          <PublicodesSituationProvider environment={Environment.CUT} studyId={study.id} studySiteId={studySiteId}>
             <AllPostsInfographySimplified study={study} />
           </PublicodesSituationProvider>
         ),
         [Environment.CLICKSON]: (
-          <PublicodesSituationProvider environment={Environment.CLICKSON} studyId={study.id} studySiteId={studySite}>
+          <PublicodesSituationProvider environment={Environment.CLICKSON} studyId={study.id} studySiteId={studySiteId}>
             <AllPostsInfographySimplified study={study} />
           </PublicodesSituationProvider>
         ),
         [Environment.TILT]: study.simplified ? (
-          <PublicodesSituationProvider environment={Environment.TILT} studyId={study.id} studySiteId={studySite}>
+          <PublicodesSituationProvider environment={Environment.TILT} studyId={study.id} studySiteId={studySiteId}>
             <AllPostsInfographySimplified study={study} />
           </PublicodesSituationProvider>
         ) : (

@@ -49,7 +49,7 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, us
   const tValidation = useTranslations('validation')
   const tCountry = useTranslations('country')
   const { callServerFunction } = useServerFunction()
-  const { studySite, setSite } = useStudySite(study)
+  const { siteId: studySite, studySiteId, setSite } = useStudySite(study)
   const [siteData, setSiteData] = useState<FullStudy['sites'][0] | undefined>()
   const [loading, setLoading] = useState(true)
   const [showSiteDataWarning, setShowSiteDataWarning] = useState(false)
@@ -104,7 +104,7 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, us
     async function setStudySiteData() {
       setLoading(true)
       if (studySite && studySite !== 'all') {
-        const studySiteRes = await getStudySite(studySite)
+        const studySiteRes = await getStudySite(studySiteId)
 
         if (studySiteRes.success && studySiteRes.data) {
           const newSiteData = studySiteRes.data
@@ -127,11 +127,11 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, us
     }
 
     setStudySiteData()
-  }, [form, studySite])
+  }, [form, studySite, studySiteId])
 
   const handleStudyEstablishmentUpdate = useCallback(
     async (data: ChangeStudyEstablishmentCommand) => {
-      await callServerFunction(() => changeStudyEstablishment(studySite, data))
+      await callServerFunction(() => changeStudyEstablishment(studySiteId, data))
       setOriginalValues({
         etp: data.etp ?? 0,
         studentNumber: data.studentNumber ?? 0,
@@ -139,7 +139,7 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, us
         country: data.country ?? null,
       })
     },
-    [callServerFunction, originalValues, siteData?.site.cnc?.id, studySite],
+    [callServerFunction, studySiteId],
   )
 
   const handleSiteDataWarningCancel = () => {
@@ -153,7 +153,7 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, us
   const handleSiteDataWarningConfirm = async () => {
     if (pendingSiteChanges) {
       setShowSiteDataWarning(false)
-      await callServerFunction(() => changeStudyEstablishment(studySite, pendingSiteChanges.pendingData))
+      await callServerFunction(() => changeStudyEstablishment(studySiteId, pendingSiteChanges.pendingData))
       setOriginalValues({
         etp: pendingSiteChanges.pendingData.etp ?? 0,
         studentNumber: pendingSiteChanges.pendingData.studentNumber ?? 0,

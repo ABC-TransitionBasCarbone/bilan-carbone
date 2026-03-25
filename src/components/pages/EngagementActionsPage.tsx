@@ -24,7 +24,7 @@ const EngagementActionsPage = ({ study, actions }: Props) => {
   const tTargets = useTranslations('study.engagementActions.targets')
   const tSteps = useTranslations('study.engagementActions.steps')
   const tPhases = useTranslations('study.engagementActions.phases')
-  const { studySite, setSite } = useStudySite(study, true)
+  const { siteId, studySiteId, setSite } = useStudySite(study, true)
 
   const handleExportCSV = () => {
     downloadEngagementActionsCSV(actions, study.name, t, tTargets, tSteps, tPhases)
@@ -53,12 +53,12 @@ const EngagementActionsPage = ({ study, actions }: Props) => {
             <Button onClick={handleExportCSV} variant="outlined" isLarge>
               <DownloadIcon className="mr-2" /> {t('export')}
             </Button>
-            <SelectStudySite sites={study.sites} defaultValue={studySite} setSite={setSite} />
+            <SelectStudySite sites={study.sites} defaultValue={siteId} setSite={setSite} />
           </div>
         }
       >
         <div className="flex-col gapped2">
-          <EngagementActions actions={actions} study={study} studySite={studySite} />
+          <EngagementActions actions={actions} study={study} studySite={studySiteId} />
         </div>
       </Block>
     </>

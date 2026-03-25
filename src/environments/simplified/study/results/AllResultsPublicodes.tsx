@@ -22,7 +22,7 @@ interface Props {
 
 const AllResultsPublicodes = ({ study, chartOrder = defaultChartOrder, caUnit, showSubLevel = false }: Props) => {
   const tStudyNav = useTranslations('study.navigation')
-  const { studySite, setSite } = useStudySite(study, true)
+  const { siteId, studySiteId, setSite } = useStudySite(study, true)
   const { aggregated, bySite, isLoading, error } = usePublicodesResults(
     study,
     'all',
@@ -35,11 +35,11 @@ const AllResultsPublicodes = ({ study, chartOrder = defaultChartOrder, caUnit, s
   // be updated here until a full re-computation is done (e.g., by refreshing
   // the page). I assume that it's acceptable for now.
   const selectedResults = useMemo(() => {
-    if (studySite === 'all') {
+    if (siteId === 'all') {
       return aggregated
     }
-    return bySite[studySite] ?? []
-  }, [aggregated, bySite, studySite])
+    return bySite[studySiteId] ?? []
+  }, [aggregated, bySite, siteId, studySiteId])
 
   const totalValue = useMemo(
     () => getTotalValueFromBaseResults(selectedResults, study.resultsUnit),
@@ -65,7 +65,7 @@ const AllResultsPublicodes = ({ study, chartOrder = defaultChartOrder, caUnit, s
         bySite,
       }}
       totalValue={totalValue}
-      studySite={studySite}
+      studySite={siteId}
       setSite={setSite}
       chartOrder={chartOrder}
       caUnit={caUnit}

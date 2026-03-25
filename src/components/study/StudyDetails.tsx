@@ -33,7 +33,7 @@ const StudyDetails = ({
   validatedOnly,
   organizationVersionId,
 }: Props) => {
-  const { studySite, setSite } = useStudySite(study, true)
+  const { siteId, setSite } = useStudySite(study, true)
 
   return (
     <>
@@ -43,7 +43,7 @@ const StudyDetails = ({
         canDeleteStudy={canDeleteStudy}
         canDuplicateStudy={canDuplicateStudy}
         duplicableEnvironments={duplicableEnvironments}
-        studySite={studySite}
+        studySite={siteId}
         setSite={setSite}
       />
       <Block>
@@ -52,12 +52,7 @@ const StudyDetails = ({
             [Environment.CUT]: <StudyResultsContainerSummaryPublicodes study={study} />,
           }}
           defaultComponent={
-            <StudyResultsContainerSummary
-              user={user}
-              study={study}
-              studySite={studySite}
-              validatedOnly={validatedOnly}
-            />
+            <StudyResultsContainerSummary user={user} study={study} studySite={siteId} validatedOnly={validatedOnly} />
           }
         />
       </Block>
