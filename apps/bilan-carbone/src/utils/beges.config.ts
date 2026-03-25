@@ -1,5 +1,5 @@
-import { EmissionFactorPartType, SubPost } from '@repo/db-common/enums'
 import type { ExportRule } from '@repo/db-common'
+import { EmissionFactorPartType, SubPost } from '@repo/db-common/enums'
 
 export const begesRules = [
   {

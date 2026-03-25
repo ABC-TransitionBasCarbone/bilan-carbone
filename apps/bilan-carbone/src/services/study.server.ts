@@ -1,4 +1,4 @@
-import { getStudyById } from "@/db/study"
+import { getStudyById } from '@/db/study'
 
 export const getStudyParentOrganizationVersionId = async (
   studyId: string,
@@ -11,4 +11,3 @@ export const getStudyParentOrganizationVersionId = async (
 
   return study.organizationVersion.parentId || study.organizationVersion.id
 }
-

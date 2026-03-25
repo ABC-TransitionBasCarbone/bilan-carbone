@@ -6,6 +6,9 @@ import { signPassword } from '@/services/auth'
 import { getEmissionFactorsFromAPI } from '@/services/importEmissionFactor/baseEmpreinte/getEmissionFactorsFromAPI'
 import { getAllowedLevels } from '@/services/study'
 import { faker } from '@faker-js/faker'
+import { PrismaPg } from '@prisma/adapter-pg'
+import type { Account, User } from '@repo/db-common'
+import { PrismaClient } from '@repo/db-common'
 import {
   EmissionFactorBase,
   EmissionFactorStatus,
@@ -19,9 +22,6 @@ import {
   UserChecklist,
   UserStatus,
 } from '@repo/db-common/enums'
-import type {Account, User} from '@repo/db-common'
-import {PrismaClient} from '@repo/db-common'
-import { PrismaPg } from '@prisma/adapter-pg'
 
 import { Command } from 'commander'
 import { ACTUALITIES } from '../legacy_data/actualities'
@@ -48,7 +48,7 @@ const adapter = new PrismaPg({
 })
 
 const prisma = new PrismaClient({
-  adapter
+  adapter,
 }) as PrismaClient
 
 const users = async () => {

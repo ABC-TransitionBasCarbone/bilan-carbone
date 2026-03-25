@@ -12,9 +12,9 @@ import { CutRuleName, CutSituation } from '@/environments/cut/publicodes/types'
 import { ListLayoutSituations } from '@/lib/publicodes/context/types'
 import { aggregateSituationValues } from '@/lib/publicodes/utils'
 import { CutStudySiteFields } from '@/services/studySiteToSituation'
-import { QuestionType, Unit } from '@repo/db-common/enums'
+import type { InputJsonValue } from '@prisma/client/runtime/client'
 import type { Answer } from '@repo/db-common'
-import type {InputJsonValue} from "@prisma/client/runtime/client"
+import { QuestionType, Unit } from '@repo/db-common/enums'
 import { CutSituationKey, InternQuestionId, questionsPublicodesMapping } from './questionsPublicodesMapping'
 
 // Pour chaque answers:

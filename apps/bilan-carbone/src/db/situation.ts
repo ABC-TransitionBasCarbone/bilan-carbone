@@ -1,6 +1,6 @@
 import { PUBLICODES_ENGINE_VERSION } from '@/constants/versions'
+import type { InputJsonValue } from '@prisma/client/runtime/client'
 import { Situation as SituationSchema } from '@repo/db-common'
-import type {InputJsonValue} from "@prisma/client/runtime/client"
 import { prismaClient } from './client.server'
 
 export async function getSituationByStudySite(studySiteId: string): Promise<SituationSchema | null> {

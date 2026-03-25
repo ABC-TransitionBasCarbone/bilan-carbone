@@ -1,24 +1,16 @@
-import { formatDateFr } from '@/utils/time'
-import { Environment, StudyResultUnit, SubPost, Level } from '@repo/db-common/enums'
+import { EngagementActionTargets } from '@/constants/engagementActions'
 import type { FullStudy } from '@/db/study'
 import { Translations } from '@/types/translation'
-import { EngagementActionTargets } from '@/constants/engagementActions'
-import { Post } from './posts'
-import { download } from './file'
-import dayjs from 'dayjs'
-import { EmissionFactorWithMetaData, getEmissionFactorsByIds } from './serverFunctions/emissionFactor'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { getPost } from '@/utils/post'
-import {
-  formatEmissionValueForExport,
-  hasDeprecationPeriod,
-  isCAS,
-} from '@/utils/study'
-import {
-  getEmissionResults,
-  getEmissionSourceEmission,
-  getEmissionSourcesTotalCo2,
-} from './emissionSource'
+import { formatEmissionValueForExport, hasDeprecationPeriod, isCAS } from '@/utils/study'
+import { formatDateFr } from '@/utils/time'
+import { Environment, Level, StudyResultUnit, SubPost } from '@repo/db-common/enums'
+import dayjs from 'dayjs'
+import { getEmissionResults, getEmissionSourceEmission, getEmissionSourcesTotalCo2 } from './emissionSource'
+import { download } from './file'
+import { Post } from './posts'
+import { EmissionFactorWithMetaData, getEmissionFactorsByIds } from './serverFunctions/emissionFactor'
 import {
   getEmissionSourcesConfidenceInterval,
   getQualitativeUncertaintyForEmissionSources,
@@ -50,7 +42,6 @@ const getFileName = (study: FullStudy, post?: string, subPost?: SubPost) => {
   const formattedDate = date.format('YYYY_MM_DD')
   return `${name}_${formattedDate}.csv`
 }
-
 
 const getEmissionSourcesCSVContent = (
   emissionSources: FullStudy['emissionSources'],
