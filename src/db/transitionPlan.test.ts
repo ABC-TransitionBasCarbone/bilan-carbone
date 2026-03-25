@@ -1,3 +1,4 @@
+import type { ActionWithRelations, ObjectiveWithScope, TransitionPlanWithRelations } from '@/types/trajectory.types'
 import { expect } from '@jest/globals'
 import {
   ActionIndicatorType,
@@ -7,12 +8,7 @@ import {
   TrajectoryType,
   TransitionPlanStudy,
 } from '@prisma/client'
-import {
-  ActionWithRelations,
-  duplicateTransitionPlanWithRelations,
-  ObjectiveWithScope,
-  TransitionPlanWithRelations,
-} from './transitionPlan'
+import { duplicateTransitionPlanWithRelations } from './transitionPlan'
 
 const mockTx = {
   transitionPlan: {

@@ -2,7 +2,6 @@
 
 import LoadingButton from '@/components/base/LoadingButton'
 import Modal from '@/components/modals/Modal'
-import { TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import {
   createTrajectorySchema,
@@ -15,6 +14,7 @@ import {
   updateTrajectory,
 } from '@/services/serverFunctions/trajectory.serverFunction'
 import type { BaseObjective, PastStudy } from '@/types/trajectory.types'
+import { TrajectoryWithObjectivesAndScope } from '@/types/trajectory.types'
 import {
   calculateBaseSNBCReductionRates,
   calculateSectoralSNBCReductionRates,

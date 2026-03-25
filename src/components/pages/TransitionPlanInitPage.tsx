@@ -12,7 +12,6 @@ import TrajectoryGraph from '@/components/study/transitionPlan/TrajectoryGraph'
 import TransitionPlanFilters from '@/components/study/transitionPlan/TransitionPlanFilters'
 import { TRAJECTORY_15_ID, TRAJECTORY_SNBC_GENERAL_ID } from '@/constants/trajectories'
 import { FullStudy } from '@/db/study'
-import { TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
 import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { useTransitionPlan } from '@/hooks/useTransitionPlan'
@@ -25,6 +24,7 @@ import {
   initializeTransitionPlan,
   updateTransitionPlanSectenVersion,
 } from '@/services/serverFunctions/transitionPlan'
+import { TrajectoryWithObjectivesAndScope } from '@/types/trajectory.types'
 import { compareSectenVersions } from '@/utils/secten'
 import { calculateSectoralSNBCReductionRates } from '@/utils/snbc'
 import { getDefaultSnbcSectoralTrajectory } from '@/utils/trajectory'

@@ -27,9 +27,9 @@ import {
   saveActionScope,
   saveIndicatorsOnAction,
   saveStepsOnAction,
-  TransitionPlanWithStudies,
   updateAction,
 } from '@/db/transitionPlan'
+import type { TransitionPlanWithStudies } from '@/types/trajectory.types'
 import { ApiResponse, withServerResponse } from '@/utils/serverResponse'
 import { getYearFromDateStr } from '@/utils/time'
 import { TransitionPlan } from '@prisma/client'

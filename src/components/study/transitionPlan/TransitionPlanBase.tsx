@@ -3,10 +3,14 @@
 import Block from '@/components/base/Block'
 import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
 import { FullStudy } from '@/db/study'
-import type { ActionWithRelations, TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
 import { useTransitionPlan } from '@/hooks/useTransitionPlan'
 import { useTransitionPlanFilters } from '@/hooks/useTransitionPlanFilters'
-import type { ObjectiveGroup, PastStudy } from '@/types/trajectory.types'
+import type {
+  ActionWithRelations,
+  ObjectiveGroup,
+  PastStudy,
+  TrajectoryWithObjectivesAndScope,
+} from '@/types/trajectory.types'
 import { buildObjectiveGroups } from '@/utils/scope.utils'
 import { scopeMatchesUIFilters } from '@/utils/scopeFilter'
 import { getActionReductionRatio } from '@/utils/study'
