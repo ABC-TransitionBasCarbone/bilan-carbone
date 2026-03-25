@@ -1,5 +1,5 @@
-import { Environment } from "@repo/db-common/enums"
-import { signIn, signOut, SignOutParams } from "next-auth/react"
+import { Environment } from '@repo/db-common/enums'
+import { signIn, signOut, SignOutParams } from 'next-auth/react'
 
 export async function accountHandler(accountId: string) {
   return await signIn('credentials', {

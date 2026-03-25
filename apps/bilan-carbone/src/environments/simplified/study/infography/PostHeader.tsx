@@ -1,6 +1,6 @@
 import PostIcon from '@/components/study/infography/icons/PostIcon'
 import { Post } from '@/services/posts'
-import { SubPost } from  '@repo/db-common/enums'
+import { SubPost } from '@repo/db-common/enums'
 import { useTranslations } from 'next-intl'
 import styles from './PostHeader.module.css'
 import {

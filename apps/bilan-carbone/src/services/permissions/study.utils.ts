@@ -1,4 +1,4 @@
-import { isAdminOnOrga  } from '@/utils/organization'
+import { isAdminOnOrga } from '@/utils/organization'
 import { UserSession } from 'next-auth'
 
 export const isAdminOnStudyOrga = (

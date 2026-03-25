@@ -15,8 +15,8 @@ import {
   Switch,
   TextField,
 } from '@mui/material'
-import { EmissionFactorBase, SubPost } from '@repo/db-common/enums'
 import type { EmissionFactorImportVersion } from '@repo/db-common'
+import { EmissionFactorBase, SubPost } from '@repo/db-common/enums'
 import { Button } from '@repo/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

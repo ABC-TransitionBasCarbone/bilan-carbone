@@ -1,5 +1,5 @@
-"use server"
-import type { DeactivatableFeature,  Prisma } from '@repo/db-common'
+'use server'
+import type { DeactivatableFeature, Prisma } from '@repo/db-common'
 import { Environment, UserSource } from '@repo/db-common/enums'
 import { prismaClient } from './client.server'
 
