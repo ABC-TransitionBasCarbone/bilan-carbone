@@ -67,6 +67,14 @@ export default defineConfig([
     },
   },
   {
+    files: ['**/*.test.*', 'src/tests/**/*'],
+    languageOptions: {
+      globals: {
+        ...globals.jest,
+      },
+    },
+  },
+  {
     files: ['cypress/**/*.{js,ts,jsx,tsx}'],
     ...cypress.configs.recommended,
   },
