@@ -83,7 +83,7 @@
     "fuse.js": "^7.0.0",
     "jsonwebtoken": "^9.0.3",
     "mui-color-input": "^7.0.0",
-    "next": "15.5.12",
+    "next": "16.2.1",
     "next-auth": "^4.24.13",
     "next-intl": "^4.8.3",
     "node-xlsx": "^0.24.0",
@@ -134,7 +134,7 @@
     "cypress": "^15.11.0",
     "dotenv-cli": "^11.0.0",
     "eslint": "^9.39.2",
-    "eslint-config-next": "15.5.12",
+    "eslint-config-next": "16.2.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-cypress": "^6.1.0",
     "eslint-plugin-mocha": "^11.1.0",
@@ -150,6 +150,8 @@
     "yargs": "^18.0.0"
   },
   "resolutions": {
-    "fast-xml-parser": ">=5.3.8"
+    "fast-xml-parser": ">=5.3.8",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3"
   }
 }
