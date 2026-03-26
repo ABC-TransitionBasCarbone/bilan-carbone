@@ -1,8 +1,7 @@
 import { parseFloatString } from '@/utils/number'
-import type { Prisma } from '@repo/db-common'
+import type { Prisma, PrismaClient } from '@repo/db-common'
 import { parse } from 'csv-parse'
 import fs from 'fs'
-import { prismaClient } from '../../db/client.server'
 
 type SectenRow = {
   sector: string
@@ -145,7 +144,12 @@ export const updateSectenVersion = async (
   })
 }
 
-export const importSectenData = async (year: number, filePath: string, shouldUpdate: boolean = false) => {
+export const importSectenData = async (
+  prismaClient: PrismaClient,
+  year: number,
+  filePath: string,
+  shouldUpdate: boolean = false,
+) => {
   const data = await parseSectenCSV(filePath)
 
   return prismaClient.$transaction(async (transaction) => {
