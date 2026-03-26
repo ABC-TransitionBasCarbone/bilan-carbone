@@ -19,6 +19,6 @@
     "format": "prettier --write ."
   },
   "devDependencies": {
-    "turbo": "latest"
+    "turbo": "^2.8.20"
   }
 }
