@@ -1,6 +1,9 @@
 import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '@repo/db-common'
-import 'server-only'
+// Au lieu de : import 'server-only' pour pas casser la seed
+if (typeof window !== 'undefined') {
+  throw new Error('prismaClient cannot be used client-side')
+}
 
 // https://www.prisma.io/docs/guides/other/troubleshooting-orm/help-articles/nextjs-prisma-client-dev-practices
 const globalForPrisma = global as unknown as {

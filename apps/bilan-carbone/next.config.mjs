@@ -23,9 +23,6 @@ const nextConfig = {
   images: {
     remotePatterns: [{ hostname: scalewayUrl }],
   },
-  experimental: {
-    serverActions: { bodySizeLimit: '5mb' },
-  },
   transpilePackages: [
     'mui-color-input',
     '@abc-transitionbascarbone/publicodes-count',
