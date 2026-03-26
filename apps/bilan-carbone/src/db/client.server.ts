@@ -1,7 +1,7 @@
 import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '@repo/db-common'
 // Au lieu de : import 'server-only' pour pas casser la seed
-if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'test') {
   throw new Error('prismaClient cannot be used client-side')
 }
 

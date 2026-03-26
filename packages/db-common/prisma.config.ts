@@ -1,6 +1,6 @@
 import 'dotenv/config'
-import { defineConfig, env } from 'prisma/config'
 import path from 'path'
+import { defineConfig, env } from 'prisma/config'
 import { fileURLToPath } from 'url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
