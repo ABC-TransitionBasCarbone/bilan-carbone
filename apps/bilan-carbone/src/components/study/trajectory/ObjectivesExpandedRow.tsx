@@ -1,12 +1,12 @@
 'use client'
 
-import Button from '@/components/base/Button'
 import { TableActionButton } from '@/components/base/TableActionButton'
 import { environmentSubPostsMapping } from '@/services/posts'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { ObjectiveWithScope, TrajectoryWithObjectivesAndScope } from '@/types/trajectory.types'
 import { Typography } from '@mui/material'
 import { TrajectoryType } from '@prisma/client'
+import Button from '@repo/ui'
 import { useTranslations } from 'next-intl'
 import { useCallback } from 'react'
 import type { ObjectiveRow } from './ObjectivesInnerTable'
