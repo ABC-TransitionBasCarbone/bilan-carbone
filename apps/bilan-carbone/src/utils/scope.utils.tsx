@@ -8,7 +8,7 @@ export const toScopedValues = <T,>(selected: T[], all: T[]) =>
   selected.length === all.length && all.every((v) => selected.includes(v)) ? [] : selected
 
 export interface BuildObjectiveGroupsParams {
-  study: Pick<FullStudy, 'emissionSources' | 'resultsUnit' | 'organizationVersion'>
+  study: Pick<FullStudy, 'emissionSources' | 'resultsUnit' | 'organizationVersion' | 'tagFamilies'>
   validatedOnly: boolean
   objectives: ObjectiveWithScope[]
   filterSiteIds: string[]
