@@ -1,4 +1,1 @@
-export type SharedExample = {
-  id: string
-  name: string
-}
+// export common types from this directory/file
