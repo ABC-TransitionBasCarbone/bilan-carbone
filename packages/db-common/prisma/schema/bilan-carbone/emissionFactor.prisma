@@ -1,0 +1,357 @@
+enum EmissionFactorPartType {
+  CarburantAmontCombustion
+  Amont
+  Intrants
+  Combustion
+  TransportEtDistribution
+  Energie
+  Fabrication
+  Traitement
+  Collecte
+  Autre
+  Amortissement
+  Incineration
+  EmissionsFugitives
+  Fuites
+  Transport
+  CombustionALaCentrale
+  Pertes
+  AutresEmissionsLieesALaConsommationDElectriciteBarrage
+
+  @@schema("bilan_carbone")
+}
+
+enum Import {
+  BaseEmpreinte
+  Legifrance
+  NegaOctet
+  Manual
+  CUT
+  CLICKSON
+  AIB
+
+  @@schema("bilan_carbone")
+}
+
+enum EmissionFactorStatus {
+  Archived
+  Valid
+
+  @@schema("bilan_carbone")
+}
+
+enum SubPost {
+  // Energies
+  CombustiblesFossiles
+  CombustiblesOrganiques
+  ReseauxDeChaleurEtDeVapeur
+  ReseauxDeFroid
+  Electricite
+
+  // AutresEmissionsNonEnergetiques
+  Agriculture
+  EmissionsLieesAuChangementDAffectationDesSolsCas
+  EmissionsLieesALaProductionDeFroid
+  EmissionsLieesAuxProcedesIndustriels
+  AutresEmissionsNonEnergetiques
+
+  // IntrantsBiensEtMatieres
+  MetauxPlastiquesEtVerre
+  PapiersCartons
+  MateriauxDeConstruction
+  ProduitsChimiquesEtHydrogene
+  NourritureRepasBoissons
+  MatiereDestineeAuxEmballages
+  AutresIntrants
+  BiensEtMatieresEnApprocheMonetaire
+
+  // IntrantsServices
+  AchatsDeServices
+  UsagesNumeriques
+  ServicesEnApprocheMonetaire
+
+  // DechetsDirects
+  DechetsDEmballagesEtPlastiques
+  DechetsOrganiques
+  DechetsOrduresMenageres
+  DechetsDangereux
+  DechetsBatiments
+  DechetsFuitesOuEmissionsNonEnergetiques
+  EauxUsees
+  AutresDechets
+
+  //Fret
+  FretEntrant
+  FretInterne
+  FretSortant
+
+  // Deplacements
+  DeplacementsDomicileTravail
+  DeplacementsProfessionnels
+  DeplacementsVisiteurs
+
+  // Immobilisations
+  Batiments
+  AutresInfrastructures
+  Equipements
+  Informatique
+
+  // UtilisationEtDependance
+  UtilisationEnResponsabilite
+  UtilisationEnDependance
+  InvestissementsFinanciersRealises
+
+  // FinDeVie
+  ConsommationDEnergieEnFinDeVie
+  TraitementDesDechetsEnFinDeVie
+  FuitesOuEmissionsNonEnergetiques
+  TraitementDesEmballagesEnFinDeVie
+
+  // CUT
+  // Fonctionnement
+  Batiment
+  Equipe
+  Energie
+  ActivitesDeBureau
+
+  // MobiliteSpectateurs
+  MobiliteSpectateurs
+
+  // TourneesAvantPremiere
+  EquipesRecues
+
+  // SallesEtCabines
+  MaterielTechnique
+  AutreMateriel
+
+  // ConfiseriesEtBoissons
+  Achats
+  Fret
+  Electromenager
+
+  // Dechets
+  DechetsOrdinaires
+  DechetsExceptionnels
+
+  // BilletterieEtCommunication
+  MaterielDistributeurs
+  MaterielCinema
+  CommunicationDigitale
+  CaissesEtBornes
+
+  // TILT
+  // Dechets
+  FroidEtClim
+
+  // Autres émissions 
+  ActivitesAgricoles
+  ActivitesIndustrielles
+
+  // Deplacements de personnes
+  DeplacementsDomicileTravailSalaries
+  DeplacementsDomicileTravailBenevoles
+  DeplacementsDansLeCadreDUneMissionAssociativeSalaries
+  DeplacementsDansLeCadreDUneMissionAssociativeBenevoles
+  DeplacementsDesBeneficiaires
+  DeplacementsFabricationDesVehicules
+
+  // Transport de marchandises
+  Entrant
+  Interne
+  Sortant
+  TransportFabricationDesVehicules
+
+  // Alimentation 
+  RepasPrisParLesSalaries
+  RepasPrisParLesBenevoles
+  RepasPrisParLesBeneficiaires
+
+  // Utilisation
+  UtilisationEnResponsabiliteConsommationDeBiens
+  UtilisationEnResponsabiliteConsommationNumerique
+  UtilisationEnResponsabiliteConsommationDEnergie
+  UtilisationEnResponsabiliteFuitesEtAutresConsommations
+  UtilisationEnDependanceConsommationDeBiens
+  UtilisationEnDependanceConsommationNumerique
+  UtilisationEnDependanceConsommationDEnergie
+  UtilisationEnDependanceFuitesEtAutresConsommations
+
+  // Télétravail 
+  TeletravailSalaries
+  TeletravailBenevoles
+
+  // Équipements et immobilisations
+  EquipementsDesSalaries
+  ParcInformatiqueDesSalaries
+  EquipementsDesBenevoles
+  ParcInformatiqueDesBenevoles
+
+  // CLICKSON
+  // Energie
+  Combustibles
+  AutresGaz
+
+  // Restauration
+  TypesDeRepasServis
+  DistributeursAutomatiques
+
+  // Deplacements
+  TransportDesEleves
+  TransportDuPersonnel
+  VoyagesScolaires
+
+  // Achats
+  Fournitures
+  ProduitsChimiques
+  EquipementsDeSport
+  DechetsRecyclables
+  OrduresMenageresResiduelles
+
+  // Immobilisations
+  Construction
+  Renovation
+  EquipementsInformatiqueAudiovisuel
+  EquipementsDivers
+
+  @@schema("bilan_carbone")
+}
+
+enum EmissionFactorBase {
+  LocationBased
+  MarketBased
+
+  @@schema("bilan_carbone")
+}
+
+model EmissionFactorImportVersion {
+  id       String @id @default(uuid())
+  internId String @map("intern_id")
+  source   Import
+  name     String
+
+  emissionFactors             EmissionFactor[]
+  studyEmissionFactorVersions StudyEmissionFactorVersion[]
+
+  archived Boolean @default(false)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@unique([source, internId])
+  @@map("emission_factor_import_version")
+  @@schema("bilan_carbone")
+}
+
+model EmissionFactor {
+  id                  String               @id @default(uuid())
+  createdAt           DateTime             @default(now()) @map("created_at")
+  updatedAt           DateTime             @default(now()) @updatedAt @map("updated_at")
+  emissionFactorParts EmissionFactorPart[]
+
+  oldBCId String? @map("old_bc_id")
+
+  versionId String?                      @map("version_id")
+  version   EmissionFactorImportVersion? @relation(fields: [versionId], references: [id])
+
+  importedFrom   Import        @map("imported_from")
+  importedId     String?       @map("imported_id")
+  organizationId String?       @map("organization_id")
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+
+  base EmissionFactorBase?
+
+  status   EmissionFactorStatus
+  metaData EmissionFactorMetaData[]
+  source   String?
+  location String?
+
+  reliability                  Int?
+  technicalRepresentativeness  Int? @map("technical_representativeness")
+  geographicRepresentativeness Int? @map("geographic_representativeness")
+  temporalRepresentativeness   Int? @map("temporal_representativeness")
+  completeness                 Int? @map("completeness")
+
+  totalCo2   Float   @map("total_co2")
+  co2f       Float?
+  ch4f       Float?
+  ch4b       Float?
+  n2o        Float?
+  co2b       Float?
+  sf6        Float?
+  hfc        Float?
+  pfc        Float?
+  otherGES   Float?  @map("other_ges")
+  unit       Unit?
+  customUnit String?
+  isMonetary Boolean @map("is_monetary")
+
+  subPosts            SubPost[]             @map("sub_posts")
+  studyEmissionSource StudyEmissionSource[]
+
+  @@index([organizationId])
+  @@index([status])
+  @@map("emission_factors")
+  @@schema("bilan_carbone")
+}
+
+model EmissionFactorMetaData {
+  emissionFactor   EmissionFactor @relation(fields: [emissionFactorId], references: [id])
+  emissionFactorId String         @map("emission_factor_id")
+  language         String
+
+  title     String?
+  attribute String?
+  frontiere String?
+  tag       String?
+  location  String?
+  comment   String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@id([emissionFactorId, language])
+  @@index([language, title])
+  @@map("emission_metadata")
+  @@schema("bilan_carbone")
+}
+
+model EmissionFactorPart {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  oldBCId String? @map("old_bc_id")
+
+  emissionFactorId String                       @map("emission_factor_id")
+  emissionFactor   EmissionFactor               @relation(fields: [emissionFactorId], references: [id])
+  metaData         EmissionFactorPartMetaData[]
+  type             EmissionFactorPartType
+
+  totalCo2 Float  @map("total_co2")
+  co2f     Float?
+  ch4f     Float?
+  ch4b     Float?
+  n2o      Float?
+  co2b     Float?
+  sf6      Float?
+  hfc      Float?
+  pfc      Float?
+  otherGES Float? @map("other_ges")
+
+  @@map("emission_factor_parts")
+  @@schema("bilan_carbone")
+}
+
+model EmissionFactorPartMetaData {
+  emissionFactorPart   EmissionFactorPart @relation(fields: [emissionFactorPartId], references: [id])
+  emissionFactorPartId String             @map("emission_post_id")
+  title                String
+  language             String
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@id([emissionFactorPartId, language])
+  @@map("emission_factor_part_metadata")
+  @@schema("bilan_carbone")
+}

@@ -1,158 +1,189 @@
-# Bilan Carbone
+# Bilan Carbone — Monorepo
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Ce monorepo contient les applications et packages partagés du projet Bilan Carbone.
+This monorepo contains apps and shared packages for Bilan Carbone & MEP Pro
 
 ## Get started
 
 ### Prerequisites
 
-- Node.js >=22
+- Node.js >= 22.16.0
 - Yarn 1.22
-- Docker and Docker Compose
+- Docker et Docker Compose
 
 ### Setup Steps
 
-1. **Install dependencies**
+Execute these commands from the **root directory**
 
-   ```bash
-   yarn install
-   ```
-
-2. **Environment setup**
-
-   Create a `.env` copied from `.env.dist` in the root directory and a `.env.test` copied from `.env.test.dist` in the root directory.
-
-3. **Start the database**
-
-   ```bash
-   docker-compose up -d
-   ```
-
-4. **Set up the database with Prisma**
-
-   ```bash
-   # Push all migrations to the database
-   npx prisma migrate deploy
-
-   # Seed the database
-   npx prisma db seed
-   ```
-
-5. **Set up Publicodes local development** (optionnal)
-
-   ```bash
-   # Recompile Publicodes rules (one time)
-   yarn publicodes-count:compile
-
-   # In an other terminal watch changes
-   yarn publicodes-count:watch
-   ```
-
-6. **Run the development server**
-
-   ```bash
-   yarn dev
-   ```
-
-   The application will be available at [http://localhost:3000](http://localhost:3000)
-
-## Import Scripts
-
-Run these import scripts in the production environment (change the value of the version):
-
-Importer les facteurs d'emissions de negaoctet :
-`npx tsx src/scripts/negaOctet/getEmissionFactors.ts -n ${versionNumber} -f ${pathToCSVFileNegaOctet}`
-
-Importer les facteurs d'emissions de legifrance :
-`npx tsx src/scripts/legifrance/getEmissionFactors.ts -n ${versionNumber} -f ${pathToCSVFileLegifrance}`
-
-Importer les facteurs d'emissions de la base empreinte :
-`npx tsx src/scripts/baseEmpreinte/getEmissionFactors.ts -n ${versionNumberBaseEmpreinte}"`
-
-Créer les règles de gestion du BEGES :
-`npx tsx src/scripts/exportRules/beges.ts`
-
-Importer les actualités depuis un CSV :
-`npx tsx src/scripts/actuality/add.ts -f ${pathToCSVFileActuality}`
-
-Importer les Donnée cartographie depuis un [CSV du CNC](https://www.cnc.fr/cinema/etudes-et-rapports/statistiques/geolocalisation-des-cinemas-actifs-en-france) :
-`npx tsx src/scripts/cnc/add.ts -f ${pathToCSVFileCNC}`
-
-Supprimer les réponses d'une question :
-`npx tsx src/scripts/questions/deleteAnswersWithCleanup.ts -q "question-intern-id-here"`
-
-### Scripts lancés par CRON
-
-Importer les utilisateurs depuis le FTP : `curl -X POST $NEXT_API_URL/cron/import-users -H "Authorization: Bearer $CRON_SECRET"`
-
-Créer les études de formation pour les utilisateurs qui ont commencé ou terminé une formation : `curl -X POST $NEXT_API_URL/cron/assign-training-studies -H "Authorization: Bearer $CRON_SECRET"`
-
-### Importer les données de Secten
-
-Importer les données de Secten en créant une nouvelle version ou en mettant à jour une version existante si le nom de la version est déjà utilisé :
-`npx tsx src/scripts/secten/importSectenData.ts -y ${versionYear} -f ${pathToCSVFileSecten}`
-
-Le CSV est créé manuellement depuis l'excel disponible sur le site de Secten.
-
-- Trouver le fichier <https://www.citepa.org/donnees-air-climat/donnees-gaz-a-effet-de-serre/secten/> > "Données de GES ed X"
-- Télécharger le fichier 01 > Onglet CO2e-UE
-- Copier les valeurs des lignes 7 à 14, sauf la ligne 13, dans le fichier excel template.
-- Puis exporter le fichier excel en CSV avec le delimiter ";" et le format "UTF-8".
-
-## Prisma Commands
+### 1. Install dependencies
 
 ```bash
-# Apply in progress changes to the database
-npx prisma db push
-
-# Create new migration after a schema change
-npx prisma migrate dev
-
-# View database in Prisma Studio
-npx prisma studio
+yarn install
 ```
 
-## Testing
+### 2. Variables d'environnement
 
-### Run unit tests
+Create a `.env` copied from `apps/bilan-carbone/.env.dist` and create a `.env.test` copied from `apps/bilan-carbone/.env.test.dist`.
 
 ```bash
-# Run tests
-yarn test
+cp apps/bilan-carbone/.env.dist apps/bilan-carbone/.env
+cp apps/bilan-carbone/.env.dist.test apps/bilan-carbone/.env.test
+```
 
-# Run tests in watch mode
-yarn test:watch
+### 3. Start the database
+
+```bash
+cd apps/bilan-carbone && docker-compose up -d && cd ../..
+```
+
+### 4. Set up the database with Prisma
+
+```bash
+yarn workspace @repo/db-common db:migrate
+```
+
+Or in production :
+
+```bash
+yarn workspace @repo/db-common prisma migrate deploy
+```
+
+### 5. Seed the database
+
+```bash
+yarn workspace bilan-carbone prisma db seed
+```
+
+### 6. Generated prisma client
+
+```bash
+yarn workspace @repo/db-common db:generate
+```
+
+### 7. Run the development serve
+
+```bash
+yarn dev
+```
+
+The application will be available at [http://localhost:3000](http://localhost:3000)
+
+---
+
+## Commands by workspace
+
+### bilan-carbone application
+
+````bash
+# Development
+yarn workspace bilan-carbone dev
+
+# Build
+yarn workspace bilan-carbone build
+
+# Unit tests
+yarn workspace bilan-carbone test
+
+# Cypress e2e tests
+yarn workspace bilan-carbone cypress
+
+# Reset test database
+yarn workspace bilan-carbone db:test:reset
+
+### Database (db-common)
+
+```bash
+# Create a new migration
+yarn workspace @repo/db-common db:migrate
+
+# Apply migrations
+yarn workspace @repo/db-common prisma migrate deploy
+
+# Check migration status
+yarn workspace @repo/db-common db:status
+
+# Generate Prisma client
+yarn workspace @repo/db-common db:generate
+
+# Prisma Studio
+yarn workspace @repo/db-common prisma studio
+
+---
+
+## Import scripts
+
+These scripts must be run from apps/bilan-carbone:
+
+```bash
+cd apps/bilan-carbone
+
+# Importer les facteurs d'émissions NegaOctet
+npx tsx src/scripts/negaOctet/getEmissionFactors.ts -n ${versionNumber} -f ${pathToCSVFile}
+
+# Importer les facteurs d'émissions Légifrance
+npx tsx src/scripts/legifrance/getEmissionFactors.ts -n ${versionNumber} -f ${pathToCSVFile}
+
+# Importer les facteurs d'émissions Base Empreinte
+npx tsx src/scripts/baseEmpreinte/getEmissionFactors.ts -n ${versionNumberBaseEmpreinte}
+
+# Créer les règles BEGES
+npx tsx src/scripts/exportRules/beges.ts
+
+# Importer les actualités
+npx tsx src/scripts/actuality/add.ts -f ${pathToCSVFile}
+
+# Importer les données CNC
+npx tsx src/scripts/cnc/add.ts -f ${pathToCSVFile}
+
+# Supprimer les réponses d'une question
+npx tsx src/scripts/questions/deleteAnswersWithCleanup.ts -q "question-intern-id-here"
+
+# Importer les données Secten
+npx tsx src/scripts/secten/importSectenData.ts -y ${versionYear} -f ${pathToCSVFile}
+````
+
+---
+
+## Tests
+
+### Run Unit tests
+
+```bash
+yarn workspace bilan-carbone test
+
+# Watch mode
+yarn workspace bilan-carbone test:watch
+```
+
+### Run Publicodes test
+
+```bash
+yarn workspace bilan-carbone publicodes-count:test
 ```
 
 ### Run Cypress tests
 
 ```bash
-# Add environment variables to the test database
-Create a `.env.test` file in the root directory and copy the content of `.env.test.dist` to it.
-
 # Start the app in test environment connected to the test database
-yarn dev:test
+yarn workspace bilan-carbone dev:test
 
 # Run Cypress tests
-yarn cypress
+yarn workspace bilan-carbone cypress
 
 # Run a specific test file
-yarn cypress --spec "src/tests/end-to-end/app/auth.cy.ts"
+cd apps/bilan-carbone && yarn cypress --spec "src/tests/end-to-end/app/auth.cy.ts"
 
 # Open Cypress GUI
-yarn cypress:gui
+yarn workspace bilan-carbone cypress:gui
 ```
 
-### Run Publicodes tests
-
-```bash
-# Run tests
-yarn publicodes-count:test
-```
+---
 
 ## Deploy on Scalingo
 
-Follow Scalingo deployment guidelines for Next.js applications.
+Migrations are automatically applied via the Procfile on each deployment
+
+---
 
 ## Dependency Upgrades
 
