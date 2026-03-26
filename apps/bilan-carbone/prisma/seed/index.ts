@@ -23,6 +23,7 @@ import {
   UserStatus,
 } from '@repo/db-common/enums'
 
+import { prismaClient } from '@/db/client.node'
 import { Command } from 'commander'
 import { ACTUALITIES } from '../legacy_data/actualities'
 import { SECTEN_SEED_DATA } from './sectenSeedData'
@@ -44,7 +45,6 @@ type userAndAccountsAndOrganizationVersion = {
 
 const adapter = new PrismaPg({
   connectionString: process.env.POSTGRES_PRISMA_URL,
-  ssl: { rejectUnauthorized: false },
 })
 
 const prisma = new PrismaClient({
@@ -1063,9 +1063,15 @@ const seedSecten = async () => {
 }
 
 const main = async (params: Params) => {
-  await Promise.all([actualities(), users(), reCreateBegesRules(), reCreateGHGPRules(), seedSecten()])
+  await Promise.all([
+    actualities(),
+    users(),
+    reCreateBegesRules(prismaClient),
+    reCreateGHGPRules(prismaClient),
+    seedSecten(),
+  ])
   if (params.importFactors) {
-    await getEmissionFactorsFromAPI(params.importFactors)
+    await getEmissionFactorsFromAPI(prismaClient, params.importFactors)
   }
 }
 
