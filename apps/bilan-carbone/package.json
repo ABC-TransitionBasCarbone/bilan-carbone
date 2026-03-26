@@ -15,7 +15,7 @@
     "build": "next build && node copy-assets.js",
     "start": "node -r dotenv/config .next/standalone/apps/bilan-carbone/server.js dotenv_config_path=.env",
     "ts": "tsc --noEmit",
-    "lint": "prettier --check . && next lint",
+    "lint": "prettier --check . && eslint .",
     "format": "prettier --write .",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -42,8 +42,6 @@
     "seed": "tsx prisma/seed/index.ts"
   },
   "dependencies": {
-    "@repo/types": "*",
-    "@repo/ui": "*",
     "@abc-transitionbascarbone/publicodes-clickson": "file:./publicodes-packages/publicodes-clickson/",
     "@abc-transitionbascarbone/publicodes-count": "file:./publicodes-packages/publicodes-count/",
     "@abc-transitionbascarbone/publicodes-tilt": "file:./publicodes-packages/publicodes-tilt/",
@@ -64,6 +62,8 @@
     "@mui/x-date-pickers": "^8.27.2",
     "@prisma/client": "^7.5.0",
     "@publicodes/forms": "^0.6.1",
+    "@repo/types": "*",
+    "@repo/ui": "*",
     "@smithy/config-resolver": "^4.4.9",
     "@tanstack/react-table": "^8.21.3",
     "@types/react-gauge-chart": "^0.5.0",

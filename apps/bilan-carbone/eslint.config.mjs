@@ -1,40 +1,36 @@
-import { FlatCompat } from '@eslint/eslintrc'
 import js from '@eslint/js'
-import typescriptEslint from '@typescript-eslint/eslint-plugin'
 import tsParser from '@typescript-eslint/parser'
+import next from 'eslint-config-next'
+import prettierConfig from 'eslint-config-prettier'
 import cypress from 'eslint-plugin-cypress'
 import mocha from 'eslint-plugin-mocha'
 import prettier from 'eslint-plugin-prettier'
 import react from 'eslint-plugin-react'
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all,
-})
+import globals from 'globals'
 
 const config = [
-  mocha.configs.recommended,
-  ...compat.extends(
-    'eslint:recommended',
-    'plugin:react/recommended',
-    'plugin:prettier/recommended',
-    'next/core-web-vitals',
-    'next/typescript',
-  ),
+  js.configs.recommended,
+  react.configs.flat.recommended,
+  ...next,
+  prettierConfig,
+  {
+    plugins: { mocha },
+    rules: mocha.configs.recommended.rules,
+  },
   {
     plugins: {
-      '@typescript-eslint': typescriptEslint,
       react,
       prettier,
       cypress,
       mocha,
     },
-    languageOptions: { parser: tsParser },
+    languageOptions: {
+      parser: tsParser,
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+    },
     settings: { react: { version: 'detect' } },
     rules: {
       'no-irregular-whitespace': 'off',
@@ -51,8 +47,27 @@ const config = [
     },
   },
   {
+    files: ['**/*.test.*', 'src/tests/**/*'],
+    languageOptions: {
+      globals: {
+        ...globals.jest,
+      },
+    },
+  },
+  {
     files: ['cypress/**/*.{js,ts,jsx,tsx}'],
     plugins: { cypress },
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        cy: 'readonly',
+        Cypress: 'readonly',
+        describe: 'readonly',
+        it: 'readonly',
+        before: 'readonly',
+        beforeEach: 'readonly',
+      },
+    },
     rules: {
       ...cypress.configs.recommended.rules,
     },
