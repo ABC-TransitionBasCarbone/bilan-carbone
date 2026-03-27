@@ -1,12 +1,14 @@
 'use client'
 import Block from '@/components/base/Block'
-import LinkButton from '@/components/base/LinkButton'
 import { FormSelect } from '@/components/form/Select'
 import SiteDeselectionWarningModal from '@/components/modals/SiteDeselectionWarningModal'
 import { OrganizationWithSites } from '@/db/account'
 import DynamicSites from '@/environments/core/organization/DynamicSites'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { NOT_AUTHORIZED } from '@/services/permissions/check'
 import { hasAccessToStudySiteAddAndSelection } from '@/services/permissions/environment'
+import { updateOrganizationCommand } from '@/services/serverFunctions/organization'
+import { UpdateOrganizationCommand } from '@/services/serverFunctions/organization.command'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
 import { FormHelperText, MenuItem } from '@mui/material'
@@ -44,6 +46,7 @@ const SelectOrganization = ({
   const [pendingDeselectedSites, setPendingDeselectedSites] = useState<
     Array<{ name: string; emissionSourcesCount: number }>
   >([])
+  const { callServerFunction } = useServerFunction()
 
   const sites = form.watch('sites')
   const organizationVersionId = form.watch('organizationVersionId')
@@ -53,6 +56,7 @@ const SelectOrganization = ({
     () => organizationVersions.find((organizationVersion) => organizationVersion.id === organizationVersionId),
     [organizationVersionId, organizationVersions],
   )
+  const hasNoSites = organizationVersion && organizationVersion.organization.sites.length === 0
 
   useEffect(() => {
     if (!organizationVersion) {
@@ -112,7 +116,27 @@ const SelectOrganization = ({
     setPendingDeselectedSites([])
   }
 
-  const next = () => {
+  const next = async () => {
+    if (hasNoSites) {
+      form.setValue('sites', sites)
+      const command: UpdateOrganizationCommand = {
+        organizationVersionId: organizationVersionId!,
+        name: organizationVersion?.organization.name || '',
+        sites: sites,
+      }
+      await callServerFunction(() => updateOrganizationCommand(command), {
+        onSuccess: () => {
+          selectOrganizationVersion({
+            ...organizationVersion,
+            organization: {
+              ...organizationVersion!.organization,
+              sites: sites,
+            },
+          } as OrganizationWithSites)
+          return
+        },
+      })
+    }
     if (!sites.some((site) => site.selected)) {
       setError(t('validation.sites'))
       return
@@ -191,27 +215,17 @@ const SelectOrganization = ({
             </FormSelect>
           </>
         )}
-        {organizationVersion &&
-          (organizationVersion.organization.sites.length > 0 ? (
-            <>
-              <DynamicSites sites={sites} form={form} caUnit={caUnit} withSelection />
-              <div className="mt2">
-                <Button
-                  disabled={!sites.some((site) => site.selected)}
-                  data-testid="new-study-organization-button"
-                  onClick={next}
-                >
-                  {tCommon('next')}
-                </Button>
-                {error && <FormHelperText error>{error}</FormHelperText>}
-              </div>
-            </>
-          ) : (
-            <>
-              <p className="title-h3 mt1 mb-2">{t('noSites')}</p>
-              <LinkButton href={`/organisations/${organizationVersion.id}/modifier`}>{t('addSite')}</LinkButton>
-            </>
-          ))}
+        <DynamicSites sites={sites} form={form} caUnit={caUnit} withSelection={!hasNoSites} disabled={!hasNoSites} />
+        <div className="mt2">
+          <Button
+            disabled={!sites.some((site) => site.selected || (hasNoSites && site.name))}
+            data-testid="new-study-organization-button"
+            onClick={next}
+          >
+            {tCommon('next')}
+          </Button>
+          {error && <FormHelperText error>{error}</FormHelperText>}
+        </div>
       </Block>
 
       <SiteDeselectionWarningModal
