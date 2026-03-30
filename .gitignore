@@ -3,3 +3,7 @@ node_modules
 .env.test
 .turbo
 packages/db-common/src/generated/*
+.vscode
+.next
+notes/*
+CLAUDE.md

@@ -1,5 +1,5 @@
 import { BCPost, CutPost, Post, subPostsByPost, TiltPost } from '@/services/posts'
-import { AdditionalResultTypes } from '@/services/study'
+import { AdditionalResultTypes } from '@/types/study.types'
 import { expect } from '@jest/globals'
 import { Environment, SubPost } from '@repo/db-common/enums'
 import { getPost, getPostValues } from './post'

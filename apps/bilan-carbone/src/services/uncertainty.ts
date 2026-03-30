@@ -1,9 +1,8 @@
 // Documentation : https://www.bilancarbone-methode.com/4-comptabilisation/4.4-methode-destimation-des-incertitudes/4.4.2-comment-les-determiner
 
 import type { FullStudy } from '@/db/study'
+import { getEmissionSourcesTotalCo2 } from '@/utils/emissionSources'
 import { EmissionFactor } from '@repo/db-common'
-import { getEmissionSourcesTotalCo2 } from './emissionSource'
-import { StudyWithoutDetail } from './permissions/study'
 
 export const qualityKeys = [
   'reliability',
@@ -82,9 +81,7 @@ export const getSquaredStandardDeviationForQuality = (quality: Quality | null) =
   return Math.exp(Math.sqrt(qualities.reduce((acc, value) => acc + Math.pow(Math.log(value), 2), 0)))
 }
 
-export const getSquaredStandardDeviationForEmissionSource = (
-  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][number],
-) => {
+export const getSquaredStandardDeviationForEmissionSource = (emissionSource: FullStudy['emissionSources'][number]) => {
   const emissionSquaredStandardDeviation = getSquaredStandardDeviationForQuality(emissionSource)
   const factorSquaredStandardDeviation = getSquaredStandardDeviationForQuality(
     getSpecificEmissionFactorQuality(emissionSource),

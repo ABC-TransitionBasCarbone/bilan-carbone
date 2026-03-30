@@ -1,6 +1,6 @@
 import type { FullStudy } from '@/db/study'
 import { Post, subPostsByPost } from '@/services/posts'
-import { EmissionSourcesStatus } from '@/services/study'
+import { EmissionSourcesStatus } from '@/types/emissionSource.types'
 import { EmissionSourcesFilters } from '@/types/filters'
 import { Checkbox, FormControl, ListItemText, MenuItem, Select } from '@mui/material'
 import { EmissionSourceCaracterisation } from '@repo/db-common'
