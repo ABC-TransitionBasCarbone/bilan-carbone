@@ -1,5 +1,6 @@
 import * as dbAccount from '@/db/account'
 import * as dbOrganization from '@/db/organization'
+import * as dbStudy from '@/db/study'
 import * as dbUser from '@/db/user'
 import { mockedOrganizationId, mockedOrganizationVersionId } from '@/tests/utils/models/organization'
 import { getMockedAuthUser } from '@/tests/utils/models/user'
@@ -9,7 +10,6 @@ import { expect } from '@jest/globals'
 import { Role } from '@repo/db-common/enums'
 import { UserSession } from 'next-auth'
 import * as authModule from '../auth'
-import * as dbStudy from '@/db/study'
 import {
   canCreateOrganization,
   canDeleteMember,
