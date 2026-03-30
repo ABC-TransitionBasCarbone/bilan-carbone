@@ -11,5 +11,7 @@ export default defineConfig({
     experimentalStudio: true,
     defaultCommandTimeout: 8000, // default value, change if needed during local tests
     retries: 3,
+    experimentalMemoryManagement: true,
+    numTestsKeptInMemory: process.env.CYPRESS_UI === 'true' ? 10 : 0,
   },
 })
