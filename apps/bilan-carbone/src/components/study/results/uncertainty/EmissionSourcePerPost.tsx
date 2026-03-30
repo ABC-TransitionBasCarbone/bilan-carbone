@@ -1,6 +1,6 @@
 import Title from '@/components/base/Title'
 import { Post } from '@/services/posts'
-import { ResultsByPost } from '@/services/results/consolidated'
+import { ResultsByPost } from '@/types/study.types'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
 import { defaultPostColor, postColors, STUDY_UNIT_VALUES } from '@/utils/study'
 import { ScatterMarkerProps, ScatterSeries } from '@mui/x-charts'

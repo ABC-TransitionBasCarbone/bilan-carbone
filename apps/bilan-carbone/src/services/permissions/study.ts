@@ -4,14 +4,19 @@ import { getOrganizationVersionForRightsCheck, getOrganizationVersionsByOrganiza
 import { FullStudy, getStudyById } from '@/db/study'
 import { getAccountByIdWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
 import { canEditOrganizationVersion, hasActiveLicence, isInOrgaOrParent } from '@/utils/organization'
-import { getAccountRoleOnStudy, getDuplicableEnvironments, hasEditionRights, StudyWithRoleFields } from '@/utils/study'
+import {
+  getAccountRoleOnStudy,
+  getDuplicableEnvironments,
+  hasEditionRights,
+  hasSufficientLevel,
+  StudyWithRoleFields,
+} from '@/utils/study'
 import type { Prisma, Study, User } from '@repo/db-common'
 import { DeactivatableFeature, Environment, Level, Role, StudyRole } from '@repo/db-common/enums'
 import { UserSession } from 'next-auth'
 import { dbActualizedAuth } from '../auth'
 import { isDeactivableFeatureActiveForEnvironment } from '../serverFunctions/deactivableFeatures'
 import { getUserActiveAccounts } from '../serverFunctions/user'
-import { hasSufficientLevel } from '../study'
 import {
   canCreateStudyOnlyAsAdministrator,
   canCreateStudyWithoutSpecificRights,
@@ -381,7 +386,6 @@ export const filterStudyEmissionSources = (user: UserSession, study: FullStudy) 
     ),
   }
 }
-export type StudyWithoutDetail = ReturnType<typeof filterStudyEmissionSources>
 
 export const canReadStudyDetail = async (user: UserSession, study: StudyWithRoleFields) => {
   const studyRight = await canReadStudy(user, study.id)

@@ -1,6 +1,6 @@
 import type { FullStudy } from '@/db/study'
 import { Post } from '@/services/posts'
-import { ResultsByPost } from '@/services/results/consolidated'
+import { ResultsByPost } from '@/types/study.types'
 import { SubPost } from '@repo/db-common/enums'
 import classNames from 'classnames'
 import styles from './AllPostsInfography.module.css'

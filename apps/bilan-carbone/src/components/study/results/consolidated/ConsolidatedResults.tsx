@@ -1,4 +1,4 @@
-import { ResultsByPost } from '@/services/results/consolidated'
+import { ResultsByPost } from '@/types/study.types'
 import { StudyResultUnit } from '@repo/db-common'
 import { useTranslations } from 'next-intl'
 import ResultsTableAndGraphs from '../ResultsTableAndGraphs'
