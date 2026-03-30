@@ -67,7 +67,6 @@ const NewStudyForm = ({
     await callServerFunction(() => serverFunction(), {
       onSuccess: (data) => {
         router.push(`/etudes/${data.id}${customRouteAfterCreation}`)
-        router.refresh()
       },
       getErrorMessage: (error) => tError(error),
       onError: () => setLoading(false),
