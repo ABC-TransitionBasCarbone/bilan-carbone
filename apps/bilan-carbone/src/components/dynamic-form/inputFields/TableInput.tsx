@@ -143,7 +143,6 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue, 
             disabled={isFirstColumnInFixedTable}
             isTable={true}
             onTableFieldChange={handleTableFieldChange}
-            studyStartDate={studyStartDate}
           />
         )
       },
@@ -193,6 +192,7 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue, 
     setValue,
     handleTableFieldChange,
     tCutQuestions,
+    tAction,
     handleDuplicateRow,
     handleDeleteRow,
   ])

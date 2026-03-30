@@ -2,7 +2,7 @@ import type { Question } from '@repo/db-common/types'
 import { useMemo } from 'react'
 import { FieldErrors, UseFormSetValue, UseFormWatch } from 'react-hook-form'
 import { UseAutoSaveReturn } from '../../hooks/useAutoSave'
-import FieldComponent from './FieldComponent'
+import FieldWrapper from './FieldWrapper'
 import QuestionContainer from './QuestionContainer'
 import { getQuestionFieldType } from './services/questionService'
 import { DynamicFormFieldProps, FormValues } from './types/formTypes'
@@ -33,7 +33,7 @@ const DynamicFormField = ({
 
   return (
     <QuestionContainer question={question} isLoading={isLoading} saveStatus={fieldStatus}>
-      <FieldComponent
+      <FieldWrapper
         fieldType={fieldType}
         fieldName={fieldName}
         question={question}
