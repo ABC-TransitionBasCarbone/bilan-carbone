@@ -6,7 +6,7 @@ import { DeactivatableFeature, Environment, Role } from '@repo/db-common/enums'
 import { UserSession } from 'next-auth'
 import { AccountWithUserSelect } from './account.select'
 import { prismaClient } from './client.server'
-import { OrganizationVersionWithOrganizationSelect } from './organization'
+import { OrganizationVersionWithOrganizationSelect } from './organization.select'
 
 export type AccountWithUser = Account & {
   user: User
