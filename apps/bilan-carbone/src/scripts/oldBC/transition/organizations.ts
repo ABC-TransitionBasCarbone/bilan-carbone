@@ -1,4 +1,5 @@
-import { OrganizationVersionWithOrganization, OrganizationVersionWithOrganizationSelect } from '@/db/organization'
+import { OrganizationVersionWithOrganization } from '@/db/organization'
+import { OrganizationVersionWithOrganizationSelect } from '@/db/organization.select'
 import { Prisma } from '@repo/db-common'
 import { Environment } from '@repo/db-common/enums'
 import { OrganizationRow, OrganizationsWorkSheet } from './oldBCWorkSheetsReader'
