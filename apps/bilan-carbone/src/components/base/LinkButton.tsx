@@ -1,3 +1,5 @@
+'use client'
+
 import { Button, ButtonProps } from '@mui/material'
 import Link from 'next/link'
 import { AnchorHTMLAttributes } from 'react'
