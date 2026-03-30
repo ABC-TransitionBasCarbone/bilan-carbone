@@ -1,7 +1,7 @@
 'use client'
 
 import GlossaryModal from '@/components/modals/GlossaryModal'
-import { TRAJECTORY_15_ID, TRAJECTORY_SNBC_GENERAL_ID, TRAJECTORY_WB2C_ID } from '@/constants/trajectories'
+import { TRAJECTORY_15_ID, TRAJECTORY_SNBC_GENERAL_ID, TRAJECTORY_WB2C_ID } from '@/constants/trajectory.constants'
 import type { FullStudy } from '@/db/study'
 import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
 import { customRich } from '@/i18n/customRich'

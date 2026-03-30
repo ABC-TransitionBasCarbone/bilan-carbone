@@ -83,3 +83,20 @@ export type ActionWithRelations = Action & {
   tags: Array<ActionTag & { studyTag: StudyTag }>
   subPosts: ActionSubPost[]
 }
+export type SBTIType = 'SBTI_15' | 'SBTI_WB2C'
+
+export interface TrajectoryData {
+  previousTrajectoryStartYear: number | null
+  previousTrajectory: TrajectoryDataPoint[] | null
+  currentTrajectory: TrajectoryDataPoint[]
+  withinThreshold: boolean
+  isFailed?: boolean
+}
+
+export interface TrajectoryResult {
+  sbti15: TrajectoryData | null
+  sbtiWB2C: TrajectoryData | null
+  snbc: { [trajectoryId: string]: TrajectoryData | null }
+  customTrajectories: Array<{ id: string; data: TrajectoryData }>
+  actionBased: TrajectoryData | null
+}
