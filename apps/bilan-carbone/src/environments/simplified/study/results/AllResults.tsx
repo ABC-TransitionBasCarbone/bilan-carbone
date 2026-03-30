@@ -35,8 +35,9 @@ import {
   hasAccessToSimplifiedEmissionAnalysis,
   showResultsInfoText,
 } from '@/services/permissions/environment'
-import { BaseResultsByPost, BaseResultsBySite } from '@/services/results/consolidated'
+import type { BaseResultsByPost } from '@/services/posts'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
+import type { BaseResultsBySite } from '@/types/study.types'
 import { a11yProps, ChartType, defaultChartOrder, tabsLabels } from './utils'
 
 interface Props {

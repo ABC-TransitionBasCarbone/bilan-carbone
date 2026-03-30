@@ -5,8 +5,7 @@ import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { Environment, StudyResultUnit, SubPost } from '@repo/db-common'
 import Engine from 'publicodes'
 import { hasCustomPostOrder } from '../permissions/environment'
-import { Post } from '../posts'
-import { BaseResultsByPost } from './consolidated'
+import type { BaseResultsByPost, Post } from '../posts'
 
 function safeEvaluate(engine: Engine, ruleName: string | undefined): number {
   if (!ruleName) {

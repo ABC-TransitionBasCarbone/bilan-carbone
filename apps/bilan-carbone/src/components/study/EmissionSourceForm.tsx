@@ -8,7 +8,6 @@ import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionF
 import { getTagFamiliesByStudyId } from '@/services/serverFunctions/emissionSource'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { duplicateStudyEmissionSource } from '@/services/serverFunctions/study'
-import { EmissionSourcesStatus } from '@/services/study'
 import {
   getQualitativeUncertaintyFromQuality,
   getSpecificEmissionFactorQuality,
@@ -16,6 +15,7 @@ import {
   specificFEQualityKeys,
 } from '@/services/uncertainty'
 import { useUnitLabel } from '@/services/unit'
+import { EmissionSourcesStatus } from '@/types/emissionSource.types'
 import { emissionFactorDefautQualityStar, getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
 import { formatEmissionFromNumber, hasDeprecationPeriod, hasEditionRights, isCAS } from '@/utils/study'

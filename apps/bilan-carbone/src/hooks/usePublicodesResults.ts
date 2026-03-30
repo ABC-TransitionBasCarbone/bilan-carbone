@@ -1,13 +1,14 @@
 'use client'
 import type { FullStudy } from '@/db/study'
+import type { BaseResultsByPost } from '@/services/posts'
 import {
   getSimplifiedPublicodesConfig,
   SimplifiedEnvironment,
   SimplifiedPublicodesConfig,
 } from '@/services/publicodes/simplifiedPublicodesConfig'
-import { BaseResultsByPost, BaseResultsBySite } from '@/services/results/consolidated'
 import { aggregateBaseResultsByPost, computeBaseResultsByPostFromEngine } from '@/services/results/publicodes'
 import { loadSituations } from '@/services/serverFunctions/situation'
+import type { BaseResultsBySite } from '@/types/study.types'
 import { Environment } from '@repo/db-common/enums'
 import { useTranslations } from 'next-intl'
 import { Situation } from 'publicodes'
