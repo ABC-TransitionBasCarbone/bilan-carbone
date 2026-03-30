@@ -59,8 +59,7 @@ export async function proxy(req: NextRequest) {
     }
   }
 
-  const nonceRestriction =
-    process.env.NODE_ENV === 'development' ? "'unsafe-inline'" : `'nonce-${nonce}' 'strict-dynamic'`
+  const nonceRestriction = process.env.NODE_ENV === 'development' ? "'unsafe-inline' 'unsafe-eval'" : `'nonce-${nonce}'`
 
   const cspHeader = `
     default-src 'self';
