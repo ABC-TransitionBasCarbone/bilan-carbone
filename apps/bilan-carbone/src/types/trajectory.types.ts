@@ -16,7 +16,7 @@ import type {
   Trajectory,
   TransitionPlan,
   TransitionPlanStudy,
-} from '@prisma/client'
+} from '@repo/db-common'
 
 export interface TrajectoryDataPoint {
   year: number
