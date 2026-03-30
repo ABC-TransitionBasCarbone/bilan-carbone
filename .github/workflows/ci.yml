@@ -33,6 +33,21 @@ jobs:
       - name: TypeScript check
         run: npx tsc --noEmit
 
+  check-circular-deps:
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/bilan-carbone
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.16.0
+          cache: 'yarn'
+      - name: Check circular dependencies
+        run: npx madge --circular --extensions ts,tsx --exclude "packages/db-common/src/generated" .
+
   unit-tests:
     timeout-minutes: 10
     runs-on: ubuntu-latest
