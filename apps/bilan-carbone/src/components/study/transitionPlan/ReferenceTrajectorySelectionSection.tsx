@@ -10,7 +10,7 @@ import {
   TRAJECTORY_SNBC_TRANSPORTATION_ID,
   TRAJECTORY_SNBC_WASTE_ID,
   TRAJECTORY_WB2C_ID,
-} from '@/constants/trajectories'
+} from '@/constants/trajectory.constants'
 import { customRich } from '@/i18n/customRich'
 import { TrajectoryWithObjectives } from '@/types/trajectory.types'
 import { Typography } from '@mui/material'

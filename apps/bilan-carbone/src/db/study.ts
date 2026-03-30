@@ -16,7 +16,6 @@ import { cache } from 'react'
 import { getAccountOrganizationVersions } from './account'
 import { AccountWithUserSelect } from './account.select'
 import { prismaClient } from './client.server'
-import { getOrganizationVersionForRightsCheck } from './organization'
 
 export type StudyTagFamilyWithTags = Omit<StudyTagFamily, 'createdAt' | 'updatedAt'> & {
   tags: Omit<StudyTag, 'familyId' | 'createdAt' | 'updatedAt'>[]
@@ -445,7 +444,16 @@ export const getAllowedStudiesByUserAndOrganization = async (
   organizationVersionId: string,
   simplified = false,
 ) => {
-  const organizationVersion = await getOrganizationVersionForRightsCheck(organizationVersionId)
+  const organizationVersion = await prismaClient.organizationVersion.findUnique({
+    where: { id: organizationVersionId },
+    select: {
+      id: true,
+      environment: true,
+      activatedLicence: true,
+      parentId: true,
+      parent: { select: { activatedLicence: true } },
+    },
+  })
   if (!organizationVersion) {
     return []
   }

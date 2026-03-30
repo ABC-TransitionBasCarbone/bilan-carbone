@@ -1,22 +1,15 @@
+import { SBTI_REDUCTION_RATE_15, SBTI_REDUCTION_RATE_WB2C, TARGET_YEAR } from '@/constants/trajectory.constants'
 import type { BaseObjective, PastStudy, TrajectoryDataPoint, TrajectoryWithObjectives } from '@/types/trajectory.types'
 import { expect } from '@jest/globals'
 import { Action } from '@repo/db-common'
 import { StudyResultUnit, TrajectoryType } from '@repo/db-common/enums'
+import { calculateActionBasedTrajectory } from './actionTrajectory.utils'
+import { calculateCustomTrajectory } from './customTrajectory.utils'
+import { calculateSBTiTrajectory, getDefaultSBTIReductionRate } from './sbti'
 import { createGeneralSectenData } from './secten.test-utils'
 import { calculateSNBCTrajectory } from './snbc'
-import {
-  calculateActionBasedTrajectory,
-  calculateCustomTrajectory,
-  calculateSBTiTrajectory,
-  calculateTrajectoryIntegral,
-  calculateTrajectoryYearBounds,
-  getDefaultSBTIReductionRate,
-  getTrajectoryEmissionsAtYear,
-  isWithinThreshold,
-  SBTI_REDUCTION_RATE_15,
-  SBTI_REDUCTION_RATE_WB2C,
-  TARGET_YEAR,
-} from './trajectory'
+import { calculateTrajectoryYearBounds } from './trajectory'
+import { calculateTrajectoryIntegral, getTrajectoryEmissionsAtYear, isWithinThreshold } from './trajectory-shared.utils'
 
 // TODO: ESM module issue with Jest. Remove these mocks when moving to Vitest
 jest.mock('../services/file', () => ({ download: jest.fn() }))
