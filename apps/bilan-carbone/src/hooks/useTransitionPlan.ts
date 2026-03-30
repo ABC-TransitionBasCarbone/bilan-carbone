@@ -2,7 +2,7 @@ import type { FullStudy } from '@/db/study'
 import { getStudyTotalCo2Emissions } from '@/services/study'
 import type { PastStudy } from '@/types/trajectory.types'
 import { getUIFilteredEmissions } from '@/utils/study'
-import { convertToPastStudies } from '@/utils/trajectory'
+import { convertToPastStudies } from '@/utils/transitionPlan.utils'
 import type { ExternalStudy, SubPost } from '@repo/db-common'
 import { useMemo } from 'react'
 
