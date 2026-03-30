@@ -1,17 +1,7 @@
 {
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "react-jsx",
-    "incremental": true,
+    "tsBuildInfoFile": ".next/cache/tsbuildinfo.json",
     "plugins": [
       {
         "name": "next"
@@ -19,11 +9,13 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
+      "@repo/db-common": ["../../packages/db-common/src/index.ts"],
+      "@repo/db-common/enums": ["../../packages/db-common/src/enums.ts"],
+      "@repo/db-common/types": ["../../packages/db-common/src/types.ts"],
       "@abc-transitionbascarbone/publicodes-count": ["./publicodes-packages/publicodes-count"],
       "@abc-transitionbascarbone/publicodes-clickson": ["./publicodes-packages/publicodes-clickson"],
       "@abc-transitionbascarbone/publicodes-tilt": ["./publicodes-packages/publicodes-tilt"]
-    },
-    "target": "ESNext"
+    }
   },
   "ts-node": {
     "experimentalResolver": true,
@@ -31,13 +23,6 @@
       "module": "commonjs"
     }
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts",
-    ".next/dev/dev/types/**/*.ts"
-  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", ".next/dev/types/**/*.ts", "**/*.mts"],
   "exclude": ["node_modules", "publicodes-packages"]
 }
