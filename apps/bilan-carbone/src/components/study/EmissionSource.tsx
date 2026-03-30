@@ -13,11 +13,12 @@ import {
   UpdateEmissionSourceCommand,
   UpdateEmissionSourceCommandValidation,
 } from '@/services/serverFunctions/emissionSource.command'
-import { EmissionSourcesStatus, getEmissionSourceStatus } from '@/services/study'
 import { getQualitativeUncertaintyFromSquaredStandardDeviation } from '@/services/uncertainty'
 import { useUnitLabel } from '@/services/unit'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { EmissionSourcesStatus } from '@/types/emissionSource.types'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
+import { getEmissionSourceStatus } from '@/utils/emissionSources'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
 import { hasEditionRights, STUDY_UNIT_VALUES } from '@/utils/study'
 import { formatDateFr } from '@/utils/time'

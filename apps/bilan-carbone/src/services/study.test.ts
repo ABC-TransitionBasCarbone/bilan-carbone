@@ -1,8 +1,9 @@
 import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
 import { getMockeFullStudy } from '@/tests/utils/models/study'
+import { hasSufficientLevel } from '@/utils/study'
 import { expect } from '@jest/globals'
 import { Environment, Level, StudyResultUnit, SubPost } from '@repo/db-common/enums'
-import { getStudyTotalCo2Emissions, getTransEnvironmentSubPost, hasSufficientLevel } from './study'
+import { getStudyTotalCo2Emissions, getTransEnvironmentSubPost } from './study'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('./file', () => ({ download: jest.fn() }))

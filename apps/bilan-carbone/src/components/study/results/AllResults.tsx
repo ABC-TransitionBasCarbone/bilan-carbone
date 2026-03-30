@@ -16,14 +16,9 @@ import { computeGHGPResult } from '@/services/results/ghgp'
 import { getSiteEmissionSourcesWithoutMarketBase } from '@/services/results/utils'
 import { isDeactivableFeatureActiveForEnvironment } from '@/services/serverFunctions/deactivableFeatures'
 import { prepareReport } from '@/services/serverFunctions/study'
-import {
-  AdditionalResultTypes,
-  downloadStudyEmissionSources,
-  downloadStudyResults,
-  getDetailedEmissionResults,
-  ResultType,
-} from '@/services/study'
+import { downloadStudyEmissionSources, downloadStudyResults, getDetailedEmissionResults } from '@/services/study'
 import { sortAlphabetically } from '@/services/utils'
+import { AdditionalResultTypes, ResultType } from '@/types/study.types'
 import { getPost } from '@/utils/post'
 import { calculateMonetaryRatio, convertValue } from '@/utils/study'
 import DownloadIcon from '@mui/icons-material/Download'

@@ -1,5 +1,4 @@
 import { EngagementActionSteps, EngagementActionTargets } from '@/constants/engagementActions'
-import { EmissionSourcesStatus } from '@/services/study'
 import { BCUnit } from '@/services/unit'
 import {
   EmissionFactorBase,
@@ -8,6 +7,7 @@ import {
   EngagementPhase,
   SubPost,
 } from '@repo/db-common/enums'
+import { EmissionSourcesStatus } from './emissionSource.types'
 
 export type FeFilters = {
   archived: boolean
