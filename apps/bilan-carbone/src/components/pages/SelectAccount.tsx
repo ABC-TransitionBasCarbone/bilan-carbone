@@ -29,7 +29,6 @@ const SelectAccount = ({ user, userWithAccountsAndOrganizations }: Props) => {
       setIsLoading(true)
       await switchEnvironment(environment)
       router.push('/')
-      router.refresh()
     }
   }
 
