@@ -1,4 +1,3 @@
-import * as StudyServiceUtilsModule from '@/services/study'
 import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
 import { mockedEmissionSourceEmissionFactor } from '@/tests/utils/models/study'
 import { getMockedAuthUser } from '@/tests/utils/models/user'
@@ -10,11 +9,8 @@ import { getBaseFilteredEmissionSources, getDuplicableEnvironments, getUserRoleO
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('../services/file', () => ({ download: jest.fn() }))
 jest.mock('@/services/permissions/study.utils', () => ({ isAdminOnStudyOrga: jest.fn() }))
-
-jest.mock('@/services/study', () => ({ hasSufficientLevel: jest.fn() }))
 jest.mock('@/utils/user', () => ({ isAdmin: jest.fn() }))
 
-const mockHasSufficientLevel = StudyServiceUtilsModule.hasSufficientLevel as jest.Mock
 const mockIsAdmin = UserUtilsModule.isAdmin as unknown as jest.Mock
 
 const emissionSources = [
@@ -73,18 +69,18 @@ describe('StudyUtils functions', () => {
   describe('getUserRoleOnPublicStudy', () => {
     it('should return Validator for admin user with sufficient level', () => {
       mockIsAdmin.mockReturnValue(true)
-      mockHasSufficientLevel.mockReturnValue(true)
+      const user = { ...userMock, level: Level.Initial }
 
-      const res = getUserRoleOnPublicStudy(userMock, Level.Initial)
+      const res = getUserRoleOnPublicStudy(user, Level.Initial)
 
       expect(res).toBe('Validator')
     })
 
     it('should return Reader for admin user with not sufficient level', () => {
       mockIsAdmin.mockReturnValue(true)
-      mockHasSufficientLevel.mockReturnValue(false)
+      const user = { ...userMock, level: null }
 
-      const res = getUserRoleOnPublicStudy(userMock, Level.Initial)
+      const res = getUserRoleOnPublicStudy(user, Level.Initial)
 
       expect(res).toBe('Reader')
     })
@@ -99,8 +95,7 @@ describe('StudyUtils functions', () => {
 
     it('should return Editor for collaborator with sufficient level in non CUT environment', () => {
       mockIsAdmin.mockReturnValue(false)
-      mockHasSufficientLevel.mockReturnValue(true)
-      const user = { ...userMock, role: Role.COLLABORATOR, environment: Environment.BC }
+      const user = { ...userMock, role: Role.COLLABORATOR, environment: Environment.BC, level: Level.Initial }
 
       const res = getUserRoleOnPublicStudy(user, Level.Initial)
 
@@ -109,8 +104,7 @@ describe('StudyUtils functions', () => {
 
     it('should return Reader for collaborator with not sufficient level in non CUT environment', () => {
       mockIsAdmin.mockReturnValue(false)
-      mockHasSufficientLevel.mockReturnValue(false)
-      const user = { ...userMock, role: Role.COLLABORATOR, environment: Environment.BC }
+      const user = { ...userMock, role: Role.COLLABORATOR, environment: Environment.BC, level: null }
 
       const res = getUserRoleOnPublicStudy(user, Level.Initial)
 

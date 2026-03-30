@@ -1,6 +1,6 @@
 import { Post } from '@/services/posts'
-import { ResultsByPost } from '@/services/results/consolidated'
 import { getQualitativeUncertaintyFromSquaredStandardDeviation } from '@/services/uncertainty'
+import { ResultsByPost } from '@/types/study.types'
 import { postColors } from '@/utils/study'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

@@ -4,6 +4,7 @@ import type { EmissionFactorWithParts } from '@/db/emissionFactors'
 import type { FullStudy } from '@/db/study'
 import { Translations } from '@/types/translation'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
+import { getEmissionSourcesTotalCo2 } from '@/utils/emissionSources'
 import { getGHGPRuleName } from '@/utils/ghgp'
 import { getPost } from '@/utils/post'
 import {
@@ -16,17 +17,13 @@ import {
 } from '@/utils/study'
 import { formatDateFr } from '@/utils/time'
 import type { ExportRule } from '@repo/db-common'
-import { EmissionFactorBase, Environment, Export, Level, StudyResultUnit, SubPost } from '@repo/db-common/enums'
+import { EmissionFactorBase, Environment, Export, StudyResultUnit, SubPost } from '@repo/db-common/enums'
 import dayjs from 'dayjs'
-import {
-  canBeValidated,
-  getEmissionResults,
-  getEmissionSourceEmission,
-  getEmissionSourcesTotalCo2,
-} from './emissionSource'
+import type { ResultType } from '../types/study.types'
+import { AdditionalResultTypes, BaseResultsBySite, ResultsByPost } from '../types/study.types'
+import { getEmissionResults, getEmissionSourceEmission } from './emissionSource'
 import { download } from './file'
 import { hasAccessToBcExport } from './permissions/environment'
-import { StudyWithoutDetail } from './permissions/study'
 import {
   convertSimplifiedEnvToBilanCarbone,
   convertTiltSubPostToBCSubPost,
@@ -36,12 +33,7 @@ import {
 } from './posts'
 import { isSimplifiedEnvironment } from './publicodes/simplifiedPublicodesConfig'
 import { rulesSpans as begesRulesSpans, computeBegesResult } from './results/beges'
-import {
-  BaseResultsBySite,
-  computeResultsByPostFromEmissionSources,
-  computeResultsByTag,
-  ResultsByPost,
-} from './results/consolidated'
+import { computeResultsByPostFromEmissionSources, computeResultsByTag } from './results/consolidated'
 import { PostInfos } from './results/exports'
 import { computeGHGPResult, rulesSpans as ghgpRulesSpans } from './results/ghgp'
 import { filterWithDependencies } from './results/utils'
@@ -57,57 +49,8 @@ import {
   getSquaredStandardDeviationForEmissionSource,
 } from './uncertainty'
 
-export enum AdditionalResultTypes {
-  CONSOLIDATED = 'consolidated',
-  ENV_SPECIFIC_EXPORT = 'env_specific_export',
-}
-export type ResultType = Export | AdditionalResultTypes
-
 const getQuality = (quality: ReturnType<typeof getQualitativeUncertaintyFromQuality>, t: Translations) => {
   return quality === null ? t('unknown') : t(quality.toString())
-}
-
-export const getAllowedLevels = (level: Level | null) => {
-  switch (level) {
-    case Level.Initial:
-      return [Level.Initial]
-    case Level.Standard:
-      return [Level.Initial, Level.Standard]
-    case Level.Advanced:
-      return [Level.Initial, Level.Standard, Level.Advanced]
-    default:
-      return []
-  }
-}
-
-export const hasSufficientLevel = (userLevel: Level | null, targetLevel: Level) =>
-  userLevel ? getAllowedLevels(userLevel).includes(targetLevel) : false
-
-export enum EmissionSourcesStatus {
-  Valid = 'valid',
-  ToVerify = 'toVerify',
-  Waiting = 'waiting',
-  WaitingContributor = 'waitingContributor',
-}
-
-export const getEmissionSourceStatus = (
-  study: FullStudy | StudyWithoutDetail,
-  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0],
-  environment: Environment | undefined,
-) => {
-  if (emissionSource.validated) {
-    return EmissionSourcesStatus.Valid
-  }
-
-  if (canBeValidated(emissionSource, study, emissionSource.emissionFactor, environment)) {
-    return EmissionSourcesStatus.ToVerify
-  }
-
-  if (study.contributors && study.contributors.some((contributor) => contributor.subPost === emissionSource.subPost)) {
-    return EmissionSourcesStatus.WaitingContributor
-  }
-
-  return EmissionSourcesStatus.Waiting
 }
 
 const encodeCSVField = (field: string | number = '') => {

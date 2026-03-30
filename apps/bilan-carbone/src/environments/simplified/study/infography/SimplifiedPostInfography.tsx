@@ -1,8 +1,8 @@
 'use client'
 
 import { Post, SimplifiedPost } from '@/services/posts'
-import { ResultsByPost } from '@/services/results/consolidated'
 import { QuestionStats } from '@/services/serverFunctions/question'
+import { ResultsByPost } from '@/types/study.types'
 import CheckCircleOutlineSharp from '@mui/icons-material/CheckCircleOutlineSharp'
 import EditIcon from '@mui/icons-material/Edit'
 import { SubPost } from '@repo/db-common/enums'

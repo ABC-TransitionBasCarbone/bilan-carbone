@@ -1,7 +1,6 @@
 import { SUBPOSTS_PUBLICODE_FROM_ENV } from '@/environments/core/publicodes/subposts'
 import { Environment, SubPost } from '@repo/db-common/enums'
 import { BCPost, ClicksonPost, CutPost, TiltPost } from './posts.enums'
-import { BaseResultsByPost } from './results/consolidated'
 
 // Re-export enums for backward compatibility
 export { BCPost, ClicksonPost, CutPost, TiltPost }
@@ -9,6 +8,13 @@ export { BCPost, ClicksonPost, CutPost, TiltPost }
 export const Post = { ...BCPost, ...CutPost, ...TiltPost, ...ClicksonPost }
 export type SimplifiedPost = CutPost | ClicksonPost | TiltPost
 export type Post = BCPost | TiltPost | CutPost | ClicksonPost
+
+export type BaseResultsByPost = {
+  post: Post | SubPost | 'total'
+  label: string
+  value: number
+  children: BaseResultsByPost[]
+}
 
 export const subPostsByPostBC: Record<BCPost, SubPost[]> = {
   [BCPost.Energies]: [
