@@ -153,6 +153,13 @@ export const calculateSBTiTrajectory = ({
   const snbcPivotYear =
     earliestPastStudyYear !== null ? Math.min(earliestPastStudyYear, SBTI_START_YEAR) : SBTI_START_YEAR
 
+  // For the current trajectory (studyStartYear > SBTI_START_YEAR), follow the default trajectory
+  // until the earliest past study year, even if it's after 2020
+  const currentTrajectoryPivotYear =
+    studyStartYear > SBTI_START_YEAR && earliestPastStudyYear !== null
+      ? Math.min(earliestPastStudyYear, studyStartYear)
+      : snbcPivotYear
+
   if (studyEmissions === 0) {
     const graphEndYear = maxYear ?? TARGET_YEAR
 
@@ -183,13 +190,13 @@ export const calculateSBTiTrajectory = ({
     )
 
     for (let year = graphStartYear; year <= Math.max(newEndYear, maxYear ?? TARGET_YEAR); year++) {
-      if (defaultTrajectory && year <= snbcPivotYear) {
+      if (defaultTrajectory && year <= currentTrajectoryPivotYear) {
         // Follow the default trajectory until pivot year included
         const snbcPoint = defaultTrajectory.find((p: TrajectoryDataPoint) => p.year === year)
         if (snbcPoint) {
           dataPoints.push(snbcPoint)
+          continue
         }
-        continue
       }
 
       const dataPoint = computeValue(
