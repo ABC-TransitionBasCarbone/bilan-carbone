@@ -19,6 +19,7 @@ interface Props<T extends StudyExportsCommand> {
   t: Translations
   disabled?: boolean
   duplicateStudyId?: string | null
+  onSave?: (exports: Export[], controlMode: ControlMode) => void
 }
 
 const StudyExportsForm = <T extends StudyExportsCommand>({
@@ -29,11 +30,11 @@ const StudyExportsForm = <T extends StudyExportsCommand>({
   t,
   disabled,
   duplicateStudyId,
+  onSave,
 }: Props<T>) => {
   const tGlossary = useTranslations('study.new.glossary')
   const control = form?.control as Control<StudyExportsCommand>
   const setValue = form?.setValue as UseFormSetValue<StudyExportsCommand>
-  const { exports } = form.getValues()
 
   return (
     <div className="mt2">
@@ -65,12 +66,21 @@ const StudyExportsForm = <T extends StudyExportsCommand>({
             <FormGroup>
               <ExportCheckboxes
                 values={form.getValues()}
-                setControl={(value: ControlMode) => setValue('controlMode', value)}
+                setControl={(value: ControlMode) => {
+                  setValue('controlMode', value)
+                  onSave?.(form.getValues().exports, value)
+                }}
                 onChange={(value: Export[]) => {
+                  const currentValues = form.getValues()
+                  const controlMode =
+                    currentValues.exports.length === 0 && value.length === 1
+                      ? ControlMode.Operational
+                      : currentValues.controlMode || ControlMode.Operational
                   setValue('exports', value)
-                  if (exports.length === 0 && value.length === 1) {
+                  if (currentValues.exports.length === 0 && value.length === 1) {
                     setValue('controlMode', ControlMode.Operational)
                   }
+                  onSave?.(value, controlMode)
                 }}
                 study={study}
                 disabled={disabled}

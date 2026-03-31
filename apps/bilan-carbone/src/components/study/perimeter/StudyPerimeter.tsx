@@ -23,8 +23,8 @@ import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { useFormatter, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useForm, useWatch } from 'react-hook-form'
+import { useCallback, useMemo, useState } from 'react'
+import { useForm } from 'react-hook-form'
 import StudyExportsForm from './StudyExportsForm'
 import styles from './StudyPerimeter.module.css'
 import StudySites from './StudySites'
@@ -72,9 +72,6 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
       controlMode: study.exports?.control,
     },
   })
-  const exportsWatch = useWatch(exportsForm).exports
-  const controlWatch = useWatch(exportsForm).controlMode
-  const showControl = useMemo(() => !!(exportsWatch && exportsWatch.length), [exportsWatch])
 
   const [startDate, endDate, realizationStartDate, realizationEndDate] = form.watch([
     'startDate',
@@ -110,18 +107,18 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
     }
   }, [form, callServerFunction, router, tValidation, study])
 
-  const updateStudyExport = useCallback(
+  const handleExportsChange = useCallback(
     async (exportTypes: Export[], control: ControlMode) => {
-      await callServerFunction(() => changeStudyExports(study.id, exportTypes, control))
+      if (hasEditionRole) {
+        await callServerFunction(() => changeStudyExports(study.id, exportTypes, control), {
+          onSuccess: () => {
+            router.refresh()
+          },
+        })
+      }
     },
-    [callServerFunction, study.id],
+    [callServerFunction, hasEditionRole, router, study.id],
   )
-
-  useEffect(() => {
-    if (exportsWatch && hasEditionRole) {
-      updateStudyExport(exportsForm.getValues().exports, controlWatch || ControlMode.Operational)
-    }
-  }, [exportsForm, exportsWatch, controlWatch, updateStudyExport])
 
   const Help = (name: string) => (
     <HelpIcon className="ml-4" onClick={() => setGlossary(name)} label={tGlossary('title')} />
@@ -216,10 +213,11 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
       <StudyExportsForm
         form={exportsForm}
         study={study}
-        showControl={showControl}
+        showControl={!!study.exports?.types?.length}
         setGlossary={setGlossary}
         t={t}
         disabled={!hasEditionRole}
+        onSave={handleExportsChange}
       />
 
       {glossary && (
