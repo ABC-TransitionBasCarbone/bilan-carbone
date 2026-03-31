@@ -143,7 +143,11 @@ jobs:
         run: yarn build
       - name: Start server
         run: yarn start &
+      - name: Wait for server
+        run: npx wait-on http://localhost:3000 --timeout 60000
       - name: Launch e2e tests
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
         run: |
           for spec in src/tests/end-to-end/app/*.cy.ts; do
             echo "Running test: $spec"
