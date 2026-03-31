@@ -13,7 +13,9 @@ import type {
   ObjectiveGroup,
   OvershootAdjustment,
   PastStudy,
+  TrajectoryData,
   TrajectoryDataPoint,
+  TrajectoryResult,
   TrajectoryWithObjectives,
   TrajectoryWithObjectivesAndScope,
 } from '@/types/trajectory.types'
@@ -203,22 +205,6 @@ export const calculateTrajectoryYearBounds = (
   }
 
   return { minYear, maxYear }
-}
-
-export interface TrajectoryData {
-  previousTrajectoryStartYear: number | null
-  previousTrajectory: TrajectoryDataPoint[] | null
-  currentTrajectory: TrajectoryDataPoint[]
-  withinThreshold: boolean
-  isFailed?: boolean
-}
-
-export interface TrajectoryResult {
-  sbti15: TrajectoryData | null
-  sbtiWB2C: TrajectoryData | null
-  snbc: { [trajectoryId: string]: TrajectoryData | null }
-  customTrajectories: Array<{ id: string; data: TrajectoryData }>
-  actionBased: TrajectoryData | null
 }
 
 export const getLatestPastStudy = (pastStudies: PastStudy[]): PastStudy | null => {
