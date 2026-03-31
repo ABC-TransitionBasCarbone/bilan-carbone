@@ -6,7 +6,8 @@ describe('Authentication', () => {
   beforeEach(() => {
     cy.intercept('POST', '/api/auth/callback/credentials').as('login')
     cy.intercept('POST', '/reset-password/*').as('reset-password')
-    cy.intercept('POST', '/activation?email=').as('activate')
+    cy.intercept('POST', '/activation*').as('activate')
+    cy.intercept('GET', '/equipe').as('equipe')
   })
 
   it('does not authenticate with wrong password', () => {
@@ -53,7 +54,7 @@ describe('Authentication', () => {
       'bc-collaborator-2@yopmail.com',
     )
 
-    cy.getByTestId('reset-button').click()
+    cy.getByTestId('reset-button').should('be.visible').should('not.be.disabled').click()
 
     cy.visit('http://localhost:1080')
     cy.origin('http://localhost:1080', () => {
@@ -87,7 +88,7 @@ describe('Authentication', () => {
       .should('not.be.disabled')
       .type('new-Password-2')
 
-    cy.getByTestId('reset-button').click()
+    cy.getByTestId('reset-button').should('be.visible').should('not.be.disabled').click()
 
     cy.wait('@reset-password')
 
@@ -101,7 +102,7 @@ describe('Authentication', () => {
       .should('be.visible')
       .should('not.be.disabled')
       .type('password-2')
-    cy.getByTestId('login-button').click()
+    cy.getByTestId('login-button').should('be.visible').should('not.be.disabled').click()
 
     cy.wait('@login')
 
@@ -119,7 +120,7 @@ describe('Authentication', () => {
 
     cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('new-Password-2')
 
-    cy.getByTestId('login-button').click()
+    cy.getByTestId('login-button').should('be.visible').should('not.be.disabled').click()
 
     cy.wait('@login')
 
@@ -139,7 +140,7 @@ describe('Authentication', () => {
       .should('be.visible')
       .should('not.be.disabled')
       .type('password-1')
-    cy.getByTestId('login-button').click()
+    cy.getByTestId('login-button').should('be.visible').should('not.be.disabled').click()
 
     cy.wait('@login')
 
@@ -150,8 +151,6 @@ describe('Authentication', () => {
 
   it('does activate account', () => {
     cy.visit('/')
-
-    cy.intercept('GET', '/equipe').as('equipe')
 
     cy.url().should('include', '/login')
     cy.login('imported@yopmail.com', 'Password-0')
@@ -171,9 +170,7 @@ describe('Authentication', () => {
 
     cy.getByTestId('activation-email').should('be.visible').should('not.be.disabled').type('imported@yopmail.co')
     cy.getByTestId('activation-form-message').should('not.exist')
-    cy.getByTestId('activation-button').click()
-
-    cy.wait('@activate')
+    cy.getByTestId('activation-button').should('be.visible').should('not.be.disabled').click()
 
     cy.getByTestId('activation-form-message').should('be.visible').should('not.be.disabled')
 
@@ -247,7 +244,7 @@ describe('Authentication', () => {
       .should('not.be.disabled')
       .type('Password-0')
 
-    cy.getByTestId('reset-button').click({ force: true })
+    cy.getByTestId('reset-button').should('be.visible').should('not.be.disabled').click()
 
     cy.wait('@reset-password')
 
@@ -261,7 +258,7 @@ describe('Authentication', () => {
       .should('be.visible')
       .should('not.be.disabled')
       .type('Password-0')
-    cy.getByTestId('login-button').click()
+    cy.getByTestId('login-button').should('be.visible').should('not.be.disabled').click()
 
     cy.wait('@login')
 
