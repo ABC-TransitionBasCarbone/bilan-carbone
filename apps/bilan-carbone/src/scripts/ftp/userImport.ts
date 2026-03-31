@@ -11,6 +11,15 @@ import { createUsersWithAccount, updateAccount } from '@/db/user'
 import { Environment, Level, Prisma, Role, UserSource, UserStatus } from '@prisma/client'
 import { getCutRoleFromBase } from '../../../prisma/seed/utils'
 
+type Training = {
+  idTrainingType: number
+  organismeFormation: string
+  formationName: string
+  sessionStartDate: string
+  sessionEndDate: string
+  expirationDate: string
+}
+
 const processUser = async (value: Record<string, string>, importedFileDate: Date) => {
   const {
     Firstname: firstName = '',
@@ -28,7 +37,20 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
     Formation_Name: formationName,
     Formation_Start_Date: formationStartDate,
     Formation_End_Date: formationEndDate,
+    trainings: rawTrainings,
   } = value
+
+  const trainings: Training[] = Array.isArray(rawTrainings)
+    ? rawTrainings
+    : rawTrainings
+      ? (() => {
+        try {
+          return JSON.parse(rawTrainings)
+        } catch {
+          return []
+        }
+      })()
+      : []
 
   const environment = (dataEnvironment || Environment.BC) as Environment
 
@@ -66,6 +88,17 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
 
   if (sessionCodeTraining) {
     user.level = sessionCodeTraining.includes('BCM2') ? Level.Advanced : Level.Initial
+  }
+
+  if (trainings) {
+    user.account.formationName = trainings.map((t) => t.formationName).join(' | ')
+    user.account.formationStartDate = trainings.map((t) => t.sessionStartDate).join(' | ')
+    user.account.formationEndDate = trainings.map((t) => t.sessionEndDate).join(' | ')
+
+    const computedLevel = getUserLevel(trainings)
+    if (computedLevel) {
+      user.level = computedLevel
+    }
   }
 
   if (companyNumber) {
@@ -136,4 +169,52 @@ export const processUsers = async (values: Record<string, string>[], importedFil
   } else {
     console.log('No new users to create')
   }
+}
+
+const getUserLevel = (trainings: Training[]): Level | undefined => {
+  // Retrieve all relevant trainings
+  const formationNames = trainings.map((t) => t.formationName)
+  // Find the first session date to determine the year
+  const firstSessionYear = trainings
+    .map((t) => t.sessionStartDate)
+    .map((d) => Number(d?.slice(0, 4)))
+    .filter((y) => !isNaN(y))
+    .sort()[0]
+
+  const initial2026 = [
+    'Bilan Carbone® Découverte',
+    'Bilan Carbone® Initiation',
+  ]
+  const initialBefore2026 = [
+    'Bilan Carbone® Initiation',
+    'MAJ Bilan Carbone® 2025 - Initiation',
+  ]
+  const advanced2026 = [
+    'Bilan Carbone® Maitrise',
+    'Bilan Carbone® Professionnel',
+  ]
+  const advancedBefore2026 = [
+    'Bilan Carbone® Maitrise',
+    'MAJ Bilan Carbone® 2025 - Maitrise',
+  ]
+
+  const hasAll = (required: string[]) => required.every((f) => formationNames.includes(f))
+  const hasOne = (options: string[]) => options.some((f) => formationNames.includes(f))
+
+  if (firstSessionYear && firstSessionYear >= 2026) {
+    if (hasOne(initial2026)) {
+      return Level.Initial
+    }
+    if (hasOne(advanced2026)) {
+      return Level.Advanced
+    }
+  } else if (firstSessionYear && firstSessionYear < 2026) {
+    if (hasAll(initialBefore2026)) {
+      return Level.Initial
+    }
+    if (hasAll(advancedBefore2026)) {
+      return Level.Advanced
+    }
+  }
+  return undefined
 }
