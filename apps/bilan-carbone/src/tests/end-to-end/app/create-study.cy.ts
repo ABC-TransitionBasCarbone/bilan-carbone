@@ -20,6 +20,11 @@ const newSimplifiedStudyTest = (studyName: string, options: SimplifiedStudyOptio
     if ($body.find('[data-testid="new-study-organization-title"]').length > 0) {
       cy.getByTestId('organization-sites-checkbox').first().click()
       cy.getByTestId('new-study-organization-button').click()
+    } else {
+      // Fill in new site form fields here if needed, e.g.:
+      cy.getByTestId('new-site-name').type('Site 1')
+      cy.getByTestId('new-site-city').type('Paris')
+      cy.getByTestId('add-site-button').click()
     }
   })
   cy.getByTestId('new-study-name', { timeout: 10000 }).should('be.visible')
