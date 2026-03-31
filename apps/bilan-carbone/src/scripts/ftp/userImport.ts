@@ -44,12 +44,12 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
     ? rawTrainings
     : rawTrainings
       ? (() => {
-        try {
-          return JSON.parse(rawTrainings)
-        } catch {
-          return []
-        }
-      })()
+          try {
+            return JSON.parse(rawTrainings)
+          } catch {
+            return []
+          }
+        })()
       : []
 
   const environment = (dataEnvironment || Environment.BC) as Environment
@@ -181,22 +181,10 @@ const getUserLevel = (trainings: Training[]): Level | undefined => {
     .filter((y) => !isNaN(y))
     .sort()[0]
 
-  const initial2026 = [
-    'Bilan Carbone® Découverte',
-    'Bilan Carbone® Initiation',
-  ]
-  const initialBefore2026 = [
-    'Bilan Carbone® Initiation',
-    'MAJ Bilan Carbone® 2025 - Initiation',
-  ]
-  const advanced2026 = [
-    'Bilan Carbone® Maitrise',
-    'Bilan Carbone® Professionnel',
-  ]
-  const advancedBefore2026 = [
-    'Bilan Carbone® Maitrise',
-    'MAJ Bilan Carbone® 2025 - Maitrise',
-  ]
+  const initial2026 = ['Bilan Carbone® Découverte', 'Bilan Carbone® Initiation']
+  const initialBefore2026 = ['Bilan Carbone® Initiation', 'MAJ Bilan Carbone® 2025 - Initiation']
+  const advanced2026 = ['Bilan Carbone® Maitrise', 'Bilan Carbone® Professionnel']
+  const advancedBefore2026 = ['Bilan Carbone® Maitrise', 'MAJ Bilan Carbone® 2025 - Maitrise']
 
   const hasAll = (required: string[]) => required.every((f) => formationNames.includes(f))
   const hasOne = (options: string[]) => options.some((f) => formationNames.includes(f))
