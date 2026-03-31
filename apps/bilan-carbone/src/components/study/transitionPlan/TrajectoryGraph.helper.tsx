@@ -1,5 +1,5 @@
 import type { TrajectoryData, TrajectoryDataPoint, TrajectorySeries } from '@/types/trajectory.types'
-import { TrajectoryType } from '@prisma/client'
+import { TrajectoryType } from '@repo/db-common/enums'
 
 interface BuildTrajectorySeriesParams {
   trajectoryData: TrajectoryData
