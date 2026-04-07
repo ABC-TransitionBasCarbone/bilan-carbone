@@ -172,6 +172,8 @@ describe('Authentication', () => {
     cy.getByTestId('activation-form-message').should('not.exist')
     cy.getByTestId('activation-button').should('be.visible').should('not.be.disabled').click()
 
+    cy.wait('@activate')
+
     cy.getByTestId('activation-form-message').should('be.visible').should('not.be.disabled')
 
     cy.getByTestId('activation-email').should('be.visible').should('not.be.disabled').type('m')
