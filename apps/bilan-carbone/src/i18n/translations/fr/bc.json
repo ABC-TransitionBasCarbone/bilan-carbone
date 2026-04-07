@@ -1103,6 +1103,10 @@
             "title": "Reconstruction des émissions passées sur le BC+",
             "description": "Les émissions historiques affichées sont : - Soit issues de vos études passées, que vous avez renseignées dans la page « Initialisation » - Soit reconstituées à partir des inventaires nationaux français pour les années qui précèdent votre premier bilan. L'outil suppose donc que votre organisation s'est décarbonée au même rythme que la France.",
             "close": "Close"
+          },
+          "overshootTrajectoryGlossary": {
+            "title": "Pour Gabriel - titre",
+            "description": "Pour Gabriel - description"
           }
         },
         "linkedStudies": {
@@ -1298,6 +1302,10 @@
           "startYear": "Année de départ",
           "targetYear": "Année cible",
           "rates": "Réduction annuelle: référence / compensée",
+          "ratesGlossary": {
+            "title": "Pour Gabriel - titre",
+            "description": "Pour Gabriel - description"
+          },
           "referenceYear": "Année de référence",
           "actions": "Actions",
           "period": "Période",
