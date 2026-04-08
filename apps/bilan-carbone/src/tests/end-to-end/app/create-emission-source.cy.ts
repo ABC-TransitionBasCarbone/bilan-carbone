@@ -1,8 +1,9 @@
 describe('Create study emission source', () => {
   const studyId = '88c93e88-7c80-4be4-905b-f0bbd2ccc779'
+  const subPostTestId = 'subpost-MetauxPlastiquesEtVerre'
 
   before(() => {
-    cy.resetTestDatabase()
+    // cy.resetTestDatabase()
   })
 
   beforeEach(() => {
@@ -11,22 +12,39 @@ describe('Create study emission source', () => {
   })
 
   it('should create an emission source on a study', () => {
+    const openSubPost = () => {
+      cy.getByTestId(subPostTestId).scrollIntoView()
+      cy.getByTestId(subPostTestId)
+        .find('[data-testid="subpost"]')
+        .then(($subpost) => {
+          if ($subpost.attr('aria-expanded') !== 'true') {
+            cy.wrap($subpost).click({ force: true })
+          }
+        })
+    }
+
     cy.login()
 
     cy.url().should('eq', `${Cypress.config().baseUrl}/?fromLogin`)
     cy.visit(`/etudes/${studyId}/comptabilisation/saisie-des-donnees/IntrantsBiensEtMatieres`)
     cy.wait('@pageLoad')
 
-    cy.getByTestId('subpost').first().scrollIntoView()
+    openSubPost()
+    cy.getByTestId(subPostTestId).find('[data-testid="new-emission-source"]').scrollIntoView().should('be.visible')
+    cy.getByTestId(subPostTestId).find('[data-testid="new-emission-source"]').type('My new emission source')
 
-    cy.getByTestId('subpost').first().click({ force: true })
+    // Register intercept right before click so it catches the RSC GET from router.refresh()
+    cy.intercept('GET', '**/IntrantsBiensEtMatieres**').as('rscRefresh')
+    cy.getByTestId(subPostTestId).find('[data-testid="new-emission-source-add"]').should('be.enabled').click()
+    cy.wait('@serverAction').its('response.statusCode').should('eq', 200)
+    cy.wait('@rscRefresh')
 
-    cy.getByTestId('new-emission-source').first().scrollIntoView()
-    cy.getByTestId('new-emission-source').first().type('My new emission source{enter}')
-    cy.wait('@serverAction')
+    // After server action + refresh, ensure the target subpost is expanded again.
+    openSubPost()
 
-    cy.getByTestId('emission-source-My new emission source').should('exist')
-    cy.getByTestId('emission-source-My new emission source')
+    cy.getByTestId(subPostTestId)
+      .find('[data-testid="emission-source-My new emission source"]')
+      .should('be.visible')
       .first()
       .within(() => {
         cy.getByTestId('emission-source-status').should('have.text', "En attente d'un·e contributeur·rice")
