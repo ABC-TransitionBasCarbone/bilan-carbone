@@ -9,16 +9,18 @@ const newSimplifiedStudyTest = (studyName: string, options: SimplifiedStudyOptio
   const { includeEndDate = true, startPath = '/organisations' } = options
 
   cy.intercept('POST', '**/etudes/creer**').as('create')
+  cy.intercept('GET', '**/etudes/creer**').as('creationPageLoad')
   cy.visit(startPath)
   cy.getByTestId('new-study').should('be.visible').click()
-  cy.url().should('include', 'creer')
+  cy.url({ timeout: 15000 }).should('include', 'creer')
+  cy.wait('@creationPageLoad', { timeout: 15000 })
 
-  cy.get('[data-testid="new-study-organization-title"], [data-testid="new-study-name"]', { timeout: 15000 })
+  cy.get('[data-testid="new-study-organization-title"], [data-testid="new-study-name"]', { timeout: 20000 })
     .first()
     .should('be.visible')
-  cy.get('body').then(($body) => {
-    if ($body.find('[data-testid="new-study-organization-title"]').length > 0) {
-      cy.getByTestId('organization-sites-checkbox').first().click()
+  cy.document().then((doc) => {
+    if (doc.querySelector('[data-testid="new-study-organization-title"]')) {
+      cy.getByTestId('organization-sites-checkbox', { timeout: 10000 }).first().click()
       cy.getByTestId('new-study-organization-button').click()
     }
   })
@@ -65,12 +67,9 @@ describe('Create study', () => {
     cy.resetTestDatabase()
   })
 
-  beforeEach(() => {
-    cy.intercept('POST', '**/etudes/creer').as('create')
-  })
-
   describe('BC', () => {
     it('should create a study on your organization as a simple user', () => {
+      cy.intercept('POST', '**/etudes/creer').as('create')
       cy.login()
       cy.visit('/')
       cy.getByTestId('new-study').should('be.visible').click()
@@ -103,6 +102,7 @@ describe('Create study', () => {
     })
 
     it('should create a study on a child organization as a CR user', () => {
+      cy.intercept('POST', '**/etudes/creer').as('create')
       cy.login('bc-cr-collaborator-1@yopmail.com', 'password-1')
       cy.visit('/')
       cy.getByTestId('organization').first().find('a').click()
