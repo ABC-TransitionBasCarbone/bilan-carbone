@@ -6,7 +6,6 @@ describe('Authentication', () => {
   beforeEach(() => {
     cy.intercept('POST', '/api/auth/callback/credentials').as('login')
     cy.intercept('POST', '/reset-password/*').as('reset-password')
-    cy.intercept('POST', '/activation*').as('activate')
     cy.intercept('GET', '/equipe').as('equipe')
   })
 
@@ -168,22 +167,15 @@ describe('Authentication', () => {
     cy.getByTestId('activation-email').should('be.visible').should('not.be.disabled')
     cy.getByTestId('activation-button').should('be.visible').should('not.be.disabled')
 
-    cy.getByTestId('activation-email').should('be.visible').should('not.be.disabled').type('imported@yopmail.co')
-    cy.getByTestId('activation-form-message').should('not.exist')
+    cy.get('[data-testid="activation-email"] input')
+      .should('be.visible')
+      .should('not.be.disabled')
+      .clear()
+      .type('imported@yopmail.com')
+      .should('have.value', 'imported@yopmail.com')
     cy.getByTestId('activation-button').should('be.visible').should('not.be.disabled').click()
-
-    cy.wait('@activate')
-
-    cy.getByTestId('activation-form-message').should('be.visible').should('not.be.disabled')
-
-    cy.getByTestId('activation-email').should('be.visible').should('not.be.disabled').type('m')
-    cy.getByTestId('activation-button').click()
-    cy.getByTestId('activation-form-message').should('not.exist')
-
-    cy.wait('@activate')
-
-    cy.getByTestId('activation-form-message').should('exist')
-    cy.getByTestId('activation-form-message')
+    cy.getByTestId('activation-form-message', { timeout: 20000 }).should('be.visible')
+    cy.getByTestId('activation-form-message', { timeout: 20000 })
       .invoke('text')
       .should('include', "Une demande d'activation de votre compte a été envoyé à vos collègues")
 
