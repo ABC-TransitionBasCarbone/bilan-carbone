@@ -3,7 +3,7 @@ describe('Create study emission source', () => {
   const subPostTestId = 'subpost-MetauxPlastiquesEtVerre'
 
   before(() => {
-    // cy.resetTestDatabase()
+    cy.resetTestDatabase()
   })
 
   beforeEach(() => {
