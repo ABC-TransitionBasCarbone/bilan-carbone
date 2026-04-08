@@ -1,0 +1,87 @@
+'use client'
+
+import { FullStudy } from '@/db/study'
+import { environmentPostMapping, Post, subPostsByPost } from '@/services/posts'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { withInfobulle } from '@/utils/post'
+import { Environment, StudyRole } from '@prisma/client'
+import { useTranslations } from 'next-intl'
+import { useMemo, useState } from 'react'
+import Block from '../base/Block'
+import HelpIcon from '../base/HelpIcon'
+import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
+import GlossaryModal from '../modals/GlossaryModal'
+import PostIcon from '../study/infography/icons/PostIcon'
+import SelectStudySite from '../study/site/SelectStudySite'
+import useStudySite from '../study/site/useStudySite'
+import SubPosts from '../study/SubPosts'
+
+interface Props {
+  study: FullStudy
+  userRole: StudyRole | null
+}
+
+const StudyContributorPage = ({ study, userRole }: Props) => {
+  const tNav = useTranslations('nav')
+  const tPost = useTranslations('emissionFactors.post')
+  const [glossary, setGlossary] = useState('')
+  const { siteId, studySiteId, setSite } = useStudySite(study)
+  const { environment } = useAppEnvironmentStore()
+
+  const emissionSources = useMemo(
+    () =>
+      study.emissionSources.filter(
+        (emissionSource) => emissionSource.studySite.site.id === siteId,
+      ) as FullStudy['emissionSources'],
+    [study, siteId],
+  )
+
+  return (
+    <>
+      <Breadcrumbs current={study.name} links={[{ label: tNav('home'), link: '/' }]} />
+      <Block
+        title={study.name}
+        as="h2"
+        rightComponent={
+          <SelectStudySite sites={study.sites} defaultValue={siteId} setSite={setSite} showAllOption={false} />
+        }
+      >
+        {Object.values(environmentPostMapping[environment || Environment.BC])
+          .filter((post: Post) =>
+            study.emissionSources.some((emissionSource) => subPostsByPost[post].includes(emissionSource.subPost)),
+          )
+          .map((post: Post) => (
+            <Block
+              key={post}
+              title={
+                <>
+                  {tPost(post)}{' '}
+                  {withInfobulle(post) && <HelpIcon label={tPost('glossary')} onClick={() => setGlossary(post)} />}
+                </>
+              }
+              icon={<PostIcon post={post} />}
+              iconPosition="before"
+            >
+              <SubPosts
+                post={post}
+                subPosts={subPostsByPost[post]}
+                study={study}
+                emissionSources={emissionSources}
+                studySiteId={studySiteId}
+                userRole={userRole}
+                setGlossary={setGlossary}
+                withoutDetail={true}
+              />
+            </Block>
+          ))}
+        {glossary && (
+          <GlossaryModal glossary={glossary} label="post-glossary" t={tPost} onClose={() => setGlossary('')}>
+            {tPost(`glossaryDescription.${glossary}`)}
+          </GlossaryModal>
+        )}
+      </Block>
+    </>
+  )
+}
+
+export default StudyContributorPage

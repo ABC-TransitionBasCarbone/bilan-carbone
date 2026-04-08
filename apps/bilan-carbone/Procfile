@@ -1,0 +1,1 @@
+postdeploy: cd $APP_HOME && npx --yes prisma@6 migrate deploy --schema ../../packages/db-common/prisma/schema

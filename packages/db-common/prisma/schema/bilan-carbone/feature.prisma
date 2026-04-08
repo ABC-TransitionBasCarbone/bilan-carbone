@@ -1,0 +1,35 @@
+enum DeactivatableFeature {
+  Formation
+  Feedback
+  Creation
+  DownloadReport
+  FormationStudy
+  TransitionPlan
+  TiltSimplified
+
+  @@schema("bilan_carbone")
+}
+
+model DeactivatableFeatureStatus {
+  id                      String               @id @default(uuid())
+  feature                 DeactivatableFeature @unique
+  active                  Boolean              @default(false)
+  deactivatedSources      UserSource[]         @default([]) @map("deactivated_sources")
+  deactivatedEnvironments Environment[]        @default([]) @map("deactivated_environments")
+
+  updatedById String?  @map("updated_by_account")
+  updator     Account? @relation("deactivable_feature_updator", fields: [updatedById], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("deactivable_features_statuses")
+  @@schema("bilan_carbone")
+}
+
+enum DuplicableStudy {
+  TrainingExercise
+  TrainingCorrectionExercise
+
+  @@schema("bilan_carbone")
+}

@@ -1,0 +1,54 @@
+.expandable {
+  cursor: pointer;
+}
+
+.expandable:hover {
+  opacity: 0.7;
+}
+
+.searchInput {
+  :global(.MuiInputBase-root) {
+    height: 2.5rem;
+  }
+  input {
+    min-width: 20rem;
+  }
+}
+
+.addButton {
+  border-radius: 0.75rem;
+  height: 2.5rem;
+}
+
+.defaultSnbcRow {
+  td {
+    background-color: var(--grayscale-50);
+    color: var(--grayscale-800);
+  }
+}
+
+.defaultSnbcTable {
+  :global(td),
+  :global(th) {
+    background-color: var(--grayscale-50);
+    color: var(--grayscale-900);
+  }
+}
+
+.expandedParentRow > td:first-child {
+  border-left: 3px solid var(--mui-palette-primary-main);
+}
+
+.expandedRow > td {
+  border-left: 3px solid var(--mui-palette-primary-main);
+}
+
+.expandedRowCell {
+  background-color: white;
+}
+
+.innerBaseTable {
+  :global(th) {
+    background-color: white;
+  }
+}

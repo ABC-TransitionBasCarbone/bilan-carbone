@@ -1,0 +1,252 @@
+'use client'
+
+import { FullStudy } from '@/db/study'
+import { customRich } from '@/i18n/customRich'
+import { getCaracterisationsBySubPost, getEmissionResults } from '@/services/emissionSource'
+import { Post } from '@/services/posts'
+import { EmissionFactorWithMetaData, getEmissionFactors } from '@/services/serverFunctions/emissionFactor'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { formatNumber } from '@/utils/number'
+import { withInfobulle } from '@/utils/post'
+import { postColors, STUDY_UNIT_VALUES } from '@/utils/study'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
+import { ControlMode, Environment, Import, StudyRole, SubPost as SubPostEnum } from '@prisma/client'
+import classNames from 'classnames'
+import { useSession } from 'next-auth/react'
+import { useTranslations } from 'next-intl'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import HelpIcon from '../base/HelpIcon'
+import ElectricityBaseDifference from './ElectricityBaseDifference'
+import EmissionSource from './EmissionSource'
+import NewEmissionSource from './NewEmissionSource'
+import styles from './SubPosts.module.css'
+
+type StudyProps = {
+  study: FullStudy
+  withoutDetail: boolean
+  hasFilter: boolean
+}
+
+interface Props {
+  post: Post
+  subPost: SubPostEnum
+  userRoleOnStudy: StudyRole | null
+  emissionSources: FullStudy['emissionSources']
+  studySiteId: string
+  setGlossary: (subPost: string) => void
+  count: number
+  validated: number
+  defaultOpen: boolean
+}
+
+const SubPost = ({
+  post,
+  subPost,
+  withoutDetail,
+  study,
+  userRoleOnStudy,
+  emissionSources,
+  studySiteId,
+  setGlossary,
+  count,
+  validated,
+  hasFilter,
+  defaultOpen,
+}: Props & StudyProps) => {
+  const t = useTranslations('study.post')
+  const tStudy = useTranslations('study')
+  const tPost = useTranslations('emissionFactors.post')
+  const tUnits = useTranslations('study.results.units')
+  const { environment } = useAppEnvironmentStore()
+  const [emissionFactorsForSubPost, setEmissionFactorsForSubPost] = useState<EmissionFactorWithMetaData[]>([])
+  const [expanded, setExpanded] = useState(defaultOpen)
+
+  const { data: session } = useSession()
+
+  const importVersions = useMemo(
+    () => [
+      { id: Import.Manual, source: Import.Manual, name: '' },
+      ...study.emissionFactorVersions.map((efv) => efv.importVersion),
+    ],
+    [study.emissionFactorVersions],
+  )
+
+  useEffect(() => {
+    async function fetchEmissionFactors() {
+      const emissionsFactors = await getEmissionFactors(
+        0,
+        'ALL',
+        {
+          archived: false,
+          search: '',
+          locations: [],
+          sources: importVersions.map((iv) => iv.id),
+          units: [],
+          subPosts: [subPost],
+        },
+        environment as Environment,
+        study.id,
+      )
+
+      if (emissionsFactors.success) {
+        setEmissionFactorsForSubPost(emissionsFactors.data.emissionFactors)
+      }
+    }
+
+    if (emissionFactorsForSubPost.length === 0 && expanded) {
+      fetchEmissionFactors()
+    }
+  }, [emissionFactorsForSubPost.length, environment, expanded, importVersions, study.id, subPost])
+
+  useEffect(() => {
+    if (hasFilter && emissionSources.length) {
+      setExpanded(true)
+    }
+  }, [emissionSources.length, hasFilter])
+
+  const total = useMemo(() => {
+    if (!environment) {
+      return 0
+    }
+
+    return emissionSources.reduce(
+      (sum, emissionSource) => sum + (getEmissionResults(emissionSource, environment)?.emissionValue || 0),
+      0,
+    )
+  }, [emissionSources, environment])
+
+  const contributors = useMemo(
+    () =>
+      study.contributors
+        .filter((contributor) => contributor.subPost === subPost)
+        .map((contributor) => contributor.account.user.email),
+    [study, subPost],
+  )
+
+  const caracterisations = useMemo(
+    () =>
+      getCaracterisationsBySubPost(
+        subPost,
+        environment,
+        study.exports?.types || [],
+        study.exports?.control || ControlMode.Operational,
+      ),
+    [subPost, study.exports, environment],
+  )
+
+  const isContributor = useMemo(() => {
+    return session?.user && contributors?.includes(session?.user.email)
+  }, [session?.user, contributors])
+
+  const accordionRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const hash = window.location.hash
+
+    if (hash === `#subpost-${subPost}`) {
+      setExpanded(true)
+      setTimeout(() => {
+        accordionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }, 300)
+    } else if (hash.startsWith('#emission-source-')) {
+      const emissionSourceId = hash.replace('#emission-source-', '')
+      const hasTargetEmissionSource = emissionSources.some((source) => source.id === emissionSourceId)
+
+      if (hasTargetEmissionSource) {
+        setExpanded(true)
+      }
+    }
+  }, [emissionSources, subPost])
+
+  useEffect(() => {
+    setExpanded(defaultOpen)
+  }, [defaultOpen])
+
+  return (!userRoleOnStudy || userRoleOnStudy === StudyRole.Reader) && emissionSources.length === 0 ? null : (
+    <>
+      {subPost === SubPostEnum.Electricite && environment && (
+        <ElectricityBaseDifference
+          emissionSources={emissionSources}
+          exports={study.exports?.types}
+          className="align-end mt1"
+        />
+      )}
+      <div ref={accordionRef} id={`subpost-${subPost}`} className={styles.subPostScrollContainer}>
+        <Accordion
+          expanded={expanded}
+          onChange={(_, isExpanded) => setExpanded(isExpanded)}
+          className={styles.accordion}
+        >
+          <AccordionSummary
+            className={classNames(styles.subPostContainer, styles[`post-${postColors[post]}`], {
+              [styles.open]: expanded,
+            })}
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls={`panel-${subPost}-content`}
+            data-testid="subpost"
+          >
+            <p>
+              {tPost(subPost)}
+              {withInfobulle(subPost) && (
+                <HelpIcon
+                  className={classNames(styles.helpIcon, 'ml-4')}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setGlossary(subPost)
+                  }}
+                  label={tPost('glossary')}
+                />
+              )}
+              <span className={classNames(styles.value, 'ml1')}>
+                {formatNumber(total / STUDY_UNIT_VALUES[study.resultsUnit])} {tUnits(study.resultsUnit)}
+              </span>
+              {!withoutDetail && contributors && contributors.length > 0 && (
+                <span className={classNames(styles.contributors, 'ml1')}>
+                  {t('contributorsList', { count: contributors.length })} {contributors.join(', ')}
+                </span>
+              )}
+            </p>
+            {count > 0 && (
+              <span className="grow justify-end mr1">
+                {customRich(tStudy, 'validatedSources', {
+                  total: count,
+                  validated,
+                  data: (children) => <>{children}</>,
+                })}
+              </span>
+            )}
+          </AccordionSummary>
+          <AccordionDetails id={`panel-${subPost}-content`} className={styles.subPostDetailsContainer}>
+            {emissionSources.map((emissionSource) => (
+              <EmissionSource
+                study={study}
+                emissionSource={emissionSource}
+                key={emissionSource.id}
+                subPost={subPost}
+                userRoleOnStudy={userRoleOnStudy}
+                withoutDetail={withoutDetail}
+                caracterisations={caracterisations}
+                emissionFactorsForSubPost={emissionFactorsForSubPost}
+                importVersions={importVersions}
+                isContributor={isContributor}
+              />
+            ))}
+            {!withoutDetail && userRoleOnStudy && userRoleOnStudy !== StudyRole.Reader && (
+              <div className="mt2">
+                <NewEmissionSource
+                  study={study}
+                  subPost={subPost}
+                  caracterisations={caracterisations}
+                  studySiteId={studySiteId}
+                />
+              </div>
+            )}
+          </AccordionDetails>
+        </Accordion>
+      </div>
+    </>
+  )
+}
+
+export default SubPost

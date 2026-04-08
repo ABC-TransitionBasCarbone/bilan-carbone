@@ -1,0 +1,128 @@
+enum Role {
+  ADMIN
+  SUPER_ADMIN
+  GESTIONNAIRE
+  COLLABORATOR
+  DEFAULT
+
+  @@schema("bilan_carbone")
+}
+
+enum UserStatus {
+  IMPORTED
+  PENDING_REQUEST
+  VALIDATED
+  ACTIVE
+
+  @@schema("bilan_carbone")
+}
+
+enum UserChecklist {
+  CreateAccount
+  AddCollaborator
+  AddClient
+  AddSiteCR
+  AddSiteCRCollaborator
+  AddSiteOrga
+  CreateFirstStudy
+  CreateFirstEmissionSource
+  ConsultResults
+  Completed
+
+  @@schema("bilan_carbone")
+}
+
+enum UserSource {
+  CRON
+  TUNISIE
+
+  @@schema("bilan_carbone")
+}
+
+model Account {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id])
+
+  importedFileDate DateTime? @map("imported_file_date")
+
+  organizationVersion           OrganizationVersion?  @relation(fields: [organizationVersionId], references: [id])
+  onboardedOrganizationVersions OrganizationVersion[] @relation("organizationVersionOnboarder")
+  organizationVersionId         String?               @map("organization_version_id")
+
+  deactivatableFeatureStatus DeactivatableFeatureStatus[] @relation("deactivable_feature_updator")
+
+  feedbackDate DateTime? @map("feedback_date")
+
+  role Role
+
+  createdStudies          Study[]
+  allowedStudies          UserOnStudy[]
+  contributors            Contributors[]
+  editedEmissionSources   StudyEmissionSource[]
+  flows                   Document[]
+  userApplicationSettings UserApplicationSettings?
+
+  studyCommentsValidated StudyComment[] @relation("study_comment_validator")
+  studyComments          StudyComment[] @relation("study_comment_author")
+
+  environment Environment
+  status      UserStatus
+
+  formationName      String?   @map("formation_name")
+  formationStartDate DateTime? @map("formation_start_date")
+  formationEndDate   DateTime? @map("formation_end_date")
+
+  @@unique([userId, environment])
+  @@map("accounts")
+  @@schema("bilan_carbone")
+}
+
+model User {
+  id         String     @id @default(uuid())
+  level      Level?
+  firstName  String     @map("first_name")
+  lastName   String     @map("last_name")
+  email      String     @unique
+  password   String?
+  resetToken String?    @map("reset_token")
+  accounts   Account[]
+  source     UserSource @default(CRON)
+
+  formationFormStartTime DateTime? @map("formation_form_start_time")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("users")
+  @@schema("bilan_carbone")
+}
+
+model UserApplicationSettings {
+  id                           String     @id @default(uuid())
+  accountId                    String?    @unique @map("account_id")
+  account                      Account?   @relation(fields: [accountId], references: [id])
+  validatedEmissionSourcesOnly Boolean    @default(true) @map("validated_emission_sources_only")
+  caUnit                       SiteCAUnit @default(K) @map("ca_unit")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("user_application_settings")
+  @@schema("bilan_carbone")
+}
+
+model UserCheckedStep {
+  id        String        @id @default(uuid())
+  accountId String        @map("account_id")
+  step      UserChecklist
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@unique([accountId, step])
+  @@map("user_checked_steps")
+  @@schema("bilan_carbone")
+}
