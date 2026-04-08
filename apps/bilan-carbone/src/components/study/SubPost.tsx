@@ -172,7 +172,12 @@ const SubPost = ({
           className="align-end mt1"
         />
       )}
-      <div ref={accordionRef} id={`subpost-${subPost}`} className={styles.subPostScrollContainer}>
+      <div
+        ref={accordionRef}
+        id={`subpost-${subPost}`}
+        data-testid={`subpost-${subPost}`}
+        className={styles.subPostScrollContainer}
+      >
         <Accordion
           expanded={expanded}
           onChange={(_, isExpanded) => setExpanded(isExpanded)}
