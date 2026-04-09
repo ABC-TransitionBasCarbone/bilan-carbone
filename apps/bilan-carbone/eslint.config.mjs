@@ -2,10 +2,7 @@ import nextVitals from 'eslint-config-next/core-web-vitals'
 import nextTs from 'eslint-config-next/typescript'
 import prettier from 'eslint-config-prettier/flat'
 import cypress from 'eslint-plugin-cypress'
-import mocha from 'eslint-plugin-mocha'
 import pluginPrettier from 'eslint-plugin-prettier'
-import react from 'eslint-plugin-react'
-import reactHooks from 'eslint-plugin-react-hooks'
 import { defineConfig, globalIgnores } from 'eslint/config'
 import globals from 'globals'
 
@@ -26,9 +23,6 @@ export default defineConfig([
   {
     plugins: {
       prettier: pluginPrettier,
-      mocha,
-      react,
-      'react-hooks': reactHooks,
     },
     rules: {
       '@typescript-eslint/no-require-imports': 'off',
@@ -41,8 +35,6 @@ export default defineConfig([
         'error',
         { beforeSelfClosing: 'always', afterOpening: 'never', beforeClosing: 'never' },
       ],
-      'mocha/no-exclusive-tests': 'error',
-      'mocha/no-mocha-arrows': 'off',
       'react-hooks/preserve-manual-memoization': 'warn',
       'react-hooks/set-state-in-effect': 'warn',
       'react-hooks/refs': 'warn',
@@ -50,7 +42,6 @@ export default defineConfig([
       'react-hooks/immutability': 'warn',
     },
   },
-
   {
     files: ['**/*.d.ts'],
     rules: {
@@ -59,7 +50,6 @@ export default defineConfig([
       'no-undef': 'off',
     },
   },
-
   {
     files: ['**/*.test.*', 'src/tests/**/*'],
     languageOptions: {
@@ -68,7 +58,6 @@ export default defineConfig([
       },
     },
   },
-
   {
     files: ['**/*.test.*', 'src/tests/**/*'],
     languageOptions: {
