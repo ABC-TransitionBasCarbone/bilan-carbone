@@ -1,6 +1,5 @@
-import { execSync } from 'node:child_process'
-
-import { expect, test, type Locator, type Page } from '@playwright/test'
+import { expect, test, type Page } from '@playwright/test'
+import { inputByTestId, login, logout, openSubPost, resetTestDatabase, sourceCard } from './playwright.helpers'
 
 const studyId = '88c93e88-7c80-4be4-905b-f0bbd2ccc779'
 const post = 'IntrantsBiensEtMatieres'
@@ -13,22 +12,6 @@ const sourceNameEdited = 'My edited emission source name'
 
 const route = `/etudes/${studyId}/comptabilisation/saisie-des-donnees/${post}`
 
-const login = async (page: Page, email: string, password: string) => {
-  await page.goto('/login')
-  await page.locator('[data-testid="input-email"] input').fill(email)
-  await page.locator('[data-testid="input-password"] input').fill(password)
-  await page.getByTestId('login-button').click()
-  await expect(page).toHaveURL(/fromLogin/, { timeout: 30000 })
-}
-
-const logout = async (page: Page) => {
-  await page.goto('/logout')
-}
-
-const sourceCard = (page: Page, name: string): Locator => page.getByTestId(`emission-source-${name}`).first()
-const inputByTestId = (scope: Page | Locator, testId: string): Locator =>
-  scope.getByTestId(testId).locator('input,textarea')
-
 const sourceRowAssertions = async (
   page: Page,
   name: string,
@@ -40,26 +23,9 @@ const sourceRowAssertions = async (
   await expect(card.getByTestId('emission-source-quality')).toHaveText(quality)
 }
 
-const openSubPost = async (page: Page, { canCreate = true } = {}) => {
-  const subPost = page.getByTestId(subPostTestId)
-  const toggle = subPost.getByTestId('subpost')
-  await toggle.scrollIntoViewIfNeeded()
-  const isExpanded = await toggle.getAttribute('aria-expanded')
-  if (isExpanded !== 'true') {
-    await toggle.click()
-  }
-  if (canCreate) {
-    await expect(subPost.getByTestId('new-emission-source')).toBeVisible()
-  } else {
-    await expect(toggle).toHaveAttribute('aria-expanded', 'true')
-  }
-}
-
 test.describe('Create study emission source (Playwright migration)', () => {
   test.beforeAll(() => {
-    const env = { ...process.env }
-    delete env['CLAUDECODE']
-    execSync('yarn db:test:reset', { stdio: 'inherit', env })
+    resetTestDatabase()
   })
 
   test('covers the same functional flow as Cypress', async ({ page }) => {
@@ -68,7 +34,7 @@ test.describe('Create study emission source (Playwright migration)', () => {
     await test.step('Admin creates and validates an emission source', async () => {
       await login(page, 'bc-collaborator-0@yopmail.com', 'password-0')
       await page.goto(route)
-      await openSubPost(page)
+      await openSubPost(page, subPostTestId)
 
       const subPost = page.getByTestId(subPostTestId)
       const newSourceInput = inputByTestId(subPost, 'new-emission-source')
@@ -89,7 +55,7 @@ test.describe('Create study emission source (Playwright migration)', () => {
 
       // Navigate fresh to guarantee the new source appears (router.refresh() can return stale RSC data).
       await page.goto(route)
-      await openSubPost(page)
+      await openSubPost(page, subPostTestId)
       await expect(sourceCard(page, sourceNameInitial)).toBeVisible({ timeout: 15000 })
       await expect(sourceCard(page, sourceNameInitial).getByTestId('emission-source-status')).toHaveText(
         "En attente d'un·e contributeur·rice",
@@ -179,7 +145,7 @@ test.describe('Create study emission source (Playwright migration)', () => {
       await logout(page)
       await login(page, 'bc-gestionnaire-0@yopmail.com', 'password-0')
       await page.goto(route)
-      await openSubPost(page)
+      await openSubPost(page, subPostTestId)
 
       await sourceRowAssertions(page, sourceNameCopy, {
         status: 'À vérifier',
@@ -199,7 +165,7 @@ test.describe('Create study emission source (Playwright migration)', () => {
       await logout(page)
       await login(page, 'bc-collaborator-1@yopmail.com', 'password-1')
       await page.goto(route)
-      await openSubPost(page, { canCreate: false })
+      await openSubPost(page, subPostTestId, { canCreate: false })
 
       await expect(page.getByTestId('new-emission-source')).toHaveCount(0)
       await sourceRowAssertions(page, sourceNameEdited, {
@@ -220,7 +186,7 @@ test.describe('Create study emission source (Playwright migration)', () => {
       await login(page, 'bc-contributor@yopmail.com', 'password')
       await page.goto(route)
       await expect(page).toHaveURL(`/etudes/${studyId}/contributeur`)
-      await openSubPost(page, { canCreate: false })
+      await openSubPost(page, subPostTestId, { canCreate: false })
 
       await sourceRowAssertions(page, sourceNameEdited, {
         status: 'À vérifier',
