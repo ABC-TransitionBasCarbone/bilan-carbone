@@ -72,9 +72,6 @@ The application will be available at [http://localhost:3000](http://localhost:30
 
 ## Commands by workspace
 
-Important: `yarn workspace <workspace-name> <command>` can be shorten in `yarn <command> -F <workspace-name>`
-Example: `yarn workspace bilan-carbone db:test:reset` can be shorten in `yarn db:test:reset -F bilan-carbone`
-
 ### bilan-carbone application
 
 ````bash
