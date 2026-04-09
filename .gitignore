@@ -7,3 +7,4 @@ CLAUDE.md
 .claude/
 .vscode/
 notes/
+next-env.d.ts
