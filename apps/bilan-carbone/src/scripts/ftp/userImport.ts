@@ -12,9 +12,9 @@ import { Environment, Level, Prisma, Role, UserSource, UserStatus } from '@prism
 import { getCutRoleFromBase } from '../../../prisma/seed/utils'
 
 type Training = {
-  idTrainingType: number
-  organismeFormation: string
-  formationName: string
+  trainingTypeId: number
+  trainingOrganisation: string
+  trainingName: string
   sessionStartDate: string
   sessionEndDate: string
   expirationDate: string
@@ -22,22 +22,23 @@ type Training = {
 
 const processUser = async (value: Record<string, string>, importedFileDate: Date) => {
   const {
-    Firstname: firstName = '',
-    Lastname: lastName = '',
-    Session_Code: sessionCodeTraining,
-    Company_Name: name,
-    SIRET: siret,
-    SIREN: siren,
-    VAT: vat,
-    Tax_Number: taxNumber,
-    Purchased_Products: purchasedProducts,
-    Membership_Year: membershipYear,
-    User_Source: source,
-    Environment: dataEnvironment,
-    Formation_Name: formationName,
-    Formation_Start_Date: formationStartDate,
-    Formation_End_Date: formationEndDate,
+    firstName = '',
+    lastName = '',
+    userEmail,
+    purchasedProducts,
+    sessionCode,
+    companyName,
+    siret,
+    siren,
+    vat,
+    taxNumber,
+    membershipYear,
     trainings: rawTrainings,
+    source,
+    environment: dataEnvironment,
+    formationName,
+    formationStartDate,
+    formationEndDate,
   } = value
 
   const trainings: Training[] = Array.isArray(rawTrainings)
@@ -54,11 +55,11 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
 
   const environment = (dataEnvironment || Environment.BC) as Environment
 
-  const email = value['User_Email'].replace(/ /g, '').toLowerCase()
+  const email = (userEmail || '').replace(/ /g, '').toLowerCase()
 
   const companyNumber = siret || siren || vat || taxNumber
   const isCR = ['adhesion_conseil', 'licence_exploitation'].includes(purchasedProducts)
-  const activatedLicence = membershipYear.match(/\d{4}/g)?.map(Number)
+  const activatedLicence = (membershipYear || '').match(/\d{4}/g)?.map(Number)
 
   const dbAccount = await getAccountByEmailAndEnvironment(email, environment)
 
@@ -86,16 +87,26 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
     },
   }
 
-  if (sessionCodeTraining) {
-    user.level = sessionCodeTraining.includes('BCM2') ? Level.Advanced : Level.Initial
+  if (sessionCode) {
+    user.level = sessionCode.includes('BCM2') ? Level.Advanced : Level.Initial
   }
 
-  if (trainings) {
-    user.account.formationName = trainings.map((t) => t.formationName).join(' | ')
-    user.account.formationStartDate = trainings.map((t) => t.sessionStartDate).join(' | ')
-    user.account.formationEndDate = trainings.map((t) => t.sessionEndDate).join(' | ')
+  if (trainings && Array.isArray(trainings) && trainings.length > 0) {
+    const highestLevelTraining = trainings.reduce((prev, current) => {
+      const prevLevel = getUserLevel([prev])
+      const currentLevel = getUserLevel([current])
+      return currentLevel && (!prevLevel || currentLevel > prevLevel) ? current : prev
+    }, trainings[0])
 
-    const computedLevel = getUserLevel(trainings)
+    user.account.formationName = highestLevelTraining.trainingName
+    user.account.formationStartDate = highestLevelTraining.sessionStartDate
+      ? new Date(highestLevelTraining.sessionStartDate)
+      : undefined
+    user.account.formationEndDate = highestLevelTraining.sessionEndDate
+      ? new Date(highestLevelTraining.sessionEndDate)
+      : undefined
+
+    const computedLevel = getUserLevel([highestLevelTraining])
     if (computedLevel) {
       user.level = computedLevel
     }
@@ -109,7 +120,7 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
     organization = await createOrUpdateOrganization(
       {
         id: organization?.id,
-        name,
+        name: companyName,
         wordpressId: companyNumber,
       } as Prisma.OrganizationCreateInput,
       isCR,
@@ -173,7 +184,7 @@ export const processUsers = async (values: Record<string, string>[], importedFil
 
 const getUserLevel = (trainings: Training[]): Level | undefined => {
   // Retrieve all relevant trainings
-  const formationNames = trainings.map((t) => t.formationName)
+  const formationNames = trainings.map((t) => t.trainingName)
   // Find the first session date to determine the year
   const firstSessionYear = trainings
     .map((t) => t.sessionStartDate)

@@ -61,7 +61,8 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
     if (environment && isAdvanced(environment)) {
       col.push({
         header: t('level'),
-        accessorFn: (member: TeamMember) => tLevel(member.user.level ? member.user.level : 'noLevel'),
+        accessorFn: (member: TeamMember) =>
+          member.formationName ? member.formationName : tLevel(member.user.level ? member.user.level : 'noLevel'),
       })
     }
 
