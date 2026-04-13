@@ -42,6 +42,7 @@ export default defineConfig([
       'react-hooks/immutability': 'warn',
     },
   },
+
   {
     files: ['**/*.d.ts'],
     rules: {
