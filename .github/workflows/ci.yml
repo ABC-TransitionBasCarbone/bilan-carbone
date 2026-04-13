@@ -175,6 +175,67 @@ jobs:
           name: cypress-screenshots
           path: ${{ github.workspace }}/apps/bilan-carbone/cypress/screenshots
 
+  playwright-e2e-tests:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    needs: [lint-and-typecheck, unit-tests]
+    defaults:
+      run:
+        working-directory: apps/bilan-carbone
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: bilancarbone
+          POSTGRES_PASSWORD: bilancarbone
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.16.0
+          cache: 'yarn'
+      - name: Copy .env
+        run: cp .env.dist .env
+      - name: Copy .env to db-common
+        run: cp apps/bilan-carbone/.env.dist packages/db-common/.env
+        working-directory: ${{ github.workspace }}
+      - name: Copy .env.test
+        run: cp .env.dist .env.test
+      - name: Install dependencies
+        run: yarn install --immutable --immutable-cache --check-cache
+        working-directory: .
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      - name: Prebuild application
+        run: yarn prebuild
+      - name: Generate prisma files
+        run: yarn workspace @repo/db-common prisma generate
+        working-directory: .
+      - name: Migrate DB
+        run: yarn workspace @repo/db-common prisma migrate deploy
+        working-directory: .
+      - name: Build standalone application
+        run: yarn build
+      - name: Launch Playwright tests
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
+        run: yarn playwright:test
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: |
+            ${{ github.workspace }}/apps/bilan-carbone/playwright-report
+            ${{ github.workspace }}/apps/bilan-carbone/test-results
+
   lighthouse:
     timeout-minutes: 10
     runs-on: ubuntu-latest
