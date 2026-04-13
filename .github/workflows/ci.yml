@@ -226,7 +226,7 @@ jobs:
       - name: Launch Playwright tests
         env:
           NODE_OPTIONS: --max-old-space-size=4096
-        run: yarn playwright:test playwright/create-emission-source.spec.ts
+        run: yarn playwright:test
       - name: Upload Playwright report
         uses: actions/upload-artifact@v4
         if: always()
