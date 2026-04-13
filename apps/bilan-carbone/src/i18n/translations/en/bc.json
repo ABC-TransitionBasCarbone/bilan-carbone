@@ -1222,6 +1222,7 @@
           "SNBC_SECTORAL": "I follow the SNBC reference trajectory",
           "CUSTOM": "I follow my own trajectory"
         },
+        "siteFilterWarning": "{count, plural, =1 {You have selected site {siteNames} but trajectories can only be defined for all sites.} other {You have selected sites {siteNames} but trajectories can only be defined for all sites.}} Your trajectory will therefore be defined for all sites. You can then create sub-objectives by site, post and sub-post.",
         "name": "My trajectory name",
         "namePlaceholder": "Give your trajectory a name",
         "description": "My trajectory description",

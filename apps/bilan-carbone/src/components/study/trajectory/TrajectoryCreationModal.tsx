@@ -29,6 +29,7 @@ import {
   getDisplayedReferenceYearForTrajectoryType,
 } from '@/utils/trajectory'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Alert } from '@mui/material'
 import type { SectenInfo } from '@repo/db-common'
 import { TrajectoryType } from '@repo/db-common/enums'
 import { useTranslations } from 'next-intl'
@@ -52,6 +53,8 @@ interface Props {
   studyEmissions?: number
   pastStudies?: PastStudy[]
   defaultSnbcSectoralPercentages?: SectorPercentages | null
+  selectedSiteIds?: string[]
+  siteOptions?: { id: string; name: string }[]
 }
 
 const getDefaultValues = (defaultSnbcSectoralPercentages?: SectorPercentages | null): TrajectoryFormData => ({
@@ -85,9 +88,24 @@ const TrajectoryCreationModal = ({
   studyEmissions = 0,
   pastStudies = [],
   defaultSnbcSectoralPercentages,
+  selectedSiteIds = [],
+  siteOptions = [],
 }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectoryModal')
   const isEditMode = !!trajectory
+
+  const selectedSiteNames = useMemo(() => {
+    if (selectedSiteIds.length === 0 || selectedSiteIds.length === siteOptions.length) {
+      return null
+    }
+    return selectedSiteIds.map((id) => siteOptions.find((s) => s.id === id)?.name ?? id)
+  }, [selectedSiteIds, siteOptions])
+
+  const siteWarning = selectedSiteNames ? (
+    <Alert severity="warning" className="mb1">
+      {t('siteFilterWarning', { siteNames: selectedSiteNames.join(', '), count: selectedSiteNames.length })}
+    </Alert>
+  ) : null
   const [activeStep, setActiveStep] = useState(isEditMode || !isFirstCreation ? 1 : 0)
   const [isLoading, setIsLoading] = useState(false)
   const { callServerFunction } = useServerFunction()
@@ -452,6 +470,7 @@ const TrajectoryCreationModal = ({
           },
         ]}
       >
+        {siteWarning}
         {trajectoryType && (
           <TrajectoryCreationStep2
             isSBTI={isSBTI}
@@ -493,6 +512,7 @@ const TrajectoryCreationModal = ({
         ) : undefined
       }
     >
+      {siteWarning}
       {activeStep === 0 && (
         <TrajectoryCreationStep1 trajectoryType={trajectoryType} handleModeSelect={handleModeSelect} />
       )}
