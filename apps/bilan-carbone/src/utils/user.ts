@@ -19,6 +19,7 @@ export const findUserInfo = (user: UserSession) =>
       },
       status: true,
       role: true,
+      formationName: true,
       updatedAt: true,
     },
     where: canEditMemberRole(user)
