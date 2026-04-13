@@ -1,7 +1,7 @@
 'use client'
 
 import { sendAddedUsersAndProccess, verifyPasswordAndProcessUsers } from '@/services/serverFunctions/user'
-import { Environment } from '@prisma/client'
+import { Environment } from '@repo/db-common/enums'
 import { useTranslations } from 'next-intl'
 import InputFileUpload from '../base/InputFileUpload'
 

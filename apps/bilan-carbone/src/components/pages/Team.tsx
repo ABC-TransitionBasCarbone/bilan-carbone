@@ -1,7 +1,7 @@
 'use client'
 
 import { TeamMember } from '@/db/account'
-import { UserStatus } from '@prisma/client'
+import { UserStatus } from '@repo/db-common/enums'
 import { UserSession } from 'next-auth'
 import { SessionProvider } from 'next-auth/react'
 import { useTranslations } from 'next-intl'

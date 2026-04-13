@@ -2,7 +2,7 @@ import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionS
 import { getMockeFullStudy, mockedEmissionSourceEmissionFactor } from '@/tests/utils/models/study'
 import { getActionReductionRatio, getUIFilteredEmissions } from '@/utils/study'
 import { expect } from '@jest/globals'
-import { StudyResultUnit, SubPost } from '@prisma/client'
+import { StudyResultUnit, SubPost } from '@repo/db-common/enums'
 
 jest.mock('../file', () => ({ download: jest.fn() }))
 jest.mock('../auth', () => ({ auth: jest.fn() }))

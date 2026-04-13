@@ -1,12 +1,13 @@
 'use client'
 
 import { OrganizationWithSites } from '@/db/account'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import StudyRights from '@/environments/base/study/StudyRights'
 import StudyRightsClickson from '@/environments/clickson/study/StudyRightsClickson'
 import StudyRightsCut from '@/environments/cut/study/StudyRightsCut'
 import StudyRightsTiltSimplified from '@/environments/tilt/study/StudyRightsTiltSimplified'
-import { EmissionFactorImportVersion, Environment, SiteCAUnit, StudyRole } from '@prisma/client'
+import type { EmissionFactorImportVersion } from '@repo/db-common'
+import { Environment, SiteCAUnit, StudyRole } from '@repo/db-common/enums'
 import { UserSession } from 'next-auth'
 import DynamicComponent from '../utils/DynamicComponent'
 

@@ -1,7 +1,7 @@
 'use client'
 
 import GlossaryModal from '@/components/modals/GlossaryModal'
-import { TRAJECTORY_15_ID, TRAJECTORY_SNBC_GENERAL_ID, TRAJECTORY_WB2C_ID } from '@/constants/trajectories'
+import { TRAJECTORY_15_ID, TRAJECTORY_SNBC_GENERAL_ID, TRAJECTORY_WB2C_ID } from '@/constants/trajectory.constants'
 import type { FullStudy } from '@/db/study'
 import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
 import { customRich } from '@/i18n/customRich'
@@ -27,7 +27,8 @@ import {
   LineSeriesType,
   MarkPlot,
 } from '@mui/x-charts'
-import { Action, SectenInfo, TrajectoryType } from '@prisma/client'
+import { Action, SectenInfo } from '@repo/db-common'
+import { TrajectoryType } from '@repo/db-common/enums'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'

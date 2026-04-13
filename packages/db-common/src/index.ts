@@ -1,2 +1,2 @@
-export { PrismaClient } from '@prisma/client'
-export type { Unit } from '@prisma/client'
+export type * from './generated/prisma/client'
+export { Prisma, PrismaClient } from './generated/prisma/client'

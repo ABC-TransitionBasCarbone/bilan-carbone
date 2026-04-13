@@ -2,7 +2,7 @@ import { Command } from 'commander'
 import * as fs from 'fs'
 import { stdin as input, stdout as output } from 'node:process'
 import * as readline from 'node:readline/promises'
-import { prismaClient } from '../../db/client'
+import { prismaClient } from '../../db/client.node'
 import { importSectenData } from './secten'
 
 const program = new Command()
@@ -49,7 +49,7 @@ const main = async () => {
   }
 
   console.log('Importing Secten data...')
-  const result = await importSectenData(year, params.file, shouldUpdate)
+  const result = await importSectenData(prismaClient, year, params.file, shouldUpdate)
 
   if (result.success) {
     console.log(`✓ ${result.message} version ${result.versionId}`)

@@ -5,31 +5,17 @@ import { hasAccessToCreateStudyWithEmissionFactorVersions } from '@/services/per
 import { filterAllowedStudies } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { ChangeStudyCinemaCommand } from '@/services/serverFunctions/study.command'
-import { getAllowedLevels, hasSufficientLevel } from '@/services/study'
 import { mapCncToStudySite } from '@/utils/cnc'
 import { isAdminOnOrga } from '@/utils/organization'
-import { getUserRoleOnPublicStudy, StudyWithRoleFields } from '@/utils/study'
+import { getAllowedLevels, getUserRoleOnPublicStudy, hasSufficientLevel, StudyWithRoleFields } from '@/utils/study'
 import { isAdmin } from '@/utils/user'
-import {
-  CommentStatus,
-  ControlMode,
-  DuplicableStudy,
-  Environment,
-  Export,
-  Import,
-  Level,
-  StudyRole,
-  StudyTag,
-  StudyTagFamily,
-  SubPost,
-  type Prisma,
-} from '@prisma/client'
+import type { DuplicableStudy, Level, Prisma, StudyTag, StudyTagFamily, SubPost } from '@repo/db-common'
+import { CommentStatus, ControlMode, Environment, Export, Import, StudyRole } from '@repo/db-common/enums'
 import { UserSession } from 'next-auth'
 import { cache } from 'react'
 import { getAccountOrganizationVersions } from './account'
 import { AccountWithUserSelect } from './account.select'
-import { prismaClient } from './client'
-import { getOrganizationVersionForRightsCheck } from './organization'
+import { prismaClient } from './client.server'
 
 export type StudyTagFamilyWithTags = Omit<StudyTagFamily, 'createdAt' | 'updatedAt'> & {
   tags: Omit<StudyTag, 'familyId' | 'createdAt' | 'updatedAt'>[]
@@ -458,7 +444,16 @@ export const getAllowedStudiesByUserAndOrganization = async (
   organizationVersionId: string,
   simplified = false,
 ) => {
-  const organizationVersion = await getOrganizationVersionForRightsCheck(organizationVersionId)
+  const organizationVersion = await prismaClient.organizationVersion.findUnique({
+    where: { id: organizationVersionId },
+    select: {
+      id: true,
+      environment: true,
+      activatedLicence: true,
+      parentId: true,
+      parent: { select: { activatedLicence: true } },
+    },
+  })
   if (!organizationVersion) {
     return []
   }

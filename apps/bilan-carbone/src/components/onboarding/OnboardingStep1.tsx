@@ -1,7 +1,7 @@
 import { OnboardingCommand } from '@/services/serverFunctions/user.command'
 import HomeIcon from '@mui/icons-material/Home'
 import PersonIcon from '@mui/icons-material/Person'
-import { Role } from '@prisma/client'
+import { Role } from '@repo/db-common/enums'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { UseFormReturn } from 'react-hook-form'

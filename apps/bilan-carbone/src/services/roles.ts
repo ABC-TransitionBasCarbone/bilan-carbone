@@ -1,4 +1,4 @@
-import { Role } from '@prisma/client'
+import { Role } from '@repo/db-common/enums'
 
 export const CutRoles = {
   ADMIN: Role.ADMIN,

@@ -1,6 +1,6 @@
 import Modal from '@/components/modals/Modal'
 import { wasteEmissionFactors } from '@/constants/wasteEmissionFactors'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import {
   simulateStudyEmissionFactorSourceUpgrade,
@@ -8,7 +8,8 @@ import {
 } from '@/services/serverFunctions/study'
 import { useUnitLabel } from '@/services/unit'
 import { IsSuccess } from '@/utils/serverResponse'
-import { EmissionFactorImportVersion, Import, StudyResultUnit } from '@prisma/client'
+import type { EmissionFactorImportVersion } from '@repo/db-common'
+import { Import, StudyResultUnit } from '@repo/db-common/enums'
 import { Button } from '@repo/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

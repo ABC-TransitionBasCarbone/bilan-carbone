@@ -2,7 +2,7 @@
 
 import Block from '@/components/base/Block'
 import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { useTransitionPlan } from '@/hooks/useTransitionPlan'
 import { useTransitionPlanFilters } from '@/hooks/useTransitionPlanFilters'
 import type {
@@ -14,7 +14,7 @@ import type {
 import { buildObjectiveGroups } from '@/utils/scope.utils'
 import { scopeMatchesUIFilters } from '@/utils/scopeFilter'
 import { getActionReductionRatio } from '@/utils/study'
-import type { ExternalStudy, SectenInfo, SubPost } from '@prisma/client'
+import type { ExternalStudy, SectenInfo, SubPost } from '@repo/db-common'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useMemo } from 'react'
 import TrajectoryGraph from './TrajectoryGraph'

@@ -1,5 +1,6 @@
 import { setCustomMessage } from '@/lib/zod.config'
-import { Question, QuestionType } from '@prisma/client'
+import type { Question } from '@repo/db-common'
+import { QuestionType } from '@repo/db-common/enums'
 import { useMemo } from 'react'
 import { z } from 'zod'
 

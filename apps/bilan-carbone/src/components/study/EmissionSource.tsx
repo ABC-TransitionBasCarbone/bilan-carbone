@@ -1,8 +1,8 @@
 'use client'
 
 import { AccountWithUser } from '@/db/account'
-import { keepOnlyOneMetadata } from '@/db/emissionFactors'
-import { FullStudy } from '@/db/study'
+import { keepOnlyOneMetadata } from '@/db/emissionFactors.utils'
+import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { Locale } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
@@ -13,11 +13,12 @@ import {
   UpdateEmissionSourceCommand,
   UpdateEmissionSourceCommandValidation,
 } from '@/services/serverFunctions/emissionSource.command'
-import { EmissionSourcesStatus, getEmissionSourceStatus } from '@/services/study'
 import { getQualitativeUncertaintyFromSquaredStandardDeviation } from '@/services/uncertainty'
 import { useUnitLabel } from '@/services/unit'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { EmissionSourcesStatus } from '@/types/emissionSource.types'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
+import { getEmissionSourceStatus } from '@/utils/emissionSources'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
 import { hasEditionRights, STUDY_UNIT_VALUES } from '@/utils/study'
 import { formatDateFr } from '@/utils/time'
@@ -32,7 +33,7 @@ import {
   StudyRole,
   SubPost,
   Unit,
-} from '@prisma/client'
+} from '@repo/db-common/enums'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'

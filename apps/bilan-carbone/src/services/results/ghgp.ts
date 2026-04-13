@@ -1,9 +1,10 @@
 import { wasteImpact } from '@/constants/emissions'
 import { wasteEmissionFactors } from '@/constants/wasteEmissionFactors'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { hasDeprecationPeriod } from '@/utils/study'
-import { EmissionFactorBase, Environment, ExportRule, Import } from '@prisma/client'
+import type { ExportRule } from '@repo/db-common'
+import { EmissionFactorBase, Environment, Import } from '@repo/db-common/enums'
 import { computeResult, EmissionSource, ExportEmissionFactor, getEmissionTotal, PostInfos } from './exports'
 
 const allRules = [

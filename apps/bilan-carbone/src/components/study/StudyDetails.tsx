@@ -1,8 +1,8 @@
 'use client'
 
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import { Environment } from '@prisma/client'
+import { Environment } from '@repo/db-common/enums'
 import { UserSession } from 'next-auth'
 import dynamic from 'next/dynamic'
 import Block from '../base/Block'

@@ -1,5 +1,5 @@
 import { expect } from '@jest/globals'
-import { SubPost } from '@prisma/client'
+import { SubPost } from '@repo/db-common/enums'
 import { convertTiltSubPostToBCSubPost, subPostBCToSubPostTiltMapping } from './posts'
 
 describe('Posts Service', () => {

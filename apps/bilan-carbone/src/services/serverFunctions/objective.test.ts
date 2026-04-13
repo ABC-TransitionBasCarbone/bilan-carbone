@@ -4,7 +4,7 @@ import * as transitionPlanDbModule from '@/db/transitionPlan'
 import * as authModule from '@/services/auth'
 import * as studyPermissionsModule from '@/services/permissions/study'
 import { expect } from '@jest/globals'
-import { SubPost } from '@prisma/client'
+import { SubPost } from '@repo/db-common/enums'
 import {
   createSubObjectives,
   deleteObjective,
@@ -18,7 +18,7 @@ jest.mock('next-intl/server', () => ({
   getTranslations: jest.fn(() => (key: string) => key),
 }))
 
-jest.mock('../../db/client', () => ({
+jest.mock('../../db/client.server', () => ({
   prismaClient: {
     $transaction: jest.fn((callback) => callback({})),
   },

@@ -1,5 +1,6 @@
-import { FullStudy } from '@/db/study'
-import { EmissionFactorBase, Import, StudyEmissionSource, SubPost, Unit } from '@prisma/client'
+import type { FullStudy } from '@/db/study'
+import { StudyEmissionSource } from '@repo/db-common'
+import { EmissionFactorBase, Import, SubPost, Unit } from '@repo/db-common/enums'
 
 export const mockedEmissionSource = {
   id: 'mocked-emission-source-id',

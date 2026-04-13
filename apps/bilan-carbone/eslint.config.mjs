@@ -1,45 +1,38 @@
-import { FlatCompat } from '@eslint/eslintrc'
-import js from '@eslint/js'
-import typescriptEslint from '@typescript-eslint/eslint-plugin'
-import tsParser from '@typescript-eslint/parser'
+import nextVitals from 'eslint-config-next/core-web-vitals'
+import nextTs from 'eslint-config-next/typescript'
+import prettier from 'eslint-config-prettier/flat'
 import cypress from 'eslint-plugin-cypress'
 import mocha from 'eslint-plugin-mocha'
-import prettier from 'eslint-plugin-prettier'
+import pluginPrettier from 'eslint-plugin-prettier'
 import react from 'eslint-plugin-react'
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
+import reactHooks from 'eslint-plugin-react-hooks'
+import { defineConfig, globalIgnores } from 'eslint/config'
+import globals from 'globals'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all,
-})
+export default defineConfig([
+  ...nextVitals,
+  ...nextTs,
+  prettier,
 
-const config = [
-  mocha.configs.recommended,
-  ...compat.extends(
-    'eslint:recommended',
-    'plugin:react/recommended',
-    'plugin:prettier/recommended',
-    'next/core-web-vitals',
-    'next/typescript',
-  ),
+  globalIgnores([
+    '.next/**',
+    'out/**',
+    'build/**',
+    'next-env.d.ts',
+    'publicodes-packages/**/publicodes-build/**',
+    '**/.env**',
+  ]),
+
   {
     plugins: {
-      '@typescript-eslint': typescriptEslint,
-      react,
-      prettier,
-      cypress,
+      prettier: pluginPrettier,
       mocha,
+      react,
+      'react-hooks': reactHooks,
     },
-    languageOptions: { parser: tsParser },
-    settings: { react: { version: 'detect' } },
     rules: {
+      '@typescript-eslint/no-require-imports': 'off',
       'no-irregular-whitespace': 'off',
-      'mocha/no-exclusive-tests': 'error',
-      'mocha/no-mocha-arrows': 'off',
       'react/no-unescaped-entities': 'off',
       'react/self-closing-comp': 'error',
       curly: 'error',
@@ -48,15 +41,44 @@ const config = [
         'error',
         { beforeSelfClosing: 'always', afterOpening: 'never', beforeClosing: 'never' },
       ],
+      'mocha/no-exclusive-tests': 'error',
+      'mocha/no-mocha-arrows': 'off',
+      'react-hooks/preserve-manual-memoization': 'warn',
+      'react-hooks/set-state-in-effect': 'warn',
+      'react-hooks/refs': 'warn',
+      'react-hooks/static-components': 'warn',
+      'react-hooks/immutability': 'warn',
+    },
+  },
+
+  {
+    files: ['**/*.d.ts'],
+    rules: {
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
+      'no-undef': 'off',
+    },
+  },
+
+  {
+    files: ['**/*.test.*', 'src/tests/**/*'],
+    languageOptions: {
+      globals: {
+        ...globals.jest,
+      },
+    },
+  },
+
+  {
+    files: ['**/*.test.*', 'src/tests/**/*'],
+    languageOptions: {
+      globals: {
+        ...globals.jest,
+      },
     },
   },
   {
     files: ['cypress/**/*.{js,ts,jsx,tsx}'],
-    plugins: { cypress },
-    rules: {
-      ...cypress.configs.recommended.rules,
-    },
+    ...cypress.configs.recommended,
   },
-]
-
-export default config
+])

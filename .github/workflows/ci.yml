@@ -14,6 +14,12 @@ jobs:
         with:
           node-version: 22.16.0
           cache: 'yarn'
+      - name: Copy .env
+        run: cp .env.dist .env
+        working-directory: apps/bilan-carbone
+      - name: Copy .env to db-common
+        run: cp apps/bilan-carbone/.env.dist packages/db-common/.env
+        working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
         working-directory: .
@@ -26,6 +32,21 @@ jobs:
         run: yarn prebuild
       - name: TypeScript check
         run: npx tsc --noEmit
+
+  check-circular-deps:
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/bilan-carbone
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.16.0
+          cache: 'yarn'
+      - name: Check circular dependencies
+        run: npx madge --circular --extensions ts,tsx --exclude "packages/db-common/src/generated" .
 
   unit-tests:
     timeout-minutes: 10
@@ -41,6 +62,10 @@ jobs:
           cache: 'yarn'
       - name: Copy .env
         run: cp .env.dist .env
+        working-directory: apps/bilan-carbone
+      - name: Copy .env to db-common
+        run: cp apps/bilan-carbone/.env.dist packages/db-common/.env
+        working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
         working-directory: .
@@ -64,6 +89,12 @@ jobs:
         with:
           node-version: 22.16.0
           cache: 'yarn'
+      - name: Copy .env
+        run: cp .env.dist .env
+        working-directory: apps/bilan-carbone
+      - name: Copy .env to db-common
+        run: cp apps/bilan-carbone/.env.dist packages/db-common/.env
+        working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
         working-directory: .
@@ -127,7 +158,11 @@ jobs:
         run: yarn build
       - name: Start server
         run: yarn start &
+      - name: Wait for server
+        run: npx wait-on http://localhost:3000 --timeout 60000
       - name: Launch e2e tests
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
         run: |
           for spec in src/tests/end-to-end/app/*.cy.ts; do
             echo "Running test: $spec"

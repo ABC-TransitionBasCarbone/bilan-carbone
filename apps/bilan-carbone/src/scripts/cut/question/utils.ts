@@ -1,5 +1,6 @@
 import { CUTUnit } from '@/services/unit'
-import { Prisma, QuestionType, SubPost } from '@prisma/client'
+import type { Prisma } from '@repo/db-common'
+import { QuestionType, SubPost } from '@repo/db-common/enums'
 
 export enum HEADERS {
   ID_EMISSION_FACTOR = 'ID FE',

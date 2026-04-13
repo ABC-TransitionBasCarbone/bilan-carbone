@@ -1,10 +1,10 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { getEmissionResults } from '@/services/emissionSource'
 import { getBegesEmissionTotal } from '@/services/results/beges'
 import { getGHGPEmissionTotal } from '@/services/results/ghgp'
 import { Translations } from '@/types/translation'
-import { Environment, Export, StudyResultUnit } from '@prisma/client'
+import { Environment, Export, StudyResultUnit } from '@repo/db-common/enums'
 import { formatNumber } from './number'
 import { STUDY_UNIT_VALUES } from './study'
 

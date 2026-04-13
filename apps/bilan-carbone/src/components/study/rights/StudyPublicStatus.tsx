@@ -3,7 +3,7 @@
 import HelpIcon from '@/components/base/HelpIcon'
 import { FormRadio } from '@/components/form/Radio'
 import GlossaryModal from '@/components/modals/GlossaryModal'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { changeStudyPublicStatus } from '@/services/serverFunctions/study'
 import {

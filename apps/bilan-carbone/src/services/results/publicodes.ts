@@ -2,11 +2,10 @@ import { TOTAL_RULE } from '@/constants/publicodes'
 import { customPostOrder } from '@/environments/clickson/utils/constant'
 import { sortByCustomOrder } from '@/utils/array'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
-import { Environment, StudyResultUnit, SubPost } from '@prisma/client'
+import { Environment, StudyResultUnit, SubPost } from '@repo/db-common'
 import Engine from 'publicodes'
 import { hasCustomPostOrder } from '../permissions/environment'
-import { Post } from '../posts'
-import { BaseResultsByPost } from './consolidated'
+import type { BaseResultsByPost, Post } from '../posts'
 
 function safeEvaluate(engine: Engine, ruleName: string | undefined): number {
   if (!ruleName) {

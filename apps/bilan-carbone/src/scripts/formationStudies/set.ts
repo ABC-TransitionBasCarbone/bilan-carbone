@@ -1,5 +1,5 @@
 import { setStudyTemplate } from '@/services/serverFunctions/study'
-import { DuplicableStudy, Environment } from '@prisma/client'
+import { DuplicableStudy, Environment } from '@repo/db-common/enums'
 import { Command } from 'commander'
 
 const program = new Command()

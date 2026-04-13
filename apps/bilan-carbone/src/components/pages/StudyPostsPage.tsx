@@ -1,13 +1,17 @@
 'use client'
 
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { getCaracterisationsBySubPost } from '@/services/emissionSource'
 import { Post, subPostsByPost } from '@/services/posts'
-import { EmissionSourcesStatus, getEmissionSourceStatus } from '@/services/study'
+import { EmissionSourcesStatus } from '@/types/emissionSource.types'
 import { EmissionSourcesFilters, EmissionSourcesSort } from '@/types/filters'
 import { unique } from '@/utils/array'
-import { getEmissionSourcesFuseOptions, getSortedEmissionSources } from '@/utils/emissionSources'
-import { ControlMode, EmissionSourceCaracterisation, EmissionSourceType, StudyRole } from '@prisma/client'
+import {
+  getEmissionSourcesFuseOptions,
+  getEmissionSourceStatus,
+  getSortedEmissionSources,
+} from '@/utils/emissionSources'
+import { ControlMode, EmissionSourceCaracterisation, EmissionSourceType, StudyRole } from '@repo/db-common/enums'
 import Fuse from 'fuse.js'
 import { UserSession } from 'next-auth'
 import { useLocale, useTranslations } from 'next-intl'

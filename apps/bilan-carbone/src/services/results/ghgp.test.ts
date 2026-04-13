@@ -1,7 +1,7 @@
 import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
 import * as studyUtilsModule from '@/utils/study'
 import { expect } from '@jest/globals'
-import { SubPost } from '@prisma/client'
+import { SubPost } from '@repo/db-common/enums'
 import { getGHGPEmissionValue } from './ghgp'
 
 jest.mock('../../utils/study', () => ({ hasDeprecationPeriod: jest.fn(), hasFabricationPart: jest.fn() }))

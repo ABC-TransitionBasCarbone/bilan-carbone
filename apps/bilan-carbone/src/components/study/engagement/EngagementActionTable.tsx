@@ -3,10 +3,10 @@
 import BaseTable from '@/components/base/Table'
 import { TableActionButton } from '@/components/base/TableActionButton'
 import { EngagementActionSteps, EngagementActionTargets } from '@/constants/engagementActions'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { EngagementActionWithSites } from '@/services/serverFunctions/study'
 import { formatDateFr } from '@/utils/time'
-import { EngagementPhase } from '@prisma/client'
+import { EngagementPhase } from '@repo/db-common/enums'
 import {
   ColumnDef,
   getCoreRowModel,

@@ -1,10 +1,10 @@
 'use client'
 
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { environmentPostMapping, Post, subPostsByPost } from '@/services/posts'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { withInfobulle } from '@/utils/post'
-import { Environment, StudyRole } from '@prisma/client'
+import { Environment, StudyRole } from '@repo/db-common/enums'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import Block from '../base/Block'

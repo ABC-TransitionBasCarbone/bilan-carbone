@@ -1,4 +1,4 @@
-import { Environment } from '@prisma/client'
+import { Environment } from '@repo/db-common/enums'
 import { getToken } from 'next-auth/jwt'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -17,7 +17,7 @@ const logos = ['https://base-empreinte.ademe.fr', 'https://www.legifrance.gouv.f
 
 const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const host = req.headers.get('host')?.toLowerCase()
   const redirectHosts = [
     'calculator.clickson.eu',
@@ -59,8 +59,7 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  const nonceRestriction =
-    process.env.NODE_ENV === 'development' ? "'unsafe-inline'" : `'nonce-${nonce}' 'strict-dynamic'`
+  const nonceRestriction = process.env.NODE_ENV === 'development' ? "'unsafe-inline' 'unsafe-eval'" : `'nonce-${nonce}'`
 
   const cspHeader = `
     default-src 'self';

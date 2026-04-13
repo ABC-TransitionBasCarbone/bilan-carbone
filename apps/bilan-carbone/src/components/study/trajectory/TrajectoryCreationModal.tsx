@@ -2,6 +2,7 @@
 
 import LoadingButton from '@/components/base/LoadingButton'
 import Modal from '@/components/modals/Modal'
+import { SBTI_START_YEAR, SNBC_FINAL_TARGET_YEAR } from '@/constants/trajectory.constants'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import {
   createTrajectorySchema,
@@ -15,23 +16,22 @@ import {
 } from '@/services/serverFunctions/trajectory.serverFunction'
 import type { BaseObjective, PastStudy } from '@/types/trajectory.types'
 import { TrajectoryWithObjectivesAndScope } from '@/types/trajectory.types'
+import { getDefaultSBTIReductionRate } from '@/utils/sbti'
 import {
   calculateBaseSNBCReductionRates,
   calculateSectoralSNBCReductionRates,
   extractSNBCReductionRatesFromObjectives,
-  SNBC_FINAL_TARGET_YEAR,
 } from '@/utils/snbc'
 import { getYearFromDateStr } from '@/utils/time'
 import {
   getCorrectedObjectives,
   getDefaultObjectivesForTrajectoryType,
-  getDefaultSBTIReductionRate,
   getDisplayedReferenceYearForTrajectoryType,
-  SBTI_START_YEAR,
 } from '@/utils/trajectory'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Alert } from '@mui/material'
-import { SectenInfo, TrajectoryType } from '@prisma/client'
+import type { SectenInfo } from '@repo/db-common'
+import { TrajectoryType } from '@repo/db-common/enums'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import { useEffect, useMemo, useState } from 'react'

@@ -24,7 +24,7 @@ import {
   isOrganizationVersionCR,
 } from '@/db/organization'
 import { addSite } from '@/db/site'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import {
   addUser,
   changeStatus,
@@ -54,17 +54,16 @@ import { withServerResponse } from '@/utils/serverResponse'
 import { DAY, HOUR, MIN, TIME_IN_MS, YEAR } from '@/utils/time'
 import { getRoleToSetForUntrained } from '@/utils/user'
 import { accountWithUserToUserSession, userSessionToDbUser } from '@/utils/userAccounts'
+import { Organization, User } from '@repo/db-common'
 import {
   Country,
   DeactivatableFeature,
   Environment,
   Level,
-  Organization,
   Role,
-  User,
   UserChecklist,
   UserStatus,
-} from '@prisma/client'
+} from '@repo/db-common/enums'
 import jwt from 'jsonwebtoken'
 import { UserSession } from 'next-auth'
 import { getCompanyName, getValidAssociationNameBySiret } from '../associationApi'

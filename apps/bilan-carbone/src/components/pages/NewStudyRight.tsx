@@ -1,5 +1,5 @@
 import { getOrganizationVersionAccounts } from '@/db/organization'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { getAccountRoleOnStudy } from '@/utils/study'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
