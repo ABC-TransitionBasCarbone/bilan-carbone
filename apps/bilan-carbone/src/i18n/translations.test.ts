@@ -1,6 +1,3 @@
-/* eslint-disable mocha/no-setup-in-describe */
-// from the doc https://github.com/lo1tuma/eslint-plugin-mocha/blob/main/docs/rules/no-setup-in-describe.md
-// if you're using dynamically generated tests, you should disable this rule.
 import { expect } from '@jest/globals'
 import fs from 'fs'
 import path from 'path'

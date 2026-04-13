@@ -7,41 +7,75 @@ import {
   getRawOrganizationById,
   getRawOrganizationBySiret,
 } from '@/db/organization'
-import { createUsersWithAccount, updateAccount } from '@/db/user'
+import { createUsersWithAccount, organizationVersionActiveAccountsCount, updateAccount } from '@/db/user'
 import { Prisma } from '@repo/db-common'
 import { Environment, Level, Role, UserSource, UserStatus } from '@repo/db-common/enums'
 import { getCutRoleFromBase } from '../../../prisma/seed/utils'
 
+type Training = {
+  trainingTypeId: number
+  trainingOrganisation: string
+  trainingName: string
+  sessionStartDate: string
+  sessionEndDate: string
+  expirationDate: string
+}
+
 const processUser = async (value: Record<string, string>, importedFileDate: Date) => {
   const {
-    Firstname: firstName = '',
-    Lastname: lastName = '',
-    Session_Code: sessionCodeTraining,
-    Company_Name: name,
-    SIRET: siret,
-    SIREN: siren,
-    VAT: vat,
-    Tax_Number: taxNumber,
-    Purchased_Products: purchasedProducts,
-    Membership_Year: membershipYear,
-    User_Source: source,
-    Environment: dataEnvironment,
-    Formation_Name: formationName,
-    Formation_Start_Date: formationStartDate,
-    Formation_End_Date: formationEndDate,
+    firstName = '',
+    lastName = '',
+    userEmail,
+    purchasedProducts,
+    sessionCode,
+    companyName,
+    siret,
+    siren,
+    vat,
+    taxNumber,
+    membershipYear,
+    trainings: rawTrainings,
+    source,
+    environment: dataEnvironment,
+    formationName,
+    formationStartDate,
+    formationEndDate,
   } = value
+
+  const trainings: Training[] = Array.isArray(rawTrainings)
+    ? rawTrainings
+    : rawTrainings
+      ? (() => {
+          try {
+            return JSON.parse(rawTrainings)
+          } catch {
+            return []
+          }
+        })()
+      : []
 
   const environment = (dataEnvironment || Environment.BC) as Environment
 
-  const email = value['User_Email'].replace(/ /g, '').toLowerCase()
+  const email = (userEmail || '').replace(/ /g, '').toLowerCase()
 
   const companyNumber = siret || siren || vat || taxNumber
   const isCR = ['adhesion_conseil', 'licence_exploitation'].includes(purchasedProducts)
-  const activatedLicence = membershipYear.match(/\d{4}/g)?.map(Number)
+  const activatedLicence = (membershipYear || '').match(/\d{4}/g)?.map(Number)
 
   const dbAccount = await getAccountByEmailAndEnvironment(email, environment)
 
-  const role = environment === Environment.CUT ? getCutRoleFromBase(Role.COLLABORATOR) : Role.COLLABORATOR
+  let role = environment === Environment.CUT ? getCutRoleFromBase(Role.COLLABORATOR) : Role.COLLABORATOR
+
+  // If the user already has an account but is not linked to an organization version, or if they are the last active account of their organization version, they should be set as admin to avoid locking themselves out of their organization
+  if (
+    dbAccount &&
+    dbAccount.user.level !== undefined &&
+    ((dbAccount.organizationVersion &&
+      ((await organizationVersionActiveAccountsCount(dbAccount.organizationVersion.id)) ?? 0) <= 1) ||
+      !dbAccount.organizationVersion)
+  ) {
+    role = Role.ADMIN
+  }
 
   const user: Prisma.UserCreateManyInput & { account: Prisma.AccountCreateInput } = {
     id: dbAccount?.user.id,
@@ -65,8 +99,29 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
     },
   }
 
-  if (sessionCodeTraining) {
-    user.level = sessionCodeTraining.includes('BCM2') ? Level.Advanced : Level.Initial
+  if (sessionCode) {
+    user.level = sessionCode.includes('BCM2') ? Level.Advanced : Level.Initial
+  }
+
+  if (trainings && Array.isArray(trainings) && trainings.length > 0) {
+    const highestLevelTraining = trainings.reduce((prev, current) => {
+      const prevLevel = getUserLevel([prev])
+      const currentLevel = getUserLevel([current])
+      return currentLevel && (!prevLevel || currentLevel > prevLevel) ? current : prev
+    }, trainings[0])
+
+    user.account.formationName = highestLevelTraining.trainingName
+    user.account.formationStartDate = highestLevelTraining.sessionStartDate
+      ? new Date(highestLevelTraining.sessionStartDate)
+      : undefined
+    user.account.formationEndDate = highestLevelTraining.sessionEndDate
+      ? new Date(highestLevelTraining.sessionEndDate)
+      : undefined
+
+    const computedLevel = getUserLevel([highestLevelTraining])
+    if (computedLevel) {
+      user.level = computedLevel
+    }
   }
 
   if (companyNumber) {
@@ -77,7 +132,7 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
     organization = await createOrUpdateOrganization(
       {
         id: organization?.id,
-        name,
+        name: companyName,
         wordpressId: companyNumber,
       } as Prisma.OrganizationCreateInput,
       isCR,
@@ -137,4 +192,40 @@ export const processUsers = async (values: Record<string, string>[], importedFil
   } else {
     console.log('No new users to create')
   }
+}
+
+const getUserLevel = (trainings: Training[]): Level | undefined => {
+  // Retrieve all relevant trainings
+  const formationNames = trainings.map((t) => t.trainingName)
+  // Find the first session date to determine the year
+  const firstSessionYear = trainings
+    .map((t) => t.sessionStartDate)
+    .map((d) => Number(d?.slice(0, 4)))
+    .filter((y) => !isNaN(y))
+    .sort()[0]
+
+  const initial2026 = ['Bilan Carbone® Découverte', 'Bilan Carbone® Initiation']
+  const initialBefore2026 = ['Bilan Carbone® Initiation', 'MAJ Bilan Carbone® 2025 - Initiation']
+  const advanced2026 = ['Bilan Carbone® Maitrise', 'Bilan Carbone® Professionnel']
+  const advancedBefore2026 = ['Bilan Carbone® Maitrise', 'MAJ Bilan Carbone® 2025 - Maitrise']
+
+  const hasAll = (required: string[]) => required.every((f) => formationNames.includes(f))
+  const hasOne = (options: string[]) => options.some((f) => formationNames.includes(f))
+
+  if (firstSessionYear && firstSessionYear >= 2026) {
+    if (hasOne(initial2026)) {
+      return Level.Initial
+    }
+    if (hasOne(advanced2026)) {
+      return Level.Advanced
+    }
+  } else if (firstSessionYear && firstSessionYear < 2026) {
+    if (hasAll(initialBefore2026)) {
+      return Level.Initial
+    }
+    if (hasAll(advancedBefore2026)) {
+      return Level.Advanced
+    }
+  }
+  return undefined
 }
