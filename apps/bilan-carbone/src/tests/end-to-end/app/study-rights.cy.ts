@@ -16,7 +16,7 @@ describe('Study Rights', () => {
     cy.login('bc-cr-admin-1@yopmail.com', 'password-1')
     cy.getByTestId('organization').first().click()
     cy.getByTestId('new-study').click()
-    cy.getByTestId('organization-sites-checkbox').first().find('input').click({ force: true })
+    cy.getByTestId('organization-sites-checkbox').first().should('be.visible').find('input').check({ force: true })
     cy.getByTestId('new-study-organization-button').should('not.be.disabled').click()
     cy.getByTestId('new-study-name').scrollIntoView()
     cy.getByTestId('new-study-name').should('be.visible')
@@ -70,7 +70,7 @@ describe('Study Rights', () => {
   it('should set user and manage role according to given rights', () => {
     cy.login('bc-admin-1@yopmail.com', 'password-1')
     cy.getByTestId('new-study').click()
-    cy.getByTestId('organization-sites-checkbox').first().find('input').click({ force: true })
+    cy.getByTestId('organization-sites-checkbox').first().should('be.visible').find('input').check({ force: true })
     cy.getByTestId('new-study-organization-button').should('not.be.disabled').click()
     cy.getByTestId('new-study-name').scrollIntoView()
     cy.getByTestId('new-study-name').should('be.visible')
@@ -242,7 +242,7 @@ describe('Study Rights', () => {
   it('study members deletion rights', () => {
     cy.login('bc-admin-1@yopmail.com', 'password-1')
     cy.getByTestId('new-study').click()
-    cy.getByTestId('organization-sites-checkbox').first().find('input').click({ force: true })
+    cy.getByTestId('organization-sites-checkbox').first().should('be.visible').find('input').check({ force: true })
     cy.getByTestId('new-study-organization-button').should('not.be.disabled').click()
     cy.getByTestId('new-study-name').scrollIntoView()
     cy.getByTestId('new-study-name').type('Study with deletion rights')
@@ -306,7 +306,7 @@ describe('Study Rights', () => {
   it('study contributors deletion rights', () => {
     cy.login('bc-admin-1@yopmail.com', 'password-1')
     cy.getByTestId('new-study').click()
-    cy.getByTestId('organization-sites-checkbox').first().find('input').click({ force: true })
+    cy.getByTestId('organization-sites-checkbox').first().should('be.visible').find('input').check({ force: true })
     cy.getByTestId('new-study-organization-button').should('not.be.disabled').click()
     cy.getByTestId('new-study-name').scrollIntoView()
     cy.getByTestId('new-study-name').type('Study with contributor deletion rights')
@@ -383,7 +383,7 @@ describe('Study Rights', () => {
   it('study contributors edition rights', () => {
     cy.login('bc-admin-1@yopmail.com', 'password-1')
     cy.getByTestId('new-study').click()
-    cy.getByTestId('organization-sites-checkbox').first().find('input').click({ force: true })
+    cy.getByTestId('organization-sites-checkbox').first().should('be.visible').find('input').check({ force: true })
     cy.getByTestId('new-study-organization-button').should('not.be.disabled').click()
     cy.getByTestId('new-study-name').scrollIntoView()
     cy.getByTestId('new-study-name').type('Study with contributor deletion rights')
@@ -424,7 +424,7 @@ describe('Study Rights', () => {
   it('admin user default role is validator', () => {
     cy.login('bc-admin-0@yopmail.com', 'password-0')
     cy.getByTestId('new-study').click()
-    cy.getByTestId('organization-sites-checkbox').first().find('input').click({ force: true })
+    cy.getByTestId('organization-sites-checkbox').first().should('be.visible').find('input').check({ force: true })
     cy.getByTestId('new-study-organization-button').should('not.be.disabled').click()
     cy.getByTestId('new-study-name').scrollIntoView()
     cy.getByTestId('new-study-name').should('be.visible').type('Study from admin')
@@ -444,7 +444,7 @@ describe('Study Rights', () => {
   it('non admin user default role is editor', () => {
     cy.login()
     cy.getByTestId('new-study').click()
-    cy.getByTestId('organization-sites-checkbox').first().find('input').click({ force: true })
+    cy.getByTestId('organization-sites-checkbox').first().should('be.visible').find('input').check({ force: true })
     cy.getByTestId('new-study-organization-button').should('not.be.disabled').click()
     cy.getByTestId('new-study-name').scrollIntoView()
     cy.getByTestId('new-study-name').should('be.visible').type('Study from non admin')
