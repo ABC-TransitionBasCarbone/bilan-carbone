@@ -31,6 +31,11 @@ const nextConfig = {
     '@publicodes/forms',
   ],
   reactStrictMode: true,
+  experimental: {
+    staleTimes: {
+      dynamic: 0,
+    },
+  },
   headers: async () => [
     {
       source: '/(.*)',
