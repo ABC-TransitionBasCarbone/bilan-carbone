@@ -7,7 +7,7 @@ import {
   getRawOrganizationById,
   getRawOrganizationBySiret,
 } from '@/db/organization'
-import { createUsersWithAccount, updateAccount } from '@/db/user'
+import { createUsersWithAccount, organizationVersionActiveAccountsCount, updateAccount } from '@/db/user'
 import { Environment, Level, Prisma, Role, UserSource, UserStatus } from '@prisma/client'
 import { getCutRoleFromBase } from '../../../prisma/seed/utils'
 
@@ -63,7 +63,18 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
 
   const dbAccount = await getAccountByEmailAndEnvironment(email, environment)
 
-  const role = environment === Environment.CUT ? getCutRoleFromBase(Role.COLLABORATOR) : Role.COLLABORATOR
+  let role = environment === Environment.CUT ? getCutRoleFromBase(Role.COLLABORATOR) : Role.COLLABORATOR
+
+  // If the user already has an account but is not linked to an organization version, or if they are the last active account of their organization version, they should be set as admin to avoid locking themselves out of their organization
+  if (
+    dbAccount &&
+    dbAccount.user.level !== undefined &&
+    ((dbAccount.organizationVersion &&
+      ((await organizationVersionActiveAccountsCount(dbAccount.organizationVersion.id)) ?? 0) <= 1) ||
+      !dbAccount.organizationVersion)
+  ) {
+    role = Role.ADMIN
+  }
 
   const user: Prisma.UserCreateManyInput & { account: Prisma.AccountCreateInput } = {
     id: dbAccount?.user.id,
