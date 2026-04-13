@@ -26,6 +26,7 @@ describe('userUtils functions', () => {
       const result = findUserInfo(user)
       expect(result).toEqual({
         select: {
+          formationName: true,
           user: {
             select: {
               email: true,
@@ -49,6 +50,7 @@ describe('userUtils functions', () => {
       const result = findUserInfo(user)
       expect(result).toEqual({
         select: {
+          formationName: true,
           user: {
             select: {
               email: true,
