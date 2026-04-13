@@ -444,7 +444,7 @@ describe('Study Rights', () => {
   it('non admin user default role is editor', () => {
     cy.login()
     cy.getByTestId('new-study').click()
-    cy.getByTestId('organization-sites-checkbox').first().click()
+    cy.getByTestId('organization-sites-checkbox').first().should('be.visible').click()
     cy.getByTestId('new-study-organization-button').click()
     cy.getByTestId('new-study-name').scrollIntoView()
     cy.getByTestId('new-study-name').should('be.visible').type('Study from non admin')
