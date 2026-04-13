@@ -22,9 +22,9 @@
   },
   "devDependencies": {
     "@publicodes/tools": "^1.8.1",
-    "vitest": "^4.0.18"
+    "vitest": "^4.1.4"
   },
   "resolutions": {
-    "rollup": ">=4.59.0"
+    "vite": "^6.4.2"
   }
 }
