@@ -10,7 +10,7 @@ export default defineConfig({
     supportFile: 'cypress/support/index.ts',
     experimentalStudio: true,
     defaultCommandTimeout: 15000, // default value, change if needed during local tests
-    retries: 3,
+    retries: 2,
     experimentalMemoryManagement: true,
     numTestsKeptInMemory: process.env.CYPRESS_UI === 'true' ? 10 : 0,
     pageLoadTimeout: 80000,
