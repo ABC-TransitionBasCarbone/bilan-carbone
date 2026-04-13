@@ -15,7 +15,7 @@ import { Button } from '@repo/ui'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
-import { UseFormReturn } from 'react-hook-form'
+import { Control, UseFormReturn, useWatch } from 'react-hook-form'
 
 interface Props {
   user: UserSession
@@ -27,6 +27,27 @@ interface Props {
   targetOrganizationVersionId?: string | null
 }
 
+interface NextButtonProps {
+  control: Control<CreateStudyCommand>
+  onClick: () => void
+  error: string
+}
+
+const NextButton = ({ control, onClick, error }: NextButtonProps) => {
+  const tCommon = useTranslations('common')
+  const sites = useWatch({ control, name: 'sites' })
+  const hasSelected = sites.some((site) => site.selected)
+
+  return (
+    <div className="mt2">
+      <Button disabled={!hasSelected} data-testid="new-study-organization-button" onClick={onClick}>
+        {tCommon('next')}
+      </Button>
+      {error && <FormHelperText error>{error}</FormHelperText>}
+    </div>
+  )
+}
+
 const SelectOrganization = ({
   user,
   organizationVersions,
@@ -36,7 +57,6 @@ const SelectOrganization = ({
   duplicateStudyId,
 }: Props) => {
   const t = useTranslations('study.organization')
-  const tCommon = useTranslations('common')
   const tOrganizationSites = useTranslations('organization.sites')
   const [error, setError] = useState('')
   const [showWarningModal, setShowWarningModal] = useState(false)
@@ -113,14 +133,15 @@ const SelectOrganization = ({
   }
 
   const next = () => {
-    if (!sites.some((site) => site.selected)) {
+    const currentSites = form.getValues('sites')
+    if (!currentSites.some((site) => site.selected)) {
       setError(t('validation.sites'))
       return
     }
 
     if (
       user.environment === Environment.CUT &&
-      sites
+      currentSites
         .filter((site) => site.selected)
         .some(
           (site) =>
@@ -136,8 +157,8 @@ const SelectOrganization = ({
 
     // Check for deselected sites with emission sources when duplicating
     if (duplicateStudyId) {
-      const currentSelectedSiteIds = sites.filter((site) => site.selected).map((site) => site.id)
-      const deselectedSitesWithSources = sites
+      const currentSelectedSiteIds = currentSites.filter((site) => site.selected).map((site) => site.id)
+      const deselectedSitesWithSources = currentSites
         .filter((site) => {
           const wasOriginallySelected = originalSelectedSites?.includes(site.id)
           const isCurrentlySelected = currentSelectedSiteIds.includes(site.id)
@@ -195,16 +216,7 @@ const SelectOrganization = ({
           (organizationVersion.organization.sites.length > 0 ? (
             <>
               <DynamicSites sites={sites} form={form} caUnit={caUnit} withSelection />
-              <div className="mt2">
-                <Button
-                  disabled={!sites.some((site) => site.selected)}
-                  data-testid="new-study-organization-button"
-                  onClick={next}
-                >
-                  {tCommon('next')}
-                </Button>
-                {error && <FormHelperText error>{error}</FormHelperText>}
-              </div>
+              <NextButton control={form.control} onClick={next} error={error} />
             </>
           ) : (
             <>
