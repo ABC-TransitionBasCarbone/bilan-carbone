@@ -217,7 +217,12 @@ export const calculateTrajectoriesWithHistory = ({
   )
 
   const defaultTrajectoryDataPoints = defaultTrajectoryData?.data.currentTrajectory ?? []
-  const defaultTrajectoryForSBTI = defaultTrajectoryDataPoints.filter((p) => p.year <= SBTI_START_YEAR)
+  const earliestPastStudyYearForSBTI = getEarliestPastStudyYear(pastStudies)
+  const sbtiDefaultTrajectoryPivotYear =
+    earliestPastStudyYearForSBTI !== null && earliestPastStudyYearForSBTI > SBTI_START_YEAR
+      ? earliestPastStudyYearForSBTI
+      : SBTI_START_YEAR
+  const defaultTrajectoryForSBTI = defaultTrajectoryDataPoints.filter((p) => p.year <= sbtiDefaultTrajectoryPivotYear)
 
   const { sbti15Data, sbtiWB2CData } = getDefaultSBTiData(
     pastStudies,

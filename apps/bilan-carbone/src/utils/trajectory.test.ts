@@ -273,6 +273,47 @@ describe('calculateTrajectory', () => {
       const point2015 = result.find((p) => p.year === 2015)
       expect(point2015?.value).toBeCloseTo(1500, 1)
     })
+
+    test('with defaultTrajectory and earliest past study after 2020 - current trajectory follows default until that past study year', () => {
+      const sectenData = createGeneralSectenData()
+      const pastStudies = createPastStudies([2022, 1100])
+      const snbcTrajectory = calculateSNBCTrajectory({
+        studyEmissions: 1000,
+        studyStartYear: 2025,
+        sectenData,
+        pastStudies,
+      })
+
+      const result = calculateSBTiTrajectory({
+        studyEmissions: 1000,
+        studyStartYear: 2025,
+        reductionRate: SBTI_REDUCTION_RATE_15,
+        pastStudies,
+        defaultTrajectory: snbcTrajectory,
+      })
+
+      // Years up to and including 2022 (earliest past study) should follow the default (SNBC) trajectory
+      const point2020 = result.find((p) => p.year === 2020)
+      const snbcPoint2020 = snbcTrajectory.find((p) => p.year === 2020)
+      expect(point2020?.value).toEqual(snbcPoint2020?.value)
+
+      const point2021 = result.find((p) => p.year === 2021)
+      const snbcPoint2021 = snbcTrajectory.find((p) => p.year === 2021)
+      expect(point2021?.value).toEqual(snbcPoint2021?.value)
+
+      const point2022 = result.find((p) => p.year === 2022)
+      const snbcPoint2022 = snbcTrajectory.find((p) => p.year === 2022)
+      expect(point2022?.value).toEqual(snbcPoint2022?.value)
+
+      // From 2023 onward (after the past study pivot), SBTi reduction applies — not SNBC values
+      // Use 2030 where the linear SBTi reduction clearly diverges from SNBC
+      const point2030 = result.find((p) => p.year === 2030)
+      expect(point2030?.value).not.toEqual(snbcTrajectory.find((p) => p.year === 2030)?.value)
+
+      // Study start year remains at study emissions
+      const point2025 = result.find((p) => p.year === 2025)
+      expect(point2025?.value).toEqual(1000)
+    })
   })
 
   describe('custom trajectory calculation', () => {
