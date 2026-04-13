@@ -1,5 +1,5 @@
 import { FormTextField } from '@/components/form/TextField'
-import { SECTEN_SECTORS } from '@/constants/trajectories'
+import { SECTEN_SECTORS } from '@/constants/trajectory.constants'
 import { TrajectoryFormData } from '@/services/serverFunctions/trajectory.command'
 import { Typography } from '@mui/material'
 import classNames from 'classnames'

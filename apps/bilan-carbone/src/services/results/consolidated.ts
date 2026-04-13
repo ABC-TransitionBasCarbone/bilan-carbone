@@ -2,34 +2,14 @@ import type { FullStudy } from '@/db/study'
 import { customPostOrder } from '@/environments/clickson/utils/constant'
 import { Translations } from '@/types/translation'
 import { sortByCustomOrder } from '@/utils/array'
-import { Environment, SubPost } from '@repo/db-common/enums'
-import { getEmissionResults, getEmissionSourcesTotalCo2, getEmissionSourcesTotalMonetaryCo2 } from '../emissionSource'
+import { getEmissionSourcesTotalCo2 } from '@/utils/emissionSources'
+import { Environment } from '@repo/db-common/enums'
+import { AdditionalResultTypes, ResultsByPost, ResultType } from '../../types/study.types'
+import { getEmissionResults, getEmissionSourcesTotalMonetaryCo2 } from '../emissionSource'
 import { hasCustomPostOrder } from '../permissions/environment'
 import { BCPost, ClicksonPost, convertTiltSubPostToBCSubPost, CutPost, Post, subPostsByPost, TiltPost } from '../posts'
-import { AdditionalResultTypes, ResultType } from '../study'
 import { getSquaredStandardDeviationForEmissionSourceArray } from '../uncertainty'
 import { filterWithDependencies, getSiteEmissionSourcesWithoutMarketBase } from './utils'
-
-export type BaseResultsByPost = {
-  post: Post | SubPost | 'total'
-  label: string
-  value: number
-  children: BaseResultsByPost[]
-}
-
-export interface BaseResultsBySite {
-  aggregated: BaseResultsByPost[]
-  bySite: Record<string, BaseResultsByPost[]>
-}
-
-export type ResultsByPost = Omit<BaseResultsByPost, 'children'> & {
-  monetaryValue: number
-  nonSpecificMonetaryValue: number
-  numberOfEmissionSource: number
-  numberOfValidatedEmissionSource: number
-  squaredStandardDeviation: number
-  children: ResultsByPost[]
-}
 
 export const computeResultsByPostFromEmissionSources = (
   study: FullStudy,

@@ -3,12 +3,12 @@ import {
   TRAJECTORY_SNBC_ENERGY_ID,
   TRAJECTORY_SNBC_GENERAL_ID,
   TRAJECTORY_SNBC_TRANSPORTATION_ID,
-} from '@/constants/trajectories'
+} from '@/constants/trajectory.constants'
 import type { PastStudy, TrajectoryDataPoint } from '@/types/trajectory.types'
 import { expect } from '@jest/globals'
 import { createGeneralSectenData, createSectenDataWithSectors } from './secten.test-utils'
-import { calculateSNBCTrajectory } from './snbc'
-import { calculateTrajectoryIntegral, getSNBCData } from './trajectory'
+import { calculateSNBCTrajectory, getSNBCData } from './snbc'
+import { calculateTrajectoryIntegral } from './trajectory-shared.utils'
 
 // TODO: ESM module issue with Jest. Remove these mocks when moving to Vitest
 jest.mock('../services/file', () => ({ download: jest.fn() }))

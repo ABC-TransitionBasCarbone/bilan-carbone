@@ -1,7 +1,7 @@
 'use client'
 
 import Modal from '@/components/modals/Modal'
-import { SECTEN_SECTORS } from '@/constants/trajectories'
+import { SECTEN_SECTORS } from '@/constants/trajectory.constants'
 import { customRich } from '@/i18n/customRich'
 import { SectenVersionDiff } from '@/utils/secten'
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'

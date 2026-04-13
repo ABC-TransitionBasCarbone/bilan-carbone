@@ -20,13 +20,12 @@ import DatePickerInput from './inputFields/DatePickerInput'
 import QCMInput from './inputFields/QCMInput'
 import QCUInput from './inputFields/QCUInput'
 import SelectInput from './inputFields/SelectInput'
-import TableInput from './inputFields/TableInput'
 import TextUnitInput from './inputFields/TextUnitInput'
 import YearPickerInput from './inputFields/YearPickerInput'
 import { FormValues } from './types/formTypes'
 import { FieldType } from './types/questionTypes'
 
-interface Props {
+export interface FieldComponentProps {
   fieldType: FieldType
   fieldName: string
   question: Question
@@ -40,7 +39,6 @@ interface Props {
   setValue: UseFormSetValue<FormValues>
   isTable?: boolean
   onTableFieldChange?: () => void
-  studyStartDate: Date
 }
 
 const getCustomQuestionComponent = (question: Question) => {
@@ -60,14 +58,11 @@ const FieldComponent = ({
   error,
   isLoading,
   disabled,
-  watch,
   formErrors,
   autoSave,
-  setValue,
   isTable,
   onTableFieldChange,
-  studyStartDate,
-}: Props) => {
+}: FieldComponentProps) => {
   const { callServerFunction } = useServerFunction()
 
   const tValidation = useTranslations('form.validation')
@@ -76,7 +71,6 @@ const FieldComponent = ({
   const saveField = useCallback(
     async (value: unknown) => {
       if (!formErrors[fieldName]) {
-        // Specific saving logic for table fields
         if (isTable && onTableFieldChange) {
           onTableFieldChange()
           return
@@ -191,23 +185,6 @@ const FieldComponent = ({
           console.warn(`Unsupported question type: ${question.type} (mapped to: ${fieldType})`)
           return () => null
       }
-    }
-
-    if (fieldType === FieldType.TABLE) {
-      return (
-        <TableInput
-          question={baseInputProps.question}
-          label={baseInputProps.label}
-          errorMessage={baseInputProps.errorMessage}
-          disabled={baseInputProps.disabled}
-          control={control}
-          autoSave={autoSave}
-          watch={watch}
-          formErrors={formErrors}
-          setValue={setValue}
-          studyStartDate={studyStartDate}
-        />
-      )
     }
 
     const InputComponent = getInputComponent()

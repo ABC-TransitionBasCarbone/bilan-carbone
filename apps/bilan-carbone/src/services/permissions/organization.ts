@@ -5,12 +5,12 @@ import {
   getOrgVersionWithOrgId,
   organizationVersionExists,
 } from '@/db/organization'
+import { countOrganizationStudiesFromOtherUsers } from '@/db/study'
 import { getUserByEmail } from '@/db/user'
 import { canEditOrganizationVersion, hasEditionRole, isInOrgaOrParent } from '@/utils/organization'
 import { canEditMemberRole } from '@/utils/user'
 import { UserSession } from 'next-auth'
 import { dbActualizedAuth } from '../auth'
-import { getOrganizationStudiesFromOtherUsers } from '../serverFunctions/study'
 
 export const isInOrgaOrParentFromId = async (
   userOrganizationVersionId: string | null,
@@ -91,15 +91,12 @@ export const canDeleteOrganizationVersion = async (organizationVersionId: string
     return false
   }
 
-  const organizationStudiesFromOtherUsers = await getOrganizationStudiesFromOtherUsers(
+  const organizationStudiesFromOtherUsersCount = await countOrganizationStudiesFromOtherUsers(
     organizationVersionId,
     session.user.accountId,
   )
 
-  if (
-    !hasEditionRole(true, session.user.role) ||
-    (organizationStudiesFromOtherUsers.success && !!organizationStudiesFromOtherUsers.data)
-  ) {
+  if (!hasEditionRole(true, session.user.role) || !!organizationStudiesFromOtherUsersCount) {
     return false
   }
 

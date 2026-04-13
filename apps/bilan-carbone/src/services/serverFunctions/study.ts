@@ -112,6 +112,7 @@ import { formatDateFr } from '@/utils/time'
 import { isAdmin } from '@/utils/user'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
 
+import { hasSufficientLevel } from '@/utils/study'
 import type {
   Account,
   Document,
@@ -171,7 +172,7 @@ import {
 import { isAdminOnStudyOrga } from '../permissions/study.utils'
 import { isSimplifiedEnvironment, SimplifiedEnvironment } from '../publicodes/simplifiedPublicodesConfig'
 import { deleteFileFromBucket, getFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'
-import { getTransEnvironmentSubPost, hasSufficientLevel } from '../study'
+import { getTransEnvironmentSubPost } from '../study'
 import { UpdateEmissionSourceCommand } from './emissionSource.command'
 import { saveAnswerForQuestion } from './question'
 import { saveSituation as saveSituationInDB } from './situation'
