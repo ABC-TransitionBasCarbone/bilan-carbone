@@ -4,6 +4,7 @@ import { TableActionButton } from '@/components/base/TableActionButton'
 import { environmentSubPostsMapping } from '@/services/posts'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { ObjectiveWithScope, TrajectoryWithObjectivesAndScope } from '@/types/trajectory.types'
+import { getAverageAnnualRateFromTrajectory } from '@/utils/trajectory-shared.utils'
 import { Typography } from '@mui/material'
 import { TrajectoryType } from '@repo/db-common/enums'
 import { Button } from '@repo/ui'
@@ -16,8 +17,13 @@ interface Props {
   trajectory: TrajectoryWithObjectivesAndScope
   canEdit: boolean
   isDefaultSnbc: boolean
-  correctedRatesMap: Map<string, { correctedRate: number }>
+  trajectoryData?: {
+    previousTrajectory: Array<{ year: number; value: number }> | null
+    currentTrajectory: Array<{ year: number; value: number }>
+    withinThreshold: boolean
+  }
   defaultObjectiveReferenceYear: number
+  studyYear: number
   sites: Array<{ id: string; name: string }>
   onAddObjective: () => void
   onEditObjective: (objective: ObjectiveWithScope) => void
@@ -29,8 +35,9 @@ const ObjectivesExpandedRow = ({
   trajectory,
   canEdit,
   isDefaultSnbc,
-  correctedRatesMap,
+  trajectoryData,
   defaultObjectiveReferenceYear,
+  studyYear,
   sites,
   onAddObjective,
   onEditObjective,
@@ -127,20 +134,37 @@ const ObjectivesExpandedRow = ({
 
   const getPeriod = (startYear: number, targetYear: number) => `${startYear} → ${targetYear}`
 
+  const getDisplayedRatesForPeriod = (startYear: number, endYear: number) => {
+    const referenceRate = getAverageAnnualRateFromTrajectory(trajectoryData?.previousTrajectory, startYear, endYear)
+
+    if (!trajectoryData || trajectoryData.withinThreshold) {
+      return { referenceRate, correctedRate: undefined }
+    }
+
+    // Corrected rate of the first objective is only applied from study start year, not reference year
+    const correctedStartYear = startYear < studyYear ? studyYear : startYear
+    const correctedRate = getAverageAnnualRateFromTrajectory(
+      trajectoryData.currentTrajectory,
+      correctedStartYear,
+      endYear,
+    )
+    return { referenceRate, correctedRate }
+  }
+
   const isCustom = trajectory.type === TrajectoryType.CUSTOM
   const defaultObjectivesCount = defaultObjectives.length
 
   const defaultObjectiveRows: ObjectiveRow[] = defaultObjectives.map((objective, index) => {
     const prevYear = index > 0 ? defaultObjectives[index - 1].targetYear : defaultObjectiveReferenceYear
-    const corrected = correctedRatesMap.get(objective.id)
+    const rates = getDisplayedRatesForPeriod(prevYear, objective.targetYear)
     const canEditObj = isCustom && !isDefaultSnbc
     const canDeleteObj = isCustom && !isDefaultSnbc && defaultObjectivesCount > 1
 
     return {
       id: objective.id,
       period: getPeriod(prevYear, objective.targetYear),
-      reductionRate: objective.reductionRate,
-      correctedRate: corrected?.correctedRate,
+      reductionRate: rates.referenceRate ?? objective.reductionRate,
+      correctedRate: rates.correctedRate,
       sites: tCommon('allSites'),
       posts: tCommon('allPosts'),
       tags: tCommon('allTags'),
@@ -153,13 +177,13 @@ const ObjectivesExpandedRow = ({
 
   const subObjectiveRows: ObjectiveRow[] = subObjectives.map((objective, index) => {
     const startYear = objective.startYear ?? defaultObjectiveReferenceYear
-    const corrected = correctedRatesMap.get(objective.id)
+    const rates = getDisplayedRatesForPeriod(startYear, objective.targetYear)
 
     return {
       id: objective.id,
       period: getPeriod(startYear, objective.targetYear),
-      reductionRate: objective.reductionRate,
-      correctedRate: corrected?.correctedRate,
+      reductionRate: rates.referenceRate ?? objective.reductionRate,
+      correctedRate: rates.correctedRate,
       sites: getSitesDisplay(objective),
       posts: getSubPostsDisplay(objective),
       tags: getTagsDisplay(objective),
