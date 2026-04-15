@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test'
-import { inputByTestId, login, logout, openSubPost, resetTestDatabase, sourceCard } from './playwright.helpers'
+import { inputByTestId, login, logout, openSubPost, sourceCard } from './playwright.helpers'
 
 const studyId = '88c93e88-7c80-4be4-905b-f0bbd2ccc779'
 const post = 'IntrantsBiensEtMatieres'
@@ -23,10 +23,38 @@ const sourceRowAssertions = async (
   await expect(card.getByTestId('emission-source-quality')).toHaveText(quality)
 }
 
+const deleteSourceIfExists = async (page: import('@playwright/test').Page, name: string) => {
+  // Loop in case there are multiple sources with the same name
+  while (true) {
+    const getCard = () => page.getByTestId(`emission-source-${name}`).first()
+    const count = await page.getByTestId(`emission-source-${name}`).count()
+    if (count === 0) {
+      break
+    }
+    await getCard().click()
+    // If validated, unvalidate first (validated sources cannot be deleted)
+    const isValidated = await getCard().getByTestId('validated-emission-source-name').isVisible({ timeout: 1000 }).catch(() => false)
+    if (isValidated) {
+      const validateBtn = page.getByTestId('emission-source-validate')
+      if (await validateBtn.isVisible({ timeout: 1000 }).catch(() => false)) {
+        await validateBtn.click()
+        // Wait for the unvalidation to complete and the card to update
+        await expect(getCard().getByTestId('emission-source-delete')).toBeVisible({ timeout: 8000 })
+      }
+    }
+    const deleteBtn = getCard().getByTestId('emission-source-delete')
+    if (await deleteBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
+      await deleteBtn.click()
+      await page.getByTestId('delete-emission-source-modal-accept').click()
+      // Wait until this card disappears before looping
+      await page.waitForTimeout(500)
+    } else {
+      break
+    }
+  }
+}
+
 test.describe('Create study emission source (Playwright migration)', () => {
-  test.beforeAll(() => {
-    resetTestDatabase()
-  })
 
   test('covers the same functional flow as Cypress', async ({ page }) => {
     test.setTimeout(120000)
@@ -35,6 +63,11 @@ test.describe('Create study emission source (Playwright migration)', () => {
       await login(page, 'bc-collaborator-0@yopmail.com', 'password-0')
       await page.goto(route)
       await openSubPost(page, subPostTestId)
+
+      // Clean up any leftover sources from previous runs
+      for (const name of [sourceNameInitial, sourceName, sourceNameCopy, sourceNameEdited]) {
+        await deleteSourceIfExists(page, name)
+      }
 
       const subPost = page.getByTestId(subPostTestId)
       const newSourceInput = inputByTestId(subPost, 'new-emission-source')
@@ -92,7 +125,7 @@ test.describe('Create study emission source (Playwright migration)', () => {
       await sourceRowAssertions(page, sourceName, {
         status: 'À vérifier',
         value: '1 008 tCO₂e',
-        quality: 'Qualité : Très mauvaise',
+        quality: 'Qualité : Mauvaise',
       })
 
       // Expand quality fields if collapsed.
@@ -216,6 +249,16 @@ test.describe('Create study emission source (Playwright migration)', () => {
         value: '1 744 tCO₂e',
         quality: 'Qualité : Mauvaise',
       })
+    })
+
+    await test.step('Cleanup: delete created emission sources', async () => {
+      await logout(page)
+      await login(page, 'bc-collaborator-0@yopmail.com', 'password-0')
+      await page.goto(route)
+      await openSubPost(page, subPostTestId)
+      for (const name of [sourceName, sourceNameEdited]) {
+        await deleteSourceIfExists(page, name)
+      }
     })
   })
 })

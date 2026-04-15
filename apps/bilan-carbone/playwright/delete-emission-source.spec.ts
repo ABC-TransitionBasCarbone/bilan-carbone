@@ -9,10 +9,6 @@ const sourceName = 'My temp emission source'
 const route = `/etudes/${studyId}/comptabilisation/saisie-des-donnees/${post}`
 
 test.describe('Delete emission source', () => {
-  test.beforeAll(() => {
-    // resetTestDatabase()
-  })
-
   test('should be able to delete an emission source on a study', async ({ page }) => {
     test.setTimeout(120000)
 

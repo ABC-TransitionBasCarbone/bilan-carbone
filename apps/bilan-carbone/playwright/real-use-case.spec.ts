@@ -1,5 +1,5 @@
 import { expect, test, type Locator, type Page } from '@playwright/test'
-import { login, resetTestDatabase } from './playwright.helpers'
+import { login } from './playwright.helpers'
 
 const studyId = '91bb3826-2be7-4d56-bb9b-363f4d9af62f'
 const route = `/etudes/${studyId}/comptabilisation/resultats`
@@ -20,10 +20,6 @@ const assertResultsTableRows = async (page: Page, testId: string, rows: RowAsser
 }
 
 test.describe('Real use case: BC V8_10', () => {
-  test.beforeAll(() => {
-    resetTestDatabase()
-  })
-
   test('should correctly compute results', async ({ page }) => {
     test.setTimeout(120000)
 
