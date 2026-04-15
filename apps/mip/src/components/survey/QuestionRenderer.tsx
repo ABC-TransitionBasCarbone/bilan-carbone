@@ -14,7 +14,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
-import { ChoiceQuestion, Question, TextQuestion } from '@/lib/survey/types'
+import { ChoiceQuestion, Question, TextQuestion } from '@repo/survey'
 
 interface QuestionRendererProps {
   question: Question

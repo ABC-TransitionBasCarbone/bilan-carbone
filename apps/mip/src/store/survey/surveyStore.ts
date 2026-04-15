@@ -4,9 +4,13 @@
 
 import { create } from 'zustand'
 import { v4 as uuidv4 } from 'uuid'
-import { SurveyEngine } from '../../lib/survey/engine'
-import { surveyStorage } from '../../lib/survey/storage'
-import { Survey, SurveyResponse, SurveyState } from '../../lib/survey/types'
+import {
+  SurveyEngine,
+  surveyStorage,
+  Survey,
+  SurveyResponse,
+  SurveyState,
+} from '@repo/survey'
 
 interface SurveyActions {
   loadSurvey: (survey: Survey, responseId?: string) => void
