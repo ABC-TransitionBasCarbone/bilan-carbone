@@ -2,16 +2,9 @@ node_modules
 .env
 .env.test
 .turbo
-<<<<<<< HEAD
-packages/db-common/src/generated/
-notes/
-.vscode/
-.next/
-=======
 packages/db-common/src/generated/*
 CLAUDE.md
 .claude/
 .vscode/
 notes/
 next-env.d.ts
->>>>>>> origin/develop
