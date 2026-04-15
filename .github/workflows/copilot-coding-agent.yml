@@ -10,6 +10,6 @@ jobs:
   copilot-coding-agent:
     runs-on: ubuntu-latest
     steps:
-      - uses: github/copilot-coding-agent@latest
+      - uses: github/copilot/cli-action@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
