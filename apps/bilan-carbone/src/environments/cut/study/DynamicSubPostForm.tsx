@@ -1,9 +1,9 @@
 import DynamicForm from '@/components/dynamic-form/DynamicForm'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { formatDynamicLabel } from '@/services/interpolation'
 import { getQuestionsWithAnswers } from '@/services/serverFunctions/question'
 import { CircularProgress } from '@mui/material'
-import { Answer, Question, SubPost } from '@prisma/client'
+import { Answer, Question, SubPost } from '@repo/db-common'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useState } from 'react'
 

@@ -1,6 +1,6 @@
 import Link from '@/components/base/Link'
 import { Post } from '@/services/posts'
-import { SubPost } from '@prisma/client'
+import { SubPost } from '@repo/db-common/enums'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import progressStyles from '../../base/ProgressBar.module.css'

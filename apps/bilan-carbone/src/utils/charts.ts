@@ -1,6 +1,6 @@
 import { Translations } from '@/types/translation'
 import { Theme } from '@mui/material'
-import { StudyResultUnit, SubPost } from '@prisma/client'
+import { StudyResultUnit, SubPost } from '@repo/db-common'
 import { formatNumber } from './number'
 import { isPost } from './post'
 import { STUDY_UNIT_VALUES } from './study'

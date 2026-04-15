@@ -3,9 +3,11 @@ import { getEmissionFactorById } from '@/db/emissionFactors'
 import { FullStudy, getStudyById, getStudySites } from '@/db/study'
 import { getAccountRoleOnStudy, hasDeprecationPeriod } from '@/utils/study'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
-import { StudyEmissionSource, StudyRole } from '@prisma/client'
+import type { StudyEmissionSource } from '@repo/db-common'
+import { StudyRole } from '@repo/db-common/enums'
 import { canBeValidated } from '../emissionSource'
-import { canReadStudy, isAdminOnStudyOrga } from './study'
+import { canReadStudy } from './study'
+import { isAdminOnStudyOrga } from './study.utils'
 
 export const hasStudyBasicRights = async (account: AccountWithUser, study: FullStudy) => {
   if (!(await canReadStudy(accountWithUserToUserSession(account), study.id))) {

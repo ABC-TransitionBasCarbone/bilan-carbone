@@ -1,7 +1,6 @@
 import { getEmissionFactorsFromCSV } from '@/services/importEmissionFactor/baseEmpreinte/getEmissionFactorsFromCSV'
 import { addSourceToStudies } from '@/services/importEmissionFactor/import'
 import {
-  Account,
   ControlMode,
   DeactivatableFeature,
   EmissionFactorStatus,
@@ -10,11 +9,13 @@ import {
   Export,
   Import,
   Level,
-  PrismaClient,
   StudyRole,
   SubPost,
   Unit,
-} from '@prisma/client'
+} from '@repo/db-common/enums'
+
+import { PrismaClient } from '@repo/db-common'
+import type { Account } from '@repo/db-common/types'
 
 const studyId = '91bb3826-2be7-4d56-bb9b-363f4d9af62f'
 const siteId = 'c3f2b8d4-7a0c-4b3f-8c5b-5b5e7b6f3e3b'

@@ -1,4 +1,4 @@
-import { TrajectoryType } from '@prisma/client'
+import { TrajectoryType } from '@repo/db-common/enums'
 import TrajectoryOption from './TrajectoryOption'
 
 interface Props {

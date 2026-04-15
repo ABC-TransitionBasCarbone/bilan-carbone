@@ -1,13 +1,7 @@
 import type { ActionWithRelations, ObjectiveWithScope, TransitionPlanWithRelations } from '@/types/trajectory.types'
 import { expect } from '@jest/globals'
-import {
-  ActionIndicatorType,
-  ActionPotentialDeduction,
-  ExternalStudy,
-  Trajectory,
-  TrajectoryType,
-  TransitionPlanStudy,
-} from '@prisma/client'
+import type { ExternalStudy, Trajectory, TransitionPlanStudy } from '@repo/db-common'
+import { ActionIndicatorType, ActionPotentialDeduction, TrajectoryType } from '@repo/db-common/enums'
 import { duplicateTransitionPlanWithRelations } from './transitionPlan'
 
 const mockTx = {
@@ -16,7 +10,7 @@ const mockTx = {
   },
 }
 
-jest.mock('./client', () => ({
+jest.mock('./client.server', () => ({
   prismaClient: {
     $transaction: jest.fn((callback) => callback(mockTx)),
     transitionPlan: {

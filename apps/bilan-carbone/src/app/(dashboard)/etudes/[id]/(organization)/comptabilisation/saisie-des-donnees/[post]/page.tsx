@@ -5,7 +5,7 @@ import StudyPostsPageContainer from '@/components/pages/StudyPostsContainer'
 import { canReadStudyDetail } from '@/services/permissions/study'
 import { Post } from '@/services/posts'
 import { getAccountRoleOnStudy } from '@/utils/study'
-import { SubPost } from '@prisma/client'
+import { SubPost } from '@repo/db-common/enums'
 
 interface Props {
   params: Promise<{

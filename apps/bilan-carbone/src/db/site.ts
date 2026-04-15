@@ -1,5 +1,5 @@
-import { Prisma } from '@prisma/client'
-import { prismaClient } from './client'
+import type { Prisma } from '@repo/db-common'
+import { prismaClient } from './client.server'
 
 export const addSite = async (site: Prisma.SiteCreateInput) =>
   prismaClient.site.create({

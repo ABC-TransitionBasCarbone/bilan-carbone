@@ -13,7 +13,7 @@ import {
 import * as organizationUtils from '@/utils/organization'
 import * as studyUtils from '@/utils/study'
 import { expect } from '@jest/globals'
-import { Environment, Level, Role, StudyRole } from '@prisma/client'
+import { Environment, Level, Role, StudyRole } from '@repo/db-common/enums'
 import * as authModule from '../auth'
 import * as userModule from '../serverFunctions/user'
 import * as environmentAdvancedModule from './environmentAdvanced'
@@ -32,7 +32,11 @@ jest.mock('@/db/organization', () => ({
 }))
 jest.mock('@/db/study', () => ({ getStudyById: jest.fn() }))
 jest.mock('@/db/user', () => ({ getUserByEmail: jest.fn() }))
-jest.mock('@/utils/study', () => ({ getAccountRoleOnStudy: jest.fn(), getDuplicableEnvironments: jest.fn() }))
+jest.mock('@/utils/study', () => ({
+  getAccountRoleOnStudy: jest.fn(),
+  getDuplicableEnvironments: jest.fn(),
+  hasSufficientLevel: jest.fn(),
+}))
 jest.mock('@/utils/organization', () => ({ canEditOrganizationVersion: jest.fn(), hasActiveLicence: jest.fn() }))
 jest.mock('./organization', () => ({ isInOrgaOrParentFromId: jest.fn() }))
 jest.mock('./environmentAdvanced', () => ({ hasAccessToDuplicateStudy: jest.fn() }))
@@ -51,6 +55,7 @@ const mockGetUserActiveAccounts = userModule.getUserActiveAccounts as jest.Mock
 const mockGetStudyById = dbStudyModule.getStudyById as jest.Mock
 const mockGetAccountRoleOnStudy = studyUtils.getAccountRoleOnStudy as jest.Mock
 const mockGetDuplicableEnvironments = studyUtils.getDuplicableEnvironments as jest.Mock
+const mockHasSufficientLevel = studyUtils.hasSufficientLevel as jest.Mock
 const mockCanEditOrganizationVersion = organizationUtils.canEditOrganizationVersion as jest.Mock
 const mockHasActiveLicence = organizationUtils.hasActiveLicence as jest.Mock
 const mockIsInOrgaOrParentFromId = organizationModule.isInOrgaOrParentFromId as jest.Mock
@@ -93,6 +98,7 @@ describe('Study permissions service', () => {
         mockGetAccountById.mockResolvedValue(getMockedDbAccount({}, { level: Level.Advanced }))
         mockGetOrganizationVersionById.mockResolvedValue({})
         mockHasActiveLicence.mockReturnValue(true)
+        mockHasSufficientLevel.mockReturnValue(true)
       })
 
       it('User should be able to create an "Advanced" study', async () => {
@@ -117,16 +123,19 @@ describe('Study permissions service', () => {
       })
 
       it('User should not be able to create an "Advanced" study', async () => {
+        mockHasSufficientLevel.mockReturnValue(false)
         const result = await canCreateSpecificStudy(mockedSession, advancedStudy, mockedOrganizationVersionId)
         expect(result).toBe(false)
       })
 
       it('User should be able to create a "Standard" study', async () => {
+        mockHasSufficientLevel.mockReturnValue(true)
         const result = await canCreateSpecificStudy(mockedSession, standardStudy, mockedOrganizationVersionId)
         expect(result).toBe(true)
       })
 
       it('User should be able to create an "Initial" study', async () => {
+        mockHasSufficientLevel.mockReturnValue(true)
         const result = await canCreateSpecificStudy(mockedSession, initialStudy, mockedOrganizationVersionId)
         expect(result).toBe(true)
       })
@@ -138,16 +147,19 @@ describe('Study permissions service', () => {
       })
 
       it('User should not be able to create an "Advanced" study', async () => {
+        mockHasSufficientLevel.mockReturnValue(false)
         const result = await canCreateSpecificStudy(mockedSession, advancedStudy, mockedOrganizationVersionId)
         expect(result).toBe(false)
       })
 
       it('User should not be able to create a "Standard" study', async () => {
+        mockHasSufficientLevel.mockReturnValue(false)
         const result = await canCreateSpecificStudy(mockedSession, standardStudy, mockedOrganizationVersionId)
         expect(result).toBe(false)
       })
 
       it('User should be able to create an "Initial" study', async () => {
+        mockHasSufficientLevel.mockReturnValue(true)
         const result = await canCreateSpecificStudy(mockedSession, initialStudy, mockedOrganizationVersionId)
         expect(result).toBe(true)
       })
@@ -499,6 +511,7 @@ describe('Study permissions service', () => {
       })
       mockGetOrganizationVersionsByOrganizationId.mockResolvedValue([{ id: 'mocked-organization-id-1' }])
       mockGetDuplicableEnvironments.mockReturnValue([])
+      mockHasSufficientLevel.mockReturnValue(true)
       const res = await getEnvironmentsForDuplication(mockedStudyId)
       expect(res).toHaveLength(0)
       expect(mockGetStudyById).toHaveBeenCalledTimes(2)
@@ -529,6 +542,7 @@ describe('Study permissions service', () => {
         { id: 'mocked-study-organization-id-2' },
       ])
       mockGetDuplicableEnvironments.mockReturnValue([Environment.TILT])
+      mockHasSufficientLevel.mockReturnValue(true)
       const res = await getEnvironmentsForDuplication(mockedStudyId)
       expect(res).toHaveLength(0)
       expect(mockGetStudyById).toHaveBeenCalledTimes(2)
@@ -559,6 +573,7 @@ describe('Study permissions service', () => {
         { id: 'mocked-study-organization-id-2' },
       ])
       mockGetDuplicableEnvironments.mockReturnValue([Environment.TILT])
+      mockHasSufficientLevel.mockReturnValue(true)
       const res = await getEnvironmentsForDuplication(mockedStudyId)
       expect(res).toHaveLength(1)
       expect(res[0]).toBe(Environment.TILT)

@@ -4,24 +4,26 @@ import { reCreateBegesRules, reCreateGHGPRules } from '@/db/exports'
 import { getSectenVersion, updateSectenVersion } from '@/scripts/secten/secten'
 import { signPassword } from '@/services/auth'
 import { getEmissionFactorsFromAPI } from '@/services/importEmissionFactor/baseEmpreinte/getEmissionFactorsFromAPI'
-import { getAllowedLevels } from '@/services/study'
+import { getAllowedLevels } from '@/utils/study'
 import { faker } from '@faker-js/faker'
+import { PrismaPg } from '@prisma/adapter-pg'
+import type { Account, User } from '@repo/db-common'
+import { PrismaClient } from '@repo/db-common'
 import {
-  Account,
   EmissionFactorBase,
   EmissionFactorStatus,
   Environment,
   Import,
   Level,
-  PrismaClient,
   Role,
   StudyRole,
   SubPost,
   Unit,
-  User,
   UserChecklist,
   UserStatus,
-} from '@prisma/client'
+} from '@repo/db-common/enums'
+
+import { prismaClient } from '@/db/client.node'
 import { Command } from 'commander'
 import { ACTUALITIES } from '../legacy_data/actualities'
 import { SECTEN_SEED_DATA } from './sectenSeedData'
@@ -41,7 +43,13 @@ type userAndAccountsAndOrganizationVersion = {
   }[]
 }
 
-const prisma = new PrismaClient()
+const adapter = new PrismaPg({
+  connectionString: process.env.POSTGRES_PRISMA_URL,
+})
+
+const prisma = new PrismaClient({
+  adapter,
+}) as PrismaClient
 
 const users = async () => {
   await prisma.answer.deleteMany()
@@ -1027,14 +1035,19 @@ const users = async () => {
   await Promise.all(
     studies.map(async (study) => {
       return prisma.studyEmissionSource.createMany({
-        data: faker.helpers.arrayElements(subPosts, { min: 1, max: subPosts.length }).flatMap((subPost) =>
-          Array.from({ length: Math.ceil(Math.random() * 20) }).map(() => ({
+        data: faker.helpers.arrayElements(subPosts, { min: 1, max: subPosts.length }).flatMap((subPost) => {
+          // Keep this study clean for e2e tests to prevent flakiness
+          if (study.id === '88c93e88-7c80-4be4-905b-f0bbd2ccc779' && subPost === SubPost.MetauxPlastiquesEtVerre) {
+            return []
+          }
+
+          return Array.from({ length: Math.ceil(Math.random() * 20) }).map(() => ({
             studyId: study.id,
             name: faker.lorem.words({ min: 2, max: 5 }),
             subPost: subPost as SubPost,
             studySiteId: faker.helpers.arrayElement(study.sites).id,
-          })),
-        ),
+          }))
+        }),
       })
     }),
   )
@@ -1055,9 +1068,15 @@ const seedSecten = async () => {
 }
 
 const main = async (params: Params) => {
-  await Promise.all([actualities(), users(), reCreateBegesRules(), reCreateGHGPRules(), seedSecten()])
+  await Promise.all([
+    actualities(),
+    users(),
+    reCreateBegesRules(prismaClient),
+    reCreateGHGPRules(prismaClient),
+    seedSecten(),
+  ])
   if (params.importFactors) {
-    await getEmissionFactorsFromAPI(params.importFactors)
+    await getEmissionFactorsFromAPI(prismaClient, params.importFactors)
   }
 }
 

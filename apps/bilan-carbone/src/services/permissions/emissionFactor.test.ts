@@ -1,12 +1,13 @@
 import { AccountWithUser } from '@/db/account'
 import { getMockedDbAccount } from '@/tests/utils/models/user'
 import { expect } from '@jest/globals'
-import { EmissionFactor, Import } from '@prisma/client'
+import type { EmissionFactor } from '@repo/db-common'
+import { Import } from '@repo/db-common/enums'
 import * as emissionFactorModule from '../serverFunctions/emissionFactor'
 import { canEditEmissionFactor, canReadEmissionFactor } from './emissionFactor'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
-jest.mock('./study', () => ({ isAdminOnStudyOrga: jest.fn() }))
+jest.mock('./study.utils', () => ({ isAdminOnStudyOrga: jest.fn() }))
 jest.mock('../auth', () => ({ auth: jest.fn() }))
 jest.mock('../study', () => ({ hasSufficientLevel: jest.fn() }))
 

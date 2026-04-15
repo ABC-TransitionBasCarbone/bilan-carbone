@@ -1,6 +1,6 @@
 'use server'
 
-import { Formation } from '@prisma/client'
+import { Formation } from '@repo/db-common'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'

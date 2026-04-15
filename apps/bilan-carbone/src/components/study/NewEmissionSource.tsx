@@ -1,14 +1,14 @@
 'use client'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { createEmissionSource } from '@/services/serverFunctions/emissionSource'
 import AddIcon from '@mui/icons-material/Add'
 import { FormLabel, TextField } from '@mui/material'
-import { EmissionSourceCaracterisation, SubPost } from '@prisma/client'
+import { EmissionSourceCaracterisation, SubPost } from '@repo/db-common'
 import { Button } from '@repo/ui'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { FocusEvent, KeyboardEvent, useCallback, useState } from 'react'
+import { KeyboardEvent, useCallback, useState } from 'react'
 import styles from './NewEmissionSource.module.css'
 
 interface Props {
@@ -25,38 +25,48 @@ const NewEmissionSource = ({ study, subPost, caracterisations, studySiteId }: Pr
   const { callServerFunction } = useServerFunction()
   const router = useRouter()
 
-  const onKeyDown = useCallback((event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      const element = event.target as HTMLInputElement
-      element.blur()
-    }
-  }, [])
+  const createSource = useCallback(
+    async (rawName: string) => {
+      const name = rawName.trim()
+      if (!name || saving) {
+        return
+      }
 
-  const onBlur = useCallback(
-    async (event: FocusEvent<HTMLInputElement>) => {
-      if (event.target.value) {
-        setSaving(true)
-        await callServerFunction(
-          () =>
-            createEmissionSource({
-              name: event.target.value,
-              subPost,
-              studyId: study.id,
-              studySiteId,
-              caracterisation: caracterisations.length === 1 ? caracterisations[0] : undefined,
-            }),
-          {
-            onSuccess: () => {
-              setValue('')
-              router.refresh()
-            },
+      setSaving(true)
+      await callServerFunction(
+        () =>
+          createEmissionSource({
+            name,
+            subPost,
+            studyId: study.id,
+            studySiteId,
+            caracterisation: caracterisations.length === 1 ? caracterisations[0] : undefined,
+          }),
+        {
+          onSuccess: () => {
+            setValue('')
+            // Keep the current subpost opened after refresh, otherwise newly created
+            // sources can be hidden when the accordion remounts collapsed.
+            window.location.hash = `subpost-${subPost}`
+            router.refresh()
           },
-        )
-        setSaving(false)
+        },
+      )
+      setSaving(false)
+    },
+    [study.id, subPost, studySiteId, caracterisations, callServerFunction, router, saving],
+  )
+
+  const onKeyDown = useCallback(
+    async (event: KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === 'Enter') {
+        event.preventDefault()
+        await createSource((event.target as HTMLInputElement).value)
       }
     },
-    [study, subPost, router, studySiteId, callServerFunction, caracterisations],
+    [createSource],
   )
+
   return (
     <>
       <FormLabel component="legend">{t('label')}</FormLabel>
@@ -66,13 +76,17 @@ const NewEmissionSource = ({ study, subPost, caracterisations, studySiteId }: Pr
           disabled={saving}
           className={styles.input}
           onKeyDown={onKeyDown}
-          onBlur={onBlur}
           value={value}
           onChange={(e) => setValue(e.target.value)}
           placeholder={t('new')}
         />
         <div className="ml1">
-          <Button className="h100" disabled={!value}>
+          <Button
+            className="h100"
+            data-testid="new-emission-source-add"
+            disabled={!value.trim() || saving}
+            onClick={() => createSource(value)}
+          >
             <AddIcon />
             {t('add')}
           </Button>

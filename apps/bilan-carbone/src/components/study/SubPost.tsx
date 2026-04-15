@@ -1,6 +1,6 @@
 'use client'
 
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { customRich } from '@/i18n/customRich'
 import { getCaracterisationsBySubPost, getEmissionResults } from '@/services/emissionSource'
 import { Post } from '@/services/posts'
@@ -11,7 +11,7 @@ import { withInfobulle } from '@/utils/post'
 import { postColors, STUDY_UNIT_VALUES } from '@/utils/study'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
-import { ControlMode, Environment, Import, StudyRole, SubPost as SubPostEnum } from '@prisma/client'
+import { ControlMode, Environment, Import, StudyRole, SubPost as SubPostEnum } from '@repo/db-common/enums'
 import classNames from 'classnames'
 import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
@@ -172,7 +172,12 @@ const SubPost = ({
           className="align-end mt1"
         />
       )}
-      <div ref={accordionRef} id={`subpost-${subPost}`} className={styles.subPostScrollContainer}>
+      <div
+        ref={accordionRef}
+        id={`subpost-${subPost}`}
+        data-testid={`subpost-${subPost}`}
+        className={styles.subPostScrollContainer}
+      >
         <Accordion
           expanded={expanded}
           onChange={(_, isExpanded) => setExpanded(isExpanded)}

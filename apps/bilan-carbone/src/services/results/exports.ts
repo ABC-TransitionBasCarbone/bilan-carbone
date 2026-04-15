@@ -1,15 +1,15 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { toCamelCase } from '@/utils/string'
 import { getBaseFilteredEmissionSources } from '@/utils/study'
+import type { ExportRule } from '@repo/db-common'
 import {
   EmissionFactorBase,
   EmissionFactorPartType,
   EmissionSourceCaracterisation,
   Environment,
-  ExportRule,
   Import,
-} from '@prisma/client'
+} from '@repo/db-common/enums'
 import { convertTiltSubPostToBCSubPost } from '../posts'
 import {
   getSquaredStandardDeviationForEmissionSource,

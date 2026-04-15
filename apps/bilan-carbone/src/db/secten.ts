@@ -1,5 +1,5 @@
-import type { SectenInfo, SectenVersion } from '@prisma/client'
-import { prismaClient } from './client'
+import type { SectenInfo, SectenVersion } from '@repo/db-common'
+import { prismaClient } from './client.server'
 
 export const getLatestSectenVersion = async (): Promise<(SectenVersion & { sectenInfos: SectenInfo[] }) | null> => {
   return prismaClient.sectenVersion.findFirst({

@@ -2,7 +2,7 @@ import PublicPage from '@/components/pages/Public'
 import styles from '@/components/pages/Public.module.css'
 import DynamicTheme from '@/environments/core/providers/DynamicTheme'
 import { customRich } from '@/i18n/customRich'
-import { Environment } from '@prisma/client'
+import { Environment } from '@repo/db-common/enums'
 import { getTranslations } from 'next-intl/server'
 import { ReactNode } from 'react'
 

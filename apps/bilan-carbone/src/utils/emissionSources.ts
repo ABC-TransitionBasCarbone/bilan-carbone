@@ -1,14 +1,15 @@
-import { FullStudy } from '@/db/study'
-import { getEmissionResults } from '@/services/emissionSource'
+import type { FullStudy } from '@/db/study'
+import { canBeValidated, getEmissionResults } from '@/services/emissionSource'
 import {
   getQualitativeUncertaintyFromSquaredStandardDeviation,
   getSpecificEmissionFactorQuality,
   getSquaredStandardDeviationForEmissionSource,
   getSquaredStandardDeviationForQuality,
 } from '@/services/uncertainty'
-import { EmissionSourcesSort } from '@/types/filters'
-import { Translations } from '@/types/translation'
-import { Environment } from '@prisma/client'
+import { EmissionSourcesStatus } from '@/types/emissionSource.types'
+import type { EmissionSourcesSort } from '@/types/filters'
+import type { Translations } from '@/types/translation'
+import { Environment } from '@repo/db-common/enums'
 
 export const getEmissionSourcesFuseOptions = (tQuality: Translations, tUnit: Translations, locale: string) => ({
   keys: [
@@ -114,3 +115,26 @@ export const getEmissionFactor = <T extends { id: string }>(
   emissionSource: FullStudy['emissionSources'][number],
   emissionFactors: T[],
 ) => emissionFactors.find((ef) => ef.id === emissionSource.emissionFactor?.id)
+
+export const getEmissionSourcesTotalCo2 = (emissionSources: { emissionValue: number }[]) =>
+  emissionSources.reduce((sum, emissionSource) => sum + emissionSource.emissionValue, 0)
+
+export const getEmissionSourceStatus = (
+  study: FullStudy,
+  emissionSource: FullStudy['emissionSources'][0],
+  environment: Environment | undefined,
+) => {
+  if (emissionSource.validated) {
+    return EmissionSourcesStatus.Valid
+  }
+
+  if (canBeValidated(emissionSource, study, emissionSource.emissionFactor, environment)) {
+    return EmissionSourcesStatus.ToVerify
+  }
+
+  if (study.contributors && study.contributors.some((contributor) => contributor.subPost === emissionSource.subPost)) {
+    return EmissionSourcesStatus.WaitingContributor
+  }
+
+  return EmissionSourcesStatus.Waiting
+}

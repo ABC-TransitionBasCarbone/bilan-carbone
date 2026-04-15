@@ -7,7 +7,7 @@ import {
   changeDeactivableFeatureStatus,
 } from '@/services/serverFunctions/deactivableFeatures'
 import { FormControl, FormControlLabel, FormLabel, Switch } from '@mui/material'
-import { DeactivatableFeature, Environment, UserSource } from '@prisma/client'
+import { DeactivatableFeature, Environment, UserSource } from '@repo/db-common/enums'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 

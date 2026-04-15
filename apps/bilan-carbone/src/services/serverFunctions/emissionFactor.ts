@@ -1,7 +1,7 @@
 'use server'
 
 import { getAccountById } from '@/db/account'
-import { prismaClient } from '@/db/client'
+import { prismaClient } from '@/db/client.server'
 import {
   createEmissionFactorWithParts,
   deleteEmissionFactorAndDependencies,
@@ -27,12 +27,12 @@ import { ManualEmissionFactorUnitList } from '@/utils/emissionFactors'
 import { hasActiveLicence } from '@/utils/organization'
 import { flattenSubposts } from '@/utils/post'
 import { IsSuccess, withServerResponse } from '@/utils/serverResponse'
-import { EmissionFactorStatus, Environment, Import, Unit } from '@prisma/client'
+import { EmissionFactorStatus, Environment, Import, Unit } from '@repo/db-common/enums'
 import { auth, dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
-import { canCreateEmissionFactor } from '../permissions/emissionFactor'
+import { canCreateEmissionFactor } from '../permissions/emissionFactor.server'
 import { canReadStudy } from '../permissions/study'
-import { getStudyParentOrganizationVersionId } from '../study'
+import { getStudyParentOrganizationVersionId } from '../study.server'
 import { sortAlphabetically } from '../utils'
 import { EmissionFactorCommand, UpdateEmissionFactorCommand } from './emissionFactor.command'
 

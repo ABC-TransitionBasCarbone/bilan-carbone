@@ -10,10 +10,20 @@
     "db:status": "prisma migrate status"
   },
   "dependencies": {
-    "@prisma/client": "^6.17.1",
-    "prisma": "^6.17.1"
+    "@prisma/adapter-pg": "^7.7.0",
+    "@prisma/client": "7.7.0",
+    "pg": "^8.20.0"
   },
   "prisma": {
     "schema": "prisma/schema"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./enums": "./src/enums.ts",
+    "./types": "./src/types.ts"
+  },
+  "devDependencies": {},
+  "resolutions": {
+    "@hono/node-server": "^1.19.13"
   }
 }

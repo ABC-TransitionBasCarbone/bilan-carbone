@@ -13,6 +13,20 @@
       "1": "Comprendre la mesure d'impact de votre établissement",
       "2": "Identifier les priorités d'action",
       "3": "Construire une trajectoire de réduction"
+    },
+    "navigation": {
+      "collaborators": {
+        "title": "",
+        "message": ""
+      },
+      "footprints": {
+        "title": "",
+        "message": ""
+      },
+      "sites": {
+        "title": "",
+        "message": ""
+      }
     }
   },
   "exports": {
@@ -1208,6 +1222,7 @@
           "SNBC_SECTORAL": "Je suis la trajectoire de référence SNBC",
           "CUSTOM": "Je suis ma propre trajectoire"
         },
+        "siteFilterWarning": "{count, plural, =1 {Vous avez sélectionné le site {siteNames} mais les trajectoires ne sont définissables que pour tous les sites.} other {Vous avez sélectionné les sites {siteNames} mais les trajectoires ne sont définissables que pour tous les sites.}} Votre trajectoire sera donc définie pour tous les sites. Vous pourrez ensuite faire des sous objectifs par sites, postes et sous postes.",
         "name": "Nom de ma trajectoire",
         "namePlaceholder": "Donner un nom à ma trajectoire",
         "description": "Description de ma trajectoire",

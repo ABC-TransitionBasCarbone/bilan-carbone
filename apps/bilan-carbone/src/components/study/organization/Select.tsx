@@ -8,16 +8,14 @@ import { useServerFunction } from '@/hooks/useServerFunction'
 import { NOT_AUTHORIZED } from '@/services/permissions/check'
 import { hasAccessToStudySiteAddAndSelection } from '@/services/permissions/environment'
 import { updateOrganizationCommand } from '@/services/serverFunctions/organization'
-import { UpdateOrganizationCommand } from '@/services/serverFunctions/organization.command'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
-import { FormHelperText, MenuItem } from '@mui/material'
-import { Environment, SiteCAUnit } from '@prisma/client'
-import { Button } from '@repo/ui'
+import { Button, FormHelperText, MenuItem } from '@mui/material'
+import { Environment, SiteCAUnit } from '@repo/db-common/enums'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
-import { UseFormReturn } from 'react-hook-form'
+import { Control, UseFormReturn, useWatch } from 'react-hook-form'
 
 interface Props {
   user: UserSession
@@ -29,6 +27,28 @@ interface Props {
   targetOrganizationVersionId?: string | null
 }
 
+interface NextButtonProps {
+  control: Control<CreateStudyCommand>
+  onClick: () => void
+  error: string
+  hasNoSites?: boolean
+}
+
+const NextButton = ({ control, onClick, error, hasNoSites }: NextButtonProps) => {
+  const tCommon = useTranslations('common')
+  const sites = useWatch({ control, name: 'sites' })
+  const hasNoSelectedSites = !sites.some((site) => site.selected || (hasNoSites && site.name))
+
+  return (
+    <div className="mt2">
+      <Button disabled={hasNoSelectedSites} data-testid="new-study-organization-button" onClick={onClick}>
+        {tCommon('next')}
+      </Button>
+      {error && <FormHelperText error>{error}</FormHelperText>}
+    </div>
+  )
+}
+
 const SelectOrganization = ({
   user,
   organizationVersions,
@@ -38,7 +58,6 @@ const SelectOrganization = ({
   duplicateStudyId,
 }: Props) => {
   const t = useTranslations('study.organization')
-  const tCommon = useTranslations('common')
   const tOrganizationSites = useTranslations('organization.sites')
   const [error, setError] = useState('')
   const [showWarningModal, setShowWarningModal] = useState(false)
@@ -117,34 +136,37 @@ const SelectOrganization = ({
   }
 
   const next = async () => {
+    const currentSites = form.getValues('sites').map((site) => (hasNoSites ? { ...site, selected: true } : site))
+
     if (hasNoSites) {
-      form.setValue('sites', sites)
-      const command: UpdateOrganizationCommand = {
-        organizationVersionId: organizationVersionId!,
-        name: organizationVersion?.organization.name || '',
-        sites: sites,
-      }
-      await callServerFunction(() => updateOrganizationCommand(command), {
-        onSuccess: () => {
-          selectOrganizationVersion({
-            ...organizationVersion,
-            organization: {
-              ...organizationVersion!.organization,
-              sites: sites,
-            },
-          } as OrganizationWithSites)
-          return
+      form.setValue('sites', currentSites)
+      await callServerFunction(
+        () =>
+          updateOrganizationCommand({
+            organizationVersionId: organizationVersionId!,
+            name: organizationVersion?.organization.name || '',
+            sites: currentSites,
+          }),
+        {
+          onSuccess: () => {
+            selectOrganizationVersion({
+              ...organizationVersion,
+              organization: {
+                ...organizationVersion!.organization,
+                currentSites,
+              },
+            } as OrganizationWithSites)
+          },
         },
-      })
-    }
-    if (!sites.some((site) => site.selected)) {
+      )
+    } else if (!currentSites.some((site) => site.selected)) {
       setError(t('validation.sites'))
       return
     }
 
     if (
       user.environment === Environment.CUT &&
-      sites
+      currentSites
         .filter((site) => site.selected)
         .some(
           (site) =>
@@ -160,8 +182,8 @@ const SelectOrganization = ({
 
     // Check for deselected sites with emission sources when duplicating
     if (duplicateStudyId) {
-      const currentSelectedSiteIds = sites.filter((site) => site.selected).map((site) => site.id)
-      const deselectedSitesWithSources = sites
+      const currentSelectedSiteIds = currentSites.filter((site) => site.selected).map((site) => site.id)
+      const deselectedSitesWithSources = currentSites
         .filter((site) => {
           const wasOriginallySelected = originalSelectedSites?.includes(site.id)
           const isCurrentlySelected = currentSelectedSiteIds.includes(site.id)
@@ -215,17 +237,8 @@ const SelectOrganization = ({
             </FormSelect>
           </>
         )}
-        <DynamicSites sites={sites} form={form} caUnit={caUnit} withSelection={!hasNoSites} disabled={!hasNoSites} />
-        <div className="mt2">
-          <Button
-            disabled={!sites.some((site) => site.selected || (hasNoSites && site.name))}
-            data-testid="new-study-organization-button"
-            onClick={next}
-          >
-            {tCommon('next')}
-          </Button>
-          {error && <FormHelperText error>{error}</FormHelperText>}
-        </div>
+        <DynamicSites sites={sites} form={form} caUnit={caUnit} withSelection={!hasNoSites} disabled={false} />
+        <NextButton control={form.control} onClick={next} error={error} hasNoSites={hasNoSites} />
       </Block>
 
       <SiteDeselectionWarningModal

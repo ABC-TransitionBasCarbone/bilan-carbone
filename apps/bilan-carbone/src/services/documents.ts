@@ -1,4 +1,4 @@
-import { DocumentCategory } from '@prisma/client'
+import { DocumentCategory } from '@repo/db-common/enums'
 
 export const DEFAULT_SAMPLE_TITLE = 'example_study_flow.jpg'
 

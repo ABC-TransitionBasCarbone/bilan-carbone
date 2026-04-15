@@ -1,8 +1,8 @@
 import BarChart from '@/components/study/charts/BarChart'
 import PieChart from '@/components/study/charts/PieChart'
-import { BaseResultsByPost } from '@/services/results/consolidated'
+import type { BaseResultsByPost } from '@/services/posts'
 import { Translations } from '@/types/translation'
-import { StudyResultUnit } from '@prisma/client'
+import { StudyResultUnit } from '@repo/db-common/enums'
 
 interface Props {
   results: BaseResultsByPost[]

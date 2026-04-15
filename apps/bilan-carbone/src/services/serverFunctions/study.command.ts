@@ -9,7 +9,7 @@ import {
   Level,
   StudyResultUnit,
   StudyRole,
-} from '@prisma/client'
+} from '@repo/db-common/enums'
 import dayjs from 'dayjs'
 import z from 'zod'
 import { HolidayOpeningHoursValidation, OpeningHoursValidation } from '../hours'

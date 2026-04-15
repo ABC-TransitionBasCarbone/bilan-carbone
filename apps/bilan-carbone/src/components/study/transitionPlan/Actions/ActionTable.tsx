@@ -18,7 +18,7 @@ import ArrowRight from '@mui/icons-material/ArrowRight'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { Link, Switch, TableCell, TableRow } from '@mui/material'
-import { ActionPotentialDeduction, StudyResultUnit } from '@prisma/client'
+import { ActionPotentialDeduction, StudyResultUnit } from '@repo/db-common/enums'
 import {
   ColumnDef,
   flexRender,

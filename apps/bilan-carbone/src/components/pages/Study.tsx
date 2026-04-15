@@ -1,7 +1,7 @@
 'use server'
 
 import { isOrganizationVersionCR } from '@/db/organization'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { getUserApplicationSettings } from '@/db/user'
 import { canDeleteStudy, canDuplicateStudy, getEnvironmentsForDuplication } from '@/services/permissions/study'
 import { UserSession } from 'next-auth'

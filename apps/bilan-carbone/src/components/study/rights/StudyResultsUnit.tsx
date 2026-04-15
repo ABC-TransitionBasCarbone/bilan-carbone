@@ -1,7 +1,7 @@
 'use client'
 
 import { FormSelect } from '@/components/form/Select'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { changeStudyResultsUnit } from '@/services/serverFunctions/study'
 import {
@@ -10,7 +10,7 @@ import {
 } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
-import { StudyResultUnit } from '@prisma/client'
+import { StudyResultUnit } from '@repo/db-common/enums'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect } from 'react'

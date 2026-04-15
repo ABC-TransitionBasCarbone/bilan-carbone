@@ -1,6 +1,6 @@
 'use client'
 
-import { Actuality } from '@prisma/client'
+import type { Actuality } from '@repo/db-common'
 import { Button } from '@repo/ui'
 import classNames from 'classnames'
 import DOMPurify from 'dompurify'

@@ -1,6 +1,6 @@
 import { getLocale } from '@/i18n/locale'
-import { Prisma } from '@prisma/client'
-import { prismaClient } from './client'
+import type { Prisma } from '@repo/db-common'
+import { prismaClient } from './client.server'
 
 export const getAllActualitiesLocale = async () => {
   const locale = await getLocale()

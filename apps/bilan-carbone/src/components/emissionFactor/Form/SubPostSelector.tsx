@@ -5,7 +5,7 @@ import { ALL_SUB_POSTS_VALUE } from '@/constants/post.constants'
 import { environmentPostMapping, Post, subPostsByPost } from '@/services/posts'
 import { getSortedPosts } from '@/utils/post'
 import { Checkbox, ListItemText, ListSubheader, MenuItem, SelectChangeEvent } from '@mui/material'
-import { Environment, SubPost } from '@prisma/client'
+import { Environment, SubPost } from '@repo/db-common/enums'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 

@@ -1,7 +1,7 @@
 import { isCut, isTilt } from '@/services/permissions/environment'
 import { hasAccessToEngagementActions, isTiltSimplified } from '@/services/permissions/environmentAdvanced'
 import { Translations } from '@/types/translation'
-import { Environment } from '@prisma/client'
+import { Environment } from '@repo/db-common/enums'
 
 interface MenuLink {
   href: string

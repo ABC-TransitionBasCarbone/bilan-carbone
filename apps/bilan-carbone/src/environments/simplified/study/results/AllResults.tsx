@@ -1,7 +1,7 @@
 'use client'
 
 import SelectStudySite from '@/components/study/site/SelectStudySite'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import DownloadIcon from '@mui/icons-material/Download'
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
 import { Box, Button, Tab, Tabs, Typography } from '@mui/material'
@@ -11,7 +11,7 @@ import { SyntheticEvent, useMemo, useState } from 'react'
 import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
 import TabPanel from '@/components/tabPanel/tabPanel'
 import { downloadStudyResults } from '@/services/study'
-import { Environment, SiteCAUnit } from '@prisma/client'
+import { Environment, SiteCAUnit } from '@repo/db-common/enums'
 
 import Block from '@/components/base/Block'
 import LoadingButton from '@/components/base/LoadingButton'
@@ -35,8 +35,9 @@ import {
   hasAccessToSimplifiedEmissionAnalysis,
   showResultsInfoText,
 } from '@/services/permissions/environment'
-import { BaseResultsByPost, BaseResultsBySite } from '@/services/results/consolidated'
+import type { BaseResultsByPost } from '@/services/posts'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
+import type { BaseResultsBySite } from '@/types/study.types'
 import { a11yProps, ChartType, defaultChartOrder, tabsLabels } from './utils'
 
 interface Props {

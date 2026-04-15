@@ -1,7 +1,7 @@
 'use client'
 
 import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { EngagementActionWithSites } from '@/services/serverFunctions/study'
 import { downloadEngagementActionsCSV } from '@/services/study'
 import DownloadIcon from '@mui/icons-material/Download'

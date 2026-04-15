@@ -1,3 +1,5 @@
+import { DataType } from '@/components/study/transitionPlan/TrajectoryGraph'
+import { LineSeriesType } from '@mui/x-charts'
 import type {
   Action,
   ActionIndicator,
@@ -16,7 +18,7 @@ import type {
   Trajectory,
   TransitionPlan,
   TransitionPlanStudy,
-} from '@prisma/client'
+} from '@repo/db-common'
 
 export interface TrajectoryDataPoint {
   year: number
@@ -82,4 +84,27 @@ export type ActionWithRelations = Action & {
   sites: Array<ActionSite & { studySite: StudySite }>
   tags: Array<ActionTag & { studyTag: StudyTag }>
   subPosts: ActionSubPost[]
+}
+
+export interface TrajectoryData {
+  previousTrajectoryStartYear: number | null
+  previousTrajectory: TrajectoryDataPoint[] | null
+  currentTrajectory: TrajectoryDataPoint[]
+  withinThreshold: boolean
+  isFailed?: boolean
+}
+
+export interface TrajectoryResult {
+  sbti15: TrajectoryData | null
+  sbtiWB2C: TrajectoryData | null
+  snbc: { [trajectoryId: string]: TrajectoryData | null }
+  customTrajectories: Array<{ id: string; data: TrajectoryData }>
+  actionBased: TrajectoryData | null
+}
+
+export type TrajectorySeries = LineSeriesType & {
+  dataType: DataType
+  isFailed?: boolean
+  isCustom?: boolean
+  withinThreshold?: boolean
 }
