@@ -1103,6 +1103,10 @@
             "title": "Reconstruction of past emissions on BC+",
             "description": "Description Gabriel",
             "close": "Close"
+          },
+          "overshootTrajectoryGlossary": {
+            "title": "Pour Gabriel - titre",
+            "description": "Pour Gabriel - description"
           }
         },
         "linkedStudies": {
@@ -1299,6 +1303,10 @@
           "startYear": "Start year",
           "targetYear": "Target year",
           "rates": "Annual reduction: reference / corrected",
+          "ratesGlossary": {
+            "title": "Pour Gabriel - titre",
+            "description": "Pour Gabriel - description"
+          },
           "referenceYear": "Reference year",
           "actions": "Actions",
           "period": "Period",

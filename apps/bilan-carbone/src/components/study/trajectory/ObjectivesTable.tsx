@@ -3,6 +3,7 @@
 import BaseTable from '@/components/base/Table'
 import baseTableStyles from '@/components/base/Table.module.css'
 import { TableActionButton } from '@/components/base/TableActionButton'
+import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
 import { deleteObjective } from '@/services/serverFunctions/objective.serverFunction'
@@ -292,7 +293,19 @@ const ObjectivesTable = ({
         },
       },
       {
-        header: t('table.rates'),
+        id: 'rates',
+        header: () => (
+          <div className="flex align-center gapped025">
+            {t('table.rates')}
+            <GlossaryIconModal
+              title="table.ratesGlossary.title"
+              label="reduction-rates"
+              tModal="study.transitionPlan.objectives"
+            >
+              <p>{customRich(t, 'table.ratesGlossary.description')}</p>
+            </GlossaryIconModal>
+          </div>
+        ),
         accessorFn: (row) => row,
         cell: ({ row }) => {
           return getDisplayedRates(row.original.reductionRate, row.original.correctedRate)

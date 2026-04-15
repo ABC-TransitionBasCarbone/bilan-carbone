@@ -2,6 +2,7 @@
 
 import BaseTable from '@/components/base/Table'
 import { TableActionButton } from '@/components/base/TableActionButton'
+import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
 import { Typography } from '@mui/material'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'
@@ -43,7 +44,18 @@ const ObjectivesInnerTable = ({ rows, canEdit, isDefaultSnbc, title }: Props) =>
       { header: tCommon('posts'), accessorKey: 'posts' },
       { header: tCommon('tags'), accessorKey: 'tags' },
       {
-        header: t('table.rates'),
+        header: () => (
+          <div className="flex align-center gapped025">
+            {t('table.rates')}
+            <GlossaryIconModal
+              title="table.ratesGlossary.title"
+              label="reduction-rates"
+              tModal="study.transitionPlan.objectives"
+            >
+              <p>{t('table.ratesGlossary.description')}</p>
+            </GlossaryIconModal>
+          </div>
+        ),
         accessorKey: 'reductionRate',
         cell: ({ row }) => getDisplayedRates(row.original.reductionRate, row.original.correctedRate),
       },

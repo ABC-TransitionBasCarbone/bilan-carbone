@@ -1,5 +1,6 @@
 'use client'
 
+import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { TRAJECTORY_15_ID, TRAJECTORY_SNBC_GENERAL_ID, TRAJECTORY_WB2C_ID } from '@/constants/trajectory.constants'
 import type { FullStudy } from '@/db/study'
@@ -505,6 +506,15 @@ const TrajectoryGraph = ({
                     <circle cx="12" cy="12" r="6" fill={s.color as string} />
                   </SvgIcon>
                   <Typography variant="body2">{s.label as string}</Typography>
+                  {s.dataType === 'current' && !s.withinThreshold && (
+                    <GlossaryIconModal
+                      title="overshootTrajectoryGlossary.title"
+                      label="current-trajectory"
+                      tModal="study.transitionPlan.trajectories.graph"
+                    >
+                      <p>{customRich(t, 'overshootTrajectoryGlossary.description')}</p>
+                    </GlossaryIconModal>
+                  )}
                 </div>
               ))}
           </div>
