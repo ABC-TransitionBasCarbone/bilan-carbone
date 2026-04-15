@@ -17,10 +17,9 @@ import {
   Alert,
 } from '@mui/material'
 import { ArrowBack, ArrowForward, Check } from '@mui/icons-material'
+import { SurveyEngine, Survey } from '@repo/survey'
 import { useSurveyStore } from '@/store/survey/surveyStore'
-import { SurveyEngine } from '@/lib/survey/engine'
 import { QuestionRenderer } from './QuestionRenderer'
-import { Survey } from '@/lib/survey/types'
 
 interface SurveyPageProps {
   survey: Survey

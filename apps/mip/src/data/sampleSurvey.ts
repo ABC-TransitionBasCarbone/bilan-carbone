@@ -3,7 +3,7 @@
  * Example survey for testing the MIP survey system
  */
 
-import { Survey } from '../lib/survey/types'
+import { Survey } from '@repo/survey'
 
 export const sampleSurvey: Survey = {
   id: 'sample-survey-1',
