@@ -1,7 +1,6 @@
 import { checkCronRequest } from '@/app/api/cron/utils'
 import { getUsersFromFTP } from '@/scripts/ftp/importUsers'
 import type { NextRequest } from 'next/server'
-import { Response as UndiciResponse } from 'undici'
 import { POST } from './route'
 
 jest.mock('@/app/api/cron/utils', () => ({
@@ -16,11 +15,24 @@ describe('POST /api/cron/import-users', () => {
   const req = {} as NextRequest
   const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => undefined)
   const originalResponse = globalThis.Response
+  class MockResponse {
+    public status: number
+    private readonly body: string
+
+    constructor(body: string, init?: { status?: number }) {
+      this.body = body
+      this.status = init?.status ?? 200
+    }
+
+    async text() {
+      return this.body
+    }
+  }
 
   beforeEach(() => {
     jest.clearAllMocks()
     if (!globalThis.Response) {
-      globalThis.Response = UndiciResponse as unknown as typeof Response
+      globalThis.Response = MockResponse as unknown as typeof Response
     }
   })
 
