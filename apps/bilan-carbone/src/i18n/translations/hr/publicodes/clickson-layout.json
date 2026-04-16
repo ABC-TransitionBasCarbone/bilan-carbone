@@ -23,8 +23,8 @@
       },
       "EquipementsDivers": {
         "question": "Vaša škola vjerojatno ima jedan ili više kotlova za grijanje. Za rad ovi uređaji mogu koristiti razne vrste fosilnih goriva (lož ulje, prirodni plin i dr.). Emisije stakleničkih plinova (GHG) koje stvara ova oprema oslobađaju se primjerice izgaranjem loživog ulja ili plina.",
-        "equipement": "Équipement",
-        "nombre": "Nombre"
+        "equipement": "Oprema",
+        "nombre": "Broj"
       }
     }
   }
