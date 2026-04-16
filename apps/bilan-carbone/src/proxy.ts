@@ -8,6 +8,10 @@ const CLICKSON_ROUTE = '/clickson'
 const ENV_ROUTES = [COUNT_ROUTE, TILT_ROUTE, CLICKSON_ROUTE]
 const publicRoutes = ['/login', '/reset-password', '/activation', '/preview', ...ENV_ROUTES]
 const assetsRoutes = ['/_next', '/img']
+const RATE_LIMITED_METHODS = ['GET', 'HEAD']
+const DEFAULT_PUBLIC_RATE_LIMIT_MAX_REQUESTS = 100
+const DEFAULT_PUBLIC_RATE_LIMIT_WINDOW_MS = 60_000
+const MAX_RATE_LIMIT_ENTRIES = 5_000
 
 const bucketName = process.env.SCW_BUCKET_NAME as string
 const region = process.env.SCW_REGION
@@ -16,6 +20,71 @@ const scaleway = `https://${bucketName}.s3.${region}.scw.cloud`
 const logos = ['https://base-empreinte.ademe.fr', 'https://www.legifrance.gouv.fr', ''].join(' ')
 
 const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
+
+type RateLimitResult = {
+  isLimited: boolean
+  retryAfterSeconds: number
+}
+
+const asPositiveInteger = (value: string | undefined, fallbackValue: number): number => {
+  const parsedValue = Number(value)
+  return Number.isInteger(parsedValue) && parsedValue > 0 ? parsedValue : fallbackValue
+}
+
+export const createInMemoryRateLimiter = (maxRequests: number, windowMs: number) => {
+  const requestsByKey = new Map<string, { count: number; windowStart: number }>()
+
+  const clearExpiredEntries = (now: number) => {
+    for (const [key, entry] of requestsByKey.entries()) {
+      if (now - entry.windowStart >= windowMs) {
+        requestsByKey.delete(key)
+      }
+    }
+  }
+
+  return {
+    check: (key: string, now: number = Date.now()): RateLimitResult => {
+      if (requestsByKey.size >= MAX_RATE_LIMIT_ENTRIES) {
+        clearExpiredEntries(now)
+      }
+
+      const entry = requestsByKey.get(key)
+      if (!entry || now - entry.windowStart >= windowMs) {
+        requestsByKey.set(key, { count: 1, windowStart: now })
+        return { isLimited: false, retryAfterSeconds: 0 }
+      }
+
+      if (entry.count >= maxRequests) {
+        const retryAfterSeconds = Math.max(1, Math.ceil((windowMs - (now - entry.windowStart)) / 1000))
+        return { isLimited: true, retryAfterSeconds }
+      }
+
+      requestsByKey.set(key, { ...entry, count: entry.count + 1 })
+      return { isLimited: false, retryAfterSeconds: 0 }
+    },
+  }
+}
+
+const publicRateLimitMaxRequests = asPositiveInteger(
+  process.env.PUBLIC_RATE_LIMIT_MAX_REQUESTS,
+  DEFAULT_PUBLIC_RATE_LIMIT_MAX_REQUESTS,
+)
+const publicRateLimitWindowMs = asPositiveInteger(
+  process.env.PUBLIC_RATE_LIMIT_WINDOW_MS,
+  DEFAULT_PUBLIC_RATE_LIMIT_WINDOW_MS,
+)
+const publicRouteRateLimiter = createInMemoryRateLimiter(publicRateLimitMaxRequests, publicRateLimitWindowMs)
+
+const getClientIp = (req: NextRequest): string => {
+  const forwardedFor = req.headers.get('x-forwarded-for')
+  if (forwardedFor) {
+    return forwardedFor.split(',')[0].trim()
+  }
+
+  return req.headers.get('x-real-ip') ?? req.headers.get('cf-connecting-ip') ?? 'unknown'
+}
+
+const isPublicRoute = (pathname: string) => publicRoutes.some((route) => pathname.startsWith(route))
 
 export async function proxy(req: NextRequest) {
   const host = req.headers.get('host')?.toLowerCase()
@@ -27,6 +96,18 @@ export async function proxy(req: NextRequest) {
   ]
   if (host && redirectHosts.includes(host)) {
     return NextResponse.redirect('https://bilancarbone-app.com/clickson', 308)
+  }
+
+  if (RATE_LIMITED_METHODS.includes(req.method) && isPublicRoute(req.nextUrl.pathname)) {
+    const rateLimitKey = `${getClientIp(req)}:${req.nextUrl.pathname}`
+    const rateLimitResult = publicRouteRateLimiter.check(rateLimitKey)
+
+    if (rateLimitResult.isLimited) {
+      return new NextResponse('Too Many Requests', {
+        status: 429,
+        headers: { 'Retry-After': `${rateLimitResult.retryAfterSeconds}` },
+      })
+    }
   }
 
   if (ENV_ROUTES.includes(req.nextUrl.pathname)) {
