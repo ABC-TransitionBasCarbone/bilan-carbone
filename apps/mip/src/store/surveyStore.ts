@@ -99,7 +99,10 @@ export const useSurveyStore = create<SurveyStore>((set, get) => ({
     // Validate current answer before proceeding
     if (currentQuestion && currentQuestion.required) {
       const answer = engine.getAnswer(currentQuestion.id)
-      const validationError = engine.validateAnswer(currentQuestion, answer || '')
+      const validationError = engine.validateAnswer(
+        currentQuestion,
+        answer || '',
+      )
       if (validationError) {
         set({ error: validationError })
         return
@@ -210,7 +213,10 @@ export const useSurveyStore = create<SurveyStore>((set, get) => ({
 }))
 
 // Helper function to create a new response
-function createNewResponse(surveyId: string, responseId: string): SurveyResponse {
+function createNewResponse(
+  surveyId: string,
+  responseId: string,
+): SurveyResponse {
   const now = new Date()
   return {
     surveyId,

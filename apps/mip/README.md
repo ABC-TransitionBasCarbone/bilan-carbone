@@ -60,7 +60,7 @@ apps/mip/
 │   │   ├── survey/[id]/       # Dynamic survey route with UUID
 │   │   ├── layout.tsx         # Root layout with MUI theme
 │   │   └── page.tsx           # Home page (redirects to new survey)
-│   ├── components/            
+│   ├── components/
 │   │   └── survey/            # Survey UI components
 │   │       ├── QuestionRenderer.tsx
 │   │       └── SurveyPage.tsx
@@ -182,4 +182,4 @@ const allIds = surveyStorage.getAllResponseIds()
 
 ## License
 
-Private - ABC Transition Bas Carbone
+This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.

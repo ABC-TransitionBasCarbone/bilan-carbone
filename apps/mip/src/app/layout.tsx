@@ -1,29 +1,39 @@
+import RouteChangeListener from '@/components/survey/RouteChangeListener'
+import '@/css/index.css'
+import Providers from '@/providers/Providers'
+import { CssBaseline } from '@mui/material'
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter'
 import type { Metadata } from 'next'
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter'
-import { ThemeProvider } from '@mui/material/styles'
-import CssBaseline from '@mui/material/CssBaseline'
-import { theme } from './theme'
+import { headers } from 'next/headers'
 
 export const metadata: Metadata = {
-  title: 'MIP Survey',
-  description: 'Survey system for carbon footprint assessment',
+  title: 'Bilan Carbone +',
+  description: 'Découvrez le logiciel Bilan Carbone +',
 }
 
-export default function RootLayout({
-  children,
-}: {
+interface Props {
   children: React.ReactNode
-}) {
+}
+
+const RootLayout = async ({ children }: Readonly<Props>) => {
+  const providerOptions = {
+    key: 'mui',
+    nonce: (await headers()).get('x-nonce') || undefined,
+    prepend: true,
+  }
   return (
-    <html lang="en">
+    <html lang="fr">
       <body>
-        <AppRouterCacheProvider>
-          <ThemeProvider theme={theme}>
+        <AppRouterCacheProvider options={providerOptions}>
+          <RouteChangeListener />
+          <Providers>
             <CssBaseline />
             {children}
-          </ThemeProvider>
+          </Providers>
         </AppRouterCacheProvider>
       </body>
     </html>
   )
 }
+
+export default RootLayout

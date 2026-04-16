@@ -10,6 +10,6 @@ export default function SurveyRoute({
   params: Promise<{ id: string }>
 }) {
   const { id } = React.use(params)
-  
+
   return <SurveyPage survey={sampleSurvey} responseId={id} />
 }
