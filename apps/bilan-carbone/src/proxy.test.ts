@@ -1,4 +1,4 @@
-import { createInMemoryRateLimiter } from '@/proxy'
+import { createInMemoryRateLimiter, getPublicRouteScope } from '@/proxy'
 
 describe('createInMemoryRateLimiter', () => {
   it('allows requests up to the configured limit and blocks the next one', () => {
@@ -31,5 +31,13 @@ describe('createInMemoryRateLimiter', () => {
     expect(limiter.check(keyA, 1).isLimited).toBe(false)
     expect(limiter.check(keyA, 2).isLimited).toBe(true)
     expect(limiter.check(keyB, 2).isLimited).toBe(false)
+  })
+})
+
+describe('getPublicRouteScope', () => {
+  it('normalizes nested paths to the matching public route prefix', () => {
+    expect(getPublicRouteScope('/tilt/login')).toBe('/tilt')
+    expect(getPublicRouteScope('/preview/something')).toBe('/preview')
+    expect(getPublicRouteScope('/unknown')).toBe('/unknown')
   })
 })

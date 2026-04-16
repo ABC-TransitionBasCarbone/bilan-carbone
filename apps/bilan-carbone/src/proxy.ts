@@ -60,7 +60,8 @@ export const createInMemoryRateLimiter = (maxRequests: number, windowMs: number)
         return { isLimited: true, retryAfterSeconds }
       }
 
-      requestsByKey.set(key, { ...entry, count: entry.count + 1 })
+      entry.count += 1
+      requestsByKey.set(key, entry)
       return { isLimited: false, retryAfterSeconds: 0 }
     },
   }
@@ -76,23 +77,18 @@ const publicRateLimitWindowMs = asPositiveInteger(
 )
 const publicRouteRateLimiter = createInMemoryRateLimiter(publicRateLimitMaxRequests, publicRateLimitWindowMs)
 
-const getClientIp = (req: NextRequest): string => {
+const getClientIp = (req: NextRequest): string | null => {
   const forwardedFor = req.headers.get('x-forwarded-for')
   if (forwardedFor) {
     return forwardedFor.split(',')[0].trim()
   }
 
-  return (
-    req.ip ??
-    req.headers.get('x-real-ip') ??
-    req.headers.get('cf-connecting-ip') ??
-    req.headers.get('user-agent') ??
-    'unknown'
-  )
+  return req.ip ?? req.headers.get('x-real-ip') ?? req.headers.get('cf-connecting-ip')
 }
 
 const isPublicRoute = (pathname: string) => publicRoutes.some((route) => pathname.startsWith(route))
-const getPublicRouteScope = (pathname: string) => publicRoutes.find((route) => pathname.startsWith(route)) ?? pathname
+export const getPublicRouteScope = (pathname: string) =>
+  publicRoutes.find((route) => pathname.startsWith(route)) ?? pathname
 
 export async function proxy(req: NextRequest) {
   const host = req.headers.get('host')?.toLowerCase()
@@ -107,14 +103,17 @@ export async function proxy(req: NextRequest) {
   }
 
   if (RATE_LIMITED_METHODS.includes(req.method) && isPublicRoute(req.nextUrl.pathname)) {
-    const rateLimitKey = `${getClientIp(req)}:${getPublicRouteScope(req.nextUrl.pathname)}`
-    const rateLimitResult = publicRouteRateLimiter.check(rateLimitKey)
+    const clientIp = getClientIp(req)
+    if (clientIp) {
+      const rateLimitKey = `${clientIp}:${getPublicRouteScope(req.nextUrl.pathname)}`
+      const rateLimitResult = publicRouteRateLimiter.check(rateLimitKey)
 
-    if (rateLimitResult.isLimited) {
-      return new NextResponse('Too Many Requests', {
-        status: 429,
-        headers: { 'Retry-After': `${rateLimitResult.retryAfterSeconds}` },
-      })
+      if (rateLimitResult.isLimited) {
+        return new NextResponse('Too Many Requests', {
+          status: 429,
+          headers: { 'Retry-After': `${rateLimitResult.retryAfterSeconds}` },
+        })
+      }
     }
   }
 
