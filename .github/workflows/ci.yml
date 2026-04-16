@@ -103,10 +103,50 @@ jobs:
       - name: Launch unit tests
         run: yarn run publicodes-count:test
 
+  build-app:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    needs: [lint-and-typecheck, unit-tests]
+    defaults:
+      run:
+        working-directory: apps/bilan-carbone
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.16.0
+          cache: 'yarn'
+      - name: Copy .env
+        run: cp .env.dist .env
+      - name: Copy .env to db-common
+        run: cp apps/bilan-carbone/.env.dist packages/db-common/.env
+        working-directory: ${{ github.workspace }}
+      - name: Install dependencies
+        run: yarn install --immutable --immutable-cache --check-cache
+        working-directory: .
+      - name: Prebuild application
+        run: yarn prebuild
+      - name: Generate prisma files
+        run: yarn workspace @repo/db-common prisma generate
+        working-directory: .
+      - name: Build application
+        run: yarn build
+      - name: Archive build output
+        run: tar -czf /tmp/bilan-carbone-next-build.tgz .next
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-next-build
+          path: /tmp/bilan-carbone-next-build.tgz
+
   e2e-tests:
     timeout-minutes: 30
     runs-on: ubuntu-latest
-    needs: [lint-and-typecheck, unit-tests]
+    needs: [lint-and-typecheck, unit-tests, build-app]
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
     defaults:
       run:
         working-directory: apps/bilan-carbone
@@ -154,31 +194,52 @@ jobs:
         working-directory: .
       - name: Seed DB
         run: yarn workspace bilan-carbone prisma db seed
-      - name: Build application
-        run: yarn build
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-next-build
+          path: /tmp/ci-build
+      - name: Extract build artifact
+        run: tar -xzf /tmp/ci-build/bilan-carbone-next-build.tgz -C .
       - name: Start server
         run: yarn start &
       - name: Wait for server
         run: npx wait-on http://localhost:3000 --timeout 60000
+      - name: Select shard specs
+        id: select-specs
+        run: |
+          mapfile -t specs < <(find src/tests/end-to-end/app -maxdepth 1 -name '*.cy.ts' | sort)
+          selected_specs=()
+          for i in "${!specs[@]}"; do
+            if (( ((i % 4) + 1) == ${{ matrix.shard }} )); then
+              selected_specs+=("${specs[$i]}")
+            fi
+          done
+
+          if [ ${#selected_specs[@]} -eq 0 ]; then
+            echo "No specs selected for shard ${{ matrix.shard }}"
+            exit 1
+          fi
+
+          echo "Running shard ${{ matrix.shard }} with specs:"
+          printf '%s\n' "${selected_specs[@]}"
+          specs_csv="$(IFS=,; echo "${selected_specs[*]}")"
+          echo "specs=${specs_csv}" >> "$GITHUB_OUTPUT"
       - name: Launch e2e tests
         env:
           NODE_OPTIONS: --max-old-space-size=4096
-        run: |
-          for spec in src/tests/end-to-end/app/*.cy.ts; do
-            echo "Running test: $spec"
-            yarn cypress run --spec "$spec" --headless || exit 1
-          done
+        run: yarn cypress run --spec "${{ steps.select-specs.outputs.specs }}" --headless
       - name: Upload screenshots
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: cypress-screenshots
+          name: cypress-screenshots-shard-${{ matrix.shard }}
           path: ${{ github.workspace }}/apps/bilan-carbone/cypress/screenshots
 
   lighthouse:
     timeout-minutes: 10
     runs-on: ubuntu-latest
-    needs: [lint-and-typecheck, unit-tests]
+    needs: [lint-and-typecheck, unit-tests, build-app]
     defaults:
       run:
         working-directory: apps/bilan-carbone
@@ -222,8 +283,13 @@ jobs:
       - name: Seed DB
         run: yarn workspace bilan-carbone prisma db seed
         working-directory: .
-      - name: Build application
-        run: yarn build
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-next-build
+          path: /tmp/ci-build
+      - name: Extract build artifact
+        run: tar -xzf /tmp/ci-build/bilan-carbone-next-build.tgz -C .
       - name: Start server
         run: yarn start &
       - run: mkdir -p ${{ github.workspace }}/tmp/artifacts
