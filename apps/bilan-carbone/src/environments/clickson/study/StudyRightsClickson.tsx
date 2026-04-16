@@ -245,7 +245,7 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, us
   return (
     <>
       <Block
-        title={tRights('title', { name: study.name })}
+        title={study.name}
         icon={
           editionDisabled ? null : (
             <Button aria-label={tRights('edit')} title={tRights('edit')} onClick={() => setEditTitle(true)}>

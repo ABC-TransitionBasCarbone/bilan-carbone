@@ -103,6 +103,7 @@ describe('StudyRightsClickson', () => {
   it('shows edit study name action for admin/editor roles', () => {
     renderComponent(false)
 
+    expect(screen.getByRole('heading', { name: 'Session test' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'edit' })).toBeInTheDocument()
   })
 
