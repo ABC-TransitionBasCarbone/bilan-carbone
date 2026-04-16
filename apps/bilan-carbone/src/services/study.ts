@@ -808,7 +808,7 @@ export const downloadStudyResults = async (
     )
   }
 
-  if (environment === Environment.CUT && computedResults) {
+  if (isSimplifiedEnvironment(environment) && environment !== Environment.CLICKSON && computedResults) {
     data.push(formatBaseResultsToBCExport(study, siteList, computedResults, tExport, tPost))
   }
 
