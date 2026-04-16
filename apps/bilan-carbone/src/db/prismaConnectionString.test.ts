@@ -25,12 +25,10 @@ describe('getPrismaConnectionString', () => {
     expect(getPrismaConnectionString()).toBe('postgresql://direct-url')
   })
 
-  it('should throw when no database url is configured', () => {
+  it('should return undefined when no database url is configured', () => {
     delete process.env.POSTGRES_PRISMA_POOL_URL
     delete process.env.POSTGRES_PRISMA_URL
 
-    expect(() => getPrismaConnectionString()).toThrow(
-      'Missing database connection string: set POSTGRES_PRISMA_URL or POSTGRES_PRISMA_POOL_URL',
-    )
+    expect(getPrismaConnectionString()).toBeUndefined()
   })
 })
