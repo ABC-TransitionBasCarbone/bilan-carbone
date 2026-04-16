@@ -28,7 +28,16 @@ describe('getPrismaConnectionString', () => {
   it('should return undefined when no database url is configured', () => {
     delete process.env.POSTGRES_PRISMA_POOL_URL
     delete process.env.POSTGRES_PRISMA_URL
+    process.env.NODE_ENV = 'production'
 
     expect(getPrismaConnectionString()).toBeUndefined()
+  })
+
+  it('should fallback to test connection string in test environment', () => {
+    delete process.env.POSTGRES_PRISMA_POOL_URL
+    delete process.env.POSTGRES_PRISMA_URL
+    process.env.NODE_ENV = 'test'
+
+    expect(getPrismaConnectionString()).toBe('postgresql://postgres:postgres@localhost:5432/postgres')
   })
 })

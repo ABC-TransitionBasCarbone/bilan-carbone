@@ -12,25 +12,21 @@ const globalForPrisma = global as unknown as {
 }
 
 const connectionString = getPrismaConnectionString()
-if (!connectionString && process.env.NODE_ENV !== 'test') {
+if (!connectionString) {
   throw new Error('Missing database connection string: set POSTGRES_PRISMA_URL or POSTGRES_PRISMA_POOL_URL')
 }
 
+const adapter = new PrismaPg({
+  connectionString,
+})
+
 // https://www.prisma.io/docs/orm/prisma-client/queries/excluding-fields
-const defaultPrismaClient = (connectionString
-  ? new PrismaClient({
-      adapter: new PrismaPg({
-        connectionString,
-      }),
-      omit: {
-        user: { password: true, resetToken: true },
-      },
-    })
-  : new PrismaClient({
-      omit: {
-        user: { password: true, resetToken: true },
-      },
-    })) as PrismaClient
+const defaultPrismaClient = new PrismaClient({
+  adapter,
+  omit: {
+    user: { password: true, resetToken: true },
+  },
+}) as PrismaClient
 
 export const prismaClient = globalForPrisma.prismaClient ?? defaultPrismaClient
 
