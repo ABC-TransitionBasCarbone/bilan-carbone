@@ -14,7 +14,12 @@ import StudyComments from '@/components/study/StudyComments'
 import { SiteDependentField } from '@/constants/emissionFactorMap'
 import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import { changeStudyDates, changeStudyEstablishment, changeStudyName, getStudySite } from '@/services/serverFunctions/study'
+import {
+  changeStudyDates,
+  changeStudyEstablishment,
+  changeStudyName,
+  getStudySite,
+} from '@/services/serverFunctions/study'
 import {
   ChangeStudyDatesCommand,
   ChangeStudyDatesCommandValidation,

@@ -103,12 +103,12 @@ describe('StudyRightsClickson', () => {
   it('shows edit study name action for admin/editor roles', () => {
     renderComponent(false)
 
-    expect(screen.getByRole('button', { name: 'study.rights.edit' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'edit' })).toBeInTheDocument()
   })
 
   it('hides edit study name action for contributors without edition rights', () => {
     renderComponent(true)
 
-    expect(screen.queryByRole('button', { name: 'study.rights.edit' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'edit' })).not.toBeInTheDocument()
   })
 })
