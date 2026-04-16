@@ -58,6 +58,9 @@ describe('processUsers', () => {
         importedFileDate,
       },
     })
+    expect(consoleLogSpy).toHaveBeenCalledWith('1 users created')
+    expect(consoleLogSpy).toHaveBeenCalledWith('1 accounts created')
+    expect(consoleLogSpy).not.toHaveBeenCalledWith(expect.stringContaining('Progress:'))
   })
 
   it('updates imported existing accounts and skips bulk create when no new users', async () => {
@@ -77,5 +80,7 @@ describe('processUsers', () => {
     expect(updateAccount).toHaveBeenCalledTimes(1)
     expect(createUsersWithAccount).not.toHaveBeenCalled()
     expect(consoleLogSpy).toHaveBeenCalledWith('No new users to create')
+    expect(consoleLogSpy).toHaveBeenCalledWith('1 accounts updated')
+    expect(consoleLogSpy).not.toHaveBeenCalledWith(expect.stringContaining('Progress:'))
   })
 })

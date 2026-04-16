@@ -172,6 +172,7 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
 export const processUsers = async (values: Record<string, string>[], importedFileDate: Date) => {
   const BATCH_SIZE = 20
   const usersWithAccount: (Prisma.UserCreateManyInput & { account: Prisma.AccountCreateInput })[] = []
+  let updatedAccountsCount = 0
 
   for (let i = 0; i < values.length; i += BATCH_SIZE) {
     const batch = values.slice(i, i + BATCH_SIZE)
@@ -179,10 +180,9 @@ export const processUsers = async (values: Record<string, string>[], importedFil
     for (const userWithAccount of results) {
       if (userWithAccount) {
         usersWithAccount.push(userWithAccount)
+      } else {
+        updatedAccountsCount += 1
       }
-    }
-    if (i % (BATCH_SIZE * 5) === 0 || i + BATCH_SIZE >= values.length) {
-      console.log(`Progress: ${Math.min(i + BATCH_SIZE, values.length)}/${values.length}`)
     }
   }
   if (usersWithAccount.length > 0) {
@@ -191,6 +191,9 @@ export const processUsers = async (values: Record<string, string>[], importedFil
     console.log(`${newAccounts.count} accounts created`)
   } else {
     console.log('No new users to create')
+  }
+  if (updatedAccountsCount > 0) {
+    console.log(`${updatedAccountsCount} accounts updated`)
   }
 }
 
