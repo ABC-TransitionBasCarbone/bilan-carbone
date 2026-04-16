@@ -9,11 +9,12 @@ describe('Public IP rate limiting', () => {
         return cy.wrap(null)
       }
 
-      return cy.request({
-        url: targetPath,
-        headers,
-        failOnStatusCode: false,
-      })
+      return cy
+        .request({
+          url: targetPath,
+          headers,
+          failOnStatusCode: false,
+        })
         .its('status')
         .should('not.eq', 429)
         .then(() => makeAllowedRequests(remainingRequests - 1))
