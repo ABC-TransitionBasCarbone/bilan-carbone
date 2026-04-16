@@ -7,6 +7,7 @@ This implementation creates a survey system inspired by the nosgestesclimat-app 
 ## Architecture
 
 ### Apps Structure
+
 ```
 apps/
 ├── bilan-carbone/       # Existing carbon accounting app
@@ -20,6 +21,7 @@ apps/
 ```
 
 ### Shared Packages
+
 ```
 packages/
 ├── survey/              # NEW: Shared survey logic
@@ -37,6 +39,7 @@ packages/
 ## Key Features Implemented
 
 ### 1. Core Survey Engine (`packages/survey`)
+
 - **SurveyEngine Class**: Handles navigation, validation, and state management
   - `getCurrentQuestion()`: Get current question
   - `goToNextQuestion()` / `goToPreviousQuestion()`: Navigation
@@ -45,6 +48,7 @@ packages/
   - `isComplete()`: Completion status
 
 ### 2. Question Types (MVP)
+
 - **Text Input**: Multi-line text with validation
   - Min/max length validation
   - Pattern validation (regex)
@@ -54,6 +58,7 @@ packages/
   - Required field validation
 
 ### 3. State Management (Zustand)
+
 - `useSurveyStore`: Global survey state
   - Auto-save to localStorage
   - Response restoration
@@ -61,17 +66,20 @@ packages/
   - Navigation actions
 
 ### 4. LocalStorage Persistence
+
 - Automatic saving on every answer
 - Response restoration by UUID
 - Prefix-based storage (`mip_survey_`)
 - Date object serialization
 
 ### 5. UUID-based URLs
+
 - Each survey response gets a unique URL: `/survey/{uuid}`
 - Home page auto-redirects to new survey with generated UUID
 - Responses are tied to their UUID for later resumption
 
 ### 6. UI Components
+
 - **QuestionRenderer**: Polymorphic question rendering
 - **SurveyPage**: Main survey interface with:
   - Progress bar
@@ -81,6 +89,7 @@ packages/
   - Completion screen
 
 ### 7. Material-UI Integration
+
 - Themed components using MUI v7
 - Responsive design
 - Accessible form controls
@@ -88,18 +97,19 @@ packages/
 
 ## Tech Stack
 
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| Next.js | 16.2.3 | React framework |
-| React | 19.2.5 | UI library |
-| TypeScript | 6.0.2 | Type safety |
-| Zustand | 5.0.11 | State management |
-| Material-UI | 7.3.8 | UI components |
-| UUID | 13.0.0 | Unique IDs |
+| Technology  | Version | Purpose          |
+| ----------- | ------- | ---------------- |
+| Next.js     | 16.2.3  | React framework  |
+| React       | 19.2.5  | UI library       |
+| TypeScript  | 6.0.2   | Type safety      |
+| Zustand     | 5.0.11  | State management |
+| Material-UI | 7.3.8   | UI components    |
+| UUID        | 13.0.0  | Unique IDs       |
 
 ## File Structure
 
 ### apps/mip/
+
 ```
 src/
 ├── app/
@@ -121,6 +131,7 @@ src/
 ```
 
 ### packages/survey/
+
 ```
 src/
 ├── types.ts       # Survey, Question, Response types
@@ -185,6 +196,7 @@ const mySurvey: Survey = {
 ## Sample Survey
 
 A sample carbon footprint survey is included (`src/data/sampleSurvey.ts`) with:
+
 1. Organization name (text input)
 2. Primary sector (choice)
 3. Number of employees (choice)
@@ -226,6 +238,7 @@ import { SurveyEngine, surveyStorage, Survey } from '@repo/survey'
 ```
 
 This allows the bilan-carbone app to:
+
 - Create custom surveys for users
 - Collect additional data through surveys
 - Integrate survey responses with carbon calculations

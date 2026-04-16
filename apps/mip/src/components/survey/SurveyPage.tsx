@@ -18,7 +18,7 @@ import {
 } from '@mui/material'
 import { ArrowBack, ArrowForward, Check } from '@mui/icons-material'
 import { SurveyEngine, Survey } from '@repo/survey'
-import { useSurveyStore } from '@/store/survey/surveyStore'
+import { useSurveyStore } from '@/store/surveyStore'
 import { QuestionRenderer } from './QuestionRenderer'
 
 interface SurveyPageProps {
