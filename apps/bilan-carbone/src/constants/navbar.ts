@@ -23,6 +23,9 @@ interface Menu {
   sections: MenuSection[]
 }
 
+export const CLICKS_ON_ACT_INFO =
+  "Construisez votre plan de transition avec Clicks On Act. En cliquant sur ce lien, un nouvel onglet va s'ouvrir."
+
 export const getStudyNavbarMenu = (
   environment: Environment,
   t: Translations,
@@ -97,7 +100,7 @@ export const getStudyNavbarMenu = (
               href: 'https://transition.clickson.eu',
               label: 'Clicks On Act',
               external: true,
-              info: "Construisez votre plan de transition avec Clicks On Act. En cliquant sur ce lien, un nouvel onglet va s'ouvrir.",
+              info: CLICKS_ON_ACT_INFO,
             },
           ],
         },
