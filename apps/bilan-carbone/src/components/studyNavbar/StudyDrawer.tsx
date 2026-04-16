@@ -1,4 +1,6 @@
 import { getStudyNavbarMenu } from '@/constants/navbar'
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
+import { Tooltip } from '@mui/material'
 import { Environment, StudyRole } from '@repo/db-common/enums'
 import classNames from 'classnames'
 import { UUID } from 'crypto'
@@ -63,13 +65,20 @@ const StudyDrawer = ({
                       prefetch={false}
                       key={linkIndex}
                       target={link.external ? '_blank' : undefined}
+                      rel={link.external ? 'noopener noreferrer' : undefined}
                       className={classNames(styles.link, {
                         [styles.active]: pathName === link.href || pathName.startsWith(`${link.href}/`),
+                        [styles.linkWithInfo]: !!link.info,
                       })}
                       href={link.href || '#'}
                       {...(link.testId && { 'data-testid': link.testId })}
                     >
-                      {link.label}
+                      <span>{link.label}</span>
+                      {link.info && (
+                        <Tooltip title={link.info} arrow>
+                          <InfoOutlinedIcon className={styles.infoIcon} fontSize="small" />
+                        </Tooltip>
+                      )}
                     </Link>
                   ),
                 )}

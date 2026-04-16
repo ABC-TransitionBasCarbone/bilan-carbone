@@ -10,6 +10,7 @@ interface MenuLink {
   disabled?: boolean
   external?: boolean
   hide?: boolean
+  info?: string
 }
 
 interface MenuSection {
@@ -96,6 +97,7 @@ export const getStudyNavbarMenu = (
               href: 'https://transition.clickson.eu',
               label: 'Clicks On Act',
               external: true,
+              info: "Construisez votre plan de transition avec Clicks On Act. En cliquant sur ce lien, un nouvel onglet va s'ouvrir.",
             },
           ],
         },
