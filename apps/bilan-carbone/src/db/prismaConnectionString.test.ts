@@ -38,6 +38,6 @@ describe('getPrismaConnectionString', () => {
     delete process.env.POSTGRES_PRISMA_URL
     process.env.NODE_ENV = 'test'
 
-    expect(getPrismaConnectionString()).toBe('postgresql://postgres:postgres@localhost:5432/postgres')
+    expect(getPrismaConnectionString()).toBe('postgresql://localhost:5432/postgres')
   })
 })
