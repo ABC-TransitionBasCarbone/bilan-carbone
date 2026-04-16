@@ -36,7 +36,7 @@ déplacements . voyages scolaires:
           par défaut: 0
 
     bus électrique:
-      titre: Autobus
+      titre: Autobus électrique
       formule: distance * commun . FE . moyen de transport . autobus électrique
       form:
         à traduire: oui
