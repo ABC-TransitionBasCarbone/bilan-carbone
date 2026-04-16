@@ -215,6 +215,24 @@ describe('Study Service', () => {
       expect(data.data[1][2]).toBe('Valeur (tCO2e)')
     })
 
+    it('keeps dynamic unit translation for non-clickson exports', () => {
+      const data = formatComputedResultsForExport(
+        getMockeFullStudy({ resultsUnit: StudyResultUnit.K }),
+        [{ name: 'Tous les sites', id: 'all' }],
+        {
+          aggregated: [{ label: 'Total', post: 'total', children: [], value: 12 }],
+          bySite: {},
+        },
+        tStudy,
+        (key: string, values?: { unit?: string }) =>
+          key === 'value' ? `Valeur (${values?.unit})` : key,
+        () => 'kgCO2e',
+        Environment.CUT,
+      )
+
+      expect(data.data[1][2]).toBe('Valeur (kgCO2e)')
+    })
+
     it('does not include "Export au format Bilan Carbone®" sheet for CLICKSON', async () => {
       const prepareExcelMock = prepareExcel as jest.Mock
       const getUserSettingsMock = getUserSettings as jest.Mock
@@ -244,6 +262,37 @@ describe('Study Service', () => {
       const workbookSheets = prepareExcelMock.mock.calls[0][0]
       expect(workbookSheets).toHaveLength(1)
       expect(workbookSheets.some((sheet: { name: string }) => sheet.name === 'bc.title')).toBe(false)
+    })
+
+    it('includes "Export au format Bilan Carbone®" sheet for CUT', async () => {
+      const prepareExcelMock = prepareExcel as jest.Mock
+      const getUserSettingsMock = getUserSettings as jest.Mock
+      prepareExcelMock.mockClear()
+      getUserSettingsMock.mockResolvedValue({ success: false })
+
+      await downloadStudyResults(
+        getMockeFullStudy({ resultsUnit: StudyResultUnit.T, exports: { types: [], control: ControlMode.Operational } }),
+        [],
+        [],
+        [],
+        tStudy,
+        tExport,
+        t,
+        t,
+        t,
+        t,
+        tUnits,
+        t,
+        Environment.CUT,
+        {
+          aggregated: [{ label: 'Total', post: 'total', children: [], value: 12 }],
+          bySite: {},
+        },
+      )
+
+      const workbookSheets = prepareExcelMock.mock.calls[0][0]
+      expect(workbookSheets).toHaveLength(2)
+      expect(workbookSheets.some((sheet: { name: string }) => sheet.name === 'bc.title')).toBe(true)
     })
   })
 })
