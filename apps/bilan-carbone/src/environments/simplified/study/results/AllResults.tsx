@@ -4,7 +4,7 @@ import SelectStudySite from '@/components/study/site/SelectStudySite'
 import type { FullStudy } from '@/db/study'
 import DownloadIcon from '@mui/icons-material/Download'
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
-import { Box, Button, Tab, Tabs, Typography } from '@mui/material'
+import { Box, Button, SvgIcon, Tab, Tabs, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { SyntheticEvent, useMemo, useState } from 'react'
 
@@ -39,6 +39,16 @@ import type { BaseResultsByPost } from '@/services/posts'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import type { BaseResultsBySite } from '@/types/study.types'
 import { a11yProps, ChartType, defaultChartOrder, tabsLabels } from './utils'
+
+const SheetIcon = () => (
+  <SvgIcon viewBox="0 0 24 24">
+    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" fill="none" stroke="currentColor" strokeWidth="2" />
+    <line x1="3" y1="9" x2="21" y2="9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    <line x1="3" y1="15" x2="21" y2="15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    <line x1="9" y1="9" x2="9" y2="21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    <line x1="15" y1="9" x2="15" y2="21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+  </SvgIcon>
+)
 
 interface Props {
   setSite: (site: string) => void
@@ -130,7 +140,7 @@ const AllResults = ({
             variant="contained"
             color="primary"
             size="large"
-            endIcon={<DownloadIcon />}
+            endIcon={environment === Environment.CLICKSON ? <SheetIcon /> : <DownloadIcon />}
             onClick={() =>
               downloadStudyResults(
                 study,
