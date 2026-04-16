@@ -25,6 +25,7 @@ yarn install
 
 Create a `.env` copied from `apps/bilan-carbone/.env.dist` and create a `.env.test` copied from `apps/bilan-carbone/.env.test.dist`.
 Do the same in db-common folder.
+`POSTGRES_PRISMA_POOL_URL` is optional and can be set to an external pooler URL for app runtime connections.
 
 ```bash
 cp apps/bilan-carbone/.env.dist apps/bilan-carbone/.env

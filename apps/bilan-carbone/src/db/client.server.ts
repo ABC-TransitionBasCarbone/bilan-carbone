@@ -1,5 +1,6 @@
 import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '@repo/db-common'
+import { getPrismaConnectionString } from './prismaConnectionString'
 // Au lieu de : import 'server-only' pour pas casser la seed
 if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'test') {
   throw new Error('prismaClient cannot be used client-side')
@@ -11,7 +12,7 @@ const globalForPrisma = global as unknown as {
 }
 
 const adapter = new PrismaPg({
-  connectionString: process.env.POSTGRES_PRISMA_URL,
+  connectionString: getPrismaConnectionString(),
 })
 
 // https://www.prisma.io/docs/orm/prisma-client/queries/excluding-fields
