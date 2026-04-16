@@ -73,11 +73,15 @@ const StudyDrawer = ({
                       href={link.href || '#'}
                       {...(link.testId && { 'data-testid': link.testId })}
                     >
-                      <span>{link.label}</span>
-                      {link.info && (
-                        <Tooltip title={link.info} arrow>
-                          <InfoOutlinedIcon className={styles.infoIcon} fontSize="small" />
-                        </Tooltip>
+                      {link.info ? (
+                        <>
+                          <span>{link.label}</span>
+                          <Tooltip title={link.info} arrow>
+                            <InfoOutlinedIcon className={styles.infoIcon} fontSize="small" />
+                          </Tooltip>
+                        </>
+                      ) : (
+                        link.label
                       )}
                     </Link>
                   ),
