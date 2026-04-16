@@ -8,6 +8,7 @@ import {
 import { SitesCommand } from '@/services/serverFunctions/study.command'
 import { defaultCAUnit } from '@/utils/number'
 import { Environment, SiteCAUnit } from '@repo/db-common/enums'
+import { Checkbox, FormControlLabel } from '@mui/material'
 import { Button } from '@repo/ui'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
@@ -39,11 +40,16 @@ const Sites = <T extends SitesCommand>({
   disabled,
 }: Props<T>) => {
   const t = useTranslations('organization.sites')
+  const tCommon = useTranslations('common.action')
   const tGlossary = useTranslations('organization.sites.glossary')
   const tUnit = useTranslations('settings.caUnit')
   const [showGlossary, setShowGlossary] = useState(false)
 
   const setValue = form?.setValue as UseFormSetValue<SitesCommand>
+  const canAddSite = !disabled && form && !withSelection && hasAccessToStudySiteAddAndSelection(environment)
+  const canSelectAll = !disabled && form && withSelection && sites.length > 0
+  const allSitesSelected = canSelectAll && sites.every((site) => site.selected)
+  const someSitesSelected = canSelectAll && sites.some((site) => site.selected)
 
   const newSite = () => ({ id: uuidv4(), name: '', selected: false }) as SitesCommand['sites'][0]
 
@@ -73,14 +79,34 @@ const Sites = <T extends SitesCommand>({
               </span>
             )}
           </p>
-          {!disabled && form && !withSelection && hasAccessToStudySiteAddAndSelection(environment) && (
-            <Button onClick={() => setValue('sites', [...sites, newSite()])} data-testid="add-site-button">
-              {t('add')}
-            </Button>
-          )}
         </div>
       </div>
+      {canSelectAll && (
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={allSitesSelected}
+              indeterminate={someSitesSelected && !allSitesSelected}
+              onChange={(_, checked) =>
+                setValue(
+                  'sites',
+                  sites.map((site) => ({ ...site, selected: checked })),
+                )
+              }
+              data-testid="organization-sites-select-all-checkbox"
+            />
+          }
+          label={allSitesSelected ? tCommon('unselectAll') : tCommon('selectAll')}
+        />
+      )}
       <BaseTable table={table} className="mt1" testId="sites" />
+      {canAddSite && (
+        <div className="mt1 justify-end">
+          <Button onClick={() => setValue('sites', [...sites, newSite()])} data-testid="add-site-button">
+            {t('add')}
+          </Button>
+        </div>
+      )}
       <GlossaryModal
         glossary={showGlossary ? 'title' : ''}
         onClose={() => setShowGlossary(false)}
