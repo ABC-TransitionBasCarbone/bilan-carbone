@@ -8,6 +8,11 @@ export async function POST(req: NextRequest) {
     return error
   }
 
-  await getUsersFromFTP()
-  return new Response('OK', { status: 200 })
+  try {
+    await getUsersFromFTP()
+    return new Response('OK', { status: 200 })
+  } catch (error) {
+    console.error('Error in import-users cron:', error)
+    return new Response('Import users failed', { status: 500 })
+  }
 }
