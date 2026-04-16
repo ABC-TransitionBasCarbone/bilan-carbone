@@ -2,12 +2,21 @@ import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionS
 import { getMockeFullStudy } from '@/tests/utils/models/study'
 import { hasSufficientLevel } from '@/utils/study'
 import { expect } from '@jest/globals'
-import { Environment, Level, StudyResultUnit, SubPost } from '@repo/db-common/enums'
-import { getStudyTotalCo2Emissions, getTransEnvironmentSubPost } from './study'
+import { ControlMode, Environment, Level, StudyResultUnit, SubPost } from '@repo/db-common/enums'
+import { prepareExcel } from './serverFunctions/file'
+import { getUserSettings } from './serverFunctions/user'
+import {
+  downloadStudyResults,
+  formatComputedResultsForExport,
+  getStudyTotalCo2Emissions,
+  getTransEnvironmentSubPost,
+} from './study'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('./file', () => ({ download: jest.fn() }))
 jest.mock('./auth', () => ({ auth: jest.fn() }))
+jest.mock('./serverFunctions/file', () => ({ prepareExcel: jest.fn(async () => Buffer.from('mock')) }))
+jest.mock('./serverFunctions/user', () => ({ getUserSettings: jest.fn(async () => ({ success: false })) }))
 jest.mock('uuid', () => ({ v4: jest.fn() }))
 jest.mock('next-intl/server', () => ({ getTranslations: jest.fn(() => (key: string) => key) }))
 
@@ -180,6 +189,59 @@ describe('Study Service', () => {
       expect(hasSufficientLevel(null, Level.Initial)).toBe(false)
       expect(hasSufficientLevel(null, Level.Standard)).toBe(false)
       expect(hasSufficientLevel(null, Level.Advanced)).toBe(false)
+    })
+  })
+
+  describe('exports', () => {
+    const t = (key: string) => key
+    const tStudy = (key: string) => key
+    const tExport = (key: string) => (key === 'value' ? 'Valeur' : key)
+    const tUnits = (key: string) => key
+
+    it('adds "(tCO2e)" to clickson exported value header', () => {
+      const data = formatComputedResultsForExport(
+        getMockeFullStudy({ resultsUnit: StudyResultUnit.T }),
+        [{ name: 'Tous les sites', id: 'all' }],
+        {
+          aggregated: [{ label: 'Total', post: 'total', children: [], value: 12 }],
+          bySite: {},
+        },
+        tStudy,
+        tExport,
+        tUnits,
+        Environment.CLICKSON,
+      )
+
+      expect(data.data[1][2]).toBe('Valeur (tCO2e)')
+    })
+
+    it('does not include "Export au format Bilan Carbone®" sheet for CLICKSON', async () => {
+      ;(prepareExcel as jest.Mock).mockClear()
+      ;(getUserSettings as jest.Mock).mockResolvedValue({ success: false })
+
+      await downloadStudyResults(
+        getMockeFullStudy({ resultsUnit: StudyResultUnit.T, exports: { types: [], control: ControlMode.Operational } }),
+        [],
+        [],
+        [],
+        tStudy,
+        tExport,
+        t,
+        t,
+        t,
+        t,
+        tUnits,
+        t,
+        Environment.CLICKSON,
+        {
+          aggregated: [{ label: 'Total', post: 'total', children: [], value: 12 }],
+          bySite: {},
+        },
+      )
+
+      const workbookSheets = (prepareExcel as jest.Mock).mock.calls[0][0]
+      expect(workbookSheets).toHaveLength(1)
+      expect(workbookSheets.some((sheet: { name: string }) => sheet.name === 'bc.title')).toBe(false)
     })
   })
 })

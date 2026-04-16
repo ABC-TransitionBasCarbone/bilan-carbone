@@ -332,7 +332,11 @@ const getFormattedHeadersForEnv = (
   const headers = getHeadersForEnv(environment)
 
   return headers.map((header) =>
-    header !== 'value' ? traduction(header) : traduction(header, { unit: traductionUnit(unit) }),
+    header !== 'value'
+      ? traduction(header)
+      : environment === Environment.CLICKSON
+        ? `${traduction(header)} (tCO2e)`
+        : traduction(header, { unit: traductionUnit(unit) }),
   )
 }
 
@@ -800,7 +804,7 @@ export const downloadStudyResults = async (
     )
   }
 
-  if (isSimplifiedEnvironment(environment) && computedResults) {
+  if (environment === Environment.CUT && computedResults) {
     data.push(formatBaseResultsToBCExport(study, siteList, computedResults, tExport, tPost))
   }
 
