@@ -2,6 +2,13 @@ jest.mock('next-auth/jwt', () => ({
   getToken: jest.fn(),
 }))
 
+if (typeof Request === 'undefined') {
+  Object.defineProperty(globalThis, 'Request', {
+    value: class Request {},
+    configurable: true,
+  })
+}
+
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { createInMemoryRateLimiter, getPublicRouteScope } = require('@/proxy')
 
