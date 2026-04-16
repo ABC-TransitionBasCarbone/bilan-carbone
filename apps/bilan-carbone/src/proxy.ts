@@ -61,7 +61,6 @@ export const createInMemoryRateLimiter = (maxRequests: number, windowMs: number)
       }
 
       entry.count += 1
-      requestsByKey.set(key, entry)
       return { isLimited: false, retryAfterSeconds: 0 }
     },
   }

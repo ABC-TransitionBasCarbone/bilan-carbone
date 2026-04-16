@@ -4,22 +4,29 @@ describe('Public IP rate limiting', () => {
     const targetPath = '/preview'
     const headers = { 'x-forwarded-for': '198.51.100.77' }
 
-    Cypress._.times(maxRequests, () => {
-      cy.request({
+    const makeAllowedRequests = (remainingRequests: number): Cypress.Chainable => {
+      if (remainingRequests <= 0) {
+        return cy.wrap(null)
+      }
+
+      return cy.request({
         url: targetPath,
         headers,
         failOnStatusCode: false,
       }).its('status')
         .should('not.eq', 429)
-    })
+        .then(() => makeAllowedRequests(remainingRequests - 1))
+    }
 
-    cy.request({
-      url: targetPath,
-      headers,
-      failOnStatusCode: false,
-    }).then((response) => {
-      expect(response.status).to.eq(429)
-      expect(response.headers).to.have.property('retry-after')
-    })
+    makeAllowedRequests(maxRequests).then(() =>
+      cy.request({
+        url: targetPath,
+        headers,
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.eq(429)
+        expect(response.headers).to.have.property('retry-after')
+      })
+    )
   })
 })
