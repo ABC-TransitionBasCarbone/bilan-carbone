@@ -19,3 +19,20 @@ services:
     ports:
       - '1080:1080'
       - '1025:1025'
+  waf:
+    image: owasp/modsecurity-crs:nginx
+    profiles:
+      - waf
+    environment:
+      BACKEND: ${WAF_BACKEND:-http://host.docker.internal:3000}
+      PORT: 8080
+      SERVER_NAME: localhost
+      MODSEC_RULE_ENGINE: 'On'
+      NGINX_ALWAYS_TLS_REDIRECT: 'off'
+    ports:
+      - '8080:8080'
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    volumes:
+      - ./waf/custom-rules.conf:/etc/modsecurity.d/custom_rules.d/custom-rules.conf:ro
+      - ./waf/default.conf.template:/etc/nginx/templates/conf.d/default.conf.template:ro

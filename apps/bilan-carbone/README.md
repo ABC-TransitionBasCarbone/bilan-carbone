@@ -28,6 +28,14 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
    docker-compose up -d
    ```
 
+   To also start the local WAF (ModSecurity + NGINX) in front of the app:
+
+   ```bash
+   WAF_BACKEND=http://host.docker.internal:3000 docker-compose --profile waf up -d waf
+   ```
+
+   Then access the app through the WAF at [http://localhost:8080](http://localhost:8080).
+
 4. **Set up the database with Prisma**
 
    ```bash
