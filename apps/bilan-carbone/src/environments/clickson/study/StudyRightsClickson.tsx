@@ -218,22 +218,23 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, us
 
   const handleStudyNameUpdate = useCallback(async () => {
     setLoadingStudyName(true)
+    try {
+      await nameForm.handleSubmit(async (data) => {
+        if (data.name === study.name) {
+          resetNameInput()
+          return
+        }
 
-    await nameForm.handleSubmit(async (data) => {
-      if (data.name === study.name) {
-        resetNameInput()
-        return
-      }
-
-      await callServerFunction(() => changeStudyName(data), {
-        onSuccess: () => {
-          setEditTitle(false)
-          router.refresh()
-        },
-      })
-    })()
-
-    setLoadingStudyName(false)
+        await callServerFunction(() => changeStudyName(data), {
+          onSuccess: () => {
+            setEditTitle(false)
+            router.refresh()
+          },
+        })
+      })()
+    } finally {
+      setLoadingStudyName(false)
+    }
   }, [nameForm, study.name, resetNameInput, callServerFunction, router])
 
   return (
