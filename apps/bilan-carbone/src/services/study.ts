@@ -331,13 +331,17 @@ const getFormattedHeadersForEnv = (
 ) => {
   const headers = getHeadersForEnv(environment)
 
-  return headers.map((header) =>
-    header !== 'value'
-      ? traduction(header)
-      : environment === Environment.CLICKSON
-        ? `${traduction(header)} (tCO2e)`
-        : traduction(header, { unit: traductionUnit(unit) }),
-  )
+  return headers.map((header) => {
+    if (header !== 'value') {
+      return traduction(header)
+    }
+
+    if (environment === Environment.CLICKSON) {
+      return `${traduction(header)} (tCO2e)`
+    }
+
+    return traduction(header, { unit: traductionUnit(unit) })
+  })
 }
 
 const handleLine = (

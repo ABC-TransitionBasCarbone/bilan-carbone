@@ -216,8 +216,10 @@ describe('Study Service', () => {
     })
 
     it('does not include "Export au format Bilan Carbone®" sheet for CLICKSON', async () => {
-      ;(prepareExcel as jest.Mock).mockClear()
-      ;(getUserSettings as jest.Mock).mockResolvedValue({ success: false })
+      const prepareExcelMock = prepareExcel as jest.Mock
+      const getUserSettingsMock = getUserSettings as jest.Mock
+      prepareExcelMock.mockClear()
+      getUserSettingsMock.mockResolvedValue({ success: false })
 
       await downloadStudyResults(
         getMockeFullStudy({ resultsUnit: StudyResultUnit.T, exports: { types: [], control: ControlMode.Operational } }),
@@ -239,7 +241,7 @@ describe('Study Service', () => {
         },
       )
 
-      const workbookSheets = (prepareExcel as jest.Mock).mock.calls[0][0]
+      const workbookSheets = prepareExcelMock.mock.calls[0][0]
       expect(workbookSheets).toHaveLength(1)
       expect(workbookSheets.some((sheet: { name: string }) => sheet.name === 'bc.title')).toBe(false)
     })
