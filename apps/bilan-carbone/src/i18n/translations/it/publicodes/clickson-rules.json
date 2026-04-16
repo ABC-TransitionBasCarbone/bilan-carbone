@@ -291,10 +291,10 @@
         },
         "biscuits": {
           "nombre": {
-            "question": "[UPDATED] Quantité di biscuit consommée annuellement"
+            "question": "Quantità di biscotti consumata annualmente"
           },
           "FE": {
-            "question": "[UPDATED] Facteur d'émission par kg di peso netto di biscuits"
+            "question": "Fattore di emissione per kg di peso netto di biscotti"
           }
         },
         "paquet di chips": {
@@ -307,10 +307,10 @@
         },
         "café noir": {
           "nombre": {
-            "question": "[UPDATED] Quantité di café noir consommée annuellement"
+            "question": "Quantità di caffè nero consumata annualmente"
           },
           "FE": {
-            "question": "[UPDATED] Facteur d'émission par kg di peso netto di café noir"
+            "question": "Fattore di emissione per kg di peso netto di caffè nero"
           }
         },
         "café au lait": {
@@ -323,10 +323,10 @@
         },
         "thé infusé": {
           "nombre": {
-            "question": "[UPDATED] Quantité di thé infusé consommée annuellement"
+            "question": "Quantità di tè infuso consumata annualmente"
           },
           "FE": {
-            "question": "[UPDATED] Facteur d'émission par kg di peso netto di thé infusé"
+            "question": "Fattore di emissione per kg di peso netto di tè infuso"
           }
         },
         "sandwich pain di mie": {
@@ -334,15 +334,15 @@
             "question": "Numero di panini di pancarrè consumati annualmente"
           },
           "FE": {
-            "question": "[UPDATED] Facteur d'émission par kg di peso netto di sandwich pain di mie"
+            "question": "Fattore di emissione per kg di peso netto di panino di pancarrè"
           }
         },
         "barre chocolatée": {
           "nombre": {
-            "question": "[UPDATED] Quantité di barres chocolatées consommée annuellement"
+            "question": "Quantità di barrette di cioccolato consumata annualmente"
           },
           "FE": {
-            "question": "[UPDATED] Facteur d'émission par kg di peso netto di barre chocolatée"
+            "question": "Fattore di emissione per kg di peso netto di barretta di cioccolato"
           }
         }
       }
@@ -525,23 +525,23 @@
           "titre": "Tagliaerba termico",
           "question": "Quanti tagliaerba termici possiedi?",
           "nombre": {
-            "question": "[UPDATED] Combien di tondeuse à gazon thermique possédez-vous ?"
+            "question": "Quanti tosaerba termici possedete?"
           },
           "FE": {
-            "question": "[UPDATED] Facteur d'émission par unité di tondeuse à gazon"
+            "question": "Fattore di emissione per unità di tosaerba"
           },
           "immo": {
-            "question": "[UPDATED] Immobilisation di tondeuse à gazon"
+            "question": "Immobilizzazione di tosaerba"
           }
         },
         "tondeuse gazon électrique": {
-          "titre": "[UPDATED] Tondeuse à gazon électrique",
-          "question": "[UPDATED] Combien di tondeuse à gazon électrique possédez-vous ?",
+          "titre": "Tosaerba elettrico",
+          "question": "Quanti tosaerba elettrici possedete?",
           "nombre": {
-            "question": "[UPDATED] Combien di tondeuse à gazon électrique possédez-vous ?"
+            "question": "Quanti tosaerba elettrici possedete?"
           },
           "FE": {
-            "question": "[UPDATED] Facteur d'émission par unité di tondeuse à gazon électrique"
+            "question": "Fattore di emissione per unità di tosaerba elettrico"
           },
           "immo": {
             "question": "Immobilizzazione"
@@ -600,29 +600,29 @@
           }
         },
         "machine café filtre": {
-          "titre": "[UPDATED] Machine à café - filtre",
-          "question": "[UPDATED] Combien di machine à café - filtre possédez-vous ?",
+          "titre": "Macchina da caffè - filtro",
+          "question": "Quante macchine da caffè a filtro possedete?",
           "nombre": {
-            "question": "[UPDATED] Combien di machine à café - filtre possédez-vous ?"
+            "question": "Quante macchine da caffè a filtro possedete?"
           },
           "FE": {
-            "question": "[UPDATED] Facteur d'émission par unité di machine à café - filtre"
+            "question": "Fattore di emissione per unità di macchina da caffè a filtro"
           },
           "immo": {
-            "question": "[UPDATED] Immobilisation di machine à café - filtre"
+            "question": "Immobilizzazione di macchina da caffè a filtro"
           }
         },
         "machine café dosettes": {
-          "titre": "[UPDATED] Machine à café - dosettes",
-          "question": "[UPDATED] Combien di machine à café - dosettes possédez-vous ?",
+          "titre": "Macchina da caffè - capsule",
+          "question": "Quante macchine da caffè a capsule possedete?",
           "nombre": {
-            "question": "[UPDATED] Combien di machine à café - dosettes possédez-vous ?"
+            "question": "Quante macchine da caffè a capsule possedete?"
           },
           "FE": {
-            "question": "[UPDATED] Facteur d'émission par unité di machine à café - dosettes"
+            "question": "Fattore di emissione per unità di macchina da caffè a capsule"
           },
           "immo": {
-            "question": "[UPDATED] Immobilisation di machine à café - dosettes"
+            "question": "Immobilizzazione di macchina da caffè a capsule"
           }
         },
         "lave-vaiselle professionnel": {
@@ -772,7 +772,7 @@
       "construction": {
         "bâtiment scolaire struttura in cemento": {
           "surface": {
-            "question": "[UPDATED] Quelle surface di bâtiment scolaire (struttura in cemento) comporte votre enceinte scolaire ?"
+            "question": "Quale superficie di edificio scolastico (struttura in cemento) comprende il vostro complesso scolastico?"
           },
           "FE": {
             "question": "Fattore di emissione per m² di edificio scolastico (struttura in cemento)"
@@ -780,7 +780,7 @@
         },
         "parking bâtiment struttura in cemento": {
           "surface": {
-            "question": "[UPDATED] Quelle surface di parking (bâtiment - struttura in cemento) comporte votre enceinte scolaire ?"
+            "question": "Quale superficie di parcheggio (edificio - struttura in cemento) comprende il vostro complesso scolastico?"
           },
           "FE": {
             "question": "Fattore di emissione per m² di parcheggio (edificio - struttura in cemento)"
@@ -788,7 +788,7 @@
         },
         "parking surface bitume": {
           "surface": {
-            "question": "[UPDATED] Quelle surface di parking (surface bitume) comporte votre enceinte scolaire ?"
+            "question": "Quale superficie di parcheggio (superficie in bitume) comprende il vostro complesso scolastico?"
           },
           "FE": {
             "question": "Fattore di emissione per m² di parcheggio (superficie bitume)"
@@ -796,7 +796,7 @@
         },
         "parking surface semi-dure": {
           "surface": {
-            "question": "[UPDATED] Quelle surface di parking (surface semi-dure) comporte votre enceinte scolaire ?"
+            "question": "Quale superficie di parcheggio (superficie semidura) comprende il vostro complesso scolastico?"
           },
           "FE": {
             "question": "Fattore di emissione per m² di parcheggio (superficie semidura)"
@@ -804,7 +804,7 @@
         },
         "garage struttura in cemento": {
           "surface": {
-            "question": "[UPDATED] Quelle surface di garage (struttura in cemento) comporte votre enceinte scolaire ?"
+            "question": "Quale superficie di garage (struttura in cemento) comprende il vostro complesso scolastico?"
           },
           "FE": {
             "question": "Fattore di emissione per m² di garage (struttura in cemento)"
@@ -812,7 +812,7 @@
         },
         "garage structure métal": {
           "surface": {
-            "question": "[UPDATED] Quelle surface di garage (structure métal) comporte votre enceinte scolaire ?"
+            "question": "Quale superficie di garage (struttura in metallo) comprende il vostro complesso scolastico?"
           },
           "FE": {
             "question": "Fattore di emissione per m² di garage (structure métal)"
@@ -831,7 +831,7 @@
         "bus": {
           "titre": "Autobus",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Passeggeri (per km)"
           }
         },
         "bus électrique": {
@@ -843,31 +843,31 @@
         "TER": {
           "titre": "TER",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Passeggeri (per km)"
           }
         },
         "TGV": {
           "titre": "TGV",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Passeggeri (per km)"
           }
         },
         "avion court courrier": {
           "titre": "Aereo a corto raggio",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Passeggeri (per km)"
           }
         },
         "avion moyen courrier": {
           "titre": "Aereo a medio raggio",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Passeggeri (per km)"
           }
         },
         "avion long courrier": {
           "titre": "Aereo a lungo raggio",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Passeggeri (per km)"
           }
         }
       },
@@ -917,7 +917,7 @@
         "bus": {
           "titre": "Autobus",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Passeggeri (per km)"
           }
         },
         "bus électrique": {
@@ -929,13 +929,13 @@
         "TER": {
           "titre": "TER",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Passeggeri (per km)"
           }
         },
         "TGV": {
           "titre": "TGV",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Passeggeri (per km)"
           }
         }
       },
@@ -985,7 +985,7 @@
         "bus": {
           "titre": "Autobus",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Passeggeri (per km)"
           }
         },
         "bus électrique": {
@@ -997,13 +997,13 @@
         "TER": {
           "titre": "TER",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Passeggeri (per km)"
           }
         },
         "TGV": {
           "titre": "TGV",
           "distance": {
-            "question": "[UPDATED] Passagers (par km)"
+            "question": "Passeggeri (per km)"
           }
         }
       }
