@@ -11,7 +11,6 @@ const assetsRoutes = ['/_next', '/img']
 const RATE_LIMITED_METHODS = ['GET', 'HEAD']
 const DEFAULT_PUBLIC_RATE_LIMIT_MAX_REQUESTS = 100
 const DEFAULT_PUBLIC_RATE_LIMIT_WINDOW_MS = 60_000
-const MAX_RATE_LIMIT_ENTRIES = 5_000
 
 const bucketName = process.env.SCW_BUCKET_NAME as string
 const region = process.env.SCW_REGION
@@ -33,6 +32,7 @@ const asPositiveInteger = (value: string | undefined, fallbackValue: number): nu
 
 export const createInMemoryRateLimiter = (maxRequests: number, windowMs: number) => {
   const requestsByKey = new Map<string, { count: number; windowStart: number }>()
+  let lastCleanupAt = 0
 
   const clearExpiredEntries = (now: number) => {
     for (const [key, entry] of requestsByKey.entries()) {
@@ -44,8 +44,9 @@ export const createInMemoryRateLimiter = (maxRequests: number, windowMs: number)
 
   return {
     check: (key: string, now: number = Date.now()): RateLimitResult => {
-      if (requestsByKey.size >= MAX_RATE_LIMIT_ENTRIES) {
+      if (now - lastCleanupAt >= windowMs) {
         clearExpiredEntries(now)
+        lastCleanupAt = now
       }
 
       const entry = requestsByKey.get(key)
@@ -81,10 +82,17 @@ const getClientIp = (req: NextRequest): string => {
     return forwardedFor.split(',')[0].trim()
   }
 
-  return req.headers.get('x-real-ip') ?? req.headers.get('cf-connecting-ip') ?? 'unknown'
+  return (
+    req.ip ??
+    req.headers.get('x-real-ip') ??
+    req.headers.get('cf-connecting-ip') ??
+    req.headers.get('user-agent') ??
+    'unknown'
+  )
 }
 
 const isPublicRoute = (pathname: string) => publicRoutes.some((route) => pathname.startsWith(route))
+const getPublicRouteScope = (pathname: string) => publicRoutes.find((route) => pathname.startsWith(route)) ?? pathname
 
 export async function proxy(req: NextRequest) {
   const host = req.headers.get('host')?.toLowerCase()
@@ -99,7 +107,7 @@ export async function proxy(req: NextRequest) {
   }
 
   if (RATE_LIMITED_METHODS.includes(req.method) && isPublicRoute(req.nextUrl.pathname)) {
-    const rateLimitKey = `${getClientIp(req)}:${req.nextUrl.pathname}`
+    const rateLimitKey = `${getClientIp(req)}:${getPublicRouteScope(req.nextUrl.pathname)}`
     const rateLimitResult = publicRouteRateLimiter.check(rateLimitKey)
 
     if (rateLimitResult.isLimited) {
