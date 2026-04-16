@@ -11,8 +11,13 @@ const globalForPrisma = global as unknown as {
   prismaClient: PrismaClient | undefined
 }
 
+const connectionString = getPrismaConnectionString()
+if (!connectionString && process.env.NODE_ENV !== 'test') {
+  throw new Error('Missing database connection string: set POSTGRES_PRISMA_URL or POSTGRES_PRISMA_POOL_URL')
+}
+
 const adapter = new PrismaPg({
-  connectionString: getPrismaConnectionString(),
+  connectionString,
 })
 
 // https://www.prisma.io/docs/orm/prisma-client/queries/excluding-fields
