@@ -13,4 +13,8 @@ describe('Clickson publicodes transport labels', () => {
   it('uses a distinct title for electric bus in staff transport', () => {
     expect(clicksonRules.déplacements['transport du personnel']['bus électrique'].titre).toBe('Autobus électrique')
   })
+
+  it('uses a distinct title for electric bus in school trips transport', () => {
+    expect(clicksonRules.déplacements['voyages scolaires']['bus électrique'].titre).toBe('Autobus électrique')
+  })
 })
