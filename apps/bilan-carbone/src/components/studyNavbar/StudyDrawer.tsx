@@ -1,12 +1,13 @@
 import { getStudyNavbarMenu } from '@/constants/navbar'
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
-import { Tooltip } from '@mui/material'
 import { Environment, StudyRole } from '@repo/db-common/enums'
 import classNames from 'classnames'
 import { UUID } from 'crypto'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useState } from 'react'
+import HelpIcon from '../base/HelpIcon'
+import Modal from '../modals/Modal'
 import StudyName from '../study/card/StudyName'
 import styles from './StudyNavbar.module.css'
 
@@ -30,8 +31,10 @@ const StudyDrawer = ({
   hasObjectives,
 }: Props) => {
   const pathName = usePathname()
+  const [glossaryInfo, setGlossaryInfo] = useState<{ id: string; label: string; info: string } | null>(null)
 
   const t = useTranslations('study.navigation')
+  const tCommon = useTranslations('common')
 
   const { title, sections } = getStudyNavbarMenu(
     environment,
@@ -55,41 +58,54 @@ const StudyDrawer = ({
               {section.header && <div className={styles.sectionHeader}>{section.header}</div>}
               {section.links
                 .filter((link) => !link.hide)
-                .map((link, linkIndex) =>
-                  link.disabled ? (
+                .map((link, linkIndex) => {
+                  return link.disabled ? (
                     <button key={linkIndex} className={classNames(styles.link, styles.disabled)}>
                       {link.label}
                     </button>
                   ) : (
-                    <Link
-                      prefetch={false}
-                      key={linkIndex}
-                      target={link.external ? '_blank' : undefined}
-                      rel={link.external ? 'noopener noreferrer' : undefined}
-                      className={classNames(styles.link, {
-                        [styles.active]: pathName === link.href || pathName.startsWith(`${link.href}/`),
-                        [styles.linkWithInfo]: !!link.info,
-                      })}
-                      href={link.href || '#'}
-                      {...(link.testId && { 'data-testid': link.testId })}
-                    >
-                      {link.info ? (
-                        <>
-                          <span>{link.label}</span>
-                          <Tooltip title={link.info} arrow>
-                            <InfoOutlinedIcon className={styles.infoIcon} fontSize="small" />
-                          </Tooltip>
-                        </>
-                      ) : (
-                        link.label
+                    <div key={linkIndex} className={classNames({ [styles.linkWithInfo]: !!link.info })}>
+                      <Link
+                        prefetch={false}
+                        target={link.external ? '_blank' : undefined}
+                        rel={link.external ? 'noopener noreferrer' : undefined}
+                        className={classNames(styles.link, {
+                          [styles.active]: pathName === link.href || pathName.startsWith(`${link.href}/`),
+                        })}
+                        href={link.href || '#'}
+                        {...(link.testId && { 'data-testid': link.testId })}
+                      >
+                        {link.label}
+                      </Link>
+                      {link.info && (
+                        <HelpIcon
+                          className={styles.infoIcon}
+                          label={tCommon('moreInfo')}
+                          onClick={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            setGlossaryInfo({ id: `${sectionIndex}-${linkIndex}`, label: link.label, info: link.info! })
+                          }}
+                        />
                       )}
-                    </Link>
-                  ),
-                )}
+                    </div>
+                  )
+                })}
             </div>
           ))}
         </div>
       </div>
+      {glossaryInfo && (
+        <Modal
+          open
+          label={`study-navbar-link-info-${glossaryInfo.id}`}
+          title={glossaryInfo.label}
+          onClose={() => setGlossaryInfo(null)}
+          actions={[{ actionType: 'button', onClick: () => setGlossaryInfo(null), children: tCommon('close') }]}
+        >
+          {glossaryInfo.info}
+        </Modal>
+      )}
     </div>
   )
 }

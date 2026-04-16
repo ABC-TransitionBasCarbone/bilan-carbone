@@ -108,12 +108,17 @@
 .linkWithInfo {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
+  gap: 0.25rem;
 }
 
 .infoIcon {
   color: var(--mui-palette-text-secondary);
+  margin-right: 1rem;
+  flex-shrink: 0;
+}
+
+.linkWithInfo .link {
+  flex: 1;
 }
 
 .disabled {
