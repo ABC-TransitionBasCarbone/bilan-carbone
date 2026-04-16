@@ -2,23 +2,23 @@
   "publicodes-rules": {
     "général": {
       "nombre étudiant": {
-        "question": "Nombre d'étudiants"
+        "question": "Numero di studenti"
       },
       "nombre personnel": {
-        "question": "Nombre de personnel (enseignants et non enseignants)"
+        "question": "Numero di personale (docente e non docente)"
       },
-      "année de construction": {
+      "année di construction": {
         "question": "Anno di costruzione dell'edificio principale"
       },
-      "année de rénovation": {
+      "année di rénovation": {
         "question": "Anno di ristrutturazione dell'edificio principale"
       },
       "pays": {
-        "question": "Pays de l'établissement",
+        "question": "Paese dell'istituto",
         "options": {
           "FRANCE": "FRANCIA",
-          "HONGRIE": "HONGRIE",
-          "ROUMANIE": "ROUMANIE",
+          "HONGRIE": "UNGHERIA",
+          "ROUMANIE": "ROMANIA",
           "CROATIE": "CROAZIA"
         }
       }
@@ -27,137 +27,137 @@
       "électricité": {
         "janvier": {
           "consommation": {
-            "question": "Consommation d'électricité en janvier"
+            "question": "Consumo di elettricità a gennaio"
           },
           "FE": {
-            "question": "Fattore di emissione di l'électricité"
+            "question": "Fattore di emissione dell'elettricità"
           }
         },
         "février": {
           "consommation": {
-            "question": "Consommation d'électricité en février"
+            "question": "Consumo di elettricità a febbraio"
           },
           "FE": {
-            "question": "Fattore di emissione di l'électricité"
+            "question": "Fattore di emissione dell'elettricità"
           }
         },
         "mars": {
           "consommation": {
-            "question": "Consommation d'électricité en mars"
+            "question": "Consumo di elettricità a marzo"
           },
           "FE": {
-            "question": "Fattore di emissione di l'électricité"
+            "question": "Fattore di emissione dell'elettricità"
           }
         },
         "avril": {
           "consommation": {
-            "question": "Consommation d'électricité en avril"
+            "question": "Consumo di elettricità a aprile"
           },
           "FE": {
-            "question": "Fattore di emissione di l'électricité"
+            "question": "Fattore di emissione dell'elettricità"
           }
         },
         "mai": {
           "consommation": {
-            "question": "Consommation d'électricité en mai"
+            "question": "Consumo di elettricità a maggio"
           },
           "FE": {
-            "question": "Fattore di emissione di l'électricité"
+            "question": "Fattore di emissione dell'elettricità"
           }
         },
         "juin": {
           "consommation": {
-            "question": "Consommation d'électricité en juin"
+            "question": "Consumo di elettricità a giugno"
           },
           "FE": {
-            "question": "Fattore di emissione di l'électricité"
+            "question": "Fattore di emissione dell'elettricità"
           }
         },
         "juillet": {
           "consommation": {
-            "question": "Consommation d'électricité en juillet"
+            "question": "Consumo di elettricità a luglio"
           },
           "FE": {
-            "question": "Fattore di emissione di l'électricité"
+            "question": "Fattore di emissione dell'elettricità"
           }
         },
         "août": {
           "consommation": {
-            "question": "Consommation d'électricité en août"
+            "question": "Consumo di elettricità a agosto"
           },
           "FE": {
-            "question": "Fattore di emissione di l'électricité"
+            "question": "Fattore di emissione dell'elettricità"
           }
         },
         "septembre": {
           "consommation": {
-            "question": "Consommation d'électricité en septembre"
+            "question": "Consumo di elettricità a settembre"
           },
           "FE": {
-            "question": "Fattore di emissione di l'électricité"
+            "question": "Fattore di emissione dell'elettricità"
           }
         },
         "octobre": {
           "consommation": {
-            "question": "Consommation d'électricité en octobre"
+            "question": "Consumo di elettricità a ottobre"
           },
           "FE": {
-            "question": "Fattore di emissione di l'électricité"
+            "question": "Fattore di emissione dell'elettricità"
           }
         },
         "novembre": {
           "consommation": {
-            "question": "Consommation d'électricité en novembre"
+            "question": "Consumo di elettricità a novembre"
           },
           "FE": {
-            "question": "Fattore di emissione di l'électricité"
+            "question": "Fattore di emissione dell'elettricità"
           }
         },
         "décembre": {
           "consommation": {
-            "question": "Consommation d'électricité en décembre"
+            "question": "Consumo di elettricità a dicembre"
           },
           "FE": {
-            "question": "Fattore di emissione di l'électricité"
+            "question": "Fattore di emissione dell'elettricità"
           }
         }
       },
       "combustibles": {
         "fioul domestique": {
           "consommation": {
-            "question": "Consumo annuo di fioul domestique"
+            "question": "Consumo annuo di gasolio domestico"
           }
         },
         "fioul lourd": {
           "consommation": {
-            "question": "Consumo annuo di fioul lourd/commercial"
+            "question": "Consumo annuo di olio combustibile pesante/commerciale"
           }
         },
         "gaz naturel": {
           "consommation": {
-            "question": "Consumo annuo di gaz naturel"
+            "question": "Consumo annuo di gas naturale"
           }
         },
-        "granulés de bois": {
+        "granulés di bois": {
           "consommation": {
-            "question": "Consumo annuo di granulés de bois"
+            "question": "Consumo annuo di granulés di legno"
           }
         },
         "biopropane": {
           "consommation": {
-            "question": "Consumo annuo di biopropane"
+            "question": "Consumo annuo di biopropano"
           }
         },
-        "réseau de chaleur": {
+        "réseau di chaleur": {
           "consommation": {
-            "question": "Consumo annuo di réseau de chaleur"
+            "question": "Consumo annuo di rete di teleriscaldamento"
           }
         }
       },
       "autres gaz": {
         "gaz réfrigérants": {
           "titre": "Gaz réfrigérants",
-          "question": "Consumo annuo di gaz réfrigérant"
+          "question": "Consumo annuo di gas refrigerante"
         },
         "gaz réfrigérant": {
           "consommation": {
@@ -174,11 +174,11 @@
             }
           }
         },
-        "gaz effet de serre principaux": {
-          "titre": "Gaz à effet de serre principal",
-          "question": "Consumo annuo di gaz à effet de serre principal"
+        "gaz effet di serre principaux": {
+          "titre": "Gaz à effet di serre principal",
+          "question": "Consumo annuo di gas serra principale"
         },
-        "gaz effet de serre principal": {
+        "gaz effet di serre principal": {
           "consommation": {
             "question": "Consumo annuale di questo gas"
           },
@@ -198,92 +198,92 @@
       }
     },
     "restauration": {
-      "types de repas servis": {
+      "types di repas servis": {
         "moyen": {
           "nombre": {
-            "question": "Nombre de repas moyens annuels"
+            "question": "Numero di pasti medi annuali"
           },
           "FE": {
-            "question": "Fattore di emissione per repas moyen"
+            "question": "Fattore di emissione per pasto medio"
           }
         },
         "végétarien": {
           "nombre": {
-            "question": "Nombre de repas végétariens annuels"
+            "question": "Numero di pasti vegetariani annuali"
           },
           "FE": {
-            "question": "Fattore di emissione per repas végétarien"
+            "question": "Fattore di emissione per pasto vegetariano"
           }
         },
         "végétalien": {
           "nombre": {
-            "question": "Nombre de repas végétaliens annuels"
+            "question": "Numero di pasti vegani annuali"
           },
           "FE": {
-            "question": "Fattore di emissione per repas végétalien"
+            "question": "Fattore di emissione per pasto vegano"
           }
         },
         "viande rouge": {
           "nombre": {
-            "question": "Nombre de repas à base de viande rouge annuels"
+            "question": "Numero di pasti a base di carne rossa annuali"
           },
           "FE": {
-            "question": "Fattore di emissione per repas à base de viande rouge"
+            "question": "Fattore di emissione per pasto a base di carne rossa"
           }
         },
         "viande blanche": {
           "nombre": {
-            "question": "Nombre de repas à base de viande blanche annuels"
+            "question": "Numero di pasti a base di carne bianca annuali"
           },
           "FE": {
-            "question": "Fattore di emissione per repas à base de viande blanche"
+            "question": "Fattore di emissione per pasto a base di carne bianca"
           }
         },
         "poisson": {
           "nombre": {
-            "question": "Nombre de repas à base de poisson blanc annuels"
+            "question": "Numero di pasti a base di pesce bianco annuali"
           },
           "FE": {
-            "question": "Fattore di emissione per repas à base de poisson blanc"
+            "question": "Fattore di emissione per pasto a base di pesce bianco"
           }
         }
       },
       "fret": {
         "routier": {
           "consommation": {
-            "question": "Distanza percorsa in fret routier"
+            "question": "Distanza percorsa in trasporto su strada"
           }
         },
         "ferroviaire": {
           "consommation": {
-            "question": "Distanza percorsa in fret ferroviaire"
+            "question": "Distanza percorsa in trasporto ferroviario"
           }
         }
       },
-      "fin de vie moyenne": {
+      "fin di vie moyenne": {
         "déchets résiduels": {
           "quantité": {
-            "question": "Quantité de déchets résiduels"
+            "question": "Quantità di rifiuti residuali"
           }
         },
         "déchets organiques": {
           "quantité": {
-            "question": "Quantité de déchets organiques"
+            "question": "Quantità di rifiuti organici"
           }
         }
       },
       "distributeur automatiques": {
         "bouteille d'eau": {
           "nombre": {
-            "question": "Nombre de bouteille d'eau consommées annuellement"
+            "question": "Numero di bottiglie d'acqua consumate annualmente"
           },
           "FE": {
-            "question": "Fattore di emissione per bouteille d'eau"
+            "question": "Fattore di emissione per bottiglia d'acqua"
           }
         },
         "soda": {
           "nombre": {
-            "question": "Nombre de sodas consommés annuellement"
+            "question": "Numero di bevande gassate consumate annualmente"
           },
           "FE": {
             "question": "Fattore di emissione per soda"
@@ -291,229 +291,229 @@
         },
         "biscuits": {
           "nombre": {
-            "question": "[UPDATED] Quantité de biscuit consommée annuellement"
+            "question": "[UPDATED] Quantité di biscuit consommée annuellement"
           },
           "FE": {
-            "question": "[UPDATED] Facteur d'émission par kg de poids net de biscuits"
+            "question": "[UPDATED] Facteur d'émission par kg di peso netto di biscuits"
           }
         },
-        "paquet de chips": {
+        "paquet di chips": {
           "nombre": {
-            "question": "Nombre de paquets de chips consommés annuellement"
+            "question": "Numero di pacchetti di patatine consumati annualmente"
           },
           "FE": {
-            "question": "Fattore di emissione per paquet de chips"
+            "question": "Fattore di emissione per pacchetto di chips"
           }
         },
         "café noir": {
           "nombre": {
-            "question": "[UPDATED] Quantité de café noir consommée annuellement"
+            "question": "[UPDATED] Quantité di café noir consommée annuellement"
           },
           "FE": {
-            "question": "[UPDATED] Facteur d'émission par kg de poids net de café noir"
+            "question": "[UPDATED] Facteur d'émission par kg di peso netto di café noir"
           }
         },
         "café au lait": {
           "nombre": {
-            "question": "Quantité de café au lait consommée annuellement"
+            "question": "Quantità di caffè latte consumata annualmente"
           },
           "FE": {
-            "question": "Fattore di emissione per kg de poids net de café a lait"
+            "question": "Fattore di emissione per kg di peso netto di caffè latte"
           }
         },
         "thé infusé": {
           "nombre": {
-            "question": "[UPDATED] Quantité de thé infusé consommée annuellement"
+            "question": "[UPDATED] Quantité di thé infusé consommée annuellement"
           },
           "FE": {
-            "question": "[UPDATED] Facteur d'émission par kg de poids net de thé infusé"
+            "question": "[UPDATED] Facteur d'émission par kg di peso netto di thé infusé"
           }
         },
-        "sandwich pain de mie": {
+        "sandwich pain di mie": {
           "nombre": {
-            "question": "Nombre de sandwichs pain de mie consommés annuellement"
+            "question": "Numero di panini di pancarrè consumati annualmente"
           },
           "FE": {
-            "question": "[UPDATED] Facteur d'émission par kg de poids net de sandwich pain de mie"
+            "question": "[UPDATED] Facteur d'émission par kg di peso netto di sandwich pain di mie"
           }
         },
         "barre chocolatée": {
           "nombre": {
-            "question": "[UPDATED] Quantité de barres chocolatées consommée annuellement"
+            "question": "[UPDATED] Quantité di barres chocolatées consommée annuellement"
           },
           "FE": {
-            "question": "[UPDATED] Facteur d'émission par kg de poids net de barre chocolatée"
+            "question": "[UPDATED] Facteur d'émission par kg di peso netto di barre chocolatée"
           }
         }
       }
     },
     "immobilisations": {
       "rénovation": {
-        "bâtiment scolaire structure béton rénové": {
+        "bâtiment scolaire struttura in cemento rénové": {
           "surface": {
-            "question": "Quelle surface de bâtiment scolaire (structure béton) avez-vous rénovée ?"
+            "question": "Quale superficie di edificio scolastico (struttura in cemento) avete ristrutturato?"
           },
           "FE": {
-            "question": "Fattore di emissione per m² de bâtiment scolaire rénové (structure béton)"
+            "question": "Fattore di emissione per m² di edificio scolastico ristrutturato (struttura in cemento)"
           }
         }
       },
       "équipements informatique audiovisuel": {
-        "ordinateur de bureau": {
-          "titre": "Ordinateur de bureau",
+        "ordinateur di bureau": {
+          "titre": "Ordinateur di bureau",
           "nombre": {
-            "question": "Quante unità di ordinateurs de bureau avete acquistato?"
+            "question": "Quante unità di computer desktop avete acquistato?"
           },
           "FE": {
-            "question": "Fattore di emissione per ordinateur de bureau"
+            "question": "Fattore di emissione per computer desktop"
           }
         },
         "ordinateur portable": {
           "titre": "Ordinateur portable",
           "nombre": {
-            "question": "Quante unità di ordinateurs portables avete acquistato?"
+            "question": "Quante unità di computer portatili avete acquistato?"
           },
           "FE": {
-            "question": "Fattore di emissione per ordinateur portable"
+            "question": "Fattore di emissione per computer portatile"
           }
         },
         "tablette": {
           "titre": "Tablette",
           "nombre": {
-            "question": "Quante unità di tablettes avete acquistato?"
+            "question": "Quante unità di tablet avete acquistato?"
           },
           "FE": {
-            "question": "Fattore di emissione per tablette"
+            "question": "Fattore di emissione per tablet"
           }
         },
         "imprimante": {
           "titre": "Imprimante",
           "nombre": {
-            "question": "Quante unità di imprimantes avete acquistato?"
+            "question": "Quante unità di stampanti avete acquistato?"
           },
           "FE": {
-            "question": "Fattore di emissione per imprimante"
+            "question": "Fattore di emissione per stampante"
           }
         },
         "photocopieur": {
           "titre": "Photocopieur",
           "nombre": {
-            "question": "Quante unità di photocopieurs avete acquistato?"
+            "question": "Quante unità di fotocopiatrici avete acquistato?"
           },
           "FE": {
-            "question": "Fattore di emissione per photocopieur"
+            "question": "Fattore di emissione per fotocopiatrice"
           }
         },
-        "vidéoprojecteur": {
-          "titre": "Vidéoprojecteur",
+        "videoproiettore": {
+          "titre": "Videoproiettore",
           "nombre": {
-            "question": "Quante unità di vidéoprojecteurs avete acquistato?"
+            "question": "Quante unità di videoproiettori avete acquistato?"
           },
           "FE": {
-            "question": "Fattore di emissione per vidéoprojecteur"
+            "question": "Fattore di emissione per videoproiettore"
           }
         },
         "serveur informatique": {
           "titre": "Serveur informatique",
           "nombre": {
-            "question": "Quante unità di serveurs informatiques avete acquistato?"
+            "question": "Quante unità di server informatici avete acquistato?"
           },
           "FE": {
-            "question": "Fattore di emissione per serveur informatique"
+            "question": "Fattore di emissione per server informatico"
           }
         },
-        "télévision 40-49 pouces": {
-          "titre": "Télévision 40-49 pouces",
+        "televisore da 40-49 pollici": {
+          "titre": "Televisore da 40-49 pollici",
           "nombre": {
-            "question": "Quante unità di télévisions 40-49 pouces avete acquistato?"
+            "question": "Quante unità di televisori da 40-49 pollici avete acquistato?"
           },
           "FE": {
-            "question": "Fattore di emissione per télévision 40-49 pouces"
+            "question": "Fattore di emissione per televisore da 40-49 pollici"
           }
         },
-        "rack de serveur": {
-          "titre": "Rack de serveur",
+        "rack di serveur": {
+          "titre": "Rack di serveur",
           "nombre": {
-            "question": "Quante unità di racks de serveur avete acquistato?"
+            "question": "Quante unità di rack server avete acquistato?"
           },
           "FE": {
-            "question": "Fattore di emissione per rack de serveur"
+            "question": "Fattore di emissione per rack server"
           }
         },
-        "télécommande universelle sans piles 80g": {
-          "titre": "Télécommande universelle sans piles 80g",
+        "telecomando universale senza pile da 80 g": {
+          "titre": "Telecomando universale senza pile da 80 g",
           "nombre": {
             "question": "Quante unità di télécommandes universelles sans piles (80g) avete acquistato?"
           },
           "FE": {
-            "question": "Fattore di emissione per télécommande universelle sans piles 80g"
+            "question": "Fattore di emissione per telecomando universale senza pile da 80 g"
           }
         },
-        "stéréo classique": {
-          "titre": "Stéréo classique",
+        "stereo classico": {
+          "titre": "Stereo classico",
           "nombre": {
-            "question": "Quante unità di stéréos classiques avete acquistato?"
+            "question": "Quante unità di stereo classici avete acquistato?"
           },
           "FE": {
-            "question": "Fattore di emissione per stéréo classique"
+            "question": "Fattore di emissione per stereo classico"
           }
         },
-        "enceinte Bluetooth": {
-          "titre": "Enceinte Bluetooth",
+        "altoparlante Bluetooth": {
+          "titre": "Altoparlante Bluetooth",
           "nombre": {
-            "question": "Quante unità di enceintes Bluetooth avete acquistato?"
+            "question": "Quante unità di altoparlanti Bluetooth avete acquistato?"
           },
           "FE": {
-            "question": "Fattore di emissione per enceinte Bluetooth"
+            "question": "Fattore di emissione per altoparlante Bluetooth"
           }
         },
-        "smartphone 5 pouces": {
-          "titre": "Smartphone 5 pouces",
+        "smartphone da 5 pollici": {
+          "titre": "Smartphone da 5 pollici",
           "nombre": {
-            "question": "Quante unità di smartphones 5 pouces avete acquistato?"
+            "question": "Quante unità di smartphone da 5 pollici avete acquistato?"
           },
           "FE": {
-            "question": "Fattore di emissione per smartphone 5 pouces"
+            "question": "Fattore di emissione per smartphone da 5 pollici"
           }
         },
-        "écran 23,8 pouces": {
-          "titre": "Écran 23,8 pouces",
+        "schermo da 23,8 pollici": {
+          "titre": "Schermo da 23,8 pollici",
           "nombre": {
-            "question": "Quante unità di écrans 23,8 pouces avete acquistato?"
+            "question": "Quante unità di schermi da 23,8 pollici avete acquistato?"
           },
           "FE": {
-            "question": "Fattore di emissione per écran 23,8 pouces"
+            "question": "Fattore di emissione per schermo da 23,8 pollici"
           }
         }
       },
       "équipements divers": {
         "chaise bois": {
           "nombre": {
-            "question": "Quante unità di chaises (bois) avete acquistato?"
+            "question": "Quante unità di sedie (legno) avete acquistato?"
           },
           "FE": {
-            "question": "Fattore di emissione per chaise (bois)"
+            "question": "Fattore di emissione per sedia (legno)"
           }
         },
         "chaise plastique": {
           "nombre": {
-            "question": "Quante unità di chaises (plastique) avete acquistato?"
+            "question": "Quante unità di sedie (plastique) avete acquistato?"
           },
           "FE": {
-            "question": "Fattore di emissione per chaise (plastique)"
+            "question": "Fattore di emissione per sedia (plastique)"
           }
         },
         "table standard": {
           "nombre": {
-            "question": "Quante unità di tables de réunion avete acquistato?"
+            "question": "Quante unità di tavoli riunione avete acquistato?"
           },
           "FE": {
-            "question": "Fattore di emissione per table (standard)"
+            "question": "Fattore di emissione per tavolo (standard)"
           }
         },
         "armoire standard": {
           "nombre": {
-            "question": "Quante unità di armoires (standard) avete acquistato?"
+            "question": "Quante unità di armadi (standard) avete acquistato?"
           },
           "FE": {
             "question": "Fattore di emissione per armoire (standard)"
@@ -525,23 +525,23 @@
           "titre": "Tagliaerba termico",
           "question": "Quanti tagliaerba termici possiedi?",
           "nombre": {
-            "question": "[UPDATED] Combien de tondeuse à gazon thermique possédez-vous ?"
+            "question": "[UPDATED] Combien di tondeuse à gazon thermique possédez-vous ?"
           },
           "FE": {
-            "question": "[UPDATED] Facteur d'émission par unité de tondeuse à gazon"
+            "question": "[UPDATED] Facteur d'émission par unité di tondeuse à gazon"
           },
           "immo": {
-            "question": "[UPDATED] Immobilisation de tondeuse à gazon"
+            "question": "[UPDATED] Immobilisation di tondeuse à gazon"
           }
         },
         "tondeuse gazon électrique": {
           "titre": "[UPDATED] Tondeuse à gazon électrique",
-          "question": "[UPDATED] Combien de tondeuse à gazon électrique possédez-vous ?",
+          "question": "[UPDATED] Combien di tondeuse à gazon électrique possédez-vous ?",
           "nombre": {
-            "question": "[UPDATED] Combien de tondeuse à gazon électrique possédez-vous ?"
+            "question": "[UPDATED] Combien di tondeuse à gazon électrique possédez-vous ?"
           },
           "FE": {
-            "question": "[UPDATED] Facteur d'émission par unité de tondeuse à gazon électrique"
+            "question": "[UPDATED] Facteur d'émission par unité di tondeuse à gazon électrique"
           },
           "immo": {
             "question": "Immobilizzazione"
@@ -601,28 +601,28 @@
         },
         "machine café filtre": {
           "titre": "[UPDATED] Machine à café - filtre",
-          "question": "[UPDATED] Combien de machine à café - filtre possédez-vous ?",
+          "question": "[UPDATED] Combien di machine à café - filtre possédez-vous ?",
           "nombre": {
-            "question": "[UPDATED] Combien de machine à café - filtre possédez-vous ?"
+            "question": "[UPDATED] Combien di machine à café - filtre possédez-vous ?"
           },
           "FE": {
-            "question": "[UPDATED] Facteur d'émission par unité de machine à café - filtre"
+            "question": "[UPDATED] Facteur d'émission par unité di machine à café - filtre"
           },
           "immo": {
-            "question": "[UPDATED] Immobilisation de machine à café - filtre"
+            "question": "[UPDATED] Immobilisation di machine à café - filtre"
           }
         },
         "machine café dosettes": {
           "titre": "[UPDATED] Machine à café - dosettes",
-          "question": "[UPDATED] Combien de machine à café - dosettes possédez-vous ?",
+          "question": "[UPDATED] Combien di machine à café - dosettes possédez-vous ?",
           "nombre": {
-            "question": "[UPDATED] Combien de machine à café - dosettes possédez-vous ?"
+            "question": "[UPDATED] Combien di machine à café - dosettes possédez-vous ?"
           },
           "FE": {
-            "question": "[UPDATED] Facteur d'émission par unité de machine à café - dosettes"
+            "question": "[UPDATED] Facteur d'émission par unité di machine à café - dosettes"
           },
           "immo": {
-            "question": "[UPDATED] Immobilisation de machine à café - dosettes"
+            "question": "[UPDATED] Immobilisation di machine à café - dosettes"
           }
         },
         "lave-vaiselle professionnel": {
@@ -716,7 +716,7 @@
             "question": "Immobilizzazione frigorifero - 250l"
           }
         },
-        "plaques de cuisson au gaz": {
+        "plaques di cuisson au gaz": {
           "titre": "Piastre di cottura/gas 9000W",
           "question": "Quante piastre di cottura/gas 9000W possiedi?",
           "nombre": {
@@ -770,52 +770,52 @@
         }
       },
       "construction": {
-        "bâtiment scolaire structure béton": {
+        "bâtiment scolaire struttura in cemento": {
           "surface": {
-            "question": "[UPDATED] Quelle surface de bâtiment scolaire (structure béton) comporte votre enceinte scolaire ?"
+            "question": "[UPDATED] Quelle surface di bâtiment scolaire (struttura in cemento) comporte votre enceinte scolaire ?"
           },
           "FE": {
-            "question": "Fattore di emissione per m² de bâtiment scolaire (structure béton)"
+            "question": "Fattore di emissione per m² di edificio scolastico (struttura in cemento)"
           }
         },
-        "parking bâtiment structure béton": {
+        "parking bâtiment struttura in cemento": {
           "surface": {
-            "question": "[UPDATED] Quelle surface de parking (bâtiment - structure béton) comporte votre enceinte scolaire ?"
+            "question": "[UPDATED] Quelle surface di parking (bâtiment - struttura in cemento) comporte votre enceinte scolaire ?"
           },
           "FE": {
-            "question": "Fattore di emissione per m² de parking (bâtiment - structure béton)"
+            "question": "Fattore di emissione per m² di parcheggio (edificio - struttura in cemento)"
           }
         },
         "parking surface bitume": {
           "surface": {
-            "question": "[UPDATED] Quelle surface de parking (surface bitume) comporte votre enceinte scolaire ?"
+            "question": "[UPDATED] Quelle surface di parking (surface bitume) comporte votre enceinte scolaire ?"
           },
           "FE": {
-            "question": "Fattore di emissione per m² de parking (surface bitume)"
+            "question": "Fattore di emissione per m² di parcheggio (superficie bitume)"
           }
         },
         "parking surface semi-dure": {
           "surface": {
-            "question": "[UPDATED] Quelle surface de parking (surface semi-dure) comporte votre enceinte scolaire ?"
+            "question": "[UPDATED] Quelle surface di parking (surface semi-dure) comporte votre enceinte scolaire ?"
           },
           "FE": {
-            "question": "Fattore di emissione per m² de parking (surface semi-dure)"
+            "question": "Fattore di emissione per m² di parcheggio (superficie semidura)"
           }
         },
-        "garage structure béton": {
+        "garage struttura in cemento": {
           "surface": {
-            "question": "[UPDATED] Quelle surface de garage (structure béton) comporte votre enceinte scolaire ?"
+            "question": "[UPDATED] Quelle surface di garage (struttura in cemento) comporte votre enceinte scolaire ?"
           },
           "FE": {
-            "question": "Fattore di emissione per m² de garage (structure béton)"
+            "question": "Fattore di emissione per m² di garage (struttura in cemento)"
           }
         },
         "garage structure métal": {
           "surface": {
-            "question": "[UPDATED] Quelle surface de garage (structure métal) comporte votre enceinte scolaire ?"
+            "question": "[UPDATED] Quelle surface di garage (structure métal) comporte votre enceinte scolaire ?"
           },
           "FE": {
-            "question": "Fattore di emissione per m² de garage (structure métal)"
+            "question": "Fattore di emissione per m² di garage (structure métal)"
           }
         }
       }
@@ -823,9 +823,9 @@
     "déplacements": {
       "voyages scolaires": {
         "RER transilien métro tram": {
-          "titre": "Transilien, RER, Métro, Tramway",
+          "titre": "Transilien, RER, Metro, Tram",
           "distance": {
-            "question": "Passagers (par km)"
+            "question": "Passeggeri (per km)"
           }
         },
         "bus": {
@@ -837,7 +837,7 @@
         "bus électrique": {
           "titre": "Autobus",
           "distance": {
-            "question": "Passagers (par km)"
+            "question": "Passeggeri (per km)"
           }
         },
         "TER": {
@@ -873,43 +873,43 @@
       },
       "transport des élèves": {
         "RER transilien métro tram": {
-          "titre": "Transilien, RER, Métro, Tramway",
+          "titre": "Transilien, RER, Metro, Tram",
           "distance": {
-            "question": "Passagers (par km)"
+            "question": "Passeggeri (per km)"
           }
         },
         "vélo électrique": {
-          "titre": "Vélo électrique",
+          "titre": "Bicicletta elettrica",
           "distance": {
             "question": "Distanza (km)"
           }
         },
         "trottinette électrique": {
-          "titre": "Trottinette électrique",
+          "titre": "Monopattino elettrico",
           "distance": {
             "question": "Distanza (km)"
           }
         },
         "moto essence": {
-          "titre": "Moto essence",
+          "titre": "Moto benzina",
           "distance": {
             "question": "Distanza (km)"
           }
         },
         "véhicule compact électrique": {
-          "titre": "Véhicule compact électrique",
+          "titre": "Veicolo compatto elettrico",
           "distance": {
             "question": "Distanza (km)"
           }
         },
         "voiture individuelle essence": {
-          "titre": "Voiture individuelle essence",
+          "titre": "Auto individuale benzina",
           "distance": {
             "question": "Distanza (km)"
           }
         },
         "voiture individuelle diesel": {
-          "titre": "Voiture individuelle diesel",
+          "titre": "Auto individuale diesel",
           "distance": {
             "question": "Distanza (km)"
           }
@@ -923,7 +923,7 @@
         "bus électrique": {
           "titre": "Autobus",
           "distance": {
-            "question": "Passagers (par km)"
+            "question": "Passeggeri (per km)"
           }
         },
         "TER": {
@@ -941,43 +941,43 @@
       },
       "transport du personnel": {
         "RER transilien métro tram": {
-          "titre": "Transilien, RER, Métro, Tramway",
+          "titre": "Transilien, RER, Metro, Tram",
           "distance": {
-            "question": "Passagers (par km)"
+            "question": "Passeggeri (per km)"
           }
         },
         "vélo électrique": {
-          "titre": "Vélo électrique",
+          "titre": "Bicicletta elettrica",
           "distance": {
             "question": "Distanza (km)"
           }
         },
         "trottinette électrique": {
-          "titre": "Trottinette électrique",
+          "titre": "Monopattino elettrico",
           "distance": {
             "question": "Distanza (km)"
           }
         },
         "moto essence": {
-          "titre": "Moto essence",
+          "titre": "Moto benzina",
           "distance": {
             "question": "Distanza (km)"
           }
         },
         "véhicule compact électrique": {
-          "titre": "Véhicule compact électrique",
+          "titre": "Veicolo compatto elettrico",
           "distance": {
             "question": "Distanza (km)"
           }
         },
         "voiture individuelle essence": {
-          "titre": "Voiture individuelle essence",
+          "titre": "Auto individuale benzina",
           "distance": {
             "question": "Distanza (km)"
           }
         },
         "voiture individuelle diesel": {
-          "titre": "Voiture individuelle diesel",
+          "titre": "Auto individuale diesel",
           "distance": {
             "question": "Distanza (km)"
           }
@@ -991,7 +991,7 @@
         "bus électrique": {
           "titre": "Autobus",
           "distance": {
-            "question": "Passagers (par km)"
+            "question": "Passeggeri (per km)"
           }
         },
         "TER": {
@@ -1012,189 +1012,189 @@
       "produits chimiques": {
         "produit vaisselle liquide": {
           "consommation": {
-            "question": "Consumo annuo di produit vaisselle liquide"
+            "question": "Consumo annuo di detersivo piatti liquido"
           }
         },
         "savon liquide": {
           "consommation": {
-            "question": "Consumo annuo di savon liquide"
+            "question": "Consumo annuo di sapone liquido"
           }
         },
         "produit vitre": {
           "consommation": {
-            "question": "Consumo annuo di produit vitre"
+            "question": "Consumo annuo di detergente vetri"
           }
         },
         "nettoyant sols": {
           "consommation": {
-            "question": "Consumo annuo di nettoyant sols"
+            "question": "Consumo annuo di detergente pavimenti"
           }
         },
         "nettoyant multi-usages": {
           "consommation": {
-            "question": "Consumo annuo di nettoyant multi-usages"
+            "question": "Consumo annuo di detergente multiuso"
           }
         },
         "détergent sanitaire": {
           "consommation": {
-            "question": "Consumo annuo di détergent sanitaire"
+            "question": "Consumo annuo di detergente sanitario"
           }
         },
         "désinfectant": {
           "consommation": {
-            "question": "Consumo annuo di désinfectant"
+            "question": "Consumo annuo di disinfettante"
           }
         },
         "chlore": {
           "consommation": {
-            "question": "Consumo annuo di chlore"
+            "question": "Consumo annuo di cloro"
           }
         },
-        "bicarbonate de soude": {
+        "bicarbonate di soude": {
           "consommation": {
-            "question": "Consumo annuo di bicarbonate de soude"
+            "question": "Consumo annuo di bicarbonato di sodio"
           }
         },
         "peinture revêtement mural intérieur": {
           "consommation": {
-            "question": "Consumo annuo di peinture - revêtement mural intérieur"
+            "question": "Consumo annuo di pittura - rivestimento murale interno"
           }
         },
         "peinture revêtement mural extérieur": {
           "consommation": {
-            "question": "Consumo annuo di peinture - revêtement mural extérieur"
+            "question": "Consumo annuo di pittura - rivestimento murale esterno"
           }
         },
         "savon solide": {
           "consommation": {
-            "question": "Consumo annuo di savon solide"
+            "question": "Consumo annuo di sapone solido"
           }
         },
         "vinaigre blanc": {
           "consommation": {
-            "question": "Consumo annuo di vinaigre blanc"
+            "question": "Consumo annuo di aceto bianco"
           }
         },
         "soude solide": {
           "consommation": {
-            "question": "Consumo annuo di soude solide (poudre, granulés)"
+            "question": "Consumo annuo di soda solida (polvere, granuli)"
           }
         },
         "acide sulfurique": {
           "consommation": {
-            "question": "Consumo annuo di acide sulfurique"
+            "question": "Consumo annuo di acido solforico"
           }
         },
         "acide chlorhydrique": {
           "consommation": {
-            "question": "Consumo annuo di acide chlorhydrique"
+            "question": "Consumo annuo di acido cloridrico"
           }
         }
       },
       "fournitures": {
         "petites fournitures": {
           "montant": {
-            "question": "Qual è l'importo speso per petites fournitures (stylos, etc.)?"
+            "question": "Qual è l'importo speso per piccole forniture (penne, ecc.)?"
           },
           "FE": {
-            "question": "Fattore di emissione per euro de petites fournitures"
+            "question": "Fattore di emissione per euro di piccole forniture"
           }
         },
         "livres": {
           "nombre": {
-            "question": "Quante unità di livres avete acquistato?"
+            "question": "Quante unità di libri avete acquistato?"
           },
           "FE": {
-            "question": "Fattore di emissione per livre"
+            "question": "Fattore di emissione per libro"
           }
         },
         "papier ramette": {
           "nombre": {
-            "question": "Quante unità di ramettes de papier avete acquistato?"
+            "question": "Quante unità di risme di carta avete acquistato?"
           },
           "FE": {
-            "question": "Fattore di emissione per ramette de papier"
+            "question": "Fattore di emissione per risma di carta"
           }
         },
         "consommables": {
           "montant": {
-            "question": "Qual è l'importo speso per consommables (cartouches d'encre, etc.)?"
+            "question": "Qual è l'importo speso per materiali di consumo (cartucce d'inchiostro, ecc.)?"
           },
           "FE": {
-            "question": "Fattore di emissione per euro de consommables"
+            "question": "Fattore di emissione per euro di materiali di consumo"
           }
         },
         "piles aaa": {
           "nombre": {
-            "question": "Quante unità di piles AAA (alcalines) avete acquistato?"
+            "question": "Quante unità di pila AAA (alcaline) avete acquistato?"
           },
           "FE": {
-            "question": "Fattore di emissione per pile AAA"
+            "question": "Fattore di emissione per pila AAA"
           }
         },
         "piles aa": {
           "nombre": {
-            "question": "Quante unità di piles AA (alcalines) avete acquistato?"
+            "question": "Quante unità di pila AA (alcaline) avete acquistato?"
           },
           "FE": {
-            "question": "Fattore di emissione per pile AA"
+            "question": "Fattore di emissione per pila AA"
           }
         }
       },
-      "fin de vie moyenne": {
+      "fin di vie moyenne": {
         "carton": {
           "nombre": {
-            "question": "Quantité de carton (en tonne) ?"
+            "question": "Quantità di cartone (en tonne) ?"
           },
           "FE": {
-            "question": "Fattore di emissione del carton"
+            "question": "Fattore di emissione del cartone"
           }
         },
         "plastique moyen": {
           "nombre": {
-            "question": "Quantité de plastique moyen (en tonne) ?"
+            "question": "Quantità di plastica media (en tonne) ?"
           },
           "FE": {
-            "question": "Fattore di emissione del plastique moyen"
+            "question": "Fattore di emissione del plastica media"
           }
         },
         "verre": {
           "nombre": {
-            "question": "Quantité de verre (en tonne) ?"
+            "question": "Quantità di vetro (en tonne) ?"
           },
           "FE": {
-            "question": "Fattore di emissione del verre"
+            "question": "Fattore di emissione del vetro"
           }
         },
         "bois": {
           "nombre": {
-            "question": "Quantité de bois (en tonne) ?"
+            "question": "Quantità di legno (en tonne) ?"
           },
           "FE": {
-            "question": "Fattore di emissione del bois"
+            "question": "Fattore di emissione del legno"
           }
         }
       },
-      "équipements de sport": {
-        "ballon de volley": {
+      "équipements di sport": {
+        "ballon di volley": {
           "nombre": {
-            "question": "Quante unità di ballons de volley avete acquistato?"
+            "question": "Quante unità di palloni di volley avete acquistato?"
           },
           "FE": {
-            "question": "Fattore di emissione per ballon de volley"
+            "question": "Fattore di emissione per pallone di volley"
           }
         },
-        "ballon de handball": {
+        "ballon di handball": {
           "nombre": {
-            "question": "Quante unità di ballons de handball avete acquistato?"
+            "question": "Quante unità di palloni di handball avete acquistato?"
           },
           "FE": {
-            "question": "Fattore di emissione per ballon de handball"
+            "question": "Fattore di emissione per pallone di handball"
           }
         },
         "kimono judo": {
           "nombre": {
-            "question": "Quante unità di kimonos de judo avete acquistato?"
+            "question": "Quante unità di kimono da judo avete acquistato?"
           },
           "FE": {
             "question": "Fattore di emissione per kimono (judo)"
@@ -1202,7 +1202,7 @@
         },
         "shorts tous sports": {
           "nombre": {
-            "question": "Quante unità di shorts tous sports avete acquistato?"
+            "question": "Quante unità di pantaloncini multisport avete acquistato?"
           },
           "FE": {
             "question": "Fattore di emissione per short tous sports"
@@ -1210,7 +1210,7 @@
         },
         "maillots tous sports": {
           "nombre": {
-            "question": "Quante unità di maillots tous sports avete acquistato?"
+            "question": "Quante unità di maglie multisport avete acquistato?"
           },
           "FE": {
             "question": "Fattore di emissione per maillot tous sports"
@@ -1218,54 +1218,54 @@
         },
         "t-shirt polyester": {
           "nombre": {
-            "question": "Quante unità di t-shirts en polyester avete acquistato?"
+            "question": "Quante unità di t-shirt in poliestere avete acquistato?"
           },
           "FE": {
             "question": "Fattore di emissione per t-shirt en polyester"
           }
         },
-        "ballon de basket": {
+        "ballon di basket": {
           "nombre": {
-            "question": "Quante unità di ballons de basket avete acquistato?"
+            "question": "Quante unità di palloni di basket avete acquistato?"
           },
           "FE": {
-            "question": "Fattore di emissione per ballon de basket"
+            "question": "Fattore di emissione per pallone di basket"
           }
         },
-        "ballon de football": {
+        "ballon di football": {
           "nombre": {
-            "question": "Quante unità di ballons de football avete acquistato?"
+            "question": "Quante unità di palloni di football avete acquistato?"
           },
           "FE": {
-            "question": "Fattore di emissione per ballon de football"
+            "question": "Fattore di emissione per pallone di football"
           }
         }
       }
     }
   },
   "publicodes-units": {
-    "étudiant": "étudiant",
-    "personne": "personne",
-    "année": "année",
-    "pays": "pays",
+    "étudiant": "studente",
+    "personne": "persona",
+    "année": "anno",
+    "pays": "paese",
     "kWh": "kWh",
     "litre": "litre",
     "kWh PCI": "kWh PCI",
     "kgCO2e/kg": "kgCO2e/kg",
-    "repas": "repas",
-    "kgCO2e/repas": "kgCO2e/repas",
+    "repas": "pasto",
+    "kgCO2e/repas": "kgCO2e/pasto",
     "m3/km": "m3.km",
     "t/km": "t.km",
     "t": "t",
-    "bouteille": "bouteille",
-    "kgCO2e/bouteille": "kgCO2e/bouteille",
-    "canette": "canette",
-    "kgCO2e/canette": "kgCO2e/canette",
-    "kg de poids net": "kg de poids net",
-    "kgCO2e/kg de poids net": "kgCO2e/kg de poids net",
-    "paquet": "paquet",
-    "kgCO2e/paquet": "kgCO2e/paquet",
-    "barre": "barre",
+    "bouteille": "bottiglia",
+    "kgCO2e/bouteille": "kgCO2e/bottiglia",
+    "canette": "lattina",
+    "kgCO2e/canette": "kgCO2e/lattina",
+    "kg di peso netto": "kg di peso netto",
+    "kgCO2e/kg di peso netto": "kgCO2e/kg di peso netto",
+    "paquet": "pacchetto",
+    "kgCO2e/paquet": "kgCO2e/pacchetto",
+    "barre": "barretta",
     "m2": "m2",
     "kgCO2e/m2": "kgCO2e/m2",
     "kgCO2e": "kgCO2e",
