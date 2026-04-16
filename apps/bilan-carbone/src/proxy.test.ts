@@ -1,4 +1,9 @@
-import { createInMemoryRateLimiter, getPublicRouteScope } from '@/proxy'
+jest.mock('next-auth/jwt', () => ({
+  getToken: jest.fn(),
+}))
+
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { createInMemoryRateLimiter, getPublicRouteScope } = require('@/proxy')
 
 describe('createInMemoryRateLimiter', () => {
   it('allows requests up to the configured limit and blocks the next one', () => {

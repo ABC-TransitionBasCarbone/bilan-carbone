@@ -13,12 +13,13 @@ describe('Public IP rate limiting', () => {
         url: targetPath,
         headers,
         failOnStatusCode: false,
-      }).its('status')
+      })
+        .its('status')
         .should('not.eq', 429)
         .then(() => makeAllowedRequests(remainingRequests - 1))
     }
 
-    makeAllowedRequests(maxRequests).then(() =>
+    makeAllowedRequests(maxRequests).then(() => {
       cy.request({
         url: targetPath,
         headers,
@@ -27,6 +28,6 @@ describe('Public IP rate limiting', () => {
         expect(response.status).to.eq(429)
         expect(response.headers).to.have.property('retry-after')
       })
-    )
+    })
   })
 })
