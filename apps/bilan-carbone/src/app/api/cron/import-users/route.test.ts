@@ -24,7 +24,7 @@ describe('POST /api/cron/import-users', () => {
   })
 
   it('returns cron auth/rate-limit error when request is rejected by middleware', async () => {
-    const errorResponse = new Response('Unauthorized', { status: 401 })
+    const errorResponse = { status: 401 } as Response
     ;(checkCronRequest as jest.Mock).mockReturnValue(errorResponse)
 
     const response = await POST(req)
