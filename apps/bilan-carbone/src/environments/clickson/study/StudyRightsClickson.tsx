@@ -5,6 +5,7 @@ import LinkButton from '@/components/base/LinkButton'
 import { FormAutocomplete } from '@/components/form/Autocomplete'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import { FormTextField } from '@/components/form/TextField'
+import Modal from '@/components/modals/Modal'
 import StudyContributorsTable from '@/components/study/rights/StudyContributorsTable'
 import StudyVersions from '@/components/study/rights/StudyVersions'
 import SelectStudySite from '@/components/study/site/SelectStudySite'
@@ -13,17 +14,21 @@ import StudyComments from '@/components/study/StudyComments'
 import { SiteDependentField } from '@/constants/emissionFactorMap'
 import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import { changeStudyDates, changeStudyEstablishment, getStudySite } from '@/services/serverFunctions/study'
+import { changeStudyDates, changeStudyEstablishment, changeStudyName, getStudySite } from '@/services/serverFunctions/study'
 import {
   ChangeStudyDatesCommand,
   ChangeStudyDatesCommandValidation,
   ChangeStudyEstablishmentCommand,
   ChangeStudyEstablishmentValidation,
+  ChangeStudyNameCommand,
+  ChangeStudyNameValidation,
 } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'
+import EditIcon from '@mui/icons-material/Edit'
 import { Box, CircularProgress } from '@mui/material'
 import type { EmissionFactorImportVersion } from '@repo/db-common'
 import { Country } from '@repo/db-common/enums'
+import { Button } from '@repo/ui'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
@@ -53,6 +58,8 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, us
   const { siteId: studySite, studySiteId, setSite } = useStudySite(study)
   const [siteData, setSiteData] = useState<FullStudy['sites'][0] | undefined>()
   const [loading, setLoading] = useState(true)
+  const [editTitle, setEditTitle] = useState(false)
+  const [loadingStudyName, setLoadingStudyName] = useState(false)
   const [showSiteDataWarning, setShowSiteDataWarning] = useState(false)
   const [pendingSiteChanges, setPendingSiteChanges] = useState<{
     changedFields: SiteDependentField[]
@@ -76,6 +83,15 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, us
       etp: siteData?.etp ?? siteData?.site.etp ?? 0,
       studentNumber: siteData?.studentNumber ?? siteData?.site.studentNumber ?? 0,
       superficy: siteData?.superficy ?? siteData?.site.superficy ?? null,
+    },
+  })
+  const nameForm = useForm<ChangeStudyNameCommand>({
+    resolver: zodResolver(ChangeStudyNameValidation),
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
+    defaultValues: {
+      studyId: study.id,
+      name: study.name,
     },
   })
 
@@ -195,10 +211,43 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, us
     form.handleSubmit(handleStudyEstablishmentUpdate, (e) => console.log('invalid', e))()
   }, [form, handleStudyEstablishmentUpdate, studySite])
 
+  const resetNameInput = useCallback(() => {
+    nameForm.setValue('name', study.name)
+    setEditTitle(false)
+  }, [nameForm, study.name])
+
+  const handleStudyNameUpdate = useCallback(async () => {
+    setLoadingStudyName(true)
+
+    await nameForm.handleSubmit(async (data) => {
+      if (data.name === study.name) {
+        resetNameInput()
+        return
+      }
+
+      await callServerFunction(() => changeStudyName(data), {
+        onSuccess: () => {
+          setEditTitle(false)
+          router.refresh()
+        },
+      })
+    })()
+
+    setLoadingStudyName(false)
+  }, [nameForm, study.name, resetNameInput, callServerFunction, router])
+
   return (
     <>
       <Block
-        title={tRights('general')}
+        title={tRights('title', { name: study.name })}
+        icon={
+          editionDisabled ? null : (
+            <Button aria-label={tRights('edit')} title={tRights('edit')} onClick={() => setEditTitle(true)}>
+              <EditIcon />
+            </Button>
+          )
+        }
+        iconPosition="after"
         rightComponent={
           <SelectStudySite sites={study.sites} defaultValue={studySite} setSite={setSite} showAllOption={false} />
         }
@@ -293,6 +342,22 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, us
         )}
         {!editionDisabled && <StudyContributorsTable study={study} canAddContributor={!editionDisabled} />}
       </Block>
+      <Modal
+        open={editTitle}
+        label="edit-study-title"
+        title={tRights('edit')}
+        onClose={resetNameInput}
+        actions={[
+          {
+            actionType: 'loadingButton',
+            onClick: () => handleStudyNameUpdate(),
+            loading: loadingStudyName,
+            children: tRights('edit'),
+          },
+        ]}
+      >
+        <FormTextField name="name" control={nameForm.control} required />
+      </Modal>
     </>
   )
 }
