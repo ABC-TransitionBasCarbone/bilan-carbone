@@ -194,7 +194,8 @@ describe('Study Service', () => {
 
   describe('exports', () => {
     const t = (key: string) => key
-    const tStudy = (key: string) => key
+    const tStudy = (key: string, values?: { unit?: string }) =>
+      key === 'value' ? `Valeur${values?.unit ? ` (${values.unit})` : ''}` : key
     const tExport = (key: string) => (key === 'value' ? 'Valeur' : key)
     const tUnits = (key: string) => key
 
@@ -212,7 +213,7 @@ describe('Study Service', () => {
         Environment.CLICKSON,
       )
 
-      expect(data.data[1][2]).toBe('Valeur (tCO2e)')
+      expect(data.data[1][3]).toBe('Valeur (tCO2e)')
     })
 
     it('keeps dynamic unit translation for non-clickson exports', () => {
@@ -224,8 +225,6 @@ describe('Study Service', () => {
           bySite: {},
         },
         tStudy,
-        (key: string, values?: { unit?: string }) =>
-          key === 'value' ? `Valeur (${values?.unit})` : key,
         () => 'kgCO2e',
         Environment.CUT,
       )
@@ -240,12 +239,16 @@ describe('Study Service', () => {
       getUserSettingsMock.mockResolvedValue({ success: false })
 
       await downloadStudyResults(
-        getMockeFullStudy({ resultsUnit: StudyResultUnit.T, exports: { types: [], control: ControlMode.Operational } }),
+        getMockeFullStudy({
+          resultsUnit: StudyResultUnit.T,
+          exports: { types: [], control: ControlMode.Operational },
+        }),
         [],
         [],
         [],
         tStudy,
         tExport,
+        t,
         t,
         t,
         t,
@@ -271,12 +274,16 @@ describe('Study Service', () => {
       getUserSettingsMock.mockResolvedValue({ success: false })
 
       await downloadStudyResults(
-        getMockeFullStudy({ resultsUnit: StudyResultUnit.T, exports: { types: [], control: ControlMode.Operational } }),
+        getMockeFullStudy({
+          resultsUnit: StudyResultUnit.T,
+          exports: { types: [], control: ControlMode.Operational },
+        }),
         [],
         [],
         [],
         tStudy,
         tExport,
+        t,
         t,
         t,
         t,
