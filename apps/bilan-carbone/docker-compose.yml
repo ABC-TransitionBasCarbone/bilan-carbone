@@ -24,6 +24,7 @@ services:
     profiles:
       - waf
     environment:
+      # owasp/modsecurity-crs:nginx reads ${BACKEND} in includes/proxy_backend.conf.template
       BACKEND: ${WAF_BACKEND:-http://host.docker.internal:3000}
       PORT: 8080
       SERVER_NAME: localhost

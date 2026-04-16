@@ -10,15 +10,13 @@ server {
   server_name ${SERVER_NAME};
   port_in_redirect off;
 
+  # Replaced by image entrypoint when proxy SSL env vars are configured.
   PROXY_SSL_CONFIG
 
   location / {
     client_max_body_size 0;
     include includes/cors.conf;
     include includes/proxy_backend.conf;
-
-    index index.html index.htm;
-    root /usr/share/nginx/html;
   }
 
   include includes/location_common.conf;

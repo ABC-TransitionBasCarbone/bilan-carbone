@@ -31,8 +31,10 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
    To also start the local WAF (ModSecurity + NGINX) in front of the app:
 
    ```bash
-   WAF_BACKEND=http://host.docker.internal:3000 docker-compose --profile waf up -d waf
+   docker-compose --profile waf up -d waf
    ```
+
+   Override `WAF_BACKEND` only if your app is not reachable at `http://host.docker.internal:3000`.
 
    Then access the app through the WAF at [http://localhost:8080](http://localhost:8080).
 
