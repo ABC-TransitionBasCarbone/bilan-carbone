@@ -12,10 +12,23 @@ if (typeof Request === 'undefined') {
 if (typeof Response === 'undefined') {
   Object.defineProperty(globalThis, 'Response', {
     value: class Response {
+      constructor(
+        public body: unknown = null,
+        init?: { status?: number; headers?: Record<string, string> },
+      ) {
+        if (init?.status) this.status = init.status
+        if (init?.headers) this.headers = new Map(Object.entries(init.headers))
+      }
       status = 200
       ok = true
       headers = new Map()
-      body = null
+      json = async () => this.body
+      text = async () => (typeof this.body === 'string' ? this.body : JSON.stringify(this.body))
+      clone = () =>
+        new (this.constructor as new (body: unknown, init: { status: number; headers: Record<string, string> }) => unknown)(
+          this.body,
+          { status: this.status, headers: Object.fromEntries(this.headers) },
+        )
     },
     configurable: true,
   })
