@@ -12,6 +12,9 @@
     },
     "ts": {},
     "lint": {},
+    "prisma": {
+      "cache": false
+    },
     "format": {
       "cache": false
     },

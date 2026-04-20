@@ -153,9 +153,12 @@ export const mockedEmissionSourceEmissionFactor = {
   isMonetary: false,
   location: '',
   customUnit: null,
-  version: {
-    id: 'version-id',
-  },
+  versions: [
+    {
+      importVersionId: TEST_IDS.importVersion,
+      importVersion: { id: TEST_IDS.importVersion, name: 'test', source: Import.BaseEmpreinte, archived: false },
+    },
+  ],
   metaData: [
     {
       language: 'fr',

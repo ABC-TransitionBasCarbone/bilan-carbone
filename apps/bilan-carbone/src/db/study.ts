@@ -152,9 +152,10 @@ const fullStudyInclude = {
               comment: true,
             },
           },
-          version: {
+          versions: {
             select: {
-              id: true,
+              importVersionId: true,
+              importVersion: { select: { id: true, name: true, source: true, archived: true } },
             },
           },
         },

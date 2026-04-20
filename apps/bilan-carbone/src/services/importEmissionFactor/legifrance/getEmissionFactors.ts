@@ -16,10 +16,8 @@ const getSubPostsFunc = (emissionFactor: ImportEmissionFactor) => () => {
   return subPostByNetworkType[emissionFactor.reseau]
 }
 
-const mapLegifranceEmissionFactors = (emissionFactor: ImportEmissionFactor, versionId: string) =>
-  mapEmissionFactors(emissionFactor, Import.Legifrance, versionId, getSubPostsFunc(emissionFactor))
+const mapLegifranceEmissionFactors = (emissionFactor: ImportEmissionFactor) =>
+  mapEmissionFactors(emissionFactor, Import.Legifrance, getSubPostsFunc(emissionFactor))
 
 export const getEmissionFactorsFromCSV = async (name: string, file: string) =>
-  getEmissionFactors(name, file, Import.Legifrance, (emissionFactor: ImportEmissionFactor, versionId: string) =>
-    mapLegifranceEmissionFactors(emissionFactor, versionId),
-  )
+  getEmissionFactors(name, file, Import.Legifrance, mapLegifranceEmissionFactors)

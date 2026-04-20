@@ -79,7 +79,7 @@ export const getExistingEmissionFactors = async (
   const emissionFactors = await transaction.emissionFactor.findMany({
     where: { OR: [{ importedId: { in: importedIds } }, { oldBCId: { in: oldBCIds } }] },
     include: {
-      version: true,
+      versions: { include: { importVersion: true } },
     },
   })
   return emissionFactors

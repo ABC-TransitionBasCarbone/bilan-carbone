@@ -68,9 +68,9 @@ const EmissionFactorDetails = ({ emissionFactor }: Props) => {
       <div className="flex-col grow">
         <div className={styles.info}>
           <span className={classNames(styles.infoTitle, 'bold')}>{t('source')} : </span>
-          {emissionFactor.importedFrom !== Import.Manual && emissionFactor.version && (
+          {emissionFactor.importedFrom !== Import.Manual && emissionFactor.versions.length > 0 && (
             <>
-              {t(emissionFactor.importedFrom)} {emissionFactor.version.name}
+              {t(emissionFactor.importedFrom)} {emissionFactor.versions.map((v) => v.importVersion.name).join(', ')}
             </>
           )}
           {emissionFactor.source && <> - {emissionFactor.source}</>}
