@@ -28,12 +28,9 @@ describe('getPrismaConnectionString', () => {
   it('should return undefined when no database url is configured', () => {
     delete process.env.POSTGRES_PRISMA_POOL_URL
     delete process.env.POSTGRES_PRISMA_URL
-    process.env = {
-      ...process.env,
-      NODE_ENV: 'production',
-      JEST_WORKER_ID: undefined,
-      npm_lifecycle_event: undefined,
-    }
+    process.env = { ...process.env, NODE_ENV: 'production' }
+    delete process.env.JEST_WORKER_ID
+    delete process.env.npm_lifecycle_event
 
     expect(getPrismaConnectionString()).toBeUndefined()
   })
@@ -57,12 +54,8 @@ describe('getPrismaConnectionString', () => {
   it('should fallback to test connection string when running yarn test', () => {
     delete process.env.POSTGRES_PRISMA_POOL_URL
     delete process.env.POSTGRES_PRISMA_URL
-    process.env = {
-      ...process.env,
-      NODE_ENV: 'production',
-      JEST_WORKER_ID: undefined,
-      npm_lifecycle_event: 'test',
-    }
+    process.env = { ...process.env, NODE_ENV: 'production', npm_lifecycle_event: 'test' }
+    delete process.env.JEST_WORKER_ID
 
     expect(getPrismaConnectionString()).toBe('postgresql://localhost:5432/postgres')
   })
