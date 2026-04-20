@@ -3,7 +3,8 @@ const TEST_PRISMA_URL = 'postgresql://localhost:5432/postgres'
 // POSTGRES_PRISMA_POOL_URL is optional and falls back to POSTGRES_PRISMA_URL.
 export const getPrismaConnectionString = (): string | undefined => {
   const isJestRuntime =
-    process.env.JEST_WORKER_ID !== undefined || process.argv.some((arg) => arg.toLowerCase().includes('jest'))
+    process.env.JEST_WORKER_ID !== undefined ||
+    process.argv.some((arg) => arg === 'jest' || /(^|[\\/])jest(?:\.js)?$/i.test(arg))
   const isTestRuntime =
     process.env.NODE_ENV === 'test' ||
     isJestRuntime ||
