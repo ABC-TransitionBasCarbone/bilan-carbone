@@ -9,6 +9,7 @@ if (typeof Request === 'undefined') {
   })
 }
 
+// Jest Node runtime can miss fetch API globals required by next/server when importing proxy.ts.
 if (typeof Response === 'undefined') {
   Object.defineProperty(globalThis, 'Response', {
     value: class Response {
@@ -24,11 +25,12 @@ if (typeof Response === 'undefined') {
       headers = new Map()
       json = async () => this.body
       text = async () => (typeof this.body === 'string' ? this.body : JSON.stringify(this.body))
-      clone = () =>
-        new (this.constructor as new (body: unknown, init: { status: number; headers: Record<string, string> }) => unknown)(
-          this.body,
-          { status: this.status, headers: Object.fromEntries(this.headers) },
-        )
+      clone = () => {
+        const ResponseCtor = this.constructor as {
+          new (body: unknown, init: { status: number; headers: Record<string, string> }): unknown
+        }
+        return new ResponseCtor(this.body, { status: this.status, headers: Object.fromEntries(this.headers) })
+      }
     },
     configurable: true,
   })
