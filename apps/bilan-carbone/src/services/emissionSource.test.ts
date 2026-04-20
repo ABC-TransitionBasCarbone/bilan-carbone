@@ -42,6 +42,7 @@ const defaultEmissionSource = {
         title: 'Mocked Emission Factor',
         attribute: 'Mocked Attribute',
         comment: 'Mocked Comment',
+        tag: null,
       },
     ],
     emissionFactorParts: [],

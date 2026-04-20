@@ -1,6 +1,8 @@
 import * as XLSX from 'xlsx'
 import { ImportEmissionFactor, numberColumns, validStatuses } from './import'
 
+const xlsxNumberFields = [...numberColumns, 'Incertitude'] as string[]
+
 const parseNumber = (value: unknown): number => {
   if (typeof value === 'number') {
     return value
@@ -28,7 +30,6 @@ export const parseSheetRows = (sheet: XLSX.WorkSheet): ImportEmissionFactor[] =>
       return status && validStatuses.includes(status)
     })
     .map((row) => {
-      const xlsxNumberFields = [...numberColumns, 'Incertitude'] as string[]
       for (const field of xlsxNumberFields) {
         if (row[field] !== undefined) {
           row[field] = parseNumber(row[field])

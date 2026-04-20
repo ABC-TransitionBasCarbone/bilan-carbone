@@ -2,6 +2,8 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "tsBuildInfoFile": ".next/cache/tsbuildinfo.json",
+    "ignoreDeprecations": "5.0", // Necessary for Cypress using downlevelIteration which is deprecated
+    "types": ["cypress", "node"],
     "plugins": [
       {
         "name": "next"

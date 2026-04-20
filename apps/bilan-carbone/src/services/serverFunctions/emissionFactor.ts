@@ -17,6 +17,7 @@ import {
   getManualEmissionFactors,
   setEmissionFactorUnitAsCustom,
   updateEmissionFactor,
+  type EmissionFactorList,
 } from '@/db/emissionFactors'
 import { getOrganizationVersionByOrganizationIdAndEnvironment, getOrgVersionWithOrgId } from '@/db/organization'
 import { getStudyOrganizationVersion } from '@/db/study'
@@ -131,8 +132,8 @@ export const getEmissionFactorsByIds = async (ids: string[], studyId: string) =>
           ...emissionFactor,
           metaData: emissionFactor.metaData.find((metadata) => metadata.language === locale),
         }))
-        .filter((emissionFactor) => emissionFactor.metaData)
-        .sort((a, b) => sortAlphabetically(a?.metaData?.title, b?.metaData?.title))
+        .filter((emissionFactor) => !!emissionFactor.metaData)
+        .sort((a, b) => sortAlphabetically(a?.metaData?.title, b?.metaData?.title)) as unknown as EmissionFactorList[]
     } catch {
       return []
     }

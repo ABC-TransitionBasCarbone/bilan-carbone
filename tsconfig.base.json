@@ -13,8 +13,7 @@
     "jsx": "react-jsx",
     "target": "ES2017",
     "incremental": true,
-    "ignoreDeprecations": "6.0", // Necessary for Cypress using downlevelIteration which is deprecated
-    "types": ["cypress", "node"],
+    "types": ["node"],
     "paths": {
       "@abc-transitionbascarbone/db-common": ["packages/db-common/src/index.ts"],
       "@abc-transitionbascarbone/db-common/enums": ["packages/db-common/src/enums.ts"],

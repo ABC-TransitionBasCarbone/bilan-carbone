@@ -4,33 +4,29 @@ import { prismaClient } from '../../db/client.server'
 import { MIN, TIME_IN_MS } from '../../utils/time'
 import { ImportEmissionFactor, mapEmissionFactors } from './import'
 
-type MapFunction = (row: ImportEmissionFactor) => Prisma.EmissionFactorCreateInput
+type MapFunction = (row: ImportEmissionFactor) => ReturnType<typeof mapEmissionFactors>
 
-const buildOverrideData = (
-  mapped: Prisma.EmissionFactorCreateInput,
-): Omit<Prisma.EmissionFactorOverrideCreateInput, 'emissionFactor'> => {
-  return {
-    totalCo2: mapped.totalCo2 as number,
-    co2f: mapped.co2f as number | undefined,
-    ch4f: mapped.ch4f as number | undefined,
-    ch4b: mapped.ch4b as number | undefined,
-    n2o: mapped.n2o as number | undefined,
-    co2b: mapped.co2b as number | undefined,
-    sf6: mapped.sf6 as number | undefined,
-    hfc: mapped.hfc as number | undefined,
-    pfc: mapped.pfc as number | undefined,
-    otherGES: mapped.otherGES as number | undefined,
-    unit: mapped.unit as Prisma.EmissionFactorOverrideCreateInput['unit'],
-    status: mapped.status as Prisma.EmissionFactorOverrideCreateInput['status'],
-    source: mapped.source as string | undefined,
-    location: mapped.location as string | undefined,
-    metaData: {
-      createMany: {
-        data: mapped.metaData?.createMany?.data ?? [],
-      },
+const buildOverrideData = (mapped: ReturnType<typeof mapEmissionFactors>) => ({
+  totalCo2: mapped.totalCo2,
+  co2f: mapped.co2f,
+  ch4f: mapped.ch4f,
+  ch4b: mapped.ch4b,
+  n2o: mapped.n2o,
+  co2b: mapped.co2b,
+  sf6: mapped.sf6,
+  hfc: mapped.hfc,
+  pfc: mapped.pfc,
+  otherGES: mapped.otherGES,
+  unit: mapped.unit,
+  status: mapped.status,
+  source: mapped.source,
+  location: mapped.location,
+  metaData: {
+    createMany: {
+      data: mapped.metaData.createMany.data,
     },
-  }
-}
+  },
+})
 
 export const applyOverridesFromRows = async (
   source: Import,
@@ -95,32 +91,30 @@ export const applyOverridesFromRows = async (
             emissionFactor: { connect: { id: efId } },
             ...overrideData,
             parts: {
-              create: await Promise.all(
-                partRowsForEf.map(async (part) => {
-                  const mappedPart = mapEmissionFactors(part, source, () => [])
-                  const metaData = []
-                  if (part.Nom_poste_français) {
-                    metaData.push({ language: 'fr', title: part.Nom_poste_français })
-                  }
-                  if (part.Nom_poste_anglais) {
-                    metaData.push({ language: 'en', title: part.Nom_poste_anglais })
-                  }
-                  return {
-                    type: part.Type_poste as Prisma.EmissionFactorOverridePartCreateManyInput['type'],
-                    totalCo2: mappedPart.totalCo2,
-                    co2f: mappedPart.co2f,
-                    ch4f: mappedPart.ch4f,
-                    ch4b: mappedPart.ch4b,
-                    n2o: mappedPart.n2o,
-                    co2b: mappedPart.co2b,
-                    sf6: mappedPart.sf6,
-                    hfc: mappedPart.hfc,
-                    pfc: mappedPart.pfc,
-                    otherGES: mappedPart.otherGES,
-                    metaData: metaData.length > 0 ? { createMany: { data: metaData } } : undefined,
-                  }
-                }),
-              ),
+              create: partRowsForEf.map((part) => {
+                const mappedPart = mapEmissionFactors(part, source, () => [])
+                const metaData = []
+                if (part.Nom_poste_français) {
+                  metaData.push({ language: 'fr', title: part.Nom_poste_français })
+                }
+                if (part.Nom_poste_anglais) {
+                  metaData.push({ language: 'en', title: part.Nom_poste_anglais })
+                }
+                return {
+                  type: part.Type_poste as Prisma.EmissionFactorOverridePartCreateManyInput['type'],
+                  totalCo2: mappedPart.totalCo2,
+                  co2f: mappedPart.co2f,
+                  ch4f: mappedPart.ch4f,
+                  ch4b: mappedPart.ch4b,
+                  n2o: mappedPart.n2o,
+                  co2b: mappedPart.co2b,
+                  sf6: mappedPart.sf6,
+                  hfc: mappedPart.hfc,
+                  pfc: mappedPart.pfc,
+                  otherGES: mappedPart.otherGES,
+                  metaData: metaData.length > 0 ? { createMany: { data: metaData } } : undefined,
+                }
+              }),
             },
           },
         })

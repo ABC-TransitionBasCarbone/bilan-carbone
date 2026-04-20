@@ -150,6 +150,7 @@ const fullStudyInclude = {
               frontiere: true,
               location: true,
               comment: true,
+              tag: true,
             },
           },
           versions: {

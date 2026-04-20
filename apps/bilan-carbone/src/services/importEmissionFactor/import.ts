@@ -86,12 +86,12 @@ export const getEmissionFactorImportVersion = async (
 ) => {
   const existingVersion = await transaction.emissionFactorImportVersion.findFirst({ where: { name, source } })
   if (existingVersion) {
-    return { success: false, id: existingVersion.id, alreadyExists: true }
+    return { id: existingVersion.id, alreadyExists: true }
   }
   const newVersion = await transaction.emissionFactorImportVersion.create({
     data: { name, source },
   })
-  return { success: true, id: newVersion.id, alreadyExists: false }
+  return { id: newVersion.id, alreadyExists: false }
 }
 
 export const getEmissionFactorImportVersionByName = async (
@@ -140,11 +140,14 @@ export const propagateOverrides = async (
   transaction: Prisma.TransactionClient,
   oldToNewEfId: { oldId: string; newId: string }[],
 ) => {
+  const existingOverrides = await transaction.emissionFactorOverride.findMany({
+    where: { emissionFactorId: { in: oldToNewEfId.map((e) => e.oldId) } },
+    include: { parts: { include: { metaData: true } }, metaData: true },
+  })
+  const byOldId = new Map(existingOverrides.map((o) => [o.emissionFactorId, o]))
+
   for (const { oldId, newId } of oldToNewEfId) {
-    const existing = await transaction.emissionFactorOverride.findUnique({
-      where: { emissionFactorId: oldId },
-      include: { parts: { include: { metaData: true } }, metaData: true },
-    })
+    const existing = byOldId.get(oldId)
     if (existing) {
       const newOverride = await transaction.emissionFactorOverride.create({
         data: {
@@ -594,16 +597,14 @@ export const saveEmissionFactorsParts = async (
   importedIdToEfId: Map<string, string>,
   parts: ImportEmissionFactor[],
 ) => {
-  for (const i in parts) {
-    if (Number(i) % 100 === 0) {
+  for (const [i, part] of parts.entries()) {
+    if (i % 100 === 0) {
       console.log(`${i}/${parts.length}`)
     }
-    const part = parts[i]
     const emissionFactorId = importedIdToEfId.get(part["Identifiant_de_l'élément"])
     if (!emissionFactorId) {
       throw new Error('No emission factor found for ' + part["Identifiant_de_l'élément"])
     }
-    const emissionFactor = { id: emissionFactorId }
 
     const metaData = []
     if (part.Nom_poste_français) {
@@ -615,7 +616,7 @@ export const saveEmissionFactorsParts = async (
 
     const data = {
       ...getGases(part),
-      emissionFactor: { connect: { id: emissionFactor.id } },
+      emissionFactor: { connect: { id: emissionFactorId } },
       type: getType(part.Type_poste),
       metaData: metaData.length > 0 ? { createMany: { data: metaData } } : undefined,
     } satisfies Prisma.EmissionFactorPartCreateInput

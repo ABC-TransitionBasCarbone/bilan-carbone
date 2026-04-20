@@ -35,7 +35,7 @@ const EmissionSourceFactorModal = ({
   useEffect(() => {
     async function fetchFiltersInfos() {
       const locationFromBdd = await getFELocations()
-      setLocationOptions(locationFromBdd.filter((loc) => !!loc).map((loc) => loc.location) ?? [])
+      setLocationOptions(locationFromBdd.flatMap((loc) => (loc.location ? [loc.location] : [])))
     }
 
     fetchFiltersInfos()
