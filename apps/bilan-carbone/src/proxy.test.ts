@@ -11,7 +11,12 @@ if (typeof Request === 'undefined') {
 
 if (typeof Response === 'undefined') {
   Object.defineProperty(globalThis, 'Response', {
-    value: class Response {},
+    value: class Response {
+      status = 200
+      ok = true
+      headers = new Map()
+      body = null
+    },
     configurable: true,
   })
 }
