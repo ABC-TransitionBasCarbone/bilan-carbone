@@ -34,6 +34,7 @@ import {
   hasAccessToPDFExport,
   hasAccessToResultsRatioTab,
   hasAccessToSimplifiedEmissionAnalysis,
+  isClickson,
   showResultsInfoText,
 } from '@/services/permissions/environment'
 import type { BaseResultsByPost } from '@/services/posts'
@@ -131,7 +132,7 @@ const AllResults = ({
             variant="contained"
             color="primary"
             size="large"
-            endIcon={environment === Environment.CLICKSON ? <SheetIcon /> : <DownloadIcon />}
+            endIcon={environment && isClickson(environment) ? <SheetIcon /> : <DownloadIcon />}
             onClick={() =>
               downloadStudyResults(
                 study,
