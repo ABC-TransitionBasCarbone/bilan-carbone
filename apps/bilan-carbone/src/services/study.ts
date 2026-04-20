@@ -23,7 +23,7 @@ import type { ResultType } from '../types/study.types'
 import { AdditionalResultTypes, BaseResultsBySite, ResultsByPost } from '../types/study.types'
 import { getEmissionResults, getEmissionSourceEmission } from './emissionSource'
 import { download } from './file'
-import { hasAccessToBcExport } from './permissions/environment'
+import { hasAccessToBcExport, isCut } from './permissions/environment'
 import {
   convertSimplifiedEnvToBilanCarbone,
   convertTiltSubPostToBCSubPost,
@@ -31,7 +31,6 @@ import {
   Post,
   subPostBCToSubPostTiltMapping,
 } from './posts'
-import { isSimplifiedEnvironment } from './publicodes/simplifiedPublicodesConfig'
 import { rulesSpans as begesRulesSpans, computeBegesResult } from './results/beges'
 import { computeResultsByPostFromEmissionSources, computeResultsByTag } from './results/consolidated'
 import { PostInfos } from './results/exports'
@@ -808,7 +807,7 @@ export const downloadStudyResults = async (
     )
   }
 
-  if (isSimplifiedEnvironment(environment) && environment !== Environment.CLICKSON && computedResults) {
+  if (isCut(environment) && computedResults) {
     data.push(formatBaseResultsToBCExport(study, siteList, computedResults, tExport, tPost))
   }
 

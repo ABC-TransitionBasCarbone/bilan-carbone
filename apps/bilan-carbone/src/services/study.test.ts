@@ -1,5 +1,6 @@
 import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
 import { getMockeFullStudy } from '@/tests/utils/models/study'
+import { Translations } from '@/types/translation'
 import { hasSufficientLevel } from '@/utils/study'
 import { expect } from '@jest/globals'
 import { ControlMode, Environment, Level, StudyResultUnit, SubPost } from '@repo/db-common/enums'
@@ -193,11 +194,12 @@ describe('Study Service', () => {
   })
 
   describe('exports', () => {
-    const t = (key: string) => key
-    const tStudy = (key: string, values?: { unit?: string }) =>
-      key === 'value' ? `Valeur${values?.unit ? ` (${values.unit})` : ''}` : key
-    const tExport = (key: string) => (key === 'value' ? 'Valeur' : key)
-    const tUnits = (key: string) => key
+    const t = ((key: string) => key) as unknown as Translations
+    const tStudy = ((key: string, values?: { unit?: string }) =>
+      key === 'value' ? `Valeur${values?.unit ? ` (${values.unit})` : ''}` : key) as unknown as Translations
+    const tExport = ((key: string) => (key === 'value' ? 'Valeur' : key)) as unknown as Translations
+    const tUnits = ((key: string) => key) as unknown as Translations
+    const tUnitsKg = ((key: string) => (key ? 'kgCO2e' : key)) as unknown as Translations
 
     it('adds "(tCO2e)" to clickson exported value header', () => {
       const data = formatComputedResultsForExport(
@@ -225,7 +227,8 @@ describe('Study Service', () => {
           bySite: {},
         },
         tStudy,
-        () => 'kgCO2e',
+        tExport,
+        tUnitsKg,
         Environment.CUT,
       )
 
