@@ -81,6 +81,7 @@ const TrajectoryGraph = ({
   objectiveGroupsByTrajectoryId,
 }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectories.graph')
+  const tDocumentation = useTranslations('documentationUrl')
   const tUnit = useTranslations('study.results.units')
   const [yearRange, setYearRange] = useState<number[] | null>(null)
   const [glossary, setGlossary] = useState(false)
@@ -512,7 +513,13 @@ const TrajectoryGraph = ({
                       label="current-trajectory"
                       tModal="study.transitionPlan.trajectories.graph"
                     >
-                      <p>{customRich(t, 'overshootTrajectoryGlossary.description')}</p>
+                      <p>{customRich(t, 'overshootTrajectoryGlossary.description',
+                        {link: (children) => (
+                          <Link href={tDocumentation('carbon budget')} target="_blank" rel="noreferrer noopener">
+                            {children}
+                          </Link>
+                        )})},
+                      </p>
                     </GlossaryIconModal>
                   )}
                 </div>

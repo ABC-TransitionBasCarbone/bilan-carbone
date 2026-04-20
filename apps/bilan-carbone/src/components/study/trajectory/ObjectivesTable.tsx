@@ -32,6 +32,7 @@ import { Fragment, useMemo, useState } from 'react'
 import ObjectivesSubTable from './ObjectivesExpandedRow'
 import { getDisplayedRates } from './ObjectivesTable.helper'
 import styles from './ObjectivesTable.module.css'
+import Link from 'next/link'
 
 const ConfirmDeleteModal = dynamic(() => import('../../modals/ConfirmDeleteModal'), { ssr: false })
 const TrajectoryCreationModal = dynamic(() => import('./TrajectoryCreationModal'), { ssr: false })
@@ -96,6 +97,7 @@ const ObjectivesTable = ({
   defaultSnbcSectoralTrajectoryId,
 }: Props) => {
   const tAction = useTranslations('common.action')
+  const tDocumentation = useTranslations('documentationUrl')
   const t = useTranslations('study.transitionPlan.objectives')
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
@@ -302,7 +304,13 @@ const ObjectivesTable = ({
               label="reduction-rates"
               tModal="study.transitionPlan.objectives"
             >
-              <p>{customRich(t, 'table.ratesGlossary.description')}</p>
+              <p>{customRich(t, 'table.ratesGlossary.description', 
+                {link: (children) => (
+                  <Link href={tDocumentation('carbon budget')} target="_blank" rel="noreferrer noopener">
+                    {children}
+                  </Link>
+                )})}, 
+              </p>
             </GlossaryIconModal>
           </div>
         ),
