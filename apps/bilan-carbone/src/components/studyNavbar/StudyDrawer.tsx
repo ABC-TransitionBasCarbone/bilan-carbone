@@ -64,31 +64,35 @@ const StudyDrawer = ({
                       {link.label}
                     </button>
                   ) : (
-                    <div key={linkIndex} className={classNames({ [styles.linkWithInfo]: !!link.info })}>
-                      <Link
-                        prefetch={false}
-                        target={link.external ? '_blank' : undefined}
-                        rel={link.external ? 'noopener noreferrer' : undefined}
-                        className={classNames(styles.link, {
-                          [styles.active]: pathName === link.href || pathName.startsWith(`${link.href}/`),
-                        })}
-                        href={link.href || '#'}
-                        {...(link.testId && { 'data-testid': link.testId })}
-                      >
-                        {link.label}
-                      </Link>
-                      {link.info && (
-                        <HelpIcon
-                          className={styles.infoIcon}
-                          label={tCommon('moreInfo')}
-                          onClick={(e) => {
-                            e.preventDefault()
-                            e.stopPropagation()
-                            setGlossaryInfo({ id: `${sectionIndex}-${linkIndex}`, label: link.label, info: link.info! })
-                          }}
-                        />
+                    <Link
+                      prefetch={false}
+                      key={linkIndex}
+                      target={link.external ? '_blank' : undefined}
+                      rel={link.external ? 'noopener noreferrer' : undefined}
+                      className={classNames(styles.link, {
+                        [styles.active]: pathName === link.href || pathName.startsWith(`${link.href}/`),
+                        [styles.linkWithInfo]: !!link.info,
+                      })}
+                      href={link.href || '#'}
+                      {...(link.testId && { 'data-testid': link.testId })}
+                    >
+                      {link.info ? (
+                        <>
+                          <span>{link.label}</span>
+                          <HelpIcon
+                            className={styles.infoIcon}
+                            label={tCommon('moreInfo')}
+                            onClick={(e) => {
+                              e.preventDefault()
+                              e.stopPropagation()
+                              setGlossaryInfo({ id: `${sectionIndex}-${linkIndex}`, label: link.label, info: link.info! })
+                            }}
+                          />
+                        </>
+                      ) : (
+                        link.label
                       )}
-                    </div>
+                    </Link>
                   )
                 })}
             </div>
