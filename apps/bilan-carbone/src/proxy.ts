@@ -82,7 +82,8 @@ const getClientIp = (req: NextRequest): string | null => {
     return forwardedFor.split(',')[0].trim()
   }
 
-  return req.ip ?? req.headers.get('x-real-ip') ?? req.headers.get('cf-connecting-ip')
+  const requestWithOptionalIp = req as NextRequest & { ip?: string }
+  return requestWithOptionalIp.ip ?? req.headers.get('x-real-ip') ?? req.headers.get('cf-connecting-ip')
 }
 
 const isPublicRoute = (pathname: string) => publicRoutes.some((route) => pathname.startsWith(route))

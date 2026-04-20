@@ -26,8 +26,8 @@ describe('Public IP rate limiting', () => {
         headers,
         failOnStatusCode: false,
       }).then((response) => {
-        expect(response.status).to.eq(429)
-        expect(response.headers).to.have.property('retry-after')
+        cy.wrap(response.status).should('eq', 429)
+        cy.wrap(response.headers).its('retry-after').should('exist')
       })
     })
   })

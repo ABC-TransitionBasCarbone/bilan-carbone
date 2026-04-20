@@ -9,7 +9,13 @@ if (typeof Request === 'undefined') {
   })
 }
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
+if (typeof Response === 'undefined') {
+  Object.defineProperty(globalThis, 'Response', {
+    value: class Response {},
+    configurable: true,
+  })
+}
+
 const { createInMemoryRateLimiter, getPublicRouteScope } = require('@/proxy')
 
 describe('createInMemoryRateLimiter', () => {
