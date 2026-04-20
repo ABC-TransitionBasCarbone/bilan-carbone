@@ -23,7 +23,7 @@ import type { ResultType } from '../types/study.types'
 import { AdditionalResultTypes, BaseResultsBySite, ResultsByPost } from '../types/study.types'
 import { getEmissionResults, getEmissionSourceEmission } from './emissionSource'
 import { download } from './file'
-import { hasAccessToBcExport, isCut } from './permissions/environment'
+import { hasAccessToBcExport, hasAccessToSimplifiedBcExport } from './permissions/environment'
 import {
   convertSimplifiedEnvToBilanCarbone,
   convertTiltSubPostToBCSubPost,
@@ -807,7 +807,7 @@ export const downloadStudyResults = async (
     )
   }
 
-  if (isCut(environment) && computedResults) {
+  if (hasAccessToSimplifiedBcExport(environment) && computedResults) {
     data.push(formatBaseResultsToBCExport(study, siteList, computedResults, tExport, tPost))
   }
 
