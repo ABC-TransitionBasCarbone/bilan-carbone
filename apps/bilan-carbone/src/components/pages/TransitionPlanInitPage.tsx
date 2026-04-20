@@ -39,12 +39,12 @@ import { Button } from '@repo/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ReferenceTrajectorySelectionSection } from '../study/transitionPlan/ReferenceTrajectorySelectionSection'
 import TransitionPlanOnboarding from '../study/transitionPlan/TransitionPlanOnboarding'
 import styles from './TransitionPlanInitPage.module.css'
-import Link from 'next/link'
 
 const TransitionPlanSelectionModal = dynamic(
   () => import('@/components/study/transitionPlan/TransitionPlanSelectionModal'),
@@ -403,8 +403,8 @@ const TransitionPlanInitPage = ({
             title={t('initialization.onboarding.title')}
             description={customRich(t, 'initialization.onboarding.description')}
             storageKey="transition-plan-initialization"
-            detailedContent={customRich(t, 'initialization.onboarding.detailedInfo', 
-              {link1: (children) => (
+            detailedContent={customRich(t, 'initialization.onboarding.detailedInfo', {
+              link1: (children) => (
                 <Link href={tDocumentation('SNBC')} target="_blank" rel="noreferrer noopener">
                   {children}
                 </Link>

@@ -8,27 +8,13 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@repo/db-common": [
-        "../../packages/db-common/src/index.ts"
-      ],
-      "@repo/db-common/enums": [
-        "../../packages/db-common/src/enums.ts"
-      ],
-      "@repo/db-common/types": [
-        "../../packages/db-common/src/types.ts"
-      ],
-      "@abc-transitionbascarbone/publicodes-count": [
-        "./publicodes-packages/publicodes-count"
-      ],
-      "@abc-transitionbascarbone/publicodes-clickson": [
-        "./publicodes-packages/publicodes-clickson"
-      ],
-      "@abc-transitionbascarbone/publicodes-tilt": [
-        "./publicodes-packages/publicodes-tilt"
-      ]
+      "@/*": ["./src/*"],
+      "@repo/db-common": ["../../packages/db-common/src/index.ts"],
+      "@repo/db-common/enums": ["../../packages/db-common/src/enums.ts"],
+      "@repo/db-common/types": ["../../packages/db-common/src/types.ts"],
+      "@abc-transitionbascarbone/publicodes-count": ["./publicodes-packages/publicodes-count"],
+      "@abc-transitionbascarbone/publicodes-clickson": ["./publicodes-packages/publicodes-clickson"],
+      "@abc-transitionbascarbone/publicodes-tilt": ["./publicodes-packages/publicodes-tilt"]
     },
     "jsx": "preserve"
   },
@@ -38,16 +24,6 @@
       "module": "commonjs"
     }
   },
-  "include": [
-    "next-env.d.ts",
-    ".next/types/**/*.ts",
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "cypress/**/*.ts",
-    "**/*.cy.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "publicodes-packages"
-  ]
+  "include": ["next-env.d.ts", ".next/types/**/*.ts", "src/**/*.ts", "src/**/*.tsx", "cypress/**/*.ts", "**/*.cy.ts"],
+  "exclude": ["node_modules", "publicodes-packages"]
 }

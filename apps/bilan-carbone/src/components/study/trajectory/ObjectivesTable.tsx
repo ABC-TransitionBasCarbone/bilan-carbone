@@ -27,12 +27,12 @@ import classNames from 'classnames'
 import Fuse from 'fuse.js'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Fragment, useMemo, useState } from 'react'
 import ObjectivesSubTable from './ObjectivesExpandedRow'
 import { getDisplayedRates } from './ObjectivesTable.helper'
 import styles from './ObjectivesTable.module.css'
-import Link from 'next/link'
 
 const ConfirmDeleteModal = dynamic(() => import('../../modals/ConfirmDeleteModal'), { ssr: false })
 const TrajectoryCreationModal = dynamic(() => import('./TrajectoryCreationModal'), { ssr: false })
@@ -304,12 +304,15 @@ const ObjectivesTable = ({
               label="reduction-rates"
               tModal="study.transitionPlan.objectives"
             >
-              <p>{customRich(t, 'table.ratesGlossary.description', 
-                {link: (children) => (
-                  <Link href={tDocumentation('carbon budget')} target="_blank" rel="noreferrer noopener">
-                    {children}
-                  </Link>
-                )})}, 
+              <p>
+                {customRich(t, 'table.ratesGlossary.description', {
+                  link: (children) => (
+                    <Link href={tDocumentation('carbon budget')} target="_blank" rel="noreferrer noopener">
+                      {children}
+                    </Link>
+                  ),
+                })}
+                ,
               </p>
             </GlossaryIconModal>
           </div>

@@ -513,12 +513,15 @@ const TrajectoryGraph = ({
                       label="current-trajectory"
                       tModal="study.transitionPlan.trajectories.graph"
                     >
-                      <p>{customRich(t, 'overshootTrajectoryGlossary.description',
-                        {link: (children) => (
-                          <Link href={tDocumentation('carbon budget')} target="_blank" rel="noreferrer noopener">
-                            {children}
-                          </Link>
-                        )})},
+                      <p>
+                        {customRich(t, 'overshootTrajectoryGlossary.description', {
+                          link: (children) => (
+                            <Link href={tDocumentation('carbon budget')} target="_blank" rel="noreferrer noopener">
+                              {children}
+                            </Link>
+                          ),
+                        })}
+                        ,
                       </p>
                     </GlossaryIconModal>
                   )}
