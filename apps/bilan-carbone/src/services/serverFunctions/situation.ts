@@ -4,6 +4,7 @@ import { getSituationByStudySite, getSituationsByStudySites, upsertSituation } f
 import { getStudyById } from '@/db/study'
 import { ListLayoutSituations } from '@/lib/publicodes/context'
 import { withServerResponse } from '@/utils/serverResponse'
+import { Environment } from '@repo/db-common/enums'
 import type { InputJsonValue } from '@prisma/client/runtime/client'
 import { Situation } from 'publicodes'
 import { dbActualizedAuth } from '../auth'
@@ -63,14 +64,17 @@ export const saveSituation = async (
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const hasEditAccess = await hasEditAccessOnStudy(studyId, session)
-    if (!hasEditAccess) {
-      throw new Error(NOT_AUTHORIZED)
-    }
-
     const study = await getStudyById(studyId, session.user.organizationVersionId)
     const studySite = study?.sites.find((site) => site.id === studySiteId)
     if (!study || !studySite) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const hasEditAccess = await hasEditAccessOnStudy(studyId, session)
+    const isClicksonContributor =
+      session.user.environment === Environment.CLICKSON &&
+      study.contributors.some((contributor) => contributor.accountId === session.user.accountId)
+    if (!hasEditAccess && !isClicksonContributor) {
       throw new Error(NOT_AUTHORIZED)
     }
 
