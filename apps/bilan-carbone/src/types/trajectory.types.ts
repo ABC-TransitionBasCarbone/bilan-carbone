@@ -107,4 +107,5 @@ export type TrajectorySeries = LineSeriesType & {
   isFailed?: boolean
   isCustom?: boolean
   withinThreshold?: boolean
+  isAction?: boolean
 }
