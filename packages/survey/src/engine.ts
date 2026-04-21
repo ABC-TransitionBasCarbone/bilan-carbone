@@ -149,9 +149,14 @@ export class SurveyEngine {
    */
   getProgress(): number {
     if (this.survey.questions.length === 0) return 0
-    return Math.round(
-      (this.response.currentQuestionIndex / this.survey.questions.length) * 100,
+    // If completed, return 100%
+    if (this.response.completed) return 100
+    // Calculate progress based on answered questions (0-based index + 1)
+    const answeredCount = Math.min(
+      this.response.currentQuestionIndex + 1,
+      this.survey.questions.length,
     )
+    return Math.round((answeredCount / this.survey.questions.length) * 100)
   }
 
   /**

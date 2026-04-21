@@ -1,15 +1,12 @@
-'use client'
-
-import React from 'react'
-import { SurveyPage } from '@/components/survey/SurveyPage'
+import { Survey } from '@/components/survey/Survey'
 import { sampleSurvey } from '@/data/sampleSurvey'
 
-export default function SurveyRoute({
+export default async function SurveyPage({
   params,
 }: {
   params: Promise<{ id: string }>
 }) {
-  const { id } = React.use(params)
+  const { id } = await params
 
-  return <SurveyPage survey={sampleSurvey} responseId={id} />
+  return <Survey survey={sampleSurvey} responseId={id} />
 }

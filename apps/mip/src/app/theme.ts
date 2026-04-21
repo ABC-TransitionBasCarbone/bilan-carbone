@@ -4,21 +4,18 @@ export const theme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#1976d2',
+      main: '#272768',
     },
     secondary: {
-      main: '#dc004e',
+      main: '#346fef',
     },
   },
   typography: {
-    fontFamily: [
-      '-apple-system',
-      'BlinkMacSystemFont',
-      '"Segoe UI"',
-      'Roboto',
-      '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
-    ].join(','),
+    fontFamily: 'gilroy-regular, sans-serif',
+    button: {
+      fontSize: '1rem',
+      textTransform: 'none',
+      fontFamily: 'gilroy-regular, sans-serif',
+    },
   },
 })

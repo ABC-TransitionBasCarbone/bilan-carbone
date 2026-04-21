@@ -1,5 +1,5 @@
 /**
- * Survey Page Component
+ * Survey Component
  * Main component for displaying and managing survey questions
  */
 
@@ -17,16 +17,16 @@ import {
   Alert,
 } from '@mui/material'
 import { ArrowBack, ArrowForward, Check } from '@mui/icons-material'
-import { SurveyEngine, Survey } from '@repo/survey'
+import { SurveyEngine, Survey as SurveyType } from '@repo/survey'
 import { useSurveyStore } from '@/store/surveyStore'
 import { QuestionRenderer } from './QuestionRenderer'
 
-interface SurveyPageProps {
-  survey: Survey
+interface SurveyProps {
+  survey: SurveyType
   responseId?: string
 }
 
-export function SurveyPage({ survey, responseId }: SurveyPageProps) {
+export function Survey({ survey, responseId }: SurveyProps) {
   const {
     survey: loadedSurvey,
     response,
@@ -110,7 +110,7 @@ export function SurveyPage({ survey, responseId }: SurveyPageProps) {
       <Box mb={3}>
         <Box display="flex" justifyContent="space-between" mb={1}>
           <Typography variant="body2" color="text.secondary">
-            Question {currentQuestionIndex + 1} of {survey.questions.length}
+            Question {Math.min(currentQuestionIndex + 1, survey.questions.length)} of {survey.questions.length}
           </Typography>
           <Typography variant="body2" color="text.secondary">
             {progress}% Complete
