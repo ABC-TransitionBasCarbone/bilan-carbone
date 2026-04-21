@@ -134,21 +134,14 @@ const ObjectivesExpandedRow = ({
 
   const getPeriod = (startYear: number, targetYear: number) => `${startYear} → ${targetYear}`
 
-  const getDisplayedRatesForPeriod = (startYear: number, endYear: number) => {
-    const referenceRate = getAverageAnnualRateFromTrajectory(trajectoryData?.previousTrajectory, startYear, endYear)
-
+  const getDisplayedCorrectedRatesForPeriod = (startYear: number, endYear: number) => {
     if (!trajectoryData || trajectoryData.withinThreshold) {
-      return { referenceRate, correctedRate: undefined }
+      return undefined
     }
 
     // Corrected rate of the first objective is only applied from study start year, not reference year
     const correctedStartYear = startYear < studyYear ? studyYear : startYear
-    const correctedRate = getAverageAnnualRateFromTrajectory(
-      trajectoryData.currentTrajectory,
-      correctedStartYear,
-      endYear,
-    )
-    return { referenceRate, correctedRate }
+    return getAverageAnnualRateFromTrajectory(trajectoryData.currentTrajectory, correctedStartYear, endYear)
   }
 
   const isCustom = trajectory.type === TrajectoryType.CUSTOM
@@ -156,15 +149,15 @@ const ObjectivesExpandedRow = ({
 
   const defaultObjectiveRows: ObjectiveRow[] = defaultObjectives.map((objective, index) => {
     const prevYear = index > 0 ? defaultObjectives[index - 1].targetYear : defaultObjectiveReferenceYear
-    const rates = getDisplayedRatesForPeriod(prevYear, objective.targetYear)
+    const correctedRate = getDisplayedCorrectedRatesForPeriod(prevYear, objective.targetYear)
     const canEditObj = isCustom && !isDefaultSnbc
     const canDeleteObj = isCustom && !isDefaultSnbc && defaultObjectivesCount > 1
 
     return {
       id: objective.id,
       period: getPeriod(prevYear, objective.targetYear),
-      reductionRate: rates.referenceRate ?? objective.reductionRate,
-      correctedRate: rates.correctedRate,
+      reductionRate: objective.reductionRate,
+      correctedRate,
       sites: tCommon('allSites'),
       posts: tCommon('allPosts'),
       tags: tCommon('allTags'),
@@ -177,13 +170,13 @@ const ObjectivesExpandedRow = ({
 
   const subObjectiveRows: ObjectiveRow[] = subObjectives.map((objective, index) => {
     const startYear = objective.startYear ?? defaultObjectiveReferenceYear
-    const rates = getDisplayedRatesForPeriod(startYear, objective.targetYear)
+    const correctedRate = getDisplayedCorrectedRatesForPeriod(startYear, objective.targetYear)
 
     return {
       id: objective.id,
       period: getPeriod(startYear, objective.targetYear),
-      reductionRate: rates.referenceRate ?? objective.reductionRate,
-      correctedRate: rates.correctedRate,
+      reductionRate: objective.reductionRate,
+      correctedRate,
       sites: getSitesDisplay(objective),
       posts: getSubPostsDisplay(objective),
       tags: getTagsDisplay(objective),
