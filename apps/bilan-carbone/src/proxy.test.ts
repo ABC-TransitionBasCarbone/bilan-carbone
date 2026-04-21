@@ -17,8 +17,12 @@ if (typeof Response === 'undefined') {
         public body: unknown = null,
         init?: { status?: number; headers?: Record<string, string> },
       ) {
-        if (init?.status) this.status = init.status
-        if (init?.headers) this.headers = new Map(Object.entries(init.headers))
+        if (init?.status) {
+          this.status = init.status
+        }
+        if (init?.headers) {
+          this.headers = new Map(Object.entries(init.headers))
+        }
       }
       status = 200
       ok = true
