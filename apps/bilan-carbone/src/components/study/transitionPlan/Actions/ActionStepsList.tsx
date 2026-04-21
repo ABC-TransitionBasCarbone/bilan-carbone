@@ -46,7 +46,7 @@ const ActionStepsList = ({ control, errors }: Props) => {
 
   return (
     <Box className={classNames('flex-col w100')}>
-      <CustomFormLabel label={`${t('subSteps')} *`} />
+      <CustomFormLabel label={`${t('subSteps')}`} />
       <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext items={fields.map((f) => f.id)} strategy={rectSortingStrategy}>
           <Box className={classNames('flex wrap align-center w100', styles.stepsContainer)}>

@@ -198,8 +198,6 @@ const ActionModal = ({
     if (step === 0) {
       return [
         'title',
-        'steps',
-        'detailedDescription',
         'potentialDeduction',
         'reductionStartYear',
         'reductionEndYear',
