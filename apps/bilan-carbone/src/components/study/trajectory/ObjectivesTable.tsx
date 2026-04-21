@@ -25,7 +25,7 @@ import { TrajectoryType } from '@repo/db-common/enums'
 import { ColumnDef, flexRender, getCoreRowModel, getExpandedRowModel, Row, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'
 import Fuse from 'fuse.js'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -96,6 +96,7 @@ const ObjectivesTable = ({
   tagFamilies = [],
   defaultSnbcSectoralTrajectoryId,
 }: Props) => {
+  const locale = useLocale()
   const tAction = useTranslations('common.action')
   const tDocumentation = useTranslations('documentationUrl')
   const t = useTranslations('study.transitionPlan.objectives')
@@ -319,7 +320,7 @@ const ObjectivesTable = ({
         ),
         accessorFn: (row) => row,
         cell: ({ row }) => {
-          return getDisplayedRates(row.original.reductionRate, row.original.correctedRate)
+          return getDisplayedRates(locale, row.original.reductionRate, row.original.correctedRate)
         },
       },
       {
