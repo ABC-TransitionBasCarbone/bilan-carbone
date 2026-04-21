@@ -39,6 +39,7 @@ import { Button } from '@repo/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ReferenceTrajectorySelectionSection } from '../study/transitionPlan/ReferenceTrajectorySelectionSection'
@@ -80,6 +81,7 @@ const TransitionPlanInitPage = ({
   isSectenOutdated,
 }: Props) => {
   const t = useTranslations('study.transitionPlan')
+  const tDocumentation = useTranslations('documentationUrl')
   const tBlock = useTranslations('study.transitionPlan.initialization.sectorBlock')
   const tNav = useTranslations('nav')
   const tStudyNav = useTranslations('study.navigation')
@@ -401,7 +403,28 @@ const TransitionPlanInitPage = ({
             title={t('initialization.onboarding.title')}
             description={customRich(t, 'initialization.onboarding.description')}
             storageKey="transition-plan-initialization"
-            detailedContent={customRich(t, 'initialization.onboarding.detailedInfo')}
+            detailedContent={customRich(t, 'initialization.onboarding.detailedInfo', {
+              link1: (children) => (
+                <Link href={tDocumentation('SNBC')} target="_blank" rel="noreferrer noopener">
+                  {children}
+                </Link>
+              ),
+              link2: (children) => (
+                <Link href={tDocumentation('SBTi')} target="_blank" rel="noreferrer noopener">
+                  {children}
+                </Link>
+              ),
+              link3: (children) => (
+                <Link href={tDocumentation('carbonBudget')} target="_blank" rel="noreferrer noopener">
+                  {children}
+                </Link>
+              ),
+              link4: (children) => (
+                <Link href={tDocumentation('carbonNeutrality')} target="_blank" rel="noreferrer noopener">
+                  {children}
+                </Link>
+              ),
+            })}
           />
 
           {/* Step 1 – Past studies */}

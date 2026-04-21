@@ -2535,6 +2535,10 @@
     "maturity": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/1-framing-the-approach/1.1-define-your-bilan-carbone-r-maturity-level",
     "monetaryRatio": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/4-accounting/4.3-method-for-selecting-emission-factors#efs-in-monetary-ratios",
     "dependencyAndResponsability": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/annexes/annexes/annex-1-key-accounting-principles-of-bilan-carbone-r#use-and-dependency",
-    "uncertainties": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/4-accounting/4.4-method-for-estimating-uncertainties/4.4.2-how-to-determine-them"
+    "uncertainties": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/4-accounting/4.4-method-for-estimating-uncertainties/4.4.2-how-to-determine-them",
+    "SNBC": "https://www.ecologie.gouv.fr/politiques-publiques/strategie-nationale-bas-carbone-snbc",
+    "SBTi": "https://sciencebasedtargets.org/net-zero",
+    "carbonBudget": "https://www.bilancarbone-methode.com/annexes/glossaire#b",
+    "carbonNeutrality": "https://www.bilancarbone-methode.com/annexes/glossaire#n"
   }
 }

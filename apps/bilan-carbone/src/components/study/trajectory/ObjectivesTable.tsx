@@ -27,6 +27,7 @@ import classNames from 'classnames'
 import Fuse from 'fuse.js'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Fragment, useMemo, useState } from 'react'
 import ObjectivesSubTable from './ObjectivesExpandedRow'
@@ -96,6 +97,7 @@ const ObjectivesTable = ({
   defaultSnbcSectoralTrajectoryId,
 }: Props) => {
   const tAction = useTranslations('common.action')
+  const tDocumentation = useTranslations('documentationUrl')
   const t = useTranslations('study.transitionPlan.objectives')
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
@@ -302,7 +304,16 @@ const ObjectivesTable = ({
               label="reduction-rates"
               tModal="study.transitionPlan.objectives"
             >
-              <p>{customRich(t, 'table.ratesGlossary.description')}</p>
+              <p>
+                {customRich(t, 'table.ratesGlossary.description', {
+                  link: (children) => (
+                    <Link href={tDocumentation('carbonBudget')} target="_blank" rel="noreferrer noopener">
+                      {children}
+                    </Link>
+                  ),
+                })}
+                ,
+              </p>
             </GlossaryIconModal>
           </div>
         ),
