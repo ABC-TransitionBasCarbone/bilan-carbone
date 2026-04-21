@@ -62,6 +62,26 @@ This is a Next.js monorepo for the "Bilan Carbone" platform, focused on carbon a
 - **No leading semicolons**: Do not use semicolons at the start of lines (e.g., `;(mock as jest.Mock)`). The project uses `"semi": false` in Prettier. For mocking in Jest, use `jest.mocked(fn)` to type mock functions instead of casting with leading semicolons.
 - **PR descriptions**: Always write PR descriptions that describe all changes made in the entire PR, not just the latest commit. Include every functional change, test addition, refactor, and convention update.
 
+## Best Practices
+
+### React & Next.js
+- **Server Components First**: Pages should be server components by default. Use `await params` instead of `React.use(params)` in page components.
+- **Avoid useEffect for Data Loading**: Load data server-side rather than in useEffect. This is an anti-pattern in React 19.
+- **Client Components**: Only use `'use client'` when you need hooks, event handlers, or browser APIs.
+- **Component Naming**: Page files export a component matching the route purpose (e.g., `SurveyPage` for a survey page route).
+
+### Styling
+- **No Inline Styles**: Use MUI's `sx` prop or styled components instead of inline `style` attributes.
+- **Typography**: Use Gilroy font family (`gilroy-regular, sans-serif`) consistently across all apps.
+- **Theme Consistency**: Follow the base theme patterns from `apps/bilan-carbone/src/environments/base/theme/theme.ts`.
+
+### Code Organization
+- **Separate Components**: Each component should be in its own file. Avoid multiple component definitions in a single file.
+- **Feature Folders**: Group related components by feature (e.g., `src/components/survey/`).
+
+### Internationalization
+- **Use Translations**: All user-facing strings should use the i18n system, not hardcoded text.
+
 ## Key Files & Directories
 
 - `src/db/emissionFactors.ts`: Main DB logic for emission factors.
