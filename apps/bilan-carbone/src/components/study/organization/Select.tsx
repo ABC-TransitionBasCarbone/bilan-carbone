@@ -41,9 +41,16 @@ const NextButton = ({ control, onClick, error, hasNoSites }: NextButtonProps) =>
 
   return (
     <div className="mt2">
-      <Button disabled={hasNoSelectedSites} data-testid="new-study-organization-button" onClick={onClick}>
-        {tCommon('next')}
-      </Button>
+      <div className="flex justify-end">
+        <Button
+          variant="contained"
+          disabled={hasNoSelectedSites}
+          data-testid="new-study-organization-button"
+          onClick={onClick}
+        >
+          {tCommon('next')}
+        </Button>
+      </div>
       {error && <FormHelperText error>{error}</FormHelperText>}
     </div>
   )
