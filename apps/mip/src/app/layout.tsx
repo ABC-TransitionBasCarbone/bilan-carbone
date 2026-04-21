@@ -4,11 +4,13 @@ import Providers from '@/providers/Providers'
 import { CssBaseline } from '@mui/material'
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter'
 import type { Metadata } from 'next'
+import { NextIntlClientProvider } from 'next-intl'
+import { getMessages } from 'next-intl/server'
 import { headers } from 'next/headers'
 
 export const metadata: Metadata = {
-  title: 'Bilan Carbone +',
-  description: 'Découvrez le logiciel Bilan Carbone +',
+  title: 'Mon Empreinte Pro',
+  description: 'Calculez votre empreinte carbone professionnelle',
 }
 
 interface Props {
@@ -16,6 +18,7 @@ interface Props {
 }
 
 const RootLayout = async ({ children }: Readonly<Props>) => {
+  const messages = await getMessages()
   const providerOptions = {
     key: 'mui',
     nonce: (await headers()).get('x-nonce') || undefined,
@@ -26,10 +29,12 @@ const RootLayout = async ({ children }: Readonly<Props>) => {
       <body>
         <AppRouterCacheProvider options={providerOptions}>
           <RouteChangeListener />
-          <Providers>
-            <CssBaseline />
-            {children}
-          </Providers>
+          <NextIntlClientProvider messages={messages}>
+            <Providers>
+              <CssBaseline />
+              {children}
+            </Providers>
+          </NextIntlClientProvider>
         </AppRouterCacheProvider>
       </body>
     </html>
