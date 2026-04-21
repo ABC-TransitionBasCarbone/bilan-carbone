@@ -11,6 +11,7 @@ This is a Next.js monorepo for the "Bilan Carbone" platform, focused on carbon a
 - **API**: Endpoints are in `src/app/api/`. Server-side logic is often abstracted into `src/services/` and `src/db/`.
 - **Types & Constants**: Shared types in `src/types/`, constants in `src/constants/`.
 - **Testing**: Cypress for E2E (`cypress/`), Jest for unit/integration (`src/tests/`).
+  - Prefer unit tests on server methods/business logic; avoid component tests unless explicitly requested.
 - **Scripts**: Data import/export and maintenance scripts in `src/scripts/`.
 
 ## Developer Workflows
