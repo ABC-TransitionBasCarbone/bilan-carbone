@@ -217,7 +217,9 @@ const ObjectivesExpandedRow = ({
             <Button variant="outlined" onClick={onAddObjective}>
               {t('table.addSubObjective')}
             </Button>
-          ) : null}
+          ) : (
+            <Typography variant="body2">{t('table.noSubObjectives')}</Typography>
+          )}
         </div>
       )}
     </div>

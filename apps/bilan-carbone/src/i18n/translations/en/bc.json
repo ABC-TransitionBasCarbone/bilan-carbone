@@ -1312,7 +1312,8 @@
           "period": "Period",
           "defaultObjectives": "Default objectives",
           "subObjectives": "Sub-objectives",
-          "addSubObjective": "Add sub-objective"
+          "addSubObjective": "Add sub-objective",
+          "noSubObjectives": "No sub-objectives yet"
         },
         "cancel": "Cancel",
         "deleteTrajectory": {
