@@ -15,8 +15,7 @@
       "@abc-transitionbascarbone/publicodes-count": ["./publicodes-packages/publicodes-count"],
       "@abc-transitionbascarbone/publicodes-clickson": ["./publicodes-packages/publicodes-clickson"],
       "@abc-transitionbascarbone/publicodes-tilt": ["./publicodes-packages/publicodes-tilt"]
-    },
-    "jsx": "preserve"
+    }
   },
   "ts-node": {
     "experimentalResolver": true,

@@ -516,7 +516,7 @@ const TrajectoryGraph = ({
                       <p>
                         {customRich(t, 'overshootTrajectoryGlossary.description', {
                           link: (children) => (
-                            <Link href={tDocumentation('carbon budget')} target="_blank" rel="noreferrer noopener">
+                            <Link href={tDocumentation('carbonBudget')} target="_blank" rel="noreferrer noopener">
                               {children}
                             </Link>
                           ),

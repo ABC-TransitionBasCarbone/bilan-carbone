@@ -2538,7 +2538,7 @@
     "uncertainties": "https://www.bilancarbone-methode.com/4-comptabilisation/4.4-methode-destimation-des-incertitudes/4.4.2-comment-les-determiner#determination-qualitative",
     "SNBC": "https://www.ecologie.gouv.fr/politiques-publiques/strategie-nationale-bas-carbone-snbc",
     "SBTi": "https://sciencebasedtargets.org/net-zero",
-    "carbon budget": "https://www.bilancarbone-methode.com/annexes/glossaire#b",
-    "carbon neutrality": "https://www.bilancarbone-methode.com/annexes/glossaire#n"
+    "carbonBudget": "https://www.bilancarbone-methode.com/annexes/glossaire#b",
+    "carbonNeutrality": "https://www.bilancarbone-methode.com/annexes/glossaire#n"
   }
 }

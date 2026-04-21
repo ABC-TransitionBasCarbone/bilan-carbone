@@ -415,12 +415,12 @@ const TransitionPlanInitPage = ({
                 </Link>
               ),
               link3: (children) => (
-                <Link href={tDocumentation('carbon budget')} target="_blank" rel="noreferrer noopener">
+                <Link href={tDocumentation('carbonBudget')} target="_blank" rel="noreferrer noopener">
                   {children}
                 </Link>
               ),
               link4: (children) => (
-                <Link href={tDocumentation('carbon neutrality')} target="_blank" rel="noreferrer noopener">
+                <Link href={tDocumentation('carbonNeutrality')} target="_blank" rel="noreferrer noopener">
                   {children}
                 </Link>
               ),
