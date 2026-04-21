@@ -1,8 +1,3 @@
-/**
- * Survey Component
- * Main component for displaying and managing survey questions
- */
-
 'use client'
 
 import { useEffect, useMemo } from 'react'
@@ -17,6 +12,7 @@ import {
   Alert,
 } from '@mui/material'
 import { ArrowBack, ArrowForward, Check } from '@mui/icons-material'
+import { useTranslations } from 'next-intl'
 import { SurveyEngine, Survey as SurveyType } from '@repo/survey'
 import { useSurveyStore } from '@/store/surveyStore'
 import { QuestionRenderer } from './QuestionRenderer'
@@ -27,6 +23,7 @@ interface SurveyProps {
 }
 
 export function Survey({ survey, responseId }: SurveyProps) {
+  const t = useTranslations('survey')
   const {
     survey: loadedSurvey,
     response,
@@ -38,7 +35,6 @@ export function Survey({ survey, responseId }: SurveyProps) {
     goToPrevious,
   } = useSurveyStore()
 
-  // Load survey on mount
   useEffect(() => {
     loadSurvey(survey, responseId)
   }, [survey, responseId, loadSurvey])
@@ -51,7 +47,7 @@ export function Survey({ survey, responseId }: SurveyProps) {
   if (!engine || !response) {
     return (
       <Container maxWidth="md" sx={{ py: 4 }}>
-        <Typography>Loading survey...</Typography>
+        <Typography>{t('loading')}</Typography>
       </Container>
     )
   }
@@ -68,13 +64,13 @@ export function Survey({ survey, responseId }: SurveyProps) {
             <Box textAlign="center" py={4}>
               <Check sx={{ fontSize: 80, color: 'success.main', mb: 2 }} />
               <Typography variant="h4" gutterBottom>
-                Survey Completed!
+                {t('completed.title')}
               </Typography>
               <Typography variant="body1" color="text.secondary" paragraph>
-                Thank you for completing the survey.
+                {t('completed.description')}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Response ID: {response.responseId}
+                {t('completed.responseId', { id: response.responseId })}
               </Typography>
             </Box>
           </CardContent>
@@ -86,7 +82,7 @@ export function Survey({ survey, responseId }: SurveyProps) {
   if (!currentQuestion) {
     return (
       <Container maxWidth="md" sx={{ py: 4 }}>
-        <Alert severity="error">No question found</Alert>
+        <Alert severity="error">{t('notFound')}</Alert>
       </Container>
     )
   }
@@ -106,27 +102,27 @@ export function Survey({ survey, responseId }: SurveyProps) {
         )}
       </Box>
 
-      {/* Progress Bar */}
       <Box mb={3}>
         <Box display="flex" justifyContent="space-between" mb={1}>
           <Typography variant="body2" color="text.secondary">
-            Question {Math.min(currentQuestionIndex + 1, survey.questions.length)} of {survey.questions.length}
+            {t('progress.question', {
+              current: Math.min(currentQuestionIndex + 1, survey.questions.length),
+              total: survey.questions.length,
+            })}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            {progress}% Complete
+            {t('progress.complete', { percent: progress })}
           </Typography>
         </Box>
         <LinearProgress variant="determinate" value={progress} />
       </Box>
 
-      {/* Error Alert */}
       {error && (
         <Alert severity="error" sx={{ mb: 3 }} onClose={() => {}}>
           {error}
         </Alert>
       )}
 
-      {/* Question Card */}
       <Card sx={{ mb: 3 }}>
         <CardContent>
           <QuestionRenderer
@@ -138,7 +134,6 @@ export function Survey({ survey, responseId }: SurveyProps) {
         </CardContent>
       </Card>
 
-      {/* Navigation Buttons */}
       <Box display="flex" justifyContent="space-between">
         <Button
           variant="outlined"
@@ -146,7 +141,7 @@ export function Survey({ survey, responseId }: SurveyProps) {
           onClick={goToPrevious}
           disabled={!engine.hasPreviousQuestion()}
         >
-          Previous
+          {t('navigation.previous')}
         </Button>
 
         {engine.hasNextQuestion() ? (
@@ -155,7 +150,7 @@ export function Survey({ survey, responseId }: SurveyProps) {
             endIcon={<ArrowForward />}
             onClick={goToNext}
           >
-            Next
+            {t('navigation.next')}
           </Button>
         ) : (
           <Button
@@ -164,15 +159,14 @@ export function Survey({ survey, responseId }: SurveyProps) {
             endIcon={<Check />}
             onClick={goToNext}
           >
-            Complete
+            {t('navigation.complete')}
           </Button>
         )}
       </Box>
 
-      {/* Response ID */}
       <Box mt={4} textAlign="center">
         <Typography variant="caption" color="text.secondary">
-          Response ID: {response.responseId}
+          {t('completed.responseId', { id: response.responseId })}
         </Typography>
       </Box>
     </Container>

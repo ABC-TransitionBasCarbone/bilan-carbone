@@ -74,9 +74,16 @@ This is a Next.js monorepo for the "Bilan Carbone" platform, focused on carbon a
 ### Code Organization
 - **Separate Components**: Each component should be in its own file. Avoid multiple component definitions in a single file.
 - **Feature Folders**: Group related components by feature (e.g., `src/components/survey/`).
+- **Limit Comments**: Avoid unnecessary comments. Code should be self-documenting. Only add comments for:
+  - Complex business logic that isn't obvious from the code
+  - Non-obvious technical decisions or workarounds
+  - Public API documentation (JSDoc for exported functions/types)
+  - DO NOT add simple descriptive comments like "// Text Question Input Component" or "// Progress Bar"
 
 ### Internationalization
-- **Use Translations**: All user-facing strings should use the i18n system, not hardcoded text.
+- **Use Translations**: All user-facing strings should use the i18n system (next-intl), not hardcoded text.
+- **Translation Pattern**: Use `useTranslations('namespace')` in client components, `getTranslations('namespace')` in server components.
+- **Translation Files**: Store translations in `src/i18n/translations/{locale}/{namespace}.json`.
 
 ## Key Files & Directories
 

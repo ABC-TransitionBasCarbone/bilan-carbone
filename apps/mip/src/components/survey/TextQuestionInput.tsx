@@ -1,8 +1,5 @@
-/**
- * Text Question Input Component
- */
-
 import { FormControl, FormHelperText, TextField } from '@mui/material'
+import { useTranslations } from 'next-intl'
 import { TextQuestion } from '@repo/survey'
 
 interface TextQuestionInputProps {
@@ -18,6 +15,8 @@ export function TextQuestionInput({
   onChange,
   error,
 }: TextQuestionInputProps) {
+  const t = useTranslations('survey')
+
   return (
     <FormControl fullWidth error={!!error}>
       <TextField
@@ -35,7 +34,10 @@ export function TextQuestionInput({
       />
       {question.validation?.maxLength && (
         <FormHelperText>
-          {value?.length || 0} / {question.validation.maxLength} characters
+          {t('characterCount', {
+            current: value?.length || 0,
+            max: question.validation.maxLength,
+          })}
         </FormHelperText>
       )}
     </FormControl>

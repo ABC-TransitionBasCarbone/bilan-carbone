@@ -1,7 +1,3 @@
-/**
- * Choice Question Input Component
- */
-
 import {
   FormControl,
   FormControlLabel,

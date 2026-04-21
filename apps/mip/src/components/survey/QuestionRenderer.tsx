@@ -1,8 +1,3 @@
-/**
- * Question Renderer Component
- * Renders different question types based on the question configuration
- */
-
 import { Typography } from '@mui/material'
 import { Question } from '@repo/survey'
 import { TextQuestionInput } from './TextQuestionInput'
