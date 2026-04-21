@@ -41,7 +41,7 @@ const NextButton = ({ control, onClick, error, hasNoSites }: NextButtonProps) =>
 
   return (
     <div className="mt2">
-      <div className="justify-end">
+      <div className="flex justify-end">
         <Button
           variant="contained"
           disabled={hasNoSelectedSites}
