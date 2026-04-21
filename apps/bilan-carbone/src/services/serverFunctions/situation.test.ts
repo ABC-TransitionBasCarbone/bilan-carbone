@@ -1,7 +1,7 @@
 import * as authModule from '@/services/auth'
 import * as situationDbModule from '@/db/situation'
 import * as studyDbModule from '@/db/study'
-import * as studyPermissionsModule from '@/services/permissions/study'
+import * as situationPermissionsModule from '@/services/permissions/situation'
 import { Environment } from '@repo/db-common/enums'
 import { saveSituation } from './situation'
 
@@ -21,8 +21,11 @@ jest.mock('../../db/study', () => ({
 }))
 
 jest.mock('../permissions/study', () => ({
-  hasEditAccessOnStudy: jest.fn(),
   hasReadAccessOnStudy: jest.fn(),
+}))
+
+jest.mock('../permissions/situation', () => ({
+  canSaveSituationOnStudy: jest.fn(),
 }))
 
 jest.mock('../permissions/check', () => ({
@@ -31,7 +34,7 @@ jest.mock('../permissions/check', () => ({
 
 const mockAuth = authModule.auth as jest.Mock
 const mockDbActualizedAuth = authModule.dbActualizedAuth as jest.Mock
-const mockHasEditAccessOnStudy = studyPermissionsModule.hasEditAccessOnStudy as jest.Mock
+const mockCanSaveSituationOnStudy = situationPermissionsModule.canSaveSituationOnStudy as jest.Mock
 const mockGetStudyById = studyDbModule.getStudyById as jest.Mock
 const mockUpsertSituation = situationDbModule.upsertSituation as jest.Mock
 
@@ -49,7 +52,7 @@ describe('saveSituation', () => {
     jest.clearAllMocks()
     mockAuth.mockResolvedValue(mockSession)
     mockDbActualizedAuth.mockResolvedValue(mockSession)
-    mockHasEditAccessOnStudy.mockResolvedValue(true)
+    mockCanSaveSituationOnStudy.mockResolvedValue(true)
     mockGetStudyById.mockResolvedValue({
       id: 'study-1',
       contributors: [{ accountId: 'account-1' }],
@@ -62,11 +65,12 @@ describe('saveSituation', () => {
     const result = await saveSituation('study-1', 'site-1', {}, {}, 'v1')
 
     expect(result.success).toBe(true)
+    expect(mockCanSaveSituationOnStudy).toHaveBeenCalled()
     expect(mockUpsertSituation).toHaveBeenCalledWith('site-1', {}, {}, 'v1')
   })
 
   it('saves situation for clickson contributor without edit access', async () => {
-    mockHasEditAccessOnStudy.mockResolvedValue(false)
+    mockCanSaveSituationOnStudy.mockResolvedValue(true)
 
     const result = await saveSituation('study-1', 'site-1', {}, {}, 'v1')
 
@@ -75,12 +79,7 @@ describe('saveSituation', () => {
   })
 
   it('returns not authorized when user has no edit access and is not clickson contributor', async () => {
-    mockHasEditAccessOnStudy.mockResolvedValue(false)
-    mockGetStudyById.mockResolvedValue({
-      id: 'study-1',
-      contributors: [{ accountId: 'other-account' }],
-      sites: [{ id: 'site-1' }],
-    })
+    mockCanSaveSituationOnStudy.mockResolvedValue(false)
 
     const result = await saveSituation('study-1', 'site-1', {}, {}, 'v1')
 
@@ -98,7 +97,7 @@ describe('saveSituation', () => {
       ...mockSession,
       user: { ...mockSession.user, environment: Environment.CUT },
     })
-    mockHasEditAccessOnStudy.mockResolvedValue(false)
+    mockCanSaveSituationOnStudy.mockResolvedValue(false)
 
     const result = await saveSituation('study-1', 'site-1', {}, {}, 'v1')
 

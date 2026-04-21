@@ -4,12 +4,12 @@ import { getSituationByStudySite, getSituationsByStudySites, upsertSituation } f
 import { getStudyById } from '@/db/study'
 import { ListLayoutSituations } from '@/lib/publicodes/context'
 import { withServerResponse } from '@/utils/serverResponse'
-import { Environment } from '@repo/db-common/enums'
 import type { InputJsonValue } from '@prisma/client/runtime/client'
 import { Situation } from 'publicodes'
 import { dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
-import { hasEditAccessOnStudy, hasReadAccessOnStudy } from '../permissions/study'
+import { canSaveSituationOnStudy } from '../permissions/situation'
+import { hasReadAccessOnStudy } from '../permissions/study'
 
 export const loadMappedSituation = async (studyId: string, studySiteId: string, mapping: Record<string, string>) =>
   withServerResponse('loadMappedSituation', async () => {
@@ -70,11 +70,8 @@ export const saveSituation = async (
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const hasEditAccess = await hasEditAccessOnStudy(studyId, session)
-    const isClicksonContributor =
-      session.user.environment === Environment.CLICKSON &&
-      study.contributors.some((contributor) => contributor.accountId === session.user.accountId)
-    if (!hasEditAccess && !isClicksonContributor) {
+    const canSaveSituation = await canSaveSituationOnStudy(studyId, study, session)
+    if (!canSaveSituation) {
       throw new Error(NOT_AUTHORIZED)
     }
 
