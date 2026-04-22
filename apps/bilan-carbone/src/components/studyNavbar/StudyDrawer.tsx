@@ -85,7 +85,11 @@ const StudyDrawer = ({
                             onClick={(e) => {
                               e.preventDefault()
                               e.stopPropagation()
-                              setGlossaryInfo({ id: `${sectionIndex}-${linkIndex}`, label: link.label, info: link.info! })
+                              setGlossaryInfo({
+                                id: `${sectionIndex}-${linkIndex}`,
+                                label: link.label,
+                                info: link.info!,
+                              })
                             }}
                           />
                         </>
