@@ -190,20 +190,20 @@ describe('Study Service', () => {
 
   describe('downloadStudyResults', () => {
     it('should correctly ventilate consolidated results by site using appropriate ID types', async () => {
-      const siteA = getMockedFullStudySite()
-      const siteB = getMockedFullStudySite()
+      const studySiteA = getMockedFullStudySite()
+      const studySiteB = getMockedFullStudySite()
       const study = getMockeFullStudy({
         organizationVersion: { environment: Environment.BC },
         sites: [
           {
-            ...siteA,
+            ...studySiteA,
             id: 'study-site-a',
-            site: { ...siteA.site, id: 'site-a', name: 'Site A' },
+            site: { ...studySiteA.site, id: 'site-a', name: 'Site A' },
           },
           {
-            ...siteB,
+            ...studySiteB,
             id: 'study-site-b',
-            site: { ...siteB.site, id: 'site-b', name: 'Site B' },
+            site: { ...studySiteB.site, id: 'site-b', name: 'Site B' },
           },
         ],
         emissionSources: [
@@ -233,11 +233,16 @@ describe('Study Service', () => {
 
       const findSiteTotalRow = (siteName: string) => {
         const siteRowIndex = rows.findIndex((row) => row[0] === siteName)
+        if (siteRowIndex < 0) {
+          return undefined
+        }
         return rows.slice(siteRowIndex).find((row) => row[0] === 'total')
       }
       const siteATotalRow = findSiteTotalRow('Site A')
       const siteBTotalRow = findSiteTotalRow('Site B')
 
+      expect(siteATotalRow).toBeDefined()
+      expect(siteBTotalRow).toBeDefined()
       expect(siteATotalRow?.[2]).toBe(10)
       expect(siteBTotalRow?.[2]).toBe(20)
     })
