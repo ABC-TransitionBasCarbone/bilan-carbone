@@ -4,18 +4,18 @@
     "completed": {
       "title": "Sondage terminé !",
       "description": "Merci d'avoir complété le sondage.",
-      "responseId": "ID de réponse : {{id}}"
+      "responseId": "ID de réponse : {id}"
     },
     "notFound": "Aucune question trouvée",
     "progress": {
-      "question": "Question {{current}} sur {{total}}",
-      "complete": "{{percent}}% Complété"
+      "question": "Question {current} sur {total}",
+      "complete": "{percent}% Complété"
     },
     "navigation": {
       "previous": "Précédent",
       "next": "Suivant",
       "complete": "Terminer"
     },
-    "characterCount": "{{current}} / {{max}} caractères"
+    "characterCount": "{current} / {max} caractères"
   }
 }
