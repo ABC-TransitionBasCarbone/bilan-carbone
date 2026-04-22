@@ -381,6 +381,7 @@ const TrajectoryGraph = ({
           label: t('actionBasedTrajectory'),
           color: 'var(--trajectory-action)',
           isCustom: true,
+          isAction: true,
         }),
       )
     }
@@ -507,7 +508,7 @@ const TrajectoryGraph = ({
                     <circle cx="12" cy="12" r="6" fill={s.color as string} />
                   </SvgIcon>
                   <Typography variant="body2">{s.label as string}</Typography>
-                  {s.dataType === 'current' && !s.withinThreshold && (
+                  {s.dataType === 'current' && !s.withinThreshold && !s.isAction && (
                     <GlossaryIconModal
                       title="overshootTrajectoryGlossary.title"
                       label="current-trajectory"
@@ -529,12 +530,14 @@ const TrajectoryGraph = ({
               ))}
           </div>
           <CustomTrajectoryLegend
-            series={seriesCreated.map((s) => ({
-              label: s.label as string,
-              color: s.color as string,
-              dataType: s.dataType,
-              withinThreshold: s.withinThreshold,
-            }))}
+            series={seriesCreated
+              .filter((s) => s.label)
+              .map((s) => ({
+                label: s.label as string,
+                color: s.color as string,
+                dataType: s.dataType,
+                withinThreshold: s.withinThreshold,
+              }))}
             hiddenLabels={hiddenTrajectoryLabels}
             onToggle={onToggleFilter}
             previousLabel={(year: number) => t('previousTrajectories', { year })}
