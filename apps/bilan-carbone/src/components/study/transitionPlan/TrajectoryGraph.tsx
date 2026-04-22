@@ -36,7 +36,7 @@ import Link from 'next/link'
 import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import DrawingAreaBox, { DrawingProps } from '../charts/DrawingArea'
 import CustomTrajectoryLegend from '../trajectory/CustomTrajectoryLegend'
-import { buildTrajectorySeries, formatValue, getCustomTrajectoryColor } from './TrajectoryGraph.helper'
+import { buildTrajectorySeries, getCustomTrajectoryColor } from './TrajectoryGraph.helper'
 import styles from './TrajectoryGraph.module.css'
 import { BottomLeftMultilineText } from './TrajectoryGraphDrawingArea'
 
@@ -288,7 +288,7 @@ const TrajectoryGraph = ({
     }))
     studyPoints.push({ year: studyStartYear, value: studyEmissions, label: name })
 
-    return studyPoints.map(({ year, value, label }) => ({
+    return studyPoints.map(({ year, value }) => ({
       type: 'line' as const,
       id: `study-point-${year}`,
       data: yearsToDisplay.map((y) => (y === year ? value : null)),
@@ -297,8 +297,7 @@ const TrajectoryGraph = ({
       disableHighlight: true,
       connectNulls: false,
       curve: 'linear' as const,
-      label,
-      valueFormatter: formatValue,
+      valueFormatter: () => null,
     }))
   }, [pastStudies, studyStartYear, studyEmissions, yearsToDisplay, name])
 
