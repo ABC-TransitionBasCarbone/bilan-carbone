@@ -4,6 +4,10 @@ import { Environment, UserStatus } from '@repo/db-common/enums'
 jest.mock('next-intl/server', () => ({
   getTranslations: jest.fn(() => (key: string) => key),
 }))
+jest.mock('next-auth', () => ({
+  getServerSession: jest.fn(),
+}))
+jest.mock('next-auth/providers/credentials', () => jest.fn())
 
 import { getActiveAccountsForEnvironment } from './auth'
 
