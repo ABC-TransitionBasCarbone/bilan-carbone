@@ -109,7 +109,10 @@ const TrajectoryCreationModal = ({
   const [activeStep, setActiveStep] = useState(isEditMode || !isFirstCreation ? 1 : 0)
   const [isLoading, setIsLoading] = useState(false)
   const { callServerFunction } = useServerFunction()
-  const trajectorySchema = createTrajectorySchema()
+  const existingSubObjectiveStartYears = trajectory
+    ? trajectory.objectives.filter((o) => !o.isDefault).map((o) => o.startYear!)
+    : []
+  const trajectorySchema = createTrajectorySchema({ existingSubObjectiveStartYears })
 
   const {
     control,

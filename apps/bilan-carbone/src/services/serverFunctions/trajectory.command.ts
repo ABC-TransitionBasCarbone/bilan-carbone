@@ -55,7 +55,9 @@ export const createObjectiveSchema = () =>
       return startYear < targetYear
     }, setCustomMessage('startYearMustBeBeforeTargetYear'))
 
-export const createTrajectorySchema = () => {
+export const createTrajectorySchema = ({
+  existingSubObjectiveStartYears = [],
+}: { existingSubObjectiveStartYears?: number[] } = {}) => {
   const objectiveSchema = createObjectiveSchema()
   return z
     .object({
@@ -86,6 +88,36 @@ export const createTrajectorySchema = () => {
         (data.sectorPercentages !== null && data.sectorPercentages !== undefined),
       setCustomIssue(['sectorPercentages'], 'sectorPercentagesRequired'),
     )
+    .superRefine((data, ctx) => {
+      if (!data.referenceYear) {
+        return
+      }
+      const refYear = parseInt(data.referenceYear, 10)
+
+      data.objectives.forEach((obj, index) => {
+        if (obj.targetYear && parseInt(obj.targetYear, 10) <= refYear) {
+          ctx.addIssue({
+            code: 'custom',
+            path: ['objectives', index, 'targetYear'],
+            ...setCustomMessage('yearMustBeAfterReferenceYear'),
+          })
+        }
+      })
+
+      const objectiveTargetYears = data.objectives
+        .map((obj) => (obj.targetYear ? parseInt(obj.targetYear, 10) : null))
+        .filter((y): y is number => y !== null)
+      const minObjectiveTargetYear = objectiveTargetYears.length > 0 ? Math.min(...objectiveTargetYears) : null
+      const minSubObjectiveStartYear =
+        existingSubObjectiveStartYears.length > 0 ? Math.min(...existingSubObjectiveStartYears) : null
+
+      if (minObjectiveTargetYear !== null && refYear >= minObjectiveTargetYear) {
+        ctx.addIssue(setCustomIssue(['referenceYear'], 'referenceYearMustBeBeforeObjectiveTargetYear'))
+      }
+      if (minSubObjectiveStartYear !== null && refYear > minSubObjectiveStartYear) {
+        ctx.addIssue(setCustomIssue(['referenceYear'], 'referenceYearMustBeBeforeSubObjectiveStartYear'))
+      }
+    })
 }
 
 export type TrajectoryFormData = z.infer<ReturnType<typeof createTrajectorySchema>>
