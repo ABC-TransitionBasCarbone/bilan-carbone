@@ -55,6 +55,7 @@ const ActionModal = ({
   tagFamilies,
 }: Props) => {
   const [activeStep, setActiveStep] = useState(0)
+
   const [toast, setToast] = useState<{ text: string; color: ToastColors }>(emptyToast)
   const [organizationMembers, setOrganizationMembers] = useState<{ label: string; value: string }[]>([])
   const t = useTranslations('study.transitionPlan.actions.addModal')
@@ -198,8 +199,6 @@ const ActionModal = ({
     if (step === 0) {
       return [
         'title',
-        'steps',
-        'detailedDescription',
         'potentialDeduction',
         'reductionStartYear',
         'reductionEndYear',
@@ -253,6 +252,7 @@ const ActionModal = ({
         open={open}
         label="add-action-modal"
         onClose={handleClose}
+        disableBackdropClose
         title={t('add')}
         activeStep={activeStep}
         steps={steps}
