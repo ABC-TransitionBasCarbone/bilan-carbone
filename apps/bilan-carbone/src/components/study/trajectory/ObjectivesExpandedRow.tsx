@@ -196,21 +196,25 @@ const ObjectivesExpandedRow = ({
           title={t('table.defaultObjectives')}
         />
       )}
-      <div className="flex flex-col gapped-2">
-        <div className="flex align-end justify-between">
-          <Typography variant="body1" color="text.secondary">
-            {t('table.subObjectives')}
-          </Typography>
-          {canEdit && subObjectives.length > 0 && <TableActionButton type="add" onClick={onAddObjective} />}
+      {!isDefaultSnbc && (
+        <div className="flex flex-col gapped-2">
+          <div className="flex align-end justify-between">
+            <Typography variant="body1" color="text.secondary">
+              {t('table.subObjectives')}
+            </Typography>
+            {canEdit && subObjectives.length > 0 && <TableActionButton type="add" onClick={onAddObjective} />}
+          </div>
+          {subObjectives.length > 0 ? (
+            <ObjectivesInnerTable rows={subObjectiveRows} canEdit={canEdit} isDefaultSnbc={isDefaultSnbc} />
+          ) : canEdit ? (
+            <Button variant="outlined" onClick={onAddObjective}>
+              {t('table.addSubObjective')}
+            </Button>
+          ) : (
+            <Typography variant="body2">{t('table.noSubObjectives')}</Typography>
+          )}
         </div>
-        {subObjectives.length > 0 ? (
-          <ObjectivesInnerTable rows={subObjectiveRows} canEdit={canEdit} isDefaultSnbc={isDefaultSnbc} />
-        ) : (
-          <Button variant="outlined" onClick={onAddObjective}>
-            {t('table.addSubObjective')}
-          </Button>
-        )}
-      </div>
+      )}
     </div>
   )
 }
