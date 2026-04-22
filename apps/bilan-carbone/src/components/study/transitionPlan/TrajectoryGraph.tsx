@@ -59,7 +59,7 @@ interface Props {
   titleAction?: ReactNode
   storageKey: string
   isTrajectoryPage?: boolean
-  objectiveGroupsByTrajectoryId?: Map<string, ObjectiveGroup[]>
+  objectiveGroupsByTrajectoryId: Map<string, ObjectiveGroup[]>
 }
 
 const TrajectoryGraph = ({

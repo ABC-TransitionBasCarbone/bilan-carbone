@@ -55,7 +55,7 @@ interface CalculateTrajectoriesWithHistoryParams {
   selectedSbtiTrajectories: string[]
   selectedCustomTrajectoryIds: string[]
   sectenData?: SectenInfo[]
-  objectiveGroupsByTrajectoryId?: Map<string, ObjectiveGroup[]>
+  objectiveGroupsByTrajectoryId: Map<string, ObjectiveGroup[]>
 }
 
 interface TrajectoryYearBounds {

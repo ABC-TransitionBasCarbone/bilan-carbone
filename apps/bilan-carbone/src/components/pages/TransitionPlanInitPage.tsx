@@ -28,7 +28,7 @@ import {
   initializeTransitionPlan,
   updateTransitionPlanSectenVersion,
 } from '@/services/serverFunctions/transitionPlan'
-import { TrajectoryWithObjectivesAndScope } from '@/types/trajectory.types'
+import { ObjectiveGroup, TrajectoryWithObjectivesAndScope } from '@/types/trajectory.types'
 import { compareSectenVersions } from '@/utils/secten'
 import { calculateSectoralSNBCReductionRates, getDefaultSnbcSectoralTrajectory } from '@/utils/snbc'
 import { getInitialCurrentStep, readStoredStringArray } from '@/utils/transitionPlan.utils'
@@ -526,6 +526,7 @@ const TransitionPlanInitPage = ({
               showTitle={false}
               showActionTrajectory={false}
               storageKey={`transition-plan-init-${transitionPlan!.id}`}
+              objectiveGroupsByTrajectoryId={new Map<string, ObjectiveGroup[]>()}
             />
           </OnboardingSectionStep>
           {!isComplete && (
