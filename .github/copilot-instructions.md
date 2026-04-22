@@ -67,9 +67,10 @@ This is a Next.js monorepo for the "Bilan Carbone" platform, focused on carbon a
 - **Component Naming**: Page files export a component matching the route purpose (e.g., `SurveyPage` for a survey page route).
 
 ### Styling
-- **No Inline Styles**: Use MUI's `sx` prop or styled components instead of inline `style` attributes.
+- **No Inline Styles or sx Prop**: Never use inline `style` attributes or MUI's `sx` prop. Use CSS modules (`.module.css`) instead.
 - **Typography**: Use Gilroy font family (`gilroy-regular, sans-serif`) consistently across all apps.
 - **Theme Consistency**: Follow the base theme patterns from `apps/bilan-carbone/src/environments/base/theme/theme.ts`.
+- **MUI Component Props**: Use `slotProps` instead of the deprecated `inputProps`. For example, use `slotProps={{ htmlInput: { maxLength: 100 } }}` on a `TextField`.
 
 ### Code Organization
 - **Separate Components**: Each component should be in its own file. Avoid multiple component definitions in a single file.

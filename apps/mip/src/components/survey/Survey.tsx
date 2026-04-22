@@ -1,21 +1,13 @@
 'use client'
 
 import { useEffect, useMemo } from 'react'
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Container,
-  LinearProgress,
-  Typography,
-  Alert,
-} from '@mui/material'
+import { Alert, Button, Card, CardContent, Container, LinearProgress, Typography } from '@mui/material'
 import { ArrowBack, ArrowForward, Check } from '@mui/icons-material'
 import { useTranslations } from 'next-intl'
 import { SurveyEngine, Survey as SurveyType } from '@repo/survey'
 import { useSurveyStore } from '@/store/surveyStore'
 import { QuestionRenderer } from './QuestionRenderer'
+import styles from './Survey.module.css'
 
 interface SurveyProps {
   survey: SurveyType
@@ -46,7 +38,7 @@ export function Survey({ survey, responseId }: SurveyProps) {
 
   if (!engine || !response) {
     return (
-      <Container maxWidth="md" sx={{ py: 4 }}>
+      <Container maxWidth="md" className={styles.container}>
         <Typography>{t('loading')}</Typography>
       </Container>
     )
@@ -58,11 +50,11 @@ export function Survey({ survey, responseId }: SurveyProps) {
 
   if (isComplete) {
     return (
-      <Container maxWidth="md" sx={{ py: 4 }}>
+      <Container maxWidth="md" className={styles.container}>
         <Card>
           <CardContent>
-            <Box textAlign="center" py={4}>
-              <Check sx={{ fontSize: 80, color: 'success.main', mb: 2 }} />
+            <div className={styles.completedContent}>
+              <Check className={styles.checkIcon} />
               <Typography variant="h4" gutterBottom>
                 {t('completed.title')}
               </Typography>
@@ -72,7 +64,7 @@ export function Survey({ survey, responseId }: SurveyProps) {
               <Typography variant="body2" color="text.secondary">
                 {t('completed.responseId', { id: response.responseId })}
               </Typography>
-            </Box>
+            </div>
           </CardContent>
         </Card>
       </Container>
@@ -81,7 +73,7 @@ export function Survey({ survey, responseId }: SurveyProps) {
 
   if (!currentQuestion) {
     return (
-      <Container maxWidth="md" sx={{ py: 4 }}>
+      <Container maxWidth="md" className={styles.container}>
         <Alert severity="error">{t('notFound')}</Alert>
       </Container>
     )
@@ -90,8 +82,8 @@ export function Survey({ survey, responseId }: SurveyProps) {
   const currentAnswer = engine.getAnswer(currentQuestion.id)
 
   return (
-    <Container maxWidth="md" sx={{ py: 4 }}>
-      <Box mb={3}>
+    <Container maxWidth="md" className={styles.container}>
+      <div className={styles.header}>
         <Typography variant="h3" gutterBottom>
           {survey.title}
         </Typography>
@@ -100,10 +92,10 @@ export function Survey({ survey, responseId }: SurveyProps) {
             {survey.description}
           </Typography>
         )}
-      </Box>
+      </div>
 
-      <Box mb={3}>
-        <Box display="flex" justifyContent="space-between" mb={1}>
+      <div className={styles.progress}>
+        <div className={styles.progressLabels}>
           <Typography variant="body2" color="text.secondary">
             {t('progress.question', {
               current: Math.min(currentQuestionIndex + 1, survey.questions.length),
@@ -113,17 +105,17 @@ export function Survey({ survey, responseId }: SurveyProps) {
           <Typography variant="body2" color="text.secondary">
             {t('progress.complete', { percent: progress })}
           </Typography>
-        </Box>
+        </div>
         <LinearProgress variant="determinate" value={progress} />
-      </Box>
+      </div>
 
       {error && (
-        <Alert severity="error" sx={{ mb: 3 }} onClose={() => {}}>
+        <Alert severity="error" className={styles.alert} onClose={() => {}}>
           {error}
         </Alert>
       )}
 
-      <Card sx={{ mb: 3 }}>
+      <Card className={styles.questionCard}>
         <CardContent>
           <QuestionRenderer
             question={currentQuestion}
@@ -134,41 +126,28 @@ export function Survey({ survey, responseId }: SurveyProps) {
         </CardContent>
       </Card>
 
-      <Box display="flex" justifyContent="space-between">
-        <Button
-          variant="outlined"
-          startIcon={<ArrowBack />}
-          onClick={goToPrevious}
-          disabled={!engine.hasPreviousQuestion()}
-        >
+      <div className={styles.navigation}>
+        <Button variant="outlined" startIcon={<ArrowBack />} onClick={goToPrevious} disabled={!engine.hasPreviousQuestion()}>
           {t('navigation.previous')}
         </Button>
 
         {engine.hasNextQuestion() ? (
-          <Button
-            variant="contained"
-            endIcon={<ArrowForward />}
-            onClick={goToNext}
-          >
+          <Button variant="contained" endIcon={<ArrowForward />} onClick={goToNext}>
             {t('navigation.next')}
           </Button>
         ) : (
-          <Button
-            variant="contained"
-            color="success"
-            endIcon={<Check />}
-            onClick={goToNext}
-          >
+          <Button variant="contained" color="success" endIcon={<Check />} onClick={goToNext}>
             {t('navigation.complete')}
           </Button>
         )}
-      </Box>
+      </div>
 
-      <Box mt={4} textAlign="center">
+      <div className={styles.footer}>
         <Typography variant="caption" color="text.secondary">
           {t('completed.responseId', { id: response.responseId })}
         </Typography>
-      </Box>
+      </div>
     </Container>
   )
 }
+
