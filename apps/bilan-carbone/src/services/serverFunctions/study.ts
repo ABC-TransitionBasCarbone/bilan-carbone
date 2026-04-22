@@ -880,6 +880,7 @@ const getOrCreateUserAndSendStudyInvite = async (
           status: UserStatus.VALIDATED,
           role: Role.DEFAULT,
           environment: study.organizationVersion.environment,
+          organizationVersionId: study.organizationVersion.id,
         },
       },
     })
@@ -910,10 +911,11 @@ const getOrCreateUserAndSendStudyInvite = async (
         role: Role.COLLABORATOR,
         environment: organizationVersion.environment,
         status: UserStatus.VALIDATED,
+        organizationVersion: { connect: { id: organizationVersion.id } },
       })) as AccountWithUser
     } else if (account.status === UserStatus.IMPORTED) {
       await updateAccount(account.id, {
-        organizationVersion: { disconnect: true },
+        organizationVersion: { connect: { id: organizationVersion.id } },
         status: UserStatus.VALIDATED,
         role: Role.COLLABORATOR,
       })
