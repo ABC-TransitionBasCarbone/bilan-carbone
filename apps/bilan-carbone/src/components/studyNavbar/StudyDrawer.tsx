@@ -109,7 +109,7 @@ const StudyDrawer = ({
           label={`study-navbar-link-info-${glossaryInfo.id}`}
           title={glossaryInfo.label}
           onClose={() => setGlossaryInfo(null)}
-          actions={[{ actionType: 'button', onClick: () => setGlossaryInfo(null), children: tCommon('close') }]}
+          actions={[{ actionType: 'button', onClick: () => setGlossaryInfo(null), children: tCommon('action.close') }]}
         >
           {glossaryInfo.info}
         </Modal>

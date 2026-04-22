@@ -347,8 +347,7 @@
       "exports": "Take into account emissions that have not been validated",
       "exportsDescription": "Within a Bilan Carbone®, you can choose to display all the emissions you have entered, or only those that have been validated.",
       "caUnits": "Turnover figures",
-      "caUnitsDescription": "Specify the unit you wish to use for turnover figures.",
-      "close": "Close"
+      "caUnitsDescription": "Specify the unit you wish to use for turnover figures."
     },
     "caUnit": {
       "label": "Site's turnover unit",
@@ -388,7 +387,6 @@
     "validatedOnlyDescription": "For each Bilan Carbone®, one or more validators can be defined. These validators are responsible for validating the sources of emissions once they have been entered by the study's contributors and editors. By default, only validated emissions appear in your results, but you can change this behaviour via the \"Settings\" menu.",
     "withDependenciesDescription": "The new Bilan Carbone® method introduces the concept of responsibility and dependency. It is strongly recommended that the results of the Bilan Carbone® are presented with and without the \"Use in dependence\" subcategory, as the organization is generally not in a position to act easily on this subcategory. On the other hand, this subcategory remains crucial for understanding the risks to which the organization is exposed, particularly if it is dependent on high-carbon sectors or activities. The final result should include dependency. For more information on these new concepts, please consult <link>this page</link>.",
     "monetaryRatioDescription": "It is strongly discouraged to use spend-based emission factors when an alternative is possible. You can find more information on the <monetaryLink>methodology</monetaryLink>.",
-    "close": "Close",
     "selectSite": "Before filling in the details, choose a site",
     "see": "See my Bilan Carbone®",
     "navigation": {
@@ -484,8 +482,7 @@
         "control": "Control approach",
         "controlDescription": "Some carbon accounting methods (Regulatory GHG Assessment, GHG Protocol, ...) require to choose one control approach. In order to obtain the results in the formats requested by these methods, you will need to characterise the different sources of emissions when you enter them, which will determine into which of the existing categories within these methods (the equivalent of the categories and subcategories within the Bilan Carbone® method) the emissions will be broken down. The control approach applies to all the exports you have selected. Depending on the control approach selected, the characterizations available for the different sources of emissions vary. For more details on the control approaches, please consult the methodological guides for the methods in question. We strongly recommend that you use the \"Operational Control\" control approach, which is by far the most common.",
         "duplicationOptions": "Duplication options",
-        "duplicationOptionsDescription": "When duplicating a study, you can choose to invite the same team members and contributors from the original study to the new one. This helps maintain collaboration continuity.",
-        "close": "Close"
+        "duplicationOptionsDescription": "When duplicating a study, you can choose to invite the same team members and contributors from the original study to the new one. This helps maintain collaboration continuity."
       },
       "validation": {
         "name": "Please provide a name",
@@ -719,7 +716,6 @@
         "cancel": "Cancel",
         "confirm": "Confirm",
         "glossary": "Tags family",
-        "close": "Close",
         "glossaryDescription": "Tags and tag families are used to identify emission sources in order to breakdown your results by tags later. Similar tags should be part of the same tag family. <br></br>Create your tags and tag families to link them to your emission sources on the “Data entry” page, before viewing the emissions on the “Results” page. To avoid double counting, it is not possible to view emissions from two tag families simultaneously.<br></br>For instance, let's consider two tag families: \"Products Sold\" and \"Target Audiences\". These two families and their respective tags will allow you to visualize the distribution of your organization's emissions based on the products sold and the target audiences.",
         "allTags": "All tags"
       },
@@ -851,14 +847,12 @@
       "postEmissionPerNumberOfSources": "Emissions by category based on the number of emission sources",
       "glossary": {
         "title": "Glossary",
-        "close": "Close",
         "more": "More information",
         "uncertaintyPerPost": "Uncertainties per category",
         "uncertaintyPerPostDescription": "Please note that the size of the circles on this graph is proportional to the number of emission sources that have been entered for the item, and not to the total emissions for the item (which can be seen on the x-axis). This allows you to see which items have been analysed in the greatest detail and to assess whether this is relevant in terms of the significance of the associated emissions, as it is generally more relevant to work in detail on the most significant emission items. The following graphs also illustrate this effect.",
         "uncertaintyPerPostDescription2": "Furthermore, the greater the number of emission sources within a station, the less uncertainty there will be for that station. This is because two uncertainties cancel each other out, as it is generally uncertain whether the error will be made in the same direction. To give a concrete example, when measuring two strings, it is possible to overestimate the length of the first and underestimate the length of the second. Consequently, the uncertainty about the length of the sum of the two strings will be less than the sum of the two uncertainties taken separately."
       },
-      "resultsWord": "Bilan Carbone® Report",
-      "close": "Close"
+      "resultsWord": "Bilan Carbone® Report"
     },
     "pdf": {
       "loading": "Loading data...",
@@ -930,7 +924,6 @@
       "download": "Download flow",
       "flows": "Flow mapping",
       "information": "Information",
-      "close": "Close",
       "documentSelector": "Mapping to display",
       "invalidFileType": "Invalid file type",
       "newFlow": "Add a flow mapping",
@@ -948,7 +941,6 @@
       "download": "Download matrix",
       "dependencyMatrices": "Risk and dependency matrices",
       "information": "Information",
-      "close": "Close",
       "documentSelector": "Risk and dependency matrix to display",
       "invalidFileType": "Unsupported file type",
       "noDocument": "No risk and dependency matrix to display",
@@ -1101,8 +1093,7 @@
           "estimatedPast": "Estimated Past",
           "glossary": {
             "title": "Reconstruction of past emissions on BC+",
-            "description": "Description Gabriel",
-            "close": "Close"
+            "description": "Description Gabriel"
           },
           "overshootTrajectoryGlossary": {
             "title": "Pour Gabriel - titre",
@@ -1128,11 +1119,9 @@
           "studyYearMustBeBeforeCurrent": "The study year must be before the current study year",
           "Not authorized": "You are not allowed to do this action",
           "noAvailableStudies": "No previous studies available",
-          "noLinkedStudies": "No linked studies yet",
           "information": "Information",
           "glossaryTitle": "Pour gabriel - titre",
           "glossaryDescription": "Pour gabriel - description",
-          "close": "Close",
           "table": {
             "name": "Name",
             "year": "Year",
@@ -1254,7 +1243,6 @@
         },
         "glossary": {
           "title": "Glossary",
-          "close": "Close",
           "referenceYear": "Reference Year",
           "referenceYearDescription": "The reference year corresponds to the starting year of your reduction trajectory. This year serves as the starting point for calculating reduction objectives. For SBTi and SNBC trajectories, the reference year is predefined and cannot be modified. For custom trajectories, you can freely choose this year.",
           "referenceYearMethod": "{method} Reference Year",
@@ -1332,8 +1320,7 @@
         "glossary": {
           "label": "Glossary",
           "title": "titre gabriel",
-          "description": "description gabriel",
-          "close": "Close"
+          "description": "description gabriel"
         }
       },
       "actions": {
@@ -1345,7 +1332,6 @@
           "enabledGlossaryIconLabel": "Enabling and disabling my actions",
           "enabledGlossaryTitle": "Enabling and disabling my actions",
           "enabledGlossaryDescription": "The reductions linked to actions you have enabled are taken into account on the <trajectoryLink>trajectories and objectives</trajectoryLink> page in your bottom-up trajectory. Reductions linked to disabled actions will not be visible. Enabling or disabling actions allows you to consider different scenarios to achieve your reduction objectives.",
-          "close": "Close",
           "title": "Title",
           "priority": "Priority",
           "actionType": "Action type",
@@ -1409,7 +1395,6 @@
             "step2": "Categorization",
             "step3": "Details and responsibility"
           },
-          "close": "Close",
           "Not authorized": "You are not allowed to do this action",
           "validation": {
             "required": "Required fields",
@@ -1444,8 +1429,7 @@
           "ReductionWithinOrganisationCoreBusiness": "Reduction within the organisation's core business (Priority 1/6)",
           "glossaryTitle": "Action relevance levels",
           "information": "Information about relevance levels",
-          "learnMore": "For more information, please visit <link>this page</link>.",
-          "close": "Close"
+          "learnMore": "For more information, please visit <link>this page</link>."
         },
         "onboarding": {
           "title": "Create your action plan to achieve your objectives",
@@ -1645,7 +1629,6 @@
       "TeletravailSalaries": "Remote work by employees",
       "TeletravailBenevoles": "Remote work by volunteers",
       "glossary": "Glossary",
-      "close": "Close",
       "glossaryDescription": {
         "DechetsDirects": "This category covers all emissions linked to the management of waste produced (collection and treatment) within the organization. It is divided into multiple subcategories, each covering a different type of waste.",
         "IntrantsBiensEtMatieres": "This category covers emissions linked to the various flows of goods and materials entering the organization. It is divided into multiple subcategories, each covering a different type of material.",
@@ -1734,8 +1717,7 @@
         },
         "post": "Category",
         "post_studyContributorDescription": "You must choose the item(s) and sub-item(s) within which your emission factor will be selectable.",
-        "post_emissionFactorDescription": "You must choose the item(s) and sub-item(s) within which the contributor will be able to work.",
-        "close": "Close"
+        "post_emissionFactorDescription": "You must choose the item(s) and sub-item(s) within which the contributor will be able to work."
       },
       "validation": {
         "name": "Please provide a name",
@@ -1831,9 +1813,7 @@
         "confirm-edition": "Are you sure you want to edit this emission factor",
         "confirm-deletion": "Are you sure you want to delete this emission factor",
         "title": "Edit the emission factor",
-        "description": "<warning>If you've used this emission factor in a study, the changes will be applied to all the emission sources that use it.</warning> If you want to create a new version, create a new one.",
-        "confirm": "Confirm",
-        "close": "Cancel"
+        "description": "<warning>If you've used this emission factor in a study, the changes will be applied to all the emission sources that use it.</warning> If you want to create a new version, create a new one."
       }
     },
     "type": {
@@ -1893,7 +1873,6 @@
     "COLLABORATOR_description_CR": "A collaborator is a person trained in the Bilan Carbone® method. They have no rights to the organization's account but can create clients and studies. They only have access to their organization's or their organization clients public studies with the role editor by default.",
     "DEFAULT_description": "A member of the organization has no specific rights over the organization, the team or studies. By default, they are readers of all their organization's public Bilans Carbone®.",
     "DEFAULT_description_CR": "A member of the organization has no specific rights over the organization, the team, their clients or studies. By default, they are readers of all their organization's or their organization's clients public Bilans Carbone®.",
-    "close": "Close",
     "guide": "Roles guide",
     "saved": "New role saved",
     "Not authorized": "You are not allowed to do this action",
@@ -1928,8 +1907,6 @@
       "deleteMember": "Delete member",
       "userDeletion": "User deletion",
       "userDeletionDescription": "Are you sure you want to delete this user? He will no longer have access to your organisation's account, but will still have access to the studies for which he has been invited by other organisations.",
-      "close": "Cancel",
-      "confirm": "Confirm",
       "necessaryAdmin": "This administrator cannot be removed. He/she is the sole validator of the following studies: "
     }
   },
@@ -2187,8 +2164,7 @@
         "etp": "Number of Full Time Equivalents",
         "etpDescription": "This data will eventually be used to calculate carbon intensities (kgCO₂e/FTE).",
         "ca": "Turnover ({unit})",
-        "caDescription": "These data will eventually be used to calculate carbon intensities (kgCO₂e/{unit} Turnover).",
-        "close": "Close"
+        "caDescription": "These data will eventually be used to calculate carbon intensities (kgCO₂e/{unit} Turnover)."
       },
       "validation": {
         "name": "Please enter a name",
@@ -2255,8 +2231,7 @@
       "qualityDescription": "Uncertainties are now calculated using qualitative notes on the quality of the emission factor and the quality of the activity data. The scores for the emission factor are taken directly from the databases, but those for the activity data must be entered. For more information on how scores are awarded, please consult <link>this page</link>.",
       "specificEmissionFactorQuality": "You can specifically adjust the quality of the emission factor in your emission source. The generic value of the emission factor is indicated by the {marker} symbol.",
       "version": "Emission factor from older version",
-      "versionDescription": "You are modifying a study from the old BC+. As this emission factor does not exist in the version linked to your study ({bcVersion}), if you modify it, you will never be able to put it back.",
-      "close": "Fermer"
+      "versionDescription": "You are modifying a study from the old BC+. As this emission factor does not exist in the version linked to your study ({bcVersion}), if you modify it, you will never be able to put it back."
     },
     "deleteDialog": {
       "button": "Delete source",

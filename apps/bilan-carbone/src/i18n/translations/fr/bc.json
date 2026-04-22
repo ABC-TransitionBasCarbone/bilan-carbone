@@ -347,8 +347,7 @@
       "exports": "Prendre en compte les émissions non validées",
       "exportsDescription": "Au sein d'un Bilan Carbone®, vous pouvez choisir d'afficher toutes les émissions que vous avez renseignées, ou bien uniquement celles qui ont été validées par un·e validateur·rice.",
       "caUnits": "Unité des chiffres d'affaire",
-      "caUnitsDescription": "Précisez l'unité que vous souhaitez utiliser pour les chiffres d'affaire.",
-      "close": "Fermer"
+      "caUnitsDescription": "Précisez l'unité que vous souhaitez utiliser pour les chiffres d'affaire."
     },
     "caUnit": {
       "label": "Unité des chiffres d'affaire des sites",
@@ -389,7 +388,6 @@
     "validatedOnlyDescription": "Pour chaque Bilan Carbone®, un ou plusieurs validateur·rices peuvent être définis. Ceux-ci ont la responsabilité de valider les sources d'émission lorsque celles-ci auront été renseignées par les contributeur·rices et éditeur·rices de l'étude. Par défaut, seules les émissions validées apparaissent au sein de vos résultats, mais vous pouvez changer ce comportement via le menu \"Paramètres\".",
     "withDependenciesDescription": "La nouvelle méthode Bilan Carbone® introduit le concept de responsabilité et de dépendance. Il est fortement recommandé de restituer les résultats du Bilan Carbone® avec et sans le sous-poste \"Utilisation en dépendance\", car l'organisation n'est généralement pas en mesure d'agir aisément sur ce sous-poste. En revanche, celui-ci reste capital pour comprendre les risques auxquels sont soumis l'organisation, notamment si elle est dépendante de secteurs ou d'activités très carbonés. Le résultat final à retenir doit inclure la dépendance. Pour plus d'information sur ces nouveaux concepts, nous vous invitons à consulter <link>cette page</link>.",
     "monetaryRatioDescription": "Il est fortement déconseillé d'utiliser des facteurs d'émission en ratio monétaire lorsqu'une alternative est possible. Vous pouvez trouver plus d'information sur la <monetaryLink>méthodologie de l'ABC</monetaryLink>.",
-    "close": "Fermer",
     "selectSite": "Avant de remplir les données, choisissez un site",
     "navigation": {
       "homepage": "Accueil",
@@ -484,8 +482,7 @@
         "control": "Mode de contrôle des exports",
         "controlDescription": "Le mode de contrôle est une donnée demandée par certaines méthodes de comptabilité carbone, comme le Bilan GES règlementaire ou le GHG Protocol. Pour obtenir les résultats sous les formats demandés par ces méthodes, vous devrez caractériser les différentes sources d'émission lors de votre saisie, ce qui déterminera dans quelle catégories existantes au sein de ces méthodes (l'équivalent des postes et sous-postes au sein de la méthode Bilan Carbone®) les émissions vont se ventiler. Le mode de contrôle s'applique bien à tous les exports que vous avez sélectionnés. En fonction du mode de contrôle sélectionné, les caractérisations disponibles pour les différentes sources d'émission varient. Pour plus de détail sur les modes de contrôle, nous vous invitons à consulter les guides méthodologiques des méthodes en question. Nous vous recommandons vivement d'utiliser le mode de contrôle \"Contrôle Opérationnel\", qui est de loin le plus courant.",
         "duplicationOptions": "Options de duplication",
-        "duplicationOptionsDescription": "Lors de la duplication d'une étude, vous pouvez choisir d'inviter les mêmes membres d'équipe et contributeurs de l'étude originale dans la nouvelle. Cela permet de maintenir la continuité de la collaboration.",
-        "close": "Fermer"
+        "duplicationOptionsDescription": "Lors de la duplication d'une étude, vous pouvez choisir d'inviter les mêmes membres d'équipe et contributeurs de l'étude originale dans la nouvelle. Cela permet de maintenir la continuité de la collaboration."
       },
       "validation": {
         "name": "Veuillez renseigner un nom",
@@ -719,7 +716,6 @@
         "cancel": "Annuler",
         "confirm": "Confirmer",
         "glossary": "Famille de tags",
-        "close": "Fermer",
         "glossaryDescription": "Les tags et familles de tags servent à identifier vos sources d'émissions dans le but d'agréger vos résultats en fonction de ces tags par la suite. Les tags similaires devraient être renseignés dans une même famille. <br></br>Créer vos tags et familles de tags pour les associer à des sources d'émissions au sein de la page \"Saisie des données\", avant d'en visualiser les émissions dans la page \"Résultats\". Pour éviter les doubles-comptes, il n'est pas possible de visualiser les émissions de deux familles de tags simultanément. <br></br>Par exemple, prenons deux familles de tags : \"Produits vendus\" et \"Publics ciblés\". Ces deux familles et leurs tags respectifs vous permettrons de visualiser la répartition des émissions de votre organisation en fonction des produits vendus, et des publics ciblés.",
         "allTags": "Tous les tags"
       },
@@ -851,14 +847,12 @@
       "gesTag": "Émissions de GES par tag ({unit})",
       "glossary": {
         "title": "Glossaire",
-        "close": "Fermer",
         "more": "Plus d'informations",
         "uncertaintyPerPost": "Uncertitude par poste",
         "uncertaintyPerPostDescription": "Attention, la taille des cercles sur ce graphique est proportionnelle au nombre de sources d'émission qui ont étés renseignées au sein du poste, et non pas au total des émissions du poste (qui peut lui s'observer sur l'axe des abscisses). Cela permet de visualiser sur quels postes le travail a été le plus approfondi, et d'apprécier si cela est pertinent en fonction de l'importance des émissions associées, car il est généralement plus pertinent d'aller travailler dans le détail sur les postes d'émissions les plus importants. Les graphiques suivants permettent également de visualiser cet effet.",
         "uncertaintyPerPostDescription2": "Par ailleurs, plus le nombre de sources d'émission est important au sein d'un poste, moins l'incertitude de ce poste sera grande. Cela est dû au fait que deux incertitudes se compensent, car il n'est généralement pas certain que l'erreur soit faite dans le même sens. Pour donner un exemple concret, lorsque l'on mesure deux cordes, il est possible de surestimer la longueur de la première, et de sous-estimer celle de la seconde. Par conséquent, l'incertitude sur la longueur de la somme des deux cordes sera inférieure à la somme des deux incertitudes prises séparément."
       },
-      "resultsWord": "Rapport Bilan Carbone®",
-      "close": "Fermer"
+      "resultsWord": "Rapport Bilan Carbone®"
     },
     "pdf": {
       "loading": "Chargement des données...",
@@ -930,7 +924,6 @@
       "download": "Télécharger le flux",
       "flows": "Cartographies des flux",
       "information": "Information",
-      "close": "Fermer",
       "documentSelector": "Cartographie à afficher",
       "invalidFileType": "Type de fichier non supporté",
       "newFlow": "Ajouter une cartographie des flux",
@@ -948,7 +941,6 @@
       "download": "Télécharger la matrice",
       "dependencyMatrices": "Matrices de risque et de dépendance",
       "information": "Information",
-      "close": "Fermer",
       "documentSelector": "Matrice de risque et de dépendance à afficher",
       "invalidFileType": "Type de fichier non supporté",
       "noDocument": "Aucune matrice de risque et de dépendance à afficher",
@@ -1101,8 +1093,7 @@
           "estimatedPast": "Passé estimé",
           "glossary": {
             "title": "Reconstruction des émissions passées sur le BC+",
-            "description": "Les émissions historiques affichées sont : - Soit issues de vos études passées, que vous avez renseignées dans la page « Initialisation » - Soit reconstituées à partir des inventaires nationaux français pour les années qui précèdent votre premier bilan. En l'absence d'informations, l'outil suppose donc que votre organisation s'est décarbonée au même rythme que la France.",
-            "close": "Close"
+            "description": "Les émissions historiques affichées sont : - Soit issues de vos études passées, que vous avez renseignées dans la page « Initialisation » - Soit reconstituées à partir des inventaires nationaux français pour les années qui précèdent votre premier bilan. En l'absence d'informations, l'outil suppose donc que votre organisation s'est décarbonée au même rythme que la France."
           },
           "overshootTrajectoryGlossary": {
             "title": "Trajectoire corrigée",
@@ -1128,11 +1119,9 @@
           "studyYearMustBeBeforeCurrent": "L'année de l'étude doit être antérieure à l'année de l'étude actuelle",
           "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
           "noAvailableStudies": "Aucune étude passée disponible",
-          "noLinkedStudies": "Aucune étude liée pour le moment",
           "information": "Informations",
           "glossaryTitle": "Pour gabriel - titre",
           "glossaryDescription": "Pour gabriel - description",
-          "close": "Fermer",
           "table": {
             "name": "Nom",
             "year": "Année",
@@ -1254,7 +1243,6 @@
         },
         "glossary": {
           "title": "Glossaire",
-          "close": "Fermer",
           "referenceYear": "Année de référence",
           "referenceYearDescription": "L'année de référence correspond à l'année de départ de votre trajectoire de réduction. Cette année sert de point de départ pour calculer les objectifs de réduction. Pour les trajectoires SBTi et SNBC, l'année de référence est prédéfinie et ne peut pas être modifiée. Pour les trajectoires personnalisées, vous pouvez choisir librement cette année.",
           "referenceYearMethod": "Année de référence {method}",
@@ -1332,8 +1320,7 @@
         "glossary": {
           "label": "Glossaire",
           "title": "titre gabriel",
-          "description": "description gabriel",
-          "close": "Fermer"
+          "description": "description gabriel"
         }
       },
       "actions": {
@@ -1345,7 +1332,6 @@
           "enabledGlossaryIconLabel": "Activation et désactivation de mes actions",
           "enabledGlossaryTitle": "Activation et désactivation de mes actions",
           "enabledGlossaryDescription": "Les réductions liées aux actions que vous avez activées sont prises en compte sur la visualisation des trajectoires de réduction, dans votre trajectoire bottom-up. Les réductions liées aux actions désactivées ne seront pas visibles. Activer ou désactiver des actions vous permet ainsi <b>d'envisager différents scénarios pour atteindre vos objectifs de réduction</b>.",
-          "close": "Fermer",
           "title": "Titre",
           "priority": "Priorité",
           "actionType": "Type d'action",
@@ -1409,7 +1395,6 @@
             "step2": "Catégorisation",
             "step3": "Détails et responsabilité"
           },
-          "close": "Fermer",
           "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
           "validation": {
             "required": "Champs requis",
@@ -1444,8 +1429,7 @@
           "ReductionWithinOrganisationCoreBusiness": "Réduction dans le coeur d'activité de l'organisation (Priorité 1/6)",
           "glossaryTitle": "Niveaux de pertinence d'une action",
           "information": "Information sur les niveaux de pertinence",
-          "learnMore": "Pour plus d'information, nous vous invitons à consulter <link>cette page</link>.",
-          "close": "Fermer"
+          "learnMore": "Pour plus d'information, nous vous invitons à consulter <link>cette page</link>."
         },
         "onboarding": {
           "title": "Construisez un plan d'action afin d'atteindre vos objectifs",
@@ -1645,7 +1629,6 @@
       "TeletravailSalaries": "Télétravail des salariés",
       "TeletravailBenevoles": "Télétravail des bénévoles",
       "glossary": "Glossaire",
-      "close": "Fermer",
       "glossaryDescription": {
         "DechetsDirects": "Ce poste recouvre l'ensemble des émissions liées à la gestion des déchets produits (collecte et traitement) au sein de l'organisation. Il est divisé en différents sous-postes qui recouvrent chacun une catégorie de déchets.",
         "IntrantsBiensEtMatieres": "Ce poste recouvre les émissions liées aux différents flux de biens et de matières qui entrent dans l'organisation. Il est divisé en différents sous-postes qui recouvrent chacun une catégorie de matériaux.",
@@ -1734,8 +1717,7 @@
         },
         "post": "Poste",
         "post_studyContributorDescription": "Vous devez choisir le ou les postes et sous-postes au sein duquel votre facteur d'émission sera sélectionnable.",
-        "post_emissionFactorDescription": "Vous devez choisir le ou les postes et sous-postes au sein duquel le contributeur·rice pourra intervenir.",
-        "close": "Fermer"
+        "post_emissionFactorDescription": "Vous devez choisir le ou les postes et sous-postes au sein duquel le contributeur·rice pourra intervenir."
       },
       "validation": {
         "name": "Veuillez renseigner un nom",
@@ -1831,9 +1813,7 @@
         "confirm-edition": "Êtes-vous sûrs de vouloir modifier ce facteur d'émissions",
         "confirm-deletion": "Êtes-vous sûrs de vouloir supprimer ce facteur d'émissions",
         "title": "Modifier un facteur d'émission",
-        "description": "<warning>Si vous avez utilisé ce facteur d'émissions dans des études, celles-ci seront donc modifiées.</warning> Si vous souhaitez faire une nouvelle version de ce facteur d'émissions, merci d'en créer un nouveau.",
-        "confirm": "Confirmer",
-        "close": "Annuler"
+        "description": "<warning>Si vous avez utilisé ce facteur d'émissions dans des études, celles-ci seront donc modifiées.</warning> Si vous souhaitez faire une nouvelle version de ce facteur d'émissions, merci d'en créer un nouveau."
       }
     },
     "type": {
@@ -1893,7 +1873,6 @@
     "COLLABORATOR_description_CR": "Un·e collaborateur·rice est une personne formée à la méthode Bilan Carbone®. Il n'a aucun droit sur le compte de l'organisation mais peut créer des clients et des études pour son organisation et ses clients. Il est par défaut éditeur·rice sur tous les Bilans Carbone® publics de son organisation ou de ses clients.",
     "DEFAULT_description": "Un membre de l'organisation n'a aucun droit spécifique ni sur l'organisation, ni sur l'équipe, ni sur les Bilan Carbone® réalisés. Il est par défaut lecteur sur tous les Bilans Carbone® publics de son organisation.",
     "DEFAULT_description_CR": "Un membre de l'organisation n'a aucun droit spécifique ni sur l'organisation, ni sur l'équipe, ni sur les clients, ni sur les Bilan Carbone® réalisés. Il est par défaut lecteur sur tous les Bilans Carbone® publics de son organisation et de ses clients",
-    "close": "Fermer",
     "guide": "Guide des rôles",
     "saved": "Nouveau rôle sauvegardé",
     "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
@@ -1928,8 +1907,6 @@
       "deleteMember": "Supprimer le·a membre",
       "userDeletion": "Suppression d'un·e utilisateur·rice",
       "userDeletionDescription": "Êtes vous sur de vouloir supprimer cet·te utilisateur·rice ? Il n'aura plus accès au compte de votre organisation, mais aura toujours accès aux études pour lesquelles il a été invité par d'autres organisations.",
-      "close": "Annuler",
-      "confirm": "Confirmer",
       "necessaryAdmin": "La suppression de cet administrateur est impossible. Il est le seul validateur·rice des études suivantes : "
     }
   },
@@ -2187,8 +2164,7 @@
         "etp": "Nombre d'Équivalent Temps Plein",
         "etpDescription": "Ces données seront à terme utilisées pour calculer des intensités carbone (kgCO₂e/ETP).",
         "ca": "Chiffre d'Affaire ({unit})",
-        "caDescription": "Ces données seront à terme utilisées pour calculer des intensités carbone (kgCO₂e/{unit} CA).",
-        "close": "Fermer"
+        "caDescription": "Ces données seront à terme utilisées pour calculer des intensités carbone (kgCO₂e/{unit} CA)."
       },
       "validation": {
         "name": "Veuillez renseigner un nom",
@@ -2255,8 +2231,7 @@
       "qualityDescription": "Les incertitudes sont dorénavant calculées grâce à des notes qualitatives apportées sur la qualité du facteur d'émission et la qualité de la donnée d'activité. Les notes associées au facteur d'émission sont directement issues des bases de données, mais celles liées à la donnée d'activité doivent être saisies. Pour plus d'informations sur l'attribution des notes, nous vous invitons à consulter <link>cette page</link>.",
       "specificEmissionFactorQuality": "Vous pouvez spécifiquement ajuster la qualité du facteur d'émission dans votre source d'émission. La valeur générique du facteur d'émission est indiquée par le symbole {marker}.",
       "version": "Facteur d'émission d'une ancienne version",
-      "versionDescription": "Vous modifiez une étude qui provient de l'ancien BC+. Ce facteur d'émission n'existant pas dans la version de la base empreinte liée à votre étude ({bcVersion}), si vous le modifiez, vous ne pourrez jamais le remettre.",
-      "close": "Fermer"
+      "versionDescription": "Vous modifiez une étude qui provient de l'ancien BC+. Ce facteur d'émission n'existant pas dans la version de la base empreinte liée à votre étude ({bcVersion}), si vous le modifiez, vous ne pourrez jamais le remettre."
     },
     "deleteDialog": {
       "button": "Supprimer la source",
