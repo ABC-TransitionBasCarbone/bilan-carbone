@@ -227,8 +227,15 @@ describe('Study Service', () => {
 
       const prepareExcelMock = jest.mocked(prepareExcel)
       expect(prepareExcelMock).toHaveBeenCalledTimes(1)
-      const exportedData = prepareExcelMock.mock.calls[0]?.[0] as { data: (string | number)[][] }[]
+      const exportedData = prepareExcelMock.mock.calls[0]?.[0]
+      expect(Array.isArray(exportedData)).toBe(true)
+      if (!Array.isArray(exportedData)) {
+        throw new Error('Expected prepared export data to be an array of sheets')
+      }
+      expect(exportedData.length).toBeGreaterThan(0)
       const consolidatedSheet = exportedData[0]
+      expect(consolidatedSheet).toBeDefined()
+      expect(Array.isArray(consolidatedSheet.data)).toBe(true)
       const rows = consolidatedSheet.data
 
       const findSiteTotalRow = (siteName: string) => {
