@@ -11,11 +11,12 @@ import { findCncByCncCode } from '@/db/cnc'
 import {
   createOrganizationWithVersion,
   getOrganizationVersionByOrganizationIdAndEnvironment,
+  getOrganizationVersionForRightsCheck,
   getRawOrganizationBySiret,
   getRawOrganizationBySiteCNC,
 } from '@/db/organization'
 import { addSite } from '@/db/site'
-import { addUser, getUserByEmail, updateAccount, validateUser } from '@/db/user'
+import { addUser, getUserByEmail, organizationVersionActiveAccountsCount, updateAccount, validateUser } from '@/db/user'
 import {
   EMAIL_SENT,
   NOT_ASSOCIATION_SIRET,
@@ -84,6 +85,8 @@ const mockGetRawOrganizationBySiret = getRawOrganizationBySiret as jest.Mock
 const mockGetValidAssociationNameBySiret = getValidAssociationNameBySiret as jest.Mock
 const mockGetCompanyName = getCompanyName as jest.Mock
 const mockSendActivationRequest = sendActivationRequest as jest.Mock
+const mockGetOrganizationVersionForRightsCheck = getOrganizationVersionForRightsCheck as jest.Mock
+const mockOrganizationVersionActiveAccountsCount = organizationVersionActiveAccountsCount as jest.Mock
 const mockActivateEmail = activateEmail as jest.Mock
 
 const testEmail = 'test@example.com'
@@ -157,7 +160,39 @@ describe('signUpWithSiretOrCNC', () => {
         organizationVersionId: mockedOrganizationVersionId,
         status: UserStatus.IMPORTED,
       })
-      mockActivateEmail.mockResolvedValue({ success: true, data: REQUEST_SENT })
+      mockGetUserByEmail.mockResolvedValue({
+        id: mockedUserId,
+        email: testEmail,
+        firstName: 'Test',
+        lastName: 'User',
+        accounts: [{ id: mockedAccountId, environment: Environment.TILT, status: UserStatus.IMPORTED }],
+      })
+      mockGetAccountById.mockResolvedValue({
+        id: mockedAccountId,
+        role: Role.DEFAULT,
+        organizationVersionId: mockedOrganizationVersionId,
+        status: UserStatus.IMPORTED,
+        environment: Environment.TILT,
+        user: {
+          id: mockedUserId,
+          email: testEmail,
+          firstName: 'Test',
+          lastName: 'User',
+          level: null,
+        },
+      })
+      mockGetOrganizationVersionForRightsCheck.mockResolvedValue({
+        id: mockedOrganizationVersionId,
+        activatedLicence: false,
+      })
+      mockOrganizationVersionActiveAccountsCount.mockResolvedValue(1)
+      mockGetAccountFromUserOrganization.mockResolvedValue([
+        {
+          role: Role.ADMIN,
+          status: UserStatus.ACTIVE,
+          user: { email: 'admin@example.com' },
+        },
+      ])
 
       const result = await signUpWithSiretOrCNC(testEmail, testSiret, Environment.TILT)
 
@@ -165,7 +200,11 @@ describe('signUpWithSiretOrCNC', () => {
       if (result.success) {
         expect(result.data).toBe(REQUEST_SENT)
       }
-      expect(mockActivateEmail).toHaveBeenCalledWith(testEmail.toLowerCase(), Environment.TILT)
+      expect(mockSendActivationRequest).toHaveBeenCalledWith(
+        ['admin@example.com'],
+        testEmail.toLowerCase(),
+        'Test User',
+      )
     })
 
     it('returns NOT_AUTHORIZED when TILT account exists and is active', async () => {

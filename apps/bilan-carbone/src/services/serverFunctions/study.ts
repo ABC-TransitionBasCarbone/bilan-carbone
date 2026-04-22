@@ -880,7 +880,7 @@ const getOrCreateUserAndSendStudyInvite = async (
           status: UserStatus.VALIDATED,
           role: Role.DEFAULT,
           environment: study.organizationVersion.environment,
-          organizationVersionId: study.organizationVersion.id,
+          organizationVersion: { connect: { id: study.organizationVersion.id } },
         },
       },
     })
