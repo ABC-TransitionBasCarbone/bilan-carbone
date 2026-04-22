@@ -79,7 +79,7 @@ interface Props {
     tags: Array<{ id: string; name: string; color: string | null }>
   }>
   defaultSnbcSectoralTrajectoryId?: string | null
-  objectiveGroupsByTrajectoryId?: Map<string, ObjectiveGroup[]>
+  objectiveGroupsByTrajectoryId: Map<string, ObjectiveGroup[]>
 }
 
 const fuseOptions = {
