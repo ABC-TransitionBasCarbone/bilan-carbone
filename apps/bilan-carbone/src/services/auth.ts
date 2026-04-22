@@ -12,6 +12,22 @@ export const signPassword = async (password: string) => {
   return bcrypt.hashSync(password, salt)
 }
 
+type AccountAuthenticationInput = {
+  status: UserStatus
+  environment: Environment
+}
+
+export const getActiveAccountsForEnvironment = <T extends AccountAuthenticationInput>(
+  accounts: T[],
+  requestedEnvironment?: string,
+) => {
+  const activeAccounts = accounts.filter((account) => account.status === UserStatus.ACTIVE)
+  if (!requestedEnvironment) {
+    return activeAccounts
+  }
+  return activeAccounts.filter((account) => account.environment === requestedEnvironment)
+}
+
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: 'jwt',
@@ -109,6 +125,7 @@ export const authOptions: NextAuthOptions = {
         email: { label: 'email', type: 'text' },
         password: { label: 'password', type: 'password' },
         accountId: { label: 'accountId', type: 'text' },
+        environment: { label: 'environment', type: 'text' },
       },
       async authorize(credentials) {
         if (!credentials) {
@@ -151,7 +168,11 @@ export const authOptions: NextAuthOptions = {
           return null
         }
 
-        const accounts = user.accounts.filter((a) => a.status === UserStatus.ACTIVE)
+        const accounts = getActiveAccountsForEnvironment(user.accounts, credentials.environment)
+
+        if (accounts.length === 0) {
+          return null
+        }
 
         if (accounts.length > 1) {
           return {

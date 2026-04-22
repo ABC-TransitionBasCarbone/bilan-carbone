@@ -59,7 +59,12 @@ const LoginForm = ({ environment = Environment.BC }: Props) => {
     setSubmitting(true)
 
     const values = getValues()
-    const result = await signIn('credentials', { ...values, email: values.email.toLowerCase(), redirect: false })
+    const result = await signIn('credentials', {
+      ...values,
+      email: values.email.toLowerCase(),
+      environment,
+      redirect: false,
+    })
 
     if (result?.error) {
       setSubmitting(false)
