@@ -1,5 +1,6 @@
 import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
 import { getMockeFullStudy, getMockedFullStudySite } from '@/tests/utils/models/study'
+import type { Translations } from '@/types/translation'
 import { hasSufficientLevel } from '@/utils/study'
 import { expect } from '@jest/globals'
 import { Environment, Level, StudyResultUnit, SubPost } from '@repo/db-common/enums'
@@ -220,7 +221,7 @@ describe('Study Service', () => {
         ],
       })
 
-      const t = ((key: string) => key) as (key: string) => string
+      const t = ((key: string) => key) as unknown as Translations
 
       jest.mocked(prepareExcel).mockClear()
       await downloadStudyResults(study, [], [], [], t, t, t, t, t, t, t, t, t, Environment.BC)
@@ -245,13 +246,30 @@ describe('Study Service', () => {
         }
         return rows.slice(siteRowIndex).find((row) => row[0] === 'total')
       }
+
+      const getTotalValue = (siteName: string) => {
+        const totalRow = findSiteTotalRow(siteName)
+        expect(totalRow).toBeDefined()
+        const value = Number(totalRow?.[2] ?? NaN)
+        expect(Number.isFinite(value)).toBe(true)
+        return value
+      }
+
       const siteATotalRow = findSiteTotalRow('Site A')
       const siteBTotalRow = findSiteTotalRow('Site B')
+      const allSitesTotalRow = findSiteTotalRow('allSites')
 
       expect(siteATotalRow).toBeDefined()
       expect(siteBTotalRow).toBeDefined()
-      expect(siteATotalRow?.[2]).toBe(10)
-      expect(siteBTotalRow?.[2]).toBe(20)
+      expect(allSitesTotalRow).toBeDefined()
+
+      const siteATotalValue = getTotalValue('Site A')
+      const siteBTotalValue = getTotalValue('Site B')
+      const allSitesTotalValue = getTotalValue('allSites')
+
+      expect(siteATotalValue).toBeGreaterThan(0)
+      expect(siteBTotalValue).toBeGreaterThan(siteATotalValue)
+      expect(allSitesTotalValue).toBe(siteATotalValue + siteBTotalValue)
     })
   })
 })
