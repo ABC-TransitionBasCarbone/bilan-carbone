@@ -1,15 +1,20 @@
 import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
-import { getMockeFullStudy } from '@/tests/utils/models/study'
+import { getMockeFullStudy, getMockedFullStudySite } from '@/tests/utils/models/study'
 import { hasSufficientLevel } from '@/utils/study'
 import { expect } from '@jest/globals'
 import { Environment, Level, StudyResultUnit, SubPost } from '@repo/db-common/enums'
-import { getStudyTotalCo2Emissions, getTransEnvironmentSubPost } from './study'
+import { prepareExcel } from './serverFunctions/file'
+import { downloadStudyResults, getStudyTotalCo2Emissions, getTransEnvironmentSubPost } from './study'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('./file', () => ({ download: jest.fn() }))
 jest.mock('./auth', () => ({ auth: jest.fn() }))
 jest.mock('uuid', () => ({ v4: jest.fn() }))
 jest.mock('next-intl/server', () => ({ getTranslations: jest.fn(() => (key: string) => key) }))
+jest.mock('./serverFunctions/file', () => ({ prepareExcel: jest.fn(async () => new ArrayBuffer(0)) }))
+jest.mock('./serverFunctions/user', () => ({
+  getUserSettings: jest.fn(async () => ({ success: true, data: { validatedEmissionSourcesOnly: false } })),
+}))
 
 describe('Study Service', () => {
   describe('getTransEnvironmentSubPost', () => {
@@ -180,6 +185,59 @@ describe('Study Service', () => {
       expect(hasSufficientLevel(null, Level.Initial)).toBe(false)
       expect(hasSufficientLevel(null, Level.Standard)).toBe(false)
       expect(hasSufficientLevel(null, Level.Advanced)).toBe(false)
+    })
+  })
+
+  describe('downloadStudyResults', () => {
+    it('should export site-ventilated consolidated results using site ids', async () => {
+      const siteA = getMockedFullStudySite()
+      const siteB = getMockedFullStudySite()
+      const study = getMockeFullStudy({
+        organizationVersion: { environment: Environment.BC },
+        sites: [
+          {
+            ...siteA,
+            id: 'study-site-a',
+            site: { ...siteA.site, id: 'site-a', name: 'Site A' },
+          },
+          {
+            ...siteB,
+            id: 'study-site-b',
+            site: { ...siteB.site, id: 'site-b', name: 'Site B' },
+          },
+        ],
+        emissionSources: [
+          getMockedFullStudyEmissionSource({
+            value: 1,
+            validated: true,
+            studySite: { id: 'study-site-a', site: { id: 'site-a', name: 'Site A' } },
+          }),
+          getMockedFullStudyEmissionSource({
+            value: 2,
+            validated: true,
+            studySite: { id: 'study-site-b', site: { id: 'site-b', name: 'Site B' } },
+          }),
+        ],
+      })
+
+      const t = ((key: string) => key) as (key: string) => string
+
+      jest.mocked(prepareExcel).mockClear()
+      await downloadStudyResults(study, [], [], [], t, t, t, t, t, t, t, t, t, Environment.BC)
+
+      const prepareExcelMock = jest.mocked(prepareExcel)
+      expect(prepareExcelMock).toHaveBeenCalledTimes(1)
+      const exportedData = prepareExcelMock.mock.calls[0]?.[0] as { data: (string | number)[][] }[]
+      const consolidatedSheet = exportedData[0]
+      const rows = consolidatedSheet.data
+
+      const siteARowIndex = rows.findIndex((row) => row[0] === 'Site A')
+      const siteATotalRow = rows.slice(siteARowIndex).find((row) => row[0] === 'total')
+      const siteBRowIndex = rows.findIndex((row) => row[0] === 'Site B')
+      const siteBTotalRow = rows.slice(siteBRowIndex).find((row) => row[0] === 'total')
+
+      expect(siteATotalRow?.[2]).toBe(10)
+      expect(siteBTotalRow?.[2]).toBe(20)
     })
   })
 })

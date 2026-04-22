@@ -672,6 +672,10 @@ export const downloadStudyResults = async (
 
   const siteList = [
     { name: tOrga('allSites'), id: 'all' },
+    ...study.sites.map((s) => ({ name: s.site.name, id: s.site.id })),
+  ]
+  const precomputedResultsSiteList = [
+    { name: tOrga('allSites'), id: 'all' },
     ...study.sites.map((s) => ({ name: s.site.name, id: s.id })),
   ]
 
@@ -685,7 +689,7 @@ export const downloadStudyResults = async (
     if (computedResults !== undefined) {
       const environmentResults = formatComputedResultsForExport(
         study,
-        siteList,
+        precomputedResultsSiteList,
         computedResults,
         tStudy,
         tExport,
@@ -801,7 +805,7 @@ export const downloadStudyResults = async (
   }
 
   if (isSimplifiedEnvironment(environment) && computedResults) {
-    data.push(formatBaseResultsToBCExport(study, siteList, computedResults, tExport, tPost))
+    data.push(formatBaseResultsToBCExport(study, precomputedResultsSiteList, computedResults, tExport, tPost))
   }
 
   const buffer = await prepareExcel(data)
