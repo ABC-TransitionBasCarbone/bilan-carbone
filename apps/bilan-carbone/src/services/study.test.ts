@@ -247,32 +247,20 @@ describe('Study Service', () => {
         return rows.slice(siteRowIndex).find((row) => row[0] === 'total')
       }
 
-      const getTotalValue = (siteName: string) => {
+      // BC export row layout: [label, '', uncertainty, co2Value, confidenceInterval]
+      // co2Value is at index 3 (index 2 is the uncertainty/quality score)
+      const getTotalCo2Value = (siteName: string) => {
         const totalRow = findSiteTotalRow(siteName)
-        expect(totalRow).toBeDefined()
         if (!totalRow) {
           throw new Error(`Missing total row for ${siteName}`)
         }
-        const value = Number(totalRow[2])
-        expect(Number.isFinite(value)).toBe(true)
-        return value
+        return totalRow[3] as number
       }
 
-      const siteATotalRow = findSiteTotalRow('Site A')
-      const siteBTotalRow = findSiteTotalRow('Site B')
-      const allSitesTotalRow = findSiteTotalRow('allSites')
-
-      expect(siteATotalRow).toBeDefined()
-      expect(siteBTotalRow).toBeDefined()
-      expect(allSitesTotalRow).toBeDefined()
-
-      const siteATotalValue = getTotalValue('Site A')
-      const siteBTotalValue = getTotalValue('Site B')
-      const allSitesTotalValue = getTotalValue('allSites')
-
-      expect(siteATotalValue).toBeGreaterThan(0)
-      expect(siteBTotalValue).toBeGreaterThan(siteATotalValue)
-      expect(allSitesTotalValue).toBe(siteATotalValue + siteBTotalValue)
+      // emissionFactor.totalCo2=10; value=1 → 10 kg → 10 K; value=2 → 20 K
+      expect(getTotalCo2Value('Site A')).toBe(10)
+      expect(getTotalCo2Value('Site B')).toBe(20)
+      expect(getTotalCo2Value('allSites')).toBe(30)
     })
   })
 })
