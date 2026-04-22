@@ -28,8 +28,10 @@ export function TextQuestionInput({
         onChange={(e) => onChange(e.target.value)}
         error={!!error}
         helperText={error}
-        inputProps={{
-          maxLength: question.validation?.maxLength,
+        slotProps={{
+          htmlInput: {
+            maxLength: question.validation?.maxLength,
+          },
         }}
       />
       {question.validation?.maxLength && (
