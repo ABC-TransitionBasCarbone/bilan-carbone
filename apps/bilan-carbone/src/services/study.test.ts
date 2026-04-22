@@ -189,7 +189,7 @@ describe('Study Service', () => {
   })
 
   describe('downloadStudyResults', () => {
-    it('should export site-ventilated consolidated results using site ids', async () => {
+    it('should correctly ventilate consolidated results by site using appropriate ID types', async () => {
       const siteA = getMockedFullStudySite()
       const siteB = getMockedFullStudySite()
       const study = getMockeFullStudy({
@@ -231,10 +231,12 @@ describe('Study Service', () => {
       const consolidatedSheet = exportedData[0]
       const rows = consolidatedSheet.data
 
-      const siteARowIndex = rows.findIndex((row) => row[0] === 'Site A')
-      const siteATotalRow = rows.slice(siteARowIndex).find((row) => row[0] === 'total')
-      const siteBRowIndex = rows.findIndex((row) => row[0] === 'Site B')
-      const siteBTotalRow = rows.slice(siteBRowIndex).find((row) => row[0] === 'total')
+      const findSiteTotalRow = (siteName: string) => {
+        const siteRowIndex = rows.findIndex((row) => row[0] === siteName)
+        return rows.slice(siteRowIndex).find((row) => row[0] === 'total')
+      }
+      const siteATotalRow = findSiteTotalRow('Site A')
+      const siteBTotalRow = findSiteTotalRow('Site B')
 
       expect(siteATotalRow?.[2]).toBe(10)
       expect(siteBTotalRow?.[2]).toBe(20)
