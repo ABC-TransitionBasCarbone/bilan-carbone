@@ -29,6 +29,7 @@ export interface TransitionPlanBaseChildProps {
   selectedSiteIds: string[]
   selectedSubPosts: SubPost[]
   selectedTagIds: string[]
+  objectiveGroupsByTrajectoryId: Map<string, ObjectiveGroup[]> | undefined
 }
 
 interface Props {
@@ -234,6 +235,7 @@ const TransitionPlanBase = ({
             selectedSiteIds,
             selectedSubPosts,
             selectedTagIds,
+            objectiveGroupsByTrajectoryId,
           })}
         </div>
       </Block>
