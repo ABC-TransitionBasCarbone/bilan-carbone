@@ -8,3 +8,4 @@ CLAUDE.md
 .vscode/
 notes/
 next-env.d.ts
+certs/*
