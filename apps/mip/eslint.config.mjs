@@ -3,6 +3,7 @@ import pluginPrettier from 'eslint-plugin-prettier'
 import { defineConfig, globalIgnores } from 'eslint/config'
 import { dirname } from 'path'
 import { fileURLToPath } from 'url'
+import { dtsOverride, sharedRules } from '../../eslint.config.base.mjs'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -20,17 +21,8 @@ export default defineConfig([
     plugins: {
       prettier: pluginPrettier,
     },
-    rules: {
-      '@typescript-eslint/no-require-imports': 'off',
-      'no-irregular-whitespace': 'off',
-      'react/no-unescaped-entities': 'off',
-      'react/self-closing-comp': 'error',
-      curly: 'error',
-      'prettier/prettier': ['error', { endOfLine: 'auto' }],
-      'react/jsx-tag-spacing': [
-        'error',
-        { beforeSelfClosing: 'always', afterOpening: 'never', beforeClosing: 'never' },
-      ],
-    },
+    rules: sharedRules,
   },
+
+  dtsOverride,
 ])

@@ -1,8 +1,3 @@
-/**
- * Sample Survey Configuration
- * Example survey for testing the MIP survey system
- */
-
 import { Survey } from '@repo/survey'
 
 export const sampleSurvey: Survey = {

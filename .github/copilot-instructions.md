@@ -79,7 +79,12 @@ This is a Next.js monorepo for the "Bilan Carbone" platform, focused on carbon a
   - Complex business logic that isn't obvious from the code
   - Non-obvious technical decisions or workarounds
   - Public API documentation (JSDoc for exported functions/types)
-  - DO NOT add simple descriptive comments like "// Text Question Input Component" or "// Progress Bar"
+  - DO NOT add simple descriptive comments like `// Text Question Input Component` or `// Progress Bar`
+  - DO NOT add file/module-level JSDoc block comments (e.g., `/** Sample Survey Configuration */`)
+
+### Tooling
+- **Prettier**: A single `.prettierrc.json` at the monorepo root is the canonical prettier config. Do not add per-app prettier config files.
+- **ESLint**: Shared rules are defined in `eslint.config.base.mjs` at the monorepo root. Each app's `eslint.config.mjs` imports `sharedRules` and `dtsOverride` from the root base and adds app-specific config on top.
 
 ### Internationalization
 - **Use Translations**: All user-facing strings should use the i18n system (next-intl), not hardcoded text.
