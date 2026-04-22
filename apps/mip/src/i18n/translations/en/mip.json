@@ -4,18 +4,18 @@
     "completed": {
       "title": "Survey Completed!",
       "description": "Thank you for completing the survey.",
-      "responseId": "Response ID: {{id}}"
+      "responseId": "Response ID: {id}"
     },
     "notFound": "No question found",
     "progress": {
-      "question": "Question {{current}} of {{total}}",
-      "complete": "{{percent}}% Complete"
+      "question": "Question {current} of {total}",
+      "complete": "{percent}% Complete"
     },
     "navigation": {
       "previous": "Previous",
       "next": "Next",
       "complete": "Complete"
     },
-    "characterCount": "{{current}} / {{max}} characters"
+    "characterCount": "{current} / {max} characters"
   }
 }
