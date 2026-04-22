@@ -2,6 +2,7 @@ import { Typography } from '@mui/material'
 import { Question } from '@repo/survey'
 import { TextQuestionInput } from './TextQuestionInput'
 import { ChoiceQuestionInput } from './ChoiceQuestionInput'
+import styles from './QuestionRenderer.module.css'
 
 interface QuestionRendererProps {
   question: Question
@@ -10,17 +11,17 @@ interface QuestionRendererProps {
   error?: string | null
 }
 
-export function QuestionRenderer({
-  question,
-  value,
-  onChange,
-  error,
-}: QuestionRendererProps) {
+export function QuestionRenderer({ question, value, onChange, error }: QuestionRendererProps) {
   return (
     <div>
       <Typography variant="h5" gutterBottom>
         {question.title}
-        {question.required && <Typography component="span" sx={{ color: 'error.main' }}> *</Typography>}
+        {question.required && (
+          <Typography component="span" className={styles.required}>
+            {' '}
+            *
+          </Typography>
+        )}
       </Typography>
 
       {question.description && (
@@ -39,13 +40,9 @@ export function QuestionRenderer({
       )}
 
       {question.type === 'choice' && (
-        <ChoiceQuestionInput
-          question={question}
-          value={value}
-          onChange={onChange}
-          error={error}
-        />
+        <ChoiceQuestionInput question={question} value={value} onChange={onChange} error={error} />
       )}
     </div>
   )
 }
+
