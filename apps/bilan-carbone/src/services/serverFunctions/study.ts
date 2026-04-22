@@ -914,6 +914,8 @@ const getOrCreateUserAndSendStudyInvite = async (
         organizationVersion: { connect: { id: organizationVersion.id } },
       })) as AccountWithUser
     } else if (account.status === UserStatus.IMPORTED) {
+      // IMPORTED accounts are placeholders without an org; assign the study's org so the user
+      // has a valid organizationVersionId after activating their account.
       await updateAccount(account.id, {
         organizationVersion: { connect: { id: organizationVersion.id } },
         status: UserStatus.VALIDATED,
