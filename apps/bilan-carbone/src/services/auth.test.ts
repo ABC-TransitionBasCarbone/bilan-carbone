@@ -1,5 +1,10 @@
 import { Environment, UserStatus } from '@repo/db-common/enums'
 
+// TODO: ESM module issue with Jest. Remove these mocks when moving to Vitest
+jest.mock('next-intl/server', () => ({
+  getTranslations: jest.fn(() => (key: string) => key),
+}))
+
 import { getActiveAccountsForEnvironment } from './auth'
 
 describe('getActiveAccountsForEnvironment', () => {
