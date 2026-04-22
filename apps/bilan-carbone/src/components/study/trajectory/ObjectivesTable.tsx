@@ -492,6 +492,7 @@ const ObjectivesTable = ({
             setEditObjective(null)
           }}
           trajectory={objectiveModalTrajectory}
+          studyYear={studyYear}
           onSuccess={handleObjectiveSuccess}
           objective={editObjective || undefined}
           sites={sites}

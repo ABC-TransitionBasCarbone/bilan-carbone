@@ -113,20 +113,18 @@ const calculateObjectiveGroupTrajectory = (
 ): TrajectoryDataPoint[] => {
   const groupStates = objectiveGroups.map((group) => {
     const sortedObjectives = [...group.objectives].sort((a, b) => a.targetYear - b.targetYear)
+    // Skip prefix objectives whose targetYear is already reached before the study starts
+    const firstActiveIndex = sortedObjectives.findIndex((o) => o.targetYear > studyStartYear)
+    const objectiveIndex = firstActiveIndex === -1 ? sortedObjectives.length : firstActiveIndex
+    const groupEmissions = studyEmissions * group.ratio
+    const activeObjective = sortedObjectives[objectiveIndex]
     return {
-      emissions: studyEmissions * group.ratio,
+      emissions: groupEmissions,
       objectives: sortedObjectives,
-      objectiveIndex: 0,
-      yearlyReduction: 0,
+      objectiveIndex,
+      yearlyReduction: activeObjective ? groupEmissions * Number(activeObjective.reductionRate) : 0,
     }
   })
-
-  // Compute the first yearly reduction for each group
-  for (const state of groupStates) {
-    if (state.objectives.length > 0) {
-      state.yearlyReduction = state.emissions * Number(state.objectives[0].reductionRate)
-    }
-  }
 
   const lastYear = Math.max(maxYear ?? 0, ...objectiveGroups.flatMap((g) => g.objectives.map((o) => o.targetYear)))
 
