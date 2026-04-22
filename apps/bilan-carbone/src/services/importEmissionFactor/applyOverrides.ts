@@ -6,7 +6,7 @@ import { ImportEmissionFactor, mapEmissionFactors } from './import'
 
 type MapFunction = (row: ImportEmissionFactor) => ReturnType<typeof mapEmissionFactors>
 
-const buildOverrideData = (mapped: ReturnType<typeof mapEmissionFactors>) => ({
+const pickGasFields = (mapped: ReturnType<typeof mapEmissionFactors>) => ({
   totalCo2: mapped.totalCo2,
   co2f: mapped.co2f,
   ch4f: mapped.ch4f,
@@ -17,6 +17,10 @@ const buildOverrideData = (mapped: ReturnType<typeof mapEmissionFactors>) => ({
   hfc: mapped.hfc,
   pfc: mapped.pfc,
   otherGES: mapped.otherGES,
+})
+
+const buildOverrideData = (mapped: ReturnType<typeof mapEmissionFactors>) => ({
+  ...pickGasFields(mapped),
   unit: mapped.unit,
   status: mapped.status,
   source: mapped.source,
@@ -102,16 +106,7 @@ export const applyOverridesFromRows = async (
                 }
                 return {
                   type: part.Type_poste as Prisma.EmissionFactorOverridePartCreateManyInput['type'],
-                  totalCo2: mappedPart.totalCo2,
-                  co2f: mappedPart.co2f,
-                  ch4f: mappedPart.ch4f,
-                  ch4b: mappedPart.ch4b,
-                  n2o: mappedPart.n2o,
-                  co2b: mappedPart.co2b,
-                  sf6: mappedPart.sf6,
-                  hfc: mappedPart.hfc,
-                  pfc: mappedPart.pfc,
-                  otherGES: mappedPart.otherGES,
+                  ...pickGasFields(mappedPart),
                   metaData: metaData.length > 0 ? { createMany: { data: metaData } } : undefined,
                 }
               }),
