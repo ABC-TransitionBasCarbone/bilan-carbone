@@ -250,7 +250,10 @@ describe('Study Service', () => {
       const getTotalValue = (siteName: string) => {
         const totalRow = findSiteTotalRow(siteName)
         expect(totalRow).toBeDefined()
-        const value = Number(totalRow?.[2] ?? NaN)
+        if (!totalRow) {
+          throw new Error(`Missing total row for ${siteName}`)
+        }
+        const value = Number(totalRow[2])
         expect(Number.isFinite(value)).toBe(true)
         return value
       }
