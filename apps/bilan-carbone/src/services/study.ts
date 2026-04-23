@@ -584,8 +584,7 @@ const formatBaseResultsToBCExport = (
   data.push([])
 
   for (const site of siteList) {
-    const results =
-      site.studySiteId === 'all' ? computedResults.aggregated : computedResults.bySite[site.studySiteId]
+    const results = site.studySiteId === 'all' ? computedResults.aggregated : computedResults.bySite[site.studySiteId]
     // TODO: use a more generic conversion function to be used by all simplified environments
     const bilanCarboneEquivalent = convertSimplifiedEnvToBilanCarbone(results ?? [])
 
@@ -628,8 +627,7 @@ export const formatComputedResultsForExport = (
   for (const site of siteList) {
     dataForExport.push([site.name])
     dataForExport.push(formattedHeaders)
-    const results =
-      site.studySiteId === 'all' ? computedResults.aggregated : computedResults.bySite[site.studySiteId]
+    const results = site.studySiteId === 'all' ? computedResults.aggregated : computedResults.bySite[site.studySiteId]
 
     for (const result of results) {
       dataForExport.push([result.label, '', formatEmissionValueForExport(result.value ?? 0, study.resultsUnit)])
