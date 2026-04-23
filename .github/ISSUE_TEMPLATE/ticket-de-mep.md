@@ -1,7 +1,7 @@
 ---
 name: Ticket de MEP
 about: Modèle pour préparer une mise en production
-title: 'ETQ dev, '
+title: '[MEP] '
 labels: ''
 assignees: ''
 ---
@@ -11,24 +11,24 @@ assignees: ''
 Processus de MEP (à mettre dans la PR develop > master) :warning: Faire attention à :
 
 - [ ] Regarder les tickets en test, en déploiement et en retour
-- [ ] Pas de MEP le jeudi
+- [ ] Pas de MEP le jeudi (règle du process projet pour éviter une MEP juste avant fin de semaine)
 - [ ] Pas de MEP solo
-  - [ ] Doc de MEP est ok
+  - [ ] La documentation de MEP est complète et à jour
   - [ ] Est ce que toutes les issues sont OK ?
 - [ ] Pas de multi tâches sur le projet
 - [ ] Backup avant la MEP
-- [ ] Task force en cas de force majeur
+- [ ] Task force en cas de force majeure
 - [ ] En cas de script faire un select avant de faire delete ou update et conserver les données dans un excel quelques jours (à supprimer ensuite !)
 
-:u6e80: Si migration BDD complexe faire avant
+:white_check_mark: Pré-requis si migration BDD complexe
 
 - [ ] Déployer master sur staging
-- [ ] npx prisma migrate reset
+- [ ] npx prisma migrate reset (staging uniquement, commande destructive)
 - [ ] Déployer develop sur staging
 - [ ] npx prisma migrate deploy + prisma generate
 - [ ] Tester que la migration est bien passée
 
-:ballot_box_with_check: à faire si migration complexe
+:ballot_box_with_check: Actions de MEP si migration complexe
 
 - [ ] Une PR develop sur master
 - [ ] Déployer master sur la production
