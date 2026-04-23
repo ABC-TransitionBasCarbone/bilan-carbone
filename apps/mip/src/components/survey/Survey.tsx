@@ -1,11 +1,11 @@
 'use client'
 
-import { useEffect, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { Alert, Button, Card, CardContent, Container, LinearProgress, Typography } from '@mui/material'
 import { ArrowBack, ArrowForward, Check } from '@mui/icons-material'
 import { useTranslations } from 'next-intl'
-import { SurveyEngine, Survey as SurveyType } from '@repo/survey'
-import { useSurveyStore } from '@/store/surveyStore'
+import { v4 as uuidv4 } from 'uuid'
+import { SurveyEngine, surveyStorage, Survey as SurveyType, SurveyResponse } from '@repo/survey'
 import { QuestionRenderer } from './QuestionRenderer'
 import styles from './Survey.module.css'
 
@@ -14,41 +14,80 @@ interface SurveyProps {
   responseId?: string
 }
 
+function initResponse(survey: SurveyType, responseId?: string): SurveyResponse {
+  if (responseId) {
+    const existing = surveyStorage.loadResponse(responseId)
+    if (existing && existing.surveyId === survey.id) {
+      return existing
+    }
+  }
+  const now = new Date()
+  return {
+    surveyId: survey.id,
+    responseId: responseId ?? uuidv4(),
+    answers: {},
+    currentQuestionIndex: 0,
+    completed: false,
+    startedAt: now,
+    updatedAt: now,
+  }
+}
+
 export function Survey({ survey, responseId }: SurveyProps) {
   const t = useTranslations('survey')
-  const {
-    survey: loadedSurvey,
-    response,
-    currentQuestionIndex,
-    error,
-    loadSurvey,
-    setAnswer,
-    goToNext,
-    goToPrevious,
-  } = useSurveyStore()
+  const [response, setResponse] = useState<SurveyResponse>(() => initResponse(survey, responseId))
+  const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    loadSurvey(survey, responseId)
-  }, [survey, responseId, loadSurvey])
+  const engine = useMemo(() => new SurveyEngine(survey, response), [survey, response])
 
-  const engine = useMemo(() => {
-    if (!loadedSurvey || !response) return null
-    return new SurveyEngine(loadedSurvey, response)
-  }, [loadedSurvey, response])
+  const saveAndUpdate = useCallback((updatedResponse: SurveyResponse) => {
+    surveyStorage.saveResponse(updatedResponse.responseId, updatedResponse)
+    setResponse(updatedResponse)
+  }, [])
 
-  if (!engine || !response) {
-    return (
-      <Container maxWidth="md" className={styles.container}>
-        <Typography>{t('loading')}</Typography>
-      </Container>
-    )
-  }
+  const handleAnswer = useCallback(
+    (answer: string | string[]) => {
+      const updatedEngine = new SurveyEngine(survey, response)
+      updatedEngine.setAnswer(answer)
+      saveAndUpdate(updatedEngine.getResponse())
+      setError(null)
+    },
+    [survey, response, saveAndUpdate],
+  )
+
+  const handleNext = useCallback(() => {
+    const currentQuestion = engine.getCurrentQuestion()
+    if (currentQuestion?.required) {
+      const answer = engine.getAnswer(currentQuestion.id)
+      const validationError = engine.validateAnswer(currentQuestion, answer || '')
+      if (validationError) {
+        setError(validationError)
+        return
+      }
+    }
+    const updatedEngine = new SurveyEngine(survey, response)
+    if (updatedEngine.hasNextQuestion()) {
+      updatedEngine.goToNextQuestion()
+    } else {
+      updatedEngine.complete()
+    }
+    saveAndUpdate(updatedEngine.getResponse())
+    setError(null)
+  }, [engine, survey, response, saveAndUpdate])
+
+  const handlePrevious = useCallback(() => {
+    const updatedEngine = new SurveyEngine(survey, response)
+    if (updatedEngine.hasPreviousQuestion()) {
+      updatedEngine.goToPreviousQuestion()
+      saveAndUpdate(updatedEngine.getResponse())
+      setError(null)
+    }
+  }, [survey, response, saveAndUpdate])
 
   const currentQuestion = engine.getCurrentQuestion()
   const progress = engine.getProgress()
-  const isComplete = engine.isComplete()
 
-  if (isComplete) {
+  if (engine.isComplete()) {
     return (
       <Container maxWidth="md" className={styles.container}>
         <Card>
@@ -98,7 +137,7 @@ export function Survey({ survey, responseId }: SurveyProps) {
         <div className={styles.progressLabels}>
           <Typography variant="body2" color="text.secondary">
             {t('progress.question', {
-              current: Math.min(currentQuestionIndex + 1, survey.questions.length),
+              current: Math.min(response.currentQuestionIndex + 1, survey.questions.length),
               total: survey.questions.length,
             })}
           </Typography>
@@ -110,7 +149,7 @@ export function Survey({ survey, responseId }: SurveyProps) {
       </div>
 
       {error && (
-        <Alert severity="error" className={styles.alert} onClose={() => {}}>
+        <Alert severity="error" className={styles.alert} onClose={() => setError(null)}>
           {error}
         </Alert>
       )}
@@ -120,23 +159,28 @@ export function Survey({ survey, responseId }: SurveyProps) {
           <QuestionRenderer
             question={currentQuestion}
             value={currentAnswer}
-            onChange={(value) => setAnswer(currentQuestion.id, value)}
+            onChange={handleAnswer}
             error={error}
           />
         </CardContent>
       </Card>
 
       <div className={styles.navigation}>
-        <Button variant="outlined" startIcon={<ArrowBack />} onClick={goToPrevious} disabled={!engine.hasPreviousQuestion()}>
+        <Button
+          variant="outlined"
+          startIcon={<ArrowBack />}
+          onClick={handlePrevious}
+          disabled={!engine.hasPreviousQuestion()}
+        >
           {t('navigation.previous')}
         </Button>
 
         {engine.hasNextQuestion() ? (
-          <Button variant="contained" endIcon={<ArrowForward />} onClick={goToNext}>
+          <Button variant="contained" endIcon={<ArrowForward />} onClick={handleNext}>
             {t('navigation.next')}
           </Button>
         ) : (
-          <Button variant="contained" color="success" endIcon={<Check />} onClick={goToNext}>
+          <Button variant="contained" color="success" endIcon={<Check />} onClick={handleNext}>
             {t('navigation.complete')}
           </Button>
         )}

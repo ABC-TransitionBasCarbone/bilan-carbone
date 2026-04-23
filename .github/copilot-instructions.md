@@ -67,6 +67,7 @@ This is a Next.js monorepo for the "Bilan Carbone" platform, focused on carbon a
 ### React & Next.js
 - **Server Components First**: Pages should be server components by default. Use `await params` instead of `React.use(params)` in page components.
 - **Avoid useEffect for Data Loading**: Load data server-side rather than in useEffect. This is an anti-pattern in React 19.
+- **Client-Side Initialization**: For client-side state that reads from localStorage or URL params, use `useState` with a lazy initializer (`useState(() => computeInitialValue())`) instead of `useEffect`. This is the React 19 recommended approach.
 - **Client Components**: Only use `'use client'` when you need hooks, event handlers, or browser APIs.
 - **Component Naming**: Page files export a component matching the route purpose (e.g., `SurveyPage` for a survey page route).
 
@@ -87,8 +88,10 @@ This is a Next.js monorepo for the "Bilan Carbone" platform, focused on carbon a
   - DO NOT add file/module-level JSDoc block comments (e.g., `/** Sample Survey Configuration */`)
 
 ### Tooling
-- **Prettier**: A single `.prettierrc.json` at the monorepo root is the canonical prettier config. Do not add per-app prettier config files.
-- **ESLint**: Shared rules are defined in `eslint.config.base.mjs` at the monorepo root. Each app's `eslint.config.mjs` imports `sharedRules` and `dtsOverride` from the root base and adds app-specific config on top.
+- **Prettier**: A single `.prettierrc.json` and `.prettierignore` at the monorepo root are the canonical configs. Do not add per-app prettier config or ignore files.
+- **ESLint**: Shared rules are defined in `eslint.config.base.mjs` at the monorepo root. Each app's `eslint.config.mjs` imports `sharedRules` and `dtsOverride` from the root base and adds only Next.js-specific extends on top. Ideally, only the root config should exist.
+- **TypeScript**: `tsconfig.base.json` at the monorepo root is the canonical config with all common compiler options. App-level `tsconfig.json` files should only extend it and add app-specific overrides (Next.js plugin, `paths`, `include`/`exclude`). Do not duplicate base options in app configs.
+- **READMEs**: Only 3 README files should exist: one at the monorepo root, one in `apps/bilan-carbone/`, and one in `apps/mip/`. Do not add READMEs to packages.
 
 ### Internationalization
 - **Use Translations**: All user-facing strings should use the i18n system (next-intl), not hardcoded text.
