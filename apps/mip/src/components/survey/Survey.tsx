@@ -42,17 +42,16 @@ export function Survey({ survey, responseId }: SurveyProps) {
 
   const saveAndUpdate = useCallback((updatedResponse: SurveyResponse) => {
     surveyStorage.saveResponse(updatedResponse.responseId, updatedResponse)
-    setResponse(updatedResponse)
+    setResponse({ ...updatedResponse })
   }, [])
 
   const handleAnswer = useCallback(
     (answer: string | string[]) => {
-      const updatedEngine = new SurveyEngine(survey, response)
-      updatedEngine.setAnswer(answer)
-      saveAndUpdate(updatedEngine.getResponse())
+      engine.setAnswer(answer)
+      saveAndUpdate(engine.getResponse())
       setError(null)
     },
-    [survey, response, saveAndUpdate],
+    [engine, saveAndUpdate],
   )
 
   const handleNext = useCallback(() => {
@@ -65,24 +64,22 @@ export function Survey({ survey, responseId }: SurveyProps) {
         return
       }
     }
-    const updatedEngine = new SurveyEngine(survey, response)
-    if (updatedEngine.hasNextQuestion()) {
-      updatedEngine.goToNextQuestion()
+    if (engine.hasNextQuestion()) {
+      engine.goToNextQuestion()
     } else {
-      updatedEngine.complete()
+      engine.complete()
     }
-    saveAndUpdate(updatedEngine.getResponse())
+    saveAndUpdate(engine.getResponse())
     setError(null)
-  }, [engine, survey, response, saveAndUpdate])
+  }, [engine, saveAndUpdate])
 
   const handlePrevious = useCallback(() => {
-    const updatedEngine = new SurveyEngine(survey, response)
-    if (updatedEngine.hasPreviousQuestion()) {
-      updatedEngine.goToPreviousQuestion()
-      saveAndUpdate(updatedEngine.getResponse())
+    if (engine.hasPreviousQuestion()) {
+      engine.goToPreviousQuestion()
+      saveAndUpdate(engine.getResponse())
       setError(null)
     }
-  }, [survey, response, saveAndUpdate])
+  }, [engine, saveAndUpdate])
 
   const currentQuestion = engine.getCurrentQuestion()
   const progress = engine.getProgress()
