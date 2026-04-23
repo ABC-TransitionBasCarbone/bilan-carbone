@@ -321,7 +321,6 @@ const ObjectivesTable = ({
                     </Link>
                   ),
                 })}
-                ,
               </p>
             </GlossaryIconModal>
           </div>

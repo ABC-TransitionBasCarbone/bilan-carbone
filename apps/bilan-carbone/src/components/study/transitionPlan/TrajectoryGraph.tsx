@@ -429,7 +429,7 @@ const TrajectoryGraph = ({
       <BottomLeftMultilineText {...props} className="bold">
         <div className={classNames('flex', styles.estimatedPastLabel)}>
           <Typography variant="body2" fontWeight={600}>
-            {customRich(t,'estimatedPast')}
+            {customRich(t, 'estimatedPast')}
           </Typography>
           <HelpOutlineOutlinedIcon color="secondary" className="ml-4 pointer" onClick={onClick} />
         </div>
@@ -508,7 +508,6 @@ const TrajectoryGraph = ({
                             </Link>
                           ),
                         })}
-                        ,
                       </p>
                     </GlossaryIconModal>
                   )}
@@ -601,7 +600,7 @@ const TrajectoryGraph = ({
 
       {glossary && (
         <GlossaryModal glossary="title" label="emission-factor-post" t={tGlossary} onClose={() => setGlossary(false)}>
-          {tGlossary('description')}
+          {customRich(tGlossary, 'description')}
         </GlossaryModal>
       )}
     </div>

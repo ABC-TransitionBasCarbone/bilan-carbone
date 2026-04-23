@@ -1331,7 +1331,7 @@
           "enabled": "Enabled",
           "enabledGlossaryIconLabel": "Enabling and disabling my actions",
           "enabledGlossaryTitle": "Enabling and disabling my actions",
-          "enabledGlossaryDescription": "The reductions linked to actions you have enabled are taken into account on the <trajectoryLink>pathways and objectives</trajectoryLink> page in your bottom-up pathway. Reductions linked to disabled actions will not be visible. Enabling or disabling actions allows you to consider different scenarios to achieve your reduction objectives."
+          "enabledGlossaryDescription": "The reductions linked to actions you have enabled are taken into account on the <trajectoryLink>pathways and objectives</trajectoryLink> page in your bottom-up pathway. Reductions linked to disabled actions will not be visible. Enabling or disabling actions allows you to consider different scenarios to achieve your reduction objectives.",
           "title": "Title",
           "priority": "Priority",
           "actionType": "Action type",
@@ -1872,7 +1872,7 @@
     "COLLABORATOR_description": "A collaborator is a person trained in the Bilan Carbone® method. They have no rights to the organisation's account but can create studies. They have access to their organisation's public studies with the role editor by default.",
     "COLLABORATOR_description_CR": "A collaborator is a person trained in the Bilan Carbone® method. They have no rights to the organisation's account but can create clients and studies. They only have access to their organisation's or their organisation clients public studies with the role editor by default.",
     "DEFAULT_description": "A member of the organisation has no specific rights over the organisation, the team or studies. By default, they are readers of all their organisation's public Bilans Carbone®.",
-    "DEFAULT_description_CR": "A member of the organisation has no specific rights over the organisation, the team, their clients or studies. By default, they are readers of all their organisation's or their organisation's clients public Bilans Carbone®."
+    "DEFAULT_description_CR": "A member of the organisation has no specific rights over the organisation, the team, their clients or studies. By default, they are readers of all their organisation's or their organisation's clients public Bilans Carbone®.",
     "guide": "Roles guide",
     "saved": "New role saved",
     "Not authorized": "You are not allowed to do this action",
@@ -2517,7 +2517,7 @@
     "uncertainties": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/4-accounting/4.4-method-for-estimating-uncertainties/4.4.2-how-to-determine-them",
     "SNBC": "https://www.ecologie.gouv.fr/politiques-publiques/strategie-nationale-bas-carbone-snbc",
     "SBTi": "https://sciencebasedtargets.org/net-zero",
-    "carbonBudget": "https://www.bilancarbone-methode.com/annexes/glossaire#b",
-    "carbonNeutrality": "https://www.bilancarbone-methode.com/annexes/glossaire#n"
+    "carbonBudget": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/appendices/glossary#b",
+    "carbonNeutrality": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/appendices/glossary#n"
   }
 }
