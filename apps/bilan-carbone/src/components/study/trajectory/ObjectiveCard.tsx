@@ -11,9 +11,11 @@ import Typography from '@mui/material/Typography'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
+import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import { Control, FieldPath } from 'react-hook-form'
 import styles from './ObjectiveCard.module.css'
+import { customRich } from '@/i18n/customRich'
 
 interface Props<T extends TrajectoryFormData | ObjectiveModalFormData> {
   reductionRate?: number
@@ -40,6 +42,7 @@ const ObjectiveCard = <T extends TrajectoryFormData | ObjectiveModalFormData>({
   const tCommon = useTranslations('common')
   const tGlossary = useTranslations('study.transitionPlan.trajectoryModal.glossary')
   const [showOvershootInfo, setShowOvershootInfo] = useState(false)
+  const tDocumentation = useTranslations('documentationUrl')
 
   const correctedRates = useMemo(() => {
     if (!correctedObjective) {
@@ -135,7 +138,13 @@ const ObjectiveCard = <T extends TrajectoryFormData | ObjectiveModalFormData>({
           t={tGlossary}
           onClose={() => setShowOvershootInfo(false)}
         >
-          {tGlossary('correctedRateDescription')}
+          <p>{customRich(tGlossary, 'correctedRateDescription',
+            {link: (children) => (
+              <Link href={tDocumentation('CarbonBudget')} target="_blank" rel="noreferrer noopener">
+                {children}
+              </Link>
+            )})},
+          </p>
         </GlossaryModal>
       )}
     </div>

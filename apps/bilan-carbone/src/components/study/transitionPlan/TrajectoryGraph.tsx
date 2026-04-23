@@ -429,7 +429,7 @@ const TrajectoryGraph = ({
       <BottomLeftMultilineText {...props} className="bold">
         <div className={classNames('flex', styles.estimatedPastLabel)}>
           <Typography variant="body2" fontWeight={600}>
-            {t('estimatedPast')}
+            {customRich(t,'estimatedPast')}
           </Typography>
           <HelpOutlineOutlinedIcon color="secondary" className="ml-4 pointer" onClick={onClick} />
         </div>
