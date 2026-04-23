@@ -1324,6 +1324,7 @@
         "search": "Search for your action here",
         "add": "Add an action",
         "table": {
+          "sectionTitle": "Actions list",
           "enabled": "Enabled",
           "enabledGlossaryIconLabel": "Enabling and disabling my actions",
           "enabledGlossaryTitle": "Enabling and disabling my actions",
@@ -1334,6 +1335,8 @@
           "implementation": "Implementation",
           "potential": "Reduction potential",
           "owner": "Manager",
+          "allOwners": "All managers",
+          "noOwner": "No manager",
           "budget": "Budget",
           "errorChangingEnabled": "Error changing action status",
           "relevance": "Relevance levels",

@@ -24,7 +24,9 @@ import {
   flexRender,
   getCoreRowModel,
   getExpandedRowModel,
+  getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   PaginationState,
   Row,
   useReactTable,
@@ -33,6 +35,28 @@ import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
+import { NO_OWNER } from './ActionFilters'
+
+const sortWithUpdatedAtFallback = (
+  rowA: { original: ActionWithRelations; getValue: (columnId: string) => unknown },
+  rowB: { original: ActionWithRelations; getValue: (columnId: string) => unknown },
+  columnId: string,
+): number => {
+  const a = (rowA.getValue(columnId) as number | null | undefined) ?? null
+  const b = (rowB.getValue(columnId) as number | null | undefined) ?? null
+
+  if (a !== b) {
+    if (a === null) {
+      return 1
+    }
+    if (b === null) {
+      return -1
+    }
+    return a < b ? -1 : 1
+  }
+
+  return new Date(rowB.original.updatedAt).getTime() - new Date(rowA.original.updatedAt).getTime()
+}
 
 interface Props {
   actions: ActionWithRelations[]
@@ -42,9 +66,21 @@ interface Props {
   studyId: string
   studyUnit: StudyResultUnit
   allSites: Array<{ id: string; name: string }>
+  allOwnerCount: number
+  ownerFilter: string[]
 }
 
-const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId, studyUnit, allSites }: Props) => {
+const ActionTable = ({
+  actions,
+  openEditModal,
+  openDeleteModal,
+  canEdit,
+  studyId,
+  studyUnit,
+  allSites,
+  allOwnerCount,
+  ownerFilter,
+}: Props) => {
   const { environment } = useAppEnvironmentStore()
   const tActiontable = useTranslations('study.transitionPlan.actions.table')
   const tCommon = useTranslations('common')
@@ -193,7 +229,7 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId
 
       return display
     },
-    [environment, getSubPostsDisplay, tCommon],
+    [environment, getScopeItemDisplay, getSubPostsDisplay, tCommon, tPosts],
   )
 
   const getTagsDisplay = useCallback(
@@ -212,12 +248,20 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId
     [getTagsDisplay, tCommon],
   )
 
+  const getStartYear = useCallback((action: ActionWithRelations) => {
+    if (!action.reductionStartYear) {
+      return null
+    }
+    return getYearFromDateStr(action.reductionStartYear)
+  }, [])
+
   const columns = useMemo(
     () =>
       [
         {
           id: 'expand',
           header: '',
+          enableSorting: false,
           accessorFn: () => '',
           cell: ({ row }) => (
             <button
@@ -230,6 +274,7 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId
         },
         {
           id: 'enabled',
+          enableSorting: false,
           header: () => (
             <div className="flex-cc">
               <GlossaryIconModal
@@ -266,37 +311,76 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId
         {
           header: tActiontable('title'),
           accessorKey: 'title',
+          enableSorting: false,
         },
         {
           header: tActiontable('sites'),
           accessorFn: getSitesCompactDisplay,
+          enableSorting: false,
         },
         {
           header: tActiontable('posts'),
           accessorFn: getSubPostsCompactDisplay,
+          enableSorting: false,
         },
         {
           header: tActiontable('tags'),
           accessorFn: getTagsCompactDisplay,
+          enableSorting: false,
         },
         {
+          id: 'priority',
           header: tActiontable('priority'),
           accessorKey: 'priority',
+          sortingFn: 'withUpdatedAtFallback',
         },
         {
           header: tActiontable('actionType'),
           accessorFn: (action) => action.category.map((category) => tCategory(category)).join(', '),
+          enableSorting: false,
         },
         {
+          id: 'implementation',
           header: tActiontable('implementation'),
-          accessorFn: getImplementationPeriod,
+          accessorFn: getStartYear,
+          cell: ({ row }) => getImplementationPeriod(row.original),
+          sortingFn: 'withUpdatedAtFallback',
         },
-        { header: tActiontable('potential'), accessorFn: getPotential },
-        { header: tActiontable('owner'), accessorKey: 'owner' },
-        { header: `${tActiontable('budget')} (k€)`, accessorKey: 'necessaryBudget' },
+        {
+          id: 'potential',
+          header: tActiontable('potential'),
+          accessorFn: (action) => {
+            if (action.potentialDeduction === ActionPotentialDeduction.Quantity && action.reductionValueKg !== null) {
+              return action.reductionValueKg
+            }
+            return null
+          },
+          cell: ({ row }) => getPotential(row.original),
+          sortingFn: 'withUpdatedAtFallback',
+        },
+        {
+          id: 'owner',
+          header: tActiontable('owner'),
+          accessorKey: 'owner',
+          enableSorting: false,
+          filterFn: (row, columnId, filterValue: string[]) => {
+            const owner = row.getValue<string>(columnId)
+            if (!owner) {
+              return filterValue.includes(NO_OWNER)
+            }
+            return filterValue.includes(owner)
+          },
+        },
+        {
+          id: 'budget',
+          header: `${tActiontable('budget')} (k€)`,
+          accessorKey: 'necessaryBudget',
+          sortingFn: 'withUpdatedAtFallback',
+        },
         {
           id: 'actions',
           header: '',
+          enableSorting: false,
           accessorFn: () => '',
           cell: ({ row }) =>
             canEdit ? (
@@ -312,6 +396,7 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId
     [
       tActiontable,
       getImplementationPeriod,
+      getStartYear,
       getPotential,
       studyId,
       getSitesCompactDisplay,
@@ -330,13 +415,23 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId
     data: localActions,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     onPaginationChange: setPagination,
     getRowCanExpand: () => true,
     getExpandedRowModel: getExpandedRowModel(),
+    sortingFns: { withUpdatedAtFallback: sortWithUpdatedAtFallback },
+    enableSortingRemoval: false,
+    initialState: { pagination, sorting: [{ id: 'priority', desc: false }] },
     state: { pagination },
   })
 
-  const Row = (row: Row<ActionWithRelations>) => (
+  useEffect(() => {
+    const allSelected = ownerFilter.length === allOwnerCount
+    table.getColumn('owner')?.setFilterValue(allSelected ? undefined : ownerFilter)
+  }, [ownerFilter, allOwnerCount, table])
+
+  const RowComponent = (row: Row<ActionWithRelations>) => (
     <Fragment key={row.id}>
       <TableRow key={`${row.id}-main`} className={styles.line} data-testid="actions-table-row">
         {row.getVisibleCells().map((cell) => (
@@ -404,7 +499,7 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId
     </Fragment>
   )
 
-  return <BaseTable customRow={Row} table={table} paginations={[10, 25, 50, 100]} testId="actions" />
+  return <BaseTable customRow={RowComponent} table={table} paginations={[10, 25, 50, 100]} testId="actions" />
 }
 
 export default ActionTable
