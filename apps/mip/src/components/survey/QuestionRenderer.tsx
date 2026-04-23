@@ -18,7 +18,7 @@ export function QuestionRenderer({ question, value, onChange, error }: QuestionR
         {question.title}
         {question.required && (
           <Typography component="span" className={styles.required}>
-            {' *'}
+            *
           </Typography>
         )}
       </Typography>

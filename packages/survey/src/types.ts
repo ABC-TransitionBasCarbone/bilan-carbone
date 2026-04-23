@@ -1,8 +1,3 @@
-/**
- * Survey Types
- * Based on nosgestesclimat-app question logic
- */
-
 export type QuestionType = 'text' | 'choice'
 
 export interface BaseQuestion {
