@@ -19,6 +19,7 @@ const ConfirmDeleteModal = dynamic(() => import('@/components/modals/ConfirmDele
 
 interface Props {
   actions: ActionWithRelations[]
+  scopedActions: ActionWithRelations[]
   transitionPlanId: string
   studyUnit: StudyResultUnit
   canEdit: boolean
@@ -36,6 +37,7 @@ const fuseOptions = {
 
 const Actions = ({
   actions,
+  scopedActions,
   studyUnit,
   transitionPlanId,
   canEdit,
@@ -140,6 +142,7 @@ const Actions = ({
       />
       <ActionTable
         actions={searchedActions}
+        scopedActions={scopedActions}
         openEditModal={handleOpenEditModal}
         openDeleteModal={handleOpenDeleteModal}
         canEdit={canEdit}

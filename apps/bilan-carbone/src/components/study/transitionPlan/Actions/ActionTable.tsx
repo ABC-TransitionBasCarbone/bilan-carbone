@@ -17,7 +17,7 @@ import { getYearFromDateStr } from '@/utils/time'
 import ArrowRight from '@mui/icons-material/ArrowRight'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
-import { Link, Switch, TableCell, TableRow } from '@mui/material'
+import { Link, Switch, TableCell, TableRow, Typography } from '@mui/material'
 import { ActionPotentialDeduction, StudyResultUnit } from '@repo/db-common/enums'
 import {
   ColumnDef,
@@ -60,6 +60,7 @@ const sortWithUpdatedAtFallback = (
 
 interface Props {
   actions: ActionWithRelations[]
+  scopedActions: ActionWithRelations[]
   openEditModal: (action: ActionWithRelations) => void
   openDeleteModal: (action: ActionWithRelations) => void
   canEdit: boolean
@@ -72,6 +73,7 @@ interface Props {
 
 const ActionTable = ({
   actions,
+  scopedActions,
   openEditModal,
   openDeleteModal,
   canEdit,
@@ -115,22 +117,42 @@ const ActionTable = ({
     [callServerFunction, router, setLocalActions, actions],
   )
 
+  const scopedActionsMap = useMemo(() => new Map(scopedActions.map((a) => [a.id, a])), [scopedActions])
+
   const getPotential = useCallback(
     (action: ActionWithRelations) => {
       switch (action.potentialDeduction) {
         case ActionPotentialDeduction.Quality:
           return tPotential(ActionPotentialDeduction.Quality)
-        case ActionPotentialDeduction.Quantity:
-          if (action.reductionValueKg !== null) {
-            const valueInStudyUnit = convertValue(action.reductionValueKg, StudyResultUnit.K, studyUnit)
-            return `${formatNumber(valueInStudyUnit)} ${tUnit(studyUnit)}`
+        case ActionPotentialDeduction.Quantity: {
+          if (action.reductionValueKg === null) {
+            return ''
           }
-          return ''
+          const originalValue = convertValue(action.reductionValueKg, StudyResultUnit.K, studyUnit)
+          const scopedAction = scopedActionsMap.get(action.id)
+          const scopedValueKg = scopedAction?.reductionValueKg ?? action.reductionValueKg
+          const isProrated = scopedValueKg !== action.reductionValueKg
+          const unit = tUnit(studyUnit)
+          if (!isProrated) {
+            return `${formatNumber(originalValue)} ${unit}`
+          }
+          const proratedValue = convertValue(scopedValueKg, StudyResultUnit.K, studyUnit)
+          return (
+            <div className="flex-col">
+              <span>{`${formatNumber(originalValue)} ${unit}`}</span>
+              <span className="ml05">
+                <Typography component="span" color="warning.main">
+                  {`(${formatNumber(proratedValue)} ${unit})`}
+                </Typography>
+              </span>
+            </div>
+          )
+        }
         default:
           return ''
       }
     },
-    [tPotential, tUnit, studyUnit],
+    [tPotential, tUnit, studyUnit, scopedActionsMap],
   )
 
   const getImplementationPeriod = useCallback((action: ActionWithRelations) => {
@@ -348,7 +370,7 @@ const ActionTable = ({
         },
         {
           id: 'potential',
-          header: tActiontable('potential'),
+          header: customRich(tActiontable, 'potential'),
           accessorFn: (action) => {
             if (action.potentialDeduction === ActionPotentialDeduction.Quantity && action.reductionValueKg !== null) {
               return action.reductionValueKg

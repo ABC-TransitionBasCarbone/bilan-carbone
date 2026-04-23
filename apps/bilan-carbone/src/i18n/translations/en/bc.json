@@ -1333,7 +1333,7 @@
           "priority": "Priority",
           "actionType": "Action type",
           "implementation": "Implementation",
-          "potential": "Reduction potential",
+          "potential": "Reduction potential <br></br>(Filtered)",
           "owner": "Manager",
           "allOwners": "All managers",
           "noOwner": "No manager",

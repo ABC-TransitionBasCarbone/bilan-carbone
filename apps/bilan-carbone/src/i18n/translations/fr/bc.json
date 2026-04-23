@@ -1333,7 +1333,7 @@
           "priority": "Priorité",
           "actionType": "Type d'action",
           "implementation": "Mise en oeuvre",
-          "potential": "Potentiel de réduction",
+          "potential": "Potentiel de réduction <br></br>(Avec filtres)",
           "owner": "Responsable",
           "allOwners": "Tous les responsables",
           "noOwner": "Sans responsable",
