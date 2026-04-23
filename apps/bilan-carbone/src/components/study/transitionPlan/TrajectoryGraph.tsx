@@ -18,8 +18,8 @@ import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import { Alert, Slider, SvgIcon, Typography } from '@mui/material'
 import {
   AreaPlot,
-  ChartContainer,
   ChartsAxisHighlight,
+  ChartsContainer,
   ChartsReferenceLine,
   ChartsTooltip,
   ChartsXAxis,
@@ -38,7 +38,7 @@ import DrawingAreaBox, { DrawingProps } from '../charts/DrawingArea'
 import CustomTrajectoryLegend from '../trajectory/CustomTrajectoryLegend'
 import { buildTrajectorySeries, getCustomTrajectoryColor } from './TrajectoryGraph.helper'
 import styles from './TrajectoryGraph.module.css'
-import { BottomLeftMultilineText } from './TrajectoryGraphDrawingArea'
+import { BottomLeftMultilineText, PastAreaBackground } from './TrajectoryGraphDrawingArea'
 
 export type DataType = 'previous' | 'current'
 
@@ -424,19 +424,6 @@ const TrajectoryGraph = ({
     [hiddenTrajectoryLabels, seriesCreated],
   )
 
-  const maxY = Math.max(...displayedSeries.flatMap((s) => s?.data?.filter((v) => v !== null) || 0))
-
-  const backgroundForPastInfos: LineSeriesType = {
-    type: 'line',
-    id: 'background-area',
-    data: yearsToDisplay.map((year) => (year <= oldestPastStudyYear ? maxY : null)),
-    area: true,
-    color: 'var(--trajectory-gray-area)',
-    showMark: false,
-    disableHighlight: true,
-    valueFormatter: () => null,
-  }
-
   const BottomLeftText = ({ onClick, ...props }: DrawingProps & { onClick: () => void }) => (
     <>
       <BottomLeftMultilineText {...props} className="bold">
@@ -543,12 +530,8 @@ const TrajectoryGraph = ({
             currentLabel={(year: number) => t('currentTrajectories', { year })}
           />
         </div>
-        <ChartContainer
-          series={[
-            ...(displayedSeries.length > 0 ? [backgroundForPastInfos] : []),
-            ...studyPointsSeries,
-            ...displayedSeries,
-          ]}
+        <ChartsContainer
+          series={[...studyPointsSeries, ...displayedSeries]}
           xAxis={[
             {
               data: yearsToDisplay,
@@ -564,6 +547,7 @@ const TrajectoryGraph = ({
           yAxis={[{ label: `${t('yAxisLabel')} (${tUnit(resultsUnit)})` }]}
           height={400}
         >
+          {displayEstimatedPast && <PastAreaBackground untilYear={oldestPastStudyYear} />}
           <AreaPlot />
           <LinePlot />
           <MarkPlot />
@@ -580,7 +564,7 @@ const TrajectoryGraph = ({
           <ChartsTooltip trigger="axis" />
           <ChartsXAxis />
           <ChartsYAxis />
-        </ChartContainer>
+        </ChartsContainer>
       </div>
 
       <div className="flex justify-center w100">
