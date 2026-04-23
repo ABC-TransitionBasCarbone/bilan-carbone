@@ -211,13 +211,11 @@ describe('Study Service', () => {
           getMockedFullStudyEmissionSource({
             value: 1,
             validated: true,
-            subPost: SubPost.Electricite,
             studySite: { id: 'study-site-a', site: { id: 'site-a', name: 'Site A' } },
           }),
           getMockedFullStudyEmissionSource({
             value: 2,
             validated: true,
-            subPost: SubPost.Electricite,
             studySite: { id: 'study-site-b', site: { id: 'site-b', name: 'Site B' } },
           }),
         ],
