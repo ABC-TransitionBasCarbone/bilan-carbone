@@ -716,12 +716,7 @@
         "cancel": "Cancel",
         "confirm": "Confirm",
         "glossary": "Tags family",
-<<<<<<< HEAD
-        "glossaryDescription": "Tags and tag families are used to identify emission sources in order to breakdown your results by tags later. Similar tags should be part of the same tag family. <br></br>Create your tags and tag families to link them to your emission sources on the “Data entry” page, before viewing the emissions on the “Results” page. To avoid double counting, it is not possible to view emissions from two tag families simultaneously.<br></br>For instance, let's consider two tag families: \"Products Sold\" and \"Target Audiences\". These two families and their respective tags will allow you to visualize the distribution of your organization's emissions based on the products sold and the target audiences.",
-=======
-        "close": "Close",
         "glossaryDescription": "Tags and tag families are used to identify emission sources in order to breakdown your results by tags later. Similar tags should be part of the same tag family. <br></br>Create your tags and tag families to link them to your emission sources on the “Data entry” page, before viewing the emissions on the “Results” page. To avoid double counting, it is not possible to view emissions from two tag families simultaneously.<br></br>For instance, let's consider two tag families: \"Products Sold\" and \"Target Audiences\". These two families and their respective tags will allow you to visualise the distribution of your organisation's emissions based on the products sold and the target audiences.",
->>>>>>> 366edda4 (Wordings EN + Quelques changements supplémentaires)
         "allTags": "All tags"
       },
       "duplicate": {
@@ -1098,12 +1093,7 @@
           "estimatedPast": "Estimated Past",
           "glossary": {
             "title": "Reconstruction of past emissions on BC+",
-<<<<<<< HEAD
-            "description": "Description Gabriel"
-=======
-            "description": "Past emissions displayed are: <br></br> - Either from your past Bilan Carbone®, which you input on the “Initialisation” page <br></br> - Or reconstructed from French national inventories for the years preceding your first assessment. In the absence of information, the tool therefore assumes that your organisation has decarbonized at the same rate as France.",
-            "close": "Close"
->>>>>>> 366edda4 (Wordings EN + Quelques changements supplémentaires)
+            "description": "Past emissions displayed are: <br></br> - Either from your past Bilan Carbone®, which you input on the “Initialisation” page <br></br> - Or reconstructed from French national inventories for the years preceding your first assessment. In the absence of information, the tool therefore assumes that your organisation has decarbonized at the same rate as France."
           },
           "overshootTrajectoryGlossary": {
             "title": "Adjusted pathway",
@@ -1341,12 +1331,7 @@
           "enabled": "Enabled",
           "enabledGlossaryIconLabel": "Enabling and disabling my actions",
           "enabledGlossaryTitle": "Enabling and disabling my actions",
-<<<<<<< HEAD
-          "enabledGlossaryDescription": "The reductions linked to actions you have enabled are taken into account on the <trajectoryLink>trajectories and objectives</trajectoryLink> page in your bottom-up trajectory. Reductions linked to disabled actions will not be visible. Enabling or disabling actions allows you to consider different scenarios to achieve your reduction objectives.",
-=======
-          "enabledGlossaryDescription": "The reductions linked to actions you have enabled are taken into account on the <trajectoryLink>pathways and objectives</trajectoryLink> page in your bottom-up pathway. Reductions linked to disabled actions will not be visible. Enabling or disabling actions allows you to consider different scenarios to achieve your reduction objectives.",
-          "close": "Close",
->>>>>>> 366edda4 (Wordings EN + Quelques changements supplémentaires)
+          "enabledGlossaryDescription": "The reductions linked to actions you have enabled are taken into account on the <trajectoryLink>pathways and objectives</trajectoryLink> page in your bottom-up pathway. Reductions linked to disabled actions will not be visible. Enabling or disabling actions allows you to consider different scenarios to achieve your reduction objectives."
           "title": "Title",
           "priority": "Priority",
           "actionType": "Action type",
@@ -1880,16 +1865,6 @@
     "GESTIONNAIRE": "Manager",
     "COLLABORATOR": "Collaborator",
     "DEFAULT": "Member",
-<<<<<<< HEAD
-    "ADMIN_description": "An administrator has full rights to the organization's account and to all studies for his organization (whether public or private). It is impossible to change an administrator role on a study of his organization.",
-    "ADMIN_description_CR": "An administrator has full rights to the organization's and the organization clients' account and studies (whether public or private). It is impossible to change an administrator role on a study of his organization or one of its clients.",
-    "GESTIONNAIRE_description": "A manager has full rights over the organization's account, but no rights over studies. He is by default reader on public studies of his organization.",
-    "GESTIONNAIRE_description_CR": "A manager has full rights over the organization's account, but no rights over customers or studies. He is by default reader on its organization's or its clients public studies.",
-    "COLLABORATOR_description": "A collaborator is a person trained in the Bilan Carbone® method. They have no rights to the organization's account but can create studies. They have access to their organization's public studies with the role editor by default.",
-    "COLLABORATOR_description_CR": "A collaborator is a person trained in the Bilan Carbone® method. They have no rights to the organization's account but can create clients and studies. They only have access to their organization's or their organization clients public studies with the role editor by default.",
-    "DEFAULT_description": "A member of the organization has no specific rights over the organization, the team or studies. By default, they are readers of all their organization's public Bilans Carbone®.",
-    "DEFAULT_description_CR": "A member of the organization has no specific rights over the organization, the team, their clients or studies. By default, they are readers of all their organization's or their organization's clients public Bilans Carbone®.",
-=======
     "ADMIN_description": "An administrator has full rights to the organisation's account and to all studies for his organisation (whether public or private). It is impossible to change an administrator role on a study of his organisation.",
     "ADMIN_description_CR": "An administrator has full rights to the organisation's and the organisation clients' account and studies (whether public or private). It is impossible to change an administrator role on a study of his organisation or one of its clients.",
     "GESTIONNAIRE_description": "A manager has full rights over the organisation's account, but no rights over studies. He is by default reader on public studies of his organisation.",
@@ -1897,9 +1872,7 @@
     "COLLABORATOR_description": "A collaborator is a person trained in the Bilan Carbone® method. They have no rights to the organisation's account but can create studies. They have access to their organisation's public studies with the role editor by default.",
     "COLLABORATOR_description_CR": "A collaborator is a person trained in the Bilan Carbone® method. They have no rights to the organisation's account but can create clients and studies. They only have access to their organisation's or their organisation clients public studies with the role editor by default.",
     "DEFAULT_description": "A member of the organisation has no specific rights over the organisation, the team or studies. By default, they are readers of all their organisation's public Bilans Carbone®.",
-    "DEFAULT_description_CR": "A member of the organisation has no specific rights over the organisation, the team, their clients or studies. By default, they are readers of all their organisation's or their organisation's clients public Bilans Carbone®.",
-    "close": "Close",
->>>>>>> 366edda4 (Wordings EN + Quelques changements supplémentaires)
+    "DEFAULT_description_CR": "A member of the organisation has no specific rights over the organisation, the team, their clients or studies. By default, they are readers of all their organisation's or their organisation's clients public Bilans Carbone®."
     "guide": "Roles guide",
     "saved": "New role saved",
     "Not authorized": "You are not allowed to do this action",
@@ -2524,14 +2497,10 @@
     "studyIsLinkedInTransitionPlan": "This study is linked in the transition plan of study \"{studyName}\". The new date must be earlier than that study's date.",
     "maxTwoDecimals": "The reduction rate must have at most 2 decimal places",
     "startYearMustBeBeforeTargetYear": "Start year must be before target year",
-<<<<<<< HEAD
-    "yearMustBeAfterReferenceYear": "Year must be after the trajectory reference year",
-    "referenceYearMustBeBeforeObjectiveTargetYear": "Reference year must be strictly before the target year of global objectives",
-    "referenceYearMustBeBeforeSubObjectiveStartYear": "Reference year must be before or equal to the start year of sub-objectives",
-    "referenceYearMustBeBeforeOrEqualToStudyYear": "Reference year must be less than or equal to the study year",
-=======
+    "yearMustBeAfterReferenceYear": "Year must be after the pathway base year",
+    "referenceYearMustBeBeforeObjectiveTargetYear": "Base year must be strictly before the target year of global objectives",
+    "referenceYearMustBeBeforeSubObjectiveStartYear": "Base year must be before or equal to the start year of sub-objectives",
     "referenceYearMustBeBeforeOrEqualToStudyYear": "Base year must be less than or equal to the study year",
->>>>>>> 366edda4 (Wordings EN + Quelques changements supplémentaires)
     "sectorPercentagesTotalExceeds100": "Total sector percentages cannot exceed 100%",
     "sectorPercentagesRequired": "Sector percentages are required",
     "scopeRequired": "Please select at least one site, tag, or sub post",
@@ -2543,7 +2512,6 @@
     "actionRelevance": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/5-transition-plan/5.2-building-the-action-plan#characterise-the-relevance-of-the-action",
     "dataType": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/4-accounting/4.2-method-for-collecting-activity-data",
     "maturity": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/1-framing-the-approach/1.1-define-your-bilan-carbone-r-maturity-level",
-<<<<<<< HEAD
     "monetaryRatio": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/4-accounting/4.3-method-for-selecting-emission-factors#efs-in-monetary-ratios",
     "dependencyAndResponsability": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/annexes/annexes/annex-1-key-accounting-principles-of-bilan-carbone-r#use-and-dependency",
     "uncertainties": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/4-accounting/4.4-method-for-estimating-uncertainties/4.4.2-how-to-determine-them",
@@ -2551,14 +2519,5 @@
     "SBTi": "https://sciencebasedtargets.org/net-zero",
     "carbonBudget": "https://www.bilancarbone-methode.com/annexes/glossaire#b",
     "carbonNeutrality": "https://www.bilancarbone-methode.com/annexes/glossaire#n"
-=======
-    "monetaryRatio": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/4-accounting/4.3-method-for-selecting-emission-factors#efs-in-spend-based-ratios",
-    "dependencyAndResponsability": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/appendices/appendices/appendix-1-main-accounting-principles-of-bilan-carbone-r#focus-on-the-sub-categories-use-in-responsibility-and-use-in-dependence",
-    "uncertainties": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/4-accounting/4.4-method-for-estimating-uncertainties/4.4.2-how-to-determine-them",
-    "SNBC": "https://www.ecologie.gouv.fr/politiques-publiques/strategie-nationale-bas-carbone-snbc",
-    "SBTi": "https://sciencebasedtargets.org/net-zero",
-    "CarbonBudget": "https://www.bilancarbone-methode.com/annexes/glossaire#b",
-    "CarbonNeutrality": "https://www.bilancarbone-methode.com/annexes/glossaire#n"
->>>>>>> 366edda4 (Wordings EN + Quelques changements supplémentaires)
   }
 }
