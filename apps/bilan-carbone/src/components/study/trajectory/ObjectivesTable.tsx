@@ -8,7 +8,12 @@ import { useServerFunction } from '@/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
 import { deleteObjective } from '@/services/serverFunctions/objective.serverFunction'
 import { deleteTrajectory } from '@/services/serverFunctions/trajectory.serverFunction'
-import type { ObjectiveWithScope, PastStudy, TrajectoryWithObjectivesAndScope } from '@/types/trajectory.types'
+import type {
+  ObjectiveGroup,
+  ObjectiveWithScope,
+  PastStudy,
+  TrajectoryWithObjectivesAndScope,
+} from '@/types/trajectory.types'
 import { getCustomData } from '@/utils/customTrajectory.utils'
 import {
   calculateTrajectoryYearBounds,
@@ -74,6 +79,7 @@ interface Props {
     tags: Array<{ id: string; name: string; color: string | null }>
   }>
   defaultSnbcSectoralTrajectoryId?: string | null
+  objectiveGroupsByTrajectoryId: Map<string, ObjectiveGroup[]>
 }
 
 const fuseOptions = {
@@ -95,6 +101,7 @@ const ObjectivesTable = ({
   sites = [],
   tagFamilies = [],
   defaultSnbcSectoralTrajectoryId,
+  objectiveGroupsByTrajectoryId,
 }: Props) => {
   const locale = useLocale()
   const tAction = useTranslations('common.action')
@@ -145,6 +152,7 @@ const ObjectivesTable = ({
       minYear,
       maxYear,
       sectenData,
+      objectiveGroupsByTrajectoryId,
     )
 
     customTrajectoriesData.forEach((trajectoryData) => {
@@ -156,7 +164,7 @@ const ObjectivesTable = ({
     })
 
     return map
-  }, [trajectories, pastStudies, studyEmissions, studyYear, sectenData])
+  }, [trajectories, pastStudies, studyEmissions, studyYear, sectenData, objectiveGroupsByTrajectoryId])
 
   const handleDeleteClick = (type: 'trajectory' | 'objective', id: string, name: string) => {
     setDeleteTarget({ type, id, name })

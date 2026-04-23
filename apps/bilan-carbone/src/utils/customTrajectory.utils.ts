@@ -440,7 +440,7 @@ export const getCustomData = (
   minYear: number,
   maxYear: number,
   sectenData: SectenInfo[],
-  objectiveGroupsByTrajectoryId?: Map<string, ObjectiveGroup[]>,
+  objectiveGroupsByTrajectoryId: Map<string, ObjectiveGroup[]>,
 ): {
   customTrajectoriesData: Array<{ id: string; data: TrajectoryData }>
   defaultTrajectoryData: { id: string; data: TrajectoryData } | null
