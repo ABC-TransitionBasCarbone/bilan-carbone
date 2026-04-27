@@ -554,7 +554,7 @@
       "new": {
         "title": "Ajouter une personne sur l'étude : {name}",
         "email": "Email",
-        "role": "Droit",
+        "role": "Rôle",
         "create": "Ajouter la personne",
         "clear": "Supprimer la valeur",
         "Already in study": "Cette personne a déjà accès à l'étude.",
@@ -616,7 +616,7 @@
         "actions": " ",
         "delete": "Supprimer le·a membre",
         "email": "Email",
-        "role": "Droits",
+        "role": "Rôle",
         "title": "Gestion de l'équipe",
         "newRightLink": "Ajouter une personne à l'étude",
         "deleting": {
@@ -1000,7 +1000,7 @@
           "description": "Cette fonctionnalité sert à reconstruire l'historique de vos émissions, idéalement à partir de votre année de référence. Vous pouvez renseigner des Bilans Carbone® issus du BC+ ou d'outils tiers. Ces données alimenteront vos graphiques et trajectoires de réduction.",
           "glossaryTitle": "Bilans Carbone® passés",
           "glossaryDescription": "",
-          "linkStudyButton": "Lier une étude"
+          "linkStudyButton": "Lier un Bilan Carbone®"
         },
         "stepSectorAllocation": {
           "title": "Répartition sectorielle",
@@ -1093,11 +1093,11 @@
           "estimatedPast": "Passé estimé",
           "glossary": {
             "title": "Reconstruction des émissions passées sur le BC+",
-            "description": "Les émissions historiques affichées sont : - Soit issues de vos études passées, que vous avez renseignées dans la page « Initialisation » - Soit reconstituées à partir des inventaires nationaux français pour les années qui précèdent votre premier bilan. En l'absence d'informations, l'outil suppose donc que votre organisation s'est décarbonée au même rythme que la France."
+            "description": "Les émissions historiques affichées sont : <br></br> - Soit issues de vos Bilan Carbone® passées, que vous avez renseignées dans la page « Initialisation » <br></br> - Soit reconstituées à partir des inventaires nationaux français pour les années qui précèdent votre premier bilan. En l'absence d'informations, l'outil suppose donc que votre organisation s'est décarbonée au même rythme que la France."
           },
           "overshootTrajectoryGlossary": {
             "title": "Trajectoire corrigée",
-            "description": "Votre organisation ne s'est pas décarbonée au rythme requis initialement par cette trajectoire. En conséquence, celle-ci a été <b>corrigée pour respecter le <link>budget carbone</link> qui vous était initialement alloué</b>. Vous aurez alors deux affichages : <br></br> - <b>La trajectoire dans son état initial</b>, avec le taux de réduction annuel de référence <br></br> - <b>La trajectoire corrigée</b> pour l'année en cours, avec le taux de réduction annuel corrigé <br></br><br></br> La trajectoire qui résulte de cette correction est <b>plus ambitieuse</b> : à vous de choisir si vous vous y conformez ou si vous en construisez une nouvelle. Notez que si vous décidez aujourd'hui de suivre une trajectoire dont l'année de référence est ancienne, il est tout à fait normal que vous soyez en deça de ses attendus. La correction des trajectoires ne se déclenche que lorsqu'un <b> de plus de 5% entre les attendus et le Bilan Carbone® est constaté</b>."
+            "description": "Votre organisation ne s'est pas décarbonée au rythme requis initialement par cette trajectoire. En conséquence, celle-ci a été <b>corrigée pour respecter le <link>budget carbone</link> qui vous était initialement alloué</b>. Vous aurez alors deux affichages : <br></br> - <b>La trajectoire dans son état initial</b>, avec le taux de réduction annuel de référence <br></br> - <b>La trajectoire corrigée</b> pour l'année en cours, avec le taux de réduction annuel corrigé <br></br><br></br> La trajectoire qui résulte de cette correction est <b>plus ambitieuse</b> : à vous de choisir si vous vous y conformez ou si vous en construisez une nouvelle. Notez que si vous décidez aujourd'hui de suivre une trajectoire dont l'année de référence est ancienne, il est tout à fait normal que vous soyez en deça de ses attendus. La correction des trajectoires ne se déclenche que lorsqu'un écart <b> de plus de 5% entre les attendus et le Bilan Carbone® est constaté</b>."
           }
         },
         "linkedStudies": {
@@ -1162,14 +1162,14 @@
         "subtitle": "Suivez une des trajectoires de référence ou créez votre propre trajectoire de réduction en approche descendante, ou top-down, pour commencer à construire votre plan de transition",
         "sbti": {
           "title": "SBTi",
-          "subtitle": "Je suis la trajectoire de référence SBTi",
+          "subtitle": "Je suis un des trajectoires SBTi",
           "benefit1": "Pour viser une cohérence et une reconnaissance <strong>à l'échelle internationale</strong>",
           "benefit2": "Pour viser un <strong>niveau de maturité Standard</strong>",
           "benefit3": "Pour m'aligner avec une <b>limitation du réchauffement climatique à 1,5°C ou 2°C</b>"
         },
         "snbc": {
           "title": "SNBC",
-          "subtitle": "Je suis la trajectoire de référence SNBC",
+          "subtitle": "Je suis une des trajectoires SNBC",
           "benefit1": "Pour viser une cohérence à <b>l'échelle nationale</b>",
           "benefit2": "Pour viser un <b>niveau de maturité Initial</b>",
           "benefit3": "Pour comprendre les <b>attentes réglementaires françaises</b>"
@@ -1207,10 +1207,10 @@
           "placeholder": "0-100"
         },
         "selectedTrajectory": {
-          "SBTI_15": "Je suis la trajectoire de référence SBTi",
-          "SBTI_WB2C": "Je suis la trajectoire de référence SBTi",
-          "SNBC_GENERAL": "Je suis la trajectoire de référence SNBC",
-          "SNBC_SECTORAL": "Je suis la trajectoire de référence SNBC",
+          "SBTI_15": "Je suis une des trajectoires SBTi",
+          "SBTI_WB2C": "Je suis une des trajectoires SBTi",
+          "SNBC_GENERAL": "Je suis une des trajectoires SNBC",
+          "SNBC_SECTORAL": "Je suis une des trajectoires SNBC",
           "CUSTOM": "Je suis ma propre trajectoire"
         },
         "siteFilterWarning": "{count, plural, =1 {Vous avez sélectionné le site {siteNames} mais les trajectoires doivent être définies sur l'ensemble de l'organisation.} other {Vous avez sélectionné les sites {siteNames} mais les trajectoires doivent être définies sur l'ensemble de l'organisation.}} Votre trajectoire sera donc définie pour tous les sites. Vous pourrez ensuite définir des sous objectifs par sites, postes, sous postes ou tags.",
@@ -1247,7 +1247,7 @@
           "referenceYearMethodDescription": "Vous ne pouvez pas modifier la date de référence pour une trajectoire de type {method} car celle-ci est dictée par ce standard.",
           "referenceYearMethodLink": "Pour plus d'informations, cliquez ici.",
           "correctedRate": "Calcul du taux corrigé",
-          "correctedRateDescription": "Si vous choisissez une trajectoire dont l'année de référence est ancienne, il se peut que votre organisation n'ait pas respecté la trajectoire jusqu'à présent. Cela occasionne un dépassement du budget carbone qui vous était initialement alloué, que l'on appelle overshoot. Dans ce cas de figure, la trajectoire est corrigée pour conserver le budget carbone qui vous était initialement alloué, et un taux de réduction annuel corrigé est alors appliqué. Vous aurez alors deux affichages : <br></br> - La trajectoire dans son état initial, avec le taux de réduction annuel de référence <br></br> - La trajectoire corrigée pour l'année en cours, avec le taux de réduction annuel corrigé"
+          "correctedRateDescription": "Si vous choisissez une trajectoire dont l'année de référence est ancienne, il se peut que votre organisation n'ait pas respecté la trajectoire jusqu'à présent. Cela occasionne un <b>dépassement du <link>budget carbone</link> qui vous était initialement alloué</b>, que l'on appelle overshoot. <br></br><br></br> Dans ce cas de figure, la trajectoire est <b>corrigée pour conserver le budget carbone qui vous était initialement alloué</b>, et un taux de réduction annuel corrigé est alors appliqué. Vous aurez alors deux affichages : <br></br> - <b>La trajectoire dans son état initial</b>, avec le taux de réduction annuel de référence <br></br> - <b>La trajectoire corrigée</b> pour l'année en cours, avec le taux de réduction annuel corrigé"
         }
       },
       "scope": {
@@ -1413,7 +1413,7 @@
           "Strategic": "Stratégique",
           "Priority": "Prioritaire",
           "Improvement": "Amélioration de la démarche",
-          "Adaptation": "Adaption"
+          "Adaptation": "Adaptation"
         },
         "relevance": {
           "Offsetting": "Compensation (Priorité 6/6)",
@@ -1430,7 +1430,7 @@
         "onboarding": {
           "title": "Construisez un plan d'action afin d'atteindre vos objectifs",
           "description": "La construction du plan de transition implique les sous-étapes suivantes : <br></br><br></br> 1 - Visualiser les <b>objectifs et trajectoires de référence</b> dont l'ambition à l'échelle planétaire est celle de l'Accord de Paris. <br></br> 2 - Sélectionner une <b>trajectoire de décarbonation descendante ou « top-down »</b>, c'est-à-dire la trajectoire théorique que votre organisation devrait suivre. <br></br> 3 - Construire votre <b>plan d'action</b>. <br></br> 4 - Estimer l'impact prévisionnel de la mise en oeuvre de votre plan d'action, en calculant son <b>potentiel de réduction</b>, pour construire votre <b>trajectoire de décarbonation ascendante ou « bottom-up »</b>. <br></br> 5 - Vérifier la cohérence : la <b>trajectoire bottom-up issue de votre plan d'action justifie la crédibilité de votre trajectoire top-down</b> à plus ou moins long terme selon votre niveau de maturité. <br></br><br></br> Cette page vous permet de <b>créer votre plan d'action et d'estimer son impact prévisionnel</b>, aboutissant à une trajectoire bottom-up. Vous pouvez ensuite vérifier <b>la cohérence entre vos trajectoires top-down et bottom-up</b>.",
-          "detailedInfo": "Cette page vous permet de construire votre plan d'action, en renseignant différentes actions et en les caractérisant. Ces fiches actions reprennent l'ensemble des informations définies au sein de la méthode Bilan Carbone®. Toutes ces informations doivent être renseignées au sein d'un Bilan Carbone®, mais il est possible d'en remplir certaines ultérieurement, dans le but de tester différentes combinaisons d'actions avant de les sélectionner définitivement. Un bouton de bascule dans la première colonne du tableau vous permet ainsi d'activer ou de désactiver les actions renseignées, afin de voir si la trajectoire bottom-up résultante est cohérente avec votre trajectoire top-down. Une fois les actions pertinentes sélectionnées, vous pouvez compléter les informations manquantes, afin de mieux caractériser l'action, lui attribuer un budget, renseigner des étapes de mises en oeuvre, et des indicateurs qui vous permettront par la suite de piloter la mise en oeuvre, le suivi et les performances de vos actions."
+          "detailedInfo": "Cette page vous permet de construire votre plan d'action, <b>en renseignant différentes actions et en les caractérisant</b>. Ces fiches actions reprennent l'ensemble des informations définies au sein de la méthode Bilan Carbone®. Toutes ces informations doivent être renseignées au sein d'un Bilan Carbone®, mais il est possible d'en remplir certaines ultérieurement, dans le but de <b>tester différentes combinaisons d'actions avant de les sélectionner définitivement</b>. Un bouton de bascule dans la première colonne du tableau vous permet ainsi d'activer ou de désactiver les actions renseignées, afin de voir si la <b>trajectoire bottom-up résultante est cohérente avec votre trajectoire top-down</b>. <br></br><br></br> Une fois les actions pertinentes sélectionnées, vous pouvez compléter les informations manquantes, afin de mieux <b>caractériser l'action, lui attribuer un budget, renseigner des étapes de mises en oeuvre, et des indicateurs</b> qui vous permettront par la suite de piloter la mise en oeuvre, le suivi et les performances de vos actions."
         },
         "deleteModal": {
           "title": "Supprimer l'action",
@@ -1898,7 +1898,7 @@
       "lastName": "Nom",
       "email": "Email",
       "level": "Formation",
-      "role": "Droits",
+      "role": "Rôle",
       "action": " ",
       "deleteMember": "Supprimer le·a membre",
       "userDeletion": "Suppression d'un·e utilisateur·rice",
@@ -1911,7 +1911,7 @@
     "email": "Email",
     "firstName": "Prénom",
     "lastName": "Nom",
-    "role": "Droits",
+    "role": "Rôle",
     "level": "Formation",
     "create": "Inviter l'utilisateur·rice",
     "Not authorized": "Impossible d'inviter cette utilisateur·rice. Veuillez contacter le <link>support</link> pour plus d'informations.",
