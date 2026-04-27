@@ -1111,7 +1111,7 @@
           "oldStudy": "Études BC+",
           "externalStudy": "Étude venant d'une autre plateforme",
           "name": "Nom",
-          "namePlaceholder": "Veuillez renseigne un nom",
+          "namePlaceholder": "Veuillez renseigner un nom",
           "date": "Année",
           "totalCo2": "Emissions totales",
           "totalCo2Placeholder": "256",
@@ -1120,8 +1120,6 @@
           "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
           "noAvailableStudies": "Aucune étude passée disponible",
           "information": "Informations",
-          "glossaryTitle": "Pour gabriel - titre",
-          "glossaryDescription": "Pour gabriel - description",
           "table": {
             "name": "Nom",
             "year": "Année",
@@ -1318,9 +1316,7 @@
           "detailedInfo": "Lorsque vous renseignez votre première trajectoire top-down, les objectifs associés, à horizon 2030 et 2050, seront renseignés au sein de ce tableau. Vous pouvez ensuite détailler ces objectifs en renseignant des objectifs intermédiaires supplémentaires, qui peuvent porter soit sur tous les postes et tous les sites du Bilan Carbone® (auquel cas les réductions seront calculées automatiquement pour maintenir une cohérence avec les objectifs 2030 et 2050), soit sur certains postes et sites en particulier. Vous pouvez également renseigner la croissance prévisionnelle de votre chiffre d'affaire, afin d'obtenir les réductions annuelles tenant compte de cette croissance. Enfin, vous pouvez ajouter d'autres trajectoires top-down, notamment dans le but de visualiser différentes trajectoires sur la page précédente avant de choisir celle que vous suivrez."
         },
         "glossary": {
-          "label": "Glossaire",
-          "title": "titre gabriel",
-          "description": "description gabriel"
+          "label": "Glossaire"
         }
       },
       "actions": {
