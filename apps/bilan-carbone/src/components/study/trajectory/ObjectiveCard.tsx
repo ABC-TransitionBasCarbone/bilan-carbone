@@ -141,7 +141,7 @@ const ObjectiveCard = <T extends TrajectoryFormData | ObjectiveModalFormData>({
           <p>
             {customRich(tGlossary, 'correctedRateDescription', {
               link: (children) => (
-                <Link href={tDocumentation('CarbonBudget')} target="_blank" rel="noreferrer noopener">
+                <Link href={tDocumentation('carbonBudget')} target="_blank" rel="noreferrer noopener">
                   {children}
                 </Link>
               ),
