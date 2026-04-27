@@ -14,40 +14,18 @@ jest.mock('@/scripts/ftp/importUsers', () => ({
 describe('POST /api/cron/import-users', () => {
   const req = {} as NextRequest
   const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => undefined)
-  const originalResponse = globalThis.Response
-  class MockResponse {
-    public status: number
-    private readonly body: string
-
-    constructor(body: string, init?: { status?: number }) {
-      this.body = body
-      this.status = init?.status ?? 200
-    }
-
-    async text() {
-      return this.body
-    }
-  }
 
   beforeEach(() => {
     jest.clearAllMocks()
-    if (!globalThis.Response) {
-      globalThis.Response = MockResponse as unknown as typeof Response
-    }
   })
 
   afterAll(() => {
-    if (originalResponse) {
-      globalThis.Response = originalResponse
-    } else {
-      delete (globalThis as { Response?: typeof Response }).Response
-    }
     consoleErrorSpy.mockRestore()
   })
 
   it('returns cron auth/rate-limit error when request is rejected by middleware', async () => {
     const errorResponse = { status: 401 } as Response
-    ;(checkCronRequest as jest.Mock).mockReturnValue(errorResponse)
+    jest.mocked(checkCronRequest).mockReturnValue(errorResponse)
 
     const response = await POST(req)
 
@@ -56,8 +34,8 @@ describe('POST /api/cron/import-users', () => {
   })
 
   it('returns 200 when import succeeds', async () => {
-    ;(checkCronRequest as jest.Mock).mockReturnValue(null)
-    ;(getUsersFromFTP as jest.Mock).mockResolvedValue(undefined)
+    jest.mocked(checkCronRequest).mockReturnValue(null)
+    jest.mocked(getUsersFromFTP).mockResolvedValue(undefined)
 
     const response = await POST(req)
 
@@ -67,8 +45,8 @@ describe('POST /api/cron/import-users', () => {
 
   it('returns 500 when import fails', async () => {
     const error = new Error('FTP down')
-    ;(checkCronRequest as jest.Mock).mockReturnValue(null)
-    ;(getUsersFromFTP as jest.Mock).mockRejectedValue(error)
+    jest.mocked(checkCronRequest).mockReturnValue(null)
+    jest.mocked(getUsersFromFTP).mockRejectedValue(error)
 
     const response = await POST(req)
 

@@ -37,6 +37,8 @@ jest.mock('./userImport', () => ({
 
 describe('getUsersFromFTP', () => {
   const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => undefined)
+  const createWriteStreamMock = fs.createWriteStream as jest.Mock
+  const readFileMock = fs.promises.readFile as jest.Mock
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -56,8 +58,8 @@ describe('getUsersFromFTP', () => {
     const importedAt = '2026-01-01T00:00:00.000Z'
     const values = [{ userEmail: 'user@test.com' }]
 
-    ;(fs.createWriteStream as jest.Mock).mockReturnValue('stream')
-    ;(fs.promises.readFile as jest.Mock).mockResolvedValue(JSON.stringify(values))
+    createWriteStreamMock.mockReturnValue('stream')
+    readFileMock.mockResolvedValue(JSON.stringify(values))
     listMock.mockResolvedValue([{ name: 'users.json', rawModifiedAt: importedAt }])
 
     await getUsersFromFTP()
@@ -77,7 +79,7 @@ describe('getUsersFromFTP', () => {
 
   it('logs and throws when FTP import fails', async () => {
     const error = new Error('download failed')
-    ;(fs.createWriteStream as jest.Mock).mockReturnValue('stream')
+    createWriteStreamMock.mockReturnValue('stream')
     listMock.mockResolvedValue([{ name: 'users.json', rawModifiedAt: '2026-01-01T00:00:00.000Z' }])
     downloadToMock.mockRejectedValue(error)
 
