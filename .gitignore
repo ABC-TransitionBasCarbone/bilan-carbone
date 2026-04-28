@@ -5,6 +5,8 @@ CLAUDE.md
 .vscode/
 notes/
 certs/*
+.notes
+next-env.d.ts
 # Additional ignores from sub .gitignore files
 # apps/mip/.gitignore
 logs
@@ -53,7 +55,6 @@ web_modules/
 .parcel-cache
 .next
 out
-next-env.d.ts
 .nuxt
 dist
 # apps/bilan-carbone/.gitignore
