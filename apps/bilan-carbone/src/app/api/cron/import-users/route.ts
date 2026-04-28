@@ -1,6 +1,6 @@
 import { checkCronRequest } from '@/app/api/cron/utils'
 import { getUsersFromFTP } from '@/scripts/ftp/importUsers'
-import { NextRequest, NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
 export async function POST(req: NextRequest): Promise<Response> {
   const error = checkCronRequest(req, 'import-users')
@@ -10,9 +10,9 @@ export async function POST(req: NextRequest): Promise<Response> {
 
   try {
     await getUsersFromFTP()
-    return new NextResponse('OK', { status: 200 })
+    return new Response('OK', { status: 200 })
   } catch (error) {
     console.error('Error in import-users cron:', error)
-    return new NextResponse('Import users failed', { status: 500 })
+    return new Response('Import users failed', { status: 500 })
   }
 }

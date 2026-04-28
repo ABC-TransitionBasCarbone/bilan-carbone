@@ -73,7 +73,7 @@ describe('processUsers', () => {
         firstName: 'Existing',
         lastName: 'User',
       },
-    })
+    } as Awaited<ReturnType<typeof getAccountByEmailAndEnvironment>>)
 
     await processUsers([{ userEmail: 'existing@example.com' }], new Date('2026-01-15T12:00:00.000Z'))
 
@@ -130,7 +130,7 @@ describe('processUsers', () => {
       },
     ]
 
-    await processUsers(users, importedFileDate)
+    await processUsers(users as unknown as Record<string, string>[], importedFileDate)
 
     expect(createUsersWithAccount).toHaveBeenCalledTimes(1)
     const [usersToCreate] = jest.mocked(createUsersWithAccount).mock.calls[0]
@@ -178,7 +178,7 @@ describe('processUsers', () => {
         id: 'account-existing',
         status: UserStatus.IMPORTED,
         user: { id: 'user-existing', email: 'existing@example.com', firstName: 'Existing', lastName: 'User' },
-      })
+      } as Awaited<ReturnType<typeof getAccountByEmailAndEnvironment>>)
     jest.mocked(createUsersWithAccount).mockResolvedValue({
       newUsers: { count: 1 },
       newAccounts: { count: 1 },
