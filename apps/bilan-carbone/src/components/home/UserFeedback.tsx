@@ -1,7 +1,7 @@
 'use client'
 
 import { answerFeeback, delayFeeback } from '@/services/serverFunctions/user'
-import { DAY, TIME_IN_MS } from '@/utils/time'
+import { DAY, TIME_IN_MS } from '@repo/utils'
 import { Environment } from '@repo/db-common/enums'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'

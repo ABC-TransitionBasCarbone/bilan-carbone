@@ -1,5 +1,5 @@
 import Form from '@/components/base/Form'
-import Toast, { ToastColors } from '@/components/base/Toast'
+import Toast, { ToastColors } from '@repo/ui'
 import { FormAutocomplete } from '@/components/form/Autocomplete'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import { FormSelect } from '@/components/form/Select'

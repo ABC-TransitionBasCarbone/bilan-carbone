@@ -2,7 +2,7 @@
 
 import Form from '@/components/base/Form'
 import LoadingButton from '@/components/base/LoadingButton'
-import { useToast } from '@/components/base/ToastProvider'
+import { useToast } from '@repo/ui'
 import { FormAutocomplete } from '@/components/form/Autocomplete'
 import { FormSelect } from '@/components/form/Select'
 import { getOrganizationVersionAccounts } from '@/db/organization'

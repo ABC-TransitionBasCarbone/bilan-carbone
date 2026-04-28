@@ -31,7 +31,7 @@ import {
 } from '@/db/transitionPlan'
 import type { TransitionPlanWithStudies } from '@/types/trajectory.types'
 import { ApiResponse, withServerResponse } from '@/utils/serverResponse'
-import { getYearFromDateStr } from '@/utils/time'
+import { getYearFromDateStr } from '@repo/utils'
 import { TransitionPlan } from '@repo/db-common'
 import { dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED, NOT_FOUND } from '../permissions/check'

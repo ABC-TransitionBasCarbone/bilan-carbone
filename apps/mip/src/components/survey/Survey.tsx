@@ -2,7 +2,9 @@
 
 import { ArrowBack, ArrowForward, Check } from '@mui/icons-material'
 import { Alert, Button, Card, CardContent, Container, LinearProgress, Typography } from '@mui/material'
-import { SurveyEngine, SurveyResponse, surveyStorage, Survey as SurveyType } from '@repo/survey'
+import { SurveyEngine, SurveyResponse } from '@/engine'
+import { surveyStorage } from '@/storage'
+import { Survey as SurveyType } from '@/types/survey'
 import { useTranslations } from 'next-intl'
 import { useCallback, useMemo, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'

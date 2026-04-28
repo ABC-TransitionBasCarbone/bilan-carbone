@@ -2,7 +2,7 @@
 
 import Block from '@/components/base/Block'
 import LoadingButton from '@/components/base/LoadingButton'
-import { useToast } from '@/components/base/ToastProvider'
+import { useToast } from '@repo/ui'
 import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
 import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'

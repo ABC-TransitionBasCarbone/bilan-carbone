@@ -1,5 +1,5 @@
 import LoadingButton from '@/components/base/LoadingButton'
-import Toast, { ToastColors } from '@/components/base/Toast'
+import Toast, { ToastColors } from '@repo/ui'
 import { TagFamily } from '@/components/form/ScopeSelectors'
 import { OTHER_TAG_ID } from '@/components/form/TagFilter'
 import ModalStepper from '@/components/modals/ModalStepper'

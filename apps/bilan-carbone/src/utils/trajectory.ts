@@ -31,7 +31,7 @@ import {
   calculateSNBCTrajectory,
   getSNBCData,
 } from './snbc'
-import { getYearFromDateStr } from './time'
+import { getYearFromDateStr } from '@repo/utils'
 import {
   computePastOrPresentValue,
   getAllHistoricalStudyPoints,

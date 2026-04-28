@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material'
-import { Question } from '@repo/survey'
+import { Question } from '@/types/survey'
 import { ChoiceQuestionInput } from './ChoiceQuestionInput'
 import styles from './QuestionRenderer.module.css'
 import { TextQuestionInput } from './TextQuestionInput'

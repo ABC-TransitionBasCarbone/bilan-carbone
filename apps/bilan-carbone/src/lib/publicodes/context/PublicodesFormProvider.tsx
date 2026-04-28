@@ -1,4 +1,4 @@
-import { useToast } from '@/components/base/ToastProvider'
+import { useToast } from '@repo/ui'
 import { getUpdatedSituationWithInputValue, situationsAreEqual } from '@/components/publicodes-form/utils'
 import { useBeforeUnload } from '@/hooks/useBeforeUnload'
 import { useLatestRef } from '@/hooks/utils'

@@ -22,7 +22,7 @@ import {
   calculateSectoralSNBCReductionRates,
   extractSNBCReductionRatesFromObjectives,
 } from '@/utils/snbc'
-import { getYearFromDateStr } from '@/utils/time'
+import { getYearFromDateStr } from '@repo/utils'
 import {
   getCorrectedObjectives,
   getDefaultObjectivesForTrajectoryType,

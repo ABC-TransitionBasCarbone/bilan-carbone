@@ -1,5 +1,5 @@
 import { FormControl, FormHelperText, TextField } from '@mui/material'
-import { TextQuestion } from '@repo/survey'
+import { TextQuestion } from '@/types/survey'
 import { useTranslations } from 'next-intl'
 
 interface TextQuestionInputProps {

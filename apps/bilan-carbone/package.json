@@ -65,6 +65,8 @@
     "@publicodes/forms": "^0.6.1",
     "@repo/types": "*",
     "@repo/ui": "*",
+    "@repo/utils": "*",
+    "@repo/lib": "*",
     "@smithy/config-resolver": "^4.4.14",
     "@tanstack/react-table": "^8.21.3",
     "@types/react-gauge-chart": "^0.5.0",

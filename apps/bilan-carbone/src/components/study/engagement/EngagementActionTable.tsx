@@ -5,7 +5,7 @@ import { TableActionButton } from '@/components/base/TableActionButton'
 import { EngagementActionSteps, EngagementActionTargets } from '@/constants/engagementActions'
 import type { FullStudy } from '@/db/study'
 import { EngagementActionWithSites } from '@/services/serverFunctions/study'
-import { formatDateFr } from '@/utils/time'
+import { formatDateFr } from '@repo/utils'
 import { EngagementPhase } from '@repo/db-common/enums'
 import {
   ColumnDef,
