@@ -17,6 +17,7 @@ interface Props<TData> {
   testId: string
   size?: 'small' | 'medium'
   firstHeader?: ReactNode
+  sortable?: boolean
 }
 
 const Table = <TData,>({
@@ -29,6 +30,7 @@ const Table = <TData,>({
   testId,
   size = 'medium',
   firstHeader,
+  sortable = false,
 }: Props<TData>) => {
   const totalRows = table.getRowCount()
   const shouldShowPagination = !!paginations && totalRows > Math.min(...paginations)
@@ -51,14 +53,14 @@ const Table = <TData,>({
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className={styles.headers}>
                 {headerGroup.headers.map((header) => {
-                  const canSort = header.column.getCanSort()
+                  const canSort = sortable && header.column.getCanSort()
                   const sortDirection = header.column.getIsSorted()
                   return (
                     <TableCell
                       key={header.id}
                       className={classNames(
                         header.id === 'actions' ? styles.actionsColumn : undefined,
-                        canSort ? 'pointer' : undefined,
+                        sortable ? (canSort ? styles.sortable : styles.notSortable) : undefined,
                       )}
                       onClick={canSort ? header.column.getToggleSortingHandler() : undefined}
                     >

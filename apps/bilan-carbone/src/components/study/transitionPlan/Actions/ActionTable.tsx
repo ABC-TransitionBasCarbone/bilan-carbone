@@ -501,7 +501,7 @@ const ActionTable = ({
     </Fragment>
   )
 
-  return <BaseTable customRow={RowComponent} table={table} paginations={[10, 25, 50, 100]} testId="actions" />
+  return <BaseTable customRow={RowComponent} table={table} paginations={[10, 25, 50, 100]} testId="actions" sortable />
 }
 
 export default ActionTable

@@ -17,6 +17,19 @@
   th:first-child {
     text-align: left !important;
   }
+
+  .sortable {
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+
+    &:hover {
+      background-color: var(--grayscale-50);
+    }
+  }
+
+  .notSortable {
+    cursor: default;
+  }
 }
 
 .pagination {
