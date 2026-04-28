@@ -80,6 +80,9 @@ This is a Next.js monorepo for the "Bilan Carbone" platform, focused on carbon a
 ### Code Organization
 - **Separate Components**: Each component should be in its own file. Avoid multiple component definitions in a single file.
 - **Feature Folders**: Group related components by feature (e.g., `src/components/survey/`).
+- **No Empty Re-export Files**: Do not create app-local files that only re-export from a shared package (e.g., `types/translation.ts` that just re-exports from `@repo/lib`). Instead, import directly from the shared package (`@repo/lib`, `@repo/typeguards`, etc.).
+- **Shared Packages First**: Before creating a new file in an app (e.g., `types/survey.ts`, component files), check if an equivalent already exists in the packages/ directory. If not and the logic is reusable across apps, add it to the appropriate package.
+- **Survey Components**: MIP survey input components live in `packages/components/src/survey/`. MIP survey types live in `packages/typeguards/question.ts`. Import from `@repo/components` and `@repo/typeguards`.
 - **Limit Comments**: Avoid unnecessary comments. Code should be self-documenting. Only add comments for:
   - Complex business logic that isn't obvious from the code
   - Non-obvious technical decisions or workarounds
@@ -92,6 +95,8 @@ This is a Next.js monorepo for the "Bilan Carbone" platform, focused on carbon a
 - **ESLint**: Shared rules are defined in `eslint.config.base.mjs` at the monorepo root. Each app's `eslint.config.mjs` imports `sharedRules` and `dtsOverride` from the root base and adds only Next.js-specific extends on top. Ideally, only the root config should exist.
 - **TypeScript**: `tsconfig.base.json` at the monorepo root is the canonical config with all common compiler options. App-level `tsconfig.json` files should only extend it and add app-specific overrides (Next.js plugin, `paths`, `include`/`exclude`). Do not duplicate base options in app configs.
 - **READMEs**: Only 3 README files should exist: one at the monorepo root, one in `apps/bilan-carbone/`, and one in `apps/mip/`. Do not add READMEs to packages.
+- **AppRouterCacheProvider**: Use `@mui/material-nextjs/v15-appRouter` (for Next.js 15+/16) in layout.tsx files.
+- **.notes Folder**: The `.notes` folder is in `.gitignore` to allow local AI notes without committing them. Do not commit anything in `.notes`.
 
 ### Internationalization
 - **Use Translations**: All user-facing strings should use the i18n system (next-intl), not hardcoded text.
