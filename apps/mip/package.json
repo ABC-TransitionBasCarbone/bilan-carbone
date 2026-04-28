@@ -25,6 +25,7 @@
     "@mui/x-date-pickers": "^8.27.2",
     "@repo/lib": "*",
     "@repo/typeguards": "*",
+    "@repo/components": "*",
     "@repo/ui": "*",
     "@repo/utils": "*",
     "dayjs": "^1.11.19",
