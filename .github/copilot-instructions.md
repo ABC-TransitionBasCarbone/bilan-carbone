@@ -58,6 +58,7 @@ This is a Next.js monorepo for the "Bilan Carbone" platform, focused on carbon a
 - **Constants and enums** are centralized in `src/constants/`.
 - **Async data flows**: All DB/service calls are async/await.
 - **Localization**: All user-facing data is filtered by `locale`.
+- **PR descriptions**: PR descriptions must describe the actual code changes and their purpose for reviewers — not implementation checklists or agent progress notes. Include: what bug/feature is addressed, what was changed and why, and any non-obvious design decisions.
 
 ## Key Files & Directories
 
