@@ -66,12 +66,12 @@ const processUser = async (value: UserImportRecord, importedFileDate: Date) => {
     ? rawTrainings
     : rawTrainings
       ? (() => {
-        try {
-          return JSON.parse(rawTrainings)
-        } catch {
-          return []
-        }
-      })()
+          try {
+            return JSON.parse(rawTrainings)
+          } catch {
+            return []
+          }
+        })()
       : []
 
   const environment = (dataEnvironment || Environment.BC) as Environment
