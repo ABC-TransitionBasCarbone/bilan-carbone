@@ -106,6 +106,7 @@ const TrajectoryPage = ({
         filteredTrajectories,
         selectedSiteIds,
         objectiveGroupsByTrajectoryId,
+        hasFilters,
       }) => (
         <>
           <div className="flex-col gapped1">
@@ -128,6 +129,7 @@ const TrajectoryPage = ({
               tagFamilies={study.tagFamilies}
               defaultSnbcSectoralTrajectoryId={defaultSnbcSectoralTrajectoryId}
               objectiveGroupsByTrajectoryId={objectiveGroupsByTrajectoryId}
+              hasFilters={hasFilters}
             />
           </div>
 
