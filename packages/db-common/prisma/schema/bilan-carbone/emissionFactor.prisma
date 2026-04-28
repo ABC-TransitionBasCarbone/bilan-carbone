@@ -241,95 +241,6 @@ model EmissionFactorImportVersion {
   @@schema("bilan_carbone")
 }
 
-// Used to store manual overrides for an EmissionFactor.
-// This override is applied to all versions of the EmissionFactor.
-model EmissionFactorOverride {
-  id               String         @id @default(uuid())
-  emissionFactorId String         @unique @map("emission_factor_id")
-  emissionFactor   EmissionFactor @relation(fields: [emissionFactorId], references: [id])
-
-  totalCo2   Float    @map("total_co2")
-  co2f       Float?
-  ch4f       Float?
-  ch4b       Float?
-  n2o        Float?
-  co2b       Float?
-  sf6        Float?
-  hfc        Float?
-  pfc        Float?
-  otherGES   Float?   @map("other_ges")
-  unit       Unit?
-  status     EmissionFactorStatus?
-  source     String?
-  location   String?
-
-  parts    EmissionFactorOverridePart[]
-  metaData EmissionFactorOverrideMetaData[]
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
-
-  @@map("emission_factor_overrides")
-  @@schema("bilan_carbone")
-}
-
-model EmissionFactorOverrideMetaData {
-  overrideId String                @map("override_id")
-  override   EmissionFactorOverride @relation(fields: [overrideId], references: [id], onDelete: Cascade)
-  language   String
-
-  title     String?
-  attribute String?
-  frontiere String?
-  tag       String?
-  location  String?
-  comment   String?
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
-
-  @@id([overrideId, language])
-  @@map("emission_factor_override_metadata")
-  @@schema("bilan_carbone")
-}
-
-model EmissionFactorOverridePart {
-  id         String                @id @default(uuid())
-  overrideId String                @map("override_id")
-  override   EmissionFactorOverride @relation(fields: [overrideId], references: [id], onDelete: Cascade)
-  type       EmissionFactorPartType
-
-  totalCo2 Float  @map("total_co2")
-  co2f     Float?
-  ch4f     Float?
-  ch4b     Float?
-  n2o      Float?
-  co2b     Float?
-  sf6      Float?
-  hfc      Float?
-  pfc      Float?
-  otherGES Float? @map("other_ges")
-
-  metaData EmissionFactorOverridePartMetaData[]
-
-  @@map("emission_factor_override_parts")
-  @@schema("bilan_carbone")
-}
-
-model EmissionFactorOverridePartMetaData {
-  overridePartId String                      @map("override_part_id")
-  overridePart   EmissionFactorOverridePart  @relation(fields: [overridePartId], references: [id], onDelete: Cascade)
-  language       String
-  title          String
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
-
-  @@id([overridePartId, language])
-  @@map("emission_factor_override_part_metadata")
-  @@schema("bilan_carbone")
-}
-
 // Link table between EmissionFactor and EmissionFactorImportVersion
 model EmissionFactorVersion {
   emissionFactorId String         @map("emission_factor_id")
@@ -353,7 +264,6 @@ model EmissionFactor {
   oldBCId String? @map("old_bc_id")
 
   versions EmissionFactorVersion[]
-  override EmissionFactorOverride?
 
   importedFrom   Import        @map("imported_from")
   importedId     String?       @map("imported_id")
@@ -386,6 +296,9 @@ model EmissionFactor {
   unit       Unit?
   customUnit String?
   isMonetary Boolean @map("is_monetary")
+
+  importedRawCsv String? @map("imported_raw_csv")
+  overrideRawCsv String? @map("override_raw_csv")
 
   subPosts            SubPost[]             @map("sub_posts")
   studyEmissionSource StudyEmissionSource[]
@@ -439,6 +352,9 @@ model EmissionFactorPart {
   hfc      Float?
   pfc      Float?
   otherGES Float? @map("other_ges")
+
+  importedRawCsv String? @map("imported_raw_csv")
+  overrideRawCsv String? @map("override_raw_csv")
 
   @@map("emission_factor_parts")
   @@schema("bilan_carbone")

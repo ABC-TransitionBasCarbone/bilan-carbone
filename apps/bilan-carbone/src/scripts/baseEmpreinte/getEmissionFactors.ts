@@ -12,21 +12,22 @@ program
   .requiredOption('-n, --name <value>', 'Nom de la version')
   .requiredOption('-f, --file <value>', 'Import depuis un fichier CSV complet')
   .option('--dry-run', 'Affiche un rapport sans écrire en base')
-  .option('--keep-overrides', 'En cas de conflits, duplique les overrides existants vers les nouveaux EFs')
-  .option(
-    '--discard-overrides',
-    "En cas de conflits, ignore les overrides existants (les nouveaux EFs n'ont pas d'override)",
-  )
+  .option('--keep-overrides', 'Progagates existing manual overrides onto the new EF values')
+  .option('--discard-overrides', 'Discards existing manual overrides and imports the new CSV values')
   .parse(process.argv)
 
 const params = program.opts()
 
 if (params.keepOverrides && params.discardOverrides) {
-  console.error('Cannot use --keep-overrides and --discard-overrides together')
+  console.error('Cannot use --keep-overrides and --discard-overrides at the same time')
   process.exit(1)
 }
 
-const overrideMode: OverrideMode = params.keepOverrides ? 'keep' : params.discardOverrides ? 'discard' : 'none'
+const overrideMode: OverrideMode | undefined = params.keepOverrides
+  ? 'keep'
+  : params.discardOverrides
+    ? 'discard'
+    : undefined
 
 getEmissionFactorsFromCSV(params.name, params.file, Import.BaseEmpreinte, mapBaseEmpreinteEmissionFactors, {
   dryRun: params.dryRun,

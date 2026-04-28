@@ -1,7 +1,7 @@
 import { getSourceLatestImportVersionId } from '@/db/study'
 import { getEnvVar } from '@/lib/environment'
 import { isMonetaryEmissionFactor } from '@/utils/emissionFactors'
-import type { EmissionFactor, Prisma } from '@abc-transitionbascarbone/db-common'
+import type { Prisma } from '@abc-transitionbascarbone/db-common'
 import {
   EmissionFactorPartType,
   EmissionFactorStatus,
@@ -94,106 +94,6 @@ export const getEmissionFactorImportVersion = async (
   return { id: newVersion.id, alreadyExists: false }
 }
 
-export const getEmissionFactorImportVersionByName = async (
-  transaction: Prisma.TransactionClient,
-  name: string,
-  source: Import,
-) => {
-  return transaction.emissionFactorImportVersion.findFirst({ where: { name, source } })
-}
-
-export type ConflictReport = {
-  importedId: string
-}
-
-export type DryRunReport = {
-  newCount: number
-  updatedCount: number
-  reusedCount: number
-  removedCount: number
-  conflicts: ConflictReport[]
-}
-
-export const checkOverrideConflicts = async (
-  transaction: Prisma.TransactionClient,
-  changedEfIds: { importedId: string; efId: string }[],
-): Promise<ConflictReport[]> => {
-  if (changedEfIds.length === 0) {
-    return []
-  }
-
-  const overrides = await transaction.emissionFactorOverride.findMany({
-    where: { emissionFactorId: { in: changedEfIds.map((e) => e.efId) } },
-    select: { emissionFactorId: true },
-  })
-
-  if (overrides.length === 0) {
-    return []
-  }
-
-  const overrideEfIds = new Set(overrides.map((o) => o.emissionFactorId))
-
-  return changedEfIds.filter((e) => overrideEfIds.has(e.efId)).map((e) => ({ importedId: e.importedId }))
-}
-
-export const propagateOverrides = async (
-  transaction: Prisma.TransactionClient,
-  oldToNewEfId: { oldId: string; newId: string }[],
-) => {
-  const existingOverrides = await transaction.emissionFactorOverride.findMany({
-    where: { emissionFactorId: { in: oldToNewEfId.map((e) => e.oldId) } },
-    include: { parts: { include: { metaData: true } }, metaData: true },
-  })
-  const byOldId = new Map(existingOverrides.map((o) => [o.emissionFactorId, o]))
-
-  for (const { oldId, newId } of oldToNewEfId) {
-    const existing = byOldId.get(oldId)
-    if (existing) {
-      const newOverride = await transaction.emissionFactorOverride.create({
-        data: {
-          emissionFactorId: newId,
-          totalCo2: existing.totalCo2,
-          co2f: existing.co2f,
-          ch4f: existing.ch4f,
-          ch4b: existing.ch4b,
-          n2o: existing.n2o,
-          co2b: existing.co2b,
-          sf6: existing.sf6,
-          hfc: existing.hfc,
-          pfc: existing.pfc,
-          otherGES: existing.otherGES,
-          unit: existing.unit,
-          status: existing.status,
-          source: existing.source,
-          location: existing.location,
-          metaData: {
-            createMany: {
-              // eslint-disable-next-line @typescript-eslint/no-unused-vars
-              data: existing.metaData.map(({ overrideId: _overrideId, createdAt: _c, updatedAt: _u, ...meta }) => meta),
-            },
-          },
-        },
-      })
-      for (const part of existing.parts) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { id: _id, overrideId: _overrideId, metaData: partMetaData, ...partData } = part
-        const newPart = await transaction.emissionFactorOverridePart.create({
-          data: { ...partData, overrideId: newOverride.id },
-        })
-        if (partMetaData.length > 0) {
-          await transaction.emissionFactorOverridePartMetaData.createMany({
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            data: partMetaData.map(({ overridePartId: _pid, createdAt: _c, updatedAt: _u, ...meta }) => ({
-              ...meta,
-              overridePartId: newPart.id,
-            })),
-          })
-        }
-      }
-    }
-  }
-}
-
 export const connectEmissionFactorToVersion = async (
   transaction: Prisma.TransactionClient,
   emissionFactorId: string,
@@ -206,117 +106,85 @@ export const connectEmissionFactorToVersion = async (
   })
 }
 
-type EFWithMetaData = EmissionFactor & {
-  metaData: {
-    language: string
-    title?: string | null
-    attribute?: string | null
-    frontiere?: string | null
-    tag?: string | null
-    location?: string | null
-    comment?: string | null
-  }[]
+/**
+ * Serializes a CSV row as "header\nvalues" so it can be stored and compared on next imports.
+ * The header line ensures comparisons remain correct even if column order changes between versions.
+ */
+export const serializeRowAsCsv = (row: ImportEmissionFactor): string => {
+  const keys = Object.keys(row) as (keyof ImportEmissionFactor)[]
+  const header = keys.join(';')
+  const values = keys.map((k) => (row[k] !== undefined && row[k] !== null ? String(row[k]) : '')).join(';')
+  return `${header}\n${values}`
 }
 
-// Relative tolerance comparison for floats — values that differ by less than 0.1% are considered equal
-export const eqFloat = (a: number | null, b: number | null) => {
-  const va = a || 0
-  const vb = b || 0
-  if (va === vb) {
-    return true
+const normalizeValue = (val: string): string => {
+  const normalized = val.replace(',', '.')
+  const n = Number(normalized)
+  if (!isNaN(n) && normalized.trim() !== '') {
+    return String(n)
   }
-  const magnitude = Math.max(Math.abs(va), Math.abs(vb), 1)
-  return Math.abs(va - vb) / magnitude < 1e-3
+  return val
 }
 
-// Normalizes CSV strings: removes triple-quote artifacts and applies NFC unicode normalization
-export const normalizeImportStr = (v: string | null | undefined): string | null => {
-  if (!v) {
-    return null
+const parseRawCsv = (rawCsv: string): Map<string, string> => {
+  const lines = rawCsv.split('\n')
+  if (lines.length !== 2) {
+    return new Map()
   }
-  return String(v).replaceAll('"""', '').normalize('NFC')
+  const headers = lines[0].split(';')
+  const values = lines[1].split(';')
+  return new Map(headers.map((h, i) => [h, values[i] ?? '']))
 }
 
-export const eqImportStr = (a: string | null | undefined, b: string | null | undefined) =>
-  normalizeImportStr(a) === normalizeImportStr(b)
+/**
+ * Merges a new CSV row with a previous override delta.
+ * Columns that were manually changed (differ between oldImportedRawCsv and overrideRawCsv)
+ * are preserved from the override. All other columns come from the new CSV row.
+ */
+export const mergeRowWithOverride = (
+  newRow: ImportEmissionFactor,
+  oldImportedRawCsv: string,
+  overrideRawCsv: string,
+): ImportEmissionFactor => {
+  const oldImportedMap = parseRawCsv(oldImportedRawCsv)
+  const overrideMap = parseRawCsv(overrideRawCsv)
 
-// Tags comparison is order-insensitive
-export const eqImportTags = (a: string | null | undefined, b: string | null | undefined) => {
-  if ((a ?? null) === (b ?? null)) {
-    return true
+  const merged = { ...newRow }
+  for (const [col, overrideVal] of overrideMap.entries()) {
+    const oldVal = oldImportedMap.get(col) ?? ''
+    if (normalizeValue(overrideVal) !== normalizeValue(oldVal)) {
+      const key = col as keyof ImportEmissionFactor
+      if (key in merged) {
+        ;(merged[key] as string | number) = numberColumns.includes(key) ? Number(overrideVal) : overrideVal
+      }
+    }
   }
-  if (!a || !b) {
+  return merged
+}
+
+export const isRowUnchanged = (existingRawCsv: string, newRow: ImportEmissionFactor): boolean => {
+  const newSerialized = serializeRowAsCsv(newRow)
+  const existingLines = existingRawCsv.split('\n')
+  const newLines = newSerialized.split('\n')
+  if (existingLines.length !== 2 || newLines.length !== 2) {
     return false
   }
-  const setA = new Set(a.split(',').map((t) => t.trim()))
-  const setB = new Set(b.split(',').map((t) => t.trim()))
-  return setA.size === setB.size && [...setA].every((t) => setB.has(t))
-}
+  const existingHeaders = existingLines[0].split(';')
+  const existingValues = existingLines[1].split(';')
+  const newHeaders = newLines[0].split(';')
+  const newValues = newLines[1].split(';')
 
-export const isEmissionFactorUnchanged = (
-  existing: EFWithMetaData,
-  row: ImportEmissionFactor,
-  parts: ImportEmissionFactor[],
-): boolean => {
-  // Simulate what cleanImport would store: if parts exist, gas values are summed from parts
-  let gases: ReturnType<typeof getGases>
-  if (parts.length > 0) {
-    const partGases = parts.map(getGases)
-    gases = {
-      totalCo2: partGases.reduce((s, p) => s + p.totalCo2, 0),
-      co2f: partGases.reduce((s, p) => s + p.co2f, 0),
-      ch4f: partGases.reduce((s, p) => s + p.ch4f, 0),
-      ch4b: partGases.reduce((s, p) => s + p.ch4b, 0),
-      n2o: partGases.reduce((s, p) => s + p.n2o, 0),
-      co2b: partGases.reduce((s, p) => s + p.co2b, 0),
-      sf6: partGases.reduce((s, p) => s + p.sf6, 0),
-      hfc: partGases.reduce((s, p) => s + p.hfc, 0),
-      pfc: partGases.reduce((s, p) => s + p.pfc, 0),
-      otherGES: partGases.reduce((s, p) => s + p.otherGES, 0),
+  const existingMap = new Map(existingHeaders.map((h, i) => [h, existingValues[i] ?? '']))
+
+  for (let i = 0; i < newHeaders.length; i++) {
+    const col = newHeaders[i]
+    const existingVal = normalizeValue(existingMap.get(col) ?? '')
+    const newVal = normalizeValue(newValues[i] ?? '')
+    if (existingVal !== newVal) {
+      return false
     }
-  } else {
-    gases = getGases(row)
   }
-
-  const frMeta = existing.metaData.find((m) => m.language === 'fr')
-  const enMeta = existing.metaData.find((m) => m.language === 'en')
-
-  const checks = {
-    totalCo2: eqFloat(existing.totalCo2, gases.totalCo2),
-    co2f: eqFloat(existing.co2f, gases.co2f),
-    ch4f: eqFloat(existing.ch4f, gases.ch4f),
-    ch4b: eqFloat(existing.ch4b, gases.ch4b),
-    n2o: eqFloat(existing.n2o, gases.n2o),
-    co2b: eqFloat(existing.co2b, gases.co2b),
-    sf6: eqFloat(existing.sf6, gases.sf6),
-    hfc: eqFloat(existing.hfc, gases.hfc),
-    pfc: eqFloat(existing.pfc, gases.pfc),
-    otherGES: eqFloat(existing.otherGES, gases.otherGES),
-    status:
-      existing.status ===
-      (row["Statut_de_l'élément"] === 'Archivé' ? EmissionFactorStatus.Archived : EmissionFactorStatus.Valid),
-    unit: existing.unit === getUnit(row.Unité_français),
-    source: eqImportStr(existing.source, row.Source),
-    location: eqImportStr(existing.location, row.Localisation_géographique),
-    frTitle: eqImportStr(frMeta?.title, row.Nom_base_français),
-    frAttribute: eqImportStr(frMeta?.attribute, row.Nom_attribut_français),
-    frFrontiere: eqImportStr(frMeta?.frontiere, row.Nom_frontière_français),
-    frTag: eqImportTags(frMeta?.tag, row.Tags_français),
-    frLocation: eqImportStr(frMeta?.location, row['Sous-localisation_géographique_français']),
-    frComment: eqImportStr(frMeta?.comment, row.Commentaire_français),
-    enTitle: eqImportStr(enMeta?.title, row.Nom_base_anglais),
-    enAttribute: eqImportStr(enMeta?.attribute, row.Nom_attribut_anglais),
-    enFrontiere: eqImportStr(enMeta?.frontiere, row.Nom_frontière_anglais),
-    enTag: eqImportTags(enMeta?.tag, row.Tags_anglais),
-    enLocation: eqImportStr(enMeta?.location, row['Sous-localisation_géographique_anglais']),
-    enComment: eqImportStr(enMeta?.comment, row.Commentaire_anglais),
-  }
-
-  const failed = Object.entries(checks)
-    .filter(([, ok]) => !ok)
-    .map(([key]) => key)
-
-  return failed.length === 0
+  return true
 }
 
 export type ImportEmissionFactor = {
@@ -481,7 +349,7 @@ const LABEL_TO_PART_TYPE = Object.fromEntries(
   Object.entries(PART_TYPE_LABELS).map(([type, label]) => [label, type as EmissionFactorPartType]),
 ) as Record<string, EmissionFactorPartType>
 
-const getType = (value: string): EmissionFactorPartType => {
+export const getType = (value: string): EmissionFactorPartType => {
   // Special case: CSV uses '?' for accented characters in this label
   const normalized = value.replace('d?électricité', "d'électricité")
   const type = LABEL_TO_PART_TYPE[normalized]
@@ -509,7 +377,7 @@ export const getEmissionQuality = (uncertainty?: number) => {
   }
 }
 
-const getGases = (emissionFactor: ImportEmissionFactor) => {
+export const getGases = (emissionFactor: ImportEmissionFactor) => {
   const gases = {
     totalCo2: Number(emissionFactor.Total_poste_non_décomposé),
     co2f: Number(emissionFactor.CO2f),
@@ -596,6 +464,7 @@ export const saveEmissionFactorsParts = async (
   transaction: Prisma.TransactionClient,
   importedIdToEfId: Map<string, string>,
   parts: ImportEmissionFactor[],
+  reusedEfIds: Set<string> = new Set(),
 ) => {
   for (const [i, part] of parts.entries()) {
     if (i % 100 === 0) {
@@ -604,6 +473,9 @@ export const saveEmissionFactorsParts = async (
     const emissionFactorId = importedIdToEfId.get(part["Identifiant_de_l'élément"])
     if (!emissionFactorId) {
       throw new Error('No emission factor found for ' + part["Identifiant_de_l'élément"])
+    }
+    if (reusedEfIds.has(emissionFactorId)) {
+      continue
     }
 
     const metaData = []
@@ -618,11 +490,108 @@ export const saveEmissionFactorsParts = async (
       ...getGases(part),
       emissionFactor: { connect: { id: emissionFactorId } },
       type: getType(part.Type_poste),
+      importedRawCsv: serializeRowAsCsv(part),
       metaData: metaData.length > 0 ? { createMany: { data: metaData } } : undefined,
     } satisfies Prisma.EmissionFactorPartCreateInput
 
     await transaction.emissionFactorPart.create({ data })
   }
+}
+
+export const propagatePartOverrides = async (
+  transaction: Prisma.TransactionClient,
+  mergedOverrideEfIds: Map<string, string>,
+) => {
+  if (mergedOverrideEfIds.size === 0) {
+    return
+  }
+
+  const oldEfIds = [...mergedOverrideEfIds.values()]
+  const oldParts = await transaction.emissionFactorPart.findMany({
+    where: { emissionFactorId: { in: oldEfIds }, overrideRawCsv: { not: null } },
+    select: { emissionFactorId: true, type: true, importedRawCsv: true, overrideRawCsv: true },
+  })
+
+  for (const [newEfId, oldEfId] of mergedOverrideEfIds.entries()) {
+    const oldPartsForEf = oldParts.filter((p) => p.emissionFactorId === oldEfId)
+    if (oldPartsForEf.length === 0) {
+      continue
+    }
+
+    const newParts = await transaction.emissionFactorPart.findMany({
+      where: { emissionFactorId: newEfId },
+      select: { id: true, type: true, importedRawCsv: true },
+    })
+
+    for (const oldPart of oldPartsForEf) {
+      if (!oldPart.importedRawCsv || !oldPart.overrideRawCsv) {
+        continue
+      }
+      const newPart = newParts.find((p) => p.type === oldPart.type)
+      if (!newPart?.importedRawCsv) {
+        continue
+      }
+
+      const oldImportedMap = parseRawCsv(oldPart.importedRawCsv)
+      const overrideMap = parseRawCsv(oldPart.overrideRawCsv)
+
+      const gasFields: (keyof ImportEmissionFactor)[] = [
+        'Total_poste_non_décomposé',
+        'CO2f',
+        'CH4f',
+        'CH4b',
+        'N2O',
+        'CO2b',
+        'Autres_GES',
+      ]
+      const updateData: Record<string, number | string> = {}
+      // Columns that were manually changed on the old part (delta)
+      const deltaColumns = new Map<string, string>()
+
+      for (const [col, overrideVal] of overrideMap.entries()) {
+        const oldVal = oldImportedMap.get(col) ?? ''
+        if (normalizeValue(overrideVal) !== normalizeValue(oldVal)) {
+          deltaColumns.set(col, overrideVal)
+          if (gasFields.includes(col as keyof ImportEmissionFactor)) {
+            const prismaField = csvColToPrismaGasField(col)
+            if (prismaField) {
+              updateData[prismaField] = Number(overrideVal)
+            }
+          }
+        }
+      }
+
+      if (Object.keys(updateData).length > 0) {
+        // Build overrideRawCsv relative to the new part's importedRawCsv so future
+        // imports compute the delta correctly.
+        const newImportedMap = parseRawCsv(newPart.importedRawCsv)
+        for (const [col, overrideVal] of deltaColumns) {
+          newImportedMap.set(col, overrideVal)
+        }
+        const headers = [...newImportedMap.keys()].join(';')
+        const values = [...newImportedMap.values()].join(';')
+        const newOverrideRawCsv = `${headers}\n${values}`
+
+        await transaction.emissionFactorPart.update({
+          where: { id: newPart.id },
+          data: { ...updateData, overrideRawCsv: newOverrideRawCsv },
+        })
+      }
+    }
+  }
+}
+
+const csvColToPrismaGasField = (col: string): string | null => {
+  const map: Record<string, string> = {
+    Total_poste_non_décomposé: 'totalCo2',
+    CO2f: 'co2f',
+    CH4f: 'ch4f',
+    CH4b: 'ch4b',
+    N2O: 'n2o',
+    CO2b: 'co2b',
+    Autres_GES: 'otherGES',
+  }
+  return map[col] ?? null
 }
 
 export const cleanImport = async (transaction: Prisma.TransactionClient, newEmissionFactorIds: string[]) => {

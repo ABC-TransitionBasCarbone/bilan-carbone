@@ -74,27 +74,33 @@ yarn tsx src/scripts/legifrance/getEmissionFactors.ts -n ${versionNumber} -f ${p
 
 ### Import emission factors from Base Empreinte
 
+Unchanged EFs between two imports are reused (same DB row). Changed EFs create a new row. Comparison is done via the raw CSV line stored in `importedRawCsv` at import time.
+
+If EFs have been manually corrected via `applyOverrides` and their CSV row has changed, the import fails and requires an explicit choice between `--keep-overrides` and `--discard-overrides`.
+
 ```bash
-# Prévisualiser un import sans écrire en base
+# Preview an import without writing to the database
 yarn tsx src/scripts/baseEmpreinte/getEmissionFactors.ts -n ${versionNumberBaseEmpreinte} -f ${pathToCSVFile} --dry-run
 
-# Importer la base empreinte
+# Import Base Empreinte
 yarn tsx src/scripts/baseEmpreinte/getEmissionFactors.ts -n ${versionNumberBaseEmpreinte} -f ${pathToCSVFile}
 
-# Importer la base empreinte en conservant les correctifs manuels existants en cas de conflit
+# Import while keeping existing manual overrides on changed EFs
 yarn tsx src/scripts/baseEmpreinte/getEmissionFactors.ts -n ${versionNumberBaseEmpreinte} -f ${pathToCSVFile} --keep-overrides
 
-# Importer la base empreinte en supprimant les correctifs manuels existants en cas de conflit
+# Import while discarding existing manual overrides in favor of new CSV values
 yarn tsx src/scripts/baseEmpreinte/getEmissionFactors.ts -n ${versionNumberBaseEmpreinte} -f ${pathToCSVFile} --discard-overrides
 
-# Preview overrides to emission factors (overrides)
-yarn tsx src/scripts/baseEmpreinte/applyOverrides.ts -f ${pathToCSVFile} --dry-run
+# Backfill importedRawCsv on EFs imported before the field was introduced (one-timeon the last version before the field was introduced)
+yarn tsx src/scripts/baseEmpreinte/backfillImportedRawCsv.ts -n ${versionNumberBaseEmpreinte} -f ${pathToCSVFile} --dry-run
+yarn tsx src/scripts/baseEmpreinte/backfillImportedRawCsv.ts -n ${versionNumberBaseEmpreinte} -f ${pathToCSVFile}
 
-# Apply overrides to emission factors on an existing version
-yarn tsx src/scripts/baseEmpreinte/applyOverrides.ts -f ${pathToCSVFile}
+# Preview manual corrections without writing to the database
+yarn tsx src/scripts/baseEmpreinte/applyOverrides.ts -f ${pathToXlsxFile} --dry-run
 
-# Export existing overrides to Excel to modify or add new ones
-yarn tsx src/scripts/baseEmpreinte/exportOverrides.ts
+# Apply manual corrections to existing EFs (writes values directly onto the EF)
+# The Excel file must contain the same columns as the standard import CSV
+yarn tsx src/scripts/baseEmpreinte/applyOverrides.ts -f ${pathToXlsxFile}
 ```
 
 ### Create BEGES rules

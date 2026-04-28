@@ -32,37 +32,6 @@ const versionsSelect = {
   },
 }
 
-const overrideSelect = {
-  select: {
-    totalCo2: true,
-    co2f: true,
-    ch4f: true,
-    ch4b: true,
-    n2o: true,
-    co2b: true,
-    sf6: true,
-    hfc: true,
-    pfc: true,
-    otherGES: true,
-    unit: true,
-    status: true,
-    source: true,
-    location: true,
-    parts: { select: { type: true, totalCo2: true } },
-    metaData: {
-      select: {
-        language: true,
-        title: true,
-        attribute: true,
-        comment: true,
-        frontiere: true,
-        tag: true,
-        location: true,
-      },
-    },
-  },
-}
-
 const otherSelectEmissionFactor = {
   id: true,
   status: true,
@@ -92,7 +61,6 @@ const otherSelectEmissionFactor = {
   pfc: true,
   otherGES: true,
   versions: versionsSelect,
-  override: overrideSelect,
   emissionFactorParts: { select: { type: true, totalCo2: true } },
 }
 
@@ -136,7 +104,6 @@ const selectEmissionFactor = {
     },
   },
   versions: versionsSelect,
-  override: overrideSelect,
   emissionFactorParts: { select: { type: true, totalCo2: true } },
 } as Prisma.EmissionFactorSelect
 
@@ -148,33 +115,6 @@ type EmissionFactorVersion = {
     source: Import
     archived: boolean
   }
-}
-
-export type EmissionFactorOverrideData = {
-  totalCo2: number
-  co2f: number | null
-  ch4f: number | null
-  ch4b: number | null
-  n2o: number | null
-  co2b: number | null
-  sf6: number | null
-  hfc: number | null
-  pfc: number | null
-  otherGES: number | null
-  unit: Unit | null
-  status: EmissionFactorStatus | null
-  source: string | null
-  location: string | null
-  parts: { type: string; totalCo2: number }[]
-  metaData: {
-    language: string
-    title: string | null
-    attribute: string | null
-    comment: string | null
-    frontiere: string | null
-    tag: string | null
-    location: string | null
-  }[]
 }
 
 export type EmissionFactorList = {
@@ -215,48 +155,10 @@ export type EmissionFactorList = {
     tag: string | null
   }
   versions: EmissionFactorVersion[]
-  override: EmissionFactorOverrideData | null
   emissionFactorParts: {
     type: string
     totalCo2: number
   }[]
-}
-
-/**
- * Apply the override to the emission factor's fields including the metaData.
- */
-export const applyEmissionFactorOverride = <T extends EmissionFactorList>(ef: T, locale: string): T => {
-  if (!ef.override) {
-    return ef
-  }
-  const efOverride = ef.override
-  const efMetadataOverride = efOverride.metaData.find((m) => m.language === locale)
-  return {
-    ...ef,
-    totalCo2: efOverride.totalCo2,
-    co2f: efOverride.co2f ?? ef.co2f,
-    ch4f: efOverride.ch4f ?? ef.ch4f,
-    ch4b: efOverride.ch4b ?? ef.ch4b,
-    n2o: efOverride.n2o ?? ef.n2o,
-    co2b: efOverride.co2b ?? ef.co2b,
-    sf6: efOverride.sf6 ?? ef.sf6,
-    hfc: efOverride.hfc ?? ef.hfc,
-    pfc: efOverride.pfc ?? ef.pfc,
-    otherGES: efOverride.otherGES ?? ef.otherGES,
-    unit: efOverride.unit ?? ef.unit,
-    status: efOverride.status ?? ef.status,
-    source: efOverride.source ?? ef.source,
-    location: efOverride.location ?? ef.location,
-    metaData: {
-      ...ef.metaData,
-      title: efMetadataOverride?.title ?? ef.metaData.title,
-      attribute: efMetadataOverride?.attribute ?? ef.metaData.attribute,
-      comment: efMetadataOverride?.comment ?? ef.metaData.comment,
-      frontiere: efMetadataOverride?.frontiere ?? ef.metaData.frontiere,
-      location: efMetadataOverride?.location ?? ef.metaData.location,
-      tag: efMetadataOverride?.tag ?? ef.metaData.tag,
-    },
-  }
 }
 
 const getDefaultEmissionFactorsCount = async (
@@ -307,22 +209,6 @@ const getBaseFilterForEmissionFactors = (
           { title: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
           { attribute: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
           { frontiere: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
-          {
-            emissionFactor: {
-              override: {
-                metaData: {
-                  some: {
-                    language: locale,
-                    OR: [
-                      { title: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
-                      { attribute: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
-                      { frontiere: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
-                    ],
-                  },
-                },
-              },
-            },
-          },
         ],
       }),
       ...(filters.locations.length > 0
@@ -376,23 +262,18 @@ const getDefaultEmissionFactors = async (
     orderBy: { title: 'asc' },
   })
 
-  return emissionFactorsMetadata.map((metadata) =>
-    applyEmissionFactorOverride(
-      {
-        ...metadata.emissionFactor,
-        metaData: {
-          language: metadata.language,
-          title: metadata.title,
-          attribute: metadata.attribute,
-          comment: metadata.comment,
-          location: metadata.location,
-          frontiere: metadata.frontiere,
-          tag: metadata.tag,
-        },
-      },
-      locale,
-    ),
-  )
+  return emissionFactorsMetadata.map((metadata) => ({
+    ...metadata.emissionFactor,
+    metaData: {
+      language: metadata.language,
+      title: metadata.title,
+      attribute: metadata.attribute,
+      comment: metadata.comment,
+      location: metadata.location,
+      frontiere: metadata.frontiere,
+      tag: metadata.tag,
+    },
+  }))
 }
 
 export const getAllEmissionFactorsLocations = async () => {

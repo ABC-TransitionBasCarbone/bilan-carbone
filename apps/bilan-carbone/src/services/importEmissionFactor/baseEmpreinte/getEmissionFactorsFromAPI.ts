@@ -9,6 +9,7 @@ import {
   ImportEmissionFactor,
   requiredColumns,
   saveEmissionFactorsParts,
+  serializeRowAsCsv,
   validStatuses,
 } from '../import'
 import { mapBaseEmpreinteEmissionFactors } from './import'
@@ -47,6 +48,7 @@ export const getEmissionFactorsFromAPI = async (prismaClient: PrismaClient, name
           const created = await transaction.emissionFactor.create({
             data: {
               ...data,
+              importedRawCsv: serializeRowAsCsv(row),
               versions: { create: { importVersionId: emissionFactorImportVersion.id } },
             },
           })

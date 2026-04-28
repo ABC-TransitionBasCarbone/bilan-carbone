@@ -55,11 +55,6 @@ const users = async () => {
   await prisma.answer.deleteMany()
   await prisma.question.deleteMany()
 
-  await prisma.emissionFactorOverridePartMetaData.deleteMany()
-  await prisma.emissionFactorOverridePart.deleteMany()
-  await prisma.emissionFactorOverrideMetaData.deleteMany()
-  await prisma.emissionFactorOverride.deleteMany()
-
   await prisma.emissionFactorPartMetaData.deleteMany()
   await prisma.emissionFactorPart.deleteMany()
   await prisma.emissionFactorMetaData.deleteMany()
