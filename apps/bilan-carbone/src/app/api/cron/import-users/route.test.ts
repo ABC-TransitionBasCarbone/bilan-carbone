@@ -1,7 +1,21 @@
 import { checkCronRequest } from '@/app/api/cron/utils'
 import { getUsersFromFTP } from '@/scripts/ftp/importUsers'
-import { type NextRequest } from 'next/server'
+import { NextResponse, type NextRequest } from 'next/server'
 import { POST } from './route'
+
+jest.mock('next/server', () => ({
+  NextResponse: class MockNextResponse {
+    readonly status: number
+    private readonly body: string
+    constructor(body: string | null, init?: ResponseInit) {
+      this.body = body ?? ''
+      this.status = init?.status ?? 200
+    }
+    async text(): Promise<string> {
+      return this.body
+    }
+  },
+}))
 
 jest.mock('@/app/api/cron/utils', () => ({
   checkCronRequest: jest.fn(),
@@ -24,7 +38,7 @@ describe('POST /api/cron/import-users', () => {
   })
 
   it('returns cron auth/rate-limit error when request is rejected by middleware', async () => {
-    const errorResponse = { status: 401 } as Response
+    const errorResponse = new NextResponse(null, { status: 401 })
     jest.mocked(checkCronRequest).mockReturnValue(errorResponse)
 
     const response = await POST(req)
