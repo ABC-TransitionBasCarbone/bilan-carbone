@@ -13,10 +13,7 @@ export class SurveyEngine {
    * Get the current question
    */
   getCurrentQuestion(): Question | null {
-    if (
-      this.response.currentQuestionIndex < 0 ||
-      this.response.currentQuestionIndex >= this.survey.questions.length
-    ) {
+    if (this.response.currentQuestionIndex < 0 || this.response.currentQuestionIndex >= this.survey.questions.length) {
       return null
     }
     return this.survey.questions[this.response.currentQuestionIndex]
@@ -143,10 +140,7 @@ export class SurveyEngine {
   getProgress(): number {
     if (this.survey.questions.length === 0) return 0
     if (this.response.completed) return 100
-    const answeredCount = Math.min(
-      this.response.currentQuestionIndex + 1,
-      this.survey.questions.length,
-    )
+    const answeredCount = Math.min(this.response.currentQuestionIndex + 1, this.survey.questions.length)
     return Math.round((answeredCount / this.survey.questions.length) * 100)
   }
 

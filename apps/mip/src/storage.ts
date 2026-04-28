@@ -55,9 +55,7 @@ export const surveyStorage = {
   getAllResponseIds: (): string[] => {
     try {
       const keys = Object.keys(localStorage)
-      return keys
-        .filter((key) => key.startsWith(STORAGE_PREFIX))
-        .map((key) => key.replace(STORAGE_PREFIX, ''))
+      return keys.filter((key) => key.startsWith(STORAGE_PREFIX)).map((key) => key.replace(STORAGE_PREFIX, ''))
     } catch (error) {
       console.error('Failed to get response IDs:', error)
       return []

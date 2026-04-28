@@ -108,9 +108,9 @@ import {
   hasDeprecationPeriod,
   hasEditionRights,
 } from '@/utils/study'
-import { formatDateFr } from '@repo/utils'
 import { isAdmin } from '@/utils/user'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
+import { formatDateFr } from '@repo/utils'
 
 import { hasSufficientLevel } from '@/utils/study'
 import type {

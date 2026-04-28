@@ -8,8 +8,8 @@ import {
 } from '@/services/uncertainty'
 import { EmissionSourcesStatus } from '@/types/emissionSource.types'
 import type { EmissionSourcesSort } from '@/types/filters'
-import type { Translations } from '@repo/lib'
 import { Environment } from '@repo/db-common/enums'
+import type { Translations } from '@repo/lib'
 
 export const getEmissionSourcesFuseOptions = (tQuality: Translations, tUnit: Translations, locale: string) => ({
   keys: [
