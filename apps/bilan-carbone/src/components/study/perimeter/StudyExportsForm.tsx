@@ -1,7 +1,7 @@
 import HelpIcon from '@/components/base/HelpIcon'
 import type { FullStudy } from '@/db/study'
 import { StudyExportsCommand } from '@/services/serverFunctions/study.command'
-import { Translations } from '@/types/translation'
+import { Translations } from '@repo/lib'
 import { FormControl, FormGroup, FormLabel } from '@mui/material'
 import { ControlMode, Export } from '@repo/db-common/enums'
 import classNames from 'classnames'

@@ -1,4 +1,4 @@
-import { Translations } from '@/types/translation'
+import { Translations } from '@repo/lib'
 
 export const uniqueByKey = <T, K extends keyof T>(arr: T[], key: K) => {
   const filteredKeys = new Set<T[K]>()

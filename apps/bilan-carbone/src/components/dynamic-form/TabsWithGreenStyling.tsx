@@ -1,4 +1,4 @@
-import { Translations } from '@/types/translation'
+import { Translations } from '@repo/lib'
 import { Box, Tabs as MuiTabs, Tab, styled } from '@mui/material'
 import { ReactNode, useMemo, useState } from 'react'
 

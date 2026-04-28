@@ -1,5 +1,5 @@
 import { DeleteCommand } from '@/services/serverFunctions/study.command'
-import { Translations } from '@/types/translation'
+import { Translations } from '@repo/lib'
 import { handleWarningText } from '@/utils/components'
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import { Button } from '@repo/ui'

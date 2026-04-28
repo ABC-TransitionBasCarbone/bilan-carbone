@@ -1,4 +1,4 @@
-import { Translations } from '@/types/translation'
+import { Translations } from '@repo/lib'
 import { FormControl, FormHelperText, SelectProps } from '@mui/material'
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form'
 import { Select } from '../base/Select'

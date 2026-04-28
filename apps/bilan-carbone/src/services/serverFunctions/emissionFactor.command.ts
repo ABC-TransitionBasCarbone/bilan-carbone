@@ -1,4 +1,4 @@
-import { setCustomIssue } from '@/lib/zod.config'
+import { setCustomIssue } from '@repo/lib'
 import { EmissionFactorBase, EmissionFactorPartType, SubPost, Unit } from '@repo/db-common/enums'
 import z from 'zod'
 

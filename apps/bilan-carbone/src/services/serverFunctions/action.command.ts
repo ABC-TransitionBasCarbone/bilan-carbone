@@ -1,4 +1,4 @@
-import { setCustomMessage } from '@/lib/zod.config'
+import { setCustomMessage } from '@repo/lib'
 import {
   ActionCategory,
   ActionIndicatorType,

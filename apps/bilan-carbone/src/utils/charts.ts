@@ -1,4 +1,4 @@
-import { Translations } from '@/types/translation'
+import { Translations } from '@repo/lib'
 import { Theme } from '@mui/material'
 import { StudyResultUnit, SubPost } from '@repo/db-common'
 import { formatNumber } from './number'
