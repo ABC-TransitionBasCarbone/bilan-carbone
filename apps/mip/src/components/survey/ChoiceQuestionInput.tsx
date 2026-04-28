@@ -3,13 +3,13 @@ import { ChoiceQuestion } from '@repo/survey'
 
 interface ChoiceQuestionInputProps {
   question: ChoiceQuestion
-  value: string | string[] | undefined
+  value: string | undefined
   onChange: (value: string | string[]) => void
   error?: string | null
 }
 
 export function ChoiceQuestionInput({ question, value, onChange, error }: ChoiceQuestionInputProps) {
-  const selectedValue = typeof value === 'string' ? value : value?.[0] || ''
+  const selectedValue = value || ''
 
   return (
     <FormControl fullWidth error={!!error}>

@@ -177,12 +177,6 @@ export function Survey({ survey, responseId }: SurveyProps) {
           </Button>
         )}
       </div>
-
-      <div className={styles.footer}>
-        <Typography variant="caption" color="text.secondary">
-          {t('completed.responseId', { id: response.responseId })}
-        </Typography>
-      </div>
     </Container>
   )
 }

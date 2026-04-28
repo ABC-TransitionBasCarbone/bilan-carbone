@@ -98,6 +98,9 @@ This is a Next.js monorepo for the "Bilan Carbone" platform, focused on carbon a
 - **Translation Pattern**: Use `useTranslations('namespace')` in client components, `getTranslations('namespace')` in server components.
 - **Translation Files**: Store translations in `src/i18n/translations/{locale}/{namespace}.json`.
 
+## AI Behaviour in Code Review
+- **Do not reply to human peer review comments**: When implementing changes based on review feedback, apply the code changes but do not post replies to human review threads. Only humans communicate with humans in peer review.
+
 ## Key Files & Directories
 
 - `src/db/emissionFactors.ts`: Main DB logic for emission factors.
