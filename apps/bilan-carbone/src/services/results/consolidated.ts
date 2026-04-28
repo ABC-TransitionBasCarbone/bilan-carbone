@@ -1,6 +1,6 @@
 import type { FullStudy } from '@/db/study'
 import { customPostOrder } from '@/environments/clickson/utils/constant'
-import { Translations } from '@/types/translation'
+import { Translations } from '@repo/lib'
 import { sortByCustomOrder } from '@/utils/array'
 import { getEmissionSourcesTotalCo2 } from '@/utils/emissionSources'
 import { Environment } from '@repo/db-common/enums'

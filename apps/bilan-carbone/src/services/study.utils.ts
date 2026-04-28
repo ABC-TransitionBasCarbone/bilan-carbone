@@ -1,6 +1,6 @@
 import { EngagementActionTargets } from '@/constants/engagementActions'
 import type { FullStudy } from '@/db/study'
-import { Translations } from '@/types/translation'
+import { Translations } from '@repo/lib'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { getEmissionSourcesTotalCo2 } from '@/utils/emissionSources'
 import { getPost } from '@/utils/post'

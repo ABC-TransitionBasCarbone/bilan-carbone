@@ -1,7 +1,7 @@
 import BarChart from '@/components/study/charts/BarChart'
 import PieChart from '@/components/study/charts/PieChart'
 import type { BaseResultsByPost } from '@/services/posts'
-import { Translations } from '@/types/translation'
+import { Translations } from '@repo/lib'
 import { StudyResultUnit } from '@repo/db-common/enums'
 
 interface Props {

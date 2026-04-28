@@ -1,5 +1,5 @@
 import { getEnvVarClient } from '@/lib/environmentClient'
-import { Translations } from '@/types/translation'
+import { Translations } from '@repo/lib'
 import { Environment } from '@repo/db-common/enums'
 import classNames from 'classnames'
 import Link from 'next/link'

@@ -1,6 +1,6 @@
 import { Locale } from '@/i18n/config'
 import { getEnvVar } from '@/lib/environment'
-import { Translations } from '@/types/translation'
+import { Translations } from '@repo/lib'
 import { Environment } from '@repo/db-common/enums'
 import { getLocale } from 'next-intl/server'
 

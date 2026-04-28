@@ -1,4 +1,4 @@
-import { Translations } from '@/types/translation'
+import { Translations } from '@repo/lib'
 import { useTranslations } from 'next-intl'
 import Modal from './Modal'
 

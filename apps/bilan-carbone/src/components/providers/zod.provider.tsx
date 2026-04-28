@@ -1,7 +1,7 @@
 'use client'
 
 import { LocaleType } from '@/i18n/config'
-import { configureZod } from '@/lib/zod.config'
+import { configureZod } from '@repo/lib'
 import { useLocale, useTranslations } from 'next-intl'
 import { useEffect } from 'react'
 

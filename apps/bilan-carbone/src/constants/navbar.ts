@@ -1,6 +1,6 @@
 import { isCut, isTilt } from '@/services/permissions/environment'
 import { hasAccessToEngagementActions, isTiltSimplified } from '@/services/permissions/environmentAdvanced'
-import { Translations } from '@/types/translation'
+import { Translations } from '@repo/lib'
 import { Environment } from '@repo/db-common/enums'
 
 interface MenuLink {

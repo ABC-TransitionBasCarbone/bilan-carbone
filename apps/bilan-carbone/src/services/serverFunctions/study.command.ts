@@ -1,4 +1,4 @@
-import { setCustomIssue, setCustomMessage } from '@/lib/zod.config'
+import { setCustomIssue, setCustomMessage } from '@repo/lib'
 import {
   ControlMode,
   Country,

@@ -1,4 +1,4 @@
-import { setCustomIssue, setCustomMessage } from '@/lib/zod.config'
+import { setCustomIssue, setCustomMessage } from '@repo/lib'
 import { SubPost, TrajectoryType } from '@repo/db-common/enums'
 import { z } from 'zod'
 

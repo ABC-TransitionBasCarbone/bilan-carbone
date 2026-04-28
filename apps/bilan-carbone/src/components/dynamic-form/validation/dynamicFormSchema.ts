@@ -1,4 +1,4 @@
-import { setCustomMessage } from '@/lib/zod.config'
+import { setCustomMessage } from '@repo/lib'
 import type { Question } from '@repo/db-common'
 import { QuestionType } from '@repo/db-common/enums'
 import { useMemo } from 'react'

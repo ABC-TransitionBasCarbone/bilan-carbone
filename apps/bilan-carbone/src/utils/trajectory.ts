@@ -19,7 +19,7 @@ import type {
   TrajectoryResult,
   TrajectoryWithObjectives,
 } from '@/types/trajectory.types'
-import type { Translations } from '@/types/translation'
+import type { Translations } from '@repo/lib'
 import { Action, SectenInfo } from '@repo/db-common'
 import { ActionPotentialDeduction, StudyResultUnit, TrajectoryType } from '@repo/db-common/enums'
 import { getActionBasedData } from './actionTrajectory.utils'
