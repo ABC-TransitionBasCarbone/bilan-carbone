@@ -1,7 +1,7 @@
 import '@/css/index.css'
 import Providers from '@repo/lib'
 import { CssBaseline } from '@mui/material'
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter'
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter'
 import type { Metadata } from 'next'
 import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
