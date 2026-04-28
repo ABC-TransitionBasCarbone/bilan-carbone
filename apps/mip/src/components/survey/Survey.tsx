@@ -8,7 +8,7 @@ import { Survey as SurveyType, SurveyResponse } from '@repo/typeguards'
 import { useTranslations } from 'next-intl'
 import { useCallback, useMemo, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
-import { QuestionRenderer } from './QuestionRenderer'
+import { QuestionRenderer } from '@repo/components'
 import styles from './Survey.module.css'
 
 interface SurveyProps {
