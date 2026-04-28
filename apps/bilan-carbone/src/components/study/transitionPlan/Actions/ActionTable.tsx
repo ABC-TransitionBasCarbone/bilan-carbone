@@ -13,6 +13,7 @@ import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import type { ActionWithRelations } from '@/types/trajectory.types'
 import { formatNumber } from '@/utils/number'
 import { convertValue } from '@/utils/study'
+import { sortWithUpdatedAtFallback } from '@/utils/table.utils'
 import { getYearFromDateStr } from '@/utils/time'
 import ArrowRight from '@mui/icons-material/ArrowRight'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
@@ -36,27 +37,6 @@ import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
 import { NO_OWNER } from './ActionFilters'
-
-const sortWithUpdatedAtFallback = (
-  rowA: { original: ActionWithRelations; getValue: (columnId: string) => unknown },
-  rowB: { original: ActionWithRelations; getValue: (columnId: string) => unknown },
-  columnId: string,
-): number => {
-  const a = (rowA.getValue(columnId) as number | null | undefined) ?? null
-  const b = (rowB.getValue(columnId) as number | null | undefined) ?? null
-
-  if (a !== b) {
-    if (a === null) {
-      return 1
-    }
-    if (b === null) {
-      return -1
-    }
-    return a < b ? -1 : 1
-  }
-
-  return new Date(rowB.original.updatedAt).getTime() - new Date(rowA.original.updatedAt).getTime()
-}
 
 interface Props {
   actions: ActionWithRelations[]
