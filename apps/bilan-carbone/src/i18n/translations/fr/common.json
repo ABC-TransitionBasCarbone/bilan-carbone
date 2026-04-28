@@ -1,5 +1,6 @@
 {
   "common": {
+    "error": "Une erreur est survenue. Si le problème persiste, contactez le support.",
     "yes": "Oui",
     "no": "Non",
     "previous": "Précédent",
