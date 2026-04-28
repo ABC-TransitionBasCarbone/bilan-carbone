@@ -1,10 +1,10 @@
 'use client'
 
-import { ToastProvider } from '../../../../packages/ui/src/Toast/ToastProvider'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import 'dayjs/locale/fr'
 import { ReactNode } from 'react'
+import { ToastProvider } from '../../../../packages/ui/src/Toast/ToastProvider'
 
 interface Props {
   children: ReactNode
