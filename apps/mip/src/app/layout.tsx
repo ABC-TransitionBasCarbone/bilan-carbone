@@ -1,4 +1,3 @@
-import RouteChangeListener from '@/components/survey/RouteChangeListener'
 import '@/css/index.css'
 import Providers from '@/providers/Providers'
 import { CssBaseline } from '@mui/material'
@@ -28,7 +27,6 @@ const RootLayout = async ({ children }: Readonly<Props>) => {
     <html lang="fr">
       <body>
         <AppRouterCacheProvider options={providerOptions}>
-          <RouteChangeListener />
           <NextIntlClientProvider messages={messages}>
             <Providers>
               <CssBaseline />

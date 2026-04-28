@@ -39,7 +39,12 @@ export function QuestionRenderer({ question, value, onChange, error }: QuestionR
       )}
 
       {question.type === 'choice' && (
-        <ChoiceQuestionInput question={question} value={value} onChange={onChange} error={error} />
+        <ChoiceQuestionInput
+          question={question}
+          value={typeof value === 'string' ? value : undefined}
+          onChange={onChange}
+          error={error}
+        />
       )}
     </div>
   )

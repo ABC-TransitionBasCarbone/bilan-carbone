@@ -142,6 +142,7 @@ export class SurveyEngine {
     this.response.completed = true
     this.response.completedAt = new Date()
     this.response.updatedAt = new Date()
+    this.response.currentQuestionIndex = this.survey.questions.length
   }
 
   /**
