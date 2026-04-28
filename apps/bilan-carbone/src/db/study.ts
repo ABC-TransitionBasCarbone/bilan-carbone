@@ -13,6 +13,7 @@ import type { DuplicableStudy, Level, Prisma, StudyTag, StudyTagFamily, SubPost 
 import { CommentStatus, ControlMode, Environment, Export, Import, StudyRole } from '@repo/db-common/enums'
 import { UserSession } from 'next-auth'
 import { cache } from 'react'
+import { deleteTransitionPlan } from '../services/serverFunctions/transitionPlan'
 import { getAccountOrganizationVersions } from './account'
 import { AccountWithUserSelect } from './account.select'
 import { prismaClient } from './client.server'
@@ -822,6 +823,7 @@ export const deleteStudy = async (id: string) => {
       transaction.studyEmissionFactorVersion.deleteMany({ where: { studyId: id } }),
       transaction.studyExport.deleteMany({ where: { studyId: id } }),
       ...studySites.map((studySite) => transaction.openingHours.deleteMany({ where: { studySiteId: studySite.id } })),
+      deleteTransitionPlan(id),
     ])
     await transaction.study.delete({ where: { id } })
   })
