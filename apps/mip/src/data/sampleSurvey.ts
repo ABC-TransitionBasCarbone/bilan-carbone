@@ -1,4 +1,4 @@
-import { Survey } from '@/types/survey'
+import { Survey } from '@repo/typeguards'
 
 export const sampleSurvey: Survey = {
   id: 'sample-survey-1',

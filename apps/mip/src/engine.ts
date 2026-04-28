@@ -1,4 +1,4 @@
-import { Question, Survey, SurveyResponse } from '@/types/survey'
+import { Question, Survey, SurveyResponse } from '@repo/typeguards'
 
 export class SurveyEngine {
   private survey: Survey
