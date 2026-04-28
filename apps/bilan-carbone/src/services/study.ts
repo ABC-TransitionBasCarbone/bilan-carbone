@@ -15,7 +15,7 @@ import {
   isCAS,
   STUDY_UNIT_VALUES,
 } from '@/utils/study'
-import { formatDateFr } from '@/utils/time'
+import { formatDateFr } from '@repo/utils'
 import type { ExportRule } from '@repo/db-common'
 import { EmissionFactorBase, Environment, Export, StudyResultUnit, SubPost } from '@repo/db-common/enums'
 import dayjs from 'dayjs'

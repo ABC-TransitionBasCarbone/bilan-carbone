@@ -3,7 +3,7 @@ import type { PastStudy, TrajectoryDataPoint } from '@/types/trajectory.types'
 import type { Action } from '@repo/db-common'
 import { ActionPotentialDeduction, StudyResultUnit } from '@repo/db-common/enums'
 import { convertValue } from './study'
-import { getYearFromDateStr } from './time'
+import { getYearFromDateStr } from '@repo/utils'
 import {
   addHistoricalDataAndStudyPoint,
   getTrajectoryEmissionsAtYear,

@@ -11,7 +11,7 @@ import { createSubObjectives, updateSubObjective } from '@/services/serverFuncti
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { ObjectiveWithScope, TrajectoryWithObjectivesAndScope } from '@/types/trajectory.types'
 import { toScopedValues } from '@/utils/scope.utils'
-import { getYearFromDateStr } from '@/utils/time'
+import { getYearFromDateStr } from '@repo/utils'
 import { getDisplayedReferenceYearForTrajectoryType } from '@/utils/trajectory'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'

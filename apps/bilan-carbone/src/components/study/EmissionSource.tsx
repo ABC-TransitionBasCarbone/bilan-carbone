@@ -21,7 +21,7 @@ import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { getEmissionSourceStatus } from '@/utils/emissionSources'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
 import { hasEditionRights, STUDY_UNIT_VALUES } from '@/utils/study'
-import { formatDateFr } from '@/utils/time'
+import { formatDateFr } from '@repo/utils'
 import SavedIcon from '@mui/icons-material/CloudUpload'
 import { Alert, CircularProgress, FormLabel, TextField } from '@mui/material'
 import {

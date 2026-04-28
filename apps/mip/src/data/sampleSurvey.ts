@@ -1,4 +1,4 @@
-import { Survey } from '@repo/survey'
+import { Survey } from '@/types/survey'
 
 export const sampleSurvey: Survey = {
   id: 'sample-survey-1',

@@ -3,7 +3,7 @@
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
 import { getFormationFormStart, startFormationForm } from '@/services/serverFunctions/user'
-import { MIN, TIME_IN_MS } from '@/utils/time'
+import { MIN, TIME_IN_MS } from '@repo/utils'
 import { Checkbox } from '@mui/material'
 import { Formation } from '@repo/db-common'
 import { Button } from '@repo/ui'

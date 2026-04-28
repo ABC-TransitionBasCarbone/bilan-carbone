@@ -1,5 +1,5 @@
 import { FormControl, FormControlLabel, FormHelperText, Radio, RadioGroup } from '@mui/material'
-import { ChoiceQuestion } from '@repo/survey'
+import { ChoiceQuestion } from '@/types/survey'
 
 interface ChoiceQuestionInputProps {
   question: ChoiceQuestion

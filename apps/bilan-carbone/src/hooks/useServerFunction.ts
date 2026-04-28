@@ -1,6 +1,6 @@
 'use client'
 
-import { useToast } from '@/components/base/ToastProvider'
+import { useToast } from '@repo/ui'
 import { ApiResponse } from '@/utils/serverResponse'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect } from 'react'
