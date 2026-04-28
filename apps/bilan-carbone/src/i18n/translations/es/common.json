@@ -1,5 +1,6 @@
 {
   "common": {
+    "error": "Un error ha ocurrido. Si el problema persiste, por favor contacte al soporte.",
     "yes": "Sí",
     "no": "No",
     "previous": "Anterior",
