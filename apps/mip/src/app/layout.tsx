@@ -9,8 +9,8 @@ import { getMessages } from 'next-intl/server'
 import { headers } from 'next/headers'
 
 export const metadata: Metadata = {
-  title: 'Mon Empreinte Pro',
-  description: 'Calculez votre empreinte carbone professionnelle',
+  title: 'MIP : Mon Impact Pro',
+  description: 'Calculez votre impact carbone professionnel',
 }
 
 interface Props {

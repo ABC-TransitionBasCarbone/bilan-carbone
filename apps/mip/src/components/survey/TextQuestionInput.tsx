@@ -1,6 +1,6 @@
 import { FormControl, FormHelperText, TextField } from '@mui/material'
-import { useTranslations } from 'next-intl'
 import { TextQuestion } from '@repo/survey'
+import { useTranslations } from 'next-intl'
 
 interface TextQuestionInputProps {
   question: TextQuestion
@@ -9,12 +9,7 @@ interface TextQuestionInputProps {
   error?: string | null
 }
 
-export function TextQuestionInput({
-  question,
-  value,
-  onChange,
-  error,
-}: TextQuestionInputProps) {
+export function TextQuestionInput({ question, value, onChange, error }: TextQuestionInputProps) {
   const t = useTranslations('survey')
 
   return (

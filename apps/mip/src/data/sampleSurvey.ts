@@ -3,8 +3,7 @@ import { Survey } from '@repo/survey'
 export const sampleSurvey: Survey = {
   id: 'sample-survey-1',
   title: 'Carbon Footprint Survey',
-  description:
-    'Help us understand your carbon footprint by answering a few questions.',
+  description: 'Help us understand your carbon footprint by answering a few questions.',
   questions: [
     {
       id: 'q1',

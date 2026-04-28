@@ -51,34 +51,6 @@ yarn build
 yarn start
 ```
 
-## Project Structure
-
-```
-apps/mip/
-├── src/
-│   ├── app/                    # Next.js app router
-│   │   ├── survey/[id]/       # Dynamic survey route with UUID
-│   │   ├── layout.tsx         # Root layout with MUI theme
-│   │   └── page.tsx           # Home page (redirects to new survey)
-│   ├── components/
-│   │   └── survey/            # Survey UI components
-│   │       ├── QuestionRenderer.tsx
-│   │       └── SurveyPage.tsx
-│   ├── lib/                   # Core survey logic
-│   │   └── survey/
-│   │       ├── types.ts       # TypeScript types
-│   │       ├── engine.ts      # Survey navigation & validation
-│   │       └── storage.ts     # LocalStorage utilities
-│   ├── store/                 # State management
-│   │   └── survey/
-│   │       └── surveyStore.ts # Zustand store
-│   └── data/                  # Sample data
-│       └── sampleSurvey.ts    # Example survey configuration
-├── package.json
-├── tsconfig.json
-└── next.config.mjs
-```
-
 ## Usage
 
 ### Creating a Survey

@@ -1,8 +1,8 @@
 import { Typography } from '@mui/material'
 import { Question } from '@repo/survey'
-import { TextQuestionInput } from './TextQuestionInput'
 import { ChoiceQuestionInput } from './ChoiceQuestionInput'
 import styles from './QuestionRenderer.module.css'
+import { TextQuestionInput } from './TextQuestionInput'
 
 interface QuestionRendererProps {
   question: Question
@@ -44,4 +44,3 @@ export function QuestionRenderer({ question, value, onChange, error }: QuestionR
     </div>
   )
 }
-

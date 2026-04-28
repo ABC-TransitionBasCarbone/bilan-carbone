@@ -1,11 +1,11 @@
 'use client'
 
-import { useCallback, useMemo, useState } from 'react'
-import { Alert, Button, Card, CardContent, Container, LinearProgress, Typography } from '@mui/material'
 import { ArrowBack, ArrowForward, Check } from '@mui/icons-material'
+import { Alert, Button, Card, CardContent, Container, LinearProgress, Typography } from '@mui/material'
+import { SurveyEngine, SurveyResponse, surveyStorage, Survey as SurveyType } from '@repo/survey'
 import { useTranslations } from 'next-intl'
+import { useCallback, useMemo, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
-import { SurveyEngine, surveyStorage, Survey as SurveyType, SurveyResponse } from '@repo/survey'
 import { QuestionRenderer } from './QuestionRenderer'
 import styles from './Survey.module.css'
 
@@ -153,12 +153,7 @@ export function Survey({ survey, responseId }: SurveyProps) {
 
       <Card className={styles.questionCard}>
         <CardContent>
-          <QuestionRenderer
-            question={currentQuestion}
-            value={currentAnswer}
-            onChange={handleAnswer}
-            error={error}
-          />
+          <QuestionRenderer question={currentQuestion} value={currentAnswer} onChange={handleAnswer} error={error} />
         </CardContent>
       </Card>
 
@@ -191,4 +186,3 @@ export function Survey({ survey, responseId }: SurveyProps) {
     </Container>
   )
 }
-

@@ -77,9 +77,6 @@ export const setCustomMessage = (message: string) => {
  * Create a custom issue for zod superRefine() method
  */
 
-export const setCustomIssue = (
-  path: string[],
-  message: string,
-): z.core.$ZodSuperRefineIssue => {
+export const setCustomIssue = (path: string[], message: string): z.core.$ZodSuperRefineIssue => {
   return { code: 'custom', path, ...setCustomMessage(message) }
 }
