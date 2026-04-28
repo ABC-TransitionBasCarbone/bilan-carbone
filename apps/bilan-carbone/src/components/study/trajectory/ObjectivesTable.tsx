@@ -446,6 +446,7 @@ const ObjectivesTable = ({
                 onEditObjective={(objective) => handleEditObjectiveClick(objective, rowData.trajectory)}
                 onDeleteObjective={(id, name) => handleDeleteClick('objective', id, name)}
                 onEditTrajectory={() => handleEditClick(rowData.trajectory)}
+                hasFilters={hasFilters}
               />
             </TableCell>
           </TableRow>
