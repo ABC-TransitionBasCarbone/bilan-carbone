@@ -1,18 +1,18 @@
 {
   "home": {
-    "userToValidate": "A user has been added to your organization because they have just been trained in the carbon assessment method. Go to <link>your team page</link> to validate their account",
+    "userToValidate": "A user has been added to your organisation because they have just been trained in the carbon assessment method. Go to <link>your team page</link> to validate their account",
     "title": "Completing your impact assessment will allow you to:",
     "info": {
       "0": "Understand the impact assessment of your establishment",
       "1": "Identify priority actions",
-      "2": "Build a reduction trajectory"
+      "2": "Build a reduction pathway"
     },
     "message": {
       "core": "Welcome to COUNT, the first ecological impact calculator dedicated to movie theaters.\nThis tool was developed by the association CUT! Cinema United for Transition, in cooperation with the Association for Low Carbon Transition (ABC).\nThis initiative is supported by the French State as part of the 'Support Green Alternatives 2' program under France 2030, operated by the Banque des Territoires (Caisse des Dépôts).\nCUT is supported by the CNC.",
       "0": "Completing your impact assessment will allow you to:",
       "1": "Understand the impact assessment of your establishment",
       "2": "Identify priority actions",
-      "3": "Build a reduction trajectory"
+      "3": "Build a reduction pathway"
     },
     "navigation": {
       "collaborators": {
@@ -44,7 +44,7 @@
       "disclaimerExcel2": "The process you followed via the Count tool is NOT an official Carbon Footprint® assessment, even though the results obtained can already help you better understand how to reduce your impact by identifying your most emissive activities.",
       "disclaimerExcel3": "However, this simplified carbon footprint is the first step towards a more comprehensive approach like the Carbon Footprint®!",
       "disclaimerExcel4": "For the following years, you can either renew your simplified carbon footprint measurement with the Count tool, or carry out a full Carbon Footprint®.",
-      "disclaimerExcel5": "A Carbon Footprint® follows a very specific methodology and must meet a number of objective criteria. For example, during a Carbon Footprint®, management must be engaged, the organization's various stakeholders must be mobilized, uncertainties must be calculated and associated with emissions, and above all, a solid transition plan must be built to engage the organization in a low-carbon transition.",
+      "disclaimerExcel5": "A Carbon Footprint® follows a very specific methodology and must meet a number of objective criteria. For example, during a Carbon Footprint®, management must be engaged, the organisation's various stakeholders must be mobilized, uncertainties must be calculated and associated with emissions, and above all, a solid transition plan must be built to engage the organisation in a low-carbon transition.",
       "disclaimerExcel6": "If you wish to embark on a Carbon Footprint® in the coming years, it all starts with training in the methodology, or by contacting us at count@cut-collectif.fr, or by being supported by a Carbon Footprint® provider!"
     },
     "glossary": {
@@ -187,16 +187,16 @@
     "backToHome": "Back to home",
     "emissionFactors": "Emission Factors",
     "home": "Home",
-    "newOrganization": "Add an Organization",
+    "newOrganization": "Add an organisation",
     "newStudy": "Add a New Study",
     "studyPerimeter": "Perimeter",
     "newStudyContributor": "Add a contributor",
     "editStudyContributor": "Edit a contributor",
     "newStudyRight": "Add a Person",
     "notFound": "Page not found",
-    "organization": "Organization",
+    "organization": "Organisation",
     "edit": "Edit",
-    "studyRights": "Rights",
+    "studyRights": "Role",
     "team": "Team",
     "actualities": "News"
   },
@@ -310,7 +310,7 @@
     "admin": "Admin",
     "profile": "Profile",
     "study": "Study",
-    "organization": "My organization",
+    "organization": "My organisation",
     "transition": "BC+ transition",
     "logout": "Log out",
     "methodology": "Methodology",
@@ -347,8 +347,7 @@
       "exports": "Take into account emissions that have not been validated",
       "exportsDescription": "Within a Bilan Carbone®, you can choose to display all the emissions you have entered, or only those that have been validated.",
       "caUnits": "Turnover figures",
-      "caUnitsDescription": "Specify the unit you wish to use for turnover figures.",
-      "close": "Close"
+      "caUnitsDescription": "Specify the unit you wish to use for turnover figures."
     },
     "caUnit": {
       "label": "Site's turnover unit",
@@ -386,9 +385,8 @@
     "information": "Information",
     "validatedOnly": "Validated emission sources",
     "validatedOnlyDescription": "For each Bilan Carbone®, one or more validators can be defined. These validators are responsible for validating the sources of emissions once they have been entered by the study's contributors and editors. By default, only validated emissions appear in your results, but you can change this behaviour via the \"Settings\" menu.",
-    "withDependenciesDescription": "The new Bilan Carbone® method introduces the concept of responsibility and dependency. It is strongly recommended that the results of the Bilan Carbone® are presented with and without the \"Use in dependence\" subcategory, as the organization is generally not in a position to act easily on this subcategory. On the other hand, this subcategory remains crucial for understanding the risks to which the organization is exposed, particularly if it is dependent on high-carbon sectors or activities. The final result should include dependency. For more information on these new concepts, please consult <link>this page</link>.",
+    "withDependenciesDescription": "The new Bilan Carbone® method introduces the concept of responsibility and dependency. It is strongly recommended that the results of the Bilan Carbone® are presented with and without the \"Use in dependence\" subcategory, as the organisation is generally not in a position to act easily on this subcategory. On the other hand, this subcategory remains crucial for understanding the risks to which the organisation is exposed, particularly if it is dependent on high-carbon sectors or activities. The final result should include dependency. For more information on these new concepts, please consult <link>this page</link>.",
     "monetaryRatioDescription": "It is strongly discouraged to use spend-based emission factors when an alternative is possible. You can find more information on the <monetaryLink>methodology</monetaryLink>.",
-    "close": "Close",
     "selectSite": "Before filling in the details, choose a site",
     "see": "See my Bilan Carbone®",
     "navigation": {
@@ -401,12 +399,12 @@
       "transitionPlan": "Transition plan",
       "menu": "Open the study navigation menu",
       "coming": "coming",
-      "organizations": "My organization",
+      "organizations": "My organisation",
       "team": "My team",
       "informationDefinition": "Information definition",
       "dataAccounting": "Accounting of data",
-      "trajectories": "Trajectories and objectives",
-      "initialization": "Initialization",
+      "trajectories": "Pathways and objectives",
+      "initialization": "Initialisation",
       "objectives": "Reduction objectives",
       "actionPlan": "Action plan",
       "commingSoon": "Coming soon",
@@ -447,7 +445,7 @@
       },
       "suggestion": {
         "name": "Bilan Carbone® - {orga} {studyStartDate}",
-        "yourOrga": "Your organization"
+        "yourOrga": "Your organisation"
       },
       "private": "Private",
       "public": "Public",
@@ -476,16 +474,15 @@
         "realizationDates": "Study completion date",
         "realizationDatesDescription": "This is the period during which you will be working on the study: filling in emission sources, exporting, etc. These dates are not compulsory and you can always access the study outside the indicated period.",
         "type": "Bilan Carbone® maturity",
-        "typeDescription": "The new version of the Bilan Carbone® method introduces three levels of maturity for the organizations. For more details, please consult <link>this page</link>.",
+        "typeDescription": "The new version of the Bilan Carbone® method introduces three levels of maturity for the organisations. For more details, please consult <link>this page</link>.",
         "visibility": "Visibility of the Bilan Carbone®",
-        "visibilityDescription": "Choose whether your Bilan Carbone® should be public, i.e. accessible to all your colleagues that are registered in your team, or private, i.e. only accessible to the people you specifically add in this study (from the framework page). The administrators of your organization have access to all Bilan Carbone®, regardless of their visibility.",
+        "visibilityDescription": "Choose whether your Bilan Carbone® should be public, i.e. accessible to all your colleagues that are registered in your team, or private, i.e. only accessible to the people you specifically add in this study (from the framework page). The administrators of your organisation have access to all Bilan Carbone®, regardless of their visibility.",
         "exports": "Exports",
         "exportsDescription": "By default, the results are returned in Bilan Carbone® format, but it is possible to obtain the results in the formats required by several other carbon accounting methods, such as the Regulatory GHG Assessment, which is the French regulation on GHG emissions, or the GHG Protocol.",
         "control": "Control approach",
         "controlDescription": "Some carbon accounting methods (Regulatory GHG Assessment, GHG Protocol, ...) require to choose one control approach. In order to obtain the results in the formats requested by these methods, you will need to characterise the different sources of emissions when you enter them, which will determine into which of the existing categories within these methods (the equivalent of the categories and subcategories within the Bilan Carbone® method) the emissions will be broken down. The control approach applies to all the exports you have selected. Depending on the control approach selected, the characterizations available for the different sources of emissions vary. For more details on the control approaches, please consult the methodological guides for the methods in question. We strongly recommend that you use the \"Operational Control\" control approach, which is by far the most common.",
         "duplicationOptions": "Duplication options",
-        "duplicationOptionsDescription": "When duplicating a study, you can choose to invite the same team members and contributors from the original study to the new one. This helps maintain collaboration continuity.",
-        "close": "Close"
+        "duplicationOptionsDescription": "When duplicating a study, you can choose to invite the same team members and contributors from the original study to the new one. This helps maintain collaboration continuity."
       },
       "validation": {
         "name": "Please provide a name",
@@ -524,14 +521,14 @@
     "organization": {
       "site": "Site",
       "allSites": "All sites",
-      "noSites": "There are no sites configured for the organization",
+      "noSites": "There are no sites configured for the organisation",
       "allSitesOnly": "This page is global to all sites of the study",
       "allSitesOnlyTransitionPlan": "This page is global to all sites of the study for the moment",
       "addSite": "Create a site",
-      "title": "Which organization is covered in the study?",
-      "sites": "The organization's sites",
+      "title": "Which organisation is covered in the study?",
+      "sites": "The organisation's sites",
       "next": "Next",
-      "select": "Organization",
+      "select": "Organisation",
       "validation": {
         "sites": "Please select at least one site covered in the study",
         "etpCa": "Please enter a strictly positiv value for every selected sites employees and turnover"
@@ -543,7 +540,7 @@
       "Reader": "Reader",
       "Contributor": "Contributor",
       "guide": "Roles guide",
-      "introduction": "From this page, you can manage the members of your team involved in the Bilan Carbone®. In all cases, the administrators of your organization have access to all your studies as validators. If your study is public, members of your organization (employees, managers) automatically have read access to it. You can also add people from outside your organization via this menu.",
+      "introduction": "From this page, you can manage the members of your team involved in the Bilan Carbone®. In all cases, the administrators of your organisation have access to all your studies as validators. If your study is public, members of your organisation (employees, managers) automatically have read access to it. You can also add people from outside your organisation via this menu.",
       "Validator_description": "Has full rights over the study and can validate the emission sources entered by validators, editors and contributors.",
       "Editor_description": "Has all rights to the study except for validation of emission sources.",
       "Reader_description": "Can only read the study and export its information.",
@@ -570,7 +567,7 @@
         },
         "dialog": {
           "title": "Are you sure you want to add this person to your study?",
-          "otherOrganization": "<warning>They are not within your organization.</warning>",
+          "otherOrganization": "<warning>They are not within your organisation.</warning>",
           "rightsWarning": "If they do not match the necessary conditions for this role, you will only be able to give them access to this study only with READ or contribution rights. An email will be sent to them to give access to the study.",
           "accept": "Yes",
           "decline": "No"
@@ -619,7 +616,7 @@
         "actions": " ",
         "delete": "Remove the member",
         "email": "Email",
-        "role": "Rights",
+        "role": "Role",
         "title": "Team management",
         "newRightLink": "Add team member",
         "deleting": {
@@ -719,8 +716,7 @@
         "cancel": "Cancel",
         "confirm": "Confirm",
         "glossary": "Tags family",
-        "close": "Close",
-        "glossaryDescription": "Tags and tag families are used to identify emission sources in order to breakdown your results by tags later. Similar tags should be part of the same tag family. <br></br>Create your tags and tag families to link them to your emission sources on the “Data entry” page, before viewing the emissions on the “Results” page. To avoid double counting, it is not possible to view emissions from two tag families simultaneously.<br></br>For instance, let's consider two tag families: \"Products Sold\" and \"Target Audiences\". These two families and their respective tags will allow you to visualize the distribution of your organization's emissions based on the products sold and the target audiences.",
+        "glossaryDescription": "Tags and tag families are used to identify emission sources in order to breakdown your results by tags later. Similar tags should be part of the same tag family. <br></br>Create your tags and tag families to link them to your emission sources on the “Data entry” page, before viewing the emissions on the “Results” page. To avoid double counting, it is not possible to view emissions from two tag families simultaneously.<br></br>For instance, let's consider two tag families: \"Products Sold\" and \"Target Audiences\". These two families and their respective tags will allow you to visualise the distribution of your organisation's emissions based on the products sold and the target audiences.",
         "allTags": "All tags"
       },
       "duplicate": {
@@ -809,11 +805,11 @@
         "dependanceGHG": "The GHG Protocol does not include the subcategory \"Dependent use\", as the concept of dependence does not exist in this method.",
         "goToSubPost": "Go to subcategory",
         "waste": "The Regulatory GHG Assessment includes all emissions due to waste recycling in the waste emitter's balance sheet, whereas the Bilan Carbone® only includes the weight of waste collection and transport in the waste emitter's balance sheet. Thus, the emission factors with a value of 41 kgCO₂e/t within the tool are those used for the Bilan Carbone®, while the values incorporating the regeneration of materials (the recycling process, for the emission factors \"Recycling\" or \"Average end of life\") are used for the Regulatory GHG Assessment. The emission factor displayed on the BC+ is only that used for the Bilan Carbone®, but the BEGES-R export calculations are made using the ADEME emission factors linked to recycling or average end-of-life. Here are the sources of emissions related to this topic: ",
-        "missingCaract1": "Uncharacterized emission sources are not accounted for in the {type}, which leads to undue differences with the Bilan Carbone® if you have chosen to visualize unvalidated emission sources.",
+        "missingCaract1": "Uncharacterized emission sources are not accounted for in the {type}, which leads to undue differences with the Bilan Carbone® if you have chosen to visualise unvalidated emission sources.",
         "missingCaract2": "You have not entered the characterizations for all the emission sources in your study. Please edit and add the characterization for the following emission sources:",
-        "immobilisation1": "The difference shown here stems from the fact that, according to GHG Protocol, and unlike in the Bilan Carbone®, organizations should not depreciate, discount, or amortize the emissions from the production of capital goods over time. The cradle-to-gate emissions are therefore accounted for in the year of acquisition.",
+        "immobilisation1": "The difference shown here stems from the fact that, according to GHG Protocol, and unlike in the Bilan Carbone®, organisations should not depreciate, discount, or amortize the emissions from the production of capital goods over time. The cradle-to-gate emissions are therefore accounted for in the year of acquisition.",
         "otherEmissionsAval": "Travels from visitors or clients may be accounted for according to GHG Protocol. If those emissions are calculated, not operated ones will not be accounted for in this format, due to the lack of a suitable subcategory.",
-        "otherEmissionsAmont": "Some emissions are not accounted for in the GHG Protocol format, especially if the activites they stem from are not directly operated by the organization. This happens for instance with the transport and distribution losses for electricity, or the original emissions that stem from building the power capacities. In the regulatory GHG assessment format, these emissions are accounted for in subcategory 6.1, but GHG Protocol lacks a suitable subcategory for these emissions.",
+        "otherEmissionsAmont": "Some emissions are not accounted for in the GHG Protocol format, especially if the activites they stem from are not directly operated by the organisation. This happens for instance with the transport and distribution losses for electricity, or the original emissions that stem from building the power capacities. In the regulatory GHG assessment format, these emissions are accounted for in subcategory 6.1, but GHG Protocol lacks a suitable subcategory for these emissions.",
         "otherGas1": "Only greenhouse gases that are part of the Kyoto Protocol agreement (CO2, CH4, N2O, HFC, PFC, SF6) are accounted for in the GHG Protocol. Other GHG emissions (contrails, NF3, other air conditioning or industrial gases) are accounted for in the Bilan Carbone®, but not in the GHG Protocol.",
         "marketBased": "Part of the differences between market-based GHG Protocol and Bilan Carbone® simply stems from the difference between the results of the <green>location-based method</green> and the <purple>market-based method</purple>.",
         "fabrication": "You used emission factors that depends on the distance travelled (passenger.km, ...) for operated vehicles. Manufacturing emissions of these vehicles will not be accounted for in GHG Protocol. You should use the Capital goods category for vehicles that were acquired inside the temporal boundary of the assessment.",
@@ -851,14 +847,12 @@
       "postEmissionPerNumberOfSources": "Emissions by category based on the number of emission sources",
       "glossary": {
         "title": "Glossary",
-        "close": "Close",
         "more": "More information",
         "uncertaintyPerPost": "Uncertainties per category",
         "uncertaintyPerPostDescription": "Please note that the size of the circles on this graph is proportional to the number of emission sources that have been entered for the item, and not to the total emissions for the item (which can be seen on the x-axis). This allows you to see which items have been analysed in the greatest detail and to assess whether this is relevant in terms of the significance of the associated emissions, as it is generally more relevant to work in detail on the most significant emission items. The following graphs also illustrate this effect.",
         "uncertaintyPerPostDescription2": "Furthermore, the greater the number of emission sources within a station, the less uncertainty there will be for that station. This is because two uncertainties cancel each other out, as it is generally uncertain whether the error will be made in the same direction. To give a concrete example, when measuring two strings, it is possible to overestimate the length of the first and underestimate the length of the second. Consequently, the uncertainty about the length of the sum of the two strings will be less than the sum of the two uncertainties taken separately."
       },
-      "resultsWord": "Bilan Carbone® Report",
-      "close": "Close"
+      "resultsWord": "Bilan Carbone® Report"
     },
     "pdf": {
       "loading": "Loading data...",
@@ -930,7 +924,6 @@
       "download": "Download flow",
       "flows": "Flow mapping",
       "information": "Information",
-      "close": "Close",
       "documentSelector": "Mapping to display",
       "invalidFileType": "Invalid file type",
       "newFlow": "Add a flow mapping",
@@ -938,7 +931,7 @@
       "notAuthorized": "Action not authorized",
       "removeDocument": "Remove mapping",
       "Not authorized": "You are not allowed to do this action",
-      "info": "You can download a flow mapping template to help you build your own. Afterwards, if you wish to submit your flow mapping so that other users can use it as an example and help other organizations, please send it to <mail>methodologie@abc-transitionbascarbone.fr</mail>",
+      "info": "You can download a flow mapping template to help you build your own. Afterwards, if you wish to submit your flow mapping so that other users can use it as an example and help other organisations, please send it to <mail>methodologie@abc-transitionbascarbone.fr</mail>",
       "downloadSample": "Download template"
     },
     "dependencyMatrix": {
@@ -948,14 +941,13 @@
       "download": "Download matrix",
       "dependencyMatrices": "Risk and dependency matrices",
       "information": "Information",
-      "close": "Close",
       "documentSelector": "Risk and dependency matrix to display",
       "invalidFileType": "Unsupported file type",
       "noDocument": "No risk and dependency matrix to display",
       "notAuthorized": "Action not authorized",
       "removeDocument": "Remove risk and dependency matrix",
       "Not authorized": "You are not allowed to do this action",
-      "info": "You can download a sample risk and dependency matrix to help you build your own. Afterwards, if you wish to submit your own matrix to help other organizations by providing a working base, please send it to <mail>methodologie@abc-transitionbascarbone.fr</mail>",
+      "info": "You can download a sample risk and dependency matrix to help you build your own. Afterwards, if you wish to submit your own matrix to help other organisations by providing a working base, please send it to <mail>methodologie@abc-transitionbascarbone.fr</mail>",
       "downloadSample": "Download sample"
     },
     "delete": {
@@ -974,16 +966,16 @@
       "startButton": "Start my transition plan",
       "emptyState": {
         "title": "Transition Plan",
-        "subtitle": "Define your organization's emission reduction trajectories and track your actions over time."
+        "subtitle": "Define your organisation's emission reduction pathways and track your actions over time."
       },
       "modal": {
         "title": "Choose a transition plan",
-        "description": "You already have one or more transition plans defined for this organization. Would you like to reuse one or define a new one? If you reuse it, it will be duplicated, any changes made here will not impact the one made in the previous study.",
+        "description": "You already have one or more transition plans defined for this organisation. Would you like to reuse one or define a new one? If you reuse it, it will be duplicated, any changes made here will not impact the one made in the previous study.",
         "createNew": "Create a new transition plan from scratch",
         "createNewDescription": "Start a new transition plan from scratch",
         "reuseExisting": "Reuse an existing transition plan",
         "reuseExistingDescription": "Reuse an existing transition plan for this study. It will be duplicated, any changes made here will not impact the one made in the previous study.",
-        "noAvailablePlans": "No transition plans available in this organization",
+        "noAvailablePlans": "No transition plans available in this organisation",
         "cancel": "Cancel",
         "confirm": "Confirm",
         "selectPlaceholder": "Select an existing transition plan",
@@ -998,53 +990,53 @@
         "title": "Initialise your transition plan",
         "onboarding": {
           "title": "Prepare your transition plan",
-          "description": "Add linked studies and allocate your emissions by sector, then visualise your SBTi and SNBC reference trajectories.",
-          "detailedInfo": "Pour Grabriel"
+          "description": "Developing a transition plan involves the following steps: <br></br><br></br> 1 - Visualise the <b>reference pathways</b> that align with the global ambitions of the Paris Agreement. <br></br> 2 - Select a <b>top-down decarbonization pathway</b>, i.e., the theoretical pathway your organisation should follow. <br></br> 3 - Build your <b>action plan</b>. <br></br> 4 - Estimate the projected impact of your action plan by calculating its <b>reduction potential</b> to develop your <b>bottom-up decarbonization pathway</b>. <br></br> 5 - Check for consistency: the <b>bottom-up pathway derived from your action plan shows the credibility of your top-down pathway</b> in the short to long term, depending on your level of maturity. <br></br><br></br> This page allows you to view the reference pathways derived from the <b>French National Low-Carbon Strategy</b> (SNBC) and the <b>Science-Based Targets Initiative</b> (SBTi). To do this, you can start by adding past emissions inventories and allocating your emissions by SNBC activity sector if you wish to use this pathway.",
+          "detailedInfo": "Two reference pathways—the SNBC and SBTi—are provided at the bottom of this page. You can view the decarbonization pathway your organisation should follow according to each of these. These pathways are based on <b>robust scientific logic</b>, but they also result from <b>socio-economic choices</b> (definition of needs, changes in supply and demand, policy directions, profitability, etc.). <br></br><br></br> Since the SNBC is broken down by major sectors of the French economy, you can select the sector that best fits your organisation, or allocate your emissions across the different sectors. The tool then applies the sector-specific pathways to the selected emissions and <b>combines them into a single SNBC pathway for your organisation</b>. If these sectors do not apply to your organisation, you should use the general pathway. If you break down your emissions across different sectors, you can of course keep a portion of your emissions assigned to the general pathway. More information on the SNBC is available <link1>here</link1>. <br></br><br></br> SBTi provides a pathway aimed at limiting global warming to <b>1.5°C</b>, and a second one aimed at limiting it to <b>well below 2°C</b>. You must also choose which of these two pathways you wish to view. "
         },
-        "createButton": "Create my first custom trajectory",
+        "createButton": "Create my first custom pathway",
         "skipOnboarding": "Skip onboarding",
         "stepLinkStudy": {
-          "title": "Past studies",
-          "description": "Link your past BC+ studies to reconstruct your emissions history. This data will feed into your reduction trajectories.",
-          "glossaryTitle": "Past studies",
-          "glossaryDescription": "Pour gabriel - description",
-          "linkStudyButton": "Link a study"
+          "title": "Past Bilan Carbone®",
+          "description": "This feature is designed to reconstruct your emissions history, ideally starting from your base year. You can input Bilan Carbone® from the BC+ or from third-party tools. This data will be used to generate your graphs and reduction pathways.",
+          "glossaryTitle": "Past Bilan Carbone®",
+          "glossaryDescription": "",
+          "linkStudyButton": "Link a Bilan Carbone®"
         },
         "stepSectorAllocation": {
           "title": "Sector allocation",
-          "description": "Indicate the share of your emissions belonging to each major SNBC sector. This will automatically generate a sector-specific SNBC trajectory tailored to your organisation.",
+          "description": "Indicate the share of your emissions belonging to each major SNBC sector. This will automatically generate a sector-specific SNBC pathway tailored to your organisation.",
           "glossaryTitle": "SNBC sector allocation",
-          "glossaryDescription": "The SNBC sets differentiated reduction targets by sector (energy, industry, buildings, transport…). By entering the share of your emissions in each sector, the platform calculates a weighted SNBC trajectory representative of your activity mix."
+          "glossaryDescription": "The SNBC sets differentiated reduction targets by sector (energy, industry, buildings, transport…). By entering the share of your emissions in each sector, the platform calculates a weighted SNBC pathway representative of your activity mix."
         },
         "stepSelectReferenceTrajectories": {
-          "title": "Reference trajectories",
-          "description": "Choose the climate reference trajectories to display on your chart: SNBC (national) and/or SBTi (science-based). These trajectories serve as benchmarks for building your own reduction trajectory.",
-          "glossaryTitle": "Reference trajectories",
-          "glossaryDescription": "The SNBC (Stratégie Nationale Bas-Carbone) is France's official emissions reduction trajectory. SBTi (Science Based Targets initiative) trajectories are international standards aligned with the objectives of the Paris Agreement."
+          "title": "Reference pathways",
+          "description": "Choose the climate reference pathways to display on your chart: SNBC (national) and/or SBTi (science-based). These pathways serve as benchmarks for building your own reduction pathway.",
+          "glossaryTitle": "Reference pathways",
+          "glossaryDescription": "The SNBC (Stratégie Nationale Bas-Carbone) is France's official emissions reduction pathway. SBTi (Science Based Targets initiative) pathways are international standards aligned with the objectives of the Paris Agreement."
         },
         "stepVisualization": {
-          "title": "Trajectory visualisation",
-          "description": "Visualise the reference trajectories selected for your organisation. This chart will be enriched over time with your own reduction trajectories.",
-          "glossaryTitle": "Trajectory chart",
-          "glossaryDescription": "This chart shows the evolution of your organisation's emissions over time against the reference trajectories. The vertical axis shows total emissions, the horizontal axis represents years."
+          "title": "Pathway visualisation",
+          "description": "Visualise the reference pathways selected for your organisation. This chart will be enriched over time with your own reduction pathways.",
+          "glossaryTitle": "Pathway chart",
+          "glossaryDescription": "This chart shows the evolution of your organisation's emissions over time against the reference pathways. The vertical axis shows total emissions, the horizontal axis represents years."
         },
         "sectorBlock": {
           "title": "SNBC sector allocation",
-          "description": "Enter the breakdown of your emissions by major activity sector according to the SNBC. This will create a customised sectoral SNBC trajectory as a reference point.",
-          "snbcSectorialName": "Reference SNBC trajectory",
+          "description": "Enter the breakdown of your emissions by major activity sector according to the SNBC. This will create a customised sectoral SNBC pathway as a reference point.",
+          "snbcSectorialName": "Reference SNBC pathway",
           "update": "Save changes"
         }
       },
       "trajectories": {
-        "title": "Trajectories and objectives",
-        "tableTitle": "Trajectories and objectives list",
-        "snbcButton": "SNBC Trajectory",
-        "sbtiButton": "SBTi Trajectories",
-        "customButton": "I choose my trajectory",
-        "customSubtitle": "Build your own reduction trajectory",
-        "myTrajectories": "My trajectories",
-        "addTrajectory": "Add a reduction trajectory",
-        "selectTrajectories": "Select your trajectories",
+        "title": "Pathways and objectives",
+        "tableTitle": "Pathways and objectives list",
+        "snbcButton": "SNBC pathways",
+        "sbtiButton": "SBTi pathways",
+        "customButton": "I choose my pathway",
+        "customSubtitle": "Build your own reduction pathway",
+        "myTrajectories": "My pathways",
+        "addTrajectory": "Add a reduction pathway",
+        "selectTrajectories": "Select your pathways",
         "delete": {
           "title": "Transition plan deletion",
           "description": "Do you really want to delete your transition plan? All data from your transition plan will be deleted. This will not impact linked studies and transition plans.",
@@ -1052,8 +1044,8 @@
           "cancel": "Cancel"
         },
         "snbcCard": {
-          "title": "SNBC Trajectories",
-          "description": "The National Low-Carbon Strategy (SNBC) is France's roadmap to fight climate change, defining a GHG reduction trajectory until 2030 and 2050 targets. Abroad, we advise relying on local strategies if they exist.",
+          "title": "SNBC Pathways",
+          "description": "The National Low-Carbon Strategy (SNBC) is France's roadmap to tackle climate change, defining a GHG reduction pathway with targets for 2030 and 2050. Abroad, we advise relying on local strategies if they exist.",
           "methodLabel": "Methods",
           "general": "General",
           "energy": "Energy",
@@ -1062,47 +1054,50 @@
           "buildings": "Buildings",
           "agriculture": "Agriculture",
           "transportation": "Transportation",
-          "placeholder": "No trajectory selected",
+          "placeholder": "No pathway selected",
           "sectenUpdateButton": "New secten values available",
           "sectenUpdateModal": {
             "title": "Update secten values",
-            "description": "A new version of the secten values is available. You can update these values to apply them to your trajectories. Here are the modifications:"
+            "description": "A new version of the secten values is available. You can update these values to apply them to your pathways. Here are the modifications:"
           }
         },
         "sbtiCard": {
-          "title": "SBTi Trajectories",
-          "description": "The Science Based Targets Initiative defines two reference trajectories, aiming to limit global warming to 1.5°C (SBTi 1.5°C) or \"Well below 2 degrees\" (SBTi WB2C).",
+          "title": "SBTi pathways",
+          "description": "The Science Based Targets Initiative defines two reference pathways, aiming to limit global warming to 1.5°C (SBTi 1.5°C) or \"Well below 2 degrees\" (SBTi WB2C).",
           "methodLabel": "Methods",
           "optionSNBC": "SNBC",
           "option15": "SBTi 1.5°C",
           "optionWB2C": "SBTi WB2C",
-          "placeholder": "No trajectory selected"
+          "placeholder": "No pathway selected"
         },
         "graph": {
-          "title": "Reduction trajectories visualization",
-          "subtitle": "Display of reference trajectories and your organization's trajectories",
+          "title": "Reduction pathways visualisation",
+          "subtitle": "Display of reference pathways and your organisation's pathways",
           "trajectory15": "SBTi 1.5°C",
           "trajectoryWB2C": "SBTi WB2C",
           "trajectorySNBC": "SNBC",
           "yAxisLabel": "Emissions",
-          "actionBasedTrajectory": "Action-based trajectory",
-          "unvalidatedSourcesWarning": "{count, plural, =1 {One emission source is not validated in the current study and is therefore not taken into account in the trajectory calculations.} other {{count} emission sources are not validated in the current study and are therefore not taken into account in the trajectory calculations.}}",
+          "actionBasedTrajectory": "Bottom-up pathway",
+          "unvalidatedSourcesWarning": "{count, plural, =1 {One emission source is not validated in the current study and is therefore not taken into account in the pathway calculations.} other {{count} emission sources are not validated in the current study and are therefore not taken into account in the pathway calculations.}}",
           "unvalidatedSourcesLinkedStudiesWarning": "{count, plural, =1 {One emission source is not validated in the following past study:} other {{count} emission sources are not validated in the following past studies:}}",
           "unvalidatedSourcesLinkedStudyCount": " ({count, plural, =1 {1 unvalidated source} other {{count} unvalidated sources}})",
-          "noEmissionSourcesWarning": "No emission source is greater than 0. Trajectories cannot be calculated.",
-          "noEmissionSourcesDisabledButton": "No emission source is greater than 0. Please fill in at least one emission source before creating a custom trajectory.",
-          "yearRangeLabel": "Visualization period",
-          "sbtiSnbc": "SBTI/SNBC Trajectories",
-          "custom": "My custom Trajectories",
-          "legendFilter": "Filter trajectories",
+          "noEmissionSourcesWarning": "No emission source is greater than 0. Pathways cannot be calculated.",
+          "noEmissionSourcesDisabledButton": "No emission source is greater than 0. Please fill in at least one emission source before creating a custom pathway.",
+          "yearRangeLabel": "Visualisation period",
+          "sbtiSnbc": "SBTI/SNBC pathways",
+          "custom": "My custom pathways",
+          "legendFilter": "Filter pathways",
           "previousTrajectories": "Reference ({year})",
           "currentTrajectories": "Current ({year})",
-          "failedTrajectories": "The following trajectories cannot be displayed correctly in the future because you have already consumed the entire carbon budget provided by these:",
+          "failedTrajectories": "The following pathways cannot be displayed correctly in the future because you have already consumed the entire carbon budget provided by these:",
           "estimatedPast": "Estimated Past",
           "glossary": {
             "title": "Reconstruction of past emissions on BC+",
-            "description": "Description Gabriel",
-            "close": "Close"
+            "description": "Past emissions displayed are: <br></br> - Either from your past Bilan Carbone®, which you input on the “Initialisation” page <br></br> - Or reconstructed from French national inventories for the years preceding your first assessment. In the absence of information, the tool therefore assumes that your organisation has decarbonized at the same rate as France."
+          },
+          "overshootTrajectoryGlossary": {
+            "title": "Adjusted pathway",
+            "description": "Your organisation has not decarbonized at the pace initially required by this pathway. As a result, the pathway has been <b>adjusted to comply with the <link>carbon budget</link> that you were initially allocated</b>. You will therefore see two displays: <br></br> - <b>The pathway in its original form</b>, with the baseline annual reduction rate <br></br> - <b>The adjusted pathway</b> for the current year, with the adjusted annual reduction rate <br></br><br></br> The pathway resulting from this adjustment is <b>more ambitious</b>. It is up to you to decide whether to comply with it or to create a new one. Note that if you decide today to follow a pathway with an older base year, it is entirely normal for you to fall short of its expectations. Pathway adjustments are triggered only when a difference <b> of more than 5% between the expectations and the Bilan Carbone® is observed</b>."
           }
         },
         "linkedStudies": {
@@ -1124,11 +1119,7 @@
           "studyYearMustBeBeforeCurrent": "The study year must be before the current study year",
           "Not authorized": "You are not allowed to do this action",
           "noAvailableStudies": "No previous studies available",
-          "noLinkedStudies": "No linked studies yet",
           "information": "Information",
-          "glossaryTitle": "Pour gabriel - titre",
-          "glossaryDescription": "Pour gabriel - description",
-          "close": "Close",
           "table": {
             "name": "Name",
             "year": "Year",
@@ -1150,59 +1141,59 @@
           }
         },
         "onboarding": {
-          "title": "Choose a reference trajectory or create your top-down trajectory",
-          "description": "Compare your situation with SBTi and SNBC reference trajectories. Follow one of these trajectories and its associated objectives or create your personalized trajectory (top-down trajectory).",
-          "detailedInfo": "Two reference trajectories, SNBC and SBTi, are offered here. You can visualize the decarbonization trajectory that your organization should follow according to each one.<br></br><br></br>Since SNBC is divided according to the major sectors of the French economy, you must select the sector that best corresponds to you. <snbc>More information about SNBC is available here</snbc>.<br></br>SBTi provides a trajectory aimed at limiting global warming to 1.5°C, and a second aimed at limiting it well below 2°C. You must also choose which of these two trajectories you wish to visualize. <sbti>More information about SBTi is available here</sbti>.<br></br><br></br>If your reference assessment dates from a year prior to the use of BC+2.0, you can enter the reference year and associated emissions. If this assessment is already present on BC+2.0, you can select it as the reference assessment.<br></br><br></br>For each of these trajectories, the choice has been made to keep the associated carbon budget. If your emissions do not exactly follow the chosen trajectory, BC+2.0 will recalculate an adapted trajectory to avoid exceeding the initially allocated carbon budget. With each new assessment carried out, your trajectories will be updated."
+          "title": "Choose a reference pathway or create your top-down pathway",
+          "description": "Developing a transition plan involves the following steps: <br></br><br></br> 1 - Visualise the <b>reference pathways</b> that align with the global ambitions of the Paris Agreement. <br></br> 2 - Select a <b>top-down decarbonization pathway</b>, i.e., the theoretical pathway your organisation should follow. <br></br> 3 - Build your <b>action plan</b>. <br></br> 4 - Estimate the projected impact of your action plan by calculating its <b>reduction potential</b> to develop your <b>bottom-up decarbonization pathway</b>. <br></br> 5 - Check for consistency: the <b>bottom-up pathway derived from your action plan shows the credibility of your top-down pathway</b> in the short to long term, depending on your level of maturity. <br></br><br></br> This page allows you to create <b>your own top-down pathways</b>, either by using the reference pathways as a starting point or by setting your own objectives. You can then <b>break down these pathways by adding sub-objectives</b> related to your various sites, posts, subposts, or tags.",
+          "detailedInfo": ""
         }
       },
       "trajectoryModal": {
-        "title": "I choose my trajectory",
-        "addTitle": "Add a trajectory",
-        "editTitle": "Edit my trajectory",
+        "title": "I choose my pathway",
+        "addTitle": "Add a pathway",
+        "editTitle": "Edit my pathway",
         "submit": "Confirm",
         "save": "Save",
         "cancel": "Cancel",
-        "success": "You have created your first trajectory!",
-        "successSubtitle": "To modify your trajectory and associated objectives, you can go to the <link>My reduction objectives</link> section.",
+        "success": "You have created your first pathway!",
+        "successSubtitle": "To modify your pathway and associated objectives, you can go to the <link>My reduction objectives</link> section.",
         "steps": {
-          "chooseTrajectory": "Choose my trajectory",
-          "defineObjectives": "Define my reduction objectives"
+          "chooseTrajectory": "Choosing my pathway",
+          "defineObjectives": "Defining my reduction objectives"
         },
-        "subtitle": "Reuse an existing trajectory or create your own reduction trajectory to start building your transition plan",
+        "subtitle": "Reuse an existing pathway or create your own reduction pathway to start building your transition plan",
         "sbti": {
           "title": "SBTi",
-          "subtitle": "I follow the SBTi reference trajectory",
-          "benefit1": "To commit to a trajectory <strong>compatible with the Paris Agreement</strong>",
-          "benefit2": "To gain <strong>international recognition</strong>",
-          "benefit3": "To structure your long-term reduction objectives"
+          "subtitle": "I follow one of the SBTi pathways",
+          "benefit1": "To ensure consistency at an <b>international level</b>",
+          "benefit2": "To aim for a <b>Standard maturity level</b>",
+          "benefit3": "To align with a <b>goal of limiting global warming to 1.5°C or 2°C</b>"
         },
         "snbc": {
           "title": "SNBC",
-          "subtitle": "I follow the SNBC reference trajectory",
-          "benefit1": "To position yourself in relation to your sector in France",
-          "benefit2": "To build a concrete and structured action plan",
-          "benefit3": "To understand French regulatory expectations"
+          "subtitle": "I follow one of the SNBC pathways",
+          "benefit1": "To ensure consistency at a <b>national level</b>",
+          "benefit2": "To aim for an <b>Initial maturity level</b>",
+          "benefit3": "To understand <b>French regulatory requirements</b>"
         },
         "custom": {
           "title": "CUSTOM",
-          "subtitle": "I follow my own trajectory",
-          "benefit1": "I build my own top-down trajectory",
-          "benefit2": "I can customize my intermediate objectives",
-          "benefit3": "My organization is already committed to a trajectory"
+          "subtitle": "I follow my own pathway",
+          "benefit1": "To tailor all the objectives to <b>my situation</b>",
+          "benefit2": "To <b>break down intermediate objectives</b> by posts, by sites, etc.",
+          "benefit3": "To <b>use a pathway that was already approved</b> within my organization"
         },
         "sbtiType": {
-          "title": "SBTi trajectory type",
+          "title": "SBTi pathway type",
           "15": "1.5°C aligned",
           "wb2c": "WB2C (Well below 2 degrees)"
         },
         "snbcType": {
-          "title": "SNBC trajectory type",
+          "title": "SNBC pathway type",
           "generale": "General",
           "sectorielle": "Sectoral"
         },
         "sectorAllocation": {
           "title": "Sector Allocation",
-          "description": "Percentage of emissions allocated to each sector. To update these values, please go to the initialization page of the transition plan."
+          "description": "Percentage of emissions allocated to each sector. To update these values, please go to the initialisation page of the transition plan."
         },
         "sectors": {
           "energy": "Energy",
@@ -1216,52 +1207,51 @@
           "placeholder": "0-100"
         },
         "selectedTrajectory": {
-          "SBTI_15": "I follow the SBTi reference trajectory",
-          "SBTI_WB2C": "I follow the SBTi reference trajectory",
-          "SNBC_GENERAL": "I follow the SNBC reference trajectory",
-          "SNBC_SECTORAL": "I follow the SNBC reference trajectory",
-          "CUSTOM": "I follow my own trajectory"
+          "SBTI_15": "I follow one of the SBTi pathways",
+          "SBTI_WB2C": "I follow one of the SBTi pathways",
+          "SNBC_GENERAL": "I follow one of the SNBC pathways",
+          "SNBC_SECTORAL": "I follow one of the SNBC pathways",
+          "CUSTOM": "I follow my own pathway"
         },
-        "siteFilterWarning": "{count, plural, =1 {You have selected site {siteNames} but trajectories can only be defined for all sites.} other {You have selected sites {siteNames} but trajectories can only be defined for all sites.}} Your trajectory will therefore be defined for all sites. You can then create sub-objectives by site, post and sub-post.",
-        "name": "My trajectory name",
-        "namePlaceholder": "Give your trajectory a name",
-        "description": "My trajectory description",
-        "descriptionPlaceholder": "Describe your trajectory",
-        "referenceYear": "Reference year",
+        "siteFilterWarning": "{count, plural, =1 {You have selected site {siteNames} but pathways can only be defined for all sites.} other {You have selected sites {siteNames} but pathways can only be defined for all sites.}} Your pathway will therefore be defined for all sites. You can then create sub-objectives by site, post and sub-post.",
+        "name": "My pathway name",
+        "namePlaceholder": "Give your pathway a name",
+        "description": "My pathway description",
+        "descriptionPlaceholder": "Describe your pathway",
+        "referenceYear": "Base year",
         "objectives": {
           "title": "Reduction objectives",
-          "sbtiDescription": "These reduction objectives are linked to the SBTi reference trajectory and are predefined. You can add intermediate objectives in the \"My reduction objectives\" section.",
-          "snbcDescription": "These reduction objectives are linked to the SNBC reference trajectory and are predefined. You can add intermediate objectives in the \"My reduction objectives\" section.",
+          "sbtiDescription": "These reduction objectives are linked to the SBTi reference pathway and are predefined. You can add intermediate objectives in the \"My reduction objectives\" section.",
+          "snbcDescription": "These reduction objectives are linked to the SNBC reference pathway and are predefined. You can add intermediate objectives in the \"My reduction objectives\" section.",
           "global": "GLOBAL OBJECTIVE",
           "horizon2030": "2030 Horizon",
           "horizon2050": "2050 Horizon",
           "year": "Objective year",
           "yearPlaceholder": "Choose a year",
-          "reductionRate": "Annual reduction percentage",
+          "reductionRate": "Annual reduction rate",
           "reductionRatePlaceholder": "Give a reduction % (e.g., 2.5)",
-          "referenceRate": "Reference rate",
-          "correctedRate": "Corrected rate",
+          "referenceRate": "Base rate",
+          "correctedRate": "Adjusted rate",
           "overshootInfo": "Rate adjusted to compensate for overshoot"
         },
         "validation": {
           "required": "Required field",
           "objectiveBothRequired": "Both year and reduction rate are required",
-          "atLeastOneObjective": "At least one complete objective is required for custom trajectories"
+          "atLeastOneObjective": "At least one complete objective is required for custom pathways"
         },
         "glossary": {
           "title": "Glossary",
-          "close": "Close",
-          "referenceYear": "Reference Year",
-          "referenceYearDescription": "The reference year corresponds to the starting year of your reduction trajectory. This year serves as the starting point for calculating reduction objectives. For SBTi and SNBC trajectories, the reference year is predefined and cannot be modified. For custom trajectories, you can freely choose this year.",
-          "referenceYearMethod": "{method} Reference Year",
-          "referenceYearMethodDescription": "You cannot modify the reference date for a {method} trajectory as it is dictated by the method.",
-          "referenceYearMethodLink": "For more info, click here.",
-          "correctedRate": "Year N Rate Calculation",
-          "correctedRateDescription": "The Year N rate takes into account your desired rate as well as emissions between your reference year and your study year. If your emissions did not follow your desired rate, we calculate the excess emissions (overshoot) and apply a new rate to allow you to catch up on the excess emissions."
+          "referenceYear": "Base year",
+          "referenceYearDescription": "The base year corresponds to the starting year of your reduction pathway. This year serves as the starting point for calculating reduction objectives. For SBTi and SNBC pathways, the base year is predefined and cannot be modified. For custom pathways, you can freely choose this year.",
+          "referenceYearMethod": "{method} Base year",
+          "referenceYearMethodDescription": "You cannot modify the reference date for a {method} pathway as it is dictated by the method.",
+          "referenceYearMethodLink": "For more information, click here.",
+          "correctedRate": "Adjusted rate calculation",
+          "correctedRateDescription": "If you choose a pathway with an older base year, your organisation may not have stayed on track so far. This results in an <b>overshoot of the <link>carbon budget</link> that you were initially allocated</b>. <br></br><br></br> If that happens, the pathway is <b>adjusted to maintain the carbon budget that you were initially allocated</b>, and an adjusted annual reduction rate is calculated. You will then see two displays: <br></br> - <b>The pathway in its initial state</b>, with the base annual reduction rate <br></br> - <b>The adjusted pathway</b> for the current year, with the adjusted annual reduction rate"
         }
       },
       "scope": {
-        "scopeSelection": "Scope selection"
+        "scopeSelection": "Framework selection"
       },
       "objectiveModal": {
         "title": "Add sub-objectives",
@@ -1269,17 +1259,17 @@
         "cancel": "Cancel",
         "submit": "Add sub-objectives",
         "update": "Update sub-objective",
-        "scopeSelection": "Scope Selection",
+        "scopeSelection": "Framework selection",
         "objectives": "Sub-objectives",
         "sites": "Sites",
         "tags": "Tags",
         "subPosts": "Sub-posts"
       },
       "conversionWarning": {
-        "title": "Trajectory Type Conversion",
-        "warningTitle": "This action will convert your trajectory to CUSTOM type.",
-        "message": "Adding a scope-specific objective to the trajectory \"{trajectoryName}\" ({trajectoryType}) will automatically convert it to a CUSTOM trajectory type. This action is irreversible.",
-        "explanation": "Once converted to CUSTOM, the trajectory will no longer follow the predefined {trajectoryType} reduction rates. You will have full control over all objectives.",
+        "title": "Pathway Type Conversion",
+        "warningTitle": "This action will convert your pathway to CUSTOM type.",
+        "message": "Adding a scope-specific objective to the pathway \"{trajectoryName}\" ({trajectoryType}) will automatically convert it to a CUSTOM pathway type. This action is irreversible.",
+        "explanation": "Once converted to CUSTOM, the pathway will no longer follow the predefined {trajectoryType} reduction rates. You will have full control over all objectives.",
         "cancel": "Cancel",
         "confirm": "Continue"
       },
@@ -1289,42 +1279,44 @@
         "snbcGeneral": "SNBC General",
         "snbcSectoral": "SNBC Sectoral",
         "objectiveNumber": "Objective {number}",
-        "defaultSnbcTooltip": "This trajectory is linked to the data entered during the transition plan initialization and cannot be modified or deleted",
-        "defaultSnbcSectoral": "Reference trajectory",
-        "search": "Search for a trajectory",
-        "add": "Add a trajectory",
+        "defaultSnbcTooltip": "This pathway is linked to the data entered during the transition plan initialisation and cannot be modified or deleted",
+        "defaultSnbcSectoral": "Reference pathway",
+        "search": "Search for a pathway",
+        "add": "Add a pathway",
         "table": {
           "name": "Name",
           "type": "Type",
           "startYear": "Start year",
           "targetYear": "Target year",
-          "rates": "Annual reduction: reference / corrected",
-          "referenceYear": "Reference year",
+          "rates": "Annual reduction: reference / adjusted",
+          "ratesGlossary": {
+            "title": "Baseline reduction rate and adjusted reduction rate",
+            "description": "The rates shown here are always calculated between the base year and the target year. The first rate is set when the pathway is created (or calculated based on the various rates defined at that time), while the second corresponds to the annual reduction you must achieve today to stay on track while <b>maintaining the <link>carbon budget</link> initially allocated to you</b>. <br></br> If only one rate is shown, this means that you are currently aligned with the corresponding pathway and that you are in line with the carbon budget that you were initially allocated."
+          },
+          "referenceYear": "Base year",
           "actions": "Actions",
           "period": "Period",
           "defaultObjectives": "Default objectives",
           "subObjectives": "Sub-objectives",
-          "addSubObjective": "Add sub-objective"
+          "addSubObjective": "Add sub-objective",
+          "noSubObjectives": "No sub-objectives yet"
         },
         "cancel": "Cancel",
         "deleteTrajectory": {
-          "title": "Delete trajectory",
-          "message": "Are you sure you want to delete this trajectory? This action will also delete all associated objectives."
+          "title": "Delete pathway",
+          "message": "Are you sure you want to delete this pathway? This action will also delete all associated objectives."
         },
         "deleteObjective": {
           "title": "Delete objective",
           "message": "Are you sure you want to delete this objective?"
         },
         "onboarding": {
-          "title": "Add a trajectory or reduction objectives",
-          "description": "You have already created a reference trajectory but want to add others to test different hypotheses and ambition levels? You can create new trajectories, or add intermediate objectives for more detailed tracking without losing sight of the final goal!",
-          "detailedInfo": "When you enter your first top-down trajectory, the associated objectives for 2030 and 2050 will be recorded in this table. You can then detail these objectives by adding additional intermediate targets, which can apply either to all categories and sites of the Carbon Assessment® (in which case the reductions will be calculated automatically to maintain consistency with the 2030 and 2050 objectives), or to specific categories and sites. You can also enter your projected revenue growth to obtain annual reductions that account for this growth. Finally, you can add other top-down trajectories, particularly to visualize different trajectories on the previous page before choosing the one you will follow."
+          "title": "Add a pathway or reduction objectives",
+          "description": "You have already created a reference pathway but want to add others to test different hypotheses and ambition levels? You can create new pathways, or add intermediate objectives for more detailed tracking without losing sight of the final goal!",
+          "detailedInfo": "When you enter your first top-down pathway, the associated objectives for 2030 and 2050 will be recorded in this table. You can then detail these objectives by adding additional intermediate targets, which can apply either to all categories and sites of the Carbon Assessment® (in which case the reductions will be calculated automatically to maintain consistency with the 2030 and 2050 objectives), or to specific categories and sites. You can also enter your projected revenue growth to obtain annual reductions that account for this growth. Finally, you can add other top-down pathways, particularly to visualise different pathways on the previous page before choosing the one you will follow."
         },
         "glossary": {
-          "label": "Glossary",
-          "title": "titre gabriel",
-          "description": "description gabriel",
-          "close": "Close"
+          "label": "Glossary"
         }
       },
       "actions": {
@@ -1335,14 +1327,13 @@
           "enabled": "Enabled",
           "enabledGlossaryIconLabel": "Enabling and disabling my actions",
           "enabledGlossaryTitle": "Enabling and disabling my actions",
-          "enabledGlossaryDescription": "The reductions linked to actions you have enabled are taken into account on the <trajectoryLink>trajectories and objectives</trajectoryLink> page in your bottom-up trajectory. Reductions linked to disabled actions will not be visible. Enabling or disabling actions allows you to consider different scenarios to achieve your reduction objectives.",
-          "close": "Close",
+          "enabledGlossaryDescription": "The reductions linked to actions you have enabled are taken into account on the <trajectoryLink>pathways and objectives</trajectoryLink> page in your bottom-up pathway. Reductions linked to disabled actions will not be visible. Enabling or disabling actions allows you to consider different scenarios to achieve your reduction objectives.",
           "title": "Title",
           "priority": "Priority",
           "actionType": "Action type",
           "implementation": "Implementation",
           "potential": "Reduction potential",
-          "owner": "Owner",
+          "owner": "Manager",
           "budget": "Budget",
           "errorChangingEnabled": "Error changing action status",
           "relevance": "Relevance levels",
@@ -1372,7 +1363,7 @@
           "reductionDetailsPlaceholder": "Describe the details and assumptions",
           "reductionStartYear": "Year action begins",
           "reductionEndYear": "Year action ends",
-          "owner": "Action owner",
+          "owner": "Action manager",
           "ownerPlaceholder": "Enter the name of the person leading the action",
           "necessaryBudget": "Budget required for implementation (k€)",
           "necessaryBudgetPlaceholder": "Enter the budget",
@@ -1380,7 +1371,7 @@
           "necesssaryRessourcesPlaceholder": "Specify the resources",
           "indicator": "Description of indicators",
           "implementation": "Implementation",
-          "followUp": "Follow-up",
+          "followUp": "Monitoring",
           "performance": "Performance",
           "indicatorDescriptionPlaceholder": "Description",
           "indicatorGoalPlaceholder": "Goal",
@@ -1400,7 +1391,6 @@
             "step2": "Categorization",
             "step3": "Details and responsibility"
           },
-          "close": "Close",
           "Not authorized": "You are not allowed to do this action",
           "validation": {
             "required": "Required fields",
@@ -1422,7 +1412,7 @@
           "Immediate": "Immediate",
           "Strategic": "Strategic",
           "Priority": "Priority",
-          "Improvement": "Approach improvement",
+          "Improvement": "Bilan Carbone® improvement",
           "Adaptation": "Adaptation"
         },
         "relevance": {
@@ -1432,16 +1422,15 @@
           "AvoidanceFinancing": "Avoidance financing (Priority 4/6)",
           "ReductionOutsideOrganisationValueChain": "Reduction outside the organisation's value chain (Priority 2/6)",
           "ReductionWithinOrganisationValueChain": "Reduction within the organisation's value chain (Priority 1/6)",
-          "ReductionWithinOrganisationCoreBusiness": "Reduction within the organisation's core business (Priority 1/6)",
+          "ReductionWithinOrganisationCoreBusiness": "Reduction within the organisation's core activities (Priority 1/6)",
           "glossaryTitle": "Action relevance levels",
           "information": "Information about relevance levels",
-          "learnMore": "For more information, please visit <link>this page</link>.",
-          "close": "Close"
+          "learnMore": "For more information, please visit <link>this page</link>."
         },
         "onboarding": {
           "title": "Create your action plan to achieve your objectives",
-          "description": "You have already created your trajectory and associated objectives. Now you can add the actions to your transition plan that will allow you to achieve these objectives",
-          "detailedInfo": "A top-down trajectory is defined macroscopically, setting medium and long-term reduction targets. In contrast, a bottom-up trajectory is built from an action plan—a set of coherent actions that, when combined, enable emission reductions during their implementation. This page allows you to enter and characterize various actions, following the information defined in the Carbon Assessment® methodology. All this information must be recorded in a Carbon Assessment®, but it is possible to fill in some details later to test different action combinations before making final selections. A toggle in the first column of the table allows you to activate or deactivate the entered actions to see if the resulting bottom-up trajectory aligns with the chosen top-down trajectory. Once relevant actions are selected, you can complete the missing information to better characterize each action, assign a budget, specify implementation steps, and define indicators that will later help you monitor the implementation, tracking, and performance of your actions."
+          "description": "Developing a transition plan involves the following steps: <br></br><br></br> 1 - Visualise the <b>reference pathways</b> that align with the global ambitions of the Paris Agreement. <br></br> 2 - Select a <b>top-down decarbonization pathway</b>, i.e., the theoretical pathway your organisation should follow. <br></br> 3 - Build your <b>action plan</b>. <br></br> 4 - Estimate the projected impact of your action plan by calculating its <b>reduction potential</b> to develop your <b>bottom-up decarbonization pathway</b>. <br></br> 5 - Check for consistency: the <b>bottom-up pathway derived from your action plan shows the credibility of your top-down pathway</b> in the short to long term, depending on your level of maturity. <br></br><br></br> This page allows you to <b>build your action plan and estimate its projected impact</b>, resulting in a bottom-up pathway. You can then verify the <b>consistency between your top-down and bottom-up pathways</b>.",
+          "detailedInfo": "This page allows you to build your action plan by <b>creating various actions and describing them</b>. These action sheets include all the information defined within the Bilan Carbone® method. All this information must be entered for a Bilan Carbone® assessment, but it is possible to fill in certain fields later, in order to <b>test different combinations of actions before making a final selection</b>. A toggle button in the first column of the table allows you to enable or disable the actions, so you can see if the <b>resulting bottom-up trajectory is consistent with your top-down trajectory</b>. <br></br><br></br> Once the relevant actions have been selected, you can fill in the missing information to better <b>characterize the action, assign a budget to it, specify implementation steps, and define indicators</b> that will subsequently allow you to manage the implementation, monitoring, and performance of your actions."
         },
         "deleteModal": {
           "title": "Delete action",
@@ -1636,17 +1625,16 @@
       "TeletravailSalaries": "Remote work by employees",
       "TeletravailBenevoles": "Remote work by volunteers",
       "glossary": "Glossary",
-      "close": "Close",
       "glossaryDescription": {
-        "DechetsDirects": "This category covers all emissions linked to the management of waste produced (collection and treatment) within the organization. It is divided into multiple subcategories, each covering a different type of waste.",
-        "IntrantsBiensEtMatieres": "This category covers emissions linked to the various flows of goods and materials entering the organization. It is divided into multiple subcategories, each covering a different type of material.",
-        "Immobilisations": "All emissions linked to the purchase or long-term rental of durable goods (subject to accounting depreciation by the organization).",
+        "DechetsDirects": "This category covers all emissions linked to the management of waste produced (collection and treatment) within the organisation. It is divided into multiple subcategories, each covering a different type of waste.",
+        "IntrantsBiensEtMatieres": "This category covers emissions linked to the various flows of goods and materials entering the organisation. It is divided into multiple subcategories, each covering a different type of material.",
+        "Immobilisations": "All emissions linked to the purchase or long-term rental of durable goods (subject to accounting depreciation by the organisation).",
         "FinDeVie": "This category covers all emissions related to the future end-of-life of products sold within the temporal boundary.",
-        "DeplacementsDomicileTravail": "Commuting to and from work for employees working within the organization, including temporary staff, subcontractors and contractors.",
-        "DeplacementsProfessionnels": "Business travel by employees in the course of their professional activity, whether or not the organization owns the means of transport, and whether or not the travel takes place during working hours.",
+        "DeplacementsDomicileTravail": "Commuting to and from work for employees working within the organisation, including temporary staff, subcontractors and contractors.",
+        "DeplacementsProfessionnels": "Business travel by employees in the course of their professional activity, whether or not the organisation owns the means of transport, and whether or not the travel takes place during working hours.",
         "DeplacementsVisiteurs": "Customers, users, beneficiaries...",
-        "IntrantsServices": "This category covers all services and services provisions that the organization benefits from, aswell as its digital usages. Services are often accounted for either directly through the informations disclosed by the providers, either through spend-based emission factors.",
-        "Energies": "This category covers all energy consumptions from stationnary sources : facilities, machines, etc. Emissions arising from energy consumption in facilities or other goods <b>used</b> by the organization shall be included in a Bilan Carbone®, whether those are owned or loaned. Energy consumption from vehicles or other mobile sources (fossil or organic fuels, electricity, ...) should be accounted for in the categories Transport & Distribution and Travel & Commuting rather than Energy.",
+        "IntrantsServices": "This category covers all services and services provisions that the organisation benefits from, aswell as its digital usages. Services are often accounted for either directly through the informations disclosed by the providers, either through spend-based emission factors.",
+        "Energies": "This category covers all energy consumptions from stationnary sources : facilities, machines, etc. Emissions arising from energy consumption in facilities or other goods <b>used</b> by the organisation shall be included in a Bilan Carbone®, whether those are owned or loaned. Energy consumption from vehicles or other mobile sources (fossil or organic fuels, electricity, ...) should be accounted for in the categories Transport & Distribution and Travel & Commuting rather than Energy.",
         "CombustiblesFossiles": "For heating, industrial processes, electricity or steam production.",
         "CombustiblesOrganiques": "For heating, industrial processes, electricity or steam production.",
         "ReseauxDeChaleurEtDeVapeur": "For heating and industrial processes.",
@@ -1660,8 +1648,8 @@
         "ServicesEnApprocheMonetaire": "Various services received, accounted for through spend-based emission factors.",
         "MatiereDestineeAuxEmballages": "In order to be able to focus the transition plan's actions on packaging, a subcategory dedicated to the material used in this packaging is available.",
         "BiensEtMatieresEnApprocheMonetaire": "A subcategory is also dedicated to materials for which spend-based emission factors are used.",
-        "UtilisationEnResponsabilite": "Some products sold by the organization within the temporal boundary will induce emissions when they are used (e.g cars, hair driers ...). The organization must account for the emissions that will occur over the entire lifespan of these products. Use in responsability accounts for emissions for which the organisation is <b>directly responsible</b>. For instance, for a manufacturer of meal trays served on aircraft, the responsible use corresponds to the energy used to cool and heat the meal tray.",
-        "UtilisationEnDependance": "Some products sold by the organization within the temporal boundary will induce emissions when they are used (e.g cars, hair driers, ...). The organization must account for the emissions that will occur over the entire lifespan of these products. Use in dependency accounts for emissions for which the organisation is not directly responsible but <b>that need to occur for the product to be useful</b>. This is useful to assess your dependance to carbon emissions. For instance, for a manufacturer of meal trays served in an aircraft, the dependent use corresponds to the emissions for the entire flight."
+        "UtilisationEnResponsabilite": "Some products sold by the organisation within the temporal boundary will induce emissions when they are used (e.g cars, hair driers ...). The organisation must account for the emissions that will occur over the entire lifespan of these products. Use in responsability accounts for emissions for which the organisation is <b>directly responsible</b>. For instance, for a manufacturer of meal trays served on aircraft, the responsible use corresponds to the energy used to cool and heat the meal tray.",
+        "UtilisationEnDependance": "Some products sold by the organisation within the temporal boundary will induce emissions when they are used (e.g cars, hair driers, ...). The organisation must account for the emissions that will occur over the entire lifespan of these products. Use in dependency accounts for emissions for which the organisation is not directly responsible but <b>that need to occur for the product to be useful</b>. This is useful to assess your dependance to carbon emissions. For instance, for a manufacturer of meal trays served in an aircraft, the dependent use corresponds to the emissions for the entire flight."
       }
     },
     "create": {
@@ -1725,8 +1713,7 @@
         },
         "post": "Category",
         "post_studyContributorDescription": "You must choose the item(s) and sub-item(s) within which your emission factor will be selectable.",
-        "post_emissionFactorDescription": "You must choose the item(s) and sub-item(s) within which the contributor will be able to work.",
-        "close": "Close"
+        "post_emissionFactorDescription": "You must choose the item(s) and sub-item(s) within which the contributor will be able to work."
       },
       "validation": {
         "name": "Please provide a name",
@@ -1822,9 +1809,7 @@
         "confirm-edition": "Are you sure you want to edit this emission factor",
         "confirm-deletion": "Are you sure you want to delete this emission factor",
         "title": "Edit the emission factor",
-        "description": "<warning>If you've used this emission factor in a study, the changes will be applied to all the emission sources that use it.</warning> If you want to create a new version, create a new one.",
-        "confirm": "Confirm",
-        "close": "Cancel"
+        "description": "<warning>If you've used this emission factor in a study, the changes will be applied to all the emission sources that use it.</warning> If you want to create a new version, create a new one."
       }
     },
     "type": {
@@ -1854,7 +1839,7 @@
         "warning": "The kWh accounted for through the location-based method and the market-based method are different.",
         "explanation": "Explanation",
         "title": "The kWh accounted for through the <green>location-based method</green> and the <purple>market-based method</purple> are different.",
-        "description": "According to GHG Protocol, organizations shall account for their Scope 2 emissions <b>once using the <green>location-based method (LBM)</green> and once using the <purple>market-based (market-based method, MBM)</purple></b>. To do this, you simply need to account for your kWh of energy consumed twice, once using <b><green>location-based</green></b> emission factors, and a second time using <b><purple>market-based</purple></b> emission factors. You must account for the <b>same number of kWh in both methods</b>."
+        "description": "According to GHG Protocol, organisations shall account for their Scope 2 emissions <b>once using the <green>location-based method (LBM)</green> and once using the <purple>market-based (market-based method, MBM)</purple></b>. To do this, you simply need to account for your kWh of energy consumed twice, once using <b><green>location-based</green></b> emission factors, and a second time using <b><purple>market-based</purple></b> emission factors. You must account for the <b>same number of kWh in both methods</b>."
       }
     },
     "missingQualities": {
@@ -1876,19 +1861,18 @@
     "GESTIONNAIRE": "Manager",
     "COLLABORATOR": "Collaborator",
     "DEFAULT": "Member",
-    "ADMIN_description": "An administrator has full rights to the organization's account and to all studies for his organization (whether public or private). It is impossible to change an administrator role on a study of his organization.",
-    "ADMIN_description_CR": "An administrator has full rights to the organization's and the organization clients' account and studies (whether public or private). It is impossible to change an administrator role on a study of his organization or one of its clients.",
-    "GESTIONNAIRE_description": "A manager has full rights over the organization's account, but no rights over studies. He is by default reader on public studies of his organization.",
-    "GESTIONNAIRE_description_CR": "A manager has full rights over the organization's account, but no rights over customers or studies. He is by default reader on its organization's or its clients public studies.",
-    "COLLABORATOR_description": "A collaborator is a person trained in the Bilan Carbone® method. They have no rights to the organization's account but can create studies. They have access to their organization's public studies with the role editor by default.",
-    "COLLABORATOR_description_CR": "A collaborator is a person trained in the Bilan Carbone® method. They have no rights to the organization's account but can create clients and studies. They only have access to their organization's or their organization clients public studies with the role editor by default.",
-    "DEFAULT_description": "A member of the organization has no specific rights over the organization, the team or studies. By default, they are readers of all their organization's public Bilans Carbone®.",
-    "DEFAULT_description_CR": "A member of the organization has no specific rights over the organization, the team, their clients or studies. By default, they are readers of all their organization's or their organization's clients public Bilans Carbone®.",
-    "close": "Close",
+    "ADMIN_description": "An administrator has full rights to the organisation's account and to all studies for his organisation (whether public or private). It is impossible to change an administrator role on a study of his organisation.",
+    "ADMIN_description_CR": "An administrator has full rights to the organisation's and the organisation clients' account and studies (whether public or private). It is impossible to change an administrator role on a study of his organisation or one of its clients.",
+    "GESTIONNAIRE_description": "A manager has full rights over the organisation's account, but no rights over studies. He is by default reader on public studies of his organisation.",
+    "GESTIONNAIRE_description_CR": "A manager has full rights over the organisation's account, but no rights over customers or studies. He is by default reader on its organisation's or its clients public studies.",
+    "COLLABORATOR_description": "A collaborator is a person trained in the Bilan Carbone® method. They have no rights to the organisation's account but can create studies. They have access to their organisation's public studies with the role editor by default.",
+    "COLLABORATOR_description_CR": "A collaborator is a person trained in the Bilan Carbone® method. They have no rights to the organisation's account but can create clients and studies. They only have access to their organisation's or their organisation clients public studies with the role editor by default.",
+    "DEFAULT_description": "A member of the organisation has no specific rights over the organisation, the team or studies. By default, they are readers of all their organisation's public Bilans Carbone®.",
+    "DEFAULT_description_CR": "A member of the organisation has no specific rights over the organisation, the team, their clients or studies. By default, they are readers of all their organisation's or their organisation's clients public Bilans Carbone®.",
     "guide": "Roles guide",
     "saved": "New role saved",
     "Not authorized": "You are not allowed to do this action",
-    "More than one": "There must be at least one admin or manager in the organization"
+    "More than one": "There must be at least one admin or manager in the organisation"
   },
   "environment": {
     "BC": "BC+ 2.0",
@@ -1914,13 +1898,11 @@
       "lastName": "Last Name",
       "email": "Email",
       "level": "Training",
-      "role": "Rights",
+      "role": "Role",
       "action": " ",
       "deleteMember": "Delete member",
       "userDeletion": "User deletion",
       "userDeletionDescription": "Are you sure you want to delete this user? He will no longer have access to your organisation's account, but will still have access to the studies for which he has been invited by other organisations.",
-      "close": "Cancel",
-      "confirm": "Confirm",
       "necessaryAdmin": "This administrator cannot be removed. He/she is the sole validator of the following studies: "
     }
   },
@@ -1929,7 +1911,7 @@
     "email": "Email",
     "firstName": "First Name",
     "lastName": "Last Name",
-    "role": "Rights",
+    "role": "Role",
     "level": "Training",
     "create": "Invite User",
     "Not authorized": "User invitation not authorized. Please contact <link>the support</link> for more information.",
@@ -1940,7 +1922,7 @@
       "level": "Please enter a training level",
       "role": "Please enter a role"
     },
-    "addedMember": "The user has been successfully invited to your organization."
+    "addedMember": "The user has been successfully invited to your organisation."
   },
   "units": {
     "selectAll": "Select all",
@@ -2131,27 +2113,27 @@
     "MAX_TONNAGE": "max loaded tonnage"
   },
   "organization": {
-    "create": "New Organization",
+    "create": "New organisation",
     "modify": "Modify",
-    "myOrganization": "Organization:",
+    "myOrganization": "Organisation:",
     "myOrganizations": "My current clients",
     "seeLess": "See less",
     "seeMore": "See more",
     "name": "Name: ",
-    "title": "Organization",
+    "title": "Organisation",
     "createFirstClient": "Create my first client",
     "firstClientMessage": "We invite you to create your first client and then create your first Bilan Carbone®.",
     "form": {
-      "create": "Create organization",
-      "editTitle": "Edit my organization",
+      "create": "Create organisation",
+      "editTitle": "Edit my organisation",
       "edit": "Save changes",
-      "name": "Organization name",
-      "title": "Information about the new organization",
+      "name": "Organisation name",
+      "title": "Information about the new organisation",
       "Unknown error": "An unknwon error happened. Please contact the support"
     },
     "sites": {
-      "title": "Organization's sites covered in this study",
-      "noSites": "There are no sites configured for the organization",
+      "title": "Organisation's sites covered in this study",
+      "noSites": "There are no sites configured for the organisation",
       "name": "Name",
       "namePlaceholder": "Site name",
       "etp": "Number of Full Time Equivalents",
@@ -2178,8 +2160,7 @@
         "etp": "Number of Full Time Equivalents",
         "etpDescription": "This data will eventually be used to calculate carbon intensities (kgCO₂e/FTE).",
         "ca": "Turnover ({unit})",
-        "caDescription": "These data will eventually be used to calculate carbon intensities (kgCO₂e/{unit} Turnover).",
-        "close": "Close"
+        "caDescription": "These data will eventually be used to calculate carbon intensities (kgCO₂e/{unit} Turnover)."
       },
       "validation": {
         "name": "Please enter a name",
@@ -2189,13 +2170,13 @@
     },
     "studySites": {
       "title": "You cannot delete these sites",
-      "description": "Some of your studies include the following sites. <warning>Please delete them from these studies before you can delete them from your organization.</warning>",
+      "description": "Some of your studies include the following sites. <warning>Please delete them from these studies before you can delete them from your organisation.</warning>",
       "existingSite": "<name></name>: <link></link>",
       "existingUnauthorizedSite": "{name} : {count, plural,  =1 {1 study} other { studies}} you do not have access to"
     },
     "card": {
       "method": "Consult the Bilan Carbone® method",
-      "myOrganization": "My organization",
+      "myOrganization": "My organisation",
       "myClient": "My client",
       "update": "Update my information",
       "updateClient": "Update my client",
@@ -2204,9 +2185,9 @@
       "renewLink": "Renew"
     },
     "delete": {
-      "button": "Delete organization",
+      "button": "Delete organisation",
       "title": "Are you sure you want to delete this client ?",
-      "content": "Are you sure you want to delete this client ? <warning>All its data and studies will be definitely deleted and it won't be possible to recover it.</warning> If it is the case, please write the organization name in the field right below:",
+      "content": "Are you sure you want to delete this client ? <warning>All its data and studies will be definitely deleted and it won't be possible to recover it.</warning> If it is the case, please write the organisation name in the field right below:",
       "name": "Organisation's name",
       "cancel": "Cancel",
       "confirm": "Confirm",
@@ -2246,8 +2227,7 @@
       "qualityDescription": "Uncertainties are now calculated using qualitative notes on the quality of the emission factor and the quality of the activity data. The scores for the emission factor are taken directly from the databases, but those for the activity data must be entered. For more information on how scores are awarded, please consult <link>this page</link>.",
       "specificEmissionFactorQuality": "You can specifically adjust the quality of the emission factor in your emission source. The generic value of the emission factor is indicated by the {marker} symbol.",
       "version": "Emission factor from older version",
-      "versionDescription": "You are modifying a study from the old BC+. As this emission factor does not exist in the version linked to your study ({bcVersion}), if you modify it, you will never be able to put it back.",
-      "close": "Fermer"
+      "versionDescription": "You are modifying a study from the old BC+. As this emission factor does not exist in the version linked to your study ({bcVersion}), if you modify it, you will never be able to put it back."
     },
     "deleteDialog": {
       "button": "Delete source",
@@ -2344,7 +2324,7 @@
     "default": "Something went wrong ..., please try again. If the problem persists, please contact support",
     "error": "Something went wrong ...",
     "contactSupport": "A problem has occurred. Try returning to the <link>home page</link>. <p>If this does not work, contact our support at <m></m> or try to <logout>reconnect</logout>.</p>",
-    "duplicateScopeCombination": "An objective with the same scope (sites, tags, sub-posts) and target year already exists for this trajectory"
+    "duplicateScopeCombination": "An objective with the same scope (sites, tags, sub-posts) and target year already exists for this pathway"
   },
   "upload": {
     "fileTooBig": "File too big (max size {size} MB)",
@@ -2354,16 +2334,16 @@
     "loading": "Loading"
   },
   "onboarding": {
-    "title-1": "Welcome to BC+! Before you start, please set up your organization",
-    "titleDescription-1": "We've pre-filled some information about your organization (association, company, ...) based on your membership with ABC. You can update your organization's name now, or at any time in BC+ via the \"Organization\" section.",
+    "title-1": "Welcome to BC+! Before you start, please set up your organisation",
+    "titleDescription-1": "We've pre-filled some information about your organisation (association, company, ...) based on your membership with ABC. You can update your organisation's name now, or at any time in BC+ via the \"Organization\" section.",
     "title-2": "Manage your team",
-    "titleDescription-2": "You can already add your team members! You'll still be able to add new people later via the \"Team\" section within the \"Organization\" menu.",
+    "titleDescription-2": "You can already add your team members! You'll still be able to add new people later via the \"Team\" section within the \"Organisation\" menu.",
     "previous": "Previous",
     "next": "Next",
     "validate": "Validate",
     "step1": {
-      "name": "Name of my organization",
-      "role": "My role within the organization",
+      "name": "Name of my organisation",
+      "role": "My role within the organisation",
       "information": "My information",
       "firstName": "Firstname",
       "lastName": "Lastname",
@@ -2378,8 +2358,8 @@
       "adminDescription": "Has all existing rights",
       "collaboratorDescription": "Create and complete Bilan Carbone®",
       "crCollaboratorDescription": "Create clients and realize their Bilan Carbone®",
-      "gestionnaireDescription": "Manages the organization's account but does not have access to studies",
-      "memberDescription": "Has no rights over the organization and is not necessarily trained to the Bilan Carbone® method.",
+      "gestionnaireDescription": "Manages the organisation's account but does not have access to studies",
+      "memberDescription": "Has no rights over the organisation and is not necessarily trained to the Bilan Carbone® method.",
       "validation": {
         "email": "Invalid email address",
         "requiredEmail": "Email is required",
@@ -2393,15 +2373,15 @@
     "CreateAccount": "Create your account",
     "CreateAccountDetails": "",
     "AddCollaborator": "Add collaborators",
-    "AddCollaboratorDetails": "Add your colleagues so that they can help you draw up your organization's Bilan Carbone®.",
+    "AddCollaboratorDetails": "Add your colleagues so that they can help you draw up your organisation's Bilan Carbone®.",
     "AddClient": "Create your first client",
     "AddClientDetails": "Add your first client to start your Bilans Carbone®.",
     "AddSiteCR": "Add sites",
-    "AddSiteCRDetails": "Add sites to your <orga>organization</orga> or to <client>one of your clients</client> so that you can set up emissions for each site. If your organization or customer has only one site, create an 'All sites' site.",
+    "AddSiteCRDetails": "Add sites to your <orga>organisation</orga> or to <client>one of your clients</client> so that you can set up emissions for each site. If your organisation or customer has only one site, create an 'All sites' site.",
     "AddSiteCRCollaborator": "Add sites",
     "AddSiteCRCollaboratorDetails": "Add sites to <client>one of your clients</client> so that you can set up emissions for each site. If your customer has only one site, create an 'All sites' site.",
     "AddSiteOrga": "Add sites",
-    "AddSiteOrgaDetails": "Add sites to your <orga>organization</orga> so that you can set up emissions for each site. If your organization has only one site, create an 'All sites' site.",
+    "AddSiteOrgaDetails": "Add sites to your <orga>organisation</orga> so that you can set up emissions for each site. If your organisation has only one site, create an 'All sites' site.",
     "CreateFirstStudy": "Create your first Bilan Carbone®",
     "CreateFirstStudyDetails": "Let's get started with your first Bilan Carbone®! Fill in the initial details, such as the name of the study, the temporal boundary, ...",
     "CreateFirstEmissionSource": "Create your first emissions source",
@@ -2478,7 +2458,7 @@
       "newUser": "You have been invited to BC+",
       "addedActiveUser": "You have been invited to a new environment on BC+",
       "activation": "You have activated your account on BC+",
-      "activationRequest": "Access request to your BC+ organization",
+      "activationRequest": "Access request to your BC+ organisation",
       "userOnStudyInvitation": "Added to the study {studyName}",
       "contributorInvitation": "Contribution request on the study {studyName}",
       "addedUsersByFile": "Authorization for user import"
@@ -2513,7 +2493,10 @@
     "studyIsLinkedInTransitionPlan": "This study is linked in the transition plan of study \"{studyName}\". The new date must be earlier than that study's date.",
     "maxTwoDecimals": "The reduction rate must have at most 2 decimal places",
     "startYearMustBeBeforeTargetYear": "Start year must be before target year",
-    "referenceYearMustBeBeforeOrEqualToStudyYear": "Reference year must be less than or equal to the study year",
+    "yearMustBeAfterReferenceYear": "Year must be after the pathway base year",
+    "referenceYearMustBeBeforeObjectiveTargetYear": "Base year must be strictly before the target year of global objectives",
+    "referenceYearMustBeBeforeSubObjectiveStartYear": "Base year must be before or equal to the start year of sub-objectives",
+    "referenceYearMustBeBeforeOrEqualToStudyYear": "Base year must be less than or equal to the study year",
     "sectorPercentagesTotalExceeds100": "Total sector percentages cannot exceed 100%",
     "sectorPercentagesRequired": "Sector percentages are required",
     "scopeRequired": "Please select at least one site, tag, or sub post",
@@ -2527,6 +2510,10 @@
     "maturity": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/1-framing-the-approach/1.1-define-your-bilan-carbone-r-maturity-level",
     "monetaryRatio": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/4-accounting/4.3-method-for-selecting-emission-factors#efs-in-monetary-ratios",
     "dependencyAndResponsability": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/annexes/annexes/annex-1-key-accounting-principles-of-bilan-carbone-r#use-and-dependency",
-    "uncertainties": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/4-accounting/4.4-method-for-estimating-uncertainties/4.4.2-how-to-determine-them"
+    "uncertainties": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/4-accounting/4.4-method-for-estimating-uncertainties/4.4.2-how-to-determine-them",
+    "SNBC": "https://www.ecologie.gouv.fr/politiques-publiques/strategie-nationale-bas-carbone-snbc",
+    "SBTi": "https://sciencebasedtargets.org/net-zero",
+    "carbonBudget": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/appendices/glossary#b",
+    "carbonNeutrality": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/appendices/glossary#n"
   }
 }

@@ -1,7 +1,8 @@
 {
   "nav": {
     "newStudyContributor": "Ajouter un·e élève",
-    "team": "Équipe pilote"
+    "team": "Équipe pilote",
+    "home": "Accueil"
   },
   "navigation": {
     "organizations": "Mes Empreintes carbone",
@@ -65,7 +66,12 @@
       "framing": "Profil de l'établissement",
       "organizations": "Mes établissement",
       "team": "Mes Collaborateur·rices",
-      "title": "Mon Empreinte"
+      "title": "Mon Empreinte",
+      "informationDefinition": "Définition des informations",
+      "dataAccounting": "Comptabilisation des données",
+      "dataEntry": "Saisie des données",
+      "results": "Résultats",
+      "transitionPlan": "Plan de transition"
     },
     "validatedOnlyDescription": "En tant qu'élèves j'ai accès en tant que contributeurice sur un ou plusieurs postes d'émission.",
     "new": {
@@ -156,7 +162,16 @@
       "additionalInfo": "Les résultats que vous obtenez ici sont un calcul simplifié de l'empreinte carbone de votre établissement et ne répondent par aux exigences du Bilan Carbone®, ni de la réglementation en vigueur.  Ces résultats ont pour objet de vous accompagner dans la compréhension des enjeux climatiques et l'identification de vos priorités d'action.  Portant donc une valeur essentiellement pédagogique, le calcul de l'empreinte carbone de votre établissement via notre outil constitue donc une première étape dans votre adaptation aux conséquences du changement climatique."
     },
     "results": {
-      "carbonIntensities": "Empreinte carbone individuelle"
+      "carbonIntensities": "Empreinte carbone individuelle",
+      "analysis": "Analyse des émissions",
+      "total": "Total des émissions",
+      "downloadPDF": "Télécharger la synthèse",
+      "downloadingPDF": "Téléchargement de la synthèse...",
+      "chartTypes": {
+        "bar": "Diagramme en barres",
+        "pie": "Diagramme circulaire",
+        "table": "Tableau"
+      }
     }
   },
   "emissionFactors": {

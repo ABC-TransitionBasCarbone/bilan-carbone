@@ -1,9 +1,20 @@
-import { formatNumber } from '@/utils/number'
 import { Typography } from '@mui/material'
 
-export const getDisplayedRates = (referenceRate: number | undefined, correctedRate: number | undefined) => {
-  const reference = referenceRate ? `-${formatNumber(referenceRate * 100, 1)}%` : null
-  const corrected = correctedRate ? `-${formatNumber(correctedRate * 100, 1)}%` : null
+const formatRatePercent = (rate: number, locale = 'fr-FR') => {
+  return new Intl.NumberFormat(locale, {
+    style: 'percent',
+    maximumSignificantDigits: 2,
+    minimumSignificantDigits: 2,
+  }).format(rate)
+}
+
+export const getDisplayedRates = (
+  locale = 'fr-FR',
+  referenceRate: number | undefined,
+  correctedRate: number | undefined,
+) => {
+  const reference = referenceRate !== undefined ? `-${formatRatePercent(referenceRate, locale)}` : null
+  const corrected = correctedRate !== undefined ? `-${formatRatePercent(correctedRate, locale)}` : null
 
   return (
     <>

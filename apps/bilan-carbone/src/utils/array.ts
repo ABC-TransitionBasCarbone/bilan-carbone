@@ -13,6 +13,13 @@ export const uniqueByKey = <T, K extends keyof T>(arr: T[], key: K) => {
 
 export const unique = <T>(arr: T[]): T[] => [...new Set(arr)]
 
+export const filterStringArray = (value: unknown): string[] => {
+  if (!Array.isArray(value)) {
+    return []
+  }
+  return value.filter((item): item is string => typeof item === 'string')
+}
+
 export const getNestedValue = <T extends object, R = unknown>(obj: T, path: string): R | undefined => {
   const [key, ...rest] = path.split('.')
   const value = (obj as Record<string, unknown>)[key]

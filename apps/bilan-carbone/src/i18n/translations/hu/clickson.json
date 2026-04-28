@@ -1,6 +1,7 @@
 {
   "nav": {
-    "newStudyContributor": "Diák hozzáadása"
+    "newStudyContributor": "Diák hozzáadása",
+    "home": "Kezdőlap"
   },
   "navigation": {
     "organizations": "Saját karbonlábnyomaim",
@@ -51,7 +52,12 @@
       "framing": "Általános adatok",
       "organizations": "Intézményeim",
       "team": "Munkatársaim",
-      "title": "Saját lábnyom"
+      "title": "Saját lábnyom",
+      "informationDefinition": "Információk meghatározása",
+      "dataAccounting": "Adatok elszámolása",
+      "dataEntry": "Adatbevitel",
+      "results": "Eredmények",
+      "transitionPlan": "Átállási terv"
     },
     "validatedOnlyDescription": "Diákként hozzáférésem van, mint közreműködő, egy vagy több kibocsátási ponthoz.",
     "new": {
@@ -128,7 +134,16 @@
       "additionalInfo": "Az itt kapott eredmények az intézményed karbonlábnyomának egyszerűsített számításai, nem felelnek meg a Bilan Carbone® vagy a hatályos szabályozás követelményeinek. Ezek az eredmények segítenek megérteni a klímaváltozás kihívásait és azonosítani a cselekvési prioritásokat. Elsősorban oktatási célúak, az eszközünkön keresztül végzett karbonlábnyom-számítás az első lépés az alkalmazkodásban a klímaváltozás következményeihez."
     },
     "results": {
-      "carbonIntensities": "Egyéni karbonlábnyom"
+      "carbonIntensities": "Egyéni karbonlábnyom",
+      "analysis": "Kibocsátás elemzése",
+      "total": "Összes kibocsátás",
+      "downloadPDF": "Összefoglaló letöltése",
+      "downloadingPDF": "Összefoglaló letöltése...",
+      "chartTypes": {
+        "table": "Táblázat",
+        "bar": "Oszlopdiagram",
+        "pie": "Kördiagram"
+      }
     }
   },
   "emissionFactors": {

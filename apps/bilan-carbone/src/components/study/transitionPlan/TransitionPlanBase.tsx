@@ -29,6 +29,7 @@ export interface TransitionPlanBaseChildProps {
   selectedSiteIds: string[]
   selectedSubPosts: SubPost[]
   selectedTagIds: string[]
+  objectiveGroupsByTrajectoryId: Map<string, ObjectiveGroup[]>
 }
 
 interface Props {
@@ -130,7 +131,7 @@ const TransitionPlanBase = ({
         result.set(traj.id, groups)
       }
     }
-    return result.size > 0 ? result : undefined
+    return result
   }, [trajectories, study, validatedOnly, selectedSiteIds, selectedSubPosts, selectedTagIds])
 
   const filteredActions = useMemo(() => {
@@ -234,6 +235,7 @@ const TransitionPlanBase = ({
             selectedSiteIds,
             selectedSubPosts,
             selectedTagIds,
+            objectiveGroupsByTrajectoryId,
           })}
         </div>
       </Block>

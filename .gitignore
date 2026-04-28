@@ -70,3 +70,4 @@ publicodes-build
 # apps/bilan-carbone/publicodes-packages/publicodes-clickson/.gitignore
 node_modules
 publicodes-build
+certs/*

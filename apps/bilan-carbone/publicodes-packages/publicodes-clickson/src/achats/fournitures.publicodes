@@ -37,7 +37,7 @@ achats . fournitures:
       par défaut: 0
       avec:
         nombre:
-          question: "Combien de livres avez-vous achetés ?"
+          question: "Combien de livres avez-vous acheté ?"
           unité: unité
           par défaut: 0
         FE:
@@ -57,7 +57,7 @@ achats . fournitures:
       par défaut: 0
       avec:
         nombre:
-          question: "Combien de ramettes de papier avez-vous achetées ?"
+          question: "Combien de ramettes de papier avez-vous acheté ?"
           unité: unité
           par défaut: 0
         FE:
@@ -97,7 +97,7 @@ achats . fournitures:
       par défaut: 0
       avec:
         nombre:
-          question: "Combien de piles AAA (alcalines) avez-vous achetées ?"
+          question: "Combien de piles AAA (alcalines) avez-vous acheté ?"
           unité: unité
           par défaut: 0
         FE:
@@ -117,7 +117,7 @@ achats . fournitures:
       par défaut: 0
       avec:
         nombre:
-          question: "Combien de piles AA (alcalines) avez-vous achetées ?"
+          question: "Combien de piles AA (alcalines) avez-vous acheté ?"
           unité: unité
           par défaut: 0
         FE:

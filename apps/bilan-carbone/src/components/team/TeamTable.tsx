@@ -169,7 +169,7 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
             actionType: 'button',
             ['data-testid']: 'organization-roles-cancel',
             onClick: () => setDisplayRoles(false),
-            children: tAction('close'),
+            children: tAction('cancel'),
           },
         ]}
       >
@@ -192,13 +192,13 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
             ['data-testid']: 'delete-member-cancel',
             onClick: onClose,
             className: 'secondary',
-            children: t('close'),
+            children: tAction('cancel'),
           },
           {
             actionType: 'button',
             ['data-testid']: 'delete-member-validation',
             onClick: deleteMember,
-            children: t('confirm'),
+            children: tAction('confirm'),
             disabled: !!deletionErrorData,
           },
         ]}

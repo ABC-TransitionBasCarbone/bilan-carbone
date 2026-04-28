@@ -260,6 +260,33 @@ export const getEarliestPastStudyYear = (pastStudies: PastStudy[]): number | nul
   return Math.min(...pastStudies.map((s) => s.year))
 }
 
+export const getLatestPastStudy = (pastStudies: PastStudy[]): PastStudy | null => {
+  if (pastStudies.length === 0) {
+    return null
+  }
+  return pastStudies.reduce((mostRecent, current) => (current.year > mostRecent.year ? current : mostRecent))
+}
+
+export const getAverageAnnualRateFromTrajectory = (
+  trajectory: TrajectoryDataPoint[] | null | undefined,
+  startYear: number,
+  endYear: number,
+): number | undefined => {
+  if (!trajectory || endYear <= startYear) {
+    return undefined
+  }
+
+  const startValue = getTrajectoryEmissionsAtYear(trajectory, startYear)
+  const endValue = getTrajectoryEmissionsAtYear(trajectory, endYear)
+
+  if (startValue === null || endValue === null || startValue <= 0) {
+    return undefined
+  }
+
+  const avgRate = Math.max(0, (startValue - endValue) / startValue / (endYear - startYear))
+  return avgRate
+}
+
 // Build trajectory with a given rate multiplier applied to the objectives
 // This must match the trajectory building logic in calculateCustomTrajectory and calculateSNBCTrajectory
 const buildTrajectoryWithObjectivesAndMultiplier = (

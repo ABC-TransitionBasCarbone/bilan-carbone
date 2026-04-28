@@ -44,7 +44,7 @@ const UserFeedback = ({ environment }: Props) => {
         title={t('title')}
         actions={
           displayForm
-            ? [{ actionType: 'button', children: tCommon('close'), onClick: onClose }]
+            ? [{ actionType: 'button', children: tCommon('action.close'), onClick: onClose }]
             : [
                 { actionType: 'button', children: t('reject'), onClick: onClose },
                 {

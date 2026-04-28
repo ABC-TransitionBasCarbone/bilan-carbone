@@ -28,7 +28,7 @@ immobilisations . équipements informatique audiovisuel:
         à traduire: oui
       avec:
         nombre:
-          question: "Combien d'ordinateurs de bureau avez-vous achetés ?"
+          question: "Combien d'ordinateurs de bureau avez-vous acheté ?"
           unité: unité
           par défaut: 0
         FE:
@@ -50,7 +50,7 @@ immobilisations . équipements informatique audiovisuel:
         à traduire: oui
       avec:
         nombre:
-          question: "Combien d'ordinateurs portables avez-vous achetés ?"
+          question: "Combien d'ordinateurs portables avez-vous acheté ?"
           unité: unité
           par défaut: 0
         FE:
@@ -72,7 +72,7 @@ immobilisations . équipements informatique audiovisuel:
         à traduire: oui
       avec:
         nombre:
-          question: "Combien de tablettes avez-vous achetées ?"
+          question: "Combien de tablettes avez-vous acheté ?"
           unité: unité
           par défaut: 0
         FE:
@@ -94,7 +94,7 @@ immobilisations . équipements informatique audiovisuel:
         à traduire: oui
       avec:
         nombre:
-          question: "Combien d'imprimantes avez-vous achetées ?"
+          question: "Combien d'imprimantes avez-vous acheté ?"
           unité: unité
           par défaut: 0
         FE:
@@ -116,7 +116,7 @@ immobilisations . équipements informatique audiovisuel:
         à traduire: oui
       avec:
         nombre:
-          question: "Combien de photocopieurs avez-vous achetés ?"
+          question: "Combien de photocopieurs avez-vous acheté ?"
           unité: unité
           par défaut: 0
         FE:
@@ -138,7 +138,7 @@ immobilisations . équipements informatique audiovisuel:
         à traduire: oui
       avec:
         nombre:
-          question: "Combien de vidéoprojecteurs avez-vous achetés ?"
+          question: "Combien de vidéoprojecteurs avez-vous acheté ?"
           unité: unité
           par défaut: 0
         FE:
@@ -160,7 +160,7 @@ immobilisations . équipements informatique audiovisuel:
         à traduire: oui
       avec:
         nombre:
-          question: "Combien de serveurs informatiques avez-vous achetés ?"
+          question: "Combien de serveurs informatiques avez-vous acheté ?"
           unité: unité
           par défaut: 0
         FE:
@@ -182,7 +182,7 @@ immobilisations . équipements informatique audiovisuel:
         à traduire: oui
       avec:
         nombre:
-          question: "Combien de télévisions 40-49 pouces avez-vous achetées ?"
+          question: "Combien de télévisions 40-49 pouces avez-vous acheté ?"
           unité: unité
           par défaut: 0
         FE:
@@ -204,7 +204,7 @@ immobilisations . équipements informatique audiovisuel:
         à traduire: oui
       avec:
         nombre:
-          question: "Combien de racks de serveur avez-vous achetés ?"
+          question: "Combien de racks de serveur avez-vous acheté ?"
           unité: unité
           par défaut: 0
         FE:
@@ -226,7 +226,7 @@ immobilisations . équipements informatique audiovisuel:
         à traduire: oui
       avec:
         nombre:
-          question: "Combien de télécommandes universelles sans piles (80g) avez-vous achetées ?"
+          question: "Combien de télécommandes universelles sans piles (80g) avez-vous acheté ?"
           unité: unité
           par défaut: 0
         FE:
@@ -248,7 +248,7 @@ immobilisations . équipements informatique audiovisuel:
         à traduire: oui
       avec:
         nombre:
-          question: "Combien de stéréos classiques avez-vous achetées ?"
+          question: "Combien de stéréos classiques avez-vous acheté ?"
           unité: unité
           par défaut: 0
         FE:
@@ -270,7 +270,7 @@ immobilisations . équipements informatique audiovisuel:
         à traduire: oui
       avec:
         nombre:
-          question: "Combien d'enceintes Bluetooth avez-vous achetées ?"
+          question: "Combien d'enceintes Bluetooth avez-vous acheté ?"
           unité: unité
           par défaut: 0
         FE:
@@ -292,7 +292,7 @@ immobilisations . équipements informatique audiovisuel:
         à traduire: oui
       avec:
         nombre:
-          question: "Combien de smartphones 5 pouces avez-vous achetés ?"
+          question: "Combien de smartphones 5 pouces avez-vous acheté ?"
           # FIXME: pourquoi l'unité ne s'affiche-t-elle pas correctement ici dans NumberWithUnit ?
           unité: unité
           par défaut: 0
@@ -315,7 +315,7 @@ immobilisations . équipements informatique audiovisuel:
         à traduire: oui
       avec:
         nombre:
-          question: "Combien d'écrans 23,8 pouces avez-vous achetés ?"
+          question: "Combien d'écrans 23,8 pouces avez-vous acheté ?"
           unité: unité
           par défaut: 0
         FE:

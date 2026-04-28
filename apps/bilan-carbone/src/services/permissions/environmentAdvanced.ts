@@ -10,7 +10,7 @@ export const isAdvancedAndNotTiltSimplified = (environment: Environment, simplif
   ([BC, TILT] as Environment[]).includes(environment) && !isTiltSimplified(environment, simplified)
 
 export const hasAccessToEmissionFactors = (environment: Environment, userLevel: Level | null) =>
-  ([BC] as Environment[]).includes(environment) || (environment === TILT && !!userLevel)
+  ([BC, CLICKSON] as Environment[]).includes(environment) || (environment === TILT && !!userLevel)
 
 export const hasAccessToStudies = (environment: Environment, userLevel: Level | null) =>
   ([BC, CUT, CLICKSON] as Environment[]).includes(environment) || (environment === TILT && !!userLevel)

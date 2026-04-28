@@ -105,6 +105,17 @@
   }
 }
 
+.linkWithInfo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.infoIcon {
+  color: var(--mui-palette-text-secondary);
+}
+
 .disabled {
   color: var(--mui-palette-text-disabled);
   cursor: not-allowed;

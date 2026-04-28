@@ -4,6 +4,7 @@ import { TableActionButton } from '@/components/base/TableActionButton'
 import { environmentSubPostsMapping } from '@/services/posts'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { ObjectiveWithScope, TrajectoryWithObjectivesAndScope } from '@/types/trajectory.types'
+import { getAverageAnnualRateFromTrajectory } from '@/utils/trajectory-shared.utils'
 import { Typography } from '@mui/material'
 import { TrajectoryType } from '@repo/db-common/enums'
 import { Button } from '@repo/ui'
@@ -16,8 +17,13 @@ interface Props {
   trajectory: TrajectoryWithObjectivesAndScope
   canEdit: boolean
   isDefaultSnbc: boolean
-  correctedRatesMap: Map<string, { correctedRate: number }>
+  trajectoryData?: {
+    previousTrajectory: Array<{ year: number; value: number }> | null
+    currentTrajectory: Array<{ year: number; value: number }>
+    withinThreshold: boolean
+  }
   defaultObjectiveReferenceYear: number
+  studyYear: number
   sites: Array<{ id: string; name: string }>
   onAddObjective: () => void
   onEditObjective: (objective: ObjectiveWithScope) => void
@@ -29,8 +35,9 @@ const ObjectivesExpandedRow = ({
   trajectory,
   canEdit,
   isDefaultSnbc,
-  correctedRatesMap,
+  trajectoryData,
   defaultObjectiveReferenceYear,
+  studyYear,
   sites,
   onAddObjective,
   onEditObjective,
@@ -127,12 +134,22 @@ const ObjectivesExpandedRow = ({
 
   const getPeriod = (startYear: number, targetYear: number) => `${startYear} → ${targetYear}`
 
+  const getDisplayedCorrectedRatesForPeriod = (startYear: number, endYear: number) => {
+    if (!trajectoryData || trajectoryData.withinThreshold) {
+      return undefined
+    }
+
+    // Corrected rate of the first objective is only applied from study start year, not reference year
+    const correctedStartYear = startYear < studyYear ? studyYear : startYear
+    return getAverageAnnualRateFromTrajectory(trajectoryData.currentTrajectory, correctedStartYear, endYear)
+  }
+
   const isCustom = trajectory.type === TrajectoryType.CUSTOM
   const defaultObjectivesCount = defaultObjectives.length
 
   const defaultObjectiveRows: ObjectiveRow[] = defaultObjectives.map((objective, index) => {
     const prevYear = index > 0 ? defaultObjectives[index - 1].targetYear : defaultObjectiveReferenceYear
-    const corrected = correctedRatesMap.get(objective.id)
+    const correctedRate = getDisplayedCorrectedRatesForPeriod(prevYear, objective.targetYear)
     const canEditObj = isCustom && !isDefaultSnbc
     const canDeleteObj = isCustom && !isDefaultSnbc && defaultObjectivesCount > 1
 
@@ -140,7 +157,7 @@ const ObjectivesExpandedRow = ({
       id: objective.id,
       period: getPeriod(prevYear, objective.targetYear),
       reductionRate: objective.reductionRate,
-      correctedRate: corrected?.correctedRate,
+      correctedRate,
       sites: tCommon('allSites'),
       posts: tCommon('allPosts'),
       tags: tCommon('allTags'),
@@ -153,13 +170,13 @@ const ObjectivesExpandedRow = ({
 
   const subObjectiveRows: ObjectiveRow[] = subObjectives.map((objective, index) => {
     const startYear = objective.startYear ?? defaultObjectiveReferenceYear
-    const corrected = correctedRatesMap.get(objective.id)
+    const correctedRate = getDisplayedCorrectedRatesForPeriod(startYear, objective.targetYear)
 
     return {
       id: objective.id,
       period: getPeriod(startYear, objective.targetYear),
       reductionRate: objective.reductionRate,
-      correctedRate: corrected?.correctedRate,
+      correctedRate,
       sites: getSitesDisplay(objective),
       posts: getSubPostsDisplay(objective),
       tags: getTagsDisplay(objective),
@@ -179,7 +196,7 @@ const ObjectivesExpandedRow = ({
           title={t('table.defaultObjectives')}
         />
       )}
-      {isCustom && (
+      {!isDefaultSnbc && (
         <div className="flex flex-col gapped-2">
           <div className="flex align-end justify-between">
             <Typography variant="body1" color="text.secondary">
@@ -189,10 +206,12 @@ const ObjectivesExpandedRow = ({
           </div>
           {subObjectives.length > 0 ? (
             <ObjectivesInnerTable rows={subObjectiveRows} canEdit={canEdit} isDefaultSnbc={isDefaultSnbc} />
-          ) : (
+          ) : canEdit ? (
             <Button variant="outlined" onClick={onAddObjective}>
               {t('table.addSubObjective')}
             </Button>
+          ) : (
+            <Typography variant="body2">{t('table.noSubObjectives')}</Typography>
           )}
         </div>
       )}

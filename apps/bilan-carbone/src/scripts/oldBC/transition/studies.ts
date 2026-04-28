@@ -368,7 +368,7 @@ const parseEmissionSources = async (
         row.idefType !== 1 ||
         row.siteOldBCId === 'NULL'
       ) {
-        console.log(`skipped, ${row.studyOldBCId} ${row.idefType}`)
+        console.log(`skipped, ${row.studyOldBCId} ${row.idefType} ${row.daTotalValue}`)
         return null
       }
 

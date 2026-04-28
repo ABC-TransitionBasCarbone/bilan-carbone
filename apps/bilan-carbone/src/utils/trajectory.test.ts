@@ -1657,6 +1657,40 @@ describe('calculateTrajectory', () => {
         createPastStudies([2019, 1000], [2025, 1200]),
       )
     })
+
+    test('SBTI - budget equality 2020-2050 with SNBC default trajectory and 2021/2025 studies', () => {
+      const reductionRate = SBTI_REDUCTION_RATE_15
+      const pastStudies = createPastStudies([2021, 300])
+      const sectenData = createGeneralSectenData()
+
+      const snbcDefaultTrajectory = calculateSNBCTrajectory({
+        studyEmissions: 300,
+        studyStartYear: 2021,
+        sectenData,
+        pastStudies,
+      })
+
+      const previousTrajectory = calculateSBTiTrajectory({
+        studyEmissions: 300,
+        studyStartYear: 2021,
+        reductionRate,
+        pastStudies,
+        defaultTrajectory: snbcDefaultTrajectory,
+      })
+
+      const currentTrajectory = calculateSBTiTrajectory({
+        studyEmissions: 280,
+        studyStartYear: 2025,
+        reductionRate,
+        pastStudies,
+        defaultTrajectory: snbcDefaultTrajectory,
+      })
+
+      const previousBudget2020To2050 = calculateTrajectoryIntegral(previousTrajectory, 2020, 2050)
+      const currentBudget2020To2050 = calculateTrajectoryIntegral(currentTrajectory, 2020, 2050)
+
+      expectBudgetsApproximatelyEqual(currentBudget2020To2050, previousBudget2020To2050)
+    })
   })
 
   describe('calculateTrajectoryYearBounds', () => {

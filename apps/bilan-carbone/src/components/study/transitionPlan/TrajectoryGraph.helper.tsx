@@ -15,6 +15,7 @@ interface BuildTrajectorySeriesParams {
   studyStartYearIndex: number
   failedColor?: string
   isCustomTrajectory?: boolean
+  isAction?: boolean
 }
 
 export const formatValue = (value: number | null) => (value !== null ? Math.round(value).toString() : '')
@@ -52,6 +53,7 @@ export const buildTrajectorySeries = ({
   studyStartYearIndex,
   failedColor = 'var(--error-100)',
   isCustomTrajectory = false,
+  isAction = false,
 }: BuildTrajectorySeriesParams): TrajectorySeries[] => {
   const series: TrajectorySeries[] = []
   const { previousTrajectory, previousTrajectoryStartYear, currentTrajectory, withinThreshold, isFailed } =
@@ -96,7 +98,9 @@ export const buildTrajectorySeries = ({
       type: 'line',
       dataType: 'current',
       isCustom,
+      isAction,
       isFailed,
+      withinThreshold,
       data: currentData,
       label: previousTrajectory ? label + ` (${studyStartYear})` : label,
       color: isFailed ? failedColor : color,
@@ -111,8 +115,8 @@ export const buildTrajectorySeries = ({
       dataType: 'current',
       isCustom,
       isFailed,
+      withinThreshold,
       data: currentData.map((val, idx) => (idx === studyStartYearIndex ? val : null)),
-      label: label + ` (${studyStartYear})`,
       color: isFailed ? failedColor : color,
       curve: 'linear' as const,
       connectNulls: false,

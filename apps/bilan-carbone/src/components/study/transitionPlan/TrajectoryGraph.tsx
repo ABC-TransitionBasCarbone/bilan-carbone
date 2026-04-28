@@ -1,5 +1,6 @@
 'use client'
 
+import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { TRAJECTORY_15_ID, TRAJECTORY_SNBC_GENERAL_ID, TRAJECTORY_WB2C_ID } from '@/constants/trajectory.constants'
 import type { FullStudy } from '@/db/study'
@@ -17,8 +18,8 @@ import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import { Alert, Slider, SvgIcon, Typography } from '@mui/material'
 import {
   AreaPlot,
-  ChartContainer,
   ChartsAxisHighlight,
+  ChartsContainer,
   ChartsReferenceLine,
   ChartsTooltip,
   ChartsXAxis,
@@ -35,9 +36,9 @@ import Link from 'next/link'
 import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import DrawingAreaBox, { DrawingProps } from '../charts/DrawingArea'
 import CustomTrajectoryLegend from '../trajectory/CustomTrajectoryLegend'
-import { buildTrajectorySeries, formatValue, getCustomTrajectoryColor } from './TrajectoryGraph.helper'
+import { buildTrajectorySeries, getCustomTrajectoryColor } from './TrajectoryGraph.helper'
 import styles from './TrajectoryGraph.module.css'
-import { BottomLeftMultilineText } from './TrajectoryGraphDrawingArea'
+import { BottomLeftMultilineText, PastAreaBackground } from './TrajectoryGraphDrawingArea'
 
 export type DataType = 'previous' | 'current'
 
@@ -58,7 +59,7 @@ interface Props {
   titleAction?: ReactNode
   storageKey: string
   isTrajectoryPage?: boolean
-  objectiveGroupsByTrajectoryId?: Map<string, ObjectiveGroup[]>
+  objectiveGroupsByTrajectoryId: Map<string, ObjectiveGroup[]>
 }
 
 const TrajectoryGraph = ({
@@ -80,6 +81,7 @@ const TrajectoryGraph = ({
   objectiveGroupsByTrajectoryId,
 }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectories.graph')
+  const tDocumentation = useTranslations('documentationUrl')
   const tUnit = useTranslations('study.results.units')
   const [yearRange, setYearRange] = useState<number[] | null>(null)
   const [glossary, setGlossary] = useState(false)
@@ -286,7 +288,7 @@ const TrajectoryGraph = ({
     }))
     studyPoints.push({ year: studyStartYear, value: studyEmissions, label: name })
 
-    return studyPoints.map(({ year, value, label }) => ({
+    return studyPoints.map(({ year, value }) => ({
       type: 'line' as const,
       id: `study-point-${year}`,
       data: yearsToDisplay.map((y) => (y === year ? value : null)),
@@ -295,8 +297,7 @@ const TrajectoryGraph = ({
       disableHighlight: true,
       connectNulls: false,
       curve: 'linear' as const,
-      label,
-      valueFormatter: formatValue,
+      valueFormatter: () => null,
     }))
   }, [pastStudies, studyStartYear, studyEmissions, yearsToDisplay, name])
 
@@ -379,6 +380,7 @@ const TrajectoryGraph = ({
           label: t('actionBasedTrajectory'),
           color: 'var(--trajectory-action)',
           isCustom: true,
+          isAction: true,
         }),
       )
     }
@@ -422,25 +424,12 @@ const TrajectoryGraph = ({
     [hiddenTrajectoryLabels, seriesCreated],
   )
 
-  const maxY = Math.max(...displayedSeries.flatMap((s) => s?.data?.filter((v) => v !== null) || 0))
-
-  const backgroundForPastInfos: LineSeriesType = {
-    type: 'line',
-    id: 'background-area',
-    data: yearsToDisplay.map((year) => (year <= oldestPastStudyYear ? maxY : null)),
-    area: true,
-    color: 'var(--trajectory-gray-area)',
-    showMark: false,
-    disableHighlight: true,
-    valueFormatter: () => null,
-  }
-
   const BottomLeftText = ({ onClick, ...props }: DrawingProps & { onClick: () => void }) => (
     <>
       <BottomLeftMultilineText {...props} className="bold">
         <div className={classNames('flex', styles.estimatedPastLabel)}>
           <Typography variant="body2" fontWeight={600}>
-            {t('estimatedPast')}
+            {customRich(t, 'estimatedPast')}
           </Typography>
           <HelpOutlineOutlinedIcon color="secondary" className="ml-4 pointer" onClick={onClick} />
         </div>
@@ -505,28 +494,43 @@ const TrajectoryGraph = ({
                     <circle cx="12" cy="12" r="6" fill={s.color as string} />
                   </SvgIcon>
                   <Typography variant="body2">{s.label as string}</Typography>
+                  {s.dataType === 'current' && !s.withinThreshold && !s.isAction && (
+                    <GlossaryIconModal
+                      title="overshootTrajectoryGlossary.title"
+                      label="current-trajectory"
+                      tModal="study.transitionPlan.trajectories.graph"
+                    >
+                      <p>
+                        {customRich(t, 'overshootTrajectoryGlossary.description', {
+                          link: (children) => (
+                            <Link href={tDocumentation('carbonBudget')} target="_blank" rel="noreferrer noopener">
+                              {children}
+                            </Link>
+                          ),
+                        })}
+                      </p>
+                    </GlossaryIconModal>
+                  )}
                 </div>
               ))}
           </div>
           <CustomTrajectoryLegend
-            series={seriesCreated.map((s) => ({
-              label: s.label as string,
-              color: s.color as string,
-              dataType: s.dataType,
-              withinThreshold: s.withinThreshold,
-            }))}
+            series={seriesCreated
+              .filter((s) => s.label)
+              .map((s) => ({
+                label: s.label as string,
+                color: s.color as string,
+                dataType: s.dataType,
+                withinThreshold: s.withinThreshold,
+              }))}
             hiddenLabels={hiddenTrajectoryLabels}
             onToggle={onToggleFilter}
             previousLabel={(year: number) => t('previousTrajectories', { year })}
             currentLabel={(year: number) => t('currentTrajectories', { year })}
           />
         </div>
-        <ChartContainer
-          series={[
-            ...(displayedSeries.length > 0 ? [backgroundForPastInfos] : []),
-            ...studyPointsSeries,
-            ...displayedSeries,
-          ]}
+        <ChartsContainer
+          series={[...studyPointsSeries, ...displayedSeries]}
           xAxis={[
             {
               data: yearsToDisplay,
@@ -542,6 +546,7 @@ const TrajectoryGraph = ({
           yAxis={[{ label: `${t('yAxisLabel')} (${tUnit(resultsUnit)})` }]}
           height={400}
         >
+          {displayEstimatedPast && <PastAreaBackground untilYear={oldestPastStudyYear} />}
           <AreaPlot />
           <LinePlot />
           <MarkPlot />
@@ -558,7 +563,7 @@ const TrajectoryGraph = ({
           <ChartsTooltip trigger="axis" />
           <ChartsXAxis />
           <ChartsYAxis />
-        </ChartContainer>
+        </ChartsContainer>
       </div>
 
       <div className="flex justify-center w100">
@@ -595,7 +600,7 @@ const TrajectoryGraph = ({
 
       {glossary && (
         <GlossaryModal glossary="title" label="emission-factor-post" t={tGlossary} onClose={() => setGlossary(false)}>
-          {tGlossary('description')}
+          {customRich(tGlossary, 'description')}
         </GlossaryModal>
       )}
     </div>
