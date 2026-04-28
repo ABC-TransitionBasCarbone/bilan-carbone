@@ -1,4 +1,4 @@
-import { SurveyResponse } from '@/types/survey'
+import { SurveyResponse } from '@repo/typeguards'
 
 const STORAGE_PREFIX = 'mip_survey_'
 
