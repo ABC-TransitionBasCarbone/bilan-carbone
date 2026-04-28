@@ -66,12 +66,12 @@ const processUser = async (value: UserImportRecord, importedFileDate: Date) => {
     ? rawTrainings
     : rawTrainings
       ? (() => {
-          try {
-            return JSON.parse(rawTrainings)
-          } catch {
-            return []
-          }
-        })()
+        try {
+          return JSON.parse(rawTrainings)
+        } catch {
+          return []
+        }
+      })()
       : []
 
   const environment = (dataEnvironment || Environment.BC) as Environment
@@ -79,7 +79,7 @@ const processUser = async (value: UserImportRecord, importedFileDate: Date) => {
   const email = (userEmail || '').replace(/ /g, '').toLowerCase()
 
   const companyNumber = siret || siren || vat || taxNumber
-  const isCR = ['adhesion_conseil', 'licence_exploitation'].includes(purchasedProducts)
+  const isCR = ['adhesion_conseil', 'licence_exploitation'].includes(purchasedProducts ?? '')
   const activatedLicence = (membershipYear || '').match(/\d{4}/g)?.map(Number)
 
   const dbAccount = await getAccountByEmailAndEnvironment(email, environment)
