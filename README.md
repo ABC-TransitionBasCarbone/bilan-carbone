@@ -44,22 +44,26 @@ cd apps/bilan-carbone && docker-compose up -d && cd ../..
 yarn workspace @repo/db-common db:migrate
 ```
 
+This will apply all migrations and automatically generate the Prisma client.
+
 Or in production :
 
 ```bash
 yarn workspace @repo/db-common prisma migrate deploy
 ```
 
-### 5. Seed the database
+### 5. Generated prisma client
 
-```bash
-yarn workspace bilan-carbone prisma db seed
-```
-
-### 6. Generated prisma client
+If `db:migrate` failed or you need to regenerate the client manually:
 
 ```bash
 yarn workspace @repo/db-common db:generate
+```
+
+### 6. Seed the database
+
+```bash
+yarn workspace bilan-carbone prisma db seed
 ```
 
 ### 7. Run the development serve

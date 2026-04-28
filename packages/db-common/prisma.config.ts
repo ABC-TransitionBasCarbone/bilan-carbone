@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import path from 'path'
-import { defineConfig, env } from 'prisma/config'
+import { defineConfig } from 'prisma/config'
 import { fileURLToPath } from 'url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -12,6 +12,10 @@ export default defineConfig({
     seed: 'tsx prisma/seed/index.ts',
   },
   datasource: {
-    url: env('POSTGRES_PRISMA_URL'),
+    // Fallback to empty string so `prisma generate` works without a DB
+    // connection (e.g. during `yarn install` before .env is configured).
+    // Database operations (migrate, seed, app runtime) still require the
+    // POSTGRES_PRISMA_URL env var to be set in the .env file.
+    url: process.env.POSTGRES_PRISMA_URL ?? '',
   },
 })
