@@ -185,10 +185,7 @@ describe('processUsers', () => {
     })
 
     const importedFileDate = new Date('2026-01-15T12:00:00.000Z')
-    await processUsers(
-      [{ userEmail: 'new@example.com' }, { userEmail: 'existing@example.com' }],
-      importedFileDate,
-    )
+    await processUsers([{ userEmail: 'new@example.com' }, { userEmail: 'existing@example.com' }], importedFileDate)
 
     expect(createUsersWithAccount).toHaveBeenCalledTimes(1)
     const [usersToCreate] = jest.mocked(createUsersWithAccount).mock.calls[0]
