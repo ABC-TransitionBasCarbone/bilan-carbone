@@ -1,4 +1,3 @@
-import { setCustomMessage } from '@repo/lib'
 import {
   ActionCategory,
   ActionIndicatorType,
@@ -7,6 +6,7 @@ import {
   ActionRelevance,
   SubPost,
 } from '@repo/db-common/enums'
+import { setCustomMessage } from '@repo/lib'
 import { z } from 'zod'
 
 const ActionIndicatorSchema = z.object({

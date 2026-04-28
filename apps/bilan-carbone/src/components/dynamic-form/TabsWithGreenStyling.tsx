@@ -1,5 +1,5 @@
-import { Translations } from '@repo/lib'
 import { Box, Tabs as MuiTabs, Tab, styled } from '@mui/material'
+import { Translations } from '@repo/lib'
 import { ReactNode, useMemo, useState } from 'react'
 
 const StyledTabs = styled(MuiTabs)(({ theme }) => ({

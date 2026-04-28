@@ -51,7 +51,6 @@ import {
 } from '@/db/user'
 import { processUsers } from '@/scripts/ftp/userImport'
 import { withServerResponse } from '@/utils/serverResponse'
-import { DAY, HOUR, MIN, TIME_IN_MS, YEAR } from '@repo/utils'
 import { getRoleToSetForUntrained } from '@/utils/user'
 import { accountWithUserToUserSession, userSessionToDbUser } from '@/utils/userAccounts'
 import { Organization, User } from '@repo/db-common'
@@ -64,6 +63,7 @@ import {
   UserChecklist,
   UserStatus,
 } from '@repo/db-common/enums'
+import { DAY, HOUR, MIN, TIME_IN_MS, YEAR } from '@repo/utils'
 import jwt from 'jsonwebtoken'
 import { UserSession } from 'next-auth'
 import { getCompanyName, getValidAssociationNameBySiret } from '../associationApi'

@@ -1,7 +1,7 @@
 import { DeleteCommand } from '@/services/serverFunctions/study.command'
-import { Translations } from '@repo/lib'
 import { handleWarningText } from '@/utils/components'
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
+import { Translations } from '@repo/lib'
 import { Button } from '@repo/ui'
 import { Control, UseFormReturn, useWatch } from 'react-hook-form'
 import Form from '../base/Form'

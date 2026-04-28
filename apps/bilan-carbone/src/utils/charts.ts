@@ -1,6 +1,6 @@
-import { Translations } from '@repo/lib'
 import { Theme } from '@mui/material'
 import { StudyResultUnit, SubPost } from '@repo/db-common'
+import { Translations } from '@repo/lib'
 import { formatNumber } from './number'
 import { isPost } from './post'
 import { STUDY_UNIT_VALUES } from './study'

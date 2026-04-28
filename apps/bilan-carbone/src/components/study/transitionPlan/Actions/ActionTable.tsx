@@ -13,12 +13,12 @@ import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import type { ActionWithRelations } from '@/types/trajectory.types'
 import { formatNumber } from '@/utils/number'
 import { convertValue } from '@/utils/study'
-import { getYearFromDateStr } from '@repo/utils'
 import ArrowRight from '@mui/icons-material/ArrowRight'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { Link, Switch, TableCell, TableRow } from '@mui/material'
 import { ActionPotentialDeduction, StudyResultUnit } from '@repo/db-common/enums'
+import { getYearFromDateStr } from '@repo/utils'
 import {
   ColumnDef,
   flexRender,
