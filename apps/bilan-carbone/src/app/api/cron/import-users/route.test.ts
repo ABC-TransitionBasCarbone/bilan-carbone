@@ -1,6 +1,6 @@
 import { checkCronRequest } from '@/app/api/cron/utils'
 import { getUsersFromFTP } from '@/scripts/ftp/importUsers'
-import type { NextRequest } from 'next/server'
+import { type NextRequest } from 'next/server'
 import { POST } from './route'
 
 jest.mock('@/app/api/cron/utils', () => ({
