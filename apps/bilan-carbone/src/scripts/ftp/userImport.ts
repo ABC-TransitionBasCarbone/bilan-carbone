@@ -21,7 +21,27 @@ type Training = {
   expirationDate: string
 }
 
-const processUser = async (value: Record<string, string>, importedFileDate: Date) => {
+type UserImportRecord = {
+  firstName?: string
+  lastName?: string
+  userEmail?: string
+  purchasedProducts?: string
+  sessionCode?: string
+  companyName?: string
+  siret?: string
+  siren?: string
+  vat?: string
+  taxNumber?: string
+  membershipYear?: string
+  trainings?: Training[] | string
+  source?: string
+  environment?: string
+  formationName?: string
+  formationStartDate?: string
+  formationEndDate?: string
+}
+
+const processUser = async (value: UserImportRecord, importedFileDate: Date) => {
   const {
     firstName = '',
     lastName = '',
@@ -169,14 +189,14 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
   return user
 }
 
-export const processUsers = async (values: Record<string, string>[], importedFileDate: Date) => {
+export const processUsers = async (values: UserImportRecord[], importedFileDate: Date) => {
   const BATCH_SIZE = 20
   const usersWithAccount: (Prisma.UserCreateManyInput & { account: Prisma.AccountCreateInput })[] = []
   let updatedAccountsCount = 0
 
   for (let i = 0; i < values.length; i += BATCH_SIZE) {
     const batch = values.slice(i, i + BATCH_SIZE)
-    const results = await Promise.all(batch.map((v) => processUser(v as Record<string, string>, importedFileDate)))
+    const results = await Promise.all(batch.map((v) => processUser(v, importedFileDate)))
     for (const userWithAccount of results) {
       if (userWithAccount) {
         usersWithAccount.push(userWithAccount)

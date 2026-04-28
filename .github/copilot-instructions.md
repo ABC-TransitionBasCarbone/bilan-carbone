@@ -53,7 +53,7 @@ This is a Next.js monorepo for the "Bilan Carbone" platform, focused on carbon a
 
 ## Conventions
 
-- **TypeScript everywhere**; strict typing for all models and API responses.
+- **TypeScript everywhere**; strict typing for all models and API responses. Avoid `unknown` and `as unknown as` casts — define proper named types instead (e.g. a `UserImportRecord` type instead of `Record<string, string>` when fields have mixed types).
 - **Constants and enums** are centralized in `src/constants/`.
 - **Async data flows**: All DB/service calls are async/await.
 - **Localization**: All user-facing data is filtered by `locale`.

@@ -130,7 +130,7 @@ describe('processUsers', () => {
       },
     ]
 
-    await processUsers(users as unknown as Record<string, string>[], importedFileDate)
+    await processUsers(users, importedFileDate)
 
     expect(createUsersWithAccount).toHaveBeenCalledTimes(1)
     const [usersToCreate] = jest.mocked(createUsersWithAccount).mock.calls[0]
