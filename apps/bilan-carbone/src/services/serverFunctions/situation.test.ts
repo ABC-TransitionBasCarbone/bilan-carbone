@@ -32,11 +32,11 @@ jest.mock('../permissions/check', () => ({
   NOT_AUTHORIZED: 'NOT_AUTHORIZED',
 }))
 
-const mockAuth = jest.mocked(authModule.auth)
-const mockDbActualizedAuth = jest.mocked(authModule.dbActualizedAuth)
+const mockAuth = authModule.auth as jest.Mock
+const mockDbActualizedAuth = authModule.dbActualizedAuth as jest.Mock
 const mockCanSaveSituationOnStudy = jest.mocked(situationPermissionsModule.canSaveSituationOnStudy)
-const mockGetStudyById = jest.mocked(studyDbModule.getStudyById)
-const mockUpsertSituation = jest.mocked(situationDbModule.upsertSituation)
+const mockGetStudyById = studyDbModule.getStudyById as jest.Mock
+const mockUpsertSituation = situationDbModule.upsertSituation as jest.Mock
 
 describe('saveSituation', () => {
   const mockSession = {
