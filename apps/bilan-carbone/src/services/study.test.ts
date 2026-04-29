@@ -1,5 +1,5 @@
 import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
-import { getMockeFullStudy, getMockedFullStudySite } from '@/tests/utils/models/study'
+import { getMockeFullStudy, getMockedDetailedFullStudySite } from '@/tests/utils/models/study'
 import type { Translations } from '@/types/translation'
 import { hasSufficientLevel } from '@/utils/study'
 import { expect } from '@jest/globals'
@@ -191,21 +191,11 @@ describe('Study Service', () => {
 
   describe('downloadStudyResults', () => {
     it('should correctly ventilate consolidated results by site using appropriate ID types', async () => {
-      const studySiteA = getMockedFullStudySite()
-      const studySiteB = getMockedFullStudySite()
       const study = getMockeFullStudy({
         organizationVersion: { environment: Environment.BC },
         sites: [
-          {
-            ...studySiteA,
-            id: 'study-site-a',
-            site: { ...studySiteA.site, id: 'site-a', name: 'Site A' },
-          },
-          {
-            ...studySiteB,
-            id: 'study-site-b',
-            site: { ...studySiteB.site, id: 'site-b', name: 'Site B' },
-          },
+          getMockedDetailedFullStudySite('site-a', 'study-site-a', 'Site A'),
+          getMockedDetailedFullStudySite('site-b', 'study-site-b', 'Site B'),
         ],
         emissionSources: [
           getMockedFullStudyEmissionSource({
@@ -223,28 +213,20 @@ describe('Study Service', () => {
 
       const t = ((key: string) => key) as unknown as Translations
 
-      jest.mocked(prepareExcel).mockClear()
+      const prepareExcelMock = jest.mocked(prepareExcel)
+      prepareExcelMock.mockClear()
       await downloadStudyResults(study, [], [], [], t, t, t, t, t, t, t, t, t, Environment.BC)
 
-      const prepareExcelMock = jest.mocked(prepareExcel)
       expect(prepareExcelMock).toHaveBeenCalledTimes(1)
-      const exportedData = prepareExcelMock.mock.calls[0]?.[0]
-      expect(Array.isArray(exportedData)).toBe(true)
-      if (!Array.isArray(exportedData)) {
-        throw new Error('Expected prepared export data to be an array of sheets')
-      }
-      expect(exportedData.length).toBeGreaterThan(0)
-      const consolidatedSheet = exportedData[0]
-      expect(consolidatedSheet).toBeDefined()
-      expect(Array.isArray(consolidatedSheet.data)).toBe(true)
+      expect(prepareExcelMock).toHaveBeenCalledWith(expect.any(Array))
+
+      const [exportedData] = prepareExcelMock.mock.calls[0]
+      const consolidatedSheet = (exportedData as { data: (string | number)[][] }[])[0]
       const rows = consolidatedSheet.data
 
       const findSiteTotalRow = (siteName: string) => {
         const siteRowIndex = rows.findIndex((row) => row[0] === siteName)
-        if (siteRowIndex < 0) {
-          return undefined
-        }
-        return rows.slice(siteRowIndex).find((row) => row[0] === 'total')
+        return siteRowIndex >= 0 ? rows.slice(siteRowIndex).find((row) => row[0] === 'total') : undefined
       }
 
       // BC export row layout: [label, '', uncertainty, co2Value, confidenceInterval]
