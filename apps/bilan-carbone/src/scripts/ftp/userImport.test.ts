@@ -46,18 +46,18 @@ describe('processUsers', () => {
     await processUsers([{ userEmail: '  NEW.USER@Example.COM ', sessionCode: 'FORM-BCM2' }], importedFileDate)
 
     expect(createUsersWithAccount).toHaveBeenCalledTimes(1)
-    const [usersToCreate] = jest.mocked(createUsersWithAccount).mock.calls[0]
-    expect(usersToCreate).toHaveLength(1)
-    expect(usersToCreate[0]).toMatchObject({
-      email: 'new.user@example.com',
-      level: Level.Advanced,
-      account: {
-        role: Role.COLLABORATOR,
-        status: UserStatus.IMPORTED,
-        environment: Environment.BC,
-        importedFileDate,
-      },
-    })
+    expect(createUsersWithAccount).toHaveBeenCalledWith([
+      expect.objectContaining({
+        email: 'new.user@example.com',
+        level: Level.Advanced,
+        account: expect.objectContaining({
+          role: Role.COLLABORATOR,
+          status: UserStatus.IMPORTED,
+          environment: Environment.BC,
+          importedFileDate,
+        }),
+      }),
+    ])
     expect(consoleLogSpy).toHaveBeenCalledWith('1 users created')
     expect(consoleLogSpy).toHaveBeenCalledWith('1 accounts created')
     expect(consoleLogSpy).not.toHaveBeenCalledWith(expect.stringContaining('Progress:'))
@@ -133,38 +133,36 @@ describe('processUsers', () => {
     await processUsers(users, importedFileDate)
 
     expect(createUsersWithAccount).toHaveBeenCalledTimes(1)
-    const [usersToCreate] = jest.mocked(createUsersWithAccount).mock.calls[0]
-    expect(usersToCreate).toHaveLength(2)
-
-    const advancedUser = usersToCreate.find((u) => u.email === 'advanced.before2026@yopmail.com')
-    expect(advancedUser).toMatchObject({
-      email: 'advanced.before2026@yopmail.com',
-      firstName: 'Advanced',
-      lastName: 'Before2026',
-      level: Level.Advanced,
-      account: {
-        role: Role.COLLABORATOR,
-        status: UserStatus.IMPORTED,
-        environment: Environment.BC,
-        importedFileDate,
-        formationName: 'Bilan Carbone® Maitrise',
-      },
-    })
-
-    const initialUser = usersToCreate.find((u) => u.email === 'initial.user@yopmail.com')
-    expect(initialUser).toMatchObject({
-      email: 'initial.user@yopmail.com',
-      firstName: 'Initial',
-      lastName: 'User',
-      level: Level.Initial,
-      account: {
-        role: Role.COLLABORATOR,
-        status: UserStatus.IMPORTED,
-        environment: Environment.BC,
-        importedFileDate,
-        formationName: 'Bilan Carbone® Découverte',
-      },
-    })
+    expect(createUsersWithAccount).toHaveBeenCalledWith(
+      expect.arrayContaining([
+        expect.objectContaining({
+          email: 'advanced.before2026@yopmail.com',
+          firstName: 'Advanced',
+          lastName: 'Before2026',
+          level: Level.Advanced,
+          account: expect.objectContaining({
+            role: Role.COLLABORATOR,
+            status: UserStatus.IMPORTED,
+            environment: Environment.BC,
+            importedFileDate,
+            formationName: 'Bilan Carbone® Maitrise',
+          }),
+        }),
+        expect.objectContaining({
+          email: 'initial.user@yopmail.com',
+          firstName: 'Initial',
+          lastName: 'User',
+          level: Level.Initial,
+          account: expect.objectContaining({
+            role: Role.COLLABORATOR,
+            status: UserStatus.IMPORTED,
+            environment: Environment.BC,
+            importedFileDate,
+            formationName: 'Bilan Carbone® Découverte',
+          }),
+        }),
+      ]),
+    )
 
     expect(consoleLogSpy).toHaveBeenCalledWith('2 users created')
     expect(consoleLogSpy).toHaveBeenCalledWith('2 accounts created')
@@ -188,9 +186,7 @@ describe('processUsers', () => {
     await processUsers([{ userEmail: 'new@example.com' }, { userEmail: 'existing@example.com' }], importedFileDate)
 
     expect(createUsersWithAccount).toHaveBeenCalledTimes(1)
-    const [usersToCreate] = jest.mocked(createUsersWithAccount).mock.calls[0]
-    expect(usersToCreate).toHaveLength(1)
-    expect(usersToCreate[0]).toMatchObject({ email: 'new@example.com' })
+    expect(createUsersWithAccount).toHaveBeenCalledWith([expect.objectContaining({ email: 'new@example.com' })])
 
     expect(updateAccount).toHaveBeenCalledTimes(1)
     expect(consoleLogSpy).toHaveBeenCalledWith('1 users created')
