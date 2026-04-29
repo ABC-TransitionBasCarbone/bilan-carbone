@@ -31,13 +31,6 @@ const SignUpFormTilt = () => {
 
   const searchParams = useSearchParams()
 
-  useEffect(() => {
-    const email = searchParams.get('email')
-    if (email) {
-      setValue('email', email)
-    }
-  }, [searchParams])
-
   const { control, getValues, setValue, handleSubmit } = useForm<SignUpTiltCommand>({
     resolver: zodResolver(SignUpTiltCommandValidation),
     mode: 'onBlur',
@@ -46,6 +39,13 @@ const SignUpFormTilt = () => {
       email: searchParams.get('email') ?? '',
     },
   })
+
+  useEffect(() => {
+    const email = searchParams.get('email')
+    if (email) {
+      setValue('email', email)
+    }
+  }, [searchParams, setValue])
 
   const onSubmit = async () => {
     setMessage('')
