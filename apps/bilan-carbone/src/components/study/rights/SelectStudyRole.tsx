@@ -6,10 +6,10 @@ import { isAdminOnStudyOrga } from '@/services/permissions/study.utils'
 import { changeStudyRole } from '@/services/serverFunctions/study'
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { StudyRole } from '@repo/db-common/enums'
+import { Toast, ToastColors } from '@repo/ui'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
-import { Toast, ToastColors } from '@repo/ui'
 
 const emptyToast = { text: '', color: 'info' } as const
 const toastPosition = { vertical: 'bottom', horizontal: 'left' } as const
