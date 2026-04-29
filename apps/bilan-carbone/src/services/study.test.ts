@@ -194,9 +194,7 @@ describe('Study Service', () => {
   })
 
   describe('exports', () => {
-    const createTranslations = (
-      translate: (key: string, values?: { unit?: string }) => string,
-    ): Translations => {
+    const createTranslations = (translate: (key: string, values?: { unit?: string }) => string): Translations => {
       const mockedTranslations = ((key: string, values?: { unit?: string }) =>
         translate(key, values)) as Translations & {
         rich: jest.Mock
