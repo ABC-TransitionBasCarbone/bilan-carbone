@@ -27,6 +27,7 @@ export interface TransitionPlanBaseChildProps {
   filteredPastStudies: PastStudy[]
   filteredTrajectories: TrajectoryWithObjectivesAndScope[]
   filteredActions: ActionWithRelations[]
+  scopedActions: ActionWithRelations[]
   selectedSiteIds: string[]
   selectedSubPosts: SubPost[]
   selectedTagIds: string[]
@@ -167,18 +168,21 @@ const TransitionPlanBase = ({
       return []
     }
 
-    return actions
-      .filter((action) =>
-        scopeMatchesUIFilters(
-          action.sites?.map((s) => s.studySite.siteId) ?? [],
-          action.subPosts?.map((sp) => sp.subPost) ?? [],
-          action.tags?.map((tag) => tag.studyTag.id) ?? [],
-          selectedSiteIds,
-          selectedSubPosts,
-          selectedTagIds,
-        ),
-      )
-      .map((action) => {
+    return actions.filter((action) =>
+      scopeMatchesUIFilters(
+        action.sites?.map((s) => s.studySite.siteId) ?? [],
+        action.subPosts?.map((sp) => sp.subPost) ?? [],
+        action.tags?.map((tag) => tag.studyTag.id) ?? [],
+        selectedSiteIds,
+        selectedSubPosts,
+        selectedTagIds,
+      ),
+    )
+  }, [allTagIds.length, selectedSiteIds, selectedSubPosts, selectedTagIds, actions])
+
+  const scopedActions = useMemo(
+    () =>
+      filteredActions.map((action) => {
         if (action.reductionValueKg === null) {
           return action
         }
@@ -193,8 +197,9 @@ const TransitionPlanBase = ({
           selectedTagIds,
         )
         return { ...action, reductionValueKg: action.reductionValueKg * ratio }
-      })
-  }, [allTagIds.length, selectedSiteIds, selectedSubPosts, selectedTagIds, actions, study, validatedOnly])
+      }),
+    [filteredActions, study, validatedOnly, selectedSiteIds, selectedSubPosts, selectedTagIds],
+  )
 
   return (
     <>
@@ -237,7 +242,7 @@ const TransitionPlanBase = ({
           <TrajectoryGraph
             study={study}
             trajectories={filteredTrajectories}
-            actions={filteredActions}
+            actions={scopedActions}
             linkedStudies={linkedStudies}
             sectenData={sectenData}
             selectedSnbcTrajectories={[]}
@@ -255,6 +260,7 @@ const TransitionPlanBase = ({
             filteredPastStudies,
             filteredTrajectories,
             filteredActions,
+            scopedActions,
             selectedSiteIds,
             selectedSubPosts,
             selectedTagIds,
