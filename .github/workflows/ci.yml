@@ -144,12 +144,17 @@ jobs:
     timeout-minutes: 30
     runs-on: ubuntu-latest
     needs: [lint-and-typecheck, unit-tests, build-app]
-    env:
-      E2E_SHARD_COUNT: 4
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4]
+        group:
+          - auth
+          - organization
+          - study
+          - emission-factors
+          - emission-sources
+          - pages
+          - real-use-case
     defaults:
       run:
         working-directory: apps/bilan-carbone
@@ -208,37 +213,15 @@ jobs:
         run: yarn start &
       - name: Wait for server
         run: npx wait-on http://localhost:3000 --timeout 60000
-      - name: Select shard specs
-        id: select-specs
-        run: |
-          mapfile -t specs < <(find src/tests/end-to-end/app -maxdepth 1 -name '*.cy.ts' | sort)
-          selected_specs=()
-          for i in "${!specs[@]}"; do
-            if (( ((i % $E2E_SHARD_COUNT) + 1) == ${{ matrix.shard }} )); then
-              selected_specs+=("${specs[$i]}")
-            fi
-          done
-
-          if [ ${#selected_specs[@]} -eq 0 ]; then
-            echo "No specs selected for shard ${{ matrix.shard }}"
-            echo "specs=" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          echo "Running shard ${{ matrix.shard }} with specs:"
-          printf '%s\n' "${selected_specs[@]}"
-          specs_list="$(IFS=,; echo "${selected_specs[*]}")"
-          echo "specs=${specs_list}" >> "$GITHUB_OUTPUT"
       - name: Launch e2e tests
-        if: ${{ steps.select-specs.outputs.specs != '' }}
         env:
           NODE_OPTIONS: --max-old-space-size=4096
-        run: yarn cypress run --spec "${{ steps.select-specs.outputs.specs }}" --headless
+        run: yarn cypress run --spec "src/tests/end-to-end/app/${{ matrix.group }}/**/*.cy.ts" --headless
       - name: Upload screenshots
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: cypress-screenshots-shard-${{ matrix.shard }}
+          name: cypress-screenshots-${{ matrix.group }}
           path: ${{ github.workspace }}/apps/bilan-carbone/cypress/screenshots
 
   lighthouse:
