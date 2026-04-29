@@ -28,7 +28,7 @@
   }
 
   .notSortable {
-    cursor: default;
+    cursor: not-allowed;
   }
 }
 
