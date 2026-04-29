@@ -80,6 +80,7 @@ interface Props {
   }>
   defaultSnbcSectoralTrajectoryId?: string | null
   objectiveGroupsByTrajectoryId: Map<string, ObjectiveGroup[]>
+  hasFilters?: boolean
 }
 
 const fuseOptions = {
@@ -102,6 +103,7 @@ const ObjectivesTable = ({
   tagFamilies = [],
   defaultSnbcSectoralTrajectoryId,
   objectiveGroupsByTrajectoryId,
+  hasFilters = false,
 }: Props) => {
   const locale = useLocale()
   const tAction = useTranslations('common.action')
@@ -307,7 +309,7 @@ const ObjectivesTable = ({
         id: 'rates',
         header: () => (
           <div className="flex align-center gapped025">
-            {t('table.rates')}
+            {`${t('table.rates')}${hasFilters ? ` ${t('table.ratesWithFilters')}` : ''}`}
             <GlossaryIconModal
               title="table.ratesGlossary.title"
               label="reduction-rates"
@@ -363,7 +365,7 @@ const ObjectivesTable = ({
         },
       },
     ]
-  }, [t, defaultSnbcSectoralTrajectoryId, canEdit]) as ColumnDef<TrajectoryRow>[]
+  }, [t, tDocumentation, locale, defaultSnbcSectoralTrajectoryId, canEdit, hasFilters]) as ColumnDef<TrajectoryRow>[]
 
   const tableData = useMemo((): TrajectoryRow[] => {
     const filteredTrajectories = searchFilter ? fuse.search(searchFilter).map(({ item }) => item) : trajectories
@@ -444,6 +446,7 @@ const ObjectivesTable = ({
                 onEditObjective={(objective) => handleEditObjectiveClick(objective, rowData.trajectory)}
                 onDeleteObjective={(id, name) => handleDeleteClick('objective', id, name)}
                 onEditTrajectory={() => handleEditClick(rowData.trajectory)}
+                hasFilters={hasFilters}
               />
             </TableCell>
           </TableRow>

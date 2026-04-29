@@ -1289,6 +1289,7 @@
           "startYear": "Start year",
           "targetYear": "Target year",
           "rates": "Annual reduction: reference / adjusted",
+          "ratesWithFilters": "(with filters)",
           "ratesGlossary": {
             "title": "Baseline reduction rate and adjusted reduction rate",
             "description": "The rates shown here are always calculated between the base year and the target year. The first rate is set when the pathway is created (or calculated based on the various rates defined at that time), while the second corresponds to the annual reduction you must achieve today to stay on track while <b>maintaining the <link>carbon budget</link> initially allocated to you</b>. <br></br> If only one rate is shown, this means that you are currently aligned with the corresponding pathway and that you are in line with the carbon budget that you were initially allocated."
@@ -1324,6 +1325,7 @@
         "search": "Search for your action here",
         "add": "Add an action",
         "table": {
+          "sectionTitle": "Actions list",
           "enabled": "Enabled",
           "enabledGlossaryIconLabel": "Enabling and disabling my actions",
           "enabledGlossaryTitle": "Enabling and disabling my actions",
@@ -1332,8 +1334,10 @@
           "priority": "Priority",
           "actionType": "Action type",
           "implementation": "Implementation",
-          "potential": "Reduction potential",
+          "potential": "Reduction potential <br></br>(Filtered)",
           "owner": "Manager",
+          "allOwners": "All managers",
+          "noOwner": "No manager",
           "budget": "Budget",
           "errorChangingEnabled": "Error changing action status",
           "relevance": "Relevance levels",

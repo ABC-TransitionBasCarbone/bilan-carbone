@@ -29,6 +29,7 @@ interface Props {
   onEditObjective: (objective: ObjectiveWithScope) => void
   onDeleteObjective: (id: string, name: string) => void
   onEditTrajectory: () => void
+  hasFilters?: boolean
 }
 
 const ObjectivesExpandedRow = ({
@@ -43,6 +44,7 @@ const ObjectivesExpandedRow = ({
   onEditObjective,
   onDeleteObjective,
   onEditTrajectory,
+  hasFilters = false,
 }: Props) => {
   const t = useTranslations('study.transitionPlan.objectives')
   const tCommon = useTranslations('common')
@@ -194,6 +196,7 @@ const ObjectivesExpandedRow = ({
           canEdit={canEdit}
           isDefaultSnbc={isDefaultSnbc}
           title={t('table.defaultObjectives')}
+          hasFilters={hasFilters}
         />
       )}
       {!isDefaultSnbc && (
@@ -205,7 +208,12 @@ const ObjectivesExpandedRow = ({
             {canEdit && subObjectives.length > 0 && <TableActionButton type="add" onClick={onAddObjective} />}
           </div>
           {subObjectives.length > 0 ? (
-            <ObjectivesInnerTable rows={subObjectiveRows} canEdit={canEdit} isDefaultSnbc={isDefaultSnbc} />
+            <ObjectivesInnerTable
+              rows={subObjectiveRows}
+              canEdit={canEdit}
+              isDefaultSnbc={isDefaultSnbc}
+              hasFilters={hasFilters}
+            />
           ) : canEdit ? (
             <Button variant="outlined" onClick={onAddObjective}>
               {t('table.addSubObjective')}

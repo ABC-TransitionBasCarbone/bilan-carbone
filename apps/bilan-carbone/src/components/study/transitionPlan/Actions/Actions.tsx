@@ -4,13 +4,14 @@ import type { TagFamily } from '@/components/form/ScopeSelectors'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteAction } from '@/services/serverFunctions/transitionPlan'
 import type { ActionWithRelations } from '@/types/trajectory.types'
+import { Typography } from '@mui/material'
 import type { StudyResultUnit } from '@repo/db-common'
 import Fuse from 'fuse.js'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
-import ActionFilters from './ActionFilters'
+import ActionFilters, { NO_OWNER } from './ActionFilters'
 import ActionTable from './ActionTable'
 
 const ActionModal = dynamic(() => import('./ActionModal'))
@@ -18,6 +19,7 @@ const ConfirmDeleteModal = dynamic(() => import('@/components/modals/ConfirmDele
 
 interface Props {
   actions: ActionWithRelations[]
+  scopedActions: ActionWithRelations[]
   transitionPlanId: string
   studyUnit: StudyResultUnit
   canEdit: boolean
@@ -35,6 +37,7 @@ const fuseOptions = {
 
 const Actions = ({
   actions,
+  scopedActions,
   studyUnit,
   transitionPlanId,
   canEdit,
@@ -48,6 +51,27 @@ const Actions = ({
   const t = useTranslations('study.transitionPlan.actions')
 
   const [filter, setFilter] = useState('')
+
+  const owners = useMemo(() => {
+    const set = new Set<string>()
+    for (const action of actions) {
+      if (action.owner) {
+        set.add(action.owner)
+      }
+    }
+    return Array.from(set).sort()
+  }, [actions])
+
+  const [excludedOwners, setExcludedOwners] = useState<string[]>([])
+
+  const ownerFilter = useMemo(
+    () => [...owners, NO_OWNER].filter((o) => !excludedOwners.includes(o)),
+    [owners, excludedOwners],
+  )
+
+  const setOwnerFilter = (selected: string[]) => {
+    setExcludedOwners([...owners, NO_OWNER].filter((o) => !selected.includes(o)))
+  }
   const [editingAction, setEditingAction] = useState<ActionWithRelations | undefined>(undefined)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
@@ -104,15 +128,29 @@ const Actions = ({
 
   return (
     <div className="flex-col gapped1">
-      <ActionFilters search={filter} setSearch={setFilter} openAddModal={handleOpenAddModal} canEdit={canEdit} />
+      <Typography variant="h5" component="h2" fontWeight={600}>
+        {t('table.sectionTitle')}
+      </Typography>
+      <ActionFilters
+        search={filter}
+        setSearch={setFilter}
+        openAddModal={handleOpenAddModal}
+        canEdit={canEdit}
+        owners={owners}
+        ownerFilter={ownerFilter}
+        setOwnerFilter={setOwnerFilter}
+      />
       <ActionTable
         actions={searchedActions}
+        scopedActions={scopedActions}
         openEditModal={handleOpenEditModal}
         openDeleteModal={handleOpenDeleteModal}
         canEdit={canEdit}
         studyId={studyId}
         studyUnit={studyUnit}
         allSites={sites}
+        allOwnerCount={owners.length + 1}
+        ownerFilter={ownerFilter}
       />
       {isEditModalOpen && (
         <ActionModal

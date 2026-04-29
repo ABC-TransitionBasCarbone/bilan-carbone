@@ -1289,6 +1289,7 @@
           "startYear": "Année de départ",
           "targetYear": "Année cible",
           "rates": "Taux de réduction annuel : référence/corrigé",
+          "ratesWithFilters": "(avec filtres)",
           "ratesGlossary": {
             "title": "Taux de réduction de référence et taux de réduction corrigé",
             "description": "Les taux affichés ici sont toujours calculés entre l'année de référence et l'année cible. Le premier taux est définit lors de la création de la trajectoire (ou calculé à partir des différents taux définis à la création), tandis que le second correspond à la réduction annuelle que vous devez aujourd'hui suivre pour respecter cette trajectoire tout en <b>conservant le <link>budget carbone</link> qui vous était initialement alloué</b>. <br></br> Si un seul taux est présent, cela signifie que vous êtes pour le moment aligné avec la trajectoire correspondante et que vous respectez le budget carbone qui vous est alloué."
@@ -1324,6 +1325,7 @@
         "search": "Cherchez votre action ici",
         "add": "Ajouter une action",
         "table": {
+          "sectionTitle": "Liste des actions",
           "enabled": "Activée",
           "enabledGlossaryIconLabel": "Activation et désactivation de mes actions",
           "enabledGlossaryTitle": "Activation et désactivation de mes actions",
@@ -1332,8 +1334,10 @@
           "priority": "Priorité",
           "actionType": "Type d'action",
           "implementation": "Mise en oeuvre",
-          "potential": "Potentiel de réduction",
+          "potential": "Potentiel de réduction <br></br>(Avec filtres)",
           "owner": "Responsable",
+          "allOwners": "Tous les responsables",
+          "noOwner": "Sans responsable",
           "budget": "Budget",
           "errorChangingEnabled": "Erreur lors du changement de statut de l'action",
           "relevance": "Niveaux de pertinence",

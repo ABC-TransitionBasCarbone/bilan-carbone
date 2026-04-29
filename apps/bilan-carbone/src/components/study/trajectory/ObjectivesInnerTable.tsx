@@ -29,9 +29,10 @@ interface Props {
   canEdit: boolean
   isDefaultSnbc: boolean
   title?: string
+  hasFilters?: boolean
 }
 
-const ObjectivesInnerTable = ({ rows, canEdit, isDefaultSnbc, title }: Props) => {
+const ObjectivesInnerTable = ({ rows, canEdit, isDefaultSnbc, title, hasFilters = false }: Props) => {
   const t = useTranslations('study.transitionPlan.objectives')
   const tDocumentation = useTranslations('documentationUrl')
   const locale = useLocale()
@@ -49,7 +50,7 @@ const ObjectivesInnerTable = ({ rows, canEdit, isDefaultSnbc, title }: Props) =>
       {
         header: () => (
           <div className="flex align-center gapped025">
-            {t('table.rates')}
+            {`${t('table.rates')}${hasFilters ? ` ${t('table.ratesWithFilters')}` : ''}`}
             <GlossaryIconModal
               title="table.ratesGlossary.title"
               label="reduction-rates"
@@ -87,7 +88,7 @@ const ObjectivesInnerTable = ({ rows, canEdit, isDefaultSnbc, title }: Props) =>
     }
 
     return cols
-  }, [t, tCommon, canEdit, tDocumentation, locale])
+  }, [t, tCommon, canEdit, tDocumentation, locale, hasFilters])
 
   const table = useReactTable({
     columns,
