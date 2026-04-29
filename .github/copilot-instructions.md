@@ -95,7 +95,6 @@ This is a Next.js monorepo for the "Bilan Carbone" platform, focused on carbon a
 - **ESLint**: Shared rules are defined in `eslint.config.base.mjs` at the monorepo root. Each app's `eslint.config.mjs` imports `sharedRules` and `dtsOverride` from the root base and adds only Next.js-specific extends on top. Ideally, only the root config should exist.
 - **TypeScript**: `tsconfig.base.json` at the monorepo root is the canonical config with all common compiler options. App-level `tsconfig.json` files should only extend it and add app-specific overrides (Next.js plugin, `paths`, `include`/`exclude`). Do not duplicate base options in app configs.
 - **READMEs**: Only 3 README files should exist: one at the monorepo root, one in `apps/bilan-carbone/`, and one in `apps/mip/`. Do not add READMEs to packages.
-- **AppRouterCacheProvider**: Use `@mui/material-nextjs/v15-appRouter` (for Next.js 15+/16) in layout.tsx files.
 - **.notes Folder**: The `.notes` folder is in `.gitignore` to allow local AI notes without committing them. Do not commit anything in `.notes`.
 
 ### Internationalization
