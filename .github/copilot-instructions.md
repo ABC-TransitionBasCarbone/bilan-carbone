@@ -41,6 +41,10 @@ This is a Next.js monorepo for the "Bilan Carbone" platform, focused on carbon a
   - See `src/db/emissionFactors.ts` for query patterns.
 - **Custom Units**:
   - Custom units are handled via the `customUnit` field and `setEmissionFactorUnitAsCustom` function.
+- **Authorization / Permissions**:
+  - All authorization logic must be extracted to `src/services/permissions/` (not inlined in server functions).
+  - Permission helper functions should type their inputs with only the fields they actually use, not full Prisma relation types (e.g., `{ contributors: Array<{ accountId: string }> }` instead of `Pick<FullStudy, 'contributors'>`).
+  - Always add a `console.error()` with contextual details (function name, relevant IDs) immediately before every `throw new Error(NOT_AUTHORIZED)`, so authorization failures are traceable in server logs.
 
 ## Integration Points
 
