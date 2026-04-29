@@ -8,7 +8,7 @@ import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
 import { Select } from '../base/Select'
-import Toast, { ToastColors } from '../base/Toast'
+import { Toast, ToastColors } from '@repo/ui'
 import Modal from './Modal'
 
 const emptyToast = { text: '', color: 'info' } as const
