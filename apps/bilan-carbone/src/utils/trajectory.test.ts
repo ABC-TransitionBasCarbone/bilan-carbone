@@ -9,7 +9,12 @@ import { calculateSBTiTrajectory, getDefaultSBTIReductionRate } from './sbti'
 import { createGeneralSectenData } from './secten.test-utils'
 import { calculateSNBCTrajectory } from './snbc'
 import { calculateTrajectoryYearBounds } from './trajectory'
-import { calculateTrajectoryIntegral, getTrajectoryEmissionsAtYear, isWithinThreshold } from './trajectory-shared.utils'
+import {
+  calculateTrajectoryIntegral,
+  getTrajectoryEmissionsAtYear,
+  isFailedTrajectory,
+  isWithinThreshold,
+} from './trajectory-shared.utils'
 
 // TODO: ESM module issue with Jest. Remove these mocks when moving to Vitest
 jest.mock('../services/file', () => ({ download: jest.fn() }))
@@ -791,6 +796,56 @@ describe('calculateTrajectory', () => {
       // At 2050: non-energy also reaches 0 (900 - 20*45 = 0)
       const point2050 = result.find((p) => p.year === 2050)
       expect(point2050?.value).toBeCloseTo(0, 1)
+    })
+
+    test('overshoot + groups: aggressive sub-objective does not produce false isFailed', () => {
+      const studyEmissions = 1000
+      const studyStartYear = 2025
+      const referenceYear = 2020
+      const referenceEmissions = 1000
+
+      const objectiveGroups = [
+        {
+          ratio: 0.3,
+          objectives: [
+            { targetYear: 2030, reductionRate: 0.042 },
+            { targetYear: 2050, reductionRate: 0.2 }, // aggressive sub-objective, compensation still doable
+          ],
+        },
+        {
+          ratio: 0.7,
+          objectives: [
+            { targetYear: 2030, reductionRate: 0.042 },
+            { targetYear: 2050, reductionRate: 0.042 },
+          ],
+        },
+      ]
+
+      // Reference trajectory: built from referenceYear with same groups
+      const referenceTrajectory = calculateCustomTrajectory({
+        studyEmissions: referenceEmissions,
+        studyStartYear: referenceYear,
+        objectives: [{ targetYear: 2035, reductionRate: 0.05 }],
+        objectiveGroups,
+        defaultTrajectory: DEFAULT_TRAJECTORY,
+      })
+
+      const referenceAt2024 = referenceTrajectory.find((p) => p.year === studyStartYear)?.value ?? 0
+      // Actual emissions (1000) exceed reference at study year → overshoot scenario
+      expect(studyEmissions).toBeGreaterThan(referenceAt2024)
+
+      const currentTrajectory = calculateCustomTrajectory({
+        studyEmissions,
+        studyStartYear,
+        objectives: [{ targetYear: 2035, reductionRate: 0.05 }],
+        objectiveGroups,
+        overshootAdjustment: { referenceTrajectory, referenceStudyYear: referenceYear },
+        defaultTrajectory: DEFAULT_TRAJECTORY,
+      })
+
+      // Current trajectory must not exceed reference budget (isFailed must be false).
+      const isFailed = isFailedTrajectory(2050, referenceYear, referenceTrajectory, currentTrajectory, false)
+      expect(isFailed).toBe(false)
     })
   })
 

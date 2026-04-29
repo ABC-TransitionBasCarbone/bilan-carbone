@@ -54,11 +54,12 @@ This is a Next.js monorepo for the "Bilan Carbone" platform, focused on carbon a
 
 ## Conventions
 
-- **TypeScript everywhere**; strict typing for all models and API responses.
+- **TypeScript everywhere**; strict typing for all models and API responses. Avoid `unknown` and `as unknown as` casts — define proper named types instead (e.g. a `UserImportRecord` type instead of `Record<string, string>` when fields have mixed types).
 - **Constants and enums** are centralized in `src/constants/`.
 - **Async data flows**: All DB/service calls are async/await.
 - **Localization**: All user-facing data is filtered by `locale`.
-- **PR descriptions**: PR descriptions must describe the actual code changes and their purpose for reviewers — not implementation checklists or agent progress notes. Include: what bug/feature is addressed, what was changed and why, and any non-obvious design decisions.
+- **No leading semicolons**: Do not use semicolons at the start of lines (e.g., `;(mock as jest.Mock)`). The project uses `"semi": false` in Prettier. For mocking in Jest, use `jest.mocked(fn)` to type mock functions instead of casting with leading semicolons.
+- **PR descriptions**: Always write PR descriptions that describe all changes made in the entire PR, not just the latest commit. Include every functional change, test addition, refactor, and convention update.
 
 ## Key Files & Directories
 

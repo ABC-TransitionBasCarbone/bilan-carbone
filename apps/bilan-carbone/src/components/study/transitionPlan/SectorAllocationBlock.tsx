@@ -124,6 +124,7 @@ const SectorAllocationBlock = ({
       nextButtonLabel={isActive ? tCommon('action.confirm') : tBlock('update')}
       nextButtonLoading={loading}
       nextButtonDisabled={isOverLimit}
+      showNextButton={canEdit}
     >
       <div className="flex-col gapped1">
         <Typography variant="body1">{customRich(tBlock, 'description')}</Typography>

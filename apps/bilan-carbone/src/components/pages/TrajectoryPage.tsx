@@ -100,7 +100,14 @@ const TrajectoryPage = ({
       onboardingDetailedContent={customRich(t, 'trajectories.onboarding.detailedInfo')}
       graphTitleAction={addButton}
     >
-      {({ filteredStudyEmissions, filteredPastStudies, filteredTrajectories, selectedSiteIds }) => (
+      {({
+        filteredStudyEmissions,
+        filteredPastStudies,
+        filteredTrajectories,
+        selectedSiteIds,
+        objectiveGroupsByTrajectoryId,
+        hasFilters,
+      }) => (
         <>
           <div className="flex-col gapped1">
             <Typography variant="h5" component="h2" fontWeight={600}>
@@ -121,6 +128,8 @@ const TrajectoryPage = ({
               sites={sites}
               tagFamilies={study.tagFamilies}
               defaultSnbcSectoralTrajectoryId={defaultSnbcSectoralTrajectoryId}
+              objectiveGroupsByTrajectoryId={objectiveGroupsByTrajectoryId}
+              hasFilters={hasFilters}
             />
           </div>
 

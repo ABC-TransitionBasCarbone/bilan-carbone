@@ -347,8 +347,7 @@
       "exports": "Prendre en compte les émissions non validées",
       "exportsDescription": "Au sein d'un Bilan Carbone®, vous pouvez choisir d'afficher toutes les émissions que vous avez renseignées, ou bien uniquement celles qui ont été validées par un·e validateur·rice.",
       "caUnits": "Unité des chiffres d'affaire",
-      "caUnitsDescription": "Précisez l'unité que vous souhaitez utiliser pour les chiffres d'affaire.",
-      "close": "Fermer"
+      "caUnitsDescription": "Précisez l'unité que vous souhaitez utiliser pour les chiffres d'affaire."
     },
     "caUnit": {
       "label": "Unité des chiffres d'affaire des sites",
@@ -389,7 +388,6 @@
     "validatedOnlyDescription": "Pour chaque Bilan Carbone®, un ou plusieurs validateur·rices peuvent être définis. Ceux-ci ont la responsabilité de valider les sources d'émission lorsque celles-ci auront été renseignées par les contributeur·rices et éditeur·rices de l'étude. Par défaut, seules les émissions validées apparaissent au sein de vos résultats, mais vous pouvez changer ce comportement via le menu \"Paramètres\".",
     "withDependenciesDescription": "La nouvelle méthode Bilan Carbone® introduit le concept de responsabilité et de dépendance. Il est fortement recommandé de restituer les résultats du Bilan Carbone® avec et sans le sous-poste \"Utilisation en dépendance\", car l'organisation n'est généralement pas en mesure d'agir aisément sur ce sous-poste. En revanche, celui-ci reste capital pour comprendre les risques auxquels sont soumis l'organisation, notamment si elle est dépendante de secteurs ou d'activités très carbonés. Le résultat final à retenir doit inclure la dépendance. Pour plus d'information sur ces nouveaux concepts, nous vous invitons à consulter <link>cette page</link>.",
     "monetaryRatioDescription": "Il est fortement déconseillé d'utiliser des facteurs d'émission en ratio monétaire lorsqu'une alternative est possible. Vous pouvez trouver plus d'information sur la <monetaryLink>méthodologie de l'ABC</monetaryLink>.",
-    "close": "Fermer",
     "selectSite": "Avant de remplir les données, choisissez un site",
     "navigation": {
       "homepage": "Accueil",
@@ -484,8 +482,7 @@
         "control": "Mode de contrôle des exports",
         "controlDescription": "Le mode de contrôle est une donnée demandée par certaines méthodes de comptabilité carbone, comme le Bilan GES règlementaire ou le GHG Protocol. Pour obtenir les résultats sous les formats demandés par ces méthodes, vous devrez caractériser les différentes sources d'émission lors de votre saisie, ce qui déterminera dans quelle catégories existantes au sein de ces méthodes (l'équivalent des postes et sous-postes au sein de la méthode Bilan Carbone®) les émissions vont se ventiler. Le mode de contrôle s'applique bien à tous les exports que vous avez sélectionnés. En fonction du mode de contrôle sélectionné, les caractérisations disponibles pour les différentes sources d'émission varient. Pour plus de détail sur les modes de contrôle, nous vous invitons à consulter les guides méthodologiques des méthodes en question. Nous vous recommandons vivement d'utiliser le mode de contrôle \"Contrôle Opérationnel\", qui est de loin le plus courant.",
         "duplicationOptions": "Options de duplication",
-        "duplicationOptionsDescription": "Lors de la duplication d'une étude, vous pouvez choisir d'inviter les mêmes membres d'équipe et contributeurs de l'étude originale dans la nouvelle. Cela permet de maintenir la continuité de la collaboration.",
-        "close": "Fermer"
+        "duplicationOptionsDescription": "Lors de la duplication d'une étude, vous pouvez choisir d'inviter les mêmes membres d'équipe et contributeurs de l'étude originale dans la nouvelle. Cela permet de maintenir la continuité de la collaboration."
       },
       "validation": {
         "name": "Veuillez renseigner un nom",
@@ -557,7 +554,7 @@
       "new": {
         "title": "Ajouter une personne sur l'étude : {name}",
         "email": "Email",
-        "role": "Droit",
+        "role": "Rôle",
         "create": "Ajouter la personne",
         "clear": "Supprimer la valeur",
         "Already in study": "Cette personne a déjà accès à l'étude.",
@@ -619,7 +616,7 @@
         "actions": " ",
         "delete": "Supprimer le·a membre",
         "email": "Email",
-        "role": "Droits",
+        "role": "Rôle",
         "title": "Gestion de l'équipe",
         "newRightLink": "Ajouter une personne à l'étude",
         "deleting": {
@@ -719,7 +716,6 @@
         "cancel": "Annuler",
         "confirm": "Confirmer",
         "glossary": "Famille de tags",
-        "close": "Fermer",
         "glossaryDescription": "Les tags et familles de tags servent à identifier vos sources d'émissions dans le but d'agréger vos résultats en fonction de ces tags par la suite. Les tags similaires devraient être renseignés dans une même famille. <br></br>Créer vos tags et familles de tags pour les associer à des sources d'émissions au sein de la page \"Saisie des données\", avant d'en visualiser les émissions dans la page \"Résultats\". Pour éviter les doubles-comptes, il n'est pas possible de visualiser les émissions de deux familles de tags simultanément. <br></br>Par exemple, prenons deux familles de tags : \"Produits vendus\" et \"Publics ciblés\". Ces deux familles et leurs tags respectifs vous permettrons de visualiser la répartition des émissions de votre organisation en fonction des produits vendus, et des publics ciblés.",
         "allTags": "Tous les tags"
       },
@@ -851,14 +847,12 @@
       "gesTag": "Émissions de GES par tag ({unit})",
       "glossary": {
         "title": "Glossaire",
-        "close": "Fermer",
         "more": "Plus d'informations",
         "uncertaintyPerPost": "Uncertitude par poste",
         "uncertaintyPerPostDescription": "Attention, la taille des cercles sur ce graphique est proportionnelle au nombre de sources d'émission qui ont étés renseignées au sein du poste, et non pas au total des émissions du poste (qui peut lui s'observer sur l'axe des abscisses). Cela permet de visualiser sur quels postes le travail a été le plus approfondi, et d'apprécier si cela est pertinent en fonction de l'importance des émissions associées, car il est généralement plus pertinent d'aller travailler dans le détail sur les postes d'émissions les plus importants. Les graphiques suivants permettent également de visualiser cet effet.",
         "uncertaintyPerPostDescription2": "Par ailleurs, plus le nombre de sources d'émission est important au sein d'un poste, moins l'incertitude de ce poste sera grande. Cela est dû au fait que deux incertitudes se compensent, car il n'est généralement pas certain que l'erreur soit faite dans le même sens. Pour donner un exemple concret, lorsque l'on mesure deux cordes, il est possible de surestimer la longueur de la première, et de sous-estimer celle de la seconde. Par conséquent, l'incertitude sur la longueur de la somme des deux cordes sera inférieure à la somme des deux incertitudes prises séparément."
       },
-      "resultsWord": "Rapport Bilan Carbone®",
-      "close": "Fermer"
+      "resultsWord": "Rapport Bilan Carbone®"
     },
     "pdf": {
       "loading": "Chargement des données...",
@@ -930,7 +924,6 @@
       "download": "Télécharger le flux",
       "flows": "Cartographies des flux",
       "information": "Information",
-      "close": "Fermer",
       "documentSelector": "Cartographie à afficher",
       "invalidFileType": "Type de fichier non supporté",
       "newFlow": "Ajouter une cartographie des flux",
@@ -948,7 +941,6 @@
       "download": "Télécharger la matrice",
       "dependencyMatrices": "Matrices de risque et de dépendance",
       "information": "Information",
-      "close": "Fermer",
       "documentSelector": "Matrice de risque et de dépendance à afficher",
       "invalidFileType": "Type de fichier non supporté",
       "noDocument": "Aucune matrice de risque et de dépendance à afficher",
@@ -1008,7 +1000,7 @@
           "description": "Cette fonctionnalité sert à reconstruire l'historique de vos émissions, idéalement à partir de votre année de référence. Vous pouvez renseigner des Bilans Carbone® issus du BC+ ou d'outils tiers. Ces données alimenteront vos graphiques et trajectoires de réduction.",
           "glossaryTitle": "Bilans Carbone® passés",
           "glossaryDescription": "",
-          "linkStudyButton": "Lier une étude"
+          "linkStudyButton": "Lier un Bilan Carbone®"
         },
         "stepSectorAllocation": {
           "title": "Répartition sectorielle",
@@ -1101,12 +1093,11 @@
           "estimatedPast": "Passé estimé",
           "glossary": {
             "title": "Reconstruction des émissions passées sur le BC+",
-            "description": "Les émissions historiques affichées sont : - Soit issues de vos études passées, que vous avez renseignées dans la page « Initialisation » - Soit reconstituées à partir des inventaires nationaux français pour les années qui précèdent votre premier bilan. En l'absence d'informations, l'outil suppose donc que votre organisation s'est décarbonée au même rythme que la France.",
-            "close": "Close"
+            "description": "Les émissions historiques affichées sont : <br></br> - Soit issues de vos Bilan Carbone® passées, que vous avez renseignées dans la page « Initialisation » <br></br> - Soit reconstituées à partir des inventaires nationaux français pour les années qui précèdent votre premier bilan. En l'absence d'informations, l'outil suppose donc que votre organisation s'est décarbonée au même rythme que la France."
           },
           "overshootTrajectoryGlossary": {
             "title": "Trajectoire corrigée",
-            "description": "Votre organisation ne s'est pas décarbonée au rythme requis initialement par cette trajectoire. En conséquence, celle-ci a été <b>corrigée pour respecter le <link>budget carbone</link> qui vous était initialement alloué</b>. Vous aurez alors deux affichages : <br></br> - <b>La trajectoire dans son état initial</b>, avec le taux de réduction annuel de référence <br></br> - <b>La trajectoire corrigée</b> pour l'année en cours, avec le taux de réduction annuel corrigé <br></br><br></br> La trajectoire qui résulte de cette correction est <b>plus ambitieuse</b> : à vous de choisir si vous vous y conformez ou si vous en construisez une nouvelle. Notez que si vous décidez aujourd'hui de suivre une trajectoire dont l'année de référence est ancienne, il est tout à fait normal que vous soyez en deça de ses attendus. La correction des trajectoires ne se déclenche que lorsqu'un <b> de plus de 5% entre les attendus et le Bilan Carbone® est constaté</b>."
+            "description": "Votre organisation ne s'est pas décarbonée au rythme requis initialement par cette trajectoire. En conséquence, celle-ci a été <b>corrigée pour respecter le <link>budget carbone</link> qui vous était initialement alloué</b>. Vous aurez alors deux affichages : <br></br> - <b>La trajectoire dans son état initial</b>, avec le taux de réduction annuel de référence <br></br> - <b>La trajectoire corrigée</b> pour l'année en cours, avec le taux de réduction annuel corrigé <br></br><br></br> La trajectoire qui résulte de cette correction est <b>plus ambitieuse</b> : à vous de choisir si vous vous y conformez ou si vous en construisez une nouvelle. Notez que si vous décidez aujourd'hui de suivre une trajectoire dont l'année de référence est ancienne, il est tout à fait normal que vous soyez en deça de ses attendus. La correction des trajectoires ne se déclenche que lorsqu'un écart <b> de plus de 5% entre les attendus et le Bilan Carbone® est constaté</b>."
           }
         },
         "linkedStudies": {
@@ -1120,7 +1111,7 @@
           "oldStudy": "Études BC+",
           "externalStudy": "Étude venant d'une autre plateforme",
           "name": "Nom",
-          "namePlaceholder": "Veuillez renseigne un nom",
+          "namePlaceholder": "Veuillez renseigner un nom",
           "date": "Année",
           "totalCo2": "Emissions totales",
           "totalCo2Placeholder": "256",
@@ -1128,11 +1119,7 @@
           "studyYearMustBeBeforeCurrent": "L'année de l'étude doit être antérieure à l'année de l'étude actuelle",
           "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
           "noAvailableStudies": "Aucune étude passée disponible",
-          "noLinkedStudies": "Aucune étude liée pour le moment",
           "information": "Informations",
-          "glossaryTitle": "Pour gabriel - titre",
-          "glossaryDescription": "Pour gabriel - description",
-          "close": "Fermer",
           "table": {
             "name": "Nom",
             "year": "Année",
@@ -1175,14 +1162,14 @@
         "subtitle": "Suivez une des trajectoires de référence ou créez votre propre trajectoire de réduction en approche descendante, ou top-down, pour commencer à construire votre plan de transition",
         "sbti": {
           "title": "SBTi",
-          "subtitle": "Je suis la trajectoire de référence SBTi",
+          "subtitle": "Je suis un des trajectoires SBTi",
           "benefit1": "Pour viser une cohérence et une reconnaissance <strong>à l'échelle internationale</strong>",
           "benefit2": "Pour viser un <strong>niveau de maturité Standard</strong>",
           "benefit3": "Pour m'aligner avec une <b>limitation du réchauffement climatique à 1,5°C ou 2°C</b>"
         },
         "snbc": {
           "title": "SNBC",
-          "subtitle": "Je suis la trajectoire de référence SNBC",
+          "subtitle": "Je suis une des trajectoires SNBC",
           "benefit1": "Pour viser une cohérence à <b>l'échelle nationale</b>",
           "benefit2": "Pour viser un <b>niveau de maturité Initial</b>",
           "benefit3": "Pour comprendre les <b>attentes réglementaires françaises</b>"
@@ -1220,10 +1207,10 @@
           "placeholder": "0-100"
         },
         "selectedTrajectory": {
-          "SBTI_15": "Je suis la trajectoire de référence SBTi",
-          "SBTI_WB2C": "Je suis la trajectoire de référence SBTi",
-          "SNBC_GENERAL": "Je suis la trajectoire de référence SNBC",
-          "SNBC_SECTORAL": "Je suis la trajectoire de référence SNBC",
+          "SBTI_15": "Je suis une des trajectoires SBTi",
+          "SBTI_WB2C": "Je suis une des trajectoires SBTi",
+          "SNBC_GENERAL": "Je suis une des trajectoires SNBC",
+          "SNBC_SECTORAL": "Je suis une des trajectoires SNBC",
           "CUSTOM": "Je suis ma propre trajectoire"
         },
         "siteFilterWarning": "{count, plural, =1 {Vous avez sélectionné le site {siteNames} mais les trajectoires doivent être définies sur l'ensemble de l'organisation.} other {Vous avez sélectionné les sites {siteNames} mais les trajectoires doivent être définies sur l'ensemble de l'organisation.}} Votre trajectoire sera donc définie pour tous les sites. Vous pourrez ensuite définir des sous objectifs par sites, postes, sous postes ou tags.",
@@ -1254,14 +1241,13 @@
         },
         "glossary": {
           "title": "Glossaire",
-          "close": "Fermer",
           "referenceYear": "Année de référence",
           "referenceYearDescription": "L'année de référence correspond à l'année de départ de votre trajectoire de réduction. Cette année sert de point de départ pour calculer les objectifs de réduction. Pour les trajectoires SBTi et SNBC, l'année de référence est prédéfinie et ne peut pas être modifiée. Pour les trajectoires personnalisées, vous pouvez choisir librement cette année.",
           "referenceYearMethod": "Année de référence {method}",
           "referenceYearMethodDescription": "Vous ne pouvez pas modifier la date de référence pour une trajectoire de type {method} car celle-ci est dictée par ce standard.",
           "referenceYearMethodLink": "Pour plus d'informations, cliquez ici.",
           "correctedRate": "Calcul du taux corrigé",
-          "correctedRateDescription": "Si vous choisissez une trajectoire dont l'année de référence est ancienne, il se peut que votre organisation n'ait pas respecté la trajectoire jusqu'à présent. Cela occasionne un dépassement du budget carbone qui vous était initialement alloué, que l'on appelle overshoot. Dans ce cas de figure, la trajectoire est corrigée pour conserver le budget carbone qui vous était initialement alloué, et un taux de réduction annuel corrigé est alors appliqué. Vous aurez alors deux affichages : <br></br> - La trajectoire dans son état initial, avec le taux de réduction annuel de référence <br></br> - La trajectoire corrigée pour l'année en cours, avec le taux de réduction annuel corrigé"
+          "correctedRateDescription": "Si vous choisissez une trajectoire dont l'année de référence est ancienne, il se peut que votre organisation n'ait pas respecté la trajectoire jusqu'à présent. Cela occasionne un <b>dépassement du <link>budget carbone</link> qui vous était initialement alloué</b>, que l'on appelle overshoot. <br></br><br></br> Dans ce cas de figure, la trajectoire est <b>corrigée pour conserver le budget carbone qui vous était initialement alloué</b>, et un taux de réduction annuel corrigé est alors appliqué. Vous aurez alors deux affichages : <br></br> - <b>La trajectoire dans son état initial</b>, avec le taux de réduction annuel de référence <br></br> - <b>La trajectoire corrigée</b> pour l'année en cours, avec le taux de réduction annuel corrigé"
         }
       },
       "scope": {
@@ -1303,6 +1289,7 @@
           "startYear": "Année de départ",
           "targetYear": "Année cible",
           "rates": "Taux de réduction annuel : référence/corrigé",
+          "ratesWithFilters": "(avec filtres)",
           "ratesGlossary": {
             "title": "Taux de réduction de référence et taux de réduction corrigé",
             "description": "Les taux affichés ici sont toujours calculés entre l'année de référence et l'année cible. Le premier taux est définit lors de la création de la trajectoire (ou calculé à partir des différents taux définis à la création), tandis que le second correspond à la réduction annuelle que vous devez aujourd'hui suivre pour respecter cette trajectoire tout en <b>conservant le <link>budget carbone</link> qui vous était initialement alloué</b>. <br></br> Si un seul taux est présent, cela signifie que vous êtes pour le moment aligné avec la trajectoire correspondante et que vous respectez le budget carbone qui vous est alloué."
@@ -1312,7 +1299,8 @@
           "period": "Période",
           "defaultObjectives": "Objectifs par défaut",
           "subObjectives": "Sous-objectifs",
-          "addSubObjective": "Ajouter un sous-objectif"
+          "addSubObjective": "Ajouter un sous-objectif",
+          "noSubObjectives": "Aucun sous-objectif pour le moment"
         },
         "cancel": "Annuler",
         "deleteTrajectory": {
@@ -1329,10 +1317,7 @@
           "detailedInfo": "Lorsque vous renseignez votre première trajectoire top-down, les objectifs associés, à horizon 2030 et 2050, seront renseignés au sein de ce tableau. Vous pouvez ensuite détailler ces objectifs en renseignant des objectifs intermédiaires supplémentaires, qui peuvent porter soit sur tous les postes et tous les sites du Bilan Carbone® (auquel cas les réductions seront calculées automatiquement pour maintenir une cohérence avec les objectifs 2030 et 2050), soit sur certains postes et sites en particulier. Vous pouvez également renseigner la croissance prévisionnelle de votre chiffre d'affaire, afin d'obtenir les réductions annuelles tenant compte de cette croissance. Enfin, vous pouvez ajouter d'autres trajectoires top-down, notamment dans le but de visualiser différentes trajectoires sur la page précédente avant de choisir celle que vous suivrez."
         },
         "glossary": {
-          "label": "Glossaire",
-          "title": "titre gabriel",
-          "description": "description gabriel",
-          "close": "Fermer"
+          "label": "Glossaire"
         }
       },
       "actions": {
@@ -1340,17 +1325,19 @@
         "search": "Cherchez votre action ici",
         "add": "Ajouter une action",
         "table": {
+          "sectionTitle": "Liste des actions",
           "enabled": "Activée",
           "enabledGlossaryIconLabel": "Activation et désactivation de mes actions",
           "enabledGlossaryTitle": "Activation et désactivation de mes actions",
           "enabledGlossaryDescription": "Les réductions liées aux actions que vous avez activées sont prises en compte sur la visualisation des trajectoires de réduction, dans votre trajectoire bottom-up. Les réductions liées aux actions désactivées ne seront pas visibles. Activer ou désactiver des actions vous permet ainsi <b>d'envisager différents scénarios pour atteindre vos objectifs de réduction</b>.",
-          "close": "Fermer",
           "title": "Titre",
           "priority": "Priorité",
           "actionType": "Type d'action",
           "implementation": "Mise en oeuvre",
-          "potential": "Potentiel de réduction",
+          "potential": "Potentiel de réduction <br></br>(Avec filtres)",
           "owner": "Responsable",
+          "allOwners": "Tous les responsables",
+          "noOwner": "Sans responsable",
           "budget": "Budget",
           "errorChangingEnabled": "Erreur lors du changement de statut de l'action",
           "relevance": "Niveaux de pertinence",
@@ -1408,7 +1395,6 @@
             "step2": "Catégorisation",
             "step3": "Détails et responsabilité"
           },
-          "close": "Fermer",
           "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
           "validation": {
             "required": "Champs requis",
@@ -1431,7 +1417,7 @@
           "Strategic": "Stratégique",
           "Priority": "Prioritaire",
           "Improvement": "Amélioration de la démarche",
-          "Adaptation": "Adaption"
+          "Adaptation": "Adaptation"
         },
         "relevance": {
           "Offsetting": "Compensation (Priorité 6/6)",
@@ -1443,13 +1429,12 @@
           "ReductionWithinOrganisationCoreBusiness": "Réduction dans le coeur d'activité de l'organisation (Priorité 1/6)",
           "glossaryTitle": "Niveaux de pertinence d'une action",
           "information": "Information sur les niveaux de pertinence",
-          "learnMore": "Pour plus d'information, nous vous invitons à consulter <link>cette page</link>.",
-          "close": "Fermer"
+          "learnMore": "Pour plus d'information, nous vous invitons à consulter <link>cette page</link>."
         },
         "onboarding": {
           "title": "Construisez un plan d'action afin d'atteindre vos objectifs",
           "description": "La construction du plan de transition implique les sous-étapes suivantes : <br></br><br></br> 1 - Visualiser les <b>objectifs et trajectoires de référence</b> dont l'ambition à l'échelle planétaire est celle de l'Accord de Paris. <br></br> 2 - Sélectionner une <b>trajectoire de décarbonation descendante ou « top-down »</b>, c'est-à-dire la trajectoire théorique que votre organisation devrait suivre. <br></br> 3 - Construire votre <b>plan d'action</b>. <br></br> 4 - Estimer l'impact prévisionnel de la mise en oeuvre de votre plan d'action, en calculant son <b>potentiel de réduction</b>, pour construire votre <b>trajectoire de décarbonation ascendante ou « bottom-up »</b>. <br></br> 5 - Vérifier la cohérence : la <b>trajectoire bottom-up issue de votre plan d'action justifie la crédibilité de votre trajectoire top-down</b> à plus ou moins long terme selon votre niveau de maturité. <br></br><br></br> Cette page vous permet de <b>créer votre plan d'action et d'estimer son impact prévisionnel</b>, aboutissant à une trajectoire bottom-up. Vous pouvez ensuite vérifier <b>la cohérence entre vos trajectoires top-down et bottom-up</b>.",
-          "detailedInfo": "Cette page vous permet de construire votre plan d'action, en renseignant différentes actions et en les caractérisant. Ces fiches actions reprennent l'ensemble des informations définies au sein de la méthode Bilan Carbone®. Toutes ces informations doivent être renseignées au sein d'un Bilan Carbone®, mais il est possible d'en remplir certaines ultérieurement, dans le but de tester différentes combinaisons d'actions avant de les sélectionner définitivement. Un bouton de bascule dans la première colonne du tableau vous permet ainsi d'activer ou de désactiver les actions renseignées, afin de voir si la trajectoire bottom-up résultante est cohérente avec votre trajectoire top-down. Une fois les actions pertinentes sélectionnées, vous pouvez compléter les informations manquantes, afin de mieux caractériser l'action, lui attribuer un budget, renseigner des étapes de mises en oeuvre, et des indicateurs qui vous permettront par la suite de piloter la mise en oeuvre, le suivi et les performances de vos actions."
+          "detailedInfo": "Cette page vous permet de construire votre plan d'action, <b>en renseignant différentes actions et en les caractérisant</b>. Ces fiches actions reprennent l'ensemble des informations définies au sein de la méthode Bilan Carbone®. Toutes ces informations doivent être renseignées au sein d'un Bilan Carbone®, mais il est possible d'en remplir certaines ultérieurement, dans le but de <b>tester différentes combinaisons d'actions avant de les sélectionner définitivement</b>. Un bouton de bascule dans la première colonne du tableau vous permet ainsi d'activer ou de désactiver les actions renseignées, afin de voir si la <b>trajectoire bottom-up résultante est cohérente avec votre trajectoire top-down</b>. <br></br><br></br> Une fois les actions pertinentes sélectionnées, vous pouvez compléter les informations manquantes, afin de mieux <b>caractériser l'action, lui attribuer un budget, renseigner des étapes de mises en oeuvre, et des indicateurs</b> qui vous permettront par la suite de piloter la mise en oeuvre, le suivi et les performances de vos actions."
         },
         "deleteModal": {
           "title": "Supprimer l'action",
@@ -1644,7 +1629,6 @@
       "TeletravailSalaries": "Télétravail des salariés",
       "TeletravailBenevoles": "Télétravail des bénévoles",
       "glossary": "Glossaire",
-      "close": "Fermer",
       "glossaryDescription": {
         "DechetsDirects": "Ce poste recouvre l'ensemble des émissions liées à la gestion des déchets produits (collecte et traitement) au sein de l'organisation. Il est divisé en différents sous-postes qui recouvrent chacun une catégorie de déchets.",
         "IntrantsBiensEtMatieres": "Ce poste recouvre les émissions liées aux différents flux de biens et de matières qui entrent dans l'organisation. Il est divisé en différents sous-postes qui recouvrent chacun une catégorie de matériaux.",
@@ -1733,8 +1717,7 @@
         },
         "post": "Poste",
         "post_studyContributorDescription": "Vous devez choisir le ou les postes et sous-postes au sein duquel votre facteur d'émission sera sélectionnable.",
-        "post_emissionFactorDescription": "Vous devez choisir le ou les postes et sous-postes au sein duquel le contributeur·rice pourra intervenir.",
-        "close": "Fermer"
+        "post_emissionFactorDescription": "Vous devez choisir le ou les postes et sous-postes au sein duquel le contributeur·rice pourra intervenir."
       },
       "validation": {
         "name": "Veuillez renseigner un nom",
@@ -1830,9 +1813,7 @@
         "confirm-edition": "Êtes-vous sûrs de vouloir modifier ce facteur d'émissions",
         "confirm-deletion": "Êtes-vous sûrs de vouloir supprimer ce facteur d'émissions",
         "title": "Modifier un facteur d'émission",
-        "description": "<warning>Si vous avez utilisé ce facteur d'émissions dans des études, celles-ci seront donc modifiées.</warning> Si vous souhaitez faire une nouvelle version de ce facteur d'émissions, merci d'en créer un nouveau.",
-        "confirm": "Confirmer",
-        "close": "Annuler"
+        "description": "<warning>Si vous avez utilisé ce facteur d'émissions dans des études, celles-ci seront donc modifiées.</warning> Si vous souhaitez faire une nouvelle version de ce facteur d'émissions, merci d'en créer un nouveau."
       }
     },
     "type": {
@@ -1892,7 +1873,6 @@
     "COLLABORATOR_description_CR": "Un·e collaborateur·rice est une personne formée à la méthode Bilan Carbone®. Il n'a aucun droit sur le compte de l'organisation mais peut créer des clients et des études pour son organisation et ses clients. Il est par défaut éditeur·rice sur tous les Bilans Carbone® publics de son organisation ou de ses clients.",
     "DEFAULT_description": "Un membre de l'organisation n'a aucun droit spécifique ni sur l'organisation, ni sur l'équipe, ni sur les Bilan Carbone® réalisés. Il est par défaut lecteur sur tous les Bilans Carbone® publics de son organisation.",
     "DEFAULT_description_CR": "Un membre de l'organisation n'a aucun droit spécifique ni sur l'organisation, ni sur l'équipe, ni sur les clients, ni sur les Bilan Carbone® réalisés. Il est par défaut lecteur sur tous les Bilans Carbone® publics de son organisation et de ses clients",
-    "close": "Fermer",
     "guide": "Guide des rôles",
     "saved": "Nouveau rôle sauvegardé",
     "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
@@ -1922,13 +1902,11 @@
       "lastName": "Nom",
       "email": "Email",
       "level": "Formation",
-      "role": "Droits",
+      "role": "Rôle",
       "action": " ",
       "deleteMember": "Supprimer le·a membre",
       "userDeletion": "Suppression d'un·e utilisateur·rice",
       "userDeletionDescription": "Êtes vous sur de vouloir supprimer cet·te utilisateur·rice ? Il n'aura plus accès au compte de votre organisation, mais aura toujours accès aux études pour lesquelles il a été invité par d'autres organisations.",
-      "close": "Annuler",
-      "confirm": "Confirmer",
       "necessaryAdmin": "La suppression de cet administrateur est impossible. Il est le seul validateur·rice des études suivantes : "
     }
   },
@@ -1937,7 +1915,7 @@
     "email": "Email",
     "firstName": "Prénom",
     "lastName": "Nom",
-    "role": "Droits",
+    "role": "Rôle",
     "level": "Formation",
     "create": "Inviter l'utilisateur·rice",
     "Not authorized": "Impossible d'inviter cette utilisateur·rice. Veuillez contacter le <link>support</link> pour plus d'informations.",
@@ -2186,8 +2164,7 @@
         "etp": "Nombre d'Équivalent Temps Plein",
         "etpDescription": "Ces données seront à terme utilisées pour calculer des intensités carbone (kgCO₂e/ETP).",
         "ca": "Chiffre d'Affaire ({unit})",
-        "caDescription": "Ces données seront à terme utilisées pour calculer des intensités carbone (kgCO₂e/{unit} CA).",
-        "close": "Fermer"
+        "caDescription": "Ces données seront à terme utilisées pour calculer des intensités carbone (kgCO₂e/{unit} CA)."
       },
       "validation": {
         "name": "Veuillez renseigner un nom",
@@ -2254,8 +2231,7 @@
       "qualityDescription": "Les incertitudes sont dorénavant calculées grâce à des notes qualitatives apportées sur la qualité du facteur d'émission et la qualité de la donnée d'activité. Les notes associées au facteur d'émission sont directement issues des bases de données, mais celles liées à la donnée d'activité doivent être saisies. Pour plus d'informations sur l'attribution des notes, nous vous invitons à consulter <link>cette page</link>.",
       "specificEmissionFactorQuality": "Vous pouvez spécifiquement ajuster la qualité du facteur d'émission dans votre source d'émission. La valeur générique du facteur d'émission est indiquée par le symbole {marker}.",
       "version": "Facteur d'émission d'une ancienne version",
-      "versionDescription": "Vous modifiez une étude qui provient de l'ancien BC+. Ce facteur d'émission n'existant pas dans la version de la base empreinte liée à votre étude ({bcVersion}), si vous le modifiez, vous ne pourrez jamais le remettre.",
-      "close": "Fermer"
+      "versionDescription": "Vous modifiez une étude qui provient de l'ancien BC+. Ce facteur d'émission n'existant pas dans la version de la base empreinte liée à votre étude ({bcVersion}), si vous le modifiez, vous ne pourrez jamais le remettre."
     },
     "deleteDialog": {
       "button": "Supprimer la source",
@@ -2521,6 +2497,9 @@
     "studyIsLinkedInTransitionPlan": "Cette étude est liée dans le plan de transition de l'étude « {studyName} ». La nouvelle date doit être antérieure à celle de cette étude.",
     "maxTwoDecimals": "Le taux de réduction doit avoir au maximum 2 décimales",
     "startYearMustBeBeforeTargetYear": "L'année de début doit être antérieure à l'année cible",
+    "yearMustBeAfterReferenceYear": "L'année doit être postérieure à l'année de référence de la trajectoire",
+    "referenceYearMustBeBeforeObjectiveTargetYear": "L'année de référence doit être strictement antérieure à l'année cible des objectifs globaux",
+    "referenceYearMustBeBeforeSubObjectiveStartYear": "L'année de référence doit être inférieure ou égale à l'année de début des sous-objectifs",
     "referenceYearMustBeBeforeOrEqualToStudyYear": "L'année de référence doit être inférieure ou égale à l'année de l'étude",
     "sectorPercentagesTotalExceeds100": "Le total des pourcentages ne peut pas dépasser 100%",
     "sectorPercentagesRequired": "Les pourcentages des secteurs sont requis",

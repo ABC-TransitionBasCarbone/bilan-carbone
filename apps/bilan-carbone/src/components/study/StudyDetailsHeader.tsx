@@ -46,6 +46,7 @@ const StudyDetailsHeader = ({
   const t = useTranslations('study')
   const tStudyDelete = useTranslations('study.delete')
   const tExport = useTranslations('exports')
+  const tCommon = useTranslations('common')
   const router = useRouter()
 
   const form = useForm<DeleteCommand>({
@@ -60,7 +61,7 @@ const StudyDetailsHeader = ({
 
   const onDelete = async () => {
     await callServerFunction(() => deleteStudyCommand(form.getValues()), {
-      getErrorMessage: (error) => tStudyDelete(error),
+      getErrorMessage: (error) => (tStudyDelete.has(error) ? tStudyDelete(error) : tCommon('error')),
       onSuccess: () => {
         router.push('/')
       },

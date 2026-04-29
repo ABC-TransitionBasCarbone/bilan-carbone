@@ -122,12 +122,12 @@ export const updateOrganizationSitesCommand = async (command: SitesCommand, orga
     await updateOrganizationSites(command, organizationVersionId, caUnit)
   })
 
-export const deleteOrganizationCommand = async ({ id, name }: DeleteCommand) =>
+export const deleteOrganizationCommand = async ({ id: organizationVersionId, name }: DeleteCommand) =>
   withServerResponse('deleteOrganizationCommand', async () => {
-    if (!(await canDeleteOrganizationVersion(id))) {
+    if (!(await canDeleteOrganizationVersion(organizationVersionId))) {
       throw new Error(NOT_AUTHORIZED)
     }
-    const orgName = await getOrgNameByOrgVersionId(id)
+    const orgName = await getOrgNameByOrgVersionId(organizationVersionId)
     if (!orgName) {
       throw new Error(NOT_AUTHORIZED)
     }
@@ -136,7 +136,7 @@ export const deleteOrganizationCommand = async ({ id, name }: DeleteCommand) =>
       throw new Error('wrongName')
     }
 
-    return deleteClient(id)
+    return deleteClient(organizationVersionId)
   })
 
 export const setOnboardedOrganizationVersion = async (organizationVersionId: string) =>

@@ -1,10 +1,10 @@
 {
   "common": {
+    "error": "An error occurred. If the problem persists, please contact support.",
     "yes": "Yes",
     "no": "No",
     "previous": "Previous",
     "next": "Next",
-    "close": "Close",
     "all": "All",
     "allSites": "All sites",
     "allSubPosts": "All sub posts",

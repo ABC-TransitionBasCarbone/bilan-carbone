@@ -55,9 +55,10 @@ const ActionsPage = ({
       onboardingStorageKey="actions"
       onboardingDetailedContent={customRich(t, 'onboarding.detailedInfo')}
     >
-      {({ filteredActions }) => (
+      {({ filteredActions, scopedActions }) => (
         <Actions
           actions={filteredActions}
+          scopedActions={scopedActions}
           studyUnit={study.resultsUnit}
           transitionPlanId={transitionPlanId}
           canEdit={canEdit}
