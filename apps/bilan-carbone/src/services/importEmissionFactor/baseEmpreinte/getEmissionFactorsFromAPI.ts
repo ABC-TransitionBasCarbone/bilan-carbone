@@ -1,7 +1,7 @@
 import type { PrismaClient } from '@repo/db-common'
 import { Import } from '@repo/db-common/enums'
 import axios, { AxiosResponse } from 'axios'
-import { HOUR, TIME_IN_MS } from '../../../utils/time'
+import { HOUR, TIME_IN_MS } from '@repo/utils'
 import {
   addSourceToStudies,
   cleanImport,

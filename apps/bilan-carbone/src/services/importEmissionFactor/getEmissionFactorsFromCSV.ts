@@ -5,7 +5,7 @@ import fs from 'fs'
 import path from 'path'
 import { prismaClient } from '../../db/client.server'
 import { getEncoding } from '../../utils/csv'
-import { MIN, TIME_IN_MS } from '../../utils/time'
+import { MIN, TIME_IN_MS } from '@repo/utils'
 import {
   addSourceToStudies,
   cleanImport,
