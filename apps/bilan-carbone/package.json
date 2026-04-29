@@ -19,6 +19,7 @@
     "format": "prettier --write .",
     "test": "jest",
     "test:watch": "jest --watch",
+    "tsx": "dotenv -e .env -- tsx",
     "publicodes-count:compile": "cd publicodes-packages/publicodes-count && yarn run compile",
     "publicodes-count:watch": "cd publicodes-packages/publicodes-count && yarn run watch ",
     "publicodes-count:test": "cd publicodes-packages/publicodes-count && yarn test",

@@ -2,6 +2,7 @@ import HelpIcon from '@/components/base/HelpIcon'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import { FormTextField } from '@/components/form/TextField'
 import GlossaryModal from '@/components/modals/GlossaryModal'
+import { customRich } from '@/i18n/customRich'
 import { ObjectiveModalFormData } from '@/services/serverFunctions/objective.command'
 import { TrajectoryFormData } from '@/services/serverFunctions/trajectory.command'
 import type { BaseObjective } from '@/types/trajectory.types'
@@ -11,6 +12,7 @@ import Typography from '@mui/material/Typography'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
+import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import { Control, FieldPath } from 'react-hook-form'
 import styles from './ObjectiveCard.module.css'
@@ -40,6 +42,7 @@ const ObjectiveCard = <T extends TrajectoryFormData | ObjectiveModalFormData>({
   const tCommon = useTranslations('common')
   const tGlossary = useTranslations('study.transitionPlan.trajectoryModal.glossary')
   const [showOvershootInfo, setShowOvershootInfo] = useState(false)
+  const tDocumentation = useTranslations('documentationUrl')
 
   const correctedRates = useMemo(() => {
     if (!correctedObjective) {
@@ -135,7 +138,15 @@ const ObjectiveCard = <T extends TrajectoryFormData | ObjectiveModalFormData>({
           t={tGlossary}
           onClose={() => setShowOvershootInfo(false)}
         >
-          {tGlossary('correctedRateDescription')}
+          <p>
+            {customRich(tGlossary, 'correctedRateDescription', {
+              link: (children) => (
+                <Link href={tDocumentation('carbonBudget')} target="_blank" rel="noreferrer noopener">
+                  {children}
+                </Link>
+              ),
+            })}
+          </p>
         </GlossaryModal>
       )}
     </div>

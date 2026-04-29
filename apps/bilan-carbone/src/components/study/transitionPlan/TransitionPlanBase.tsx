@@ -5,6 +5,7 @@ import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
 import type { FullStudy } from '@/db/study'
 import { useTransitionPlan } from '@/hooks/useTransitionPlan'
 import { useTransitionPlanFilters } from '@/hooks/useTransitionPlanFilters'
+import { environmentSubPostsMapping } from '@/services/posts'
 import type {
   ActionWithRelations,
   ObjectiveGroup,
@@ -29,6 +30,8 @@ export interface TransitionPlanBaseChildProps {
   selectedSiteIds: string[]
   selectedSubPosts: SubPost[]
   selectedTagIds: string[]
+  objectiveGroupsByTrajectoryId: Map<string, ObjectiveGroup[]>
+  hasFilters: boolean
 }
 
 interface Props {
@@ -82,6 +85,27 @@ const TransitionPlanBase = ({
 
   const allTagIds = useMemo(() => study.tagFamilies.flatMap((f) => f.tags.map((tag) => tag.id)), [study.tagFamilies])
 
+  const hasFilters = useMemo(() => {
+    const allSiteIds = study.sites.map((s) => s.site.id)
+    const envSubPostsByPost = environmentSubPostsMapping[study.organizationVersion.environment]
+    const allEnvSubPosts = Array.from(new Set(Object.values(envSubPostsByPost).flat()))
+    const allTagIdsWithOther = study.tagFamilies.some((f) => f.name !== 'DEFAULT_FAMILY_TAG')
+      ? [...allTagIds, 'other']
+      : allTagIds
+    const sitesFiltered = allSiteIds.length > 0 && selectedSiteIds.length < allSiteIds.length
+    const subPostsFiltered = allEnvSubPosts.length > 0 && selectedSubPosts.length < allEnvSubPosts.length
+    const tagsFiltered = allTagIdsWithOther.length > 0 && selectedTagIds.length < allTagIdsWithOther.length
+    return sitesFiltered || subPostsFiltered || tagsFiltered
+  }, [
+    study.sites,
+    study.organizationVersion.environment,
+    study.tagFamilies,
+    allTagIds,
+    selectedSiteIds,
+    selectedSubPosts,
+    selectedTagIds,
+  ])
+
   const { filteredStudyEmissions, filteredPastStudies } = useTransitionPlan({
     study,
     linkedStudies,
@@ -130,7 +154,7 @@ const TransitionPlanBase = ({
         result.set(traj.id, groups)
       }
     }
-    return result.size > 0 ? result : undefined
+    return result
   }, [trajectories, study, validatedOnly, selectedSiteIds, selectedSubPosts, selectedTagIds])
 
   const filteredActions = useMemo(() => {
@@ -234,6 +258,8 @@ const TransitionPlanBase = ({
             selectedSiteIds,
             selectedSubPosts,
             selectedTagIds,
+            objectiveGroupsByTrajectoryId,
+            hasFilters,
           })}
         </div>
       </Block>

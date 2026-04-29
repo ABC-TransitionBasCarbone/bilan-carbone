@@ -8,7 +8,12 @@ import { useServerFunction } from '@/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
 import { deleteObjective } from '@/services/serverFunctions/objective.serverFunction'
 import { deleteTrajectory } from '@/services/serverFunctions/trajectory.serverFunction'
-import type { ObjectiveWithScope, PastStudy, TrajectoryWithObjectivesAndScope } from '@/types/trajectory.types'
+import type {
+  ObjectiveGroup,
+  ObjectiveWithScope,
+  PastStudy,
+  TrajectoryWithObjectivesAndScope,
+} from '@/types/trajectory.types'
 import { getCustomData } from '@/utils/customTrajectory.utils'
 import {
   calculateTrajectoryYearBounds,
@@ -25,8 +30,9 @@ import { TrajectoryType } from '@repo/db-common/enums'
 import { ColumnDef, flexRender, getCoreRowModel, getExpandedRowModel, Row, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'
 import Fuse from 'fuse.js'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Fragment, useMemo, useState } from 'react'
 import ObjectivesSubTable from './ObjectivesExpandedRow'
@@ -73,6 +79,8 @@ interface Props {
     tags: Array<{ id: string; name: string; color: string | null }>
   }>
   defaultSnbcSectoralTrajectoryId?: string | null
+  objectiveGroupsByTrajectoryId: Map<string, ObjectiveGroup[]>
+  hasFilters?: boolean
 }
 
 const fuseOptions = {
@@ -94,8 +102,12 @@ const ObjectivesTable = ({
   sites = [],
   tagFamilies = [],
   defaultSnbcSectoralTrajectoryId,
+  objectiveGroupsByTrajectoryId,
+  hasFilters = false,
 }: Props) => {
+  const locale = useLocale()
   const tAction = useTranslations('common.action')
+  const tDocumentation = useTranslations('documentationUrl')
   const t = useTranslations('study.transitionPlan.objectives')
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
@@ -142,6 +154,7 @@ const ObjectivesTable = ({
       minYear,
       maxYear,
       sectenData,
+      objectiveGroupsByTrajectoryId,
     )
 
     customTrajectoriesData.forEach((trajectoryData) => {
@@ -153,7 +166,7 @@ const ObjectivesTable = ({
     })
 
     return map
-  }, [trajectories, pastStudies, studyEmissions, studyYear, sectenData])
+  }, [trajectories, pastStudies, studyEmissions, studyYear, sectenData, objectiveGroupsByTrajectoryId])
 
   const handleDeleteClick = (type: 'trajectory' | 'objective', id: string, name: string) => {
     setDeleteTarget({ type, id, name })
@@ -296,19 +309,27 @@ const ObjectivesTable = ({
         id: 'rates',
         header: () => (
           <div className="flex align-center gapped025">
-            {t('table.rates')}
+            {`${t('table.rates')}${hasFilters ? ` ${t('table.ratesWithFilters')}` : ''}`}
             <GlossaryIconModal
               title="table.ratesGlossary.title"
               label="reduction-rates"
               tModal="study.transitionPlan.objectives"
             >
-              <p>{customRich(t, 'table.ratesGlossary.description')}</p>
+              <p>
+                {customRich(t, 'table.ratesGlossary.description', {
+                  link: (children) => (
+                    <Link href={tDocumentation('carbonBudget')} target="_blank" rel="noreferrer noopener">
+                      {children}
+                    </Link>
+                  ),
+                })}
+              </p>
             </GlossaryIconModal>
           </div>
         ),
         accessorFn: (row) => row,
         cell: ({ row }) => {
-          return getDisplayedRates(row.original.reductionRate, row.original.correctedRate)
+          return getDisplayedRates(locale, row.original.reductionRate, row.original.correctedRate)
         },
       },
       {
@@ -344,7 +365,7 @@ const ObjectivesTable = ({
         },
       },
     ]
-  }, [t, defaultSnbcSectoralTrajectoryId, canEdit]) as ColumnDef<TrajectoryRow>[]
+  }, [t, tDocumentation, locale, defaultSnbcSectoralTrajectoryId, canEdit, hasFilters]) as ColumnDef<TrajectoryRow>[]
 
   const tableData = useMemo((): TrajectoryRow[] => {
     const filteredTrajectories = searchFilter ? fuse.search(searchFilter).map(({ item }) => item) : trajectories
@@ -425,6 +446,7 @@ const ObjectivesTable = ({
                 onEditObjective={(objective) => handleEditObjectiveClick(objective, rowData.trajectory)}
                 onDeleteObjective={(id, name) => handleDeleteClick('objective', id, name)}
                 onEditTrajectory={() => handleEditClick(rowData.trajectory)}
+                hasFilters={hasFilters}
               />
             </TableCell>
           </TableRow>
@@ -480,6 +502,7 @@ const ObjectivesTable = ({
             setEditObjective(null)
           }}
           trajectory={objectiveModalTrajectory}
+          studyYear={studyYear}
           onSuccess={handleObjectiveSuccess}
           objective={editObjective || undefined}
           sites={sites}

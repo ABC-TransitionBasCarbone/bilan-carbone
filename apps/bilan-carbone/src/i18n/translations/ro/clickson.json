@@ -1,6 +1,7 @@
 {
   "nav": {
-    "newStudyContributor": "Adaugă un elev"
+    "newStudyContributor": "Adaugă un elev",
+    "home": "Acasă"
   },
   "navigation": {
     "organizations": "Amprentele mele de carbon",
@@ -42,8 +43,8 @@
     "create": "Adaugă o amprentă",
     "myStudies": "Amprentele mele de carbon",
     "createFirstStudy": "Creează prima mea amprentă",
-    "createFirstSimplifiedStudy": "Create",
-    "firstSimplifiedStudyMessage": "It's time to get started! We invite you to create your first simplified carbon footprint.",
+    "createFirstSimplifiedStudy": "Creează prima mea amprentă",
+    "firstSimplifiedStudyMessage": "Este timpul să începi! Te invităm să îți creezi prima amprentă simplificată de carbon.",
     "see": "Vezi amprenta mea",
     "selectSite": "Înainte de a completa datele, te rugăm să selectezi o instituție",
     "lastStudyTitle": "Ultima amprentă",
@@ -51,7 +52,12 @@
       "framing": "Date generale",
       "organizations": "Instituțiile mele",
       "team": "Colaboratorii mei",
-      "title": "Amprenta mea"
+      "title": "Amprenta mea",
+      "informationDefinition": "Definirea informațiilor",
+      "dataAccounting": "Contabilizarea datelor",
+      "dataEntry": "Introducerea datelor",
+      "results": "Rezultate",
+      "transitionPlan": "Plan de tranziție"
     },
     "validatedOnlyDescription": "Ca elev, am acces ca contributor la unul sau mai multe posturi de emisii.",
     "new": {
@@ -128,7 +134,16 @@
       "additionalInfo": "Rezultatele obținute aici reprezintă un calcul simplificat al amprentei de carbon a instituției dumneavoastră și nu respectă cerințele Bilan Carbone® sau reglementările în vigoare. Aceste rezultate au scopul de a vă ajuta să înțelegeți provocările climatice și să identificați prioritățile de acțiune. Având o valoare preponderent pedagogică, calculul amprentei de carbon prin intermediul instrumentului nostru constituie o primă etapă în adaptarea la consecințele schimbărilor climatice."
     },
     "results": {
-      "carbonIntensities": "Amprenta de carbon individuală"
+      "carbonIntensities": "Amprenta de carbon individuală",
+      "analysis": "Analiza emisiilor",
+      "total": "Emisii totale",
+      "downloadPDF": "Descarcă sinteza",
+      "downloadingPDF": "Se descarcă sinteza...",
+      "chartTypes": {
+        "table": "Tabel",
+        "bar": "Grafic cu bare",
+        "pie": "Diagramă circulară"
+      }
     }
   },
   "emissionFactors": {

@@ -23,8 +23,8 @@
       },
       "EquipementsDivers": {
         "question": "Az iskoládban valószínűleg egy vagy több kazán található fűtésre. Ezek a berendezések különféle fosszilis tüzelőanyagokkal (fűtőolaj, földgáz stb.) működnek. Az ilyen berendezések által termelt üvegházhatású gázok (ÜHG) például a fűtőolaj vagy gáz elégetése során szabadulnak fel.",
-        "equipement": "Équipement",
-        "nombre": "Nombre"
+        "equipement": "Felszerelés",
+        "nombre": "Darabszám"
       }
     }
   }

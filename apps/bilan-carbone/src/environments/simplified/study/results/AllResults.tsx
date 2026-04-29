@@ -2,6 +2,7 @@
 
 import SelectStudySite from '@/components/study/site/SelectStudySite'
 import type { FullStudy } from '@/db/study'
+import SheetIcon from '@/environments/simplified/icons/SheetIcon'
 import DownloadIcon from '@mui/icons-material/Download'
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
 import { Box, Button, Tab, Tabs, Typography } from '@mui/material'
@@ -33,6 +34,7 @@ import {
   hasAccessToPDFExport,
   hasAccessToResultsRatioTab,
   hasAccessToSimplifiedEmissionAnalysis,
+  isClickson,
   showResultsInfoText,
 } from '@/services/permissions/environment'
 import type { BaseResultsByPost } from '@/services/posts'
@@ -130,7 +132,7 @@ const AllResults = ({
             variant="contained"
             color="primary"
             size="large"
-            endIcon={<DownloadIcon />}
+            endIcon={environment && isClickson(environment) ? <SheetIcon /> : <DownloadIcon />}
             onClick={() =>
               downloadStudyResults(
                 study,

@@ -37,40 +37,6 @@ interface CalculateCustomTrajectoryParams {
 }
 
 /**
- * Extracts effective objectives (one per breakpoint year) from pre-computed trajectory data points.
- * Computes the average reduction rate per segment so the result can be fed
- * into getObjectivesWithOvershootCompensation.
- */
-const extractEffectiveObjectives = (
-  studyEmissions: number,
-  studyStartYear: number,
-  breakpointYears: number[],
-  dataPoints: TrajectoryDataPoint[],
-): BaseObjective[] => {
-  const getEmissionsAtYear = (year: number): number => {
-    if (year === studyStartYear) {
-      return studyEmissions
-    }
-    return dataPoints.find((p) => p.year === year)?.value ?? studyEmissions
-  }
-
-  const effectiveObjectives: BaseObjective[] = []
-  let prevYear = studyStartYear
-
-  for (const year of breakpointYears) {
-    if (year <= studyStartYear) {
-      continue
-    }
-    const prevEmissions = getEmissionsAtYear(prevYear)
-    const currentEmissions = getEmissionsAtYear(year)
-    const years = year - prevYear
-    const rate = years > 0 && prevEmissions > 0 ? (prevEmissions - currentEmissions) / prevEmissions / years : 0
-    effectiveObjectives.push({ targetYear: year, reductionRate: Math.max(0, rate) })
-    prevYear = year
-  }
-
-  return effectiveObjectives
-} /**
  * Build the custom trajectory without reference until study start year using past studies and the study data
  * Then pick the desired reference value at the target year
  */
@@ -113,20 +79,18 @@ const calculateObjectiveGroupTrajectory = (
 ): TrajectoryDataPoint[] => {
   const groupStates = objectiveGroups.map((group) => {
     const sortedObjectives = [...group.objectives].sort((a, b) => a.targetYear - b.targetYear)
+    // Skip prefix objectives whose targetYear is already reached before the study starts
+    const firstActiveIndex = sortedObjectives.findIndex((o) => o.targetYear > studyStartYear)
+    const objectiveIndex = firstActiveIndex === -1 ? sortedObjectives.length : firstActiveIndex
+    const groupEmissions = studyEmissions * group.ratio
+    const activeObjective = sortedObjectives[objectiveIndex]
     return {
-      emissions: studyEmissions * group.ratio,
+      emissions: groupEmissions,
       objectives: sortedObjectives,
-      objectiveIndex: 0,
-      yearlyReduction: 0,
+      objectiveIndex,
+      yearlyReduction: activeObjective ? groupEmissions * Number(activeObjective.reductionRate) : 0,
     }
   })
-
-  // Compute the first yearly reduction for each group
-  for (const state of groupStates) {
-    if (state.objectives.length > 0) {
-      state.yearlyReduction = state.emissions * Number(state.objectives[0].reductionRate)
-    }
-  }
 
   const lastYear = Math.max(maxYear ?? 0, ...objectiveGroups.flatMap((g) => g.objectives.map((o) => o.targetYear)))
 
@@ -228,44 +192,40 @@ export const calculateCustomTrajectory = ({
   addHistoricalDataAndStudyPoint(dataPoints, pastStudies, studyEmissions, studyStartYear, minYear)
 
   if (objectiveGroups && objectiveGroups.length > 0) {
-    const scopeDataPoints = calculateObjectiveGroupTrajectory(
-      studyEmissions,
-      studyStartYear,
-      objectiveGroups,
-      maxYear ?? 0,
-    )
-
     if (!overshootAdjustment) {
+      const scopeDataPoints = calculateObjectiveGroupTrajectory(
+        studyEmissions,
+        studyStartYear,
+        objectiveGroups,
+        maxYear ?? 0,
+      )
       dataPoints.push(...scopeDataPoints)
       return dataPoints
     }
 
-    const breakpointYears = [...new Set(objectiveGroups.flatMap((g) => g.objectives.map((o) => o.targetYear)))].sort(
-      (a, b) => a - b,
-    )
-    const effectiveObjectives = extractEffectiveObjectives(
+    // Apply overshoot compensation per group independently
+    const compensatedGroups: ObjectiveGroup[] = objectiveGroups.map((group) => {
+      const groupReferenceTrajectory = overshootAdjustment.referenceTrajectory.map((p) => ({
+        year: p.year,
+        value: p.value * group.ratio,
+      }))
+      const correctedObjectives = getObjectivesWithOvershootCompensation(
+        studyEmissions * group.ratio,
+        studyStartYear,
+        group.objectives,
+        { ...overshootAdjustment, referenceTrajectory: groupReferenceTrajectory },
+        pastStudies,
+      )
+      return { ratio: group.ratio, objectives: correctedObjectives }
+    })
+
+    const compensatedDataPoints = calculateObjectiveGroupTrajectory(
       studyEmissions,
       studyStartYear,
-      breakpointYears,
-      scopeDataPoints,
+      compensatedGroups,
+      maxYear ?? 0,
     )
-    const sortedObjectives = getObjectivesWithOvershootCompensation(
-      actualEmissions,
-      studyStartYear,
-      effectiveObjectives,
-      overshootAdjustment,
-      pastStudies,
-    )
-
-    for (const objective of sortedObjectives) {
-      const yearlyReduction = actualEmissions * Number(objective.reductionRate)
-      for (let year = startYear + 1; year <= objective.targetYear; year++) {
-        actualEmissions = Math.max(0, actualEmissions - yearlyReduction)
-        dataPoints.push({ year, value: actualEmissions })
-      }
-      startYear = objective.targetYear
-    }
-
+    dataPoints.push(...compensatedDataPoints)
     return dataPoints
   }
 
@@ -442,7 +402,7 @@ export const getCustomData = (
   minYear: number,
   maxYear: number,
   sectenData: SectenInfo[],
-  objectiveGroupsByTrajectoryId?: Map<string, ObjectiveGroup[]>,
+  objectiveGroupsByTrajectoryId: Map<string, ObjectiveGroup[]>,
 ): {
   customTrajectoriesData: Array<{ id: string; data: TrajectoryData }>
   defaultTrajectoryData: { id: string; data: TrajectoryData } | null

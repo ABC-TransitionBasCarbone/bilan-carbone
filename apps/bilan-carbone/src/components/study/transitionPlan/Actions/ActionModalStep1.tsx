@@ -62,7 +62,7 @@ const ActionModalStep1 = ({ studyUnit, control, setValue, errors, sites, tagFami
       <FormTextField
         control={control}
         name="detailedDescription"
-        label={`${t('detailedDescription')} *`}
+        label={t('detailedDescription')}
         placeholder={t('detailedDescriptionPlaceholder')}
         multiline
         data-testid="add-action-detailedDescription"
