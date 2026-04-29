@@ -8,6 +8,7 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
+      "@repo/css": ["../../packages/css/index.ts"],
       "@repo/survey": ["../../packages/survey/src/index.ts"]
     }
   },

@@ -1,4 +1,5 @@
 import { createTheme } from '@mui/material/styles'
+import { globalTheme } from '@repo/css'
 
 export const theme = createTheme({
   palette: {
@@ -10,12 +11,5 @@ export const theme = createTheme({
       main: '#346fef',
     },
   },
-  typography: {
-    fontFamily: 'gilroy-regular, sans-serif',
-    button: {
-      fontSize: '1rem',
-      textTransform: 'none',
-      fontFamily: 'gilroy-regular, sans-serif',
-    },
-  },
+  typography: globalTheme.typography,
 })

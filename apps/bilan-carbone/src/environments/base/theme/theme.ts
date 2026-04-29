@@ -1,5 +1,6 @@
 import { Post } from '@/services/posts'
 import { createTheme } from '@mui/material/styles'
+import { globalTheme } from '@repo/css'
 import { SubPost } from '@repo/db-common/enums'
 
 const base = createTheme({
@@ -78,40 +79,7 @@ const base = createTheme({
       complementaryTotalColumn: '#ac6cb1',
     },
   },
-  typography: {
-    fontFamily: 'gilroy-regular, sans-serif',
-    button: {
-      fontSize: '1rem',
-      textTransform: 'none',
-      fontFamily: 'gilroy-regular, sans-serif',
-    },
-    h1: {
-      fontSize: '2.5rem',
-      lineHeight: '3.25rem',
-      fontWeight: 800,
-    },
-    h2: {
-      fontWeight: 700,
-      fontSize: '2rem',
-      lineHeight: '2.75rem',
-    },
-    h3: {
-      fontSize: '1.75rem',
-      lineHeight: '2.25rem',
-    },
-    h4: {
-      fontSize: '1.5rem',
-      lineHeight: '2rem',
-    },
-    h5: {
-      fontSize: '1.375rem',
-      lineHeight: '1.75rem',
-    },
-    h6: {
-      fontSize: '1.25rem',
-      lineHeight: '1.75rem',
-    },
-  },
+  typography: globalTheme.typography,
 })
 
 const theme = createTheme(base, {
