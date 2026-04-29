@@ -1,5 +1,6 @@
 import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
 import { getMockeFullStudy } from '@/tests/utils/models/study'
+import { BaseResultsBySite } from '@/types/study.types'
 import { Translations } from '@/types/translation'
 import { hasSufficientLevel } from '@/utils/study'
 import { expect } from '@jest/globals'
@@ -194,31 +195,13 @@ describe('Study Service', () => {
   })
 
   describe('exports', () => {
-    const createTranslations = (translate: (key: string, values?: { unit?: string }) => string): Translations => {
-      const mockedTranslations = ((key: string, values?: { unit?: string }) =>
-        translate(key, values)) as Translations & {
-        rich: jest.Mock
-        markup: jest.Mock
-        raw: jest.Mock
-        has: jest.Mock
-      }
-
-      mockedTranslations.rich = jest.fn((key: string) => translate(key))
-      mockedTranslations.markup = jest.fn((key: string) => translate(key))
-      mockedTranslations.raw = jest.fn((key: string) => translate(key))
-      mockedTranslations.has = jest.fn(() => true)
-
-      return mockedTranslations
-    }
-
-    const t = createTranslations((key) => key)
-    const tStudy = createTranslations((key, values) =>
-      key === 'value' ? `Valeur${values?.unit ? ` (${values.unit})` : ''}` : key,
-    )
-    const tExport = createTranslations((key) => (key === 'value' ? 'Valeur' : key))
-    const tUnits = createTranslations((key) => key)
-    const tUnitsKg = createTranslations((key) => (key ? 'kgCO2e' : key))
-    const computedResults = {
+    const t = ((key: string) => key) as unknown as Translations
+    const tStudy = ((key: string, values?: { unit?: string }) =>
+      key === 'value' ? `Valeur${values?.unit ? ` (${values.unit})` : ''}` : key) as unknown as Translations
+    const tExport = ((key: string) => (key === 'value' ? 'Valeur' : key)) as unknown as Translations
+    const tUnits = ((key: string) => key) as unknown as Translations
+    const tUnitsKg = ((key: string) => (key ? 'kgCO2e' : key)) as unknown as Translations
+    const computedResults: BaseResultsBySite = {
       aggregated: [{ label: 'Total', post: 'total', children: [], value: 12 }],
       bySite: {},
     }
@@ -228,7 +211,7 @@ describe('Study Service', () => {
       const getUserSettingsMock = jest.mocked(getUserSettings)
 
       prepareExcelMock.mockClear()
-      getUserSettingsMock.mockResolvedValue({ success: false })
+      getUserSettingsMock.mockResolvedValue({ success: false, errorMessage: '' })
 
       await downloadStudyResults(
         getMockeFullStudy({
