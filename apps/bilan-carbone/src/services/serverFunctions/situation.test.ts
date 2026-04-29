@@ -32,11 +32,11 @@ jest.mock('../permissions/check', () => ({
   NOT_AUTHORIZED: 'NOT_AUTHORIZED',
 }))
 
-const mockAuth = authModule.auth as jest.Mock
-const mockDbActualizedAuth = authModule.dbActualizedAuth as jest.Mock
-const mockCanSaveSituationOnStudy = situationPermissionsModule.canSaveSituationOnStudy as jest.Mock
-const mockGetStudyById = studyDbModule.getStudyById as jest.Mock
-const mockUpsertSituation = situationDbModule.upsertSituation as jest.Mock
+const mockAuth = jest.mocked(authModule.auth)
+const mockDbActualizedAuth = jest.mocked(authModule.dbActualizedAuth)
+const mockCanSaveSituationOnStudy = jest.mocked(situationPermissionsModule.canSaveSituationOnStudy)
+const mockGetStudyById = jest.mocked(studyDbModule.getStudyById)
+const mockUpsertSituation = jest.mocked(situationDbModule.upsertSituation)
 
 describe('saveSituation', () => {
   const mockSession = {
@@ -48,55 +48,54 @@ describe('saveSituation', () => {
     },
   }
 
+  const mockStudy = {
+    id: 'study-1',
+    contributors: [{ accountId: 'account-1' }],
+    sites: [{ id: 'site-1' }],
+  }
+
   beforeEach(() => {
     jest.clearAllMocks()
-    mockAuth.mockResolvedValue(mockSession)
-    mockDbActualizedAuth.mockResolvedValue(mockSession)
-    mockCanSaveSituationOnStudy.mockResolvedValue(true)
-    mockGetStudyById.mockResolvedValue({
-      id: 'study-1',
-      contributors: [{ accountId: 'account-1' }],
-      sites: [{ id: 'site-1' }],
-    })
-    mockUpsertSituation.mockResolvedValue({ id: 'saved-situation' })
   })
 
-  it('saves situation when user has edit access', async () => {
-    const result = await saveSituation('study-1', 'site-1', {}, {}, 'v1')
-
-    expect(result.success).toBe(true)
-    expect(mockCanSaveSituationOnStudy).toHaveBeenCalled()
-    expect(mockUpsertSituation).toHaveBeenCalledWith('site-1', {}, {}, 'v1')
-  })
-
-  it('saves situation for clickson contributor without edit access', async () => {
-    mockCanSaveSituationOnStudy.mockResolvedValue(true)
-
-    const result = await saveSituation('study-1', 'site-1', {}, {}, 'v1')
-
-    expect(result.success).toBe(true)
-    expect(mockUpsertSituation).toHaveBeenCalledWith('site-1', {}, {}, 'v1')
-  })
-
-  it('returns not authorized when user has no edit access and is not clickson contributor', async () => {
-    mockCanSaveSituationOnStudy.mockResolvedValue(false)
+  it('returns not authorized when there is no session', async () => {
+    mockAuth.mockResolvedValue(null)
+    mockDbActualizedAuth.mockResolvedValue(null)
 
     const result = await saveSituation('study-1', 'site-1', {}, {}, 'v1')
 
     expect(result.success).toBe(false)
     expect((result as { errorMessage: string }).errorMessage).toBe('NOT_AUTHORIZED')
-    expect(mockUpsertSituation).not.toHaveBeenCalled()
   })
 
-  it('returns not authorized for non-clickson contributor without edit access', async () => {
-    mockDbActualizedAuth.mockResolvedValue({
-      ...mockSession,
-      user: { ...mockSession.user, environment: Environment.CUT },
-    })
-    mockAuth.mockResolvedValue({
-      ...mockSession,
-      user: { ...mockSession.user, environment: Environment.CUT },
-    })
+  it('returns not authorized when study or studySite is not found', async () => {
+    mockAuth.mockResolvedValue(mockSession)
+    mockDbActualizedAuth.mockResolvedValue(mockSession)
+    mockGetStudyById.mockResolvedValue(null)
+
+    const result = await saveSituation('study-1', 'site-1', {}, {}, 'v1')
+
+    expect(result.success).toBe(false)
+    expect((result as { errorMessage: string }).errorMessage).toBe('NOT_AUTHORIZED')
+  })
+
+  it('saves situation if user can save situation on study', async () => {
+    mockAuth.mockResolvedValue(mockSession)
+    mockDbActualizedAuth.mockResolvedValue(mockSession)
+    mockGetStudyById.mockResolvedValue(mockStudy)
+    mockCanSaveSituationOnStudy.mockResolvedValue(true)
+    mockUpsertSituation.mockResolvedValue({ id: 'saved-situation' })
+
+    const result = await saveSituation('study-1', 'site-1', {}, {}, 'v1')
+
+    expect(result.success).toBe(true)
+    expect(mockUpsertSituation).toHaveBeenCalledWith('site-1', {}, {}, 'v1')
+  })
+
+  it('returns not authorized if user cannot save situation on study', async () => {
+    mockAuth.mockResolvedValue(mockSession)
+    mockDbActualizedAuth.mockResolvedValue(mockSession)
+    mockGetStudyById.mockResolvedValue(mockStudy)
     mockCanSaveSituationOnStudy.mockResolvedValue(false)
 
     const result = await saveSituation('study-1', 'site-1', {}, {}, 'v1')

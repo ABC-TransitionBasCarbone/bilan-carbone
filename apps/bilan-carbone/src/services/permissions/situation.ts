@@ -2,6 +2,16 @@ import { Environment } from '@repo/db-common/enums'
 import type { UserSession } from 'next-auth'
 import { hasEditAccessOnStudy } from './study'
 
+export const isSimplifiedContributor = (
+  study: { contributors: Array<{ accountId: string }> },
+  session: { user: UserSession },
+) => {
+  return (
+    session.user.environment === Environment.CLICKSON &&
+    study.contributors.some((contributor) => contributor.accountId === session.user.accountId)
+  )
+}
+
 export const canSaveSituationOnStudy = async (
   studyId: string,
   study: { contributors: Array<{ accountId: string }> },
@@ -12,9 +22,5 @@ export const canSaveSituationOnStudy = async (
     return true
   }
 
-  if (session.user.environment !== Environment.CLICKSON) {
-    return false
-  }
-
-  return study.contributors.some((contributor) => contributor.accountId === session.user.accountId)
+  return isSimplifiedContributor(study, session)
 }
