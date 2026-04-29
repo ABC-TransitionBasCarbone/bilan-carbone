@@ -1,7 +1,7 @@
-DROP TRIGGER  IF EXISTS trg_check_matching_source ON bilan_carbone.study_emission_factor_versions;
-DROP FUNCTION IF EXISTS bilan_carbone.check_matching_source();
+DROP TRIGGER  IF EXISTS trg_check_matching_source ON study_emission_factor_versions;
+DROP FUNCTION IF EXISTS check_matching_source();
 
-CREATE FUNCTION bilan_carbone.check_matching_source()
+CREATE FUNCTION check_matching_source()
 RETURNS TRIGGER
 LANGUAGE plpgsql
 AS $$
@@ -10,7 +10,7 @@ DECLARE
 BEGIN
   SELECT source::text
   INTO   real_source
-  FROM   bilan_carbone.emission_factor_import_version
+  FROM   emission_factor_import_version
   WHERE  id = NEW.import_version_id;
 
   /* Si aucune version trouvée, la clé étrangère échouera d'elle-même.     */
@@ -26,6 +26,6 @@ $$;
 
 CREATE TRIGGER trg_check_matching_source
 BEFORE INSERT OR UPDATE
-ON bilan_carbone.study_emission_factor_versions
+ON study_emission_factor_versions
 FOR EACH ROW
-EXECUTE FUNCTION bilan_carbone.check_matching_source();
+EXECUTE FUNCTION check_matching_source();
