@@ -194,21 +194,73 @@ describe('Study Service', () => {
   })
 
   describe('exports', () => {
-    const t = ((key: string) => key) as unknown as Translations
-    const tStudy = ((key: string, values?: { unit?: string }) =>
-      key === 'value' ? `Valeur${values?.unit ? ` (${values.unit})` : ''}` : key) as unknown as Translations
-    const tExport = ((key: string) => (key === 'value' ? 'Valeur' : key)) as unknown as Translations
-    const tUnits = ((key: string) => key) as unknown as Translations
-    const tUnitsKg = ((key: string) => (key ? 'kgCO2e' : key)) as unknown as Translations
+    const createTranslations = (
+      translate: (key: string, values?: { unit?: string }) => string,
+    ): Translations => {
+      const mockedTranslations = ((key: string, values?: { unit?: string }) =>
+        translate(key, values)) as Translations & {
+        rich: jest.Mock
+        markup: jest.Mock
+        raw: jest.Mock
+        has: jest.Mock
+      }
+
+      mockedTranslations.rich = jest.fn((key: string) => translate(key))
+      mockedTranslations.markup = jest.fn((key: string) => translate(key))
+      mockedTranslations.raw = jest.fn((key: string) => translate(key))
+      mockedTranslations.has = jest.fn(() => true)
+
+      return mockedTranslations
+    }
+
+    const t = createTranslations((key) => key)
+    const tStudy = createTranslations((key, values) =>
+      key === 'value' ? `Valeur${values?.unit ? ` (${values.unit})` : ''}` : key,
+    )
+    const tExport = createTranslations((key) => (key === 'value' ? 'Valeur' : key))
+    const tUnits = createTranslations((key) => key)
+    const tUnitsKg = createTranslations((key) => (key ? 'kgCO2e' : key))
+    const computedResults = {
+      aggregated: [{ label: 'Total', post: 'total', children: [], value: 12 }],
+      bySite: {},
+    }
+
+    const getWorkbookSheets = async (environment: Environment) => {
+      const prepareExcelMock = jest.mocked(prepareExcel)
+      const getUserSettingsMock = jest.mocked(getUserSettings)
+
+      prepareExcelMock.mockClear()
+      getUserSettingsMock.mockResolvedValue({ success: false })
+
+      await downloadStudyResults(
+        getMockeFullStudy({
+          resultsUnit: StudyResultUnit.T,
+          exports: { types: [], control: ControlMode.Operational },
+        }),
+        [],
+        [],
+        [],
+        tStudy,
+        tExport,
+        t,
+        t,
+        t,
+        t,
+        t,
+        tUnits,
+        t,
+        environment,
+        computedResults,
+      )
+
+      return prepareExcelMock.mock.calls[0][0]
+    }
 
     it('adds "(tCO2e)" to clickson exported value header', () => {
       const data = formatComputedResultsForExport(
         getMockeFullStudy({ resultsUnit: StudyResultUnit.T }),
         [{ name: 'Tous les sites', id: 'all' }],
-        {
-          aggregated: [{ label: 'Total', post: 'total', children: [], value: 12 }],
-          bySite: {},
-        },
+        computedResults,
         tStudy,
         tExport,
         tUnits,
@@ -222,10 +274,7 @@ describe('Study Service', () => {
       const data = formatComputedResultsForExport(
         getMockeFullStudy({ resultsUnit: StudyResultUnit.K }),
         [{ name: 'Tous les sites', id: 'all' }],
-        {
-          aggregated: [{ label: 'Total', post: 'total', children: [], value: 12 }],
-          bySite: {},
-        },
+        computedResults,
         tStudy,
         tExport,
         tUnitsKg,
@@ -236,71 +285,13 @@ describe('Study Service', () => {
     })
 
     it('does not include "Export au format Bilan Carbone®" sheet for CLICKSON', async () => {
-      const prepareExcelMock = prepareExcel as jest.Mock
-      const getUserSettingsMock = getUserSettings as jest.Mock
-      prepareExcelMock.mockClear()
-      getUserSettingsMock.mockResolvedValue({ success: false })
-
-      await downloadStudyResults(
-        getMockeFullStudy({
-          resultsUnit: StudyResultUnit.T,
-          exports: { types: [], control: ControlMode.Operational },
-        }),
-        [],
-        [],
-        [],
-        tStudy,
-        tExport,
-        t,
-        t,
-        t,
-        t,
-        t,
-        tUnits,
-        t,
-        Environment.CLICKSON,
-        {
-          aggregated: [{ label: 'Total', post: 'total', children: [], value: 12 }],
-          bySite: {},
-        },
-      )
-
-      const workbookSheets = prepareExcelMock.mock.calls[0][0]
+      const workbookSheets = await getWorkbookSheets(Environment.CLICKSON)
       expect(workbookSheets).toHaveLength(1)
       expect(workbookSheets.some((sheet: { name: string }) => sheet.name === 'bc.title')).toBe(false)
     })
 
     it('includes "Export au format Bilan Carbone®" sheet for CUT', async () => {
-      const prepareExcelMock = prepareExcel as jest.Mock
-      const getUserSettingsMock = getUserSettings as jest.Mock
-      prepareExcelMock.mockClear()
-      getUserSettingsMock.mockResolvedValue({ success: false })
-
-      await downloadStudyResults(
-        getMockeFullStudy({
-          resultsUnit: StudyResultUnit.T,
-          exports: { types: [], control: ControlMode.Operational },
-        }),
-        [],
-        [],
-        [],
-        tStudy,
-        tExport,
-        t,
-        t,
-        t,
-        t,
-        t,
-        tUnits,
-        t,
-        Environment.CUT,
-        {
-          aggregated: [{ label: 'Total', post: 'total', children: [], value: 12 }],
-          bySite: {},
-        },
-      )
-
-      const workbookSheets = prepareExcelMock.mock.calls[0][0]
+      const workbookSheets = await getWorkbookSheets(Environment.CUT)
       expect(workbookSheets).toHaveLength(2)
       expect(workbookSheets.some((sheet: { name: string }) => sheet.name === 'bc.title')).toBe(true)
     })

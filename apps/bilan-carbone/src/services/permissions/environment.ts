@@ -29,6 +29,7 @@ export const hasWasteImpact = isAdvanced
 
 export const hasAccessToBcExport = isTilt
 export const hasAccessToSimplifiedBcExport = isCut
+export const hasFixedResultsExportValueUnit = isClickson
 
 export const hasAccessToDependencyMatrix = isTilt
 

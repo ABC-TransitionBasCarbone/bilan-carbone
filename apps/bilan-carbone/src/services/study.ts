@@ -23,7 +23,11 @@ import type { ResultType } from '../types/study.types'
 import { AdditionalResultTypes, BaseResultsBySite, ResultsByPost } from '../types/study.types'
 import { getEmissionResults, getEmissionSourceEmission } from './emissionSource'
 import { download } from './file'
-import { hasAccessToBcExport, hasAccessToSimplifiedBcExport } from './permissions/environment'
+import {
+  hasAccessToBcExport,
+  hasAccessToSimplifiedBcExport,
+  hasFixedResultsExportValueUnit,
+} from './permissions/environment'
 import {
   convertSimplifiedEnvToBilanCarbone,
   convertTiltSubPostToBCSubPost,
@@ -335,7 +339,7 @@ const getFormattedHeadersForEnv = (
       return traduction(header)
     }
 
-    if (environment === Environment.CLICKSON) {
+    if (hasFixedResultsExportValueUnit(environment)) {
       return `${traduction(header)} (tCO2e)`
     }
 
