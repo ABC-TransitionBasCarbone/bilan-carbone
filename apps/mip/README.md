@@ -41,7 +41,7 @@ yarn install
 yarn dev
 
 # Or from monorepo root
-yarn workspace mip-survey dev
+yarn workspace mip dev
 ```
 
 ### Build
