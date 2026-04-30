@@ -43,7 +43,8 @@
       "selectAll": "Select all",
       "unselectAll": "Unselect all",
       "back": "Back",
-      "import": "Import"
+      "import": "Import",
+      "export": "Export"
     },
     "questions": {
       "glossary": {

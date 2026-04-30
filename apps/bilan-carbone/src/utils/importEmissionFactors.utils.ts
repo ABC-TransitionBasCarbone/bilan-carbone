@@ -4,10 +4,11 @@ import frBc from '@/i18n/translations/fr/bc.json'
 import { environmentPostMapping, environmentSubPostsMapping } from '@/services/posts'
 import { EmissionFactorBase, Environment, SubPost, Unit } from '@repo/db-common/enums'
 import { ManualEmissionFactorUnitList } from './emissionFactors'
+import { extractAllForms, getSingularForm } from './translation.utils'
 
 type BcTranslations = typeof frBc
 
-function getBcTranslations(locale: LocaleType): BcTranslations {
+export function getBcTranslations(locale: LocaleType): BcTranslations {
   return locale === Locale.FR ? frBc : enBc
 }
 
@@ -84,22 +85,22 @@ export function mapSubPostLabelFromTranslations(
   locale: LocaleType,
   environment: Environment,
 ): SubPost | null {
-  const envSubPosts = Object.keys(environmentSubPostsMapping[environment])
+  const envSubPosts = Object.values(environmentSubPostsMapping[environment]).flat()
   return mapLabelFromTranslations(label, locale, (bc) =>
     buildLabelMap(
       bc.emissionFactors.post,
-      (k) => envSubPosts.includes(k),
+      (k) => envSubPosts.includes(k as SubPost),
       (k) => k as SubPost,
     ),
   )
 }
 
-function extractUnitForms(value: string): string[] {
-  const icuMatch = value.match(/\{[^}]+\}/g)
-  if (icuMatch) {
-    return icuMatch.map((s) => s.slice(1, -1).trim())
+export function getUnitLabel(unit: Unit, locale: LocaleType): string {
+  const raw = (getBcTranslations(locale).units as Record<string, string>)[unit]
+  if (!raw) {
+    return unit
   }
-  return [value.trim()]
+  return getSingularForm(raw)
 }
 
 function buildUnitLabelMap(bc: BcTranslations): Record<string, Unit> {
@@ -109,7 +110,7 @@ function buildUnitLabelMap(bc: BcTranslations): Record<string, Unit> {
     if (!raw) {
       continue
     }
-    for (const form of extractUnitForms(raw)) {
+    for (const form of extractAllForms(raw)) {
       entries.push([form.toLowerCase(), unit])
     }
   }
@@ -118,6 +119,25 @@ function buildUnitLabelMap(bc: BcTranslations): Record<string, Unit> {
 
 export function mapUnitLabelFromTranslations(label: string | undefined | null, locale: LocaleType): Unit | null {
   return mapLabelFromTranslations(label, locale, buildUnitLabelMap)
+}
+
+export function buildPostsAndSubPostsCell(subPosts: SubPost[], locale: LocaleType, environment: Environment): string {
+  const postTranslations = getBcTranslations(locale).emissionFactors.post as unknown as Record<string, string>
+  const subPostsByPost = environmentSubPostsMapping[environment] as Record<string, SubPost[]>
+  const envPosts = environmentPostMapping[environment]
+
+  const groups: string[] = []
+  for (const post of Object.values(envPosts)) {
+    const allowed = subPostsByPost[post as string] ?? []
+    const matching = subPosts.filter((sp) => allowed.includes(sp))
+    if (matching.length === 0) {
+      continue
+    }
+    const postLabel = postTranslations[post as string] ?? (post as string)
+    const subPostLabels = matching.map((sp) => postTranslations[sp] ?? sp).join(' | ')
+    groups.push(`${postLabel} : ${subPostLabels}`)
+  }
+  return groups.join(' || ')
 }
 
 type ParseError = { key: string; value?: string }

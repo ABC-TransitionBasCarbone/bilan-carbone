@@ -1,11 +1,14 @@
 'use server'
 
 import { getAccountById } from '@/db/account'
-import { createEmissionFactorWithParts } from '@/db/emissionFactors'
+import { createEmissionFactorWithParts, getManualEmissionFactorsByOrganization } from '@/db/emissionFactors'
 import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
 import { environmentSubPostsMapping } from '@/services/posts'
 import {
+  buildPostsAndSubPostsCell,
+  getBcTranslations,
+  getUnitLabel,
   mapBaseLabelFromTranslations,
   mapQualityLabelFromTranslations,
   mapUnitLabelFromTranslations,
@@ -20,6 +23,7 @@ import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canCreateEmissionFactor } from '../permissions/emissionFactor.server'
 import { EmissionFactorCommandValidation } from './emissionFactor.command'
+import { prepareExcel } from './file'
 import { getFileUrlFromBucket } from './scaleway'
 
 type ImportError = {
@@ -299,7 +303,7 @@ function buildCreateInput(row: ParsedRow, organizationId: string, locale: Locale
       importedFrom: Import.Manual,
       status: EmissionFactorStatus.Valid,
       organization: { connect: { id: organizationId } },
-      unit: command.unit as Unit,
+      unit: command.unit,
       subPosts: flattenSubposts(subPosts),
       metaData: { create: { language: locale, title: name, attribute, comment } },
     },
@@ -326,6 +330,77 @@ export async function importEmissionFactorsFromFile(file: File): Promise<ImportE
   }
 
   return { success: true, count: result.rows.length }
+}
+
+export async function exportManualEmissionFactorsToFile(): Promise<ArrayBuffer> {
+  const account = await checkAuth()
+  const locale = await getLocale()
+  const bc = getBcTranslations(locale)
+  const baseTranslations = bc.emissionFactors.base
+  const qualityTranslations = bc.quality as Record<string, string>
+
+  const organizationId = account.organizationVersion!.organizationId
+  const emissionFactors = await getManualEmissionFactorsByOrganization(organizationId)
+
+  const c = bc.emissionFactors.create
+  const tbl = bc.emissionFactors.table
+  const header = [
+    c.name,
+    c.attribute,
+    c.location,
+    c.source,
+    c.unit,
+    c.customUnit,
+    c.totalCo2,
+    c.co2f,
+    c.ch4f,
+    c.ch4b,
+    c.n2o,
+    c.co2b,
+    c.sf6,
+    c.hfc,
+    c.pfc,
+    c.otherGES,
+    tbl.reliability.replace(/ :$/, ''),
+    tbl.technicalRepresentativeness.replace(/ :$/, ''),
+    tbl.geographicRepresentativeness.replace(/ :$/, ''),
+    tbl.temporalRepresentativeness.replace(/ :$/, ''),
+    tbl.completeness.replace(/ :$/, ''),
+    c.post,
+    c.base,
+    c.comment,
+  ]
+  const rows: (string | number)[][] = emissionFactors.map((ef) => {
+    const metaData = ef.metaData.find((m) => m.language === locale) ?? ef.metaData[0]
+    return [
+      metaData?.title ?? '',
+      metaData?.attribute ?? '',
+      ef.location ?? '',
+      ef.source ?? '',
+      ef.unit ? getUnitLabel(ef.unit, locale) : '',
+      ef.customUnit ?? '',
+      ef.totalCo2,
+      ef.co2f ?? '',
+      ef.ch4f ?? '',
+      ef.ch4b ?? '',
+      ef.n2o ?? '',
+      ef.co2b ?? '',
+      ef.sf6 ?? '',
+      ef.hfc ?? '',
+      ef.pfc ?? '',
+      ef.otherGES ?? '',
+      qualityTranslations[String(ef.reliability)] ?? '',
+      qualityTranslations[String(ef.technicalRepresentativeness)] ?? '',
+      qualityTranslations[String(ef.geographicRepresentativeness)] ?? '',
+      qualityTranslations[String(ef.temporalRepresentativeness)] ?? '',
+      qualityTranslations[String(ef.completeness)] ?? '',
+      buildPostsAndSubPostsCell(ef.subPosts, locale, account.environment),
+      ef.base ? (baseTranslations[ef.base] ?? ef.base) : '',
+      metaData?.comment ?? '',
+    ]
+  })
+
+  return prepareExcel([{ name: "Facteurs d'émission", data: [header, ...rows], options: {} }])
 }
 
 export const getImportEmissionFactorsTemplateUrl = async () =>

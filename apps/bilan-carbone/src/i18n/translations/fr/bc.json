@@ -1505,8 +1505,7 @@
     }
   },
   "emissionFactors": {
-    "add": "Ajouter un facteur d'émission",
-    "import": "Importer des facteurs d'émission",
+    "exportFileName": "emission-factors-export.xlsx",
     "importModal": {
       "title": "Import de facteurs d'émission",
       "downloadTemplate": "Télécharger le modèle d'import",
