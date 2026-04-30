@@ -128,7 +128,6 @@ const ObjectivesTable = ({
   const [pendingTrajectory, setPendingTrajectory] = useState<TrajectoryWithObjectivesAndScope | null>(null)
 
   const fuse = useMemo(() => new Fuse(trajectories, fuseOptions), [trajectories])
-
   const trajectoryDataMap = useMemo(() => {
     const map = new Map<string, TrajectoryDisplayData>()
 

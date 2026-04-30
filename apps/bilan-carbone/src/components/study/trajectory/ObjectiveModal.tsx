@@ -63,6 +63,7 @@ const ObjectiveModal = ({
         subPosts: objective.subPosts.length > 0 ? objective.subPosts.map((sp) => sp.subPost) : allEnvSubPosts,
         objectives: [
           {
+            name: objective.name ?? '',
             startYear: objective.startYear?.toString(),
             targetYear: objective.targetYear.toString(),
             reductionRate: Number((objective.reductionRate * 100).toFixed(2)),
@@ -70,6 +71,7 @@ const ObjectiveModal = ({
         ],
       }
     : {
+        name: '',
         siteIds: allSiteIds,
         tagIds: allTagIds,
         subPosts: allEnvSubPosts,
@@ -109,6 +111,7 @@ const ObjectiveModal = ({
         () =>
           updateSubObjective({
             id: objective.id,
+            name: obj.name,
             targetYear: getYearFromDateStr(obj.targetYear!),
             startYear: getYearFromDateStr(obj.startYear!),
             reductionRate: Number((obj.reductionRate! / 100).toFixed(4)),
@@ -137,6 +140,7 @@ const ObjectiveModal = ({
       }
 
       const objectivesToCreate = validObjectives.map((obj) => ({
+        name: obj.name,
         trajectoryId: trajectory.id,
         targetYear: getYearFromDateStr(obj.targetYear!),
         startYear: getYearFromDateStr(obj.startYear!),
@@ -224,7 +228,9 @@ const ObjectiveModal = ({
               />
             ))}
             {!isEditing && (
-              <AddObjectiveButton onClick={() => append({ startYear: '', targetYear: '', reductionRate: 0 })} />
+              <AddObjectiveButton
+                onClick={() => append({ startYear: '', targetYear: '', reductionRate: 0, name: '' })}
+              />
             )}
           </div>
         </div>

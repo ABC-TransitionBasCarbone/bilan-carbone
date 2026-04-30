@@ -1232,7 +1232,9 @@
           "reductionRatePlaceholder": "Give a reduction % (e.g., 2.5)",
           "referenceRate": "Base rate",
           "correctedRate": "Adjusted rate",
-          "overshootInfo": "Rate adjusted to compensate for overshoot"
+          "overshootInfo": "Rate adjusted to compensate for overshoot",
+          "name": "Nom",
+          "namePlaceholder": "Give a name to my subobjective"
         },
         "validation": {
           "required": "Required field",

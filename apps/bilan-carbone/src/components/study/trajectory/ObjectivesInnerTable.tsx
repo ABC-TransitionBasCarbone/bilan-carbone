@@ -30,9 +30,10 @@ interface Props {
   isDefaultSnbc: boolean
   title?: string
   hasFilters?: boolean
+  isCustom: boolean
 }
 
-const ObjectivesInnerTable = ({ rows, canEdit, isDefaultSnbc, title, hasFilters = false }: Props) => {
+const ObjectivesInnerTable = ({ rows, canEdit, isDefaultSnbc, title, hasFilters = false, isCustom }: Props) => {
   const t = useTranslations('study.transitionPlan.objectives')
   const tDocumentation = useTranslations('documentationUrl')
   const locale = useLocale()
@@ -40,6 +41,14 @@ const ObjectivesInnerTable = ({ rows, canEdit, isDefaultSnbc, title, hasFilters 
 
   const columns = useMemo((): ColumnDef<ObjectiveRow>[] => {
     const cols: ColumnDef<ObjectiveRow>[] = [
+      ...(isCustom
+        ? [
+            {
+              header: t('table.name'),
+              accessorKey: 'name',
+            },
+          ]
+        : []),
       {
         header: t('table.period'),
         accessorKey: 'period',

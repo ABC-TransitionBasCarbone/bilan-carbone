@@ -1232,7 +1232,9 @@
           "reductionRatePlaceholder": "Donnez un % de réduction (ex: 2.5)",
           "referenceRate": "Taux de réduction annuel de référence",
           "correctedRate": "Taux de réduction annuel corrigé",
-          "overshootInfo": "Taux ajusté pour compenser l'overshoot"
+          "overshootInfo": "Taux ajusté pour compenser l'overshoot",
+          "name": "Nom",
+          "namePlaceholder": "Donner un nom à mon sous-objectif"
         },
         "validation": {
           "required": "Champs requis",

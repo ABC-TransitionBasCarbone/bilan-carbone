@@ -22,6 +22,7 @@ import { NOT_AUTHORIZED } from '../permissions/check'
 import { hasEditAccessOnStudy } from '../permissions/study'
 
 export interface CreateObjectiveInput {
+  name?: string
   trajectoryId: string
   targetYear: number
   startYear?: number
@@ -33,6 +34,7 @@ export interface CreateObjectiveInput {
 
 export interface UpdateObjectiveInput {
   id: string
+  name?: string
   targetYear: number
   startYear?: number
   reductionRate: number
@@ -145,6 +147,7 @@ export const updateSubObjective = async (input: UpdateObjectiveInput) =>
           targetYear: input.targetYear,
           startYear: input.startYear,
           reductionRate: input.reductionRate,
+          name: input.name,
         },
         tx,
       )

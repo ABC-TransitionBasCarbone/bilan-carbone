@@ -45,6 +45,7 @@ const createMockTrajectory = (
       sites: [],
       tags: [],
       subPosts: [],
+      name: 'Test Objective 1',
     },
     {
       id: 'objective-2',
@@ -58,6 +59,7 @@ const createMockTrajectory = (
       sites: [],
       tags: [],
       subPosts: [],
+      name: 'Test Objective 2',
     },
   ],
   ...overrides,
