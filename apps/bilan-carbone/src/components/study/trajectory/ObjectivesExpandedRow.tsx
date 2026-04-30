@@ -196,7 +196,7 @@ const ObjectivesExpandedRow = ({
           isDefaultSnbc={isDefaultSnbc}
           title={t('table.defaultObjectives')}
           hasFilters={hasFilters}
-          isCustom={false}
+          isCustom={isCustom}
         />
       )}
       {!isDefaultSnbc && (

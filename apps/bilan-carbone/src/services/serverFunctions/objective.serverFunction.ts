@@ -93,7 +93,10 @@ export const createSubObjectives = async (inputs: CreateObjectiveInput[]) =>
 
       const createdObjectives = await createManyObjectivesAndReturn(
         inputs.map((input) => ({
-          ...input,
+          trajectoryId: input.trajectoryId,
+          targetYear: input.targetYear,
+          startYear: input.startYear,
+          reductionRate: input.reductionRate,
           isDefault: false,
         })),
         tx,
