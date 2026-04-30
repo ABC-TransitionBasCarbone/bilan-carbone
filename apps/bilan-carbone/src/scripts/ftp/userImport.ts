@@ -51,7 +51,11 @@ const normalizeRecord = (raw: RawFTPRecord): UserImportRecord => {
 
   const rawTrainings = raw.trainings
   const trainings: Training[] | string | undefined =
-    Array.isArray(rawTrainings) || typeof rawTrainings === 'string' ? (rawTrainings as Training[] | string) : undefined
+    typeof rawTrainings === 'string'
+      ? rawTrainings
+      : Array.isArray(rawTrainings)
+        ? (rawTrainings as Training[])
+        : undefined
 
   return {
     firstName: getString('firstName', 'Firstname'),
