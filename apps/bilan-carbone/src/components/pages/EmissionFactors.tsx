@@ -5,6 +5,7 @@ import { getTranslations } from 'next-intl/server'
 import { Suspense } from 'react'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
+import EmissionFactorButtons from '../emissionFactor/EmissionFactorButtons'
 import EmissionFactors from '../emissionFactor/EmissionFactors'
 import withAuth, { UserSessionProps } from '../hoc/withAuth'
 
@@ -26,17 +27,10 @@ const EmissionFactorsPage = async ({ userOrganizationId, environment, user }: Pr
       <Block
         title={t('title')}
         as="h1"
-        actions={
-          userOrganizationId && activeLicence
-            ? [
-                {
-                  actionType: 'link',
-                  href: '/facteurs-d-emission/creer',
-                  'data-testid': 'new-emission',
-                  children: t('add'),
-                },
-              ]
-            : undefined
+        rightComponent={
+          userOrganizationId && activeLicence ? (
+            <EmissionFactorButtons addHref="/facteurs-d-emission/creer" />
+          ) : undefined
         }
       >
         <Suspense fallback={t('loading')}>

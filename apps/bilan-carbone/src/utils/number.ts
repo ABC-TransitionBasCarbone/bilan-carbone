@@ -56,3 +56,15 @@ export const CA_UNIT_VALUES: Record<SiteCAUnit, number> = {
 }
 
 export const defaultCAUnit = SiteCAUnit.K
+
+export function parseNumericValue(value: string | number | undefined | null): number | null {
+  if (value === null || value === undefined || value === '') {
+    return null
+  }
+  if (typeof value === 'number') {
+    return isNaN(value) ? null : value
+  }
+  const normalized = String(value).trim().replace(',', '.')
+  const parsed = parseFloat(normalized)
+  return isNaN(parsed) ? null : parsed
+}

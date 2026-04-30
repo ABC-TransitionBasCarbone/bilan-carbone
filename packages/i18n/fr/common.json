@@ -41,7 +41,9 @@
       "close": "Fermer",
       "approve": "Approuver",
       "selectAll": "Tout sélectionner",
-      "unselectAll": "Tout désélectionner"
+      "unselectAll": "Tout désélectionner",
+      "back": "Retour",
+      "import": "Importer"
     },
     "questions": {
       "glossary": {
@@ -55,7 +57,12 @@
       "sites": "Sites",
       "date": "Date",
       "startYear": "Année de début",
-      "targetYear": "Année cible"
+      "targetYear": "Année cible",
+      "line": "Ligne {line}",
+      "labelName": "Libellé",
+      "source": "Source",
+      "unit": "Unité",
+      "emissionsKg": "Émissions (kgCO2e)"
     },
     "notAuthorized": "Action non authorisée",
     "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
