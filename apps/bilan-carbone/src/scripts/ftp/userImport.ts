@@ -49,14 +49,6 @@ const normalizeRecord = (raw: RawFTPRecord): UserImportRecord => {
     return typeof val === 'string' ? val : undefined
   }
 
-  const rawTrainings = raw.trainings
-  const trainings: Training[] | string | undefined =
-    typeof rawTrainings === 'string'
-      ? rawTrainings
-      : Array.isArray(rawTrainings)
-        ? (rawTrainings as Training[])
-        : undefined
-
   return {
     firstName: getString('firstName', 'Firstname'),
     lastName: getString('lastName', 'Lastname'),
@@ -69,7 +61,7 @@ const normalizeRecord = (raw: RawFTPRecord): UserImportRecord => {
     vat: getString('vat', 'VAT'),
     taxNumber: getString('taxNumber', 'Tax_Number'),
     membershipYear: getString('membershipYear', 'Membership_Year'),
-    trainings,
+    trainings: raw.trainings as Training[] | string | undefined,
     source: getString('source', 'User_Source'),
     environment: getString('environment', 'Environment'),
     formationName: getString('formationName', 'Formation_Name'),
