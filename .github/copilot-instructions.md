@@ -20,7 +20,7 @@ This is a Next.js monorepo for the "Bilan Carbone" platform, focused on carbon a
   - Start dev server: `npx next dev --turbopack --port 3001`
   - Prisma Studio: `npx prisma studio`
 - **Testing**:
-  - Run Cypress: `npx cypress run --spec "src/tests/end-to-end/app/register-cut.cy.ts"`
+  - Run Cypress: `npx cypress run --spec "src/tests/end-to-end/app/auth/register-cut.cy.ts"`
   - Run Jest: `npx jest`
 - **Data Import**:
   - Example:  
