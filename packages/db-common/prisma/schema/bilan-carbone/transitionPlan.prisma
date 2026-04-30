@@ -245,6 +245,7 @@ model Objective {
   trajectoryId String     @map("trajectory_id")
   trajectory   Trajectory @relation(fields: [trajectoryId], references: [id], onDelete: Cascade)
 
+  name          String? @default("")
   targetYear    Int     @map("target_year")
   startYear     Int?    @map("start_year")
   reductionRate Float   @map("reduction_rate")

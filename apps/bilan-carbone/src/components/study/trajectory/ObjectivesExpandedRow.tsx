@@ -175,9 +175,8 @@ const ObjectivesExpandedRow = ({
     const correctedRate = getDisplayedCorrectedRatesForPeriod(startYear, objective.targetYear)
 
     return {
-      id: objective.id,
+      ...objective,
       period: getPeriod(startYear, objective.targetYear),
-      reductionRate: objective.reductionRate,
       correctedRate,
       sites: getSitesDisplay(objective),
       posts: getSubPostsDisplay(objective),
@@ -197,6 +196,7 @@ const ObjectivesExpandedRow = ({
           isDefaultSnbc={isDefaultSnbc}
           title={t('table.defaultObjectives')}
           hasFilters={hasFilters}
+          isCustom={false}
         />
       )}
       {!isDefaultSnbc && (
@@ -212,6 +212,7 @@ const ObjectivesExpandedRow = ({
               rows={subObjectiveRows}
               canEdit={canEdit}
               isDefaultSnbc={isDefaultSnbc}
+              isCustom={isCustom}
               hasFilters={hasFilters}
             />
           ) : canEdit ? (

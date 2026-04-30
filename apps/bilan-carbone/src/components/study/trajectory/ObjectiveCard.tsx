@@ -96,6 +96,14 @@ const ObjectiveCard = <T extends TrajectoryFormData | ObjectiveModalFormData>({
             </div>
           ) : (
             <div className="flex-col gapped1">
+              <FormTextField
+                name={`objectives.${index}.name` as FieldPath<T>}
+                label={t('objectives.name')}
+                control={control}
+                className="w100"
+                placeholder={t('objectives.namePlaceholder')}
+                data-testid="objective-name-input"
+              />
               {!isDefault && (
                 <FormDatePicker
                   name={`objectives.${index}.startYear` as FieldPath<T>}

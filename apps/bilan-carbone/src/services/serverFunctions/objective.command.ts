@@ -5,6 +5,7 @@ import { z } from 'zod'
 export const createObjectiveFormSchema = ({ referenceYear }: { referenceYear?: number } = {}) =>
   z
     .object({
+      name: z.string(),
       startYear: z.string().min(1),
       targetYear: z.string().min(1),
       reductionRate: z.number(),

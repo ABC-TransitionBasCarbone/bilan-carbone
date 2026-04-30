@@ -31,6 +31,7 @@ export const getObjectiveWithTransitionPlan = async (id: string) => {
 
 export const createManyObjectivesAndReturn = async (
   objectives: Array<{
+    name: string
     trajectoryId: string
     targetYear: number
     startYear?: number
@@ -69,6 +70,7 @@ export const updateObjective = async (
     targetYear: number
     startYear?: number
     reductionRate: number
+    name: string
   },
   tx: Prisma.TransactionClient,
 ) => {
