@@ -35,6 +35,7 @@ This is a Next.js monorepo for the "Bilan Carbone" platform, focused on carbon a
 - **Prisma Usage**:
   - Raw SQL queries use `Prisma.sql` and are only passed to `$queryRaw` for SELECTs.
   - All mutations (INSERT/UPDATE/DELETE) use Prisma model methods, not raw SQL.
+  - **Never modify already-applied Prisma migrations.** If a schema change is needed (e.g., moving triggers/functions to a new schema), create a new migration instead of editing existing ones.
 - **Feature Folders**:
   - UI and logic are grouped by feature (e.g., `src/components/emissionFactor/`, `src/app/(dashboard)/`).
 - **Metadata Handling**:
