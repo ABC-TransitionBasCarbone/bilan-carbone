@@ -63,7 +63,7 @@ const ObjectiveModal = ({
         subPosts: objective.subPosts.length > 0 ? objective.subPosts.map((sp) => sp.subPost) : allEnvSubPosts,
         objectives: [
           {
-            name: objective.name,
+            name: objective.name ?? '',
             startYear: objective.startYear?.toString(),
             targetYear: objective.targetYear.toString(),
             reductionRate: Number((objective.reductionRate * 100).toFixed(2)),
