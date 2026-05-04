@@ -71,11 +71,6 @@ function PublicodesAutoSaveProvider<RuleName extends string = string>({
   const { showSuccessToast } = useToast()
   const { engine, situation, listLayoutSituations, setSituation, studySiteId, config } =
     usePublicodesSituation<RuleName>()
-  // NOTE: we use refs to always have the latest situation values in the
-  // callbacks, without having to add them to the dependency arrays.
-  const currentSituationRef = useLatestRef(situation)
-  const currentListLayoutSituationsRef = useLatestRef(listLayoutSituations)
-
   const lastSyncedAt = useRef<Date>(new Date())
 
   const autoSave = useSituationAutoSave({
@@ -89,13 +84,21 @@ function PublicodesAutoSaveProvider<RuleName extends string = string>({
     when: autoSave.hasUnsavedChanges,
   })
 
+  // NOTE: we use refs to always have the latest values in the callbacks,
+  // without having to add them to the dependency arrays.
+  const currentSituationRef = useLatestRef(situation)
+  const currentListLayoutSituationsRef = useLatestRef(listLayoutSituations)
+  const hasUnsavedChangesRef = useLatestRef(autoSave.hasUnsavedChanges)
+  const showSuccessToastRef = useLatestRef(showSuccessToast)
+  const tRef = useLatestRef(t)
+
   useEffect(() => {
     if (!syncIntervalMs || syncIntervalMs <= 0 || !studySiteId) {
       return
     }
 
     const syncFromDB = async () => {
-      if (autoSave.hasUnsavedChanges) {
+      if (hasUnsavedChangesRef.current) {
         return
       }
 
@@ -107,10 +110,14 @@ function PublicodesAutoSaveProvider<RuleName extends string = string>({
 
         const dbUpdatedAt = result.data.updatedAt ? new Date(result.data.updatedAt) : null
         const situationInDB = (result.data.situation ?? {}) as Situation<RuleName>
-        if (dbUpdatedAt && dbUpdatedAt > lastSyncedAt.current && !situationsAreEqual(situationInDB, situation ?? {})) {
+        if (
+          dbUpdatedAt &&
+          dbUpdatedAt > lastSyncedAt.current &&
+          !situationsAreEqual(situationInDB, currentSituationRef.current ?? {})
+        ) {
           setSituation(situationInDB)
           lastSyncedAt.current = dbUpdatedAt
-          showSuccessToast(t('syncedFromOtherUser'))
+          showSuccessToastRef.current(tRef.current('syncedFromOtherUser'))
         }
       } catch (err) {
         console.warn('Failed to sync situation from DB:', err)
@@ -122,7 +129,7 @@ function PublicodesAutoSaveProvider<RuleName extends string = string>({
     return () => {
       clearInterval(interval)
     }
-  }, [studyId, studySiteId, syncIntervalMs, autoSave.hasUnsavedChanges, setSituation, situation, showSuccessToast, t])
+  }, [studyId, studySiteId, syncIntervalMs, setSituation])
 
   const updateField = useCallback(
     (ruleName: RuleName, value: string | number | boolean | undefined) => {
@@ -198,7 +205,15 @@ function PublicodesAutoSaveProvider<RuleName extends string = string>({
       lastSaved: autoSave.lastSaved,
       saveError: autoSave.error,
     }),
-    [updateField, autoSave],
+    [
+      updateField,
+      updateListLayoutSituation,
+      createNewListLayoutSituation,
+      deleteListLayoutSituation,
+      autoSave.saveStatus,
+      autoSave.lastSaved,
+      autoSave.error,
+    ],
   )
 
   return (
