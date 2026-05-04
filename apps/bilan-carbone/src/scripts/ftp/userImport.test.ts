@@ -168,6 +168,50 @@ describe('processUsers', () => {
     expect(consoleLogSpy).toHaveBeenCalledWith('2 accounts created')
   })
 
+  it('handles old PascalCase FTP format (without trainings) and maps fields correctly', async () => {
+    jest.mocked(getAccountByEmailAndEnvironment).mockResolvedValue(null)
+    jest.mocked(createUsersWithAccount).mockResolvedValue({
+      newUsers: { count: 1 },
+      newAccounts: { count: 1 },
+    })
+
+    const importedFileDate = new Date('2026-01-15T12:00:00.000Z')
+    await processUsers(
+      [
+        {
+          User_Login: '',
+          User_Email: 'test@yopmail.com',
+          Order_Date: '',
+          Purchased_Products: 'adhesion_conseil',
+          Session_Code: 'BCM2',
+          Session_Date: '',
+          Company_Name: '',
+          SIRET: '53817009300032',
+          Country: '',
+          Membership_Year: '2026;',
+          Organization_Category: '',
+          Organization_Manager: '',
+        },
+      ],
+      importedFileDate,
+    )
+
+    expect(createUsersWithAccount).toHaveBeenCalledTimes(1)
+    expect(createUsersWithAccount).toHaveBeenCalledWith([
+      expect.objectContaining({
+        email: 'test@yopmail.com',
+        level: Level.Advanced,
+        account: expect.objectContaining({
+          role: Role.COLLABORATOR,
+          status: UserStatus.IMPORTED,
+          environment: Environment.BC,
+          importedFileDate,
+        }),
+      }),
+    ])
+    expect(consoleLogSpy).toHaveBeenCalledWith('1 users created')
+  })
+
   it('processes a mix of new and existing users in a single batch', async () => {
     jest
       .mocked(getAccountByEmailAndEnvironment)
