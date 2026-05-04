@@ -103,6 +103,11 @@ const ImportEmissionFactorsModal = ({ open, onClose, onSuccess }: Props) => {
     if (!files?.length) {
       return
     }
+    if (files.length > 1) {
+      setModalState('error')
+      setErrors([{ line: 0, key: 'tooManyFiles' }])
+      return
+    }
     previewFile(files[0])
   }
 

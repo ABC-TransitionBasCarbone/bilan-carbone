@@ -1515,6 +1515,7 @@
       "success": "Facteurs d'émission importés avec succès",
       "errorTitle": "Erreurs détectées — aucun facteur n'a été importé",
       "invalidFileType": "Format de fichier invalide. Utilisez un fichier .xlsx ou .xls",
+      "tooManyFiles": "Veuillez importer un seul fichier à la fois",
       "emptyFile": "Le fichier est vide ou ne contient pas de données",
       "missingName": "Libellé manquant",
       "missingSource": "Source manquante",

@@ -1515,6 +1515,7 @@
       "success": "Emission factors imported successfully",
       "errorTitle": "Errors detected — no factors were imported",
       "invalidFileType": "Invalid file format. Please use a .xlsx or .xls file",
+      "tooManyFiles": "Please import one file at a time",
       "emptyFile": "The file is empty or contains no data",
       "missingName": "Label is missing",
       "missingSource": "Source is missing",

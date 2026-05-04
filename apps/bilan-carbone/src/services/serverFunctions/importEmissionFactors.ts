@@ -123,7 +123,14 @@ async function checkAuth() {
 }
 
 function parseImportFile(buffer: Buffer, locale: LocaleType, environment: Environment): ParseResult {
-  const workbook = xlsx.parse(buffer, { raw: false })
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let workbook: ReturnType<typeof xlsx.parse<any[]>>
+  try {
+    workbook = xlsx.parse(buffer, { raw: false })
+  } catch {
+    return { success: false, errors: [{ line: 0, key: 'invalidFileType' }] }
+  }
+
   const sheet = workbook[0]
   if (!sheet?.data || sheet.data.length < 2) {
     return { success: false, errors: [{ line: 0, key: 'emptyFile' }] }
