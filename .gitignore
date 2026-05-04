@@ -4,7 +4,6 @@ CLAUDE.md
 .claude/
 .vscode/
 notes/
-certs/*
 .notes
 next-env.d.ts
 # Additional ignores from sub .gitignore files
@@ -69,3 +68,5 @@ publicodes-build
 # apps/bilan-carbone/publicodes-packages/publicodes-clickson/.gitignore
 node_modules
 publicodes-build
+certs/*
+cypress/screenshots
