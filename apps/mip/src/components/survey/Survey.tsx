@@ -7,26 +7,20 @@ import { Alert, Button, Card, CardContent, Container, LinearProgress, Typography
 import { QuestionRenderer } from '@repo/components'
 import { SurveyResponse, Survey as SurveyType } from '@repo/typeguards'
 import { useTranslations } from 'next-intl'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import styles from './Survey.module.css'
 
 interface SurveyProps {
   survey: SurveyType
-  responseId?: string
+  surveyId: string
 }
 
-function initResponse(survey: SurveyType, responseId?: string): SurveyResponse {
-  if (responseId) {
-    const existing = surveyStorage.loadResponse(responseId)
-    if (existing && existing.surveyId === survey.id) {
-      return existing
-    }
-  }
+function initResponse(survey: SurveyType): SurveyResponse {
   const now = new Date()
   return {
     surveyId: survey.id,
-    responseId: responseId ?? uuidv4(),
+    responseId: uuidv4(),
     answers: {},
     currentQuestionIndex: 0,
     completed: false,
@@ -35,15 +29,28 @@ function initResponse(survey: SurveyType, responseId?: string): SurveyResponse {
   }
 }
 
-export function Survey({ survey, responseId }: SurveyProps) {
+export function Survey({ survey, surveyId }: SurveyProps) {
   const t = useTranslations('survey')
-  const [response, setResponse] = useState<SurveyResponse>(() => initResponse(survey, responseId))
+  const [response, setResponse] = useState<SurveyResponse>(() => initResponse(survey))
   const [error, setError] = useState<string | null>(null)
+  const [isResumed, setIsResumed] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    if (surveyId) {
+      const existing = surveyStorage.loadResponse(surveyId)
+      if (existing && existing.surveyId === survey.id) {
+        setResponse(existing)
+        setIsResumed(true)
+      }
+    }
+    setIsLoading(false)
+  }, [surveyId])
 
   const engine = useMemo(() => new SurveyEngine(survey, response), [survey, response])
 
   const saveAndUpdate = useCallback((updatedResponse: SurveyResponse) => {
-    surveyStorage.saveResponse(updatedResponse.responseId, updatedResponse)
+    surveyStorage.saveResponse(updatedResponse.surveyId, updatedResponse)
     setResponse({ ...updatedResponse })
   }, [])
 
@@ -83,8 +90,41 @@ export function Survey({ survey, responseId }: SurveyProps) {
     }
   }, [engine, saveAndUpdate])
 
+  const handleRestart = () => {
+    setResponse(initResponse(survey))
+    setIsResumed(false)
+    surveyStorage.deleteResponse(surveyId)
+  }
+
   const currentQuestion = engine.getCurrentQuestion()
   const progress = engine.getProgress()
+
+  if (isLoading) {
+    return <Typography>{t('loading')}</Typography>
+  }
+
+  if (isResumed) {
+    return (
+      <Container maxWidth="md" className={styles.container}>
+        <div className={styles.header}>
+          <Typography variant="h3" gutterBottom>
+            {survey.title}
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            {t('resume')}
+          </Typography>
+        </div>
+        <div className={styles.navigation}>
+          <Button variant="outlined" onClick={handleRestart}>
+            {t('navigation.restart')}
+          </Button>
+          <Button variant="contained" onClick={() => setIsResumed(false)}>
+            {t('navigation.continue')}
+          </Button>
+        </div>
+      </Container>
+    )
+  }
 
   if (engine.isComplete()) {
     return (

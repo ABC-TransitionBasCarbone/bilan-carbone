@@ -4,5 +4,5 @@ import { sampleSurvey } from '@/data/sampleSurvey'
 export default async function SurveyPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
 
-  return <Survey survey={sampleSurvey} responseId={id} />
+  return <Survey survey={sampleSurvey} surveyId={id} />
 }

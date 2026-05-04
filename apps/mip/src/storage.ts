@@ -6,9 +6,9 @@ export const surveyStorage = {
   /**
    * Save survey response to localStorage
    */
-  saveResponse: (responseId: string, response: SurveyResponse): void => {
+  saveResponse: (surveyId: string, response: SurveyResponse): void => {
     try {
-      const key = `${STORAGE_PREFIX}${responseId}`
+      const key = `${STORAGE_PREFIX}${surveyId}`
       localStorage.setItem(key, JSON.stringify(response))
     } catch (error) {
       console.error('Failed to save survey response:', error)
@@ -18,9 +18,9 @@ export const surveyStorage = {
   /**
    * Load survey response from localStorage
    */
-  loadResponse: (responseId: string): SurveyResponse | null => {
+  loadResponse: (surveyId: string): SurveyResponse | null => {
     try {
-      const key = `${STORAGE_PREFIX}${responseId}`
+      const key = `${STORAGE_PREFIX}${surveyId}`
       const data = localStorage.getItem(key)
       if (!data) return null
 
@@ -40,9 +40,9 @@ export const surveyStorage = {
   /**
    * Delete survey response from localStorage
    */
-  deleteResponse: (responseId: string): void => {
+  deleteResponse: (surveyId: string): void => {
     try {
-      const key = `${STORAGE_PREFIX}${responseId}`
+      const key = `${STORAGE_PREFIX}${surveyId}`
       localStorage.removeItem(key)
     } catch (error) {
       console.error('Failed to delete survey response:', error)

@@ -14,8 +14,11 @@
     "navigation": {
       "previous": "Précédent",
       "next": "Suivant",
-      "complete": "Terminer"
+      "complete": "Terminer",
+      "continue": "Continuer",
+      "restart": "Recommencer"
     },
+    "resume": "Reprendre le sondage",
     "characterCount": "{current} / {max} caractères"
   }
 }
