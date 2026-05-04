@@ -72,3 +72,4 @@ publicodes-build
 node_modules
 publicodes-build
 certs/*
+cypress/screenshots
