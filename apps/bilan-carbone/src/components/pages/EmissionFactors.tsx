@@ -27,11 +27,7 @@ const EmissionFactorsPage = async ({ userOrganizationId, environment, user }: Pr
       <Block
         title={t('title')}
         as="h1"
-        rightComponent={
-          userOrganizationId && activeLicence ? (
-            <EmissionFactorButtons addHref="/facteurs-d-emission/creer" />
-          ) : undefined
-        }
+        rightComponent={userOrganizationId && activeLicence ? <EmissionFactorButtons /> : undefined}
       >
         <Suspense fallback={t('loading')}>
           <EmissionFactors

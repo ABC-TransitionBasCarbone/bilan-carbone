@@ -1,16 +1,8 @@
-import { Locale, LocaleType } from '@/i18n/config'
-import enBc from '@/i18n/translations/en/bc.json'
-import frBc from '@/i18n/translations/fr/bc.json'
+import { LocaleType } from '@/i18n/config'
 import { environmentPostMapping, environmentSubPostsMapping } from '@/services/posts'
 import { EmissionFactorBase, Environment, SubPost, Unit } from '@repo/db-common/enums'
 import { ManualEmissionFactorUnitList } from './emissionFactors'
-import { extractAllForms, getSingularForm } from './translation.utils'
-
-type BcTranslations = typeof frBc
-
-export function getBcTranslations(locale: LocaleType): BcTranslations {
-  return locale === Locale.FR ? frBc : enBc
-}
+import { BcTranslations, extractAllForms, getBcTranslations, getSingularForm } from './translation.utils'
 
 /**
  * Map a string label coming from the import file to a value of the right type

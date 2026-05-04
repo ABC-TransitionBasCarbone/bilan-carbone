@@ -1,3 +1,7 @@
+import { Locale, LocaleType } from '@/i18n/config'
+import enBc from '@/i18n/translations/en/bc.json'
+import frBc from '@/i18n/translations/fr/bc.json'
+
 /**
  * Extracts the =0 singular form from an ICU plural string, e.g. "{count, plural, =0 {Litre} ...}" → "Litre"
  */
@@ -17,4 +21,10 @@ export function extractAllForms(value: string): string[] {
     return forms.length ? [...new Set(forms)] : [value.trim()]
   }
   return [value.trim()]
+}
+
+export type BcTranslations = typeof frBc
+
+export function getBcTranslations(locale: LocaleType): BcTranslations {
+  return locale === Locale.FR ? frBc : enBc
 }

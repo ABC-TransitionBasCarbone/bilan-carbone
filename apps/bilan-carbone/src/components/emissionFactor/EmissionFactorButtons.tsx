@@ -13,11 +13,7 @@ import { useState, useTransition } from 'react'
 
 const ImportEmissionFactorsModal = dynamic(() => import('./ImportEmissionFactorsModal'))
 
-interface Props {
-  addHref: string
-}
-
-const EmissionFactorButtons = ({ addHref }: Props) => {
+const EmissionFactorButtons = () => {
   const t = useTranslations('emissionFactors')
   const tCommon = useTranslations('common.action')
   const { showSuccessToast } = useToast()
@@ -27,7 +23,7 @@ const EmissionFactorButtons = ({ addHref }: Props) => {
   const handleClose = () => setOpen(false)
 
   const handleSuccess = () => {
-    setOpen(false)
+    handleClose()
     showSuccessToast(t('importModal.success'))
   }
 
@@ -49,10 +45,6 @@ const EmissionFactorButtons = ({ addHref }: Props) => {
   return (
     <>
       <div className="flex gapped1 align-center">
-        <LinkButton variant="contained" href={addHref} startIcon={<AddIcon />}>
-          {tCommon('add')}
-        </LinkButton>
-
         <LoadingButton variant="outlined" startIcon={<UploadFileIcon />} onClick={() => setOpen(true)} loading={false}>
           {tCommon('import')}
         </LoadingButton>
@@ -60,6 +52,10 @@ const EmissionFactorButtons = ({ addHref }: Props) => {
         <LoadingButton variant="outlined" startIcon={<FileDownloadIcon />} onClick={handleExport} loading={isExporting}>
           {tCommon('export')}
         </LoadingButton>
+
+        <LinkButton variant="contained" href="/facteurs-d-emission/creer" startIcon={<AddIcon />}>
+          {tCommon('add')}
+        </LinkButton>
       </div>
       {open && <ImportEmissionFactorsModal open={open} onClose={handleClose} onSuccess={handleSuccess} />}
     </>
