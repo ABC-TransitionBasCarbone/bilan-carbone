@@ -53,7 +53,12 @@ const EmissionFactorButtons = () => {
           {tCommon('export')}
         </LoadingButton>
 
-        <LinkButton variant="contained" href="/facteurs-d-emission/creer" startIcon={<AddIcon />}>
+        <LinkButton
+          data-testid="new-emission"
+          variant="contained"
+          href="/facteurs-d-emission/creer"
+          startIcon={<AddIcon />}
+        >
           {tCommon('add')}
         </LinkButton>
       </div>
