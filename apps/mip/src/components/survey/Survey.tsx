@@ -139,9 +139,6 @@ export function Survey({ survey, surveyId }: SurveyProps) {
               <Typography variant="body1" color="text.secondary" paragraph>
                 {t('completed.description')}
               </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {t('completed.responseId', { id: response.responseId })}
-              </Typography>
             </div>
           </CardContent>
         </Card>

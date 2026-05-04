@@ -1,27 +1,41 @@
-import { Survey } from '@repo/typeguards'
+import { Question, Survey } from '@repo/typeguards'
 
-export const sampleSurvey: Survey = {
-  id: 'sample-survey-1',
-  title: 'Carbon Footprint Survey',
-  description: 'Help us understand your carbon footprint by answering a few questions.',
-  questions: [
-    {
+type PublicodesElement = {
+  rule: string
+  type: 'input'
+  evaluatedElement: {
+    id: string
+    label: string
+    description?: string
+    type: 'number' | 'text' | 'boolean' | 'choice'
+    unit?: string
+    required: boolean
+    defaultValue?: unknown
+    value?: unknown
+    options?: Array<{ value: string; label: string }>
+  }
+}
+
+const fakePublicodesElements: PublicodesElement[] = [
+  {
+    rule: 'organisation . nom',
+    type: 'input',
+    evaluatedElement: {
       id: 'q1',
-      type: 'text',
-      title: 'What is your organization name?',
+      label: 'What is your organization name?',
       description: 'Please enter the full name of your organization.',
-      placeholder: 'e.g., ABC Transition',
+      type: 'text',
       required: true,
-      validation: {
-        minLength: 2,
-        maxLength: 200,
-      },
     },
-    {
+  },
+  {
+    rule: 'organisation . secteur',
+    type: 'input',
+    evaluatedElement: {
       id: 'q2',
-      type: 'choice',
-      title: 'What is your primary sector of activity?',
+      label: 'What is your primary sector of activity?',
       description: 'Select the sector that best describes your organization.',
+      type: 'choice',
       required: true,
       options: [
         { value: 'industry', label: 'Industry' },
@@ -32,10 +46,14 @@ export const sampleSurvey: Survey = {
         { value: 'other', label: 'Other' },
       ],
     },
-    {
+  },
+  {
+    rule: 'organisation . effectif',
+    type: 'input',
+    evaluatedElement: {
       id: 'q3',
+      label: 'How many employees does your organization have?',
       type: 'choice',
-      title: 'How many employees does your organization have?',
       required: true,
       options: [
         { value: '1-10', label: '1-10 employees' },
@@ -45,20 +63,61 @@ export const sampleSurvey: Survey = {
         { value: '500+', label: 'More than 500 employees' },
       ],
     },
-    {
+  },
+  {
+    rule: 'emissions . sources',
+    type: 'input',
+    evaluatedElement: {
       id: 'q4',
-      type: 'text',
-      title: 'What are your main carbon emission sources?',
+      label: 'What are your main carbon emission sources?',
       description:
         'Please describe the main sources of carbon emissions in your organization (e.g., transportation, energy consumption, manufacturing processes).',
-      placeholder: 'Describe your main emission sources...',
+      type: 'text',
       required: false,
-      validation: {
-        minLength: 10,
-        maxLength: 1000,
-      },
     },
-  ],
+  },
+]
+
+function mapElementToQuestion(el: PublicodesElement): Question {
+  const { evaluatedElement: e } = el
+  if (e.type === 'boolean') {
+    return {
+      id: e.id,
+      type: 'choice',
+      title: e.label,
+      description: e.description,
+      required: e.required,
+      options: [
+        { value: 'true', label: 'Oui' },
+        { value: 'false', label: 'Non' },
+      ],
+    }
+  }
+  if (e.type === 'choice') {
+    return {
+      id: e.id,
+      type: 'choice',
+      title: e.label,
+      description: e.description,
+      required: e.required,
+      options: e.options ?? [],
+    }
+  }
+  return {
+    id: e.id,
+    type: 'text',
+    title: e.label,
+    description: e.description,
+    required: e.required,
+    placeholder: e.unit ? `ex: 42 ${e.unit}` : undefined,
+  }
+}
+
+export const sampleSurvey: Survey = {
+  id: 'sample-survey-1',
+  title: 'Carbon Footprint Survey',
+  description: 'Help us understand your carbon footprint by answering a few questions.',
   createdAt: new Date(),
   updatedAt: new Date(),
+  questions: fakePublicodesElements.map(mapElementToQuestion),
 }
