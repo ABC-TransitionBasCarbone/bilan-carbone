@@ -18,6 +18,7 @@ import { getBcTranslations } from '@/utils/translation.utils'
 import { EmissionFactorStatus, Import } from '@repo/db-common/enums'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
+import { canReadEmissionFactor } from '../permissions/emissionFactor'
 import { canCreateEmissionFactor } from '../permissions/emissionFactor.server'
 import { prepareExcel } from './file'
 import { getFileUrlFromBucket } from './scaleway'
@@ -33,12 +34,25 @@ async function checkAuth(requireCreatePermission = true): Promise<AccountWithUse
     throw new Error(NOT_AUTHORIZED)
   }
 
-  if (requireCreatePermission && !(await canCreateEmissionFactor(account.organizationVersionId))) {
-    throw new Error(NOT_AUTHORIZED)
+  // This way TS knows that the organizationVersion is not null
+  const accountWithOrgVersion = { ...account, organizationVersion: account.organizationVersion }
+
+  if (requireCreatePermission) {
+    if (!(await canCreateEmissionFactor(account.organizationVersionId))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+  } else {
+    if (
+      !canReadEmissionFactor(accountWithOrgVersion, {
+        organizationId: account.organizationVersion.organizationId,
+        importedFrom: Import.Manual,
+      })
+    ) {
+      throw new Error(NOT_AUTHORIZED)
+    }
   }
 
-  // This way TS knows that the organizationVersion is not null
-  return { ...account, organizationVersion: account.organizationVersion }
+  return accountWithOrgVersion
 }
 
 export async function previewEmissionFactorsFromFile(file: File): Promise<PreviewEmissionFactorsResult> {
