@@ -5,6 +5,7 @@ import { createEmissionFactorWithParts, getManualEmissionFactorsByOrganization }
 import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
 import { environmentSubPostsMapping } from '@/services/posts'
+import { AccountWithUser } from '@/types/account.types'
 import {
   COLUMNS,
   ImportEmissionFactorsResult,
@@ -35,25 +36,27 @@ import { EmissionFactorCommandValidation } from './emissionFactor.command'
 import { prepareExcel } from './file'
 import { getFileUrlFromBucket } from './scaleway'
 
-async function checkAuth() {
+async function checkAuth(requireCreatePermission = true): Promise<AccountWithUser> {
   const session = await auth()
   if (!session?.user) {
     throw new Error(NOT_AUTHORIZED)
   }
 
   const account = await getAccountById(session.user.accountId)
-  if (!account?.organizationVersionId) {
+  if (!account?.organizationVersionId || !account.organizationVersion) {
     throw new Error(NOT_AUTHORIZED)
   }
 
-  if (!(await canCreateEmissionFactor(account.organizationVersionId))) {
+  if (requireCreatePermission && !(await canCreateEmissionFactor(account.organizationVersionId))) {
     throw new Error(NOT_AUTHORIZED)
   }
 
-  return account
+  // This way TS knows that the organizationVersion is not null
+  return { ...account, organizationVersion: account.organizationVersion }
 }
 
-function parseImportFile(buffer: Buffer, locale: LocaleType, environment: Environment): ParseResult {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function parseSheet(buffer: Buffer): { success: false; errors: ImportError[] } | { success: true; dataRows: any[][] } {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let workbook: ReturnType<typeof xlsx.parse<any[]>>
   try {
@@ -72,6 +75,17 @@ function parseImportFile(buffer: Buffer, locale: LocaleType, environment: Enviro
   if (dataRows.length === 0) {
     return { success: false, errors: [{ line: 0, key: 'emptyFile' }] }
   }
+
+  return { success: true, dataRows }
+}
+
+function parseImportFile(buffer: Buffer, locale: LocaleType, environment: Environment): ParseResult {
+  const sheetResult = parseSheet(buffer)
+  if (!sheetResult.success) {
+    return sheetResult
+  }
+
+  const { dataRows } = sheetResult
 
   const errors: ImportError[] = []
   const parsedRows: ParsedRow[] = []
@@ -241,7 +255,6 @@ function buildCreateInput(row: ParsedRow, organizationId: string, locale: Locale
       importedFrom: Import.Manual,
       status: EmissionFactorStatus.Valid,
       organization: { connect: { id: organizationId } },
-      unit: command.unit,
       subPosts: flattenSubposts(subPosts),
       metaData: { create: { language: locale, title: name, attribute, comment } },
     },
@@ -260,7 +273,7 @@ export async function importEmissionFactorsFromFile(file: File): Promise<ImportE
   if (!result.success) {
     return result
   }
-  const organizationId = account.organizationVersion!.organizationId
+  const organizationId = account.organizationVersion.organizationId
 
   for (const row of result.rows) {
     const { data, parts, locale: rowLocale } = buildCreateInput(row, organizationId, locale)
@@ -271,13 +284,13 @@ export async function importEmissionFactorsFromFile(file: File): Promise<ImportE
 }
 
 export async function exportManualEmissionFactorsToFile(): Promise<ArrayBuffer> {
-  const account = await checkAuth()
+  const account = await checkAuth(false)
   const locale = await getLocale()
   const bc = getBcTranslations(locale)
   const baseTranslations = bc.emissionFactors.base
   const qualityTranslations = bc.quality as Record<string, string>
 
-  const organizationId = account.organizationVersion!.organizationId
+  const organizationId = account.organizationVersion.organizationId
   const emissionFactors = await getManualEmissionFactorsByOrganization(organizationId)
 
   const c = bc.emissionFactors.create
@@ -285,10 +298,16 @@ export async function exportManualEmissionFactorsToFile(): Promise<ArrayBuffer> 
   const header = [
     c.name,
     c.attribute,
-    c.location,
-    c.source,
     c.unit,
     c.customUnit,
+    c.source,
+    c.location,
+    tbl.technicalRepresentativeness.replace(/ :$/, ''),
+    tbl.geographicRepresentativeness.replace(/ :$/, ''),
+    tbl.temporalRepresentativeness.replace(/ :$/, ''),
+    tbl.completeness.replace(/ :$/, ''),
+    tbl.reliability.replace(/ :$/, ''),
+    c.comment,
     c.totalCo2,
     c.co2f,
     c.ch4f,
@@ -299,24 +318,24 @@ export async function exportManualEmissionFactorsToFile(): Promise<ArrayBuffer> 
     c.hfc,
     c.pfc,
     c.otherGES,
-    tbl.reliability.replace(/ :$/, ''),
-    tbl.technicalRepresentativeness.replace(/ :$/, ''),
-    tbl.geographicRepresentativeness.replace(/ :$/, ''),
-    tbl.temporalRepresentativeness.replace(/ :$/, ''),
-    tbl.completeness.replace(/ :$/, ''),
     c.post,
     c.base,
-    c.comment,
   ]
   const rows: (string | number)[][] = emissionFactors.map((ef) => {
     const metaData = ef.metaData.find((m) => m.language === locale) ?? ef.metaData[0]
     return [
       metaData?.title ?? '',
       metaData?.attribute ?? '',
-      ef.location ?? '',
-      ef.source ?? '',
       ef.unit ? getUnitLabel(ef.unit, locale) : '',
       ef.customUnit ?? '',
+      ef.source ?? '',
+      ef.location ?? '',
+      qualityTranslations[String(ef.technicalRepresentativeness)] ?? '',
+      qualityTranslations[String(ef.geographicRepresentativeness)] ?? '',
+      qualityTranslations[String(ef.temporalRepresentativeness)] ?? '',
+      qualityTranslations[String(ef.completeness)] ?? '',
+      qualityTranslations[String(ef.reliability)] ?? '',
+      metaData?.comment ?? '',
       ef.totalCo2,
       ef.co2f ?? '',
       ef.ch4f ?? '',
@@ -327,14 +346,8 @@ export async function exportManualEmissionFactorsToFile(): Promise<ArrayBuffer> 
       ef.hfc ?? '',
       ef.pfc ?? '',
       ef.otherGES ?? '',
-      qualityTranslations[String(ef.reliability)] ?? '',
-      qualityTranslations[String(ef.technicalRepresentativeness)] ?? '',
-      qualityTranslations[String(ef.geographicRepresentativeness)] ?? '',
-      qualityTranslations[String(ef.temporalRepresentativeness)] ?? '',
-      qualityTranslations[String(ef.completeness)] ?? '',
       buildPostsAndSubPostsCell(ef.subPosts, locale, account.environment),
       ef.base ? (baseTranslations[ef.base] ?? ef.base) : '',
-      metaData?.comment ?? '',
     ]
   })
 
