@@ -364,9 +364,11 @@ const handleLine = (
   return resultLine
 }
 
+export type SiteExportEntry = { name: string; siteId: string; studySiteId: string }
+
 export const formatConsolidatedStudyResultsForExport = (
   study: FullStudy,
-  siteList: { name: string; id: string }[],
+  siteList: SiteExportEntry[],
   tStudy: Translations,
   tExport: Translations,
   tPost: Translations,
@@ -383,7 +385,7 @@ export const formatConsolidatedStudyResultsForExport = (
     const resultList = computeResultsByPostFromEmissionSources(
       study,
       tPost,
-      site.id,
+      site.siteId,
       true,
       validatedEmissionSourcesOnly,
       environmentPostMapping[environment],
@@ -476,7 +478,7 @@ const buildRowMerge = (row: number, startCol: number, span: number): Merge => ({
 
 export const formatStudyExportResultsForExport = (
   study: FullStudy,
-  siteList: { name: string; id: string }[],
+  siteList: SiteExportEntry[],
   tStudy: Translations,
   tQuality: Translations,
   tSpecificExport: Translations,
@@ -506,7 +508,7 @@ export const formatStudyExportResultsForExport = (
 
   for (let i = 0; i < siteList.length; i++) {
     const site = siteList[i]
-    const resultList = getResults(site.id)
+    const resultList = getResults(site.siteId)
     const gasFields = data.gasFields
 
     // Merge cells
@@ -567,7 +569,7 @@ export const formatStudyExportResultsForExport = (
 
 const formatBaseResultsToBCExport = (
   study: FullStudy,
-  siteList: { name: string; id: string }[],
+  siteList: SiteExportEntry[],
   computedResults: BaseResultsBySite,
   tExport: Translations,
   tPost: Translations,
@@ -582,7 +584,7 @@ const formatBaseResultsToBCExport = (
   data.push([])
 
   for (const site of siteList) {
-    const results = site.id === 'all' ? computedResults.aggregated : computedResults.bySite[site.id]
+    const results = site.studySiteId === 'all' ? computedResults.aggregated : computedResults.bySite[site.studySiteId]
     // TODO: use a more generic conversion function to be used by all simplified environments
     const bilanCarboneEquivalent = convertSimplifiedEnvToBilanCarbone(results ?? [])
 
@@ -612,7 +614,7 @@ const formatBaseResultsToBCExport = (
 
 export const formatComputedResultsForExport = (
   study: FullStudy,
-  siteList: { name: string; id: string }[],
+  siteList: SiteExportEntry[],
   computedResults: BaseResultsBySite,
   tStudy: Translations,
   tExport: Translations,
@@ -625,7 +627,8 @@ export const formatComputedResultsForExport = (
   for (const site of siteList) {
     dataForExport.push([site.name])
     dataForExport.push(formattedHeaders)
-    const results = site.id === 'all' ? computedResults.aggregated : computedResults.bySite[site.id]
+    const results =
+      site.studySiteId === 'all' ? computedResults.aggregated : (computedResults.bySite[site.studySiteId] ?? [])
 
     for (const result of results) {
       dataForExport.push([result.label, '', formatEmissionValueForExport(result.value ?? 0, study.resultsUnit)])
@@ -670,9 +673,9 @@ export const downloadStudyResults = async (
 ) => {
   const data = []
 
-  const siteList = [
-    { name: tOrga('allSites'), id: 'all' },
-    ...study.sites.map((s) => ({ name: s.site.name, id: s.id })),
+  const siteList: SiteExportEntry[] = [
+    { name: tOrga('allSites'), siteId: 'all', studySiteId: 'all' },
+    ...study.sites.map((s) => ({ name: s.site.name, siteId: s.site.id, studySiteId: s.id })),
   ]
 
   const userSettings = await getUserSettings()
@@ -812,7 +815,7 @@ export const downloadStudyResults = async (
 export const getDetailedEmissionResults = (
   study: FullStudy,
   tPost: Translations,
-  studySite: string,
+  siteId: string,
   validatedOnly: boolean,
   environment: Environment,
   tStudyResults: Translations,
@@ -822,7 +825,7 @@ export const getDetailedEmissionResults = (
   const computedResultsWithDep = computeResultsByPostFromEmissionSources(
     study,
     tPost,
-    studySite,
+    siteId,
     true,
     validatedOnly,
     environmentPostMapping[environment],
@@ -833,7 +836,7 @@ export const getDetailedEmissionResults = (
   const computedResultsWithoutDep = computeResultsByPostFromEmissionSources(
     study,
     tPost,
-    studySite,
+    siteId,
     false,
     validatedOnly,
     environmentPostMapping[environment],
@@ -843,7 +846,7 @@ export const getDetailedEmissionResults = (
 
   const computedResultsByTag = computeResultsByTag(
     study,
-    studySite,
+    siteId,
     withDependencies,
     validatedOnly,
     environment,

@@ -104,7 +104,7 @@ export const computeResult = (
   study: FullStudy,
   rules: ExportRule[],
   emissionFactorsWithParts: EmissionFactorWithParts[],
-  studySite: string,
+  siteId: string,
   withDependencies: boolean,
   validatedOnly: boolean,
   allRules: string[],
@@ -119,7 +119,7 @@ export const computeResult = (
     {},
   )
   const siteEmissionSources = getBaseFilteredEmissionSources(
-    getAllSiteEmissionSources(study.emissionSources, studySite),
+    getAllSiteEmissionSources(study.emissionSources, siteId),
     base,
   )
 

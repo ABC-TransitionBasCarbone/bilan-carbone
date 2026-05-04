@@ -12,7 +12,7 @@ import { SyntheticEvent, useMemo, useState } from 'react'
 import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
 import TabPanel from '@/components/tabPanel/tabPanel'
 import { downloadStudyResults } from '@/services/study'
-import { Environment, SiteCAUnit } from '@repo/db-common/enums'
+import { SiteCAUnit } from '@repo/db-common/enums'
 
 import Block from '@/components/base/Block'
 import LoadingButton from '@/components/base/LoadingButton'
@@ -148,7 +148,7 @@ const AllResults = ({
                 tGHGP,
                 tUnits,
                 tBase,
-                Environment.CUT,
+                study.organizationVersion.environment,
                 computedResultsBySite,
               )
             }
