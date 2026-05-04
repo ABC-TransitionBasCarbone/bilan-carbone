@@ -209,7 +209,7 @@ function parseSheet(
     return { success: false, errors: [{ line: 0, key: 'emptyFile' }] }
   }
 
-  const dataRows = sheet.data.slice(1).filter((row) => String(row[COLUMNS.name] ?? '').trim() !== '')
+  const dataRows = sheet.data.slice(1).filter((row) => row.some((cell) => String(cell ?? '').trim() !== ''))
 
   if (dataRows.length === 0) {
     return { success: false, errors: [{ line: 0, key: 'emptyFile' }] }

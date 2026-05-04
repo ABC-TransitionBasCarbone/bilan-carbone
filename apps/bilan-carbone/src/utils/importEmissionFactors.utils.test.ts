@@ -261,12 +261,21 @@ describe('parseImportFile', () => {
       }
     })
 
-    it('skips rows where name is blank', () => {
-      const buffer = makeBuffer([VALID_ROW, { ...VALID_ROW, name: '' }])
+    it('skips rows where all cells are blank', () => {
+      const buffer = makeBuffer([VALID_ROW, {}])
       const result = parseImportFile(buffer, Locale.FR, Environment.BC)
       expect(result.success).toBe(true)
       if (result.success) {
         expect(result.rows).toHaveLength(1)
+      }
+    })
+
+    it('returns missingName error when row has content but no name', () => {
+      const buffer = makeBuffer([{ ...VALID_ROW, name: '' }])
+      const result = parseImportFile(buffer, Locale.FR, Environment.BC)
+      expect(result.success).toBe(false)
+      if (!result.success) {
+        expect(result.errors.some((e) => e.key === 'missingName')).toBe(true)
       }
     })
 
