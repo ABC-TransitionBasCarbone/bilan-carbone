@@ -14,8 +14,11 @@
     "navigation": {
       "previous": "Previous",
       "next": "Next",
-      "complete": "Complete"
+      "complete": "Complete",
+      "continue": "Continue",
+      "restart": "Restart"
     },
+    "resume": "Resume survey",
     "characterCount": "{current} / {max} characters"
   }
 }
