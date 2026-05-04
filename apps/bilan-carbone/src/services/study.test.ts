@@ -1,13 +1,24 @@
 import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
 import { getMockeFullStudy } from '@/tests/utils/models/study'
+import { BaseResultsBySite } from '@/types/study.types'
+import { Translations } from '@/types/translation'
 import { hasSufficientLevel } from '@/utils/study'
 import { expect } from '@jest/globals'
-import { Environment, Level, StudyResultUnit, SubPost } from '@repo/db-common/enums'
-import { getStudyTotalCo2Emissions, getTransEnvironmentSubPost } from './study'
+import { ControlMode, Environment, Level, StudyResultUnit, SubPost } from '@repo/db-common/enums'
+import { prepareExcel } from './serverFunctions/file'
+import { getUserSettings } from './serverFunctions/user'
+import {
+  downloadStudyResults,
+  formatComputedResultsForExport,
+  getStudyTotalCo2Emissions,
+  getTransEnvironmentSubPost,
+} from './study'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('./file', () => ({ download: jest.fn() }))
 jest.mock('./auth', () => ({ auth: jest.fn() }))
+jest.mock('./serverFunctions/file', () => ({ prepareExcel: jest.fn(async () => Buffer.from('mock')) }))
+jest.mock('./serverFunctions/user', () => ({ getUserSettings: jest.fn(async () => ({ success: false })) }))
 jest.mock('uuid', () => ({ v4: jest.fn() }))
 jest.mock('next-intl/server', () => ({ getTranslations: jest.fn(() => (key: string) => key) }))
 
@@ -180,6 +191,90 @@ describe('Study Service', () => {
       expect(hasSufficientLevel(null, Level.Initial)).toBe(false)
       expect(hasSufficientLevel(null, Level.Standard)).toBe(false)
       expect(hasSufficientLevel(null, Level.Advanced)).toBe(false)
+    })
+  })
+
+  describe('exports', () => {
+    const t = ((key: string) => key) as unknown as Translations
+    const tStudy = ((key: string, values?: { unit?: string }) =>
+      key === 'value' ? `Valeur${values?.unit ? ` (${values.unit})` : ''}` : key) as unknown as Translations
+    const tExport = ((key: string) => (key === 'value' ? 'Valeur' : key)) as unknown as Translations
+    const tUnits = ((key: string) => key) as unknown as Translations
+    const tUnitsKg = ((key: string) => (key ? 'kgCO2e' : key)) as unknown as Translations
+    const computedResults: BaseResultsBySite = {
+      aggregated: [{ label: 'Total', post: 'total', children: [], value: 12 }],
+      bySite: {},
+    }
+
+    const getWorkbookSheets = async (environment: Environment) => {
+      const prepareExcelMock = jest.mocked(prepareExcel)
+      const getUserSettingsMock = jest.mocked(getUserSettings)
+
+      prepareExcelMock.mockClear()
+      getUserSettingsMock.mockResolvedValue({ success: false, errorMessage: '' })
+
+      await downloadStudyResults(
+        getMockeFullStudy({
+          resultsUnit: StudyResultUnit.T,
+          exports: { types: [], control: ControlMode.Operational },
+        }),
+        [],
+        [],
+        [],
+        tStudy,
+        tExport,
+        t,
+        t,
+        t,
+        t,
+        t,
+        tUnits,
+        t,
+        environment,
+        computedResults,
+      )
+
+      return prepareExcelMock.mock.calls[0][0]
+    }
+
+    it('adds "(tCO2e)" to clickson exported value header', () => {
+      const data = formatComputedResultsForExport(
+        getMockeFullStudy({ resultsUnit: StudyResultUnit.T }),
+        [{ name: 'Tous les sites', id: 'all' }],
+        computedResults,
+        tStudy,
+        tExport,
+        tUnits,
+        Environment.CLICKSON,
+      )
+
+      expect(data.data[1][3]).toBe('Valeur (tCO2e)')
+    })
+
+    it('keeps dynamic unit translation for non-clickson exports', () => {
+      const data = formatComputedResultsForExport(
+        getMockeFullStudy({ resultsUnit: StudyResultUnit.K }),
+        [{ name: 'Tous les sites', id: 'all' }],
+        computedResults,
+        tStudy,
+        tExport,
+        tUnitsKg,
+        Environment.CUT,
+      )
+
+      expect(data.data[1][2]).toBe('Valeur (kgCO2e)')
+    })
+
+    it('does not include "Export au format Bilan Carbone®" sheet for CLICKSON', async () => {
+      const workbookSheets = await getWorkbookSheets(Environment.CLICKSON)
+      expect(workbookSheets).toHaveLength(1)
+      expect(workbookSheets.some((sheet: { name: string }) => sheet.name === 'bc.title')).toBe(false)
+    })
+
+    it('includes "Export au format Bilan Carbone®" sheet for CUT', async () => {
+      const workbookSheets = await getWorkbookSheets(Environment.CUT)
+      expect(workbookSheets).toHaveLength(2)
+      expect(workbookSheets.some((sheet: { name: string }) => sheet.name === 'bc.title')).toBe(true)
     })
   })
 })
