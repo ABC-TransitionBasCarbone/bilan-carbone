@@ -2,7 +2,6 @@
 
 import { environmentsWithChecklist } from '@/constants/environments'
 import {
-  AccountWithUser,
   addAccount,
   changeAccountRole,
   getAccountByEmailAndEnvironment,
@@ -50,6 +49,7 @@ import {
   validateUser,
 } from '@/db/user'
 import { processUsers } from '@/scripts/ftp/userImport'
+import { AccountWithUser } from '@/types/account.types'
 import { withServerResponse } from '@/utils/serverResponse'
 import { getRoleToSetForUntrained } from '@/utils/user'
 import { accountWithUserToUserSession, userSessionToDbUser } from '@/utils/userAccounts'

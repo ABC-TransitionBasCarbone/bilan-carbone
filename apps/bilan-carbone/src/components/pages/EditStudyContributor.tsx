@@ -1,6 +1,6 @@
-import { AccountWithUser } from '@/db/account'
 import { getOrganizationVersionAccounts } from '@/db/organization'
 import type { FullStudy } from '@/db/study'
+import { AccountWithUser } from '@/types/account.types'
 import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'

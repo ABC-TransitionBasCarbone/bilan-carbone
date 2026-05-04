@@ -1,17 +1,12 @@
 import { NOT_AUTHORIZED } from '@/services/permissions/check'
 import { getDeactivableFeatureRestrictions } from '@/services/serverFunctions/deactivableFeatures'
 import { findUserInfo } from '@/utils/user'
-import type { Account, Prisma, User } from '@abc-transitionbascarbone/db-common'
+import type { Prisma } from '@abc-transitionbascarbone/db-common'
 import { DeactivatableFeature, Environment, Role } from '@abc-transitionbascarbone/db-common/enums'
 import { UserSession } from 'next-auth'
 import { AccountWithUserSelect } from './account.select'
 import { prismaClient } from './client.server'
 import { OrganizationVersionWithOrganizationSelect } from './organization.select'
-
-export type AccountWithUser = Account & {
-  user: User
-  organizationVersion: { organizationId: string; environment: Environment }
-}
 
 export const getAccountByEmailAndOrganizationVersionId = (email: string, organizationVersionId: string | null) => {
   return prismaClient.account.findFirst({

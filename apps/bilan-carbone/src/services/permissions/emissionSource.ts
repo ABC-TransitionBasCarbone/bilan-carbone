@@ -1,6 +1,6 @@
-import { AccountWithUser } from '@/db/account'
 import { getEmissionFactorById } from '@/db/emissionFactors'
 import { FullStudy, getStudyById, getStudySites } from '@/db/study'
+import { AccountWithUser } from '@/types/account.types'
 import { getAccountRoleOnStudy, hasDeprecationPeriod } from '@/utils/study'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import type { StudyEmissionSource } from '@abc-transitionbascarbone/db-common'
