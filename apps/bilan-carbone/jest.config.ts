@@ -17,7 +17,8 @@ const config: Config = {
   setupFilesAfterEnv: ['<rootDir>/src/tests/unit/setupTests.ts'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
-    '@abc-transitionbascarbone/(.*)$': '<rootDir>/publicodes-packages/$1/',
+    '^@abc-transitionbascarbone/publicodes-(.*)$': '<rootDir>/publicodes-packages/publicodes-$1/',
+
   },
 }
 
