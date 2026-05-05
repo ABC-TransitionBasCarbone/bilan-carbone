@@ -1,7 +1,7 @@
-import { FormTextField } from '@/components/form/TextField'
 import { SECTEN_SECTORS } from '@/constants/trajectory.constants'
 import { TrajectoryFormData } from '@/services/serverFunctions/trajectory.command'
 import { Typography } from '@mui/material'
+import { FormTextField } from '@repo/components/src/form/TextField'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { Control, useWatch } from 'react-hook-form'

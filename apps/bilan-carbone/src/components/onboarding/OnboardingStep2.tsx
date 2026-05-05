@@ -5,11 +5,11 @@ import { Button } from '@abc-transitionbascarbone/ui'
 import AddIcon from '@mui/icons-material/Add'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { MenuItem } from '@mui/material'
+import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { UseFormReturn, useWatch } from 'react-hook-form'
 import { FormSelect } from '../form/Select'
-import { FormTextField } from '../form/TextField'
 import styles from './Onboarding.module.css'
 
 interface Props {

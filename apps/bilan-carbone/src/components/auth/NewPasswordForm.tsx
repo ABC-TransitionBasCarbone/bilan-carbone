@@ -7,13 +7,13 @@ import { EmailCommand, EmailCommandValidation } from '@/services/serverFunctions
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl } from '@mui/material'
+import Form from '@abc-transitionbascarbone/components/src/base/Form'
+import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
+import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { useTranslations } from 'next-intl'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import Form from '../base/Form'
-import LoadingButton from '../base/LoadingButton'
-import { FormTextField } from '../form/TextField'
 import authStyles from './Auth.module.css'
 
 interface Props {

@@ -1,9 +1,9 @@
 'use client'
 
-import { FormTextField } from '@/components/form/TextField'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
 import { formatNumber } from '@/utils/number'
 import { Environment, SiteCAUnit } from '@abc-transitionbascarbone/db-common/enums'
+import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { ColumnDef } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'

@@ -1,6 +1,5 @@
 'use client'
 
-import Form from '@/components/base/Form'
 import { gazKeys } from '@/constants/emissions'
 import { DetailedEmissionFactor } from '@/db/emissionFactors'
 import { useServerFunction } from '@/hooks/useServerFunction'
@@ -14,6 +13,7 @@ import {
 import { getPost } from '@/utils/post'
 import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { zodResolver } from '@hookform/resolvers/zod'
+import Form from '@abc-transitionbascarbone/components/src/base/Form'
 import { useRouter } from 'next/navigation'
 import { FormEvent, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'

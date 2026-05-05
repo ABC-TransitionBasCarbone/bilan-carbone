@@ -1,4 +1,3 @@
-import LoadingButton from '@/components/base/LoadingButton'
 import { TagFamily } from '@/components/form/ScopeSelectors'
 import ModalStepper from '@/components/modals/ModalStepper'
 import { OTHER_TAG_ID } from '@/constants/tag.constants'
@@ -24,6 +23,7 @@ import {
 } from '@abc-transitionbascarbone/db-common/enums'
 import { Toast, ToastColors } from '@abc-transitionbascarbone/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
+import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useParams, useRouter } from 'next/navigation'

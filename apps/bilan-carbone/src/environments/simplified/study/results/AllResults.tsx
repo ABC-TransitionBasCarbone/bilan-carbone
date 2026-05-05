@@ -1,9 +1,10 @@
 'use client'
 
 import Block from '@/components/base/Block'
-import LoadingButton from '@/components/base/LoadingButton'
 import BarChart from '@/components/study/charts/BarChart'
 import PieChart from '@/components/study/charts/PieChart'
+import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
+
 import CarbonIntensities from '@/components/study/results/consolidated/CarbonIntensities'
 import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
 import SelectStudySite from '@/components/study/site/SelectStudySite'

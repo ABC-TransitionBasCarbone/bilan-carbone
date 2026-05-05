@@ -8,11 +8,11 @@ import { StudyTagFamily } from '@abc-transitionbascarbone/db-common'
 import { Button } from '@abc-transitionbascarbone/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
+import Form from '@abc-transitionbascarbone/components/src/base/Form'
+import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
+import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { useTranslations } from 'next-intl'
 import { useForm } from 'react-hook-form'
-import Form from '../../base/Form'
-import LoadingButton from '../../base/LoadingButton'
-import { FormTextField } from '../../form/TextField'
 
 interface Props {
   studyId?: string

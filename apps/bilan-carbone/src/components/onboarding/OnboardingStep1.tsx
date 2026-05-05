@@ -2,10 +2,10 @@ import { OnboardingCommand } from '@/services/serverFunctions/user.command'
 import { Role } from '@abc-transitionbascarbone/db-common/enums'
 import HomeIcon from '@mui/icons-material/Home'
 import PersonIcon from '@mui/icons-material/Person'
+import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { UseFormReturn } from 'react-hook-form'
-import { FormTextField } from '../form/TextField'
 import styles from './Onboarding.module.css'
 
 interface Props {
