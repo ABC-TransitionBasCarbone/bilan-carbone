@@ -1,6 +1,7 @@
 {
   "nav": {
-    "newStudyContributor": "Dodaj učenika"
+    "newStudyContributor": "Dodaj učenika",
+    "home": "Početna"
   },
   "navigation": {
     "organizations": "Moji ugljični otisci",
@@ -42,8 +43,8 @@
     "create": "Dodaj otisak",
     "myStudies": "Moji ugljični otisci",
     "createFirstStudy": "Kreiraj svoj prvi otisak",
-    "createFirstSimplifiedStudy": "Create",
-    "firstSimplifiedStudyMessage": "It's time to get started! We invite you to create your first simplified carbon footprint.",
+    "createFirstSimplifiedStudy": "Kreiraj svoj prvi otisak",
+    "firstSimplifiedStudyMessage": "Vrijeme je za početak! Pozivamo vas da kreirate svoj prvi pojednostavljeni ugljični otisak.",
     "see": "Pogledaj svoj otisak",
     "selectSite": "Prije unosa podataka odaberite ustanovu",
     "lastStudyTitle": "Zadnji otisak",
@@ -51,7 +52,12 @@
       "framing": "Opći podaci",
       "organizations": "Moje ustanove",
       "team": "Moji suradnici",
-      "title": "Moj otisak"
+      "title": "Moj otisak",
+      "informationDefinition": "Definicija informacija",
+      "dataAccounting": "Računovodstvo podataka",
+      "dataEntry": "Unos podataka",
+      "results": "Rezultati",
+      "transitionPlan": "Plan tranzicije"
     },
     "validatedOnlyDescription": "Kao učenik imam pristup kao suradnik jednom ili više emisijskih mjesta.",
     "new": {
@@ -128,7 +134,16 @@
       "additionalInfo": "Rezultati koje ovdje dobivate su pojednostavljeni izračun ugljičnog otiska vaše ustanove i ne udovoljavaju zahtjevima Bilan Carbone® niti važećim propisima. Ovi rezultati imaju za cilj pomoći vam u razumijevanju klimatskih izazova i identificiranju vaših prioriteta za djelovanje. Imaju uglavnom obrazovnu vrijednost, izračun ugljičnog otiska vaše ustanove putem našeg alata predstavlja prvi korak u prilagodbi na posljedice klimatskih promjena."
     },
     "results": {
-      "carbonIntensities": "Individualni ugljični otisak"
+      "carbonIntensities": "Individualni ugljični otisak",
+      "analysis": "Analiza emisija",
+      "total": "Ukupne emisije",
+      "downloadPDF": "Preuzmi sažetak",
+      "downloadingPDF": "Preuzimanje sažetka...",
+      "chartTypes": {
+        "table": "Tablica",
+        "bar": "Stupčasti grafikon",
+        "pie": "Kružni grafikon"
+      }
     }
   },
   "emissionFactors": {

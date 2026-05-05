@@ -10,7 +10,8 @@ import {
 import { addTableRow, createFixedTableRow, deleteTableRow, duplicateTableRow, isTableAnswer } from '@/utils/tableInput'
 import { ContentCopy, Delete } from '@mui/icons-material'
 import { Box, IconButton, Paper, TableContainer } from '@mui/material'
-import { Prisma, QuestionType } from '@prisma/client'
+import type { Prisma } from '@repo/db-common'
+import { QuestionType } from '@repo/db-common/enums'
 import { Button } from '@repo/ui'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
@@ -142,7 +143,6 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue, 
             disabled={isFirstColumnInFixedTable}
             isTable={true}
             onTableFieldChange={handleTableFieldChange}
-            studyStartDate={studyStartDate}
           />
         )
       },
@@ -192,6 +192,7 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue, 
     setValue,
     handleTableFieldChange,
     tCutQuestions,
+    tAction,
     handleDuplicateRow,
     handleDeleteRow,
   ])

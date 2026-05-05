@@ -4,7 +4,7 @@ import Block from '@/components/base/Block'
 import Box from '@/components/base/Box'
 import { storageKeys } from '@/constants/storage.constants'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { download } from '@/services/file'
@@ -16,30 +16,25 @@ import { computeGHGPResult } from '@/services/results/ghgp'
 import { getSiteEmissionSourcesWithoutMarketBase } from '@/services/results/utils'
 import { isDeactivableFeatureActiveForEnvironment } from '@/services/serverFunctions/deactivableFeatures'
 import { prepareReport } from '@/services/serverFunctions/study'
-import {
-  AdditionalResultTypes,
-  downloadStudyEmissionSources,
-  downloadStudyResults,
-  getDetailedEmissionResults,
-  ResultType,
-} from '@/services/study'
+import { downloadStudyEmissionSources, downloadStudyResults, getDetailedEmissionResults } from '@/services/study'
 import { sortAlphabetically } from '@/services/utils'
+import { AdditionalResultTypes, ResultType } from '@/types/study.types'
 import { getPost } from '@/utils/post'
 import { calculateMonetaryRatio, convertValue } from '@/utils/study'
 import DownloadIcon from '@mui/icons-material/Download'
 import SummarizeIcon from '@mui/icons-material/Summarize'
 import { FormControl, InputLabel, MenuItem, Select, Tab, Tabs } from '@mui/material'
+import type { ExportRule } from '@repo/db-common'
 import {
   ControlMode,
   DeactivatableFeature,
   EmissionFactorBase,
   Environment,
   Export,
-  ExportRule,
   SiteCAUnit,
   StudyResultUnit,
   SubPost,
-} from '@prisma/client'
+} from '@repo/db-common/enums'
 import { Button } from '@repo/ui'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'

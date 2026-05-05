@@ -1,4 +1,4 @@
-import { Environment, Role } from '@prisma/client'
+import { Environment, Role } from '@repo/db-common/enums'
 
 export const getCutRoleFromBase = (role: Role): Role => {
   switch (role) {

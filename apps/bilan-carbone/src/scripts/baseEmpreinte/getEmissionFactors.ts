@@ -1,3 +1,4 @@
+import { prismaClient } from '@/db/client.node'
 import { Command } from 'commander'
 import { getEmissionFactorsFromAPI } from '../../services/importEmissionFactor/baseEmpreinte/getEmissionFactorsFromAPI'
 import { getEmissionFactorsFromCSV } from '../../services/importEmissionFactor/baseEmpreinte/getEmissionFactorsFromCSV'
@@ -17,5 +18,5 @@ const params = program.opts()
 if (params.file) {
   getEmissionFactorsFromCSV(params.name, params.file)
 } else {
-  getEmissionFactorsFromAPI(params.name)
+  getEmissionFactorsFromAPI(prismaClient, params.name)
 }

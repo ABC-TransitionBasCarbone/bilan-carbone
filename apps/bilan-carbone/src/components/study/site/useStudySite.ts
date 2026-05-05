@@ -1,12 +1,11 @@
 'use client'
 
 import { storageKeys } from '@/constants/storage.constants'
-import { FullStudy } from '@/db/study'
-import { StudyWithoutDetail } from '@/services/permissions/study'
+import type { FullStudy } from '@/db/study'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
-export default function useStudySite(study: FullStudy | StudyWithoutDetail, allowAll?: boolean) {
+export default function useStudySite(study: FullStudy, allowAll?: boolean) {
   const [siteId, setSiteState] = useState('')
   const searchParams = useSearchParams()
   const router = useRouter()

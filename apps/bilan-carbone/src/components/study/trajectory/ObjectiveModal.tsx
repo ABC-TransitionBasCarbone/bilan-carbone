@@ -12,6 +12,7 @@ import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { ObjectiveWithScope, TrajectoryWithObjectivesAndScope } from '@/types/trajectory.types'
 import { toScopedValues } from '@/utils/scope.utils'
 import { getYearFromDateStr } from '@/utils/time'
+import { getDisplayedReferenceYearForTrajectoryType } from '@/utils/trajectory'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
@@ -23,13 +24,23 @@ interface Props {
   open: boolean
   onClose: () => void
   trajectory: TrajectoryWithObjectivesAndScope
+  studyYear: number
   onSuccess: () => void
   objective?: ObjectiveWithScope
   sites?: Array<{ id: string; name: string }>
   tagFamilies?: TagFamily[]
 }
 
-const ObjectiveModal = ({ open, onClose, trajectory, onSuccess, objective, sites = [], tagFamilies = [] }: Props) => {
+const ObjectiveModal = ({
+  open,
+  onClose,
+  trajectory,
+  studyYear,
+  onSuccess,
+  objective,
+  sites = [],
+  tagFamilies = [],
+}: Props) => {
   const t = useTranslations('study.transitionPlan.objectiveModal')
   const { environment } = useAppEnvironmentStore()
   const [isLoading, setIsLoading] = useState(false)
@@ -42,6 +53,8 @@ const ObjectiveModal = ({ open, onClose, trajectory, onSuccess, objective, sites
     [tagFamilies],
   )
   const allEnvSubPosts = useMemo(() => getEnvSubPosts(environment), [environment])
+  const referenceYear =
+    trajectory.referenceYear ?? getDisplayedReferenceYearForTrajectoryType(trajectory.type, studyYear)
 
   const defaultValues = objective
     ? {
@@ -50,6 +63,7 @@ const ObjectiveModal = ({ open, onClose, trajectory, onSuccess, objective, sites
         subPosts: objective.subPosts.length > 0 ? objective.subPosts.map((sp) => sp.subPost) : allEnvSubPosts,
         objectives: [
           {
+            name: objective.name ?? '',
             startYear: objective.startYear?.toString(),
             targetYear: objective.targetYear.toString(),
             reductionRate: Number((objective.reductionRate * 100).toFixed(2)),
@@ -57,6 +71,7 @@ const ObjectiveModal = ({ open, onClose, trajectory, onSuccess, objective, sites
         ],
       }
     : {
+        name: '',
         siteIds: allSiteIds,
         tagIds: allTagIds,
         subPosts: allEnvSubPosts,
@@ -66,7 +81,7 @@ const ObjectiveModal = ({ open, onClose, trajectory, onSuccess, objective, sites
   const { control, handleSubmit, watch, reset, setValue, formState } = useForm<ObjectiveModalFormData>({
     defaultValues,
     mode: 'onChange',
-    resolver: zodResolver(createObjectiveModalSchema({ hasTagFamilies: tagFamilies.length > 0 })),
+    resolver: zodResolver(createObjectiveModalSchema({ hasTagFamilies: tagFamilies.length > 0, referenceYear })),
   })
 
   const {
@@ -96,6 +111,7 @@ const ObjectiveModal = ({ open, onClose, trajectory, onSuccess, objective, sites
         () =>
           updateSubObjective({
             id: objective.id,
+            name: obj.name,
             targetYear: getYearFromDateStr(obj.targetYear!),
             startYear: getYearFromDateStr(obj.startYear!),
             reductionRate: Number((obj.reductionRate! / 100).toFixed(4)),
@@ -124,6 +140,7 @@ const ObjectiveModal = ({ open, onClose, trajectory, onSuccess, objective, sites
       }
 
       const objectivesToCreate = validObjectives.map((obj) => ({
+        name: obj.name,
         trajectoryId: trajectory.id,
         targetYear: getYearFromDateStr(obj.targetYear!),
         startYear: getYearFromDateStr(obj.startYear!),
@@ -211,7 +228,9 @@ const ObjectiveModal = ({ open, onClose, trajectory, onSuccess, objective, sites
               />
             ))}
             {!isEditing && (
-              <AddObjectiveButton onClick={() => append({ startYear: '', targetYear: '', reductionRate: 0 })} />
+              <AddObjectiveButton
+                onClick={() => append({ startYear: '', targetYear: '', reductionRate: 0, name: '' })}
+              />
             )}
           </div>
         </div>

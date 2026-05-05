@@ -6,7 +6,7 @@ achats . fin de vie moyenne:
       - plastique moyen
       - verre
       - bois
-  unité: kgCO2e/t
+  unité: kgCO2e
   par défaut: 0
   avec:
     carton:

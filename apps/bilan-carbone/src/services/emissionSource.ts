@@ -1,16 +1,8 @@
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { hasDeprecationPeriod } from '@/utils/study'
-import {
-  ControlMode,
-  EmissionSourceCaracterisation,
-  Environment,
-  Export,
-  Import,
-  StudyEmissionSource,
-  SubPost,
-} from '@prisma/client'
-import { StudyWithoutDetail } from './permissions/study'
+import type { StudyEmissionSource } from '@repo/db-common'
+import { ControlMode, EmissionSourceCaracterisation, Environment, Export, Import, SubPost } from '@repo/db-common/enums'
 import { convertTiltSubPostToBCSubPost } from './posts'
 import { getConfidenceInterval, getSquaredStandardDeviationForEmissionSource } from './uncertainty'
 
@@ -32,8 +24,8 @@ type EmissionSourceFormType = Pick<
 
 export const getEmissionSourceCompletion = (
   emissionSource: EmissionSourceFormType,
-  study: FullStudy | StudyWithoutDetail,
-  emissionFactor: (FullStudy | StudyWithoutDetail)['emissionSources'][number]['emissionFactor'],
+  study: FullStudy,
+  emissionFactor: FullStudy['emissionSources'][number]['emissionFactor'],
   environment: Environment | undefined,
 ) => {
   const mandatoryFields = ['name', 'type', 'emissionFactorId'] as (keyof typeof emissionSource)[]
@@ -77,8 +69,8 @@ export const getEmissionSourceCompletion = (
 
 export const canBeValidated = (
   emissionSource: EmissionSourceFormType,
-  study: FullStudy | StudyWithoutDetail,
-  emissionFactor: (FullStudy | StudyWithoutDetail)['emissionSources'][number]['emissionFactor'],
+  study: FullStudy,
+  emissionFactor: FullStudy['emissionSources'][number]['emissionFactor'],
   environment: Environment | undefined,
 ) => {
   return getEmissionSourceCompletion(emissionSource, study, emissionFactor, environment) === 1
@@ -90,7 +82,7 @@ export const getAlpha = (emission: number, confidenceInterval: number[]) => {
 
 export const getEmissionSourceEmission = (
   emissionSource: Pick<
-    (FullStudy | StudyWithoutDetail)['emissionSources'][number],
+    FullStudy['emissionSources'][number],
     'emissionFactor' | 'value' | 'subPost' | 'depreciationPeriod'
   >,
   environment?: Environment,
@@ -118,10 +110,7 @@ const getEmissionSourceMonetaryEmission = (
   return emissionSource.emissionValue
 }
 
-export const getEmissionResults = (
-  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][number],
-  environment: Environment,
-) => {
+export const getEmissionResults = (emissionSource: FullStudy['emissionSources'][number], environment: Environment) => {
   const emission = getEmissionSourceEmission(emissionSource, environment) ?? 0
 
   const squaredStandardDeviation = getSquaredStandardDeviationForEmissionSource(emissionSource)
@@ -135,9 +124,6 @@ export const getEmissionResults = (
     alpha,
   }
 }
-
-export const getEmissionSourcesTotalCo2 = (emissionSources: { emissionValue: number }[]) =>
-  emissionSources.reduce((sum, emissionSource) => sum + emissionSource.emissionValue, 0)
 
 export const getEmissionSourcesTotalMonetaryCo2 = (
   emissionSources: (Pick<FullStudy['emissionSources'][number], 'emissionFactor'> & { emissionValue: number })[],

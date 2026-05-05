@@ -1,10 +1,10 @@
 'use client'
 
 import TransitionPlanBase from '@/components/study/transitionPlan/TransitionPlanBase'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { customRich } from '@/i18n/customRich'
 import type { ActionWithRelations, TrajectoryWithObjectivesAndScope } from '@/types/trajectory.types'
-import type { ExternalStudy, SectenInfo } from '@prisma/client'
+import type { ExternalStudy, SectenInfo } from '@repo/db-common'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import Actions from '../study/transitionPlan/Actions/Actions'
@@ -55,9 +55,10 @@ const ActionsPage = ({
       onboardingStorageKey="actions"
       onboardingDetailedContent={customRich(t, 'onboarding.detailedInfo')}
     >
-      {({ filteredActions }) => (
+      {({ filteredActions, scopedActions }) => (
         <Actions
           actions={filteredActions}
+          scopedActions={scopedActions}
           studyUnit={study.resultsUnit}
           transitionPlanId={transitionPlanId}
           canEdit={canEdit}

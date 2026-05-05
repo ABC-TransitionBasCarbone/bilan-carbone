@@ -1,19 +1,36 @@
-import { SECTEN_SECTORS, SectenSector, SNBC_SECTOR_TARGET_EMISSIONS } from '@/constants/trajectories'
+import {
+  SECTEN_SECTORS,
+  SectenSector,
+  SNBC_FINAL_TARGET_YEAR,
+  SNBC_REFERENCE_YEAR,
+  SNBC_SECTOR_TARGET_EMISSIONS,
+  TRAJECTORY_SNBC_GENERAL_ID,
+} from '@/constants/trajectory.constants'
 import { SectorPercentages } from '@/services/serverFunctions/trajectory.command'
-import type { BaseObjective, OvershootAdjustment, PastStudy, TrajectoryDataPoint } from '@/types/trajectory.types'
-import type { SectenInfo } from '@prisma/client'
+import type {
+  BaseObjective,
+  OvershootAdjustment,
+  PastStudy,
+  TrajectoryDataPoint,
+  TrajectoryWithObjectivesAndScope,
+} from '@/types/trajectory.types'
+import { TrajectoryData } from '@/types/trajectory.types'
+import type { SectenInfo } from '@repo/db-common'
+import { TrajectoryType } from '@repo/db-common/enums'
+import { isSectenSector } from './secten'
 import {
   computePastOrPresentValue,
   getAllHistoricalStudyPoints,
   getGraphStartYear,
   getObjectivesWithOvershootCompensation,
-} from './trajectory'
+  getTrajectoryEmissionsAtYear,
+  isFailedTrajectory,
+  isWithinThreshold,
+} from './trajectory-shared.utils'
 
 // SNBC trajectory constants
-const SNBC_REFERENCE_YEAR = 1990
 const SNBC_SECTOR_FIRST_TARGET_YEAR = 2015
 const SNBC_MID_TARGET_YEAR = 2030
-export const SNBC_FINAL_TARGET_YEAR = 2050
 const SNBC_2030_REDUCTION_RATE = 0.4 // 40% reduction from 1990 to 2030
 const SNBC_2050_REDUCTION_RATE = 5 / 6 // ~83% reduction from 1990 to 2050 (target is 1/6th of 1990 emissions)
 
@@ -631,4 +648,108 @@ export const calculateCustomSNBCSectoralTrajectory = (
   })
 
   return combinedTrajectory
+}
+
+export const getSNBCData = (
+  selectedSnbcTrajectories: string[],
+  sectenData: SectenInfo[],
+  referenceStudyData: PastStudy | null,
+  pastStudies: PastStudy[],
+  studyStartYear: number,
+  totalCo2: number,
+  maxYear: number,
+): { [sectorId: string]: TrajectoryData | null } => {
+  const result: { [sectorId: string]: TrajectoryData | null } = {}
+
+  for (const sectorId of selectedSnbcTrajectories) {
+    if (!referenceStudyData) {
+      result[sectorId] = {
+        previousTrajectoryStartYear: null,
+        previousTrajectory: null,
+        currentTrajectory: calculateSNBCTrajectoryByType(sectorId, {
+          studyEmissions: totalCo2,
+          studyStartYear,
+          sectenData,
+          pastStudies,
+          maxYear,
+        }),
+        withinThreshold: true,
+      }
+    } else {
+      const referenceTrajectory = calculateSNBCTrajectoryByType(sectorId, {
+        studyEmissions: referenceStudyData.totalCo2,
+        studyStartYear: referenceStudyData.year,
+        sectenData,
+        pastStudies: pastStudies.filter((s) => s.year < referenceStudyData.year),
+        maxYear,
+      })
+
+      const referenceEmissionsForStudyStartYear = getTrajectoryEmissionsAtYear(referenceTrajectory, studyStartYear)
+      const withinThreshold =
+        referenceEmissionsForStudyStartYear !== null && isWithinThreshold(totalCo2, referenceEmissionsForStudyStartYear)
+
+      let currentTrajectory: TrajectoryDataPoint[]
+
+      if (withinThreshold) {
+        currentTrajectory = [{ year: studyStartYear, value: totalCo2 }]
+      } else {
+        currentTrajectory = calculateSNBCTrajectoryByType(sectorId, {
+          studyEmissions: totalCo2,
+          studyStartYear,
+          sectenData,
+          pastStudies,
+          displayCurrentStudyValueOnTrajectory: true,
+          overshootAdjustment: {
+            referenceTrajectory,
+            referenceStudyYear: referenceStudyData.year,
+          },
+          maxYear,
+        })
+      }
+
+      const isFailed = isFailedTrajectory(
+        maxYear,
+        referenceStudyData.year,
+        referenceTrajectory,
+        currentTrajectory,
+        withinThreshold,
+      )
+
+      result[sectorId] = {
+        previousTrajectoryStartYear: referenceStudyData.year,
+        previousTrajectory: referenceTrajectory,
+        currentTrajectory,
+        withinThreshold,
+        isFailed,
+      }
+    }
+  }
+
+  return result
+}
+
+export const calculateSNBCTrajectoryByType = (
+  sectorId: string,
+  params: CalculateTrajectoryParams,
+): TrajectoryDataPoint[] => {
+  if (sectorId === TRAJECTORY_SNBC_GENERAL_ID) {
+    return calculateSNBCTrajectory(params)
+  }
+  if (isSectenSector(sectorId)) {
+    return calculateSNBCTrajectory(params, sectorId)
+  }
+  return []
+}
+
+export const getDefaultSnbcSectoralTrajectory = (
+  trajectories: { type: TrajectoryType; isDefault: boolean }[],
+): TrajectoryWithObjectivesAndScope | null => {
+  const trajectory = trajectories.find((t) => t.type === TrajectoryType.SNBC_SECTORAL && t.isDefault)
+  return (trajectory as TrajectoryWithObjectivesAndScope) ?? null
+}
+
+export const getDefaultSnbcSectoralPercentages = (
+  trajectories: { type: TrajectoryType; sectorPercentages: unknown; isDefault: boolean }[],
+): SectorPercentages | null => {
+  return (getDefaultSnbcSectoralTrajectory(trajectories)?.sectorPercentages as SectorPercentages) ?? null
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteStudyCommand } from '@/services/serverFunctions/study'
 import { DeleteCommand, DeleteCommandValidation } from '@/services/serverFunctions/study.command'
@@ -9,7 +9,7 @@ import CopyIcon from '@mui/icons-material/ContentCopy'
 import DeleteIcon from '@mui/icons-material/Delete'
 import LockIcon from '@mui/icons-material/Lock'
 import LockOpenIcon from '@mui/icons-material/LockOpen'
-import { Environment } from '@prisma/client'
+import { Environment } from '@repo/db-common/enums'
 import { useFormatter, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -46,6 +46,7 @@ const StudyDetailsHeader = ({
   const t = useTranslations('study')
   const tStudyDelete = useTranslations('study.delete')
   const tExport = useTranslations('exports')
+  const tCommon = useTranslations('common')
   const router = useRouter()
 
   const form = useForm<DeleteCommand>({
@@ -60,7 +61,7 @@ const StudyDetailsHeader = ({
 
   const onDelete = async () => {
     await callServerFunction(() => deleteStudyCommand(form.getValues()), {
-      getErrorMessage: (error) => tStudyDelete(error),
+      getErrorMessage: (error) => (tStudyDelete.has(error) ? tStudyDelete(error) : tCommon('error')),
       onSuccess: () => {
         router.push('/')
       },

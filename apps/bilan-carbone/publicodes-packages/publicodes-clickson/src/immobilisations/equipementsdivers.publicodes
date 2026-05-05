@@ -16,7 +16,7 @@ immobilisations . équipements divers:
       par défaut: 0
       avec:
         nombre:
-          question: "Combien de chaises (bois) avez-vous achetées ?"
+          question: "Combien de chaises (bois) avez-vous acheté ?"
           unité: unité
           par défaut: 0
         FE:
@@ -36,7 +36,7 @@ immobilisations . équipements divers:
       par défaut: 0
       avec:
         nombre:
-          question: "Combien de chaises (plastique) avez-vous achetées ?"
+          question: "Combien de chaises (plastique) avez-vous acheté ?"
           unité: unité
           par défaut: 0
         FE:
@@ -56,7 +56,7 @@ immobilisations . équipements divers:
       par défaut: 0
       avec:
         nombre:
-          question: "Combien de tables de réunion avez-vous achetées ?"
+          question: "Combien de tables de réunion avez-vous acheté ?"
           unité: unité
           par défaut: 0
         FE:
@@ -76,7 +76,7 @@ immobilisations . équipements divers:
       par défaut: 0
       avec:
         nombre:
-          question: "Combien d'armoires (standard) avez-vous achetées ?"
+          question: "Combien d'armoires (standard) avez-vous acheté ?"
           unité: unité
           par défaut: 0
         FE:

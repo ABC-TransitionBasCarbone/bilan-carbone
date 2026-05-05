@@ -1,14 +1,13 @@
 'use client'
 
 import { EmissionFactorList } from '@/db/emissionFactors'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { customRich } from '@/i18n/customRich'
 import { getEmissionResults } from '@/services/emissionSource'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { getTagFamiliesByStudyId } from '@/services/serverFunctions/emissionSource'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { duplicateStudyEmissionSource } from '@/services/serverFunctions/study'
-import { EmissionSourcesStatus } from '@/services/study'
 import {
   getQualitativeUncertaintyFromQuality,
   getSpecificEmissionFactorQuality,
@@ -16,6 +15,7 @@ import {
   specificFEQualityKeys,
 } from '@/services/uncertainty'
 import { useUnitLabel } from '@/services/unit'
+import { EmissionSourcesStatus } from '@/types/emissionSource.types'
 import { emissionFactorDefautQualityStar, getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
 import { formatEmissionFromNumber, hasDeprecationPeriod, hasEditionRights, isCAS } from '@/utils/study'
@@ -25,16 +25,16 @@ import EditIcon from '@mui/icons-material/Edit'
 import HideIcon from '@mui/icons-material/VisibilityOff'
 import { Autocomplete, FormControl, InputLabel, MenuItem, Popper, TextField } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers'
+import type { StudyTag } from '@repo/db-common'
 import {
   EmissionSourceCaracterisation,
   EmissionSourceType,
   Environment,
   StudyResultUnit,
   StudyRole,
-  StudyTag,
   SubPost,
   Unit,
-} from '@prisma/client'
+} from '@repo/db-common/enums'
 import { Button } from '@repo/ui'
 import classNames from 'classnames'
 import dayjs from 'dayjs'

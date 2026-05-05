@@ -18,7 +18,9 @@ import {
 import { getStudyById } from '@/db/study'
 import { withServerResponse } from '@/utils/serverResponse'
 import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
-import { Import, Prisma, StudyTag, SubPost, UserChecklist } from '@prisma/client'
+import type { Prisma, StudyTag } from '@repo/db-common'
+import { Import, SubPost, UserChecklist } from '@repo/db-common/enums'
+import { revalidatePath } from 'next/cache'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import {
@@ -72,13 +74,17 @@ export const createEmissionSource = async ({
       defaultTags = tags.data as string[]
     }
 
-    return await createEmissionSourceOnStudy({
+    const result = await createEmissionSourceOnStudy({
       ...command,
       emissionSourceTags: { create: defaultTags.map((id) => ({ tagId: id })) },
       ...(emissionFactorId ? { emissionFactor: { connect: { id: emissionFactorId } } } : {}),
       studySite: { connect: { id: studySiteId } },
       study: { connect: { id: studyId } },
     })
+
+    revalidatePath(`/etudes/${studyId}/comptabilisation/saisie-des-donnees/${command.subPost}`)
+
+    return result
   })
 
 export const updateEmissionSource = async ({
@@ -158,6 +164,7 @@ export const updateEmissionSource = async ({
 
     await updateEmissionSourceOnStudy(emissionSourceId, { ...data, lastEditor: { connect: { id: account.id } } })
     addUserChecklistItem(UserChecklist.CreateFirstEmissionSource)
+    revalidatePath(`/etudes/${emissionSource.studyId}/comptabilisation/saisie-des-donnees/${emissionSource.subPost}`)
   })
 
 export const deleteEmissionSource = async (emissionSourceId: string) =>
@@ -181,6 +188,7 @@ export const deleteEmissionSource = async (emissionSourceId: string) =>
     }
 
     await deleteEmissionSourceOnStudy(emissionSourceId)
+    revalidatePath(`/etudes/${emissionSource.studyId}/comptabilisation/saisie-des-donnees/${emissionSource.subPost}`)
   })
 
 export const getEmissionSourcesByStudyId = async (studyId: string) =>

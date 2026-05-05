@@ -1,7 +1,7 @@
 'use server'
 
 import { getAccountOrganizationVersions } from '@/db/account'
-import { prismaClient } from '@/db/client'
+import { prismaClient } from '@/db/client.server'
 import { getEmissionFactorWithoutQuality } from '@/db/emissionFactors'
 import {
   createOrganizationWithVersion,
@@ -23,7 +23,8 @@ import { uniqueByKey } from '@/utils/array'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 import { withServerResponse } from '@/utils/serverResponse'
 import { isAdmin } from '@/utils/user'
-import { Account, Prisma, StudyRole, User, UserChecklist } from '@prisma/client'
+import type { Account, Prisma, User } from '@repo/db-common'
+import { StudyRole, UserChecklist } from '@repo/db-common/enums'
 import { auth, dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED, UNKNOWN_ERROR } from '../permissions/check'
 import { hasAccessToCreateOrganization } from '../permissions/environment'
@@ -121,12 +122,12 @@ export const updateOrganizationSitesCommand = async (command: SitesCommand, orga
     await updateOrganizationSites(command, organizationVersionId, caUnit)
   })
 
-export const deleteOrganizationCommand = async ({ id, name }: DeleteCommand) =>
+export const deleteOrganizationCommand = async ({ id: organizationVersionId, name }: DeleteCommand) =>
   withServerResponse('deleteOrganizationCommand', async () => {
-    if (!(await canDeleteOrganizationVersion(id))) {
+    if (!(await canDeleteOrganizationVersion(organizationVersionId))) {
       throw new Error(NOT_AUTHORIZED)
     }
-    const orgName = await getOrgNameByOrgVersionId(id)
+    const orgName = await getOrgNameByOrgVersionId(organizationVersionId)
     if (!orgName) {
       throw new Error(NOT_AUTHORIZED)
     }
@@ -135,7 +136,7 @@ export const deleteOrganizationCommand = async ({ id, name }: DeleteCommand) =>
       throw new Error('wrongName')
     }
 
-    return deleteClient(id)
+    return deleteClient(organizationVersionId)
   })
 
 export const setOnboardedOrganizationVersion = async (organizationVersionId: string) =>

@@ -1,6 +1,7 @@
 import { isSimplifiedEnvironment } from '@/services/publicodes/simplifiedPublicodesConfig'
 import { ClicksonRoles, CutRoles } from '@/services/roles'
-import { Environment, Prisma, Role, UserStatus } from '@prisma/client'
+import type { Prisma } from '@repo/db-common'
+import { Environment, Role, UserStatus } from '@repo/db-common/enums'
 import { UserSession } from 'next-auth'
 
 export const isAdmin = (userRole: Role) => userRole === Role.ADMIN || userRole === Role.SUPER_ADMIN
@@ -19,6 +20,7 @@ export const findUserInfo = (user: UserSession) =>
       },
       status: true,
       role: true,
+      formationName: true,
       updatedAt: true,
     },
     where: canEditMemberRole(user)

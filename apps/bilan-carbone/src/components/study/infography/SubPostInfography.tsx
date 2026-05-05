@@ -1,5 +1,5 @@
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
-import { SubPost } from '@prisma/client'
+import { SubPost } from '@repo/db-common/enums'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'

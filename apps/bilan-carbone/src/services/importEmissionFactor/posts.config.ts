@@ -1,4 +1,4 @@
-import { SubPost } from '@prisma/client'
+import { SubPost } from '@repo/db-common/enums'
 
 export const elementsBySubPost: Record<SubPost, string[]> = {
   [SubPost.CombustiblesFossiles]: [

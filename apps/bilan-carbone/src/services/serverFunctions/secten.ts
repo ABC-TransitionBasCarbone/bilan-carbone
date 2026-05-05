@@ -2,7 +2,7 @@
 
 import { getLatestSectenVersion as dbGetLatestSectenVersion, getSectenData as dbGetSectenData } from '@/db/secten'
 import { ApiResponse, withServerResponse } from '@/utils/serverResponse'
-import type { SectenInfo, SectenVersion } from '@prisma/client'
+import type { SectenInfo, SectenVersion } from '@repo/db-common'
 
 export const getSectenData = async (versionId?: string): Promise<ApiResponse<SectenInfo[]>> =>
   withServerResponse('getSectenData', async () => {

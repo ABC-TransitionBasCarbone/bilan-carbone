@@ -14,6 +14,12 @@ describe('Edit study', () => {
     cy.login()
 
     cy.visit('/etudes/creer')
+    cy.getByTestId('organization-sites-select-all-checkbox').within(() => {
+      cy.get('input').check({ force: true })
+      cy.get('input').should('be.checked')
+      cy.get('input').uncheck({ force: true })
+      cy.get('input').should('not.be.checked')
+    })
     cy.get('[data-testid="organization-sites-checkbox"] > input').eq(1).click({ force: true })
     cy.getByTestId('organization-sites-etp')
       .eq(1)

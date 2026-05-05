@@ -2,6 +2,7 @@
 
 import LoadingButton from '@/components/base/LoadingButton'
 import Modal from '@/components/modals/Modal'
+import { SBTI_START_YEAR, SNBC_FINAL_TARGET_YEAR } from '@/constants/trajectory.constants'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import {
   createTrajectorySchema,
@@ -15,22 +16,22 @@ import {
 } from '@/services/serverFunctions/trajectory.serverFunction'
 import type { BaseObjective, PastStudy } from '@/types/trajectory.types'
 import { TrajectoryWithObjectivesAndScope } from '@/types/trajectory.types'
+import { getDefaultSBTIReductionRate } from '@/utils/sbti'
 import {
   calculateBaseSNBCReductionRates,
   calculateSectoralSNBCReductionRates,
   extractSNBCReductionRatesFromObjectives,
-  SNBC_FINAL_TARGET_YEAR,
 } from '@/utils/snbc'
 import { getYearFromDateStr } from '@/utils/time'
 import {
   getCorrectedObjectives,
   getDefaultObjectivesForTrajectoryType,
-  getDefaultSBTIReductionRate,
   getDisplayedReferenceYearForTrajectoryType,
-  SBTI_START_YEAR,
 } from '@/utils/trajectory'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { SectenInfo, TrajectoryType } from '@prisma/client'
+import { Alert } from '@mui/material'
+import type { SectenInfo } from '@repo/db-common'
+import { TrajectoryType } from '@repo/db-common/enums'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import { useEffect, useMemo, useState } from 'react'
@@ -52,6 +53,8 @@ interface Props {
   studyEmissions?: number
   pastStudies?: PastStudy[]
   defaultSnbcSectoralPercentages?: SectorPercentages | null
+  selectedSiteIds?: string[]
+  siteOptions?: { id: string; name: string }[]
 }
 
 const getDefaultValues = (defaultSnbcSectoralPercentages?: SectorPercentages | null): TrajectoryFormData => ({
@@ -85,13 +88,31 @@ const TrajectoryCreationModal = ({
   studyEmissions = 0,
   pastStudies = [],
   defaultSnbcSectoralPercentages,
+  selectedSiteIds = [],
+  siteOptions = [],
 }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectoryModal')
   const isEditMode = !!trajectory
+
+  const selectedSiteNames = useMemo(() => {
+    if (selectedSiteIds.length === 0 || selectedSiteIds.length === siteOptions.length) {
+      return null
+    }
+    return selectedSiteIds.map((id) => siteOptions.find((s) => s.id === id)?.name ?? id)
+  }, [selectedSiteIds, siteOptions])
+
+  const siteWarning = selectedSiteNames ? (
+    <Alert severity="warning" className="mb1">
+      {t('siteFilterWarning', { siteNames: selectedSiteNames.join(', '), count: selectedSiteNames.length })}
+    </Alert>
+  ) : null
   const [activeStep, setActiveStep] = useState(isEditMode || !isFirstCreation ? 1 : 0)
   const [isLoading, setIsLoading] = useState(false)
   const { callServerFunction } = useServerFunction()
-  const trajectorySchema = createTrajectorySchema()
+  const existingSubObjectiveStartYears = trajectory
+    ? trajectory.objectives.filter((o) => !o.isDefault).map((o) => o.startYear!)
+    : []
+  const trajectorySchema = createTrajectorySchema({ existingSubObjectiveStartYears })
 
   const {
     control,
@@ -452,6 +473,7 @@ const TrajectoryCreationModal = ({
           },
         ]}
       >
+        {siteWarning}
         {trajectoryType && (
           <TrajectoryCreationStep2
             isSBTI={isSBTI}
@@ -493,6 +515,7 @@ const TrajectoryCreationModal = ({
         ) : undefined
       }
     >
+      {siteWarning}
       {activeStep === 0 && (
         <TrajectoryCreationStep1 trajectoryType={trajectoryType} handleModeSelect={handleModeSelect} />
       )}

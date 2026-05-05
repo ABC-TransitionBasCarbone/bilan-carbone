@@ -1,5 +1,7 @@
-import { DeactivatableFeature, Environment, Prisma, UserSource } from '@prisma/client'
-import { prismaClient } from './client'
+'use server'
+import type { DeactivatableFeature, Prisma } from '@repo/db-common'
+import { Environment, UserSource } from '@repo/db-common/enums'
+import { prismaClient } from './client.server'
 
 export type RestrictionsTypes = UserSource | Environment
 

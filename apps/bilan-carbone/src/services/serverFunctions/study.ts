@@ -16,7 +16,7 @@ import {
   getAccountsFromOrganization,
   getAccountsUserLevel,
 } from '@/db/account'
-import { prismaClient } from '@/db/client'
+import { prismaClient } from '@/db/client.server'
 import { findCncByCncCode, updateNumberOfProgrammedFilms } from '@/db/cnc'
 import { createDocument, deleteDocument } from '@/db/document'
 import {
@@ -111,29 +111,33 @@ import {
 import { formatDateFr } from '@/utils/time'
 import { isAdmin } from '@/utils/user'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
-import {
+
+import { hasSufficientLevel } from '@/utils/study'
+import type {
   Account,
-  CommentStatus,
-  ControlMode,
   Document,
-  DocumentCategory,
-  DuplicableStudy,
   EmissionFactor,
   EmissionFactorImportVersion,
+  Prisma,
+  StudyEmissionSource,
+} from '@repo/db-common'
+import {
+  CommentStatus,
+  ControlMode,
+  DocumentCategory,
+  DuplicableStudy,
   EmissionSourceCaracterisation,
   Environment,
   Export,
   Import,
   Level,
-  Prisma,
   Role,
-  StudyEmissionSource,
   StudyResultUnit,
   StudyRole,
   SubPost,
   UserChecklist,
   UserStatus,
-} from '@prisma/client'
+} from '@repo/db-common/enums'
 import Docxtemplater from 'docxtemplater'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
@@ -164,11 +168,11 @@ import {
   canEditStudyFlows,
   canUpgradeSourceVersion,
   getEnvironmentsForDuplication,
-  isAdminOnStudyOrga,
 } from '../permissions/study'
+import { isAdminOnStudyOrga } from '../permissions/study.utils'
 import { isSimplifiedEnvironment, SimplifiedEnvironment } from '../publicodes/simplifiedPublicodesConfig'
 import { deleteFileFromBucket, getFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'
-import { getTransEnvironmentSubPost, hasSufficientLevel } from '../study'
+import { getTransEnvironmentSubPost } from '../study'
 import { UpdateEmissionSourceCommand } from './emissionSource.command'
 import { saveAnswerForQuestion } from './question'
 import { saveSituation as saveSituationInDB } from './situation'

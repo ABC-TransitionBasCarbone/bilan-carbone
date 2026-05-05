@@ -1,6 +1,6 @@
 import { getMockedAuthUser } from '@/tests/utils/models/user'
 import { expect } from '@jest/globals'
-import { Environment, Role } from '@prisma/client'
+import { Environment, Role } from '@repo/db-common/enums'
 import {
   canEditOrganizationVersion,
   hasActiveLicence,
@@ -193,7 +193,7 @@ describe('organisation utils', () => {
 
   describe('hasActiveLicenceForFormation', () => {
     beforeEach(() => {
-      jest.useFakeTimers().setSystemTime(new Date('2026-01-15'))
+      jest.useFakeTimers().setSystemTime(new Date('2026-01-15').getTime())
       process.env.MEMBERSHIP_BLOCKING_DATE = '15/02'
     })
 
@@ -293,7 +293,7 @@ describe('organisation utils', () => {
 
   describe('isLicenceActiveForFormation', () => {
     beforeEach(() => {
-      jest.useFakeTimers().setSystemTime(new Date('2026-01-15'))
+      jest.useFakeTimers().setSystemTime(new Date('2026-01-15').getTime())
     })
 
     afterEach(() => {
@@ -321,7 +321,7 @@ describe('organisation utils', () => {
 
     it('should return true if has 2025 and we are still in 2025', () => {
       process.env.MEMBERSHIP_BLOCKING_DATE = '01/01'
-      jest.setSystemTime(new Date('2025-12-25'))
+      jest.setSystemTime(new Date('2025-12-25').getTime())
       expect(isLicenceActiveForFormation([2025])).toBe(true)
       expect(isLicenceActiveForFormation([2025, 2026])).toBe(true)
     })
@@ -335,7 +335,7 @@ describe('organisation utils', () => {
     })
 
     it('should return empty if not BC environment', () => {
-      jest.useFakeTimers().setSystemTime(new Date('2026-01-15'))
+      jest.useFakeTimers().setSystemTime(new Date('2026-01-15').getTime())
       Object.values(Environment)
         .filter((env) => env !== Environment.BC)
         .forEach((env) => {
@@ -344,7 +344,7 @@ describe('organisation utils', () => {
     })
 
     it('should return empty if has license for next year', () => {
-      jest.useFakeTimers().setSystemTime(new Date('2026-01-15'))
+      jest.useFakeTimers().setSystemTime(new Date('2026-01-15').getTime())
       expect(
         shouldRenewLicenceText({
           activatedLicence: [2027],
@@ -356,7 +356,7 @@ describe('organisation utils', () => {
     it('should return renewUpcoming if has license for current year but not for next year and we are in renewal period', () => {
       process.env.NEXT_LICENSE_RENEWAL_MONTH_START = '12'
       process.env.NEXT_LICENSE_RENEWAL_MONTH_END = '2'
-      jest.useFakeTimers().setSystemTime(new Date('2025-12-15'))
+      jest.useFakeTimers().setSystemTime(new Date('2025-12-15').getTime())
 
       expect(
         shouldRenewLicenceText({
@@ -369,7 +369,7 @@ describe('organisation utils', () => {
     it('should return renewUpcoming if has license for last year but not for current year and is before renwalMessageEndMonth', () => {
       process.env.NEXT_LICENSE_RENEWAL_MONTH_START = '12'
       process.env.NEXT_LICENSE_RENEWAL_MONTH_END = '2'
-      jest.useFakeTimers().setSystemTime(new Date('2026-01-15'))
+      jest.useFakeTimers().setSystemTime(new Date('2026-01-15').getTime())
 
       expect(
         shouldRenewLicenceText({
@@ -382,7 +382,7 @@ describe('organisation utils', () => {
     it('should return renew if does not have license for current year and is after renwalMessageEndMonth', () => {
       process.env.NEXT_LICENSE_RENEWAL_MONTH_START = '12'
       process.env.NEXT_LICENSE_RENEWAL_MONTH_END = '2'
-      jest.useFakeTimers().setSystemTime(new Date('2026-02-15'))
+      jest.useFakeTimers().setSystemTime(new Date('2026-02-15').getTime())
 
       expect(
         shouldRenewLicenceText({

@@ -11,6 +11,7 @@ This is a Next.js monorepo for the "Bilan Carbone" platform, focused on carbon a
 - **API**: Endpoints are in `src/app/api/`. Server-side logic is often abstracted into `src/services/` and `src/db/`.
 - **Types & Constants**: Shared types in `src/types/`, constants in `src/constants/`.
 - **Testing**: Cypress for E2E (`cypress/`), Jest for unit/integration (`src/tests/`).
+  - Prefer unit tests on server methods/business logic; avoid component tests unless explicitly requested.
 - **Scripts**: Data import/export and maintenance scripts in `src/scripts/`.
 
 ## Developer Workflows
@@ -19,7 +20,7 @@ This is a Next.js monorepo for the "Bilan Carbone" platform, focused on carbon a
   - Start dev server: `npx next dev --turbopack --port 3001`
   - Prisma Studio: `npx prisma studio`
 - **Testing**:
-  - Run Cypress: `npx cypress run --spec "src/tests/end-to-end/app/register-cut.cy.ts"`
+  - Run Cypress: `npx cypress run --spec "src/tests/end-to-end/app/auth/register-cut.cy.ts"`
   - Run Jest: `npx jest`
 - **Data Import**:
   - Example:  
@@ -34,6 +35,7 @@ This is a Next.js monorepo for the "Bilan Carbone" platform, focused on carbon a
 - **Prisma Usage**:
   - Raw SQL queries use `Prisma.sql` and are only passed to `$queryRaw` for SELECTs.
   - All mutations (INSERT/UPDATE/DELETE) use Prisma model methods, not raw SQL.
+  - **Never modify already-applied Prisma migrations.** If a schema change is needed (e.g., moving triggers/functions to a new schema), create a new migration instead of editing existing ones.
 - **Feature Folders**:
   - UI and logic are grouped by feature (e.g., `src/components/emissionFactor/`, `src/app/(dashboard)/`).
 - **Metadata Handling**:
@@ -53,10 +55,12 @@ This is a Next.js monorepo for the "Bilan Carbone" platform, focused on carbon a
 
 ## Conventions
 
-- **TypeScript everywhere**; strict typing for all models and API responses.
+- **TypeScript everywhere**; strict typing for all models and API responses. Avoid `unknown` and `as unknown as` casts — define proper named types instead (e.g. a `UserImportRecord` type instead of `Record<string, string>` when fields have mixed types).
 - **Constants and enums** are centralized in `src/constants/`.
 - **Async data flows**: All DB/service calls are async/await.
 - **Localization**: All user-facing data is filtered by `locale`.
+- **No leading semicolons**: Do not use semicolons at the start of lines (e.g., `;(mock as jest.Mock)`). The project uses `"semi": false` in Prettier. For mocking in Jest, use `jest.mocked(fn)` to type mock functions instead of casting with leading semicolons.
+- **PR descriptions**: Always write PR descriptions that describe all changes made in the entire PR, not just the latest commit. Include every functional change, test addition, refactor, and convention update.
 
 ## Key Files & Directories
 

@@ -1,9 +1,9 @@
 import AllResultsAdvanced from '@/components/study/results/AllResults'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import AllResultsPublicodes from '@/environments/simplified/study/results/AllResultsPublicodes'
 import { ChartType } from '@/environments/simplified/study/results/utils'
-import { ExportRule, SiteCAUnit } from '@prisma/client'
+import { ExportRule, SiteCAUnit } from '@repo/db-common'
 
 interface Props {
   emissionFactorsWithParts: EmissionFactorWithParts[]

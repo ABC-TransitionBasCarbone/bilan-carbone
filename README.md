@@ -24,10 +24,12 @@ yarn install
 ### 2. Variables d'environnement
 
 Create a `.env` copied from `apps/bilan-carbone/.env.dist` and create a `.env.test` copied from `apps/bilan-carbone/.env.test.dist`.
+Do the same in db-common folder.
 
 ```bash
 cp apps/bilan-carbone/.env.dist apps/bilan-carbone/.env
 cp apps/bilan-carbone/.env.dist.test apps/bilan-carbone/.env.test
+cp packages/db-common/.env.dist packages/db-common/.env
 ```
 
 ### 3. Start the database

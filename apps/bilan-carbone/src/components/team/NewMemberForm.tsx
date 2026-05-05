@@ -8,7 +8,7 @@ import { AddMemberCommand, AddMemberCommandValidation } from '@/services/serverF
 import { getEnvironmentRoles } from '@/utils/user'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
-import { Environment, Role } from '@prisma/client'
+import { Environment, Role } from '@repo/db-common/enums'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'

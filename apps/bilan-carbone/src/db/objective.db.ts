@@ -1,5 +1,5 @@
-import { Prisma, SubPost } from '@prisma/client'
-import { prismaClient } from './client'
+import { Prisma, SubPost } from '@repo/db-common'
+import { prismaClient } from './client.server'
 
 export const getSubObjectives = async (trajectoryId: string, targetYear: number, excludeObjectiveId?: string) => {
   return prismaClient.objective.findMany({
@@ -31,6 +31,7 @@ export const getObjectiveWithTransitionPlan = async (id: string) => {
 
 export const createManyObjectivesAndReturn = async (
   objectives: Array<{
+    name?: string
     trajectoryId: string
     targetYear: number
     startYear?: number
@@ -69,6 +70,7 @@ export const updateObjective = async (
     targetYear: number
     startYear?: number
     reductionRate: number
+    name?: string
   },
   tx: Prisma.TransactionClient,
 ) => {

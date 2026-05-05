@@ -1,9 +1,10 @@
 import { customPostOrder } from '@/environments/clickson/utils/constant'
 import { hasCustomPostOrder } from '@/services/permissions/environment'
 import { BCPost, ClicksonPost, CutPost, Post, subPostsByPost, TiltPost } from '@/services/posts'
-import { AdditionalResultTypes, ResultType } from '@/services/study'
+import type { ResultType } from '@/types/study.types'
+import { AdditionalResultTypes } from '@/types/study.types'
 import { Translations } from '@/types/translation'
-import { Environment, SubPost } from '@prisma/client'
+import { Environment, SubPost } from '@repo/db-common/enums'
 import { sortByCustomOrder } from './array'
 
 export const getPost = (subPost?: SubPost) =>

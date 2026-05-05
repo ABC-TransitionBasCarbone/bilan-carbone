@@ -6,8 +6,8 @@ import { FormTextField } from '@/components/form/TextField'
 import { AddActionFormCommand } from '@/services/serverFunctions/action.command'
 import { getYearFromDateStr } from '@/utils/time'
 import { MenuItem } from '@mui/material'
-import type { StudyResultUnit } from '@prisma/client'
-import { ActionPotentialDeduction, SubPost } from '@prisma/client'
+import type { StudyResultUnit } from '@repo/db-common'
+import { ActionPotentialDeduction, SubPost } from '@repo/db-common/enums'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
@@ -62,7 +62,7 @@ const ActionModalStep1 = ({ studyUnit, control, setValue, errors, sites, tagFami
       <FormTextField
         control={control}
         name="detailedDescription"
-        label={`${t('detailedDescription')} *`}
+        label={t('detailedDescription')}
         placeholder={t('detailedDescriptionPlaceholder')}
         multiline
         data-testid="add-action-detailedDescription"

@@ -2,16 +2,11 @@ import { UpdateOrganizationCommand } from '@/services/serverFunctions/organizati
 import { SitesCommand } from '@/services/serverFunctions/study.command'
 import { OnboardingCommand } from '@/services/serverFunctions/user.command'
 import { unique } from '@/utils/array'
-import {
-  Environment,
-  EstablishmentType,
-  Organization,
-  OrganizationVersion,
-  Prisma,
-  Site,
-  UserStatus,
-} from '@prisma/client'
-import { prismaClient } from './client'
+import type { Organization, OrganizationVersion, Site } from '@repo/db-common'
+import { Prisma } from '@repo/db-common'
+import { Environment, EstablishmentType, UserStatus } from '@repo/db-common/enums'
+import { prismaClient } from './client.server'
+import { OrganizationVersionWithOrganizationSelect } from './organization.select'
 import { deleteStudy } from './study'
 
 export type OrganizationVersionWithOrganization = OrganizationVersion & {
@@ -24,82 +19,6 @@ export type OrganizationVersionWithOrganization = OrganizationVersion & {
   }
 }
 export type OrganizationVersionWithOrganizationWithoutSites = OrganizationVersion & { organization: Organization }
-
-export const OrganizationVersionWithOrganizationSelect = {
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-  organizationId: true,
-  isCR: true,
-  activatedLicence: true,
-  onboarded: true,
-  onboarderId: true,
-  environment: true,
-  parentId: true,
-  parent: {
-    select: {
-      activatedLicence: true,
-    },
-  },
-  organization: {
-    select: {
-      oldBCId: true,
-      id: true,
-      name: true,
-      createdAt: true,
-      updatedAt: true,
-      importedFileDate: true,
-      wordpressId: true,
-      sites: {
-        select: {
-          name: true,
-          etp: true,
-          ca: true,
-          id: true,
-          createdAt: true,
-          updatedAt: true,
-          organizationId: true,
-          oldBCId: true,
-          postalCode: true,
-          city: true,
-          volunteerNumber: true,
-          beneficiaryNumber: true,
-          establishmentId: true,
-          establishmentYear: true,
-          studentNumber: true,
-          academy: true,
-          establishmentType: true,
-          superficy: true,
-          address: true,
-          cncId: true,
-          country: true,
-          cnc: {
-            select: {
-              cncCode: true,
-              seances: true,
-              entrees2024: true,
-              entrees2023: true,
-              semainesActivite: true,
-              latitude: true,
-              longitude: true,
-              cncVersionId: true,
-            },
-          },
-        },
-        orderBy: { createdAt: Prisma.SortOrder.asc },
-      },
-    },
-  },
-  userAccounts: {
-    select: {
-      user: {
-        select: {
-          level: true,
-        },
-      },
-    },
-  },
-}
 
 export const getOrgNameByOrgVersionId = async (id: string | null) => {
   if (!id) {
@@ -402,8 +321,8 @@ export const onboardOrganizationVersion = async (
   })
 }
 
-export const deleteClient = async (id: string) => {
-  const organizationVersion = await getOrgVersionWithOrgId(id)
+export const deleteClient = async (organizationVersionId: string) => {
+  const organizationVersion = await getOrganizationVersionById(organizationVersionId)
   if (!organizationVersion) {
     return
   }
@@ -411,8 +330,8 @@ export const deleteClient = async (id: string) => {
   const organization = await getOrganizationWithSitesById(organizationVersion.organizationId)
 
   const [clientUsers, clientChildren, clientEmissionFactors] = await Promise.all([
-    prismaClient.account.findFirst({ where: { organizationVersionId: id } }),
-    prismaClient.organizationVersion.findFirst({ where: { parentId: id } }),
+    prismaClient.account.findFirst({ where: { organizationVersionId: organizationVersionId } }),
+    prismaClient.organizationVersion.findFirst({ where: { parentId: organizationVersionId } }),
     prismaClient.emissionFactor.findFirst({ where: { organizationId: organizationVersion.organizationId } }),
   ])
   if (clientUsers || clientChildren || clientEmissionFactors) {
@@ -420,17 +339,17 @@ export const deleteClient = async (id: string) => {
   }
   return prismaClient.$transaction(async (transaction) => {
     const studies = await transaction.study.findMany({
-      where: { organizationVersionId: id },
+      where: { organizationVersionId },
     })
     await Promise.all(studies.map((study) => deleteStudy(study.id)))
-    await transaction.organizationVersion.delete({ where: { id } })
+    await transaction.organizationVersion.delete({ where: { id: organizationVersionId } })
 
     if (!organization?.organizationVersions.length) {
       return 'unexpectedAssociations'
     }
 
     await transaction.site.deleteMany({ where: { organizationId: organizationVersion.organizationId } })
-    await transaction.organization.delete({ where: { id } })
+    await transaction.organization.delete({ where: { id: organizationVersion.organizationId } })
   })
 }
 export const getRawOrganizationVersionById = (id: string | null) =>

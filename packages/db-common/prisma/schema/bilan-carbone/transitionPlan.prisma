@@ -89,7 +89,7 @@ model Action {
   transitionPlan   TransitionPlan @relation(fields: [transitionPlanId], references: [id], onDelete: Cascade)
 
   title                    String
-  detailedDescription      String                   @map("detailed_description")
+  detailedDescription      String?                  @map("detailed_description")
   potentialDeduction       ActionPotentialDeduction @map("potential_deduction")
   reductionDetails         String?                  @map("reduction_details")
   reductionValueKg         Int?                     @map("reduction_value_kg")
@@ -245,6 +245,7 @@ model Objective {
   trajectoryId String     @map("trajectory_id")
   trajectory   Trajectory @relation(fields: [trajectoryId], references: [id], onDelete: Cascade)
 
+  name          String? @default("")
   targetYear    Int     @map("target_year")
   startYear     Int?    @map("start_year")
   reductionRate Float   @map("reduction_rate")

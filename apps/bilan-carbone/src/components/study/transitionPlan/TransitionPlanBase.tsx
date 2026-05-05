@@ -2,9 +2,10 @@
 
 import Block from '@/components/base/Block'
 import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { useTransitionPlan } from '@/hooks/useTransitionPlan'
 import { useTransitionPlanFilters } from '@/hooks/useTransitionPlanFilters'
+import { environmentSubPostsMapping } from '@/services/posts'
 import type {
   ActionWithRelations,
   ObjectiveGroup,
@@ -14,7 +15,7 @@ import type {
 import { buildObjectiveGroups } from '@/utils/scope.utils'
 import { scopeMatchesUIFilters } from '@/utils/scopeFilter'
 import { getActionReductionRatio } from '@/utils/study'
-import type { ExternalStudy, SectenInfo, SubPost } from '@prisma/client'
+import type { ExternalStudy, SectenInfo, SubPost } from '@repo/db-common'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useMemo } from 'react'
 import TrajectoryGraph from './TrajectoryGraph'
@@ -26,9 +27,12 @@ export interface TransitionPlanBaseChildProps {
   filteredPastStudies: PastStudy[]
   filteredTrajectories: TrajectoryWithObjectivesAndScope[]
   filteredActions: ActionWithRelations[]
+  scopedActions: ActionWithRelations[]
   selectedSiteIds: string[]
   selectedSubPosts: SubPost[]
   selectedTagIds: string[]
+  objectiveGroupsByTrajectoryId: Map<string, ObjectiveGroup[]>
+  hasFilters: boolean
 }
 
 interface Props {
@@ -82,6 +86,27 @@ const TransitionPlanBase = ({
 
   const allTagIds = useMemo(() => study.tagFamilies.flatMap((f) => f.tags.map((tag) => tag.id)), [study.tagFamilies])
 
+  const hasFilters = useMemo(() => {
+    const allSiteIds = study.sites.map((s) => s.site.id)
+    const envSubPostsByPost = environmentSubPostsMapping[study.organizationVersion.environment]
+    const allEnvSubPosts = Array.from(new Set(Object.values(envSubPostsByPost).flat()))
+    const allTagIdsWithOther = study.tagFamilies.some((f) => f.name !== 'DEFAULT_FAMILY_TAG')
+      ? [...allTagIds, 'other']
+      : allTagIds
+    const sitesFiltered = allSiteIds.length > 0 && selectedSiteIds.length < allSiteIds.length
+    const subPostsFiltered = allEnvSubPosts.length > 0 && selectedSubPosts.length < allEnvSubPosts.length
+    const tagsFiltered = allTagIdsWithOther.length > 0 && selectedTagIds.length < allTagIdsWithOther.length
+    return sitesFiltered || subPostsFiltered || tagsFiltered
+  }, [
+    study.sites,
+    study.organizationVersion.environment,
+    study.tagFamilies,
+    allTagIds,
+    selectedSiteIds,
+    selectedSubPosts,
+    selectedTagIds,
+  ])
+
   const { filteredStudyEmissions, filteredPastStudies } = useTransitionPlan({
     study,
     linkedStudies,
@@ -130,7 +155,7 @@ const TransitionPlanBase = ({
         result.set(traj.id, groups)
       }
     }
-    return result.size > 0 ? result : undefined
+    return result
   }, [trajectories, study, validatedOnly, selectedSiteIds, selectedSubPosts, selectedTagIds])
 
   const filteredActions = useMemo(() => {
@@ -143,18 +168,21 @@ const TransitionPlanBase = ({
       return []
     }
 
-    return actions
-      .filter((action) =>
-        scopeMatchesUIFilters(
-          action.sites?.map((s) => s.studySite.siteId) ?? [],
-          action.subPosts?.map((sp) => sp.subPost) ?? [],
-          action.tags?.map((tag) => tag.studyTag.id) ?? [],
-          selectedSiteIds,
-          selectedSubPosts,
-          selectedTagIds,
-        ),
-      )
-      .map((action) => {
+    return actions.filter((action) =>
+      scopeMatchesUIFilters(
+        action.sites?.map((s) => s.studySite.siteId) ?? [],
+        action.subPosts?.map((sp) => sp.subPost) ?? [],
+        action.tags?.map((tag) => tag.studyTag.id) ?? [],
+        selectedSiteIds,
+        selectedSubPosts,
+        selectedTagIds,
+      ),
+    )
+  }, [allTagIds.length, selectedSiteIds, selectedSubPosts, selectedTagIds, actions])
+
+  const scopedActions = useMemo(
+    () =>
+      filteredActions.map((action) => {
         if (action.reductionValueKg === null) {
           return action
         }
@@ -169,8 +197,9 @@ const TransitionPlanBase = ({
           selectedTagIds,
         )
         return { ...action, reductionValueKg: action.reductionValueKg * ratio }
-      })
-  }, [allTagIds.length, selectedSiteIds, selectedSubPosts, selectedTagIds, actions, study, validatedOnly])
+      }),
+    [filteredActions, study, validatedOnly, selectedSiteIds, selectedSubPosts, selectedTagIds],
+  )
 
   return (
     <>
@@ -213,7 +242,7 @@ const TransitionPlanBase = ({
           <TrajectoryGraph
             study={study}
             trajectories={filteredTrajectories}
-            actions={filteredActions}
+            actions={scopedActions}
             linkedStudies={linkedStudies}
             sectenData={sectenData}
             selectedSnbcTrajectories={[]}
@@ -231,9 +260,12 @@ const TransitionPlanBase = ({
             filteredPastStudies,
             filteredTrajectories,
             filteredActions,
+            scopedActions,
             selectedSiteIds,
             selectedSubPosts,
             selectedTagIds,
+            objectiveGroupsByTrajectoryId,
+            hasFilters,
           })}
         </div>
       </Block>

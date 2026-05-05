@@ -1,6 +1,6 @@
-import { Environment } from '@prisma/client'
+import { Environment } from '@repo/db-common/enums'
 import { Command } from 'commander'
-import { prismaClient } from '../../db/client'
+import { prismaClient } from '../../db/client.server'
 
 const program = new Command()
 

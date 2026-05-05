@@ -2,7 +2,8 @@
 
 import { hasAccessToManualImport } from '@/services/permissions/environment'
 import { getEmissionFactorImportVersions, getFELocations } from '@/services/serverFunctions/emissionFactor'
-import { EmissionFactorImportVersion, Environment, Import } from '@prisma/client'
+import type { EmissionFactorImportVersion } from '@repo/db-common'
+import { Environment, Import } from '@repo/db-common/enums'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import EmissionFactorsFiltersAndTable from './EmissionFactorsFiltersAndTable'

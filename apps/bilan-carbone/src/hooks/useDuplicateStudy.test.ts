@@ -1,4 +1,4 @@
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import {
   COMMON_DATES,
   getMockedDetailedFullStudySite,
@@ -7,7 +7,7 @@ import {
 } from '@/tests/utils/models/study'
 import { getMockedAuthUser } from '@/tests/utils/models/user'
 import { expect } from '@jest/globals'
-import { ControlMode, Export, Level, SiteCAUnit, StudyResultUnit } from '@prisma/client'
+import { ControlMode, Export, Level, SiteCAUnit, StudyResultUnit } from '@repo/db-common/enums'
 import dayjs from 'dayjs'
 import { createDuplicateFormData, updateSitesFromSourceStudy } from './useDuplicateStudy'
 

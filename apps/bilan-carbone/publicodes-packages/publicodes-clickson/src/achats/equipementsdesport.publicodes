@@ -20,7 +20,7 @@ achats . équipements de sport:
       par défaut: 0
       avec:
         nombre:
-          question: "Combien de ballons de volley avez-vous achetés ?"
+          question: "Combien de ballons de volley avez-vous acheté ?"
           unité: unité
           par défaut: 0
         FE:
@@ -40,7 +40,7 @@ achats . équipements de sport:
       par défaut: 0
       avec:
         nombre:
-          question: "Combien de ballons de handball avez-vous achetés ?"
+          question: "Combien de ballons de handball avez-vous acheté ?"
           unité: unité
           par défaut: 0
         FE:
@@ -60,7 +60,7 @@ achats . équipements de sport:
       par défaut: 0
       avec:
         nombre:
-          question: "Combien de kimonos de judo avez-vous achetés ?"
+          question: "Combien de kimonos de judo avez-vous acheté ?"
           unité: unité
           par défaut: 0
         FE:
@@ -79,7 +79,7 @@ achats . équipements de sport:
       par défaut: 0
       avec:
         nombre:
-          question: "Combien de shorts tous sports avez-vous achetés ?"
+          question: "Combien de shorts tous sports avez-vous acheté ?"
           unité: unité
           par défaut: 0
         FE:
@@ -99,7 +99,7 @@ achats . équipements de sport:
       par défaut: 0
       avec:
         nombre:
-          question: "Combien de maillots tous sports avez-vous achetés ?"
+          question: "Combien de maillots tous sports avez-vous acheté ?"
           unité: unité
           par défaut: 0
         FE:
@@ -119,7 +119,7 @@ achats . équipements de sport:
       par défaut: 0
       avec:
         nombre:
-          question: "Combien de t-shirts en polyester avez-vous achetés ?"
+          question: "Combien de t-shirts en polyester avez-vous acheté ?"
           unité: unité
           par défaut: 0
         FE:
@@ -139,7 +139,7 @@ achats . équipements de sport:
       par défaut: 0
       avec:
         nombre:
-          question: "Combien de ballons de basket avez-vous achetés ?"
+          question: "Combien de ballons de basket avez-vous acheté ?"
           unité: unité
           par défaut: 0
         FE:
@@ -159,7 +159,7 @@ achats . équipements de sport:
       par défaut: 0
       avec:
         nombre:
-          question: "Combien de ballons de football avez-vous achetés ?"
+          question: "Combien de ballons de football avez-vous acheté ?"
           unité: unité
           par défaut: 0
         FE:

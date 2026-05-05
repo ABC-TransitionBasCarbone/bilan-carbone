@@ -13,7 +13,7 @@ import {
 } from '@/services/serverFunctions/emissionFactor.command'
 import { getPost } from '@/utils/post'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { SubPost } from '@prisma/client'
+import { SubPost } from '@repo/db-common/enums'
 import { useRouter } from 'next/navigation'
 import { FormEvent, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'

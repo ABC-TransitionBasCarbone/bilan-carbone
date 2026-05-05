@@ -5,7 +5,7 @@ import { OnboardingCommand, OnboardingCommandValidation } from '@/services/serve
 import { zodResolver } from '@hookform/resolvers/zod'
 import CloseIcon from '@mui/icons-material/Close'
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button as MUIButton } from '@mui/material'
-import { Role } from '@prisma/client'
+import { Role } from '@repo/db-common/enums'
 import { Button } from '@repo/ui'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'

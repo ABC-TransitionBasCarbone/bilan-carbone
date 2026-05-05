@@ -1,21 +1,20 @@
+import { SBTI_REDUCTION_RATE_15, SBTI_REDUCTION_RATE_WB2C, TARGET_YEAR } from '@/constants/trajectory.constants'
 import type { BaseObjective, PastStudy, TrajectoryDataPoint, TrajectoryWithObjectives } from '@/types/trajectory.types'
 import { expect } from '@jest/globals'
-import { Action, StudyResultUnit, TrajectoryType } from '@prisma/client'
+import { Action } from '@repo/db-common'
+import { StudyResultUnit, TrajectoryType } from '@repo/db-common/enums'
+import { calculateActionBasedTrajectory } from './actionTrajectory.utils'
+import { calculateCustomTrajectory } from './customTrajectory.utils'
+import { calculateSBTiTrajectory, getDefaultSBTIReductionRate } from './sbti'
 import { createGeneralSectenData } from './secten.test-utils'
 import { calculateSNBCTrajectory } from './snbc'
+import { calculateTrajectoryYearBounds } from './trajectory'
 import {
-  calculateActionBasedTrajectory,
-  calculateCustomTrajectory,
-  calculateSBTiTrajectory,
   calculateTrajectoryIntegral,
-  calculateTrajectoryYearBounds,
-  getDefaultSBTIReductionRate,
   getTrajectoryEmissionsAtYear,
+  isFailedTrajectory,
   isWithinThreshold,
-  SBTI_REDUCTION_RATE_15,
-  SBTI_REDUCTION_RATE_WB2C,
-  TARGET_YEAR,
-} from './trajectory'
+} from './trajectory-shared.utils'
 
 // TODO: ESM module issue with Jest. Remove these mocks when moving to Vitest
 jest.mock('../services/file', () => ({ download: jest.fn() }))
@@ -278,6 +277,47 @@ describe('calculateTrajectory', () => {
       // At pivot year (2015), historical data applies
       const point2015 = result.find((p) => p.year === 2015)
       expect(point2015?.value).toBeCloseTo(1500, 1)
+    })
+
+    test('with defaultTrajectory and earliest past study after 2020 - current trajectory follows default until that past study year', () => {
+      const sectenData = createGeneralSectenData()
+      const pastStudies = createPastStudies([2022, 1100])
+      const snbcTrajectory = calculateSNBCTrajectory({
+        studyEmissions: 1000,
+        studyStartYear: 2025,
+        sectenData,
+        pastStudies,
+      })
+
+      const result = calculateSBTiTrajectory({
+        studyEmissions: 1000,
+        studyStartYear: 2025,
+        reductionRate: SBTI_REDUCTION_RATE_15,
+        pastStudies,
+        defaultTrajectory: snbcTrajectory,
+      })
+
+      // Years up to and including 2022 (earliest past study) should follow the default (SNBC) trajectory
+      const point2020 = result.find((p) => p.year === 2020)
+      const snbcPoint2020 = snbcTrajectory.find((p) => p.year === 2020)
+      expect(point2020?.value).toEqual(snbcPoint2020?.value)
+
+      const point2021 = result.find((p) => p.year === 2021)
+      const snbcPoint2021 = snbcTrajectory.find((p) => p.year === 2021)
+      expect(point2021?.value).toEqual(snbcPoint2021?.value)
+
+      const point2022 = result.find((p) => p.year === 2022)
+      const snbcPoint2022 = snbcTrajectory.find((p) => p.year === 2022)
+      expect(point2022?.value).toEqual(snbcPoint2022?.value)
+
+      // From 2023 onward (after the past study pivot), SBTi reduction applies — not SNBC values
+      // Use 2030 where the linear SBTi reduction clearly diverges from SNBC
+      const point2030 = result.find((p) => p.year === 2030)
+      expect(point2030?.value).not.toEqual(snbcTrajectory.find((p) => p.year === 2030)?.value)
+
+      // Study start year remains at study emissions
+      const point2025 = result.find((p) => p.year === 2025)
+      expect(point2025?.value).toEqual(1000)
     })
   })
 
@@ -756,6 +796,56 @@ describe('calculateTrajectory', () => {
       // At 2050: non-energy also reaches 0 (900 - 20*45 = 0)
       const point2050 = result.find((p) => p.year === 2050)
       expect(point2050?.value).toBeCloseTo(0, 1)
+    })
+
+    test('overshoot + groups: aggressive sub-objective does not produce false isFailed', () => {
+      const studyEmissions = 1000
+      const studyStartYear = 2025
+      const referenceYear = 2020
+      const referenceEmissions = 1000
+
+      const objectiveGroups = [
+        {
+          ratio: 0.3,
+          objectives: [
+            { targetYear: 2030, reductionRate: 0.042 },
+            { targetYear: 2050, reductionRate: 0.2 }, // aggressive sub-objective, compensation still doable
+          ],
+        },
+        {
+          ratio: 0.7,
+          objectives: [
+            { targetYear: 2030, reductionRate: 0.042 },
+            { targetYear: 2050, reductionRate: 0.042 },
+          ],
+        },
+      ]
+
+      // Reference trajectory: built from referenceYear with same groups
+      const referenceTrajectory = calculateCustomTrajectory({
+        studyEmissions: referenceEmissions,
+        studyStartYear: referenceYear,
+        objectives: [{ targetYear: 2035, reductionRate: 0.05 }],
+        objectiveGroups,
+        defaultTrajectory: DEFAULT_TRAJECTORY,
+      })
+
+      const referenceAt2024 = referenceTrajectory.find((p) => p.year === studyStartYear)?.value ?? 0
+      // Actual emissions (1000) exceed reference at study year → overshoot scenario
+      expect(studyEmissions).toBeGreaterThan(referenceAt2024)
+
+      const currentTrajectory = calculateCustomTrajectory({
+        studyEmissions,
+        studyStartYear,
+        objectives: [{ targetYear: 2035, reductionRate: 0.05 }],
+        objectiveGroups,
+        overshootAdjustment: { referenceTrajectory, referenceStudyYear: referenceYear },
+        defaultTrajectory: DEFAULT_TRAJECTORY,
+      })
+
+      // Current trajectory must not exceed reference budget (isFailed must be false).
+      const isFailed = isFailedTrajectory(2050, referenceYear, referenceTrajectory, currentTrajectory, false)
+      expect(isFailed).toBe(false)
     })
   })
 
@@ -1621,6 +1711,40 @@ describe('calculateTrajectory', () => {
         SBTI_REDUCTION_RATE_15,
         createPastStudies([2019, 1000], [2025, 1200]),
       )
+    })
+
+    test('SBTI - budget equality 2020-2050 with SNBC default trajectory and 2021/2025 studies', () => {
+      const reductionRate = SBTI_REDUCTION_RATE_15
+      const pastStudies = createPastStudies([2021, 300])
+      const sectenData = createGeneralSectenData()
+
+      const snbcDefaultTrajectory = calculateSNBCTrajectory({
+        studyEmissions: 300,
+        studyStartYear: 2021,
+        sectenData,
+        pastStudies,
+      })
+
+      const previousTrajectory = calculateSBTiTrajectory({
+        studyEmissions: 300,
+        studyStartYear: 2021,
+        reductionRate,
+        pastStudies,
+        defaultTrajectory: snbcDefaultTrajectory,
+      })
+
+      const currentTrajectory = calculateSBTiTrajectory({
+        studyEmissions: 280,
+        studyStartYear: 2025,
+        reductionRate,
+        pastStudies,
+        defaultTrajectory: snbcDefaultTrajectory,
+      })
+
+      const previousBudget2020To2050 = calculateTrajectoryIntegral(previousTrajectory, 2020, 2050)
+      const currentBudget2020To2050 = calculateTrajectoryIntegral(currentTrajectory, 2020, 2050)
+
+      expectBudgetsApproximatelyEqual(currentBudget2020To2050, previousBudget2020To2050)
     })
   })
 

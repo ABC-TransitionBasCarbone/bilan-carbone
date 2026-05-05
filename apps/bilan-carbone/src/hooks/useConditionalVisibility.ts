@@ -1,6 +1,6 @@
 import { emissionFactorMap } from '@/constants/emissionFactorMap'
 import { cleanupHiddenQuestion } from '@/services/serverFunctions/question'
-import { Question } from '@prisma/client'
+import type { Question } from '@repo/db-common/types'
 import { useEffect, useMemo, useRef } from 'react'
 import { UseFormSetValue, UseFormWatch } from 'react-hook-form'
 

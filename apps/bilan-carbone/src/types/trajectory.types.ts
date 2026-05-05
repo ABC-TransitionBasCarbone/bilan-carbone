@@ -18,7 +18,7 @@ import type {
   Trajectory,
   TransitionPlan,
   TransitionPlanStudy,
-} from '@prisma/client'
+} from '@repo/db-common'
 
 export interface TrajectoryDataPoint {
   year: number
@@ -85,6 +85,7 @@ export type ActionWithRelations = Action & {
   tags: Array<ActionTag & { studyTag: StudyTag }>
   subPosts: ActionSubPost[]
 }
+
 export interface TrajectoryData {
   previousTrajectoryStartYear: number | null
   previousTrajectory: TrajectoryDataPoint[] | null
@@ -100,9 +101,11 @@ export interface TrajectoryResult {
   customTrajectories: Array<{ id: string; data: TrajectoryData }>
   actionBased: TrajectoryData | null
 }
+
 export type TrajectorySeries = LineSeriesType & {
   dataType: DataType
   isFailed?: boolean
   isCustom?: boolean
   withinThreshold?: boolean
+  isAction?: boolean
 }

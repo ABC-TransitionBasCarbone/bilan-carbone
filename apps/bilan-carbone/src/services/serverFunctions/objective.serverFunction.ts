@@ -1,6 +1,6 @@
 'use server'
 
-import { prismaClient } from '@/db/client'
+import { prismaClient } from '@/db/client.server'
 import {
   createManyObjectiveSites,
   createManyObjectiveSubPosts,
@@ -17,11 +17,12 @@ import {
 import { getTrajectoryType, updateTrajectoryType } from '@/db/trajectory'
 import { getTrajectoryWithTransitionPlan } from '@/db/transitionPlan'
 import { withServerResponse } from '@/utils/serverResponse'
-import { SubPost, TrajectoryType } from '@prisma/client'
+import { SubPost, TrajectoryType } from '@repo/db-common/enums'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { hasEditAccessOnStudy } from '../permissions/study'
 
 export interface CreateObjectiveInput {
+  name?: string
   trajectoryId: string
   targetYear: number
   startYear?: number
@@ -33,6 +34,7 @@ export interface CreateObjectiveInput {
 
 export interface UpdateObjectiveInput {
   id: string
+  name?: string
   targetYear: number
   startYear?: number
   reductionRate: number
@@ -145,6 +147,7 @@ export const updateSubObjective = async (input: UpdateObjectiveInput) =>
           targetYear: input.targetYear,
           startYear: input.startYear,
           reductionRate: input.reductionRate,
+          name: input.name,
         },
         tx,
       )

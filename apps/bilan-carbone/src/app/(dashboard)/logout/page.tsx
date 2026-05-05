@@ -1,7 +1,7 @@
 'use client'
 
-import { signOutEnv } from '@/services/auth'
-import { Environment } from '@prisma/client'
+import { signOutEnv } from '@/services/auth.utils'
+import { Environment } from '@repo/db-common/enums'
 import { useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
 

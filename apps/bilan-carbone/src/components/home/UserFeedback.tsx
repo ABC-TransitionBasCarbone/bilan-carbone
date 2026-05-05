@@ -2,7 +2,7 @@
 
 import { answerFeeback, delayFeeback } from '@/services/serverFunctions/user'
 import { DAY, TIME_IN_MS } from '@/utils/time'
-import { Environment } from '@prisma/client'
+import { Environment } from '@repo/db-common/enums'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import Modal from '../modals/Modal'
@@ -44,7 +44,7 @@ const UserFeedback = ({ environment }: Props) => {
         title={t('title')}
         actions={
           displayForm
-            ? [{ actionType: 'button', children: tCommon('close'), onClick: onClose }]
+            ? [{ actionType: 'button', children: tCommon('action.close'), onClick: onClose }]
             : [
                 { actionType: 'button', children: t('reject'), onClick: onClose },
                 {

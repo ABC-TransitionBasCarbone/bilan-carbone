@@ -1,7 +1,7 @@
 import { isCut, isTilt } from '@/services/permissions/environment'
 import { hasAccessToEngagementActions, isTiltSimplified } from '@/services/permissions/environmentAdvanced'
 import { Translations } from '@/types/translation'
-import { Environment } from '@prisma/client'
+import { Environment } from '@repo/db-common/enums'
 
 interface MenuLink {
   href: string
@@ -10,6 +10,7 @@ interface MenuLink {
   disabled?: boolean
   external?: boolean
   hide?: boolean
+  info?: string
 }
 
 interface MenuSection {
@@ -21,6 +22,9 @@ interface Menu {
   title: MenuLink
   sections: MenuSection[]
 }
+
+export const CLICKS_ON_ACT_INFO =
+  "Construisez votre plan de transition avec Clicks On Act. En cliquant sur ce lien, un nouvel onglet va s'ouvrir."
 
 export const getStudyNavbarMenu = (
   environment: Environment,
@@ -96,6 +100,7 @@ export const getStudyNavbarMenu = (
               href: 'https://transition.clickson.eu',
               label: 'Clicks On Act',
               external: true,
+              info: CLICKS_ON_ACT_INFO,
             },
           ],
         },

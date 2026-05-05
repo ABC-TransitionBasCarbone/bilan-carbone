@@ -1,5 +1,6 @@
+import * as studyUtilsModule from '@/utils/study'
 import { expect } from '@jest/globals'
-import { Environment, Import, Level, StudyRole, SubPost } from '@prisma/client'
+import { Environment, Import, Level, StudyRole, SubPost } from '@repo/db-common/enums'
 import { v4 as uuidv4 } from 'uuid'
 import * as accountModule from '../../db/account'
 import * as emissionFactorsModule from '../../db/emissionFactors'
@@ -12,7 +13,6 @@ import * as userDbModule from '../../db/user'
 import * as authModule from '../../services/auth'
 import * as studyPermissionsModule from '../../services/permissions/study'
 import * as userModule from '../../services/serverFunctions/user'
-import * as studyModule from '../../services/study'
 import { mockedOrganizationVersion } from '../../tests/utils/models/organization'
 import {
   getMockedDuplicateStudyCommand,
@@ -23,7 +23,6 @@ import {
 } from '../../tests/utils/models/study'
 import { getMockedDbActualizedAuth } from '../../tests/utils/models/user'
 import * as organizationUtilsModule from '../../utils/organization'
-import * as studyUtilsModule from '../../utils/study'
 import * as userUtilsModule from '../../utils/user'
 import type { CreateStudyCommand, DuplicateSiteCommand } from './study.command'
 
@@ -61,23 +60,25 @@ const mockTransaction = {
     updateMany: jest.fn(),
   },
 }
-jest.mock('../../db/client', () => ({
+jest.mock('../../db/client.server', () => ({
   prismaClient: {
     $transaction: jest.fn((callback) => callback(mockTransaction)),
   },
 }))
 jest.mock('../../services/permissions/study', () => ({
   hasEditionRights: jest.fn(),
-  getAccountRoleOnStudy: jest.fn(),
-  isAdminOnStudyOrga: jest.fn(),
   canCreateSpecificStudy: jest.fn(),
   canDuplicateStudy: jest.fn(),
   canChangeSites: jest.fn(),
   canChangeDates: jest.fn(),
 }))
+jest.mock('../../services/permissions/study.utils', () => ({
+  isAdminOnStudyOrga: jest.fn(),
+}))
 jest.mock('../../utils/study', () => ({
   getAccountRoleOnStudy: jest.fn(),
   hasEditionRights: jest.fn(),
+  hasSufficientLevel: jest.fn(),
 }))
 jest.mock('../../db/organization', () => ({
   getOrganizationVersionById: jest.fn(),
@@ -151,7 +152,6 @@ jest.mock('../../utils/post', () => ({
 jest.mock('../../services/study', () => ({
   AdditionalResultTypes: {},
   ResultType: {},
-  hasSufficientLevel: jest.fn(),
 }))
 jest.mock('../results/consolidated', () => ({
   computeResultsByPostFromEmissionSources: jest.fn(),
@@ -200,6 +200,7 @@ const mockGetAccountByEmailAndOrganizationVersionId =
   accountModule.getAccountByEmailAndOrganizationVersionId as jest.Mock
 const mockGetAccountByEmailAndEnvironment = accountModule.getAccountByEmailAndEnvironment as jest.Mock
 const mockGetAccountRoleOnStudy = studyUtilsModule.getAccountRoleOnStudy as jest.Mock
+const mockHasSufficientLevel = studyUtilsModule.hasSufficientLevel as jest.Mock
 const mockCanCreateSpecificStudy = studyPermissionsModule.canCreateSpecificStudy as jest.Mock
 const mockCanDuplicateStudy = studyPermissionsModule.canDuplicateStudy as jest.Mock
 const mockGetEmissionFactorsImportActiveVersion =
@@ -211,7 +212,6 @@ const mockCreateEmissionSourcesWithReturn = emissionSourcesModule.createEmission
 const mockIsOrganizationVersionCR = organizationModule.isOrganizationVersionCR as jest.Mock
 const mockCanChangeSites = studyPermissionsModule.canChangeSites as jest.Mock
 const mockCanEditOrganizationVersion = organizationUtilsModule.canEditOrganizationVersion as jest.Mock
-const mockHasSufficientLevel = studyModule.hasSufficientLevel as jest.Mock
 const mockCanChangeDates = studyPermissionsModule.canChangeDates as jest.Mock
 const mockGetTransitionPlanByStudyId = transitionPlanDbModule.getTransitionPlanByStudyId as jest.Mock
 const mockGetTransitionPlansWhereStudyIsLinked =

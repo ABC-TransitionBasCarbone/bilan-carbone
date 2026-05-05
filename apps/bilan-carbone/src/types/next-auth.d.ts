@@ -1,4 +1,4 @@
-import { OrganizationVersion, Account as PrismaAccount, User as PrismaUser } from '@prisma/client'
+import { OrganizationVersion, Account as PrismaAccount, User as PrismaUser } from '@repo/db-common'
 import 'next-auth'
 
 declare module 'next-auth' {

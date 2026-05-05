@@ -2,7 +2,7 @@
 
 import { getOrganizationVersionForRightsCheck } from '@/db/organization'
 import { hasActiveLicenceForFormation } from '@/utils/organization'
-import { DeactivatableFeature } from '@prisma/client'
+import { DeactivatableFeature } from '@repo/db-common/enums'
 import { UserSession } from 'next-auth'
 import { getDeactivableFeatureRestrictions, isDeactivableFeatureActive } from '../serverFunctions/deactivableFeatures'
 import { getUserSource } from '../serverFunctions/user'

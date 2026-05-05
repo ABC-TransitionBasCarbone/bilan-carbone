@@ -1,5 +1,5 @@
-import { SECTEN_SECTORS, SectenSector } from '@/constants/trajectories'
-import type { SectenInfo } from '@prisma/client'
+import { SECTEN_SECTORS, SectenSector } from '@/constants/trajectory.constants'
+import type { SectenInfo } from '@repo/db-common'
 
 export type SectenDiffEntry = {
   year: number
@@ -43,4 +43,8 @@ export const compareSectenVersions = (oldData: SectenInfo[], newData: SectenInfo
   }
 
   return { modified, added }
+}
+
+export const isSectenSector = (sectorId: string): sectorId is SectenSector => {
+  return SECTEN_SECTORS.includes(sectorId as SectenSector)
 }

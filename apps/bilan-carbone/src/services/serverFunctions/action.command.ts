@@ -6,7 +6,7 @@ import {
   ActionPotentialDeduction,
   ActionRelevance,
   SubPost,
-} from '@prisma/client'
+} from '@repo/db-common/enums'
 import { z } from 'zod'
 
 const ActionIndicatorSchema = z.object({
@@ -28,18 +28,18 @@ export type ActionStepCommand = z.infer<typeof ActionStepSchema>
 export const AddActionCommandBase = (hasTagFamilies: boolean) => {
   return z.object({
     title: z.string().min(1),
-    detailedDescription: z.string().min(1),
+    detailedDescription: z.string().optional(),
     transitionPlanId: z.uuid(),
     potentialDeduction: z.enum(ActionPotentialDeduction),
     reductionValue: z.number().optional().nullable(),
     reductionDetails: z.string().optional(),
-    reductionStartYear: z.string(),
-    reductionEndYear: z.string(),
+    reductionStartYear: z.string().min(1),
+    reductionEndYear: z.string().min(1),
     owner: z.string().optional(),
     necessaryBudget: z.number().optional(),
     necesssaryRessources: z.string().optional(),
     indicators: z.array(ActionIndicatorSchema).optional(),
-    steps: z.array(ActionStepSchema).min(1),
+    steps: z.array(ActionStepSchema).min(0),
     facilitatorsAndObstacles: z.string().optional(),
     additionalInformation: z.string().optional(),
     nature: z.array(z.enum(ActionNature)).min(0),

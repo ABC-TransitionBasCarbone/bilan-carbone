@@ -1,6 +1,6 @@
-import { Import } from '@prisma/client'
+import type { PrismaClient } from '@repo/db-common'
+import { Import } from '@repo/db-common/enums'
 import axios, { AxiosResponse } from 'axios'
-import { prismaClient } from '../../../db/client'
 import { HOUR, TIME_IN_MS } from '../../../utils/time'
 import {
   addSourceToStudies,
@@ -19,7 +19,7 @@ type EmissionFactorResponse = {
   results: ImportEmissionFactor[]
 }
 
-export const getEmissionFactorsFromAPI = async (name: string) => {
+export const getEmissionFactorsFromAPI = async (prismaClient: PrismaClient, name: string) => {
   const results = await axios.get('https://data.ademe.fr/data-fair/api/v1/datasets/base-carboner')
   const fileName = results.data.file.name
 

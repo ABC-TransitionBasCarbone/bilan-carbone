@@ -1,21 +1,21 @@
 'use client'
 import Block from '@/components/base/Block'
-import LinkButton from '@/components/base/LinkButton'
 import { FormSelect } from '@/components/form/Select'
 import SiteDeselectionWarningModal from '@/components/modals/SiteDeselectionWarningModal'
 import { OrganizationWithSites } from '@/db/account'
 import DynamicSites from '@/environments/core/organization/DynamicSites'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { NOT_AUTHORIZED } from '@/services/permissions/check'
 import { hasAccessToStudySiteAddAndSelection } from '@/services/permissions/environment'
+import { updateOrganizationCommand } from '@/services/serverFunctions/organization'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
-import { FormHelperText, MenuItem } from '@mui/material'
-import { Environment, SiteCAUnit } from '@prisma/client'
-import { Button } from '@repo/ui'
+import { Button, FormHelperText, MenuItem } from '@mui/material'
+import { Environment, SiteCAUnit } from '@repo/db-common/enums'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
-import { UseFormReturn } from 'react-hook-form'
+import { Control, UseFormReturn, useWatch } from 'react-hook-form'
 
 interface Props {
   user: UserSession
@@ -27,6 +27,35 @@ interface Props {
   targetOrganizationVersionId?: string | null
 }
 
+interface NextButtonProps {
+  control: Control<CreateStudyCommand>
+  onClick: () => void
+  error: string
+  hasNoSites?: boolean
+}
+
+const NextButton = ({ control, onClick, error, hasNoSites }: NextButtonProps) => {
+  const tCommon = useTranslations('common')
+  const sites = useWatch({ control, name: 'sites' })
+  const hasNoSelectedSites = !sites.some((site) => site.selected || (hasNoSites && site.name))
+
+  return (
+    <div className="mt2">
+      <div className="flex justify-end">
+        <Button
+          variant="contained"
+          disabled={hasNoSelectedSites}
+          data-testid="new-study-organization-button"
+          onClick={onClick}
+        >
+          {tCommon('next')}
+        </Button>
+      </div>
+      {error && <FormHelperText error>{error}</FormHelperText>}
+    </div>
+  )
+}
+
 const SelectOrganization = ({
   user,
   organizationVersions,
@@ -36,7 +65,6 @@ const SelectOrganization = ({
   duplicateStudyId,
 }: Props) => {
   const t = useTranslations('study.organization')
-  const tCommon = useTranslations('common')
   const tOrganizationSites = useTranslations('organization.sites')
   const [error, setError] = useState('')
   const [showWarningModal, setShowWarningModal] = useState(false)
@@ -44,6 +72,7 @@ const SelectOrganization = ({
   const [pendingDeselectedSites, setPendingDeselectedSites] = useState<
     Array<{ name: string; emissionSourcesCount: number }>
   >([])
+  const { callServerFunction } = useServerFunction()
 
   const sites = form.watch('sites')
   const organizationVersionId = form.watch('organizationVersionId')
@@ -53,6 +82,7 @@ const SelectOrganization = ({
     () => organizationVersions.find((organizationVersion) => organizationVersion.id === organizationVersionId),
     [organizationVersionId, organizationVersions],
   )
+  const hasNoSites = organizationVersion && organizationVersion.organization.sites.length === 0
 
   useEffect(() => {
     if (!organizationVersion) {
@@ -112,15 +142,38 @@ const SelectOrganization = ({
     setPendingDeselectedSites([])
   }
 
-  const next = () => {
-    if (!sites.some((site) => site.selected)) {
+  const next = async () => {
+    const currentSites = form.getValues('sites').map((site) => (hasNoSites ? { ...site, selected: true } : site))
+
+    if (hasNoSites) {
+      form.setValue('sites', currentSites)
+      await callServerFunction(
+        () =>
+          updateOrganizationCommand({
+            organizationVersionId: organizationVersionId!,
+            name: organizationVersion?.organization.name || '',
+            sites: currentSites,
+          }),
+        {
+          onSuccess: () => {
+            selectOrganizationVersion({
+              ...organizationVersion,
+              organization: {
+                ...organizationVersion!.organization,
+                currentSites,
+              },
+            } as OrganizationWithSites)
+          },
+        },
+      )
+    } else if (!currentSites.some((site) => site.selected)) {
       setError(t('validation.sites'))
       return
     }
 
     if (
       user.environment === Environment.CUT &&
-      sites
+      currentSites
         .filter((site) => site.selected)
         .some(
           (site) =>
@@ -136,8 +189,8 @@ const SelectOrganization = ({
 
     // Check for deselected sites with emission sources when duplicating
     if (duplicateStudyId) {
-      const currentSelectedSiteIds = sites.filter((site) => site.selected).map((site) => site.id)
-      const deselectedSitesWithSources = sites
+      const currentSelectedSiteIds = currentSites.filter((site) => site.selected).map((site) => site.id)
+      const deselectedSitesWithSources = currentSites
         .filter((site) => {
           const wasOriginallySelected = originalSelectedSites?.includes(site.id)
           const isCurrentlySelected = currentSelectedSiteIds.includes(site.id)
@@ -191,27 +244,8 @@ const SelectOrganization = ({
             </FormSelect>
           </>
         )}
-        {organizationVersion &&
-          (organizationVersion.organization.sites.length > 0 ? (
-            <>
-              <DynamicSites sites={sites} form={form} caUnit={caUnit} withSelection />
-              <div className="mt2">
-                <Button
-                  disabled={!sites.some((site) => site.selected)}
-                  data-testid="new-study-organization-button"
-                  onClick={next}
-                >
-                  {tCommon('next')}
-                </Button>
-                {error && <FormHelperText error>{error}</FormHelperText>}
-              </div>
-            </>
-          ) : (
-            <>
-              <p className="title-h3 mt1 mb-2">{t('noSites')}</p>
-              <LinkButton href={`/organisations/${organizationVersion.id}/modifier`}>{t('addSite')}</LinkButton>
-            </>
-          ))}
+        <DynamicSites sites={sites} form={form} caUnit={caUnit} withSelection={!hasNoSites} disabled={false} />
+        <NextButton control={form.control} onClick={next} error={error} hasNoSites={hasNoSites} />
       </Block>
 
       <SiteDeselectionWarningModal

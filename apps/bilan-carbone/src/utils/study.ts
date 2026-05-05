@@ -1,11 +1,10 @@
-import { FullStudy } from '@/db/study'
-import { getEmissionResults, getEmissionSourcesTotalCo2 } from '@/services/emissionSource'
+import type { FullStudy } from '@/db/study'
+import { getEmissionResults } from '@/services/emissionSource'
 import { isTiltSimplified } from '@/services/permissions/environmentAdvanced'
-import { isAdminOnStudyOrga } from '@/services/permissions/study'
+import { isAdminOnStudyOrga } from '@/services/permissions/study.utils'
 import { Post, subPostsByPost } from '@/services/posts'
-import { ResultsByPost } from '@/services/results/consolidated'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
-import { hasSufficientLevel } from '@/services/study'
+import { ResultsByPost } from '@/types/study.types'
 import { isAdmin } from '@/utils/user'
 import {
   EmissionFactorBase,
@@ -18,10 +17,11 @@ import {
   StudyRole,
   SubPost,
   Unit,
-} from '@prisma/client'
+} from '@repo/db-common/enums'
 import { Getter } from '@tanstack/react-table'
 import { UserSession } from 'next-auth'
 import { unique } from './array'
+import { getEmissionSourcesTotalCo2 } from './emissionSources'
 import { formatNumber } from './number'
 import { hasActiveLicence, isInOrgaOrParent } from './organization'
 
@@ -378,3 +378,19 @@ export const getActionReductionRatio = (
 
   return emissionsWithActionScopeAndFilters / emissionsWithActionScope
 }
+
+export const getAllowedLevels = (level: Level | null) => {
+  switch (level) {
+    case Level.Initial:
+      return [Level.Initial]
+    case Level.Standard:
+      return [Level.Initial, Level.Standard]
+    case Level.Advanced:
+      return [Level.Initial, Level.Standard, Level.Advanced]
+    default:
+      return []
+  }
+}
+
+export const hasSufficientLevel = (userLevel: Level | null, targetLevel: Level) =>
+  userLevel ? getAllowedLevels(userLevel).includes(targetLevel) : false

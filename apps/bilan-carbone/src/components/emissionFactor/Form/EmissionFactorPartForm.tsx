@@ -4,7 +4,7 @@ import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor
 import CloseIcon from '@mui/icons-material/Close'
 import ExpandIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary, MenuItem } from '@mui/material'
-import { EmissionFactorPartType } from '@prisma/client'
+import { EmissionFactorPartType } from '@repo/db-common/enums'
 import { Button } from '@repo/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

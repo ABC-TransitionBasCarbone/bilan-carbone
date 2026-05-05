@@ -1,6 +1,7 @@
 import { customRich } from '@/i18n/customRich'
 import { getUserCheckList, mandatoryParentSteps } from '@/services/checklist'
-import { Level, OrganizationVersion, Role, UserChecklist } from '@prisma/client'
+import type { OrganizationVersion } from '@repo/db-common'
+import { Level, Role, UserChecklist } from '@repo/db-common/enums'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'

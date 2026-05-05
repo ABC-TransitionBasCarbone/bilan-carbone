@@ -1,4 +1,4 @@
-import { Role } from '@prisma/client'
+import { Role } from '@repo/db-common/enums'
 
 describe('Team', () => {
   before(() => {
@@ -127,8 +127,7 @@ describe('Team', () => {
 
   it('should add a new member', () => {
     cy.login('bc-admin-1@yopmail.com', 'password-1')
-    cy.getByTestId('button-menu-my-organization').trigger('mouseover')
-    cy.getByTestId('link-equipe').click()
+    cy.visit('/equipe')
 
     cy.getByTestId('pending-invitation').should('not.exist')
     cy.getByTestId('add-member-link').click()

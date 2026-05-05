@@ -1,5 +1,5 @@
 import { expect } from '@jest/globals'
-import { DeactivatableFeature, Environment, Role, UserStatus } from '@prisma/client'
+import { DeactivatableFeature, Environment, Role, UserStatus } from '@repo/db-common/enums'
 
 import {
   addAccount,

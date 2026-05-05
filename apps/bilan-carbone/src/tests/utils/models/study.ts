@@ -1,17 +1,16 @@
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
+import type { Prisma, Study } from '@repo/db-common'
 import {
   ControlMode,
   EmissionFactorBase,
   Export,
   Import,
   Level,
-  Prisma,
-  Study,
   StudyResultUnit,
   StudyRole,
   SubPost,
   Unit,
-} from '@prisma/client'
+} from '@repo/db-common/enums'
 import { mockedOrganizationVersion, mockedOrganizationVersionId } from './organization'
 import { mockedAccountId, mockedUser } from './user'
 

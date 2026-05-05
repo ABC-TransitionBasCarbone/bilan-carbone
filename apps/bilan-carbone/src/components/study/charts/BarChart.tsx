@@ -8,7 +8,7 @@ import styles from './BarChart.module.css'
 
 import { BasicTypeCharts, processBarChartData } from '@/utils/charts'
 import { formatNumber } from '@/utils/number'
-import { StudyResultUnit } from '@prisma/client'
+import { StudyResultUnit } from '@repo/db-common'
 
 const BAR_CHART_CONSTANTS = {
   TICK_ANGLE: -20,

@@ -3,7 +3,7 @@
 import MenuIcon from '@mui/icons-material/Menu'
 import MenuOpenIcon from '@mui/icons-material/MenuOpen'
 import { Drawer, Fab } from '@mui/material'
-import { Environment, StudyRole } from '@prisma/client'
+import { Environment, StudyRole } from '@repo/db-common/enums'
 import classNames from 'classnames'
 import { UUID } from 'crypto'
 import { useTranslations } from 'next-intl'

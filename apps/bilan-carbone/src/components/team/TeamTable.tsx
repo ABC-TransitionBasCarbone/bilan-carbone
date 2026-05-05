@@ -8,7 +8,7 @@ import { isAdvanced } from '@/services/permissions/environment'
 import { deleteOrganizationMember } from '@/services/serverFunctions/organization'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { canEditMemberRole, getEnvironmentRoles } from '@/utils/user'
-import { Role } from '@prisma/client'
+import { Role } from '@repo/db-common/enums'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
@@ -61,7 +61,8 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
     if (environment && isAdvanced(environment)) {
       col.push({
         header: t('level'),
-        accessorFn: (member: TeamMember) => tLevel(member.user.level ? member.user.level : 'noLevel'),
+        accessorFn: (member: TeamMember) =>
+          member.formationName ? member.formationName : tLevel(member.user.level ? member.user.level : 'noLevel'),
       })
     }
 
@@ -168,7 +169,7 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
             actionType: 'button',
             ['data-testid']: 'organization-roles-cancel',
             onClick: () => setDisplayRoles(false),
-            children: tAction('close'),
+            children: tAction('cancel'),
           },
         ]}
       >
@@ -191,13 +192,13 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
             ['data-testid']: 'delete-member-cancel',
             onClick: onClose,
             className: 'secondary',
-            children: t('close'),
+            children: tAction('cancel'),
           },
           {
             actionType: 'button',
             ['data-testid']: 'delete-member-validation',
             onClick: deleteMember,
-            children: t('confirm'),
+            children: tAction('confirm'),
             disabled: !!deletionErrorData,
           },
         ]}
