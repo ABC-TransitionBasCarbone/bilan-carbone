@@ -1,11 +1,11 @@
 import { OnboardingCommand } from '@/services/serverFunctions/user.command'
 import HomeIcon from '@mui/icons-material/Home'
 import PersonIcon from '@mui/icons-material/Person'
+import { FormTextField } from '@repo/components/src/form/TextField'
 import { Role } from '@repo/db-common/enums'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { UseFormReturn } from 'react-hook-form'
-import { FormTextField } from '../form/TextField'
 import styles from './Onboarding.module.css'
 
 interface Props {

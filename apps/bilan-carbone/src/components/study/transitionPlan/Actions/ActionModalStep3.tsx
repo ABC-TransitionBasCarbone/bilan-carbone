@@ -1,7 +1,7 @@
 import { FormAutocomplete } from '@/components/form/Autocomplete'
-import { FormTextField } from '@/components/form/TextField'
 import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
 import { AddActionFormCommand } from '@/services/serverFunctions/action.command'
+import { FormTextField } from '@repo/components/src/form/TextField'
 import { ActionIndicatorType } from '@repo/db-common/enums'
 import { useTranslations } from 'next-intl'
 import { SyntheticEvent } from 'react'

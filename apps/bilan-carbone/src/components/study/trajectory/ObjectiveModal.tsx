@@ -1,6 +1,5 @@
 'use client'
 
-import { CustomFormLabel } from '@/components/form/CustomFormLabel'
 import ScopeSelectors, { TagFamily } from '@/components/form/ScopeSelectors'
 import { OTHER_TAG_ID } from '@/components/form/TagFilter'
 import Modal from '@/components/modals/Modal'
@@ -13,6 +12,7 @@ import { ObjectiveWithScope, TrajectoryWithObjectivesAndScope } from '@/types/tr
 import { toScopedValues } from '@/utils/scope.utils'
 import { getDisplayedReferenceYearForTrajectoryType } from '@/utils/trajectory'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { CustomFormLabel } from '@repo/components/src/form/CustomFormLabel'
 import { getYearFromDateStr } from '@repo/utils'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'

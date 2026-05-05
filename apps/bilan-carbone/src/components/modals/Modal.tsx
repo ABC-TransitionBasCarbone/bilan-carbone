@@ -1,11 +1,11 @@
 'use client'
 import CloseIcon from '@mui/icons-material/Close'
 import { ButtonProps, IconButton, Modal as MUIModal, Typography } from '@mui/material'
+import LoadingButton from '@repo/components/src/base/LoadingButton'
 import { Button } from '@repo/ui'
 import classNames from 'classnames'
 import Box from '../base/Box'
 import LinkButton from '../base/LinkButton'
-import LoadingButton, { Props as LoadingButtonProps } from '../base/LoadingButton'
 import styles from './Modal.module.css'
 
 export interface Props {

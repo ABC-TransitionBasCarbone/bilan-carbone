@@ -1,11 +1,11 @@
 'use client'
 
 import HelpIcon from '@/components/base/HelpIcon'
-import { FormTextField } from '@/components/form/TextField'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { gazKeys } from '@/constants/emissions'
 import { EmissionFactorCommand, maxParts } from '@/services/serverFunctions/emissionFactor.command'
 import { FormControlLabel, FormLabel, Switch, TextField } from '@mui/material'
+import { FormTextField } from '@repo/components/src/form/TextField'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'

@@ -2,7 +2,6 @@
 
 import Block from '@/components/base/Block'
 import HelpIcon from '@/components/base/HelpIcon'
-import IconLabel from '@/components/base/IconLabel'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import SelectStudySite from '@/components/study/site/SelectStudySite'
@@ -18,6 +17,7 @@ import {
 } from '@/services/serverFunctions/study.command'
 import { hasEditionRights } from '@/utils/study'
 import { zodResolver } from '@hookform/resolvers/zod'
+import IconLabel from '@repo/components/src/base/IconLabel'
 import { ControlMode, Export, SiteCAUnit, StudyRole } from '@repo/db-common/enums'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'

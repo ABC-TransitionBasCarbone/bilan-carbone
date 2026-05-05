@@ -2,7 +2,6 @@
 
 import Block from '@/components/base/Block'
 import LinkButton from '@/components/base/LinkButton'
-import { FormTextField } from '@/components/form/TextField'
 import SelectStudySite from '@/components/study/site/SelectStudySite'
 import useStudySite from '@/components/study/site/useStudySite'
 import {
@@ -16,6 +15,7 @@ import { changeStudyCinema, getQuestionsGroupedBySubPost, getStudySite } from '@
 import { ChangeStudyCinemaCommand, ChangeStudyCinemaValidation } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Box, CircularProgress } from '@mui/material'
+import { FormTextField } from '@repo/components/src/form/TextField'
 import type { OpeningHours } from '@repo/db-common'
 import { DayOfWeek } from '@repo/db-common/enums'
 import { useTranslations } from 'next-intl'

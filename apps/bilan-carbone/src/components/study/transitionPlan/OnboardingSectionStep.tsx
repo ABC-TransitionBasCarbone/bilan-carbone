@@ -1,7 +1,7 @@
 import Box from '@/components/base/Box'
-import LoadingButton from '@/components/base/LoadingButton'
 import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
 import { Typography } from '@mui/material'
+import LoadingButton from '@repo/components/src/base/LoadingButton'
 import { Button } from '@repo/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

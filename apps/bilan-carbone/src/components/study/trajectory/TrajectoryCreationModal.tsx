@@ -1,6 +1,5 @@
 'use client'
 
-import LoadingButton from '@/components/base/LoadingButton'
 import Modal from '@/components/modals/Modal'
 import { SBTI_START_YEAR, SNBC_FINAL_TARGET_YEAR } from '@/constants/trajectory.constants'
 import { useServerFunction } from '@/hooks/useServerFunction'
@@ -29,6 +28,7 @@ import {
 } from '@/utils/trajectory'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Alert } from '@mui/material'
+import LoadingButton from '@repo/components/src/base/LoadingButton'
 import type { SectenInfo } from '@repo/db-common'
 import { TrajectoryType } from '@repo/db-common/enums'
 import { getYearFromDateStr } from '@repo/utils'

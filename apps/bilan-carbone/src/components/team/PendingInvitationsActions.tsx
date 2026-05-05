@@ -3,11 +3,11 @@
 import { TeamMember } from '@/db/account'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteMember, resendInvitation } from '@/services/serverFunctions/user'
+import LoadingButton from '@repo/components/src/base/LoadingButton'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import LoadingButton from '../base/LoadingButton'
 import styles from './InvitationsActions.module.css'
 
 interface Props {

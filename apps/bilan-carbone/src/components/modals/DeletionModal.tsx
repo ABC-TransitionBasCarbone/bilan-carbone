@@ -1,12 +1,12 @@
 import { DeleteCommand } from '@/services/serverFunctions/study.command'
 import { handleWarningText } from '@/utils/components'
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
+import Form from '@repo/components/src/base/Form'
+import LoadingButton from '@repo/components/src/base/LoadingButton'
+import { FormTextField } from '@repo/components/src/form/TextField'
 import { Translations } from '@repo/lib'
 import { Button } from '@repo/ui'
 import { Control, UseFormReturn, useWatch } from 'react-hook-form'
-import Form from '../base/Form'
-import LoadingButton from '../base/LoadingButton'
-import { FormTextField } from '../form/TextField'
 
 interface Props<T extends DeleteCommand> {
   form: UseFormReturn<T>

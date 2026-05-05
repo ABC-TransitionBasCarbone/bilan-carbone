@@ -1,11 +1,11 @@
 'use client'
 
 import ColorPicker from '@/components/base/ColorPicker'
-import { CustomFormLabel } from '@/components/form/CustomFormLabel'
 import { FormSelect } from '@/components/form/Select'
-import { FormTextField } from '@/components/form/TextField'
 import { StudyTagFamilyWithTags } from '@/db/study'
 import { MenuItem } from '@mui/material'
+import { CustomFormLabel } from '@repo/components/src/form/CustomFormLabel'
+import { FormTextField } from '@repo/components/src/form/TextField'
 import { Translations } from '@repo/lib'
 import { useTranslations } from 'next-intl'
 import { Control } from 'react-hook-form'
