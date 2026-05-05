@@ -8,6 +8,10 @@ import { ManualEmissionFactorUnitList } from './emissionFactors'
 import { parseNumericValue } from './number'
 import { BcTranslations, extractAllForms, getBcTranslations, getSingularForm } from './translation.utils'
 
+export function getAllPostsLabel(locale: LocaleType): string {
+  return getBcTranslations(locale).emissionFactors.importModal.allPostsAndSubPosts
+}
+
 /**
  * Map a string label coming from the import file to a value of the right type
  * based on the translations file.
@@ -114,16 +118,23 @@ function buildUnitLabelMap(bc: BcTranslations): Record<string, Unit> {
 }
 
 export function mapUnitLabelFromTranslations(label: string | undefined | null, locale: LocaleType): Unit | null {
-  return mapLabelFromTranslations(label, locale, buildUnitLabelMap)
+  const stripped = label?.replace(/^kgCO2e\s*\/\s*/i, '') ?? label
+  return mapLabelFromTranslations(stripped, locale, buildUnitLabelMap)
 }
 
 /**
  * Build a cell from a list of subposts for export following the format:
  * "Post1 : SubPost1 | SubPost2 || Post2 : SubPost3"
+ * Returns the locale-specific all-posts label when all env subposts are covered.
  */
 export function buildPostsAndSubPostsCell(subPosts: SubPost[], locale: LocaleType, environment: Environment): string {
-  const postTranslations = getBcTranslations(locale).emissionFactors.post as unknown as Record<string, string>
   const subPostsByPost = environmentSubPostsMapping[environment] as Record<string, SubPost[]>
+  const allEnvSubPosts = Object.values(subPostsByPost).flat()
+  if (allEnvSubPosts.every((sp) => subPosts.includes(sp))) {
+    return getAllPostsLabel(locale)
+  }
+
+  const postTranslations = getBcTranslations(locale).emissionFactors.post as unknown as Record<string, string>
   const envPosts = environmentPostMapping[environment]
 
   const groups: string[] = []
@@ -156,6 +167,12 @@ export function parsePostsAndSubPostsCell(
   if (!cell) {
     return { success: false, errors: [{ key: 'missingPostsAndSubPosts' }] }
   }
+
+  if (cell.trim().toLowerCase() === getAllPostsLabel(locale).toLowerCase()) {
+    const subPostsByPost = environmentSubPostsMapping[environment] as Record<string, SubPost[]>
+    return { success: true, subPosts: subPostsByPost as Record<string, SubPost[]> }
+  }
+
   const result: Record<string, SubPost[]> = {}
   const errors: ParseError[] = []
   const groups = String(cell)
@@ -194,6 +211,7 @@ export function parsePostsAndSubPostsCell(
 
 function parseSheet(
   buffer: Buffer,
+  locale: LocaleType,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): { success: false; errors: ImportError[] } | { success: true; dataRows: any[][] } {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -209,7 +227,19 @@ function parseSheet(
     return { success: false, errors: [{ line: 0, key: 'emptyFile' }] }
   }
 
-  const dataRows = sheet.data.slice(1).filter((row) => row.some((cell) => String(cell ?? '').trim() !== ''))
+  const dataRows = sheet.data.slice(1).filter((row) =>
+    row.some((cell, i) => {
+      const value = String(cell ?? '').trim()
+      if (value === '') {
+        return false
+      }
+      // Ignore the posts and subposts column from the filtering if it contains the special value
+      if (i === COLUMNS.postsAndSubPosts && value.toLowerCase() === getAllPostsLabel(locale).toLowerCase()) {
+        return false
+      }
+      return true
+    }),
+  )
 
   if (dataRows.length === 0) {
     return { success: false, errors: [{ line: 0, key: 'emptyFile' }] }
@@ -219,7 +249,7 @@ function parseSheet(
 }
 
 export function parseImportFile(buffer: Buffer, locale: LocaleType, environment: Environment): ParseResult {
-  const sheetResult = parseSheet(buffer)
+  const sheetResult = parseSheet(buffer, locale)
   if (!sheetResult.success) {
     return sheetResult
   }

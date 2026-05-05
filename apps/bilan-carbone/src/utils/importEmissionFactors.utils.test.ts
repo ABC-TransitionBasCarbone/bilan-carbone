@@ -4,7 +4,12 @@ import { COLUMNS } from '@/types/importEmissionFactors.types'
 import { expect } from '@jest/globals'
 import { EmissionFactorBase, Environment, SubPost, Unit } from '@repo/db-common/enums'
 import xlsx from 'node-xlsx'
-import { buildPostsAndSubPostsCell, parseImportFile, parsePostsAndSubPostsCell } from './importEmissionFactors.utils'
+import {
+  buildPostsAndSubPostsCell,
+  getAllPostsLabel,
+  parseImportFile,
+  parsePostsAndSubPostsCell,
+} from './importEmissionFactors.utils'
 
 // Ordered by COLUMNS index
 type RowInput = {
@@ -158,6 +163,17 @@ describe('parsePostsAndSubPostsCell', () => {
     })
   })
 
+  describe('with getAllPostsLabel', () => {
+    it('returns all subposts for the environment', () => {
+      const result = parsePostsAndSubPostsCell(getAllPostsLabel(Locale.FR), Locale.FR, Environment.BC)
+      expect(result.success).toBe(true)
+      if (result.success) {
+        expect(result.subPosts[Post.Energies]).toBeDefined()
+        expect(result.subPosts[Post.Fret]).toBeDefined()
+      }
+    })
+  })
+
   describe('with EN locale and BC environment', () => {
     it('parses multiple post groups', () => {
       const result = parsePostsAndSubPostsCell(
@@ -192,6 +208,13 @@ describe('buildPostsAndSubPostsCell', () => {
   it('builds a cell from multiple posts', () => {
     const result = buildPostsAndSubPostsCell([SubPost.Electricite, SubPost.FretEntrant], Locale.FR, Environment.BC)
     expect(result).toBe('Énergie : Électricité || Fret : Fret entrant')
+  })
+
+  it('returns getAllPostsLabel when all env subposts are covered', () => {
+    const { subPostsByPostBC } = jest.requireActual<typeof import('@/services/posts')>('@/services/posts')
+    const allBC = Object.values(subPostsByPostBC).flat() as SubPost[]
+    const result = buildPostsAndSubPostsCell(allBC, Locale.FR, Environment.BC)
+    expect(result).toBe(getAllPostsLabel(Locale.FR))
   })
 
   describe('round-trip parse → build → parse', () => {
@@ -311,6 +334,24 @@ describe('parseImportFile', () => {
       expect(result.success).toBe(false)
       if (!result.success) {
         expect(result.errors.some((e) => e.key === 'invalidUnit')).toBe(true)
+      }
+    })
+
+    it('strips kgCO2e/ prefix from unit before mapping', () => {
+      const buffer = makeBuffer([{ ...VALID_ROW, unit: 'kgCO2e/kg' }])
+      const result = parseImportFile(buffer, Locale.FR, Environment.BC)
+      expect(result.success).toBe(true)
+      if (result.success) {
+        expect(result.rows[0].unit).toBe(Unit.KG)
+      }
+    })
+
+    it('strips kgCO2e/ prefix with spaces', () => {
+      const buffer = makeBuffer([{ ...VALID_ROW, unit: 'kgCO2e / kg' }])
+      const result = parseImportFile(buffer, Locale.FR, Environment.BC)
+      expect(result.success).toBe(true)
+      if (result.success) {
+        expect(result.rows[0].unit).toBe(Unit.KG)
       }
     })
 

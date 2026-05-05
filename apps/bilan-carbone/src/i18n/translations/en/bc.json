@@ -1537,7 +1537,8 @@
       "previewWarning": "Please review the data below before confirming the import.",
       "previewPostsAndSubPosts": "Post(s) and sub-post(s)",
       "templateFileName": "emission-factors-template.xlsx",
-      "confirm": "Confirm import"
+      "confirm": "Confirm import",
+      "allPostsAndSubPosts": "All posts/all sub-posts"
     },
     "post": {
       "total": "Total",

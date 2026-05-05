@@ -1537,7 +1537,8 @@
       "previewWarning": "Vérifiez les données ci-dessous avant de confirmer l'import.",
       "previewPostsAndSubPosts": "Poste(s) et sous-poste(s)",
       "templateFileName": "modele-facteurs-emission.xlsx",
-      "confirm": "Confirmer l'import"
+      "confirm": "Confirmer l'import",
+      "allPostsAndSubPosts": "Tous les postes/tous les sous-postes"
     },
     "post": {
       "total": "Total",
