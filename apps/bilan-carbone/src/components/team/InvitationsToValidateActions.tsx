@@ -7,6 +7,7 @@ import { useServerFunction } from '@abc-transitionbascarbone/components/src/hook
 import { Role } from '@abc-transitionbascarbone/db-common/enums'
 import CheckIcon from '@mui/icons-material/Check'
 import DeleteIcon from '@mui/icons-material/Delete'
+import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'

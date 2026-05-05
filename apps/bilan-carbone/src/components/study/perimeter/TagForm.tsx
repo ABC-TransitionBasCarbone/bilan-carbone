@@ -7,6 +7,8 @@ import { CustomFormLabel } from '@abc-transitionbascarbone/components/src/form/C
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { Translations } from '@abc-transitionbascarbone/lib'
 import { MenuItem } from '@mui/material'
+import { CustomFormLabel } from '@abc-transitionbascarbone/components/src/form/CustomFormLabel'
+import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { useTranslations } from 'next-intl'
 import { Control } from 'react-hook-form'
 import styles from './TagForm.module.css'

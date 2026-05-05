@@ -1,5 +1,6 @@
 import LoadingButton, { Props as LoadingButtonProps } from '@abc-transitionbascarbone/components/src/base/LoadingButton'
 import { Button, ButtonProps, Typography } from '@mui/material'
+import LoadingButton from '@repo/components/src/base/LoadingButton'
 import classNames from 'classnames'
 import { ReactNode } from 'react'
 import styles from './Block.module.css'

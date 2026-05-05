@@ -10,6 +10,7 @@ import { FormTextField } from '@abc-transitionbascarbone/components/src/form/Tex
 import { Environment, EstablishmentType } from '@abc-transitionbascarbone/db-common/enums'
 import EditIcon from '@mui/icons-material/Edit'
 import { MenuItem } from '@mui/material'
+import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { ColumnDef } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'

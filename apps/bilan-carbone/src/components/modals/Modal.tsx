@@ -3,6 +3,7 @@ import LoadingButton, { Props as LoadingButtonProps } from '@abc-transitionbasca
 import { Button } from '@abc-transitionbascarbone/ui'
 import CloseIcon from '@mui/icons-material/Close'
 import { ButtonProps, IconButton, Modal as MUIModal, Typography } from '@mui/material'
+import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
 import classNames from 'classnames'
 import Box from '../base/Box'
 import LinkButton from '../base/LinkButton'
