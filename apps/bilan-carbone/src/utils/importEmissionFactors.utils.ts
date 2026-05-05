@@ -118,8 +118,7 @@ function buildUnitLabelMap(bc: BcTranslations): Record<string, Unit> {
 }
 
 export function mapUnitLabelFromTranslations(label: string | undefined | null, locale: LocaleType): Unit | null {
-  const stripped = label?.replace(/^kgCO2e\s*\/\s*/i, '') ?? label
-  return mapLabelFromTranslations(stripped, locale, buildUnitLabelMap)
+  return mapLabelFromTranslations(label, locale, buildUnitLabelMap)
 }
 
 /**
@@ -274,13 +273,25 @@ export function parseImportFile(buffer: Buffer, locale: LocaleType, environment:
       rowErrors.push({ key: 'missingSource' })
     }
 
+    const kgCO2ePrefix = /^kgCO2e\s*\/\s*/i
+    const rawCustomUnit = String(row[COLUMNS.customUnit] ?? '').trim()
     const rawUnit = String(row[COLUMNS.unit] ?? '').trim()
-    const unit = mapUnitLabelFromTranslations(rawUnit, locale)
+
+    if (rawCustomUnit) {
+      if (!kgCO2ePrefix.test(rawCustomUnit)) {
+        rowErrors.push({ key: 'invalidUnit', value: rawCustomUnit })
+      }
+    } else if (!kgCO2ePrefix.test(rawUnit) && rawUnit !== '') {
+      rowErrors.push({ key: 'invalidUnit', value: rawUnit })
+    }
+
+    const strippedUnit = rawCustomUnit ? rawCustomUnit.replace(kgCO2ePrefix, '') : rawUnit.replace(kgCO2ePrefix, '')
+    const unit = rawCustomUnit ? Unit.CUSTOM : mapUnitLabelFromTranslations(strippedUnit, locale)
     if (!unit) {
       rowErrors.push({ key: 'invalidUnit', value: rawUnit })
     }
 
-    const customUnit = unit === Unit.CUSTOM ? String(row[COLUMNS.customUnit] ?? '').trim() || null : null
+    const customUnit = unit === Unit.CUSTOM ? strippedUnit || null : null
 
     const rawTotalCo2 = row[COLUMNS.totalCo2]
     const totalCo2 = parseNumericValue(rawTotalCo2)

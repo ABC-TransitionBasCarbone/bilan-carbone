@@ -77,7 +77,7 @@ const QUALITY = 'Bonne'
 const VALID_ROW: RowInput = {
   name: 'Mon FE',
   source: 'Source test',
-  unit: 'kg',
+  unit: 'kgCO2e/kg',
   totalCo2: 10,
   reliability: QUALITY,
   technicalRepresentativeness: QUALITY,
@@ -352,6 +352,43 @@ describe('parseImportFile', () => {
       expect(result.success).toBe(true)
       if (result.success) {
         expect(result.rows[0].unit).toBe(Unit.KG)
+      }
+    })
+
+    it('accepts a row with customUnit prefixed with kgCO2e/ and no unit column', () => {
+      const buffer = makeBuffer([{ ...VALID_ROW, unit: '', customUnit: 'kgCO2e/mon unité' }])
+      const result = parseImportFile(buffer, Locale.FR, Environment.BC)
+      expect(result.success).toBe(true)
+      if (result.success) {
+        expect(result.rows[0].unit).toBe(Unit.CUSTOM)
+        expect(result.rows[0].customUnit).toBe('mon unité')
+      }
+    })
+
+    it('returns invalidUnit error when customUnit is missing the kgCO2e/ prefix', () => {
+      const buffer = makeBuffer([{ ...VALID_ROW, unit: '', customUnit: 'mon unité' }])
+      const result = parseImportFile(buffer, Locale.FR, Environment.BC)
+      expect(result.success).toBe(false)
+      if (!result.success) {
+        expect(result.errors.some((e) => e.key === 'invalidUnit')).toBe(true)
+      }
+    })
+
+    it('returns invalidUnit error when unit is missing the kgCO2e/ prefix', () => {
+      const buffer = makeBuffer([{ ...VALID_ROW, unit: 'kg' }])
+      const result = parseImportFile(buffer, Locale.FR, Environment.BC)
+      expect(result.success).toBe(false)
+      if (!result.success) {
+        expect(result.errors.some((e) => e.key === 'invalidUnit')).toBe(true)
+      }
+    })
+
+    it('returns invalidUnit error when both unit and customUnit are empty', () => {
+      const buffer = makeBuffer([{ ...VALID_ROW, unit: '', customUnit: '' }])
+      const result = parseImportFile(buffer, Locale.FR, Environment.BC)
+      expect(result.success).toBe(false)
+      if (!result.success) {
+        expect(result.errors.some((e) => e.key === 'invalidUnit')).toBe(true)
       }
     })
 

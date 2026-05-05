@@ -157,8 +157,8 @@ export async function exportManualEmissionFactorsToFile(): Promise<ArrayBuffer> 
     return [
       metaData?.title ?? '',
       metaData?.attribute ?? '',
-      ef.unit ? getUnitLabel(ef.unit, locale) : '',
-      ef.customUnit ?? '',
+      ef.unit && !ef.customUnit ? `kgCO2e/${getUnitLabel(ef.unit, locale)}` : '',
+      ef.customUnit ? `kgCO2e/${ef.customUnit}` : '',
       ef.source ?? '',
       ef.location ?? '',
       qualityTranslations[String(ef.technicalRepresentativeness)] ?? '',
