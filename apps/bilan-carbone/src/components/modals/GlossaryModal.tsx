@@ -1,4 +1,4 @@
-import { Translations } from '@repo/lib'
+import { Translations } from '@abc-transitionbascarbone/lib'
 import { useTranslations } from 'next-intl'
 import Modal from './Modal'
 

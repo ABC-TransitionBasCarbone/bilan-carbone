@@ -1,10 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 import { canEditEmissionFactor } from '@/services/permissions/emissionFactor'
+import { Import } from '@abc-transitionbascarbone/db-common/enums'
 import DeleteIcon from '@mui/icons-material/Cancel'
 import EditIcon from '@mui/icons-material/Edit'
 import HomeWorkIcon from '@mui/icons-material/HomeWork'
 import { Button as MuiButton } from '@mui/material'
-import { Import } from '@repo/db-common/enums'
 import { Getter } from '@tanstack/react-table'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

@@ -1,6 +1,6 @@
-import { QuestionType } from '@repo/db-common/enums'
+import { QuestionType } from '@abc-transitionbascarbone/db-common/enums'
 
-export { QuestionType, SubPost } from '@repo/db-common/enums'
+export { QuestionType, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 
 export enum TextInputFormat {
   Text = 'Text',

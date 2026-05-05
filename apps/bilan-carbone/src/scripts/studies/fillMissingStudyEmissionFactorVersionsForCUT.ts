@@ -2,8 +2,8 @@
 
 import { prismaClient } from '@/db/client.server'
 import { getSourceCutImportVersionIds } from '@/db/study'
-import { Prisma } from '@repo/db-common'
-import { Environment } from '@repo/db-common/enums'
+import { Prisma } from '@abc-transitionbascarbone/db-common'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 
 /**
  * Script to populate missing StudyEmissionFactorVersion entries for CUT studies.

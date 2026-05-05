@@ -2,10 +2,10 @@
 
 import { SurveyEngine } from '@/engine'
 import { surveyStorage } from '@/storage'
+import { QuestionRenderer } from '@abc-transitionbascarbone/components'
+import { SurveyResponse, Survey as SurveyType } from '@abc-transitionbascarbone/typeguards'
 import { ArrowBack, ArrowForward, Check } from '@mui/icons-material'
 import { Alert, Button, Card, CardContent, Container, LinearProgress, Typography } from '@mui/material'
-import { QuestionRenderer } from '@repo/components'
-import { SurveyResponse, Survey as SurveyType } from '@repo/typeguards'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'

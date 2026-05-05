@@ -41,13 +41,13 @@ cd apps/bilan-carbone && docker-compose up -d && cd ../..
 ### 4. Set up the database with Prisma
 
 ```bash
-yarn workspace @repo/db-common db:migrate
+yarn workspace @abc-transitionbascarbone/db-common db:migrate
 ```
 
 Or in production :
 
 ```bash
-yarn workspace @repo/db-common prisma migrate deploy
+yarn workspace @abc-transitionbascarbone/db-common prisma migrate deploy
 ```
 
 ### 5. Seed the database
@@ -59,7 +59,7 @@ yarn workspace bilan-carbone prisma db seed
 ### 6. Generated prisma client
 
 ```bash
-yarn workspace @repo/db-common db:generate
+yarn workspace @abc-transitionbascarbone/db-common db:generate
 ```
 
 ### 7. Run the development serve
@@ -96,19 +96,19 @@ yarn workspace bilan-carbone db:test:reset
 
 ```bash
 # Create a new migration
-yarn workspace @repo/db-common db:migrate
+yarn workspace @abc-transitionbascarbone/db-common db:migrate
 
 # Apply migrations
-yarn workspace @repo/db-common prisma migrate deploy
+yarn workspace @abc-transitionbascarbone/db-common prisma migrate deploy
 
 # Check migration status
-yarn workspace @repo/db-common db:status
+yarn workspace @abc-transitionbascarbone/db-common db:status
 
 # Generate Prisma client
-yarn workspace @repo/db-common db:generate
+yarn workspace @abc-transitionbascarbone/db-common db:generate
 
 # Prisma Studio
-yarn workspace @repo/db-common prisma studio
+yarn workspace @abc-transitionbascarbone/db-common prisma studio
 
 ---
 

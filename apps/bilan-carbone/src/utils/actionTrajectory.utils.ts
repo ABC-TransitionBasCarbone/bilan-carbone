@@ -1,8 +1,8 @@
 import { TARGET_YEAR } from '@/constants/trajectory.constants'
 import type { PastStudy, TrajectoryDataPoint } from '@/types/trajectory.types'
-import type { Action } from '@repo/db-common'
-import { ActionPotentialDeduction, StudyResultUnit } from '@repo/db-common/enums'
-import { getYearFromDateStr } from '@repo/utils'
+import type { Action } from '@abc-transitionbascarbone/db-common'
+import { ActionPotentialDeduction, StudyResultUnit } from '@abc-transitionbascarbone/db-common/enums'
+import { getYearFromDateStr } from '@abc-transitionbascarbone/utils'
 import { convertValue } from './study'
 import {
   addHistoricalDataAndStudyPoint,

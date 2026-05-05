@@ -1,8 +1,8 @@
 import { AccountWithUser } from '@/db/account'
 import { getMockedDbAccount } from '@/tests/utils/models/user'
+import type { EmissionFactor } from '@abc-transitionbascarbone/db-common'
+import { Import } from '@abc-transitionbascarbone/db-common/enums'
 import { expect } from '@jest/globals'
-import type { EmissionFactor } from '@repo/db-common'
-import { Import } from '@repo/db-common/enums'
 import * as emissionFactorModule from '../serverFunctions/emissionFactor'
 import { canEditEmissionFactor, canReadEmissionFactor } from './emissionFactor'
 

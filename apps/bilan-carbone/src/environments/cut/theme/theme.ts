@@ -1,6 +1,6 @@
 import { Post } from '@/services/posts'
+import { globalTheme } from '@abc-transitionbascarbone/css'
 import { createTheme } from '@mui/material/styles'
-import { globalTheme } from '@repo/css'
 
 const base = createTheme({
   cssVariables: true,

@@ -5,10 +5,8 @@ import { getSectenVersion, updateSectenVersion } from '@/scripts/secten/secten'
 import { signPassword } from '@/services/auth'
 import { getEmissionFactorsFromAPI } from '@/services/importEmissionFactor/baseEmpreinte/getEmissionFactorsFromAPI'
 import { getAllowedLevels } from '@/utils/study'
-import { faker } from '@faker-js/faker'
-import { PrismaPg } from '@prisma/adapter-pg'
-import type { Account, User } from '@repo/db-common'
-import { PrismaClient } from '@repo/db-common'
+import type { Account, User } from '@abc-transitionbascarbone/db-common'
+import { PrismaClient } from '@abc-transitionbascarbone/db-common'
 import {
   EmissionFactorBase,
   EmissionFactorStatus,
@@ -21,7 +19,9 @@ import {
   Unit,
   UserChecklist,
   UserStatus,
-} from '@repo/db-common/enums'
+} from '@abc-transitionbascarbone/db-common/enums'
+import { faker } from '@faker-js/faker'
+import { PrismaPg } from '@prisma/adapter-pg'
 
 import { prismaClient } from '@/db/client.node'
 import { Command } from 'commander'

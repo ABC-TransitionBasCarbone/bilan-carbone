@@ -1,7 +1,7 @@
 import { isCut, isTilt } from '@/services/permissions/environment'
 import { hasAccessToEngagementActions, isTiltSimplified } from '@/services/permissions/environmentAdvanced'
-import { Environment } from '@repo/db-common/enums'
-import { Translations } from '@repo/lib'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { Translations } from '@abc-transitionbascarbone/lib'
 
 interface MenuLink {
   href: string

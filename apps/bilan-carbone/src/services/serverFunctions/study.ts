@@ -110,7 +110,7 @@ import {
 } from '@/utils/study'
 import { isAdmin } from '@/utils/user'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
-import { formatDateFr } from '@repo/utils'
+import { formatDateFr } from '@abc-transitionbascarbone/utils'
 
 import { hasSufficientLevel } from '@/utils/study'
 import type {
@@ -120,7 +120,7 @@ import type {
   EmissionFactorImportVersion,
   Prisma,
   StudyEmissionSource,
-} from '@repo/db-common'
+} from '@abc-transitionbascarbone/db-common'
 import {
   CommentStatus,
   ControlMode,
@@ -137,7 +137,7 @@ import {
   SubPost,
   UserChecklist,
   UserStatus,
-} from '@repo/db-common/enums'
+} from '@abc-transitionbascarbone/db-common/enums'
 import Docxtemplater from 'docxtemplater'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'

@@ -1,7 +1,7 @@
 import { customRich } from '@/i18n/customRich'
+import { TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
 import CheckIcon from '@mui/icons-material/Check'
 import { Typography } from '@mui/material'
-import { TrajectoryType } from '@repo/db-common/enums'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import styles from './TrajectoryCreationModal.module.css'

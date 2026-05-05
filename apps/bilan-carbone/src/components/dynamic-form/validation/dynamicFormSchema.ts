@@ -1,6 +1,6 @@
-import type { Question } from '@repo/db-common'
-import { QuestionType } from '@repo/db-common/enums'
-import { setCustomMessage } from '@repo/lib'
+import type { Question } from '@abc-transitionbascarbone/db-common'
+import { QuestionType } from '@abc-transitionbascarbone/db-common/enums'
+import { setCustomMessage } from '@abc-transitionbascarbone/lib'
 import { useMemo } from 'react'
 import { z } from 'zod'
 

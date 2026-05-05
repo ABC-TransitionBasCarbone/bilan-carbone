@@ -1,5 +1,5 @@
+import { Translations } from '@abc-transitionbascarbone/lib'
 import { Tabs as MuiTabs, Tab } from '@mui/material'
-import { Translations } from '@repo/lib'
 import { ReactNode, useMemo, useState } from 'react'
 
 interface Props {

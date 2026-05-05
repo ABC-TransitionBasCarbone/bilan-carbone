@@ -1,5 +1,5 @@
+import { TextQuestion } from '@abc-transitionbascarbone/typeguards'
 import { FormControl, FormHelperText, TextField } from '@mui/material'
-import { TextQuestion } from '@repo/typeguards'
 import { useTranslations } from 'next-intl'
 
 interface TextQuestionInputProps {

@@ -12,10 +12,10 @@ import {
   StudyRole,
   SubPost,
   Unit,
-} from '@repo/db-common/enums'
+} from '@abc-transitionbascarbone/db-common/enums'
 
-import { PrismaClient } from '@repo/db-common'
-import type { Account } from '@repo/db-common/types'
+import { PrismaClient } from '@abc-transitionbascarbone/db-common'
+import type { Account } from '@abc-transitionbascarbone/db-common/types'
 
 const studyId = '91bb3826-2be7-4d56-bb9b-363f4d9af62f'
 const siteId = 'c3f2b8d4-7a0c-4b3f-8c5b-5b5e7b6f3e3b'

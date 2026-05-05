@@ -5,8 +5,8 @@ import {
   ActionPotentialDeduction,
   ActionRelevance,
   SubPost,
-} from '@repo/db-common/enums'
-import { setCustomMessage } from '@repo/lib'
+} from '@abc-transitionbascarbone/db-common/enums'
+import { setCustomMessage } from '@abc-transitionbascarbone/lib'
 import { z } from 'zod'
 
 const ActionIndicatorSchema = z.object({

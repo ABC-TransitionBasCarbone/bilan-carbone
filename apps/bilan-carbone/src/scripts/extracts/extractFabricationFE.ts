@@ -1,6 +1,6 @@
+import { PrismaClient } from '@abc-transitionbascarbone/db-common'
+import { EmissionFactorPartType } from '@abc-transitionbascarbone/db-common/enums'
 import { PrismaPg } from '@prisma/adapter-pg'
-import { PrismaClient } from '@repo/db-common'
-import { EmissionFactorPartType } from '@repo/db-common/enums'
 import { writeFileSync } from 'fs'
 
 // One shot script to get all FE with fabrication part

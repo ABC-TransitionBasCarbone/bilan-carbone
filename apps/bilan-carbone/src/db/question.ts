@@ -1,5 +1,5 @@
 import { ID_INTERN_PREFIX_REGEX } from '@/constants/utils'
-import { Answer, Prisma, Question, SubPost } from '@repo/db-common'
+import { Answer, Prisma, Question, SubPost } from '@abc-transitionbascarbone/db-common'
 import { prismaClient } from './client.server'
 
 export const getAllQuestions = () => prismaClient.question.findMany({})

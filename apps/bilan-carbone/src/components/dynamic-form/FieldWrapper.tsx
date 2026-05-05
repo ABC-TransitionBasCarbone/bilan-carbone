@@ -1,6 +1,6 @@
 import { UseAutoSaveReturn } from '@/hooks/useAutoSave'
 import { getQuestionLabel } from '@/utils/question'
-import type { Question } from '@repo/db-common'
+import type { Question } from '@abc-transitionbascarbone/db-common'
 import { useTranslations } from 'next-intl'
 import { Control, FieldError, FieldErrors, UseFormSetValue, UseFormWatch } from 'react-hook-form'
 import FieldComponent from './FieldComponent'

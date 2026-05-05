@@ -1,7 +1,7 @@
 import { Post } from '@/services/posts'
+import { globalTheme } from '@abc-transitionbascarbone/css'
+import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { createTheme } from '@mui/material/styles'
-import { globalTheme } from '@repo/css'
-import { SubPost } from '@repo/db-common/enums'
 
 const base = createTheme({
   cssVariables: true,

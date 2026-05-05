@@ -19,8 +19,8 @@ import {
   NewStudyContributorCommandValidation,
 } from '@/services/serverFunctions/study.command'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { SubPost } from '@repo/db-common/enums'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useCallback, useMemo, useState } from 'react'

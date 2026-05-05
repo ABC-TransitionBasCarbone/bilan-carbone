@@ -28,12 +28,12 @@ import {
   ChangeStudyNameCommand,
   ChangeStudyNameValidation,
 } from '@/services/serverFunctions/study.command'
+import type { EmissionFactorImportVersion } from '@abc-transitionbascarbone/db-common'
+import { Country } from '@abc-transitionbascarbone/db-common/enums'
+import { Button } from '@abc-transitionbascarbone/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import EditIcon from '@mui/icons-material/Edit'
 import { Box, CircularProgress } from '@mui/material'
-import type { EmissionFactorImportVersion } from '@repo/db-common'
-import { Country } from '@repo/db-common/enums'
-import { Button } from '@repo/ui'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'

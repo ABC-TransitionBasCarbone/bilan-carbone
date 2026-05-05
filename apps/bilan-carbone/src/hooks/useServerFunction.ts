@@ -1,7 +1,7 @@
 'use client'
 
 import { ApiResponse } from '@/utils/serverResponse'
-import { useToast } from '@repo/ui'
+import { useToast } from '@abc-transitionbascarbone/ui'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect } from 'react'
 

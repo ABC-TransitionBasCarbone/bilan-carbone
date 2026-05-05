@@ -65,6 +65,7 @@ This is a Next.js monorepo for the "Bilan Carbone" platform, focused on carbon a
 ## Best Practices
 
 ### React & Next.js
+
 - **Server Components First**: Pages should be server components by default. Use `await params` instead of `React.use(params)` in page components.
 - **Avoid useEffect for Data Loading**: Load data server-side rather than in useEffect. This is an anti-pattern in React 19.
 - **Client-Side Initialization**: For client-side state that reads from localStorage or URL params, use `useState` with a lazy initializer (`useState(() => computeInitialValue())`) instead of `useEffect`. This is the React 19 recommended approach.
@@ -72,17 +73,19 @@ This is a Next.js monorepo for the "Bilan Carbone" platform, focused on carbon a
 - **Component Naming**: Page files export a component matching the route purpose (e.g., `SurveyPage` for a survey page route).
 
 ### Styling
+
 - **No Inline Styles or sx Prop**: Never use inline `style` attributes or MUI's `sx` prop. Use CSS modules (`.module.css`) instead.
 - **Typography**: Use Gilroy font family (`gilroy-regular, sans-serif`) consistently across all apps.
 - **Theme Consistency**: Follow the base theme patterns from `apps/bilan-carbone/src/environments/base/theme/theme.ts`.
 - **MUI Component Props**: Use `slotProps` instead of the deprecated `inputProps`. For example, use `slotProps={{ htmlInput: { maxLength: 100 } }}` on a `TextField`.
 
 ### Code Organization
+
 - **Separate Components**: Each component should be in its own file. Avoid multiple component definitions in a single file.
 - **Feature Folders**: Group related components by feature (e.g., `src/components/survey/`).
-- **No Empty Re-export Files**: Do not create app-local files that only re-export from a shared package (e.g., `types/translation.ts` that just re-exports from `@repo/lib`). Instead, import directly from the shared package (`@repo/lib`, `@repo/typeguards`, etc.).
+- **No Empty Re-export Files**: Do not create app-local files that only re-export from a shared package (e.g., `types/translation.ts` that just re-exports from `@abc-transitionbascarbone/lib`). Instead, import directly from the shared package (`@abc-transitionbascarbone/lib`, `@abc-transitionbascarbone/typeguards`, etc.).
 - **Shared Packages First**: Before creating a new file in an app (e.g., `types/survey.ts`, component files), check if an equivalent already exists in the packages/ directory. If not and the logic is reusable across apps, add it to the appropriate package.
-- **Survey Components**: MIP survey input components live in `packages/components/src/survey/`. MIP survey types live in `packages/typeguards/question.ts`. Import from `@repo/components` and `@repo/typeguards`.
+- **Survey Components**: MIP survey input components live in `packages/components/src/survey/`. MIP survey types live in `packages/typeguards/question.ts`. Import from `@abc-transitionbascarbone/components` and `@abc-transitionbascarbone/typeguards`.
 - **Limit Comments**: Avoid unnecessary comments. Code should be self-documenting. Only add comments for:
   - Complex business logic that isn't obvious from the code
   - Non-obvious technical decisions or workarounds
@@ -91,6 +94,7 @@ This is a Next.js monorepo for the "Bilan Carbone" platform, focused on carbon a
   - DO NOT add file/module-level JSDoc block comments (e.g., `/** Sample Survey Configuration */`)
 
 ### Tooling
+
 - **Prettier**: A single `.prettierrc.json` and `.prettierignore` at the monorepo root are the canonical configs. Do not add per-app prettier config or ignore files.
 - **ESLint**: Shared rules are defined in `eslint.config.base.mjs` at the monorepo root. Each app's `eslint.config.mjs` imports `sharedRules` and `dtsOverride` from the root base and adds only Next.js-specific extends on top. Ideally, only the root config should exist.
 - **TypeScript**: `tsconfig.base.json` at the monorepo root is the canonical config with all common compiler options. App-level `tsconfig.json` files should only extend it and add app-specific overrides (Next.js plugin, `paths`, `include`/`exclude`). Do not duplicate base options in app configs.
@@ -98,11 +102,13 @@ This is a Next.js monorepo for the "Bilan Carbone" platform, focused on carbon a
 - **.notes Folder**: The `.notes` folder is in `.gitignore` to allow local AI notes without committing them. Do not commit anything in `.notes`.
 
 ### Internationalization
+
 - **Use Translations**: All user-facing strings should use the i18n system (next-intl), not hardcoded text.
 - **Translation Pattern**: Use `useTranslations('namespace')` in client components, `getTranslations('namespace')` in server components.
 - **Translation Files**: Store translations in `src/i18n/translations/{locale}/{namespace}.json`.
 
 ## AI Behaviour in Code Review
+
 - **Do not reply to human peer review comments**: When implementing changes based on review feedback, apply the code changes but do not post replies to human review threads. Only humans communicate with humans in peer review.
 
 ## Key Files & Directories

@@ -1,6 +1,6 @@
 'use client'
 
-import { SEC, TIME_IN_MS } from '@repo/utils'
+import { SEC, TIME_IN_MS } from '@abc-transitionbascarbone/utils'
 import { SnackbarCloseReason } from '@mui/material'
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
 import Toast, { ToastColors } from './Toast'

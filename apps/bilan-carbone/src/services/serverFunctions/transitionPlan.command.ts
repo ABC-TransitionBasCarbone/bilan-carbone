@@ -1,4 +1,4 @@
-import { setCustomMessage } from '@repo/lib'
+import { setCustomMessage } from '@abc-transitionbascarbone/lib'
 import z from 'zod'
 
 export const ExternalStudyFormValidation = z.object({

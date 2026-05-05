@@ -1,5 +1,5 @@
 {
-  "name": "@repo/components",
+  "name": "@abc-transitionbascarbone/components",
   "version": "0.0.1",
   "private": true,
   "main": "src/index.ts",
@@ -10,6 +10,6 @@
     "next-intl": "*"
   },
   "dependencies": {
-    "@repo/typeguards": "*"
+    "@abc-transitionbascarbone/typeguards": "*"
   }
 }

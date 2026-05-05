@@ -48,8 +48,8 @@ import {
   hasTableEmissionCalculator,
 } from '@/utils/tableEmissionCalculations'
 import { isTableAnswer } from '@/utils/tableInput'
-import type { Answer, Prisma, Question } from '@repo/db-common'
-import { QuestionType, SubPost } from '@repo/db-common/enums'
+import type { Answer, Prisma, Question } from '@abc-transitionbascarbone/db-common'
+import { QuestionType, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { UserSession } from 'next-auth'
 import { dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'

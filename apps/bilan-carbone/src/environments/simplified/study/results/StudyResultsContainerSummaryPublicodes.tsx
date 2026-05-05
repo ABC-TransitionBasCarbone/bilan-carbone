@@ -5,8 +5,8 @@ import BarChart from '@/components/study/charts/BarChart'
 import styles from '@/components/study/results/ResultsContainer.module.css'
 import type { FullStudy } from '@/db/study'
 import { usePublicodesResults } from '@/hooks/usePublicodesResults'
+import { Button } from '@abc-transitionbascarbone/ui'
 import CircularProgress from '@mui/material/CircularProgress'
-import { Button } from '@repo/ui'
 import { useTranslations } from 'next-intl'
 
 interface Props {

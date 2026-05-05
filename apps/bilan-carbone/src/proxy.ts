@@ -1,4 +1,4 @@
-import { Environment } from '@repo/db-common/enums'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { getToken } from 'next-auth/jwt'
 import { NextRequest, NextResponse } from 'next/server'
 

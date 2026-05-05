@@ -1,5 +1,5 @@
+import { Button } from '@abc-transitionbascarbone/ui'
 import { ButtonProps, CircularProgress } from '@mui/material'
-import { Button } from '@repo/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import styles from './LoadingButton.module.css'

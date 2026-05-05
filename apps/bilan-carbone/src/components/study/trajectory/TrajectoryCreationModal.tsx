@@ -27,11 +27,11 @@ import {
   getDefaultObjectivesForTrajectoryType,
   getDisplayedReferenceYearForTrajectoryType,
 } from '@/utils/trajectory'
+import type { SectenInfo } from '@abc-transitionbascarbone/db-common'
+import { TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
+import { getYearFromDateStr } from '@abc-transitionbascarbone/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Alert } from '@mui/material'
-import type { SectenInfo } from '@repo/db-common'
-import { TrajectoryType } from '@repo/db-common/enums'
-import { getYearFromDateStr } from '@repo/utils'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import { useEffect, useMemo, useState } from 'react'

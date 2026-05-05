@@ -11,7 +11,12 @@ import {
   getEmissionSourceStatus,
   getSortedEmissionSources,
 } from '@/utils/emissionSources'
-import { ControlMode, EmissionSourceCaracterisation, EmissionSourceType, StudyRole } from '@repo/db-common/enums'
+import {
+  ControlMode,
+  EmissionSourceCaracterisation,
+  EmissionSourceType,
+  StudyRole,
+} from '@abc-transitionbascarbone/db-common/enums'
 import Fuse from 'fuse.js'
 import { UserSession } from 'next-auth'
 import { useLocale, useTranslations } from 'next-intl'

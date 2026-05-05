@@ -2,9 +2,9 @@ import { FormValues } from '@/components/dynamic-form/types/formTypes'
 import { FieldType } from '@/components/dynamic-form/types/questionTypes'
 import { EmissionFactorInfo } from '@/constants/emissionFactorMap'
 import { ID_INTERN_PREFIX_REGEX } from '@/constants/utils'
+import type { Answer, Question } from '@abc-transitionbascarbone/db-common'
+import { QuestionType } from '@abc-transitionbascarbone/db-common/enums'
 import { JsonObject } from '@prisma/client/runtime/client'
-import type { Answer, Question } from '@repo/db-common'
-import { QuestionType } from '@repo/db-common/enums'
 
 export const answersToFormValues = (questions: Question[], answers?: Answer[]): FormValues => {
   const formValues: FormValues = {}

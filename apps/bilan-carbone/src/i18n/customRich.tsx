@@ -1,6 +1,6 @@
 import { getEnvVarClient } from '@/lib/environmentClient'
-import { Environment } from '@repo/db-common/enums'
-import { Translations } from '@repo/lib'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { Translations } from '@abc-transitionbascarbone/lib'
 import classNames from 'classnames'
 import Link from 'next/link'
 import { ReactNode } from 'react'

@@ -14,12 +14,12 @@ import type { ActionWithRelations } from '@/types/trajectory.types'
 import { formatNumber } from '@/utils/number'
 import { convertValue } from '@/utils/study'
 import { sortWithUpdatedAtFallback } from '@/utils/table.utils'
-import { getYearFromDateStr } from '@repo/utils'
+import { ActionPotentialDeduction, StudyResultUnit } from '@abc-transitionbascarbone/db-common/enums'
+import { getYearFromDateStr } from '@abc-transitionbascarbone/utils'
 import ArrowRight from '@mui/icons-material/ArrowRight'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { Link, Switch, TableCell, TableRow, Typography } from '@mui/material'
-import { ActionPotentialDeduction, StudyResultUnit } from '@repo/db-common/enums'
 import {
   ColumnDef,
   flexRender,

@@ -1,6 +1,6 @@
-import type { PrismaClient } from '@repo/db-common'
-import { Import } from '@repo/db-common/enums'
-import { HOUR, TIME_IN_MS } from '@repo/utils'
+import type { PrismaClient } from '@abc-transitionbascarbone/db-common'
+import { Import } from '@abc-transitionbascarbone/db-common/enums'
+import { HOUR, TIME_IN_MS } from '@abc-transitionbascarbone/utils'
 import axios, { AxiosResponse } from 'axios'
 import {
   addSourceToStudies,

@@ -1,5 +1,5 @@
+import { Question } from '@abc-transitionbascarbone/typeguards'
 import { Typography } from '@mui/material'
-import { Question } from '@repo/typeguards'
 import { ChoiceQuestionInput } from './ChoiceQuestionInput'
 import styles from './QuestionRenderer.module.css'
 import { TextQuestionInput } from './TextQuestionInput'

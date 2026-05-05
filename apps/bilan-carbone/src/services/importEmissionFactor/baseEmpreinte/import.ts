@@ -1,4 +1,4 @@
-import { EmissionFactorBase, Import, SubPost } from '@repo/db-common/enums'
+import { EmissionFactorBase, Import, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { ImportEmissionFactor, mapEmissionFactors } from '../import'
 import { elementsBySubPost } from '../posts.config'
 

@@ -1,5 +1,5 @@
+import { globalTheme } from '@abc-transitionbascarbone/css'
 import { createTheme } from '@mui/material/styles'
-import { globalTheme } from '@repo/css'
 
 export const theme = createTheme({
   palette: {

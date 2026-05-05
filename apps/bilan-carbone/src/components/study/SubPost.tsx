@@ -9,9 +9,15 @@ import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
 import { withInfobulle } from '@/utils/post'
 import { postColors, STUDY_UNIT_VALUES } from '@/utils/study'
+import {
+  ControlMode,
+  Environment,
+  Import,
+  StudyRole,
+  SubPost as SubPostEnum,
+} from '@abc-transitionbascarbone/db-common/enums'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
-import { ControlMode, Environment, Import, StudyRole, SubPost as SubPostEnum } from '@repo/db-common/enums'
 import classNames from 'classnames'
 import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'

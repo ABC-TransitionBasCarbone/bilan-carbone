@@ -1,4 +1,4 @@
-import { Question, Survey, SurveyResponse } from '@repo/typeguards'
+import { Question, Survey, SurveyResponse } from '@abc-transitionbascarbone/typeguards'
 
 export class SurveyEngine {
   private survey: Survey

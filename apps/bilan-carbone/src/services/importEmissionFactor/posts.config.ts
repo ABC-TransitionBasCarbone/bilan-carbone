@@ -1,4 +1,4 @@
-import { SubPost } from '@repo/db-common/enums'
+import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
 
 export const elementsBySubPost: Record<SubPost, string[]> = {
   [SubPost.CombustiblesFossiles]: [

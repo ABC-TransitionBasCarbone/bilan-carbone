@@ -1,6 +1,6 @@
 import { getMockedAuthUser } from '@/tests/utils/models/user'
+import { Environment, Role } from '@abc-transitionbascarbone/db-common/enums'
 import { expect } from '@jest/globals'
-import { Environment, Role } from '@repo/db-common/enums'
 import {
   canEditOrganizationVersion,
   hasActiveLicence,

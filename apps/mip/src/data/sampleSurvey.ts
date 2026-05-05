@@ -1,4 +1,4 @@
-import { Question, Survey } from '@repo/typeguards'
+import { Question, Survey } from '@abc-transitionbascarbone/typeguards'
 
 type PublicodesElement = {
   rule: string

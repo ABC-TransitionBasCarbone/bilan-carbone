@@ -14,10 +14,16 @@ import {
   isCAS,
   STUDY_UNIT_VALUES,
 } from '@/utils/study'
-import type { ExportRule } from '@repo/db-common'
-import { EmissionFactorBase, Environment, Export, StudyResultUnit, SubPost } from '@repo/db-common/enums'
-import { Translations } from '@repo/lib'
-import { formatDateFr } from '@repo/utils'
+import type { ExportRule } from '@abc-transitionbascarbone/db-common'
+import {
+  EmissionFactorBase,
+  Environment,
+  Export,
+  StudyResultUnit,
+  SubPost,
+} from '@abc-transitionbascarbone/db-common/enums'
+import { Translations } from '@abc-transitionbascarbone/lib'
+import { formatDateFr } from '@abc-transitionbascarbone/utils'
 import dayjs from 'dayjs'
 import type { ResultType } from '../types/study.types'
 import { AdditionalResultTypes, BaseResultsBySite, ResultsByPost } from '../types/study.types'

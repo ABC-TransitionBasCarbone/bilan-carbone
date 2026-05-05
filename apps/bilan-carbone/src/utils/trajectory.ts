@@ -19,10 +19,10 @@ import type {
   TrajectoryResult,
   TrajectoryWithObjectives,
 } from '@/types/trajectory.types'
-import { Action, SectenInfo } from '@repo/db-common'
-import { ActionPotentialDeduction, StudyResultUnit, TrajectoryType } from '@repo/db-common/enums'
-import type { Translations } from '@repo/lib'
-import { getYearFromDateStr } from '@repo/utils'
+import { Action, SectenInfo } from '@abc-transitionbascarbone/db-common'
+import { ActionPotentialDeduction, StudyResultUnit, TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
+import type { Translations } from '@abc-transitionbascarbone/lib'
+import { getYearFromDateStr } from '@abc-transitionbascarbone/utils'
 import { getActionBasedData } from './actionTrajectory.utils'
 import { calculateCustomTrajectory, getCustomData } from './customTrajectory.utils'
 import { getDefaultSBTiData, getDefaultSBTIReductionRate, getSBTiCorrectedRateAndEndYear } from './sbti'

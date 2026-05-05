@@ -1,8 +1,8 @@
 'use client'
 
 import { answerFeeback, delayFeeback } from '@/services/serverFunctions/user'
-import { Environment } from '@repo/db-common/enums'
-import { DAY, TIME_IN_MS } from '@repo/utils'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { DAY, TIME_IN_MS } from '@abc-transitionbascarbone/utils'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import Modal from '../modals/Modal'

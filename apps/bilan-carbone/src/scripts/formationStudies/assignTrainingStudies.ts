@@ -1,5 +1,5 @@
 import { assignTrainingCorrectionExerciseStudy, assignTrainingExerciseStudy } from '@/services/serverFunctions/study'
-import { formatDateFr } from '@repo/utils'
+import { formatDateFr } from '@abc-transitionbascarbone/utils'
 
 export const assignTrainingStudies = async () => {
   const trainingRes = await assignTrainingExerciseStudy()

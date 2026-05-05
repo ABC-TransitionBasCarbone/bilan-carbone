@@ -2,9 +2,9 @@
 
 import { customRich } from '@/i18n/customRich'
 import { duplicateStudyInOtherEnvironment } from '@/services/serverFunctions/study'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { Toast, ToastColors } from '@abc-transitionbascarbone/ui'
 import { MenuItem } from '@mui/material'
-import { Environment } from '@repo/db-common/enums'
-import { Toast, ToastColors } from '@repo/ui'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'

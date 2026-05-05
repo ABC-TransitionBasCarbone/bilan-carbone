@@ -1,6 +1,6 @@
+import { Translations } from '@abc-transitionbascarbone/lib'
 import ClearIcon from '@mui/icons-material/Clear'
 import { IconButton, InputAdornment, Select as MUISelect, SelectChangeEvent, SelectProps } from '@mui/material'
-import { Translations } from '@repo/lib'
 import { CustomFormLabel } from '../form/CustomFormLabel'
 
 interface Props {

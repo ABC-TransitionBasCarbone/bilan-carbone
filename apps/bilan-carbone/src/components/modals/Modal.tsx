@@ -1,7 +1,7 @@
 'use client'
+import { Button } from '@abc-transitionbascarbone/ui'
 import CloseIcon from '@mui/icons-material/Close'
 import { ButtonProps, IconButton, Modal as MUIModal, Typography } from '@mui/material'
-import { Button } from '@repo/ui'
 import classNames from 'classnames'
 import Box from '../base/Box'
 import LinkButton from '../base/LinkButton'

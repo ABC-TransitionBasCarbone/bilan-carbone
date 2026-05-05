@@ -8,8 +8,8 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@repo/css": ["../../packages/css/index.ts"],
-      "@repo/survey": ["../../packages/survey/src/index.ts"]
+      "@abc-transitionbascarbone/css": ["../../packages/css/index.ts"],
+      "@abc-transitionbascarbone/survey": ["../../packages/survey/src/index.ts"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
