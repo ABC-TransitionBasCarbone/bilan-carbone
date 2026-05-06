@@ -1,4 +1,4 @@
-import { EmissionFactorBase, SubPost, Unit } from '@repo/db-common'
+import { EmissionFactorBase, SubPost, Unit } from '@abc-transitionbascarbone/db-common'
 
 export type ImportError = {
   line: number

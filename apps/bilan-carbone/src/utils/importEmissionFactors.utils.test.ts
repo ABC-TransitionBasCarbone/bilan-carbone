@@ -1,8 +1,8 @@
 import { Locale } from '@/i18n/config'
 import { Post } from '@/services/posts'
 import { COLUMNS } from '@/types/importEmissionFactors.types'
+import { EmissionFactorBase, Environment, SubPost, Unit } from '@abc-transitionbascarbone/db-common/enums'
 import { expect } from '@jest/globals'
-import { EmissionFactorBase, Environment, SubPost, Unit } from '@repo/db-common/enums'
 import xlsx from 'node-xlsx'
 import {
   buildPostsAndSubPostsCell,

@@ -1,4 +1,4 @@
-import { type Account, type User, Environment } from '@repo/db-common'
+import { type Account, type User, Environment } from '@abc-transitionbascarbone/db-common'
 
 export type AccountWithUser = Account & {
   user: User

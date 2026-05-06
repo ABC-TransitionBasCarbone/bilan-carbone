@@ -15,7 +15,7 @@ import { buildPostsAndSubPostsCell, getUnitLabel, parseImportFile } from '@/util
 import { flattenSubposts } from '@/utils/post'
 import { withServerResponse } from '@/utils/serverResponse'
 import { getBcTranslations } from '@/utils/translation.utils'
-import { EmissionFactorStatus, Import } from '@repo/db-common/enums'
+import { EmissionFactorStatus, Import } from '@abc-transitionbascarbone/db-common/enums'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canReadEmissionFactor } from '../permissions/emissionFactor'

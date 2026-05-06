@@ -2,8 +2,8 @@
 
 import LinkButton from '@/components/base/LinkButton'
 import LoadingButton from '@/components/base/LoadingButton'
-import { useToast } from '@/components/base/ToastProvider'
 import { exportManualEmissionFactorsToFile } from '@/services/serverFunctions/importEmissionFactors'
+import { useToast } from '@abc-transitionbascarbone/ui'
 import AddIcon from '@mui/icons-material/Add'
 import FileDownloadIcon from '@mui/icons-material/FileDownload'
 import UploadFileIcon from '@mui/icons-material/UploadFile'
