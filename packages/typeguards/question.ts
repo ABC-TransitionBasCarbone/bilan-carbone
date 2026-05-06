@@ -1,4 +1,4 @@
-export type QuestionType = 'text' | 'choice'
+export type QuestionType = 'text' | 'choice' | 'number'
 
 export interface BaseQuestion {
   id: string
@@ -27,7 +27,17 @@ export interface ChoiceQuestion extends BaseQuestion {
   multiple?: boolean
 }
 
-export type Question = TextQuestion | ChoiceQuestion
+export interface NumberQuestion extends BaseQuestion {
+  type: 'number'
+  placeholder?: string
+  validation?: {
+    min?: number
+    max?: number
+    step?: number
+  }
+}
+
+export type Question = TextQuestion | ChoiceQuestion | NumberQuestion
 
 export interface Survey {
   id: string
@@ -41,7 +51,7 @@ export interface Survey {
 export interface SurveyResponse {
   surveyId: string
   responseId: string
-  answers: Record<string, string | string[]>
+  answers: Record<string, string | string[] | number>
   currentQuestionIndex: number
   completed: boolean
   startedAt: Date

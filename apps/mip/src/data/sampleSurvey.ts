@@ -76,6 +76,17 @@ const fakePublicodesElements: PublicodesElement[] = [
       required: false,
     },
   },
+  {
+    rule: 'alimentation . plats',
+    type: 'input',
+    evaluatedElement: {
+      id: 'q5',
+      label: 'How many vegetarian meals does your organization serve per week?',
+      description: 'Please enter the number of vegetarian meals served per week.',
+      type: 'number',
+      required: false,
+    },
+  },
 ]
 
 function mapElementToQuestion(el: PublicodesElement): Question {
@@ -105,7 +116,7 @@ function mapElementToQuestion(el: PublicodesElement): Question {
   }
   return {
     id: e.id,
-    type: 'text',
+    type: e.type,
     title: e.label,
     description: e.description,
     required: e.required,

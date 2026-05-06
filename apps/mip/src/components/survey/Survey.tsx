@@ -56,7 +56,7 @@ export function Survey({ survey, surveyId }: SurveyProps) {
   }, [])
 
   const handleAnswer = useCallback(
-    (answer: string | string[]) => {
+    (answer: string | string[] | number) => {
       engine.setAnswer(answer)
       saveAndUpdate(engine.getResponse())
       setError(null)

@@ -56,7 +56,7 @@ export class SurveyEngine {
   /**
    * Validate an answer for a specific question
    */
-  validateAnswer(question: Question, answer: string | string[]): string | null {
+  validateAnswer(question: Question, answer: string | string[] | number): string | null {
     if (question.required) {
       if (!answer || (Array.isArray(answer) && answer.length === 0)) {
         return 'This question is required'
@@ -102,7 +102,7 @@ export class SurveyEngine {
   /**
    * Set an answer for the current question
    */
-  setAnswer(answer: string | string[]): void {
+  setAnswer(answer: string | string[] | number): void {
     const currentQuestion = this.getCurrentQuestion()
     if (currentQuestion) {
       this.response.answers[currentQuestion.id] = answer
@@ -113,7 +113,7 @@ export class SurveyEngine {
   /**
    * Get the answer for a specific question
    */
-  getAnswer(questionId: string): string | string[] | undefined {
+  getAnswer(questionId: string): string | string[] | number | undefined {
     return this.response.answers[questionId]
   }
 
