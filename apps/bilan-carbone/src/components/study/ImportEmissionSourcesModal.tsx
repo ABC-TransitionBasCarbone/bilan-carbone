@@ -30,7 +30,7 @@ const ImportEmissionSourcesModal = ({ studyId, open, onClose, onSuccess }: Props
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = t('sheetName') + '.xlsx'
+    a.download = t('templateFileName')
     a.click()
     URL.revokeObjectURL(url)
   }
@@ -46,7 +46,11 @@ const ImportEmissionSourcesModal = ({ studyId, open, onClose, onSuccess }: Props
           <TableCell>{t('columnValue')}</TableCell>
           <TableCell>{t('columnType')}</TableCell>
           <TableCell>{t('columnSource')}</TableCell>
-          <TableCell>{t('columnQuality')}</TableCell>
+          <TableCell>{t('columnReliability')}</TableCell>
+          <TableCell>{t('columnTechnicalRepresentativeness')}</TableCell>
+          <TableCell>{t('columnGeographicRepresentativeness')}</TableCell>
+          <TableCell>{t('columnTemporalRepresentativeness')}</TableCell>
+          <TableCell>{t('columnCompleteness')}</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -59,7 +63,11 @@ const ImportEmissionSourcesModal = ({ studyId, open, onClose, onSuccess }: Props
             <TableCell>{row.value}</TableCell>
             <TableCell>{row.type}</TableCell>
             <TableCell>{row.source}</TableCell>
-            <TableCell>{row.quality}</TableCell>
+            <TableCell>{row.reliability}</TableCell>
+            <TableCell>{row.technicalRepresentativeness}</TableCell>
+            <TableCell>{row.geographicRepresentativeness}</TableCell>
+            <TableCell>{row.temporalRepresentativeness}</TableCell>
+            <TableCell>{row.completeness}</TableCell>
           </TableRow>
         ))}
       </TableBody>

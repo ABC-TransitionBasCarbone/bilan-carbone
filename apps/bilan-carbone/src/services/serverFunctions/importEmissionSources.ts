@@ -23,7 +23,7 @@ import { getAuthenticatedAccount } from '../permissions/account.permissions'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { hasStudyBasicRights } from '../permissions/emissionSource'
 import { canReadStudy } from '../permissions/study'
-import { getQualitativeUncertaintyFromQuality, getSpecificEmissionFactorQuality, qualityKeys } from '../uncertainty'
+import { getQualitativeUncertaintyFromQuality, getSpecificEmissionFactorQuality } from '../uncertainty'
 import { getEmissionFactorsByIds } from './emissionFactor'
 
 async function getStudyOrThrow(studyId: string, account: AccountWithUser): Promise<FullStudy> {
@@ -66,7 +66,14 @@ export async function previewEmissionSourcesFromFile(
     type: row.type ?? '',
     tag: row.tag ?? '',
     source: row.source ?? '',
-    quality: row.quality !== undefined ? String(row.quality) : '',
+    reliability: row.reliability !== undefined ? String(row.reliability) : '',
+    technicalRepresentativeness:
+      row.technicalRepresentativeness !== undefined ? String(row.technicalRepresentativeness) : '',
+    geographicRepresentativeness:
+      row.geographicRepresentativeness !== undefined ? String(row.geographicRepresentativeness) : '',
+    temporalRepresentativeness:
+      row.temporalRepresentativeness !== undefined ? String(row.temporalRepresentativeness) : '',
+    completeness: row.completeness !== undefined ? String(row.completeness) : '',
   }))
 
   return { success: true, rows }
@@ -148,15 +155,17 @@ export async function importEmissionSourcesFromFile(file: File, studyId: string)
       ...(row.type ? { type: row.type } : {}),
       ...(row.caracterisation ? { caracterisation: row.caracterisation } : {}),
       ...(row.source ? { source: row.source } : {}),
-      ...(row.quality !== undefined
-        ? {
-            reliability: row.quality,
-            technicalRepresentativeness: row.quality,
-            geographicRepresentativeness: row.quality,
-            temporalRepresentativeness: row.quality,
-            completeness: row.quality,
-          }
+      ...(row.reliability !== undefined ? { reliability: row.reliability } : {}),
+      ...(row.technicalRepresentativeness !== undefined
+        ? { technicalRepresentativeness: row.technicalRepresentativeness }
         : {}),
+      ...(row.geographicRepresentativeness !== undefined
+        ? { geographicRepresentativeness: row.geographicRepresentativeness }
+        : {}),
+      ...(row.temporalRepresentativeness !== undefined
+        ? { temporalRepresentativeness: row.temporalRepresentativeness }
+        : {}),
+      ...(row.completeness !== undefined ? { completeness: row.completeness } : {}),
       ...(row.comment ? { comment: row.comment } : {}),
       ...(row.feComment ? { feComment: row.feComment } : {}),
     })
@@ -183,13 +192,13 @@ function buildEmissionSourcesWorkbook(
 
   // Column layout:
   // Fixed cols [0-5]: Site, Poste, Sous-poste, Libellé, Tags, Caractérisation
-  // DA group  [6-13]: Valeur, Unité, Durée amort., Incert. globale, Incert. détaillées, Source, Type, Hypothèses DA
-  // FE group [14-21]: FE utilisé, Valeur FE, Unité FE, Incert. globale, Incert. détaillées, Source, Type, FE souhaité
-  const TOTAL_COLS = 22
+  // DA group  [6-17]: Valeur, Unité, Durée amort., Incert. globale, Fiabilité, Rep. tech., Rep. géo., Rep. temp., Complétude, Source, Type, Hypothèses DA
+  // FE group [18-29]: FE utilisé, Valeur FE, Unité FE, Incert. globale, Fiabilité, Rep. tech., Rep. géo., Rep. temp., Complétude, Source, Type, FE souhaité
+  const TOTAL_COLS = 30
   const DA_START = 6
-  const DA_END = 13
-  const FE_START = 14
-  const FE_END = 21
+  const DA_END = 17
+  const FE_START = 18
+  const FE_END = 29
 
   const empty = (n: number) => Array(n).fill('')
 
@@ -217,7 +226,11 @@ function buildEmissionSourcesWorkbook(
     t('columnUnit'),
     t('columnDepreciationPeriod'),
     t('columnGlobalUncertainty'),
-    t('columnDetailedUncertainties'),
+    t('columnReliability'),
+    t('columnTechnicalRepresentativeness'),
+    t('columnGeographicRepresentativeness'),
+    t('columnTemporalRepresentativeness'),
+    t('columnCompleteness'),
     t('columnSource'),
     t('columnType'),
     t('columnComment'),
@@ -225,7 +238,11 @@ function buildEmissionSourcesWorkbook(
     t('columnEfValue'),
     t('columnEfUnit'),
     t('columnGlobalUncertainty'),
-    t('columnDetailedUncertainties'),
+    t('columnReliability'),
+    t('columnTechnicalRepresentativeness'),
+    t('columnGeographicRepresentativeness'),
+    t('columnTemporalRepresentativeness'),
+    t('columnCompleteness'),
     t('columnEfSource'),
     t('columnEfType'),
     t('columnFeComment'),
@@ -286,16 +303,24 @@ export async function getImportEmissionSourcesTemplate(studyId: string): Promise
     '',
     '',
     '',
+    '',
+    '',
+    '',
     t('exampleSource'),
     exampleTypeLabel,
     '',
     t('exampleEmissionFactor'),
     1.85,
     exampleEfUnit,
-    '',
-    '',
-    '',
     exampleQualityLabel,
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
   ]
 
   return buildEmissionSourcesWorkbook(study, locale, [exampleRow])
@@ -331,17 +356,8 @@ export async function exportEmissionSourcesToExcel(studyId: string): Promise<Arr
   const getQualityLabel = (quality: ReturnType<typeof getQualitativeUncertaintyFromQuality> | null) =>
     quality !== null ? (qualityTranslations[String(quality)] ?? '') : ''
 
-  const getDetailedUncertainties = (q: {
-    reliability: number | null
-    technicalRepresentativeness: number | null
-    geographicRepresentativeness: number | null
-    temporalRepresentativeness: number | null
-    completeness: number | null
-  }) =>
-    qualityKeys
-      .map((key) => q[key])
-      .filter((v): v is number => v !== null)
-      .join(' / ')
+  const getQualityFieldLabel = (value: number | null) =>
+    value !== null ? (qualityTranslations[String(value)] ?? '') : ''
 
   const dataRows = emissionSources.map((es) => {
     const ef = emissionFactors.find((f) => f.id === es.emissionFactor?.id)
@@ -353,21 +369,23 @@ export async function exportEmissionSourcesToExcel(studyId: string): Promise<Arr
       ? (categorisationsTranslations[es.caracterisation] ?? es.caracterisation)
       : ''
     const typeLabel = es.type ? (typeTranslations[es.type] ?? es.type) : ''
-    const daDetailedUncertainties = getDetailedUncertainties(es)
     const unitRaw = ef?.unit ? (unitTranslations[ef.unit] ?? ef.unit) : ''
     const unitLabel = unitRaw ? getSingularForm(unitRaw) : ''
     const efTitle = ef?.metaData?.title ?? ''
     const efValue = ef ? ef.totalCo2 : ''
     const efUnitRaw = ef?.unit ? (unitTranslations[ef.unit] ?? ef.unit) : ''
     const efUnitLabel = efUnitRaw ? getSingularForm(efUnitRaw) : ''
-    const feQuality = ef ? getQualitativeUncertaintyFromQuality(getSpecificEmissionFactorQuality(es)) : null
-    const feQualityLabel = getQualityLabel(feQuality)
-    const feDetailedUncertainties = ef ? getDetailedUncertainties(getSpecificEmissionFactorQuality(es)) : ''
+    const feSpecificQuality = ef ? getSpecificEmissionFactorQuality(es) : null
+    const feQualityLabel = feSpecificQuality
+      ? getQualityLabel(getQualitativeUncertaintyFromQuality(feSpecificQuality))
+      : ''
     const efSourceBase = ef ? (efImportSourceTranslations[ef.importedFrom] ?? ef.importedFrom) : ''
     const efSource = ef ? [efSourceBase, ef.version?.name].filter(Boolean).join(' ') : ''
     const efTypeLabel = ef
       ? ef.isMonetary
-        ? t('efTypeMonetary')
+        ? ef.importedFrom === 'Manual'
+          ? t('efTypeMonetarySpecific')
+          : t('efTypeMonetaryNonSpecific')
         : ef.importedFrom === 'Manual'
           ? t('efTypeOrga')
           : t('efTypeBDD')
@@ -385,7 +403,11 @@ export async function exportEmissionSourcesToExcel(studyId: string): Promise<Arr
       unitLabel,
       es.depreciationPeriod ?? '',
       globalUncertaintyLabel,
-      daDetailedUncertainties,
+      getQualityFieldLabel(es.reliability),
+      getQualityFieldLabel(es.technicalRepresentativeness),
+      getQualityFieldLabel(es.geographicRepresentativeness),
+      getQualityFieldLabel(es.temporalRepresentativeness),
+      getQualityFieldLabel(es.completeness),
       es.source ?? '',
       typeLabel,
       es.comment ?? '',
@@ -393,7 +415,11 @@ export async function exportEmissionSourcesToExcel(studyId: string): Promise<Arr
       efValue,
       efUnitLabel,
       feQualityLabel,
-      feDetailedUncertainties,
+      feSpecificQuality ? getQualityFieldLabel(feSpecificQuality.reliability) : '',
+      feSpecificQuality ? getQualityFieldLabel(feSpecificQuality.technicalRepresentativeness) : '',
+      feSpecificQuality ? getQualityFieldLabel(feSpecificQuality.geographicRepresentativeness) : '',
+      feSpecificQuality ? getQualityFieldLabel(feSpecificQuality.temporalRepresentativeness) : '',
+      feSpecificQuality ? getQualityFieldLabel(feSpecificQuality.completeness) : '',
       efSource,
       efTypeLabel,
       es.feComment ?? '',

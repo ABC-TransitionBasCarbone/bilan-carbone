@@ -20,7 +20,11 @@ export type PreviewEmissionSourceRow = {
   type: string
   tag: string
   source: string
-  quality: string
+  reliability: string
+  technicalRepresentativeness: string
+  geographicRepresentativeness: string
+  temporalRepresentativeness: string
+  completeness: string
 }
 
 export type PreviewEmissionSourcesResult =
@@ -39,7 +43,11 @@ export type ParsedEmissionSourceRow = {
   caracterisation: EmissionSourceCaracterisation | undefined
   tag: string | undefined
   source: string | undefined
-  quality: number | undefined
+  reliability: number | undefined
+  technicalRepresentativeness: number | undefined
+  geographicRepresentativeness: number | undefined
+  temporalRepresentativeness: number | undefined
+  completeness: number | undefined
   comment: string | undefined
   feComment: string | undefined
 }
@@ -53,15 +61,19 @@ export const SOURCE_IMPORT_COLUMNS = {
   post: 1,
   subPost: 2,
   name: 3,
-  emissionFactorName: 4,
-  emissionFactorValue: 5,
-  emissionFactorUnit: 6,
-  value: 7,
-  type: 8,
-  caracterisation: 9,
-  tag: 10,
-  source: 11,
-  quality: 12,
-  comment: 13,
-  feComment: 14,
+  tag: 4,
+  caracterisation: 5,
+  value: 6,
+  reliability: 10,
+  technicalRepresentativeness: 11,
+  geographicRepresentativeness: 12,
+  temporalRepresentativeness: 13,
+  completeness: 14,
+  source: 15,
+  type: 16,
+  comment: 17,
+  emissionFactorName: 18,
+  emissionFactorValue: 19,
+  emissionFactorUnit: 20,
+  feComment: 29,
 } as const
