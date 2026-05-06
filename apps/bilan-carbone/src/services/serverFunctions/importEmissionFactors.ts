@@ -151,6 +151,7 @@ export async function exportManualEmissionFactorsToFile(): Promise<ArrayBuffer> 
     c.otherGES,
     c.post,
     c.base,
+    c.addedDate,
   ]
   const rows: (string | number)[][] = emissionFactors.map((ef) => {
     const metaData = ef.metaData.find((m) => m.language === locale) ?? ef.metaData[0]
@@ -179,6 +180,7 @@ export async function exportManualEmissionFactorsToFile(): Promise<ArrayBuffer> 
       ef.otherGES ?? '',
       buildPostsAndSubPostsCell(ef.subPosts, locale, account.environment),
       ef.base ? (baseTranslations[ef.base] ?? ef.base) : '',
+      ef.createdAt.toLocaleDateString(locale),
     ]
   })
 

@@ -1731,6 +1731,7 @@
       "subPost": "Sous Poste",
       "comment": "Commentaires",
       "clear": "Supprimer la valeur",
+      "addedDate": "Date d'ajout",
       "base": "Approche pour le scope 2 (GHG Protocol)",
       "baseModal": {
         "title": "Information pour les exports GHG-P",

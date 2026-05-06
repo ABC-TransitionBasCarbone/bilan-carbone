@@ -1731,6 +1731,7 @@
       "partType": "Part type",
       "comment": "Comments",
       "clear": "Clear value",
+      "addedDate": "Added date",
       "base": "Scope 2 approach (GHG Protocol)",
       "baseModal": {
         "title": "GHG-P exports information",
