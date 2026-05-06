@@ -107,6 +107,7 @@ const fullStudyInclude = {
       source: true,
       type: true,
       comment: true,
+      feComment: true,
       validated: true,
       depreciationPeriod: true,
       hectare: true,

@@ -83,3 +83,7 @@
 .gapped {
   gap: 1rem;
 }
+
+.block {
+  display: block;
+}

@@ -12,6 +12,7 @@ export type PreviewRow = {
   name: string
   source: string
   unit: string
+  customUnit: string | null
   totalCo2: number
   postsAndSubPosts: string
 }

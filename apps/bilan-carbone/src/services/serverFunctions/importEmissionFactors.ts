@@ -1,6 +1,5 @@
 'use server'
 
-import { getAccountById } from '@/db/account'
 import { createEmissionFactorWithParts, getManualEmissionFactorsByOrganization } from '@/db/emissionFactors'
 import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
@@ -16,7 +15,7 @@ import { flattenSubposts } from '@/utils/post'
 import { withServerResponse } from '@/utils/serverResponse'
 import { getBcTranslations } from '@/utils/translation.utils'
 import { EmissionFactorStatus, Import } from '@abc-transitionbascarbone/db-common/enums'
-import { auth } from '../auth'
+import { getAuthenticatedAccount } from '../permissions/account.permissions'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canReadEmissionFactor } from '../permissions/emissionFactor'
 import { canCreateEmissionFactor } from '../permissions/emissionFactor.server'
@@ -24,18 +23,7 @@ import { prepareExcel } from './file'
 import { getFileUrlFromBucket } from './scaleway'
 
 async function checkAuth(requireCreatePermission = true): Promise<AccountWithUser> {
-  const session = await auth()
-  if (!session?.user) {
-    throw new Error(NOT_AUTHORIZED)
-  }
-
-  const account = await getAccountById(session.user.accountId)
-  if (!account?.organizationVersionId || !account.organizationVersion) {
-    throw new Error(NOT_AUTHORIZED)
-  }
-
-  // This way TS knows that the organizationVersion is not null
-  const accountWithOrgVersion = { ...account, organizationVersion: account.organizationVersion }
+  const account = await getAuthenticatedAccount()
 
   if (requireCreatePermission) {
     if (!(await canCreateEmissionFactor(account.organizationVersionId))) {
@@ -43,7 +31,7 @@ async function checkAuth(requireCreatePermission = true): Promise<AccountWithUse
     }
   } else {
     if (
-      !canReadEmissionFactor(accountWithOrgVersion, {
+      !canReadEmissionFactor(account, {
         organizationId: account.organizationVersion.organizationId,
         importedFrom: Import.Manual,
       })
@@ -52,7 +40,7 @@ async function checkAuth(requireCreatePermission = true): Promise<AccountWithUse
     }
   }
 
-  return accountWithOrgVersion
+  return account
 }
 
 export async function previewEmissionFactorsFromFile(file: File): Promise<PreviewEmissionFactorsResult> {
@@ -70,6 +58,7 @@ export async function previewEmissionFactorsFromFile(file: File): Promise<Previe
     name: row.name,
     source: row.source,
     unit: row.rawUnit,
+    customUnit: row.customUnit ?? null,
     totalCo2: row.totalCo2,
     postsAndSubPosts: row.rawPostsAndSubPosts,
   }))

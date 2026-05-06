@@ -288,6 +288,7 @@ model StudyEmissionSource {
   source                       String?
   type                         EmissionSourceType?
   comment                      String?
+  feComment                    String?             @map("fe_comment")
   validated                    Boolean?
   recycledPart                 Int?                @map("recycled_part")
 
