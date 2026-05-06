@@ -3,40 +3,18 @@ import { environmentPostMapping, environmentSubPostsMapping } from '@/services/p
 import { EmissionFactorCommandValidation } from '@/services/serverFunctions/emissionFactor.command'
 import { COLUMNS, ImportError, ParsedRow, ParseResult } from '@/types/importEmissionFactors.types'
 import { EmissionFactorBase, Environment, SubPost, Unit } from '@abc-transitionbascarbone/db-common/enums'
-import xlsx from 'node-xlsx'
 import { ManualEmissionFactorUnitList } from './emissionFactors'
+import {
+  buildLabelMap,
+  mapLabelFromTranslations,
+  mapQualityLabelFromTranslations,
+  parseXlsxSheet,
+} from './import.utils'
 import { parseNumericValue } from './number'
 import { BcTranslations, extractAllForms, getBcTranslations, getSingularForm } from './translation.utils'
 
 export function getAllPostsLabel(locale: LocaleType): string {
   return getBcTranslations(locale).emissionFactors.importModal.allPostsAndSubPosts
-}
-
-/**
- * Map a string label coming from the import file to a value of the right type
- * based on the translations file.
- */
-function mapLabelFromTranslations<T>(
-  label: string | undefined | null,
-  locale: LocaleType,
-  buildMap: (bc: BcTranslations) => Record<string, T>,
-): T | null {
-  if (!label) {
-    return null
-  }
-  return buildMap(getBcTranslations(locale))[label.trim().toLowerCase()] ?? null
-}
-
-function buildLabelMap<T extends string>(
-  entries: Record<string, unknown>,
-  keyFilter: (k: string) => boolean,
-  toValue: (k: string) => T,
-): Record<string, T> {
-  return Object.fromEntries(
-    Object.entries(entries)
-      .filter(([k, v]) => keyFilter(k) && typeof v === 'string')
-      .map(([k, v]) => [(v as string).toLowerCase(), toValue(k)]),
-  )
 }
 
 export function mapBaseLabelFromTranslations(
@@ -50,19 +28,6 @@ export function mapBaseLabelFromTranslations(
       (k) => k as EmissionFactorBase,
     ),
   )
-}
-
-export function mapQualityLabelFromTranslations(label: string | undefined | null, locale: LocaleType): number | null {
-  if (!label) {
-    return null
-  }
-  const bc = getBcTranslations(locale)
-  const map = Object.fromEntries(
-    Object.entries(bc.quality)
-      .filter(([k]) => /^[1-5]$/.test(k))
-      .map(([k, v]) => [v.toLowerCase(), Number(k)]),
-  )
-  return map[String(label).trim().toLowerCase()] ?? null
 }
 
 export function mapPostLabelFromTranslations(
@@ -208,47 +173,11 @@ export function parsePostsAndSubPostsCell(
   return { success: true, subPosts: result }
 }
 
-function parseSheet(
-  buffer: Buffer,
-  locale: LocaleType,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): { success: false; errors: ImportError[] } | { success: true; dataRows: any[][] } {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let workbook: ReturnType<typeof xlsx.parse<any[]>>
-  try {
-    workbook = xlsx.parse(buffer, { raw: false })
-  } catch {
-    return { success: false, errors: [{ line: 0, key: 'invalidFileType' }] }
-  }
-
-  const sheet = workbook[0]
-  if (!sheet?.data || sheet.data.length < 2) {
-    return { success: false, errors: [{ line: 0, key: 'emptyFile' }] }
-  }
-
-  const dataRows = sheet.data.slice(1).filter((row) =>
-    row.some((cell, i) => {
-      const value = String(cell ?? '').trim()
-      if (value === '') {
-        return false
-      }
-      // Ignore the posts and subposts column from the filtering if it contains the special value
-      if (i === COLUMNS.postsAndSubPosts && value.toLowerCase() === getAllPostsLabel(locale).toLowerCase()) {
-        return false
-      }
-      return true
-    }),
-  )
-
-  if (dataRows.length === 0) {
-    return { success: false, errors: [{ line: 0, key: 'emptyFile' }] }
-  }
-
-  return { success: true, dataRows }
-}
-
 export function parseImportFile(buffer: Buffer, locale: LocaleType, environment: Environment): ParseResult {
-  const sheetResult = parseSheet(buffer, locale)
+  const sheetResult = parseXlsxSheet(buffer, {
+    rowFilter: (_row, i, value) =>
+      !(i === COLUMNS.postsAndSubPosts && value.toLowerCase() === getAllPostsLabel(locale).toLowerCase()),
+  })
   if (!sheetResult.success) {
     return sheetResult
   }

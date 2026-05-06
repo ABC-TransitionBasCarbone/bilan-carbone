@@ -1,0 +1,42 @@
+.dropzone {
+  min-height: 12rem;
+  border: 2px dashed var(--mui-palette-grey-400);
+  border-radius: 0.5rem;
+  padding: 2rem;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s;
+  background-color: var(--mui-palette-grey-50);
+}
+
+.dropzone:hover {
+  border-color: var(--mui-palette-primary-main);
+  background-color: var(--mui-palette-grey-100);
+}
+
+.icon {
+  font-size: 3rem !important;
+  color: var(--mui-palette-primary-main);
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.errorList {
+  padding: 0;
+  margin: 0.5rem 0 0;
+  max-height: 15rem;
+  overflow-y: auto;
+}
+
+.tableWrapper {
+  overflow-y: auto;
+  flex: 1;
+  border: 1px solid var(--mui-palette-grey-200);
+  border-radius: 0.25rem;
+}
+
+.cellName {
+  max-width: 16rem;
+}

@@ -281,3 +281,9 @@
 .bold {
   font-weight: bold;
 }
+
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

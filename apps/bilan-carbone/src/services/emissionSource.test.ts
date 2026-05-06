@@ -65,6 +65,7 @@ const defaultEmissionSource = {
   feTemporalRepresentativeness: 1,
   feGeographicRepresentativeness: null,
   feCompleteness: null,
+  feComment: null,
   lastEditor: null,
   depreciationPeriod: null,
   duration: null,
