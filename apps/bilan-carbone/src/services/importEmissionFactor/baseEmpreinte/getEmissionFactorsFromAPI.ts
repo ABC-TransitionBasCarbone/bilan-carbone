@@ -9,6 +9,7 @@ import {
   ImportEmissionFactor,
   requiredColumns,
   saveEmissionFactorsParts,
+  serializeRowAsCsv,
   validStatuses,
 } from '../import'
 import { mapBaseEmpreinteEmissionFactors } from './import'
@@ -20,22 +21,18 @@ type EmissionFactorResponse = {
 }
 
 export const getEmissionFactorsFromAPI = async (prismaClient: PrismaClient, name: string) => {
-  const results = await axios.get('https://data.ademe.fr/data-fair/api/v1/datasets/base-carboner')
-  const fileName = results.data.file.name
+  await axios.get('https://data.ademe.fr/data-fair/api/v1/datasets/base-carboner')
 
   await prismaClient.$transaction(
     async (transaction) => {
-      const emissionFactorImportVersion = await getEmissionFactorImportVersion(
-        transaction,
-        name,
-        Import.BaseEmpreinte,
-        fileName,
-      )
-      if (!emissionFactorImportVersion.success) {
+      const emissionFactorImportVersion = await getEmissionFactorImportVersion(transaction, name, Import.BaseEmpreinte)
+      if (emissionFactorImportVersion.alreadyExists) {
         return console.error('Emission factors already imported with id : ', emissionFactorImportVersion.id)
       }
 
       let parts: ImportEmissionFactor[] = []
+      const importedIdToEfId = new Map<string, string>()
+      const newEmissionFactorIds: string[] = []
       let url: string | undefined =
         `https://data.ademe.fr/data-fair/api/v1/datasets/base-carboner/lines?select=${requiredColumns.join(',')}&q_fields=Statut_de_l'élément&q=${validStatuses.map((status) => encodeURI(status)).join(',')}`
 
@@ -45,16 +42,24 @@ export const getEmissionFactorsFromAPI = async (prismaClient: PrismaClient, name
         parts = parts.concat(
           emissionFactors.data.results.filter((emissionFactor) => emissionFactor.Type_Ligne === 'Poste'),
         )
-        const data = emissionFactors.data.results
-          .filter((emissionFactor) => emissionFactor.Type_Ligne !== 'Poste')
-          .map((emissionFactor) => mapBaseEmpreinteEmissionFactors(emissionFactor, emissionFactorImportVersion.id))
-
-        await Promise.all(data.map((data) => transaction.emissionFactor.create({ data })))
+        const efRows = emissionFactors.data.results.filter((emissionFactor) => emissionFactor.Type_Ligne !== 'Poste')
+        for (const row of efRows) {
+          const data = mapBaseEmpreinteEmissionFactors(row)
+          const created = await transaction.emissionFactor.create({
+            data: {
+              ...data,
+              importedRawCsv: serializeRowAsCsv(row),
+              versions: { create: { importVersionId: emissionFactorImportVersion.id } },
+            },
+          })
+          importedIdToEfId.set(row["Identifiant_de_l'élément"], created.id)
+          newEmissionFactorIds.push(created.id)
+        }
         url = emissionFactors.data.next
       }
 
-      await saveEmissionFactorsParts(transaction, emissionFactorImportVersion.id, parts)
-      await cleanImport(transaction, emissionFactorImportVersion.id)
+      await saveEmissionFactorsParts(transaction, importedIdToEfId, parts)
+      await cleanImport(transaction, newEmissionFactorIds)
       await addSourceToStudies(Import.BaseEmpreinte, transaction)
     },
     { timeout: HOUR * TIME_IN_MS },

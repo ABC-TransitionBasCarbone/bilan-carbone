@@ -1,5 +1,5 @@
 import type { FullStudy } from '@/db/study'
-import { EmissionFactorBase, Environment, SubPost, Unit } from '@abc-transitionbascarbone/db-common/enums'
+import { EmissionFactorBase, Environment, Import, SubPost, Unit } from '@abc-transitionbascarbone/db-common/enums'
 import { expect } from '@jest/globals'
 import { getEmissionResults } from './emissionSource'
 
@@ -28,9 +28,12 @@ const defaultEmissionSource = {
     isMonetary: false,
     location: '',
     customUnit: null,
-    version: {
-      id: 'version-id',
-    },
+    versions: [
+      {
+        importVersionId: 'versionId',
+        importVersion: { id: 'versionId', name: 'versionName', source: Import.BaseEmpreinte, archived: false },
+      },
+    ],
     metaData: [
       {
         language: 'fr',
@@ -39,6 +42,7 @@ const defaultEmissionSource = {
         title: 'Mocked Emission Factor',
         attribute: 'Mocked Attribute',
         comment: 'Mocked Comment',
+        tag: null,
       },
     ],
     emissionFactorParts: [],

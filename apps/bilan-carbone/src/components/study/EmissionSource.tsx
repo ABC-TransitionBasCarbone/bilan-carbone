@@ -190,10 +190,11 @@ const EmissionSource = ({
 
   const isFromOldImport = useMemo(
     () =>
-      !!selectedFactor?.version?.id &&
-      !study.emissionFactorVersions
-        .map((studyImportVersion) => studyImportVersion.importVersionId)
-        .includes(selectedFactor.version.id),
+      !!selectedFactor &&
+      selectedFactor.versions.length > 0 &&
+      !selectedFactor.versions.some((v) =>
+        study.emissionFactorVersions.map((sv) => sv.importVersionId).includes(v.importVersionId),
+      ),
     [selectedFactor, study.emissionFactorVersions],
   )
 

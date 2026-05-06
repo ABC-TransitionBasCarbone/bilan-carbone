@@ -7,7 +7,8 @@
   "scripts": {
     "db:migrate": "prisma migrate dev",
     "db:generate": "prisma generate",
-    "db:status": "prisma migrate status"
+    "db:status": "prisma migrate status",
+    "prisma": "prisma"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.8.0",

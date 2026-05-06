@@ -14,6 +14,7 @@ export const keepOnlyOneMetadata = <T extends { metaData: EmissionFactorList['me
       comment: null,
       location: null,
       frontiere: null,
+      tag: null,
     },
   }))
 }

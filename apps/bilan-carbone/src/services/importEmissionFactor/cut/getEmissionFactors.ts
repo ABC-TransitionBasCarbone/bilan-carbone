@@ -4,8 +4,8 @@ import { ImportEmissionFactor, mapEmissionFactors } from '../import'
 
 const getSubPostsFunc = () => [SubPost.UsagesNumeriques]
 
-const mapCUTEmissionFactors = (emissionFactor: ImportEmissionFactor, versionId: string) =>
-  mapEmissionFactors(emissionFactor, Import.CUT, versionId, getSubPostsFunc)
+const mapCUTEmissionFactors = (emissionFactor: ImportEmissionFactor) =>
+  mapEmissionFactors(emissionFactor, Import.CUT, getSubPostsFunc)
 
 export const getEmissionFactorsFromCSV = async (name: string, file: string) =>
   getEmissionFactors(name, file, Import.CUT, mapCUTEmissionFactors)

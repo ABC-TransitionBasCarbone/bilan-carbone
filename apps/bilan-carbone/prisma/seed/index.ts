@@ -58,6 +58,7 @@ const users = async () => {
   await prisma.emissionFactorPartMetaData.deleteMany()
   await prisma.emissionFactorPart.deleteMany()
   await prisma.emissionFactorMetaData.deleteMany()
+  await prisma.emissionFactorVersion.deleteMany()
   await prisma.emissionFactor.deleteMany()
 
   await prisma.emissionSourceTag.deleteMany()

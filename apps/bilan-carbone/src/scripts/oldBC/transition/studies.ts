@@ -555,7 +555,7 @@ const getExistingStudySites = async (transaction: Prisma.TransactionClient, stud
 }
 
 interface EmissionFactorWithVersion extends EmissionFactorPrismaModel {
-  version: EmissionFactorImportVersion | null
+  versions: { importVersionId: string; importVersion: EmissionFactorImportVersion }[]
 }
 
 class EmissionFactorsByImportedIdMap {
@@ -566,14 +566,15 @@ class EmissionFactorsByImportedIdMap {
     this.emissionFactorsMap = emissionFactors.reduce((emissionFactorsMap, emissionFactor) => {
       if (emissionFactor.importedId) {
         const emissionFactors = emissionFactorsMap.get(emissionFactor.importedId)
+        const firstVersion = emissionFactor.versions[0]?.importVersion ?? null
         const emissionFactorItem = {
           id: emissionFactor.id,
           unit: emissionFactor.unit,
-          version: emissionFactor.version
+          version: firstVersion
             ? {
-                id: emissionFactor.version.id,
-                source: emissionFactor.version.source,
-                createdAt: emissionFactor.version.createdAt,
+                id: firstVersion.id,
+                source: firstVersion.source,
+                createdAt: firstVersion.createdAt,
               }
             : null,
           importedId: emissionFactor.importedId,
@@ -623,13 +624,14 @@ class StudiesEmissionFactorVersionsMap {
   addEmissionFactor(studyId: string, emissionFactor: EmissionFactor) {
     const emissionFactorVersionsMap =
       this.studiesEmissionFactorVersionsMap.get(studyId) ?? new Map<string, { id: string; createdAt: Date }[]>()
-    if (emissionFactor.version) {
+    const firstVersion = emissionFactor.version
+    if (firstVersion) {
       const emissionFactorItem = {
-        id: emissionFactor.version.id,
-        createdAt: emissionFactor.version.createdAt,
+        id: firstVersion.id,
+        createdAt: firstVersion.createdAt,
       }
-      const emissionFactorVersions = emissionFactorVersionsMap.get(emissionFactor.version.source) ?? []
-      emissionFactorVersionsMap.set(emissionFactor.version.source, emissionFactorVersions.concat(emissionFactorItem))
+      const emissionFactorVersions = emissionFactorVersionsMap.get(firstVersion.source) ?? []
+      emissionFactorVersionsMap.set(firstVersion.source, emissionFactorVersions.concat(emissionFactorItem))
       this.studiesEmissionFactorVersionsMap.set(studyId, emissionFactorVersionsMap)
     }
   }

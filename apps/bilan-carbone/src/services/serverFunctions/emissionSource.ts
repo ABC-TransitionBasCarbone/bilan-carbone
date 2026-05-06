@@ -60,10 +60,11 @@ export const createEmissionSource = async ({
     ])
 
     if (
-      emissionFactor?.version?.id &&
-      !study?.emissionFactorVersions
-        .map((emissionFactorVersion) => emissionFactorVersion.importVersionId)
-        .includes(emissionFactor.version.id)
+      emissionFactor &&
+      emissionFactor.versions.length > 0 &&
+      !emissionFactor.versions.some((v) =>
+        study?.emissionFactorVersions.map((sv) => sv.importVersionId).includes(v.importVersionId),
+      )
     ) {
       throw new Error(NOT_AUTHORIZED)
     }
@@ -113,10 +114,11 @@ export const updateEmissionSource = async ({
     }
 
     if (
-      emissionFactor?.version?.id &&
-      !study.emissionFactorVersions
-        .map((emissionFactorVersion) => emissionFactorVersion.importVersionId)
-        .includes(emissionFactor.version.id)
+      emissionFactor &&
+      emissionFactor.versions.length > 0 &&
+      !emissionFactor.versions.some((v) =>
+        study.emissionFactorVersions.map((sv) => sv.importVersionId).includes(v.importVersionId),
+      )
     ) {
       throw new Error(NOT_AUTHORIZED)
     }

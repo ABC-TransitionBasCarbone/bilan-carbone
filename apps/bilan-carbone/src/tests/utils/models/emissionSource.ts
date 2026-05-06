@@ -65,9 +65,12 @@ export const getMockedFullStudyEmissionSource = (
     isMonetary: false,
     location: '',
     customUnit: null,
-    version: {
-      id: 'version-id',
-    },
+    versions: [
+      {
+        importVersionId: 'mocked-import-version-id',
+        importVersion: { id: 'mocked-import-version-id', name: 'test', source: Import.BaseEmpreinte, archived: false },
+      },
+    ],
     metaData: [
       {
         language: 'fr',
@@ -76,6 +79,7 @@ export const getMockedFullStudyEmissionSource = (
         title: 'Mocked Emission Factor',
         attribute: 'Mocked Attribute',
         comment: 'Mocked Comment',
+        tag: null,
       },
     ],
     emissionFactorParts: [],

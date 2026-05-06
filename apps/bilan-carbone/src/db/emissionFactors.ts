@@ -18,6 +18,20 @@ import { Session } from 'next-auth'
 import { prismaClient } from './client.server'
 import { getOrgVersionWithOrgId } from './organization'
 
+const versionsSelect = {
+  select: {
+    importVersionId: true,
+    importVersion: {
+      select: {
+        id: true,
+        name: true,
+        source: true,
+        archived: true,
+      },
+    },
+  },
+}
+
 const otherSelectEmissionFactor = {
   id: true,
   status: true,
@@ -46,13 +60,7 @@ const otherSelectEmissionFactor = {
   hfc: true,
   pfc: true,
   otherGES: true,
-  version: {
-    select: {
-      id: true,
-      name: true,
-      archived: true,
-    },
-  },
+  versions: versionsSelect,
   emissionFactorParts: { select: { type: true, totalCo2: true } },
 }
 
@@ -92,17 +100,22 @@ const selectEmissionFactor = {
       comment: true,
       location: true,
       frontiere: true,
+      tag: true,
     },
   },
-  version: {
-    select: {
-      id: true,
-      name: true,
-      archived: true,
-    },
-  },
+  versions: versionsSelect,
   emissionFactorParts: { select: { type: true, totalCo2: true } },
 } as Prisma.EmissionFactorSelect
+
+type EmissionFactorVersion = {
+  importVersionId: string
+  importVersion: {
+    id: string
+    name: string
+    source: Import
+    archived: boolean
+  }
+}
 
 export type EmissionFactorList = {
   id: string
@@ -139,12 +152,9 @@ export type EmissionFactorList = {
     comment: string | null
     location: string | null
     frontiere: string | null
+    tag: string | null
   }
-  version: {
-    id: string
-    name: string
-    archived: boolean
-  } | null
+  versions: EmissionFactorVersion[]
   emissionFactorParts: {
     type: string
     totalCo2: number
@@ -180,13 +190,13 @@ const getBaseFilterForEmissionFactors = (
     } else if (filters.sources.includes(Import.Manual) && organizationId) {
       importedFromCondition = {
         OR: [
-          { versionId: { in: filters.sources.filter((s) => s !== Import.Manual) } },
+          { versions: { some: { importVersionId: { in: filters.sources.filter((s) => s !== Import.Manual) } } } },
           { importedFrom: Import.Manual, organizationId },
         ],
       }
     } else {
       importedFromCondition = {
-        OR: [{ versionId: { in: filters.sources.filter((s) => s !== Import.Manual) } }],
+        OR: [{ versions: { some: { importVersionId: { in: filters.sources.filter((s) => s !== Import.Manual) } } } }],
       }
     }
   }
@@ -246,6 +256,7 @@ const getDefaultEmissionFactors = async (
       comment: true,
       location: true,
       frontiere: true,
+      tag: true,
       emissionFactor: { select: otherSelectEmissionFactor },
     },
     orderBy: { title: 'asc' },
@@ -260,6 +271,7 @@ const getDefaultEmissionFactors = async (
       comment: metadata.comment,
       location: metadata.location,
       frontiere: metadata.frontiere,
+      tag: metadata.tag,
     },
   }))
 }
@@ -306,7 +318,7 @@ export const getEmissionFactorByImportedIdAndStudiesEmissionSource = (importedId
   prismaClient.emissionFactor.findFirst({
     where: {
       importedId,
-      versionId: { in: versionIds },
+      versions: { some: { importVersionId: { in: versionIds } } },
     },
     select: selectEmissionFactor,
   })
@@ -330,11 +342,11 @@ export const getEmissionFactorsByIdsAndSource = (ids: string[], source: Import) 
     select: selectEmissionFactor,
   })
 
-export const getEmissionFactorsByImportedIdsAndVersion = (ids: string[], versionId: string) =>
+export const getEmissionFactorsByImportedIdsAndVersion = (ids: string[], importVersionId: string) =>
   prismaClient.emissionFactor.findMany({
     where: {
       importedId: { in: ids },
-      versionId,
+      versions: { some: { importVersionId } },
     },
     select: selectEmissionFactor,
   })
@@ -556,11 +568,10 @@ export const findEmissionFactorByImportedId = (id: string) =>
     where: { importedId: id },
     select: {
       id: true,
-      versionId: true,
       importedId: true,
       unit: true,
       customUnit: true,
-      version: { select: { id: true } },
+      versions: { select: { importVersionId: true } },
       metaData: true,
     },
   })

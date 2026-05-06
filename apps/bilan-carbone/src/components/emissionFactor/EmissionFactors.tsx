@@ -44,7 +44,7 @@ const EmissionFactors = ({ userOrganizationId, environment, hasActiveLicence }: 
       }
       const selectedImportVersionsArray = Object.values(selectedImportVersions)
 
-      setLocationOptions(locationFromBdd.filter((loc) => !!loc).map((loc) => loc.location) ?? [])
+      setLocationOptions(locationFromBdd.flatMap((loc) => (loc.location ? [loc.location] : [])))
 
       const importVersions = importVersionsFromBdd.sort((a, b) => {
         if (a.source === b.source) {

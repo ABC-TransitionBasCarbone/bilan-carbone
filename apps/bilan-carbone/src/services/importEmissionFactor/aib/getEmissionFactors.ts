@@ -6,8 +6,8 @@ const source = Import.AIB
 
 const getSubPostsFunc = () => [SubPost.Electricite]
 
-const mapAIBEmissionFactors = (emissionFactor: ImportEmissionFactor, versionId: string) => ({
-  ...mapEmissionFactors(emissionFactor, source, versionId, getSubPostsFunc),
+const mapAIBEmissionFactors = (emissionFactor: ImportEmissionFactor) => ({
+  ...mapEmissionFactors(emissionFactor, source, getSubPostsFunc),
   base: EmissionFactorBase.MarketBased,
 })
 

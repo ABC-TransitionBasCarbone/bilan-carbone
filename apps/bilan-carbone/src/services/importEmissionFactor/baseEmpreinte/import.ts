@@ -7,7 +7,7 @@ const getSubPostsFunc = (emissionFactor: ImportEmissionFactor) =>
     .filter(([, elements]) => elements.some((element) => element === emissionFactor["Identifiant_de_l'élément"]))
     .map(([subPost]) => subPost as SubPost)
 
-export const mapBaseEmpreinteEmissionFactors = (emissionFactor: ImportEmissionFactor, versionId: string) => ({
-  ...mapEmissionFactors(emissionFactor, Import.BaseEmpreinte, versionId, getSubPostsFunc),
+export const mapBaseEmpreinteEmissionFactors = (emissionFactor: ImportEmissionFactor) => ({
+  ...mapEmissionFactors(emissionFactor, Import.BaseEmpreinte, getSubPostsFunc),
   base: getSubPostsFunc(emissionFactor).includes(SubPost.Electricite) ? EmissionFactorBase.LocationBased : null,
 })

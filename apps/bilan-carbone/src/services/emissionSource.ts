@@ -29,10 +29,10 @@ type EmissionSourceFormType = Pick<
   | 'duration'
 >
 
-export const getEmissionSourceCompletion = (
+const getEmissionSourceCompletion = (
   emissionSource: EmissionSourceFormType,
   study: FullStudy,
-  emissionFactor: FullStudy['emissionSources'][number]['emissionFactor'],
+  unit: string | null | undefined,
   environment: Environment | undefined,
 ) => {
   const mandatoryFields = ['name', 'type', 'emissionFactorId'] as (keyof typeof emissionSource)[]
@@ -58,11 +58,7 @@ export const getEmissionSourceCompletion = (
     }
   }
 
-  if (
-    emissionSource.subPost === SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas &&
-    emissionFactor &&
-    emissionFactor.unit === 'HA_YEAR'
-  ) {
+  if (emissionSource.subPost === SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas && unit === 'HA_YEAR') {
     mandatoryFields.push('hectare')
     mandatoryFields.push('duration')
   }
@@ -77,10 +73,10 @@ export const getEmissionSourceCompletion = (
 export const canBeValidated = (
   emissionSource: EmissionSourceFormType,
   study: FullStudy,
-  emissionFactor: FullStudy['emissionSources'][number]['emissionFactor'],
+  emissionFactor: { unit?: string | null } | null | undefined,
   environment: Environment | undefined,
 ) => {
-  return getEmissionSourceCompletion(emissionSource, study, emissionFactor, environment) === 1
+  return getEmissionSourceCompletion(emissionSource, study, emissionFactor?.unit, environment) === 1
 }
 
 export const getAlpha = (emission: number, confidenceInterval: number[]) => {

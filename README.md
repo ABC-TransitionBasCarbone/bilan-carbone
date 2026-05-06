@@ -41,16 +41,16 @@ cd apps/bilan-carbone && docker-compose up -d && cd ../..
 ### 4. Set up the database with Prisma
 
 ```bash
-yarn workspace @abc-transitionbascarbone/db-common db:migrate
+yarn prisma migrate dev
 ```
 
 Or in production :
 
 ```bash
-yarn workspace @abc-transitionbascarbone/db-common prisma migrate deploy
+yarn prisma migrate deploy
 ```
 
-### 5. Seed the database
+### 5. Seed the database (cannot use the yarn prisma shortcut)
 
 ```bash
 yarn workspace bilan-carbone prisma db seed
@@ -59,7 +59,7 @@ yarn workspace bilan-carbone prisma db seed
 ### 6. Generated prisma client
 
 ```bash
-yarn workspace @abc-transitionbascarbone/db-common db:generate
+yarn prisma generate
 ```
 
 ### 7. Run the development serve
@@ -70,13 +70,11 @@ yarn dev
 
 The application will be available at [http://localhost:3000](http://localhost:3000)
 
----
-
 ## Commands by workspace
 
 ### bilan-carbone application
 
-````bash
+```bash
 # Development
 yarn workspace bilan-carbone dev
 
@@ -91,24 +89,28 @@ yarn workspace bilan-carbone cypress
 
 # Reset test database
 yarn workspace bilan-carbone db:test:reset
+```
 
 ### Database (db-common)
 
-```bash
+````bash
 # Create a new migration
-yarn workspace @abc-transitionbascarbone/db-common db:migrate
+yarn prisma migrate dev
+
+# Reset the database
+yarn prisma migrate reset
 
 # Apply migrations
-yarn workspace @abc-transitionbascarbone/db-common prisma migrate deploy
+yarn prisma migrate deploy
 
 # Check migration status
-yarn workspace @abc-transitionbascarbone/db-common db:status
+yarn prisma migrate status
 
 # Generate Prisma client
-yarn workspace @abc-transitionbascarbone/db-common db:generate
+yarn prisma generate
 
 # Prisma Studio
-yarn workspace @abc-transitionbascarbone/db-common prisma studio
+yarn prisma studio
 
 ---
 
@@ -157,35 +159,9 @@ yarn workspace bilan-carbone test
 yarn workspace bilan-carbone test:watch
 ```
 
-### Run Publicodes test
-
-```bash
-yarn workspace bilan-carbone publicodes-count:test
-```
-
-### Run Cypress tests
-
-```bash
-# Start the app in test environment connected to the test database
-yarn workspace bilan-carbone dev:test
-
-# Run Cypress tests
-yarn workspace bilan-carbone cypress
-
-# Run a specific test file
-cd apps/bilan-carbone && yarn cypress --spec "src/tests/end-to-end/app/auth.cy.ts"
-
-# Open Cypress GUI
-yarn workspace bilan-carbone cypress:gui
-```
-
----
-
 ## Deploy on Scalingo
 
 Migrations are automatically applied via the Procfile on each deployment
-
----
 
 ## Dependency Upgrades
 

@@ -17,6 +17,7 @@ import {
   getManualEmissionFactors,
   setEmissionFactorUnitAsCustom,
   updateEmissionFactor,
+  type EmissionFactorList,
 } from '@/db/emissionFactors'
 import { getOrganizationVersionByOrganizationIdAndEnvironment, getOrgVersionWithOrgId } from '@/db/organization'
 import { getStudyOrganizationVersion } from '@/db/study'
@@ -50,13 +51,13 @@ export const getFELocations = async () => {
         subPosts: { isEmpty: false },
         OR: [
           { organizationId: session.user.organizationId },
-          { AND: [{ versionId: { not: null }, version: { source: { not: Import.CUT } } }] },
+          { AND: [{ versions: { some: { importVersion: { source: { not: Import.CUT } } } } }] },
         ],
       },
     },
     distinct: ['location'],
     select: { location: true },
-  }) as Promise<{ location: string }[]>
+  })
 }
 export const getEmissionFactors = async (
   skip: number,
@@ -131,8 +132,8 @@ export const getEmissionFactorsByIds = async (ids: string[], studyId: string) =>
           ...emissionFactor,
           metaData: emissionFactor.metaData.find((metadata) => metadata.language === locale),
         }))
-        .filter((emissionFactor) => emissionFactor.metaData)
-        .sort((a, b) => sortAlphabetically(a?.metaData?.title, b?.metaData?.title)) as EmissionFactorWithMetaData[]
+        .filter((emissionFactor) => !!emissionFactor.metaData)
+        .sort((a, b) => sortAlphabetically(a?.metaData?.title, b?.metaData?.title)) as unknown as EmissionFactorList[]
     } catch {
       return []
     }
@@ -224,7 +225,7 @@ export const createEmissionFactorCommand = async ({
         importedFrom: Import.Manual,
         status: EmissionFactorStatus.Valid,
         organization: { connect: { id: account.organizationVersion?.organizationId } },
-        unit: unit as Unit,
+        unit,
         subPosts: flattenSubposts(subPosts),
         metaData: { create: { language: local, title: name, attribute, comment } },
       },

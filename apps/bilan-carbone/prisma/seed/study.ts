@@ -1,4 +1,5 @@
-import { getEmissionFactorsFromCSV } from '@/services/importEmissionFactor/baseEmpreinte/getEmissionFactorsFromCSV'
+import { mapBaseEmpreinteEmissionFactors } from '@/services/importEmissionFactor/baseEmpreinte/import'
+import { getEmissionFactorsFromCSV } from '@/services/importEmissionFactor/getEmissionFactorsFromCSV'
 import { addSourceToStudies } from '@/services/importEmissionFactor/import'
 import {
   ControlMode,
@@ -26,12 +27,18 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
     return null
   }
 
-  await getEmissionFactorsFromCSV('test', './prisma/seed/Base_Carbone_Test.csv')
+  await getEmissionFactorsFromCSV(
+    'test',
+    './prisma/seed/Base_Carbone_Test.csv',
+    Import.BaseEmpreinte,
+    mapBaseEmpreinteEmissionFactors,
+  )
+
   await prisma.emissionFactorImportVersion.createMany({
     data: [
-      { internId: 'Legifrance_Test.csv', name: 'test', source: Import.Legifrance },
-      { internId: 'Negaoctet_Test.csv', name: 'test', source: Import.NegaOctet },
-      { internId: 'AIB_Test.csv', name: 'test', source: Import.AIB },
+      { name: 'Legifrance_Test.csv', source: Import.Legifrance },
+      { name: 'Negaoctet_Test.csv', source: Import.NegaOctet },
+      { name: 'AIB_Test.csv', source: Import.AIB },
     ],
   })
 
@@ -55,13 +62,15 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
   })
 
   const version = await prisma.emissionFactorImportVersion.findFirst({
-    where: { internId: 'Base_Carbone_Test.csv', source: Import.BaseEmpreinte },
+    where: { name: 'test', source: Import.BaseEmpreinte },
   })
   if (!version) {
     return null
   }
 
-  const emissionFactors = await prisma.emissionFactor.findMany({ where: { versionId: version.id } })
+  const emissionFactors = await prisma.emissionFactor.findMany({
+    where: { versions: { some: { importVersionId: version.id } } },
+  })
 
   const papier = await prisma.emissionFactor.create({
     data: {
