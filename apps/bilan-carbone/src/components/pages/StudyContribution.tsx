@@ -49,7 +49,7 @@ const StudyContributionPage = ({ study }: Props) => {
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download = tImport('sheetName') + '.xlsx'
+      a.download = tImport('exportFileName')
       a.click()
       URL.revokeObjectURL(url)
     })

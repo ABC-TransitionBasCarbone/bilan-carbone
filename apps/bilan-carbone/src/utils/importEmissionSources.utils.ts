@@ -1,4 +1,5 @@
 import { LocaleType } from '@/i18n/config'
+import { qualityKeys } from '@/services/uncertainty'
 import {
   ImportEmissionSourceError,
   ParsedEmissionSourceRow,
@@ -142,14 +143,16 @@ export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): Pa
       }
     }
 
-    const qualityLabel = col('quality')
-    let quality: number | undefined = undefined
-    if (qualityLabel) {
-      const mapped = mapQualityLabelFromTranslations(qualityLabel, locale)
-      if (mapped === null) {
-        rowErrors.push({ key: 'invalidQuality', value: qualityLabel })
-      } else {
-        quality = mapped
+    const parsedQualities: Partial<Record<(typeof qualityKeys)[number], number>> = {}
+    for (const field of qualityKeys) {
+      const label = col(field)
+      if (label) {
+        const mapped = mapQualityLabelFromTranslations(label, locale)
+        if (mapped === null) {
+          rowErrors.push({ key: 'invalidQuality', value: label })
+        } else {
+          parsedQualities[field] = mapped
+        }
       }
     }
 
@@ -172,7 +175,11 @@ export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): Pa
       source: col('source') || undefined,
       comment: col('comment') || undefined,
       feComment: col('feComment') || undefined,
-      quality,
+      reliability: parsedQualities.reliability,
+      technicalRepresentativeness: parsedQualities.technicalRepresentativeness,
+      geographicRepresentativeness: parsedQualities.geographicRepresentativeness,
+      temporalRepresentativeness: parsedQualities.temporalRepresentativeness,
+      completeness: parsedQualities.completeness,
     })
   }
 
