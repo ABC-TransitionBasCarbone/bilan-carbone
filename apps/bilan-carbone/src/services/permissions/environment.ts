@@ -8,7 +8,7 @@ const simplifiedEnvironments: Environment[] = [CUT, CLICKSON]
 export const isAdvanced = (environment: Environment) => advancedEnvironments.includes(environment)
 export const isSimplified = (environment: Environment) => simplifiedEnvironments.includes(environment)
 
-const isBC = (environment: Environment) => environment === BC
+export const isBC = (environment: Environment) => environment === BC
 export const isTilt = (environment: Environment) => environment === TILT
 export const isCut = (environment: Environment) => environment === CUT
 export const isClickson = (environment: Environment) => environment === CLICKSON

@@ -92,7 +92,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
   } else {
     displaySimplifiedStudies = await isTiltSimplifiedFeatureActive(user.environment)
     if (!displaySimplifiedStudies) {
-      hasStudies = advancedStudies.length > 0
+      hasStudies = advancedStudies.length > 0 || collaborationStudies.length > 0
     }
   }
 
