@@ -31,6 +31,7 @@ function initResponse(survey: SurveyType): SurveyResponse {
 
 export function Survey({ survey, surveyId }: SurveyProps) {
   const t = useTranslations('survey')
+  const tCommon = useTranslations('common')
   const [response, setResponse] = useState<SurveyResponse>(() => initResponse(survey))
   const [error, setError] = useState<string | null>(null)
   const [isResumed, setIsResumed] = useState(false)
@@ -203,12 +204,12 @@ export function Survey({ survey, surveyId }: SurveyProps) {
           onClick={handlePrevious}
           disabled={!engine.hasPreviousQuestion()}
         >
-          {t('navigation.previous')}
+          {tCommon('previous')}
         </Button>
 
         {engine.hasNextQuestion() ? (
           <Button variant="contained" endIcon={<ArrowForward />} onClick={handleNext}>
-            {t('navigation.next')}
+            {tCommon('next')}
           </Button>
         ) : (
           <Button variant="contained" color="success" endIcon={<Check />} onClick={handleNext}>

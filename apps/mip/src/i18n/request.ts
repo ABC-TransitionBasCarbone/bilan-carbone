@@ -4,9 +4,9 @@ import { Locale } from './config'
 export default getRequestConfig(async () => {
   const locale = Locale.FR
 
-  const commonMessages = await import(`./translations/${locale}/common.json`)
+  const commonMessages = await import(`../../../../packages/i18n/${locale}/common.json`)
     .then((m) => m.default)
-    .catch(() => import(`./translations/${Locale.FR}/common.json`).then((m) => m.default))
+    .catch(() => import(`../../../../packages/i18n/${Locale.FR}/common.json`).then((m) => m.default))
 
   const mipMessages = await import(`./translations/${locale}/mip.json`)
     .then((m) => m.default)

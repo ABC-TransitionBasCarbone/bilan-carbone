@@ -12,8 +12,6 @@
       "complete": "{percent}% Complété"
     },
     "navigation": {
-      "previous": "Précédent",
-      "next": "Suivant",
       "complete": "Terminer",
       "continue": "Continuer",
       "restart": "Recommencer"
