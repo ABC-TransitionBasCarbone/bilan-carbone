@@ -17,7 +17,7 @@
     "ts": "turbo run ts",
     "lint": "turbo run lint",
     "format": "turbo run format",
-    "prisma": "yarn workspace @repo/db-common run prisma"
+    "prisma": "yarn workspace @abc-transitionbascarbone/db-common run prisma"
   },
   "devDependencies": {
     "turbo": "^2.9.6"

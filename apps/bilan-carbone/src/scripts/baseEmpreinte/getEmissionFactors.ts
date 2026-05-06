@@ -1,4 +1,4 @@
-import { Import } from '@repo/db-common/enums'
+import { Import } from '@abc-transitionbascarbone/db-common/enums'
 import { Command } from 'commander'
 import { mapBaseEmpreinteEmissionFactors } from '../../services/importEmissionFactor/baseEmpreinte/import'
 import { getEmissionFactorsFromCSV, OverrideMode } from '../../services/importEmissionFactor/getEmissionFactorsFromCSV'
