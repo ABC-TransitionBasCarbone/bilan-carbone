@@ -49,6 +49,7 @@ const EmissionFactorButtons = () => {
   return (
     <>
       <Button
+        data-testid="emission-factors-menu"
         className={styles.trigger}
         variant="outlined"
         endIcon={<ArrowDropDownIcon />}
