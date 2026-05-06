@@ -128,7 +128,7 @@ jobs:
       - name: Prebuild application
         run: yarn prebuild
       - name: Generate prisma files
-        run: yarn workspace @repo/db-common prisma generate
+        run: yarn workspace @abc-transitionbascarbone/db-common prisma generate
         working-directory: ${{ github.workspace }}
       - name: Build application
         run: yarn build
