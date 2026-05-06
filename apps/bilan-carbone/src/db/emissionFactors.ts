@@ -422,7 +422,10 @@ export const deleteEmissionFactorAndDependencies = (id: string) =>
     })
 
     await Promise.all([
-      transaction.studyEmissionSource.deleteMany({ where: { emissionFactorId: id } }),
+      transaction.studyEmissionSource.updateMany({
+        where: { emissionFactorId: id },
+        data: { emissionFactorId: null, validated: false },
+      }),
       transaction.emissionFactorMetaData.deleteMany({ where: { emissionFactorId: id } }),
       transaction.emissionFactorPart.deleteMany({
         where: { id: { in: emissionFactorParts.map((emissionFactorPart) => emissionFactorPart.id) } },
