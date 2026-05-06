@@ -29,7 +29,7 @@ import {
 } from '@/utils/trajectory'
 import type { SectenInfo } from '@abc-transitionbascarbone/db-common'
 import { TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
-import { getYearFromDateStr } from '@abc-transitionbascarbone/utils'
+import { getYearFromDateStr } from '@abc-transitionbascarbone/utils/time'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Alert } from '@mui/material'
 import { useTranslations } from 'next-intl'

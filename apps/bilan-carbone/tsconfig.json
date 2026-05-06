@@ -13,6 +13,7 @@
       "@abc-transitionbascarbone/db-common/enums": ["../../packages/db-common/src/enums.ts"],
       "@abc-transitionbascarbone/db-common/types": ["../../packages/db-common/src/types.ts"],
       "@abc-transitionbascarbone/css": ["../../packages/css/index.ts"],
+      "@abc-transitionbascarbone/lib": ["../../packages/lib/src/index.ts"],
       "@abc-transitionbascarbone/publicodes-count": ["./publicodes-packages/publicodes-count"],
       "@abc-transitionbascarbone/publicodes-clickson": ["./publicodes-packages/publicodes-clickson"],
       "@abc-transitionbascarbone/publicodes-tilt": ["./publicodes-packages/publicodes-tilt"]

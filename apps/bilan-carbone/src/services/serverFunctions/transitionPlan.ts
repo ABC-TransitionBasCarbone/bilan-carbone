@@ -32,7 +32,7 @@ import {
 import type { TransitionPlanWithStudies } from '@/types/trajectory.types'
 import { ApiResponse, withServerResponse } from '@/utils/serverResponse'
 import { TransitionPlan } from '@abc-transitionbascarbone/db-common'
-import { getYearFromDateStr } from '@abc-transitionbascarbone/utils'
+import { getYearFromDateStr } from '@abc-transitionbascarbone/utils/time'
 import { dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED, NOT_FOUND } from '../permissions/check'
 import { canReadStudy, hasEditAccessOnStudy, hasReadAccessOnStudy } from '../permissions/study'
