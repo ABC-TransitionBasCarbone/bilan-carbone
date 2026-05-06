@@ -5,10 +5,7 @@ export const sharedRules = {
   'react/self-closing-comp': 'error',
   curly: 'error',
   'prettier/prettier': ['error', { endOfLine: 'auto' }],
-  'react/jsx-tag-spacing': [
-    'error',
-    { beforeSelfClosing: 'always', afterOpening: 'never', beforeClosing: 'never' },
-  ],
+  'react/jsx-tag-spacing': ['error', { beforeSelfClosing: 'always', afterOpening: 'never', beforeClosing: 'never' }],
 }
 
 export const dtsOverride = {

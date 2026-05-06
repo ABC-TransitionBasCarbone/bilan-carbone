@@ -1,5 +1,5 @@
-import { Translations } from './translation'
 import * as z from 'zod'
+import { Translations } from './translation'
 
 export function configureZod(locale: string, t?: Translations) {
   if (locale === 'en') {

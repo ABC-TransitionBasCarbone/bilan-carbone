@@ -18,7 +18,6 @@ const config: Config = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@abc-transitionbascarbone/publicodes-(.*)$': '<rootDir>/publicodes-packages/publicodes-$1/',
-
   },
 }
 
