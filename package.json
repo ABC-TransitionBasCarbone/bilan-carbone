@@ -22,6 +22,11 @@
     "turbo": "^2.9.6"
   },
   "resolutions": {
-    "@hono/node-server": "^1.19.13"
+    "@hono/node-server": "^1.19.13",
+    "follow-redirects": "^1.16.0",
+    "hono": "^4.12.14",
+    "@xmldom/xmldom": "^0.9.10",
+    "uuid": "^14.0.0",
+    "postcss": "^8.5.12"
   }
 }
