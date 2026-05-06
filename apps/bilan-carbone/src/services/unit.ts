@@ -1,4 +1,4 @@
-import { Unit } from '@repo/db-common/enums'
+import { Unit } from '@abc-transitionbascarbone/db-common/enums'
 import { useTranslations } from 'next-intl'
 
 const UnitCommon = {

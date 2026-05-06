@@ -10,15 +10,15 @@ import { getEmissionFactor } from '@/utils/emissionSources'
 import { computeDifferenceForTableEmissions, formatDifferenceTableEmissions } from '@/utils/exports'
 import { formatNumber } from '@/utils/number'
 import { hasDeprecationPeriod, hasFabricationPart, STUDY_UNIT_VALUES } from '@/utils/study'
-import WarningAmberIcon from '@mui/icons-material/WarningAmberOutlined'
-import { ExportRule } from '@repo/db-common'
+import { ExportRule } from '@abc-transitionbascarbone/db-common'
 import {
   EmissionFactorBase,
   EmissionFactorPartType,
   EmissionSourceCaracterisation,
   Export,
   SubPost,
-} from '@repo/db-common/enums'
+} from '@abc-transitionbascarbone/db-common/enums'
+import WarningAmberIcon from '@mui/icons-material/WarningAmberOutlined'
 import { useTranslations } from 'next-intl'
 import { useCallback, useMemo } from 'react'
 import { EnergiesIcon } from '../infography/icons/energies'

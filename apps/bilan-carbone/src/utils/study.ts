@@ -17,7 +17,7 @@ import {
   StudyRole,
   SubPost,
   Unit,
-} from '@repo/db-common/enums'
+} from '@abc-transitionbascarbone/db-common/enums'
 import { Getter } from '@tanstack/react-table'
 import { UserSession } from 'next-auth'
 import { unique } from './array'

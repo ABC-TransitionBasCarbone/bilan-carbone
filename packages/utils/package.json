@@ -1,0 +1,7 @@
+{
+  "name": "@abc-transitionbascarbone/utils",
+  "version": "0.0.1",
+  "private": true,
+  "main": "time.ts",
+  "types": "time.ts"
+}

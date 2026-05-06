@@ -1,6 +1,6 @@
 import { getOrganizationVersionForRightsCheck } from '@/db/organization'
 import { hasActiveLicence } from '@/utils/organization'
-import { Environment } from '@repo/db-common/enums'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { getTranslations } from 'next-intl/server'
 import { Suspense } from 'react'
 import Block from '../base/Block'

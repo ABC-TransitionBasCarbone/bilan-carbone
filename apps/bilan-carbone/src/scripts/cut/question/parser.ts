@@ -1,5 +1,5 @@
-import { Prisma } from '@repo/db-common'
-import { SubPost } from '@repo/db-common/enums'
+import { Prisma } from '@abc-transitionbascarbone/db-common'
+import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { parse } from 'csv-parse'
 import fs from 'fs'
 import { validateRow } from './utils'

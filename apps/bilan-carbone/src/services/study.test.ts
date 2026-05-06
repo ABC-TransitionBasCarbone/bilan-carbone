@@ -1,9 +1,9 @@
 import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
 import { getMockeFullStudy, getMockedDetailedFullStudySite } from '@/tests/utils/models/study'
-import type { Translations } from '@/types/translation'
 import { hasSufficientLevel } from '@/utils/study'
+import { Environment, Level, StudyResultUnit, SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import type { Translations } from '@abc-transitionbascarbone/lib'
 import { expect } from '@jest/globals'
-import { Environment, Level, StudyResultUnit, SubPost } from '@repo/db-common/enums'
 import { prepareExcel } from './serverFunctions/file'
 import { downloadStudyResults, getStudyTotalCo2Emissions, getTransEnvironmentSubPost } from './study'
 

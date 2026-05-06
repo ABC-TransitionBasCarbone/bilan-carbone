@@ -7,8 +7,14 @@ import { AddMemberCommand } from '@/services/serverFunctions/user.command'
 import { AuthorizedInOrgaUserStatus } from '@/services/users'
 import { getRoleToSetForUntrained } from '@/utils/user'
 import { userSessionToDbUser } from '@/utils/userAccounts'
-import { Prisma } from '@repo/db-common'
-import { DeactivatableFeature, Environment, Role, UserChecklist, UserStatus } from '@repo/db-common/enums'
+import { Prisma } from '@abc-transitionbascarbone/db-common'
+import {
+  DeactivatableFeature,
+  Environment,
+  Role,
+  UserChecklist,
+  UserStatus,
+} from '@abc-transitionbascarbone/db-common/enums'
 import { UserSession } from 'next-auth'
 import { addAccount, getAccountByEmailAndEnvironment, getAccountByEmailAndOrganizationVersionId } from './account'
 import { prismaClient } from './client.server'

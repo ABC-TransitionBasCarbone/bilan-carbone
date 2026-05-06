@@ -1,6 +1,6 @@
 import ResetForm from '@/components/auth/ResetForm'
 import { auth } from '@/services/auth'
-import { Environment } from '@repo/db-common/enums'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 
 interface Props {
   params: Promise<{ token: string }>

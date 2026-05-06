@@ -1,8 +1,8 @@
 'use client'
 
-import { useToast } from '@/components/base/ToastProvider'
 import { usePublicodesForm } from '@/lib/publicodes/context'
-import { SEC, TIME_IN_MS } from '@/utils/time'
+import { useToast } from '@abc-transitionbascarbone/ui'
+import { SEC, TIME_IN_MS } from '@abc-transitionbascarbone/utils'
 import { useTranslations } from 'next-intl'
 import { useEffect, useRef } from 'react'
 

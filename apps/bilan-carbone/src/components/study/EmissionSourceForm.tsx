@@ -19,13 +19,7 @@ import { EmissionSourcesStatus } from '@/types/emissionSource.types'
 import { emissionFactorDefautQualityStar, getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
 import { formatEmissionFromNumber, hasDeprecationPeriod, hasEditionRights, isCAS } from '@/utils/study'
-import AddIcon from '@mui/icons-material/Add'
-import CopyIcon from '@mui/icons-material/ContentCopy'
-import EditIcon from '@mui/icons-material/Edit'
-import HideIcon from '@mui/icons-material/VisibilityOff'
-import { Autocomplete, FormControl, InputLabel, MenuItem, Popper, TextField } from '@mui/material'
-import { DatePicker } from '@mui/x-date-pickers'
-import type { StudyTag } from '@repo/db-common'
+import type { StudyTag } from '@abc-transitionbascarbone/db-common'
 import {
   EmissionSourceCaracterisation,
   EmissionSourceType,
@@ -34,8 +28,14 @@ import {
   StudyRole,
   SubPost,
   Unit,
-} from '@repo/db-common/enums'
-import { Button } from '@repo/ui'
+} from '@abc-transitionbascarbone/db-common/enums'
+import { Button } from '@abc-transitionbascarbone/ui'
+import AddIcon from '@mui/icons-material/Add'
+import CopyIcon from '@mui/icons-material/ContentCopy'
+import EditIcon from '@mui/icons-material/Edit'
+import HideIcon from '@mui/icons-material/VisibilityOff'
+import { Autocomplete, FormControl, InputLabel, MenuItem, Popper, TextField } from '@mui/material'
+import { DatePicker } from '@mui/x-date-pickers'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'

@@ -26,7 +26,7 @@ jobs:
         run: yarn install --immutable --immutable-cache --check-cache
         working-directory: .
       - name: Generate prisma files
-        run: yarn workspace @repo/db-common prisma generate
+        run: yarn workspace @abc-transitionbascarbone/db-common prisma generate
         working-directory: .
       - name: Linter
         run: yarn lint
@@ -74,7 +74,7 @@ jobs:
       - name: Prebuild application
         run: yarn prebuild
       - name: Generate prisma files
-        run: yarn workspace @repo/db-common prisma generate
+        run: yarn workspace @abc-transitionbascarbone/db-common prisma generate
         working-directory: .
       - name: Launch unit tests
         run: yarn run test
@@ -128,7 +128,7 @@ jobs:
       - name: Prebuild application
         run: yarn prebuild
       - name: Generate prisma files
-        run: yarn workspace @repo/db-common prisma generate
+        run: yarn workspace @abc-transitionbascarbone/db-common prisma generate
         working-directory: ${{ github.workspace }}
       - name: Build application
         run: yarn build
@@ -195,10 +195,10 @@ jobs:
       - name: Prebuild application
         run: yarn prebuild
       - name: Generate prisma files
-        run: yarn workspace @repo/db-common prisma generate
+        run: yarn workspace @abc-transitionbascarbone/db-common prisma generate
         working-directory: .
       - name: Migrate DB
-        run: yarn workspace @repo/db-common prisma migrate deploy
+        run: yarn workspace @abc-transitionbascarbone/db-common prisma migrate deploy
         working-directory: .
       - name: Seed DB
         run: yarn workspace bilan-carbone prisma db seed
@@ -263,10 +263,10 @@ jobs:
       - name: Prebuild application
         run: yarn prebuild
       - name: Generate prisma files
-        run: yarn workspace @repo/db-common prisma generate
+        run: yarn workspace @abc-transitionbascarbone/db-common prisma generate
         working-directory: .
       - name: Migrate DB
-        run: yarn workspace @repo/db-common prisma migrate deploy
+        run: yarn workspace @abc-transitionbascarbone/db-common prisma migrate deploy
         working-directory: .
       - name: Seed DB
         run: yarn workspace bilan-carbone prisma db seed

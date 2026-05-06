@@ -1,4 +1,4 @@
-import { Environment } from '@repo/db-common/enums'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { getRequestConfig } from 'next-intl/server'
 import { Locale } from './config'
 import { getEnvironment } from './environment'

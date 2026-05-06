@@ -1,4 +1,4 @@
-import { Environment, Level } from '@repo/db-common/enums'
+import { Environment, Level } from '@abc-transitionbascarbone/db-common/enums'
 import { hasAccessToCarbonResponsibilityIntensities, isTilt } from './environment'
 
 const { BC, CUT, TILT, CLICKSON } = Environment

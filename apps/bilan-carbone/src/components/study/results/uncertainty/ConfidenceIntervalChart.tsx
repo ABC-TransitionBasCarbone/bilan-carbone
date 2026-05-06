@@ -1,6 +1,6 @@
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
-import { StudyResultUnit } from '@repo/db-common'
+import { StudyResultUnit } from '@abc-transitionbascarbone/db-common'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import progressStyles from '../../../base/ProgressBar.module.css'

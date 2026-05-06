@@ -9,8 +9,22 @@ import { mapCncToStudySite } from '@/utils/cnc'
 import { isAdminOnOrga } from '@/utils/organization'
 import { getAllowedLevels, getUserRoleOnPublicStudy, hasSufficientLevel, StudyWithRoleFields } from '@/utils/study'
 import { isAdmin } from '@/utils/user'
-import type { DuplicableStudy, Level, Prisma, StudyTag, StudyTagFamily, SubPost } from '@repo/db-common'
-import { CommentStatus, ControlMode, Environment, Export, Import, StudyRole } from '@repo/db-common/enums'
+import type {
+  DuplicableStudy,
+  Level,
+  Prisma,
+  StudyTag,
+  StudyTagFamily,
+  SubPost,
+} from '@abc-transitionbascarbone/db-common'
+import {
+  CommentStatus,
+  ControlMode,
+  Environment,
+  Export,
+  Import,
+  StudyRole,
+} from '@abc-transitionbascarbone/db-common/enums'
 import { UserSession } from 'next-auth'
 import { cache } from 'react'
 import { deleteTransitionPlan } from '../services/serverFunctions/transitionPlan'

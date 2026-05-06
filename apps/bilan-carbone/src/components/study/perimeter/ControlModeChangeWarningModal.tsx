@@ -2,7 +2,7 @@
 
 import Modal from '@/components/modals/Modal'
 import { customRich } from '@/i18n/customRich'
-import { ControlMode } from '@repo/db-common/enums'
+import { ControlMode } from '@abc-transitionbascarbone/db-common/enums'
 import { useTranslations } from 'next-intl'
 
 interface Props {

@@ -1,7 +1,7 @@
 import Box from '@/components/base/Box'
 import Title from '@/components/base/Title'
 import { formatNumber } from '@/utils/number'
-import { Export, StudyResultUnit } from '@repo/db-common'
+import { Export, StudyResultUnit } from '@abc-transitionbascarbone/db-common'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import styles from '../ResultsContainer.module.css'

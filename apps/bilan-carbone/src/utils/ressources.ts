@@ -1,7 +1,7 @@
 import { Locale } from '@/i18n/config'
 import { getEnvVar } from '@/lib/environment'
-import { Translations } from '@/types/translation'
-import { Environment } from '@repo/db-common/enums'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { Translations } from '@abc-transitionbascarbone/lib'
 import { getLocale } from 'next-intl/server'
 
 export const getEnvironnementRessources = async (env: Environment, t: Translations) => {

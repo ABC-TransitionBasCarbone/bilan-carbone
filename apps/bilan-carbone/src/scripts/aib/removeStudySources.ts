@@ -1,5 +1,5 @@
 import { removeSourceToAllStudies } from '@/db/study'
-import { Import } from '@repo/db-common/enums'
+import { Import } from '@abc-transitionbascarbone/db-common/enums'
 import { Command } from 'commander'
 
 const program = new Command()

@@ -1,6 +1,6 @@
 import type { FullStudy } from '@/db/study'
 import { getBaseFilteredEmissionSources } from '@/utils/study'
-import { SubPost } from '@repo/db-common/enums'
+import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
 
 export const getSiteEmissionSourcesWithoutMarketBase = <
   T extends Pick<FullStudy['emissionSources'][number], 'studySite' | 'emissionFactor'>,

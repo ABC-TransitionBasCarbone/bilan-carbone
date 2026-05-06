@@ -4,7 +4,7 @@ import { BasePostInfography } from '@/environments/base/study/infography/BasePos
 import { Post, subPostsByPost } from '@/services/posts'
 import { ResultsByPost } from '@/types/study.types'
 import { getEmissionValueString, getValidationPercentage } from '@/utils/study'
-import { StudyResultUnit, SubPost } from '@repo/db-common'
+import { StudyResultUnit, SubPost } from '@abc-transitionbascarbone/db-common'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 

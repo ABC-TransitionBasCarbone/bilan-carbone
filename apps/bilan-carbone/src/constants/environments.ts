@@ -1,4 +1,4 @@
-import { Environment } from '@repo/db-common/enums'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 
 export const environmentWithOnboarding: Environment[] = [Environment.BC, Environment.CLICKSON]
 export const environmentsWithChecklist: Environment[] = [Environment.BC]

@@ -15,8 +15,8 @@ import type {
   TrajectoryWithObjectivesAndScope,
 } from '@/types/trajectory.types'
 import { TrajectoryData } from '@/types/trajectory.types'
-import type { SectenInfo } from '@repo/db-common'
-import { TrajectoryType } from '@repo/db-common/enums'
+import type { SectenInfo } from '@abc-transitionbascarbone/db-common'
+import { TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
 import { isSectenSector } from './secten'
 import {
   computePastOrPresentValue,

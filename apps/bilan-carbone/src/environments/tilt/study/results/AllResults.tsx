@@ -3,7 +3,7 @@ import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import type { FullStudy } from '@/db/study'
 import AllResultsPublicodes from '@/environments/simplified/study/results/AllResultsPublicodes'
 import { ChartType } from '@/environments/simplified/study/results/utils'
-import { ExportRule, SiteCAUnit } from '@repo/db-common'
+import { ExportRule, SiteCAUnit } from '@abc-transitionbascarbone/db-common'
 
 interface Props {
   emissionFactorsWithParts: EmissionFactorWithParts[]

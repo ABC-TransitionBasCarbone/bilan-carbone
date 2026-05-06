@@ -1,0 +1,24 @@
+{
+  "survey": {
+    "loading": "Loading survey...",
+    "completed": {
+      "title": "Survey Completed!",
+      "description": "Thank you for completing the survey.",
+      "responseId": "Response ID: {id}"
+    },
+    "notFound": "No question found",
+    "progress": {
+      "question": "Question {current} of {total}",
+      "complete": "{percent}% Complete"
+    },
+    "navigation": {
+      "previous": "Previous",
+      "next": "Next",
+      "complete": "Complete",
+      "continue": "Continue",
+      "restart": "Restart"
+    },
+    "resume": "Resume survey",
+    "characterCount": "{current} / {max} characters"
+  }
+}

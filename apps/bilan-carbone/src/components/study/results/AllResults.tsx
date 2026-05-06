@@ -21,10 +21,7 @@ import { sortAlphabetically } from '@/services/utils'
 import { AdditionalResultTypes, ResultType } from '@/types/study.types'
 import { getPost } from '@/utils/post'
 import { calculateMonetaryRatio, convertValue } from '@/utils/study'
-import DownloadIcon from '@mui/icons-material/Download'
-import SummarizeIcon from '@mui/icons-material/Summarize'
-import { FormControl, InputLabel, MenuItem, Select, Tab, Tabs } from '@mui/material'
-import type { ExportRule } from '@repo/db-common'
+import type { ExportRule } from '@abc-transitionbascarbone/db-common'
 import {
   ControlMode,
   DeactivatableFeature,
@@ -34,8 +31,11 @@ import {
   SiteCAUnit,
   StudyResultUnit,
   SubPost,
-} from '@repo/db-common/enums'
-import { Button } from '@repo/ui'
+} from '@abc-transitionbascarbone/db-common/enums'
+import { Button } from '@abc-transitionbascarbone/ui'
+import DownloadIcon from '@mui/icons-material/Download'
+import SummarizeIcon from '@mui/icons-material/Summarize'
+import { FormControl, InputLabel, MenuItem, Select, Tab, Tabs } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { MouseEvent, useCallback, useEffect, useMemo, useState } from 'react'

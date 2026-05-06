@@ -2,8 +2,8 @@ import { PostHeader } from '@/components/study/infography/PostHeader'
 import { SubPostInfography } from '@/components/study/infography/SubPostInfography'
 import { Post } from '@/services/posts'
 import { defaultPostColor, postColors } from '@/utils/study'
+import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { styled } from '@mui/material/styles'
-import { SubPost } from '@repo/db-common/enums'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 const StyledLink = styled('div', { shouldForwardProp: (prop) => prop !== 'visible' && prop !== 'post' })<{

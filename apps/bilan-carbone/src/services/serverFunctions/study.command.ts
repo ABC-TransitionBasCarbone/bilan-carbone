@@ -1,4 +1,3 @@
-import { setCustomIssue, setCustomMessage } from '@/lib/zod.config'
 import {
   ControlMode,
   Country,
@@ -9,7 +8,8 @@ import {
   Level,
   StudyResultUnit,
   StudyRole,
-} from '@repo/db-common/enums'
+} from '@abc-transitionbascarbone/db-common/enums'
+import { setCustomIssue, setCustomMessage } from '@abc-transitionbascarbone/lib'
 import dayjs from 'dayjs'
 import z from 'zod'
 import { HolidayOpeningHoursValidation, OpeningHoursValidation } from '../hours'

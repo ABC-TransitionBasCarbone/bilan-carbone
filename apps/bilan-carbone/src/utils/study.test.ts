@@ -2,8 +2,8 @@ import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionS
 import { mockedEmissionSourceEmissionFactor } from '@/tests/utils/models/study'
 import { getMockedAuthUser } from '@/tests/utils/models/user'
 import * as UserUtilsModule from '@/utils/user'
+import { EmissionFactorBase, Environment, Level, Role } from '@abc-transitionbascarbone/db-common/enums'
 import { expect } from '@jest/globals'
-import { EmissionFactorBase, Environment, Level, Role } from '@repo/db-common/enums'
 import { getBaseFilteredEmissionSources, getDuplicableEnvironments, getUserRoleOnPublicStudy } from './study'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not

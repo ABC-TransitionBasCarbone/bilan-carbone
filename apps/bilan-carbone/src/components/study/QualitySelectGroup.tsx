@@ -2,10 +2,10 @@
 
 import type { FullStudy } from '@/db/study'
 import { qualityKeys, specificFEQualityKeys, specificFEQualityKeysLinks } from '@/services/uncertainty'
+import { Button } from '@abc-transitionbascarbone/ui'
 import ZoomInMapIcon from '@mui/icons-material/ZoomInMap'
 import ZoomOutMapIcon from '@mui/icons-material/ZoomOutMap'
 import { FormControl, FormHelperText } from '@mui/material'
-import { Button } from '@repo/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { Control, Controller, FieldValues, Path, useForm, useFormState } from 'react-hook-form'

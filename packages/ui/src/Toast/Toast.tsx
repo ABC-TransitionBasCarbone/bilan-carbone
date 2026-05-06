@@ -1,4 +1,4 @@
-import { SEC, TIME_IN_MS } from '@/utils/time'
+import { SEC, TIME_IN_MS } from '@abc-transitionbascarbone/utils'
 import { Snackbar, SnackbarOrigin } from '@mui/material'
 import Alert from '@mui/material/Alert'
 

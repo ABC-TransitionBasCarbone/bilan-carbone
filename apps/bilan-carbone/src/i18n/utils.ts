@@ -1,6 +1,6 @@
 'use server'
 import { mergeObjects } from '@/utils/object'
-import { Environment } from '@repo/db-common/enums'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import fs from 'fs'
 import path from 'path'
 import { Locale, LocaleType } from './config'

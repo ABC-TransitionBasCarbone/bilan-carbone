@@ -1,6 +1,6 @@
 import type { FullStudy } from '@/db/study'
-import { StudyEmissionSource } from '@repo/db-common'
-import { EmissionFactorBase, Import, SubPost, Unit } from '@repo/db-common/enums'
+import { StudyEmissionSource } from '@abc-transitionbascarbone/db-common'
+import { EmissionFactorBase, Import, SubPost, Unit } from '@abc-transitionbascarbone/db-common/enums'
 
 export const mockedEmissionSource = {
   id: 'mocked-emission-source-id',

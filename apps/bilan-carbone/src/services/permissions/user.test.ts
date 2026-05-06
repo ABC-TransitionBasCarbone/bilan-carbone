@@ -2,8 +2,8 @@ import { AccountWithUser } from '@/db/account'
 import { mockedOrganizationVersionId } from '@/tests/utils/models/organization'
 import { getMockedAuthUser, getMockedDbAccount, mockedAccountId } from '@/tests/utils/models/user'
 import * as userUtils from '@/utils/user'
+import { Role, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { expect } from '@jest/globals'
-import { Role, UserStatus } from '@repo/db-common/enums'
 import { canAddMember, canChangeRole, canDeleteMember, canEditSelfRole } from './user'
 
 jest.mock('@/utils/organization', () => ({}))

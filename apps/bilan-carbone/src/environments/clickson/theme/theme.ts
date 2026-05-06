@@ -1,7 +1,7 @@
 import theme from '@/environments/base/theme/theme'
 import { Post } from '@/services/posts'
+import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { createTheme } from '@mui/material/styles'
-import { SubPost } from '@repo/db-common/enums'
 
 const clicksonTheme = createTheme(theme, {
   palette: {

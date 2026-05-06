@@ -3,8 +3,8 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import type { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import type { ExportRule } from '@repo/db-common'
-import { Environment, SiteCAUnit } from '@repo/db-common/enums'
+import type { ExportRule } from '@abc-transitionbascarbone/db-common'
+import { Environment, SiteCAUnit } from '@abc-transitionbascarbone/db-common/enums'
 import dynamic from 'next/dynamic'
 
 const AllResults = dynamic(() => import('@/components/study/results/AllResults'))

@@ -1,6 +1,6 @@
 import type { FullStudy } from '@/db/study'
+import { EmissionFactorBase, Environment, SubPost, Unit } from '@abc-transitionbascarbone/db-common/enums'
 import { expect } from '@jest/globals'
-import { EmissionFactorBase, Environment, SubPost, Unit } from '@repo/db-common/enums'
 import { getEmissionResults } from './emissionSource'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not

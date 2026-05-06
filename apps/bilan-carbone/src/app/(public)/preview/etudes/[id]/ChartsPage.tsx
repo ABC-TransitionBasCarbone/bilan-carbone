@@ -1,8 +1,8 @@
 import BarChart from '@/components/study/charts/BarChart'
 import PieChart from '@/components/study/charts/PieChart'
 import type { BaseResultsByPost } from '@/services/posts'
-import { Translations } from '@/types/translation'
-import { StudyResultUnit } from '@repo/db-common/enums'
+import { StudyResultUnit } from '@abc-transitionbascarbone/db-common/enums'
+import { Translations } from '@abc-transitionbascarbone/lib'
 
 interface Props {
   results: BaseResultsByPost[]

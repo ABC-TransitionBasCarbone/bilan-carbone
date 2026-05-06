@@ -19,9 +19,10 @@ import type {
   TrajectoryResult,
   TrajectoryWithObjectives,
 } from '@/types/trajectory.types'
-import type { Translations } from '@/types/translation'
-import { Action, SectenInfo } from '@repo/db-common'
-import { ActionPotentialDeduction, StudyResultUnit, TrajectoryType } from '@repo/db-common/enums'
+import { Action, SectenInfo } from '@abc-transitionbascarbone/db-common'
+import { ActionPotentialDeduction, StudyResultUnit, TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
+import type { Translations } from '@abc-transitionbascarbone/lib'
+import { getYearFromDateStr } from '@abc-transitionbascarbone/utils/time'
 import { getActionBasedData } from './actionTrajectory.utils'
 import { calculateCustomTrajectory, getCustomData } from './customTrajectory.utils'
 import { getDefaultSBTiData, getDefaultSBTIReductionRate, getSBTiCorrectedRateAndEndYear } from './sbti'
@@ -31,7 +32,6 @@ import {
   calculateSNBCTrajectory,
   getSNBCData,
 } from './snbc'
-import { getYearFromDateStr } from './time'
 import {
   computePastOrPresentValue,
   getAllHistoricalStudyPoints,

@@ -2,8 +2,8 @@
 
 import { customRich } from '@/i18n/customRich'
 import { getEnvironnementRessources } from '@/utils/ressources'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { Alert } from '@mui/material'
-import { Environment } from '@repo/db-common/enums'
 import classNames from 'classnames'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'

@@ -3,8 +3,8 @@ import { hasCustomPostOrder } from '@/services/permissions/environment'
 import { BCPost, ClicksonPost, CutPost, Post, subPostsByPost, TiltPost } from '@/services/posts'
 import type { ResultType } from '@/types/study.types'
 import { AdditionalResultTypes } from '@/types/study.types'
-import { Translations } from '@/types/translation'
-import { Environment, SubPost } from '@repo/db-common/enums'
+import { Environment, SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { Translations } from '@abc-transitionbascarbone/lib'
 import { sortByCustomOrder } from './array'
 
 export const getPost = (subPost?: SubPost) =>

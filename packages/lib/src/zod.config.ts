@@ -1,9 +1,7 @@
-// lib/zod-config.ts
-import { LocaleType } from '@/i18n/config'
-import { Translations } from '@/types/translation'
 import * as z from 'zod'
+import { Translations } from './translation'
 
-export function configureZod(locale: LocaleType, t?: Translations) {
+export function configureZod(locale: string, t?: Translations) {
   if (locale === 'en') {
     z.config(z.locales.en())
   } else if (locale === 'fr') {
@@ -76,7 +74,6 @@ export const setCustomMessage = (message: string) => {
 /**
  * Create a custom issue for zod superRefine() method
  */
-
 export const setCustomIssue = (path: string[], message: string): z.core.$ZodSuperRefineIssue => {
   return { code: 'custom', path, ...setCustomMessage(message) }
 }

@@ -1,5 +1,5 @@
 {
-  "name": "@repo/db-common",
+  "name": "@abc-transitionbascarbone/db-common",
   "version": "0.0.1",
   "private": true,
   "main": "src/index.ts",
