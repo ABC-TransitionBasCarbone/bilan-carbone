@@ -1505,6 +1505,7 @@
     }
   },
   "emissionFactors": {
+    "manualSectionLabel": "Manage your manual EFs",
     "exportFileName": "emission-factors-export.xlsx",
     "importModal": {
       "title": "Import emission factors",

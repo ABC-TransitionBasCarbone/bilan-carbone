@@ -1,15 +1,17 @@
 'use client'
 
-import LinkButton from '@/components/base/LinkButton'
-import LoadingButton from '@/components/base/LoadingButton'
 import { exportManualEmissionFactorsToFile } from '@/services/serverFunctions/importEmissionFactors'
 import { useToast } from '@abc-transitionbascarbone/ui'
 import AddIcon from '@mui/icons-material/Add'
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import FileDownloadIcon from '@mui/icons-material/FileDownload'
 import UploadFileIcon from '@mui/icons-material/UploadFile'
+import { ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material'
+import Button from '@mui/material/Button'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import { useState, useTransition } from 'react'
+import styles from './EmissionFactorButtons.module.css'
 
 const ImportEmissionFactorsModal = dynamic(() => import('./ImportEmissionFactorsModal'))
 
@@ -18,6 +20,7 @@ const EmissionFactorButtons = () => {
   const tCommon = useTranslations('common.action')
   const { showSuccessToast } = useToast()
   const [open, setOpen] = useState(false)
+  const [menuAnchor, setMenuAnchor] = useState<HTMLButtonElement | null>(null)
   const [isExporting, startExportTransition] = useTransition()
 
   const handleClose = () => setOpen(false)
@@ -28,6 +31,7 @@ const EmissionFactorButtons = () => {
   }
 
   const handleExport = () => {
+    setMenuAnchor(null)
     startExportTransition(async () => {
       const arrayBuffer = await exportManualEmissionFactorsToFile()
       const blob = new Blob([arrayBuffer], {
@@ -44,24 +48,51 @@ const EmissionFactorButtons = () => {
 
   return (
     <>
-      <div className="flex gapped1 align-center">
-        <LoadingButton variant="outlined" startIcon={<UploadFileIcon />} onClick={() => setOpen(true)} loading={false}>
-          {tCommon('import')}
-        </LoadingButton>
-
-        <LoadingButton variant="outlined" startIcon={<FileDownloadIcon />} onClick={handleExport} loading={isExporting}>
-          {tCommon('export')}
-        </LoadingButton>
-
-        <LinkButton
-          data-testid="new-emission"
-          variant="contained"
-          href="/facteurs-d-emission/creer"
-          startIcon={<AddIcon />}
+      <Button
+        className={styles.trigger}
+        variant="outlined"
+        endIcon={<ArrowDropDownIcon />}
+        onClick={(e) => setMenuAnchor(e.currentTarget)}
+      >
+        {t('manualSectionLabel')}
+      </Button>
+      <Menu
+        anchorEl={menuAnchor}
+        open={!!menuAnchor}
+        onClose={() => setMenuAnchor(null)}
+        slotProps={{ paper: { style: { width: menuAnchor?.offsetWidth } } }}
+      >
+        <MenuItem
+          className={styles.menuItem}
+          onClick={() => {
+            setMenuAnchor(null)
+            setOpen(true)
+          }}
         >
-          {tCommon('add')}
-        </LinkButton>
-      </div>
+          <ListItemIcon>
+            <UploadFileIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>{tCommon('import')}</ListItemText>
+        </MenuItem>
+        <MenuItem className={styles.menuItem} onClick={handleExport} disabled={isExporting}>
+          <ListItemIcon>
+            <FileDownloadIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>{tCommon('export')}</ListItemText>
+        </MenuItem>
+        <MenuItem
+          className={styles.menuItem}
+          component="a"
+          href="/facteurs-d-emission/creer"
+          data-testid="new-emission"
+          onClick={() => setMenuAnchor(null)}
+        >
+          <ListItemIcon>
+            <AddIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>{tCommon('add')}</ListItemText>
+        </MenuItem>
+      </Menu>
       {open && <ImportEmissionFactorsModal open={open} onClose={handleClose} onSuccess={handleSuccess} />}
     </>
   )
