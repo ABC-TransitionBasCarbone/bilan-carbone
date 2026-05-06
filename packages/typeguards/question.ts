@@ -30,6 +30,7 @@ export interface ChoiceQuestion extends BaseQuestion {
 export interface NumberQuestion extends BaseQuestion {
   type: 'number'
   placeholder?: string
+  unit?: string
   validation?: {
     min?: number
     max?: number

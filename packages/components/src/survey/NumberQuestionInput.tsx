@@ -1,11 +1,12 @@
 import { NumberQuestion } from '@abc-transitionbascarbone/typeguards'
-import { FormControl, FormHelperText, TextField } from '@mui/material'
+import MosaicNumberInput from '@abc-transitionbascarbone/ui/src/Form/MosaicNumberInput'
+import { FormControl, FormHelperText } from '@mui/material'
 import { useTranslations } from 'next-intl'
 
 interface NumberQuestionInputProps {
   question: NumberQuestion
   value: number
-  onChange: (value: number) => void
+  onChange: (value: number | undefined) => void
   error?: string | null
 }
 
@@ -14,22 +15,7 @@ export function NumberQuestionInput({ question, value, onChange, error }: Number
 
   return (
     <FormControl fullWidth error={!!error}>
-      <TextField
-        type="number"
-        fullWidth
-        placeholder={question.placeholder}
-        value={value || ''}
-        onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
-        error={!!error}
-        helperText={error}
-        slotProps={{
-          htmlInput: {
-            max: question.validation?.max,
-            min: question.validation?.min,
-            step: question.validation?.step,
-          },
-        }}
-      />
+      <MosaicNumberInput title="Test" icons="🍴" value={value} onChange={onChange} />
       {question.validation?.max && (
         <FormHelperText>
           {t('characterCount', {
@@ -41,5 +27,3 @@ export function NumberQuestionInput({ question, value, onChange, error }: Number
     </FormControl>
   )
 }
-
-
