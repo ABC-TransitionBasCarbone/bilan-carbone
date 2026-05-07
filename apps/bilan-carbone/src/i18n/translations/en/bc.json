@@ -945,6 +945,11 @@
       "exampleEmissionFactor": "Steel or tinplate, new",
       "exampleSource": "Purchase orders",
       "columnFeComment": "Desired EF/Made hypotheses",
+      "columnConstructionYear": "Acquisition year",
+      "groupBcSpecific": "BC+ specific data",
+      "columnValidation": "Validation",
+      "columnCalculatedValue": "Calculated value",
+      "columnCalculatedUncertainty": "Calculated uncertainty",
       "exportOrganization": "Organization name concerned by the carbon assessment",
       "exportDate": "Carbon assessment date",
       "groupActivityData": "Activity Data",
@@ -1587,7 +1592,11 @@
     "invalidQuality": "Invalid quality: {value}",
     "invalidValue": "Invalid numeric value: {value}",
     "siteNotFound": "Site not found in study: {value}",
-    "emissionFactorNotFound": "Emission factor not found: {value}"
+    "emissionFactorNotFound": "Emission factor not found: {value}",
+    "invalidEmissionFactorValue": "Invalid emission factor value: {value}",
+    "missingEmissionFactorName": "Emission factor name is missing",
+    "missingEmissionFactorValue": "Emission factor value is missing",
+    "missingEmissionFactorUnit": "Emission factor unit is missing"
   },
   "emissionFactors": {
     "manualSectionLabel": "Manage your manual EFs",

@@ -6,10 +6,21 @@ import {
   ParseEmissionSourcesResult,
   SOURCE_IMPORT_COLUMNS,
 } from '@/types/importEmissionSources.types'
-import { EmissionSourceCaracterisation, EmissionSourceType, SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import {
+  EmissionSourceCaracterisation,
+  EmissionSourceType,
+  SubPost,
+  Unit,
+} from '@abc-transitionbascarbone/db-common/enums'
 import { parseExcelSheet } from './excel.utils'
-import { buildLabelMap, mapLabelFromTranslations, mapQualityLabelFromTranslations } from './import.utils'
+import {
+  buildLabelMap,
+  mapLabelFromTranslations,
+  mapQualityLabelFromTranslations,
+  mapUnitLabelFromTranslationsWithList,
+} from './import.utils'
 import { parseNumericValue } from './number'
+import { getBcTranslations } from './translation.utils'
 
 export function mapTypeLabelFromTranslations(
   label: string | undefined | null,
@@ -104,9 +115,16 @@ export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): Pa
       }
     }
 
-    const emissionFactorUnit = col('emissionFactorUnit')
-    if (!emissionFactorUnit) {
+    const emissionFactorUnitLabel = col('emissionFactorUnit')
+    const emissionFactorUnit = mapUnitLabelFromTranslationsWithList(
+      emissionFactorUnitLabel,
+      locale,
+      Object.values(Unit),
+    )
+    if (!emissionFactorUnitLabel) {
       rowErrors.push({ key: 'missingEmissionFactorUnit' })
+    } else if (!emissionFactorUnit) {
+      rowErrors.push({ key: 'invalidUnit', value: emissionFactorUnitLabel })
     }
 
     const rawValueStr = col('value')
@@ -166,7 +184,7 @@ export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): Pa
       name,
       emissionFactorName,
       emissionFactorValue: emissionFactorValue!,
-      emissionFactorUnit,
+      emissionFactorUnit: emissionFactorUnit!,
       value,
       type,
       caracterisation,
@@ -174,6 +192,7 @@ export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): Pa
       source: col('source') || undefined,
       comment: col('comment') || undefined,
       feComment: col('feComment') || undefined,
+      validated: col('validation') ? col('validation') === getBcTranslations(locale).study.export.yes : undefined,
       reliability: parsedQualities.reliability,
       technicalRepresentativeness: parsedQualities.technicalRepresentativeness,
       geographicRepresentativeness: parsedQualities.geographicRepresentativeness,

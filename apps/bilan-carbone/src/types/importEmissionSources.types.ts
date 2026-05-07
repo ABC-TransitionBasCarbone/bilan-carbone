@@ -50,6 +50,7 @@ export type ParsedEmissionSourceRow = {
   completeness: number | undefined
   comment: string | undefined
   feComment: string | undefined
+  validated: boolean | undefined
 }
 
 export type ParseEmissionSourcesResult =
@@ -64,16 +65,21 @@ export const SOURCE_IMPORT_COLUMNS = {
   tag: 4,
   caracterisation: 5,
   value: 6,
-  reliability: 10,
-  technicalRepresentativeness: 11,
-  geographicRepresentativeness: 12,
-  temporalRepresentativeness: 13,
-  completeness: 14,
-  source: 15,
-  type: 16,
-  comment: 17,
-  emissionFactorName: 18,
-  emissionFactorValue: 19,
-  emissionFactorUnit: 20,
-  feComment: 29,
+  unit: 7,
+  depreciationPeriod: 8,
+  constructionYear: 9,
+  globalUncertainty: 10,
+  reliability: 11,
+  technicalRepresentativeness: 12,
+  geographicRepresentativeness: 13,
+  temporalRepresentativeness: 14,
+  completeness: 15,
+  source: 16,
+  type: 17,
+  comment: 18,
+  emissionFactorName: 19,
+  emissionFactorValue: 20,
+  emissionFactorUnit: 21,
+  feComment: 30,
+  validation: 31,
 } as const

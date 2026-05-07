@@ -15,17 +15,26 @@ import {
 } from '@/types/importEmissionSources.types'
 import { parseEmissionSourcesFile } from '@/utils/importEmissionSources.utils'
 import { getPost } from '@/utils/post'
+import { formatEmissionValueForExport } from '@/utils/study'
 import { getBcTranslations, getSingularForm } from '@/utils/translation.utils'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import { EmissionSourceCaracterisation, EmissionSourceType, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { revalidatePath } from 'next/cache'
 import xlsx from 'node-xlsx'
+import { getEmissionSourceEmission } from '../emissionSource'
 import { getAuthenticatedAccount } from '../permissions/account.permissions'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { hasStudyBasicRights } from '../permissions/emissionSource'
 import { canReadStudy } from '../permissions/study'
-import { getQualitativeUncertaintyFromQuality, getSpecificEmissionFactorQuality } from '../uncertainty'
+import {
+  getQualitativeUncertaintyFromQuality,
+  getQualitativeUncertaintyFromSquaredStandardDeviation,
+  getSpecificEmissionFactorQuality,
+  getSquaredStandardDeviationForEmissionSource,
+} from '../uncertainty'
 import { getEmissionFactorsByIds } from './emissionFactor'
+
+const TOTAL_EXCEL_COLS = 34
 
 async function getStudyOrThrow(studyId: string, account: AccountWithUser): Promise<FullStudy> {
   const study = await getStudyById(studyId, account.organizationVersionId)
@@ -169,6 +178,7 @@ export async function importEmissionSourcesFromFile(file: File, studyId: string)
       ...(row.completeness !== undefined ? { completeness: row.completeness } : {}),
       ...(row.comment ? { comment: row.comment } : {}),
       ...(row.feComment ? { feComment: row.feComment } : {}),
+      ...(row.validated !== undefined ? { validated: row.validated } : {}),
     })
   }
 
@@ -187,69 +197,39 @@ function buildEmissionSourcesSheet(study: FullStudy, locale: LocaleType, dataRow
   const modal = (bc.study as Record<string, unknown>)?.importEmissionSourcesModal as Record<string, string> | undefined
   const t = (key: string) => modal?.[key] ?? key
 
-  // Column layout:
-  // Fixed cols [0-5]: Site, Poste, Sous-poste, Libellé, Tags, Caractérisation
-  // DA group  [6-17]: Valeur, Unité, Durée amort., Incert. globale, Fiabilité, Rep. tech., Rep. géo., Rep. temp., Complétude, Source, Type, Hypothèses DA
-  // FE group [18-29]: FE utilisé, Valeur FE, Unité FE, Incert. globale, Fiabilité, Rep. tech., Rep. géo., Rep. temp., Complétude, Source, Type, FE souhaité
-  const TOTAL_COLS = 30
   const DA_START = 6
-  const DA_END = 17
-  const FE_START = 18
-  const FE_END = 29
+  const DA_END = 18
+  const FE_START = 19
+  const FE_END = 30
+  const BC_START = 31
+  const BC_END = 33
 
   const empty = (n: number) => Array(n).fill('')
 
   const orgName = study.organizationVersion.organization?.name ?? ''
   const studyDate = study.startDate ? study.startDate.toLocaleDateString(locale === 'fr' ? 'fr-FR' : 'en-US') : ''
 
-  const metaRow: (string | number)[] = [t('exportOrganization'), orgName, ...empty(TOTAL_COLS - 2)]
-  const dateRow: (string | number)[] = [t('exportDate'), studyDate, ...empty(TOTAL_COLS - 2)]
-  const blankRow: (string | number)[] = empty(TOTAL_COLS)
+  const metaRow: (string | number)[] = [t('exportOrganization'), orgName, ...empty(TOTAL_EXCEL_COLS - 2)]
+  const dateRow: (string | number)[] = [t('exportDate'), studyDate, ...empty(TOTAL_EXCEL_COLS - 2)]
+  const blankRow: (string | number)[] = empty(TOTAL_EXCEL_COLS)
   const groupRow: (string | number)[] = [
     ...empty(DA_START),
     t('groupActivityData'),
     ...empty(DA_END - DA_START),
     t('groupEmissionFactor'),
     ...empty(FE_END - FE_START),
+    '',
+    t('groupBcSpecific'),
+    ...empty(BC_END - BC_START),
   ]
-  const headerRow: (string | number)[] = [
-    t('columnSite'),
-    t('columnPost'),
-    t('columnSubPost'),
-    t('columnName'),
-    t('columnTag'),
-    t('columnCaracterisation'),
-    t('columnValue'),
-    t('columnUnit'),
-    t('columnDepreciationPeriod'),
-    t('columnGlobalUncertainty'),
-    t('columnReliability'),
-    t('columnTechnicalRepresentativeness'),
-    t('columnGeographicRepresentativeness'),
-    t('columnTemporalRepresentativeness'),
-    t('columnCompleteness'),
-    t('columnSource'),
-    t('columnType'),
-    t('columnComment'),
-    t('columnEfUsed'),
-    t('columnEfValue'),
-    t('columnEfUnit'),
-    t('columnGlobalUncertainty'),
-    t('columnReliability'),
-    t('columnTechnicalRepresentativeness'),
-    t('columnGeographicRepresentativeness'),
-    t('columnTemporalRepresentativeness'),
-    t('columnCompleteness'),
-    t('columnEfSource'),
-    t('columnEfType'),
-    t('columnFeComment'),
-  ]
+  const headerRow: (string | number)[] = getEmissionSourcesHeaderRow(t)
 
   // Row indices: 0=meta, 1=date, 2=blank, 3=groupRow, 4=headerRow, 5+=data
   const GROUP_ROW_INDEX = 3
   const merges = [
     { s: { r: GROUP_ROW_INDEX, c: DA_START }, e: { r: GROUP_ROW_INDEX, c: DA_END } },
     { s: { r: GROUP_ROW_INDEX, c: FE_START }, e: { r: GROUP_ROW_INDEX, c: FE_END } },
+    { s: { r: GROUP_ROW_INDEX, c: BC_START }, e: { r: GROUP_ROW_INDEX, c: BC_END } },
   ]
 
   const sheetName = t('sheetName')
@@ -283,30 +263,14 @@ export async function getImportEmissionSourcesTemplate(
   const siteName = studySite?.site?.name ?? ''
   const postLabel = post ? (postTranslations[post] ?? post) : ''
 
-  const TOTAL_COLS = 30
-  const emptyRow: (string | number)[] = [siteName, postLabel, ...Array(TOTAL_COLS - 2).fill('')]
+  const emptyRow: (string | number)[] = [siteName, postLabel, ...Array(TOTAL_EXCEL_COLS - 2).fill('')]
 
   const rows = post ? Array.from({ length: 100 }, () => [...emptyRow]) : [emptyRow]
   return buildEmissionSourcesSheet(study, locale, rows)
 }
 
-function buildEmissionSourcesCSV(study: FullStudy, locale: LocaleType, dataRows: (string | number)[][]): string {
-  const bc = getBcTranslations(locale)
-  const modal = (bc.study as Record<string, unknown>)?.importEmissionSourcesModal as Record<string, string> | undefined
-  const t = (key: string) => modal?.[key] ?? key
-
-  const encodeField = (field: string | number = '') => {
-    if (typeof field === 'number') {
-      return String(field)
-    }
-    const escaped = field.replace(/"/g, '""')
-    if (escaped.includes(';') || escaped.includes('"') || escaped.includes('\n')) {
-      return `"${escaped}"`
-    }
-    return escaped
-  }
-
-  const headerRow = [
+function getEmissionSourcesHeaderRow(t: (key: string) => string): string[] {
+  return [
     t('columnSite'),
     t('columnPost'),
     t('columnSubPost'),
@@ -316,6 +280,7 @@ function buildEmissionSourcesCSV(study: FullStudy, locale: LocaleType, dataRows:
     t('columnValue'),
     t('columnUnit'),
     t('columnDepreciationPeriod'),
+    t('columnConstructionYear'),
     t('columnGlobalUncertainty'),
     t('columnReliability'),
     t('columnTechnicalRepresentativeness'),
@@ -337,10 +302,32 @@ function buildEmissionSourcesCSV(study: FullStudy, locale: LocaleType, dataRows:
     t('columnEfSource'),
     t('columnEfType'),
     t('columnFeComment'),
-  ].join(';')
+    t('columnValidation'),
+    t('columnCalculatedValue'),
+    t('columnCalculatedUncertainty'),
+  ]
+}
+
+function buildEmissionSourcesCSV(locale: LocaleType, dataRows: (string | number)[][]): string {
+  const bc = getBcTranslations(locale)
+  const modal = bc.study.importEmissionSourcesModal as Record<string, string>
+  const t = (key: string) => modal[key] ?? key
+
+  const encodeField = (field: string | number = '') => {
+    if (typeof field === 'number') {
+      return String(field)
+    }
+    const escaped = field.replace(/"/g, '""')
+    if (escaped.includes(';') || escaped.includes('"') || escaped.includes('\n')) {
+      return `"${escaped}"`
+    }
+    return escaped
+  }
+
+  const headerRow = getEmissionSourcesHeaderRow(t).join(';')
 
   const rows = dataRows.map((row) => row.map(encodeField).join(';'))
-  return '﻿' + [headerRow, ...rows].join('\n')
+  return [headerRow, ...rows].join('\n')
 }
 
 async function buildEmissionSourcesDataRows(
@@ -411,6 +398,19 @@ async function buildEmissionSourcesDataRows(
           : t('efTypeBDD')
       : ''
     const globalUncertaintyLabel = getQualityLabel(getQualitativeUncertaintyFromQuality(es))
+    const environment = study.organizationVersion.environment
+    const calculatedEmission = getEmissionSourceEmission(es, environment) ?? 0
+    const calculatedValue = formatEmissionValueForExport(calculatedEmission, study.resultsUnit)
+    const emissionSourceSD = getSquaredStandardDeviationForEmissionSource(es)
+    const calculatedUncertaintyLabel = emissionSourceSD
+      ? getQualityLabel(getQualitativeUncertaintyFromSquaredStandardDeviation(emissionSourceSD))
+      : ''
+    const studyResultsUnits = ((bc.study as Record<string, unknown>)?.results as Record<string, unknown>)?.units as
+      | Record<string, string>
+      | undefined
+    const resultsUnitLabel = studyResultsUnits?.[study.resultsUnit] ?? study.resultsUnit
+    const exportTranslations = bc.study.export
+    const validationLabel = es.validated ? exportTranslations.yes : exportTranslations.no
 
     return [
       es.studySite.site.name,
@@ -422,6 +422,7 @@ async function buildEmissionSourcesDataRows(
       es.value ?? '',
       unitLabel,
       es.depreciationPeriod ?? '',
+      es.constructionYear ? es.constructionYear.getFullYear() : '',
       globalUncertaintyLabel,
       getQualityFieldLabel(es.reliability),
       getQualityFieldLabel(es.technicalRepresentativeness),
@@ -443,6 +444,9 @@ async function buildEmissionSourcesDataRows(
       efSource,
       efTypeLabel,
       es.feComment ?? '',
+      validationLabel,
+      `${calculatedValue} ${resultsUnitLabel}`,
+      calculatedUncertaintyLabel,
     ]
   })
 }
@@ -456,7 +460,7 @@ export async function exportEmissionSourcesToCSV(studyId: string, post?: Post): 
 
   const locale = await getLocale()
   const dataRows = await buildEmissionSourcesDataRows(study, locale, post)
-  return buildEmissionSourcesCSV(study, locale, dataRows)
+  return buildEmissionSourcesCSV(locale, dataRows)
 }
 
 export async function exportEmissionSourcesToExcel(studyId: string, post?: Post): Promise<ArrayBuffer> {

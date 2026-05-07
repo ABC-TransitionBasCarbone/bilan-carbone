@@ -2,6 +2,7 @@
 
 import LoadingButton from '@/components/base/LoadingButton'
 import ImportEmissionSourcesModal from '@/components/study/ImportEmissionSourcesModal'
+import { download } from '@/services/file'
 import { Post } from '@/services/posts'
 import {
   exportEmissionSourcesToCSV,
@@ -37,15 +38,7 @@ const EmissionSourceButtons = ({ studyId, userRole, post, siteId, onSuccess }: P
     setMenuAnchor(null)
     startExportTransition(async () => {
       const arrayBuffer = await exportEmissionSourcesToExcel(studyId, post)
-      const blob = new Blob([arrayBuffer], {
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      })
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = tImport('exportFileName')
-      a.click()
-      URL.revokeObjectURL(url)
+      download([arrayBuffer], tImport('exportFileName'), 'xlsx')
     })
   }
 
@@ -53,13 +46,7 @@ const EmissionSourceButtons = ({ studyId, userRole, post, siteId, onSuccess }: P
     setMenuAnchor(null)
     startExportTransition(async () => {
       const csvContent = await exportEmissionSourcesToCSV(studyId, post)
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = tImport('exportFileNameCsv')
-      a.click()
-      URL.revokeObjectURL(url)
+      download(['\ufeff', csvContent], tImport('exportFileNameCsv'), 'csv')
     })
   }
 
