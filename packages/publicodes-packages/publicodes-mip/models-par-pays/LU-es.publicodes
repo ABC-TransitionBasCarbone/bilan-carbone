@@ -1,0 +1,37 @@
+params:
+  code: LU
+  nom: Luxemburgo
+  gentilé: luxemburguesa
+commun . mix électrique . empreinte carbone:
+  titre: Intensidad de carbono del mix eléctrico de Luxemburgo
+  formule: 0.366
+  note: |
+    [Mapa eléctrico](https://app.electricitymaps.com/map) Perspectiva a 5 años, 2022
+transport . avion . court courrier . heures de vol:
+  suggestions:
+    🚫✈️: 0
+    Luxemburgo ⇄ París: 2
+    Luxemburgo ⇄ Amsterdam: 2
+    Luxemburgo ⇄ Londres: 3
+    Luxemburgo ⇄ Roma: 4
+transport . avion . moyen courrier . heures de vol:
+  suggestions:
+    🚫✈️: 0
+    Luxemburgo ⇄ Madrid: 5
+    Luxemburgo ⇄ Berlín: 6
+    Luxemburgo ⇄ Marrakech: 7
+    Luxemburgo ⇄ Tenerife: 9
+transport . avion . long courrier . heures de vol:
+  suggestions:
+    🚫✈️: 0
+    Luxemburgo ⇄ Nueva York: 22
+    Luxemburgo ⇄ Lima: 36
+    Luxemburgo ⇄ Tokio: 42
+    Luxemburgo ⇄ Sydney: 60
+transport . train . km:
+  suggestions:
+    atravesar una región: 300
+    Luxemburgo ⇄ París: 600
+    Luxemburgo ⇄ Múnich: 900
+    💳 viajero frecuente: 10000
+    💳 grand voyageur plus ultra: 25000

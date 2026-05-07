@@ -1,0 +1,36 @@
+params:
+  code: IT
+  nom: Italia
+  gentilé: italiano
+commun . mix électrique . empreinte carbone:
+  titre: Intensidad de carbono del mix eléctrico italiano
+  formule: 0.409
+  note: |
+    [Mapa eléctrico](https://app.electricitymaps.com/map) Perspectiva a 5 años, 2022
+transport . avion . court courrier . heures de vol:
+  suggestions:
+    🚫✈️: 0
+    Roma ⇄ Milán: 2
+    Roma ⇄ Viena: 3
+    Roma ⇄ Atenas: 4
+    Roma ⇄ París: 4
+transport . avion . moyen courrier . heures de vol:
+  suggestions:
+    🚫✈️: 0
+    Roma ⇄ Madrid: 5
+    Roma ⇄ Londres: 6
+    Roma ⇄ Dubai: 12
+transport . avion . long courrier . heures de vol:
+  suggestions:
+    🚫✈️: 0
+    Roma ⇄ Nueva York: 20
+    Roma ⇄ Lima: 40
+    Roma ⇄ Tokio: 50
+    Roma ⇄ Sydney: 50
+transport . train . km:
+  suggestions:
+    atravesar una región: 300
+    Roma ⇄ Nápoles: 400
+    Roma ⇄ Milán: 1000
+    💳 viajero frecuente: 10000
+    💳 grand voyageur plus ultra: 25000

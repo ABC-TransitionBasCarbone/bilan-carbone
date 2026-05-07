@@ -4,7 +4,7 @@ importer!:
     url: https://github.com/incubateur-ademe/publicodes-commun
   dans: commun
   les règles:
-    - intensité électricité
+    - mix électrique . empreinte carbone
     - mois par an
     - semaines par an
     - jours par semaine

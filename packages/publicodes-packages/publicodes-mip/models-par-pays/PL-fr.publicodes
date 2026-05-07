@@ -1,0 +1,41 @@
+params:
+  code: PL
+  nom: Pologne
+  gentilé: polonaise
+
+commun . mix électrique . empreinte carbone:
+  titre: Intensité carbone du mix électrique polonais
+  formule: 0.820
+  note: |
+    [Electricity Map](https://app.electricitymaps.com/map) vue 5 ans, 2022
+
+transport . avion . court courrier . heures de vol:
+  suggestions:
+    🚫✈️: 0
+    Varsovie ⇄ Vilnius: 2
+    Varsovie ⇄ Cracovie: 2
+    Varsovie ⇄ Berlin: 3
+    Varsovie ⇄ Prague: 3
+    Varsovie ⇄ Oslo: 4
+
+transport . avion . moyen courrier . heures de vol:
+  suggestions:
+    🚫✈️: 0
+    Varsovie ⇄ Paris: 5
+    Varsovie ⇄ Dublin: 6
+    Varsovie ⇄ Istanbul: 12
+transport . avion . long courrier . heures de vol:
+  suggestions:
+    🚫✈️: 0
+    Varsovie ⇄ New York: 20
+    Varsovie ⇄ Lima: 32
+    Varsovie ⇄ Tokyo: 36
+    Varsovie ⇄ Sydney: 60
+
+transport . train . km:
+  suggestions:
+    traversée d'une région: 300
+    Varsovie ⇄ Cracovie: 500
+    Varsovie ⇄ Berlin: 1000
+    💳 grand voyageur: 10000
+    💳 grand voyageur plus ultra: 25000

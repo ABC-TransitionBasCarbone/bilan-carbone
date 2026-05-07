@@ -1,6 +1,6 @@
 {
-  "name": "@abc-transitionbascarbone/publicodes-tilt",
-  "description": "Règles de calculs de tilt!",
+  "name": "@abc-transitionbascarbone/publicodes-mip",
+  "description": "Règles de calculs de mip!",
   "version": "0.1.0",
   "author": "Emile Rolley <emile@calinou.coop>",
   "license": "MIT",
@@ -18,6 +18,9 @@
     "test": "vitest run --reporter=tree"
   },
   "dependencies": {
+    "@incubateur-ademe/publicodes-acv-numerique": "^2.1.0",
+    "@incubateur-ademe/publicodes-commun": "^2.0.1",
+    "futureco-data": "^0.1.0",
     "publicodes": "^1.10.1"
   },
   "devDependencies": {
