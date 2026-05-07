@@ -32,13 +32,6 @@ enum UserChecklist {
   @@schema("bilan_carbone")
 }
 
-enum UserSource {
-  CRON
-  TUNISIE
-
-  @@schema("bilan_carbone")
-}
-
 model Account {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now()) @map("created_at")
@@ -77,26 +70,6 @@ model Account {
 
   @@unique([userId, environment])
   @@map("accounts")
-  @@schema("bilan_carbone")
-}
-
-model User {
-  id         String     @id @default(uuid())
-  level      Level?
-  firstName  String     @map("first_name")
-  lastName   String     @map("last_name")
-  email      String     @unique
-  password   String?
-  resetToken String?    @map("reset_token")
-  accounts   Account[]
-  source     UserSource @default(CRON)
-
-  formationFormStartTime DateTime? @map("formation_form_start_time")
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
-
-  @@map("users")
   @@schema("bilan_carbone")
 }
 
