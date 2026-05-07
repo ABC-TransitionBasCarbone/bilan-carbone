@@ -12,6 +12,7 @@
   },
   "scripts": {
     "dev": "turbo run dev",
+    "dev:bc": "turbo run dev --filter=bilan-carbone",
     "build": "turbo run build",
     "test": "turbo run test",
     "start": "turbo run start",
