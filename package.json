@@ -17,7 +17,9 @@
     "ts": "turbo run ts",
     "lint": "turbo run lint",
     "format": "turbo run format",
-    "prisma": "yarn workspace @abc-transitionbascarbone/db-common run prisma"
+    "prisma": "yarn workspace @abc-transitionbascarbone/db-common run prisma",
+    "postinstall": "yarn compile:publicodes",
+    "compile:publicodes": "for dir in packages/publicodes-packages/publicodes-*; do (cd $dir && yarn compile); done"
   },
   "devDependencies": {
     "turbo": "^2.9.6"

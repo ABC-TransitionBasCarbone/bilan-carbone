@@ -1,0 +1,45 @@
+# For now, it doesn't take into account ferry (in global model soon).
+params:
+  code: MQ
+  nom: Martinique
+  gentilé: martiniquaise
+  drapeau: FR
+
+commun . intensité électricité:
+  titre: Intensité carbone du mix électrique martiniquais
+  formule: 0.840
+  note: |
+    Nous utilisons les données de la base empreinte (mise à jour en décembre 2020).
+
+transport . avion . court courrier . heures de vol:
+  suggestions:
+    🚫✈️: 0
+    Fort-de-France ⇄ Sainte-Lucie: 1
+    Fort-de-France ⇄ Pointe-à-Pitre: 1.5
+    Fort-de-France ⇄ Bridgetown: 2
+    Fort-de-France ⇄ Saint-Domingue: 4
+    Fort-de-France ⇄ Cayenne: 4.5
+
+transport . avion . moyen courrier . heures de vol:
+  suggestions:
+    🚫✈️: 0
+    Fort-de-France ⇄ Miami: 8
+    Fort-de-France ⇄ Montréal: 11
+
+transport . avion . long courrier . heures de vol:
+  suggestions:
+    🚫✈️: 0
+    Fort-de-France ⇄ Paris: 17
+    Fort-de-France ⇄ Los Angeles: 26
+    Fort-de-France ⇄ Rio de Janeiro: 44
+
+transport:
+  formule:
+    somme:
+      - voiture
+      - avion
+      - deux roues
+      - mobilité douce
+      - transports commun
+      - vacances
+      - ferry

@@ -1,0 +1,305 @@
+ui . pédagogie:
+  description: |
+    L'objectif ici est de permettre d'afficher certaines informations du modèle (sans sa contrainte) au niveau de l'écran de fin ou des actions par exemple via des calculs de nouvelles variables plus pertinentes pour l'utilisateur.
+
+    On introduit ici un attribut `actions` qui permet de relier des actions du modèle à des sous catégories custom. Aucun test n'est réalisé pour l'instant pour vérifier que les actions sont bien des règles présentes dans le modèle. De même, on ne s'assure que les sous catégories comblent l'empreinte complète.
+
+    On introduit également un attribut `cachée` qui permet de ne pas afficher la sous catégorie dans l'interface utilisateur.
+
+ui . pédagogie . sous catégories:
+ui . pédagogie . sous catégories . transport:
+ui . pédagogie . sous catégories . DT:
+ui . pédagogie . sous catégories . logement:
+ui . pédagogie . sous catégories . divers:
+#ui . pédagogie . sous catégories . divers . loisirs:
+#ui . pédagogie . sous catégories . divers . loisirs . activité:
+
+###################################################################
+### Pédagogie pour les déplacements professionnels ###
+###################################################################
+ui . pédagogie . sous catégories . transport . voiture:
+  titre: déplacements professionnels en voiture
+  icônes: 🚗
+  formule: transport . voiture
+  actions:
+    - transport . voiture . éco-conduite
+    - transport . voiture . location réduire taille #Parfois l'action ne s'affiche pas car le recalcul est négatif car l'empreinte de la construction est négligeable (et certaines consos moyennes pénalisent les petits gabarits)
+    - transport . voiture . covoiturage un
+    - transport . voiture . covoiturage deux
+    - transport . voiture . location voiture électrique
+    - transport . voiture . limitation autoroute
+    - transport . voiture . prendre le train
+  # informations:
+  #   - informations regionales . transport . alternartives
+  #   - informations regionales . transport . alternartives train
+
+ui . pédagogie . sous catégories . transport . deux roues:
+  titre: déplacements professionnels en deux roues
+  icônes: 🏍️
+  formule: transport . deux roues
+  actions:
+    - transport . deux roues . limitation autoroute
+    - transport . deux roues . scooter électrique
+  informations:
+    - informations regionales . transport . alternartives
+    - informations regionales . transport . alternartives train
+
+ui . pédagogie . sous catégories . transport . train:
+  titre: déplacements professionnels en train
+  icônes: 🚋
+  formule: transport . train
+  actions:
+    - transport . train déplacements pro
+
+ui . pédagogie . sous catégories . transport . avion:
+  titre: déplacements professionnels en avion
+  icônes: ✈️
+  formule: transport . avion
+  actions:
+    - transport . avion . arrêter l'avion
+    - transport . avion . arrêter l'avion court
+    - transport . avion . prendre moins l'avion
+
+ui . pédagogie . sous catégories . transport . métro ou tram:
+  titre: déplacements professionnels en métro, tramway ou train de banlieue
+  icônes: 🚊
+  valeur: transport . transports commun . type . métro ou tram
+
+#############################
+### Pédagogie pour les DT ###
+#############################
+
+ui . pédagogie . sous catégories . DT . voiture:
+  titre: déplacement domicile - travail en voiture
+  icônes: 🚗
+  formule: DT . voiture
+  actions:
+    - DT . voiture . éco-conduite
+    - DT . voiture . opter transport commun
+    - DT . voiture . intensifier transport commun
+    - DT . voiture . sans voiture
+  informations:
+    - informations regionales . DT . covoiturage
+
+ui . pédagogie . sous catégories . DT . deux roues:
+  titre: déplacement domicile - travail en deux roues
+  icônes: 🏍️
+  formule: DT . deux roues
+  actions:
+    - transport . deux roues . limitation autoroute
+    - transport . deux roues . scooter électrique
+
+ui . pédagogie . sous catégories . DT . train:
+  titre: déplacement domicile - travail en train
+  icônes: 🚋
+  formule: DT . train
+  actions:
+    - DT . train déplacements domicile travail
+
+### On laisse ce bloc de code car dans l'idéal on aimerait pouvoir avoir une variation (en fonction de localisation . séjour)dans l'attrbut "informations" afin d'éviter d'avoir à "copier-coller" 32 fois le bloc "ui . pédagogie . sous catégories . séjour . voiture dunkerquois"
+#    variations:
+#      - si: transport . localisation séjour = 1
+#        alors:
+#          - informations regionales . séjour . vélo . arras pays d'artois
+#          - informations regionales . séjour . marche . arras pays d'artois
+#      - si: transport . localisation séjour = 2
+#        alors:
+#          - informations regionales . séjour . vélo . artois lys
+#          - informations regionales . séjour . marche . artois lys
+#      - si: transport . localisation séjour = 3
+#        alors:
+#          - informations regionales . séjour . vélo . audomarois
+#          - informations regionales . séjour . marche . audomarois
+#      - si: transport . localisation séjour = X
+#        alors:
+#          - informations regionales . séjour . vélo . xxx
+#          - informations regionales . séjour . marche . xxx
+#      - sinon:
+#          - informations regionales . séjour . vélo . par défaut
+#          - informations regionales . séjour . marche . par défaut
+
+#####################################
+### Pédagogie pour l'alimentation ###
+#####################################
+ui . pédagogie . sous catégories . alimentation:
+  titre: Votre alimentation au travail
+  icônes: 🍴
+  formule:
+    somme: #Obliger de passer par une somme de repas et boisson car la variable alimentation dans "formule" ne fonctionne pas
+      - alimentation . repas
+      - alimentation . boisson
+  actions:
+    - alimentation . repas . réduire viande . max 1 par jour
+    - alimentation . repas . viande faible empreinte
+    - alimentation . devenir végétarien
+    - alimentation . devenir végétalien
+    - alimentation . boisson . réduire café . remplace un café par jour par thé
+  informations:
+    - informations regionales . alimentation . défi
+
+ui . pédagogie . sous catégories . alimentation . poisson:
+  titre: Repas avec poisson
+  icônes: 🐟
+  formule:
+    somme:
+      - alimentation . plats . poisson gras
+      - alimentation . plats . poisson blanc
+  actions:
+    - alimentation . repas . poisson faible empreinte
+    - alimentation . devenir végétarien
+    #- alimentation . devenir végétalien # Pour le moment, nous ne souhaitons pas afficher cette action pour cette sous-catégorie
+    - alimentation . bonus . manger de saison
+    - alimentation . bonus . manger local
+
+# On commente pour l'instant tant qu'on ne peut pas afficher une action sans que 'formule' soit défini en son sein
+#ui . pédagogie . sous catégories . alimentation . végé:
+#  titre: Repas végétariens
+#  icônes: 🥦
+#  formule:
+#    somme:
+#      - alimentation . plats . végétalien
+#      - alimentation . plats . végétarien
+#  actions:
+#    - alimentation . repas . végétarien:
+
+ui . pédagogie . sous catégories . alimentation . boisson:
+  titre: Votre consommation de boissons au travail
+  icônes: 🥤
+  formule: alimentation . boisson
+  actions:
+    - alimentation . boisson . réduire café . max deux par jour
+    - alimentation . boisson . réduire café . remplace un café par jour par thé
+    - alimentation . boisson . réduire café . remplace par chicorée
+    - alimentation . boisson . réduire chocolat chaud . max un par jour
+
+#ui . pédagogie . sous catégories . alimentation . déchets:
+#  icônes: 🚮
+#  formule: alimentation . déchets
+#  actions:
+#    - alimentation . déchets . devenir zéro déchet
+#    - alimentation . déchets . réduire gaspillage
+#    - alimentation . déchets . composter
+#    - alimentation . déchets . avoir un stop pub
+
+#####################################
+### Pédagogie pour le numérique   ###
+#####################################
+
+ui . pédagogie . sous catégories . divers . numérique:
+  icônes: 📺
+  formule: divers . numérique
+  actions:
+    - divers . numérique . appareils . allongement
+    - divers . numérique . internet . diminuer
+    - divers . numérique . reconditionné
+    - divers . numérique . réduire ia
+  informations:
+    - informations regionales . numérique . défi
+    - informations regionales . numérique . bonnes pratiques
+    - informations regionales . numérique . ia
+
+################################################################################################################################
+################################################################################################################################
+### On commente car ces sous catégories et les actions qu'elle contiennent car elles ne sont pas utiles ici (car reprises de NGC)
+
+#
+#ui . pédagogie . sous catégories . transport . vacances:
+#  icônes: 🏖️
+#  formule: transport . vacances
+#
+#ui . pédagogie . sous catégories . transport . ferry:
+#  icônes: ⛴
+#  formule: transport . ferry
+#  actions:
+#    - transport . ferry . arrêter ferry
+#    - transport . ferry . réduire ferry
+#
+#ui . pédagogie . sous catégories . logement . énergie:
+#  icônes: ⚡
+#  formule:
+#    somme:
+#      - logement . chauffage
+#      - logement . électricité
+#  actions:
+#    - logement . électricité . éteindre appareils
+#    - logement . chauffage . se chauffer au bois
+#    - logement . chauffage . remplacer gaz par PAC
+#    - logement . chauffage . remplacer chauffage électrique par PAC
+#    - logement . électricité . séchage air libre
+#    - logement . chauffage . baisse température
+#    - logement . chauffage . rénovation énergétique
+#    - logement . chauffage . rénovation énergétique BBC
+#    - logement . chauffage . raccordement réseau de chaleur
+#    - logement . chauffage . installer thermostat
+#    - logement . chauffage . installer chauffe-eau solaire
+#    - logement . mutualiser son logement
+#    - logement . installer photovoltaique
+#    - services sociétaux . devenir producteur photovoltaique
+#    - logement . électricité verte
+#
+#ui . pédagogie . sous catégories . logement . climatisation:
+#  icônes: ❄️
+#  formule: logement . climatisation
+#  actions:
+#    - logement . climatisation . réduction
+#
+#ui . pédagogie . sous catégories . logement . construction:
+#  icônes: 🧱
+#  formule: logement . construction
+#  cachée: oui
+#
+#ui . pédagogie . sous catégories . logement . extérieur:
+#  icônes: ☘️
+#  formule: logement . extérieur
+#  actions:
+#    - logement . extérieur . barbecue plus écologique
+#    - logement . extérieur . privilégier le bois pour le salon de jardin
+#    - logement . extérieur . passer à la tondeuse électrique
+#
+#ui . pédagogie . sous catégories . divers . textile:
+#  icônes: 👕
+#  formule: divers . textile
+#  actions:
+#    - divers . textile . réduire neuf . diviser par deux achats
+
+#ui . pédagogie . sous catégories . divers . autres produits:
+#  icônes: 📦
+#  formule: divers . autres produits
+#  actions:
+#    - divers . autres produits . réduire
+#
+#ui . pédagogie . sous catégories . divers . ameublement:
+#  icônes: 🛋️
+#  formule: divers . ameublement
+#  actions:
+#    - divers . ameublement . meubles . allongement
+#
+#ui . pédagogie . sous catégories . divers . électroménager:
+#  icônes: 🔌
+#  formule: divers . électroménager
+#  actions:
+#    - divers . électroménager . appareils . allongement
+#
+#ui . pédagogie . sous catégories . divers . animaux domestiques:
+#  icônes: 🐶
+#  formule: divers . animaux domestiques
+#
+#ui . pédagogie . sous catégories . divers . produits consommables:
+#  icônes: 🧴
+#  formule: divers . produits consommables
+#  actions:
+#    - divers . produits consommables . réduire
+#  cachée: oui
+#
+#ui . pédagogie . sous catégories . divers . tabac:
+#  icônes: 🚬
+#  formule: divers . tabac
+#  actions:
+#    - divers . tabac . arrêter
+#
+#ui . pédagogie . empreinte faible:
+#  applicable si: bilan < 4000
+#  actions:
+#    - divers . partage NGC
+#    - divers . aider les autres
+#    - services sociétaux . voter

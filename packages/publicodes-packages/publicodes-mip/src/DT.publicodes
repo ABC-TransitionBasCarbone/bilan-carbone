@@ -1,0 +1,2138 @@
+#Checker les formulations des questions et descriptions
+#Train et Car longue distance : checker les FE
+#Voiture : poser la question de s'il s'agit du même véhicule ou si louez mais attention il faut affiner les réponses à la première question voiture car on n'est plus sur du proprio régulier non proprio et non régulier
+DT:
+  # Cette première mosaique concerne les modes de transport dit "secondaires", c.à.d ceux faits pendant le DT dans la région Hauts-de-France.
+  # # Sur avis de HdF Tourisme, on considère 6 modes de transport principaux : TER, voiture, deux roues motorisés, transport en commun, mobilité douce et taxi
+  #   applicable si:
+  #     toutes ces conditions:
+  #       # - transport . durée séjour > 0
+  #       # - transport . localisation DT > 0
+  #  applicable si:
+  #    une de ces conditions:
+  #      - transport . train . présent
+  #      - transport . car longue distance . présent
+  #      - transport . voiture . présent
+  #      - transport . deux roues . présent
+  ##      - est défini: transport . empreinte moyenne
+  ##      - transport . transports commun . présent
+  ##      - transport . mobilité douce . présent
+  ##      - transport . taxi . présent
+  applicable si:
+    toutes ces conditions:
+      - DT . congé >= 0
+      - DT . TT >= 0
+  titre: Déplacements domicile-travail
+  mosaique:
+    type: selection
+    options:
+      - train . présent
+      #      - car longue distance . présent
+      - voiture . présent
+      - deux roues . présent
+      - transports commun . présent
+      - mobilité douce . présent
+      # - taxi . présent
+    suggestions:
+      aucun:
+        train . présent: non
+        #        car longue distance . présent: non
+        voiture . présent: non
+        deux roues . présent: non
+        transports commun . présent: non
+        mobilité douce . présent: non
+        taxi . présent: non
+  question: Quel(s) moyen(s) de transport utilisez vous pour vos déplacements domicile - travail ?
+  icônes: 🏠➡️🏢
+  description: |
+    Renseignez les différents types de transport que vous utilisez le plus souvent pour vos déplacements entre votre domicile et votre lieu de travail pour une semaine type.
+  formule:
+    variations:
+      - si: choix utilisateur
+        alors:
+          somme:
+            - train
+            - voiture
+            - deux roues
+            - transports commun
+            - mobilité douce
+      - sinon: voiture . empreinte par défaut
+
+#  formule:
+#    somme:
+#      - train
+#      - voiture
+#      - deux roues
+#      - transports commun
+#      - mobilité douce
+#  formule:
+#    variations:
+#      - si: choix utilisateur
+#        alors: empreinte totale DT
+#      - sinon: empreinte par défaut
+#   formule: ( 253 - DT . congé - ( 52 - DT . congé / 5 ) * DT . TT ) * ( train + voiture + deux roues + transports commun + mobilité douce )
+
+# DT . empreinte totale:
+#   formule:
+#     somme:
+#       - train
+#       - voiture
+#       - deux roues
+#       - transports commun
+#       - mobilité douce
+#   unité: kgCO2e
+
+# DT . empreinte totale:
+#  formule:
+#    somme:
+#      - train * ( 253 - DT . congé - ( 52 - DT . congé / 5 ) * DT . TT )
+#      - voiture * ( 253 - DT . congé - ( 52 - DT . congé / 5 ) * DT . TT )
+#      - deux roues * ( 253 - DT . congé - ( 52 - DT . congé / 5 ) * DT . TT )
+#      - transports commun * ( 253 - DT . congé - ( 52 - DT . congé / 5 ) * DT . TT )
+#      - mobilité douce * ( 253 - DT . congé - ( 52 - DT . congé / 5 ) * DT . TT )
+#      # - taxi
+#  note: |
+#    On a 253 jours ouvrés dans l'année on retranche les jours de congés posés, ensuite on convertit en jours par an les jours de TT qui sont en jours par semaine en ne considérant que les semaines travaillées (52 - congés/5)
+
+DT . choix utilisateur: ### Enlever les par défaut: non
+  titre: Choix utilisateur pour les modes de transport du DT
+  formule:
+    une de ces conditions:
+      - est défini: DT . train . présent
+      - est défini: DT . voiture . présent
+      - est défini: DT . deux roues . présent
+      - est défini: DT . transports commun . présent
+      - est défini: DT . mobilité douce . présent
+
+DT . empreinte par défaut:
+  formule: DT . voiture . empreinte par défaut
+#    variations:
+#      - si: # Si A-R = jnsp (et DT = jnsp donc) --> on considère que l'utilisateur ne fait aucun effort et on impute en plus des déplacements en voiture pour A-R des déplacements pendant le DT
+#          toutes ces conditions:
+#            - est non défini: transport . choix utilisateur
+#        alors: DT . voiture . empreinte par défaut
+#      - sinon: 0 #Si A-R = défini --> on considère qu'on peut dire jnsp à DT (car on ne sait pas ce qu'on va faire) et donc attribuer 0
+
+DT . congé:
+  #ordre: 1
+  titre: Jours de congés pris par an
+  question: Combien de jours ne travaillez-vous pas par an ? (congés, RTT, arrêts maladie, etc.)
+  description: |
+    Cette question permet d'estimer vos jours d'absence du lieu de travail. Renseignez donc tous vos jours d'absence quelle que soit leur nature (congés payés, RTT, arrêt maladie)
+    Moins de jours sur site signifie moins de trajets domicile-travail par exemple.
+  par défaut: 25
+  plancher: 0
+  plafond: 365
+  suggestions:
+    25: 25
+    30: 30
+    40: 40
+  unité: jour
+
+DT . TT:
+  #  ordre: 2
+  titre: Jours de télétravail par semaine
+  question: Combien de jours de télétravail faites-vous en moyenne par semaine ?
+  description: |
+    Le télétravail modifie l’empreinte carbone professionnelle, car il réduit certains déplacements mais augmente les consommations liées au domicile.
+  par défaut: 2
+  plancher: 0
+  plafond: 5
+  suggestions:
+    aucun: 0
+    un jour: 1
+    deux jours: 2
+    trois jours: 3
+    quatre jours: 4
+    cinq jours: 5
+  unité: jour
+
+### Train ###
+DT . train . présent:
+  question: Utilisez-vous le train pour vos déplacements domicile-travail ?
+  par défaut: non
+
+DT . train:
+  applicable si: DT . train . présent
+  titre: Train
+  icônes: 🚞
+  formule: TER * km extrapolé
+  unité: kgCO2e
+
+DT . train . TER: #On est obligé de créer la variable "DT . train . TER" et d'y trouver les mêmes infos que "transport . train . TER" car si l'utilisateur ne coche pas "train" dans transport publicodes ne récupère pas les infos (du fait du applicable si: présent dans "transport . train")
+  formule: 0.0277
+  unité: kgCO2e/km
+  note: |
+    TER - 2022 - Traction moyenne ; 27.7 gCO2e/km/personne
+
+DT . train . km:
+  applicable si: DT . train . présent
+  question: Combien de kilomètres parcourez-vous en Train par jour pour vos déplacements domicile-travail ?
+  suggestions:
+    10 km: 10
+    20 km: 20
+    50 km: 50
+  unité: km/jour
+  plancher: 0
+  par défaut: 50
+
+DT . train . km extrapolé:
+  formule: km * ( 253 - DT . congé - ( 52 - DT . congé / 5 ) * DT . TT )
+  note: |
+    On a 253 jours ouvrés dans l'année on retranche les jours de congés posés, ensuite on convertit en jours par an les jours de TT qui sont en jours par semaine en ne considérant que les semaines travaillées (52 - congés/5)
+
+### Car longue distance ###
+
+# On commente car sur avis HdF Tourisme. Ce mode de transport n'a pas sa place dans les transports faits pendant le DT
+#DT . car longue distance . présent:
+#  question: Allez-vous utiliser des cars longue distance pour vous déplacer pendant votre DT ?
+#  par défaut: non
+#
+#DT . car longue distance:
+#  applicable si: DT . car longue distance . présent
+#  titre: Car Flixbus, Ouibus...
+#  icônes: 🚌
+#  formule: km * impact par km
+#  unité: kgCO2e
+#
+#DT . car longue distance . km:
+#  question: Combien de kilomètres allez vous parcourir en car de longue distance (Ouibus, Flixbus, etc.) pendant votre DT ?
+#  description: |
+#    Renseignez un nombre de km cohérent (en arrondissant à la dizaine ou centaine supérieure) avec les distances que vous allez parcourir en car longue distance pendant votre DT.
+#    Pour rappel, **ne prenez pas en compte** d'éventuels km pour aller sur votre lieu de DT et revenir à votre domicile. Vous avez dû renseigner ces km lors de la première question.
+#  suggestions:
+#    Paris ⇄ Lille: 440
+#    Bruxelles ⇄ Lille : 220
+#  unité: km
+#  par défaut: 300
+#
+#DT . car longue distance . impact par km:
+#  formule: 0.029
+#  unité: kgCO2e/km
+#  note: |
+#    FE (amont + combustion) Autocar - Gazole longue distance [Base Empreinte - hypothèses de la section "Autobus - autocars"] : 25 gCO2e/passager.km consolidé
+#    en intégrant la fabrication du véhicule. Soit une composante "fabrication" estimée à 4.4 gCO2eq/passager.km pour un FE total de 29 gCO2e/passager.km
+#    Hypothèses retenues pour la consolidation (reprises de la Base Empreinte) :
+#     - 4 kgCO2eq/kg pour la fabrication des autobus/autocar (basé sur une analyse de la littérature)
+#     - masse d’un autocar = 12 tonnes
+#     - durée de vie en km = 361 884 km
+#     - nombre de passagers moyen = 30
+
+### Voiture ###
+
+DT . voiture . présent:
+  question: Utilisez-vous une voiture pour vos déplacements domicile-travail ?
+  par défaut: non
+
+# L'attribut empreinte moyenne est gardé uniquement pour un cas bien spécifique : A-R = voiture mais jnsp sur utilisateur + DT = voiture
+DT . voiture:
+  applicable si: DT . voiture . présent
+  titre: Voiture
+  icônes: 🚘
+  formule:
+    variations:
+      - si: km = 0
+        alors: 0
+      - sinon:
+          variations:
+            - si: DT . voiture . présent
+              alors:
+                variations:
+                  - si: #Cas ou l'utilisateur répond à voiture . utilisateur
+                      une de ces conditions:
+                        - une de ces conditions:
+                            - utilisateur = 'propriétaire'
+                            - utilisateur = 'régulier non propriétaire'
+                    alors: empreinte calculée
+                  - si: utilisateur = 'non régulier' #Cas ou l'utilisateur répond à voiture . utilisateur
+                    alors: empreinte non régulier
+                  - sinon: empreinte moyenne #Cas ou l'utilisateur répond jnsp à voiture . utilisateur --> du fait du par défaut à la variable utilisateur --> ce chemin n'est jamais pris
+            - sinon: empreinte par défaut #Dans le cas où l'utilisateur répond jnsp à la mosaique transport D-T
+  unité: kgCO2e
+#            - si: #A-R voiture (complété en entier) + DT = voiture
+#                toutes ces conditions:
+#                  - transport . voiture . présent
+#                  - est défini: transport . voiture . utilisateur
+#                  - DT . voiture . présent
+#              alors:
+#                variations:
+#                  - si:
+#                      toutes ces conditions:
+#                        - une de ces conditions:
+#                          - transport . voiture . utilisateur = 'propriétaire'
+#                          - transport . voiture . utilisateur = 'propriétaire covoit'
+#                        - transport . voiture . motorisation = 'thermique'
+#                    alors: empreinte DT propriétaire thermique
+#                  - si:
+#                      toutes ces conditions:
+#                        - une de ces conditions:
+#                          - transport . voiture . utilisateur = 'propriétaire'
+#                          - transport . voiture . utilisateur = 'propriétaire covoit'
+#                        - transport . voiture . motorisation = 'hybride'
+#                    alors: empreinte DT propriétaire hybride
+#                  - si:
+#                      toutes ces conditions:
+#                        - une de ces conditions:
+#                          - transport . voiture . utilisateur = 'propriétaire'
+#                          - transport . voiture . utilisateur = 'propriétaire covoit'
+#                        - transport . voiture . motorisation = 'électrique'
+#                    alors: empreinte DT propriétaire électrique
+#                  - si:
+#                      toutes ces conditions:
+#                        - une de ces conditions:
+#                          - transport . voiture . utilisateur = 'régulier non propriétaire'
+#                          - transport . voiture . utilisateur = 'régulier non propriétaire covoit'
+#                        - transport . voiture . motorisation = 'thermique'
+#                    alors: empreinte DT régulier non propriétaire thermique
+#                  - si:
+#                      toutes ces conditions:
+#                        - une de ces conditions:
+#                          - transport . voiture . utilisateur = 'régulier non propriétaire'
+#                          - transport . voiture . utilisateur = 'régulier non propriétaire covoit'
+#                        - transport . voiture . motorisation = 'hybride'
+#                    alors: empreinte DT régulier non propriétaire hybride
+#                  - si:
+#                      toutes ces conditions:
+#                        - une de ces conditions:
+#                          - transport . voiture . utilisateur = 'régulier non propriétaire'
+#                          - transport . voiture . utilisateur = 'régulier non propriétaire covoit'
+#                        - transport . voiture . motorisation = 'électrique'
+#                    alors: empreinte DT régulier non propriétaire électrique
+#                  - sinon: empreinte calculée #A-R = voiture/non régulier + DT = voiture
+#            - si: #A-R = voiture/jnsp sur voiture . utilisateur + DT = voiture
+#                toutes ces conditions:
+#                  - transport . voiture . présent
+#                  - est non défini: transport . voiture . utilisateur
+#                  - DT . voiture . présent
+#              alors: empreinte moyenne #Si utilisateur n'est pas défini en AR on attribue une empreinte moyenne en AR --> on fait de même dans DT
+#            - sinon:
+#                variations:
+#                  - si: #Pour le cas A-R = défini et autres que voiture + DT = voiture (+ autres éventuellement)
+#                      une de ces conditions:
+#                        - DT . train . présent
+#                        - DT . deux roues . présent
+#                        - DT . mobilité douce . présent
+#                        - DT . transports commun . présent
+#                        - DT . taxi . présent
+#                        - DT . voiture . présent
+#                    alors: empreinte calculée #(devrait renvoyer 0 si uniquement train ou autre de sélectionnés)
+#                  - si: #Pour le cas A-R = défini + DT = jnsp
+#                      une de ces conditions:
+#                        - transport . train . présent
+#                        - transport . deux roues . présent
+#                        # - transport . car longue distance . présent
+#                        - transport . voiture . présent
+#                    alors: 0 #On accepte que l'utilisateur ne sache pas ce qu'il va faire pendant son DT. On lui impute donc 0
+#                  - sinon: empreinte par défaut #Pour le cas A-R = jnsp + DT = jnsp
+##            - si: DT . voiture . présent #A-R = autres que voiture OU voiture/jnsp
+##                une de ces conditions:
+##                  - est non défini: transport . voiture . présent
+##                  - transport . train . présent
+##                  - transport . car longue distance . présent
+##                  - transport . deux roues . présent
+##               alors:
+###            - si: #A-R voiture (complété en entier) + DT = voiture/jnsp (probablement que marchera pas avec les non défini)
+###                toutes ces conditions:
+###                  - transport . voiture . présent
+###                  - est défini: transport . voiture . utilisateur
+###                  - toutes ces conditions:
+###                      - est non défini:  transport . train . présent
+###                      - est non défini:  transport . car longue distance . présent
+###                      - est non défini:  transport . deux roues . présent
+###              alors: #mettre les mêmes fonctions contexte que si DT . présent mais avec des km considérés
+###            - sinon: empreinte par défaut ### Empreinte par défaut pour le cas A-R = jnsp + DT = jnsp
+#  description: |
+#    ![](https://upload.wikimedia.org/wikipedia/commons/9/9a/Congestion_caused_by_a_road_accident%2C_Algarve%2C_Portugal.jpg)
+#
+#    La voiture est aujourd'hui en France essentiellement thermique (essence, diesel), bien que l'électrique progresse lentement.
+#
+#    Pourtant, électrique ou thermique, elle reste un moyen de déplacement très peu efficient :
+#    **il s'agit en moyenne de déplacer un humain de 80kg dans une boîte en métal de 1200kg**.
+#
+#    Un peu comme si chaque midi, nous faisions à manger pour 10 avant de jeter 90% de la nourriture, ou que nous décidions de chauffer tout le pâté de maisons plutôt que l'intérieur de chacune des 10 maisons.
+#
+#    Notons finalement qu'il est important de prendre en compte à la fois l'usage (les km parcourus) et la construction de ce véhicule de plus d'une tonne de matériaux divers.
+
+DT . voiture . km:
+  titre: Km en voiture
+  applicable si: DT . voiture . présent
+  #  non applicable si: #On met cette condition car la question, sans savoir pourquoi, apparait alors qu'on calcule une empreinte moyenne ("contexte") via le cheminement [voiture/jnsp sur voiture . utilisateur + DT = voiture]
+  #    toutes ces conditions:
+  #      - transport . voiture . présent
+  #      - est non défini: transport . voiture . utilisateur
+  question: Quelle distance (aller-retour) parcourez en voiture chaque jour pour vos déplacements domicile-travail ?
+  description: |
+    Renseignez un nombre de km cohérent (en arrondissant à la dizaine ou centaine supérieure) avec les distances que vous parcourez quotidiennement en voiture pour vos déplacements domicile-travail.
+  # It seems that there is a [publicodes bug](https://github.com/publicodes/publicodes/issues/517). For now, we can't use `km annuels moyen réel` directly here, until the problem is fixed.
+  #  par défaut: 8210
+  par défaut: 15
+  unité: km
+  plancher: 0
+  suggestions:
+    5 km: 5
+    10 km: 10
+    15 km: 15
+    20 km: 20
+    30 km: 30
+
+DT . voiture . km extrapolé:
+  formule: km * ( 253 - DT . congé - ( 52 - DT . congé / 5 ) * DT . TT )
+  note: |
+    On a 253 jours ouvrés dans l'année on retranche les jours de congés posés, ensuite on convertit en jours par an les jours de TT qui sont en jours par semaine en ne considérant que les semaines travaillées (52 - congés/5)
+
+#DT . voiture . km annuels moyen réel:
+#  #8210
+#  formule: km annuels moyen * nombre véhicules circulation / population
+#
+DT . voiture . km annuels moyen:
+  #12216
+  formule:
+    somme:
+      - km annuels moyen . véhicules légers * nombre véhicules circulation . véhicules légers / nombre véhicules circulation
+      - km annuels moyen . VUL * nombre véhicules circulation . VUL / nombre véhicules circulation
+  unité: km
+  note: |
+    Ce chiffre concerne les véhicules en circulation (voitures et VUL).
+    Il est issu des [Données sur le parc automobile français au 1er janvier 2023](https://www.statistiques.developpement-durable.gouv.fr/donnees-sur-le-parc-automobile-francais-au-1er-janvier-2023?rubrique=&dossier=1348).
+
+    Nous considérons néanmoins les données pour l'année 2022 car la distance moyenne parcourue par véhicule n'est dispo que pour 2022.
+
+    Nous avons choisi de ne pas prendre en compte la catégorisation pro/perso dans de nombreux véhicules professionels sont utilisés également pour les trajets perso et domicile travail (que nous prenons en compte dans le calculateur).
+
+DT . voiture . km annuels moyen . véhicules légers:
+  formule: 11957
+  unité: km
+  note: |
+    Ce chiffre concerne les véhicules en circulation (voitures et VUL).
+    Il est issu des [Données sur le parc automobile français au 1er janvier 2023](https://www.statistiques.developpement-durable.gouv.fr/donnees-sur-le-parc-automobile-francais-au-1er-janvier-2023?rubrique=&dossier=1348).
+
+    Nous considérons néanmoins les données pour l'année 2022 car la distance moyenne parcourue par véhicule n'est dispo que pour 2022.
+
+DT . voiture . km annuels moyen . VUL:
+  formule: 13793
+  unité: km
+  note: |
+    Ce chiffre concerne les véhicules en circulation (voitures et VUL).
+    Il est issu des [Données sur le parc automobile français au 1er janvier 2023](https://www.statistiques.developpement-durable.gouv.fr/donnees-sur-le-parc-automobile-francais-au-1er-janvier-2023?rubrique=&dossier=1348).
+
+    Nous considérons néanmoins les données pour l'année 2022 car la distance moyenne parcourue par véhicule n'est dispo que pour 2022.
+
+DT . voiture . nombre véhicules circulation:
+  formule: véhicules légers + VUL
+  note: |
+    Ce chiffre concerne les véhicules en circulation (voitures et VUL).
+    Il est issu des [Données sur le parc automobile français au 1er janvier 2023](https://www.statistiques.developpement-durable.gouv.fr/donnees-sur-le-parc-automobile-francais-au-1er-janvier-2023?rubrique=&dossier=1348).
+
+    Nous considérons néanmoins les données pour l'année 2022 car la distance moyenne parcourue par véhicule n'est dispo que pour 2022.
+
+    Nous avons choisi de ne pas prendre en compte la catégorisation pro/perso dans de nombreux véhicules professionels sont utilisés également pour les trajets perso et domicile travail (que nous prenons en compte dans le calculateur).
+
+DT . voiture . nombre véhicules circulation . véhicules légers:
+  formule: 38814659
+  note: |
+    Ce chiffre est issu des [Données sur le parc automobile français au 1er janvier 2023](https://www.statistiques.developpement-durable.gouv.fr/donnees-sur-le-parc-automobile-francais-au-1er-janvier-2023?rubrique=&dossier=1348).
+
+    Nous considérons néanmoins les données pour l'année 2022 car la distance moyenne parcourue par véhicule n'est dispo que pour 2022.
+
+DT . voiture . nombre véhicules circulation . VUL:
+  formule: 6384963
+  note: |
+    Ce chiffre est issu des [Données sur le parc automobile français au 1er janvier 2023](https://www.statistiques.developpement-durable.gouv.fr/donnees-sur-le-parc-automobile-francais-au-1er-janvier-2023?rubrique=&dossier=1348).
+
+    Nous considérons néanmoins les données pour l'année 2022 car la distance moyenne parcourue par véhicule n'est dispo que pour 2022.
+
+DT . voiture . utilisateur:
+  par défaut: "'propriétaire'"
+  question: Utilisez-vous majoritairement la même voiture pour vous déplacer ?
+  applicable si: km > 0
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - propriétaire
+        - régulier non propriétaire
+        - non régulier
+  description: |
+    Deux données sont importantes dans le cadre du calcul de l'empreinte liée à la construction :
+
+    - L'usage ou non d'un même véhicule pour tous les kilomètres parcourus (si non : on vous attribue un véhicule "moyen")
+    - La propriété ou non dudit véhicule s'il s'agit toujours du même
+
+    Nous avons fait le choix d'attribuer l'empreinte de construction au pro-rata des kilomètres parcourus. Mais cette approche avait deux défauts :
+
+    - Elle était extrêmement avantageuse pour les petits rouleurs, alors que leur véhicule qui roule moins peut s'user plus vite (un moteur a besoin de tourner régulièrement) et donc avoir une durée de vie inférieure.
+    - Elle ne permettait pas de valoriser l'engagement de ne pas disposer de son propre véhicule, et de pratiquer à la place l'autopartage, ou la location ponctuelle (car l'empreinte de construction était la même, que l'on soit propriétaire ou non).
+
+    > Pour pallier ces deux problèmes, et mieux représenter qu'un véhicule possédé mais sous-utilisé s'use plus vite et mérite une empreinte de construction plus importante, **nous appliquons un seuil pour la partie construction de l'empreinte, pour les propriétaires**.
+#  par défaut: "'régulier non propriétaire'"
+DT . voiture . utilisateur . propriétaire: ### Formulation à reprendre
+  titre: Oui et j'en suis propriétaire
+  description: Vous faites la grande majorité de vos trajets avec le véhicule que vous possédez (qu'il s'aggisse du votre ou celui de l'entreprise).
+DT . voiture . utilisateur . régulier non propriétaire:
+  titre: Oui mais ce n'est pas la mienne
+  description: Vous utilisez presque systématiquement la voiture d'un même collègue.
+DT . voiture . utilisateur . non régulier:
+  titre: Non, je change souvent (autopartage avec différents véhicules)
+  description: Vous ne disposez pas de votre propre véhicule et vous covoiturez avec les véhicules de collègues différents.
+
+DT . voiture . notif utilisateur irrégulier:
+  type: notification
+  formule:
+    toutes ces conditions:
+      - est défini: voiture . utilisateur
+      - utilisateur = 'non régulier'
+      - km > 0
+  description: |
+    Vous roulez avec des véhicules différents : nous vous avons donc attribué les caractéristiques d'une voiture "moyenne".
+
+DT . voiture . notif utilisateur jnsp:
+  type: notification
+  formule:
+    toutes ces conditions:
+      - est non défini: voiture . utilisateur
+      - km > 0
+  description: |
+    Vous avez répondu 'je ne sais pas' : nous vous avons donc attribué les caractéristiques d'un usager moyen
+
+DT . voiture . empreinte non régulier:
+  valeur: voiture . empreinte calculée
+  contexte:
+    voiture . utilisateur: "'régulier non propriétaire'"
+    voiture . gabarit: "'berline'"
+    voiture . motorisation: "'thermique'"
+    voiture . thermique . carburant: "'essence E5 ou E10'"
+    voiture . thermique . consommation aux 100:
+      valeur: voiture . thermique . consommation estimée
+      contexte:
+        voiture . utilisateur: "'régulier non propriétaire'"
+        voiture . gabarit: "'berline'"
+        voiture . motorisation: "'thermique'"
+        voiture . thermique . carburant: "'essence E5 ou E10'"
+
+# # Le bloc qui suit a 6 fois la même construction de modèle et donc la même valeur affectée à 6 variables différentes et c'est dans la formule de DT . voiture qu'on affecte la valeur au bon endroit
+# DT . voiture . empreinte DT propriétaire thermique:
+#   valeur: transport . voiture . empreinte calculée
+#   contexte:
+#     transport . voiture . km: DT . voiture . km
+#     transport . voiture . passagers: DT . voiture . voyageurs
+
+# DT . voiture . empreinte DT propriétaire hybride:
+#   valeur: transport . voiture . empreinte calculée
+#   contexte:
+#     transport . voiture . km: DT . voiture . km
+#     transport . voiture . passagers: DT . voiture . voyageurs
+
+# DT . voiture . empreinte DT propriétaire électrique:
+#   valeur: transport . voiture . empreinte calculée
+#   contexte:
+#     transport . voiture . km: DT . voiture . km
+#     transport . voiture . passagers: DT . voiture . voyageurs
+
+# DT . voiture . empreinte DT régulier non propriétaire thermique:
+#   valeur: transport . voiture . empreinte calculée
+#   contexte:
+# #    DT . voiture . présent: oui #je dois rajouter ça car on a commenté la condition "voiture . présent" en entrée de "DT . voiture". La valeur voiture . présent renvoie alors la valeur par défaut à non (ce qui ne calcule pas les km) quand bien même on sélectionne voiture comme mode de transport pendant le DT (probablement un lien avec le par défaut: non de "DT . voiture . présent" mais on laisse comme ça)
+#     transport . voiture . km: DT . voiture . km
+#     transport . voiture . passagers: DT . voiture . voyageurs
+#     transport . voiture . utilisateur: "'propriétaire'" #Nécessaire pour les variables "carburant" et "consommation aux 100" sinon ça bug avec les conditions d'entrée de ces variables
+#     transport . voiture . thermique . carburant: "'essence E5 ou E10'"
+#     transport . voiture . thermique . consommation aux 100:
+#       valeur: transport . voiture . thermique . consommation estimée
+#       contexte:
+#         transport . voiture . utilisateur: "'propriétaire'" #Nécessaire pour la variable "consommation aux 100"
+#         transport . voiture . thermique . carburant: "'essence E5 ou E10'"
+
+# DT . voiture . empreinte DT régulier non propriétaire hybride:
+#   valeur: transport . voiture . empreinte calculée
+#   contexte:
+# #    DT . voiture . présent: oui #je dois rajouter ça car on a commenté la condition "voiture . présent" en entrée de "DT . voiture". La valeur voiture . présent renvoie alors la valeur par défaut à non (ce qui ne calcule pas les km) quand bien même on sélectionne voiture comme mode de transport pendant le DT (probablement un lien avec le par défaut: non de "DT . voiture . présent" mais on laisse comme ça)
+#     transport . voiture . km: DT . voiture . km
+#     transport . voiture . passagers: DT . voiture . voyageurs
+#     transport . voiture . utilisateur: "'propriétaire'" #Nécessaire pour les variables "carburant" et "consommation aux 100" sinon ça bug avec les conditions d'entrée de ces variables
+#     transport . voiture . thermique . carburant: "'essence E5 ou E10'"
+#     transport . voiture . thermique . consommation aux 100:
+#       valeur: transport . voiture . thermique . consommation estimée
+#       contexte:
+#         transport . voiture . utilisateur: "'propriétaire'" #Nécessaire pour la variable "consommation aux 100"
+#         transport . voiture . thermique . carburant: "'essence E5 ou E10'"
+
+# DT . voiture . empreinte DT régulier non propriétaire électrique:
+#   valeur: transport . voiture . empreinte calculée
+#   contexte:
+# #    DT . voiture . présent: oui #je dois rajouter ça car on a commenté la condition "voiture . présent" en entrée de "DT . voiture". La valeur voiture . présent renvoie alors la valeur par défaut à non (ce qui ne calcule pas les km) quand bien même on sélectionne voiture comme mode de transport pendant le DT (probablement un lien avec le par défaut: non de "DT . voiture . présent" mais on laisse comme ça)
+#     transport . voiture . km: DT . voiture . km
+#     transport . voiture . passagers: DT . voiture . voyageurs
+#     transport . voiture . utilisateur: "'propriétaire'" #Nécessaire pour la variable "consommation aux 100" sinon ça bug avec les conditions d'entrée de ces variables
+#     transport . voiture . électrique . consommation aux 100:
+#       valeur: transport . voiture . électrique . consommation estimée
+#       contexte:
+#         transport . voiture . utilisateur: "'propriétaire'" #Nécessaire pour la variable "consommation aux 100"
+# # Fin du bloc
+
+### Voir si le commentaire ci-dessous est toujours vrai --> pour l'instant je laisse transport . voiture . empreinte calculée
+#Je n'arrive pas à faire fonctionner la fonction contexte en pointant sur les variables "DT . voiture . XXX". Je recalcul donc avec les variables "transport . voiture . XXX"
+DT . voiture . empreinte moyenne:
+  valeur: voiture . empreinte calculée
+  contexte:
+    voiture . utilisateur: "'propriétaire'"
+    voiture . voyageurs: 1
+    voiture . gabarit: "'berline'"
+    voiture . motorisation: "'thermique'"
+    voiture . thermique . carburant: "'essence E5 ou E10'"
+    voiture . thermique . consommation aux 100:
+      valeur: voiture . thermique . consommation estimée
+      contexte:
+        voiture . utilisateur: "'régulier non propriétaire'"
+        voiture . gabarit: "'berline'"
+        voiture . motorisation: "'thermique'"
+        voiture . thermique . carburant: "'essence E5 ou E10'"
+
+### Voir si le commentaire ci-dessous est toujours vrai --> pour l'instant je laisse transport . voiture . empreinte calculée
+#Je n'arrive pas à faire fonctionner la fonction contexte en pointant sur les variables "DT . voiture . XXX". Je recalcul donc avec les variables "transport . voiture . XXX"
+DT . voiture . empreinte par défaut:
+  valeur: voiture . empreinte calculée
+  contexte:
+    voiture . présent: oui
+    voiture . utilisateur: "'propriétaire'"
+    voiture . km: 15
+    voiture . voyageurs: 1
+    voiture . gabarit: "'berline'"
+    voiture . motorisation: "'thermique'"
+    voiture . thermique . carburant: "'essence E5 ou E10'"
+    voiture . thermique . consommation aux 100:
+      valeur: transport . voiture . thermique . consommation estimée
+      contexte:
+        voiture . utilisateur: "'propriétaire'"
+        voiture . gabarit: "'berline'"
+        voiture . motorisation: "'thermique'"
+        voiture . thermique . carburant: "'essence E5 ou E10'"
+
+DT . voiture . empreinte calculée:
+  formule: (usage + construction) / voyageurs
+  unité: kgCO2e
+
+DT . voiture . voyageurs:
+  titre: Nombre de voyageurs trajets DT
+  question: Quel est le nombre moyen de voyageurs dans la voiture lors de vos déplacements domicile-travail ?
+  applicable si:
+    toutes ces conditions:
+      - DT . voiture . présent
+      - km > 0
+  description: |
+    Indiquez le nombre moyen de personnes (vous inclus) dans la voiture lors de vos déplacements domicile-travail sur une semaine type. Si vous êtes seul(e) dans la voiture, indiquez 1. Si vous êtes 2, indiquez 2. Si il ya une personne avec vous 1 trajet sur 2 indiquez 1.5, etc...
+  plancher: 1
+  avertissement: |
+    Le nombre de voyageurs ne peut pas être nul. Au volant de votre voiture, vous en êtes le premier voyageur.
+  par défaut: 1
+  suggestions:
+    je suis seul: 1
+    Je suis tout le temps accompagné d'une personne: 2
+    Je suis accompagné sur la moitié des mes trajets: 1.5
+
+DT . voiture . notif nombreux voyageurs:
+  type: notification
+  formule:
+    toutes ces conditions:
+      - DT . voiture . voyageurs >= 3
+      - DT . voiture . voyageurs < 9
+      # C'est un hack.. On devrait avoir <= 9. Pas de notif si "9" renseigné mais au moins, la notif n'est pas présente si 12 renseigné (car derrière le 12 de l'interface, c'est bien le plafond qui est considéré dans le moteur).
+  description: |
+    > Bravo ! Vous optimisez bien vos trajets en voiture !
+
+    > Est-ce bien votre taux de remplissage moyen ? Celui-ci est malheureusement souvent surévalué.
+
+    > Pour rappel, voici les chiffres moyens en France :
+
+    - pour les trajets longs : 2,25 passagers/voiture
+    - pour les trajets courts : 1,43 passagers/voiture
+
+DT . voiture . usage:
+  titre: Usage de la voiture
+  formule: usage au kilomètre * km extrapolé
+  unité: kgCO2e
+
+DT . voiture . usage au kilomètre:
+  formule: empreinte au kilomètre + base au kilomètre
+  unité: kgCO2e/km
+
+DT . voiture . empreinte au kilomètre:
+  formule: empreinte au kilomètre calculée
+#  par défaut: empreinte au kilomètre moyenne
+#  formule:
+#    variations:
+#      - si:
+#          est défini: utilisateur
+#        alors: empreinte au kilomètre calculée
+#      - sinon: empreinte au kilomètre moyenne
+#  formule:
+#    variations:
+#      - si:
+#          est défini: utilisateur
+#        alors:
+#          variations:
+#            - si:
+#                une de ces conditions:
+#                  - utilisateur = 'propriétaire'
+#                  - utilisateur = 'régulier non propriétaire'
+#              alors: empreinte au kilomètre calculée
+#            - si: utilisateur = 'non régulier'
+#              alors: empreinte au kilomètre non régulier
+#      - sinon: empreinte au kilomètre moyenne
+#
+#DT . voiture . empreinte au kilomètre moyenne:
+#  valeur: voiture . empreinte au kilomètre calculée
+#  contexte:
+##    voiture . utilisateur: "'propriétaire'"
+#    voiture . gabarit: "'berline'"
+#    voiture . motorisation: "'thermique'"
+#    voiture . thermique . carburant: "'essence E5 ou E10'"
+#    voiture . thermique . consommation aux 100:
+#      valeur: voiture . thermique . consommation estimée
+#      contexte:
+##        voiture . utilisateur: "'propriétaire'"
+#        voiture . gabarit: "'berline'"
+#        voiture . motorisation: "'thermique'"
+#        voiture . thermique . carburant: "'essence E5 ou E10'"
+
+DT . voiture . empreinte au kilomètre calculée:
+  formule:
+    variations:
+      - si: motorisation = 'thermique'
+        alors: thermique . empreinte au kilomètre
+      - si: motorisation = 'hybride'
+        alors: thermique . empreinte au kilomètre * 0.85
+      - si: motorisation = 'électrique'
+        alors: électrique . empreinte au kilomètre
+  unité: kgCO2e/km
+  note: |
+    Pour la voiture hybride, nous n'avons pour l'instant pas utilisé les valeurs de la base bilan-GES, car elles sont compliquées à interpréter :
+      - la catégorie "hybride rechargeable" a une empreinte étonnamment faible (du niveau de l'électrique), mais surtout 0 émission à la combustion. Ce serait donc un véhicule essence qui n'utilise pas d'essence à l'usage ? [Un sujet récent] sur le forum de bilan-GES n'explique pas l'incohérence.
+      - la différence entre Hybride full Prius et Hybride full P2 n'est pas expliquée
+      - dans ces 2 catégories, il n'y a pas l'entrée de gamme.
+
+    L'étude FNH-Carbone4 pourrait être utilisée pour l'empreinte au km des véhicules hybrides rechargeables. Voici l'hypothèse structurante retenue :
+
+    > Répartition des modes de roulage (thermique / électrique) pour les hybrides : 50% / 50% en 2016
+
+    Mais on notera la controverse récente sur l'empreinte des véhicules hybrides rechargeable suite à [une étude](https://www.transportenvironment.org/press/les-hybrides-rechargeables-au-cœur-d’un-nouveau-scandale-d’émissions-des-tests-révèlent-des) de Transport & Environnement faisant état d'une empreinte réelle incomparable à l'empreinte annoncée par les constructeurs.
+
+    Nous avons donc pour l'instant retenu le calcul du calculateur MicMac qui est la base de Nos Gestes Climat, dont la source est malheureusement inaccessible :
+
+    > Hybride : enlever 15% aux consommations ci-dessus (source ADEME: http://www2.ademe.fr/servlet/KBaseShow?catid=13655)
+
+DT . voiture . motorisation:
+  question: Quelle est la motorisation de la voiture que vous allez utiliser ?
+  applicable si:
+    toutes ces conditions:
+      - est défini: utilisateur
+      - une de ces conditions:
+          - utilisateur = 'propriétaire'
+          - utilisateur = 'régulier non propriétaire'
+  #      - une de ces conditions:
+  #          - est non défini: transport . voiture . utilisateur
+  #          - transport . voiture . utilisateur = 'non régulier'
+  #          - transport . train . présent
+  #          - transport . car longue distance . présent
+  #          - transport . deux roues . présent
+  ##          - transport . taxi . présent
+  par défaut: "'thermique'"
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - thermique
+        - hybride
+        - électrique
+DT . voiture . motorisation . thermique:
+  titre: Thermique (diesel/essence/GPL)
+DT . voiture . motorisation . électrique:
+  titre: Électrique
+DT . voiture . motorisation . hybride:
+  titre: Hybride
+
+DT . voiture . thermique:
+  titre: Voiture thermique
+
+DT . voiture . thermique . empreinte au kilomètre:
+  titre: empreinte au km thermique
+  formule: consommation au kilomètre * empreinte au litre
+  note: Cette méthode de calcul, plutôt qu'un barème gabarit -> empreinte au km, permet à l'utilisateur qui connait la consommation moyenne réelle de sa voiture de la saisir pour plus de précision.
+  unité: kgCO2e/km
+
+DT . voiture . thermique . consommation au kilomètre:
+  formule: consommation aux 100 / 100 km/centkm
+  unité: l/km
+
+# Je commente car cette variable ne sert que pour le cas Q1 = covoit/autres ce qui signifie qu'on considère qu'il loue une voiture pour les trajets du DT. Et dans le cas d'une location
+# on ne veut pas questionner la consommation
+DT . voiture . thermique . consommation aux 100:
+  question: Connaissez-vous la consommation moyenne de la voiture ?
+  applicable si:
+    toutes ces conditions:
+      - DT . voiture . présent
+      - est défini: utilisateur
+      - une de ces conditions:
+          - utilisateur = 'propriétaire'
+          - utilisateur = 'régulier non propriétaire' #A voir si on ne veut pas poser cette question pour 'régulier non proprio' --> auquel cas il faudra une fonction contexte supplémentaire
+      - une de ces conditions:
+          - motorisation = 'thermique'
+          - motorisation = 'hybride'
+      - km > 0
+  # non applicable si: #On met cette condition car, sans savoir pourquoi, la question apparait alors qu'on calcule l'empreinte par défaut via le cheminement [voiture/jnsp]
+  #   toutes ces conditions:
+  #     - est non défini: voiture . présent
+  description: |
+    Si vous ne savez pas, cliquez sur _Passer la question_ et nous vous attribuerons une consommation en lien avec le gabarit
+    de la voiture que vous avez renseigné.
+  suggestions:
+    5 l/100km: 5
+    7 l/100km: 7
+    9 l/100km: 9
+  par défaut: consommation estimée
+  unité: l/centkm
+
+#  note: Les suggestions de réponse sont à la louche, à préciser et sourcer.
+#    toutes ces conditions:
+#      - km > 0
+#      - une de ces conditions:
+#          - transport . voiture . utilisateur = 'non régulier'
+#          - transport . train . présent
+#          - transport . car longue distance . présent
+#          - transport . deux roues . présent
+#          - transport . taxi . présent
+#   applicable si:
+#       une de ces conditions:
+#         - motorisation = 'thermique'
+#         - motorisation = 'hybride'
+# ### Je pense qu'on peut supprimer le bloc de conditions ci-dessous
+
+DT . voiture . thermique . consommation estimée:
+  titre: Consommation estimée voiture
+  note: |
+    > Si nous avons travaillé les propositions de consommation moyenne, l'idéal au vu de l'impact de cette donnée est bien que l'utilisateur ou l'utilisatrice saisisse sa propre consommation réelle, moyennée sur son usage.
+
+    Pour obtenir nos propositions pour les voitures individuelles, nous avons croisé deux sources de données :
+
+    - Les données moyennes de consommation des véhicules essence et diesel, [fournies par l'ADEME](https://carlabelling.ademe.fr/chiffrescles/r/evolutionConsoMoyenne)
+    - Les données des "meilleures consommations" par gabarit et par carburant, fournies par [cet article de CAROOM](https://www.caroom.fr/guide/voiture-neuve/comment-choisir/carburant/faible-consommation):
+
+    Nous n'avons pas trouvé d'autre source pour obtenir la consommation moyenne par type de véhicule. Dans l'article de CAROOM, sont donnés les chiffres des meilleures performances par véhicule:
+
+      |                  | E5 ou E10 | Diesel | % circulation |
+      |------------------|-----------|--------|---------------|
+      | Petite           | 5,07      | 3,65   | 25,29%        |
+      | Moyenne          | 4,70      | 3,75   | 10,30%        |
+      | Berline          | 4,70      | 3,75   | 49,81%        |
+      | SUV              | 5,08      | 4,14   | 14,60%        |
+      | Moyenne pondérée | 4,85      | 3,78   |               |
+
+    D'un autre côté, nous avons les données fournies par l'ADEME qui donnent des consommations moyennes de 6,8 L/100km pour une essence, 5 L/100km pour un diesel.
+    On remarque bien que les consommations moyennes calculées via les données de CAROOM (4,85 L/100km et 3,78 L/100km) sont bien plus basses que celles
+    de l'ADEME, ce sont les voitures les plus performantes.
+
+    Nous avons donc retravaillé les chiffres via un ratio (conso moyenne / conso moyenne performante) pour mettre à jour les consommations moyennes par véhicules :
+    A titre d'exemple, pour une citadine essence, on obtient le chiffre de 7,11 L/100km via la formule suivante : 5,07 / 4,85 * 6,8.
+
+    - Moyennes corrigées (et utilisées dans NGC):
+
+      |                  | E5 ou E10 | Diesel | % circulation |
+      |------------------|-----------|--------|---------------|
+      | Petite           | 7,11      | 4,83   | 25,29%        |
+      | Moyenne          | 6,59      | 4,96   | 10,30%        |
+      | Berline          | 6,59      | 4,96   | 49,81%        |
+      | SUV              | 7,13      | 5,48   | 14,60%        |
+      | Moyenne pondérée | 6,80      | 5,00   |               |
+
+    Pour les véhicules utilitaires légers, nous avons utilisé cette source :
+    - [Consommation des véhicules utilitaires légers](https://www.webfleet.com/fr_fr/webfleet/blog/consommation-utilitaire/)
+
+    > Nous avons bien noté que la consomation d'une citadine essence est plus élevée que celle d'une berline, ce qui semble contre-intuitif mais nous n'avons pas d'autres sources pour l'instant.
+
+    Enfin, pour obtenir les consommations des véhicules roulant à l'essence E85, nous avons appliqué une **surconsommation de 25%** par rapport aux véhicules essence, chiffre qui semble faire consensus.
+
+    De même, pour obtenir les consommations des véhicules roulant au GPL, nous avons appliqué une **surconsommation de 15%** par rapport aux véhicules essence, sauf pour le GPL, véhicule pour lequel nous avons déjà la données.
+  unité: l/centkm
+  formule:
+    variations:
+      - si: gabarit = 'petite'
+        alors:
+          variations:
+            - si: thermique . carburant = 'gazole B7 ou B10'
+              alors: petite diesel
+            - si: thermique . carburant = 'essence E5 ou E10'
+              alors: petite essence
+            - si: thermique . carburant = 'essence E85'
+              alors: petite essence * 1.25
+            - si: thermique . carburant = 'GPL'
+              alors: petite essence * 1.15
+      - si: gabarit = 'moyenne'
+        alors:
+          variations:
+            - si: thermique . carburant = 'gazole B7 ou B10'
+              alors: moyenne diesel
+            - si: thermique . carburant = 'essence E5 ou E10'
+              alors: moyenne essence
+            - si: thermique . carburant = 'essence E85'
+              alors: moyenne essence * 1.25
+            - si: thermique . carburant = 'GPL'
+              alors: moyenne essence * 1.15
+      - si: gabarit = 'VUL'
+        alors:
+          variations:
+            - si: thermique . carburant = 'gazole B7 ou B10'
+              alors: VUL diesel
+            - si: thermique . carburant = 'essence E5 ou E10'
+              alors: VUL essence
+            - si: thermique . carburant = 'essence E85'
+              alors: VUL essence * 1.25
+            - si: thermique . carburant = 'GPL'
+              alors: 13
+      - si: gabarit = 'berline'
+        alors:
+          variations:
+            - si: thermique . carburant = 'gazole B7 ou B10'
+              alors: moyenne diesel
+            - si: thermique . carburant = 'essence E5 ou E10'
+              alors: moyenne essence
+            - si: thermique . carburant = 'essence E85'
+              alors: moyenne essence * 1.25
+            - si: thermique . carburant = 'GPL'
+              alors: moyenne essence * 1.15
+      - si: gabarit = 'SUV'
+        alors:
+          variations:
+            - si: thermique . carburant = 'gazole B7 ou B10'
+              alors: SUV diesel
+            - si: thermique . carburant = 'essence E5 ou E10'
+              alors: SUV essence
+            - si: thermique . carburant = 'essence E85'
+              alors: SUV essence * 1.25
+            - si: thermique . carburant = 'GPL'
+              alors: SUV essence * 1.15
+
+DT . voiture . thermique . consommation estimée . petite diesel:
+  titre: Consommation moyenne petite voiture diesel
+  formule: 4.83
+  unité: l/centkm
+
+DT . voiture . thermique . consommation estimée . petite essence:
+  titre: Consommation moyenne petite voiture essence
+  formule: 7.11
+  unité: l/centkm
+
+DT . voiture . thermique . consommation estimée . moyenne diesel:
+  titre: Consommation moyenne voiture "moyenne" diesel
+  formule: 4.96
+  unité: l/centkm
+
+DT . voiture . thermique . consommation estimée . moyenne essence:
+  titre: Consommation moyenne voiture "moyenne" essence
+  formule: 6.59
+  unité: l/centkm
+
+DT . voiture . thermique . consommation estimée . VUL diesel:
+  titre: Consommation moyenne VUL diesel
+  formule: 7.7
+  unité: l/centkm
+
+DT . voiture . thermique . consommation estimée . VUL essence:
+  titre: Consommation moyenne VUL essence
+  formule: 9
+  unité: l/centkm
+
+DT . voiture . thermique . consommation estimée . SUV diesel:
+  titre: Consommation moyenne SUV diesel
+  formule: 5.48
+  unité: l/centkm
+
+DT . voiture . thermique . consommation estimée . SUV essence:
+  titre: Consommation moyenne SUV essence
+  formule: 7.13
+  unité: l/centkm
+
+DT . voiture . thermique . empreinte au litre:
+  description: |
+    Les empreintes sont disponibles de façon assez détaillée sur [la base carbone](https://bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=diesel), ici par exemple pour le "diesel". Idem pour "essence".
+    Pour les retrouver facilement, filtrez par unité "kgCO2e/litre" et par géographie "France continentale".
+
+    À noter que pour le gazole, le FE choisi est la moyenne entre le gazole B7 et le gazole B10.
+  formule:
+    variations:
+      - si: carburant = 'gazole B7 ou B10'
+        alors:
+          moyenne:
+            - 3.1 kgCO2e/l
+            - 3.04 kgCO2e/l
+      - si: carburant = 'essence E5 ou E10'
+        alors: 2.7
+      - si: carburant = 'essence E85'
+        alors: 1.11
+      - si: carburant = 'GPL'
+        alors: 1.86
+  unité: kgCO2e/l
+
+# Je commente car cette variable ne sert que pour le cas Q1 = covoit/autres ce qui signifie qu'on considère qu'il loue une voiture pour les trajets du DT. Et dans le cas d'une location
+# on ne veut pas questionner le type de carburant
+# DT . voiture . thermique . carburant:
+# #  question: Quel type de carburant la voiture consomme-t-elle ?
+# #  applicable si:
+# #    toutes ces conditions:
+# #      - km > 0
+# #      - une de ces conditions:
+# #          - transport . voiture . utilisateur = 'non régulier'
+# #          - transport . train . présent
+# #          - transport . car longue distance . présent
+# #          - transport . deux roues . présent
+# #          - transport . taxi . présent
+#   applicable si:
+#        une de ces conditions:
+#         - motorisation = 'thermique'
+#         - motorisation = 'hybride'
+# ##Je pense qu'on peut supprimer le bloc de conditions ci-dessous
+# ##  applicable si:
+# ##    toutes ces conditions:
+# ##      - est défini: utilisateur
+# ##      - une de ces conditions:
+# ##          - utilisateur = 'propriétaire'
+# ##          - utilisateur = 'régulier non propriétaire'
+# ##      - une de ces conditions:
+# ##          - motorisation = 'thermique'
+# ##          - motorisation = 'hybride'
+# ##      - km > 0
+#   description: |
+#     Pour comprendre les différents types de carburants, [cet article pédagogique](https://www.francetvinfo.fr/economie/automobile/essence/les-carburants-changent-de-nom-a-la-pompe-voici-comment-vous-y-retrouver_2967013.html) est très utile.
+
+#     [Cet article](https://www.ecologie.gouv.fr/carburants-et-combustibles-autorises-en-france) du ministère de l'Écologie explique plus en détail les carburants légaux en France.
+
+#     > Attention, si le type de carburant fait varier de façon significative l'empreinte climat au litre, la consommation en litre par 100km elle aussi varie. Veillez à saisir une consommation au litre basée sur votre moyenne réelle.
+#   par défaut: "'essence E5 ou E10'"
+# #  formule:
+# #    une possibilité:
+# #      choix obligatoire: oui
+# #      possibilités:
+# #        - gazole B7 ou B10
+# #        - essence E5 ou E10
+# #        - essence E85
+# #        - GPL
+#   note: |
+#     La domination du couple gazole-essence est écrasante [source](https://www.leprogres.fr/magazine-automobile/2021/03/27/quels-sont-les-carburants-les-plus-utilises-dans-votre-commune).
+
+#     Par contre, parmi les véhicules neufs, l'essence domine aujourd'hui.
+
+#     Le facteur d'émission associé au biocarburant E85 n'est pas représentatif des conséquences environnementales liées à l'utilisation des biocarburants.
+#     En effet, au vu des problématiques liées au changement d'affectation des sols et autres impacts environnementaux liés à la culture du maïs par exemple, les **biocarburants** ne sont pas pris en compte
+#     (le facteur d'émission de la base carbone étant particulièrement incertain). Voir nos discussions [ici](https://github.com/incubateur-ademe/nosgestesclimat/pull/1324).
+
+#     Le GPL (Gaz de Pétrole Liquéfiés) est un [résidu de l'extraction du pétrole qui était autrefois brûlé](https://fr.wikipedia.org/wiki/Gaz_de_p%C3%A9trole_liqu%C3%A9fi%C3%A9).
+#     Il a une empreinte carbone par litre moins importante que les véhicules essence ou diesel, par contre sa consommation est légèrement supérieure, ce qui compense légèrement le gain.
+#     Mais si les rejets de CO2e sont au final presque équivalents entre le GPL et les autres carburants, c'est [du côté de l'émission de particules nocives](https://agirpourlatransition.ademe.fr/particuliers/conso/conso-responsable/comment-choisir-voiture-deux-roues-moins-polluant) que le GPL est un bien meilleur élève que les autres carburants thermiques.
+
+DT . voiture . thermique . carburant:
+  question: Quel type de carburant la voiture consomme-t-elle ?
+  applicable si:
+    toutes ces conditions:
+      - DT . voiture . présent
+      - est défini: utilisateur
+      - une de ces conditions:
+          - utilisateur = 'propriétaire'
+          - utilisateur = 'régulier non propriétaire' ##A voir si on ne veut pas poser cette question pour 'régulier non proprio' --> auquel cas il faudra une fonction contexte supplémentaire
+      - une de ces conditions:
+          - motorisation = 'thermique'
+          - motorisation = 'hybride'
+      - km > 0
+  description: |
+    Pour comprendre les différents types de carburants, [cet article pédagogique](https://www.francetvinfo.fr/economie/automobile/essence/les-carburants-changent-de-nom-a-la-pompe-voici-comment-vous-y-retrouver_2967013.html) est très utile.
+
+    [Cet article](https://www.ecologie.gouv.fr/carburants-et-combustibles-autorises-en-france) du ministère de l'Écologie explique plus en détail les carburants légaux en France.
+
+    > Attention, si le type de carburant fait varier de façon significative l'empreinte climat au litre, la consommation en litre par 100km elle aussi varie. Veillez à saisir une consommation au litre basée sur votre moyenne réelle.
+
+  par défaut: "'essence E5 ou E10'"
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - gazole B7 ou B10
+        - essence E5 ou E10
+        - essence E85
+        - GPL
+  note: |
+    La domination du couple gazole-essence est écrasante [source](https://www.leprogres.fr/magazine-automobile/2021/03/27/quels-sont-les-carburants-les-plus-utilises-dans-votre-commune).
+
+    Par contre, parmi les véhicules neufs, l'essence domine aujourd'hui.
+
+    Le facteur d'émission associé au biocarburant E85 n'est pas représentatif des conséquences environnementales liées à l'utilisation des biocarburants.
+    En effet, au vu des problématiques liées au changement d'affectation des sols et autres impacts environnementaux liés à la culture du maïs par exemple, les **biocarburants** ne sont pas pris en compte
+    (le facteur d'émission de la base carbone étant particulièrement incertain). Voir nos discussions [ici](https://github.com/incubateur-ademe/nosgestesclimat/pull/1324).
+
+    Le GPL (Gaz de Pétrole Liquéfiés) est un [résidu de l'extraction du pétrole qui était autrefois brûlé](https://fr.wikipedia.org/wiki/Gaz_de_p%C3%A9trole_liqu%C3%A9fi%C3%A9).
+    Il a une empreinte carbone par litre moins importante que les véhicules essence ou diesel, par contre sa consommation est légèrement supérieure, ce qui compense légèrement le gain.
+    Mais si les rejets de CO2e sont au final presque équivalents entre le GPL et les autres carburants, c'est [du côté de l'émission de particules nocives](https://agirpourlatransition.ademe.fr/particuliers/conso/conso-responsable/comment-choisir-voiture-deux-roues-moins-polluant) que le GPL est un bien meilleur élève que les autres carburants thermiques.
+
+DT . voiture . thermique . carburant . gazole B7 ou B10:
+  titre: Gazole (B7 ou B10)
+DT . voiture . thermique . carburant . essence E5 ou E10:
+  titre: Essence (E5 ou E10)
+DT . voiture . thermique . carburant . essence E85:
+  titre: Essence E85 (biocarburants)
+DT . voiture . thermique . carburant . GPL:
+  titre: GPL (Gaz de Pétrole Liquéfiés)
+
+DT . voiture . notif carburant:
+  type: notification
+  formule: thermique . carburant = 'essence E85'
+  description: |
+    Votre véhicule roule au biocarburant : au-delà de l'empreinte carbone des biocarburants, il faut bien avoir conscience qu'ils ont une empreinte au sol : ce sol pourrait être utilisé pour faire pousser des céréales pour nous nourrir ou servir de refuges de biodiversité.
+    C'est ce qu'on appelle le "changement d'affectation des sols" ici à des fins de production de biocarburants. Malheureusement, l'impact sur le climat de ce changement d'affectation est difficile à quantifier et particulièrement incertain.
+
+    Nous avons fait le choix d'ajouter cette option dans le test, mais il faut savoir que ce résultat **n'est pas représentatif des conséquences environnementales probables liées à l'utilisation de biocarburants.**
+
+DT . voiture . électrique:
+  titre: Voiture électrique
+
+DT . voiture . électrique . empreinte au kilomètre:
+  titre: empreinte au km électrique
+  unité: kgCO2e/km
+  formule: consommation au kilomètre * logement . électricité . empreinte au kWh
+  note: |
+    Nous considérons ici le mix électrique moyen français. La majorité des possesseurs de voitures électriques rechargent leur véhicule chez eux avec une tarification heure creuses, qui est plus avantageuse financièrement et correspond d'ailleurs aux moments où la demande en électricité est moins forte et le mix électrique moins carboné (les centrales gaz ne sont pas sollicitées).
+
+DT . voiture . électrique . consommation au kilomètre:
+  formule: consommation aux 100 / 100 km/centkm
+  unité: kWh/km
+
+# # Je commente car cette variable ne sert que pour le cas Q1 = covoit/autres ce qui signifie qu'on considère qu'il loue une voiture pour les trajets du DT. Et dans le cas d'une location
+# # on ne veut pas questionner le type de carburant
+# DT . voiture . électrique . consommation aux 100:
+#   titre: Consommation électrique au km
+#   question: Connaissez-vous la consommation moyenne de la voiture ?
+# #  applicable si:
+# #    toutes ces conditions:
+# #      - km > 0
+# #      - une de ces conditions:
+# #          - transport . voiture . utilisateur = 'non régulier'
+# #          - transport . train . présent
+# #          - transport . car longue distance . présent
+# #          - transport . deux roues . présent
+# #          - transport . taxi . présent
+# #      - motorisation = 'électrique'
+#  applicable si:
+#    toutes ces conditions:
+#      - est défini: utilisateur
+#      - une de ces conditions:
+#          - utilisateur = 'propriétaire'
+#          - utilisateur = 'régulier non propriétaire'
+#      - motorisation = 'électrique'
+#      - km > 0
+#   suggestions:
+#     15 kWh/100km: 15
+#     20 kWh/100km: 20
+#     25 kWh/100km: 25
+#   par défaut: consommation estimée
+#   unité: kWh/centkm
+
+DT . voiture . électrique . consommation aux 100:
+  titre: Consommation électrique au km
+  question: Connaissez-vous la consommation moyenne de la voiture ?
+  description: |
+    Si vous ne savez pas, cliquez sur _Passer la question_ et nous vous attribuerons une consommation en lien avec le gabarit
+    de la voiture que vous avez renseigné.
+  applicable si:
+    toutes ces conditions:
+      - est défini: utilisateur
+      - une de ces conditions:
+          - utilisateur = 'propriétaire'
+          - utilisateur = 'régulier non propriétaire' #A voir si on ne veut pas poser cette question pour 'régulier non proprio' --> auquel cas il faudra une fonction contexte supplémentaire
+      - motorisation = 'électrique'
+      - km > 0
+  suggestions:
+    15 kWh/100km: 15
+    20 kWh/100km: 20
+    25 kWh/100km: 25
+  par défaut: consommation estimée
+  unité: kWh/centkm
+
+DT . voiture . électrique . consommation estimée:
+  variations:
+    - si: gabarit = 'petite'
+      alors: 15
+    - si: gabarit = 'moyenne'
+      alors: 17
+    - si: gabarit = 'berline'
+      alors: 25
+    - si: gabarit = 'SUV'
+      alors: 25
+    - si: gabarit = 'VUL'
+      alors: 25
+  unité: kWh/centkm
+  note: Données moyennes fournies par le service Transport et Mobilité de l'ADEME.
+
+DT . voiture . gabarit:
+  question: Quel est le gabarit de la voiture ?
+  applicable si:
+    toutes ces conditions:
+      - est défini: utilisateur
+      - une de ces conditions:
+          - utilisateur = 'propriétaire'
+          - utilisateur = 'régulier non propriétaire'
+  #      - une de ces conditions:
+  #          - est non défini: transport . voiture . utilisateur
+  #          - transport . voiture . utilisateur = 'non régulier'
+  #          - transport . train . présent
+  #          - transport . car longue distance . présent
+  #          - transport . deux roues . présent
+  ##          - transport . taxi . présent
+  #Je pense qu'on peut supprimer le bloc de conditions ci-dessous
+  #  applicable si:
+  #    toutes ces conditions:
+  #      - est défini: utilisateur
+  #      - une de ces conditions:
+  #          - utilisateur = 'propriétaire'
+  #          - utilisateur = 'régulier non propriétaire'
+  #      - km > 0
+  #  description: |
+  #    **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
+  #
+  #    Plus une voiture est lourde et haute donc avec une forte prise au vent, plus elle consomme donc plus elle pollue !
+  par défaut: "'berline'"
+  note: |
+    Nous considérons que la voiture par défaut est une "Berline", en témoigne [une étude menée par AAA Data](https://www.alphabet.com/fr-fr/parc-automobile-roulant-les-donnees-cles)
+    qui indique que "Si les SUV ont représenté 38 % des ventes de véhicules en 2019, ils ne représentent que 16 % de la totalité des véhicules en circulation, loin derrière les berlines qui comptent pour 58 %, soit 23 millions de véhicules."
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - petite
+        - moyenne
+        - VUL
+        - berline
+        - SUV
+
+DT . voiture . gabarit . petite:
+  titre: Petite
+  description: Citadine type Zoé, Fiat 500
+DT . voiture . gabarit . moyenne:
+  titre: Moyenne
+  description: Modèle au dessus de la petite citadine, type Mégane, Golf
+DT . voiture . gabarit . VUL:
+  titre: Véhicule utilitaire
+  description: Camionette de type Kangoo ou Partner jusqu'au Trafic et Vito
+DT . voiture . gabarit . berline:
+  titre: Berline
+  description: Une voiture longue, type 308, Tesla Model 3, Audi A3
+DT . voiture . gabarit . SUV:
+  titre: SUV
+  description: |
+    "Sport utility vehicle", type 4x4 urbain
+
+DT . voiture . gabarit . petite . poids:
+  formule: 1000
+  unité: kg
+  note: Les valeurs de poids sont tirées du simulateur [carculator](https://carculator.readthedocs.io/en/latest/modeling.html#size-classes) qui utilise le papier [Cost and well-to-wheel implications of the vehicle fleet CO2 emission regulation in the European Union, Christian and others, 2014](https://www.sciencedirect.com/science/article/abs/pii/S0965856414000494?via%3Dihub)
+
+DT . voiture . gabarit . moyenne . poids:
+  formule: 1500
+  unité: kg
+  note: Les valeurs de poids sont tirées du simulateur [carculator](https://carculator.readthedocs.io/en/latest/modeling.html#size-classes) qui utilise le papier [Cost and well-to-wheel implications of the vehicle fleet CO2 emission regulation in the European Union, Christian and others, 2014](https://www.sciencedirect.com/science/article/abs/pii/S0965856414000494?via%3Dihub)
+
+DT . voiture . gabarit . VUL . poids:
+  formule: 1750
+  unité: kg
+  note: Les valeurs de poids sont tirées du simulateur [carculator](https://carculator.readthedocs.io/en/latest/modeling.html#size-classes) qui utilise le papier [Cost and well-to-wheel implications of the vehicle fleet CO2 emission regulation in the European Union, Christian and others, 2014](https://www.sciencedirect.com/science/article/abs/pii/S0965856414000494?via%3Dihub)
+
+DT . voiture . gabarit . berline . poids:
+  formule: 1750
+  unité: kg
+  note: Les valeurs de poids sont tirées du simulateur [carculator](https://carculator.readthedocs.io/en/latest/modeling.html#size-classes) qui utilise le papier [Cost and well-to-wheel implications of the vehicle fleet CO2 emission regulation in the European Union, Christian and others, 2014](https://www.sciencedirect.com/science/article/abs/pii/S0965856414000494?via%3Dihub)
+
+DT . voiture . gabarit . SUV . poids:
+  formule: 2000
+  unité: kg
+  note: Les valeurs de poids sont tirées du simulateur [carculator](https://carculator.readthedocs.io/en/latest/modeling.html#size-classes) qui utilise le papier [Cost and well-to-wheel implications of the vehicle fleet CO2 emission regulation in the European Union, Christian and others, 2014](https://www.sciencedirect.com/science/article/abs/pii/S0965856414000494?via%3Dihub)
+
+DT . voiture . base au kilomètre:
+  applicable si:
+    une de ces conditions:
+      - est défini: utilisateur
+      - une de ces conditions:
+          - utilisateur = 'propriétaire'
+          - utilisateur = 'régulier non propriétaire'
+  #       - transport . voiture . utilisateur = 'non régulier'
+  #       - transport . train . présent
+  #       # - transport . car longue distance . présent
+  #       - transport . deux roues . présent
+  # #      - transport . taxi . présent
+  titre: Entretien et climatisation au kilomètre
+  formule: entretien pondéré + climatisation
+  unité: kgCO2e/km
+
+DT . voiture . entretien pondéré:
+  formule:
+    variations:
+      - si: motorisation = 'thermique'
+        alors: entretien
+      - si: motorisation = 'hybride'
+        alors: entretien * 0.90
+      - si: motorisation = 'électrique'
+        alors: entretien * 0.75
+  unité: kgCO2e/km
+  note: |
+    Plusieurs sources s'accordent pour dire que l'entretien d'un véhicule électrique est inférieur à celui d'un véhicule thermique de 25%. Comme [celle-ci](https://izi-by-edf.fr/blog/voiture-hybride-entretien/).
+
+    Pour ce qui est d'un véhicule hybride, son entretien se situe entre celui d'un véhicule électrique et celui d'un véhicule thermique. Cela dépend de l'utilisation du moteur électrique ou thermique.
+    Nous choisissons de partir sur une hypothèse conservatrice de -10% de coût d'entretien par rapport aux véhicules thermiques.
+
+DT . voiture . entretien:
+  formule: ((empreinte branche . G45 * 1000000 kgCO2e/ktCO2e * 0.07) / nombre véhicules circulation) / DT . voiture . km annuels moyen
+  unité: kgCO2e/km
+  note: |
+    Dans le poste G45, nous prenons la part Entretien et réparation de véhicules automobiles (7%).
+    Nous le divisons par le nombre de véhicules en circulation, puis par 12200 km (la moyenne de km effectués par véhicule) pour obtenir une empreinte en kgCO2e / km.
+
+DT . voiture . climatisation:
+  formule: (émissions gaz fluorés transport / nombre véhicules circulation) / DT . voiture . km annuels moyen
+  unité: kgCO2e/km
+  note: |
+    L'idée ici est de prendre en compte une part des émissions liées aux gaz fluorés issus des climatisations des véhicules
+    en France via le total des émissions dues à ces gaz sur le secteur du transport (voitures et VUL diesel, essence, GNV, GPL, électrique).
+
+DT . voiture . climatisation . émissions gaz fluorés transport:
+  titre: Emissions nationales dûes aux climatisations des voitures et VUL
+  formule: 1374000000
+  unité: kgCO2e
+  note: |
+    Ce chiffre provient de l'étude [SECTEN](https://www.citepa.org/fr/secten/) (le rapport de référence sur les émissions de gaz à effet de serre et de polluants atmosphériques en France).
+
+    D'après l'excel [Données par substance de gaz à effet de serre (GES) édition 2023, onglet "GF-UE_total"](https://www.citepa.org/wp-content/uploads/publications/secten/2023/Citepa_gaz_a_effet_de_serre_v2.zip),
+    les émissions de gaz fluorés pour le secteur du transport (provenant des équipements de réfrigération et d'air conditionné, utilisant des halocarbures ou du SF6), sont de 1374 ktCO₂e.
+
+DT . voiture . construction:
+  titre: Construction de la voiture
+  formule: construction au kilomètre * km
+  unité: kgCO2e
+  note: |
+    Pour le moment, nous ne considérons pas l'amortissement complet d'une voiture (c'est-à-dire que nous n'avons pas l'info de l'âge ou le kilométrage complet de la voiture donc sa contruction ne sera jamais nulle).
+  # Nous pourrions utiliser ici le mécanisme `plancher` avec pour valeur "construction au kilomètre * seuil km"
+  # mais il est plus simple ici de comprendre la méhotodo avec `variations`.
+
+#DT . voiture . construction . seuil km:
+#  formule: voiture . durée de vie en km / durée de vie moyenne
+#  plafond: voiture . km annuels moyen
+#  unité: km
+
+#DT . voiture . durée de vie moyenne:
+#  formule: 20
+#  note: |
+#    On considère que l'âge moyen d'une voiture qui part à la casse est de 20 ans. Néanmoins, c'est une hypothèse forte car on peut légitimement penser qu'une voiture électrique possède une durée de vie plus longue qu'une voiture thermique. Il faudrait cependant considérer une valeur plus importante également pour la durée de vie en km.
+
+DT . voiture . construction au kilomètre:
+  formule: barème construction * amortissement
+  unité: kgCO2e/km
+
+DT . voiture . barème construction:
+  formule:
+    variations:
+      - si: motorisation = 'thermique'
+        alors: barème thermique
+      - si: motorisation = 'électrique'
+        alors: barème électrique
+      - si: motorisation = 'hybride'
+        alors: barème hybride
+  unité: kgCO2e
+  description: |
+    ![](https://i.imgur.com/uIlZcEjl.jpg)
+
+    Une voiture est un gros, très gros objet, qui pèse souvent plus d'une tonne et demie. En conséquence, sa construction a une empreinte importante.
+
+    En particulier, la construction d'une voiture électrique de gamme équivalente à une thermique émet plus de gaz à effet de serre. C'est notamment dû à la batterie et son poids important.
+
+    Malgré cela, en France, sur la durée de vie de la voiture et donc les km parcourus, le choix de la voiture électrique est nettement mieux pour le climat.
+
+    Mieux, mais loin d'être faible ! Aujourd'hui, il ne s'agit plus seulement de comparer des solutions techniques entre elles, il s'agit d'évaluer ses achats par rapport aux objectifs climat.
+
+  note: |
+    Les données autour des émissions liées à la fabrication de véhicules sont nombreuses et variées. La première approche utilisait l'étude [FNH-Carbone4](https://github.com/betagouv/ecolab-data/files/5945898/vehicule_electrique_rapport.pdf) qui propose des facteurs d'émissions pour la construction pour 2 gabarits, en distinguant les véhicules thermiques, électriques et hybrides. Certaines données pour le véhicules paraissaient incohérentes, et nous avions besoin, d'un point de vue méthodologique, de plus de finesse dans le calcul de l'empreinte des véhicules électriques.
+
+    C'est pouquoi, désormais, nous adoptons l'approche suivante:
+
+    - Pour les véhicules thermiques, nous utilisons les données de la Base Empreinte de l'ADEME donnant une valeur de 4,5 kgCO2e/kg pour la construction d'une voiture. Nous appliquons ce facteur à la masse de la voiture pour obtenir l'empreinte de la construction, masse étant déterminée par le gabarit du véhicule.
+    - Pour les véhicules électriques, nous calculons l'empreinte de la batterie en fonction de sa capacité, puis nous ajoutons l'empreinte de la construction d'une voiture thermique de gamme équivalente.
+    - Pour les véhicules hybrides, nous utilisons les mêmes données que pour les véhicules électriques (hypothèse forte, voir note sur le barème hybride).
+
+DT . voiture . barème construction . barème thermique:
+  formule:
+    variations:
+      - si: gabarit = 'petite'
+        alors: empreinte par kg * gabarit . petite . poids
+      - si: gabarit = 'moyenne'
+        alors: empreinte par kg * gabarit . moyenne . poids
+      - si: gabarit = 'VUL'
+        alors: empreinte par kg * gabarit . VUL . poids
+      - si: gabarit = 'berline'
+        alors: empreinte par kg * gabarit . berline . poids
+      - si: gabarit = 'SUV'
+        alors: empreinte par kg * gabarit . SUV . poids
+  unité: kgCO2e
+
+DT . voiture . barème construction . barème thermique . empreinte par kg:
+  formule: 4.5
+  unité: kgCO2e/kg
+  note: Facteur d'émission issu de la Base Empreinte.
+
+DT . voiture . barème construction . barème électrique:
+  formule: barème thermique + batterie
+  unité: kgCO2e
+  note: |
+    La construction d'une voiture électrique émet plus de gaz à effet de serre qu'une voiture thermique de gamme équivalente.
+    Cela est dû à la production de la batterie, qui est très énergivore et à une empreinte carbone importante.
+
+    > Ce surplus d'émissions est d'environ +50% (mais varie d'environ +20% à plus d'une multiplication par 2 selon les études).
+    https://bonpote.com/la-voiture-electrique-solution-ideale-pour-le-climat/
+
+DT . voiture . barème construction . barème électrique . batterie:
+  formule: capacité * barème construction . batterie . empreinte par kWh
+  unité: kgCO2e
+  note: |
+    L'empreinte carbone d'une batterie augmente avec sa capacité, car une capacité plus élevée nécessite l'utilisation d'un plus grand nombre de cellules lithium-ion.
+
+    La capacité de la batterie est exprimée en kWh, elle peut varier considérablement selon les modèles de voitures électriques.
+    Pour réduire l'impact de la voiture électrique il faut privilégier les modèles avec une batterie de petite capacité.
+
+DT . voiture . barème construction . barème électrique . batterie . capacité:
+  applicable si:
+    toutes ces conditions:
+      #      - est défini: utilisateur
+      - motorisation = 'électrique'
+  description: |
+    La capacité de la batterie est exprimée en kWh, elle varie considérablement selon les modèles de véhicules.
+
+    Les constructeurs distinguent parfois une capacité brute et une capacité nette, réellement disponible. Si vous avez les deux valeurs, choisissez la capacité brute.
+  unité: kWh
+  par défaut:
+    variations:
+      - si:
+          une de ces conditions:
+            - gabarit = 'petite'
+            - gabarit = 'moyenne'
+        alors: 40
+      - si:
+          une de ces conditions:
+            - gabarit = 'berline'
+            - gabarit = 'SUV'
+            - gabarit = 'VUL'
+        alors: 65
+  suggestions:
+    petite autonomie: 40
+    autonomie moyenne: 65
+    grande autonomie: 100
+
+DT . voiture . barème construction . barème hybride:
+  formule: barème thermique + batterie
+  unité: kgCO2e
+  note: |
+    On fait l'hypothèse forte que la construction d'un véhicule hybride correspond à l'empreinte d'un véhicule électrique équipé d'une petite batterie. Néanmoins, le calcul est plus complexe, notamment car le type de véhicule hybride (rechargeable ou non) sur la composition de la voiture. On a également 2 moteurs...
+
+DT . voiture . barème construction . barème hybride . batterie:
+  formule: capacité * barème construction . batterie . empreinte par kWh
+  unité: kgCO2e
+
+DT . voiture . barème construction . barème hybride . capacité:
+  valeur: 40
+  unité: kWh
+
+DT . voiture . barème construction . batterie:
+DT . voiture . barème construction . batterie . empreinte par kWh:
+  formule: 100
+  unité: kgCO2e/kWh
+  note: |
+    Les études académiques sur l'empreinte carbone des batteries des véhicules électriques sont nombreuses, mais leurs résultats sont très variables.
+
+    Les valeurs varient de 60 kgCO2e/kWh à 150 kgCO2e/kWh. Une [méta-étude de l'IFPEN](https://www.sciencedirect.com/science/article/abs/pii/S0959652622006291)
+    (Institut Français du Pétrole et des Énergies Nouvelles) calcule une valeur médiane de 83 kgCO2e/kWh, en précisant que les résultats différent selons les chimies de batteries,
+    les pays de productions, le pays des auteurs de l'étude, et que même ces facteurs intégrés il reste une grande variabilité des résultats.
+
+    Compte tenu de l'incertitude et des variations observées dans les études, nous adoptons une valeur prudente de 100 kgCO2e/kWh pour l'empreinte carbone des batteries.
+
+    [Étude Carbone 4 sur l'empreinte des batteries (en)](https://www.carbone4.com/publication-liion-battery-carbon-footprint)
+
+DT . voiture . amortissement:
+  description: |
+    Les discussions ont été animées sur l'amortissement de la voiture. Précédemment, dans le but de décourager l'achat neuf, un amortissement non linéaire avait été imaginé, fortement dégressif dans le temps, sur 10 ans.
+    Cet amortissement non linéaire avait le mérite de décourager l'achat, et de bien faire comprendre à l'utilisateur qu'une grande partie de l'empreinte du véhicule est liée à sa production, donc à l'achat neuf.
+
+    Mais cet amortissement non linéaire n'était pas évident à comprendre pour les utilisateurs, et manquait son objectif pédagogique.
+    Par ailleurs, il occasionnait un double-discours dans Nos Gestes Climat, car dans les actions proposées aux propriétaires de voitures, nous proposons l'achat d'un véhicule électrique, or celui-ci est fortement pénalisant s'il est acheté neuf dans l'empreinte carbone individuelle.
+
+    Enfin, il était, dans le simulateur Nos Gestes Climat, une exception : tous les autres biens amortis le sont de manière linéaire (l'empreinte de construction est divisée par la durée de vie du bien).
+
+    Nous avions donc fait le choix de revenir pour la voiture à un amortissement linéaire sur la durée de vie de la voiture, une durée de vie en années.
+
+    Mais ce fonctionnement ne nous convenait toujours pas : en effet, elle pénalisait beaucoup les petits rouleurs, et ne paraissait pas très juste par rapport à la réalité d'un véhicule, dont la durée de vie s'exprime plutôt en km.
+
+    C'est donc, finalement, ce choix-là que nous avons fait : l'amortissement du véhicule est fonction du nombre de km parcourus, au regard du nombre de km maximal correspondant au gabarit du véhicule.
+  formule: 1 / durée de vie en km
+
+DT . voiture . durée de vie en km:
+  formule:
+    variations:
+      - si: gabarit = 'petite'
+        alors: 150000
+      - si:
+          une de ces conditions:
+            - gabarit = 'moyenne'
+            - gabarit = 'berline'
+        alors: 225000
+      - sinon: 270000
+  unité: km
+  note: |
+    Nous nous appuyons sur le référentiel (durée de vie, kilométrage) que reprend la [plateforme automobile de préconisations européennes](https://pfa-auto.fr/wp-content/uploads/2023/04/DT_Me%CC%81thodologie_2023_V15_FRANCAIS.pdf), avec les segments suivants :
+
+    - Gabarit "petit" : correspondant au segment A, soit 150000 km
+    - Gabarit "moyen" : correspondant au segment B ou C, soit 225000 km
+    - Gabarit "VUL" : correspondant au segment CDV (Car-Derived Vehicle), soit 270000 km
+    - Gabarit "berline" : correspondant au segment B ou C, soit 225000 km
+    - Gabarit "SUV" : correspondant au segment E ou F, soit 270000 km
+
+    Pour le moment, nous ne faisons pas la différence entre thermique et électrique. C'est une hypothèse très forte.*
+
+### Deux roues ###
+# Poser une question sur la motorisation élec ou thermique si un FE moto/élec existe --< à importer
+
+DT . deux roues . présent:
+  question: Utilisez-vous un deux roues pendant lors de vos déplacements domicile-travail ?
+  par défaut: non
+
+DT . deux roues:
+  applicable si: DT . deux roues . présent
+  titre: Deux roues motorisés
+  icônes: 🛵🏍️
+  formule:
+    variations:
+      - si: km = 0
+        alors: 0
+      - sinon:
+          variations:
+            - si:
+                toutes ces conditions:
+                  - est défini: transport . deux roues . type
+                  - DT . deux roues . présent = oui
+                  - une de ces conditions:
+                      - transport . deux roues . type = 'moto inf 250'
+                      - transport . deux roues . type = 'moto sup 250'
+              alors: empreinte DT deux roues possédé
+            - si: DT . deux roues . présent = oui
+              alors: empreinte
+            - sinon: empreinte moyenne
+  unité: kgCO2e
+
+#DT . deux roues . usager:
+#  question: Utilisez-vous un scooter ou une moto ?
+#  description: |
+#    Les scooters et motos sont aujourd'hui très majoritairement des engins qui fonctionnent au pétrole. Les scooters électriques ayant fait une réelle percée, ils sont ajoutés au modèle.
+
+DT . deux roues . passagers:
+  question: Combien de personnes voyagent avec vous en moyenne sur votre deux-roues lors de vos déplacements domicile-travail ?
+  description: |
+    Indiquez le nombre moyen de personnes (y compris vous-même) voyageant sur votre deux-roues lors de vos déplacements domicile-travail. 
+
+    Si vous voyagez tout le temps seul, indiquez 1. 
+
+    Si vous prenez souvent un passager, indiquez un nombre décimal (1.5 si vous le prenez 1 trajet sur 2).
+
+    Si vous êtes toujours accompagné(e), indiquez 2.
+  par défaut: 1
+  plancher: 1
+  unicongéé: personne
+
+DT . deux roues . empreinte:
+  icônes: 🛵
+  formule: (empreinte au km + entretien pondéré) * km extrapolé  / passagers
+  unité: kgCO2e
+
+DT . deux roues . empreinte DT deux roues possédé:
+  valeur: transport . deux roues . empreinte
+  contexte:
+    transport . deux roues . km: DT . deux roues . km
+
+DT . deux roues . empreinte moyenne:
+  valeur: DT . deux roues . empreinte
+  contexte:
+    #    DT . deux roues . présent: oui
+    deux roues . type: "'moto sup 250'"
+    deux roues . km: 15
+
+DT . deux roues . km:
+  applicable si: présent
+  question: Combien de km parcourez-vous chaque jour en deux roues pour vos déplacements domicile-travail ?
+  par défaut: 15
+  plancher: 0
+  unité: km/jour
+  suggestions:
+    10km: 10
+    15km: 15
+    25km: 25
+    50km: 50
+
+DT . deux roues . km extrapolé:
+  formule: km * ( 253 - DT . congé - ( 52 - DT . congé / 5 ) * DT . TT )
+  note: |
+    On a 253 jours ouvrés dans l'année on retranche les jours de congés posés, ensuite on convertit en jours par an les jours de TT qui sont en jours par semaine en ne considérant que les semaines travaillées (52 - congés/5)
+
+DT . deux roues . type:
+  applicable si: #On pose cette question uniquement si Q1 transport (aller-retour) un utilisateur renseigne un deux roues de "petite cylindrée" (i.e = scooter) ou pas de deux roues dans la combinaison de transport
+    une de ces conditions:
+      - toutes ces conditions:
+          - transport . deux roues . présent = non
+          - DT . deux roues . présent = oui
+  question: Quelle est la motorisation du deux roues que vous utilisez ?
+  par défaut: "'scooter thermique0'"
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - scooter électrique
+        - scooter thermique
+        - moto inf 250
+        - moto sup 250
+  note: |
+    Le parc des deux-roues motorisés se divise en [3 catégories](https://www.inserr.fr/sites/default/files/public/7-parc_de_vehicules_en_circulation_0.pdf).
+    - Les cyclomoteurs (moins de 50 cm³) : 17,00 % du parc
+    - Les motocyclettes légères (50 à 125 cm³) : 26,00 % du parc
+    - Les motocyclettes lourdes (plus de 125 cm³) : 56,00 % du parc
+
+DT . deux roues . type . scooter électrique:
+  titre: Électrique
+DT . deux roues . type . scooter thermique:
+  titre: 50 cm³
+DT . deux roues . type . moto inf 250:
+  titre: Moins de 250 cm³
+DT . deux roues . type . moto sup 250:
+  titre: Plus de 250 cm³
+
+DT . deux roues . empreinte au km:
+  unité: kgCO2e/km
+  formule:
+    variations:
+      - si: type = 'scooter thermique'
+        alors: 0.0763 kgCO2e/km
+      - si: type = 'scooter électrique'
+        alors: 0.0154 kgCO2e/km
+      - si: type = 'moto inf 250'
+        alors: 0.0763 kgCO2e/km
+      - si: type = 'moto sup 250'
+        alors: 0.191 kgCO2e/km
+  note: |
+    Cyclomoteur - Mixte - 2018 ; 76,3 gCO2e/km/personne ; calculs ADEME à partir d'HBEFA (2020)
+    Scooter électrique : 30 gCO2e/km/personne ; étude "Assessing the Environmental Performance of New Mobility" de l'International Transport Forum. [Excel disponible ici](https://www.itf-oecd.org/good-to-go-environmental-performance-new-mobility)
+    Scooter électrique : FE retravaillé depuis l'étude "Assessing the Environmental Performance of New Mobility" de l'International Transport Forum. [Excel disponible ici](https://www.itf-oecd.org/good-to-go-environmental-performance-new-mobility):
+      - Modification du mix électrique considéré pour prendre en compte le mix français en compte du mix électrique  
+      - On considère l'usager non propriétaire (= autopartage) -> FE _Shared e-scooter (new generation)_. Ce FE est très émissif car :
+        - la fabrication de ces scooters est beaucoup plus émissive car ils sont beaucoup plus lourd que leur équivalent non partagés (25 kg contre 11 kg)
+        - le nombre de km roulés sur l'ensemble du cycle de vie est très faible (5700 km)
+        - les services opérationnels des systèmes d'autopartage représentent plus du quart de l'empreinte du FE
+      Avec cette méthodologie on obtient un FE de 91 gCO2e/km/personne,
+      Cependant cette valeur découle de choix conservateurs, on utilisera un FE issu d'un ACV de scooter électriques en autopartage YEGO, réalisé par ECOACT, qui prend un perimètre "cradle to grave". Etude : https://eco-act.com/case-study/yego-measures-the-environmental-impact-of-its-scooters-through-life-cycle-assessment/?utm_source=chatgpt.com
+      Le FE issu de cette étude est de 15,4gCO2e/km/personnne.
+      Moto =< 250 cm3 - Mixte - 2018 ; 76,3 gCO2e/km/personne ; calculs ADEME à partir d'HBEFA (2020)
+      Moto > 250 cm3 - Mixte - 2018 ; 191 gCO2e/km/personne ; calculs ADEME à partir d'HBEFA (2020)
+      Les chiffres ci-dessus incluent la fabrication du véhicule, contrairement aux données précédentes (2021).
+
+DT . deux roues . entretien pondéré:
+  formule:
+    variations:
+      - si: type = 'scooter électrique'
+        alors: entretien * 0.75
+      - sinon: entretien
+  unité: kgCO2e/km
+  note: Nous choisissons de pondérer l'entretien des scooters électriques par le même facteur qui réduit celui des véhicules électriques par rapport aux véhicules thermiques.
+
+DT . deux roues . entretien:
+  formule: empreinte branche . G45 * 1000000 kgCO2e/ktCO2e * 0.02 * 0.07 / ( 0.68 + 0.07 ) / nombre deux roues circulation / km annuels moyen
+  unité: kgCO2e/km
+  note: |
+    Dans le poste G45, nous proratisons le poste Commerce et réparation de motocycles (2%) sur le même rapport que les voitures pour extraire l'entretien de ce poste comprenant également le commerce.
+    Nous le divisons par le nombre de véhicules en circulation, puis par 3000 km (la moyenne de km effectués par véhicule) pour obtenir une empreinte en kgCO2e / km.
+
+DT . deux roues . nombre deux roues circulation:
+  formule: 2700000
+  note: Le nombre de deux-roues en circulation en 2020, stable, est de [2,7 millions](https://www.onisr.securite-routiere.gouv.fr/etudes-et-recherches/vehicules/parc-des-vehicules/le-parc-deux-roues-motorises-des-menages)
+
+#DT . deux roues . pourcentage motards:
+#  formule: nombre deux roues circulation / population
+
+DT . deux roues . km annuels moyen:
+  formule: 3000
+  unité: km
+  note: |
+    Source pour les km annuels moyens : [datalab ministère écologie 2019](https://www.statistiques.developpement-durable.gouv.fr/bilan-annuel-des-transports-en-2019-0), figure G1-1.
+
+### Taxi ###
+
+DT . taxi . présent:
+  question: Allez-vous utiliser un taxi pour vous déplacer pendant votre DT ?
+  par défaut: non
+
+DT . taxi:
+  applicable si: DT . taxi . présent
+  titre: Taxi
+  icônes: 🚕
+  formule: heures * impact par heure
+
+DT . taxi . heures:
+  question: Combien d'heures allez vous parcourir en taxi pour aller et revenir de votre lieu de DT ?
+  description: |
+    Si vous y passez une demi-heure renseignez 0.5. Pour 15 minutes renseignez 0.25 et ainsi de suite.
+    Ne prenez pas en compte le temps d'attente.
+  suggestions:
+    15 min: 0.25
+    30 min: 0.5
+  unité: h
+  plancher: 0
+  par défaut: 0.25
+
+DT . taxi . impact par heure:
+  formule: 5.7
+  unité: kgCO2e/h
+  note: |
+    On considère que le temps passé dans un taxi est proportionnel à la distance parcourue.
+    On considère un taxi fonctionnant au gazole et roulant à une vitesse moyenne de 30km/h, en supposant qu'il roule à la fois en ville et sur des axes plus rapides.
+    On utilise le FE suivant : [Voiture/Motorisation gazole/2023](https://base-empreinte.ademe.fr/donnees/jeu-donnees/f1f98cd7-362f-3e73-b4c0-3b3ff2850806/0/false/null) qui est de 0.190kgCO2e/km 
+    On considère que le taxi est occupé par un seul passager, on alloue donc toutes les émissions au passager.
+    On ne prend pas en compte les émissions liées à la venue du taxi jusqu'au point de prise en charge du passager, ni les émissions liées à la fin de course (retour à la base ou à un autre point de prise en charge).
+    On utilise la formule suivante : 0.190kgCO2e/km * 30km/h = 5.7kgCO2e/h
+
+### Transport en commun ###
+DT . transports commun . présent:
+  question: Utilisez-vous les transports en commun pour vous déplacer pour vos déplacements domicile-travail ?
+  par défaut: non
+
+DT . transports commun:
+  # Cette variable "intermédiaire" est un hack pour réussir à mettre une mosaique fille après une mosaique mère (même si le choix mobilité douce n'est pas à l'heure actuelle proposé dans la mosaique mère)
+  applicable si: DT . transports commun . présent
+  titre: Transports en commun
+  icônes: 🚋
+  formule: DT . transports commun . type * 1
+
+DT . transports commun . type:
+  applicable si: DT . transports commun . présent
+  titre: Transports en commun
+  mosaique:
+    type: selection
+    options:
+      - bus . présent
+      #      - car . présent
+      - métro ou tram . présent
+    suggestions:
+      aucun:
+        bus . présent: non
+        #        car . présent: non
+        métro ou tram . présent: non
+  question: Quel type de transport en commun utilisez-vous pour vos déplacements domicile-travail ?
+  icônes: 🚋
+  formule:
+    somme:
+      - bus
+      #      - car
+      - métro ou tram
+
+DT . transports commun . type . bus:
+  titre: Bus
+  icônes: 🚌
+  description: |
+    Transport urbain.
+  # Je commente la veille formule (avec le hack) pour garder trace et je reprends la formule ici de NGE.
+  formule:
+    variations:
+      - si:
+          est défini: DT . transports commun . type . bus . présent
+        alors: empreinte
+      - sinon: empreinte par défaut
+#  formule:
+#    variations:
+#      - si:
+#          est défini: bus . présent
+#        alors:
+#          # This is a hack to make sure all branch is not desactivated: we need to have the value in a `somme`, if not, the value applicability is spread to the parent and all branch is desactivated.
+#          somme:
+#            - empreinte
+#      - sinon: empreinte par défaut
+
+DT . transports commun . type . bus . empreinte:
+  formule: heures extrapolée * impact par heure
+  unité: kgCO2e
+
+DT . transports commun . type . bus . empreinte par défaut:
+  valeur: bus . empreinte
+  contexte:
+    bus . présent: oui
+    bus . heures: 0.5
+  note: la valeur de 30 min de temps de trajet par défaut n'est pas sourcée mais semble toutefois cohérente.
+
+DT . transports commun . type . bus . présent:
+  question: Utilisez-vous le bus pour vos déplacements domicile-travail ?
+  par défaut: non
+
+DT . transports commun . type . bus . impact par heure:
+  #On ne peut malheureusement pas simplifier et renvoyer vers la même variable dans "transports commun.publicodes" du fait de conditions "applicable si" au sein de ce fichier --> on reprend donc les variables "impact par km" et "vitesse"
+  formule: impact par km * vitesse
+  unité: kgCO2e/h
+  description: |
+    Sur la base de 113 gCO2e/(passager.km) et de 12 km/h de vitesse moyenne
+
+DT . transports commun . type . bus . impact par km:
+  formule: 0.113
+  unité: kgCO2e/km
+  note: |
+    Autobus - Gazole ; 113 gCO2e/km/personne ; Base Carbone consultée le 04/04/2022
+    La flotte étant majoritairement Diesel en France (https://www.statistiques.developpement-durable.gouv.fr/69-000-autocars-en-circulation-au-1er-janvier-2020), on fait le choix de prendre ce FE (plus fiable que la référence "Autobus moyen" selon la base carbone)
+    La prise compte des autres motorisations de cette catégorie de la base carbone fera diminuer ce FE (en pondérant selon les caractéristiques de la flotte française). (Ex: Autobus - électrique = 21.7 gCO2e/km/personne)
+
+DT . transports commun . type . bus . vitesse:
+  formule: 12
+  unité: km/h
+  note: Hypothèse de 12 km/h de vitesse moyenne d'après [cet article](https://www.lemonde.fr/blog/transports/2013/03/11/les-petits-secrets-de-la-ratp-reveles-au-public/) sur la RATP)
+
+DT . transports commun . type . bus . heures:
+  applicable si: DT . transports commun . type . bus . présent
+  question: Combien d'heures passez-vous en bus par jour pendant vos déplacements domicile-travail ?
+  suggestions:
+    15 min: 0.25
+    30 min: 0.5
+    1h: 1
+  unité: h/jour
+  par défaut: 0.5
+
+DT . transports commun . type . bus . heures extrapolée:
+  formule: heures * ( 253 - DT . congé - ( 52 - DT . congé / 5 ) * DT . TT )
+  note: |
+    On a 253 jours ouvrés dans l'année on retranche les jours de congés posés, ensuite on convertit en jours par an les jours de TT qui sont en jours par semaine en ne considérant que les semaines travaillées (52 - congés/5)
+
+# On commente l'option Autocar pour ne garder que Bus urbain et métro/tramway dans DT/transport en commun
+#DT . transports commun . type . car:
+#  titre: Autocar
+#  description: Transport interurbain.
+#  icônes: 🚌
+## Je commente la veille formule (avec le hack) pour garder trace et je reprends la formule ici de NGE.
+#  formule:
+#    variations:
+#      - si:
+#          est défini: DT . transports commun . type . car . présent
+#        alors: empreinte
+#      - sinon: empreinte par défaut
+##  formule:
+##    variations:
+##      - si:
+##          est défini: car . présent
+##        alors:
+##          # This is a hack to make sure all branch is not desactivated: we need to have the value in a `somme`, if not, the value applicability is spread to the parent and all branch is desactivated.
+##          somme:
+##            - empreinte
+##      - sinon: empreinte par défaut
+#
+#DT . transports commun . type . car . empreinte:
+##On ne peut malheureusement pas simplifier et renvoyer vers la même variable dans "transports commun.publicodes" du fait de conditions "applicable si" au sein de ce fichier --> on reprend donc la variables "impact par km"
+#  formule: km * impact par km
+#  unité: kgCO2e
+#
+#DT . transports commun . type . car . empreinte par défaut:
+#  valeur: car . empreinte
+#  contexte:
+#    car . présent: oui
+#    car . km: 15
+#  note: la valeur de 15 km de trajet par défaut n'est pas sourcée mais semble toutefois cohérente.
+#
+#DT . transports commun . type . car . présent:
+#  question: Allez-vous prendre le car pendant votre DT ?
+#  par défaut: non
+#
+#DT . transports commun . type . car . impact par km:
+#  formule: 0.100
+#  unité: kgCO2e/km
+#  note: |
+#    FE (amont + combustion) Autobus - Gazole courte distance [Base Empreinte - hypothèses de la section "Autobus - autocars"] : 92 gCO2e/passager.km consolidé
+#    en intégrant la fabrication du véhicule. Soit une composante "fabrication" estimée à 8.9 gCO2eq/passager.km pour un FE total de 100.9 gCO2e/passager.km
+#    Hypothèses retenues pour la consolidation (reprises de la Base Empreinte) :
+#     - 4 kgCO2eq/kg pour la fabrication des autobus/autocar (basé sur une analyse de la littérature)
+#     - masse d’un autocar = 12 tonnes
+#     - durée de vie en km = 361 884 km
+#     - nombre de passagers moyen = 30
+#    /!\ Bizarrement ce FE consolidé à partir des hypothèses diffère de ce qu'affiche la Base Empreinte - FE Autobus/Gazole : 113 gCO2eq/passager.km
+#    /!\ Le 92 gCO2eq/passager.km de la documentation ne correspond pas à la somme amont + combustion du FE : 20.5 + 83.8 = 104,3 gCO2eq/passager.k
+#
+#DT . transports commun . type . car . km:
+#  applicable si: DT . transports commun . type . car . présent
+#  question: Combien de kilomètres allez-vous faire en car pendant votre DT ?
+#  description: Ne cherchez pas à renseigner la valeur exacte, un arrondi à la dizaine supérieure fera l'affaire.
+#  suggestions:
+#    10 km: 10
+#    15 km: 15
+#    20 km: 20
+#  unité: km
+#  par défaut: 15
+
+DT . transports commun . type . métro ou tram:
+  titre: Métro, tramway
+  icônes: 🚊
+  description: |
+    Tous modes de transport urbains sur rails.
+  # Je commente la veille formule (avec le hack) pour garder trace et je reprends la formule ici de NGE.
+  formule:
+    variations:
+      - si:
+          est défini: DT . transports commun . type . métro ou tram . présent
+        alors: empreinte
+      - sinon: empreinte par défaut
+#  formule:
+#    variations:
+#      - si:
+#          est défini: métro ou tram . présent
+#        alors:
+#          # This is a hack to make sure all branch is not desactivated: we need to have the value in a `somme`, if not, the value applicability is spread to the parent and all branch is desactivated.
+#          somme:
+#            - empreinte
+#      - sinon: empreinte par défaut
+
+DT . transports commun . type . métro ou tram . empreinte:
+  formule: heures extrapolée * impact par heure
+  unité: kgCO2e
+
+DT . transports commun . type . métro ou tram . empreinte par défaut:
+  valeur: métro ou tram . empreinte
+  contexte:
+    métro ou tram . présent: oui
+    métro ou tram . heures: 0.25
+  note: la valeur de 15 min de temps de trajet par défaut n'est pas sourcée mais semble toutefois cohérente.
+
+DT . transports commun . type . métro ou tram . présent:
+  question: Utilisez-vous le métro ou le tram pour vos déplacements domicile-travail ?
+  par défaut: non
+
+DT . transports commun . type . métro ou tram . impact par heure:
+  #On ne peut malheureusement pas simplifier et renvoyer vers la même variable dans "transports commun.publicodes" du fait de conditions "applicable si" au sein de ce fichier --> on reprend donc les variables "impact par km" et "vitesse"
+  formule: impact par km * vitesse
+  unité: kgCO2e/h
+  description: Nous confondons l'ensemble des moyens de transport urbains sur rails, à savoir métro, tramway et RER.
+
+DT . transports commun . type . métro ou tram . impact par km:
+  formule:
+    moyenne:
+      - impact par km métro
+      - impact par km RER
+  unité: kgCO2e/km
+  note: Nous faisons l'hypothèse (forte) d'une moyenne non pondérée pour le calcul de l'impact au km.
+
+DT . transports commun . type . métro ou tram . impact par km métro:
+  formule: 0.00503
+  unité: kgCO2e/km
+  note: Métro, tramway, trolleybus/2018/Agglomération de 100 000 à 250 000 habitants ; Base Carbone consultée le 06/12/2023
+
+DT . transports commun . type . métro ou tram . impact par km RER:
+  formule: 0.00978
+  unité: kgCO2e/km
+  note: RER et transilien/2022/Ile de France ; Base Carbone consultée le 06/12/2023
+
+DT . transports commun . type . métro ou tram . vitesse:
+  formule: 25
+  unité: km/h
+  note: Hypothèse de 25 km/h de vitesse moyenne, d'après l'article [Les petits secrets de la RATP révélés au public](http://transports.blog.lemonde.fr/2013/03/11/les-petits-secrets-de-la-ratp-reveles-au-public/)
+
+DT . transports commun . type . métro ou tram . heures:
+  applicable si: DT . transports commun . type . métro ou tram . présent
+  question: Combien d'heures passez-vous en métro ou tram par jour pendant vos déplacements domicile-travail ?
+  suggestions:
+    15 min: 0.25
+    30 min: 0.5
+    45 min: 0.75
+    1h: 1
+  unité: h/jour
+  par défaut: 0.25
+
+DT . transports commun . type . métro ou tram . heures extrapolée:
+  formule: heures * ( 253 - DT . congé - ( 52 - DT . congé / 5 ) * DT . TT )
+  note: |
+    On a 253 jours ouvrés dans l'année on retranche les jours de congés posés, ensuite on convertit en jours par an les jours de TT qui sont en jours par semaine en ne considérant que les semaines travaillées (52 - congés/5)
+
+### Mobilité douce ###
+
+DT . mobilité douce . présent:
+  question: Utilisez-vous des mobilités douces pour vous déplacer pendant vos déplacements domicile-travail ?
+  par défaut: non
+
+DT . mobilité douce:
+  # Cette variable "intermédiaire" est un hack pour réussir à mettre une mosaique fille après une mosaique mère (même si le choix mobilité douce n'est pas à l'heure actuelle proposé dans la mosaique mère)
+  applicable si: DT . mobilité douce . présent
+  titre: Actifs (marche, vélo, trottinette, etc.)
+  icônes: 🚲🛴
+  formule: DT . mobilité douce . type * 1
+
+DT . mobilité douce . type:
+  applicable si: DT . mobilité douce . présent
+  icônes: 🚲🛴
+  mosaique:
+    type: selection
+    options:
+      - marche . présent
+      - vélo . présent
+      - vae . présent
+      - trottinette . présent
+      - trottinette électrique . présent
+    suggestions:
+      aucun:
+        marche . présent: non
+        vélo . présent: non
+        vae . présent: non
+        trottinette . présent: non
+        trottinette électrique . présent: non
+  question: Quel(s) mode(s) de déplacement "actif" utilisez-vous pendant vos déplacements domicile-travail ?
+  titre: Déplacements actifs
+  formule:
+    somme:
+      - marche
+      - vélo
+      - vae
+      - trottinette
+      - trottinette électrique
+
+DT . mobilité douce . type . marche:
+  titre: Marche
+  applicable si: DT . mobilité douce . type . marche . présent
+  icônes: 👟
+  #Pour simplifier on garde la même formule que dans mobilité douce.publicodes
+  formule: 0
+  unité: kgCO2e
+  note: L'empreinte de la marche est considérée comme nulle.
+
+DT . mobilité douce . type . marche . présent:
+  question: Marchez-vous pour vos déplacements domicile-travail ?
+  par défaut: non
+
+DT . mobilité douce . type . vélo:
+  titre: Vélo
+  applicable si: DT . mobilité douce . type . vélo . présent
+  icônes: 🦵🚲
+  #On ne peut malheureusement pas simplifier et renvoyer vers la même variable dans "mobilité douce.publicodes" du fait de conditions "applicable si" au sein de ce fichier --> on reprend donc les variables "construction amortie"
+  formule: construction amortie
+  unité: kgCO2e
+  note: |
+    Nous considérons que **l'usage** du vélo musculaire a une empreinte nulle.
+
+DT . mobilité douce . type . vélo . présent:
+  question: Utilisez-vous un vélo "classique" (i.e. sans assistance électrique) pour vos déplacements domicile-travail ?
+  par défaut: non
+
+DT . mobilité douce . type . vélo . construction amortie:
+  formule: construction / durée de vie
+  unité: kgCO2e
+
+DT . mobilité douce . type . vélo . construction:
+  formule: 116
+  unité: kgCO2e
+  note: |
+    La base empreinte ne propose pas de FE pour le vélo conventionnel.
+
+    Néanmoins, en 2021, le fabricant de vélo Trek a publié [une étude](https://view.publitas.com/trek-bicycle/trek-bicycle-2021-sustainability-report/page/6)
+    présentant l'empreinte carbone de la production de ses vélos. 
+
+    Pour le plus populaire, l'empreinte affichée est de 116 kgCO2e.
+
+DT . mobilité douce . type . vélo . durée de vie:
+  formule: 12
+  note: |
+    On considère la durée de vie d'un vélo conventionnel identique à celle d'un VAE (hypothèse forte, car il semble qu'un VAE emporte davatange de composants qui peuvent s'user davantage)
+    Hypothèse issue du HBEFA (Manuel des facteurs d'émission pour le transport routier), d'après la documentation de la base empreinte.
+    Chiffres tirés de l'étude ADEME de 2019 ["Modélisation et évaluation environnementale de produits de consommation et biens d'équipement"](https://librairie.ademe.fr/dechets-economie-circulaire/127-modelisation-et-evaluation-environnementale-de-produits-de-consommation-et-biens-d-equipement.html)
+
+DT . mobilité douce . type . vae:
+  titre: Vélo à Assistance Électrique
+  icônes: 🚲⚡
+  applicable si: DT . mobilité douce . type . vae . présent
+  #On ne peut malheureusement pas simplifier et renvoyer vers la même variable dans "mobilité douce.publicodes" du fait de conditions "applicable si" au sein de ce fichier --> on reprend donc les variables "empreinte au km"
+  formule: empreinte au km * km extrapolé
+  unité: kgCO2e
+  note: |
+    Les vélos-cargo à assistance électrique sont à classer dans la catégorie VAE. La différence de motorisation et de poids, et donc d'empreinte, est trop minime pour mériter une catégorie à part.
+
+DT . mobilité douce . type . vae . présent:
+  question: Utilisez-vous un Vélo à Assistance Électrique (VAE) pour vos déplacements domicile-travail ?
+  par défaut: non
+
+DT . mobilité douce . type . vae . empreinte au km:
+  formule: 0.0109
+  unité: kgCO2e/km
+  note: FE issu de la base empreinte (Vélo/à assistance électrique) sur le périmètre complet (fabrication + usage)
+
+DT . mobilité douce . type . vae . km:
+  applicable si: DT . mobilité douce . type . vae . présent
+  question: Combien de kilomètres faites-vous en vélo électrique par jour pour vos déplacements domicile-travail ?
+  par défaut: 1000
+  unité: km/jour
+  suggestions:
+    10 km: 10
+    20 km: 20
+    50 km: 50
+    100 km: 100
+
+DT . mobilité douce . type . vae . km extrapolé:
+  formule: km * ( 253 - DT . congé - ( 52 - DT . congé / 5 ) * DT . TT )
+  note: |
+    On a 253 jours ouvrés dans l'année on retranche les jours de congés posés, ensuite on convertit en jours par an les jours de TT qui sont en jours par semaine en ne considérant que les semaines travaillées (52 - congés/5)
+
+DT . mobilité douce . type . trottinette:
+  titre: Trottinette
+  icônes: 🛴
+  applicable si: DT . mobilité douce . type . trottinette . présent
+  #On ne peut malheureusement pas simplifier et renvoyer vers la même variable dans "mobilité douce.publicodes" du fait de conditions "applicable si" au sein de ce fichier --> on reprend donc les variables "empreinte au km"
+  formule: construction amortie
+  unité: kgCO2e
+  note: |
+    Nous considérons que **l'usage** d'une trottinette musculaire a une empreinte nulle.
+
+DT . mobilité douce . type . trottinette . présent:
+  question: Utilisez-vous une trottinette "classique" (i.e. sans assistance électrique) pour vos déplacements domicile-travail ?
+  par défaut: non
+
+DT . mobilité douce . type . trottinette . construction amortie:
+  formule: construction / durée de vie
+  unité: kgCO2e
+
+DT . mobilité douce . type . trottinette . construction:
+  formule: 62.5
+  unité: kgCO2e
+  note: |
+    La base empreinte ne propose pas de FE pour la trottinette conventionnel. On repart de l'empreinte d'une trottinette électrique 
+    à laquelle on ôte les impacts liés aux composants électroniques, cuivre, LED et batteries (-32%). Pour cela on s'appuie sur
+    l'analyse détaillée des procédés contributeurs (page 50 de l'[étude source](https://librairie.ademe.fr/consommer-autrement/127-modelisation-et-evaluation-environnementale-de-produits-de-consommation-et-biens-d-equipement.html))
+
+DT . mobilité douce . type . trottinette . durée de vie:
+  formule: 6
+  note: |
+    On majore de 50 % la durée de vie d'une trottinette non électrique. La durée de vie d'une trottinette électrique est issue des
+    hypothèses HBEFA (Manuel des facteurs d'émission pour le transport routier), d'après la documentation de la base empreinte.
+    Chiffres tirés de l'étude ADEME de 2019 ["Modélisation et évaluation environnementale de produits de consommation et biens d'équipement"](https://librairie.ademe.fr/dechets-economie-circulaire/127-modelisation-et-evaluation-environnementale-de-produits-de-consommation-et-biens-d-equipement.html)
+
+DT . mobilité douce . type . trottinette électrique:
+  titre: Trottinette électrique
+  icônes: 🛴⚡
+  applicable si: DT . mobilité douce . type . trottinette électrique . présent
+  #On ne peut malheureusement pas simplifier et renvoyer vers la même variable dans "mobilité douce.publicodes" du fait de conditions "applicable si" au sein de ce fichier --> on reprend donc les variables "empreinte au km"
+  formule: empreinte au km * km
+  unité: kgCO2e
+
+DT . mobilité douce . type . trottinette électrique . présent:
+  question: Utilisez-vous une trottinette électrique pour vos déplacements domicile-travail ?
+  par défaut: non
+
+DT . mobilité douce . type . trottinette électrique . empreinte au km:
+  formule: 0.0249
+  unité: kgCO2e/km
+  note: FE issu de la base empreinte (Trottinette) sur le périmètre complet (fabrication + usage)
+
+DT . mobilité douce . type . trottinette électrique . km:
+  applicable si: DT . mobilité douce . type . trottinette électrique . présent
+  question: Combien de kilomètres faites-vous en trottinette électrique par jour pour vos déplacements domicile-travail ?
+  par défaut: 1000
+  unité: km/jour
+  suggestions:
+    10 km: 10
+    20 km: 20
+    50 km: 50

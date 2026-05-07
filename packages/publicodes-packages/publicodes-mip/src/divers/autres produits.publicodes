@@ -1,0 +1,122 @@
+divers . autres produits:
+  non applicable si: métrique != "carbone"
+  titre: Produits manufacturés neufs
+  abréviation: autres prod.
+  icônes: 📦
+  description: |
+    Ce sous-poste permet de capter l'empreinte des achats de produits neufs, liée aux dépenses et niveau de vie d'une personne, via une approche macro-économique.
+    À l'image de la méthode utilisée pour les services sociétaux, on utilise [les résultats du travail du SDES](https://nosgestesclimat.fr/documentation/empreinte-SDES)
+    afin de reconstituer l'empreinte carbone des achats non captés "ailleurs" dans le test pour un français moyen.
+
+    Malgré des limites importantes (on en parle juste après), cette question est présente pour plusieurs raisons:
+      - Élargir le scope de consommations couvert par Nos Gestes Climat : on prend en compte ici les dépenses qui ne sont pas captées dans le reste du test
+      tel que **la décoration, les plantes, le jardinage, le matériel de cuisine, le linge de maison, les matériaux pour les loisirs créatifs, le bricolage.** Ces achats étant souvent utilisés sur le long terme et devraient donc être amortis selon le type de produit, mais dans cette approche
+      nous considérons que l'empreinte des achats est équivalente d'année en année et que l'amortissement n'est pas nécessaire.
+      - Permettre de regrouper en une question nos achats de produits neufs et éviter de mettre l'accent sur "des petites postes"
+      avec un nombre de questions qui deviendrait trop important: combien de vases ? Combien de livres ? Combien de tapis de bain ?
+      Combien de couverts ? etc.
+      - Sensibiliser sur les achats de produits neufs. Dans Nos Gestes Climat l'empreinte des produits d'occasion est attribuée à l'acheteur initial de l'objet.
+      Ainsi, l'empreinte d'un produit d'occasion est considérée comme nulle à l'heure actuelle (ce qui est bien précisé dans la question).
+
+    Ainsi, nous avons considéré dans cette question une [répartition](https://github.com/incubateur-ademe/nosgestesclimat/blob/master/scripts/services-societaux/input/r%C3%A9partition_autres_produits.yaml) des postes suivants dont le contenu carbone a été attribué parmi l'ensemble des branches / sous branches économiques :
+      - Horticulture (plantes, accessoires, livraison)
+      - Verrerie, vaisselle, ustensiles de cuisine
+      - Maroquinerie, accessoires (briquet, parapluie, lunettes de soleil…), équipements pour bébés
+      - Tapis et autres revêtements, pose et réparation
+      - Outillage pour la maison et le jardin
+      - Services de réparation d'ordinateurs et de biens personnels et domestiques
+      - Produits destinés aux travaux courants d’entretien et de réparation du logement
+      - Autres produits manufacturés type jeux, jouets, article sport, instrument musique, joaillerie/horlogerie
+
+    > Par exemple, le poste horticulture est constitué de la sous-branche "Reproduction de plantes" représentant, en chiffre d'affaires, 2% de la branche 
+    "Produits de l'agriculture et de la chasse et services annexes par habitant", de la sous-branche "Commerce de gros de fleurs et plantes" représentant 
+    0,2% de la branche "Commerce de gros, à l'exclusion des automobiles et des motocycles par habitant" et enfin de la sous-branche "Commerce de détail de fleurs, 
+    plantes, graines, engrais, animaux de compagnie et aliments pour ces animaux en magasin spécialisé" représentant 1,5% de la branche "Commerce de détail, 
+    à l'exclusion des automobiles et des motocycles par habitant"
+
+    Cependant, **l'empreinte captée dans cette question est à prendre avec des pincettes**.
+
+    En effet, l'approche macro-économique présente plusieurs limites exposées dans [notre guide technique sur les services sociétaux](https://github.com/incubateur-ademe/nosgestesclimat/wiki/Guide-technique-services-sociétaux),
+    notamment du fait de la précision des données de départ. On retire également de ce calcul un chiffre unique, identique pour l'ensemble des citoyens. On propose tout de même dans cette question une modularisation de l'empreinte
+    via une question sur le nivy a plusieurs enjeux :
+    Néanmoins, cette méthode de calcul est privilégiée ici en lieu et place de ratios monétaires qui possèdent une incertitude de 80%. 
+    Ces facteurs d'émission de la base carbone ne sont pas à jour avec le niveau d'inflation connu aujourd'hui et ceux moyennés pour cette question
+    sont très hétérogènes (on agrège à la fois le facteur associé à l'édition (livres), mais également celui associé au plastique
+    ou aux métaux). Pour finir sur le sujet, et c'est sans doute le plus gros frein à l'utilisation de ratios monétaires, l'intensité carbone
+    d'un euro dépensé pour un achat n'est pas du tout représentative de l'empreinte réelle du produit. Par exemple, il n'est pas du tout évident 
+    qu'un livre qui coûte plus cher ait une plus grosse empreinte. De même, un ensemble de draps en lin pourrait très bien avoir une empreinte 5 fois 
+    plus faible qu'un ensemble en coton (la culture du lin demande très peu de ressources), et pourtant ce dernier est susceptible de coûter jusqu'à 10 fois plus cher.
+  formule: facteur correctif * autres produits macro
+
+divers . autres produits . facteur correctif:
+  formule:
+    variations:
+      - si: niveau de dépenses = 'faible'
+        alors: 65%
+      - si: niveau de dépenses = 'moyen'
+        alors: 100%
+      - si: niveau de dépenses = 'important'
+        alors: 150%
+  description: Ce facteur permet de moduler l'empreinte liée aux achats de produits neufs selon les statistiques INSEE des dépenses des ménages par décile.
+  note: |
+    Pour cette question, sujette à de nombreuses incertitudes que ce soit au niveau de la méthode de calcul "Top Down" utilisée ici, mais aussi au niveau de la composition des catégories
+    d'émissions constitutives de cette question, nous avons fait le choix de travailler sur la base de l'étude INSEE sur les [dépenses des ménages en 2017](https://www.insee.fr/fr/statistiques/4648319?sommaire=4648339)
+    afin d'établir une échelle de dépenses qui permettra de moduler l'empreinte associée à cette question via des ordres de grandeur.
+
+    D'après ces données (voir tableau d'agrégation ci-dessous), le niveau de dépenses par Français est de l'ordre de 1000€ par an, **niveau de dépense qui varie selon la décile de revenus de la population**.
+    *A noter que pour obtenir le niveau de dépenses par individu, nous divisons les dépenses moyennes par foyer par 2,2, ce qui est la taille moyenne d'un foyer français.*
+
+    *Dans ce tableau, les pourcentages indiqués en colonnes D1 à D10 sont des facteurs correctifs associés aux déciles des dépenses par rapport à la moyenne de dépenses de chacun de ces secteurs.*
+
+    Afin de faciliter la réponse à la question, nous proposons 3 niveaux de dépenses correspondant aux déciles D3, D6 et D9 (arrondis).
+
+    | Catégorie                             | Dépense moyenne par ménage | Dépense moyenne par français | D1  | D2  | D3  | D4  | D5  | D6   | D7   | D8   | D9   | D10  |
+    |---------------------------------------|----------------------------|------------------------------|-----|-----|-----|-----|-----|------|------|------|------|------|
+    | Jeux, bijoux, loisirs                 | 319                        | 145,0                        | 55% | 44% | 65% | 50% | 79% | 94%  | 92%  | 194% | 169% | 158% |
+    | Horticulture                          | 146                        | 66,4                         | 51% | 42% | 56% | 64% | 86% | 109% | 105% | 121% | 182% | 182% |
+    | Maroquinerie et autres accessoires    | 71                         | 32,3                         | 38% | 55% | 58% | 62% | 56% | 77%  | 114% | 156% | 193% | 196% |
+    | Tapis et autres revêtements           | 14                         | 6,4                          | 7%  | 21% | 93% | 71% | 64% | 71%  | 157% | 207% | 121% | 164% |
+    | Vaisselle, ustensiles de cuisine      | 80                         | 36,4                         | 43% | 55% | 63% | 96% | 71% | 85%  | 120% | 173% | 133% | 160% |
+    | Outillage (maison et le jardin)       | 209                        | 95,0                         | 22% | 54% | 67% | 61% | 69% | 79%  | 153% | 135% | 114% | 243% |
+    | Services de réparation                | 1 121                      | 509,5                        | 49% | 59% | 70% | 69% | 75% | 94%  | 108% | 131% | 146% | 198% |
+    | Produits pour travaux courants        | 176                        | 80,0                         | 36% | 29% | 48% | 44% | 88% | 181% | 169% | 139% | 91%  | 172% |
+    | **Total**                             | **2 136**                  | **970,9**                    | **45%** | **52%** | **66%** | **64%** | **76%** | **100%** | **116%** | **144%** | **145%** | **191%** |
+
+divers . autres produits . niveau de dépenses:
+  titre: Niveau de dépenses pour des produits manufacturés neufs
+  question: Le test ne capte pas encore toutes vos consommations, comment estimeriez-vous votre niveau de dépenses en produits neufs (décoration d'intérieur, bricolage, jeux, loisirs créatifs, outils, etc.) ?
+  description: |
+    Pour garder l'interface simple, nous proposons une estimation, via vos dépenses, de l'empreinte des biens de consommation
+    que vous possédez et que vous ne pensez pas avoir inclus dans les questions précédentes.
+
+    Elle concerne : **les jeux, la décoration, le matériel de cuisine, le linge de maison, les matériaux pour les loisirs créatifs ou bricolage, les plantes, etc.**
+
+    > 💡 Les ordres de grandeur en € proposés ici sont basés sur les statistiques INSEE des dépenses des ménages. Un Français moyen dépense 80€/mois pour ces postes de dépenses.
+  note: Les ordres de grandeur associés à chacune des possibilités sont issus du travail décrit dans la description de la règle `autres produits . facteur correctif`. On fait l'hypothèse ici que le niveau de dépense et niveau de revenus sont fortement corrélés.
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - faible
+        - moyen
+        - important
+  par défaut: "'moyen'"
+
+divers . autres produits . niveau de dépenses . faible:
+  titre: Moins de 50€ / mois
+
+divers . autres produits . niveau de dépenses . moyen:
+  titre: Environ 80€ / mois
+
+divers . autres produits . niveau de dépenses . important:
+  titre: Plus de 120€ / mois
+# divers . autres produits . notif ratio monétaire:
+#   type: notification
+#   formule: montant
+#   description: |
+#     Cette question permet d'estimer l'empreinte de vos achats neufs à partir de leur prix d'achat.
+
+#     Cette comptabilisation de l'empreinte carbone **à partir de la seule information des dépenses** est très imparfaite :
+#     elle attribue une empreinte plus importante à un objet plus cher alors que ce même objet peut être acheté moitié prix ailleurs (ou plus tard !).
+
+#     Elle permet tout de même de fournir un ordre de grandeur de l'impact de vos achats (fréquence et niveau de dépenses).

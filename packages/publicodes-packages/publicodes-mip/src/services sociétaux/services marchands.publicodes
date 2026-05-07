@@ -1,0 +1,24 @@
+# Ce fichier a été généré automatiquement via le script 'scripts/generate_services_rules.js' dans le dépôt nosgestesclimat.
+# Le fichier permettant de modifier les données importantes de répartition et justification des services sociétaux
+# est 'scripts/services-societaux/input/répartition_services_sociétaux.yaml'. Pour en savoir plus, n'hésitez pas à parcourir notre guide !
+
+services sociétaux . services marchands:
+  non applicable si: métrique != "carbone"
+  abréviation: S. marchands
+  description: |-
+    Les services marchands ne sont qu'une partie des [services sociétaux](https://nosgestesclimat.fr/documentation/services-soci%C3%A9taux) dont le calcul est basé sur
+    [l'estimation de l'empreinte nationale française par le Ministère de l'Écologie](https://www.statistiques.developpement-durable.gouv.fr/lempreinte-carbone-de-la-france-de-1995-2021).
+  formule:
+    somme:
+      - empreinte branche . C30 par hab . services marchands
+      - empreinte branche . H52 par hab . services marchands
+      - empreinte branche . H53 par hab . services marchands
+      - empreinte branche . J61 par hab . services marchands
+      - empreinte branche . K64 par hab . services marchands
+      - empreinte branche . K65 par hab . services marchands
+      - empreinte branche . M69 par hab . services marchands
+      - empreinte branche . N80 par hab . services marchands
+      - empreinte branche . S94 par hab . services marchands
+      - empreinte branche . S96 par hab . services marchands
+  icônes: ✉️
+  titre: Services marchands
