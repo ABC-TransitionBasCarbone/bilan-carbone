@@ -6,57 +6,55 @@ import GlossaryModal from '@/components/modals/GlossaryModal'
 import type { FullStudy } from '@/db/study'
 import { hasAccessToPostTypeform } from '@/services/permissions/environment'
 import { Post } from '@/services/posts'
-import { downloadStudyPost } from '@/services/study'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { EmissionSourcesFilters, EmissionSourcesSort } from '@/types/filters'
 import { EmissionSourceCaracterisation } from '@abc-transitionbascarbone/db-common'
-import DownloadIcon from '@mui/icons-material/Download'
+import { StudyRole } from '@abc-transitionbascarbone/db-common/enums'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useMemo, useState } from 'react'
 import styles from '../SubPosts.module.css'
+import EmissionSourceButtons from './EmissionSourceButtons'
 import StudyPostFilters from './StudyPostFilters'
+import blockStyles from './StudyPostsBlock.module.css'
 import StudyPostSort from './StudyPostSort'
 
 interface Props {
   post: Post
   study: FullStudy
+  userRole: StudyRole
+  siteId: string
   display: boolean
   setDisplay: (display: boolean) => void
   children: ReactNode
-  emissionSources: FullStudy['emissionSources']
   filters: EmissionSourcesFilters
   setFilters: (values: Partial<EmissionSourcesFilters>) => void
   caracterisationOptions: EmissionSourceCaracterisation[]
   sort: EmissionSourcesSort
   setSort: (field: EmissionSourcesSort['field'], order: EmissionSourcesSort['order']) => void
+  onImportSuccess: () => void
 }
 
 const StudyPostsBlock = ({
   post,
   study,
+  userRole,
+  siteId,
   display,
   setDisplay,
   children,
-  emissionSources,
   filters,
   setFilters,
   caracterisationOptions,
   sort,
   setSort,
+  onImportSuccess,
 }: Props) => {
   const { environment } = useAppEnvironmentStore()
-  const [downloading, setDownloading] = useState(false)
   const [glossaryTypeform, setGlossaryTypeform] = useState('')
-  const tCaracterisations = useTranslations('categorisations')
-  const tExport = useTranslations('study.export')
   const tPost = useTranslations('emissionFactors.post')
-  const tQuality = useTranslations('quality')
   const tStudyPost = useTranslations('study.post')
-  const tUnit = useTranslations('units')
-  const tResultUnits = useTranslations('study.results.units')
-  const tBase = useTranslations('emissionFactors.base')
 
   const showTypeformLink = useMemo(() => {
     if (!environment) {
@@ -117,35 +115,20 @@ const StudyPostsBlock = ({
         }
         actions={[
           {
-            actionType: 'loadingButton',
-            onClick: async () => {
-              setDownloading(true)
-              await downloadStudyPost(
-                study,
-                emissionSources,
-                post,
-                tExport,
-                tCaracterisations,
-                tPost,
-                tQuality,
-                tUnit,
-                tBase,
-                tResultUnits,
-                environment,
-              )
-              setDownloading(false)
-            },
-            disabled: emissionSources.length === 0,
-            loading: downloading,
-            children: (
-              <>
-                {tExport('download')}
-                {!downloading && <DownloadIcon />}
-              </>
+            actionType: 'node',
+            node: (
+              <EmissionSourceButtons
+                studyId={study.id}
+                userRole={userRole}
+                post={post}
+                siteId={siteId}
+                onSuccess={onImportSuccess}
+              />
             ),
           },
           {
             actionType: 'button',
+            className: blockStyles.actionButton,
             onClick: () => setDisplay(!display),
             'aria-expanded': display,
             'aria-controls': 'study-post-infography',

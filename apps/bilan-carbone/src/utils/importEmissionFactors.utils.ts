@@ -4,12 +4,8 @@ import { EmissionFactorCommandValidation } from '@/services/serverFunctions/emis
 import { COLUMNS, ImportError, ParsedRow, ParseResult } from '@/types/importEmissionFactors.types'
 import { EmissionFactorBase, Environment, SubPost, Unit } from '@abc-transitionbascarbone/db-common/enums'
 import { ManualEmissionFactorUnitList } from './emissionFactors'
-import {
-  buildLabelMap,
-  mapLabelFromTranslations,
-  mapQualityLabelFromTranslations,
-  parseXlsxSheet,
-} from './import.utils'
+import { parseExcelSheet } from './excel.utils'
+import { buildLabelMap, mapLabelFromTranslations, mapQualityLabelFromTranslations } from './import.utils'
 import { parseNumericValue } from './number'
 import { BcTranslations, extractAllForms, getBcTranslations, getSingularForm } from './translation.utils'
 
@@ -171,7 +167,7 @@ export function parsePostsAndSubPostsCell(
 }
 
 export function parseImportFile(buffer: Buffer, locale: LocaleType, environment: Environment): ParseResult {
-  const sheetResult = parseXlsxSheet(buffer, {
+  const sheetResult = parseExcelSheet(buffer, {
     rowFilter: (_row, i, value) =>
       !(i === COLUMNS.postsAndSubPosts && value.toLowerCase() === getAllPostsLabel(locale).toLowerCase()),
   })
