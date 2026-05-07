@@ -1,6 +1,5 @@
 'use client'
 
-import { AccountWithUser } from '@/db/account'
 import { keepOnlyOneMetadata } from '@/db/emissionFactors.utils'
 import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
@@ -16,6 +15,7 @@ import {
 import { getQualitativeUncertaintyFromSquaredStandardDeviation } from '@/services/uncertainty'
 import { useUnitLabel } from '@/services/unit'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { AccountWithUser } from '@/types/account.types'
 import { EmissionSourcesStatus } from '@/types/emissionSource.types'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { getEmissionSourceStatus } from '@/utils/emissionSources'

@@ -1,4 +1,4 @@
-import { AccountWithUser } from '@/db/account'
+import { AccountWithUser } from '@/types/account.types'
 import { User } from '@abc-transitionbascarbone/db-common'
 import { UserSession } from 'next-auth'
 

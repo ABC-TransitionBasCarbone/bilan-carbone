@@ -1,6 +1,6 @@
-import { AccountWithUser } from '@/db/account'
 import { mockedOrganizationVersionId } from '@/tests/utils/models/organization'
 import { getMockedAuthUser, getMockedDbAccount, mockedAccountId } from '@/tests/utils/models/user'
+import { AccountWithUser } from '@/types/account.types'
 import * as userUtils from '@/utils/user'
 import { Role, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { expect } from '@jest/globals'

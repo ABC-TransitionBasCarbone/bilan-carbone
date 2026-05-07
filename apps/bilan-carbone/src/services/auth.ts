@@ -1,5 +1,6 @@
-import { AccountWithUser, getAccountById } from '@/db/account'
+import { getAccountById } from '@/db/account'
 import { getUserByEmailWithSensibleInformations } from '@/db/user'
+import { AccountWithUser } from '@/types/account.types'
 import { Environment, Level, Role, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { DAY } from '@abc-transitionbascarbone/utils'
 import bcrypt from 'bcryptjs'

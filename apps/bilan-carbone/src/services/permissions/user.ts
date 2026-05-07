@@ -1,4 +1,4 @@
-import { AccountWithUser } from '@/db/account'
+import { AccountWithUser } from '@/types/account.types'
 import { canBeUntrainedRole, canEditMemberRole } from '@/utils/user'
 import type { Prisma } from '@abc-transitionbascarbone/db-common'
 import { Role, UserStatus } from '@abc-transitionbascarbone/db-common/enums'

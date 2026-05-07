@@ -8,7 +8,6 @@ import {
 } from '@/constants/emissionFactorMap'
 import { DefaultStudyTags } from '@/constants/studyTags'
 import {
-  AccountWithUser,
   addAccount,
   getAccountByEmailAndEnvironment,
   getAccountByEmailAndOrganizationVersionId,
@@ -94,6 +93,7 @@ import {
 import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
 import { StudySiteFields, studySiteToSituation } from '@/services/studySiteToSituation'
+import { AccountWithUser } from '@/types/account.types'
 import { getNestedValue, groupBy } from '@/utils/array'
 import { mapCncToStudySite } from '@/utils/cnc'
 import { calculateDistanceFromParis } from '@/utils/distance'

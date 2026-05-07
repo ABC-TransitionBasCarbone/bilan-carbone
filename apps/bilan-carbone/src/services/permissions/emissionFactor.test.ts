@@ -1,5 +1,5 @@
-import { AccountWithUser } from '@/db/account'
 import { getMockedDbAccount } from '@/tests/utils/models/user'
+import { AccountWithUser } from '@/types/account.types'
 import type { EmissionFactor } from '@abc-transitionbascarbone/db-common'
 import { Import } from '@abc-transitionbascarbone/db-common/enums'
 import { expect } from '@jest/globals'

@@ -1,6 +1,6 @@
-import { AccountWithUser } from '@/db/account'
 import { getMockedFullStudy, getMockedFullStudySite } from '@/tests/utils/models/study'
 import { getMockedDbAccount } from '@/tests/utils/models/user'
+import { AccountWithUser } from '@/types/account.types'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import { StudyRole } from '@abc-transitionbascarbone/db-common/enums'
 import { expect } from '@jest/globals'

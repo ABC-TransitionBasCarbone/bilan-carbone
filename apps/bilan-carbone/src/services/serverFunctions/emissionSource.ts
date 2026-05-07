@@ -1,7 +1,7 @@
 'use server'
 
 import { DefaultStudyTagMap, DefaultStudyTagNames } from '@/constants/studyTags'
-import { AccountWithUser, getAccountById } from '@/db/account'
+import { getAccountById } from '@/db/account'
 import { getEmissionFactorById } from '@/db/emissionFactors'
 import {
   createEmissionSourceOnStudy,
@@ -16,6 +16,7 @@ import {
   upsertTagFamilyById,
 } from '@/db/emissionSource'
 import { getStudyById } from '@/db/study'
+import { AccountWithUser } from '@/types/account.types'
 import { withServerResponse } from '@/utils/serverResponse'
 import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
 import type { Prisma, StudyTag } from '@abc-transitionbascarbone/db-common'

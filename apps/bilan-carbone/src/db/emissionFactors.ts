@@ -554,6 +554,12 @@ export const getEmissionFactorVersionsBySource = async (source: Import) =>
 export const getManualEmissionFactors = async (units: Unit[]) =>
   prismaClient.emissionFactor.findMany({ where: { importedFrom: Import.Manual, unit: { in: units } } })
 
+export const getManualEmissionFactorsByOrganization = (organizationId: string) =>
+  prismaClient.emissionFactor.findMany({
+    where: { importedFrom: Import.Manual, organizationId, status: EmissionFactorStatus.Valid },
+    select: selectEmissionFactor,
+  })
+
 export const setEmissionFactorUnitAsCustom = async (id: string, unit: string) =>
   prismaClient.emissionFactor.update({ where: { id }, data: { unit: Unit.CUSTOM, customUnit: unit } })
 

@@ -41,7 +41,10 @@
       "close": "Close",
       "approve": "Approve",
       "selectAll": "Select all",
-      "unselectAll": "Unselect all"
+      "unselectAll": "Unselect all",
+      "back": "Back",
+      "import": "Import",
+      "export": "Export"
     },
     "questions": {
       "glossary": {
@@ -55,7 +58,12 @@
       "sites": "Sites",
       "date": "Date",
       "startYear": "Start year",
-      "targetYear": "Target year"
+      "targetYear": "Target year",
+      "line": "Line {line}",
+      "labelName": "Label",
+      "source": "Source",
+      "unit": "Unit",
+      "emissionsKg": "Emissions (kgCO2e)"
     },
     "notAuthorized": "Action not authorized",
     "Not authorized": "You are not allowed to do this action",
