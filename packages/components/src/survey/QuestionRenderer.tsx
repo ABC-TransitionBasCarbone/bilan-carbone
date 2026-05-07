@@ -1,13 +1,14 @@
 import { Question } from '@abc-transitionbascarbone/typeguards'
 import { Typography } from '@mui/material'
 import { ChoiceQuestionInput } from './ChoiceQuestionInput'
+import { NumberQuestionInput } from './NumberQuestionInput'
 import styles from './QuestionRenderer.module.css'
 import { TextQuestionInput } from './TextQuestionInput'
 
 interface QuestionRendererProps {
   question: Question
-  value: string | string[] | undefined
-  onChange: (value: string | string[]) => void
+  value: string | string[] | number | undefined
+  onChange: (value: string | string[] | number) => void
   error?: string | null
 }
 
@@ -42,6 +43,15 @@ export function QuestionRenderer({ question, value, onChange, error }: QuestionR
         <ChoiceQuestionInput
           question={question}
           value={typeof value === 'string' ? value : undefined}
+          onChange={onChange}
+          error={error}
+        />
+      )}
+
+      {question.type === 'number' && (
+        <NumberQuestionInput
+          question={question}
+          value={typeof value === 'number' ? value : 0}
           onChange={onChange}
           error={error}
         />
