@@ -15,6 +15,7 @@ import { computeResultsByPostFromEmissionSources, computeResultsByTag } from '@/
 import { computeGHGPResult } from '@/services/results/ghgp'
 import { getSiteEmissionSourcesWithoutMarketBase } from '@/services/results/utils'
 import { isDeactivableFeatureActiveForEnvironment } from '@/services/serverFunctions/deactivableFeatures'
+import { exportEmissionSourcesToExcel } from '@/services/serverFunctions/importEmissionSources'
 import { prepareReport } from '@/services/serverFunctions/study'
 import { downloadStudyEmissionSources, downloadStudyResults, getDetailedEmissionResults } from '@/services/study'
 import { sortAlphabetically } from '@/services/utils'
@@ -75,6 +76,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   const tCaracterisations = useTranslations('categorisations')
   const tStudyNav = useTranslations('study.navigation')
   const tBase = useTranslations('emissionFactors.base')
+  const tImport = useTranslations('study.importEmissionSourcesModal')
   const environment = study.organizationVersion.environment
   const exports = study.exports
   const [type, setType] = useState<ResultType>(AdditionalResultTypes.CONSOLIDATED)
@@ -360,6 +362,22 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     }
   }
 
+  const downloadEmissionSourcesExcel = async (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
+    preventClose(e)
+    if (hasAccessToEmissionSourcesDownload) {
+      const arrayBuffer = await exportEmissionSourcesToExcel(study.id)
+      const blob = new Blob([arrayBuffer], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = tImport('exportFileName')
+      a.click()
+      URL.revokeObjectURL(url)
+    }
+  }
+
   const downloadResults = async (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
     preventClose(e)
     await downloadStudyResults(
@@ -415,6 +433,13 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
               <MenuItem>
                 <div className="grow justify-start" onClick={downloadEmissionSources}>
                   {tStudyExport('download')}
+                </div>
+              </MenuItem>
+            )}
+            {study.emissionSources.length > 0 && (
+              <MenuItem>
+                <div className="grow justify-start" onClick={downloadEmissionSourcesExcel}>
+                  {tStudyExport('downloadExcel')}
                 </div>
               </MenuItem>
             )}

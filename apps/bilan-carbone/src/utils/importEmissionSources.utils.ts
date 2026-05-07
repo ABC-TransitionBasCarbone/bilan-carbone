@@ -7,12 +7,8 @@ import {
   SOURCE_IMPORT_COLUMNS,
 } from '@/types/importEmissionSources.types'
 import { EmissionSourceCaracterisation, EmissionSourceType, SubPost } from '@abc-transitionbascarbone/db-common/enums'
-import {
-  buildLabelMap,
-  mapLabelFromTranslations,
-  mapQualityLabelFromTranslations,
-  parseXlsxSheet,
-} from './import.utils'
+import { parseExcelSheet } from './excel.utils'
+import { buildLabelMap, mapLabelFromTranslations, mapQualityLabelFromTranslations } from './import.utils'
 import { parseNumericValue } from './number'
 
 export function mapTypeLabelFromTranslations(
@@ -53,7 +49,10 @@ export function mapSubPostLabelFromTranslations(label: string | undefined | null
 }
 
 export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): ParseEmissionSourcesResult {
-  const sheetResult = parseXlsxSheet(buffer, { headerRowIndex: 4 })
+  const sheetResult = parseExcelSheet(buffer, {
+    headerRowIndex: 4,
+    ignoredColumns: [SOURCE_IMPORT_COLUMNS.site, SOURCE_IMPORT_COLUMNS.post, SOURCE_IMPORT_COLUMNS.subPost],
+  })
   if (!sheetResult.success) {
     return sheetResult
   }

@@ -5,6 +5,7 @@ import { createEmissionSourcesOnStudy } from '@/db/emissionSource'
 import { FullStudy, getStudyById } from '@/db/study'
 import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
+import { Post, subPostsByPost } from '@/services/posts'
 import { AccountWithUser } from '@/types/account.types'
 import {
   ImportEmissionSourceError,
@@ -181,11 +182,7 @@ export async function importEmissionSourcesFromFile(file: File, studyId: string)
   return { success: true, count: validRows.length }
 }
 
-function buildEmissionSourcesWorkbook(
-  study: FullStudy,
-  locale: LocaleType,
-  dataRows: (string | number)[][],
-): ArrayBuffer {
+function buildEmissionSourcesSheet(study: FullStudy, locale: LocaleType, dataRows: (string | number)[][]): ArrayBuffer {
   const bc = getBcTranslations(locale)
   const modal = (bc.study as Record<string, unknown>)?.importEmissionSourcesModal as Record<string, string> | undefined
   const t = (key: string) => modal?.[key] ?? key
@@ -266,7 +263,11 @@ function buildEmissionSourcesWorkbook(
   return arrayBuffer
 }
 
-export async function getImportEmissionSourcesTemplate(studyId: string): Promise<ArrayBuffer> {
+export async function getImportEmissionSourcesTemplate(
+  studyId: string,
+  post?: Post,
+  siteId?: string,
+): Promise<ArrayBuffer> {
   const account = await getAuthenticatedAccount()
   const study = await getStudyOrThrow(studyId, account)
   if (!(await hasStudyBasicRights(account, study))) {
@@ -275,65 +276,78 @@ export async function getImportEmissionSourcesTemplate(studyId: string): Promise
 
   const locale = await getLocale()
   const bc = getBcTranslations(locale)
+
+  const postTranslations = bc.emissionFactors.post as unknown as Record<string, string>
+
+  const studySite = siteId ? study.sites.find((s) => s.site?.id === siteId) : study.sites[0]
+  const siteName = studySite?.site?.name ?? ''
+  const postLabel = post ? (postTranslations[post] ?? post) : ''
+
+  const TOTAL_COLS = 30
+  const emptyRow: (string | number)[] = [siteName, postLabel, ...Array(TOTAL_COLS - 2).fill('')]
+
+  const rows = post ? Array.from({ length: 100 }, () => [...emptyRow]) : [emptyRow]
+  return buildEmissionSourcesSheet(study, locale, rows)
+}
+
+function buildEmissionSourcesCSV(study: FullStudy, locale: LocaleType, dataRows: (string | number)[][]): string {
+  const bc = getBcTranslations(locale)
   const modal = (bc.study as Record<string, unknown>)?.importEmissionSourcesModal as Record<string, string> | undefined
   const t = (key: string) => modal?.[key] ?? key
 
-  const postTranslations = bc.emissionFactors.post as unknown as Record<string, string>
-  const typeTranslations = bc.emissionSource.type as Record<string, string>
-  const qualityTranslations = bc.quality as Record<string, string>
-  const unitTranslations = bc.units as Record<string, string>
-
-  const exampleSiteName = study.sites[0]?.site?.name ?? ''
-  const examplePostLabel = postTranslations['IntrantsBiensEtMatieres'] ?? ''
-  const exampleSubPostLabel = postTranslations['MetauxPlastiquesEtVerre'] ?? ''
-  const exampleTypeLabel = typeTranslations['Physical'] ?? ''
-  const exampleQualityLabel = qualityTranslations['5'] ?? ''
-  const exampleEfUnit = getSingularForm(unitTranslations['KG'] ?? '')
-
-  const exampleRow: (string | number)[] = [
-    exampleSiteName,
-    examplePostLabel,
-    exampleSubPostLabel,
-    t('exampleName'),
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    t('exampleSource'),
-    exampleTypeLabel,
-    '',
-    t('exampleEmissionFactor'),
-    1.85,
-    exampleEfUnit,
-    exampleQualityLabel,
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-  ]
-
-  return buildEmissionSourcesWorkbook(study, locale, [exampleRow])
-}
-
-export async function exportEmissionSourcesToExcel(studyId: string): Promise<ArrayBuffer> {
-  const account = await getAuthenticatedAccount()
-  const study = await getStudyOrThrow(studyId, account)
-  if (!(await canReadStudy(accountWithUserToUserSession(account), studyId))) {
-    throw new Error(NOT_AUTHORIZED)
+  const encodeField = (field: string | number = '') => {
+    if (typeof field === 'number') {
+      return String(field)
+    }
+    const escaped = field.replace(/"/g, '""')
+    if (escaped.includes(';') || escaped.includes('"') || escaped.includes('\n')) {
+      return `"${escaped}"`
+    }
+    return escaped
   }
 
-  const locale = await getLocale()
+  const headerRow = [
+    t('columnSite'),
+    t('columnPost'),
+    t('columnSubPost'),
+    t('columnName'),
+    t('columnTag'),
+    t('columnCaracterisation'),
+    t('columnValue'),
+    t('columnUnit'),
+    t('columnDepreciationPeriod'),
+    t('columnGlobalUncertainty'),
+    t('columnReliability'),
+    t('columnTechnicalRepresentativeness'),
+    t('columnGeographicRepresentativeness'),
+    t('columnTemporalRepresentativeness'),
+    t('columnCompleteness'),
+    t('columnSource'),
+    t('columnType'),
+    t('columnComment'),
+    t('columnEfUsed'),
+    t('columnEfValue'),
+    t('columnEfUnit'),
+    t('columnGlobalUncertainty'),
+    t('columnReliability'),
+    t('columnTechnicalRepresentativeness'),
+    t('columnGeographicRepresentativeness'),
+    t('columnTemporalRepresentativeness'),
+    t('columnCompleteness'),
+    t('columnEfSource'),
+    t('columnEfType'),
+    t('columnFeComment'),
+  ].join(';')
+
+  const rows = dataRows.map((row) => row.map(encodeField).join(';'))
+  return '﻿' + [headerRow, ...rows].join('\n')
+}
+
+async function buildEmissionSourcesDataRows(
+  study: FullStudy,
+  locale: LocaleType,
+  post?: Post,
+): Promise<(string | number)[][]> {
   const bc = getBcTranslations(locale)
   const modal = (bc.study as Record<string, unknown>)?.importEmissionSourcesModal as Record<string, string> | undefined
   const t = (key: string) => modal?.[key] ?? key
@@ -345,12 +359,15 @@ export async function exportEmissionSourcesToExcel(studyId: string): Promise<Arr
   const unitTranslations = bc.units as Record<string, string>
   const efImportSourceTranslations = bc.emissionFactors.table as unknown as Record<string, string>
 
-  const emissionSources = [...study.emissionSources].sort((a, b) => a.subPost.localeCompare(b.subPost))
+  const postSubPosts = post ? new Set(subPostsByPost[post]) : null
+  const emissionSources = [...study.emissionSources]
+    .filter((es) => !postSubPosts || postSubPosts.has(es.subPost))
+    .sort((a, b) => a.subPost.localeCompare(b.subPost))
   const emissionFactorIds = emissionSources
     .map((es) => es.emissionFactor?.id)
     .filter((id): id is string => id !== undefined)
 
-  const emissionFactorsData = await getEmissionFactorsByIds(emissionFactorIds, studyId)
+  const emissionFactorsData = await getEmissionFactorsByIds(emissionFactorIds, study.id)
   const emissionFactors = emissionFactorsData.success ? emissionFactorsData.data : []
 
   const getQualityLabel = (quality: ReturnType<typeof getQualitativeUncertaintyFromQuality> | null) =>
@@ -361,10 +378,10 @@ export async function exportEmissionSourcesToExcel(studyId: string): Promise<Arr
 
   const studyVersionIds = new Set(study.emissionFactorVersions.map((v) => v.importVersionId))
 
-  const dataRows = emissionSources.map((es) => {
+  return emissionSources.map((es) => {
     const ef = emissionFactors.find((f) => f.id === es.emissionFactor?.id)
-    const post = getPost(es.subPost)
-    const postLabel = post ? (postTranslations[post] ?? post) : ''
+    const esPost = getPost(es.subPost)
+    const postLabel = esPost ? (postTranslations[esPost] ?? esPost) : ''
     const subPostLabel = postTranslations[es.subPost] ?? es.subPost
     const tagLabel = es.emissionSourceTags.map((tag) => tag.tag.name).join(', ')
     const caracterisationLabel = es.caracterisation
@@ -428,6 +445,28 @@ export async function exportEmissionSourcesToExcel(studyId: string): Promise<Arr
       es.feComment ?? '',
     ]
   })
+}
 
-  return buildEmissionSourcesWorkbook(study, locale, dataRows)
+export async function exportEmissionSourcesToCSV(studyId: string, post?: Post): Promise<string> {
+  const account = await getAuthenticatedAccount()
+  const study = await getStudyOrThrow(studyId, account)
+  if (!(await canReadStudy(accountWithUserToUserSession(account), studyId))) {
+    throw new Error(NOT_AUTHORIZED)
+  }
+
+  const locale = await getLocale()
+  const dataRows = await buildEmissionSourcesDataRows(study, locale, post)
+  return buildEmissionSourcesCSV(study, locale, dataRows)
+}
+
+export async function exportEmissionSourcesToExcel(studyId: string, post?: Post): Promise<ArrayBuffer> {
+  const account = await getAuthenticatedAccount()
+  const study = await getStudyOrThrow(studyId, account)
+  if (!(await canReadStudy(accountWithUserToUserSession(account), studyId))) {
+    throw new Error(NOT_AUTHORIZED)
+  }
+
+  const locale = await getLocale()
+  const dataRows = await buildEmissionSourcesDataRows(study, locale, post)
+  return buildEmissionSourcesSheet(study, locale, dataRows)
 }

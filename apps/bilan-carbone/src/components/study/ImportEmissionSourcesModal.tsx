@@ -1,6 +1,7 @@
 'use client'
 
 import ImportFileModal from '@/components/base/ImportFileModal'
+import { Post } from '@/services/posts'
 import {
   getImportEmissionSourcesTemplate,
   importEmissionSourcesFromFile,
@@ -14,16 +15,18 @@ import styles from '../base/ImportFileModal.module.css'
 
 interface Props {
   studyId: string
+  post?: Post
+  siteId?: string
   open: boolean
   onClose: () => void
   onSuccess: () => void
 }
 
-const ImportEmissionSourcesModal = ({ studyId, open, onClose, onSuccess }: Props) => {
+const ImportEmissionSourcesModal = ({ studyId, post, siteId, open, onClose, onSuccess }: Props) => {
   const t = useTranslations('study.importEmissionSourcesModal')
 
   const handleDownloadTemplate = async () => {
-    const arrayBuffer = await getImportEmissionSourcesTemplate(studyId)
+    const arrayBuffer = await getImportEmissionSourcesTemplate(studyId, post, siteId)
     const blob = new Blob([arrayBuffer], {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     })
