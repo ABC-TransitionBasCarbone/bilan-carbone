@@ -1,0 +1,137 @@
+transport:
+  titre: Déplacements professionnels
+  mosaique:
+    type: selection
+    options:
+      - train . présent
+      # - car longue distance . présent
+      - voiture . présent
+      - deux roues . présent
+      - transports commun . présent
+      - mobilité douce . présent
+      - taxi . présent
+      - avion . présent
+    suggestions:
+      aucun:
+        train . présent: non
+        # car longue distance . présent: non
+        voiture . présent: non
+        deux roues . présent: non
+        transports commun . présent: non
+        mobilité douce . présent: non
+        taxi . présent: non
+        avion . présent: non
+  question: Quel moyen de transport utilisez-vous pour faire vos déplacements professionnels ?
+  abréviation: transp.
+  icônes: 🚦
+  description: |
+    Cochez tous les modes de transport que vous utilisez régulièrement pour vos déplacements professionnels. Vous renseignerez ensuite les détails pour chacun des modes de transport que vous aurez sélectionnés sur l'année écoulée.
+  formule:
+    somme:
+      - train
+      # - car longue distance
+      - voiture
+      - deux roues
+      - transports commun
+      - mobilité douce
+      - taxi
+      - avion
+      - hébergement
+
+transport . avion . présent:
+  question: Avez vous pris l'avion pour vos déplacements profesionnels au cours de l'année passée ?
+  par défaut: non
+
+transport . car longue distance . présent:
+  question: Avez vous pris le car longue distance pour vos déplacements profesionnels au cours de l'année passée ?
+  par défaut: non
+
+transport . train . présent:
+  question: Avez vous pris le train pour vos déplacements profesionnels au cours de l'année passée ?
+  par défaut: non
+
+transport . voiture . présent:
+  question: Avez vous pris la voiture pour vos déplacements profesionnels au cours de l'année passée ?
+  par défaut: non
+
+transport . deux roues . présent:
+  question: Avez vous pris un deux roues pour vos déplacements profesionnels au cours de l'année passée ?
+  par défaut: non
+
+transport . transports commun . présent:
+  question: Avez vous pris des transports en commun pour vos déplacements profesionnels au cours de l'année passée ?
+  par défaut: non
+
+# On laisse le . présent pour ne pas faire buguer le fichier mobilité douce.publicodes dans l'éventualité où on le remettrai comme mode de transport principal
+transport . mobilité douce . présent:
+  question: Avez vous utilisé des modes de déplacements "actifs" pour vos déplacements profesionnels au cours de l'année passée ?
+  par défaut: non
+
+# On laisse le . présent pour ne pas faire buguer le fichier taxi.publicodes dans l'éventualité où on le remettrai comme mode de transport principal
+transport . taxi . présent:
+  question: Avez vous pris le taxi pour vos déplacements profesionnels au cours de l'année passée ?
+  par défaut: non
+
+# transport . voyageurs:
+#   ordre: 1
+#   titre: Nombre voyageurs participant au séjour
+#   question: Combien de personnes voyageront (vous inclus) ?
+#   description: |
+#     Si vous êtes en couple renseignez 2. Si vous êtes une famille composée de deux adultes et deux enfants, renseignez 4. Etc.
+#   par défaut: 2
+#   plancher: 1
+#   avertissement: |
+#     Le nombre d'habitants ne peut pas être nul ni inférieur à 1.
+#   suggestions:
+#     seul: 1
+#     en couple: 2
+#     en famille: 4
+
+# transport. congé:
+#   titre: Jours de congés pris par an
+#   question: Combien de jours ne travaillez-vous pas par an ? (congés, RTT, arrêts maladie, etc.)
+#   description: |
+#     Cette question permet d'estimer vos jours d'absence du lieu de travail. Renseignez donc tous vos jours d'absence quelle que soit leur nature (congés payés, RTT, arrêt maladie)
+#     Moins de jours sur site signifie moins de trajets domicile-travail par exemple.
+#   par défaut: 25
+#   plancher: 0
+#   plafond: 365
+#   suggestions:
+#     25: 25
+#     30: 30
+#     40: 40
+#   unité: jour
+
+# transport . TT:
+#   titre: Jours de télétravail par semaine
+#   question: Combien de jours par semaine travaillez-vous en télétravail en moyenne ?
+#   description: |
+#     Le télétravail modifie l’empreinte carbone professionnelle, car il réduit certains déplacements mais augmente les consommations liées au domicile.
+#   par défaut: 2
+#   plancher: 0
+#   plafond: 5
+#   suggestions:
+#     aucun: 0
+#     un jour: 1
+#     deux jours: 2
+#     trois jours: 3
+#     quatre jours: 4
+#     cinq jours: 5
+#   unité: jour
+
+# transport . durée séjour:
+#   ordre: 2
+#   titre: Durée du séjour
+#   question: Quelle sera la durée de votre séjour ?
+#   description: |
+#     A vous de nous dire combien de temps vous allez rester dans la région Hauts-de-France.
+#   par défaut: 2
+#   plancher: 1
+#   avertissement: |
+#     La durée ne peut pas être inférieur à 1 jour. Si vous êtes ici c'est que vous comptez profiter de la beauté de la région Hauts-de-France.
+#   suggestions:
+#     un week-end: 2
+#     un week-end prolongé: 3
+#     une semaine: 7
+#   unité: jour
+

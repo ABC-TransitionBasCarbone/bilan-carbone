@@ -1,0 +1,582 @@
+importer!:
+  depuis:
+    nom: "@incubateur-ademe/publicodes-acv-numerique"
+    url: https://github.com/incubateur-ademe/publicodes-acv-numerique
+  dans: acv numerique
+  les règles:
+    - acv . smartphone . carbone . fabrication
+    - acv . smartphone . carbone . distribution
+    - acv . smartphone . durée de vie théorique
+    - acv . tablette . carbone . fabrication
+    - acv . tablette . carbone . distribution
+    - acv . tablette . durée de vie théorique
+    - acv . ordinateur portable . carbone . fabrication
+    - acv . ordinateur portable . carbone . distribution
+    - acv . ordinateur portable . durée de vie théorique
+    - acv . TV . carbone . fabrication
+    - acv . TV . carbone . distribution
+    - acv . TV . durée de vie théorique
+    - acv . ordinateur fixe . carbone . fabrication
+    - acv . ordinateur fixe . carbone . distribution
+    - acv . ordinateur fixe . durée de vie théorique
+    - acv . écran . carbone . fabrication
+    - acv . écran . carbone . distribution
+    - acv . écran . durée de vie théorique
+    - acv . enceinte . carbone . fabrication
+    - acv . enceinte . carbone . distribution
+    - acv . enceinte . durée de vie théorique
+    - acv . console de salon . carbone . fabrication
+    - acv . console de salon . carbone . distribution
+    - acv . console de salon . durée de vie théorique
+    - acv . console portable . carbone . fabrication
+    - acv . console portable . carbone . distribution
+    - acv . console portable . durée de vie théorique
+    - acv . imprimante . carbone . fabrication
+    - acv . imprimante . carbone . distribution
+    - acv . imprimante . durée de vie théorique
+    - acv . smartphone . eau . fabrication
+    - acv . smartphone . eau . distribution
+    - acv . tablette . eau . fabrication
+    - acv . tablette . eau . distribution
+    - acv . ordinateur portable . eau . fabrication
+    - acv . ordinateur portable . eau . distribution
+    - acv . TV . eau . fabrication
+    - acv . TV . eau . distribution
+    - acv . ordinateur fixe . eau . fabrication
+    - acv . ordinateur fixe . eau . distribution
+    - acv . écran . eau . fabrication
+    - acv . écran . eau . distribution
+    - acv . enceinte . eau . fabrication
+    - acv . enceinte . eau . distribution
+    - acv . console de salon . eau . fabrication
+    - acv . console de salon . eau . distribution
+    - acv . console portable . eau . fabrication
+    - acv . console portable . eau . distribution
+    - acv . imprimante . eau . fabrication
+    - acv . imprimante . eau . distribution
+
+divers . numérique:
+  DLUO: 01/03/2026
+  titre: Numérique
+  abréviation: num.
+  icônes: 📺
+  description: Pour le numérique, l’empreinte carbone professionnelle intègre les équipements utilisés, leur durée de vie, leur consommation d’énergie et les services numériques mobilisés (réseaux, cloud, stockage, échanges).
+  note: |
+    Pour ce poste, nous utilisons les données proposées par le service SoNum de l'ADEME, notamment:
+      - Les données d'ACV des équipements, téléchargeables sur le site de la Base Empreinte (section Documentation > 2- AE - Référentiels sectoriels & Echelles > Numérique). Ces données sont également dispoinbles via le modèle publicodes [@incubateur-ademe/publicodes-acv-numerique](https://github.com/incubateur-ademe/publicodes-acv-numerique).
+      - Le [baromètre du numérique](https://www.arcep.fr/cartes-et-donnees/nos-publications-chiffrees/barometre-du-numerique/le-barometre-du-numerique-edition-2025.html), piloté notamment par l'Arcep, fournissant des données sur la diffusion des équipements numériques (nombre d'équipements au sein des foyers), l’évolution de leurs usages et la perception de leur empreinte environnementale.
+  formule:
+    somme:
+      - internet
+      - visio
+      - appareils
+      - ia
+
+divers . numérique . ia:
+  icônes: 🤖
+  formule: empreinte requête * nombre de requêtes par jour * (251 - DT . congé)
+
+divers . numérique . ia . empreinte requête:
+  formule: 0.00114 kgCO2e/requête
+  note:
+    D'après une étude de Carbone4 et l'ADEME de 2025 sur les impacts environnementaux de l'IA de Mistral AI :https://mistral.ai/news/our-contribution-to-a-global-environmental-standard-for-ai
+    , une requête à un modèle de langage de grande taille (LLM) génère en moyenne 1.14 grammes de CO2e.
+    Cette étude est précurseuse et se base sur des données partielles qui sous estiment sans doute l'empreinte réelle. Néanmoins, en l'absence de données plus robustes, nous utilisons cette valeur comme base de calcul.
+    Ce calcul ne prend pas en compte la phase d'entrainement, mais seulement celle d'inférence (utilisation du modèle). En considérant un mix électrique mondial.
+
+divers . numérique . ia . nombre de requêtes par jour:
+  description: Cette question permet d’évaluer l’impact carbone lié à l’usage de l’intelligence artificielle générative. Ces outils nécessitent d’importantes ressources informatiques et énergétiques pour fonctionner, chaque requête sollicitant des serveurs à forte consommation électrique partout dans le monde.
+  question: Combien de requêtes à des modèles d'IA (ChatGPT, Copilot, Gemini…) effectuez-vous par jour dans le cadre de votre activité professionnelle ?
+  unité: requêtes/jour
+  plancher: 0
+  plafond: 1000
+  par défaut: 0
+  suggestions:
+    Aucun: 0
+    Peu: 5
+    Modérément: 20
+    Beaucoup: 50
+
+divers . numérique . visio:
+  icônes: 🎥
+  formule: empreinte horaire * durée journalière * (251 - DT . congé)
+
+divers . numérique . visio . empreinte horaire:
+  formule: 0.995 kgCO2e/h
+  note: FE utilisé est issue de NégaOctet 1.4 "Réaliser une webconférence d'une heure entre 20 emplacements équipés chacun d'une connexion mobile"
+
+divers . numérique . visio . durée journalière:
+  question: Combien d'heures passez-vous par jour en moyenne en visioconférence dans le cadre de votre activité professionnelle ?
+  description: Seules les heures liées à votre activité professionnelle doivent être comptabilisées.
+  unité: h/jour
+  plancher: 0
+  plafond: 16
+  par défaut: 1
+  suggestions:
+    Aucune: 0
+    Peu: 1
+    Modérément: 3
+    Beaucoup: 6
+  note: D'après le [baromètre du numérique 2025](https://www.arcep.fr/cartes-et-donnees/nos-publications-chiffrees/barometre-du-numerique/le-barometre-du-numerique-edition-2025.html), 54% des répondants déclarent passer plus de 1 heure par jour en visioconférence pour un usage professionnel. En considérant le graphe page 18 du rapport complet, on peut estimer une médiane autour de 14h par semaine, soit 2 heures par jour environ.
+
+divers . numérique . internet:
+  icônes: 🌐
+  formule: empreinte horaire * durée journalière * (251 - DT . congé)
+
+divers . numérique . internet . empreinte horaire:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors:
+          moyenne:
+            - 0.0523 kgCO2e/h
+            - 0.0311 kgCO2e/h
+      - si: métrique = "eau"
+        alors:
+          moyenne:
+            - 0.536 l/h
+            - 0.504 l/h
+  note: |
+    En octobre 2024, l'ADEME accompagné la sortie de l'[étude de l'impact environnemental des usages audiovisuels en France](https://www.arcom.fr/se-documenter/etudes-et-donnees/etudes-bilans-et-rapports-de-larcom/etude-de-limpact-environnemental-des-usages-audiovisuels-en-france) réalisée par l'Arcom et l'Arcep. Le rapport complet est disponible [ici](https://www.arcom.fr/sites/default/files/2024-10/Arcom-arcep-ademe-etude-impact-environnemental-des-usages-audiovisuels.pdf).
+
+    Cette étude propose différents scénarios d'usage d'internet et leurs impacts environnementaux. Nous avons retenu 2 scénarios:
+
+    - A4: Écoute de musique/podcast sur une plateforme de streaming (application) sur un smartphone connecté à internet via réseau mobile
+    - V5: Visionnage de vidéo en ligne sur une plateforme de partage de vidéos en HD sur un smartphone connecté à internet via réseau mobile
+
+    Pour le scénario A4, l'étude estime (cf page 329 du rapport):
+      - une empreinte carbone de 0.0131 kgCO2e/h soit 13.1 gCO2e/h.
+      - une empreinte eau de 0.000134 m3/h soit 0.134 l/h.
+
+    Pour le scénario V5, l'étude estime (cf page 334 du rapport):
+      - une empreinte carbone de de 0.0523 kgCO2e/h soit 52.3 gCO2e/h.
+      - une empreinte eau de 0.000536 m3/h soit 0.536 l/h.
+
+    Nous utilisons une moyenne de ces scénarios, **c'est une hypothèse forte (mais conservatrice)** car l'usage d'un smartphone pour de l'écoute musical ou visionnage vidéo n'est pas forcément représentatif de l'ensemble des usages d'internet (envoi de mails, surf web, streaming vidéo sur TV ou ordinateur, etc.).
+
+divers . numérique . internet . durée journalière:
+  question: Combien d'heures passez-vous par jour sur internet ?
+  description: Seules les heures liées à votre activité professionnelle doivent être comptabilisées.
+  unité: h/jour
+  plancher: 0
+  plafond: 16
+  par défaut: 2
+  suggestions:
+    Aucune: 0
+    Peu: 1
+    Modérément: 3
+    Beaucoup: 6
+  note: D'après le [baromètre du numérique 2025](https://www.arcep.fr/cartes-et-donnees/nos-publications-chiffrees/barometre-du-numerique/le-barometre-du-numerique-edition-2025.html), 72% des répondants déclarent passer plus de 2 heures par jour devant les écrans pour un usage personnel. En considérant le graphe page 16 du rapport complet, on peut estimer une médiane autour de 22h par semaine, soit 3 heures par jour environ.
+
+divers . numérique . appareils:
+  mosaique:
+    type: nombre
+    options:
+      - téléphone . nombre
+      # - TV . nombre
+      - ordinateur portable . nombre
+      - ordinateur fixe . nombre
+      - tablette . nombre
+      - écran . nombre
+      # - enceinte bluetooth . nombre
+      # - console de salon . nombre
+      # - console portable . nombre
+      - imprimante . nombre
+  question: Quels équipements numériques récent (moins de 3ans)  utilisez-vous au bureau et en télétravail ?
+  description: |
+    Seuls les équipements numériques récents sont pris en compte, car l’essentiel de leur impact provient de leur fabrication. Pour les anciens, cet impact est déjà “amorti”, c’est-à-dire réparti sur leurs années d’utilisation.
+  formule:
+    somme:
+      - téléphone
+      # - TV
+      - ordinateur portable
+      - ordinateur fixe
+      - tablette
+      - écran
+      # - enceinte bluetooth
+      # - console de salon
+      # - console portable
+      - imprimante
+
+divers . numérique . appareils . téléphone:
+  icônes: 📱
+  formule: empreinte * nombre / durée
+  note: |
+    Les téléphones, et particulièrement les smartphones récents, sont le symbole par excellence de la *high-tech*, qui est réputée consommer beaucoup de ressources.
+    La question est d'autant plus importante qu'ils sont souvent renouvelés régulièrement, par exemple à chaque sortie annuelle du nouvel iPhone.
+    En réalité, notamment en comparaison du nombre d'heures que nous passons sur ces petits objets, leur empreinte climat pourrait être compatible avec un style de vie durable. Illustration :
+    Un téléphone haut de gamme (iPhone X) c'est un peu moins de 100kgCO2e. En supposant qu'on achète ce smartphone dernier cri tous les 2 ans, on a autour de 50kgCO2e/an d'empreinte. Cela représente un demi-pourcent de l'empreinte moyenne d'un français (11 tonnes). Et 2.5% d'une empreinte durable de 2 tonnes / an.
+    Si vous n'avez pas de téléphone mobile, il y a de grandes chances pour que vous ayez un fixe.
+divers . numérique . appareils . téléphone . nombre:
+  titre: Nombre de smartphones
+  question: Nombre de smartphones
+  plancher: 0
+  plafond: 5
+  arrondi: 2 décimales
+  par défaut: 1
+  note: |
+    D'après le [baromètre du numérique 2025](https://www.arcep.fr/cartes-et-donnees/nos-publications-chiffrees/barometre-du-numerique/le-barometre-du-numerique-edition-2025.html), un foyer français possède en moyenne 2,8 smartphones (voir 19 du rapport complet).
+divers . numérique . appareils . téléphone . durée:
+  titre: Durée de vie d'un smartphone
+  formule: acv numerique . acv . smartphone . durée de vie théorique / 1 an
+divers . numérique . appareils . téléphone . empreinte:
+  titre: Empreinte d'un smartphone
+  icônes: 📱✨
+  note: |
+    Dans la première version de Nos Gestes Climat nous segmentions les possibilités de cette question en trois catégorie, selon les disponibilités des données dans la base carbone et fabricants).
+
+    - Téléphone basique (aussi appelé "feature phone", qui sont aujourd'hui au croisement entre le fameux Nokia 3310 et le smartphone, dont l'écran reste petit et les composants bas de gamme)
+    - Smartphone classique (milieu de gamme, qui représente l'écrasante majorité des ventes. Tous les smartphones vendus en 2021 ou presque ont un écran supérieur à 5.5 pouces)
+    - Smartphone haut de gamme (la base bilan-GES n'inclut pas de catégories "téléphone haut de gamme" ou "écran > 6 pouces". De plus, l'empreinte d'un iPhone 11 estimée par Apple elle-même est de 72kg de CO₂, dont 79% donc ~57kg juste pour la production.
+
+    Néanmoins, les dernières données ADEME (voir base Empreinte), à l'image des [constructeurs](https://www.apple.com/environment/pdf/products/iphone/iPhone_11_PER_sept2019.pdf), semblent donner une valeur plus élevée que les chiffres de la base Carbone.
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+divers . numérique . appareils . téléphone . empreinte carbone:
+  formule: (acv numerique . acv . smartphone . carbone . fabrication + acv numerique . acv . smartphone . carbone . distribution) / 1000 gCO2e/kgCO2e
+  unité: kgCO2e
+
+divers . numérique . appareils . téléphone . empreinte eau:
+  formule: acv numerique . acv . smartphone . eau . fabrication + acv numerique . acv . smartphone . eau . distribution
+  unité: l
+
+divers . numérique . appareils . ordinateur portable:
+  icônes: 💻
+  formule: empreinte * nombre / durée
+divers . numérique . appareils . ordinateur portable . nombre:
+  titre: Nombre d'ordinateurs portables
+  question: Nombre d'ordinateurs portables
+  plancher: 0
+  plafond: 5
+  arrondi: 2 décimales
+  par défaut: 1
+  note: |
+    D'après le [baromètre du numérique 2025](https://www.arcep.fr/cartes-et-donnees/nos-publications-chiffrees/barometre-du-numerique/le-barometre-du-numerique-edition-2025.html), un foyer français possède en moyenne 1,9 ordinateurs portables / fixe (voir 19 du rapport complet). On considère, en moyenne, 1 ordinateur fixe et un ordinateur portable par foyer.
+divers . numérique . appareils . ordinateur portable . durée:
+  titre: Durée de vie d'un ordinateur portable
+  formule: acv numerique . acv . ordinateur portable . durée de vie théorique / 1 an
+divers . numérique . appareils . ordinateur portable . empreinte:
+  titre: Empreinte ordinateur portable
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+divers . numérique . appareils . ordinateur portable . empreinte carbone:
+  formule: (acv numerique . acv . ordinateur portable . carbone . fabrication + acv numerique . acv . ordinateur portable . carbone . distribution) / 1000 gCO2e/kgCO2e
+  unité: kgCO2e
+
+divers . numérique . appareils . ordinateur portable . empreinte eau:
+  formule: acv numerique . acv . ordinateur portable . eau . fabrication + acv numerique . acv . ordinateur portable . eau . distribution
+  unité: l
+
+divers . numérique . appareils . ordinateur fixe:
+  icônes: 🖥
+  formule: empreinte * nombre / durée
+  note: |
+    Nous considérons qu'un ordinateur fixe c'est une tour et un écran détaché (même s'il existe des ordinateurs fixes où tout est "intégré" dans l'écran).
+divers . numérique . appareils . ordinateur fixe . nombre:
+  titre: Nombre d'ordinateurs fixes
+  question: Nombre d'ordinateurs fixes
+  plancher: 0
+  plafond: 5
+  arrondi: 2 décimales
+  par défaut: 0
+  note: |
+    D'après le [baromètre du numérique 2025](https://www.arcep.fr/cartes-et-donnees/nos-publications-chiffrees/barometre-du-numerique/le-barometre-du-numerique-edition-2025.html), un foyer français possède en moyenne 1,9 ordinateurs portables / fixe (voir 19 du rapport complet). On considère, en moyenne, 1 ordinateur fixe et un ordinateur portable par foyer.
+divers . numérique . appareils . ordinateur fixe . durée:
+  titre: Durée de vie d'un ordinateur fixe
+  formule:
+    moyenne:
+      - acv numerique . acv . ordinateur fixe . durée de vie théorique / 1 an
+      - acv numerique . acv . écran . durée de vie théorique / 1 an
+divers . numérique . appareils . ordinateur fixe . empreinte:
+  titre: Empreinte d'un ordinateur fixe
+  formule: tour . empreinte + écran . empreinte
+
+divers . numérique . appareils . tour:
+divers . numérique . appareils . tour . empreinte:
+  titre: Empreinte d'une tour d'ordinateur
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+divers . numérique . appareils . tour . empreinte carbone:
+  formule: (acv numerique . acv . ordinateur fixe . carbone . fabrication + acv numerique . acv . ordinateur fixe . carbone . distribution) / 1000 gCO2e/kgCO2e
+  unité: kgCO2e
+divers . numérique . appareils . tour . empreinte eau:
+  formule: acv numerique . acv . ordinateur fixe . eau . fabrication + acv numerique . acv . ordinateur fixe . eau . distribution
+  unité: l
+
+divers . numérique . appareils . écran:
+  icônes: 🖥️
+  formule: empreinte * nombre / durée
+divers . numérique . appareils . écran . nombre:
+  titre: Nombre d''écrans'
+  question: Nombre d'écrans
+  plancher: 0
+  plafond: 5
+  arrondi: 2 décimales
+  par défaut: 1
+
+divers . numérique . appareils . écran . durée:
+  titre: Durée de vie d'un écran
+  formule: acv numerique . acv . écran . durée de vie théorique / 1 an
+divers . numérique . appareils . écran . empreinte:
+  titre: Empreinte d'un écran
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+divers . numérique . appareils . écran . empreinte carbone:
+  formule: (acv numerique . acv . écran . carbone . fabrication + acv numerique . acv . écran . carbone . distribution) / 1000 gCO2e/kgCO2e
+  unité: kgCO2e
+divers . numérique . appareils . écran . empreinte eau:
+  formule: acv numerique . acv . écran . eau . fabrication + acv numerique . acv . écran . eau . distribution
+  unité: l
+
+divers . numérique . appareils . tablette:
+  icônes: ⬛
+  formule: empreinte * nombre / durée
+divers . numérique . appareils . tablette . nombre:
+  titre: Nombre de tablettes
+  question: Nombre de tablettes
+  plancher: 0
+  plafond: 5
+  arrondi: 2 décimales
+  par défaut: 0
+  note: |
+    D'après le [baromètre du numérique 2025](https://www.arcep.fr/cartes-et-donnees/nos-publications-chiffrees/barometre-du-numerique/le-barometre-du-numerique-edition-2025.html), un foyer français possède en moyenne 1,2 tablettes (voir 19 du rapport complet).
+divers . numérique . appareils . tablette . durée:
+  titre: Durée de vie d'une tablette
+  formule: acv numerique . acv . tablette . durée de vie théorique / 1 an
+divers . numérique . appareils . tablette . empreinte:
+  titre: Empreinte tablette
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+divers . numérique . appareils . tablette . empreinte carbone:
+  formule: (acv numerique . acv . tablette . carbone . fabrication + acv numerique . acv . tablette . carbone . distribution) / 1000 gCO2e/kgCO2e
+  unité: kgCO2e
+divers . numérique . appareils . tablette . empreinte eau:
+  formule: acv numerique . acv . tablette . eau . fabrication + acv numerique . acv . tablette . eau . distribution
+  unité: l
+
+# divers . numérique . appareils . TV:
+#   icônes: 📺
+#   formule: empreinte * nombre / (durée * coefficient préservation * logement . habitants)
+#   note: |
+#     La taille étant très variable, il serait mieux d'en faire des variations.
+
+#     Notons aussi :
+#       - la résolution (empreinte d'une 8k ?)
+#       - la technologie d'affichage (LED, plasma, etc.)
+# divers . numérique . appareils . TV . nombre:
+#   titre: Nombre de TV
+#   question: Nombre de TV
+#   plancher: 0
+#   plafond: 10
+#   arrondi: 2 décimales
+#   par défaut: 2
+#   note: |
+#     D'après le [baromètre du numérique 2025](https://www.arcep.fr/cartes-et-donnees/nos-publications-chiffrees/barometre-du-numerique/le-barometre-du-numerique-edition-2025.html), un foyer français possède en moyenne 2,8 télévisions (voir 19 du rapport complet).
+# divers . numérique . appareils . TV . durée:
+#   titre: Durée de vie d'une TV
+#   formule: acv numerique . acv . TV . durée de vie théorique / 1 an
+# divers . numérique . appareils . TV . empreinte:
+#   titre: Empreinte TV
+#   formule:
+#     variations:
+#       - si: métrique = "carbone"
+#         alors: empreinte carbone
+#       - si: métrique = "eau"
+#         alors: empreinte eau
+# divers . numérique . appareils . TV . empreinte carbone:
+#   formule: (acv numerique . acv . TV . carbone . fabrication + acv numerique . acv . TV . carbone . distribution) / 1000 gCO2e/kgCO2e
+#   unité: kgCO2e
+# divers . numérique . appareils . TV . empreinte eau:
+#   formule: acv numerique . acv . TV . eau . fabrication + acv numerique . acv . TV . eau . distribution
+#   unité: l
+
+# divers . numérique . appareils . enceinte bluetooth:
+#   icônes: 🎵
+#   formule: empreinte * nombre / (durée * coefficient préservation)
+# divers . numérique . appareils . enceinte bluetooth . nombre:
+#   titre: Nombre d'enceintes bluetooth
+#   question: Nombre d'enceintes bluetooth
+#   plancher: 0
+#   plafond: 5
+#   arrondi: 2 décimales
+#   par défaut: 1
+#   note: |
+#     Le baromètre du numérique 2025 ne donne pas d'information sur la possession d'enceintes bluetooth. Nous considérons une enceinte bluetooth par personne en moyenne, qui peut couvrir d'autres types d'enceintes à défaut de les compter ailleurs.
+# divers . numérique . appareils . enceinte bluetooth . durée:
+#   titre: Durée de vie d'une enceinte bluetooth
+#   formule: acv numerique . acv . enceinte . durée de vie théorique / 1 an
+# divers . numérique . appareils . enceinte bluetooth . empreinte:
+#   titre: Empreinte enceinte bluetooth
+#   formule:
+#     variations:
+#       - si: métrique = "carbone"
+#         alors: empreinte carbone
+#       - si: métrique = "eau"
+#         alors: empreinte eau
+# divers . numérique . appareils . enceinte bluetooth . empreinte carbone:
+#   formule: (acv numerique . acv . enceinte . carbone . fabrication + acv numerique . acv . enceinte . carbone . distribution) / 1000 gCO2e/kgCO2e
+#   unité: kgCO2e
+# divers . numérique . appareils . enceinte bluetooth . empreinte eau:
+#   formule: acv numerique . acv . enceinte . eau . fabrication + acv numerique . acv . enceinte . eau . distribution
+#   unité: l
+
+# divers . numérique . appareils . console de salon:
+#   icônes: 🕹
+#   formule: empreinte * nombre / (durée * coefficient préservation * logement . habitants)
+# divers . numérique . appareils . console de salon . nombre:
+#   titre: Nombre de consoles de salon
+#   question: Nombre de consoles de salon
+#   plancher: 0
+#   plafond: 5
+#   arrondi: 2 décimales
+#   par défaut: 0.45
+#   note: |
+#     D'après le [baromètre du numérique 2025](https://www.arcep.fr/cartes-et-donnees/nos-publications-chiffrees/barometre-du-numerique/le-barometre-du-numerique-edition-2025.html), un foyer français possède en moyenne 0,9 consoles de jeu (voir 19 du rapport complet).
+# divers . numérique . appareils . console de salon . durée:
+#   titre: Durée de vie d'une console de salon
+#   formule: acv numerique . acv . console de salon . durée de vie théorique / 1 an
+# divers . numérique . appareils . console de salon . empreinte:
+#   titre: Empreinte console de salon
+#   formule:
+#     variations:
+#       - si: métrique = "carbone"
+#         alors: empreinte carbone
+#       - si: métrique = "eau"
+#         alors: empreinte eau
+# divers . numérique . appareils . console de salon . empreinte carbone:
+#   formule: (acv numerique . acv . console de salon . carbone . fabrication + acv numerique . acv . console de salon . carbone . distribution) / 1000 gCO2e/kgCO2e
+#   unité: kgCO2e
+# divers . numérique . appareils . console de salon . empreinte eau:
+#   formule: acv numerique . acv . console de salon . eau . fabrication + acv numerique . acv . console de salon . eau . distribution
+#   unité: l
+
+# divers . numérique . appareils . console portable:
+#   icônes: 🎮
+#   formule: empreinte * nombre / (durée * coefficient préservation)
+# divers . numérique . appareils . console portable . nombre:
+#   titre: Nombre de consoles portables
+#   question: Nombre de consoles portables
+#   plancher: 0
+#   plafond: 10
+#   arrondi: 2 décimales
+#   par défaut: 0.45 / logement . habitants
+#   note: |
+#     D'après le [baromètre du numérique 2025](https://www.arcep.fr/cartes-et-donnees/nos-publications-chiffrees/barometre-du-numerique/le-barometre-du-numerique-edition-2025.html), un foyer français possède en moyenne 0,9 consoles de jeu (voir 19 du rapport complet).
+# divers . numérique . appareils . console portable . durée:
+#   titre: Durée de vie d'une console portable
+#   formule: acv numerique . acv . console portable . durée de vie théorique / 1 an
+# divers . numérique . appareils . console portable . empreinte:
+#   titre: Empreinte console portable
+#   formule:
+#     variations:
+#       - si: métrique = "carbone"
+#         alors: empreinte carbone
+#       - si: métrique = "eau"
+#         alors: empreinte eau
+# divers . numérique . appareils . console portable . empreinte carbone:
+#   formule: (acv numerique . acv . console portable . carbone . fabrication + acv numerique . acv . console portable . carbone . distribution) / 1000 gCO2e/kgCO2e
+#   unité: kgCO2e
+# divers . numérique . appareils . console portable . empreinte eau:
+#   formule: acv numerique . acv . console portable . eau . fabrication + acv numerique . acv . console portable . eau . distribution
+#   unité: l
+
+divers . numérique . appareils . imprimante:
+  icônes: 🖨
+  formule: empreinte * nombre / (durée * coefficient préservation)
+divers . numérique . appareils . imprimante . nombre:
+  titre: Nombre d'imprimantes
+  question: Nombre d'imprimantes
+  plancher: 0
+  plafond: 5
+  arrondi: 2 décimales
+  par défaut: 0
+divers . numérique . appareils . imprimante . durée:
+  titre: Durée de vie d'une imprimante
+  formule: acv numerique . acv . imprimante . durée de vie théorique / 1 an
+divers . numérique . appareils . imprimante . empreinte:
+  titre: Empreinte imprimante
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+divers . numérique . appareils . imprimante . empreinte carbone:
+  formule: (acv numerique . acv . imprimante . carbone . fabrication + acv numerique . acv . imprimante . carbone . distribution) / 1000 gCO2e/kgCO2e
+  unité: kgCO2e
+divers . numérique . appareils . imprimante . empreinte eau:
+  formule: acv numerique . acv . imprimante . eau . fabrication + acv numerique . acv . imprimante . eau . distribution
+  unité: l
+
+# divers . numérique . appareils . renouvellement téléphone:
+#   applicable si:
+#     toutes ces conditions:
+#       - numérique . appareils . nombre total > 0
+#       - numérique . appareils . téléphone . nombre > 0
+#   question: En 5 ans, combien de fois avez-vous changé de téléphone ?
+#   description: |
+#     Indiquez la fréquence de renouvellement de votre téléphone. Cette information nous aide à mieux estimer l'empreinte de vos appareils numériques.
+#   note: |
+#     La durée de vie d'un smartphone est de 2,5 ans environ selon les dernières données ADEME.
+#     Pour le moment, nous ne posons pas de question sur le caractère reconditionné de ses appareils, faute de données notamment.
+#   par défaut: "'moyen'"
+#   une possibilité:
+#     - faible
+#     - moyen
+#     - élevé
+
+# divers . numérique . appareils . renouvellement téléphone . faible:
+#   titre: 0 ou 1 fois
+# divers . numérique . appareils . renouvellement téléphone . moyen:
+#   titre: 2 à 3 fois
+# divers . numérique . appareils . renouvellement téléphone . élevé:
+#   titre: 4 fois ou plus
+
+# divers . numérique . appareils . coefficient préservation:
+#   note: |
+#     Dans un souci de pédagogie, nous avons choisi d'appliquer un coefficient de préservation basé sur le taux de renouvellement de son téléphone. C'est une hypothèse forte car il n'est pas certain que le taux de renouvellement du téléphone soit corrélé avec celui des autres appareils, d'autant que le téléphone est souvent "le pire élève".
+
+#     Nous considérons que la personne qui déclare renouveller souvent son téléphone garde ses appareils la moitié de leur durée de vie moyenne constatée, à l'inverse celui qui conserve son téléphone au maximum repousse leur durée de vie moyenne. Cette grille pourra évoluer si de nouvelles sources ou études viennent compléter tout cela.
+#   formule:
+#     variations:
+#       - si: renouvellement téléphone = 'élevé'
+#         alors: 1 / 2
+#       - si: renouvellement téléphone = 'faible'
+#         alors: 4 / 3
+#       - sinon: 1
+
+divers . numérique . appareils . nombre total:
+  titre: Nombre d'appareils numériques professionnels possédés
+  formule:
+    somme:
+      - téléphone . nombre
+      # - TV . nombre
+      - ordinateur portable . nombre
+      - ordinateur fixe . nombre
+      - tablette . nombre
+      # - enceinte bluetooth . nombre
+      # - console de salon . nombre
+      # - console portable . nombre
+      - imprimante . nombre

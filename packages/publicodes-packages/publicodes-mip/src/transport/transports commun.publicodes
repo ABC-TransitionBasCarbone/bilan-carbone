@@ -1,0 +1,268 @@
+transport . transports commun:
+  # Cette variable "intermédiaire" est un hack pour réussir à mettre une mosaique fille après une mosaique mère
+  applicable si: présent
+  titre: Transports en commun
+  icônes: 🚋
+  formule: transport . transports commun . type * 1
+
+transport . transports commun . type:
+  applicable si: présent
+  titre: Transports en commun
+  mosaique:
+    type: selection
+    options:
+      - bus . présent
+      # - car . présent
+      - métro ou tram . présent
+    suggestions:
+      aucun:
+        bus . présent: non
+        # car . présent: non
+        métro ou tram . présent: non
+  question: Quels types de transports en commun avez-vous utilisés pour vos déplacements professionnels ?
+  icônes: 🚋
+  formule:
+    somme:
+      - bus
+      # - car
+      - métro ou tram
+
+transport . transports commun . type . bus:
+  titre: Bus
+  icônes: 🚌
+  description: |
+    Transport urbain.
+  # Je commente la veille formule (avec le hack) pour garder trace et je reprends la formule ici de NGE.
+  formule:
+    variations:
+      - si:
+          est défini: bus . présent
+        alors: empreinte
+      - sinon: empreinte par défaut
+#  formule:
+#    variations:
+#      - si:
+#          est défini: bus . présent
+#        alors:
+#          # This is a hack to make sure all branch is not desactivated: we need to have the value in a `somme`, if not, the value applicability is spread to the parent and all branch is desactivated.
+#          somme:
+#            - empreinte
+#      - sinon: empreinte par défaut
+
+# On fait *12 car on l'impact par mois et on veut l'impact par an
+transport . transports commun . type . bus . empreinte:
+  formule: heures * impact par heure * 12
+  unité: kgCO2e
+
+transport . transports commun . type . bus . empreinte par défaut:
+  valeur: bus . empreinte * 12
+  contexte:
+    bus . présent: oui
+    bus . heures: 2
+  #    bus . heures: bus . temps moyen
+  note: la valeur de 30 min de temps de trajet par défaut n'est pas sourcée mais semble toutefois cohérente.
+
+transport . transports commun . type . bus . présent:
+  question: Vous arrive t-il de prendre le bus ?
+
+transport . transports commun . type . bus . impact par heure:
+  formule: impact par km * vitesse
+  unité: kgCO2e/h
+  description: |
+    Sur la base de 113 gCO2e/(passager.km) et de 12 km/h de vitesse moyenne
+
+transport . transports commun . type . bus . impact par km:
+  formule: 0.113
+  unité: kgCO2e/km
+  note: |
+    Autobus - Gazole ; 113 gCO2e/km/personne ; Base Carbone consultée le 04/04/2022
+    La flotte étant majoritairement Diesel en France (https://www.statistiques.developpement-durable.gouv.fr/69-000-autocars-en-circulation-au-1er-janvier-2020), on fait le choix de prendre ce FE (plus fiable que la référence "Autobus moyen" selon la base carbone)
+    La prise compte des autres motorisations de cette catégorie de la base carbone fera diminuer ce FE (en pondérant selon les caractéristiques de la flotte française). (Ex: Autobus - électrique = 21.7 gCO2e/km/personne)
+
+transport . transports commun . type . bus . vitesse:
+  formule: 12
+  unité: km/h
+  note: Hypothèse de 12 km/h de vitesse moyenne d'après [cet article](https://www.lemonde.fr/blog/transports/2013/03/11/les-petits-secrets-de-la-ratp-reveles-au-public/) sur la RATP)
+
+transport . transports commun . type . bus . heures:
+  question: Dans le cadre de vos déplacements professionnels, combien d'heures passez-vous en bus par mois ?
+  suggestions:
+    1h: 1
+    2h: 2
+    5h: 5
+  unité: h/mois
+  par défaut: 0.5
+
+#transport . transports commun . type . bus . temps moyen:
+#  formule: distance moyenne hebdo / vitesse
+#  untité: h/semaine
+#
+#transport . transports commun . type . bus . distance moyenne hebdo:
+#  formule: transport . transports commun . type . bus . distance moyenne annuelle / commun . semaines par an
+#  unité: km/semaine
+#
+#transport . transports commun . type . bus . distance moyenne annuelle:
+#  formule: (15700000000 km / 2) / population
+#  unité: km
+#  note: |
+#    D'après [l'étude "Chiffres clef du transport 2021" (données de 2019)](https://www.statistiques.developpement-durable.gouv.fr/edition-numerique/chiffres-cles-transport-2021/13-transport-routier-de-voyageurs), les français parcourent 15,7 milliards de km en bus et tram chaque année.
+
+# transport . transports commun . type . car:
+#   titre: Autocar
+#   description: Transport interurbain.
+#   icônes: 🚌
+# # Je commente la veille formule (avec le hack) pour garder trace et je reprends la formule ici de NGE.
+#   formule:
+#     variations:
+#       - si:
+#           est défini: car . présent
+#         alors: empreinte
+#       - sinon: empreinte par défaut
+# #  formule:
+# #    variations:
+# #      - si:
+# #          est défini: car . présent
+# #        alors:
+# #          # This is a hack to make sure all branch is not desactivated: we need to have the value in a `somme`, if not, the value applicability is spread to the parent and all branch is desactivated.
+# #          somme:
+# #            - empreinte
+# #      - sinon: empreinte par défaut
+
+# transport . transports commun . type . car . empreinte:
+#   formule: km * impact par km
+#   unité: kgCO2e
+
+# transport . transports commun . type . car . empreinte par défaut:
+#   valeur: car . empreinte
+#   contexte:
+#     car . présent: oui
+#     car . km: 15
+# #    car . km par semaine: car . distance moyenne hebdo
+#   note: la valeur de 15 km de trajet par défaut n'est pas sourcée mais semble toutefois cohérente.
+
+# transport . transports commun . type . car . présent:
+#   question: Vous arrive t-il de prendre le car ?
+
+# transport . transports commun . type . car . km:
+#   question: Combien de kilomètres allez-vous faire en car pour aller et revenir de votre lieu de séjour ?
+#   suggestions:
+#     10 km: 10
+#     15 km: 15
+#     20 km: 20
+#   unité: km
+#   par défaut: 15
+
+# #transport . transports commun . type . car . distance moyenne hebdo:
+# #  formule: transport . transports commun . type . car . distance moyenne annuelle / commun . semaines par an
+# #  unité: km/semaine
+# #
+# #transport . transports commun . type . car . distance moyenne annuelle:
+# #  formule: 45000000000 km / population
+# #  unité: km
+# #  note: |
+# #    D'après [l'étude "Chiffres clef du transport 2021" (données de 2019)](https://www.statistiques.developpement-durable.gouv.fr/edition-numerique/chiffres-cles-transport-2021/13-transport-routier-de-voyageurs), les français parcourent en moyenne 45 milliards de km en car par an.
+
+# transport . transports commun . type . car . impact par km:
+#   formule: 0.100
+#   unité: kgCO2e/km
+#   note: |
+#     FE (amont + combustion) Autobus - Gazole courte distance [Base Empreinte - hypothèses de la section "Autobus - autocars"] : 92 gCO2e/passager.km consolidé
+#     en intégrant la fabrication du véhicule. Soit une composante "fabrication" estimée à 8.9 gCO2eq/passager.km pour un FE total de 100.9 gCO2e/passager.km
+#     Hypothèses retenues pour la consolidation (reprises de la Base Empreinte) :
+#      - 4 kgCO2eq/kg pour la fabrication des autobus/autocar (basé sur une analyse de la littérature)
+#      - masse d’un autocar = 12 tonnes
+#      - durée de vie en km = 361 884 km
+#      - nombre de passagers moyen = 30
+#     /!\ Bizarrement ce FE consolidé à partir des hypothèses diffère de ce qu'affiche la Base Empreinte - FE Autobus/Gazole : 113 gCO2eq/passager.km
+#     /!\ Le 92 gCO2eq/passager.km de la documentation ne correspond pas à la somme amont + combustion du FE : 20.5 + 83.8 = 104,3 gCO2eq/passager.k
+
+transport . transports commun . type . métro ou tram:
+  titre: Métro, tramway, train de banlieue
+  icônes: 🚊
+  description: |
+    Tous modes de transport urbains sur rails.
+  # Je commente la veille formule (avec le hack) pour garder trace et je reprends la formule ici de NGE.
+  formule:
+    variations:
+      - si:
+          est défini: métro ou tram . présent
+        alors: empreinte
+      - sinon: empreinte par défaut
+#  formule:
+#    variations:
+#      - si:
+#          est défini: métro ou tram . présent
+#        alors:
+#          # This is a hack to make sure all branch is not desactivated: we need to have the value in a `somme`, if not, the value applicability is spread to the parent and all branch is desactivated.
+#          somme:
+#            - empreinte
+#      - sinon: empreinte par défaut
+
+# On fait *12 car on l'impact par mois et on veut l'impact par an
+transport . transports commun . type . métro ou tram . empreinte:
+  formule: heures * impact par heure * 12
+  unité: kgCO2e
+
+transport . transports commun . type . métro ou tram . empreinte par défaut:
+  valeur: métro ou tram . empreinte * 12
+  contexte:
+    métro ou tram . présent: oui
+    métro ou tram . heures: 2
+  note: la valeur de 2 heures de temps de trajet par défaut n'est pas sourcée mais semble toutefois cohérente.
+
+transport . transports commun . type . métro ou tram . présent:
+  question: Vous arrive t-il de prendre le métro ou tram ?
+
+transport . transports commun . type . métro ou tram . impact par heure:
+  formule: impact par km * vitesse
+  unité: kgCO2e/h
+  description: Nous confondons l'ensemble des moyens de transport urbains sur rails, à savoir métro, tramway et RER.
+
+transport . transports commun . type . métro ou tram . impact par km:
+  formule:
+    moyenne:
+      - impact par km métro
+      - impact par km RER
+  unité: kgCO2e/km
+  note: Nous faisons l'hypothèse (forte) d'une moyenne non pondérée pour le calcul de l'impact au km.
+
+transport . transports commun . type . métro ou tram . impact par km métro:
+  formule: 0.00503
+  unité: kgCO2e/km
+  note: Métro, tramway, trolleybus/2018/Agglomération de 100 000 à 250 000 habitants ; Base Carbone consultée le 06/12/2023
+
+transport . transports commun . type . métro ou tram . impact par km RER:
+  formule: 0.00978
+  unité: kgCO2e/km
+  note: RER et transilien/2022/Ile de France ; Base Carbone consultée le 06/12/2023
+
+transport . transports commun . type . métro ou tram . vitesse:
+  formule: 25
+  unité: km/h
+  note: Hypothèse de 25 km/h de vitesse moyenne, d'après l'article [Les petits secrets de la RATP révélés au public](http://transports.blog.lemonde.fr/2013/03/11/les-petits-secrets-de-la-ratp-reveles-au-public/)
+
+transport . transports commun . type . métro ou tram . heures:
+  question: Dans le cadre de vos déplacements professionnels, combien d'heures passez-vous dans le métro, tram ou RER par mois ?
+  suggestions:
+    30 min: 0.5
+    1h: 1
+    2h: 2
+    5h: 5
+  unité: h/mois
+  par défaut: 2
+
+#transport . transports commun . type . métro ou tram . temps moyen:
+#  formule: distance moyenne hebdo / vitesse
+#  unité: h/semaine
+#
+#transport . transports commun . type . métro ou tram . distance moyenne hebdo:
+#  formule: transport . transports commun . type . métro ou tram . distance moyenne annuelle / commun . semaines par an
+#  unité: km/semaine
+#
+#transport . transports commun . type . métro ou tram . distance moyenne annuelle:
+#  formule: (15700000000 km / 2) / population
+#  unité: km
+#  note: |
+#    D'après [l'étude "Chiffres clef du transport 2021" (données de 2019)](https://www.statistiques.developpement-durable.gouv.fr/edition-numerique/chiffres-cles-transport-2021/13-transport-routier-de-voyageurs), les français parcourent 15,7 milliards de km en bus et tram chaque année.
+#
+#    Nous divisons cette valeur équitablement entre bus et métro ou tram.

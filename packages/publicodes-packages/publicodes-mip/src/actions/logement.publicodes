@@ -1,0 +1,669 @@
+logement . hébergement . écogestes:
+  titre: Appliquer les écogestes hôteliers
+  icônes: 📋
+  #  formule: 1% * hébergement . nuitées #C'est un hack (avec une formule bidon) pour réussir à afficher les informations régionales hébergement qui semblent conditionnées à une valeur de l'action mère
+  unité: kgCO2e
+  description: |
+    Adopter les bons gestes lors de son séjour à l'hôtel, location meublées ou tout autre type d'hébergement est important pour éviter une envolée des consommations d'énergie.
+
+logement . chauffage . baisse température:
+  titre: Baisser la consigne de son chauffage
+  icônes: 🏠🌡
+  description: |
+    Le chauffage représente 66 % de la dépense énergétique d’un ménage. De nombreux foyers sont encore équipés de chaudières au gaz et au fioul qui émettent d’importantes quantités de gaz à effet de serre. En faisant des économies de chauffage, on peut donc limiter de manière importante son impact sur le climat.
+
+    Baisser la température d'un degré permet de réaliser 7% d'économies d'énergie.
+
+    > Pour mieux maîtriser la température de votre logement, pensez à installer une régulation et une programmation.
+
+    > Pour en savoir plus, consultez [notre guide « Un hiver tout confort »](https://librairie.ademe.fr/changement-climatique-et-energie/5100-un-hiver-tout-confort-9791029718984.html) et [notre guide « Changer de chauffage »](https://librairie.ademe.fr/urbanisme-et-batiment/5099-changer-de-chauffage-9791029718731.html)
+  applicable si: température > 19
+  formule: (nombre degrés * gains 1 degré * empreinte chauffage air) / habitants
+  unité: kgCO2e
+
+logement . chauffage . baisse température . nombre degrés:
+  question: De combien de degrés seriez-vous prêt à diminuer la température de votre logement ?
+  icônes: ↘️🌡
+  description: |
+    Les ¾ de la consommation d’énergie d’un ménage sont consacrés au chauffage et à l’eau chaude.
+
+    Cette consommation d’énergie, en plus d’avoir un coût financier non négligeable, augmente l’empreinte carbone des ménages.
+
+    Elle peut toutefois facilement être limitée en diminuant la température des pièces occupées sans perdre de confort thermique ou bien ressentir une sensation de froid (à condition d’avoir des logements bien isolés).
+
+    Par exemple, régler la température entre 19° et 21°C dans les pièces occupées la journée (et 17°C la nuit ou dans les pièces peu occupées).
+
+    En effet, baisser la température de chauffage d’1°C représente une économie d’énergie de 7%.
+  par défaut: 1
+  unité: degré
+  suggestions:
+    1 degré: 1
+    2 degrés: 2
+    3 degrés: 3
+
+logement . température:
+  question: À quelle température chauffez-vous votre logement ?
+  description: Cette question nous permet simplement de ne pas vous proposer de baisser la température quand elle est déjà relativement faible.
+  icônes: 🌡
+  par défaut: 20
+  unité: degrés
+
+logement . chauffage . baisse température . gains 1 degré:
+  formule: 7
+  unité: "%/degré"
+  description: |
+    C'est la baisse estimée de dépense d'énergie quand on baisse la température de notre foyer chauffé de 1°C dans la gamme de température usuelle (autour de 20°).
+
+    Nous retenons l'estimation donnée dans le [guide ADEME](https://www.ademe.fr/40-trucs-astuces-economiser-leau-lenergie) "40 trucs pour économiser l'eau et l'énergie".
+  note: |
+    Où est la source pour ces 7% ? Peut-on décliner ce chiffre pour chaque type d'énergie (bois, gaz, etc.) ? Quelle est la sensibilité de ce chiffre au type de logement, son isolation, etc. ?
+
+logement . empreinte chauffage air:
+  formule:
+    variations:
+      - si: chauffage . choix utilisateur
+        alors: empreinte chauffage air utilisateur
+      - sinon: parc français . chauffage . empreinte moyenne chauffage air par m2 * logement . surface
+  description: |
+    Pour chaque kWh de chaque type d'énergie, quelle est la part utilisée pour le chauffage de l'air d'un foyer ?
+
+    > Nous utilisons ici [les données du CEREN](https://www.statistiques.developpement-durable.gouv.fr/consommation-denergie-par-usage-du-residentiel)
+    via le travail réalisé dans le fichier [chiffres parc logements français.publicodes](https://github.com/incubateur-ademe/nosgestesclimat/blob/master/data/logement/chiffres%20parc%20logements%20fran%C3%A7ais.publicodes).
+
+logement . empreinte chauffage air utilisateur:
+  formule:
+    somme:
+      - chauffage . électricité . présent * électricité * parc français . chauffage . part chauffage air électricité
+      - (chauffage . gaz . empreinte + chauffage . citerne propane . empreinte) * parc français . chauffage . part chauffage air gaz
+      - chauffage . bois . empreinte * parc français . chauffage . part chauffage air bois
+      - chauffage . fioul . empreinte * parc français . chauffage . part chauffage air fioul
+      - chauffage . réseau de chaleur . empreinte * parc français . chauffage . part chauffage air réseau de chaleur
+
+logement . chauffage . installer thermostat:
+  titre: Installer un thermostat programmable
+  icônes: 🌡️🖥️
+  description: |
+    Le saviez-vous ? L'installation d'un thermostat programmable permet de faire jusqu'à 15% d'économies de chauffage.
+
+    > Pour en savoir plus le fonctionnement du thermostat et sur son installation, [consultez notre article](https://agirpourlatransition.ademe.fr/particuliers/maison/economies-denergie-deau/reduire-facture-chauffage-thermostat-programmable).
+
+  note: Nous choisissons de partir sur une réduction de 12% de l'énergie liée au chauffage.
+  formule: empreinte chauffage air * 0.12 / habitants
+  unité: kgCO2e
+
+logement . chauffage . installer chauffe-eau solaire:
+  titre: S’équiper d’un chauffe-eau solaire
+  icônes: 🌡️🛁☀️
+  description: |
+    C'est la solution solaire thermique la plus simple à mettre en œuvre. Elle permet de couvrir une bonne partie des besoins d'eau chaude de la maison.
+
+    Selon l’appoint utilisé, le chauffe-eau solaire diminue les rejets de gaz à effet de serre de 45 % à plus de 70 % par rapport à un chauffe-eau à gaz.
+
+    Il permet aussi de diviser les dépenses d’eau chaude par 2 voire par 3 par rapport à un système électrique, au gaz ou au fioul.
+
+    > Pour en savoir plus sur la technologie, son fonctionnement et les coûts d’installation, consultez [notre guide "Adopter le solaire thermique"](https://librairie.ademe.fr/energies-renouvelables-reseaux-et-stockage/6136-adopter-le-solaire-thermique.html).
+
+  formule: empreinte eau chaude sanitaire * 0.65 / habitants
+
+logement . chauffage . empreinte eau chaude sanitaire:
+  formule:
+    variations:
+      - si: chauffage . choix utilisateur
+        alors: empreinte eau chaude sanitaire utilisateur
+      - sinon: parc français . chauffage . empreinte moyenne ecs par m2 * logement . surface
+  unité: kgCO2e
+  description: |
+    Pour chaque kWh de chaque type d'énergie, quelle est la part utilisée pour l'eau chaude sanitaire (ECS) d'un foyer ?
+
+    > Nous utilions ici [les données du CEREN](https://www.statistiques.developpement-durable.gouv.fr/consommation-denergie-par-usage-du-residentiel)
+    via le travail réalisé dans le fichier [chiffres parc logements français.publicodes](https://github.com/incubateur-ademe/nosgestesclimat/blob/master/data/logement/chiffres%20parc%20logements%20fran%C3%A7ais.publicodes).
+
+logement . chauffage . empreinte eau chaude sanitaire utilisateur:
+  formule:
+    somme:
+      - chauffage . électricité . présent * électricité * parc français . chauffage . part ecs électricité
+      - (chauffage . gaz . empreinte + chauffage . citerne propane . empreinte) * parc français . chauffage . part ecs gaz
+      - chauffage . bois . empreinte * parc français . chauffage . part ecs bois
+      - chauffage . fioul . empreinte * parc français . chauffage . part ecs fioul
+      - chauffage . réseau de chaleur . empreinte * parc français . chauffage . part ecs réseau de chaleur
+
+logement . électricité . éteindre appareils:
+  formule: empreinte du foyer / habitants
+  titre: Éteindre ses appareils en veille
+  icônes: 🏠📺
+  description: |
+    Nos appartements et nos maisons sont de plus en plus équipés d'appareils électriques et électroniques, qui souvent restent allumés inutilement ou en veille.
+
+    En les branchant sur une multiprise avec un interrupteur, vous pourrez les éteindre complètement en un clin d'œil.
+
+    Les veilles ont fait des progrès et consomment moins que par le passé : une directive européenne applicable depuis janvier 2017 limite leur puissance à 0,5 W pour un certain nombre d’appareilsPour les appareils qui restent connectés à Internet ou à des réseaux de données, la puissance est cependant encore de 3 W.
+
+    > Pour en savoir plus sur les différentes solutions pour réduire votre consommation d’électricité, consultez [notre guide « Réduire sa facture d’électricité »](https://librairie.ademe.fr/consommer-autrement/5696-reduire-sa-facture-d-electricite.html).
+
+logement . électricité . éteindre appareils . empreinte du foyer:
+  formule: énergie de veille * logement . électricité . empreinte au kWh
+
+logement . énergie de veille:
+  formule: puissance * temps d'absence
+  unité: kWh
+
+logement . énergie de veille . puissance:
+  formule: 0.050
+  unité: kW
+  description: |
+    > La puissance totale de ces veilles pour un ménage dépasse souvent 50 Watt
+  note: |
+    Il est bien possible que l'on sous-estime le nombre de Watt en veille. Notamment, il apparait que les box internet et TV à elle-seules en consomme plus que 50.
+
+    > La « box » est un équipement de plus en plus courant, qui reste souvent allumé 24 h sur 24 et qui génère une consommation pou-vant dépasser 200 kWh / an, soit autant que le lave-linge. Sa consommation totale sur un an se situe entre 150 et 300 kWh* : c'est autant qu'un grand réfrigérateur
+
+logement . énergie de veille . temps d'absence:
+  formule: commun . jours par an * journalier
+  unité: h
+logement . énergie de veille . temps d'absence . journalier:
+  formule: 12
+  unité: h/jour
+  description: On suppose qu'en moyenne, on n'est pas présent chez soi la moitié du temps, ou on dort. La nuit (8h) et en moyenne 4h en journée, pour prendre en compte les weekends qui compensent les journées de travail de 8h, et le fait que tout le monde dans le foyer n'est pas absent au même moment.
+
+logement . chauffage . se chauffer au bois:
+  titre: Se chauffer au bois
+  applicable si:
+    toutes ces conditions:
+      - propriétaire
+      - une de ces conditions:
+          - toutes ces conditions:
+              - est défini: chauffage . gaz . présent
+              - chauffage . gaz . présent
+          - toutes ces conditions:
+              - est défini: chauffage . fioul . présent
+              - chauffage . fioul . présent
+          - toutes ces conditions:
+              - est défini: chauffage . citerne propane . présent
+              - chauffage . citerne propane . présent
+  non applicable si:
+    toutes ces conditions:
+      - est défini: logement . construction . rénovation . travaux . chauffage . présent
+      - logement . construction . rénovation . travaux . chauffage . présent
+  icônes: 🔄🪵
+  formule: (logement . chauffage - recalcul) / habitants
+  unité: kgCO2e
+  description: |
+    S’équiper d’un poêle ou d’une chaudière à bois permet de ne plus dépendre des énergies fossiles (fuel, gaz) ou de l’électricité pour se chauffer. C’est un mode de chauffage économique.
+
+    > Découvrez [nos conseils pour bien utiliser votre poêle](https://librairie.ademe.fr/energies-renouvelables-reseaux-et-stockage/5664-comment-bien-se-chauffer-au-bois--9791029719745.html).
+
+    Attention toutefois à vous équipez d’un appareil moderne et performant car les vieux poêles libèrent des polluants dans l’air. Pour en savoir plus sur les appareils les plus performants, [consultez notre guide](https://librairie.ademe.fr/urbanisme-et-batiment/5667-adopter-le-chauffage-au-bois-9791029719769.html).
+  note: |
+    Nous considérons pour l'instant que le remplacement des kWh dédiés au chauffage par la même quantité de kWh de bois est une bonne approximation de premier ordre.
+    Nous pourrons par la suite l'adapter en fonction du rendement des installations résidentielles.
+
+logement . chauffage . se chauffer au bois . recalcul:
+  valeur: logement . chauffage . bois . empreinte
+  contexte:
+    logement . chauffage . bois . présent: oui
+    logement . chauffage . bois . type: "'granulés'"
+    logement . chauffage . bois . type . granulés . consommation: recalcul . consommation
+  note: On considère un chauffage via granulés.
+
+logement . chauffage . se chauffer au bois . recalcul . consommation:
+  formule:
+    somme:
+      - chauffage . gaz . présent * chauffage . gaz . consommation
+      - chauffage . fioul . présent * chauffage . fioul . consommation / chauffage . fioul kWh au litre
+      - chauffage . citerne propane . présent * chauffage . citerne propane . consommation * logement . chauffage . citerne propane . énergie par kg
+
+logement . chauffage . remplacer gaz par PAC:
+  titre: Remplacer une chaudière gaz par une pompe à chaleur
+  action:
+    dépasse:
+      - logement . chauffage . rénovation énergétique
+      - logement . chauffage . rénovation énergétique BBC
+  applicable si:
+    toutes ces conditions:
+      - propriétaire
+      - est défini: chauffage . gaz . présent
+      - chauffage . gaz . présent
+  non applicable si:
+    toutes ces conditions:
+      - est défini: logement . construction . rénovation . travaux . chauffage . présent
+      - logement . construction . rénovation . travaux . chauffage . présent
+  icônes: 🔥🔄
+  formule: (chauffage . gaz . empreinte - PAC) / habitants
+  unité: kgCO2e
+  description: |
+    Remplacer un système de chauffage fonctionnant avec une énergie fossile (comme le gaz) par un système fonctionnant grâce à une énergie renouvelable permet de limiter de façon importante ses émissions de gaz à effet de serre.
+
+    > Pour découvrir les différentes pompes à chaleur, leurs avantages et leurs inconvénients, en savoir plus sur leurs coûts, leur installation et leur entretien, [consultez notre guide](https://librairie.ademe.fr/changement-climatique-et-energie/6714-s-equiper-d-une-pompe-a-chaleur.html).
+
+  note: |
+    Nous considérons pour l'instant que le remplacement des kWh de gaz par la même quantité de kWh électrique est une bonne approximation de premier ordre. Nous pourrons par la suite l'adapter en fonction du rendement des installations résidentielles.
+
+    Cette action chiffre le remplacement de la chaudière gaz, si vous chauffez aussi votre eau au gaz il faudra choisir une PAC qui peut aussi chauffer l'eau.
+
+    Voir [Guide ADEME PAC](https://www.ademe.fr/sites/default/files/assets/documents/guide-pratique-installer-une-pompe-a-chaleur.pdf)
+
+logement . chauffage . remplacer gaz par PAC . PAC:
+  formule: (chauffage . gaz . consommation / coefficient COP) * logement . électricité . empreinte au kWh
+
+logement . chauffage . remplacer gaz par PAC . PAC . coefficient COP:
+  titre: Coefficient de performance réel
+  formule: 2
+  description: Pour 1kWh d'électricité consommée, combien de kWh de chaleur fournis ?
+  note: |
+    Nous choississons un coefficient conservateur (l'ADEME conseille un COP > 3).
+    Voir le [Guide EDF](https://particulier.edf.fr/fr/accueil/guide-energie/electricite/pompe-a-chaleur.html).
+    Plus d'informations également sur l'article [Pompe à chaleur ou radiateurs électriques ?](https://conseils-thermiques.org/contenu/pompe-a-chaleur-ou-radiateur-electrique.php)
+
+logement . chauffage . remplacer chauffage électrique par PAC:
+  titre: Passer du chauffage électrique à une pompe à chaleur
+  action:
+    dépasse:
+      - logement . chauffage . rénovation énergétique
+      - logement . chauffage . rénovation énergétique BBC
+  applicable si:
+    toutes ces conditions:
+      - propriétaire
+      - est défini: chauffage . électricité . présent
+      - chauffage . électricité . présent
+  non applicable si:
+    toutes ces conditions:
+      - est défini: logement . construction . rénovation . travaux . chauffage . présent
+      - logement . construction . rénovation . travaux . chauffage . présent
+  icônes: 🔥🔄
+  formule: (électricité . consommation totale * part consommation remplacable - consommation via PAC) * logement . électricité . empreinte au kWh / habitants
+  unité: kgCO2e
+  description: |
+    Le chauffage électrique est assez simple à installer mais il est cher à l’usage. Pour diminuer ses factures d’électricité et bénéficier d’un moyen de chauffage fonctionnant grâce aux énergies renouvelables, vous pouvez vous équiper d’une pompe à chaleur.
+
+    > Pour découvrir les différentes pompes à chaleur, leurs avantages et leurs inconvénients, en savoir plus sur leurs coûts, leur installation et leur entretien, [consultez notre guide](https://librairie.ademe.fr/changement-climatique-et-energie/6714-s-equiper-d-une-pompe-a-chaleur.html).
+  note: |
+    Nous considérons pour l'instant que le remplacement des kWh de gaz par la même quantité de kWh électrique est une bonne approximation de premier ordre. Nous pourrons par la suite l'adapter en fonction du rendement des installations résidentielles.
+
+    Cette action chiffre le remplacement de la chaudière électrique, si vous chauffez aussi votre eau via un chauffe-eau il faudra choisir une PAC qui peut aussi chauffer l'eau.
+
+    Voir [Guide ADEME PAC](https://www.ademe.fr/sites/default/files/assets/documents/guide-pratique-installer-une-pompe-a-chaleur.pdf)
+
+logement . chauffage . remplacer chauffage électrique par PAC . part consommation remplacable:
+  formule: parc français . chauffage . part chauffage air électricité + parc français . chauffage . part ecs électricité
+
+logement . chauffage . remplacer chauffage électrique par PAC . consommation via PAC:
+  formule: (logement . électricité . consommation totale * part consommation remplacable / coefficient COP)
+
+logement . chauffage . remplacer chauffage électrique par PAC . consommation via PAC . coefficient COP:
+  titre: Coefficient de performance réel
+  formule: 2
+  description: Pour 1kWh d'électricité consommée, combien de kWh de chaleur fournis ?
+  note: |
+    Nous choississons un coefficient conservateur (l'ADEME conseille un COP > 3).
+    Voir le [Guide EDF](https://particulier.edf.fr/fr/accueil/guide-energie/electricite/pompe-a-chaleur.html).
+    > Plus d'informations également sur l'article [Pompe à chaleur ou radiateurs électriques ?](https://conseils-thermiques.org/contenu/pompe-a-chaleur-ou-radiateur-electrique.php)
+
+logement . électricité . séchage air libre:
+  titre: Privilégier l'étendoir au sèche-linge
+  applicable si: divers . électroménager . appareils . sèche-linge . nombre > 0
+  icônes: 💨👗
+  description: |
+    Faire sécher son linge à l'air libre plutôt qu’au sèche-linge, c'est économiser de l'énergie.
+  formule: (300 kWh * logement . électricité . empreinte au kWh) / habitants
+  note: |
+    D'après l'étude [ADEME Panel ElecDom 2020](https://librairie.ademe.fr/changement-climatique-et-energie/4473-panel-usages-electrodomestiques.html),
+    un sèche-linge a une [consommation moyenne de 300 kWh/an](https://agirpourlatransition.ademe.fr/particuliers/maison/economies-denergie-deau/electricite-combien-consomment-appareils-maison).
+
+logement . climatisation . réduction:
+  titre: Se passer de la climatisation
+  icônes: ❄️✋
+  applicable si:
+    toutes ces conditions:
+      - est défini: logement . climatisation . présent
+      - logement . climatisation . présent
+      - logement . climatisation . nombre > 0
+  formule: logement . climatisation + part électricité climatisation
+  unité: kgCO2e
+  description: |
+    Alors que les vagues de chaleur deviennent plus fréquentes et intenses, il est important d’aménager son logement pour préserver au mieux la fraîcheur et vivre de façon confortable pendant tout l’été. Explorez toutes les solutions avant de recourir à la climatisation. La climatisation a un coût environnemental.
+
+    > Pour découvrir les bons gestes pour vivre dans un logement confortable sans climatisation, [consultez notre article](https://agirpourlatransition.ademe.fr/particuliers/vacances-loisirs/ete/canicule-comment-garder-logement-frais).
+
+logement . climatisation . part électricité climatisation:
+  formule: logement . climatisation . nombre * 400 kWh * logement . électricité . empreinte au kWh
+  note: |
+    D'après l'étude [ADEME Panel ElecDom 2020](https://librairie.ademe.fr/changement-climatique-et-energie/4473-panel-usages-electrodomestiques.html), un climatiseur fixe a une [consommation moyenne "de 100 à 700 kWh/an"](https://agirpourlatransition.ademe.fr/particuliers/maison/economies-denergie-deau/electricite-combien-consomment-appareils-maison).
+    Nous partons donc sur une moyenne de 400 kWh/an par climatiseur installé.
+
+logement . chauffage . rénovation énergétique:
+  titre: Rénover son logement
+  icônes: 🏚️✨
+  formule: (logement . empreinte chauffage air * gain rénovation) / habitants
+  unité: kgCO2e
+  applicable si: propriétaire
+  non applicable si:
+    toutes ces conditions:
+      - est défini: logement . construction . rénovation . travaux . isolation . présent
+      - logement . construction . rénovation . travaux . isolation . présent
+  description: |
+    Mieux isoler, ventiler et équiper son logement permet de vivre dans un logement plus confortable et de diminuer ses factures d’énergie. Plus efficace, le logement sera moins gourmand en énergie.
+
+    En rénovant votre logement vous participez à réduire les émissions de gaz à effet de serre.
+
+    Plusieurs aides financières sont disponibles pour soutenir votre investissement.
+
+    > Parce qu’une rénovation demande de la réflexion, des connaissances techniques et financières, l’Etat a mis en place un service public de la rénovation qui peut vous accompagner dans votre projet. Pour contacter le conseiller le plus proche de chez vous, rendez-vous sur le site [France Rénov'](https://france-renov.gouv.fr/).
+
+logement . gain rénovation:
+  formule: 39%
+  note: |
+    Gain énergétique moyen après rénovation sur un programme de l'ANAH de 13 000 logements ciblant les "passoires thermiques".
+    Plus d'informations dans le programme [MaPrimeRénov’ Sérénité](https://france-renov.gouv.fr/aides/mpr/serenite) (ex Habiter Mieux de L’Anah).
+
+logement . propriétaire:
+  question: Etes-vous propriétaire de votre logement ?
+  description: |
+    En tant que locataire, il est évidemment délicat de faire les investissements qui améliorent l'empreinte du logement : isolation, changement de source d'énergie sont impossibles sauf à tomber sur un propriétaire particulièrement conciliant.
+
+    Pourtant, la loi pourrait dès 2023 être un soutien de poids : les passoires thermiques [seront interdites à la location](https://www.gouvernement.fr/interdiction-a-la-location-des-logements-avec-une-forte-consommation-d-energie-des-2023), forçant les propriétaires à lancer des travaux substentiels.
+  par défaut: oui
+
+logement . chauffage . rénovation énergétique BBC:
+  action:
+    dépasse:
+      - logement . chauffage . rénovation énergétique
+  titre: Rénover son logement en BBC
+  icônes: 🏠✨
+  formule: (logement . empreinte chauffage air * gain rénovation) / habitants
+  unité: kgCO2e
+  applicable si: propriétaire
+  non applicable si:
+    toutes ces conditions:
+      - est défini: logement . construction . rénovation . travaux . isolation . présent
+      - logement . construction . rénovation . travaux . isolation . présent
+  description: |
+    Une rénovation très performante peut mettre de diviser par 6 les besoins énergétiques de son logement. En consommant moins de 50 kWh par m² par an, le logement sera classé en A sur l’étiquette énergie du Diagnostic de Performance Energétique et atteindra le niveau exigé par la certification Bâtiment Basse Consommation (BBC).
+
+    Votre logement ne consommera presque plus d’énergie pour le chauffage tout en restant très confortable.
+
+    Plusieurs aides financières sont disponibles pour soutenir votre investissement.
+
+    > Parce qu’une rénovation demande de la réflexion, des connaissances techniques et financières, l’Etat a mis en place un service public de la rénovation qui peut vous accompagner dans votre projet. Pour contacter le conseiller le plus proche de chez vous, rendez-vous sur le site [France Rénov'](https://france-renov.gouv.fr/).
+
+logement . chauffage . rénovation énergétique BBC . gain rénovation:
+  formule: 70%
+  note: Gain énergétique maximal atteint après une rénovation BBC, source à préciser.
+
+logement . chauffage . raccordement réseau de chaleur:
+  titre: Se raccorder à un réseau de chaleur
+  icônes: 👥🏭
+  applicable si:
+    toutes ces conditions:
+      - type = 'appartement'
+      - chauffage collectif = 'collectif'
+      - est défini: chauffage . gaz . présent
+      - est défini: chauffage . fioul . présent
+      - une de ces conditions:
+          - chauffage . gaz . présent
+          - chauffage . fioul . présent
+  non applicable si: chauffage . réseau de chaleur . présent
+  formule: (logement . chauffage - recalcul / habitants)
+  unité: kgCO2e
+  # TODO : Cette `note` est plus grand public que technique, à voir si ce texte n'a pas sa place ailleurs.
+  note: |
+    Un réseau de chaleur est un système de canalisations qui permettent d’acheminer vers un ensemble de bâtiments de la
+    chaleur produite localement et majoritairement à partir d’énergies renouvelables et de récupération.
+
+    C'est une alternative écologique et économique pour remplacer des chaudières au gaz ou fioul,
+    aussi bien pour les bâtiments d'habitat collectif (copropriétés, habitat social) que pour les bâtiments tertiaires.
+
+    Néanmoins, être raccordé à un réseau de chaleur n'est pas aussi simple que de souscrire un contrat d'électricité.
+    En effet, la faisabilité du raccordement dépend de [plusieurs conditions techniques](https://france-chaleur-urbaine.beta.gouv.fr/ressources/faisabilite#contenu).
+
+    Tout d'abord, le raccordement se fait pour tout un bâtiment : il n'est pas possible de raccorder seulement votre appartement.
+    Ensuite, il est nécessaire de vérifier qu'il existe un réseau de chaleur à proximité du bâtiment, puis d'étudier
+    les infrastructures de chauffage au sein du bâtiment (un bâtiment équipé d'un système de chauffage collectif permettra un raccordement à moindre coût)
+
+    Côté impact climat, il faut savoir qu'en général, un réseau de chaleur est alimenté via des sources d'énergie renouvelables ou de récupération locales
+    (62% en moyenne à l'échelle nationale), c'est à dire, via l'incinération d'ordures ménagères, la combustion de biomasse, la géothermie... (comme le montre la figure ci-dessous)
+    ce qui permet de réduire considérablement l'impact CO2 du kWh d'énergie consommée devant le gaz ou le fioul.
+
+    Cependant, le mix énergétique est très variable d’un réseau à l’autre, certains réseaux sont encore principalement alimentés via des énergies fossiles (charbon, fioul, gaz).
+    Il est donc important de vérifier le taux ENR du réseau le plus proche sur la [cartographie France Chaleur Urbaine](https://france-chaleur-urbaine.beta.gouv.fr/carte), et de se renseigner auprès du gestionnaire du réseau
+    sur les évolutions à venir du mix énergétique car bcp de réseaux sont en cours de verdissement...].
+
+    ![](https://user-images.githubusercontent.com/55186402/223733624-d50b2271-6da6-4ec7-a324-cec41df10430.png)
+  description: |
+    La France compte actuellement 723 réseaux de chaleur (et 28 réseaux de froid), majoritairement situés dans les grands centres urbains. Cette chaleur alimente principalement des bâtiments résidentiels et tertiaires (91 %) et permet de chauffer environ six millions de personnes.
+
+    Le raccordement de logements individuels à un réseau de chaleur est encore rare mais pas impossible.
+
+    > Pour savoir où se renseigner et comment se raccorder, [consultez cet article](https://agirpourlatransition.ademe.fr/particuliers/maison/travaux/comment-se-raccorder-a-un-reseau-de-chaleur).
+logement . chauffage . raccordement réseau de chaleur . recalcul:
+  titre: Recalcul émissions via le raccordement à un réseau de chaleur
+  note: on considère que la consommation de gaz/fioul sera identique suite à un raccordement au réseau de chaleur.
+  formule:
+    somme:
+      - chauffage . gaz . présent * chauffage . réseau de chaleur . intensité carbone * chauffage . gaz . consommation
+      - chauffage . fioul . présent * chauffage . réseau de chaleur . intensité carbone * chauffage . fioul . consommation / chauffage . fioul kWh au litre
+
+logement . chauffage collectif:
+  avec:
+    collectif:
+    individuel:
+  question: Votre chauffage est-il collectif ou individuel ?
+  par défaut: "'collectif'"
+  note: |
+    On fait l'hypothèse que l'action est applicable seulement pour les appartements chauffés via un réseau de gaz ou fioul collectif.
+    En effet, côté particulier, il est préférable de travailler avec les copropriétaires d'un immeuble car le logement individuel n'est
+    pas une cible prioritaire pour ce type de solution, à la fois pour des questions de rentabilité économique mais également car la densité
+    thermique du réseau serait trop faible au vu de la consommation d'un logement individuel.
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - collectif
+        - individuel
+
+logement . extérieur . barbecue plus écologique:
+  applicable si:
+    toutes ces conditions:
+      - est défini: extérieur . barbecue charbon . présent
+      - extérieur . barbecue charbon . présent
+  titre: Passer au barbecue électrique
+  note: |
+    Brûler du charbon de bois ou des branchages émet des polluants dans l’air et libère des gaz à effet de serre.
+
+    Un barbecue électrique ne génèrera aucune émission de CO2 dans l’air !
+
+  formule: empreinte barbecue charbon - empreinte barbecue électrique ou gaz amortie
+  unité: kgCO2e
+
+logement . extérieur . privilégier le bois pour le salon de jardin:
+  applicable si:
+    toutes ces conditions:
+      - est défini: extérieur . salon de jardin résine ou métal . présent
+      - extérieur . salon de jardin résine ou métal . présent
+  titre: Choisir un salon de jardin en bois
+  note: |
+    Un salon de jardin en bois a une empreinte trois fois inférieure à celle d'un salon en résine ou en métal.
+
+    En plus, son entretien est plus accessible, pour le faire durer dans le temps (ponçage, huilage ou vernissage). Allonger sa durée de vie, c'est réduire encore plus son empreinte !
+  formule: empreinte salon de jardin résine ou métal amortie - empreinte salon de jardin bois amortie
+  unité: kgCO2e
+
+logement . extérieur . passer à la tondeuse électrique:
+  applicable si:
+    toutes ces conditions:
+      - est défini: extérieur . tondeuse thermique . présent
+      - extérieur . tondeuse thermique . présent
+  titre: Choisir une tondeuse électrique
+  note: |
+    Une tondeuse peut fonctionner avec du fuel et émettre alors du CO2 ou de l’électricité et n’émettre aucune émission dans l’air. Privilégiez un modèle électrique.
+  formule: empreinte tondeuse thermique amortie - empreinte tondeuse électrique ou robot amortie
+  unité: kgCO2e
+
+logement . mutualiser son logement:
+  non applicable si: métrique != "carbone"
+  titre: Partager son logement
+  icônes: 🏠👥
+  description: |
+    Vivre en colocation n'est pas seulement intéressant pour partager les factures et créer des liens sociaux, c'est aussi un moyen de réduire son empreinte sur le climat en mutualisant les espaces, les consommations et les équipements.
+
+    Nous avons tendance à vouloir vivre dans de plus grands logements mais cela contribue à l’étalement urbain et à l’artificialisation des sols. De plus, la construction de nouveaux logements consomme beaucoup d’énergie et augmente les émissions de gaz à effet de serre.
+
+    Partager des espaces de vie est donc une solution pour diminuer notre impact sur le climat.
+  applicable si: logement . surface / habitants > 50
+  formule: nombre colocataires * empreinte partagée
+
+logement . nombre colocataires:
+  question: Combien de colocataires pourriez-vous accueillir ?
+  par défaut: 1
+
+logement . mutualiser son logement . empreinte partagée:
+  formule:
+    somme:
+      - logement
+      - divers . numérique
+      - divers . électroménager
+      - divers . ameublement
+
+logement . mutualiser son logement . empreinte partagée . logement:
+  valeur: logement
+  contexte:
+    logement . habitants: logement . habitants + nombre colocataires
+    logement . vacances: 0
+  note: On fait l'hypothèse que les vacances ne seront pas partagées avec le nouveau colocataire.
+
+logement . mutualiser son logement . empreinte partagée . divers:
+logement . mutualiser son logement . empreinte partagée . divers . numérique:
+  valeur: divers . numérique . appareils
+  contexte:
+    logement . habitants: logement . habitants + nombre colocataires
+
+logement . mutualiser son logement . empreinte partagée . divers . électroménager:
+  valeur: divers . électroménager . appareils
+  contexte:
+    logement . habitants: logement . habitants + nombre colocataires
+
+logement . mutualiser son logement . empreinte partagée . divers . ameublement:
+  valeur: divers . ameublement
+  contexte:
+    logement . habitants: logement . habitants + nombre colocataires
+    divers . ameublement . meubles . matelas: 0
+    divers . ameublement . meubles . lit: 0
+
+logement . installer photovoltaique:
+  titre: Installer des panneaux photovoltaïques
+  icônes: 🌞⚡️
+  description: |
+    Installer des panneaux solaires photovoltaïques permet de réduire son empreinte carbone.
+
+    En effet, **l'empreinte carbone d'un kilowattheure d'électricité photovoltaïque est presque inférieure de moitié** à celle d'un kilowattheure d'électricité du réseau.
+
+    En règle générale, le photovoltaïque s’installe en toiture des habitations car c’est là que l’on trouve la place nécessaire (10 à 30 m2) et l’inclinaison la plus favorable. Une bonne orientation est requise (sud, sud-est ou sud-ouest). Une façade bien exposée peut aussi constituer une alternative à la toiture.
+
+    Si l'on souhaite une installation plus simple, il est aussi possible de se tourner vers les kits solaires dont le marché est en plein essor depuis 3 ans. Commercialisés dans plusieurs enseignes de la grande distribution ou en ligne, les kits « Plug & Play » sans injection sur le réseau peuvent être installés par des particuliers eux-mêmes. Ils se branchent directement à une prise électrique et bénéficient de démarches administratives simplifiées. Avec des tarifs d’achat des kits compris entre 1,5 et 2 € par Wc, ils sont rentables en moins de 10 ans (s’ils sont bien installés !). Ils peuvent couvrir une partie des consommations permanentes du logement (consommation VMC, réfrigérateur, congélateur…) pendant la journée mais ne peuvent pas satisfaire tous les besoins. Les foyers doivent rester connectés au réseau.
+
+    > Vous pouvez aussi participer à un projet citoyen ou participatif. Ces projets permettent aux citoyens d'investir une partie de leur épargne et de participer au montage de projets vertueux pour l'écologie et créateurs d'emplois locaux. Ils permettent aussi de rencontrer d'autres habitants partageant des valeurs communes. Les citoyens peuvent ainsi participer à des projets photovoltaïques de deux façons :
+
+    > - Via le financement participatif : en prêtant une somme d’argent au porteur de projet et en étant rémunéré par des intérêts.
+    > - Via l’investissement dans un projet à gouvernance locale: en faisant l’acquisition de parts du capital de la société porteuse de projet et en s’investissant dans la gouvernance du projet pour pouvoir peser dans les prises de décision.
+
+    Pour en savoir plus, consulter le guide ADEME ["L'électricité photovoltaïque en 10 questions"](https://librairie.ademe.fr/7545-l-electricite-photovoltaique-en-10-questions.html)
+
+  non applicable si: électricité . photovoltaique . présent
+  applicable si: logement . type = 'maison'
+  formule:
+    variations:
+      - si: énergie produite < logement . électricité . consommation totale
+        alors: énergie produite * (commun . intensité électricité - facteur émission)
+      - sinon: logement . électricité . consommation totale * (commun . intensité électricité - facteur émission)
+
+logement . installer photovoltaique . énergie produite:
+  formule: puissance installée * productible
+
+logement . installer photovoltaique . puissance installée:
+  formule: nombre panneaux * puissance moyenne panneau
+
+logement . installer photovoltaique . nombre panneaux:
+  question: Combien de panneaux pourriez-vous installer ?
+  par défaut: 4
+
+logement . installer photovoltaique . puissance moyenne panneau:
+  formule: 0.4
+  unité: kWc
+
+logement . installer photovoltaique . productible:
+  formule:
+    variations:
+      - si: zone climatique = 'bretagne et nord de la france'
+        alors: 1200
+      - si: zone climatique = 'centre et littoral atlantique'
+        alors: 1300
+      - si: zone climatique = 'littoral méditerranéen'
+        alors: 1500
+  unité: kWh/kWc
+
+logement . installer photovoltaique . zone climatique:
+  question: Où se situe votre logement en France ?
+  formule:
+    une possibilité:
+      possibilités:
+        - bretagne et nord de la france
+        - centre et littoral atlantique
+        - littoral méditerranéen
+  par défaut: "'centre et littoral atlantique'"
+
+logement . installer photovoltaique . zone climatique . bretagne et nord de la france:
+  titre: Bretagne et Nord de la France
+logement . installer photovoltaique . zone climatique . centre et littoral atlantique:
+  titre: Centre et littoral atlantique
+logement . installer photovoltaique . zone climatique . littoral méditerranéen:
+  titre: Littoral méditerranéen et Corse
+
+logement . installer photovoltaique . facteur émission:
+  formule:
+    variations:
+      - si: zone climatique = 'bretagne et nord de la france'
+        alors: 0.0315
+      - si: zone climatique = 'centre et littoral atlantique'
+        alors: 0.0291
+      - si: zone climatique = 'littoral méditerranéen'
+        alors: 0.0252
+  unité: kgCO2e/kWh
+
+logement . électricité verte:
+  titre: Choisir une offre d'électricité engagée
+  icônes: 🌬️☀️⚡️
+  description: |
+    Sans qu'il soit réellement possible d'estimer l'impact en termes d'empreinte carbone de la souscription à une offre d'électricité verte, il est tout à fait légitime d'affirmer que certaines offres contribuent à réduire l'empreinte carbone du mix électrique français, en favorisant l'émergence et la croissance d'offres d'énergies renouvelables sur notre territoire.
+
+    ### Quelques explications pour y voir plus clair
+
+    Toutes les offres d'électricité ne se valent pas. Face au changement climatique, nombreux sont les fournisseurs d'électricité à avoir développé une offre d'électricité dite "verte". Mais ce terme recouvre des réalités très différentes...
+
+    > **Comment ça marche ?**
+    > Les producteurs d'électricité renouvelable émettent des certificats, appelés "Garanties d'origine", permettant d’attester que l’électricité a été produite par des moyens de production renouvelables. Les fournisseurs d'énergie achètent aux producteurs soit uniquement les certificats, soit les certificats et l'électricité ensemble. Dans les deux cas, ils ont tendance à appeler "verte" l'électricité qui vous est ensuite revendue. Or, dans le cas où seul le certificat a été acheté, rien ne garantit que l’offre verte contribue au développement et à la rémunération d’énergies renouvelables.
+
+    Pour apporter davantage de transparence sur les offres dites "vertes", l'ADEME a créé le label **VertVolt**. Ce label récompense les offres de fournisseurs qui achètent au moins autant d'électricité renouvelable à des producteurs, que ce qu'ils vendent à leurs clients ayant souscrit une offre "verte". Ces offres sont qualifiées d' "engagées". Si, en plus, au moins 25% de cette électricité provient d'installations sans soutien de l'État ou avec une gouvernance partagée (c’est-à-dire que des citoyens sont impliqués dans la gestion ou le financement des centrales), l'offre est qualifiée de "très engagée", car elle permet d’encourager le financement de nouvelles installations d’énergie renouvelable.
+
+    [Toutes les infos sur le label VertVolt et les offres d'énergie engagées ou très engagées sont à retrouver ici](https://agirpourlatransition.ademe.fr/particuliers/vertvolt).
+
+#
+# logement . eau domestique . bains et douches . réduire:
+#   titre: Passer aux douches express
+#   non applicable si: logement . eau domestique . bains et douches . habitude = 'douche express'
+#   icônes: 🚿🕒
+#   formule: logement . eau domestique . bains et douches - empreinte douches express
+
+# logement . eau domestique . bains et douches . réduire . empreinte douches express:
+#   valeur: logement . eau domestique . bains et douches
+#   contexte:
+#     logement . eau domestique . bains et douches . habitude: "'douche express'"
+
+# logement . eau domestique . jardin . type arrosage . changer:
+#   titre: Passer au goutte-à-goutte
+#   non applicable si: logement . eau domestique . jardin . type arrosage = 'goutte à goutte'
+#   icônes: 💧🌱
+#   formule: logement . eau domestique . jardin - empreinte goutte à goutte
+
+# logement . eau domestique . jardin . type arrosage . changer . empreinte goutte à goutte:
+#   valeur: logement . eau domestique . jardin
+#   contexte:
+#     logement . eau domestique . jardin . type arrosage: "'goutte à goutte'"

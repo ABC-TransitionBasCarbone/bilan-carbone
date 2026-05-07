@@ -1,0 +1,82 @@
+informations regionales:
+  titre: Informations régionales
+
+informations regionales . transport:
+informations regionales . transport . alternartives:
+  titre: Comment trouver une alternative à la voiture pour venir en Hauts-de-France ?
+  icônes: 🚗❌
+  intensiteCouleur: 100
+  description: |
+    Ce [calculateur d'itinéraire](https://www.rome2rio.com) vous permettra de trouver une alternative à la voiture. On vous prévient, ça peut être un peu plus long 🙂.
+
+informations regionales . transport . alternartives train:
+  titre: Le train qu'il vous faut !
+  icônes: 🚗❌
+  intensiteCouleur: 100
+  description: |
+    C'est sur [SNCF Connect](https://www.sncf-connect.com/) ou sur [TER Hauts-de-France](https://www.ter.sncf.com/hauts-de-france).
+
+informations regionales . DT:
+informations regionales . DT . covoiturage:
+  titre: (A personnaliser) Connaissez-vous notre application de covoiturage entre collègue !
+  icônes: 🖥️❌
+  intensiteCouleur: 100
+  description: |
+    Trouvez un collègue près de chez vous pour covoiturer jusqu'à votre lieu de travail. Plus d'informations [ici]()
+
+informations regionales . numérique:
+informations regionales . numérique . ia:
+  titre: (A personnaliser) L'IA n'est pas neutre environnentalement parlant !
+  icônes: 🖥️❌
+  intensiteCouleur: 100
+  description: |
+    Avec toute l'énergie et l'eau dont ont besoin les datacenters, l'IA a un impact fort sur l'environnement. Plus d'informations ici !
+
+informations regionales . numérique . bonnes pratiques:
+  titre: (A personnaliser) Adopter les bonnes pratiques de Mon Entreprise !
+  icônes: 🖥️❌
+  intensiteCouleur: 100
+  description: |
+    Consultez toutes les bonnes pratiques numériques sur [notre guide]() accessible sur l'intranet
+
+informations regionales . numérique . défi:
+  titre: (A personnaliser) Connaissez-vous le défi "5 minutes de caméra" ?
+  icônes: 🖥️❌
+  intensiteCouleur: 100
+  description: |
+    Pour en savoir plus consultez [l'article]() accessible sur l'intranet
+
+informations regionales . alimentation:
+informations regionales . alimentation . défi:
+  titre: (A personnaliser) Connaissez-vous le défi "semaine sans viande" ?
+  icônes: 🖥️❌
+  intensiteCouleur: 100
+  description: |
+    Pour en savoir plus consultez [l'article]() accessible sur l'intranet
+
+# informations regionales . divers . slide-1:
+#   titre: Slide 1 divers
+#   icônes: 🥩1️⃣
+#   intensiteCouleur: 100
+#   description: |
+#     Vous consommez de la viande à tous les repas ?
+
+#     Pour réduire facilement votre consommation de protéines animales, ne consommez de viande qu’une fois par jour et en plus petite quantité. C’est un bon début pour limiter votre empreinte carbone.
+
+# informations regionales . divers . slide-2:
+#   titre: Slide 2 divers
+#   icônes: 🥩1️⃣
+#   intensiteCouleur: 200
+#   description: |
+#     Vous consommez de la viande à tous les repas ?
+
+#     Pour réduire facilement votre consommation de protéines animales, ne consommez de viande qu’une fois par jour et en plus petite quantité. C’est un bon début pour limiter votre empreinte carbone.
+
+# informations regionales . divers . slide-3:
+#   titre: Slide 3 divers
+#   icônes: 🥩1️⃣
+#   intensiteCouleur: 200
+#   description: |
+#     Vous consommez de la viande à tous les repas ?
+
+#     Pour réduire facilement votre consommation de protéines animales, ne consommez de viande qu’une fois par jour et en plus petite quantité. C’est un bon début pour limiter votre empreinte carbone.

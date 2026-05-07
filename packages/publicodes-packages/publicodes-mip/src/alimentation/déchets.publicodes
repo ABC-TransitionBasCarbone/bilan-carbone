@@ -1,0 +1,262 @@
+alimentation . déchets:
+  non applicable si: métrique = 'eau'
+  icônes: 🚮
+  description: |
+    Nous avons rangé ce poste dans la catégorie "Alimentation" car une grande partie de nos déchets ont une origine alimentaire (85% des emballages jetés par 
+    les ménages sont des emballages alimentaires)
+  formule:
+    variations:
+      - si: tri = 'jamais'
+        alors: 0.01
+      - si: tri = 'parfois'
+        alors: 0.02
+      - si: tri = 'toujours'
+        alors: 0.03
+      - sinon: 0.09
+  unité: kgCO2e
+#          somme:
+#            - niveau moyen
+#            - gestes
+
+alimentation . déchets . tri:
+  question: Avez-vous l'habitude de faire le tri au bureau ?
+  description: |
+    Répondez "Oui" si le geste de tri est un geste automatique pour vous (même si vous ne disposez pas toujours de poubelles de tri à votre disposition). 
+
+    Répondez "Oui parfois" si ce n'est pas un réflexe et qu'il vous arrive parfois d'oublier. 
+
+    Répondez "Non" si vous ne faites jamais le tri.
+  par défaut: "'non'"
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - jamais
+        - parfois
+        - toujours
+
+alimentation . déchets . tri . jamais:
+  titre: Non, je ne trie pas mes déchets
+  description: |
+    Vous avez tendance à jeter sans vous poser de question quant à la nature du déchet et sa poubelle de destination.
+
+alimentation . déchets . tri . parfois:
+  titre: Oui, parfois
+  description: |
+    Vous avez encore des progrès à faire mais vous essayez de faire le tri au maximum.
+
+alimentation . déchets . tri . toujours:
+  titre: Oui, tout le temps
+  description: |
+    Vous cherchez toujours à jeter un déchet dans la poubelle qui lui est destiné.
+
+#alimentation . déchets . notif zéro déchet:
+#  type: notification
+#  formule: quantité jetée = 'zéro déchet'
+#  description: |
+#    Vous avez renseigné un mode de vie zéro déchet. Il faut savoir que ce niveau d'engagement
+#    correspond à une personne qui est investie à **100% dans la démarche de réduction de ses déchets**.
+#    Consommer en vrac n'est pas suffisant pour être zéro-déchet.
+
+alimentation . déchets . niveau zéro déchets:
+  formule:
+    somme:
+      - omr . putrescibles . non compostable + omr . putrescibles . compostés
+      - omr . papier carton / 4
+      - omr . plastiques / 4
+      - omr . verre / 4
+      - omr . metaux / 4
+      - omr . autre / 4
+      - collecte separee / 4
+      - dechetterie / 4
+  note: |
+    On considère que la part de gens vivant réellement sans générer aucun déchets est peu représentative même au sein du mouvement zéro déchets. Ainsi,
+    on considère qu'un mode de vie zéro déchets correspond à une division par 4 de toutes les autres quantitées de déchets (OMR, CS et déchetterie).
+    Seuls les déchets putrescibles sont exclus des réduction opérées car ils ne concernent pas les emballages.
+    Voir l'analyse [Bien vivre en zéro déchet de l'ADEME](https://librairie.ademe.fr/dechets-economie-circulaire/1906-bien-vivre-en-zero-dechet.html).
+
+alimentation . déchets . niveau moyen:
+  formule:
+    somme:
+      - omr
+      - collecte separee
+      - dechetterie
+  description: |
+    Ce niveau correspond à la moyenne française.
+
+alimentation . déchets . gestes:
+  #  applicable si: quantité jetée = 'réduction'
+  mosaique:
+    type: selection
+    options:
+      - compostage biodéchets . présent
+      - gaspillage alimentaire . présent
+      - stop pub . présent
+      - acheter en vrac . présent
+    suggestions:
+      aucun:
+        compostage biodéchets . présent: non
+        gaspillage alimentaire: non
+        stop pub . présent: non
+        acheter en vrac . présent: non
+  question: Quels éco-gestes mettez-vous en place pour réduire vos déchets ?
+  description: Les différents gestes que vous pourriez déjà mettre en place pour réduire l'empreinte de votre poubelle.
+  formule:
+    somme:
+      - compostage biodéchets
+      - gaspillage alimentaire
+      - stop pub
+      - acheter en vrac
+  note: |
+    Une mosaïque pour les éco-gestes zéro-déchets.
+
+alimentation . déchets . gestes . compostage biodéchets . présent:
+  question: Compostez-vous vos biodéchets ?
+  par défaut: non
+  description: |
+    Les biodéchets regroupent les déchets alimentaires (mais pas tous !), les papiers et cartons souillés et une partie des déchets verts.
+
+alimentation . déchets . gestes . compostage biodéchets:
+  titre: Je composte
+  icônes: 🍃
+  applicable si: présent
+  formule: (-1) * bonus compostage biodéchets
+  unité: kgCO2e
+
+alimentation . déchets . gestes . bonus compostage biodéchets:
+  formule:
+    somme:
+      - omr . putrescibles . réduction compost
+      - (-1) * omr . putrescibles . compostés
+  unité: kgCO2e
+
+alimentation . déchets . omr . putrescibles . réduction compost:
+  formule: omr . putrescibles * (gisement réduction / quantité réelle)
+  unité: kgCO2e
+
+alimentation . déchets . omr . putrescibles . non compostable:
+  formule: omr . putrescibles * ((quantité réelle - gisement réduction) / quantité réelle)
+  unité: kgCO2e
+
+alimentation . déchets . omr . putrescibles . compostés:
+  formule: gisement réduction * impact compost domestique
+  unité: kgCO2e
+  note: |
+    On considère que seulement seul le gisement de déchets putrescibles est réellement composté. Le reste des déchets suit l'exutoire classique
+    des OMR
+
+alimentation . déchets . omr . putrescibles . gisement réduction:
+  formule: 55
+  unité: kg
+  note: |
+    Source : potentiel de réduction du gisement située entre 40 et 70 kg issu de la section 4.13.3.3. page 84 de [l'étude ADEME](https://librairie.ademe.fr/dechets-economie-circulaire/2520-etude-d-evaluation-des-gisements-d-evitement-des-potentiels-de-reduction-de-dechets-et-des-impacts-environnementaux-evites.html)
+
+alimentation . déchets . omr . putrescibles . impact compost domestique:
+  formule: 0.009
+  unité: kgCO2e/kg
+  note: |
+    Le facteur d'émission considéré est : Déchets de cuisine et déchets verts - Compostage domestique en bac - Impacts
+
+alimentation . déchets . gestes . gaspillage alimentaire . présent:
+  question: Cherchez-vous à réduire votre gaspillage alimentaire (que les produits aient été cuisinés ou non) ?
+  par défaut: non
+  description: |
+    Si vous faites peu ou pas d'efforts pour éviter de jeter vos aliments, répondez non. En moyenne, le gaspillage alimentaire reste la norme.
+
+alimentation . déchets . gestes . gaspillage alimentaire:
+  titre: Je ne gaspille jamais d'aliments
+  icônes: 🚯
+  applicable si: présent
+  formule: (-1) * empreinte gaspillage alimentaire
+  unité: kgCO2e
+  note: |
+    Il faut savoir qu'il existe un double comptage avec la fin de vie des pertes non-comestibles chez le consommateur déjà prise en compte dans les facteurs d'émission repas.
+    de la Base Carbone. Cependant, ce double comptage est peu significatif.
+    Pour aller plus loin dans cette discussion, notamment les questions de périmètre et de comparaison avec l'étude internationale de la FAO, voir nos commentaires [ici](https://github.com/incubateur-ademe/nosgestesclimat/pull/1096#issuecomment-945158967).
+
+alimentation . déchets . gestes . empreinte gaspillage alimentaire:
+  formule: 30
+  unité: kgCO2e
+  note: Voir tableau page 111 de [l'étude ADEME](https://librairie.ademe.fr/dechets-economie-circulaire/2520-etude-d-evaluation-des-gisements-d-evitement-des-potentiels-de-reduction-de-dechets-et-des-impacts-environnementaux-evites.html)
+
+alimentation . déchets . gestes . stop pub . présent:
+  question: Avez-vous un stop pub sur votre boîte aux lettres ?
+  description: |
+    C'est un autocollant à placer sur votre boîte aux lettres qui informe les distributeurs de pub que vous refusez de recevoir des catalogues, des promotions, menus de restaurant et publicités en tout genre.
+
+    Cela n'empêche pas toute publicité, mais envoie un signal fort et réduit en général considérablement la quantité de déchets papiers reçus.
+  par défaut: non
+
+alimentation . déchets . gestes . stop pub:
+  titre: J'ai un autocollant "stop pub"
+  icônes: 📬
+  applicable si: présent
+  formule: (-1) * bonus stop pub
+  unité: kgCO2e
+
+alimentation . déchets . bonus stop pub:
+  formule: gain prospectus * 3 * 52
+  unité: kgCO2e
+  note: |
+    On considère 3 prospectus par semaine dans sa boite aux lettres
+
+alimentation . déchets . bonus stop pub . gain prospectus:
+  titre: Non fabrication d'un prospectus
+  formule: 0.083
+  note: |
+    Source : Cas 2 du tableau page 103 de [l'étude ADEME](https://librairie.ademe.fr/dechets-economie-circulaire/2520-etude-d-evaluation-des-gisements-d-evitement-des-potentiels-de-reduction-de-dechets-et-des-impacts-environnementaux-evites.html)
+    C'est le cas le plus défavorable car il inclut le report vers une communication électronique
+
+alimentation . déchets . gestes . acheter en vrac . présent:
+  question: Achetez-vous en vrac ?
+  par défaut: non
+  inactif: oui
+  note: |
+    Pour le moment, ce getse reste inactif. L'impact étant relativement faible par rapport à la quantité de déchets totale,
+    il s'agira d'approfondir le chiffre issu de [l'étude ADEME sur les gisements d'évitement](https://librairie.ademe.fr/dechets-economie-circulaire/2520-etude-d-evaluation-des-gisements-d-evitement-des-potentiels-de-reduction-de-dechets-et-des-impacts-environnementaux-evites.html)
+    donna un potentiel de réduction de 2.4kg/hab/an en consommant en vrac.
+
+    [Une autre étude ADEME](https://librairie.ademe.fr/consommer-autrement/5064-panorama-et-evaluation-environnementale-du-vrac-en-france.html) 
+    plus récente et plus complète est à investiguer pour précisier cet impact.
+
+    On pourrait aussi agir directement sur les quantité d'emballages, carton et plastique, des sous postes déchets. (ex alimentation . déchets . gestes . omr . plastiques . quantité)
+
+alimentation . déchets . gestes . acheter en vrac:
+  titre: J'achète en vrac
+  icônes: 🧺
+  applicable si: présent
+  formule: (-1) * bonus acheter en vrac
+  unité: kgCO2e
+
+alimentation . déchets . gestes . bonus acheter en vrac:
+  formule: gisement réduction * empreinte emballages évités
+  unité: kgCO2e
+  note: |
+    Une étude plus récente et plus complète à investiguer pour précisier cette action : https://librairie.ademe.fr/consommer-autrement/5064-panorama-et-evaluation-environnementale-du-vrac-en-france.html.
+
+alimentation . déchets . gestes . bonus acheter en vrac . empreinte emballages évités:
+  titre: Non production des l'emballage
+  formule: 22% * empreinte carton + 78% * empreinte plastique
+  unité: kg
+  note: |
+    Source : Page 47 de [l'étude ADEME](https://librairie.ademe.fr/dechets-economie-circulaire/2520-etude-d-evaluation-des-gisements-d-evitement-des-potentiels-de-reduction-de-dechets-et-des-impacts-environnementaux-evites.html)
+    Selon le tableau 22% des emballages évités sont en papier/carton, 78% sont en plastique.
+
+alimentation . déchets . gestes . bonus acheter en vrac . gisement réduction:
+  titre: Réduction moyenne par habitant de l'action "acheter en vrac"
+  formule: 2.4
+  unité: kg
+  note: |
+    Source : Page 47 de [l'étude ADEME](https://librairie.ademe.fr/dechets-economie-circulaire/2520-etude-d-evaluation-des-gisements-d-evitement-des-potentiels-de-reduction-de-dechets-et-des-impacts-environnementaux-evites.html)
+    Basé 11 catégories de produits détaillées ci-dessus, le gisement d’évitement d’emballages visé par l’alternative de la vente en vrac peut être estimé à 2.4 kg/hab./an en 2012 au niveau national. Ces résultats ne concernent qu’un nombre limité de produits, 
+    mais ce sont ceux qui sont souvent proposés à la vente en vrac. Ces données prennent en compte la suppression de l’emballage du produit par le dispositif de vrac, mais ne prennent pas en compte les contenants proposés aux clients pour cet achat, l’évitement réel de l’action est donc moindre.
+
+alimentation . déchets . gestes . bonus acheter en vrac . empreinte plastique:
+  formule: 2.383
+  unité: kgCO2e/kg
+  note: Facteur d'émission issu de la Base Carbone (Plastique - moyenne - neuf)
+
+alimentation . déchets . gestes . bonus acheter en vrac . empreinte carton:
+  formule: 0.390
+  unité: kgCO2e/kg
+  note: Facteur d'émission issu de la Base Carbone (Carton - neuf)

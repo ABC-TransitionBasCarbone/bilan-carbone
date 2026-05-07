@@ -1,0 +1,196 @@
+ui . organisations:
+  note: Pour le moment, ces règles sont utilisées côté serveur, SANS L'ENGINE, uniquement pour récupérer les règles correspondantes aux métriques à évaluer.
+
+ui . organisations . transport:
+  titre: Transport
+  icônes: 🚦
+
+ui . organisations . transport . roule en vélo:
+  titre: Se déplacent à vélo
+  icônes: 🚴
+  formule:
+    une de ces conditions:
+      - transport . mobilité douce . type . vélo . présent
+      - transport . mobilité douce . type . vae . présent
+  unité: "%"
+
+ui . organisations . transport . roule en voiture:
+  titre: Roulent en voiture
+  icônes: 🚗
+  formule:
+    toutes ces conditions:
+      - transport . voiture . km > 0
+  unité: "%"
+
+ui . organisations . transport . prend l'avion:
+  titre: Prennent l'avion
+  icônes: ✈️
+  formule:
+    toutes ces conditions:
+      - transport . avion . présent
+  unité: "%"
+
+ui . organisations . transport . prend l'avion long courrier:
+  titre: Prennent l'avion long courrier
+  icônes: ✈️
+  formule:
+    toutes ces conditions:
+      - transport . avion . long courrier . heures de vol > 0
+  unité: "%"
+
+ui . organisations . transport . km en voiture:
+  titre: Kilomètres parcourus en moyenne en voiture
+  icônes: 🚗
+  formule:
+    moyenne:
+      - transport . voiture . km
+  unité: km
+
+ui . organisations . transport . voyageurs en voiture:
+  titre: Voyageurs en moyenne en voiture
+  icônes: 👥
+  formule:
+    moyenne:
+      - transport . voiture . passagers
+
+ui . organisations . logement:
+  titre: Logement
+  icônes: 🏠
+
+ui . organisations . logement . chauffage électricité:
+  titre: se chauffent à l’électricité
+  icônes: ⚡
+  formule:
+    toutes ces conditions:
+      - logement . chauffage . électricité . présent
+  unité: "%"
+
+ui . organisations . logement . chauffage gaz:
+  titre: se chauffent au gaz
+  icônes: 🔥
+  formule:
+    toutes ces conditions:
+      - logement . chauffage . gaz . présent
+  unité: "%"
+
+ui . organisations . logement . chauffage fioul:
+  titre: se chauffent au fioul
+  icônes: 🛢
+  formule:
+    toutes ces conditions:
+      - logement . chauffage . fioul . présent
+  unité: "%"
+
+ui . organisations . logement . chauffage bois:
+  titre: se chauffent au bois
+  icônes: 🪵
+  formule:
+    toutes ces conditions:
+      - logement . chauffage . bois . présent
+  unité: "%"
+
+ui . organisations . logement . consommation électricité:
+  titre: kWh d'électricité consommés en moyenne
+  icônes: ⚡
+  formule:
+    moyenne:
+      - logement . électricité . consommation totale
+  unité: "%"
+
+ui . organisations . logement . possède climatisation:
+  titre: ont un système de climatisation
+  icônes: ❄️
+  formule:
+    toutes ces conditions:
+      - logement . climatisation . présent
+  unité: "%"
+
+ui . organisations . alimentation:
+  titre: Alimentation
+  icônes: 🍴
+
+ui . organisations . alimentation . est végétalien:
+  titre: Sont végétaliens
+  icônes: 🥗
+  formule:
+    toutes ces conditions:
+      - alimentation . plats . végétarien . nombre = 0
+      - alimentation . plats . viande blanche . nombre = 0
+      - alimentation . plats . viande rouge . nombre = 0
+      - alimentation . plats . poisson gras . nombre = 0
+      - alimentation . plats . poisson blanc . nombre = 0
+  unité: "%"
+
+ui . organisations . alimentation . est végétarien:
+  titre: Sont végétariens
+  icônes: 🥗
+  formule:
+    toutes ces conditions:
+      - alimentation . plats . viande blanche . nombre = 0
+      - alimentation . plats . viande rouge . nombre = 0
+      - alimentation . plats . poisson gras . nombre = 0
+      - alimentation . plats . poisson blanc . nombre = 0
+  unité: "%"
+
+ui . organisations . alimentation . fréquence viande rouge:
+  titre: Mangent de la viande rouge au moins une fois par jour
+  icônes: 🥩
+  formule:
+    toutes ces conditions:
+      - alimentation . plats . viande rouge . nombre > 7
+  unité: "%"
+
+ui . organisations . alimentation . local et de saison:
+  titre: Achètent local et de saison
+  icônes: 🍅
+  formule:
+    toutes ces conditions:
+      - alimentation . de saison . consommation = 'oui toujours'
+      - alimentation . local . consommation = 'oui toujours'
+  unité: "%"
+
+#ui . organisations . alimentation . eau en bouteille:
+#  titre: Boivent de l'eau en bouteille
+#  icônes: 💧
+#  formule:
+#    toutes ces conditions:
+#      - alimentation . boisson . eau en bouteille . consommateur
+#  unité: '%'
+#
+#ui . organisations . alimentation . zéro déchet:
+#  titre: Sont Zéro déchet
+#  icônes: ♻️
+#  formule:
+#    toutes ces conditions:
+#      - alimentation . déchets . quantité jetée = 'zéro déchet'
+#  unité: '%'
+
+ui . organisations . divers:
+  titre: Divers
+  icônes: 📦
+
+ui . organisations . divers . textile:
+  titre: Vêtements neufs achetés chaque année
+  icônes: 👕
+  formule:
+    somme:
+      - divers . textile . t-shirt . nombre
+      - divers . textile . pantalon . nombre
+      - divers . textile . short . nombre
+      - divers . textile . sweat . nombre
+      - divers . textile . robe . nombre
+      - divers . textile . chemise . nombre
+      - divers . textile . pull . nombre
+      - divers . textile . chaussure . nombre
+      - divers . textile . manteau . nombre
+      - divers . textile . petit article . nombre
+      - divers . textile . gros article . nombre
+  unité: "%"
+
+ui . organisations . divers . internet:
+  titre: Passent plus de 3h par jour sur les réseaux hors bureau
+  icônes: 📱
+  formule:
+    toutes ces conditions:
+      - divers . numérique . internet . durée journalière > 3
+  unité: "%"

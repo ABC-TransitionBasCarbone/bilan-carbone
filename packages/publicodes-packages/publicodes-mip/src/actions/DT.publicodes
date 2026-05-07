@@ -1,0 +1,204 @@
+DT . voiture . éco-conduite:
+  titre: Adopter une éco-conduite
+  applicable si:
+    toutes ces conditions:
+      - DT . voiture . présent
+      - DT . voiture . km > 0
+  icônes: 🚗☮
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - est non défini: transport . voiture . utilisateur
+            - transport . voiture . utilisateur = 'non régulier'
+            - transport . train . présent
+            # - transport . car longue distance . présent
+            - transport . deux roues . présent
+        alors: DT . voiture - recalcul DT
+      - sinon: transport . voiture - recalcul transport
+  #        alors: voiture . empreinte au kilomètre * voiture . km * réduction / DT . voiture . voyageurs #Cas ou l'utilisateur vient en Hauts-de-France autrement qu'en voiture (proprio ; non proprio régulier)
+  #      - sinon: transport . voiture . empreinte au kilomètre * voiture . km * réduction / DT . voiture . voyageurs
+  unité: kgCO2e
+  description: |
+    Sécurité, réduction des émissions de gaz à effet de serre, économies de carburant : l’écoconduite n’a que des avantages. 
+
+    Avec l’écoconduite, vous pourrez économiser jusqu’à 5 pleins par an. 
+
+    > Découvrez tous les bons gestes [dans cet article](https://agirpourlatransition.ademe.fr/particuliers/bureau/deplacements/lecoconduite-solution-consommer-moins-carburant-limiter-emissions-co2).
+  note: |
+    Voir le [Guide de formation à l'éco-conduite ADEME-LaPoste](https://expertises.ademe.fr/air-mobilites/mobilite-transports/passer-a-laction/solutions-technologiques/dossier/optimiser-lutilisation-lentretien-vehicule/lecoconduite-attitude-a-adopter)
+
+DT . voiture . éco-conduite . recalcul DT:
+  valeur: DT . voiture
+  contexte:
+    DT . voiture . empreinte au kilomètre calculée: 85% * DT . voiture . empreinte au kilomètre calculée
+  note: |
+    Hypothèse de réduction de 15% ([Guide de formation à l'éco-conduite ADEME-LaPoste](https://expertises.ademe.fr/air-mobilites/mobilite-transports/passer-a-laction/solutions-technologiques/dossier/optimiser-lutilisation-lentretien-vehicule/lecoconduite-attitude-a-adopter))
+
+DT . voiture . éco-conduite . recalcul transport:
+  valeur: transport . voiture
+  contexte:
+    transport . voiture . empreinte au kilomètre calculée: 85% * transport . voiture . empreinte au kilomètre calculée
+  note: |
+    Hypothèse de réduction de 15% ([Guide de formation à l'éco-conduite ADEME-LaPoste](https://expertises.ademe.fr/air-mobilites/mobilite-transports/passer-a-laction/solutions-technologiques/dossier/optimiser-lutilisation-lentretien-vehicule/lecoconduite-attitude-a-adopter))
+
+DT . voiture . éco-conduite . réduction:
+  titre: Gain de consommation éco-conduite
+  formule: 15%
+  note: |
+    Hypothèse de réduction de 15% ([Guide de formation à l'éco-conduite ADEME-LaPoste](https://expertises.ademe.fr/air-mobilites/mobilite-transports/passer-a-laction/solutions-technologiques/dossier/optimiser-lutilisation-lentretien-vehicule/lecoconduite-attitude-a-adopter))
+
+DT . voiture . opter transport commun:
+  titre: Se déplacer (en partie) en transport en commun
+  applicable si:
+    toutes ces conditions:
+      - DT . voiture . présent
+      - DT . voiture . km > 0
+  non applicable si: DT . transports commun . présent
+  icônes: 🚌
+  formule:
+    variations:
+      - si:
+          toutes ces conditions:
+            - DT . voiture . présent
+            - est défini: DT . voiture . empreinte au kilomètre calculée
+            - DT . voiture . empreinte au kilomètre calculée > 0
+        alors: ((DT . voiture . empreinte au kilomètre calculée * voiture . km) - (impact par km bus * voiture . km)) * 15%
+      - sinon: ((transport . voiture . empreinte au kilomètre calculée * voiture . km) - (impact par km bus * voiture . km)) * part report modal
+  #  formule: ((DT . voiture . empreinte au kilomètre calculée * voiture . km) - (DT . transports commun . type . bus . impact par km * voiture . km)) * DT . voiture . opter transport commun . part report modal
+  #  formule: 85% * DT . voiture
+  unité: kgCO2e
+  description: |
+
+DT . voiture . part report modal:
+  titre: Part de déplacements en voiture faisables en TC #A variabiliser selon le lieu ? Pas pour une v1
+  formule: 15%
+  note: |
+    Valeur choisie arbitrairement et non (encore) sourcée
+
+DT . voiture . opter transport commun . impact par km bus:
+  # On copie colle la variable "DT . transports commun . type . bus . impact par km". Cf. note pour les explication
+  formule: 0.113
+  unité: kgCO2e/km
+  note: |
+    Copié collé de la variable "DT . transports commun . type . bus . impact par km"
+    On recrée une variable au sein de actions/DT.publicodes pour palier au fait que publicodes ne lit pas la variable dans DT.publicodes
+    si le choix transport commun n'est pas coché par l'utilisateur
+
+DT . voiture . intensifier transport commun:
+  titre: Intensifier l'usage des transports en commun
+  applicable si:
+    toutes ces conditions:
+      - DT . voiture . présent
+      - DT . voiture . km > 0
+      - DT . transports commun . présent
+  icônes: 🚌↗️
+  formule:
+    variations:
+      - si:
+          toutes ces conditions:
+            - DT . voiture . présent
+            - est défini: DT . voiture . empreinte au kilomètre calculée
+            - DT . voiture . empreinte au kilomètre calculée > 0
+        alors: ((DT . voiture . empreinte au kilomètre calculée * voiture . km) - (DT . transports commun . type . bus . impact par km * voiture . km)) * part report modal
+      - sinon: ((transport . voiture . empreinte au kilomètre calculée * voiture . km) - (DT . transports commun . type . bus . impact par km * voiture . km)) * part report modal
+  unité: kgCO2e
+  description: |
+
+DT . voiture . sans voiture:
+  titre: Réfléchir si il existe une alternative à la voiture
+  icônes: 🚗❌
+  applicable si:
+    toutes ces conditions:
+      - DT . voiture . présent
+      - DT . voiture . km > 0
+  formule: DT . voiture # A vérifier s'il ne faut pas des variations en fonction des différents choix utilisateur
+  unité: kgCO2e
+
+# Action à confirmer au regard des données GES utilisées qui semblait mettre en avant que les e-scooter shared avait un énorme impact car gros et à durée de vie très faible
+DT . deux roues . location deux roues électrique:
+  titre: Louer électrique plutôt que thermique
+  icônes: 🔌🚗
+  applicable si:
+    toutes ces conditions:
+      - DT . deux roues . km > 0
+      - est défini: DT . deux roues . type
+      - DT . deux roues . type = 'scooter thermique'
+  non applicable si:
+    toutes ces conditions:
+      - est défini: DT . deux roues . type
+      - DT . deux roues . type = 'scooter électrique'
+  formule: DT . deux roues - recalcul
+#  description: |
+#  note: |
+
+DT . deux roues . location deux roues électrique . recalcul:
+  valeur: DT . deux roues
+  contexte:
+    DT . deux roues . type: "'scooter électrique'"
+
+DT . voiture . location réduire taille:
+  titre: Louer une petite voiture pendant le DT
+  applicable si:
+    toutes ces conditions:
+      - DT . voiture . km > 0
+  #      - une de ces conditions:
+  #          - est non défini: transport . voiture . utilisateur
+  #          - transport . voiture . utilisateur = 'non régulier'
+  non applicable si:
+    une de ces conditions:
+      - DT . voiture . motorisation = 'petite'
+      - DT . voiture . voyageurs > 3 #Si plus de 3 passagers on considère qu'on ne peut pas prendre une petite voiture
+      - toutes ces conditions:
+          - est défini: transport . voiture . utilisateur
+          - une de ces conditions:
+              - transport . voiture . utilisateur = 'propriétaire'
+              - transport . voiture . utilisateur = 'propriétaire covoit'
+              - transport . voiture . utilisateur = 'régulier non propriétaire'
+              - transport . voiture . utilisateur = 'régulier non propriétaire covoit'
+  formule: DT . voiture - recalcul
+  description: |
+    Les voitures sont de plus en plus grosses et de plus en plus lourdes. L'impact de leur fabrication sur le climat augmente donc en conséquence. A cela
+     s'ajoute le fait que ces voitures sont de moins en moins adaptées à la ville. Tournez vous donc vers un véhicule de taille raisonnable pour votre location.
+
+DT . voiture . location réduire taille . recalcul:
+  valeur: DT . voiture
+  contexte:
+    DT . voiture . gabarit: "'petite'"
+
+DT . voiture . location voiture électrique:
+  titre: Louer électrique plutôt que thermique
+  icônes: 🔌🚗
+  applicable si:
+    toutes ces conditions:
+      - DT . voiture . km > 0
+      - DT . voiture . km < 401
+  #      - une de ces conditions:
+  #          - est non défini: transport . voiture . utilisateur
+  #          - transport . voiture . utilisateur = 'non régulier'
+  non applicable si:
+    une de ces conditions:
+      - DT . voiture . motorisation = 'électrique'
+      - toutes ces conditions:
+          - est défini: transport . voiture . utilisateur
+          - une de ces conditions:
+              - transport . voiture . utilisateur = 'propriétaire'
+              - transport . voiture . utilisateur = 'propriétaire covoit'
+              - transport . voiture . utilisateur = 'régulier non propriétaire'
+              - transport . voiture . utilisateur = 'régulier non propriétaire covoit'
+  formule: DT . voiture - recalcul
+  description: |
+    Les véhicules électriques sont des modes de transport écologiques notamment si ces derniers sont partagés et c'est ce que vous faites, bravo ! Et ne vous inquiètez pas, au regard des km que vous avez renseignés, l'autonomie de la batterie sera suffisante pour votre DT en Hauts-de-France.
+  note: |
+    On considère une autonomie de la batterie de 400 km. Cette hypothèse n'est pas issue de la littérature mais arrêtée arbitrairement
+
+DT . voiture . location voiture électrique . recalcul:
+  valeur: DT . voiture
+  contexte:
+    DT . voiture . motorisation: "'électrique'"
+
+DT . train déplacements domicile travail:
+  titre: Le train est un poste principal de vos déplacements domicile-travail... c'est donc qu'il est peu carboné ! **Félicitations !**
+  icônes: 🚅
+  description: |
+    Le train apparait comme un poste d'empreinte principal de vos déplacements domicile-travail... c'est donc que celui-ci est peu carboné ! **Félicitations !**

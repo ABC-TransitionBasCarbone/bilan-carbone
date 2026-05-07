@@ -1,0 +1,99 @@
+#A voir si on détail par type de trajets (TGV, TER, Europe)
+transport . train:
+  applicable si: présent
+  titre: Train
+  icônes: 🚆
+  formule: km * impact par km * 12
+
+# On fait pour l'instant l'hypothèse que la proportion d'utilisation des différents train est la même qu'au niveau national
+transport . train . impact par km:
+  formule:
+    somme:
+      - proportion TGV * TGV
+      - proportion TER * TER
+      - proportion intercités * intercités
+  unité: kgCO2e/km
+  note: |
+    Les différents types de trains ont des impacts carbone par passager par kilomètres différents.
+    Nous calculons une moyenne pondérée en proportion du nombre total de kilomètres parcourus dans chaque type de train au niveau national.
+    Source : [Autorité de régulation des transports](https://www.autorite-transports.fr/wp-content/uploads/2023/06/bilan-ferroviaire-2022-a-mi-2023.pdf)
+
+    ![Répartition Passagers.km](https://github.com/incubateur-ademe/nosgestesclimat/assets/55186402/4bbdf823-8e9a-4570-90da-77ff8af05b14)
+
+transport . train . TGV:
+  formule: 0.00293
+  unité: kgCO2e/km
+  note: |
+    TGV - 2022 ; 2.93 gCO2e/km/personne ; Base Carbone consultée le 19/11/2023 (Données SNCF)
+
+transport . train . TER:
+  formule: 0.0277
+  unité: kgCO2e/km
+  note: |
+    TER - 2022 - Traction moyenne ; 27.7 gCO2e/km/personne ; Base Carbone consultée le 19/11/2023 (Données SNCF)
+
+transport . train . intercités:
+  formule: 0.00898
+  unité: kgCO2e/km
+  node: |
+    Intercités - 2022 ; 8.98 gCO2e/km/personne ; Base Carbone consultée le 19/11/2023 (Données SNCF)
+
+transport . train . proportion TGV:
+  formule: passagers km TGV / total passagers km
+  note: |
+    Chiffres issus de l'[autorité de régulation des transports](https://www.autorite-transports.fr/wp-content/uploads/2023/06/bilan-ferroviaire-2022-a-mi-2023.pdf).
+
+transport . train . proportion TER:
+  formule: passagers km TER / total passagers km
+  note: |
+    Chiffres issus de l'[autorité de régulation des transports](https://www.autorite-transports.fr/wp-content/uploads/2023/06/bilan-ferroviaire-2022-a-mi-2023.pdf).
+
+transport . train . proportion intercités:
+  formule: passagers km intercités / total passagers km
+  note: |
+    Chiffres issus de l'[autorité de régulation des transports](https://www.autorite-transports.fr/wp-content/uploads/2023/06/bilan-ferroviaire-2022-a-mi-2023.pdf).
+
+transport . train . total passagers km:
+  formule:
+    somme:
+      - passagers km TGV
+      - passagers km TER
+      - passagers km intercités
+  note: |
+    Chiffres issus de l'[autorité de régulation des transports](https://www.autorite-transports.fr/wp-content/uploads/2023/06/bilan-ferroviaire-2022-a-mi-2023.pdf).
+    On omet ici les trajets en RER et transilien.
+
+transport . train . passagers km TGV:
+  formule: 54 + 7
+  note: |
+    Chiffres issus de l'[autorité de régulation des transports](https://www.autorite-transports.fr/wp-content/uploads/2023/06/bilan-ferroviaire-2022-a-mi-2023.pdf).
+    On omet ici les trajets en RER et transilien.
+
+transport . train . passagers km TER:
+  formule: 19
+  note: |
+    Chiffres issus de l'[autorité de régulation des transports](https://www.autorite-transports.fr/wp-content/uploads/2023/06/bilan-ferroviaire-2022-a-mi-2023.pdf).
+    On omet ici les trajets en RER et transilien.
+
+transport . train . passagers km intercités:
+  formule: 3 + 0.5
+  note: |
+    Chiffres issus de l'[autorité de régulation des transports](https://www.autorite-transports.fr/wp-content/uploads/2023/06/bilan-ferroviaire-2022-a-mi-2023.pdf).
+    On omet ici les trajets en RER et transilien.
+
+### A voir si on passe le modèle en heure et non plus en km
+transport . train . km:
+  question: Dans le cadres de vos déplacements professionnels, quelle distance parcourez-vous en train chaque mois ?
+  description: Renseignez la distance moyenne que vous parcourez chaque mois en  train pour vos déplacements professionnels. Si vous le prenez ponctuellement, sommez vos différents trajets et divisez par 12.
+  Suggestions:
+    peu: 100
+    moyennement: 300
+    beaucoup: 600
+  unité: km/mois
+  plancher: 0
+  par défaut: 300
+
+#  question: Combien de kilomètres parcourez-vous en train par an ?
+#  description: |
+#    Renseignez un nombre de km cohérent avec les distances que vous allez parcourir en train le temps de votre séjour (aller-retour depuis votre domicile
+#    et déplacements éventuels pendant le séjour).
