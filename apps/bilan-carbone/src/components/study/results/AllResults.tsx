@@ -15,9 +15,12 @@ import { computeResultsByPostFromEmissionSources, computeResultsByTag } from '@/
 import { computeGHGPResult } from '@/services/results/ghgp'
 import { getSiteEmissionSourcesWithoutMarketBase } from '@/services/results/utils'
 import { isDeactivableFeatureActiveForEnvironment } from '@/services/serverFunctions/deactivableFeatures'
-import { exportEmissionSourcesToExcel } from '@/services/serverFunctions/importEmissionSources'
+import {
+  exportEmissionSourcesToCSV,
+  exportEmissionSourcesToExcel,
+} from '@/services/serverFunctions/importEmissionSources'
 import { prepareReport } from '@/services/serverFunctions/study'
-import { downloadStudyEmissionSources, downloadStudyResults, getDetailedEmissionResults } from '@/services/study'
+import { downloadStudyResults, getDetailedEmissionResults } from '@/services/study'
 import { sortAlphabetically } from '@/services/utils'
 import { AdditionalResultTypes, ResultType } from '@/types/study.types'
 import { getPost } from '@/utils/post'
@@ -65,15 +68,12 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   const { callServerFunction } = useServerFunction()
   const tOrga = useTranslations('study.organization')
   const tPost = useTranslations('emissionFactors.post')
-  const tUnit = useTranslations('units')
   const tExport = useTranslations('exports')
   const tQuality = useTranslations('quality')
   const tBeges = useTranslations('beges')
   const tGHGP = useTranslations('ghgp')
   const tUnits = useTranslations('study.results.units')
-  const tResultUnits = useTranslations('study.results.units')
   const tStudyExport = useTranslations('study.export')
-  const tCaracterisations = useTranslations('categorisations')
   const tStudyNav = useTranslations('study.navigation')
   const tBase = useTranslations('emissionFactors.base')
   const tImport = useTranslations('study.importEmissionSourcesModal')
@@ -348,17 +348,8 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   const downloadEmissionSources = async (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
     preventClose(e)
     if (hasAccessToEmissionSourcesDownload) {
-      await downloadStudyEmissionSources(
-        study,
-        tStudyExport,
-        tCaracterisations,
-        tPost,
-        tQuality,
-        tUnit,
-        tResultUnits,
-        tBase,
-        environment,
-      )
+      const csvContent = await exportEmissionSourcesToCSV(study.id)
+      download(['\ufeff', csvContent], tImport('exportFileNameCsv'), 'csv')
     }
   }
 
@@ -366,15 +357,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     preventClose(e)
     if (hasAccessToEmissionSourcesDownload) {
       const arrayBuffer = await exportEmissionSourcesToExcel(study.id)
-      const blob = new Blob([arrayBuffer], {
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      })
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = tImport('exportFileName')
-      a.click()
-      URL.revokeObjectURL(url)
+      download([arrayBuffer], tImport('exportFileName'), 'xlsx')
     }
   }
 

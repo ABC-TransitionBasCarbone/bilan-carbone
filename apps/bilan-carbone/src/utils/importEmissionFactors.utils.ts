@@ -5,9 +5,14 @@ import { COLUMNS, ImportError, ParsedRow, ParseResult } from '@/types/importEmis
 import { EmissionFactorBase, Environment, SubPost, Unit } from '@abc-transitionbascarbone/db-common/enums'
 import { ManualEmissionFactorUnitList } from './emissionFactors'
 import { parseExcelSheet } from './excel.utils'
-import { buildLabelMap, mapLabelFromTranslations, mapQualityLabelFromTranslations } from './import.utils'
+import {
+  buildLabelMap,
+  mapLabelFromTranslations,
+  mapQualityLabelFromTranslations,
+  mapUnitLabelFromTranslationsWithList,
+} from './import.utils'
 import { parseNumericValue } from './number'
-import { BcTranslations, extractAllForms, getBcTranslations, getSingularForm } from './translation.utils'
+import { getBcTranslations, getSingularForm } from './translation.utils'
 
 export function getAllPostsLabel(locale: LocaleType): string {
   return getBcTranslations(locale).emissionFactors.importModal.allPostsAndSubPosts
@@ -61,22 +66,8 @@ export function getUnitLabel(unit: Unit, locale: LocaleType): string {
   return getSingularForm(raw)
 }
 
-function buildUnitLabelMap(bc: BcTranslations): Record<string, Unit> {
-  const entries: [string, Unit][] = []
-  for (const unit of ManualEmissionFactorUnitList) {
-    const raw = (bc.units as Record<string, string>)[unit]
-    if (!raw) {
-      continue
-    }
-    for (const form of extractAllForms(raw)) {
-      entries.push([form.toLowerCase(), unit])
-    }
-  }
-  return Object.fromEntries(entries)
-}
-
-function mapUnitLabelFromTranslations(label: string | undefined | null, locale: LocaleType): Unit | null {
-  return mapLabelFromTranslations(label, locale, buildUnitLabelMap)
+function mapManualUnitLabelFromTranslations(label: string | undefined | null, locale: LocaleType): Unit | null {
+  return mapUnitLabelFromTranslationsWithList(label, locale, ManualEmissionFactorUnitList)
 }
 
 /**
@@ -208,7 +199,7 @@ export function parseImportFile(buffer: Buffer, locale: LocaleType, environment:
     }
 
     const strippedUnit = rawCustomUnit ? rawCustomUnit.replace(kgCO2ePrefix, '') : rawUnit.replace(kgCO2ePrefix, '')
-    const unit = rawCustomUnit ? Unit.CUSTOM : mapUnitLabelFromTranslations(strippedUnit, locale)
+    const unit = rawCustomUnit ? Unit.CUSTOM : mapManualUnitLabelFromTranslations(strippedUnit, locale)
     if (!unit) {
       rowErrors.push({ key: 'invalidUnit', value: rawUnit })
     }
