@@ -1,0 +1,100 @@
+params:
+  code: ES
+  nom: Espagne
+  gentilé: espagnole
+  drapeau: ES
+  authors:
+    - nom: Jean-Charles Prabonneau
+      url: https://github.com/jc-prabonneau
+
+commun . mix électrique . empreinte carbone:
+  titre: Intensité carbone du mix électrique de l'Espagne continentale
+  formule: 0.206
+  note: |
+    Source: [Electricity Map](https://app.electricitymaps.com/map), 2022
+
+transport . avion . court courrier . heures de vol:
+  suggestions:
+    🚫✈️: 0
+    Madrid ⇄ Barcelone: 2.27
+    Madrid ⇄ Palma de Mallorca: 2.37
+    Barcelone ⇄ Palma de Mallorca: 1.5
+    Barcelone ⇄ Séville: 3
+
+transport . avion . moyen courrier . heures de vol:
+  suggestions:
+    🚫✈️: 0
+    Madrid ⇄ Gran Canaria: 6
+    Madrid ⇄ Paris: 3.7
+    Madrid ⇄ Amsterdam: 4.7
+    Barcelone ⇄ Londres: 4
+
+transport . avion . long courrier . heures de vol:
+  suggestions:
+    🚫✈️: 0
+    Madrid ⇄ New York: 15.4
+    Madrid ⇄ Mexico City: 22
+    Madrid ⇄ Tokyo: 28
+    Barcelone ⇄ Sydney: 44
+
+# Les vols les plus fréquents proviennent du rapport 2022 du ministère des transports espagnol: https://www.mitma.gob.es/recursos_mfom/paginabasica/recursos/trafico_en_los_aeropuertos_espanoles_-_diciembre_2022.pdf
+# Durées obtenues sur https://www.travelmath.com/flying-time/
+
+transport . train . impact par km:
+  formule: (TGV * proportion passagers km AVE) + (TER * (1 - proportion passagers km AVE))
+  avec:
+    proportion passagers km AVE: 0.523
+  unité: kgCO2e/km
+  note: |
+    Nous faisons le choix de ne pas différencier grande vitesse et train conventionnel pour le moment (pour éviter de poser deux questions).
+    Nous appliquons le facteur d'émissions de l'AVE aux 52,3% de trajets effectués en grande vitesse (AVE, Euromed, Avant) et le facteur d'émissions des trains régionaux Cercanías au reste.
+    Source : [Observatoire espagnol des chemins de fer](https://cdn.mitma.gob.es/portal-web-drupal/ferroviario/observatorio/ofe_2021_feb2023_v2.pdf), 2021
+
+transport . train . TGV:
+  titre: Trains grande vitesse AVE
+  formule: (intensité GHG TGV France / 1000 gCO2e/kgCO2e) * intensité mix électrique Espagne continentale / intensité mix électrique France métropolitaine
+  avec:
+    intensité mix électrique France métropolitaine: 90 gCO2e/kWh
+    intensité mix électrique Espagne continentale: 206 gCO2e/kWh
+    intensité GHG TGV France: 2.93 gCO2e/km
+  unité: kgCO2e/km
+  note: |
+    L'impact du train espagnol à grande vitesse est calculé sur la base du TGV français, en lui appliquant l'intensité carbone du mix électrique de l'Espagne.
+    Sources :
+    - Intensités carbone des mix électriques des deux pays : [Electricity Map](https://app.electricitymaps.com/map), 2022
+    - Impact TGV France : 2.93 gCO2e/km/personne ; Base Carbone consultée le 19/11/2023 (Données SNCF)
+
+transport . train . TER:
+  titre: Trains régionaux Cercanías
+  formule: 0.0328
+  unité: kgCO2e/km
+  note: |
+    Trains régionaux Cercanías - 32,8 gCO2e/passager-km ; [Données IDAE](https://sede.idae.gob.es/lang/extras/tramites-servicios/2021/MOVES_Proyectos_Singulares_II/Factores_de_conversion_ahorros_y_emisiones_de_CO2.pdf), 2021
+
+transport . train . km:
+  suggestions:
+    traversée d'une région: 300
+    Madrid ⇄ Barcelone: 1100
+    Barcelone ⇄ Paris: 2000
+    💳 Renfe Más Plata: 10000
+    💳 Renfe Más Oro: 20000
+
+services sociétaux . services publics:
+  description: |
+    > Le calcul des émissions des services publics espagnols est basé sur l'estimation française, réajustée des dépenses publiques espagnoles, de l'intensité carbone de l'économie espagnole et de sa population. 
+    > Il s'agit d'une première estimation macroscopique qui pourra être revue dans le futur.
+  formule: poids des services publics espagnols
+  avec:
+    poids des services publics espagnols: 1142.5
+  note: |
+    Source: [Détail de l'estimation](https://docs.google.com/spreadsheets/d/1zJ-CkVQ8W_HdFVvNyaN4xlRsyoZPzRef4rpiCqyowG4/edit?usp=sharing)
+
+services sociétaux . services marchands:
+  description: |
+    > Le calcul des émissions des services marchands espagnols est basé sur l'estimation française, réajustée des émissions territoriales de l'Espagne et de sa population. 
+    > Il s'agit d'une première estimation macroscopique qui pourra être revue dans le futur.
+  formule: poids des services marchands espagnols
+  avec:
+    poids des services marchands espagnols: 195.06
+  note: |
+    Source: [Détail de l'estimation](https://docs.google.com/spreadsheets/d/1zJ-CkVQ8W_HdFVvNyaN4xlRsyoZPzRef4rpiCqyowG4/edit?usp=sharing)

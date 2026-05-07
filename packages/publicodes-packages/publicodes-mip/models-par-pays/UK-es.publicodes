@@ -1,0 +1,37 @@
+params:
+  code: UK
+  nom: Reino Unido
+  gentilé: inglés
+  drapeau: GB
+commun . mix électrique . empreinte carbone:
+  titre: Intensidad de carbono del mix eléctrico del Reino Unido
+  formule: 0.236
+  note: |
+    [Mapa eléctrico](https://app.electricitymaps.com/map) Perspectiva a 5 años, 2022
+transport . avion . court courrier . heures de vol:
+  suggestions:
+    🚫✈️: 0
+    Londres ⇄ Manchester: 2
+    Londres ⇄ Dublín: 3
+    Londres ⇄ París: 3
+    Londres ⇄ Berlín: 4
+transport . avion . moyen courrier . heures de vol:
+  suggestions:
+    🚫✈️: 0
+    Londres ⇄ Madrid: 5
+    Londres ⇄ Roma: 5
+    Londres ⇄ Marrakech: 7
+transport . avion . long courrier . heures de vol:
+  suggestions:
+    🚫✈️: 0
+    Londres ⇄ Nueva York: 16
+    Londres ⇄ Lima: 30
+    Londres ⇄ Tokio: 40
+    Londres ⇄ Sydney: 50
+transport . train . km:
+  suggestions:
+    atravesar una región: 300
+    Londres ⇄ Manchester: 500
+    Londres ⇄ París: 700
+    💳 viajero frecuente: 10000
+    💳 grand voyageur plus ultra: 25000
