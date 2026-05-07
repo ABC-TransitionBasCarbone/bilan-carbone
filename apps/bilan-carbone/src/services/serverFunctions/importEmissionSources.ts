@@ -16,7 +16,7 @@ import { parseEmissionSourcesFile } from '@/utils/importEmissionSources.utils'
 import { getPost } from '@/utils/post'
 import { getBcTranslations, getSingularForm } from '@/utils/translation.utils'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
-import { EmissionSourceCaracterisation, EmissionSourceType, SubPost } from '@repo/db-common/enums'
+import { EmissionSourceCaracterisation, EmissionSourceType, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { revalidatePath } from 'next/cache'
 import xlsx from 'node-xlsx'
 import { getAuthenticatedAccount } from '../permissions/account.permissions'
@@ -359,6 +359,8 @@ export async function exportEmissionSourcesToExcel(studyId: string): Promise<Arr
   const getQualityFieldLabel = (value: number | null) =>
     value !== null ? (qualityTranslations[String(value)] ?? '') : ''
 
+  const studyVersionIds = new Set(study.emissionFactorVersions.map((v) => v.importVersionId))
+
   const dataRows = emissionSources.map((es) => {
     const ef = emissionFactors.find((f) => f.id === es.emissionFactor?.id)
     const post = getPost(es.subPost)
@@ -380,7 +382,8 @@ export async function exportEmissionSourcesToExcel(studyId: string): Promise<Arr
       ? getQualityLabel(getQualitativeUncertaintyFromQuality(feSpecificQuality))
       : ''
     const efSourceBase = ef ? (efImportSourceTranslations[ef.importedFrom] ?? ef.importedFrom) : ''
-    const efSource = ef ? [efSourceBase, ef.version?.name].filter(Boolean).join(' ') : ''
+    const efVersion = ef?.versions.find((v) => studyVersionIds.has(v.importVersionId))
+    const efSource = ef ? [efSourceBase, efVersion?.importVersion?.name].filter(Boolean).join(' ') : ''
     const efTypeLabel = ef
       ? ef.isMonetary
         ? ef.importedFrom === 'Manual'
