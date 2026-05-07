@@ -6,15 +6,16 @@ enum UserSource {
 }
 
 model User {
-  id         String     @id @default(uuid())
-  level      Level?
-  firstName  String     @map("first_name")
-  lastName   String     @map("last_name")
-  email      String     @unique
-  password   String?
-  resetToken String?    @map("reset_token")
-  accounts   Account[]
-  source     UserSource @default(CRON)
+  id          String       @id @default(uuid())
+  level       Level?
+  firstName   String       @map("first_name")
+  lastName    String       @map("last_name")
+  email       String       @unique
+  password    String?
+  resetToken  String?      @map("reset_token")
+  accounts    Account[]
+  accountsMip AccountMip[]
+  source      UserSource   @default(CRON)
 
   formationFormStartTime DateTime? @map("formation_form_start_time")
 
