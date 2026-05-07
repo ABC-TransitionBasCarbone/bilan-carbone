@@ -17,10 +17,7 @@ export function getAllPostsLabel(locale: LocaleType): string {
   return getBcTranslations(locale).emissionFactors.importModal.allPostsAndSubPosts
 }
 
-export function mapBaseLabelFromTranslations(
-  label: string | undefined | null,
-  locale: LocaleType,
-): EmissionFactorBase | null {
+function mapBaseLabelFromTranslations(label: string | undefined | null, locale: LocaleType): EmissionFactorBase | null {
   return mapLabelFromTranslations(label, locale, (bc) =>
     buildLabelMap(
       bc.emissionFactors.base,
@@ -30,7 +27,7 @@ export function mapBaseLabelFromTranslations(
   )
 }
 
-export function mapPostLabelFromTranslations(
+function mapPostLabelFromTranslations(
   label: string | undefined | null,
   locale: LocaleType,
   environment: Environment,
@@ -45,7 +42,7 @@ export function mapPostLabelFromTranslations(
   )
 }
 
-export function mapSubPostLabelFromTranslations(
+function mapSubPostLabelFromTranslations(
   label: string | undefined | null,
   locale: LocaleType,
   environment: Environment,
@@ -82,7 +79,7 @@ function buildUnitLabelMap(bc: BcTranslations): Record<string, Unit> {
   return Object.fromEntries(entries)
 }
 
-export function mapUnitLabelFromTranslations(label: string | undefined | null, locale: LocaleType): Unit | null {
+function mapUnitLabelFromTranslations(label: string | undefined | null, locale: LocaleType): Unit | null {
   return mapLabelFromTranslations(label, locale, buildUnitLabelMap)
 }
 

@@ -6,7 +6,7 @@ import {
   ParseEmissionSourcesResult,
   SOURCE_IMPORT_COLUMNS,
 } from '@/types/importEmissionSources.types'
-import { EmissionSourceCaracterisation, EmissionSourceType, SubPost } from '@repo/db-common/enums'
+import { EmissionSourceCaracterisation, EmissionSourceType, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import {
   buildLabelMap,
   mapLabelFromTranslations,

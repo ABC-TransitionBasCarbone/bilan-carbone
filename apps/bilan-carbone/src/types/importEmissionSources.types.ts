@@ -1,4 +1,4 @@
-import { EmissionSourceCaracterisation, EmissionSourceType, SubPost } from '@repo/db-common/enums'
+import { EmissionSourceCaracterisation, EmissionSourceType, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 
 export type ImportEmissionSourceError = {
   line: number
