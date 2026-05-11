@@ -1,0 +1,20 @@
+{
+  "name": "@abc-transitionbascarbone/publicodes",
+  "version": "0.0.1",
+  "private": true,
+  "main": "utils.ts",
+  "types": "utils.ts",
+  "exports": {
+    ".": "./singletons.ts",
+    "./utils": "./utils.ts",
+    "./hooks": "./hooks",
+    "./context": "./context"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "@mui/material": "*"
+  },
+  "dependencies": {
+    "@abc-transitionbascarbone/utils": "*"
+  }
+}
