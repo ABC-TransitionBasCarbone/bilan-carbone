@@ -1,0 +1,67 @@
+{
+  "publicodes-layout": {
+    "table": {
+      "IntrantsServices": {
+        "question": "Quel montant avez-vous dépensé dans les services immatériels suivants ?",
+        "typeService": "Type de service",
+        "montantDepense": "Montant dépensé"
+      },
+      "IntrantsBiensEtMatieresTilt": {
+        "question": "Quel montant avez-vous dépensé dans les biens suivants ?",
+        "typeBien": "Type de bien",
+        "montantDepense": "Montant dépensé"
+      },
+      "TransportDeMarchandises": {
+        "question": "D'où proviennent vos livraisons ?",
+        "typeProvenance": "Provenance",
+        "pourcentageLivraisons": "Pourcentage des livraisons"
+      },
+      "DomicileTravailSalaries": {
+        "question": "Quel pourcentage des salariés se rend au travail via les modes de transports suivants ?",
+        "ModeTransport": "Mode de transport",
+        "TauxTransport": "Pourcentage des salariés",
+        "question2": "Combien de km parcourt en moyenne, par jour, un salarié se rendant au travail via les modes de transports suivants ? Les distances doivent inclure l'aller et le retour.",
+        "ModeTransport2": "Mode de transport",
+        "DistanceMoyenne": "Distance moyenne (A/R) parcourue par jour par un salarié"
+      },
+      "DeplacementsDomicileTravailBenevoles": {
+        "question": "Quel pourcentage des bénévoles se rend à son lieu habituel de bénévolat via les modes de transports suivants ?",
+        "ModeTransport": "Mode de transport",
+        "TauxTransport": "Pourcentage des bénévoles",
+        "question2": "Combien de km parcourt en moyenne, par jour, un bénévole se rendant à son lieu habituel de bénévolat via les modes de transports suivants ? Les distances doivent inclure l'aller et le retour.",
+        "ModeTransport2": "Mode de transport",
+        "DistanceMoyenne": "Distance moyenne (A/R) parcourue par jour par un bénévole"
+      },
+      "DeplacementsDansLeCadreDUneMissionAssociativeSalaries": {
+        "question": "Combien de km parcourt en moyenne un salarié se déplaçant dans le cadre d'une mission associative via les modes de transports suivants ?",
+        "ModeTransport": "Mode de transport",
+        "DistanceMoyenne": "Distance moyenne parcourue par un salarié pour un déplacement dans le cadre d'une mission associative"
+      },
+      "DeplacementsDansLeCadreDUneMissionAssociativeBenevoles": {
+        "question": "Combien de km parcourt en moyenne un bénévole se déplaçant dans le cadre d'une mission associative via les modes de transports suivants ?",
+        "ModeTransport": "Mode de transport",
+        "DistanceMoyenne": "Distance moyenne parcourue par un bénévole pour un déplacement dans le cadre d'une mission associative"
+      },
+      "DeplacementsDesBeneficiaires": {
+        "question": "Quel pourcentage des déplacements des bénéficiaires servant à accéder aux produits et services de l'association se font via les modes de transports suivants ?",
+        "ModeTransport": "Mode de transport",
+        "TauxTransport": "Pourcentage des bénéficiaires",
+        "question2": "Combien de km parcourt en moyenne, par an, un bénéficiaire afin d'accéder aux produits et services de l'association via les modes de transports suivants ?",
+        "ModeTransport2": "Mode de transport",
+        "DistanceMoyenne": "Distance moyenne (A/R) parcourue par jour par un salarié"
+      },
+      "DechetsDirects": {
+        "question": "Quelles quantités des déchets suivants sont jetées chaque année ?",
+        "typeDéchets": "Type de déchet",
+        "poids": "Quantité jetée"
+      },
+      "EquipementsEtImmobilisations": {
+        "question": "Pour chacun de ces équipements informatiques, veuillez indiquer combien sont possédés ou loués depuis moins de 3 ans :",
+        "typeEquipement": "Type d'équipement",
+        "nombreEquipement": "Quantité"
+      }
+    },
+    "group": {},
+    "list": {}
+  }
+}

@@ -21,7 +21,8 @@
       "@abc-transitionbascarbone/css": ["packages/css/index.ts"],
       "@abc-transitionbascarbone/survey": ["packages/survey/src/index.ts"],
       "@abc-transitionbascarbone/lib": ["packages/lib/src/index.ts"],
-      "@abc-transitionbascarbon/i18n/*": ["packages/i18n/*"]
+      "@abc-transitionbascarbone/publicodes": ["packages/publicodes/*"],
+      "@abc-transitionbascarbone/i18n/*": ["packages/i18n/*"]
     }
   }
 }

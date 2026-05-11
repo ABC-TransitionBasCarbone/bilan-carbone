@@ -1,0 +1,758 @@
+{
+  "publicodes-rules": {
+    "général": {
+      "nombre séances": {
+        "question": "Number of screenings"
+      },
+      "nombre entrées": {
+        "question": "Number of admissions"
+      },
+      "nombre de jours ouverture": {
+        "question": "Number of opening days"
+      },
+      "nombre de films programmés": {
+        "question": "Number of scheduled films"
+      },
+      "distance depuis paris": {
+        "question": "Distance from Paris"
+      },
+      "nombre écrans": {
+        "question": "Number of screens / rooms"
+      }
+    },
+    "tournées avant premières": {
+      "équipes reçues": {
+        "nombre équipes": {
+          "question": "How many film crews did you host in 2025?"
+        }
+      }
+    },
+    "salles et cabines": {
+      "autre matériel": {
+        "lunettes 3D": {
+          "nombre": {
+            "question": "How many 3D glasses do you have?"
+          }
+        }
+      },
+      "matériel technique": {
+        "salles": {
+          "titre": "Rooms",
+          "question": "Describe the different rooms in the cinema"
+        },
+        "salle": {
+          "nom": {
+            "question": "Room name"
+          },
+          "projecteur": {
+            "année achat": {
+              "question": "Projector acquisition year"
+            },
+            "type": {
+              "titre": "Projector type",
+              "question": "Projectors",
+              "options": {
+                "xénon": "Xenon projector",
+                "laser": "Laser projector"
+              }
+            }
+          },
+          "écran": {
+            "année achat": {
+              "question": "Screen acquisition year"
+            },
+            "surface écran": {
+              "question": "Screen surface area"
+            },
+            "type": {
+              "titre": "Screen type",
+              "question": "Screens",
+              "options": {
+                "écran 2D": "2D screen",
+                "écran 3D": "3D screen"
+              }
+            }
+          },
+          "fauteuils": {
+            "année achat": {
+              "question": "Seat acquisition year"
+            },
+            "nombre": {
+              "question": "Number of seats"
+            },
+            "type": {
+              "titre": "Seat type",
+              "question": "Seats",
+              "options": {
+                "fauteuils classiques": "Classic seats",
+                "fauteuils 4DX": "4DX seats"
+              }
+            }
+          },
+          "système son": {
+            "année achat": {
+              "question": "Sound system acquisition year"
+            },
+            "type": {
+              "titre": "Sound system type",
+              "question": "Sound systems",
+              "options": {
+                "stéréo": "Stereo sound",
+                "dolby 51": "Dolby 5.1",
+                "dolby 71": "Dolby 7.1",
+                "dolby atmos": "Dolby Atmos",
+                "imax": "IMAX",
+                "auro 3dIce": "Auro 3D / Ice",
+                "dtsx": "DTS : X"
+              }
+            }
+          }
+        },
+        "cloud": {
+          "stockage": {
+            "question": "How much data do you store in an external cloud?"
+          }
+        },
+        "disques durs": {
+          "nombre": {
+            "question": "How many hard drives do you have?"
+          }
+        },
+        "films": {
+          "nombre films dématérialisés": {
+            "description": "By default, you can enter 90% of the total scheduled films (this number is available in your general data), which is the average value from Bilan Carbone® assessments carried out in several French cinemas. If you have more precise information for your cinema, we invite you to use it instead of the default value.",
+            "question": "How many films did you receive digitally this year?"
+          }
+        }
+      }
+    },
+    "mobilité spectateurs": {
+      "résultat précis": {
+        "empreinte": {
+          "RER et transilien": {
+            "titre": "RER and Transilien",
+            "distance": {
+              "question": "Distance (km)"
+            }
+          },
+          "métro ou tram": {
+            "titre": "Metro, tramway",
+            "distance": {
+              "question": "Distance (km)"
+            }
+          },
+          "bus": {
+            "titre": "Bus",
+            "distance": {
+              "question": "Distance (km)"
+            }
+          },
+          "vélo électrique": {
+            "titre": "Electric bike",
+            "distance": {
+              "question": "Distance (km)"
+            }
+          },
+          "vélo classique": {
+            "titre": "Classic bike",
+            "distance": {
+              "question": "Distance (km)"
+            }
+          },
+          "marche": {
+            "titre": "Walking",
+            "distance": {
+              "question": "Distance (km)"
+            }
+          },
+          "voiture diesel": {
+            "titre": "Diesel car",
+            "distance": {
+              "question": "Distance (km)"
+            }
+          },
+          "voiture essence": {
+            "titre": "Petrol car",
+            "distance": {
+              "question": "Distance (km)"
+            }
+          },
+          "voiture hybride": {
+            "titre": "Hybrid car",
+            "distance": {
+              "question": "Distance (km)"
+            }
+          },
+          "voiture électrique": {
+            "titre": "Electric car",
+            "distance": {
+              "question": "Distance (km)"
+            }
+          },
+          "moto": {
+            "titre": "Motorbike",
+            "distance": {
+              "question": "Distance (km)"
+            }
+          },
+          "scooter": {
+            "titre": "Scooter",
+            "distance": {
+              "question": "Distance (km)"
+            }
+          },
+          "trottinette électrique": {
+            "titre": "Electric scooter",
+            "distance": {
+              "question": "Distance (km)"
+            }
+          }
+        }
+      },
+      "résultat estimé": {
+        "proximité spectateurs": {
+          "question": "Are your spectators mainly \"local\" residents, i.e. living in the area year-round, or do you also attract a significant proportion of passing spectators (including tourists)?",
+          "options": {
+            "zone très touristique": "The cinema is located in a tourist area and 80% or more of spectators do not live near the cinema year-round.",
+            "zone moyennement touristique": "The cinema is located in a weekend destination town and/or seaside resort attracting around 25% \"non-local\" spectators.",
+            "majoritairement locaux": "The cinema mainly welcomes local spectators"
+          }
+        },
+        "profil établissement": {
+          "question": "If you wish to identify with comparable cinema profiles, which type of cinema does your establishment most closely resemble?",
+          "options": {
+            "distances courtes": "Spectators travel very short distances to come to the cinema (less than 10km round trip). Very few come by car (less than 10%) and the vast majority come on foot or by public transport.",
+            "distances moyennes": "Spectators travel around 10 km round trip to come to the cinema. It is mainly a local audience, mostly coming by car. Around 25% come on foot.",
+            "distances longues": "Spectators travel around 20-25 km round trip to come to the cinema. It is mainly a local audience, mostly coming by car. Around 25% come on foot.",
+            "majoritairement en voiture": "More than 80% of spectators come by car. Few or none come by public transport, few come on foot. The average distance travelled is around 15 km round trip.",
+            "uniquement accessible en voiture": "The cinema is only accessible by car."
+          }
+        }
+      },
+      "précision": {
+        "question": "Have you already conducted a spectator mobility survey?",
+        "options": {
+          "résultat précis": "Yes, and I can enter the results",
+          "besoin": "No, but I would like to do it to estimate the cinema's impact",
+          "estimation": "No, but I prefer to identify with comparable cinema profiles"
+        }
+      },
+      "mobilité spectateurs": {
+        "contact": {
+          "question": "If you wish to carry out a spectator mobility survey, you can send us an email to receive a survey template that will allow you to provide the requested information in a few weeks"
+        }
+      }
+    },
+    "fonctionnement": {
+      "équipe": {
+        "collaborateurs": {
+          "titre": "Staff",
+          "question": "What is the work schedule of the cinema staff?"
+        },
+        "collaborateur type": {
+          "nom": {
+            "question": "Label"
+          },
+          "nombre de jours par semaine": {
+            "question": "Number of days per week"
+          },
+          "transport": {
+            "distance": {
+              "question": "Home-work distance (round trip)"
+            },
+            "moyen de transport": {
+              "question": "Means of transport",
+              "options": {
+                "RER et transilien": "RER and Transilien",
+                "métro ou tram": "Metro or tram",
+                "bus": "Bus",
+                "vélo électrique": "Electric bike",
+                "vélo classique": "Classic bike",
+                "marche": "Walking",
+                "voiture diesel": "Diesel car",
+                "voiture essence": "Petrol car",
+                "voiture hybride": "Hybrid car",
+                "voiture électrique": "Electric car",
+                "moto": "Motorbike",
+                "scooter": "Scooter",
+                "trottinette électrique": "Electric scooter"
+              }
+            }
+          }
+        }
+      },
+      "énergie": {
+        "électricité": {
+          "consommation": {
+            "question": "How many kWh of electricity were consumed by the cinema this year?"
+          }
+        },
+        "gaz": {
+          "consommation": {
+            "question": "How many m³ of gas were consumed by the cinema this year?"
+          }
+        },
+        "fioul": {
+          "consommation": {
+            "question": "How many litres of fuel oil were consumed by the cinema this year?"
+          }
+        },
+        "réseau de chaleur": {
+          "consommation": {
+            "question": "How many kWh from district heating were consumed by the cinema this year?"
+          }
+        },
+        "réseau de froid": {
+          "consommation": {
+            "question": "How many kWh from district cooling were consumed by the cinema this year?"
+          }
+        },
+        "granulés": {
+          "consommation": {
+            "question": "How many kWh from wood pellet combustion were consumed by the cinema this year?"
+          }
+        },
+        "est équipé climatisation": {
+          "question": "Is your cinema equipped with air conditioning?"
+        },
+        "groupes électrogènes": {
+          "consommation": {
+            "question": "What is your annual diesel consumption?"
+          }
+        },
+        "équipement groupes électrogènes": {
+          "question": "Does the cinema have one or more generators?",
+          "options": {
+            "utilisation régulière": "Yes, and I use it several times a year",
+            "équipé sans utilisation": "Yes, but I don't use it",
+            "aucun": "No"
+          }
+        }
+      },
+      "déplacements pro": {
+        "déplacements": {
+          "titre": "Business trips",
+          "description": "Business trips by your staff are all trips other than home-work journeys, made as part of their work. These include, for example, trips to congresses, conventions, festivals, previews, etc.",
+          "question": "Describe your staff's business trips"
+        },
+        "déplacement type": {
+          "nom": {
+            "question": "Trip"
+          },
+          "nombre participants": {
+            "question": "Number of participants"
+          },
+          "nombre occurences": {
+            "question": "Number of occurrences"
+          },
+          "nombre de nuitées": {
+            "question": "Number of overnight stays"
+          },
+          "transport": {
+            "distance": {
+              "question": "Round-trip distance"
+            },
+            "moyen de transport": {
+              "question": "Means of transport",
+              "options": {
+                "RER et transilien": "RER and Transilien",
+                "métro ou tram": "Metro or tram",
+                "bus": "Bus",
+                "vélo électrique": "Electric bike",
+                "voiture diesel": "Diesel car",
+                "voiture essence": "Petrol car",
+                "voiture hybride": "Hybrid car",
+                "voiture électrique": "Electric car",
+                "moto": "Motorbike",
+                "scooter": "Scooter",
+                "trottinette électrique": "Electric scooter",
+                "TGV": "TGV",
+                "avion": "Plane"
+              }
+            }
+          },
+          "type hébergement": {
+            "question": "Type of accommodation",
+            "options": {
+              "appartement": "Apartment",
+              "hotel 1 étoile": "1-star hotel",
+              "hotel 2 étoiles": "2-star hotel",
+              "hotel 3 étoiles": "3-star hotel",
+              "hotel 4 étoiles": "4-star hotel",
+              "hotel 5 étoiles": "5-star hotel"
+            }
+          }
+        }
+      },
+      "bâtiment": {
+        "construction": {
+          "année de construction": {
+            "question": "When was the building constructed?"
+          },
+          "surface": {
+            "question": "What is the cinema's floor area? (The sum of the areas of the different levels)"
+          }
+        },
+        "rénovation": {
+          "type": {
+            "rénovation totale": {
+              "question": "Total renovation (excluding extension)"
+            },
+            "extension": {
+              "question": "Extension - enlargement"
+            },
+            "autres travaux importants": {
+              "question": "Other major works (e.g. carpet replacement, facade renovation, painting, etc.)"
+            },
+            "aucun": {
+              "question": "I have not carried out any of these renovations in the last ten years"
+            }
+          },
+          "empreinte travaux": {
+            "montant": {
+              "question": "If you have carried out a renovation in the last 10 years, what is the amount spent on these renovation works?"
+            }
+          },
+          "empreinte extension": {
+            "surface": {
+              "question": "If you have carried out an extension in the last 10 years, what is the additional surface area added?"
+            }
+          }
+        },
+        "autre activité": {
+          "surface": {
+            "question": "What is the total surface area of the building (including the cinema)?"
+          }
+        },
+        "est partagé": {
+          "question": "Is the building shared with another activity?"
+        },
+        "parking": {
+          "nombre de places": {
+            "question": "If yes, how many spaces?"
+          }
+        },
+        "parking présent": {
+          "question": "Does the cinema have a parking lot?"
+        }
+      },
+      "activités de bureau": {
+        "petites fournitures": {
+          "montant": {
+            "question": "How much did you spend on small office supplies? (Examples: pencil, ink cartridge, paper excluding programs, notebook, etc.)"
+          }
+        },
+        "services": {
+          "montant": {
+            "description": "Services include, for example, cleaning, security, accounting, bank charges, etc. You can use a default value for this answer (€25,286), which comes from Bilan Carbone® assessments carried out in several French cinemas. If you have more precise information for your cinema, we invite you to use it instead of the default value.",
+            "question": "How much did you spend on services?"
+          }
+        },
+        "informatique": {
+          "titre": "IT equipment",
+          "description": "If the equipment concerned is purchased, please do not fill in the \"Rental period\" field. If the equipment is rented occasionally, please do not fill in the \"Purchase date\" field. If you rent equipment for long periods or continuously, we recommend that you consider it as purchased (from the date of the first year of rental).",
+          "question": "For each of these IT devices, please indicate their number and their purchase date or rental period",
+          "appareil": {
+            "nombre": {
+              "question": "Number of devices"
+            },
+            "année achat": {
+              "question": "Device purchase year"
+            },
+            "durée location": {
+              "question": "Device rental period (days per year)"
+            }
+          },
+          "équipement": {
+            "titre": "Type of IT equipment",
+            "question": "Type of IT equipment",
+            "options": {
+              "ordinateurs fixes": "Desktop computers",
+              "ordinateurs portables": "Laptop computers",
+              "photocopieurs": "Photocopiers",
+              "imprimantes": "Printers",
+              "téléphones fixes": "Landline phones",
+              "téléphones portables": "Mobile phones",
+              "tablettes": "Tablets"
+            }
+          }
+        }
+      }
+    },
+    "déchets": {
+      "ordinaires": {
+        "ordures ménagères": {
+          "titre": "Household waste (unsorted waste / without specific channel)",
+          "nombre bennes": {
+            "question": "Number of bins"
+          },
+          "taille benne": {
+            "description": "Capacity of a household waste bin.",
+            "question": "Bin size"
+          },
+          "fréquence ramassage": {
+            "description": "Household waste collection frequency per week.",
+            "question": "Collection frequency"
+          }
+        },
+        "emballages et papier": {
+          "titre": "Packaging and paper (plastic, metal, paper and cardboard)",
+          "nombre bennes": {
+            "question": "Number of bins"
+          },
+          "taille benne": {
+            "description": "Capacity of a household waste bin.",
+            "question": "Bin size"
+          },
+          "fréquence ramassage": {
+            "description": "Household waste collection frequency per week.",
+            "question": "Collection frequency"
+          }
+        },
+        "biodéchets": {
+          "titre": "Biowaste (food waste)",
+          "nombre bennes": {
+            "question": "Number of bins"
+          },
+          "taille benne": {
+            "description": "Capacity of a household waste bin.",
+            "question": "Bin size"
+          },
+          "fréquence ramassage": {
+            "description": "Household waste collection frequency per week.",
+            "question": "Collection frequency"
+          }
+        },
+        "verre": {
+          "titre": "Glass waste",
+          "nombre bennes": {
+            "question": "Number of bins"
+          },
+          "taille benne": {
+            "description": "Capacity of a household waste bin.",
+            "question": "Bin size"
+          },
+          "fréquence ramassage": {
+            "description": "Household waste collection frequency per week.",
+            "question": "Collection frequency"
+          }
+        }
+      },
+      "exceptionnels": {
+        "lampe xenon": {
+          "nombre": {
+            "titre": "Number of lamps",
+            "question": "How many Xenon lamps did you dispose of this year?"
+          }
+        },
+        "matériel technique": {
+          "quantité": {
+            "question": "How much technical equipment did you dispose of this year?"
+          }
+        }
+      }
+    },
+    "confiseries et boissons": {
+      "électroménager": {
+        "appareil": {
+          "nb appareils": {
+            "question": "Number of devices"
+          },
+          "année achat": {
+            "question": "Device purchase year"
+          },
+          "durée location": {
+            "question": "Device rental period (days per year)"
+          }
+        },
+        "réfrigérateurs": {
+          "titre": "Refrigerators",
+          "nombre": {
+            "question": "Number of refrigerators"
+          },
+          "durée location": {
+            "question": "Refrigerator rental period (days per year)"
+          },
+          "année achat": {
+            "question": "Refrigerator purchase year"
+          }
+        },
+        "congélateurs": {
+          "titre": "Freezers",
+          "nombre": {
+            "question": "Number of freezers"
+          },
+          "durée location": {
+            "question": "Freezer rental period (days per year)"
+          },
+          "année achat": {
+            "question": "Freezer purchase year"
+          }
+        },
+        "warmers": {
+          "titre": "Warmers",
+          "nombre": {
+            "question": "Number of warmers"
+          },
+          "durée location": {
+            "question": "Warmer rental period (days per year)"
+          },
+          "année achat": {
+            "question": "Warmer purchase year"
+          }
+        },
+        "distributeurs": {
+          "titre": "Snack and drink dispensers",
+          "nombre": {
+            "question": "Number of snack and drink dispensers"
+          },
+          "durée location": {
+            "question": "Snack and drink dispenser rental period (days per year)"
+          },
+          "année achat": {
+            "question": "Snack and drink dispenser purchase year"
+          }
+        }
+      },
+      "fret": {
+        "distance": {
+          "question": "What is the distance between your cinema and your main supplier?"
+        }
+      },
+      "achats": {
+        "vente sur place": {
+          "titre": "On-site sales",
+          "question": "Do you sell drinks and confectionery?"
+        },
+        "achat type": {
+          "question": "On average, what does a spectator buy:",
+          "options": {
+            "un peu": "A small amount of confectionery and drinks (~30g)",
+            "standard": "A standard portion of confectionery and drinks (~120g)",
+            "significatif": "A significant portion of confectionery and drinks (~200g)"
+          }
+        }
+      }
+    },
+    "billetterie et communication": {
+      "matériel distributeurs": {
+        "affiches": {
+          "affiches 120x160": {
+            "titre": "Posters 120x160",
+            "nombre": {
+              "question": "Quantity"
+            }
+          },
+          "affiches 40x60": {
+            "titre": "Posters 40x60",
+            "nombre": {
+              "question": "Quantity"
+            }
+          }
+        },
+        "PLV": {
+          "PLV comptoir": {
+            "titre": "Counter POS",
+            "nombre": {
+              "question": "Quantity"
+            }
+          },
+          "PLV grand format": {
+            "titre": "Large format POS",
+            "nombre": {
+              "question": "Quantity"
+            }
+          }
+        }
+      },
+      "matériel cinéma": {
+        "production": {
+          "programme": {
+            "titre": "Program",
+            "nombre": {
+              "question": "Quantity"
+            }
+          },
+          "affiches": {
+            "titre": "Posters",
+            "nombre": {
+              "question": "Quantity"
+            }
+          },
+          "flyers": {
+            "titre": "Flyers",
+            "nombre": {
+              "question": "Quantity"
+            }
+          }
+        }
+      },
+      "communication digitale": {
+        "newsletters": {
+          "nombre": {
+            "question": "How many newsletters were sent this year?"
+          },
+          "destinataires": {
+            "question": "On average, how many people received these newsletters?"
+          }
+        },
+        "affichage dynamique": {
+          "nombre": {
+            "question": "How many dynamic display boxes are present in the cinema?"
+          }
+        },
+        "écrans": {
+          "nombre": {
+            "question": "How many screens are there in the circulation areas?"
+          }
+        },
+        "affichage extérieur": {
+          "surface": {
+            "question": "If the cinema has outdoor signage, what is its surface area?"
+          }
+        }
+      },
+      "caisses et bornes": {
+        "caisses libre service": {
+          "nombre": {
+            "question": "How many self-service checkout terminals does the cinema have?"
+          }
+        },
+        "caisse classique": {
+          "nombre": {
+            "question": "How many classic checkout systems does the cinema have?"
+          }
+        }
+      }
+    }
+  },
+  "publicodes-units": {
+    "séance": "screening",
+    "entrée": "admission",
+    "jour": "day",
+    "film": "film",
+    "km": "km",
+    "écran": "screen",
+    "équipe": "crew",
+    "unité": "unit",
+    "kgCO2e": "kgCO2e",
+    "m2": "m2",
+    "Go": "GB",
+    "jour/semaine": "day/week",
+    "km/jour": "km/day",
+    "kWh": "kWh",
+    "m3": "m3",
+    "litre": "liter",
+    "kg": "kg",
+    "nuitée": "overnight stay",
+    "€": "€",
+    "place": "seat",
+    "benne/ramassage": "bin/collection",
+    "l/benne": "l/bin",
+    "ramassage/semaine": "collection/week",
+    "unité/semaine": "unit/week",
+    "unité/mois": "unit/month",
+    "newsletter/personne": "newsletter/person",
+    "personne": "person"
+  }
+}

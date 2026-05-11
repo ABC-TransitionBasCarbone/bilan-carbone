@@ -2,8 +2,10 @@ import fs from 'fs'
 import path from 'path'
 import prettier from 'prettier'
 import { Rule } from 'publicodes'
-import url from 'url'
+import url, { fileURLToPath } from 'url'
 import yargs from 'yargs'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 export type TranslationKey = 'titre' | 'description' | 'question' | 'unité' | 'options'
 export interface TranslationRecord {
@@ -32,7 +34,7 @@ export const AVAILABLE_LOCALES: LocaleType[] = [
 ]
 // LocaleType already includes all supported locale codes as string values
 
-export const AVAILABLE_MODELS = ['cut', 'clickson', 'tilt'] as const
+export const AVAILABLE_MODELS = ['cut', 'clickson', 'tilt', 'mip'] as const
 export type Model = (typeof AVAILABLE_MODELS)[number]
 
 const MODEL_PACKAGES: Record<Model, string> = {
@@ -44,7 +46,7 @@ const MODEL_PACKAGES: Record<Model, string> = {
             path.resolve(
               path.join(
                 __dirname,
-                '../../../publicodes-packages/publicodes-count/publicodes-build/publicodes-count.model.json',
+                '../../publicodes-packages/publicodes-count/publicodes-build/publicodes-count.model.json',
               ),
             ),
           )
@@ -57,7 +59,7 @@ const MODEL_PACKAGES: Record<Model, string> = {
             path.resolve(
               path.join(
                 __dirname,
-                '../../../publicodes-packages/publicodes-clickson/publicodes-build/publicodes-clickson.model.json',
+                '../../publicodes-packages/publicodes-clickson/publicodes-build/publicodes-clickson.model.json',
               ),
             ),
           )
@@ -70,7 +72,20 @@ const MODEL_PACKAGES: Record<Model, string> = {
             path.resolve(
               path.join(
                 __dirname,
-                '../../../publicodes-packages/publicodes-tilt/publicodes-build/publicodes-tilt.model.json',
+                '../../publicodes-packages/publicodes-tilt/publicodes-build/publicodes-tilt.model.json',
+              ),
+            ),
+          )
+          .toString(),
+  mip:
+    process.env.NODE_ENV === 'production'
+      ? '@abc-transitionbascarbone/publicodes-mip/publicodes-build/publicodes-mip.model.json'
+      : url
+          .pathToFileURL(
+            path.resolve(
+              path.join(
+                __dirname,
+                '../../publicodes-packages/publicodes-mip/publicodes-build/publicodes-mip.model.json',
               ),
             ),
           )

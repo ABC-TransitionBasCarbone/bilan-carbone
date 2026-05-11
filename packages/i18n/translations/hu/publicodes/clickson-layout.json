@@ -1,0 +1,31 @@
+{
+  "publicodes-layout": {
+    "table": {
+      "EquipementsInformatiqueAudiovisuel": {
+        "question": "Használt informatikai és audiovizuális eszközök",
+        "equipement": "Eszköz",
+        "nombre": "Darabszám"
+      },
+      "TransportDesEleves": {
+        "question": "A diákok által az intézménybe megtett távolság",
+        "moyenTransport": "Közlekedési mód",
+        "distance": "Oda-vissza távolság km-ben"
+      },
+      "TransportDuPersonnel": {
+        "question": "A személyzet által az intézménybe megtett távolság",
+        "moyenTransport": "Közlekedési mód",
+        "distance": "Oda-vissza távolság km-ben"
+      },
+      "VoyagesScolaires": {
+        "question": "Iskolai kirándulások során megtett távolság",
+        "moyenTransport": "Közlekedési mód",
+        "distance": "Távolság (km)"
+      },
+      "EquipementsDivers": {
+        "question": "Az iskoládban valószínűleg egy vagy több kazán található fűtésre. Ezek a berendezések különféle fosszilis tüzelőanyagokkal (fűtőolaj, földgáz stb.) működnek. Az ilyen berendezések által termelt üvegházhatású gázok (ÜHG) például a fűtőolaj vagy gáz elégetése során szabadulnak fel.",
+        "equipement": "Felszerelés",
+        "nombre": "Darabszám"
+      }
+    }
+  }
+}

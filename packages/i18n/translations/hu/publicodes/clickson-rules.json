@@ -1,0 +1,1280 @@
+{
+  "publicodes-rules": {
+    "général": {
+      "nombre étudiant": {
+        "question": "Hallgatók száma"
+      },
+      "nombre personnel": {
+        "question": "Személyzet száma (tanárok és nem tanárok)"
+      },
+      "année de construction": {
+        "question": "Főépület építésének éve"
+      },
+      "année de rénovation": {
+        "question": "Főépület felújításának éve"
+      },
+      "pays": {
+        "question": "Intézmény országa",
+        "options": {
+          "FRANCE": "FRANCIAORSZÁG",
+          "HONGRIE": "MAGYARORSZÁG",
+          "ROUMANIE": "ROMÁNIA",
+          "CROATIE": "HORVÁTORSZÁG"
+        }
+      }
+    },
+    "énergie": {
+      "électricité": {
+        "janvier": {
+          "consommation": {
+            "question": "Januári villamosenergia-fogyasztás"
+          },
+          "FE": {
+            "question": "Villamosenergia kibocsátási tényezője"
+          }
+        },
+        "février": {
+          "consommation": {
+            "question": "Februári villamosenergia-fogyasztás"
+          },
+          "FE": {
+            "question": "Villamosenergia kibocsátási tényezője"
+          }
+        },
+        "mars": {
+          "consommation": {
+            "question": "Márciusi villamosenergia-fogyasztás"
+          },
+          "FE": {
+            "question": "Villamosenergia kibocsátási tényezője"
+          }
+        },
+        "avril": {
+          "consommation": {
+            "question": "Áprilisi villamosenergia-fogyasztás"
+          },
+          "FE": {
+            "question": "Villamosenergia kibocsátási tényezője"
+          }
+        },
+        "mai": {
+          "consommation": {
+            "question": "Májusi villamosenergia-fogyasztás"
+          },
+          "FE": {
+            "question": "Villamosenergia kibocsátási tényezője"
+          }
+        },
+        "juin": {
+          "consommation": {
+            "question": "Júniusi villamosenergia-fogyasztás"
+          },
+          "FE": {
+            "question": "Villamosenergia kibocsátási tényezője"
+          }
+        },
+        "juillet": {
+          "consommation": {
+            "question": "Júliusi villamosenergia-fogyasztás"
+          },
+          "FE": {
+            "question": "Villamosenergia kibocsátási tényezője"
+          }
+        },
+        "août": {
+          "consommation": {
+            "question": "Augusztusi villamosenergia-fogyasztás"
+          },
+          "FE": {
+            "question": "Villamosenergia kibocsátási tényezője"
+          }
+        },
+        "septembre": {
+          "consommation": {
+            "question": "Szeptemberi villamosenergia-fogyasztás"
+          },
+          "FE": {
+            "question": "Villamosenergia kibocsátási tényezője"
+          }
+        },
+        "octobre": {
+          "consommation": {
+            "question": "Októberi villamosenergia-fogyasztás"
+          },
+          "FE": {
+            "question": "Villamosenergia kibocsátási tényezője"
+          }
+        },
+        "novembre": {
+          "consommation": {
+            "question": "Novemberi villamosenergia-fogyasztás"
+          },
+          "FE": {
+            "question": "Villamosenergia kibocsátási tényezője"
+          }
+        },
+        "décembre": {
+          "consommation": {
+            "question": "Decemberi villamosenergia-fogyasztás"
+          },
+          "FE": {
+            "question": "Villamosenergia kibocsátási tényezője"
+          }
+        }
+      },
+      "combustibles": {
+        "fioul domestique": {
+          "consommation": {
+            "question": "Éves háztartási fűtőolaj-fogyasztás"
+          }
+        },
+        "fioul lourd": {
+          "consommation": {
+            "question": "Éves nehéz/commercial fűtőolaj-fogyasztás"
+          }
+        },
+        "gaz naturel": {
+          "consommation": {
+            "question": "Éves földgáz-fogyasztás"
+          }
+        },
+        "granulés de bois": {
+          "consommation": {
+            "question": "Éves fa pellet fogyasztás"
+          }
+        },
+        "biopropane": {
+          "consommation": {
+            "question": "Éves biopropán-fogyasztás"
+          }
+        },
+        "réseau de chaleur": {
+          "consommation": {
+            "question": "Éves távhő-fogyasztás"
+          }
+        }
+      },
+      "autres gaz": {
+        "gaz réfrigérants": {
+          "titre": "Hűtőközegek",
+          "question": "Évesítő hűtőközeg-fogyasztás"
+        },
+        "gaz réfrigérant": {
+          "consommation": {
+            "question": "Éves fogyasztás ebből a gázból"
+          },
+          "type": {
+            "titre": "Hűtőközeg",
+            "question": "Hűtőközeg típusa",
+            "options": {
+              "R134a": "R134a",
+              "R32": "R32",
+              "R407c": "R407c",
+              "R410a": "R410a"
+            }
+          }
+        },
+        "gaz effet de serre principaux": {
+          "titre": "A fő üvegházhatás gáz",
+          "question": "Évesítő fő üvegházhatás gáz fogyasztás"
+        },
+        "gaz effet de serre principal": {
+          "consommation": {
+            "question": "E gáz éves fogyasztása"
+          },
+          "type": {
+            "titre": "Fő üvegházhatást okozó gáz",
+            "question": "Fő üvegházhatást okozó gáz",
+            "options": {
+              "CO2": "CO2",
+              "CH4 fossile": "Fosszilis CH4",
+              "CH4 biogénique": "Biogén CH4",
+              "N2O": "N2O",
+              "SF6": "SF6",
+              "NF3": "NF3"
+            }
+          }
+        }
+      }
+    },
+    "restauration": {
+      "types de repas servis": {
+        "moyen": {
+          "nombre": {
+            "question": "Éves átlagos étkezések száma"
+          },
+          "FE": {
+            "question": "Egy átlagos étkezés kibocsátási tényezője"
+          }
+        },
+        "végétarien": {
+          "nombre": {
+            "question": "Éves vegetáriánus étkezések száma"
+          },
+          "FE": {
+            "question": "Egy vegetáriánus étkezés kibocsátási tényezője"
+          }
+        },
+        "végétalien": {
+          "nombre": {
+            "question": "Éves vegán étkezések száma"
+          },
+          "FE": {
+            "question": "Egy vegán étkezés kibocsátási tényezője"
+          }
+        },
+        "viande rouge": {
+          "nombre": {
+            "question": "Éves vörös húsos étkezések száma"
+          },
+          "FE": {
+            "question": "Egy vörös húsos étkezés kibocsátási tényezője"
+          }
+        },
+        "viande blanche": {
+          "nombre": {
+            "question": "Éves fehér húsos étkezések száma"
+          },
+          "FE": {
+            "question": "Egy fehér húsos étkezés kibocsátási tényezője"
+          }
+        },
+        "poisson": {
+          "nombre": {
+            "question": "Éves fehér halas étkezések száma"
+          },
+          "FE": {
+            "question": "Egy fehér halas étkezés kibocsátási tényezője"
+          }
+        }
+      },
+      "fret": {
+        "routier": {
+          "consommation": {
+            "question": "Földi szállítás során megtett távolság"
+          }
+        },
+        "ferroviaire": {
+          "consommation": {
+            "question": "Vasúti szállítás során megtett távolság"
+          }
+        }
+      },
+      "fin de vie moyenne": {
+        "déchets résiduels": {
+          "quantité": {
+            "question": "Maradék hulladék mennyisége"
+          }
+        },
+        "déchets organiques": {
+          "quantité": {
+            "question": "Szerves hulladék mennyisége"
+          }
+        }
+      },
+      "distributeur automatiques": {
+        "bouteille d'eau": {
+          "nombre": {
+            "question": "Évente elfogyasztott vízpalackok száma"
+          },
+          "FE": {
+            "question": "Egy vízpalack kibocsátási tényezője"
+          }
+        },
+        "soda": {
+          "nombre": {
+            "question": "Évente elfogyasztott üdítők száma"
+          },
+          "FE": {
+            "question": "Egy üdítő kibocsátási tényezője"
+          }
+        },
+        "biscuits": {
+          "nombre": {
+            "question": "Évente elfogyasztott keksz mennyisége"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező kilogramm nettó keksz tömegre"
+          }
+        },
+        "paquet de chips": {
+          "nombre": {
+            "question": "Évente elfogyasztott chips csomagok száma"
+          },
+          "FE": {
+            "question": "Egy chips csomag kibocsátási tényezője"
+          }
+        },
+        "café noir": {
+          "nombre": {
+            "question": "Évente elfogyasztott feketekávé mennyisége"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező kilogramm nettó feketekávé tömegre"
+          }
+        },
+        "café au lait": {
+          "nombre": {
+            "question": "Évente elfogyasztott tejeskávé mennyisége"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező kilogramm nettó tejeskávé tömegre"
+          }
+        },
+        "thé infusé": {
+          "nombre": {
+            "question": "Évente elfogyasztott főzött tea mennyisége"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező kilogramm nettó főzött tea tömegre"
+          }
+        },
+        "sandwich pain de mie": {
+          "nombre": {
+            "question": "Évente elfogyasztott szendvicsek (toast kenyérrel) száma"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező kilogramm nettó toast kenyér szendvics tömegre"
+          }
+        },
+        "barre chocolatée": {
+          "nombre": {
+            "question": "Évente elfogyasztott csokoládészeletek mennyisége"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező kilogramm nettó csokoládészelet tömegre"
+          }
+        }
+      }
+    },
+    "immobilisations": {
+      "rénovation": {
+        "bâtiment scolaire structure béton rénové": {
+          "surface": {
+            "question": "Felújított iskolai épület (beton szerkezet) területe"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező felújított iskolai épület (beton szerkezet) m²-re"
+          }
+        }
+      },
+      "équipements informatique audiovisuel": {
+        "ordinateur de bureau": {
+          "titre": "Asztali számítógép",
+          "nombre": {
+            "question": "Hány asztali számítógépet vásárolt?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező asztali számítógépenként"
+          }
+        },
+        "ordinateur portable": {
+          "titre": "Laptop",
+          "nombre": {
+            "question": "Hány laptopot vásárolt?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező laptoponként"
+          }
+        },
+        "tablette": {
+          "titre": "Tablet",
+          "nombre": {
+            "question": "Hány tabletet vásárolt?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező tabletenként"
+          }
+        },
+        "imprimante": {
+          "titre": "Nyomtató",
+          "nombre": {
+            "question": "Hány nyomtatót vásárolt?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező nyomtatónként"
+          }
+        },
+        "photocopieur": {
+          "titre": "Fénymásoló",
+          "nombre": {
+            "question": "Hány fénymásolót vásárolt?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező fénymásolónként"
+          }
+        },
+        "vidéoprojecteur": {
+          "titre": "Projektor",
+          "nombre": {
+            "question": "Hány projektort vásárolt?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező projektoronként"
+          }
+        },
+        "serveur informatique": {
+          "titre": "Szerver",
+          "nombre": {
+            "question": "Hány szervert vásárolt?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező szerverenként"
+          }
+        },
+        "télévision 40-49 pouces": {
+          "titre": "40-49 hüvelykes televízió",
+          "nombre": {
+            "question": "Hány 40-49 hüvelykes televíziót vásárolt?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező 40-49 hüvelykes televíziónként"
+          }
+        },
+        "rack de serveur": {
+          "titre": "Szerver rack",
+          "nombre": {
+            "question": "Hány szerver rack-et vásárolt?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező szerver rack-enként"
+          }
+        },
+        "télécommande universelle sans piles 80g": {
+          "titre": "Univerzális távirányító (80g, elem nélkül)",
+          "nombre": {
+            "question": "Hány univerzális távirányítót (80g, elem nélkül) vásárolt?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező univerzális távirányítónként (80g, elem nélkül)"
+          }
+        },
+        "stéréo classique": {
+          "titre": "Hagyományos sztereó",
+          "nombre": {
+            "question": "Hány hagyományos sztereót vásárolt?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező hagyományos sztereónként"
+          }
+        },
+        "enceinte Bluetooth": {
+          "titre": "Bluetooth hangszóró",
+          "nombre": {
+            "question": "Hány Bluetooth hangszórót vásárolt?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező Bluetooth hangszórónként"
+          }
+        },
+        "smartphone 5 pouces": {
+          "titre": "5 hüvelykes okostelefon",
+          "nombre": {
+            "question": "Hány 5 hüvelykes okostelefont vásárolt?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező 5 hüvelykes okostelefononként"
+          }
+        },
+        "écran 23,8 pouces": {
+          "titre": "23,8 hüvelykes képernyő",
+          "nombre": {
+            "question": "Hány 23,8 hüvelykes képernyőt vásárolt?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező 23,8 hüvelykes képernyőnként"
+          }
+        }
+      },
+      "équipements divers": {
+        "chaise bois": {
+          "nombre": {
+            "question": "Hány fa széket vásárolt?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező fa székenként"
+          }
+        },
+        "chaise plastique": {
+          "nombre": {
+            "question": "Hány műanyag széket vásárolt?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező műanyag székenként"
+          }
+        },
+        "table standard": {
+          "nombre": {
+            "question": "Hány tárgyalóasztalt vásárolt?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező standard asztalonként"
+          }
+        },
+        "armoire standard": {
+          "nombre": {
+            "question": "Hány standard szekrényt vásárolt?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező standard szekrényenként"
+          }
+        }
+      },
+      "divers": {
+        "tondeuse gazon thermique": {
+          "titre": "Termikus fűnyíró",
+          "question": "Hány termikus fűnyírót birtokol?",
+          "nombre": {
+            "question": "Hány termikus fűnyírót birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező fűnyíró egységenként"
+          },
+          "immo": {
+            "question": "Fűnyíró rögzítése"
+          }
+        },
+        "tondeuse gazon électrique": {
+          "titre": "Elektromos fűnyíró",
+          "question": "Hány elektromos fűnyírót birtokol?",
+          "nombre": {
+            "question": "Hány elektromos fűnyírót birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező fűnyíró egységenként électrique"
+          },
+          "immo": {
+            "question": "Rögzítés"
+          }
+        },
+        "bouilloire": {
+          "titre": "Elektromos vízforraló",
+          "question": "Hány elektromos vízforralót birtokol?",
+          "nombre": {
+            "question": "Hány elektromos vízforralót birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező elektromos vízforraló egységenként"
+          },
+          "immo": {
+            "question": "Elektromos vízforraló rögzítése"
+          }
+        },
+        "micro-onde": {
+          "titre": "Mikrohullámú sütő",
+          "question": "Hány mikrohullámú sütőt birtokol?",
+          "nombre": {
+            "question": "Hány mikrohullámú sütőt birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező mikrohullámú sütő egységenként"
+          },
+          "immo": {
+            "question": "Mikrohullámú sütő rögzítése"
+          }
+        },
+        "aspirateur professionnel": {
+          "titre": "Professzionális porszívó",
+          "question": "Hány professzionális porszívót birtokol?",
+          "nombre": {
+            "question": "Hány professzionális porszívót birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező professzionális porszívó egységenként"
+          },
+          "immo": {
+            "question": "Rögzítés"
+          }
+        },
+        "ballon chauffe-eau électrique": {
+          "titre": "Elektromos bojler - 200l",
+          "question": "Hány elektromos bojlert - 200l birtokol?",
+          "nombre": {
+            "question": "Hány elektromos bojlert - 200l birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező elektromos bojler - 200l egységenként"
+          },
+          "immo": {
+            "question": "Elektromos bojler - 200l rögzítése"
+          }
+        },
+        "machine café filtre": {
+          "titre": "Kávéfőző - szűrő",
+          "question": "Hány kávéfőzőt - szűrő birtokol?",
+          "nombre": {
+            "question": "Hány kávéfőzőt - szűrő birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező kávéfőző - szűrő egységenként"
+          },
+          "immo": {
+            "question": "Kávéfőző - szűrő rögzítése"
+          }
+        },
+        "machine café dosettes": {
+          "titre": "Kávéfőző - kapszulák",
+          "question": "Hány kávéfőzőt - kapszulák birtokol?",
+          "nombre": {
+            "question": "Hány kávéfőzőt - kapszulák birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező kávéfőző - kapszulák egységenként"
+          },
+          "immo": {
+            "question": "Kávéfőző - kapszulák rögzítése"
+          }
+        },
+        "lave-vaiselle professionnel": {
+          "titre": "Professzionális mosogatógép",
+          "question": "Hány professzionális mosogatógépet birtokol?",
+          "nombre": {
+            "question": "Hány professzionális mosogatógépet birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező professzionális mosogatógép egységenként"
+          },
+          "immo": {
+            "question": "Professzionális mosogatógép rögzítése"
+          }
+        },
+        "four professionnel": {
+          "titre": "Professzionális sütő",
+          "question": "Hány professzionális sütőt birtokol?",
+          "nombre": {
+            "question": "Hány professzionális sütőt birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező professzionális sütő egységenként"
+          },
+          "immo": {
+            "question": "Professzionális sütő rögzítése"
+          }
+        },
+        "lave-vaiselle standard": {
+          "titre": "Szabványos mosogatógép",
+          "question": "Hány szabványos mosogatógépet birtokol?",
+          "nombre": {
+            "question": "Hány szabványos mosogatógépet birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező szabványos mosogatógép egységenként"
+          },
+          "immo": {
+            "question": "Szabványos mosogatógép rögzítése"
+          }
+        },
+        "lave-linge": {
+          "titre": "Ruhanemű mosógép (7kg kapacitás)",
+          "question": "Hány ruhanemű mosógépet (7kg kapacitás) birtokol?",
+          "nombre": {
+            "question": "Hány ruhanemű mosógépet (7kg kapacitás) birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező ruhanemű mosógép (7kg kapacitás) egységenként"
+          },
+          "immo": {
+            "question": "Ruhanemű mosógép (7kg kapacitás) rögzítése"
+          }
+        },
+        "congélateur coffre": {
+          "titre": "Fagyasztó (láda) - 261l",
+          "question": "Hány fagyasztót (láda) - 261l birtokol?",
+          "nombre": {
+            "question": "Hány fagyasztót (láda) - 261l birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező fagyasztó (láda) - 261l egységenként"
+          },
+          "immo": {
+            "question": "Fagyasztó (láda) - 261l rögzítése"
+          }
+        },
+        "congélateur armoire": {
+          "titre": "Fagyasztó - szekrény - 205l",
+          "question": "Hány fagyasztót - szekrény - 205l birtokol?",
+          "nombre": {
+            "question": "Hány fagyasztót - szekrény - 205l birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező fagyasztó - szekrény - 205l egységenként"
+          },
+          "immo": {
+            "question": "Fagyasztó - szekrény - 205l rögzítése"
+          }
+        },
+        "réfrigérateur": {
+          "titre": "Hűtőszekrény - 250l",
+          "question": "Hány hűtőszekrényt - 250l birtokol?",
+          "nombre": {
+            "question": "Hány hűtőszekrényt - 250l birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező hűtőszekrény - 250l egységenként"
+          },
+          "immo": {
+            "question": "Hűtőszekrény - 250l rögzítése"
+          }
+        },
+        "plaques de cuisson au gaz": {
+          "titre": "Főzőlap/gáz 9000W",
+          "question": "Hány főzőlapot/gáz 9000W birtokol?",
+          "nombre": {
+            "question": "Hány főzőlapot/gáz 9000W birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező főzőlap/gáz 9000W egységenként"
+          },
+          "immo": {
+            "question": "Főzőlap/gáz 9000W rögzítése"
+          }
+        },
+        "tatami": {
+          "titre": "Tatami",
+          "question": "Hány tatamimat birtokol?",
+          "nombre": {
+            "question": "Hány tatamimat birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező tatami egységenként"
+          },
+          "immo": {
+            "question": "Tatami rögzítése"
+          }
+        },
+        "gymnastique agré barre fixe": {
+          "titre": "Tornagyakorlat, vízszintes rúd",
+          "question": "Hány vízszintes rudat birtokol?",
+          "nombre": {
+            "question": "Hány vízszintes rudat birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező vízszintes rúd egységenként"
+          },
+          "immo": {
+            "question": "Vízszintes rúd rögzítése"
+          }
+        },
+        "gymnastique agré barres parallèles": {
+          "titre": "Tornagyakorlat, párhuzamos rúdak",
+          "question": "Hány párhuzamos rudat birtokol?",
+          "nombre": {
+            "question": "Hány párhuzamos rudat birtokol?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező párhuzamos rúd egységenként"
+          },
+          "immo": {
+            "question": "Párhuzamos rúd rögzítése"
+          }
+        }
+      },
+      "construction": {
+        "bâtiment scolaire structure béton": {
+          "surface": {
+            "question": "Mekkora a beton szerkezetű iskolai épület területe az intézményben?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező beton szerkezetű iskolai épület m²-re"
+          }
+        },
+        "parking bâtiment structure béton": {
+          "surface": {
+            "question": "Mekkora a beton szerkezetű parkoló (épület) területe az intézményben?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező beton szerkezetű parkoló (épület) m²-re"
+          }
+        },
+        "parking surface bitume": {
+          "surface": {
+            "question": "Mekkora a bitumenes felületű parkoló területe az intézményben?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező bitumenes felületű parkoló m²-re"
+          }
+        },
+        "parking surface semi-dure": {
+          "surface": {
+            "question": "Mekkora a félig kemény felületű parkoló területe az intézményben?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező félig kemény felületű parkoló m²-re"
+          }
+        },
+        "garage structure béton": {
+          "surface": {
+            "question": "Mekkora a beton szerkezetű garázs területe az intézményben?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező beton szerkezetű garázs m²-re"
+          }
+        },
+        "garage structure métal": {
+          "surface": {
+            "question": "Mekkora a fém szerkezetű garázs területe az intézményben?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező fém szerkezetű garázs m²-re"
+          }
+        }
+      }
+    },
+    "déplacements": {
+      "voyages scolaires": {
+        "RER transilien métro tram": {
+          "titre": "Transilien, RER, Metró, Villamos",
+          "distance": {
+            "question": "Utasok (km-enként)"
+          }
+        },
+        "bus": {
+          "titre": "Autóbusz",
+          "distance": {
+            "question": "Utasok (km-enként)"
+          }
+        },
+        "bus électrique": {
+          "titre": "Autóbusz (elektromos)",
+          "distance": {
+            "question": "Utasok (km-enként)"
+          }
+        },
+        "TER": {
+          "titre": "TER",
+          "distance": {
+            "question": "Utasok (km-enként)"
+          }
+        },
+        "TGV": {
+          "titre": "TGV",
+          "distance": {
+            "question": "Utasok (km-enként)"
+          }
+        },
+        "avion court courrier": {
+          "titre": "Rövid távú repülőjárat",
+          "distance": {
+            "question": "Utasok (km-enként)"
+          }
+        },
+        "avion moyen courrier": {
+          "titre": "Közepes távú repülőjárat",
+          "distance": {
+            "question": "Utasok (km-enként)"
+          }
+        },
+        "avion long courrier": {
+          "titre": "Hosszú távú repülőjárat",
+          "distance": {
+            "question": "Utasok (km-enként)"
+          }
+        }
+      },
+      "transport des élèves": {
+        "RER transilien métro tram": {
+          "titre": "Transilien, RER, Metró, Villamos",
+          "distance": {
+            "question": "Utasok (km-enként)"
+          }
+        },
+        "vélo électrique": {
+          "titre": "Elektromos kerékpár",
+          "distance": {
+            "question": "Távolság (km)"
+          }
+        },
+        "trottinette électrique": {
+          "titre": "Elektromos roller",
+          "distance": {
+            "question": "Távolság (km)"
+          }
+        },
+        "moto essence": {
+          "titre": "Benzines motorkerékpár",
+          "distance": {
+            "question": "Távolság (km)"
+          }
+        },
+        "véhicule compact électrique": {
+          "titre": "Kompakt elektromos jármű",
+          "distance": {
+            "question": "Távolság (km)"
+          }
+        },
+        "voiture individuelle essence": {
+          "titre": "Egyéni benzines autó",
+          "distance": {
+            "question": "Távolság (km)"
+          }
+        },
+        "voiture individuelle diesel": {
+          "titre": "Egyéni dízel autó",
+          "distance": {
+            "question": "Távolság (km)"
+          }
+        },
+        "bus": {
+          "titre": "Autóbusz",
+          "distance": {
+            "question": "Utasok (km-enként)"
+          }
+        },
+        "bus électrique": {
+          "titre": "Autóbusz (elektromos)",
+          "distance": {
+            "question": "Utasok (km-enként)"
+          }
+        },
+        "TER": {
+          "titre": "TER",
+          "distance": {
+            "question": "Utasok (km-enként)"
+          }
+        },
+        "TGV": {
+          "titre": "TGV",
+          "distance": {
+            "question": "Utasok (km-enként)"
+          }
+        }
+      },
+      "transport du personnel": {
+        "RER transilien métro tram": {
+          "titre": "Transilien, RER, Metró, Villamos",
+          "distance": {
+            "question": "Utasok (km-enként)"
+          }
+        },
+        "vélo électrique": {
+          "titre": "Elektromos kerékpár",
+          "distance": {
+            "question": "Távolság (km)"
+          }
+        },
+        "trottinette électrique": {
+          "titre": "Elektromos roller",
+          "distance": {
+            "question": "Távolság (km)"
+          }
+        },
+        "moto essence": {
+          "titre": "Benzines motorkerékpár",
+          "distance": {
+            "question": "Távolság (km)"
+          }
+        },
+        "véhicule compact électrique": {
+          "titre": "Kompakt elektromos jármű",
+          "distance": {
+            "question": "Távolság (km)"
+          }
+        },
+        "voiture individuelle essence": {
+          "titre": "Egyéni benzines autó",
+          "distance": {
+            "question": "Távolság (km)"
+          }
+        },
+        "voiture individuelle diesel": {
+          "titre": "Egyéni dízel autó",
+          "distance": {
+            "question": "Távolság (km)"
+          }
+        },
+        "bus": {
+          "titre": "Autóbusz",
+          "distance": {
+            "question": "Utasok (km-enként)"
+          }
+        },
+        "bus électrique": {
+          "titre": "Autóbusz (elektromos)",
+          "distance": {
+            "question": "Utasok (km-enként)"
+          }
+        },
+        "TER": {
+          "titre": "TER",
+          "distance": {
+            "question": "Utasok (km-enként)"
+          }
+        },
+        "TGV": {
+          "titre": "TGV",
+          "distance": {
+            "question": "Utasok (km-enként)"
+          }
+        }
+      }
+    },
+    "achats": {
+      "produits chimiques": {
+        "produit vaisselle liquide": {
+          "consommation": {
+            "question": "Éves folyékony mosogatószer fogyasztás"
+          }
+        },
+        "savon liquide": {
+          "consommation": {
+            "question": "Éves folyékony szappan fogyasztás"
+          }
+        },
+        "produit vitre": {
+          "consommation": {
+            "question": "Éves ablaktisztító fogyasztás"
+          }
+        },
+        "nettoyant sols": {
+          "consommation": {
+            "question": "Éves padlótisztító fogyasztás"
+          }
+        },
+        "nettoyant multi-usages": {
+          "consommation": {
+            "question": "Éves többcélú tisztítószer fogyasztás"
+          }
+        },
+        "détergent sanitaire": {
+          "consommation": {
+            "question": "Éves szaniter tisztítószer fogyasztás"
+          }
+        },
+        "désinfectant": {
+          "consommation": {
+            "question": "Éves fertőtlenítőszer fogyasztás"
+          }
+        },
+        "chlore": {
+          "consommation": {
+            "question": "Éves klór fogyasztás"
+          }
+        },
+        "bicarbonate de soude": {
+          "consommation": {
+            "question": "Éves szódabikarbóna fogyasztás"
+          }
+        },
+        "peinture revêtement mural intérieur": {
+          "consommation": {
+            "question": "Éves beltéri falfesték fogyasztás"
+          }
+        },
+        "peinture revêtement mural extérieur": {
+          "consommation": {
+            "question": "Éves kültéri falfesték fogyasztás"
+          }
+        },
+        "savon solide": {
+          "consommation": {
+            "question": "Éves szilárd szappan fogyasztás"
+          }
+        },
+        "vinaigre blanc": {
+          "consommation": {
+            "question": "Éves fehér ecet fogyasztás"
+          }
+        },
+        "soude solide": {
+          "consommation": {
+            "question": "Éves szilárd szóda fogyasztás (por, granulátum)"
+          }
+        },
+        "acide sulfurique": {
+          "consommation": {
+            "question": "Éves kénsav fogyasztás"
+          }
+        },
+        "acide chlorhydrique": {
+          "consommation": {
+            "question": "Éves sósav fogyasztás"
+          }
+        }
+      },
+      "fournitures": {
+        "petites fournitures": {
+          "montant": {
+            "question": "Mennyit költött kis irodaszerekre (tollak, stb.)?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező kis irodaszerekre eurónként"
+          }
+        },
+        "livres": {
+          "nombre": {
+            "question": "Hány könyvet vásárolt?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező könyvenként"
+          }
+        },
+        "papier ramette": {
+          "nombre": {
+            "question": "Hány csomag papírt vásárolt?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező papírcsomagonként"
+          }
+        },
+        "consommables": {
+          "montant": {
+            "question": "Mennyit költött fogyóeszközökre (tintapatron, stb.)?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező fogyóeszközökre eurónként"
+          }
+        },
+        "piles aaa": {
+          "nombre": {
+            "question": "Hány AAA (alkáli) elemet vásárolt?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező AAA elemre"
+          }
+        },
+        "piles aa": {
+          "nombre": {
+            "question": "Hány AA (alkáli) elemet vásárolt?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező AA elemre"
+          }
+        }
+      },
+      "fin de vie moyenne": {
+        "carton": {
+          "nombre": {
+            "question": "Mennyi karton (tonnában)?"
+          },
+          "FE": {
+            "question": "Karton kibocsátási tényezője"
+          }
+        },
+        "plastique moyen": {
+          "nombre": {
+            "question": "Mennyi műanyag (tonnában)?"
+          },
+          "FE": {
+            "question": "Műanyag kibocsátási tényezője"
+          }
+        },
+        "verre": {
+          "nombre": {
+            "question": "Mennyi üveg (tonnában)?"
+          },
+          "FE": {
+            "question": "Üveg kibocsátási tényezője"
+          }
+        },
+        "bois": {
+          "nombre": {
+            "question": "Mennyi fa (tonnában)?"
+          },
+          "FE": {
+            "question": "Fa kibocsátási tényezője"
+          }
+        }
+      },
+      "équipements de sport": {
+        "ballon de volley": {
+          "nombre": {
+            "question": "Hány röplabda labdát vásárolt?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező röplabda labdánként"
+          }
+        },
+        "ballon de handball": {
+          "nombre": {
+            "question": "Hány kézilabda labdát vásárolt?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező kézilabda labdánként"
+          }
+        },
+        "kimono judo": {
+          "nombre": {
+            "question": "Hány judo kimonót vásárolt?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező judo kimonónként"
+          }
+        },
+        "shorts tous sports": {
+          "nombre": {
+            "question": "Hány sportnadrágot vásárolt?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező sportnadrágonként"
+          }
+        },
+        "maillots tous sports": {
+          "nombre": {
+            "question": "Hány sportmez vásárolt?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező sportmezenként"
+          }
+        },
+        "t-shirt polyester": {
+          "nombre": {
+            "question": "Hány poliészter pólót vásárolt?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező poliészter pólónként"
+          }
+        },
+        "ballon de basket": {
+          "nombre": {
+            "question": "Hány kosárlabda labdát vásárolt?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező kosárlabda labdánként"
+          }
+        },
+        "ballon de football": {
+          "nombre": {
+            "question": "Hány futball labdát vásárolt?"
+          },
+          "FE": {
+            "question": "Kibocsátási tényező futball labdánként"
+          }
+        }
+      }
+    }
+  },
+  "publicodes-units": {
+    "étudiant": "diák",
+    "personne": "személy",
+    "année": "év",
+    "pays": "ország",
+    "kWh": "kWh",
+    "litre": "liter",
+    "kWh PCI": "kWh PCI",
+    "kgCO2e/kg": "kgCO2e/kg",
+    "repas": "étkezés",
+    "kgCO2e/repas": "kgCO2e/étkezés",
+    "m3/km": "m3.km",
+    "t/km": "t.km",
+    "t": "t",
+    "bouteille": "üveg",
+    "kgCO2e/bouteille": "kgCO2e/üveg",
+    "canette": "doboz",
+    "kgCO2e/canette": "kgCO2e/doboz",
+    "kg de poids net": "kg nettó tömeg",
+    "kgCO2e/kg de poids net": "kgCO2e/kg nettó tömeg",
+    "paquet": "csomag",
+    "kgCO2e/paquet": "kgCO2e/csomag",
+    "barre": "szelet",
+    "m2": "m2",
+    "kgCO2e/m2": "kgCO2e/m2",
+    "kgCO2e": "kgCO2e",
+    "unité": "egység",
+    "kgCO2e/unité": "kgCO2e/egység",
+    "km": "km",
+    "kg": "kg",
+    "€": "€",
+    "kgCO2e/€": "kgCO2e/€",
+    "kgCO2e/t": "kgCO2e/t"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "publicodes-layout": {
+    "table": {
+      "MobiliteSpectateurs": {
+        "question": "If you have conducted a survey, what are the total distances traveled during the year for each of the following modes of transport:",
+        "moyenTransport": "Mode of transport",
+        "distance": "Distance (km)"
+      },
+      "Electromenager": {
+        "question": "For the various IT equipment used, please indicate their quantity and their purchase date or rental duration:",
+        "typeEquipement": "Type of appliances",
+        "nombre": "Quantity",
+        "dateAchat": "Purchase date",
+        "dureeLocation": "Rental duration (per year)"
+      },
+      "DechetsOrdinaires": {
+        "question": "Enter here the quantities of waste generated each week",
+        "typeDechet": "Type of waste",
+        "nbBennes": "Number of bins",
+        "tailleBennes": "Size of bins",
+        "frequenceRamassage": "Collection frequency (per week)"
+      },
+      "MaterielDistributeursAffiches": {
+        "question": "What quantity of distributor materials do you receive on average per week?",
+        "typeMateriel": "Type of material",
+        "quantite": "Quantity"
+      },
+      "MaterielDistributeursPLV": {
+        "question": "What quantity of distributor materials do you receive on average per week?",
+        "typeMateriel": "Type of material",
+        "quantite": "Quantity"
+      },
+      "MaterielCinema": {
+        "question": "What quantity of materials do you produce each month?",
+        "typeMateriel": "Type of material",
+        "quantite": "Quantity"
+      }
+    },
+    "group": {
+      "BatimentRenovation": {
+        "question": "Among the following renovations, which ones have you carried out in the last ten years?"
+      }
+    },
+    "list": {}
+  }
+}

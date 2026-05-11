@@ -10,10 +10,10 @@ export const getMessages = async (locale: LocaleType, environment?: Environment)
   let bcMessages = {}
 
   try {
-    commonMessages = (await import(`../../../../packages/i18n/${locale}/common.json`)).default
+    commonMessages = (await import(`../../../../packages/i18n/translations/${locale}/common.json`)).default
   } catch {
     console.log(`No common translation file for locale: ${locale}, falling back to default`)
-    commonMessages = (await import(`../../../../packages/i18n/${Locale.EN}/common.json`)).default
+    commonMessages = (await import(`../../../../packages/i18n/translations/${Locale.EN}/common.json`)).default
   }
 
   try {
@@ -43,14 +43,18 @@ export const getMessages = async (locale: LocaleType, environment?: Environment)
 
   let publicodesRules = {}
   try {
-    publicodesRules = (await import(`./translations/${locale}/publicodes/${envLower}-rules.json`)).default
+    publicodesRules = (
+      await import(`../../../../packages/i18n/translations/${locale}/publicodes/${envLower}-rules.json`)
+    ).default
   } catch {
     console.log(`No publicodes rules translation file for locale: ${locale} and environment: ${environment}`)
   }
 
   let publicodesLayout = {}
   try {
-    publicodesLayout = (await import(`./translations/${locale}/publicodes/${envLower}-layout.json`)).default
+    publicodesLayout = (
+      await import(`../../../../packages/i18n/translations/${locale}/publicodes/${envLower}-layout.json`)
+    ).default
   } catch {
     console.log(`No publicodes layout translation file for locale: ${locale} and environment: ${environment}`)
   }

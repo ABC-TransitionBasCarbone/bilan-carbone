@@ -17,7 +17,8 @@
       "@abc-transitionbascarbone/lib": ["../../packages/lib/src/index.ts"],
       "@abc-transitionbascarbone/publicodes-count": ["../../packages/publicodes-packages/publicodes-count"],
       "@abc-transitionbascarbone/publicodes-clickson": ["../../packages/publicodes-packages/publicodes-clickson"],
-      "@abc-transitionbascarbone/publicodes-tilt": ["../../packages/publicodes-packages/publicodes-tilt"]
+      "@abc-transitionbascarbone/publicodes-tilt": ["../../packages/publicodes-packages/publicodes-tilt"],
+      "@abc-transitionbascarbone/publicodes": ["../../packages/publicodes"]
     }
   },
   "ts-node": {

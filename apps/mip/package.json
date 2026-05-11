@@ -7,12 +7,18 @@
     "yarn": "1.22"
   },
   "scripts": {
+    "postinstall": "yarn install --production=false --cwd ../../packages/publicodes-packages/publicodes-mip && prisma generate --config ../../packages/db-common/prisma.config.ts",
     "dev": "next dev --port 3002",
+    "prebuild": "yarn run publicodes-mip:compile",
     "build": "next build",
     "start": "next start",
     "lint": "prettier --check . && eslint .",
     "format": "prettier --write .",
-    "ts": "tsc --noEmit"
+    "ts": "tsc --noEmit",
+    "publicodes-mip:compile": "cd ../../packages/publicodes-packages/publicodes-mip && yarn run compile",
+    "publicodes-mip:watch": "cd ../../packages/publicodes-packages/publicodes-mip && yarn run watch ",
+    "publicodes-mip:test": "cd ../../packages/publicodes-packages/publicodes-mip && yarn test",
+    "publicodes-mip:translate": "yarn run publicodes-mip:compile && npx tsx ../../packages/i18n/publicodes/generate-translation-file.tsx -m mip"
   },
   "dependencies": {
     "@emotion/cache": "^11.14.0",

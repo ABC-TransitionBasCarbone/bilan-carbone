@@ -1,0 +1,758 @@
+{
+  "publicodes-rules": {
+    "général": {
+      "nombre séances": {
+        "question": "Nombre de séances"
+      },
+      "nombre entrées": {
+        "question": "Nombre d'entrées"
+      },
+      "nombre de jours ouverture": {
+        "question": "Nombre de jours d'ouverture"
+      },
+      "nombre de films programmés": {
+        "question": "Nombre de films programmés"
+      },
+      "distance depuis paris": {
+        "question": "Distance depuis Paris"
+      },
+      "nombre écrans": {
+        "question": "Nombre d'écrans / salles"
+      }
+    },
+    "tournées avant premières": {
+      "équipes reçues": {
+        "nombre équipes": {
+          "question": "Combien d'équipes de films avez-vous reçues en 2025 ?"
+        }
+      }
+    },
+    "salles et cabines": {
+      "autre matériel": {
+        "lunettes 3D": {
+          "nombre": {
+            "question": "De combien de lunettes 3D disposez-vous ?"
+          }
+        }
+      },
+      "matériel technique": {
+        "salles": {
+          "titre": "Salles",
+          "question": "Décrivez les différentes salles du cinéma"
+        },
+        "salle": {
+          "nom": {
+            "question": "Nom de la salle"
+          },
+          "projecteur": {
+            "année achat": {
+              "question": "Année d'acquisition projecteur"
+            },
+            "type": {
+              "titre": "Type de projecteur",
+              "question": "Projecteurs",
+              "options": {
+                "xénon": "Projecteur xénon",
+                "laser": "Projecteur laser"
+              }
+            }
+          },
+          "écran": {
+            "année achat": {
+              "question": "Année d'acquisition écran"
+            },
+            "surface écran": {
+              "question": "Surface de l'écran"
+            },
+            "type": {
+              "titre": "Type d'écran",
+              "question": "Écrans",
+              "options": {
+                "écran 2D": "Écran 2D",
+                "écran 3D": "Écran 3D"
+              }
+            }
+          },
+          "fauteuils": {
+            "année achat": {
+              "question": "Année d'acquisition fauteuils"
+            },
+            "nombre": {
+              "question": "Nombre de fauteuils"
+            },
+            "type": {
+              "titre": "Type de fauteuils",
+              "question": "Fauteuils",
+              "options": {
+                "fauteuils classiques": "Fauteuils classiques",
+                "fauteuils 4DX": "Fauteuils 4DX"
+              }
+            }
+          },
+          "système son": {
+            "année achat": {
+              "question": "Année d'acquisition système de son"
+            },
+            "type": {
+              "titre": "Type de système son",
+              "question": "Systèmes son",
+              "options": {
+                "stéréo": "Son Stéréo",
+                "dolby 51": "Dolby 5.1",
+                "dolby 71": "Dolby 7.1",
+                "dolby atmos": "Dolby Atmos",
+                "imax": "IMAX",
+                "auro 3dIce": "Auro 3D / Ice",
+                "dtsx": "DTS : X"
+              }
+            }
+          }
+        },
+        "cloud": {
+          "stockage": {
+            "question": "Combien de données stockez-vous dans un cloud externe ?"
+          }
+        },
+        "disques durs": {
+          "nombre": {
+            "question": "De combien de disques durs disposez-vous ?"
+          }
+        },
+        "films": {
+          "nombre films dématérialisés": {
+            "description": "Vous pouvez par défaut renseigner 90% des films programmés totaux (ce nombre de films est disponible dans vos données générales), qui est la valeur moyenne issue des Bilans Carbone® qui ont étés réalisés sur plusieurs cinémas français. Si vous détenez une information plus précise pour votre cinéma, nous vous invitons à l'utiliser plutôt que la valeur par défaut.",
+            "question": "Combien de films avez-vous reçu en dématérialisé cette année ?"
+          }
+        }
+      }
+    },
+    "mobilité spectateurs": {
+      "résultat précis": {
+        "empreinte": {
+          "RER et transilien": {
+            "titre": "RER et transilien",
+            "distance": {
+              "question": "Distance (km)"
+            }
+          },
+          "métro ou tram": {
+            "titre": "Métro, tramway",
+            "distance": {
+              "question": "Distance (km)"
+            }
+          },
+          "bus": {
+            "titre": "Bus",
+            "distance": {
+              "question": "Distance (km)"
+            }
+          },
+          "vélo électrique": {
+            "titre": "Vélo électrique",
+            "distance": {
+              "question": "Distance (km)"
+            }
+          },
+          "vélo classique": {
+            "titre": "Vélo classique",
+            "distance": {
+              "question": "Distance (km)"
+            }
+          },
+          "marche": {
+            "titre": "Marche",
+            "distance": {
+              "question": "Distance (km)"
+            }
+          },
+          "voiture diesel": {
+            "titre": "Voiture diesel",
+            "distance": {
+              "question": "Distance (km)"
+            }
+          },
+          "voiture essence": {
+            "titre": "Voiture essence",
+            "distance": {
+              "question": "Distance (km)"
+            }
+          },
+          "voiture hybride": {
+            "titre": "Voiture hybride",
+            "distance": {
+              "question": "Distance (km)"
+            }
+          },
+          "voiture électrique": {
+            "titre": "Voiture électrique",
+            "distance": {
+              "question": "Distance (km)"
+            }
+          },
+          "moto": {
+            "titre": "Moto",
+            "distance": {
+              "question": "Distance (km)"
+            }
+          },
+          "scooter": {
+            "titre": "Scooter",
+            "distance": {
+              "question": "Distance (km)"
+            }
+          },
+          "trottinette électrique": {
+            "titre": "Trottinette électrique",
+            "distance": {
+              "question": "Distance (km)"
+            }
+          }
+        }
+      },
+      "résultat estimé": {
+        "proximité spectateurs": {
+          "question": "Vos spectateurs sont-ils majoritairement des habitants \"locaux\", c'est à dire résidant à l'année dans les environs ou attirez-vous aussi une part non négligeable de spectateurs de passage dans la région (touristes notamment)",
+          "options": {
+            "zone très touristique": "Le cinéma est situé dans une zone touristique et 80% ou + des spectateurs ne résident pas à proximité du cinéma à l'année.",
+            "zone moyennement touristique": "Le cinéma est situé dans une ville de destination de week-end et / ou station balnéaire attirant environ 25% de spectateurs \"non-locaux\".",
+            "majoritairement locaux": "Le cinéma accueille majoritairement des spectateurs locaux"
+          }
+        },
+        "profil établissement": {
+          "question": "Si vous souhaitez vous identifier à des profils de cinéma comparable, de quel type de cinéma votre établissement se rapproche le plus",
+          "options": {
+            "distances courtes": "Les spectateurs parcourent des distances très courtes pour venir au cinéma (moins de 10km aller-retour). Très peu viennent en voiture (- de 10%) et la grande majorité des spectateurs vient à pied ou en transports en commun.",
+            "distances moyennes": "Les spectateurs parcourent autour de 10 km aller-retour pour se rendre\nau cinéma. Il s'agit essentiellement d'un public de proximité venant en\ngrande partie en voiture. Autour de 25% d'entre eux viennent à pied.",
+            "distances longues": "Les spectateurs parcourent autour de 20-25 km aller-retour pour se\nrendre au cinéma. Il s'agit essentiellement d'un public de proximité\nvenant en grande partie en voiture. Autour de 25% d'entre eux viennent\nà pied.",
+            "majoritairement en voiture": "Plus de 80% des spectateurs viennent en voiture. Pas ou peu viennent en\ntransports en commun, peu viennent à pied. La distance moyenne\nparcourue est autour de 15 km aller-retour.",
+            "uniquement accessible en voiture": "Le cinéma n'est accessible qu'en voiture."
+          }
+        }
+      },
+      "précision": {
+        "question": "Avez-vous déjà réalisé une enquête mobilité spectateurs ?",
+        "options": {
+          "résultat précis": "Oui et je peux entrer les résultats",
+          "besoin": "Non mais je voudrais le faire pour estimer l'impact du cinéma",
+          "estimation": "Non mais je préfère m'identifier dans des profils de cinéma comparables"
+        }
+      },
+      "mobilité spectateurs": {
+        "contact": {
+          "question": "Si vous souhaitez réaliser une enquête mobilité spectateur, vous pouvez nous envoyer un mail pour récupérer un modèle d'enquête qui vous permettra de remplir d'ici quelques semaines les informations demandées"
+        }
+      }
+    },
+    "fonctionnement": {
+      "équipe": {
+        "collaborateurs": {
+          "titre": "Collaborateurs",
+          "question": "Quel est le rythme de travail des collaborateurs du cinéma ?"
+        },
+        "collaborateur type": {
+          "nom": {
+            "question": "Libellé"
+          },
+          "nombre de jours par semaine": {
+            "question": "Nombre de jours / semaine"
+          },
+          "transport": {
+            "distance": {
+              "question": "Distance domicile travail (aller-retour)"
+            },
+            "moyen de transport": {
+              "question": "Moyen de transport",
+              "options": {
+                "RER et transilien": "RER et transilien",
+                "métro ou tram": "Métro ou tram",
+                "bus": "Bus",
+                "vélo électrique": "Vélo électrique",
+                "vélo classique": "Vélo classique",
+                "marche": "Marche",
+                "voiture diesel": "Voiture diesel",
+                "voiture essence": "Voiture essence",
+                "voiture hybride": "Voiture hybride",
+                "voiture électrique": "Voiture électrique",
+                "moto": "Moto",
+                "scooter": "Scooter",
+                "trottinette électrique": "Trottinette électrique"
+              }
+            }
+          }
+        }
+      },
+      "énergie": {
+        "électricité": {
+          "consommation": {
+            "question": "Combien de kWh d'électricité ont étés consommés par le cinéma cette année ?"
+          }
+        },
+        "gaz": {
+          "consommation": {
+            "question": "Combien de m³ de gaz ont étés consommés par le cinéma cette année ?"
+          }
+        },
+        "fioul": {
+          "consommation": {
+            "question": "Combien de litres de fioul ont étés consommés par le cinéma cette année ?"
+          }
+        },
+        "réseau de chaleur": {
+          "consommation": {
+            "question": "Combien de KWh issus de réseau de chaleur ont été consommés par le cinéma cette année ?"
+          }
+        },
+        "réseau de froid": {
+          "consommation": {
+            "question": "Combien de KWh issus de réseau de froid ont été consommés par le cinéma cette année ?"
+          }
+        },
+        "granulés": {
+          "consommation": {
+            "question": "Combien de kWh issus de la combustion de granulés de bois ont étés consommés par le cinéma cette année ?"
+          }
+        },
+        "est équipé climatisation": {
+          "question": "Votre cinéma est-il équipé de la climatisation ?"
+        },
+        "groupes électrogènes": {
+          "consommation": {
+            "question": "Quelle est votre consommation annuelle de diesel ?"
+          }
+        },
+        "équipement groupes électrogènes": {
+          "question": "Le cinéma dispose-t-il d’un ou plusieurs groupes électrogènes ?",
+          "options": {
+            "utilisation régulière": "Oui et je l’utilise plusieurs fois par an",
+            "équipé sans utilisation": "Oui mais je ne l'utilise pas",
+            "aucun": "Non"
+          }
+        }
+      },
+      "déplacements pro": {
+        "déplacements": {
+          "titre": "Déplacements",
+          "description": "Les déplacements professionnels de vos collaborateurs sont tous les déplacements autres que les déplacements domicile-travail, effectués dans le cadre du travail. Ceux-ci incluent par exemple les déplacements pour se rendre à des congrès, conventions, festivals, prévisionnages, etc.",
+          "question": "Décrivez les déplacements professionnels de vos collaborateurs"
+        },
+        "déplacement type": {
+          "nom": {
+            "question": "Déplacement"
+          },
+          "nombre participants": {
+            "question": "Nombre de participants"
+          },
+          "nombre occurences": {
+            "question": "Nombre d'occurrences"
+          },
+          "nombre de nuitées": {
+            "question": "Nombre de nuitées"
+          },
+          "transport": {
+            "distance": {
+              "question": "Distance \"aller-retour\""
+            },
+            "moyen de transport": {
+              "question": "Moyen de transport",
+              "options": {
+                "RER et transilien": "RER et transilien",
+                "métro ou tram": "Métro ou tram",
+                "bus": "Bus",
+                "vélo électrique": "Vélo électrique",
+                "voiture diesel": "Voiture diesel",
+                "voiture essence": "Voiture essence",
+                "voiture hybride": "Voiture hybride",
+                "voiture électrique": "Voiture électrique",
+                "moto": "Moto",
+                "scooter": "Scooter",
+                "trottinette électrique": "Trottinette électrique",
+                "TGV": "TGV",
+                "avion": "Avion"
+              }
+            }
+          },
+          "type hébergement": {
+            "question": "Type d'hébergement",
+            "options": {
+              "appartement": "Appartement",
+              "hotel 1 étoile": "Hôtel 1*",
+              "hotel 2 étoiles": "Hôtel 2*",
+              "hotel 3 étoiles": "Hôtel 3*",
+              "hotel 4 étoiles": "Hôtel 4*",
+              "hotel 5 étoiles": "Hôtel 5*"
+            }
+          }
+        }
+      },
+      "bâtiment": {
+        "construction": {
+          "année de construction": {
+            "question": "Quand le bâtiment a-t-il été construit ?"
+          },
+          "surface": {
+            "question": "Quelle est la surface plancher du cinéma ? (La somme des surfaces des différents niveaux)"
+          }
+        },
+        "rénovation": {
+          "type": {
+            "rénovation totale": {
+              "question": "Rénovation totale (hors agrandissement)"
+            },
+            "extension": {
+              "question": "Agrandissement - extension"
+            },
+            "autres travaux importants": {
+              "question": "Autres travaux importants (par ex : changement moquette, ravalement,peinture etc)"
+            },
+            "aucun": {
+              "question": "Je n'ai pas réalisé ces rénovations durant les dix dernières années"
+            }
+          },
+          "empreinte travaux": {
+            "montant": {
+              "question": "Dans le cas d'une rénovation durant ces 10 dernières années, quel est le montant des dépenses liées à ces travaux de rénovation ?"
+            }
+          },
+          "empreinte extension": {
+            "surface": {
+              "question": "Dans le cas d'un agrandissement durant ces 10 dernières années, quelle est la surface supplémentaire ajoutée ?"
+            }
+          }
+        },
+        "autre activité": {
+          "surface": {
+            "question": "Quelle est la surface totale du bâtiment (cinéma inclus) ?"
+          }
+        },
+        "est partagé": {
+          "question": "Le bâtiment est-il partagé avec une autre activité ?"
+        },
+        "parking": {
+          "nombre de places": {
+            "question": "Si oui, de combien de places ?"
+          }
+        },
+        "parking présent": {
+          "question": "Le cinéma dispose-t-il d’un parking ?"
+        }
+      },
+      "activités de bureau": {
+        "petites fournitures": {
+          "montant": {
+            "question": "Quel montant avez-vous dépensé en petites fournitures de bureau ? (Exemples: crayon, cartouche d’encre, papier hors programme, cahier, etc.)"
+          }
+        },
+        "services": {
+          "montant": {
+            "description": "Les services incluent par exemple les dépenses de ménage, sécurité, comptabilité, frais bancaires, etc. Vous pouvez utiliser une valeur par défaut pour cette réponse (25286€) qui est issue des Bilans Carbone® qui ont étés réalisés sur plusieurs cinémas français. Si vous détenez une information plus précise pour votre cinéma, nous vous invitons à l'utiliser plutôt que la valeur par défaut.",
+            "question": "Quel montant avez-vous dépensé en services ?"
+          }
+        },
+        "informatique": {
+          "titre": "Informatique",
+          "description": "Si l'équipement concerné est acheté, merci de ne pas remplir le champ \"Durée de location\". Si l'équipement concerné est loué de manière ponctuelle, merci de ne pas remplir le champ \"Date d'achat\". Si vous louez un équipement pour de longues durées ou de manière continue, nous vous recommandons de le considérer comme acheté (à la date de la première année de location).",
+          "question": "Pour chacun de ces équipements informatiques, veuillez indiquer leur nombre et leur date d'achat ou durée de location",
+          "appareil": {
+            "nombre": {
+              "question": "Nombre d'appareils"
+            },
+            "année achat": {
+              "question": "Année d'achat des appareils"
+            },
+            "durée location": {
+              "question": "Durée de location des appareils (jours à l'année)"
+            }
+          },
+          "équipement": {
+            "titre": "Type d'équipement informatique",
+            "question": "Type d'équipement informatique",
+            "options": {
+              "ordinateurs fixes": "Ordinateurs fixes",
+              "ordinateurs portables": "Ordinateurs portables",
+              "photocopieurs": "Photocopieurs",
+              "imprimantes": "Imprimantes",
+              "téléphones fixes": "Téléphones fixes",
+              "téléphones portables": "Téléphones portables",
+              "tablettes": "Tablettes"
+            }
+          }
+        }
+      }
+    },
+    "déchets": {
+      "ordinaires": {
+        "ordures ménagères": {
+          "titre": "Ordures ménagères (déchets non triés / sans filière)",
+          "nombre bennes": {
+            "question": "Nombre de bennes"
+          },
+          "taille benne": {
+            "description": "Capacité d'une benne à ordures ménagères.",
+            "question": "Taille de la benne"
+          },
+          "fréquence ramassage": {
+            "description": "Fréquence de ramassage des ordures ménagères par semaine.",
+            "question": "Fréquence de ramassage"
+          }
+        },
+        "emballages et papier": {
+          "titre": "Emballages et papier (plastique, métal, papier et carton)",
+          "nombre bennes": {
+            "question": "Nombre de bennes"
+          },
+          "taille benne": {
+            "description": "Capacité d'une benne à ordures ménagères.",
+            "question": "Taille de la benne"
+          },
+          "fréquence ramassage": {
+            "description": "Fréquence de ramassage des ordures ménagères par semaine.",
+            "question": "Fréquence de ramassage"
+          }
+        },
+        "biodéchets": {
+          "titre": "Biodéchets (restes alimentaires)",
+          "nombre bennes": {
+            "question": "Nombre de bennes"
+          },
+          "taille benne": {
+            "description": "Capacité d'une benne à ordures ménagères.",
+            "question": "Taille de la benne"
+          },
+          "fréquence ramassage": {
+            "description": "Fréquence de ramassage des ordures ménagères par semaine.",
+            "question": "Fréquence de ramassage"
+          }
+        },
+        "verre": {
+          "titre": "Déchets verre",
+          "nombre bennes": {
+            "question": "Nombre de bennes"
+          },
+          "taille benne": {
+            "description": "Capacité d'une benne à ordures ménagères.",
+            "question": "Taille de la benne"
+          },
+          "fréquence ramassage": {
+            "description": "Fréquence de ramassage des ordures ménagères par semaine.",
+            "question": "Fréquence de ramassage"
+          }
+        }
+      },
+      "exceptionnels": {
+        "lampe xenon": {
+          "nombre": {
+            "titre": "Nombre de lampes",
+            "question": "Quelle quantité de lampes Xenon avez vous jeté cette année ?"
+          }
+        },
+        "matériel technique": {
+          "quantité": {
+            "question": "Quelle quantité de matériel technique avez vous jeté cette année ?"
+          }
+        }
+      }
+    },
+    "confiseries et boissons": {
+      "électroménager": {
+        "appareil": {
+          "nb appareils": {
+            "question": "Nombre d'appareils"
+          },
+          "année achat": {
+            "question": "Année d'achat des appareils"
+          },
+          "durée location": {
+            "question": "Durée de location des appareils (jours à l'année)"
+          }
+        },
+        "réfrigérateurs": {
+          "titre": "Réfrigérateurs",
+          "nombre": {
+            "question": "Nombre de réfrigérateurs"
+          },
+          "durée location": {
+            "question": "Durée de location des réfrigérateurs (jours à l'année)"
+          },
+          "année achat": {
+            "question": "Année d'achat des réfrigérateurs"
+          }
+        },
+        "congélateurs": {
+          "titre": "Congélateurs",
+          "nombre": {
+            "question": "Nombre de congélateurs"
+          },
+          "durée location": {
+            "question": "Durée de location des congélateurs (jours à l'année)"
+          },
+          "année achat": {
+            "question": "Année d'achat des congélateurs"
+          }
+        },
+        "warmers": {
+          "titre": "Warmers",
+          "nombre": {
+            "question": "Nombre de warmers"
+          },
+          "durée location": {
+            "question": "Durée de location des warmers (jours à l'année)"
+          },
+          "année achat": {
+            "question": "Année d'achat des warmers"
+          }
+        },
+        "distributeurs": {
+          "titre": "Distributeurs snack et boissons",
+          "nombre": {
+            "question": "Nombre de distributeurs snack et boissons"
+          },
+          "durée location": {
+            "question": "Durée de location des distributeurs snack et boissons (jours à l'année)"
+          },
+          "année achat": {
+            "question": "Année d'achat des distributeurs snack et boissons"
+          }
+        }
+      },
+      "fret": {
+        "distance": {
+          "question": "Quelle est la distance entre votre cinéma et votre principal fournisseur ?"
+        }
+      },
+      "achats": {
+        "vente sur place": {
+          "titre": "Vente sur place",
+          "question": "Vendez-vous des boissons et des confiseries ?"
+        },
+        "achat type": {
+          "question": "Selon vous, en moyenne, un spectateur achète :",
+          "options": {
+            "un peu": "Un peu de confiseries et de boissons (~30g)",
+            "standard": "Une part standard de confiseries et de boissons (~120g)",
+            "significatif": "Une part significative de confiseries et de boissons (~200g)"
+          }
+        }
+      }
+    },
+    "billetterie et communication": {
+      "matériel distributeurs": {
+        "affiches": {
+          "affiches 120x160": {
+            "titre": "Affiches 120x160",
+            "nombre": {
+              "question": "Quantité"
+            }
+          },
+          "affiches 40x60": {
+            "titre": "Affiches 40x60",
+            "nombre": {
+              "question": "Quantité"
+            }
+          }
+        },
+        "PLV": {
+          "PLV comptoir": {
+            "titre": "PLV comptoir",
+            "nombre": {
+              "question": "Quantité"
+            }
+          },
+          "PLV grand format": {
+            "titre": "PLV grand format",
+            "nombre": {
+              "question": "Quantité"
+            }
+          }
+        }
+      },
+      "matériel cinéma": {
+        "production": {
+          "programme": {
+            "titre": "Programme",
+            "nombre": {
+              "question": "Quantité"
+            }
+          },
+          "affiches": {
+            "titre": "Affiches",
+            "nombre": {
+              "question": "Quantité"
+            }
+          },
+          "flyers": {
+            "titre": "Flyers",
+            "nombre": {
+              "question": "Quantité"
+            }
+          }
+        }
+      },
+      "communication digitale": {
+        "newsletters": {
+          "nombre": {
+            "question": "Combien de newsletters ont été envoyées cette annnée ?"
+          },
+          "destinataires": {
+            "question": "En moyenne, à combien de personnes sont adressées ces newsletters ?"
+          }
+        },
+        "affichage dynamique": {
+          "nombre": {
+            "question": "Combien de caissons d’affichage dynamique sont présents dans le cinéma ?"
+          }
+        },
+        "écrans": {
+          "nombre": {
+            "question": "Combien d’écrans se trouvent dans les espaces de circulation ?"
+          }
+        },
+        "affichage extérieur": {
+          "surface": {
+            "question": "Si le cinéma dispose d'un affichage extérieur, quelle est sa surface ?"
+          }
+        }
+      },
+      "caisses et bornes": {
+        "caisses libre service": {
+          "nombre": {
+            "question": "De combien de bornes de caisse libre-service dispose le cinéma ?"
+          }
+        },
+        "caisse classique": {
+          "nombre": {
+            "question": "De combien de systèmes de caisse classique dispose le cinéma ?"
+          }
+        }
+      }
+    }
+  },
+  "publicodes-units": {
+    "séance": "séance",
+    "entrée": "entrée",
+    "jour": "jour",
+    "film": "film",
+    "km": "km",
+    "écran": "écran",
+    "équipe": "équipe",
+    "unité": "unité",
+    "kgCO2e": "kgCO2e",
+    "m2": "m2",
+    "Go": "Go",
+    "jour/semaine": "jour/semaine",
+    "km/jour": "km/jour",
+    "kWh": "kWh",
+    "m3": "m3",
+    "litre": "litre",
+    "kg": "kg",
+    "nuitée": "nuitée",
+    "€": "€",
+    "place": "place",
+    "benne/ramassage": "benne/ramassage",
+    "l/benne": "l/benne",
+    "ramassage/semaine": "ramassage/semaine",
+    "unité/semaine": "unité/semaine",
+    "unité/mois": "unité/mois",
+    "newsletter/personne": "newsletter/personne",
+    "personne": "personne"
+  }
+}

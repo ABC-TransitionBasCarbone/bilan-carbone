@@ -1,0 +1,31 @@
+{
+  "publicodes-layout": {
+    "table": {
+      "EquipementsInformatiqueAudiovisuel": {
+        "question": "Équipements informatiques et audiovisuels utilisés",
+        "equipement": "Équipement",
+        "nombre": "Nombre"
+      },
+      "TransportDesEleves": {
+        "question": "Distance parcourue par les élèves pour se rendre à l'établissement",
+        "moyenTransport": "Moyen de transport",
+        "distance": "Distance aller-retour en km"
+      },
+      "TransportDuPersonnel": {
+        "question": "Distance parcourue par le personnel pour se rendre à l'établissement",
+        "moyenTransport": "Moyen de transport",
+        "distance": "Distance aller-retour en km"
+      },
+      "VoyagesScolaires": {
+        "question": "Distance parcourue lors des voyages scolaires",
+        "moyenTransport": "Moyen de transport",
+        "distance": "Distance (km)"
+      },
+      "EquipementsDivers": {
+        "question": "Ici, tu comptabliseras des biens qui n'entrent pas dans une catégorie en particulier. Tu devras donc aller en salle des profs, cantine ou à l'intendance pour faire l'inventaire des appareils électroménagers ou industriels.  Comme pour les bâtiments, ici il faut amortir les émissions mais sur une durée plus courte. Cette durée dépendra du produit. Pour obtenir ces données, fais l'inventaire en passant dans toutes les salles. Sinon, le gestionnaire pourra t'aider à trouver ces données.",
+        "equipement": "Équipement",
+        "nombre": "Nombre"
+      }
+    }
+  }
+}

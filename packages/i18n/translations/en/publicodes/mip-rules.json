@@ -1,0 +1,1515 @@
+{
+  "publicodes-units": {
+    "jour": "[TO_TRANSLATE] jour",
+    "km/jour": "[TO_TRANSLATE] km/jour",
+    "km": "[TO_TRANSLATE] km",
+    "l/centkm": "[TO_TRANSLATE] l/centkm",
+    "kWh/centkm": "[TO_TRANSLATE] kWh/centkm",
+    "h": "[TO_TRANSLATE] h",
+    "h/jour": "[TO_TRANSLATE] h/jour",
+    "km/mois": "[TO_TRANSLATE] km/mois",
+    "h/mois": "[TO_TRANSLATE] h/mois",
+    "nuit": "[TO_TRANSLATE] nuit",
+    "m3": "[TO_TRANSLATE] m3",
+    "personne": "[TO_TRANSLATE] personne",
+    "€/mois": "[TO_TRANSLATE] €/mois",
+    "kWh": "[TO_TRANSLATE] kWh",
+    "Wc": "[TO_TRANSLATE] Wc",
+    "%": "[TO_TRANSLATE] %",
+    "m2": "[TO_TRANSLATE] m2",
+    "kgCO2e/m2": "[TO_TRANSLATE] kgCO2e/m2",
+    "climatiseur": "[TO_TRANSLATE] climatiseur",
+    "bouteille": "[TO_TRANSLATE] bouteille",
+    "kg": "[TO_TRANSLATE] kg",
+    "l": "[TO_TRANSLATE] l",
+    "€": "[TO_TRANSLATE] €",
+    "stère": "[TO_TRANSLATE] stère",
+    "paquet/semaine": "[TO_TRANSLATE] paquet/semaine",
+    "requêtes/jour": "[TO_TRANSLATE] requêtes/jour",
+    "kgCO2e": "[TO_TRANSLATE] kgCO2e",
+    "repas": "[TO_TRANSLATE] repas",
+    "tasse/jour": "[TO_TRANSLATE] tasse/jour",
+    "degré": "[TO_TRANSLATE] degré",
+    "degrés": "[TO_TRANSLATE] degrés",
+    "jour/semaine": "[TO_TRANSLATE] jour/semaine",
+    "km/trajet": "[TO_TRANSLATE] km/trajet"
+  },
+  "publicodes-rules": {
+    "DT": {
+      "titre": "[TO_TRANSLATE] Déplacements domicile-travail",
+      "description": "[TO_TRANSLATE] Renseignez les différents types de transport que vous utilisez le plus souvent pour vos déplacements entre votre domicile et votre lieu de travail pour une semaine type.",
+      "question": "[TO_TRANSLATE] Quel(s) moyen(s) de transport utilisez vous pour vos déplacements domicile - travail ?",
+      "congé": {
+        "titre": "[TO_TRANSLATE] Jours de congés pris par an",
+        "description": "[TO_TRANSLATE] Cette question permet d'estimer vos jours d'absence du lieu de travail. Renseignez donc tous vos jours d'absence quelle que soit leur nature (congés payés, RTT, arrêt maladie)\nMoins de jours sur site signifie moins de trajets domicile-travail par exemple.",
+        "question": "[TO_TRANSLATE] Combien de jours ne travaillez-vous pas par an ? (congés, RTT, arrêts maladie, etc.)"
+      },
+      "TT": {
+        "titre": "[TO_TRANSLATE] Jours de télétravail par semaine",
+        "description": "[TO_TRANSLATE] Le télétravail modifie l’empreinte carbone professionnelle, car il réduit certains déplacements mais augmente les consommations liées au domicile.",
+        "question": "[TO_TRANSLATE] Combien de jours de télétravail faites-vous en moyenne par semaine ?"
+      },
+      "train": {
+        "présent": {
+          "question": "[TO_TRANSLATE] Utilisez-vous le train pour vos déplacements domicile-travail ?"
+        },
+        "km": {
+          "question": "[TO_TRANSLATE] Combien de kilomètres parcourez-vous en Train par jour pour vos déplacements domicile-travail ?"
+        }
+      },
+      "voiture": {
+        "présent": {
+          "question": "[TO_TRANSLATE] Utilisez-vous une voiture pour vos déplacements domicile-travail ?"
+        },
+        "km": {
+          "titre": "[TO_TRANSLATE] Km en voiture",
+          "description": "[TO_TRANSLATE] Renseignez un nombre de km cohérent (en arrondissant à la dizaine ou centaine supérieure) avec les distances que vous parcourez quotidiennement en voiture pour vos déplacements domicile-travail.",
+          "question": "[TO_TRANSLATE] Quelle distance (aller-retour) parcourez en voiture chaque jour pour vos déplacements domicile-travail ?"
+        },
+        "utilisateur": {
+          "description": "[TO_TRANSLATE] Deux données sont importantes dans le cadre du calcul de l'empreinte liée à la construction :\n\n- L'usage ou non d'un même véhicule pour tous les kilomètres parcourus (si non : on vous attribue un véhicule \"moyen\")\n- La propriété ou non dudit véhicule s'il s'agit toujours du même\n\nNous avons fait le choix d'attribuer l'empreinte de construction au pro-rata des kilomètres parcourus. Mais cette approche avait deux défauts :\n\n- Elle était extrêmement avantageuse pour les petits rouleurs, alors que leur véhicule qui roule moins peut s'user plus vite (un moteur a besoin de tourner régulièrement) et donc avoir une durée de vie inférieure.\n- Elle ne permettait pas de valoriser l'engagement de ne pas disposer de son propre véhicule, et de pratiquer à la place l'autopartage, ou la location ponctuelle (car l'empreinte de construction était la même, que l'on soit propriétaire ou non).\n\n> Pour pallier ces deux problèmes, et mieux représenter qu'un véhicule possédé mais sous-utilisé s'use plus vite et mérite une empreinte de construction plus importante, **nous appliquons un seuil pour la partie construction de l'empreinte, pour les propriétaires**.",
+          "question": "[TO_TRANSLATE] Utilisez-vous majoritairement la même voiture pour vous déplacer ?"
+        },
+        "voyageurs": {
+          "titre": "[TO_TRANSLATE] Nombre de voyageurs trajets DT",
+          "description": "[TO_TRANSLATE] Indiquez le nombre moyen de personnes (vous inclus) dans la voiture lors de vos déplacements domicile-travail sur une semaine type. Si vous êtes seul(e) dans la voiture, indiquez 1. Si vous êtes 2, indiquez 2. Si il ya une personne avec vous 1 trajet sur 2 indiquez 1.5, etc...",
+          "question": "[TO_TRANSLATE] Quel est le nombre moyen de voyageurs dans la voiture lors de vos déplacements domicile-travail ?"
+        },
+        "motorisation": {
+          "question": "[TO_TRANSLATE] Quelle est la motorisation de la voiture que vous allez utiliser ?"
+        },
+        "thermique": {
+          "consommation aux 100": {
+            "description": "[TO_TRANSLATE] Si vous ne savez pas, cliquez sur _Passer la question_ et nous vous attribuerons une consommation en lien avec le gabarit\nde la voiture que vous avez renseigné.",
+            "question": "[TO_TRANSLATE] Connaissez-vous la consommation moyenne de la voiture ?"
+          },
+          "carburant": {
+            "description": "[TO_TRANSLATE] Pour comprendre les différents types de carburants, [cet article pédagogique](https://www.francetvinfo.fr/economie/automobile/essence/les-carburants-changent-de-nom-a-la-pompe-voici-comment-vous-y-retrouver_2967013.html) est très utile.\n\n[Cet article](https://www.ecologie.gouv.fr/carburants-et-combustibles-autorises-en-france) du ministère de l'Écologie explique plus en détail les carburants légaux en France.\n\n> Attention, si le type de carburant fait varier de façon significative l'empreinte climat au litre, la consommation en litre par 100km elle aussi varie. Veillez à saisir une consommation au litre basée sur votre moyenne réelle.",
+            "question": "[TO_TRANSLATE] Quel type de carburant la voiture consomme-t-elle ?"
+          }
+        },
+        "électrique": {
+          "consommation aux 100": {
+            "titre": "[TO_TRANSLATE] Consommation électrique au km",
+            "description": "[TO_TRANSLATE] Si vous ne savez pas, cliquez sur _Passer la question_ et nous vous attribuerons une consommation en lien avec le gabarit\nde la voiture que vous avez renseigné.",
+            "question": "[TO_TRANSLATE] Connaissez-vous la consommation moyenne de la voiture ?"
+          }
+        },
+        "gabarit": {
+          "question": "[TO_TRANSLATE] Quel est le gabarit de la voiture ?"
+        }
+      },
+      "deux roues": {
+        "présent": {
+          "question": "[TO_TRANSLATE] Utilisez-vous un deux roues pendant lors de vos déplacements domicile-travail ?"
+        },
+        "passagers": {
+          "description": "[TO_TRANSLATE] Indiquez le nombre moyen de personnes (y compris vous-même) voyageant sur votre deux-roues lors de vos déplacements domicile-travail. \n\nSi vous voyagez tout le temps seul, indiquez 1. \n\nSi vous prenez souvent un passager, indiquez un nombre décimal (1.5 si vous le prenez 1 trajet sur 2).\n\nSi vous êtes toujours accompagné(e), indiquez 2.",
+          "question": "[TO_TRANSLATE] Combien de personnes voyagent avec vous en moyenne sur votre deux-roues lors de vos déplacements domicile-travail ?"
+        },
+        "km": {
+          "question": "[TO_TRANSLATE] Combien de km parcourez-vous chaque jour en deux roues pour vos déplacements domicile-travail ?"
+        },
+        "type": {
+          "question": "[TO_TRANSLATE] Quelle est la motorisation du deux roues que vous utilisez ?"
+        }
+      },
+      "taxi": {
+        "présent": {
+          "question": "[TO_TRANSLATE] Allez-vous utiliser un taxi pour vous déplacer pendant votre DT ?"
+        },
+        "heures": {
+          "description": "[TO_TRANSLATE] Si vous y passez une demi-heure renseignez 0.5. Pour 15 minutes renseignez 0.25 et ainsi de suite.\nNe prenez pas en compte le temps d'attente.",
+          "question": "[TO_TRANSLATE] Combien d'heures allez vous parcourir en taxi pour aller et revenir de votre lieu de DT ?"
+        }
+      },
+      "transports commun": {
+        "présent": {
+          "question": "[TO_TRANSLATE] Utilisez-vous les transports en commun pour vous déplacer pour vos déplacements domicile-travail ?"
+        },
+        "type": {
+          "titre": "[TO_TRANSLATE] Transports en commun",
+          "question": "[TO_TRANSLATE] Quel type de transport en commun utilisez-vous pour vos déplacements domicile-travail ?",
+          "bus": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Utilisez-vous le bus pour vos déplacements domicile-travail ?"
+            },
+            "heures": {
+              "question": "[TO_TRANSLATE] Combien d'heures passez-vous en bus par jour pendant vos déplacements domicile-travail ?"
+            }
+          },
+          "métro ou tram": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Utilisez-vous le métro ou le tram pour vos déplacements domicile-travail ?"
+            },
+            "heures": {
+              "question": "[TO_TRANSLATE] Combien d'heures passez-vous en métro ou tram par jour pendant vos déplacements domicile-travail ?"
+            }
+          }
+        }
+      },
+      "mobilité douce": {
+        "présent": {
+          "question": "[TO_TRANSLATE] Utilisez-vous des mobilités douces pour vous déplacer pendant vos déplacements domicile-travail ?"
+        },
+        "type": {
+          "titre": "[TO_TRANSLATE] Déplacements actifs",
+          "question": "[TO_TRANSLATE] Quel(s) mode(s) de déplacement \"actif\" utilisez-vous pendant vos déplacements domicile-travail ?",
+          "marche": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Marchez-vous pour vos déplacements domicile-travail ?"
+            }
+          },
+          "vélo": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Utilisez-vous un vélo \"classique\" (i.e. sans assistance électrique) pour vos déplacements domicile-travail ?"
+            }
+          },
+          "vae": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Utilisez-vous un Vélo à Assistance Électrique (VAE) pour vos déplacements domicile-travail ?"
+            },
+            "km": {
+              "question": "[TO_TRANSLATE] Combien de kilomètres faites-vous en vélo électrique par jour pour vos déplacements domicile-travail ?"
+            }
+          },
+          "trottinette": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Utilisez-vous une trottinette \"classique\" (i.e. sans assistance électrique) pour vos déplacements domicile-travail ?"
+            }
+          },
+          "trottinette électrique": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Utilisez-vous une trottinette électrique pour vos déplacements domicile-travail ?"
+            },
+            "km": {
+              "question": "[TO_TRANSLATE] Combien de kilomètres faites-vous en trottinette électrique par jour pour vos déplacements domicile-travail ?"
+            }
+          }
+        }
+      }
+    },
+    "transport": {
+      "titre": "[TO_TRANSLATE] Déplacements professionnels",
+      "description": "[TO_TRANSLATE] Cochez tous les modes de transport que vous utilisez régulièrement pour vos déplacements professionnels. Vous renseignerez ensuite les détails pour chacun des modes de transport que vous aurez sélectionnés sur l'année écoulée.",
+      "question": "[TO_TRANSLATE] Quel moyen de transport utilisez-vous pour faire vos déplacements professionnels ?",
+      "avion": {
+        "présent": {
+          "question": "[TO_TRANSLATE] Avez vous pris l'avion pour vos déplacements profesionnels au cours de l'année passée ?"
+        },
+        "court courrier": {
+          "heures de vol": {
+            "description": "[TO_TRANSLATE] Comptez les heures que vous avez passées dans un avion pour des trajets de moins de 2h (ce qui correspond à des vols d'une distance inférieure à 1000km environ). Si vous faites des escales, additionnez simplement les durées de chaque vol.\n\n\nLes suggestions sont basées sur la durée minimum arrondie de vol constatée dans les moteurs de recherche, doublée pour considérer un aller-retour.",
+            "question": "[TO_TRANSLATE] Sur l'année passée, combien d'heures avez-vous voyagé sur des vols de moins de 2h (court-courrier) ?"
+          }
+        },
+        "moyen courrier": {
+          "heures de vol": {
+            "description": "[TO_TRANSLATE] Comptez les heures que vous avez passées dans un avion pour des trajets entre 2h et 6h (ce qui correspond à des vols d'une distance comprise entre 1000km et 3500km environ). Si vous faites des escales, additionnez simplement les durées de chaque vol.\n\nLes suggestions sont basées sur la durée minimum arrondie de vol constatée dans les moteurs de recherche, doublée pour considérer un aller-retour.",
+            "question": "[TO_TRANSLATE] Sur l'année passée, combien d'heures avez-vous voyagé sur des vols de 2 à 6h (moyen-courrier) ?"
+          }
+        },
+        "long courrier": {
+          "heures de vol": {
+            "description": "[TO_TRANSLATE] Comptez les heures que vous avez passées dans un avion pour des trajets de plus de 6h (ce qui correspond à des vols d'une distance supérieure à 3500km environ). Si vous faites des escales, additionnez simplement les durées de chaque vol.\n\nA noter que si vous avez voyagé vers une destination lointaine en plusieurs trajets \"courts\", ils sont à prendre en compte dans les questions précédentes.\n\nLes suggestions sont basées sur la durée minimum arrondie de vol constatée dans les moteurs de recherche, doublée pour considérer un aller-retour.",
+            "question": "[TO_TRANSLATE] Sur l'année passée, combien d'heures avez-vous voyagé sur des vols de plus de 6h (long-courrier) ?"
+          }
+        }
+      },
+      "car longue distance": {
+        "présent": {
+          "question": "[TO_TRANSLATE] Avez vous pris le car longue distance pour vos déplacements profesionnels au cours de l'année passée ?"
+        },
+        "km": {
+          "description": "[TO_TRANSLATE] Renseignez un nombre de km cohérent avec les distances que vous allez parcourir en car \"longue distance\" pour vous rendre sur votre lieu de séjour et en revenir. \nNous nous intéressons ici aux trajets faits en car de type Ouibus, Flixbus, etc.",
+          "question": "[TO_TRANSLATE] Combien de kilomètres allez vous parcourir en car de longue distance (Ouibus, Flixbus, etc.) pour aller et revenir de votre lieu de séjour ? ?"
+        }
+      },
+      "train": {
+        "présent": {
+          "question": "[TO_TRANSLATE] Avez vous pris le train pour vos déplacements profesionnels au cours de l'année passée ?"
+        },
+        "km": {
+          "description": "[TO_TRANSLATE] Renseignez la distance moyenne que vous parcourez chaque mois en  train pour vos déplacements professionnels. Si vous le prenez ponctuellement, sommez vos différents trajets et divisez par 12.",
+          "question": "[TO_TRANSLATE] Dans le cadres de vos déplacements professionnels, quelle distance parcourez-vous en train chaque mois ?"
+        }
+      },
+      "voiture": {
+        "présent": {
+          "question": "[TO_TRANSLATE] Avez vous pris la voiture pour vos déplacements profesionnels au cours de l'année passée ?"
+        },
+        "boulot": {
+          "jours travaillés en voiture": {
+            "question": "[TO_TRANSLATE] Combien de jours par semaine prenez-vous votre voiture pour aller au travail ?"
+          },
+          "distance": {
+            "km aller": {
+              "titre": "[TO_TRANSLATE] Distance aller trajet domicile travail",
+              "description": "[TO_TRANSLATE] Nous parlons ici de la distance *aller*, avec le mode de transport que vous privilégiez.\n\n70% des travailleurs en France travaillent à moins de 15km de chez eux.\n\n57% travaillent à moins de 10km et 78% à moins de 20km. \n\nSource : études INSEE 2004 et 2013, chiffres stables.",
+              "question": "[TO_TRANSLATE] A quelle distance de chez vous se situe votre travail ?"
+            }
+          },
+          "voyageurs": {
+            "titre": "[TO_TRANSLATE] Nombre de voyageurs sur le trajet domicile-travail",
+            "question": "[TO_TRANSLATE] Combien êtes-vous dans la voiture pour vos trajets domicile-travail ?"
+          },
+          "covoiturage": {
+            "nombre de covoitureurs": {
+              "question": "[TO_TRANSLATE] Combien de personnes pourraient covoiturer avec vous ?"
+            }
+          },
+          "sans voiture": {
+            "type": {
+              "question": "[TO_TRANSLATE] Si vous deviez ne plus prendre votre voiture pour vous rendre au travail quel autre moyen de transport pourriez-vous utiliser ?"
+            }
+          },
+          "télétravail": {
+            "jours télétravaillés": {
+              "question": "[TO_TRANSLATE] Combien de jours de télétravail par semaine pourriez-vous faire ?"
+            },
+            "compatible": {
+              "question": "[TO_TRANSLATE] Votre travail est-il totalement ou en partie compatible avec le télétravail ?"
+            }
+          }
+        }
+      },
+      "deux roues": {
+        "présent": {
+          "question": "[TO_TRANSLATE] Avez vous pris un deux roues pour vos déplacements profesionnels au cours de l'année passée ?"
+        },
+        "passagers": {
+          "description": "[TO_TRANSLATE] Indiquez le nombre moyen de personnes (y compris vous-même) voyageant sur votre deux-roues lors de vos déplacements professionnels.",
+          "question": "[TO_TRANSLATE] En moyenne, combien de personnes voyagent avec vous sur votre deux-roues lors de vos déplacements professionnels ?"
+        },
+        "km": {
+          "description": "[TO_TRANSLATE] Indiquez la distance moyenne mensuelle parcourue en deux-roues dans le cadre de vos déplacements professionnels.",
+          "question": "[TO_TRANSLATE] Dans le cadre de vos déplacements professionnels, quelle distance parcourez-vous en deux roues chaque mois ?"
+        },
+        "type": {
+          "question": "[TO_TRANSLATE] Quelle est la motorisation de votre moto ?"
+        }
+      },
+      "transports commun": {
+        "présent": {
+          "question": "[TO_TRANSLATE] Avez vous pris des transports en commun pour vos déplacements profesionnels au cours de l'année passée ?"
+        }
+      },
+      "mobilité douce": {
+        "présent": {
+          "question": "[TO_TRANSLATE] Avez vous utilisé des modes de déplacements \"actifs\" pour vos déplacements profesionnels au cours de l'année passée ?"
+        },
+        "type": {
+          "titre": "[TO_TRANSLATE] Déplacements actifs",
+          "description": "[TO_TRANSLATE] Avec ou sans assistance électrique (marche, vélo, trottinette)",
+          "question": "[TO_TRANSLATE] Quel(s) mode(s) de déplacement \"actif\" allez-vous utiliser pour aller et revenir de votre lieu de séjour  ?",
+          "marche": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Dans le cadre de vos déplacements professionnels, vous déplacez-vous en marchant ?"
+            }
+          },
+          "vélo": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Dans le cadre de vos déplacements professionnels, vous déplacez-vous avec un vélo \"classique\" (i.e. sans assistance électrique) ?"
+            }
+          },
+          "vae": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Dans le cadre de vos déplacements professionnels, vous déplacez-vous avec un Vélo à Assistance Électrique (VAE) ?"
+            },
+            "km": {
+              "question": "[TO_TRANSLATE] Dans le cadre de vos déplacements professionnels, quelle distance parcourez-vous avec un Vélo à Assistance Électrique (VAE) chaque mois ?"
+            }
+          },
+          "trottinette électrique": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Dans le cadre de vos déplacements professionnels, vous déplacez-vous avec une trottinette électrique ?"
+            },
+            "km": {
+              "question": "[TO_TRANSLATE] Dans le cadre de vos déplacements professionnels, quelle distance parcourez-vous avec une trottinette électrique chaque mois ?"
+            }
+          }
+        }
+      },
+      "taxi": {
+        "présent": {
+          "question": "[TO_TRANSLATE] Avez vous pris le taxi pour vos déplacements profesionnels au cours de l'année passée ?"
+        },
+        "km": {
+          "description": "[TO_TRANSLATE] Indiquez la distance moyenne mensuelle parcourue en taxi pour vos déplacements professionnels sur l'année écoulée.",
+          "question": "[TO_TRANSLATE] Dans le cadres de vos déplacements professionnels, quelle distance parcourez-vous en taxi chaque mois ?"
+        }
+      },
+      "hébergement": {
+        "nuitées": {
+          "titre": "[TO_TRANSLATE] Nuitées d'hébergement",
+          "description": "[TO_TRANSLATE] Choisissez le(s) type(s) d'hébergement que vous avez utilisé lors de vos déplacements professionnels de l'année passée. Vous pouvez en sélectionner plusieurs.",
+          "question": "[TO_TRANSLATE] Dans quel(s) type(s) d'hébergement(s) vous logez lors de vos déplacements professionnels ?",
+          "hotel": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Allez-vous réserver une chambre d'hôtel ?"
+            },
+            "nombre de nuitées": {
+              "description": "[TO_TRANSLATE] Renseignez ici les nuits passées dans un hôtel dans le cadre de vos déplacements professionnels.",
+              "question": "[TO_TRANSLATE] Combien de nuits avez-vous passé à l'hôtel lors de vos déplacements professionnels l'année passée ?"
+            }
+          },
+          "résidence de tourisme": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Allez-vous réserver une résidence de tourisme ?"
+            },
+            "nombre de nuitées": {
+              "description": "[TO_TRANSLATE] Renseignez ici les nuits passées en résidence de tourisme, apparhôtel ou vilage vacances",
+              "question": "[TO_TRANSLATE] Combien de nuits allez-vous passer dans une résidence de tourisme ?"
+            }
+          },
+          "camping": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Allez-vous réserver un emplacement de camping ?"
+            },
+            "nombre de nuitées": {
+              "description": "[TO_TRANSLATE] Renseignez ici les nuits passées en camping (tente, hamac, bungalow...).",
+              "question": "[TO_TRANSLATE] Combien de nuits allez-vous passer en camping par an pendant votre séjour ?"
+            }
+          },
+          "auberge de jeunesse": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Allez-vous réserver une place en auberge de jeunesse ?"
+            },
+            "nombre de nuitées": {
+              "description": "[TO_TRANSLATE] Renseignez ici les nuits passées en auberge de jeunesse (dortoir).",
+              "question": "[TO_TRANSLATE] Combien de nuits allez-vous passer en auberge de jeunesse pendant votre séjour ?"
+            }
+          },
+          "locations": {
+            "présent": {
+              "description": "[TO_TRANSLATE] 💡 Déclarez ici les nuits passées en locations meublées de type Airbnb ou Abritel.",
+              "question": "[TO_TRANSLATE] Combien de nuits avez-vous passé dans des locations meublées (type Airbnb) lors de vos déplacements professionnels l'année passée ?"
+            },
+            "nombre de nuitées": {
+              "description": "[TO_TRANSLATE] Renseignez ici les nuits passées en location meublée (Airbnb, Abritel...).",
+              "question": "[TO_TRANSLATE] Combien de nuits avez-vous passé dans des locations meublées lors de vos déplacements professionnels l'année passée ?"
+            }
+          },
+          "famille ou amis": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Etes-vous allé chez des amis ou de la famille ?"
+            }
+          }
+        },
+        "aquatique": {
+          "titre": "[TO_TRANSLATE] Piscines, spa, jacuzzi",
+          "description": "[TO_TRANSLATE] Même si vous ne comptez pas les utiliser, renseignez quand même ce dont votre hébergement est équipé.",
+          "question": "[TO_TRANSLATE] Votre hébergement est-t-il équipé d'une piscine ou d'un spa, sauna, bain nordique, etc. ?",
+          "piscine non chauffée": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Allez-vous disposer d'une piscine non chauffée ?"
+            }
+          },
+          "piscine chauffée": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Allez-vous disposer d'une piscine chauffée ?"
+            }
+          },
+          "spa jacuzzi": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Allez-vous disposer d'un spa/jacuzzi ?"
+            }
+          }
+        }
+      },
+      "ferry": {
+        "usager": {
+          "description": "[TO_TRANSLATE] Répondez oui si vous prenez le ferry par exemple pour vous rendre sur les îles ou continents voisins (Corse, Royaume-Uni, Maghreb...).\n\nSi vous faites des croisières (de longs voyages où vous habitez sur le bateau), répondez également oui : dans un premier temps, nous comptabilisons de la même façon les heures de ferry et de croisière.\n\nSi vous ne prenez pas le ferry tous les ans, mais que vous comptez continuer à le prendre, répondez \"oui\" et estimez grossièrement le nombre d'heures ramené à l'année.\n\nPar exemple pour une traversée de 9h (une nuit) tous les 3 ans, répondez `3`.",
+          "question": "[TO_TRANSLATE] Prenez-vous le ferry ?"
+        },
+        "heures": {
+          "titre": "[TO_TRANSLATE] Heures de ferry dans l'année",
+          "description": "[TO_TRANSLATE] Pour l'instant, nous ne prenons pas en compte les options qui peuvent augmenter ou diminuer l'empreinte d'une traversée en ferry : \n  - voiture embarquée à bord\n  - remplissage de la cabine ou réservation d'un siège\n  - utilisation des services à bord (restaurant, boutiques)\n  - et bien sûr la vitesse du bateau (plus un bateau est rapide, plus il consomme).\n\nLe calcul est donc fait pour une traversée type.",
+          "question": "[TO_TRANSLATE] Combien d'heures par an voyagez-vous en ferry ou croisière ?"
+        }
+      }
+    },
+    "futureco-data": {
+      "transport": {
+        "ferry": {
+          "volume utile": {
+            "description": "[TO_TRANSLATE] > ℹ️ Cette règle provient du modèle [`futureco-data`](https://github.com/laem/futureco-data).\n\n\nOn appelle ici volume utile la somme de toutes les surfaces qui ne sont pas l'infrastructure elle-même du bateau, sa sécurité, son équipage, etc.\n\n> Le calcul des différentes surfaces est isssu d'[un dessin SVG](https://futur.eco/ferry-surface-mega-express-four) sur un plan des ponts du navire, qui nous permet ensuite d'en déduire les volumes",
+            "question": "[TO_TRANSLATE] Quel est le volume utile du bateau ?"
+          }
+        }
+      }
+    },
+    "services sociétaux": {
+      "question rhétorique": {
+        "titre": "[TO_TRANSLATE] Question d'information sur les services communs",
+        "description": "[TO_TRANSLATE] Cette catégorie ne dépend pas de vos réponses. L'empreinte associée est calculée via une approche macro-économique à l'échelle nationale. [En savoir plus](/documentation/services-sociétaux).",
+        "question": "[TO_TRANSLATE] Avant de vous donner l'empreinte de votre séjour, nous vous proposons un petit quizz."
+      }
+    },
+    "logement": {
+      "électricité": {
+        "réseau": {
+          "consommation estimée via le coût": {
+            "saisie": {
+              "question": "[TO_TRANSLATE] Pas de facture ? Entrez vos dépenses approximatives par mois"
+            }
+          }
+        },
+        "photovoltaique": {
+          "présent": {
+            "question": "[TO_TRANSLATE] Votre logement dispose-t-il de panneaux photovoltaïques ?"
+          },
+          "production": {
+            "description": "[TO_TRANSLATE] Nous parlons bien ici de toute l'énergie produite par vos panneaux, que vous la consommiez ou non.\nLa façon de disposer de ce chiffre varie selon votre installation. La plupart des installations présentes disposent d'une application de suivi de production qui devrait vous fournir cette donnée. \n\n> Nous proposons des suggestions via le nombre de panneaux en considérant que la puissance moyenne d'un panneau solaire est de 400 Wc environ, avec une production de 1300 kWh/kWc.",
+            "question": "[TO_TRANSLATE] Quelle est la production annuelle d'électricité de vos panneaux solaires photovoltaïques, qu'elle soit autoconsommée ou réinjectée dans le réseau ?"
+          },
+          "production estimée via la puissance installée": {
+            "saisie": {
+              "question": "[TO_TRANSLATE] Pas de relevé ? Entrez ici votre puissance installée.\n\n_(Sachez qu'en moyenne, 1 panneau = 400 Wc)_"
+            }
+          },
+          "part autoconsommation": {
+            "description": "[TO_TRANSLATE] Si vous consommez toute votre production, renseignez 100%. Si vous revendez toute votre production, vous pouvez mettre 0. Dans tous les cas, il vous sera demandé par la suite votre consommation d'électricité du réseau et votre production sera prise en compte indirectement dans le calcul de vos émissions.",
+            "question": "[TO_TRANSLATE] Quelle part de cette électricité produite consommez-vous ?"
+          }
+        }
+      },
+      "vacances": {
+        "titre": "[TO_TRANSLATE] Nuitées week-end ou vacances",
+        "description": "[TO_TRANSLATE] Renseignez ici les différents types de logement que vous occupez pour vos voyages (**motif personnel**).\n\n> 💡 Si vous ne partez jamais en week-end ou en vacances, vous pouvez cliquer sur \"aucun\" juste en dessous de cette question, puis \"Suivant\".",
+        "question": "[TO_TRANSLATE] Comment êtes-vous hébergé pour vos week-ends, vos vacances ?",
+        "hotel": {
+          "présent": {
+            "question": "[TO_TRANSLATE] Allez-vous à l'hôtel ?"
+          },
+          "nombre de nuitées": {
+            "description": "[TO_TRANSLATE] 💡 Déclarez ici les nuits passées dans un hôtel, une chambre privée ou chambre d'hôtes.",
+            "question": "[TO_TRANSLATE] Combien de nuits passez-vous à l'hôtel ou chambre d'hôtes par an ?"
+          }
+        },
+        "camping": {
+          "présent": {
+            "question": "[TO_TRANSLATE] Allez-vous en camping ?"
+          },
+          "nombre de nuitées": {
+            "description": "[TO_TRANSLATE] 💡 Déclarez ici les nuits passées en camping (tente, hamac, bungalow...).",
+            "question": "[TO_TRANSLATE] Combien de nuits passez-vous en camping par an ?"
+          }
+        },
+        "auberge de jeunesse": {
+          "présent": {
+            "question": "[TO_TRANSLATE] Allez-vous en auberge de jeunesse ?"
+          },
+          "nombre de nuitées": {
+            "description": "[TO_TRANSLATE] 💡 Déclarez ici les nuits passées en auberge de jeunesse (dortoir).",
+            "question": "[TO_TRANSLATE] Combien de nuits passez-vous en auberge de jeunesse par an ?"
+          }
+        },
+        "locations": {
+          "présent": {
+            "description": "[TO_TRANSLATE] 💡 Déclarez ici les nuits passées en locations meublées de type Airbnb ou Abritel.",
+            "question": "[TO_TRANSLATE] Allez-vous en vacances en location meublée (type Airbnb) ?"
+          },
+          "nombre de nuitées": {
+            "description": "[TO_TRANSLATE] 💡 Déclarez ici les nuits passées en location meublée (Airbnb, Abritel...).",
+            "question": "[TO_TRANSLATE] Combien de nuits passez-vous en locations meublées par an ?"
+          }
+        },
+        "échange": {
+          "présent": {
+            "description": "[TO_TRANSLATE] 💡 Déclarez ici les nuits passées en échange de maison (HomeExchange, SwitchHome...).",
+            "question": "[TO_TRANSLATE] Pratiquez-vous l'échange de maison ?"
+          },
+          "nombre de nuitées": {
+            "description": "[TO_TRANSLATE] 💡 Déclarez ici les nuits passées en échange de maison (HomeExchange, SwitchHome...)",
+            "question": "[TO_TRANSLATE] Combien de nuits passez-vous en échange de maison par an ?"
+          }
+        },
+        "famille ou amis": {
+          "présent": {
+            "question": "[TO_TRANSLATE] Allez-vous chez des amis ou de la famille ?"
+          }
+        },
+        "résidence secondaire": {
+          "présent": {
+            "question": "[TO_TRANSLATE] Possédez-vous une résidence secondaire ?"
+          },
+          "surface": {
+            "titre": "[TO_TRANSLATE] Surface",
+            "question": "[TO_TRANSLATE] Quelle est la surface de votre résidence secondaire ?"
+          },
+          "localisation": {
+            "titre": "[TO_TRANSLATE] Localisation",
+            "description": "[TO_TRANSLATE] Si votre résidence secondaire se situe en ville, sur le littoral, privilégiez \"littoral\".",
+            "question": "[TO_TRANSLATE] Où se situe votre résidence secondaire ?"
+          },
+          "durée": {
+            "description": "[TO_TRANSLATE] Ne renseignez bien que le temps que vous y passez vous. Si votre résidence secondaire est utilisée par d'autres (famille, amis), l'empreinte associée à cet usage leur est imputé.",
+            "question": "[TO_TRANSLATE] Combien de temps passez-vous dans votre résidence secondaire chaque année ?",
+            "nuitées week end": {
+              "nombre": {
+                "question": "[TO_TRANSLATE] Combien de week-ends passez-vous dans votre maison secondaire ?"
+              }
+            },
+            "nuitées semaine": {
+              "nombre": {
+                "question": "[TO_TRANSLATE] Combien de semaines passez-vous dans votre maison secondaire ?"
+              }
+            }
+          },
+          "saison": {
+            "question": "[TO_TRANSLATE] À quelle(s) saison(s) vous rendez-vous majoritairement dans votre résidence secondaire ?"
+          }
+        },
+        "bateau croisière": {
+          "présent": {
+            "question": "[TO_TRANSLATE] Partez-vous en croisière pour les vacances ?"
+          }
+        }
+      },
+      "piscine": {
+        "surface": {
+          "description": "[TO_TRANSLATE] > ℹ️ Cette règle provient du modèle [`futureco-data`](https://github.com/laem/futureco-data).\n\n\n💡 Pensez à prendre en compte **les consommations d'énergie de la piscine dans celles de votre logement**. Votre facture devrait d'ailleurs être fortement impactée si votre piscine est chauffée !",
+          "question": "[TO_TRANSLATE] Quelle est la taille de votre piscine ?"
+        },
+        "type": {
+          "description": "[TO_TRANSLATE] Il est question ici de piscine privées **enterrées**, et non de piscines hors-sol, dont l'empreinte carbone est bien inférieure. Cette option sera néanmoins disponible prochainement !",
+          "question": "[TO_TRANSLATE] Votre logement dispose-t-il d'une piscine privée ?"
+        }
+      },
+      "hébergement": {
+        "nuitées": {
+          "titre": "[TO_TRANSLATE] Nuitées d'hébergement",
+          "description": "[TO_TRANSLATE] Choissiezez le(s) type(s) d'hébergement que vous avez utilisé lors de vos déplacements professionnels de l'année passée. Vous pouvez en sélectionner plusieurs.",
+          "question": "[TO_TRANSLATE] Dans quel(s) type(s) d'hébergement(s) vous logez lors de vos déplacements professionnels ?",
+          "hotel": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Allez-vous réserver une chambre d'hôtel ?"
+            },
+            "nombre de nuitées": {
+              "description": "[TO_TRANSLATE] Renseignez ici les nuits passées dans un hôtel dans le cadre de vos déplacements professionnels.",
+              "question": "[TO_TRANSLATE] Combien de nuits avez-vous passé à l'hôtel lors de vos déplacements professionnels l'année passée ?"
+            }
+          },
+          "résidence de tourisme": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Allez-vous réserver une résidence de tourisme ?"
+            },
+            "nombre de nuitées": {
+              "description": "[TO_TRANSLATE] Renseignez ici les nuits passées en résidence de tourisme, apparhôtel ou vilage vacances",
+              "question": "[TO_TRANSLATE] Combien de nuits allez-vous passer dans une résidence de tourisme ?"
+            }
+          },
+          "camping": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Allez-vous réserver un emplacement de camping ?"
+            },
+            "nombre de nuitées": {
+              "description": "[TO_TRANSLATE] Renseignez ici les nuits passées en camping (tente, hamac, bungalow...).",
+              "question": "[TO_TRANSLATE] Combien de nuits allez-vous passer en camping par an pendant votre séjour ?"
+            }
+          },
+          "auberge de jeunesse": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Allez-vous réserver une place en auberge de jeunesse ?"
+            },
+            "nombre de nuitées": {
+              "description": "[TO_TRANSLATE] Renseignez ici les nuits passées en auberge de jeunesse (dortoir).",
+              "question": "[TO_TRANSLATE] Combien de nuits allez-vous passer en auberge de jeunesse pendant votre séjour ?"
+            }
+          },
+          "locations": {
+            "présent": {
+              "description": "[TO_TRANSLATE] 💡 Déclarez ici les nuits passées en locations meublées de type Airbnb ou Abritel.",
+              "question": "[TO_TRANSLATE] Combien de nuits avez-vous passé dans des locations meublées (type Airbnb) lors de vos déplacements professionnels l'année passée ?"
+            },
+            "nombre de nuitées": {
+              "description": "[TO_TRANSLATE] Renseignez ici les nuits passées en location meublée (Airbnb, Abritel...).",
+              "question": "[TO_TRANSLATE] Combien de nuits avez-vous passé dans des locations meublées lors de vos déplacements professionnels l'année passée ?"
+            }
+          },
+          "famille ou amis": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Etes-vous allé chez des amis ou de la famille ?"
+            }
+          }
+        },
+        "aquatique": {
+          "titre": "[TO_TRANSLATE] Piscines, spa, jacuzzi",
+          "description": "[TO_TRANSLATE] Même si vous ne comptez pas les utiliser, renseignez quand même ce dont votre hébergement est équipé.",
+          "question": "[TO_TRANSLATE] Votre hébergement est-t-il équipé d'une piscine ou d'un spa, sauna, bain nordique, etc. ?",
+          "piscine non chauffée": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Allez-vous disposer d'une piscine non chauffée ?"
+            }
+          },
+          "piscine chauffée": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Allez-vous disposer d'une piscine chauffée ?"
+            }
+          },
+          "spa jacuzzi": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Allez-vous disposer d'un spa/jacuzzi ?"
+            }
+          }
+        }
+      },
+      "extérieur": {
+        "titre": "[TO_TRANSLATE] Extérieur (jardin, terrasse)",
+        "description": "[TO_TRANSLATE] Nous essayons ici de couvrir les éléments principaux d'un jardin individuel type. Il manque encore des éléments, qui seront ajoutés progressivement.",
+        "question": "[TO_TRANSLATE] Que possédez-vous dans votre extérieur (jardin, balcon) ?",
+        "salon de jardin bois": {
+          "présent": {
+            "question": "[TO_TRANSLATE] Possédez-vous un salon de jardin en bois ?"
+          }
+        },
+        "salon de jardin résine ou métal": {
+          "présent": {
+            "question": "[TO_TRANSLATE] Possédez-vous un salon de jardin en résine ou métal ?"
+          }
+        },
+        "tondeuse électrique ou robot": {
+          "présent": {
+            "question": "[TO_TRANSLATE] Possédez-vous une tondeuse électrique ou robot ?"
+          }
+        },
+        "tondeuse thermique": {
+          "présent": {
+            "question": "[TO_TRANSLATE] Possédez-vous une tondeuse thermique ?"
+          }
+        },
+        "barbecue électrique ou gaz": {
+          "présent": {
+            "question": "[TO_TRANSLATE] Possédez-vous un barbecue électrique ou gaz ?"
+          }
+        },
+        "barbecue charbon": {
+          "présent": {
+            "question": "[TO_TRANSLATE] Possédez-vous un barbecue au charbon ?"
+          }
+        }
+      },
+      "construction": {
+        "rénovation": {
+          "travaux": {
+            "description": "[TO_TRANSLATE] Votre logement n'est pas récent, il est donc fort possible qu'il ait subi des travaux d'entretien et rénovation, que vous pouvez renseigner ici si vous les connaissez.",
+            "question": "[TO_TRANSLATE] Des travaux de rénovation ont-ils été réalisés dans votre logement (hors rafraîchissement) depuis 2000 ?",
+            "rénovation": {
+              "présent": {
+                "question": "[TO_TRANSLATE] Avez-vous réalisé des travaux de rénovation (second d'oeuvre) ?"
+              }
+            },
+            "isolation": {
+              "présent": {
+                "question": "[TO_TRANSLATE] Avez-vous réalisé des travaux d'isolation ?"
+              }
+            },
+            "chauffage": {
+              "présent": {
+                "question": "[TO_TRANSLATE] Avez-vous changé de système de chauffage ?"
+              }
+            },
+            "extension": {
+              "présent": {
+                "question": "[TO_TRANSLATE] Avez-vous réalisé une extension de votre logement ?"
+              },
+              "taille": {
+                "question": "[TO_TRANSLATE] Quelle est la taille de l'extension réalisée (en m²) ?"
+              }
+            }
+          }
+        }
+      },
+      "climatisation": {
+        "présent": {
+          "description": "[TO_TRANSLATE] La climatisation utilise de l'électricité, que vous devez saisir en kWh ou en € dans la question électricité. L'empreinte de l'électricité consommée par le climatiseur est donc déjà calculée. \n\nMais en plus de cela, un climatiseur rejette d'autres gaz à effet de serre : d'où la nécessité de poser cette question.",
+          "question": "[TO_TRANSLATE] Utilisez-vous un système de climatisation pour refroidir votre logement (climatiseur électrique, pompe à chaleur) ?"
+        },
+        "nombre": {
+          "question": "[TO_TRANSLATE] Combien de climatiseurs électriques possédez-vous ?"
+        }
+      },
+      "chauffage": {
+        "titre": "[TO_TRANSLATE] Energie logement",
+        "description": "[TO_TRANSLATE] > Cette question couvre l'ensemble des sources d'énergie qui vous permet d'alimenter vos chauffages, votre chauffe-eau, vos plaques de cuisson, etc.\n\nCertains logements utilisent uniquement de l'électricité, d'autres sont entièrement chauffés au gaz, et plus rarement au bois ou au fioul.\nDans d'autres situations encore, un logement peut être chauffé principalement via des chauffages électriques ou une pompe à chaleur,\nmais avec un appoint bois, par exemple. Enfin, il est possible de prendre en compte également vos consommations de gaz pour votre van ou camping-car.\n\nCochez tous les modes que vous utilisez.",
+        "question": "[TO_TRANSLATE] Quel type d'énergie utilisez-vous pour le chauffage de votre logement, eau chaude, cuisson, etc. ?",
+        "PAC": {
+          "présent": {
+            "question": "[TO_TRANSLATE] Votre logement est-il chauffé via une pompe à chaleur ?"
+          }
+        },
+        "électricité": {
+          "présent": {
+            "question": "[TO_TRANSLATE] Votre logement est-il chauffé à l'électricité ?"
+          }
+        },
+        "gaz": {
+          "présent": {
+            "question": "[TO_TRANSLATE] Votre logement est-il chauffé au gaz ?"
+          },
+          "consommation": {
+            "description": "[TO_TRANSLATE] Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures de gaz et d'électricité ou sur votre compte en ligne sur le site de votre fournisseur.\n\n> Il se peut que votre copropriété ne vous communique pas la consommation en kWh de votre logement, quand la chaudière est centralisée. Cela dit, elle doit vous fournir le montant en €, que vous pourrez saisir ci-dessous pour estimer vos kWh.",
+            "question": "[TO_TRANSLATE] Quelle est la consommation annuelle de gaz de votre foyer ?"
+          },
+          "consommation estimée via le coût": {
+            "saisie": {
+              "question": "[TO_TRANSLATE] Pas de facture ? Entrez vos dépenses approximatives par mois"
+            }
+          },
+          "biogaz": {
+            "description": "[TO_TRANSLATE] Le biogaz ou biométhane, est un gaz fabriqué à partir de déchets organiques (déchets ménagers, fumier, déchets de pelouse, cultures, etc.), contrairement au gaz fossile aussi appelé de façon trompeuse \"naturel\", qui lui est extrait comme le pétrole depuis le sous-sol norvégien, russe, etc.\n\nDepuis quelques années, il est possible de souscrire à un contrat qui garantit l'injection sur le réseau de gaz français de la même quantité de biométhane que sa propre consommation. Le gaz que vous consommez dans votre logement sera de toute façon un mélange principalement composé de la molécule de méthane (CH₄), mais pour chaque kWh de gaz consommé, il aura été injecté \"en votre nom\" 1 kWh de biométhane.\n\n> Contrairement au gaz, l'électricité *ne se stocke pas*, c'est pourquoi nous ne proposons pas d'option \"électricité verte\" dans le simulateur.\n\nAttention, il existe des offres à 10%, 20% de biométhane seulement, si c'est le cas répondez \"non\".",
+            "question": "[TO_TRANSLATE] Avez-vous souscrit à un contrat gaz incluant du biogaz (ou biométhane) ?"
+          }
+        },
+        "biogaz": {
+          "part": {
+            "description": "[TO_TRANSLATE] Il existe peu de vendeurs de gaz proposant des contrats 100% biogaz, mais il en existe (en septembre 2022).\nPar contre, le premier vendeur de gaz français propose à ses clients une option biogaz avec une proportion reglable moyennant un coût supplémentaire (significatif mais qui ne fait pas non plus doubler la facture). N'hésitez pas à en parler à un conseiller.",
+            "question": "[TO_TRANSLATE] Quelle est la part de biogaz garantie par votre contrat de gaz ?"
+          }
+        },
+        "bouteille gaz": {
+          "présent": {
+            "question": "[TO_TRANSLATE] Utilisez-vous des bouteille de gaz ?"
+          },
+          "consommation": {
+            "description": "[TO_TRANSLATE] Pour simplifier la réponse à cette question, nous vous proposons de rentrer directement le nombre de bouteilles de gaz que vous consommez.\nOn considère ici une capacité de 13kg, modèle le plus répandu et généralement utilisé pour le gaz de cuisson.\n\nSi vous souhaitez répondre en kilogrammes, car la taille de la bouteille ne vous correspond pas, n'hésitez pas à utiliser l'aide à la conversion.",
+            "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle en bouteilles de gaz (13 kg) ?"
+          },
+          "consommation estimée via le poids": {
+            "saisie": {
+              "question": "[TO_TRANSLATE] Vous utilisez un format de bonbonne différent ? Entrez votre consommation annuelle en kg."
+            }
+          }
+        },
+        "citerne propane": {
+          "présent": {
+            "question": "[TO_TRANSLATE] Votre logement est-il chauffé via une citerne de propane ?"
+          },
+          "consommation": {
+            "description": "[TO_TRANSLATE] Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.",
+            "question": "[TO_TRANSLATE] Quelle est la consommation annuelle de gaz propane en citerne de votre foyer ?"
+          },
+          "consommation estimée via le coût": {
+            "saisie": {
+              "question": "[TO_TRANSLATE] Pas de facture ? Entrez vos dépenses approximatives par mois"
+            }
+          }
+        },
+        "fioul": {
+          "présent": {
+            "question": "[TO_TRANSLATE] Votre logement est-il chauffé au fioul ?"
+          },
+          "consommation": {
+            "description": "[TO_TRANSLATE] Astuce : Vous trouverez vos consommations annuelles d'énergie sur votre facture de fioul ou sur votre compte en ligne sur le site de votre fournisseur.",
+            "question": "[TO_TRANSLATE] Quelle est la consommation annuelle de fioul domestique de votre foyer ?"
+          },
+          "consommation estimée via le coût": {
+            "saisie": {
+              "question": "[TO_TRANSLATE] Pas de facture ? Entrez vos dépenses approximatives par mois"
+            }
+          }
+        },
+        "bois": {
+          "présent": {
+            "question": "[TO_TRANSLATE] Votre logement est-il chauffé au bois ?"
+          },
+          "type": {
+            "titre": "[TO_TRANSLATE] type de bois",
+            "question": "[TO_TRANSLATE] Quel type de bois utilisez-vous ?",
+            "granulés": {
+              "consommation": {
+                "description": "[TO_TRANSLATE] > 💡 Astuce : en moyenne, 1kg de granulés produisent 4.6 kWh. Vous pouvez donc multiplier votre consommation annuelle (en tonnes) par 4600 kWh.",
+                "question": "[TO_TRANSLATE] Quelle est la consommation annuelle de bois en granulés de votre foyer ?"
+              },
+              "consommation estimée via le coût": {
+                "saisie": {
+                  "question": "[TO_TRANSLATE] Pas de facture ? Entrez vos dépenses annuelles approximatives"
+                }
+              }
+            },
+            "bûches": {
+              "consommation": {
+                "description": "[TO_TRANSLATE] La consommation de bois de chauffage se compte traditionnellement en stères, ce qui correspond approximativement à un mètre cube de bûches.\n\n![](https://upload.wikimedia.org/wikipedia/commons/7/7c/Raummeter_hg.jpg)",
+                "question": "[TO_TRANSLATE] Quelle la consommation annuelle de bois en bûches de votre foyer ?"
+              },
+              "consommation estimée via le coût": {
+                "saisie": {
+                  "question": "[TO_TRANSLATE] Pas de facture ? Entrez vos dépenses annuelles approximatives"
+                }
+              }
+            }
+          }
+        },
+        "réseau de chaleur": {
+          "présent": {
+            "question": "[TO_TRANSLATE] Votre logement est-il chauffé via un réseau de chaleur ?"
+          },
+          "consommation": {
+            "description": "[TO_TRANSLATE] Le contenu carbone du kWh de chaleur issu d'un réseau de chaleur dépend fortement du réseau auquel vous êtes raccordé.\n\nPour le moment, nous nous basons sur un facteur d'émission moyen : nous avons fait le choix de ne pas vous demander votre adresse.\n\nAstuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.\n\n> Il se peut que votre copropriété ne vous communique pas la consommation en kWh de votre logement, quand la chaudière est centralisée. Cela dit, elle doit vous fournir le montant en €, que vous pourrez saisir ci-dessous pour estimer vos kWh.",
+            "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle d'énergie via le réseau de chaleur raccordé à votre foyer ?"
+          },
+          "consommation estimée via le coût": {
+            "saisie": {
+              "question": "[TO_TRANSLATE] Pas de facture ? Entrez vos dépenses approximatives par mois"
+            }
+          }
+        },
+        "baisse température": {
+          "nombre degrés": {
+            "description": "[TO_TRANSLATE] Les ¾ de la consommation d’énergie d’un ménage sont consacrés au chauffage et à l’eau chaude.\n\nCette consommation d’énergie, en plus d’avoir un coût financier non négligeable, augmente l’empreinte carbone des ménages.\n\nElle peut toutefois facilement être limitée en diminuant la température des pièces occupées sans perdre de confort thermique ou bien ressentir une sensation de froid (à condition d’avoir des logements bien isolés).\n\nPar exemple, régler la température entre 19° et 21°C dans les pièces occupées la journée (et 17°C la nuit ou dans les pièces peu occupées).\n\nEn effet, baisser la température de chauffage d’1°C représente une économie d’énergie de 7%.",
+            "question": "[TO_TRANSLATE] De combien de degrés seriez-vous prêt à diminuer la température de votre logement ?"
+          }
+        }
+      },
+      "bureaux": {
+        "question rhétorique": {
+          "titre": "[TO_TRANSLATE] Question d'information sur les consommation d'énergie associée à la vie de bureau et au télétravail (Chauffage, climatisation, électricité)",
+          "description": "[TO_TRANSLATE] Cette catégorie ne dépend pas de vos réponses. L'empreinte associée est une moyenne nationale, nous procédons ainsi car définir précisément votre consommation d'énergie liée à votre activité professionnelle est complexe et necessiterait de nombreuses informations que vous n'avez pas forcement à disposition.",
+          "question": "[TO_TRANSLATE] Nous attribuons à chaque employé l'empreinte de sa \"vie de bureau\" sur son lieu de travail et chez lui (chauffage, climatisation, électricité...). Cela représente autour de 280kg de CO2e par personne par an."
+        }
+      },
+      "température": {
+        "description": "[TO_TRANSLATE] Cette question nous permet simplement de ne pas vous proposer de baisser la température quand elle est déjà relativement faible.",
+        "question": "[TO_TRANSLATE] À quelle température chauffez-vous votre logement ?"
+      },
+      "propriétaire": {
+        "description": "[TO_TRANSLATE] En tant que locataire, il est évidemment délicat de faire les investissements qui améliorent l'empreinte du logement : isolation, changement de source d'énergie sont impossibles sauf à tomber sur un propriétaire particulièrement conciliant.\n\nPourtant, la loi pourrait dès 2023 être un soutien de poids : les passoires thermiques [seront interdites à la location](https://www.gouvernement.fr/interdiction-a-la-location-des-logements-avec-une-forte-consommation-d-energie-des-2023), forçant les propriétaires à lancer des travaux substentiels.",
+        "question": "[TO_TRANSLATE] Etes-vous propriétaire de votre logement ?"
+      },
+      "chauffage collectif": {
+        "question": "[TO_TRANSLATE] Votre chauffage est-il collectif ou individuel ?"
+      },
+      "nombre colocataires": {
+        "question": "[TO_TRANSLATE] Combien de colocataires pourriez-vous accueillir ?"
+      },
+      "installer photovoltaique": {
+        "nombre panneaux": {
+          "question": "[TO_TRANSLATE] Combien de panneaux pourriez-vous installer ?"
+        },
+        "zone climatique": {
+          "question": "[TO_TRANSLATE] Où se situe votre logement en France ?"
+        }
+      }
+    },
+    "divers": {
+      "électroménager": {
+        "appareils": {
+          "description": "[TO_TRANSLATE] L'essentiel de l'empreinte de l'électroménager réside dans les appareils que nous achetons.\n\n> ✨️ Par simplicité, ne renseignez que les appareils récents : un réfrigérateur âgé de 10 ans a déjà été bien amorti.\n\nSi tous vos appareils ne sont pas proposés dans cette liste, ce n'est pas grave, ce test ne se veut pas exhaustif.",
+          "question": "[TO_TRANSLATE] Quels appareils électroménagers possédez-vous ?",
+          "réfrigérateur": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre de réfrigérateur",
+              "question": "[TO_TRANSLATE] Combien de réfrigérateurs possédez-vous ?"
+            }
+          },
+          "petit réfrigérateur": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre de petits réfrigérateurs",
+              "question": "[TO_TRANSLATE] Combien de petits réfrigérateurs possédez-vous ?"
+            }
+          },
+          "congélateur": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre de congélateur",
+              "question": "[TO_TRANSLATE] Combien de congélateurs possédez-vous ?"
+            }
+          },
+          "lave-linge": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre de lave-linge",
+              "question": "[TO_TRANSLATE] Combien de lave-linge possédez-vous ?"
+            }
+          },
+          "sèche-linge": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre de sèche-linge",
+              "question": "[TO_TRANSLATE] Combien de sèche-linge possédez-vous ?"
+            }
+          },
+          "lave-vaisselle": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre de lave-vaisselle",
+              "question": "[TO_TRANSLATE] Combien de lave-vaisselle possédez-vous ?"
+            }
+          },
+          "hotte": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre de hotte",
+              "question": "[TO_TRANSLATE] Combien de hotte possédez-vous ?"
+            }
+          },
+          "four": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre de four",
+              "question": "[TO_TRANSLATE] Combien de fours possédez-vous ?"
+            }
+          },
+          "micro-onde": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre de micro-onde",
+              "question": "[TO_TRANSLATE] Combien de micro-ondes possédez-vous ?"
+            }
+          },
+          "plaques": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre de plaques",
+              "question": "[TO_TRANSLATE] Combien de plaques possédez-vous ?"
+            }
+          },
+          "bouilloire": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre de bouilloire",
+              "question": "[TO_TRANSLATE] Combien de bouilloire possédez-vous ?"
+            }
+          },
+          "cafetière": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre de cafetière",
+              "question": "[TO_TRANSLATE] Combien de cafetière possédez-vous ?"
+            }
+          },
+          "aspirateur": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre de aspirateur",
+              "question": "[TO_TRANSLATE] Combien de aspirateur possédez-vous ?"
+            }
+          },
+          "robot cuisine": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre de robot cuisine",
+              "question": "[TO_TRANSLATE] Combien de robot cuisine possédez-vous ?"
+            }
+          }
+        }
+      },
+      "textile": {
+        "empreinte": {
+          "titre": "[TO_TRANSLATE] Empreinte de sa garde-robe",
+          "description": "[TO_TRANSLATE] À vous de nous dire ce que vous avez mis dans vos sacs de shopping cette année, ou dans une année représentative si vous faites rarement les magasins.\n\n> Si vous achetez un pull tous 2 ans, arrondissez à `1`. Si vous achetez un pull tous les 3 ans, arrondissez à `0`.\n\nNe renseignez que les produits neufs. Nous excluons du calcul l'achat en friperies, la récupération, l'occasion.",
+          "question": "[TO_TRANSLATE] Quels vêtements achetez-vous neufs en général dans une année ?"
+        },
+        "t-shirt": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de t-shirt achetés sur une année"
+          }
+        },
+        "pantalon": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de pantalons/jeans achetés sur une année"
+          }
+        },
+        "short": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de shorts achetés sur une année"
+          }
+        },
+        "sweat": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de sweats achetés sur une année"
+          }
+        },
+        "robe": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de robes achetées sur une année"
+          }
+        },
+        "chemise": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de chemises achetées sur une année"
+          }
+        },
+        "pull": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de pulls achetés sur une année"
+          }
+        },
+        "chaussure": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de chaussures achetées sur une année"
+          }
+        },
+        "manteau": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de manteaux achetés sur une année"
+          }
+        },
+        "petit article": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de petits articles génériques achetés sur une année"
+          }
+        },
+        "gros article": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de gros articles génériques achetés sur une année"
+          }
+        }
+      },
+      "tabac": {
+        "consommation par semaine": {
+          "description": "[TO_TRANSLATE] 💡 Renseignez ici votre consommation de paquets de cigarettes par semaine. On considère qu'un paquet contient 20 cigarettes.\nSi vous fumez des roulées, pensez à adapter votre calcul.\n\nÀ noter que l'impact du tabac n'est pas seulement carbone : il est à l'origine de déforestation, de l'utilisation importante d'eau et de terres agricoles !\n\n> Pour le moment, nous ne considérons que les cigarettes classiques.\n> La cigarette électronique n'est pas encore prise en compte dans nos calculs, faute de données !",
+          "question": "[TO_TRANSLATE] Quelle est votre consommation par semaine de tabac ?"
+        }
+      },
+      "produits consommables": {
+        "consommation": {
+          "description": "[TO_TRANSLATE] Cette question nous permet d'évaluer *simplement* l'empreinte climat de vos consommations en produits d'hygiène \n(parfumerie, gels douche, shampoings, déodorants, dentifrices, maquillage, crèmes de soin, crèmes solaires...) et en produits d'entretien \n(lessives, produits pour le lave-vaisselle, produits ménagers...) sur la base de 3 niveaux de consommation.",
+          "question": "[TO_TRANSLATE] Comment estimeriez-vous votre consommation de produits d'hygiène (savon, maquillage...) et d'entretien (lessive, produits ménagers...) par mois ?"
+        }
+      },
+      "numérique": {
+        "ia": {
+          "nombre de requêtes par jour": {
+            "description": "[TO_TRANSLATE] Cette question permet d’évaluer l’impact carbone lié à l’usage de l’intelligence artificielle générative. Ces outils nécessitent d’importantes ressources informatiques et énergétiques pour fonctionner, chaque requête sollicitant des serveurs à forte consommation électrique partout dans le monde.",
+            "question": "[TO_TRANSLATE] Combien de requêtes à des modèles d'IA (ChatGPT, Copilot, Gemini…) effectuez-vous par jour dans le cadre de votre activité professionnelle ?"
+          }
+        },
+        "visio": {
+          "durée journalière": {
+            "description": "[TO_TRANSLATE] Seules les heures liées à votre activité professionnelle doivent être comptabilisées.",
+            "question": "[TO_TRANSLATE] Combien d'heures passez-vous par jour en moyenne en visioconférence dans le cadre de votre activité professionnelle ?"
+          }
+        },
+        "internet": {
+          "durée journalière": {
+            "description": "[TO_TRANSLATE] Seules les heures liées à votre activité professionnelle doivent être comptabilisées.",
+            "question": "[TO_TRANSLATE] Combien d'heures passez-vous par jour sur internet ?"
+          }
+        },
+        "appareils": {
+          "description": "[TO_TRANSLATE] Seuls les équipements numériques récents sont pris en compte, car l’essentiel de leur impact provient de leur fabrication. Pour les anciens, cet impact est déjà “amorti”, c’est-à-dire réparti sur leurs années d’utilisation.",
+          "question": "[TO_TRANSLATE] Quels équipements numériques récent (moins de 3ans)  utilisez-vous au bureau et en télétravail ?",
+          "téléphone": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre de smartphones",
+              "question": "[TO_TRANSLATE] Nombre de smartphones"
+            }
+          },
+          "ordinateur portable": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre d'ordinateurs portables",
+              "question": "[TO_TRANSLATE] Nombre d'ordinateurs portables"
+            }
+          },
+          "ordinateur fixe": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre d'ordinateurs fixes",
+              "question": "[TO_TRANSLATE] Nombre d'ordinateurs fixes"
+            }
+          },
+          "écran": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre d''écrans'",
+              "question": "[TO_TRANSLATE] Nombre d'écrans"
+            }
+          },
+          "tablette": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre de tablettes",
+              "question": "[TO_TRANSLATE] Nombre de tablettes"
+            }
+          },
+          "imprimante": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre d'imprimantes",
+              "question": "[TO_TRANSLATE] Nombre d'imprimantes"
+            }
+          }
+        }
+      },
+      "loisirs": {
+        "activité": {
+          "titre": "[TO_TRANSLATE] Activités culturelles et de loisirs",
+          "description": "[TO_TRANSLATE] Renseignez ce que vous pensez faire pendant votre séjour.",
+          "question": "[TO_TRANSLATE] Quelles types d'activités comptez-vous faire pendant votre séjour ?",
+          "concerts et spectacles": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Vous arrive-t-il d'assister à des concerts ou spectacles ?"
+            }
+          },
+          "musées et monuments": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Vous arrive-t-il de visiter des musées, monuments et parcs nationaux ?"
+            }
+          },
+          "activité nature": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Allez-vous faire des activités de pleine nature ?"
+            }
+          },
+          "naviguation": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Allez-vous faire des activités de naviguation ?"
+            }
+          },
+          "activité motorisée": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Allez-vous faire des activités motorisées  ?"
+            }
+          },
+          "footing": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Allez-vous faire des activités sportives"
+            }
+          },
+          "journée spa": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Allez-vous faire des activités sportives"
+            }
+          },
+          "édition": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Achetez-vous parfois des livres, revues ou journaux ?"
+            }
+          },
+          "pratique de la musique": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Possédez-vous un instrument de musique ?"
+            }
+          }
+        },
+        "sports": {
+          "titre": "[TO_TRANSLATE] Pratiques sportives",
+          "question": "[TO_TRANSLATE] Quels sont les sports que vous pratiquez régulièrement ?",
+          "individuel extérieur": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Faites-vous du roller ou du skateboard ?"
+            }
+          },
+          "balle ou ballon": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Pratiquez-vous un sport de raquette ?"
+            }
+          },
+          "aquatique": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Pratiquez-vous un sport en piscine ?"
+            }
+          },
+          "martial ou combat": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Pratiquez-vous un art martial ou de combat ?"
+            }
+          },
+          "athlétisme": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Pratiquez-vous l'athlétisme ?"
+            }
+          },
+          "salle de sport": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Fréquentez-vous une salle de sport, fitness ou musculation ?"
+            }
+          },
+          "équitation": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Pratiquez-vous l'équitation ?"
+            }
+          },
+          "golf": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Pratiquez-vous le golf ?"
+            }
+          },
+          "nautique": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Pratiquez-vous un sport nautique ?"
+            }
+          },
+          "hiver montagne": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Pratiquez-vous un sport d'hiver ou de montagne ?"
+            }
+          },
+          "sports énergivores": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Pratiquez-vous un sport impliquant un véhicule motorisé ?"
+            }
+          },
+          "autres sports": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Pratiquez-vous un sport non listé ?"
+            }
+          }
+        },
+        "question rhétorique": {
+          "titre": "[TO_TRANSLATE] Info sur le quizz",
+          "question": "[TO_TRANSLATE] Avant de vous donner l'empreinte de votre séjour, nous vous proposons un petit quizz..."
+        }
+      },
+      "ameublement": {
+        "préservation": {
+          "description": "[TO_TRANSLATE] Pour éviter de vous demander de renseigner l'âge précis de tous les biens que vous possédez, nous avons défini un âge moyen pour chacun de vos objets(généralement autour 10 ans). Vous allongez ou réduisez cet âge moyen ici !\n\n> Nous cherchons ici à évaluer, non pas l'âge de vos objets avant que ces derniers deviennent inutilisables, mais leur âge quand leurs propriétaires décident de les remplacer par du neuf.",
+          "question": "[TO_TRANSLATE] Quelle relation entretenez-vous à vos objets, vos appareils, vos meubles ?"
+        },
+        "meubles": {
+          "titre": "[TO_TRANSLATE] Ameublement",
+          "description": "[TO_TRANSLATE] Renseignez ici les biens d'ameublement de moins de 10 ans qui composent l'intérieur de votre ; et seulement les produits achetés neufs, \nnous excluons ici l'achat d'occasion et en dépôt vente.\n\nN'oubliez pas vos meubles de cuisine !  \n\nNous considérons que tous les meubles sont utilisés par l'ensemble du foyer, même si potentiellement, certains ne le sont qu'à titre individuel (les lits par exemple), c'est une limitation du test.\n\nN'hésitez pas à utiliser les catégories petit meuble (inférieur à 10 kg comme un petit buffet ou une table basse par \nexemple) ou grand meuble (supérieur à 10 kg comme un grand bureau par exemple) dans le cas où vous ne parvenez pas à catégoriser ce que vous possédez dans le reste des propositions.",
+          "question": "[TO_TRANSLATE] Quels meubles de moins de 10 ans possédez-vous ?",
+          "armoire": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre d'armoires",
+              "question": "[TO_TRANSLATE] Combien d'armoires possédez-vous ?"
+            }
+          },
+          "canapé": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre de canapés",
+              "question": "[TO_TRANSLATE] Combien de canapés possédez-vous ?"
+            }
+          },
+          "matelas": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre de matelas",
+              "question": "[TO_TRANSLATE] Combien de matelas possédez-vous ?"
+            }
+          },
+          "lit": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre de lits",
+              "question": "[TO_TRANSLATE] Combien de lits possédez-vous ?"
+            }
+          },
+          "table": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre de tables",
+              "question": "[TO_TRANSLATE] Combien de tables possédez-vous ?"
+            }
+          },
+          "chaise": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre de chaises",
+              "question": "[TO_TRANSLATE] Combien de chaises possédez-vous ?"
+            }
+          },
+          "petit meuble": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre de petits meubles",
+              "question": "[TO_TRANSLATE] Combien de petits meubles possédez-vous ?"
+            }
+          },
+          "grand meuble": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre de grands meubles",
+              "question": "[TO_TRANSLATE] Combien de grands meubles (non inclu ailleurs) possédez-vous ?"
+            }
+          }
+        }
+      },
+      "autres produits": {
+        "niveau de dépenses": {
+          "titre": "[TO_TRANSLATE] Niveau de dépenses pour des produits manufacturés neufs",
+          "description": "[TO_TRANSLATE] Pour garder l'interface simple, nous proposons une estimation, via vos dépenses, de l'empreinte des biens de consommation\nque vous possédez et que vous ne pensez pas avoir inclus dans les questions précédentes.\n\nElle concerne : **les jeux, la décoration, le matériel de cuisine, le linge de maison, les matériaux pour les loisirs créatifs ou bricolage, les plantes, etc.**\n\n> 💡 Les ordres de grandeur en € proposés ici sont basés sur les statistiques INSEE des dépenses des ménages. Un Français moyen dépense 80€/mois pour ces postes de dépenses.",
+          "question": "[TO_TRANSLATE] Le test ne capte pas encore toutes vos consommations, comment estimeriez-vous votre niveau de dépenses en produits neufs (décoration d'intérieur, bricolage, jeux, loisirs créatifs, outils, etc.) ?"
+        }
+      },
+      "animaux domestiques": {
+        "empreinte": {
+          "titre": "[TO_TRANSLATE] Empreinte annuelle des animaux du foyer",
+          "description": "[TO_TRANSLATE] Seuls sont proposés des chiens et des chats qui sont les animaux de compagnie les plus courants. Si vous voyagez avec un autre type d'animal, cliquez sur \"Aucun\".",
+          "question": "[TO_TRANSLATE] Voyagez-vous avec un animal de compagnie, si oui lequel(s) ?",
+          "chats": {
+            "nombre": {
+              "question": "[TO_TRANSLATE] Combien de chats possédez-vous dans votre foyer ?"
+            }
+          },
+          "petit chien": {
+            "nombre": {
+              "question": "[TO_TRANSLATE] Combien de chiens possédez-vous dans votre foyer ?"
+            }
+          },
+          "chien moyen": {
+            "nombre": {
+              "question": "[TO_TRANSLATE] Combien de chiens possédez-vous dans votre foyer ?"
+            }
+          },
+          "gros chien": {
+            "nombre": {
+              "question": "[TO_TRANSLATE] Combien de chiens possédez-vous dans votre foyer ?"
+            }
+          }
+        }
+      }
+    },
+    "alimentation": {
+      "plats": {
+        "titre": "[TO_TRANSLATE] Empreinte des repas",
+        "description": "[TO_TRANSLATE] On inclut le repas du midi car il est directement lié au cadre professionnel : il existe parce que l’on travaille.\n\nQue le déjeuner soit pris au restaurant d’entreprise, avec des tickets restaurant fournis par l’employeur, ou à domicile en télétravail, c’est un impact induit par l’activité professionnelle et organisé en partie par l’entreprise.\n\nVous devez renseignez ici les 5 repas du midi de votre semaine de travail type.",
+        "question": "[TO_TRANSLATE] Comment se composent vos repas du midi sur une semaine type de travail ?",
+        "végétalien": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de plats végétaliens"
+          }
+        },
+        "végétarien": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de plats végétariens"
+          }
+        },
+        "viande blanche": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de plats viande blanche"
+          }
+        },
+        "viande rouge": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de plats viande rouge"
+          }
+        },
+        "poisson gras": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de plats poisson gras"
+          }
+        },
+        "poisson blanc": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de plats poisson blanc"
+          }
+        }
+      },
+      "petit déjeuner": {
+        "type": {
+          "description": "[TO_TRANSLATE] Si vous ne retrouvez pas exactement votre petit déjeuner, choisissez celui qui s'en rapproche le plus. \n\n> À noter : votre consommation de jus de fruits, café, thé, chocolat chaud est questionnée juste après.",
+          "question": "[TO_TRANSLATE] Quel sera le type de petit-déjeuner que vous prendrez durant votre séjour ?"
+        }
+      },
+      "local": {
+        "consommation": {
+          "description": "[TO_TRANSLATE] Cette question nous permet de corriger l'empreinte de votre régime alimentaire en fonction de votre habitude sur le caractère local de votre alimentation.\n\nNous considérons \"locaux\" les aliments qui sont issus de la région où vous vivez ou de régions proches.\n\nCe critère a un impact relativement faible, car la part du transport dans l'empreinte carbone des produits que nous consommons est faible devant les émissions liées à la production, la transformation ou l'emballage, surtout quand votre régime est carné.\n\nMais c'est toujours ça de gagné, et les avantages d'une consommation locale ne s'arrêtent pas à l'empreinte climat.",
+          "question": "[TO_TRANSLATE] Privilégiez-vous les produits locaux dans votre alimentation ?",
+          "options": {
+            "jamais": "[TO_TRANSLATE] Jamais",
+            "parfois": "[TO_TRANSLATE] Parfois",
+            "souvent": "[TO_TRANSLATE] Souvent",
+            "oui toujours": "[TO_TRANSLATE] Oui toujours"
+          }
+        }
+      },
+      "de saison": {
+        "consommation": {
+          "description": "[TO_TRANSLATE] Cette question nous permet de corriger l'empreinte de votre régime alimentaire en fonction de votre habitude sur le caractère de saison de votre alimentation.\n\nCet impact est relativement faible, car la part de produits de saison représente seulement 7% de l'alimentation moyenne d'un Français.\n\nMais c'est toujours ça de gagné, et les avantages d'une consommation de saison ne s'arrêtent pas à l'empreinte climat.\n\n> Mais quelle est la saison d'une pomme, d'un chou-fleur ?\n> Découvrez notre mini-site [Mes fruits et légumes de saison](https://mesfruitsetlegumesdesaison.fr).",
+          "question": "[TO_TRANSLATE] Pensez-vous privilégier les produits de saison durant votre séjour ?"
+        }
+      },
+      "déchets": {
+        "tri": {
+          "description": "[TO_TRANSLATE] Répondez \"Oui\" si le geste de tri est un geste automatique pour vous (même si vous ne disposez pas toujours de poubelles de tri à votre disposition). \n\nRépondez \"Oui parfois\" si ce n'est pas un réflexe et qu'il vous arrive parfois d'oublier. \n\nRépondez \"Non\" si vous ne faites jamais le tri.",
+          "question": "[TO_TRANSLATE] Avez-vous l'habitude de faire le tri au bureau ?"
+        },
+        "gestes": {
+          "description": "[TO_TRANSLATE] Les différents gestes que vous pourriez déjà mettre en place pour réduire l'empreinte de votre poubelle.",
+          "question": "[TO_TRANSLATE] Quels éco-gestes mettez-vous en place pour réduire vos déchets ?",
+          "compostage biodéchets": {
+            "présent": {
+              "description": "[TO_TRANSLATE] Les biodéchets regroupent les déchets alimentaires (mais pas tous !), les papiers et cartons souillés et une partie des déchets verts.",
+              "question": "[TO_TRANSLATE] Compostez-vous vos biodéchets ?"
+            }
+          },
+          "gaspillage alimentaire": {
+            "présent": {
+              "description": "[TO_TRANSLATE] Si vous faites peu ou pas d'efforts pour éviter de jeter vos aliments, répondez non. En moyenne, le gaspillage alimentaire reste la norme.",
+              "question": "[TO_TRANSLATE] Cherchez-vous à réduire votre gaspillage alimentaire (que les produits aient été cuisinés ou non) ?"
+            }
+          },
+          "stop pub": {
+            "présent": {
+              "description": "[TO_TRANSLATE] C'est un autocollant à placer sur votre boîte aux lettres qui informe les distributeurs de pub que vous refusez de recevoir des catalogues, des promotions, menus de restaurant et publicités en tout genre.\n\nCela n'empêche pas toute publicité, mais envoie un signal fort et réduit en général considérablement la quantité de déchets papiers reçus.",
+              "question": "[TO_TRANSLATE] Avez-vous un stop pub sur votre boîte aux lettres ?"
+            }
+          },
+          "acheter en vrac": {
+            "présent": {
+              "question": "[TO_TRANSLATE] Achetez-vous en vrac ?"
+            }
+          }
+        }
+      },
+      "boisson": {
+        "chaude": {
+          "description": "[TO_TRANSLATE] Cherchez ici à renseigner une consommation représentative de votre consommation, ce n'est pas grave si cela ne correspond pas à ce que vous buvez exactement\n\n_Précision_ : considérez le déca comme un café !",
+          "question": "[TO_TRANSLATE] Quelle est votre consommation de boissons chaudes par jour ? (en nombre de tasses par jour)",
+          "café": {
+            "nombre": {
+              "question": "[TO_TRANSLATE] Nombre de cafés par jour"
+            }
+          },
+          "thé": {
+            "nombre": {
+              "question": "[TO_TRANSLATE] Nombre de thés par jour"
+            }
+          },
+          "chocolat chaud": {
+            "nombre": {
+              "question": "[TO_TRANSLATE] Nombre de chocolats chauds par jour"
+            }
+          },
+          "chicorée": {
+            "nombre": {
+              "question": "[TO_TRANSLATE] Nombre de tasses de chicorée par jour"
+            }
+          }
+        },
+        "eau en bouteille": {
+          "consommateur": {
+            "description": "[TO_TRANSLATE] Si vous buvez principalement de l'eau du robinet et que votre consommation d'eau en bouteille se réduit à de rares occasions (par exemple un repas sur le pouce en boulangerie par semaine, avec leur fameux menu \"sandwich + dessert + boisson en bouteille plastique\"), répondez non.\n\n> Sachez que la consommation d'eau du robinet a une empreinte climat si faible que nous ne vous poserons pas la question de votre consommation alimentaire d'eau.",
+            "question": "[TO_TRANSLATE] Buvez-vous votre eau en bouteille ?"
+          }
+        },
+        "sucrées": {
+          "question": "[TO_TRANSLATE] Quelle est votre consommation de boissons sucrées au travail ? (en nombre de verres par jour)",
+          "sirop": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre de verres de sirop",
+              "question": "[TO_TRANSLATE] Combien de verres de sirop allez-vous boire ?"
+            }
+          },
+          "cocktail sans alcool": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre de cocktail sans alcool",
+              "question": "[TO_TRANSLATE] Combien de cocktail sans alcool allez-vous boire ?"
+            }
+          },
+          "soda": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre de verres de soda",
+              "question": "[TO_TRANSLATE] Combien de verres de soda allez-vous boire ?"
+            }
+          },
+          "jus de fruit": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre de verres de jus de fruit",
+              "question": "[TO_TRANSLATE] Combien de verres de jus de fruit allez-vous boire ?"
+            }
+          },
+          "bière demi": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre de verres de sirop",
+              "question": "[TO_TRANSLATE] Combien de demis de bière allez-vous boire ?"
+            }
+          },
+          "vin": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre de verres de vin",
+              "question": "[TO_TRANSLATE] Combien de verres de vin allez-vous boire ?"
+            }
+          },
+          "champagne": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre de verres de champagne",
+              "question": "[TO_TRANSLATE] Combien de verres de champagne allez-vous boire ?"
+            }
+          },
+          "cocktail": {
+            "nombre": {
+              "titre": "[TO_TRANSLATE] Nombre de cocktail",
+              "question": "[TO_TRANSLATE] Combien de cocktail allez-vous boire ?"
+            }
+          }
+        }
+      },
+      "type de lait": {
+        "question": "[TO_TRANSLATE] Quel sera le type de lait que vous consommerez ?"
+      }
+    }
+  }
+}
