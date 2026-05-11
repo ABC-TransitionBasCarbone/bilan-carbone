@@ -104,9 +104,7 @@ export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): Pa
 
     const rawEfValueStr = col('emissionFactorValue')
     let emissionFactorValue: number | undefined = undefined
-    if (!rawEfValueStr) {
-      rowErrors.push({ key: 'missingEmissionFactorValue' })
-    } else {
+    if (rawEfValueStr) {
       const parsed = parseNumericValue(rawEfValueStr)
       if (parsed === null) {
         rowErrors.push({ key: 'invalidEmissionFactorValue', value: rawEfValueStr })
@@ -116,16 +114,17 @@ export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): Pa
     }
 
     const emissionFactorUnitLabel = col('emissionFactorUnit')
-    const emissionFactorUnit = mapUnitLabelFromTranslationsWithList(
-      emissionFactorUnitLabel,
-      locale,
-      Object.values(Unit),
-    )
-    if (!emissionFactorUnitLabel) {
-      rowErrors.push({ key: 'missingEmissionFactorUnit' })
-    } else if (!emissionFactorUnit) {
-      rowErrors.push({ key: 'invalidUnit', value: emissionFactorUnitLabel })
+    let emissionFactorUnit: string | undefined = undefined
+    if (emissionFactorUnitLabel) {
+      const mapped = mapUnitLabelFromTranslationsWithList(emissionFactorUnitLabel, locale, Object.values(Unit))
+      if (!mapped) {
+        rowErrors.push({ key: 'invalidUnit', value: emissionFactorUnitLabel })
+      } else {
+        emissionFactorUnit = mapped
+      }
     }
+
+    const unit = col('unit') || undefined
 
     const rawValueStr = col('value')
     let value: number | undefined = undefined
@@ -182,9 +181,10 @@ export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): Pa
       siteName,
       subPost: subPost!,
       name,
+      unit,
       emissionFactorName,
-      emissionFactorValue: emissionFactorValue!,
-      emissionFactorUnit: emissionFactorUnit!,
+      emissionFactorValue,
+      emissionFactorUnit,
       value,
       type,
       caracterisation,

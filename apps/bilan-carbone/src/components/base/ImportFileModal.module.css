@@ -40,3 +40,19 @@
 .cellName {
   max-width: 16rem;
 }
+
+.groupHeader {
+  text-align: center !important;
+  font-weight: 600 !important;
+  border-bottom: 2px solid var(--mui-palette-divider) !important;
+  border-left: 2px solid var(--mui-palette-divider) !important;
+}
+
+.groupFirstCell {
+  border-left: 2px solid var(--mui-palette-divider) !important;
+}
+
+.warningArrow {
+  font-size: 0.9rem !important;
+  flex-shrink: 0;
+}

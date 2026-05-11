@@ -597,27 +597,31 @@ export const getEmissionFactorWithoutQuality = async (organizationId: string) =>
     },
   })
 
-export const getEmissionFactorByTitleValueAndUnit = async (
-  { title, value, unit }: { title: string; value: number; unit: string },
+export const findEmissionFactorsByNameAndUnit = (
+  title: string,
   locale: string,
-  organizationId: string,
-) => {
-  const candidates = await prismaClient.emissionFactor.findMany({
-    where: {
-      AND: [
-        { OR: [{ organizationId: null }, { organizationId }] },
-        { OR: [{ unit: unit as Unit }, { customUnit: unit }] },
-      ],
-      metaData: {
-        some: {
-          language: locale,
-          title,
-        },
-      },
+  orgFilter: object,
+  unitFilter: object,
+) =>
+  prismaClient.emissionFactor.findMany({
+    where: { AND: [orgFilter, unitFilter], metaData: { some: { language: locale, title } } },
+    select: {
+      id: true,
+      totalCo2: true,
+      unit: true,
+      customUnit: true,
+      metaData: { select: { title: true, language: true } },
     },
-    select: { id: true, totalCo2: true },
   })
-  // Find the right emission factor by comparing the value with a small epsilon
-  const match = candidates.find((ef) => Math.abs(Number(ef.totalCo2) - value) < 1e-9)
-  return match ? { id: match.id } : null
-}
+
+export const findEmissionFactorsByUnit = (orgFilter: object, unitFilter: object) =>
+  prismaClient.emissionFactor.findMany({
+    where: { AND: [orgFilter, unitFilter] },
+    select: {
+      id: true,
+      totalCo2: true,
+      unit: true,
+      customUnit: true,
+      metaData: { select: { title: true, language: true } },
+    },
+  })

@@ -6,17 +6,40 @@ export type ImportEmissionSourceError = {
   value?: string
 }
 
-export type ImportEmissionSourcesResult =
-  | { success: true; count: number }
-  | { success: false; errors: ImportEmissionSourceError[] }
+export type EmissionFactorCandidateInfo = {
+  foundTitle?: string
+  foundValue?: number
+  foundUnit?: string
+}
+
+export type ImportEmissionSourceWarning = {
+  line: number
+  sourceName?: string
+  searchedName: string
+  searchedValue?: number
+  searchedUnit?: string
+  foundTitle?: string
+  foundValue?: number
+  foundUnit?: string
+  candidates?: EmissionFactorCandidateInfo[]
+}
+
+export type ImportEmissionSourcesResult = {
+  success: boolean
+  errors?: ImportEmissionSourceError[]
+  warnings?: ImportEmissionSourceWarning[]
+}
 
 export type PreviewEmissionSourceRow = {
   site: string
   post: string
   subPost: string
   name: string
-  emissionFactorName: string
   value: string
+  unit: string
+  emissionFactorName: string
+  emissionFactorValue: string
+  emissionFactorUnit: string
   type: string
   tag: string
   source: string
@@ -35,9 +58,10 @@ export type ParsedEmissionSourceRow = {
   siteName: string
   subPost: SubPost
   name: string
+  unit: string | undefined
   emissionFactorName: string
-  emissionFactorValue: number
-  emissionFactorUnit: string
+  emissionFactorValue: number | undefined
+  emissionFactorUnit: string | undefined
   value: number | undefined
   type: EmissionSourceType | undefined
   caracterisation: EmissionSourceCaracterisation | undefined
