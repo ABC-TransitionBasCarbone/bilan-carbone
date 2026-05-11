@@ -1,6 +1,6 @@
 'use server'
 
-import { getEmissionFactorByTitleValueAndUnit } from '@/db/emissionFactors'
+import { findEmissionFactorsByNameAndUnit, findEmissionFactorsByUnit } from '@/db/emissionFactors'
 import { createEmissionSourcesOnStudy } from '@/db/emissionSource'
 import { FullStudy, getStudyById } from '@/db/study'
 import { LocaleType } from '@/i18n/config'
@@ -10,6 +10,7 @@ import { AccountWithUser } from '@/types/account.types'
 import {
   ImportEmissionSourceError,
   ImportEmissionSourcesResult,
+  ImportEmissionSourceWarning,
   PreviewEmissionSourceRow,
   PreviewEmissionSourcesResult,
 } from '@/types/importEmissionSources.types'
@@ -33,6 +34,85 @@ import {
   getSquaredStandardDeviationForEmissionSource,
 } from '../uncertainty'
 import { getEmissionFactorsByIds } from './emissionFactor'
+
+type EfMatchResult =
+  | {
+      matchType: 'exact' | 'nameOnly' | 'valueAndUnitOnly'
+      id: string
+      foundTitle?: string
+      foundValue?: number
+      foundUnit?: string
+    }
+  | { matchType: 'nameAmbiguous'; candidates: { foundTitle?: string; foundValue?: number; foundUnit?: string }[] }
+
+type EfRow = {
+  id: string
+  totalCo2: number
+  unit: string | null
+  customUnit: string | null
+  metaData: { title: string | null; language: string }[]
+}
+
+function toEfMatch(ef: EfRow, matchType: 'exact' | 'nameOnly' | 'valueAndUnitOnly', locale: string) {
+  return {
+    matchType,
+    id: ef.id,
+    foundTitle: ef.metaData.find((m) => m.language === locale)?.title ?? undefined,
+    foundValue: ef.totalCo2,
+    foundUnit: ef.customUnit ?? ef.unit ?? undefined,
+  }
+}
+
+/**
+ * Find the right emission factor for a given id in external base, name, value and unit by order of priority:
+ * - exact match by id
+ * - exact match by name, value and unit
+ * - name and unit combined match
+ * - value and unit combined match
+ * - name ambiguous match
+ * - no match
+ */
+async function findEmissionFactorMatch(
+  title: string,
+  value: number | undefined,
+  unit: string | undefined,
+  locale: string,
+  organizationId: string,
+): Promise<EfMatchResult | null> {
+  const orgFilter = { OR: [{ organizationId: null }, { organizationId }] }
+  const unitFilter = unit ? { OR: [{ unit }, { customUnit: unit }] } : {}
+  const epsilon = 1e-9
+
+  const byNameAndUnit = await findEmissionFactorsByNameAndUnit(title, locale, orgFilter, unitFilter)
+
+  if (value !== undefined) {
+    const exact = byNameAndUnit.find((ef) => Math.abs(Number(ef.totalCo2) - value) < epsilon)
+    if (exact) {
+      return toEfMatch(exact, 'exact', locale)
+    }
+  }
+
+  if (byNameAndUnit.length === 1) {
+    return toEfMatch(byNameAndUnit[0], 'nameOnly', locale)
+  }
+
+  if (byNameAndUnit.length > 1) {
+    return {
+      matchType: 'nameAmbiguous',
+      candidates: byNameAndUnit.map((ef) => toEfMatch(ef, 'nameOnly', locale)),
+    }
+  }
+
+  if (value !== undefined && unit) {
+    const byUnit = await findEmissionFactorsByUnit(orgFilter, unitFilter)
+    const match = byUnit.find((ef) => Math.abs(Number(ef.totalCo2) - value) < epsilon)
+    if (match) {
+      return toEfMatch(match, 'valueAndUnitOnly', locale)
+    }
+  }
+
+  return null
+}
 
 const TOTAL_EXCEL_COLS = 34
 
@@ -65,31 +145,43 @@ export async function previewEmissionSourcesFromFile(
 
   const bc = getBcTranslations(locale)
   const postTranslations = bc.emissionFactors.post as unknown as Record<string, string>
+  const unitTranslations = bc.units as Record<string, string>
+  const translateUnitLabel = (unit: string | undefined) => (unit ? getSingularForm(unitTranslations[unit] ?? unit) : '')
 
-  const rows: PreviewEmissionSourceRow[] = result.rows.map((row) => ({
-    site: row.siteName,
-    post: postTranslations[row.subPost] ?? row.subPost,
-    subPost: postTranslations[row.subPost] ?? row.subPost,
-    name: row.name,
-    emissionFactorName: row.emissionFactorName ?? '',
-    value: row.value !== undefined ? String(row.value) : '',
-    type: row.type ?? '',
-    tag: row.tag ?? '',
-    source: row.source ?? '',
-    reliability: row.reliability !== undefined ? String(row.reliability) : '',
-    technicalRepresentativeness:
-      row.technicalRepresentativeness !== undefined ? String(row.technicalRepresentativeness) : '',
-    geographicRepresentativeness:
-      row.geographicRepresentativeness !== undefined ? String(row.geographicRepresentativeness) : '',
-    temporalRepresentativeness:
-      row.temporalRepresentativeness !== undefined ? String(row.temporalRepresentativeness) : '',
-    completeness: row.completeness !== undefined ? String(row.completeness) : '',
-  }))
+  const rows: PreviewEmissionSourceRow[] = result.rows.map((row) => {
+    const post = getPost(row.subPost)
+    return {
+      site: row.siteName,
+      post: post ? (postTranslations[post] ?? post) : '',
+      subPost: postTranslations[row.subPost] ?? row.subPost,
+      name: row.name,
+      value: row.value !== undefined ? String(row.value) : '',
+      unit: row.unit ?? '',
+      emissionFactorName: row.emissionFactorName ?? '',
+      emissionFactorValue: row.emissionFactorValue !== undefined ? String(row.emissionFactorValue) : '',
+      emissionFactorUnit: translateUnitLabel(row.emissionFactorUnit),
+      type: row.type ?? '',
+      tag: row.tag ?? '',
+      source: row.source ?? '',
+      reliability: row.reliability !== undefined ? String(row.reliability) : '',
+      technicalRepresentativeness:
+        row.technicalRepresentativeness !== undefined ? String(row.technicalRepresentativeness) : '',
+      geographicRepresentativeness:
+        row.geographicRepresentativeness !== undefined ? String(row.geographicRepresentativeness) : '',
+      temporalRepresentativeness:
+        row.temporalRepresentativeness !== undefined ? String(row.temporalRepresentativeness) : '',
+      completeness: row.completeness !== undefined ? String(row.completeness) : '',
+    }
+  })
 
   return { success: true, rows }
 }
 
-export async function importEmissionSourcesFromFile(file: File, studyId: string): Promise<ImportEmissionSourcesResult> {
+export async function importEmissionSourcesFromFile(
+  file: File,
+  studyId: string,
+  forceImport = false,
+): Promise<ImportEmissionSourcesResult> {
   const account = await getAuthenticatedAccount()
 
   const study = await getStudyOrThrow(studyId, account)
@@ -114,8 +206,13 @@ export async function importEmissionSourcesFromFile(file: File, studyId: string)
   }
 
   const organizationId = study.organizationVersion.organization?.id ?? ''
+  const bc = getBcTranslations(locale)
+  const unitTranslations = bc.units as Record<string, string>
+  const translateUnit = (unit: string | undefined) =>
+    unit ? getSingularForm(unitTranslations[unit] ?? unit) : undefined
 
   const rowErrors: ImportEmissionSourceError[] = []
+  const rowWarnings: ImportEmissionSourceWarning[] = []
   const validRows: Array<{
     studySiteId: string
     studyId: string
@@ -144,23 +241,58 @@ export async function importEmissionSourcesFromFile(file: File, studyId: string)
       continue
     }
 
-    const ef = await getEmissionFactorByTitleValueAndUnit(
-      { title: row.emissionFactorName, value: row.emissionFactorValue, unit: row.emissionFactorUnit },
+    const ef = await findEmissionFactorMatch(
+      row.emissionFactorName,
+      row.emissionFactorValue,
+      row.emissionFactorUnit,
       locale,
       organizationId,
     )
+
+    let emissionFactorId: string | undefined
     if (!ef) {
-      rowErrors.push({ line: lineNum, key: 'emissionFactorNotFound', value: row.emissionFactorName })
-      continue
+      rowWarnings.push({
+        line: lineNum,
+        sourceName: row.name,
+        searchedName: row.emissionFactorName,
+        searchedValue: row.emissionFactorValue,
+        searchedUnit: row.emissionFactorUnit,
+      })
+    } else if (ef.matchType === 'nameAmbiguous') {
+      rowWarnings.push({
+        line: lineNum,
+        sourceName: row.name,
+        searchedName: row.emissionFactorName,
+        searchedValue: row.emissionFactorValue,
+        searchedUnit: row.emissionFactorUnit,
+        candidates: ef.candidates.map((c) => ({
+          foundTitle: c.foundTitle,
+          foundValue: c.foundValue,
+          foundUnit: translateUnit(c.foundUnit),
+        })),
+      })
+    } else if (ef.matchType !== 'exact') {
+      rowWarnings.push({
+        line: lineNum,
+        sourceName: row.name,
+        searchedName: row.emissionFactorName,
+        searchedValue: row.emissionFactorValue,
+        searchedUnit: row.emissionFactorUnit,
+        foundTitle: ef.foundTitle,
+        foundValue: ef.foundValue,
+        foundUnit: translateUnit(ef.foundUnit),
+      })
+      emissionFactorId = ef.id
+    } else {
+      emissionFactorId = ef.id
     }
-    const emissionFactorId = ef.id
 
     validRows.push({
       studySiteId,
       studyId,
       subPost: row.subPost,
       name: row.name,
-      emissionFactorId,
+      ...(emissionFactorId ? { emissionFactorId } : {}),
       ...(row.value !== undefined ? { value: row.value } : {}),
       ...(row.type ? { type: row.type } : {}),
       ...(row.caracterisation ? { caracterisation: row.caracterisation } : {}),
@@ -186,10 +318,14 @@ export async function importEmissionSourcesFromFile(file: File, studyId: string)
     return { success: false, errors: rowErrors }
   }
 
+  if (rowWarnings.length > 0 && !forceImport) {
+    return { success: false, warnings: rowWarnings }
+  }
+
   await createEmissionSourcesOnStudy(validRows)
   revalidatePath(`/etudes/${studyId}/comptabilisation/saisie-des-donnees`)
 
-  return { success: true, count: validRows.length }
+  return { success: true, errors: [], warnings: [] }
 }
 
 function buildEmissionSourcesSheet(study: FullStudy, locale: LocaleType, dataRows: (string | number)[][]): ArrayBuffer {

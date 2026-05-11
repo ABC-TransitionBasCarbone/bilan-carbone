@@ -42,35 +42,40 @@ const ImportEmissionSourcesModal = ({ studyId, post, siteId, open, onClose, onSu
     <Table size="small" stickyHeader>
       <TableHead>
         <TableRow>
+          <TableCell />
+          <TableCell />
+          <TableCell />
+          <TableCell colSpan={3} className={styles.groupHeader}>
+            {t('groupActivityData')}
+          </TableCell>
+          <TableCell colSpan={3} className={styles.groupHeader}>
+            {t('groupEmissionFactor')}
+          </TableCell>
+        </TableRow>
+        <TableRow>
           <TableCell>{t('columnSite')}</TableCell>
+          <TableCell>{t('columnPost')}</TableCell>
           <TableCell>{t('columnSubPost')}</TableCell>
-          <TableCell>{t('columnName')}</TableCell>
-          <TableCell>{t('columnEmissionFactor')}</TableCell>
+          <TableCell className={styles.groupFirstCell}>{t('columnName')}</TableCell>
           <TableCell>{t('columnValue')}</TableCell>
-          <TableCell>{t('columnType')}</TableCell>
-          <TableCell>{t('columnSource')}</TableCell>
-          <TableCell>{t('columnReliability')}</TableCell>
-          <TableCell>{t('columnTechnicalRepresentativeness')}</TableCell>
-          <TableCell>{t('columnGeographicRepresentativeness')}</TableCell>
-          <TableCell>{t('columnTemporalRepresentativeness')}</TableCell>
-          <TableCell>{t('columnCompleteness')}</TableCell>
+          <TableCell>{t('columnUnit')}</TableCell>
+          <TableCell className={styles.groupFirstCell}>{t('columnEfUsed')}</TableCell>
+          <TableCell>{t('columnEfValue')}</TableCell>
+          <TableCell>{t('columnEfUnit')}</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
         {rows.map((row, i) => (
           <TableRow key={i}>
             <TableCell>{row.site}</TableCell>
+            <TableCell>{row.post}</TableCell>
             <TableCell>{row.subPost}</TableCell>
-            <TableCell className={classNames('ellipsis', styles.cellName)}>{row.name}</TableCell>
-            <TableCell>{row.emissionFactorName}</TableCell>
+            <TableCell className={classNames('ellipsis', styles.cellName, styles.groupFirstCell)}>{row.name}</TableCell>
             <TableCell>{row.value}</TableCell>
-            <TableCell>{row.type}</TableCell>
-            <TableCell>{row.source}</TableCell>
-            <TableCell>{row.reliability}</TableCell>
-            <TableCell>{row.technicalRepresentativeness}</TableCell>
-            <TableCell>{row.geographicRepresentativeness}</TableCell>
-            <TableCell>{row.temporalRepresentativeness}</TableCell>
-            <TableCell>{row.completeness}</TableCell>
+            <TableCell>{row.unit}</TableCell>
+            <TableCell className={styles.groupFirstCell}>{row.emissionFactorName}</TableCell>
+            <TableCell>{row.emissionFactorValue}</TableCell>
+            <TableCell>{row.emissionFactorUnit}</TableCell>
           </TableRow>
         ))}
       </TableBody>
@@ -86,6 +91,7 @@ const ImportEmissionSourcesModal = ({ studyId, post, siteId, open, onClose, onSu
       onSuccess={onSuccess}
       onPreview={(file) => previewEmissionSourcesFromFile(file, studyId)}
       onConfirmImport={(file) => importEmissionSourcesFromFile(file, studyId)}
+      onForceImport={(file) => importEmissionSourcesFromFile(file, studyId, true)}
       onDownloadTemplate={handleDownloadTemplate}
       renderPreviewTable={renderPreviewTable}
       previewTitle={(count) => t('previewTitle', { count })}

@@ -2,6 +2,8 @@
 
 import LoadingButton from '@/components/base/LoadingButton'
 import Modal from '@/components/modals/Modal'
+import { ImportEmissionSourcesResult } from '@/types/importEmissionSources.types'
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import DownloadIcon from '@mui/icons-material/Download'
 import UploadFileIcon from '@mui/icons-material/UploadFile'
 import { Alert, AlertTitle, CircularProgress, List, ListItem, Typography } from '@mui/material'
@@ -10,8 +12,36 @@ import { useTranslations } from 'next-intl'
 import { DragEvent, ReactNode, useRef, useState, useTransition } from 'react'
 import styles from './ImportFileModal.module.css'
 
-export type ImportError = { line: number; key: string; value?: string }
-export type ImportModalState = 'default' | 'preview' | 'error'
+type ImportError = { line: number; key: string; value?: string }
+
+type ImportWarningCandidate = { foundTitle?: string; foundValue?: number; foundUnit?: string }
+
+type ImportWarning = {
+  line: number
+  sourceName?: string
+  searchedName: string
+  searchedValue?: number
+  searchedUnit?: string
+  foundTitle?: string
+  foundValue?: number
+  foundUnit?: string
+  candidates?: ImportWarningCandidate[]
+}
+
+type ImportModalState = 'default' | 'preview' | 'error' | 'warning'
+
+function groupByLine<T extends { line: number }>(items: T[]): { line: number; items: T[] }[] {
+  const map = new Map<number, T[]>()
+  for (const item of items) {
+    const existing = map.get(item.line)
+    if (existing) {
+      existing.push(item)
+    } else {
+      map.set(item.line, [item])
+    }
+  }
+  return Array.from(map.entries()).map(([line, items]) => ({ line, items }))
+}
 
 interface Props<TPreviewRow> {
   open: boolean
@@ -20,7 +50,8 @@ interface Props<TPreviewRow> {
   onClose: () => void
   onSuccess: () => void
   onPreview: (file: File) => Promise<{ success: true; rows: TPreviewRow[] } | { success: false; errors: ImportError[] }>
-  onConfirmImport: (file: File) => Promise<{ success: true } | { success: false; errors: ImportError[] }>
+  onConfirmImport: (file: File) => Promise<ImportEmissionSourcesResult>
+  onForceImport?: (file: File) => Promise<ImportEmissionSourcesResult>
   onDownloadTemplate: () => Promise<void>
   renderPreviewTable: (rows: TPreviewRow[]) => ReactNode
   previewTitle: (count: number) => string
@@ -35,6 +66,7 @@ const ImportFileModal = <TPreviewRow,>({
   onSuccess,
   onPreview,
   onConfirmImport,
+  onForceImport,
   onDownloadTemplate,
   renderPreviewTable,
   previewTitle,
@@ -46,6 +78,7 @@ const ImportFileModal = <TPreviewRow,>({
   const [isDownloading, setIsDownloading] = useState(false)
   const [modalState, setModalState] = useState<ImportModalState>('default')
   const [errors, setErrors] = useState<ImportError[]>([])
+  const [warnings, setWarnings] = useState<ImportWarning[]>([])
   const [previewRows, setPreviewRows] = useState<TPreviewRow[]>([])
   const [isDragOver, setIsDragOver] = useState(false)
   const [pendingFile, setPendingFile] = useState<File | null>(null)
@@ -54,6 +87,7 @@ const ImportFileModal = <TPreviewRow,>({
   const reset = () => {
     setModalState('default')
     setErrors([])
+    setWarnings([])
     setPreviewRows([])
     setIsDragOver(false)
     setPendingFile(null)
@@ -91,9 +125,28 @@ const ImportFileModal = <TPreviewRow,>({
       if (result.success) {
         reset()
         onSuccess()
+      } else if (result.warnings) {
+        setModalState('warning')
+        setWarnings(result.warnings)
       } else {
         setModalState('error')
-        setErrors(result.errors)
+        setErrors(result.errors ?? [])
+      }
+    })
+  }
+
+  const forceImport = () => {
+    if (!pendingFile || !onForceImport) {
+      return
+    }
+    startTransition(async () => {
+      const result = await onForceImport(pendingFile)
+      if (result.success) {
+        reset()
+        onSuccess()
+      } else {
+        setModalState('error')
+        setErrors(result.errors ?? [])
       }
     })
   }
@@ -142,11 +195,7 @@ const ImportFileModal = <TPreviewRow,>({
       actions={
         modalState === 'preview'
           ? [
-              {
-                actionType: 'button',
-                onClick: reset,
-                children: tCommon('action.back'),
-              },
+              { actionType: 'button', variant: 'outlined', onClick: reset, children: tCommon('action.back') },
               {
                 actionType: 'loadingButton',
                 onClick: confirmImport,
@@ -154,7 +203,23 @@ const ImportFileModal = <TPreviewRow,>({
                 children: tCommon('action.confirm'),
               },
             ]
-          : undefined
+          : modalState === 'warning' && onForceImport
+            ? [
+                {
+                  actionType: 'button',
+                  variant: 'outlined',
+                  color: 'error',
+                  onClick: reset,
+                  children: tCommon('action.cancel'),
+                },
+                {
+                  actionType: 'loadingButton',
+                  onClick: forceImport,
+                  loading: isPending,
+                  children: t('confirmAnyway'),
+                },
+              ]
+            : undefined
       }
     >
       <div className="flex-col gapped15">
@@ -178,6 +243,75 @@ const ImportFileModal = <TPreviewRow,>({
             </Typography>
             <div className={styles.tableWrapper}>{renderPreviewTable(previewRows)}</div>
           </>
+        )}
+
+        {modalState === 'warning' && warnings.length > 0 && (
+          <Alert severity="warning">
+            <AlertTitle>{t('warningTitle')}</AlertTitle>
+            <List dense className={styles.errorList}>
+              {groupByLine(warnings).map(({ line, items }) => (
+                <ListItem key={line} disableGutters className="py025">
+                  <div>
+                    {line > 0 && (
+                      <Typography variant="body2" fontWeight="medium">
+                        {tCommon('label.line', { line })}
+                        {items[0]?.sourceName ? ` — ${items[0].sourceName}` : ''}
+                      </Typography>
+                    )}
+                    <List dense disablePadding>
+                      {items.map((w, i) => {
+                        const formatEf = (
+                          name: string | undefined,
+                          value: number | undefined,
+                          unit: string | undefined,
+                        ) =>
+                          [name, value !== undefined && unit ? `${value} ${unit}` : (value ?? unit)]
+                            .filter(Boolean)
+                            .join(' - ')
+                        const searched = formatEf(w.searchedName, w.searchedValue, w.searchedUnit)
+                        const found =
+                          w.foundTitle !== undefined || w.foundValue !== undefined
+                            ? formatEf(w.foundTitle, w.foundValue, w.foundUnit)
+                            : null
+                        return (
+                          <ListItem key={i} disableGutters className={line > 0 ? 'pl15' : undefined}>
+                            <div>
+                              <Typography variant="body2">
+                                {line > 0 ? '• ' : ''}
+                                {t('warningEfNotFound', { searched })}
+                              </Typography>
+                              {w.candidates ? (
+                                <>
+                                  <Typography variant="body2" className="align-center gapped025">
+                                    {t('warningEfAmbiguous')}
+                                  </Typography>
+                                  {w.candidates.map((c, j) => (
+                                    <Typography key={j} variant="body2" className="align-center gapped025">
+                                      {'  – '}
+                                      {formatEf(c.foundTitle, c.foundValue, c.foundUnit)}
+                                    </Typography>
+                                  ))}
+                                  <Typography variant="body2" fontWeight="bold" className="align-center gapped025">
+                                    <ArrowForwardIcon className={styles.warningArrow} />
+                                    {t('warningEfLeftEmpty')}
+                                  </Typography>
+                                </>
+                              ) : (
+                                <Typography variant="body2" fontWeight="bold" className="align-center gapped025">
+                                  <ArrowForwardIcon className={styles.warningArrow} />
+                                  {found ? `${t('warningEfReplacedBy')} ${found}` : t('warningEfLeftEmpty')}
+                                </Typography>
+                              )}
+                            </div>
+                          </ListItem>
+                        )
+                      })}
+                    </List>
+                  </div>
+                </ListItem>
+              ))}
+            </List>
+          </Alert>
         )}
 
         {(modalState === 'default' || modalState === 'error') && (
@@ -216,12 +350,25 @@ const ImportFileModal = <TPreviewRow,>({
               <Alert severity="error">
                 <AlertTitle>{t('errorTitle')}</AlertTitle>
                 <List dense className={styles.errorList}>
-                  {errors.map((err, i) => (
-                    <ListItem key={i} disableGutters className="py025">
-                      <Typography variant="body2">
-                        {err.line > 0 ? `${tCommon('label.line', { line: err.line })} : ` : ''}
-                        {t(err.key, err.value ? { value: err.value } : undefined)}
-                      </Typography>
+                  {groupByLine(errors).map(({ line, items }) => (
+                    <ListItem key={line} disableGutters className="py025">
+                      <div>
+                        {line > 0 && (
+                          <Typography variant="body2" fontWeight="medium">
+                            {tCommon('label.line', { line })}
+                          </Typography>
+                        )}
+                        <List dense disablePadding>
+                          {items.map((msg, i) => (
+                            <ListItem key={i} disableGutters className={line > 0 ? 'pl15' : undefined}>
+                              <Typography variant="body2">
+                                {line > 0 ? '• ' : ''}
+                                {t(msg.key, msg.value !== undefined ? { value: msg.value } : undefined)}
+                              </Typography>
+                            </ListItem>
+                          ))}
+                        </List>
+                      </div>
                     </ListItem>
                   ))}
                 </List>
