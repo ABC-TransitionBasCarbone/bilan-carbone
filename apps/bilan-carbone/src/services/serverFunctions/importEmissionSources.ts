@@ -13,6 +13,7 @@ import {
   PreviewEmissionSourceRow,
   PreviewEmissionSourcesResult,
 } from '@/types/importEmissionSources.types'
+import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { findEmissionFactorMatch } from '@/utils/findEmissionFactor.utils'
 import { parseEmissionSourcesFile } from '@/utils/importEmissionSources.utils'
 import { getPost } from '@/utils/post'
@@ -490,7 +491,7 @@ async function buildEmissionSourcesDataRows(
     const unitRaw = ef?.unit ? (unitTranslations[ef.unit] ?? ef.unit) : ''
     const unitLabel = unitRaw ? getSingularForm(unitRaw) : ''
     const efTitle = ef?.metaData?.title ?? ''
-    const efValue = ef ? ef.totalCo2 : ''
+    const efValue = ef ? getEmissionFactorValue(ef, study.organizationVersion.environment) : ''
     const efUnitRaw = ef?.unit ? (unitTranslations[ef.unit] ?? ef.unit) : ''
     const efUnitLabel = efUnitRaw ? getSingularForm(efUnitRaw) : ''
     const feSpecificQuality = ef ? getSpecificEmissionFactorQuality(es) : null
@@ -544,7 +545,7 @@ async function buildEmissionSourcesDataRows(
       es.source ?? '',
       typeLabel,
       es.comment ?? '',
-      ef?.id ?? '',
+      ef?.importedId ?? '',
       efTitle,
       efValue,
       efUnitLabel,
