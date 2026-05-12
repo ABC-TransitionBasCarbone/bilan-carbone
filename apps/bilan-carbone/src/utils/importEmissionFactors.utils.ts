@@ -5,6 +5,7 @@ import { COLUMNS, ImportError, ParsedRow, ParseResult } from '@/types/importEmis
 import { EmissionFactorBase, Environment, SubPost, Unit } from '@abc-transitionbascarbone/db-common/enums'
 import { ManualEmissionFactorUnitList } from './emissionFactors'
 import { parseExcelSheet } from './excel.utils'
+import { getExampleRowPrefixes } from './importEmissionSources.utils'
 import {
   buildLabelMap,
   mapLabelFromTranslations,
@@ -179,6 +180,8 @@ export function parseImportFile(buffer: Buffer, locale: LocaleType, environment:
     const name = String(row[COLUMNS.name] ?? '').trim()
     if (!name) {
       rowErrors.push({ key: 'missingName' })
+    } else if (getExampleRowPrefixes().some((prefix) => name.startsWith(prefix))) {
+      continue
     }
 
     const source = String(row[COLUMNS.source] ?? '').trim()

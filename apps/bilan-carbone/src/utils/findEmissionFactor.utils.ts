@@ -1,5 +1,5 @@
 import {
-  findEmissionFactorByIdForMatch,
+  findEmissionFactorByImportedIdForMatch,
   findEmissionFactorsByNameAndUnit,
   findEmissionFactorsByUnit,
 } from '@/db/emissionFactors'
@@ -39,9 +39,10 @@ export async function findEmissionFactorMatch(
   unit: string | undefined,
   locale: string,
   organizationId: string,
+  versionIds: string[],
 ): Promise<EfMatchResult | null> {
   if (id) {
-    const byId = await findEmissionFactorByIdForMatch(id, organizationId)
+    const byId = await findEmissionFactorByImportedIdForMatch(id, organizationId, versionIds)
     if (byId) {
       return toEfMatch(byId, 'exact', locale)
     }
@@ -51,7 +52,7 @@ export async function findEmissionFactorMatch(
   const unitFilter = unit ? { OR: [{ unit }, { customUnit: unit }] } : {}
   const epsilon = 1e-9
 
-  const byNameAndUnit = await findEmissionFactorsByNameAndUnit(title ?? '', locale, orgFilter, unitFilter)
+  const byNameAndUnit = await findEmissionFactorsByNameAndUnit(title ?? '', locale, orgFilter, unitFilter, versionIds)
 
   if (value !== undefined) {
     const exact = byNameAndUnit.find((ef) => Math.abs(Number(ef.totalCo2) - value) < epsilon)
@@ -72,7 +73,7 @@ export async function findEmissionFactorMatch(
   }
 
   if (value !== undefined && unit) {
-    const byUnit = await findEmissionFactorsByUnit(orgFilter, unitFilter)
+    const byUnit = await findEmissionFactorsByUnit(orgFilter, unitFilter, versionIds)
     const match = byUnit.find((ef) => Math.abs(Number(ef.totalCo2) - value) < epsilon)
     if (match) {
       return toEfMatch(match, 'valueAndUnitOnly', locale)

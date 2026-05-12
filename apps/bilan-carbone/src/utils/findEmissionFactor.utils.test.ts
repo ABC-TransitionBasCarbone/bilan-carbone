@@ -1,5 +1,5 @@
 import {
-  findEmissionFactorByIdForMatch,
+  findEmissionFactorByImportedIdForMatch,
   findEmissionFactorsByNameAndUnit,
   findEmissionFactorsByUnit,
 } from '@/db/emissionFactors'
@@ -11,12 +11,13 @@ jest.mock('@/db/emissionFactors', () => ({
   findEmissionFactorsByUnit: jest.fn(),
 }))
 
-const mockFindById = findEmissionFactorByIdForMatch as jest.Mock
+const mockFindById = findEmissionFactorByImportedIdForMatch as jest.Mock
 const mockFindByNameAndUnit = findEmissionFactorsByNameAndUnit as jest.Mock
 const mockFindByUnit = findEmissionFactorsByUnit as jest.Mock
 
 const locale = 'fr'
 const organizationId = 'org-1'
+const versionIds = ['v-1']
 
 const makeEf = (id: string, totalCo2: number, unit: string, title: string): EfRow => ({
   id,
@@ -38,7 +39,7 @@ describe('findEmissionFactorMatch', () => {
       const ef = makeEf('ef-1', 2.5, 'KG', 'Électricité')
       mockFindById.mockResolvedValue(ef)
 
-      const result = await findEmissionFactorMatch('ef-1', 'Électricité', 2.5, 'KG', locale, organizationId)
+      const result = await findEmissionFactorMatch('ef-1', 'Électricité', 2.5, 'KG', locale, organizationId, versionIds)
 
       expect(result).toEqual({
         matchType: 'exact',
@@ -47,7 +48,7 @@ describe('findEmissionFactorMatch', () => {
         foundValue: 2.5,
         foundUnit: 'KG',
       })
-      expect(mockFindById).toHaveBeenCalledWith('ef-1', organizationId)
+      expect(mockFindById).toHaveBeenCalledWith('ef-1', organizationId, versionIds)
       expect(mockFindByNameAndUnit).not.toHaveBeenCalled()
     })
 
@@ -56,7 +57,15 @@ describe('findEmissionFactorMatch', () => {
       const ef = makeEf('ef-2', 2.5, 'KG', 'Électricité')
       mockFindByNameAndUnit.mockResolvedValue([ef])
 
-      const result = await findEmissionFactorMatch('unknown-id', 'Électricité', 2.5, 'KG', locale, organizationId)
+      const result = await findEmissionFactorMatch(
+        'unknown-id',
+        'Électricité',
+        2.5,
+        'KG',
+        locale,
+        organizationId,
+        versionIds,
+      )
 
       expect(result).toMatchObject({ matchType: 'exact', id: 'ef-2' })
     })
@@ -67,7 +76,15 @@ describe('findEmissionFactorMatch', () => {
       const ef = makeEf('ef-1', 2.5, 'KG', 'Électricité')
       mockFindByNameAndUnit.mockResolvedValue([ef])
 
-      const result = await findEmissionFactorMatch(undefined, 'Électricité', 2.5, 'KG', locale, organizationId)
+      const result = await findEmissionFactorMatch(
+        undefined,
+        'Électricité',
+        2.5,
+        'KG',
+        locale,
+        organizationId,
+        versionIds,
+      )
 
       expect(result).toEqual({
         matchType: 'exact',
@@ -82,7 +99,15 @@ describe('findEmissionFactorMatch', () => {
       const ef = makeEf('ef-1', 3.0, 'KG', 'Électricité')
       mockFindByNameAndUnit.mockResolvedValue([ef])
 
-      const result = await findEmissionFactorMatch(undefined, 'Électricité', 2.5, 'KG', locale, organizationId)
+      const result = await findEmissionFactorMatch(
+        undefined,
+        'Électricité',
+        2.5,
+        'KG',
+        locale,
+        organizationId,
+        versionIds,
+      )
 
       expect(result).toMatchObject({ matchType: 'nameOnly', id: 'ef-1' })
     })
@@ -91,7 +116,15 @@ describe('findEmissionFactorMatch', () => {
       const ef = makeEf('ef-1', 3.0, 'KG', 'Électricité')
       mockFindByNameAndUnit.mockResolvedValue([ef])
 
-      const result = await findEmissionFactorMatch(undefined, 'Électricité', undefined, 'KG', locale, organizationId)
+      const result = await findEmissionFactorMatch(
+        undefined,
+        'Électricité',
+        undefined,
+        'KG',
+        locale,
+        organizationId,
+        versionIds,
+      )
 
       expect(result).toMatchObject({ matchType: 'nameOnly', id: 'ef-1' })
     })
@@ -101,7 +134,15 @@ describe('findEmissionFactorMatch', () => {
       const ef2 = makeEf('ef-2', 3.0, 'KG', 'Électricité')
       mockFindByNameAndUnit.mockResolvedValue([ef1, ef2])
 
-      const result = await findEmissionFactorMatch(undefined, 'Électricité', 9.9, 'KG', locale, organizationId)
+      const result = await findEmissionFactorMatch(
+        undefined,
+        'Électricité',
+        9.9,
+        'KG',
+        locale,
+        organizationId,
+        versionIds,
+      )
 
       expect(result).toMatchObject({
         matchType: 'nameAmbiguous',
@@ -119,7 +160,7 @@ describe('findEmissionFactorMatch', () => {
       const ef = makeEf('ef-1', 2.5, 'KG', 'Électricité')
       mockFindByUnit.mockResolvedValue([ef])
 
-      const result = await findEmissionFactorMatch(undefined, 'Inconnu', 2.5, 'KG', locale, organizationId)
+      const result = await findEmissionFactorMatch(undefined, 'Inconnu', 2.5, 'KG', locale, organizationId, versionIds)
 
       expect(result).toMatchObject({ matchType: 'valueAndUnitOnly', id: 'ef-1' })
     })
@@ -128,7 +169,7 @@ describe('findEmissionFactorMatch', () => {
       mockFindByNameAndUnit.mockResolvedValue([])
       mockFindByUnit.mockResolvedValue([])
 
-      const result = await findEmissionFactorMatch(undefined, 'Inconnu', 2.5, 'KG', locale, organizationId)
+      const result = await findEmissionFactorMatch(undefined, 'Inconnu', 2.5, 'KG', locale, organizationId, versionIds)
 
       expect(result).toBeNull()
     })
@@ -136,10 +177,32 @@ describe('findEmissionFactorMatch', () => {
     it('returns null when no name match and no value+unit provided', async () => {
       mockFindByNameAndUnit.mockResolvedValue([])
 
-      const result = await findEmissionFactorMatch(undefined, 'Inconnu', undefined, undefined, locale, organizationId)
+      const result = await findEmissionFactorMatch(
+        undefined,
+        'Inconnu',
+        undefined,
+        undefined,
+        locale,
+        organizationId,
+        versionIds,
+      )
 
       expect(result).toBeNull()
       expect(mockFindByUnit).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('version isolation', () => {
+    it('returns null when EF is not in study versions (DB returns nothing)', async () => {
+      mockFindById.mockResolvedValue(null)
+      mockFindByNameAndUnit.mockResolvedValue([])
+      mockFindByUnit.mockResolvedValue([])
+
+      const result = await findEmissionFactorMatch('ef-1', 'Électricité', 2.5, 'KG', locale, organizationId, [
+        'other-version',
+      ])
+
+      expect(result).toBeNull()
     })
   })
 
@@ -148,7 +211,15 @@ describe('findEmissionFactorMatch', () => {
       const ef = { ...makeEf('ef-1', 2.5, 'KG', 'Électricité'), customUnit: 'kWh' }
       mockFindByNameAndUnit.mockResolvedValue([ef])
 
-      const result = await findEmissionFactorMatch(undefined, 'Électricité', 2.5, 'KG', locale, organizationId)
+      const result = await findEmissionFactorMatch(
+        undefined,
+        'Électricité',
+        2.5,
+        'KG',
+        locale,
+        organizationId,
+        versionIds,
+      )
 
       expect(result).toMatchObject({ foundUnit: 'kWh' })
     })
