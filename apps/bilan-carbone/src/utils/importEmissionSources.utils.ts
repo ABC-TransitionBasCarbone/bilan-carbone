@@ -1,4 +1,4 @@
-import { LocaleType } from '@/i18n/config'
+import { Locale, LocaleType } from '@/i18n/config'
 import { qualityKeys } from '@/services/uncertainty'
 import {
   ImportEmissionSourceError,
@@ -21,6 +21,17 @@ import {
 } from './import.utils'
 import { parseNumericValue } from './number'
 import { getBcTranslations } from './translation.utils'
+
+export function getExampleRowPrefixes(): string[] {
+  return Object.values(Locale).flatMap((locale) => {
+    const bc = getBcTranslations(locale)
+    const modal = (bc.study as Record<string, unknown>)?.importEmissionSourcesModal as
+      | Record<string, string>
+      | undefined
+    const prefix = modal?.examplePrefix
+    return prefix ? [prefix] : []
+  })
+}
 
 export function mapTypeLabelFromTranslations(
   label: string | undefined | null,
@@ -95,6 +106,8 @@ export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): Pa
     const name = col('name')
     if (!name) {
       rowErrors.push({ key: 'missingName' })
+    } else if (getExampleRowPrefixes().some((prefix) => name.startsWith(prefix))) {
+      continue
     }
 
     const emissionFactorId = col('emissionFactorId') || undefined
@@ -206,6 +219,10 @@ export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): Pa
 
   if (errors.length > 0) {
     return { success: false, errors }
+  }
+
+  if (parsedRows.length === 0) {
+    return { success: false, errors: [{ line: 0, key: 'noRows' }] }
   }
 
   return { success: true, rows: parsedRows }

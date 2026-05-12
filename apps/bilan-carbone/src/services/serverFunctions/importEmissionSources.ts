@@ -128,6 +128,7 @@ export async function importEmissionSourcesFromFile(
   }
 
   const organizationId = study.organizationVersion.organization?.id ?? ''
+  const versionIds = study.emissionFactorVersions.map((v) => v.importVersionId)
   const bc = getBcTranslations(locale)
   const unitTranslations = bc.units as Record<string, string>
   const translateUnit = (unit: string | undefined) =>
@@ -170,6 +171,7 @@ export async function importEmissionSourcesFromFile(
       row.emissionFactorUnit,
       locale,
       organizationId,
+      versionIds,
     )
 
     let emissionFactorId: string | undefined
@@ -349,13 +351,32 @@ export async function getImportEmissionSourcesTemplate(
 
   const postTranslations = bc.emissionFactors.post as unknown as Record<string, string>
 
+  const modal = (bc.study as Record<string, unknown>)?.importEmissionSourcesModal as Record<string, string> | undefined
+  const t = (key: string) => modal?.[key] ?? key
+
   const studySite = siteId ? study.sites.find((s) => s.site?.id === siteId) : study.sites[0]
   const siteName = studySite?.site?.name ?? ''
   const postLabel = post ? (postTranslations[post] ?? post) : ''
 
+  const subPostTranslations = bc.emissionFactors.post as unknown as Record<string, string>
+  const unitTranslations = bc.units as Record<string, string>
+  const typeTranslations = (bc.emissionSource as Record<string, unknown>).type as Record<string, string>
+
+  const exampleRow: (string | number)[] = Array(TOTAL_EXCEL_COLS).fill('')
+  exampleRow[0] = siteName
+  exampleRow[1] = postTranslations['IntrantsBiensEtMatieres'] ?? 'IntrantsBiensEtMatieres'
+  exampleRow[2] = subPostTranslations['MetauxPlastiquesEtVerre'] ?? 'MetauxPlastiquesEtVerre'
+  exampleRow[3] = t('examplePrefix') + t('exampleName')
+  exampleRow[6] = 1000
+  exampleRow[7] = getSingularForm(unitTranslations['TON'] ?? 'TON')
+  exampleRow[11] = 5
+  exampleRow[16] = t('exampleSource')
+  exampleRow[17] = typeTranslations['Physical'] ?? 'Physical'
+  exampleRow[20] = t('exampleEmissionFactor')
+
   const emptyRow: (string | number)[] = [siteName, postLabel, ...Array(TOTAL_EXCEL_COLS - 2).fill('')]
 
-  const rows = post ? Array.from({ length: 100 }, () => [...emptyRow]) : [emptyRow]
+  const rows = post ? [exampleRow, ...Array.from({ length: 100 }, () => [...emptyRow])] : [exampleRow, emptyRow]
   return buildEmissionSourcesSheet(study, locale, rows)
 }
 
