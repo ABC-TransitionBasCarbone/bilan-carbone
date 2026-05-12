@@ -65,3 +65,6 @@ export function buildLabelMap<T extends string>(
       .map(([k, v]) => [(v as string).toLowerCase(), toValue(k)]),
   )
 }
+
+export const formatEf = (name: string | undefined, value: number | undefined, unit: string | undefined) =>
+  [name, value !== undefined && unit ? `${value} ${unit}` : (value ?? unit)].filter(Boolean).join(' - ')
