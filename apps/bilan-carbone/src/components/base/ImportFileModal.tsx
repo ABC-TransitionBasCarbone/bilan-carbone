@@ -17,9 +17,10 @@ type ImportError = { line: number; key: string; value?: string }
 type ImportWarningCandidate = { foundTitle?: string; foundValue?: number; foundUnit?: string }
 
 type ImportWarning = {
+  type: 'efNotFound' | 'validationSkipped'
   line: number
   sourceName?: string
-  searchedName: string
+  searchedName?: string
   searchedValue?: number
   searchedUnit?: string
   foundTitle?: string
@@ -260,6 +261,16 @@ const ImportFileModal = <TPreviewRow,>({
                     )}
                     <List dense disablePadding>
                       {items.map((w, i) => {
+                        if (w.type === 'validationSkipped') {
+                          return (
+                            <ListItem key={i} disableGutters className={line > 0 ? 'pl15' : undefined}>
+                              <Typography variant="body2">
+                                {line > 0 ? '• ' : ''}
+                                {t('warningValidationSkipped')}
+                              </Typography>
+                            </ListItem>
+                          )
+                        }
                         const formatEf = (
                           name: string | undefined,
                           value: number | undefined,

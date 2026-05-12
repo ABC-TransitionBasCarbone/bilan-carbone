@@ -170,7 +170,6 @@ const StudyPostsPage = ({ post, study, userRole, emissionSources, siteId, studyS
         siteId={siteId}
         display={showInfography}
         setDisplay={setShowInfography}
-        emissionSources={emissionSources}
         filters={filters}
         setFilters={updateFilters}
         caracterisationOptions={initialCaracterisations}

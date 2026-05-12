@@ -48,7 +48,7 @@ const ImportEmissionSourcesModal = ({ studyId, post, siteId, open, onClose, onSu
           <TableCell colSpan={3} className={styles.groupHeader}>
             {t('groupActivityData')}
           </TableCell>
-          <TableCell colSpan={3} className={styles.groupHeader}>
+          <TableCell colSpan={4} className={styles.groupHeader}>
             {t('groupEmissionFactor')}
           </TableCell>
         </TableRow>
@@ -59,7 +59,8 @@ const ImportEmissionSourcesModal = ({ studyId, post, siteId, open, onClose, onSu
           <TableCell className={styles.groupFirstCell}>{t('columnName')}</TableCell>
           <TableCell>{t('columnValue')}</TableCell>
           <TableCell>{t('columnUnit')}</TableCell>
-          <TableCell className={styles.groupFirstCell}>{t('columnEfUsed')}</TableCell>
+          <TableCell className={styles.groupFirstCell}>{t('columnEfId')}</TableCell>
+          <TableCell>{t('columnEfUsed')}</TableCell>
           <TableCell>{t('columnEfValue')}</TableCell>
           <TableCell>{t('columnEfUnit')}</TableCell>
         </TableRow>
@@ -73,7 +74,8 @@ const ImportEmissionSourcesModal = ({ studyId, post, siteId, open, onClose, onSu
             <TableCell className={classNames('ellipsis', styles.cellName, styles.groupFirstCell)}>{row.name}</TableCell>
             <TableCell>{row.value}</TableCell>
             <TableCell>{row.unit}</TableCell>
-            <TableCell className={styles.groupFirstCell}>{row.emissionFactorName}</TableCell>
+            <TableCell className={styles.groupFirstCell}>{row.emissionFactorId}</TableCell>
+            <TableCell>{row.emissionFactorName}</TableCell>
             <TableCell>{row.emissionFactorValue}</TableCell>
             <TableCell>{row.emissionFactorUnit}</TableCell>
           </TableRow>

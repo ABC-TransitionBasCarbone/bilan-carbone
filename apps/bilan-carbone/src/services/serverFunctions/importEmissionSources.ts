@@ -1,6 +1,5 @@
 'use server'
 
-import { findEmissionFactorsByNameAndUnit, findEmissionFactorsByUnit } from '@/db/emissionFactors'
 import { createEmissionSourcesOnStudy } from '@/db/emissionSource'
 import { FullStudy, getStudyById } from '@/db/study'
 import { LocaleType } from '@/i18n/config'
@@ -14,6 +13,7 @@ import {
   PreviewEmissionSourceRow,
   PreviewEmissionSourcesResult,
 } from '@/types/importEmissionSources.types'
+import { findEmissionFactorMatch } from '@/utils/findEmissionFactor.utils'
 import { parseEmissionSourcesFile } from '@/utils/importEmissionSources.utils'
 import { getPost } from '@/utils/post'
 import { formatEmissionValueForExport } from '@/utils/study'
@@ -22,7 +22,7 @@ import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import { EmissionSourceCaracterisation, EmissionSourceType, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { revalidatePath } from 'next/cache'
 import xlsx from 'node-xlsx'
-import { getEmissionSourceEmission } from '../emissionSource'
+import { canBeValidated, getEmissionSourceEmission } from '../emissionSource'
 import { getAuthenticatedAccount } from '../permissions/account.permissions'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { hasStudyBasicRights } from '../permissions/emissionSource'
@@ -35,86 +35,7 @@ import {
 } from '../uncertainty'
 import { getEmissionFactorsByIds } from './emissionFactor'
 
-type EfMatchResult =
-  | {
-      matchType: 'exact' | 'nameOnly' | 'valueAndUnitOnly'
-      id: string
-      foundTitle?: string
-      foundValue?: number
-      foundUnit?: string
-    }
-  | { matchType: 'nameAmbiguous'; candidates: { foundTitle?: string; foundValue?: number; foundUnit?: string }[] }
-
-type EfRow = {
-  id: string
-  totalCo2: number
-  unit: string | null
-  customUnit: string | null
-  metaData: { title: string | null; language: string }[]
-}
-
-function toEfMatch(ef: EfRow, matchType: 'exact' | 'nameOnly' | 'valueAndUnitOnly', locale: string) {
-  return {
-    matchType,
-    id: ef.id,
-    foundTitle: ef.metaData.find((m) => m.language === locale)?.title ?? undefined,
-    foundValue: ef.totalCo2,
-    foundUnit: ef.customUnit ?? ef.unit ?? undefined,
-  }
-}
-
-/**
- * Find the right emission factor for a given id in external base, name, value and unit by order of priority:
- * - exact match by id
- * - exact match by name, value and unit
- * - name and unit combined match
- * - value and unit combined match
- * - name ambiguous match
- * - no match
- */
-async function findEmissionFactorMatch(
-  title: string,
-  value: number | undefined,
-  unit: string | undefined,
-  locale: string,
-  organizationId: string,
-): Promise<EfMatchResult | null> {
-  const orgFilter = { OR: [{ organizationId: null }, { organizationId }] }
-  const unitFilter = unit ? { OR: [{ unit }, { customUnit: unit }] } : {}
-  const epsilon = 1e-9
-
-  const byNameAndUnit = await findEmissionFactorsByNameAndUnit(title, locale, orgFilter, unitFilter)
-
-  if (value !== undefined) {
-    const exact = byNameAndUnit.find((ef) => Math.abs(Number(ef.totalCo2) - value) < epsilon)
-    if (exact) {
-      return toEfMatch(exact, 'exact', locale)
-    }
-  }
-
-  if (byNameAndUnit.length === 1) {
-    return toEfMatch(byNameAndUnit[0], 'nameOnly', locale)
-  }
-
-  if (byNameAndUnit.length > 1) {
-    return {
-      matchType: 'nameAmbiguous',
-      candidates: byNameAndUnit.map((ef) => toEfMatch(ef, 'nameOnly', locale)),
-    }
-  }
-
-  if (value !== undefined && unit) {
-    const byUnit = await findEmissionFactorsByUnit(orgFilter, unitFilter)
-    const match = byUnit.find((ef) => Math.abs(Number(ef.totalCo2) - value) < epsilon)
-    if (match) {
-      return toEfMatch(match, 'valueAndUnitOnly', locale)
-    }
-  }
-
-  return null
-}
-
-const TOTAL_EXCEL_COLS = 34
+const TOTAL_EXCEL_COLS = 35
 
 async function getStudyOrThrow(studyId: string, account: AccountWithUser): Promise<FullStudy> {
   const study = await getStudyById(studyId, account.organizationVersionId)
@@ -157,6 +78,7 @@ export async function previewEmissionSourcesFromFile(
       name: row.name,
       value: row.value !== undefined ? String(row.value) : '',
       unit: row.unit ?? '',
+      emissionFactorId: row.emissionFactorId ?? '',
       emissionFactorName: row.emissionFactorName ?? '',
       emissionFactorValue: row.emissionFactorValue !== undefined ? String(row.emissionFactorValue) : '',
       emissionFactorUnit: translateUnitLabel(row.emissionFactorUnit),
@@ -242,6 +164,7 @@ export async function importEmissionSourcesFromFile(
     }
 
     const ef = await findEmissionFactorMatch(
+      row.emissionFactorId,
       row.emissionFactorName,
       row.emissionFactorValue,
       row.emissionFactorUnit,
@@ -250,8 +173,10 @@ export async function importEmissionSourcesFromFile(
     )
 
     let emissionFactorId: string | undefined
+    let efUnit: string | undefined
     if (!ef) {
       rowWarnings.push({
+        type: 'efNotFound',
         line: lineNum,
         sourceName: row.name,
         searchedName: row.emissionFactorName,
@@ -260,6 +185,7 @@ export async function importEmissionSourcesFromFile(
       })
     } else if (ef.matchType === 'nameAmbiguous') {
       rowWarnings.push({
+        type: 'efNotFound',
         line: lineNum,
         sourceName: row.name,
         searchedName: row.emissionFactorName,
@@ -273,6 +199,7 @@ export async function importEmissionSourcesFromFile(
       })
     } else if (ef.matchType !== 'exact') {
       rowWarnings.push({
+        type: 'efNotFound',
         line: lineNum,
         sourceName: row.name,
         searchedName: row.emissionFactorName,
@@ -283,8 +210,35 @@ export async function importEmissionSourcesFromFile(
         foundUnit: translateUnit(ef.foundUnit),
       })
       emissionFactorId = ef.id
+      efUnit = ef.foundUnit
     } else {
       emissionFactorId = ef.id
+      efUnit = ef.foundUnit
+    }
+
+    let validated = row.validated
+    if (validated) {
+      const canValidate = canBeValidated(
+        {
+          name: row.name,
+          type: row.type ?? null,
+          value: row.value ?? null,
+          emissionFactorId: emissionFactorId ?? null,
+          caracterisation: row.caracterisation ?? null,
+          subPost: row.subPost,
+          constructionYear: null,
+          depreciationPeriod: null,
+          hectare: null,
+          duration: null,
+        },
+        study,
+        { unit: efUnit },
+        study.organizationVersion.environment,
+      )
+      if (!canValidate) {
+        validated = false
+        rowWarnings.push({ type: 'validationSkipped', line: lineNum, sourceName: row.name })
+      }
     }
 
     validRows.push({
@@ -310,7 +264,7 @@ export async function importEmissionSourcesFromFile(
       ...(row.completeness !== undefined ? { completeness: row.completeness } : {}),
       ...(row.comment ? { comment: row.comment } : {}),
       ...(row.feComment ? { feComment: row.feComment } : {}),
-      ...(row.validated !== undefined ? { validated: row.validated } : {}),
+      ...(validated !== undefined ? { validated } : {}),
     })
   }
 
@@ -336,9 +290,9 @@ function buildEmissionSourcesSheet(study: FullStudy, locale: LocaleType, dataRow
   const DA_START = 6
   const DA_END = 18
   const FE_START = 19
-  const FE_END = 30
-  const BC_START = 31
-  const BC_END = 33
+  const FE_END = 31
+  const BC_START = 32
+  const BC_END = 34
 
   const empty = (n: number) => Array(n).fill('')
 
@@ -426,6 +380,7 @@ function getEmissionSourcesHeaderRow(t: (key: string) => string): string[] {
     t('columnSource'),
     t('columnType'),
     t('columnComment'),
+    t('columnEfId'),
     t('columnEfUsed'),
     t('columnEfValue'),
     t('columnEfUnit'),
@@ -568,6 +523,7 @@ async function buildEmissionSourcesDataRows(
       es.source ?? '',
       typeLabel,
       es.comment ?? '',
+      ef?.id ?? '',
       efTitle,
       efValue,
       efUnitLabel,
