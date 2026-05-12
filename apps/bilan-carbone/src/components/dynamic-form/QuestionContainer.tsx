@@ -2,18 +2,18 @@ import { emissionFactorMap } from '@/constants/emissionFactorMap'
 import { ID_INTERN_PREFIX_REGEX } from '@/constants/utils'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
-import { Box, Typography } from '@mui/material'
-import { useTranslations } from 'next-intl'
-import { useState } from 'react'
-import HelpIcon from '../base/HelpIcon'
-import GlossaryModal from '../modals/GlossaryModal'
+import HelpIcon from '@abc-transitionbascarbone/components/src/base/HelpIcon'
 import {
   StyledEmissionResults,
   StyledQuestionContainer,
   StyledQuestionContent,
   StyledQuestionHeader,
   StyledQuestionTitle,
-} from './QuestionContainer.styles'
+} from '@abc-transitionbascarbone/css'
+import { Box, Typography } from '@mui/material'
+import { useTranslations } from 'next-intl'
+import { useState } from 'react'
+import GlossaryModal from '../modals/GlossaryModal'
 import SaveStatusIndicator from './SaveStatusIndicator'
 import { EmissionResults, QuestionContainerProps } from './types/formTypes'
 import { FieldType } from './types/questionTypes'

@@ -608,6 +608,7 @@ DT . voiture . empreinte par défaut:
         voiture . thermique . carburant: "'essence E5 ou E10'"
 
 DT . voiture . empreinte calculée:
+  résoudre la référence circulaire: oui
   formule: (usage + construction) / voyageurs
   unité: kgCO2e
 

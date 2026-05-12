@@ -3,10 +3,10 @@ import Box from '@mui/material/Box'
 import { EvaluatedFormElement } from '@publicodes/forms'
 import { useTranslations } from 'next-intl'
 import GroupQuestion from './GroupQuestion'
-import PublicodesInputField from './InputField'
+import { InputField as PublicodesInputField } from './InputField'
 import { EvaluatedFormLayout, EvaluatedListLayout } from './layouts/evaluatedFormLayout'
 import ListQuestion from './ListQuestion'
-import QuestionContainer from './QuestionContainer'
+import { QuestionContainer } from './QuestionContainer'
 import TableQuestion from './TableQuestion'
 import { OnFieldChange } from './utils'
 
@@ -16,11 +16,11 @@ interface InputQuestionProps<RuleName extends string> {
 }
 
 function InputQuestion<RuleName extends string>({ formElement, onChange }: InputQuestionProps<RuleName>) {
-  const { question, description } = usePublicodesRuleTranslation(formElement.id)
+  const { question } = usePublicodesRuleTranslation(formElement.id)
 
   return (
     <Box key={formElement.id} className="mb2">
-      <QuestionContainer label={question} helperText={description}>
+      <QuestionContainer label={question}>
         <PublicodesInputField formElement={formElement} onChange={onChange} />
       </QuestionContainer>
     </Box>
@@ -34,10 +34,10 @@ function ListQuestionContainer<RuleName extends string>({
   listLayout: EvaluatedListLayout<RuleName>
   onChange: OnFieldChange<RuleName>
 }) {
-  const { question, description } = usePublicodesRuleTranslation(listLayout.targetRule)
+  const { question } = usePublicodesRuleTranslation(listLayout.targetRule)
 
   return (
-    <QuestionContainer label={question} helperText={description}>
+    <QuestionContainer label={question}>
       <ListQuestion listLayout={listLayout} onChange={onChange} />
     </QuestionContainer>
   )

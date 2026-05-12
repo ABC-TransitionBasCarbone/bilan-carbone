@@ -2,6 +2,7 @@
 
 import type { FullStudy } from '@/db/study'
 import { qualityKeys, specificFEQualityKeys, specificFEQualityKeysLinks } from '@/services/uncertainty'
+import HelpIcon from '@abc-transitionbascarbone/components/src/base/HelpIcon'
 import { Button } from '@abc-transitionbascarbone/ui'
 import ZoomInMapIcon from '@mui/icons-material/ZoomInMap'
 import ZoomOutMapIcon from '@mui/icons-material/ZoomOutMap'
@@ -9,7 +10,6 @@ import { FormControl, FormHelperText } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { Control, Controller, FieldValues, Path, useForm, useFormState } from 'react-hook-form'
-import HelpIcon from '../base/HelpIcon'
 import QualitySelect from '../form/QualitySelect'
 import styles from './EmissionSource.module.css'
 

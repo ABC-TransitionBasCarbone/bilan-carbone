@@ -1,7 +1,6 @@
 'use client'
 
 import Block from '@/components/base/Block'
-import HelpIcon from '@/components/base/HelpIcon'
 import IconLabel from '@/components/base/IconLabel'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import GlossaryModal from '@/components/modals/GlossaryModal'
@@ -17,6 +16,7 @@ import {
   StudyExportsCommandValidation,
 } from '@/services/serverFunctions/study.command'
 import { hasEditionRights } from '@/utils/study'
+import HelpIcon from '@abc-transitionbascarbone/components/src/base/HelpIcon'
 import { ControlMode, Export, SiteCAUnit, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
 import { zodResolver } from '@hookform/resolvers/zod'
 import classNames from 'classnames'

@@ -6,7 +6,7 @@ import { BaseInputProps } from './utils'
 
 const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
   backgroundColor: 'white',
-  border: `solid 1px ${theme.custom.box.borderColor}`,
+  border: `solid 1px`,
   borderRadius: '1rem',
   width: 'fit-content',
 }))

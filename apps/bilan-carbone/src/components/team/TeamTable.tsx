@@ -1,12 +1,12 @@
 'use client'
 
-import HelpIcon from '@/components/base/HelpIcon'
 import { TeamMember } from '@/db/account'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { isAdvanced } from '@/services/permissions/environment'
 import { deleteOrganizationMember } from '@/services/serverFunctions/organization'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { canEditMemberRole, getEnvironmentRoles } from '@/utils/user'
+import HelpIcon from '@abc-transitionbascarbone/components/src/base/HelpIcon'
 import BaseTable from '@abc-transitionbascarbone/components/src/base/Table'
 import { Role } from '@abc-transitionbascarbone/db-common/enums'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'

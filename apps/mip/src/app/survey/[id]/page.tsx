@@ -1,5 +1,4 @@
-import { Survey } from '@/components/survey/Survey'
-import { sampleSurvey } from '@/data/sampleSurvey'
+import Survey from '@/components/survey/Survey'
 import { MipPublicodesProvider } from '@/publicodes/MipPublicodesProvider'
 
 export default async function SurveyPage({ params }: { params: Promise<{ id: string }> }) {
@@ -7,7 +6,7 @@ export default async function SurveyPage({ params }: { params: Promise<{ id: str
 
   return (
     <MipPublicodesProvider>
-      <Survey survey={sampleSurvey} surveyId={id} />
+      <Survey surveyId={id} />
     </MipPublicodesProvider>
   )
 }

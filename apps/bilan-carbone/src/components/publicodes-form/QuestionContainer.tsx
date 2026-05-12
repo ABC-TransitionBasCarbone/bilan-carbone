@@ -1,13 +1,13 @@
-import { Box } from '@mui/material'
-import { useTranslations } from 'next-intl'
-import { useState } from 'react'
-import HelpIcon from '../base/HelpIcon'
+import HelpIcon from '@abc-transitionbascarbone/components/src/base/HelpIcon'
 import {
   StyledQuestionContainer,
   StyledQuestionContent,
   StyledQuestionHeader,
   StyledQuestionTitle,
-} from '../dynamic-form/QuestionContainer.styles'
+} from '@abc-transitionbascarbone/css'
+import { Box } from '@mui/material'
+import { useTranslations } from 'next-intl'
+import { useState } from 'react'
 import GlossaryModal from '../modals/GlossaryModal'
 
 export interface QuestionContainerProps {

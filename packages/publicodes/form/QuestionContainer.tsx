@@ -1,43 +1,28 @@
-import { Box } from '@mui/material'
-import { useTranslations } from 'next-intl'
-import { useState } from 'react'
-import HelpIcon from '../base/HelpIcon'
 import {
   StyledQuestionContainer,
   StyledQuestionContent,
   StyledQuestionHeader,
   StyledQuestionTitle,
-} from '../dynamic-form/QuestionContainer.styles'
-import GlossaryModal from '../modals/GlossaryModal'
+} from '@abc-transitionbascarbone/css'
+import { Box } from '@mui/material'
 
 export interface QuestionContainerProps {
   label: string
-  helperText?: string
   children: React.ReactNode
 }
 
-const QuestionContainer = ({ label, helperText, children }: QuestionContainerProps) => {
-  const tGlossary = useTranslations('questions.glossary')
-  const [glossary, setGlossary] = useState('')
-  const tCommon = useTranslations('common.questions.glossary')
-
+const QuestionContainer = ({ label, children }: QuestionContainerProps) => {
   return (
     <StyledQuestionContainer>
       <StyledQuestionHeader>
         <Box className="align-center gapped1">
           <StyledQuestionTitle>{label}</StyledQuestionTitle>
-          {helperText && <HelpIcon className="ml-2" onClick={() => setGlossary('title')} label={tGlossary('title')} />}
         </Box>
       </StyledQuestionHeader>
 
       <StyledQuestionContent>{children}</StyledQuestionContent>
-      {glossary && (
-        <GlossaryModal glossary="title" label="emission-factor-post" t={tCommon} onClose={() => setGlossary('')}>
-          {helperText}
-        </GlossaryModal>
-      )}
     </StyledQuestionContainer>
   )
 }
 
-export default QuestionContainer
+export { QuestionContainer }

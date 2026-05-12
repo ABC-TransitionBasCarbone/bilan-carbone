@@ -1,7 +1,6 @@
 'use client'
 
 import Block from '@/components/base/Block'
-import HelpIcon from '@/components/base/HelpIcon'
 import { FormAutocomplete } from '@/components/form/Autocomplete'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import { FormTextField } from '@/components/form/TextField'
@@ -26,6 +25,7 @@ import {
   ChangeStudySiteTiltSimplifiedCommand,
   ChangeStudySiteTiltSimplifiedValidation,
 } from '@/services/serverFunctions/study.command'
+import HelpIcon from '@abc-transitionbascarbone/components/src/base/HelpIcon'
 import { SiteCAUnit, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CircularProgress, Typography } from '@mui/material'
