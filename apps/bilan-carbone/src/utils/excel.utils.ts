@@ -10,7 +10,7 @@ export function parseExcelSheet(
     ignoredColumns?: number[]
   },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): { success: false; errors: ParseSheetError[] } | { success: true; dataRows: any[][] } {
+): { success: false; errors: ParseSheetError[] } | { success: true; dataRows: any[][]; headerRowIndex: number } {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let workbook: ReturnType<typeof xlsx.parse<any[]>>
   try {
@@ -43,5 +43,5 @@ export function parseExcelSheet(
     return { success: false, errors: [{ line: 0, key: 'emptyFile' }] }
   }
 
-  return { success: true, dataRows }
+  return { success: true, dataRows, headerRowIndex }
 }
