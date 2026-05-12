@@ -1,4 +1,4 @@
-import { usePublicodesRuleTranslation } from '@/hooks/usePublicodesTranslation'
+import { usePublicodesRuleTranslation } from '@abc-transitionbascarbone/publicodes/hooks'
 import { Checkbox, FormControlLabel, styled } from '@mui/material'
 import { EvaluatedCheckbox } from '@publicodes/forms'
 import { OnFieldChange } from '../utils'

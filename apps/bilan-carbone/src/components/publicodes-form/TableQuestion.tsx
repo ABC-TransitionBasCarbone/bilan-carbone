@@ -1,5 +1,5 @@
 import BaseTable from '@/components/base/Table'
-import { usePublicodesTranslation } from '@/hooks/usePublicodesTranslation'
+import { usePublicodesTranslation } from '@abc-transitionbascarbone/publicodes/hooks'
 import { Paper, TableContainer } from '@mui/material'
 import { EvaluatedFormElement } from '@publicodes/forms'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'

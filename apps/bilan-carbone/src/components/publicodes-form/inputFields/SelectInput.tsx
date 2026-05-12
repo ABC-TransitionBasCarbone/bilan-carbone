@@ -1,4 +1,4 @@
-import { usePublicodesRuleTranslation } from '@/hooks/usePublicodesTranslation'
+import { usePublicodesRuleTranslation } from '@abc-transitionbascarbone/publicodes/hooks'
 import { FormControl, FormHelperText, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { EvaluatedSelect } from '@publicodes/forms'
