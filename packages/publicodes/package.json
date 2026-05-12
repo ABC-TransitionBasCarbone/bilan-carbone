@@ -8,7 +8,8 @@
     ".": "./singletons.ts",
     "./utils": "./utils.ts",
     "./hooks": "./hooks/index.ts",
-    "./context": "./context/index.ts"
+    "./context": "./context/index.ts",
+    "./form": "./form/index.ts"
   },
   "peerDependencies": {
     "react": "*",

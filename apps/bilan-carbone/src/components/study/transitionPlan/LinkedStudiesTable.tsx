@@ -1,11 +1,11 @@
 'use client'
 
-import BaseTable from '@/components/base/Table'
 import { TableActionButton } from '@/components/base/TableActionButton'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteExternalStudy, deleteLinkedStudy } from '@/services/serverFunctions/transitionPlan'
 import type { PastStudy } from '@/types/trajectory.types'
 import { formatNumber } from '@/utils/number'
+import BaseTable from '@abc-transitionbascarbone/components/src/base/Table'
 import type { StudyResultUnit } from '@abc-transitionbascarbone/db-common'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'

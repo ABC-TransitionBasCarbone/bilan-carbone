@@ -1,0 +1,37 @@
+.relationLine {
+  width: 3px;
+  height: 2rem;
+  margin-left: 1rem;
+  margin-top: -2rem;
+  margin-bottom: 0;
+  background-color: #63ea90; /* TODO: change mui variable when available */
+}
+
+.selectMenuPaper {
+  width: auto !important;
+  margin-left: 2rem;
+  margin-right: 2rem;
+}
+
+.selectMenuPaper.table {
+  min-width: 12.5rem;
+  max-width: 12.5rem;
+}
+
+.selectMenuPaper.normal {
+  min-width: 100%;
+  max-width: 100%;
+}
+
+.selectMenuItem {
+  white-space: normal;
+  min-height: 3rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  width: auto;
+  max-width: 100%;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow: hidden;
+  box-sizing: border-box;
+}

@@ -1,12 +1,12 @@
 'use client'
 
-import BaseTable from '@/components/base/Table'
 import {
   hasAccessToStudySiteAddAndSelection,
   hasCustomGlossaryTextForEstablishment,
 } from '@/services/permissions/environment'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
 import { defaultCAUnit } from '@/utils/number'
+import BaseTable from '@abc-transitionbascarbone/components/src/base/Table'
 import { Environment, SiteCAUnit } from '@abc-transitionbascarbone/db-common/enums'
 import { Button } from '@abc-transitionbascarbone/ui'
 import { Checkbox, FormControlLabel } from '@mui/material'

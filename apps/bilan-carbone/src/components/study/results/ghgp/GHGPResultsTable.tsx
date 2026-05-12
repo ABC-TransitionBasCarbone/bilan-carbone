@@ -1,12 +1,12 @@
 'use client'
 
-import BaseTable from '@/components/base/Table'
 import type { FullStudy } from '@/db/study'
 import { PostInfos } from '@/services/results/exports'
 import { rulesSpans } from '@/services/results/ghgp'
 import { getConfidenceInterval } from '@/services/uncertainty'
 import { getGHGPRuleName } from '@/utils/ghgp'
 import { formatConfidenceInterval, formatEmission, STUDY_UNIT_VALUES } from '@/utils/study'
+import BaseTable from '@abc-transitionbascarbone/components/src/base/Table'
 import { EmissionFactorBase, Export } from '@abc-transitionbascarbone/db-common/enums'
 import { Cell, ColumnDef, getCoreRowModel, Row, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'
