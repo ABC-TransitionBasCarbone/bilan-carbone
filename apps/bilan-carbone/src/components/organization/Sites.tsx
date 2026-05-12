@@ -6,6 +6,7 @@ import {
 } from '@/services/permissions/environment'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
 import { defaultCAUnit } from '@/utils/number'
+import Help from '@abc-transitionbascarbone/components/src/base/HelpIcon'
 import BaseTable from '@abc-transitionbascarbone/components/src/base/Table'
 import { Environment, SiteCAUnit } from '@abc-transitionbascarbone/db-common/enums'
 import { Button } from '@abc-transitionbascarbone/ui'
@@ -15,7 +16,6 @@ import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import { UseFormReturn, UseFormSetValue } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
-import Help from '../base/HelpIcon'
 import GlossaryModal from '../modals/GlossaryModal'
 
 type TypeDef = SitesCommand['sites'][number]

@@ -11,12 +11,12 @@ import { useServerFunction } from '@/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
 import { createStudyCommand, duplicateStudyCommand } from '@/services/serverFunctions/study'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
+import HelpIcon from '@abc-transitionbascarbone/components/src/base/HelpIcon'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
-import HelpIcon from '../../base/HelpIcon'
 import styles from './Form.module.css'
 
 interface Props {

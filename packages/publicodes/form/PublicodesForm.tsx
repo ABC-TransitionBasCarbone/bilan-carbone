@@ -1,6 +1,6 @@
-import { usePublicodesForm } from '@/lib/publicodes/context'
 import { Box } from '@mui/material'
 import { useMemo } from 'react'
+import { usePublicodesForm } from '../context'
 import { getEvaluatedFormLayout } from './layouts/evaluatedFormLayout'
 import { FormLayout } from './layouts/formLayout'
 import styles from './PublicodesForm.module.css'
@@ -11,7 +11,7 @@ export interface PublicodesFormProps<RuleName extends string> {
   formLayouts: FormLayout<RuleName>[]
 }
 
-export default function PublicodesForm<RuleName extends string>({ formLayouts }: PublicodesFormProps<RuleName>) {
+export function PublicodesForm<RuleName extends string>({ formLayouts }: PublicodesFormProps<RuleName>) {
   const { engine, situation, listLayoutSituations, updateField } = usePublicodesForm<RuleName>()
 
   const elementsWithRelation = useMemo(() => {

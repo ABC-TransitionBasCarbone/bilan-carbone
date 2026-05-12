@@ -9,6 +9,7 @@ import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
 import { withInfobulle } from '@/utils/post'
 import { postColors, STUDY_UNIT_VALUES } from '@/utils/study'
+import HelpIcon from '@abc-transitionbascarbone/components/src/base/HelpIcon'
 import {
   ControlMode,
   Environment,
@@ -22,7 +23,6 @@ import classNames from 'classnames'
 import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import HelpIcon from '../base/HelpIcon'
 import ElectricityBaseDifference from './ElectricityBaseDifference'
 import EmissionSource from './EmissionSource'
 import NewEmissionSource from './NewEmissionSource'

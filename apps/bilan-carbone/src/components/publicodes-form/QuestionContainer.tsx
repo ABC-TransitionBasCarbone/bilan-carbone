@@ -1,14 +1,14 @@
 import { Box } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
-import HelpIcon from '../base/HelpIcon'
 import GlossaryModal from '../modals/GlossaryModal'
+import HelpIcon from '@abc-transitionbascarbone/components/src/base/HelpIcon'
 import {
   StyledQuestionContainer,
   StyledQuestionContent,
   StyledQuestionHeader,
   StyledQuestionTitle,
-} from './QuestionContainer.styles'
+} from '@abc-transitionbascarbone/css'
 
 export interface QuestionContainerProps {
   label: string

@@ -1,7 +1,6 @@
 'use client'
 
 import Box from '@/components/base/Box'
-import HelpIcon from '@/components/base/HelpIcon'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import type { FullStudy } from '@/db/study'
 import { customRich } from '@/i18n/customRich'
@@ -9,6 +8,7 @@ import { hasAccessToStudyResults, hasRoleOnStudy } from '@/services/permissions/
 import { getDetailedEmissionResults } from '@/services/study'
 import { formatNumber } from '@/utils/number'
 import { getDisplayedRoleOnStudy } from '@/utils/study'
+import HelpIcon from '@abc-transitionbascarbone/components/src/base/HelpIcon'
 import { Button } from '@abc-transitionbascarbone/ui'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import classNames from 'classnames'

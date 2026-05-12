@@ -11,10 +11,7 @@ export interface PublicodesInputFieldProps<RuleName extends string> {
   onChange: OnFieldChange<RuleName>
 }
 
-export default function InputField<RuleName extends string>({
-  formElement,
-  onChange,
-}: PublicodesInputFieldProps<RuleName>) {
+export function InputField<RuleName extends string>({ formElement, onChange }: PublicodesInputFieldProps<RuleName>) {
   /*
    * TODO: to check if we want to support more input types in the future
    * eslint-disable no-fallthrough

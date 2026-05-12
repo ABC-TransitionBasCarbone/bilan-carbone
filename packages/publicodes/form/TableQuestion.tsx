@@ -5,7 +5,7 @@ import { EvaluatedFormElement } from '@publicodes/forms'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
-import InputField from './InputField'
+import { InputField } from './InputField'
 import { EvaluatedTableLayout } from './layouts/evaluatedFormLayout'
 import { OnFieldChange } from './utils'
 

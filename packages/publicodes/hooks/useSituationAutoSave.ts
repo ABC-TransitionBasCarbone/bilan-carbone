@@ -1,5 +1,5 @@
-import { situationsAreEqual } from '@/lib/publicodes/utils'
-import { saveSituation as saveSituationInDB } from '@/services/serverFunctions/situation'
+import { situationsAreEqual } from '../utils'
+// import { saveSituation as saveSituationInDB } from '@/services/serverFunctions/situation'
 import { Situation } from 'publicodes'
 import { useCallback, useRef, useState } from 'react'
 import { ListLayoutSituations } from '../context/types'
@@ -42,23 +42,23 @@ export const useSituationAutoSave = ({
         return
       }
 
-      try {
-        setSaveStatus('saving')
-        const result = await saveSituationInDB(studyId, studySiteId, situation, listLayoutSituations, modelVersion)
+      // try {
+      setSaveStatus('saving')
+      // const result = await saveSituationInDB(studyId, studySiteId, situation, listLayoutSituations, modelVersion)
 
-        if (result.success) {
-          lastSavedSituation.current = situation
-          setSaveStatus('saved')
-          setLastSaved(new Date())
-          setError(undefined)
-        } else {
-          setSaveStatus('error')
-          setError(result.errorMessage || 'Failed to save situation')
-        }
-      } catch (err) {
-        setSaveStatus('error')
-        setError(err instanceof Error ? err.message : 'Unknown error')
-      }
+      // if (result.success) {
+      //   lastSavedSituation.current = situation
+      //   setSaveStatus('saved')
+      //   setLastSaved(new Date())
+      setError(undefined)
+      //   } else {
+      //     setSaveStatus('error')
+      //     setError(result.errorMessage || 'Failed to save situation')
+      //   }
+      // } catch (err) {
+      //   setSaveStatus('error')
+      //   setError(err instanceof Error ? err.message : 'Unknown error')
+      // }
     },
     [enabled, studyId, studySiteId, modelVersion],
   )

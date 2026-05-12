@@ -1,6 +1,6 @@
-import HelpIcon from '@/components/base/HelpIcon'
 import type { FullStudy } from '@/db/study'
 import { StudyExportsCommand } from '@/services/serverFunctions/study.command'
+import HelpIcon from '@abc-transitionbascarbone/components/src/base/HelpIcon'
 import { ControlMode, Export } from '@abc-transitionbascarbone/db-common/enums'
 import { Translations } from '@abc-transitionbascarbone/lib'
 import { FormControl, FormGroup, FormLabel } from '@mui/material'
