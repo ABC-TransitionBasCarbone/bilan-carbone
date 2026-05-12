@@ -66,6 +66,7 @@ const otherSelectEmissionFactor = {
 
 const selectEmissionFactor = {
   id: true,
+  createdAt: true,
   status: true,
   totalCo2: true,
   location: true,
