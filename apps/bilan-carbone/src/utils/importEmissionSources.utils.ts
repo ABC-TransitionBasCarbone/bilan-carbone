@@ -34,10 +34,7 @@ export function getExampleRowPrefixes(): string[] {
   })
 }
 
-export function mapTypeLabelFromTranslations(
-  label: string | undefined | null,
-  locale: LocaleType,
-): EmissionSourceType | null {
+function mapTypeLabelFromTranslations(label: string | undefined | null, locale: LocaleType): EmissionSourceType | null {
   return mapLabelFromTranslations(label, locale, (bc) =>
     buildLabelMap(
       bc.emissionSource.type as Record<string, unknown>,
@@ -47,7 +44,7 @@ export function mapTypeLabelFromTranslations(
   )
 }
 
-export function mapCaracterisationLabelFromTranslations(
+function mapCaracterisationLabelFromTranslations(
   label: string | undefined | null,
   locale: LocaleType,
 ): EmissionSourceCaracterisation | null {
@@ -60,7 +57,7 @@ export function mapCaracterisationLabelFromTranslations(
   )
 }
 
-export function mapSubPostLabelFromTranslations(label: string | undefined | null, locale: LocaleType): SubPost | null {
+function mapSubPostLabelFromTranslations(label: string | undefined | null, locale: LocaleType): SubPost | null {
   const subPostValues = new Set(Object.values(SubPost) as string[])
   return mapLabelFromTranslations(label, locale, (bc) =>
     buildLabelMap(
@@ -76,6 +73,7 @@ export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): Pa
     headerRowIndex: 4,
     ignoredColumns: [SOURCE_IMPORT_COLUMNS.site, SOURCE_IMPORT_COLUMNS.post, SOURCE_IMPORT_COLUMNS.subPost],
   })
+
   if (!sheetResult.success) {
     return sheetResult
   }
@@ -114,7 +112,6 @@ export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): Pa
     }
 
     const emissionFactorId = col('emissionFactorId') || undefined
-
     const emissionFactorName = col('emissionFactorName')
     if (!emissionFactorName && !emissionFactorId) {
       rowErrors.push({ key: 'missingEmissionFactorName' })
