@@ -51,6 +51,9 @@ export function mapUnitLabelFromTranslationsWithList(
   return mapLabelFromTranslations(label, locale, (bc) => buildUnitLabelMap(bc, unitList))
 }
 
+/**
+ * Filters and casts the entries to the target type.
+ */
 export function buildLabelMap<T extends string>(
   entries: Record<string, unknown>,
   keyFilter: (k: string) => boolean,
