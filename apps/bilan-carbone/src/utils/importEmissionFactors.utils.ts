@@ -5,13 +5,13 @@ import { COLUMNS, ImportError, ParsedRow, ParseResult } from '@/types/importEmis
 import { EmissionFactorBase, Environment, SubPost, Unit } from '@abc-transitionbascarbone/db-common/enums'
 import { ManualEmissionFactorUnitList } from './emissionFactors'
 import { parseExcelSheet } from './excel.utils'
-import { getExampleRowPrefixes } from './importEmissionSources.utils'
 import {
   buildLabelMap,
   mapLabelFromTranslations,
   mapQualityLabelFromTranslations,
   mapUnitLabelFromTranslationsWithList,
 } from './import.utils'
+import { getExampleRowPrefixes } from './importEmissionSources.utils'
 import { parseNumericValue } from './number'
 import { getBcTranslations, getSingularForm } from './translation.utils'
 
@@ -315,6 +315,10 @@ export function parseImportFile(buffer: Buffer, locale: LocaleType, environment:
 
   if (errors.length > 0) {
     return { success: false, errors }
+  }
+
+  if (parsedRows.length === 0) {
+    return { success: false, errors: [{ line: 0, key: 'noRows' }] }
   }
 
   return { success: true, rows: parsedRows }
