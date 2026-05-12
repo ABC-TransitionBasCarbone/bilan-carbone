@@ -6,7 +6,7 @@ import {
 import { EfRow, findEmissionFactorMatch } from './findEmissionFactor.utils'
 
 jest.mock('@/db/emissionFactors', () => ({
-  findEmissionFactorByIdForMatch: jest.fn(),
+  findEmissionFactorByImportedIdForMatch: jest.fn(),
   findEmissionFactorsByNameAndUnit: jest.fn(),
   findEmissionFactorsByUnit: jest.fn(),
 }))
