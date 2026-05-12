@@ -1,35 +1,5 @@
 import { EmissionSourceCaracterisation, EmissionSourceType, SubPost } from '@abc-transitionbascarbone/db-common/enums'
-
-export type ImportEmissionSourceError = {
-  line: number
-  key: string
-  value?: string
-}
-
-export type EmissionFactorCandidateInfo = {
-  foundTitle?: string
-  foundValue?: number
-  foundUnit?: string
-}
-
-export type ImportEmissionSourceWarning = {
-  type: 'efNotFound' | 'validationSkipped'
-  line: number
-  sourceName?: string
-  searchedName?: string
-  searchedValue?: number
-  searchedUnit?: string
-  foundTitle?: string
-  foundValue?: number
-  foundUnit?: string
-  candidates?: EmissionFactorCandidateInfo[]
-}
-
-export type ImportEmissionSourcesResult = {
-  success: boolean
-  errors?: ImportEmissionSourceError[]
-  warnings?: ImportEmissionSourceWarning[]
-}
+import { ImportError } from './import.types'
 
 export type PreviewEmissionSourceRow = {
   site: string
@@ -46,7 +16,7 @@ export type PreviewEmissionSourceRow = {
 
 export type PreviewEmissionSourcesResult =
   | { success: true; rows: PreviewEmissionSourceRow[] }
-  | { success: false; errors: ImportEmissionSourceError[] }
+  | { success: false; errors: ImportError[] }
 
 export type ParsedEmissionSourceRow = {
   siteName: string
@@ -71,10 +41,6 @@ export type ParsedEmissionSourceRow = {
   feComment: string | undefined
   validated: boolean | undefined
 }
-
-export type ParseEmissionSourcesResult =
-  | { success: true; rows: ParsedEmissionSourceRow[] }
-  | { success: false; errors: ImportEmissionSourceError[] }
 
 export const SOURCE_IMPORT_COLUMNS = {
   site: 0,

@@ -2,6 +2,8 @@
 
 import LoadingButton from '@/components/base/LoadingButton'
 import Modal from '@/components/modals/Modal'
+import { ImportError, ImportResult, ImportWarning } from '@/types/import.types'
+import { formatEf } from '@/utils/import.utils'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import DownloadIcon from '@mui/icons-material/Download'
 import UploadFileIcon from '@mui/icons-material/UploadFile'
@@ -10,27 +12,6 @@ import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { DragEvent, ReactNode, useRef, useState, useTransition } from 'react'
 import styles from './ImportFileModal.module.css'
-
-type ImportError = { line: number; key: string; value?: string }
-
-type ImportWarningCandidate = { foundTitle?: string; foundValue?: number; foundUnit?: string }
-
-type ImportWarning = {
-  type: 'efNotFound' | 'validationSkipped'
-  line: number
-  sourceName?: string
-  searchedName?: string
-  searchedValue?: number
-  searchedUnit?: string
-  foundTitle?: string
-  foundValue?: number
-  foundUnit?: string
-  candidates?: ImportWarningCandidate[]
-}
-
-type ImportResult = { success: boolean; errors?: ImportError[]; warnings?: ImportWarning[] }
-
-type ImportModalState = 'default' | 'preview' | 'error' | 'warning'
 
 function groupByLine<T extends { line: number }>(items: T[]): { line: number; items: T[] }[] {
   const map = new Map<number, T[]>()
@@ -78,7 +59,7 @@ const ImportFileModal = <TPreviewRow,>({
   const tCommon = useTranslations('common')
   const [isPending, startTransition] = useTransition()
   const [isDownloading, setIsDownloading] = useState(false)
-  const [modalState, setModalState] = useState<ImportModalState>('default')
+  const [modalState, setModalState] = useState<'default' | 'preview' | 'error' | 'warning'>('default')
   const [errors, setErrors] = useState<ImportError[]>([])
   const [warnings, setWarnings] = useState<ImportWarning[]>([])
   const [previewRows, setPreviewRows] = useState<TPreviewRow[]>([])
@@ -272,19 +253,13 @@ const ImportFileModal = <TPreviewRow,>({
                             </ListItem>
                           )
                         }
-                        const formatEf = (
-                          name: string | undefined,
-                          value: number | undefined,
-                          unit: string | undefined,
-                        ) =>
-                          [name, value !== undefined && unit ? `${value} ${unit}` : (value ?? unit)]
-                            .filter(Boolean)
-                            .join(' - ')
+
                         const searched = formatEf(w.searchedName, w.searchedValue, w.searchedUnit)
                         const found =
                           w.foundTitle !== undefined || w.foundValue !== undefined
                             ? formatEf(w.foundTitle, w.foundValue, w.foundUnit)
                             : null
+
                         return (
                           <ListItem key={i} disableGutters className={line > 0 ? 'pl15' : undefined}>
                             <div>

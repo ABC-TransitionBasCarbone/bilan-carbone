@@ -7,13 +7,8 @@ import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
 import { Post, subPostsByPost } from '@/services/posts'
 import { AccountWithUser } from '@/types/account.types'
-import {
-  ImportEmissionSourceError,
-  ImportEmissionSourcesResult,
-  ImportEmissionSourceWarning,
-  PreviewEmissionSourceRow,
-  PreviewEmissionSourcesResult,
-} from '@/types/importEmissionSources.types'
+import { ImportError, ImportResult, ImportWarning } from '@/types/import.types'
+import { PreviewEmissionSourceRow, PreviewEmissionSourcesResult } from '@/types/importEmissionSources.types'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { findEmissionFactorMatch } from '@/utils/findEmissionFactor.utils'
 import { getImportEmissionSourcesTranslations, parseEmissionSourcesFile } from '@/utils/importEmissionSources.utils'
@@ -93,7 +88,7 @@ export async function importEmissionSourcesFromFile(
   file: File,
   studyId: string,
   forceImport = false,
-): Promise<ImportEmissionSourcesResult> {
+): Promise<ImportResult> {
   const account = await getAuthenticatedAccount()
 
   const study = await getStudyOrThrow(studyId, account)
@@ -124,8 +119,8 @@ export async function importEmissionSourcesFromFile(
   const translateUnit = (unit: string | undefined) =>
     unit ? getSingularForm(unitTranslations[unit] ?? unit) : undefined
 
-  const rowErrors: ImportEmissionSourceError[] = []
-  const rowWarnings: ImportEmissionSourceWarning[] = []
+  const rowErrors: ImportError[] = []
+  const rowWarnings: ImportWarning[] = []
   const validRows: Array<{
     studySiteId: string
     studyId: string
@@ -343,6 +338,7 @@ export async function getImportEmissionSourcesTemplate(
   const postTranslations = bc.emissionFactors.post as unknown as Record<string, string>
   const unitTranslations = bc.units as Record<string, string>
   const typeTranslations = (bc.emissionSource as Record<string, unknown>).type as Record<string, string>
+  const qualityTranslations = bc.quality as Record<string, string>
 
   const studySite = siteId ? study.sites.find((s) => s.site?.id === siteId) : study.sites[0]
   const siteName = studySite?.site?.name ?? ''
@@ -355,7 +351,7 @@ export async function getImportEmissionSourcesTemplate(
   exampleRow[3] = t('examplePrefix') + t('exampleName')
   exampleRow[6] = 1000
   exampleRow[7] = getSingularForm(unitTranslations['TON'])
-  exampleRow[11] = 5
+  exampleRow[11] = qualityTranslations['5']
   exampleRow[16] = t('exampleSource')
   exampleRow[17] = typeTranslations['Physical']
   exampleRow[20] = t('exampleEmissionFactor')

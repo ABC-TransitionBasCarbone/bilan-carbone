@@ -1,11 +1,7 @@
 import { Locale, LocaleType } from '@/i18n/config'
 import { qualityKeys } from '@/services/uncertainty'
-import {
-  ImportEmissionSourceError,
-  ParsedEmissionSourceRow,
-  ParseEmissionSourcesResult,
-  SOURCE_IMPORT_COLUMNS,
-} from '@/types/importEmissionSources.types'
+import { ImportError } from '@/types/import.types'
+import { ParsedEmissionSourceRow, SOURCE_IMPORT_COLUMNS } from '@/types/importEmissionSources.types'
 import {
   EmissionSourceCaracterisation,
   EmissionSourceType,
@@ -68,6 +64,10 @@ function mapSubPostLabelFromTranslations(label: string | undefined | null, local
   )
 }
 
+type ParseEmissionSourcesResult =
+  | { success: true; rows: ParsedEmissionSourceRow[] }
+  | { success: false; errors: ImportError[] }
+
 export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): ParseEmissionSourcesResult {
   const sheetResult = parseExcelSheet(buffer, {
     headerRowIndex: 4,
@@ -79,13 +79,13 @@ export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): Pa
   }
 
   const { dataRows, headerRowIndex } = sheetResult
-  const errors: ImportEmissionSourceError[] = []
+  const errors: ImportError[] = []
   const parsedRows: ParsedEmissionSourceRow[] = []
 
   for (let i = 0; i < dataRows.length; i++) {
     const row = dataRows[i] as unknown[]
     const lineNum = i + headerRowIndex + 2
-    const rowErrors: Omit<ImportEmissionSourceError, 'line'>[] = []
+    const rowErrors: Omit<ImportError, 'line'>[] = []
 
     const col = (key: keyof typeof SOURCE_IMPORT_COLUMNS) => String(row[SOURCE_IMPORT_COLUMNS[key]] ?? '').trim()
 
