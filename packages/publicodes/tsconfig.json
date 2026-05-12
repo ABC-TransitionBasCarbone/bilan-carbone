@@ -3,14 +3,8 @@
   "compilerOptions": {
     "plugins": [],
     "paths": {
-      "@abc-transitionbascarbone/css": [
-        "../../packages/css/index.ts"
-      ]
+      "@abc-transitionbascarbone/css": ["../../packages/css/index.ts"]
     }
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.css"
-  ]
+  "include": ["**/*.ts", "**/*.tsx", "**/*.css"]
 }
