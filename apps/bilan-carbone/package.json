@@ -7,7 +7,7 @@
     "yarn": "1.22"
   },
   "scripts": {
-    "postinstall": "yarn install --production=false --cwd ../../packages/publicodes-packages/publicodes-count && yarn install --production=false --cwd ../../packages/publicodes-packages/publicodes-clickson && yarn install --production=false --cwd ../../packages/publicodes-packages/publicodes-tilt && prisma generate --config ../../packages/db-common/prisma.config.ts",
+    "postinstall": "yarn install --production=false --cwd ../../packages/publicodes-packages/publicodes-count && yarn install --production=false --cwd ../../packages/publicodes-packages/publicodes-clickson && yarn install --production=false --cwd ../../packages/publicodes-packages/publicodes-tilt && rm -rf ../../packages/db-common/src/generated/prisma && prisma generate --config ../../packages/db-common/prisma.config.ts",
     "dev": "next dev",
     "dev:test": "dotenv -e .env.test -- next dev --port 3001",
     "start:test": "dotenv -e .env.test -- env PORT=3001 node .next/standalone/apps/bilan-carbone/server.js",
