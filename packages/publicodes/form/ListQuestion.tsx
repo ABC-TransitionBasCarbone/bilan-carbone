@@ -1,5 +1,5 @@
-import { usePublicodesForm } from '@/lib/publicodes/context'
 import BaseTable from '@abc-transitionbascarbone/components/src/base/Table'
+import { usePublicodesForm } from '../context'
 import { usePublicodesTranslation } from '@abc-transitionbascarbone/publicodes/hooks'
 import { Button } from '@abc-transitionbascarbone/ui'
 import { ContentCopy, Delete } from '@mui/icons-material'

@@ -1,4 +1,3 @@
-import BaseTable from '@/components/base/Table'
 import { emissionFactorMap } from '@/constants/emissionFactorMap'
 import { UseAutoSaveReturn } from '@/hooks/useAutoSave'
 import { formatDynamicLabel } from '@/services/interpolation'
@@ -8,6 +7,7 @@ import {
   getQuestionsFromIdIntern,
 } from '@/services/serverFunctions/question'
 import { addTableRow, createFixedTableRow, deleteTableRow, duplicateTableRow, isTableAnswer } from '@/utils/tableInput'
+import BaseTable from '@abc-transitionbascarbone/components/src/base/Table'
 import type { Prisma } from '@abc-transitionbascarbone/db-common'
 import { QuestionType } from '@abc-transitionbascarbone/db-common/enums'
 import { Button } from '@abc-transitionbascarbone/ui'
