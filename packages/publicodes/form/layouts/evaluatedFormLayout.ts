@@ -1,6 +1,6 @@
-import { ListLayoutSituations } from '../../context'
 import { EvaluatedFormElement, getEvaluatedFormElement } from '@publicodes/forms'
 import Engine, { Situation } from 'publicodes'
+import { ListLayoutSituations } from '../../context'
 import { FormLayout, GroupLayout, InputLayout, ListLayout, TableLayout } from './formLayout'
 
 export type EvaluatedFormLayout<RuleName extends string> =

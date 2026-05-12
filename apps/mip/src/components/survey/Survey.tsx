@@ -34,7 +34,14 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   const t = useTranslations('survey')
   const tCommon = useTranslations('common')
   const { engine } = useMipPublicodes()
-  const formBuilder = useMemo(() => new FormBuilder({ engine }), [engine])
+  const formBuilder = useMemo(
+    () =>
+      new FormBuilder({
+        engine,
+        pageBuilder: (fields) => fields.map((field) => ({ elements: [field] })),
+      }),
+    [engine],
+  )
 
   const initState = useCallback(() => {
     let s = FormBuilder.newState()

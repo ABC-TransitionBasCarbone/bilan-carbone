@@ -1,5 +1,5 @@
-import { getI18nKeyRuleName, getI18nUnitKey } from '../utils'
 import { useTranslations } from 'next-intl'
+import { getI18nKeyRuleName, getI18nUnitKey } from '../utils'
 
 export function usePublicodesTranslation() {
   const tRules = useTranslations('publicodes-rules')
