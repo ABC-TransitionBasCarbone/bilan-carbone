@@ -13,9 +13,10 @@ export type EmissionFactorCandidateInfo = {
 }
 
 export type ImportEmissionSourceWarning = {
+  type: 'efNotFound' | 'validationSkipped'
   line: number
   sourceName?: string
-  searchedName: string
+  searchedName?: string
   searchedValue?: number
   searchedUnit?: string
   foundTitle?: string
@@ -37,6 +38,7 @@ export type PreviewEmissionSourceRow = {
   name: string
   value: string
   unit: string
+  emissionFactorId: string
   emissionFactorName: string
   emissionFactorValue: string
   emissionFactorUnit: string
@@ -59,6 +61,7 @@ export type ParsedEmissionSourceRow = {
   subPost: SubPost
   name: string
   unit: string | undefined
+  emissionFactorId: string | undefined
   emissionFactorName: string
   emissionFactorValue: number | undefined
   emissionFactorUnit: string | undefined
@@ -101,9 +104,10 @@ export const SOURCE_IMPORT_COLUMNS = {
   source: 16,
   type: 17,
   comment: 18,
-  emissionFactorName: 19,
-  emissionFactorValue: 20,
-  emissionFactorUnit: 21,
-  feComment: 30,
-  validation: 31,
+  emissionFactorId: 19,
+  emissionFactorName: 20,
+  emissionFactorValue: 21,
+  emissionFactorUnit: 22,
+  feComment: 31,
+  validation: 32,
 } as const

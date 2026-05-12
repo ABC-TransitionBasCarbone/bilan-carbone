@@ -597,6 +597,18 @@ export const getEmissionFactorWithoutQuality = async (organizationId: string) =>
     },
   })
 
+export const findEmissionFactorByIdForMatch = (id: string, organizationId: string) =>
+  prismaClient.emissionFactor.findFirst({
+    where: { id, OR: [{ organizationId: null }, { organizationId }] },
+    select: {
+      id: true,
+      totalCo2: true,
+      unit: true,
+      customUnit: true,
+      metaData: { select: { title: true, language: true } },
+    },
+  })
+
 export const findEmissionFactorsByNameAndUnit = (
   title: string,
   locale: string,

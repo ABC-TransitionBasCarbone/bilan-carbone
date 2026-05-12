@@ -97,8 +97,10 @@ export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): Pa
       rowErrors.push({ key: 'missingName' })
     }
 
+    const emissionFactorId = col('emissionFactorId') || undefined
+
     const emissionFactorName = col('emissionFactorName')
-    if (!emissionFactorName) {
+    if (!emissionFactorName && !emissionFactorId) {
       rowErrors.push({ key: 'missingEmissionFactorName' })
     }
 
@@ -182,6 +184,7 @@ export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): Pa
       subPost: subPost!,
       name,
       unit,
+      emissionFactorId,
       emissionFactorName,
       emissionFactorValue,
       emissionFactorUnit,
