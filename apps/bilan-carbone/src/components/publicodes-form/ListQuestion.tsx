@@ -1,6 +1,6 @@
 import BaseTable from '@/components/base/Table'
-import { usePublicodesTranslation } from '@/hooks/usePublicodesTranslation'
 import { usePublicodesForm } from '@/lib/publicodes/context'
+import { usePublicodesTranslation } from '@abc-transitionbascarbone/publicodes/hooks'
 import { Button } from '@abc-transitionbascarbone/ui'
 import { ContentCopy, Delete } from '@mui/icons-material'
 import { Box, IconButton, Paper, TableContainer } from '@mui/material'

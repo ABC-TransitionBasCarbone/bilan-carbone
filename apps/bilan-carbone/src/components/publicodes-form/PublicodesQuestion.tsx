@@ -1,4 +1,4 @@
-import { usePublicodesRuleTranslation } from '@/hooks/usePublicodesTranslation'
+import { usePublicodesRuleTranslation } from '@abc-transitionbascarbone/publicodes/hooks'
 import Box from '@mui/material/Box'
 import { EvaluatedFormElement } from '@publicodes/forms'
 import { useTranslations } from 'next-intl'

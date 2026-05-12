@@ -1,4 +1,4 @@
-import { getI18nKeyRuleName, getI18nUnitKey } from '@/lib/publicodes/utils'
+import { getI18nKeyRuleName, getI18nUnitKey } from '../utils'
 import { useTranslations } from 'next-intl'
 
 export function usePublicodesTranslation() {

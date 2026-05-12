@@ -1,4 +1,4 @@
-import { usePublicodesRuleTranslation } from '@/hooks/usePublicodesTranslation'
+import { usePublicodesRuleTranslation } from '@abc-transitionbascarbone/publicodes/hooks'
 import { FormControl, FormControlLabel, Radio, styled } from '@mui/material'
 import { EvaluatedRadioGroup } from '@publicodes/forms'
 import classNames from 'classnames'
