@@ -9,6 +9,7 @@ import { Alert, Button, Card, CardContent, Container, LinearProgress, Typography
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
+import TestPublicode from '../TestPublicode'
 import styles from './Survey.module.css'
 
 interface SurveyProps {
@@ -99,6 +100,8 @@ export function Survey({ survey, surveyId }: SurveyProps) {
 
   const currentQuestion = engine.getCurrentQuestion()
   const progress = engine.getProgress()
+
+  return <TestPublicode />
 
   if (isLoading) {
     return <Typography>{t('loading')}</Typography>
