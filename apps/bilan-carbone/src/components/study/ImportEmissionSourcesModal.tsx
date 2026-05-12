@@ -1,6 +1,7 @@
 'use client'
 
 import ImportFileModal from '@/components/base/ImportFileModal'
+import { download } from '@/services/file'
 import { Post } from '@/services/posts'
 import {
   getImportEmissionSourcesTemplate,
@@ -27,15 +28,7 @@ const ImportEmissionSourcesModal = ({ studyId, post, siteId, open, onClose, onSu
 
   const handleDownloadTemplate = async () => {
     const arrayBuffer = await getImportEmissionSourcesTemplate(studyId, post, siteId)
-    const blob = new Blob([arrayBuffer], {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = t('templateFileName')
-    a.click()
-    URL.revokeObjectURL(url)
+    download([arrayBuffer], t('templateFileName'), 'xlsx')
   }
 
   const renderPreviewTable = (rows: PreviewEmissionSourceRow[]) => (
