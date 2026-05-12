@@ -1,7 +1,9 @@
 'use client'
 
+import EmissionSourceButtons from '@/components/study/buttons/EmissionSourceButtons'
 import type { FullStudy } from '@/db/study'
 import { StudyRole } from '@abc-transitionbascarbone/db-common/enums'
+import { useToast } from '@abc-transitionbascarbone/ui/src/Toast/ToastProvider'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import Block from '../base/Block'
@@ -16,10 +18,12 @@ interface Props {
   user: UserSession
 }
 
-const StudyContributionPage = ({ study }: Props) => {
+const StudyContributionPage = ({ study, userRole }: Props) => {
   const tNav = useTranslations('nav')
   const tStudyNav = useTranslations('study.navigation')
+  const tImport = useTranslations('study.importEmissionSourcesModal')
   const { siteId, studySiteId, setSite } = useStudySite(study)
+  const { showSuccessToast } = useToast()
 
   return (
     <>
@@ -40,6 +44,19 @@ const StudyContributionPage = ({ study }: Props) => {
       <Block
         title={tStudyNav('dataEntry')}
         as="h2"
+        actions={[
+          {
+            actionType: 'node',
+            node: (
+              <EmissionSourceButtons
+                studyId={study.id}
+                userRole={userRole}
+                siteId={siteId}
+                onSuccess={() => showSuccessToast(tImport('success'))}
+              />
+            ),
+          },
+        ]}
         rightComponent={
           <SelectStudySite sites={study.sites} defaultValue={siteId} setSite={setSite} showAllOption={false} />
         }

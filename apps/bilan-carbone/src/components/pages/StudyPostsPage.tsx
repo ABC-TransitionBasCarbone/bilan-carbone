@@ -17,6 +17,7 @@ import {
   EmissionSourceType,
   StudyRole,
 } from '@abc-transitionbascarbone/db-common/enums'
+import { useToast } from '@abc-transitionbascarbone/ui/src/Toast/ToastProvider'
 import Fuse from 'fuse.js'
 import { UserSession } from 'next-auth'
 import { useLocale, useTranslations } from 'next-intl'
@@ -40,7 +41,9 @@ const StudyPostsPage = ({ post, study, userRole, emissionSources, siteId, studyS
   const [showInfography, setShowInfography] = useState(false)
   const tQuality = useTranslations('quality')
   const tUnit = useTranslations('units')
+  const tImport = useTranslations('study.importEmissionSourcesModal')
   const locale = useLocale()
+  const { showSuccessToast } = useToast()
 
   const initialTags = useMemo(
     () =>
@@ -163,14 +166,16 @@ const StudyPostsPage = ({ post, study, userRole, emissionSources, siteId, studyS
       <StudyPostsBlock
         post={post}
         study={study}
+        userRole={userRole}
+        siteId={siteId}
         display={showInfography}
         setDisplay={setShowInfography}
-        emissionSources={emissionSources}
         filters={filters}
         setFilters={updateFilters}
         caracterisationOptions={initialCaracterisations}
         sort={sort}
         setSort={updateSort}
+        onImportSuccess={() => showSuccessToast(tImport('success'))}
       >
         {showInfography && <StudyPostInfography study={study} siteId={siteId} studySiteId={studySiteId} />}
         <SubPosts

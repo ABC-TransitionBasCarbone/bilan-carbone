@@ -1,5 +1,6 @@
 'use client'
 
+import { download } from '@/services/file'
 import { exportManualEmissionFactorsToFile } from '@/services/serverFunctions/importEmissionFactors'
 import { useToast } from '@abc-transitionbascarbone/ui'
 import AddIcon from '@mui/icons-material/Add'
@@ -34,15 +35,7 @@ const EmissionFactorButtons = () => {
     setMenuAnchor(null)
     startExportTransition(async () => {
       const arrayBuffer = await exportManualEmissionFactorsToFile()
-      const blob = new Blob([arrayBuffer], {
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      })
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = t('exportFileName')
-      a.click()
-      URL.revokeObjectURL(url)
+      download([arrayBuffer], t('exportFileName'), 'xlsx')
     })
   }
 

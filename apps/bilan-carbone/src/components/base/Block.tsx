@@ -10,6 +10,7 @@ export type Action =
   | (ButtonProps & { actionType: 'button'; 'data-testid'?: string })
   | (LoadingButtonProps & ButtonProps & { actionType: 'loadingButton' })
   | (ButtonProps & { actionType: 'link'; href?: string; 'data-testid'?: string })
+  | { actionType: 'node'; node: ReactNode }
 
 export interface Props {
   children?: ReactNode
@@ -88,6 +89,8 @@ const Block = ({
                       <Button key={index} variant="outlined" {...(action as ButtonProps)} />
                     ) : actionType === 'loadingButton' ? (
                       <LoadingButton key={index} {...(action as LoadingButtonProps)} />
+                    ) : actionType === 'node' ? (
+                      <span key={index}>{(action as { node: ReactNode }).node}</span>
                     ) : (
                       <LinkButton key={index} variant="contained" {...(action as ButtonProps & { href: string })} />
                     ),

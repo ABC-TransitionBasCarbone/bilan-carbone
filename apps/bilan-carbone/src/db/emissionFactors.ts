@@ -597,3 +597,60 @@ export const getEmissionFactorWithoutQuality = async (organizationId: string) =>
       ],
     },
   })
+
+export const findEmissionFactorByImportedIdForMatch = (id: string, organizationId: string, versionIds: string[]) =>
+  prismaClient.emissionFactor.findFirst({
+    where: {
+      importedId: id,
+      OR: [{ organizationId: null }, { organizationId }],
+      versions: { some: { importVersionId: { in: versionIds } } },
+    },
+    select: {
+      id: true,
+      totalCo2: true,
+      unit: true,
+      customUnit: true,
+      metaData: { select: { title: true, language: true } },
+    },
+  })
+
+export const findEmissionFactorsByNameAndUnit = (
+  title: string,
+  locale: string,
+  orgFilter: Prisma.EmissionFactorWhereInput,
+  unitFilter: Prisma.EmissionFactorWhereInput,
+  versionIds: string[],
+) =>
+  prismaClient.emissionFactor.findMany({
+    where: {
+      AND: [orgFilter, unitFilter],
+      metaData: { some: { language: locale, title } },
+      versions: { some: { importVersionId: { in: versionIds } } },
+    },
+    select: {
+      id: true,
+      totalCo2: true,
+      unit: true,
+      customUnit: true,
+      metaData: { select: { title: true, language: true } },
+    },
+  })
+
+export const findEmissionFactorsByUnit = (
+  orgFilter: Prisma.EmissionFactorWhereInput,
+  unitFilter: Prisma.EmissionFactorWhereInput,
+  versionIds: string[],
+) =>
+  prismaClient.emissionFactor.findMany({
+    where: {
+      AND: [orgFilter, unitFilter],
+      versions: { some: { importVersionId: { in: versionIds } } },
+    },
+    select: {
+      id: true,
+      totalCo2: true,
+      unit: true,
+      customUnit: true,
+      metaData: { select: { title: true, language: true } },
+    },
+  })

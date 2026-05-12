@@ -3,46 +3,23 @@ import { environmentPostMapping, environmentSubPostsMapping } from '@/services/p
 import { EmissionFactorCommandValidation } from '@/services/serverFunctions/emissionFactor.command'
 import { COLUMNS, ImportError, ParsedRow, ParseResult } from '@/types/importEmissionFactors.types'
 import { EmissionFactorBase, Environment, SubPost, Unit } from '@abc-transitionbascarbone/db-common/enums'
-import xlsx from 'node-xlsx'
 import { ManualEmissionFactorUnitList } from './emissionFactors'
+import { parseExcelSheet } from './excel.utils'
+import {
+  buildLabelMap,
+  mapLabelFromTranslations,
+  mapQualityLabelFromTranslations,
+  mapUnitLabelFromTranslationsWithList,
+} from './import.utils'
+import { getExampleRowPrefixes } from './importEmissionSources.utils'
 import { parseNumericValue } from './number'
-import { BcTranslations, extractAllForms, getBcTranslations, getSingularForm } from './translation.utils'
+import { getBcTranslations, getSingularForm } from './translation.utils'
 
 export function getAllPostsLabel(locale: LocaleType): string {
   return getBcTranslations(locale).emissionFactors.importModal.allPostsAndSubPosts
 }
 
-/**
- * Map a string label coming from the import file to a value of the right type
- * based on the translations file.
- */
-function mapLabelFromTranslations<T>(
-  label: string | undefined | null,
-  locale: LocaleType,
-  buildMap: (bc: BcTranslations) => Record<string, T>,
-): T | null {
-  if (!label) {
-    return null
-  }
-  return buildMap(getBcTranslations(locale))[label.trim().toLowerCase()] ?? null
-}
-
-function buildLabelMap<T extends string>(
-  entries: Record<string, unknown>,
-  keyFilter: (k: string) => boolean,
-  toValue: (k: string) => T,
-): Record<string, T> {
-  return Object.fromEntries(
-    Object.entries(entries)
-      .filter(([k, v]) => keyFilter(k) && typeof v === 'string')
-      .map(([k, v]) => [(v as string).toLowerCase(), toValue(k)]),
-  )
-}
-
-export function mapBaseLabelFromTranslations(
-  label: string | undefined | null,
-  locale: LocaleType,
-): EmissionFactorBase | null {
+function mapBaseLabelFromTranslations(label: string | undefined | null, locale: LocaleType): EmissionFactorBase | null {
   return mapLabelFromTranslations(label, locale, (bc) =>
     buildLabelMap(
       bc.emissionFactors.base,
@@ -52,20 +29,7 @@ export function mapBaseLabelFromTranslations(
   )
 }
 
-export function mapQualityLabelFromTranslations(label: string | undefined | null, locale: LocaleType): number | null {
-  if (!label) {
-    return null
-  }
-  const bc = getBcTranslations(locale)
-  const map = Object.fromEntries(
-    Object.entries(bc.quality)
-      .filter(([k]) => /^[1-5]$/.test(k))
-      .map(([k, v]) => [v.toLowerCase(), Number(k)]),
-  )
-  return map[String(label).trim().toLowerCase()] ?? null
-}
-
-export function mapPostLabelFromTranslations(
+function mapPostLabelFromTranslations(
   label: string | undefined | null,
   locale: LocaleType,
   environment: Environment,
@@ -80,7 +44,7 @@ export function mapPostLabelFromTranslations(
   )
 }
 
-export function mapSubPostLabelFromTranslations(
+function mapSubPostLabelFromTranslations(
   label: string | undefined | null,
   locale: LocaleType,
   environment: Environment,
@@ -103,22 +67,8 @@ export function getUnitLabel(unit: Unit, locale: LocaleType): string {
   return getSingularForm(raw)
 }
 
-function buildUnitLabelMap(bc: BcTranslations): Record<string, Unit> {
-  const entries: [string, Unit][] = []
-  for (const unit of ManualEmissionFactorUnitList) {
-    const raw = (bc.units as Record<string, string>)[unit]
-    if (!raw) {
-      continue
-    }
-    for (const form of extractAllForms(raw)) {
-      entries.push([form.toLowerCase(), unit])
-    }
-  }
-  return Object.fromEntries(entries)
-}
-
-export function mapUnitLabelFromTranslations(label: string | undefined | null, locale: LocaleType): Unit | null {
-  return mapLabelFromTranslations(label, locale, buildUnitLabelMap)
+function mapManualUnitLabelFromTranslations(label: string | undefined | null, locale: LocaleType): Unit | null {
+  return mapUnitLabelFromTranslationsWithList(label, locale, ManualEmissionFactorUnitList)
 }
 
 /**
@@ -208,47 +158,11 @@ export function parsePostsAndSubPostsCell(
   return { success: true, subPosts: result }
 }
 
-function parseSheet(
-  buffer: Buffer,
-  locale: LocaleType,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): { success: false; errors: ImportError[] } | { success: true; dataRows: any[][] } {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let workbook: ReturnType<typeof xlsx.parse<any[]>>
-  try {
-    workbook = xlsx.parse(buffer, { raw: false })
-  } catch {
-    return { success: false, errors: [{ line: 0, key: 'invalidFileType' }] }
-  }
-
-  const sheet = workbook[0]
-  if (!sheet?.data || sheet.data.length < 2) {
-    return { success: false, errors: [{ line: 0, key: 'emptyFile' }] }
-  }
-
-  const dataRows = sheet.data.slice(1).filter((row) =>
-    row.some((cell, i) => {
-      const value = String(cell ?? '').trim()
-      if (value === '') {
-        return false
-      }
-      // Ignore the posts and subposts column from the filtering if it contains the special value
-      if (i === COLUMNS.postsAndSubPosts && value.toLowerCase() === getAllPostsLabel(locale).toLowerCase()) {
-        return false
-      }
-      return true
-    }),
-  )
-
-  if (dataRows.length === 0) {
-    return { success: false, errors: [{ line: 0, key: 'emptyFile' }] }
-  }
-
-  return { success: true, dataRows }
-}
-
 export function parseImportFile(buffer: Buffer, locale: LocaleType, environment: Environment): ParseResult {
-  const sheetResult = parseSheet(buffer, locale)
+  const sheetResult = parseExcelSheet(buffer, {
+    rowFilter: (_row, i, value) =>
+      !(i === COLUMNS.postsAndSubPosts && value.toLowerCase() === getAllPostsLabel(locale).toLowerCase()),
+  })
   if (!sheetResult.success) {
     return sheetResult
   }
@@ -266,6 +180,8 @@ export function parseImportFile(buffer: Buffer, locale: LocaleType, environment:
     const name = String(row[COLUMNS.name] ?? '').trim()
     if (!name) {
       rowErrors.push({ key: 'missingName' })
+    } else if (getExampleRowPrefixes().some((prefix) => name.startsWith(prefix))) {
+      continue
     }
 
     const source = String(row[COLUMNS.source] ?? '').trim()
@@ -286,7 +202,7 @@ export function parseImportFile(buffer: Buffer, locale: LocaleType, environment:
     }
 
     const strippedUnit = rawCustomUnit ? rawCustomUnit.replace(kgCO2ePrefix, '') : rawUnit.replace(kgCO2ePrefix, '')
-    const unit = rawCustomUnit ? Unit.CUSTOM : mapUnitLabelFromTranslations(strippedUnit, locale)
+    const unit = rawCustomUnit ? Unit.CUSTOM : mapManualUnitLabelFromTranslations(strippedUnit, locale)
     if (!unit) {
       rowErrors.push({ key: 'invalidUnit', value: rawUnit })
     }
@@ -399,6 +315,10 @@ export function parseImportFile(buffer: Buffer, locale: LocaleType, environment:
 
   if (errors.length > 0) {
     return { success: false, errors }
+  }
+
+  if (parsedRows.length === 0) {
+    return { success: false, errors: [{ line: 0, key: 'noRows' }] }
   }
 
   return { success: true, rows: parsedRows }
