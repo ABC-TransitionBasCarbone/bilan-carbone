@@ -26,6 +26,7 @@
     "@abc-transitionbascarbone/typeguards": "*",
     "@abc-transitionbascarbone/ui": "*",
     "@abc-transitionbascarbone/utils": "*",
+    "@abc-transitionbascarbone/publicodes": "*",
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
@@ -42,7 +43,9 @@
     "react-hook-form": "^7.72.1",
     "uuid": "^14.0.0",
     "zod": "^4.4.3",
-    "zustand": "^5.0.13"
+    "zustand": "^5.0.13",
+    "publicodes": "^1.10.1",
+    "@publicodes/forms": "^0.6.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.4",
