@@ -1,5 +1,6 @@
 'use server'
 
+import { EmissionFactorList } from '@/db/emissionFactors'
 import { createEmissionSourcesOnStudy } from '@/db/emissionSource'
 import { FullStudy, getStudyById } from '@/db/study'
 import { LocaleType } from '@/i18n/config'
@@ -15,7 +16,7 @@ import {
 } from '@/types/importEmissionSources.types'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { findEmissionFactorMatch } from '@/utils/findEmissionFactor.utils'
-import { parseEmissionSourcesFile } from '@/utils/importEmissionSources.utils'
+import { getImportEmissionSourcesTranslations, parseEmissionSourcesFile } from '@/utils/importEmissionSources.utils'
 import { getPost } from '@/utils/post'
 import { formatEmissionValueForExport } from '@/utils/study'
 import { getBcTranslations, getSingularForm } from '@/utils/translation.utils'
@@ -68,32 +69,20 @@ export async function previewEmissionSourcesFromFile(
   const bc = getBcTranslations(locale)
   const postTranslations = bc.emissionFactors.post as unknown as Record<string, string>
   const unitTranslations = bc.units as Record<string, string>
-  const translateUnitLabel = (unit: string | undefined) => (unit ? getSingularForm(unitTranslations[unit] ?? unit) : '')
 
   const rows: PreviewEmissionSourceRow[] = result.rows.map((row) => {
     const post = getPost(row.subPost)
     return {
       site: row.siteName,
       post: post ? (postTranslations[post] ?? post) : '',
-      subPost: postTranslations[row.subPost] ?? row.subPost,
+      subPost: postTranslations[row.subPost],
       name: row.name,
       value: row.value !== undefined ? String(row.value) : '',
       unit: row.unit ?? '',
       emissionFactorId: row.emissionFactorId ?? '',
       emissionFactorName: row.emissionFactorName ?? '',
       emissionFactorValue: row.emissionFactorValue !== undefined ? String(row.emissionFactorValue) : '',
-      emissionFactorUnit: translateUnitLabel(row.emissionFactorUnit),
-      type: row.type ?? '',
-      tag: row.tag ?? '',
-      source: row.source ?? '',
-      reliability: row.reliability !== undefined ? String(row.reliability) : '',
-      technicalRepresentativeness:
-        row.technicalRepresentativeness !== undefined ? String(row.technicalRepresentativeness) : '',
-      geographicRepresentativeness:
-        row.geographicRepresentativeness !== undefined ? String(row.geographicRepresentativeness) : '',
-      temporalRepresentativeness:
-        row.temporalRepresentativeness !== undefined ? String(row.temporalRepresentativeness) : '',
-      completeness: row.completeness !== undefined ? String(row.completeness) : '',
+      emissionFactorUnit: row.emissionFactorUnit ? getSingularForm(unitTranslations[row.emissionFactorUnit]) : '',
     }
   })
 
@@ -286,9 +275,8 @@ export async function importEmissionSourcesFromFile(
 }
 
 function buildEmissionSourcesSheet(study: FullStudy, locale: LocaleType, dataRows: (string | number)[][]): ArrayBuffer {
-  const bc = getBcTranslations(locale)
-  const modal = (bc.study as Record<string, unknown>)?.importEmissionSourcesModal as Record<string, string> | undefined
-  const t = (key: string) => modal?.[key] ?? key
+  const tranlations = getImportEmissionSourcesTranslations(locale)
+  const t = (key: string) => tranlations[key] ?? key
 
   const DA_START = 6
   const DA_END = 18
@@ -349,30 +337,27 @@ export async function getImportEmissionSourcesTemplate(
 
   const locale = await getLocale()
   const bc = getBcTranslations(locale)
+  const translations = getImportEmissionSourcesTranslations(locale)
+  const t = (key: string) => translations[key] ?? key
 
   const postTranslations = bc.emissionFactors.post as unknown as Record<string, string>
-
-  const modal = (bc.study as Record<string, unknown>)?.importEmissionSourcesModal as Record<string, string> | undefined
-  const t = (key: string) => modal?.[key] ?? key
+  const unitTranslations = bc.units as Record<string, string>
+  const typeTranslations = (bc.emissionSource as Record<string, unknown>).type as Record<string, string>
 
   const studySite = siteId ? study.sites.find((s) => s.site?.id === siteId) : study.sites[0]
   const siteName = studySite?.site?.name ?? ''
   const postLabel = post ? (postTranslations[post] ?? post) : ''
 
-  const subPostTranslations = bc.emissionFactors.post as unknown as Record<string, string>
-  const unitTranslations = bc.units as Record<string, string>
-  const typeTranslations = (bc.emissionSource as Record<string, unknown>).type as Record<string, string>
-
   const exampleRow: (string | number)[] = Array(TOTAL_EXCEL_COLS).fill('')
   exampleRow[0] = siteName
-  exampleRow[1] = postTranslations['IntrantsBiensEtMatieres'] ?? 'IntrantsBiensEtMatieres'
-  exampleRow[2] = subPostTranslations['MetauxPlastiquesEtVerre'] ?? 'MetauxPlastiquesEtVerre'
+  exampleRow[1] = postTranslations['IntrantsBiensEtMatieres']
+  exampleRow[2] = postTranslations['MetauxPlastiquesEtVerre']
   exampleRow[3] = t('examplePrefix') + t('exampleName')
   exampleRow[6] = 1000
-  exampleRow[7] = getSingularForm(unitTranslations['TON'] ?? 'TON')
+  exampleRow[7] = getSingularForm(unitTranslations['TON'])
   exampleRow[11] = 5
   exampleRow[16] = t('exampleSource')
-  exampleRow[17] = typeTranslations['Physical'] ?? 'Physical'
+  exampleRow[17] = typeTranslations['Physical']
   exampleRow[20] = t('exampleEmissionFactor')
 
   const emptyRow: (string | number)[] = [siteName, postLabel, ...Array(TOTAL_EXCEL_COLS - 2).fill('')]
@@ -443,21 +428,154 @@ function buildEmissionSourcesCSV(locale: LocaleType, dataRows: (string | number)
   return [headerRow, ...rows].join('\n')
 }
 
+type ExportTranslations = {
+  t: (key: string) => string
+  postTranslations: Record<string, string>
+  typeTranslations: Record<string, string>
+  qualityTranslations: Record<string, string>
+  categorisationsTranslations: Record<string, string>
+  unitTranslations: Record<string, string>
+  efImportSourceTranslations: Record<string, string>
+  exportYes: string
+  exportNo: string
+  resultsUnitLabel: string
+}
+
+function buildEmissionSourceRow(
+  es: FullStudy['emissionSources'][number],
+  ef: EmissionFactorList | undefined,
+  study: FullStudy,
+  studyVersionIds: Set<string>,
+  translations: ExportTranslations,
+): (string | number)[] {
+  const {
+    t,
+    postTranslations,
+    typeTranslations,
+    qualityTranslations,
+    categorisationsTranslations,
+    unitTranslations,
+    efImportSourceTranslations,
+    exportYes,
+    exportNo,
+    resultsUnitLabel,
+  } = translations
+
+  const getQualityLabel = (quality: ReturnType<typeof getQualitativeUncertaintyFromQuality> | null) =>
+    quality !== null ? (qualityTranslations[String(quality)] ?? '') : ''
+  const getQualityFieldLabel = (value: number | null) =>
+    value !== null ? (qualityTranslations[String(value)] ?? '') : ''
+
+  const esPost = getPost(es.subPost)
+  const postLabel = esPost ? (postTranslations[esPost] ?? esPost) : ''
+  const subPostLabel = postTranslations[es.subPost] ?? es.subPost
+  const tagLabel = es.emissionSourceTags.map((tag) => tag.tag.name).join(', ')
+  const caracterisationLabel = es.caracterisation
+    ? (categorisationsTranslations[es.caracterisation] ?? es.caracterisation)
+    : ''
+  const typeLabel = es.type ? (typeTranslations[es.type] ?? es.type) : ''
+  const unitRaw = ef?.unit ? (unitTranslations[ef.unit] ?? ef.unit) : ''
+  const unitLabel = unitRaw ? getSingularForm(unitRaw) : ''
+  const efTitle = ef?.metaData?.title ?? ''
+  const efValue = ef ? getEmissionFactorValue(ef, study.organizationVersion.environment) : ''
+  const efUnitRaw = ef?.unit ? (unitTranslations[ef.unit] ?? ef.unit) : ''
+  const efUnitLabel = efUnitRaw ? getSingularForm(efUnitRaw) : ''
+  const feSpecificQuality = ef ? getSpecificEmissionFactorQuality(es) : null
+  const feQualityLabel = feSpecificQuality
+    ? getQualityLabel(getQualitativeUncertaintyFromQuality(feSpecificQuality))
+    : ''
+  const efSourceBase = ef ? (efImportSourceTranslations[ef.importedFrom] ?? ef.importedFrom) : ''
+  const efVersion = ef?.versions.find((v) => studyVersionIds.has(v.importVersionId))
+  const efSource = ef ? [efSourceBase, efVersion?.importVersion?.name].filter(Boolean).join(' ') : ''
+  const efTypeLabel = ef
+    ? ef.isMonetary
+      ? ef.importedFrom === 'Manual'
+        ? t('efTypeMonetarySpecific')
+        : t('efTypeMonetaryNonSpecific')
+      : ef.importedFrom === 'Manual'
+        ? t('efTypeOrga')
+        : t('efTypeBDD')
+    : ''
+  const globalUncertaintyLabel = getQualityLabel(getQualitativeUncertaintyFromQuality(es))
+  const environment = study.organizationVersion.environment
+  const calculatedEmission = getEmissionSourceEmission(es, environment) ?? 0
+  const calculatedValue = formatEmissionValueForExport(calculatedEmission, study.resultsUnit)
+  const emissionSourceSD = getSquaredStandardDeviationForEmissionSource(es)
+  const calculatedUncertaintyLabel = emissionSourceSD
+    ? getQualityLabel(getQualitativeUncertaintyFromSquaredStandardDeviation(emissionSourceSD))
+    : ''
+  const validationLabel = es.validated ? exportYes : exportNo
+
+  return [
+    es.studySite.site.name,
+    postLabel,
+    subPostLabel,
+    es.name,
+    tagLabel,
+    caracterisationLabel,
+    es.value ?? '',
+    unitLabel,
+    es.depreciationPeriod ?? '',
+    es.constructionYear ? es.constructionYear.getFullYear() : '',
+    globalUncertaintyLabel,
+    getQualityFieldLabel(es.reliability),
+    getQualityFieldLabel(es.technicalRepresentativeness),
+    getQualityFieldLabel(es.geographicRepresentativeness),
+    getQualityFieldLabel(es.temporalRepresentativeness),
+    getQualityFieldLabel(es.completeness),
+    es.source ?? '',
+    typeLabel,
+    es.comment ?? '',
+    ef?.importedId ?? '',
+    efTitle,
+    efValue,
+    efUnitLabel,
+    feQualityLabel,
+    feSpecificQuality ? getQualityFieldLabel(feSpecificQuality.reliability) : '',
+    feSpecificQuality ? getQualityFieldLabel(feSpecificQuality.technicalRepresentativeness) : '',
+    feSpecificQuality ? getQualityFieldLabel(feSpecificQuality.geographicRepresentativeness) : '',
+    feSpecificQuality ? getQualityFieldLabel(feSpecificQuality.temporalRepresentativeness) : '',
+    feSpecificQuality ? getQualityFieldLabel(feSpecificQuality.completeness) : '',
+    efSource,
+    efTypeLabel,
+    es.feComment ?? '',
+    validationLabel,
+    `${calculatedValue} ${resultsUnitLabel}`,
+    calculatedUncertaintyLabel,
+  ]
+}
+
 async function buildEmissionSourcesDataRows(
   study: FullStudy,
   locale: LocaleType,
   post?: Post,
 ): Promise<(string | number)[][]> {
   const bc = getBcTranslations(locale)
-  const modal = (bc.study as Record<string, unknown>)?.importEmissionSourcesModal as Record<string, string> | undefined
-  const t = (key: string) => modal?.[key] ?? key
+  const importTranslations = getImportEmissionSourcesTranslations(locale)
+  const t = (key: string) => importTranslations[key] ?? key
 
   const postTranslations = bc.emissionFactors.post as unknown as Record<string, string>
-  const typeTranslations = bc.emissionSource.type as Record<string, string>
+  const typeTranslations = bc.emissionSource.type as unknown as Record<string, string>
   const qualityTranslations = bc.quality as Record<string, string>
   const categorisationsTranslations = bc.categorisations as Record<string, string>
-  const unitTranslations = bc.units as Record<string, string>
+  const unitTranslations = bc.units
   const efImportSourceTranslations = bc.emissionFactors.table as unknown as Record<string, string>
+  const studyResultsUnits = bc.study.results.units as Record<string, string>
+  const resultsUnitLabel = studyResultsUnits?.[study.resultsUnit] ?? study.resultsUnit
+  const exportTranslations = bc.study.export as Record<string, string>
+
+  const translations = {
+    t,
+    postTranslations,
+    typeTranslations,
+    qualityTranslations,
+    categorisationsTranslations,
+    unitTranslations,
+    efImportSourceTranslations,
+    exportYes: exportTranslations.yes,
+    exportNo: exportTranslations.no,
+    resultsUnitLabel,
+  }
 
   const postSubPosts = post ? new Set(subPostsByPost[post]) : null
   const emissionSources = [...study.emissionSources]
@@ -468,100 +586,12 @@ async function buildEmissionSourcesDataRows(
     .filter((id): id is string => id !== undefined)
 
   const emissionFactorsData = await getEmissionFactorsByIds(emissionFactorIds, study.id)
-  const emissionFactors = emissionFactorsData.success ? emissionFactorsData.data : []
-
-  const getQualityLabel = (quality: ReturnType<typeof getQualitativeUncertaintyFromQuality> | null) =>
-    quality !== null ? (qualityTranslations[String(quality)] ?? '') : ''
-
-  const getQualityFieldLabel = (value: number | null) =>
-    value !== null ? (qualityTranslations[String(value)] ?? '') : ''
-
+  const emissionFactors: EmissionFactorList[] = emissionFactorsData.success ? emissionFactorsData.data : []
   const studyVersionIds = new Set(study.emissionFactorVersions.map((v) => v.importVersionId))
 
   return emissionSources.map((es) => {
     const ef = emissionFactors.find((f) => f.id === es.emissionFactor?.id)
-    const esPost = getPost(es.subPost)
-    const postLabel = esPost ? (postTranslations[esPost] ?? esPost) : ''
-    const subPostLabel = postTranslations[es.subPost] ?? es.subPost
-    const tagLabel = es.emissionSourceTags.map((tag) => tag.tag.name).join(', ')
-    const caracterisationLabel = es.caracterisation
-      ? (categorisationsTranslations[es.caracterisation] ?? es.caracterisation)
-      : ''
-    const typeLabel = es.type ? (typeTranslations[es.type] ?? es.type) : ''
-    const unitRaw = ef?.unit ? (unitTranslations[ef.unit] ?? ef.unit) : ''
-    const unitLabel = unitRaw ? getSingularForm(unitRaw) : ''
-    const efTitle = ef?.metaData?.title ?? ''
-    const efValue = ef ? getEmissionFactorValue(ef, study.organizationVersion.environment) : ''
-    const efUnitRaw = ef?.unit ? (unitTranslations[ef.unit] ?? ef.unit) : ''
-    const efUnitLabel = efUnitRaw ? getSingularForm(efUnitRaw) : ''
-    const feSpecificQuality = ef ? getSpecificEmissionFactorQuality(es) : null
-    const feQualityLabel = feSpecificQuality
-      ? getQualityLabel(getQualitativeUncertaintyFromQuality(feSpecificQuality))
-      : ''
-    const efSourceBase = ef ? (efImportSourceTranslations[ef.importedFrom] ?? ef.importedFrom) : ''
-    const efVersion = ef?.versions.find((v) => studyVersionIds.has(v.importVersionId))
-    const efSource = ef ? [efSourceBase, efVersion?.importVersion?.name].filter(Boolean).join(' ') : ''
-    const efTypeLabel = ef
-      ? ef.isMonetary
-        ? ef.importedFrom === 'Manual'
-          ? t('efTypeMonetarySpecific')
-          : t('efTypeMonetaryNonSpecific')
-        : ef.importedFrom === 'Manual'
-          ? t('efTypeOrga')
-          : t('efTypeBDD')
-      : ''
-    const globalUncertaintyLabel = getQualityLabel(getQualitativeUncertaintyFromQuality(es))
-    const environment = study.organizationVersion.environment
-    const calculatedEmission = getEmissionSourceEmission(es, environment) ?? 0
-    const calculatedValue = formatEmissionValueForExport(calculatedEmission, study.resultsUnit)
-    const emissionSourceSD = getSquaredStandardDeviationForEmissionSource(es)
-    const calculatedUncertaintyLabel = emissionSourceSD
-      ? getQualityLabel(getQualitativeUncertaintyFromSquaredStandardDeviation(emissionSourceSD))
-      : ''
-    const studyResultsUnits = ((bc.study as Record<string, unknown>)?.results as Record<string, unknown>)?.units as
-      | Record<string, string>
-      | undefined
-    const resultsUnitLabel = studyResultsUnits?.[study.resultsUnit] ?? study.resultsUnit
-    const exportTranslations = bc.study.export
-    const validationLabel = es.validated ? exportTranslations.yes : exportTranslations.no
-
-    return [
-      es.studySite.site.name,
-      postLabel,
-      subPostLabel,
-      es.name,
-      tagLabel,
-      caracterisationLabel,
-      es.value ?? '',
-      unitLabel,
-      es.depreciationPeriod ?? '',
-      es.constructionYear ? es.constructionYear.getFullYear() : '',
-      globalUncertaintyLabel,
-      getQualityFieldLabel(es.reliability),
-      getQualityFieldLabel(es.technicalRepresentativeness),
-      getQualityFieldLabel(es.geographicRepresentativeness),
-      getQualityFieldLabel(es.temporalRepresentativeness),
-      getQualityFieldLabel(es.completeness),
-      es.source ?? '',
-      typeLabel,
-      es.comment ?? '',
-      ef?.importedId ?? '',
-      efTitle,
-      efValue,
-      efUnitLabel,
-      feQualityLabel,
-      feSpecificQuality ? getQualityFieldLabel(feSpecificQuality.reliability) : '',
-      feSpecificQuality ? getQualityFieldLabel(feSpecificQuality.technicalRepresentativeness) : '',
-      feSpecificQuality ? getQualityFieldLabel(feSpecificQuality.geographicRepresentativeness) : '',
-      feSpecificQuality ? getQualityFieldLabel(feSpecificQuality.temporalRepresentativeness) : '',
-      feSpecificQuality ? getQualityFieldLabel(feSpecificQuality.completeness) : '',
-      efSource,
-      efTypeLabel,
-      es.feComment ?? '',
-      validationLabel,
-      `${calculatedValue} ${resultsUnitLabel}`,
-      calculatedUncertaintyLabel,
-    ]
+    return buildEmissionSourceRow(es, ef, study, studyVersionIds, translations)
   })
 }
 

@@ -616,8 +616,8 @@ export const findEmissionFactorByImportedIdForMatch = (id: string, organizationI
 export const findEmissionFactorsByNameAndUnit = (
   title: string,
   locale: string,
-  orgFilter: object,
-  unitFilter: object,
+  orgFilter: Prisma.EmissionFactorWhereInput,
+  unitFilter: Prisma.EmissionFactorWhereInput,
   versionIds: string[],
 ) =>
   prismaClient.emissionFactor.findMany({
@@ -635,7 +635,11 @@ export const findEmissionFactorsByNameAndUnit = (
     },
   })
 
-export const findEmissionFactorsByUnit = (orgFilter: object, unitFilter: object, versionIds: string[]) =>
+export const findEmissionFactorsByUnit = (
+  orgFilter: Prisma.EmissionFactorWhereInput,
+  unitFilter: Prisma.EmissionFactorWhereInput,
+  versionIds: string[],
+) =>
   prismaClient.emissionFactor.findMany({
     where: {
       AND: [orgFilter, unitFilter],

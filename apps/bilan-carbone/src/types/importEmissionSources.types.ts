@@ -42,14 +42,6 @@ export type PreviewEmissionSourceRow = {
   emissionFactorName: string
   emissionFactorValue: string
   emissionFactorUnit: string
-  type: string
-  tag: string
-  source: string
-  reliability: string
-  technicalRepresentativeness: string
-  geographicRepresentativeness: string
-  temporalRepresentativeness: string
-  completeness: string
 }
 
 export type PreviewEmissionSourcesResult =

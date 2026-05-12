@@ -3,6 +3,7 @@ import {
   findEmissionFactorsByNameAndUnit,
   findEmissionFactorsByUnit,
 } from '@/db/emissionFactors'
+import { Unit } from '@abc-transitionbascarbone/db-common/enums'
 
 type EfMatchResult =
   | {
@@ -49,7 +50,7 @@ export async function findEmissionFactorMatch(
   }
 
   const orgFilter = { OR: [{ organizationId: null }, { organizationId }] }
-  const unitFilter = unit ? { OR: [{ unit }, { customUnit: unit }] } : {}
+  const unitFilter = unit ? { OR: [{ unit: unit as Unit }, { customUnit: unit }] } : {}
   const epsilon = 1e-9
 
   const byNameAndUnit = await findEmissionFactorsByNameAndUnit(title ?? '', locale, orgFilter, unitFilter, versionIds)

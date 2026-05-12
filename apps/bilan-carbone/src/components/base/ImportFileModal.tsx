@@ -2,7 +2,6 @@
 
 import LoadingButton from '@/components/base/LoadingButton'
 import Modal from '@/components/modals/Modal'
-import { ImportEmissionSourcesResult } from '@/types/importEmissionSources.types'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import DownloadIcon from '@mui/icons-material/Download'
 import UploadFileIcon from '@mui/icons-material/UploadFile'
@@ -29,6 +28,8 @@ type ImportWarning = {
   candidates?: ImportWarningCandidate[]
 }
 
+type ImportResult = { success: boolean; errors?: ImportError[]; warnings?: ImportWarning[] }
+
 type ImportModalState = 'default' | 'preview' | 'error' | 'warning'
 
 function groupByLine<T extends { line: number }>(items: T[]): { line: number; items: T[] }[] {
@@ -51,8 +52,8 @@ interface Props<TPreviewRow> {
   onClose: () => void
   onSuccess: () => void
   onPreview: (file: File) => Promise<{ success: true; rows: TPreviewRow[] } | { success: false; errors: ImportError[] }>
-  onConfirmImport: (file: File) => Promise<ImportEmissionSourcesResult>
-  onForceImport?: (file: File) => Promise<ImportEmissionSourcesResult>
+  onConfirmImport: (file: File) => Promise<ImportResult>
+  onForceImport?: (file: File) => Promise<ImportResult>
   onDownloadTemplate: () => Promise<void>
   renderPreviewTable: (rows: TPreviewRow[]) => ReactNode
   previewTitle: (count: number) => string

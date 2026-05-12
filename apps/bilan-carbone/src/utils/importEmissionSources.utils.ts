@@ -22,14 +22,15 @@ import {
 import { parseNumericValue } from './number'
 import { getBcTranslations } from './translation.utils'
 
+export function getImportEmissionSourcesTranslations(locale: LocaleType): Record<string, string> {
+  const bc = getBcTranslations(locale)
+  return bc.study.importEmissionSourcesModal
+}
+
 export function getExampleRowPrefixes(): string[] {
   return Object.values(Locale).flatMap((locale) => {
-    const bc = getBcTranslations(locale)
-    const modal = (bc.study as Record<string, unknown>)?.importEmissionSourcesModal as
-      | Record<string, string>
-      | undefined
-    const prefix = modal?.examplePrefix
-    return prefix ? [prefix] : []
+    const translations = getImportEmissionSourcesTranslations(locale)
+    return translations.examplePrefix ? [translations.examplePrefix] : []
   })
 }
 
@@ -79,16 +80,21 @@ export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): Pa
     return sheetResult
   }
 
-  const { dataRows } = sheetResult
+  const { dataRows, headerRowIndex } = sheetResult
   const errors: ImportEmissionSourceError[] = []
   const parsedRows: ParsedEmissionSourceRow[] = []
 
   for (let i = 0; i < dataRows.length; i++) {
     const row = dataRows[i] as unknown[]
-    const lineNum = i + 2
+    const lineNum = i + headerRowIndex + 2
     const rowErrors: Omit<ImportEmissionSourceError, 'line'>[] = []
 
     const col = (key: keyof typeof SOURCE_IMPORT_COLUMNS) => String(row[SOURCE_IMPORT_COLUMNS[key]] ?? '').trim()
+
+    const name = col('name')
+    if (getExampleRowPrefixes().some((prefix) => name.startsWith(prefix))) {
+      continue
+    }
 
     const siteName = col('site')
     if (!siteName) {
@@ -103,11 +109,8 @@ export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): Pa
       rowErrors.push({ key: 'invalidSubPost', value: subPostLabel })
     }
 
-    const name = col('name')
     if (!name) {
       rowErrors.push({ key: 'missingName' })
-    } else if (getExampleRowPrefixes().some((prefix) => name.startsWith(prefix))) {
-      continue
     }
 
     const emissionFactorId = col('emissionFactorId') || undefined
