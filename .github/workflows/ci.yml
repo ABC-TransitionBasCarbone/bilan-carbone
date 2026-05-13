@@ -55,10 +55,6 @@ jobs:
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
-        working-directory: ${{ github.workspace }}
-      - name: Generate prisma files
-        run: yarn workspace @abc-transitionbascarbone/db-common prisma generate
-        working-directory: ${{ github.workspace }}
       - name: Linter
         run: yarn lint
       - name: TypeScript check
