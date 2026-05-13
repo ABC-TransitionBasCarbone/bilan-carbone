@@ -14,7 +14,7 @@ import CheckIcon from '@mui/icons-material/Check'
 import { ArrowLeftIcon, ArrowRightIcon } from '@mui/x-date-pickers'
 import { useTranslations } from 'next-intl'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import PublicodesSubPostForm from '../study/PublicodesSubPostForm'
 import SaveStatusIndicator from '../study/SaveStatusIndicator'
 import RealTimeResults from './RealTimeResults'
@@ -49,16 +49,24 @@ const SimplifiedStudyPostsPage = ({ environment, post, currentSubPost, study, st
   const [activeStep, setActiveStep] = useState(initialStep)
   const activeSubPost = subPosts[activeStep]
 
-  const setSearchParams = (newStep: number) => {
-    const newActiveSubPost = subPosts[newStep]
-    const newSearchParams = new URLSearchParams(searchParams.toString())
-    newSearchParams.set('subPost', newActiveSubPost)
-    const newUrl = `${window.location.pathname}?${newSearchParams.toString()}`
-    router.replace(newUrl)
-  }
+  const setSearchParamsAndReplaceRoute = useCallback(
+    (newStep: number) => {
+      const newActiveSubPost = subPosts[newStep]
+      const newSearchParams = new URLSearchParams(searchParams.toString())
+      newSearchParams.set('subPost', newActiveSubPost)
+      const newUrl = `${window.location.pathname}?${newSearchParams.toString()}`
+      router.replace(newUrl)
+    },
+    // can not add searchParams to deps as it causes infinite loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [subPosts],
+  )
+
+  useEffect(() => {
+    setSearchParamsAndReplaceRoute(activeStep)
+  }, [activeStep, setSearchParamsAndReplaceRoute])
 
   const changeActiveStep = (newStep: number) => {
-    setSearchParams(newStep)
     setActiveStep(newStep)
   }
 
@@ -66,8 +74,6 @@ const SimplifiedStudyPostsPage = ({ environment, post, currentSubPost, study, st
     setActiveStep((prevStep) => {
       const newStep = prevStep + number
       if (newStep > 0 || newStep < subPosts.length) {
-        setSearchParams(newStep)
-
         return newStep
       }
 
