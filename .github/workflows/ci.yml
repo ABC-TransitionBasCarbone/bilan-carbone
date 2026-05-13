@@ -4,7 +4,7 @@ on:
 permissions:
   contents: read
 jobs:
-  lint-and-typecheck:
+  bc-lint-and-typecheck:
     timeout-minutes: 10
     runs-on: ubuntu-latest
     defaults:
@@ -35,22 +35,60 @@ jobs:
       - name: TypeScript check
         run: npx tsc --noEmit
 
-  check-circular-deps:
-    timeout-minutes: 5
+  mip-lint-and-typecheck:
+    timeout-minutes: 10
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: apps/bilan-carbone
+        working-directory: apps/mip
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22.16.0
           cache: 'yarn'
-      - name: Check circular dependencies
-        run: npx madge --circular --extensions ts,tsx --exclude "packages/db-common/src/generated" .
+      - name: Install dependencies
+        run: yarn install --immutable --immutable-cache --check-cache
+        working-directory: .
+      - name: Linter
+        run: yarn lint
+      - name: TypeScript check
+        run: yarn ts
 
-  unit-tests:
+  mip-build-app:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    needs: [mip-lint-and-typecheck]
+    defaults:
+      run:
+        working-directory: apps/mip
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.16.0
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install --immutable --immutable-cache --check-cache
+        working-directory: ${{ github.workspace }}
+      - name: Build application
+        run: yarn build
+
+  check-circular-deps:
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.16.0
+          cache: 'yarn'
+      - name: Check circular dependencies (bilan-carbone)
+        run: npx madge --circular --extensions ts,tsx --exclude "packages/db-common/src/generated" apps/bilan-carbone
+      - name: Check circular dependencies (mip)
+        run: npx madge --circular --extensions ts,tsx apps/mip
+
+  bc-unit-tests:
     timeout-minutes: 10
     runs-on: ubuntu-latest
     defaults:
@@ -105,10 +143,10 @@ jobs:
       - name: Launch unit tests
         run: yarn run publicodes-count:test
 
-  build-app:
+  bc-build-app:
     timeout-minutes: 15
     runs-on: ubuntu-latest
-    needs: [lint-and-typecheck, unit-tests]
+    needs: [bc-lint-and-typecheck, bc-unit-tests]
     defaults:
       run:
         working-directory: apps/bilan-carbone
@@ -143,7 +181,7 @@ jobs:
   e2e-tests:
     timeout-minutes: 30
     runs-on: ubuntu-latest
-    needs: [lint-and-typecheck, unit-tests, build-app]
+    needs: [bc-lint-and-typecheck, bc-unit-tests, bc-build-app]
     strategy:
       fail-fast: false
       matrix:
@@ -227,7 +265,7 @@ jobs:
   lighthouse:
     timeout-minutes: 10
     runs-on: ubuntu-latest
-    needs: [lint-and-typecheck, unit-tests, build-app]
+    needs: [bc-lint-and-typecheck, bc-unit-tests, bc-build-app]
     defaults:
       run:
         working-directory: apps/bilan-carbone

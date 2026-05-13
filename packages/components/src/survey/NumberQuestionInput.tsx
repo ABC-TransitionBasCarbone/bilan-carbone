@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl'
 interface NumberQuestionInputProps {
   question: NumberQuestion
   value: number
-  onChange: (value: number | undefined) => void
+  onChange: (value: number) => void
   error?: string | null
 }
 
