@@ -50,11 +50,15 @@ jobs:
       - name: Copy .env
         run: cp .env.dist .env
         working-directory: apps/mip
+      - name: Copy .env for bilan-carbone (needed for postinstall)
+        run: cp apps/bilan-carbone/.env.dist apps/bilan-carbone/.env
+        working-directory: ${{ github.workspace }}
       - name: Copy .env to db-common
         run: cp apps/bilan-carbone/.env.dist packages/db-common/.env
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
+        working-directory: ${{ github.workspace }}
       - name: Linter
         run: yarn lint
       - name: TypeScript check
@@ -73,6 +77,15 @@ jobs:
         with:
           node-version: 22.16.0
           cache: 'yarn'
+      - name: Copy .env
+        run: cp .env.dist .env
+        working-directory: apps/mip
+      - name: Copy .env for bilan-carbone (needed for postinstall)
+        run: cp apps/bilan-carbone/.env.dist apps/bilan-carbone/.env
+        working-directory: ${{ github.workspace }}
+      - name: Copy .env to db-common
+        run: cp apps/bilan-carbone/.env.dist packages/db-common/.env
+        working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
         working-directory: ${{ github.workspace }}
