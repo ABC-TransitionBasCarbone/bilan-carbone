@@ -71,8 +71,10 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   }, [surveyId])
 
   useEffect(() => {
-    saveState(surveyId, state)
-  }, [surveyId, state])
+    if (!isLoading) {
+      saveState(surveyId, state)
+    }
+  }, [surveyId, state, isLoading])
 
   const updateState = useCallback((newState: FormState<string>) => {
     setState(newState)

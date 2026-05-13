@@ -1,12 +1,11 @@
-import Survey from '@/components/survey/Survey'
+import SurveyClient from '@/components/survey/SurveyClient'
 import { MipPublicodesProvider } from '@/publicodes/MipPublicodesProvider'
 
 export default async function SurveyPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-
   return (
     <MipPublicodesProvider>
-      <Survey surveyId={id} />
+      <SurveyClient surveyId={id} />
     </MipPublicodesProvider>
   )
 }

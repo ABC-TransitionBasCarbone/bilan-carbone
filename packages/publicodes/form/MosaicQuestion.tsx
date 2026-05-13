@@ -21,7 +21,6 @@ export function MosaicQuestion({ parent, elements, engine, onChange }: Props) {
     <QuestionContainer label={label}>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
         {elements.map((el, index) => {
-          const elRaw = rules[el.id]?.rawNode as any
           const parts = el.id.split(' . ')
           const lastSegment = parts.slice(-2, -1)[0]
           const directParentName = parts.slice(0, -1).join(' . ')
@@ -45,12 +44,10 @@ export function MosaicQuestion({ parent, elements, engine, onChange }: Props) {
               />
             )
           }
-
           if (mosaicType === 'selection') {
-            const currentValue = (() => {
-              if (el.element === 'input' && el.type === 'checkbox') return el.checked ?? el.defaultChecked ?? false
-              return false
-            })()
+            const currentValue =
+              el.element === 'RadioGroup' ? (el.value as unknown) === true || el.value === 'oui' : false
+
             return (
               <MosaicBooleanInput
                 key={el.id}
