@@ -138,8 +138,12 @@ export class SurveyEngine {
    * Get survey progress percentage
    */
   getProgress(): number {
-    if (this.survey.questions.length === 0) return 0
-    if (this.response.completed) return 100
+    if (this.survey.questions.length === 0) {
+      return 0
+    }
+    if (this.response.completed) {
+      return 100
+    }
     const answeredCount = Math.min(this.response.currentQuestionIndex + 1, this.survey.questions.length)
     return Math.round((answeredCount / this.survey.questions.length) * 100)
   }
