@@ -56,9 +56,15 @@
   flex-shrink: 0;
 }
 
-.check_inactive { border-color: #e5e7eb; }
-.check_checked { border-color: var(--primary); }
-.check_unchecked { border-color: #bfdbfe; }
+.check_inactive {
+  border-color: #e5e7eb;
+}
+.check_checked {
+  border-color: var(--primary);
+}
+.check_unchecked {
+  border-color: #bfdbfe;
+}
 
 .checkmark {
   font-family: monospace;
@@ -76,9 +82,15 @@
   font-size: 0.875rem;
 }
 
-.title_inactive { color: #9ca3af; }
-.title_checked { color: var(--primary); }
-.title_unchecked { color: var(--primary); }
+.title_inactive {
+  color: #9ca3af;
+}
+.title_checked {
+  color: var(--primary);
+}
+.title_unchecked {
+  color: var(--primary);
+}
 
 .description {
   margin-bottom: 0;
