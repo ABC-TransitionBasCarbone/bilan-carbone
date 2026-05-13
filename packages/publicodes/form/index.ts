@@ -1,4 +1,5 @@
 export * from './InputField'
 export * from './MosaicQuestion'
+export * from './PublicodesQuestion'
 export * from './QuestionContainer'
 export * from './utils'

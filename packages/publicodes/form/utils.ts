@@ -1,4 +1,4 @@
-import { FormPages } from '@publicodes/forms'
+import { EvaluatedFormElement, FormPageElementProp, FormPages } from '@publicodes/forms'
 import Engine, { reduceAST, RuleNode, utils } from 'publicodes'
 import { EvaluatedFormLayout } from './layouts/evaluatedFormLayout'
 import { FormLayout } from './layouts/formLayout'
@@ -107,16 +107,22 @@ export function getMosaicParent(engine: Engine, ruleName: string): string | null
 
 export function buildPageBuilder(engine: Engine) {
   return (fields: string[]): FormPages<string> => {
+    const rules = engine.getParsedRules()
+    const filteredFields = fields.filter((field) => {
+      const raw = rules[field]?.rawNode as any
+      return raw?.question !== undefined
+    })
+
     const pages: FormPages<string> = []
     const seen = new Set<string>()
 
-    for (const field of fields) {
+    for (const field of filteredFields) {
       const mosaicParent = getMosaicParent(engine, field)
       if (mosaicParent) {
         if (!seen.has(mosaicParent)) {
           seen.add(mosaicParent)
           pages.push({
-            elements: fields.filter((f) => getMosaicParent(engine, f) === mosaicParent),
+            elements: filteredFields.filter((f) => getMosaicParent(engine, f) === mosaicParent),
             title: (engine.getParsedRules()[mosaicParent]?.rawNode as any)?.question,
           })
         }
@@ -125,5 +131,55 @@ export function buildPageBuilder(engine: Engine) {
       }
     }
     return pages
+  }
+}
+
+export type MipQuestionType = 'notQuestion' | 'mosaic' | 'choices' | 'boolean' | 'number'
+
+const booleanSecureTypes = ['présent', 'propriétaire']
+
+export function getQuestionType(engine: Engine, ruleName: string): MipQuestionType {
+  const rules = engine.getParsedRules()
+  const rule = rules[ruleName]
+  if (!rule) return 'notQuestion'
+
+  const raw = rule.rawNode as any
+
+  if (!raw?.question) return 'notQuestion'
+  if (raw?.mosaique) return 'mosaic'
+
+  const evaluation = engine.evaluate(ruleName)
+
+  if (
+    (raw?.unité === undefined && typeof evaluation.nodeValue !== 'number') ||
+    booleanSecureTypes.some((key) => ruleName.includes(key))
+  ) {
+    const unePossibilite = raw?.formule ? raw.formule['une possibilité'] : raw?.['une possibilité']
+    return unePossibilite ? 'choices' : 'boolean'
+  }
+
+  return 'number'
+}
+
+export function patchFormElement<RuleName extends string>(
+  el: EvaluatedFormElement<RuleName> & FormPageElementProp,
+  questionType: MipQuestionType,
+): EvaluatedFormElement<RuleName> & FormPageElementProp {
+  if (el.element !== 'input') return el
+
+  switch (questionType) {
+    case 'boolean':
+      return {
+        ...el,
+        element: 'RadioGroup',
+        options: [
+          { label: 'Oui', value: true },
+          { label: 'Non', value: false },
+        ],
+      } as any
+    case 'choices':
+      return { ...el, element: 'select' } as any
+    default:
+      return el
   }
 }
