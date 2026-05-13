@@ -5,9 +5,9 @@
   "main": "src/index.ts",
   "types": "src/index.ts",
   "peerDependencies": {
-    "react": "*",
+    "@mui/x-date-pickers": "*",
     "next-intl": "*",
-    "@mui/x-date-pickers": "*"
+    "react": "*"
   },
   "dependencies": {
     "@abc-transitionbascarbone/ui": "*",
