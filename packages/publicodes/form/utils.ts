@@ -1,8 +1,9 @@
-import { reduceAST, RuleNode, utils } from 'publicodes'
+import { FormPages } from '@publicodes/forms'
+import Engine, { reduceAST, RuleNode, utils } from 'publicodes'
 import { EvaluatedFormLayout } from './layouts/evaluatedFormLayout'
 import { FormLayout } from './layouts/formLayout'
 
-export { getUpdatedSituationWithInputValue, situationsAreEqual } from '@/lib/publicodes/utils'
+export { getUpdatedSituationWithInputValue, situationsAreEqual } from '../utils'
 
 export type OnFieldChange<RuleName extends string = string> = (
   ruleName: RuleName,
@@ -80,4 +81,49 @@ function areReferencedInApplicability<RuleName extends string>(
     false,
     currentNode,
   )
+}
+
+export function isMosaic(engine: Engine, ruleName: string): boolean {
+  return !!(engine.getParsedRules()[ruleName]?.rawNode as any)?.mosaique
+}
+
+export function getMosaicParent(engine: Engine, ruleName: string): string | null {
+  const rules = engine.getParsedRules()
+  const parts = ruleName.split(' . ')
+
+  for (let i = parts.length - 1; i > 0; i--) {
+    const parent = parts.slice(0, i).join(' . ')
+    const parentRule = rules[parent]?.rawNode as any
+    if (parentRule?.mosaique) {
+      const options = parentRule.mosaique.options ?? []
+      const relativeRuleName = parts.slice(i).join(' . ')
+      if (options.includes(relativeRuleName)) {
+        return parent
+      }
+    }
+  }
+  return null
+}
+
+export function buildPageBuilder(engine: Engine) {
+  return (fields: string[]): FormPages<string> => {
+    const pages: FormPages<string> = []
+    const seen = new Set<string>()
+
+    for (const field of fields) {
+      const mosaicParent = getMosaicParent(engine, field)
+      if (mosaicParent) {
+        if (!seen.has(mosaicParent)) {
+          seen.add(mosaicParent)
+          pages.push({
+            elements: fields.filter((f) => getMosaicParent(engine, f) === mosaicParent),
+            title: (engine.getParsedRules()[mosaicParent]?.rawNode as any)?.question,
+          })
+        }
+      } else {
+        pages.push({ elements: [field] })
+      }
+    }
+    return pages
+  }
 }

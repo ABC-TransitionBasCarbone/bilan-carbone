@@ -8,6 +8,12 @@ export function getMipEngine(): Engine {
     instance = new Engine(rules, {
       flag: { filterNotApplicablePossibilities: true },
       strict: { situation: false },
+      // DELETE LOGGER PART THIS IS TEMPORARY
+      logger: {
+        log: () => {},
+        warn: () => {},
+        error: () => {},
+      },
     })
   }
   return instance

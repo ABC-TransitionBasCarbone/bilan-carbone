@@ -1,9 +1,15 @@
 'use client'
 import { useMipPublicodes } from '@/publicodes/MipPublicodesProvider'
-import { InputField, QuestionContainer } from '@abc-transitionbascarbone/publicodes/form'
+import {
+  buildPageBuilder,
+  getMosaicParent,
+  InputField,
+  MosaicQuestion,
+  QuestionContainer,
+} from '@abc-transitionbascarbone/publicodes/form'
 import { ArrowBack, ArrowForward, Check } from '@mui/icons-material'
 import { Button, Card, CardContent, Container, LinearProgress, Typography } from '@mui/material'
-import { FormBuilder, FormState } from '@publicodes/forms'
+import { EvaluatedFormElement, FormBuilder, FormPageElementProp, FormState } from '@publicodes/forms'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import styles from './Survey.module.css'
@@ -34,11 +40,12 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   const t = useTranslations('survey')
   const tCommon = useTranslations('common')
   const { engine } = useMipPublicodes()
+
   const formBuilder = useMemo(
     () =>
       new FormBuilder({
         engine,
-        pageBuilder: (fields) => fields.map((field) => ({ elements: [field] })),
+        pageBuilder: buildPageBuilder(engine),
       }),
     [engine],
   )
@@ -82,6 +89,34 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   const isComplete = !hasNextPage && current === pageCount
 
   const progress = useMemo(() => Math.round((current / pageCount) * 100), [current, pageCount])
+
+  const rules = engine.getParsedRules()
+
+  type GroupedElement =
+    | { type: 'single'; el: EvaluatedFormElement<string> & FormPageElementProp }
+    | { type: 'mosaic'; parent: string; elements: Array<EvaluatedFormElement<string> & FormPageElementProp> }
+
+  const groupedElements = useMemo<GroupedElement[]>(() => {
+    const result: GroupedElement[] = []
+    const seen = new Set<string>()
+
+    for (const el of elements) {
+      const mosaicParent = getMosaicParent(engine, el.id)
+      if (mosaicParent) {
+        if (!seen.has(mosaicParent)) {
+          seen.add(mosaicParent)
+          result.push({
+            type: 'mosaic',
+            parent: mosaicParent,
+            elements: elements.filter((e) => getMosaicParent(engine, e.id) === mosaicParent),
+          })
+        }
+      } else {
+        result.push({ type: 'single', el })
+      }
+    }
+    return result
+  }, [elements, engine])
 
   if (isLoading) {
     return <Typography>{t('loading')}</Typography>
@@ -143,14 +178,24 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
         </div>
       </div>
 
-      {elements.map((el) => (
-        <QuestionContainer key={el.id} label={el.label ?? el.id}>
-          <InputField
-            formElement={el}
+      {groupedElements.map((group) =>
+        group.type === 'mosaic' ? (
+          <MosaicQuestion
+            key={group.parent}
+            parent={group.parent}
+            elements={group.elements}
+            engine={engine}
             onChange={(ruleName, value) => updateState(formBuilder.handleInputChange(state, ruleName, value))}
           />
-        </QuestionContainer>
-      ))}
+        ) : (
+          <QuestionContainer key={group.el.id} label={group.el.label ?? group.el.id}>
+            <InputField
+              formElement={group.el}
+              onChange={(ruleName, value) => updateState(formBuilder.handleInputChange(state, ruleName, value))}
+            />
+          </QuestionContainer>
+        ),
+      )}
 
       <div>
         {hasPreviousPage && (
