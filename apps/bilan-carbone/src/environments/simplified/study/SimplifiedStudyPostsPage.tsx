@@ -14,7 +14,7 @@ import CheckIcon from '@mui/icons-material/Check'
 import { ArrowLeftIcon, ArrowRightIcon } from '@mui/x-date-pickers'
 import { useTranslations } from 'next-intl'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import PublicodesSubPostForm from '../study/PublicodesSubPostForm'
 import SaveStatusIndicator from '../study/SaveStatusIndicator'
 import RealTimeResults from './RealTimeResults'
@@ -47,27 +47,49 @@ const SimplifiedStudyPostsPage = ({ environment, post, currentSubPost, study, st
   }, [currentSubPost, subPosts])
 
   const [activeStep, setActiveStep] = useState(initialStep)
-
   const activeSubPost = subPosts[activeStep]
 
-  useEffect(() => {
-    if (activeSubPost) {
+  const setSearchParamsAndReplaceRoute = useCallback(
+    (newStep: number) => {
+      const newActiveSubPost = subPosts[newStep]
       const newSearchParams = new URLSearchParams(searchParams.toString())
-      newSearchParams.set('subPost', activeSubPost)
+      newSearchParams.set('subPost', newActiveSubPost)
       const newUrl = `${window.location.pathname}?${newSearchParams.toString()}`
-      window.history.replaceState(null, '', newUrl)
-    }
-  }, [activeSubPost, searchParams])
+      router.replace(newUrl)
+    },
+    // can not add searchParams to deps as it causes infinite loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [subPosts],
+  )
+
+  useEffect(() => {
+    setSearchParamsAndReplaceRoute(activeStep)
+  }, [activeStep, setSearchParamsAndReplaceRoute])
+
+  const changeActiveStep = (newStep: number) => {
+    setActiveStep(newStep)
+  }
+
+  const goToNextOrPreviousStep = (number: 1 | -1) => {
+    setActiveStep((prevStep) => {
+      const newStep = prevStep + number
+      if (newStep > 0 || newStep < subPosts.length) {
+        return newStep
+      }
+
+      return prevStep
+    })
+  }
 
   const handleNextStep = () => {
     if (activeStep < subPosts.length - 1) {
-      setActiveStep(activeStep + 1)
+      goToNextOrPreviousStep(1)
     }
   }
 
   const handlePreviousStep = () => {
     if (activeStep > 0) {
-      setActiveStep(activeStep - 1)
+      goToNextOrPreviousStep(-1)
     }
   }
 
@@ -98,7 +120,7 @@ const SimplifiedStudyPostsPage = ({ environment, post, currentSubPost, study, st
           t={tPost}
           content={<PublicodesSubPostForm subPost={activeSubPost} />}
           activeTab={activeStep}
-          setActiveTab={setActiveStep}
+          setActiveTab={changeActiveStep}
         />
 
         <Stepper
