@@ -1,11 +1,11 @@
 import { usePublicodesRuleTranslation } from '@abc-transitionbascarbone/publicodes/hooks'
 import Box from '@mui/material/Box'
-import { EvaluatedFormElement } from '@publicodes/forms'
+import { EvaluatedFormElement, FormPageElementProp } from '@publicodes/forms'
 import { useTranslations } from 'next-intl'
 import GroupQuestion from './GroupQuestion'
 import { InputField as PublicodesInputField } from './InputField'
-import { EvaluatedFormLayout, EvaluatedListLayout } from './layouts/evaluatedFormLayout'
-import ListQuestion from './ListQuestion'
+import { EvaluatedFormLayout } from './layouts/evaluatedFormLayout'
+// import ListQuestion from './ListQuestion'
 import { QuestionContainer } from './QuestionContainer'
 import TableQuestion from './TableQuestion'
 import { OnFieldChange } from './utils'
@@ -17,38 +17,46 @@ interface InputQuestionProps<RuleName extends string> {
 
 function InputQuestion<RuleName extends string>({ formElement, onChange }: InputQuestionProps<RuleName>) {
   const { question } = usePublicodesRuleTranslation(formElement.id)
-
   return (
     <Box key={formElement.id} className="mb2">
-      <QuestionContainer label={question}>
+      <QuestionContainer label={question ?? formElement.label ?? formElement.id}>
         <PublicodesInputField formElement={formElement} onChange={onChange} />
       </QuestionContainer>
     </Box>
   )
 }
 
-function ListQuestionContainer<RuleName extends string>({
-  listLayout,
-  onChange,
-}: {
-  listLayout: EvaluatedListLayout<RuleName>
-  onChange: OnFieldChange<RuleName>
-}) {
-  const { question } = usePublicodesRuleTranslation(listLayout.targetRule)
+// function ListQuestionContainer<RuleName extends string>({
+//   listLayout,
+//   onChange,
+// }: {
+//   listLayout: EvaluatedListLayout<RuleName>
+//   onChange: OnFieldChange<RuleName>
+// }) {
+//   const { question } = usePublicodesRuleTranslation(listLayout.targetRule)
+//   return (
+//     <QuestionContainer label={question}>
+//       <ListQuestion listLayout={listLayout} onChange={onChange} />
+//     </QuestionContainer>
+//   )
+// }
 
-  return (
-    <QuestionContainer label={question}>
-      <ListQuestion listLayout={listLayout} onChange={onChange} />
-    </QuestionContainer>
-  )
+type SimpleFormLayout<RuleName extends string> = {
+  type: 'input'
+  evaluatedElement: EvaluatedFormElement<RuleName> & FormPageElementProp
+  rule: RuleName
 }
+
+export type PublicodesQuestionLayout<RuleName extends string> =
+  | EvaluatedFormLayout<RuleName>
+  | SimpleFormLayout<RuleName>
 
 export interface PublicodesQuestionProps<RuleName extends string> {
-  formLayout: EvaluatedFormLayout<RuleName>
+  formLayout: PublicodesQuestionLayout<RuleName>
   onChange: OnFieldChange<RuleName>
 }
 
-export default function PublicodesQuestion<RuleName extends string>({
+export function PublicodesQuestion<RuleName extends string>({
   formLayout,
   onChange,
 }: PublicodesQuestionProps<RuleName>) {
@@ -74,8 +82,8 @@ export default function PublicodesQuestion<RuleName extends string>({
         </QuestionContainer>
       )
     }
-    case 'list': {
-      return <ListQuestionContainer listLayout={formLayout} onChange={onChange} />
-    }
+    // case 'list': {
+    //   return <ListQuestionContainer listLayout={formLayout} onChange={onChange} />
+    // }
   }
 }

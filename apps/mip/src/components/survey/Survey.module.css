@@ -2,40 +2,32 @@
   padding-top: 2rem;
   padding-bottom: 2rem;
 }
-
 .header {
   margin-bottom: 1.5rem;
 }
-
 .progress {
   margin-bottom: 1.5rem;
 }
-
 .progressLabels {
   display: flex;
   justify-content: space-between;
   margin-bottom: 0.25rem;
 }
-
-.alert {
-  margin-bottom: 1.5rem;
-}
-
 .questionCard {
   margin-bottom: 1.5rem;
 }
-
+.questionLabel {
+  margin-bottom: 1rem;
+}
 .navigation {
   display: flex;
   justify-content: space-between;
 }
-
 .completedContent {
   text-align: center;
   padding-top: 2rem;
   padding-bottom: 2rem;
 }
-
 .checkIcon {
   font-size: 5rem !important;
   color: var(--success);

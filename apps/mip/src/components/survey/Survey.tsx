@@ -3,8 +3,8 @@ import { useMipPublicodes } from '@/publicodes/MipPublicodesProvider'
 import {
   buildPageBuilder,
   getMosaicParent,
-  InputField,
   MosaicQuestion,
+  PublicodesQuestion,
   QuestionContainer,
 } from '@abc-transitionbascarbone/publicodes/form'
 import { ArrowBack, ArrowForward, Check } from '@mui/icons-material'
@@ -12,6 +12,7 @@ import { Button, Card, CardContent, Container, LinearProgress, Typography } from
 import { EvaluatedFormElement, FormBuilder, FormPageElementProp, FormState } from '@publicodes/forms'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import Category from './Category/Category'
 import styles from './Survey.module.css'
 
 function getStorageKey(surveyId: string) {
@@ -86,13 +87,11 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
     setState(initState())
   }
 
-  const { title, elements } = formBuilder.currentPage(state)
+  const { elements } = formBuilder.currentPage(state)
   const { current, pageCount, hasNextPage, hasPreviousPage } = formBuilder.pagination(state)
   const isComplete = !hasNextPage && current === pageCount
 
   const progress = useMemo(() => Math.round((current / pageCount) * 100), [current, pageCount])
-
-  const rules = engine.getParsedRules()
 
   type GroupedElement =
     | { type: 'single'; el: EvaluatedFormElement<string> & FormPageElementProp }
@@ -119,6 +118,33 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
     }
     return result
   }, [elements, engine])
+
+  const currentTitle = useMemo(() => {
+    const getCategoryKey = (ruleName: string) => {
+      return ruleName.split(' . ')[0]
+    }
+    if (groupedElements[0]?.type === 'mosaic') {
+      const parent = groupedElements[0].parent
+      const key = getCategoryKey(parent)
+      const raw = engine.getParsedRules()[key]?.rawNode as any
+
+      return {
+        label: raw?.titre,
+        icons: raw?.icônes,
+      }
+    }
+    if (groupedElements[0]?.type === 'single') {
+      const el = groupedElements[0].el
+      const key = getCategoryKey(el.id)
+      const raw = engine.getParsedRules()[key]?.rawNode as any
+      console.log('raw', raw)
+      return {
+        label: raw?.titre,
+        icons: raw?.icônes,
+      }
+    }
+    return { label: '', icons: undefined }
+  }, [groupedElements, engine])
 
   if (isLoading) {
     return <Typography>{t('loading')}</Typography>
@@ -161,9 +187,9 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   }
 
   return (
-    <Container maxWidth="md">
-      <div>
-        <Typography variant="h3">{title}</Typography>
+    <Container maxWidth="md" className={styles.container}>
+      <div className={styles.header}>
+        <Category title={currentTitle.label} icons={currentTitle.icons} />
         <div className={styles.progress}>
           <div className={styles.progressLabels}>
             <Typography variant="body2" color="text.secondary">
@@ -180,27 +206,40 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
         </div>
       </div>
 
-      {groupedElements.map((group) =>
-        group.type === 'mosaic' ? (
-          <MosaicQuestion
-            key={group.parent}
-            parent={group.parent}
-            elements={group.elements}
-            engine={engine}
-            onChange={(ruleName, value) => updateState(formBuilder.handleInputChange(state, ruleName, value))}
-          />
-        ) : (
-          <QuestionContainer key={group.el.id} label={group.el.label ?? group.el.id}>
-            <InputField
-              formElement={group.el}
+      <div className={styles.questionCard}>
+        {groupedElements.map((group) =>
+          group.type === 'mosaic' ? (
+            <MosaicQuestion
+              key={group.parent}
+              parent={group.parent}
+              elements={group.elements}
+              engine={engine}
               onChange={(ruleName, value) => updateState(formBuilder.handleInputChange(state, ruleName, value))}
             />
-          </QuestionContainer>
-        ),
-      )}
+          ) : (
+            <QuestionContainer key={group.el.id} label={group.el.label ?? group.el.id}>
+              <PublicodesQuestion
+                key={group.el.id}
+                formLayout={{
+                  type: 'input',
+                  evaluatedElement: group.el,
+                  rule: group.el.id as string,
+                }}
+                onChange={(ruleName, value) => updateState(formBuilder.handleInputChange(state, ruleName, value))}
+              />
+              {/* <InputField
+                  formElement={group.el}
+                  onChange={(ruleName, value) =>
+                    updateState(formBuilder.handleInputChange(state, ruleName, value))
+                  } */}
+              {/* /> */}
+            </QuestionContainer>
+          ),
+        )}
+      </div>
 
-      <div>
-        {hasPreviousPage && (
+      <div className={styles.navigation}>
+        {hasPreviousPage ? (
           <Button
             variant="outlined"
             startIcon={<ArrowBack />}
@@ -208,6 +247,8 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
           >
             {tCommon('previous')}
           </Button>
+        ) : (
+          <div />
         )}
         {hasNextPage ? (
           <Button

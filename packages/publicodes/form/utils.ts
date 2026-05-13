@@ -107,16 +107,22 @@ export function getMosaicParent(engine: Engine, ruleName: string): string | null
 
 export function buildPageBuilder(engine: Engine) {
   return (fields: string[]): FormPages<string> => {
+    const rules = engine.getParsedRules()
+    const filteredFields = fields.filter((field) => {
+      const raw = rules[field]?.rawNode as any
+      return raw?.question !== undefined
+    })
+
     const pages: FormPages<string> = []
     const seen = new Set<string>()
 
-    for (const field of fields) {
+    for (const field of filteredFields) {
       const mosaicParent = getMosaicParent(engine, field)
       if (mosaicParent) {
         if (!seen.has(mosaicParent)) {
           seen.add(mosaicParent)
           pages.push({
-            elements: fields.filter((f) => getMosaicParent(engine, f) === mosaicParent),
+            elements: filteredFields.filter((f) => getMosaicParent(engine, f) === mosaicParent),
             title: (engine.getParsedRules()[mosaicParent]?.rawNode as any)?.question,
           })
         }

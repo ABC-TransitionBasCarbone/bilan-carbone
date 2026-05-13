@@ -4,14 +4,14 @@ import { usePublicodesForm } from '../context'
 import { getEvaluatedFormLayout } from './layouts/evaluatedFormLayout'
 import { FormLayout } from './layouts/formLayout'
 import styles from './PublicodesForm.module.css'
-import PublicodesQuestion from './PublicodesQuestion'
+import { PublicodesQuestion } from './PublicodesQuestion'
 import { areRulesReferencedInApplicability, evaluatedLayoutIsApplicable, getRuleNamesFromLayout } from './utils'
 
 export interface PublicodesFormProps<RuleName extends string> {
   formLayouts: FormLayout<RuleName>[]
 }
 
-export function PublicodesForm<RuleName extends string>({ formLayouts }: PublicodesFormProps<RuleName>) {
+export default function PublicodesForm<RuleName extends string>({ formLayouts }: PublicodesFormProps<RuleName>) {
   const { engine, situation, listLayoutSituations, updateField } = usePublicodesForm<RuleName>()
 
   const elementsWithRelation = useMemo(() => {
