@@ -47,19 +47,22 @@ jobs:
         with:
           node-version: 22.16.0
           cache: 'yarn'
+      - name: Copy .env
+        run: cp .env.dist .env
+        working-directory: apps/mip
       - name: Copy .env to db-common
         run: cp apps/bilan-carbone/.env.dist packages/db-common/.env
         working-directory: ${{ github.workspace }}
-      - name: Generate prisma files
-        run: yarn workspace @abc-transitionbascarbone/db-common prisma generate
-        working-directory: .
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
+        working-directory: .
+      - name: Generate prisma files
+        run: yarn workspace @abc-transitionbascarbone/db-common prisma generate
         working-directory: .
       - name: Linter
         run: yarn lint
       - name: TypeScript check
-        run: yarn ts --noEmit
+        run: npx tsc --noEmit
 
   mip-build-app:
     timeout-minutes: 15
