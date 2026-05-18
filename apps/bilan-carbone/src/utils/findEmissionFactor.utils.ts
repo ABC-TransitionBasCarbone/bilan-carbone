@@ -53,7 +53,13 @@ export async function findEmissionFactorMatch(
   const unitFilter = unit ? { OR: [{ unit: unit as Unit }, { customUnit: unit }] } : {}
   const epsilon = 1e-9
 
-  const byNameAndUnit = await findEmissionFactorsByNameAndUnit(title ?? '', locale, orgFilter, unitFilter, versionIds)
+  const byNameAndUnit = await findEmissionFactorsByNameAndUnit(
+    title?.trim() ?? '',
+    locale,
+    orgFilter,
+    unitFilter,
+    versionIds,
+  )
 
   if (value !== undefined) {
     const exact = byNameAndUnit.find((ef) => Math.abs(Number(ef.totalCo2) - value) < epsilon)

@@ -624,7 +624,7 @@ export const findEmissionFactorsByNameAndUnit = (
   prismaClient.emissionFactor.findMany({
     where: {
       AND: [orgFilter, unitFilter],
-      metaData: { some: { language: locale, title } },
+      metaData: { some: { language: locale, title: { equals: title, mode: Prisma.QueryMode.insensitive } } },
       versions: { some: { importVersionId: { in: versionIds } } },
     },
     select: {
