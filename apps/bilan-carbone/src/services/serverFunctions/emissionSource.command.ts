@@ -22,7 +22,7 @@ export const UpdateEmissionSourceCommandValidation = z.object({
   caracterisation: z.enum(EmissionSourceCaracterisation).optional().nullable(),
   constructionYear: z.date().nullable().optional(),
   value: z.number().optional().nullable(),
-  source: z.string().trim().min(1).optional(),
+  source: z.string().trim().min(1).nullable().optional(),
   type: z.enum(EmissionSourceType).optional().nullable(),
   reliability: z.number().optional(),
   technicalRepresentativeness: z.number().optional(),

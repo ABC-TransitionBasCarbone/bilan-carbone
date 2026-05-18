@@ -340,7 +340,7 @@ const EmissionSourceForm = ({
           disabled={!canEdit}
           data-testid="emission-source-source"
           defaultValue={emissionSource.source}
-          onBlur={(event) => update('source', event.target.value)}
+          onBlur={(event) => update('source', event.target.value || null)}
           label={`${t('form.source')} *`}
         />
         {caracterisations.length > 0 && displayCaracterisation && (

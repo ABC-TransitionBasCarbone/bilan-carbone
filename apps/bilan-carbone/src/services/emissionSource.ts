@@ -35,7 +35,7 @@ const getEmissionSourceCompletion = (
   unit: string | null | undefined,
   environment: Environment | undefined,
 ) => {
-  const mandatoryFields = ['name', 'type', 'emissionFactorId'] as (keyof typeof emissionSource)[]
+  const mandatoryFields = ['name', 'type', 'emissionFactorId', 'source'] as (keyof typeof emissionSource)[]
 
   const caracterisations = study.exports?.types.length
     ? getCaracterisationsBySubPost(
