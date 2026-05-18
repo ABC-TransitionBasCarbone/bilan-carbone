@@ -307,8 +307,6 @@ model StudyEmissionSource {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
-  answerEmissionSources AnswerEmissionSource[]
-
   emissionSourceTags EmissionSourceTag[]
 
   @@map("study_emission_sources")
@@ -401,7 +399,6 @@ model StudySite {
   country       Country?
 
   situation    Situation?
-  studyAnswers Answer[]
 
   engagementActions EngagementAction[]
   objectiveSites    ObjectiveSite[]

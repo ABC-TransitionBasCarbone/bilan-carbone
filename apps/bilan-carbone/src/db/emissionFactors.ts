@@ -315,15 +315,6 @@ export const getEmissionFactorById = (id: string) =>
     select: selectEmissionFactor,
   })
 
-export const getEmissionFactorByImportedIdAndStudiesEmissionSource = (importedId: string, versionIds: string[]) =>
-  prismaClient.emissionFactor.findFirst({
-    where: {
-      importedId,
-      versions: { some: { importVersionId: { in: versionIds } } },
-    },
-    select: selectEmissionFactor,
-  })
-
 export const getAllEmissionFactorsByIds = (ids: string[], organizationId: string) =>
   prismaClient.emissionFactor.findMany({
     where: {

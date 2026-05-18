@@ -9,7 +9,6 @@ import GlossaryModal from '@/components/modals/GlossaryModal'
 import StudySites from '@/components/study/perimeter/StudySites'
 import SelectStudySite from '@/components/study/site/SelectStudySite'
 import useStudySite from '@/components/study/site/useStudySite'
-import { SiteDependentField } from '@/constants/emissionFactorMap'
 import { OrganizationWithSites } from '@/db/account'
 import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
@@ -31,15 +30,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { CircularProgress, Typography } from '@mui/material'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
-import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './StudyRightsTiltSimplified.module.css'
-
-const SiteDataChangeWarningModal = dynamic(() => import('@/components/modals/SiteDataChangeWarningModal'), {
-  ssr: false,
-})
 
 interface Props {
   study: FullStudy
@@ -62,16 +56,6 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
   const [glossary, setGlossary] = useState('')
   const [siteData, setSiteData] = useState<TiltCustomDataFields | undefined>()
   const [loading, setLoading] = useState(true)
-  const [showSiteDataWarning, setShowSiteDataWarning] = useState(false)
-  const [pendingSiteChanges, setPendingSiteChanges] = useState<{
-    changedFields: SiteDependentField[]
-    questionsBySubPost: Record<string, Array<{ id: string; label: string; idIntern: string; answer?: string }>>
-    pendingData: ChangeStudySiteTiltSimplifiedCommand
-  } | null>(null)
-  const [originalValues, setOriginalValues] = useState<{
-    postalCode: string
-    structure: string
-  } | null>(null)
 
   const form = useForm<ChangeStudySiteTiltSimplifiedCommand>({
     resolver: zodResolver(ChangeStudySiteTiltSimplifiedValidation),
@@ -104,15 +88,10 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
           const newSiteData = situationRes.data
           setSiteData(newSiteData)
 
-          const initialValues = {
+          form.reset({
             postalCode: String(newSiteData?.postalCode ?? ''),
             structure: String(newSiteData?.structure ?? ''),
-          }
-
-          // Store original values for change detection
-          setOriginalValues(initialValues)
-
-          form.reset(initialValues)
+          })
         }
       }
       setLoading(false)
@@ -124,33 +103,9 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
   const handleStudySiteUpdate = useCallback(
     async (data: ChangeStudySiteTiltSimplifiedCommand) => {
       await callServerFunction(() => changeStudySiteTiltSimplified(studySiteId, data))
-      setOriginalValues({
-        postalCode: data.postalCode ?? '',
-        structure: data.structure ?? '',
-      })
     },
     [callServerFunction, studySiteId],
   )
-
-  const handleSiteDataWarningCancel = () => {
-    setShowSiteDataWarning(false)
-    setPendingSiteChanges(null)
-    if (originalValues && siteData) {
-      form.reset(originalValues)
-    }
-  }
-
-  const handleSiteDataWarningConfirm = async () => {
-    if (pendingSiteChanges) {
-      setShowSiteDataWarning(false)
-      await callServerFunction(() => changeStudySiteTiltSimplified(studySiteId, pendingSiteChanges.pendingData))
-      setOriginalValues({
-        postalCode: pendingSiteChanges.pendingData.postalCode ?? '',
-        structure: pendingSiteChanges.pendingData.structure ?? '',
-      })
-      setPendingSiteChanges(null)
-    }
-  }
 
   const handleDateChange = useCallback(async () => {
     const isValid = await dateForm.trigger()
@@ -252,14 +207,6 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
               </div>
             </div>
           </>
-        )}
-        {showSiteDataWarning && pendingSiteChanges && (
-          <SiteDataChangeWarningModal
-            isOpen={showSiteDataWarning}
-            onClose={handleSiteDataWarningCancel}
-            onConfirm={handleSiteDataWarningConfirm}
-            questionsBySubPost={pendingSiteChanges.questionsBySubPost}
-          />
         )}
       </Block>
       {glossary && (

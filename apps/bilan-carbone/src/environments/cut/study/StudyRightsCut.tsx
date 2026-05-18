@@ -5,28 +5,18 @@ import LinkButton from '@/components/base/LinkButton'
 import { FormTextField } from '@/components/form/TextField'
 import SelectStudySite from '@/components/study/site/SelectStudySite'
 import useStudySite from '@/components/study/site/useStudySite'
-import {
-  getQuestionsAffectedBySiteDataChange,
-  SITE_DEPENDENT_FIELDS,
-  SiteDependentField,
-} from '@/constants/emissionFactorMap'
 import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import { changeStudyCinema, getQuestionsGroupedBySubPost, getStudySite } from '@/services/serverFunctions/study'
+import { changeStudyCinema, getStudySite } from '@/services/serverFunctions/study'
 import { ChangeStudyCinemaCommand, ChangeStudyCinemaValidation } from '@/services/serverFunctions/study.command'
 import type { OpeningHours } from '@abc-transitionbascarbone/db-common'
 import { DayOfWeek } from '@abc-transitionbascarbone/db-common/enums'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Box, CircularProgress } from '@mui/material'
 import { useTranslations } from 'next-intl'
-import dynamic from 'next/dynamic'
 import { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './StudyRights.module.css'
-
-const SiteDataChangeWarningModal = dynamic(() => import('@/components/modals/SiteDataChangeWarningModal'), {
-  ssr: false,
-})
 
 type PartialOpeningHours = Pick<OpeningHours, 'day' | 'openHour' | 'closeHour' | 'isHoliday'>
 
@@ -41,18 +31,6 @@ const StudyRightsCut = ({ study }: Props) => {
   const { siteId, studySiteId, setSite } = useStudySite(study)
   const [siteData, setSiteData] = useState<FullStudy['sites'][0] | undefined>()
   const [loading, setLoading] = useState(true)
-  const [showSiteDataWarning, setShowSiteDataWarning] = useState(false)
-  const [pendingSiteChanges, setPendingSiteChanges] = useState<{
-    changedFields: SiteDependentField[]
-    questionsBySubPost: Record<string, Array<{ id: string; label: string; idIntern: string; answer?: string }>>
-    pendingData: ChangeStudyCinemaCommand
-  } | null>(null)
-  const [originalValues, setOriginalValues] = useState<{
-    numberOfSessions: number
-    numberOfTickets: number
-    numberOfOpenDays: number
-    numberOfProgrammedFilms: number
-  } | null>(null)
 
   const openingHoursToObject = (openingHoursArr: PartialOpeningHours[], handleNormalDays: boolean) => {
     const formattedOpeningHours = openingHoursArr.reduce(
@@ -107,20 +85,13 @@ const StudyRightsCut = ({ study }: Props) => {
           const newSiteData = studySiteRes.data
           setSiteData(newSiteData)
 
-          const initialValues = {
+          form.reset({
+            openingHours: openingHoursToObject(newSiteData.openingHours, true),
+            openingHoursHoliday: openingHoursToObject(newSiteData.openingHours, false),
             numberOfOpenDays: newSiteData.numberOfOpenDays ?? 0,
             numberOfSessions: newSiteData.numberOfSessions ?? 0,
             numberOfTickets: newSiteData.numberOfTickets ?? 0,
             numberOfProgrammedFilms: newSiteData.site.cnc?.numberOfProgrammedFilms ?? 0,
-          }
-
-          // Store original values for change detection
-          setOriginalValues(initialValues)
-
-          form.reset({
-            openingHours: openingHoursToObject(newSiteData.openingHours, true),
-            openingHoursHoliday: openingHoursToObject(newSiteData.openingHours, false),
-            ...initialValues,
           })
         }
       }
@@ -137,79 +108,11 @@ const StudyRightsCut = ({ study }: Props) => {
     async (data: ChangeStudyCinemaCommand) => {
       const cncId = siteData?.site.cnc?.id
       if (cncId) {
-        if (originalValues) {
-          // Check for changes in fields that could affect emissions
-          const changedFields: SiteDependentField[] = []
-          for (const field of SITE_DEPENDENT_FIELDS) {
-            if ((data[field] ?? 0) !== originalValues[field]) {
-              changedFields.push(field)
-            }
-          }
-
-          if (changedFields.length > 0) {
-            const affectedQuestionIds = getQuestionsAffectedBySiteDataChange(changedFields)
-            if (affectedQuestionIds.length > 0) {
-              const questionsBySubPostResponse = await getQuestionsGroupedBySubPost(affectedQuestionIds, studySiteId)
-              const questionsBySubPost = questionsBySubPostResponse.success ? questionsBySubPostResponse.data : {}
-
-              const hasAnswers = Object.values(questionsBySubPost).some((questions) =>
-                questions.some((question) => question.answer && question.answer.trim() !== ''),
-              )
-
-              if (hasAnswers) {
-                setPendingSiteChanges({
-                  changedFields,
-                  questionsBySubPost,
-                  pendingData: data,
-                })
-                setShowSiteDataWarning(true)
-                return
-              }
-            }
-          }
-        }
-
         await callServerFunction(() => changeStudyCinema(studySiteId, cncId, data))
-        setOriginalValues({
-          numberOfSessions: data.numberOfSessions ?? 0,
-          numberOfTickets: data.numberOfTickets ?? 0,
-          numberOfOpenDays: data.numberOfOpenDays ?? 0,
-          numberOfProgrammedFilms: data.numberOfProgrammedFilms ?? 0,
-        })
       }
     },
-    [callServerFunction, originalValues, siteData?.site.cnc?.id, studySiteId],
+    [callServerFunction, siteData?.site.cnc?.id, studySiteId],
   )
-
-  const handleSiteDataWarningCancel = () => {
-    setShowSiteDataWarning(false)
-    setPendingSiteChanges(null)
-    if (originalValues && siteData) {
-      form.reset({
-        numberOfSessions: originalValues.numberOfSessions,
-        numberOfTickets: originalValues.numberOfTickets,
-        numberOfOpenDays: originalValues.numberOfOpenDays,
-        numberOfProgrammedFilms: originalValues.numberOfProgrammedFilms,
-      })
-    }
-  }
-
-  const handleSiteDataWarningConfirm = async () => {
-    if (pendingSiteChanges) {
-      setShowSiteDataWarning(false)
-      const cncId = siteData?.site.cnc?.id
-      if (cncId) {
-        await callServerFunction(() => changeStudyCinema(studySiteId, cncId, pendingSiteChanges.pendingData))
-        setOriginalValues({
-          numberOfSessions: pendingSiteChanges.pendingData.numberOfSessions ?? 0,
-          numberOfTickets: pendingSiteChanges.pendingData.numberOfTickets ?? 0,
-          numberOfOpenDays: pendingSiteChanges.pendingData.numberOfOpenDays ?? 0,
-          numberOfProgrammedFilms: pendingSiteChanges.pendingData.numberOfProgrammedFilms ?? 0,
-        })
-        setPendingSiteChanges(null)
-      }
-    }
-  }
 
   const onStudyCinemaUpdate = useCallback(() => {
     if (siteId === 'all') {
@@ -286,14 +189,6 @@ const StudyRightsCut = ({ study }: Props) => {
               </LinkButton>
             </Box>
           </>
-        )}
-        {showSiteDataWarning && pendingSiteChanges && (
-          <SiteDataChangeWarningModal
-            isOpen={showSiteDataWarning}
-            onClose={handleSiteDataWarningCancel}
-            onConfirm={handleSiteDataWarningConfirm}
-            questionsBySubPost={pendingSiteChanges.questionsBySubPost}
-          />
         )}
       </Block>
     </>

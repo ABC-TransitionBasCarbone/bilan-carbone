@@ -13,7 +13,6 @@ import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
 import { useEffect } from 'react'
 import { Control, FieldErrors, UseFormGetValues, UseFormSetValue, useWatch } from 'react-hook-form'
-import textUnitStyles from '../../../dynamic-form/inputFields/TextUnitInput.module.css'
 import styles from './ActionModal.module.css'
 import ActionStepsList from './ActionStepsList'
 
@@ -90,7 +89,7 @@ const ActionModalStep1 = ({ studyUnit, control, setValue, errors, sites, tagFami
               type="number"
               control={control}
               name="reductionValue"
-              endAdornment={<div className={textUnitStyles.unit}>{tUnit(studyUnit)}</div>}
+              endAdornment={<div className="unit">{tUnit(studyUnit)}</div>}
               data-testid="add-action-reductionValue"
             />
           </div>

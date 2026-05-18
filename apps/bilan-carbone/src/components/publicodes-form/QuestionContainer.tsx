@@ -2,13 +2,13 @@ import { Box } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import HelpIcon from '../base/HelpIcon'
+import GlossaryModal from '../modals/GlossaryModal'
 import {
   StyledQuestionContainer,
   StyledQuestionContent,
   StyledQuestionHeader,
   StyledQuestionTitle,
-} from '../dynamic-form/QuestionContainer.styles'
-import GlossaryModal from '../modals/GlossaryModal'
+} from './QuestionContainer.styles'
 
 export interface QuestionContainerProps {
   label: string

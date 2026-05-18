@@ -22,7 +22,6 @@ import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import textUnitStyles from '../../dynamic-form/inputFields/TextUnitInput.module.css'
 
 type PastStudyType = PastStudy['type']
 
@@ -224,7 +223,7 @@ const LinkingStudyModal = ({
                     }}
                     fullWidth
                   />
-                  <div className={textUnitStyles.unit}>{tUnit(studyUnit)}</div>
+                  <div className="unit">{tUnit(studyUnit)}</div>
                 </div>
               </div>
               <div className="mt1 justify-end">

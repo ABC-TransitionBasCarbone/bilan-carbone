@@ -52,9 +52,6 @@ const prisma = new PrismaClient({
 }) as PrismaClient
 
 const users = async () => {
-  await prisma.answer.deleteMany()
-  await prisma.question.deleteMany()
-
   await prisma.emissionFactorPartMetaData.deleteMany()
   await prisma.emissionFactorPart.deleteMany()
   await prisma.emissionFactorMetaData.deleteMany()
