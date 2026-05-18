@@ -81,6 +81,7 @@ export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): Pa
   const { dataRows, headerRowIndex } = sheetResult
   const errors: ImportError[] = []
   const parsedRows: ParsedEmissionSourceRow[] = []
+  const exampleRowPrefixes = getExampleRowPrefixes()
 
   for (let i = 0; i < dataRows.length; i++) {
     const row = dataRows[i] as unknown[]
@@ -90,7 +91,7 @@ export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): Pa
     const col = (key: keyof typeof SOURCE_IMPORT_COLUMNS) => String(row[SOURCE_IMPORT_COLUMNS[key]] ?? '').trim()
 
     const name = col('name')
-    if (getExampleRowPrefixes().some((prefix) => name.startsWith(prefix))) {
+    if (exampleRowPrefixes.some((prefix) => name.startsWith(prefix))) {
       continue
     }
 
@@ -193,6 +194,7 @@ export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): Pa
     }
 
     parsedRows.push({
+      lineNumber: lineNum,
       siteName,
       subPost: subPost!,
       name,

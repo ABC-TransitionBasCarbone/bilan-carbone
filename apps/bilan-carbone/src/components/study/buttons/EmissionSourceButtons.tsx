@@ -15,7 +15,7 @@ import UploadFileIcon from '@mui/icons-material/UploadFile'
 import { ButtonGroup, Menu, MenuItem } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useState, useTransition } from 'react'
-import styles from './StudyPostsBlock.module.css'
+import styles from './EmissionSourceButtons.module.css'
 
 interface Props {
   studyId: string

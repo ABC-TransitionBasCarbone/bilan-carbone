@@ -141,7 +141,7 @@ export async function importEmissionSourcesFromFile(
 
   for (let i = 0; i < result.rows.length; i++) {
     const row = result.rows[i]
-    const lineNum = i + 2
+    const lineNum = row.lineNumber
 
     const studySiteId = siteMap.get(row.siteName.toLowerCase())
     if (!studySiteId) {

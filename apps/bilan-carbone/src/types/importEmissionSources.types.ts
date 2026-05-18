@@ -19,6 +19,7 @@ export type PreviewEmissionSourcesResult =
   | { success: false; errors: ImportError[] }
 
 export type ParsedEmissionSourceRow = {
+  lineNumber: number
   siteName: string
   subPost: SubPost
   name: string

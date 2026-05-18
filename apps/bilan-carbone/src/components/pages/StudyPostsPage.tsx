@@ -17,7 +17,7 @@ import {
   EmissionSourceType,
   StudyRole,
 } from '@abc-transitionbascarbone/db-common/enums'
-import { useToast } from '@abc-transitionbascarbone/ui/src/Toast/ToastProvider'
+import { useToast } from '@abc-transitionbascarbone/ui'
 import Fuse from 'fuse.js'
 import { UserSession } from 'next-auth'
 import { useLocale, useTranslations } from 'next-intl'

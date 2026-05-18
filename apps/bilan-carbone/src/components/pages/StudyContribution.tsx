@@ -3,7 +3,7 @@
 import EmissionSourceButtons from '@/components/study/buttons/EmissionSourceButtons'
 import type { FullStudy } from '@/db/study'
 import { StudyRole } from '@abc-transitionbascarbone/db-common/enums'
-import { useToast } from '@abc-transitionbascarbone/ui/src/Toast/ToastProvider'
+import { useToast } from '@abc-transitionbascarbone/ui'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import Block from '../base/Block'
