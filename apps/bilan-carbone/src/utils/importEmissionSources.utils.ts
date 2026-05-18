@@ -130,7 +130,7 @@ export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): Pa
     }
 
     const emissionFactorUnitLabel = col('emissionFactorUnit')
-    let emissionFactorUnit: string | undefined = undefined
+    let emissionFactorUnit: Unit | undefined = undefined
     if (emissionFactorUnitLabel) {
       const mapped = mapUnitLabelFromTranslationsWithList(emissionFactorUnitLabel, locale, Object.values(Unit))
       if (!mapped) {

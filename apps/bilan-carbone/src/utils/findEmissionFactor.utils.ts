@@ -37,7 +37,7 @@ export async function findEmissionFactorMatch(
   id: string | undefined,
   title: string | undefined,
   value: number | undefined,
-  unit: string | undefined,
+  unit: Unit | undefined,
   locale: string,
   organizationId: string,
   versionIds: string[],
@@ -50,7 +50,7 @@ export async function findEmissionFactorMatch(
   }
 
   const orgFilter = { OR: [{ organizationId: null }, { organizationId }] }
-  const unitFilter = unit ? { OR: [{ unit: unit as Unit }, { customUnit: unit }] } : {}
+  const unitFilter = unit ? { OR: [{ unit }, { customUnit: unit }] } : {}
   const epsilon = 1e-9
 
   const byNameAndUnit = await findEmissionFactorsByNameAndUnit(

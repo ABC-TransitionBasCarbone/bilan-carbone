@@ -1,4 +1,9 @@
-import { EmissionSourceCaracterisation, EmissionSourceType, SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import {
+  EmissionSourceCaracterisation,
+  EmissionSourceType,
+  SubPost,
+  Unit,
+} from '@abc-transitionbascarbone/db-common/enums'
 import { ImportError } from './import.types'
 
 export type PreviewEmissionSourceRow = {
@@ -27,7 +32,7 @@ export type ParsedEmissionSourceRow = {
   emissionFactorId: string | undefined
   emissionFactorName: string
   emissionFactorValue: number | undefined
-  emissionFactorUnit: string | undefined
+  emissionFactorUnit: Unit | undefined
   value: number | undefined
   type: EmissionSourceType | undefined
   caracterisation: EmissionSourceCaracterisation | undefined
