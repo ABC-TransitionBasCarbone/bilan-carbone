@@ -13,8 +13,8 @@ import { Button } from '@abc-transitionbascarbone/ui'
 import CheckIcon from '@mui/icons-material/Check'
 import { ArrowLeftIcon, ArrowRightIcon } from '@mui/x-date-pickers'
 import { useTranslations } from 'next-intl'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { useCallback, useMemo } from 'react'
 import PublicodesSubPostForm from '../study/PublicodesSubPostForm'
 import SaveStatusIndicator from '../study/SaveStatusIndicator'
 import RealTimeResults from './RealTimeResults'
@@ -32,64 +32,41 @@ const SimplifiedStudyPostsPage = ({ environment, post, currentSubPost, study, st
   const tStudyQuestions = useTranslations('study.questions')
   const tInfography = useTranslations('study.infography')
   const router = useRouter()
+  const pathName = usePathname()
   const searchParams = useSearchParams()
   const subPosts = useMemo(
     () => subPostsByPost[post].filter((subPost) => SUBPOSTS_PUBLICODE_FROM_ENV[environment]?.includes(subPost)),
     [post, environment],
   )
 
-  const initialStep = useMemo(() => {
-    if (currentSubPost) {
-      const index = subPosts.findIndex((subPost) => subPost === currentSubPost)
-      return index !== -1 ? index : 0
-    }
-    return 0
-  }, [currentSubPost, subPosts])
+  const activeSubPostFromUrl = searchParams.get('subPost') as SubPost | null
+  const activeSubPost = activeSubPostFromUrl || currentSubPost || subPosts[0]
 
-  const [activeStep, setActiveStep] = useState(initialStep)
-  const activeSubPost = subPosts[activeStep]
+  const activeStep = useMemo(() => {
+    const index = subPosts.indexOf(activeSubPost)
+    return index !== -1 ? index : 0
+  }, [activeSubPost, subPosts])
 
   const setSearchParamsAndReplaceRoute = useCallback(
     (newStep: number) => {
       const newActiveSubPost = subPosts[newStep]
       const newSearchParams = new URLSearchParams(searchParams.toString())
       newSearchParams.set('subPost', newActiveSubPost)
-      const newUrl = `${window.location.pathname}?${newSearchParams.toString()}`
+      const newUrl = `${pathName}?${newSearchParams.toString()}`
       router.replace(newUrl)
     },
-    // can not add searchParams to deps as it causes infinite loop
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [subPosts],
+    [router, searchParams, subPosts, pathName],
   )
-
-  useEffect(() => {
-    setSearchParamsAndReplaceRoute(activeStep)
-  }, [activeStep, setSearchParamsAndReplaceRoute])
-
-  const changeActiveStep = (newStep: number) => {
-    setActiveStep(newStep)
-  }
-
-  const goToNextOrPreviousStep = (number: 1 | -1) => {
-    setActiveStep((prevStep) => {
-      const newStep = prevStep + number
-      if (newStep > 0 || newStep < subPosts.length) {
-        return newStep
-      }
-
-      return prevStep
-    })
-  }
 
   const handleNextStep = () => {
     if (activeStep < subPosts.length - 1) {
-      goToNextOrPreviousStep(1)
+      setSearchParamsAndReplaceRoute(activeStep + 1)
     }
   }
 
   const handlePreviousStep = () => {
     if (activeStep > 0) {
-      goToNextOrPreviousStep(-1)
+      setSearchParamsAndReplaceRoute(activeStep - 1)
     }
   }
 
@@ -120,7 +97,7 @@ const SimplifiedStudyPostsPage = ({ environment, post, currentSubPost, study, st
           t={tPost}
           content={<PublicodesSubPostForm subPost={activeSubPost} />}
           activeTab={activeStep}
-          setActiveTab={changeActiveStep}
+          setActiveTab={setSearchParamsAndReplaceRoute}
         />
 
         <Stepper
