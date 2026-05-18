@@ -51,7 +51,7 @@ transport . hébergement . nuitées . empreinte totale:
 transport . hébergement . nuitées . empreinte par défaut:
   formule:
     somme:
-      - 3 * empreinte hotel par nuit
+      - 3 nuit * empreinte hotel par nuit
   unité: kgCO2e
   note: On considère que le nombre de jour moyen pour des déplacements professionnels est de 3 nuits en hôtel.
 

@@ -65,9 +65,9 @@ logement . piscine . type . pas de piscine:
 logement . piscine . empreinte:
   formule:
     variations:
-      - si: métrique = "carbone"
+      - si: métrique = 'carbone'
         alors: empreinte carbone
-      - si: métrique = "eau"
+      - si: métrique = 'eau'
         alors: empreinte eau
 
 logement . piscine . empreinte carbone:

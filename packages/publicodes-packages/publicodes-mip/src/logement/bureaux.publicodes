@@ -24,4 +24,5 @@ logement . bureaux . question rhétorique . ok:
   titre: OK
 
 logement . bureaux . empreinte:
-  formule: 282 kgCO2e/an
+  formule: 282
+  unité: kgCO2e

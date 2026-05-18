@@ -126,12 +126,12 @@ divers . numérique . internet:
 divers . numérique . internet . empreinte horaire:
   formule:
     variations:
-      - si: métrique = "carbone"
+      - si: métrique = 'carbone'
         alors:
           moyenne:
             - 0.0523 kgCO2e/h
             - 0.0311 kgCO2e/h
-      - si: métrique = "eau"
+      - si: métrique = 'eau'
         alors:
           moyenne:
             - 0.536 l/h
@@ -232,9 +232,9 @@ divers . numérique . appareils . téléphone . empreinte:
     Néanmoins, les dernières données ADEME (voir base Empreinte), à l'image des [constructeurs](https://www.apple.com/environment/pdf/products/iphone/iPhone_11_PER_sept2019.pdf), semblent donner une valeur plus élevée que les chiffres de la base Carbone.
   formule:
     variations:
-      - si: métrique = "carbone"
+      - si: métrique = 'carbone'
         alors: empreinte carbone
-      - si: métrique = "eau"
+      - si: métrique = 'eau'
         alors: empreinte eau
 
 divers . numérique . appareils . téléphone . empreinte carbone:
@@ -264,9 +264,9 @@ divers . numérique . appareils . ordinateur portable . empreinte:
   titre: Empreinte ordinateur portable
   formule:
     variations:
-      - si: métrique = "carbone"
+      - si: métrique = 'carbone'
         alors: empreinte carbone
-      - si: métrique = "eau"
+      - si: métrique = 'eau'
         alors: empreinte eau
 
 divers . numérique . appareils . ordinateur portable . empreinte carbone:
@@ -306,9 +306,9 @@ divers . numérique . appareils . tour . empreinte:
   titre: Empreinte d'une tour d'ordinateur
   formule:
     variations:
-      - si: métrique = "carbone"
+      - si: métrique = 'carbone'
         alors: empreinte carbone
-      - si: métrique = "eau"
+      - si: métrique = 'eau'
         alors: empreinte eau
 divers . numérique . appareils . tour . empreinte carbone:
   formule: (acv numerique . acv . ordinateur fixe . carbone . fabrication + acv numerique . acv . ordinateur fixe . carbone . distribution) / 1000 gCO2e/kgCO2e
@@ -335,9 +335,9 @@ divers . numérique . appareils . écran . empreinte:
   titre: Empreinte d'un écran
   formule:
     variations:
-      - si: métrique = "carbone"
+      - si: métrique = 'carbone'
         alors: empreinte carbone
-      - si: métrique = "eau"
+      - si: métrique = 'eau'
         alors: empreinte eau
 divers . numérique . appareils . écran . empreinte carbone:
   formule: (acv numerique . acv . écran . carbone . fabrication + acv numerique . acv . écran . carbone . distribution) / 1000 gCO2e/kgCO2e
@@ -365,9 +365,9 @@ divers . numérique . appareils . tablette . empreinte:
   titre: Empreinte tablette
   formule:
     variations:
-      - si: métrique = "carbone"
+      - si: métrique = 'carbone'
         alors: empreinte carbone
-      - si: métrique = "eau"
+      - si: métrique = 'eau'
         alors: empreinte eau
 divers . numérique . appareils . tablette . empreinte carbone:
   formule: (acv numerique . acv . tablette . carbone . fabrication + acv numerique . acv . tablette . carbone . distribution) / 1000 gCO2e/kgCO2e
@@ -401,9 +401,9 @@ divers . numérique . appareils . tablette . empreinte eau:
 #   titre: Empreinte TV
 #   formule:
 #     variations:
-#       - si: métrique = "carbone"
+#       - si: métrique = 'carbone'
 #         alors: empreinte carbone
-#       - si: métrique = "eau"
+#       - si: métrique = 'eau'
 #         alors: empreinte eau
 # divers . numérique . appareils . TV . empreinte carbone:
 #   formule: (acv numerique . acv . TV . carbone . fabrication + acv numerique . acv . TV . carbone . distribution) / 1000 gCO2e/kgCO2e
@@ -431,9 +431,9 @@ divers . numérique . appareils . tablette . empreinte eau:
 #   titre: Empreinte enceinte bluetooth
 #   formule:
 #     variations:
-#       - si: métrique = "carbone"
+#       - si: métrique = 'carbone'
 #         alors: empreinte carbone
-#       - si: métrique = "eau"
+#       - si: métrique = 'eau'
 #         alors: empreinte eau
 # divers . numérique . appareils . enceinte bluetooth . empreinte carbone:
 #   formule: (acv numerique . acv . enceinte . carbone . fabrication + acv numerique . acv . enceinte . carbone . distribution) / 1000 gCO2e/kgCO2e
@@ -461,9 +461,9 @@ divers . numérique . appareils . tablette . empreinte eau:
 #   titre: Empreinte console de salon
 #   formule:
 #     variations:
-#       - si: métrique = "carbone"
+#       - si: métrique = 'carbone'
 #         alors: empreinte carbone
-#       - si: métrique = "eau"
+#       - si: métrique = 'eau'
 #         alors: empreinte eau
 # divers . numérique . appareils . console de salon . empreinte carbone:
 #   formule: (acv numerique . acv . console de salon . carbone . fabrication + acv numerique . acv . console de salon . carbone . distribution) / 1000 gCO2e/kgCO2e
@@ -491,9 +491,9 @@ divers . numérique . appareils . tablette . empreinte eau:
 #   titre: Empreinte console portable
 #   formule:
 #     variations:
-#       - si: métrique = "carbone"
+#       - si: métrique = 'carbone'
 #         alors: empreinte carbone
-#       - si: métrique = "eau"
+#       - si: métrique = 'eau'
 #         alors: empreinte eau
 # divers . numérique . appareils . console portable . empreinte carbone:
 #   formule: (acv numerique . acv . console portable . carbone . fabrication + acv numerique . acv . console portable . carbone . distribution) / 1000 gCO2e/kgCO2e
@@ -519,9 +519,9 @@ divers . numérique . appareils . imprimante . empreinte:
   titre: Empreinte imprimante
   formule:
     variations:
-      - si: métrique = "carbone"
+      - si: métrique = 'carbone'
         alors: empreinte carbone
-      - si: métrique = "eau"
+      - si: métrique = 'eau'
         alors: empreinte eau
 divers . numérique . appareils . imprimante . empreinte carbone:
   formule: (acv numerique . acv . imprimante . carbone . fabrication + acv numerique . acv . imprimante . carbone . distribution) / 1000 gCO2e/kgCO2e

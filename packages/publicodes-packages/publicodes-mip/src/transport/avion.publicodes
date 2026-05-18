@@ -10,14 +10,17 @@ transport . avion:
     A noter aussi que les escales entrainent des décollages supplémentaires, qui consomment plus de carburant qu'une vitesse de croisière.
     C'est aussi un paramètre à prendre en compte par la suite.
   formule: empreinte
-
 # transport . avion . empreinte moyenne:
 #   valeur: transport . avion . empreinte
 #   contexte:
 #     transport . avion . usager: oui
-#     transport . avion . court courrier . heures de vol: transport . avion . court courrier . durée moyenne
-#     transport . avion . moyen courrier . heures de vol: transport . avion . moyen courrier . durée moyenne
-#     transport . avion . long courrier . heures de vol: transport . avion . long courrier . durée moyenne
+#     transport . avion . court courrier . heures de vol:
+#       transport . avion . court courrier . durée moyenne
+#     transport . avion . moyen courrier . heures de vol:
+#       transport . avion . moyen courrier . durée moyenne
+#     transport . avion . long courrier . heures de vol:
+#       transport . avion . long courrier . durée moyenne
+#     transport . avion . long courrier . heures de vol:
 
 transport . avion . empreinte:
   formule:
@@ -51,6 +54,7 @@ transport . avion . court courrier . empreinte par km:
   unité: kgCO2e/km
 
 transport . avion . court courrier . heures de vol:
+  résoudre la référence circulaire: oui
   applicable si: présent
   question: Sur l'année passée, combien d'heures avez-vous voyagé sur des vols de moins de 2h (court-courrier) ?
   description: |
@@ -67,8 +71,6 @@ transport . avion . court courrier . heures de vol:
   unité: h
   par défaut: durée moyenne
   plancher: 0
-  note: La caractérisation "court courrier" par le temps de trajet est donnée par la règle `court courrier . durée max` = 2.17h.
-
 transport . avion . court courrier . durée moyenne:
   titre: Durée moyenne passée par un Français dans les vols court-courriers
   formule: passager km moyen / vitesse moyenne
@@ -112,6 +114,7 @@ transport . avion . moyen courrier . empreinte par km:
   unité: kgCO2e/km
 
 transport . avion . moyen courrier . heures de vol:
+  résoudre la référence circulaire: oui
   applicable si: présent
   question: Sur l'année passée, combien d'heures avez-vous voyagé sur des vols de 2 à 6h (moyen-courrier) ?
   description: |
@@ -128,9 +131,7 @@ transport . avion . moyen courrier . heures de vol:
   par défaut: durée moyenne
   plancher: 0
   note: La caractérisation "moyen courrier" par le temps de trajet est donnée par la règle `court courrier . durée max`=2.17h et `moyen courrier . durée max` = 6.48h.
-
 transport . avion . moyen courrier . durée moyenne:
-  titre: Durée moyenne passée par un Français dans les vols moyen-courriers
   formule: passager km moyen / vitesse moyenne
   unité: h
 
@@ -170,8 +171,9 @@ transport . avion . long courrier . empreinte par km:
   description: |
     Nous utilisons le facteur d'émission de la base carbone `Avion passagers - Long courrier, 2018 - AVEC trainées`.
   unité: kgCO2e/km
-
+  résoudre la référence circulaire: oui
 transport . avion . long courrier . heures de vol:
+  résoudre la référence circulaire: oui
   applicable si: présent
   question: Sur l'année passée, combien d'heures avez-vous voyagé sur des vols de plus de 6h (long-courrier) ?
   description: |
@@ -187,11 +189,9 @@ transport . avion . long courrier . heures de vol:
     Paris ⇄ Tokyo: 24
     Paris ⇄ Lima: 36
     Paris ⇄ Sydney: 40
-  unité: h
   par défaut: durée moyenne
   plancher: 0
   note: La caractérisation "long courrier" par le temps de trajet est donnée par la règle `moyen courrier . durée max` = 6.48h.
-
 transport . avion . long courrier . durée moyenne:
   titre: Durée moyenne passée par un Français dans les vols long-courriers
   formule: passager km moyen / vitesse moyenne

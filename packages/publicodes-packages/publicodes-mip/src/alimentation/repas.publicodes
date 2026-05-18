@@ -3,9 +3,9 @@ alimentation . repas:
   formule:
     somme:
       # - petit déjeuner séjour
-      - déjeuner
+      - plats
       # - bonus
-      - déforestation
+      # - déforestation
   note: |
     Comme pour le textile et l'ameublement, est ajoutée ici une part de l'empreinte liée à la déforestation importée.
 
@@ -144,9 +144,9 @@ alimentation . plats . végétalien:
 alimentation . plats . végétalien . empreinte:
   formule:
     variations:
-      - si: métrique = "carbone"
+      - si: métrique = 'carbone'
         alors: empreinte carbone
-      - si: métrique = "eau"
+      - si: métrique = 'eau'
         alors: empreinte eau
 
 alimentation . plats . végétalien . empreinte carbone:
@@ -187,9 +187,9 @@ alimentation . plats . végétarien:
 alimentation . plats . végétarien . empreinte:
   formule:
     variations:
-      - si: métrique = "carbone"
+      - si: métrique = 'carbone'
         alors: empreinte carbone
-      - si: métrique = "eau"
+      - si: métrique = 'eau'
         alors: empreinte eau
 
 alimentation . plats . végétarien . empreinte carbone:
@@ -216,7 +216,7 @@ alimentation . plats . végétarien . empreinte eau:
 
 alimentation . plats . végétarien . nombre:
   question: Nombre de plats végétariens
-  par défaut: 2 * 36%
+  par défaut: 2 repas * 36%
   unité: repas
   note: 36% = 5 repas végétarien sur 14 par défaut dans le modèle NGC
 
@@ -230,9 +230,9 @@ alimentation . plats . viande blanche:
 alimentation . plats . viande blanche . empreinte:
   formule:
     variations:
-      - si: métrique = "carbone"
+      - si: métrique = 'carbone'
         alors: empreinte carbone
-      - si: métrique = "eau"
+      - si: métrique = 'eau'
         alors: empreinte eau
 
 alimentation . plats . viande blanche . empreinte carbone:
@@ -259,7 +259,7 @@ alimentation . plats . viande blanche . empreinte eau:
 
 alimentation . plats . viande blanche . nombre:
   question: Nombre de plats viande blanche
-  par défaut: 2 * 29%
+  par défaut: 2 repas * 29%
   plancher: 0
   unité: repas
   note: 29% = 4 repas viande blanche sur 14 par défaut dans le modèle NGC
@@ -274,9 +274,9 @@ alimentation . plats . viande rouge:
 alimentation . plats . viande rouge . empreinte:
   formule:
     variations:
-      - si: métrique = "carbone"
+      - si: métrique = 'carbone'
         alors: empreinte carbone
-      - si: métrique = "eau"
+      - si: métrique = 'eau'
         alors: empreinte eau
 
 alimentation . plats . viande rouge . empreinte carbone:
@@ -284,7 +284,7 @@ alimentation . plats . viande rouge . empreinte carbone:
   formule:
     somme:
       - 5.19
-      - déforestation
+      # - déforestation
   unité: kgCO2e/repas
   note: |
     Repas contenant 150g d'une viande rouge moyenne (issue d'un travail de consolidation sur les consommations moyennes de viande rouge de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile.
@@ -323,7 +323,7 @@ alimentation . plats . viande rouge . déforestation:
 
 alimentation . plats . viande rouge . nombre:
   question: Nombre de plats viande rouge
-  par défaut: 2 * 21%
+  par défaut: 2 repas * 21%
   plancher: 0
   unité: repas
   note: 21% = 3 repas viande rouge sur 14 par défaut dans le modèle NGC
@@ -338,9 +338,9 @@ alimentation . plats . poisson gras:
 alimentation . plats . poisson gras . empreinte:
   formule:
     variations:
-      - si: métrique = "carbone"
+      - si: métrique = 'carbone'
         alors: empreinte carbone
-      - si: métrique = "eau"
+      - si: métrique = 'eau'
         alors: empreinte eau
 
 alimentation . plats . poisson gras . empreinte carbone:
@@ -367,7 +367,7 @@ alimentation . plats . poisson gras . empreinte eau:
 
 alimentation . plats . poisson gras . nombre:
   question: Nombre de plats poisson gras
-  par défaut: 2 * 14%
+  par défaut: 2 repas * 14%
   plancher: 0
   unité: repas
   note: 14% = 2 repas poisson gras sur 14 par défaut dans le modèle NGC
@@ -382,9 +382,9 @@ alimentation . plats . poisson blanc:
 alimentation . plats . poisson blanc . empreinte:
   formule:
     variations:
-      - si: métrique = "carbone"
+      - si: métrique = 'carbone'
         alors: empreinte carbone
-      - si: métrique = "eau"
+      - si: métrique = 'eau'
         alors: empreinte eau
 
 alimentation . plats . poisson blanc . empreinte carbone:
@@ -460,9 +460,9 @@ alimentation . petit déjeuner . continental:
   titre: Continental
   formule:
     variations:
-      - si: métrique = "carbone"
+      - si: métrique = 'carbone'
         alors: empreinte carbone
-      - si: métrique = "eau"
+      - si: métrique = 'eau'
         alors: empreinte eau
 
 alimentation . petit déjeuner . continental . empreinte carbone:
@@ -502,9 +502,9 @@ alimentation . petit déjeuner . lait vache céréales:
   titre: Céréales avec lait de vache
   formule:
     variations:
-      - si: métrique = "carbone"
+      - si: métrique = 'carbone'
         alors: empreinte carbone
-      - si: métrique = "eau"
+      - si: métrique = 'eau'
         alors: empreinte eau
 
 alimentation . petit déjeuner . lait vache céréales . empreinte carbone:
@@ -533,9 +533,9 @@ alimentation . petit déjeuner . lait soja céréales:
   titre: Céréales avec lait de soja
   formule:
     variations:
-      - si: métrique = "carbone"
+      - si: métrique = 'carbone'
         alors: empreinte carbone
-      - si: métrique = "eau"
+      - si: métrique = 'eau'
         alors: empreinte eau
 
 alimentation . petit déjeuner . lait soja céréales . empreinte carbone:
@@ -564,9 +564,9 @@ alimentation . petit déjeuner . lait avoine céréales:
   titre: Céréales avec lait d'avoine
   formule:
     variations:
-      - si: métrique = "carbone"
+      - si: métrique = 'carbone'
         alors: empreinte carbone
-      - si: métrique = "eau"
+      - si: métrique = 'eau'
         alors: empreinte eau
 
 alimentation . petit déjeuner . lait avoine céréales . empreinte carbone:
@@ -595,9 +595,9 @@ alimentation . petit déjeuner . britannique:
   titre: Britannique
   formule:
     variations:
-      - si: métrique = "carbone"
+      - si: métrique = 'carbone'
         alors: empreinte carbone
-      - si: métrique = "eau"
+      - si: métrique = 'eau'
         alors: empreinte eau
 
 alimentation . petit déjeuner . britannique . empreinte carbone:
@@ -626,9 +626,9 @@ alimentation . petit déjeuner . végétalien:
   titre: Végétalien
   formule:
     variations:
-      - si: métrique = "carbone"
+      - si: métrique = 'carbone'
         alors: empreinte carbone
-      - si: métrique = "eau"
+      - si: métrique = 'eau'
         alors: empreinte eau
 
 alimentation . petit déjeuner . végétalien . empreinte carbone:
@@ -717,13 +717,14 @@ alimentation . local . consommation:
     Mais c'est toujours ça de gagné, et les avantages d'une consommation locale ne s'arrêtent pas à l'empreinte climat.
   note: Voir détail de l'approche de calcul [ici](http://nosgestesclimat/documentation/alimentation/local/part-locale)
   par défaut: "'jamais'"
-  une possibilité:
-    choix obligatoire: oui
-    possibilités:
-      - jamais
-      - parfois
-      - souvent
-      - oui toujours
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - jamais
+        - parfois
+        - souvent
+        - oui toujours
 
 alimentation . local . consommation . jamais:
   titre: Jamais

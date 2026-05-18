@@ -19,9 +19,9 @@ logement . électricité . empreinte:
 logement . électricité . empreinte au kWh:
   formule:
     variations:
-      - si: métrique = "carbone"
+      - si: métrique = 'carbone'
         alors: intensité carbone équivalente
-      - si: métrique = "eau"
+      - si: métrique = 'eau'
         alors: empreinte eau mix électrique
 
 logement . électricité . intensité carbone équivalente:

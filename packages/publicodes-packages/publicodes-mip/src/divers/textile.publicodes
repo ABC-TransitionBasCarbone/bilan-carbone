@@ -124,9 +124,9 @@ divers . textile . t-shirt . nombre:
 divers . textile . t-shirt . empreinte:
   formule:
     variations:
-      - si: métrique = "carbone"
+      - si: métrique = 'carbone'
         alors: empreinte carbone
-      - si: métrique = "eau"
+      - si: métrique = 'eau'
         alors: empreinte eau
 
 divers . textile . t-shirt . empreinte carbone:
@@ -151,9 +151,9 @@ divers . textile . pantalon . nombre:
 divers . textile . pantalon . empreinte:
   formule:
     variations:
-      - si: métrique = "carbone"
+      - si: métrique = 'carbone'
         alors: empreinte carbone
-      - si: métrique = "eau"
+      - si: métrique = 'eau'
         alors: empreinte eau
 
 divers . textile . pantalon . empreinte carbone:
@@ -179,9 +179,9 @@ divers . textile . short . nombre:
 divers . textile . short . empreinte:
   formule:
     variations:
-      - si: métrique = "carbone"
+      - si: métrique = 'carbone'
         alors: empreinte carbone
-      - si: métrique = "eau"
+      - si: métrique = 'eau'
         alors: empreinte eau
 
 divers . textile . short . empreinte carbone:
@@ -207,9 +207,9 @@ divers . textile . sweat . nombre:
 divers . textile . sweat . empreinte:
   formule:
     variations:
-      - si: métrique = "carbone"
+      - si: métrique = 'carbone'
         alors: empreinte carbone
-      - si: métrique = "eau"
+      - si: métrique = 'eau'
         alors: empreinte eau
 
 divers . textile . sweat . empreinte carbone:
@@ -237,9 +237,9 @@ divers . textile . robe . nombre:
 divers . textile . robe . empreinte:
   formule:
     variations:
-      - si: métrique = "carbone"
+      - si: métrique = 'carbone'
         alors: empreinte carbone
-      - si: métrique = "eau"
+      - si: métrique = 'eau'
         alors: empreinte eau
 
 divers . textile . robe . empreinte carbone:
@@ -264,9 +264,9 @@ divers . textile . chemise . nombre:
 divers . textile . chemise . empreinte:
   formule:
     variations:
-      - si: métrique = "carbone"
+      - si: métrique = 'carbone'
         alors: empreinte carbone
-      - si: métrique = "eau"
+      - si: métrique = 'eau'
         alors: empreinte eau
 
 divers . textile . chemise . empreinte carbone:
@@ -292,9 +292,9 @@ divers . textile . pull . nombre:
 divers . textile . pull . empreinte:
   formule:
     variations:
-      - si: métrique = "carbone"
+      - si: métrique = 'carbone'
         alors: empreinte carbone
-      - si: métrique = "eau"
+      - si: métrique = 'eau'
         alors: empreinte eau
 
 divers . textile . pull . empreinte carbone:
@@ -320,9 +320,9 @@ divers . textile . chaussure . nombre:
 divers . textile . chaussure . empreinte:
   formule:
     variations:
-      - si: métrique = "carbone"
+      - si: métrique = 'carbone'
         alors: empreinte carbone
-      - si: métrique = "eau"
+      - si: métrique = 'eau'
         alors: empreinte eau
 
 divers . textile . chaussure . empreinte carbone:
@@ -347,9 +347,9 @@ divers . textile . manteau . nombre:
 divers . textile . manteau . empreinte:
   formule:
     variations:
-      - si: métrique = "carbone"
+      - si: métrique = 'carbone'
         alors: empreinte carbone
-      - si: métrique = "eau"
+      - si: métrique = 'eau'
         alors: empreinte eau
 
 divers . textile . manteau . empreinte carbone:
@@ -376,9 +376,9 @@ divers . textile . petit article . nombre:
 divers . textile . petit article . empreinte:
   formule:
     variations:
-      - si: métrique = "carbone"
+      - si: métrique = 'carbone'
         alors: empreinte carbone
-      - si: métrique = "eau"
+      - si: métrique = 'eau'
         alors: empreinte eau
 
 divers . textile . petit article . empreinte carbone:
@@ -405,9 +405,9 @@ divers . textile . gros article . nombre:
 divers . textile . gros article . empreinte:
   formule:
     variations:
-      - si: métrique = "carbone"
+      - si: métrique = 'carbone'
         alors: empreinte carbone
-      - si: métrique = "eau"
+      - si: métrique = 'eau'
         alors: empreinte eau
 
 divers . textile . gros article . empreinte carbone:
