@@ -7,7 +7,7 @@ import { SurveyResponse, Survey as SurveyType } from '@abc-transitionbascarbone/
 import { ArrowBack, ArrowForward, Check } from '@mui/icons-material'
 import { Alert, Button, Card, CardContent, Container, LinearProgress, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import styles from './Survey.module.css'
 
@@ -32,17 +32,24 @@ function initResponse(survey: SurveyType): SurveyResponse {
 export function Survey({ survey, surveyId }: SurveyProps) {
   const t = useTranslations('survey')
   const tCommon = useTranslations('common')
-  const [response, setResponse] = useState<SurveyResponse>(() => {
+  const [response, setResponse] = useState<SurveyResponse>(() => initResponse(survey))
+  const [error, setError] = useState<string | null>(null)
+  const [isResumed, setIsResumed] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
     if (surveyId) {
       const existing = surveyStorage.loadResponse(surveyId)
       if (existing && existing.surveyId === survey.id) {
-        return existing
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setResponse(existing)
+        setIsResumed(true)
       }
     }
-    return initResponse(survey)
-  })
-  const [error, setError] = useState<string | null>(null)
-  const [isResumed, setIsResumed] = useState(() => !!response)
+    setIsLoading(false)
+    // Disaled rule to prevent flickering until we fix the component hydration issue
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [surveyId])
 
   const engine = useMemo(() => new SurveyEngine(survey, response), [survey, response])
 
@@ -95,6 +102,10 @@ export function Survey({ survey, surveyId }: SurveyProps) {
 
   const currentQuestion = engine.getCurrentQuestion()
   const progress = engine.getProgress()
+
+  if (isLoading) {
+    return <Typography>{t('loading')}</Typography>
+  }
 
   if (isResumed) {
     return (
