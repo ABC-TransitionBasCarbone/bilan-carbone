@@ -1,9 +1,9 @@
 'use server'
 import { mergeObjects } from '@/utils/object'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { Locale, LocaleType } from '@abc-transitionbascarbone/i18n/config'
 import fs from 'fs'
 import path from 'path'
-import { Locale, LocaleType } from './config'
 
 export const getMessages = async (locale: LocaleType, environment?: Environment) => {
   let commonMessages = {}

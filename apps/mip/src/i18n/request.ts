@@ -1,5 +1,5 @@
+import { Locale } from '@abc-transitionbascarbone/i18n/config'
 import { getRequestConfig } from 'next-intl/server'
-import { Locale } from './config'
 
 export default getRequestConfig(async () => {
   const locale = Locale.FR

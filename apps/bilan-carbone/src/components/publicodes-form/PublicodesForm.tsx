@@ -14,7 +14,7 @@ export interface PublicodesFormProps<RuleName extends string> {
   formLayouts: FormLayout<RuleName>[]
 }
 
-export function PublicodesForm<RuleName extends string>({ formLayouts }: PublicodesFormProps<RuleName>) {
+export default function PublicodesForm<RuleName extends string>({ formLayouts }: PublicodesFormProps<RuleName>) {
   const { engine, situation, listLayoutSituations, updateField } = usePublicodesForm<RuleName>()
 
   const elementsWithRelation = useMemo(() => {

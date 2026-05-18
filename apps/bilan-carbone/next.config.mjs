@@ -16,9 +16,9 @@ const nextConfig = {
     resolveAlias: {
       underscore: 'lodash',
       // NOTE: while the package is not published to npm, we use a local path
-      '@abc-transitionbascarbone/publicodes-count': './publicodes-packages/publicodes-count/',
-      '@abc-transitionbascarbone/publicodes-clickson': './publicodes-packages/publicodes-clickson/',
-      '@abc-transitionbascarbone/publicodes-tilt': './publicodes-packages/publicodes-tilt/',
+      '@abc-transitionbascarbone/publicodes-count': '../../packages/publicodes-packages/publicodes-count/',
+      '@abc-transitionbascarbone/publicodes-clickson': '../../packages/publicodes-packages/publicodes-clickson/',
+      '@abc-transitionbascarbone/publicodes-tilt': '../../packages/publicodes-packages/publicodes-tilt/',
       // '@publicodes/forms': '../../publicodes/publicodes/packages/forms/src/',
     },
     resolveExtensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
