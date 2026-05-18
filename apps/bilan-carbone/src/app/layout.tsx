@@ -1,7 +1,7 @@
 import { ZodConfigClientProvider } from '@/components/providers/zod.provider'
 import RouteChangeListener from '@/components/RouteChangeListener'
 import '@/css/index.css'
-import { Locale, LocaleType } from '@/i18n/config'
+import { Locale, LocaleType } from '@abc-transitionbascarbone/i18n/config'
 import { getEnvironment } from '@/i18n/environment'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { Providers, configureZod } from '@abc-transitionbascarbone/lib'

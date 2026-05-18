@@ -1,5 +1,5 @@
 import { KG_CO2E_PREFIX_REGEX } from '@/constants/import'
-import { LocaleType } from '@/i18n/config'
+import { LocaleType } from '@abc-transitionbascarbone/i18n/config'
 import { environmentPostMapping, environmentSubPostsMapping } from '@/services/posts'
 import { EmissionFactorCommandValidation } from '@/services/serverFunctions/emissionFactor.command'
 import { ImportWarning } from '@/types/import.types'

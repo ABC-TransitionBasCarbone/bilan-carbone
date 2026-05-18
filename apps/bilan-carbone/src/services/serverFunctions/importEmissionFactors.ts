@@ -1,7 +1,7 @@
 'use server'
 
 import { createEmissionFactorWithParts, getManualEmissionFactorsByOrganization } from '@/db/emissionFactors'
-import { LocaleType } from '@/i18n/config'
+import { LocaleType } from '@abc-transitionbascarbone/i18n/config'
 import { getLocale } from '@/i18n/locale'
 import { AccountWithUser } from '@/types/account.types'
 import {

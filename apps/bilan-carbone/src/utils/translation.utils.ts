@@ -1,4 +1,4 @@
-import { Locale, LocaleType } from '@/i18n/config'
+import { Locale, LocaleType } from '@abc-transitionbascarbone/i18n/config'
 import enBc from '@/i18n/translations/en/bc.json'
 import frBc from '@/i18n/translations/fr/bc.json'
 import enCommon from '@abc-transitionbascarbone/i18n/en/common.json'

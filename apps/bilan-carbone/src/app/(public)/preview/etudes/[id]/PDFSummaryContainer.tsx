@@ -1,7 +1,7 @@
 'use client'
 import type { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import { LocaleType } from '@/i18n/config'
+import { LocaleType } from '@abc-transitionbascarbone/i18n/config'
 import { getMessages } from '@/i18n/utils'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { NextIntlClientProvider } from 'next-intl'

@@ -1,7 +1,7 @@
 import NotFound from '@/components/pages/NotFound'
 import { FullStudy, getStudyById } from '@/db/study'
 import { getUserById } from '@/db/user'
-import { LocaleType } from '@/i18n/config'
+import { LocaleType } from '@abc-transitionbascarbone/i18n/config'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import jwt from 'jsonwebtoken'
 import { headers } from 'next/headers'

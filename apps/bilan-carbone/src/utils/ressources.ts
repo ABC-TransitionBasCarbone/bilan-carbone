@@ -1,4 +1,4 @@
-import { Locale } from '@/i18n/config'
+import { Locale } from '@abc-transitionbascarbone/i18n/config'
 import { getEnvVar } from '@/lib/environment'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { Translations } from '@abc-transitionbascarbone/lib'

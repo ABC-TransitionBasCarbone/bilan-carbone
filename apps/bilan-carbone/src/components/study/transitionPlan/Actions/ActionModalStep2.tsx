@@ -1,6 +1,6 @@
 import { FormSelect } from '@/components/form/Select'
 import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
-import { Locale } from '@/i18n/config'
+import { Locale } from '@abc-transitionbascarbone/i18n/config'
 import { customRich } from '@/i18n/customRich'
 import { AddActionFormCommand } from '@/services/serverFunctions/action.command'
 import { getOrderedActionRelevances } from '@/utils/action'

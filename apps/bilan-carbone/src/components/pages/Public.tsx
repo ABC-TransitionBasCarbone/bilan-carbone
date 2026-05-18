@@ -1,5 +1,5 @@
 'use client'
-import { defaultLocale, Locale, LocaleType } from '@/i18n/config'
+import { defaultLocale, Locale, LocaleType } from '@abc-transitionbascarbone/i18n/config'
 import { customRich } from '@/i18n/customRich'
 import { switchEnvironment } from '@/i18n/environment'
 import { getLocale, switchLocale } from '@/i18n/locale'

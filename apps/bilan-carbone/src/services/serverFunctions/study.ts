@@ -84,7 +84,7 @@ import {
   updateAccount,
   UserWithAccounts,
 } from '@/db/user'
-import { LocaleType } from '@/i18n/config'
+import { LocaleType } from '@abc-transitionbascarbone/i18n/config'
 import { getLocale } from '@/i18n/locale'
 import { StudySiteFields, studySiteToSituation } from '@/services/studySiteToSituation'
 import { AccountWithUser } from '@/types/account.types'

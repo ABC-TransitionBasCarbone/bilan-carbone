@@ -1,6 +1,6 @@
 'use client'
 
-import { Locale, LocaleType, defaultLocale } from '@/i18n/config'
+import { Locale, LocaleType, defaultLocale } from '@abc-transitionbascarbone/i18n/config'
 import { getLocale, switchLocale } from '@/i18n/locale'
 import { hasAccessToAllLocales } from '@/services/permissions/environment'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
