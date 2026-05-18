@@ -8,7 +8,11 @@ import { getLocale } from '@/i18n/locale'
 import { Post, subPostsByPost } from '@/services/posts'
 import { AccountWithUser } from '@/types/account.types'
 import { ImportError, ImportResult, ImportWarning } from '@/types/import.types'
-import { PreviewEmissionSourceRow, PreviewEmissionSourcesResult } from '@/types/importEmissionSources.types'
+import {
+  PreviewEmissionSourceRow,
+  PreviewEmissionSourcesResult,
+  SOURCE_IMPORT_COLUMNS,
+} from '@/types/importEmissionSources.types'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { findEmissionFactorMatch } from '@/utils/findEmissionFactor.utils'
 import { getImportEmissionSourcesTranslations, parseEmissionSourcesFile } from '@/utils/importEmissionSources.utils'
@@ -32,7 +36,7 @@ import {
 } from '../uncertainty'
 import { getEmissionFactorsByIds } from './emissionFactor'
 
-const TOTAL_EXCEL_COLS = 35
+const TOTAL_EXCEL_COLS = Object.keys(SOURCE_IMPORT_COLUMNS).length
 
 async function getStudyOrThrow(studyId: string, account: AccountWithUser): Promise<FullStudy> {
   const study = await getStudyById(studyId, account.organizationVersionId)
@@ -344,62 +348,33 @@ export async function getImportEmissionSourcesTemplate(
   const siteName = studySite?.site?.name ?? ''
   const postLabel = post ? (postTranslations[post] ?? post) : ''
 
+  const columns = SOURCE_IMPORT_COLUMNS
   const exampleRow: (string | number)[] = Array(TOTAL_EXCEL_COLS).fill('')
-  exampleRow[0] = siteName
-  exampleRow[1] = postTranslations['IntrantsBiensEtMatieres']
-  exampleRow[2] = postTranslations['MetauxPlastiquesEtVerre']
-  exampleRow[3] = t('examplePrefix') + t('exampleName')
-  exampleRow[6] = 1000
-  exampleRow[7] = getSingularForm(unitTranslations['TON'])
-  exampleRow[11] = qualityTranslations['5']
-  exampleRow[16] = t('exampleSource')
-  exampleRow[17] = typeTranslations['Physical']
-  exampleRow[20] = t('exampleEmissionFactor')
+  exampleRow[columns.site] = siteName
+  exampleRow[columns.post] = postTranslations['IntrantsBiensEtMatieres']
+  exampleRow[columns.subPost] = postTranslations['MetauxPlastiquesEtVerre']
+  exampleRow[columns.name] = t('examplePrefix') + t('exampleName')
+  exampleRow[columns.value] = 1000
+  exampleRow[columns.unit] = getSingularForm(unitTranslations['TON'])
+  exampleRow[columns.reliability] = qualityTranslations['5']
+  exampleRow[columns.source] = t('exampleSource')
+  exampleRow[columns.type] = typeTranslations['Physical']
+  exampleRow[columns.emissionFactorName] = t('exampleEmissionFactor')
 
-  const emptyRow: (string | number)[] = [siteName, postLabel, ...Array(TOTAL_EXCEL_COLS - 2).fill('')]
+  const emptyRow: (string | number)[] = Array(TOTAL_EXCEL_COLS).fill('')
+  emptyRow[columns.site] = siteName
+  emptyRow[columns.post] = postLabel
 
   const rows = post ? [exampleRow, ...Array.from({ length: 100 }, () => [...emptyRow])] : [exampleRow, emptyRow]
   return buildEmissionSourcesSheet(study, locale, rows)
 }
 
 function getEmissionSourcesHeaderRow(t: (key: string) => string): string[] {
-  return [
-    t('columnSite'),
-    t('columnPost'),
-    t('columnSubPost'),
-    t('columnName'),
-    t('columnTag'),
-    t('columnCaracterisation'),
-    t('columnValue'),
-    t('columnUnit'),
-    t('columnDepreciationPeriod'),
-    t('columnConstructionYear'),
-    t('columnGlobalUncertainty'),
-    t('columnReliability'),
-    t('columnTechnicalRepresentativeness'),
-    t('columnGeographicRepresentativeness'),
-    t('columnTemporalRepresentativeness'),
-    t('columnCompleteness'),
-    t('columnSource'),
-    t('columnType'),
-    t('columnComment'),
-    t('columnEfId'),
-    t('columnEfUsed'),
-    t('columnEfValue'),
-    t('columnEfUnit'),
-    t('columnGlobalUncertainty'),
-    t('columnReliability'),
-    t('columnTechnicalRepresentativeness'),
-    t('columnGeographicRepresentativeness'),
-    t('columnTemporalRepresentativeness'),
-    t('columnCompleteness'),
-    t('columnEfSource'),
-    t('columnEfType'),
-    t('columnFeComment'),
-    t('columnValidation'),
-    t('columnCalculatedValue'),
-    t('columnCalculatedUncertainty'),
-  ]
+  const row = Array<string>(TOTAL_EXCEL_COLS).fill('')
+  for (const [col, index] of Object.entries(SOURCE_IMPORT_COLUMNS) as [string, number][]) {
+    row[index] = t('column' + col.charAt(0).toUpperCase() + col.slice(1))
+  }
+  return row
 }
 
 function buildEmissionSourcesCSV(locale: LocaleType, dataRows: (string | number)[][]): string {
@@ -502,43 +477,50 @@ function buildEmissionSourceRow(
     : ''
   const validationLabel = es.validated ? exportYes : exportNo
 
-  return [
-    es.studySite.site.name,
-    postLabel,
-    subPostLabel,
-    es.name,
-    tagLabel,
-    caracterisationLabel,
-    es.value ?? '',
-    unitLabel,
-    es.depreciationPeriod ?? '',
-    es.constructionYear ? es.constructionYear.getFullYear() : '',
-    globalUncertaintyLabel,
-    getQualityFieldLabel(es.reliability),
-    getQualityFieldLabel(es.technicalRepresentativeness),
-    getQualityFieldLabel(es.geographicRepresentativeness),
-    getQualityFieldLabel(es.temporalRepresentativeness),
-    getQualityFieldLabel(es.completeness),
-    es.source ?? '',
-    typeLabel,
-    es.comment ?? '',
-    ef?.importedId ?? '',
-    efTitle,
-    efValue,
-    efUnitLabel,
-    feQualityLabel,
-    feSpecificQuality ? getQualityFieldLabel(feSpecificQuality.reliability) : '',
-    feSpecificQuality ? getQualityFieldLabel(feSpecificQuality.technicalRepresentativeness) : '',
-    feSpecificQuality ? getQualityFieldLabel(feSpecificQuality.geographicRepresentativeness) : '',
-    feSpecificQuality ? getQualityFieldLabel(feSpecificQuality.temporalRepresentativeness) : '',
-    feSpecificQuality ? getQualityFieldLabel(feSpecificQuality.completeness) : '',
-    efSource,
-    efTypeLabel,
-    es.feComment ?? '',
-    validationLabel,
-    `${calculatedValue} ${resultsUnitLabel}`,
-    calculatedUncertaintyLabel,
-  ]
+  const C = SOURCE_IMPORT_COLUMNS
+  const row = Array<string | number>(TOTAL_EXCEL_COLS).fill('')
+  row[C.site] = es.studySite.site.name
+  row[C.post] = postLabel
+  row[C.subPost] = subPostLabel
+  row[C.name] = es.name
+  row[C.tag] = tagLabel
+  row[C.caracterisation] = caracterisationLabel
+  row[C.value] = es.value ?? ''
+  row[C.unit] = unitLabel
+  row[C.depreciationPeriod] = es.depreciationPeriod ?? ''
+  row[C.constructionYear] = es.constructionYear ? es.constructionYear.getFullYear() : ''
+  row[C.globalUncertainty] = globalUncertaintyLabel
+  row[C.reliability] = getQualityFieldLabel(es.reliability)
+  row[C.technicalRepresentativeness] = getQualityFieldLabel(es.technicalRepresentativeness)
+  row[C.geographicRepresentativeness] = getQualityFieldLabel(es.geographicRepresentativeness)
+  row[C.temporalRepresentativeness] = getQualityFieldLabel(es.temporalRepresentativeness)
+  row[C.completeness] = getQualityFieldLabel(es.completeness)
+  row[C.source] = es.source ?? ''
+  row[C.type] = typeLabel
+  row[C.comment] = es.comment ?? ''
+  row[C.emissionFactorId] = ef?.importedId ?? ''
+  row[C.emissionFactorName] = efTitle
+  row[C.emissionFactorValue] = efValue
+  row[C.emissionFactorUnit] = efUnitLabel
+  row[C.feGlobalUncertainty] = feQualityLabel
+  row[C.feReliability] = feSpecificQuality ? getQualityFieldLabel(feSpecificQuality.reliability) : ''
+  row[C.feTechnicalRepresentativeness] = feSpecificQuality
+    ? getQualityFieldLabel(feSpecificQuality.technicalRepresentativeness)
+    : ''
+  row[C.feGeographicRepresentativeness] = feSpecificQuality
+    ? getQualityFieldLabel(feSpecificQuality.geographicRepresentativeness)
+    : ''
+  row[C.feTemporalRepresentativeness] = feSpecificQuality
+    ? getQualityFieldLabel(feSpecificQuality.temporalRepresentativeness)
+    : ''
+  row[C.feCompleteness] = feSpecificQuality ? getQualityFieldLabel(feSpecificQuality.completeness) : ''
+  row[C.efSource] = efSource
+  row[C.efType] = efTypeLabel
+  row[C.feComment] = es.feComment ?? ''
+  row[C.validation] = validationLabel
+  row[C.calculatedValue] = `${calculatedValue} ${resultsUnitLabel}`
+  row[C.calculatedUncertainty] = calculatedUncertaintyLabel
+  return row
 }
 
 async function buildEmissionSourcesDataRows(

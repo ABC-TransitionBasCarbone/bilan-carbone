@@ -52,10 +52,10 @@ const ImportEmissionSourcesModal = ({ studyId, post, siteId, open, onClose, onSu
           <TableCell className={styles.groupFirstCell}>{t('columnName')}</TableCell>
           <TableCell>{t('columnValue')}</TableCell>
           <TableCell>{t('columnUnit')}</TableCell>
-          <TableCell className={styles.groupFirstCell}>{t('columnEfId')}</TableCell>
-          <TableCell>{t('columnEfUsed')}</TableCell>
-          <TableCell>{t('columnEfValue')}</TableCell>
-          <TableCell>{t('columnEfUnit')}</TableCell>
+          <TableCell className={styles.groupFirstCell}>{t('columnEmissionFactorId')}</TableCell>
+          <TableCell>{t('columnEmissionFactorName')}</TableCell>
+          <TableCell>{t('columnEmissionFactorValue')}</TableCell>
+          <TableCell>{t('columnEmissionFactorUnit')}</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
