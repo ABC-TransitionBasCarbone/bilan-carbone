@@ -1,11 +1,14 @@
 import { usePublicodesForm } from '@/lib/publicodes/context'
+import {
+  areRulesReferencedInApplicability,
+  evaluatedLayoutIsApplicable,
+  getRuleNamesFromLayout,
+} from '@abc-transitionbascarbone/publicodes/form'
+import { FormLayout, getEvaluatedFormLayout } from '@abc-transitionbascarbone/publicodes/form/layouts'
 import { Box } from '@mui/material'
 import { useMemo } from 'react'
-import { getEvaluatedFormLayout } from './layouts/evaluatedFormLayout'
-import { FormLayout } from './layouts/formLayout'
 import styles from './PublicodesForm.module.css'
 import PublicodesQuestion from './PublicodesQuestion'
-import { areRulesReferencedInApplicability, evaluatedLayoutIsApplicable, getRuleNamesFromLayout } from './utils'
 
 export interface PublicodesFormProps<RuleName extends string> {
   formLayouts: FormLayout<RuleName>[]

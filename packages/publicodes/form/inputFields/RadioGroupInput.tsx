@@ -4,12 +4,16 @@ import { EvaluatedRadioGroup } from '@publicodes/forms'
 import classNames from 'classnames'
 import { BaseInputProps } from './utils'
 
-const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
-  backgroundColor: 'white',
-  border: `solid 1px`,
-  borderRadius: '1rem',
-  width: 'fit-content',
-}))
+const StyledFormControlLabel = styled(FormControlLabel)(({ theme }: { theme: any }) => {
+  const borderColor = theme.custom?.box?.borderColor ?? theme.palette.divider
+
+  return {
+    backgroundColor: 'white',
+    border: `solid 1px ${borderColor}`,
+    borderRadius: '1rem',
+    width: 'fit-content',
+  }
+})
 
 interface RadioGroupInputProps<RuleName extends string> extends BaseInputProps<RuleName> {
   formElement: EvaluatedRadioGroup<RuleName>

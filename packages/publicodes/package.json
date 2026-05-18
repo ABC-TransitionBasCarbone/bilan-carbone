@@ -9,7 +9,9 @@
     "./utils": "./utils.ts",
     "./hooks": "./hooks/index.ts",
     "./context": "./context/index.ts",
-    "./form": "./form/index.ts"
+    "./form": "./form/index.ts",
+    "./form/inputFields": "./form/inputFields/index.ts",
+    "./form/layouts": "./form/layouts/index.ts"
   },
   "peerDependencies": {
     "react": "*",

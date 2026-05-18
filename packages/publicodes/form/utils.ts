@@ -83,10 +83,6 @@ function areReferencedInApplicability<RuleName extends string>(
   )
 }
 
-export function isMosaic(engine: Engine, ruleName: string): boolean {
-  return !!(engine.getParsedRules()[ruleName]?.rawNode as any)?.mosaique
-}
-
 export function getMosaicParent(engine: Engine, ruleName: string): string | null {
   const rules = engine.getParsedRules()
   const parts = ruleName.split(' . ')

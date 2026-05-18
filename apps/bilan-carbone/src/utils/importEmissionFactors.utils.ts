@@ -1,10 +1,10 @@
 import { KG_CO2E_PREFIX_REGEX } from '@/constants/import'
-import { LocaleType } from '@abc-transitionbascarbone/i18n/config'
 import { environmentPostMapping, environmentSubPostsMapping } from '@/services/posts'
 import { EmissionFactorCommandValidation } from '@/services/serverFunctions/emissionFactor.command'
 import { ImportWarning } from '@/types/import.types'
 import { COLUMNS, ImportError, ParsedRow, ParseResult } from '@/types/importEmissionFactors.types'
 import { EmissionFactorBase, Environment, SubPost, Unit } from '@abc-transitionbascarbone/db-common/enums'
+import { LocaleType } from '@abc-transitionbascarbone/i18n/config'
 import { ManualEmissionFactorUnitList } from './emissionFactors'
 import { parseExcelSheet } from './excel.utils'
 import {

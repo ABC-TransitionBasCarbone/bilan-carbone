@@ -1,5 +1,7 @@
 import { usePublicodesForm } from '@/lib/publicodes/context'
 import BaseTable from '@abc-transitionbascarbone/components/src/base/Table'
+import { InputField, OnFieldChange } from '@abc-transitionbascarbone/publicodes/form'
+import { EvaluatedListLayout } from '@abc-transitionbascarbone/publicodes/form/layouts'
 import { usePublicodesTranslation } from '@abc-transitionbascarbone/publicodes/hooks'
 import { Button } from '@abc-transitionbascarbone/ui'
 import { ContentCopy, Delete } from '@mui/icons-material'
@@ -9,9 +11,6 @@ import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table
 import { useTranslations } from 'next-intl'
 import { Situation } from 'publicodes'
 import { useCallback, useEffect, useMemo } from 'react'
-import InputField from './InputField'
-import { EvaluatedListLayout } from './layouts/evaluatedFormLayout'
-import { OnFieldChange } from './utils'
 
 interface ListLayoutProps<RuleName extends string> {
   listLayout: EvaluatedListLayout<RuleName>

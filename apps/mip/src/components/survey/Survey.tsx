@@ -4,10 +4,10 @@ import {
   buildPageBuilder,
   getMosaicParent,
   getQuestionType,
+  InputQuestion,
   MipQuestionType,
   MosaicQuestion,
   patchFormElement,
-  PublicodesQuestion,
 } from '@abc-transitionbascarbone/publicodes/form'
 import { ArrowBack, ArrowForward, Check } from '@mui/icons-material'
 import { Button, Card, CardContent, Container, LinearProgress, Typography } from '@mui/material'
@@ -227,13 +227,9 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
               onChange={(ruleName, value) => updateState(formBuilder.handleInputChange(state, ruleName, value))}
             />
           ) : (
-            <PublicodesQuestion
+            <InputQuestion
               key={group.el.id}
-              formLayout={{
-                type: 'input',
-                evaluatedElement: group.el,
-                rule: group.el.id as string,
-              }}
+              formElement={group.el}
               onChange={(ruleName, value) => updateState(formBuilder.handleInputChange(state, ruleName, value))}
             />
           ),
