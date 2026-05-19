@@ -14,8 +14,8 @@ import { signIn } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useEffect, useMemo, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useState } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
 import Form from '../base/Form'
 import LoadingButton from '../base/LoadingButton'
 import { FormTextField } from '../form/TextField'
@@ -27,32 +27,23 @@ interface Props {
 }
 
 const LoginForm = ({ environment = Environment.BC }: Props) => {
+  'use memo'
+
   const support = getEnvVarClient('SUPPORT_EMAIL', environment)
   const t = useTranslations('login.form')
   const router = useRouter()
   const [submitting, setSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [showPassword, setShowPassword] = useState(false)
-  const [email, setEmail] = useState('')
 
-  const { getValues, control, watch, handleSubmit } = useForm<LoginCommand>({
+  const { getValues, control, handleSubmit } = useForm<LoginCommand>({
     resolver: zodResolver(LoginCommandValidation),
     mode: 'onBlur',
     reValidateMode: 'onChange',
     defaultValues: { email: '', password: '' },
   })
 
-  useEffect(() => {
-    setEmail(getValues('email') ?? '')
-
-    const subscription = watch((values) => {
-      if (values.email !== email) {
-        setEmail(values.email ?? '')
-      }
-    })
-
-    return () => subscription.unsubscribe()
-  }, [watch])
+  const email = useWatch({ control, name: 'email', defaultValue: '' })
 
   const onSubmit = async () => {
     setErrorMessage('')
@@ -68,14 +59,10 @@ const LoginForm = ({ environment = Environment.BC }: Props) => {
       router.push('/?fromLogin')
     }
   }
-  const resetLink = useMemo(() => getEnvRoute(`reset-password?email=${email}`, environment), [email])
-  const activationLink = useMemo(
-    () =>
-      getEnvRoute(
-        environment === Environment.BC ? `activation?email=${email}` : `register?email=${email}`,
-        environment,
-      ),
-    [email],
+  const resetLink = getEnvRoute(`reset-password?email=${email}`, environment)
+  const activationLink = getEnvRoute(
+    environment === Environment.BC ? `activation?email=${email}` : `register?email=${email}`,
+    environment,
   )
 
   return (
