@@ -8,6 +8,7 @@ import {
   exportEmissionSourcesToCSV,
   exportEmissionSourcesToExcel,
 } from '@/services/serverFunctions/importEmissionSources'
+import { hasEditionRights } from '@/utils/study'
 import { StudyRole } from '@abc-transitionbascarbone/db-common/enums'
 import FileDownloadIcon from '@mui/icons-material/FileDownload'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
@@ -32,7 +33,7 @@ const EmissionSourceButtons = ({ studyId, userRole, post, siteId, onSuccess }: P
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null)
   const [isExporting, startExportTransition] = useTransition()
 
-  const canEdit = userRole !== StudyRole.Reader
+  const canEdit = hasEditionRights(userRole)
 
   const handleExportExcel = () => {
     setMenuAnchor(null)

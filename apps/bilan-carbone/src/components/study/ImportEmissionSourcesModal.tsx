@@ -1,6 +1,6 @@
 'use client'
 
-import ImportFileModal from '@/components/base/ImportFileModal'
+import ImportFileModal from '@/components/base/ImportFileModal/ImportFileModal'
 import { download } from '@/services/file'
 import { Post } from '@/services/posts'
 import {
@@ -12,7 +12,7 @@ import { PreviewEmissionSourceRow } from '@/types/importEmissionSources.types'
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import styles from '../base/ImportFileModal.module.css'
+import styles from '../base/ImportFileModal/ImportFileModal.module.css'
 
 interface Props {
   studyId: string

@@ -3,15 +3,15 @@
 import LoadingButton from '@/components/base/LoadingButton'
 import Modal from '@/components/modals/Modal'
 import { ImportError, ImportResult, ImportWarning } from '@/types/import.types'
-import { formatEf } from '@/utils/import.utils'
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import DownloadIcon from '@mui/icons-material/Download'
 import UploadFileIcon from '@mui/icons-material/UploadFile'
-import { Alert, AlertTitle, CircularProgress, List, ListItem, Typography } from '@mui/material'
+import { CircularProgress, Typography } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { DragEvent, ReactNode, useRef, useState, useTransition } from 'react'
+import ErrorList from './ErrorList'
 import styles from './ImportFileModal.module.css'
+import WarningList from './WarningList'
 
 function groupByLine<T extends { line: number }>(items: T[]): { line: number; items: T[] }[] {
   const map = new Map<number, T[]>()
@@ -226,78 +226,7 @@ const ImportFileModal = <TPreviewRow,>({
           </>
         )}
 
-        {isWarning && (
-          <Alert severity="warning">
-            <AlertTitle>{t('warningTitle')}</AlertTitle>
-            <List dense className={styles.errorList}>
-              {warnings.map(({ line, items }) => (
-                <ListItem key={line} disableGutters className="py025">
-                  <div>
-                    {line > 0 && (
-                      <Typography variant="body2" fontWeight="medium">
-                        {tCommon('label.line', { line })}
-                        {items[0]?.sourceName ? ` — ${items[0].sourceName}` : ''}
-                      </Typography>
-                    )}
-                    <List dense disablePadding>
-                      {items.map((w, i) => {
-                        if (w.type === 'validationSkipped') {
-                          return (
-                            <ListItem key={i} disableGutters className={line > 0 ? 'pl15' : undefined}>
-                              <Typography variant="body2">
-                                {line > 0 ? '• ' : ''}
-                                {t('warningValidationSkipped')}
-                              </Typography>
-                            </ListItem>
-                          )
-                        }
-
-                        const searched = formatEf(w.searchedName, w.searchedValue, w.searchedUnit)
-                        const found =
-                          w.foundTitle !== undefined || w.foundValue !== undefined
-                            ? formatEf(w.foundTitle, w.foundValue, w.foundUnit)
-                            : null
-
-                        return (
-                          <ListItem key={i} disableGutters className={line > 0 ? 'pl15' : undefined}>
-                            <div>
-                              <Typography variant="body2">
-                                {line > 0 ? '• ' : ''}
-                                {t('warningEfNotFound', { searched })}
-                              </Typography>
-                              {w.candidates ? (
-                                <>
-                                  <Typography variant="body2" className="align-center gapped025">
-                                    {t('warningEfAmbiguous')}
-                                  </Typography>
-                                  {w.candidates.map((c, j) => (
-                                    <Typography key={j} variant="body2" className="align-center gapped025">
-                                      {'  – '}
-                                      {formatEf(c.foundTitle, c.foundValue, c.foundUnit)}
-                                    </Typography>
-                                  ))}
-                                  <Typography variant="body2" fontWeight="bold" className="align-center gapped025">
-                                    <ArrowForwardIcon className={styles.warningArrow} />
-                                    {t('warningEfLeftEmpty')}
-                                  </Typography>
-                                </>
-                              ) : (
-                                <Typography variant="body2" fontWeight="bold" className="align-center gapped025">
-                                  <ArrowForwardIcon className={styles.warningArrow} />
-                                  {found ? `${t('warningEfReplacedBy')} ${found}` : t('warningEfLeftEmpty')}
-                                </Typography>
-                              )}
-                            </div>
-                          </ListItem>
-                        )
-                      })}
-                    </List>
-                  </div>
-                </ListItem>
-              ))}
-            </List>
-          </Alert>
-        )}
+        {isWarning && <WarningList warnings={warnings} t={t} tCommon={tCommon} />}
 
         {!isPreview && !isWarning && (
           <>
@@ -331,34 +260,7 @@ const ImportFileModal = <TPreviewRow,>({
               )}
             </div>
 
-            {isError && (
-              <Alert severity="error">
-                <AlertTitle>{t('errorTitle')}</AlertTitle>
-                <List dense className={styles.errorList}>
-                  {errors.map(({ line, items }) => (
-                    <ListItem key={line} disableGutters className="py025">
-                      <div>
-                        {line > 0 && (
-                          <Typography variant="body2" fontWeight="medium">
-                            {tCommon('label.line', { line })}
-                          </Typography>
-                        )}
-                        <List dense disablePadding>
-                          {items.map((msg, i) => (
-                            <ListItem key={i} disableGutters className={line > 0 ? 'pl15' : undefined}>
-                              <Typography variant="body2">
-                                {line > 0 ? '• ' : ''}
-                                {t(msg.key, msg.value !== undefined ? { value: msg.value } : undefined)}
-                              </Typography>
-                            </ListItem>
-                          ))}
-                        </List>
-                      </div>
-                    </ListItem>
-                  ))}
-                </List>
-              </Alert>
-            )}
+            {isError && <ErrorList errors={errors} t={t} tCommon={tCommon} />}
           </>
         )}
       </div>

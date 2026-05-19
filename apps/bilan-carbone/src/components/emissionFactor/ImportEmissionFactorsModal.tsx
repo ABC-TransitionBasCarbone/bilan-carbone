@@ -1,6 +1,6 @@
 'use client'
 
-import ImportFileModal from '@/components/base/ImportFileModal'
+import ImportFileModal from '@/components/base/ImportFileModal/ImportFileModal'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { downloadFromUrl } from '@/services/file'
 import {
