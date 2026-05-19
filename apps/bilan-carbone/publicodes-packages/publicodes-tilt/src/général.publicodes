@@ -59,4 +59,5 @@ général . type:
     Autre:
 
 général . type autre:
+  applicable si: général . type = 'Autre'
   question: Précisez le type de structure

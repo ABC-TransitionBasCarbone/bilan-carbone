@@ -11,11 +11,11 @@ import SelectStudySite from '@/components/study/site/SelectStudySite'
 import useStudySite from '@/components/study/site/useStudySite'
 import { OrganizationWithSites } from '@/db/account'
 import type { FullStudy } from '@/db/study'
+import { getTiltEngine } from '@/environments/tilt/publicodes/tilt-engine'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import {
   mappedTiltSituationToCustomDataFields,
   optionalTiltSituationToCustomDataFields,
-  TILT_STRUCTURE_OTHER_VALUE,
   TiltCustomDataFields,
   TiltStructureOptions,
 } from '@/services/customDataToSituation'
@@ -30,10 +30,11 @@ import {
 import { SiteCAUnit, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CircularProgress, Typography } from '@mui/material'
+import { getEvaluatedFormElement } from '@publicodes/forms'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import styles from './StudyRightsTiltSimplified.module.css'
 
@@ -71,13 +72,20 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
   })
 
   const selectedStructure = useWatch({ control: form.control, name: 'structure' })
-  const isOtherStructure = selectedStructure === TILT_STRUCTURE_OTHER_VALUE
+  const isOtherStructure = useMemo(() => {
+    if (!selectedStructure) {
+      return false
+    }
+    const engine = getTiltEngine().shallowCopy()
+    engine.setSituation({ 'général . type': selectedStructure })
+    return getEvaluatedFormElement(engine, 'général . type autre').applicable
+  }, [selectedStructure])
 
   useEffect(() => {
-    if (selectedStructure !== TILT_STRUCTURE_OTHER_VALUE) {
+    if (!isOtherStructure) {
       form.setValue('structureOther', '')
     }
-  }, [selectedStructure, form])
+  }, [isOtherStructure, form])
 
   const dateForm = useForm<ChangeStudyDatesCommand>({
     resolver: zodResolver(ChangeStudyDatesCommandValidation),

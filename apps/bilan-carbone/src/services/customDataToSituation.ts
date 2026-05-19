@@ -31,8 +31,6 @@ export const TiltStructureOptions: string[] = [
   "'Autre'",
 ]
 
-export const TILT_STRUCTURE_OTHER_VALUE = "'Autre'"
-
 export const customDataToSituationByEnvironment = (
   environment: SimplifiedEnvironment,
   data: TiltCustomDataFields | undefined,
