@@ -13,7 +13,7 @@ import { ArrowBack, ArrowForward, Check } from '@mui/icons-material'
 import { Button, Card, CardContent, Container, LinearProgress, Typography } from '@mui/material'
 import { EvaluatedFormElement, FormBuilder, FormPageElementProp, FormState } from '@publicodes/forms'
 import { useTranslations } from 'next-intl'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Category from './Category/Category'
 import styles from './Survey.module.css'
 
@@ -39,30 +39,30 @@ interface MipSurveyProps {
   rootRule?: string
 }
 
+type GroupedElement =
+  | { type: 'single'; el: EvaluatedFormElement<string> & FormPageElementProp; questionType: MipQuestionType }
+  | { type: 'mosaic'; parent: string; elements: Array<EvaluatedFormElement<string> & FormPageElementProp> }
+
 export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps) {
   const t = useTranslations('survey')
   const tCommon = useTranslations('common')
   const { engine } = useMipPublicodes()
 
-  const formBuilder = useMemo(
-    () =>
-      new FormBuilder({
-        engine,
-        pageBuilder: buildPageBuilder(engine),
-      }),
-    [engine],
-  )
+  const formBuilder = new FormBuilder({
+    engine,
+    pageBuilder: buildPageBuilder(engine),
+  })
 
-  const initState = useCallback(() => {
+  function initState() {
     let s = FormBuilder.newState()
     s = formBuilder.start(s, rootRule)
     return s
-  }, [formBuilder, rootRule])
+  }
 
   const [isResumed, setIsResumed] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-
   const [state, setState] = useState<FormState<string>>(initState)
+  const updateState = (newState: FormState<string>) => setState(newState)
 
   useEffect(() => {
     const saved = loadState(surveyId)
@@ -72,7 +72,6 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
       setIsResumed(true)
     }
     setIsLoading(false)
-    // Disaled rule to prevent flickering until we fix the component hydration issue
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [surveyId])
 
@@ -81,10 +80,6 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
       saveState(surveyId, state)
     }
   }, [surveyId, state, isLoading])
-
-  const updateState = useCallback((newState: FormState<string>) => {
-    setState(newState)
-  }, [])
 
   const handleRestart = () => {
     localStorage.removeItem(getStorageKey(surveyId))
@@ -95,14 +90,9 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   const { elements } = formBuilder.currentPage(state)
   const { current, pageCount, hasNextPage, hasPreviousPage } = formBuilder.pagination(state)
   const isComplete = !hasNextPage && current === pageCount
+  const progress = Math.round((current / pageCount) * 100)
 
-  const progress = useMemo(() => Math.round((current / pageCount) * 100), [current, pageCount])
-
-  type GroupedElement =
-    | { type: 'single'; el: EvaluatedFormElement<string> & FormPageElementProp; questionType: MipQuestionType }
-    | { type: 'mosaic'; parent: string; elements: Array<EvaluatedFormElement<string> & FormPageElementProp> }
-
-  const groupedElements = useMemo<GroupedElement[]>(() => {
+  function getGroupedElements(): GroupedElement[] {
     const result: GroupedElement[] = []
     const seen = new Set<string>()
 
@@ -126,33 +116,27 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
       }
     }
     return result
-  }, [elements, engine])
+  }
 
-  const currentTitle = useMemo(() => {
-    const getCategoryKey = (ruleName: string) => {
-      return ruleName.split(' . ')[0]
-    }
+  const groupedElements = getGroupedElements()
+
+  function getCurrentTitle() {
+    const getCategoryKey = (ruleName: string) => ruleName.split(' . ')[0]
+
     if (groupedElements[0]?.type === 'mosaic') {
-      const parent = groupedElements[0].parent
-      const key = getCategoryKey(parent)
-      const raw = engine.getParsedRules()[key]?.rawNode as any
-
-      return {
-        label: raw?.titre,
-        icons: raw?.icônes,
-      }
+      const key = getCategoryKey(groupedElements[0].parent)
+      const raw = engine.getParsedRules()[key]?.rawNode
+      return { label: raw?.titre, icons: raw?.icônes }
     }
     if (groupedElements[0]?.type === 'single') {
-      const el = groupedElements[0].el
-      const key = getCategoryKey(el.id)
-      const raw = engine.getParsedRules()[key]?.rawNode as any
-      return {
-        label: raw?.titre,
-        icons: raw?.icônes,
-      }
+      const key = getCategoryKey(groupedElements[0].el.id)
+      const raw = engine.getParsedRules()[key]?.rawNode
+      return { label: raw?.titre, icons: raw?.icônes }
     }
     return { label: '', icons: undefined }
-  }, [groupedElements, engine])
+  }
+
+  const currentTitle = getCurrentTitle()
 
   if (isLoading) {
     return <Typography>{t('loading')}</Typography>

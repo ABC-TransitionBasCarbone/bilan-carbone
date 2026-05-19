@@ -29,6 +29,8 @@ export function MipPublicodesProvider({ children }: { children: ReactNode }) {
 
 export function useMipPublicodes() {
   const context = useContext(MipPublicodesContext)
-  if (!context) throw new Error('useMipPublicodes must be used within MipPublicodesProvider')
+  if (!context) {
+    throw new Error('useMipPublicodes must be used within MipPublicodesProvider')
+  }
   return context
 }
