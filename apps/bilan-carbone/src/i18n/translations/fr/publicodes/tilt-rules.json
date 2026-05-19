@@ -75,8 +75,12 @@
           "Association humanitaire": "Association humanitaire",
           "Autres structures sociales et solidaires": "Autres structures sociales et solidaires",
           "Association de défense de l'environnement": "Association de défense de l'environnement",
-          "Association d'enseignement ou de formation": "Association d'enseignement ou de formation"
+          "Association d'enseignement ou de formation": "Association d'enseignement ou de formation",
+          "Autre": "Autre"
         }
+      },
+      "type autre": {
+        "question": "Précisez le type de structure"
       }
     },
     "équipements et immobilisations": {

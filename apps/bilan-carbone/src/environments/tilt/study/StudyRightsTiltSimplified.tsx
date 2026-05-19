@@ -14,6 +14,8 @@ import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import {
   mappedTiltSituationToCustomDataFields,
+  optionalTiltSituationToCustomDataFields,
+  TILT_STRUCTURE_OTHER_VALUE,
   TiltCustomDataFields,
   TiltStructureOptions,
 } from '@/services/customDataToSituation'
@@ -32,7 +34,7 @@ import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import styles from './StudyRightsTiltSimplified.module.css'
 
 interface Props {
@@ -64,8 +66,18 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
     defaultValues: {
       postalCode: siteData?.postalCode ?? '',
       structure: siteData?.structure ?? '',
+      structureOther: ((siteData?.structureOther as string) ?? '').replace(/^'|'$/g, ''),
     },
   })
+
+  const selectedStructure = useWatch({ control: form.control, name: 'structure' })
+  const isOtherStructure = selectedStructure === TILT_STRUCTURE_OTHER_VALUE
+
+  useEffect(() => {
+    if (selectedStructure !== TILT_STRUCTURE_OTHER_VALUE) {
+      form.setValue('structureOther', '')
+    }
+  }, [selectedStructure, form])
 
   const dateForm = useForm<ChangeStudyDatesCommand>({
     resolver: zodResolver(ChangeStudyDatesCommandValidation),
@@ -82,7 +94,10 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
     async function setStudySiteData() {
       setLoading(true)
       if (studySite && studySite !== 'all') {
-        const situationRes = await loadMappedSituation(study.id, studySiteId, mappedTiltSituationToCustomDataFields)
+        const situationRes = await loadMappedSituation(study.id, studySiteId, {
+          ...mappedTiltSituationToCustomDataFields,
+          ...optionalTiltSituationToCustomDataFields,
+        })
 
         if (situationRes.success && situationRes.data) {
           const newSiteData = situationRes.data
@@ -91,6 +106,7 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
           form.reset({
             postalCode: String(newSiteData?.postalCode ?? ''),
             structure: String(newSiteData?.structure ?? ''),
+            structureOther: String(newSiteData?.structureOther ?? '').replace(/^'|'$/g, ''),
           })
         }
       }
@@ -189,6 +205,15 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
                 renderValue={(structure) => (structure ? tStructure(structure as string) : '')}
                 onBlur={onStudySiteUpdate}
               />
+              {isOtherStructure && (
+                <FormTextField
+                  control={form.control}
+                  name="structureOther"
+                  label={t('structureOther')}
+                  className={styles.formTextField}
+                  onBlur={onStudySiteUpdate}
+                />
+              )}
               <Typography className="bold">{t('dates')}</Typography>
               <div className={styles.dates}>
                 <FormDatePicker

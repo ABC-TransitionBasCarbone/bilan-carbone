@@ -67,6 +67,7 @@
       "postalCode": "Quel est le code postal de l'association ?",
       "sites": "Quels sont les sites concernés par l'empreinte et leurs caractéristiques ?",
       "structure": "De quel type de structure votre association se rapproche t'elle le plus ?",
+      "structureOther": "Précisez le type de structure",
       "dates": "Sur quelle période porte votre empreinte carbone ?",
       "numberOfTTEmployee": "Combien de jours sont télétravaillées par semaine pour vos salariés ?",
       "numberOfTTVolunteer": "Combien de jours sont télétravaillées par semaine pour vos bénévoles ?",
@@ -110,7 +111,8 @@
       "'Association humanitaire'": "Association humanitaire",
       "'Autres structures sociales et solidaires'": "Autres structures sociales et solidaires",
       "'Association de défense de l'environnement'": "Association de défense de l'environnement",
-      "'Association d'enseignement ou de formation'": "Association d'enseignement ou de formation"
+      "'Association d'enseignement ou de formation'": "Association d'enseignement ou de formation",
+      "'Autre'": "Autre"
     }
   },
   "emissionFactors": {

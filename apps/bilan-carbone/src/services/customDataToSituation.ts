@@ -1,15 +1,19 @@
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
-import { Situation } from 'publicodes'
 import { SimplifiedEnvironment } from './publicodes/simplifiedPublicodesConfig'
 
 export interface TiltCustomDataFields {
   postalCode?: string | undefined
   structure?: string | undefined
+  structureOther?: string | undefined
 }
 
 export const mappedTiltSituationToCustomDataFields: Record<string, keyof TiltCustomDataFields> = {
   'général . code postal': 'postalCode',
   'général . type': 'structure',
+}
+
+export const optionalTiltSituationToCustomDataFields: Record<string, keyof TiltCustomDataFields> = {
+  'général . type autre': 'structureOther',
 }
 
 export const TiltStructureOptions: string[] = [
@@ -24,12 +28,15 @@ export const TiltStructureOptions: string[] = [
   "'Autres structures sociales et solidaires'",
   "'Association de défense de l'environnement'",
   "'Association d'enseignement ou de formation'",
+  "'Autre'",
 ]
+
+export const TILT_STRUCTURE_OTHER_VALUE = "'Autre'"
 
 export const customDataToSituationByEnvironment = (
   environment: SimplifiedEnvironment,
   data: TiltCustomDataFields | undefined,
-): Situation<string> => {
+): Record<string, string | null> => {
   switch (environment) {
     case Environment.CUT:
     case Environment.CLICKSON:
@@ -41,18 +48,22 @@ export const customDataToSituationByEnvironment = (
   }
 }
 
-const getTiltSituation = (data: TiltCustomDataFields | undefined): Situation<string> => {
+const getTiltSituation = (data: TiltCustomDataFields | undefined): Record<string, string | null> => {
   if (!data) {
     return {}
   }
 
-  const situation: Situation<string> = {}
+  const situation: Record<string, string | null> = {}
 
   if (data.postalCode != null) {
     situation['général . code postal'] = data.postalCode
   }
   if (data.structure != null) {
     situation['général . type'] = data.structure
+  }
+  if (data.structureOther !== undefined) {
+    // Add single quotes to the structure value to avoid parsing errors in publicodes
+    situation['général . type autre'] = data.structureOther === '' ? null : `'${data.structureOther}'`
   }
 
   return situation
