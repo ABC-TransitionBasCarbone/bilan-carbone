@@ -8,8 +8,10 @@ export const surveyStorage = {
    */
   saveResponse: (surveyId: string, response: SurveyResponse): void => {
     try {
-      const key = `${STORAGE_PREFIX}${surveyId}`
-      localStorage.setItem(key, JSON.stringify(response))
+      if (typeof window !== 'undefined') {
+        const key = `${STORAGE_PREFIX}${surveyId}`
+        localStorage.setItem(key, JSON.stringify(response))
+      }
     } catch (error) {
       console.error('Failed to save survey response:', error)
     }
@@ -20,17 +22,22 @@ export const surveyStorage = {
    */
   loadResponse: (surveyId: string): SurveyResponse | null => {
     try {
-      const key = `${STORAGE_PREFIX}${surveyId}`
-      const data = localStorage.getItem(key)
-      if (!data) return null
+      if (typeof window !== 'undefined') {
+        const key = `${STORAGE_PREFIX}${surveyId}`
+        const data = localStorage.getItem(key)
+        if (!data) {
+          return null
+        }
 
-      const response = JSON.parse(data)
-      return {
-        ...response,
-        startedAt: new Date(response.startedAt),
-        completedAt: response.completedAt ? new Date(response.completedAt) : undefined,
-        updatedAt: new Date(response.updatedAt),
+        const response = JSON.parse(data)
+        return {
+          ...response,
+          startedAt: new Date(response.startedAt),
+          completedAt: response.completedAt ? new Date(response.completedAt) : undefined,
+          updatedAt: new Date(response.updatedAt),
+        }
       }
+      return null
     } catch (error) {
       console.error('Failed to load survey response:', error)
       return null

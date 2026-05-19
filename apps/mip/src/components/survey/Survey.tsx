@@ -41,11 +41,14 @@ export function Survey({ survey, surveyId }: SurveyProps) {
     if (surveyId) {
       const existing = surveyStorage.loadResponse(surveyId)
       if (existing && existing.surveyId === survey.id) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setResponse(existing)
         setIsResumed(true)
       }
     }
     setIsLoading(false)
+    // Disaled rule to prevent flickering until we fix the component hydration issue
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [surveyId])
 
   const engine = useMemo(() => new SurveyEngine(survey, response), [survey, response])
