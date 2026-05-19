@@ -1,11 +1,6 @@
 'use server'
 
 import { StudyContributorDeleteParams } from '@/components/study/rights/StudyContributorsTable'
-import {
-  getQuestionsAffectedBySiteDataChange,
-  SITE_DEPENDENT_FIELDS,
-  SiteDependentField,
-} from '@/constants/emissionFactorMap'
 import { DefaultStudyTags } from '@/constants/studyTags'
 import {
   addAccount,
@@ -34,7 +29,6 @@ import {
   isOrganizationVersionCR,
   OrganizationVersionWithOrganization,
 } from '@/db/organization'
-import { getAnswerByQuestionId, getQuestionByIdIntern, getQuestionsByIdIntern } from '@/db/question'
 import { updateSituationFields } from '@/db/situation'
 import {
   addSourceToStudy,
@@ -174,7 +168,6 @@ import { isSimplifiedEnvironment, SimplifiedEnvironment } from '../publicodes/si
 import { deleteFileFromBucket, getFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'
 import { getTransEnvironmentSubPost } from '../study'
 import { UpdateEmissionSourceCommand } from './emissionSource.command'
-import { saveAnswerForQuestion } from './question'
 import { saveSituation as saveSituationInDB } from './situation'
 import {
   AddEngagementActionCommand,
@@ -539,31 +532,15 @@ export const changeStudyCinema = async (studySiteId: string, cncId: string, data
       throw new Error(NOT_AUTHORIZED)
     }
 
-    // Detect changes in fields with dependencies and calculate distanceToParis
     const currentSite = studySites[0]
-    const changedFields: SiteDependentField[] = []
     let calculatedDistanceToParis: number | undefined
 
-    // Calculate distanceToParis if CNC data with coordinates is available
     const cncData = currentSite.site.cnc
     if (cncData?.latitude && cncData?.longitude) {
       calculatedDistanceToParis = calculateDistanceFromParis({
         latitude: cncData.latitude,
         longitude: cncData.longitude,
       })
-    }
-
-    for (const field of SITE_DEPENDENT_FIELDS) {
-      if (field === 'numberOfProgrammedFilms') {
-        const currentCncValue = currentSite.site.cnc?.numberOfProgrammedFilms ?? 0
-        if (numberOfProgrammedFilms !== undefined && numberOfProgrammedFilms !== currentCncValue) {
-          changedFields.push(field)
-        }
-      } else {
-        if (updateData[field] !== undefined && updateData[field] !== currentSite[field]) {
-          changedFields.push(field)
-        }
-      }
     }
 
     // Prefill fields from CNC data if they are not already set
@@ -585,12 +562,6 @@ export const changeStudyCinema = async (studySiteId: string, cncId: string, data
     await updateStudyOpeningHours(studySiteId, openingHours, openingHoursHoliday)
     await updateStudySiteData(studySiteId, finalUpdateData)
     await updateSituationWithStudySiteData(studySiteId, finalUpdateData, informations.user.environment)
-
-    // Recalculate emissions for affected emissions if dependent fields changed
-    if (changedFields.length > 0 && informations.user.organizationVersionId) {
-      const affectedQuestionIds = getQuestionsAffectedBySiteDataChange(changedFields)
-      await recalculateEmissionsForQuestions(study.id, informations.user.organizationVersionId, affectedQuestionIds)
-    }
   })
 
 async function updateSituationWithStudySiteData(
@@ -651,38 +622,6 @@ const hasEmissionSources = async (study: FullStudy, siteId: string) => {
   }
 
   return true
-}
-
-const recalculateEmissionsForQuestions = async (
-  studyId: string,
-  organizationVersionId: string,
-  affectedQuestionIds: string[],
-) => {
-  if (affectedQuestionIds.length === 0) {
-    return
-  }
-
-  const study = await getStudyById(studyId, organizationVersionId)
-  if (!study) {
-    throw new Error(NOT_AUTHORIZED)
-  }
-
-  for (const questionIdIntern of affectedQuestionIds) {
-    const question = await getQuestionByIdIntern(questionIdIntern)
-    if (!question) {
-      continue
-    }
-
-    for (const studySite of study.sites) {
-      const answer = await getAnswerByQuestionId(question.id, studySite.id)
-      if (!answer || !answer.response) {
-        continue
-      }
-
-      // Re-save the answer to trigger recalculation through the normal flow
-      await saveAnswerForQuestion(question, answer.response, study.id, studySite.id)
-    }
-  }
 }
 
 export const changeStudySites = async (studyId: string, { organizationId, ...command }: ChangeStudySitesCommand) =>
@@ -1194,42 +1133,6 @@ export const deleteDocumentFromStudy = async (document: Document, studyId: strin
     if (bucketDelete.success) {
       await deleteDocument(document.id)
     }
-  })
-
-export const getQuestionsGroupedBySubPost = async (questionIds: string[], studySiteId?: string) =>
-  withServerResponse('getQuestionsGroupedBySubPost', async () => {
-    const questionsBySubPost: Record<
-      string,
-      Array<{ id: string; label: string; idIntern: string; answer?: string }>
-    > = {}
-
-    for (const questionId of questionIds) {
-      const questions = await getQuestionsByIdIntern(questionId)
-      if (questions) {
-        for (const question of questions) {
-          if (!questionsBySubPost[question.subPost]) {
-            questionsBySubPost[question.subPost] = []
-          }
-
-          let answerText: string | undefined
-          if (studySiteId) {
-            const answer = await getAnswerByQuestionId(question.id, studySiteId)
-            if (answer && answer.response) {
-              answerText = typeof answer.response === 'string' ? answer.response : JSON.stringify(answer.response)
-            }
-          }
-
-          questionsBySubPost[question.subPost].push({
-            id: question.id,
-            label: question.label,
-            idIntern: question.idIntern,
-            answer: answerText,
-          })
-        }
-      }
-    }
-
-    return questionsBySubPost
   })
 
 const hasAccessToStudy = (user: UserSession, study: AsyncReturnType<typeof getStudiesSitesFromIds>[0]['study']) => {

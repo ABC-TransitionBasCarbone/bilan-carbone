@@ -1034,24 +1034,6 @@ export const deleteStudyMemberFromOrganization = async (accountId: string, organ
   })
 }
 
-export const getStudiesAffectedByQuestion = async (questionIdIntern: string) => {
-  return prismaClient.study.findMany({
-    where: {
-      sites: {
-        some: {
-          studyAnswers: {
-            some: {
-              question: { idIntern: questionIdIntern },
-            },
-          },
-        },
-      },
-    },
-    select: { id: true, name: true },
-    distinct: ['id'],
-  })
-}
-
 export const upsertStudyTemplate = async (template: DuplicableStudy, environment: Environment, studyId: string) =>
   prismaClient.studyTemplate.upsert({
     where: { environment_template: { environment, template } },
