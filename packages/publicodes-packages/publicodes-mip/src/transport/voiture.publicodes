@@ -17,7 +17,7 @@ transport . voiture:
                   - transport . voiture . présent
                   - DT . voiture . utilisateur = 'propriétaire'
                   - DT . voiture . présent
-              alors: empreinte meme voiture
+              alors: transport . voiture . empreinte meme voiture
             - si:
                 une de ces conditions:
                   - toutes ces conditions:
@@ -50,7 +50,7 @@ transport . voiture:
                           - transport . mobilité douce . présent = non
                           - transport . taxi . présent = non
                           - transport . avion . présent = non
-              alors: empreinte calculée
+              alors: transport . voiture . empreinte calculée
             - sinon: 100 #(à remplacer par empreinte par défaut)
             #                variations:
             #                  - si:
