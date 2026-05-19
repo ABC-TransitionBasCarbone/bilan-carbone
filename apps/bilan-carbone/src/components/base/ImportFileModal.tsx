@@ -59,16 +59,18 @@ const ImportFileModal = <TPreviewRow,>({
   const tCommon = useTranslations('common')
   const [isPending, startTransition] = useTransition()
   const [isDownloading, setIsDownloading] = useState(false)
-  const [modalState, setModalState] = useState<'default' | 'preview' | 'error' | 'warning'>('default')
-  const [errors, setErrors] = useState<ImportError[]>([])
-  const [warnings, setWarnings] = useState<ImportWarning[]>([])
+  const [errors, setErrors] = useState<{ line: number; items: ImportError[] }[]>([])
+  const [warnings, setWarnings] = useState<{ line: number; items: ImportWarning[] }[]>([])
   const [previewRows, setPreviewRows] = useState<TPreviewRow[]>([])
   const [isDragOver, setIsDragOver] = useState(false)
   const [pendingFile, setPendingFile] = useState<File | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
+  const isPreview = previewRows.length > 0
+  const isWarning = warnings.length > 0
+  const isError = errors.length > 0
+
   const reset = () => {
-    setModalState('default')
     setErrors([])
     setWarnings([])
     setPreviewRows([])
@@ -86,15 +88,14 @@ const ImportFileModal = <TPreviewRow,>({
 
   const previewFile = (file: File) => {
     setErrors([])
+    setPreviewRows([])
     setPendingFile(file)
     startTransition(async () => {
       const result = await onPreview(file)
       if (result.success) {
         setPreviewRows(result.rows)
-        setModalState('preview')
       } else {
-        setModalState('error')
-        setErrors(result.errors)
+        setErrors(groupByLine(result.errors))
       }
     })
   }
@@ -109,11 +110,9 @@ const ImportFileModal = <TPreviewRow,>({
         reset()
         onSuccess()
       } else if (result.warnings) {
-        setModalState('warning')
-        setWarnings(result.warnings)
+        setWarnings(groupByLine(result.warnings))
       } else {
-        setModalState('error')
-        setErrors(result.errors ?? [])
+        setErrors(groupByLine(result.errors ?? []))
       }
     })
   }
@@ -128,8 +127,8 @@ const ImportFileModal = <TPreviewRow,>({
         reset()
         onSuccess()
       } else {
-        setModalState('error')
-        setErrors(result.errors ?? [])
+        setWarnings([])
+        setErrors(groupByLine(result.errors ?? []))
       }
     })
   }
@@ -139,8 +138,7 @@ const ImportFileModal = <TPreviewRow,>({
       return
     }
     if (files.length > 1) {
-      setModalState('error')
-      setErrors([{ line: 0, key: 'tooManyFiles' }])
+      setErrors(groupByLine([{ line: 0, key: 'tooManyFiles' }]))
       return
     }
     previewFile(files[0])
@@ -174,9 +172,9 @@ const ImportFileModal = <TPreviewRow,>({
       label={label}
       title={title}
       onClose={handleClose}
-      big={modalState === 'preview'}
+      big={isPreview}
       actions={
-        modalState === 'preview'
+        isPreview
           ? [
               { actionType: 'button', variant: 'outlined', onClick: reset, children: tCommon('action.back') },
               {
@@ -186,7 +184,7 @@ const ImportFileModal = <TPreviewRow,>({
                 children: tCommon('action.confirm'),
               },
             ]
-          : modalState === 'warning' && onForceImport
+          : isWarning && onForceImport
             ? [
                 {
                   actionType: 'button',
@@ -206,7 +204,7 @@ const ImportFileModal = <TPreviewRow,>({
       }
     >
       <div className="flex-col gapped15">
-        {modalState !== 'preview' && (
+        {!isPreview && (
           <div className="flex align-center">
             <LoadingButton
               variant="outlined"
@@ -219,7 +217,7 @@ const ImportFileModal = <TPreviewRow,>({
           </div>
         )}
 
-        {modalState === 'preview' && (
+        {isPreview && (
           <>
             <Typography variant="body2" color="textSecondary">
               {previewTitle(previewRows.length)} — {t('previewWarning')}
@@ -228,11 +226,11 @@ const ImportFileModal = <TPreviewRow,>({
           </>
         )}
 
-        {modalState === 'warning' && warnings.length > 0 && (
+        {isWarning && (
           <Alert severity="warning">
             <AlertTitle>{t('warningTitle')}</AlertTitle>
             <List dense className={styles.errorList}>
-              {groupByLine(warnings).map(({ line, items }) => (
+              {warnings.map(({ line, items }) => (
                 <ListItem key={line} disableGutters className="py025">
                   <div>
                     {line > 0 && (
@@ -301,7 +299,7 @@ const ImportFileModal = <TPreviewRow,>({
           </Alert>
         )}
 
-        {(modalState === 'default' || modalState === 'error') && (
+        {!isPreview && !isWarning && (
           <>
             <div
               className={classNames(styles.dropzone, 'flex-col align-center justify-center gapped075 pointer')}
@@ -333,11 +331,11 @@ const ImportFileModal = <TPreviewRow,>({
               )}
             </div>
 
-            {modalState === 'error' && errors.length > 0 && (
+            {isError && (
               <Alert severity="error">
                 <AlertTitle>{t('errorTitle')}</AlertTitle>
                 <List dense className={styles.errorList}>
-                  {groupByLine(errors).map(({ line, items }) => (
+                  {errors.map(({ line, items }) => (
                     <ListItem key={line} disableGutters className="py025">
                       <div>
                         {line > 0 && (
