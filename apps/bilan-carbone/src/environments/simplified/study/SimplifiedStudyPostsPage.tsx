@@ -13,8 +13,8 @@ import { Button } from '@abc-transitionbascarbone/ui'
 import CheckIcon from '@mui/icons-material/Check'
 import { ArrowLeftIcon, ArrowRightIcon } from '@mui/x-date-pickers'
 import { useTranslations } from 'next-intl'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useMemo, useState } from 'react'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { useCallback, useMemo } from 'react'
 import PublicodesSubPostForm from '../study/PublicodesSubPostForm'
 import SaveStatusIndicator from '../study/SaveStatusIndicator'
 import RealTimeResults from './RealTimeResults'
@@ -32,42 +32,41 @@ const SimplifiedStudyPostsPage = ({ environment, post, currentSubPost, study, st
   const tStudyQuestions = useTranslations('study.questions')
   const tInfography = useTranslations('study.infography')
   const router = useRouter()
+  const pathName = usePathname()
   const searchParams = useSearchParams()
   const subPosts = useMemo(
     () => subPostsByPost[post].filter((subPost) => SUBPOSTS_PUBLICODE_FROM_ENV[environment]?.includes(subPost)),
     [post, environment],
   )
 
-  const initialStep = useMemo(() => {
-    if (currentSubPost) {
-      const index = subPosts.findIndex((subPost) => subPost === currentSubPost)
-      return index !== -1 ? index : 0
-    }
-    return 0
-  }, [currentSubPost, subPosts])
+  const activeSubPostFromUrl = searchParams.get('subPost') as SubPost | null
+  const activeSubPost = activeSubPostFromUrl || currentSubPost || subPosts[0]
 
-  const [activeStep, setActiveStep] = useState(initialStep)
+  const activeStep = useMemo(() => {
+    const index = subPosts.indexOf(activeSubPost)
+    return index !== -1 ? index : 0
+  }, [activeSubPost, subPosts])
 
-  const activeSubPost = subPosts[activeStep]
-
-  useEffect(() => {
-    if (activeSubPost) {
+  const setSearchParamsAndReplaceRoute = useCallback(
+    (newStep: number) => {
+      const newActiveSubPost = subPosts[newStep]
       const newSearchParams = new URLSearchParams(searchParams.toString())
-      newSearchParams.set('subPost', activeSubPost)
-      const newUrl = `${window.location.pathname}?${newSearchParams.toString()}`
-      window.history.replaceState(null, '', newUrl)
-    }
-  }, [activeSubPost, searchParams])
+      newSearchParams.set('subPost', newActiveSubPost)
+      const newUrl = `${pathName}?${newSearchParams.toString()}`
+      router.replace(newUrl)
+    },
+    [router, searchParams, subPosts, pathName],
+  )
 
   const handleNextStep = () => {
     if (activeStep < subPosts.length - 1) {
-      setActiveStep(activeStep + 1)
+      setSearchParamsAndReplaceRoute(activeStep + 1)
     }
   }
 
   const handlePreviousStep = () => {
     if (activeStep > 0) {
-      setActiveStep(activeStep - 1)
+      setSearchParamsAndReplaceRoute(activeStep - 1)
     }
   }
 
@@ -98,7 +97,7 @@ const SimplifiedStudyPostsPage = ({ environment, post, currentSubPost, study, st
           t={tPost}
           content={<PublicodesSubPostForm subPost={activeSubPost} />}
           activeTab={activeStep}
-          setActiveTab={setActiveStep}
+          setActiveTab={setSearchParamsAndReplaceRoute}
         />
 
         <Stepper

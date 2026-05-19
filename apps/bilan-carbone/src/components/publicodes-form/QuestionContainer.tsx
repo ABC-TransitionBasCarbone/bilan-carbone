@@ -17,7 +17,6 @@ export interface QuestionContainerProps {
 }
 
 const QuestionContainer = ({ label, helperText, children }: QuestionContainerProps) => {
-  const tGlossary = useTranslations('questions.glossary')
   const [glossary, setGlossary] = useState('')
   const tCommon = useTranslations('common.questions.glossary')
 
@@ -26,7 +25,7 @@ const QuestionContainer = ({ label, helperText, children }: QuestionContainerPro
       <StyledQuestionHeader>
         <Box className="align-center gapped1">
           <StyledQuestionTitle>{label}</StyledQuestionTitle>
-          {helperText && <HelpIcon className="ml-2" onClick={() => setGlossary('title')} label={tGlossary('title')} />}
+          {helperText && <HelpIcon className="ml-2" onClick={() => setGlossary('title')} label={tCommon('title')} />}
         </Box>
       </StyledQuestionHeader>
 
