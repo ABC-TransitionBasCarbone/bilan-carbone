@@ -1,0 +1,42 @@
+transport . car longue distance:
+  applicable si: présent
+  titre: Car Flixbus, Ouibus...
+  icônes: 🚌
+  formule: km * impact par km
+  unité: kgCO2e
+
+transport . car longue distance . km:
+  #  question: Combien de kilomètres avez-vous parcouru en car pour des trajets longue distance en 2023 ?
+  question: Combien de kilomètres allez vous parcourir en car de longue distance (Ouibus, Flixbus, etc.) pour aller et revenir de votre lieu de séjour ? ?
+  #  description: |
+  #     Renseignez un nombre de km cohérent avec les distances que vous allez parcourir en car "longue distance" le temps de votre séjour (aller-retour depuis votre domicile
+  #     et déplacements éventuels pendant le séjour).
+  #
+  #     Nous nous intéressons ici aux trajets faits en car de type Ouibus, Flixbus, etc.
+  description: |
+    Renseignez un nombre de km cohérent avec les distances que vous allez parcourir en car "longue distance" pour vous rendre sur votre lieu de séjour et en revenir. 
+    Nous nous intéressons ici aux trajets faits en car de type Ouibus, Flixbus, etc.
+  suggestions:
+    Paris ⇄ Lille: 440
+    Bruxelles ⇄ Lille: 220
+  unité: km
+  par défaut: 300
+
+transport . car longue distance . impact par km:
+  formule: 0.029
+  unité: kgCO2e/km
+  note: |
+    FE (amont + combustion) Autocar - Gazole longue distance [Base Empreinte - hypothèses de la section "Autobus - autocars"] : 25 gCO2e/passager.km consolidé
+    en intégrant la fabrication du véhicule. Soit une composante "fabrication" estimée à 4.4 gCO2eq/passager.km pour un FE total de 29 gCO2e/passager.km
+    Hypothèses retenues pour la consolidation (reprises de la Base Empreinte) :
+     - 4 kgCO2eq/kg pour la fabrication des autobus/autocar (basé sur une analyse de la littérature)
+     - masse d’un autocar = 12 tonnes
+     - durée de vie en km = 361 884 km
+     - nombre de passagers moyen = 30
+
+#transport . car longue distance . distance moyenne annuelle:
+#  formule: 9600000000 km / population
+#  unité: km
+#  note: |
+#    D'après [l'étude "Chiffres clef du transport 2021" (données de 2019)](https://www.statistiques.developpement-durable.gouv.fr/edition-numerique/chiffres-cles-transport-2021/13-transport-routier-de-voyageurs), les français parcourent en moyenne 9.6 milliards de km par an en car sur des trajets longue distance
+#    Sont comptabilisés les km réalisés en autocars « Macron » et en transport occasionnel en autocars étrangers.

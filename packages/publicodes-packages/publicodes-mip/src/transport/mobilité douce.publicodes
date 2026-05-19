@@ -1,0 +1,160 @@
+transport . mobilité douce:
+  # Cette variable "intermédiaire" est un hack pour réussir à mettre une mosaique fille après une mosaique mère (même si le choix mobilité douce n'est pas à l'heure actuelle proposé dans la mosaique mère)
+  applicable si: présent
+  titre: Mobilité douce (marche, vélo...)
+  icônes: 🚶‍♀️🚲
+  formule: transport . mobilité douce . type * 1
+
+transport . mobilité douce . type:
+  applicable si: présent
+  icônes: 🚲🛴
+  mosaique:
+    type: selection
+    options:
+      - marche . présent
+      - vélo . présent
+      - vae . présent
+      - trottinette électrique . présent
+    suggestions:
+      aucun:
+        marche . présent: non
+        vélo . présent: non
+        vae . présent: non
+        trottinette électrique . présent: non
+  question: Quel(s) mode(s) de déplacement "actif" allez-vous utiliser pour aller et revenir de votre lieu de séjour  ?
+  titre: Déplacements actifs
+  description: Avec ou sans assistance électrique (marche, vélo, trottinette)
+  #  description: |
+  #    Ces déplacements incluent tout ce qu'on regroupe aussi sous le terme de mobilité douce car il s'agit de déplacements alternatifs aux transports motorisés. Cela
+  #    inclut la marche, les vélos électriques ou non, les trottinettes électriques ou non, les gyropodes, etc.
+  #
+  #    Si vous n'utilisez pas de modes de déplacements actifs, cliquez sur "Aucun", puis passez à la question suivante.
+  formule:
+    somme:
+      - marche
+      - vélo
+      - vae
+      - trottinette électrique
+  note: Pour la question des modalités utilisées pour aller et revenir de son lieu de séjour, nous excluons les petits véhicules électriques (gyropod, hoverboard, etc.) ainsi que la trottinette non électrique.
+
+### On commente car on ne veut pas voir poper la notif
+#transport . mobilité douce . type . notif marche ou vélo:
+#  type: notification
+#  formule:
+#    une de ces conditions:
+#      - type . marche . présent = oui
+#      - type . vélo . présent = oui
+#  description: |
+#    **Vous avez renseigné marcher ou faire du vélo ?**
+#    Félicitations ! 👏
+#
+#    Le vélo est un mode de transport super sobre : on utilise 15 kilos de matériel pour déplacer un corps de ~70 kilos.
+#    Quant à vos chaussures, elles sont un véhicule ultra léger !
+#
+#    💡 A noter que l'empreinte de la marche et de **l'usage** du vélo classique (et non la fabrication) est considérée comme nulle.
+
+transport . mobilité douce . type . marche:
+  titre: Marche
+  applicable si: présent
+  icônes: 👟
+  formule: 0
+  unité: kgCO2e
+  note: L'empreinte de la marche est considérée comme nulle.
+
+transport . mobilité douce . type . marche . présent:
+  question: Dans le cadre de vos déplacements professionnels, vous déplacez-vous en marchant ?
+  par défaut: non
+
+transport . mobilité douce . type . vélo:
+  titre: Vélo classique
+  applicable si: présent
+  icônes: 🦵🚲
+  # On proratise la construction en fonction de la durée du séjour car il s'agit très certainement d'un vélo de location
+  formule: construction amortie
+  unité: kgCO2e
+  note: |
+    Nous considérons que **l'usage** du vélo musculaire a une empreinte nulle.
+
+    Il est toujours possible de lui attribuer l'empreinte du surplus de calories, qui dépend du régime alimentaire.
+
+    Nous avons tous les ingrédients ici pour le faire, mais c'est loin d'être aussi simple. Le surplus d'activité physique est aussi associé à des risques et donc des dépenses de santé bien moindres.
+
+transport . mobilité douce . type . vélo . présent:
+  question: Dans le cadre de vos déplacements professionnels, vous déplacez-vous avec un vélo "classique" (i.e. sans assistance électrique) ?
+  par défaut: non
+
+transport . mobilité douce . type . vélo . construction amortie:
+  formule: construction / durée de vie
+  unité: kgCO2e
+
+transport . mobilité douce . type . vélo . construction:
+  formule: 116
+  unité: kgCO2e
+  note: |
+    La base empreinte ne propose pas de FE pour le vélo conventionnel.
+
+    Néanmoins, en 2021, le fabricant de vélo Trek a publié [une étude](https://view.publitas.com/trek-bicycle/trek-bicycle-2021-sustainability-report/page/6)
+    présentant l'empreinte carbone de la production de ses vélos. 
+
+    Pour le plus populaire, l'empreinte affichée est de 116 kgCO2e.
+
+transport . mobilité douce . type . vélo . durée de vie:
+  formule: 12
+  note: |
+    On considère la durée de vie d'un vélo conventionnel identique à celle d'un VAE (hypothèse forte, car il semble qu'un VAE emporte davatange de composants qui peuvent s'user davantage)
+    Hypothèse issue du HBEFA (Manuel des facteurs d'émission pour le transport routier), d'après la documentation de la base empreinte.
+    Chiffres tirés de l'étude ADEME de 2019 ["Modélisation et évaluation environnementale de produits de consommation et biens d'équipement"](https://librairie.ademe.fr/dechets-economie-circulaire/127-modelisation-et-evaluation-environnementale-de-produits-de-consommation-et-biens-d-equipement.html)
+
+transport . mobilité douce . type . vae:
+  # Modification du modèle par rapport à NGC pour prendre directement le FE complet (fabrication + usage) de la Base Empreinte
+  titre: Vélo à Assistance Électrique
+  icônes: 🚲⚡
+  applicable si: présent
+  formule: empreinte au km * km * 12
+  unité: kgCO2e
+  note: |
+    Les vélos-cargo à assistance électrique sont à classer dans la catégorie VAE. La différence de motorisation et de poids, et donc d'empreinte, est trop minime pour mériter une catégorie à part.
+
+transport . mobilité douce . type . vae . présent:
+  question: Dans le cadre de vos déplacements professionnels, vous déplacez-vous avec un Vélo à Assistance Électrique (VAE) ?
+  par défaut: non
+
+transport . mobilité douce . type . vae . empreinte au km:
+  formule: 0.0109
+  unité: kgCO2e/km
+  note: FE issu de la base empreinte (Vélo/à assistance électrique) sur le périmètre complet (fabrication + usage)
+
+transport . mobilité douce . type . vae . km:
+  question: Dans le cadre de vos déplacements professionnels, quelle distance parcourez-vous avec un Vélo à Assistance Électrique (VAE) chaque mois ?
+  par défaut: 100
+  unité: km/mois
+  suggestions:
+    20 km: 20
+    50 km: 50
+    100 km: 100
+
+transport . mobilité douce . type . trottinette électrique:
+  # Modification du modèle par rapport à NGC pour prendre directement le FE complet (fabrication + usage) de la Base Empreinte
+  titre: Trottinette électrique
+  icônes: 🛴⚡
+  applicable si: présent
+  formule: empreinte au km * km * 12
+  unité: kgCO2e
+
+transport . mobilité douce . type . trottinette électrique . présent:
+  question: Dans le cadre de vos déplacements professionnels, vous déplacez-vous avec une trottinette électrique ?
+  par défaut: non
+
+transport . mobilité douce . type . trottinette électrique . empreinte au km:
+  formule: 0.0249
+  unité: kgCO2e/km
+  note: FE issu de la base empreinte (Trottinette) sur le périmètre complet (fabrication + usage)
+
+transport . mobilité douce . type . trottinette électrique . km:
+  question: Dans le cadre de vos déplacements professionnels, quelle distance parcourez-vous avec une trottinette électrique chaque mois ?
+  par défaut: 50
+  unité: km/mois
+  suggestions:
+    20 km: 20
+    50 km: 50
+    100 km: 100

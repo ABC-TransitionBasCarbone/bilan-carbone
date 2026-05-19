@@ -1,0 +1,54 @@
+params:
+  nom: Canada
+  code: CA
+  gentilé: québec
+  authors:
+    - nom: Alexandre Theve
+      url: https://github.com/davidson-canada
+
+commun . mix électrique . empreinte carbone:
+  titre: Carbon intensity of Québec's electricity mix
+  formule: 0.028
+  note: |
+    [Electricity Map](https://app.electricitymaps.com/map) 5-year view, 2022
+
+transport . avion . court courrier . heures de vol:
+  suggestions:
+    🚫✈️: 0
+    Montréal ⇄ Québec: 2
+    Montréal ⇄ Toronto: 3
+    Ottawa ⇄ Halifax: 4
+    Vancouver ⇄ Winnipeg: 4
+
+transport . avion . moyen courrier . heures de vol:
+  suggestions:
+    🚫✈️: 0
+    Vancouver ⇄ Toronto: 9
+    Montréal ⇄ Vancouver: 11
+    Montréal ⇄ Paris: 14
+
+transport . avion . long courrier . heures de vol:
+  suggestions:
+    🚫✈️: 0
+    Montréal ⇄ Lima: 18
+    Vancouver ⇄ Dubai: 36
+    Montréal ⇄ Tokyo: 50
+    Toronto ⇄ Sydney: 60
+
+transport . train . km:
+  suggestions:
+    🚫🚃: 0
+    Toronto ⇄ Windsor: 400
+    Montréal ⇄ Halifax: 1200
+    Vancouver ⇄ Winnipeg: 3000
+
+services sociétaux:
+  description: |
+    > The calculation of the societal services footprint for Quebec is an attribution estimate based on data from the 2011 Canadian GHG emissions inventory
+    > It is therefore an initial estimate that may be refined in the future.
+  formule: poids des services publics Québecois
+  avec:
+    poids des services publics Québecois: 2370
+  note: |
+    Sources:
+    - <a href="https://docs.google.com/presentation/d/1q_-9H6JAjJ0Jjb0252VreQYy7pI3tHypZ6-18x6WLoU/edit#slide=id.g10269eb2fa9_0_11">Découpage de l'empreinte des québécois-es, Julien Letrouit, 2021</a>

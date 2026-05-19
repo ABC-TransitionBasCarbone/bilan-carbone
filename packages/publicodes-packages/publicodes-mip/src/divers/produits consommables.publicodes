@@ -1,0 +1,122 @@
+divers . produits consommables:
+  non applicable si: métrique != "carbone"
+  icônes: 🧴
+  formule: empreinte par mois * commun . mois par an
+  description: |
+    L'objectif ici est de sortir de la question "dépenses" les produits consommables, qui ne sont donc pas amortis,
+    au même titre que les achats "long terme" comme un instrument de musique. 
+    Le deuxième enjeu est de permettre de quantifier l'empreinte climat des produits d'hygiène et d'entretien via une approche
+    "consommation" : les facteurs d'émission existent pour ces produits.
+    En revanche, la difficulté de ce sujet réside dans la question posée à l'utilisateur : qui est en mesure de répondre facilement
+    sur sa consommation en poids, volume ou € ? L'objectif ici est de faciliter la réponse en définissant différent niveaux de consommation
+    basé sur une quantité consommée (les FE étant définis en kgCO2e/kg de produit).
+
+divers . produits consommables . empreinte par mois:
+  titre: Empreinte des produits consommables sur un mois
+  icônes: 🧴
+  formule:
+    variations:
+      - si: consommation = 'faible'
+        alors: empreinte * 1 kg/mois
+      - si: consommation = 'normale'
+        alors: empreinte * 2 kg/mois
+      - si: consommation = 'élevée'
+        alors: empreinte * 5 kg/mois
+  note: |
+    Pour cette question et afin de faciliter la réponse, nous avons décidé de proposer un choix prédéfini (arbitrairement) parmi 3 niveaux de réponse,
+    en considérant qu'un produit fait environ 500 grammes.
+      
+      - Une consommation faible à raison de 1 kg de produits par mois 
+      - Une consommation normale à raison de 2 kg par mois
+      - Une consommation élevée à raison de 5 kg par mois
+
+    Afin de nous aider dans la définition de ces niveaux et sur la base de recherches internet,
+    nous avons fait l'hypothèse qu'une consommation "normale" de ces produits par personne et par an est:
+
+    Pour les produits d'hygiène:
+      - la parfumerie (parfums, eaux de toilette, etc.) : 500g
+      - les produits de toilette (savons, gels douche, déodorants, dentifrices...) : 3kg
+      - les produits capillaires (shampoings, laques, gels, mousses coiffantes, coloration...) : 3kg
+      - les cosmétiques (maquillage, crèmes de soins, produits pour bébé, crèmes solaires...) : 2kg
+
+    Pour les produits d'entretien :
+      - Liquide vaisselle: 2kg
+      - Produit lave-vaisselle: 3kg (3 lavages par semaine, 20g par lavage)
+      - Lessive liquide: 5kg (2 lessives par semaine, 50g par lavage)
+      - Nettoyant multi-usages: 5kg
+
+    Ainsi, on estime à 2kg par mois une "quantité normale" consommée pour une personne.
+
+  unité: kgCO2e/mois
+
+divers . produits consommables . consommation:
+  question: Comment estimeriez-vous votre consommation de produits d'hygiène (savon, maquillage...) et d'entretien (lessive, produits ménagers...) par mois ?
+  description: |
+    Cette question nous permet d'évaluer *simplement* l'empreinte climat de vos consommations en produits d'hygiène 
+    (parfumerie, gels douche, shampoings, déodorants, dentifrices, maquillage, crèmes de soin, crèmes solaires...) et en produits d'entretien 
+    (lessives, produits pour le lave-vaisselle, produits ménagers...) sur la base de 3 niveaux de consommation.
+  par défaut: "'normale'"
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - faible
+        - normale
+        - élevée
+
+divers . produits consommables . consommation . faible:
+  titre: 1 à 2 produits / mois
+divers . produits consommables . consommation . normale:
+  titre: Environ 5 produits / mois
+divers . produits consommables . consommation . élevée:
+  titre: Environ 10 produits / mois
+
+divers . produits consommables . empreinte:
+  titre: Empreinte des produits consommables
+  formule:
+    moyenne:
+      - produits nettoyage
+      - produits hygiène
+  unité: kgCO2e/kg
+
+divers . produits consommables . produits nettoyage:
+  titre: Empreinte produits de nettoyage
+  formule:
+    moyenne:
+      - nettoyant multi usages
+      - liquide vaisselle
+      - lessive liquide
+  unité: kgCO2e/kg
+
+divers . produits consommables . produits hygiène:
+  titre: Empreinte produits d'hygiène
+  formule:
+    moyenne:
+      - gel douche
+      - shampoing
+  unité: kgCO2e/kg
+
+divers . produits consommables . nettoyant multi usages:
+  titre: Empreinte nettoyant multi-usages
+  formule: 0.656
+  unité: kgCO2e/kg
+
+divers . produits consommables . liquide vaisselle:
+  titre: Empreinte liquide vaisselle
+  formule: 1.48
+  unité: kgCO2e/kg
+
+divers . produits consommables . lessive liquide:
+  titre: Empreinte lessive liquide
+  formule: 0.838
+  unité: kgCO2e/kg
+
+divers . produits consommables . gel douche:
+  titre: Empreinte gel douche
+  formule: 1.77
+  unité: kgCO2e/kg
+
+divers . produits consommables . shampoing:
+  titre: Empreinte shampoing
+  formule: 0.595
+  unité: kgCO2e/kg

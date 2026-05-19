@@ -34,13 +34,14 @@ export const AVAILABLE_LOCALES: LocaleType[] = [
 ]
 // LocaleType already includes all supported locale codes as string values
 
-export const AVAILABLE_MODELS = ['cut', 'clickson', 'tilt'] as const
+export const AVAILABLE_MODELS = ['cut', 'clickson', 'tilt', 'mip'] as const
 export type Model = (typeof AVAILABLE_MODELS)[number]
 
 const MODEL_PACKAGES: Record<Model, string> = {
   cut: '@abc-transitionbascarbone/publicodes-count/publicodes-build/publicodes-count.model.json',
   clickson: '@abc-transitionbascarbone/publicodes-clickson/publicodes-build/publicodes-clickson.model.json',
   tilt: '@abc-transitionbascarbone/publicodes-tilt/publicodes-build/publicodes-tilt.model.json',
+  mip: '@abc-transitionbascarbone/publicodes-mip/publicodes-build/publicodes-mip.model.json',
 }
 
 // Helper to load publicodes rules from a given model

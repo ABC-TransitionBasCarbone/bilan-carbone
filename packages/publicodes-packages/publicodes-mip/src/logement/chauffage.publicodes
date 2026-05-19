@@ -1,0 +1,680 @@
+logement . chauffage:
+  non applicable si: métrique != "carbone"
+  titre: Energie logement
+  mosaique:
+    type: selection
+    options:
+      - PAC . présent
+      - électricité . présent
+      - gaz . présent
+      - réseau de chaleur . présent
+      - bouteille gaz . présent
+      - citerne propane . présent
+      - fioul . présent
+      - bois . présent
+    suggestions:
+      pas de chauffage:
+        PAC . présent: non
+        électricité . présent: non
+        gaz . présent: non
+        réseau de chaleur . présent: non
+        bouteille gaz . présent: non
+        citerne propane . présent: non
+        fioul . présent: non
+        bois . présent: non
+  icônes: 🌡️
+  question: Quel type d'énergie utilisez-vous pour le chauffage de votre logement, eau chaude, cuisson, etc. ?
+  description: |
+    > Cette question couvre l'ensemble des sources d'énergie qui vous permet d'alimenter vos chauffages, votre chauffe-eau, vos plaques de cuisson, etc.
+
+    Certains logements utilisent uniquement de l'électricité, d'autres sont entièrement chauffés au gaz, et plus rarement au bois ou au fioul.
+    Dans d'autres situations encore, un logement peut être chauffé principalement via des chauffages électriques ou une pompe à chaleur,
+    mais avec un appoint bois, par exemple. Enfin, il est possible de prendre en compte également vos consommations de gaz pour votre van ou camping-car.
+
+    Cochez tous les modes que vous utilisez.
+#  formule:
+#    variations:
+#      - si: choix utilisateur
+#        alors: empreinte totale / habitants
+#      - sinon: empreinte par défaut / habitants
+
+logement . chauffage . empreinte totale:
+  formule:
+    somme:
+      - gaz . empreinte
+      - bouteille gaz . empreinte
+      - citerne propane . empreinte
+      - fioul . empreinte
+      - bois . empreinte
+      - réseau de chaleur . empreinte
+      # chauffage électrique et PAC déjà compté dans la conso électrique
+  unité: kgCO2e
+
+logement . chauffage . empreinte par défaut:
+  icônes: 🌡️
+  formule: parc français . chauffage . empreinte moyenne par m2 hors électricité * logement . surface
+  unité: kgCO2e
+
+logement . chauffage . choix utilisateur:
+  titre: Choix utilisateur pour le chauffage
+  formule:
+    une de ces conditions:
+      - est défini: électricité . présent
+      - est défini: PAC . présent
+      - est défini: gaz . présent
+      - est défini: réseau de chaleur . présent
+      - est défini: bouteille gaz . présent
+      - est défini: citerne propane . présent
+      - est défini: fioul . présent
+      - est défini: bois . présent
+
+logement . chauffage . PAC:
+  titre: Pompe à chaleur
+  icônes: 🌡️
+
+logement . chauffage . PAC . présent:
+  question: Votre logement est-il chauffé via une pompe à chaleur ?
+
+logement . chauffage . notif électrique:
+  type: notification
+  formule:
+    toutes ces conditions:
+      - est défini: PAC . présent
+      - est défini: électricité . présent
+      - une de ces conditions:
+          - PAC . présent = oui
+          - électricité . présent = oui
+  description: |
+    Vous avez renseigné une pompe à chaleur ou un chauffage électrique : leur consommation est prise en compte via votre facture globale d'électricité.
+
+logement . chauffage . électricité:
+  icônes: ⚡️
+
+logement . chauffage . électricité . présent:
+  question: Votre logement est-il chauffé à l'électricité ?
+
+logement . chauffage . gaz:
+  titre: Réseau de gaz
+  icônes: 🔥
+  unité: kgCO2e
+
+logement . chauffage . gaz . empreinte:
+  titre: Empreinte de la consommation de gaz
+  applicable si:
+    toutes ces conditions:
+      - est défini: gaz . présent
+      - gaz . présent
+  formule: consommation * gaz . intensité carbone gaz utilisateur
+  unité: kgCO2e
+
+logement . chauffage . gaz . présent:
+  question: Votre logement est-il chauffé au gaz ?
+  note: |
+    Bien que le chauffage majoritaire en France soit électrique [source](https://fr.statista.com/statistiques/856283/types-chauffage-logement-principal-france), nous mettons ici la valeur par défaut à oui pour se rapprocher de la moyenne d'empreinte du logement.
+
+    On touche aux limites actuelles de ce système de situation par défaut.
+
+logement . chauffage . gaz . consommation:
+  icônes: 🔥
+  question: Quelle est la consommation annuelle de gaz de votre foyer ?
+  aide: logement . chauffage . gaz . consommation estimée via le coût . saisie
+  par défaut: parc français . chauffage . consommation gaz par m2 * surface
+  plancher: 0
+  unité: kWh
+  description: |
+    Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures de gaz et d'électricité ou sur votre compte en ligne sur le site de votre fournisseur.
+
+    > Il se peut que votre copropriété ne vous communique pas la consommation en kWh de votre logement, quand la chaudière est centralisée. Cela dit, elle doit vous fournir le montant en €, que vous pourrez saisir ci-dessous pour estimer vos kWh.
+
+logement . chauffage . gaz . consommation estimée via le coût:
+  titre: Consommation estimée via le coût
+  formule: saisie * commun . mois par an / facteur
+  arrondi: oui
+  unité: kWh
+  note: Cette règle est utilisée dans le cadre de l'aide à la saisie pour la question mentionnée dans l'attribut `aide`. L'attribution de la valeur finale est géré côté site.
+
+logement . chauffage . gaz . consommation estimée via le coût . saisie:
+  question: Pas de facture ? Entrez vos dépenses approximatives par mois
+  plancher: 0
+  unité: €/mois
+
+logement . chauffage . gaz . consommation estimée via le coût . facteur:
+  formule: gaz . prix
+  unité: €/kWh
+  note: |
+    Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois.
+
+    Voir l'onglet "Calcul consommation Energie" du [tableur MicMac](https://avenirclimatique.org/wp-content/uploads/2020/04/2020-04-12_MicMac_V2.6.xlsx)
+    Mis à jour via un petit algorithme de calcul en janvier 2022, suite aux hausses historiques du prix en 2021.
+    La valeur pour 2022 est approximativement de 0.104 €/kWh.
+
+logement . chauffage . gaz . biogaz:
+  question: Avez-vous souscrit à un contrat gaz incluant du biogaz (ou biométhane) ?
+  par défaut: non
+  description: |
+    Le biogaz ou biométhane, est un gaz fabriqué à partir de déchets organiques (déchets ménagers, fumier, déchets de pelouse, cultures, etc.), contrairement au gaz fossile aussi appelé de façon trompeuse "naturel", qui lui est extrait comme le pétrole depuis le sous-sol norvégien, russe, etc.
+
+    Depuis quelques années, il est possible de souscrire à un contrat qui garantit l'injection sur le réseau de gaz français de la même quantité de biométhane que sa propre consommation. Le gaz que vous consommez dans votre logement sera de toute façon un mélange principalement composé de la molécule de méthane (CH₄), mais pour chaque kWh de gaz consommé, il aura été injecté "en votre nom" 1 kWh de biométhane.
+
+    > Contrairement au gaz, l'électricité *ne se stocke pas*, c'est pourquoi nous ne proposons pas d'option "électricité verte" dans le simulateur.
+
+    Attention, il existe des offres à 10%, 20% de biométhane seulement, si c'est le cas répondez "non".
+
+logement . chauffage . gaz . avertissement biogaz:
+  formule: biogaz
+  type: notification
+  description: |
+    Vous constaterez que le choix du biogaz réduit énormément l'empreinte climat du gaz que vous consommez, mais notez bien que la production actuelle est incapable de passer à l'échelle : la réduction globale de toute consommation de gaz reste essentielle, que l'on consomme du biogaz ou du gaz fossile.
+
+logement . chauffage . gaz . intensité carbone gaz utilisateur:
+  formule:
+    variations:
+      - si: chauffage . gaz . biogaz
+        alors: biogaz . facteur d'émission
+      - sinon: facteur d'émission base carbone
+  unité: kgCO2e/kWh
+
+logement . chauffage . gaz . facteur d'émission base carbone:
+  titre: Intensité carbone gaz naturel
+  formule: 0.221
+  unité: kgCO2e/kWh
+  note: |
+    Il s'agit de kgCO2e/kWh *PCS*.
+
+    On raisonne en PCS (Pouvoir Calorifique Supérieur) et non en PCI (Pouvoir Calorifique Inférieur), car le PCS est utilisé en tant que coefficient de conversion dans les factures pour convertir le volume de gaz utilisé en kWh :
+    on fait l'hypothèse que la chaudière gaz récupère bien la chaleur latente de condensation.
+
+    Base Carbone Gaz naturel - 2022/mix moyen/consommation
+
+logement . chauffage . biogaz:
+  note: |
+    La base carbone retient le facteur d'émission biogaz suivant : `0.0444 kgCO2e/kWhPCI`.
+
+    Voici davantage de documentation sur l'intégration de ce chiffres et ses limites.
+
+    <details><summary>Leur justification est dans la documentation [déplier]</summary>
+
+    Pour des questions méthodologiques, cette approche n’est pas compatible avec la logique de construction des facteurs d’émissions de la Base Carbone® et ne peut être utilisée pour la réalisation d’un bilan d’émissions de GES. Ainsi, des travaux complémentaires ont été menés aboutissant à une mise à jour de l'Analyse de Cycle de Vie en 2020 [[144]](https://bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/references.htm) et à un facteur d’émissions de 44,1 gCO2e / kWh PCI. Cette dernière valeur traduit l’impact GES induit par la production d’un kWh de biométhane, contrairement à la valeur de 23,4 gCO2e / kWh PCI issue de la précédente étude, qui traduit l’impact global de la filière de méthanisation et injection, intégrant impacts induits et réductions d’émissions de GES apportés par cette filière. </details>
+    <br/>
+
+    Il nous faudra préciser ce qui dans NGC, nous empêche d'utiliser le facteur le plus faible dans le cadre de ce modèle de calcul consommation qui est un calcul global couvrant également l'agriculture via l'alimentation.
+
+    Autre point crucial : le gaz se stocke, contrairement à l'électricité "verte", ce qui a motivé la non intégration de leur facteur d'émission pour l'instant dans NGC.
+
+    Ajoutons que les fuites des installations de biométhane, par nature bien plus petites et nombreuses que le gaz fossile et donc difficile à controler, pourraient être sous-estimées. Cette [étude de 2022](https://www.cell.com/one-earth/fulltext/S2590-3322(22)00267-6) est-elle prise en compte dans le facteur d'émission ci-dessus (2020) ?
+
+    ## Au sujet de l'utilisation des terres
+
+    Le lien de la base carbone vers l'étude de GRDF n'est plus en ligne. [La voici en PDF](https://github.com/incubateur-ademe/nosgestesclimat/files/9542516/evaluation-des-impacts-ges-biomethane-_synthese-quantis_2017.pdf). On peut y voir :
+
+    ![image](https://user-images.githubusercontent.com/1177762/189527416-4e8a3725-ef5a-448e-8557-0ad0007e0720.png)
+
+    Dont la part rouge est détaillée ici :
+
+    ![image](https://user-images.githubusercontent.com/1177762/189527431-3fdcc5b2-22c0-49e1-b5f0-68762f780d57.png)
+
+    On peut y voir que les cultures dédiées sont très faibles en proportion, ce qui est plutôt très rassurant.
+
+    Cela dit, et je ne sais pas trop comment le définir précisément, j'ai quand même une forte impression qu'une grande partie de ces composants pourraient être valorisés différemment : concrètement, on brûle et on valorise donc à un prix vendu très élevé (le gaz en prix de gros [coûte en septembre 2022](https://twitter.com/i/timeline) près de 2 fois le prix de production du biogaz (90€/MWh)) les restes de poulet de la cantine qu'on aurait pu juste ne pas produire (bleu); la pelouse domestique que le voisin tond toutes les semaines (bleu clair); le fumier de cultures qui auraient pu être dédiées à du végétal humain (mauve); etc.
+
+    En bref, si une partie de l'énergie présente dans les matières utilisées par le biométhane était juste perdue, une autre partie subit simplement un changement d'allocation, d'une chose utile au monde agricole vers la combustion du gaz pour chauffer des logemens notamment. Sans compter l'effet d'aubaine pour des activités qui émettent, substituables par d'autres qui émettent moins. L'étude pourtant semble très complète, donc c'est à creuser, peut-être qu'elle répond à tout ça et que je n'ai pas vu (c'est complexe).
+
+    On peut aussi citer [un article de Reporterre](https://reporterre.net/methanisation-un-digestat-bien-indigeste-pour-les-sols-et-les-eaux) qui s'inquiète des contaminations bactériennes dues à l'épendage du digestat ainsi qu'aux fuites de méthane et de protoxide d'azote N2O, qui seraient sous-estimées (car bien présentes donc évaluées dans l'étude citée par la base carbone). Mais attention, Reporterre n'est pas un organisme de recherche, mais un média d'opinion.
+
+    Une investigation toute récente sur les méthaniseurs de Bretagne va dans le même sens, cataloguant les incidents ayant eu lieu dans la région : https://basta.media/des-methaniseurs-menacent-l-environnement-la-carte-inedite-des-accidents-en-Bretagne-Splann.
+
+    Cela ne remet pas en question le fait d'intégrer dans NGC le facteur à mon avis. La production de gaz fossile est tout à fait concernée par ce genre de problèmes également, à titre d'exemple.
+
+    Une autre question dont la réponse y est peut-être est celle-ci : la filière peut-elle faire x10 en production sans introduire des externalités négatives pour l'instant maitrisées ? Ce serait intéressant d'y répondre pour l'utilisateur de NGC, lui montrer que son choix peut passer à l'échelle de la société. Carbone4 semble y répondre négativement : le remplacement du gaz fossile par le biométhane ne doit pas conduire à une non réduction de la consommation de gaz en général, et encore moins à un effet rebond !
+
+    ![image](https://user-images.githubusercontent.com/1177762/189527887-931ee20a-8ad6-431f-bd4d-d705fa9eefca.png)
+
+    Un **avertissement** est donc être intégré pendant la simulation pour évoquer cet impossible passage à l'échelle :
+
+    > Le biométhane réduit **énormément** les émissions de CO₂ du gaz que vous consommez, mais la production actuelle est **incapable de passer à l'échelle** : la réduction globale de toute consommation de gaz reste **essentielle**, que l'on consomme du biogaz ou du gaz fossile.
+
+logement . chauffage . biogaz . facteur d'émission:
+  formule: biogaz . facteur d'émission base carbone * part + gaz . facteur d'émission base carbone * (1 - part)
+  description: |
+    Biogaz : Biométhane - Injecté dans les réseaux - Mix moyen
+
+logement . chauffage . biogaz . facteur d'émission base carbone:
+  titre: Facteur d'émission du biogaz
+  formule: 0.0395
+  unité: kgCO2e/kWh
+  description: |
+    On raisonne en PCS (Pouvoir Calorifique Supérieur) et non en PCI (Pouvoir Calorifique Inférieur), car le PCS est utilisé en tant que coefficient de conversion dans les factures pour convertir le volume de gaz utilisé en kWh :
+    on fait l'hypothèse que la chaudière gaz récupère bien la chaleur latente de condensation.
+
+    Biogaz : Biométhane - Injecté dans les réseaux - Mix moyen
+
+logement . chauffage . biogaz . part:
+  question: Quelle est la part de biogaz garantie par votre contrat de gaz ?
+  plancher: 0
+  plafond: 100
+  description: |
+    Il existe peu de vendeurs de gaz proposant des contrats 100% biogaz, mais il en existe (en septembre 2022).
+    Par contre, le premier vendeur de gaz français propose à ses clients une option biogaz avec une proportion reglable moyennant un coût supplémentaire (significatif mais qui ne fait pas non plus doubler la facture). N'hésitez pas à en parler à un conseiller.
+  par défaut: 20%
+  unité: "%"
+
+logement . chauffage . bouteille gaz:
+  icônes: 🛢️🔥
+  titre: Bouteille de gaz
+  unité: kgCO2e
+
+logement . chauffage . bouteille gaz . empreinte:
+  titre: Empreinte de la consommation de bouteilles de gaz
+  applicable si:
+    toutes ces conditions:
+      - est défini: bouteille gaz . présent
+      - bouteille gaz . présent
+  formule: empreinte bouteille * consommation
+  unité: kgCO2e
+
+logement . chauffage . bouteille gaz . présent:
+  question: Utilisez-vous des bouteille de gaz ?
+
+logement . chauffage . bouteille gaz . consommation:
+  question: Quelle est votre consommation annuelle en bouteilles de gaz (13 kg) ?
+  aide: logement . chauffage . bouteille gaz . consommation estimée via le poids . saisie
+  plancher: 0
+  par défaut: parc français . chauffage . consommation moyenne gaz cuisson / énergie par bouteille
+  unité: bouteille
+  description: |
+    Pour simplifier la réponse à cette question, nous vous proposons de rentrer directement le nombre de bouteilles de gaz que vous consommez.
+    On considère ici une capacité de 13kg, modèle le plus répandu et généralement utilisé pour le gaz de cuisson.
+
+    Si vous souhaitez répondre en kilogrammes, car la taille de la bouteille ne vous correspond pas, n'hésitez pas à utiliser l'aide à la conversion.
+  note: |
+    Il n'existe pas de facteur d'émission associé directement aux bouteilles de gaz mais il faut savoir
+    qu'elles contiennent majoritairement du propane et butane, gaz pour lesquels, on dispose de facteurs d'émission.
+
+    Il existe différents modèles de bonbonnes comme le montre l'infographie ci-dessous tirée du site [lepropane.com](https://lepropane.com/bouteilles/dimension).
+
+    ![Infographie modèles bouteilles de gaz tiré du site "lepropane.com"](https://lepropane.com/sites/lepropane.com/files/images/infographies/dimensions-bouteilles.png)
+
+    La bouteille la plus répandue est le modèle de 13kg, généralement utilisée pour le gaz de cuisson. On considère donc pour cette question une bouteille de 13kg.
+
+    Étant donné que les bouteilles elles-mêmes sont consignées, nous prenons en compte uniquement les émissions liées au gaz seul.
+
+logement . chauffage . bouteille gaz . consommation estimée via le poids:
+  titre: Consommation estimée via le poids
+  formule: saisie / facteur
+  arrondi: 1 décimale
+  unité: bouteille
+  note: Cette règle est utilisée dans le cadre de l'aide à la saisie pour la question mentionnée dans l'attribut `aide`. L'attribution de la valeur finale est géré côté site.
+
+logement . chauffage . bouteille gaz . consommation estimée via le poids . saisie:
+  question: Vous utilisez un format de bonbonne différent ? Entrez votre consommation annuelle en kg.
+  plancher: 0
+  unité: kg
+
+logement . chauffage . bouteille gaz . consommation estimée via le poids . facteur:
+  formule: 13
+  unité: kg/bouteille
+  note: |
+    Cette aide permet de simplifier la conversion des kg de gaz consommés en bouteille de gaz au format 13kg.
+
+    Ce mécanisme d'aide à l'estimation est conçu pour recevoir une consommation mensuelle en entrée (cf InputEstimation.tsx côté site).
+    Néanmoins, pour ce cas précis, nous souhaitons proposer une aide à l'estimation sur l'année et attendons une consommation par an
+    et non par mois (période correspondant davantage aux factures de fournisseurs).
+    C'est pourquoi , la formule présente un facteur 12.
+
+logement . chauffage . bouteille gaz . énergie par bouteille:
+  titre: Energie bouteille de gaz (13 kg)
+  formule: 179
+  unité: kWh/bouteille
+  note: Chiffre tiré de [francegazliquides.fr](https://www.francegazliquides.fr/energie-butane-propane/industrie-et-distribution/bouteilles/).
+
+logement . chauffage . bouteille gaz . empreinte bouteille:
+  titre: Empreinte bouteille de gaz commune
+  formule: empreinte contenu * capacité
+  unité: kgCO2e/bouteille
+
+logement . chauffage . bouteille gaz . capacité:
+  titre: Capacité bouteille de gaz commune
+  formule: 13
+  unité: kg/bouteille
+
+logement . chauffage . bouteille gaz . empreinte contenu:
+  titre: Empreinte gaz d'une bonbonne
+  formule: (empreinte butane + empreinte propane) / 2
+  unité: kgCO2e/kg
+  note: Moyenne entre butane et propane, dont les facteurs d'émission sont néanmoins très proches.
+
+logement . chauffage . empreinte butane:
+  titre: Empreinte butane
+  formule: 3.44
+  unité: kgCO2e/kg
+  note: Base carbone - Butane/inclus maritime
+
+logement . chauffage . empreinte propane:
+  titre: Empreinte propane
+  formule: 3.47
+  unité: kgCO2e/kg
+  note: Base carbone - Propane/inclus maritime
+
+logement . chauffage . citerne propane:
+  icônes: 🛢️🔥
+  titre: Gaz propane en citerne
+  unité: kgCO2e
+
+logement . chauffage . citerne propane . empreinte:
+  titre: Empreinte de la consommation de gaz propane en citerne
+  applicable si:
+    toutes ces conditions:
+      - est défini: citerne propane . présent
+      - citerne propane . présent
+  formule: empreinte propane * consommation
+  unité: kgCO2e
+
+logement . chauffage . citerne propane . présent:
+  question: Votre logement est-il chauffé via une citerne de propane ?
+
+logement . chauffage . citerne propane . consommation:
+  question: Quelle est la consommation annuelle de gaz propane en citerne de votre foyer ?
+  aide: logement . chauffage . citerne propane . consommation estimée via le coût . saisie
+  plancher: 0
+  par défaut: parc français . chauffage . consommation gaz par m2 * surface / énergie par kg
+  unité: kg
+  description: |
+    Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.
+  note: |
+    Certains logements ne peuvent être raccordés au réseau de gaz et disposent d'une citerne propane, à l'image d'une citerne fioul.
+
+logement . chauffage . citerne propane . consommation estimée via le coût:
+  titre: Consommation estimée via le coût
+  formule: saisie * commun . mois par an / facteur
+  arrondi: oui
+  unité: kg
+  note: Cette règle est utilisée dans le cadre de l'aide à la saisie pour la question mentionnée dans l'attribut `aide`. L'attribution de la valeur finale est géré côté site.
+
+logement . chauffage . citerne propane . consommation estimée via le coût . saisie:
+  question: Pas de facture ? Entrez vos dépenses approximatives par mois
+  plancher: 0
+  unité: €/mois
+
+logement . chauffage . citerne propane . consommation estimée via le coût . facteur:
+  formule: 1.8
+  unité: €/kg
+  note: |
+    Selon les informations agrégées par le site [HelloWatt](https://www.hellowatt.fr/gaz-propane-citerne/comparatif-prix),
+    le prix du propane en citerne oscille autour de 1800€ par tonne (selon le fournisseur).
+
+    Cette aide à l'estimation est désignée pour recevoir une consommation mensuelle (cf InputEstimation.tsx côté site)
+
+logement . chauffage . citerne propane . énergie par kg:
+  formule: 46 MJ/kg * 1.111 / 3.6 MJ/kWh
+  unité: kWh/kg
+  note: |
+    Documentation de la base carbone:
+    Pouvoir calorifique du propane = 46 MJ/kg (PCI)
+    Rapport PCS/PCI = 1,111
+    1 kWh = 3,6 MJ
+
+    On raisonne en PCS (Pouvoir Calorifique Supérieur) et non en PCI (Pouvoir Calorifique Inférieur), car le PCS est utilisé en tant que coefficient de conversion dans les factures pour convertir le volume de gaz utilisé en kWh :
+    on fait l'hypothèse que la chaudière gaz récupère bien la chaleur latente de condensation.
+
+    Le calcul donne 13.88 kWh/kg (PCS)
+
+    ![](https://user-images.githubusercontent.com/55186402/224317812-b646f6d9-1b41-43f3-9823-0295a57dd6c1.png)
+    ![](https://user-images.githubusercontent.com/55186402/224318088-78940efa-2201-407f-9905-545b2f3e09d8.png)
+
+logement . chauffage . fioul:
+  icônes: 🛢
+  titre: Fioul domestique
+  unité: kgCO2e
+
+logement . chauffage . fioul . empreinte:
+  titre: Empreinte de la consommation de fioul domestique
+  applicable si:
+    toutes ces conditions:
+      - est défini: fioul . présent
+      - fioul . présent
+  formule: consommation * intensité carbone fioul litre
+  unité: kgCO2e
+
+logement . chauffage . fioul . présent:
+  question: Votre logement est-il chauffé au fioul ?
+
+logement . chauffage . fioul . consommation:
+  question: Quelle est la consommation annuelle de fioul domestique de votre foyer ?
+  aide: logement . chauffage . fioul . consommation estimée via le coût . saisie
+  plancher: 0
+  unité: l
+  description: |
+    Astuce : Vous trouverez vos consommations annuelles d'énergie sur votre facture de fioul ou sur votre compte en ligne sur le site de votre fournisseur.
+  par défaut: parc français . chauffage . consommation fioul par m2 * fioul kWh au litre * surface
+
+logement . chauffage . fioul . consommation estimée via le coût:
+  titre: Consommation estimée via le coût
+  formule: saisie * commun . mois par an / facteur
+  arrondi: oui
+  unité: l
+  note: Cette règle est utilisée dans le cadre de l'aide à la saisie pour la question mentionnée dans l'attribut `aide`. L'attribution de la valeur finale est géré côté site.
+
+logement . chauffage . fioul . consommation estimée via le coût . saisie:
+  question: Pas de facture ? Entrez vos dépenses approximatives par mois
+  plancher: 0
+  unité: €/mois
+
+logement . chauffage . fioul . consommation estimée via le coût . facteur:
+  formule: 1.2869
+  unité: €/l
+  note: |
+    Cette formule nous permet de passer des €/mois aux litres/an.
+
+    Source : Fioul domestique 2000 à 4999 litres, 2ème semestre 2023.
+    Donnée issue de l'excel `Prix HTT et TTC depuis janvier 2020.xlsx` téléchargeable sur la page
+    [Prix des produits pétroliers](https://www.ecologie.gouv.fr/prix-des-produits-petroliers#scroll-nav__4) du ministère de la Transition Écologique.
+
+logement . chauffage . fioul kWh au litre:
+  formule: 0.101436943
+  unité: l/kWh
+  note: |
+    Selon la base carbone (https://bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/New_liquides),
+    le pouvoir calorifique du fioul domestique est de 42GT/T et sa masse volumique est de 845 kg/m3.
+    Après conversion on trouve un facteur de pour passer des kWh au litre de fioul.
+
+logement . chauffage . intensité carbone fioul litre:
+  formule: 3.25
+  unité: kgCO2e/l
+  note: Facteur d'émission issu de la Base Carbone (Fioul domestique France continental).
+
+logement . chauffage . bois:
+  titre: Bois ou granulés
+  icônes: 🪵
+  unité: kgCO2e
+
+logement . chauffage . bois . empreinte:
+  titre: Empreinte de la consommation de bois
+  applicable si:
+    toutes ces conditions:
+      - est défini: bois . présent
+      - bois . présent
+  formule:
+    variations:
+      - si: type = 'bûches'
+        alors: type . bûches . consommation * bois . type . bûches . intensité énergétique * facteur d'émission bûches
+      - si: type = 'granulés'
+        alors: type . granulés . consommation * facteur d'émission granulés
+  unité: kgCO2e
+
+logement . chauffage . bois . présent:
+  question: Votre logement est-il chauffé au bois ?
+
+logement . chauffage . bois . type:
+  titre: type de bois
+  question: Quel type de bois utilisez-vous ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - bûches
+        - granulés
+  par défaut: "'bûches'"
+  note: Les poêles à bûches représentent [70% des poêles vendus](https://www.planetoscope.com/Source-d-energie/1521-.html).
+
+logement . chauffage . bois . type . bûches:
+  titre: Bûches
+logement . chauffage . bois . type . granulés:
+  titre: Granulés
+
+logement . chauffage . bois . type . granulés . consommation:
+  question: Quelle est la consommation annuelle de bois en granulés de votre foyer ?
+  aide: logement . chauffage . bois . type . granulés . consommation estimée via le coût . saisie
+  plancher: 0
+  unité: kWh
+  par défaut: parc français . chauffage . consommation bois par m2 * surface
+  description: |
+    > 💡 Astuce : en moyenne, 1kg de granulés produisent 4.6 kWh. Vous pouvez donc multiplier votre consommation annuelle (en tonnes) par 4600 kWh.
+  note: |
+    La valeur par défaut ici est à priori largement sur-estimée. En effet, les données utilisées ([CEREN](https://www.statistiques.developpement-durable.gouv.fr/consommation-denergie-par-usage-du-residentiel)) reflètent mal la réalité de l'énergie bois.
+    Les données relatives aux consommations de bois des ménages aggrègent à la fois des données sur les granulés (performant en termes de combustion) et sur le bois bûches en foyer ouvert (peu performant).
+
+    Et donc probablement que si la discrimination par type de bois de chauffe était faite dans les données du CEREN (pour les kWh consommés et les surface chauffées) on aboutirait à une valeur en kWh/m2 beaucoup plus faible pour les granulés que pour le bois bûches.
+
+logement . chauffage . bois . type . granulés . consommation estimée via le coût:
+  titre: Consommation estimée via le coût
+  formule: saisie / facteur
+  arrondi: oui
+  unité: kWh
+  note: Cette règle est utilisée dans le cadre de l'aide à la saisie pour la question mentionnée dans l'attribut `aide`. L'attribution de la valeur finale est géré côté site.
+
+logement . chauffage . bois . type . granulés . consommation estimée via le coût . saisie:
+  question: Pas de facture ? Entrez vos dépenses annuelles approximatives
+  plancher: 0
+  unité: €
+
+logement . chauffage . bois . type . granulés . consommation estimée via le coût . facteur:
+  formule: granulés . prix kWh
+  unité: €/kWh
+  note: |
+    Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois.
+
+logement . chauffage . bois . type . bûches . intensité énergétique:
+  formule: 1610
+  unité: kWh/stère
+  note: Nous faisons l'hypothèse d'une consommation de bûches de 20% d'humidité, d'après l'[étude ADEME sur le chauffahe domestique au bois](https://librairie.ademe.fr/produire-autrement/872-etude-sur-le-chauffage-domestique-au-bois.html), page 10.
+
+logement . chauffage . bois . type . bûches . consommation:
+  question: Quelle la consommation annuelle de bois en bûches de votre foyer ?
+  aide: logement . chauffage . bois . type . bûches . consommation estimée via le coût . saisie
+  plancher: 0
+  description: |
+    La consommation de bois de chauffage se compte traditionnellement en stères, ce qui correspond approximativement à un mètre cube de bûches.
+
+    ![](https://upload.wikimedia.org/wikipedia/commons/7/7c/Raummeter_hg.jpg)
+  unité: stère
+  par défaut: parc français . chauffage . consommation bois par m2 * surface / intensité énergétique
+
+logement . chauffage . bois . type . bûches . consommation estimée via le coût:
+  titre: Consommation estimée via le coût
+  formule: saisie / facteur
+  arrondi: oui
+  unité: stère
+  note: Cette règle est utilisée dans le cadre de l'aide à la saisie pour la question mentionnée dans l'attribut `aide`. L'attribution de la valeur finale est géré côté site.
+
+logement . chauffage . bois . type . bûches . consommation estimée via le coût . saisie:
+  question: Pas de facture ? Entrez vos dépenses annuelles approximatives
+  plancher: 0
+  unité: €
+
+logement . chauffage . bois . type . bûches . consommation estimée via le coût . facteur:
+  formule: prix stère 2024
+  unité: €/stère
+  note: |
+    Cette formule nous permet de passer des €/mois au nombre de stères par an.
+
+    Prix calculé sur la base de l'indice prix bois énergie publié par l'INSEE.
+
+logement . chauffage . bois . facteur d'émission bûches:
+  titre: Empreinte bois bûches
+  formule: 0.0460
+  unité: kgCO2e/kWh
+  note: |
+    Attention : faute de facteur d'émission de statut "validé générique" pour le bois bûche dans la Base Carbone, nous optons pour un facteur d'émission "validé spécifique"
+    (initiative E+/C- = label Energie Positive et Réduction Carbone), afin d'assurer une certaine cohérence pour l'utilisateur parcourant le modèle de calcul.
+    Cependant, les facteurs d'émissions E+/C- suivent des règles d'élaboration parfois différentes des règles de calcul de la Base Carbone.
+    Il est donc probable que ce facteur d'émission sous-estime légèrement l'impact GES de la consommation d'un kWh de bois bûche en ne prenant pas en compte les émissions de méthane imbrulé.
+
+logement . chauffage . bois . facteur d'émission granulés:
+  titre: Empreinte bois granulés
+  formule: 0.0320
+  unité: kgCO2e/kWh
+  note: |
+    Attention : faute de facteur d'émission de statut "validé générique" pour les granulés dans la Base Carbone (le FE valide générique disponible ne correspond pas à un usage dans un poêle individuel mais dans un réseau de chaleur),
+    nous optons pour un facteur d'émission "validé spécifique" (initiative E+/C- = label Energie Positive et Réduction Carbone), afin d'assurer une certaine cohérence pour l'utilisateur parcourant le modèle de calcul.
+    Cependant, les facteurs d'émissions E+/C- suivent des règles d'élaboration parfois différentes des règles de calcul de la Base Carbone.
+    Il est donc probable que ce facteur d'émission sous-estime légèrement l'impact GES de la consommation d'un kWh de bois bûche en ne prenant pas en compte les émissions de méthane imbrulé.
+
+logement . chauffage . réseau de chaleur:
+  icônes: 🏭
+  titre: Réseau de chaleur
+  unité: kgCO2e
+
+logement . chauffage . réseau de chaleur . empreinte:
+  titre: Empreinte de la consommation de gaz via réseau de chaleur
+  applicable si:
+    toutes ces conditions:
+      - est défini: réseau de chaleur . présent
+      - réseau de chaleur . présent
+  formule: consommation * intensité carbone
+  unité: kgCO2e
+
+logement . chauffage . réseau de chaleur . présent:
+  question: Votre logement est-il chauffé via un réseau de chaleur ?
+
+logement . chauffage . réseau de chaleur . consommation:
+  icônes: 🔥
+  question: Quelle est votre consommation annuelle d'énergie via le réseau de chaleur raccordé à votre foyer ?
+  aide: logement . chauffage . réseau de chaleur . consommation estimée via le coût . saisie
+  plancher: 0
+  par défaut: parc français . chauffage . consommation réseau de chaleur par m2 * surface
+  unité: kWh
+  description: |
+    Le contenu carbone du kWh de chaleur issu d'un réseau de chaleur dépend fortement du réseau auquel vous êtes raccordé.
+
+    Pour le moment, nous nous basons sur un facteur d'émission moyen : nous avons fait le choix de ne pas vous demander votre adresse.
+
+    Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.
+
+    > Il se peut que votre copropriété ne vous communique pas la consommation en kWh de votre logement, quand la chaudière est centralisée. Cela dit, elle doit vous fournir le montant en €, que vous pourrez saisir ci-dessous pour estimer vos kWh.
+
+logement . chauffage . réseau de chaleur . consommation estimée via le coût:
+  titre: Consommation estimée via le coût
+  formule: saisie * commun . mois par an / facteur
+  arrondi: oui
+  note: Cette règle est utilisée dans le cadre de l'aide à la saisie pour la question mentionnée dans l'attribut `aide`. L'attribution de la valeur finale est géré côté site.
+
+logement . chauffage . réseau de chaleur . consommation estimée via le coût . saisie:
+  question: Pas de facture ? Entrez vos dépenses approximatives par mois
+  plancher: 0
+  unité: €/mois
+
+logement . chauffage . réseau de chaleur . consommation estimée via le coût . facteur:
+  formule: 0.085
+  unité: €/kWh
+  note: |
+    Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois.
+
+    Ce chiffre est tiré de l'[Enquête des réseaux de chaleur et de froid](https://amorce.asso.fr/actualite/les-reseaux-de-chaleur-la-bonne-solution-de-chauffage-pour-le-pouvoir-d-achat-et-le-climat)
+    basé sur les données 2021 qui donne un chiffre de 80€HT/MWh.
+
+    L'[Enquête sur le prix de vente de la chaleur et de froid de 2019](https://amorce.asso.fr/publications/enquete-sur-le-prix-de-vente-de-la-chaleur-et-de-froid-en-2019-rce36)
+    donnait un chiffre de 74,6€HT/MWh et 79,3€TTC/MWh, avec une médiane à 82,3€TTC/MWh.
+
+    Nous avons donc choisi dans une première approximation de nous baser sur la moyenne 2021 en conservant le ratio 2019 pour passer en TTC ce qui donne une valeur de 85€TTC/MWh
+    (ce n'est pas seulement un 5,5% ou 20%, car l'application de ces taux varie selon la proportion d'énergie verte dans le mix du réseau de chaleur,
+    une TVA à 5,5% étant appliquée aux réseaux contenant plus de 50 % d'énergie renouvelable et de récupération).
+
+    C'est une valeur moyenne dont l'écart-type est relativement important.
+    Néanmoins, on peut lire dans l'enquête que "les prix de vente moyens des réseaux de chaleur affichent une très grande disparité, 89% de la chaleur livrée est vendue à un prix compris entre -30 et +30% de la moyenne nationale".
+
+logement . chauffage . réseau de chaleur . intensité carbone:
+  titre: Empreinte carbone réseau de chaleur
+  formule: 0.112
+  unité: kgCO2e/kWh
+  note: |
+    Facteur d'émission issu de l'[enquête FEDEN sur les réseaux de chaleur en France 2023](https://www.fedene.fr/sncu/lenquete-2023-sur-les-reseaux-de-chaleur-froid-en-france/).

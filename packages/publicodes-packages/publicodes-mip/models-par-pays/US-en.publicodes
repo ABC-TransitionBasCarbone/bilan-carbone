@@ -1,0 +1,50 @@
+params:
+  code: US
+  nom: United States
+  gentilé: american
+commun . mix électrique . empreinte carbone:
+  titre: Carbon intensity of the US electricity mix.
+  formule: 0.428
+  note: |
+    [Electricity Map](https://app.electricitymaps.com/map) 5-year view, 2022
+transport . avion . court courrier . heures de vol:
+  suggestions:
+    🚫✈️: 0
+    Los Angeles ⇄ San Francisco: 3
+    New York ⇄ Boston: 3
+    Miami ⇄ San Antonio: 6
+
+transport . avion . moyen courrier . heures de vol:
+  suggestions:
+    🚫✈️: 0
+    New York ⇄ Miami: 7
+    Las Vegas ⇄ Boston: 11
+    Seattle ⇄ Miami: 12
+    New York ⇄ Los Angeles: 12
+
+transport . avion . long courrier . heures de vol:
+  suggestions:
+    🚫✈️: 0
+    New York ⇄ Paris: 14
+    Los Angeles ⇄ Tokyo: 23
+    San Francisco ⇄ Sydney: 32
+
+transport . train . km:
+  suggestions:
+    crossing a region: 300
+    New York ⇄ Boston: 600
+    San Francisco ⇄ San Diego: 1600
+    💳 frequent traveler: 10000
+    💳 the extra mile: 25000
+logement . électricité . réseau . consommation estimée via le coût . saisie:
+  unité: $/month
+
+logement . électricité . réseau . consommation estimée via le coût . facteur:
+  formule: 0.173
+  unité: $/kWh
+  note: |
+    This formula allows us to switch from $/month to kWh/year.
+
+    The figure includes a subscription cost, and therefore represents an average. It is not the marginal price per kWh. It includes taxes.
+
+    Figure taken from <a href="https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Electricity_price_statistics">Eurostat, household, first half 2023</a>.

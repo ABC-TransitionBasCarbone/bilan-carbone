@@ -61,6 +61,8 @@ jobs:
         working-directory: ${{ github.workspace }}
       - name: Linter
         run: yarn lint
+      - name: Prebuild application
+        run: yarn prebuild
       - name: TypeScript check
         run: npx tsc --noEmit
 
