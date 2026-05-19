@@ -65,13 +65,11 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   const [state, setState] = useState<FormState<string>>(initState)
 
   useEffect(() => {
-    if (surveyId) {
-      const existing = surveyStorage.loadResponse(surveyId)
-      if (existing && existing.surveyId === survey.id) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setResponse(existing)
-        setIsResumed(true)
-      }
+    const saved = loadState(surveyId)
+    if (saved) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setState(saved)
+      setIsResumed(true)
     }
     setIsLoading(false)
     // Disaled rule to prevent flickering until we fix the component hydration issue
