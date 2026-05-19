@@ -16,7 +16,6 @@ import UploadFileIcon from '@mui/icons-material/UploadFile'
 import { ButtonGroup, Menu, MenuItem } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useState, useTransition } from 'react'
-import styles from './EmissionSourceButtons.module.css'
 
 interface Props {
   studyId: string
@@ -61,7 +60,7 @@ const EmissionSourceButtons = ({ studyId, userRole, post, siteId, onSuccess }: P
       <ButtonGroup>
         {canEdit && (
           <LoadingButton
-            className={styles.actionButton}
+            isLarge
             variant="contained"
             startIcon={<UploadFileIcon />}
             onClick={() => setImportOpen(true)}
@@ -71,7 +70,7 @@ const EmissionSourceButtons = ({ studyId, userRole, post, siteId, onSuccess }: P
           </LoadingButton>
         )}
         <LoadingButton
-          className={styles.actionButton}
+          isLarge
           variant="outlined"
           startIcon={<FileDownloadIcon />}
           endIcon={<KeyboardArrowDownIcon />}
