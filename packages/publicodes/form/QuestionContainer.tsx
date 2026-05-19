@@ -1,10 +1,10 @@
+import { Box } from '@mui/material'
 import {
   StyledQuestionContainer,
   StyledQuestionContent,
   StyledQuestionHeader,
   StyledQuestionTitle,
-} from '@abc-transitionbascarbone/css'
-import { Box } from '@mui/material'
+} from './QuestionContainer.styles'
 
 export interface QuestionContainerProps {
   label: string
