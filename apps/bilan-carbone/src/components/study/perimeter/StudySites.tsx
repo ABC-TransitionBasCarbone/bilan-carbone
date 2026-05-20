@@ -28,7 +28,7 @@ import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
-import { useForm, UseFormReturn } from 'react-hook-form'
+import { useForm, UseFormReturn, useWatch } from 'react-hook-form'
 import DeleteStudySiteModal from './DeleteStudySiteModal'
 import { DuplicateFormData } from './DuplicateSiteModal'
 import ReplicateSitesChangesModal from './ReplicateSitesChangesModal'
@@ -116,7 +116,7 @@ const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user 
     },
   })
 
-  const sites = siteForm.watch('sites')
+  const sites = useWatch({ control: siteForm.control, name: 'sites' })
   const disabledUpdateButton = isEditing && sites.every((site) => !site.selected)
 
   useEffect(() => {

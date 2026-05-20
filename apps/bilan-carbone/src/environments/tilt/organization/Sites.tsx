@@ -81,7 +81,7 @@ const Sites = <T extends SitesCommand>({
             ),
         },
       ] as ColumnDef<SitesCommand['sites'][number]>[],
-    [form, disabled],
+    [t, form, disabled, control],
   )
 
   return (
