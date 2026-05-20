@@ -21,7 +21,6 @@ import { formatEmissionValueForExport } from '@/utils/study'
 import { getBcTranslations, getSingularForm } from '@/utils/translation.utils'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import { EmissionSourceCaracterisation, EmissionSourceType, SubPost } from '@abc-transitionbascarbone/db-common/enums'
-import { revalidatePath } from 'next/cache'
 import xlsx from 'node-xlsx'
 import { canBeValidated, getEmissionSourceEmission } from '../emissionSource'
 import { getAuthenticatedAccount } from '../permissions/account.permissions'
@@ -264,7 +263,6 @@ export async function importEmissionSourcesFromFile(
   }
 
   await createEmissionSourcesOnStudy(validRows)
-  revalidatePath(`/etudes/${studyId}/comptabilisation/saisie-des-donnees`)
 
   return { success: true, errors: [], warnings: [] }
 }

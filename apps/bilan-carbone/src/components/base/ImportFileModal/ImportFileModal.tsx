@@ -110,6 +110,7 @@ const ImportFileModal = <TPreviewRow,>({
         reset()
         onSuccess()
       } else if (result.warnings) {
+        setPreviewRows([])
         setWarnings(groupByLine(result.warnings))
       } else {
         setErrors(groupByLine(result.errors ?? []))

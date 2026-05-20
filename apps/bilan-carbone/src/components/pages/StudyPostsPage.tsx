@@ -21,6 +21,7 @@ import { useToast } from '@abc-transitionbascarbone/ui'
 import Fuse from 'fuse.js'
 import { UserSession } from 'next-auth'
 import { useLocale, useTranslations } from 'next-intl'
+import { useRouter } from 'next/navigation'
 import { useCallback, useMemo, useState } from 'react'
 import SubPosts from '../study/SubPosts'
 import StudyPostsBlock from '../study/buttons/StudyPostsBlock'
@@ -44,6 +45,7 @@ const StudyPostsPage = ({ post, study, userRole, emissionSources, siteId, studyS
   const tImport = useTranslations('study.importEmissionSourcesModal')
   const locale = useLocale()
   const { showSuccessToast } = useToast()
+  const router = useRouter()
 
   const initialTags = useMemo(
     () =>
@@ -175,7 +177,10 @@ const StudyPostsPage = ({ post, study, userRole, emissionSources, siteId, studyS
         caracterisationOptions={initialCaracterisations}
         sort={sort}
         setSort={updateSort}
-        onImportSuccess={() => showSuccessToast(tImport('success'))}
+        onImportSuccess={() => {
+          showSuccessToast(tImport('success'))
+          router.refresh()
+        }}
       >
         {showInfography && <StudyPostInfography study={study} siteId={siteId} studySiteId={studySiteId} />}
         <SubPosts
