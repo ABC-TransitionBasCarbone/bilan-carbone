@@ -1,5 +1,7 @@
 import { UserSessionProps } from "@/components/hoc/withAuth"
+import { appendForm } from "@/utils/form"
 import { UserSession } from "next-auth"
+import { useEffect } from "react"
 
 const typeformId = process.env.NEXT_PUBLIC_RESULTS_FEEDBACK_TYPEFORM_ID
 interface Props {
@@ -13,6 +15,9 @@ export const FeedbackModal = ({ user, organizationName }: Props) => {
     email: user.email,
     organization: organizationName,
   }
+  useEffect(() => {
+    appendForm()
+  }, [])
 
   return <div
     className="typeform"

@@ -63,7 +63,7 @@ export async function proxy(req: NextRequest) {
 
   const cspHeader = `
     default-src 'self';
-    script-src 'self' ${nonceRestriction};
+    script-src 'self' ${nonceRestriction} https://embed.typeform.com;
     style-src 'self' ${nonceRestriction} https://fonts.cdnfonts.com https://embed.typeform.com;
     img-src 'self' data: ${logos};
     font-src 'self' https://fonts.cdnfonts.com;
