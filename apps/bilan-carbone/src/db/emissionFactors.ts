@@ -617,13 +617,16 @@ export const findEmissionFactorByImportedIdForMatch = (id: string, organizationI
 export const findEmissionFactorsByNameAndUnit = (
   title: string,
   locale: string,
-  orgFilter: Prisma.EmissionFactorWhereInput,
-  unitFilter: Prisma.EmissionFactorWhereInput,
+  organizationId: string,
+  unit: Unit | undefined,
   versionIds: string[],
 ) =>
   prismaClient.emissionFactor.findMany({
     where: {
-      AND: [orgFilter, unitFilter],
+      AND: [
+        { OR: [{ organizationId: null }, { organizationId }] },
+        unit ? { OR: [{ unit }, { customUnit: unit }] } : {},
+      ],
       metaData: { some: { language: locale, title: { equals: title, mode: Prisma.QueryMode.insensitive } } },
       versions: { some: { importVersionId: { in: versionIds } } },
     },
@@ -636,14 +639,10 @@ export const findEmissionFactorsByNameAndUnit = (
     },
   })
 
-export const findEmissionFactorsByUnit = (
-  orgFilter: Prisma.EmissionFactorWhereInput,
-  unitFilter: Prisma.EmissionFactorWhereInput,
-  versionIds: string[],
-) =>
+export const findEmissionFactorsByUnit = (organizationId: string, unit: Unit, versionIds: string[]) =>
   prismaClient.emissionFactor.findMany({
     where: {
-      AND: [orgFilter, unitFilter],
+      AND: [{ OR: [{ organizationId: null }, { organizationId }] }, { OR: [{ unit }, { customUnit: unit }] }],
       versions: { some: { importVersionId: { in: versionIds } } },
     },
     select: {

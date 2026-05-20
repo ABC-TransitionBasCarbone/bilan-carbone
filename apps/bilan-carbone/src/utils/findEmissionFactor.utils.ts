@@ -7,7 +7,7 @@ import { Unit } from '@abc-transitionbascarbone/db-common/enums'
 
 export enum EmissionFactorMatchType {
   Exact = 'exact',
-  NameOnly = 'nameOnly',
+  NameAndUnitOnly = 'nameAndUnitOnly',
   ValueAndUnitOnly = 'valueAndUnitOnly',
   NameAmbiguous = 'nameAmbiguous',
 }
@@ -16,7 +16,7 @@ type EfMatchResult =
   | {
       matchType:
         | EmissionFactorMatchType.Exact
-        | EmissionFactorMatchType.NameOnly
+        | EmissionFactorMatchType.NameAndUnitOnly
         | EmissionFactorMatchType.ValueAndUnitOnly
       id: string
       foundTitle?: string
@@ -40,7 +40,7 @@ function toEfMatch(
   ef: EfRow,
   matchType:
     | EmissionFactorMatchType.Exact
-    | EmissionFactorMatchType.NameOnly
+    | EmissionFactorMatchType.NameAndUnitOnly
     | EmissionFactorMatchType.ValueAndUnitOnly,
   locale: string,
 ) {
@@ -69,15 +69,13 @@ export async function findEmissionFactorMatch(
     }
   }
 
-  const orgFilter = { OR: [{ organizationId: null }, { organizationId }] }
-  const unitFilter = unit ? { OR: [{ unit }, { customUnit: unit }] } : {}
   const epsilon = 1e-9
 
   const byNameAndUnit = await findEmissionFactorsByNameAndUnit(
     title?.trim() ?? '',
     locale,
-    orgFilter,
-    unitFilter,
+    organizationId,
+    unit,
     versionIds,
   )
 
@@ -89,18 +87,18 @@ export async function findEmissionFactorMatch(
   }
 
   if (byNameAndUnit.length === 1) {
-    return toEfMatch(byNameAndUnit[0], EmissionFactorMatchType.NameOnly, locale)
+    return toEfMatch(byNameAndUnit[0], EmissionFactorMatchType.NameAndUnitOnly, locale)
   }
 
   if (byNameAndUnit.length > 1) {
     return {
       matchType: EmissionFactorMatchType.NameAmbiguous,
-      candidates: byNameAndUnit.map((ef) => toEfMatch(ef, EmissionFactorMatchType.NameOnly, locale)),
+      candidates: byNameAndUnit.map((ef) => toEfMatch(ef, EmissionFactorMatchType.NameAndUnitOnly, locale)),
     }
   }
 
   if (value !== undefined && unit) {
-    const byUnit = await findEmissionFactorsByUnit(orgFilter, unitFilter, versionIds)
+    const byUnit = await findEmissionFactorsByUnit(organizationId, unit, versionIds)
     const match = byUnit.find((ef) => Math.abs(Number(ef.totalCo2) - value) < epsilon)
     if (match) {
       return toEfMatch(match, EmissionFactorMatchType.ValueAndUnitOnly, locale)
