@@ -4,10 +4,9 @@ import DynamicAllResults from '@/environments/core/study/results/DynamicAllResul
 import { addUserChecklistItem } from '@/services/serverFunctions/user'
 import { ExportRule } from '@abc-transitionbascarbone/db-common'
 import { SiteCAUnit, UserChecklist } from '@abc-transitionbascarbone/db-common/enums'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
-import { UserSessionProps } from '../hoc/withAuth'
-import { UserSession } from 'next-auth'
 
 interface Props {
   study: FullStudy
@@ -32,9 +31,9 @@ const ResultsPage = ({ study, rules, emissionFactorsWithParts, validatedOnly, ca
           { label: tNav('home'), link: '/' },
           study.organizationVersion.isCR
             ? {
-              label: study.organizationVersion.organization.name,
-              link: `/organisations/${study.organizationVersion.id}`,
-            }
+                label: study.organizationVersion.organization.name,
+                link: `/organisations/${study.organizationVersion.id}`,
+              }
             : undefined,
           { label: study.name, link: `/etudes/${study.id}` },
         ].filter((link) => link !== undefined)}

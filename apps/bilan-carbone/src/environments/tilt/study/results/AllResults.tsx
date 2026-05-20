@@ -1,4 +1,3 @@
-import { UserSessionProps } from '@/components/hoc/withAuth'
 import AllResultsAdvanced from '@/components/study/results/AllResults'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import type { FullStudy } from '@/db/study'

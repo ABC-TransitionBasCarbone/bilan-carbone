@@ -8,12 +8,11 @@ import { usePublicodesResults } from '@/hooks/usePublicodesResults'
 import { getTotalValueFromBaseResults } from '@/services/results/publicodes'
 import { SiteCAUnit } from '@abc-transitionbascarbone/db-common/enums'
 import CircularProgress from '@mui/material/CircularProgress'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import AllResults from './AllResults'
 import { ChartType, defaultChartOrder } from './utils'
-import { UserSessionProps } from '@/components/hoc/withAuth'
-import { UserSession } from 'next-auth'
 
 interface Props {
   study: FullStudy

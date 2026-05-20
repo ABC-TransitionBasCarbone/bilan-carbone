@@ -1,6 +1,5 @@
 'use client'
 
-import { UserSessionProps } from '@/components/hoc/withAuth'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import type { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
