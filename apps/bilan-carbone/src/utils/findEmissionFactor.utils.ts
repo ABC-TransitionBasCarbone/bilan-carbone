@@ -5,15 +5,28 @@ import {
 } from '@/db/emissionFactors'
 import { Unit } from '@abc-transitionbascarbone/db-common/enums'
 
+export enum EmissionFactorMatchType {
+  Exact = 'exact',
+  NameOnly = 'nameOnly',
+  ValueAndUnitOnly = 'valueAndUnitOnly',
+  NameAmbiguous = 'nameAmbiguous',
+}
+
 type EfMatchResult =
   | {
-      matchType: 'exact' | 'nameOnly' | 'valueAndUnitOnly'
+      matchType:
+        | EmissionFactorMatchType.Exact
+        | EmissionFactorMatchType.NameOnly
+        | EmissionFactorMatchType.ValueAndUnitOnly
       id: string
       foundTitle?: string
       foundValue?: number
       foundUnit?: string
     }
-  | { matchType: 'nameAmbiguous'; candidates: { foundTitle?: string; foundValue?: number; foundUnit?: string }[] }
+  | {
+      matchType: EmissionFactorMatchType.NameAmbiguous
+      candidates: { foundTitle?: string; foundValue?: number; foundUnit?: string }[]
+    }
 
 export type EfRow = {
   id: string
@@ -23,7 +36,14 @@ export type EfRow = {
   metaData: { title: string | null; language: string }[]
 }
 
-function toEfMatch(ef: EfRow, matchType: 'exact' | 'nameOnly' | 'valueAndUnitOnly', locale: string) {
+function toEfMatch(
+  ef: EfRow,
+  matchType:
+    | EmissionFactorMatchType.Exact
+    | EmissionFactorMatchType.NameOnly
+    | EmissionFactorMatchType.ValueAndUnitOnly,
+  locale: string,
+) {
   return {
     matchType,
     id: ef.id,
@@ -45,7 +65,7 @@ export async function findEmissionFactorMatch(
   if (id) {
     const byId = await findEmissionFactorByImportedIdForMatch(id, organizationId, versionIds)
     if (byId) {
-      return toEfMatch(byId, 'exact', locale)
+      return toEfMatch(byId, EmissionFactorMatchType.Exact, locale)
     }
   }
 
@@ -64,18 +84,18 @@ export async function findEmissionFactorMatch(
   if (value !== undefined) {
     const exact = byNameAndUnit.find((ef) => Math.abs(Number(ef.totalCo2) - value) < epsilon)
     if (exact) {
-      return toEfMatch(exact, 'exact', locale)
+      return toEfMatch(exact, EmissionFactorMatchType.Exact, locale)
     }
   }
 
   if (byNameAndUnit.length === 1) {
-    return toEfMatch(byNameAndUnit[0], 'nameOnly', locale)
+    return toEfMatch(byNameAndUnit[0], EmissionFactorMatchType.NameOnly, locale)
   }
 
   if (byNameAndUnit.length > 1) {
     return {
-      matchType: 'nameAmbiguous',
-      candidates: byNameAndUnit.map((ef) => toEfMatch(ef, 'nameOnly', locale)),
+      matchType: EmissionFactorMatchType.NameAmbiguous,
+      candidates: byNameAndUnit.map((ef) => toEfMatch(ef, EmissionFactorMatchType.NameOnly, locale)),
     }
   }
 
@@ -83,7 +103,7 @@ export async function findEmissionFactorMatch(
     const byUnit = await findEmissionFactorsByUnit(orgFilter, unitFilter, versionIds)
     const match = byUnit.find((ef) => Math.abs(Number(ef.totalCo2) - value) < epsilon)
     if (match) {
-      return toEfMatch(match, 'valueAndUnitOnly', locale)
+      return toEfMatch(match, EmissionFactorMatchType.ValueAndUnitOnly, locale)
     }
   }
 

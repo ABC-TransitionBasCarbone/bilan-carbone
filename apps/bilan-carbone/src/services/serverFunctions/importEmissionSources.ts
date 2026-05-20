@@ -14,7 +14,7 @@ import {
   SOURCE_IMPORT_COLUMNS,
 } from '@/types/importEmissionSources.types'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
-import { findEmissionFactorMatch } from '@/utils/findEmissionFactor.utils'
+import { EmissionFactorMatchType, findEmissionFactorMatch } from '@/utils/findEmissionFactor.utils'
 import { getImportEmissionSourcesTranslations, parseEmissionSourcesFile } from '@/utils/importEmissionSources.utils'
 import { getPost } from '@/utils/post'
 import { formatEmissionValueForExport } from '@/utils/study'
@@ -35,6 +35,24 @@ import {
   getSquaredStandardDeviationForEmissionSource,
 } from '../uncertainty'
 import { getEmissionFactorsByIds } from './emissionFactor'
+
+type ValidImportRow = {
+  studySiteId: string
+  studyId: string
+  subPost: SubPost
+  name: string
+  emissionFactorId?: string
+  value?: number
+  type?: EmissionSourceType
+  caracterisation?: EmissionSourceCaracterisation
+  source?: string
+  reliability?: number
+  technicalRepresentativeness?: number
+  geographicRepresentativeness?: number
+  temporalRepresentativeness?: number
+  completeness?: number
+  comment?: string
+}
 
 const TOTAL_EXCEL_COLS = Object.keys(SOURCE_IMPORT_COLUMNS).length
 
@@ -125,23 +143,7 @@ export async function importEmissionSourcesFromFile(
 
   const rowErrors: ImportError[] = []
   const rowWarnings: ImportWarning[] = []
-  const validRows: Array<{
-    studySiteId: string
-    studyId: string
-    subPost: SubPost
-    name: string
-    emissionFactorId?: string
-    value?: number
-    type?: EmissionSourceType
-    caracterisation?: EmissionSourceCaracterisation
-    source?: string
-    reliability?: number
-    technicalRepresentativeness?: number
-    geographicRepresentativeness?: number
-    temporalRepresentativeness?: number
-    completeness?: number
-    comment?: string
-  }> = []
+  const validRows: ValidImportRow[] = []
 
   for (let i = 0; i < result.rows.length; i++) {
     const row = result.rows[i]
@@ -174,7 +176,7 @@ export async function importEmissionSourcesFromFile(
         searchedValue: row.emissionFactorValue,
         searchedUnit: row.emissionFactorUnit,
       })
-    } else if (ef.matchType === 'nameAmbiguous') {
+    } else if (ef.matchType === EmissionFactorMatchType.NameAmbiguous) {
       rowWarnings.push({
         type: 'efNotFound',
         line: lineNum,
@@ -188,7 +190,7 @@ export async function importEmissionSourcesFromFile(
           foundUnit: translateUnit(c.foundUnit),
         })),
       })
-    } else if (ef.matchType !== 'exact') {
+    } else if (ef.matchType !== EmissionFactorMatchType.Exact) {
       rowWarnings.push({
         type: 'efNotFound',
         line: lineNum,
@@ -237,25 +239,19 @@ export async function importEmissionSourcesFromFile(
       studyId,
       subPost: row.subPost,
       name: row.name,
-      ...(emissionFactorId ? { emissionFactorId } : {}),
-      ...(row.value !== undefined ? { value: row.value } : {}),
-      ...(row.type ? { type: row.type } : {}),
-      ...(row.caracterisation ? { caracterisation: row.caracterisation } : {}),
-      ...(row.source ? { source: row.source } : {}),
-      ...(row.reliability !== undefined ? { reliability: row.reliability } : {}),
-      ...(row.technicalRepresentativeness !== undefined
-        ? { technicalRepresentativeness: row.technicalRepresentativeness }
-        : {}),
-      ...(row.geographicRepresentativeness !== undefined
-        ? { geographicRepresentativeness: row.geographicRepresentativeness }
-        : {}),
-      ...(row.temporalRepresentativeness !== undefined
-        ? { temporalRepresentativeness: row.temporalRepresentativeness }
-        : {}),
-      ...(row.completeness !== undefined ? { completeness: row.completeness } : {}),
-      ...(row.comment ? { comment: row.comment } : {}),
-      ...(row.feComment ? { feComment: row.feComment } : {}),
-      ...(validated !== undefined ? { validated } : {}),
+      emissionFactorId,
+      value: row.value,
+      type: row.type,
+      caracterisation: row.caracterisation,
+      source: row.source,
+      reliability: row.reliability,
+      technicalRepresentativeness: row.technicalRepresentativeness,
+      geographicRepresentativeness: row.geographicRepresentativeness,
+      temporalRepresentativeness: row.temporalRepresentativeness,
+      completeness: row.completeness,
+      comment: row.comment,
+      feComment: row.feComment,
+      validated,
     })
   }
 
@@ -523,7 +519,7 @@ function buildEmissionSourceRow(
   return row
 }
 
-async function buildEmissionSourcesDataRows(
+async function buildAllEmissionSourcesRows(
   study: FullStudy,
   locale: LocaleType,
   post?: Post,
@@ -581,7 +577,7 @@ export async function exportEmissionSourcesToCSV(studyId: string, post?: Post): 
   }
 
   const locale = await getLocale()
-  const dataRows = await buildEmissionSourcesDataRows(study, locale, post)
+  const dataRows = await buildAllEmissionSourcesRows(study, locale, post)
   return buildEmissionSourcesCSV(locale, dataRows)
 }
 
@@ -593,6 +589,6 @@ export async function exportEmissionSourcesToExcel(studyId: string, post?: Post)
   }
 
   const locale = await getLocale()
-  const dataRows = await buildEmissionSourcesDataRows(study, locale, post)
+  const dataRows = await buildAllEmissionSourcesRows(study, locale, post)
   return buildEmissionSourcesSheet(study, locale, dataRows)
 }

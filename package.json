@@ -13,6 +13,7 @@
   "scripts": {
     "dev": "turbo run dev",
     "dev:bc": "turbo run dev --filter=bilan-carbone",
+    "dev:mip": "turbo run dev --filter=mip",
     "build": "turbo run build",
     "test": "turbo run test",
     "start": "turbo run start",

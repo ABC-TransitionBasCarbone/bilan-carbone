@@ -345,7 +345,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   if (!environment) {
     return null
   }
-  const downloadEmissionSources = async (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
+  const downloadEmissionSourcesCsv = async (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
     preventClose(e)
     if (hasAccessToEmissionSourcesDownload) {
       const csvContent = await exportEmissionSourcesToCSV(study.id)
@@ -414,7 +414,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
           >
             {study.emissionSources.length > 0 && (
               <MenuItem>
-                <div className="grow justify-start" onClick={downloadEmissionSources}>
+                <div className="grow justify-start" onClick={downloadEmissionSourcesCsv}>
                   {tStudyExport('download')}
                 </div>
               </MenuItem>
