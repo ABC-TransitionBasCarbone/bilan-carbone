@@ -1,6 +1,6 @@
 import type { FullStudy } from '@/db/study'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
-import { hasDeprecationPeriod } from '@/utils/study'
+import { hasDeprecationPeriod, isCASSubPost } from '@/utils/study'
 import type { StudyEmissionSource } from '@abc-transitionbascarbone/db-common'
 import {
   ControlMode,
@@ -27,6 +27,7 @@ type EmissionSourceFormType = Pick<
   | 'depreciationPeriod'
   | 'hectare'
   | 'duration'
+  | 'source'
 >
 
 const getEmissionSourceCompletion = (
@@ -58,7 +59,7 @@ const getEmissionSourceCompletion = (
     }
   }
 
-  if (emissionSource.subPost === SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas && unit === 'HA_YEAR') {
+  if (isCASSubPost(emissionSource.subPost, unit)) {
     mandatoryFields.push('hectare')
     mandatoryFields.push('duration')
   }

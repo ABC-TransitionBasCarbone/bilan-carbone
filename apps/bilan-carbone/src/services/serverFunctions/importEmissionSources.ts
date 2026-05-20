@@ -17,7 +17,7 @@ import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { EmissionFactorMatchType, findEmissionFactorMatch } from '@/utils/findEmissionFactor.utils'
 import { getImportEmissionSourcesTranslations, parseEmissionSourcesFile } from '@/utils/importEmissionSources.utils'
 import { getPost } from '@/utils/post'
-import { formatEmissionValueForExport } from '@/utils/study'
+import { formatEmissionValueForExport, isCASSubPost } from '@/utils/study'
 import { getBcTranslations, getSingularForm } from '@/utils/translation.utils'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import { EmissionSourceCaracterisation, EmissionSourceType, SubPost } from '@abc-transitionbascarbone/db-common/enums'
@@ -54,6 +54,8 @@ type ValidImportRow = {
   feComment?: string
   depreciationPeriod?: number
   constructionYear?: Date
+  hectare?: number // Generated for CAS, not in import file
+  duration?: number // Generated for CAS, not in import file
   validated?: boolean
 }
 
@@ -214,6 +216,8 @@ export async function importEmissionSourcesFromFile(
 
     let validated = row.validated
     if (validated) {
+      const isCASSubPost =
+        row.subPost === SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas && efUnit === 'HA_YEAR'
       const canValidate = canBeValidated(
         {
           name: row.name,
@@ -224,8 +228,9 @@ export async function importEmissionSourcesFromFile(
           subPost: row.subPost,
           constructionYear: null,
           depreciationPeriod: null,
-          hectare: null,
-          duration: null,
+          source: row.source ?? null,
+          hectare: isCASSubPost ? (row.value ?? null) : null,
+          duration: isCASSubPost && row.value != null ? 1 : null,
         },
         study,
         { unit: efUnit },
@@ -256,6 +261,8 @@ export async function importEmissionSourcesFromFile(
       feComment: row.feComment,
       depreciationPeriod: row.depreciationPeriod,
       constructionYear: row.constructionYear !== undefined ? new Date(row.constructionYear, 0, 1) : undefined,
+      hectare: isCASSubPost(row.subPost, efUnit) ? (row.value ?? undefined) : undefined,
+      duration: isCASSubPost(row.subPost, efUnit) && row.value != null ? 1 : undefined,
       validated,
     })
   }

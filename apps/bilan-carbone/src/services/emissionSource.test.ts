@@ -1,7 +1,7 @@
 import type { FullStudy } from '@/db/study'
 import { EmissionFactorBase, Environment, Import, SubPost, Unit } from '@abc-transitionbascarbone/db-common/enums'
 import { expect } from '@jest/globals'
-import { getEmissionResults } from './emissionSource'
+import { canBeValidated, getEmissionResults } from './emissionSource'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('./file', () => ({ download: jest.fn() }))
@@ -74,6 +74,43 @@ const defaultEmissionSource = {
   createdAt: new Date(),
   updatedAt: new Date(),
 } satisfies FullStudy['emissionSources'][0]
+
+const baseStudy = {
+  exports: null,
+  emissionFactorVersions: [],
+  organizationVersion: { environment: Environment.BC },
+} as unknown as FullStudy
+
+describe('canBeValidated', () => {
+  const casEmissionSource = {
+    name: 'CAS source',
+    type: null,
+    value: 140,
+    emissionFactorId: 'ef-id',
+    caracterisation: null,
+    subPost: SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas,
+    constructionYear: null,
+    depreciationPeriod: null,
+    source: 'Ma source',
+    hectare: null,
+    duration: null,
+  }
+
+  it('should return false when hectare and duration are null for a CAS source', () => {
+    expect(canBeValidated(casEmissionSource, baseStudy, { unit: Unit.HA_YEAR }, Environment.BC)).toBe(false)
+  })
+
+  it('should return true when value is provided in place of hectare/duration (import scenario)', () => {
+    expect(
+      canBeValidated(
+        { ...casEmissionSource, hectare: casEmissionSource.value, duration: 1 },
+        baseStudy,
+        { unit: Unit.HA_YEAR },
+        Environment.BC,
+      ),
+    ).toBe(true)
+  })
+})
 
 describe('emissionSource Service', () => {
   describe('getEmissionResults', () => {
