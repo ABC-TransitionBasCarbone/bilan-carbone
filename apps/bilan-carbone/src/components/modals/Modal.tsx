@@ -51,7 +51,10 @@ const Modal = ({ className, label, open, onClose, title, children, actions, big 
         </IconButton>
       </div>
 
-      <div className={classNames(styles.content, 'flex-col grow mb1')} id={`${label}-modal-description`}>
+      <div
+        className={classNames(styles.content, 'flex-col grow mb1', { [styles.bigContent]: big })}
+        id={`${label}-modal-description`}
+      >
         {children}
       </div>
 

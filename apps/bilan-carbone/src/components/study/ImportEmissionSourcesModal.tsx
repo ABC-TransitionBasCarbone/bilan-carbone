@@ -35,9 +35,9 @@ const ImportEmissionSourcesModal = ({ studyId, post, siteId, open, onClose, onSu
     <Table size="small" stickyHeader>
       <TableHead>
         <TableRow>
-          <TableCell />
-          <TableCell />
-          <TableCell />
+          <TableCell className={styles.groupEmpty} />
+          <TableCell className={styles.groupEmpty} />
+          <TableCell className={styles.groupEmpty} />
           <TableCell colSpan={3} className={styles.groupHeader}>
             {t('groupActivityData')}
           </TableCell>
@@ -45,7 +45,7 @@ const ImportEmissionSourcesModal = ({ studyId, post, siteId, open, onClose, onSu
             {t('groupEmissionFactor')}
           </TableCell>
         </TableRow>
-        <TableRow>
+        <TableRow className={styles.subHeader}>
           <TableCell>{t('columnSite')}</TableCell>
           <TableCell>{t('columnPost')}</TableCell>
           <TableCell>{t('columnSubPost')}</TableCell>

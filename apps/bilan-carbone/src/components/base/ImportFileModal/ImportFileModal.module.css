@@ -23,22 +23,32 @@
   display: none;
 }
 
-.errorList {
-  padding: 0 1rem 0 0;
-  margin: 0.5rem -1rem 0 0;
+.errorAlert {
   max-height: 15rem;
   overflow-y: auto;
 }
 
+.errorList {
+  padding: 0;
+  margin: 0;
+}
+
 .tableWrapper {
-  overflow-y: auto;
+  overflow: auto;
   flex: 1;
+  min-height: 0;
   border: 1px solid var(--mui-palette-grey-200);
   border-radius: 0.25rem;
 }
 
 .cellName {
   max-width: 16rem;
+}
+
+.groupHeader,
+.groupEmpty {
+  top: 0 !important;
+  background-color: white !important;
 }
 
 .groupHeader {
@@ -50,6 +60,11 @@
 
 .groupFirstCell {
   border-left: 2px solid var(--mui-palette-divider) !important;
+}
+
+.subHeader th {
+  top: 2.125rem !important;
+  background-color: white !important;
 }
 
 .warningArrow {

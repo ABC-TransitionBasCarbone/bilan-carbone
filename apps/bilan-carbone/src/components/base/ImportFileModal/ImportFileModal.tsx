@@ -203,7 +203,7 @@ const ImportFileModal = <TPreviewRow,>({
             : undefined
       }
     >
-      <div className="flex-col gapped15">
+      <div className={classNames('flex-col gapped15', { 'grow overflow-hidden': isPreview && !isWarning })}>
         {!isPreview && (
           <div className="flex align-center">
             <LoadingButton
@@ -217,7 +217,7 @@ const ImportFileModal = <TPreviewRow,>({
           </div>
         )}
 
-        {isPreview && (
+        {isPreview && !isWarning && (
           <>
             <Typography variant="body2" color="textSecondary">
               {previewTitle(previewRows.length)} — {t('previewWarning')}
