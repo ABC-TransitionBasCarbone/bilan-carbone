@@ -109,7 +109,7 @@ describe('findEmissionFactorMatch', () => {
         versionIds,
       )
 
-      expect(result).toMatchObject({ matchType: 'nameOnly', id: 'ef-1' })
+      expect(result).toMatchObject({ matchType: 'nameAndUnitOnly', id: 'ef-1' })
     })
 
     it('returns nameOnly when single match and no value provided', async () => {
@@ -126,7 +126,7 @@ describe('findEmissionFactorMatch', () => {
         versionIds,
       )
 
-      expect(result).toMatchObject({ matchType: 'nameOnly', id: 'ef-1' })
+      expect(result).toMatchObject({ matchType: 'nameAndUnitOnly', id: 'ef-1' })
     })
 
     it('returns nameAmbiguous when multiple matches by name+unit and value matches none', async () => {
