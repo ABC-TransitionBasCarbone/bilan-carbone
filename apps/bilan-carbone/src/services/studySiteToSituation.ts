@@ -21,7 +21,13 @@ export interface ClicksonStudySiteFields {
   // renovationYear?: number | null
 }
 
-export interface StudySiteFields extends CutStudySiteFields, ClicksonStudySiteFields {}
+export interface TiltStudySiteFields {
+  volunteerNumber?: number
+  beneficiaryNumber?: number
+  etp?: number
+}
+
+export interface StudySiteFields extends CutStudySiteFields, ClicksonStudySiteFields, TiltStudySiteFields {}
 
 export type StudySiteToSituationFn = (studySite: StudySiteFields | undefined) => Situation<string>
 

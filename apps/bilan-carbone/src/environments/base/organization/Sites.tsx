@@ -177,6 +177,7 @@ const Sites = <T extends SitesCommand>({
     return columns
     // TODO: This component needs refactoring because the form is not properly defined
     // Without removing some deps the form refreshes on every keystroke
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [t, form, caUnit, onDuplicate])
 
   return (

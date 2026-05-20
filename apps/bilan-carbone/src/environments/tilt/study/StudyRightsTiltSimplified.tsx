@@ -24,6 +24,7 @@ import {
   ChangeStudySiteTiltSimplifiedCommand,
   ChangeStudySiteTiltSimplifiedValidation,
 } from '@/services/serverFunctions/study.command'
+import { TiltStudySiteFields } from '@/services/studySiteToSituation'
 import { HelpIcon } from '@abc-transitionbascarbone/components'
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
@@ -55,7 +56,7 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
   const tStructure = useTranslations('study.structure')
   const tGlossary = useTranslations('study.new.glossary')
   const { callServerFunction } = useServerFunction()
-  const { siteId: studySite, studySiteId, setSite } = useStudySite(study)
+  const { siteId: studySite, studySiteId } = useStudySite(study)
   const [glossary, setGlossary] = useState('')
   const [siteData, setSiteData] = useState<TiltCustomDataFields | undefined>()
   const [loading, setLoading] = useState(true)
@@ -125,7 +126,7 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
   }, [form, study.id, studySite, studySiteId])
 
   const handleStudySiteUpdate = useCallback(
-    async (data: ChangeStudySiteTiltSimplifiedCommand) => {
+    async (data: ChangeStudySiteTiltSimplifiedCommand & TiltStudySiteFields) => {
       await callServerFunction(() => changeStudySiteTiltSimplified(studySiteId, data))
     },
     [callServerFunction, studySiteId],
@@ -165,9 +166,7 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
     <>
       <Block
         title={tRights('general')}
-        rightComponent={
-          <SelectStudySite sites={study.sites} defaultValue={studySite} setSite={setSite} showAllOption={false} />
-        }
+        rightComponent={<SelectStudySite sites={study.sites} defaultValue="all" siteSelectionDisabled />}
       >
         {loading ? (
           <CircularProgress variant="indeterminate" color="primary" size={100} className="flex mt2" />
@@ -198,6 +197,7 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
                   user={user}
                   userRoleOnStudy={userRoleOnStudy}
                   organizationVersion={organizationVersion}
+                  handleSpecificChange={handleStudySiteUpdate}
                 />
               )}
               <FormAutocomplete

@@ -44,9 +44,10 @@ interface Props {
   userRoleOnStudy: StudyRole
   caUnit: SiteCAUnit
   user: UserSession
+  handleSpecificChange?: () => void
 }
 
-const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user }: Props) => {
+const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user, handleSpecificChange }: Props) => {
   const tGlossary = useTranslations('study.new.glossary')
   const t = useTranslations('study.perimeter')
   const [open, setOpen] = useState(false)
@@ -80,26 +81,26 @@ const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user 
           const existingStudySite = study.sites.find((studySite) => studySite.site.id === site.id)
           return existingStudySite
             ? {
-                ...existingStudySite,
-                id: site.id,
-                name: existingStudySite.site.name,
-                selected: true,
-                postalCode: existingStudySite.site.postalCode ?? '',
-                city: existingStudySite.site.city ?? '',
-                establishmentYear: existingStudySite.site?.establishmentYear
-                  ? parseInt(existingStudySite.site?.establishmentYear)
-                  : 0,
-              }
+              ...existingStudySite,
+              id: site.id,
+              name: existingStudySite.site.name,
+              selected: true,
+              postalCode: existingStudySite.site.postalCode ?? '',
+              city: existingStudySite.site.city ?? '',
+              establishmentYear: existingStudySite.site?.establishmentYear
+                ? parseInt(existingStudySite.site?.establishmentYear)
+                : 0,
+            }
             : {
-                ...site,
-                selected: false,
-                postalCode: site.postalCode ?? '',
-                city: site.city ?? '',
-                cncId: site.cncId ?? '',
-                establishmentYear: site?.establishmentYear ? parseInt(site?.establishmentYear) : 0,
-                academy: site.academy ?? '',
-                establishmentType: site.establishmentType ?? undefined,
-              }
+              ...site,
+              selected: false,
+              postalCode: site.postalCode ?? '',
+              city: site.city ?? '',
+              cncId: site.cncId ?? '',
+              establishmentYear: site?.establishmentYear ? parseInt(site?.establishmentYear) : 0,
+              academy: site.academy ?? '',
+              establishmentType: site.establishmentType ?? undefined,
+            }
         })
         .sort((a, b) => a.name.localeCompare(b.name))
         .sort((a, b) => (b.selected ? 1 : 0) - (a.selected ? 1 : 0)) || [],
@@ -127,6 +128,7 @@ const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user 
   }, [siteList, isEditing, caUnit, siteForm])
 
   const onSitesSubmit = async () => {
+    // TODO Chloé : c'est ici qu'il faut modifier
     const deletedSites = sites.filter((site) => {
       return !site.selected && study.sites.some((studySite) => studySite.site.id === site.id)
     })
@@ -198,12 +200,12 @@ const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user 
                 isEditing
                   ? sites
                   : study.sites.map((site) => ({
-                      ...site,
-                      name: site.site.name,
-                      selected: false,
-                      postalCode: site.site.postalCode ?? '',
-                      city: site.site.city ?? '',
-                    }))
+                    ...site,
+                    name: site.site.name,
+                    selected: false,
+                    postalCode: site.site.postalCode ?? '',
+                    city: site.site.city ?? '',
+                  }))
               }
               form={siteForm as unknown as UseFormReturn<SitesCommand>}
               withSelection
@@ -219,6 +221,7 @@ const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user 
               withSelection
               onDuplicate={!isEditing && hasEditionRole ? setDuplicatingSiteId : undefined}
               organizationId={isFromStudyOrganizationOrParent ? study.organizationVersion.id : undefined}
+              {...(handleSpecificChange && { handleSpecificChange })}
             />
           ),
         }}

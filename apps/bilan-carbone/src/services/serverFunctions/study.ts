@@ -85,7 +85,7 @@ import {
   UserWithAccounts,
 } from '@/db/user'
 import { getLocale } from '@/i18n/locale'
-import { StudySiteFields, studySiteToSituation } from '@/services/studySiteToSituation'
+import { StudySiteFields, studySiteToSituation, TiltStudySiteFields } from '@/services/studySiteToSituation'
 import { AccountWithUser } from '@/types/account.types'
 import { getNestedValue, groupBy } from '@/utils/array'
 import { mapCncToStudySite } from '@/utils/cnc'
@@ -2497,7 +2497,10 @@ export const changeStudyEstablishment = async (studySiteId: string, data: Change
     await updateSituationWithStudySiteData(studySiteId, data, informations.user.environment)
   })
 
-export const changeStudySiteTiltSimplified = async (studySiteId: string, data: ChangeStudySiteTiltSimplifiedCommand) =>
+export const changeStudySiteTiltSimplified = async (
+  studySiteId: string,
+  data: ChangeStudySiteTiltSimplifiedCommand & TiltStudySiteFields,
+) =>
   withServerResponse('changeStudySiteTiltSimplified', async () => {
     // this function only updates situation for now not the study site because we don't have the fields
     const studySites = await getStudiesSitesFromIds([studySiteId])
@@ -2518,7 +2521,20 @@ export const changeStudySiteTiltSimplified = async (studySiteId: string, data: C
     if (!studySites[0].situation) {
       await saveSituationInDB(study.id, studySiteId, {}, {}, '')
     }
-    await updateSituationWithCustomData(studySiteId, data, informations.user.environment, study.simplified)
+
+    const { postalCode, structure, volunteerNumber, beneficiaryNumber, etp } = data
+
+    await updateSituationWithCustomData(
+      studySiteId,
+      { postalCode, structure },
+      informations.user.environment,
+      study.simplified,
+    )
+    await updateSituationWithStudySiteData(
+      studySiteId,
+      { volunteerNumber, beneficiaryNumber, etp },
+      informations.user.environment,
+    )
   })
 
 export const addEngagementAction = async ({ studyId, sites, ...command }: AddEngagementActionCommand) =>
