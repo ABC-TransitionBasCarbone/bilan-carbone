@@ -386,7 +386,7 @@ const EmissionSourceForm = ({
             {selectedFactor.unit === Unit.CUSTOM ? selectedFactor.customUnit : getUnitLabel(selectedFactor.unit || '')}{' '}
             {feQualityRating && (
               <>
-                - {tQuality('name')} {tQuality(feQualityRating.toString())}
+                - {t('form.quality')} {tQuality(feQualityRating.toString())}
                 {editSpecificQuality ? (
                   <HideIcon
                     className={classNames(styles.editFEQualityButton, 'ml-4')}

@@ -9,12 +9,7 @@ import {
   Unit,
 } from '@abc-transitionbascarbone/db-common/enums'
 import { parseExcelSheet } from './excel.utils'
-import {
-  buildLabelMap,
-  mapLabelFromTranslations,
-  mapQualityLabelFromTranslations,
-  mapUnitLabelFromTranslationsWithList,
-} from './import.utils'
+import { buildLabelMap, mapLabelFromTranslations, mapUnitLabelFromTranslationsWithList } from './import.utils'
 import { parseNumericValue } from './number'
 import { getBcTranslations } from './translation.utils'
 
@@ -179,7 +174,9 @@ export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): Pa
     for (const field of qualityKeys) {
       const label = col(field)
       if (label) {
-        const mapped = mapQualityLabelFromTranslations(label, locale)
+        const mapped = mapLabelFromTranslations(label, locale, (bc) =>
+          Object.fromEntries(Object.entries(bc.quality).map(([k, v]) => [v.toLowerCase(), Number(k)])),
+        )
         if (mapped === null) {
           rowErrors.push({ key: 'invalidQuality', value: label })
         } else {

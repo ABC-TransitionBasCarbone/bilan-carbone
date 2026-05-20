@@ -41,6 +41,7 @@ interface Props {
 const StudyPostsPage = ({ post, study, userRole, emissionSources, siteId, studySiteId, setGlossary }: Props) => {
   const [showInfography, setShowInfography] = useState(false)
   const tQuality = useTranslations('quality')
+  const tCommon = useTranslations('common')
   const tUnit = useTranslations('units')
   const tImport = useTranslations('study.importEmissionSourcesModal')
   const locale = useLocale()
@@ -97,8 +98,8 @@ const StudyPostsPage = ({ post, study, userRole, emissionSources, siteId, studyS
   )
 
   const fuse = useMemo(
-    () => new Fuse(emissionSources, getEmissionSourcesFuseOptions(tQuality, tUnit, locale)),
-    [emissionSources, locale, tQuality, tUnit],
+    () => new Fuse(emissionSources, getEmissionSourcesFuseOptions(tQuality, tCommon, tUnit, locale)),
+    [emissionSources, locale, tQuality, tCommon, tUnit],
   )
 
   const filteredSources = useMemo(() => {

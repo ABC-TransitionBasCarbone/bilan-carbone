@@ -5,12 +5,7 @@ import { COLUMNS, ImportError, ParsedRow, ParseResult } from '@/types/importEmis
 import { EmissionFactorBase, Environment, SubPost, Unit } from '@abc-transitionbascarbone/db-common/enums'
 import { ManualEmissionFactorUnitList } from './emissionFactors'
 import { parseExcelSheet } from './excel.utils'
-import {
-  buildLabelMap,
-  mapLabelFromTranslations,
-  mapQualityLabelFromTranslations,
-  mapUnitLabelFromTranslationsWithList,
-} from './import.utils'
+import { buildLabelMap, mapLabelFromTranslations, mapUnitLabelFromTranslationsWithList } from './import.utils'
 import { getExampleRowPrefixes } from './importEmissionSources.utils'
 import { parseNumericValue } from './number'
 import { getBcTranslations, getSingularForm } from './translation.utils'
@@ -217,7 +212,9 @@ export function parseImportFile(buffer: Buffer, locale: LocaleType, environment:
 
     const parseQuality = (col: keyof typeof COLUMNS, errorKey: string) => {
       const raw = row[COLUMNS[col]]
-      const value = mapQualityLabelFromTranslations(raw, locale)
+      const value = mapLabelFromTranslations(raw, locale, (bc) =>
+        Object.fromEntries(Object.entries(bc.quality).map(([k, v]) => [v.toLowerCase(), Number(k)])),
+      )
       if (value === null) {
         rowErrors.push({ key: errorKey, value: String(raw ?? '') })
       }

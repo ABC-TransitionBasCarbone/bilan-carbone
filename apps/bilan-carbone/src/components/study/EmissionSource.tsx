@@ -287,7 +287,7 @@ const EmissionSource = ({
                   className={classNames(styles.resultQuality, styles.resultText)}
                   data-testid="emission-source-quality"
                 >
-                  {tQuality('name')}{' '}
+                  {t('form.quality')} :{' '}
                   {tQuality(
                     getQualitativeUncertaintyFromSquaredStandardDeviation(
                       emissionResults.squaredStandardDeviation,

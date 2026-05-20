@@ -2,19 +2,6 @@ import { LocaleType } from '@/i18n/config'
 import { Unit } from '@abc-transitionbascarbone/db-common/enums'
 import { BcTranslations, extractAllForms, getBcTranslations } from './translation.utils'
 
-export function mapQualityLabelFromTranslations(label: string | undefined | null, locale: LocaleType): number | null {
-  if (!label) {
-    return null
-  }
-  const bc = getBcTranslations(locale)
-  const map = Object.fromEntries(
-    Object.entries(bc.quality)
-      .filter(([k]) => /^[1-5]$/.test(k))
-      .map(([k, v]) => [v.toLowerCase(), Number(k)]),
-  )
-  return map[String(label).trim().toLowerCase()] ?? null
-}
-
 export function mapLabelFromTranslations<T>(
   label: string | undefined | null,
   locale: LocaleType,
