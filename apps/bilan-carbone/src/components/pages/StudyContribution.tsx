@@ -52,6 +52,7 @@ const StudyContributionPage = ({ study, userRole }: Props) => {
                 studyId={study.id}
                 userRole={userRole}
                 siteId={siteId}
+                hasEmissionSources={study.emissionSources.length > 0}
                 onSuccess={() => showSuccessToast(tImport('success'))}
               />
             ),

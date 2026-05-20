@@ -46,6 +46,8 @@ export type ParsedEmissionSourceRow = {
   comment: string | undefined
   feComment: string | undefined
   validated: boolean | undefined
+  depreciationPeriod: number | undefined
+  constructionYear: number | undefined
 }
 
 export const SOURCE_IMPORT_COLUMNS = {

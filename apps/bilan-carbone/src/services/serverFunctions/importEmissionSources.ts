@@ -51,6 +51,10 @@ type ValidImportRow = {
   temporalRepresentativeness?: number
   completeness?: number
   comment?: string
+  feComment?: string
+  depreciationPeriod?: number
+  constructionYear?: Date
+  validated?: boolean
 }
 
 const TOTAL_EXCEL_COLS = Object.keys(SOURCE_IMPORT_COLUMNS).length
@@ -250,6 +254,8 @@ export async function importEmissionSourcesFromFile(
       completeness: row.completeness,
       comment: row.comment,
       feComment: row.feComment,
+      depreciationPeriod: row.depreciationPeriod,
+      constructionYear: row.constructionYear !== undefined ? new Date(row.constructionYear, 0, 1) : undefined,
       validated,
     })
   }

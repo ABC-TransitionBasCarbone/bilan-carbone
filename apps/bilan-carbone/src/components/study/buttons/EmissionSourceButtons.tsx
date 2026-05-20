@@ -16,16 +16,18 @@ import UploadFileIcon from '@mui/icons-material/UploadFile'
 import { ButtonGroup, Menu, MenuItem } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useState, useTransition } from 'react'
+import styles from './EmissionSourceButtons.module.css'
 
 interface Props {
   studyId: string
   userRole: StudyRole
   post?: Post
   siteId?: string
+  hasEmissionSources: boolean
   onSuccess: () => void
 }
 
-const EmissionSourceButtons = ({ studyId, userRole, post, siteId, onSuccess }: Props) => {
+const EmissionSourceButtons = ({ studyId, userRole, post, siteId, hasEmissionSources, onSuccess }: Props) => {
   const tCommon = useTranslations('common')
   const tImport = useTranslations('study.importEmissionSourcesModal')
   const [importOpen, setImportOpen] = useState(false)
@@ -61,6 +63,7 @@ const EmissionSourceButtons = ({ studyId, userRole, post, siteId, onSuccess }: P
         {canEdit && (
           <LoadingButton
             isLarge
+            className={styles.button}
             variant="contained"
             startIcon={<UploadFileIcon />}
             onClick={() => setImportOpen(true)}
@@ -71,10 +74,12 @@ const EmissionSourceButtons = ({ studyId, userRole, post, siteId, onSuccess }: P
         )}
         <LoadingButton
           isLarge
+          className={styles.button}
           variant="outlined"
           startIcon={<FileDownloadIcon />}
           endIcon={<KeyboardArrowDownIcon />}
           loading={isExporting}
+          disabled={!hasEmissionSources}
           onClick={(e) => setMenuAnchor(e.currentTarget)}
         >
           {tCommon('action.export')}

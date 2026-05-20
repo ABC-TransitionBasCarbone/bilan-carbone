@@ -122,6 +122,7 @@ const StudyPostsBlock = ({
                 userRole={userRole}
                 post={post}
                 siteId={siteId}
+                hasEmissionSources={study.emissionSources.length > 0}
                 onSuccess={onImportSuccess}
               />
             ),

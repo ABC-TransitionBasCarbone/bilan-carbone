@@ -211,6 +211,10 @@ export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): Pa
       comment: col('comment') || undefined,
       feComment: col('feComment') || undefined,
       validated: col('validation') ? col('validation') === getBcTranslations(locale).study.export.yes : undefined,
+      depreciationPeriod: col('depreciationPeriod')
+        ? (parseNumericValue(col('depreciationPeriod')) ?? undefined)
+        : undefined,
+      constructionYear: col('constructionYear') ? (parseNumericValue(col('constructionYear')) ?? undefined) : undefined,
       reliability: parsedQualities.reliability,
       technicalRepresentativeness: parsedQualities.technicalRepresentativeness,
       geographicRepresentativeness: parsedQualities.geographicRepresentativeness,

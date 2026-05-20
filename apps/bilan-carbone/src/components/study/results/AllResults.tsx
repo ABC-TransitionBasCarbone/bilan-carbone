@@ -412,20 +412,16 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
               </div>
             )}
           >
-            {study.emissionSources.length > 0 && (
-              <MenuItem>
-                <div className="grow justify-start" onClick={downloadEmissionSourcesCsv}>
-                  {tStudyExport('download')}
-                </div>
-              </MenuItem>
-            )}
-            {study.emissionSources.length > 0 && (
-              <MenuItem>
-                <div className="grow justify-start" onClick={downloadEmissionSourcesExcel}>
-                  {tStudyExport('downloadExcel')}
-                </div>
-              </MenuItem>
-            )}
+            <MenuItem disabled={study.emissionSources.length === 0}>
+              <div className="grow justify-start" onClick={downloadEmissionSourcesCsv}>
+                {tStudyExport('download')}
+              </div>
+            </MenuItem>
+            <MenuItem disabled={study.emissionSources.length === 0}>
+              <div className="grow justify-start" onClick={downloadEmissionSourcesExcel}>
+                {tStudyExport('downloadExcel')}
+              </div>
+            </MenuItem>
             <MenuItem>
               <div className="grow justify-start" onClick={downloadResults}>
                 {t('downloadResults')}
