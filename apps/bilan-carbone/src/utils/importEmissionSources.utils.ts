@@ -63,6 +63,39 @@ type ParseEmissionSourcesResult =
   | { success: true; rows: ParsedEmissionSourceRow[] }
   | { success: false; errors: ImportError[] }
 
+function parseOptionalLabel<T>(
+  label: string,
+  errorKey: string,
+  rowErrors: Omit<ImportError, 'line'>[],
+  map: (label: string) => T | null,
+): T | undefined {
+  if (!label) {
+    return undefined
+  }
+  const mapped = map(label)
+  if (mapped === null) {
+    rowErrors.push({ key: errorKey, value: label })
+    return undefined
+  }
+  return mapped
+}
+
+function parseOptionalNumber(
+  raw: string,
+  errorKey: string,
+  rowErrors: Omit<ImportError, 'line'>[],
+): number | undefined {
+  if (!raw) {
+    return undefined
+  }
+  const parsed = parseNumericValue(raw)
+  if (parsed === null) {
+    rowErrors.push({ key: errorKey, value: raw })
+    return undefined
+  }
+  return parsed
+}
+
 export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): ParseEmissionSourcesResult {
   const sheetResult = parseExcelSheet(buffer, {
     headerRowIndex: 4,
@@ -113,75 +146,28 @@ export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): Pa
       rowErrors.push({ key: 'missingEmissionFactorName' })
     }
 
-    const rawEfValueStr = col('emissionFactorValue')
-    let emissionFactorValue: number | undefined = undefined
-    if (rawEfValueStr) {
-      const parsed = parseNumericValue(rawEfValueStr)
-      if (parsed === null) {
-        rowErrors.push({ key: 'invalidEmissionFactorValue', value: rawEfValueStr })
-      } else {
-        emissionFactorValue = parsed
-      }
-    }
-
-    const emissionFactorUnitLabel = col('emissionFactorUnit')
-    let emissionFactorUnit: Unit | undefined = undefined
-    if (emissionFactorUnitLabel) {
-      const mapped = mapUnitLabelFromTranslationsWithList(emissionFactorUnitLabel, locale, Object.values(Unit))
-      if (!mapped) {
-        rowErrors.push({ key: 'invalidUnit', value: emissionFactorUnitLabel })
-      } else {
-        emissionFactorUnit = mapped
-      }
-    }
-
+    const emissionFactorValue = parseOptionalNumber(col('emissionFactorValue'), 'invalidEmissionFactorValue', rowErrors)
+    const emissionFactorUnit = parseOptionalLabel(col('emissionFactorUnit'), 'invalidUnit', rowErrors, (label) =>
+      mapUnitLabelFromTranslationsWithList(label, locale, Object.values(Unit)),
+    )
     const unit = col('unit') || undefined
-
-    const rawValueStr = col('value')
-    let value: number | undefined = undefined
-    if (rawValueStr) {
-      const parsed = parseNumericValue(rawValueStr)
-      if (parsed === null) {
-        rowErrors.push({ key: 'invalidValue', value: rawValueStr })
-      } else {
-        value = parsed
-      }
-    }
-
-    const typeLabel = col('type')
-    let type: EmissionSourceType | undefined = undefined
-    if (typeLabel) {
-      const mapped = mapTypeLabelFromTranslations(typeLabel, locale)
-      if (!mapped) {
-        rowErrors.push({ key: 'invalidType', value: typeLabel })
-      } else {
-        type = mapped
-      }
-    }
-
-    const caracterisationLabel = col('caracterisation')
-    let caracterisation: EmissionSourceCaracterisation | undefined = undefined
-    if (caracterisationLabel) {
-      const mapped = mapCaracterisationLabelFromTranslations(caracterisationLabel, locale)
-      if (!mapped) {
-        rowErrors.push({ key: 'invalidCaracterisation', value: caracterisationLabel })
-      } else {
-        caracterisation = mapped
-      }
-    }
+    const value = parseOptionalNumber(col('value'), 'invalidValue', rowErrors)
+    const type = parseOptionalLabel(col('type'), 'invalidType', rowErrors, (label) =>
+      mapTypeLabelFromTranslations(label, locale),
+    )
+    const caracterisation = parseOptionalLabel(col('caracterisation'), 'invalidCaracterisation', rowErrors, (label) =>
+      mapCaracterisationLabelFromTranslations(label, locale),
+    )
 
     const parsedQualities: Partial<Record<(typeof qualityKeys)[number], number>> = {}
     for (const field of qualityKeys) {
-      const label = col(field)
-      if (label) {
-        const mapped = mapLabelFromTranslations(label, locale, (bc) =>
+      const mapped = parseOptionalLabel(col(field), 'invalidQuality', rowErrors, (label) =>
+        mapLabelFromTranslations(label, locale, (bc) =>
           Object.fromEntries(Object.entries(bc.quality).map(([k, v]) => [v.toLowerCase(), Number(k)])),
-        )
-        if (mapped === null) {
-          rowErrors.push({ key: 'invalidQuality', value: label })
-        } else {
-          parsedQualities[field] = mapped
-        }
+        ),
+      )
+      if (mapped !== undefined) {
+        parsedQualities[field] = mapped
       }
     }
 
