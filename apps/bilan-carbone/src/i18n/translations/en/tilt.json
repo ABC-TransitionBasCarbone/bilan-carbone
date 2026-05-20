@@ -97,8 +97,10 @@
       "export": "Export my results"
     },
     "results": {
-      "feedback": "Give us your feedback ! ✨",
-      "title": "Give us your feedback ! ✨"
+      "feedback": {
+        "button": "Give us your feedback ! ✨",
+        "title": "Give us your feedback ! ✨"
+      }
     },
     "structure": {
       "'Club de loisirs'": "Leisure Club",
