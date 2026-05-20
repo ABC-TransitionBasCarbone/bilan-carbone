@@ -1,10 +1,12 @@
 'use client'
 
+import { UserSessionProps } from '@/components/hoc/withAuth'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import type { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import type { ExportRule } from '@abc-transitionbascarbone/db-common'
 import { Environment, SiteCAUnit } from '@abc-transitionbascarbone/db-common/enums'
+import { UserSession } from 'next-auth'
 import dynamic from 'next/dynamic'
 
 const AllResults = dynamic(() => import('@/components/study/results/AllResults'))
@@ -17,9 +19,10 @@ interface Props {
   emissionFactorsWithParts: EmissionFactorWithParts[]
   validatedOnly: boolean
   caUnit?: SiteCAUnit
+  user: UserSession
 }
 
-const DynamicAllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caUnit }: Props) => {
+const DynamicAllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caUnit, user }: Props) => {
   return (
     <DynamicComponent
       environmentComponents={{
@@ -44,6 +47,7 @@ const DynamicAllResults = ({ study, rules, emissionFactorsWithParts, validatedOn
             emissionFactorsWithParts={emissionFactorsWithParts}
             validatedOnly={validatedOnly}
             caUnit={caUnit}
+            user={user}
             chartOrder={{
               bar: 0,
               pie: 1,

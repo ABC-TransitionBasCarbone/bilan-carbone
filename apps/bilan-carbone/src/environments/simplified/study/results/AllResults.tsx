@@ -31,6 +31,7 @@ import CarbonIntensitiesCut from '@/environments/cut/study/results/CarbonIntensi
 import { customRich } from '@/i18n/customRich'
 import {
   hasAccessToAdvancedEmissionAnalysis,
+  hasAccessToFeedbackButton,
   hasAccessToPDFExport,
   hasAccessToResultsRatioTab,
   hasAccessToSimplifiedEmissionAnalysis,
@@ -41,6 +42,9 @@ import type { BaseResultsByPost } from '@/services/posts'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import type { BaseResultsBySite } from '@/types/study.types'
 import { a11yProps, ChartType, defaultChartOrder, tabsLabels } from './utils'
+import { FeedbackModal } from './FeedbackModal'
+import Modal from '@/components/modals/Modal'
+import { UserSession } from 'next-auth'
 
 interface Props {
   setSite: (site: string) => void
@@ -55,6 +59,7 @@ interface Props {
   chartOrder?: Record<ChartType, number>
   emissionFactorsWithPart?: EmissionFactorWithParts[]
   showSubLevel?: boolean
+  user?: UserSession
 }
 
 const AllResults = ({
@@ -69,10 +74,11 @@ const AllResults = ({
   chartOrder = defaultChartOrder,
   emissionFactorsWithPart = [],
   showSubLevel = false,
+  user,
 }: Props) => {
   const [tabValue, setTabValue] = useState(0)
   const [pdfLoading, setPdfLoading] = useState(false)
-
+  const [openFeedback, setOpenFeedback] = useState(false)
   const { environment } = useAppEnvironmentStore()
 
   const handleChange = (_event: SyntheticEvent, newValue: number) => {
@@ -128,6 +134,15 @@ const AllResults = ({
       descriptionColor="primary"
       rightComponent={
         <div className="flex gapped align-center">
+          {environment && hasAccessToFeedbackButton(environment) &&
+            <Button
+              variant="outlined"
+              color="primary"
+              size="large"
+              onClick={() => setOpenFeedback(true)}>
+              {tResults('feedback.button')}
+            </Button>
+          }
           <Button
             variant="contained"
             color="primary"
@@ -155,74 +170,82 @@ const AllResults = ({
           >
             {tExportButton('export')}
           </Button>
-          {environment && hasAccessToPDFExport(environment) && (
-            <LoadingButton
-              variant="outlined"
-              color="primary"
-              size="large"
-              endIcon={<PictureAsPdfIcon />}
-              onClick={handlePDFDownload}
-              loading={pdfLoading}
-            >
-              {pdfLoading ? tResults('downloadingPDF') : tResults('downloadPDF')}
-            </LoadingButton>
-          )}
+          {
+            environment && hasAccessToPDFExport(environment) && (
+              <LoadingButton
+                variant="outlined"
+                color="primary"
+                size="large"
+                endIcon={<PictureAsPdfIcon />}
+                onClick={handlePDFDownload}
+                loading={pdfLoading}
+              >
+                {pdfLoading ? tResults('downloadingPDF') : tResults('downloadPDF')}
+              </LoadingButton>
+            )
+          }
           <SelectStudySite sites={study.sites} defaultValue={studySite} setSite={setSite} />
-        </div>
+        </div >
       }
     >
       {/* Default info text for environments that show it */}
-      {environment && showResultsInfoText(environment) && (
-        <>
-          <Box component="section" className="mb2">
-            <Typography>
-              {customRich(tResults, 'simplifiedFeedback', {
-                questionnaire: (children) => (
-                  <Link href={process.env.NEXT_PUBLIC_CUT_FEEDBACK_TYPEFORM_LINK ?? ''} target="_blank">
-                    <strong>{children}</strong>
-                  </Link>
-                ),
-              })}
-            </Typography>
-          </Box>
-          <Box component="section">
-            <Typography className={classNames(styles.infoContainer)}>
-              {customRich(tResults, 'infoWithLinks', {
-                formation: (children) => (
-                  <Link href={process.env.NEXT_PUBLIC_FORMATION_URL ?? ''} target="_blank">
-                    <strong>{children}</strong>
-                  </Link>
-                ),
-                email: (children) => (
-                  <Link href={`mailto:${process.env.NEXT_PUBLIC_CUT_SUPPORT_EMAIL ?? ''}`} target="_blank">
-                    <strong>{children}</strong>
-                  </Link>
-                ),
-                prestataire: (children) => (
-                  <Link href={process.env.NEXT_PUBLIC_ACTORS_URL ?? ''} target="_blank">
-                    <strong>{children}</strong>
-                  </Link>
-                ),
-              })}
-            </Typography>
-          </Box>
-        </>
-      )}
+      {
+        environment && showResultsInfoText(environment) && (
+          <>
+            <Box component="section" className="mb2">
+              <Typography>
+                {customRich(tResults, 'simplifiedFeedback', {
+                  questionnaire: (children) => (
+                    <Link href={process.env.NEXT_PUBLIC_CUT_FEEDBACK_TYPEFORM_LINK ?? ''} target="_blank">
+                      <strong>{children}</strong>
+                    </Link>
+                  ),
+                })}
+              </Typography>
+            </Box>
+            <Box component="section">
+              <Typography className={classNames(styles.infoContainer)}>
+                {customRich(tResults, 'infoWithLinks', {
+                  formation: (children) => (
+                    <Link href={process.env.NEXT_PUBLIC_FORMATION_URL ?? ''} target="_blank">
+                      <strong>{children}</strong>
+                    </Link>
+                  ),
+                  email: (children) => (
+                    <Link href={`mailto:${process.env.NEXT_PUBLIC_CUT_SUPPORT_EMAIL ?? ''}`} target="_blank">
+                      <strong>{children}</strong>
+                    </Link>
+                  ),
+                  prestataire: (children) => (
+                    <Link href={process.env.NEXT_PUBLIC_ACTORS_URL ?? ''} target="_blank">
+                      <strong>{children}</strong>
+                    </Link>
+                  ),
+                })}
+              </Typography>
+            </Box>
+          </>
+        )
+      }
 
       {/* Emissions analysis for environments that have it */}
-      {environment && hasAccessToSimplifiedEmissionAnalysis(environment) ? (
-        <EmissionsAnalysisClickson study={study} studySite={studySite} totalValue={totalValue} />
-      ) : null}
+      {
+        environment && hasAccessToSimplifiedEmissionAnalysis(environment) ? (
+          <EmissionsAnalysisClickson study={study} studySite={studySite} totalValue={totalValue} />
+        ) : null
+      }
 
-      {environment && hasAccessToAdvancedEmissionAnalysis(environment) ? (
-        <CarbonIntensities
-          study={study}
-          studySite={studySite}
-          withDep={totalValue}
-          withoutDep={totalValueWithoutDep}
-          caUnit={caUnit}
-        />
-      ) : null}
+      {
+        environment && hasAccessToAdvancedEmissionAnalysis(environment) ? (
+          <CarbonIntensities
+            study={study}
+            studySite={studySite}
+            withDep={totalValue}
+            withoutDep={totalValueWithoutDep}
+            caUnit={caUnit}
+          />
+        ) : null
+      }
 
       {/* Results tabs */}
       <Box component="section" sx={{ marginTop: '1rem' }}>
@@ -269,6 +292,16 @@ const AllResults = ({
               <CarbonIntensitiesCut study={study} studySite={studySite} withDepValue={totalValue} />
             </TabPanel>
           ) : null}
+          {environment && hasAccessToFeedbackButton(environment) && user &&
+            <Modal
+              open={openFeedback}
+              label="formation-evaluation"
+              title={tResults('feedback.title')}
+              onClose={() => setOpenFeedback(false)}
+            >
+              <FeedbackModal user={user} organizationName="test" />
+            </Modal>
+          }
         </Box>
       </Box>
     </Block>
