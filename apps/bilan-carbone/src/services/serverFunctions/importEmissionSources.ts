@@ -21,6 +21,7 @@ import { formatEmissionValueForExport, isCASSubPost } from '@/utils/study'
 import { getBcTranslations, getSingularForm } from '@/utils/translation.utils'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import { EmissionSourceCaracterisation, EmissionSourceType, SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { yearToDate } from '@abc-transitionbascarbone/utils'
 import xlsx from 'node-xlsx'
 import { canBeValidated, getEmissionSourceEmission } from '../emissionSource'
 import { getAuthenticatedAccount } from '../permissions/account.permissions'
@@ -226,8 +227,8 @@ export async function importEmissionSourcesFromFile(
           emissionFactorId: emissionFactorId ?? null,
           caracterisation: row.caracterisation ?? null,
           subPost: row.subPost,
-          constructionYear: null,
-          depreciationPeriod: null,
+          constructionYear: row.constructionYear !== undefined ? yearToDate(row.constructionYear) : null,
+          depreciationPeriod: row.depreciationPeriod ?? null,
           source: row.source ?? null,
           hectare: isCASSubPost ? (row.value ?? null) : null,
           duration: isCASSubPost && row.value != null ? 1 : null,
@@ -260,7 +261,8 @@ export async function importEmissionSourcesFromFile(
       comment: row.comment,
       feComment: row.feComment,
       depreciationPeriod: row.depreciationPeriod,
-      constructionYear: row.constructionYear !== undefined ? new Date(row.constructionYear, 0, 1) : undefined,
+      constructionYear:
+        row.constructionYear !== undefined ? (yearToDate(row.constructionYear) ?? undefined) : undefined,
       hectare: isCASSubPost(row.subPost, efUnit) ? (row.value ?? undefined) : undefined,
       duration: isCASSubPost(row.subPost, efUnit) && row.value != null ? 1 : undefined,
       validated,

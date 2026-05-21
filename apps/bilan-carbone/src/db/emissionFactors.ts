@@ -598,12 +598,16 @@ export const getEmissionFactorWithoutQuality = async (organizationId: string) =>
     },
   })
 
+const getOrganizationAndImportedVersionsFilters = (organizationId: string, versionIds: string[]) => [
+  { organizationId: null, versions: { some: { importVersionId: { in: versionIds } } } },
+  { organizationId, importedFrom: Import.Manual },
+]
+
 export const findEmissionFactorByImportedIdForMatch = (id: string, organizationId: string, versionIds: string[]) =>
   prismaClient.emissionFactor.findFirst({
     where: {
       importedId: id,
-      OR: [{ organizationId: null }, { organizationId }],
-      versions: { some: { importVersionId: { in: versionIds } } },
+      OR: getOrganizationAndImportedVersionsFilters(organizationId, versionIds),
     },
     select: {
       id: true,
@@ -623,12 +627,9 @@ export const findEmissionFactorsByNameAndUnit = (
 ) =>
   prismaClient.emissionFactor.findMany({
     where: {
-      AND: [
-        { OR: [{ organizationId: null }, { organizationId }] },
-        unit ? { OR: [{ unit }, { customUnit: unit }] } : {},
-      ],
+      ...(unit ? { AND: [{ OR: [{ unit }, { customUnit: unit }] }] } : {}),
       metaData: { some: { language: locale, title: { equals: title, mode: Prisma.QueryMode.insensitive } } },
-      versions: { some: { importVersionId: { in: versionIds } } },
+      OR: getOrganizationAndImportedVersionsFilters(organizationId, versionIds),
     },
     select: {
       id: true,
@@ -642,8 +643,8 @@ export const findEmissionFactorsByNameAndUnit = (
 export const findEmissionFactorsByUnit = (organizationId: string, unit: Unit, versionIds: string[]) =>
   prismaClient.emissionFactor.findMany({
     where: {
-      AND: [{ OR: [{ organizationId: null }, { organizationId }] }, { OR: [{ unit }, { customUnit: unit }] }],
-      versions: { some: { importVersionId: { in: versionIds } } },
+      AND: [{ OR: [{ unit }, { customUnit: unit }] }],
+      OR: getOrganizationAndImportedVersionsFilters(organizationId, versionIds),
     },
     select: {
       id: true,

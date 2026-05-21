@@ -7,6 +7,7 @@ export const MONTH = 30 * DAY
 export const YEAR = 12 * MONTH
 
 export const TIME_IN_MS = 1000
+const YEAR_REGEX = /^\d{4}$/
 
 export const formatDateFr = (date: Date) => {
   return date.toLocaleDateString('fr-FR', {
@@ -18,4 +19,11 @@ export const formatDateFr = (date: Date) => {
 
 export const getYearFromDateStr = (date: string) => {
   return new Date(date).getUTCFullYear()
+}
+
+export function yearToDate(year: number): Date | null {
+  if (!YEAR_REGEX.test(String(year))) {
+    return null
+  }
+  return new Date(year, 0, 1)
 }
