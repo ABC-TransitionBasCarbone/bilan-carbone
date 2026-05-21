@@ -69,7 +69,7 @@ export async function findEmissionFactorMatch(
     }
   }
 
-  const epsilon = 1e-9
+  const epsilon = 1e-2
 
   const byNameAndUnit = await findEmissionFactorsByNameAndUnit(
     title?.trim() ?? '',
