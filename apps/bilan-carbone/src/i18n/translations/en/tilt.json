@@ -67,6 +67,7 @@
       "postalCode": "What is the postal code of the non-profit organisation?",
       "sites": "Which sites are concerned by the footprint and what are their characteristics?",
       "structure": "Which type of structure does your non-profit organisation most closely resemble?",
+      "structureOther": "Please specify the type of structure",
       "dates": "What period does your carbon footprint cover?",
       "numberOfTTEmployee": "How many days per week are teleworked by your employees?",
       "numberOfTTVolunteer": "How many days per week are teleworked by your volunteers?",
@@ -110,7 +111,8 @@
       "'Association humanitaire'": "Humanitarian Association",
       "'Autres structures sociales et solidaires'": "Other Social and Solidarity Organizations",
       "'Association de défense de l'environnement'": "Environmental Protection Association",
-      "'Association d'enseignement ou de formation'": "Educational or Training Association"
+      "'Association d'enseignement ou de formation'": "Educational or Training Association",
+      "'Autre'": "Other"
     }
   },
   "emissionFactors": {
