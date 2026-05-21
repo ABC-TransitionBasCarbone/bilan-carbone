@@ -6,6 +6,7 @@ import { StudyRole } from '@abc-transitionbascarbone/db-common/enums'
 import { useToast } from '@abc-transitionbascarbone/ui'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
+import { useRouter } from 'next/navigation'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import AllPostsInfographyContainer from '../study/infography/AllPostsInfographyContainer'
@@ -24,6 +25,7 @@ const StudyContributionPage = ({ study, userRole }: Props) => {
   const tImport = useTranslations('study.importEmissionSourcesModal')
   const { siteId, studySiteId, setSite } = useStudySite(study)
   const { showSuccessToast } = useToast()
+  const router = useRouter()
 
   return (
     <>
@@ -53,7 +55,10 @@ const StudyContributionPage = ({ study, userRole }: Props) => {
                 userRole={userRole}
                 siteId={siteId}
                 hasEmissionSources={study.emissionSources.length > 0}
-                onSuccess={() => showSuccessToast(tImport('success'))}
+                onSuccess={() => {
+                  showSuccessToast(tImport('success'))
+                  router.refresh()
+                }}
               />
             ),
           },
