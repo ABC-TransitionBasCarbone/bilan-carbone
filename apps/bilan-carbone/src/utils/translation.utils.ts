@@ -6,7 +6,7 @@ import frBc from '@/i18n/translations/fr/bc.json'
  * Extracts the =0 singular form from an ICU plural string, e.g. "{count, plural, =0 {Litre} ...}" → "Litre"
  */
 export function getSingularForm(value: string): string {
-  const match = value.match(/=0\s*\{([^}]+)\}/)
+  const match = value.match(/=0\s*\{([^}]+)\}/) ?? value.match(/\bone\s*\{([^}]+)\}/)
   return match ? match[1].trim() : value.trim()
 }
 
