@@ -61,6 +61,14 @@ type ValidImportRow = {
 }
 
 const TOTAL_EXCEL_COLS = Object.keys(SOURCE_IMPORT_COLUMNS).length
+const CAS_DEFAULT_DURATION = 20
+
+function getHectareAndDuration(isCAS: boolean, value: number | undefined) {
+  if (!isCAS || value == null) {
+    return { hectare: null, duration: null }
+  }
+  return { hectare: value / CAS_DEFAULT_DURATION, duration: CAS_DEFAULT_DURATION }
+}
 
 async function getStudyOrThrow(studyId: string, account: AccountWithUser): Promise<FullStudy> {
   const study = await getStudyById(studyId, account.organizationVersionId)
@@ -230,8 +238,7 @@ export async function importEmissionSourcesFromFile(
           constructionYear: row.constructionYear !== undefined ? yearToDate(row.constructionYear) : null,
           depreciationPeriod: row.depreciationPeriod ?? null,
           source: row.source ?? null,
-          hectare: isCASSubPost ? (row.value ?? null) : null,
-          duration: isCASSubPost && row.value != null ? 1 : null,
+          ...getHectareAndDuration(isCASSubPost, row.value),
         },
         study,
         { unit: efUnit },
@@ -243,6 +250,7 @@ export async function importEmissionSourcesFromFile(
       }
     }
 
+    const casFields = getHectareAndDuration(isCASSubPost(row.subPost, efUnit), row.value)
     validRows.push({
       studySiteId,
       studyId,
@@ -263,8 +271,8 @@ export async function importEmissionSourcesFromFile(
       depreciationPeriod: row.depreciationPeriod,
       constructionYear:
         row.constructionYear !== undefined ? (yearToDate(row.constructionYear) ?? undefined) : undefined,
-      hectare: isCASSubPost(row.subPost, efUnit) ? (row.value ?? undefined) : undefined,
-      duration: isCASSubPost(row.subPost, efUnit) && row.value != null ? 1 : undefined,
+      hectare: casFields.hectare ?? undefined,
+      duration: casFields.duration ?? undefined,
       validated,
     })
   }
