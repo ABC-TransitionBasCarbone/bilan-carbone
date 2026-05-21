@@ -1623,7 +1623,17 @@
       "previewTitle": "{count, plural, one {# facteur détecté} other {# facteurs détectés}}",
       "previewPostsAndSubPosts": "Poste(s) et sous-poste(s)",
       "templateFileName": "modele-facteurs-emission.xlsx",
-      "allPostsAndSubPosts": "Tous les postes/tous les sous-postes"
+      "allPostsAndSubPosts": "Tous les postes/tous les sous-postes",
+      "sheetName": "Facteurs d'émission",
+      "templatePostsHeader": "Poste(s) et sous-poste(s) * [format: Poste : SousPoste1 | SousPoste2 || Poste2 : SousPoste3] ou \"Tous les postes/tous les sous-postes\"",
+      "templateBaseHeader": "Approche scope 2 (requis si sous poste Électricité inclus) : Location-based ou Market-based",
+      "examplePrefix": "Exemple :",
+      "exampleName": "Abricot, dénoyauté, cru",
+      "exampleAttribute": "Le fret est considéré comme ayant eu lieu à température ambiante",
+      "exampleSource": "Agribalyse® 3.1",
+      "exampleLocation": "France continentale",
+      "examplePostsAndSubPosts": "Intrants biens et matières : Nourriture, repas, boissons | Autres intrants",
+      "examplePostsAndSubPostsComment": "Exemple simple (un poste, plusieurs sous-postes)"
     },
     "post": {
       "total": "Total",

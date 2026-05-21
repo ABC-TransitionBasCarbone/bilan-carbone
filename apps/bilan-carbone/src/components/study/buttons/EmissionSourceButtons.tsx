@@ -2,6 +2,7 @@
 
 import LoadingButton from '@/components/base/LoadingButton'
 import ImportEmissionSourcesModal from '@/components/study/ImportEmissionSourcesModal'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { download } from '@/services/file'
 import { Post } from '@/services/posts'
 import {
@@ -33,22 +34,25 @@ const EmissionSourceButtons = ({ studyId, userRole, post, siteId, hasEmissionSou
   const [importOpen, setImportOpen] = useState(false)
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null)
   const [isExporting, startExportTransition] = useTransition()
+  const { callServerFunction } = useServerFunction()
 
   const canEdit = hasEditionRights(userRole)
 
   const handleExportExcel = () => {
     setMenuAnchor(null)
     startExportTransition(async () => {
-      const arrayBuffer = await exportEmissionSourcesToExcel(studyId, post)
-      download([arrayBuffer], tImport('exportFileName'), 'xlsx')
+      await callServerFunction(() => exportEmissionSourcesToExcel(studyId, post), {
+        onSuccess: (arrayBuffer) => download([arrayBuffer], tImport('exportFileName'), 'xlsx'),
+      })
     })
   }
 
   const handleExportCsv = () => {
     setMenuAnchor(null)
     startExportTransition(async () => {
-      const csvContent = await exportEmissionSourcesToCSV(studyId, post)
-      download(['\ufeff', csvContent], tImport('exportFileNameCsv'), 'csv')
+      await callServerFunction(() => exportEmissionSourcesToCSV(studyId, post), {
+        onSuccess: (csvContent) => download(['\ufeff', csvContent], tImport('exportFileNameCsv'), 'csv'),
+      })
     })
   }
 
