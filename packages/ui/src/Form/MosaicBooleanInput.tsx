@@ -5,20 +5,20 @@ type Props = {
   icons?: string
   description?: string
   value?: boolean
-  isInactive?: boolean
+  disabled?: boolean
   onChange: (value: boolean) => void
   index: number
 }
 
-export default function MosaicBooleanInput({ title, icons, description, value, isInactive, onChange, index }: Props) {
-  const status = isInactive ? 'inactive' : value ? 'checked' : 'unchecked'
+export default function MosaicBooleanInput({ title, icons, description, value, disabled, onChange, index }: Props) {
+  const status = disabled ? 'inactive' : value ? 'checked' : 'unchecked'
 
   return (
     <div className={styles.wrapper}>
       <label className={`${styles.label} ${styles[status]}`} htmlFor={`mosaic-boolean-${index}`}>
         <input
           type="checkbox"
-          disabled={isInactive}
+          disabled={disabled}
           className={styles.hiddenInput}
           onClick={() => onChange(!value)}
           id={`mosaic-boolean-${index}`}

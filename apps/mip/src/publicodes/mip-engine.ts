@@ -1,4 +1,3 @@
-// import rules from '@abc-transitionbascarbone/publicodes-mip'
 import Engine from 'publicodes'
 
 let instance: Engine | null = null

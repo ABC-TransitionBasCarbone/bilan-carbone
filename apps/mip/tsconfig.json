@@ -11,7 +11,6 @@
       "@abc-transitionbascarbone/css": ["../../packages/css/index.ts"],
       "@abc-transitionbascarbone/survey": ["../../packages/survey/src/index.ts"],
       "@abc-transitionbascarbone/publicodes": ["../../packages/publicodes/*"]
-      // "@abc-transitionbascarbone/publicodes-mip": ["../../packages/publicodes-packages/publicodes-mip"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

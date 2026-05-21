@@ -34,63 +34,13 @@ export const AVAILABLE_LOCALES: LocaleType[] = [
 ]
 // LocaleType already includes all supported locale codes as string values
 
-// export const AVAILABLE_MODELS = ['cut', 'clickson', 'tilt', 'mip'] as const
 export const AVAILABLE_MODELS = ['cut', 'clickson', 'tilt'] as const
 export type Model = (typeof AVAILABLE_MODELS)[number]
 
 const MODEL_PACKAGES: Record<Model, string> = {
-  cut:
-    process.env.NODE_ENV === 'production'
-      ? '@abc-transitionbascarbone/publicodes-count/publicodes-build/publicodes-count.model.json'
-      : url
-          .pathToFileURL(
-            path.resolve(
-              path.join(
-                __dirname,
-                '../../publicodes-packages/publicodes-count/publicodes-build/publicodes-count.model.json',
-              ),
-            ),
-          )
-          .toString(),
-  clickson:
-    process.env.NODE_ENV === 'production'
-      ? '@abc-transitionbascarbone/publicodes-clickson/publicodes-build/publicodes-clickson.model.json'
-      : url
-          .pathToFileURL(
-            path.resolve(
-              path.join(
-                __dirname,
-                '../../publicodes-packages/publicodes-clickson/publicodes-build/publicodes-clickson.model.json',
-              ),
-            ),
-          )
-          .toString(),
-  tilt:
-    process.env.NODE_ENV === 'production'
-      ? '@abc-transitionbascarbone/publicodes-tilt/publicodes-build/publicodes-tilt.model.json'
-      : url
-          .pathToFileURL(
-            path.resolve(
-              path.join(
-                __dirname,
-                '../../publicodes-packages/publicodes-tilt/publicodes-build/publicodes-tilt.model.json',
-              ),
-            ),
-          )
-          .toString(),
-  // mip:
-  //   process.env.NODE_ENV === 'production'
-  //     ? '@abc-transitionbascarbone/publicodes-mip/publicodes-build/publicodes-mip.model.json'
-  //     : url
-  //         .pathToFileURL(
-  //           path.resolve(
-  //             path.join(
-  //               __dirname,
-  //               '../../publicodes-packages/publicodes-mip/publicodes-build/publicodes-mip.model.json',
-  //             ),
-  //           ),
-  //         )
-  //         .toString(),
+  cut: '@abc-transitionbascarbone/publicodes-count/publicodes-build/publicodes-count.model.json',
+  clickson: '@abc-transitionbascarbone/publicodes-clickson/publicodes-build/publicodes-clickson.model.json',
+  tilt: '@abc-transitionbascarbone/publicodes-tilt/publicodes-build/publicodes-tilt.model.json',
 }
 
 // Helper to load publicodes rules from a given model

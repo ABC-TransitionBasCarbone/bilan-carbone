@@ -130,19 +130,26 @@ export function buildPageBuilder(engine: Engine) {
   }
 }
 
-export type MipQuestionType = 'notQuestion' | 'mosaic' | 'choices' | 'boolean' | 'number'
+export enum MipQuestionType {
+  NotQuestion = 'notQuestion',
+  Mosaic = 'mosaic',
+  Choices = 'choices',
+  Boolean = 'boolean',
+  Number = 'number',
+}
 
 const booleanSecureTypes = ['présent', 'propriétaire']
 
 export function getQuestionType(engine: Engine, ruleName: string): MipQuestionType {
   const rules = engine.getParsedRules()
   const rule = rules[ruleName]
-  if (!rule) return 'notQuestion'
+
+  if (!rule) return MipQuestionType.NotQuestion
 
   const raw = rule.rawNode as any
 
-  if (!raw?.question) return 'notQuestion'
-  if (raw?.mosaique) return 'mosaic'
+  if (!raw?.question) return MipQuestionType.NotQuestion
+  if (raw?.mosaique) return MipQuestionType.Mosaic
 
   const evaluation = engine.evaluate(ruleName)
 
@@ -151,10 +158,11 @@ export function getQuestionType(engine: Engine, ruleName: string): MipQuestionTy
     booleanSecureTypes.some((key) => ruleName.includes(key))
   ) {
     const unePossibilite = raw?.formule ? raw.formule['une possibilité'] : raw?.['une possibilité']
-    return unePossibilite ? 'choices' : 'boolean'
+
+    return unePossibilite ? MipQuestionType.Choices : MipQuestionType.Boolean
   }
 
-  return 'number'
+  return MipQuestionType.Number
 }
 
 export function patchFormElement<RuleName extends string>(

@@ -20,15 +20,6 @@ export default getRequestConfig(async () => {
     console.log(`No publicodes rules translation file for locale: ${locale}`)
   }
 
-  // let publicodesLayout = {}
-  // try {
-  //   publicodesLayout = (
-  //     await import(`../../../../packages/i18n/translations/${locale}/publicodes/mip-layout.json`)
-  //   ).default
-  // } catch {
-  //   console.log(`No publicodes layout translation file for locale: ${locale}`)
-  // }
-
   return {
     locale,
     messages: { ...commonMessages, ...mipMessages, ...publicodesRules },

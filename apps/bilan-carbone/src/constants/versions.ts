@@ -1,6 +1,6 @@
-import clicksonPackage from '../../../../packages/publicodes-packages/publicodes-clickson/package.json'
-import countPackage from '../../../../packages/publicodes-packages/publicodes-count/package.json'
-import tiltPackage from '../../../../packages/publicodes-packages/publicodes-tilt/package.json'
+import clicksonPackage from '@abc-transitionbascarbone/publicodes-clickson/package.json'
+import countPackage from '@abc-transitionbascarbone/publicodes-count/package.json'
+import tiltPackage from '@abc-transitionbascarbone/publicodes-tilt/package.json'
 import mainPackage from '../../package.json'
 
 export const PUBLICODES_COUNT_VERSION = `${countPackage.name}@${countPackage.version}`
