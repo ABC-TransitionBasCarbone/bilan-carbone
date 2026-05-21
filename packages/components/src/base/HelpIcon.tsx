@@ -10,7 +10,7 @@ interface Props extends SvgIconProps {
   label: string
 }
 
-const HelpIcon = ({ className, onClick, label, ...props }: Props) => (
+export const HelpIcon = ({ className, onClick, label, ...props }: Props) => (
   <HelpOutlineIcon
     color="primary"
     className={classNames(styles.helpIcon, className)}
@@ -20,5 +20,3 @@ const HelpIcon = ({ className, onClick, label, ...props }: Props) => (
     {...props}
   />
 )
-
-export default HelpIcon

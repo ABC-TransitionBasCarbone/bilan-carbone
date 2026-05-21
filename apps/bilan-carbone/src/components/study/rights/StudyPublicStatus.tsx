@@ -9,7 +9,7 @@ import {
   ChangeStudyPublicStatusCommand,
   ChangeStudyPublicStatusCommandValidation,
 } from '@/services/serverFunctions/study.command'
-import HelpIcon from '@abc-transitionbascarbone/components/src/base/HelpIcon'
+import { HelpIcon } from '@abc-transitionbascarbone/components'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControlLabel, Radio } from '@mui/material'
 import { UserSession } from 'next-auth'

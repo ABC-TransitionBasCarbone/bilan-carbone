@@ -2,7 +2,7 @@
 
 import { getConfidenceInterval, getQualitativeUncertaintyFromSquaredStandardDeviation } from '@/services/uncertainty'
 import { formatConfidenceInterval, formatEmissionFromNumber } from '@/utils/study'
-import BaseTable from '@abc-transitionbascarbone/components/src/base/Table'
+import { Table as BaseTable } from '@abc-transitionbascarbone/components'
 import { StudyResultUnit } from '@abc-transitionbascarbone/db-common'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'

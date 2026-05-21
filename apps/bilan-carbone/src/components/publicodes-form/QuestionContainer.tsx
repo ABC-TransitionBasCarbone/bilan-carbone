@@ -1,4 +1,4 @@
-import HelpIcon from '@abc-transitionbascarbone/components/src/base/HelpIcon'
+import { HelpIcon } from '@abc-transitionbascarbone/components'
 import {
   StyledQuestionContainer,
   StyledQuestionContent,

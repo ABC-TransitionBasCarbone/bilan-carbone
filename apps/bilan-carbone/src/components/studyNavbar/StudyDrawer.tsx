@@ -1,5 +1,5 @@
 import { getStudyNavbarMenu } from '@/constants/navbar'
-import HelpIcon from '@abc-transitionbascarbone/components/src/base/HelpIcon'
+import { HelpIcon } from '@abc-transitionbascarbone/components'
 import { Environment, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
 import classNames from 'classnames'
 import { UUID } from 'crypto'

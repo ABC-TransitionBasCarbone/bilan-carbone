@@ -20,7 +20,7 @@ import {
   getTrajectoryTypeLabel,
 } from '@/utils/trajectory'
 import { getAverageAnnualRateFromTrajectory, getLatestPastStudy } from '@/utils/trajectory-shared.utils'
-import BaseTable from '@abc-transitionbascarbone/components/src/base/Table'
+import { Table as BaseTable } from '@abc-transitionbascarbone/components'
 import baseTableStyles from '@abc-transitionbascarbone/components/src/base/Table.module.css'
 import { SectenInfo } from '@abc-transitionbascarbone/db-common'
 import { TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'

@@ -9,7 +9,7 @@ import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
 import { withInfobulle } from '@/utils/post'
 import { postColors, STUDY_UNIT_VALUES } from '@/utils/study'
-import HelpIcon from '@abc-transitionbascarbone/components/src/base/HelpIcon'
+import { HelpIcon } from '@abc-transitionbascarbone/components'
 import {
   ControlMode,
   Environment,

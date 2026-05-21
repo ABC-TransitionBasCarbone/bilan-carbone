@@ -11,7 +11,7 @@ interface Props<TData> {
   paginations: number[]
 }
 
-const Pagination = <TData,>({ table, paginations }: Props<TData>) => {
+export const Pagination = <TData,>({ table, paginations }: Props<TData>) => {
   const t = useTranslations('table')
 
   const onPaginationChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -73,5 +73,3 @@ const Pagination = <TData,>({ table, paginations }: Props<TData>) => {
     </div>
   )
 }
-
-export default Pagination

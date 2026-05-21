@@ -1,4 +1,4 @@
-import BaseTable from '@abc-transitionbascarbone/components/src/base/Table'
+import { Table as BaseTable } from '@abc-transitionbascarbone/components'
 import { InputField, OnFieldChange } from '@abc-transitionbascarbone/publicodes/form'
 import { EvaluatedTableLayout } from '@abc-transitionbascarbone/publicodes/form/layouts'
 import { usePublicodesTranslation } from '@abc-transitionbascarbone/publicodes/hooks'

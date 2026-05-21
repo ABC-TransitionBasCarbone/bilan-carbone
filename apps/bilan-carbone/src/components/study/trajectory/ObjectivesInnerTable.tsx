@@ -3,7 +3,7 @@
 import { TableActionButton } from '@/components/base/TableActionButton'
 import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
 import { customRich } from '@/i18n/customRich'
-import BaseTable from '@abc-transitionbascarbone/components/src/base/Table'
+import { Table as BaseTable } from '@abc-transitionbascarbone/components'
 import { Link, Typography } from '@mui/material'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'

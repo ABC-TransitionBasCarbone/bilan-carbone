@@ -5,7 +5,7 @@ import { flexRender, Table as ReactTable, Row } from '@tanstack/react-table'
 import classNames from 'classnames'
 import { ReactNode } from 'react'
 import styles from './Table.module.css'
-import Pagination from './TablePagination'
+import { Pagination } from './TablePagination'
 
 interface Props<TData> {
   title?: string
@@ -20,7 +20,7 @@ interface Props<TData> {
   sortable?: boolean
 }
 
-const Table = <TData,>({
+export const Table = <TData,>({
   title,
   table,
   paginations,
@@ -111,5 +111,3 @@ const Table = <TData,>({
     </>
   )
 }
-
-export default Table

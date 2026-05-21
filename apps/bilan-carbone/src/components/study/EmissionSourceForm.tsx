@@ -19,7 +19,7 @@ import { EmissionSourcesStatus } from '@/types/emissionSource.types'
 import { emissionFactorDefautQualityStar, getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
 import { formatEmissionFromNumber, hasDeprecationPeriod, hasEditionRights, isCAS } from '@/utils/study'
-import HelpIcon from '@abc-transitionbascarbone/components/src/base/HelpIcon'
+import { HelpIcon } from '@abc-transitionbascarbone/components'
 import type { StudyTag } from '@abc-transitionbascarbone/db-common'
 import {
   EmissionSourceCaracterisation,

@@ -8,7 +8,7 @@ import { hasAccessToStudyResults, hasRoleOnStudy } from '@/services/permissions/
 import { getDetailedEmissionResults } from '@/services/study'
 import { formatNumber } from '@/utils/number'
 import { getDisplayedRoleOnStudy } from '@/utils/study'
-import HelpIcon from '@abc-transitionbascarbone/components/src/base/HelpIcon'
+import { HelpIcon } from '@abc-transitionbascarbone/components'
 import { Button } from '@abc-transitionbascarbone/ui'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import classNames from 'classnames'

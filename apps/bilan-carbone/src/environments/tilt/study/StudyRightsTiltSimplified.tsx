@@ -26,7 +26,7 @@ import {
   ChangeStudySiteTiltSimplifiedCommand,
   ChangeStudySiteTiltSimplifiedValidation,
 } from '@/services/serverFunctions/study.command'
-import HelpIcon from '@abc-transitionbascarbone/components/src/base/HelpIcon'
+import { HelpIcon } from '@abc-transitionbascarbone/components'
 import { SiteCAUnit, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CircularProgress, Typography } from '@mui/material'

@@ -1,7 +1,7 @@
 'use client'
 
 import { customRich } from '@/i18n/customRich'
-import HelpIcon from '@abc-transitionbascarbone/components/src/base/HelpIcon'
+import { HelpIcon } from '@abc-transitionbascarbone/components'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import Modal from './Modal'

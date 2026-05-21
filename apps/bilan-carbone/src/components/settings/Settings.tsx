@@ -3,7 +3,7 @@
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { updateUserSettings } from '@/services/serverFunctions/user'
 import { EditSettingsCommand, EditSettingsCommandValidation } from '@/services/serverFunctions/user.command'
-import HelpIcon from '@abc-transitionbascarbone/components/src/base/HelpIcon'
+import { HelpIcon } from '@abc-transitionbascarbone/components'
 import { UserApplicationSettings } from '@abc-transitionbascarbone/db-common'
 import { SiteCAUnit } from '@abc-transitionbascarbone/db-common/enums'
 import { zodResolver } from '@hookform/resolvers/zod'

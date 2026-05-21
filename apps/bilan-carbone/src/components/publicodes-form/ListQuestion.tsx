@@ -1,5 +1,5 @@
 import { usePublicodesForm } from '@/lib/publicodes/context'
-import BaseTable from '@abc-transitionbascarbone/components/src/base/Table'
+import { Table as BaseTable } from '@abc-transitionbascarbone/components'
 import { InputField, OnFieldChange } from '@abc-transitionbascarbone/publicodes/form'
 import { EvaluatedListLayout } from '@abc-transitionbascarbone/publicodes/form/layouts'
 import { usePublicodesTranslation } from '@abc-transitionbascarbone/publicodes/hooks'
