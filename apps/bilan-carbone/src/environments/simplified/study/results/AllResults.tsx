@@ -8,12 +8,10 @@ import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
 import { Box, Button, Tab, Tabs, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { SyntheticEvent, useMemo, useState } from 'react'
-
 import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
 import TabPanel from '@/components/tabPanel/tabPanel'
 import { downloadStudyResults } from '@/services/study'
 import { SiteCAUnit } from '@abc-transitionbascarbone/db-common/enums'
-
 import Block from '@/components/base/Block'
 import LoadingButton from '@/components/base/LoadingButton'
 import BarChart from '@/components/study/charts/BarChart'
@@ -23,8 +21,6 @@ import { generateStudySummaryPDF } from '@/services/serverFunctions/pdf'
 import classNames from 'classnames'
 import Link from 'next/link'
 import styles from './AllResults.module.css'
-
-import Modal from '@/components/modals/Modal'
 import CarbonIntensities from '@/components/study/results/consolidated/CarbonIntensities'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import EmissionsAnalysisClickson from '@/environments/clickson/study/results/consolidated/EmissionsAnalysisClickson'
@@ -43,8 +39,11 @@ import type { BaseResultsByPost } from '@/services/posts'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import type { BaseResultsBySite } from '@/types/study.types'
 import { UserSession } from 'next-auth'
-import { FeedbackModal } from './FeedbackModal'
 import { a11yProps, ChartType, defaultChartOrder, tabsLabels } from './utils'
+import dynamic from 'next/dynamic'
+
+
+const FeedbackModal = dynamic(() => import('./FeedbackModal'))
 
 interface Props {
   setSite: (site: string) => void
@@ -280,15 +279,13 @@ const AllResults = ({
               <CarbonIntensitiesCut study={study} studySite={studySite} withDepValue={totalValue} />
             </TabPanel>
           ) : null}
-          {environment && hasAccessToFeedbackButton(environment) && user && (
-            <Modal
+          {environment && hasAccessToFeedbackButton(environment) && user && openFeedback && (
+            <FeedbackModal
+              user={user}
+              organizationName={study.organizationVersion.organization.name}
               open={openFeedback}
-              label="formation-evaluation"
-              title={tResults('feedback.title')}
-              onClose={() => setOpenFeedback(false)}
-            >
-              <FeedbackModal user={user} organizationName="test" />
-            </Modal>
+              setOpen={setOpenFeedback}
+            />
           )}
         </Box>
       </Box>
