@@ -146,10 +146,11 @@ export const hasEditionRights = (userRoleOnStudy: StudyRole | null) => {
   return userRoleOnStudy && userRoleOnStudy !== StudyRole.Reader
 }
 
+export const isCASSubPost = (subPost: SubPost, unit: string | null | undefined) =>
+  subPost === SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas && unit === Unit.HA_YEAR
+
 export const isCAS = (emissionSource: FullStudy['emissionSources'][number]) =>
-  emissionSource.subPost === SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas &&
-  emissionSource.emissionFactor &&
-  emissionSource.emissionFactor.unit === Unit.HA_YEAR
+  isCASSubPost(emissionSource.subPost, emissionSource.emissionFactor?.unit)
 
 export const hasFabricationPart = (emissionFactor?: FullStudy['emissionSources'][number]['emissionFactor']) =>
   emissionFactor?.emissionFactorParts.some((part) => part.type === EmissionFactorPartType.Fabrication) || false

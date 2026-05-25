@@ -1,5 +1,6 @@
 {
   "common": {
+    "colon": " :",
     "error": "Une erreur est survenue. Si le problème persiste, contactez le support.",
     "yes": "Oui",
     "no": "Non",
@@ -14,6 +15,7 @@
     "xSubPosts": "{count} sous-postes",
     "xTags": "{count} tags",
     "none": "Aucun",
+    "unknown": "Inconnu",
     "subPosts": "Sous postes",
     "onDate": "le",
     "by": "par",

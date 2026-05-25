@@ -1,9 +1,12 @@
 'use client'
 
+import EmissionSourceButtons from '@/components/study/buttons/EmissionSourceButtons'
 import type { FullStudy } from '@/db/study'
 import { StudyRole } from '@abc-transitionbascarbone/db-common/enums'
+import { useToast } from '@abc-transitionbascarbone/ui'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
+import { useRouter } from 'next/navigation'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import AllPostsInfographyContainer from '../study/infography/AllPostsInfographyContainer'
@@ -16,10 +19,13 @@ interface Props {
   user: UserSession
 }
 
-const StudyContributionPage = ({ study }: Props) => {
+const StudyContributionPage = ({ study, userRole }: Props) => {
   const tNav = useTranslations('nav')
   const tStudyNav = useTranslations('study.navigation')
+  const tImport = useTranslations('study.importEmissionSourcesModal')
   const { siteId, studySiteId, setSite } = useStudySite(study)
+  const { showSuccessToast } = useToast()
+  const router = useRouter()
 
   return (
     <>
@@ -40,6 +46,23 @@ const StudyContributionPage = ({ study }: Props) => {
       <Block
         title={tStudyNav('dataEntry')}
         as="h2"
+        actions={[
+          {
+            actionType: 'node',
+            node: (
+              <EmissionSourceButtons
+                studyId={study.id}
+                userRole={userRole}
+                siteId={siteId}
+                hasEmissionSources={study.emissionSources.length > 0}
+                onSuccess={() => {
+                  showSuccessToast(tImport('success'))
+                  router.refresh()
+                }}
+              />
+            ),
+          },
+        ]}
         rightComponent={
           <SelectStudySite sites={study.sites} defaultValue={siteId} setSite={setSite} showAllOption={false} />
         }

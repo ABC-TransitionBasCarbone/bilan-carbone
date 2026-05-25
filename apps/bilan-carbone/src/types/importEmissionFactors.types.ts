@@ -1,10 +1,7 @@
+import { ImportError } from '@/types/import.types'
 import { EmissionFactorBase, SubPost, Unit } from '@abc-transitionbascarbone/db-common'
 
-export type ImportError = {
-  line: number
-  key: string
-  value?: string
-}
+export type { ImportError }
 
 export type ImportEmissionFactorsResult = { success: true; count: number } | { success: false; errors: ImportError[] }
 
@@ -12,6 +9,7 @@ export type PreviewRow = {
   name: string
   source: string
   unit: string
+  customUnit: string | null
   totalCo2: number
   postsAndSubPosts: string
 }

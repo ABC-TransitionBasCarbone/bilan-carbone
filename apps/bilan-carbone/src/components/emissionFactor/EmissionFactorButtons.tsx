@@ -1,13 +1,13 @@
 'use client'
 
+import { download } from '@/services/file'
 import { exportManualEmissionFactorsToFile } from '@/services/serverFunctions/importEmissionFactors'
-import { useToast } from '@abc-transitionbascarbone/ui'
+import { Button, useToast } from '@abc-transitionbascarbone/ui'
 import AddIcon from '@mui/icons-material/Add'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import FileDownloadIcon from '@mui/icons-material/FileDownload'
 import UploadFileIcon from '@mui/icons-material/UploadFile'
 import { ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material'
-import Button from '@mui/material/Button'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import { useState, useTransition } from 'react'
@@ -34,15 +34,7 @@ const EmissionFactorButtons = () => {
     setMenuAnchor(null)
     startExportTransition(async () => {
       const arrayBuffer = await exportManualEmissionFactorsToFile()
-      const blob = new Blob([arrayBuffer], {
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      })
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = t('exportFileName')
-      a.click()
-      URL.revokeObjectURL(url)
+      download([arrayBuffer], t('exportFileName'), 'xlsx')
     })
   }
 
@@ -50,7 +42,7 @@ const EmissionFactorButtons = () => {
     <>
       <Button
         data-testid="emission-factors-menu"
-        className={styles.trigger}
+        isLarge
         variant="outlined"
         endIcon={<ArrowDropDownIcon />}
         onClick={(e) => setMenuAnchor(e.currentTarget)}

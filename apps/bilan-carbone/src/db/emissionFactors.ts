@@ -588,3 +588,60 @@ export const getEmissionFactorWithoutQuality = async (organizationId: string) =>
       ],
     },
   })
+
+const getOrganizationAndImportedVersionsFilters = (organizationId: string, versionIds: string[]) => [
+  { organizationId: null, versions: { some: { importVersionId: { in: versionIds } } } },
+  { organizationId, importedFrom: Import.Manual },
+]
+
+export const findEmissionFactorByImportedIdForMatch = (id: string, organizationId: string, versionIds: string[]) =>
+  prismaClient.emissionFactor.findFirst({
+    where: {
+      importedId: id,
+      OR: getOrganizationAndImportedVersionsFilters(organizationId, versionIds),
+    },
+    select: {
+      id: true,
+      totalCo2: true,
+      unit: true,
+      customUnit: true,
+      metaData: { select: { title: true, language: true } },
+    },
+  })
+
+export const findEmissionFactorsByNameAndUnit = (
+  title: string,
+  locale: string,
+  organizationId: string,
+  unit: Unit | undefined,
+  versionIds: string[],
+) =>
+  prismaClient.emissionFactor.findMany({
+    where: {
+      ...(unit ? { AND: [{ OR: [{ unit }, { customUnit: unit }] }] } : {}),
+      metaData: { some: { language: locale, title: { equals: title, mode: Prisma.QueryMode.insensitive } } },
+      OR: getOrganizationAndImportedVersionsFilters(organizationId, versionIds),
+    },
+    select: {
+      id: true,
+      totalCo2: true,
+      unit: true,
+      customUnit: true,
+      metaData: { select: { title: true, language: true } },
+    },
+  })
+
+export const findEmissionFactorsByUnit = (organizationId: string, unit: Unit, versionIds: string[]) =>
+  prismaClient.emissionFactor.findMany({
+    where: {
+      AND: [{ OR: [{ unit }, { customUnit: unit }] }],
+      OR: getOrganizationAndImportedVersionsFilters(organizationId, versionIds),
+    },
+    select: {
+      id: true,
+      totalCo2: true,
+      unit: true,
+      customUnit: true,
+      metaData: { select: { title: true, language: true } },
+    },
+  })

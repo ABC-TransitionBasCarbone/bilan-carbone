@@ -37,6 +37,7 @@ export const mockedDbEmissionSource = {
   feGeographicRepresentativeness: null,
   feTemporalRepresentativeness: null,
   feCompleteness: null,
+  feComment: null,
   emissionSourceTags: [],
 } as StudyEmissionSource
 

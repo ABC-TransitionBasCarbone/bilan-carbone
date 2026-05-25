@@ -56,6 +56,12 @@ yarn prisma migrate deploy
 yarn workspace bilan-carbone prisma db seed
 ```
 
+OR use the shortcut:
+
+```bash
+yarn seed
+```
+
 ### 6. Generated prisma client
 
 ```bash

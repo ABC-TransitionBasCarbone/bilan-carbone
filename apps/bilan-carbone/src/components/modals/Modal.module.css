@@ -11,10 +11,13 @@
 }
 
 .big {
-  height: 95%;
   width: 90%;
   max-height: 95% !important;
   max-width: 90% !important;
+}
+
+.bigContent {
+  min-height: 0;
 }
 
 .closeIcon {
@@ -23,8 +26,7 @@
 }
 
 .content {
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 .actions {

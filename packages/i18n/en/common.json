@@ -1,5 +1,6 @@
 {
   "common": {
+    "colon": ":",
     "error": "An error occurred. If the problem persists, please contact support.",
     "yes": "Yes",
     "no": "No",
@@ -14,6 +15,7 @@
     "xSubPosts": "{count} sub posts",
     "xTags": "{count} tags",
     "none": "None",
+    "unknown": "Unknown",
     "subPosts": "Sub posts",
     "onDate": "on",
     "by": "by",
