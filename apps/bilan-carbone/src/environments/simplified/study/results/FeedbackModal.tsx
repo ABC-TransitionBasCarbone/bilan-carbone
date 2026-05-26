@@ -1,8 +1,8 @@
-import { appendForm } from '@/utils/form'
 import Modal from '@/components/modals/Modal'
+import { appendForm } from '@/utils/form'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 const typeformId = process.env.NEXT_PUBLIC_RESULTS_FEEDBACK_TYPEFORM_ID
 interface Props {
@@ -25,13 +25,7 @@ const FeedbackModal = ({ user, organizationName, open, setOpen }: Props) => {
   }, [])
 
   return (
-    <Modal
-      open={open}
-      label="feedback"
-      title={tResults('feedback.title')}
-      onClose={() => setOpen(false)}
-    >
-
+    <Modal open={open} label="feedback" title={tResults('feedback.title')} onClose={() => setOpen(false)}>
       <div
         className="typeform"
         data-tf-live={typeformId}
