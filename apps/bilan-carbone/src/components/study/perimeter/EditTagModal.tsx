@@ -1,9 +1,9 @@
 'use client'
 
 import { StudyTagFamilyWithTags } from '@/db/study'
+import Form from '@abc-transitionbascarbone/components/src/base/Form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl } from '@mui/material'
-import Form from '@repo/components/src/base/Form'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'

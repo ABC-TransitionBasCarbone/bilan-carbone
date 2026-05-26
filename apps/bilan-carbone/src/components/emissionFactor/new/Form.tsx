@@ -6,9 +6,9 @@ import {
   EmissionFactorCommandValidation,
   maxParts,
 } from '@/services/serverFunctions/emissionFactor.command'
+import Form from '@abc-transitionbascarbone/components/src/base/Form'
 import { EmissionFactorBase } from '@abc-transitionbascarbone/db-common/enums'
 import { zodResolver } from '@hookform/resolvers/zod'
-import Form from '@repo/components/src/base/Form'
 import { useRouter } from 'next/navigation'
 import { FormEvent, useState } from 'react'
 import { useForm } from 'react-hook-form'

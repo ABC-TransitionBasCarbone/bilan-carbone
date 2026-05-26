@@ -2,8 +2,8 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "paths": {
-      "@repo/css": ["../../packages/css/index.ts"],
-      "@repo/survey": ["../../packages/survey/src/index.ts"]
+      "@abc-transitionbascarbone/css": ["../../packages/css/index.ts"],
+      "@abc-transitionbascarbone/survey": ["../../packages/survey/src/index.ts"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.d.ts"],

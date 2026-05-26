@@ -3,7 +3,7 @@
 import { TeamMember } from '@/db/account'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteMember, resendInvitation } from '@/services/serverFunctions/user'
-import LoadingButton from '@repo/components/src/base/LoadingButton'
+import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'

@@ -1,5 +1,5 @@
+import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
 import { Button, ButtonProps, Typography } from '@mui/material'
-import LoadingButton from '@repo/components/src/base/LoadingButton'
 import classNames from 'classnames'
 import { ReactNode } from 'react'
 import styles from './Block.module.css'
@@ -8,7 +8,7 @@ import Title from './Title'
 
 export type Action =
   | (ButtonProps & { actionType: 'button'; 'data-testid'?: string })
-  | (LoadingButtonProps & ButtonProps & { actionType: 'loadingButton' })
+  | (ButtonProps & { actionType: 'loadingButton' })
   | (ButtonProps & { actionType: 'link'; href?: string; 'data-testid'?: string })
   | { actionType: 'node'; node: ReactNode }
 

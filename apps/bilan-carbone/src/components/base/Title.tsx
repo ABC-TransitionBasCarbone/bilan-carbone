@@ -1,4 +1,4 @@
-import IconLabel from '@repo/components/src/base/IconLabel'
+import IconLabel from '@abc-transitionbascarbone/components/src/base/IconLabel'
 import classNames from 'classnames'
 import { ReactNode } from 'react'
 import styles from './Title.module.css'
