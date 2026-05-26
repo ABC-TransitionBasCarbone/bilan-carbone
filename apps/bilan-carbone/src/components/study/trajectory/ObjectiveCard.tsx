@@ -9,7 +9,6 @@ import { FormTextField } from '@abc-transitionbascarbone/components/src/form/Tex
 import DeleteIcon from '@mui/icons-material/Delete'
 import { IconButton } from '@mui/material'
 import Typography from '@mui/material/Typography'
-import { FormTextField } from '@repo/components/src/form/TextField'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
