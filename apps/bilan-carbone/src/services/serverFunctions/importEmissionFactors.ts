@@ -239,6 +239,7 @@ export const getImportEmissionFactorsTemplate = async () =>
     exampleRow[COLUMNS.comment] = modal.examplePostsAndSubPostsComment
     exampleRow[COLUMNS.totalCo2] = 884
     exampleRow[COLUMNS.postsAndSubPosts] = modal.examplePostsAndSubPosts
+    exampleRow[COLUMNS.base] = bc.emissionFactors.base[EmissionFactorBase.LocationBased]
 
     const emptyRow: (string | number)[] = Array(TOTAL_COLS).fill('')
     emptyRow[COLUMNS.postsAndSubPosts] = allPostsLabel

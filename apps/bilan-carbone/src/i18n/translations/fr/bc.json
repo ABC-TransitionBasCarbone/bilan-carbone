@@ -1625,15 +1625,15 @@
       "templateFileName": "modele-facteurs-emission.xlsx",
       "allPostsAndSubPosts": "Tous les postes/tous les sous-postes",
       "sheetName": "Facteurs d'émission",
-      "templatePostsHeader": "Poste(s) et sous-poste(s) * [format: Poste : SousPoste1 | SousPoste2 || Poste2 : SousPoste3] ou \"Tous les postes/tous les sous-postes\"",
+      "templatePostsHeader": "Poste(s) et sous-poste(s) * [format: Poste : SousPoste1 | SousPoste2 || Poste2 : SousPoste3] ou \"Tous les postes/tous les sous-postes\". Si cette colonne est laissée vierge, l'outil considère par défaut que le facteur d'émission doit être présent dans tous les postes et sous-postes.",
       "templateBaseHeader": "Approche scope 2 (requis si sous poste Électricité inclus) : Location-based ou Market-based",
       "examplePrefix": "Exemple :",
       "exampleName": "Abricot, dénoyauté, cru",
       "exampleAttribute": "Le fret est considéré comme ayant eu lieu à température ambiante",
       "exampleSource": "Agribalyse® 3.1",
       "exampleLocation": "France continentale",
-      "examplePostsAndSubPosts": "Intrants biens et matières : Nourriture, repas, boissons | Autres intrants",
-      "examplePostsAndSubPostsComment": "Exemple simple (un poste, plusieurs sous-postes)"
+      "examplePostsAndSubPosts": "Intrants biens et matières : Nourriture, repas, boissons | Autres intrants || Utilisation : Utilisation en responsabilité",
+      "examplePostsAndSubPostsComment": "Exemple multi-postes (plusieurs postes et sous-postes)"
     },
     "post": {
       "total": "Total",

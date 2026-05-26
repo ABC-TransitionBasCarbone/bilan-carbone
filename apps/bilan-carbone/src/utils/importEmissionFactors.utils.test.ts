@@ -87,18 +87,12 @@ const VALID_ROW: RowInput = {
 
 describe('parsePostsAndSubPostsCell', () => {
   describe('with FR locale and BC environment', () => {
-    it('returns error when cell is empty or null', () => {
+    it('treats empty or null cell as all posts/sub-posts', () => {
       const result = parsePostsAndSubPostsCell('', Locale.FR, Environment.BC)
-      expect(result.success).toBe(false)
-      if (!result.success) {
-        expect(result.errors[0].key).toBe('missingPostsAndSubPosts')
-      }
+      expect(result.success).toBe(true)
 
       const result2 = parsePostsAndSubPostsCell(null, Locale.FR, Environment.BC)
-      expect(result2.success).toBe(false)
-      if (!result2.success) {
-        expect(result2.errors[0].key).toBe('missingPostsAndSubPosts')
-      }
+      expect(result2.success).toBe(true)
     })
 
     it('parses a single post with one subpost', () => {

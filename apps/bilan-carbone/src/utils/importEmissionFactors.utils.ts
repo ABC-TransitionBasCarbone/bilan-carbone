@@ -108,11 +108,8 @@ export function parsePostsAndSubPostsCell(
   locale: LocaleType,
   environment: Environment,
 ): ParsePostsResult {
-  if (!cell) {
-    return { success: false, errors: [{ key: 'missingPostsAndSubPosts' }] }
-  }
-
-  if (cell.trim().toLowerCase() === getAllPostsLabel(locale).toLowerCase()) {
+  const trimmed = cell?.trim() ?? ''
+  if (!trimmed || trimmed.toLowerCase() === getAllPostsLabel(locale).toLowerCase()) {
     const subPostsByPost = environmentSubPostsMapping[environment] as Record<string, SubPost[]>
     return { success: true, subPosts: subPostsByPost as Record<string, SubPost[]> }
   }
