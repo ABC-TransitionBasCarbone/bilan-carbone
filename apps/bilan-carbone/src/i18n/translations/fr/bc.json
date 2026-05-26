@@ -1632,7 +1632,7 @@
       "exampleAttribute": "Le fret est considéré comme ayant eu lieu à température ambiante",
       "exampleSource": "Agribalyse® 3.1",
       "exampleLocation": "France continentale",
-      "examplePostsAndSubPosts": "Intrants biens et matières : Nourriture, repas, boissons | Autres intrants || Utilisation : Utilisation en responsabilité",
+      "examplePostsAndSubPosts": "Intrants biens et matières : Nourriture, repas, boissons | Autres intrants || Utilisation et dépendance : Utilisation en responsabilité",
       "examplePostsAndSubPostsComment": "Exemple multi-postes (plusieurs postes et sous-postes)"
     },
     "post": {

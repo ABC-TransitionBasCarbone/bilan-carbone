@@ -142,7 +142,11 @@ const ImportFileModal = <TPreviewRow,>({
       setErrors(groupByLine([{ line: 0, key: 'tooManyFiles' }]))
       return
     }
-    previewFile(files[0])
+    const file = files[0]
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
+    previewFile(file)
   }
 
   const handleDragOver = (e: DragEvent<HTMLDivElement>) => {

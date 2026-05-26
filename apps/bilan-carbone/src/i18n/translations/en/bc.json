@@ -1632,7 +1632,7 @@
       "exampleAttribute": "Transport and distribution is considered at ambient temperature",
       "exampleSource": "Agribalyse® 3.1",
       "exampleLocation": "Continental France",
-      "examplePostsAndSubPosts": "Inputs - Goods & Materials : Food, meals, beverages | Other inputs || Use : Use in responsibility",
+      "examplePostsAndSubPosts": "Inputs - Goods & Materials : Food, meals, beverages | Other inputs || Use and Dependence : Use in responsibility",
       "examplePostsAndSubPostsComment": "Multi-post example (multiple posts and sub-posts)"
     },
     "post": {
