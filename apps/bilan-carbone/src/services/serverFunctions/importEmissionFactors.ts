@@ -63,7 +63,6 @@ export async function previewEmissionFactorsFromFile(file: File): Promise<Previe
     name: row.name,
     source: row.source,
     unit: row.rawUnit,
-    customUnit: row.customUnit ?? null,
     totalCo2: row.totalCo2,
     postsAndSubPosts: row.rawPostsAndSubPosts,
   }))
@@ -125,7 +124,6 @@ export async function exportManualEmissionFactorsToFile(): Promise<ArrayBuffer> 
     c.name,
     c.attribute,
     c.unit,
-    c.customUnit,
     c.isMonetary,
     c.source,
     c.location,
@@ -154,8 +152,7 @@ export async function exportManualEmissionFactorsToFile(): Promise<ArrayBuffer> 
     return [
       metaData?.title ?? '',
       metaData?.attribute ?? '',
-      ef.unit && !ef.customUnit ? `kgCO2e/${getUnitLabel(ef.unit, locale)}` : '',
-      ef.customUnit ? `kgCO2e/${ef.customUnit}` : '',
+      ef.customUnit ? `kgCO2e/${ef.customUnit}` : ef.unit ? `kgCO2e/${getUnitLabel(ef.unit, locale)}` : '',
       ef.isMonetary ? common.yes : common.no,
       ef.source ?? '',
       ef.location ?? '',
@@ -193,7 +190,6 @@ function buildEmissionFactorsTemplateHeader(locale: LocaleType): string[] {
     c.name,
     c.attribute,
     c.unit,
-    c.customUnit,
     c.isMonetary,
     c.source,
     c.location,

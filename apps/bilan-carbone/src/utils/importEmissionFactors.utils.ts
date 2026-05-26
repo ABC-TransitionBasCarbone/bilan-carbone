@@ -186,19 +186,15 @@ export function parseImportFile(buffer: Buffer, locale: LocaleType, environment:
     }
 
     const kgCO2ePrefix = /^kgCO2e\s*\/\s*/i
-    const rawCustomUnit = String(row[COLUMNS.customUnit] ?? '').trim()
     const rawUnit = String(row[COLUMNS.unit] ?? '').trim()
 
-    if (rawCustomUnit) {
-      if (!kgCO2ePrefix.test(rawCustomUnit)) {
-        rowErrors.push({ key: 'invalidUnit', value: rawCustomUnit })
-      }
-    } else if (!kgCO2ePrefix.test(rawUnit) && rawUnit !== '') {
+    if (!kgCO2ePrefix.test(rawUnit) && rawUnit !== '') {
       rowErrors.push({ key: 'invalidUnit', value: rawUnit })
     }
 
-    const strippedUnit = rawCustomUnit ? rawCustomUnit.replace(kgCO2ePrefix, '') : rawUnit.replace(kgCO2ePrefix, '')
-    const unit = rawCustomUnit ? Unit.CUSTOM : mapManualUnitLabelFromTranslations(strippedUnit, locale)
+    const strippedUnit = rawUnit.replace(kgCO2ePrefix, '')
+    const standardUnit = mapManualUnitLabelFromTranslations(strippedUnit, locale)
+    const unit = standardUnit ?? (strippedUnit ? Unit.CUSTOM : null)
     if (!unit) {
       rowErrors.push({ key: 'invalidUnit', value: rawUnit })
     }
