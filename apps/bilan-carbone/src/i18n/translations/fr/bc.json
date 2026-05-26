@@ -1932,10 +1932,10 @@
     "edit": {
       "title": "Modifier le facteur d'émissions ({name})",
       "modal": {
-        "confirm-edition": "Êtes-vous sûrs de vouloir modifier ce facteur d'émissions",
-        "confirm-deletion": "Êtes-vous sûrs de vouloir supprimer ce facteur d'émissions",
+        "confirm-edition": "Êtes-vous sûrs de vouloir modifier ce facteur d'émission ?",
+        "confirm-deletion": "Êtes-vous sûrs de vouloir supprimer ce facteur d'émission ?",
         "title": "Modifier un facteur d'émission",
-        "description": "<warning>Si vous avez utilisé ce facteur d'émissions dans des études, celles-ci seront donc modifiées.</warning> Si vous souhaitez faire une nouvelle version de ce facteur d'émissions, merci d'en créer un nouveau."
+        "description": "<warning>Si vous avez utilisé ce facteur d'émissions dans certaines études, le champ dédié au facteur d'émission deviendra vide et les sources d'émission liées seront dévalidées.</warning> Vous pouvez modifier le facteur d'émission au lieu de le supprimer, ou en créer un nouveau sans supprimer l'ancien."
       }
     },
     "type": {
