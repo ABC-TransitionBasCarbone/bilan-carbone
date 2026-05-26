@@ -1,5 +1,4 @@
 import { KG_CO2E_PREFIX_REGEX } from '@/constants/import'
-import { Locale, LocaleType } from '@/i18n/config'
 import { qualityKeys } from '@/services/uncertainty'
 import { ImportError } from '@/types/import.types'
 import { ParsedEmissionSourceRow, SOURCE_IMPORT_COLUMNS } from '@/types/importEmissionSources.types'
@@ -9,6 +8,7 @@ import {
   SubPost,
   Unit,
 } from '@abc-transitionbascarbone/db-common/enums'
+import { Locale, LocaleType } from '@abc-transitionbascarbone/i18n/config'
 import { parseExcelSheet } from './excel.utils'
 import {
   buildLabelMap,
