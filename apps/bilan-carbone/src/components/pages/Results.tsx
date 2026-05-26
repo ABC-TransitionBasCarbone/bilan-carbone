@@ -4,6 +4,7 @@ import DynamicAllResults from '@/environments/core/study/results/DynamicAllResul
 import { addUserChecklistItem } from '@/services/serverFunctions/user'
 import { ExportRule } from '@abc-transitionbascarbone/db-common'
 import { SiteCAUnit, UserChecklist } from '@abc-transitionbascarbone/db-common/enums'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 
@@ -13,9 +14,10 @@ interface Props {
   emissionFactorsWithParts: EmissionFactorWithParts[]
   validatedOnly: boolean
   caUnit?: SiteCAUnit
+  user: UserSession
 }
 
-const ResultsPage = ({ study, rules, emissionFactorsWithParts, validatedOnly, caUnit }: Props) => {
+const ResultsPage = ({ study, rules, emissionFactorsWithParts, validatedOnly, caUnit, user }: Props) => {
   const tNav = useTranslations('nav')
   const tStudyNav = useTranslations('study.navigation')
 
@@ -42,6 +44,7 @@ const ResultsPage = ({ study, rules, emissionFactorsWithParts, validatedOnly, ca
         study={study}
         validatedOnly={validatedOnly}
         caUnit={caUnit}
+        user={user}
       />
     </>
   )

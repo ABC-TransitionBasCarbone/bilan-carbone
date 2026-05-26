@@ -8,6 +8,7 @@ import { usePublicodesResults } from '@/hooks/usePublicodesResults'
 import { getTotalValueFromBaseResults } from '@/services/results/publicodes'
 import { SiteCAUnit } from '@abc-transitionbascarbone/db-common/enums'
 import CircularProgress from '@mui/material/CircularProgress'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import AllResults from './AllResults'
@@ -18,9 +19,10 @@ interface Props {
   chartOrder?: Record<ChartType, number>
   caUnit?: SiteCAUnit
   showSubLevel?: boolean
+  user?: UserSession
 }
 
-const AllResultsPublicodes = ({ study, chartOrder = defaultChartOrder, caUnit, showSubLevel = false }: Props) => {
+const AllResultsPublicodes = ({ study, chartOrder = defaultChartOrder, caUnit, showSubLevel = false, user }: Props) => {
   const tStudyNav = useTranslations('study.navigation')
   const { siteId, studySiteId, setSite } = useStudySite(study, true)
   const { aggregated, bySite, isLoading, error } = usePublicodesResults(
@@ -70,6 +72,7 @@ const AllResultsPublicodes = ({ study, chartOrder = defaultChartOrder, caUnit, s
       chartOrder={chartOrder}
       caUnit={caUnit}
       showSubLevel={showSubLevel}
+      user={user}
     />
   )
 }

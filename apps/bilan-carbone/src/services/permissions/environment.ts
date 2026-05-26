@@ -113,3 +113,5 @@ export const hasHomeButtonHeader = isClickson
 
 export const hasAccessToPDFExport = (environment: Environment) =>
   ([CUT, CLICKSON] as Environment[]).includes(environment)
+
+export const hasAccessToFeedbackButton = isTilt
