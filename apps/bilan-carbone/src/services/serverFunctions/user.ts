@@ -2,7 +2,6 @@
 
 import { environmentsWithChecklist } from '@/constants/environments'
 import {
-  AccountWithUser,
   addAccount,
   changeAccountRole,
   getAccountByEmailAndEnvironment,
@@ -50,11 +49,11 @@ import {
   validateUser,
 } from '@/db/user'
 import { processUsers } from '@/scripts/ftp/userImport'
+import { AccountWithUser } from '@/types/account.types'
 import { withServerResponse } from '@/utils/serverResponse'
-import { DAY, HOUR, MIN, TIME_IN_MS, YEAR } from '@/utils/time'
 import { getRoleToSetForUntrained } from '@/utils/user'
 import { accountWithUserToUserSession, userSessionToDbUser } from '@/utils/userAccounts'
-import { Organization, User } from '@repo/db-common'
+import { Organization, User } from '@abc-transitionbascarbone/db-common'
 import {
   Country,
   DeactivatableFeature,
@@ -63,7 +62,8 @@ import {
   Role,
   UserChecklist,
   UserStatus,
-} from '@repo/db-common/enums'
+} from '@abc-transitionbascarbone/db-common/enums'
+import { DAY, HOUR, MIN, TIME_IN_MS, YEAR } from '@abc-transitionbascarbone/utils'
 import jwt from 'jsonwebtoken'
 import { UserSession } from 'next-auth'
 import { getCompanyName, getValidAssociationNameBySiret } from '../associationApi'
@@ -90,7 +90,7 @@ import {
   UNKNOWN_SCHOOL,
   UNKNOWN_SIRET_OR_CNC,
 } from '../permissions/check'
-import { isTilt } from '../permissions/environment'
+import { isBC, isTilt } from '../permissions/environment'
 import { canAddMember, canChangeRole, canDeleteMember, canEditSelfRole } from '../permissions/user'
 import { establishmentTypeMap, School } from '../schoolApi'
 import { getDeactivableFeatureRestrictions } from './deactivableFeatures'
@@ -342,9 +342,9 @@ export const resetPassword = async (email: string, userEnv: Environment | undefi
     }
   })
 
-export const activateEmail = async (email: string, userEnv: Environment | undefined, fromReset: boolean = false) =>
+export const activateEmail = async (email: string, userEnv: Environment, fromReset: boolean = false) =>
   withServerResponse('activateEmail', async () => {
-    const env = userEnv || Environment.BC
+    const env = userEnv
 
     const user = await getUserByEmail(email.toLowerCase())
     const account = (await getAccountById(
@@ -672,7 +672,8 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const newOrganizationRole = isTilt(environment) ? Role.GESTIONNAIRE : Role.ADMIN
+    const newOrganizationRole =
+      isTilt(environment) || (isBC(environment) && !user.level) ? Role.GESTIONNAIRE : Role.ADMIN
     await updateAccount(account.id, {
       role: organization?.id ? Role.DEFAULT : newOrganizationRole,
       organizationVersion: { connect: { id: organizationVersion.id } },

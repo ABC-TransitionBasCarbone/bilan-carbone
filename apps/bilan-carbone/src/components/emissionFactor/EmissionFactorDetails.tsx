@@ -5,9 +5,9 @@ import { getQualitativeUncertaintyFromQuality, qualityKeys } from '@/services/un
 import { BCUnit, useUnitLabel } from '@/services/unit'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
+import { Environment, Import, StudyResultUnit, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import ShrinkIcon from '@mui/icons-material/ZoomInMap'
 import ExpandIcon from '@mui/icons-material/ZoomOutMap'
-import { Environment, Import, StudyResultUnit, SubPost } from '@repo/db-common/enums'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { Fragment, useMemo, useState } from 'react'
@@ -68,9 +68,9 @@ const EmissionFactorDetails = ({ emissionFactor }: Props) => {
       <div className="flex-col grow">
         <div className={styles.info}>
           <span className={classNames(styles.infoTitle, 'bold')}>{t('source')} : </span>
-          {emissionFactor.importedFrom !== Import.Manual && emissionFactor.version && (
+          {emissionFactor.importedFrom !== Import.Manual && emissionFactor.versions.length > 0 && (
             <>
-              {t(emissionFactor.importedFrom)} {emissionFactor.version.name}
+              {t(emissionFactor.importedFrom)} {emissionFactor.versions.map((v) => v.importVersion.name).join(', ')}
             </>
           )}
           {emissionFactor.source && <> - {emissionFactor.source}</>}

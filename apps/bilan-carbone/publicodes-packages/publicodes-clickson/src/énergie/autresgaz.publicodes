@@ -4,25 +4,25 @@
     somme:
       - gaz réfrigérants
       - gaz effet de serre principaux
-  unité: kgCO2e/kg
+  unité: kgCO2e
   par défaut: 0
 
 énergie . autres gaz . gaz réfrigérants:
   titre: Gaz réfrigérants
   question: Consommation annuelle de gaz réfrigérant
   par défaut: 0
-  unité: kgCO2e/kg
+  unité: kgCO2e
   formule: gaz réfrigérant
 
 énergie . autres gaz . gaz réfrigérant:
   titre: Gaz réfrigérant
   par défaut: 0
-  unité: kgCO2e/kg
+  unité: kgCO2e
   formule: consommation * FE
   avec:
     consommation:
       question: Consommation annuelle de ce gaz
-      unité: kgCO2e/kg
+      unité: kg
       par défaut: 0
     FE:
       titre: Facteur d'émission du projecteur
@@ -93,18 +93,18 @@
   question: Consommation annuelle de gaz à effet de serre principal
   titre: Gaz à effet de serre principal
   par défaut: 0
-  unité: kgCO2e/kg
+  unité: kgCO2e
   formule: gaz effet de serre principal
 
 énergie . autres gaz . gaz effet de serre principal:
   titre: Gaz à effet de serre principal
   par défaut: 0
-  unité: kgCO2e/kg
+  unité: kgCO2e
   formule: consommation * FE
   avec:
     consommation:
       question: Consommation annuelle de ce gaz
-      unité: kgCO2e/kg
+      unité: kg
       par défaut: 0
     FE:
       titre: Facteur d'émission du projecteur

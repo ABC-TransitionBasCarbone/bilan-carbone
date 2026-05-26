@@ -5,11 +5,32 @@ import { FeFilters } from '@/types/filters'
 import { unique } from '@/utils/array'
 import { getEmissionFactorSubPostsMap, isMonetaryEmissionFactor } from '@/utils/emissionFactors'
 import { flattenSubposts } from '@/utils/post'
-import { Prisma } from '@repo/db-common'
-import { EmissionFactorBase, EmissionFactorStatus, Environment, Import, SubPost, Unit } from '@repo/db-common/enums'
+import { Prisma } from '@abc-transitionbascarbone/db-common'
+import {
+  EmissionFactorBase,
+  EmissionFactorStatus,
+  Environment,
+  Import,
+  SubPost,
+  Unit,
+} from '@abc-transitionbascarbone/db-common/enums'
 import { Session } from 'next-auth'
 import { prismaClient } from './client.server'
 import { getOrgVersionWithOrgId } from './organization'
+
+const versionsSelect = {
+  select: {
+    importVersionId: true,
+    importVersion: {
+      select: {
+        id: true,
+        name: true,
+        source: true,
+        archived: true,
+      },
+    },
+  },
+}
 
 const otherSelectEmissionFactor = {
   id: true,
@@ -39,18 +60,13 @@ const otherSelectEmissionFactor = {
   hfc: true,
   pfc: true,
   otherGES: true,
-  version: {
-    select: {
-      id: true,
-      name: true,
-      archived: true,
-    },
-  },
+  versions: versionsSelect,
   emissionFactorParts: { select: { type: true, totalCo2: true } },
 }
 
 const selectEmissionFactor = {
   id: true,
+  createdAt: true,
   status: true,
   totalCo2: true,
   location: true,
@@ -85,17 +101,22 @@ const selectEmissionFactor = {
       comment: true,
       location: true,
       frontiere: true,
+      tag: true,
     },
   },
-  version: {
-    select: {
-      id: true,
-      name: true,
-      archived: true,
-    },
-  },
+  versions: versionsSelect,
   emissionFactorParts: { select: { type: true, totalCo2: true } },
 } as Prisma.EmissionFactorSelect
+
+type EmissionFactorVersion = {
+  importVersionId: string
+  importVersion: {
+    id: string
+    name: string
+    source: Import
+    archived: boolean
+  }
+}
 
 export type EmissionFactorList = {
   id: string
@@ -132,12 +153,9 @@ export type EmissionFactorList = {
     comment: string | null
     location: string | null
     frontiere: string | null
+    tag: string | null
   }
-  version: {
-    id: string
-    name: string
-    archived: boolean
-  } | null
+  versions: EmissionFactorVersion[]
   emissionFactorParts: {
     type: string
     totalCo2: number
@@ -173,13 +191,13 @@ const getBaseFilterForEmissionFactors = (
     } else if (filters.sources.includes(Import.Manual) && organizationId) {
       importedFromCondition = {
         OR: [
-          { versionId: { in: filters.sources.filter((s) => s !== Import.Manual) } },
+          { versions: { some: { importVersionId: { in: filters.sources.filter((s) => s !== Import.Manual) } } } },
           { importedFrom: Import.Manual, organizationId },
         ],
       }
     } else {
       importedFromCondition = {
-        OR: [{ versionId: { in: filters.sources.filter((s) => s !== Import.Manual) } }],
+        OR: [{ versions: { some: { importVersionId: { in: filters.sources.filter((s) => s !== Import.Manual) } } } }],
       }
     }
   }
@@ -239,6 +257,7 @@ const getDefaultEmissionFactors = async (
       comment: true,
       location: true,
       frontiere: true,
+      tag: true,
       emissionFactor: { select: otherSelectEmissionFactor },
     },
     orderBy: { title: 'asc' },
@@ -253,6 +272,7 @@ const getDefaultEmissionFactors = async (
       comment: metadata.comment,
       location: metadata.location,
       frontiere: metadata.frontiere,
+      tag: metadata.tag,
     },
   }))
 }
@@ -295,15 +315,6 @@ export const getEmissionFactorById = (id: string) =>
     select: selectEmissionFactor,
   })
 
-export const getEmissionFactorByImportedIdAndStudiesEmissionSource = (importedId: string, versionIds: string[]) =>
-  prismaClient.emissionFactor.findFirst({
-    where: {
-      importedId,
-      versionId: { in: versionIds },
-    },
-    select: selectEmissionFactor,
-  })
-
 export const getAllEmissionFactorsByIds = (ids: string[], organizationId: string) =>
   prismaClient.emissionFactor.findMany({
     where: {
@@ -323,11 +334,11 @@ export const getEmissionFactorsByIdsAndSource = (ids: string[], source: Import) 
     select: selectEmissionFactor,
   })
 
-export const getEmissionFactorsByImportedIdsAndVersion = (ids: string[], versionId: string) =>
+export const getEmissionFactorsByImportedIdsAndVersion = (ids: string[], importVersionId: string) =>
   prismaClient.emissionFactor.findMany({
     where: {
       importedId: { in: ids },
-      versionId,
+      versions: { some: { importVersionId } },
     },
     select: selectEmissionFactor,
   })
@@ -422,7 +433,10 @@ export const deleteEmissionFactorAndDependencies = (id: string) =>
     })
 
     await Promise.all([
-      transaction.studyEmissionSource.deleteMany({ where: { emissionFactorId: id } }),
+      transaction.studyEmissionSource.updateMany({
+        where: { emissionFactorId: id },
+        data: { emissionFactorId: null, validated: false },
+      }),
       transaction.emissionFactorMetaData.deleteMany({ where: { emissionFactorId: id } }),
       transaction.emissionFactorPart.deleteMany({
         where: { id: { in: emissionFactorParts.map((emissionFactorPart) => emissionFactorPart.id) } },
@@ -532,6 +546,12 @@ export const getEmissionFactorVersionsBySource = async (source: Import) =>
 export const getManualEmissionFactors = async (units: Unit[]) =>
   prismaClient.emissionFactor.findMany({ where: { importedFrom: Import.Manual, unit: { in: units } } })
 
+export const getManualEmissionFactorsByOrganization = (organizationId: string) =>
+  prismaClient.emissionFactor.findMany({
+    where: { importedFrom: Import.Manual, organizationId, status: EmissionFactorStatus.Valid },
+    select: selectEmissionFactor,
+  })
+
 export const setEmissionFactorUnitAsCustom = async (id: string, unit: string) =>
   prismaClient.emissionFactor.update({ where: { id }, data: { unit: Unit.CUSTOM, customUnit: unit } })
 
@@ -546,11 +566,10 @@ export const findEmissionFactorByImportedId = (id: string) =>
     where: { importedId: id },
     select: {
       id: true,
-      versionId: true,
       importedId: true,
       unit: true,
       customUnit: true,
-      version: { select: { id: true } },
+      versions: { select: { importVersionId: true } },
       metaData: true,
     },
   })
@@ -567,5 +586,62 @@ export const getEmissionFactorWithoutQuality = async (organizationId: string) =>
         { temporalRepresentativeness: null },
         { completeness: null },
       ],
+    },
+  })
+
+const getOrganizationAndImportedVersionsFilters = (organizationId: string, versionIds: string[]) => [
+  { organizationId: null, versions: { some: { importVersionId: { in: versionIds } } } },
+  { organizationId, importedFrom: Import.Manual },
+]
+
+export const findEmissionFactorByImportedIdForMatch = (id: string, organizationId: string, versionIds: string[]) =>
+  prismaClient.emissionFactor.findFirst({
+    where: {
+      importedId: id,
+      OR: getOrganizationAndImportedVersionsFilters(organizationId, versionIds),
+    },
+    select: {
+      id: true,
+      totalCo2: true,
+      unit: true,
+      customUnit: true,
+      metaData: { select: { title: true, language: true } },
+    },
+  })
+
+export const findEmissionFactorsByNameAndUnit = (
+  title: string,
+  locale: string,
+  organizationId: string,
+  unit: Unit | undefined,
+  versionIds: string[],
+) =>
+  prismaClient.emissionFactor.findMany({
+    where: {
+      ...(unit ? { AND: [{ OR: [{ unit }, { customUnit: unit }] }] } : {}),
+      metaData: { some: { language: locale, title: { equals: title, mode: Prisma.QueryMode.insensitive } } },
+      OR: getOrganizationAndImportedVersionsFilters(organizationId, versionIds),
+    },
+    select: {
+      id: true,
+      totalCo2: true,
+      unit: true,
+      customUnit: true,
+      metaData: { select: { title: true, language: true } },
+    },
+  })
+
+export const findEmissionFactorsByUnit = (organizationId: string, unit: Unit, versionIds: string[]) =>
+  prismaClient.emissionFactor.findMany({
+    where: {
+      AND: [{ OR: [{ unit }, { customUnit: unit }] }],
+      OR: getOrganizationAndImportedVersionsFilters(organizationId, versionIds),
+    },
+    select: {
+      id: true,
+      totalCo2: true,
+      unit: true,
+      customUnit: true,
+      metaData: { select: { title: true, language: true } },
     },
   })

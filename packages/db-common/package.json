@@ -1,5 +1,5 @@
 {
-  "name": "@repo/db-common",
+  "name": "@abc-transitionbascarbone/db-common",
   "version": "0.0.1",
   "private": true,
   "main": "src/index.ts",
@@ -7,11 +7,12 @@
   "scripts": {
     "db:migrate": "prisma migrate dev",
     "db:generate": "prisma generate",
-    "db:status": "prisma migrate status"
+    "db:status": "prisma migrate status",
+    "prisma": "prisma"
   },
   "dependencies": {
-    "@prisma/adapter-pg": "^7.7.0",
-    "@prisma/client": "7.7.0",
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "7.8.0",
     "pg": "^8.20.0"
   },
   "prisma": {
@@ -21,9 +22,5 @@
     ".": "./src/index.ts",
     "./enums": "./src/enums.ts",
     "./types": "./src/types.ts"
-  },
-  "devDependencies": {},
-  "resolutions": {
-    "@hono/node-server": "^1.19.13"
   }
 }

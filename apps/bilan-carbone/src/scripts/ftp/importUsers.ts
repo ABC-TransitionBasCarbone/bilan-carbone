@@ -22,8 +22,9 @@ const downloadFileFromFTP = async (client: Client, folderPath: string, fileName:
 }
 
 export const getUsersFromFTP = async () => {
+  let client: Client | undefined
   try {
-    const client = await getFTPClient()
+    client = await getFTPClient()
     const folderPath = process.env.FTP_FILE_PATH || '/'
     const fileName = process.env.FTP_FILE_NAME || '/'
     const fileList = await client.list(folderPath)
@@ -32,10 +33,12 @@ export const getUsersFromFTP = async () => {
 
     const data = await downloadFileFromFTP(client, folderPath, fileName)
     const values = JSON.parse(data)
-    client.close()
 
     await processUsers(values, importedFileDate)
   } catch (error) {
     console.error('Error importing users:', error)
+    throw error
+  } finally {
+    client?.close()
   }
 }

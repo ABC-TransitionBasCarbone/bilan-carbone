@@ -7,6 +7,7 @@ import {
   EmissionFactorCommandValidation,
   maxParts,
 } from '@/services/serverFunctions/emissionFactor.command'
+import { EmissionFactorBase } from '@abc-transitionbascarbone/db-common/enums'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { FormEvent, useState } from 'react'
@@ -36,6 +37,7 @@ const NewEmissionFactorForm = ({ locations }: Props) => {
       parts: Array.from({ length: maxParts }, () => ({ name: '', totalCo2: 0 })),
       comment: '',
       isMonetary: false,
+      base: EmissionFactorBase.LocationBased,
     },
   })
 

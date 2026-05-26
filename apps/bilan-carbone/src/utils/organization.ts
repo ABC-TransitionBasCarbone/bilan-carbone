@@ -1,7 +1,7 @@
 import { OrganizationVersionWithParentLicence } from '@/db/organization'
 import { needsLicenceToUseApp } from '@/services/permissions/environment'
 import { isAdmin } from '@/utils/user'
-import { Environment, Role } from '@repo/db-common/enums'
+import { Environment, Role } from '@abc-transitionbascarbone/db-common/enums'
 import { UserSession } from 'next-auth'
 
 export const isAdminOnOrga = (

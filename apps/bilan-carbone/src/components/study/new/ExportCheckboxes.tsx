@@ -3,7 +3,12 @@ import { useServerFunction } from '@/hooks/useServerFunction'
 import { adaptFeSourceWithExport, updateStudySpecificExportFields } from '@/services/serverFunctions/study'
 import { sortAlphabetically } from '@/services/utils'
 import { exportSpecificFields, getAllSpecificFieldsForExports } from '@/utils/study'
-import { ControlMode, EmissionFactorBase, EmissionSourceCaracterisation, Export } from '@repo/db-common/enums'
+import {
+  ControlMode,
+  EmissionFactorBase,
+  EmissionSourceCaracterisation,
+  Export,
+} from '@abc-transitionbascarbone/db-common/enums'
 import { useCallback, useMemo, useState } from 'react'
 import ExportActivationWarningModal from './ExportActivationWarningModal'
 import ExportCheckbox from './ExportCheckbox'

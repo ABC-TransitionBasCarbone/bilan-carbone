@@ -1,12 +1,11 @@
 import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
-import { getMockeFullStudy } from '@/tests/utils/models/study'
+import { getMockeFullStudy, getMockedDetailedFullStudySite } from '@/tests/utils/models/study'
 import { BaseResultsBySite } from '@/types/study.types'
-import { Translations } from '@/types/translation'
 import { hasSufficientLevel } from '@/utils/study'
+import { ControlMode, Environment, Export, Level, StudyResultUnit, SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import type { Translations } from '@abc-transitionbascarbone/lib'
 import { expect } from '@jest/globals'
-import { ControlMode, Environment, Level, StudyResultUnit, SubPost } from '@repo/db-common/enums'
 import { prepareExcel } from './serverFunctions/file'
-import { getUserSettings } from './serverFunctions/user'
 import {
   downloadStudyResults,
   formatComputedResultsForExport,
@@ -17,10 +16,12 @@ import {
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('./file', () => ({ download: jest.fn() }))
 jest.mock('./auth', () => ({ auth: jest.fn() }))
-jest.mock('./serverFunctions/file', () => ({ prepareExcel: jest.fn(async () => Buffer.from('mock')) }))
-jest.mock('./serverFunctions/user', () => ({ getUserSettings: jest.fn(async () => ({ success: false })) }))
 jest.mock('uuid', () => ({ v4: jest.fn() }))
 jest.mock('next-intl/server', () => ({ getTranslations: jest.fn(() => (key: string) => key) }))
+jest.mock('./serverFunctions/file', () => ({ prepareExcel: jest.fn(async () => new ArrayBuffer(0)) }))
+jest.mock('./serverFunctions/user', () => ({
+  getUserSettings: jest.fn(async () => ({ success: true, data: { validatedEmissionSourcesOnly: false } })),
+}))
 
 describe('Study Service', () => {
   describe('getTransEnvironmentSubPost', () => {
@@ -208,10 +209,7 @@ describe('Study Service', () => {
 
     const getWorkbookSheets = async (environment: Environment) => {
       const prepareExcelMock = jest.mocked(prepareExcel)
-      const getUserSettingsMock = jest.mocked(getUserSettings)
-
       prepareExcelMock.mockClear()
-      getUserSettingsMock.mockResolvedValue({ success: false, errorMessage: '' })
 
       await downloadStudyResults(
         getMockeFullStudy({
@@ -240,7 +238,7 @@ describe('Study Service', () => {
     it('adds "(tCO2e)" to clickson exported value header', () => {
       const data = formatComputedResultsForExport(
         getMockeFullStudy({ resultsUnit: StudyResultUnit.T }),
-        [{ name: 'Tous les sites', id: 'all' }],
+        [{ name: 'Tous les sites', siteId: 'all', studySiteId: 'all' }],
         computedResults,
         tStudy,
         tExport,
@@ -254,7 +252,7 @@ describe('Study Service', () => {
     it('keeps dynamic unit translation for non-clickson exports', () => {
       const data = formatComputedResultsForExport(
         getMockeFullStudy({ resultsUnit: StudyResultUnit.K }),
-        [{ name: 'Tous les sites', id: 'all' }],
+        [{ name: 'Tous les sites', siteId: 'all', studySiteId: 'all' }],
         computedResults,
         tStudy,
         tExport,
@@ -275,6 +273,63 @@ describe('Study Service', () => {
       const workbookSheets = await getWorkbookSheets(Environment.CUT)
       expect(workbookSheets).toHaveLength(2)
       expect(workbookSheets.some((sheet: { name: string }) => sheet.name === 'bc.title')).toBe(true)
+    })
+  })
+
+  describe('downloadStudyResults', () => {
+    it('should correctly ventilate consolidated results by site using appropriate ID types', async () => {
+      const study = getMockeFullStudy({
+        organizationVersion: { environment: Environment.BC },
+        sites: [
+          getMockedDetailedFullStudySite('site-a', 'study-site-a', 'Site A'),
+          getMockedDetailedFullStudySite('site-b', 'study-site-b', 'Site B'),
+        ],
+        emissionSources: [
+          getMockedFullStudyEmissionSource({
+            value: 1,
+            validated: true,
+            studySite: { id: 'study-site-a', site: { id: 'site-a', name: 'Site A' } },
+          }),
+          getMockedFullStudyEmissionSource({
+            value: 2,
+            validated: true,
+            studySite: { id: 'study-site-b', site: { id: 'site-b', name: 'Site B' } },
+          }),
+        ],
+      })
+
+      const t = ((key: string) => key) as unknown as Translations
+
+      const prepareExcelMock = jest.mocked(prepareExcel)
+      prepareExcelMock.mockClear()
+      await downloadStudyResults(study, [], [], [], t, t, t, t, t, t, t, t, t, Environment.BC)
+
+      expect(prepareExcelMock).toHaveBeenCalledTimes(1)
+      expect(prepareExcelMock).toHaveBeenCalledWith(expect.any(Array))
+
+      const [exportedData] = prepareExcelMock.mock.calls[0]
+      const consolidatedSheet = (exportedData as { data: (string | number)[][] }[])[0]
+      const rows = consolidatedSheet.data
+
+      const findSiteTotalRow = (siteName: string) => {
+        const siteRowIndex = rows.findIndex((row) => row[0] === siteName)
+        return siteRowIndex >= 0 ? rows.slice(siteRowIndex).find((row) => row[0] === 'total') : undefined
+      }
+
+      // BC export row layout: [label, '', uncertainty, co2Value, confidenceInterval]
+      // co2Value is at index 3 (index 2 is the uncertainty/quality score)
+      const getTotalCo2Value = (siteName: string) => {
+        const totalRow = findSiteTotalRow(siteName)
+        if (!totalRow) {
+          throw new Error(`Missing total row for ${siteName}`)
+        }
+        return totalRow[3] as number
+      }
+
+      // emissionFactor.totalCo2=10; value=1 → 10 kg → 10 K; value=2 → 20 K
+      expect(getTotalCo2Value('Site A')).toBe(10)
+      expect(getTotalCo2Value('Site B')).toBe(20)
+      expect(getTotalCo2Value('allSites')).toBe(30)
     })
   })
 })

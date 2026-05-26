@@ -19,4 +19,19 @@ describe("Sous-poste : Énergie", () => {
 
     expect(result.nodeValue).toBeGreaterThan(0);
   });
+
+  test("Les autres gaz sont exprimés en kgCO2e sans unité au dénominateur", () => {
+    const localEngine = engine.shallowCopy();
+    const situation: Situation = {
+      "énergie . autres gaz . gaz réfrigérant . type": "'R134a'",
+      "énergie . autres gaz . gaz réfrigérant . consommation": 1,
+    };
+
+    localEngine.setSituation(situation);
+    const result = localEngine.evaluate("énergie . autres gaz");
+
+    expect(result.nodeValue).toBeGreaterThan(0);
+    expect(result.unit?.numerators).toContain("kgCO2e");
+    expect(result.unit?.denominators).toEqual([]);
+  });
 });

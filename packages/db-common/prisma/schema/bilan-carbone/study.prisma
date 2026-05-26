@@ -288,6 +288,7 @@ model StudyEmissionSource {
   source                       String?
   type                         EmissionSourceType?
   comment                      String?
+  feComment                    String?             @map("fe_comment")
   validated                    Boolean?
   recycledPart                 Int?                @map("recycled_part")
 
@@ -306,8 +307,6 @@ model StudyEmissionSource {
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
-
-  answerEmissionSources AnswerEmissionSource[]
 
   emissionSourceTags EmissionSourceTag[]
 
@@ -401,7 +400,6 @@ model StudySite {
   country       Country?
 
   situation    Situation?
-  studyAnswers Answer[]
 
   engagementActions EngagementAction[]
   objectiveSites    ObjectiveSite[]

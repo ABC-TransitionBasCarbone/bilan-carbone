@@ -2,7 +2,7 @@
 
 import { getUserByEmailWithSensibleInformations, updateUserPasswordForEmail } from '@/db/user'
 import { withServerResponse } from '@/utils/serverResponse'
-import { Environment } from '@repo/db-common/enums'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import jwt from 'jsonwebtoken'
 import { computePasswordValidation } from '../utils'
 

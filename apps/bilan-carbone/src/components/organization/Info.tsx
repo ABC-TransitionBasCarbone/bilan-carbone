@@ -22,6 +22,7 @@ interface Props {
 const OrganizationInfo = ({ organizationVersion, canDelete, canUpdate }: Props) => {
   const t = useTranslations('organization')
   const tDelete = useTranslations('organization.delete')
+  const tCommon = useTranslations('common')
   const { callServerFunction } = useServerFunction()
   const [deleting, setDeleting] = useState(false)
 
@@ -39,7 +40,7 @@ const OrganizationInfo = ({ organizationVersion, canDelete, canUpdate }: Props) 
 
   const onDelete = async () => {
     await callServerFunction(() => deleteOrganizationCommand(form.getValues()), {
-      getErrorMessage: (error) => tDelete(error),
+      getErrorMessage: (error) => (tDelete.has(error) ? tDelete(error) : tCommon('error')),
       onSuccess: () => {
         router.push('/')
       },

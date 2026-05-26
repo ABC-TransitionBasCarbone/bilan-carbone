@@ -5,7 +5,7 @@ import SitesClickson from '@/environments/clickson/organization/Sites'
 import SitesCut from '@/environments/cut/organization/Sites'
 import SitesTilt from '@/environments/tilt/organization/Sites'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
-import { Environment, SiteCAUnit } from '@repo/db-common/enums'
+import { Environment, SiteCAUnit } from '@abc-transitionbascarbone/db-common/enums'
 import { UseFormReturn } from 'react-hook-form'
 import DynamicComponent from '../utils/DynamicComponent'
 

@@ -9,9 +9,9 @@ import {
   editStudyComment,
   getStudyComments,
 } from '@/services/serverFunctions/study'
+import { CommentStatus, SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { Button } from '@abc-transitionbascarbone/ui'
 import { Card, CardContent, TextField } from '@mui/material'
-import { CommentStatus, SubPost } from '@repo/db-common/enums'
-import { Button } from '@repo/ui'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useState } from 'react'

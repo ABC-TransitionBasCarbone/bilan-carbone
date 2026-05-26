@@ -35,7 +35,7 @@ const GlossaryIconModal = ({ title, className, iconLabel, label, tModal, childre
         label={`${label}-glossary`}
         title={customRich(t, title)}
         onClose={() => setOpen(false)}
-        actions={[{ actionType: 'button', onClick: () => setOpen(false), children: tCommon('close') }]}
+        actions={[{ actionType: 'button', onClick: () => setOpen(false), children: tCommon('action.close') }]}
       >
         {children}
       </Modal>

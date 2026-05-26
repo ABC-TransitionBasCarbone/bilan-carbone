@@ -9,12 +9,13 @@ import GlossaryModal from '@/components/modals/GlossaryModal'
 import StudySites from '@/components/study/perimeter/StudySites'
 import SelectStudySite from '@/components/study/site/SelectStudySite'
 import useStudySite from '@/components/study/site/useStudySite'
-import { SiteDependentField } from '@/constants/emissionFactorMap'
 import { OrganizationWithSites } from '@/db/account'
 import type { FullStudy } from '@/db/study'
+import { getTiltEngine } from '@/environments/tilt/publicodes/tilt-engine'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import {
   mappedTiltSituationToCustomDataFields,
+  optionalTiltSituationToCustomDataFields,
   TiltCustomDataFields,
   TiltStructureOptions,
 } from '@/services/customDataToSituation'
@@ -26,20 +27,16 @@ import {
   ChangeStudySiteTiltSimplifiedCommand,
   ChangeStudySiteTiltSimplifiedValidation,
 } from '@/services/serverFunctions/study.command'
+import { SiteCAUnit, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CircularProgress, Typography } from '@mui/material'
-import { SiteCAUnit, StudyRole } from '@repo/db-common/enums'
+import { getEvaluatedFormElement } from '@publicodes/forms'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
-import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
-import { useCallback, useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
 import styles from './StudyRightsTiltSimplified.module.css'
-
-const SiteDataChangeWarningModal = dynamic(() => import('@/components/modals/SiteDataChangeWarningModal'), {
-  ssr: false,
-})
 
 interface Props {
   study: FullStudy
@@ -62,16 +59,6 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
   const [glossary, setGlossary] = useState('')
   const [siteData, setSiteData] = useState<TiltCustomDataFields | undefined>()
   const [loading, setLoading] = useState(true)
-  const [showSiteDataWarning, setShowSiteDataWarning] = useState(false)
-  const [pendingSiteChanges, setPendingSiteChanges] = useState<{
-    changedFields: SiteDependentField[]
-    questionsBySubPost: Record<string, Array<{ id: string; label: string; idIntern: string; answer?: string }>>
-    pendingData: ChangeStudySiteTiltSimplifiedCommand
-  } | null>(null)
-  const [originalValues, setOriginalValues] = useState<{
-    postalCode: string
-    structure: string
-  } | null>(null)
 
   const form = useForm<ChangeStudySiteTiltSimplifiedCommand>({
     resolver: zodResolver(ChangeStudySiteTiltSimplifiedValidation),
@@ -80,8 +67,25 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
     defaultValues: {
       postalCode: siteData?.postalCode ?? '',
       structure: siteData?.structure ?? '',
+      structureOther: ((siteData?.structureOther as string) ?? '').replace(/^'|'$/g, ''),
     },
   })
+
+  const selectedStructure = useWatch({ control: form.control, name: 'structure' })
+  const isOtherStructure = useMemo(() => {
+    if (!selectedStructure) {
+      return false
+    }
+    const engine = getTiltEngine().shallowCopy()
+    engine.setSituation({ 'général . type': selectedStructure })
+    return getEvaluatedFormElement(engine, 'général . type autre').applicable
+  }, [selectedStructure])
+
+  useEffect(() => {
+    if (!isOtherStructure) {
+      form.setValue('structureOther', '')
+    }
+  }, [isOtherStructure, form])
 
   const dateForm = useForm<ChangeStudyDatesCommand>({
     resolver: zodResolver(ChangeStudyDatesCommandValidation),
@@ -98,21 +102,20 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
     async function setStudySiteData() {
       setLoading(true)
       if (studySite && studySite !== 'all') {
-        const situationRes = await loadMappedSituation(study.id, studySiteId, mappedTiltSituationToCustomDataFields)
+        const situationRes = await loadMappedSituation(study.id, studySiteId, {
+          ...mappedTiltSituationToCustomDataFields,
+          ...optionalTiltSituationToCustomDataFields,
+        })
 
         if (situationRes.success && situationRes.data) {
           const newSiteData = situationRes.data
           setSiteData(newSiteData)
 
-          const initialValues = {
+          form.reset({
             postalCode: String(newSiteData?.postalCode ?? ''),
             structure: String(newSiteData?.structure ?? ''),
-          }
-
-          // Store original values for change detection
-          setOriginalValues(initialValues)
-
-          form.reset(initialValues)
+            structureOther: String(newSiteData?.structureOther ?? '').replace(/^'|'$/g, ''),
+          })
         }
       }
       setLoading(false)
@@ -124,33 +127,9 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
   const handleStudySiteUpdate = useCallback(
     async (data: ChangeStudySiteTiltSimplifiedCommand) => {
       await callServerFunction(() => changeStudySiteTiltSimplified(studySiteId, data))
-      setOriginalValues({
-        postalCode: data.postalCode ?? '',
-        structure: data.structure ?? '',
-      })
     },
     [callServerFunction, studySiteId],
   )
-
-  const handleSiteDataWarningCancel = () => {
-    setShowSiteDataWarning(false)
-    setPendingSiteChanges(null)
-    if (originalValues && siteData) {
-      form.reset(originalValues)
-    }
-  }
-
-  const handleSiteDataWarningConfirm = async () => {
-    if (pendingSiteChanges) {
-      setShowSiteDataWarning(false)
-      await callServerFunction(() => changeStudySiteTiltSimplified(studySiteId, pendingSiteChanges.pendingData))
-      setOriginalValues({
-        postalCode: pendingSiteChanges.pendingData.postalCode ?? '',
-        structure: pendingSiteChanges.pendingData.structure ?? '',
-      })
-      setPendingSiteChanges(null)
-    }
-  }
 
   const handleDateChange = useCallback(async () => {
     const isValid = await dateForm.trigger()
@@ -234,6 +213,15 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
                 renderValue={(structure) => (structure ? tStructure(structure as string) : '')}
                 onBlur={onStudySiteUpdate}
               />
+              {isOtherStructure && (
+                <FormTextField
+                  control={form.control}
+                  name="structureOther"
+                  label={t('structureOther')}
+                  className={styles.formTextField}
+                  onBlur={onStudySiteUpdate}
+                />
+              )}
               <Typography className="bold">{t('dates')}</Typography>
               <div className={styles.dates}>
                 <FormDatePicker
@@ -252,14 +240,6 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
               </div>
             </div>
           </>
-        )}
-        {showSiteDataWarning && pendingSiteChanges && (
-          <SiteDataChangeWarningModal
-            isOpen={showSiteDataWarning}
-            onClose={handleSiteDataWarningCancel}
-            onConfirm={handleSiteDataWarningConfirm}
-            questionsBySubPost={pendingSiteChanges.questionsBySubPost}
-          />
         )}
       </Block>
       {glossary && (

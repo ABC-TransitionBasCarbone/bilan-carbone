@@ -53,7 +53,7 @@ const SelectStudySite = ({
   }, [sites, showAllOption, defaultValue])
 
   const orderedSites = useMemo(() => {
-    return sites?.sort((a, b) => a.site.name.localeCompare(b.site.name)) ?? []
+    return [...(sites ?? [])].sort((a, b) => a.site.name.localeCompare(b.site.name))
   }, [sites])
 
   if (environment && !hasAccessToStudySiteAddAndSelection(environment)) {

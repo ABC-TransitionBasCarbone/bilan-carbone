@@ -56,48 +56,99 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
    The application will be available at [http://localhost:3000](http://localhost:3000)
 
-## Import Scripts
+## Import scripts
 
-Run these import scripts in the production environment (change the value of the version):
+These scripts must be run from apps/bilan-carbone:
 
-Importer les facteurs d'emissions de negaoctet :
-`npx tsx src/scripts/negaOctet/getEmissionFactors.ts -n ${versionNumber} -f ${pathToCSVFileNegaOctet}`
+### Import emission factors from NegaOctet
 
-Importer les facteurs d'emissions de legifrance :
-`npx tsx src/scripts/legifrance/getEmissionFactors.ts -n ${versionNumber} -f ${pathToCSVFileLegifrance}`
+```bash
+yarn tsx src/scripts/negaOctet/getEmissionFactors.ts -n ${versionNumber} -f ${pathToCSVFile}
+```
 
-Importer les facteurs d'emissions de la base empreinte :
-`npx tsx src/scripts/baseEmpreinte/getEmissionFactors.ts -n ${versionNumberBaseEmpreinte}"`
+### Import emission factors from Legifrance
 
-Créer les règles de gestion du BEGES :
-`npx tsx src/scripts/exportRules/beges.ts`
+```bash
+yarn tsx src/scripts/legifrance/getEmissionFactors.ts -n ${versionNumber} -f ${pathToCSVFile}
+```
 
-Importer les actualités depuis un CSV :
-`npx tsx src/scripts/actuality/add.ts -f ${pathToCSVFileActuality}`
+### Import emission factors from Base Empreinte
 
-Importer les Donnée cartographie depuis un [CSV du CNC](https://www.cnc.fr/cinema/etudes-et-rapports/statistiques/geolocalisation-des-cinemas-actifs-en-france) :
-`npx tsx src/scripts/cnc/add.ts -f ${pathToCSVFileCNC}`
+Unchanged EFs between two imports are reused (same DB row). Changed EFs create a new row. Comparison is done via the raw CSV line stored in `importedRawCsv` at import time.
 
-Supprimer les réponses d'une question :
-`npx tsx src/scripts/questions/deleteAnswersWithCleanup.ts -q "question-intern-id-here"`
+If EFs have been manually corrected via `applyOverrides` and their CSV row has changed, the import fails and requires an explicit choice between `--keep-overrides` and `--discard-overrides`.
+
+```bash
+# Preview an import without writing to the database
+yarn tsx src/scripts/baseEmpreinte/getEmissionFactors.ts -n ${versionNumberBaseEmpreinte} -f ${pathToCSVFile} --dry-run
+
+# Import Base Empreinte
+yarn tsx src/scripts/baseEmpreinte/getEmissionFactors.ts -n ${versionNumberBaseEmpreinte} -f ${pathToCSVFile}
+
+# Import while keeping existing manual overrides on changed EFs
+yarn tsx src/scripts/baseEmpreinte/getEmissionFactors.ts -n ${versionNumberBaseEmpreinte} -f ${pathToCSVFile} --keep-overrides
+
+# Import while discarding existing manual overrides in favor of new CSV values
+yarn tsx src/scripts/baseEmpreinte/getEmissionFactors.ts -n ${versionNumberBaseEmpreinte} -f ${pathToCSVFile} --discard-overrides
+
+# Backfill importedRawCsv on EFs imported before the field was introduced (one-timeon the last version before the field was introduced)
+yarn tsx src/scripts/baseEmpreinte/backfillImportedRawCsv.ts -n ${versionNumberBaseEmpreinte} -f ${pathToCSVFile} --dry-run
+yarn tsx src/scripts/baseEmpreinte/backfillImportedRawCsv.ts -n ${versionNumberBaseEmpreinte} -f ${pathToCSVFile}
+
+# Preview manual corrections without writing to the database
+yarn tsx src/scripts/baseEmpreinte/applyOverrides.ts -f ${pathToXlsxFile} --dry-run
+
+# Apply manual corrections to existing EFs (writes values directly onto the EF)
+# The Excel file must contain the same columns as the standard import CSV
+yarn tsx src/scripts/baseEmpreinte/applyOverrides.ts -f ${pathToXlsxFile}
+```
+
+### Create BEGES rules
+
+```bash
+yarn tsx src/scripts/exportRules/beges.ts
+```
+
+### Import actualities
+
+```bash
+yarn tsx src/scripts/actuality/add.ts -f ${pathToCSVFile}
+```
+
+### Import CNC data
+
+Import CNC data from a [CSV file](https://www.cnc.fr/cinema/etudes-et-rapports/statistiques/geolocalisation-des-cinemas-actifs-en-france) :
+
+```bash
+yarn tsx src/scripts/cnc/add.ts -f ${pathToCSVFile}
+```
+
+### Delete answers of a question
+
+```bash
+yarn tsx src/scripts/questions/deleteAnswersWithCleanup.ts -q "question-intern-id-here"
+```
 
 ### Scripts lancés par CRON
 
-Importer les utilisateurs depuis le FTP : `curl -X POST $NEXT_API_URL/cron/import-users -H "Authorization: Bearer $CRON_SECRET"`
+Import users from the FTP server : `curl -X POST $NEXT_API_URL/cron/import-users -H "Authorization: Bearer $CRON_SECRET"`
 
-Créer les études de formation pour les utilisateurs qui ont commencé ou terminé une formation : `curl -X POST $NEXT_API_URL/cron/assign-training-studies -H "Authorization: Bearer $CRON_SECRET"`
+Create training studies for users who have started or ended a formation : `curl -X POST $NEXT_API_URL/cron/assign-training-studies -H "Authorization: Bearer $CRON_SECRET"`
 
-### Importer les données de Secten
+### Import Secten data
 
-Importer les données de Secten en créant une nouvelle version ou en mettant à jour une version existante si le nom de la version est déjà utilisé :
-`npx tsx src/scripts/secten/importSectenData.ts -y ${versionYear} -f ${pathToCSVFileSecten}`
+Import Secten data by creating a new version or updating an existing version if the version name is already used :
 
-Le CSV est créé manuellement depuis l'excel disponible sur le site de Secten.
+```bash
+yarn tsx src/scripts/secten/importSectenData.ts -y ${versionYear} -f ${pathToCSVFileSecten}
+```
 
-- Trouver le fichier <https://www.citepa.org/donnees-air-climat/donnees-gaz-a-effet-de-serre/secten/> > "Données de GES ed X"
-- Télécharger le fichier 01 > Onglet CO2e-UE
-- Copier les valeurs des lignes 7 à 14, sauf la ligne 13, dans le fichier excel template.
-- Puis exporter le fichier excel en CSV avec le delimiter ";" et le format "UTF-8".
+The CSV file is created manually from the Excel file available on the Secten website.
+
+- Find the file <https://www.citepa.org/donnees-air-climat/donnees-gaz-a-effet-de-serre/secten/> > "Données de GES ed X"
+- Download the file 01 > Tab CO2e-UE
+- Copy the values of lines 7 to 14, except line 13, into the excel template file.
+- Then export the excel file to CSV with the delimiter ";" and the format "UTF-8".
 
 ## Prisma Commands
 
@@ -122,6 +173,14 @@ yarn test
 
 # Run tests in watch mode
 yarn test:watch
+```
+
+### Run Publicodes test
+
+```bash
+yarn publicodes-count:test
+yarn publicodes-clickson:test
+yarn publicodes-tilt:test
 ```
 
 ### Run Cypress tests

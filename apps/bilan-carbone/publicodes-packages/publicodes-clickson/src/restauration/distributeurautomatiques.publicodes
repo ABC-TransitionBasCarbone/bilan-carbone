@@ -174,12 +174,12 @@ restauration . distributeur automatiques:
     barre chocolatée:
       titre: Barre chocolatée
       formule: nombre * FE
-      unité: kg de poids net
+      unité: kgCO2e
       par défaut: 0
       avec:
         nombre:
           question: Quantité de barres chocolatées consommée annuellement
-          unité: barre
+          unité: kg de poids net
           par défaut: 0
         FE:
           question: Facteur d'émission par kg de poids net de barre chocolatée

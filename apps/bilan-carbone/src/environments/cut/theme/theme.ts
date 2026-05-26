@@ -1,4 +1,5 @@
 import { Post } from '@/services/posts'
+import { globalTheme } from '@abc-transitionbascarbone/css'
 import { createTheme } from '@mui/material/styles'
 
 const base = createTheme({
@@ -77,21 +78,7 @@ const base = createTheme({
     'none',
     'none',
   ],
-  typography: {
-    fontFamily: 'Gilroy-Regular, sans-serif',
-    button: {
-      textTransform: 'none',
-      fontWeight: 600,
-      fontFamily: 'Gilroy-Regular, sans-serif',
-    },
-    h4: {
-      fontFamily: 'Gilroy-Regular, sans-serif',
-      fontWeight: 700,
-      fontSize: '1.5rem',
-      lineHeight: '1.2rem',
-      letterSpacing: '0%',
-    },
-  },
+  typography: globalTheme.typography,
 })
 
 const cutTheme = createTheme(base, {

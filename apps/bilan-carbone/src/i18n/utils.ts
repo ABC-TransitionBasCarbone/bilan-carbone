@@ -1,6 +1,6 @@
 'use server'
 import { mergeObjects } from '@/utils/object'
-import { Environment } from '@repo/db-common/enums'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import fs from 'fs'
 import path from 'path'
 import { Locale, LocaleType } from './config'
@@ -10,10 +10,10 @@ export const getMessages = async (locale: LocaleType, environment?: Environment)
   let bcMessages = {}
 
   try {
-    commonMessages = (await import(`./translations/${locale}/common.json`)).default
+    commonMessages = (await import(`../../../../packages/i18n/${locale}/common.json`)).default
   } catch {
     console.log(`No common translation file for locale: ${locale}, falling back to default`)
-    commonMessages = (await import(`./translations/${Locale.EN}/common.json`)).default
+    commonMessages = (await import(`../../../../packages/i18n/${Locale.EN}/common.json`)).default
   }
 
   try {

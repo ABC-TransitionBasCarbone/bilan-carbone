@@ -2,7 +2,7 @@
 
 import type { FullStudy } from '@/db/study'
 import { Post } from '@/services/posts'
-import { StudyRole, SubPost } from '@repo/db-common/enums'
+import { StudyRole, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import classNames from 'classnames'
 import { SessionProvider } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'

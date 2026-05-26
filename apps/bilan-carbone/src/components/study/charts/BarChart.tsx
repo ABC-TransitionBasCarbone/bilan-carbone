@@ -8,7 +8,7 @@ import styles from './BarChart.module.css'
 
 import { BasicTypeCharts, processBarChartData } from '@/utils/charts'
 import { formatNumber } from '@/utils/number'
-import { StudyResultUnit } from '@repo/db-common'
+import { StudyResultUnit } from '@abc-transitionbascarbone/db-common'
 
 const BAR_CHART_CONSTANTS = {
   TICK_ANGLE: -20,

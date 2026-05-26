@@ -1,6 +1,6 @@
 import { DefaultStudyTags } from '@/constants/studyTags'
-import type { Prisma } from '@repo/db-common'
-import { Environment } from '@repo/db-common/enums'
+import type { Prisma } from '@abc-transitionbascarbone/db-common'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { prismaClient } from './client.server'
 
 export const getEmissionSourceById = (id: string) =>

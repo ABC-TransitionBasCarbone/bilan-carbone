@@ -57,8 +57,8 @@ const StyledChip = <C extends React.ElementType = 'div'>({
 
   const finalLabel = (
     <div className={styles.labelContainer}>
-      <span className={styles.title}>{label}</span>
-      {subtitle && <span className={styles.subtitle}>{subtitle}</span>}
+      <span className={classNames('ellipsis', styles.title)}>{label}</span>
+      {subtitle && <span className={classNames('ellipsis', styles.subtitle)}>{subtitle}</span>}
     </div>
   )
 

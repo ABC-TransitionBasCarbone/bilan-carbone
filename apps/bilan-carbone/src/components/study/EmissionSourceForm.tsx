@@ -19,13 +19,7 @@ import { EmissionSourcesStatus } from '@/types/emissionSource.types'
 import { emissionFactorDefautQualityStar, getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
 import { formatEmissionFromNumber, hasDeprecationPeriod, hasEditionRights, isCAS } from '@/utils/study'
-import AddIcon from '@mui/icons-material/Add'
-import CopyIcon from '@mui/icons-material/ContentCopy'
-import EditIcon from '@mui/icons-material/Edit'
-import HideIcon from '@mui/icons-material/VisibilityOff'
-import { Autocomplete, FormControl, InputLabel, MenuItem, Popper, TextField } from '@mui/material'
-import { DatePicker } from '@mui/x-date-pickers'
-import type { StudyTag } from '@repo/db-common'
+import type { StudyTag } from '@abc-transitionbascarbone/db-common'
 import {
   EmissionSourceCaracterisation,
   EmissionSourceType,
@@ -34,8 +28,14 @@ import {
   StudyRole,
   SubPost,
   Unit,
-} from '@repo/db-common/enums'
-import { Button } from '@repo/ui'
+} from '@abc-transitionbascarbone/db-common/enums'
+import { Button } from '@abc-transitionbascarbone/ui'
+import AddIcon from '@mui/icons-material/Add'
+import CopyIcon from '@mui/icons-material/ContentCopy'
+import EditIcon from '@mui/icons-material/Edit'
+import HideIcon from '@mui/icons-material/VisibilityOff'
+import { Autocomplete, FormControl, InputLabel, MenuItem, Popper, TextField } from '@mui/material'
+import { DatePicker } from '@mui/x-date-pickers'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
@@ -335,31 +335,14 @@ const EmissionSourceForm = ({
             )}
           </>
         )}
-        <FormControl>
-          <div className="flex">
-            <div className="grow">
-              <InputLabel id={'type-label'}>{`${t('form.type')} *`}</InputLabel>
-              <Select
-                disabled={!canEdit || isContributor}
-                data-testid="emission-source-type"
-                value={emissionSource.type || ''}
-                onChange={(event) => update('type', event.target.value === '' ? null : (event.target.value as string))}
-                label={`${t('form.type')} *`}
-                labelId={'type-label'}
-                withLabel={false}
-                fullWidth
-                clearable={!!canEdit && !isContributor}
-              >
-                {Object.keys(EmissionSourceType).map((value) => (
-                  <MenuItem key={value} value={value}>
-                    {t(`type.${value}`)}
-                  </MenuItem>
-                ))}
-              </Select>
-            </div>
-            <HelpIcon className="ml1" onClick={() => setGlossary('type')} label={tGlossary('title')} />
-          </div>
-        </FormControl>
+        <TextField
+          className="grow"
+          disabled={!canEdit}
+          data-testid="emission-source-source"
+          defaultValue={emissionSource.source}
+          onBlur={(event) => update('source', event.target.value || null)}
+          label={`${t('form.source')} *`}
+        />
         {caracterisations.length > 0 && displayCaracterisation && (
           <FormControl className="grow">
             <InputLabel id="emission-source-caracterisation-label">{`${t('form.caracterisation')} *`}</InputLabel>
@@ -403,7 +386,7 @@ const EmissionSourceForm = ({
             {selectedFactor.unit === Unit.CUSTOM ? selectedFactor.customUnit : getUnitLabel(selectedFactor.unit || '')}{' '}
             {feQualityRating && (
               <>
-                - {tQuality('name')} {tQuality(feQualityRating.toString())}
+                - {t('form.quality')} {tQuality(feQualityRating.toString())}
                 {editSpecificQuality ? (
                   <HideIcon
                     className={classNames(styles.editFEQualityButton, 'ml-4')}
@@ -507,14 +490,33 @@ const EmissionSourceForm = ({
                 </div>
               )}
             />
-            <TextField
-              className="grow"
-              disabled={!canEdit}
-              data-testid="emission-source-source"
-              defaultValue={emissionSource.source}
-              onBlur={(event) => update('source', event.target.value)}
-              label={t('form.source')}
-            />
+            <FormControl className={styles.typeContainer}>
+              <div className="flex">
+                <div className="grow">
+                  <InputLabel id={'type-label'}>{t('form.type')}</InputLabel>
+                  <Select
+                    disabled={!canEdit || isContributor}
+                    data-testid="emission-source-type"
+                    value={emissionSource.type || ''}
+                    onChange={(event) =>
+                      update('type', event.target.value === '' ? null : (event.target.value as string))
+                    }
+                    label={t('form.type')}
+                    labelId={'type-label'}
+                    withLabel={false}
+                    fullWidth
+                    clearable={!!canEdit && !isContributor}
+                  >
+                    {Object.keys(EmissionSourceType).map((value) => (
+                      <MenuItem key={value} value={value}>
+                        {t(`type.${value}`)}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </div>
+                <HelpIcon className="ml1" onClick={() => setGlossary('type')} label={tGlossary('title')} />
+              </div>
+            </FormControl>
           </div>
           <QualitySelectGroup
             canEdit={canEdit}
@@ -538,6 +540,16 @@ const EmissionSourceForm = ({
           defaultValue={emissionSource.comment}
           onBlur={(event) => update('comment', event.target.value)}
           label={t('form.comment')}
+        />
+        <TextField
+          multiline
+          fullWidth
+          className={classNames('grow', styles.resizable)}
+          disabled={!canEdit}
+          data-testid="emission-source-fe-comment"
+          defaultValue={emissionSource.feComment}
+          onBlur={(event) => update('feComment', event.target.value)}
+          label={t('form.feComment')}
         />
       </div>
       <div className="flex-row justify-between">

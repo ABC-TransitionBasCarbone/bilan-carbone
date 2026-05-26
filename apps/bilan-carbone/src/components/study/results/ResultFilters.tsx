@@ -1,7 +1,7 @@
 import type { FullStudy } from '@/db/study'
 import { environmentSubPostsMapping, Post, subPostsByPost } from '@/services/posts'
 import type { ResultType } from '@/types/study.types'
-import { SubPost } from '@repo/db-common/enums'
+import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { PostSubPostFilter } from '../../form/PostSubPostFilter'
 import { TagFilter } from '../../form/TagFilter'

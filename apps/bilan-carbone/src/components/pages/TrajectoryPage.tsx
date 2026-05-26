@@ -6,10 +6,10 @@ import { customRich } from '@/i18n/customRich'
 import { getStudyTotalCo2Emissions } from '@/services/study'
 import type { ActionWithRelations, TrajectoryWithObjectivesAndScope } from '@/types/trajectory.types'
 import { getDefaultSnbcSectoralPercentages, getDefaultSnbcSectoralTrajectory } from '@/utils/snbc'
+import type { ExternalStudy, SectenInfo, TransitionPlan } from '@abc-transitionbascarbone/db-common'
+import { Button } from '@abc-transitionbascarbone/ui'
 import AddIcon from '@mui/icons-material/Add'
 import { Tooltip, Typography } from '@mui/material'
-import type { ExternalStudy, SectenInfo, TransitionPlan } from '@repo/db-common'
-import { Button } from '@repo/ui'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -100,7 +100,14 @@ const TrajectoryPage = ({
       onboardingDetailedContent={customRich(t, 'trajectories.onboarding.detailedInfo')}
       graphTitleAction={addButton}
     >
-      {({ filteredStudyEmissions, filteredPastStudies, filteredTrajectories, selectedSiteIds }) => (
+      {({
+        filteredStudyEmissions,
+        filteredPastStudies,
+        filteredTrajectories,
+        selectedSiteIds,
+        objectiveGroupsByTrajectoryId,
+        hasFilters,
+      }) => (
         <>
           <div className="flex-col gapped1">
             <Typography variant="h5" component="h2" fontWeight={600}>
@@ -121,6 +128,8 @@ const TrajectoryPage = ({
               sites={sites}
               tagFamilies={study.tagFamilies}
               defaultSnbcSectoralTrajectoryId={defaultSnbcSectoralTrajectoryId}
+              objectiveGroupsByTrajectoryId={objectiveGroupsByTrajectoryId}
+              hasFilters={hasFilters}
             />
           </div>
 

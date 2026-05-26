@@ -1,8 +1,8 @@
 'use client'
 
+import { Button } from '@abc-transitionbascarbone/ui'
 import CloseIcon from '@mui/icons-material/Close'
 import { IconButton, Modal as MUIModal, Step, StepLabel, Stepper, Typography } from '@mui/material'
-import { Button } from '@repo/ui'
 import classNames from 'classnames'
 import { ReactNode } from 'react'
 import Box from '../base/Box'
@@ -12,6 +12,7 @@ export interface Props {
   label: string
   open: boolean
   onClose: () => void
+  disableBackdropClose?: boolean
   title: React.ReactNode | string
   activeStep: number
   steps: string[]
@@ -32,6 +33,7 @@ const ModalStepper = ({
   label,
   open,
   onClose,
+  disableBackdropClose,
   title,
   activeStep,
   steps,
@@ -52,7 +54,12 @@ const ModalStepper = ({
   return (
     <MUIModal
       open={open}
-      onClose={onClose}
+      onClose={(_, reason) => {
+        if (disableBackdropClose && reason === 'backdropClick') {
+          return
+        }
+        onClose()
+      }}
       aria-labelledby={`${label}-modal-title`}
       aria-describedby={`${label}-modal-description`}
       data-testid={`${label}-modal`}

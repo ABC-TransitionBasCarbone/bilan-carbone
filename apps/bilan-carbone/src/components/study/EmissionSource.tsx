@@ -1,6 +1,5 @@
 'use client'
 
-import { AccountWithUser } from '@/db/account'
 import { keepOnlyOneMetadata } from '@/db/emissionFactors.utils'
 import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
@@ -16,14 +15,12 @@ import {
 import { getQualitativeUncertaintyFromSquaredStandardDeviation } from '@/services/uncertainty'
 import { useUnitLabel } from '@/services/unit'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { AccountWithUser } from '@/types/account.types'
 import { EmissionSourcesStatus } from '@/types/emissionSource.types'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { getEmissionSourceStatus } from '@/utils/emissionSources'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
 import { hasEditionRights, STUDY_UNIT_VALUES } from '@/utils/study'
-import { formatDateFr } from '@/utils/time'
-import SavedIcon from '@mui/icons-material/CloudUpload'
-import { Alert, CircularProgress, FormLabel, TextField } from '@mui/material'
 import {
   EmissionSourceCaracterisation,
   Export,
@@ -33,7 +30,10 @@ import {
   StudyRole,
   SubPost,
   Unit,
-} from '@repo/db-common/enums'
+} from '@abc-transitionbascarbone/db-common/enums'
+import { formatDateFr } from '@abc-transitionbascarbone/utils'
+import SavedIcon from '@mui/icons-material/CloudUpload'
+import { Alert, CircularProgress, FormLabel, TextField } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -190,10 +190,11 @@ const EmissionSource = ({
 
   const isFromOldImport = useMemo(
     () =>
-      !!selectedFactor?.version?.id &&
-      !study.emissionFactorVersions
-        .map((studyImportVersion) => studyImportVersion.importVersionId)
-        .includes(selectedFactor.version.id),
+      !!selectedFactor &&
+      selectedFactor.versions.length > 0 &&
+      !selectedFactor.versions.some((v) =>
+        study.emissionFactorVersions.map((sv) => sv.importVersionId).includes(v.importVersionId),
+      ),
     [selectedFactor, study.emissionFactorVersions],
   )
 
@@ -286,7 +287,8 @@ const EmissionSource = ({
                   className={classNames(styles.resultQuality, styles.resultText)}
                   data-testid="emission-source-quality"
                 >
-                  {tQuality('name')}{' '}
+                  {t('form.quality')}
+                  {tCommon('colon')}{' '}
                   {tQuality(
                     getQualitativeUncertaintyFromSquaredStandardDeviation(
                       emissionResults.squaredStandardDeviation,

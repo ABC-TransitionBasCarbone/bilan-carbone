@@ -1,6 +1,6 @@
 import { getTransitionPlanById } from '@/db/transitionPlan'
 import { getEnvironment } from '@/i18n/environment'
-import { DeactivatableFeature, Environment } from '@repo/db-common/enums'
+import { DeactivatableFeature, Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { isDeactivableFeatureActiveForEnvironment } from '../serverFunctions/deactivableFeatures'
 import { hasEditAccessOnStudy, hasReadAccessOnStudy } from './study'
 

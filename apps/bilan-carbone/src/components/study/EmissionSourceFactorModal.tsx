@@ -1,5 +1,5 @@
 import { EmissionFactorWithMetaData, getFELocations } from '@/services/serverFunctions/emissionFactor'
-import { Environment, SubPost } from '@repo/db-common/enums'
+import { Environment, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import { ImportVersionForFilters } from '../emissionFactor/EmissionFactorsFilters'
@@ -35,7 +35,7 @@ const EmissionSourceFactorModal = ({
   useEffect(() => {
     async function fetchFiltersInfos() {
       const locationFromBdd = await getFELocations()
-      setLocationOptions(locationFromBdd.filter((loc) => !!loc).map((loc) => loc.location) ?? [])
+      setLocationOptions(locationFromBdd.flatMap((loc) => (loc.location ? [loc.location] : [])))
     }
 
     fetchFiltersInfos()

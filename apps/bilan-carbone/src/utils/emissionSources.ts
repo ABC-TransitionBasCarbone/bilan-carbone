@@ -8,10 +8,15 @@ import {
 } from '@/services/uncertainty'
 import { EmissionSourcesStatus } from '@/types/emissionSource.types'
 import type { EmissionSourcesSort } from '@/types/filters'
-import type { Translations } from '@/types/translation'
-import { Environment } from '@repo/db-common/enums'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import type { Translations } from '@abc-transitionbascarbone/lib'
 
-export const getEmissionSourcesFuseOptions = (tQuality: Translations, tUnit: Translations, locale: string) => ({
+export const getEmissionSourcesFuseOptions = (
+  tQuality: Translations,
+  tCommon: Translations,
+  tUnit: Translations,
+  locale: string,
+) => ({
   keys: [
     { name: 'name', weight: 1 },
     { name: 'source', weight: 0.5 },
@@ -59,8 +64,8 @@ export const getEmissionSourcesFuseOptions = (tQuality: Translations, tUnit: Tra
         const qualityRating =
           getQualitativeUncertaintyFromSquaredStandardDeviation(
             getSquaredStandardDeviationForQuality(getSpecificEmissionFactorQuality(emissionSource)),
-          ) || 'unknown'
-        return tQuality(qualityRating.toString())
+          ) || null
+        return qualityRating ? tQuality(qualityRating.toString()) : tCommon('unknown')
       },
       weight: 0.3,
     },

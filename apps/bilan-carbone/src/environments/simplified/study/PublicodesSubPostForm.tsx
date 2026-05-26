@@ -1,8 +1,8 @@
 'use client'
 
-import { SubPost } from '@/components/dynamic-form/types/questionTypes'
 import PublicodesForm from '@/components/publicodes-form/PublicodesForm'
 import { usePublicodesForm } from '@/lib/publicodes/context'
+import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { CircularProgress } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

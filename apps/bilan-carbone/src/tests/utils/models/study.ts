@@ -1,5 +1,5 @@
 import type { FullStudy } from '@/db/study'
-import type { Prisma, Study } from '@repo/db-common'
+import type { Prisma, Study } from '@abc-transitionbascarbone/db-common'
 import {
   ControlMode,
   EmissionFactorBase,
@@ -10,7 +10,7 @@ import {
   StudyRole,
   SubPost,
   Unit,
-} from '@repo/db-common/enums'
+} from '@abc-transitionbascarbone/db-common/enums'
 import { mockedOrganizationVersion, mockedOrganizationVersionId } from './organization'
 import { mockedAccountId, mockedUser } from './user'
 
@@ -153,9 +153,12 @@ export const mockedEmissionSourceEmissionFactor = {
   isMonetary: false,
   location: '',
   customUnit: null,
-  version: {
-    id: 'version-id',
-  },
+  versions: [
+    {
+      importVersionId: TEST_IDS.importVersion,
+      importVersion: { id: TEST_IDS.importVersion, name: 'test', source: Import.BaseEmpreinte, archived: false },
+    },
+  ],
   metaData: [
     {
       language: 'fr',
@@ -164,6 +167,7 @@ export const mockedEmissionSourceEmissionFactor = {
       title: 'Mocked Emission Factor',
       attribute: 'Mocked Attribute',
       comment: 'Mocked Comment',
+      tag: null,
     },
   ],
   emissionFactorParts: [],
@@ -320,6 +324,7 @@ export const getMockeFullStudy = (overrides = {}): FullStudy => ({
       feGeographicRepresentativeness: null,
       feTemporalRepresentativeness: null,
       feCompleteness: null,
+      feComment: null,
       lastEditor: null,
       createdAt: new Date(),
       updatedAt: new Date(),

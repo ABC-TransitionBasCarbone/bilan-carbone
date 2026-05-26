@@ -1,6 +1,6 @@
 import { Post, subPostsByPost } from '@/services/posts'
+import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { Checkbox, FormControl, FormLabel, InputLabel, ListItemText, MenuItem, Select } from '@mui/material'
-import { SubPost } from '@repo/db-common/enums'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'

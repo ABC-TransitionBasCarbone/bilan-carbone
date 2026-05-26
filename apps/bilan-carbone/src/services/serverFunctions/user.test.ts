@@ -1,5 +1,5 @@
+import { DeactivatableFeature, Environment, Role, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { expect } from '@jest/globals'
-import { DeactivatableFeature, Environment, Role, UserStatus } from '@repo/db-common/enums'
 
 import {
   addAccount,

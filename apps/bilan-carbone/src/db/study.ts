@@ -9,10 +9,25 @@ import { mapCncToStudySite } from '@/utils/cnc'
 import { isAdminOnOrga } from '@/utils/organization'
 import { getAllowedLevels, getUserRoleOnPublicStudy, hasSufficientLevel, StudyWithRoleFields } from '@/utils/study'
 import { isAdmin } from '@/utils/user'
-import type { DuplicableStudy, Level, Prisma, StudyTag, StudyTagFamily, SubPost } from '@repo/db-common'
-import { CommentStatus, ControlMode, Environment, Export, Import, StudyRole } from '@repo/db-common/enums'
+import type {
+  DuplicableStudy,
+  Level,
+  Prisma,
+  StudyTag,
+  StudyTagFamily,
+  SubPost,
+} from '@abc-transitionbascarbone/db-common'
+import {
+  CommentStatus,
+  ControlMode,
+  Environment,
+  Export,
+  Import,
+  StudyRole,
+} from '@abc-transitionbascarbone/db-common/enums'
 import { UserSession } from 'next-auth'
 import { cache } from 'react'
+import { deleteTransitionPlan } from '../services/serverFunctions/transitionPlan'
 import { getAccountOrganizationVersions } from './account'
 import { AccountWithUserSelect } from './account.select'
 import { prismaClient } from './client.server'
@@ -92,6 +107,7 @@ const fullStudyInclude = {
       source: true,
       type: true,
       comment: true,
+      feComment: true,
       validated: true,
       depreciationPeriod: true,
       hectare: true,
@@ -135,11 +151,13 @@ const fullStudyInclude = {
               frontiere: true,
               location: true,
               comment: true,
+              tag: true,
             },
           },
-          version: {
+          versions: {
             select: {
-              id: true,
+              importVersionId: true,
+              importVersion: { select: { id: true, name: true, source: true, archived: true } },
             },
           },
         },
@@ -822,6 +840,7 @@ export const deleteStudy = async (id: string) => {
       transaction.studyEmissionFactorVersion.deleteMany({ where: { studyId: id } }),
       transaction.studyExport.deleteMany({ where: { studyId: id } }),
       ...studySites.map((studySite) => transaction.openingHours.deleteMany({ where: { studySiteId: studySite.id } })),
+      deleteTransitionPlan(id),
     ])
     await transaction.study.delete({ where: { id } })
   })
@@ -1013,24 +1032,6 @@ export const deleteStudyMemberFromOrganization = async (accountId: string, organ
   const studies = await getAllowedStudiesByAccountIdAndOrganizationId(organizationVersionIds)
   return prismaClient.userOnStudy.deleteMany({
     where: { accountId, studyId: { in: studies.map((study) => study.id) } },
-  })
-}
-
-export const getStudiesAffectedByQuestion = async (questionIdIntern: string) => {
-  return prismaClient.study.findMany({
-    where: {
-      sites: {
-        some: {
-          studyAnswers: {
-            some: {
-              question: { idIntern: questionIdIntern },
-            },
-          },
-        },
-      },
-    },
-    select: { id: true, name: true },
-    distinct: ['id'],
   })
 }
 

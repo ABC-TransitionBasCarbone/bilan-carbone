@@ -11,7 +11,7 @@ import {
   SUBPOST_TO_FORM_LAYOUTS as SUBPOST_TO_FORM_LAYOUTS_TILT,
 } from '@/environments/tilt/publicodes/subPostMapping'
 import { SimplifiedPost } from '@/services/posts'
-import { Environment, SubPost } from '@repo/db-common/enums'
+import { Environment, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 
 export const SUBPOSTS_PUBLICODE_FROM_ENV: Partial<Record<Environment, SubPost[]>> = {
   [Environment.CLICKSON]: Object.keys(SUBPOST_TO_FORM_LAYOUTS_CLICKSON) as SubPost[],

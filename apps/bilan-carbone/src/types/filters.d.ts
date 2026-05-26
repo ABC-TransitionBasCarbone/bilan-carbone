@@ -6,7 +6,7 @@ import {
   EmissionSourceType,
   EngagementPhase,
   SubPost,
-} from '@repo/db-common/enums'
+} from '@abc-transitionbascarbone/db-common/enums'
 import { EmissionSourcesStatus } from './emissionSource.types'
 
 export type FeFilters = {

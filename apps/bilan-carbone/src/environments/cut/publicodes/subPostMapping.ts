@@ -6,7 +6,7 @@ import {
   tableLayout,
 } from '@/components/publicodes-form/layouts/formLayout'
 import { CutPost } from '@/services/posts.enums'
-import { SubPost } from '@repo/db-common/enums'
+import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { CutRuleName } from './types'
 
 export const getPostRuleNameCut = (post: CutPost): CutRuleName => {

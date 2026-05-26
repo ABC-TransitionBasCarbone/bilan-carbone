@@ -1,4 +1,4 @@
-import { Environment, SubPost } from '@repo/db-common/enums'
+import { Environment, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 
 export enum DefaultStudyTagNames {
   PERIMETRE_INTERNE = 'Périmètre Interne',

@@ -8,9 +8,9 @@ import { getStudyTotalCo2Emissions } from '@/services/study'
 import type { PastStudy } from '@/types/trajectory.types'
 import { TrajectoryWithObjectivesAndScope } from '@/types/trajectory.types'
 import { calculateSectoralSNBCReductionRates } from '@/utils/snbc'
+import type { SectenInfo } from '@abc-transitionbascarbone/db-common'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Typography } from '@mui/material'
-import type { SectenInfo } from '@repo/db-common'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
@@ -124,6 +124,7 @@ const SectorAllocationBlock = ({
       nextButtonLabel={isActive ? tCommon('action.confirm') : tBlock('update')}
       nextButtonLoading={loading}
       nextButtonDisabled={isOverLimit}
+      showNextButton={canEdit}
     >
       <div className="flex-col gapped1">
         <Typography variant="body1">{customRich(tBlock, 'description')}</Typography>

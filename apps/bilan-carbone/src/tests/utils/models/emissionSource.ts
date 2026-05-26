@@ -1,11 +1,11 @@
 import type { FullStudy } from '@/db/study'
-import { StudyEmissionSource } from '@repo/db-common'
-import { EmissionFactorBase, Import, SubPost, Unit } from '@repo/db-common/enums'
+import { StudyEmissionSource } from '@abc-transitionbascarbone/db-common'
+import { EmissionFactorBase, Import, SubPost, Unit } from '@abc-transitionbascarbone/db-common/enums'
 
 export const mockedEmissionSource = {
   id: 'mocked-emission-source-id',
   studyId: 'mocked-study-id',
-  subPost: SubPost.Achats,
+  subPost: SubPost.Electricite,
   studySiteId: 'mocked-site-id',
   name: 'Mocked Emission Source',
   emissionFactorId: null,
@@ -37,6 +37,7 @@ export const mockedDbEmissionSource = {
   feGeographicRepresentativeness: null,
   feTemporalRepresentativeness: null,
   feCompleteness: null,
+  feComment: null,
   emissionSourceTags: [],
 } as StudyEmissionSource
 
@@ -65,9 +66,12 @@ export const getMockedFullStudyEmissionSource = (
     isMonetary: false,
     location: '',
     customUnit: null,
-    version: {
-      id: 'version-id',
-    },
+    versions: [
+      {
+        importVersionId: 'mocked-import-version-id',
+        importVersion: { id: 'mocked-import-version-id', name: 'test', source: Import.BaseEmpreinte, archived: false },
+      },
+    ],
     metaData: [
       {
         language: 'fr',
@@ -76,6 +80,7 @@ export const getMockedFullStudyEmissionSource = (
         title: 'Mocked Emission Factor',
         attribute: 'Mocked Attribute',
         comment: 'Mocked Comment',
+        tag: null,
       },
     ],
     emissionFactorParts: [],

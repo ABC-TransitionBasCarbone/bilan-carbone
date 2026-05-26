@@ -1,5 +1,5 @@
 import { addMissingSourceToStudies } from '@/services/serverFunctions/study'
-import { Import } from '@repo/db-common/enums'
+import { Import } from '@abc-transitionbascarbone/db-common/enums'
 import { Command } from 'commander'
 import { getEmissionFactorsFromCSV } from '../../services/importEmissionFactor/aib/getEmissionFactors'
 

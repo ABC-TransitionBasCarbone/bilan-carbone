@@ -166,11 +166,7 @@ export const TagFilter = ({
               setTagFilterAnchorEl(event.currentTarget)
             }}
             renderValue={() => {
-              return (
-                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>
-                  {tagsSelectorRenderValue}
-                </span>
-              )
+              return <span className={classNames('ellipsis', 'block')}>{tagsSelectorRenderValue}</span>
             }}
           />
         )}

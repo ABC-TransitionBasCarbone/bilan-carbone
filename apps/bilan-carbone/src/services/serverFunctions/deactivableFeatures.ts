@@ -11,7 +11,7 @@ import {
   updateFeatureRestictions,
 } from '@/db/deactivableFeatures'
 import { withServerResponse } from '@/utils/serverResponse'
-import { DeactivatableFeature, Environment, Role, UserSource } from '@repo/db-common/enums'
+import { DeactivatableFeature, Environment, Role, UserSource } from '@abc-transitionbascarbone/db-common/enums'
 import { dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 

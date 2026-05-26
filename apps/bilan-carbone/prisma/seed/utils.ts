@@ -1,4 +1,4 @@
-import { Environment, Role } from '@repo/db-common/enums'
+import { Environment, Role } from '@abc-transitionbascarbone/db-common/enums'
 
 export const getCutRoleFromBase = (role: Role): Role => {
   switch (role) {

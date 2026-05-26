@@ -8,8 +8,8 @@ import {
   getRawOrganizationBySiret,
 } from '@/db/organization'
 import { createUsersWithAccount, organizationVersionActiveAccountsCount, updateAccount } from '@/db/user'
-import { Prisma } from '@repo/db-common'
-import { Environment, Level, Role, UserSource, UserStatus } from '@repo/db-common/enums'
+import { Prisma } from '@abc-transitionbascarbone/db-common'
+import { Environment, Level, Role, UserSource, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { getCutRoleFromBase } from '../../../prisma/seed/utils'
 
 type Training = {
@@ -21,7 +21,56 @@ type Training = {
   expirationDate: string
 }
 
-const processUser = async (value: Record<string, string>, importedFileDate: Date) => {
+type UserImportRecord = {
+  firstName?: string
+  lastName?: string
+  userEmail?: string
+  purchasedProducts?: string
+  sessionCode?: string
+  companyName?: string
+  siret?: string
+  siren?: string
+  vat?: string
+  taxNumber?: string
+  membershipYear?: string
+  trainings?: Training[] | string
+  source?: string
+  environment?: string
+  formationName?: string
+  formationStartDate?: string
+  formationEndDate?: string
+}
+
+type RawFTPRecord = Record<string, unknown>
+
+const normalizeRecord = (raw: RawFTPRecord): UserImportRecord => {
+  const getString = (camel: string, pascal: string): string | undefined => {
+    const val = raw[camel] ?? raw[pascal]
+    return typeof val === 'string' ? val : undefined
+  }
+
+  return {
+    firstName: getString('firstName', 'Firstname'),
+    lastName: getString('lastName', 'Lastname'),
+    userEmail: getString('userEmail', 'User_Email'),
+    purchasedProducts: getString('purchasedProducts', 'Purchased_Products'),
+    sessionCode: getString('sessionCode', 'Session_Code'),
+    companyName: getString('companyName', 'Company_Name'),
+    siret: getString('siret', 'SIRET'),
+    siren: getString('siren', 'SIREN'),
+    vat: getString('vat', 'VAT'),
+    taxNumber: getString('taxNumber', 'Tax_Number'),
+    membershipYear: getString('membershipYear', 'Membership_Year'),
+    trainings: raw.trainings as Training[] | string | undefined,
+    source: getString('source', 'User_Source'),
+    environment: getString('environment', 'Environment'),
+    formationName: getString('formationName', 'Formation_Name'),
+    formationStartDate: getString('formationStartDate', 'Formation_Start_Date'),
+    formationEndDate: getString('formationEndDate', 'Formation_End_Date'),
+  }
+}
+
+const processUser = async (value: UserImportRecord, importedFileDate: Date) => {
   const {
     firstName = '',
     lastName = '',
@@ -59,7 +108,7 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
   const email = (userEmail || '').replace(/ /g, '').toLowerCase()
 
   const companyNumber = siret || siren || vat || taxNumber
-  const isCR = ['adhesion_conseil', 'licence_exploitation'].includes(purchasedProducts)
+  const isCR = ['adhesion_conseil', 'licence_exploitation'].includes(purchasedProducts ?? '')
   const activatedLicence = (membershipYear || '').match(/\d{4}/g)?.map(Number)
 
   const dbAccount = await getAccountByEmailAndEnvironment(email, environment)
@@ -169,20 +218,20 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
   return user
 }
 
-export const processUsers = async (values: Record<string, string>[], importedFileDate: Date) => {
+export const processUsers = async (values: RawFTPRecord[], importedFileDate: Date) => {
   const BATCH_SIZE = 20
   const usersWithAccount: (Prisma.UserCreateManyInput & { account: Prisma.AccountCreateInput })[] = []
+  let updatedAccountsCount = 0
 
   for (let i = 0; i < values.length; i += BATCH_SIZE) {
     const batch = values.slice(i, i + BATCH_SIZE)
-    const results = await Promise.all(batch.map((v) => processUser(v as Record<string, string>, importedFileDate)))
+    const results = await Promise.all(batch.map((v) => processUser(normalizeRecord(v), importedFileDate)))
     for (const userWithAccount of results) {
       if (userWithAccount) {
         usersWithAccount.push(userWithAccount)
+      } else {
+        updatedAccountsCount += 1
       }
-    }
-    if (i % (BATCH_SIZE * 5) === 0 || i + BATCH_SIZE >= values.length) {
-      console.log(`Progress: ${Math.min(i + BATCH_SIZE, values.length)}/${values.length}`)
     }
   }
   if (usersWithAccount.length > 0) {
@@ -191,6 +240,9 @@ export const processUsers = async (values: Record<string, string>[], importedFil
     console.log(`${newAccounts.count} accounts created`)
   } else {
     console.log('No new users to create')
+  }
+  if (updatedAccountsCount > 0) {
+    console.log(`${updatedAccountsCount} accounts updated`)
   }
 }
 

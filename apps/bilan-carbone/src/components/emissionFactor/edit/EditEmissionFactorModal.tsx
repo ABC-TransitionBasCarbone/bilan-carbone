@@ -15,6 +15,8 @@ interface Props {
 
 const EditEmissionFactorModal = ({ emissionFactorId, action, setAction, setFilters }: Props) => {
   const t = useTranslations('emissionFactors.edit.modal')
+  const tCommon = useTranslations('common')
+
   const [deleting, setDeleting] = useState(false)
   const router = useRouter()
   const onCancel = () => setAction(undefined)
@@ -46,14 +48,14 @@ const EditEmissionFactorModal = ({ emissionFactorId, action, setAction, setFilte
         {
           actionType: 'button',
           onClick: onCancel,
-          children: t('close'),
+          children: tCommon('action.cancel'),
           ['data-testid']: `${action}-emission-factor-cancel`,
         },
         {
           actionType: 'loadingButton',
           onClick: onConfirm,
           loading: deleting,
-          children: t('confirm'),
+          children: tCommon('action.confirm'),
           ['data-testid']: `${action}-emission-factor-confirm`,
         },
       ]}

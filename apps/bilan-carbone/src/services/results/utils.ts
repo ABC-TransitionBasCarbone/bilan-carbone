@@ -1,26 +1,26 @@
 import type { FullStudy } from '@/db/study'
 import { getBaseFilteredEmissionSources } from '@/utils/study'
-import { SubPost } from '@repo/db-common/enums'
+import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
 
 export const getSiteEmissionSourcesWithoutMarketBase = <
   T extends Pick<FullStudy['emissionSources'][number], 'studySite' | 'emissionFactor'>,
 >(
   emissionSources: T[],
-  studySite: string,
+  siteId: string,
 ): T[] =>
   getBaseFilteredEmissionSources(
-    studySite === 'all'
+    siteId === 'all'
       ? emissionSources
-      : emissionSources.filter((emissionSource) => emissionSource.studySite.site.id === studySite),
+      : emissionSources.filter((emissionSource) => emissionSource.studySite.site.id === siteId),
   )
 
 export const getAllSiteEmissionSources = <T extends Pick<FullStudy['emissionSources'][number], 'studySite'>>(
   emissionSources: T[],
-  studySite: string,
+  siteId: string,
 ): T[] =>
-  studySite === 'all'
+  siteId === 'all'
     ? emissionSources
-    : emissionSources.filter((emissionSource) => emissionSource.studySite.site.id === studySite)
+    : emissionSources.filter((emissionSource) => emissionSource.studySite.site.id === siteId)
 
 const dependencySubPosts = [
   SubPost.UtilisationEnDependance,

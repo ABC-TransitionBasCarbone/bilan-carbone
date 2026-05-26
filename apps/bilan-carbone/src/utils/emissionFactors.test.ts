@@ -1,5 +1,5 @@
+import { Environment, Import, Unit } from '@abc-transitionbascarbone/db-common/enums'
 import { expect } from '@jest/globals'
-import { Environment, Import, Unit } from '@repo/db-common/enums'
 import { getEmissionFactorValue, isMonetaryEmissionFactor } from './emissionFactors'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not

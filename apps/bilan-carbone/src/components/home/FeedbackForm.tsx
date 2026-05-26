@@ -1,5 +1,5 @@
 import { appendForm } from '@/utils/form'
-import { Environment } from '@repo/db-common/enums'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { useEffect, useState } from 'react'
 
 const typeformId = process.env.NEXT_PUBLIC_FEEDBACK_TYPEFORM_ID

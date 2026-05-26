@@ -10,8 +10,8 @@ import { hasAccessToStudySiteAddAndSelection } from '@/services/permissions/envi
 import { updateOrganizationCommand } from '@/services/serverFunctions/organization'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
+import { Environment, SiteCAUnit } from '@abc-transitionbascarbone/db-common/enums'
 import { Button, FormHelperText, MenuItem } from '@mui/material'
-import { Environment, SiteCAUnit } from '@repo/db-common/enums'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
@@ -41,9 +41,16 @@ const NextButton = ({ control, onClick, error, hasNoSites }: NextButtonProps) =>
 
   return (
     <div className="mt2">
-      <Button disabled={hasNoSelectedSites} data-testid="new-study-organization-button" onClick={onClick}>
-        {tCommon('next')}
-      </Button>
+      <div className="flex justify-end">
+        <Button
+          variant="contained"
+          disabled={hasNoSelectedSites}
+          data-testid="new-study-organization-button"
+          onClick={onClick}
+        >
+          {tCommon('next')}
+        </Button>
+      </div>
       {error && <FormHelperText error>{error}</FormHelperText>}
     </div>
   )

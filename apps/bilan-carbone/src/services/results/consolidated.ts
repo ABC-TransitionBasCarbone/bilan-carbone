@@ -1,9 +1,9 @@
 import type { FullStudy } from '@/db/study'
 import { customPostOrder } from '@/environments/clickson/utils/constant'
-import { Translations } from '@/types/translation'
 import { sortByCustomOrder } from '@/utils/array'
 import { getEmissionSourcesTotalCo2 } from '@/utils/emissionSources'
-import { Environment } from '@repo/db-common/enums'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { Translations } from '@abc-transitionbascarbone/lib'
 import { AdditionalResultTypes, ResultsByPost, ResultType } from '../../types/study.types'
 import { getEmissionResults, getEmissionSourcesTotalMonetaryCo2 } from '../emissionSource'
 import { hasCustomPostOrder } from '../permissions/environment'
@@ -14,14 +14,14 @@ import { filterWithDependencies, getSiteEmissionSourcesWithoutMarketBase } from 
 export const computeResultsByPostFromEmissionSources = (
   study: FullStudy,
   tPost: (key: string) => string,
-  studySite: string,
+  siteId: string,
   withDependencies: boolean,
   validatedOnly: boolean = true,
   postValues: typeof Post | typeof CutPost | typeof BCPost | typeof TiltPost | typeof ClicksonPost = BCPost,
   environment: Environment,
   type?: ResultType,
 ): ResultsByPost[] => {
-  const siteEmissionSources = getSiteEmissionSourcesWithoutMarketBase(study.emissionSources, studySite)
+  const siteEmissionSources = getSiteEmissionSourcesWithoutMarketBase(study.emissionSources, siteId)
   const convertToBc = type === AdditionalResultTypes.CONSOLIDATED && environment !== Environment.BC
   const convertedSiteEmissionSources = convertToBc
     ? siteEmissionSources.map((emissionSource) => {
@@ -131,13 +131,13 @@ export const computeResultsByTag = (
     emissionSources: FullStudy['emissionSources']
     tagFamilies: FullStudy['tagFamilies']
   },
-  studySite: string,
+  siteId: string,
   withDependencies: boolean,
   validatedOnly: boolean = true,
   environment: Environment,
   t: Translations,
 ): ResultsByTag[] => {
-  const siteEmissionSources = getSiteEmissionSourcesWithoutMarketBase(study.emissionSources, studySite)
+  const siteEmissionSources = getSiteEmissionSourcesWithoutMarketBase(study.emissionSources, siteId)
   const emissionSourceWithEmissionValue = siteEmissionSources
     .filter((emissionSource) => filterWithDependencies(emissionSource.subPost, withDependencies))
     .map((emissionSource) => ({

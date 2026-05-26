@@ -1,3 +1,5 @@
+import ExpandLessIcon from '@mui/icons-material/ExpandLess'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Table as MuiTable, TableBody, TableCell, TableHead, TableRow } from '@mui/material'
 import { flexRender, Table as ReactTable, Row } from '@tanstack/react-table'
 import classNames from 'classnames'
@@ -15,6 +17,7 @@ interface Props<TData> {
   testId: string
   size?: 'small' | 'medium'
   firstHeader?: ReactNode
+  sortable?: boolean
 }
 
 const Table = <TData,>({
@@ -27,6 +30,7 @@ const Table = <TData,>({
   testId,
   size = 'medium',
   firstHeader,
+  sortable = false,
 }: Props<TData>) => {
   const totalRows = table.getRowCount()
   const shouldShowPagination = !!paginations && totalRows > Math.min(...paginations)
@@ -48,14 +52,37 @@ const Table = <TData,>({
             ) : null}
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className={styles.headers}>
-                {headerGroup.headers.map((header) => (
-                  <TableCell
-                    key={header.id}
-                    className={classNames(header.id === 'actions' ? styles.actionsColumn : undefined)}
-                  >
-                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                  </TableCell>
-                ))}
+                {headerGroup.headers.map((header) => {
+                  const canSort = sortable && header.column.getCanSort()
+                  const sortDirection = header.column.getIsSorted()
+                  return (
+                    <TableCell
+                      key={header.id}
+                      className={classNames(
+                        header.id === 'actions' ? styles.actionsColumn : undefined,
+                        sortable ? (canSort ? styles.sortable : styles.notSortable) : undefined,
+                      )}
+                      onClick={canSort ? header.column.getToggleSortingHandler() : undefined}
+                    >
+                      {header.isPlaceholder ? null : canSort ? (
+                        <span className="flex-cc gap025">
+                          {flexRender(header.column.columnDef.header, header.getContext())}
+                          {sortDirection && (
+                            <span className="flex-cc">
+                              {sortDirection === 'asc' ? (
+                                <ExpandLessIcon fontSize="small" />
+                              ) : (
+                                <ExpandMoreIcon fontSize="small" />
+                              )}
+                            </span>
+                          )}
+                        </span>
+                      ) : (
+                        flexRender(header.column.columnDef.header, header.getContext())
+                      )}
+                    </TableCell>
+                  )
+                })}
               </TableRow>
             ))}
           </TableHead>

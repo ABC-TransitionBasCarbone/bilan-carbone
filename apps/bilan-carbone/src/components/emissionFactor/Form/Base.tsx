@@ -4,11 +4,11 @@ import { Select } from '@/components/base/Select'
 import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
 import { customRich } from '@/i18n/customRich'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
+import { EmissionFactorBase, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { FormControl, FormHelperText, MenuItem } from '@mui/material'
-import { EmissionFactorBase, SubPost } from '@repo/db-common/enums'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo } from 'react'
-import { Control, Controller, UseFormReturn, UseFormSetValue } from 'react-hook-form'
+import { Controller, UseFormReturn } from 'react-hook-form'
 import styles from './Base.module.css'
 
 const GlossaryModal = () => {
@@ -34,10 +34,10 @@ const Base = <T extends EmissionFactorCommand>({ form }: Props<T>) => {
   const tValidation = useTranslations('validation')
   const tBase = useTranslations('emissionFactors.base')
 
-  const control = form.control as Control<EmissionFactorCommand>
-  const setValue = form.setValue as UseFormSetValue<EmissionFactorCommand>
-
-  const subPostsValues = (form as UseFormReturn<EmissionFactorCommand>).watch('subPosts')
+  const castedForm = form as UseFormReturn<EmissionFactorCommand>
+  const control = castedForm.control
+  const setValue = castedForm.setValue
+  const subPostsValues = castedForm.watch('subPosts')
 
   const hasElectricity = useMemo(() => {
     const subPosts = Object.values(subPostsValues || {}).flat()
@@ -47,8 +47,10 @@ const Base = <T extends EmissionFactorCommand>({ form }: Props<T>) => {
   useEffect(() => {
     if (!hasElectricity) {
       setValue('base', null)
+    } else if (!castedForm.getValues('base')) {
+      setValue('base', EmissionFactorBase.LocationBased)
     }
-  }, [hasElectricity, setValue])
+  }, [hasElectricity, setValue, castedForm])
 
   return (
     hasElectricity && (

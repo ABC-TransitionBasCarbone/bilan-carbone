@@ -1,8 +1,8 @@
 'use client'
 import Image from '@/components/document/Image'
 import { UserSessionProps } from '@/components/hoc/withAuth'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { Box } from '@mui/material'
-import { Environment } from '@repo/db-common/enums'
 import { useMemo } from 'react'
 import styles from './LogosHome.module.css'
 

@@ -2,14 +2,14 @@ import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import type { FullStudy } from '@/db/study'
 import { toCamelCase } from '@/utils/string'
 import { getBaseFilteredEmissionSources } from '@/utils/study'
-import type { ExportRule } from '@repo/db-common'
+import type { ExportRule } from '@abc-transitionbascarbone/db-common'
 import {
   EmissionFactorBase,
   EmissionFactorPartType,
   EmissionSourceCaracterisation,
   Environment,
   Import,
-} from '@repo/db-common/enums'
+} from '@abc-transitionbascarbone/db-common/enums'
 import { convertTiltSubPostToBCSubPost } from '../posts'
 import {
   getSquaredStandardDeviationForEmissionSource,
@@ -104,7 +104,7 @@ export const computeResult = (
   study: FullStudy,
   rules: ExportRule[],
   emissionFactorsWithParts: EmissionFactorWithParts[],
-  studySite: string,
+  siteId: string,
   withDependencies: boolean,
   validatedOnly: boolean,
   allRules: string[],
@@ -119,7 +119,7 @@ export const computeResult = (
     {},
   )
   const siteEmissionSources = getBaseFilteredEmissionSources(
-    getAllSiteEmissionSources(study.emissionSources, studySite),
+    getAllSiteEmissionSources(study.emissionSources, siteId),
     base,
   )
 

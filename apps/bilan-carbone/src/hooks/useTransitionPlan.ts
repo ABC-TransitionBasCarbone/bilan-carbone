@@ -3,7 +3,7 @@ import { getStudyTotalCo2Emissions } from '@/services/study'
 import type { PastStudy } from '@/types/trajectory.types'
 import { getUIFilteredEmissions } from '@/utils/study'
 import { convertToPastStudies } from '@/utils/transitionPlan.utils'
-import type { ExternalStudy, SubPost } from '@repo/db-common'
+import type { ExternalStudy, SubPost } from '@abc-transitionbascarbone/db-common'
 import { useMemo } from 'react'
 
 interface Params {

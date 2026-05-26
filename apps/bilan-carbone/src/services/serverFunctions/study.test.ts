@@ -1,6 +1,6 @@
 import * as studyUtilsModule from '@/utils/study'
+import { Environment, Import, Level, StudyRole, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { expect } from '@jest/globals'
-import { Environment, Import, Level, StudyRole, SubPost } from '@repo/db-common/enums'
 import { v4 as uuidv4 } from 'uuid'
 import * as accountModule from '../../db/account'
 import * as emissionFactorsModule from '../../db/emissionFactors'
