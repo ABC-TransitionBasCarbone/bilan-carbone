@@ -50,6 +50,7 @@
     "@abc-transitionbascarbone/types": "*",
     "@abc-transitionbascarbone/ui": "*",
     "@abc-transitionbascarbone/utils": "*",
+    "@abc-transitionbascarbone/publicodes": "*",
     "@aws-sdk/client-s3": "^3.1045.0",
     "@aws-sdk/s3-request-presigner": "^3.1045.0",
     "@base-ui-components/react": "^1.0.0-rc.0",
