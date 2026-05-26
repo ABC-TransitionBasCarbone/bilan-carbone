@@ -3,7 +3,7 @@ import enBc from '@/i18n/translations/en/bc.json'
 import frBc from '@/i18n/translations/fr/bc.json'
 
 /**
- * Extracts the =0 singular form from an ICU plural string, e.g. "{count, plural, =0 {Litre} ...}" → "Litre"
+ * Extracts the ="one" singular form from an ICU plural string, e.g. "{count, plural, =0 {None} one {Litre} other {Litres}}" → "Litre"
  */
 export function getSingularForm(value: string): string {
   const match = value.match(/\bone\s*\{([^}]+)\}/)
