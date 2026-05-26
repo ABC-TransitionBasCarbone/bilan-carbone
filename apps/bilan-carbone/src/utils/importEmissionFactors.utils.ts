@@ -155,6 +155,7 @@ export function parsePostsAndSubPostsCell(
 
 export function parseImportFile(buffer: Buffer, locale: LocaleType, environment: Environment): ParseResult {
   const sheetResult = parseExcelSheet(buffer, {
+    ignoredColumns: [COLUMNS.base],
     rowFilter: (_row, i, value) =>
       !(i === COLUMNS.postsAndSubPosts && value.toLowerCase() === getAllPostsLabel(locale).toLowerCase()),
   })

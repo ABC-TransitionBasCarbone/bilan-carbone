@@ -17,6 +17,7 @@ import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { EmissionFactorMatchType, findEmissionFactorMatch } from '@/utils/findEmissionFactor.utils'
 import { getImportEmissionSourcesTranslations, parseEmissionSourcesFile } from '@/utils/importEmissionSources.utils'
 import { getPost } from '@/utils/post'
+import { withServerResponse } from '@/utils/serverResponse'
 import { formatEmissionValueForExport, isCASSubPost } from '@/utils/study'
 import { getBcTranslations, getSingularForm } from '@/utils/translation.utils'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
@@ -590,26 +591,28 @@ async function buildAllEmissionSourcesRows(
   })
 }
 
-export async function exportEmissionSourcesToCSV(studyId: string, post?: Post): Promise<string> {
-  const account = await getAuthenticatedAccount()
-  const study = await getStudyOrThrow(studyId, account)
-  if (!(await canReadStudy(accountWithUserToUserSession(account), studyId))) {
-    throw new Error(NOT_AUTHORIZED)
-  }
+export const exportEmissionSourcesToCSV = async (studyId: string, post?: Post) =>
+  withServerResponse('exportEmissionSourcesToCSV', async () => {
+    const account = await getAuthenticatedAccount()
+    const study = await getStudyOrThrow(studyId, account)
+    if (!(await canReadStudy(accountWithUserToUserSession(account), studyId))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  const locale = await getLocale()
-  const dataRows = await buildAllEmissionSourcesRows(study, locale, post)
-  return buildEmissionSourcesCSV(locale, dataRows)
-}
+    const locale = await getLocale()
+    const dataRows = await buildAllEmissionSourcesRows(study, locale, post)
+    return buildEmissionSourcesCSV(locale, dataRows)
+  })
 
-export async function exportEmissionSourcesToExcel(studyId: string, post?: Post): Promise<ArrayBuffer> {
-  const account = await getAuthenticatedAccount()
-  const study = await getStudyOrThrow(studyId, account)
-  if (!(await canReadStudy(accountWithUserToUserSession(account), studyId))) {
-    throw new Error(NOT_AUTHORIZED)
-  }
+export const exportEmissionSourcesToExcel = async (studyId: string, post?: Post) =>
+  withServerResponse('exportEmissionSourcesToExcel', async () => {
+    const account = await getAuthenticatedAccount()
+    const study = await getStudyOrThrow(studyId, account)
+    if (!(await canReadStudy(accountWithUserToUserSession(account), studyId))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  const locale = await getLocale()
-  const dataRows = await buildAllEmissionSourcesRows(study, locale, post)
-  return buildEmissionSourcesSheet(study, locale, dataRows)
-}
+    const locale = await getLocale()
+    const dataRows = await buildAllEmissionSourcesRows(study, locale, post)
+    return buildEmissionSourcesSheet(study, locale, dataRows)
+  })

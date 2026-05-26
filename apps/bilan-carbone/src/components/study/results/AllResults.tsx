@@ -348,16 +348,18 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   const downloadEmissionSourcesCsv = async (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
     preventClose(e)
     if (hasAccessToEmissionSourcesDownload) {
-      const csvContent = await exportEmissionSourcesToCSV(study.id)
-      download(['\ufeff', csvContent], tImport('exportFileNameCsv'), 'csv')
+      await callServerFunction(() => exportEmissionSourcesToCSV(study.id), {
+        onSuccess: (csvContent) => download(['\ufeff', csvContent], tImport('exportFileNameCsv'), 'csv'),
+      })
     }
   }
 
   const downloadEmissionSourcesExcel = async (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
     preventClose(e)
     if (hasAccessToEmissionSourcesDownload) {
-      const arrayBuffer = await exportEmissionSourcesToExcel(study.id)
-      download([arrayBuffer], tImport('exportFileName'), 'xlsx')
+      await callServerFunction(() => exportEmissionSourcesToExcel(study.id), {
+        onSuccess: (arrayBuffer) => download([arrayBuffer], tImport('exportFileName'), 'xlsx'),
+      })
     }
   }
 

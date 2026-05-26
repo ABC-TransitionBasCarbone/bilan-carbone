@@ -5,22 +5,27 @@ import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
 import { AccountWithUser } from '@/types/account.types'
 import {
+  COLUMNS,
   ImportEmissionFactorsResult,
   ParsedRow,
   PreviewEmissionFactorsResult,
   PreviewRow,
 } from '@/types/importEmissionFactors.types'
-import { buildPostsAndSubPostsCell, getUnitLabel, parseImportFile } from '@/utils/importEmissionFactors.utils'
+import {
+  buildPostsAndSubPostsCell,
+  getAllPostsLabel,
+  getUnitLabel,
+  parseImportFile,
+} from '@/utils/importEmissionFactors.utils'
 import { flattenSubposts } from '@/utils/post'
 import { withServerResponse } from '@/utils/serverResponse'
 import { getBcTranslations } from '@/utils/translation.utils'
-import { EmissionFactorStatus, Import } from '@abc-transitionbascarbone/db-common/enums'
+import { EmissionFactorBase, EmissionFactorStatus, Import } from '@abc-transitionbascarbone/db-common/enums'
 import { getAuthenticatedAccount } from '../permissions/account.permissions'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canReadEmissionFactor } from '../permissions/emissionFactor'
 import { canCreateEmissionFactor } from '../permissions/emissionFactor.server'
 import { prepareExcel } from './file'
-import { getFileUrlFromBucket } from './scaleway'
 
 async function checkAuth(requireCreatePermission = true): Promise<AccountWithUser> {
   const account = await getAuthenticatedAccount()
@@ -176,15 +181,72 @@ export async function exportManualEmissionFactorsToFile(): Promise<ArrayBuffer> 
   return prepareExcel([{ name: "Facteurs d'émission", data: [header, ...rows], options: {} }])
 }
 
-export const getImportEmissionFactorsTemplateUrl = async () =>
-  withServerResponse('getImportEmissionFactorsTemplateUrl', async () => {
-    const key = process.env.SCW_EF_TEMPLATE_KEY
-    if (!key) {
-      throw new Error('templateNotFound')
-    }
-    const res = await getFileUrlFromBucket(key)
-    if (!res.success) {
-      throw new Error('templateNotFound')
-    }
-    return res.data
+function buildEmissionFactorsTemplateHeader(locale: LocaleType): string[] {
+  const bc = getBcTranslations(locale)
+  const c = bc.emissionFactors.create
+  const tbl = bc.emissionFactors.table
+  const modal = bc.emissionFactors.importModal as unknown as Record<string, string>
+  return [
+    c.name,
+    c.attribute,
+    c.unit,
+    c.customUnit,
+    c.source,
+    c.location,
+    (tbl.technicalRepresentativeness as string).replace(/ :$/, ''),
+    (tbl.geographicRepresentativeness as string).replace(/ :$/, ''),
+    (tbl.temporalRepresentativeness as string).replace(/ :$/, ''),
+    (tbl.completeness as string).replace(/ :$/, ''),
+    (tbl.reliability as string).replace(/ :$/, ''),
+    c.comment,
+    c.totalCo2,
+    c.co2f,
+    c.ch4f,
+    c.ch4b,
+    c.n2o,
+    c.co2b,
+    c.sf6,
+    c.hfc,
+    c.pfc,
+    c.otherGES,
+    modal.templatePostsHeader,
+    modal.templateBaseHeader,
+  ]
+}
+
+export const getImportEmissionFactorsTemplate = async () =>
+  withServerResponse('getImportEmissionFactorsTemplate', async () => {
+    await checkAuth()
+    const locale = await getLocale()
+    const bc = getBcTranslations(locale)
+    const modal = bc.emissionFactors.importModal as unknown as Record<string, string>
+    const qualityTranslations = bc.quality as Record<string, string>
+
+    const TOTAL_COLS = Object.keys(COLUMNS).length
+    const allPostsLabel = getAllPostsLabel(locale)
+
+    const exampleRow: (string | number)[] = Array(TOTAL_COLS).fill('')
+    exampleRow[COLUMNS.name] = `${modal.examplePrefix} ${modal.exampleName}`
+    exampleRow[COLUMNS.attribute] = modal.exampleAttribute
+    exampleRow[COLUMNS.unit] = 'kgCO2e/kg'
+    exampleRow[COLUMNS.source] = modal.exampleSource
+    exampleRow[COLUMNS.location] = modal.exampleLocation
+    exampleRow[COLUMNS.technicalRepresentativeness] = qualityTranslations['5']
+    exampleRow[COLUMNS.geographicRepresentativeness] = qualityTranslations['5']
+    exampleRow[COLUMNS.temporalRepresentativeness] = qualityTranslations['5']
+    exampleRow[COLUMNS.completeness] = qualityTranslations['5']
+    exampleRow[COLUMNS.reliability] = qualityTranslations['5']
+    exampleRow[COLUMNS.comment] = modal.examplePostsAndSubPostsComment
+    exampleRow[COLUMNS.totalCo2] = 884
+    exampleRow[COLUMNS.postsAndSubPosts] = modal.examplePostsAndSubPosts
+
+    const emptyRow: (string | number)[] = Array(TOTAL_COLS).fill('')
+    emptyRow[COLUMNS.postsAndSubPosts] = allPostsLabel
+    emptyRow[COLUMNS.base] = bc.emissionFactors.base[EmissionFactorBase.LocationBased]
+
+    const header = buildEmissionFactorsTemplateHeader(locale)
+    const dataRows = [exampleRow, ...Array.from({ length: 100 }, () => [...emptyRow])]
+    const sheetName = modal.sheetName
+
+    return prepareExcel([{ name: sheetName, data: [header, ...dataRows], options: {} }])
   })

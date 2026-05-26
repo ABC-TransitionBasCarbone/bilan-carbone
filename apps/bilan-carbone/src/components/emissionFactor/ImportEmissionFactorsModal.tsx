@@ -2,9 +2,9 @@
 
 import ImportFileModal from '@/components/base/ImportFileModal/ImportFileModal'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import { downloadFromUrl } from '@/services/file'
+import { download } from '@/services/file'
 import {
-  getImportEmissionFactorsTemplateUrl,
+  getImportEmissionFactorsTemplate,
   importEmissionFactorsFromFile,
   previewEmissionFactorsFromFile,
 } from '@/services/serverFunctions/importEmissionFactors'
@@ -34,8 +34,8 @@ const ImportEmissionFactorsModal = ({ open, onClose, onSuccess }: Props) => {
   const { callServerFunction } = useServerFunction()
 
   const handleDownloadTemplate = async () => {
-    await callServerFunction(() => getImportEmissionFactorsTemplateUrl(), {
-      onSuccess: (url) => downloadFromUrl(url, t('templateFileName')),
+    await callServerFunction(() => getImportEmissionFactorsTemplate(), {
+      onSuccess: (arrayBuffer) => download([arrayBuffer], t('templateFileName'), 'xlsx'),
     })
   }
 
