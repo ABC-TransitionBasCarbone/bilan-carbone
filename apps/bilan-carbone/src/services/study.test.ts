@@ -2,7 +2,7 @@ import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionS
 import { getMockeFullStudy, getMockedDetailedFullStudySite } from '@/tests/utils/models/study'
 import { BaseResultsBySite } from '@/types/study.types'
 import { hasSufficientLevel } from '@/utils/study'
-import { ControlMode, Environment, Export, Level, StudyResultUnit, SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { ControlMode, Environment, Level, StudyResultUnit, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import type { Translations } from '@abc-transitionbascarbone/lib'
 import { expect } from '@jest/globals'
 import { prepareExcel } from './serverFunctions/file'
