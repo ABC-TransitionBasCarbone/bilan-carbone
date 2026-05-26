@@ -8,7 +8,7 @@ import { parseExcelSheet } from './excel.utils'
 import { buildLabelMap, mapLabelFromTranslations, mapUnitLabelFromTranslationsWithList } from './import.utils'
 import { getExampleRowPrefixes } from './importEmissionSources.utils'
 import { parseNumericValue } from './number'
-import { getBcTranslations, getSingularForm } from './translation.utils'
+import { getBcTranslations, getCommonTranslations, getSingularForm } from './translation.utils'
 
 export function getAllPostsLabel(locale: LocaleType): string {
   return getBcTranslations(locale).emissionFactors.importModal.allPostsAndSubPosts
@@ -205,6 +205,13 @@ export function parseImportFile(buffer: Buffer, locale: LocaleType, environment:
 
     const customUnit = unit === Unit.CUSTOM ? strippedUnit || null : null
 
+    const yesLabel = getCommonTranslations(locale).common.yes
+    const isMonetary =
+      unit === Unit.CUSTOM &&
+      String(row[COLUMNS.isMonetary] ?? '')
+        .trim()
+        .toLowerCase() === yesLabel.toLowerCase()
+
     const rawTotalCo2 = row[COLUMNS.totalCo2]
     const totalCo2 = parseNumericValue(rawTotalCo2)
     if (totalCo2 === null || totalCo2 < 0) {
@@ -272,7 +279,7 @@ export function parseImportFile(buffer: Buffer, locale: LocaleType, environment:
       source,
       unit: unit!,
       customUnit: customUnit ?? undefined,
-      isMonetary: false,
+      isMonetary,
       totalCo2: totalCo2!,
       co2f: parseNumericValue(row[COLUMNS.co2f]) ?? undefined,
       ch4f: parseNumericValue(row[COLUMNS.ch4f]) ?? undefined,

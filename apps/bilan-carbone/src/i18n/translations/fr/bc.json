@@ -1801,6 +1801,7 @@
       "customUnit": "Unité personnalisée",
       "customUnitPlaceholder": "Votre unité personnalisée",
       "monetaryUnit": "Unité monétaire",
+      "isMonetary": "Unité monétaire (Oui/Non)",
       "source": "Source",
       "sourcePlaceholder": "Agribalyse® 3.1",
       "detailedGES": "Décomposition des GES",

@@ -1801,6 +1801,7 @@
       "customUnit": "Custom unit",
       "customUnitPlaceholder": "Your custom unit",
       "monetaryUnit": "Monetary unit",
+      "isMonetary": "Monetary unit (Yes/No)",
       "source": "Source",
       "sourcePlaceholder": "Agribalyse® 3.1",
       "detailedGES": "Breakdown of GHG",

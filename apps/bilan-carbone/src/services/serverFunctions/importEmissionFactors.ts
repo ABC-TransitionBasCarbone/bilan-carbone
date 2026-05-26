@@ -19,7 +19,7 @@ import {
 } from '@/utils/importEmissionFactors.utils'
 import { flattenSubposts } from '@/utils/post'
 import { withServerResponse } from '@/utils/serverResponse'
-import { getBcTranslations } from '@/utils/translation.utils'
+import { getBcTranslations, getCommonTranslations } from '@/utils/translation.utils'
 import { EmissionFactorBase, EmissionFactorStatus, Import } from '@abc-transitionbascarbone/db-common/enums'
 import { getAuthenticatedAccount } from '../permissions/account.permissions'
 import { NOT_AUTHORIZED } from '../permissions/check'
@@ -112,6 +112,7 @@ export async function exportManualEmissionFactorsToFile(): Promise<ArrayBuffer> 
   const account = await checkAuth(false)
   const locale = await getLocale()
   const bc = getBcTranslations(locale)
+  const common = getCommonTranslations(locale).common
   const baseTranslations = bc.emissionFactors.base
   const qualityTranslations = bc.quality as Record<string, string>
 
@@ -125,6 +126,7 @@ export async function exportManualEmissionFactorsToFile(): Promise<ArrayBuffer> 
     c.attribute,
     c.unit,
     c.customUnit,
+    c.isMonetary,
     c.source,
     c.location,
     tbl.technicalRepresentativeness.replace(/ :$/, ''),
@@ -154,6 +156,7 @@ export async function exportManualEmissionFactorsToFile(): Promise<ArrayBuffer> 
       metaData?.attribute ?? '',
       ef.unit && !ef.customUnit ? `kgCO2e/${getUnitLabel(ef.unit, locale)}` : '',
       ef.customUnit ? `kgCO2e/${ef.customUnit}` : '',
+      ef.isMonetary ? common.yes : common.no,
       ef.source ?? '',
       ef.location ?? '',
       qualityTranslations[String(ef.technicalRepresentativeness)] ?? '',
@@ -191,6 +194,7 @@ function buildEmissionFactorsTemplateHeader(locale: LocaleType): string[] {
     c.attribute,
     c.unit,
     c.customUnit,
+    c.isMonetary,
     c.source,
     c.location,
     (tbl.technicalRepresentativeness as string).replace(/ :$/, ''),

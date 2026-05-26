@@ -1,6 +1,14 @@
 import { Locale, LocaleType } from '@/i18n/config'
 import enBc from '@/i18n/translations/en/bc.json'
 import frBc from '@/i18n/translations/fr/bc.json'
+import enCommon from '@abc-transitionbascarbone/i18n/en/common.json'
+import frCommon from '@abc-transitionbascarbone/i18n/fr/common.json'
+
+export type CommonTranslations = typeof frCommon
+
+export function getCommonTranslations(locale: LocaleType): CommonTranslations {
+  return locale === Locale.FR ? frCommon : enCommon
+}
 
 /**
  * Extracts the ="one" singular form from an ICU plural string, e.g. "{count, plural, =0 {None} one {Litre} other {Litres}}" → "Litre"
