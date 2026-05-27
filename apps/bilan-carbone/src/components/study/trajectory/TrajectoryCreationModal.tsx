@@ -26,12 +26,12 @@ import {
   getDefaultObjectivesForTrajectoryType,
   getDisplayedReferenceYearForTrajectoryType,
 } from '@/utils/trajectory'
+import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
 import type { SectenInfo } from '@abc-transitionbascarbone/db-common'
 import { TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
 import { getYearFromDateStr } from '@abc-transitionbascarbone/utils/time'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Alert } from '@mui/material'
-import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import { useEffect, useMemo, useState } from 'react'

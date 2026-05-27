@@ -4,11 +4,8 @@ import { customRich } from '@/i18n/customRich'
 import { ObjectiveModalFormData } from '@/services/serverFunctions/objective.command'
 import { TrajectoryFormData } from '@/services/serverFunctions/trajectory.command'
 import type { BaseObjective } from '@/types/trajectory.types'
-<<<<<<< HEAD
 import { HelpIcon } from '@abc-transitionbascarbone/components'
-=======
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
->>>>>>> fix after rebase
 import DeleteIcon from '@mui/icons-material/Delete'
 import { IconButton } from '@mui/material'
 import Typography from '@mui/material/Typography'

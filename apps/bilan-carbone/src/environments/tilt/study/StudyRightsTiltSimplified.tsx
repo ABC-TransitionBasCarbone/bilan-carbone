@@ -25,12 +25,15 @@ import {
   ChangeStudySiteTiltSimplifiedCommand,
   ChangeStudySiteTiltSimplifiedValidation,
 } from '@/services/serverFunctions/study.command'
+<<<<<<< HEAD
 import { HelpIcon } from '@abc-transitionbascarbone/components'
+=======
+import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
+>>>>>>> prettier
 import { SiteCAUnit, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CircularProgress, Typography } from '@mui/material'
 import { getEvaluatedFormElement } from '@publicodes/forms'
-import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'

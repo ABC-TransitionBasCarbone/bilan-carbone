@@ -1,7 +1,7 @@
+import { CustomFormLabel } from '@abc-transitionbascarbone/components/src/form/CustomFormLabel'
 import { Translations } from '@abc-transitionbascarbone/lib'
 import ClearIcon from '@mui/icons-material/Clear'
 import { IconButton, InputAdornment, Select as MUISelect, SelectChangeEvent, SelectProps } from '@mui/material'
-import { CustomFormLabel } from '@abc-transitionbascarbone/components/src/form/CustomFormLabel'
 
 interface Props {
   icon?: React.ReactNode

@@ -1,5 +1,5 @@
-import { FormControl, FormControlLabel, FormHelperText, Radio, RadioGroup } from '@mui/material'
 import { ChoiceQuestion } from '@abc-transitionbascarbone/survey'
+import { FormControl, FormControlLabel, FormHelperText, Radio, RadioGroup } from '@mui/material'
 
 interface ChoiceQuestionInputProps {
   question: ChoiceQuestion

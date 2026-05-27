@@ -16,6 +16,7 @@ import { calculatePriorityFromRelevance } from '@/utils/action'
 import { objectWithoutNullAttributes } from '@/utils/object'
 import { toScopedValues } from '@/utils/scope.utils'
 import { convertValue } from '@/utils/study'
+import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
 import {
   ActionIndicatorType,
   ActionPotentialDeduction,
@@ -23,7 +24,6 @@ import {
 } from '@abc-transitionbascarbone/db-common/enums'
 import { Toast, ToastColors } from '@abc-transitionbascarbone/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
-import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useParams, useRouter } from 'next/navigation'
