@@ -90,6 +90,11 @@ const ImportFileModal = <TPreviewRow,>({
     setErrors([])
     setPreviewRows([])
     setPendingFile(file)
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
+
     startTransition(async () => {
       const result = await onPreview(file)
       if (result.success) {
@@ -143,9 +148,6 @@ const ImportFileModal = <TPreviewRow,>({
       return
     }
     const file = files[0]
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ''
-    }
     previewFile(file)
   }
 
