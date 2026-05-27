@@ -1,8 +1,8 @@
 'use client'
 
-import LoadingButton from '@/components/base/LoadingButton'
 import Modal from '@/components/modals/Modal'
 import { ImportError, ImportResult, ImportWarning } from '@/types/import.types'
+import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
 import DownloadIcon from '@mui/icons-material/Download'
 import UploadFileIcon from '@mui/icons-material/UploadFile'
 import { CircularProgress, Typography } from '@mui/material'

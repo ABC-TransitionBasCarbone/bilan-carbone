@@ -1,5 +1,5 @@
 'use client'
-import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
+import LoadingButton, { Props as LoadingButtonProps } from '@abc-transitionbascarbone/components/src/base/LoadingButton'
 import { Button } from '@abc-transitionbascarbone/ui'
 import CloseIcon from '@mui/icons-material/Close'
 import { ButtonProps, IconButton, Modal as MUIModal, Typography } from '@mui/material'
@@ -21,13 +21,13 @@ export interface Props {
 
 type ModalAction =
   | (ButtonProps & { actionType?: 'button' | 'submit'; 'data-testid'?: string })
-  | {
+  | (LoadingButtonProps & {
       actionType: 'loadingButton'
       onClick: VoidFunction
       'data-testid'?: string
       disabled?: boolean
       color?: 'secondary' | 'error' | 'primary'
-    }
+    })
   | (ButtonProps & { actionType: 'link'; href?: string; 'data-testid'?: string })
 
 const Modal = ({ className, label, open, onClose, title, children, actions, big }: Props) => (

@@ -1,4 +1,4 @@
-import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
+import LoadingButton, { Props as LoadingButtonProps } from '@abc-transitionbascarbone/components/src/base/LoadingButton'
 import { Button, ButtonProps, Typography } from '@mui/material'
 import classNames from 'classnames'
 import { ReactNode } from 'react'
