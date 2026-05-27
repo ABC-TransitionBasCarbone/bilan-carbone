@@ -3,7 +3,6 @@ import { FormTextField } from '@abc-transitionbascarbone/components/src/form/Tex
 import { Role } from '@abc-transitionbascarbone/db-common/enums'
 import HomeIcon from '@mui/icons-material/Home'
 import PersonIcon from '@mui/icons-material/Person'
-import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { UseFormReturn } from 'react-hook-form'

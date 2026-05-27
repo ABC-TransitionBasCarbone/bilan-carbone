@@ -4,7 +4,6 @@ import { ActionIndicatorType } from '@abc-transitionbascarbone/db-common'
 import AddIcon from '@mui/icons-material/Add'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { IconButton, Typography } from '@mui/material'
-import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { useTranslations } from 'next-intl'
 import { Control, useFieldArray, UseFormSetValue } from 'react-hook-form'
 

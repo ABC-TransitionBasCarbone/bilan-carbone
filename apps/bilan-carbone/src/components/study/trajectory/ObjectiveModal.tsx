@@ -14,7 +14,6 @@ import { CustomFormLabel } from '@abc-transitionbascarbone/components/src/form/C
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { getYearFromDateStr } from '@abc-transitionbascarbone/utils/time'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { CustomFormLabel } from '@abc-transitionbascarbone/components/src/form/CustomFormLabel'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
