@@ -2,7 +2,6 @@ import { environmentsWithChecklist } from '@/constants/environments'
 import { DefaultStudyTags } from '@/constants/tag.constants'
 import { reCreateBegesRules, reCreateGHGPRules } from '@/db/exports'
 import { getSectenVersion, updateSectenVersion } from '@/scripts/secten/secten'
-import { signPassword } from '@/services/auth'
 import { getEmissionFactorsFromAPI } from '@/services/importEmissionFactor/baseEmpreinte/getEmissionFactorsFromAPI'
 import { getAllowedLevels } from '@/utils/study'
 import type { Account, User } from '@abc-transitionbascarbone/db-common'
@@ -20,6 +19,7 @@ import {
   UserChecklist,
   UserStatus,
 } from '@abc-transitionbascarbone/db-common/enums'
+import { signPassword } from '@abc-transitionbascarbone/utils/auth'
 import { faker } from '@faker-js/faker'
 import { PrismaPg } from '@prisma/adapter-pg'
 
@@ -79,6 +79,7 @@ const users = async () => {
   await prisma.userCheckedStep.deleteMany()
   await prisma.userApplicationSettings.deleteMany()
   await prisma.account.deleteMany()
+  await prisma.accountMip.deleteMany()
   await prisma.user.deleteMany()
 
   await prisma.organizationVersion.deleteMany()

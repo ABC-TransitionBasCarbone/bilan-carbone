@@ -47,15 +47,19 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'password', type: 'password' },
       },
       async authorize(credentials) {
-        if (!credentials) return null
-
-        console.log('crédentials reçues', credentials)
+        if (!credentials) {
+          return null
+        }
 
         const user = await getUserByEmailWithSensibleInformations(credentials.email)
-        if (!user || !user.password) return null
+        if (!user || !user.password) {
+          return null
+        }
 
         const passwordMatch = await bcrypt.compare(credentials.password, user.password)
-        if (!passwordMatch) return null
+        if (!passwordMatch) {
+          return null
+        }
 
         return {
           id: user.id,
