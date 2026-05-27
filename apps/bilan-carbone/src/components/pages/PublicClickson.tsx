@@ -1,12 +1,12 @@
 'use client'
 import { switchEnvironment } from '@/i18n/environment'
 import { getLocale, switchLocale } from '@/i18n/locale'
+import PublicContainer from '@abc-transitionbascarbone/components/src/base/PublicContainer'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { defaultLocale, Locale, LocaleType } from '@abc-transitionbascarbone/i18n/config'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useEffect, useState } from 'react'
-import PublicContainer from '../base/PublicContainer'
 import Image from '../document/Image'
 import styles from './Public.module.css'
 

@@ -1,0 +1,5 @@
+.loginForm {
+  padding: 2rem;
+  border: var(--border-dark);
+  border-radius: 0 1rem 1rem 0;
+}

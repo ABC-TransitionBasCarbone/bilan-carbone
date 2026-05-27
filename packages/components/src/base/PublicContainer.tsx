@@ -9,8 +9,8 @@ interface Props {
   children: ReactNode
 }
 
-const StyledPublicContainer = styled(Container)(({ theme }) => ({
-  background: theme.custom.publicContainer?.background,
+const StyledPublicContainer = styled(Container)(({ theme }: any) => ({
+  background: theme?.custom?.publicContainer?.background,
 }))
 
 const PublicContainer = ({ children }: Props) => {
