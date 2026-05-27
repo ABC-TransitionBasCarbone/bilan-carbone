@@ -3,7 +3,7 @@ import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
 import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { useEffect, useState } from 'react'
 
-export const useTransitionPlanFilters = (studyId: string) => {
+export const useTransitionPlanFilters = (studyId: string, validTagIds: string[] = []) => {
   const [selectedSiteIds, setSelectedSiteIds] = useState<string[]>([])
   const [selectedSubPosts, setSelectedSubPosts] = useState<SubPost[]>([])
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([])
@@ -42,7 +42,12 @@ export const useTransitionPlanFilters = (studyId: string) => {
     if (storedTags) {
       const parsed: unknown = JSON.parse(storedTags)
       if (Array.isArray(parsed) && parsed.length > 0 && parsed.every((id: unknown) => typeof id === 'string')) {
-        setSelectedTagIds(parsed)
+        const allValid = validTagIds.length === 0 || (parsed as string[]).every((id) => validTagIds.includes(id))
+        if (allValid) {
+          setSelectedTagIds(parsed)
+        } else {
+          localStorage.removeItem(tagsKey)
+        }
       }
     }
 

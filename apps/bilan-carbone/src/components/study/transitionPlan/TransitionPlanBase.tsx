@@ -74,6 +74,7 @@ const TransitionPlanBase = ({
   children,
 }: Props) => {
   const tNav = useTranslations('nav')
+  const allTagIds = useMemo(() => study.tagFamilies.flatMap((f) => f.tags.map((tag) => tag.id)), [study.tagFamilies])
   const {
     selectedSiteIds,
     selectedSubPosts,
@@ -82,9 +83,7 @@ const TransitionPlanBase = ({
     setSelectedSiteIds,
     setSelectedSubPosts,
     setSelectedTagIds,
-  } = useTransitionPlanFilters(study.id)
-
-  const allTagIds = useMemo(() => study.tagFamilies.flatMap((f) => f.tags.map((tag) => tag.id)), [study.tagFamilies])
+  } = useTransitionPlanFilters(study.id, allTagIds)
 
   const hasFilters = useMemo(() => {
     const allSiteIds = study.sites.map((s) => s.site.id)

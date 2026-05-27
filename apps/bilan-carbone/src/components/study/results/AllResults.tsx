@@ -106,7 +106,13 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     if (storedTags) {
       const parsed: unknown = JSON.parse(storedTags)
       if (Array.isArray(parsed) && parsed.every((id: unknown) => typeof id === 'string')) {
-        setSelectedTags(parsed as string[])
+        const validTagIds = study.tagFamilies.flatMap((f) => f.tags.map((tag) => tag.id))
+        const allValid = validTagIds.length === 0 || (parsed as string[]).every((id) => validTagIds.includes(id))
+        if (allValid) {
+          setSelectedTags(parsed as string[])
+        } else {
+          localStorage.removeItem(tagsKey)
+        }
       }
     }
 

@@ -101,6 +101,7 @@ const TransitionPlanInitPage = ({
   const [selectedSbtiTrajectories, setSelectedSbtiTrajectories] = useState<string[]>(
     () => readStoredStringArray(`trajectory-sbti-selected-${study.id}`) ?? [TRAJECTORY_15_ID],
   )
+  const allTagIds = useMemo(() => study.tagFamilies.flatMap((f) => f.tags.map((tag) => tag.id)), [study.tagFamilies])
   const {
     selectedSiteIds,
     selectedSubPosts,
@@ -109,7 +110,7 @@ const TransitionPlanInitPage = ({
     setSelectedSiteIds,
     setSelectedSubPosts,
     setSelectedTagIds,
-  } = useTransitionPlanFilters(study.id)
+  } = useTransitionPlanFilters(study.id, allTagIds)
 
   const storageKey = `transition-init-step-${study.id}`
   const snbcStorageKey = `trajectory-snbc-selected-${study.id}`
