@@ -2,6 +2,7 @@
 
 import EmissionSourceButtons from '@/components/study/buttons/EmissionSourceButtons'
 import type { FullStudy } from '@/db/study'
+import { hasAccessToDownloadStudyEmissionSourcesButton } from '@/services/permissions/environment'
 import { StudyRole } from '@abc-transitionbascarbone/db-common/enums'
 import { useToast } from '@abc-transitionbascarbone/ui'
 import { UserSession } from 'next-auth'
@@ -46,23 +47,27 @@ const StudyContributionPage = ({ study, userRole }: Props) => {
       <Block
         title={tStudyNav('dataEntry')}
         as="h2"
-        actions={[
-          {
-            actionType: 'node',
-            node: (
-              <EmissionSourceButtons
-                studyId={study.id}
-                userRole={userRole}
-                siteId={siteId}
-                hasEmissionSources={study.emissionSources.length > 0}
-                onSuccess={() => {
-                  showSuccessToast(tImport('success'))
-                  router.refresh()
-                }}
-              />
-            ),
-          },
-        ]}
+        actions={
+          hasAccessToDownloadStudyEmissionSourcesButton(study.organizationVersion.environment) && !study.simplified
+            ? [
+                {
+                  actionType: 'node',
+                  node: (
+                    <EmissionSourceButtons
+                      studyId={study.id}
+                      userRole={userRole}
+                      siteId={siteId}
+                      hasEmissionSources={study.emissionSources.length > 0}
+                      onSuccess={() => {
+                        showSuccessToast(tImport('success'))
+                        router.refresh()
+                      }}
+                    />
+                  ),
+                },
+              ]
+            : []
+        }
         rightComponent={
           <SelectStudySite sites={study.sites} defaultValue={siteId} setSite={setSite} showAllOption={false} />
         }
