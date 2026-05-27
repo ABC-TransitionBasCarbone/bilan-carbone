@@ -2,7 +2,7 @@ import * as situationDbModule from '@/db/situation'
 import * as studyDbModule from '@/db/study'
 import * as authModule from '@/services/auth'
 import * as situationPermissionsModule from '@/services/permissions/situation'
-import { Environment } from '@repo/db-common/enums'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { saveSituation } from './situation'
 
 jest.mock('../auth', () => ({
