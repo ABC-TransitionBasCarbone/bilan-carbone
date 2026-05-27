@@ -1,3 +1,4 @@
+import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import type { FullStudy } from '@/db/study'
 import { getEmissionResults } from '@/services/emissionSource'
 import { isTiltSimplified } from '@/services/permissions/environmentAdvanced'
@@ -259,16 +260,78 @@ export const formatConfidenceInterval = (confidenceInterval: number[], resultsUn
                                   ${formatEmissionFromNumber(confidenceInterval[1], resultsUnit)}]`
 }
 
+const shouldKeepEFOrESFromBaseSimpleCases = (
+  efOrEs: { base: EmissionFactorBase | null },
+  base: EmissionFactorBase = EmissionFactorBase.LocationBased,
+) => {
+  if (!base || !efOrEs.base) {
+    return true
+  }
+
+  const isMarketBased = base === EmissionFactorBase.MarketBased
+  if (!isMarketBased) {
+    return efOrEs.base === base
+  }
+
+  return false
+}
+
 export const getBaseFilteredEmissionSources = <T extends Pick<FullStudy['emissionSources'][number], 'emissionFactor'>>(
   emissionSources: T[],
   base: EmissionFactorBase = EmissionFactorBase.LocationBased,
-) =>
-  emissionSources.filter(
-    (emissionSource) =>
-      !emissionSource.emissionFactor ||
-      !emissionSource.emissionFactor.base ||
-      emissionSource.emissionFactor.base === base,
-  )
+) => {
+  return emissionSources.filter((emissionSource) => {
+    if (!emissionSource.emissionFactor) {
+      return true
+    }
+
+    if (!base || !emissionSource.emissionFactor.base) {
+      return true
+    }
+
+    const isMarketBased = base === EmissionFactorBase.MarketBased
+    if (!isMarketBased) {
+      return emissionSource.emissionFactor.base === base
+    }
+
+    return true
+  })
+}
+
+export const getBaseFilteredEmissionFactorsWithParts = (
+  emissionFactorsWithPart: EmissionFactorWithParts[],
+  base: EmissionFactorBase = EmissionFactorBase.LocationBased,
+) => {
+  if (!base) {
+    return emissionFactorsWithPart
+  }
+
+  return emissionFactorsWithPart
+    .map((ef) => {
+      if (shouldKeepEFOrESFromBaseSimpleCases(ef, base)) {
+        return ef
+      }
+
+      const locationPartsToKeep = ef.emissionFactorParts.filter(
+        (part) =>
+          part.type === EmissionFactorPartType.Amont || part.type === EmissionFactorPartType.TransportEtDistribution,
+      )
+
+      if (ef.base === EmissionFactorBase.MarketBased) {
+        return ef
+      }
+
+      if (locationPartsToKeep.length === 0) {
+        return null
+      }
+
+      return {
+        ...ef,
+        emissionFactorParts: locationPartsToKeep,
+      }
+    })
+    .filter((ef) => ef !== null)
+}
 
 /**
  * Computes emissions after applying filters coming from DB scope or UI selectors.

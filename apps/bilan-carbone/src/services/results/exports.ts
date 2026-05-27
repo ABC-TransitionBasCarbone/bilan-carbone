@@ -1,7 +1,7 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import type { FullStudy } from '@/db/study'
 import { toCamelCase } from '@/utils/string'
-import { getBaseFilteredEmissionSources } from '@/utils/study'
+import { getBaseFilteredEmissionFactorsWithParts, getBaseFilteredEmissionSources } from '@/utils/study'
 import type { ExportRule } from '@abc-transitionbascarbone/db-common'
 import {
   EmissionFactorBase,
@@ -118,10 +118,15 @@ export const computeResult = (
     (acc, rule) => ({ ...acc, [rule]: [] }),
     {},
   )
+
   const siteEmissionSources = getBaseFilteredEmissionSources(
     getAllSiteEmissionSources(study.emissionSources, siteId),
     base,
   )
+
+  const emissionFactorsWithPartsBaseFiltered = getBaseFilteredEmissionFactorsWithParts(emissionFactorsWithParts, base)
+
+  console.log(isGHGP, siteEmissionSources, emissionFactorsWithPartsBaseFiltered)
 
   siteEmissionSources
     .map((emissionSource) => ({
@@ -142,9 +147,7 @@ export const computeResult = (
 
       const value = getEmissionActivityValue(emissionSource)
 
-      const emissionFactor = emissionFactorsWithParts.find(
-        (emissionFactorsWithParts) => emissionFactorsWithParts.id === id,
-      )
+      const emissionFactor = emissionFactorsWithPartsBaseFiltered.find((efwp) => efwp.id === id)
 
       if (!emissionFactor) {
         return
