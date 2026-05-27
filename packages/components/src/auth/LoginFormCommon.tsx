@@ -1,54 +1,45 @@
 'use client'
 
+import { zodResolver } from '@hookform/resolvers/zod'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import { FormControl, IconButton, InputAdornment } from '@mui/material'
 import classNames from 'classnames'
+import { signIn } from 'next-auth/react'
 import Link from 'next/link'
-import {  ReactNode, useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { ReactNode, useState } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
 import Form from '../base/Form'
 import LoadingButton from '../base/LoadingButton'
 import { FormTextField } from '../form/TextField'
 import authStyles from './Auth.module.css'
 import styles from './LoginFormCommon.module.css'
-import {  useForm } from 'react-hook-form'
 import { LoginCommand, LoginCommandValidation } from './user.command'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { signIn } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
 
-interface Props{
+interface Props {
   errorMessageCustom: (error: string) => ReactNode
-  getResetLink: (email:string) => string
-  getActivationLink: (email:string) => string
+  getResetLink: (email: string) => string
+  getActivationLink: (email: string) => string
   t: (key: string) => string
 }
 
-const LoginFormCommon = ({errorMessageCustom, getResetLink, getActivationLink, t}: Props) => {
+const LoginFormCommon = ({ errorMessageCustom, getResetLink, getActivationLink, t }: Props) => {
+  'use memo'
+
   const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
-  const [email, setEmail] = useState('')
 
-  const { getValues, control, watch, handleSubmit } = useForm<LoginCommand>({
+  const { getValues, control, handleSubmit } = useForm<LoginCommand>({
     resolver: zodResolver(LoginCommandValidation),
     mode: 'onBlur',
     reValidateMode: 'onChange',
     defaultValues: { email: '', password: '' },
   })
 
-  useEffect(() => {
-    setEmail(getValues('email') ?? '')
-
-    const subscription = watch((values) => {
-      if (values.email !== email) {
-        setEmail(values.email ?? '')
-      }
-    })
-
-    return () => subscription.unsubscribe()
-  }, [watch])
+  const email = useWatch({ control, name: 'email', defaultValue: '' })
 
   const onSubmit = async () => {
     setErrorMessage('')
@@ -104,11 +95,7 @@ const LoginFormCommon = ({errorMessageCustom, getResetLink, getActivationLink, t
         <LoadingButton data-testid="login-button" type="submit" loading={submitting} fullWidth>
           {t('login')}
         </LoadingButton>
-        {errorMessage && (
-          <p className="error">
-            {errorMessageCustom(errorMessage)}
-          </p>
-        )}
+        {errorMessage && <p className="error">{errorMessageCustom(errorMessage)}</p>}
         <div className={authStyles.bottomLink}>
           {t('firstConnection')}
           <Link data-testid="activation-button" className="ml-2" href={getActivationLink(email)} prefetch={false}>
