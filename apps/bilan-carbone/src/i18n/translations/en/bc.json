@@ -1625,15 +1625,15 @@
       "templateFileName": "emission-factors-template.xlsx",
       "allPostsAndSubPosts": "All posts/all sub-posts",
       "sheetName": "Emission Factors",
-      "templatePostsHeader": "Category(ies) and sub-category(ies) * [format: Category : SubCat1 | SubCat2 || Category2 : SubCat3] or \"All posts/all sub-posts\"",
+      "templatePostsHeader": "Category(ies) and sub-category(ies) * [format: Category : SubCat1 | SubCat2 || Category2 : SubCat3] or \"All posts/all sub-posts\". If this column is left blank, the tool will assume by default that the emission factor applies to all posts and sub-posts.",
       "templateBaseHeader": "Scope 2 approach (required if Electricity sub-category included): Location-based or Market-based",
       "examplePrefix": "Example:",
       "exampleName": "Apricot, pitted, raw",
       "exampleAttribute": "Transport and distribution is considered at ambient temperature",
       "exampleSource": "Agribalyse® 3.1",
       "exampleLocation": "Continental France",
-      "examplePostsAndSubPosts": "Inputs - Goods & Materials : Food, meals, beverages | Other inputs",
-      "examplePostsAndSubPostsComment": "Simple example (one category, multiple sub-categories)"
+      "examplePostsAndSubPosts": "Inputs - Goods & Materials : Food, meals, beverages | Other inputs || Use and Dependence : Use in responsibility",
+      "examplePostsAndSubPostsComment": "Multi-post example (multiple posts and sub-posts)"
     },
     "post": {
       "total": "Total",
@@ -1801,6 +1801,7 @@
       "customUnit": "Custom unit",
       "customUnitPlaceholder": "Your custom unit",
       "monetaryUnit": "Monetary unit",
+      "isMonetary": "Monetary unit (Yes/No)",
       "source": "Source",
       "sourcePlaceholder": "Agribalyse® 3.1",
       "detailedGES": "Breakdown of GHG",

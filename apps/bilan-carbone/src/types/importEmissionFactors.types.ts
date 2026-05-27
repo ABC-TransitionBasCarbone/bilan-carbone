@@ -9,7 +9,6 @@ export type PreviewRow = {
   name: string
   source: string
   unit: string
-  customUnit: string | null
   totalCo2: number
   postsAndSubPosts: string
 }
@@ -22,7 +21,7 @@ export const COLUMNS = {
   name: 0,
   attribute: 1,
   unit: 2,
-  customUnit: 3,
+  isMonetary: 3,
   source: 4,
   location: 5,
   technicalRepresentativeness: 6,

@@ -16,7 +16,6 @@ type RowInput = {
   name?: string
   attribute?: string
   unit?: string
-  customUnit?: string
   source?: string
   location?: string
   technicalRepresentativeness?: string
@@ -40,13 +39,12 @@ type RowInput = {
 }
 
 function makeBuffer(rows: RowInput[]): Buffer {
-  const header = new Array(24).fill('')
+  const header = new Array(Object.keys(COLUMNS).length).fill('')
   const dataRows = rows.map((r) => {
-    const row = new Array(24).fill('')
+    const row = new Array(Object.keys(COLUMNS).length).fill('')
     row[COLUMNS.name] = r.name ?? ''
     row[COLUMNS.attribute] = r.attribute ?? ''
     row[COLUMNS.unit] = r.unit ?? ''
-    row[COLUMNS.customUnit] = r.customUnit ?? ''
     row[COLUMNS.source] = r.source ?? ''
     row[COLUMNS.location] = r.location ?? ''
     row[COLUMNS.technicalRepresentativeness] = r.technicalRepresentativeness ?? ''
@@ -89,18 +87,12 @@ const VALID_ROW: RowInput = {
 
 describe('parsePostsAndSubPostsCell', () => {
   describe('with FR locale and BC environment', () => {
-    it('returns error when cell is empty or null', () => {
+    it('treats empty or null cell as all posts/sub-posts', () => {
       const result = parsePostsAndSubPostsCell('', Locale.FR, Environment.BC)
-      expect(result.success).toBe(false)
-      if (!result.success) {
-        expect(result.errors[0].key).toBe('missingPostsAndSubPosts')
-      }
+      expect(result.success).toBe(true)
 
       const result2 = parsePostsAndSubPostsCell(null, Locale.FR, Environment.BC)
-      expect(result2.success).toBe(false)
-      if (!result2.success) {
-        expect(result2.errors[0].key).toBe('missingPostsAndSubPosts')
-      }
+      expect(result2.success).toBe(true)
     })
 
     it('parses a single post with one subpost', () => {
@@ -355,22 +347,13 @@ describe('parseImportFile', () => {
       }
     })
 
-    it('accepts a row with customUnit prefixed with kgCO2e/ and no unit column', () => {
-      const buffer = makeBuffer([{ ...VALID_ROW, unit: '', customUnit: 'kgCO2e/mon unité' }])
+    it('auto-detects unknown unit as Unit.CUSTOM', () => {
+      const buffer = makeBuffer([{ ...VALID_ROW, unit: 'kgCO2e/mon unité' }])
       const result = parseImportFile(buffer, Locale.FR, Environment.BC)
       expect(result.success).toBe(true)
       if (result.success) {
         expect(result.rows[0].unit).toBe(Unit.CUSTOM)
         expect(result.rows[0].customUnit).toBe('mon unité')
-      }
-    })
-
-    it('returns invalidUnit error when customUnit is missing the kgCO2e/ prefix', () => {
-      const buffer = makeBuffer([{ ...VALID_ROW, unit: '', customUnit: 'mon unité' }])
-      const result = parseImportFile(buffer, Locale.FR, Environment.BC)
-      expect(result.success).toBe(false)
-      if (!result.success) {
-        expect(result.errors.some((e) => e.key === 'invalidUnit')).toBe(true)
       }
     })
 
@@ -383,8 +366,8 @@ describe('parseImportFile', () => {
       }
     })
 
-    it('returns invalidUnit error when both unit and customUnit are empty', () => {
-      const buffer = makeBuffer([{ ...VALID_ROW, unit: '', customUnit: '' }])
+    it('returns invalidUnit error when unit is empty', () => {
+      const buffer = makeBuffer([{ ...VALID_ROW, unit: '' }])
       const result = parseImportFile(buffer, Locale.FR, Environment.BC)
       expect(result.success).toBe(false)
       if (!result.success) {

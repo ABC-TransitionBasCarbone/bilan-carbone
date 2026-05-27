@@ -8,7 +8,7 @@ import { parseExcelSheet } from './excel.utils'
 import { buildLabelMap, mapLabelFromTranslations, mapUnitLabelFromTranslationsWithList } from './import.utils'
 import { getExampleRowPrefixes } from './importEmissionSources.utils'
 import { parseNumericValue } from './number'
-import { getBcTranslations, getSingularForm } from './translation.utils'
+import { getBcTranslations, getCommonTranslations, getSingularForm } from './translation.utils'
 
 export function getAllPostsLabel(locale: LocaleType): string {
   return getBcTranslations(locale).emissionFactors.importModal.allPostsAndSubPosts
@@ -108,11 +108,8 @@ export function parsePostsAndSubPostsCell(
   locale: LocaleType,
   environment: Environment,
 ): ParsePostsResult {
-  if (!cell) {
-    return { success: false, errors: [{ key: 'missingPostsAndSubPosts' }] }
-  }
-
-  if (cell.trim().toLowerCase() === getAllPostsLabel(locale).toLowerCase()) {
+  const trimmed = cell?.trim() ?? ''
+  if (!trimmed || trimmed.toLowerCase() === getAllPostsLabel(locale).toLowerCase()) {
     const subPostsByPost = environmentSubPostsMapping[environment] as Record<string, SubPost[]>
     return { success: true, subPosts: subPostsByPost as Record<string, SubPost[]> }
   }
@@ -186,24 +183,27 @@ export function parseImportFile(buffer: Buffer, locale: LocaleType, environment:
     }
 
     const kgCO2ePrefix = /^kgCO2e\s*\/\s*/i
-    const rawCustomUnit = String(row[COLUMNS.customUnit] ?? '').trim()
     const rawUnit = String(row[COLUMNS.unit] ?? '').trim()
 
-    if (rawCustomUnit) {
-      if (!kgCO2ePrefix.test(rawCustomUnit)) {
-        rowErrors.push({ key: 'invalidUnit', value: rawCustomUnit })
-      }
-    } else if (!kgCO2ePrefix.test(rawUnit) && rawUnit !== '') {
+    if (!kgCO2ePrefix.test(rawUnit) && rawUnit !== '') {
       rowErrors.push({ key: 'invalidUnit', value: rawUnit })
     }
 
-    const strippedUnit = rawCustomUnit ? rawCustomUnit.replace(kgCO2ePrefix, '') : rawUnit.replace(kgCO2ePrefix, '')
-    const unit = rawCustomUnit ? Unit.CUSTOM : mapManualUnitLabelFromTranslations(strippedUnit, locale)
+    const strippedUnit = rawUnit.replace(kgCO2ePrefix, '')
+    const standardUnit = mapManualUnitLabelFromTranslations(strippedUnit, locale)
+    const unit = standardUnit ?? (strippedUnit ? Unit.CUSTOM : null)
     if (!unit) {
       rowErrors.push({ key: 'invalidUnit', value: rawUnit })
     }
 
     const customUnit = unit === Unit.CUSTOM ? strippedUnit || null : null
+
+    const yesLabel = getCommonTranslations(locale).common.yes
+    const isMonetary =
+      unit === Unit.CUSTOM &&
+      String(row[COLUMNS.isMonetary] ?? '')
+        .trim()
+        .toLowerCase() === yesLabel.toLowerCase()
 
     const rawTotalCo2 = row[COLUMNS.totalCo2]
     const totalCo2 = parseNumericValue(rawTotalCo2)
@@ -272,7 +272,7 @@ export function parseImportFile(buffer: Buffer, locale: LocaleType, environment:
       source,
       unit: unit!,
       customUnit: customUnit ?? undefined,
-      isMonetary: false,
+      isMonetary,
       totalCo2: totalCo2!,
       co2f: parseNumericValue(row[COLUMNS.co2f]) ?? undefined,
       ch4f: parseNumericValue(row[COLUMNS.ch4f]) ?? undefined,

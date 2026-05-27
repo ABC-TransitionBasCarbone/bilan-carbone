@@ -22,7 +22,6 @@ type PreviewRow = {
   name: string
   source: string
   unit: string
-  customUnit: string | null
   totalCo2: number
   postsAndSubPosts: string
 }
@@ -55,7 +54,7 @@ const ImportEmissionFactorsModal = ({ open, onClose, onSuccess }: Props) => {
           <TableRow key={i}>
             <TableCell className={styles.cellName}>{row.name}</TableCell>
             <TableCell>{row.source}</TableCell>
-            <TableCell>{row.customUnit ?? row.unit}</TableCell>
+            <TableCell>{row.unit}</TableCell>
             <TableCell align="right">{row.totalCo2}</TableCell>
             <TableCell>{row.postsAndSubPosts}</TableCell>
           </TableRow>
