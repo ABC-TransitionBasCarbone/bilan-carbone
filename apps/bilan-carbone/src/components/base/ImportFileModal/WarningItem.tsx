@@ -23,6 +23,17 @@ const WarningItem = ({ w, line, t }: Props) => {
     )
   }
 
+  if (w.type === 'efMissing') {
+    return (
+      <ListItem disableGutters className={line > 0 ? 'pl15' : undefined}>
+        <Typography variant="body2">
+          {line > 0 ? '• ' : ''}
+          {t('warningEfMissing', { sourceName: w.sourceName ?? '' })}
+        </Typography>
+      </ListItem>
+    )
+  }
+
   const searched = formatEf(w.searchedName, w.searchedValue, w.searchedUnit)
   const found =
     w.foundTitle !== undefined || w.foundValue !== undefined ? formatEf(w.foundTitle, w.foundValue, w.foundUnit) : null

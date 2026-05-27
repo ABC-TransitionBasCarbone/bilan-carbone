@@ -1,3 +1,4 @@
+import { KG_CO2E_PREFIX_REGEX } from '@/constants/import'
 import { LocaleType } from '@/i18n/config'
 import { environmentPostMapping, environmentSubPostsMapping } from '@/services/posts'
 import { EmissionFactorCommandValidation } from '@/services/serverFunctions/emissionFactor.command'
@@ -182,14 +183,13 @@ export function parseImportFile(buffer: Buffer, locale: LocaleType, environment:
       rowErrors.push({ key: 'missingSource' })
     }
 
-    const kgCO2ePrefix = /^kgCO2e\s*\/\s*/i
     const rawUnit = String(row[COLUMNS.unit] ?? '').trim()
 
-    if (!kgCO2ePrefix.test(rawUnit) && rawUnit !== '') {
+    if (!KG_CO2E_PREFIX_REGEX.test(rawUnit) && rawUnit !== '') {
       rowErrors.push({ key: 'invalidUnit', value: rawUnit })
     }
 
-    const strippedUnit = rawUnit.replace(kgCO2ePrefix, '')
+    const strippedUnit = rawUnit.replace(KG_CO2E_PREFIX_REGEX, '')
     const standardUnit = mapManualUnitLabelFromTranslations(strippedUnit, locale)
     const unit = standardUnit ?? (strippedUnit ? Unit.CUSTOM : null)
     if (!unit) {

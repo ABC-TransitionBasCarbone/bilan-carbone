@@ -32,7 +32,7 @@ type RowInput = {
 
 function makeBuffer(rows: RowInput[]): Buffer {
   const colCount = 35
-  const headerRows = Array.from({ length: 5 }, () => new Array(colCount).fill(''))
+  const headerRows = Array.from({ length: 9 }, () => new Array(colCount).fill(''))
   const dataRows = rows.map((r) => {
     const row = new Array(colCount).fill('')
     row[SOURCE_IMPORT_COLUMNS.site] = r.site ?? ''
@@ -165,13 +165,31 @@ describe('parseEmissionSourcesFile', () => {
     }
   })
 
+  it('accepts a row without any emission factor data', () => {
+    const buffer = makeBuffer([{ ...VALID_ROW, emissionFactorName: '', emissionFactorId: '' }])
+    const result = parseEmissionSourcesFile(buffer, Locale.FR)
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.rows[0].emissionFactorName).toBe('')
+      expect(result.rows[0].emissionFactorId).toBeUndefined()
+    }
+  })
+
+  it('accepts emissionFactorUnit with kgCO2e/ prefix', () => {
+    const buffer = makeBuffer([{ ...VALID_ROW, emissionFactorUnit: 'kgCO2e/tonne' }])
+    const result = parseEmissionSourcesFile(buffer, Locale.FR)
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.rows[0].emissionFactorUnit).toBe(Unit.TON)
+    }
+  })
+
   describe('row-level validation errors', () => {
     it.each([
       [{ site: '' }, 'missingSite'],
       [{ subPost: '' }, 'missingSubPost'],
       [{ subPost: 'Sous-poste inconnu' }, 'invalidSubPost'],
       [{ name: '' }, 'missingName'],
-      [{ emissionFactorName: '', emissionFactorId: '' }, 'missingEmissionFactorName'],
       [{ value: 'abc' }, 'invalidValue'],
       [{ emissionFactorValue: 'abc' }, 'invalidEmissionFactorValue'],
       [{ emissionFactorUnit: 'unité-inconnue' }, 'invalidUnit'],

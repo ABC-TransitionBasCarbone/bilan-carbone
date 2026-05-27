@@ -1,3 +1,4 @@
+import { KG_CO2E_PREFIX_REGEX } from '@/constants/import'
 import { Locale, LocaleType } from '@/i18n/config'
 import { qualityKeys } from '@/services/uncertainty'
 import { ImportError } from '@/types/import.types'
@@ -11,7 +12,7 @@ import {
 import { parseExcelSheet } from './excel.utils'
 import { buildLabelMap, mapLabelFromTranslations, mapUnitLabelFromTranslationsWithList } from './import.utils'
 import { parseNumericValue } from './number'
-import { getBcTranslations } from './translation.utils'
+import { getBcTranslations, getCommonTranslations } from './translation.utils'
 
 export function getImportEmissionSourcesTranslations(locale: LocaleType): Record<string, string> {
   const bc = getBcTranslations(locale)
@@ -98,7 +99,7 @@ function parseOptionalNumber(
 
 export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): ParseEmissionSourcesResult {
   const sheetResult = parseExcelSheet(buffer, {
-    headerRowIndex: 4,
+    headerRowIndex: 9,
     ignoredColumns: [SOURCE_IMPORT_COLUMNS.site, SOURCE_IMPORT_COLUMNS.post, SOURCE_IMPORT_COLUMNS.subPost],
   })
 
@@ -142,12 +143,11 @@ export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): Pa
 
     const emissionFactorId = col('emissionFactorId') || undefined
     const emissionFactorName = col('emissionFactorName')
-    if (!emissionFactorName && !emissionFactorId) {
-      rowErrors.push({ key: 'missingEmissionFactorName' })
-    }
 
     const emissionFactorValue = parseOptionalNumber(col('emissionFactorValue'), 'invalidEmissionFactorValue', rowErrors)
-    const emissionFactorUnit = parseOptionalLabel(col('emissionFactorUnit'), 'invalidUnit', rowErrors, (label) =>
+    const rawEmissionFactorUnit = col('emissionFactorUnit')
+    const strippedEmissionFactorUnit = rawEmissionFactorUnit.replace(KG_CO2E_PREFIX_REGEX, '')
+    const emissionFactorUnit = parseOptionalLabel(strippedEmissionFactorUnit, 'invalidUnit', rowErrors, (label) =>
       mapUnitLabelFromTranslationsWithList(label, locale, Object.values(Unit)),
     )
     const unit = col('unit') || undefined
@@ -193,7 +193,9 @@ export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): Pa
       source: col('source') || undefined,
       comment: col('comment') || undefined,
       feComment: col('feComment') || undefined,
-      validated: col('validation') ? col('validation') === getBcTranslations(locale).study.export.yes : undefined,
+      validated: col('validation')
+        ? col('validation').toLowerCase() === getCommonTranslations(locale).common.yes.toLowerCase()
+        : undefined,
       depreciationPeriod: col('depreciationPeriod')
         ? (parseNumericValue(col('depreciationPeriod')) ?? undefined)
         : undefined,

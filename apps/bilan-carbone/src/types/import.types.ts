@@ -1,7 +1,7 @@
 export type ImportWarningCandidate = { foundTitle?: string; foundValue?: number; foundUnit?: string }
 
 export type ImportWarning = {
-  type: 'efNotFound' | 'validationSkipped'
+  type: 'efNotFound' | 'efMissing' | 'validationSkipped'
   line: number
   sourceName?: string
   searchedName?: string

@@ -1,5 +1,6 @@
 'use server'
 
+import { KG_CO2E_PREFIX } from '@/constants/import'
 import { createEmissionFactorWithParts, getManualEmissionFactorsByOrganization } from '@/db/emissionFactors'
 import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
@@ -152,7 +153,11 @@ export async function exportManualEmissionFactorsToFile(): Promise<ArrayBuffer> 
     return [
       metaData?.title ?? '',
       metaData?.attribute ?? '',
-      ef.customUnit ? `kgCO2e/${ef.customUnit}` : ef.unit ? `kgCO2e/${getUnitLabel(ef.unit, locale)}` : '',
+      ef.customUnit
+        ? `${KG_CO2E_PREFIX}${ef.customUnit}`
+        : ef.unit
+          ? `${KG_CO2E_PREFIX}${getUnitLabel(ef.unit, locale)}`
+          : '',
       ef.isMonetary ? common.yes : common.no,
       ef.source ?? '',
       ef.location ?? '',
@@ -228,7 +233,7 @@ export const getImportEmissionFactorsTemplate = async () =>
     const exampleRow: (string | number)[] = Array(TOTAL_COLS).fill('')
     exampleRow[COLUMNS.name] = `${modal.examplePrefix} ${modal.exampleName}`
     exampleRow[COLUMNS.attribute] = modal.exampleAttribute
-    exampleRow[COLUMNS.unit] = 'kgCO2e/kg'
+    exampleRow[COLUMNS.unit] = `${KG_CO2E_PREFIX}kg`
     exampleRow[COLUMNS.source] = modal.exampleSource
     exampleRow[COLUMNS.location] = modal.exampleLocation
     exampleRow[COLUMNS.technicalRepresentativeness] = qualityTranslations['5']
