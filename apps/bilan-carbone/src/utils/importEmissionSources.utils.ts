@@ -14,6 +14,8 @@ import { buildLabelMap, mapLabelFromTranslations, mapUnitLabelFromTranslationsWi
 import { parseNumericValue } from './number'
 import { getBcTranslations, getCommonTranslations } from './translation.utils'
 
+export const SOURCE_IMPORT_HEADER_ROW_INDEX = 9
+
 export function getImportEmissionSourcesTranslations(locale: LocaleType): Record<string, string> {
   const bc = getBcTranslations(locale)
   return bc.study.importEmissionSourcesModal
@@ -99,7 +101,7 @@ function parseOptionalNumber(
 
 export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): ParseEmissionSourcesResult {
   const sheetResult = parseExcelSheet(buffer, {
-    headerRowIndex: 9,
+    headerRowIndex: SOURCE_IMPORT_HEADER_ROW_INDEX,
     ignoredColumns: [SOURCE_IMPORT_COLUMNS.site, SOURCE_IMPORT_COLUMNS.post, SOURCE_IMPORT_COLUMNS.subPost],
   })
 

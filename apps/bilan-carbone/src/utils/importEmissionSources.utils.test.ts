@@ -2,7 +2,7 @@ import { Locale } from '@/i18n/config'
 import { SOURCE_IMPORT_COLUMNS } from '@/types/importEmissionSources.types'
 import { EmissionSourceType, SubPost, Unit } from '@abc-transitionbascarbone/db-common/enums'
 import xlsx from 'node-xlsx'
-import { parseEmissionSourcesFile } from './importEmissionSources.utils'
+import { parseEmissionSourcesFile, SOURCE_IMPORT_HEADER_ROW_INDEX } from './importEmissionSources.utils'
 
 type RowInput = {
   site?: string
@@ -32,7 +32,7 @@ type RowInput = {
 
 function makeBuffer(rows: RowInput[]): Buffer {
   const colCount = 35
-  const headerRows = Array.from({ length: 9 }, () => new Array(colCount).fill(''))
+  const headerRows = Array.from({ length: SOURCE_IMPORT_HEADER_ROW_INDEX + 1 }, () => new Array(colCount).fill(''))
   const dataRows = rows.map((r) => {
     const row = new Array(colCount).fill('')
     row[SOURCE_IMPORT_COLUMNS.site] = r.site ?? ''
