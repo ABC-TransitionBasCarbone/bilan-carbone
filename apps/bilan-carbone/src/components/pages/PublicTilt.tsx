@@ -10,6 +10,8 @@ import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useEffect, useState } from 'react'
 import styles from './Public.module.css'
+import { customRich } from '@/i18n/customRich'
+import Link from 'next/link'
 
 interface Props {
   children: ReactNode
@@ -18,6 +20,7 @@ interface Props {
 const PublicTiltPage = ({ children, question }: Props) => {
   const t = useTranslations('login')
   const tLocale = useTranslations('locale')
+  const tDocumentation = useTranslations('documentationUrlTilt')
   const [locale, setLocale] = useState<LocaleType>(defaultLocale)
 
   useEffect(() => {
@@ -35,9 +38,14 @@ const PublicTiltPage = ({ children, question }: Props) => {
       <div className={classNames(styles.info, 'flex-col grow p2 text-center gapped4')}>
         <div>
           <p className="title-h4 mb1">{t('welcome')}</p>
-          <p className="title-h6 bold">{t('subtext')}</p>
+          <p className="title-h6 bold">{customRich(t,'subtext')}</p>
         </div>
-        <p>{t('explanation')}</p>
+        <p>{customRich(t,'explanation',{
+            link: (children) => (
+              <Link href={tDocumentation('tiltABCPage')} target="_blank" rel="noreferrer noopener">
+                {children}
+              </Link>
+        )})}</p>
         <div className="flex-cc gapped1 w100 p1">
           <Image src="/logos/abc/logo_abc.png" alt="ABC logo" fill className="w50 hauto" />
           <CloseIcon />
