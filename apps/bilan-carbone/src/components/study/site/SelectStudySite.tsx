@@ -5,8 +5,8 @@ import { hasAccessToStudySiteAddAndSelection } from '@/services/permissions/envi
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { FormControl, InputLabel, MenuItem, Select, Tooltip } from '@mui/material'
 import { useTranslations } from 'next-intl'
-import { useMemo } from 'react'
 import styles from './SelectStudySite.module.css'
+import { getSelectStudySiteValue } from './selectStudySite.utils'
 
 interface Props {
   sites: FullStudy['sites']
@@ -27,34 +27,22 @@ const SelectStudySite = ({
   isTransitionPlan = false,
   showAllOption = true,
 }: Props) => {
-  const t = useTranslations('study.organization')
+  'use memo'
 
+  const t = useTranslations('study.organization')
   const { environment } = useAppEnvironmentStore()
 
-  const tooltipMessage = useMemo(() => {
-    if (siteSelectionDisabled) {
-      if (isTransitionPlan) {
-        return t('allSitesOnlyTransitionPlan')
-      } else {
-        return t('allSitesOnly')
-      }
-    }
-    return null
-  }, [siteSelectionDisabled, isTransitionPlan, t])
-
-  const value = useMemo(() => {
-    if (sites?.length === 1) {
-      return sites[0].site.id
-    } else if (showAllOption && defaultValue === 'all') {
-      return 'all'
+  const tooltipMessage: string | null = null
+  if (siteSelectionDisabled) {
+    if (isTransitionPlan) {
+      return t('allSitesOnlyTransitionPlan')
     } else {
-      return defaultValue
+      return t('allSitesOnly')
     }
-  }, [sites, showAllOption, defaultValue])
+  }
 
-  const orderedSites = useMemo(() => {
-    return [...(sites ?? [])].sort((a, b) => a.site.name.localeCompare(b.site.name))
-  }, [sites])
+  const value = getSelectStudySiteValue(sites, defaultValue, showAllOption)
+  const orderedSites = [...(sites ?? [])].sort((a, b) => a.site.name.localeCompare(b.site.name))
 
   if (environment && !hasAccessToStudySiteAddAndSelection(environment)) {
     return null

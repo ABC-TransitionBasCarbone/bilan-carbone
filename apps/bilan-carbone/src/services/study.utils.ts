@@ -338,6 +338,13 @@ export const downloadStudyEmissionSources = async (
   downloadCSV(csvContent, fileName)
 }
 
+export const sanitizeStudyName = (name: string) => {
+  return name
+    .replace(/[/\\?%*:|"<>]/g, '-')
+    .replace(/\s+/g, '_')
+    .trim()
+}
+
 export const getAllowedLevels = (level: Level | null) => {
   switch (level) {
     case Level.Initial:
