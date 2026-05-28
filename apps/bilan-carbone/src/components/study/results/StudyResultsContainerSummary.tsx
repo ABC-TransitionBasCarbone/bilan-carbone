@@ -53,14 +53,14 @@ const StudyResultsContainerSummary = ({
     computedResultsWithDep,
     computedResultsWithoutDep,
   ] = useMemo(() => {
-    const { withDepValue, withoutDepValue, monetaryRatio, computedResultsWithDep, computedResultsWithoutDep } =
+    const { withDepValue, withoutDepValue, monetaryRatio, resultsBySiteWithDep, resultsBySiteWithoutDep } =
       getDetailedEmissionResults(study, tPost, studySite, !!validatedOnly, environment, tResults)
     return [
       formatNumber(withDepValue),
       formatNumber(withoutDepValue),
       formatNumber(monetaryRatio, 2),
-      computedResultsWithDep,
-      computedResultsWithoutDep,
+      resultsBySiteWithDep,
+      resultsBySiteWithoutDep,
     ]
   }, [environment, study, studySite, tPost, tResults, validatedOnly])
 
