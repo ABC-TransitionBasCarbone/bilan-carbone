@@ -279,16 +279,24 @@ export async function importEmissionSourcesFromFile(
     }
 
     let caracterisation = row.caracterisation
+    const availableCaracterisations = getCaracterisationsBySubPost(
+      row.subPost,
+      study.organizationVersion.environment,
+      study.exports?.types ?? [],
+      study.exports?.control ?? ControlMode.Operational,
+    )
     if (!caracterisation) {
-      const availableCaracterisations = getCaracterisationsBySubPost(
-        row.subPost,
-        study.organizationVersion.environment,
-        study.exports?.types ?? [],
-        study.exports?.control ?? ControlMode.Operational,
-      )
       if (availableCaracterisations.length === 1) {
         caracterisation = availableCaracterisations[0]
       }
+    } else if (!availableCaracterisations.includes(caracterisation)) {
+      rowWarnings.push({
+        type: 'invalidCaracterisation',
+        lineNumber,
+        sourceName: row.name,
+        value: row.caracterisation,
+      })
+      caracterisation = undefined
     }
 
     const casFields = getHectareAndDuration(isCASSubPost(row.subPost, efUnit), row.value)

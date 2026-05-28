@@ -1617,7 +1617,8 @@
     "missingEmissionFactorName": "Emission factor name is missing",
     "missingEmissionFactorValue": "Emission factor value is missing",
     "missingEmissionFactorUnit": "Emission factor unit is missing",
-    "warningEfMissing": "No emission factor provided for \"{sourceName}\""
+    "warningEfMissing": "No emission factor provided for \"{sourceName}\"",
+    "warningInvalidCaracterisation": "The caracterisation \"{caracterisation}\" of \"{sourceName}\" is not valid for this sub-post and will be ignored"
   },
   "emissionFactors": {
     "manualSectionLabel": "Manage your manual EFs",

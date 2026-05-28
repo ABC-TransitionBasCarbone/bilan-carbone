@@ -12,23 +12,26 @@ interface Props {
 }
 
 const WarningItem = ({ w, lineNumber, t }: Props) => {
+  let warningMessage: string | null = null
   if (w.type === 'validationSkipped') {
-    return (
-      <ListItem disableGutters className={lineNumber > 0 ? 'pl15' : undefined}>
-        <Typography variant="body2">
-          {lineNumber > 0 ? '• ' : ''}
-          {t('warningValidationSkipped')}
-        </Typography>
-      </ListItem>
-    )
+    warningMessage = t('warningValidationSkipped')
+  }
+  if (w.type === 'efMissing') {
+    warningMessage = t('warningEfMissing', { sourceName: w.sourceName ?? '' })
+  }
+  if (w.type === 'invalidCaracterisation') {
+    warningMessage = t('warningInvalidCaracterisation', {
+      sourceName: w.sourceName ?? '',
+      caracterisation: w.value ?? '',
+    })
   }
 
-  if (w.type === 'efMissing') {
+  if (warningMessage) {
     return (
       <ListItem disableGutters className={lineNumber > 0 ? 'pl15' : undefined}>
         <Typography variant="body2">
           {lineNumber > 0 ? '• ' : ''}
-          {t('warningEfMissing', { sourceName: w.sourceName ?? '' })}
+          {warningMessage}
         </Typography>
       </ListItem>
     )

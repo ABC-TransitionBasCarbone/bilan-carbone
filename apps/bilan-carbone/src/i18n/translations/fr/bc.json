@@ -1617,7 +1617,8 @@
     "missingEmissionFactorName": "Nom du facteur d'émission manquant",
     "missingEmissionFactorValue": "Valeur du facteur d'émission manquante",
     "missingEmissionFactorUnit": "Unité du facteur d'émission manquante",
-    "warningEfMissing": "Aucun facteur d'émission renseigné pour \"{sourceName}\""
+    "warningEfMissing": "Aucun facteur d'émission renseigné pour \"{sourceName}\"",
+    "warningInvalidCaracterisation": "La caractérisation \"{caracterisation}\" de \"{sourceName}\" n'est pas valide pour ce sous-poste et sera ignorée"
   },
   "emissionFactors": {
     "manualSectionLabel": "Gérez vos FEs manuels",
