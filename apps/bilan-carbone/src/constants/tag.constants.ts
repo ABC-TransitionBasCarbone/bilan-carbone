@@ -1,5 +1,7 @@
 import { Environment, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 
+export const OTHER_TAG_ID = 'other'
+
 export enum DefaultStudyTagNames {
   PERIMETRE_INTERNE = 'Périmètre Interne',
   PERIMETRE_BENEVOLES = 'Périmètre Bénévoles',

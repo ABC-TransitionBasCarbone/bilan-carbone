@@ -1,6 +1,6 @@
 'use server'
 
-import { DefaultStudyTagMap, DefaultStudyTagNames } from '@/constants/studyTags'
+import { DefaultStudyTagMap, DefaultStudyTagNames } from '@/constants/tag.constants'
 import { getAccountById } from '@/db/account'
 import { getEmissionFactorById } from '@/db/emissionFactors'
 import {

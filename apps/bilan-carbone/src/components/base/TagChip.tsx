@@ -1,6 +1,6 @@
 'use client'
 
-import { StudyTagColors } from '@/constants/studyTags'
+import { StudyTagColors } from '@/constants/tag.constants'
 import { Chip, ChipProps } from '@mui/material'
 import classNames from 'classnames'
 import styles from './TagChip.module.css'

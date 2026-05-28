@@ -1,4 +1,4 @@
-import { DefaultStudyTags } from '@/constants/studyTags'
+import { DefaultStudyTags } from '@/constants/tag.constants'
 import type { Prisma } from '@abc-transitionbascarbone/db-common'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { prismaClient } from './client.server'
