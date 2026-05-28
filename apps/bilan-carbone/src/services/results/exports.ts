@@ -1,7 +1,7 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import type { FullStudy } from '@/db/study'
 import { toCamelCase } from '@/utils/string'
-import { getBaseFilteredEmissionFactorsWithParts, getBaseFilteredEmissionSources } from '@/utils/study'
+import { getBaseFilteredEmissionSources } from '@/utils/study'
 import type { ExportRule } from '@abc-transitionbascarbone/db-common'
 import {
   EmissionFactorBase,
@@ -15,6 +15,7 @@ import {
   getSquaredStandardDeviationForEmissionSource,
   getSquaredStandardDeviationForEmissionSourceArray,
 } from '../uncertainty'
+import { handleGHGPLine } from './ghgp'
 import { filterWithDependencies, getAllSiteEmissionSources } from './utils'
 
 export type PostInfos = {
@@ -100,6 +101,41 @@ export const getDefaultRule = (rules: ExportRule[], caracterisation: EmissionSou
 
 const getRulesCount = (allRules: string[]) => new Set(allRules.map((rule) => rule.split('.')[0])).size
 
+const getLineAndPost = (
+  post: string,
+  results: Record<string, Omit<PostInfos, 'rule' | 'PostInfos'>[]>,
+  getLine: GetLineFunctionType,
+  value: number,
+  emissionFactor: ExportEmissionFactor,
+  efBase: EmissionFactorBase | null,
+  efHasParts: boolean,
+  squaredStandardDeviation: number,
+  isGHGP?: boolean,
+  base?: EmissionFactorBase,
+) => {
+  if (post && results[post]) {
+    const line = { ...getLine(value, emissionFactor), squaredStandardDeviation }
+
+    if (isGHGP) {
+      const { keep, post: ghgpPost } = handleGHGPLine(
+        post,
+        efBase,
+        efHasParts,
+        emissionFactor.importedFrom === Import.Manual,
+        base,
+      )
+
+      if (keep) {
+        return { line, post: ghgpPost }
+      }
+    } else {
+      return { line, post }
+    }
+  }
+
+  return { line: null, post: null }
+}
+
 export const computeResult = (
   emissionSources: FullStudy['emissionSources'],
   rules: ExportRule[],
@@ -118,10 +154,7 @@ export const computeResult = (
     (acc, rule) => ({ ...acc, [rule]: [] }),
     {},
   )
-
   const siteEmissionSources = getBaseFilteredEmissionSources(getAllSiteEmissionSources(emissionSources, siteId), base)
-
-  const emissionFactorsWithPartsBaseFiltered = getBaseFilteredEmissionFactorsWithParts(emissionFactorsWithParts, base)
 
   siteEmissionSources
     .map((emissionSource) => ({
@@ -142,7 +175,7 @@ export const computeResult = (
 
       const value = getEmissionActivityValue(emissionSource)
 
-      const emissionFactor = emissionFactorsWithPartsBaseFiltered.find((efwp) => efwp.id === id)
+      const emissionFactor = emissionFactorsWithParts.find((efwp) => efwp.id === id)
 
       if (!emissionFactor) {
         return
@@ -158,14 +191,28 @@ export const computeResult = (
 
       if (emissionFactor.emissionFactorParts.length === 0) {
         // Pas de decomposition => on ventile selon la regle par default
-        const post = getDefaultRule(subPostRules, caracterisation)
-        if (post && results[post]) {
-          results[post].push({ ...getLine(value, emissionFactor), squaredStandardDeviation })
+        const defaultRule = getDefaultRule(subPostRules, caracterisation)
+        if (defaultRule && results[defaultRule]) {
+          const { line, post } = getLineAndPost(
+            defaultRule,
+            results,
+            getLine,
+            value,
+            emissionFactor,
+            emissionFactor.base,
+            false,
+            squaredStandardDeviation,
+            isGHGP,
+            base,
+          )
+          if (line && post) {
+            results[post].push(line)
+          }
         }
       } else {
         emissionFactor.emissionFactorParts.forEach((part) => {
           const rule = subPostRules.find((rule) => rule.type === part.type)
-          let post = getRulePost(caracterisation, rule)
+          let rulePost = getRulePost(caracterisation, rule)
           if (
             isGHGP &&
             part.type === EmissionFactorPartType.Fabrication &&
@@ -174,14 +221,29 @@ export const computeResult = (
             return
           }
 
-          if (!post) {
+          if (!rulePost) {
             // On a pas de regle specifique pour cette composante => on ventile selon la regle par default
-            post = getDefaultRule(subPostRules, caracterisation)
+            rulePost = getDefaultRule(subPostRules, caracterisation)
           }
 
-          if (post && results[post]) {
+          if (rulePost && results[rulePost]) {
             // Et on ajoute la valeur selon la composante quoi qu'il arrive
-            results[post].push({ ...getLine(value, part), squaredStandardDeviation })
+            const { line, post } = getLineAndPost(
+              rulePost,
+              results,
+              getLine,
+              value,
+              part,
+              emissionFactor.base,
+              true,
+              squaredStandardDeviation,
+              isGHGP,
+              base,
+            )
+
+            if (line && post) {
+              results[post].push(line)
+            }
           }
         })
       }

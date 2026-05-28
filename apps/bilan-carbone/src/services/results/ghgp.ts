@@ -86,6 +86,37 @@ export const getLine = (
   }
 }
 
+export const handleGHGPLine = (
+  post: string,
+  efbase: EmissionFactorBase | null,
+  EfHasParts: boolean,
+  isEfManual: boolean,
+  base: EmissionFactorBase = EmissionFactorBase.LocationBased,
+) => {
+  if (base === EmissionFactorBase.LocationBased || !efbase) {
+    return { keep: true, post }
+  }
+
+  // There is only two bases, so we are now in market based
+  if (efbase === EmissionFactorBase.LocationBased) {
+    if (post.startsWith('1.') || post.startsWith('3.')) {
+      return { keep: true, post }
+    }
+    return { keep: false, post }
+  }
+
+  // same, we are now in market based with ef in market based
+  if (!post.startsWith('2.')) {
+    return { keep: false, post }
+  }
+
+  if (isEfManual && EfHasParts) {
+    return { keep: true, post: '3.3' }
+  }
+
+  return { keep: true, post }
+}
+
 export const getGHGPEmissionValue = (studyDate: Date) => (emissionSource: EmissionSource) => {
   if (!emissionSource.value) {
     return 0
