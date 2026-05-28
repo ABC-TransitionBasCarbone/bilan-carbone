@@ -1608,7 +1608,7 @@
     "missingSite": "Site is missing",
     "missingSubPost": "Sub-post is missing",
     "invalidType": "Invalid type: {value}",
-    "invalidCaracterisation": "Invalid characterisation: {value}",
+    "invalidCaracterisation": "Invalid characterisation: \"{value}\"",
     "invalidQuality": "Invalid quality: {value}",
     "invalidValue": "Invalid numeric value: {value}",
     "siteNotFound": "Site not found in study: {value}",
@@ -1617,8 +1617,7 @@
     "missingEmissionFactorName": "Emission factor name is missing",
     "missingEmissionFactorValue": "Emission factor value is missing",
     "missingEmissionFactorUnit": "Emission factor unit is missing",
-    "warningEfMissing": "No emission factor provided for \"{sourceName}\"",
-    "warningInvalidCaracterisation": "The caracterisation \"{caracterisation}\" of \"{sourceName}\" is not valid for this sub-post and will be ignored"
+    "warningEfMissing": "No emission factor provided for \"{sourceName}\""
   },
   "emissionFactors": {
     "manualSectionLabel": "Manage your manual EFs",

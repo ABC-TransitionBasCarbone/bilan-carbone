@@ -19,13 +19,6 @@ const WarningItem = ({ w, lineNumber, t }: Props) => {
   if (w.type === 'efMissing') {
     warningMessage = t('warningEfMissing', { sourceName: w.sourceName ?? '' })
   }
-  if (w.type === 'invalidCaracterisation') {
-    warningMessage = t('warningInvalidCaracterisation', {
-      sourceName: w.sourceName ?? '',
-      caracterisation: w.value ?? '',
-    })
-  }
-
   if (warningMessage) {
     return (
       <ListItem disableGutters className={lineNumber > 0 ? 'pl15' : undefined}>

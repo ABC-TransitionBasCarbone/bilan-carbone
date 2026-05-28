@@ -1608,7 +1608,7 @@
     "missingSite": "Le site est manquant",
     "missingSubPost": "Le sous-poste est manquant",
     "invalidType": "Type invalide : {value}",
-    "invalidCaracterisation": "Caractérisation invalide : {value}",
+    "invalidCaracterisation": "Caractérisation invalide : \"{value}\"",
     "invalidQuality": "Qualité invalide : {value}",
     "invalidValue": "Valeur numérique invalide : {value}",
     "siteNotFound": "Site non trouvé dans l'étude : {value}",
@@ -1617,8 +1617,7 @@
     "missingEmissionFactorName": "Nom du facteur d'émission manquant",
     "missingEmissionFactorValue": "Valeur du facteur d'émission manquante",
     "missingEmissionFactorUnit": "Unité du facteur d'émission manquante",
-    "warningEfMissing": "Aucun facteur d'émission renseigné pour \"{sourceName}\"",
-    "warningInvalidCaracterisation": "La caractérisation \"{caracterisation}\" de \"{sourceName}\" n'est pas valide pour ce sous-poste et sera ignorée"
+    "warningEfMissing": "Aucun facteur d'émission renseigné pour \"{sourceName}\""
   },
   "emissionFactors": {
     "manualSectionLabel": "Gérez vos FEs manuels",

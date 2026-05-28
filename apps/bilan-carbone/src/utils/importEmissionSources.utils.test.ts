@@ -1,6 +1,11 @@
 import { Locale } from '@/i18n/config'
 import { SOURCE_IMPORT_COLUMNS } from '@/types/importEmissionSources.types'
-import { EmissionSourceType, SubPost, Unit } from '@abc-transitionbascarbone/db-common/enums'
+import {
+  EmissionSourceCaracterisation,
+  EmissionSourceType,
+  SubPost,
+  Unit,
+} from '@abc-transitionbascarbone/db-common/enums'
 import xlsx from 'node-xlsx'
 import { parseEmissionSourcesFile, SOURCE_IMPORT_HEADER_ROW_INDEX } from './importEmissionSources.utils'
 
@@ -153,6 +158,15 @@ describe('parseEmissionSourcesFile', () => {
     if (result.success) {
       expect(result.rows[0].type).toBe(EmissionSourceType.Physical)
       expect(result.rows[0].emissionFactorUnit).toBe(Unit.KG)
+    }
+  })
+
+  it('parses a valid caracterisation', () => {
+    const buffer = makeBuffer([{ ...VALID_ROW, caracterisation: 'Opéré' }])
+    const result = parseEmissionSourcesFile(buffer, Locale.FR)
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.rows[0].caracterisation).toBe(EmissionSourceCaracterisation.Operated)
     }
   })
 
