@@ -184,6 +184,15 @@ describe('parseEmissionSourcesFile', () => {
     }
   })
 
+  it('accepts emissionFactorUnit with leading space before kgCO2e/ prefix', () => {
+    const buffer = makeBuffer([{ ...VALID_ROW, emissionFactorUnit: ' kgCO2e/tonne' }])
+    const result = parseEmissionSourcesFile(buffer, Locale.FR)
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.rows[0].emissionFactorUnit).toBe(Unit.TON)
+    }
+  })
+
   describe('row-level validation errors', () => {
     it.each([
       [{ site: '' }, 'missingSite'],
