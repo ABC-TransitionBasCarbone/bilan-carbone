@@ -14,7 +14,7 @@ interface Props {
   emissionSources: FullStudy['emissionSources']
   exportType: Export
   studySite: string
-  value: string
+  value: number
   resultsUnit: StudyResultUnit
   navigateToEmissionSource: (emissionSourceId: string, subPost: SubPost) => void
   Icon?: React.ElementType
