@@ -1,5 +1,5 @@
 import { environmentsWithChecklist } from '@/constants/environments'
-import { DefaultStudyTags } from '@/constants/studyTags'
+import { DefaultStudyTags } from '@/constants/tag.constants'
 import { reCreateBegesRules, reCreateGHGPRules } from '@/db/exports'
 import { getSectenVersion, updateSectenVersion } from '@/scripts/secten/secten'
 import { signPassword } from '@/services/auth'

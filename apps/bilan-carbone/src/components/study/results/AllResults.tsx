@@ -25,6 +25,7 @@ import { sortAlphabetically } from '@/services/utils'
 import { AdditionalResultTypes, ResultType } from '@/types/study.types'
 import { getPost } from '@/utils/post'
 import { calculateMonetaryRatio, convertValue } from '@/utils/study'
+import { getAllTagIds } from '@/utils/tag.utils'
 import type { ExportRule } from '@abc-transitionbascarbone/db-common'
 import {
   ControlMode,
@@ -106,7 +107,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     if (storedTags) {
       const parsed: unknown = JSON.parse(storedTags)
       if (Array.isArray(parsed) && parsed.every((id: unknown) => typeof id === 'string')) {
-        const validTagIds = study.tagFamilies.flatMap((f) => f.tags.map((tag) => tag.id))
+        const validTagIds = getAllTagIds(study.tagFamilies)
         const allValid = validTagIds.length === 0 || (parsed as string[]).every((id) => validTagIds.includes(id))
         if (allValid) {
           setSelectedTags(parsed as string[])

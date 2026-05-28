@@ -5,6 +5,7 @@ import { PostSubPostFilter } from '@/components/form/PostSubPostFilter'
 import { TagFilter } from '@/components/form/TagFilter'
 import { FullStudy, StudyTagFamilyWithTags } from '@/db/study'
 import { environmentSubPostsMapping, Post, subPostsByPost } from '@/services/posts'
+import { getAllTagIds } from '@/utils/tag.utils'
 import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { FormControl, InputLabel } from '@mui/material'
 import { useTranslations } from 'next-intl'
@@ -45,13 +46,7 @@ const TransitionPlanFilters = ({
     }
   }, [study.organizationVersion.environment])
 
-  const allTagIds = useMemo(
-    () =>
-      study.tagFamilies
-        .flatMap((family) => family.tags.map((tag) => tag.id))
-        .concat(study.tagFamilies.some((f) => f.name !== 'DEFAULT_FAMILY_TAG') ? ['other'] : []),
-    [study.tagFamilies],
-  )
+  const allTagIds = useMemo(() => getAllTagIds(study.tagFamilies), [study.tagFamilies])
 
   useEffect(() => {
     if (!filtersMounted || initializedRef.current) {

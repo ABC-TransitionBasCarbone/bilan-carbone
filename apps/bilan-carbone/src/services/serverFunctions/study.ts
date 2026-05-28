@@ -1,7 +1,7 @@
 'use server'
 
 import { StudyContributorDeleteParams } from '@/components/study/rights/StudyContributorsTable'
-import { DefaultStudyTags } from '@/constants/studyTags'
+import { DefaultStudyTags } from '@/constants/tag.constants'
 import {
   addAccount,
   getAccountByEmailAndEnvironment,

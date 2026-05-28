@@ -1,3 +1,4 @@
+import { OTHER_TAG_ID } from '@/constants/tag.constants'
 import { StudyTagFamilyWithTags } from '@/db/study'
 import { Checkbox, FormControl, FormControlLabel, FormLabel, InputLabel, Menu, MenuItem, Select } from '@mui/material'
 import classNames from 'classnames'
@@ -5,7 +6,6 @@ import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import styles from './TagFilter.module.css'
 
-export const OTHER_TAG_ID = 'other'
 const OTHER_FAMILY_ID = 'otherFamily'
 
 type ChildrenType = { id: string; label: string }

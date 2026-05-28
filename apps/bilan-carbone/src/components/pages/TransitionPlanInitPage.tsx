@@ -31,6 +31,7 @@ import {
 import { ObjectiveGroup, TrajectoryWithObjectivesAndScope } from '@/types/trajectory.types'
 import { compareSectenVersions } from '@/utils/secten'
 import { calculateSectoralSNBCReductionRates, getDefaultSnbcSectoralTrajectory } from '@/utils/snbc'
+import { getAllTagIds } from '@/utils/tag.utils'
 import { getInitialCurrentStep, readStoredStringArray } from '@/utils/transitionPlan.utils'
 import type { ExternalStudy, SectenInfo, SectenVersion, TransitionPlan } from '@abc-transitionbascarbone/db-common'
 import { TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
@@ -101,7 +102,7 @@ const TransitionPlanInitPage = ({
   const [selectedSbtiTrajectories, setSelectedSbtiTrajectories] = useState<string[]>(
     () => readStoredStringArray(`trajectory-sbti-selected-${study.id}`) ?? [TRAJECTORY_15_ID],
   )
-  const allTagIds = useMemo(() => study.tagFamilies.flatMap((f) => f.tags.map((tag) => tag.id)), [study.tagFamilies])
+  const allTagIds = useMemo(() => getAllTagIds(study.tagFamilies), [study.tagFamilies])
   const {
     selectedSiteIds,
     selectedSubPosts,
