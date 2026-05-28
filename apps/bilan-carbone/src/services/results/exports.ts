@@ -101,7 +101,7 @@ export const getDefaultRule = (rules: ExportRule[], caracterisation: EmissionSou
 const getRulesCount = (allRules: string[]) => new Set(allRules.map((rule) => rule.split('.')[0])).size
 
 export const computeResult = (
-  study: FullStudy,
+  emissionSources: FullStudy['emissionSources'],
   rules: ExportRule[],
   emissionFactorsWithParts: EmissionFactorWithParts[],
   siteId: string,
@@ -119,14 +119,9 @@ export const computeResult = (
     {},
   )
 
-  const siteEmissionSources = getBaseFilteredEmissionSources(
-    getAllSiteEmissionSources(study.emissionSources, siteId),
-    base,
-  )
+  const siteEmissionSources = getBaseFilteredEmissionSources(getAllSiteEmissionSources(emissionSources, siteId), base)
 
   const emissionFactorsWithPartsBaseFiltered = getBaseFilteredEmissionFactorsWithParts(emissionFactorsWithParts, base)
-
-  console.log(isGHGP, siteEmissionSources, emissionFactorsWithPartsBaseFiltered)
 
   siteEmissionSources
     .map((emissionSource) => ({

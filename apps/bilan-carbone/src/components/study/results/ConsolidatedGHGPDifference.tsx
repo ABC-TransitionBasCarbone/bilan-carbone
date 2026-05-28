@@ -21,6 +21,7 @@ import {
 import WarningAmberIcon from '@mui/icons-material/WarningAmberOutlined'
 import { useTranslations } from 'next-intl'
 import { useCallback, useMemo } from 'react'
+import { computeGHGPResult } from '../../../services/results/ghgp'
 import { EnergiesIcon } from '../infography/icons/energies'
 import ConsolidatedExportDifference, { calculateEmissionSourcesDifference } from './ConsolidatedExportDifference'
 import ExportDifferenceItems from './ExportDifferenceItems'
@@ -240,20 +241,33 @@ const ConsolatedGHGPDifference = ({
       0,
     )
 
-    const marketBasedValue = marketBased.reduce(
-      (total, emissionSource) => total + getEmissionResults(emissionSource, environment).emissionValue,
-      0,
-    )
+    const marketBasedValue =
+      computeGHGPResult(
+        [...marketBased, ...locationBased],
+        study.startDate,
+        ghgpRules,
+        emissionFactorsWithParts,
+        studySite,
+        validatedOnly,
+        EmissionFactorBase.MarketBased,
+        environment,
+      ).find((result) => result.rule === 'total')?.total ?? 0
+
+    console.log(locationBasedValue, marketBasedValue)
 
     return (marketBasedValue - locationBasedValue) / unitValue
   }, [
     base,
     emissionSourcesForSelectedSite,
     marketBased,
+    study.startDate,
+    ghgpRules,
+    emissionFactorsWithParts,
+    studySite,
+    validatedOnly,
+    environment,
     unitValue,
     isEmissionSourceFiltered,
-    emissionFactorsWithParts,
-    environment,
   ])
 
   const fabricationEmissionSources = useMemo(
@@ -384,7 +398,7 @@ const ConsolatedGHGPDifference = ({
           navigateToEmissionSource={navigateToEmissionSource}
         />
       )}
-      {marketBasedDifference > 0 && (
+      {Math.abs(marketBasedDifference) > 0 && (
         <ExportDifferenceItems
           title="marketBasedTitle"
           descriptions={['marketBased']}

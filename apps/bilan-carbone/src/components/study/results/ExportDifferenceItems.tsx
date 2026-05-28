@@ -1,4 +1,6 @@
 import type { FullStudy } from '@/db/study'
+import { customRich } from '@/i18n/customRich'
+import { formatNumber } from '@/utils/number'
 import { Export, StudyResultUnit, SubPost } from '@abc-transitionbascarbone/db-common'
 import TrendingUpIcon from '@mui/icons-material/TrendingUpOutlined'
 import classNames from 'classnames'
@@ -39,11 +41,12 @@ const ExportDifferenceItems = ({
         <div className={classNames(styles.cardHeaderWithValue, 'align-center justify-between')}>
           <div className={classNames(styles.cardHeaderLeft, 'align-center')}>
             <Icon className={styles.cardIcon} />
-            <h4>{t(title)}</h4>
+            <h4>{customRich(t, title)}</h4>
           </div>
           <div className={'align-center'}>
-            <span className={styles.differenceValueNegative}>
-              {value} {unit}
+            <span className={value >= 0 ? styles.differenceValue : styles.differenceValueNegative}>
+              {value > 0 ? '+' : ''}
+              {formatNumber(value, 0)} {unit}
             </span>
           </div>
         </div>
@@ -51,7 +54,7 @@ const ExportDifferenceItems = ({
           <p className={styles.cardDescription}>
             {descriptions.map((description, i) => (
               <>
-                <span key={i}>{t(description, { type: exportType })}</span>
+                <span key={i}>{customRich(t, description, { type: exportType })}</span>
                 {i < descriptions.length - 1 && <br />}
               </>
             ))}

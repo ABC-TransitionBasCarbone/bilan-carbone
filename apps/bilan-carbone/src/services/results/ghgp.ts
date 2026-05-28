@@ -109,24 +109,24 @@ export const getGHGPEmissionTotal = (
 ) => getEmissionTotal(emissionSource, emissionFactor, getGHGPEmissionValue(studyStartDate), getLine)
 
 export const computeGHGPResult = (
-  study: FullStudy,
+  emissionSources: FullStudy['emissionSources'],
+  startDate: Date,
   rules: ExportRule[],
   emissionFactorsWithParts: EmissionFactorWithParts[],
   siteId: string,
-  withDependencies: boolean,
   validatedOnly: boolean = true,
   base?: EmissionFactorBase,
   environment: Environment = Environment.BC,
 ): PostInfos[] =>
   computeResult(
-    study,
+    emissionSources,
     rules,
     emissionFactorsWithParts,
     siteId,
-    withDependencies,
+    false,
     validatedOnly,
     allRules,
-    getGHGPEmissionValue(study.startDate),
+    getGHGPEmissionValue(startDate),
     getLine,
     base,
     true,

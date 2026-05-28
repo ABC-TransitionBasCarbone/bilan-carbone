@@ -87,7 +87,7 @@ export const computeBegesResult = (
   environment: Environment = Environment.BC,
 ): PostInfos[] =>
   computeResult(
-    study,
+    study.emissionSources,
     rules,
     emissionFactorsWithParts,
     siteId,
