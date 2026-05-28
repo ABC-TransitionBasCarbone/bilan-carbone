@@ -361,7 +361,7 @@ type Merge = {
   e: { c: number; r: number }
 }
 
-export const getStudyResultsExportFilename = (studyName: string, tExport: Translations) => {
+const getStudyResultsExportFilename = (studyName: string, tExport: Translations) => {
   const sanitized = sanitizeStudyName(studyName)
   return `${tExport('exportFilename', { studyName: sanitized })}.xlsx`
 }
@@ -404,7 +404,7 @@ const buildDisclaimerRows = (
   return { rows, merges }
 }
 
-export const formatSimplifiedStudyResultsForExport = (
+const formatSimplifiedStudyResultsForExport = (
   study: FullStudy,
   siteLabel: string,
   results: BaseResultsByPost[],
@@ -465,7 +465,7 @@ const handleLine = (
 
 export type SiteExportEntry = { name: string; siteId: string; studySiteId: string }
 
-export const formatConsolidatedStudyResultsForExport = (
+const formatConsolidatedStudyResultsForExport = (
   study: FullStudy,
   siteList: SiteExportEntry[],
   tStudy: Translations,
@@ -522,6 +522,7 @@ export const formatConsolidatedStudyResultsForExport = (
     options: { '!cols': [{ wch: 30 }, { wch: 15 }, { wch: 20 }] },
   }
 }
+
 interface IExportData {
   rulesSpans: Record<string, number>
   gasCols: (t: Translations) => string[]
