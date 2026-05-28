@@ -1085,7 +1085,7 @@
         },
         "sectorBlock": {
           "title": "Répartition sectorielle SNBC",
-          "description": "Indiquez la part de vos émissions relevant des secteurs de la SNBC. Cela permettra de combiner les trajectoire sectorielles de la SNBC pour obtenir votre trajectoire SNBC.",
+          "description": "Indiquez la part de vos émissions relevant des secteurs de la SNBC. Cela permettra de combiner les trajectoires sectorielles de la SNBC pour obtenir votre trajectoire SNBC.",
           "snbcSectorialName": "Votre trajectoire SNBC",
           "update": "Sauvegarder les modifications"
         }

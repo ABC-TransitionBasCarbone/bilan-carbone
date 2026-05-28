@@ -79,6 +79,7 @@ const TransitionPlanBase = ({
   const tNav = useTranslations('nav')
   const allTagIds = study.tagFamilies.flatMap((f) => f.tags.map((tag) => tag.id))
   const allTagIdsWithOther = getAllTagIds(study.tagFamilies)
+  const allSiteIds = study.sites.map((s) => s.site.id)
   const {
     selectedSiteIds,
     selectedSubPosts,
@@ -87,9 +88,8 @@ const TransitionPlanBase = ({
     setSelectedSiteIds,
     setSelectedSubPosts,
     setSelectedTagIds,
-  } = useTransitionPlanFilters(study.id, allTagIdsWithOther)
+  } = useTransitionPlanFilters(study.id, allTagIdsWithOther, allSiteIds)
 
-  const allSiteIds = study.sites.map((s) => s.site.id)
   const envSubPostsByPost = environmentSubPostsMapping[study.organizationVersion.environment]
   const allEnvSubPosts = Array.from(new Set(Object.values(envSubPostsByPost).flat()))
   const sitesFiltered = allSiteIds.length > 0 && selectedSiteIds.length < allSiteIds.length

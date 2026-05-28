@@ -2,11 +2,10 @@
 
 import Block from '@/components/base/Block'
 import Box from '@/components/base/Box'
-import { storageKeys } from '@/constants/storage.constants'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import type { FullStudy } from '@/db/study'
-import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { useTransitionPlanFilters } from '@/hooks/useTransitionPlanFilters'
 import { download } from '@/services/file'
 import { hasAccessToBcExport, hasAccessToDownloadStudyEmissionSourcesButton } from '@/services/permissions/environment'
 import { environmentPostMapping } from '@/services/posts'
@@ -82,45 +81,13 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   const exports = study.exports
   const [type, setType] = useState<ResultType>(AdditionalResultTypes.CONSOLIDATED)
   const [isDownloadReportActive, setIsDownloadReportActive] = useState(false)
-  const [selectedSubposts, setSelectedSubposts] = useState<string[]>([])
-  const [selectedTags, setSelectedTags] = useState<string[]>([])
-  const [filtersMounted, setFiltersMounted] = useState(false)
   const [selectedGHGPTable, setSelectedGHGPTable] = useState<EmissionFactorBase>(EmissionFactorBase.LocationBased)
   const router = useRouter()
 
-  const subpostsKey = storageKeys.studyFilterSubposts(study.id)
-  const tagsKey = storageKeys.studyFilterTags(study.id)
-
-  useLocalStorageSync(subpostsKey, selectedSubposts, filtersMounted)
-  useLocalStorageSync(tagsKey, selectedTags, filtersMounted)
-
-  useEffect(() => {
-    const storedSubposts = localStorage.getItem(subpostsKey)
-    if (storedSubposts) {
-      const parsed: unknown = JSON.parse(storedSubposts)
-      if (Array.isArray(parsed) && parsed.every((id: unknown) => typeof id === 'string')) {
-        setSelectedSubposts(parsed as string[])
-      }
-    }
-
-    const storedTags = localStorage.getItem(tagsKey)
-    if (storedTags) {
-      const parsed: unknown = JSON.parse(storedTags)
-      if (Array.isArray(parsed) && parsed.every((id: unknown) => typeof id === 'string')) {
-        const validTagIds = getAllTagIds(study.tagFamilies)
-        const allValid = validTagIds.length === 0 || (parsed as string[]).every((id) => validTagIds.includes(id))
-        if (allValid) {
-          setSelectedTags(parsed as string[])
-        } else {
-          localStorage.removeItem(tagsKey)
-        }
-      }
-    }
-
-    setFiltersMounted(true)
-    // This effect is only used to mount the filters, so we don't need to re-run it when the study id changes
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [study.id])
+  const { selectedSubPosts, selectedTagIds, setSelectedSubPosts, setSelectedTagIds } = useTransitionPlanFilters(
+    study.id,
+    getAllTagIds(study.tagFamilies),
+  )
 
   const displayConsolidatedInfo =
     (type === AdditionalResultTypes.CONSOLIDATED || type === AdditionalResultTypes.ENV_SPECIFIC_EXPORT) &&
@@ -189,7 +156,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     monetaryRatio,
     nonSpecificMonetaryRatio,
   } = useMemo(() => {
-    if (selectedSubposts.length === 0 && selectedTags.length === 0) {
+    if (selectedSubPosts.length === 0 && selectedTagIds.length === 0) {
       // No results shown when no filters are selected
       return {
         withDepForced: 0,
@@ -222,12 +189,11 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
         // 'normal' mode: continue with normal filtering
       }
 
-      const subPostStr = String(emissionSource.subPost)
-      const matchesSubPost = selectedSubposts.length > 0 && selectedSubposts.includes(subPostStr)
+      const matchesSubPost = selectedSubPosts.length > 0 && selectedSubPosts.includes(emissionSource.subPost)
 
       const hasNoTags = emissionSource.emissionSourceTags.length === 0
-      const hasSomeSelectedTag = emissionSource.emissionSourceTags.some((est) => selectedTags.includes(est.tag.id))
-      const untaggedLabelSelected = selectedTags.includes('other')
+      const hasSomeSelectedTag = emissionSource.emissionSourceTags.some((est) => selectedTagIds.includes(est.tag.id))
+      const untaggedLabelSelected = selectedTagIds.includes('other')
       const matchesTag = (hasNoTags && untaggedLabelSelected) || hasSomeSelectedTag
 
       return matchesSubPost && matchesTag
@@ -298,7 +264,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     const withoutDepForcedValue = filteredResultWithoutDep.find((r) => r.post === 'total')?.value || 0
     const withoutDepForced = convertValue(withoutDepForcedValue, StudyResultUnit.K, study.resultsUnit)
 
-    const isUtilisationEnDependanceSelected = selectedSubposts.includes(SubPost.UtilisationEnDependance)
+    const isUtilisationEnDependanceSelected = selectedSubPosts.includes(SubPost.UtilisationEnDependance)
     const filteredResultsByPost = isUtilisationEnDependanceSelected ? filteredResult : filteredResultWithoutDep
 
     const total = filteredResultsByPost.find((r) => r.post === 'total')
@@ -314,7 +280,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
       monetaryRatio,
       nonSpecificMonetaryRatio,
     }
-  }, [study, siteId, selectedSubposts, selectedTags, validatedOnly, t, tPost, type])
+  }, [study, siteId, selectedSubPosts, selectedTagIds, validatedOnly, t, tPost, type])
 
   const computedBegesData = useMemo(
     () => computeBegesResult(study, begesRules, emissionFactorsWithParts, siteId, false, validatedOnly, environment),
@@ -510,10 +476,10 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
         {type !== Export.Beges && displayConsolidatedInfo && (
           <ResultFilters
             study={study}
-            selectedPostIds={selectedSubposts}
-            selectedTagIds={selectedTags}
-            onPostFilterChange={setSelectedSubposts}
-            onTagFilterChange={setSelectedTags}
+            selectedPostIds={selectedSubPosts}
+            selectedTagIds={selectedTagIds}
+            onPostFilterChange={setSelectedSubPosts}
+            onTagFilterChange={setSelectedTagIds}
             exportType={type}
           />
         )}
@@ -562,7 +528,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
             emissionSources={filteredEmissionSources}
             environment={environment}
             validatedOnly={validatedOnly}
-            selectedPostIds={selectedSubposts}
+            selectedSubPosts={selectedSubPosts}
           />
         )}
       </div>
