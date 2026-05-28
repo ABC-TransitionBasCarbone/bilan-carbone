@@ -115,6 +115,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     checkDownloadReportFeature()
   }, [environment, callServerFunction])
 
+  // Single site filter, which is why we don't use the useTransitionPlanFilters hook for sites
   const { siteId, setSite } = useStudySite(study, true)
 
   const begesRules = useMemo(() => rules.filter((rule) => rule.export === Export.Beges), [rules])
