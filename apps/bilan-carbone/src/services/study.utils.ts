@@ -338,6 +338,14 @@ export const downloadStudyEmissionSources = async (
   downloadCSV(csvContent, fileName)
 }
 
+export const getSiteLabelFromId = (study: FullStudy, siteId: string, tOrga: Translations): string => {
+  if (siteId === 'all') {
+    return tOrga('allSites')
+  }
+  const site = study.sites.find((studySite) => studySite.site.id === siteId)
+  return site?.site.name ?? ''
+}
+
 export const sanitizeStudyName = (name: string) => {
   return name
     .replace(/[/\\?%*:|"<>]/g, '-')

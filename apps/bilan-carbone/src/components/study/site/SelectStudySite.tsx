@@ -32,13 +32,9 @@ const SelectStudySite = ({
   const t = useTranslations('study.organization')
   const { environment } = useAppEnvironmentStore()
 
-  const tooltipMessage: string | null = null
+  let tooltipMessage: string | null = null
   if (siteSelectionDisabled) {
-    if (isTransitionPlan) {
-      return t('allSitesOnlyTransitionPlan')
-    } else {
-      return t('allSitesOnly')
-    }
+    tooltipMessage = isTransitionPlan ? t('allSitesOnlyTransitionPlan') : t('allSitesOnly')
   }
 
   const value = getSelectStudySiteValue(sites, defaultValue, showAllOption)

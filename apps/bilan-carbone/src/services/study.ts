@@ -1,4 +1,3 @@
-import { getSiteLabelFromId } from '@/components/study/site/selectStudySite.utils'
 import { EngagementActionTargets } from '@/constants/engagementActions'
 import {
   resultsExportHeadersBase,
@@ -54,7 +53,7 @@ import { filterWithDependencies } from './results/utils'
 import { EmissionFactorWithMetaData, getEmissionFactorsByIds } from './serverFunctions/emissionFactor'
 import { prepareExcel } from './serverFunctions/file'
 import { getUserSettings } from './serverFunctions/user'
-import { sanitizeStudyName } from './study.utils'
+import { getSiteLabelFromId, sanitizeStudyName } from './study.utils'
 import {
   getConfidenceInterval,
   getEmissionSourcesConfidenceInterval,
@@ -340,20 +339,18 @@ const getHeadersForEnv = (environment: Environment) => {
 }
 const getFormattedHeadersForEnv = (
   environment: Environment,
-  traduction: Translations,
-  traductionUnit: Translations,
+  tStudy: Translations,
+  tUnits: Translations,
   unit: StudyResultUnit,
 ) => {
   const headers = getHeadersForEnv(environment)
 
-  return headers.map((header) =>
-    header !== 'value' ? traduction(header) : traduction(header, { unit: traductionUnit(unit) }),
-  )
+  return headers.map((header) => (header !== 'value' ? tStudy(header) : tStudy(header, { unit: tUnits(unit) })))
 }
 
-const getFormattedSimplifiedHeaders = (traduction: Translations, traductionUnit: Translations, unit: StudyResultUnit) =>
+const getFormattedSimplifiedHeaders = (tStudy: Translations, tUnits: Translations, unit: StudyResultUnit) =>
   resultsExportHeadersSimplified.map((header) =>
-    header !== 'value' ? traduction(header) : traduction(header, { unit: traductionUnit(unit) }),
+    header !== 'value' ? tStudy(header) : tStudy(header, { unit: tUnits(unit) }),
   )
 
 type Merge = {
