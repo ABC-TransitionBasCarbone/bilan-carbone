@@ -69,7 +69,7 @@ type ParseEmissionSourcesResult =
 function parseOptionalLabel<T>(
   label: string,
   errorKey: string,
-  rowErrors: Omit<ImportError, 'line'>[],
+  rowErrors: Omit<ImportError, 'lineNumber'>[],
   map: (label: string) => T | null,
 ): T | undefined {
   if (!label) {
@@ -86,7 +86,7 @@ function parseOptionalLabel<T>(
 function parseOptionalNumber(
   raw: string,
   errorKey: string,
-  rowErrors: Omit<ImportError, 'line'>[],
+  rowErrors: Omit<ImportError, 'lineNumber'>[],
 ): number | undefined {
   if (!raw) {
     return undefined
@@ -116,8 +116,8 @@ export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): Pa
 
   for (let i = 0; i < dataRows.length; i++) {
     const row = dataRows[i] as unknown[]
-    const lineNum = i + headerRowIndex + 2
-    const rowErrors: Omit<ImportError, 'line'>[] = []
+    const lineNumber = i + headerRowIndex + 2
+    const rowErrors: Omit<ImportError, 'lineNumber'>[] = []
 
     const col = (key: keyof typeof SOURCE_IMPORT_COLUMNS) => String(row[SOURCE_IMPORT_COLUMNS[key]] ?? '').trim()
 
@@ -174,12 +174,12 @@ export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): Pa
     }
 
     if (rowErrors.length > 0) {
-      errors.push(...rowErrors.map((e) => ({ line: lineNum, ...e })))
+      errors.push(...rowErrors.map((e) => ({ lineNumber, ...e })))
       continue
     }
 
     parsedRows.push({
-      lineNumber: lineNum,
+      lineNumber: lineNumber,
       siteName,
       subPost: subPost!,
       name,
@@ -215,7 +215,7 @@ export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): Pa
   }
 
   if (parsedRows.length === 0) {
-    return { success: false, errors: [{ line: 0, key: 'noRows' }] }
+    return { success: false, errors: [{ lineNumber: 0, key: 'noRows' }] }
   }
 
   return { success: true, rows: parsedRows }

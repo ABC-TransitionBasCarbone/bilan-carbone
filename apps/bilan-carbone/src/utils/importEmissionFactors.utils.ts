@@ -168,8 +168,8 @@ export function parseImportFile(buffer: Buffer, locale: LocaleType, environment:
 
   for (let i = 0; i < dataRows.length; i++) {
     const row = dataRows[i]
-    const lineNum = i + 2
-    const rowErrors: Omit<ImportError, 'line'>[] = []
+    const lineNumber = i + 2
+    const rowErrors: Omit<ImportError, 'lineNumber'>[] = []
 
     const name = String(row[COLUMNS.name] ?? '').trim()
     if (!name) {
@@ -261,7 +261,7 @@ export function parseImportFile(buffer: Buffer, locale: LocaleType, environment:
     }
 
     if (rowErrors.length > 0) {
-      errors.push(...rowErrors.map((e) => ({ line: lineNum, ...e })))
+      errors.push(...rowErrors.map((e) => ({ lineNumber, ...e })))
       continue
     }
 
@@ -300,7 +300,7 @@ export function parseImportFile(buffer: Buffer, locale: LocaleType, environment:
     if (!validation.success) {
       errors.push(
         ...validation.error.issues.map((issue) => ({
-          line: lineNum,
+          lineNumber,
           key: 'validationError',
           value: issue.path.join('.'),
         })),
@@ -316,7 +316,7 @@ export function parseImportFile(buffer: Buffer, locale: LocaleType, environment:
   }
 
   if (parsedRows.length === 0) {
-    return { success: false, errors: [{ line: 0, key: 'noRows' }] }
+    return { success: false, errors: [{ lineNumber: 0, key: 'noRows' }] }
   }
 
   return { success: true, rows: parsedRows }

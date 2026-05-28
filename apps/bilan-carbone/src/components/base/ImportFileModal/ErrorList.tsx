@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl'
 import styles from './ImportFileModal.module.css'
 
 interface Props {
-  errors: { line: number; items: ImportError[] }[]
+  errors: { lineNumber: number; items: ImportError[] }[]
   t: ReturnType<typeof useTranslations>
   tCommon: ReturnType<typeof useTranslations>
 }
@@ -14,19 +14,19 @@ const ErrorList = ({ errors, t, tCommon }: Props) => (
     <Alert severity="error">
       <AlertTitle>{t('errorTitle')}</AlertTitle>
       <List dense className={styles.errorList}>
-        {errors.map(({ line, items }) => (
-          <ListItem key={line} disableGutters className="py025">
+        {errors.map(({ lineNumber, items }) => (
+          <ListItem key={lineNumber} disableGutters className="py025">
             <div>
-              {line > 0 && (
+              {lineNumber > 0 && (
                 <Typography variant="body2" fontWeight="medium">
-                  {tCommon('label.line', { line })}
+                  {tCommon('label.line', { lineNumber })}
                 </Typography>
               )}
               <List dense disablePadding>
                 {items.map((msg, i) => (
-                  <ListItem key={i} disableGutters className={line > 0 ? 'pl15' : undefined}>
+                  <ListItem key={i} disableGutters className={lineNumber > 0 ? 'pl15' : undefined}>
                     <Typography variant="body2">
-                      {line > 0 ? '• ' : ''}
+                      {lineNumber > 0 ? '• ' : ''}
                       {t(msg.key, msg.value !== undefined ? { value: msg.value } : undefined)}
                     </Typography>
                   </ListItem>

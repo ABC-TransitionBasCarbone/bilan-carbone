@@ -2,7 +2,7 @@ export type ImportWarningCandidate = { foundTitle?: string; foundValue?: number;
 
 export type ImportWarning = {
   type: 'efNotFound' | 'efMissing' | 'validationSkipped'
-  line: number
+  lineNumber: number
   sourceName?: string
   searchedName?: string
   searchedValue?: number
@@ -13,6 +13,6 @@ export type ImportWarning = {
   candidates?: ImportWarningCandidate[]
 }
 
-export type ImportError = { line: number; key: string; value?: string }
+export type ImportError = { lineNumber: number; key: string; value?: string }
 
 export type ImportResult = { success: boolean; errors?: ImportError[]; warnings?: ImportWarning[] }

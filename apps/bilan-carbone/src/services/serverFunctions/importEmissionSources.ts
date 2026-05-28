@@ -168,11 +168,11 @@ export async function importEmissionSourcesFromFile(
 
   for (let i = 0; i < result.rows.length; i++) {
     const row = result.rows[i]
-    const lineNum = row.lineNumber
+    const lineNumber = row.lineNumber
 
     const studySiteId = siteMap.get(row.siteName.toLowerCase())
     if (!studySiteId) {
-      rowErrors.push({ line: lineNum, key: 'siteNotFound', value: row.siteName })
+      rowErrors.push({ lineNumber, key: 'siteNotFound', value: row.siteName })
       continue
     }
 
@@ -194,7 +194,7 @@ export async function importEmissionSourcesFromFile(
       if (hasSomeEfData) {
         rowWarnings.push({
           type: 'efNotFound',
-          line: lineNum,
+          lineNumber,
           sourceName: row.name,
           searchedName: row.emissionFactorName,
           searchedValue: row.emissionFactorValue,
@@ -203,14 +203,14 @@ export async function importEmissionSourcesFromFile(
       } else {
         rowWarnings.push({
           type: 'efMissing',
-          line: lineNum,
+          lineNumber,
           sourceName: row.name,
         })
       }
     } else if (ef.matchType === EmissionFactorMatchType.NameAmbiguous) {
       rowWarnings.push({
         type: 'efNotFound',
-        line: lineNum,
+        lineNumber,
         sourceName: row.name,
         searchedName: row.emissionFactorName,
         searchedValue: row.emissionFactorValue,
@@ -224,7 +224,7 @@ export async function importEmissionSourcesFromFile(
     } else if (ef.matchType !== EmissionFactorMatchType.Exact) {
       rowWarnings.push({
         type: 'efNotFound',
-        line: lineNum,
+        lineNumber,
         sourceName: row.name,
         searchedName: row.emissionFactorName,
         searchedValue: row.emissionFactorValue,
@@ -263,7 +263,7 @@ export async function importEmissionSourcesFromFile(
       )
       if (!canValidate) {
         validated = false
-        rowWarnings.push({ type: 'validationSkipped', line: lineNum, sourceName: row.name })
+        rowWarnings.push({ type: 'validationSkipped', lineNumber: lineNumber, sourceName: row.name })
       }
     }
 
