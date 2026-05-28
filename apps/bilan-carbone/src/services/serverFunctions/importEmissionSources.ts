@@ -127,6 +127,21 @@ export async function previewEmissionSourcesFromFile(
   return { success: true, rows }
 }
 
+const getDisplayedUnitString = (locale: LocaleType, unit: string | undefined) => {
+  if (!unit) {
+    return ''
+  }
+
+  const bc = getBcTranslations(locale)
+  const unitTranslationObject = bc.units as Record<string, string>
+  const unitTranslation = unitTranslationObject[unit]
+
+  if (!unitTranslation) {
+    return unit
+  }
+  return getSingularForm(unitTranslation)
+}
+
 export async function importEmissionSourcesFromFile(
   file: File,
   studyId: string,
@@ -157,10 +172,6 @@ export async function importEmissionSourcesFromFile(
 
   const organizationId = study.organizationVersion.organization?.id ?? ''
   const versionIds = study.emissionFactorVersions.map((v) => v.importVersionId)
-  const bc = getBcTranslations(locale)
-  const unitTranslations = bc.units as Record<string, string>
-  const translateUnit = (unit: string | undefined) =>
-    unit ? getSingularForm(unitTranslations[unit] ?? unit) : undefined
 
   const rowErrors: ImportError[] = []
   const rowWarnings: ImportWarning[] = []
@@ -198,7 +209,7 @@ export async function importEmissionSourcesFromFile(
           sourceName: row.name,
           searchedName: row.emissionFactorName,
           searchedValue: row.emissionFactorValue,
-          searchedUnit: translateUnit(row.emissionFactorUnit),
+          searchedUnit: getDisplayedUnitString(locale, row.emissionFactorUnit),
         })
       } else {
         rowWarnings.push({
@@ -214,11 +225,11 @@ export async function importEmissionSourcesFromFile(
         sourceName: row.name,
         searchedName: row.emissionFactorName,
         searchedValue: row.emissionFactorValue,
-        searchedUnit: translateUnit(row.emissionFactorUnit),
+        searchedUnit: getDisplayedUnitString(locale, row.emissionFactorUnit),
         candidates: ef.candidates.map((c) => ({
           foundTitle: c.foundTitle,
           foundValue: c.foundValue,
-          foundUnit: translateUnit(c.foundUnit),
+          foundUnit: getDisplayedUnitString(locale, c.foundUnit),
         })),
       })
     } else if (ef.matchType !== EmissionFactorMatchType.Exact) {
@@ -228,10 +239,10 @@ export async function importEmissionSourcesFromFile(
         sourceName: row.name,
         searchedName: row.emissionFactorName,
         searchedValue: row.emissionFactorValue,
-        searchedUnit: translateUnit(row.emissionFactorUnit),
+        searchedUnit: getDisplayedUnitString(locale, row.emissionFactorUnit),
         foundTitle: ef.foundTitle,
         foundValue: ef.foundValue,
-        foundUnit: translateUnit(ef.foundUnit),
+        foundUnit: getDisplayedUnitString(locale, ef.foundUnit),
       })
       emissionFactorId = ef.id
       efUnit = ef.foundUnit
