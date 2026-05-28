@@ -36,11 +36,11 @@ déplacements . DT-bénévoles . avec:
       note: Source de la répartition https://www.insee.fr/fr/statistiques/6454112
       avec:
         voiture:
-          valeur: déplacements . DM-bénévoles . sans . voiture . split
+          valeur: déplacements . DM-salariés . sans . voiture . split
           unité: kgCO2e/km
           par défaut: 0
         transports en commun:
-          valeur: déplacements . DM-bénévoles . sans . transports en commun . split
+          valeur: déplacements . DM-salariés . sans . transports en commun . split
           unité: kgCO2e/km
           par défaut: 0
         deux roues:

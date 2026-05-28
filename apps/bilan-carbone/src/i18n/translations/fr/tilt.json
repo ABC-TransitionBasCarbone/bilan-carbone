@@ -123,17 +123,20 @@
       "resultsWord": "Rapport Bilan Carbone® - Sphère associative"
     },
     "structure": {
+      "'Structure sportive'": "Structure sportive",
       "'Club de loisirs'": "Club de loisirs",
-      "'Association étudiante'": "Association étudiante",
-      "'Association culturelle'": "Association culturelle",
+      "'Éducation, formation et insertion professionnelle'": "Éducation, formation et insertion professionnelle",
+      "'Développement économique et local'": "Développement économique et local",
+      "'Développement international et humanitaire'": "Développement international et humanitaire",
+      "'Culture et patrimoine'": "Culture et patrimoine",
       "'Association de voisinage'": "Association de voisinage",
       "'Hôpital'": "Hôpital",
       "'Maison de retraite'": "Maison de retraite",
       "'Association d'aide à domicile'": "Association d'aide à domicile",
-      "'Association humanitaire'": "Association humanitaire",
+      "'Accompagnement des personnes en situation de handicap'": "Accompagnement des personnes en situation de handicap",
+      "'Protection de l'enfance'": "Protection de l'enfance",
       "'Autres structures sociales et solidaires'": "Autres structures sociales et solidaires",
-      "'Association de défense de l'environnement'": "Association de défense de l'environnement",
-      "'Association d'enseignement ou de formation'": "Association d'enseignement ou de formation",
+      "'Défense de l'environnement'": "Défense de l'environnement",
       "'Autre'": "Autre"
     }
   },
