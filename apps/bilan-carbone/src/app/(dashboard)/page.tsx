@@ -6,6 +6,7 @@ import { environmentWithOnboarding } from '@/constants/environments'
 import { getOrganizationVersionById } from '@/db/organization'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { UserSession } from 'next-auth'
 import dynamic from 'next/dynamic'
 
 const ClicksonUserView = dynamic(() => import('@/environments/clickson/home/UserView'))
@@ -23,17 +24,18 @@ const Home = async ({ user: account }: UserSessionProps) => {
     !userOrganizationVersion.onboarded &&
     environmentWithOnboarding.includes(userOrganizationVersion.environment)
 
+  const isTrainedOrWithoutOrga = (account: UserSession) => account.level || !account.organizationVersionId
+
   return (
     <>
       <Block>
         <DynamicComponent
           environmentComponents={{
-            [Environment.TILT]:
-              account.level || !account.organizationVersionId ? (
-                <UserView account={account} />
-              ) : (
-                <SimplifiedUserView account={account} />
-              ),
+            [Environment.TILT]: isTrainedOrWithoutOrga(account) ? (
+              <UserView account={account} />
+            ) : (
+              <SimplifiedUserView account={account} />
+            ),
             [Environment.CUT]: <SimplifiedUserView account={account} />,
             [Environment.CLICKSON]: <ClicksonUserView account={account} />,
           }}
