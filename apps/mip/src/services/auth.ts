@@ -21,8 +21,6 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id
         token.email = user.email
-        token.firstName = user.firstName
-        token.lastName = user.lastName
       }
       return token
     },

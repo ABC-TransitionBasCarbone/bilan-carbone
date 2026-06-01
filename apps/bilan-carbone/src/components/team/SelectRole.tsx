@@ -1,6 +1,6 @@
 'use client'
 
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { canEditSelfRole } from '@/services/permissions/user'
 import { changeRole } from '@/services/serverFunctions/user'
 import { canBeUntrainedRole, getEnvironmentRoles } from '@/utils/user'

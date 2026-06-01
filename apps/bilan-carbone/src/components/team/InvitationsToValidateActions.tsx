@@ -1,7 +1,7 @@
 'use client'
 
 import { TeamMember } from '@/db/account'
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { deleteMember, validateMember } from '@/services/serverFunctions/user'
 import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
 import { Role } from '@abc-transitionbascarbone/db-common/enums'

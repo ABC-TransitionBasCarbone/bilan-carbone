@@ -3,7 +3,7 @@
 import MultiplePosts from '@/components/emissionFactor/Form/MultiplePosts'
 import { getOrganizationVersionAccounts } from '@/db/organization'
 import type { FullStudy } from '@/db/study'
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import {
   displayingStudyRightModalForAddingContributors,
   hasAccessToNamingInAddContributor,

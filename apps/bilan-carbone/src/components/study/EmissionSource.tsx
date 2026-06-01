@@ -2,7 +2,7 @@
 
 import { keepOnlyOneMetadata } from '@/db/emissionFactors.utils'
 import type { FullStudy } from '@/db/study'
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { getLocale } from '@/i18n/locale'
 import { getEmissionResults } from '@/services/emissionSource'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'

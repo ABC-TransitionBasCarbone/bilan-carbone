@@ -2,7 +2,7 @@
 
 import { gazKeys } from '@/constants/emissions'
 import { DetailedEmissionFactor } from '@/db/emissionFactors'
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { Post } from '@/services/posts'
 import { updateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor'
 import {

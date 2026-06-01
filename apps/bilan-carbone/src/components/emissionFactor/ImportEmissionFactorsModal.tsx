@@ -1,7 +1,7 @@
 'use client'
 
 import ImportFileModal from '@/components/base/ImportFileModal/ImportFileModal'
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'components/src/hooks/useServerFunction'
 import { download } from '@/services/file'
 import {
   getImportEmissionFactorsTemplate,

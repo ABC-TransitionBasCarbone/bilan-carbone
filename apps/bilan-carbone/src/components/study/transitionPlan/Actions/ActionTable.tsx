@@ -3,7 +3,7 @@
 import { TableActionButton } from '@/components/base/TableActionButton'
 import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
 import commonStyles from '@/components/study/results/commonTable.module.css'
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
 import { environmentSubPostsMapping } from '@/services/posts'
 import { toggleActionEnabled } from '@/services/serverFunctions/transitionPlan'

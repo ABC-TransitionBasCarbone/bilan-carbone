@@ -49,17 +49,6 @@ export const EditSettingsCommandValidation = z.object({
 
 export type EditSettingsCommand = z.infer<typeof EditSettingsCommandValidation>
 
-export const ResetPasswordCommandValidation = z.object({
-  email: z
-    .email()
-    .trim()
-    .transform((email) => email.toLowerCase()),
-  password: z.string().min(1),
-  confirmPassword: z.string().min(1),
-})
-
-export type ResetPasswordCommand = z.infer<typeof ResetPasswordCommandValidation>
-
 export const SignUpCutCommandValidation = z.object({
   email: z
     .email()

@@ -1,7 +1,7 @@
 'use client'
 
 import type { FullStudy } from '@/db/study'
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { getStudy } from '@/services/serverFunctions/study'
 import { CreateStudyCommand, SitesCommand } from '@/services/serverFunctions/study.command'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'

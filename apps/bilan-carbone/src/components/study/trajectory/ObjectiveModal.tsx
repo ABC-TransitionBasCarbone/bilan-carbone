@@ -3,7 +3,7 @@
 import ScopeSelectors, { TagFamily } from '@/components/form/ScopeSelectors'
 import Modal from '@/components/modals/Modal'
 import { OTHER_TAG_ID } from '@/constants/tag.constants'
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { getEnvSubPosts } from '@/services/posts'
 import { createObjectiveModalSchema, ObjectiveModalFormData } from '@/services/serverFunctions/objective.command'
 import { createSubObjectives, updateSubObjective } from '@/services/serverFunctions/objective.serverFunction'

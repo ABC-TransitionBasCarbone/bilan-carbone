@@ -1,7 +1,7 @@
 'use client'
 
 import Block from '@/components/base/Block'
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { createOrganizationCommand } from '@/services/serverFunctions/organization'
 import {
   CreateOrganizationCommand,

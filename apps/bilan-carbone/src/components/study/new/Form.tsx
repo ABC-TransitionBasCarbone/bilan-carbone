@@ -3,7 +3,7 @@
 import { FormDatePicker } from '@/components/form/DatePicker'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import StudyDuplicationForm, { InviteOptions } from '@/components/study/duplication/StudyDuplicationForm'
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
 import { createStudyCommand, duplicateStudyCommand } from '@/services/serverFunctions/study'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'

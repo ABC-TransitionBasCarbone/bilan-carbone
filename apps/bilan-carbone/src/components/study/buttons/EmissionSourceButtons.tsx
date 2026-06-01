@@ -1,7 +1,7 @@
 'use client'
 
 import ImportEmissionSourcesModal from '@/components/study/ImportEmissionSourcesModal'
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { download } from '@/services/file'
 import { Post } from '@/services/posts'
 import {

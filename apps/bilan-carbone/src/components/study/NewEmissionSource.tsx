@@ -1,6 +1,6 @@
 'use client'
 import type { FullStudy } from '@/db/study'
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { createEmissionSource } from '@/services/serverFunctions/emissionSource'
 import { EmissionSourceCaracterisation, SubPost } from '@abc-transitionbascarbone/db-common'
 import { Button } from '@abc-transitionbascarbone/ui'

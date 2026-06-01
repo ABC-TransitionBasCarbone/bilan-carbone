@@ -1,7 +1,7 @@
 'use client'
 
 import type { FullStudy } from '@/db/study'
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'components/src/hooks/useServerFunction'
 import { deleteStudyCommand } from '@/services/serverFunctions/study'
 import { DeleteCommand, DeleteCommandValidation } from '@/services/serverFunctions/study.command'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'

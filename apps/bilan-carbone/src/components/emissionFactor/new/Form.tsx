@@ -1,5 +1,5 @@
 'use client'
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'components/src/hooks/useServerFunction'
 import { createEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor'
 import {
   EmissionFactorCommand,

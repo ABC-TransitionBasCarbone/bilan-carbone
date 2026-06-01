@@ -1,18 +1,6 @@
 import { auth } from '@/services/auth'
-
-export type SuccessResponse<T> = {
-  success: true
-  data: T
-}
-
-export type IsSuccess<T> = T extends SuccessResponse<infer U> ? U : never
-
-export type ApiResponse<T = unknown> =
-  | SuccessResponse<T>
-  | {
-      success: false
-      errorMessage: string
-    }
+import type { ApiResponse } from '@abc-transitionbascarbone/utils/serverResponse'
+import { logServerFunctionCall } from '@abc-transitionbascarbone/utils/serverResponse'
 
 export const withServerResponse = async <T>(functionName: string, fn: () => Promise<T>): Promise<ApiResponse<T>> => {
   const session = await auth()
@@ -38,20 +26,4 @@ export const withServerResponse = async <T>(functionName: string, fn: () => Prom
 
     return { success: false, errorMessage: error.message }
   }
-}
-
-type LogEntry = {
-  userId: string
-  functionName: string
-  success: boolean
-  errorMessage?: string
-  start: Date
-  duration: number
-}
-
-const logServerFunctionCall = (entry: LogEntry) => {
-  const logLine = `[${entry.start.toISOString()}] ${entry.success ? '✅' : '❌'} ${
-    entry.functionName
-  } - userId : ${entry.userId} in ${entry.duration}ms${entry.errorMessage ? ` – ${entry.errorMessage}` : ''}`
-  console.log(logLine)
 }

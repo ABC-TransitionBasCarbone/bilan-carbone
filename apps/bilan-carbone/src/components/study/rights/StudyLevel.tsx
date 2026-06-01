@@ -3,7 +3,7 @@
 import { FormSelect } from '@/components/form/Select'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import type { FullStudy } from '@/db/study'
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'components/src/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
 import { changeStudyLevel } from '@/services/serverFunctions/study'
 import { ChangeStudyLevelCommand, ChangeStudyLevelCommandValidation } from '@/services/serverFunctions/study.command'

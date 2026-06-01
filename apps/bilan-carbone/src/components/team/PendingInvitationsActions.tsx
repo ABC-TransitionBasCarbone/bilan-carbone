@@ -1,7 +1,7 @@
 'use client'
 
 import { TeamMember } from '@/db/account'
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { deleteMember, resendInvitation } from '@/services/serverFunctions/user'
 import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
 import classNames from 'classnames'

@@ -16,7 +16,7 @@ import {
   TRAJECTORY_WB2C_ID,
 } from '@/constants/trajectory.constants'
 import type { FullStudy } from '@/db/study'
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { useTransitionPlan } from '@/hooks/useTransitionPlan'
 import { useTransitionPlanFilters } from '@/hooks/useTransitionPlanFilters'
 import { customRich } from '@/i18n/customRich'

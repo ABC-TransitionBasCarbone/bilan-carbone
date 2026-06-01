@@ -3,7 +3,7 @@
 import { FormRadio } from '@/components/form/Radio'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import type { FullStudy } from '@/db/study'
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { changeStudyPublicStatus } from '@/services/serverFunctions/study'
 import {
   ChangeStudyPublicStatusCommand,

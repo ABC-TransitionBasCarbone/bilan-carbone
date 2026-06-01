@@ -11,7 +11,8 @@ import {
   studyHasObjectives,
 } from '@/db/transitionPlan'
 import { TrajectoryWithObjectivesAndScope } from '@/types/trajectory.types'
-import { ApiResponse, withServerResponse } from '@/utils/serverResponse'
+import { withServerResponse } from '@/utils/serverResponse'
+import type { ApiResponse } from '@abc-transitionbascarbone/utils/serverResponse'
 import { getDefaultObjectivesForTrajectoryType } from '@/utils/trajectory'
 import { TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
 import { NOT_AUTHORIZED } from '../permissions/check'

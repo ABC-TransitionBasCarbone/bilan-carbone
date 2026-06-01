@@ -1,6 +1,6 @@
 'use client'
 
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
 import { getEnvVarClient } from '@/lib/environmentClient'
 import { getEnvRoute } from '@/services/email/utils'

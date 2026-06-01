@@ -3,7 +3,7 @@
 import { TableActionButton } from '@/components/base/TableActionButton'
 import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
 import { DEFAULT_FUZZY_OPTIONS } from '@/constants/fuse.constant'
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
 import { deleteObjective } from '@/services/serverFunctions/objective.serverFunction'
 import { deleteTrajectory } from '@/services/serverFunctions/trajectory.serverFunction'

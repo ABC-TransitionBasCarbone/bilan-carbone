@@ -1,4 +1,4 @@
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'components/src/hooks/useServerFunction'
 import { updateUserProfile } from '@/services/serverFunctions/user'
 import { EditProfileCommand, EditProfileCommandValidation } from '@/services/serverFunctions/user.command'
 import Form from '@abc-transitionbascarbone/components/src/base/Form'

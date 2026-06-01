@@ -1,6 +1,6 @@
 'use client'
 
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { getDocumentUrl } from '@/services/serverFunctions/documents'
 import { Card, CardContent, Typography } from '@mui/material'
 import classNames from 'classnames'

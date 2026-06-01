@@ -1,7 +1,7 @@
 'use client'
 
 import type { FullStudy } from '@/db/study'
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { deleteEmissionSource } from '@/services/serverFunctions/emissionSource'
 import { handleWarningText } from '@/utils/components'
 import { Button } from '@abc-transitionbascarbone/ui'

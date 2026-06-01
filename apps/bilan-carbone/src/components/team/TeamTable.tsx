@@ -1,7 +1,7 @@
 'use client'
 
 import { TeamMember } from '@/db/account'
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { isAdvanced } from '@/services/permissions/environment'
 import { deleteOrganizationMember } from '@/services/serverFunctions/organization'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'

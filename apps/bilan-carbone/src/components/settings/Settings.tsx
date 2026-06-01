@@ -1,6 +1,6 @@
 'use client'
 
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { updateUserSettings } from '@/services/serverFunctions/user'
 import { EditSettingsCommand, EditSettingsCommandValidation } from '@/services/serverFunctions/user.command'
 import { HelpIcon } from '@abc-transitionbascarbone/components'

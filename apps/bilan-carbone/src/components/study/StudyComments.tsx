@@ -1,7 +1,7 @@
 'use client'
 
 import { FullStudyComments } from '@/db/study'
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import {
   approveStudyComment,
   createStudyCommentCommand,

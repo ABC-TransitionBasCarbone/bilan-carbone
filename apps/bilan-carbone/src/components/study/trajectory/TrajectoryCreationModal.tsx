@@ -2,7 +2,7 @@
 
 import Modal from '@/components/modals/Modal'
 import { SBTI_START_YEAR, SNBC_FINAL_TARGET_YEAR } from '@/constants/trajectory.constants'
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import {
   createTrajectorySchema,
   SectorPercentages,

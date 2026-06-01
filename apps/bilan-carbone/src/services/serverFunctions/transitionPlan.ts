@@ -30,7 +30,8 @@ import {
   updateAction,
 } from '@/db/transitionPlan'
 import type { TransitionPlanWithStudies } from '@/types/trajectory.types'
-import { ApiResponse, withServerResponse } from '@/utils/serverResponse'
+import { withServerResponse } from '@/utils/serverResponse'
+import type { ApiResponse } from '@abc-transitionbascarbone/utils/serverResponse'
 import { TransitionPlan } from '@abc-transitionbascarbone/db-common'
 import { getYearFromDateStr } from '@abc-transitionbascarbone/utils/time'
 import { dbActualizedAuth } from '../auth'

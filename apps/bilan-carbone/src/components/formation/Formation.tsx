@@ -1,6 +1,6 @@
 'use client'
 
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
 import { getFormationFormStart, startFormationForm } from '@/services/serverFunctions/user'
 import { Formation } from '@abc-transitionbascarbone/db-common'

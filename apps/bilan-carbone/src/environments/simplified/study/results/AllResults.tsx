@@ -14,7 +14,7 @@ import type { FullStudy } from '@/db/study'
 import EmissionsAnalysisClickson from '@/environments/clickson/study/results/consolidated/EmissionsAnalysisClickson'
 import CarbonIntensitiesCut from '@/environments/cut/study/results/CarbonIntensitiesCut'
 import SheetIcon from '@/environments/simplified/icons/SheetIcon'
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
 import {
   hasAccessToAdvancedEmissionAnalysis,

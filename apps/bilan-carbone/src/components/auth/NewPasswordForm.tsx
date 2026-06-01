@@ -1,6 +1,6 @@
 'use client'
 
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { getEnvRoute } from '@/services/email/utils'
 import { resetPassword } from '@/services/serverFunctions/user'
 import NewPasswordFormCommon from '@abc-transitionbascarbone/components/src/auth/NewPasswordFormCommon'

@@ -3,7 +3,7 @@
 import Block from '@/components/base/Block'
 import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
 import type { FullStudy } from '@/db/study'
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
 import { DEFAULT_SAMPLE_TITLE, SAMPLE_TITLES } from '@/services/documents'
 import { allowedFlowFileTypes, downloadFromUrl, maxAllowedFileSize, MB } from '@/services/file'

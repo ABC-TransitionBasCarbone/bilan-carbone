@@ -2,7 +2,7 @@ import { Select } from '@/components/base/Select'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import Modal from '@/components/modals/Modal'
 import type { FullStudy } from '@/db/study'
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'components/src/hooks/useServerFunction'
 import { getStudyPreviousOccurrences } from '@/services/serverFunctions/study'
 import { addExternalStudy, linkOldStudy, updateExternalStudy } from '@/services/serverFunctions/transitionPlan'
 import {

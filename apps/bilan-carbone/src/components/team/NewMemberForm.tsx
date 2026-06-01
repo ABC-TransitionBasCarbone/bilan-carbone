@@ -1,6 +1,6 @@
 'use client'
 
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { addMember } from '@/services/serverFunctions/user'
 import { AddMemberCommand, AddMemberCommandValidation } from '@/services/serverFunctions/user.command'
 import { getEnvironmentRoles } from '@/utils/user'

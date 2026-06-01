@@ -6,7 +6,7 @@ import GlossaryModal from '@/components/modals/GlossaryModal'
 import SelectStudySite from '@/components/study/site/SelectStudySite'
 import { OrganizationWithSites } from '@/db/account'
 import type { FullStudy } from '@/db/study'
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'components/src/hooks/useServerFunction'
 import { changeStudyDates, changeStudyExports } from '@/services/serverFunctions/study'
 import {
   ChangeStudyDatesCommand,

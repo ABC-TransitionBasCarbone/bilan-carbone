@@ -1,7 +1,7 @@
 'use client'
 
 import type { FullStudy } from '@/db/study'
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { isAdminOnStudyOrga } from '@/services/permissions/study.utils'
 import { changeStudyRole } from '@/services/serverFunctions/study'
 import { StudyRole } from '@abc-transitionbascarbone/db-common/enums'

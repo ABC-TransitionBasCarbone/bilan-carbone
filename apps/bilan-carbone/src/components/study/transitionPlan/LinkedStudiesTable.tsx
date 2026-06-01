@@ -1,7 +1,7 @@
 'use client'
 
 import { TableActionButton } from '@/components/base/TableActionButton'
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'components/src/hooks/useServerFunction'
 import { deleteExternalStudy, deleteLinkedStudy } from '@/services/serverFunctions/transitionPlan'
 import type { PastStudy } from '@/types/trajectory.types'
 import { formatNumber } from '@/utils/number'

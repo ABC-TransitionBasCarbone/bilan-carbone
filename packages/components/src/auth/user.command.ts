@@ -14,3 +14,14 @@ export const EmailCommandValidation = z.object({
 })
 
 export type EmailCommand = z.infer<typeof EmailCommandValidation>
+
+export const ResetPasswordCommandValidation = z.object({
+  email: z
+    .email()
+    .trim()
+    .transform((email) => email.toLowerCase()),
+  password: z.string().min(1),
+  confirmPassword: z.string().min(1),
+})
+
+export type ResetPasswordCommand = z.infer<typeof ResetPasswordCommandValidation>

@@ -1,4 +1,4 @@
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
 import { getLink } from '@/services/checklist'
 import { addUserChecklistItem } from '@/services/serverFunctions/user'

@@ -1,7 +1,7 @@
 'use client'
 
 import { getFeaturesRestictions, RestrictionsTypes } from '@/db/deactivableFeatures'
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import {
   changeDeactivableFeatureRestriction,
   changeDeactivableFeatureStatus,

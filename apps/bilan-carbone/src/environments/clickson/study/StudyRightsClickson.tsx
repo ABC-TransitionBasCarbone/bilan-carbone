@@ -11,7 +11,7 @@ import SelectStudySite from '@/components/study/site/SelectStudySite'
 import useStudySite from '@/components/study/site/useStudySite'
 import StudyComments from '@/components/study/StudyComments'
 import type { FullStudy } from '@/db/study'
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import {
   changeStudyDates,
   changeStudyEstablishment,

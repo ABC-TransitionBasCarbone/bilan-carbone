@@ -10,7 +10,7 @@ import useStudySite from '@/components/study/site/useStudySite'
 import { OrganizationWithSites } from '@/db/account'
 import type { FullStudy } from '@/db/study'
 import { getTiltEngine } from '@/environments/tilt/publicodes/tilt-engine'
-import { useServerFunction } from '@/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import {
   mappedTiltSituationToCustomDataFields,
   optionalTiltSituationToCustomDataFields,
