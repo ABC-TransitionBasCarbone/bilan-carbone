@@ -7,17 +7,24 @@ import styles from './ImportFileModal.module.css'
 
 interface Props {
   w: ImportWarning
-  line: number
+  lineNumber: number | null
   t: ReturnType<typeof useTranslations>
 }
 
-const WarningItem = ({ w, line, t }: Props) => {
+const WarningItem = ({ w, lineNumber, t }: Props) => {
+  let warningMessage: string | null = null
   if (w.type === 'validationSkipped') {
+    warningMessage = t('warningValidationSkipped')
+  }
+  if (w.type === 'efMissing') {
+    warningMessage = t('warningEfMissing', { sourceName: w.sourceName ?? '' })
+  }
+  if (warningMessage) {
     return (
-      <ListItem disableGutters className={line > 0 ? 'pl15' : undefined}>
+      <ListItem disableGutters className={lineNumber !== null ? 'pl15' : undefined}>
         <Typography variant="body2">
-          {line > 0 ? '• ' : ''}
-          {t('warningValidationSkipped')}
+          {lineNumber !== null ? '• ' : ''}
+          {warningMessage}
         </Typography>
       </ListItem>
     )
@@ -28,10 +35,10 @@ const WarningItem = ({ w, line, t }: Props) => {
     w.foundTitle !== undefined || w.foundValue !== undefined ? formatEf(w.foundTitle, w.foundValue, w.foundUnit) : null
 
   return (
-    <ListItem disableGutters className={line > 0 ? 'pl15' : undefined}>
+    <ListItem disableGutters className={lineNumber !== null ? 'pl15' : undefined}>
       <div>
         <Typography variant="body2">
-          {line > 0 ? '• ' : ''}
+          {lineNumber !== null ? '• ' : ''}
           {t('warningEfNotFound', { searched })}
         </Typography>
         {w.candidates ? (

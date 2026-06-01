@@ -1,5 +1,6 @@
 'use server'
 
+import { KG_CO2E_PREFIX } from '@/constants/import'
 import { EmissionFactorList } from '@/db/emissionFactors'
 import { createEmissionSourcesOnStudy } from '@/db/emissionSource'
 import { FullStudy, getStudyById } from '@/db/study'
@@ -21,10 +22,15 @@ import { withServerResponse } from '@/utils/serverResponse'
 import { formatEmissionValueForExport, isCASSubPost } from '@/utils/study'
 import { getBcTranslations, getSingularForm } from '@/utils/translation.utils'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
-import { EmissionSourceCaracterisation, EmissionSourceType, SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import {
+  ControlMode,
+  EmissionSourceCaracterisation,
+  EmissionSourceType,
+  SubPost,
+} from '@abc-transitionbascarbone/db-common/enums'
 import { yearToDate } from '@abc-transitionbascarbone/utils'
 import xlsx from 'node-xlsx'
-import { canBeValidated, getEmissionSourceEmission } from '../emissionSource'
+import { canBeValidated, getCaracterisationsBySubPost, getEmissionSourceEmission } from '../emissionSource'
 import { getAuthenticatedAccount } from '../permissions/account.permissions'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { hasStudyBasicRights } from '../permissions/emissionSource'
@@ -121,6 +127,21 @@ export async function previewEmissionSourcesFromFile(
   return { success: true, rows }
 }
 
+const getDisplayedUnitString = (locale: LocaleType, unit: string | undefined) => {
+  if (!unit) {
+    return ''
+  }
+
+  const bc = getBcTranslations(locale)
+  const unitTranslationObject = bc.units as Record<string, string>
+  const unitTranslation = unitTranslationObject[unit]
+
+  if (!unitTranslation) {
+    return unit
+  }
+  return getSingularForm(unitTranslation)
+}
+
 export async function importEmissionSourcesFromFile(
   file: File,
   studyId: string,
@@ -151,10 +172,6 @@ export async function importEmissionSourcesFromFile(
 
   const organizationId = study.organizationVersion.organization?.id ?? ''
   const versionIds = study.emissionFactorVersions.map((v) => v.importVersionId)
-  const bc = getBcTranslations(locale)
-  const unitTranslations = bc.units as Record<string, string>
-  const translateUnit = (unit: string | undefined) =>
-    unit ? getSingularForm(unitTranslations[unit] ?? unit) : undefined
 
   const rowErrors: ImportError[] = []
   const rowWarnings: ImportWarning[] = []
@@ -162,11 +179,11 @@ export async function importEmissionSourcesFromFile(
 
   for (let i = 0; i < result.rows.length; i++) {
     const row = result.rows[i]
-    const lineNum = row.lineNumber
+    const lineNumber = row.lineNumber
 
     const studySiteId = siteMap.get(row.siteName.toLowerCase())
     if (!studySiteId) {
-      rowErrors.push({ line: lineNum, key: 'siteNotFound', value: row.siteName })
+      rowErrors.push({ lineNumber, key: 'siteNotFound', value: row.siteName })
       continue
     }
 
@@ -180,42 +197,52 @@ export async function importEmissionSourcesFromFile(
       versionIds,
     )
 
+    const hasSomeEfData = !!(row.emissionFactorId || row.emissionFactorName)
+
     let emissionFactorId: string | undefined
     let efUnit: string | undefined
     if (!ef) {
-      rowWarnings.push({
-        type: 'efNotFound',
-        line: lineNum,
-        sourceName: row.name,
-        searchedName: row.emissionFactorName,
-        searchedValue: row.emissionFactorValue,
-        searchedUnit: row.emissionFactorUnit,
-      })
+      if (hasSomeEfData) {
+        rowWarnings.push({
+          type: 'efNotFound',
+          lineNumber,
+          sourceName: row.name,
+          searchedName: row.emissionFactorName,
+          searchedValue: row.emissionFactorValue,
+          searchedUnit: getDisplayedUnitString(locale, row.emissionFactorUnit),
+        })
+      } else {
+        rowWarnings.push({
+          type: 'efMissing',
+          lineNumber,
+          sourceName: row.name,
+        })
+      }
     } else if (ef.matchType === EmissionFactorMatchType.NameAmbiguous) {
       rowWarnings.push({
         type: 'efNotFound',
-        line: lineNum,
+        lineNumber,
         sourceName: row.name,
         searchedName: row.emissionFactorName,
         searchedValue: row.emissionFactorValue,
-        searchedUnit: row.emissionFactorUnit,
+        searchedUnit: getDisplayedUnitString(locale, row.emissionFactorUnit),
         candidates: ef.candidates.map((c) => ({
           foundTitle: c.foundTitle,
           foundValue: c.foundValue,
-          foundUnit: translateUnit(c.foundUnit),
+          foundUnit: getDisplayedUnitString(locale, c.foundUnit),
         })),
       })
     } else if (ef.matchType !== EmissionFactorMatchType.Exact) {
       rowWarnings.push({
         type: 'efNotFound',
-        line: lineNum,
+        lineNumber,
         sourceName: row.name,
         searchedName: row.emissionFactorName,
         searchedValue: row.emissionFactorValue,
-        searchedUnit: row.emissionFactorUnit,
+        searchedUnit: getDisplayedUnitString(locale, row.emissionFactorUnit),
         foundTitle: ef.foundTitle,
         foundValue: ef.foundValue,
-        foundUnit: translateUnit(ef.foundUnit),
+        foundUnit: getDisplayedUnitString(locale, ef.foundUnit),
       })
       emissionFactorId = ef.id
       efUnit = ef.foundUnit
@@ -247,7 +274,20 @@ export async function importEmissionSourcesFromFile(
       )
       if (!canValidate) {
         validated = false
-        rowWarnings.push({ type: 'validationSkipped', line: lineNum, sourceName: row.name })
+        rowWarnings.push({ type: 'validationSkipped', lineNumber: lineNumber, sourceName: row.name })
+      }
+    }
+
+    let caracterisation = row.caracterisation
+    if (!caracterisation) {
+      const availableCaracterisations = getCaracterisationsBySubPost(
+        row.subPost,
+        study.organizationVersion.environment,
+        study.exports?.types ?? [],
+        study.exports?.control ?? ControlMode.Operational,
+      )
+      if (availableCaracterisations.length === 1) {
+        caracterisation = availableCaracterisations[0]
       }
     }
 
@@ -260,7 +300,7 @@ export async function importEmissionSourcesFromFile(
       emissionFactorId,
       value: row.value,
       type: row.type,
-      caracterisation: row.caracterisation,
+      caracterisation,
       source: row.source,
       reliability: row.reliability,
       technicalRepresentativeness: row.technicalRepresentativeness,
@@ -307,9 +347,15 @@ function buildEmissionSourcesSheet(study: FullStudy, locale: LocaleType, dataRow
   const orgName = study.organizationVersion.organization?.name ?? ''
   const studyDate = study.startDate ? study.startDate.toLocaleDateString(locale === 'fr' ? 'fr-FR' : 'en-US') : ''
 
+  const INFO_COLS_END = 20 // A to Q
+
   const metaRow: (string | number)[] = [t('exportOrganization'), orgName, ...empty(TOTAL_EXCEL_COLS - 2)]
   const dateRow: (string | number)[] = [t('exportDate'), studyDate, ...empty(TOTAL_EXCEL_COLS - 2)]
   const blankRow: (string | number)[] = empty(TOTAL_EXCEL_COLS)
+  const infoRow1: (string | number)[] = [t('templateInfoLine1'), ...empty(TOTAL_EXCEL_COLS - 1)]
+  const infoRow2: (string | number)[] = [t('templateInfoLine2'), ...empty(TOTAL_EXCEL_COLS - 1)]
+  const infoRow3: (string | number)[] = [t('templateInfoLine3'), ...empty(TOTAL_EXCEL_COLS - 1)]
+  const infoRow4: (string | number)[] = [t('templateInfoLine4'), ...empty(TOTAL_EXCEL_COLS - 1)]
   const groupRow: (string | number)[] = [
     ...empty(DA_START),
     t('groupActivityData'),
@@ -322,16 +368,36 @@ function buildEmissionSourcesSheet(study: FullStudy, locale: LocaleType, dataRow
   ]
   const headerRow: (string | number)[] = getEmissionSourcesHeaderRow(t)
 
-  // Row indices: 0=meta, 1=date, 2=blank, 3=groupRow, 4=headerRow, 5+=data
-  const GROUP_ROW_INDEX = 3
+  const INFO_ROW1_INDEX = 3
+  const INFO_ROW2_INDEX = 4
+  const INFO_ROW3_INDEX = 5
+  const INFO_ROW4_INDEX = 6
+  const GROUP_ROW_INDEX = 8
+
   const merges = [
+    { s: { r: INFO_ROW1_INDEX, c: 0 }, e: { r: INFO_ROW1_INDEX, c: INFO_COLS_END } },
+    { s: { r: INFO_ROW2_INDEX, c: 0 }, e: { r: INFO_ROW2_INDEX, c: INFO_COLS_END } },
+    { s: { r: INFO_ROW3_INDEX, c: 0 }, e: { r: INFO_ROW3_INDEX, c: INFO_COLS_END } },
+    { s: { r: INFO_ROW4_INDEX, c: 0 }, e: { r: INFO_ROW4_INDEX, c: INFO_COLS_END } },
     { s: { r: GROUP_ROW_INDEX, c: DA_START }, e: { r: GROUP_ROW_INDEX, c: DA_END } },
     { s: { r: GROUP_ROW_INDEX, c: FE_START }, e: { r: GROUP_ROW_INDEX, c: FE_END } },
     { s: { r: GROUP_ROW_INDEX, c: BC_START }, e: { r: GROUP_ROW_INDEX, c: BC_END } },
   ]
 
   const sheetName = t('sheetName')
-  const sheetData = [metaRow, dateRow, blankRow, groupRow, headerRow, ...dataRows]
+  const sheetData = [
+    metaRow,
+    dateRow,
+    blankRow,
+    infoRow1,
+    infoRow2,
+    infoRow3,
+    infoRow4,
+    blankRow,
+    groupRow,
+    headerRow,
+    ...dataRows,
+  ]
   const buffer = xlsx.build([{ name: sheetName, data: sheetData, options: { '!merges': merges } }])
   const arrayBuffer = new ArrayBuffer(buffer.length)
   const view = new Uint8Array(arrayBuffer)
@@ -360,7 +426,7 @@ export async function getImportEmissionSourcesTemplate(
   const postTranslations = bc.emissionFactors.post as unknown as Record<string, string>
   const unitTranslations = bc.units as Record<string, string>
   const typeTranslations = (bc.emissionSource as Record<string, unknown>).type as Record<string, string>
-  const qualityTranslations = bc.quality as Record<string, string>
+  const categorisationsTranslations = bc.categorisations as Record<string, string>
 
   const studySite = siteId ? study.sites.find((s) => s.site?.id === siteId) : study.sites[0]
   const siteName = studySite?.site?.name ?? ''
@@ -374,10 +440,11 @@ export async function getImportEmissionSourcesTemplate(
   exampleRow[columns.name] = t('examplePrefix') + t('exampleName')
   exampleRow[columns.value] = 1000
   exampleRow[columns.unit] = getSingularForm(unitTranslations['TON'])
-  exampleRow[columns.reliability] = qualityTranslations['5']
+  exampleRow[columns.caracterisation] = categorisationsTranslations['Operated']
   exampleRow[columns.source] = t('exampleSource')
   exampleRow[columns.type] = typeTranslations['Physical']
   exampleRow[columns.emissionFactorName] = t('exampleEmissionFactor')
+  exampleRow[columns.emissionFactorUnit] = `${KG_CO2E_PREFIX}${getSingularForm(unitTranslations['TON'])}`
 
   const emptyRow: (string | number)[] = Array(TOTAL_EXCEL_COLS).fill('')
   emptyRow[columns.site] = siteName
@@ -468,7 +535,7 @@ function buildEmissionSourceRow(
   const efTitle = ef?.metaData?.title ?? ''
   const efValue = ef ? getEmissionFactorValue(ef, study.organizationVersion.environment) : ''
   const efUnitRaw = ef?.unit ? (unitTranslations[ef.unit] ?? ef.unit) : ''
-  const efUnitLabel = efUnitRaw ? getSingularForm(efUnitRaw) : ''
+  const efUnitLabel = efUnitRaw ? `${KG_CO2E_PREFIX}${getSingularForm(efUnitRaw)}` : ''
   const feSpecificQuality = ef ? getSpecificEmissionFactorQuality(es) : null
   const feQualityLabel = feSpecificQuality
     ? getQualityLabel(getQualitativeUncertaintyFromQuality(feSpecificQuality))

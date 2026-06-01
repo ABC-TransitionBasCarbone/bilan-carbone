@@ -347,6 +347,15 @@ describe('parseImportFile', () => {
       }
     })
 
+    it('strips kgCO2e/ prefix with leading space', () => {
+      const buffer = makeBuffer([{ ...VALID_ROW, unit: ' kgCO2e/kg' }])
+      const result = parseImportFile(buffer, Locale.FR, Environment.BC)
+      expect(result.success).toBe(true)
+      if (result.success) {
+        expect(result.rows[0].unit).toBe(Unit.KG)
+      }
+    })
+
     it('auto-detects unknown unit as Unit.CUSTOM', () => {
       const buffer = makeBuffer([{ ...VALID_ROW, unit: 'kgCO2e/mon unité' }])
       const result = parseImportFile(buffer, Locale.FR, Environment.BC)

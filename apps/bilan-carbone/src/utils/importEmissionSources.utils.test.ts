@@ -1,8 +1,13 @@
 import { Locale } from '@/i18n/config'
 import { SOURCE_IMPORT_COLUMNS } from '@/types/importEmissionSources.types'
-import { EmissionSourceType, SubPost, Unit } from '@abc-transitionbascarbone/db-common/enums'
+import {
+  EmissionSourceCaracterisation,
+  EmissionSourceType,
+  SubPost,
+  Unit,
+} from '@abc-transitionbascarbone/db-common/enums'
 import xlsx from 'node-xlsx'
-import { parseEmissionSourcesFile } from './importEmissionSources.utils'
+import { parseEmissionSourcesFile, SOURCE_IMPORT_HEADER_ROW_INDEX } from './importEmissionSources.utils'
 
 type RowInput = {
   site?: string
@@ -32,7 +37,7 @@ type RowInput = {
 
 function makeBuffer(rows: RowInput[]): Buffer {
   const colCount = 35
-  const headerRows = Array.from({ length: 5 }, () => new Array(colCount).fill(''))
+  const headerRows = Array.from({ length: SOURCE_IMPORT_HEADER_ROW_INDEX + 1 }, () => new Array(colCount).fill(''))
   const dataRows = rows.map((r) => {
     const row = new Array(colCount).fill('')
     row[SOURCE_IMPORT_COLUMNS.site] = r.site ?? ''
@@ -156,6 +161,15 @@ describe('parseEmissionSourcesFile', () => {
     }
   })
 
+  it('parses a valid caracterisation', () => {
+    const buffer = makeBuffer([{ ...VALID_ROW, caracterisation: 'Opéré' }])
+    const result = parseEmissionSourcesFile(buffer, Locale.FR)
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.rows[0].caracterisation).toBe(EmissionSourceCaracterisation.Operated)
+    }
+  })
+
   it('accepts emissionFactorId without emissionFactorName', () => {
     const buffer = makeBuffer([{ ...VALID_ROW, emissionFactorName: '', emissionFactorId: 'abc-123' }])
     const result = parseEmissionSourcesFile(buffer, Locale.FR)
@@ -165,13 +179,40 @@ describe('parseEmissionSourcesFile', () => {
     }
   })
 
+  it('accepts a row without any emission factor data', () => {
+    const buffer = makeBuffer([{ ...VALID_ROW, emissionFactorName: '', emissionFactorId: '' }])
+    const result = parseEmissionSourcesFile(buffer, Locale.FR)
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.rows[0].emissionFactorName).toBe('')
+      expect(result.rows[0].emissionFactorId).toBeUndefined()
+    }
+  })
+
+  it('accepts emissionFactorUnit with kgCO2e/ prefix', () => {
+    const buffer = makeBuffer([{ ...VALID_ROW, emissionFactorUnit: 'kgCO2e/tonne' }])
+    const result = parseEmissionSourcesFile(buffer, Locale.FR)
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.rows[0].emissionFactorUnit).toBe(Unit.TON)
+    }
+  })
+
+  it('accepts emissionFactorUnit with leading space before kgCO2e/ prefix', () => {
+    const buffer = makeBuffer([{ ...VALID_ROW, emissionFactorUnit: ' kgCO2e/tonne' }])
+    const result = parseEmissionSourcesFile(buffer, Locale.FR)
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.rows[0].emissionFactorUnit).toBe(Unit.TON)
+    }
+  })
+
   describe('row-level validation errors', () => {
     it.each([
       [{ site: '' }, 'missingSite'],
       [{ subPost: '' }, 'missingSubPost'],
       [{ subPost: 'Sous-poste inconnu' }, 'invalidSubPost'],
       [{ name: '' }, 'missingName'],
-      [{ emissionFactorName: '', emissionFactorId: '' }, 'missingEmissionFactorName'],
       [{ value: 'abc' }, 'invalidValue'],
       [{ emissionFactorValue: 'abc' }, 'invalidEmissionFactorValue'],
       [{ emissionFactorUnit: 'unité-inconnue' }, 'invalidUnit'],

@@ -1,3 +1,4 @@
+import { KG_CO2E_PREFIX } from '@/constants/import'
 import { getSourceLatestImportVersionId } from '@/db/study'
 import { getEnvVar } from '@/lib/environment'
 import { isMonetaryEmissionFactor } from '@/utils/emissionFactors'
@@ -306,8 +307,8 @@ const getUnit = (value?: string): Unit | null => {
   if (!value) {
     value = 'kg'
   }
-  if (value.startsWith('kgCO2e/')) {
-    value = value.replace('kgCO2e/', '')
+  if (value.startsWith(KG_CO2E_PREFIX)) {
+    value = value.replace(KG_CO2E_PREFIX, '')
   }
   value = value.trim().replace(/\.$/, '').replace("% d'humidité)", '% humidité)').replace('  ', ' ')
   if (value.toLowerCase() === 'tep pci') {
