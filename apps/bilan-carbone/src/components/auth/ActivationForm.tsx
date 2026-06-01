@@ -3,7 +3,7 @@
 import { customRich } from '@/i18n/customRich'
 import { getEnvVarClient } from '@/lib/environmentClient'
 import { activateEmail } from '@/services/serverFunctions/user'
-import { EmailCommand, EmailCommandValidation } from '@/services/serverFunctions/user.command'
+import { EmailCommand, EmailCommandValidation } from '@abc-transitionbascarbone/components/src/auth/user.command'
 import Form from '@abc-transitionbascarbone/components/src/base/Form'
 import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'

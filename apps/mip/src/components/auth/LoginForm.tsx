@@ -1,25 +1,19 @@
 'use client'
 
 import LoginFormCommon from '@abc-transitionbascarbone/components/src/auth/LoginFormCommon'
-import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { useTranslations } from 'next-intl'
 
-interface Props {
-  environment?: Environment
-}
-
-const LoginForm = ({ environment = Environment.BC }: Props) => {
+const LoginForm = () => {
   'use memo'
 
-  const support = ''
   const t = useTranslations('login.form')
 
-  const getResetLink = (email: string) => ''
-  const getActivationLink = (email: string) => ''
+  const getResetLink = (email: string) => `/reset-password?email=${email}`
+  const getActivationLink = () => ''
 
   return (
     <LoginFormCommon
-      errorMessageCustom={(error) => ''}
+      errorMessageCustom={() => t('error')}
       getResetLink={getResetLink}
       getActivationLink={getActivationLink}
       t={t}

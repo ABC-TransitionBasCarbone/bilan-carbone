@@ -1,7 +1,7 @@
 import { getToken } from 'next-auth/jwt'
 import { NextRequest, NextResponse } from 'next/server'
 
-const publicRoutes = ['/login']
+const publicRoutes = ['/login', '/reset-password', '/activation']
 const assetsRoutes = ['/_next', '/img']
 
 export async function proxy(req: NextRequest) {
