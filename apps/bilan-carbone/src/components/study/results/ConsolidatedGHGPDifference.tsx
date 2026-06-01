@@ -298,7 +298,7 @@ const ConsolatedGHGPDifference = ({
       const parts = emissionFactor.emissionFactorParts.filter((p) => p.type === EmissionFactorPartType.Fabrication)
       parts.forEach((part) => {
         const emissionTotal = getGHGPEmissionValue(study.startDate)(emissionSource)
-        value = value - getLine(emissionTotal, part).total / unitValue
+        value = value - getLine(emissionTotal, { ...part, importedFrom: emissionFactor.importedFrom }).total / unitValue
       })
     })
     return value
