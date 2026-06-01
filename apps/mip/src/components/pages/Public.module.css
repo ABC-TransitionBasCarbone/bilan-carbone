@@ -3,3 +3,44 @@
   border: var(--border-dark);
   border-radius: 0 1rem 1rem 0;
 }
+
+.header {
+  @media screen and (max-width: 37rem) {
+    flex-direction: column;
+    .welcomeLogo {
+      width: 100%;
+    }
+    .locales {
+      justify-content: flex-end;
+    }
+  }
+}
+
+.welcomeLogo {
+  height: auto;
+  width: 50%;
+}
+
+.info {
+  background-color: var(--primary-800);
+  border: var(--border-dark);
+  border-radius: 1rem 0 0 1rem;
+  color: white;
+}
+
+.locales {
+  gap: 0.25rem;
+}
+
+.flag {
+  height: fit-content;
+  border-radius: 0.25rem;
+  padding: 0.125rem;
+  margin: 0.125rem;
+  border: 0;
+}
+
+.selected {
+  margin: 0;
+  border: 0.125rem solid var(--primary-800);
+}
