@@ -19,7 +19,7 @@ const ErrorList = ({ errors, t, tCommon }: Props) => (
             <div>
               {lineNumber !== null && (
                 <Typography variant="body2" fontWeight="medium">
-                  {tCommon('label.line', { lineNumber })}
+                  {tCommon('label.line', { line: lineNumber })}
                 </Typography>
               )}
               <List dense disablePadding>

@@ -19,7 +19,7 @@ const WarningList = ({ warnings, t, tCommon }: Props) => (
           <ListItem key={lineNumber ?? 'global'} disableGutters className="py025">
             <div>
               <Typography variant="body2" fontWeight="medium">
-                {lineNumber !== null ? tCommon('label.line', { lineNumber }) : ''}
+                {lineNumber !== null ? tCommon('label.line', { line: lineNumber }) : ''}
                 {items[0]?.sourceName ? ` — ${items[0].sourceName}` : ''}
               </Typography>
 

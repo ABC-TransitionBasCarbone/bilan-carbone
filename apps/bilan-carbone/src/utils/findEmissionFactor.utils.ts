@@ -4,6 +4,9 @@ import {
   findEmissionFactorsByUnit,
 } from '@/db/emissionFactors'
 import { Unit } from '@abc-transitionbascarbone/db-common/enums'
+import Fuse from 'fuse.js'
+
+const FUZZY_EF_THRESHOLD = 0.3
 
 export enum EmissionFactorMatchType {
   Exact = 'exact',
@@ -97,11 +100,42 @@ export async function findEmissionFactorMatch(
     }
   }
 
-  if (value !== undefined && unit) {
+  if (unit && (title || value !== undefined)) {
     const byUnit = await findEmissionFactorsByUnit(organizationId, unit, versionIds)
-    const match = byUnit.find((ef) => Math.abs(Number(ef.totalCo2) - value) < epsilon)
-    if (match) {
-      return toEfMatch(match, EmissionFactorMatchType.ValueAndUnitOnly, locale)
+
+    if (title) {
+      const candidates = byUnit.map((ef) => ({
+        ef,
+        title: ef.metaData.find((m) => m.language === locale)?.title ?? ef.metaData[0]?.title ?? '',
+      }))
+
+      const fuse = new Fuse(candidates, { keys: ['title'], includeScore: true, threshold: FUZZY_EF_THRESHOLD })
+      const results = fuse.search(title.trim())
+
+      if (results.length === 1) {
+        return toEfMatch(results[0].item.ef, EmissionFactorMatchType.NameAndUnitOnly, locale)
+      }
+
+      if (results.length > 1) {
+        if (value !== undefined) {
+          const exactByValue = results.find((r) => Math.abs(Number(r.item.ef.totalCo2) - value) < epsilon)
+          if (exactByValue) {
+            return toEfMatch(exactByValue.item.ef, EmissionFactorMatchType.Exact, locale)
+          }
+        }
+
+        return {
+          matchType: EmissionFactorMatchType.NameAmbiguous,
+          candidates: results.map((r) => toEfMatch(r.item.ef, EmissionFactorMatchType.NameAndUnitOnly, locale)),
+        }
+      }
+    }
+
+    if (value !== undefined) {
+      const match = byUnit.find((ef) => Math.abs(Number(ef.totalCo2) - value) < epsilon)
+      if (match) {
+        return toEfMatch(match, EmissionFactorMatchType.ValueAndUnitOnly, locale)
+      }
     }
   }
 

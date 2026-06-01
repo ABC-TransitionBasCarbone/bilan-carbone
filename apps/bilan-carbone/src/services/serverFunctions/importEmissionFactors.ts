@@ -192,19 +192,19 @@ function buildEmissionFactorsTemplateHeader(locale: LocaleType): string[] {
   const tbl = bc.emissionFactors.table
   const modal = bc.emissionFactors.importModal as unknown as Record<string, string>
   return [
-    c.name,
+    `${c.name} *`,
     c.attribute,
-    c.unit,
+    `${c.unit} *`,
     c.isMonetary,
-    c.source,
+    `${c.source} *`,
     c.location,
-    (tbl.technicalRepresentativeness as string).replace(/ :$/, ''),
-    (tbl.geographicRepresentativeness as string).replace(/ :$/, ''),
-    (tbl.temporalRepresentativeness as string).replace(/ :$/, ''),
-    (tbl.completeness as string).replace(/ :$/, ''),
-    (tbl.reliability as string).replace(/ :$/, ''),
+    `${(tbl.technicalRepresentativeness as string).replace(/ :$/, '')} *`,
+    `${(tbl.geographicRepresentativeness as string).replace(/ :$/, '')} *`,
+    `${(tbl.temporalRepresentativeness as string).replace(/ :$/, '')} *`,
+    `${(tbl.completeness as string).replace(/ :$/, '')} *`,
+    `${(tbl.reliability as string).replace(/ :$/, '')} *`,
     c.comment,
-    c.totalCo2,
+    `${c.totalCo2} *`,
     c.co2f,
     c.ch4f,
     c.ch4b,
@@ -226,6 +226,7 @@ export const getImportEmissionFactorsTemplate = async () =>
     const bc = getBcTranslations(locale)
     const modal = bc.emissionFactors.importModal as unknown as Record<string, string>
     const qualityTranslations = bc.quality as Record<string, string>
+    const common = getCommonTranslations(locale).common
 
     const TOTAL_COLS = Object.keys(COLUMNS).length
     const allPostsLabel = getAllPostsLabel(locale)
@@ -234,6 +235,7 @@ export const getImportEmissionFactorsTemplate = async () =>
     exampleRow[COLUMNS.name] = `${modal.examplePrefix} ${modal.exampleName}`
     exampleRow[COLUMNS.attribute] = modal.exampleAttribute
     exampleRow[COLUMNS.unit] = `${KG_CO2E_PREFIX}kg`
+    exampleRow[COLUMNS.isMonetary] = common.no
     exampleRow[COLUMNS.source] = modal.exampleSource
     exampleRow[COLUMNS.location] = modal.exampleLocation
     exampleRow[COLUMNS.technicalRepresentativeness] = qualityTranslations['5']
