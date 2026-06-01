@@ -215,7 +215,7 @@ export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): Pa
   }
 
   if (parsedRows.length === 0) {
-    return { success: false, errors: [{ lineNumber: 0, key: 'noRows' }] }
+    return { success: false, errors: [{ lineNumber: null, key: 'noRows' }] }
   }
 
   return { success: true, rows: parsedRows }

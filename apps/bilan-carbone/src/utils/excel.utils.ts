@@ -1,6 +1,6 @@
 import xlsx from 'node-xlsx'
 
-type ParseSheetError = { lineNumber: number; key: string }
+type ParseSheetError = { lineNumber: number | null; key: string }
 
 export function parseExcelSheet(
   buffer: Buffer,
@@ -16,13 +16,13 @@ export function parseExcelSheet(
   try {
     workbook = xlsx.parse(buffer, { raw: false })
   } catch {
-    return { success: false, errors: [{ lineNumber: 0, key: 'invalidFileType' }] }
+    return { success: false, errors: [{ lineNumber: null, key: 'invalidFileType' }] }
   }
 
   const headerRowIndex = options?.headerRowIndex ?? 0
   const sheet = workbook[0]
   if (!sheet?.data || sheet.data.length < headerRowIndex + 2) {
-    return { success: false, errors: [{ lineNumber: 0, key: 'emptyFile' }] }
+    return { success: false, errors: [{ lineNumber: null, key: 'emptyFile' }] }
   }
 
   const ignoredColumns = new Set(options?.ignoredColumns ?? [])
@@ -40,7 +40,7 @@ export function parseExcelSheet(
   )
 
   if (dataRows.length === 0) {
-    return { success: false, errors: [{ lineNumber: 0, key: 'emptyFile' }] }
+    return { success: false, errors: [{ lineNumber: null, key: 'emptyFile' }] }
   }
 
   return { success: true, dataRows, headerRowIndex }

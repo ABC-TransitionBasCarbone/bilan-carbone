@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl'
 import styles from './ImportFileModal.module.css'
 
 interface Props {
-  errors: { lineNumber: number; items: ImportError[] }[]
+  errors: { lineNumber: number | null; items: ImportError[] }[]
   t: ReturnType<typeof useTranslations>
   tCommon: ReturnType<typeof useTranslations>
 }
@@ -17,16 +17,16 @@ const ErrorList = ({ errors, t, tCommon }: Props) => (
         {errors.map(({ lineNumber, items }) => (
           <ListItem key={lineNumber} disableGutters className="py025">
             <div>
-              {lineNumber > 0 && (
+              {lineNumber !== null && (
                 <Typography variant="body2" fontWeight="medium">
                   {tCommon('label.line', { lineNumber })}
                 </Typography>
               )}
               <List dense disablePadding>
                 {items.map((msg, i) => (
-                  <ListItem key={i} disableGutters className={lineNumber > 0 ? 'pl15' : undefined}>
+                  <ListItem key={i} disableGutters className={lineNumber !== null ? 'pl15' : undefined}>
                     <Typography variant="body2">
-                      {lineNumber > 0 ? '• ' : ''}
+                      {lineNumber !== null ? '• ' : ''}
                       {t(msg.key, msg.value !== undefined ? { value: msg.value } : undefined)}
                     </Typography>
                   </ListItem>

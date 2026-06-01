@@ -5,7 +5,7 @@ import styles from './ImportFileModal.module.css'
 import WarningItem from './WarningItem'
 
 interface Props {
-  warnings: { lineNumber: number; items: ImportWarning[] }[]
+  warnings: { lineNumber: number | null; items: ImportWarning[] }[]
   t: ReturnType<typeof useTranslations>
   tCommon: ReturnType<typeof useTranslations>
 }
@@ -16,14 +16,13 @@ const WarningList = ({ warnings, t, tCommon }: Props) => (
       <AlertTitle>{t('warningTitle')}</AlertTitle>
       <List dense className={styles.errorList}>
         {warnings.map(({ lineNumber, items }) => (
-          <ListItem key={lineNumber} disableGutters className="py025">
+          <ListItem key={lineNumber ?? 'global'} disableGutters className="py025">
             <div>
-              {lineNumber > 0 && (
-                <Typography variant="body2" fontWeight="medium">
-                  {tCommon('label.line', { lineNumber })}
-                  {items[0]?.sourceName ? ` — ${items[0].sourceName}` : ''}
-                </Typography>
-              )}
+              <Typography variant="body2" fontWeight="medium">
+                {lineNumber !== null ? tCommon('label.line', { lineNumber }) : ''}
+                {items[0]?.sourceName ? ` — ${items[0].sourceName}` : ''}
+              </Typography>
+
               <List dense disablePadding>
                 {items.map((w, i) => (
                   <WarningItem key={i} w={w} lineNumber={lineNumber} t={t} />

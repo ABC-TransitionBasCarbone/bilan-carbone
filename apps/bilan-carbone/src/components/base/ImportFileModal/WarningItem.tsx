@@ -7,7 +7,7 @@ import styles from './ImportFileModal.module.css'
 
 interface Props {
   w: ImportWarning
-  lineNumber: number
+  lineNumber: number | null
   t: ReturnType<typeof useTranslations>
 }
 
@@ -21,9 +21,9 @@ const WarningItem = ({ w, lineNumber, t }: Props) => {
   }
   if (warningMessage) {
     return (
-      <ListItem disableGutters className={lineNumber > 0 ? 'pl15' : undefined}>
+      <ListItem disableGutters className={lineNumber !== null ? 'pl15' : undefined}>
         <Typography variant="body2">
-          {lineNumber > 0 ? '• ' : ''}
+          {lineNumber !== null ? '• ' : ''}
           {warningMessage}
         </Typography>
       </ListItem>
@@ -35,10 +35,10 @@ const WarningItem = ({ w, lineNumber, t }: Props) => {
     w.foundTitle !== undefined || w.foundValue !== undefined ? formatEf(w.foundTitle, w.foundValue, w.foundUnit) : null
 
   return (
-    <ListItem disableGutters className={lineNumber > 0 ? 'pl15' : undefined}>
+    <ListItem disableGutters className={lineNumber !== null ? 'pl15' : undefined}>
       <div>
         <Typography variant="body2">
-          {lineNumber > 0 ? '• ' : ''}
+          {lineNumber !== null ? '• ' : ''}
           {t('warningEfNotFound', { searched })}
         </Typography>
         {w.candidates ? (

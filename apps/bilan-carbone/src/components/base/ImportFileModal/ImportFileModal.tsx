@@ -13,8 +13,8 @@ import ErrorList from './ErrorList'
 import styles from './ImportFileModal.module.css'
 import WarningList from './WarningList'
 
-function groupByLine<T extends { lineNumber: number }>(items: T[]): { lineNumber: number; items: T[] }[] {
-  const map = new Map<number, T[]>()
+function groupByLine<T extends { lineNumber: number | null }>(items: T[]): { lineNumber: number | null; items: T[] }[] {
+  const map = new Map<number | null, T[]>()
   for (const item of items) {
     const existing = map.get(item.lineNumber)
     if (existing) {
@@ -59,8 +59,8 @@ const ImportFileModal = <TPreviewRow,>({
   const tCommon = useTranslations('common')
   const [isPending, startTransition] = useTransition()
   const [isDownloading, setIsDownloading] = useState(false)
-  const [errors, setErrors] = useState<{ lineNumber: number; items: ImportError[] }[]>([])
-  const [warnings, setWarnings] = useState<{ lineNumber: number; items: ImportWarning[] }[]>([])
+  const [errors, setErrors] = useState<{ lineNumber: number | null; items: ImportError[] }[]>([])
+  const [warnings, setWarnings] = useState<{ lineNumber: number | null; items: ImportWarning[] }[]>([])
   const [previewRows, setPreviewRows] = useState<TPreviewRow[]>([])
   const [isDragOver, setIsDragOver] = useState(false)
   const [pendingFile, setPendingFile] = useState<File | null>(null)
@@ -139,7 +139,7 @@ const ImportFileModal = <TPreviewRow,>({
       return
     }
     if (files.length > 1) {
-      setErrors(groupByLine([{ lineNumber: 0, key: 'tooManyFiles' }]))
+      setErrors(groupByLine([{ lineNumber: null, key: 'tooManyFiles' }]))
       return
     }
     const file = files[0]
