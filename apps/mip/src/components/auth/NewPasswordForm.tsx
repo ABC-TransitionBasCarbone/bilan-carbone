@@ -14,7 +14,6 @@ const NewPasswordForm = () => {
   // const loginLink = '/login'
 
   const resetPasswordHandler = async (email: string) => {
-    console.log('Reset password for email:', email)
     // callServerFunction(() => resetPassword(email.toLowerCase()), {
     //   getSuccessMessage: () => t('emailSent'),
     //   getErrorMessage: (error) => t(error),
