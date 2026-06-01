@@ -13,11 +13,16 @@ import { Alert, Box, Typography } from '@mui/material'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import CinemaOutlinedIcon from '../../cut/icons/CinemaOutlinedIcon'
 import DiagramOutlinedIcon from '../icons/DiagramOutlinedIcon'
 import LinkCard from './LinkCard'
 import styles from './UserView.module.css'
+
+const BetaBanner = dynamic(() => import('@/components/base/BetaBanner/BetaBanner'), {
+  ssr: true,
+})
 
 interface Props {
   account: UserSession
@@ -76,6 +81,7 @@ const UserView = async ({ account }: Props) => {
             </Box>
           )}
         </Box>
+        {isFootprintsEnabled && isTilt(account.environment) && <BetaBanner />}
         <Box className="flex gapped1 mt1">
           <LinkCard
             href={`/organisations/${account.organizationVersionId}/modifier`}

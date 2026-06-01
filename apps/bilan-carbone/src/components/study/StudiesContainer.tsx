@@ -116,6 +116,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
           user={user}
           collaborations={!organizationVersionId && isCR}
           simplified
+          showBetaBanner={isTilt(user.environment) && displaySimplifiedStudies}
         />
       )}
       {!!collaborationStudies.length && (

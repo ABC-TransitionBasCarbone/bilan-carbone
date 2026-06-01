@@ -186,5 +186,10 @@
   "navigation": {
     "footprints": "Mes empreintes",
     "information": "Mon Association"
+  },
+  "betaBanner": {
+    "badge": "Bêta",
+    "title": "Version Bêta de l'outil Cap Carbone",
+    "description": "Cap Carbone est aujourd'hui en version bêta ! Merci d'être nos premiers utilisateurs et testeurs 🎉 N'hésitez pas à nous contacter à l'adresse <support>support@abc-transitionbascarbone.fr</support> si vous avez des retours ! L'application étant en bêta il est possible que certaines questions changent dans le formulaire et donc que les réponses des questions modifiées soient supprimées dans de futures mise à jour. Pensez à regarder la complétion de vos postes sur la page saisie des données avant d'aller voir vos résultats pour vérifier que toutes vos réponses sont toujours disponibles."
   }
 }
