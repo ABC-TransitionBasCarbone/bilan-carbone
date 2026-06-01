@@ -2501,6 +2501,7 @@ export const changeStudySiteTiltSimplified = async (
   studySiteId: string,
   data: ChangeStudySiteTiltSimplifiedCommand & TiltStudySiteFields,
 ) =>
+  //TODO : on a un problème ici, je recois un not authorized alors que je ne devrais pas. Gérer aussi l'init de la situation à la création d'une étude.
   withServerResponse('changeStudySiteTiltSimplified', async () => {
     // this function only updates situation for now not the study site because we don't have the fields
     const studySites = await getStudiesSitesFromIds([studySiteId])

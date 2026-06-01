@@ -18,7 +18,6 @@ interface Props<T extends SitesCommand> {
   organizationId?: string
   onDuplicate?: (studySiteId: string) => void
   disabled?: boolean
-  handleSpecificChange?: (value: string) => void
 }
 
 const Sites = <T extends SitesCommand>({
@@ -29,10 +28,10 @@ const Sites = <T extends SitesCommand>({
   organizationId,
   onDuplicate,
   disabled = false,
-  handleSpecificChange,
 }: Props<T>) => {
   const t = useTranslations('organization.sites')
   const control = form?.control as Control<SitesCommand>
+
   const columns = useMemo(
     () =>
       [

@@ -6,7 +6,6 @@ import { FormDatePicker } from '@/components/form/DatePicker'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import StudySites from '@/components/study/perimeter/StudySites'
 import SelectStudySite from '@/components/study/site/SelectStudySite'
-import useStudySite from '@/components/study/site/useStudySite'
 import { OrganizationWithSites } from '@/db/account'
 import type { FullStudy } from '@/db/study'
 import { getTiltEngine } from '@/environments/tilt/publicodes/tilt-engine'
@@ -25,6 +24,7 @@ import {
   ChangeStudySiteTiltSimplifiedValidation,
 } from '@/services/serverFunctions/study.command'
 import { TiltStudySiteFields } from '@/services/studySiteToSituation'
+import { sortAlphabetically } from '@/services/utils'
 import { HelpIcon } from '@abc-transitionbascarbone/components'
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
@@ -56,10 +56,11 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
   const tStructure = useTranslations('study.structure')
   const tGlossary = useTranslations('study.new.glossary')
   const { callServerFunction } = useServerFunction()
-  const { siteId: studySite, studySiteId } = useStudySite(study)
   const [glossary, setGlossary] = useState('')
   const [siteData, setSiteData] = useState<TiltCustomDataFields | undefined>()
   const [loading, setLoading] = useState(true)
+
+  const studySite = useMemo(() => study.sites.sort((a, b) => sortAlphabetically(a.id, b.id))[0], [study.sites])
 
   const form = useForm<ChangeStudySiteTiltSimplifiedCommand>({
     resolver: zodResolver(ChangeStudySiteTiltSimplifiedValidation),
@@ -102,34 +103,34 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
   useEffect(() => {
     async function setStudySiteData() {
       setLoading(true)
-      if (studySite && studySite !== 'all') {
-        const situationRes = await loadMappedSituation(study.id, studySiteId, {
-          ...mappedTiltSituationToCustomDataFields,
-          ...optionalTiltSituationToCustomDataFields,
+
+      const situationRes = await loadMappedSituation(study.id, studySite.id, {
+        ...mappedTiltSituationToCustomDataFields,
+        ...optionalTiltSituationToCustomDataFields,
+      })
+
+      if (situationRes.success && situationRes.data) {
+        const newSiteData = situationRes.data
+        setSiteData(newSiteData)
+
+        form.reset({
+          postalCode: String(newSiteData?.postalCode ?? ''),
+          structure: String(newSiteData?.structure ?? ''),
+          structureOther: String(newSiteData?.structureOther ?? '').replace(/^'|'$/g, ''),
         })
-
-        if (situationRes.success && situationRes.data) {
-          const newSiteData = situationRes.data
-          setSiteData(newSiteData)
-
-          form.reset({
-            postalCode: String(newSiteData?.postalCode ?? ''),
-            structure: String(newSiteData?.structure ?? ''),
-            structureOther: String(newSiteData?.structureOther ?? '').replace(/^'|'$/g, ''),
-          })
-        }
       }
+
       setLoading(false)
     }
 
     setStudySiteData()
-  }, [form, study.id, studySite, studySiteId])
+  }, [form, study.id, studySite])
 
   const handleStudySiteUpdate = useCallback(
-    async (data: ChangeStudySiteTiltSimplifiedCommand & TiltStudySiteFields) => {
+    async (studySiteId: string, data: ChangeStudySiteTiltSimplifiedCommand & TiltStudySiteFields) => {
       await callServerFunction(() => changeStudySiteTiltSimplified(studySiteId, data))
     },
-    [callServerFunction, studySiteId],
+    [callServerFunction],
   )
 
   const handleDateChange = useCallback(async () => {
@@ -155,11 +156,10 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
   }, [dateForm, callServerFunction, router, tValidation, study])
 
   const onStudySiteUpdate = useCallback(() => {
-    if (studySite === 'all') {
-      return
-    }
-
-    form.handleSubmit(handleStudySiteUpdate, (e) => console.log('invalid', e))()
+    form.handleSubmit(
+      (data) => handleStudySiteUpdate(studySite.id, data),
+      (e) => console.log('invalid', e),
+    )()
   }, [form, handleStudySiteUpdate, studySite])
 
   return (

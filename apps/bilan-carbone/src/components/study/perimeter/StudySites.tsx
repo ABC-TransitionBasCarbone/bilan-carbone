@@ -13,8 +13,10 @@ import { changeStudySites, duplicateSiteAndEmissionSources, hasActivityData } fr
 import {
   ChangeStudySitesCommand,
   ChangeStudySitesCommandValidation,
+  ChangeStudySiteTiltSimplifiedCommand,
   SitesCommand,
 } from '@/services/serverFunctions/study.command'
+import { TiltStudySiteFields } from '@/services/studySiteToSituation'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
 import { canEditOrganizationVersion, isInOrgaOrParent } from '@/utils/organization'
 import { hasEditionRights } from '@/utils/study'
@@ -44,7 +46,10 @@ interface Props {
   userRoleOnStudy: StudyRole
   caUnit: SiteCAUnit
   user: UserSession
-  handleSpecificChange?: () => void
+  handleSpecificChange?: (
+    siteId: string,
+    data: ChangeStudySiteTiltSimplifiedCommand & TiltStudySiteFields,
+  ) => Promise<void>
 }
 
 const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user, handleSpecificChange }: Props) => {
@@ -81,26 +86,26 @@ const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user,
           const existingStudySite = study.sites.find((studySite) => studySite.site.id === site.id)
           return existingStudySite
             ? {
-              ...existingStudySite,
-              id: site.id,
-              name: existingStudySite.site.name,
-              selected: true,
-              postalCode: existingStudySite.site.postalCode ?? '',
-              city: existingStudySite.site.city ?? '',
-              establishmentYear: existingStudySite.site?.establishmentYear
-                ? parseInt(existingStudySite.site?.establishmentYear)
-                : 0,
-            }
+                ...existingStudySite,
+                id: site.id,
+                name: existingStudySite.site.name,
+                selected: true,
+                postalCode: existingStudySite.site.postalCode ?? '',
+                city: existingStudySite.site.city ?? '',
+                establishmentYear: existingStudySite.site?.establishmentYear
+                  ? parseInt(existingStudySite.site?.establishmentYear)
+                  : 0,
+              }
             : {
-              ...site,
-              selected: false,
-              postalCode: site.postalCode ?? '',
-              city: site.city ?? '',
-              cncId: site.cncId ?? '',
-              establishmentYear: site?.establishmentYear ? parseInt(site?.establishmentYear) : 0,
-              academy: site.academy ?? '',
-              establishmentType: site.establishmentType ?? undefined,
-            }
+                ...site,
+                selected: false,
+                postalCode: site.postalCode ?? '',
+                city: site.city ?? '',
+                cncId: site.cncId ?? '',
+                establishmentYear: site?.establishmentYear ? parseInt(site?.establishmentYear) : 0,
+                academy: site.academy ?? '',
+                establishmentType: site.establishmentType ?? undefined,
+              }
         })
         .sort((a, b) => a.name.localeCompare(b.name))
         .sort((a, b) => (b.selected ? 1 : 0) - (a.selected ? 1 : 0)) || [],
@@ -143,6 +148,7 @@ const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user,
 
   const updateStudySites = async () => {
     setOpen(false)
+    const formValue = siteForm.getValues()
 
     await callServerFunction(() => changeStudySites(study.id, siteForm.getValues()), {
       onSuccess: async () => {
@@ -155,6 +161,17 @@ const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user,
         }
       },
     })
+
+    if (handleSpecificChange) {
+      for (const site of formValue.sites) {
+        await handleSpecificChange(site.id, {
+          volunteerNumber: site.volunteerNumber ?? 0,
+          beneficiaryNumber: site.beneficiaryNumber ?? 0,
+          postalCode: site.postalCode,
+          etp: site.etp ?? 0,
+        })
+      }
+    }
   }
 
   const onReplicateSitesChanges = (replicate: boolean) => {
@@ -200,12 +217,12 @@ const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user,
                 isEditing
                   ? sites
                   : study.sites.map((site) => ({
-                    ...site,
-                    name: site.site.name,
-                    selected: false,
-                    postalCode: site.site.postalCode ?? '',
-                    city: site.site.city ?? '',
-                  }))
+                      ...site,
+                      name: site.site.name,
+                      selected: false,
+                      postalCode: site.site.postalCode ?? '',
+                      city: site.site.city ?? '',
+                    }))
               }
               form={siteForm as unknown as UseFormReturn<SitesCommand>}
               withSelection
