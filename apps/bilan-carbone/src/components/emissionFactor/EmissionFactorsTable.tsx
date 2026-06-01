@@ -5,6 +5,7 @@ import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionF
 import { BCUnit, useUnitLabel } from '@/services/unit'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
+import { Environment, StudyResultUnit } from '@abc-transitionbascarbone/db-common/enums'
 import {
   FormControl,
   InputLabel,
@@ -14,7 +15,6 @@ import {
   OutlinedInput,
   Select,
 } from '@mui/material'
-import { Environment, StudyResultUnit } from '@repo/db-common/enums'
 import {
   ColumnDef,
   flexRender,

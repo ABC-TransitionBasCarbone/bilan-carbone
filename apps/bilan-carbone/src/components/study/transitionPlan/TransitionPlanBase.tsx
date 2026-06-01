@@ -15,9 +15,10 @@ import type {
 import { buildObjectiveGroups } from '@/utils/scope.utils'
 import { scopeMatchesUIFilters } from '@/utils/scopeFilter'
 import { getActionReductionRatio } from '@/utils/study'
-import type { ExternalStudy, SectenInfo, SubPost } from '@repo/db-common'
+import { getAllTagIds } from '@/utils/tag.utils'
+import type { ExternalStudy, SectenInfo, SubPost } from '@abc-transitionbascarbone/db-common'
 import { useTranslations } from 'next-intl'
-import { ReactNode, useMemo } from 'react'
+import { ReactNode } from 'react'
 import TrajectoryGraph from './TrajectoryGraph'
 import TransitionPlanFilters from './TransitionPlanFilters'
 import TransitionPlanOnboarding from './TransitionPlanOnboarding'
@@ -73,7 +74,12 @@ const TransitionPlanBase = ({
   graphTitleAction,
   children,
 }: Props) => {
+  'use memo'
+
   const tNav = useTranslations('nav')
+  const allTagIds = study.tagFamilies.flatMap((f) => f.tags.map((tag) => tag.id))
+  const allTagIdsWithOther = getAllTagIds(study.tagFamilies)
+  const allSiteIds = study.sites.map((s) => s.site.id)
   const {
     selectedSiteIds,
     selectedSubPosts,
@@ -82,30 +88,14 @@ const TransitionPlanBase = ({
     setSelectedSiteIds,
     setSelectedSubPosts,
     setSelectedTagIds,
-  } = useTransitionPlanFilters(study.id)
+  } = useTransitionPlanFilters(study.id, allTagIdsWithOther, allSiteIds)
 
-  const allTagIds = useMemo(() => study.tagFamilies.flatMap((f) => f.tags.map((tag) => tag.id)), [study.tagFamilies])
-
-  const hasFilters = useMemo(() => {
-    const allSiteIds = study.sites.map((s) => s.site.id)
-    const envSubPostsByPost = environmentSubPostsMapping[study.organizationVersion.environment]
-    const allEnvSubPosts = Array.from(new Set(Object.values(envSubPostsByPost).flat()))
-    const allTagIdsWithOther = study.tagFamilies.some((f) => f.name !== 'DEFAULT_FAMILY_TAG')
-      ? [...allTagIds, 'other']
-      : allTagIds
-    const sitesFiltered = allSiteIds.length > 0 && selectedSiteIds.length < allSiteIds.length
-    const subPostsFiltered = allEnvSubPosts.length > 0 && selectedSubPosts.length < allEnvSubPosts.length
-    const tagsFiltered = allTagIdsWithOther.length > 0 && selectedTagIds.length < allTagIdsWithOther.length
-    return sitesFiltered || subPostsFiltered || tagsFiltered
-  }, [
-    study.sites,
-    study.organizationVersion.environment,
-    study.tagFamilies,
-    allTagIds,
-    selectedSiteIds,
-    selectedSubPosts,
-    selectedTagIds,
-  ])
+  const envSubPostsByPost = environmentSubPostsMapping[study.organizationVersion.environment]
+  const allEnvSubPosts = Array.from(new Set(Object.values(envSubPostsByPost).flat()))
+  const sitesFiltered = allSiteIds.length > 0 && selectedSiteIds.length < allSiteIds.length
+  const subPostsFiltered = allEnvSubPosts.length > 0 && selectedSubPosts.length < allEnvSubPosts.length
+  const tagsFiltered = allTagIdsWithOther.length > 0 && selectedTagIds.length < allTagIdsWithOther.length
+  const hasFilters = sitesFiltered || subPostsFiltered || tagsFiltered
 
   const { filteredStudyEmissions, filteredPastStudies } = useTransitionPlan({
     study,
@@ -117,89 +107,71 @@ const TransitionPlanBase = ({
     selectedTagIds,
   })
 
-  const filteredTrajectories = useMemo(
-    () =>
-      trajectories.map((traj) => ({
-        ...traj,
-        objectives: traj.objectives.filter((obj) => {
-          const hasScope = obj.sites.length > 0 || obj.subPosts.length > 0 || obj.tags.length > 0
-          if (!hasScope) {
-            return true
-          }
-          return scopeMatchesUIFilters(
-            obj.sites.map((s) => s.studySite.siteId),
-            obj.subPosts.map((sp) => sp.subPost),
-            obj.tags.map((tag) => tag.studyTag.id),
-            selectedSiteIds,
-            selectedSubPosts,
-            selectedTagIds,
-            allTagIds,
-          )
-        }),
-      })),
-    [trajectories, selectedSiteIds, selectedSubPosts, selectedTagIds, allTagIds],
-  )
-
-  const objectiveGroupsByTrajectoryId = useMemo(() => {
-    const result = new Map<string, ObjectiveGroup[]>()
-    for (const traj of trajectories) {
-      const groups = buildObjectiveGroups({
-        study,
-        validatedOnly,
-        objectives: traj.objectives,
-        filterSiteIds: selectedSiteIds,
-        filterSubPosts: selectedSubPosts,
-        filterTagIds: selectedTagIds,
-      })
-      if (groups) {
-        result.set(traj.id, groups)
+  const filteredTrajectories = trajectories.map((traj) => ({
+    ...traj,
+    objectives: traj.objectives.filter((obj) => {
+      const hasScope = obj.sites.length > 0 || obj.subPosts.length > 0 || obj.tags.length > 0
+      if (!hasScope) {
+        return true
       }
-    }
-    return result
-  }, [trajectories, study, validatedOnly, selectedSiteIds, selectedSubPosts, selectedTagIds])
-
-  const filteredActions = useMemo(() => {
-    const studyHasTags = allTagIds.length > 0
-    if (
-      selectedSiteIds.length === 0 ||
-      selectedSubPosts.length === 0 ||
-      (studyHasTags && selectedTagIds.length === 0)
-    ) {
-      return []
-    }
-
-    return actions.filter((action) =>
-      scopeMatchesUIFilters(
-        action.sites?.map((s) => s.studySite.siteId) ?? [],
-        action.subPosts?.map((sp) => sp.subPost) ?? [],
-        action.tags?.map((tag) => tag.studyTag.id) ?? [],
+      return scopeMatchesUIFilters(
+        obj.sites.map((s) => s.studySite.siteId),
+        obj.subPosts.map((sp) => sp.subPost),
+        obj.tags.map((tag) => tag.studyTag.id),
         selectedSiteIds,
         selectedSubPosts,
         selectedTagIds,
-      ),
-    )
-  }, [allTagIds.length, selectedSiteIds, selectedSubPosts, selectedTagIds, actions])
+        allTagIds,
+      )
+    }),
+  }))
 
-  const scopedActions = useMemo(
-    () =>
-      filteredActions.map((action) => {
-        if (action.reductionValueKg === null) {
-          return action
-        }
-        const ratio = getActionReductionRatio(
-          study,
-          validatedOnly,
-          action.sites.map((s) => s.studySite.siteId),
-          action.subPosts.map((sp) => sp.subPost),
-          action.tags.map((tag) => tag.studyTag.id),
-          selectedSiteIds,
-          selectedSubPosts,
-          selectedTagIds,
+  const objectiveGroupsByTrajectoryId = new Map<string, ObjectiveGroup[]>()
+  for (const traj of trajectories) {
+    const groups = buildObjectiveGroups({
+      study,
+      validatedOnly,
+      objectives: traj.objectives,
+      filterSiteIds: selectedSiteIds,
+      filterSubPosts: selectedSubPosts,
+      filterTagIds: selectedTagIds,
+    })
+    if (groups) {
+      objectiveGroupsByTrajectoryId.set(traj.id, groups)
+    }
+  }
+
+  const studyHasTags = allTagIds.length > 0
+  const filteredActions =
+    selectedSiteIds.length === 0 || selectedSubPosts.length === 0 || (studyHasTags && selectedTagIds.length === 0)
+      ? []
+      : actions.filter((action) =>
+          scopeMatchesUIFilters(
+            action.sites?.map((s) => s.studySite.siteId) ?? [],
+            action.subPosts?.map((sp) => sp.subPost) ?? [],
+            action.tags?.map((tag) => tag.studyTag.id) ?? [],
+            selectedSiteIds,
+            selectedSubPosts,
+            selectedTagIds,
+          ),
         )
-        return { ...action, reductionValueKg: action.reductionValueKg * ratio }
-      }),
-    [filteredActions, study, validatedOnly, selectedSiteIds, selectedSubPosts, selectedTagIds],
-  )
+
+  const scopedActions = filteredActions.map((action) => {
+    if (action.reductionValueKg === null) {
+      return action
+    }
+    const ratio = getActionReductionRatio(
+      study,
+      validatedOnly,
+      action.sites.map((s) => s.studySite.siteId),
+      action.subPosts.map((sp) => sp.subPost),
+      action.tags.map((tag) => tag.studyTag.id),
+      selectedSiteIds,
+      selectedSubPosts,
+      selectedTagIds,
+    )
+    return { ...action, reductionValueKg: action.reductionValueKg * ratio }
+  })
 
   return (
     <>

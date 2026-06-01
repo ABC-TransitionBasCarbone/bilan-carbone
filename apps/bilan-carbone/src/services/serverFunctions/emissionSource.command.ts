@@ -1,4 +1,4 @@
-import { EmissionSourceCaracterisation, EmissionSourceType, SubPost } from '@repo/db-common/enums'
+import { EmissionSourceCaracterisation, EmissionSourceType, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import z from 'zod'
 
 export const CreateEmissionSourceCommandValidation = z.object({
@@ -22,7 +22,7 @@ export const UpdateEmissionSourceCommandValidation = z.object({
   caracterisation: z.enum(EmissionSourceCaracterisation).optional().nullable(),
   constructionYear: z.date().nullable().optional(),
   value: z.number().optional().nullable(),
-  source: z.string().trim().optional(),
+  source: z.string().trim().min(1).nullable().optional(),
   type: z.enum(EmissionSourceType).optional().nullable(),
   reliability: z.number().optional(),
   technicalRepresentativeness: z.number().optional(),
@@ -30,6 +30,7 @@ export const UpdateEmissionSourceCommandValidation = z.object({
   temporalRepresentativeness: z.number().optional(),
   completeness: z.number().optional(),
   comment: z.string().trim().optional(),
+  feComment: z.string().trim().optional(),
   validated: z.boolean().optional(),
   depreciationPeriod: z.number().optional(),
   hectare: z.number().optional(),

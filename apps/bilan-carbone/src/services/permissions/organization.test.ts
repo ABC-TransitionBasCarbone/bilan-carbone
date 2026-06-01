@@ -6,8 +6,8 @@ import { mockedOrganizationId, mockedOrganizationVersionId } from '@/tests/utils
 import { getMockedAuthUser } from '@/tests/utils/models/user'
 import * as organizationUtils from '@/utils/organization'
 import * as userUtils from '@/utils/user'
+import { Role } from '@abc-transitionbascarbone/db-common/enums'
 import { expect } from '@jest/globals'
-import { Role } from '@repo/db-common/enums'
 import { UserSession } from 'next-auth'
 import * as authModule from '../auth'
 import {

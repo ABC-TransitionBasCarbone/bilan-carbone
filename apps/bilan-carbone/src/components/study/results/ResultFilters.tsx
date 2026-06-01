@@ -1,7 +1,7 @@
 import type { FullStudy } from '@/db/study'
 import { environmentSubPostsMapping, Post, subPostsByPost } from '@/services/posts'
 import type { ResultType } from '@/types/study.types'
-import { SubPost } from '@repo/db-common/enums'
+import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { PostSubPostFilter } from '../../form/PostSubPostFilter'
 import { TagFilter } from '../../form/TagFilter'
@@ -10,7 +10,7 @@ interface Props {
   study: Pick<FullStudy, 'tagFamilies' | 'organizationVersion'>
   selectedPostIds: string[]
   selectedTagIds: string[]
-  onPostFilterChange: (ids: string[]) => void
+  onPostFilterChange: (subposts: SubPost[]) => void
   onTagFilterChange: (ids: string[]) => void
   exportType: ResultType
 }
@@ -58,7 +58,7 @@ const ResultFilters = ({
 
   useEffect(() => {
     if (envSubPosts.length > 0) {
-      const defaultPostItems = envSubPosts.map((sp) => sp as string)
+      const defaultPostItems = envSubPosts
 
       if (previousExportType !== exportType) {
         setPreviousExportType(exportType)
@@ -92,7 +92,7 @@ const ResultFilters = ({
         envPosts={envPosts}
         envSubPosts={envSubPosts}
         selectedSubPosts={selectedSubPosts}
-        onChange={(subPosts) => onPostFilterChange(subPosts.map((sp) => String(sp)))}
+        onChange={onPostFilterChange}
       />
       <TagFilter tagFamilies={study.tagFamilies} selectedTagIds={selectedTagIds} onChange={onTagFilterChange} />
     </div>

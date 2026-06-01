@@ -1,5 +1,5 @@
 import { getLocale } from '@/i18n/locale'
-import type { Prisma } from '@repo/db-common'
+import type { Prisma } from '@abc-transitionbascarbone/db-common'
 import { prismaClient } from './client.server'
 
 export const getAllActualitiesLocale = async () => {

@@ -6,7 +6,7 @@ import { EmissionFactorWithMetaData, getEmissionFactors } from '@/services/serve
 import { getStudyExports } from '@/services/serverFunctions/study'
 import { BCUnit } from '@/services/unit'
 import { FeFilters } from '@/types/filters'
-import { EmissionFactorBase, Environment, Export, SubPost } from '@repo/db-common/enums'
+import { EmissionFactorBase, Environment, Export, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { PaginationState } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'

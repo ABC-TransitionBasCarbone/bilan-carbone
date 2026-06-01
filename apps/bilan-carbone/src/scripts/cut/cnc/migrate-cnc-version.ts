@@ -11,7 +11,7 @@
 
 import { prismaClient } from '@/db/client.server'
 import { getOrCreateCncVersion } from '@/db/cnc'
-import { Environment } from '@repo/db-common/enums'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 
 const MIGRATION_YEAR = 2023
 

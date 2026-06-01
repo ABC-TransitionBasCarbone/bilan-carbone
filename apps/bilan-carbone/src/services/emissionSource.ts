@@ -1,8 +1,15 @@
 import type { FullStudy } from '@/db/study'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
-import { hasDeprecationPeriod } from '@/utils/study'
-import type { StudyEmissionSource } from '@repo/db-common'
-import { ControlMode, EmissionSourceCaracterisation, Environment, Export, Import, SubPost } from '@repo/db-common/enums'
+import { hasDeprecationPeriod, isCASSubPost } from '@/utils/study'
+import type { StudyEmissionSource } from '@abc-transitionbascarbone/db-common'
+import {
+  ControlMode,
+  EmissionSourceCaracterisation,
+  Environment,
+  Export,
+  Import,
+  SubPost,
+} from '@abc-transitionbascarbone/db-common/enums'
 import { convertTiltSubPostToBCSubPost } from './posts'
 import { getConfidenceInterval, getSquaredStandardDeviationForEmissionSource } from './uncertainty'
 
@@ -20,15 +27,16 @@ type EmissionSourceFormType = Pick<
   | 'depreciationPeriod'
   | 'hectare'
   | 'duration'
+  | 'source'
 >
 
-export const getEmissionSourceCompletion = (
+const getEmissionSourceCompletion = (
   emissionSource: EmissionSourceFormType,
   study: FullStudy,
-  emissionFactor: FullStudy['emissionSources'][number]['emissionFactor'],
+  unit: string | null | undefined,
   environment: Environment | undefined,
 ) => {
-  const mandatoryFields = ['name', 'type', 'emissionFactorId'] as (keyof typeof emissionSource)[]
+  const mandatoryFields = ['name', 'emissionFactorId', 'source'] as (keyof typeof emissionSource)[]
 
   const caracterisations = study.exports?.types.length
     ? getCaracterisationsBySubPost(
@@ -51,11 +59,7 @@ export const getEmissionSourceCompletion = (
     }
   }
 
-  if (
-    emissionSource.subPost === SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas &&
-    emissionFactor &&
-    emissionFactor.unit === 'HA_YEAR'
-  ) {
+  if (isCASSubPost(emissionSource.subPost, unit)) {
     mandatoryFields.push('hectare')
     mandatoryFields.push('duration')
   }
@@ -70,10 +74,10 @@ export const getEmissionSourceCompletion = (
 export const canBeValidated = (
   emissionSource: EmissionSourceFormType,
   study: FullStudy,
-  emissionFactor: FullStudy['emissionSources'][number]['emissionFactor'],
+  emissionFactor: { unit?: string | null } | null | undefined,
   environment: Environment | undefined,
 ) => {
-  return getEmissionSourceCompletion(emissionSource, study, emissionFactor, environment) === 1
+  return getEmissionSourceCompletion(emissionSource, study, emissionFactor?.unit, environment) === 1
 }
 
 export const getAlpha = (emission: number, confidenceInterval: number[]) => {

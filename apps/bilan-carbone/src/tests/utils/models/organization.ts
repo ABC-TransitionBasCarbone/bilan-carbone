@@ -1,4 +1,4 @@
-import { Environment } from '@repo/db-common/enums'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 
 export const mockedOrganizationId = 'mocked-organization-id'
 export const mockedOrganizationVersionId = 'mocked-organization-version-id'

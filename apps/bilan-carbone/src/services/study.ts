@@ -2,7 +2,6 @@ import { EngagementActionTargets } from '@/constants/engagementActions'
 import { resultsExportHeadersBase, resultsExportHeadersCut } from '@/constants/exports'
 import type { EmissionFactorWithParts } from '@/db/emissionFactors'
 import type { FullStudy } from '@/db/study'
-import { Translations } from '@/types/translation'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { getEmissionSourcesTotalCo2 } from '@/utils/emissionSources'
 import { getGHGPRuleName } from '@/utils/ghgp'
@@ -15,9 +14,16 @@ import {
   isCAS,
   STUDY_UNIT_VALUES,
 } from '@/utils/study'
-import { formatDateFr } from '@/utils/time'
-import type { ExportRule } from '@repo/db-common'
-import { EmissionFactorBase, Environment, Export, StudyResultUnit, SubPost } from '@repo/db-common/enums'
+import type { ExportRule } from '@abc-transitionbascarbone/db-common'
+import {
+  EmissionFactorBase,
+  Environment,
+  Export,
+  StudyResultUnit,
+  SubPost,
+} from '@abc-transitionbascarbone/db-common/enums'
+import { Translations } from '@abc-transitionbascarbone/lib'
+import { formatDateFr } from '@abc-transitionbascarbone/utils'
 import dayjs from 'dayjs'
 import type { ResultType } from '../types/study.types'
 import { AdditionalResultTypes, BaseResultsBySite, ResultsByPost } from '../types/study.types'

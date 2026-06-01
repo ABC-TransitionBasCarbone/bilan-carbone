@@ -1,36 +1,23 @@
 'use client'
 
-import SelectStudySite from '@/components/study/site/SelectStudySite'
-import type { FullStudy } from '@/db/study'
-import SheetIcon from '@/environments/simplified/icons/SheetIcon'
-import DownloadIcon from '@mui/icons-material/Download'
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
-import { Box, Button, Tab, Tabs, Typography } from '@mui/material'
-import { useTranslations } from 'next-intl'
-import { SyntheticEvent, useMemo, useState } from 'react'
-
-import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
-import TabPanel from '@/components/tabPanel/tabPanel'
-import { downloadStudyResults } from '@/services/study'
-import { SiteCAUnit } from '@repo/db-common/enums'
-
 import Block from '@/components/base/Block'
 import LoadingButton from '@/components/base/LoadingButton'
 import BarChart from '@/components/study/charts/BarChart'
 import PieChart from '@/components/study/charts/PieChart'
-import { useServerFunction } from '@/hooks/useServerFunction'
-import { generateStudySummaryPDF } from '@/services/serverFunctions/pdf'
-import classNames from 'classnames'
-import Link from 'next/link'
-import styles from './AllResults.module.css'
-
 import CarbonIntensities from '@/components/study/results/consolidated/CarbonIntensities'
+import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
+import SelectStudySite from '@/components/study/site/SelectStudySite'
+import TabPanel from '@/components/tabPanel/tabPanel'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
+import type { FullStudy } from '@/db/study'
 import EmissionsAnalysisClickson from '@/environments/clickson/study/results/consolidated/EmissionsAnalysisClickson'
 import CarbonIntensitiesCut from '@/environments/cut/study/results/CarbonIntensitiesCut'
+import SheetIcon from '@/environments/simplified/icons/SheetIcon'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
 import {
   hasAccessToAdvancedEmissionAnalysis,
+  hasAccessToFeedbackButton,
   hasAccessToPDFExport,
   hasAccessToResultsRatioTab,
   hasAccessToSimplifiedEmissionAnalysis,
@@ -38,9 +25,24 @@ import {
   showResultsInfoText,
 } from '@/services/permissions/environment'
 import type { BaseResultsByPost } from '@/services/posts'
+import { generateStudySummaryPDF } from '@/services/serverFunctions/pdf'
+import { downloadStudyResults } from '@/services/study'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import type { BaseResultsBySite } from '@/types/study.types'
+import { SiteCAUnit } from '@abc-transitionbascarbone/db-common/enums'
+import DownloadIcon from '@mui/icons-material/Download'
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
+import { Box, Button, Tab, Tabs, Typography } from '@mui/material'
+import classNames from 'classnames'
+import { UserSession } from 'next-auth'
+import { useTranslations } from 'next-intl'
+import dynamic from 'next/dynamic'
+import Link from 'next/link'
+import { SyntheticEvent, useMemo, useState } from 'react'
+import styles from './AllResults.module.css'
 import { a11yProps, ChartType, defaultChartOrder, tabsLabels } from './utils'
+
+const FeedbackModal = dynamic(() => import('./FeedbackModal'))
 
 interface Props {
   setSite: (site: string) => void
@@ -55,6 +57,7 @@ interface Props {
   chartOrder?: Record<ChartType, number>
   emissionFactorsWithPart?: EmissionFactorWithParts[]
   showSubLevel?: boolean
+  user?: UserSession
 }
 
 const AllResults = ({
@@ -69,10 +72,11 @@ const AllResults = ({
   chartOrder = defaultChartOrder,
   emissionFactorsWithPart = [],
   showSubLevel = false,
+  user,
 }: Props) => {
   const [tabValue, setTabValue] = useState(0)
   const [pdfLoading, setPdfLoading] = useState(false)
-
+  const [openFeedback, setOpenFeedback] = useState(false)
   const { environment } = useAppEnvironmentStore()
 
   const handleChange = (_event: SyntheticEvent, newValue: number) => {
@@ -128,6 +132,11 @@ const AllResults = ({
       descriptionColor="primary"
       rightComponent={
         <div className="flex gapped align-center">
+          {environment && hasAccessToFeedbackButton(environment) && (
+            <Button variant="outlined" color="primary" size="large" onClick={() => setOpenFeedback(true)}>
+              {tResults('feedback.button')}
+            </Button>
+          )}
           <Button
             variant="contained"
             color="primary"
@@ -269,6 +278,14 @@ const AllResults = ({
               <CarbonIntensitiesCut study={study} studySite={studySite} withDepValue={totalValue} />
             </TabPanel>
           ) : null}
+          {environment && hasAccessToFeedbackButton(environment) && user && openFeedback && (
+            <FeedbackModal
+              user={user}
+              organizationName={study.organizationVersion.organization.name}
+              open={openFeedback}
+              setOpen={setOpenFeedback}
+            />
+          )}
         </Box>
       </Box>
     </Block>

@@ -4,16 +4,15 @@ import ScopeSelectors, { TagFamily } from '@/components/form/ScopeSelectors'
 import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
 import { AddActionFormCommand } from '@/services/serverFunctions/action.command'
-import { getYearFromDateStr } from '@/utils/time'
+import type { StudyResultUnit } from '@abc-transitionbascarbone/db-common'
+import { ActionPotentialDeduction, SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { getYearFromDateStr } from '@abc-transitionbascarbone/utils/time'
 import { MenuItem } from '@mui/material'
-import type { StudyResultUnit } from '@repo/db-common'
-import { ActionPotentialDeduction, SubPost } from '@repo/db-common/enums'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
 import { useEffect } from 'react'
 import { Control, FieldErrors, UseFormGetValues, UseFormSetValue, useWatch } from 'react-hook-form'
-import textUnitStyles from '../../../dynamic-form/inputFields/TextUnitInput.module.css'
 import styles from './ActionModal.module.css'
 import ActionStepsList from './ActionStepsList'
 
@@ -90,7 +89,7 @@ const ActionModalStep1 = ({ studyUnit, control, setValue, errors, sites, tagFami
               type="number"
               control={control}
               name="reductionValue"
-              endAdornment={<div className={textUnitStyles.unit}>{tUnit(studyUnit)}</div>}
+              endAdornment={<div className="unit">{tUnit(studyUnit)}</div>}
               data-testid="add-action-reductionValue"
             />
           </div>

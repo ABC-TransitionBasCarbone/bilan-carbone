@@ -14,15 +14,14 @@ import {
 } from '@/services/serverFunctions/transitionPlan.command'
 import type { PastStudy } from '@/types/trajectory.types'
 import { convertValue } from '@/utils/study'
+import { StudyResultUnit } from '@abc-transitionbascarbone/db-common/enums'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
-import { StudyResultUnit } from '@repo/db-common/enums'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import textUnitStyles from '../../dynamic-form/inputFields/TextUnitInput.module.css'
 
 type PastStudyType = PastStudy['type']
 
@@ -224,7 +223,7 @@ const LinkingStudyModal = ({
                     }}
                     fullWidth
                   />
-                  <div className={textUnitStyles.unit}>{tUnit(studyUnit)}</div>
+                  <div className="unit">{tUnit(studyUnit)}</div>
                 </div>
               </div>
               <div className="mt1 justify-end">

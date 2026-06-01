@@ -6,8 +6,8 @@ import {
   changeDeactivableFeatureRestriction,
   changeDeactivableFeatureStatus,
 } from '@/services/serverFunctions/deactivableFeatures'
+import { DeactivatableFeature, Environment, UserSource } from '@abc-transitionbascarbone/db-common/enums'
 import { FormControl, FormControlLabel, FormLabel, Switch } from '@mui/material'
-import { DeactivatableFeature, Environment, UserSource } from '@repo/db-common/enums'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 

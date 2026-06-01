@@ -1,5 +1,5 @@
+import { Button } from '@abc-transitionbascarbone/ui'
 import { ButtonProps, CircularProgress } from '@mui/material'
-import { Button } from '@repo/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import styles from './LoadingButton.module.css'
@@ -9,9 +9,18 @@ export interface Props {
   loading: boolean
   iconButton?: boolean
   fullWidth?: boolean
+  isLarge?: boolean
 }
 
-const LoadingButton = ({ children, loading, disabled, iconButton, fullWidth, ...rest }: Props & ButtonProps) => {
+const LoadingButton = ({
+  children,
+  loading,
+  disabled,
+  iconButton,
+  fullWidth,
+  isLarge,
+  ...rest
+}: Props & ButtonProps) => {
   const t = useTranslations('spinner')
   const endIcon = loading ? undefined : rest.endIcon
   return (
@@ -19,6 +28,7 @@ const LoadingButton = ({ children, loading, disabled, iconButton, fullWidth, ...
       disabled={disabled || loading}
       className={!fullWidth ? styles.buttonFitContent : undefined}
       fullWidth={fullWidth}
+      isLarge={isLarge}
       {...rest}
       endIcon={endIcon}
     >

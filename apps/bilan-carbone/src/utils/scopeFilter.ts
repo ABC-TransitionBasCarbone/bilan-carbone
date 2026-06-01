@@ -1,4 +1,4 @@
-import { SubPost } from '@repo/db-common/enums'
+import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
 
 const filtersMatcheScope = (scope: string[], filters: string[]): boolean => {
   return scope.some((id) => filters.includes(id))
@@ -38,4 +38,35 @@ export const scopeMatchesUIFilters = (
   }
 
   return true
+}
+
+/**
+ * Update and clean localStorage when filters are changed
+ */
+export const resolveFilterIds = (
+  stored: string[],
+  currentValidIds: string[],
+  allKey: string,
+  filterKey: string,
+): string[] | null => {
+  const storedAllRaw = localStorage.getItem(allKey)
+  const storedAll: string[] = storedAllRaw ? (JSON.parse(storedAllRaw) as string[]) : []
+
+  const wasSelectAll = storedAll.length > 0 && storedAll.every((id) => stored.includes(id))
+  if (wasSelectAll) {
+    localStorage.removeItem(filterKey)
+    localStorage.removeItem(allKey)
+    return null
+  }
+
+  const validIds = stored.filter((id) => currentValidIds.includes(id))
+  if (validIds.length === 0) {
+    localStorage.removeItem(filterKey)
+    localStorage.removeItem(allKey)
+    return null
+  }
+  if (validIds.length < stored.length) {
+    localStorage.setItem(filterKey, JSON.stringify(validIds))
+  }
+  return validIds
 }

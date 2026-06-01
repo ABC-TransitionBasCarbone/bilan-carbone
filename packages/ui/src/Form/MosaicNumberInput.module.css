@@ -1,0 +1,68 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-radius: 0.75rem;
+  border: 2px solid #cdd9f8;
+  background-color: white;
+  padding: 0.5rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  width: fit-content;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+
+  @media (min-width: 768px) {
+    font-size: 1.25rem;
+  }
+}
+
+.description {
+  margin: 0;
+  font-size: 0.75rem;
+  font-style: italic;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+}
+
+.button {
+  z-index: 10;
+  height: 2rem !important;
+  width: 2rem !important;
+  min-width: 2rem !important;
+  padding: 0 !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px !important;
+  background-color: #4949ba;
+}
+
+.input {
+  width: 2rem;
+  text-align: center;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+
+  -moz-appearance: textfield;
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}

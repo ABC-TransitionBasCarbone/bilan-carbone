@@ -1,7 +1,7 @@
 'use server'
 
-import { DefaultStudyTagMap, DefaultStudyTagNames } from '@/constants/studyTags'
-import { AccountWithUser, getAccountById } from '@/db/account'
+import { DefaultStudyTagMap, DefaultStudyTagNames } from '@/constants/tag.constants'
+import { getAccountById } from '@/db/account'
 import { getEmissionFactorById } from '@/db/emissionFactors'
 import {
   createEmissionSourceOnStudy,
@@ -16,10 +16,11 @@ import {
   upsertTagFamilyById,
 } from '@/db/emissionSource'
 import { getStudyById } from '@/db/study'
+import { AccountWithUser } from '@/types/account.types'
 import { withServerResponse } from '@/utils/serverResponse'
 import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
-import type { Prisma, StudyTag } from '@repo/db-common'
-import { Import, SubPost, UserChecklist } from '@repo/db-common/enums'
+import type { Prisma, StudyTag } from '@abc-transitionbascarbone/db-common'
+import { Import, SubPost, UserChecklist } from '@abc-transitionbascarbone/db-common/enums'
 import { revalidatePath } from 'next/cache'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
@@ -60,10 +61,11 @@ export const createEmissionSource = async ({
     ])
 
     if (
-      emissionFactor?.version?.id &&
-      !study?.emissionFactorVersions
-        .map((emissionFactorVersion) => emissionFactorVersion.importVersionId)
-        .includes(emissionFactor.version.id)
+      emissionFactor &&
+      emissionFactor.versions.length > 0 &&
+      !emissionFactor.versions.some((v) =>
+        study?.emissionFactorVersions.map((sv) => sv.importVersionId).includes(v.importVersionId),
+      )
     ) {
       throw new Error(NOT_AUTHORIZED)
     }
@@ -113,10 +115,11 @@ export const updateEmissionSource = async ({
     }
 
     if (
-      emissionFactor?.version?.id &&
-      !study.emissionFactorVersions
-        .map((emissionFactorVersion) => emissionFactorVersion.importVersionId)
-        .includes(emissionFactor.version.id)
+      emissionFactor &&
+      emissionFactor.versions.length > 0 &&
+      !emissionFactor.versions.some((v) =>
+        study.emissionFactorVersions.map((sv) => sv.importVersionId).includes(v.importVersionId),
+      )
     ) {
       throw new Error(NOT_AUTHORIZED)
     }

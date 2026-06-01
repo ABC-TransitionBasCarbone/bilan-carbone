@@ -2,7 +2,7 @@
 
 import { OrganizationWithSites } from '@/db/account'
 import { canDeleteOrganizationVersion, canUpdateOrganizationVersion } from '@/services/permissions/organization'
-import { Environment } from '@repo/db-common/enums'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'

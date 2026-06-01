@@ -1,7 +1,11 @@
 import type { ActionWithRelations, ObjectiveWithScope, TransitionPlanWithRelations } from '@/types/trajectory.types'
+import type { ExternalStudy, Trajectory, TransitionPlanStudy } from '@abc-transitionbascarbone/db-common'
+import {
+  ActionIndicatorType,
+  ActionPotentialDeduction,
+  TrajectoryType,
+} from '@abc-transitionbascarbone/db-common/enums'
 import { expect } from '@jest/globals'
-import type { ExternalStudy, Trajectory, TransitionPlanStudy } from '@repo/db-common'
-import { ActionIndicatorType, ActionPotentialDeduction, TrajectoryType } from '@repo/db-common/enums'
 import { duplicateTransitionPlanWithRelations } from './transitionPlan'
 
 const mockTx = {

@@ -43,6 +43,7 @@ général . type:
     - Autres structures sociales et solidaires
     - Association de défense de l'environnement
     - Association d'enseignement ou de formation
+    - Autre
   avec:
     Club de loisirs:
     Association étudiante:
@@ -55,3 +56,8 @@ général . type:
     Autres structures sociales et solidaires:
     Association de défense de l'environnement:
     Association d'enseignement ou de formation:
+    Autre:
+
+général . type autre:
+  applicable si: général . type = 'Autre'
+  question: Précisez le type de structure

@@ -1,5 +1,5 @@
 import { SUBPOSTS_PUBLICODE_FROM_ENV } from '@/environments/core/publicodes/subposts'
-import { Environment, SubPost } from '@repo/db-common/enums'
+import { Environment, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { BCPost, ClicksonPost, CutPost, TiltPost } from './posts.enums'
 
 // Re-export enums for backward compatibility

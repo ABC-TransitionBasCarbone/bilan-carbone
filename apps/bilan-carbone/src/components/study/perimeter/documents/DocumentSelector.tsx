@@ -1,7 +1,7 @@
 'use client'
 
+import { Document } from '@abc-transitionbascarbone/db-common'
 import { MenuItem, Select } from '@mui/material'
-import { Document } from '@repo/db-common'
 
 interface Props {
   documents: Document[]

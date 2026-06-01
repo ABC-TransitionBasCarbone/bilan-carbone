@@ -1,4 +1,4 @@
-import withAuth from '@/components/hoc/withAuth'
+import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import { StudyProps } from '@/components/hoc/withStudy'
 import withStudyDetails from '@/components/hoc/withStudyDetails'
 import NotFound from '@/components/pages/NotFound'
@@ -7,7 +7,7 @@ import { getEmissionFactorsWithPartsInIds } from '@/db/emissionFactors'
 import { getExportRules } from '@/db/exportRule'
 import { getUserSettings } from '@/services/serverFunctions/user'
 
-const ResultatsPages = async ({ study }: StudyProps) => {
+const ResultatsPages = async ({ study, user }: StudyProps & UserSessionProps) => {
   const ids = study.emissionSources
     .map((emissionSource) => emissionSource.emissionFactor?.id)
     .filter((id) => id !== undefined)
@@ -26,6 +26,7 @@ const ResultatsPages = async ({ study }: StudyProps) => {
     <ResultsPage
       study={study}
       rules={rules}
+      user={user}
       emissionFactorsWithParts={emissionFactorsWithParts}
       validatedOnly={!!userSettings?.data?.validatedEmissionSourcesOnly}
       caUnit={userSettings.data?.caUnit}

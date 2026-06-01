@@ -1,4 +1,4 @@
-import { Environment } from '@repo/db-common/enums'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { CLICKS_ON_ACT_INFO, getStudyNavbarMenu } from './navbar'
 
 describe('getStudyNavbarMenu', () => {

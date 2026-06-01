@@ -1,5 +1,4 @@
 import { DataType } from '@/components/study/transitionPlan/TrajectoryGraph'
-import { LineSeriesType } from '@mui/x-charts'
 import type {
   Action,
   ActionIndicator,
@@ -18,7 +17,8 @@ import type {
   Trajectory,
   TransitionPlan,
   TransitionPlanStudy,
-} from '@repo/db-common'
+} from '@abc-transitionbascarbone/db-common'
+import { LineSeriesType } from '@mui/x-charts'
 
 export interface TrajectoryDataPoint {
   year: number

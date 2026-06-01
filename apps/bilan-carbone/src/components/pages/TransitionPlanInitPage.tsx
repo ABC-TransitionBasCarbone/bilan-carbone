@@ -31,17 +31,18 @@ import {
 import { ObjectiveGroup, TrajectoryWithObjectivesAndScope } from '@/types/trajectory.types'
 import { compareSectenVersions } from '@/utils/secten'
 import { calculateSectoralSNBCReductionRates, getDefaultSnbcSectoralTrajectory } from '@/utils/snbc'
+import { getAllTagIds } from '@/utils/tag.utils'
 import { getInitialCurrentStep, readStoredStringArray } from '@/utils/transitionPlan.utils'
+import type { ExternalStudy, SectenInfo, SectenVersion, TransitionPlan } from '@abc-transitionbascarbone/db-common'
+import { TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
+import { Button } from '@abc-transitionbascarbone/ui'
 import DeleteIcon from '@mui/icons-material/Delete'
-import type { ExternalStudy, SectenInfo, SectenVersion, TransitionPlan } from '@repo/db-common'
-import { TrajectoryType } from '@repo/db-common/enums'
-import { Button } from '@repo/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ReferenceTrajectorySelectionSection } from '../study/transitionPlan/ReferenceTrajectorySelectionSection'
 import TransitionPlanOnboarding from '../study/transitionPlan/TransitionPlanOnboarding'
 import styles from './TransitionPlanInitPage.module.css'
@@ -80,6 +81,8 @@ const TransitionPlanInitPage = ({
   latestSectenVersion,
   isSectenOutdated,
 }: Props) => {
+  'use memo'
+
   const t = useTranslations('study.transitionPlan')
   const tDocumentation = useTranslations('documentationUrl')
   const tBlock = useTranslations('study.transitionPlan.initialization.sectorBlock')
@@ -101,6 +104,9 @@ const TransitionPlanInitPage = ({
   const [selectedSbtiTrajectories, setSelectedSbtiTrajectories] = useState<string[]>(
     () => readStoredStringArray(`trajectory-sbti-selected-${study.id}`) ?? [TRAJECTORY_15_ID],
   )
+  const allTagIds = getAllTagIds(study.tagFamilies)
+  const allSiteIds = study.sites.map((s) => s.site.id)
+
   const {
     selectedSiteIds,
     selectedSubPosts,
@@ -109,60 +115,47 @@ const TransitionPlanInitPage = ({
     setSelectedSiteIds,
     setSelectedSubPosts,
     setSelectedTagIds,
-  } = useTransitionPlanFilters(study.id)
+  } = useTransitionPlanFilters(study.id, allTagIds, allSiteIds)
 
   const storageKey = `transition-init-step-${study.id}`
   const snbcStorageKey = `trajectory-snbc-selected-${study.id}`
   const sbtiStorageKey = `trajectory-sbti-selected-${study.id}`
   const isComplete = currentStep === 'complete'
-  const defaultSnbcSectoralTrajectory = useMemo(() => getDefaultSnbcSectoralTrajectory(trajectories), [trajectories])
-  const validSnbcIds = useMemo(
-    () =>
-      new Set([
-        TRAJECTORY_SNBC_GENERAL_ID,
-        ...SECTEN_SECTORS,
-        ...(defaultSnbcSectoralTrajectory ? [defaultSnbcSectoralTrajectory.id] : []),
-      ]),
-    [defaultSnbcSectoralTrajectory],
+  const defaultSnbcSectoralTrajectory = getDefaultSnbcSectoralTrajectory(trajectories)
+  const validSnbcIds = new Set([
+    TRAJECTORY_SNBC_GENERAL_ID,
+    ...SECTEN_SECTORS,
+    ...(defaultSnbcSectoralTrajectory ? [defaultSnbcSectoralTrajectory.id] : []),
+  ])
+  const sanitizedSelectedSnbcTrajectories = selectedSnbcTrajectories.filter(
+    (id) => id !== 'sectoral' && validSnbcIds.has(id),
   )
-  const sanitizedSelectedSnbcTrajectories = useMemo(
-    () => selectedSnbcTrajectories.filter((id) => id !== 'sectoral' && validSnbcIds.has(id)),
-    [selectedSnbcTrajectories, validSnbcIds],
-  )
-  const sanitizedSelectedSbtiTrajectories = useMemo(
-    () =>
-      selectedSbtiTrajectories.filter((id) => SBTI_TRAJECTORY_IDS.includes(id as (typeof SBTI_TRAJECTORY_IDS)[number])),
-    [selectedSbtiTrajectories],
+  const sanitizedSelectedSbtiTrajectories = selectedSbtiTrajectories.filter((id) =>
+    SBTI_TRAJECTORY_IDS.includes(id as (typeof SBTI_TRAJECTORY_IDS)[number]),
   )
 
-  const handleConfirmPlanSelection = useCallback(
-    async (selectedPlanId?: string) => {
-      await callServerFunction(() => initializeTransitionPlan(study.id, selectedPlanId), {
-        onSuccess: async () => {
-          setShowModal(false)
-          setIsLoading(true)
-          router.refresh()
-        },
-      })
-    },
-    [callServerFunction, study.id, router],
-  )
+  const handleConfirmPlanSelection = async (selectedPlanId?: string) => {
+    await callServerFunction(() => initializeTransitionPlan(study.id, selectedPlanId), {
+      onSuccess: async () => {
+        setShowModal(false)
+        setIsLoading(true)
+        router.refresh()
+      },
+    })
+  }
 
-  const validateStep = useCallback(
-    (step: number) => {
-      if (canEdit && !isComplete) {
-        const next = step + 1
-        if (next >= TOTAL_STEPS) {
-          localStorage.setItem(storageKey, 'complete')
-          setCurrentStep('complete')
-        } else {
-          localStorage.setItem(storageKey, String(next))
-          setCurrentStep(next)
-        }
+  const validateStep = (step: number) => {
+    if (canEdit && !isComplete) {
+      const next = step + 1
+      if (next >= TOTAL_STEPS) {
+        localStorage.setItem(storageKey, 'complete')
+        setCurrentStep('complete')
+      } else {
+        localStorage.setItem(storageKey, String(next))
+        setCurrentStep(next)
       }
-    },
-    [storageKey, canEdit, isComplete],
-  )
+    }
+  }
 
   const isStepVisible = (step: number) => {
     if (isComplete) {
@@ -212,17 +205,14 @@ const TransitionPlanInitPage = ({
     }
   }, [transitionPlan, storageKey, snbcStorageKey, sbtiStorageKey, study.id])
 
-  const handleSnbcTrajectoriesChange = useCallback(
-    (next: string[]) => {
-      setSelectedSnbcTrajectories(next.filter((id) => validSnbcIds.has(id)))
-    },
-    [validSnbcIds],
-  )
-  const handleSbtiTrajectoriesChange = useCallback((next: string[]) => {
+  const handleSnbcTrajectoriesChange = (next: string[]) => {
+    setSelectedSnbcTrajectories(next.filter((id) => validSnbcIds.has(id)))
+  }
+  const handleSbtiTrajectoriesChange = (next: string[]) => {
     setSelectedSbtiTrajectories(
       next.filter((id) => SBTI_TRAJECTORY_IDS.includes(id as (typeof SBTI_TRAJECTORY_IDS)[number])),
     )
-  }, [])
+  }
 
   const { pastStudies, studyTotalEmissions, filteredStudyEmissions, filteredPastStudies } = useTransitionPlan({
     study,
@@ -234,23 +224,23 @@ const TransitionPlanInitPage = ({
     selectedTagIds,
   })
 
-  const handleConfirmDelete = useCallback(async () => {
+  const handleConfirmDelete = async () => {
     await callServerFunction(() => deleteTransitionPlan(study.id), {
       onSuccess: async () => {
         setShowDeleteModal(false)
         router.refresh()
       },
     })
-  }, [callServerFunction, study.id, router])
+  }
 
-  const handleOpenSectenUpdateModal = useCallback(() => {
+  const handleOpenSectenUpdateModal = () => {
     if (!latestSectenVersion) {
       return
     }
     setShowSectenUpdateModal(true)
-  }, [latestSectenVersion])
+  }
 
-  const handleConfirmSectenUpdate = useCallback(async () => {
+  const handleConfirmSectenUpdate = async () => {
     if (!transitionPlan || !latestSectenVersion) {
       return
     }
@@ -262,74 +252,61 @@ const TransitionPlanInitPage = ({
       },
     })
     setIsSectenUpdateLoading(false)
-  }, [transitionPlan, latestSectenVersion, callServerFunction, router])
+  }
 
-  const handleSaveTrajectory = useCallback(
-    async (sectorPercentages: SectorPercentages) => {
-      if (!transitionPlan) {
-        return
+  const handleSaveTrajectory = async (sectorPercentages: SectorPercentages) => {
+    if (!transitionPlan) {
+      return
+    }
+
+    const rates = calculateSectoralSNBCReductionRates(
+      {
+        studyEmissions: studyTotalEmissions,
+        studyStartYear: study.startDate.getFullYear(),
+        sectenData,
+        pastStudies,
+      },
+      sectorPercentages,
+    )
+
+    const objectives: { targetYear: number; reductionRate: number }[] = []
+    if (rates) {
+      if (rates.rateTo2015 !== undefined) {
+        objectives.push({ targetYear: 2015, reductionRate: rates.rateTo2015 })
       }
+      objectives.push({ targetYear: 2030, reductionRate: rates.rateTo2030 })
+      objectives.push({ targetYear: 2050, reductionRate: rates.rateTo2050 })
+    }
 
-      const rates = calculateSectoralSNBCReductionRates(
-        {
-          studyEmissions: studyTotalEmissions,
-          studyStartYear: study.startDate.getFullYear(),
-          sectenData,
-          pastStudies,
-        },
-        sectorPercentages,
+    if (defaultSnbcSectoralTrajectory) {
+      const defaultObjectives = defaultSnbcSectoralTrajectory.objectives.filter((obj) => obj.isDefault)
+      await callServerFunction(
+        () =>
+          updateTrajectory(defaultSnbcSectoralTrajectory.id, {
+            sectorPercentages,
+            objectives: objectives.map((obj, index) => ({
+              id: defaultObjectives[index]?.id,
+              targetYear: obj.targetYear,
+              reductionRate: Number(obj.reductionRate.toFixed(4)),
+            })),
+          }),
+        { onSuccess: () => router.refresh() },
       )
-
-      const objectives: { targetYear: number; reductionRate: number }[] = []
-      if (rates) {
-        if (rates.rateTo2015 !== undefined) {
-          objectives.push({ targetYear: 2015, reductionRate: rates.rateTo2015 })
-        }
-        objectives.push({ targetYear: 2030, reductionRate: rates.rateTo2030 })
-        objectives.push({ targetYear: 2050, reductionRate: rates.rateTo2050 })
-      }
-
-      if (defaultSnbcSectoralTrajectory) {
-        const defaultObjectives = defaultSnbcSectoralTrajectory.objectives.filter((obj) => obj.isDefault)
-        await callServerFunction(
-          () =>
-            updateTrajectory(defaultSnbcSectoralTrajectory.id, {
-              sectorPercentages,
-              objectives: objectives.map((obj, index) => ({
-                id: defaultObjectives[index]?.id,
-                targetYear: obj.targetYear,
-                reductionRate: Number(obj.reductionRate.toFixed(4)),
-              })),
-            }),
-          { onSuccess: () => router.refresh() },
-        )
-      } else {
-        await callServerFunction(
-          () =>
-            createTrajectoryWithObjectives({
-              transitionPlanId: transitionPlan.id,
-              name: tBlock('snbcSectorialName'),
-              type: TrajectoryType.SNBC_SECTORAL,
-              sectorPercentages,
-              isDefault: true,
-              objectives,
-            }),
-          { onSuccess: () => router.refresh() },
-        )
-      }
-    },
-    [
-      transitionPlan,
-      defaultSnbcSectoralTrajectory,
-      studyTotalEmissions,
-      study.startDate,
-      sectenData,
-      pastStudies,
-      callServerFunction,
-      tBlock,
-      router,
-    ],
-  )
+    } else {
+      await callServerFunction(
+        () =>
+          createTrajectoryWithObjectives({
+            transitionPlanId: transitionPlan.id,
+            name: tBlock('snbcSectorialName'),
+            type: TrajectoryType.SNBC_SECTORAL,
+            sectorPercentages,
+            isDefault: true,
+            objectives,
+          }),
+        { onSuccess: () => router.refresh() },
+      )
+    }
+  }
 
   if (!transitionPlan) {
     if (canEdit) {

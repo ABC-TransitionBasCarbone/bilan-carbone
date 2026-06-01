@@ -12,6 +12,7 @@ describe('Create emission factor', () => {
 
     cy.getByTestId('navbar-facteur-demission').click({ force: true })
 
+    cy.getByTestId('emission-factors-menu').click({ force: true })
     cy.getByTestId('new-emission').click({ force: true })
 
     cy.getByTestId('emission-factor-name').type('My new FE')
@@ -58,6 +59,7 @@ describe('Create emission factor', () => {
     cy.login()
     cy.getByTestId('navbar-facteur-demission').click()
 
+    cy.getByTestId('emission-factors-menu').click({ force: true })
     cy.getByTestId('new-emission').click({ force: true })
 
     cy.getByTestId('emission-factor-name').type('My new detailed FE')
@@ -128,6 +130,7 @@ describe('Create emission factor', () => {
     cy.login()
     cy.getByTestId('navbar-facteur-demission').click()
 
+    cy.getByTestId('emission-factors-menu').click({ force: true })
     cy.getByTestId('new-emission').click({ force: true })
 
     cy.getByTestId('emission-factor-name').type('My new multiple FE')
@@ -201,6 +204,7 @@ describe('Create emission factor', () => {
     cy.login()
     cy.getByTestId('navbar-facteur-demission').click()
 
+    cy.getByTestId('emission-factors-menu').click({ force: true })
     cy.getByTestId('new-emission').click({ force: true })
 
     cy.getByTestId('emission-factor-name').type('My new multiple detailed FE')
@@ -299,6 +303,7 @@ describe('Create emission factor', () => {
     cy.login()
     cy.getByTestId('navbar-facteur-demission').click()
 
+    cy.getByTestId('emission-factors-menu').click({ force: true })
     cy.getByTestId('new-emission').click({ force: true })
 
     cy.getByTestId('emission-part-0-header').should('not.exist')
@@ -371,6 +376,7 @@ describe('Create emission factor', () => {
     cy.login()
     cy.getByTestId('navbar-facteur-demission').click()
 
+    cy.getByTestId('emission-factors-menu').click({ force: true })
     cy.getByTestId('new-emission').click({ force: true })
 
     cy.getByTestId('emission-factor-name').type('My new FE without parts')

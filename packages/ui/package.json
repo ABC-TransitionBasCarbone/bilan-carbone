@@ -1,5 +1,5 @@
 {
-  "name": "@repo/ui",
+  "name": "@abc-transitionbascarbone/ui",
   "version": "0.0.1",
   "private": true,
   "main": "src/index.ts",
@@ -7,5 +7,8 @@
   "peerDependencies": {
     "react": "*",
     "@mui/material": "*"
+  },
+  "dependencies": {
+    "@abc-transitionbascarbone/utils": "*"
   }
 }

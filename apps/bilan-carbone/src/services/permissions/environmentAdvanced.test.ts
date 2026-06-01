@@ -1,4 +1,4 @@
-import { Environment, Level } from '@repo/db-common/enums'
+import { Environment, Level } from '@abc-transitionbascarbone/db-common/enums'
 import { hasAccessToEmissionFactors } from './environmentAdvanced'
 
 describe('environmentAdvanced permissions', () => {

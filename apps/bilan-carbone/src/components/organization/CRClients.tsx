@@ -1,7 +1,7 @@
 'use client'
 
 import { OrganizationVersionWithOrganization } from '@/db/organization'
-import { Button } from '@repo/ui'
+import { Button } from '@abc-transitionbascarbone/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useRef, useState } from 'react'

@@ -5,9 +5,9 @@ import { getEnvVarClient } from '@/lib/environmentClient'
 import { getEnvRoute } from '@/services/email/utils'
 import { signUpWithSiretOrCNC } from '@/services/serverFunctions/user'
 import { SignUpTiltCommand, SignUpTiltCommandValidation } from '@/services/serverFunctions/user.command'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl } from '@mui/material'
-import { Environment } from '@repo/db-common/enums'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -31,13 +31,6 @@ const SignUpFormTilt = () => {
 
   const searchParams = useSearchParams()
 
-  useEffect(() => {
-    const email = searchParams.get('email')
-    if (email) {
-      setValue('email', email)
-    }
-  }, [searchParams])
-
   const { control, getValues, setValue, handleSubmit } = useForm<SignUpTiltCommand>({
     resolver: zodResolver(SignUpTiltCommandValidation),
     mode: 'onBlur',
@@ -46,6 +39,13 @@ const SignUpFormTilt = () => {
       email: searchParams.get('email') ?? '',
     },
   })
+
+  useEffect(() => {
+    const email = searchParams.get('email')
+    if (email) {
+      setValue('email', email)
+    }
+  }, [searchParams, setValue])
 
   const onSubmit = async () => {
     setMessage('')

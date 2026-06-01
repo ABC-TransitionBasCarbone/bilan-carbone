@@ -11,7 +11,7 @@ import type {
   TransitionPlanWithRelations,
   TransitionPlanWithStudies,
 } from '@/types/trajectory.types'
-import { Prisma, SubPost, TransitionPlan } from '@repo/db-common'
+import { Prisma, SubPost, TransitionPlan } from '@abc-transitionbascarbone/db-common'
 import { prismaClient } from './client.server'
 
 const actionInclude = {

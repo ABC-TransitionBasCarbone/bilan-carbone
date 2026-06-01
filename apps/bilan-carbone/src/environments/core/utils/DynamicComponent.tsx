@@ -3,7 +3,7 @@
 import { EnvironmentMode } from '@/constants/environments'
 import { isAdvanced, isSimplified } from '@/services/permissions/environment'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
-import { Environment } from '@repo/db-common/enums'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { ReactNode } from 'react'
 import EnvironmentLoader from './EnvironmentLoader'
 

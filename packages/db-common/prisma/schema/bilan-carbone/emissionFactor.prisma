@@ -224,12 +224,11 @@ enum EmissionFactorBase {
 }
 
 model EmissionFactorImportVersion {
-  id       String @id @default(uuid())
-  internId String @map("intern_id")
-  source   Import
-  name     String
+  id     String @id @default(uuid())
+  source Import
+  name   String // Version like 23.7
 
-  emissionFactors             EmissionFactor[]
+  emissionFactorVersions      EmissionFactorVersion[]
   studyEmissionFactorVersions StudyEmissionFactorVersion[]
 
   archived Boolean @default(false)
@@ -237,8 +236,22 @@ model EmissionFactorImportVersion {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
-  @@unique([source, internId])
+  @@unique([source, name])
   @@map("emission_factor_import_version")
+  @@schema("bilan_carbone")
+}
+
+// Link table between EmissionFactor and EmissionFactorImportVersion
+model EmissionFactorVersion {
+  emissionFactorId String         @map("emission_factor_id")
+  emissionFactor   EmissionFactor @relation(fields: [emissionFactorId], references: [id])
+  importVersionId  String         @map("import_version_id")
+  importVersion    EmissionFactorImportVersion @relation(fields: [importVersionId], references: [id])
+  createdAt        DateTime       @default(now()) @map("created_at")
+
+  @@id([emissionFactorId, importVersionId])
+  @@index([importVersionId])
+  @@map("emission_factor_versions")
   @@schema("bilan_carbone")
 }
 
@@ -250,8 +263,7 @@ model EmissionFactor {
 
   oldBCId String? @map("old_bc_id")
 
-  versionId String?                      @map("version_id")
-  version   EmissionFactorImportVersion? @relation(fields: [versionId], references: [id])
+  versions EmissionFactorVersion[]
 
   importedFrom   Import        @map("imported_from")
   importedId     String?       @map("imported_id")
@@ -284,6 +296,9 @@ model EmissionFactor {
   unit       Unit?
   customUnit String?
   isMonetary Boolean @map("is_monetary")
+
+  importedRawCsv String? @map("imported_raw_csv")
+  overrideRawCsv String? @map("override_raw_csv")
 
   subPosts            SubPost[]             @map("sub_posts")
   studyEmissionSource StudyEmissionSource[]
@@ -337,6 +352,9 @@ model EmissionFactorPart {
   hfc      Float?
   pfc      Float?
   otherGES Float? @map("other_ges")
+
+  importedRawCsv String? @map("imported_raw_csv")
+  overrideRawCsv String? @map("override_raw_csv")
 
   @@map("emission_factor_parts")
   @@schema("bilan_carbone")

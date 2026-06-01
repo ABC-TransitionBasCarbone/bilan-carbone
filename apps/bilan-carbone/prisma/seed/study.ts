@@ -1,4 +1,5 @@
-import { getEmissionFactorsFromCSV } from '@/services/importEmissionFactor/baseEmpreinte/getEmissionFactorsFromCSV'
+import { mapBaseEmpreinteEmissionFactors } from '@/services/importEmissionFactor/baseEmpreinte/import'
+import { getEmissionFactorsFromCSV } from '@/services/importEmissionFactor/getEmissionFactorsFromCSV'
 import { addSourceToStudies } from '@/services/importEmissionFactor/import'
 import {
   ControlMode,
@@ -12,10 +13,10 @@ import {
   StudyRole,
   SubPost,
   Unit,
-} from '@repo/db-common/enums'
+} from '@abc-transitionbascarbone/db-common/enums'
 
-import { PrismaClient } from '@repo/db-common'
-import type { Account } from '@repo/db-common/types'
+import { PrismaClient } from '@abc-transitionbascarbone/db-common'
+import type { Account } from '@abc-transitionbascarbone/db-common/types'
 
 const studyId = '91bb3826-2be7-4d56-bb9b-363f4d9af62f'
 const siteId = 'c3f2b8d4-7a0c-4b3f-8c5b-5b5e7b6f3e3b'
@@ -26,12 +27,18 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
     return null
   }
 
-  await getEmissionFactorsFromCSV('test', './prisma/seed/Base_Carbone_Test.csv')
+  await getEmissionFactorsFromCSV(
+    'test',
+    './prisma/seed/Base_Carbone_Test.csv',
+    Import.BaseEmpreinte,
+    mapBaseEmpreinteEmissionFactors,
+  )
+
   await prisma.emissionFactorImportVersion.createMany({
     data: [
-      { internId: 'Legifrance_Test.csv', name: 'test', source: Import.Legifrance },
-      { internId: 'Negaoctet_Test.csv', name: 'test', source: Import.NegaOctet },
-      { internId: 'AIB_Test.csv', name: 'test', source: Import.AIB },
+      { name: 'Legifrance_Test.csv', source: Import.Legifrance },
+      { name: 'Negaoctet_Test.csv', source: Import.NegaOctet },
+      { name: 'AIB_Test.csv', source: Import.AIB },
     ],
   })
 
@@ -55,13 +62,15 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
   })
 
   const version = await prisma.emissionFactorImportVersion.findFirst({
-    where: { internId: 'Base_Carbone_Test.csv', source: Import.BaseEmpreinte },
+    where: { name: 'test', source: Import.BaseEmpreinte },
   })
   if (!version) {
     return null
   }
 
-  const emissionFactors = await prisma.emissionFactor.findMany({ where: { versionId: version.id } })
+  const emissionFactors = await prisma.emissionFactor.findMany({
+    where: { versions: { some: { importVersionId: version.id } } },
+  })
 
   const papier = await prisma.emissionFactor.create({
     data: {
@@ -153,14 +162,19 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
 
   await prisma.userOnStudy.create({ data: { role: StudyRole.Validator, accountId: creator.id, studyId } })
 
+  const baseEmissionSource = {
+    studyId,
+    studySiteId,
+    type: EmissionSourceType.Physical,
+    validated: true,
+    reliability: 5,
+    source: 'Seed data',
+  }
+
   await prisma.studyEmissionSource.createMany({
     data: [
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Fioul domestique, France continentale, Base Carbone',
         subPost: SubPost.CombustiblesFossiles,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -168,11 +182,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '14087')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Plaquettes forestières sèches (25% humidité), France continentale, Base Carbone',
         subPost: SubPost.CombustiblesOrganiques,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -180,11 +190,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '34943')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: '2022 - mix moyen, France continentale, Base Carbone',
         subPost: SubPost.Electricite,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -192,11 +198,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '42513')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'photovoltaïque - fabrication Europe, France continentale, Base Carbone',
         subPost: SubPost.Electricite,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -204,11 +206,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '34721')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'R22 (HCFC-22), Base Carbone',
         subPost: SubPost.EmissionsLieesALaProductionDeFroid,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -216,11 +214,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '43119')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Action sociale, France continentale, Base Carbone',
         subPost: SubPost.ServicesEnApprocheMonetaire,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -228,11 +222,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '25029')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Activités des organisations associatives, France continentale, Base Carbone',
         subPost: SubPost.ServicesEnApprocheMonetaire,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -240,11 +230,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '25032')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Assurance, services bancaires, conseil et honoraires, France continentale, Base Carbone',
         subPost: SubPost.ServicesEnApprocheMonetaire,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -252,11 +238,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '24997')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Courrier, France continentale, Base Carbone',
         subPost: SubPost.ServicesEnApprocheMonetaire,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -264,11 +246,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '24998')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Enseignement, France continentale, Base Carbone',
         subPost: SubPost.ServicesEnApprocheMonetaire,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -276,11 +254,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '25026')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Hébergement et restauration, France continentale, Base Carbone',
         subPost: SubPost.ServicesEnApprocheMonetaire,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -288,11 +262,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '25000')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Machines et équipements, France continentale, Base Carbone',
         subPost: SubPost.ServicesEnApprocheMonetaire,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -300,11 +270,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '25022')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Meubles et autres biens manufacturés, France continentale, Base Carbone',
         subPost: SubPost.ServicesEnApprocheMonetaire,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -312,11 +278,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '25017')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Produits chimiques, France continentale, Base Carbone',
         subPost: SubPost.ServicesEnApprocheMonetaire,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -324,11 +286,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '25018')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: "Réparation et installation de machines et d'équipements, France continentale, Base Carbone",
         subPost: SubPost.ServicesEnApprocheMonetaire,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -336,11 +294,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '25004')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Services (imprimerie, publicité, architecture et ingénierie, maintenance multi-technique des bâtimen, France continentale, Base Carbone',
         subPost: SubPost.ServicesEnApprocheMonetaire,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -348,11 +302,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '25001')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Télécommunications, France continentale, Base Carbone',
         subPost: SubPost.ServicesEnApprocheMonetaire,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -360,11 +310,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '24999')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Transport terrestre, France continentale, Base Carbone',
         subPost: SubPost.ServicesEnApprocheMonetaire,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -372,11 +318,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '25005')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Acier ou fer blanc, France continentale, Base Carbone',
         subPost: SubPost.MetauxPlastiquesEtVerre,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -384,11 +326,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '26729')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Acier ou fer blanc, France continentale, Base Carbone - Fin de vie',
         subPost: SubPost.TraitementDesEmballagesEnFinDeVie,
         caracterisation: EmissionSourceCaracterisation.FinalClient,
@@ -396,11 +334,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '34462')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Films plastiques PET (pas recyclable), France continentale, Base Carbone',
         subPost: SubPost.MetauxPlastiquesEtVerre,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -408,11 +342,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '20835')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Films plastiques PET (pas recyclable), France continentale, Base Carbone - Fin de vie',
         subPost: SubPost.TraitementDesEmballagesEnFinDeVie,
         caracterisation: EmissionSourceCaracterisation.FinalClient,
@@ -420,11 +350,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '34496')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Bois courte durée de vie (ameublement…) fabrication, France continentale, Base Carbone',
         subPost: SubPost.AutresIntrants,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -432,11 +358,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '20908')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Bois courte durée de vie (ameublement…) fabrication, France continentale, Base Carbone - Fin de vie',
         subPost: SubPost.TraitementDesEmballagesEnFinDeVie,
         caracterisation: EmissionSourceCaracterisation.FinalClient,
@@ -444,11 +366,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '34678')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Papier Moyen, Hors utilisation et fin de vie, France continentale, Base Carbone',
         subPost: SubPost.PapiersCartons,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -456,11 +374,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '24309')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Papier Moyen, Hors utilisation et fin de vie, France continentale, Base Carbone - Fin de vie',
         subPost: SubPost.TraitementDesEmballagesEnFinDeVie,
         caracterisation: EmissionSourceCaracterisation.FinalClient,
@@ -468,11 +382,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: papier.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Carton - Fin de vie moyenne filière - impacts, France continentale, Base Carbone',
         subPost: SubPost.DechetsBatiments,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -480,11 +390,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '34486')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Papier/fin de vie moyenne, France continentale, Base Carbone',
         subPost: SubPost.DechetsBatiments,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -492,11 +398,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '22024')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Plastique souple PET pétrosourcé - Fin de vie moyenne filière - Impacts, France continentale, Base Carbone',
         subPost: SubPost.DechetsDEmballagesEtPlastiques,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -504,11 +406,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '34512')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Déchets non dangereux en mélange (DIB) - Fin de vie moyenne - Impacts, France continentale, Base Carbone',
         subPost: SubPost.DechetsBatiments,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -516,11 +414,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '34682')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Articulé, 34 à 40 T, diesel routier, 7% de biodiesel, France continentale, Base Carbone',
         subPost: SubPost.FretEntrant,
         caracterisation: EmissionSourceCaracterisation.NotOperatedSupported,
@@ -528,11 +422,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '28041')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Articulé, 34 à 40 T, diesel routier, 7% de biodiesel, France continentale, Base Carbone',
         subPost: SubPost.FretSortant,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -540,11 +430,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '28041')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Rigide, 12 à 20 T, diesel routier, 7% biodiesel, France continentale, Base Carbone',
         subPost: SubPost.FretSortant,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -552,11 +438,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '28033')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Porte-conteneurs, Dry, Europe - Afrique, France continentale, Base Carbone',
         subPost: SubPost.FretSortant,
         caracterisation: EmissionSourceCaracterisation.NotOperatedSupported,
@@ -564,11 +446,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '28205')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Porte-conteneurs, Dry, Europe - Amérique du Sud et Centrale, France continentale, Base Carbone',
         subPost: SubPost.FretSortant,
         caracterisation: EmissionSourceCaracterisation.NotOperatedSupported,
@@ -576,11 +454,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '28207')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Porte-conteneurs, Dry, Europe du Nord - Amérique du Nord, façade atlantique, France continentale, Base Carbone',
         subPost: SubPost.FretSortant,
         caracterisation: EmissionSourceCaracterisation.NotOperatedSupported,
@@ -588,11 +462,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '28218')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Porte-conteneurs, Dry, Europe - Océanie, France continentale, Base Carbone',
         subPost: SubPost.FretSortant,
         caracterisation: EmissionSourceCaracterisation.NotOperatedSupported,
@@ -600,11 +470,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '28211')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Porte-conteneurs, Dry, Intra Méditerranée, France continentale, Base Carbone',
         subPost: SubPost.FretSortant,
         caracterisation: EmissionSourceCaracterisation.NotOperatedSupported,
@@ -612,11 +478,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '28225')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Porte-conteneurs, Dry, Asie - Europe du Nord, France continentale, Base Carbone',
         subPost: SubPost.FretSortant,
         caracterisation: EmissionSourceCaracterisation.NotOperatedSupported,
@@ -624,11 +486,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '28203')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Voiture - motorisation essence - 2018, France continentale, Base Carbone',
         subPost: SubPost.DeplacementsDomicileTravail,
         caracterisation: EmissionSourceCaracterisation.NotOperated,
@@ -636,11 +494,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '27965')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Voiture - motorisation gazole - 2018, France continentale, Base Carbone',
         subPost: SubPost.DeplacementsDomicileTravail,
         caracterisation: EmissionSourceCaracterisation.NotOperated,
@@ -648,11 +502,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '27966')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Voiture particulière - cœur de gamme - véhicule compact - électrique, France continentale, Base Carbone',
         subPost: SubPost.DeplacementsDomicileTravail,
         caracterisation: EmissionSourceCaracterisation.NotOperated,
@@ -660,11 +510,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '28007')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Autobus moyen - agglomération de 100 000 à 250 000 habitants, France continentale, Base Carbone',
         subPost: SubPost.DeplacementsDomicileTravail,
         caracterisation: EmissionSourceCaracterisation.NotOperated,
@@ -672,11 +518,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '27999')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Métro, tramway, trolleybus - 2018 - Agglomération de 100 000 à 250 000 habitants, France continentale, Base Carbone',
         subPost: SubPost.DeplacementsDomicileTravail,
         caracterisation: EmissionSourceCaracterisation.NotOperated,
@@ -684,11 +526,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '28150')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'TER - 2021 - traction moyenne, France continentale, Base Carbone',
         subPost: SubPost.DeplacementsDomicileTravail,
         caracterisation: EmissionSourceCaracterisation.NotOperated,
@@ -696,11 +534,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '37141')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Voiture - motorisation essence - 2018, France continentale, Base Carbone',
         subPost: SubPost.DeplacementsProfessionnels,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -708,11 +542,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '27965')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Voiture - motorisation gazole - 2018, France continentale, Base Carbone',
         subPost: SubPost.DeplacementsProfessionnels,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -720,11 +550,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '27966')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Voiture particulière - cœur de gamme - véhicule compact - électrique, France continentale, Base Carbone',
         subPost: SubPost.DeplacementsProfessionnels,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -732,11 +558,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '28007')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Intercités - 2019, France continentale, Base Carbone',
         subPost: SubPost.DeplacementsProfessionnels,
         caracterisation: EmissionSourceCaracterisation.NotOperated,
@@ -744,11 +566,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '28144')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Avion passagers, court courrier, avec trainées, France continentale, Base Carbone',
         subPost: SubPost.DeplacementsProfessionnels,
         caracterisation: EmissionSourceCaracterisation.NotOperated,
@@ -756,11 +574,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '28130')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Bâtiment industriel, structure métallique, France continentale, Base Carbone',
         subPost: SubPost.Batiments,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -770,11 +584,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '20731')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Parking, classique - bitume, France continentale, Base Carbone',
         subPost: SubPost.AutresInfrastructures,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -784,11 +594,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '26011')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Machines, France continentale, Base Carbone',
         subPost: SubPost.Equipements,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -798,11 +604,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '20906')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Mobilier, France continentale, Base Carbone',
         subPost: SubPost.Equipements,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -812,11 +614,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '20907')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Ordinateur portable, France continentale, Base Carbone',
         subPost: SubPost.Informatique,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -826,11 +624,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '27002')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Ordinateur fixe - bureautique, France continentale, Base Carbone',
         subPost: SubPost.Informatique,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -840,11 +634,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '27003')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: "Imprimante jet d'encre, France continentale, Base Carbone",
         subPost: SubPost.Informatique,
         caracterisation: EmissionSourceCaracterisation.Operated,
@@ -854,11 +644,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '27025')?.id,
       },
       {
-        studyId,
-        type: EmissionSourceType.Physical,
-        studySiteId,
-        validated: true,
-        reliability: 5,
+        ...baseEmissionSource,
         name: 'Photocopieurs, Monde, Base Carbone',
         subPost: SubPost.Informatique,
         caracterisation: EmissionSourceCaracterisation.Operated,

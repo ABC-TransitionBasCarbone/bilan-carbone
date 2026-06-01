@@ -1,7 +1,13 @@
 'use server'
 
 import { withServerResponse } from '@/utils/serverResponse'
-import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
+import {
+  DeleteObjectCommand,
+  GetObjectCommand,
+  HeadObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -46,6 +52,8 @@ export const deleteFileFromBucket = async (fileKey: string) =>
 
 export const getFileUrlFromBucket = async (fileKey: string) =>
   withServerResponse('getFileUrlFromBucket', async () => {
+    // Check if the file exists, otherwise throw an error
+    await s3.send(new HeadObjectCommand({ Bucket: bucketName, Key: fileKey }))
     return getSignedUrl(s3, new GetObjectCommand({ Bucket: bucketName, Key: fileKey }), { expiresIn: 3600 })
   })
 

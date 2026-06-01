@@ -2,8 +2,8 @@
 
 import { hasAccessToManualImport } from '@/services/permissions/environment'
 import { getEmissionFactorImportVersions, getFELocations } from '@/services/serverFunctions/emissionFactor'
-import type { EmissionFactorImportVersion } from '@repo/db-common'
-import { Environment, Import } from '@repo/db-common/enums'
+import type { EmissionFactorImportVersion } from '@abc-transitionbascarbone/db-common'
+import { Environment, Import } from '@abc-transitionbascarbone/db-common/enums'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import EmissionFactorsFiltersAndTable from './EmissionFactorsFiltersAndTable'
@@ -44,7 +44,7 @@ const EmissionFactors = ({ userOrganizationId, environment, hasActiveLicence }: 
       }
       const selectedImportVersionsArray = Object.values(selectedImportVersions)
 
-      setLocationOptions(locationFromBdd.filter((loc) => !!loc).map((loc) => loc.location) ?? [])
+      setLocationOptions(locationFromBdd.flatMap((loc) => (loc.location ? [loc.location] : [])))
 
       const importVersions = importVersionsFromBdd.sort((a, b) => {
         if (a.source === b.source) {

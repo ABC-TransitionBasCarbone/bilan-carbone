@@ -1,8 +1,8 @@
 import { Post } from '@/services/posts'
 import { translationMock } from '@/tests/utils/models/translationsMock'
+import { StudyResultUnit, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { expect } from '@jest/globals'
 import { Theme } from '@mui/material'
-import { StudyResultUnit, SubPost } from '@repo/db-common/enums'
 import {
   BasicTypeCharts,
   formatValueAndUnit,

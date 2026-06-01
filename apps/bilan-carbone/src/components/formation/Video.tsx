@@ -1,6 +1,6 @@
 'use client'
 
-import { Formation } from '@repo/db-common'
+import { Formation } from '@abc-transitionbascarbone/db-common'
 import classNames from 'classnames'
 import dynamic from 'next/dynamic'
 import Box from '../base/Box'

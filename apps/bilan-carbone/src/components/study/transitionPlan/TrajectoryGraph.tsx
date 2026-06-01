@@ -14,6 +14,8 @@ import type {
   TrajectoryWithObjectives,
 } from '@/types/trajectory.types'
 import { calculateTrajectoriesWithHistory, getYearsToDisplay } from '@/utils/trajectory'
+import { Action, SectenInfo } from '@abc-transitionbascarbone/db-common'
+import { TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import { Alert, Slider, SvgIcon, Typography } from '@mui/material'
 import {
@@ -28,8 +30,6 @@ import {
   LineSeriesType,
   MarkPlot,
 } from '@mui/x-charts'
-import { Action, SectenInfo } from '@repo/db-common'
-import { TrajectoryType } from '@repo/db-common/enums'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'

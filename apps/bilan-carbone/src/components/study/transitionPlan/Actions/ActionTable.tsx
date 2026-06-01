@@ -14,12 +14,12 @@ import type { ActionWithRelations } from '@/types/trajectory.types'
 import { formatNumber } from '@/utils/number'
 import { convertValue } from '@/utils/study'
 import { sortWithUpdatedAtFallback } from '@/utils/table.utils'
-import { getYearFromDateStr } from '@/utils/time'
+import { ActionPotentialDeduction, StudyResultUnit } from '@abc-transitionbascarbone/db-common/enums'
+import { getYearFromDateStr } from '@abc-transitionbascarbone/utils/time'
 import ArrowRight from '@mui/icons-material/ArrowRight'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { Link, Switch, TableCell, TableRow, Typography } from '@mui/material'
-import { ActionPotentialDeduction, StudyResultUnit } from '@repo/db-common/enums'
 import {
   ColumnDef,
   flexRender,
@@ -250,13 +250,6 @@ const ActionTable = ({
     [getTagsDisplay, tCommon],
   )
 
-  const getStartYear = useCallback((action: ActionWithRelations) => {
-    if (!action.reductionStartYear) {
-      return null
-    }
-    return getYearFromDateStr(action.reductionStartYear)
-  }, [])
-
   const columns = useMemo(
     () =>
       [
@@ -344,7 +337,14 @@ const ActionTable = ({
         {
           id: 'implementation',
           header: tActiontable('implementation'),
-          accessorFn: getStartYear,
+          accessorFn: (action) => {
+            if (!action.reductionStartYear || !action.reductionEndYear) {
+              return null
+            }
+            const startYear = getYearFromDateStr(action.reductionStartYear)
+            const endYear = getYearFromDateStr(action.reductionEndYear)
+            return startYear * 10000 + endYear
+          },
           cell: ({ row }) => getImplementationPeriod(row.original),
           sortingFn: 'withUpdatedAtFallback',
         },
@@ -352,6 +352,9 @@ const ActionTable = ({
           id: 'potential',
           header: customRich(tActiontable, 'potential'),
           accessorFn: (action) => {
+            if (action.potentialDeduction === ActionPotentialDeduction.Quality) {
+              return 0
+            }
             if (action.potentialDeduction === ActionPotentialDeduction.Quantity && action.reductionValueKg !== null) {
               return action.reductionValueKg
             }
@@ -376,7 +379,8 @@ const ActionTable = ({
         {
           id: 'budget',
           header: `${tActiontable('budget')} (k€)`,
-          accessorKey: 'necessaryBudget',
+          accessorFn: (action) => action.necessaryBudget ?? 0,
+          cell: ({ row }) => row.original.necessaryBudget ?? '',
           sortingFn: 'withUpdatedAtFallback',
         },
         {
@@ -398,7 +402,6 @@ const ActionTable = ({
     [
       tActiontable,
       getImplementationPeriod,
-      getStartYear,
       getPotential,
       studyId,
       getSitesCompactDisplay,

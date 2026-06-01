@@ -2,7 +2,7 @@ import Title from '@/components/base/Title'
 import type { FullStudy } from '@/db/study'
 import { getConfidenceInterval } from '@/services/uncertainty'
 import { ResultsByPost } from '@/types/study.types'
-import { Environment, StudyResultUnit } from '@repo/db-common/enums'
+import { Environment, StudyResultUnit, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
@@ -21,7 +21,7 @@ interface Props {
   emissionSources: FullStudy['emissionSources']
   environment: Environment
   validatedOnly: boolean
-  selectedPostIds: string[]
+  selectedSubPosts: SubPost[]
 }
 
 const UncertaintyAnalytics = ({
@@ -31,7 +31,7 @@ const UncertaintyAnalytics = ({
   emissionSources,
   environment,
   validatedOnly,
-  selectedPostIds,
+  selectedSubPosts,
 }: Props) => {
   const t = useTranslations('study.results.uncertainties')
 
@@ -52,11 +52,11 @@ const UncertaintyAnalytics = ({
   }, [confidenceInterval])
 
   const filteredEmissionSources = useMemo(() => {
-    if (selectedPostIds.length === 0) {
+    if (selectedSubPosts.length === 0) {
       return []
     }
-    return emissionSources.filter((emissionSource) => selectedPostIds.includes(String(emissionSource.subPost)))
-  }, [selectedPostIds, emissionSources])
+    return emissionSources.filter((emissionSource) => selectedSubPosts.includes(emissionSource.subPost))
+  }, [selectedSubPosts, emissionSources])
 
   return (
     <div className="my2">

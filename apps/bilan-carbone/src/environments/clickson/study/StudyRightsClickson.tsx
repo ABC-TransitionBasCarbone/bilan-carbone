@@ -11,7 +11,6 @@ import StudyVersions from '@/components/study/rights/StudyVersions'
 import SelectStudySite from '@/components/study/site/SelectStudySite'
 import useStudySite from '@/components/study/site/useStudySite'
 import StudyComments from '@/components/study/StudyComments'
-import { SiteDependentField } from '@/constants/emissionFactorMap'
 import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import {
@@ -28,23 +27,18 @@ import {
   ChangeStudyNameCommand,
   ChangeStudyNameValidation,
 } from '@/services/serverFunctions/study.command'
+import type { EmissionFactorImportVersion } from '@abc-transitionbascarbone/db-common'
+import { Country } from '@abc-transitionbascarbone/db-common/enums'
+import { Button } from '@abc-transitionbascarbone/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import EditIcon from '@mui/icons-material/Edit'
 import { Box, CircularProgress } from '@mui/material'
-import type { EmissionFactorImportVersion } from '@repo/db-common'
-import { Country } from '@repo/db-common/enums'
-import { Button } from '@repo/ui'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
-import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './StudyRights.module.css'
-
-const SiteDataChangeWarningModal = dynamic(() => import('@/components/modals/SiteDataChangeWarningModal'), {
-  ssr: false,
-})
 
 interface Props {
   study: FullStudy
@@ -65,19 +59,6 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, us
   const [loading, setLoading] = useState(true)
   const [editTitle, setEditTitle] = useState(false)
   const [loadingStudyName, setLoadingStudyName] = useState(false)
-  const [showSiteDataWarning, setShowSiteDataWarning] = useState(false)
-  const [pendingSiteChanges, setPendingSiteChanges] = useState<{
-    changedFields: SiteDependentField[]
-    questionsBySubPost: Record<string, Array<{ id: string; label: string; idIntern: string; answer?: string }>>
-    pendingData: ChangeStudyEstablishmentCommand
-  } | null>(null)
-  const [originalValues, setOriginalValues] = useState<{
-    etp: number
-    studentNumber: number
-    superficy: number | null
-    country: Country | null
-  } | null>(null)
-
   const router = useRouter()
 
   const form = useForm<ChangeStudyEstablishmentCommand>({
@@ -132,17 +113,12 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, us
           const newSiteData = studySiteRes.data
           setSiteData(newSiteData)
 
-          const initialValues = {
+          form.reset({
             etp: newSiteData.etp ?? newSiteData.site.etp ?? 0,
             studentNumber: newSiteData.studentNumber ?? newSiteData.site.studentNumber ?? 0,
             superficy: newSiteData.superficy ?? newSiteData.site.superficy ?? null,
             country: newSiteData.country ?? newSiteData.site.country ?? null,
-          }
-
-          // Store original values for change detection
-          setOriginalValues(initialValues)
-
-          form.reset(initialValues)
+          })
         }
       }
       setLoading(false)
@@ -154,37 +130,9 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, us
   const handleStudyEstablishmentUpdate = useCallback(
     async (data: ChangeStudyEstablishmentCommand) => {
       await callServerFunction(() => changeStudyEstablishment(studySiteId, data))
-      setOriginalValues({
-        etp: data.etp ?? 0,
-        studentNumber: data.studentNumber ?? 0,
-        superficy: data.superficy ?? null,
-        country: data.country ?? null,
-      })
     },
     [callServerFunction, studySiteId],
   )
-
-  const handleSiteDataWarningCancel = () => {
-    setShowSiteDataWarning(false)
-    setPendingSiteChanges(null)
-    if (originalValues && siteData) {
-      form.reset(originalValues)
-    }
-  }
-
-  const handleSiteDataWarningConfirm = async () => {
-    if (pendingSiteChanges) {
-      setShowSiteDataWarning(false)
-      await callServerFunction(() => changeStudyEstablishment(studySiteId, pendingSiteChanges.pendingData))
-      setOriginalValues({
-        etp: pendingSiteChanges.pendingData.etp ?? 0,
-        studentNumber: pendingSiteChanges.pendingData.studentNumber ?? 0,
-        superficy: pendingSiteChanges.pendingData.superficy ?? null,
-        country: pendingSiteChanges.pendingData.country ?? null,
-      })
-      setPendingSiteChanges(null)
-    }
-  }
 
   const handleDateChange = useCallback(async () => {
     const isValid = await dateForm.trigger()
@@ -338,14 +286,6 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, us
         )}
 
         <StudyComments user={user} studyId={study.id} canValidate={!editionDisabled} />
-        {showSiteDataWarning && pendingSiteChanges && (
-          <SiteDataChangeWarningModal
-            isOpen={showSiteDataWarning}
-            onClose={handleSiteDataWarningCancel}
-            onConfirm={handleSiteDataWarningConfirm}
-            questionsBySubPost={pendingSiteChanges.questionsBySubPost}
-          />
-        )}
         {!editionDisabled && <StudyContributorsTable study={study} canAddContributor={!editionDisabled} />}
       </Block>
       <Modal

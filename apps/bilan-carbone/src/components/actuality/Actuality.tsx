@@ -1,7 +1,7 @@
 'use client'
 
-import type { Actuality } from '@repo/db-common'
-import { Button } from '@repo/ui'
+import type { Actuality } from '@abc-transitionbascarbone/db-common'
+import { Button } from '@abc-transitionbascarbone/ui'
 import classNames from 'classnames'
 import DOMPurify from 'dompurify'
 import { useFormatter, useTranslations } from 'next-intl'

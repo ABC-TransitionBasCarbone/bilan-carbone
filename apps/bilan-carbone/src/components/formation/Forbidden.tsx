@@ -1,5 +1,5 @@
 import { customRich } from '@/i18n/customRich'
-import { Environment } from '@repo/db-common/enums'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import Block from '../base/Block'

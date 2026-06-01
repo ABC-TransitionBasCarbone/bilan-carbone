@@ -2,7 +2,7 @@
 
 import type { FullStudy } from '@/db/study'
 import { getEmissionSourcesTotalCo2 } from '@/utils/emissionSources'
-import { EmissionFactor } from '@repo/db-common'
+import { EmissionFactor } from '@abc-transitionbascarbone/db-common'
 
 export const qualityKeys = [
   'reliability',

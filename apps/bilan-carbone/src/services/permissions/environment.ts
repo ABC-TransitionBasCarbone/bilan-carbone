@@ -1,5 +1,5 @@
 import { isFeatureActiveForEnvironment } from '@/db/deactivableFeatures'
-import { DeactivatableFeature, Environment } from '@repo/db-common/enums'
+import { DeactivatableFeature, Environment } from '@abc-transitionbascarbone/db-common/enums'
 
 const { BC, CUT, TILT, CLICKSON } = Environment
 const advancedEnvironments: Environment[] = [BC, TILT]
@@ -8,7 +8,7 @@ const simplifiedEnvironments: Environment[] = [CUT, CLICKSON]
 export const isAdvanced = (environment: Environment) => advancedEnvironments.includes(environment)
 export const isSimplified = (environment: Environment) => simplifiedEnvironments.includes(environment)
 
-const isBC = (environment: Environment) => environment === BC
+export const isBC = (environment: Environment) => environment === BC
 export const isTilt = (environment: Environment) => environment === TILT
 export const isCut = (environment: Environment) => environment === CUT
 export const isClickson = (environment: Environment) => environment === CLICKSON
@@ -113,3 +113,5 @@ export const hasHomeButtonHeader = isClickson
 
 export const hasAccessToPDFExport = (environment: Environment) =>
   ([CUT, CLICKSON] as Environment[]).includes(environment)
+
+export const hasAccessToFeedbackButton = isTilt
