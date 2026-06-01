@@ -29,7 +29,11 @@ import type { ResultType } from '../types/study.types'
 import { AdditionalResultTypes, BaseResultsBySite, ResultsByPost } from '../types/study.types'
 import { getEmissionResults, getEmissionSourceEmission } from './emissionSource'
 import { download } from './file'
-import { hasAccessToBcExport } from './permissions/environment'
+import {
+  hasAccessToBcExport,
+  hasAccessToSimplifiedBcExport,
+  hasFixedResultsExportValueUnit,
+} from './permissions/environment'
 import {
   convertSimplifiedEnvToBilanCarbone,
   convertTiltSubPostToBCSubPost,
@@ -37,7 +41,6 @@ import {
   Post,
   subPostBCToSubPostTiltMapping,
 } from './posts'
-import { isSimplifiedEnvironment } from './publicodes/simplifiedPublicodesConfig'
 import { rulesSpans as begesRulesSpans, computeBegesResult } from './results/beges'
 import { computeResultsByPostFromEmissionSources, computeResultsByTag } from './results/consolidated'
 import { PostInfos } from './results/exports'
@@ -337,9 +340,17 @@ const getFormattedHeadersForEnv = (
 ) => {
   const headers = getHeadersForEnv(environment)
 
-  return headers.map((header) =>
-    header !== 'value' ? traduction(header) : traduction(header, { unit: traductionUnit(unit) }),
-  )
+  return headers.map((header) => {
+    if (header !== 'value') {
+      return traduction(header)
+    }
+
+    if (hasFixedResultsExportValueUnit(environment)) {
+      return `${traduction(header)} (tCO2e)`
+    }
+
+    return traduction(header, { unit: traductionUnit(unit) })
+  })
 }
 
 const handleLine = (
@@ -809,7 +820,7 @@ export const downloadStudyResults = async (
     )
   }
 
-  if (isSimplifiedEnvironment(environment) && computedResults) {
+  if (hasAccessToSimplifiedBcExport(environment) && computedResults) {
     data.push(formatBaseResultsToBCExport(study, siteList, computedResults, tExport, tPost))
   }
 
