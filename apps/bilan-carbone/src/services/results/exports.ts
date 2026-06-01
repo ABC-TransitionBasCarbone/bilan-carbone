@@ -15,7 +15,6 @@ import {
   getSquaredStandardDeviationForEmissionSource,
   getSquaredStandardDeviationForEmissionSourceArray,
 } from '../uncertainty'
-import { handleGHGPLine } from './ghgp'
 import { filterWithDependencies, getAllSiteEmissionSources } from './utils'
 
 export type PostInfos = {
@@ -43,7 +42,7 @@ export interface ExportEmissionFactor {
   sf6?: number | null
   otherGES: number | null
   totalCo2: number | null
-  importedFrom?: Import
+  importedFrom: Import
   importedId?: string | null
 }
 
@@ -59,6 +58,14 @@ export type EmissionSource = Pick<
   FullStudy['emissionSources'][0],
   'value' | 'subPost' | 'depreciationPeriod' | 'constructionYear' | 'emissionFactor'
 >
+
+type GetLineAndPostForExportFunctionType = (
+  value: number,
+  emissionFactor: ExportEmissionFactor & { base: EmissionFactorBase | null },
+  post: string,
+  EfHasParts: boolean,
+  base?: EmissionFactorBase,
+) => { line: Omit<PostInfos, 'rule' | 'squaredStandardDeviation'> | null; post: string | null | undefined }
 
 type GetLineFunctionType = (
   value: number,
@@ -104,33 +111,21 @@ const getRulesCount = (allRules: string[]) => new Set(allRules.map((rule) => rul
 const getLineAndPost = (
   post: string,
   results: Record<string, Omit<PostInfos, 'rule' | 'PostInfos'>[]>,
-  getLine: GetLineFunctionType,
+  getLineAndPostForExport: GetLineAndPostForExportFunctionType,
   value: number,
-  emissionFactor: ExportEmissionFactor,
-  efBase: EmissionFactorBase | null,
+  emissionFactor: ExportEmissionFactor & { base: EmissionFactorBase | null },
   efHasParts: boolean,
   squaredStandardDeviation: number,
-  isGHGP?: boolean,
   base?: EmissionFactorBase,
 ) => {
   if (post && results[post]) {
-    const line = { ...getLine(value, emissionFactor), squaredStandardDeviation }
+    const { line, post: overridedPost } = getLineAndPostForExport(value, emissionFactor, post, efHasParts, base)
 
-    if (isGHGP) {
-      const { keep, post: ghgpPost } = handleGHGPLine(
-        post,
-        efBase,
-        efHasParts,
-        emissionFactor.importedFrom === Import.Manual,
-        base,
-      )
-
-      if (keep) {
-        return { line, post: ghgpPost }
-      }
-    } else {
-      return { line, post }
+    if (!overridedPost || !line) {
+      return { line: null, post: null }
     }
+
+    return { line: { ...line, squaredStandardDeviation }, post: overridedPost }
   }
 
   return { line: null, post: null }
@@ -145,7 +140,7 @@ export const computeResult = (
   validatedOnly: boolean,
   allRules: string[],
   getEmissionActivityValue: (emissionSource: EmissionSource) => number,
-  getLine: GetLineFunctionType,
+  getLineAndPostForExport: GetLineAndPostForExportFunctionType,
   base?: EmissionFactorBase,
   isGHGP?: boolean,
   environment: Environment = Environment.BC,
@@ -196,13 +191,11 @@ export const computeResult = (
           const { line, post } = getLineAndPost(
             defaultRule,
             results,
-            getLine,
+            getLineAndPostForExport,
             value,
             emissionFactor,
-            emissionFactor.base,
             false,
             squaredStandardDeviation,
-            isGHGP,
             base,
           )
           if (line && post) {
@@ -231,13 +224,11 @@ export const computeResult = (
             const { line, post } = getLineAndPost(
               rulePost,
               results,
-              getLine,
+              getLineAndPostForExport,
               value,
-              part,
-              emissionFactor.base,
+              { ...part, base: emissionFactor.base, importedFrom: emissionFactor.importedFrom },
               true,
               squaredStandardDeviation,
-              isGHGP,
               base,
             )
 

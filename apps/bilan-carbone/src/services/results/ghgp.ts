@@ -86,35 +86,37 @@ export const getLine = (
   }
 }
 
-export const handleGHGPLine = (
+export const getGHGPLineAndPost = (
+  value: number,
+  emissionFactor: ExportEmissionFactor & { base: EmissionFactorBase | null },
   post: string,
-  efbase: EmissionFactorBase | null,
   EfHasParts: boolean,
-  isEfManual: boolean,
   base: EmissionFactorBase = EmissionFactorBase.LocationBased,
 ) => {
-  if (base === EmissionFactorBase.LocationBased || !efbase) {
-    return { keep: true, post }
+  const line = getLine(value, emissionFactor)
+
+  if (base === EmissionFactorBase.LocationBased || !emissionFactor.base) {
+    return { line, post }
   }
 
   // There is only two bases, so we are now in market based
-  if (efbase === EmissionFactorBase.LocationBased) {
+  if (emissionFactor.base === EmissionFactorBase.LocationBased) {
     if (post.startsWith('1.') || post.startsWith('3.')) {
-      return { keep: true, post }
+      return { line, post }
     }
-    return { keep: false, post }
+    return { line: null, post: null }
   }
 
   // same, we are now in market based with ef in market based
   if (!post.startsWith('2.')) {
-    return { keep: false, post }
+    return { line: null, post: null }
   }
 
-  if (isEfManual && EfHasParts) {
-    return { keep: true, post: '3.3' }
+  if (emissionFactor.importedFrom === Import.Manual && EfHasParts) {
+    return { line, post: '3.3' }
   }
 
-  return { keep: true, post }
+  return { line, post }
 }
 
 export const getGHGPEmissionValue = (studyDate: Date) => (emissionSource: EmissionSource) => {
@@ -158,7 +160,7 @@ export const computeGHGPResult = (
     validatedOnly,
     allRules,
     getGHGPEmissionValue(startDate),
-    getLine,
+    getGHGPLineAndPost,
     base,
     true,
     environment,
