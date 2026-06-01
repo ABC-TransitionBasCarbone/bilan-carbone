@@ -28,11 +28,12 @@ const Home = async ({ user: account }: UserSessionProps) => {
       <Block>
         <DynamicComponent
           environmentComponents={{
-            [Environment.TILT]: account.level ? (
-              <UserView account={account} />
-            ) : (
-              <SimplifiedUserView account={account} />
-            ),
+            [Environment.TILT]:
+              account.level || !account.organizationVersionId ? (
+                <UserView account={account} />
+              ) : (
+                <SimplifiedUserView account={account} />
+              ),
             [Environment.CUT]: <SimplifiedUserView account={account} />,
             [Environment.CLICKSON]: <ClicksonUserView account={account} />,
           }}
