@@ -29,6 +29,7 @@ export const TagFilter = ({
 }: TagFilterProps) => {
   const tOther = useTranslations('study.results')
   const tCommon = useTranslations('common')
+  const tPerimeter = useTranslations('study.perimeter')
   const [tagFilterAnchorEl, setTagFilterAnchorEl] = useState<HTMLElement | null>(null)
 
   const tagItems = useMemo(
@@ -40,7 +41,7 @@ export const TagFilter = ({
           if (tagInfos.length > 0) {
             acc[tagFamily.id] = {
               id: tagFamily.id,
-              name: tagFamily.name,
+              name: tagFamily.name === 'DEFAULT_FAMILY_TAG' ? tPerimeter('preset') : tagFamily.name,
               children: tagInfos,
             }
           }
@@ -49,10 +50,10 @@ export const TagFilter = ({
         },
         {} as Record<string, { id: string; name: string; children: ChildrenType[] }>,
       ),
-    [tagFamilies],
+    [tagFamilies, tPerimeter],
   )
 
-  const studyHasTags = useMemo(() => tagFamilies.some((f) => f.name !== 'DEFAULT_FAMILY_TAG'), [tagFamilies])
+  const studyHasTags = useMemo(() => tagFamilies.some((f) => f.tags.length > 0), [tagFamilies])
 
   const tagItemsWithOthers = useMemo<Record<string, { id: string; name: string; children: ChildrenType[] }>>(() => {
     if (!studyHasTags) {
