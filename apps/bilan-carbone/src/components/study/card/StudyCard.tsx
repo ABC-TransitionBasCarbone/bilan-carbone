@@ -20,7 +20,7 @@ interface Props {
 
 const StudyCard = async ({ study, user, simplified }: Props) => {
   const t = await getTranslations('study')
-  const { id, name, validatedSources } = study
+  const { id, name, validatedSources, simplifiedProgress } = study
 
   const showRoleInChip = hasRoleOnStudy(user.environment)
   const accountRoleOnStudy = getDisplayedRoleOnStudy(user, study)
@@ -29,9 +29,13 @@ const StudyCard = async ({ study, user, simplified }: Props) => {
     return null
   }
 
-  const percent = validatedSources.validated
-    ? Math.floor((validatedSources.validated / validatedSources.total) * 100)
-    : 0
+  const percent = simplified
+    ? simplifiedProgress && simplifiedProgress.total > 0
+      ? Math.floor((simplifiedProgress.answered / simplifiedProgress.total) * 100)
+      : 0
+    : validatedSources.validated
+      ? Math.floor((validatedSources.validated / validatedSources.total) * 100)
+      : 0
 
   return (
     <li data-testid="study" className="flex">
@@ -42,24 +46,36 @@ const StudyCard = async ({ study, user, simplified }: Props) => {
         {hasAccessToStudyCardDetails(user.environment) && (
           <Box>
             <p className="mb1 align-center">
-              {customRich(t, 'validatedSources', {
-                validated: validatedSources.validated,
-                total: validatedSources.total,
-                data: (children) => (
-                  <span className={classNames(styles.validated, 'mr-4', { [styles.success]: percent === 100 })}>
-                    {children}
-                  </span>
-                ),
-              })}
-              <GlossaryIconModal
-                title="validatedOnly"
-                className={`ml-2 ${styles.helpIcon}`}
-                iconLabel="information"
-                label="study-card"
-                tModal="study"
-              >
-                {t('validatedOnlyDescription')}
-              </GlossaryIconModal>
+              {simplified && simplifiedProgress
+                ? customRich(t, 'questionsProgress', {
+                    answered: simplifiedProgress.answered,
+                    total: simplifiedProgress.total,
+                    data: (children) => (
+                      <span className={classNames(styles.validated, 'mr-4', { [styles.success]: percent === 100 })}>
+                        {children}
+                      </span>
+                    ),
+                  })
+                : customRich(t, 'validatedSources', {
+                    validated: validatedSources.validated,
+                    total: validatedSources.total,
+                    data: (children) => (
+                      <span className={classNames(styles.validated, 'mr-4', { [styles.success]: percent === 100 })}>
+                        {children}
+                      </span>
+                    ),
+                  })}
+              {!simplified && (
+                <GlossaryIconModal
+                  title="validatedOnly"
+                  className={`ml-2 ${styles.helpIcon}`}
+                  iconLabel="information"
+                  label="study-card"
+                  tModal="study"
+                >
+                  {t('validatedOnlyDescription')}
+                </GlossaryIconModal>
+              )}
             </p>
             <ProgressBar
               value={percent}

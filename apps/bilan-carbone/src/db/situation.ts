@@ -40,6 +40,8 @@ export async function upsertSituation(
   situation: InputJsonValue,
   listLayoutSituations: InputJsonValue,
   modelVersion: string,
+  answeredCount: number,
+  totalCount: number,
 ): Promise<SituationSchema> {
   return await prismaClient.situation.upsert({
     where: { studySiteId },
@@ -49,15 +51,30 @@ export async function upsertSituation(
       listLayoutSituations,
       modelVersion,
       publicodesVersion: PUBLICODES_ENGINE_VERSION,
+      answeredCount,
+      totalCount,
       createdAt: new Date(),
       updatedAt: new Date(),
     },
     update: {
       situation,
       listLayoutSituations,
-      updatedAt: new Date(),
       modelVersion,
       publicodesVersion: PUBLICODES_ENGINE_VERSION,
+      answeredCount,
+      totalCount,
+      updatedAt: new Date(),
+    },
+  })
+}
+
+export async function getSituationsProgressByStudyIds(studyIds: string[]) {
+  return await prismaClient.situation.findMany({
+    where: { studySite: { studyId: { in: studyIds } } },
+    select: {
+      answeredCount: true,
+      totalCount: true,
+      studySite: { select: { studyId: true } },
     },
   })
 }

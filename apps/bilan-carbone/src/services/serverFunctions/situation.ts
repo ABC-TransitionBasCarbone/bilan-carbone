@@ -1,8 +1,15 @@
 'use server'
 
-import { getSituationByStudySite, getSituationsByStudySites, upsertSituation } from '@/db/situation'
+import {
+  getSituationByStudySite,
+  getSituationsByStudySites,
+  getSituationsProgressByStudyIds,
+  upsertSituation,
+} from '@/db/situation'
 import { getStudyById } from '@/db/study'
 import { ListLayoutSituations } from '@/lib/publicodes/context'
+import { computeProgress } from '@/services/publicodes/questionProgress'
+import { SimplifiedEnvironment } from '@/services/publicodes/simplifiedPublicodesConfig'
 import { withServerResponse } from '@/utils/serverResponse'
 import type { InputJsonValue } from '@prisma/client/runtime/client'
 import { Situation } from 'publicodes'
@@ -56,6 +63,7 @@ export const saveSituation = async (
   situation: Situation<string>,
   listLayoutSituations: ListLayoutSituations<string>,
   modelVersion: string,
+  simplifiedEnvironment: SimplifiedEnvironment | null,
 ) =>
   withServerResponse('saveSituation', async () => {
     const session = await dbActualizedAuth()
@@ -74,10 +82,31 @@ export const saveSituation = async (
       throw new Error(NOT_AUTHORIZED)
     }
 
+    const { answeredCount, totalCount } = simplifiedEnvironment
+      ? computeProgress(simplifiedEnvironment, situation, listLayoutSituations)
+      : { answeredCount: 0, totalCount: 0 }
+
     return await upsertSituation(
       studySiteId,
       situation as InputJsonValue,
       listLayoutSituations as InputJsonValue,
       modelVersion,
+      answeredCount,
+      totalCount,
     )
+  })
+
+export const getSimplifiedStudiesProgress = async (studyIds: string[]) =>
+  withServerResponse('getSimplifiedStudiesProgress', async () => {
+    const situations = await getSituationsProgressByStudyIds(studyIds)
+    const result: Record<string, { answered: number; total: number }> = {}
+    for (const id of studyIds) {
+      result[id] = { answered: 0, total: 0 }
+    }
+    for (const situation of situations) {
+      const studyId = situation.studySite.studyId
+      result[studyId].answered += situation.answeredCount
+      result[studyId].total += situation.totalCount
+    }
+    return result
   })

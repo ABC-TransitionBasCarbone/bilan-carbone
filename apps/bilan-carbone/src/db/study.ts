@@ -621,6 +621,7 @@ type StudiesForCardsMap = AsyncReturnType<typeof getStudiesForCards>
 
 export type StudyCardItem = StudiesForCardsMap[string] & {
   validatedSources: { total: number; validated: number }
+  simplifiedProgress?: { answered: number; total: number }
 }
 
 export const getStudyByIds = async (ids: string[]) => {

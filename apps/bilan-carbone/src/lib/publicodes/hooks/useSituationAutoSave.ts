@@ -1,4 +1,5 @@
 import { situationsAreEqual } from '@/lib/publicodes/utils'
+import { SimplifiedEnvironment } from '@/services/publicodes/simplifiedPublicodesConfig'
 import { saveSituation as saveSituationInDB } from '@/services/serverFunctions/situation'
 import { Situation } from 'publicodes'
 import { useCallback, useRef, useState } from 'react'
@@ -8,6 +9,7 @@ export interface SituationAutoSaveOptions {
   studyId: string
   studySiteId: string
   modelVersion: string
+  simplifiedEnvironment: SimplifiedEnvironment
   enabled?: boolean
 }
 
@@ -23,6 +25,7 @@ export const useSituationAutoSave = ({
   studyId,
   studySiteId,
   modelVersion,
+  simplifiedEnvironment,
   enabled = true,
 }: SituationAutoSaveOptions): SituationAutoSaveReturn => {
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
@@ -44,7 +47,14 @@ export const useSituationAutoSave = ({
 
       try {
         setSaveStatus('saving')
-        const result = await saveSituationInDB(studyId, studySiteId, situation, listLayoutSituations, modelVersion)
+        const result = await saveSituationInDB(
+          studyId,
+          studySiteId,
+          situation,
+          listLayoutSituations,
+          modelVersion,
+          simplifiedEnvironment,
+        )
 
         if (result.success) {
           lastSavedSituation.current = situation
@@ -60,7 +70,7 @@ export const useSituationAutoSave = ({
         setError(err instanceof Error ? err.message : 'Unknown error')
       }
     },
-    [enabled, studyId, studySiteId, modelVersion],
+    [enabled, studyId, studySiteId, modelVersion, simplifiedEnvironment],
   )
 
   const hasUnsavedChanges = saveStatus === 'saving'

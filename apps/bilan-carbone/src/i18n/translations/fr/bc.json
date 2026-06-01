@@ -382,6 +382,7 @@
     "seeResults": "Voir les résultats",
     "firstStudyMessage": "Il est temps de vous lancer ! Nous vous invitons à créer votre premier Bilan Carbone®.",
     "validatedSources": "<data>{validated} / {total}</data> Sources d'émission validées",
+    "questionsProgress": "<data>{answered} / {total}</data> Questions répondues",
     "see": "Voir mon Bilan Carbone®",
     "information": "Informations",
     "validatedOnly": "Sources d'émission validées",

@@ -73,3 +73,16 @@ const SIMPLIFIED_PUBLICODES_CONFIGS = {
 export const getSimplifiedPublicodesConfig = (env: SimplifiedEnvironment): SimplifiedPublicodesConfig => {
   return SIMPLIFIED_PUBLICODES_CONFIGS[env]
 }
+
+export function getEnvironmentForSimplifiedStudy(
+  environment: Environment,
+  simplified: boolean,
+): SimplifiedEnvironment | null {
+  if (isSimplifiedEnvironment(environment)) {
+    return environment
+  }
+  if (simplified && environment in SIMPLIFIED_PUBLICODES_CONFIGS) {
+    return environment as SimplifiedEnvironment
+  }
+  return null
+}

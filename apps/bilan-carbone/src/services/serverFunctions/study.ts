@@ -164,7 +164,7 @@ import {
   getEnvironmentsForDuplication,
 } from '../permissions/study'
 import { isAdminOnStudyOrga } from '../permissions/study.utils'
-import { isSimplifiedEnvironment, SimplifiedEnvironment } from '../publicodes/simplifiedPublicodesConfig'
+import { getEnvironmentForSimplifiedStudy, isSimplifiedEnvironment, SimplifiedEnvironment } from '../publicodes/simplifiedPublicodesConfig'
 import { deleteFileFromBucket, getFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'
 import { getTransEnvironmentSubPost } from '../study'
 import { UpdateEmissionSourceCommand } from './emissionSource.command'
@@ -370,7 +370,14 @@ export const createStudyCommand = async (
       if (isSimplifiedEnvironment(session.user.environment)) {
         await Promise.all(
           createdStudy.sites.map(async (site) => {
-            await saveSituationInDB(createdStudy.id, site.id, {}, {}, '')
+            await saveSituationInDB(
+              createdStudy.id,
+              site.id,
+              {},
+              {},
+              '',
+              getEnvironmentForSimplifiedStudy(session.user.environment, false),
+            )
             await updateSituationWithStudySiteData(site.id, site, session.user.environment)
           }),
         )
@@ -2519,7 +2526,14 @@ export const changeStudySiteTiltSimplified = async (studySiteId: string, data: C
     }
 
     if (!studySites[0].situation) {
-      await saveSituationInDB(study.id, studySiteId, {}, {}, '')
+      await saveSituationInDB(
+        study.id,
+        studySiteId,
+        {},
+        {},
+        '',
+        getEnvironmentForSimplifiedStudy(informations.user.environment, study.simplified),
+      )
     }
     await updateSituationWithCustomData(studySiteId, data, informations.user.environment, study.simplified)
   })

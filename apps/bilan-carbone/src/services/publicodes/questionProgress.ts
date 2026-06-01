@@ -8,11 +8,32 @@ import { FormLayout } from '@/components/publicodes-form/layouts/formLayout'
 import { ListLayoutSituations } from '@/lib/publicodes/context'
 import { typedEntries } from '@/utils/object'
 import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
-import Engine from 'publicodes'
+import Engine, { Situation } from 'publicodes'
 import { SimplifiedPost } from '../posts'
+import { getSimplifiedPublicodesConfig, SimplifiedEnvironment } from './simplifiedPublicodesConfig'
 
 export type QuestionStats = { answered: number; total: number }
 export type StatsResult = Partial<Record<SimplifiedPost, Partial<Record<SubPost, QuestionStats>>>>
+
+export function computeProgress(
+  environment: SimplifiedEnvironment,
+  situation: Situation<string>,
+  listLayoutSituations: ListLayoutSituations<string>,
+): { answeredCount: number; totalCount: number } {
+  const config = getSimplifiedPublicodesConfig(environment)
+  const engine = config.getEngine().shallowCopy()
+  engine.setSituation(situation)
+  const progress = getQuestionProgressBySubPost(engine, listLayoutSituations, config.subPostsByPost, config.getFormLayout)
+  let answeredCount = 0
+  let totalCount = 0
+  for (const subPostStats of Object.values(progress)) {
+    for (const stats of Object.values(subPostStats ?? {})) {
+      answeredCount += stats?.answered ?? 0
+      totalCount += stats?.total ?? 0
+    }
+  }
+  return { answeredCount, totalCount }
+}
 
 export const getQuestionProgressBySubPost = <RuleName extends string = string>(
   engine: Engine<RuleName>,

@@ -14,6 +14,7 @@ import {
   PublicodesSituationProvider,
   usePublicodesSituation,
 } from './PublicodesSituationProvider'
+import { ListLayoutSituations } from './types'
 
 interface PublicodesFormContextValue<RuleName extends string = string>
   extends PublicodesSituationContextValue<RuleName>, PublicodesAutoSaveContextValue<RuleName> {}
@@ -64,6 +65,7 @@ const PublicodesAutoSaveContext = createContext<PublicodesAutoSaveContextValue |
 
 function PublicodesAutoSaveProvider<RuleName extends string = string>({
   children,
+  environment,
   studyId,
   syncIntervalMs = 10000,
 }: Omit<PublicodesFormProviderProps, 'studySiteId'>) {
@@ -82,6 +84,7 @@ function PublicodesAutoSaveProvider<RuleName extends string = string>({
     studyId,
     studySiteId,
     modelVersion: config.modelVersion,
+    simplifiedEnvironment: environment,
     enabled: true,
   })
 

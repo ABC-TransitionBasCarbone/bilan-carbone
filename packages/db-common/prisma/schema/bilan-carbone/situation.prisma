@@ -9,6 +9,9 @@ model Situation {
   publicodesVersion String @map("publicodes_version")
   modelVersion      String @map("model_version")
 
+  answeredCount Int @default(0) @map("answered_count")
+  totalCount    Int @default(0) @map("total_count")
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 

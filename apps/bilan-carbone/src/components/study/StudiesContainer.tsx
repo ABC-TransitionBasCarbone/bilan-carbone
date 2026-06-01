@@ -14,6 +14,7 @@ import {
   isTiltSimplifiedFeatureActive,
 } from '@/services/permissions/environment'
 import { canCreateAStudy } from '@/services/permissions/study'
+import { getSimplifiedStudiesProgress } from '@/services/serverFunctions/situation'
 import { hasActiveLicence } from '@/utils/organization'
 import AddIcon from '@mui/icons-material/Add'
 import { Alert, Box as MUIBox } from '@mui/material'
@@ -54,15 +55,23 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
     getStudiesValidatedEmissionsSources(allowedStudyIds),
   ])
 
-  const studies = allowedStudyIds
-    .map((studyId) => {
-      const card = studiesForCards[studyId]
-      if (!card) {
-        return null
-      }
-      return { ...card, validatedSources: studiesValidatedSources[studyId] }
-    })
-    .filter((c): c is StudyCardItem => c !== null)
+  const simplifiedIds = allowedStudyIds.filter((id) => studiesForCards[id]?.simplified)
+  const simplifiedProgressResult = simplifiedIds.length > 0 ? await getSimplifiedStudiesProgress(simplifiedIds) : null
+  const simplifiedProgressMap = simplifiedProgressResult?.success ? simplifiedProgressResult.data : {}
+
+  const studies = allowedStudyIds.flatMap((studyId): StudyCardItem[] => {
+    const card = studiesForCards[studyId]
+    if (!card) {
+      return []
+    }
+    return [
+      {
+        ...card,
+        validatedSources: studiesValidatedSources[studyId],
+        simplifiedProgress: card.simplified ? simplifiedProgressMap[studyId] : undefined,
+      },
+    ]
+  })
 
   const isOrgaHomePage = !organizationVersionId && !isCR
   const [orgaStudies, otherStudies] = isOrgaHomePage
