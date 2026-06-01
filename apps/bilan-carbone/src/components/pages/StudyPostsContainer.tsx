@@ -94,6 +94,7 @@ const StudyPostsPageContainer = ({ post, currentSubPost, study, userRole, user }
           setSite={setSite}
           environment={study.organizationVersion.environment}
           setGlossary={setGlossary}
+          simplified={study.simplified}
         />
       </Block>
       <DynamicComponent

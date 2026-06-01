@@ -17,8 +17,6 @@ export const hasAccessToActualityCards = isBC
 
 export const hasAccessToDownloadStudyEmissionSourcesButton = isAdvanced
 
-export const hasAccessToStudyCardDetails = isAdvanced
-
 export const hasAccessToCreateOrganization = isAdvanced
 
 export const hasAccessToCreateStudyTag = isAdvanced
@@ -37,7 +35,9 @@ export const hasAccessToDependencyMatrixExample = (environment: Environment) => 
 
 export const needsLicenceToUseApp = isBC
 
-export const hasAccessToEmissionSourceValidation = isAdvanced
+export const hasAccessToEmissionSourceValidation = (environment: Environment, isSimplifiedStudy: boolean = false) => {
+  return isAdvanced(environment) && !isSimplifiedStudy
+}
 
 export const hasRoleOnStudy = isAdvanced
 
