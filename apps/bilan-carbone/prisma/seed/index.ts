@@ -828,6 +828,19 @@ const users = async () => {
               })),
             },
           },
+          tagFamilies: {
+            create: [
+              {
+                name: 'DEFAULT_FAMILY_TAG',
+                tags: {
+                  create: (DefaultStudyTags[Environment.TILT] ?? []).map((tag) => ({
+                    name: tag.name,
+                    color: tag.color,
+                  })),
+                },
+              },
+            ],
+          },
         },
       })
     }),
@@ -965,19 +978,6 @@ const users = async () => {
         contributors: {
           create: { accountId: contributor.id, subPost: SubPost.MetauxPlastiquesEtVerre },
         },
-        tagFamilies: {
-          create: [
-            {
-              name: 'DEFAULT_FAMILY_TAG',
-              tags: {
-                create: (DefaultStudyTags[Environment.TILT] ?? []).map((tag) => ({
-                  name: tag.name,
-                  color: tag.color,
-                })),
-              },
-            },
-          ],
-        },
       },
     }),
   )
@@ -1012,19 +1012,6 @@ const users = async () => {
           createMany: {
             data: [{ role: StudyRole.Validator, accountId: defaultUserWithAccount.accounts[0].account.id }],
           },
-        },
-        tagFamilies: {
-          create: [
-            {
-              name: 'DEFAULT_FAMILY_TAG',
-              tags: {
-                create: (DefaultStudyTags[Environment.TILT] ?? []).map((tag) => ({
-                  name: tag.name,
-                  color: tag.color,
-                })),
-              },
-            },
-          ],
         },
       },
     }),

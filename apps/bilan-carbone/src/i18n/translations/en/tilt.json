@@ -76,6 +76,9 @@
     }
   },
   "study": {
+    "perimeter": {
+      "preset": "Audience type"
+    },
     "new": {
       "postalCode": "What is the postal code of the non-profit organisation?",
       "sites": "Which sites are concerned by the footprint and what are their characteristics?",

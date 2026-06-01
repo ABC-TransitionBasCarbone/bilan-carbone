@@ -76,6 +76,9 @@
     }
   },
   "study": {
+    "perimeter": {
+      "preset": "Type de public"
+    },
     "new": {
       "postalCode": "Quel est le code postal de l'association ?",
       "sites": "Quels sont les sites concernés par l'empreinte et leurs caractéristiques ?",
