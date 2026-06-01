@@ -1,8 +1,10 @@
+import { TiltPost } from '@/services/posts.enums'
 import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
-import { getMockeFullStudy, getMockedDetailedFullStudySite } from '@/tests/utils/models/study'
+import { mockedOrganizationVersion } from '@/tests/utils/models/organization'
+import { COMMON_DATES, getMockeFullStudy, getMockedDetailedFullStudySite } from '@/tests/utils/models/study'
 import { hasSufficientLevel } from '@/utils/study'
 import { Environment, Level, StudyResultUnit, SubPost } from '@abc-transitionbascarbone/db-common/enums'
-import type { Translations } from '@abc-transitionbascarbone/lib'
+import { Translations } from '@abc-transitionbascarbone/lib'
 import { expect } from '@jest/globals'
 import { prepareExcel } from './serverFunctions/file'
 import { downloadStudyResults, getStudyTotalCo2Emissions, getTransEnvironmentSubPost } from './study'
@@ -243,6 +245,76 @@ describe('Study Service', () => {
       expect(getTotalCo2Value('Site A')).toBe(10)
       expect(getTotalCo2Value('Site B')).toBe(20)
       expect(getTotalCo2Value('allSites')).toBe(30)
+    })
+
+    it('should export a single simplified sheet for Tilt simplified studies', async () => {
+      const study = getMockeFullStudy({
+        simplified: true,
+        ...COMMON_DATES,
+        organizationVersion: { ...mockedOrganizationVersion, environment: Environment.TILT },
+        sites: [getMockedDetailedFullStudySite('site-a', 'study-site-a', 'Site A')],
+      })
+
+      const t = ((key: string) => key) as unknown as Translations
+      const mockResults = [
+        {
+          post: TiltPost.Energies,
+          label: 'Énergies',
+          value: 100_000,
+          children: [
+            {
+              post: SubPost.Electricite,
+              label: 'Électricité',
+              value: 100_000,
+              children: [],
+            },
+          ],
+        },
+        {
+          post: 'total' as const,
+          label: 'Total',
+          value: 100_000,
+          children: [],
+        },
+      ]
+
+      const prepareExcelMock = jest.mocked(prepareExcel)
+      prepareExcelMock.mockClear()
+
+      await downloadStudyResults(
+        study,
+        [],
+        [],
+        [],
+        t,
+        t,
+        t,
+        t,
+        t,
+        t,
+        t,
+        t,
+        t,
+        Environment.TILT,
+        { aggregated: mockResults, bySite: { 'study-site-a': mockResults } },
+        mockResults,
+        'site-a',
+      )
+
+      expect(prepareExcelMock).toHaveBeenCalledTimes(1)
+      const [exportedData] = prepareExcelMock.mock.calls[0]
+      expect(exportedData).toHaveLength(1)
+
+      const sheet = (exportedData as { name: string; data: (string | number)[][]; options: object }[])[0]
+      expect(sheet.name).toBe('env_specific_export')
+      expect(sheet.data[0][0]).toBe('simplified.disclaimerExcel1')
+      expect(sheet.data[4][0]).toBe('simplified.disclaimerExcel5')
+      expect(sheet.data[5]).toEqual([])
+      expect(sheet.data[6]).toEqual(['simplified.metadata.organization', 'Mocked Organization'])
+      expect(sheet.data[7]).toEqual(['simplified.metadata.site', 'Site A'])
+      expect(sheet.data[10]).toEqual([])
+      expect(sheet.data[11]).toEqual(['post', 'subPost', 'value'])
+      expect(sheet.data[12]).toEqual(['Énergies', '', 100_000])
     })
   })
 })

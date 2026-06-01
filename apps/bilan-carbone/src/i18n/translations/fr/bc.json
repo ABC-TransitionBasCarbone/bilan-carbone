@@ -31,6 +31,7 @@
   },
   "exports": {
     "title": "Exports :",
+    "exportFilename": "resultats_etude_{studyName}",
     "consolidated": "Bilan Carbone®",
     "Beges": "Bilan GES Réglementaire",
     "GHGP": "GHG Protocol",

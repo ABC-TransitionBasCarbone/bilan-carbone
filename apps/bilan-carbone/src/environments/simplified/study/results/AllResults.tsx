@@ -142,7 +142,7 @@ const AllResults = ({
             color="primary"
             size="large"
             endIcon={environment && isClickson(environment) ? <SheetIcon /> : <DownloadIcon />}
-            onClick={() =>
+            onClick={() => {
               downloadStudyResults(
                 study,
                 [],
@@ -159,8 +159,10 @@ const AllResults = ({
                 tBase,
                 study.organizationVersion.environment,
                 computedResultsBySite,
+                computedResults,
+                studySite,
               )
-            }
+            }}
           >
             {tExportButton('export')}
           </Button>

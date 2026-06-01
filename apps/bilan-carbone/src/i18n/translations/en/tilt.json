@@ -35,7 +35,20 @@
     "title": "Calculating your simplified carbon footprint will allow you to:"
   },
   "exports": {
-    "env_specific_export": "Tilt"
+    "env_specific_export": "Simplified carbon footprint",
+    "simplified": {
+      "disclaimerExcel1": "Please note that the results shown here come solely from a simplified carbon footprint calculation performed by Cap Carbone. They must not under any circumstances be presented or used as Bilan Carbone® results,",
+      "disclaimerExcel2": "as even though the results obtained may already help you understand how to reduce your impact, your approach remains an estimate.",
+      "disclaimerExcel3": "However, this simplified carbon footprint is indeed the first step towards a more comprehensive approach such as the Bilan Carbone®!",
+      "disclaimerExcel4": "For subsequent years, you can either renew your simplified carbon footprint measurement with Cap Carbone, or carry out a Bilan Carbone®.",
+      "disclaimerExcel5": "If you would like to go further in your approach, more information is available here: https://abc-transitionbascarbone.fr/transition-association-abc-tilt/#",
+      "metadata": {
+        "organization": "Organisation",
+        "site": "Site",
+        "startDate": "Study start date",
+        "endDate": "Study end date"
+      }
+    }
   },
   "email": {
     "subject": {
