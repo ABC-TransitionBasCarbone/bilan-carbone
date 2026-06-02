@@ -10,11 +10,18 @@ import {
   Unit,
 } from '@abc-transitionbascarbone/db-common/enums'
 import { parseExcelSheet } from './excel.utils'
-import { buildLabelMap, mapLabelFromTranslations, mapUnitLabelFromTranslationsWithList } from './import.utils'
+import {
+  buildLabelMap,
+  matchLabelFromMap,
+  matchLabelFromTranslations,
+  matchUnitLabelFromTranslations,
+} from './import.utils'
 import { parseNumericValue } from './number'
 import { getBcTranslations, getCommonTranslations } from './translation.utils'
 
 export const SOURCE_IMPORT_HEADER_ROW_INDEX = 9
+
+type StudySiteForImport = { id: string; site: { name: string } | null }
 
 export function getImportEmissionSourcesTranslations(locale: LocaleType): Record<string, string> {
   const bc = getBcTranslations(locale)
@@ -28,8 +35,23 @@ export function getExampleRowPrefixes(): string[] {
   })
 }
 
+function buildStudySiteNameMap(sites: StudySiteForImport[]): Record<string, string> {
+  const map: Record<string, string> = {}
+  for (const studySite of sites) {
+    const siteName = studySite.site?.name
+    if (siteName) {
+      map[siteName.toLowerCase()] = studySite.id
+    }
+  }
+  return map
+}
+
+function resolveStudySiteId(siteName: string, sites: StudySiteForImport[]): string | null {
+  return matchLabelFromMap(siteName, buildStudySiteNameMap(sites))
+}
+
 function mapTypeLabelFromTranslations(label: string | undefined | null, locale: LocaleType): EmissionSourceType | null {
-  return mapLabelFromTranslations(label, locale, (bc) =>
+  return matchLabelFromTranslations(label, locale, (bc) =>
     buildLabelMap(
       bc.emissionSource.type as Record<string, unknown>,
       () => true,
@@ -42,7 +64,7 @@ function mapCaracterisationLabelFromTranslations(
   label: string | undefined | null,
   locale: LocaleType,
 ): EmissionSourceCaracterisation | null {
-  return mapLabelFromTranslations(label, locale, (bc) =>
+  return matchLabelFromTranslations(label, locale, (bc) =>
     buildLabelMap(
       bc.categorisations as Record<string, unknown>,
       () => true,
@@ -53,7 +75,7 @@ function mapCaracterisationLabelFromTranslations(
 
 function mapSubPostLabelFromTranslations(label: string | undefined | null, locale: LocaleType): SubPost | null {
   const subPostValues = new Set(Object.values(SubPost) as string[])
-  return mapLabelFromTranslations(label, locale, (bc) =>
+  return matchLabelFromTranslations(label, locale, (bc) =>
     buildLabelMap(
       bc.emissionFactors.post as unknown as Record<string, unknown>,
       (k) => subPostValues.has(k),
@@ -99,7 +121,11 @@ function parseOptionalNumber(
   return parsed
 }
 
-export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): ParseEmissionSourcesResult {
+export function parseEmissionSourcesFile(
+  buffer: Buffer,
+  locale: LocaleType,
+  studySites: StudySiteForImport[],
+): ParseEmissionSourcesResult {
   const sheetResult = parseExcelSheet(buffer, {
     headerRowIndex: SOURCE_IMPORT_HEADER_ROW_INDEX,
     ignoredColumns: [SOURCE_IMPORT_COLUMNS.site, SOURCE_IMPORT_COLUMNS.post, SOURCE_IMPORT_COLUMNS.subPost],
@@ -129,6 +155,8 @@ export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): Pa
     const siteName = col('site')
     if (!siteName) {
       rowErrors.push({ key: 'missingSite' })
+    } else if (!resolveStudySiteId(siteName, studySites)) {
+      rowErrors.push({ key: 'siteNotFound', value: siteName })
     }
 
     const subPostLabel = col('subPost')
@@ -148,9 +176,12 @@ export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): Pa
 
     const emissionFactorValue = parseOptionalNumber(col('emissionFactorValue'), 'invalidEmissionFactorValue', rowErrors)
     const rawEmissionFactorUnit = col('emissionFactorUnit')
+    if (!KG_CO2E_PREFIX_REGEX.test(rawEmissionFactorUnit) && rawEmissionFactorUnit !== '') {
+      rowErrors.push({ key: 'invalidUnit', value: rawEmissionFactorUnit })
+    }
     const strippedEmissionFactorUnit = rawEmissionFactorUnit.replace(KG_CO2E_PREFIX_REGEX, '')
     const emissionFactorUnit = parseOptionalLabel(strippedEmissionFactorUnit, 'invalidUnit', rowErrors, (label) =>
-      mapUnitLabelFromTranslationsWithList(label, locale, Object.values(Unit)),
+      matchUnitLabelFromTranslations(label, locale, Object.values(Unit)),
     )
     const unit = col('unit') || undefined
     const value = parseOptionalNumber(col('value'), 'invalidValue', rowErrors)
@@ -164,7 +195,7 @@ export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): Pa
     const parsedQualities: Partial<Record<(typeof qualityKeys)[number], number>> = {}
     for (const field of qualityKeys) {
       const mapped = parseOptionalLabel(col(field), 'invalidQuality', rowErrors, (label) =>
-        mapLabelFromTranslations(label, locale, (bc) =>
+        matchLabelFromTranslations(label, locale, (bc) =>
           Object.fromEntries(Object.entries(bc.quality).map(([k, v]) => [v.toLowerCase(), Number(k)])),
         ),
       )
@@ -180,6 +211,7 @@ export function parseEmissionSourcesFile(buffer: Buffer, locale: LocaleType): Pa
 
     parsedRows.push({
       lineNumber: lineNumber,
+      studySiteId: resolveStudySiteId(siteName, studySites)!,
       siteName,
       subPost: subPost!,
       name,

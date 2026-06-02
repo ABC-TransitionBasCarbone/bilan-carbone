@@ -6,7 +6,7 @@ import { COLUMNS, ImportError, ParsedRow, ParseResult } from '@/types/importEmis
 import { EmissionFactorBase, Environment, SubPost, Unit } from '@abc-transitionbascarbone/db-common/enums'
 import { ManualEmissionFactorUnitList } from './emissionFactors'
 import { parseExcelSheet } from './excel.utils'
-import { buildLabelMap, mapLabelFromTranslations, mapUnitLabelFromTranslationsWithList } from './import.utils'
+import { buildLabelMap, matchLabelFromTranslations, matchUnitLabelFromTranslations } from './import.utils'
 import { getExampleRowPrefixes } from './importEmissionSources.utils'
 import { parseNumericValue } from './number'
 import { getBcTranslations, getCommonTranslations, getSingularForm } from './translation.utils'
@@ -15,8 +15,11 @@ export function getAllPostsLabel(locale: LocaleType): string {
   return getBcTranslations(locale).emissionFactors.importModal.allPostsAndSubPosts
 }
 
-function mapBaseLabelFromTranslations(label: string | undefined | null, locale: LocaleType): EmissionFactorBase | null {
-  return mapLabelFromTranslations(label, locale, (bc) =>
+function matchBaseLabelFromTranslations(
+  label: string | undefined | null,
+  locale: LocaleType,
+): EmissionFactorBase | null {
+  return matchLabelFromTranslations(label, locale, (bc) =>
     buildLabelMap(
       bc.emissionFactors.base,
       () => true,
@@ -25,13 +28,13 @@ function mapBaseLabelFromTranslations(label: string | undefined | null, locale: 
   )
 }
 
-function mapPostLabelFromTranslations(
+function matchPostLabelFromTranslations(
   label: string | undefined | null,
   locale: LocaleType,
   environment: Environment,
 ): string | null {
   const envPosts = environmentPostMapping[environment]
-  return mapLabelFromTranslations(label, locale, (bc) =>
+  return matchLabelFromTranslations(label, locale, (bc) =>
     buildLabelMap(
       bc.emissionFactors.post,
       (k) => k in envPosts,
@@ -40,13 +43,13 @@ function mapPostLabelFromTranslations(
   )
 }
 
-function mapSubPostLabelFromTranslations(
+function matchSubPostLabelFromTranslations(
   label: string | undefined | null,
   locale: LocaleType,
   environment: Environment,
 ): SubPost | null {
   const envSubPosts = Object.values(environmentSubPostsMapping[environment]).flat()
-  return mapLabelFromTranslations(label, locale, (bc) =>
+  return matchLabelFromTranslations(label, locale, (bc) =>
     buildLabelMap(
       bc.emissionFactors.post,
       (k) => envSubPosts.includes(k as SubPost),
@@ -61,10 +64,6 @@ export function getUnitLabel(unit: Unit, locale: LocaleType): string {
     return unit
   }
   return getSingularForm(raw)
-}
-
-function mapManualUnitLabelFromTranslations(label: string | undefined | null, locale: LocaleType): Unit | null {
-  return mapUnitLabelFromTranslationsWithList(label, locale, ManualEmissionFactorUnitList)
 }
 
 /**
@@ -123,7 +122,7 @@ export function parsePostsAndSubPostsCell(
     .filter(Boolean)
   for (const group of groups) {
     const [postPart, ...subPostParts] = group.split(':').map((s) => s.trim())
-    const post = mapPostLabelFromTranslations(postPart, locale, environment)
+    const post = matchPostLabelFromTranslations(postPart, locale, environment)
     if (!post) {
       errors.push({ key: 'invalidPost', value: postPart })
       continue
@@ -134,7 +133,7 @@ export function parsePostsAndSubPostsCell(
       .map((s) => s.trim())
       .filter(Boolean)
     for (const token of subPostTokens) {
-      const subPost = mapSubPostLabelFromTranslations(token, locale, environment)
+      const subPost = matchSubPostLabelFromTranslations(token, locale, environment)
       if (!subPost) {
         errors.push({ key: 'invalidSubPost', value: token })
       } else {
@@ -190,7 +189,7 @@ export function parseImportFile(buffer: Buffer, locale: LocaleType, environment:
     }
 
     const strippedUnit = rawUnit.replace(KG_CO2E_PREFIX_REGEX, '')
-    const standardUnit = mapManualUnitLabelFromTranslations(strippedUnit, locale)
+    const standardUnit = matchUnitLabelFromTranslations(strippedUnit, locale, ManualEmissionFactorUnitList)
     const unit = standardUnit ?? (strippedUnit ? Unit.CUSTOM : null)
     if (!unit) {
       rowErrors.push({ key: 'invalidUnit', value: rawUnit })
@@ -213,7 +212,7 @@ export function parseImportFile(buffer: Buffer, locale: LocaleType, environment:
 
     const parseQuality = (col: keyof typeof COLUMNS, errorKey: string) => {
       const raw = row[COLUMNS[col]]
-      const value = mapLabelFromTranslations(raw, locale, (bc) =>
+      const value = matchLabelFromTranslations(raw, locale, (bc) =>
         Object.fromEntries(Object.entries(bc.quality).map(([k, v]) => [v.toLowerCase(), Number(k)])),
       )
       if (value === null) {
@@ -254,7 +253,7 @@ export function parseImportFile(buffer: Buffer, locale: LocaleType, environment:
     }
 
     const rawBase = String(row[COLUMNS.base] ?? '').trim()
-    const base = mapBaseLabelFromTranslations(rawBase, locale)
+    const base = matchBaseLabelFromTranslations(rawBase, locale)
 
     if (flatSubPosts.includes(SubPost.Electricite) && !base) {
       rowErrors.push({ key: 'missingBase', value: rawBase || undefined })

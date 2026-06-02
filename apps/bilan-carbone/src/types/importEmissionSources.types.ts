@@ -25,6 +25,7 @@ export type PreviewEmissionSourcesResult =
 
 export type ParsedEmissionSourceRow = {
   lineNumber: number
+  studySiteId: string
   siteName: string
   subPost: SubPost
   name: string

@@ -4,15 +4,10 @@ import { Unit } from '@abc-transitionbascarbone/db-common/enums'
 import Fuse from 'fuse.js'
 import { BcTranslations, extractAllForms, getBcTranslations } from './translation.utils'
 
-export function mapLabelFromTranslations<T>(
-  label: string | undefined | null,
-  locale: LocaleType,
-  buildMap: (bc: BcTranslations) => Record<string, T>,
-): T | null {
+export function matchLabelFromMap<T>(label: string | undefined | null, map: Record<string, T>): T | null {
   if (!label) {
     return null
   }
-  const map = buildMap(getBcTranslations(locale))
   const trimmed = label.trim().toLowerCase()
   if (trimmed in map) {
     return map[trimmed]
@@ -24,6 +19,17 @@ export function mapLabelFromTranslations<T>(
     return map[results[0].item]
   }
   return null
+}
+
+export function matchLabelFromTranslations<T>(
+  label: string | undefined | null,
+  locale: LocaleType,
+  buildMap: (bc: BcTranslations) => Record<string, T>,
+): T | null {
+  if (!label) {
+    return null
+  }
+  return matchLabelFromMap(label, buildMap(getBcTranslations(locale)))
 }
 
 export function buildUnitLabelMap(bc: BcTranslations, unitList: Unit[]): Record<string, Unit> {
@@ -43,12 +49,12 @@ export function buildUnitLabelMap(bc: BcTranslations, unitList: Unit[]): Record<
   return map
 }
 
-export function mapUnitLabelFromTranslationsWithList(
+export function matchUnitLabelFromTranslations(
   label: string | undefined | null,
   locale: LocaleType,
   unitList: Unit[],
 ): Unit | null {
-  return mapLabelFromTranslations(label, locale, (bc) => buildUnitLabelMap(bc, unitList))
+  return matchLabelFromTranslations(label, locale, (bc) => buildUnitLabelMap(bc, unitList))
 }
 
 /**

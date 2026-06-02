@@ -98,7 +98,7 @@ export async function previewEmissionSourcesFromFile(
 
   const locale = await getLocale()
   const buffer = Buffer.from(await file.arrayBuffer())
-  const result = parseEmissionSourcesFile(buffer, locale)
+  const result = parseEmissionSourcesFile(buffer, locale, study.sites)
 
   if (!result.success) {
     return result
@@ -106,7 +106,6 @@ export async function previewEmissionSourcesFromFile(
 
   const bc = getBcTranslations(locale)
   const postTranslations = bc.emissionFactors.post as unknown as Record<string, string>
-  const unitTranslations = bc.units as Record<string, string>
 
   const rows: PreviewEmissionSourceRow[] = result.rows.map((row) => {
     const post = getPost(row.subPost)
@@ -120,7 +119,7 @@ export async function previewEmissionSourcesFromFile(
       emissionFactorId: row.emissionFactorId ?? '',
       emissionFactorName: row.emissionFactorName ?? '',
       emissionFactorValue: row.emissionFactorValue !== undefined ? String(row.emissionFactorValue) : '',
-      emissionFactorUnit: row.emissionFactorUnit ? getSingularForm(unitTranslations[row.emissionFactorUnit]) : '',
+      emissionFactorUnit: getDisplayedUnitString(locale, row.emissionFactorUnit),
     }
   })
 
@@ -135,11 +134,8 @@ const getDisplayedUnitString = (locale: LocaleType, unit: string | undefined) =>
   const bc = getBcTranslations(locale)
   const unitTranslationObject = bc.units as Record<string, string>
   const unitTranslation = unitTranslationObject[unit]
-
-  if (!unitTranslation) {
-    return unit
-  }
-  return getSingularForm(unitTranslation)
+  const label = unitTranslation ? getSingularForm(unitTranslation) : unit
+  return `${KG_CO2E_PREFIX}${label}`
 }
 
 export async function importEmissionSourcesFromFile(
@@ -156,18 +152,10 @@ export async function importEmissionSourcesFromFile(
 
   const locale = await getLocale()
   const buffer = Buffer.from(await file.arrayBuffer())
-  const result = parseEmissionSourcesFile(buffer, locale)
+  const result = parseEmissionSourcesFile(buffer, locale, study.sites)
 
   if (!result.success) {
     return result
-  }
-
-  const siteMap = new Map<string, string>()
-  for (const studySite of study.sites) {
-    const siteName = studySite.site?.name
-    if (siteName) {
-      siteMap.set(siteName.toLowerCase(), studySite.id)
-    }
   }
 
   const organizationId = study.organizationVersion.organization?.id ?? ''
@@ -180,12 +168,6 @@ export async function importEmissionSourcesFromFile(
   for (let i = 0; i < result.rows.length; i++) {
     const row = result.rows[i]
     const lineNumber = row.lineNumber
-
-    const studySiteId = siteMap.get(row.siteName.toLowerCase())
-    if (!studySiteId) {
-      rowErrors.push({ lineNumber, key: 'siteNotFound', value: row.siteName })
-      continue
-    }
 
     const ef = await findEmissionFactorMatch(
       row.emissionFactorId,
@@ -293,7 +275,7 @@ export async function importEmissionSourcesFromFile(
 
     const casFields = getHectareAndDuration(isCASSubPost(row.subPost, efUnit), row.value)
     validRows.push({
-      studySiteId,
+      studySiteId: row.studySiteId,
       studyId,
       subPost: row.subPost,
       name: row.name,
