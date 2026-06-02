@@ -19,8 +19,9 @@ interface Props {
   setSite: (site: string) => void
   setGlossary: (glossary: string) => void
   environment: Environment
+  simplified?: boolean
 }
-const StudyPostsCard = ({ study, post, studySite, setSite, setGlossary, environment }: Props) => {
+const StudyPostsCard = ({ study, post, studySite, setSite, setGlossary, environment, simplified }: Props) => {
   const t = useTranslations('study')
   const tPost = useTranslations('emissionFactors.post')
 
@@ -62,7 +63,7 @@ const StudyPostsCard = ({ study, post, studySite, setSite, setGlossary, environm
             </div>
           </StyledPostContainer>
         </div>
-        {hasAccessToEmissionSourceValidation(environment) && (
+        {hasAccessToEmissionSourceValidation(environment, simplified) && (
           <div className={classNames({ [styles.allValidated]: percent === 100 }, 'grow flex-cc')}>
             <p className={classNames(styles.emissionSources, 'mb1 justify-end grow')}>
               {customRich(t, 'validatedSources', {
