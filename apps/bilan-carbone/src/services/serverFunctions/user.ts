@@ -1,6 +1,5 @@
 'use server'
 
-import { environmentsWithChecklist } from '@/constants/environments'
 import {
   addAccount,
   changeAccountRole,
@@ -63,12 +62,6 @@ import {
   UserChecklist,
   UserStatus,
 } from '@abc-transitionbascarbone/db-common/enums'
-import { DAY, HOUR, MIN, TIME_IN_MS, YEAR } from '@abc-transitionbascarbone/utils'
-import jwt from 'jsonwebtoken'
-import { UserSession } from 'next-auth'
-import { getCompanyName, getValidAssociationNameBySiret } from '../associationApi'
-import { auth, dbActualizedAuth } from '../auth'
-import { getUserCheckList } from '../checklist'
 import {
   sendActivationEmail,
   sendActivationRequest,
@@ -80,7 +73,14 @@ import {
   sendNewUserOnStudyInvitationEmail,
   sendResetPassword,
   sendUserOnStudyInvitationEmail,
-} from '../email/email'
+} from '@abc-transitionbascarbone/services/email/email'
+import { DAY, HOUR, MIN, TIME_IN_MS, YEAR } from '@abc-transitionbascarbone/utils'
+import { environmentsWithChecklist } from '@abc-transitionbascarbone/utils/environments'
+import jwt from 'jsonwebtoken'
+import { UserSession } from 'next-auth'
+import { getCompanyName, getValidAssociationNameBySiret } from '../associationApi'
+import { auth, dbActualizedAuth } from '../auth'
+import { getUserCheckList } from '../checklist'
 import {
   EMAIL_SENT,
   MORE_THAN_ONE,

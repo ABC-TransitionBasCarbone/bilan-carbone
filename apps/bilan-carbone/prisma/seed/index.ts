@@ -1,4 +1,3 @@
-import { environmentsWithChecklist } from '@/constants/environments'
 import { DefaultStudyTags } from '@/constants/tag.constants'
 import { reCreateBegesRules, reCreateGHGPRules } from '@/db/exports'
 import { getSectenVersion, updateSectenVersion } from '@/scripts/secten/secten'
@@ -20,6 +19,7 @@ import {
   UserStatus,
 } from '@abc-transitionbascarbone/db-common/enums'
 import { signPassword } from '@abc-transitionbascarbone/utils/auth'
+import { environmentsWithChecklist } from '@abc-transitionbascarbone/utils/environments'
 import { faker } from '@faker-js/faker'
 import { PrismaPg } from '@prisma/adapter-pg'
 

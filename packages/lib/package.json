@@ -12,5 +12,9 @@
   "dependencies": {
     "@abc-transitionbascarbone/ui": "*",
     "zod": "*"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*.ts"
   }
 }

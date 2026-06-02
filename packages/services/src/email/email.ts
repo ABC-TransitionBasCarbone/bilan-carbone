@@ -1,6 +1,6 @@
-import { EnvironmentNames } from '@/constants/environments'
-import { getEnvVar } from '@/lib/environment'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { getEnvVar } from '@abc-transitionbascarbone/lib/environment'
+import { EnvironmentNames } from '@abc-transitionbascarbone/utils/environments'
 import { getTranslations } from 'next-intl/server'
 import { sendEmail } from './send'
 import { getEnvResetLink } from './utils'

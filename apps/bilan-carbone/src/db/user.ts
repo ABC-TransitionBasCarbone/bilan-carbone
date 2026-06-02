@@ -1,4 +1,3 @@
-import { environmentsWithChecklist } from '@/constants/environments'
 import { NOT_AUTHORIZED } from '@/services/permissions/check'
 import { getDeactivableFeatureRestrictions } from '@/services/serverFunctions/deactivableFeatures'
 import { addUserChecklistItem, sendEmailToAddedUser } from '@/services/serverFunctions/user'
@@ -15,6 +14,7 @@ import {
   UserStatus,
 } from '@abc-transitionbascarbone/db-common/enums'
 import { signPassword } from '@abc-transitionbascarbone/utils/auth'
+import { environmentsWithChecklist } from '@abc-transitionbascarbone/utils/environments'
 import { UserSession } from 'next-auth'
 import { addAccount, getAccountByEmailAndEnvironment, getAccountByEmailAndOrganizationVersionId } from './account'
 import { prismaClient } from './client.server'

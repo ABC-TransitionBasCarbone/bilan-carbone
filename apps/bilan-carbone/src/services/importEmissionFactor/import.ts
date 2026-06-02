@@ -1,6 +1,5 @@
 import { KG_CO2E_PREFIX } from '@/constants/import'
 import { getSourceLatestImportVersionId } from '@/db/study'
-import { getEnvVar } from '@/lib/environment'
 import { isMonetaryEmissionFactor } from '@/utils/emissionFactors'
 import type { Prisma } from '@abc-transitionbascarbone/db-common'
 import {
@@ -11,6 +10,7 @@ import {
   SubPost,
   Unit,
 } from '@abc-transitionbascarbone/db-common/enums'
+import { getEnvVar } from '@abc-transitionbascarbone/lib/environment'
 import { unitsMatrix } from './historyUnits'
 import { additionalParts } from './parts.config'
 
