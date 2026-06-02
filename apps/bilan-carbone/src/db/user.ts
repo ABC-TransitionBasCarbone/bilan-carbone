@@ -131,6 +131,12 @@ export const updateUserPasswordForEmail = async (email: string, password: string
   return user
 }
 
+export const updateUserResetTokenForEmail = async (email: string, resetToken: string) =>
+  prismaClient.user.update({
+    where: { email: email.toLowerCase() },
+    data: { resetToken },
+  })
+
 export const deleteUserFromOrga = async (email: string, organizationVersionId: string | null) => {
   const account = await getAccountByEmailAndOrganizationVersionId(email, organizationVersionId)
   if (!account) {

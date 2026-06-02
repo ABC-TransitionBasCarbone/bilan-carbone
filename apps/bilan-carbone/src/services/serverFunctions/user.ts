@@ -44,6 +44,7 @@ import {
   updateUser,
   updateUserApplicationSettings,
   updateUserFeedbackDate,
+  updateUserResetTokenForEmail,
   UserWithAccounts,
   validateUser,
 } from '@/db/user'
@@ -53,7 +54,6 @@ import { withServerResponse } from '@/utils/serverResponse'
 import { getRoleToSetForUntrained } from '@/utils/user'
 import { accountWithUserToUserSession, userSessionToDbUser } from '@/utils/userAccounts'
 import { Organization, User } from '@abc-transitionbascarbone/db-common'
-import { updateUserResetTokenForEmail } from '@abc-transitionbascarbone/db-common/db'
 import {
   Country,
   DeactivatableFeature,
