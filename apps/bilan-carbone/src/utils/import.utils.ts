@@ -1,5 +1,7 @@
+import { DEFAULT_FUZZY_OPTIONS } from '@/constants/fuse.contstant'
 import { LocaleType } from '@/i18n/config'
 import { Unit } from '@abc-transitionbascarbone/db-common/enums'
+import Fuse from 'fuse.js'
 import { BcTranslations, extractAllForms, getBcTranslations } from './translation.utils'
 
 export function mapLabelFromTranslations<T>(
@@ -10,7 +12,18 @@ export function mapLabelFromTranslations<T>(
   if (!label) {
     return null
   }
-  return buildMap(getBcTranslations(locale))[label.trim().toLowerCase()] ?? null
+  const map = buildMap(getBcTranslations(locale))
+  const trimmed = label.trim().toLowerCase()
+  if (trimmed in map) {
+    return map[trimmed]
+  }
+  const keys = Object.keys(map)
+  const fuse = new Fuse(keys, DEFAULT_FUZZY_OPTIONS)
+  const results = fuse.search(trimmed)
+  if (results.length > 0 && results[0].item) {
+    return map[results[0].item]
+  }
+  return null
 }
 
 export function buildUnitLabelMap(bc: BcTranslations, unitList: Unit[]): Record<string, Unit> {
