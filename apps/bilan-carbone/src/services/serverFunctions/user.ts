@@ -11,7 +11,7 @@ import {
   getAccountsFromUser,
 } from '@/db/account'
 import { findCncByCncCode } from '@/db/cnc'
-import { isFeatureActive } from '@/db/deactivableFeatures'
+import { isFeatureActiveForEnvironment } from '@/db/deactivableFeatures'
 import {
   createOrganizationWithVersion,
   getOrganizationVersionByOrganizationIdAndEnvironment,
@@ -510,7 +510,7 @@ export const displayFeedBackForm = async () =>
 
     const [userFeedbackDate, activeFeature] = await Promise.all([
       getUserFeedbackDate(session.user.accountId),
-      isFeatureActive(DeactivatableFeature.Feedback),
+      isFeatureActiveForEnvironment(DeactivatableFeature.Feedback, session.user.environment),
     ])
 
     if (!userFeedbackDate || !activeFeature) {
