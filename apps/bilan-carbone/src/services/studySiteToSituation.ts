@@ -22,8 +22,8 @@ export interface ClicksonStudySiteFields {
 }
 
 export interface TiltStudySiteFields {
-  volunteerNumber?: number
-  beneficiaryNumber?: number
+  volunteerNumber?: number | null
+  beneficiaryNumber?: number | null
   etp?: number
 }
 
