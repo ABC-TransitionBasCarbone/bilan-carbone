@@ -366,7 +366,6 @@ export const createStudyCommand = async (
         // This cannot be part of a transaction easily so it is done in the duplication flow after the transaction is committed
         await addUserChecklistItem(UserChecklist.CreateFirstStudy)
       }
-      console.log(createdStudy)
 
       if (createdStudy.simplified) {
         await Promise.all(
