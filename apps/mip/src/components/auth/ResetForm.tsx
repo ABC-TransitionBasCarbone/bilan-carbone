@@ -18,12 +18,6 @@ interface Props {
 
 const ResetForm = ({ user, token }: Props) => {
   useEffect(() => {
-    checkToken(token).then((invalidtoken) => {
-      setInvalidResetLink(invalidtoken)
-    })
-  }, [token])
-
-  useEffect(() => {
     if (user) {
       signOut({ callbackUrl: `/signed-out`, redirect: false })
     }
@@ -34,6 +28,12 @@ const ResetForm = ({ user, token }: Props) => {
   const [invalidResetLink, setInvalidResetLink] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const { callServerFunction } = useServerFunction()
+
+  useEffect(() => {
+    checkToken(token).then((invalidtoken) => {
+      setInvalidResetLink(invalidtoken)
+    })
+  }, [token])
 
   if (invalidResetLink) {
     return <ResetLinkAlreadyUsed />

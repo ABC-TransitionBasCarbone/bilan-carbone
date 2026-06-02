@@ -6,7 +6,6 @@ import GlossaryModal from '@/components/modals/GlossaryModal'
 import SelectStudySite from '@/components/study/site/SelectStudySite'
 import { OrganizationWithSites } from '@/db/account'
 import type { FullStudy } from '@/db/study'
-import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'components/src/hooks/useServerFunction'
 import { changeStudyDates, changeStudyExports } from '@/services/serverFunctions/study'
 import {
   ChangeStudyDatesCommand,
@@ -17,6 +16,7 @@ import {
 import { hasEditionRights } from '@/utils/study'
 import { HelpIcon } from '@abc-transitionbascarbone/components'
 import IconLabel from '@abc-transitionbascarbone/components/src/base/IconLabel'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { ControlMode, Export, SiteCAUnit, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
 import { zodResolver } from '@hookform/resolvers/zod'
 import classNames from 'classnames'

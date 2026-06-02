@@ -16,7 +16,6 @@ import {
   TRAJECTORY_WB2C_ID,
 } from '@/constants/trajectory.constants'
 import type { FullStudy } from '@/db/study'
-import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { useTransitionPlan } from '@/hooks/useTransitionPlan'
 import { useTransitionPlanFilters } from '@/hooks/useTransitionPlanFilters'
 import { customRich } from '@/i18n/customRich'
@@ -33,6 +32,7 @@ import { calculateSectoralSNBCReductionRates, getDefaultSnbcSectoralTrajectory }
 import { getAllTagIds } from '@/utils/tag.utils'
 import { getInitialCurrentStep, readStoredStringArray } from '@/utils/transitionPlan.utils'
 import Image from '@abc-transitionbascarbone/components/src/document/Image'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import type { ExternalStudy, SectenInfo, SectenVersion, TransitionPlan } from '@abc-transitionbascarbone/db-common'
 import { TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
 import { Button } from '@abc-transitionbascarbone/ui'

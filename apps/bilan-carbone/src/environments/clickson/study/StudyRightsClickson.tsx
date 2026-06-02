@@ -11,7 +11,6 @@ import SelectStudySite from '@/components/study/site/SelectStudySite'
 import useStudySite from '@/components/study/site/useStudySite'
 import StudyComments from '@/components/study/StudyComments'
 import type { FullStudy } from '@/db/study'
-import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import {
   changeStudyDates,
   changeStudyEstablishment,
@@ -27,6 +26,7 @@ import {
   ChangeStudyNameValidation,
 } from '@/services/serverFunctions/study.command'
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import type { EmissionFactorImportVersion } from '@abc-transitionbascarbone/db-common'
 import { Country } from '@abc-transitionbascarbone/db-common/enums'
 import { Button } from '@abc-transitionbascarbone/ui'

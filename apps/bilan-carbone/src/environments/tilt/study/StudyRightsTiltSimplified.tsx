@@ -10,7 +10,6 @@ import useStudySite from '@/components/study/site/useStudySite'
 import { OrganizationWithSites } from '@/db/account'
 import type { FullStudy } from '@/db/study'
 import { getTiltEngine } from '@/environments/tilt/publicodes/tilt-engine'
-import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import {
   mappedTiltSituationToCustomDataFields,
   optionalTiltSituationToCustomDataFields,
@@ -25,11 +24,9 @@ import {
   ChangeStudySiteTiltSimplifiedCommand,
   ChangeStudySiteTiltSimplifiedValidation,
 } from '@/services/serverFunctions/study.command'
-<<<<<<< HEAD
 import { HelpIcon } from '@abc-transitionbascarbone/components'
-=======
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
->>>>>>> prettier
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { SiteCAUnit, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CircularProgress, Typography } from '@mui/material'

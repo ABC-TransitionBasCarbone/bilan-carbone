@@ -1,6 +1,5 @@
 'use client'
 
-import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
 import { getEnvVarClient } from '@/lib/environmentClient'
 import { getEnvRoute } from '@/services/email/utils'
@@ -11,6 +10,7 @@ import { SignUpClicksonCommand, SignUpClicksonCommandValidation } from '@/servic
 import Form from '@abc-transitionbascarbone/components/src/base/Form'
 import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { Country, Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { zodResolver } from '@hookform/resolvers/zod'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
