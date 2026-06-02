@@ -2,6 +2,7 @@
 
 import ConfirmDeleteModal from '@/components/modals/ConfirmDeleteModal'
 import { EngagementActionSteps, EngagementActionTargets } from '@/constants/engagementActions'
+import { DEFAULT_FUZZY_OPTIONS } from '@/constants/fuse.contstant'
 import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteEngagementAction, EngagementActionWithSites } from '@/services/serverFunctions/study'
@@ -98,8 +99,7 @@ const EngagementActions = ({ actions, study, studySite }: Props) => {
         },
         { name: 'sites.site.name', weight: 1 },
       ],
-      threshold: 0.3,
-      isCaseSensitive: false,
+      ...DEFAULT_FUZZY_OPTIONS,
     }),
     [stepTranslatedMapping, targetTranslatedMapping, phaseTranslatedMapping],
   )

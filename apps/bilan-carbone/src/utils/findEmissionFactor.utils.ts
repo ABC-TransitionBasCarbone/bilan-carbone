@@ -1,3 +1,4 @@
+import { DEFAULT_FUZZY_OPTIONS } from '@/constants/fuse.contstant'
 import {
   findEmissionFactorByImportedIdForMatch,
   findEmissionFactorsByNameAndUnit,
@@ -5,8 +6,6 @@ import {
 } from '@/db/emissionFactors'
 import { Unit } from '@abc-transitionbascarbone/db-common/enums'
 import Fuse from 'fuse.js'
-
-const FUZZY_EF_THRESHOLD = 0.3
 
 export enum EmissionFactorMatchType {
   Exact = 'exact',
@@ -109,7 +108,10 @@ export async function findEmissionFactorMatch(
         title: ef.metaData.find((m) => m.language === locale)?.title ?? ef.metaData[0]?.title ?? '',
       }))
 
-      const fuse = new Fuse(candidates, { keys: ['title'], includeScore: true, threshold: FUZZY_EF_THRESHOLD })
+      const fuse = new Fuse(candidates, {
+        keys: ['title'],
+        ...DEFAULT_FUZZY_OPTIONS,
+      })
       const results = fuse.search(title.trim())
 
       if (results.length === 1) {

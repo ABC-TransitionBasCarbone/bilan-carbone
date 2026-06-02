@@ -1,9 +1,8 @@
+import { DEFAULT_FUZZY_OPTIONS } from '@/constants/fuse.contstant'
 import { LocaleType } from '@/i18n/config'
 import { Unit } from '@abc-transitionbascarbone/db-common/enums'
 import Fuse from 'fuse.js'
 import { BcTranslations, extractAllForms, getBcTranslations } from './translation.utils'
-
-const FUZZY_THRESHOLD = 0.3
 
 export function mapLabelFromTranslations<T>(
   label: string | undefined | null,
@@ -19,7 +18,7 @@ export function mapLabelFromTranslations<T>(
     return map[trimmed]
   }
   const keys = Object.keys(map)
-  const fuse = new Fuse(keys, { includeScore: true, threshold: FUZZY_THRESHOLD })
+  const fuse = new Fuse(keys, DEFAULT_FUZZY_OPTIONS)
   const results = fuse.search(trimmed)
   if (results.length > 0 && results[0].item) {
     return map[results[0].item]
