@@ -3,7 +3,7 @@ import { studySiteToCutSituation } from '@/environments/cut/publicodes/studySite
 import { studySiteToTiltSituation } from '@/environments/tilt/publicodes/studySiteToSituation'
 import { Country, Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { Situation } from 'publicodes'
-import { SimplifiedEnvironment } from './publicodes/simplifiedPublicodesConfig'
+import { EnvironmentWithSimplifiedStudies } from './permissions/environment'
 
 export interface CutStudySiteFields {
   distanceToParis?: number | null
@@ -35,18 +35,20 @@ export type StudySiteToSituationFn = (studySite: StudySiteFields | undefined) =>
  * Registry of studySiteToSituation functions by environment.
  * Each environment can define its own mapping from StudySite fields to Publicodes situation keys.
  */
-const studySiteToSituationByEnvironment: Record<SimplifiedEnvironment, StudySiteToSituationFn> = {
+const studySiteToSituationByEnvironment: Record<EnvironmentWithSimplifiedStudies, StudySiteToSituationFn> = {
   [Environment.CUT]: studySiteToCutSituation,
   [Environment.CLICKSON]: studySiteToClicksonSituation,
   [Environment.TILT]: studySiteToTiltSituation,
 }
 
-export function getStudySiteToSituation(environment: SimplifiedEnvironment): StudySiteToSituationFn | undefined {
+export function getStudySiteToSituation(
+  environment: EnvironmentWithSimplifiedStudies,
+): StudySiteToSituationFn | undefined {
   return studySiteToSituationByEnvironment[environment]
 }
 
 export function studySiteToSituation(
-  environment: SimplifiedEnvironment,
+  environment: EnvironmentWithSimplifiedStudies,
   studySite: ClicksonStudySiteFields | undefined,
 ): Situation<string> {
   const fn = getStudySiteToSituation(environment)

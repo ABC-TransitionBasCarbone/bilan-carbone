@@ -1,6 +1,6 @@
+import { EnvironmentWithSimplifiedStudies } from '@/services/permissions/environment'
 import {
   getSimplifiedPublicodesConfig,
-  SimplifiedEnvironment,
   SimplifiedPublicodesConfig,
 } from '@/services/publicodes/simplifiedPublicodesConfig'
 import { loadSituation } from '@/services/serverFunctions/situation'
@@ -22,7 +22,7 @@ export interface PublicodesSituationContextValue<RuleName extends string = strin
 const PublicodesSituationContext = createContext<PublicodesSituationContextValue | null>(null)
 
 interface PublicodesSituationProviderProps {
-  environment: SimplifiedEnvironment
+  environment: EnvironmentWithSimplifiedStudies
   studyId: string
   studySiteId: string
   children: ReactNode

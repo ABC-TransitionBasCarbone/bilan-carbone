@@ -133,7 +133,6 @@ const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user,
   }, [siteList, isEditing, caUnit, siteForm])
 
   const onSitesSubmit = async () => {
-    // TODO Chloé : c'est ici qu'il faut modifier
     const deletedSites = sites.filter((site) => {
       return !site.selected && study.sites.some((studySite) => studySite.site.id === site.id)
     })

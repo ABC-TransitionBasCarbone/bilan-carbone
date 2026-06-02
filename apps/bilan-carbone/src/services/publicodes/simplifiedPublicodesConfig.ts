@@ -18,17 +18,12 @@ import {
   getSubPostRuleNameTilt,
 } from '@/environments/tilt/publicodes/subPostMapping'
 import { getTiltEngine } from '@/environments/tilt/publicodes/tilt-engine'
+import { EnvironmentWithSimplifiedStudies } from '@/services/permissions/environment'
 import { Environment, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { FormLayout } from '@abc-transitionbascarbone/publicodes/form/layouts'
 import Engine from 'publicodes'
 import { getSubPostByPostTiltSimplified, SimplifiedPost, subPostsByPostClickson, subPostsByPostCUT } from '../posts'
 import { ClicksonPost, CutPost } from '../posts.enums'
-
-export type SimplifiedEnvironment = 'CUT' | 'CLICKSON' | 'TILT'
-
-export const isSimplifiedEnvironment = (env: Environment): env is SimplifiedEnvironment => {
-  return env === Environment.CUT || env === Environment.CLICKSON
-}
 
 export interface SimplifiedPublicodesConfig<RuleName extends string = string> {
   posts: SimplifiedPost[]
@@ -68,8 +63,8 @@ const SIMPLIFIED_PUBLICODES_CONFIGS = {
     getEngine: getTiltEngine,
     modelVersion: PUBLICODES_TILT_VERSION,
   } satisfies SimplifiedPublicodesConfig,
-} satisfies Record<SimplifiedEnvironment, SimplifiedPublicodesConfig>
+} satisfies Record<EnvironmentWithSimplifiedStudies, SimplifiedPublicodesConfig>
 
-export const getSimplifiedPublicodesConfig = (env: SimplifiedEnvironment): SimplifiedPublicodesConfig => {
+export const getSimplifiedPublicodesConfig = (env: EnvironmentWithSimplifiedStudies): SimplifiedPublicodesConfig => {
   return SIMPLIFIED_PUBLICODES_CONFIGS[env]
 }

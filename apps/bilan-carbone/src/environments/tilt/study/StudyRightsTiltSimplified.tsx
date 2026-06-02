@@ -29,6 +29,7 @@ import { HelpIcon } from '@abc-transitionbascarbone/components'
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { SiteCAUnit, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
+import { useToast } from '@abc-transitionbascarbone/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CircularProgress, Typography } from '@mui/material'
 import { getEvaluatedFormElement } from '@publicodes/forms'
@@ -59,6 +60,8 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
   const [glossary, setGlossary] = useState('')
   const [siteData, setSiteData] = useState<TiltCustomDataFields | undefined>()
   const [loading, setLoading] = useState(true)
+  const { showErrorToast } = useToast()
+  const tGeneralError = useTranslations('error')
 
   const studySite = useMemo(() => study.sites.sort((a, b) => sortAlphabetically(a.id, b.id))[0], [study.sites])
 
@@ -162,6 +165,18 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
     )()
   }, [form, handleStudySiteUpdate, studySite])
 
+  const handleSiteChange = useCallback(
+    async (siteId: string, data: ChangeStudySiteTiltSimplifiedCommand & TiltStudySiteFields) => {
+      const studySite = study.sites.find((site) => site.site.id === siteId)
+      if (studySite) {
+        await handleStudySiteUpdate(studySite.id, data)
+      } else {
+        showErrorToast(tGeneralError('default'))
+      }
+    },
+    [handleStudySiteUpdate, showErrorToast, study.sites, tGeneralError],
+  )
+
   return (
     <>
       <Block
@@ -197,7 +212,7 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
                   user={user}
                   userRoleOnStudy={userRoleOnStudy}
                   organizationVersion={organizationVersion}
-                  handleSpecificChange={handleStudySiteUpdate}
+                  handleSpecificChange={handleSiteChange}
                 />
               )}
               <FormAutocomplete
