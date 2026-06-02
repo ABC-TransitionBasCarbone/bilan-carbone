@@ -320,12 +320,14 @@ describe('parseImportFile', () => {
       }
     })
 
-    it('returns invalidUnit error for an unknown unit', () => {
+    it('accepts a custom unit without kgCO2e/ prefix without warning', () => {
       const buffer = makeBuffer([{ ...VALID_ROW, unit: 'poids-inconnu' }])
       const result = parseImportFile(buffer, Locale.FR, Environment.BC)
-      expect(result.success).toBe(false)
-      if (!result.success) {
-        expect(result.errors.some((e) => e.key === 'invalidUnit')).toBe(true)
+      expect(result.success).toBe(true)
+      if (result.success) {
+        expect(result.rows[0].unit).toBe(Unit.CUSTOM)
+        expect(result.rows[0].customUnit).toBe('poids-inconnu')
+        expect(result.warnings).toEqual([])
       }
     })
 
@@ -366,12 +368,19 @@ describe('parseImportFile', () => {
       }
     })
 
-    it('returns invalidUnit error when unit is missing the kgCO2e/ prefix', () => {
+    it('returns a warning when unit is missing the kgCO2e/ prefix but is recognized', () => {
       const buffer = makeBuffer([{ ...VALID_ROW, unit: 'kg' }])
       const result = parseImportFile(buffer, Locale.FR, Environment.BC)
-      expect(result.success).toBe(false)
-      if (!result.success) {
-        expect(result.errors.some((e) => e.key === 'invalidUnit')).toBe(true)
+      expect(result.success).toBe(true)
+      if (result.success) {
+        expect(result.warnings).toEqual([
+          expect.objectContaining({
+            type: 'unitMissingPrefix',
+            lineNumber: 2,
+            foundUnit: 'kg',
+            resolvedValue: 'kgCO2e/kg',
+          }),
+        ])
       }
     })
 

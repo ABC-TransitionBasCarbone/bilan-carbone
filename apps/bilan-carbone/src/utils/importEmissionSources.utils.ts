@@ -153,9 +153,10 @@ export function parseEmissionSourcesFile(
     }
 
     const siteName = col('site')
+    const resolvedStudySiteId = siteName ? resolveStudySiteId(siteName, studySites) : null
     if (!siteName) {
       rowErrors.push({ key: 'missingSite' })
-    } else if (!resolveStudySiteId(siteName, studySites)) {
+    } else if (!resolvedStudySiteId) {
       rowErrors.push({ key: 'siteNotFound', value: siteName })
     }
 
@@ -176,13 +177,14 @@ export function parseEmissionSourcesFile(
 
     const emissionFactorValue = parseOptionalNumber(col('emissionFactorValue'), 'invalidEmissionFactorValue', rowErrors)
     const rawEmissionFactorUnit = col('emissionFactorUnit')
-    if (!KG_CO2E_PREFIX_REGEX.test(rawEmissionFactorUnit) && rawEmissionFactorUnit !== '') {
+    const strippedEmissionFactorUnit = rawEmissionFactorUnit.replace(KG_CO2E_PREFIX_REGEX, '')
+    const matchedEmissionFactorUnit = strippedEmissionFactorUnit
+      ? matchUnitLabelFromTranslations(strippedEmissionFactorUnit, locale, Object.values(Unit))
+      : undefined
+    if (strippedEmissionFactorUnit && matchedEmissionFactorUnit === null) {
       rowErrors.push({ key: 'invalidUnit', value: rawEmissionFactorUnit })
     }
-    const strippedEmissionFactorUnit = rawEmissionFactorUnit.replace(KG_CO2E_PREFIX_REGEX, '')
-    const emissionFactorUnit = parseOptionalLabel(strippedEmissionFactorUnit, 'invalidUnit', rowErrors, (label) =>
-      matchUnitLabelFromTranslations(label, locale, Object.values(Unit)),
-    )
+    const emissionFactorUnit = matchedEmissionFactorUnit ?? undefined
     const unit = col('unit') || undefined
     const value = parseOptionalNumber(col('value'), 'invalidValue', rowErrors)
     const type = parseOptionalLabel(col('type'), 'invalidType', rowErrors, (label) =>
@@ -211,7 +213,7 @@ export function parseEmissionSourcesFile(
 
     parsedRows.push({
       lineNumber: lineNumber,
-      studySiteId: resolveStudySiteId(siteName, studySites)!,
+      studySiteId: resolvedStudySiteId!,
       siteName,
       subPost: subPost!,
       name,
@@ -220,6 +222,7 @@ export function parseEmissionSourcesFile(
       emissionFactorName,
       emissionFactorValue,
       emissionFactorUnit,
+      emissionFactorUnitRaw: rawEmissionFactorUnit || undefined,
       value,
       type,
       caracterisation,

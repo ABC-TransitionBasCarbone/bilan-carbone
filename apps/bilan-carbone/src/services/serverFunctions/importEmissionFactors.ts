@@ -1,6 +1,5 @@
 'use server'
 
-import { KG_CO2E_PREFIX } from '@/constants/import'
 import { createEmissionFactorWithParts, getManualEmissionFactorsByOrganization } from '@/db/emissionFactors'
 import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
@@ -12,16 +11,12 @@ import {
   PreviewEmissionFactorsResult,
   PreviewRow,
 } from '@/types/importEmissionFactors.types'
-import {
-  buildPostsAndSubPostsCell,
-  getAllPostsLabel,
-  getUnitLabel,
-  parseImportFile,
-} from '@/utils/importEmissionFactors.utils'
+import { formatPrefixedUnitDisplay } from '@/utils/import.utils'
+import { buildPostsAndSubPostsCell, getAllPostsLabel, parseImportFile } from '@/utils/importEmissionFactors.utils'
 import { flattenSubposts } from '@/utils/post'
 import { withServerResponse } from '@/utils/serverResponse'
 import { getBcTranslations, getCommonTranslations } from '@/utils/translation.utils'
-import { EmissionFactorBase, EmissionFactorStatus, Import } from '@abc-transitionbascarbone/db-common/enums'
+import { EmissionFactorBase, EmissionFactorStatus, Import, Unit } from '@abc-transitionbascarbone/db-common/enums'
 import { getAuthenticatedAccount } from '../permissions/account.permissions'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canReadEmissionFactor } from '../permissions/emissionFactor'
@@ -88,7 +83,10 @@ function buildCreateInput(row: ParsedRow, organizationId: string, locale: Locale
   }
 }
 
-export async function importEmissionFactorsFromFile(file: File): Promise<ImportEmissionFactorsResult> {
+export async function importEmissionFactorsFromFile(
+  file: File,
+  forceImport = false,
+): Promise<ImportEmissionFactorsResult> {
   const account = await checkAuth()
 
   const locale = await getLocale()
@@ -98,6 +96,11 @@ export async function importEmissionFactorsFromFile(file: File): Promise<ImportE
   if (!result.success) {
     return result
   }
+
+  if (result.warnings.length > 0 && !forceImport) {
+    return { success: false, warnings: result.warnings }
+  }
+
   const organizationId = account.organizationVersion.organizationId
 
   for (const row of result.rows) {
@@ -154,9 +157,9 @@ export async function exportManualEmissionFactorsToFile(): Promise<ArrayBuffer> 
       metaData?.title ?? '',
       metaData?.attribute ?? '',
       ef.customUnit
-        ? `${KG_CO2E_PREFIX}${ef.customUnit}`
+        ? formatPrefixedUnitDisplay(locale, Unit.CUSTOM, ef.customUnit)
         : ef.unit
-          ? `${KG_CO2E_PREFIX}${getUnitLabel(ef.unit, locale)}`
+          ? formatPrefixedUnitDisplay(locale, ef.unit)
           : '',
       ef.isMonetary ? common.yes : common.no,
       ef.source ?? '',
@@ -234,7 +237,7 @@ export const getImportEmissionFactorsTemplate = async () =>
     const exampleRow: (string | number)[] = Array(TOTAL_COLS).fill('')
     exampleRow[COLUMNS.name] = `${modal.examplePrefix} ${modal.exampleName}`
     exampleRow[COLUMNS.attribute] = modal.exampleAttribute
-    exampleRow[COLUMNS.unit] = `${KG_CO2E_PREFIX}kg`
+    exampleRow[COLUMNS.unit] = formatPrefixedUnitDisplay(locale, Unit.KG)
     exampleRow[COLUMNS.isMonetary] = common.no
     exampleRow[COLUMNS.source] = modal.exampleSource
     exampleRow[COLUMNS.location] = modal.exampleLocation

@@ -19,6 +19,12 @@ const WarningItem = ({ w, lineNumber, t }: Props) => {
   if (w.type === 'efMissing') {
     warningMessage = t('warningEfMissing', { sourceName: w.sourceName ?? '' })
   }
+  if (w.type === 'unitMissingPrefix') {
+    warningMessage = t('warningUnitMissingPrefix', {
+      foundUnit: w.foundUnit ?? '',
+      resolvedValue: w.resolvedValue ?? '',
+    })
+  }
   if (warningMessage) {
     return (
       <ListItem disableGutters className={lineNumber !== null ? 'pl15' : undefined}>

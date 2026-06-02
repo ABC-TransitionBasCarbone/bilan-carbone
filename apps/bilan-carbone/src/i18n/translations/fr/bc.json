@@ -1586,6 +1586,7 @@
     "warningEfLeftEmpty": "Il sera laissé vide",
     "warningEfAmbiguous": "Plusieurs facteurs d'émission correspondent à ce nom :",
     "warningValidationSkipped": "La source importée ne sera pas validée car les champs requis ne sont pas tous remplis",
+    "warningUnitMissingPrefix": "Unité \"{foundUnit}\" non trouvée — \"{resolvedValue}\" sera utilisée",
     "tooManyFiles": "Veuillez importer un seul fichier à la fois",
     "invalidFileType": "Le fichier n'est pas un fichier Excel valide",
     "emptyFile": "Le fichier est vide",

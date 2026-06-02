@@ -260,7 +260,6 @@ describe('parseEmissionSourcesFile', () => {
       [{ value: 'abc' }, 'invalidValue'],
       [{ emissionFactorValue: 'abc' }, 'invalidEmissionFactorValue'],
       [{ emissionFactorUnit: 'kgCO2e/unité-inconnue' }, 'invalidUnit'],
-      [{ emissionFactorUnit: 'tonne' }, 'invalidUnit'],
       [{ type: 'type-inconnu' }, 'invalidType'],
       [{ caracterisation: 'catégorie-inconnue' }, 'invalidCaracterisation'],
       [{ reliability: 'qualité-inconnue' }, 'invalidQuality'],
@@ -283,13 +282,23 @@ describe('parseEmissionSourcesFile', () => {
       }
     })
 
-    it('returns both unit and site errors for the same row', () => {
+    it('parses a recognized emission factor unit without kgCO2e/ prefix', () => {
+      const buffer = makeBuffer([{ ...VALID_ROW, emissionFactorUnit: 'tonne' }])
+      const result = parseEmissionSourcesFile(buffer, Locale.FR, TEST_STUDY_SITES)
+      expect(result.success).toBe(true)
+      if (result.success) {
+        expect(result.rows[0].emissionFactorUnit).toBe(Unit.TON)
+        expect(result.rows[0].emissionFactorUnitRaw).toBe('tonne')
+      }
+    })
+
+    it('returns both siteNotFound and parses unit without prefix on the same row', () => {
       const buffer = makeBuffer([{ ...VALID_ROW, site: 'Site inconnu', emissionFactorUnit: 'tonne' }])
       const result = parseEmissionSourcesFile(buffer, Locale.FR, TEST_STUDY_SITES)
       expect(result.success).toBe(false)
       if (!result.success) {
-        expect(result.errors.some((e) => e.key === 'invalidUnit')).toBe(true)
         expect(result.errors.some((e) => e.key === 'siteNotFound')).toBe(true)
+        expect(result.errors.some((e) => e.key === 'invalidUnit')).toBe(false)
       }
     })
   })

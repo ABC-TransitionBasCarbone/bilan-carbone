@@ -34,6 +34,7 @@ export type ParsedEmissionSourceRow = {
   emissionFactorName: string
   emissionFactorValue: number | undefined
   emissionFactorUnit: Unit | undefined
+  emissionFactorUnitRaw?: string
   value: number | undefined
   type: EmissionSourceType | undefined
   caracterisation: EmissionSourceCaracterisation | undefined

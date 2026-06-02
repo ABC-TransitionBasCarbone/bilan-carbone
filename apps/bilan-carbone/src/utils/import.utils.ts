@@ -1,8 +1,9 @@
 import { DEFAULT_FUZZY_OPTIONS } from '@/constants/fuse.contstant'
+import { KG_CO2E_PREFIX } from '@/constants/import'
 import { LocaleType } from '@/i18n/config'
 import { Unit } from '@abc-transitionbascarbone/db-common/enums'
 import Fuse from 'fuse.js'
-import { BcTranslations, extractAllForms, getBcTranslations } from './translation.utils'
+import { BcTranslations, extractAllForms, getBcTranslations, getSingularForm } from './translation.utils'
 
 export function matchLabelFromMap<T>(label: string | undefined | null, map: Record<string, T>): T | null {
   if (!label) {
@@ -74,3 +75,23 @@ export function buildLabelMap<T extends string>(
 
 export const formatEf = (name: string | undefined, value: number | undefined, unit: string | undefined) =>
   [name, value !== undefined && unit ? `${value} ${unit}` : (value ?? unit)].filter(Boolean).join(' - ')
+
+export function formatPrefixedUnitLabel(label: string): string {
+  return `${KG_CO2E_PREFIX}${label}`
+}
+
+export function formatPrefixedUnitDisplay(locale: LocaleType, unit: Unit | string, customLabel?: string): string {
+  if (unit === Unit.CUSTOM) {
+    return formatPrefixedUnitLabel(customLabel ?? '')
+  }
+  const raw = (getBcTranslations(locale).units as Record<string, string>)[unit as string]
+  const label = raw ? getSingularForm(raw) : (unit as string)
+  return formatPrefixedUnitLabel(label)
+}
+
+export function formatPrefixedUnitDisplayOptional(locale: LocaleType, unit: string | undefined): string {
+  if (!unit) {
+    return ''
+  }
+  return formatPrefixedUnitDisplay(locale, unit)
+}
