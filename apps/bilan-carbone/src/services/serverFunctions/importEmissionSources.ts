@@ -1,6 +1,6 @@
 'use server'
 
-import { KG_CO2E_PREFIX } from '@/constants/import'
+import { KG_CO2E_PREFIX_REGEX } from '@/constants/import'
 import { EmissionFactorList } from '@/db/emissionFactors'
 import { createEmissionSourcesOnStudy } from '@/db/emissionSource'
 import { FullStudy, getStudyById } from '@/db/study'
@@ -8,7 +8,7 @@ import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
 import { Post, subPostsByPost } from '@/services/posts'
 import { AccountWithUser } from '@/types/account.types'
-import { ImportError, ImportResult, ImportWarning } from '@/types/import.types'
+import { ImportResult, ImportWarning } from '@/types/import.types'
 import {
   PreviewEmissionSourceRow,
   PreviewEmissionSourcesResult,
@@ -16,6 +16,7 @@ import {
 } from '@/types/importEmissionSources.types'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { EmissionFactorMatchType, findEmissionFactorMatch } from '@/utils/findEmissionFactor.utils'
+import { formatPrefixedUnitDisplay, formatPrefixedUnitDisplayOptional } from '@/utils/import.utils'
 import { getImportEmissionSourcesTranslations, parseEmissionSourcesFile } from '@/utils/importEmissionSources.utils'
 import { getPost } from '@/utils/post'
 import { withServerResponse } from '@/utils/serverResponse'
@@ -27,6 +28,7 @@ import {
   EmissionSourceCaracterisation,
   EmissionSourceType,
   SubPost,
+  Unit,
 } from '@abc-transitionbascarbone/db-common/enums'
 import { yearToDate } from '@abc-transitionbascarbone/utils'
 import xlsx from 'node-xlsx'
@@ -98,7 +100,7 @@ export async function previewEmissionSourcesFromFile(
 
   const locale = await getLocale()
   const buffer = Buffer.from(await file.arrayBuffer())
-  const result = parseEmissionSourcesFile(buffer, locale)
+  const result = parseEmissionSourcesFile(buffer, locale, study.sites)
 
   if (!result.success) {
     return result
@@ -106,7 +108,6 @@ export async function previewEmissionSourcesFromFile(
 
   const bc = getBcTranslations(locale)
   const postTranslations = bc.emissionFactors.post as unknown as Record<string, string>
-  const unitTranslations = bc.units as Record<string, string>
 
   const rows: PreviewEmissionSourceRow[] = result.rows.map((row) => {
     const post = getPost(row.subPost)
@@ -120,26 +121,11 @@ export async function previewEmissionSourcesFromFile(
       emissionFactorId: row.emissionFactorId ?? '',
       emissionFactorName: row.emissionFactorName ?? '',
       emissionFactorValue: row.emissionFactorValue !== undefined ? String(row.emissionFactorValue) : '',
-      emissionFactorUnit: row.emissionFactorUnit ? getSingularForm(unitTranslations[row.emissionFactorUnit]) : '',
+      emissionFactorUnit: formatPrefixedUnitDisplayOptional(locale, row.emissionFactorUnit),
     }
   })
 
   return { success: true, rows }
-}
-
-const getDisplayedUnitString = (locale: LocaleType, unit: string | undefined) => {
-  if (!unit) {
-    return ''
-  }
-
-  const bc = getBcTranslations(locale)
-  const unitTranslationObject = bc.units as Record<string, string>
-  const unitTranslation = unitTranslationObject[unit]
-
-  if (!unitTranslation) {
-    return unit
-  }
-  return getSingularForm(unitTranslation)
 }
 
 export async function importEmissionSourcesFromFile(
@@ -156,24 +142,15 @@ export async function importEmissionSourcesFromFile(
 
   const locale = await getLocale()
   const buffer = Buffer.from(await file.arrayBuffer())
-  const result = parseEmissionSourcesFile(buffer, locale)
+  const result = parseEmissionSourcesFile(buffer, locale, study.sites)
 
   if (!result.success) {
     return result
   }
 
-  const siteMap = new Map<string, string>()
-  for (const studySite of study.sites) {
-    const siteName = studySite.site?.name
-    if (siteName) {
-      siteMap.set(siteName.toLowerCase(), studySite.id)
-    }
-  }
-
   const organizationId = study.organizationVersion.organization?.id ?? ''
   const versionIds = study.emissionFactorVersions.map((v) => v.importVersionId)
 
-  const rowErrors: ImportError[] = []
   const rowWarnings: ImportWarning[] = []
   const validRows: ValidImportRow[] = []
 
@@ -181,10 +158,19 @@ export async function importEmissionSourcesFromFile(
     const row = result.rows[i]
     const lineNumber = row.lineNumber
 
-    const studySiteId = siteMap.get(row.siteName.toLowerCase())
-    if (!studySiteId) {
-      rowErrors.push({ lineNumber, key: 'siteNotFound', value: row.siteName })
-      continue
+    if (
+      row.emissionFactorUnitRaw &&
+      row.emissionFactorUnit &&
+      row.emissionFactorUnit !== Unit.CUSTOM &&
+      !KG_CO2E_PREFIX_REGEX.test(row.emissionFactorUnitRaw)
+    ) {
+      rowWarnings.push({
+        type: 'unitMissingPrefix',
+        lineNumber,
+        sourceName: row.name,
+        foundUnit: row.emissionFactorUnitRaw,
+        resolvedValue: formatPrefixedUnitDisplayOptional(locale, row.emissionFactorUnit),
+      })
     }
 
     const ef = await findEmissionFactorMatch(
@@ -209,7 +195,7 @@ export async function importEmissionSourcesFromFile(
           sourceName: row.name,
           searchedName: row.emissionFactorName,
           searchedValue: row.emissionFactorValue,
-          searchedUnit: getDisplayedUnitString(locale, row.emissionFactorUnit),
+          searchedUnit: formatPrefixedUnitDisplayOptional(locale, row.emissionFactorUnit),
         })
       } else {
         rowWarnings.push({
@@ -225,11 +211,11 @@ export async function importEmissionSourcesFromFile(
         sourceName: row.name,
         searchedName: row.emissionFactorName,
         searchedValue: row.emissionFactorValue,
-        searchedUnit: getDisplayedUnitString(locale, row.emissionFactorUnit),
+        searchedUnit: formatPrefixedUnitDisplayOptional(locale, row.emissionFactorUnit),
         candidates: ef.candidates.map((c) => ({
           foundTitle: c.foundTitle,
           foundValue: c.foundValue,
-          foundUnit: getDisplayedUnitString(locale, c.foundUnit),
+          foundUnit: formatPrefixedUnitDisplayOptional(locale, c.foundUnit),
         })),
       })
     } else if (ef.matchType !== EmissionFactorMatchType.Exact) {
@@ -239,10 +225,10 @@ export async function importEmissionSourcesFromFile(
         sourceName: row.name,
         searchedName: row.emissionFactorName,
         searchedValue: row.emissionFactorValue,
-        searchedUnit: getDisplayedUnitString(locale, row.emissionFactorUnit),
+        searchedUnit: formatPrefixedUnitDisplayOptional(locale, row.emissionFactorUnit),
         foundTitle: ef.foundTitle,
         foundValue: ef.foundValue,
-        foundUnit: getDisplayedUnitString(locale, ef.foundUnit),
+        foundUnit: formatPrefixedUnitDisplayOptional(locale, ef.foundUnit),
       })
       emissionFactorId = ef.id
       efUnit = ef.foundUnit
@@ -293,7 +279,7 @@ export async function importEmissionSourcesFromFile(
 
     const casFields = getHectareAndDuration(isCASSubPost(row.subPost, efUnit), row.value)
     validRows.push({
-      studySiteId,
+      studySiteId: row.studySiteId,
       studyId,
       subPost: row.subPost,
       name: row.name,
@@ -316,10 +302,6 @@ export async function importEmissionSourcesFromFile(
       duration: casFields.duration ?? undefined,
       validated,
     })
-  }
-
-  if (rowErrors.length > 0) {
-    return { success: false, errors: rowErrors }
   }
 
   if (rowWarnings.length > 0 && !forceImport) {
@@ -444,7 +426,7 @@ export async function getImportEmissionSourcesTemplate(
   exampleRow[columns.source] = t('exampleSource')
   exampleRow[columns.type] = typeTranslations['Physical']
   exampleRow[columns.emissionFactorName] = t('exampleEmissionFactor')
-  exampleRow[columns.emissionFactorUnit] = `${KG_CO2E_PREFIX}${getSingularForm(unitTranslations['TON'])}`
+  exampleRow[columns.emissionFactorUnit] = formatPrefixedUnitDisplay(locale, Unit.TON)
 
   const emptyRow: (string | number)[] = Array(TOTAL_EXCEL_COLS).fill('')
   emptyRow[columns.site] = siteName
@@ -485,6 +467,7 @@ function buildEmissionSourcesCSV(locale: LocaleType, dataRows: (string | number)
 }
 
 type ExportTranslations = {
+  locale: LocaleType
   t: (key: string) => string
   postTranslations: Record<string, string>
   typeTranslations: Record<string, string>
@@ -505,6 +488,7 @@ function buildEmissionSourceRow(
   translations: ExportTranslations,
 ): (string | number)[] {
   const {
+    locale,
     t,
     postTranslations,
     typeTranslations,
@@ -534,8 +518,7 @@ function buildEmissionSourceRow(
   const unitLabel = unitRaw ? getSingularForm(unitRaw) : ''
   const efTitle = ef?.metaData?.title ?? ''
   const efValue = ef ? getEmissionFactorValue(ef, study.organizationVersion.environment) : ''
-  const efUnitRaw = ef?.unit ? (unitTranslations[ef.unit] ?? ef.unit) : ''
-  const efUnitLabel = efUnitRaw ? `${KG_CO2E_PREFIX}${getSingularForm(efUnitRaw)}` : ''
+  const efUnitLabel = ef?.unit ? formatPrefixedUnitDisplay(locale, ef.unit) : ''
   const feSpecificQuality = ef ? getSpecificEmissionFactorQuality(es) : null
   const feQualityLabel = feSpecificQuality
     ? getQualityLabel(getQualitativeUncertaintyFromQuality(feSpecificQuality))
@@ -628,6 +611,7 @@ async function buildAllEmissionSourcesRows(
   const exportTranslations = bc.study.export as Record<string, string>
 
   const translations = {
+    locale,
     t,
     postTranslations,
     typeTranslations,

@@ -1,7 +1,7 @@
 export type ImportWarningCandidate = { foundTitle?: string; foundValue?: number; foundUnit?: string }
 
 export type ImportWarning = {
-  type: 'efNotFound' | 'efMissing' | 'validationSkipped'
+  type: 'efNotFound' | 'efMissing' | 'validationSkipped' | 'unitMissingPrefix'
   lineNumber: number | null
   sourceName?: string
   searchedName?: string
@@ -10,6 +10,7 @@ export type ImportWarning = {
   foundTitle?: string
   foundValue?: number
   foundUnit?: string
+  resolvedValue?: string
   candidates?: ImportWarningCandidate[]
 }
 

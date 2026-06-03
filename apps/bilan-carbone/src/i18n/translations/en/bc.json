@@ -31,6 +31,7 @@
   },
   "exports": {
     "title": "Exports:",
+    "exportFilename": "{studyName}_study_results",
     "consolidated": "Bilan Carbone®",
     "Beges": "Regulatory GHG Assesment",
     "GHGP": "GHG Protocol",
@@ -1585,6 +1586,7 @@
     "warningEfLeftEmpty": "It will be left empty",
     "warningEfAmbiguous": "Multiple emission factors match this name:",
     "warningValidationSkipped": "The source will be imported without validation as not all required fields are filled",
+    "warningUnitMissingPrefix": "Unit \"{foundUnit}\" not found — \"{resolvedValue}\" will be used",
     "tooManyFiles": "Please import one file at a time",
     "invalidFileType": "The file is not a valid Excel file",
     "emptyFile": "The file is empty",

@@ -35,7 +35,20 @@
     "title": "Calculer votre empreinte carbone simplifiée vous permettra de :"
   },
   "exports": {
-    "env_specific_export": "Tilt"
+    "env_specific_export": "Empreinte carbone simplifiée",
+    "simplified": {
+      "disclaimerExcel1": "Attention, les résultats que vous obtenez ici sont uniquement issus d'un calcul d'empreinte carbone simplifié réalisé par Cap Carbone. Ils ne doivent en aucun cas être présentés ou utilisés comme des résultats Bilan Carbone®,",
+      "disclaimerExcel2": "car même si les résultats obtenus peuvent déjà vous permettre de comprendre comment réduire votre impact, votre démarche se limite à une estimation.",
+      "disclaimerExcel3": "En revanche, cette empreinte carbone simplifiée est bien le premier pas vers une démarche plus complète comme le Bilan Carbone® !",
+      "disclaimerExcel4": "Pour les années suivantes, vous pouvez soit renouveler votre mesure d'empreinte carbone simplifiée avec Cap Carbone, soit réaliser un Bilan Carbone®.",
+      "disclaimerExcel5": "Si vous souhaitez aller plus loin dans votre démarche, plus d'informations sont disponibles ici : https://abc-transitionbascarbone.fr/transition-association-abc-tilt/#",
+      "metadata": {
+        "organization": "Organisation",
+        "site": "Site",
+        "startDate": "Date de début de l'étude",
+        "endDate": "Date de fin de l'étude"
+      }
+    }
   },
   "email": {
     "subject": {
@@ -63,6 +76,9 @@
     }
   },
   "study": {
+    "perimeter": {
+      "preset": "Type de public"
+    },
     "new": {
       "postalCode": "Quel est le code postal de l'association ?",
       "sites": "Quels sont les sites concernés par l'empreinte et leurs caractéristiques ?",

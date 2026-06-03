@@ -4,6 +4,7 @@ import BaseTable from '@/components/base/Table'
 import baseTableStyles from '@/components/base/Table.module.css'
 import { TableActionButton } from '@/components/base/TableActionButton'
 import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
+import { DEFAULT_FUZZY_OPTIONS } from '@/constants/fuse.contstant'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
 import { deleteObjective } from '@/services/serverFunctions/objective.serverFunction'
@@ -85,8 +86,7 @@ interface Props {
 
 const fuseOptions = {
   keys: [{ name: 'name', weight: 1 }],
-  threshold: 0.3,
-  isCaseSensitive: false,
+  ...DEFAULT_FUZZY_OPTIONS,
 }
 
 const ObjectivesTable = ({

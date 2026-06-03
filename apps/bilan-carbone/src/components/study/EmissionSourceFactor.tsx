@@ -1,3 +1,4 @@
+import { DEFAULT_FUZZY_OPTIONS } from '@/constants/fuse.contstant'
 import { EmissionFactorList } from '@/db/emissionFactors'
 import type { FullStudy } from '@/db/study'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
@@ -46,9 +47,7 @@ const fuseOptions = {
       weight: 0.5,
     },
   ],
-  threshold: 0.3,
-  isCaseSensitive: false,
-  includeScore: true,
+  ...DEFAULT_FUZZY_OPTIONS,
 }
 
 interface Props {

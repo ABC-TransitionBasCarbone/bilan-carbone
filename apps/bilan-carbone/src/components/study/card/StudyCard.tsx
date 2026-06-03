@@ -1,7 +1,7 @@
 import ProgressBar from '@/components/base/ProgressBar'
 import { StudyCardItem } from '@/db/study'
 import { customRich } from '@/i18n/customRich'
-import { hasAccessToStudyCardDetails, hasRoleOnStudy } from '@/services/permissions/environment'
+import { hasAccessToEmissionSourceValidation, hasRoleOnStudy } from '@/services/permissions/environment'
 import { getDisplayedRoleOnStudy } from '@/utils/study'
 import { Button } from '@abc-transitionbascarbone/ui'
 import classNames from 'classnames'
@@ -39,7 +39,7 @@ const StudyCard = async ({ study, user, simplified }: Props) => {
         <div className="justify-center">
           <StudyName studyId={id} name={name} role={showRoleInChip ? accountRoleOnStudy : null} />
         </div>
-        {hasAccessToStudyCardDetails(user.environment) && (
+        {hasAccessToEmissionSourceValidation(user.environment, simplified) && (
           <Box>
             <p className="mb1 align-center">
               {customRich(t, 'validatedSources', {

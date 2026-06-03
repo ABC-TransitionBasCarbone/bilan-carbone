@@ -1,8 +1,28 @@
+import { DEFAULT_FUZZY_OPTIONS } from '@/constants/fuse.contstant'
+import { KG_CO2E_PREFIX } from '@/constants/import'
 import { LocaleType } from '@/i18n/config'
 import { Unit } from '@abc-transitionbascarbone/db-common/enums'
-import { BcTranslations, extractAllForms, getBcTranslations } from './translation.utils'
+import Fuse from 'fuse.js'
+import { BcTranslations, extractAllForms, getBcTranslations, getSingularForm } from './translation.utils'
 
-export function mapLabelFromTranslations<T>(
+export function matchLabelFromMap<T>(label: string | undefined | null, map: Record<string, T>): T | null {
+  if (!label) {
+    return null
+  }
+  const trimmed = label.trim().toLowerCase()
+  if (trimmed in map) {
+    return map[trimmed]
+  }
+  const keys = Object.keys(map)
+  const fuse = new Fuse(keys, DEFAULT_FUZZY_OPTIONS)
+  const results = fuse.search(trimmed)
+  if (results.length > 0 && results[0].item) {
+    return map[results[0].item]
+  }
+  return null
+}
+
+export function matchLabelFromTranslations<T>(
   label: string | undefined | null,
   locale: LocaleType,
   buildMap: (bc: BcTranslations) => Record<string, T>,
@@ -10,7 +30,7 @@ export function mapLabelFromTranslations<T>(
   if (!label) {
     return null
   }
-  return buildMap(getBcTranslations(locale))[label.trim().toLowerCase()] ?? null
+  return matchLabelFromMap(label, buildMap(getBcTranslations(locale)))
 }
 
 export function buildUnitLabelMap(bc: BcTranslations, unitList: Unit[]): Record<string, Unit> {
@@ -30,12 +50,12 @@ export function buildUnitLabelMap(bc: BcTranslations, unitList: Unit[]): Record<
   return map
 }
 
-export function mapUnitLabelFromTranslationsWithList(
+export function matchUnitLabelFromTranslations(
   label: string | undefined | null,
   locale: LocaleType,
   unitList: Unit[],
 ): Unit | null {
-  return mapLabelFromTranslations(label, locale, (bc) => buildUnitLabelMap(bc, unitList))
+  return matchLabelFromTranslations(label, locale, (bc) => buildUnitLabelMap(bc, unitList))
 }
 
 /**
@@ -55,3 +75,23 @@ export function buildLabelMap<T extends string>(
 
 export const formatEf = (name: string | undefined, value: number | undefined, unit: string | undefined) =>
   [name, value !== undefined && unit ? `${value} ${unit}` : (value ?? unit)].filter(Boolean).join(' - ')
+
+export function formatPrefixedUnitLabel(label: string): string {
+  return `${KG_CO2E_PREFIX}${label}`
+}
+
+export function formatPrefixedUnitDisplay(locale: LocaleType, unit: Unit | string, customLabel?: string): string {
+  if (unit === Unit.CUSTOM) {
+    return formatPrefixedUnitLabel(customLabel ?? '')
+  }
+  const raw = (getBcTranslations(locale).units as Record<string, string>)[unit as string]
+  const label = raw ? getSingularForm(raw) : (unit as string)
+  return formatPrefixedUnitLabel(label)
+}
+
+export function formatPrefixedUnitDisplayOptional(locale: LocaleType, unit: string | undefined): string {
+  if (!unit) {
+    return ''
+  }
+  return formatPrefixedUnitDisplay(locale, unit)
+}

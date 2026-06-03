@@ -1,6 +1,7 @@
 'use client'
 
 import type { TagFamily } from '@/components/form/ScopeSelectors'
+import { DEFAULT_FUZZY_OPTIONS } from '@/constants/fuse.contstant'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteAction } from '@/services/serverFunctions/transitionPlan'
 import type { ActionWithRelations } from '@/types/trajectory.types'
@@ -31,8 +32,7 @@ interface Props {
 
 const fuseOptions = {
   keys: [{ name: 'title', weight: 1 }],
-  threshold: 0.3,
-  isCaseSensitive: false,
+  ...DEFAULT_FUZZY_OPTIONS,
 }
 
 const Actions = ({

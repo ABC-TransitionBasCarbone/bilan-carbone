@@ -1,17 +1,14 @@
 import { getAccountOrganizationVersions } from '@/db/account'
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { hasAccountToValidateInOrganization } from '@/db/user'
-import { default as CUTLogosHome } from '@/environments/cut/home/LogosHome'
 import { hasAccessToActualityCards } from '@/services/permissions/environment'
 import { hasQualitylessEmissionFactors } from '@/services/serverFunctions/organization'
-import { displayFeedBackForm } from '@/services/serverFunctions/user'
 import { canEditMemberRole } from '@/utils/user'
 import { UserSession } from 'next-auth'
 import ActualitiesCards from '../actuality/ActualitiesCards'
 import StudiesContainer from '../study/StudiesContainer'
 import CRClientsList from './CRClientsList'
 import EmissionFactorsWarning from './EmissionFactorsWarning'
-import UserFeedback from './UserFeedback'
 import UserToValidate from './UserToValidate'
 
 interface Props {
@@ -19,10 +16,9 @@ interface Props {
 }
 
 const UserView = async ({ account }: Props) => {
-  const [organizationVersions, hasUserToValidate, displayFeedback, emissionFactorWarning] = await Promise.all([
+  const [organizationVersions, hasUserToValidate, emissionFactorWarning] = await Promise.all([
     getAccountOrganizationVersions(account.accountId),
     hasAccountToValidateInOrganization(account.organizationVersionId),
-    displayFeedBackForm(),
     hasQualitylessEmissionFactors(),
   ])
 
@@ -51,8 +47,6 @@ const UserView = async ({ account }: Props) => {
       <StudiesContainer user={account} isCR={isCR} />
 
       {hasAccessToActualityCards(account.environment) && <ActualitiesCards />}
-      <CUTLogosHome user={account} />
-      {displayFeedback.success && displayFeedback.data && <UserFeedback environment={account.environment} />}
       {emissionFactorWarning.success && !!emissionFactorWarning.data.length && (
         <EmissionFactorsWarning emissionFactors={emissionFactorWarning.data} />
       )}

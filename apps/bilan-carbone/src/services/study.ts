@@ -1,5 +1,10 @@
 import { EngagementActionTargets } from '@/constants/engagementActions'
-import { resultsExportHeadersBase, resultsExportHeadersCut } from '@/constants/exports'
+import {
+  resultsExportHeadersBase,
+  resultsExportHeadersSimplified,
+  simplifiedDisclaimerColSpan,
+  simplifiedDisclaimerExportKeys,
+} from '@/constants/exports'
 import type { EmissionFactorWithParts } from '@/db/emissionFactors'
 import type { FullStudy } from '@/db/study'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
@@ -30,7 +35,9 @@ import { AdditionalResultTypes, BaseResultsBySite, ResultsByPost } from '../type
 import { getEmissionResults, getEmissionSourceEmission } from './emissionSource'
 import { download } from './file'
 import { hasAccessToBcExport } from './permissions/environment'
+import { isTiltSimplified } from './permissions/environmentAdvanced'
 import {
+  BaseResultsByPost,
   convertSimplifiedEnvToBilanCarbone,
   convertTiltSubPostToBCSubPost,
   environmentPostMapping,
@@ -46,6 +53,7 @@ import { filterWithDependencies } from './results/utils'
 import { EmissionFactorWithMetaData, getEmissionFactorsByIds } from './serverFunctions/emissionFactor'
 import { prepareExcel } from './serverFunctions/file'
 import { getUserSettings } from './serverFunctions/user'
+import { getSiteLabelFromId, sanitizeStudyName } from './study.utils'
 import {
   getConfidenceInterval,
   getEmissionSourcesConfidenceInterval,
@@ -323,7 +331,7 @@ export const downloadStudyEmissionSources = async (
 const getHeadersForEnv = (environment: Environment) => {
   switch (environment) {
     case Environment.CUT:
-      return resultsExportHeadersCut
+      return resultsExportHeadersSimplified
     case Environment.BC:
     default:
       return resultsExportHeadersBase
@@ -331,15 +339,97 @@ const getHeadersForEnv = (environment: Environment) => {
 }
 const getFormattedHeadersForEnv = (
   environment: Environment,
-  traduction: Translations,
-  traductionUnit: Translations,
+  tStudy: Translations,
+  tUnits: Translations,
   unit: StudyResultUnit,
 ) => {
   const headers = getHeadersForEnv(environment)
 
-  return headers.map((header) =>
-    header !== 'value' ? traduction(header) : traduction(header, { unit: traductionUnit(unit) }),
+  return headers.map((header) => (header !== 'value' ? tStudy(header) : tStudy(header, { unit: tUnits(unit) })))
+}
+
+const getFormattedSimplifiedHeaders = (tStudy: Translations, tUnits: Translations, unit: StudyResultUnit) =>
+  resultsExportHeadersSimplified.map((header) =>
+    header !== 'value' ? tStudy(header) : tStudy(header, { unit: tUnits(unit) }),
   )
+
+type Merge = {
+  s: { c: number; r: number }
+  e: { c: number; r: number }
+}
+
+const getStudyResultsExportFilename = (studyName: string, tExport: Translations) => {
+  const sanitized = sanitizeStudyName(studyName)
+  return `${tExport('exportFilename', { studyName: sanitized })}.xlsx`
+}
+
+const buildResultsTableRows = (results: BaseResultsByPost[], resultsUnit: StudyResultUnit): (string | number)[][] => {
+  const rows: (string | number)[][] = []
+
+  for (const result of results) {
+    rows.push([result.label, '', formatEmissionValueForExport(result.value ?? 0, resultsUnit)])
+
+    if (result.post !== 'total') {
+      for (const subPostResult of result.children) {
+        rows.push(['', subPostResult.label, formatEmissionValueForExport(subPostResult.value ?? 0, resultsUnit)])
+      }
+    }
+  }
+
+  return rows
+}
+
+const buildStudyMetadataRows = (study: FullStudy, siteLabel: string, tExport: Translations): (string | number)[][] => [
+  [tExport('simplified.metadata.organization'), study.organizationVersion.organization.name],
+  [tExport('simplified.metadata.site'), siteLabel],
+  [tExport('simplified.metadata.startDate'), formatDateFr(study.startDate)],
+  [tExport('simplified.metadata.endDate'), formatDateFr(study.endDate)],
+]
+
+const buildDisclaimerRows = (
+  tExport: Translations,
+  keys: readonly string[] = simplifiedDisclaimerExportKeys,
+  startRowIndex = 0,
+  colSpan = simplifiedDisclaimerColSpan,
+): { rows: (string | number)[][]; merges: Merge[] } => {
+  const rows = keys.map((key) => [tExport(key)])
+  const merges = keys.map((_, index) => ({
+    s: { c: 0, r: startRowIndex + index },
+    e: { c: colSpan - 1, r: startRowIndex + index },
+  }))
+
+  return { rows, merges }
+}
+
+const formatSimplifiedStudyResultsForExport = (
+  study: FullStudy,
+  siteLabel: string,
+  results: BaseResultsByPost[],
+  tStudy: Translations,
+  tExport: Translations,
+  tUnits: Translations,
+) => {
+  const dataForExport: (string | number)[][] = []
+  const merges: Merge[] = []
+
+  const disclaimer = buildDisclaimerRows(tExport)
+  dataForExport.push(...disclaimer.rows)
+  merges.push(...disclaimer.merges)
+  dataForExport.push([])
+
+  dataForExport.push(...buildStudyMetadataRows(study, siteLabel, tExport))
+  dataForExport.push([])
+  dataForExport.push(getFormattedSimplifiedHeaders(tStudy, tUnits, study.resultsUnit))
+  dataForExport.push(...buildResultsTableRows(results, study.resultsUnit))
+
+  return {
+    name: tExport(AdditionalResultTypes.ENV_SPECIFIC_EXPORT),
+    data: dataForExport,
+    options: {
+      '!cols': [{ wch: 30 }, { wch: 15 }, { wch: 20 }],
+      '!merges': merges,
+    },
+  }
 }
 
 const handleLine = (
@@ -372,7 +462,7 @@ const handleLine = (
 
 export type SiteExportEntry = { name: string; siteId: string; studySiteId: string }
 
-export const formatConsolidatedStudyResultsForExport = (
+const formatConsolidatedStudyResultsForExport = (
   study: FullStudy,
   siteList: SiteExportEntry[],
   tStudy: Translations,
@@ -429,6 +519,7 @@ export const formatConsolidatedStudyResultsForExport = (
     options: { '!cols': [{ wch: 30 }, { wch: 15 }, { wch: 20 }] },
   }
 }
+
 interface IExportData {
   rulesSpans: Record<string, number>
   gasCols: (t: Translations) => string[]
@@ -452,11 +543,6 @@ const exportsData: Partial<Record<Export, IExportData>> = {
     getRuleName: getGHGPRuleName,
     getCategoryName: (category: string, t: Translations) => t(`category.${category}`),
   },
-}
-
-type Merge = {
-  s: { c: number; r: number }
-  e: { c: number; r: number }
 }
 
 const buildMerges = (rulesSpans: Record<number, number>, startRow: number, column = 0): Merge[] => {
@@ -576,7 +662,7 @@ export const formatStudyExportResultsForExport = (
 const formatBaseResultsToBCExport = (
   study: FullStudy,
   siteList: SiteExportEntry[],
-  computedResults: BaseResultsBySite,
+  resultsBySite: BaseResultsBySite,
   tExport: Translations,
   tPost: Translations,
 ) => {
@@ -590,7 +676,7 @@ const formatBaseResultsToBCExport = (
   data.push([])
 
   for (const site of siteList) {
-    const results = site.studySiteId === 'all' ? computedResults.aggregated : computedResults.bySite[site.studySiteId]
+    const results = site.studySiteId === 'all' ? resultsBySite.aggregated : resultsBySite.bySite[site.studySiteId]
     // TODO: use a more generic conversion function to be used by all simplified environments
     const bilanCarboneEquivalent = convertSimplifiedEnvToBilanCarbone(results ?? [])
 
@@ -621,7 +707,7 @@ const formatBaseResultsToBCExport = (
 export const formatComputedResultsForExport = (
   study: FullStudy,
   siteList: SiteExportEntry[],
-  computedResults: BaseResultsBySite,
+  resultsBySite: BaseResultsBySite,
   tStudy: Translations,
   tExport: Translations,
   tUnits: Translations,
@@ -634,21 +720,9 @@ export const formatComputedResultsForExport = (
     dataForExport.push([site.name])
     dataForExport.push(formattedHeaders)
     const results =
-      site.studySiteId === 'all' ? computedResults.aggregated : (computedResults.bySite[site.studySiteId] ?? [])
+      site.studySiteId === 'all' ? resultsBySite.aggregated : (resultsBySite.bySite[site.studySiteId] ?? [])
 
-    for (const result of results) {
-      dataForExport.push([result.label, '', formatEmissionValueForExport(result.value ?? 0, study.resultsUnit)])
-
-      if (result.post !== 'total') {
-        for (const subPostResult of result.children) {
-          dataForExport.push([
-            '',
-            subPostResult.label,
-            formatEmissionValueForExport(subPostResult.value ?? 0, study.resultsUnit),
-          ])
-        }
-      }
-    }
+    dataForExport.push(...buildResultsTableRows(results, study.resultsUnit))
   }
 
   dataForExport.push([])
@@ -675,8 +749,24 @@ export const downloadStudyResults = async (
   tUnits: Translations,
   tBase: Translations,
   environment: Environment = Environment.BC,
-  computedResults?: BaseResultsBySite,
+  resultsBySite?: BaseResultsBySite,
+  resultsByPost?: BaseResultsByPost[],
+  selectedSiteId?: string,
 ) => {
+  const exportFilename = getStudyResultsExportFilename(study.name, tExport)
+
+  if (isTiltSimplified(environment, study.simplified)) {
+    if (!resultsBySite || !selectedSiteId || !resultsByPost) {
+      throw new Error('Missing required parameters for simplified study export')
+    }
+
+    const siteLabel = getSiteLabelFromId(study, selectedSiteId, tOrga)
+    const sheet = formatSimplifiedStudyResultsForExport(study, siteLabel, resultsByPost, tStudy, tExport, tUnits)
+    const buffer = await prepareExcel([sheet])
+    download([buffer], exportFilename, 'xlsx')
+    return
+  }
+
   const data = []
 
   const siteList: SiteExportEntry[] = [
@@ -691,11 +781,11 @@ export const downloadStudyResults = async (
 
   if (environment !== Environment.BC) {
     // Use precomputed results from publicodes if available (for simplified environments)
-    if (computedResults !== undefined) {
+    if (resultsBySite !== undefined) {
       const environmentResults = formatComputedResultsForExport(
         study,
         siteList,
-        computedResults,
+        resultsBySite,
         tStudy,
         tExport,
         tUnits,
@@ -809,13 +899,13 @@ export const downloadStudyResults = async (
     )
   }
 
-  if (isSimplifiedEnvironment(environment) && computedResults) {
-    data.push(formatBaseResultsToBCExport(study, siteList, computedResults, tExport, tPost))
+  if (isSimplifiedEnvironment(environment) && resultsBySite) {
+    data.push(formatBaseResultsToBCExport(study, siteList, resultsBySite, tExport, tPost))
   }
 
   const buffer = await prepareExcel(data)
 
-  download([buffer], `${study.name}_results.xlsx`, 'xlsx')
+  download([buffer], exportFilename, 'xlsx')
 }
 
 export const getDetailedEmissionResults = (
@@ -828,7 +918,7 @@ export const getDetailedEmissionResults = (
   withDependencies: boolean = true,
   type?: ResultType,
 ) => {
-  const computedResultsWithDep = computeResultsByPostFromEmissionSources(
+  const resultsBySiteWithDep = computeResultsByPostFromEmissionSources(
     study,
     tPost,
     siteId,
@@ -839,7 +929,7 @@ export const getDetailedEmissionResults = (
     type,
   )
 
-  const computedResultsWithoutDep = computeResultsByPostFromEmissionSources(
+  const resultsBySiteWithoutDep = computeResultsByPostFromEmissionSources(
     study,
     tPost,
     siteId,
@@ -850,7 +940,7 @@ export const getDetailedEmissionResults = (
     type,
   )
 
-  const computedResultsByTag = computeResultsByTag(
+  const resultsBySiteByTag = computeResultsByTag(
     study,
     siteId,
     withDependencies,
@@ -859,27 +949,27 @@ export const getDetailedEmissionResults = (
     tStudyResults,
   )
 
-  const totalResult = computedResultsWithDep.find((result) => result.post === 'total')
+  const totalResult = resultsBySiteWithDep.find((result) => result.post === 'total')
   const total = totalResult?.value || 0
   const monetaryTotal = totalResult?.monetaryValue || 0
   const nonSpecificMonetaryTotal = totalResult?.nonSpecificMonetaryValue || 0
 
   const withDepValue = total / STUDY_UNIT_VALUES[study.resultsUnit]
   const withoutDepValue =
-    (computedResultsWithoutDep.find((result) => result.post === 'total')?.value || 0) /
+    (resultsBySiteWithoutDep.find((result) => result.post === 'total')?.value || 0) /
     STUDY_UNIT_VALUES[study.resultsUnit]
 
   const monetaryRatio = calculateMonetaryRatio(monetaryTotal, total)
   const nonSpecificMonetaryRatio = calculateMonetaryRatio(nonSpecificMonetaryTotal, total)
 
   return {
-    computedResultsWithDep,
-    computedResultsWithoutDep,
+    resultsBySiteWithDep,
+    resultsBySiteWithoutDep,
     withDepValue,
     withoutDepValue,
     monetaryRatio,
     nonSpecificMonetaryRatio,
-    computedResultsByTag,
+    resultsBySiteByTag,
   }
 }
 

@@ -1,3 +1,4 @@
+import { DEFAULT_FUZZY_OPTIONS } from '@/constants/fuse.contstant'
 import type { FullStudy } from '@/db/study'
 import { canBeValidated, getEmissionResults } from '@/services/emissionSource'
 import {
@@ -70,8 +71,7 @@ export const getEmissionSourcesFuseOptions = (
       weight: 0.3,
     },
   ],
-  threshold: 0.3,
-  isCaseSensitive: false,
+  ...DEFAULT_FUZZY_OPTIONS,
 })
 
 export const getSortedEmissionSources = (
