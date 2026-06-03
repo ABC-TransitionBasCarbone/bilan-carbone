@@ -32,12 +32,6 @@ divers . publicité:
 
 #     De plus, vous pouvez trouver des meubles moins polluants en choisissant des mobiliers avec [un écolabel](https://www.ademe.fr/labels-environnementaux).
 
-divers . tabac . arrêter:
-  titre: Arrêter de fumer
-  icônes: ❌🚬
-  non applicable si: divers . tabac . consommation = 0
-  formule: divers . tabac
-
 divers . numérique . internet . diminuer:
   titre: Réduire son temps en ligne
   icônes: 💻📉
@@ -91,51 +85,6 @@ divers . numérique . réduire ia:
 
     Pour réduire votre empreinte carbone liée à l'utilisation de ces outils, limitez leur usage aux situations où ils sont vraiment nécessaires ou priviligiez des petits modèles spécifiques à votre besoin.
 
-divers . textile . réduire neuf:
-
-#     Il est temps de revoir notre rapport à notre garde-robe ! Posséder moins, choisir des vêtements de qualité que l'on peut réparer, se fournir en seconde-main.
-
-divers . textile . réduire neuf . diviser par deux achats:
-  applicable si: divers . textile . nombre total > 10
-  titre: Acheter deux fois moins de vêtements
-  icônes: 👖📉
-  formule: divers . textile / 2
-  description: |
-    Chaque année en France, près de 3,3 milliards de vêtements, chaussures, linge de maison sont mis sur le marché, soit plus de deux fois plus que dans les années 80. Les vêtements sont vendus à des prix attractifs ; on en achète donc plus qu’il y a quelques années et on les garde moins longtemps. Et cela n’est pas sans poser de problèmes.
-
-    Leur fabrication comprend de nombreuses étapes et procédés qui nuisent parfois à l’environnement et aux personnes qui les fabriquent et les portent.
-
-    Pour fabriquer un jean, par exemple, on utilise du coton cultivé en Inde ou en Afrique générant de nombreux impacts environnementaux et sociaux. En effet, il est teint dans un autre pays, renvoyé en Asie pour la confection afin d’être finalement vendu en France et partout dans le monde ! Il peut ainsi faire le tour de la planète. Dans chacun de ces pays, à chacune des étapes de son cycle de vie, ce vêtement a de lourdes conséquences environnementales et sociales.
-
-    Pour limiter les impacts des vêtements, faites-les durer, acheter moins et plus souvent d’occasion.
-
-    > Découvrez l’empreinte carbone de ses vêtements [sur ce simulateur](https://impactco2.fr/habillement).
-
-divers . produits consommables . réduire:
-  non applicable si: produits consommables . consommation = 'faible'
-  titre: Utiliser des produits écologiques pour le ménage
-  icônes: 🪥🧴
-  formule: divers . produits consommables - recalcul
-  unité: kgCO2e
-  description: |
-    Alors qu’on veut rendre la maison plus saine en faisant le ménage, c’est souvent l’inverse qui se passe. Les produits d’entretien peuvent émettre de nombreux polluants dans l’air. 
-
-    Inutile de multiplier les produits. Voici quelques produits naturels et utiles pour nettoyer votre logement :
-
-    - Le bicarbonate de soude absorbe les odeurs, nettoie les surfaces, permet de déboucher les canalisations par exemple.
-    - Le savon noir nettoie et dégraisse : une cuillère à soupe de savon noir dans un seau d’eau nettoie parfaitement les sols.
-    - Le vinaigre blanc permet de nettoyer casseroles, cafetière, argenterie, micro-ondes, salle de bain, etc. Cependant, ce produit étant acide, ne le versez pas en grande quantité dans vos toilettes ou éviers. Ne le mélangez jamais avec de l’eau de Javel.
-    - Le citron nettoie, désinfecte, désodorise : si vous placez un demi-citron dans la porte de votre réfrigérateur, il absorbera les mauvaises odeurs. Sinon, privilégiez des solutions mécaniques pour déboucher des canalisations, par exemple : ventouse, furet, eau chaude, avant de verser des produits ménagers.
-    - La vapeur dissout les graisses et nettoie en profondeur. Sans parfum, elle ne détériore pas la qualité de l’air. Mais aérez systématiquement pour ne pas augmenter l’humidité dans votre logement.
-    - Utilisez le plus possible des solutions de nettoyage qui n’émettent pas de substances toxiques : nettoyage vapeur, chiffons microfibres, chiffon humide, etc.
-
-    > Pour encore plus de conseils, [consultez notre article](https://agirpourlatransition.ademe.fr/particuliers/maison/menage/faire-menage-facon-plus-ecologique).
-
-divers . produits consommables . réduire . recalcul:
-  valeur: produits consommables
-  contexte:
-    produits consommables . consommation: "'faible'"
-
 divers . autres produits . réduire:
   non applicable si: autres produits . niveau de dépenses = 'faible'
   titre: Privilégier la seconde main
@@ -155,28 +104,3 @@ divers . autres produits . réduire . recalcul:
   valeur: autres produits
   contexte:
     autres produits . niveau de dépenses: "'faible'"
-
-divers . loisirs . activité décarbonée:
-  titre: Vos activités décarbonées sont un poste principal d'empreinte de votre séjour... c'est donc qu'il est très peu carboné ! **Félicitations !**
-  icônes: 🚶🌳
-  description: |
-    Vos activités décarbonées apparaissent comme un poste principal d'empreinte de votre séjour... c'est donc qu'il est très peu carboné ! **Félicitations !**
-
-divers . loisirs . activité moins carbonée:
-  titre: Optez pour des activités moins carbonées pour profiter de votre séjour
-  icônes: 🚶
-  formule: divers . loisirs . activité . empreinte activité motorisée - (recalcul / 6) #On divise par 6 car la variable recalcul somme les empreintes des 6 activités "écolos"
-  unité: kgCO2e
-  description: |
-    Profitez de la ville, des sentiers, voies cycables ou activités culturelles
-
-divers . loisirs . activité moins carbonée . recalcul:
-  valeur: divers . loisirs . activité
-  contexte:
-    divers . loisirs . activité . concerts et spectacles . présent: oui
-    divers . loisirs . activité . musées et monuments . présent: oui
-    divers . loisirs . activité . activité nature . présent: oui
-    divers . loisirs . activité . naviguation . présent: oui
-    divers . loisirs . activité . activité motorisée . présent: non
-    divers . loisirs . activité . footing . présent: oui
-    divers . loisirs . activité . journée spa . présent: non

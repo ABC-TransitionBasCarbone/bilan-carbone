@@ -298,17 +298,6 @@ logement . chauffage . remplacer chauffage électrique par PAC . consommation vi
     Voir le [Guide EDF](https://particulier.edf.fr/fr/accueil/guide-energie/electricite/pompe-a-chaleur.html).
     > Plus d'informations également sur l'article [Pompe à chaleur ou radiateurs électriques ?](https://conseils-thermiques.org/contenu/pompe-a-chaleur-ou-radiateur-electrique.php)
 
-logement . électricité . séchage air libre:
-  titre: Privilégier l'étendoir au sèche-linge
-  applicable si: divers . électroménager . appareils . sèche-linge . nombre > 0
-  icônes: 💨👗
-  description: |
-    Faire sécher son linge à l'air libre plutôt qu’au sèche-linge, c'est économiser de l'énergie.
-  formule: (300 kWh * logement . électricité . empreinte au kWh) / habitants
-  note: |
-    D'après l'étude [ADEME Panel ElecDom 2020](https://librairie.ademe.fr/changement-climatique-et-energie/4473-panel-usages-electrodomestiques.html),
-    un sèche-linge a une [consommation moyenne de 300 kWh/an](https://agirpourlatransition.ademe.fr/particuliers/maison/economies-denergie-deau/electricite-combien-consomment-appareils-maison).
-
 logement . climatisation . réduction:
   titre: Se passer de la climatisation
   icônes: ❄️✋
@@ -520,24 +509,17 @@ logement . mutualiser son logement . empreinte partagée:
     somme:
       - logement
       - divers . numérique
-      - divers . électroménager
       - divers . ameublement
 
 logement . mutualiser son logement . empreinte partagée . logement:
   valeur: logement
   contexte:
     logement . habitants: logement . habitants + nombre colocataires
-    logement . vacances: 0
   note: On fait l'hypothèse que les vacances ne seront pas partagées avec le nouveau colocataire.
 
 logement . mutualiser son logement . empreinte partagée . divers:
 logement . mutualiser son logement . empreinte partagée . divers . numérique:
   valeur: divers . numérique . appareils
-  contexte:
-    logement . habitants: logement . habitants + nombre colocataires
-
-logement . mutualiser son logement . empreinte partagée . divers . électroménager:
-  valeur: divers . électroménager . appareils
   contexte:
     logement . habitants: logement . habitants + nombre colocataires
 

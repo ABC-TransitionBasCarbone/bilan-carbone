@@ -7,7 +7,6 @@ logement . eau domestique:
       - bains et douches
       - toilettes
       - linge
-      - vaisselle
       - cuisine
       - hydratation
       - voiture
@@ -188,67 +187,6 @@ logement . eau domestique . linge . quantité:
   note: |
     Les chiffres fournis pour l'eau domestique sont le croisement de deux données : les consommations moyennes liées à un usage, souvent une moyenne de plusieurs sources sur Internet (consommation d'eau d'une douche, d'un bain, d'une machine à laver...), et la mise en rapport avec la part d'eau domestique moyenne concernée par l'usage en France (par exemple, 12% pour le linge).
     Pour la machine à laver, cela donne : une consommation moyenne de 80 litres d'eau.
-
-logement . eau domestique . vaisselle:
-  icônes: 🧽
-  formule: foyer / logement . habitants
-  note: |
-    A priori, il est plus intéressant de demander si le foyer possède un lave-vaisselle puis la fréquence en attribuant un complément arbitraire "à la main".
-    Si le foyer ne possède pas de lave-vaisselle, on peut simplement considérer que la vaiselle est faite à la main en considérant
-    une quantité d'eau moyenne consommée par membre du foyer.
-
-logement . eau domestique . vaisselle . foyer:
-  formule:
-    somme:
-      - lave vaisselle
-      - à la main
-
-logement . eau domestique . vaisselle . lave vaisselle:
-  formule: par semaine * commun . semaines par an
-
-logement . eau domestique . vaisselle . lave vaisselle . par semaine:
-  formule: nombre * quantité
-
-logement . eau domestique . vaisselle . lave vaisselle . nombre:
-  titre: Nombre de lavages par semaine
-  applicable si: divers . électroménager . appareils . lave-vaisselle . nombre > 0
-  valeur: logement . habitants * 1.4
-  note: On considère 1 lavage par personne tous les 5.
-  unité: lavage/semaine
-
-logement . eau domestique . vaisselle . lave vaisselle . quantité:
-  titre: Quantité d'eau par lavage
-  formule: 15
-  unité: l/lavage
-  note: |
-    Les chiffres fournis pour l'eau domestique sont le croisement de deux données : les consommations moyennes liées à un usage, souvent une moyenne de plusieurs sources sur Internet (consommation d'eau d'une douche, d'un bain, d'une machine à laver...), et la mise en rapport avec la part d'eau domestique moyenne concernée par l'usage en France (par exemple, 12% pour le linge).
-    Pour des laves vaiselles récent, on atteint des consommations d'eau inférieures à 10 litres.
-    Néanmoins, pour des modèles plus anciens, la consommation peut atteindre plus de 30 litres par cycle.
-    On considère qu'un lavage de lave-vaisselle consomme en moyenne 15 litres d'eau.
-
-logement . eau domestique . vaisselle . à la main:
-  formule: par jour * commun . jours par an
-
-logement . eau domestique . vaisselle . à la main . par jour:
-  formule: nombre * quantité
-
-logement . eau domestique . vaisselle . à la main . nombre:
-  titre: Nombre de lavages par jour
-  valeur: 1
-  unité: lavage/jour
-  note: On considère un lavage par jour.
-
-logement . eau domestique . vaisselle . à la main . quantité:
-  titre: Quantité d'eau par lavage
-  formule:
-    variations:
-      - si: divers . électroménager . appareils . lave-vaisselle . nombre > 0
-        alors: 4 * logement . habitants
-      - sinon: 12 * logement . habitants
-  unité: l/lavage
-  note: |
-    Les chiffres fournis pour l'eau domestique sont le croisement de deux données : les consommations moyennes liées à un usage, souvent une moyenne de plusieurs sources sur Internet (consommation d'eau d'une douche, d'un bain, d'une machine à laver...), et la mise en rapport avec la part d'eau domestique moyenne concernée par l'usage en France (par exemple, 12% pour le linge).
-    Pour la vaisselle, cela donne : une consommation moyenne de 12 litres d'eau.
 
 logement . eau domestique . cuisine:
   icônes: 🥔🚰

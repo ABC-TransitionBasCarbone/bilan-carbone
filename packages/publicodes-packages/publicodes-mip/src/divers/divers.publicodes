@@ -12,7 +12,6 @@ divers . ameublement . préservation:
   applicable si:
     une de ces conditions:
       - ameublement . meubles . nombre total > 0
-      - électroménager . appareils . nombre total > 0
       - numérique . appareils . nombre total > 0
   question: Quelle relation entretenez-vous à vos objets, vos appareils, vos meubles ?
   description: |
