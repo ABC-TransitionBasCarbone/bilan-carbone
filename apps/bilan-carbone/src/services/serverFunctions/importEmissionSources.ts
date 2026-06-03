@@ -14,7 +14,7 @@ import {
   PreviewEmissionSourcesResult,
   SOURCE_IMPORT_COLUMNS,
 } from '@/types/importEmissionSources.types'
-import { getEmissionFactorValue } from '@/utils/emissionFactors'
+import { getEmissionFactorFullName, getEmissionFactorValue } from '@/utils/emissionFactors'
 import { EmissionFactorMatchType, findEmissionFactorMatch } from '@/utils/findEmissionFactor.utils'
 import { formatPrefixedUnitDisplay, formatPrefixedUnitDisplayOptional } from '@/utils/import.utils'
 import { getImportEmissionSourcesTranslations, parseEmissionSourcesFile } from '@/utils/importEmissionSources.utils'
@@ -322,14 +322,14 @@ function buildEmissionSourcesSheet(study: FullStudy, locale: LocaleType, dataRow
   const FE_START = 19
   const FE_END = 31
   const BC_START = 32
-  const BC_END = 34
+  const BC_END = 35
 
   const empty = (n: number) => Array(n).fill('')
 
   const orgName = study.organizationVersion.organization?.name ?? ''
   const studyDate = study.startDate ? study.startDate.toLocaleDateString(locale === 'fr' ? 'fr-FR' : 'en-US') : ''
 
-  const INFO_COLS_END = 20 // A to Q
+  const INFO_COLS_END = 20
 
   const metaRow: (string | number)[] = [t('exportOrganization'), orgName, ...empty(TOTAL_EXCEL_COLS - 2)]
   const dateRow: (string | number)[] = [t('exportDate'), studyDate, ...empty(TOTAL_EXCEL_COLS - 2)]
@@ -516,7 +516,7 @@ function buildEmissionSourceRow(
   const typeLabel = es.type ? (typeTranslations[es.type] ?? es.type) : ''
   const unitRaw = ef?.unit ? (unitTranslations[ef.unit] ?? ef.unit) : ''
   const unitLabel = unitRaw ? getSingularForm(unitRaw) : ''
-  const efTitle = ef?.metaData?.title ?? ''
+  const efTitle = getEmissionFactorFullName(ef?.metaData)
   const efValue = ef ? getEmissionFactorValue(ef, study.organizationVersion.environment) : ''
   const efUnitLabel = ef?.unit ? formatPrefixedUnitDisplay(locale, ef.unit) : ''
   const feSpecificQuality = ef ? getSpecificEmissionFactorQuality(es) : null
@@ -586,7 +586,8 @@ function buildEmissionSourceRow(
   row[C.efType] = efTypeLabel
   row[C.feComment] = es.feComment ?? ''
   row[C.validation] = validationLabel
-  row[C.calculatedValue] = `${calculatedValue} ${resultsUnitLabel}`
+  row[C.calculatedValue] = calculatedValue
+  row[C.calculatedUnit] = resultsUnitLabel
   row[C.calculatedUncertainty] = calculatedUncertaintyLabel
   return row
 }

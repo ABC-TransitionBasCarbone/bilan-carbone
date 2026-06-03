@@ -24,6 +24,16 @@ export const getEmissionFactorValue = (
 
 export const emissionFactorDefautQualityStar = '☆'
 
+export function getEmissionFactorFullName(
+  metaData: { title?: string | null; attribute?: string | null; frontiere?: string | null } | null | undefined,
+  valueIfMissing = '',
+): string {
+  if (!metaData) {
+    return valueIfMissing
+  }
+  return [metaData.title, metaData.attribute, metaData.frontiere].filter(Boolean).join(' - ') || valueIfMissing
+}
+
 export const ManualEmissionFactorUnitList: Unit[] = [
   Unit.PERCENT,
   Unit.GJ_PCI,

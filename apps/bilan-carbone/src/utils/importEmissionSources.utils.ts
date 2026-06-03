@@ -35,22 +35,21 @@ export function getExampleRowPrefixes(): string[] {
   })
 }
 
-function buildStudySiteNameMap(sites: StudySiteForImport[]): Record<string, string> {
+function resolveStudySiteId(siteName: string, sites: StudySiteForImport[]): string | null {
   const map: Record<string, string> = {}
   for (const studySite of sites) {
-    const siteName = studySite.site?.name
-    if (siteName) {
-      map[siteName.toLowerCase()] = studySite.id
+    const name = studySite.site?.name
+    if (name) {
+      map[name.toLowerCase()] = studySite.id
     }
   }
-  return map
+  return matchLabelFromMap(siteName, map)
 }
 
-function resolveStudySiteId(siteName: string, sites: StudySiteForImport[]): string | null {
-  return matchLabelFromMap(siteName, buildStudySiteNameMap(sites))
-}
-
-function mapTypeLabelFromTranslations(label: string | undefined | null, locale: LocaleType): EmissionSourceType | null {
+function matchTypeLabelFromTranslations(
+  label: string | undefined | null,
+  locale: LocaleType,
+): EmissionSourceType | null {
   return matchLabelFromTranslations(label, locale, (bc) =>
     buildLabelMap(
       bc.emissionSource.type as Record<string, unknown>,
@@ -60,7 +59,7 @@ function mapTypeLabelFromTranslations(label: string | undefined | null, locale: 
   )
 }
 
-function mapCaracterisationLabelFromTranslations(
+function matchCaracterisationLabelFromTranslations(
   label: string | undefined | null,
   locale: LocaleType,
 ): EmissionSourceCaracterisation | null {
@@ -73,7 +72,7 @@ function mapCaracterisationLabelFromTranslations(
   )
 }
 
-function mapSubPostLabelFromTranslations(label: string | undefined | null, locale: LocaleType): SubPost | null {
+function matchSubPostLabelFromTranslations(label: string | undefined | null, locale: LocaleType): SubPost | null {
   const subPostValues = new Set(Object.values(SubPost) as string[])
   return matchLabelFromTranslations(label, locale, (bc) =>
     buildLabelMap(
@@ -161,7 +160,7 @@ export function parseEmissionSourcesFile(
     }
 
     const subPostLabel = col('subPost')
-    const subPost = mapSubPostLabelFromTranslations(subPostLabel, locale)
+    const subPost = matchSubPostLabelFromTranslations(subPostLabel, locale)
     if (!subPostLabel) {
       rowErrors.push({ key: 'missingSubPost' })
     } else if (!subPost) {
@@ -188,10 +187,10 @@ export function parseEmissionSourcesFile(
     const unit = col('unit') || undefined
     const value = parseOptionalNumber(col('value'), 'invalidValue', rowErrors)
     const type = parseOptionalLabel(col('type'), 'invalidType', rowErrors, (label) =>
-      mapTypeLabelFromTranslations(label, locale),
+      matchTypeLabelFromTranslations(label, locale),
     )
     const caracterisation = parseOptionalLabel(col('caracterisation'), 'invalidCaracterisation', rowErrors, (label) =>
-      mapCaracterisationLabelFromTranslations(label, locale),
+      matchCaracterisationLabelFromTranslations(label, locale),
     )
 
     const parsedQualities: Partial<Record<(typeof qualityKeys)[number], number>> = {}

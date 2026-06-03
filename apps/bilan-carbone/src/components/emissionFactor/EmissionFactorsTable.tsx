@@ -3,7 +3,7 @@
 import { EmissionFactorList } from '@/db/emissionFactors'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { BCUnit, useUnitLabel } from '@/services/unit'
-import { getEmissionFactorValue } from '@/utils/emissionFactors'
+import { getEmissionFactorFullName, getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
 import { Environment, StudyResultUnit } from '@abc-transitionbascarbone/db-common/enums'
 import {
@@ -79,10 +79,7 @@ export const EmissionFactorsTable = ({
       {
         id: 'name',
         header: t('name'),
-        accessorFn: (emissionFactor) =>
-          emissionFactor.metaData
-            ? `${emissionFactor.metaData.title}${emissionFactor.metaData.attribute ? ` - ${emissionFactor.metaData.attribute}` : ''}${emissionFactor.metaData.frontiere ? ` - ${emissionFactor.metaData.frontiere}` : ''}`
-            : '',
+        accessorFn: (emissionFactor) => getEmissionFactorFullName(emissionFactor.metaData),
         cell: ({ getValue, row }) => <EmissionFactorNameCell expanded={row.getIsExpanded()} getValue={getValue} />,
       },
       {

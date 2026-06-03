@@ -1,4 +1,4 @@
-import { DEFAULT_FUZZY_OPTIONS } from '@/constants/fuse.contstant'
+import { DEFAULT_FUZZY_OPTIONS } from '@/constants/fuse.constant'
 import type { FullStudy } from '@/db/study'
 import { canBeValidated, getEmissionResults } from '@/services/emissionSource'
 import {
