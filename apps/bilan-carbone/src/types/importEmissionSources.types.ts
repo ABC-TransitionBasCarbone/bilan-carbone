@@ -25,6 +25,7 @@ export type PreviewEmissionSourcesResult =
 
 export type ParsedEmissionSourceRow = {
   lineNumber: number
+  studySiteId: string
   siteName: string
   subPost: SubPost
   name: string
@@ -33,6 +34,7 @@ export type ParsedEmissionSourceRow = {
   emissionFactorName: string
   emissionFactorValue: number | undefined
   emissionFactorUnit: Unit | undefined
+  emissionFactorUnitRaw?: string
   value: number | undefined
   type: EmissionSourceType | undefined
   caracterisation: EmissionSourceCaracterisation | undefined

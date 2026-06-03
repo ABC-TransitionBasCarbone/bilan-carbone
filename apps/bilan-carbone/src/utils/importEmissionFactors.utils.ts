@@ -2,11 +2,17 @@ import { KG_CO2E_PREFIX_REGEX } from '@/constants/import'
 import { LocaleType } from '@/i18n/config'
 import { environmentPostMapping, environmentSubPostsMapping } from '@/services/posts'
 import { EmissionFactorCommandValidation } from '@/services/serverFunctions/emissionFactor.command'
+import { ImportWarning } from '@/types/import.types'
 import { COLUMNS, ImportError, ParsedRow, ParseResult } from '@/types/importEmissionFactors.types'
 import { EmissionFactorBase, Environment, SubPost, Unit } from '@abc-transitionbascarbone/db-common/enums'
 import { ManualEmissionFactorUnitList } from './emissionFactors'
 import { parseExcelSheet } from './excel.utils'
-import { buildLabelMap, mapLabelFromTranslations, mapUnitLabelFromTranslationsWithList } from './import.utils'
+import {
+  buildLabelMap,
+  formatPrefixedUnitDisplay,
+  matchLabelFromTranslations,
+  matchUnitLabelFromTranslations,
+} from './import.utils'
 import { getExampleRowPrefixes } from './importEmissionSources.utils'
 import { parseNumericValue } from './number'
 import { getBcTranslations, getCommonTranslations, getSingularForm } from './translation.utils'
@@ -15,8 +21,11 @@ export function getAllPostsLabel(locale: LocaleType): string {
   return getBcTranslations(locale).emissionFactors.importModal.allPostsAndSubPosts
 }
 
-function mapBaseLabelFromTranslations(label: string | undefined | null, locale: LocaleType): EmissionFactorBase | null {
-  return mapLabelFromTranslations(label, locale, (bc) =>
+function matchBaseLabelFromTranslations(
+  label: string | undefined | null,
+  locale: LocaleType,
+): EmissionFactorBase | null {
+  return matchLabelFromTranslations(label, locale, (bc) =>
     buildLabelMap(
       bc.emissionFactors.base,
       () => true,
@@ -25,13 +34,13 @@ function mapBaseLabelFromTranslations(label: string | undefined | null, locale: 
   )
 }
 
-function mapPostLabelFromTranslations(
+function matchPostLabelFromTranslations(
   label: string | undefined | null,
   locale: LocaleType,
   environment: Environment,
 ): string | null {
   const envPosts = environmentPostMapping[environment]
-  return mapLabelFromTranslations(label, locale, (bc) =>
+  return matchLabelFromTranslations(label, locale, (bc) =>
     buildLabelMap(
       bc.emissionFactors.post,
       (k) => k in envPosts,
@@ -40,13 +49,13 @@ function mapPostLabelFromTranslations(
   )
 }
 
-function mapSubPostLabelFromTranslations(
+function matchSubPostLabelFromTranslations(
   label: string | undefined | null,
   locale: LocaleType,
   environment: Environment,
 ): SubPost | null {
   const envSubPosts = Object.values(environmentSubPostsMapping[environment]).flat()
-  return mapLabelFromTranslations(label, locale, (bc) =>
+  return matchLabelFromTranslations(label, locale, (bc) =>
     buildLabelMap(
       bc.emissionFactors.post,
       (k) => envSubPosts.includes(k as SubPost),
@@ -61,10 +70,6 @@ export function getUnitLabel(unit: Unit, locale: LocaleType): string {
     return unit
   }
   return getSingularForm(raw)
-}
-
-function mapManualUnitLabelFromTranslations(label: string | undefined | null, locale: LocaleType): Unit | null {
-  return mapUnitLabelFromTranslationsWithList(label, locale, ManualEmissionFactorUnitList)
 }
 
 /**
@@ -98,6 +103,23 @@ export function buildPostsAndSubPostsCell(subPosts: SubPost[], locale: LocaleTyp
 
 type ParseError = { key: string; value?: string }
 
+function parseQuality(
+  col: keyof typeof COLUMNS,
+  errorKey: string,
+  row: string[],
+  locale: LocaleType,
+  rowErrors: Omit<ImportError, 'lineNumber'>[],
+): number | null {
+  const raw = row[COLUMNS[col]]
+  const value = matchLabelFromTranslations(raw, locale, (bc) =>
+    Object.fromEntries(Object.entries(bc.quality).map(([k, v]) => [v.toLowerCase(), Number(k)] as [string, number])),
+  )
+  if (value === null) {
+    rowErrors.push({ key: errorKey, value: String(raw ?? '') })
+  }
+  return value
+}
+
 export type ParsePostsResult =
   | { success: true; subPosts: Record<string, SubPost[]> }
   | { success: false; errors: ParseError[] }
@@ -123,7 +145,7 @@ export function parsePostsAndSubPostsCell(
     .filter(Boolean)
   for (const group of groups) {
     const [postPart, ...subPostParts] = group.split(':').map((s) => s.trim())
-    const post = mapPostLabelFromTranslations(postPart, locale, environment)
+    const post = matchPostLabelFromTranslations(postPart, locale, environment)
     if (!post) {
       errors.push({ key: 'invalidPost', value: postPart })
       continue
@@ -134,7 +156,7 @@ export function parsePostsAndSubPostsCell(
       .map((s) => s.trim())
       .filter(Boolean)
     for (const token of subPostTokens) {
-      const subPost = mapSubPostLabelFromTranslations(token, locale, environment)
+      const subPost = matchSubPostLabelFromTranslations(token, locale, environment)
       if (!subPost) {
         errors.push({ key: 'invalidSubPost', value: token })
       } else {
@@ -164,12 +186,14 @@ export function parseImportFile(buffer: Buffer, locale: LocaleType, environment:
   const { dataRows } = sheetResult
 
   const errors: ImportError[] = []
+  const warnings: ImportWarning[] = []
   const parsedRows: ParsedRow[] = []
 
   for (let i = 0; i < dataRows.length; i++) {
     const row = dataRows[i]
     const lineNumber = i + 2
     const rowErrors: Omit<ImportError, 'lineNumber'>[] = []
+    const rowWarnings: ImportWarning[] = []
 
     const name = String(row[COLUMNS.name] ?? '').trim()
     if (!name) {
@@ -185,15 +209,19 @@ export function parseImportFile(buffer: Buffer, locale: LocaleType, environment:
 
     const rawUnit = String(row[COLUMNS.unit] ?? '').trim()
 
-    if (!KG_CO2E_PREFIX_REGEX.test(rawUnit) && rawUnit !== '') {
-      rowErrors.push({ key: 'invalidUnit', value: rawUnit })
-    }
-
     const strippedUnit = rawUnit.replace(KG_CO2E_PREFIX_REGEX, '')
-    const standardUnit = mapManualUnitLabelFromTranslations(strippedUnit, locale)
+    const standardUnit = matchUnitLabelFromTranslations(strippedUnit, locale, ManualEmissionFactorUnitList)
     const unit = standardUnit ?? (strippedUnit ? Unit.CUSTOM : null)
     if (!unit) {
       rowErrors.push({ key: 'invalidUnit', value: rawUnit })
+    } else if (standardUnit && rawUnit && !KG_CO2E_PREFIX_REGEX.test(rawUnit)) {
+      rowWarnings.push({
+        type: 'unitMissingPrefix',
+        lineNumber,
+        sourceName: name,
+        foundUnit: rawUnit,
+        resolvedValue: formatPrefixedUnitDisplay(locale, standardUnit),
+      })
     }
 
     const customUnit = unit === Unit.CUSTOM ? strippedUnit || null : null
@@ -211,28 +239,29 @@ export function parseImportFile(buffer: Buffer, locale: LocaleType, environment:
       rowErrors.push({ key: 'invalidTotalCo2' })
     }
 
-    const parseQuality = (col: keyof typeof COLUMNS, errorKey: string) => {
-      const raw = row[COLUMNS[col]]
-      const value = mapLabelFromTranslations(raw, locale, (bc) =>
-        Object.fromEntries(Object.entries(bc.quality).map(([k, v]) => [v.toLowerCase(), Number(k)])),
-      )
-      if (value === null) {
-        rowErrors.push({ key: errorKey, value: String(raw ?? '') })
-      }
-      return value
-    }
-
-    const reliability = parseQuality('reliability', 'invalidReliability')
+    const reliability = parseQuality('reliability', 'invalidReliability', row, locale, rowErrors)
     const technicalRepresentativeness = parseQuality(
       'technicalRepresentativeness',
       'invalidTechnicalRepresentativeness',
+      row,
+      locale,
+      rowErrors,
     )
     const geographicRepresentativeness = parseQuality(
       'geographicRepresentativeness',
       'invalidGeographicRepresentativeness',
+      row,
+      locale,
+      rowErrors,
     )
-    const temporalRepresentativeness = parseQuality('temporalRepresentativeness', 'invalidTemporalRepresentativeness')
-    const completeness = parseQuality('completeness', 'invalidCompleteness')
+    const temporalRepresentativeness = parseQuality(
+      'temporalRepresentativeness',
+      'invalidTemporalRepresentativeness',
+      row,
+      locale,
+      rowErrors,
+    )
+    const completeness = parseQuality('completeness', 'invalidCompleteness', row, locale, rowErrors)
 
     const rawPostsAndSubPosts = String(row[COLUMNS.postsAndSubPosts] ?? '').trim()
     const parsedPosts = parsePostsAndSubPostsCell(rawPostsAndSubPosts, locale, environment)
@@ -254,7 +283,7 @@ export function parseImportFile(buffer: Buffer, locale: LocaleType, environment:
     }
 
     const rawBase = String(row[COLUMNS.base] ?? '').trim()
-    const base = mapBaseLabelFromTranslations(rawBase, locale)
+    const base = matchBaseLabelFromTranslations(rawBase, locale)
 
     if (flatSubPosts.includes(SubPost.Electricite) && !base) {
       rowErrors.push({ key: 'missingBase', value: rawBase || undefined })
@@ -264,6 +293,8 @@ export function parseImportFile(buffer: Buffer, locale: LocaleType, environment:
       errors.push(...rowErrors.map((e) => ({ lineNumber, ...e })))
       continue
     }
+
+    warnings.push(...rowWarnings)
 
     const command = {
       name,
@@ -319,5 +350,5 @@ export function parseImportFile(buffer: Buffer, locale: LocaleType, environment:
     return { success: false, errors: [{ lineNumber: null, key: 'noRows' }] }
   }
 
-  return { success: true, rows: parsedRows }
+  return { success: true, rows: parsedRows, warnings }
 }

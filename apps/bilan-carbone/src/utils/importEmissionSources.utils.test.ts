@@ -9,6 +9,11 @@ import {
 import xlsx from 'node-xlsx'
 import { parseEmissionSourcesFile, SOURCE_IMPORT_HEADER_ROW_INDEX } from './importEmissionSources.utils'
 
+const TEST_STUDY_SITES = [
+  { id: 'study-site-a', site: { name: 'Site principal' } },
+  { id: 'study-site-b', site: { name: 'Site secondaire' } },
+]
+
 type RowInput = {
   site?: string
   subPost?: string
@@ -79,7 +84,7 @@ const VALID_ROW: RowInput = {
 describe('parseEmissionSourcesFile', () => {
   it('returns emptyFile error for an empty sheet', () => {
     const buffer = xlsx.build([{ name: 'Sheet1', data: [new Array(35).fill('')], options: {} }])
-    const result = parseEmissionSourcesFile(Buffer.from(buffer), Locale.FR)
+    const result = parseEmissionSourcesFile(Buffer.from(buffer), Locale.FR, [])
     expect(result.success).toBe(false)
     if (!result.success) {
       expect(result.errors[0].key).toBe('emptyFile')
@@ -88,7 +93,7 @@ describe('parseEmissionSourcesFile', () => {
 
   it('returns noRows when all data rows are example rows', () => {
     const buffer = makeBuffer([{ ...VALID_ROW, name: 'Exemple : source ignorée' }])
-    const result = parseEmissionSourcesFile(buffer, Locale.FR)
+    const result = parseEmissionSourcesFile(buffer, Locale.FR, TEST_STUDY_SITES)
     expect(result.success).toBe(false)
     if (!result.success) {
       expect(result.errors[0].key).toBe('noRows')
@@ -97,11 +102,12 @@ describe('parseEmissionSourcesFile', () => {
 
   it('parses a complete valid row', () => {
     const buffer = makeBuffer([VALID_ROW])
-    const result = parseEmissionSourcesFile(buffer, Locale.FR)
+    const result = parseEmissionSourcesFile(buffer, Locale.FR, TEST_STUDY_SITES)
     expect(result.success).toBe(true)
     if (result.success) {
       const row = result.rows[0]
       expect(row.siteName).toBe('Site principal')
+      expect(row.studySiteId).toBe('study-site-a')
       expect(row.subPost).toBe(SubPost.CombustiblesFossiles)
       expect(row.name).toBe('Ma source')
       expect(row.emissionFactorName).toBe('Facteur émission test')
@@ -110,7 +116,7 @@ describe('parseEmissionSourcesFile', () => {
 
   it('parses optional fields as undefined when empty', () => {
     const buffer = makeBuffer([VALID_ROW])
-    const result = parseEmissionSourcesFile(buffer, Locale.FR)
+    const result = parseEmissionSourcesFile(buffer, Locale.FR, TEST_STUDY_SITES)
     expect(result.success).toBe(true)
     if (result.success) {
       const row = result.rows[0]
@@ -123,7 +129,7 @@ describe('parseEmissionSourcesFile', () => {
 
   it('parses numeric optional fields', () => {
     const buffer = makeBuffer([{ ...VALID_ROW, depreciationPeriod: '10', constructionYear: '2010', value: '42' }])
-    const result = parseEmissionSourcesFile(buffer, Locale.FR)
+    const result = parseEmissionSourcesFile(buffer, Locale.FR, TEST_STUDY_SITES)
     expect(result.success).toBe(true)
     if (result.success) {
       expect(result.rows[0].depreciationPeriod).toBe(10)
@@ -135,8 +141,8 @@ describe('parseEmissionSourcesFile', () => {
   it('parses validated from yes/no translation', () => {
     const bufferYes = makeBuffer([{ ...VALID_ROW, validation: 'Oui' }])
     const bufferNo = makeBuffer([{ ...VALID_ROW, validation: 'Non' }])
-    const resultYes = parseEmissionSourcesFile(bufferYes, Locale.FR)
-    const resultNo = parseEmissionSourcesFile(bufferNo, Locale.FR)
+    const resultYes = parseEmissionSourcesFile(bufferYes, Locale.FR, TEST_STUDY_SITES)
+    const resultNo = parseEmissionSourcesFile(bufferNo, Locale.FR, TEST_STUDY_SITES)
     expect(resultYes.success && resultYes.rows[0].validated).toBe(true)
     expect(resultNo.success && resultNo.rows[0].validated).toBe(false)
   })
@@ -144,16 +150,16 @@ describe('parseEmissionSourcesFile', () => {
   it('parses quality fields to numbers (FR and EN)', () => {
     const bufferFr = makeBuffer([{ ...VALID_ROW, reliability: 'Bonne', completeness: 'Très bonne' }])
     const bufferEn = makeBuffer([{ ...VALID_ROW, subPost: 'Fossil fuels', reliability: 'Good' }])
-    const resultFr = parseEmissionSourcesFile(bufferFr, Locale.FR)
-    const resultEn = parseEmissionSourcesFile(bufferEn, Locale.EN)
+    const resultFr = parseEmissionSourcesFile(bufferFr, Locale.FR, TEST_STUDY_SITES)
+    const resultEn = parseEmissionSourcesFile(bufferEn, Locale.EN, TEST_STUDY_SITES)
     expect(resultFr.success && resultFr.rows[0].reliability).toBe(4)
     expect(resultFr.success && resultFr.rows[0].completeness).toBe(5)
     expect(resultEn.success && resultEn.rows[0].reliability).toBe(4)
   })
 
   it('parses type and emissionFactorUnit fields', () => {
-    const buffer = makeBuffer([{ ...VALID_ROW, type: 'Physique', emissionFactorUnit: 'kg' }])
-    const result = parseEmissionSourcesFile(buffer, Locale.FR)
+    const buffer = makeBuffer([{ ...VALID_ROW, type: 'Physique', emissionFactorUnit: 'kgCO2e/kg' }])
+    const result = parseEmissionSourcesFile(buffer, Locale.FR, TEST_STUDY_SITES)
     expect(result.success).toBe(true)
     if (result.success) {
       expect(result.rows[0].type).toBe(EmissionSourceType.Physical)
@@ -163,7 +169,7 @@ describe('parseEmissionSourcesFile', () => {
 
   it('parses a valid caracterisation', () => {
     const buffer = makeBuffer([{ ...VALID_ROW, caracterisation: 'Opéré' }])
-    const result = parseEmissionSourcesFile(buffer, Locale.FR)
+    const result = parseEmissionSourcesFile(buffer, Locale.FR, TEST_STUDY_SITES)
     expect(result.success).toBe(true)
     if (result.success) {
       expect(result.rows[0].caracterisation).toBe(EmissionSourceCaracterisation.Operated)
@@ -172,7 +178,7 @@ describe('parseEmissionSourcesFile', () => {
 
   it('accepts emissionFactorId without emissionFactorName', () => {
     const buffer = makeBuffer([{ ...VALID_ROW, emissionFactorName: '', emissionFactorId: 'abc-123' }])
-    const result = parseEmissionSourcesFile(buffer, Locale.FR)
+    const result = parseEmissionSourcesFile(buffer, Locale.FR, TEST_STUDY_SITES)
     expect(result.success).toBe(true)
     if (result.success) {
       expect(result.rows[0].emissionFactorId).toBe('abc-123')
@@ -181,7 +187,7 @@ describe('parseEmissionSourcesFile', () => {
 
   it('accepts a row without any emission factor data', () => {
     const buffer = makeBuffer([{ ...VALID_ROW, emissionFactorName: '', emissionFactorId: '' }])
-    const result = parseEmissionSourcesFile(buffer, Locale.FR)
+    const result = parseEmissionSourcesFile(buffer, Locale.FR, TEST_STUDY_SITES)
     expect(result.success).toBe(true)
     if (result.success) {
       expect(result.rows[0].emissionFactorName).toBe('')
@@ -191,7 +197,7 @@ describe('parseEmissionSourcesFile', () => {
 
   it('accepts emissionFactorUnit with kgCO2e/ prefix', () => {
     const buffer = makeBuffer([{ ...VALID_ROW, emissionFactorUnit: 'kgCO2e/tonne' }])
-    const result = parseEmissionSourcesFile(buffer, Locale.FR)
+    const result = parseEmissionSourcesFile(buffer, Locale.FR, TEST_STUDY_SITES)
     expect(result.success).toBe(true)
     if (result.success) {
       expect(result.rows[0].emissionFactorUnit).toBe(Unit.TON)
@@ -200,28 +206,66 @@ describe('parseEmissionSourcesFile', () => {
 
   it('accepts emissionFactorUnit with leading space before kgCO2e/ prefix', () => {
     const buffer = makeBuffer([{ ...VALID_ROW, emissionFactorUnit: ' kgCO2e/tonne' }])
-    const result = parseEmissionSourcesFile(buffer, Locale.FR)
+    const result = parseEmissionSourcesFile(buffer, Locale.FR, TEST_STUDY_SITES)
     expect(result.success).toBe(true)
     if (result.success) {
       expect(result.rows[0].emissionFactorUnit).toBe(Unit.TON)
     }
   })
 
+  describe('site validation', () => {
+    it('returns missingSite when the site column is empty', () => {
+      const buffer = makeBuffer([{ ...VALID_ROW, site: '' }])
+      const result = parseEmissionSourcesFile(buffer, Locale.FR, TEST_STUDY_SITES)
+      expect(result.success).toBe(false)
+      if (!result.success) {
+        expect(result.errors).toEqual([expect.objectContaining({ key: 'missingSite', lineNumber: 11 })])
+      }
+    })
+
+    it('returns siteNotFound when the site is not in the study', () => {
+      const buffer = makeBuffer([{ ...VALID_ROW, site: 'Site inconnu' }])
+      const result = parseEmissionSourcesFile(buffer, Locale.FR, TEST_STUDY_SITES)
+      expect(result.success).toBe(false)
+      if (!result.success) {
+        expect(result.errors).toEqual([
+          expect.objectContaining({ key: 'siteNotFound', value: 'Site inconnu', lineNumber: 11 }),
+        ])
+      }
+    })
+
+    it('resolves studySiteId with a case-insensitive site name match', () => {
+      const buffer = makeBuffer([{ ...VALID_ROW, site: 'site principal' }])
+      const result = parseEmissionSourcesFile(buffer, Locale.FR, TEST_STUDY_SITES)
+      expect(result.success).toBe(true)
+      if (result.success) {
+        expect(result.rows[0].studySiteId).toBe('study-site-a')
+      }
+    })
+
+    it('resolves studySiteId with a fuzzy site name match', () => {
+      const buffer = makeBuffer([{ ...VALID_ROW, site: 'Site pricipal' }])
+      const result = parseEmissionSourcesFile(buffer, Locale.FR, TEST_STUDY_SITES)
+      expect(result.success).toBe(true)
+    })
+  })
+
   describe('row-level validation errors', () => {
     it.each([
       [{ site: '' }, 'missingSite'],
+      [{ site: 'Site inconnu' }, 'siteNotFound'],
       [{ subPost: '' }, 'missingSubPost'],
       [{ subPost: 'Sous-poste inconnu' }, 'invalidSubPost'],
       [{ name: '' }, 'missingName'],
       [{ value: 'abc' }, 'invalidValue'],
       [{ emissionFactorValue: 'abc' }, 'invalidEmissionFactorValue'],
-      [{ emissionFactorUnit: 'unité-inconnue' }, 'invalidUnit'],
+      [{ emissionFactorUnit: 'kgCO2e/unité-inconnue' }, 'invalidUnit'],
       [{ type: 'type-inconnu' }, 'invalidType'],
       [{ caracterisation: 'catégorie-inconnue' }, 'invalidCaracterisation'],
       [{ reliability: 'qualité-inconnue' }, 'invalidQuality'],
     ])('returns %s error for invalid input', (overrides, expectedError) => {
       const buffer = makeBuffer([{ ...VALID_ROW, ...overrides }])
-      const result = parseEmissionSourcesFile(buffer, Locale.FR)
+      const result = parseEmissionSourcesFile(buffer, Locale.FR, TEST_STUDY_SITES)
       expect(result.success).toBe(false)
       if (!result.success) {
         expect(result.errors.some((e) => e.key === expectedError)).toBe(true)
@@ -230,11 +274,31 @@ describe('parseEmissionSourcesFile', () => {
 
     it('accumulates multiple errors from the same row', () => {
       const buffer = makeBuffer([{ ...VALID_ROW, site: '', name: '' }])
-      const result = parseEmissionSourcesFile(buffer, Locale.FR)
+      const result = parseEmissionSourcesFile(buffer, Locale.FR, TEST_STUDY_SITES)
       expect(result.success).toBe(false)
       if (!result.success) {
         expect(result.errors.some((e) => e.key === 'missingSite')).toBe(true)
         expect(result.errors.some((e) => e.key === 'missingName')).toBe(true)
+      }
+    })
+
+    it('parses a recognized emission factor unit without kgCO2e/ prefix', () => {
+      const buffer = makeBuffer([{ ...VALID_ROW, emissionFactorUnit: 'tonne' }])
+      const result = parseEmissionSourcesFile(buffer, Locale.FR, TEST_STUDY_SITES)
+      expect(result.success).toBe(true)
+      if (result.success) {
+        expect(result.rows[0].emissionFactorUnit).toBe(Unit.TON)
+        expect(result.rows[0].emissionFactorUnitRaw).toBe('tonne')
+      }
+    })
+
+    it('returns both siteNotFound and parses unit without prefix on the same row', () => {
+      const buffer = makeBuffer([{ ...VALID_ROW, site: 'Site inconnu', emissionFactorUnit: 'tonne' }])
+      const result = parseEmissionSourcesFile(buffer, Locale.FR, TEST_STUDY_SITES)
+      expect(result.success).toBe(false)
+      if (!result.success) {
+        expect(result.errors.some((e) => e.key === 'siteNotFound')).toBe(true)
+        expect(result.errors.some((e) => e.key === 'invalidUnit')).toBe(false)
       }
     })
   })

@@ -1,9 +1,11 @@
-import { ImportError } from '@/types/import.types'
+import { ImportError, ImportWarning } from '@/types/import.types'
 import { EmissionFactorBase, SubPost, Unit } from '@abc-transitionbascarbone/db-common'
 
 export type { ImportError }
 
-export type ImportEmissionFactorsResult = { success: true; count: number } | { success: false; errors: ImportError[] }
+export type ImportEmissionFactorsResult =
+  | { success: true; count: number }
+  | { success: false; errors?: ImportError[]; warnings?: ImportWarning[] }
 
 export type PreviewRow = {
   name: string
@@ -75,4 +77,6 @@ export type ParsedRow = {
   rawUnit: string
 }
 
-export type ParseResult = { success: true; rows: ParsedRow[] } | { success: false; errors: ImportError[] }
+export type ParseResult =
+  | { success: true; rows: ParsedRow[]; warnings: ImportWarning[] }
+  | { success: false; errors: ImportError[] }
