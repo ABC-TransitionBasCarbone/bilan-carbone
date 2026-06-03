@@ -301,8 +301,9 @@ function collectWarningsAndAmbiguities(
   if (!ef) {
     const hasSomeEfData = !!(row.emissionFactorId || row.emissionFactorName)
     if (hasSomeEfData) {
+      const missingUnit = !!row.emissionFactorName && !row.emissionFactorUnit
       warnings.push({
-        type: 'efNotFound',
+        type: missingUnit ? 'efMissingUnit' : 'efNotFound',
         lineNumber,
         sourceName: row.name,
         searchedName: row.emissionFactorName,

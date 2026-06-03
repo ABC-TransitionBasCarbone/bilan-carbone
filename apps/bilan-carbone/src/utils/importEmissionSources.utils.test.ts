@@ -404,10 +404,27 @@ describe('resolveEmissionFactorRows', () => {
     }
   })
 
-  it('returns warnings with efNotFound when EF data present but no match', async () => {
+  it('returns warnings with efMissingUnit when EF name present but no unit and no match', async () => {
     mockFindMatch.mockResolvedValue(null)
 
     const result = await resolveEmissionFactorRows([makeRow()], undefined, Locale.FR, ORG_ID, VERSION_IDS)
+
+    expect(result.type).toBe('warnings')
+    if (result.type === 'warnings') {
+      expect(result.warnings[0]).toMatchObject({ type: 'efMissingUnit', lineNumber: 5 })
+    }
+  })
+
+  it('returns warnings with efNotFound when EF name and unit present but no match', async () => {
+    mockFindMatch.mockResolvedValue(null)
+
+    const result = await resolveEmissionFactorRows(
+      [makeRow({ emissionFactorUnit: Unit.KG })],
+      undefined,
+      Locale.FR,
+      ORG_ID,
+      VERSION_IDS,
+    )
 
     expect(result.type).toBe('warnings')
     if (result.type === 'warnings') {

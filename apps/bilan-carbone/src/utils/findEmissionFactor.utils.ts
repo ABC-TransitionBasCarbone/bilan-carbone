@@ -42,6 +42,17 @@ export type EfRow = {
   metaData: { title: string | null; attribute: string | null; frontiere: string | null; language: string }[]
 }
 
+function getEfFullName(ef: EfRow, locale: string): string {
+  return getEmissionFactorFullName(
+    ef.metaData.find((m) => m.language === locale) ??
+      ef.metaData[0] ?? { title: null, attribute: null, frontiere: null },
+  )
+}
+
+function findExactFullNameMatch(efs: EfRow[], normalizedSearch: string, locale: string): EfRow | undefined {
+  return efs.find((ef) => normalizeStringForSearch(getEfFullName(ef, locale)) === normalizedSearch)
+}
+
 function toEfMatch(
   ef: EfRow,
   matchType:
@@ -54,11 +65,7 @@ function toEfMatch(
     matchType,
     id: ef.id,
     importedId: ef.importedId,
-    foundTitle:
-      getEmissionFactorFullName(
-        ef.metaData.find((m) => m.language === locale) ??
-          ef.metaData[0] ?? { title: null, attribute: null, frontiere: null },
-      ) || undefined,
+    foundTitle: getEfFullName(ef, locale) || undefined,
     foundValue: ef.totalCo2,
     foundUnit: ef.customUnit ?? ef.unit ?? undefined,
   }
@@ -101,6 +108,13 @@ export async function findEmissionFactorMatch(
     return toEfMatch(byNameAndUnit[0], EmissionFactorMatchType.NameAndUnitOnly, locale)
   }
 
+  if (byNameAndUnit.length > 1 && title) {
+    const exactFullName = findExactFullNameMatch(byNameAndUnit, normalizeStringForSearch(title), locale)
+    if (exactFullName) {
+      return toEfMatch(exactFullName, EmissionFactorMatchType.Exact, locale)
+    }
+  }
+
   if (byNameAndUnit.length > 1) {
     return {
       matchType: EmissionFactorMatchType.NameAmbiguous,
@@ -113,20 +127,22 @@ export async function findEmissionFactorMatch(
 
     if (title) {
       const normalizedSearch = normalizeStringForSearch(title)
+
+      const exactFullName = findExactFullNameMatch(byUnit, normalizedSearch, locale)
+      if (exactFullName) {
+        return toEfMatch(exactFullName, EmissionFactorMatchType.Exact, locale)
+      }
+
       const candidates = byUnit.map((ef) => ({
         ef,
-        normalizedFullName: normalizeStringForSearch(
-          getEmissionFactorFullName(
-            ef.metaData.find((m) => m.language === locale) ??
-              ef.metaData[0] ?? { title: null, attribute: null, frontiere: null },
-          ),
-        ),
+        normalizedFullName: normalizeStringForSearch(getEfFullName(ef, locale)),
       }))
 
       const fuse = new Fuse(candidates, {
         keys: ['normalizedFullName'],
         ...DEFAULT_FUZZY_OPTIONS,
       })
+
       const results = fuse.search(normalizedSearch)
 
       if (results.length === 1) {

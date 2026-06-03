@@ -18,7 +18,7 @@ export type AmbiguousRow = {
 export type FEChoices = Record<number, string | null>
 
 export type ImportWarning = {
-  type: 'efNotFound' | 'efMissing' | 'validationSkipped' | 'unitMissingPrefix'
+  type: 'efNotFound' | 'efMissingUnit' | 'efMissing' | 'validationSkipped' | 'unitMissingPrefix'
   lineNumber: number | null
   sourceName?: string
   searchedName?: string

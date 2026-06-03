@@ -277,7 +277,7 @@ const ImportFileModal = <TPreviewRow,>({
         {isWarning && <WarningList warnings={warnings} t={t} tCommon={tCommon} />}
 
         {isAmbiguous && (
-          <div className={styles.ambiguousWrapper}>
+          <div className={classNames(styles.ambiguousWrapper, 'flex-col gapped1')}>
             <Typography variant="body2" color="textSecondary">
               {t('ambiguousTitle')}
             </Typography>
