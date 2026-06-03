@@ -370,7 +370,7 @@ describe('findEmissionFactorMatch', () => {
       expect(result).toMatchObject({ matchType: 'nameAndUnitOnly', id: 'ef-1' })
     })
 
-    it('finds EF when import name is "title - attribute - frontiere" via normalized Fuse match', async () => {
+    it('finds EF when import name is "title - attribute - frontiere" and returns full name as foundTitle', async () => {
       mockFindById.mockResolvedValue(null)
       mockFindByNameAndUnit.mockResolvedValue([])
       const ef = makeEf('ef-1', 938, 'KG', 'Emballages', 'Acier', 'Stockage - Impacts')
@@ -386,7 +386,11 @@ describe('findEmissionFactorMatch', () => {
         versionIds,
       )
 
-      expect(result).toMatchObject({ matchType: 'nameAndUnitOnly', id: 'ef-1' })
+      expect(result).toMatchObject({
+        matchType: 'nameAndUnitOnly',
+        id: 'ef-1',
+        foundTitle: 'Emballages - Acier - Stockage - Impacts',
+      })
     })
 
     it('matches without dashes (normalized comparison ignores punctuation)', async () => {
@@ -436,6 +440,25 @@ describe('findEmissionFactorMatch', () => {
 
       expect(mockFindByNameAndUnit).toHaveBeenCalledTimes(1)
       expect(mockFindByNameAndUnit).toHaveBeenCalledWith('Acier', locale, organizationId, 'KG', versionIds)
+    })
+
+    it('finds EF with fuzzy typo on full name with attribute (truncated attribute)', async () => {
+      mockFindById.mockResolvedValue(null)
+      mockFindByNameAndUnit.mockResolvedValue([])
+      const ef = makeEf('ef-1', 938, 'KG', 'Emballages', 'Carton', 'Recyclé')
+      mockFindByUnit.mockResolvedValue([ef])
+
+      const result = await findEmissionFactorMatch(
+        undefined,
+        'Emballages - Cart - Recyclé',
+        undefined,
+        'KG',
+        locale,
+        organizationId,
+        versionIds,
+      )
+
+      expect(result).toMatchObject({ matchType: 'nameAndUnitOnly', id: 'ef-1' })
     })
   })
 })
