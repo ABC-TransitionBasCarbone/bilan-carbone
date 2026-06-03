@@ -15,7 +15,7 @@ interface Props {
 const delayDuration = process.env.NEXT_PUBLIC_FEEDBACK_TYPEFORM_DELAY
 
 const UserFeedback = ({ environment }: Props) => {
-  const tCommon = useTranslations('feedback')
+  const tCommon = useTranslations('common')
   const t = useTranslations('feedback')
   const [open, setOpen] = useState(true)
   const [displayForm, setDisplayForm] = useState(false)
