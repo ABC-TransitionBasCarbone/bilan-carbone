@@ -1,9 +1,9 @@
 import { DEFAULT_FUZZY_OPTIONS } from '@/constants/fuse.contstant'
 import { KG_CO2E_PREFIX } from '@/constants/import'
 import { Unit } from '@abc-transitionbascarbone/db-common/enums'
+import { LocaleType } from '@abc-transitionbascarbone/i18n/config'
 import Fuse from 'fuse.js'
 import { BcTranslations, extractAllForms, getBcTranslations, getSingularForm } from './translation.utils'
-import { LocaleType } from '@abc-transitionbascarbone/i18n/config'
 
 export function matchLabelFromMap<T>(label: string | undefined | null, map: Record<string, T>): T | null {
   if (!label) {
