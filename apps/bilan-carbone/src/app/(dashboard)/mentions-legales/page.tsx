@@ -1,6 +1,6 @@
 import Block from '@/components/base/Block'
-import { getEnvVar } from '@abc-transitionbascarbone/lib/environment'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { getEnvVar } from '@abc-transitionbascarbone/lib/environment'
 import { getTranslations } from 'next-intl/server'
 import Link from 'next/link'
 import styles from './styles.module.css'
