@@ -1,6 +1,7 @@
 import { updateUserResetTokenForEmail } from '@abc-transitionbascarbone/db-common/db'
 import { getUserByEmail } from '@/db/user'
 import { withServerResponse } from '@/utils/serverResponse'
+import { sendResetPassword } from '@abc-transitionbascarbone/services/email/email'
 import { HOUR, TIME_IN_MS } from '@abc-transitionbascarbone/utils'
 import jwt from 'jsonwebtoken'
 
@@ -19,7 +20,7 @@ export const resetPassword = async (email: string) =>
         }
         const token = jwt.sign(payload, process.env.NEXTAUTH_SECRET as string)
         await updateUserResetTokenForEmail(email, resetToken)
-        // await sendResetPassword(email, token, env)
+        await sendResetPassword(email, token)
       }
     }
   })

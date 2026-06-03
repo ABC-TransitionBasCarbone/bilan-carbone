@@ -10,7 +10,7 @@ const BASE_URL = process.env.NEXTAUTH_URL
 const tSubject = async (keys: string, object?: Record<string, string | number | Date>) =>
   (await getTranslations('email.subject'))(keys, object)
 
-export const sendResetPassword = async (toEmail: string, token: string, env: Environment) => {
+export const sendResetPassword = async (toEmail: string, token: string, env: Environment = Environment.BC) => {
   return sendEmail(env, [toEmail], await tSubject('resetPassword'), 'reset-password', {
     link: getEnvResetLink('reset-password', token, env),
   })

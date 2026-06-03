@@ -2419,15 +2419,6 @@
     "4": "Good",
     "5": "Very good"
   },
-  "error": {
-    "Not authorized": "You are not allowed to do this action",
-    "Not found": "The requested resource was not found",
-    "Server error": "A server error occurred, please contact support",
-    "default": "Something went wrong ..., please try again. If the problem persists, please contact support",
-    "error": "Something went wrong ...",
-    "contactSupport": "A problem has occurred. Try returning to the <link>home page</link>. <p>If this does not work, contact our support at <m></m> or try to <logout>reconnect</logout>.</p>",
-    "duplicateScopeCombination": "An objective with the same scope (sites, tags, sub-posts) and target year already exists for this pathway"
-  },
   "upload": {
     "fileTooBig": "File too big (max size {size} MB)",
     "noFileSelected": "No file selected"
@@ -2549,18 +2540,6 @@
       "date": "Please enter a valid date (DD/MM/YYYY)",
       "phone": "Please enter a valid phone number",
       "required": "This field is required"
-    }
-  },
-  "email": {
-    "subject": {
-      "resetPassword": "Forgot password",
-      "newUser": "You have been invited to BC+",
-      "addedActiveUser": "You have been invited to a new environment on BC+",
-      "activation": "You have activated your account on BC+",
-      "activationRequest": "Access request to your BC+ organisation",
-      "userOnStudyInvitation": "Added to the study {studyName}",
-      "contributorInvitation": "Contribution request on the study {studyName}",
-      "addedUsersByFile": "Authorization for user import"
     }
   },
   "table": {
