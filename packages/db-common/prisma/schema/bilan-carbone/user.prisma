@@ -8,15 +8,6 @@ enum Role {
   @@schema("bilan_carbone")
 }
 
-enum UserStatus {
-  IMPORTED
-  PENDING_REQUEST
-  VALIDATED
-  ACTIVE
-
-  @@schema("bilan_carbone")
-}
-
 enum UserChecklist {
   CreateAccount
   AddCollaborator

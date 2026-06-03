@@ -5,6 +5,15 @@ enum UserSource {
   @@schema("common")
 }
 
+enum UserStatus {
+  IMPORTED
+  PENDING_REQUEST
+  VALIDATED
+  ACTIVE
+
+  @@schema("common")
+}
+
 model User {
   id          String       @id @default(uuid())
   level       Level?
