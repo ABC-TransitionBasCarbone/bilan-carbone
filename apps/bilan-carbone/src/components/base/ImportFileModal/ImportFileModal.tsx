@@ -6,10 +6,11 @@ import { ValidateEmissionSourcesResult } from '@/types/importEmissionSources.typ
 import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
 import DownloadIcon from '@mui/icons-material/Download'
 import UploadFileIcon from '@mui/icons-material/UploadFile'
-import { CircularProgress, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material'
+import { CircularProgress, Typography } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { DragEvent, ReactNode, useRef, useState, useTransition } from 'react'
+import AmbiguousEmissionFactorList from './AmbiguousEmissionFactorList'
 import ErrorList from './ErrorList'
 import styles from './ImportFileModal.module.css'
 import WarningList from './WarningList'
@@ -277,61 +278,11 @@ const ImportFileModal = <TPreviewRow,>({
         {isWarning && <WarningList warnings={warnings} t={t} tCommon={tCommon} />}
 
         {isAmbiguous && (
-          <div className={classNames(styles.ambiguousWrapper, 'flex-col gapped1')}>
-            <Typography variant="body2" color="textSecondary">
-              {t('ambiguousTitle')}
-            </Typography>
-            {ambiguousRows.map((row) => (
-              <div key={row.lineNumber} className={styles.ambiguousRow}>
-                <Typography variant="body2" fontWeight="medium">
-                  {tCommon('label.line', { line: row.lineNumber })}
-                  {row.sourceName ? ` — ${row.sourceName}` : ''}
-                </Typography>
-                {row.searchedName && (
-                  <Typography variant="caption" color="textSecondary">
-                    {t('ambiguousSearched', { name: row.searchedName })}
-                  </Typography>
-                )}
-                {row.tooMany ? (
-                  <Typography variant="body2">{t('ambiguousTooMany')}</Typography>
-                ) : (
-                  <RadioGroup
-                    value={feChoices[row.lineNumber] ?? 'null'}
-                    onChange={(e) =>
-                      setFeChoices((prev) => ({
-                        ...prev,
-                        [row.lineNumber]: e.target.value === 'null' ? null : e.target.value,
-                      }))
-                    }
-                  >
-                    {row.candidates.map((c) => (
-                      <FormControlLabel
-                        key={c.id}
-                        value={c.id}
-                        control={<Radio size="small" />}
-                        label={
-                          <Typography variant="body2">
-                            {[c.foundTitle, c.foundValue !== undefined ? `${c.foundValue}` : undefined, c.foundUnit]
-                              .filter(Boolean)
-                              .join(' · ')}
-                          </Typography>
-                        }
-                      />
-                    ))}
-                    <FormControlLabel
-                      value="null"
-                      control={<Radio size="small" />}
-                      label={
-                        <Typography variant="body2" color="textSecondary">
-                          {t('leaveEmpty')}
-                        </Typography>
-                      }
-                    />
-                  </RadioGroup>
-                )}
-              </div>
-            ))}
-          </div>
+          <AmbiguousEmissionFactorList
+            rows={ambiguousRows}
+            choices={feChoices}
+            onChange={(lineNumber, value) => setFeChoices((prev) => ({ ...prev, [lineNumber]: value }))}
+          />
         )}
 
         {isPreview && (
