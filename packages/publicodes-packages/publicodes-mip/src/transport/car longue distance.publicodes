@@ -6,13 +6,7 @@ transport . car longue distance:
   unité: kgCO2e
 
 transport . car longue distance . km:
-  #  question: Combien de kilomètres avez-vous parcouru en car pour des trajets longue distance en 2023 ?
   question: Combien de kilomètres allez vous parcourir en car de longue distance (Ouibus, Flixbus, etc.) pour aller et revenir de votre lieu de séjour ? ?
-  #  description: |
-  #     Renseignez un nombre de km cohérent avec les distances que vous allez parcourir en car "longue distance" le temps de votre séjour (aller-retour depuis votre domicile
-  #     et déplacements éventuels pendant le séjour).
-  #
-  #     Nous nous intéressons ici aux trajets faits en car de type Ouibus, Flixbus, etc.
   description: |
     Renseignez un nombre de km cohérent avec les distances que vous allez parcourir en car "longue distance" pour vous rendre sur votre lieu de séjour et en revenir. 
     Nous nous intéressons ici aux trajets faits en car de type Ouibus, Flixbus, etc.
@@ -33,10 +27,3 @@ transport . car longue distance . impact par km:
      - masse d’un autocar = 12 tonnes
      - durée de vie en km = 361 884 km
      - nombre de passagers moyen = 30
-
-#transport . car longue distance . distance moyenne annuelle:
-#  formule: 9600000000 km / population
-#  unité: km
-#  note: |
-#    D'après [l'étude "Chiffres clef du transport 2021" (données de 2019)](https://www.statistiques.developpement-durable.gouv.fr/edition-numerique/chiffres-cles-transport-2021/13-transport-routier-de-voyageurs), les français parcourent en moyenne 9.6 milliards de km par an en car sur des trajets longue distance
-#    Sont comptabilisés les km réalisés en autocars « Macron » et en transport occasionnel en autocars étrangers.

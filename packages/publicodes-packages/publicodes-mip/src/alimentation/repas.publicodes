@@ -14,18 +14,6 @@ alimentation . déforestation:
   formule:
     somme:
       - forfait base
-    # variations:
-    #   - si: déforestation
-    #     alors:
-    #       variations:
-    #         - si: alimentation . local . consommation = 'jamais'
-    #           alors: forfait base + (forfait moyen fruits céréales * 1.5)
-    #         - si: alimentation . local . consommation = 'parfois'
-    #           alors: forfait base + forfait moyen fruits céréales
-    #         - si: alimentation . local . consommation = 'souvent'
-    #           alors: forfait base + (forfait moyen fruits céréales * 0.6)
-    #         - sinon: forfait base + (forfait moyen fruits céréales * 0.2)
-    #   - sinon: 0
   note: |
     La déforestation importée est l'empreinte carbone associée à la destruction de forêts ailleurs sur la planète. Elle est la combinaison de deux facteurs :
 

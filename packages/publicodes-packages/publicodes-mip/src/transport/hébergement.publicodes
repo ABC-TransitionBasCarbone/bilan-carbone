@@ -6,7 +6,6 @@ transport . hébergement:
   formule:
     somme:
       - nuitées
-      # - aquatique
 
 transport . hébergement . nuitées:
   question: Dans quel(s) type(s) d'hébergement(s) vous logez lors de vos déplacements professionnels ?
@@ -15,17 +14,11 @@ transport . hébergement . nuitées:
     type: selection
     options:
       - hotel . présent
-      # - camping . présent
-      # - résidence de tourisme . présent
-      #      - auberge de jeunesse . présent
       - locations . présent
       - famille ou amis . présent
     suggestions:
       aucun:
         hotel . présent: non
-        #  camping . présent: non
-        #  résidence de tourisme . présent: non
-        #        auberge de jeunesse . présent: non
         locations . présent: non
         famille ou amis . présent: non
   icônes: 🏨
@@ -41,9 +34,6 @@ transport . hébergement . nuitées . empreinte totale:
   formule:
     somme:
       - empreinte hotel
-      #       - empreinte camping
-      #       - empreinte résidence de tourisme
-      # #      - empreinte auberge de jeunesse
       - empreinte locations
       - empreinte famille ou amis
   unité: kgCO2e
@@ -60,9 +50,6 @@ transport . hébergement . nuitées . choix utilisateur:
   formule:
     une de ces conditions:
       - est défini: hotel . présent
-      # - est défini: camping . présent
-      # - est défini: résidence de tourisme . présent
-      #      - est défini: auberge de jeunesse . présent
       - est défini: locations . présent
       - est défini: famille ou amis . présent
 
@@ -184,10 +171,6 @@ transport . hébergement . nuitées . résidence de tourisme . nombre de nuitée
   plancher: 0
   par défaut: 0
   note: La valeur par défaut est arbitraire et doit être calée avec HdF Tourisme.
-#  suggestions:
-#    un week-end: 1
-#    un week-end prolongé: 2
-#    une semaine: 6
 
 transport . hébergement . nuitées . empreinte camping:
   titre: Empreinte emplacement en camping
@@ -220,10 +203,6 @@ transport . hébergement . nuitées . camping . nombre de nuitées:
   plancher: 0
   par défaut: 0
   note: La valeur par défaut est arbitraire et doit être calée avec HdF Tourisme.
-#  suggestions:
-#    un week-end: 1
-#    un week-end prolongé: 2
-#    une semaine: 6
 
 transport . hébergement . nuitées . empreinte auberge de jeunesse:
   titre: Empreinte auberge de jeunesse
@@ -259,10 +238,6 @@ transport . hébergement . nuitées . auberge de jeunesse . nombre de nuitées:
   plancher: 0
   par défaut: 0
   note: La valeur par défaut est arbitraire et doit être calée avec HdF Tourisme.
-#  suggestions:
-#    un week-end: 1
-#    un week-end prolongé: 2
-#    une semaine: 6
 
 transport . hébergement . nuitées . empreinte locations:
   titre: Empreinte locations meublées
@@ -353,11 +328,6 @@ transport . hébergement . aquatique:
       - si: choix utilisateur
         alors: (empreinte totale)
       - sinon: 0 #On considère que par défaut un hébergement n'a pas de piscine --> à sourcer toutefois !
-#  formule:
-#    somme:
-#      - piscine non chauffée
-#      - piscine chauffée
-#      - spa jacuzzi
 
 transport . hébergement . aquatique . choix utilisateur:
   titre: Choix utilisateur aquatique
@@ -406,15 +376,6 @@ transport . hébergement . aquatique . piscine non chauffée . empreinte annuell
      - Traitement chimique : 24.31
      - Pompe de filtrag	: 97.04
      - Construction : 414.04
-#  valeur: transport . piscine
-#  contexte:
-#    métrique: "'carbone'"
-#    surface: 60 #On considère une piscine de 5 x 12
-#    type: "'creusée'"
-#    voiture . électrique . consommation aux 100:   # Je garde cette sous-structure pour pour le template au cas où j'aurai besoin de l'adapter pour que le modèle tourne
-#      valeur: voiture . électrique . consommation estimée
-#      contexte:
-#        voiture . utilisateur: "'propriétaire'"
 
 transport . hébergement . aquatique . empreinte piscine chauffée:
   applicable si:
@@ -446,15 +407,6 @@ transport . hébergement . aquatique . piscine chauffée . empreinte annuelle:
      - Traitement chimique : 24.31
      - Pompe de filtrage	: 194,08
      - Construction : 414.04
-#  valeur: transport . piscine
-#  contexte:
-#    métrique: "'carbone'"
-#    transport . piscine . surface: 60 #On considère une piscine de 5 x 12
-#    transport . piscine . type: "'creusée'"
-#    voiture . électrique . consommation aux 100:   # Je garde cette sous-structure pour pour le template au cas où j'aurai besoin de l'adapter pour que le modèle tourne
-#      valeur: voiture . électrique . consommation estimée
-#      contexte:
-#        voiture . utilisateur: "'propriétaire'"
 
 transport . hébergement . aquatique . empreinte spa jacuzzi:
   applicable si:
@@ -489,13 +441,3 @@ transport . hébergement . aquatique . spa jacuzzi . empreinte annuelle:
      - Construction : 96.16
     /!\ L'estimation de l'empreinte du chauffage, du traitement chimique et du filtrage n'est pas fonction du volume d'eau à traiter 
     --> l'empreinte de ces trois traitements est donc identique entre une piscine chaufée de 60 m2 et un spa d'environ 20 m2.
-
-#  valeur: transport . piscine
-#  contexte:
-#    métrique: "'carbone'"
-#    transport . piscine . surface: 10 #On considère une piscine de 3 x 3
-#    transport . piscine . type: "'hors sol'"
-#    voiture . électrique . consommation aux 100:   # Je garde cette sous-structure pour pour le template au cas où j'aurai besoin de l'adapter pour que le modèle tourne
-#      valeur: voiture . électrique . consommation estimée
-#      contexte:
-#        voiture . utilisateur: "'propriétaire'"

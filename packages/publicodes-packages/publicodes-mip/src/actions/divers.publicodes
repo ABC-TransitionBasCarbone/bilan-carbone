@@ -1,9 +1,3 @@
-# divers . partage MSD:
-#   titre: Promouvoir Mon Séjour Durable !
-#   icônes: 📢🌍
-#   description: |
-#     Faire connaître ce simulateur à vos proches, vos collègues, le partager sur les réseaux sociaux, c'est un moyen de contribuer à la lutte contre le changement climatique.
-
 #     Le partage de l’info via des outils numériques va consommer un peu d’énergie mais peut générer beaucoup d’actions positives pour le climat ! Si vos contacts décident des mêmes actions que vous, imaginez l'effet démultiplicateur ! 🙌
 
 divers . aider les autres:
@@ -31,37 +25,12 @@ divers . publicité:
   note: |
     ADEME: https://librairie.ademe.fr/dechets-economie-circulaire/325-biens-d-equipement-benefices-environnementaux-d-allonger-leur-duree-de-vie.html
 
-# divers . électroménager . appareils . allongement:
-#   titre: Faire durer son électroménager
-#   icônes: 💪🔌
-#   non applicable si: divers . ameublement . préservation = 'maximum'
-#   formule: (divers . électroménager . appareils - divers . électroménager . appareils . préservation allongée) / logement . habitants
-#   description: |
-#     Augmenter la durée de vie de ses équipements électroménagers (en en prenant soin ou en les réparant lorsqu'ils tombent en panne) permet de limiter son impact environnemental.
 
 #     A l'inverse, renouveler de manière prématurée ses équipements contribue à produire plus d'équipements pour un même service rendu.
 
 #     > Découvrez toutes les solutions pour prolonger la vie de vos appareils et pour économiser les ressources de la planète sur le site [Épargnons nos ressources](https://epargnonsnosressources.gouv.fr/).
 
-# divers . électroménager . appareils . préservation allongée:
-#   valeur: divers . électroménager . appareils
-#   contexte:
-#     coefficient préservation: 4 / 3
-
-# divers . ameublement . meubles . allongement:
-#   titre: Allonger la vie de ses meubles
-#   icônes: 💪🪑
-#   non applicable si: divers . ameublement . préservation = 'maximum'
-#   formule: (divers . ameublement . meubles - divers . ameublement . meubles . préservation allongée) / logement . habitants
-#   description: |
-#     Certains meubles fabriqués avec des panneaux de particules sont des sources potentielles d’émissions de COV et de formaldéhyde. Les colles employées dans ces meubles rejettent du formaldéhyde pendant plusieurs mois. Il vaut donc mieux privilégier le bois massif (que vous pourrez garder longtemps !) au bois aggloméré.
-
 #     De plus, vous pouvez trouver des meubles moins polluants en choisissant des mobiliers avec [un écolabel](https://www.ademe.fr/labels-environnementaux).
-
-# divers . ameublement . meubles . préservation allongée:
-#   valeur: divers . ameublement . meubles
-#   contexte:
-#     coefficient préservation: 4 / 3
 
 divers . tabac . arrêter:
   titre: Arrêter de fumer
@@ -97,7 +66,6 @@ divers . numérique . internet . durée journalière . réduction:
 divers . numérique . appareils . allongement:
   titre: Allonger la vie de tous ses appareils
   icônes: 💪💻️
-  # non applicable si: divers . ameublement . préservation = 'maximum'
   formule: divers . numérique . appareils - divers . numérique . appareils . préservation allongée
   description: |
     > Découvrez toutes les solutions pour prolonger la vie de vos appareils et pour économiser les ressources de la planète sur le site [Épargnons nos ressources](https://epargnonsnosressources.gouv.fr/).
@@ -124,14 +92,6 @@ divers . numérique . réduire ia:
     Pour réduire votre empreinte carbone liée à l'utilisation de ces outils, limitez leur usage aux situations où ils sont vraiment nécessaires ou priviligiez des petits modèles spécifiques à votre besoin.
 
 divers . textile . réduire neuf:
-
-# divers . textile . réduire neuf . acheter d'occasion:
-#   applicable si: divers . textile . nombre de textiles achetés > 2
-#   icônes: 👖🔁
-#   formule: divers . textile
-#   unité: kgCO2e
-#   description: |
-#     L'achat de vêtements neufs pèse très lourd dans notre empreinte carbone. Au niveau mondial, on estime que c'est 10% des émissions mondiales de gaz à effet de serre qui sont à attribuer à l'industrie textile.
 
 #     Il est temps de revoir notre rapport à notre garde-robe ! Posséder moins, choisir des vêtements de qualité que l'on peut réparer, se fournir en seconde-main.
 
@@ -195,26 +155,10 @@ divers . autres produits . réduire . recalcul:
   valeur: autres produits
   contexte:
     autres produits . niveau de dépenses: "'faible'"
-# divers . arrêter sport motorisé:
-#   applicable si: divers . loisirs . sports . sports énergivores . présent
-#   titre: Arrêter la pratique d'un sport motorisé
-#   formule: divers . loisirs . sports - recalcul
-#   icônes: 🏎️🪂
-#   description: |
-#     À ce jour, l'empreinte des sports motorisés via des hypothèses très forte qui ne reflètent pas la pratique régulière d'un sport motirisé.
-#     Mais bien évidemment, elle est importante ! Le gain est donc supérieur à ce qui est affiché ici.
-#
-# divers . arrêter sport motorisé . recalcul:
-#   valeur: divers . loisirs . sports
-#   contexte:
-#     divers . loisirs . sports . sports énergivores . présent: non
 
-#divers . dunkerquois:
 divers . loisirs . activité décarbonée:
   titre: Vos activités décarbonées sont un poste principal d'empreinte de votre séjour... c'est donc qu'il est très peu carboné ! **Félicitations !**
   icônes: 🚶🌳
-  #  formule: 10% * divers . loisirs
-  #  unité: kgCO2e
   description: |
     Vos activités décarbonées apparaissent comme un poste principal d'empreinte de votre séjour... c'est donc qu'il est très peu carboné ! **Félicitations !**
 

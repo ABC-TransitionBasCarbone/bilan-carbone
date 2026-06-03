@@ -37,22 +37,6 @@ transport . mobilité douce . type:
       - trottinette électrique
   note: Pour la question des modalités utilisées pour aller et revenir de son lieu de séjour, nous excluons les petits véhicules électriques (gyropod, hoverboard, etc.) ainsi que la trottinette non électrique.
 
-### On commente car on ne veut pas voir poper la notif
-#transport . mobilité douce . type . notif marche ou vélo:
-#  type: notification
-#  formule:
-#    une de ces conditions:
-#      - type . marche . présent = oui
-#      - type . vélo . présent = oui
-#  description: |
-#    **Vous avez renseigné marcher ou faire du vélo ?**
-#    Félicitations ! 👏
-#
-#    Le vélo est un mode de transport super sobre : on utilise 15 kilos de matériel pour déplacer un corps de ~70 kilos.
-#    Quant à vos chaussures, elles sont un véhicule ultra léger !
-#
-#    💡 A noter que l'empreinte de la marche et de **l'usage** du vélo classique (et non la fabrication) est considérée comme nulle.
-
 transport . mobilité douce . type . marche:
   titre: Marche
   applicable si: présent

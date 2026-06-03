@@ -92,8 +92,3 @@ transport . train . km:
   unité: km/mois
   plancher: 0
   par défaut: 300
-
-#  question: Combien de kilomètres parcourez-vous en train par an ?
-#  description: |
-#    Renseignez un nombre de km cohérent avec les distances que vous allez parcourir en train le temps de votre séjour (aller-retour depuis votre domicile
-#    et déplacements éventuels pendant le séjour).

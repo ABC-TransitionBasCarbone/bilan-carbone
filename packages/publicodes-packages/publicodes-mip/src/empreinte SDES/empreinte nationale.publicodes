@@ -132,7 +132,6 @@ population:
       - empreinte branche . S96 par hab
       - empreinte branche . T97 par hab
       - empreinte branche . T98 par hab
-      # - empreinte branche . U99 non pris en compte dans les données calculées par SDES
 
 empreinte branche:
   titre: Intensité carbone par branche NAF

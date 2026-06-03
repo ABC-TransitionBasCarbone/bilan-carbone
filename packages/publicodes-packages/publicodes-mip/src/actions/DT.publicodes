@@ -12,12 +12,9 @@ DT . voiture . éco-conduite:
             - est non défini: transport . voiture . utilisateur
             - transport . voiture . utilisateur = 'non régulier'
             - transport . train . présent
-            # - transport . car longue distance . présent
             - transport . deux roues . présent
         alors: DT . voiture - recalcul DT
       - sinon: transport . voiture - recalcul transport
-  #        alors: voiture . empreinte au kilomètre * voiture . km * réduction / DT . voiture . voyageurs #Cas ou l'utilisateur vient en Hauts-de-France autrement qu'en voiture (proprio ; non proprio régulier)
-  #      - sinon: transport . voiture . empreinte au kilomètre * voiture . km * réduction / DT . voiture . voyageurs
   unité: kgCO2e
   description: |
     Sécurité, réduction des émissions de gaz à effet de serre, économies de carburant : l’écoconduite n’a que des avantages. 
@@ -65,8 +62,6 @@ DT . voiture . opter transport commun:
             - DT . voiture . empreinte au kilomètre calculée > 0
         alors: ((DT . voiture . empreinte au kilomètre calculée * voiture . km) - (impact par km bus * voiture . km)) * 15%
       - sinon: ((transport . voiture . empreinte au kilomètre calculée * voiture . km) - (impact par km bus * voiture . km)) * part report modal
-  #  formule: ((DT . voiture . empreinte au kilomètre calculée * voiture . km) - (DT . transports commun . type . bus . impact par km * voiture . km)) * DT . voiture . opter transport commun . part report modal
-  #  formule: 85% * DT . voiture
   unité: kgCO2e
   description: |
 
@@ -129,8 +124,6 @@ DT . deux roues . location deux roues électrique:
       - est défini: DT . deux roues . type
       - DT . deux roues . type = 'scooter électrique'
   formule: DT . deux roues - recalcul
-#  description: |
-#  note: |
 
 DT . deux roues . location deux roues électrique . recalcul:
   valeur: DT . deux roues
@@ -142,9 +135,6 @@ DT . voiture . location réduire taille:
   applicable si:
     toutes ces conditions:
       - DT . voiture . km > 0
-  #      - une de ces conditions:
-  #          - est non défini: transport . voiture . utilisateur
-  #          - transport . voiture . utilisateur = 'non régulier'
   non applicable si:
     une de ces conditions:
       - DT . voiture . motorisation = 'petite'
@@ -173,9 +163,6 @@ DT . voiture . location voiture électrique:
     toutes ces conditions:
       - DT . voiture . km > 0
       - DT . voiture . km < 401
-  #      - une de ces conditions:
-  #          - est non défini: transport . voiture . utilisateur
-  #          - transport . voiture . utilisateur = 'non régulier'
   non applicable si:
     une de ces conditions:
       - DT . voiture . motorisation = 'électrique'

@@ -1,5 +1,3 @@
-# A faire :
-#   - ajouter une question pour savoir le nombre de personnes sur le deux roues ?
 transport . deux roues:
   titre: Moto
   applicable si: présent
@@ -10,11 +8,6 @@ transport . deux roues:
         alors: empreinte / passagers
       - sinon: empreinte moyenne * 0
   unité: kgCO2e
-
-#transport . deux roues . usager:
-#  question: Utilisez-vous un scooter ou une moto ?
-#  description: |
-#    Les scooters et motos sont aujourd'hui très majoritairement des engins qui fonctionnent au pétrole. Les scooters électriques ayant fait une réelle percée, ils sont ajoutés au modèle.
 
 transport . deux roues . passagers:
   question: En moyenne, combien de personnes voyagent avec vous sur votre deux-roues lors de vos déplacements professionnels ?
@@ -121,9 +114,6 @@ transport . deux roues . entretien:
 transport . deux roues . nombre deux roues circulation:
   formule: 2700000
   note: Le nombre de deux-roues en circulation en 2020, stable, est de [2,7 millions](https://www.onisr.securite-routiere.gouv.fr/etudes-et-recherches/vehicules/parc-des-vehicules/le-parc-deux-roues-motorises-des-menages)
-
-#transport . deux roues . pourcentage motards:
-#  formule: nombre deux roues circulation / population
 
 transport . deux roues . km annuels moyen:
   formule: 3000

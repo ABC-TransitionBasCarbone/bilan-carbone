@@ -6,7 +6,6 @@ logement . hébergement:
   formule:
     somme:
       - nuitées
-      # - aquatique
 
 logement . hébergement . nuitées:
   question: Dans quel(s) type(s) d'hébergement(s) vous logez lors de vos déplacements professionnels ?
@@ -15,19 +14,8 @@ logement . hébergement . nuitées:
     type: selection
     options:
       - hotel . présent
-      # - camping . présent
-      # - résidence de tourisme . présent
-      #      - auberge de jeunesse . présent
       - locations . présent
       - famille ou amis . présent
-  #    suggestions:
-  #      aucun:
-  #        hotel . présent: non
-  #        camping . présent: non
-  #        résidence de tourisme . présent: non
-  ##        auberge de jeunesse . présent: non
-  #        locations . présent: non
-  #        famille ou amis . présent: non
   icônes: 🏨
   description: |
     Choissiezez le(s) type(s) d'hébergement que vous avez utilisé lors de vos déplacements professionnels de l'année passée. Vous pouvez en sélectionner plusieurs.
@@ -41,9 +29,6 @@ logement . hébergement . nuitées . empreinte totale:
   formule:
     somme:
       - empreinte hotel
-      #       - empreinte camping
-      #       - empreinte résidence de tourisme
-      # #      - empreinte auberge de jeunesse * logement . habitants
       - empreinte locations
       - empreinte famille ou amis
   unité: kgCO2e
@@ -60,9 +45,6 @@ logement . hébergement . nuitées . choix utilisateur:
   formule:
     une de ces conditions:
       - est défini: hotel . présent
-      # - est défini: camping . présent
-      # - est défini: résidence de tourisme . présent
-      #      - est défini: auberge de jeunesse . présent
       - est défini: locations . présent
       - est défini: famille ou amis . présent
 
@@ -361,11 +343,6 @@ logement . hébergement . aquatique:
       - si: choix utilisateur
         alors: (empreinte totale / habitants)
       - sinon: 0 #On considère que par défaut un hébergement n'a pas de piscine --> à sourcer toutefois !
-#  formule:
-#    somme:
-#      - piscine non chauffée
-#      - piscine chauffée
-#      - spa jacuzzi
 
 logement . hébergement . aquatique . choix utilisateur:
   titre: Choix utilisateur aquatique
@@ -414,15 +391,6 @@ logement . hébergement . aquatique . piscine non chauffée . empreinte annuelle
      - Traitement chimique : 24.31
      - Pompe de filtrag	: 97.04
      - Construction : 414.04
-#  valeur: logement . piscine
-#  contexte:
-#    métrique: "'carbone'"
-#    surface: 60 #On considère une piscine de 5 x 12
-#    type: "'creusée'"
-#    voiture . électrique . consommation aux 100:   # Je garde cette sous-structure pour pour le template au cas où j'aurai besoin de l'adapter pour que le modèle tourne
-#      valeur: voiture . électrique . consommation estimée
-#      contexte:
-#        voiture . utilisateur: "'propriétaire'"
 
 logement . hébergement . aquatique . empreinte piscine chauffée:
   applicable si:
@@ -439,30 +407,6 @@ logement . hébergement . aquatique . piscine chauffée:
 
 logement . hébergement . aquatique . piscine chauffée . présent:
   question: Allez-vous disposer d'une piscine chauffée ?
-
-###Impossible de faire fonctionner une fonction 'contexte' ou les règles importées de futureco-data
-###--> on inscrit en dur l'empreinte
-logement . hébergement . aquatique . piscine chauffée . empreinte annuelle:
-  formule: 2042
-  unité: kgCO2e
-  note: |
-    Impossible de faire fonctionner une fonction 'contexte' ou les règles importées de futureco-data --> on inscrit en dur l'empreinte dans le modèle
-    On considère donc une piscine de 60 m2 utilisée 12 mois dans l'année, ce qui semble logique pour une piscine chaufée
-    L'empreinte se décompose comme telle : 
-     - Empreinte eau froide : 35.46
-     - Chauffage : 1374,71 (chauffage sans pompe à chaleur)
-     - Traitement chimique : 24.31
-     - Pompe de filtrage	: 194,08
-     - Construction : 414.04
-#  valeur: logement . piscine
-#  contexte:
-#    métrique: "'carbone'"
-#    logement . piscine . surface: 60 #On considère une piscine de 5 x 12
-#    logement . piscine . type: "'creusée'"
-#    voiture . électrique . consommation aux 100:   # Je garde cette sous-structure pour pour le template au cas où j'aurai besoin de l'adapter pour que le modèle tourne
-#      valeur: voiture . électrique . consommation estimée
-#      contexte:
-#        voiture . utilisateur: "'propriétaire'"
 
 logement . hébergement . aquatique . empreinte spa jacuzzi:
   applicable si:
@@ -481,8 +425,6 @@ logement . hébergement . aquatique . spa jacuzzi:
 logement . hébergement . aquatique . spa jacuzzi . présent:
   question: Allez-vous disposer d'un spa/jacuzzi ?
 
-###Impossible de faire fonctionner une fonction 'contexte' ou les règles importées de futureco-data
-###--> on inscrit en dur l'empreinte
 logement . hébergement . aquatique . spa jacuzzi . empreinte annuelle:
   formule: 1701
   unité: kgCO2e
@@ -497,13 +439,3 @@ logement . hébergement . aquatique . spa jacuzzi . empreinte annuelle:
      - Construction : 96.16
     /!\ L'estimation de l'empreinte du chauffage, du traitement chimique et du filtrage n'est pas fonction du volume d'eau à traiter 
     --> l'empreinte de ces trois traitements est donc identique entre une piscine chaufée de 60 m2 et un spa d'environ 20 m2.
-
-#  valeur: logement . piscine
-#  contexte:
-#    métrique: "'carbone'"
-#    logement . piscine . surface: 10 #On considère une piscine de 3 x 3
-#    logement . piscine . type: "'hors sol'"
-#    voiture . électrique . consommation aux 100:   # Je garde cette sous-structure pour pour le template au cas où j'aurai besoin de l'adapter pour que le modèle tourne
-#      valeur: voiture . électrique . consommation estimée
-#      contexte:
-#        voiture . utilisateur: "'propriétaire'"

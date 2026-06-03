@@ -14,9 +14,6 @@ alimentation . déchets:
         alors: 0.03
       - sinon: 0.09
   unité: kgCO2e
-#          somme:
-#            - niveau moyen
-#            - gestes
 
 alimentation . déchets . tri:
   question: Avez-vous l'habitude de faire le tri au bureau ?
@@ -50,14 +47,6 @@ alimentation . déchets . tri . toujours:
   description: |
     Vous cherchez toujours à jeter un déchet dans la poubelle qui lui est destiné.
 
-#alimentation . déchets . notif zéro déchet:
-#  type: notification
-#  formule: quantité jetée = 'zéro déchet'
-#  description: |
-#    Vous avez renseigné un mode de vie zéro déchet. Il faut savoir que ce niveau d'engagement
-#    correspond à une personne qui est investie à **100% dans la démarche de réduction de ses déchets**.
-#    Consommer en vrac n'est pas suffisant pour être zéro-déchet.
-
 alimentation . déchets . niveau zéro déchets:
   formule:
     somme:
@@ -85,7 +74,6 @@ alimentation . déchets . niveau moyen:
     Ce niveau correspond à la moyenne française.
 
 alimentation . déchets . gestes:
-  #  applicable si: quantité jetée = 'réduction'
   mosaique:
     type: selection
     options:
