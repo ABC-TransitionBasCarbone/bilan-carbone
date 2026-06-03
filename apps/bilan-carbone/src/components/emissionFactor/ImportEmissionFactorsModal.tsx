@@ -72,7 +72,6 @@ const ImportEmissionFactorsModal = ({ open, onClose, onSuccess }: Props) => {
       onSuccess={onSuccess}
       onPreview={previewEmissionFactorsFromFile}
       onConfirmImport={(file) => importEmissionFactorsFromFile(file)}
-      onForceImport={(file) => importEmissionFactorsFromFile(file, true)}
       onDownloadTemplate={handleDownloadTemplate}
       renderPreviewTable={renderPreviewTable}
       previewTitle={(count) => t('previewTitle', { count })}

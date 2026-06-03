@@ -594,6 +594,19 @@ const getOrganizationAndImportedVersionsFilters = (organizationId: string, versi
   { organizationId, importedFrom: Import.Manual },
 ]
 
+export const findEmissionFactorByIdForMatch = (id: string) =>
+  prismaClient.emissionFactor.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      importedId: true,
+      totalCo2: true,
+      unit: true,
+      customUnit: true,
+      metaData: { select: { title: true, attribute: true, frontiere: true, language: true } },
+    },
+  })
+
 export const findEmissionFactorByImportedIdForMatch = (id: string, organizationId: string, versionIds: string[]) =>
   prismaClient.emissionFactor.findFirst({
     where: {
@@ -602,6 +615,7 @@ export const findEmissionFactorByImportedIdForMatch = (id: string, organizationI
     },
     select: {
       id: true,
+      importedId: true,
       totalCo2: true,
       unit: true,
       customUnit: true,
@@ -624,6 +638,7 @@ export const findEmissionFactorsByNameAndUnit = (
     },
     select: {
       id: true,
+      importedId: true,
       totalCo2: true,
       unit: true,
       customUnit: true,
@@ -639,6 +654,7 @@ export const findEmissionFactorsByUnit = (organizationId: string, unit: Unit, ve
     },
     select: {
       id: true,
+      importedId: true,
       totalCo2: true,
       unit: true,
       customUnit: true,

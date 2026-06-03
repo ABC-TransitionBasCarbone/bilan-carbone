@@ -1538,7 +1538,7 @@
     "acceptedFormats": "Formats acceptés : .xlsx, .xls",
     "errorTitle": "Erreurs détectées",
     "warningTitle": "Avertissements",
-    "confirmAnyway": "Importer quand même",
+    "confirmAnyway": "Continuer quand même",
     "previewWarning": "Vérifiez les données ci-dessous avant de confirmer l'import.",
     "warningEfNotFound": "Facteur d'émission non trouvé pour \"{searched}\"",
     "warningEfReplacedBy": "Il sera remplacé par",
@@ -1578,7 +1578,11 @@
     "missingEmissionFactorName": "Nom du facteur d'émission manquant",
     "missingEmissionFactorValue": "Valeur du facteur d'émission manquante",
     "missingEmissionFactorUnit": "Unité du facteur d'émission manquante",
-    "warningEfMissing": "Aucun facteur d'émission renseigné pour \"{sourceName}\""
+    "warningEfMissing": "Aucun facteur d'émission renseigné pour \"{sourceName}\"",
+    "ambiguousTitle": "Plusieurs facteurs d'émission correspondent pour les sources suivantes. Sélectionnez celui à utiliser :",
+    "ambiguousSearched": "Recherché : \"{name}\"",
+    "ambiguousTooMany": "Trop de facteurs d'émission correspondent à cette saisie. Affinez le nom dans le fichier pour réduire les résultats. Cette source sera importée sans facteur d'émission.",
+    "leaveEmpty": "Laisser vide"
   },
   "emissionFactors": {
     "manualSectionLabel": "Gérez vos FEs manuels",

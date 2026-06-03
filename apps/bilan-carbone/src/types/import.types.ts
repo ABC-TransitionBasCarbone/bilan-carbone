@@ -1,4 +1,21 @@
-export type ImportWarningCandidate = { foundTitle?: string; foundValue?: number; foundUnit?: string }
+export type ImportWarningCandidate = {
+  id: string
+  foundTitle?: string
+  foundValue?: number
+  foundUnit?: string
+}
+
+export type AmbiguousRow = {
+  lineNumber: number
+  sourceName?: string
+  searchedName?: string
+  searchedValue?: number
+  searchedUnit?: string
+  candidates: ImportWarningCandidate[]
+  tooMany?: boolean
+}
+
+export type FEChoices = Record<number, string | null>
 
 export type ImportWarning = {
   type: 'efNotFound' | 'efMissing' | 'validationSkipped' | 'unitMissingPrefix'

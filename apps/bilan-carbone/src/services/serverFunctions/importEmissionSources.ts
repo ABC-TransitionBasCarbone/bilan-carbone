@@ -1,13 +1,13 @@
 'use server'
 
 import { KG_CO2E_PREFIX_REGEX } from '@/constants/import'
-import { EmissionFactorList } from '@/db/emissionFactors'
+import { EmissionFactorList, findEmissionFactorByIdForMatch } from '@/db/emissionFactors'
 import { createEmissionSourcesOnStudy } from '@/db/emissionSource'
 import { FullStudy, getStudyById } from '@/db/study'
 import { getLocale } from '@/i18n/locale'
 import { Post, subPostsByPost } from '@/services/posts'
 import { AccountWithUser } from '@/types/account.types'
-import { ImportResult, ImportWarning } from '@/types/import.types'
+import { AmbiguousRow, FEChoices, ImportResult, ImportWarning } from '@/types/import.types'
 import {
   PreviewEmissionSourceRow,
   PreviewEmissionSourcesResult,
@@ -71,6 +71,7 @@ type ValidImportRow = {
 
 const TOTAL_EXCEL_COLS = Object.keys(SOURCE_IMPORT_COLUMNS).length
 const CAS_DEFAULT_DURATION = 20
+const MAX_FE_CANDIDATES = 10
 
 function getHectareAndDuration(isCAS: boolean, value: number | undefined) {
   if (!isCAS || value == null) {
@@ -90,6 +91,7 @@ async function getStudyOrThrow(studyId: string, account: AccountWithUser): Promi
 export async function previewEmissionSourcesFromFile(
   file: File,
   studyId: string,
+  choices?: FEChoices,
 ): Promise<PreviewEmissionSourcesResult> {
   const account = await getAuthenticatedAccount()
 
@@ -106,11 +108,145 @@ export async function previewEmissionSourcesFromFile(
     return result
   }
 
+  const organizationId = study.organizationVersion.organization?.id ?? ''
+  const versionIds = study.emissionFactorVersions.map((v) => v.importVersionId)
+
+  const warnings: ImportWarning[] = []
+  const ambiguousRows: AmbiguousRow[] = []
+  const resolvingChoices = choices !== undefined
+
+  type ResolvedEf = { efId: string; efName: string; efValue: string; efUnit: string }
+  const resolvedByLine = new Map<number, ResolvedEf>()
+
+  for (const row of result.rows) {
+    const lineNumber = row.lineNumber
+
+    if (
+      !resolvingChoices &&
+      row.emissionFactorUnitRaw &&
+      row.emissionFactorUnit &&
+      row.emissionFactorUnit !== Unit.CUSTOM &&
+      !KG_CO2E_PREFIX_REGEX.test(row.emissionFactorUnitRaw)
+    ) {
+      warnings.push({
+        type: 'unitMissingPrefix',
+        lineNumber,
+        sourceName: row.name,
+        foundUnit: row.emissionFactorUnitRaw,
+        resolvedValue: formatPrefixedUnitDisplayOptional(locale, row.emissionFactorUnit),
+      })
+    }
+
+    if (choices !== undefined && lineNumber in choices) {
+      const chosenId = choices[lineNumber]
+      if (chosenId) {
+        const chosenEf = await findEmissionFactorByIdForMatch(chosenId)
+        if (chosenEf) {
+          resolvedByLine.set(lineNumber, {
+            efId: chosenEf.importedId ?? chosenId,
+            efName:
+              getEmissionFactorFullName(
+                chosenEf.metaData.find((m) => m.language === locale) ??
+                  chosenEf.metaData[0] ?? { title: null, attribute: null, frontiere: null },
+              ) ||
+              (row.emissionFactorName ?? ''),
+            efValue: String(chosenEf.totalCo2),
+            efUnit: formatPrefixedUnitDisplayOptional(locale, chosenEf.customUnit ?? chosenEf.unit ?? undefined),
+          })
+        }
+      }
+      continue
+    }
+
+    const ef = await findEmissionFactorMatch(
+      row.emissionFactorId,
+      row.emissionFactorName,
+      row.emissionFactorValue,
+      row.emissionFactorUnit,
+      locale,
+      organizationId,
+      versionIds,
+    )
+
+    const hasSomeEfData = !!(row.emissionFactorId || row.emissionFactorName)
+
+    if (!ef) {
+      if (!resolvingChoices) {
+        if (hasSomeEfData) {
+          warnings.push({
+            type: 'efNotFound',
+            lineNumber,
+            sourceName: row.name,
+            searchedName: row.emissionFactorName,
+            searchedValue: row.emissionFactorValue,
+            searchedUnit: formatPrefixedUnitDisplayOptional(locale, row.emissionFactorUnit),
+          })
+        } else {
+          warnings.push({ type: 'efMissing', lineNumber, sourceName: row.name })
+        }
+      }
+    } else if (ef.matchType === EmissionFactorMatchType.NameAmbiguous) {
+      const tooMany = ef.candidates.length > MAX_FE_CANDIDATES
+      ambiguousRows.push({
+        lineNumber,
+        sourceName: row.name,
+        searchedName: row.emissionFactorName,
+        searchedValue: row.emissionFactorValue,
+        searchedUnit: formatPrefixedUnitDisplayOptional(locale, row.emissionFactorUnit),
+        tooMany,
+        candidates: tooMany
+          ? []
+          : ef.candidates.map((c) => ({
+              id: c.id,
+              foundTitle: c.foundTitle,
+              foundValue: c.foundValue,
+              foundUnit: formatPrefixedUnitDisplayOptional(locale, c.foundUnit),
+            })),
+      })
+    } else if (ef.matchType !== EmissionFactorMatchType.Exact) {
+      if (!resolvingChoices) {
+        warnings.push({
+          type: 'efNotFound',
+          lineNumber,
+          sourceName: row.name,
+          searchedName: row.emissionFactorName,
+          searchedValue: row.emissionFactorValue,
+          searchedUnit: formatPrefixedUnitDisplayOptional(locale, row.emissionFactorUnit),
+          foundTitle: ef.foundTitle,
+          foundValue: ef.foundValue,
+          foundUnit: formatPrefixedUnitDisplayOptional(locale, ef.foundUnit),
+        })
+      }
+      resolvedByLine.set(lineNumber, {
+        efId: ef.importedId ?? row.emissionFactorId ?? '',
+        efName: ef.foundTitle ?? row.emissionFactorName ?? '',
+        efValue: ef.foundValue !== undefined ? String(ef.foundValue) : '',
+        efUnit: formatPrefixedUnitDisplayOptional(locale, ef.foundUnit),
+      })
+    } else {
+      resolvedByLine.set(lineNumber, {
+        efId: ef.importedId ?? row.emissionFactorId ?? '',
+        efName: ef.foundTitle ?? row.emissionFactorName ?? '',
+        efValue: ef.foundValue !== undefined ? String(ef.foundValue) : '',
+        efUnit: formatPrefixedUnitDisplayOptional(locale, ef.foundUnit),
+      })
+    }
+  }
+
+  if (warnings.length > 0) {
+    return { success: 'warnings', warnings, ambiguousRows }
+  }
+
+  if (ambiguousRows.length > 0) {
+    return { success: 'ambiguous', rows: ambiguousRows }
+  }
+
   const bc = getBcTranslations(locale)
   const postTranslations = bc.emissionFactors.post as unknown as Record<string, string>
 
   const rows: PreviewEmissionSourceRow[] = result.rows.map((row) => {
     const post = getPost(row.subPost)
+    const resolved = resolvedByLine.get(row.lineNumber)
     return {
       site: row.siteName,
       post: post ? (postTranslations[post] ?? post) : '',
@@ -118,10 +254,11 @@ export async function previewEmissionSourcesFromFile(
       name: row.name,
       value: row.value !== undefined ? String(row.value) : '',
       unit: row.unit ?? '',
-      emissionFactorId: row.emissionFactorId ?? '',
-      emissionFactorName: row.emissionFactorName ?? '',
-      emissionFactorValue: row.emissionFactorValue !== undefined ? String(row.emissionFactorValue) : '',
-      emissionFactorUnit: formatPrefixedUnitDisplayOptional(locale, row.emissionFactorUnit),
+      emissionFactorId: resolved?.efId ?? row.emissionFactorId ?? '',
+      emissionFactorName: resolved?.efName ?? row.emissionFactorName ?? '',
+      emissionFactorValue:
+        resolved?.efValue ?? (row.emissionFactorValue !== undefined ? String(row.emissionFactorValue) : ''),
+      emissionFactorUnit: resolved?.efUnit ?? formatPrefixedUnitDisplayOptional(locale, row.emissionFactorUnit),
     }
   })
 
@@ -131,7 +268,7 @@ export async function previewEmissionSourcesFromFile(
 export async function importEmissionSourcesFromFile(
   file: File,
   studyId: string,
-  forceImport = false,
+  choices?: FEChoices,
 ): Promise<ImportResult> {
   const account = await getAuthenticatedAccount()
 
@@ -151,90 +288,36 @@ export async function importEmissionSourcesFromFile(
   const organizationId = study.organizationVersion.organization?.id ?? ''
   const versionIds = study.emissionFactorVersions.map((v) => v.importVersionId)
 
-  const rowWarnings: ImportWarning[] = []
   const validRows: ValidImportRow[] = []
 
-  for (let i = 0; i < result.rows.length; i++) {
-    const row = result.rows[i]
+  for (const row of result.rows) {
     const lineNumber = row.lineNumber
-
-    if (
-      row.emissionFactorUnitRaw &&
-      row.emissionFactorUnit &&
-      row.emissionFactorUnit !== Unit.CUSTOM &&
-      !KG_CO2E_PREFIX_REGEX.test(row.emissionFactorUnitRaw)
-    ) {
-      rowWarnings.push({
-        type: 'unitMissingPrefix',
-        lineNumber,
-        sourceName: row.name,
-        foundUnit: row.emissionFactorUnitRaw,
-        resolvedValue: formatPrefixedUnitDisplayOptional(locale, row.emissionFactorUnit),
-      })
-    }
-
-    const ef = await findEmissionFactorMatch(
-      row.emissionFactorId,
-      row.emissionFactorName,
-      row.emissionFactorValue,
-      row.emissionFactorUnit,
-      locale,
-      organizationId,
-      versionIds,
-    )
-
-    const hasSomeEfData = !!(row.emissionFactorId || row.emissionFactorName)
 
     let emissionFactorId: string | undefined
     let efUnit: string | undefined
-    if (!ef) {
-      if (hasSomeEfData) {
-        rowWarnings.push({
-          type: 'efNotFound',
-          lineNumber,
-          sourceName: row.name,
-          searchedName: row.emissionFactorName,
-          searchedValue: row.emissionFactorValue,
-          searchedUnit: formatPrefixedUnitDisplayOptional(locale, row.emissionFactorUnit),
-        })
-      } else {
-        rowWarnings.push({
-          type: 'efMissing',
-          lineNumber,
-          sourceName: row.name,
-        })
+
+    if (choices !== undefined && lineNumber in choices) {
+      const chosenId = choices[lineNumber]
+      emissionFactorId = chosenId ?? undefined
+      if (emissionFactorId) {
+        const byId = await findEmissionFactorByIdForMatch(emissionFactorId)
+        efUnit = byId?.customUnit ?? byId?.unit ?? undefined
       }
-    } else if (ef.matchType === EmissionFactorMatchType.NameAmbiguous) {
-      rowWarnings.push({
-        type: 'efNotFound',
-        lineNumber,
-        sourceName: row.name,
-        searchedName: row.emissionFactorName,
-        searchedValue: row.emissionFactorValue,
-        searchedUnit: formatPrefixedUnitDisplayOptional(locale, row.emissionFactorUnit),
-        candidates: ef.candidates.map((c) => ({
-          foundTitle: c.foundTitle,
-          foundValue: c.foundValue,
-          foundUnit: formatPrefixedUnitDisplayOptional(locale, c.foundUnit),
-        })),
-      })
-    } else if (ef.matchType !== EmissionFactorMatchType.Exact) {
-      rowWarnings.push({
-        type: 'efNotFound',
-        lineNumber,
-        sourceName: row.name,
-        searchedName: row.emissionFactorName,
-        searchedValue: row.emissionFactorValue,
-        searchedUnit: formatPrefixedUnitDisplayOptional(locale, row.emissionFactorUnit),
-        foundTitle: ef.foundTitle,
-        foundValue: ef.foundValue,
-        foundUnit: formatPrefixedUnitDisplayOptional(locale, ef.foundUnit),
-      })
-      emissionFactorId = ef.id
-      efUnit = ef.foundUnit
     } else {
-      emissionFactorId = ef.id
-      efUnit = ef.foundUnit
+      const ef = await findEmissionFactorMatch(
+        row.emissionFactorId,
+        row.emissionFactorName,
+        row.emissionFactorValue,
+        row.emissionFactorUnit,
+        locale,
+        organizationId,
+        versionIds,
+      )
+
+      if (ef && ef.matchType !== EmissionFactorMatchType.NameAmbiguous) {
+        emissionFactorId = ef.id
+        efUnit = ef.foundUnit
+      }
     }
 
     let validated = row.validated
@@ -260,7 +343,6 @@ export async function importEmissionSourcesFromFile(
       )
       if (!canValidate) {
         validated = false
-        rowWarnings.push({ type: 'validationSkipped', lineNumber: lineNumber, sourceName: row.name })
       }
     }
 
@@ -302,10 +384,6 @@ export async function importEmissionSourcesFromFile(
       duration: casFields.duration ?? undefined,
       validated,
     })
-  }
-
-  if (rowWarnings.length > 0 && !forceImport) {
-    return { success: false, warnings: rowWarnings }
   }
 
   await createEmissionSourcesOnStudy(validRows)

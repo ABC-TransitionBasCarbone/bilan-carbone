@@ -23,17 +23,19 @@ type EfMatchResult =
         | EmissionFactorMatchType.NameAndUnitOnly
         | EmissionFactorMatchType.ValueAndUnitOnly
       id: string
+      importedId?: string | null
       foundTitle?: string
       foundValue?: number
       foundUnit?: string
     }
   | {
       matchType: EmissionFactorMatchType.NameAmbiguous
-      candidates: { foundTitle?: string; foundValue?: number; foundUnit?: string }[]
+      candidates: { id: string; foundTitle?: string; foundValue?: number; foundUnit?: string }[]
     }
 
 export type EfRow = {
   id: string
+  importedId?: string | null
   totalCo2: number
   unit: string | null
   customUnit: string | null
@@ -51,6 +53,7 @@ function toEfMatch(
   return {
     matchType,
     id: ef.id,
+    importedId: ef.importedId,
     foundTitle:
       getEmissionFactorFullName(
         ef.metaData.find((m) => m.language === locale) ??

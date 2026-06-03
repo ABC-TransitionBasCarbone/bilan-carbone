@@ -84,9 +84,8 @@ const ImportEmissionSourcesModal = ({ studyId, post, siteId, open, onClose, onSu
       title={t('title')}
       onClose={onClose}
       onSuccess={onSuccess}
-      onPreview={(file) => previewEmissionSourcesFromFile(file, studyId)}
-      onConfirmImport={(file) => importEmissionSourcesFromFile(file, studyId)}
-      onForceImport={(file) => importEmissionSourcesFromFile(file, studyId, true)}
+      onPreview={(file, choices) => previewEmissionSourcesFromFile(file, studyId, choices)}
+      onConfirmImport={(file, choices) => importEmissionSourcesFromFile(file, studyId, choices)}
       onDownloadTemplate={handleDownloadTemplate}
       renderPreviewTable={renderPreviewTable}
       previewTitle={(count) => t('previewTitle', { count })}
