@@ -2,6 +2,7 @@
 
 import Modal from '@/components/modals/Modal'
 import { AmbiguousRow, FEChoices, ImportError, ImportResult, ImportWarning } from '@/types/import.types'
+import { ValidateEmissionSourcesResult } from '@/types/importEmissionSources.types'
 import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
 import DownloadIcon from '@mui/icons-material/Download'
 import UploadFileIcon from '@mui/icons-material/UploadFile'
@@ -32,15 +33,11 @@ interface Props<TPreviewRow> {
   title: string
   onClose: () => void
   onSuccess: () => void
-  onPreview: (
+  onValidate: (file: File) => Promise<ValidateEmissionSourcesResult>
+  onResolve?: (
     file: File,
-    choices?: FEChoices,
-  ) => Promise<
-    | { success: true; rows: TPreviewRow[] }
-    | { success: false; errors: ImportError[] }
-    | { success: 'warnings'; warnings: ImportWarning[]; ambiguousRows: AmbiguousRow[] }
-    | { success: 'ambiguous'; rows: AmbiguousRow[] }
-  >
+    choices: FEChoices,
+  ) => Promise<{ status: 'error'; errors: ImportError[] } | { status: 'ok'; rows: TPreviewRow[] }>
   onConfirmImport: (file: File, choices?: FEChoices) => Promise<ImportResult>
   onDownloadTemplate: () => Promise<void>
   renderPreviewTable: (rows: TPreviewRow[]) => ReactNode
@@ -54,7 +51,8 @@ const ImportFileModal = <TPreviewRow,>({
   title,
   onClose,
   onSuccess,
-  onPreview,
+  onValidate,
+  onResolve,
   onConfirmImport,
   onDownloadTemplate,
   renderPreviewTable,
@@ -101,13 +99,6 @@ const ImportFileModal = <TPreviewRow,>({
 
   const initAmbiguousRows = (rows: AmbiguousRow[]) => {
     setAmbiguousRows(rows)
-    const initial: FEChoices = {}
-    for (const row of rows) {
-      if (!(row.lineNumber in feChoices)) {
-        initial[row.lineNumber] = null
-      }
-    }
-    setFeChoices((prev) => ({ ...prev, ...initial }))
   }
 
   const previewFile = (file: File) => {
@@ -124,14 +115,36 @@ const ImportFileModal = <TPreviewRow,>({
     }
 
     startTransition(async () => {
-      const result = await onPreview(file)
-      if (result.success === true) {
-        setPreviewRows(result.rows)
-      } else if (result.success === 'warnings') {
+      const result = await onValidate(file)
+      if (result.status === 'ok') {
+        if (onResolve) {
+          const resolved = await onResolve(file, {})
+          if (resolved.status === 'ok') {
+            setPreviewRows(resolved.rows)
+          } else {
+            setErrors(groupByLine(resolved.errors))
+          }
+        }
+      } else if (result.status === 'warnings') {
         setWarnings(groupByLine(result.warnings))
         setPendingAmbiguousRows(result.ambiguousRows)
-      } else if (result.success === 'ambiguous') {
+      } else if (result.status === 'ambiguous') {
         initAmbiguousRows(result.rows)
+      } else {
+        setErrors(groupByLine(result.errors))
+      }
+    })
+  }
+
+  const resolveAndPreview = (file: File, choices: FEChoices, onDone: () => void) => {
+    if (!onResolve) {
+      return
+    }
+    startTransition(async () => {
+      const result = await onResolve(file, choices)
+      onDone()
+      if (result.status === 'ok') {
+        setPreviewRows(result.rows)
       } else {
         setErrors(groupByLine(result.errors))
       }
@@ -148,44 +161,14 @@ const ImportFileModal = <TPreviewRow,>({
       setPendingAmbiguousRows([])
       return
     }
-    startTransition(async () => {
-      const result = await onPreview(pendingFile, feChoices)
-      if (result.success === true) {
-        setWarnings([])
-        setPreviewRows(result.rows)
-      } else if (result.success === 'ambiguous') {
-        setWarnings([])
-        initAmbiguousRows(result.rows)
-      } else if (result.success === 'warnings') {
-        setWarnings(groupByLine(result.warnings))
-        setPendingAmbiguousRows(result.ambiguousRows)
-      } else {
-        setWarnings([])
-        setErrors(groupByLine(result.errors))
-      }
-    })
+    resolveAndPreview(pendingFile, feChoices, () => setWarnings([]))
   }
 
   const handleResolveAmbiguities = () => {
     if (!pendingFile) {
       return
     }
-    startTransition(async () => {
-      const result = await onPreview(pendingFile, feChoices)
-      if (result.success === true) {
-        setAmbiguousRows([])
-        setPreviewRows(result.rows)
-      } else if (result.success === 'ambiguous') {
-        initAmbiguousRows(result.rows)
-      } else if (result.success === 'warnings') {
-        setAmbiguousRows([])
-        setWarnings(groupByLine(result.warnings))
-        setPendingAmbiguousRows(result.ambiguousRows)
-      } else {
-        setAmbiguousRows([])
-        setErrors(groupByLine(result.errors))
-      }
-    })
+    resolveAndPreview(pendingFile, feChoices, () => setAmbiguousRows([]))
   }
 
   const confirmImport = () => {
@@ -313,7 +296,6 @@ const ImportFileModal = <TPreviewRow,>({
                   <Typography variant="body2">{t('ambiguousTooMany')}</Typography>
                 ) : (
                   <RadioGroup
-                    className={styles.ambiguousRadioGroup}
                     value={feChoices[row.lineNumber] ?? 'null'}
                     onChange={(e) =>
                       setFeChoices((prev) => ({

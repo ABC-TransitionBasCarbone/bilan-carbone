@@ -9,8 +9,9 @@ import { AccountWithUser } from '@/types/account.types'
 import { FEChoices, ImportResult } from '@/types/import.types'
 import {
   PreviewEmissionSourceRow,
-  PreviewEmissionSourcesResult,
+  ResolveEmissionSourcesResult,
   SOURCE_IMPORT_COLUMNS,
+  ValidateEmissionSourcesResult,
 } from '@/types/importEmissionSources.types'
 import { getEmissionFactorFullName, getEmissionFactorValue } from '@/utils/emissionFactors'
 import { EmissionFactorMatchType, findEmissionFactorMatch } from '@/utils/findEmissionFactor.utils'
@@ -90,11 +91,11 @@ async function getStudyOrThrow(studyId: string, account: AccountWithUser): Promi
   return study
 }
 
-export async function previewEmissionSourcesFromFile(
+// Parse the file and detect warnings/ambiguities before showing the preview
+export async function validateEmissionSourcesFromFile(
   file: File,
   studyId: string,
-  choices?: FEChoices,
-): Promise<PreviewEmissionSourcesResult> {
+): Promise<ValidateEmissionSourcesResult> {
   const account = await getAuthenticatedAccount()
 
   const study = await getStudyOrThrow(studyId, account)
@@ -107,7 +108,44 @@ export async function previewEmissionSourcesFromFile(
   const result = parseEmissionSourcesFile(buffer, locale, study.sites)
 
   if (!result.success) {
-    return result
+    return { status: 'error', errors: result.errors }
+  }
+
+  const organizationId = study.organizationVersion.organization?.id ?? ''
+  const versionIds = study.emissionFactorVersions.map((v) => v.importVersionId)
+
+  const resolved = await resolveEmissionFactorRows(result.rows, undefined, locale, organizationId, versionIds)
+
+  if (resolved.type === 'warnings') {
+    return { status: 'warnings', warnings: resolved.warnings, ambiguousRows: resolved.ambiguousRows }
+  }
+
+  if (resolved.type === 'ambiguous') {
+    return { status: 'ambiguous', rows: resolved.ambiguousRows }
+  }
+
+  return { status: 'ok' }
+}
+
+// Apply user choices and return the resolved preview rows
+export async function resolveEmissionSourcesFromFile(
+  file: File,
+  studyId: string,
+  choices: FEChoices,
+): Promise<ResolveEmissionSourcesResult> {
+  const account = await getAuthenticatedAccount()
+
+  const study = await getStudyOrThrow(studyId, account)
+  if (!(await hasStudyBasicRights(account, study))) {
+    throw new Error(NOT_AUTHORIZED)
+  }
+
+  const locale = await getLocale()
+  const buffer = Buffer.from(await file.arrayBuffer())
+  const result = parseEmissionSourcesFile(buffer, locale, study.sites)
+
+  if (!result.success) {
+    return { status: 'error', errors: result.errors }
   }
 
   const organizationId = study.organizationVersion.organization?.id ?? ''
@@ -115,20 +153,12 @@ export async function previewEmissionSourcesFromFile(
 
   const resolved = await resolveEmissionFactorRows(result.rows, choices, locale, organizationId, versionIds)
 
-  if (resolved.type === 'warnings') {
-    return { success: 'warnings', warnings: resolved.warnings, ambiguousRows: resolved.ambiguousRows }
-  }
-
-  if (resolved.type === 'ambiguous') {
-    return { success: 'ambiguous', rows: resolved.ambiguousRows }
-  }
-
   const bc = getBcTranslations(locale)
   const postTranslations = bc.emissionFactors.post as unknown as Record<string, string>
 
   const rows: PreviewEmissionSourceRow[] = result.rows.map((row) => {
     const post = getPost(row.subPost)
-    const ef = resolved.resolvedByLine.get(row.lineNumber)
+    const ef = resolved.type === 'resolved' ? resolved.resolvedByLine.get(row.lineNumber) : undefined
     return {
       site: row.siteName,
       post: post ? (postTranslations[post] ?? post) : '',
@@ -143,7 +173,7 @@ export async function previewEmissionSourcesFromFile(
     }
   })
 
-  return { success: true, rows }
+  return { status: 'ok', rows }
 }
 
 export async function importEmissionSourcesFromFile(

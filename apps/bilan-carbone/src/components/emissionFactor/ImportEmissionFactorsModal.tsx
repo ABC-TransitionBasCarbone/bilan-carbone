@@ -70,7 +70,11 @@ const ImportEmissionFactorsModal = ({ open, onClose, onSuccess }: Props) => {
       title={t('title')}
       onClose={onClose}
       onSuccess={onSuccess}
-      onPreview={previewEmissionFactorsFromFile}
+      onValidate={async () => ({ status: 'ok' })}
+      onResolve={async (file) => {
+        const result = await previewEmissionFactorsFromFile(file)
+        return result.success ? { status: 'ok', rows: result.rows } : { status: 'error', errors: result.errors }
+      }}
       onConfirmImport={(file) => importEmissionFactorsFromFile(file)}
       onDownloadTemplate={handleDownloadTemplate}
       renderPreviewTable={renderPreviewTable}

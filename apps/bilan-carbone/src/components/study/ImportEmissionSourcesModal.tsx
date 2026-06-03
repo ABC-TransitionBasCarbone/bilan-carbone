@@ -6,7 +6,8 @@ import { Post } from '@/services/posts'
 import {
   getImportEmissionSourcesTemplate,
   importEmissionSourcesFromFile,
-  previewEmissionSourcesFromFile,
+  resolveEmissionSourcesFromFile,
+  validateEmissionSourcesFromFile,
 } from '@/services/serverFunctions/importEmissionSources'
 import { PreviewEmissionSourceRow } from '@/types/importEmissionSources.types'
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material'
@@ -84,7 +85,8 @@ const ImportEmissionSourcesModal = ({ studyId, post, siteId, open, onClose, onSu
       title={t('title')}
       onClose={onClose}
       onSuccess={onSuccess}
-      onPreview={(file, choices) => previewEmissionSourcesFromFile(file, studyId, choices)}
+      onValidate={(file) => validateEmissionSourcesFromFile(file, studyId)}
+      onResolve={(file, choices) => resolveEmissionSourcesFromFile(file, studyId, choices)}
       onConfirmImport={(file, choices) => importEmissionSourcesFromFile(file, studyId, choices)}
       onDownloadTemplate={handleDownloadTemplate}
       renderPreviewTable={renderPreviewTable}
