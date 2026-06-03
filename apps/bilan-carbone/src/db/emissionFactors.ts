@@ -605,7 +605,7 @@ export const findEmissionFactorByImportedIdForMatch = (id: string, organizationI
       totalCo2: true,
       unit: true,
       customUnit: true,
-      metaData: { select: { title: true, language: true } },
+      metaData: { select: { title: true, attribute: true, frontiere: true, language: true } },
     },
   })
 
@@ -627,7 +627,7 @@ export const findEmissionFactorsByNameAndUnit = (
       totalCo2: true,
       unit: true,
       customUnit: true,
-      metaData: { select: { title: true, language: true } },
+      metaData: { select: { title: true, attribute: true, frontiere: true, language: true } },
     },
   })
 
@@ -642,6 +642,6 @@ export const findEmissionFactorsByUnit = (organizationId: string, unit: Unit, ve
       totalCo2: true,
       unit: true,
       customUnit: true,
-      metaData: { select: { title: true, language: true } },
+      metaData: { select: { title: true, attribute: true, frontiere: true, language: true } },
     },
   })

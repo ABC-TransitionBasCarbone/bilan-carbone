@@ -11,6 +11,7 @@ import {
   PreviewEmissionFactorsResult,
   PreviewRow,
 } from '@/types/importEmissionFactors.types'
+import { getEmissionFactorFullName } from '@/utils/emissionFactors'
 import { formatPrefixedUnitDisplay } from '@/utils/import.utils'
 import { buildPostsAndSubPostsCell, getAllPostsLabel, parseImportFile } from '@/utils/importEmissionFactors.utils'
 import { flattenSubposts } from '@/utils/post'
@@ -154,7 +155,7 @@ export async function exportManualEmissionFactorsToFile(): Promise<ArrayBuffer> 
   const rows: (string | number)[][] = emissionFactors.map((ef) => {
     const metaData = ef.metaData.find((m) => m.language === locale) ?? ef.metaData[0]
     return [
-      metaData?.title ?? '',
+      getEmissionFactorFullName(metaData),
       metaData?.attribute ?? '',
       ef.customUnit
         ? formatPrefixedUnitDisplay(locale, Unit.CUSTOM, ef.customUnit)

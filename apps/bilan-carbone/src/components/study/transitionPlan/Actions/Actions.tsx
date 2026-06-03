@@ -1,7 +1,7 @@
 'use client'
 
 import type { TagFamily } from '@/components/form/ScopeSelectors'
-import { DEFAULT_FUZZY_OPTIONS } from '@/constants/fuse.contstant'
+import { DEFAULT_FUZZY_OPTIONS } from '@/constants/fuse.constant'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteAction } from '@/services/serverFunctions/transitionPlan'
 import type { ActionWithRelations } from '@/types/trajectory.types'

@@ -7,3 +7,15 @@ export const toTitleCase = (str: string) => {
 }
 
 export const toCamelCase = (str: string) => str.charAt(0).toLowerCase() + str.slice(1)
+
+/**
+ * Convert to lower case and remove special characters and extra spaces
+ */
+export function normalizeStringForSearch(s: string): string {
+  return s
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()
+}

@@ -19,12 +19,19 @@ const locale = 'fr'
 const organizationId = 'org-1'
 const versionIds = ['v-1']
 
-const makeEf = (id: string, totalCo2: number, unit: string, title: string): EfRow => ({
+const makeEf = (
+  id: string,
+  totalCo2: number,
+  unit: string,
+  title: string,
+  attribute: string | null = null,
+  frontiere: string | null = null,
+): EfRow => ({
   id,
   totalCo2,
   unit,
   customUnit: null,
-  metaData: [{ title, language: locale }],
+  metaData: [{ title, attribute, frontiere, language: locale }],
 })
 
 beforeEach(() => {
@@ -340,6 +347,95 @@ describe('findEmissionFactorMatch', () => {
       )
 
       expect(result).toMatchObject({ foundUnit: 'kWh' })
+    })
+  })
+
+  describe('full name fuzzy detection (normalized)', () => {
+    it('finds EF when import name is "title - frontiere" via normalized Fuse match', async () => {
+      mockFindById.mockResolvedValue(null)
+      mockFindByNameAndUnit.mockResolvedValue([])
+      const ef = makeEf('ef-1', 938, 'KG', 'Acier', null, 'Neuf')
+      mockFindByUnit.mockResolvedValue([ef])
+
+      const result = await findEmissionFactorMatch(
+        undefined,
+        'Acier - Neuf',
+        undefined,
+        'KG',
+        locale,
+        organizationId,
+        versionIds,
+      )
+
+      expect(result).toMatchObject({ matchType: 'nameAndUnitOnly', id: 'ef-1' })
+    })
+
+    it('finds EF when import name is "title - attribute - frontiere" via normalized Fuse match', async () => {
+      mockFindById.mockResolvedValue(null)
+      mockFindByNameAndUnit.mockResolvedValue([])
+      const ef = makeEf('ef-1', 938, 'KG', 'Emballages', 'Acier', 'Stockage - Impacts')
+      mockFindByUnit.mockResolvedValue([ef])
+
+      const result = await findEmissionFactorMatch(
+        undefined,
+        'Emballages - Acier - Stockage - Impacts',
+        undefined,
+        'KG',
+        locale,
+        organizationId,
+        versionIds,
+      )
+
+      expect(result).toMatchObject({ matchType: 'nameAndUnitOnly', id: 'ef-1' })
+    })
+
+    it('matches without dashes (normalized comparison ignores punctuation)', async () => {
+      mockFindById.mockResolvedValue(null)
+      mockFindByNameAndUnit.mockResolvedValue([])
+      const ef = makeEf('ef-1', 938, 'KG', 'Acier ou fer blanc', null, 'Neuf')
+      mockFindByUnit.mockResolvedValue([ef])
+
+      const result = await findEmissionFactorMatch(
+        undefined,
+        'Acier ou fer blanc Neuf',
+        undefined,
+        'KG',
+        locale,
+        organizationId,
+        versionIds,
+      )
+
+      expect(result).toMatchObject({ matchType: 'nameAndUnitOnly', id: 'ef-1' })
+    })
+
+    it('matches despite extra spaces around dashes', async () => {
+      mockFindById.mockResolvedValue(null)
+      mockFindByNameAndUnit.mockResolvedValue([])
+      const ef = makeEf('ef-1', 938, 'KG', 'Acier', null, 'Neuf')
+      mockFindByUnit.mockResolvedValue([ef])
+
+      const result = await findEmissionFactorMatch(
+        undefined,
+        'Acier  -  Neuf',
+        undefined,
+        'KG',
+        locale,
+        organizationId,
+        versionIds,
+      )
+
+      expect(result).toMatchObject({ matchType: 'nameAndUnitOnly', id: 'ef-1' })
+    })
+
+    it('still calls findEmissionFactorsByNameAndUnit once with raw trimmed title', async () => {
+      mockFindById.mockResolvedValue(null)
+      const ef = makeEf('ef-1', 938, 'KG', 'Acier')
+      mockFindByNameAndUnit.mockResolvedValue([ef])
+
+      await findEmissionFactorMatch(undefined, 'Acier', 938, 'KG', locale, organizationId, versionIds)
+
+      expect(mockFindByNameAndUnit).toHaveBeenCalledTimes(1)
+      expect(mockFindByNameAndUnit).toHaveBeenCalledWith('Acier', locale, organizationId, 'KG', versionIds)
     })
   })
 })
