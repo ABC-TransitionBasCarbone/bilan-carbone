@@ -1,9 +1,11 @@
-import { DEFAULT_FUZZY_OPTIONS } from '@/constants/fuse.contstant'
+import { DEFAULT_FUZZY_OPTIONS } from '@/constants/fuse.constant'
 import {
   findEmissionFactorByImportedIdForMatch,
   findEmissionFactorsByNameAndUnit,
   findEmissionFactorsByUnit,
 } from '@/db/emissionFactors'
+import { getEmissionFactorFullName } from '@/utils/emissionFactors'
+import { normalizeStringForSearch } from '@/utils/string'
 import { Unit } from '@abc-transitionbascarbone/db-common/enums'
 import Fuse from 'fuse.js'
 
@@ -35,7 +37,7 @@ export type EfRow = {
   totalCo2: number
   unit: string | null
   customUnit: string | null
-  metaData: { title: string | null; language: string }[]
+  metaData: { title: string | null; attribute: string | null; frontiere: string | null; language: string }[]
 }
 
 function toEfMatch(
@@ -49,7 +51,11 @@ function toEfMatch(
   return {
     matchType,
     id: ef.id,
-    foundTitle: ef.metaData.find((m) => m.language === locale)?.title ?? undefined,
+    foundTitle:
+      getEmissionFactorFullName(
+        ef.metaData.find((m) => m.language === locale) ??
+          ef.metaData[0] ?? { title: null, attribute: null, frontiere: null },
+      ) || undefined,
     foundValue: ef.totalCo2,
     foundUnit: ef.customUnit ?? ef.unit ?? undefined,
   }
@@ -103,16 +109,22 @@ export async function findEmissionFactorMatch(
     const byUnit = await findEmissionFactorsByUnit(organizationId, unit, versionIds)
 
     if (title) {
+      const normalizedSearch = normalizeStringForSearch(title)
       const candidates = byUnit.map((ef) => ({
         ef,
-        title: ef.metaData.find((m) => m.language === locale)?.title ?? ef.metaData[0]?.title ?? '',
+        normalizedFullName: normalizeStringForSearch(
+          getEmissionFactorFullName(
+            ef.metaData.find((m) => m.language === locale) ??
+              ef.metaData[0] ?? { title: null, attribute: null, frontiere: null },
+          ),
+        ),
       }))
 
       const fuse = new Fuse(candidates, {
-        keys: ['title'],
+        keys: ['normalizedFullName'],
         ...DEFAULT_FUZZY_OPTIONS,
       })
-      const results = fuse.search(title.trim())
+      const results = fuse.search(normalizedSearch)
 
       if (results.length === 1) {
         return toEfMatch(results[0].item.ef, EmissionFactorMatchType.NameAndUnitOnly, locale)

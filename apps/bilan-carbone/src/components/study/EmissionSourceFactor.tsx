@@ -1,11 +1,11 @@
-import { DEFAULT_FUZZY_OPTIONS } from '@/constants/fuse.contstant'
+import { DEFAULT_FUZZY_OPTIONS } from '@/constants/fuse.constant'
 import { EmissionFactorList } from '@/db/emissionFactors'
 import type { FullStudy } from '@/db/study'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { useUnitLabel } from '@/services/unit'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
-import { getEmissionFactorValue } from '@/utils/emissionFactors'
+import { getEmissionFactorFullName, getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
 import { displayOnlyExistingDataWithDash } from '@/utils/string'
 import { EmissionFactorStatus, StudyResultUnit, SubPost, Unit } from '@abc-transitionbascarbone/db-common/enums'
@@ -29,6 +29,11 @@ const fuseOptions = {
       name: 'title',
       getFn: (emissionFactor: EmissionFactorWithMetaData) => emissionFactor.metaData?.title || '',
       weight: 1,
+    },
+    {
+      name: 'frontiere',
+      getFn: (emissionFactor: EmissionFactorWithMetaData) => emissionFactor.metaData?.frontiere || '',
+      weight: 0.8,
     },
     {
       name: 'sublocation',
@@ -110,7 +115,7 @@ const EmissionSourceFactor = ({
   }, [])
 
   useEffect(() => {
-    setValue(selectedFactor?.metaData?.title || '')
+    setValue(getEmissionFactorFullName(selectedFactor?.metaData))
   }, [selectedFactor])
 
   const fuse = useMemo(() => {
@@ -191,8 +196,7 @@ const EmissionSourceFactor = ({
             >
               <p className={styles.header}>
                 {displayOnlyExistingDataWithDash([
-                  result.metaData?.title,
-                  result.metaData?.frontiere,
+                  getEmissionFactorFullName(result.metaData) || undefined,
                   result.location,
                   result.metaData?.location,
                   formatEmissionFactorNumber(getEmissionFactorValue(result, environment)),

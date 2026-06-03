@@ -16,7 +16,11 @@ import {
 } from '@/services/uncertainty'
 import { useUnitLabel } from '@/services/unit'
 import { EmissionSourcesStatus } from '@/types/emissionSource.types'
-import { emissionFactorDefautQualityStar, getEmissionFactorValue } from '@/utils/emissionFactors'
+import {
+  emissionFactorDefautQualityStar,
+  getEmissionFactorFullName,
+  getEmissionFactorValue,
+} from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
 import { formatEmissionFromNumber, hasDeprecationPeriod, hasEditionRights, isCAS } from '@/utils/study'
 import type { StudyTag } from '@abc-transitionbascarbone/db-common'
@@ -60,7 +64,7 @@ import QualitySelectGroup from './QualitySelectGroup'
 type Option = { label: string; value: string; color?: string | null }
 
 const getDetail = (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) =>
-  [metadata.attribute, metadata.comment, metadata.location].filter(Boolean).join(' - ')
+  [metadata.comment].filter(Boolean).join(' - ')
 
 interface Props {
   studyId: string
@@ -378,7 +382,7 @@ const EmissionSourceForm = ({
             </p>
           )}
           <p className={classNames(emissionFactorStyles.header, 'align-end')}>
-            {selectedFactor.metaData?.title}
+            {getEmissionFactorFullName(selectedFactor.metaData)}
             {selectedFactor.location ? ` - ${selectedFactor.location}` : ''}
             {selectedFactor.metaData?.location ? ` - ${selectedFactor.metaData.location}` : ''} -{' '}
             {formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor, environment))}

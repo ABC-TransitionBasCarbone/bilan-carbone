@@ -2,7 +2,7 @@
 
 import ConfirmDeleteModal from '@/components/modals/ConfirmDeleteModal'
 import { EngagementActionSteps, EngagementActionTargets } from '@/constants/engagementActions'
-import { DEFAULT_FUZZY_OPTIONS } from '@/constants/fuse.contstant'
+import { DEFAULT_FUZZY_OPTIONS } from '@/constants/fuse.constant'
 import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteEngagementAction, EngagementActionWithSites } from '@/services/serverFunctions/study'

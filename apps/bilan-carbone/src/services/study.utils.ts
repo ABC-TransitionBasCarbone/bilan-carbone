@@ -1,6 +1,6 @@
 import { EngagementActionTargets } from '@/constants/engagementActions'
 import type { FullStudy } from '@/db/study'
-import { getEmissionFactorValue } from '@/utils/emissionFactors'
+import { getEmissionFactorFullName, getEmissionFactorValue } from '@/utils/emissionFactors'
 import { getEmissionSourcesTotalCo2 } from '@/utils/emissionSources'
 import { getPost } from '@/utils/post'
 import { formatEmissionValueForExport, hasDeprecationPeriod, isCAS } from '@/utils/study'
@@ -194,7 +194,7 @@ const getEmissionSourcesRows = (
           emissionFactor?.unit ? tUnit(emissionFactor.unit, { count: 1 }) : '',
           getQuality(getQualitativeUncertaintyFromQuality(emissionSource), tQuality),
           emissionSource.comment || '',
-          emissionFactor?.metaData?.title || t('noFactor'),
+          getEmissionFactorFullName(emissionFactor?.metaData, t('noFactor')),
           emissionFactor
             ? getEmissionFactorValue(emissionFactor, environment).toLocaleString('fr-FR', { useGrouping: false })
             : '',
