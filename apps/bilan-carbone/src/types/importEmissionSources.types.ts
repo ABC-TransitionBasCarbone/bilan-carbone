@@ -87,5 +87,6 @@ export const SOURCE_IMPORT_COLUMNS = {
   feComment: 31,
   validation: 32,
   calculatedValue: 33,
-  calculatedUncertainty: 34,
+  calculatedUnit: 34,
+  calculatedUncertainty: 35,
 } as const

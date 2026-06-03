@@ -951,6 +951,7 @@
       "groupBcSpecific": "BC+ specific data",
       "columnValidation": "Validation (Yes/No)",
       "columnCalculatedValue": "Calculated value (1)",
+      "columnCalculatedUnit": "Calculated value unit (1)",
       "columnCalculatedUncertainty": "Calculated uncertainty (1)",
       "exportOrganization": "Organization name concerned by the carbon assessment",
       "exportDate": "Carbon assessment date",

@@ -951,6 +951,7 @@
       "groupBcSpecific": "Données spécifiques au BC+",
       "columnValidation": "Validation (Oui/Non)",
       "columnCalculatedValue": "Valeur calculée (1)",
+      "columnCalculatedUnit": "Unité de la valeur calculée (1)",
       "columnCalculatedUncertainty": "Incertitude calculée (1)",
       "exportOrganization": "Nom de l'organisation concernée par le bilan",
       "exportDate": "Date du bilan",
