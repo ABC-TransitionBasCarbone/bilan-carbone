@@ -310,9 +310,7 @@ const ImportFileModal = <TPreviewRow,>({
                   </Typography>
                 )}
                 {row.tooMany ? (
-                  <Typography variant="body2" color="warning.main">
-                    {t('ambiguousTooMany')}
-                  </Typography>
+                  <Typography variant="body2">{t('ambiguousTooMany')}</Typography>
                 ) : (
                   <RadioGroup
                     className={styles.ambiguousRadioGroup}

@@ -1,6 +1,8 @@
 import { KG_CO2E_PREFIX_REGEX } from '@/constants/import'
+import { findEmissionFactorByIdForMatch } from '@/db/emissionFactors'
+import { Locale, LocaleType } from '@/i18n/config'
 import { qualityKeys } from '@/services/uncertainty'
-import { ImportError } from '@/types/import.types'
+import { AmbiguousRow, FEChoices, ImportError, ImportWarning } from '@/types/import.types'
 import { ParsedEmissionSourceRow, SOURCE_IMPORT_COLUMNS } from '@/types/importEmissionSources.types'
 import {
   EmissionSourceCaracterisation,
@@ -8,10 +10,12 @@ import {
   SubPost,
   Unit,
 } from '@abc-transitionbascarbone/db-common/enums'
-import { Locale, LocaleType } from '@abc-transitionbascarbone/i18n/config'
+import { getEmissionFactorFullName } from './emissionFactors'
 import { parseExcelSheet } from './excel.utils'
+import { EmissionFactorMatchType, findEmissionFactorMatch } from './findEmissionFactor.utils'
 import {
   buildLabelMap,
+  formatPrefixedUnitDisplayOptional,
   matchLabelFromMap,
   matchLabelFromTranslations,
   matchUnitLabelFromTranslations,
@@ -20,6 +24,7 @@ import { parseNumericValue } from './number'
 import { getBcTranslations, getCommonTranslations } from './translation.utils'
 
 export const SOURCE_IMPORT_HEADER_ROW_INDEX = 9
+const MAX_FE_CANDIDATES = 10
 
 type StudySiteForImport = { id: string; site: { name: string } | null }
 
@@ -253,4 +258,149 @@ export function parseEmissionSourcesFile(
   }
 
   return { success: true, rows: parsedRows }
+}
+
+type ResolvedEf = { efId: string; efName: string; efValue: string; efUnit: string }
+
+export type ResolveEfRowsResult =
+  | { type: 'warnings'; warnings: ImportWarning[]; ambiguousRows: AmbiguousRow[] }
+  | { type: 'ambiguous'; ambiguousRows: AmbiguousRow[] }
+  | { type: 'resolved'; resolvedByLine: Map<number, ResolvedEf> }
+
+export async function resolveEmissionFactorRows(
+  rows: ParsedEmissionSourceRow[],
+  choices: FEChoices | undefined,
+  locale: LocaleType,
+  organizationId: string,
+  versionIds: string[],
+): Promise<ResolveEfRowsResult> {
+  const resolvingChoices = choices !== undefined
+  const warnings: ImportWarning[] = []
+  const ambiguousRows: AmbiguousRow[] = []
+  const resolvedByLine = new Map<number, ResolvedEf>()
+
+  for (const row of rows) {
+    const lineNumber = row.lineNumber
+
+    if (
+      !resolvingChoices &&
+      row.emissionFactorUnitRaw &&
+      row.emissionFactorUnit &&
+      row.emissionFactorUnit !== Unit.CUSTOM &&
+      !KG_CO2E_PREFIX_REGEX.test(row.emissionFactorUnitRaw)
+    ) {
+      warnings.push({
+        type: 'unitMissingPrefix',
+        lineNumber,
+        sourceName: row.name,
+        foundUnit: row.emissionFactorUnitRaw,
+        resolvedValue: formatPrefixedUnitDisplayOptional(locale, row.emissionFactorUnit),
+      })
+    }
+
+    if (choices !== undefined && lineNumber in choices) {
+      const chosenId = choices[lineNumber]
+      if (chosenId) {
+        const chosenEf = await findEmissionFactorByIdForMatch(chosenId)
+        if (chosenEf) {
+          resolvedByLine.set(lineNumber, {
+            efId: chosenEf.importedId ?? chosenId,
+            efName:
+              getEmissionFactorFullName(
+                chosenEf.metaData.find((m) => m.language === locale) ??
+                  chosenEf.metaData[0] ?? { title: null, attribute: null, frontiere: null },
+              ) ||
+              (row.emissionFactorName ?? ''),
+            efValue: String(chosenEf.totalCo2),
+            efUnit: formatPrefixedUnitDisplayOptional(locale, chosenEf.customUnit ?? chosenEf.unit ?? undefined),
+          })
+        }
+      }
+      continue
+    }
+
+    const ef = await findEmissionFactorMatch(
+      row.emissionFactorId,
+      row.emissionFactorName,
+      row.emissionFactorValue,
+      row.emissionFactorUnit,
+      locale,
+      organizationId,
+      versionIds,
+    )
+
+    const hasSomeEfData = !!(row.emissionFactorId || row.emissionFactorName)
+
+    if (!ef) {
+      if (!resolvingChoices) {
+        if (hasSomeEfData) {
+          warnings.push({
+            type: 'efNotFound',
+            lineNumber,
+            sourceName: row.name,
+            searchedName: row.emissionFactorName,
+            searchedValue: row.emissionFactorValue,
+            searchedUnit: formatPrefixedUnitDisplayOptional(locale, row.emissionFactorUnit),
+          })
+        } else {
+          warnings.push({ type: 'efMissing', lineNumber, sourceName: row.name })
+        }
+      }
+    } else if (ef.matchType === EmissionFactorMatchType.NameAmbiguous) {
+      const tooMany = ef.candidates.length > MAX_FE_CANDIDATES
+      ambiguousRows.push({
+        lineNumber,
+        sourceName: row.name,
+        searchedName: row.emissionFactorName,
+        searchedValue: row.emissionFactorValue,
+        searchedUnit: formatPrefixedUnitDisplayOptional(locale, row.emissionFactorUnit),
+        tooMany,
+        candidates: tooMany
+          ? []
+          : ef.candidates.map((c) => ({
+              id: c.id,
+              foundTitle: c.foundTitle,
+              foundValue: c.foundValue,
+              foundUnit: formatPrefixedUnitDisplayOptional(locale, c.foundUnit),
+            })),
+      })
+    } else if (ef.matchType !== EmissionFactorMatchType.Exact) {
+      if (!resolvingChoices) {
+        warnings.push({
+          type: 'efNotFound',
+          lineNumber,
+          sourceName: row.name,
+          searchedName: row.emissionFactorName,
+          searchedValue: row.emissionFactorValue,
+          searchedUnit: formatPrefixedUnitDisplayOptional(locale, row.emissionFactorUnit),
+          foundTitle: ef.foundTitle,
+          foundValue: ef.foundValue,
+          foundUnit: formatPrefixedUnitDisplayOptional(locale, ef.foundUnit),
+        })
+      }
+      resolvedByLine.set(lineNumber, {
+        efId: ef.importedId ?? row.emissionFactorId ?? '',
+        efName: ef.foundTitle ?? row.emissionFactorName ?? '',
+        efValue: ef.foundValue !== undefined ? String(ef.foundValue) : '',
+        efUnit: formatPrefixedUnitDisplayOptional(locale, ef.foundUnit),
+      })
+    } else {
+      resolvedByLine.set(lineNumber, {
+        efId: ef.importedId ?? row.emissionFactorId ?? '',
+        efName: ef.foundTitle ?? row.emissionFactorName ?? '',
+        efValue: ef.foundValue !== undefined ? String(ef.foundValue) : '',
+        efUnit: formatPrefixedUnitDisplayOptional(locale, ef.foundUnit),
+      })
+    }
+  }
+
+  if (warnings.length > 0) {
+    return { type: 'warnings', warnings, ambiguousRows }
+  }
+
+  if (ambiguousRows.length > 0) {
+    return { type: 'ambiguous', ambiguousRows }
+  }
+
+  return { type: 'resolved', resolvedByLine }
 }

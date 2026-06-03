@@ -1,3 +1,5 @@
+import { findEmissionFactorByIdForMatch } from '@/db/emissionFactors'
+import { Locale } from '@/i18n/config'
 import { SOURCE_IMPORT_COLUMNS } from '@/types/importEmissionSources.types'
 import {
   EmissionSourceCaracterisation,
@@ -5,9 +7,32 @@ import {
   SubPost,
   Unit,
 } from '@abc-transitionbascarbone/db-common/enums'
-import { Locale } from '@abc-transitionbascarbone/i18n/config'
 import xlsx from 'node-xlsx'
-import { parseEmissionSourcesFile, SOURCE_IMPORT_HEADER_ROW_INDEX } from './importEmissionSources.utils'
+import { EmissionFactorMatchType, findEmissionFactorMatch } from './findEmissionFactor.utils'
+import {
+  parseEmissionSourcesFile,
+  resolveEmissionFactorRows,
+  SOURCE_IMPORT_HEADER_ROW_INDEX,
+} from './importEmissionSources.utils'
+
+jest.mock('@/db/emissionFactors', () => ({
+  findEmissionFactorByIdForMatch: jest.fn(),
+  findEmissionFactorsByNameAndUnit: jest.fn(),
+  findEmissionFactorsByUnit: jest.fn(),
+  findEmissionFactorByImportedIdForMatch: jest.fn(),
+}))
+jest.mock('./findEmissionFactor.utils', () => ({
+  EmissionFactorMatchType: {
+    Exact: 'exact',
+    NameAndUnitOnly: 'nameAndUnitOnly',
+    ValueAndUnitOnly: 'valueAndUnitOnly',
+    NameAmbiguous: 'nameAmbiguous',
+  },
+  findEmissionFactorMatch: jest.fn(),
+}))
+
+const mockFindMatch = findEmissionFactorMatch as jest.Mock
+const mockFindById = findEmissionFactorByIdForMatch as jest.Mock
 
 const TEST_STUDY_SITES = [
   { id: 'study-site-a', site: { name: 'Site principal' } },
@@ -301,5 +326,205 @@ describe('parseEmissionSourcesFile', () => {
         expect(result.errors.some((e) => e.key === 'invalidUnit')).toBe(false)
       }
     })
+  })
+})
+
+const ORG_ID = 'org-1'
+const VERSION_IDS = ['v-1']
+
+const makeRow = (overrides: Partial<(typeof TEST_STUDY_SITES)[0]> & Record<string, unknown> = {}) =>
+  ({
+    lineNumber: 5,
+    studySiteId: 'study-site-a',
+    siteName: 'Site principal',
+    subPost: 'CombustiblesFossiles',
+    name: 'Ma source',
+    unit: undefined,
+    emissionFactorId: undefined,
+    emissionFactorName: 'Acier',
+    emissionFactorValue: undefined,
+    emissionFactorUnit: undefined,
+    emissionFactorUnitRaw: undefined,
+    value: undefined,
+    type: undefined,
+    caracterisation: undefined,
+    tag: undefined,
+    source: undefined,
+    reliability: undefined,
+    technicalRepresentativeness: undefined,
+    geographicRepresentativeness: undefined,
+    temporalRepresentativeness: undefined,
+    completeness: undefined,
+    comment: undefined,
+    feComment: undefined,
+    validated: undefined,
+    depreciationPeriod: undefined,
+    constructionYear: undefined,
+    ...overrides,
+  }) as Parameters<typeof resolveEmissionFactorRows>[0][number]
+
+describe('resolveEmissionFactorRows', () => {
+  beforeEach(() => {
+    mockFindMatch.mockReset()
+    mockFindById.mockReset()
+  })
+
+  it('returns resolved with efId/efName from exact match', async () => {
+    mockFindMatch.mockResolvedValue({
+      matchType: EmissionFactorMatchType.Exact,
+      id: 'prisma-1',
+      importedId: 'imported-1',
+      foundTitle: 'Acier recyclé',
+      foundValue: 2.5,
+      foundUnit: 'KG',
+    })
+
+    const result = await resolveEmissionFactorRows([makeRow()], undefined, Locale.FR, ORG_ID, VERSION_IDS)
+
+    expect(result.type).toBe('resolved')
+    if (result.type === 'resolved') {
+      expect(result.resolvedByLine.get(5)).toMatchObject({ efId: 'imported-1', efName: 'Acier recyclé' })
+    }
+  })
+
+  it('returns warnings with efMissing when no EF data and no match', async () => {
+    mockFindMatch.mockResolvedValue(null)
+
+    const result = await resolveEmissionFactorRows(
+      [makeRow({ emissionFactorName: '' })],
+      undefined,
+      Locale.FR,
+      ORG_ID,
+      VERSION_IDS,
+    )
+
+    expect(result.type).toBe('warnings')
+    if (result.type === 'warnings') {
+      expect(result.warnings[0]).toMatchObject({ type: 'efMissing', lineNumber: 5 })
+    }
+  })
+
+  it('returns warnings with efNotFound when EF data present but no match', async () => {
+    mockFindMatch.mockResolvedValue(null)
+
+    const result = await resolveEmissionFactorRows([makeRow()], undefined, Locale.FR, ORG_ID, VERSION_IDS)
+
+    expect(result.type).toBe('warnings')
+    if (result.type === 'warnings') {
+      expect(result.warnings[0]).toMatchObject({ type: 'efNotFound', lineNumber: 5 })
+    }
+  })
+
+  it('returns warnings with efNotFound and resolved when approximate match', async () => {
+    mockFindMatch.mockResolvedValue({
+      matchType: EmissionFactorMatchType.NameAndUnitOnly,
+      id: 'prisma-1',
+      importedId: 'imported-1',
+      foundTitle: 'Acier approx',
+      foundValue: 3,
+      foundUnit: 'KG',
+    })
+
+    const result = await resolveEmissionFactorRows([makeRow()], undefined, Locale.FR, ORG_ID, VERSION_IDS)
+
+    expect(result.type).toBe('warnings')
+    if (result.type === 'warnings') {
+      expect(result.warnings[0]).toMatchObject({ type: 'efNotFound', foundTitle: 'Acier approx' })
+      expect(result.ambiguousRows).toHaveLength(0)
+    }
+  })
+
+  it('returns ambiguous when NameAmbiguous and candidates <= MAX', async () => {
+    mockFindMatch.mockResolvedValue({
+      matchType: EmissionFactorMatchType.NameAmbiguous,
+      candidates: [
+        { id: 'ef-1', foundTitle: 'Acier A', foundValue: 2, foundUnit: 'KG' },
+        { id: 'ef-2', foundTitle: 'Acier B', foundValue: 3, foundUnit: 'KG' },
+      ],
+    })
+
+    const result = await resolveEmissionFactorRows([makeRow()], undefined, Locale.FR, ORG_ID, VERSION_IDS)
+
+    expect(result.type).toBe('ambiguous')
+    if (result.type === 'ambiguous') {
+      expect(result.ambiguousRows[0]).toMatchObject({ lineNumber: 5, tooMany: false })
+      expect(result.ambiguousRows[0].candidates).toHaveLength(2)
+    }
+  })
+
+  it('sets tooMany and empties candidates when > 10 candidates', async () => {
+    mockFindMatch.mockResolvedValue({
+      matchType: EmissionFactorMatchType.NameAmbiguous,
+      candidates: Array.from({ length: 11 }, (_, i) => ({
+        id: `ef-${i}`,
+        foundTitle: `FE ${i}`,
+        foundValue: i,
+        foundUnit: 'KG',
+      })),
+    })
+
+    const result = await resolveEmissionFactorRows([makeRow()], undefined, Locale.FR, ORG_ID, VERSION_IDS)
+
+    expect(result.type).toBe('ambiguous')
+    if (result.type === 'ambiguous') {
+      expect(result.ambiguousRows[0]).toMatchObject({ tooMany: true, candidates: [] })
+    }
+  })
+
+  it('returns warnings with unitMissingPrefix when unit has no kgCO2e/ prefix', async () => {
+    mockFindMatch.mockResolvedValue({
+      matchType: EmissionFactorMatchType.Exact,
+      id: 'prisma-1',
+      importedId: 'imported-1',
+      foundTitle: 'Acier',
+      foundValue: 2,
+      foundUnit: 'KG',
+    })
+
+    const result = await resolveEmissionFactorRows(
+      [makeRow({ emissionFactorUnit: Unit.TON, emissionFactorUnitRaw: 'tonne' })],
+      undefined,
+      Locale.FR,
+      ORG_ID,
+      VERSION_IDS,
+    )
+
+    expect(result.type).toBe('warnings')
+    if (result.type === 'warnings') {
+      expect(result.warnings[0]).toMatchObject({ type: 'unitMissingPrefix', foundUnit: 'tonne' })
+    }
+  })
+
+  it('skips findEmissionFactorMatch and uses chosen EF when choices provided', async () => {
+    mockFindById.mockResolvedValue({
+      id: 'prisma-1',
+      importedId: 'imported-1',
+      totalCo2: 4.2,
+      unit: 'KG',
+      customUnit: null,
+      metaData: [{ title: 'Acier choisi', attribute: null, frontiere: null, language: 'fr' }],
+    })
+
+    const result = await resolveEmissionFactorRows([makeRow()], { 5: 'prisma-1' }, Locale.FR, ORG_ID, VERSION_IDS)
+
+    expect(mockFindMatch).not.toHaveBeenCalled()
+    expect(result.type).toBe('resolved')
+    if (result.type === 'resolved') {
+      expect(result.resolvedByLine.get(5)).toMatchObject({ efId: 'imported-1', efName: 'Acier choisi', efValue: '4.2' })
+    }
+  })
+
+  it('does not generate warnings when resolvingChoices, even for lines not in choices', async () => {
+    mockFindMatch.mockResolvedValue(null)
+
+    const result = await resolveEmissionFactorRows(
+      [makeRow({ lineNumber: 5 }), makeRow({ lineNumber: 6 })],
+      { 5: null },
+      Locale.FR,
+      ORG_ID,
+      VERSION_IDS,
+    )
+
+    expect(result.type).toBe('resolved')
   })
 })
