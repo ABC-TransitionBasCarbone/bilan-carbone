@@ -322,7 +322,7 @@ function buildEmissionSourcesSheet(study: FullStudy, locale: LocaleType, dataRow
   const FE_START = 19
   const FE_END = 31
   const BC_START = 32
-  const BC_END = 34
+  const BC_END = 35
 
   const empty = (n: number) => Array(n).fill('')
 
@@ -586,7 +586,8 @@ function buildEmissionSourceRow(
   row[C.efType] = efTypeLabel
   row[C.feComment] = es.feComment ?? ''
   row[C.validation] = validationLabel
-  row[C.calculatedValue] = `${calculatedValue} ${resultsUnitLabel}`
+  row[C.calculatedValue] = calculatedValue
+  row[C.calculatedUnit] = resultsUnitLabel
   row[C.calculatedUncertainty] = calculatedUncertaintyLabel
   return row
 }
