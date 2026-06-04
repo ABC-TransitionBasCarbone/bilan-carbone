@@ -9,6 +9,7 @@ import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import { default as CUTLogosHome } from '@/environments/cut/home/LogosHome'
 import { displayFeedBackForm } from '@/services/serverFunctions/user'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { UserSession } from 'next-auth'
 import dynamic from 'next/dynamic'
 
 const ClicksonUserView = dynamic(() => import('@/environments/clickson/home/UserView'))
@@ -29,12 +30,14 @@ const Home = async ({ user: account }: UserSessionProps) => {
     !userOrganizationVersion.onboarded &&
     environmentWithOnboarding.includes(userOrganizationVersion.environment)
 
+  const isTrainedOrWithoutOrga = (account: UserSession) => account.level || !account.organizationVersionId
+
   return (
     <>
       <Block>
         <DynamicComponent
           environmentComponents={{
-            [Environment.TILT]: account.level ? (
+            [Environment.TILT]: isTrainedOrWithoutOrga(account) ? (
               <UserView account={account} />
             ) : (
               <SimplifiedUserView account={account} />

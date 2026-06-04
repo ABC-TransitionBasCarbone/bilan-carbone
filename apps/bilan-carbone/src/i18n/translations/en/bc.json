@@ -1571,6 +1571,9 @@
         "CoConstruction": "Co-construction",
         "FeedbackAndCommunication": "Feedback and communication"
       }
+    },
+    "contributor": {
+      "noData": "No data to display, an editor of the study needs to add some emission sources first."
     }
   },
   "importFileModal": {

@@ -1571,6 +1571,9 @@
         "CoConstruction": "Co-construction",
         "FeedbackAndCommunication": "Retours et communication"
       }
+    },
+    "contributor": {
+      "noData": "Pas de sources d'émissions pour le moment, il faut qu'un éditeur de l'étude en ajoute pour que vous puissiez les compléter"
     }
   },
   "importFileModal": {

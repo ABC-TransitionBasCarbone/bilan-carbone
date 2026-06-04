@@ -7,7 +7,7 @@ import { withInfobulle } from '@/utils/post'
 import { HelpIcon } from '@abc-transitionbascarbone/components'
 import { Environment, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
 import { useTranslations } from 'next-intl'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import GlossaryModal from '../modals/GlossaryModal'
@@ -22,18 +22,21 @@ interface Props {
 }
 
 const StudyContributorPage = ({ study, userRole }: Props) => {
+  'use memo'
+
   const tNav = useTranslations('nav')
   const tPost = useTranslations('emissionFactors.post')
+  const tContributor = useTranslations('study.contributor')
   const [glossary, setGlossary] = useState('')
   const { siteId, studySiteId, setSite } = useStudySite(study)
   const { environment } = useAppEnvironmentStore()
 
-  const emissionSources = useMemo(
-    () =>
-      study.emissionSources.filter(
-        (emissionSource) => emissionSource.studySite.site.id === siteId,
-      ) as FullStudy['emissionSources'],
-    [study, siteId],
+  const emissionSources = study.emissionSources.filter(
+    (emissionSource) => emissionSource.studySite.site.id === siteId,
+  ) as FullStudy['emissionSources']
+
+  const subPostsToshow = Object.values(environmentPostMapping[environment || Environment.BC]).filter((post: Post) =>
+    study.emissionSources.some((emissionSource) => subPostsByPost[post].includes(emissionSource.subPost)),
   )
 
   return (
@@ -46,11 +49,8 @@ const StudyContributorPage = ({ study, userRole }: Props) => {
           <SelectStudySite sites={study.sites} defaultValue={siteId} setSite={setSite} showAllOption={false} />
         }
       >
-        {Object.values(environmentPostMapping[environment || Environment.BC])
-          .filter((post: Post) =>
-            study.emissionSources.some((emissionSource) => subPostsByPost[post].includes(emissionSource.subPost)),
-          )
-          .map((post: Post) => (
+        {subPostsToshow.length > 0 ? (
+          subPostsToshow.map((post: Post) => (
             <Block
               key={post}
               title={
@@ -73,7 +73,10 @@ const StudyContributorPage = ({ study, userRole }: Props) => {
                 withoutDetail={true}
               />
             </Block>
-          ))}
+          ))
+        ) : (
+          <div>{tContributor('noData')}</div>
+        )}
         {glossary && (
           <GlossaryModal glossary={glossary} label="post-glossary" t={tPost} onClose={() => setGlossary('')}>
             {tPost(`glossaryDescription.${glossary}`)}
