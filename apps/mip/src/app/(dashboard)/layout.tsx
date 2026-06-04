@@ -1,15 +1,14 @@
+import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import Navbar from '@/components/navbar/Navbar'
 import { Box } from '@mui/material'
 import classNames from 'classnames'
-import { UserSession } from 'next-auth'
 import styles from './layout.module.css'
 
 interface Props {
   children: React.ReactNode
-  user: UserSession
 }
 
-const NavLayout = async ({ children, user: account }: Props) => {
+const NavLayout = async ({ children, user: account }: Props & UserSessionProps) => {
   return (
     <Box className={classNames('flex-col h100')}>
       <Box component="main" className={styles.content}>
@@ -20,5 +19,4 @@ const NavLayout = async ({ children, user: account }: Props) => {
   )
 }
 
-export default NavLayout
-// export default withAuth(NavLayout)
+export default withAuth(NavLayout)
