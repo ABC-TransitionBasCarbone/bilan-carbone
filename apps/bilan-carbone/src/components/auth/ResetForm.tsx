@@ -9,7 +9,7 @@ import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import ResetLinkAlreadyUsed from '../pages/ResetLinkAlreadyUsed'
+import ResetLinkAlreadyUsed from '@abc-transitionbascarbone/components/src/pages/ResetLinkAlreadyUsed'
 
 interface Props {
   user?: UserSession
