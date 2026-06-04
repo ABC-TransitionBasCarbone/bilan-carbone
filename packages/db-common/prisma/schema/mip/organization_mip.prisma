@@ -7,6 +7,8 @@ model OrganizationVersionMip {
   organizationId String       @map("organization_id")
   organization   Organization @relation(fields: [organizationId], references: [id])
 
+  userAccountMips AccountMip[]
+
   @@map("organization_versions_mip")
   @@schema("mip")
 }
