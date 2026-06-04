@@ -93,6 +93,8 @@
     }
   },
   "navigation": {
+    "home": "Accueil",
+    "logout": "Se déconnecter",
     "comments": "Commentaires"
   },
   "country": {

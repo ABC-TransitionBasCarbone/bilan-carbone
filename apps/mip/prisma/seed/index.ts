@@ -10,9 +10,13 @@ const adapter = new PrismaPg({
 const prisma = new PrismaClient({ adapter }) as PrismaClient
 
 const main = async () => {
-  const password = await signPassword('password-0')
-  await prisma.accountMip.deleteMany()
+  const accountsMip = await prisma.accountMip.findMany({ select: { userId: true } })
+  const userIds = accountsMip.map((a) => a.userId)
 
+  await prisma.accountMip.deleteMany()
+  await prisma.user.deleteMany({ where: { id: { in: userIds } } })
+
+  const password = await signPassword('password-0')
   const user = await prisma.user.upsert({
     where: { email: 'mip-admin-0@yopmail.com' },
     update: {},
