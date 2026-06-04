@@ -2,9 +2,9 @@
 
 import { getUserWithAccountsAndOrganizationsById } from '@/db/user'
 import { switchEnvironment } from '@/i18n/environment'
-import { accountHandler } from '@/services/auth.utils'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { accountHandler } from '@abc-transitionbascarbone/services/auth/auth.utils'
 import { EnvironmentNames } from '@abc-transitionbascarbone/utils/environments'
 import PermIdentityIcon from '@mui/icons-material/PermIdentity'
 import { Chip, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'

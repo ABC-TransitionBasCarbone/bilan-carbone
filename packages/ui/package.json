@@ -8,6 +8,10 @@
     "react": "*",
     "@mui/material": "*"
   },
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*.tsx"
+  },
   "dependencies": {
     "@abc-transitionbascarbone/utils": "*"
   }
