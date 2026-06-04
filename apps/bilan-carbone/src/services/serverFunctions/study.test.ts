@@ -1,5 +1,5 @@
 import * as studyUtilsModule from '@/utils/study'
-import { Environment, Import, Level, StudyRole, SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { Environment, Import, StudyRole, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { expect } from '@jest/globals'
 import { v4 as uuidv4 } from 'uuid'
 import * as accountModule from '../../db/account'
@@ -13,7 +13,6 @@ import * as userDbModule from '../../db/user'
 import * as authModule from '../../services/auth'
 import * as studyPermissionsModule from '../../services/permissions/study'
 import * as userModule from '../../services/serverFunctions/user'
-import { mockedOrganizationVersion } from '../../tests/utils/models/organization'
 import {
   getMockedDuplicateStudyCommand,
   getMockeFullStudy,
@@ -165,16 +164,7 @@ jest.mock('../../services/serverFunctions/transitionPlan', () => ({
   getLinkedAndExternalStudies: jest.fn(),
 }))
 
-const mockedMonetaryRatio = 40
-const mockedNonSpecificMonetaryRatio = 10
-
-const mockedResults = {
-  monetaryRatio: mockedMonetaryRatio,
-  nonSpecificMonetaryRatio: mockedNonSpecificMonetaryRatio,
-}
-
-const { duplicateStudyCommand, mapStudyForReport, duplicateSiteAndEmissionSources, changeStudyDates } =
-  jest.requireActual('./study')
+const { duplicateStudyCommand, duplicateSiteAndEmissionSources, changeStudyDates } = jest.requireActual('./study')
 
 const mockedSessionValidator = getMockedDbActualizedAuth({}, { email: TEST_EMAILS.validator })
 const mockedSession = getMockedDbActualizedAuth({}, { email: TEST_EMAILS.currentUser })
@@ -209,7 +199,6 @@ const mockIsAdmin = userUtilsModule.isAdmin as unknown as jest.Mock
 const mockCreateTagFamilyAndRelatedTags = emissionSourcesModule.createTagFamilyAndRelatedTags as jest.Mock
 const mockGetFamilyTagsForStudy = emissionSourcesModule.getFamilyTagsForStudy as jest.Mock
 const mockCreateEmissionSourcesWithReturn = emissionSourcesModule.createEmissionSourcesWithReturn as jest.Mock
-const mockIsOrganizationVersionCR = organizationModule.isOrganizationVersionCR as jest.Mock
 const mockCanChangeSites = studyPermissionsModule.canChangeSites as jest.Mock
 const mockCanEditOrganizationVersion = organizationUtilsModule.canEditOrganizationVersion as jest.Mock
 const mockCanChangeDates = studyPermissionsModule.canChangeDates as jest.Mock
@@ -540,264 +529,6 @@ describe('study', () => {
 
         expect(result).toEqual({ success: true, data: { id: TEST_IDS.newStudy } })
         expect(mockCreateUserOnStudy).not.toHaveBeenCalled()
-      })
-    })
-  })
-
-  describe('mapStudyForReport', () => {
-    beforeEach(() => {
-      jest.clearAllMocks()
-    })
-
-    describe('team organization', () => {
-      it('should correctly organize admin, internal team members, and contributors', async () => {
-        mockIsOrganizationVersionCR.mockResolvedValue(false)
-
-        const mockedStudyWithTeam = getMockeFullStudy({
-          organizationVersion: {
-            ...mockedOrganizationVersion,
-            parentId: null, // Not a parent CR
-          },
-          allowedUsers: [
-            {
-              account: {
-                id: 'validator-account-id',
-                user: {
-                  id: 'validator-user-id',
-                  level: Level.Initial,
-                  email: 'validator@email.com',
-                  firstName: 'John',
-                  lastName: 'Validator',
-                },
-                organizationVersionId: TEST_IDS.orgVersion,
-                readerOnly: false,
-              },
-              role: StudyRole.Validator,
-              accountId: 'validator-account-id',
-              createdAt: new Date('2024-01-01'),
-            },
-            {
-              account: {
-                id: 'internal-editor-id',
-                user: {
-                  id: 'internal-editor-user-id',
-                  level: Level.Initial,
-                  email: 'jane@email.com',
-                  firstName: 'Jane',
-                  lastName: 'Editor',
-                },
-                organizationVersionId: TEST_IDS.orgVersion,
-                readerOnly: false,
-              },
-              role: StudyRole.Editor,
-              accountId: 'internal-editor-id',
-              createdAt: new Date('2024-01-02'),
-            },
-          ],
-        })
-
-        const result = await mapStudyForReport(mockedStudyWithTeam, mockedResults)
-
-        expect(result.admin).toEqual({
-          accountId: 'validator-account-id',
-          name: 'John Validator',
-          role: StudyRole.Validator,
-          createdAt: new Date('2024-01-01'),
-          isInternal: true,
-          isExternal: false,
-        })
-
-        expect(result.internalTeam).toHaveLength(1)
-        expect(result.internalTeam).toContainEqual({
-          accountId: 'internal-editor-id',
-          name: 'Jane Editor',
-          role: StudyRole.Editor,
-          createdAt: new Date('2024-01-02'),
-          isInternal: true,
-          isExternal: false,
-        })
-
-        expect(result.externalTeam).toHaveLength(0)
-      })
-
-      it('should handle parent CR organization scenarios', async () => {
-        mockIsOrganizationVersionCR.mockResolvedValue(true)
-
-        const mockedStudyWithParentCR = getMockeFullStudy({
-          organizationVersion: {
-            ...mockedOrganizationVersion,
-            parentId: 'parent-id',
-          },
-          allowedUsers: [
-            {
-              account: {
-                id: 'parent-user-id',
-                user: {
-                  id: 'parent-user-id',
-                  firstName: 'Parent',
-                  lastName: 'User',
-                },
-                organizationVersionId: 'parent-id',
-              },
-              role: StudyRole.Validator,
-              accountId: 'parent-user-id',
-              createdAt: new Date('2024-01-01'),
-            },
-            {
-              account: {
-                id: 'parent-user-id-2',
-                user: {
-                  id: 'parent-user-id-2',
-                  firstName: 'Parent 2',
-                  lastName: 'User',
-                },
-                organizationVersionId: 'parent-id',
-              },
-              role: StudyRole.Validator,
-              accountId: 'parent-user-id-2',
-              createdAt: new Date('2025-01-01'),
-            },
-          ],
-          contributors: [
-            {
-              accountId: 'contributor-account-id',
-              account: {
-                id: 'contributor-account-id',
-                user: {
-                  id: 'contributor-user-id',
-                  firstName: 'Contributor',
-                  lastName: 'Contributor',
-                },
-              },
-            },
-          ],
-        })
-
-        const result = await mapStudyForReport(mockedStudyWithParentCR, mockedResults)
-
-        expect(result.admin).toEqual({
-          accountId: 'parent-user-id',
-          name: 'Parent User',
-          role: StudyRole.Validator,
-          createdAt: new Date('2024-01-01'),
-          isInternal: false,
-          isExternal: true,
-        })
-
-        // Contributors should be internal when there's a parent CR
-        expect(result.internalTeam).toContainEqual({
-          accountId: 'contributor-account-id',
-          name: 'Contributor Contributor',
-          isInternal: true,
-          isExternal: false,
-        })
-
-        // Parent users should be external
-        expect(result.externalTeam).toContainEqual({
-          accountId: 'parent-user-id-2',
-          name: 'Parent 2 User',
-          role: StudyRole.Validator,
-          createdAt: new Date('2025-01-01'),
-          isInternal: false,
-          isExternal: true,
-        })
-      })
-
-      it('should deduplicate contributors in a CR scenario', async () => {
-        mockIsOrganizationVersionCR.mockResolvedValue(true)
-
-        const mockedStudyWithDuplicates = getMockeFullStudy({
-          organizationVersion: {
-            ...mockedOrganizationVersion,
-            parentId: 'parent-id',
-          },
-          contributors: [
-            {
-              accountId: 'duplicate-id',
-              account: {
-                id: 'duplicate-id',
-                user: {
-                  id: 'duplicate-user-id',
-                  firstName: 'Duplicate',
-                  lastName: 'User',
-                },
-                organizationVersionId: TEST_IDS.orgVersion,
-              },
-              subPost: 'Achats',
-            },
-            {
-              accountId: 'duplicate-id',
-              account: {
-                id: 'duplicate-id',
-                user: {
-                  id: 'duplicate-user-id',
-                  level: Level.Initial,
-                  email: 'duplicate@email.com',
-                  firstName: 'Duplicate',
-                  lastName: 'User',
-                },
-                organizationVersionId: TEST_IDS.orgVersion,
-              },
-              subPost: 'Fret',
-            },
-          ],
-        })
-
-        const result = await mapStudyForReport(mockedStudyWithDuplicates, mockedResults)
-
-        const contributorCount =
-          result.internalTeam.filter((member: { accountId: string }) => member.accountId === 'duplicate-id').length +
-          result.externalTeam.filter((member: { accountId: string }) => member.accountId === 'duplicate-id').length
-
-        expect(contributorCount).toBe(1)
-      })
-    })
-
-    describe('monetary ratio calculations', () => {
-      it('should calculate monetary ratios correctly', async () => {
-        const mockedStudyWithResults = getMockeFullStudy()
-
-        const result = await mapStudyForReport(mockedStudyWithResults, mockedResults)
-
-        expect(result.monetaryRatioPercentage).toBe(mockedMonetaryRatio.toFixed(2))
-        expect(result.specificMonetaryRatioPercentage).toBe(
-          (mockedMonetaryRatio - mockedNonSpecificMonetaryRatio).toFixed(2),
-        )
-        expect(result.nonSpecificMonetaryRatioPercentage).toBe(mockedNonSpecificMonetaryRatio.toFixed(2))
-      })
-    })
-
-    describe('other fields', () => {
-      it('should map sites correctly', async () => {
-        const mockedStudyWithSites = getMockeFullStudy({
-          sites: [
-            {
-              id: 'study-site-1',
-              site: { id: 'site-1', name: 'Site One', city: 'Paris', postalCode: '75001' },
-            },
-            {
-              id: 'study-site-2',
-              site: { id: 'site-2', name: 'Site Two', city: 'Lyon', postalCode: '69001' },
-            },
-          ],
-        })
-
-        const result = await mapStudyForReport(mockedStudyWithSites, mockedResults)
-
-        expect(result.sites).toEqual([
-          {
-            id: 'study-site-1',
-            name: 'Site One',
-            city: 'Paris',
-            postalCode: '75001',
-          },
-          {
-            id: 'study-site-2',
-            name: 'Site Two',
-            city: 'Lyon',
-            postalCode: '69001',
-          },
-        ])
       })
     })
   })

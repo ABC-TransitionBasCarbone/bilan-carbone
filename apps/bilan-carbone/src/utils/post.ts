@@ -12,6 +12,9 @@ export const getPost = (subPost?: SubPost) =>
     ? (Object.keys(subPostsByPost).find((post: string) => subPostsByPost[post as Post].includes(subPost)) as Post)
     : undefined
 
+export const getPostsFromSubPosts = (subPosts: SubPost[]): Post[] =>
+  [...new Set(subPosts.map(getPost).filter(Boolean))] as Post[]
+
 export const flattenSubposts = (subPosts: Record<Post, SubPost[]>) =>
   Object.keys(subPosts)
     .map((post) => (subPosts?.[post as Post] || []).flat())

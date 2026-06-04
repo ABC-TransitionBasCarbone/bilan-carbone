@@ -36,9 +36,7 @@ import {
   StudyResultUnit,
   SubPost,
 } from '@abc-transitionbascarbone/db-common/enums'
-import { Button } from '@abc-transitionbascarbone/ui'
 import DownloadIcon from '@mui/icons-material/Download'
-import SummarizeIcon from '@mui/icons-material/Summarize'
 import { FormControl, InputLabel, MenuItem, Select, Tab, Tabs } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -306,7 +304,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   const downloadReport = useCallback(async () => {
     callServerFunction(() => prepareReport(study, { monetaryRatio, nonSpecificMonetaryRatio }), {
       onSuccess: (data) => {
-        download([data], `${study.name}_report.docx`, 'docx')
+        download([data.buffer], `${study.name}_report.docx`, 'docx')
       },
     })
   }, [study, monetaryRatio, nonSpecificMonetaryRatio, callServerFunction])
@@ -381,7 +379,8 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
           <Select
             id="download-results-dropdown"
             labelId="download-results-dropdown"
-            value="download"
+            value=""
+            displayEmpty
             renderValue={() => (
               <div className="align-center">
                 <DownloadIcon className="mr-2" /> {t('download')}
@@ -403,12 +402,20 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
                 {t('downloadResults')}
               </div>
             </MenuItem>
+            {isDownloadReportActive && (
+              <MenuItem>
+                <div
+                  className="grow justify-start"
+                  onClick={(e) => {
+                    preventClose(e)
+                    downloadReport()
+                  }}
+                >
+                  {t('resultsWord')}
+                </div>
+              </MenuItem>
+            )}
           </Select>
-          {isDownloadReportActive && (
-            <Button onClick={downloadReport} title={t('downloadReport')} variant="outlined">
-              <SummarizeIcon className="mr-2" /> {t('resultsWord')}
-            </Button>
-          )}
           <SelectStudySite sites={study.sites} defaultValue={siteId} setSite={setSite} />
         </div>
       }
