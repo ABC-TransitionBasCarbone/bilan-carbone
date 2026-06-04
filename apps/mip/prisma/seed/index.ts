@@ -23,11 +23,8 @@ const main = async () => {
     },
   })
 
-  await prisma.accountMip.upsert({
-    where: { id: 'mip-admin-0-account' },
-    update: {},
-    create: {
-      id: 'mip-admin-0-account',
+  await prisma.accountMip.create({
+    data: {
       userId: user.id,
     },
   })

@@ -15,11 +15,11 @@ export const checkToken = async (token: string) => {
     const user = await getUserByEmailWithSensibleInformations(tokenValues.email)
     return !user?.resetToken
   } catch (error) {
-    // Le token est expiré
+    // The token has expired
     if (error instanceof jwt.TokenExpiredError) {
       return true
     }
-    // Autres erreurs (token invalide, etc.)
+    // Other errors (invalid token, etc.)
     return true
   }
 }
