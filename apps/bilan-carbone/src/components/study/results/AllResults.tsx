@@ -304,7 +304,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   const downloadReport = useCallback(async () => {
     callServerFunction(() => prepareReport(study, { monetaryRatio, nonSpecificMonetaryRatio }), {
       onSuccess: (data) => {
-        download([data.buffer], `${study.name}_report.docx`, 'docx')
+        download([data.buffer as ArrayBuffer], `${study.name}_report.docx`, 'docx')
       },
     })
   }, [study, monetaryRatio, nonSpecificMonetaryRatio, callServerFunction])
