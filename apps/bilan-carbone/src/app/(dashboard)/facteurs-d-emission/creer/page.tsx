@@ -1,10 +1,10 @@
 import withAuth from '@/components/hoc/withAuth'
 import NewEmissionFactorPage from '@/components/pages/NewEmissionFactor'
-import NotFound from '@/components/pages/NotFound'
 import { getOrganizationVersionForRightsCheck } from '@/db/organization'
 import { hasAccessToEmissionFactors } from '@/services/permissions/environmentAdvanced'
 import { getEmissionFactorLocations } from '@/services/serverFunctions/emissionFactor'
 import { hasActiveLicence } from '@/utils/organization'
+import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 import { UserSession } from 'next-auth'
 
 interface Props {

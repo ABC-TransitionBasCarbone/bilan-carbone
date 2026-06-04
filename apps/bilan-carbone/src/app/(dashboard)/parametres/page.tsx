@@ -1,10 +1,10 @@
 'use server'
 
-import Block from '@/components/base/Block'
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
-import NotFound from '@/components/pages/NotFound'
 import SettingsPage from '@/components/pages/Settings'
 import { hasAccessToSettings } from '@/services/permissions/environmentAdvanced'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
+import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 import { useTranslations } from 'next-intl'
 
 const Settings = ({ user }: UserSessionProps) => {

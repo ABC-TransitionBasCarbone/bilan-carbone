@@ -1,7 +1,7 @@
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
-import NotFound from '@/components/pages/NotFound'
 import OrganizationPage from '@/components/pages/Organization'
 import { getAccountOrganizationVersions } from '@/db/account'
+import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 
 const Organisation = async ({ user }: UserSessionProps) => {
   if (!user.organizationVersionId) {

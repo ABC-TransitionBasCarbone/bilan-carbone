@@ -1,9 +1,9 @@
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import withStudy, { StudyProps } from '@/components/hoc/withStudy'
-import NotFound from '@/components/pages/NotFound'
 import StudyContributorPage from '@/components/pages/StudyContributor'
 import { canReadStudy, canReadStudyDetail, filterStudyEmissionSources } from '@/services/permissions/study'
 import { getAccountRoleOnStudy } from '@/utils/study'
+import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 import { redirect } from 'next/navigation'
 
 const StudyView = async ({ user, study }: StudyProps & UserSessionProps) => {

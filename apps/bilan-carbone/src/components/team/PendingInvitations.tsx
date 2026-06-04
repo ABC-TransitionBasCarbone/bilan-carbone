@@ -1,9 +1,9 @@
 import { TeamMember } from '@/db/account'
 import { canEditMemberRole } from '@/utils/user'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { useFormatter, useTranslations } from 'next-intl'
-import Block from '../base/Block'
 import styles from './Invitations.module.css'
 import PendingInvitationsActions from './PendingInvitationsActions'
 
