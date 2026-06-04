@@ -16,6 +16,25 @@ const main = async () => {
   await prisma.accountMip.deleteMany()
   await prisma.user.deleteMany({ where: { id: { in: userIds } } })
 
+  const organizationVersionsMip = await prisma.organizationVersionMip.findMany({ select: { organizationId: true } })
+  const organizationIds = organizationVersionsMip.map((a) => a.organizationId)
+
+  await prisma.organizationVersionMip.deleteMany()
+  await prisma.user.deleteMany({ where: { id: { in: organizationIds } } })
+
+  const organization = await prisma.organization.create({
+    data: {
+      name: 'MIP Organization with mip versions',
+    },
+  })
+
+  const organizationVersionMip = await prisma.organizationVersionMip.create({
+    data: {
+      organizationId: organization.id,
+      name: 'MIP Organization Version',
+    },
+  })
+
   const password = await signPassword('password-0')
   const user = await prisma.user.upsert({
     where: { email: 'mip-admin-0@yopmail.com' },
@@ -33,6 +52,7 @@ const main = async () => {
       userId: user.id,
       status: UserStatus.ACTIVE,
       role: Role.ADMIN,
+      organizationVersionMipId: organizationVersionMip.id,
     },
   })
 }
