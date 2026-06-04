@@ -5,6 +5,7 @@ model AccountMip {
   userId    String   @map("user_id")
   user      User     @relation(fields: [userId], references: [id])
   status    UserStatus
+  role Role
 
   @@map("accounts_mip")
   @@schema("mip")

@@ -1,13 +1,3 @@
-enum Role {
-  ADMIN
-  SUPER_ADMIN
-  GESTIONNAIRE
-  COLLABORATOR
-  DEFAULT
-
-  @@schema("bilan_carbone")
-}
-
 enum UserChecklist {
   CreateAccount
   AddCollaborator
