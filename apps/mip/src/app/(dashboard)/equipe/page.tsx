@@ -1,10 +1,9 @@
-// import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
+import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 // import NotFound from '@/components/pages/NotFound'
 
 export const revalidate = 0
 
-// const Team = async ({ user }: UserSessionProps) => {
-const Team = async () => {
+const Team = async ({ user }: UserSessionProps) => {
   // if (!user.organizationVersionId) {
   //   return <NotFound />
   // }
@@ -17,5 +16,4 @@ const Team = async () => {
   return <p>Team page</p>
 }
 
-export default Team
-// export default withAuth(Team)
+export default withAuth(Team)
