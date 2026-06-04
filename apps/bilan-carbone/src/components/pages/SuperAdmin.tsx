@@ -1,11 +1,11 @@
 'use server'
 
 import { getDeactivableFeaturesRestrictionValues } from '@/services/serverFunctions/deactivableFeatures'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { getTranslations } from 'next-intl/server'
 import DeactivableFeatures from '../admin/DeactivableFeatures'
 import SuperAdminImport from '../admin/SuperAdminImport'
-import Block from '../base/Block'
 
 interface Props {
   environment: Environment

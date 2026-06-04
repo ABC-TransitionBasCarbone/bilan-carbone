@@ -24,6 +24,7 @@ import {
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
 import { formatEmissionFromNumber, hasDeprecationPeriod, hasEditionRights, isCAS } from '@/utils/study'
 import { HelpIcon } from '@abc-transitionbascarbone/components'
+import LinkButton from '@abc-transitionbascarbone/components/src/base/LinkButton'
 import type { StudyTag } from '@abc-transitionbascarbone/db-common'
 import {
   EmissionSourceCaracterisation,
@@ -48,7 +49,6 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import { Path } from 'react-hook-form'
-import LinkButton from '../base/LinkButton'
 import { Select } from '../base/Select'
 import TagChip from '../base/TagChip'
 import BaseChip from '../emissionFactor/BaseChip'

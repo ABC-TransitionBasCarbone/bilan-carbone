@@ -1,7 +1,7 @@
-import Title from '@/components/base/Title'
 import type { FullStudy } from '@/db/study'
 import { getConfidenceInterval } from '@/services/uncertainty'
 import { ResultsByPost } from '@/types/study.types'
+import Title from '@abc-transitionbascarbone/components/src/base/Title'
 import { Environment, StudyResultUnit, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

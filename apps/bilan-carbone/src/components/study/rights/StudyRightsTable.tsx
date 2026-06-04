@@ -1,11 +1,11 @@
 'use client'
 
-import Block from '@/components/base/Block'
 import { TableActionButton } from '@/components/base/TableActionButton'
 import Modal from '@/components/modals/Modal'
 import type { FullStudy } from '@/db/study'
 import { deleteStudyMember } from '@/services/serverFunctions/study'
 import { Table as BaseTable, HelpIcon } from '@abc-transitionbascarbone/components'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { StudyRole } from '@abc-transitionbascarbone/db-common/enums'
 import { Toast, ToastColors } from '@abc-transitionbascarbone/ui'

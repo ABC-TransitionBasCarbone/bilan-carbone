@@ -1,10 +1,10 @@
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { getUserApplicationSettings } from '@/db/user'
 import { defaultCAUnit } from '@/utils/number'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
-import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import EditOrganizationForm from '../organization/edit/EditOrganizationForm'
 

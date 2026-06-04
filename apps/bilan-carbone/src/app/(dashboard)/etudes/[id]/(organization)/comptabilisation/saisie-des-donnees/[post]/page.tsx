@@ -1,10 +1,10 @@
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import withStudy, { StudyProps } from '@/components/hoc/withStudy'
-import NotFound from '@/components/pages/NotFound'
 import StudyPostsPageContainer from '@/components/pages/StudyPostsContainer'
 import { canReadStudyDetail } from '@/services/permissions/study'
 import { Post } from '@/services/posts'
 import { getAccountRoleOnStudy } from '@/utils/study'
+import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
 
 interface Props {

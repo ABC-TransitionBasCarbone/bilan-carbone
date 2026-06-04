@@ -1,6 +1,6 @@
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { getTranslations } from 'next-intl/server'
 import ActualitiesList from '../actuality/ActualitiesList'
-import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 
 const ActualitiesPage = async () => {

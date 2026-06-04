@@ -1,9 +1,9 @@
 'use server'
 
 import withAuth from '@/components/hoc/withAuth'
-import NotFound from '@/components/pages/NotFound'
 import SuperAdminPage from '@/components/pages/SuperAdmin'
 import { auth } from '@/services/auth'
+import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 import { Role } from '@abc-transitionbascarbone/db-common/enums'
 
 const SuperAdmin = async () => {

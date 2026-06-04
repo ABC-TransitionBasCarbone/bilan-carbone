@@ -1,7 +1,5 @@
 'use client'
 
-import Block from '@/components/base/Block'
-import LinkButton from '@/components/base/LinkButton'
 import { FormAutocomplete } from '@/components/form/Autocomplete'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import Modal from '@/components/modals/Modal'
@@ -25,6 +23,8 @@ import {
   ChangeStudyNameCommand,
   ChangeStudyNameValidation,
 } from '@/services/serverFunctions/study.command'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
+import LinkButton from '@abc-transitionbascarbone/components/src/base/LinkButton'
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import type { EmissionFactorImportVersion } from '@abc-transitionbascarbone/db-common'

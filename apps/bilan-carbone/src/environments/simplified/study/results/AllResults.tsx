@@ -1,8 +1,8 @@
 'use client'
 
-import Block from '@/components/base/Block'
 import BarChart from '@/components/study/charts/BarChart'
 import PieChart from '@/components/study/charts/PieChart'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
 
 import CarbonIntensities from '@/components/study/results/consolidated/CarbonIntensities'
