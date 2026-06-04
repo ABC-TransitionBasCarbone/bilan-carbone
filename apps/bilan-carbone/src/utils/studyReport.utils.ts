@@ -115,6 +115,7 @@ export const mapStudyForReport = async (
 
   return {
     ...study,
+    siret: study.organizationVersion.organization.wordpressId,
     level: tLevel(study.level),
     isInitialOrStandard: study.level === Level.Initial || study.level === Level.Standard,
     isStandardOrAdvanced: study.level === Level.Standard || study.level === Level.Advanced,

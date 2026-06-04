@@ -305,6 +305,7 @@ const fullStudyInclude = {
         select: {
           id: true,
           name: true,
+          wordpressId: true,
         },
       },
     },
