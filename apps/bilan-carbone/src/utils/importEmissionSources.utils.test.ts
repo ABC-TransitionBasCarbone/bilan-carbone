@@ -1,5 +1,4 @@
 import { findEmissionFactorByIdForMatch } from '@/db/emissionFactors'
-import { Locale } from '@/i18n/config'
 import { SOURCE_IMPORT_COLUMNS } from '@/types/importEmissionSources.types'
 import {
   EmissionSourceCaracterisation,
@@ -7,6 +6,7 @@ import {
   SubPost,
   Unit,
 } from '@abc-transitionbascarbone/db-common/enums'
+import { Locale } from '@abc-transitionbascarbone/i18n/config'
 import xlsx from 'node-xlsx'
 import { EmissionFactorMatchType, findEmissionFactorMatch } from './findEmissionFactor.utils'
 import {
