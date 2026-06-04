@@ -863,11 +863,11 @@ export const downloadStudyResults = async (
         `${tExport(Export.GHGP)} - ${tBase(EmissionFactorBase.LocationBased)}`,
         (siteId: string) =>
           computeGHGPResult(
-            study,
+            study.emissionSources,
+            study.startDate,
             ghgpRules,
             emissionFactorsWithParts,
             siteId,
-            true,
             validatedEmissionSourcesOnly,
             EmissionFactorBase.LocationBased,
             environment,
@@ -886,11 +886,11 @@ export const downloadStudyResults = async (
         `${tExport(Export.GHGP)} - ${tBase(EmissionFactorBase.MarketBased)}`,
         (siteId: string) =>
           computeGHGPResult(
-            study,
+            study.emissionSources,
+            study.startDate,
             ghgpRules,
             emissionFactorsWithParts,
             siteId,
-            true,
             validatedEmissionSourcesOnly,
             EmissionFactorBase.MarketBased,
             environment,

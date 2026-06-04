@@ -291,11 +291,11 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   const computedGHGPData = useMemo(
     () =>
       computeGHGPResult(
-        study,
+        study.emissionSources,
+        study.startDate,
         ghgpRules,
         emissionFactorsWithParts,
         siteId,
-        false,
         validatedOnly,
         selectedGHGPTable,
         environment,

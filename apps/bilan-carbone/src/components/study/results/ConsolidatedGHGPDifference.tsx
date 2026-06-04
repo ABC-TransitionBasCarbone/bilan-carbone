@@ -8,7 +8,6 @@ import { getAllSiteEmissionSources } from '@/services/results/utils'
 import { ResultsByPost } from '@/types/study.types'
 import { getEmissionFactor } from '@/utils/emissionSources'
 import { computeDifferenceForTableEmissions, formatDifferenceTableEmissions } from '@/utils/exports'
-import { formatNumber } from '@/utils/number'
 import { hasDeprecationPeriod, hasFabricationPart, STUDY_UNIT_VALUES } from '@/utils/study'
 import { ExportRule } from '@abc-transitionbascarbone/db-common'
 import {
@@ -21,6 +20,7 @@ import {
 import WarningAmberIcon from '@mui/icons-material/WarningAmberOutlined'
 import { useTranslations } from 'next-intl'
 import { useCallback, useMemo } from 'react'
+import { computeGHGPResult } from '../../../services/results/ghgp'
 import { EnergiesIcon } from '../infography/icons/energies'
 import ConsolidatedExportDifference, { calculateEmissionSourcesDifference } from './ConsolidatedExportDifference'
 import ExportDifferenceItems from './ExportDifferenceItems'
@@ -66,7 +66,6 @@ const ConsolatedGHGPDifference = ({
   const utilisationEnDependanceValue = utilisationEnDependanceInfos
     ? -utilisationEnDependanceInfos.value / unitValue
     : 0
-  const utilisationEnDependanceValueToDisplay = formatNumber(Math.round(utilisationEnDependanceValue), 0)
 
   // Find an emission source for the "en dépendance" sub-post to use in navigation
   const utilisationEnDependanceEmissionSources = useMemo(
@@ -240,20 +239,31 @@ const ConsolatedGHGPDifference = ({
       0,
     )
 
-    const marketBasedValue = marketBased.reduce(
-      (total, emissionSource) => total + getEmissionResults(emissionSource, environment).emissionValue,
-      0,
-    )
+    const marketBasedValue =
+      computeGHGPResult(
+        [...marketBased, ...locationBased],
+        study.startDate,
+        ghgpRules,
+        emissionFactorsWithParts,
+        studySite,
+        validatedOnly,
+        EmissionFactorBase.MarketBased,
+        environment,
+      ).find((result) => result.rule === 'total')?.total ?? 0
 
     return (marketBasedValue - locationBasedValue) / unitValue
   }, [
     base,
     emissionSourcesForSelectedSite,
     marketBased,
+    study.startDate,
+    ghgpRules,
+    emissionFactorsWithParts,
+    studySite,
+    validatedOnly,
+    environment,
     unitValue,
     isEmissionSourceFiltered,
-    emissionFactorsWithParts,
-    environment,
   ])
 
   const fabricationEmissionSources = useMemo(
@@ -268,7 +278,7 @@ const ConsolatedGHGPDifference = ({
           emissionSource.caracterisation === EmissionSourceCaracterisation.Operated
         )
       }),
-    [emissionSourcesForSelectedSite, isEmissionSourceFiltered, study.startDate],
+    [emissionSourcesForSelectedSite, isEmissionSourceFiltered],
   )
 
   const fabricationEmissionSourcesDifference = useMemo(() => {
@@ -288,7 +298,7 @@ const ConsolatedGHGPDifference = ({
       const parts = emissionFactor.emissionFactorParts.filter((p) => p.type === EmissionFactorPartType.Fabrication)
       parts.forEach((part) => {
         const emissionTotal = getGHGPEmissionValue(study.startDate)(emissionSource)
-        value = value - getLine(emissionTotal, part).total / unitValue
+        value = value - getLine(emissionTotal, { ...part, importedFrom: emissionFactor.importedFrom }).total / unitValue
       })
     })
     return value
@@ -318,7 +328,7 @@ const ConsolatedGHGPDifference = ({
           emissionSources={utilisationEnDependanceEmissionSources}
           exportType={Export.GHGP}
           studySite={studySite}
-          value={utilisationEnDependanceValueToDisplay}
+          value={utilisationEnDependanceValue}
           resultsUnit={study.resultsUnit}
           navigateToEmissionSource={navigateToEmissionSource}
         />
@@ -330,7 +340,7 @@ const ConsolatedGHGPDifference = ({
           emissionSources={missingCaract}
           exportType={Export.GHGP}
           studySite={studySite}
-          value={formatNumber(missingCaractDifference, 0)}
+          value={missingCaractDifference}
           resultsUnit={study.resultsUnit}
           navigateToEmissionSource={navigateToEmissionSource}
           Icon={WarningAmberIcon}
@@ -355,7 +365,7 @@ const ConsolatedGHGPDifference = ({
           emissionSources={otherEmissionsAval}
           exportType={Export.GHGP}
           studySite={studySite}
-          value={formatNumber(otherEmissionsAvalDifference, 0)}
+          value={otherEmissionsAvalDifference}
           resultsUnit={study.resultsUnit}
           navigateToEmissionSource={navigateToEmissionSource}
         />
@@ -367,7 +377,7 @@ const ConsolatedGHGPDifference = ({
           emissionSources={otherEmissionsAmont}
           exportType={Export.GHGP}
           studySite={studySite}
-          value={formatNumber(otherEmissionsAmontDifference, 0)}
+          value={otherEmissionsAmontDifference}
           resultsUnit={study.resultsUnit}
           navigateToEmissionSource={navigateToEmissionSource}
         />
@@ -379,19 +389,19 @@ const ConsolatedGHGPDifference = ({
           emissionSources={otherGas}
           exportType={Export.GHGP}
           studySite={studySite}
-          value={formatNumber(otherGasDifference, 0)}
+          value={otherGasDifference}
           resultsUnit={study.resultsUnit}
           navigateToEmissionSource={navigateToEmissionSource}
         />
       )}
-      {marketBasedDifference > 0 && (
+      {Math.abs(marketBasedDifference) > 0 && (
         <ExportDifferenceItems
           title="marketBasedTitle"
           descriptions={['marketBased']}
           emissionSources={marketBased}
           exportType={Export.GHGP}
           studySite={studySite}
-          value={formatNumber(marketBasedDifference, 0)}
+          value={marketBasedDifference}
           resultsUnit={study.resultsUnit}
           navigateToEmissionSource={navigateToEmissionSource}
           Icon={EnergiesIcon}
@@ -404,7 +414,7 @@ const ConsolatedGHGPDifference = ({
           emissionSources={fabricationEmissionSources}
           exportType={Export.GHGP}
           studySite={studySite}
-          value={formatNumber(fabricationEmissionSourcesDifference, 0)}
+          value={fabricationEmissionSourcesDifference}
           resultsUnit={study.resultsUnit}
           navigateToEmissionSource={navigateToEmissionSource}
         />

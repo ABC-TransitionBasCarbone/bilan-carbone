@@ -40,6 +40,16 @@ export const rulesSpans: Record<string, number> = {
   total: 1,
 }
 
+const getLineAndPostForExport = (
+  value: number,
+  EFOrEFPart: ExportEmissionFactor,
+  post: string,
+): { line: Omit<PostInfos, 'rule' | 'squaredStandardDeviation'>; post: string | null | undefined } => {
+  const line = getLine(value, EFOrEFPart)
+
+  return { line, post }
+}
+
 const getLine = (
   value: number,
   EFOrEFPart: ExportEmissionFactor,
@@ -87,7 +97,7 @@ export const computeBegesResult = (
   environment: Environment = Environment.BC,
 ): PostInfos[] =>
   computeResult(
-    study,
+    study.emissionSources,
     rules,
     emissionFactorsWithParts,
     siteId,
@@ -95,7 +105,7 @@ export const computeBegesResult = (
     validatedOnly,
     allRules,
     getBegesEmissionValue,
-    getLine,
+    getLineAndPostForExport,
     undefined,
     undefined,
     environment,

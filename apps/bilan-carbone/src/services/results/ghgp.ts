@@ -86,6 +86,39 @@ export const getLine = (
   }
 }
 
+export const getGHGPLineAndPost = (
+  value: number,
+  emissionFactor: ExportEmissionFactor & { base: EmissionFactorBase | null },
+  post: string,
+  EfHasParts: boolean,
+  base: EmissionFactorBase = EmissionFactorBase.LocationBased,
+) => {
+  const line = getLine(value, emissionFactor)
+
+  if (base === EmissionFactorBase.LocationBased || !emissionFactor.base) {
+    return { line, post }
+  }
+
+  // There is only two bases, so we are now in market based
+  if (emissionFactor.base === EmissionFactorBase.LocationBased) {
+    if (post.startsWith('1.') || post.startsWith('3.')) {
+      return { line, post }
+    }
+    return { line: null, post: null }
+  }
+
+  // same, we are now in market based with ef in market based
+  if (!post.startsWith('2.')) {
+    return { line: null, post: null }
+  }
+
+  if (emissionFactor.importedFrom === Import.Manual && EfHasParts) {
+    return { line, post: '3.3' }
+  }
+
+  return { line, post }
+}
+
 export const getGHGPEmissionValue = (studyDate: Date) => (emissionSource: EmissionSource) => {
   if (!emissionSource.value) {
     return 0
@@ -109,25 +142,25 @@ export const getGHGPEmissionTotal = (
 ) => getEmissionTotal(emissionSource, emissionFactor, getGHGPEmissionValue(studyStartDate), getLine)
 
 export const computeGHGPResult = (
-  study: FullStudy,
+  emissionSources: FullStudy['emissionSources'],
+  startDate: Date,
   rules: ExportRule[],
   emissionFactorsWithParts: EmissionFactorWithParts[],
   siteId: string,
-  withDependencies: boolean,
   validatedOnly: boolean = true,
   base?: EmissionFactorBase,
   environment: Environment = Environment.BC,
 ): PostInfos[] =>
   computeResult(
-    study,
+    emissionSources,
     rules,
     emissionFactorsWithParts,
     siteId,
-    withDependencies,
+    false,
     validatedOnly,
     allRules,
-    getGHGPEmissionValue(study.startDate),
-    getLine,
+    getGHGPEmissionValue(startDate),
+    getGHGPLineAndPost,
     base,
     true,
     environment,

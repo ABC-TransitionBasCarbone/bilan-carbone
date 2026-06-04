@@ -262,13 +262,20 @@ export const formatConfidenceInterval = (confidenceInterval: number[], resultsUn
 export const getBaseFilteredEmissionSources = <T extends Pick<FullStudy['emissionSources'][number], 'emissionFactor'>>(
   emissionSources: T[],
   base: EmissionFactorBase = EmissionFactorBase.LocationBased,
-) =>
-  emissionSources.filter(
-    (emissionSource) =>
-      !emissionSource.emissionFactor ||
-      !emissionSource.emissionFactor.base ||
-      emissionSource.emissionFactor.base === base,
-  )
+) => {
+  return emissionSources.filter((emissionSource) => {
+    if (!emissionSource.emissionFactor || !emissionSource.emissionFactor.base) {
+      return true
+    }
+
+    const isMarketBased = base === EmissionFactorBase.MarketBased
+    if (!isMarketBased) {
+      return emissionSource.emissionFactor.base === base
+    }
+
+    return true
+  })
+}
 
 /**
  * Computes emissions after applying filters coming from DB scope or UI selectors.
