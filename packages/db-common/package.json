@@ -21,6 +21,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./enums": "./src/enums.ts",
-    "./types": "./src/types.ts"
+    "./types": "./src/types.ts",
+    "./db": "./src/db/index.ts"
   }
 }

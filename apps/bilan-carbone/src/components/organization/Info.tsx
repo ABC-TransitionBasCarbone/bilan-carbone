@@ -1,9 +1,9 @@
 'use client'
 
 import { OrganizationWithSites } from '@/db/account'
-import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteOrganizationCommand } from '@/services/serverFunctions/organization'
 import { DeleteCommand, DeleteCommandValidation } from '@/services/serverFunctions/study.command'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'

@@ -92,7 +92,7 @@ import { mapCncToStudySite } from '@/utils/cnc'
 import { calculateDistanceFromParis } from '@/utils/distance'
 import { CA_UNIT_VALUES, defaultCAUnit, formatNumber } from '@/utils/number'
 import { canEditOrganizationVersion } from '@/utils/organization'
-import { IsSuccess, withServerResponse } from '@/utils/serverResponse'
+import { withServerResponse } from '@/utils/serverResponse'
 import {
   getAccountRoleOnStudy,
   getAllowedRolesFromDefaultRole,
@@ -105,6 +105,7 @@ import { isAdmin } from '@/utils/user'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import { LocaleType } from '@abc-transitionbascarbone/i18n/config'
 import { formatDateFr } from '@abc-transitionbascarbone/utils'
+import type { IsSuccess } from '@abc-transitionbascarbone/utils/serverResponse'
 
 import { hasSufficientLevel } from '@/utils/study'
 import type {

@@ -1,8 +1,9 @@
 import { Locale } from '@abc-transitionbascarbone/i18n/config'
 import { getRequestConfig } from 'next-intl/server'
+import { getLocale } from './locale'
 
 export default getRequestConfig(async () => {
-  const locale = Locale.FR
+  const locale = await getLocale()
 
   const commonMessages = await import(`../../../../packages/i18n/translations/${locale}/common.json`)
     .then((m) => m.default)

@@ -5,7 +5,6 @@ import { OrganizationWithSites } from '@/db/account'
 import type { FullStudy } from '@/db/study'
 import Sites from '@/environments/base/organization/Sites'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import { useServerFunction } from '@/hooks/useServerFunction'
 import {
   getUpdateOrganizationVersionPermission,
   updateOrganizationSitesCommand,
@@ -19,6 +18,7 @@ import {
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
 import { canEditOrganizationVersion, isInOrgaOrParent } from '@/utils/organization'
 import { hasEditionRights } from '@/utils/study'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { Environment, SiteCAUnit, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
 import { Button } from '@abc-transitionbascarbone/ui'
 import { zodResolver } from '@hookform/resolvers/zod'

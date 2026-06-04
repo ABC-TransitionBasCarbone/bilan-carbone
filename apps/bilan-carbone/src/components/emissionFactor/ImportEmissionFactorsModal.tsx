@@ -1,13 +1,13 @@
 'use client'
 
 import ImportFileModal from '@/components/base/ImportFileModal/ImportFileModal'
-import { useServerFunction } from '@/hooks/useServerFunction'
 import { download } from '@/services/file'
 import {
   getImportEmissionFactorsTemplate,
   importEmissionFactorsFromFile,
   previewEmissionFactorsFromFile,
 } from '@/services/serverFunctions/importEmissionFactors'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import styles from './ImportEmissionFactorsModal.module.css'

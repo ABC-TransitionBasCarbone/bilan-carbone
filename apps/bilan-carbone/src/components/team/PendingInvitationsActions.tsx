@@ -1,13 +1,13 @@
 'use client'
 
 import { TeamMember } from '@/db/account'
-import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteMember, resendInvitation } from '@/services/serverFunctions/user'
+import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import LoadingButton from '../base/LoadingButton'
 import styles from './InvitationsActions.module.css'
 
 interface Props {

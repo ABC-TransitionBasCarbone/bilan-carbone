@@ -1,6 +1,6 @@
+import IconLabel from '@abc-transitionbascarbone/components/src/base/IconLabel'
 import classNames from 'classnames'
 import { ReactNode } from 'react'
-import IconLabel from './IconLabel'
 import styles from './Title.module.css'
 
 export interface Props {

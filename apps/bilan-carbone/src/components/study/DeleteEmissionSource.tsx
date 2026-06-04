@@ -1,9 +1,9 @@
 'use client'
 
 import type { FullStudy } from '@/db/study'
-import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteEmissionSource } from '@/services/serverFunctions/emissionSource'
 import { handleWarningText } from '@/utils/components'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { Button } from '@abc-transitionbascarbone/ui'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { useTranslations } from 'next-intl'

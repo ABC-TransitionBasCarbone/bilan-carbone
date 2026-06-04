@@ -1,0 +1,60 @@
+.gapped {
+  gap: 0.25em;
+}
+
+.icon {
+  height: 1.25rem;
+  svg {
+    height: 1.25rem;
+    width: auto;
+  }
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 8px;
+}
+
+.day {
+  min-width: 100px;
+  font-weight: bold;
+}
+
+.select {
+  min-width: 100px;
+}
+
+.separator {
+  font-weight: bold;
+}
+
+.checkLabel {
+  font-size: 0.75rem;
+}
+
+.helper {
+  height: 1.25rem;
+  margin-top: 0 !important;
+}
+
+.textFieldInput {
+  color: black;
+}
+
+.textFieldInput fieldset {
+  border-color: var(--grayscale-300);
+}
+
+.datePickerInput {
+  background-color: white;
+}
+
+.datePickerInput fieldset {
+  border-color: var(--grayscale-300);
+}
+
+.multilineResizable :global(.MuiInputBase-input) {
+  resize: vertical;
+}

@@ -1,10 +1,10 @@
 'use client'
 
 import type { FullStudy } from '@/db/study'
-import { useServerFunction } from '@/hooks/useServerFunction'
 import { getStudy } from '@/services/serverFunctions/study'
 import { CreateStudyCommand, SitesCommand } from '@/services/serverFunctions/study.command'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { SiteCAUnit } from '@abc-transitionbascarbone/db-common/enums'
 import dayjs from 'dayjs'
 import { UserSession } from 'next-auth'

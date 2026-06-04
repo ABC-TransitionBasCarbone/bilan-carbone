@@ -1,6 +1,6 @@
-import { FormTextField } from '@/components/form/TextField'
 import { SECTEN_SECTORS } from '@/constants/trajectory.constants'
 import { TrajectoryFormData } from '@/services/serverFunctions/trajectory.command'
+import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { Typography } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

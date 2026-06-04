@@ -1,3 +1,4 @@
+import IconLabel from '@abc-transitionbascarbone/components/src/base/IconLabel'
 import ClearIcon from '@mui/icons-material/Clear'
 import {
   Autocomplete,
@@ -9,7 +10,6 @@ import {
   TextField,
 } from '@mui/material'
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form'
-import IconLabel from '../base/IconLabel'
 import styles from './Form.module.css'
 
 type Option = { label: string; value: string }

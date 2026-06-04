@@ -1,7 +1,7 @@
 'use client'
 
-import Form from '@/components/base/Form'
 import { StudyTagFamilyWithTags } from '@/db/study'
+import Form from '@abc-transitionbascarbone/components/src/base/Form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl } from '@mui/material'
 import { useTranslations } from 'next-intl'

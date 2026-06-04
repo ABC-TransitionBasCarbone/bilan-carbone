@@ -1,8 +1,8 @@
 'use client'
 
-import { useServerFunction } from '@/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
 import { getFormationFormStart, startFormationForm } from '@/services/serverFunctions/user'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { Formation } from '@abc-transitionbascarbone/db-common'
 import { Button } from '@abc-transitionbascarbone/ui'
 import { MIN, TIME_IN_MS } from '@abc-transitionbascarbone/utils'

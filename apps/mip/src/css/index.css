@@ -1,4 +1,7 @@
-:root {
-  --error: #d32f2f;
-  --success: #2e7d32;
-}
+@import '../../../../packages/css/style/reset.css';
+@import '../../../../packages/css/style/colors.css';
+@import '../../../../packages/css/style/variables.css';
+@import '../../../../packages/css/style/globals.css';
+@import '../../../../packages/css/style/flex.css';
+@import '../../../../packages/css/style/var.css';
+@import '../../../../packages/css/style/inputUnit.css';

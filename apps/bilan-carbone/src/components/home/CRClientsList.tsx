@@ -1,12 +1,12 @@
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { canCreateOrganization } from '@/services/permissions/organization'
+import Image from '@abc-transitionbascarbone/components/src/document/Image'
 import AddIcon from '@mui/icons-material/Add'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Box from '../base/Box'
 import LinkButton from '../base/LinkButton'
-import Image from '../document/Image'
 import CRClients from '../organization/CRClients'
 import styles from './CRClientsList.module.css'
 

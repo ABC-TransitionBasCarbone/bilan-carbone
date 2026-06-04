@@ -1,10 +1,10 @@
 'use client'
 
 import ColorPicker from '@/components/base/ColorPicker'
-import { CustomFormLabel } from '@/components/form/CustomFormLabel'
 import { FormSelect } from '@/components/form/Select'
-import { FormTextField } from '@/components/form/TextField'
 import { StudyTagFamilyWithTags } from '@/db/study'
+import { CustomFormLabel } from '@abc-transitionbascarbone/components/src/form/CustomFormLabel'
+import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { Translations } from '@abc-transitionbascarbone/lib'
 import { MenuItem } from '@mui/material'
 import { useTranslations } from 'next-intl'

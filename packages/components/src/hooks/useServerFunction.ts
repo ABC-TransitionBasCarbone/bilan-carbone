@@ -1,6 +1,6 @@
 'use client'
 
-import { ApiResponse } from '@/utils/serverResponse'
+import type { ApiResponse } from '@abc-transitionbascarbone/utils/serverResponse'
 import { useToast } from '@abc-transitionbascarbone/ui'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect } from 'react'
