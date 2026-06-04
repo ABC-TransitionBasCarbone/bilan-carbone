@@ -1,3 +1,11 @@
+enum RoleMip {
+  ADMIN
+  SUPER_ADMIN
+  COLLABORATOR
+
+  @@schema("mip")
+}
+
 model AccountMip {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now()) @map("created_at")
@@ -5,6 +13,7 @@ model AccountMip {
   userId    String   @map("user_id")
   user      User     @relation(fields: [userId], references: [id])
   status    UserStatus
+  role RoleMip
 
   @@map("accounts_mip")
   @@schema("mip")
