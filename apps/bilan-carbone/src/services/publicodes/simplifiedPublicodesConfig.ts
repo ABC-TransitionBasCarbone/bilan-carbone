@@ -1,4 +1,3 @@
-import { FormLayout } from '@/components/publicodes-form/layouts/formLayout'
 import { PUBLICODES_CLICKSON_VERSION, PUBLICODES_COUNT_VERSION, PUBLICODES_TILT_VERSION } from '@/constants/versions'
 import { getClicksonEngine } from '@/environments/clickson/publicodes/clickson-engine'
 import {
@@ -20,6 +19,7 @@ import {
 } from '@/environments/tilt/publicodes/subPostMapping'
 import { getTiltEngine } from '@/environments/tilt/publicodes/tilt-engine'
 import { Environment, SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { FormLayout } from '@abc-transitionbascarbone/publicodes/form/layouts'
 import Engine from 'publicodes'
 import { getSubPostByPostTiltSimplified, SimplifiedPost, subPostsByPostClickson, subPostsByPostCUT } from '../posts'
 import { ClicksonPost, CutPost } from '../posts.enums'

@@ -1,7 +1,7 @@
 'use server'
 
+import { defaultLocale, LocaleType } from '@abc-transitionbascarbone/i18n/config'
 import { cookies as getCookies } from 'next/headers'
-import { defaultLocale, LocaleType } from './config'
 
 const COOKIE_NAME = 'NEXT_LOCALE'
 

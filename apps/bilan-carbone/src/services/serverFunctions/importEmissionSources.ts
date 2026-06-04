@@ -4,7 +4,6 @@ import { KG_CO2E_PREFIX_REGEX } from '@/constants/import'
 import { EmissionFactorList } from '@/db/emissionFactors'
 import { createEmissionSourcesOnStudy } from '@/db/emissionSource'
 import { FullStudy, getStudyById } from '@/db/study'
-import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
 import { Post, subPostsByPost } from '@/services/posts'
 import { AccountWithUser } from '@/types/account.types'
@@ -30,6 +29,7 @@ import {
   SubPost,
   Unit,
 } from '@abc-transitionbascarbone/db-common/enums'
+import { LocaleType } from '@abc-transitionbascarbone/i18n/config'
 import { yearToDate } from '@abc-transitionbascarbone/utils'
 import xlsx from 'node-xlsx'
 import { canBeValidated, getCaracterisationsBySubPost, getEmissionSourceEmission } from '../emissionSource'

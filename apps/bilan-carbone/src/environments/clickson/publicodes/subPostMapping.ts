@@ -1,6 +1,6 @@
-import { FormLayout, inputLayout, listLayout, tableLayout } from '@/components/publicodes-form/layouts/formLayout'
 import { ClicksonPost } from '@/services/posts.enums'
 import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { FormLayout, inputLayout, listLayout, tableLayout } from '@abc-transitionbascarbone/publicodes/form/layouts'
 import { ClicksonRuleName } from './types'
 
 export const getPostRuleNameClickson = (post: ClicksonPost): ClicksonRuleName => {

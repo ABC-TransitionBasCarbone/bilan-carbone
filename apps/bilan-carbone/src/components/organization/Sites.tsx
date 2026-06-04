@@ -1,12 +1,12 @@
 'use client'
 
-import BaseTable from '@/components/base/Table'
 import {
   hasAccessToStudySiteAddAndSelection,
   hasCustomGlossaryTextForEstablishment,
 } from '@/services/permissions/environment'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
 import { defaultCAUnit } from '@/utils/number'
+import { Table as BaseTable, HelpIcon as Help } from '@abc-transitionbascarbone/components'
 import { Environment, SiteCAUnit } from '@abc-transitionbascarbone/db-common/enums'
 import { Button } from '@abc-transitionbascarbone/ui'
 import { Checkbox, FormControlLabel } from '@mui/material'
@@ -15,7 +15,6 @@ import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import { UseFormReturn, UseFormSetValue } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
-import Help from '../base/HelpIcon'
 import GlossaryModal from '../modals/GlossaryModal'
 
 type TypeDef = SitesCommand['sites'][number]

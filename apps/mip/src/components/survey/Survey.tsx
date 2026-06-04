@@ -1,107 +1,142 @@
 'use client'
-
-import { SurveyEngine } from '@/engine'
-import { surveyStorage } from '@/storage'
-import { QuestionRenderer } from '@abc-transitionbascarbone/components'
-import { SurveyResponse, Survey as SurveyType } from '@abc-transitionbascarbone/typeguards'
+import { useMipPublicodes } from '@/publicodes/MipPublicodesProvider'
+import {
+  buildPageBuilder,
+  getMosaicParent,
+  getQuestionType,
+  InputQuestion,
+  MipQuestionType,
+  MosaicQuestion,
+  patchFormElement,
+} from '@abc-transitionbascarbone/publicodes/form'
 import { ArrowBack, ArrowForward, Check } from '@mui/icons-material'
-import { Alert, Button, Card, CardContent, Container, LinearProgress, Typography } from '@mui/material'
+import { Button, Card, CardContent, Container, LinearProgress, Typography } from '@mui/material'
+import { EvaluatedFormElement, FormBuilder, FormPageElementProp, FormState } from '@publicodes/forms'
 import { useTranslations } from 'next-intl'
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { v4 as uuidv4 } from 'uuid'
+import { useEffect, useState } from 'react'
+import Category from './Category/Category'
 import styles from './Survey.module.css'
 
-interface SurveyProps {
-  survey: SurveyType
-  surveyId: string
+function getStorageKey(surveyId: string) {
+  return `mip-publicodes-state-${surveyId}`
 }
 
-function initResponse(survey: SurveyType): SurveyResponse {
-  const now = new Date()
-  return {
-    surveyId: survey.id,
-    responseId: uuidv4(),
-    answers: {},
-    currentQuestionIndex: 0,
-    completed: false,
-    startedAt: now,
-    updatedAt: now,
+function saveState(surveyId: string, state: FormState<string>) {
+  localStorage.setItem(getStorageKey(surveyId), JSON.stringify(state))
+}
+
+function loadState(surveyId: string): FormState<string> | null {
+  try {
+    const raw = localStorage.getItem(getStorageKey(surveyId))
+    return raw ? JSON.parse(raw) : null
+  } catch {
+    return null
   }
 }
 
-export function Survey({ survey, surveyId }: SurveyProps) {
+interface MipSurveyProps {
+  surveyId: string
+  rootRule?: string
+}
+
+type GroupedElement =
+  | { type: 'single'; el: EvaluatedFormElement<string> & FormPageElementProp; questionType: MipQuestionType }
+  | { type: 'mosaic'; parent: string; elements: Array<EvaluatedFormElement<string> & FormPageElementProp> }
+
+export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps) {
   const t = useTranslations('survey')
   const tCommon = useTranslations('common')
-  const [response, setResponse] = useState<SurveyResponse>(() => initResponse(survey))
-  const [error, setError] = useState<string | null>(null)
+  const { engine } = useMipPublicodes()
+
+  const formBuilder = new FormBuilder({
+    engine,
+    pageBuilder: buildPageBuilder(engine),
+  })
+
+  function initState() {
+    let s = FormBuilder.newState()
+    s = formBuilder.start(s, rootRule)
+    return s
+  }
+
   const [isResumed, setIsResumed] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [state, setState] = useState<FormState<string>>(initState)
+  const updateState = (newState: FormState<string>) => setState(newState)
 
   useEffect(() => {
-    if (surveyId) {
-      const existing = surveyStorage.loadResponse(surveyId)
-      if (existing && existing.surveyId === survey.id) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setResponse(existing)
-        setIsResumed(true)
-      }
+    const saved = loadState(surveyId)
+    if (saved) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setState(saved)
+      setIsResumed(true)
     }
     setIsLoading(false)
-    // Disaled rule to prevent flickering until we fix the component hydration issue
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [surveyId])
 
-  const engine = useMemo(() => new SurveyEngine(survey, response), [survey, response])
-
-  const saveAndUpdate = useCallback((updatedResponse: SurveyResponse) => {
-    surveyStorage.saveResponse(updatedResponse.surveyId, updatedResponse)
-    setResponse({ ...updatedResponse })
-  }, [])
-
-  const handleAnswer = useCallback(
-    (answer: string | string[] | number) => {
-      engine.setAnswer(answer)
-      saveAndUpdate(engine.getResponse())
-      setError(null)
-    },
-    [engine, saveAndUpdate],
-  )
-
-  const handleNext = useCallback(() => {
-    const currentQuestion = engine.getCurrentQuestion()
-    if (currentQuestion?.required) {
-      const answer = engine.getAnswer(currentQuestion.id)
-      const validationError = engine.validateAnswer(currentQuestion, answer || '')
-      if (validationError) {
-        setError(validationError)
-        return
-      }
+  useEffect(() => {
+    if (!isLoading) {
+      saveState(surveyId, state)
     }
-    if (engine.hasNextQuestion()) {
-      engine.goToNextQuestion()
-    } else {
-      engine.complete()
-    }
-    saveAndUpdate(engine.getResponse())
-    setError(null)
-  }, [engine, saveAndUpdate])
-
-  const handlePrevious = useCallback(() => {
-    if (engine.hasPreviousQuestion()) {
-      engine.goToPreviousQuestion()
-      saveAndUpdate(engine.getResponse())
-      setError(null)
-    }
-  }, [engine, saveAndUpdate])
+  }, [surveyId, state, isLoading])
 
   const handleRestart = () => {
-    setResponse(initResponse(survey))
+    localStorage.removeItem(getStorageKey(surveyId))
     setIsResumed(false)
-    surveyStorage.deleteResponse(surveyId)
+    setState(initState())
   }
 
-  const currentQuestion = engine.getCurrentQuestion()
-  const progress = engine.getProgress()
+  const { elements } = formBuilder.currentPage(state)
+  const { current, pageCount, hasNextPage, hasPreviousPage } = formBuilder.pagination(state)
+  const isComplete = !hasNextPage && current === pageCount
+  const progress = Math.round((current / pageCount) * 100)
+
+  function getGroupedElements(): GroupedElement[] {
+    const result: GroupedElement[] = []
+    const seen = new Set<string>()
+
+    for (const el of elements) {
+      const mosaicParent = getMosaicParent(engine, el.id)
+      if (mosaicParent) {
+        if (!seen.has(mosaicParent)) {
+          seen.add(mosaicParent)
+          result.push({
+            type: 'mosaic',
+            parent: mosaicParent,
+            elements: elements.filter((e) => getMosaicParent(engine, e.id) === mosaicParent),
+          })
+        }
+      } else {
+        result.push({
+          type: 'single',
+          el: patchFormElement(el, getQuestionType(engine, el.id)),
+          questionType: getQuestionType(engine, el.id),
+        })
+      }
+    }
+    return result
+  }
+
+  const groupedElements = getGroupedElements()
+
+  function getCurrentTitle() {
+    const getCategoryKey = (ruleName: string) => ruleName.split(' . ')[0]
+
+    if (groupedElements[0]?.type === 'mosaic') {
+      const key = getCategoryKey(groupedElements[0].parent)
+      const raw = engine.getParsedRules()[key]?.rawNode
+      return { label: raw?.titre, icons: raw?.icônes }
+    }
+    if (groupedElements[0]?.type === 'single') {
+      const key = getCategoryKey(groupedElements[0].el.id)
+      const raw = engine.getParsedRules()[key]?.rawNode
+      return { label: raw?.titre, icons: raw?.icônes }
+    }
+    return { label: '', icons: undefined }
+  }
+
+  const currentTitle = getCurrentTitle()
 
   if (isLoading) {
     return <Typography>{t('loading')}</Typography>
@@ -109,16 +144,9 @@ export function Survey({ survey, surveyId }: SurveyProps) {
 
   if (isResumed) {
     return (
-      <Container maxWidth="md" className={styles.container}>
-        <div className={styles.header}>
-          <Typography variant="h3" gutterBottom>
-            {survey.title}
-          </Typography>
-          <Typography variant="body1" gutterBottom>
-            {t('resume')}
-          </Typography>
-        </div>
-        <div className={styles.navigation}>
+      <Container maxWidth="md">
+        <Typography variant="h4">{t('resume')}</Typography>
+        <div>
           <Button variant="outlined" onClick={handleRestart}>
             {t('navigation.restart')}
           </Button>
@@ -130,7 +158,7 @@ export function Survey({ survey, surveyId }: SurveyProps) {
     )
   }
 
-  if (engine.isComplete()) {
+  if (isComplete) {
     return (
       <Container maxWidth="md" className={styles.container}>
         <Card>
@@ -150,72 +178,73 @@ export function Survey({ survey, surveyId }: SurveyProps) {
     )
   }
 
-  if (!currentQuestion) {
-    return (
-      <Container maxWidth="md" className={styles.container}>
-        <Alert severity="error">{t('notFound')}</Alert>
-      </Container>
-    )
-  }
-
-  const currentAnswer = engine.getAnswer(currentQuestion.id)
-
   return (
     <Container maxWidth="md" className={styles.container}>
       <div className={styles.header}>
-        <Typography variant="h3" gutterBottom>
-          {survey.title}
-        </Typography>
-        {survey.description && (
-          <Typography variant="body1" color="text.secondary">
-            {survey.description}
-          </Typography>
+        <Category title={currentTitle.label} icons={currentTitle.icons} />
+        <div className={styles.progress}>
+          <div className={styles.progressLabels}>
+            <Typography variant="body2" color="text.secondary">
+              {t('progress.question', {
+                current: Math.min(current, pageCount),
+                total: pageCount,
+              })}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {t('progress.complete', { percent: progress })}
+            </Typography>
+          </div>
+          <LinearProgress variant="determinate" value={progress} />
+        </div>
+      </div>
+
+      <div className={styles.questionCard}>
+        {groupedElements.map((group) =>
+          group.type === 'mosaic' ? (
+            <MosaicQuestion
+              key={group.parent}
+              parent={group.parent}
+              elements={group.elements}
+              engine={engine}
+              onChange={(ruleName, value) => updateState(formBuilder.handleInputChange(state, ruleName, value))}
+            />
+          ) : (
+            <InputQuestion
+              key={group.el.id}
+              formElement={group.el}
+              onChange={(ruleName, value) => updateState(formBuilder.handleInputChange(state, ruleName, value))}
+            />
+          ),
         )}
       </div>
 
-      <div className={styles.progress}>
-        <div className={styles.progressLabels}>
-          <Typography variant="body2" color="text.secondary">
-            {t('progress.question', {
-              current: Math.min(response.currentQuestionIndex + 1, survey.questions.length),
-              total: survey.questions.length,
-            })}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {t('progress.complete', { percent: progress })}
-          </Typography>
-        </div>
-        <LinearProgress variant="determinate" value={progress} />
-      </div>
-
-      {error && (
-        <Alert severity="error" className={styles.alert} onClose={() => setError(null)}>
-          {error}
-        </Alert>
-      )}
-
-      <Card className={styles.questionCard}>
-        <CardContent>
-          <QuestionRenderer question={currentQuestion} value={currentAnswer} onChange={handleAnswer} error={error} />
-        </CardContent>
-      </Card>
-
       <div className={styles.navigation}>
-        <Button
-          variant="outlined"
-          startIcon={<ArrowBack />}
-          onClick={handlePrevious}
-          disabled={!engine.hasPreviousQuestion()}
-        >
-          {tCommon('previous')}
-        </Button>
-
-        {engine.hasNextQuestion() ? (
-          <Button variant="contained" endIcon={<ArrowForward />} onClick={handleNext}>
+        {hasPreviousPage ? (
+          <Button
+            variant="outlined"
+            startIcon={<ArrowBack />}
+            onClick={() => updateState(formBuilder.goToPreviousPage(state))}
+          >
+            {tCommon('previous')}
+          </Button>
+        ) : (
+          <div />
+        )}
+        {hasNextPage ? (
+          <Button
+            variant="contained"
+            endIcon={<ArrowForward />}
+            onClick={() => updateState(formBuilder.goToNextPage(state))}
+          >
             {tCommon('next')}
           </Button>
         ) : (
-          <Button variant="contained" color="success" endIcon={<Check />} onClick={handleNext}>
+          <Button
+            variant="contained"
+            color="success"
+            endIcon={<Check />}
+            onClick={() => updateState(formBuilder.goToNextPage(state))}
+          >
             {t('navigation.complete')}
           </Button>
         )}

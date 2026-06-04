@@ -1,12 +1,12 @@
+import { TiltPost } from '@/services/posts.enums'
+import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import {
   FormLayout,
   groupLayout,
   inputLayout,
   listLayout,
   tableLayout,
-} from '@/components/publicodes-form/layouts/formLayout'
-import { TiltPost } from '@/services/posts.enums'
-import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
+} from '@abc-transitionbascarbone/publicodes/form/layouts'
 import { TiltRuleName } from './types'
 
 export const getPostRuleNameTilt = (post: TiltPost): TiltRuleName | '' => {

@@ -1,10 +1,10 @@
 'use client'
 
-import BaseTable from '@/components/base/Table'
 import { TableActionButton } from '@/components/base/TableActionButton'
 import { EngagementActionSteps, EngagementActionTargets } from '@/constants/engagementActions'
 import type { FullStudy } from '@/db/study'
 import { EngagementActionWithSites } from '@/services/serverFunctions/study'
+import { Table as BaseTable } from '@abc-transitionbascarbone/components'
 import { EngagementPhase } from '@abc-transitionbascarbone/db-common/enums'
 import { formatDateFr } from '@abc-transitionbascarbone/utils'
 import {

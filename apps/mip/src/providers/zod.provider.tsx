@@ -1,6 +1,6 @@
 'use client'
 
-import { LocaleType } from '@/i18n/config'
+import { LocaleType } from '@abc-transitionbascarbone/i18n/config'
 import { configureZod } from '@abc-transitionbascarbone/lib'
 import { useLocale } from 'next-intl'
 import { useEffect } from 'react'

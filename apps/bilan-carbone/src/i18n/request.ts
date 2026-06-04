@@ -1,6 +1,6 @@
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { Locale } from '@abc-transitionbascarbone/i18n/config'
 import { getRequestConfig } from 'next-intl/server'
-import { Locale } from './config'
 import { getEnvironment } from './environment'
 import { getLocale } from './locale'
 import { getMessages } from './utils'

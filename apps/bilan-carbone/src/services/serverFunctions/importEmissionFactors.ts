@@ -1,7 +1,6 @@
 'use server'
 
 import { createEmissionFactorWithParts, getManualEmissionFactorsByOrganization } from '@/db/emissionFactors'
-import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
 import { AccountWithUser } from '@/types/account.types'
 import {
@@ -18,6 +17,7 @@ import { flattenSubposts } from '@/utils/post'
 import { withServerResponse } from '@/utils/serverResponse'
 import { getBcTranslations, getCommonTranslations } from '@/utils/translation.utils'
 import { EmissionFactorBase, EmissionFactorStatus, Import, Unit } from '@abc-transitionbascarbone/db-common/enums'
+import { LocaleType } from '@abc-transitionbascarbone/i18n/config'
 import { getAuthenticatedAccount } from '../permissions/account.permissions'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canReadEmissionFactor } from '../permissions/emissionFactor'

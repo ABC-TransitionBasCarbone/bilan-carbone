@@ -84,7 +84,6 @@ import {
   updateAccount,
   UserWithAccounts,
 } from '@/db/user'
-import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
 import { StudySiteFields, studySiteToSituation } from '@/services/studySiteToSituation'
 import { AccountWithUser } from '@/types/account.types'
@@ -104,6 +103,7 @@ import {
 } from '@/utils/study'
 import { isAdmin } from '@/utils/user'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
+import { LocaleType } from '@abc-transitionbascarbone/i18n/config'
 import { formatDateFr } from '@abc-transitionbascarbone/utils'
 
 import { hasSufficientLevel } from '@/utils/study'

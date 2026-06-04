@@ -1,13 +1,13 @@
+import { ListLayoutSituations } from '@/lib/publicodes/context'
+import { typedEntries } from '@/utils/object'
+import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import {
   EvaluatedGroupLayout,
   EvaluatedListLayout,
   EvaluatedTableLayout,
+  FormLayout,
   getEvaluatedFormLayout,
-} from '@/components/publicodes-form/layouts/evaluatedFormLayout'
-import { FormLayout } from '@/components/publicodes-form/layouts/formLayout'
-import { ListLayoutSituations } from '@/lib/publicodes/context'
-import { typedEntries } from '@/utils/object'
-import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
+} from '@abc-transitionbascarbone/publicodes/form/layouts'
 import Engine from 'publicodes'
 import { SimplifiedPost } from '../posts'
 
