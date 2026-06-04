@@ -1,6 +1,6 @@
 import { DetailedEmissionFactor } from '@/db/emissionFactors'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { useTranslations } from 'next-intl'
-import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import EditEmissionFactorForm from '../emissionFactor/edit/Form'
 

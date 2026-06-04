@@ -1,6 +1,5 @@
 'use client'
 
-import Block from '@/components/base/Block'
 import Stepper from '@/components/base/Stepper'
 import TabsWithGreenStyling from '@/components/dynamic-form/TabsWithGreenStyling'
 import type { FullStudy } from '@/db/study'
@@ -8,6 +7,7 @@ import { SUBPOSTS_PUBLICODE_FROM_ENV } from '@/environments/core/publicodes/subp
 import { PublicodesFormProvider } from '@/lib/publicodes/context'
 import { EnvironmentWithSimplifiedStudies } from '@/services/permissions/environment'
 import { Post, subPostsByPost } from '@/services/posts'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { Button } from '@abc-transitionbascarbone/ui'
 import CheckIcon from '@mui/icons-material/Check'

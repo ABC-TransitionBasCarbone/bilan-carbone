@@ -1,8 +1,8 @@
 import { customRich } from '@/i18n/customRich'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import Block from '../base/Block'
 
 interface Props {
   environment: Environment

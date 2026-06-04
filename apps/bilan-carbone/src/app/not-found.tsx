@@ -1,6 +1,6 @@
 'use client'
 
-import NotFound from '@/components/pages/NotFound'
+import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 
 export default function GlobalNotFound() {
   return <NotFound />

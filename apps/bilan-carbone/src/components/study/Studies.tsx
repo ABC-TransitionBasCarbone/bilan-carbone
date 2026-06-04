@@ -1,12 +1,12 @@
 'use server'
 
 import { StudyCardItem } from '@/db/study'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import AddIcon from '@mui/icons-material/Add'
 import { Box } from '@mui/material'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import dynamic from 'next/dynamic'
-import Block from '../base/Block'
 import styles from './Studies.module.css'
 import StudyCard from './card/StudyCard'
 

@@ -1,11 +1,11 @@
 'use client'
 
 import { OrganizationVersionWithOrganization } from '@/db/organization'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { Button } from '@abc-transitionbascarbone/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useRef, useState } from 'react'
-import Block from '../base/Block'
 import ClientCard from './CRClient'
 import styles from './CRClients.module.css'
 

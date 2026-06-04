@@ -1,4 +1,4 @@
-import Block from '@/components/base/Block'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { Box, Typography } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

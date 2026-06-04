@@ -1,4 +1,4 @@
-import Block from '@/components/base/Block'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { getEnvVar } from '@abc-transitionbascarbone/lib/environment'
 import { getTranslations } from 'next-intl/server'

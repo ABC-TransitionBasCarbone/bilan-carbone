@@ -1,6 +1,6 @@
-import NotFound from '@/components/pages/NotFound'
 import { getStudyById } from '@/db/study'
 import { canReadStudy, canReadStudyDetail } from '@/services/permissions/study'
+import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 import { redirect } from 'next/navigation'
 import React from 'react'
 import { UserSessionProps } from './withAuth'

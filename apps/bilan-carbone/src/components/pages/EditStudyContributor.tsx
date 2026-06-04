@@ -1,9 +1,9 @@
 import { getOrganizationVersionAccounts } from '@/db/organization'
 import type { FullStudy } from '@/db/study'
 import { AccountWithUser } from '@/types/account.types'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { getTranslations } from 'next-intl/server'
-import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import NewStudyContributorForm from '../study/rights/NewStudyContributorForm'
 

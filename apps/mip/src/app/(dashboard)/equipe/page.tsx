@@ -1,7 +1,7 @@
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import TeamPage from '@/components/pages/Team'
 import { getAccountMipFromUserOrganization } from '@/db/accountMip'
-// import NotFound from '@/components/pages/NotFound'
+// import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 
 export const revalidate = 0
 

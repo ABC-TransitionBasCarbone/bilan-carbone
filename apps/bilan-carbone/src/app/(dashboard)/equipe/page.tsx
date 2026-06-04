@@ -1,8 +1,8 @@
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
-import NotFound from '@/components/pages/NotFound'
 import TeamPage from '@/components/pages/Team'
 import { getAccountFromUserOrganization } from '@/db/account'
 import { getOrganizationVersionIsCR } from '@/db/organization'
+import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 
 export const revalidate = 0
 
