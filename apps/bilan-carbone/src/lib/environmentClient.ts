@@ -19,7 +19,7 @@ const CLIENT_ENV_BY_ENV: Partial<Record<Environment, Partial<Record<ClientEnvKey
     SUPPORT_EMAIL: process.env.NEXT_PUBLIC_CUT_SUPPORT_EMAIL,
     FAQ_LINK: process.env.NEXT_PUBLIC_CUT_FAQ_LINK,
     ABC_SITE: process.env.NEXT_PUBLIC_CUT_ABC_SITE,
-  },  
+  },
   CLICKSON: {
     SUPPORT_EMAIL: process.env.NEXT_PUBLIC_CLICKSON_SUPPORT_EMAIL,
     FAQ_LINK: process.env.NEXT_PUBLIC_CLICKSON_FAQ_LINK,

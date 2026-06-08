@@ -45,12 +45,7 @@ export const customRich = (
       </Link>
     ),
     abcAssociation: (children) => (
-      <Link
-        href={abcAssociation}
-        target="_blank"
-        rel="noreferrer noopener"
-         className={styles.faq}
-      >
+      <Link href={abcAssociation} target="_blank" rel="noreferrer noopener" className={styles.faq}>
         {children}
       </Link>
     ),
