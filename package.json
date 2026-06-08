@@ -36,6 +36,6 @@
     "postcss": "^8.5.12",
     "fast-uri": "^3.1.2",
     "fast-xml-builder": "^1.1.6",
-    "uuid": "^11.1.1"
+    "xlsx": "file:/tmp/xlsx-mock"
   }
 }
