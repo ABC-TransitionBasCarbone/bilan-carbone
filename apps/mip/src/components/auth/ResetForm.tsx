@@ -2,13 +2,13 @@
 import { checkToken, reset } from '@/services/serverFunctions/auth'
 import ResetFormCommon from '@abc-transitionbascarbone/components/src/auth/ResetFormCommon'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
+import ResetLinkAlreadyUsed from '@abc-transitionbascarbone/components/src/pages/ResetLinkAlreadyUsed'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { UserSession } from 'next-auth'
 import { signOut } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import ResetLinkAlreadyUsed from '@abc-transitionbascarbone/components/src/pages/ResetLinkAlreadyUsed'
 
 interface Props {
   user?: UserSession
