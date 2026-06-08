@@ -43,6 +43,15 @@ export const customRich = (
         {children}
       </Link>
     ),
+    abcAssociation: (children) => (
+      <Link
+        href="https://abc-transitionbascarbone.fr/association-pour-la-transition-bas-carbone/"
+        target="_blank"
+        rel="noreferrer noopener"
+      >
+        {children}
+      </Link>
+    ),
     br: () => <br />,
     green: (children) => <span style={{ color: 'var(--mui-palette-ghgp-main)', fontSize: 'unset' }}>{children}</span>,
     purple: (children) => (

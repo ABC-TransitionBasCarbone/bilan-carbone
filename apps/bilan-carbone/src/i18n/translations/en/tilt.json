@@ -1,7 +1,7 @@
 {
   "login": {
     "subtext": "Non-profit organisation specific version",
-    "explanation": "The tool dedicated to non-profit organisations wishing to apply the Bilan Carbone® method and its sectoral variant for the non-profit sphere. It came into being thanks to the partnership between the Association for Low Carbon Transition, which is the holder of the Bilan Carbone® method, and Tilt, which accompanies all non-profit organisations in their low-carbon transition. The tool is freely accessible for all French non-profit organisations trained in the method.",
+    "explanation": "The tool dedicated to non-profit organisations wishing to apply the Bilan Carbone® method and its sectoral variant for the non-profit sphere. It came into being thanks to the partnership between <abcAssociation>the Association for Low Carbon Transition</abcAssociation>, which is the holder of the Bilan Carbone® method, and Tilt, which accompanies all non-profit organisations in their low-carbon transition. The tool is freely accessible for all French non-profit organisations trained in the method.",
     "form": {
       "activate": "Create my account"
     }
