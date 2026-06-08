@@ -38,7 +38,7 @@ const PublicTiltPage = ({ children, question }: Props) => {
           <p className="title-h4 mb1">{t('welcome')}</p>
           <p className="title-h6 bold">{t('subtext')}</p>
         </div>
-        <p>{customRich(t, 'explanation', {}, Environment.TILT)}</p>
+        <p>{customRich(t, 'explanation', {}, Environment.TILT, { faq: styles.link })}</p>
         <div className="flex-cc gapped1 w100 p1">
           <Image src="/logos/abc/logo_abc.png" alt="ABC logo" fill className="w50 hauto" />
           <CloseIcon />
