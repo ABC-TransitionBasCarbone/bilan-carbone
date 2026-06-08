@@ -54,6 +54,7 @@ import {
   getSourcesLatestImportVersionId,
   getStudiesSitesFromIds,
   getStudyById,
+  getStudyByIdForReport,
   getStudyCommentsCountFromOrganizationVersionId,
   getStudyCommentsFromOrganizationVersionId,
   getStudyCommentsWithStudyIdAndSubPost,
@@ -1914,7 +1915,8 @@ export const prepareReport = async (
       template = contentResult.data
     }
 
-    const studyData = await mapStudyForReport(study, results)
+    const studyForReport = ((await getStudyByIdForReport(study.id)) ?? study) as FullStudy
+    const studyData = await mapStudyForReport(studyForReport, results)
     return createReport({
       template,
       data: {

@@ -521,6 +521,9 @@ const fetchStudyById = cache(async (id: string) => {
   })
 })
 
+// Only for report generation — preserves organizationVersionId on all allowed users.
+export const getStudyByIdForReport = async (id: string) => fetchStudyById(id)
+
 // IMPORTANT: Do not use unless you need the full study with all its fields and relations.
 export const getStudyById = async (id: string, organizationVersionId: string | null, tx?: Prisma.TransactionClient) => {
   const study = tx ? await tx.study.findUnique({ where: { id }, include: fullStudyInclude }) : await fetchStudyById(id)
