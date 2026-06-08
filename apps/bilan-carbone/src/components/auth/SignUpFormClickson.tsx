@@ -2,7 +2,6 @@
 
 import { customRich } from '@/i18n/customRich'
 import { getEnvVarClient } from '@/lib/environmentClient'
-import { getEnvRoute } from '@/services/email/utils'
 import { UNKNOWN_SCHOOL } from '@/services/permissions/check'
 import { getSchoolsFromPostalCodeOrName, School } from '@/services/schoolApi'
 import { signUpWithSchool } from '@/services/serverFunctions/user'
@@ -12,6 +11,7 @@ import LoadingButton from '@abc-transitionbascarbone/components/src/base/Loading
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { Country, Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { getEnvRoute } from '@abc-transitionbascarbone/services/email/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import { FormControl } from '@mui/material'

@@ -4,6 +4,7 @@ model AccountMip {
   updatedAt DateTime @default(now()) @map("updated_at")
   userId    String   @map("user_id")
   user      User     @relation(fields: [userId], references: [id])
+  status    UserStatus
 
   @@map("accounts_mip")
   @@schema("mip")

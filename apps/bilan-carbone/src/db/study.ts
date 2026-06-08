@@ -1,5 +1,4 @@
 import { StudyContributorDeleteParams } from '@/components/study/rights/StudyContributorsTable'
-import { getEnvVar } from '@/lib/environment'
 import { isSourceForEnv } from '@/services/importEmissionFactor/import'
 import { hasAccessToCreateStudyWithEmissionFactorVersions } from '@/services/permissions/environment'
 import { filterAllowedStudies } from '@/services/permissions/study'
@@ -25,6 +24,7 @@ import {
   Import,
   StudyRole,
 } from '@abc-transitionbascarbone/db-common/enums'
+import { getEnvVar } from '@abc-transitionbascarbone/lib/environment'
 import { UserSession } from 'next-auth'
 import { cache } from 'react'
 import { deleteTransitionPlan } from '../services/serverFunctions/transitionPlan'

@@ -26,8 +26,8 @@ import {
 } from '@/services/permissions/check'
 import { mockedOrganizationId, mockedOrganizationVersionId } from '@/tests/utils/models/organization'
 import { mockedAccountId, mockedUserId } from '@/tests/utils/models/user'
+import { sendActivationRequest } from '@abc-transitionbascarbone/services/email/email'
 import { getCompanyName, getValidAssociationNameBySiret } from '../associationApi'
-import { sendActivationRequest } from '../email/email'
 import { getDeactivableFeatureRestrictions } from './deactivableFeatures'
 import { activateEmail, signUpWithSiretOrCNC } from './user'
 
@@ -52,7 +52,8 @@ jest.mock('@/db/site')
 jest.mock('@/db/study', () => ({}))
 jest.mock('@/db/user')
 jest.mock('@/services/associationApi')
-jest.mock('@/services/email/email', () => ({
+jest.mock('@abc-transitionbascarbone/db-common/db')
+jest.mock('@abc-transitionbascarbone/services/email/email', () => ({
   sendActivationEmail: jest.fn(),
   sendActivationRequest: jest.fn(),
 }))
