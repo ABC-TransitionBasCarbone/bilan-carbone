@@ -2,12 +2,68 @@ import { isOrganizationVersionCR } from '@/db/organization'
 import { getEngagementActions, type FullStudy } from '@/db/study'
 import { getActions, getTransitionPlanByStudyId } from '@/db/transitionPlan'
 import { getLocale } from '@/i18n/locale'
+import { getEmissionResults } from '@/services/emissionSource'
+import { getActionReductionStats } from '@/utils/actionTrajectory.utils'
 import { formatNumber } from '@/utils/number'
 import { getPostsFromSubPosts } from '@/utils/post'
 import { getBcTranslations } from '@/utils/translation.utils'
-import { Level, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
+import { Environment, Level, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
 import { formatDateFr } from '@abc-transitionbascarbone/utils'
 import { getTranslations } from 'next-intl/server'
+
+const getActionDetails = (
+  rawActions: Awaited<ReturnType<typeof getActions>>,
+  emissionSources: FullStudy['emissionSources'],
+  environment: Environment,
+  bc: ReturnType<typeof getBcTranslations>,
+  studyYear: number,
+) => {
+  const emissionSourcesWithValue = emissionSources.map((es) => ({
+    subPost: es.subPost,
+    emissionValue: getEmissionResults(es, environment).emissionValue ?? 0,
+  }))
+  const {
+    totalKg,
+    totalWithoutUtilisationKg,
+    totalReductionKgWithoutUtilisation,
+    totalReductionKgWithUtilisation,
+    lastActionYear,
+  } = getActionReductionStats(rawActions, emissionSourcesWithValue)
+
+  const reductionPercentageWithoutUtilisation =
+    totalWithoutUtilisationKg > 0
+      ? formatNumber((totalReductionKgWithoutUtilisation / totalWithoutUtilisationKg) * 100, 2)
+      : formatNumber(0, 2)
+  const reductionPercentageWithUtilisation =
+    totalKg > 0 ? formatNumber((totalReductionKgWithUtilisation / totalKg) * 100, 2) : formatNumber(0, 2)
+
+  const actions = rawActions.map((action) => ({
+    title: action.title,
+    posts:
+      action.subPosts.length === 0
+        ? bc.emissionFactors.post.allPost
+        : getPostsFromSubPosts(action.subPosts.map((sp) => sp.subPost))
+            .map((p) => (bc.emissionFactors.post as unknown as Record<string, string>)[p] ?? p)
+            .join(', '),
+    category: action.category
+      .map((c) => (bc.study.transitionPlan.actions.category as Record<string, string>)[c] ?? c)
+      .join(', '),
+    necessaryBudget: action.necessaryBudget ?? null,
+    reductionStartYear: action.reductionStartYear ? action.reductionStartYear.slice(0, 4) : null,
+    reductionValueTCO2e: action.reductionValueKg != null ? Math.round(action.reductionValueKg / 1000) : null,
+    reductionPercentage:
+      action.reductionValueKg != null && totalKg > 0
+        ? formatNumber((action.reductionValueKg / totalKg) * 100, 2)
+        : null,
+    potentialDeduction:
+      (bc.study.transitionPlan.actions.potentialDeduction as Record<string, string>)[action.potentialDeduction] ??
+      action.potentialDeduction,
+  }))
+
+  const yearsUntilLastActionEnd = lastActionYear != null ? lastActionYear - studyYear : null
+
+  return { actions, reductionPercentageWithoutUtilisation, reductionPercentageWithUtilisation, yearsUntilLastActionEnd }
+}
 
 export const mapStudyForReport = async (
   study: FullStudy,
@@ -86,26 +142,19 @@ export const mapStudyForReport = async (
   }))
 
   const transitionPlan = await getTransitionPlanByStudyId(study.id)
-  const actions = transitionPlan
-    ? (await getActions(transitionPlan.id)).map((action) => ({
-        title: action.title,
-        posts:
-          action.subPosts.length === 0
-            ? bc.emissionFactors.post.allPost
-            : getPostsFromSubPosts(action.subPosts.map((sp) => sp.subPost))
-                .map((p) => (bc.emissionFactors.post as unknown as Record<string, string>)[p] ?? p)
-                .join(', '),
-        category: action.category
-          .map((c) => (bc.study.transitionPlan.actions.category as Record<string, string>)[c] ?? c)
-          .join(', '),
-        necessaryBudget: action.necessaryBudget ?? null,
-        reductionStartYear: action.reductionStartYear ? action.reductionStartYear.slice(0, 4) : null,
-        reductionValueTCO2e: action.reductionValueKg != null ? Math.round(action.reductionValueKg / 1000) : null,
-        potentialDeduction:
-          (bc.study.transitionPlan.actions.potentialDeduction as Record<string, string>)[action.potentialDeduction] ??
-          action.potentialDeduction,
-      }))
-    : []
+  const rawActions = transitionPlan ? await getActions(transitionPlan.id) : []
+  const {
+    actions,
+    reductionPercentageWithoutUtilisation,
+    reductionPercentageWithUtilisation,
+    yearsUntilLastActionEnd,
+  } = getActionDetails(
+    rawActions,
+    study.emissionSources,
+    study.organizationVersion.environment,
+    bc,
+    study.startDate.getFullYear(),
+  )
 
   const monetaryRatioPercentage = formatNumber(results.monetaryRatio, 2)
   const nonSpecificMonetaryRatioPercentage = formatNumber(results.nonSpecificMonetaryRatio, 2)
@@ -138,5 +187,8 @@ export const mapStudyForReport = async (
       .join(', '),
     engagementActions,
     actions,
+    reductionPercentageWithoutUtilisation,
+    reductionPercentageWithUtilisation,
+    yearsUntilLastActionEnd,
   }
 }

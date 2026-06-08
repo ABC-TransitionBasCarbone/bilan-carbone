@@ -1,3 +1,4 @@
+import type { FullStudy } from '@/db/study'
 import { mockedOrganizationVersion } from '@/tests/utils/models/organization'
 import { getMockedFullStudy, getMockedFullStudySite, getMockeFullStudy, TEST_IDS } from '@/tests/utils/models/study'
 import { ControlMode, Export, Level, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
@@ -15,6 +16,11 @@ jest.mock('@/i18n/locale', () => ({
 jest.mock('@/utils/translation.utils', () => ({
   getBcTranslations: jest.fn(() => ({
     exports: { Beges: 'Bilan GES Réglementaire', GHGP: 'GHG Protocol', ISO14069: 'ISO 14069' },
+    emissionFactors: {
+      post: {
+        allPost: 'Tous les postes',
+      },
+    },
     study: {
       engagementActions: {
         phases: {
@@ -42,6 +48,10 @@ jest.mock('@/utils/translation.utils', () => ({
       },
     },
   })),
+}))
+
+jest.mock('@/services/emissionSource', () => ({
+  getEmissionResults: jest.fn((es) => ({ emissionValue: (es as { emissionValue?: number }).emissionValue ?? 0 })),
 }))
 
 jest.mock('@/db/organization', () => ({
@@ -407,6 +417,141 @@ describe('mapStudyForReport', () => {
         baseResults,
       )
       expect(result.exportTypesList).toBe('Bilan GES Réglementaire, GHG Protocol')
+    })
+  })
+
+  describe('reductionPercentages and lastActionYear', () => {
+    it('computes reduction percentage without utilisation and with utilisation', async () => {
+      const { getActions } = require('@/db/transitionPlan')
+      getActions.mockResolvedValueOnce([
+        {
+          title: 'Action 1',
+          enabled: true,
+          reductionValueKg: 1000,
+          reductionEndYear: '2028-01-01',
+          reductionStartYear: '2025-01-01',
+          subPosts: [],
+          category: [],
+          potentialDeduction: 'Quality',
+          necessaryBudget: null,
+        },
+        {
+          title: 'Action 2',
+          enabled: true,
+          reductionValueKg: 500,
+          reductionEndYear: '2030-01-01',
+          reductionStartYear: '2026-01-01',
+          subPosts: [],
+          category: [],
+          potentialDeduction: 'Quantity',
+          necessaryBudget: null,
+        },
+        {
+          title: 'Action disabled',
+          enabled: false,
+          reductionValueKg: 9999,
+          reductionEndYear: '2035-01-01',
+          reductionStartYear: '2025-01-01',
+          subPosts: [],
+          category: [],
+          potentialDeduction: 'Quality',
+          necessaryBudget: null,
+        },
+      ])
+
+      const { getTransitionPlanByStudyId } = require('@/db/transitionPlan')
+      getTransitionPlanByStudyId.mockResolvedValueOnce({ id: 'tp-1' })
+
+      // 10000 kg total, 2000 kg from utilisation subposts
+      const study = getMockedFullStudy({
+        emissionSources: [
+          { emissionValue: 8000, subPost: 'Energies' } as unknown as FullStudy['emissionSources'][number],
+          {
+            emissionValue: 1000,
+            subPost: 'UtilisationEnResponsabilite',
+          } as unknown as FullStudy['emissionSources'][number],
+          {
+            emissionValue: 1000,
+            subPost: 'UtilisationEnDependance',
+          } as unknown as FullStudy['emissionSources'][number],
+        ],
+      })
+
+      const result = await mapStudyForReport(study, baseResults)
+
+      // totalReduction = 1500 kg (enabled only)
+      // totalWithoutUtilisation = 8000 kg → 1500/8000 = 18.75%
+      // totalWithUtilisation = 10000 kg → 1500/10000 = 15%
+      expect(result.reductionPercentageWithoutUtilisation).toBe(
+        (18.75).toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 2 }),
+      )
+      expect(result.reductionPercentageWithUtilisation).toBe(
+        (15).toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 2 }),
+      )
+      expect(result.yearsUntilLastActionEnd).toBe(5)
+    })
+
+    it('excludes utilisation-only actions from the without-utilisation percentage', async () => {
+      const { getActions } = require('@/db/transitionPlan')
+      getActions.mockResolvedValueOnce([
+        {
+          title: 'Normal action',
+          enabled: true,
+          reductionValueKg: 1000,
+          reductionEndYear: '2028-01-01',
+          reductionStartYear: '2025-01-01',
+          subPosts: [],
+          category: [],
+          potentialDeduction: 'Quality',
+          necessaryBudget: null,
+        },
+        {
+          title: 'Utilisation-only action',
+          enabled: true,
+          reductionValueKg: 500,
+          reductionEndYear: '2029-01-01',
+          reductionStartYear: '2025-01-01',
+          subPosts: [{ subPost: 'UtilisationEnResponsabilite' }, { subPost: 'UtilisationEnDependance' }],
+          category: [],
+          potentialDeduction: 'Quality',
+          necessaryBudget: null,
+        },
+        {
+          title: 'Mixed action',
+          enabled: true,
+          reductionValueKg: 200,
+          reductionEndYear: '2027-01-01',
+          reductionStartYear: '2025-01-01',
+          subPosts: [{ subPost: 'UtilisationEnResponsabilite' }, { subPost: 'Energies' }],
+          category: [],
+          potentialDeduction: 'Quality',
+          necessaryBudget: null,
+        },
+      ])
+
+      const { getTransitionPlanByStudyId } = require('@/db/transitionPlan')
+      getTransitionPlanByStudyId.mockResolvedValueOnce({ id: 'tp-4' })
+
+      const study = getMockedFullStudy({
+        emissionSources: [
+          { emissionValue: 8000, subPost: 'Energies' } as unknown as FullStudy['emissionSources'][number],
+          {
+            emissionValue: 2000,
+            subPost: 'UtilisationEnResponsabilite',
+          } as unknown as FullStudy['emissionSources'][number],
+        ],
+      })
+
+      const result = await mapStudyForReport(study, baseResults)
+
+      // Without utilisation: 1000 (normal) + 200 (mixed) = 1200 kg / 8000 kg = 15%
+      expect(result.reductionPercentageWithoutUtilisation).toBe(
+        (15).toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 2 }),
+      )
+      // With utilisation: 1000 + 500 + 200 = 1700 kg / 10000 kg = 17%
+      expect(result.reductionPercentageWithUtilisation).toBe(
+        (17).toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 2 }),
+      )
     })
   })
 })

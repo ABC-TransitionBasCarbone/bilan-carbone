@@ -1,14 +1,50 @@
 import { TARGET_YEAR } from '@/constants/trajectory.constants'
+import { BCPost, subPostsByPostBC } from '@/services/posts'
 import type { PastStudy, TrajectoryDataPoint } from '@/types/trajectory.types'
-import type { Action } from '@abc-transitionbascarbone/db-common'
+import type { Action, ActionSubPost } from '@abc-transitionbascarbone/db-common'
 import { ActionPotentialDeduction, StudyResultUnit } from '@abc-transitionbascarbone/db-common/enums'
 import { getYearFromDateStr } from '@abc-transitionbascarbone/utils/time'
+import { getEmissionSourcesTotalCo2 } from './emissionSources'
 import { convertValue } from './study'
 import {
   addHistoricalDataAndStudyPoint,
   getTrajectoryEmissionsAtYear,
   isWithinThreshold,
 } from './trajectory-shared.utils'
+
+const isUtilisationOnlyAction = (action: { subPosts: { subPost: string }[] }, utilisationSubPosts: string[]) =>
+  action.subPosts.length > 0 && action.subPosts.every((sp) => utilisationSubPosts.includes(sp.subPost))
+
+export const getActionReductionStats = (
+  rawActions: Array<
+    Pick<Action, 'enabled' | 'reductionValueKg' | 'reductionEndYear'> & { subPosts: Pick<ActionSubPost, 'subPost'>[] }
+  >,
+  emissionSources: { emissionValue: number; subPost: string }[],
+) => {
+  const utilisationSubPosts = subPostsByPostBC[BCPost.UtilisationEtDependance] as string[]
+  const totalKg = getEmissionSourcesTotalCo2(emissionSources)
+  const totalWithoutUtilisationKg = getEmissionSourcesTotalCo2(
+    emissionSources.filter((es) => !utilisationSubPosts.includes(es.subPost)),
+  )
+  const totalReductionKgWithoutUtilisation = rawActions
+    .filter((a) => a.enabled && a.reductionValueKg != null && !isUtilisationOnlyAction(a, utilisationSubPosts))
+    .reduce((sum, a) => sum + a.reductionValueKg!, 0)
+  const totalReductionKgWithUtilisation = rawActions
+    .filter((a) => a.enabled && a.reductionValueKg != null)
+    .reduce((sum, a) => sum + a.reductionValueKg!, 0)
+
+  const enabledYears = rawActions
+    .filter((a) => a.enabled && a.reductionEndYear != null)
+    .map((a) => parseInt(a.reductionEndYear!.slice(0, 4)))
+
+  return {
+    totalKg,
+    totalWithoutUtilisationKg,
+    totalReductionKgWithoutUtilisation,
+    totalReductionKgWithUtilisation,
+    lastActionYear: enabledYears.length > 0 ? Math.max(...enabledYears) : null,
+  }
+}
 
 interface CalculateActionBasedTrajectoryParams {
   studyEmissions: number
