@@ -580,7 +580,7 @@ async function updateSituationWithStudySiteData(
       return
     }
     const situationUpdates = studySiteToSituation(environment, siteDependentFields)
-    console.log(situationUpdates, siteDependentFields)
+
     if (Object.keys(situationUpdates).length > 0) {
       await updateSituationFields(studySiteId, situationUpdates)
     }
