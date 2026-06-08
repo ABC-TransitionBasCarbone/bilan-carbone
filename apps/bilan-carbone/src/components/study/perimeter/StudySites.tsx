@@ -163,12 +163,14 @@ const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user,
 
     if (handleSpecificChange) {
       for (const site of formValue.sites) {
-        await handleSpecificChange(site.id, {
-          volunteerNumber: site.volunteerNumber ?? 0,
-          beneficiaryNumber: site.beneficiaryNumber ?? 0,
-          postalCode: site.postalCode,
-          etp: site.etp ?? 0,
-        })
+        if (site.selected) {
+          await handleSpecificChange(site.id, {
+            volunteerNumber: site.volunteerNumber ?? 0,
+            beneficiaryNumber: site.beneficiaryNumber ?? 0,
+            postalCode: site.postalCode,
+            etp: site.etp ?? 0,
+          })
+        }
       }
     }
   }
