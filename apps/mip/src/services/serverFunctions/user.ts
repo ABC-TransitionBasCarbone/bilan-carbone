@@ -1,6 +1,8 @@
-import { updateUserResetTokenForEmail } from '@abc-transitionbascarbone/db-common/db'
+'use server'
+
 import { getUserByEmail } from '@/db/user'
 import { withServerResponse } from '@/utils/serverResponse'
+import { updateUserResetTokenForEmail } from '@abc-transitionbascarbone/db-common/db'
 import { sendResetPassword } from '@abc-transitionbascarbone/services/email/email'
 import { HOUR, TIME_IN_MS } from '@abc-transitionbascarbone/utils'
 import jwt from 'jsonwebtoken'

@@ -52,6 +52,7 @@ jest.mock('@/db/site')
 jest.mock('@/db/study', () => ({}))
 jest.mock('@/db/user')
 jest.mock('@/services/associationApi')
+jest.mock('@abc-transitionbascarbone/db-common/db')
 jest.mock('@abc-transitionbascarbone/services/email/email', () => ({
   sendActivationEmail: jest.fn(),
   sendActivationRequest: jest.fn(),

@@ -8,8 +8,8 @@ import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import { default as CUTLogosHome } from '@/environments/cut/home/LogosHome'
 import { displayFeedBackForm } from '@/services/serverFunctions/user'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
-import { UserSession } from 'next-auth'
 import { environmentWithOnboarding } from '@abc-transitionbascarbone/utils/environments'
+import { UserSession } from 'next-auth'
 import dynamic from 'next/dynamic'
 
 const ClicksonUserView = dynamic(() => import('@/environments/clickson/home/UserView'))
