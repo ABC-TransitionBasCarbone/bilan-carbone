@@ -1,2 +1,2 @@
 web: sh -c 'if [ "$APP_TARGET" = "mip" ]; then cd apps/mip && exec npx next start --port "${PORT:-3000}"; else exec node apps/bilan-carbone/.next/standalone/apps/bilan-carbone/server.js; fi'
-postdeploy: npx prisma migrate deploy --schema packages/db-common/prisma/schema
+postdeploy: npx prisma migrate deploy --config packages/db-common/prisma.config.ts --schema packages/db-common/prisma/schema
