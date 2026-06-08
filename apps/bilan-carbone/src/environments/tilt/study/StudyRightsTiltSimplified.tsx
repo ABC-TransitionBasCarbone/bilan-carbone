@@ -6,7 +6,6 @@ import { FormDatePicker } from '@/components/form/DatePicker'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import StudySites from '@/components/study/perimeter/StudySites'
 import SelectStudySite from '@/components/study/site/SelectStudySite'
-import useStudySite from '@/components/study/site/useStudySite'
 import { OrganizationWithSites } from '@/db/account'
 import type { FullStudy } from '@/db/study'
 import { getTiltEngine } from '@/environments/tilt/publicodes/tilt-engine'
@@ -24,10 +23,13 @@ import {
   ChangeStudySiteTiltSimplifiedCommand,
   ChangeStudySiteTiltSimplifiedValidation,
 } from '@/services/serverFunctions/study.command'
+import { TiltStudySiteFields } from '@/services/studySiteToSituation'
+import { sortAlphabetically } from '@/services/utils'
 import { HelpIcon } from '@abc-transitionbascarbone/components'
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { SiteCAUnit, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
+import { useToast } from '@abc-transitionbascarbone/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CircularProgress, Typography } from '@mui/material'
 import { getEvaluatedFormElement } from '@publicodes/forms'
@@ -55,10 +57,13 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
   const tStructure = useTranslations('study.structure')
   const tGlossary = useTranslations('study.new.glossary')
   const { callServerFunction } = useServerFunction()
-  const { siteId: studySite, studySiteId, setSite } = useStudySite(study)
   const [glossary, setGlossary] = useState('')
   const [siteData, setSiteData] = useState<TiltCustomDataFields | undefined>()
   const [loading, setLoading] = useState(true)
+  const { showErrorToast } = useToast()
+  const tGeneralError = useTranslations('error')
+
+  const studySite = useMemo(() => study.sites.sort((a, b) => sortAlphabetically(a.id, b.id))[0], [study.sites])
 
   const form = useForm<ChangeStudySiteTiltSimplifiedCommand>({
     resolver: zodResolver(ChangeStudySiteTiltSimplifiedValidation),
@@ -101,34 +106,34 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
   useEffect(() => {
     async function setStudySiteData() {
       setLoading(true)
-      if (studySite && studySite !== 'all') {
-        const situationRes = await loadMappedSituation(study.id, studySiteId, {
-          ...mappedTiltSituationToCustomDataFields,
-          ...optionalTiltSituationToCustomDataFields,
+
+      const situationRes = await loadMappedSituation(study.id, studySite.id, {
+        ...mappedTiltSituationToCustomDataFields,
+        ...optionalTiltSituationToCustomDataFields,
+      })
+
+      if (situationRes.success && situationRes.data) {
+        const newSiteData = situationRes.data
+        setSiteData(newSiteData)
+
+        form.reset({
+          postalCode: String(newSiteData?.postalCode ?? ''),
+          structure: String(newSiteData?.structure ?? ''),
+          structureOther: String(newSiteData?.structureOther ?? '').replace(/^'|'$/g, ''),
         })
-
-        if (situationRes.success && situationRes.data) {
-          const newSiteData = situationRes.data
-          setSiteData(newSiteData)
-
-          form.reset({
-            postalCode: String(newSiteData?.postalCode ?? ''),
-            structure: String(newSiteData?.structure ?? ''),
-            structureOther: String(newSiteData?.structureOther ?? '').replace(/^'|'$/g, ''),
-          })
-        }
       }
+
       setLoading(false)
     }
 
     setStudySiteData()
-  }, [form, study.id, studySite, studySiteId])
+  }, [form, study.id, studySite])
 
   const handleStudySiteUpdate = useCallback(
-    async (data: ChangeStudySiteTiltSimplifiedCommand) => {
+    async (studySiteId: string, data: ChangeStudySiteTiltSimplifiedCommand & TiltStudySiteFields) => {
       await callServerFunction(() => changeStudySiteTiltSimplified(studySiteId, data))
     },
-    [callServerFunction, studySiteId],
+    [callServerFunction],
   )
 
   const handleDateChange = useCallback(async () => {
@@ -154,20 +159,29 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
   }, [dateForm, callServerFunction, router, tValidation, study])
 
   const onStudySiteUpdate = useCallback(() => {
-    if (studySite === 'all') {
-      return
-    }
-
-    form.handleSubmit(handleStudySiteUpdate, (e) => console.log('invalid', e))()
+    form.handleSubmit(
+      (data) => handleStudySiteUpdate(studySite.id, data),
+      (e) => console.log('invalid', e),
+    )()
   }, [form, handleStudySiteUpdate, studySite])
+
+  const handleSiteChange = useCallback(
+    async (siteId: string, data: ChangeStudySiteTiltSimplifiedCommand & TiltStudySiteFields) => {
+      const studySite = study.sites.find((site) => site.site.id === siteId)
+      if (studySite) {
+        await handleStudySiteUpdate(studySite.id, data)
+      } else {
+        showErrorToast(tGeneralError('default'))
+      }
+    },
+    [handleStudySiteUpdate, showErrorToast, study.sites, tGeneralError],
+  )
 
   return (
     <>
       <Block
         title={tRights('general')}
-        rightComponent={
-          <SelectStudySite sites={study.sites} defaultValue={studySite} setSite={setSite} showAllOption={false} />
-        }
+        rightComponent={<SelectStudySite sites={study.sites} defaultValue="all" siteSelectionDisabled />}
       >
         {loading ? (
           <CircularProgress variant="indeterminate" color="primary" size={100} className="flex mt2" />
@@ -198,6 +212,7 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
                   user={user}
                   userRoleOnStudy={userRoleOnStudy}
                   organizationVersion={organizationVersion}
+                  handleSpecificChange={handleSiteChange}
                 />
               )}
               <FormAutocomplete

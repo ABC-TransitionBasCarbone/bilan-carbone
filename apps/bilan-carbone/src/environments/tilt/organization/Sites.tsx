@@ -31,6 +31,7 @@ const Sites = <T extends SitesCommand>({
 }: Props<T>) => {
   const t = useTranslations('organization.sites')
   const control = form?.control as Control<SitesCommand>
+
   const columns = useMemo(
     () =>
       [
@@ -81,7 +82,7 @@ const Sites = <T extends SitesCommand>({
             ),
         },
       ] as ColumnDef<SitesCommand['sites'][number]>[],
-    [form, disabled],
+    [t, form, disabled, control],
   )
 
   return (

@@ -1,6 +1,6 @@
+import { EnvironmentWithSimplifiedStudies } from '@/services/permissions/environment'
 import {
   getSimplifiedPublicodesConfig,
-  SimplifiedEnvironment,
   SimplifiedPublicodesConfig,
 } from '@/services/publicodes/simplifiedPublicodesConfig'
 import { loadSituation } from '@/services/serverFunctions/situation'
@@ -22,7 +22,7 @@ export interface PublicodesSituationContextValue<RuleName extends string = strin
 const PublicodesSituationContext = createContext<PublicodesSituationContextValue | null>(null)
 
 interface PublicodesSituationProviderProps {
-  environment: SimplifiedEnvironment
+  environment: EnvironmentWithSimplifiedStudies
   studyId: string
   studySiteId: string
   children: ReactNode
@@ -38,6 +38,7 @@ export function PublicodesSituationProvider<RuleName extends string = string>({
   const [situation, setSituationState] = useState<Situation<RuleName>>({})
   const [listLayoutSituations, setListLayoutSituationsState] = useState<ListLayoutSituations<RuleName>>({})
 
+  console.log('situation : ', situation)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const engine = useMemo(() => config.getEngine().shallowCopy() as Engine<RuleName>, [config])

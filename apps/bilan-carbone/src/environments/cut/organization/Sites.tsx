@@ -276,7 +276,7 @@ const Sites = ({ sites, form, withSelection, disabled = false }: Props) => {
       })
     }
     return columns
-  }, [t, form, withSelection, cncs, setCncData])
+  }, [t, form, withSelection, disabled, cncs, setCncData])
 
   if (cncs === null) {
     return <EnvironmentLoader />

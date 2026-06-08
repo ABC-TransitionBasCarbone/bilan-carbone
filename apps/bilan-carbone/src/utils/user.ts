@@ -1,4 +1,4 @@
-import { isSimplifiedEnvironment } from '@/services/publicodes/simplifiedPublicodesConfig'
+import { isSimplified } from '@/services/permissions/environment'
 import { ClicksonRoles, CutRoles } from '@/services/roles'
 import type { Prisma } from '@abc-transitionbascarbone/db-common'
 import { Environment, Role, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
@@ -40,7 +40,7 @@ export const getEnvironmentRoles = (environment: Environment) => {
 }
 
 export const getRoleToSetForUntrained = (role: Exclude<Role, 'SUPER_ADMIN'>, environment: Environment) => {
-  if (isSimplifiedEnvironment(environment)) {
+  if (isSimplified(environment)) {
     return role
   }
 

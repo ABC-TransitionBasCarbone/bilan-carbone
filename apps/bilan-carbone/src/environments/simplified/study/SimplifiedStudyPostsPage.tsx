@@ -6,8 +6,8 @@ import TabsWithGreenStyling from '@/components/dynamic-form/TabsWithGreenStyling
 import type { FullStudy } from '@/db/study'
 import { SUBPOSTS_PUBLICODE_FROM_ENV } from '@/environments/core/publicodes/subposts'
 import { PublicodesFormProvider } from '@/lib/publicodes/context'
+import { EnvironmentWithSimplifiedStudies } from '@/services/permissions/environment'
 import { Post, subPostsByPost } from '@/services/posts'
-import { SimplifiedEnvironment } from '@/services/publicodes/simplifiedPublicodesConfig'
 import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { Button } from '@abc-transitionbascarbone/ui'
 import CheckIcon from '@mui/icons-material/Check'
@@ -20,7 +20,7 @@ import SaveStatusIndicator from '../study/SaveStatusIndicator'
 import RealTimeResults from './RealTimeResults'
 
 interface Props {
-  environment: SimplifiedEnvironment
+  environment: EnvironmentWithSimplifiedStudies
   post: Post
   currentSubPost: SubPost | undefined
   study: FullStudy

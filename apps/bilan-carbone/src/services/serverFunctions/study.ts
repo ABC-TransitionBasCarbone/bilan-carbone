@@ -85,7 +85,7 @@ import {
   UserWithAccounts,
 } from '@/db/user'
 import { getLocale } from '@/i18n/locale'
-import { StudySiteFields, studySiteToSituation } from '@/services/studySiteToSituation'
+import { StudySiteFields, studySiteToSituation, TiltStudySiteFields } from '@/services/studySiteToSituation'
 import { AccountWithUser } from '@/types/account.types'
 import { getNestedValue, groupBy } from '@/utils/array'
 import { mapCncToStudySite } from '@/utils/cnc'
@@ -143,7 +143,11 @@ import { customDataToSituationByEnvironment, TiltCustomDataFields } from '../cus
 import { getCaracterisationsBySubPost } from '../emissionSource'
 import { allowedFlowFileTypes, isAllowedFileType } from '../file'
 import { ALREADY_IN_STUDY, NOT_AUTHORIZED, TOO_MANY_COMMENTS } from '../permissions/check'
-import { hasReaderRoleOnStudyAsContributor } from '../permissions/environment'
+import {
+  EnvironmentWithSimplifiedStudies,
+  hasReaderRoleOnStudyAsContributor,
+  hasSimplifiedStudies,
+} from '../permissions/environment'
 import { hasAccessToEngagementActions, isTiltSimplified } from '../permissions/environmentAdvanced'
 import { isInOrgaOrParentFromId } from '../permissions/organization'
 import {
@@ -165,7 +169,6 @@ import {
   getEnvironmentsForDuplication,
 } from '../permissions/study'
 import { isAdminOnStudyOrga } from '../permissions/study.utils'
-import { isSimplifiedEnvironment, SimplifiedEnvironment } from '../publicodes/simplifiedPublicodesConfig'
 import { deleteFileFromBucket, getFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'
 import { getTransEnvironmentSubPost } from '../study'
 import { UpdateEmissionSourceCommand } from './emissionSource.command'
@@ -364,11 +367,11 @@ export const createStudyCommand = async (
         await addUserChecklistItem(UserChecklist.CreateFirstStudy)
       }
 
-      if (isSimplifiedEnvironment(session.user.environment)) {
+      if (createdStudy.simplified) {
         await Promise.all(
           createdStudy.sites.map(async (site) => {
             await saveSituationInDB(createdStudy.id, site.id, {}, {}, '')
-            await updateSituationWithStudySiteData(site.id, site, session.user.environment)
+            await updateSituationWithStudySiteData(site.id, site, session.user.environment, createdStudy.simplified)
           }),
         )
       }
@@ -558,15 +561,24 @@ export const changeStudyCinema = async (studySiteId: string, cncId: string, data
     await updateNumberOfProgrammedFilms({ cncId, numberOfProgrammedFilms })
     await updateStudyOpeningHours(studySiteId, openingHours, openingHoursHoliday)
     await updateStudySiteData(studySiteId, finalUpdateData)
-    await updateSituationWithStudySiteData(studySiteId, finalUpdateData, informations.user.environment)
+    await updateSituationWithStudySiteData(
+      studySiteId,
+      finalUpdateData,
+      informations.user.environment,
+      study.simplified,
+    )
   })
 
 async function updateSituationWithStudySiteData(
   studySiteId: string,
   siteDependentFields: StudySiteFields,
   environment: Environment,
+  studyIsSimplified: boolean,
 ) {
-  if (isSimplifiedEnvironment(environment)) {
+  if (studyIsSimplified) {
+    if (!environment || !hasSimplifiedStudies(environment)) {
+      return
+    }
     const situationUpdates = studySiteToSituation(environment, siteDependentFields)
 
     if (Object.keys(situationUpdates).length > 0) {
@@ -581,8 +593,8 @@ async function updateSituationWithCustomData(
   environment: Environment,
   simplified: boolean,
 ) {
-  if (isSimplifiedEnvironment(environment) || isTiltSimplified(environment, simplified)) {
-    const situationUpdates = customDataToSituationByEnvironment(environment as SimplifiedEnvironment, data)
+  if (hasSimplifiedStudies(environment) || isTiltSimplified(environment, simplified)) {
+    const situationUpdates = customDataToSituationByEnvironment(environment as EnvironmentWithSimplifiedStudies, data)
     if (Object.keys(situationUpdates).length > 0) {
       await updateSituationFields(studySiteId, situationUpdates)
     }
@@ -2494,13 +2506,17 @@ export const changeStudyEstablishment = async (studySiteId: string, data: Change
     }
 
     await updateStudySiteData(studySiteId, data)
-    await updateSituationWithStudySiteData(studySiteId, data, informations.user.environment)
+    await updateSituationWithStudySiteData(studySiteId, data, informations.user.environment, study.simplified)
   })
 
-export const changeStudySiteTiltSimplified = async (studySiteId: string, data: ChangeStudySiteTiltSimplifiedCommand) =>
+export const changeStudySiteTiltSimplified = async (
+  studySiteId: string,
+  data: ChangeStudySiteTiltSimplifiedCommand & TiltStudySiteFields,
+) =>
   withServerResponse('changeStudySiteTiltSimplified', async () => {
     // this function only updates situation for now not the study site because we don't have the fields
     const studySites = await getStudiesSitesFromIds([studySiteId])
+
     if (!studySites || studySites.length === 0) {
       throw new Error(NOT_AUTHORIZED)
     }
@@ -2518,7 +2534,21 @@ export const changeStudySiteTiltSimplified = async (studySiteId: string, data: C
     if (!studySites[0].situation) {
       await saveSituationInDB(study.id, studySiteId, {}, {}, '')
     }
-    await updateSituationWithCustomData(studySiteId, data, informations.user.environment, study.simplified)
+
+    const { postalCode, structure, volunteerNumber, beneficiaryNumber, etp } = data
+
+    await updateSituationWithCustomData(
+      studySiteId,
+      { postalCode, structure },
+      informations.user.environment,
+      study.simplified,
+    )
+    await updateSituationWithStudySiteData(
+      studySiteId,
+      { volunteerNumber, beneficiaryNumber, etp },
+      informations.user.environment,
+      study.simplified,
+    )
   })
 
 export const addEngagementAction = async ({ studyId, sites, ...command }: AddEngagementActionCommand) =>

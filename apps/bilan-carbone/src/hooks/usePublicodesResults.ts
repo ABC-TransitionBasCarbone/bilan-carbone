@@ -1,11 +1,12 @@
 'use client'
 import type { FullStudy } from '@/db/study'
+import { EnvironmentWithSimplifiedStudies } from '@/services/permissions/environment'
 import type { BaseResultsByPost } from '@/services/posts'
 import {
   getSimplifiedPublicodesConfig,
-  SimplifiedEnvironment,
   SimplifiedPublicodesConfig,
 } from '@/services/publicodes/simplifiedPublicodesConfig'
+
 import { aggregateBaseResultsByPost, computeBaseResultsByPostFromEngine } from '@/services/results/publicodes'
 import { loadSituations } from '@/services/serverFunctions/situation'
 import type { BaseResultsBySite } from '@/types/study.types'
@@ -61,7 +62,10 @@ export function usePublicodesResults(
   const [situationBySiteId, setSituationsBySiteId] = useState<Record<string, Situation<string>>>({})
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const config = useMemo(() => getSimplifiedPublicodesConfig(environment as SimplifiedEnvironment), [environment])
+  const config = useMemo(
+    () => getSimplifiedPublicodesConfig(environment as EnvironmentWithSimplifiedStudies),
+    [environment],
+  )
   const studySiteIds = useMemo(() => {
     if (studySite === 'all') {
       return study.sites.map((s) => s.id).toSorted()

@@ -1,6 +1,6 @@
 import { useBeforeUnload } from '@/hooks/useBeforeUnload'
 import { useLatestRef } from '@/hooks/utils'
-import { SimplifiedEnvironment } from '@/services/publicodes/simplifiedPublicodesConfig'
+import { EnvironmentWithSimplifiedStudies } from '@/services/permissions/environment'
 import { loadSituation } from '@/services/serverFunctions/situation'
 import { getUpdatedSituationWithInputValue, situationsAreEqual } from '@abc-transitionbascarbone/publicodes/form'
 import { aggregateSituationValues } from '@abc-transitionbascarbone/publicodes/utils'
@@ -19,7 +19,7 @@ interface PublicodesFormContextValue<RuleName extends string = string>
   extends PublicodesSituationContextValue<RuleName>, PublicodesAutoSaveContextValue<RuleName> {}
 
 interface PublicodesFormProviderProps {
-  environment: SimplifiedEnvironment
+  environment: EnvironmentWithSimplifiedStudies
   studyId: string
   studySiteId: string
   syncIntervalMs?: number

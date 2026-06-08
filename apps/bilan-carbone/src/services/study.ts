@@ -34,7 +34,7 @@ import type { ResultType } from '../types/study.types'
 import { AdditionalResultTypes, BaseResultsBySite, ResultsByPost } from '../types/study.types'
 import { getEmissionResults, getEmissionSourceEmission } from './emissionSource'
 import { download } from './file'
-import { hasAccessToBcExport } from './permissions/environment'
+import { hasAccessToBcExport, hasBCExportWithSimplifiedStudy } from './permissions/environment'
 import { isTiltSimplified } from './permissions/environmentAdvanced'
 import {
   BaseResultsByPost,
@@ -44,7 +44,6 @@ import {
   Post,
   subPostBCToSubPostTiltMapping,
 } from './posts'
-import { isSimplifiedEnvironment } from './publicodes/simplifiedPublicodesConfig'
 import { rulesSpans as begesRulesSpans, computeBegesResult } from './results/beges'
 import { computeResultsByPostFromEmissionSources, computeResultsByTag } from './results/consolidated'
 import { PostInfos } from './results/exports'
@@ -899,7 +898,7 @@ export const downloadStudyResults = async (
     )
   }
 
-  if (isSimplifiedEnvironment(environment) && resultsBySite) {
+  if (hasBCExportWithSimplifiedStudy(environment) && resultsBySite) {
     data.push(formatBaseResultsToBCExport(study, siteList, resultsBySite, tExport, tPost))
   }
 

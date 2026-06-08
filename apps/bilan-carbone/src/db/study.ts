@@ -45,7 +45,12 @@ export const createStudy = async (
   const client = tx ?? prismaClient
   const dbStudy = await client.study.create({
     data,
-    select: { id: true, exports: { select: { types: true } }, sites: { select: { id: true, country: true } } },
+    select: {
+      id: true,
+      exports: { select: { types: true } },
+      sites: { select: { id: true, country: true, volunteerNumber: true, etp: true, beneficiaryNumber: true } },
+      simplified: true,
+    },
   })
 
   if (hasAccessToCreateStudyWithEmissionFactorVersions(environment) || shouldCreateFEVersions) {

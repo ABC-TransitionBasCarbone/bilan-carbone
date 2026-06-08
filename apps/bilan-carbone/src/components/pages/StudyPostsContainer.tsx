@@ -2,8 +2,8 @@
 import type { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import { customRich } from '@/i18n/customRich'
+import { EnvironmentWithSimplifiedStudies } from '@/services/permissions/environment'
 import { Post, subPostsByPost } from '@/services/posts'
-import { SimplifiedEnvironment } from '@/services/publicodes/simplifiedPublicodesConfig'
 import { StudyRole, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { EnvironmentMode } from '@abc-transitionbascarbone/utils/environments'
 import { CircularProgress } from '@mui/material'
@@ -112,7 +112,7 @@ const StudyPostsPageContainer = ({ post, currentSubPost, study, userRole, user }
             />
           ) : (
             <SimplifiedStudyPostsPage
-              environment={environment as SimplifiedEnvironment}
+              environment={environment as EnvironmentWithSimplifiedStudies}
               currentSubPost={currentSubPost}
               post={post}
               study={study}
@@ -123,7 +123,7 @@ const StudyPostsPageContainer = ({ post, currentSubPost, study, userRole, user }
         environmentComponents={{
           [EnvironmentMode.SIMPLIFIED]: (
             <SimplifiedStudyPostsPage
-              environment={environment as SimplifiedEnvironment}
+              environment={environment as EnvironmentWithSimplifiedStudies}
               currentSubPost={currentSubPost}
               post={post}
               study={study}
