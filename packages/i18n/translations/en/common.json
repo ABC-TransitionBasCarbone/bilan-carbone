@@ -253,5 +253,13 @@
       "contributorInvitation": "Contribution request on the study {studyName}",
       "addedUsersByFile": "Authorization for user import"
     }
+  },
+  "nav": {
+    "backToHome": "Back to home",
+    "home": "Home",
+    "notFound": "Page not found",
+    "organization": "Organisation",
+    "edit": "Edit",
+    "team": "Team"
   }
 }
