@@ -1,7 +1,6 @@
 'use client'
 
 import { TeamMember } from '@/db/accountMip'
-import { UserStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { UserSession } from 'next-auth'
 import { SessionProvider } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
@@ -14,8 +13,8 @@ interface Props {
 
 const TeamPage = ({ user, team }: Props) => {
   const tNav = useTranslations('nav')
-  console.log("user, ", user)
-  console.log("team, ", team)
+  console.log('user, ', user)
+  console.log('team, ', team)
 
   return (
     <SessionProvider>
