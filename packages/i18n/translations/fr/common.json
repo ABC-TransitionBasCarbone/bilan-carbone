@@ -253,5 +253,13 @@
       "contributorInvitation": "Demande de contribution sur l'étude {studyName}",
       "addedUsersByFile": "Autorisation pour l'ajout d'utilisateurs"
     }
+  },
+  "nav": {
+    "backToHome": "Retour à l'accueil",
+    "home": "Accueil",
+    "notFound": "Page non trouvée",
+    "organization": "Organisation",
+    "edit": "Modifier",
+    "team": "Équipe"
   }
 }

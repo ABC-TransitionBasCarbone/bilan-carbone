@@ -185,20 +185,14 @@
     "ges": "GHG emissions ({unit})"
   },
   "nav": {
-    "backToHome": "Back to home",
     "emissionFactors": "Emission Factors",
-    "home": "Home",
     "newOrganization": "Add an organisation",
     "newStudy": "Add a New Study",
     "studyPerimeter": "Perimeter",
     "newStudyContributor": "Add a contributor",
     "editStudyContributor": "Edit a contributor",
     "newStudyRight": "Add a Person",
-    "notFound": "Page not found",
-    "organization": "Organisation",
-    "edit": "Edit",
     "studyRights": "Role",
-    "team": "Team",
     "actualities": "News"
   },
   "actuality": {
