@@ -1,22 +1,20 @@
 'use client'
 
-import { TeamMember } from '@/db/account'
-import { isAdvanced } from '@/services/permissions/environment'
+import { TeamMember } from '@/db/accountMip'
 import { canEditSelfRole } from '@/services/permissions/user'
-import { deleteOrganizationMember } from '@/services/serverFunctions/organization'
 import { changeRole } from '@/services/serverFunctions/user'
-import { canBeUntrainedRole, canEditMemberRole, getEnvironmentRoles } from '@/utils/user'
+import { canEditMemberRole } from '@/utils/user'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import type { TeamMemberCommon } from '@abc-transitionbascarbone/components/src/team/TeamTableCommon'
 import TeamTableCommon from '@abc-transitionbascarbone/components/src/team/TeamTableCommon'
 import { UserSession } from 'next-auth'
 import { useRouter } from 'next/navigation'
 import { useCallback, useState } from 'react'
+import { Role } from '@abc-transitionbascarbone/db-common/enums'
 
 interface Props {
   user: UserSession
   team: TeamMember[]
-  crOrga: boolean
 }
 
 type DeletionErrorData = {
@@ -25,7 +23,7 @@ type DeletionErrorData = {
   organization: string
 }
 
-const TeamTable = ({ user, team, crOrga }: Props) => {
+const TeamTable = ({ user, team }: Props) => {
   const [deletingMember, setDeletingMember] = useState('')
   const [deletionError, setDeletionError] = useState('')
   const [deletionErrorData, setDeletionErrorData] = useState<DeletionErrorData[] | undefined>(undefined)
@@ -35,25 +33,25 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
   const router = useRouter()
 
   const deleteMember = useCallback(async () => {
-    setDeletionErrorData(undefined)
-    await callServerFunction(() => deleteOrganizationMember(deletingMember), {
-      onSuccess: (data) => {
-        if (data) {
-          // Handle the case where deletion failed due to business rules
-          setDeletionError(data.code)
-          setDeletionErrorData(
-            data.studies.map((study) => ({
-              id: study.id,
-              name: study.name,
-              organization: study.organizationVersion.organization.name,
-            })),
-          )
-        } else {
-          setDeletingMember('')
-          router.refresh()
-        }
-      },
-    })
+    // setDeletionErrorData(undefined)
+    // await callServerFunction(() => deleteOrganizationMember(deletingMember), {
+    //   onSuccess: (data) => {
+    //     if (data) {
+    //       // Handle the case where deletion failed due to business rules
+    //       setDeletionError(data.code)
+    //       setDeletionErrorData(
+    //         data.studies.map((study) => ({
+    //           id: study.id,
+    //           name: study.name,
+    //           organization: study.organizationVersion.organization.name,
+    //         })),
+    //       )
+    //     } else {
+    //       setDeletingMember('')
+    //       router.refresh()
+    //     }
+    //   },
+    // })
   }, [deletingMember, callServerFunction, router])
 
   return (
@@ -62,15 +60,14 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
         email={user.email}
         team={team as TeamMemberCommon[]}
         canUpdateTeam={canUpdateTeam}
-        environmentRoles={getEnvironmentRoles(user.environment)}
+        environmentRoles={Role}
         deleteMember={deleteMember}
-        isAdvanced={isAdvanced(user.environment)}
+        isAdvanced={false}
         deletionError={deletionError}
         deletionErrorData={deletionErrorData}
         setDeletionErrorData={setDeletionErrorData}
-        crOrga={crOrga}
         canEditSelfRole={canEditSelfRole(user.role)}
-        canBeUntrainedRole={canBeUntrainedRole(user.role, user.environment)}
+        canBeUntrainedRole={true}
         changeRole={changeRole}
       />
     </>

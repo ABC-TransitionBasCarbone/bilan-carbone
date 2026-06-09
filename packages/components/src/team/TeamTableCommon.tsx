@@ -4,7 +4,7 @@ import { Table as BaseTable, HelpIcon } from '@abc-transitionbascarbone/componen
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { TableActionButton } from '@abc-transitionbascarbone/components/src/base/TableActionButton'
 import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
-import { Environment, Level, Role } from '@abc-transitionbascarbone/db-common/enums'
+import { Level, Role } from '@abc-transitionbascarbone/db-common/enums'
 import { ApiResponse } from '@abc-transitionbascarbone/utils/serverResponse'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
@@ -25,7 +25,6 @@ export type TeamMemberCommon = {
 
 interface Props {
   email: string
-  userEnvironment: Environment
   team: TeamMemberCommon[]
   canUpdateTeam: boolean
   environmentRoles:
@@ -58,7 +57,6 @@ type DeletionErrorData = {
 
 const TeamTableCommon = ({
   email,
-  userEnvironment,
   team,
   canUpdateTeam,
   environmentRoles,
@@ -108,7 +106,6 @@ const TeamTableCommon = ({
             currentRole={role}
             email={row.original.user.email}
             level={row.original.user.level}
-            environment={userEnvironment}
             environmentRoles={environmentRoles}
             canEditSelfRole={canEditSelfRole}
             canBeUntrainedRole={canBeUntrainedRole}
@@ -136,7 +133,7 @@ const TeamTableCommon = ({
       })
     }
     return col
-  }, [t, canUpdateTeam, tLevel, email, userEnvironment, tRole])
+  }, [t, canUpdateTeam, tLevel, email, tRole])
 
   const table = useReactTable({
     columns,

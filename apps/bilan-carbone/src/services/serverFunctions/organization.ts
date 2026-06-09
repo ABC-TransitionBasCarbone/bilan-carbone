@@ -25,8 +25,9 @@ import { withServerResponse } from '@/utils/serverResponse'
 import { isAdmin } from '@/utils/user'
 import type { Account, Prisma, User } from '@abc-transitionbascarbone/db-common'
 import { StudyRole, UserChecklist } from '@abc-transitionbascarbone/db-common/enums'
+import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
 import { auth, dbActualizedAuth } from '../auth'
-import { NOT_AUTHORIZED, UNKNOWN_ERROR } from '../permissions/check'
+import { UNKNOWN_ERROR } from '../permissions/check'
 import { hasAccessToCreateOrganization } from '../permissions/environment'
 import {
   canCreateOrganization,
