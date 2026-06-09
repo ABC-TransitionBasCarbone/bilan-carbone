@@ -4,10 +4,10 @@ import { getSituationByStudySite, getSituationsByStudySites, upsertSituation } f
 import { getStudyById } from '@/db/study'
 import { ListLayoutSituations } from '@/lib/publicodes/context'
 import { withServerResponse } from '@/utils/serverResponse'
+import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
 import type { InputJsonValue } from '@prisma/client/runtime/client'
 import { Situation } from 'publicodes'
 import { dbActualizedAuth } from '../auth'
-import { NOT_AUTHORIZED } from '../permissions/check'
 import { canSaveSituationOnStudy } from '../permissions/situation'
 import { hasReadAccessOnStudy } from '../permissions/study'
 

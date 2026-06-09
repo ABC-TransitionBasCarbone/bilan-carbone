@@ -1,6 +1,17 @@
+import { Role } from '@abc-transitionbascarbone/db-common/enums'
 import { UserSession } from 'next-auth'
 import { AccountMipWithUserSelect } from './accountMip.select'
 import { prismaClient } from './client.server'
+
+export const getAccountMipByEmailAndOrganizationVersionMipId = (
+  email: string,
+  organizationVersionMipId: string | null,
+) => {
+  return prismaClient.accountMip.findFirst({
+    where: { user: { email }, organizationVersionMipId },
+    select: AccountMipWithUserSelect,
+  })
+}
 
 export const getAccountMipById = (id: string) =>
   prismaClient.accountMip.findUnique({
@@ -27,3 +38,9 @@ export const getAccountMipFromUserOrganization = (user: UserSession) =>
     orderBy: { user: { email: 'asc' } },
   })
 export type TeamMember = AsyncReturnType<typeof getAccountMipFromUserOrganization>[number]
+
+export const changeAccountMipRole = (id: string, role: Role) =>
+  prismaClient.accountMip.update({
+    data: { role },
+    where: { id },
+  })
