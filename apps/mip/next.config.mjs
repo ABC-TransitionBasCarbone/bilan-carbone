@@ -11,10 +11,12 @@ const nextConfig = {
   turbopack: {
     resolveAlias: {
       underscore: 'lodash',
+      '@abc-transitionbascarbone/publicodes-mip': '../../packages/publicodes-packages/publicodes-mip/',
+      '@abc-transitionbascarbone/survey': '../../packages/survey/src/index.ts',
     },
     resolveExtensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
   },
-  transpilePackages: ['@mui/material', '@mui/icons-material', '@abc-transitionbascarbone/survey'],
+  transpilePackages: ['mui-color-input', '@abc-transitionbascarbone/survey', '@abc-transitionbascarbone/publicodes-mip'],
   reactStrictMode: true,
   headers: async () => [
     {
