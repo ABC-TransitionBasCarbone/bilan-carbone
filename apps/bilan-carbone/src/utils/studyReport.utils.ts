@@ -32,10 +32,10 @@ const getActionDetails = (
 
   const reductionPercentageWithoutUtilisation =
     totalWithoutUtilisationKg > 0
-      ? formatNumber((totalReductionKgWithoutUtilisation / totalWithoutUtilisationKg) * 100, 2)
-      : formatNumber(0, 2)
+      ? formatNumber((totalReductionKgWithoutUtilisation / totalWithoutUtilisationKg) * 100, 0)
+      : formatNumber(0, 0)
   const reductionPercentageWithUtilisation =
-    totalKg > 0 ? formatNumber((totalReductionKgWithUtilisation / totalKg) * 100, 2) : formatNumber(0, 2)
+    totalKg > 0 ? formatNumber((totalReductionKgWithUtilisation / totalKg) * 100, 0) : formatNumber(0, 0)
 
   const actions = rawActions.map((action) => ({
     title: action.title,
@@ -53,7 +53,7 @@ const getActionDetails = (
     reductionValueTCO2e: action.reductionValueKg != null ? Math.round(action.reductionValueKg / 1000) : null,
     reductionPercentage:
       action.reductionValueKg != null && totalKg > 0
-        ? formatNumber((action.reductionValueKg / totalKg) * 100, 2)
+        ? formatNumber((action.reductionValueKg / totalKg) * 100, 0)
         : null,
     potentialDeduction:
       (bc.study.transitionPlan.actions.potentialDeduction as Record<string, string>)[action.potentialDeduction] ??
