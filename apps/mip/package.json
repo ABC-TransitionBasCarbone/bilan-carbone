@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "next dev --port 3002",
-    "build": "next build && node copy-assets.js",
+    "build": "next build . && node copy-assets.js",
     "start": "node -r dotenv/config .next/standalone/apps/mip/server.js dotenv_config_path=.env",
     "lint": "prettier --check . && eslint .",
     "format": "prettier --write .",
