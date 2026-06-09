@@ -18,7 +18,7 @@ import { getActionReductionRatio } from '@/utils/study'
 import { getAllTagIds } from '@/utils/tag.utils'
 import type { ExternalStudy, SectenInfo, SubPost } from '@abc-transitionbascarbone/db-common'
 import { useTranslations } from 'next-intl'
-import { ReactNode } from 'react'
+import { ReactNode, useMemo } from 'react'
 import TrajectoryGraph from './TrajectoryGraph'
 import TransitionPlanFilters from './TransitionPlanFilters'
 import TransitionPlanOnboarding from './TransitionPlanOnboarding'
@@ -74,12 +74,11 @@ const TransitionPlanBase = ({
   graphTitleAction,
   children,
 }: Props) => {
-  'use memo'
-
   const tNav = useTranslations('nav')
-  const allTagIds = study.tagFamilies.flatMap((f) => f.tags.map((tag) => tag.id))
-  const allTagIdsWithOther = getAllTagIds(study.tagFamilies)
-  const allSiteIds = study.sites.map((s) => s.site.id)
+  const allTagIds = useMemo(() => study.tagFamilies.flatMap((f) => f.tags.map((tag) => tag.id)), [study.tagFamilies])
+  const allTagIdsWithOther = useMemo(() => getAllTagIds(study.tagFamilies), [study.tagFamilies])
+  const allSiteIds = useMemo(() => study.sites.map((s) => s.site.id), [study.sites])
+
   const {
     selectedSiteIds,
     selectedSubPosts,
@@ -107,71 +106,87 @@ const TransitionPlanBase = ({
     selectedTagIds,
   })
 
-  const filteredTrajectories = trajectories.map((traj) => ({
-    ...traj,
-    objectives: traj.objectives.filter((obj) => {
-      const hasScope = obj.sites.length > 0 || obj.subPosts.length > 0 || obj.tags.length > 0
-      if (!hasScope) {
-        return true
-      }
-      return scopeMatchesUIFilters(
-        obj.sites.map((s) => s.studySite.siteId),
-        obj.subPosts.map((sp) => sp.subPost),
-        obj.tags.map((tag) => tag.studyTag.id),
-        selectedSiteIds,
-        selectedSubPosts,
-        selectedTagIds,
-        allTagIds,
-      )
-    }),
-  }))
-
-  const objectiveGroupsByTrajectoryId = new Map<string, ObjectiveGroup[]>()
-  for (const traj of trajectories) {
-    const groups = buildObjectiveGroups({
-      study,
-      validatedOnly,
-      objectives: traj.objectives,
-      filterSiteIds: selectedSiteIds,
-      filterSubPosts: selectedSubPosts,
-      filterTagIds: selectedTagIds,
-    })
-    if (groups) {
-      objectiveGroupsByTrajectoryId.set(traj.id, groups)
-    }
-  }
-
-  const studyHasTags = allTagIds.length > 0
-  const filteredActions =
-    selectedSiteIds.length === 0 || selectedSubPosts.length === 0 || (studyHasTags && selectedTagIds.length === 0)
-      ? []
-      : actions.filter((action) =>
-          scopeMatchesUIFilters(
-            action.sites?.map((s) => s.studySite.siteId) ?? [],
-            action.subPosts?.map((sp) => sp.subPost) ?? [],
-            action.tags?.map((tag) => tag.studyTag.id) ?? [],
+  const filteredTrajectories = useMemo(
+    () =>
+      trajectories.map((traj) => ({
+        ...traj,
+        objectives: traj.objectives.filter((obj) => {
+          const hasScope = obj.sites.length > 0 || obj.subPosts.length > 0 || obj.tags.length > 0
+          if (!hasScope) {
+            return true
+          }
+          return scopeMatchesUIFilters(
+            obj.sites.map((s) => s.studySite.siteId),
+            obj.subPosts.map((sp) => sp.subPost),
+            obj.tags.map((tag) => tag.studyTag.id),
             selectedSiteIds,
             selectedSubPosts,
             selectedTagIds,
-          ),
-        )
+            allTagIds,
+          )
+        }),
+      })),
+    [trajectories, selectedSiteIds, selectedSubPosts, selectedTagIds, allTagIds],
+  )
 
-  const scopedActions = filteredActions.map((action) => {
-    if (action.reductionValueKg === null) {
-      return action
+  const objectiveGroupsByTrajectoryId = useMemo(() => {
+    const map = new Map<string, ObjectiveGroup[]>()
+    for (const traj of trajectories) {
+      const groups = buildObjectiveGroups({
+        study,
+        validatedOnly,
+        objectives: traj.objectives,
+        filterSiteIds: selectedSiteIds,
+        filterSubPosts: selectedSubPosts,
+        filterTagIds: selectedTagIds,
+      })
+      if (groups) {
+        map.set(traj.id, groups)
+      }
     }
-    const ratio = getActionReductionRatio(
-      study,
-      validatedOnly,
-      action.sites.map((s) => s.studySite.siteId),
-      action.subPosts.map((sp) => sp.subPost),
-      action.tags.map((tag) => tag.studyTag.id),
-      selectedSiteIds,
-      selectedSubPosts,
-      selectedTagIds,
-    )
-    return { ...action, reductionValueKg: action.reductionValueKg * ratio }
-  })
+    return map
+  }, [trajectories, study, validatedOnly, selectedSiteIds, selectedSubPosts, selectedTagIds])
+
+  const studyHasTags = allTagIds.length > 0
+  const filteredActions = useMemo(
+    () =>
+      selectedSiteIds.length === 0 || selectedSubPosts.length === 0 || (studyHasTags && selectedTagIds.length === 0)
+        ? []
+        : actions.filter((action) =>
+            scopeMatchesUIFilters(
+              action.sites?.map((s) => s.studySite.siteId) ?? [],
+              action.subPosts?.map((sp) => sp.subPost) ?? [],
+              action.tags?.map((tag) => tag.studyTag.id) ?? [],
+              selectedSiteIds,
+              selectedSubPosts,
+              selectedTagIds,
+            ),
+          ),
+    [actions, selectedSiteIds, selectedSubPosts, selectedTagIds, studyHasTags],
+  )
+
+  const scopedActions = useMemo(
+    () =>
+      filteredActions.map((action) => {
+        if (action.reductionValueKg === null) {
+          return action
+        }
+        const ratio = getActionReductionRatio(
+          study,
+          validatedOnly,
+          action.sites.map((s) => s.studySite.siteId),
+          action.subPosts.map((sp) => sp.subPost),
+          action.tags.map((tag) => tag.studyTag.id),
+          selectedSiteIds,
+          selectedSubPosts,
+          selectedTagIds,
+        )
+        return { ...action, reductionValueKg: action.reductionValueKg * ratio }
+      }),
+    [filteredActions, study, validatedOnly, selectedSiteIds, selectedSubPosts, selectedTagIds],
+  )
+
+  const selectedCustomTrajectories = useMemo(() => filteredTrajectories.map((t) => t.id), [filteredTrajectories])
 
   return (
     <>
@@ -219,7 +234,7 @@ const TransitionPlanBase = ({
             sectenData={sectenData}
             selectedSnbcTrajectories={[]}
             selectedSbtiTrajectories={[]}
-            selectedCustomTrajectories={filteredTrajectories.map((t) => t.id)}
+            selectedCustomTrajectories={selectedCustomTrajectories}
             pastStudies={filteredPastStudies}
             validatedOnly={validatedOnly}
             studyEmissions={filteredStudyEmissions}
