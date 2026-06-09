@@ -23,7 +23,7 @@
     "prisma": "yarn workspace @abc-transitionbascarbone/db-common run prisma",
     "seed": "yarn workspace bilan-carbone prisma db seed",
     "postinstall": "yarn compile:publicodes",
-    "compile:publicodes": "for dir in packages/publicodes-packages/publicodes-*; do (cd $dir && yarn compile); done",
+    "compile:publicodes": "set -e; for dir in packages/publicodes-packages/publicodes-*; do (cd \"$dir\" && yarn compile); done",
     "compile:publicodes-windows": "for /d %d in (\"packages\\publicodes-packages\\publicodes-*\") do (@cd /d \"%d\" && yarn install && yarn compile && cd ..\\..\\..))"
   },
   "devDependencies": {
