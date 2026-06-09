@@ -18,13 +18,13 @@
     "test": "vitest run --reporter=tree"
   },
   "dependencies": {
-    "@incubateur-ademe/publicodes-acv-numerique": "^2.1.0",
-    "@incubateur-ademe/publicodes-commun": "^2.0.1",
     "@publicodes/tools": "^1.10.2",
     "futureco-data": "^0.1.0",
     "publicodes": "^1.10.1"
   },
   "devDependencies": {
+    "@incubateur-ademe/publicodes-acv-numerique": "^2.1.0",
+    "@incubateur-ademe/publicodes-commun": "^2.0.1",
     "vitest": "^4.1.6"
   },
   "resolutions": {
