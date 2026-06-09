@@ -11,20 +11,20 @@
     "publicodes-build"
   ],
   "scripts": {
-    "compile": "npx publicodes compile",
-    "watch": "npx publicodes compile --watch",
-    "dev": "npx publicodes dev",
+    "compile": "publicodes compile",
+    "watch": "publicodes compile --watch",
+    "dev": "publicodes dev",
     "pretest": "yarn run compile",
     "test": "vitest run --reporter=tree"
   },
   "dependencies": {
     "@incubateur-ademe/publicodes-acv-numerique": "^2.1.0",
     "@incubateur-ademe/publicodes-commun": "^2.0.1",
+    "@publicodes/tools": "^1.10.2",
     "futureco-data": "^0.1.0",
     "publicodes": "^1.10.1"
   },
   "devDependencies": {
-    "@publicodes/tools": "^1.10.2",
     "vitest": "^4.1.6"
   },
   "resolutions": {
