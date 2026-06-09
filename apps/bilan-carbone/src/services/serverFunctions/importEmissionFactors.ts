@@ -155,7 +155,7 @@ export async function exportManualEmissionFactorsToFile(): Promise<ArrayBuffer> 
   const rows: (string | number)[][] = emissionFactors.map((ef) => {
     const metaData = ef.metaData.find((m) => m.language === locale) ?? ef.metaData[0]
     return [
-      getEmissionFactorFullName(metaData),
+      getEmissionFactorFullName(metaData, '', Import.Manual),
       metaData?.attribute ?? '',
       ef.customUnit
         ? formatPrefixedUnitDisplay(locale, Unit.CUSTOM, ef.customUnit)

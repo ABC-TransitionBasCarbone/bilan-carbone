@@ -516,7 +516,7 @@ function buildEmissionSourceRow(
   const typeLabel = es.type ? (typeTranslations[es.type] ?? es.type) : ''
   const unitRaw = ef?.unit ? (unitTranslations[ef.unit] ?? ef.unit) : ''
   const unitLabel = unitRaw ? getSingularForm(unitRaw) : ''
-  const efTitle = getEmissionFactorFullName(ef?.metaData)
+  const efTitle = getEmissionFactorFullName(ef?.metaData, '', ef?.importedFrom)
   const efValue = ef ? getEmissionFactorValue(ef, study.organizationVersion.environment) : ''
   const efUnitLabel = ef?.unit ? formatPrefixedUnitDisplay(locale, ef.unit) : ''
   const feSpecificQuality = ef ? getSpecificEmissionFactorQuality(es) : null

@@ -382,7 +382,7 @@ const EmissionSourceForm = ({
             </p>
           )}
           <p className={classNames(emissionFactorStyles.header, 'align-end')}>
-            {getEmissionFactorFullName(selectedFactor.metaData)}
+            {getEmissionFactorFullName(selectedFactor.metaData, '', selectedFactor.importedFrom)}
             {selectedFactor.location ? ` - ${selectedFactor.location}` : ''}
             {selectedFactor.metaData?.location ? ` - ${selectedFactor.metaData.location}` : ''} -{' '}
             {formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor, environment))}

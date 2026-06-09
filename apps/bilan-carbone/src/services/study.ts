@@ -160,7 +160,7 @@ const getEmissionSourcesRows = (
           emissionFactor?.unit ? tUnit(emissionFactor.unit, { count: 1 }) : '',
           getQuality(getQualitativeUncertaintyFromQuality(emissionSource), tQuality),
           emissionSource.comment || '',
-          getEmissionFactorFullName(emissionFactor?.metaData, t('noFactor')),
+          getEmissionFactorFullName(emissionFactor?.metaData, t('noFactor'), emissionFactor?.importedFrom),
           emissionFactor
             ? getEmissionFactorValue(emissionFactor, environment).toLocaleString('fr-FR', { useGrouping: false })
             : '',
