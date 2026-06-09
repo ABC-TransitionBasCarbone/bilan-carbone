@@ -5,7 +5,7 @@ import { RoleMip, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { DAY } from '@abc-transitionbascarbone/utils'
 import bcrypt from 'bcryptjs'
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next'
-import { getServerSession, NextAuthOptions } from 'next-auth'
+import { getServerSession, NextAuthOptions, Session } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 
 export const authOptions: NextAuthOptions = {
@@ -124,4 +124,25 @@ export function auth(
   ...args: [GetServerSidePropsContext['req'], GetServerSidePropsContext['res']] | [NextApiRequest, NextApiResponse] | []
 ) {
   return getServerSession(...args, authOptions)
+}
+
+export async function dbActualizedAuth(
+  ...args: [GetServerSidePropsContext['req'], GetServerSidePropsContext['res']] | [NextApiRequest, NextApiResponse] | []
+): Promise<Session | null> {
+  const session = await getServerSession(...args, authOptions)
+  if (!session || !session.user) {
+    return null
+  }
+  const accountMip = await getAccountMipById(session.user.accountMipId)
+  if (!accountMip) {
+    return null
+  }
+  return {
+    ...session,
+    user: {
+      ...session.user,
+      role: accountMip.role,
+      organizationVersionMipId: accountMip.organizationVersionMipId,
+    },
+  }
 }

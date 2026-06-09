@@ -2,7 +2,7 @@
 
 import { getStudyTagsByStudyId as dbGetStudyTagsByStudyId } from '@/db/tag.db'
 import { withServerResponse } from '@/utils/serverResponse'
-import { NOT_AUTHORIZED } from '../permissions/check'
+import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
 import { hasReadAccessOnStudy } from '../permissions/study'
 
 export const getStudyTagsByStudyId = async (studyId: string) =>

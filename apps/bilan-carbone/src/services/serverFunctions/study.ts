@@ -132,6 +132,7 @@ import {
   UserChecklist,
   UserStatus,
 } from '@abc-transitionbascarbone/db-common/enums'
+import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
 import createReport from 'docx-templates'
 import fs from 'fs/promises'
 import { UserSession } from 'next-auth'
@@ -141,7 +142,7 @@ import { auth, dbActualizedAuth } from '../auth'
 import { customDataToSituationByEnvironment, TiltCustomDataFields } from '../customDataToSituation'
 import { getCaracterisationsBySubPost } from '../emissionSource'
 import { allowedFlowFileTypes, isAllowedFileType } from '../file'
-import { ALREADY_IN_STUDY, NOT_AUTHORIZED, TOO_MANY_COMMENTS } from '../permissions/check'
+import { ALREADY_IN_STUDY, TOO_MANY_COMMENTS } from '../permissions/check'
 import {
   EnvironmentWithSimplifiedStudies,
   hasReaderRoleOnStudyAsContributor,
