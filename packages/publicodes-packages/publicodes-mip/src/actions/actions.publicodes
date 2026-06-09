@@ -1,0 +1,37 @@
+actions:
+  formule:
+    somme:
+      - alimentation . repas . réduire viande . max 1 par jour
+      - alimentation . repas . poisson faible empreinte
+      - alimentation . repas . viande faible empreinte
+      - alimentation . repas . végétarien
+      - alimentation . devenir végétarien
+      - alimentation . devenir végétalien
+      - alimentation . boisson . réduire café . max deux par jour
+      - alimentation . boisson . réduire café . remplace un café par jour par thé
+      - alimentation . boisson . réduire café . remplace par chicorée
+      - alimentation . boisson . réduire chocolat chaud . max un par jour
+      - alimentation . bonus . manger de saison
+      - alimentation . bonus . manger local
+      - logement . hébergement . écogestes
+      - transport . voiture . éco-conduite
+      - transport . voiture . location réduire taille
+      - transport . voiture . covoiturage un
+      - transport . voiture . covoiturage deux
+      - transport . voiture . location voiture électrique
+      - transport . voiture . limitation autoroute
+      - transport . voiture . prendre le train
+      - transport . voiture . boulot . faire du covoiturage
+      - transport . voiture . boulot . sans voiture
+      - transport . voiture . boulot . télétravail
+      - transport . deux roues . scooter électrique
+      - transport . ferry . arrêter ferry
+      - transport . ferry . réduire ferry
+      - transport . infolettre
+      - transport . train déplacements pro
+      - DT . voiture . éco-conduite
+      - DT . voiture . opter transport commun
+      - DT . voiture . intensifier transport commun
+      - DT . voiture . sans voiture
+      - divers . numérique . appareils . allongement
+      - divers . numérique . internet . diminuer

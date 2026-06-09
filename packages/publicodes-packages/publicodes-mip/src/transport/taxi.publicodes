@@ -1,0 +1,23 @@
+transport . taxi:
+  applicable si: présent
+  titre: Taxi
+  icônes: 🚕
+  formule: km * impact par km * 12
+
+transport . taxi . km:
+  question: Dans le cadres de vos déplacements professionnels, quelle distance parcourez-vous en taxi chaque mois ?
+  description: |
+    Indiquez la distance moyenne mensuelle parcourue en taxi pour vos déplacements professionnels sur l'année écoulée.
+  suggestions:
+    20 km: 20
+    50 km: 50
+    100 km: 100
+  unité: km/mois
+  plancher: 0
+  par défaut: 50
+
+transport . taxi . impact par km:
+  formule: 0.17
+  unité: kgCO2e/km
+  note: |
+    FE : Voiture essence/Mixte/2023 Base empreinte

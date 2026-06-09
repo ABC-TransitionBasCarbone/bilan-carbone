@@ -1,0 +1,456 @@
+divers . ameublement:
+  non applicable si: métrique != "carbone"
+  icônes: 🛋️
+  note: |
+    Nous ne comptons ici que l'empreinte de la fabrication et la distribution des meubles. Attention donc à ne pas confondre les données de l'ACV ADEME 
+    (qui prennent en compte tous le cycle de vie : du berceau à la tombe) et les FE de la Base Carbone qui donnent uniquement 
+    l'impact de la fabrication d'un produit (en intégrant la phase "distribution" dans le FE, toutefois). 
+
+    Ces FE ne considèrent donc pas la "fin de vie" qui est prise en compte via [le modèle déchets de NGC](https://nosgestesclimat.fr/documentation/alimentation/d%C3%A9chets) (qui prend en compte les quantités de déchets amenés en déchetterie, là ou sont (théoriquement) amenés les meubles en fin de vie).
+
+    Nous considérons que tous les meubles sont utilisés par l'ensemble du foyer, même si potentiellement, certains ne le sont qu'à titre individuel, c'est une limitation du test.
+  formule:
+    somme:
+      - 0 * meubles / logement . habitants
+      - 0 * déforestation / logement . habitants
+
+divers . ameublement . meubles:
+  titre: Ameublement
+  mosaique:
+    type: nombre
+    options:
+      - armoire . nombre
+      - canapé . nombre
+      - matelas . nombre
+      - lit . nombre
+      - table . nombre
+      - chaise . nombre
+      - petit meuble . nombre
+      - grand meuble . nombre
+    suggestions:
+      aucun:
+        armoire . nombre: 0
+        canapé . nombre: 0
+        matelas . nombre: 0
+        lit . nombre: 0
+        table . nombre: 0
+        chaise . nombre: 0
+        petit meuble . nombre: 0
+        grand meuble . nombre: 0
+      équipé:
+        armoire . nombre: 2
+        canapé . nombre: 1
+        matelas . nombre: 2
+        lit . nombre: 2
+        table . nombre: 1
+        chaise . nombre: 6
+        petit meuble . nombre: 2
+        grand meuble . nombre: 1
+      remplacement minimal:
+        armoire . nombre: 0
+        canapé . nombre: 1
+        matelas . nombre: 2
+        lit . nombre: 0
+        table . nombre: 0
+        chaise . nombre: 0
+        petit meuble . nombre: 0
+        grand meuble . nombre: 0
+  question: Quels meubles de moins de 10 ans possédez-vous ?
+  formule:
+    somme:
+      - armoire
+      - canapé
+      - matelas
+      - lit
+      - table
+      - chaise
+      - petit meuble
+      - grand meuble
+  unité: kgCO2e
+  description: |
+    Renseignez ici les biens d'ameublement de moins de 10 ans qui composent l'intérieur de votre ; et seulement les produits achetés neufs, 
+    nous excluons ici l'achat d'occasion et en dépôt vente.
+
+    N'oubliez pas vos meubles de cuisine !  
+
+    Nous considérons que tous les meubles sont utilisés par l'ensemble du foyer, même si potentiellement, certains ne le sont qu'à titre individuel (les lits par exemple), c'est une limitation du test.
+
+    N'hésitez pas à utiliser les catégories petit meuble (inférieur à 10 kg comme un petit buffet ou une table basse par 
+    exemple) ou grand meuble (supérieur à 10 kg comme un grand bureau par exemple) dans le cas où vous ne parvenez pas à catégoriser ce que vous possédez dans le reste des propositions.
+  note: |
+    Les données sont toutes issues de la Base Carbone (achats de biens). Voir https://bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Mobilier.
+
+    Les valeurs par défaut ont été définie arbitrairement, en incluant les meubles de cuisine, notamment dans les ratios petit/grand meubles composés de:
+
+    - 3 petits meubles : 2 étagères, une table basse.
+    - 5 grands meubles : 2 caissons hauts de cuisine, 3 meubles bas.
+
+divers . ameublement . meubles . armoire . empreinte amortie:
+  titre: Empreinte armoire amortie
+  formule: armoire . empreinte / (durée * coefficient préservation)
+  unité: kgCO2e
+
+divers . ameublement . meubles . armoire . empreinte:
+  titre: Empreinte armoire
+  formule: 907
+  unité: kgCO2e
+  note: Facteur d'émissions Armoire - représentative de la Base Carbone
+
+divers . ameublement . meubles . armoire . durée:
+  titre: Durée de vie armoire
+  formule: 10
+  note: |
+    Dans cette [étude](https://librairie.ademe.fr/consommer-autrement/1190-modelisation-et-evaluation-du-poids-carbone-de-produits-de-consommation-et-biens-d-equipement.html)
+    même si les résultats en kgCO2e/an prennent comme hypothèse une durée de vie de 15 ans, il est écrit dans la fiche armoire (page 181) une durée de vie 
+    pouvant aller de 5 à 15 ans. Nous choisissons de considérer de vie de 10 ans.
+
+divers . ameublement . meubles . armoire . nombre:
+  titre: Nombre d'armoires
+  question: Combien d'armoires possédez-vous ?
+  plancher: 0
+  par défaut: 1
+
+divers . ameublement . meubles . armoire:
+  titre: Armoire, dressing
+  icônes: 🗄️
+  formule: empreinte amortie * nombre
+  unité: kgCO2e
+
+divers . ameublement . meubles . canapé . empreinte amortie:
+  titre: Empreinte canapé amortie
+  formule: canapé . empreinte / (durée * coefficient préservation)
+  unité: kgCO2e
+
+divers . ameublement . meubles . canapé . empreinte:
+  titre: Empreinte canapé
+  formule:
+    moyenne:
+      - empreinte canapé convertible
+      - empreinte canapé cuir
+      - empreinte canapé textile
+  unité: kgCO2e
+  note: Moyenne des facteurs d'émissions Canapé - convertible ; Canapé - cuir ; Canapé - textile de la Base Carbone
+
+divers . ameublement . meubles . canapé . empreinte canapé convertible:
+  formule: 197
+  unité: kgCO2e
+  note: Facteur d'émissions Canapé - convertible de la Base Carbone
+
+divers . ameublement . meubles . canapé . empreinte canapé cuir:
+  formule: 182
+  unité: kgCO2e
+  note: Facteur d'émissions Canapé - cuir de la Base Carbone
+
+divers . ameublement . meubles . canapé . empreinte canapé textile:
+  formule: 179
+  unité: kgCO2e
+  note: Facteur d'émissions Canapé - textile de la Base Carbone
+
+divers . ameublement . meubles . canapé . durée:
+  titre: Durée de vie canapé
+  formule: 10
+  note: |
+    Dans cette [étude](https://librairie.ademe.fr/consommer-autrement/1190-modelisation-et-evaluation-du-poids-carbone-de-produits-de-consommation-et-biens-d-equipement.html)
+    même si les résultats en kgCO2e/an prennent comme hypothèse une durée de vie de 10 ans, il est écrit dans la fiche canapé (page 179) une durée de vie 
+    pouvant aller de 5 à 20 ans. Nous choisissons de considérer de vie de 10 ans.
+
+divers . ameublement . meubles . canapé . nombre:
+  titre: Nombre de canapés
+  question: Combien de canapés possédez-vous ?
+  plancher: 0
+  par défaut: 1
+
+divers . ameublement . meubles . canapé:
+  titrre: Canapé
+  icônes: 🛋️
+  formule: empreinte amortie * nombre
+  unité: kgCO2e
+
+divers . ameublement . meubles . matelas . empreinte amortie:
+  titre: Empreinte matelas amortie
+  formule: matelas . empreinte / (durée * coefficient préservation)
+  unité: kgCO2e
+
+divers . ameublement . meubles . matelas . empreinte:
+  titre: Empreinte matelas
+  formule:
+    moyenne:
+      - empreinte matelas mousse
+      - empreinte matelas ressorts
+  unité: kgCO2e
+  note: Moyenne des facteurs d'émissions Matelas - mousse et Matelas - ressorts de la Base Carbone
+
+divers . ameublement . meubles . matelas . empreinte matelas mousse:
+  formule: 285
+  unité: kgCO2e
+  note: Facteurs d'émissions Matelas - mousse de la Base Carbone
+
+divers . ameublement . meubles . matelas . empreinte matelas ressorts:
+  formule: 232
+  unité: kgCO2e
+  note: Facteurs d'émissions Matelas - ressorts de la Base Carbone
+
+divers . ameublement . meubles . matelas . durée:
+  titre: Durée de vie matelas
+  formule: 10
+  note: |
+    Dans cette [étude](https://librairie.ademe.fr/consommer-autrement/1190-modelisation-et-evaluation-du-poids-carbone-de-produits-de-consommation-et-biens-d-equipement.html)
+    même si les résultats en kgCO2e/an prennent comme hypothèse une durée de vie de 15 ans, il est écrit dans la fiche matelas (page 184) une durée de vie 
+    pouvant aller de 5 à 20 ans. Nous choisissons de considérer une durée de vie de 10 ans.
+
+divers . ameublement . meubles . matelas . nombre:
+  titre: Nombre de matelas
+  question: Combien de matelas possédez-vous ?
+  plancher: 0
+  par défaut: 1
+
+divers . ameublement . meubles . matelas:
+  titre: Matelas
+  icônes: 🛏️
+  formule: empreinte amortie * nombre
+  unité: kgCO2e
+
+divers . ameublement . meubles . lit . empreinte amortie:
+  titre: Empreinte lit amortie
+  formule: lit . empreinte / (durée * coefficient préservation)
+  unité: kgCO2e
+
+divers . ameublement . meubles . lit . empreinte:
+  titre: Empreinte lit (sommier, cadre de lit)
+  formule:
+    moyenne:
+      - empreinte sommier à lattes
+      - empreinte sommier tapissier
+      - empreinte cadre de lit
+  unité: kgCO2e
+  note: Moyenne des facteurs d'émissions Sommier - à lattes fixes, Sommier - tapissier et Cadre de lit de la Base Carbone
+
+divers . ameublement . meubles . lit . empreinte sommier à lattes:
+  formule: 44.3
+  unité: kgCO2e
+  note: Facteur d'émissions Sommier - à lattes fixes de la Base Carbone
+
+divers . ameublement . meubles . lit . empreinte sommier tapissier:
+  formule: 103
+  unité: kgCO2e
+  note: Facteur d'émissions Sommier - tapissier de la Base Carbone
+
+divers . ameublement . meubles . lit . empreinte cadre de lit:
+  titre: Empreinte cadre de lit
+  formule: 115
+  unité: kgCO2e
+  note: Facteur d'émissions Cadre de lit de la Base Carbone
+
+divers . ameublement . meubles . lit . durée:
+  titre: Durée de vie lit
+  formule: 10
+  note: |
+    Dans cette [étude](https://librairie.ademe.fr/consommer-autrement/1190-modelisation-et-evaluation-du-poids-carbone-de-produits-de-consommation-et-biens-d-equipement.html)
+    même si les résultats en kgCO2e/an prennent comme hypothèse une durée de vie de 15 ans, il est écrit dans la fiche lit (page 182) une durée de vie 
+    pouvant aller de 5 à 20 ans. Nous choisissons de considérer une durée de vie de 10 ans.
+
+divers . ameublement . meubles . lit . nombre:
+  titre: Nombre de lits
+  question: Combien de lits possédez-vous ?
+  plancher: 0
+  par défaut: 1
+
+divers . ameublement . meubles . lit:
+  titre: Lit (sommier, cadre)
+  icônes: 🛏️
+  formule: empreinte amortie * nombre
+  unité: kgCO2e
+
+divers . ameublement . meubles . table . empreinte amortie:
+  titre: Empreinte table amortie
+  formule: table . empreinte / (durée * coefficient préservation)
+  unité: kgCO2e
+
+divers . ameublement . meubles . table . empreinte:
+  titre: Empreinte table
+  formule: 60.1
+  unité: kgCO2e
+  note: Facteur d'émissions Table - représentative  de la Base Carbone
+
+divers . ameublement . meubles . table . durée:
+  titre: Durée de vie table
+  formule: 10
+  note: |
+    Dans cette [étude](https://librairie.ademe.fr/consommer-autrement/1190-modelisation-et-evaluation-du-poids-carbone-de-produits-de-consommation-et-biens-d-equipement.html)
+    même si les résultats en kgCO2e/an prennent comme hypothèse une durée de vie de 10 ans, il est écrit dans la fiche table (page 178) une durée de vie 
+    pouvant aller de 5 à 20 ans. Nous choisissons de considérer une durée de vie de 10 ans.
+
+divers . ameublement . meubles . table . nombre:
+  titre: Nombre de tables
+  question: Combien de tables possédez-vous ?
+  plancher: 0
+  par défaut: 1
+
+divers . ameublement . meubles . table:
+  titre: Table, bureau
+  icônes: 🍽️✏️
+  formule: empreinte amortie * nombre
+  unité: kgCO2e
+
+divers . ameublement . meubles . chaise . empreinte amortie:
+  titre: Empreinte chaise amortie
+  formule: chaise . empreinte / (durée * coefficient préservation)
+  unité: kgCO2e
+
+divers . ameublement . meubles . chaise . empreinte:
+  titre: Empreinte chaise
+  formule:
+    moyenne:
+      - empreinte chaise bois
+      - empreinte chaise textile
+      - empreinte chaise plastique
+  unité: kgCO2e
+  note: Moyenne des facteurs d'émissions Chaise - bois ; Chaise - bois textile ; Chaise - plastique de la Base Carbone
+
+divers . ameublement . meubles . chaise . empreinte chaise bois:
+  formule: 18.6
+  unité: kgCO2e
+  note: Facteur d'émissions Chaise - bois de la Base Carbone
+
+divers . ameublement . meubles . chaise . empreinte chaise textile:
+  formule: 24.8
+  unité: kgCO2e
+  note: Facteur Chaise - bois textile de la Base Carbone
+
+divers . ameublement . meubles . chaise . empreinte chaise plastique:
+  formule: 34.4
+  unité: kgCO2e
+  note: Facteur d'émissions Chaise - plastique de la Base Carbone
+
+divers . ameublement . meubles . chaise . durée:
+  titre: Durée de vie chaise
+  formule: 10
+  note: |
+    Dans cette [étude](https://librairie.ademe.fr/consommer-autrement/1190-modelisation-et-evaluation-du-poids-carbone-de-produits-de-consommation-et-biens-d-equipement.html)
+    même si les résultats en kgCO2e/an prennent comme hypothèse une durée de vie de 10 ans, il est écrit dans la fiche chaise (page 176) une durée de vie 
+    pouvant aller de 5 à 20 ans. Nous choisissons de considérer une durée de vie de 10 ans.
+
+divers . ameublement . meubles . chaise . nombre:
+  titre: Nombre de chaises
+  question: Combien de chaises possédez-vous ?
+  plancher: 0
+  par défaut: 4
+
+divers . ameublement . meubles . chaise:
+  titre: Chaise, tabouret
+  icônes: 🪑
+  formule: empreinte amortie * nombre
+  unité: kgCO2e
+
+divers . ameublement . meubles . empreinte meuble par kg:
+  titre: Empreinte meuble par kg
+  formule: 1.833
+  unité: kgCO2e/kg
+  note: |
+    Facteur Mobilier - fabrication  de la Base Carbone (exprimé en kgCO2e/kg). 
+    Attention ce facteur d'émission date de 2014 et n'est pas construit à partir des études ACV ayant
+    permis l'élaboration des facteurs propres aux biens d'ameublement.
+
+divers . ameublement . meubles . petit meuble . empreinte amortie:
+  titre: Empreinte amortie petit meuble
+  formule: petit meuble . empreinte / (durée * coefficient préservation)
+  unité: kgCO2e
+
+divers . ameublement . meubles . petit meuble . empreinte:
+  titre: Empreinte petit meuble
+  formule: empreinte meuble par kg * poids moyen
+  unité: kgCO2e
+  note: facteur construit via un facteur d'émission basé sur le poids.
+
+divers . ameublement . meubles . petit meuble . poids moyen:
+  titre: Poids moyen petit meuble
+  formule: 5
+  unité: kg
+
+divers . ameublement . meubles . petit meuble . durée:
+  titre: Durée de vie petit meuble
+  formule: 10
+  note: |
+    A l'instar des autres biens d'ameublement nous considérons une durée de vie de 10 ans.
+
+divers . ameublement . meubles . petit meuble . nombre:
+  titre: Nombre de petits meubles
+  question: Combien de petits meubles possédez-vous ?
+  plancher: 0
+  par défaut: 3
+
+divers . ameublement . meubles . petit meuble:
+  titre: Petit meuble
+  description: Desserte, table basse, étagère murale...
+  icônes: 🪑
+  formule: empreinte amortie * nombre
+  unité: kgCO2e
+
+divers . ameublement . meubles . grand meuble . empreinte amortie:
+  titre: Empreinte amortie grand meuble
+  formule: grand meuble . empreinte / (durée * coefficient préservation)
+  unité: kgCO2e
+
+divers . ameublement . meubles . grand meuble . empreinte:
+  titre: Empreinte grand meuble
+  formule: empreinte meuble par kg * poids moyen
+  unité: kgCO2e
+  note: facteur construit via un facteur d'émission basé sur le poids.
+
+divers . ameublement . meubles . grand meuble . poids moyen:
+  titre: Poids moyen grand meuble
+  formule: 25
+  unité: kg
+
+divers . ameublement . meubles . grand meuble . durée:
+  titre: Durée de vie grand meuble
+  formule: 10
+  note: |
+    A l'instar des autres biens d'ameublement nous considérons une durée de vie de 10 ans.
+
+divers . ameublement . meubles . grand meuble . nombre:
+  titre: Nombre de grands meubles
+  question: Combien de grands meubles (non inclu ailleurs) possédez-vous ?
+  plancher: 0
+  par défaut: 5
+
+divers . ameublement . meubles . grand meuble:
+  titre: Grand meuble
+  description: Meuble de cuisine, grand bureau
+  icônes: 🛏️
+  formule: empreinte amortie * nombre
+  unité: kgCO2e
+
+divers . ameublement . meubles . nombre total:
+  titre: Nombre de meubles dans le logement
+  formule:
+    somme:
+      - armoire . nombre
+      - canapé . nombre
+      - matelas . nombre
+      - lit . nombre
+      - table . nombre
+      - chaise . nombre
+      - petit meuble . nombre
+      - grand meuble . nombre
+
+divers . ameublement . déforestation:
+  formule:
+    variations:
+      - si: déforestation
+        alors:
+          variations:
+            - si: divers . ameublement . meubles . nombre total <= 5
+              alors: facteur meubles * 0.5
+            - si: divers . ameublement . meubles . nombre total > 15
+              alors: facteur meubles * 1.5
+            - sinon: facteur meubles
+      - sinon: 0
+  unité: kgCO2e
+  note: |
+    L'étude [Pendril & al.](https://iopscience.iop.org/article/10.1088/1748-9326/ab0d41) montre que l'empreinte de la déforestation importée est de 81 kgCO2e en moyenne par français. 
+    Nous considérons qu'en moyenne, un foyer français possède de 5 à 15 meubles de moins de 10 ans. Si l'utilisateur en possède moins, nous réduisons la part de déforestation, et inversement s'il en possède plus.
+
+divers . ameublement . déforestation . facteur meubles:
+  formule: 81
+  unité: kgCO2e

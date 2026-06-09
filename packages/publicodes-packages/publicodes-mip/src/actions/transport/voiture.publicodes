@@ -1,0 +1,250 @@
+transport . voiture . éco-conduite:
+  titre: Adopter une éco-conduite
+  applicable si:
+    toutes ces conditions:
+      - voiture . km > 0
+      - une de ces conditions:
+          - voiture . utilisateur = 'propriétaire'
+          - voiture . utilisateur = 'propriétaire covoit'
+          - voiture . utilisateur = 'régulier non propriétaire'
+          - voiture . utilisateur = 'régulier non propriétaire covoit'
+  icônes: 🚗☮
+  ### 1. Formule initiale qui n'est pas calculée par publicodes (je la reformule en 4.)  --> j'ai donc les emojis (normal)
+  #formule: (transport . voiture . empreinte au kilomètre calculée * transport . voiture . km * transport . voiture . éco-conduite . réduction) / transport . voiture . voyageurs
+  ### 2. Formule qui est bien calculée par publicodes et pour laquelle le % d'empreinte affiché est correct --> je n'ai donc pas les emojis (normal)
+  #formule: 10% * transport . voiture
+  ### 3. Formule qui est bien calculée par publicodes et pour laquelle le % d'empreinte affiché n'est pas correct --> je n'ai donc pas les emojis (normal)
+  #formule: 10% * transport . voiture . usage
+  ### 4. Formule qui est bien calculée par publicodes mais pour laquelle le % d'empreinte ne s'affiche pas --> j'ai donc les emojis (ce n'est pas normal). Après vérif de la doc j'ai un chiffrage de l'action mais des variables sont "non applicables" notamment 'transport . voiture . empreinte au kilomètre calculée'
+  formule: transport . voiture - recalcul
+  #unité: kgCO2e
+  description: |
+    Sécurité, réduction des émissions de gaz à effet de serre, économies de carburant : l’écoconduite n’a que des avantages. 
+
+    Avec l’écoconduite, vous pourrez économiser jusqu’à 5 pleins par an. 
+
+    > Découvrez tous les bons gestes [dans cet article](https://agirpourlatransition.ademe.fr/particuliers/bureau/deplacements/lecoconduite-solution-consommer-moins-carburant-limiter-emissions-co2).
+  note: |
+    Voir le [Guide de formation à l'éco-conduite ADEME-LaPoste](https://expertises.ademe.fr/air-mobilites/mobilite-transports/passer-a-laction/solutions-technologiques/dossier/optimiser-lutilisation-lentretien-vehicule/lecoconduite-attitude-a-adopter)
+
+transport . voiture . éco-conduite . recalcul:
+  valeur: transport . voiture
+  contexte:
+    transport . voiture . empreinte au kilomètre calculée: 85% * transport . voiture . empreinte au kilomètre calculée
+  note: |
+    Hypothèse de réduction de 15% ([Guide de formation à l'éco-conduite ADEME-LaPoste](https://expertises.ademe.fr/air-mobilites/mobilite-transports/passer-a-laction/solutions-technologiques/dossier/optimiser-lutilisation-lentretien-vehicule/lecoconduite-attitude-a-adopter))
+
+transport . voiture . limitation autoroute:
+  titre: Rouler à 110km/h sur l'autoroute pour venir en Hauts-de-France
+  icônes: 🚗🛣️
+  applicable si:
+    toutes ces conditions:
+      - voiture . km > 0
+      - une de ces conditions:
+          - voiture . utilisateur = 'propriétaire'
+          - voiture . utilisateur = 'propriétaire covoit'
+          - voiture . utilisateur = 'régulier non propriétaire'
+          - voiture . utilisateur = 'régulier non propriétaire covoit'
+  ### 1. Formule qui n'est pas calculée par publicodes (je ne comprends pas pourquoi) et je reformule en 2. --> j'ai donc les emojis (normal)
+  #ormule: transport . voiture . empreinte au kilomètre calculée * réduction * km autoroute / transport . voiture . voyageurs
+  ### 2. Formule qui est bien calculée par publicodes mais pour laquelle le % d'empreinte ne s'affiche pas --> j'ai donc les emojis (ce n'est pas normal). Après vérif de la doc j'ai un chiffrage de l'action mais des variables sont "non applicables" notamment 'transport . voiture . empreinte au kilomètre calculée'
+  formule: transport . voiture - recalcul
+  description: |
+    Diminuer sa vitesse de 20 km/h sur l’autoroute permet de réduire sa consommation de carburant de l’ordre de 20 %. En ville, il est conseillé de rouler à 30 km/h pour moins consommer, fluidifier le trafic et mieux partager la route avec les vélos, les trottinettes et les piétons.
+
+    > Pour découvrir tous les conseils pour économiser du carburant, [consultez notre fiche](https://librairie.ademe.fr/mobilite-et-transport/5886-10-gestes-pour-economiser-de-l-energie-lors-de-ses-deplacements.html).
+
+transport . voiture . limitation autoroute . recalcul:
+  valeur: transport . voiture
+  contexte:
+    transport . voiture . km: km autoroute
+    transport . voiture . empreinte au kilomètre calculée: réduction
+
+transport . voiture . limitation autoroute . km autoroute:
+  formule: transport . voiture . km * 0.9
+  note: |
+    On considère que 90 % des km faits pour venir en Hauts-de-France le seront sur autoroute.
+  unité: km
+
+transport . voiture . limitation autoroute . réduction:
+  titre: Gain de consommation 130 -> 110
+  #formule: 25%
+  formule: 75% * transport . voiture . empreinte au kilomètre calculée
+  description: |
+    ![](https://imgur.com/NB9CUUt.jpg)
+    D'après ce graphique, par déduction graphique (nous n'avons pas encore remonté aux données [de l'étude](http://theses.univ-lyon2.fr/documents/getpart.php?id=1026&action=pdf), page 151 figure 26), on trouve les données ci-dessous.
+
+    Diesel : 6.5 l/100 à 130km/h -> 4.75 à 110km/h 
+
+    Essence : 11.75 l/100 à 130km/h -> 8.65 à 110km/h
+
+    Donc -27% en diesel et - 26% en essence en passant de 130 à 110. Nous retenons l'ordre de grandeur de 25%.
+  note: |
+    Il faudrait affiner ce calcul.
+    Quelques sources à investiguer pour le calcul.
+    - un citoyen qui fait son test pour une clio. Il trouve une réduction entre -20% et -50% !
+       https://twitter.com/CptQwark_/status/1289499582871658499 
+       Un autre citoyen trouve plutôt -10% avec une plus grosse voiture. 
+    - [Rapport du CGDD](<https://www.ecologie.gouv.fr/sites/default/files/Théma - Réduction des vitesses sur les routes.pdf>), où nous n'avons pas trouvé pour l'instant l'explication du calcul de l'économie de CO₂
+    - Aurélien Bigo qui critique le rapport du CGDD https://twitter.com/AurelienBigo/status/1276459283291439114, mais qui ne nous donne pas d'infos sur le calcul du CO₂ lui même.
+    - une autre évaluation, qui elle nous donne le calcul :)  : https://twitter.com/Tomsawy22670318/status/1274257122373570565
+      Attention, pour être rigoureux, comme évoqué dans ce dernier fil, il faut prendre en compte la distribution de la vitesse et la catégorie de voiture (présence d'une 6ème vitesse par exemple). On ne roule évidement pas tout le temps à 130.
+
+transport . voiture . covoiturage un:
+  titre: Prendre un covoitureur
+  applicable si:
+    toutes ces conditions:
+      - voiture . km > 0
+      - est défini: voiture . utilisateur
+      - voiture . passagers < 4 #On ne prend un covoit que si 3 ou en dessous ? Descendre la limite à 2 ?
+      - une de ces conditions:
+          - voiture . utilisateur = 'propriétaire'
+          - voiture . utilisateur = 'régulier non propriétaire'
+  non applicable si:
+    toutes ces conditions:
+      - est défini: voiture . utilisateur
+      - une de ces conditions:
+          - voiture . utilisateur = 'non régulier'
+          - voiture . utilisateur = 'propriétaire covoit'
+          - voiture . utilisateur = 'régulier non propriétaire covoit'
+  icônes: 🚗👥
+  #  formule: transport . voiture * réduction covoiturage
+  formule: transport . voiture - recalcul
+  description: |
+    5 bonnes raisons de tenter le covoiturage :
+      - C’est économique : à deux, à trois voire à quatre, c’est une opportunité de diviser ses frais de carburant par le nombre de passagers ;
+      - C’est écologique : la voiture individuelle représente à elle seule plus de 15 % des émissions de gaz à effet de serre en France. Or, le covoiturage permet de diviser le nombre des émissions de CO2 par le nombre de voyageurs. Il réduit aussi les émissions de polluants et donc les impacts sur la qualité de l’air ;
+      - C’est solidaire : le covoiturage est une solution pleine de potentiel, en particulier dans les zones aujourd’hui peu desservies par les transports en commun ;
+      - C’est convivial : même entre inconnus (grâce aux plateformes de covoiturage existantes), la route est moins longue…
+      - Dernier atout : le covoiturage constitue une solution pour réduire le trafic (et votre stress).
+
+    > Pour en savoir plus sur les aides disponibles pour vous lancer, [consultez notre article](https://agirpourlatransition.ademe.fr/particuliers/bureau/deplacements/covoiturage-bonnes-raisons-de-se-lancer)
+  note: |
+    Voir l'article The Conversation [À quelles conditions le covoiturage sera-t-il un mode de transport durable ?](https://theconversation.com/a-quelles-conditions-le-covoiturage-sera-t-il-un-mode-de-transport-durable-124122)
+
+transport . voiture . covoiturage un . recalcul:
+  valeur: transport . voiture
+  contexte:
+    transport . voiture . passagers: transport . voiture . passagers + 1
+
+transport . voiture . covoiturage deux:
+  titre: Prendre deux covoitureurs
+  applicable si:
+    toutes ces conditions:
+      - voiture . km > 0
+      - est défini: voiture . utilisateur
+      - voiture . passagers < 3 #On ne prend un covoit que si 2 ou en dessous ? Descendre la limite à 1 ?
+      - une de ces conditions:
+          - voiture . utilisateur = 'propriétaire'
+          - voiture . utilisateur = 'régulier non propriétaire'
+  non applicable si:
+    toutes ces conditions:
+      - est défini: voiture . utilisateur
+      - une de ces conditions:
+          - voiture . utilisateur = 'non régulier'
+          - voiture . utilisateur = 'propriétaire covoit'
+          - voiture . utilisateur = 'régulier non propriétaire covoit'
+  action:
+    dépasse:
+      - transport . voiture . covoiturage un
+  icônes: 🚗👥
+  #  formule: transport . voiture * réduction covoiturage
+  formule: transport . voiture - recalcul
+  description: |
+    5 bonnes raisons de tenter le covoiturage :
+      - C’est économique : à deux, à trois voire à quatre, c’est une opportunité de diviser ses frais de carburant par le nombre de passagers ;
+      - C’est écologique : la voiture individuelle représente à elle seule plus de 15 % des émissions de gaz à effet de serre en France. Or, le covoiturage permet de diviser le nombre des émissions de CO2 par le nombre de voyageurs. Il réduit aussi les émissions de polluants et donc les impacts sur la qualité de l’air ;
+      - C’est solidaire : le covoiturage est une solution pleine de potentiel, en particulier dans les zones aujourd’hui peu desservies par les transports en commun ;
+      - C’est convivial : même entre inconnus (grâce aux plateformes de covoiturage existantes), la route est moins longue…
+      - Dernier atout : le covoiturage constitue une solution pour réduire le trafic (et votre stress).
+
+    > Pour en savoir plus sur les aides disponibles pour vous lancer, [consultez notre article](https://agirpourlatransition.ademe.fr/particuliers/bureau/deplacements/covoiturage-bonnes-raisons-de-se-lancer)
+  note: |
+    Voir l'article The Conversation [À quelles conditions le covoiturage sera-t-il un mode de transport durable ?](https://theconversation.com/a-quelles-conditions-le-covoiturage-sera-t-il-un-mode-de-transport-durable-124122)
+
+transport . voiture . covoiturage deux . recalcul:
+  valeur: transport . voiture
+  contexte:
+    transport . voiture . passagers: transport . voiture . passagers + 2
+
+transport . voiture . location voiture électrique:
+  titre: Louer électrique plutôt que thermique
+  icônes: 🔌🚗
+  applicable si:
+    toutes ces conditions:
+      - voiture . km > 0
+      - voiture . km < 401
+      - est défini: voiture . utilisateur
+      - une de ces conditions:
+          - voiture . utilisateur = 'régulier non propriétaire'
+          - voiture . utilisateur = 'régulier non propriétaire covoit'
+  non applicable si:
+    une de ces conditions:
+      - transport . voiture . motorisation = 'électrique'
+      - toutes ces conditions:
+          - est défini: voiture . utilisateur
+          - une de ces conditions:
+              - voiture . utilisateur = 'propriétaire'
+              - voiture . utilisateur = 'propriétaire covoit'
+              - voiture . utilisateur = 'non régulier'
+  formule: transport . voiture - recalcul
+  description: |
+    Les véhicules électriques sont des modes de transport écologiques notamment si ces derniers sont partagés et c'est ce que vous faites, bravo ! Et ne vous inquiètez pas, au regard des km que vous avez renseignés, l'autonomie de la batterie sera suffisante pour vous rendre dans la région des Hauts-de-France.
+  note: |
+    On considère une autonomie de la batterie de 400 km. Cette hypothèse n'est pas issue de la littérature mais arrêtée arbitrairement
+
+transport . voiture . location voiture électrique . recalcul:
+  valeur: transport . voiture
+  contexte:
+    transport . voiture . motorisation: "'électrique'"
+
+transport . voiture . location réduire taille:
+  titre: Louer une petite voiture pour les déplacements professionnels
+  applicable si:
+    toutes ces conditions:
+      - voiture . km > 0
+      - est défini: voiture . utilisateur
+      - une de ces conditions:
+          - voiture . utilisateur = 'régulier non propriétaire'
+          - voiture . utilisateur = 'régulier non propriétaire covoit'
+  non applicable si:
+    une de ces conditions:
+      - transport . voiture . gabarit = 'petite'
+      - transport . voiture . passagers > 3 #Si plus de 3 passagers on considère qu'on ne peut pas prendre une petite voiture
+      - toutes ces conditions:
+          - est défini: voiture . utilisateur
+          - une de ces conditions:
+              - voiture . utilisateur = 'propriétaire'
+              - voiture . utilisateur = 'propriétaire covoit'
+              - voiture . utilisateur = 'non régulier'
+  formule: transport . voiture - recalcul
+  #  formule: 99% * transport . voiture
+  description: |
+    Les voitures sont de plus en plus grosses et de plus en plus lourdes. L'impact de leur fabrication sur le climat augmente donc en conséquence. A cela
+     s'ajoute le fait que ces voitures sont de moins en moins adaptées à la ville. Tournez vous donc vers un véhicule de taille raisonnable pour votre location.
+
+transport . voiture . location réduire taille . recalcul:
+  valeur: transport . voiture
+  contexte:
+    transport . voiture . gabarit: "'petite'"
+
+# On défini cette action mais elle ne sera pas probablement poussée en V1 car il faudrait s'assurer qu'une alternative train existe pour le trajet effectué
+# en voiture ce qui suppose de demander plus d'infos que maintenant (lieu de départ/d'arrivée notamment)
+## Doit-on faire ces actions alternatives pour le deux roues et le bus longue distance ?
+transport . voiture . prendre le train:
+  titre: Aller en Hauts-de-France en train
+  icônes: 🚆
+  description: |
+    Le train est vraiment LE mode de transport écologique ! Mais nous le savons, il est parfois plus cher et tous les trajets n'ont pas forcément de connexions simples par rail.
+    Consultez ce [calculateur d'itinéraire)(https://www.rome2rio.com) pour trouver les alternatives à la voiture possibles.
+  non applicable si:
+    une de ces conditions:
+      - transport . train . présent
+      - transport . deux roues . présent
+  applicable si: voiture . km > 0
+  formule: transport . voiture - recalcul
+
+transport . voiture . prendre le train . recalcul:
+  valeur: transport . train
+  contexte:
+    transport . train . km: transport . voiture . km

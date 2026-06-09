@@ -1,0 +1,70 @@
+transport:
+  titre: Déplacements professionnels
+  mosaique:
+    type: selection
+    options:
+      - train . présent
+      - voiture . présent
+      - deux roues . présent
+      - transports commun . présent
+      - mobilité douce . présent
+      - taxi . présent
+      - avion . présent
+    suggestions:
+      aucun:
+        train . présent: non
+        voiture . présent: non
+        deux roues . présent: non
+        transports commun . présent: non
+        mobilité douce . présent: non
+        taxi . présent: non
+        avion . présent: non
+  question: Quel moyen de transport utilisez-vous pour faire vos déplacements professionnels ?
+  abréviation: transp.
+  icônes: 🚦
+  description: |
+    Cochez tous les modes de transport que vous utilisez régulièrement pour vos déplacements professionnels. Vous renseignerez ensuite les détails pour chacun des modes de transport que vous aurez sélectionnés sur l'année écoulée.
+  formule:
+    somme:
+      - train
+      - voiture
+      - deux roues
+      - transports commun
+      - mobilité douce
+      - taxi
+      - avion
+      - hébergement
+
+transport . avion . présent:
+  question: Avez vous pris l'avion pour vos déplacements profesionnels au cours de l'année passée ?
+  par défaut: non
+
+transport . car longue distance . présent:
+  question: Avez vous pris le car longue distance pour vos déplacements profesionnels au cours de l'année passée ?
+  par défaut: non
+
+transport . train . présent:
+  question: Avez vous pris le train pour vos déplacements profesionnels au cours de l'année passée ?
+  par défaut: non
+
+transport . voiture . présent:
+  question: Avez vous pris la voiture pour vos déplacements profesionnels au cours de l'année passée ?
+  par défaut: non
+
+transport . deux roues . présent:
+  question: Avez vous pris un deux roues pour vos déplacements profesionnels au cours de l'année passée ?
+  par défaut: non
+
+transport . transports commun . présent:
+  question: Avez vous pris des transports en commun pour vos déplacements profesionnels au cours de l'année passée ?
+  par défaut: non
+
+# On laisse le . présent pour ne pas faire buguer le fichier mobilité douce.publicodes dans l'éventualité où on le remettrai comme mode de transport principal
+transport . mobilité douce . présent:
+  question: Avez vous utilisé des modes de déplacements "actifs" pour vos déplacements profesionnels au cours de l'année passée ?
+  par défaut: non
+
+# On laisse le . présent pour ne pas faire buguer le fichier taxi.publicodes dans l'éventualité où on le remettrai comme mode de transport principal
+transport . taxi . présent:
+  question: Avez vous pris le taxi pour vos déplacements profesionnels au cours de l'année passée ?
+  par défaut: non
