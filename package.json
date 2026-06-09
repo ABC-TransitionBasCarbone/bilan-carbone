@@ -14,7 +14,7 @@
     "dev": "turbo run dev",
     "dev:bc": "turbo run dev --filter=bilan-carbone",
     "dev:mip": "turbo run dev --filter=mip",
-    "build": "turbo run build",
+    "build": "sh -c 'if [ \"$APP_TARGET\" = \"mip\" ]; then turbo run build --filter=mip; else turbo run build --filter=bilan-carbone; fi'",
     "test": "turbo run test",
     "start": "turbo run start",
     "ts": "turbo run ts",
