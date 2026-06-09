@@ -1,9 +1,9 @@
 'use client'
 
+import Box from '@abc-transitionbascarbone/components/src/base/Box'
 import { Formation } from '@abc-transitionbascarbone/db-common'
 import classNames from 'classnames'
 import dynamic from 'next/dynamic'
-import Box from '../base/Box'
 import styles from './Formation.module.css'
 
 interface Props {

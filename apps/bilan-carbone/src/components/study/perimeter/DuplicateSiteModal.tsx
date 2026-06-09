@@ -1,10 +1,10 @@
 'use client'
 
 import { MultiSelect } from '@/components/base/MultiSelect'
-import Modal from '@/components/modals/Modal'
 import type { FullStudy } from '@/db/study'
 import { formatNumber } from '@/utils/number'
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
+import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
 import { SiteCAUnit } from '@abc-transitionbascarbone/db-common/enums'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

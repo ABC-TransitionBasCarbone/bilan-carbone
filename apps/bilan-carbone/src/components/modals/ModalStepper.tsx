@@ -1,11 +1,11 @@
 'use client'
 
+import Box from '@abc-transitionbascarbone/components/src/base/Box'
 import { Button } from '@abc-transitionbascarbone/ui'
 import CloseIcon from '@mui/icons-material/Close'
 import { IconButton, Modal as MUIModal, Step, StepLabel, Stepper, Typography } from '@mui/material'
 import classNames from 'classnames'
 import { ReactNode } from 'react'
-import Box from '../base/Box'
 import styles from './Modal.module.css'
 
 export interface Props {

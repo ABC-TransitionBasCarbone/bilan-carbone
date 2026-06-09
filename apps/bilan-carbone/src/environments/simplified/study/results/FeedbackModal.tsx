@@ -1,5 +1,5 @@
-import Modal from '@/components/modals/Modal'
 import { appendForm } from '@/utils/form'
+import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useEffect } from 'react'

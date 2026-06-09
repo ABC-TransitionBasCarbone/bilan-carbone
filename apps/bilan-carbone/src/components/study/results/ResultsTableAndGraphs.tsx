@@ -1,6 +1,6 @@
-import Box from '@/components/base/Box'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { BasicTypeCharts } from '@/utils/charts'
+import Box from '@abc-transitionbascarbone/components/src/base/Box'
 import Title from '@abc-transitionbascarbone/components/src/base/Title'
 import { StudyResultUnit } from '@abc-transitionbascarbone/db-common/enums'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
