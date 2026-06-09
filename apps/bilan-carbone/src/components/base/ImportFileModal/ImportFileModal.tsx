@@ -1,7 +1,7 @@
 'use client'
 
 import Modal from '@/components/modals/Modal'
-import { AmbiguousRow, FEChoices, ImportError, ImportResult, ImportWarning } from '@/types/import.types'
+import { AmbiguousRow, FEChoices, ImportError, ImportResult, ImportWarning, Phase } from '@/types/import.types'
 import { ValidateEmissionSourcesResult } from '@/types/importEmissionSources.types'
 import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
 import DownloadIcon from '@mui/icons-material/Download'
@@ -64,9 +64,9 @@ const ImportFileModal = <TPreviewRow,>({
   const tCommon = useTranslations('common')
   const [isPending, startTransition] = useTransition()
   const [isDownloading, setIsDownloading] = useState(false)
+  const [phase, setPhase] = useState<Phase>('idle')
   const [errors, setErrors] = useState<{ lineNumber: number | null; items: ImportError[] }[]>([])
   const [warnings, setWarnings] = useState<{ lineNumber: number | null; items: ImportWarning[] }[]>([])
-  const [pendingAmbiguousRows, setPendingAmbiguousRows] = useState<AmbiguousRow[]>([])
   const [ambiguousRows, setAmbiguousRows] = useState<AmbiguousRow[]>([])
   const [feChoices, setFeChoices] = useState<FEChoices>({})
   const [previewRows, setPreviewRows] = useState<TPreviewRow[]>([])
@@ -74,15 +74,10 @@ const ImportFileModal = <TPreviewRow,>({
   const [pendingFile, setPendingFile] = useState<File | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const isPreview = previewRows.length > 0
-  const isWarning = warnings.length > 0
-  const isAmbiguous = ambiguousRows.length > 0
-  const isError = errors.length > 0
-
   const reset = () => {
+    setPhase('idle')
     setErrors([])
     setWarnings([])
-    setPendingAmbiguousRows([])
     setAmbiguousRows([])
     setFeChoices({})
     setPreviewRows([])
@@ -98,22 +93,9 @@ const ImportFileModal = <TPreviewRow,>({
     onClose()
   }
 
-  const initAmbiguousRows = (rows: AmbiguousRow[]) => {
-    setAmbiguousRows(rows)
-  }
-
   const previewFile = (file: File) => {
-    setErrors([])
-    setWarnings([])
-    setPendingAmbiguousRows([])
-    setAmbiguousRows([])
-    setFeChoices({})
-    setPreviewRows([])
+    reset()
     setPendingFile(file)
-
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ''
-    }
 
     startTransition(async () => {
       const result = await onValidate(file)
@@ -122,32 +104,38 @@ const ImportFileModal = <TPreviewRow,>({
           const resolved = await onResolve(file, {})
           if (resolved.status === 'ok') {
             setPreviewRows(resolved.rows)
+            setPhase('preview')
           } else {
             setErrors(groupByLine(resolved.errors))
+            setPhase('error')
           }
         }
       } else if (result.status === 'warnings') {
         setWarnings(groupByLine(result.warnings))
-        setPendingAmbiguousRows(result.ambiguousRows)
+        setAmbiguousRows(result.ambiguousRows)
+        setPhase('warnings')
       } else if (result.status === 'ambiguous') {
-        initAmbiguousRows(result.rows)
+        setAmbiguousRows(result.rows)
+        setPhase('ambiguous')
       } else {
         setErrors(groupByLine(result.errors))
+        setPhase('error')
       }
     })
   }
 
-  const resolveAndPreview = (file: File, choices: FEChoices, onDone: () => void) => {
+  const resolveAndPreview = (file: File, choices: FEChoices) => {
     if (!onResolve) {
       return
     }
     startTransition(async () => {
       const result = await onResolve(file, choices)
-      onDone()
       if (result.status === 'ok') {
         setPreviewRows(result.rows)
+        setPhase('preview')
       } else {
         setErrors(groupByLine(result.errors))
+        setPhase('error')
       }
     })
   }
@@ -156,20 +144,18 @@ const ImportFileModal = <TPreviewRow,>({
     if (!pendingFile) {
       return
     }
-    if (pendingAmbiguousRows.length > 0) {
-      setWarnings([])
-      initAmbiguousRows(pendingAmbiguousRows)
-      setPendingAmbiguousRows([])
+    if (ambiguousRows.length > 0) {
+      setPhase('ambiguous')
       return
     }
-    resolveAndPreview(pendingFile, feChoices, () => setWarnings([]))
+    resolveAndPreview(pendingFile, feChoices)
   }
 
   const handleResolveAmbiguities = () => {
     if (!pendingFile) {
       return
     }
-    resolveAndPreview(pendingFile, feChoices, () => setAmbiguousRows([]))
+    resolveAndPreview(pendingFile, feChoices)
   }
 
   const confirmImport = () => {
@@ -183,6 +169,7 @@ const ImportFileModal = <TPreviewRow,>({
         onSuccess()
       } else {
         setErrors(groupByLine(result.errors ?? []))
+        setPhase('error')
       }
     })
   }
@@ -226,9 +213,9 @@ const ImportFileModal = <TPreviewRow,>({
       label={label}
       title={title}
       onClose={handleClose}
-      big={isPreview}
+      big={phase === 'preview'}
       actions={
-        isPreview
+        phase === 'preview'
           ? [
               { actionType: 'button', variant: 'outlined', onClick: reset, children: tCommon('action.back') },
               {
@@ -238,7 +225,7 @@ const ImportFileModal = <TPreviewRow,>({
                 children: tCommon('action.confirm'),
               },
             ]
-          : isAmbiguous
+          : phase === 'ambiguous'
             ? [
                 { actionType: 'button', variant: 'outlined', onClick: reset, children: tCommon('action.back') },
                 {
@@ -248,7 +235,7 @@ const ImportFileModal = <TPreviewRow,>({
                   children: tCommon('action.continue'),
                 },
               ]
-            : isWarning
+            : phase === 'warnings'
               ? [
                   { actionType: 'button', variant: 'outlined', onClick: reset, children: tCommon('action.cancel') },
                   {
@@ -261,8 +248,8 @@ const ImportFileModal = <TPreviewRow,>({
               : undefined
       }
     >
-      <div className={classNames('flex-col gapped15', { 'grow overflow-hidden': isPreview })}>
-        {!isPreview && !isWarning && !isAmbiguous && (
+      <div className={classNames('flex-col gapped15', { 'grow overflow-hidden': phase === 'preview' })}>
+        {phase === 'idle' && (
           <div className="flex align-center">
             <LoadingButton
               variant="outlined"
@@ -275,9 +262,9 @@ const ImportFileModal = <TPreviewRow,>({
           </div>
         )}
 
-        {isWarning && <WarningList warnings={warnings} t={t} tCommon={tCommon} />}
+        {phase === 'warnings' && <WarningList warnings={warnings} t={t} tCommon={tCommon} />}
 
-        {isAmbiguous && (
+        {phase === 'ambiguous' && (
           <AmbiguousEmissionFactorList
             rows={ambiguousRows}
             choices={feChoices}
@@ -285,7 +272,7 @@ const ImportFileModal = <TPreviewRow,>({
           />
         )}
 
-        {isPreview && (
+        {phase === 'preview' && (
           <>
             <Typography variant="body2" color="textSecondary">
               {previewTitle(previewRows.length)} — {t('previewWarning')}
@@ -294,7 +281,7 @@ const ImportFileModal = <TPreviewRow,>({
           </>
         )}
 
-        {!isPreview && !isWarning && !isAmbiguous && (
+        {(phase === 'idle' || phase === 'error') && (
           <>
             <div
               className={classNames(styles.dropzone, 'flex-col align-center justify-center gapped075 pointer')}
@@ -326,7 +313,7 @@ const ImportFileModal = <TPreviewRow,>({
               )}
             </div>
 
-            {isError && <ErrorList errors={errors} t={t} tCommon={tCommon} />}
+            {phase === 'error' && <ErrorList errors={errors} t={t} tCommon={tCommon} />}
           </>
         )}
       </div>

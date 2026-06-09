@@ -34,3 +34,5 @@ export type ImportWarning = {
 export type ImportError = { lineNumber: number | null; key: string; value?: string }
 
 export type ImportResult = { success: boolean; errors?: ImportError[]; warnings?: ImportWarning[] }
+
+export type Phase = 'idle' | 'warnings' | 'ambiguous' | 'preview' | 'error'

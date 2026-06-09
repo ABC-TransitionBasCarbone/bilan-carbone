@@ -91,7 +91,6 @@ async function getStudyOrThrow(studyId: string, account: AccountWithUser): Promi
   return study
 }
 
-// Parse the file and detect warnings/ambiguities before showing the preview
 export async function validateEmissionSourcesFromFile(
   file: File,
   studyId: string,
