@@ -1,11 +1,11 @@
 'use client'
 
-import { TableActionButton } from '@/components/base/TableActionButton'
 import { FormCheckbox } from '@/components/form/Checkbox'
 import GlobalSites from '@/components/organization/Sites'
 import EnvironmentLoader from '@/environments/core/utils/EnvironmentLoader'
 import { getAllCNCs } from '@/services/serverFunctions/cnc'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
+import { TableActionButton } from '@abc-transitionbascarbone/components/src/base/TableActionButton'
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import type { Cnc } from '@abc-transitionbascarbone/db-common'

@@ -1,6 +1,5 @@
 'use client'
 
-import Modal from '@/components/modals/Modal'
 import StudyContributorsTable from '@/components/study/rights/StudyContributorsTable'
 import StudyParams from '@/components/study/rights/StudyParams'
 import StudyRightsTable from '@/components/study/rights/StudyRightsTable'
@@ -11,6 +10,7 @@ import { ChangeStudyNameCommand, ChangeStudyNameValidation } from '@/services/se
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
+import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
 import type { EmissionFactorImportVersion } from '@abc-transitionbascarbone/db-common'
 import { StudyRole } from '@abc-transitionbascarbone/db-common/enums'
 import { Button } from '@abc-transitionbascarbone/ui'

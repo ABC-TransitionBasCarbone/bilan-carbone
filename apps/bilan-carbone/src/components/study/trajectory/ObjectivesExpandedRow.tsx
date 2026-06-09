@@ -1,10 +1,10 @@
 'use client'
 
-import { TableActionButton } from '@/components/base/TableActionButton'
 import { environmentSubPostsMapping } from '@/services/posts'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { ObjectiveWithScope, TrajectoryWithObjectivesAndScope } from '@/types/trajectory.types'
 import { getAverageAnnualRateFromTrajectory } from '@/utils/trajectory-shared.utils'
+import { TableActionButton } from '@abc-transitionbascarbone/components/src/base/TableActionButton'
 import { TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
 import { Button } from '@abc-transitionbascarbone/ui'
 import { Typography } from '@mui/material'

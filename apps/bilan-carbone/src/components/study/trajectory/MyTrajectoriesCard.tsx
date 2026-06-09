@@ -1,8 +1,8 @@
 'use client'
 
-import Box from '@/components/base/Box'
 import { MultiSelect } from '@/components/base/MultiSelect'
 import { TrajectoryWithObjectives } from '@/types/trajectory.types'
+import Box from '@abc-transitionbascarbone/components/src/base/Box'
 import { Button } from '@abc-transitionbascarbone/ui'
 import { Typography } from '@mui/material'
 import classNames from 'classnames'

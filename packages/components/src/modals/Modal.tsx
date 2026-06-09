@@ -5,7 +5,7 @@ import { Button } from '@abc-transitionbascarbone/ui'
 import CloseIcon from '@mui/icons-material/Close'
 import { ButtonProps, IconButton, Modal as MUIModal, Typography } from '@mui/material'
 import classNames from 'classnames'
-import Box from '../base/Box'
+import Box from '@abc-transitionbascarbone/components/src/base/Box'
 import styles from './Modal.module.css'
 
 export interface Props {

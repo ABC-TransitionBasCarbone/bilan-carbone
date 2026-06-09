@@ -1,6 +1,5 @@
 'use client'
 
-import { TableActionButton } from '@/components/base/TableActionButton'
 import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
 import { DEFAULT_FUZZY_OPTIONS } from '@/constants/fuse.constant'
 import { customRich } from '@/i18n/customRich'
@@ -21,6 +20,7 @@ import {
 import { getAverageAnnualRateFromTrajectory, getLatestPastStudy } from '@/utils/trajectory-shared.utils'
 import { Table as BaseTable } from '@abc-transitionbascarbone/components'
 import baseTableStyles from '@abc-transitionbascarbone/components/src/base/Table.module.css'
+import { TableActionButton } from '@abc-transitionbascarbone/components/src/base/TableActionButton'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { SectenInfo } from '@abc-transitionbascarbone/db-common'
 import { TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'

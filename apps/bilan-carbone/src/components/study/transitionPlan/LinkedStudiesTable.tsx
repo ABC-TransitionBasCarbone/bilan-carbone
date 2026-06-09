@@ -1,10 +1,10 @@
 'use client'
 
-import { TableActionButton } from '@/components/base/TableActionButton'
 import { deleteExternalStudy, deleteLinkedStudy } from '@/services/serverFunctions/transitionPlan'
 import type { PastStudy } from '@/types/trajectory.types'
 import { formatNumber } from '@/utils/number'
 import { Table as BaseTable } from '@abc-transitionbascarbone/components'
+import { TableActionButton } from '@abc-transitionbascarbone/components/src/base/TableActionButton'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import type { StudyResultUnit } from '@abc-transitionbascarbone/db-common'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
