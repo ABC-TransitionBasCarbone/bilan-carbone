@@ -6,6 +6,7 @@ import { ParsedEmissionSourceRow, SOURCE_IMPORT_COLUMNS } from '@/types/importEm
 import {
   EmissionSourceCaracterisation,
   EmissionSourceType,
+  Import,
   SubPost,
   Unit,
 } from '@abc-transitionbascarbone/db-common/enums'
@@ -373,7 +374,7 @@ export async function resolveEmissionFactorRows(
         const chosenEf = await findEmissionFactorByIdForMatch(chosenId)
         if (chosenEf) {
           resolvedByLine.set(lineNumber, {
-            efId: chosenEf.importedId ?? chosenId,
+            efId: chosenEf.importedFrom === Import.Manual ? '' : (chosenEf.importedId ?? ''),
             efName:
               getEmissionFactorFullName(
                 chosenEf.metaData.find((m) => m.language === locale) ??
@@ -404,7 +405,7 @@ export async function resolveEmissionFactorRows(
 
     if (ef && ef.matchType !== EmissionFactorMatchType.NameAmbiguous) {
       resolvedByLine.set(lineNumber, {
-        efId: ef.importedId ?? '',
+        efId: ef.importedFrom === 'Manual' ? '' : (ef.importedId ?? ''),
         efName: ef.foundTitle ?? '',
         efValue: String(ef.foundValue),
         efUnit: formatPrefixedUnitDisplayOptional(locale, ef.foundUnit),

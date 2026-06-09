@@ -119,7 +119,7 @@ describe('findEmissionFactorMatch', () => {
       expect(result).toMatchObject({ matchType: 'nameAndUnitOnly', id: 'ef-1' })
     })
 
-    it('returns nameOnly when single match and no value provided', async () => {
+    it('returns exact when single match and no value provided', async () => {
       const ef = makeEf('ef-1', 3.0, 'KG', 'Électricité')
       mockFindByNameAndUnit.mockResolvedValue([ef])
 
@@ -133,7 +133,7 @@ describe('findEmissionFactorMatch', () => {
         versionIds,
       )
 
-      expect(result).toMatchObject({ matchType: 'nameAndUnitOnly', id: 'ef-1' })
+      expect(result).toMatchObject({ matchType: 'exact', id: 'ef-1' })
     })
 
     it('returns nameAmbiguous when multiple matches by name+unit and value matches none', async () => {

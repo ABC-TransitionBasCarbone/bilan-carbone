@@ -600,6 +600,7 @@ export const findEmissionFactorByIdForMatch = (id: string) =>
     select: {
       id: true,
       importedId: true,
+      importedFrom: true,
       totalCo2: true,
       unit: true,
       customUnit: true,
@@ -616,6 +617,7 @@ export const findEmissionFactorByImportedIdForMatch = (id: string, organizationI
     select: {
       id: true,
       importedId: true,
+      importedFrom: true,
       totalCo2: true,
       unit: true,
       customUnit: true,
@@ -639,6 +641,7 @@ export const findEmissionFactorsByNameAndUnit = (
     select: {
       id: true,
       importedId: true,
+      importedFrom: true,
       totalCo2: true,
       unit: true,
       customUnit: true,
@@ -655,6 +658,7 @@ export const findEmissionFactorsByUnit = (organizationId: string, unit: Unit, ve
     select: {
       id: true,
       importedId: true,
+      importedFrom: true,
       totalCo2: true,
       unit: true,
       customUnit: true,

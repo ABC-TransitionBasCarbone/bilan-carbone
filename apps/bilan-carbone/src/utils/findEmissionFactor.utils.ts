@@ -24,6 +24,7 @@ type EfMatchResult =
         | EmissionFactorMatchType.ValueAndUnitOnly
       id: string
       importedId?: string | null
+      importedFrom?: string | null
       foundTitle?: string
       foundValue?: number
       foundUnit?: string
@@ -36,6 +37,7 @@ type EfMatchResult =
 export type EfRow = {
   id: string
   importedId?: string | null
+  importedFrom?: string | null
   totalCo2: number
   unit: string | null
   customUnit: string | null
@@ -65,6 +67,7 @@ function toEfMatch(
     matchType,
     id: ef.id,
     importedId: ef.importedId,
+    importedFrom: ef.importedFrom,
     foundTitle: getEfFullName(ef, locale) || undefined,
     foundValue: ef.totalCo2,
     foundUnit: ef.customUnit ?? ef.unit ?? undefined,
@@ -105,7 +108,9 @@ export async function findEmissionFactorMatch(
   }
 
   if (byNameAndUnit.length === 1) {
-    return toEfMatch(byNameAndUnit[0], EmissionFactorMatchType.NameAndUnitOnly, locale)
+    // If there is no value provided to compare, we consider it as an exact match
+    const matchType = value === undefined ? EmissionFactorMatchType.Exact : EmissionFactorMatchType.NameAndUnitOnly
+    return toEfMatch(byNameAndUnit[0], matchType, locale)
   }
 
   if (byNameAndUnit.length > 1 && title) {
