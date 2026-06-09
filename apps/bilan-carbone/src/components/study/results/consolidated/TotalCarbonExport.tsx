@@ -1,5 +1,5 @@
-import Box from '@/components/base/Box'
 import { formatNumber } from '@/utils/number'
+import Box from '@abc-transitionbascarbone/components/src/base/Box'
 import Title from '@abc-transitionbascarbone/components/src/base/Title'
 import { Export, StudyResultUnit } from '@abc-transitionbascarbone/db-common'
 import classNames from 'classnames'

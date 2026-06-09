@@ -1,9 +1,9 @@
 'use client'
 
-import Modal from '@/components/modals/Modal'
 import { AmbiguousRow, FEChoices, ImportError, ImportResult, ImportWarning, Phase } from '@/types/import.types'
 import { ValidateEmissionSourcesResult } from '@/types/importEmissionSources.types'
 import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
+import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
 import DownloadIcon from '@mui/icons-material/Download'
 import UploadFileIcon from '@mui/icons-material/UploadFile'
 import { CircularProgress, Typography } from '@mui/material'

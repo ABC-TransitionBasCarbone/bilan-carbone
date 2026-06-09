@@ -1,11 +1,11 @@
 'use client'
 
-import Box from '@/components/base/Box'
 import useStudySite from '@/components/study/site/useStudySite'
 import type { FullStudy } from '@/db/study'
 import { usePublicodesResults } from '@/hooks/usePublicodesResults'
 import { getTotalValueFromBaseResults } from '@/services/results/publicodes'
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
+import Box from '@abc-transitionbascarbone/components/src/base/Box'
 import { SiteCAUnit } from '@abc-transitionbascarbone/db-common/enums'
 import CircularProgress from '@mui/material/CircularProgress'
 import { UserSession } from 'next-auth'

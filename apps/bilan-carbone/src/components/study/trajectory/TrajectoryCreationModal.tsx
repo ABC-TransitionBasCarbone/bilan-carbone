@@ -1,6 +1,5 @@
 'use client'
 
-import Modal from '@/components/modals/Modal'
 import { SBTI_START_YEAR, SNBC_FINAL_TARGET_YEAR } from '@/constants/trajectory.constants'
 import {
   createTrajectorySchema,
@@ -27,6 +26,7 @@ import {
 } from '@/utils/trajectory'
 import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
+import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
 import type { SectenInfo } from '@abc-transitionbascarbone/db-common'
 import { TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
 import { getYearFromDateStr } from '@abc-transitionbascarbone/utils/time'

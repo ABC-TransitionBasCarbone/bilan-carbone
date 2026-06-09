@@ -1,6 +1,5 @@
 'use client'
 
-import Box from '@/components/base/Box'
 import TagChip from '@/components/base/TagChip'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { StudyTagColors } from '@/constants/tag.constants'
@@ -10,6 +9,7 @@ import { createTag, deleteTag, getTagFamiliesByStudyId, updateTag } from '@/serv
 import { NewStudyTagCommand, NewStudyTagCommandValidation } from '@/services/serverFunctions/emissionSource.command'
 import { HelpIcon } from '@abc-transitionbascarbone/components'
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
+import Box from '@abc-transitionbascarbone/components/src/base/Box'
 import Form from '@abc-transitionbascarbone/components/src/base/Form'
 import Title from '@abc-transitionbascarbone/components/src/base/Title'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
