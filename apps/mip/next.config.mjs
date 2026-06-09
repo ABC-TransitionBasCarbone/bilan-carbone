@@ -4,12 +4,24 @@ const withNextIntl = createNextIntlPlugin()
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone', // we use the standalone output to be able to reduce bundle size by copying only the necessary assets in the standalone folder (see copy-assets.js)
-  reactStrictMode: true,
-  transpilePackages: ['@mui/material', '@mui/icons-material', '@abc-transitionbascarbone/survey'],
   reactCompiler: {
     compilationMode: 'annotation',
   },
+  output: 'standalone', // we use the standalone output to be able to reduce bundle size by copying only the necessary assets in the standalone folder (see copy-assets.js)
+  turbopack: {
+    resolveAlias: {
+      underscore: 'lodash',
+    },
+    resolveExtensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
+  },
+  transpilePackages: ['@mui/material', '@mui/icons-material', '@abc-transitionbascarbone/survey'],
+  reactStrictMode: true,
+  headers: async () => [
+    {
+      source: '/(.*)',
+      headers: [{ key: 'X-Frame-Options', value: 'SAMEORIGIN' }],
+    },
+  ],
 }
 
 export default withNextIntl(nextConfig)
