@@ -1,6 +1,6 @@
 import { QuestionContainer } from '@abc-transitionbascarbone/publicodes/form'
-import MosaicBooleanInput from '@abc-transitionbascarbone/ui/src/Form/MosaicBooleanInput'
-import MosaicNumberInput from '@abc-transitionbascarbone/ui/src/Form/MosaicNumberInput'
+import MosaicBooleanInput from '@abc-transitionbascarbone/ui/Form/MosaicBooleanInput'
+import MosaicNumberInput from '@abc-transitionbascarbone/ui/Form/MosaicNumberInput'
 import { EvaluatedFormElement, FormPageElementProp } from '@publicodes/forms'
 import Engine from 'publicodes'
 
