@@ -79,7 +79,8 @@ export const EmissionFactorsTable = ({
       {
         id: 'name',
         header: t('name'),
-        accessorFn: (emissionFactor) => getEmissionFactorFullName(emissionFactor.metaData),
+        accessorFn: (emissionFactor) =>
+          getEmissionFactorFullName(emissionFactor.metaData, '', emissionFactor.importedFrom),
         cell: ({ getValue, row }) => <EmissionFactorNameCell expanded={row.getIsExpanded()} getValue={getValue} />,
       },
       {

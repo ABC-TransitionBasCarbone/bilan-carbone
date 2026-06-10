@@ -636,6 +636,7 @@ export const findEmissionFactorsByNameAndUnit = (
     where: {
       ...(unit ? { AND: [{ OR: [{ unit }, { customUnit: unit }] }] } : {}),
       metaData: { some: { language: locale, title: { equals: title, mode: Prisma.QueryMode.insensitive } } },
+      status: { not: EmissionFactorStatus.Archived },
       OR: getOrganizationAndImportedVersionsFilters(organizationId, versionIds),
     },
     select: {
@@ -653,6 +654,7 @@ export const findEmissionFactorsByUnit = (organizationId: string, unit: Unit, ve
   prismaClient.emissionFactor.findMany({
     where: {
       AND: [{ OR: [{ unit }, { customUnit: unit }] }],
+      status: { not: EmissionFactorStatus.Archived },
       OR: getOrganizationAndImportedVersionsFilters(organizationId, versionIds),
     },
     select: {

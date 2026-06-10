@@ -27,9 +27,13 @@ export const emissionFactorDefautQualityStar = '☆'
 export function getEmissionFactorFullName(
   metaData: { title?: string | null; attribute?: string | null; frontiere?: string | null } | null | undefined,
   valueIfMissing = '',
+  importedFrom?: Import | null,
 ): string {
   if (!metaData) {
     return valueIfMissing
+  }
+  if (importedFrom === Import.Manual) {
+    return metaData.title || valueIfMissing
   }
   return [metaData.title, metaData.attribute, metaData.frontiere].filter(Boolean).join(' - ') || valueIfMissing
 }

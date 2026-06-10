@@ -115,7 +115,7 @@ const EmissionSourceFactor = ({
   }, [])
 
   useEffect(() => {
-    setValue(getEmissionFactorFullName(selectedFactor?.metaData))
+    setValue(getEmissionFactorFullName(selectedFactor?.metaData, '', selectedFactor?.importedFrom))
   }, [selectedFactor])
 
   const fuse = useMemo(() => {
@@ -196,7 +196,7 @@ const EmissionSourceFactor = ({
             >
               <p className={styles.header}>
                 {displayOnlyExistingDataWithDash([
-                  getEmissionFactorFullName(result.metaData) || undefined,
+                  getEmissionFactorFullName(result.metaData, '', result.importedFrom) || undefined,
                   result.location,
                   result.metaData?.location,
                   formatEmissionFactorNumber(getEmissionFactorValue(result, environment)),
