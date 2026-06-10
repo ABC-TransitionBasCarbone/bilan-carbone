@@ -1,4 +1,5 @@
-import { Role } from '@abc-transitionbascarbone/db-common/enums'
+import { canEditMemberRole } from '@/utils/user'
+import { Role, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { UserSession } from 'next-auth'
 import { AccountMipWithUserSelect } from './accountMip.select'
 import { prismaClient } from './client.server'
@@ -35,6 +36,9 @@ export const getAccountMipFromUserOrganization = (user: UserSession) =>
       role: true,
       updatedAt: true,
     },
+    where: canEditMemberRole(user)
+      ? { organizationVersionMipId: user.organizationVersionMipId }
+      : { status: UserStatus.ACTIVE, organizationVersionMipId: user.organizationVersionMipId },
     orderBy: { user: { email: 'asc' } },
   })
 export type TeamMember = AsyncReturnType<typeof getAccountMipFromUserOrganization>[number]
