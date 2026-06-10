@@ -1,5 +1,5 @@
-import { FormSelect } from '@/components/form/Select'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
+import { FormSelect } from '@abc-transitionbascarbone/components/src/form/Select'
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { EmissionFactorPartType } from '@abc-transitionbascarbone/db-common/enums'
 import { Button } from '@abc-transitionbascarbone/ui'

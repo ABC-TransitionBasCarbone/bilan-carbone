@@ -1,7 +1,7 @@
+import { Select } from '@abc-transitionbascarbone/components/src/base/Select'
 import { MenuItem, SelectChangeEvent, SelectProps } from '@mui/material'
 import { useEffect, useMemo, useState } from 'react'
 import styles from './MultiSelect.module.css'
-import { Select } from './Select'
 
 interface MultiSelectProps {
   icon?: React.ReactNode

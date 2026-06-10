@@ -1,4 +1,3 @@
-import { Select } from '@/components/base/Select'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { ALL_POSTS_VALUE } from '@/constants/post.constants'
 import { environmentPostMapping, Post, subPostsByPost } from '@/services/posts'
@@ -6,6 +5,7 @@ import { SubPostsCommand } from '@/services/serverFunctions/emissionFactor.comma
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { getSortedPosts } from '@/utils/post'
 import { HelpIcon } from '@abc-transitionbascarbone/components'
+import { Select } from '@abc-transitionbascarbone/components/src/base/Select'
 import { Environment, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { Box, FormControl, FormHelperText, MenuItem, SelectChangeEvent } from '@mui/material'
 import { useTranslations } from 'next-intl'

@@ -1,9 +1,9 @@
 'use client'
 
-import { Select } from '@/components/base/Select'
 import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
 import { customRich } from '@/i18n/customRich'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
+import { Select } from '@abc-transitionbascarbone/components/src/base/Select'
 import { EmissionFactorBase, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { FormControl, FormHelperText, MenuItem } from '@mui/material'
 import { useTranslations } from 'next-intl'

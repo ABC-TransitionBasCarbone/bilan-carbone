@@ -1,11 +1,11 @@
 'use client'
 
-import { Select } from '@/components/base/Select'
 import { ALL_POSTS_VALUE } from '@/constants/post.constants'
 import { environmentPostMapping, Post, subPostsByPost } from '@/services/posts'
 import { SubPostsCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { getPost, getSortedPosts } from '@/utils/post'
+import { Select } from '@abc-transitionbascarbone/components/src/base/Select'
 import { Environment, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { Button } from '@abc-transitionbascarbone/ui'
 import DeleteIcon from '@mui/icons-material/Delete'
