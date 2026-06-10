@@ -10,6 +10,7 @@ const nextConfig = {
   output: 'standalone', // we use the standalone output to be able to reduce bundle size by copying only the necessary assets in the standalone folder (see copy-assets.js)
   turbopack: {
     resolveAlias: {
+      underscore: 'lodash',
       '@abc-transitionbascarbone/publicodes-mip': '../../packages/publicodes-packages/publicodes-mip/',
       '@abc-transitionbascarbone/survey': '../../packages/survey/src/index.ts',
     },
