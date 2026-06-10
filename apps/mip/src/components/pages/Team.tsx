@@ -1,10 +1,11 @@
 'use client'
 
 import { TeamMember } from '@/db/accountMip'
+import { UserStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { UserSession } from 'next-auth'
 import { SessionProvider } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
-// import Team from '../team/TeamTable'
+import Team from '../team/TeamTable'
 
 interface Props {
   user: UserSession
@@ -13,8 +14,6 @@ interface Props {
 
 const TeamPage = ({ user, team }: Props) => {
   const tNav = useTranslations('nav')
-  console.log('user, ', user)
-  console.log('team, ', team)
 
   return (
     <SessionProvider>
@@ -25,7 +24,7 @@ const TeamPage = ({ user, team }: Props) => {
         user={user}
       /> */}
       {/* <PendingInvitations team={team.filter((member) => member.status === UserStatus.VALIDATED)} user={user} /> */}
-      {/* <Team team={team.filter((member) => member.status === UserStatus.ACTIVE)} user={user} crOrga={crOrga} /> */}
+      <Team team={team.filter((member) => member.status === UserStatus.ACTIVE)} user={user} />
     </SessionProvider>
   )
 }

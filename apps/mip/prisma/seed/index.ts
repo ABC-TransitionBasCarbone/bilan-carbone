@@ -36,25 +36,27 @@ const main = async () => {
   })
 
   const password = await signPassword('password-0')
-  const user = await prisma.user.upsert({
-    where: { email: 'mip-admin-0@yopmail.com' },
-    update: {},
-    create: {
-      email: 'mip-admin-0@yopmail.com',
-      firstName: 'Admin',
-      lastName: 'MIP',
-      password,
-    },
-  })
+  for (const role of Object.keys(Role)) {
+    const user = await prisma.user.upsert({
+      where: { email: `mip-${role.toLocaleLowerCase()}-0@yopmail.com` },
+      update: {},
+      create: {
+        email: `mip-${role.toLocaleLowerCase()}-0@yopmail.com`,
+        firstName: role,
+        lastName: 'MIP',
+        password,
+      },
+    })
 
-  await prisma.accountMip.create({
-    data: {
-      userId: user.id,
-      status: UserStatus.ACTIVE,
-      role: Role.ADMIN,
-      organizationVersionMipId: organizationVersionMip.id,
-    },
-  })
+    await prisma.accountMip.create({
+      data: {
+        userId: user.id,
+        status: UserStatus.ACTIVE,
+        role: role as Role,
+        organizationVersionMipId: organizationVersionMip.id,
+      },
+    })
+  }
 }
 
 if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {

@@ -1,6 +1,5 @@
 'use client'
 
-import Box from '@/components/base/Box'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import type { FullStudy } from '@/db/study'
 import { useTransitionPlanFilters } from '@/hooks/useTransitionPlanFilters'
@@ -24,6 +23,7 @@ import { getPost } from '@/utils/post'
 import { calculateMonetaryRatio, convertValue } from '@/utils/study'
 import { getAllTagIds } from '@/utils/tag.utils'
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
+import Box from '@abc-transitionbascarbone/components/src/base/Box'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import type { ExportRule } from '@abc-transitionbascarbone/db-common'
 import {

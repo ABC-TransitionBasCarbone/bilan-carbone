@@ -74,6 +74,7 @@ import {
   sendResetPassword,
   sendUserOnStudyInvitationEmail,
 } from '@abc-transitionbascarbone/services/email/email'
+import { MORE_THAN_ONE, NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
 import { DAY, HOUR, MIN, TIME_IN_MS, YEAR } from '@abc-transitionbascarbone/utils'
 import { environmentsWithChecklist } from '@abc-transitionbascarbone/utils/environments'
 import jwt from 'jsonwebtoken'
@@ -83,9 +84,7 @@ import { auth, dbActualizedAuth } from '../auth'
 import { getUserCheckList } from '../checklist'
 import {
   EMAIL_SENT,
-  MORE_THAN_ONE,
   NOT_ASSOCIATION_SIRET,
-  NOT_AUTHORIZED,
   REQUEST_SENT,
   UNKNOWN_SCHOOL,
   UNKNOWN_SIRET_OR_CNC,

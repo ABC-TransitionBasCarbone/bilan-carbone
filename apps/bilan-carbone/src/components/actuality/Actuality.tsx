@@ -1,12 +1,12 @@
 'use client'
 
+import Box from '@abc-transitionbascarbone/components/src/base/Box'
 import type { Actuality } from '@abc-transitionbascarbone/db-common'
 import { Button } from '@abc-transitionbascarbone/ui'
 import classNames from 'classnames'
 import DOMPurify from 'dompurify'
 import { useFormatter, useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
-import Box from '../base/Box'
 import styles from './styles.module.css'
 
 interface Props {

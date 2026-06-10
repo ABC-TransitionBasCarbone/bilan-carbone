@@ -1,5 +1,5 @@
-import Box from '@/components/base/Box'
 import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
+import Box from '@abc-transitionbascarbone/components/src/base/Box'
 import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
 import { Button } from '@abc-transitionbascarbone/ui'
 import { Typography } from '@mui/material'

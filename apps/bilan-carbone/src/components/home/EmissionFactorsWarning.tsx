@@ -1,9 +1,9 @@
 'use client'
 
 import { customRich } from '@/i18n/customRich'
+import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
-import Modal from '../modals/Modal'
 
 interface Props {
   emissionFactors: string[]

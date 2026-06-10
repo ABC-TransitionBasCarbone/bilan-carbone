@@ -1,4 +1,3 @@
-import Modal from '@/components/modals/Modal'
 import { wasteEmissionFactors } from '@/constants/wasteEmissionFactors'
 import type { FullStudy } from '@/db/study'
 import {
@@ -7,6 +6,7 @@ import {
 } from '@/services/serverFunctions/study'
 import { useUnitLabel } from '@/services/unit'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
+import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
 import type { EmissionFactorImportVersion } from '@abc-transitionbascarbone/db-common'
 import { Import, StudyResultUnit } from '@abc-transitionbascarbone/db-common/enums'
 import { Button } from '@abc-transitionbascarbone/ui'
