@@ -15,6 +15,7 @@
     "ts": "tsc --noEmit",
     "seed": "dotenv -e .env tsx prisma/seed/index.ts",
     "tsx": "dotenv -e .env -- tsx",
+    "prebuild": "yarn run publicodes-mip:compile",
     "publicodes-mip:compile": "cd ../../packages/publicodes-packages/publicodes-mip && yarn run compile",
     "publicodes-mip:watch": "cd ../../packages/publicodes-packages/publicodes-mip && yarn run watch ",
     "publicodes-mip:test": "cd ../../packages/publicodes-packages/publicodes-mip && yarn test",
