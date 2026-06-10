@@ -1970,31 +1970,6 @@
     },
     "forbidden": "Vous devez d'abord compléter vos données générales"
   },
-  "level": {
-    "Initial": "Initial",
-    "Standard": "Standard",
-    "Advanced": "Avancé",
-    "noLevel": "Non formé·e"
-  },
-  "role": {
-    "SUPER_ADMIN": "Administrateur·rice Global",
-    "ADMIN": "Administrateur·rice",
-    "GESTIONNAIRE": "Gestionnaire",
-    "COLLABORATOR": "Collaborateur·rice",
-    "DEFAULT": "Membre",
-    "ADMIN_description": "Un·e administrateur·rice possède tous les droits sur le compte de l'organisation ainsi que sur l'ensemble des études pour son organisation (qu'elles soient publiques ou privées). Il est impossible de changer le rôle d'un·e administrateur·rice sur une étude de son organisation.",
-    "ADMIN_description_CR": "Un·e administrateur·rice possède tous les droits sur le compte et les études (qu'elles soient publiques ou privées) de l'organisation ou de ses clients. Il est impossible de changer le rôle d'un·e administrateur·rice sur une étude de son organisation ou d'un de ses clients.",
-    "GESTIONNAIRE_description": "Un gestionnaire possède tous les droits sur le compte de l'organisation, il n'a aucun droit spécifique sur les études. Il est donc par défaut lecteur pour tous les Bilans Carbone® publics de son organisation.",
-    "GESTIONNAIRE_description_CR": "Un gestionnaire possède tous les droits sur le compte de l'organisation, il n'a aucun droit spécifique sur les clients et les études. Il est donc par défaut lecteur pour tous les Bilans Carbone® publics de son organisation ou de ses clients.",
-    "COLLABORATOR_description": "Un·e collaborateur·rice est une personne formée à la méthode Bilan Carbone®. Il n'a aucun droit sur le compte de l'organisation mais peut créer des études pour son organisation. Il est par défaut éditeur·rice sur tous les Bilans Carbone® publics de son organisation.",
-    "COLLABORATOR_description_CR": "Un·e collaborateur·rice est une personne formée à la méthode Bilan Carbone®. Il n'a aucun droit sur le compte de l'organisation mais peut créer des clients et des études pour son organisation et ses clients. Il est par défaut éditeur·rice sur tous les Bilans Carbone® publics de son organisation ou de ses clients.",
-    "DEFAULT_description": "Un membre de l'organisation n'a aucun droit spécifique ni sur l'organisation, ni sur l'équipe, ni sur les Bilan Carbone® réalisés. Il est par défaut lecteur sur tous les Bilans Carbone® publics de son organisation.",
-    "DEFAULT_description_CR": "Un membre de l'organisation n'a aucun droit spécifique ni sur l'organisation, ni sur l'équipe, ni sur les clients, ni sur les Bilan Carbone® réalisés. Il est par défaut lecteur sur tous les Bilans Carbone® publics de son organisation et de ses clients",
-    "guide": "Guide des rôles",
-    "saved": "Nouveau rôle sauvegardé",
-    "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
-    "More than one": "Il doit y avoir au moins un·e administrateur·rice ou gestionnaire dans l'organisation"
-  },
   "environment": {
     "BC": "BC+ 2.0",
     "CUT": "Count",
@@ -2004,28 +1979,6 @@
   "source": {
     "CRON": "Cron",
     "TUNISIE": "Tunisie"
-  },
-  "team": {
-    "pending": "Invitations en attentes",
-    "invitationDate": "Invitation envoyé le",
-    "toValidate": "Invitations à valider",
-    "addedDate": "Ajouté le",
-    "delete": "Supprimer l'utilisateur·rice",
-    "resend": "Renvoyer l'invitation",
-    "table": {
-      "title": "Mon équipe",
-      "newUser": "Inviter un·e utilisateur·rice",
-      "firstName": "Prénom",
-      "lastName": "Nom",
-      "email": "Email",
-      "level": "Formation",
-      "role": "Rôle",
-      "action": " ",
-      "deleteMember": "Supprimer le·a membre",
-      "userDeletion": "Suppression d'un·e utilisateur·rice",
-      "userDeletionDescription": "Êtes vous sur de vouloir supprimer cet·te utilisateur·rice ? Il n'aura plus accès au compte de votre organisation, mais aura toujours accès aux études pour lesquelles il a été invité par d'autres organisations.",
-      "necessaryAdmin": "La suppression de cet administrateur est impossible. Il est le seul validateur·rice des études suivantes : "
-    }
   },
   "newMember": {
     "title": "Inviter un·e utilisateur·rice",
