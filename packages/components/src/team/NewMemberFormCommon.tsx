@@ -2,23 +2,31 @@
 
 import { addMember } from '@/services/serverFunctions/user'
 import { AddMemberCommand, AddMemberCommandValidation } from '@/services/serverFunctions/user.command'
-import { getEnvironmentRoles } from '@/utils/user'
 import Form from '@abc-transitionbascarbone/components/src/base/Form'
 import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
-import { FormSelect } from '@abc-transitionbascarbone/components/src/form/Select'
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
-import { Environment, Role } from '@abc-transitionbascarbone/db-common/enums'
+import { Role } from '@abc-transitionbascarbone/db-common/enums'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
+import { FormSelect } from '@abc-transitionbascarbone/components/src/form/Select'
 
 interface Props {
-  environment: Environment
+  environmentRoles:
+    | Role
+    | {
+        ADMIN: 'ADMIN'
+        DEFAULT: 'DEFAULT'
+      }
+    | {
+        ADMIN: 'ADMIN'
+        COLLABORATOR: 'COLLABORATOR'
+      }
 }
-const NewMemberForm = ({ environment }: Props) => {
+const NewMemberFormCommon = ({ environmentRoles }: Props) => {
   const router = useRouter()
   const t = useTranslations('newMember')
   const tRole = useTranslations('role')
@@ -69,7 +77,7 @@ const NewMemberForm = ({ environment }: Props) => {
         trim
       />
       <FormSelect control={form.control} translation={t} name="role" label={t('role')} data-testid="new-member-role">
-        {Object.keys(getEnvironmentRoles(environment))
+        {Object.keys(environmentRoles)
           .filter((role) => role !== Role.SUPER_ADMIN)
           .map((key) => (
             <MenuItem key={key} value={key}>
@@ -84,4 +92,4 @@ const NewMemberForm = ({ environment }: Props) => {
   )
 }
 
-export default NewMemberForm
+export default NewMemberFormCommon
