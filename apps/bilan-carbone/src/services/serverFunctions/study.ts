@@ -53,8 +53,8 @@ import {
   getPendingStudyCommentsCountFromAuthor,
   getSourcesLatestImportVersionId,
   getStudiesSitesFromIds,
+  getStudyAllowedUsersUnfiltered,
   getStudyById,
-  getStudyByIdForReport,
   getStudyCommentsCountFromOrganizationVersionId,
   getStudyCommentsFromOrganizationVersionId,
   getStudyCommentsWithStudyIdAndSubPost,
@@ -1915,7 +1915,8 @@ export const prepareReport = async (
       template = contentResult.data
     }
 
-    const studyForReport = ((await getStudyByIdForReport(study.id)) ?? study) as FullStudy
+    const allowedUsers = await getStudyAllowedUsersUnfiltered(study.id)
+    const studyForReport = { ...study, allowedUsers }
     const studyData = await mapStudyForReport(studyForReport, results)
     return createReport({
       template,
