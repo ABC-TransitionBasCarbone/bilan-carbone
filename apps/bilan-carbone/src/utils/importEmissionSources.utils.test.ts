@@ -379,7 +379,7 @@ describe('resolveEmissionFactorRows', () => {
       foundUnit: 'KG',
     })
 
-    const result = await resolveEmissionFactorRows([makeRow()], undefined, Locale.FR, ORG_ID, VERSION_IDS)
+    const result = await resolveEmissionFactorRows([makeRow()], {}, Locale.FR, ORG_ID, VERSION_IDS)
 
     expect(result.type).toBe('resolved')
     if (result.type === 'resolved') {
@@ -392,7 +392,7 @@ describe('resolveEmissionFactorRows', () => {
 
     const result = await resolveEmissionFactorRows(
       [makeRow({ emissionFactorName: '' })],
-      undefined,
+      {},
       Locale.FR,
       ORG_ID,
       VERSION_IDS,
@@ -407,7 +407,7 @@ describe('resolveEmissionFactorRows', () => {
   it('returns warnings with efMissingUnit when EF name present but no unit and no match', async () => {
     mockFindMatch.mockResolvedValue(null)
 
-    const result = await resolveEmissionFactorRows([makeRow()], undefined, Locale.FR, ORG_ID, VERSION_IDS)
+    const result = await resolveEmissionFactorRows([makeRow()], {}, Locale.FR, ORG_ID, VERSION_IDS)
 
     expect(result.type).toBe('warnings')
     if (result.type === 'warnings') {
@@ -420,7 +420,7 @@ describe('resolveEmissionFactorRows', () => {
 
     const result = await resolveEmissionFactorRows(
       [makeRow({ emissionFactorUnit: Unit.KG })],
-      undefined,
+      {},
       Locale.FR,
       ORG_ID,
       VERSION_IDS,
@@ -442,7 +442,7 @@ describe('resolveEmissionFactorRows', () => {
       foundUnit: 'KG',
     })
 
-    const result = await resolveEmissionFactorRows([makeRow()], undefined, Locale.FR, ORG_ID, VERSION_IDS)
+    const result = await resolveEmissionFactorRows([makeRow()], {}, Locale.FR, ORG_ID, VERSION_IDS)
 
     expect(result.type).toBe('warnings')
     if (result.type === 'warnings') {
@@ -460,7 +460,7 @@ describe('resolveEmissionFactorRows', () => {
       ],
     })
 
-    const result = await resolveEmissionFactorRows([makeRow()], undefined, Locale.FR, ORG_ID, VERSION_IDS)
+    const result = await resolveEmissionFactorRows([makeRow()], {}, Locale.FR, ORG_ID, VERSION_IDS)
 
     expect(result.type).toBe('ambiguous')
     if (result.type === 'ambiguous') {
@@ -480,7 +480,7 @@ describe('resolveEmissionFactorRows', () => {
       })),
     })
 
-    const result = await resolveEmissionFactorRows([makeRow()], undefined, Locale.FR, ORG_ID, VERSION_IDS)
+    const result = await resolveEmissionFactorRows([makeRow()], {}, Locale.FR, ORG_ID, VERSION_IDS)
 
     expect(result.type).toBe('ambiguous')
     if (result.type === 'ambiguous') {
@@ -500,7 +500,7 @@ describe('resolveEmissionFactorRows', () => {
 
     const result = await resolveEmissionFactorRows(
       [makeRow({ emissionFactorUnit: Unit.TON, emissionFactorUnitRaw: 'tonne' })],
-      undefined,
+      {},
       Locale.FR,
       ORG_ID,
       VERSION_IDS,
