@@ -1,18 +1,21 @@
 'use client'
 
-import { addMember } from '@/services/serverFunctions/user'
-import { AddMemberCommand, AddMemberCommandValidation } from '@/services/serverFunctions/user.command'
 import Form from '@abc-transitionbascarbone/components/src/base/Form'
 import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
+import { FormSelect } from '@abc-transitionbascarbone/components/src/form/Select'
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { Role } from '@abc-transitionbascarbone/db-common/enums'
+import {
+  AddMemberCommand,
+  AddMemberCommandValidation,
+} from '@abc-transitionbascarbone/services/serverFunctions/user.command'
+import { ApiResponse } from '@abc-transitionbascarbone/utils/serverResponse'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
-import { FormSelect } from '@abc-transitionbascarbone/components/src/form/Select'
 
 interface Props {
   environmentRoles:
@@ -25,8 +28,9 @@ interface Props {
         ADMIN: 'ADMIN'
         COLLABORATOR: 'COLLABORATOR'
       }
+  addMember: (command: AddMemberCommand) => Promise<ApiResponse<void>>
 }
-const NewMemberFormCommon = ({ environmentRoles }: Props) => {
+const NewMemberFormCommon = ({ environmentRoles, addMember }: Props) => {
   const router = useRouter()
   const t = useTranslations('newMember')
   const tRole = useTranslations('role')
