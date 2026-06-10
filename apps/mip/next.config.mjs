@@ -16,7 +16,11 @@ const nextConfig = {
     },
     resolveExtensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
   },
-  transpilePackages: ['mui-color-input', '@abc-transitionbascarbone/survey', '@abc-transitionbascarbone/publicodes-mip'],
+  transpilePackages: [
+    'mui-color-input',
+    '@abc-transitionbascarbone/survey',
+    '@abc-transitionbascarbone/publicodes-mip',
+  ],
   reactStrictMode: true,
   headers: async () => [
     {
