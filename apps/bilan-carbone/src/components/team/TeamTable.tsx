@@ -72,6 +72,8 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
         canEditSelfRole={canEditSelfRole(user.role)}
         canBeUntrainedRole={canBeUntrainedRole(user.role, user.environment)}
         changeRole={changeRole}
+        setDeletingMember={setDeletingMember}
+        deletingMember={deletingMember}
       />
     </>
   )
