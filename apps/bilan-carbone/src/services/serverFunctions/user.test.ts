@@ -17,16 +17,11 @@ import {
 } from '@/db/organization'
 import { addSite } from '@/db/site'
 import { addUser, getUserByEmail, organizationVersionActiveAccountsCount, updateAccount, validateUser } from '@/db/user'
-import {
-  EMAIL_SENT,
-  NOT_ASSOCIATION_SIRET,
-  NOT_AUTHORIZED,
-  REQUEST_SENT,
-  UNKNOWN_SIRET_OR_CNC,
-} from '@/services/permissions/check'
+import { EMAIL_SENT, NOT_ASSOCIATION_SIRET, REQUEST_SENT, UNKNOWN_SIRET_OR_CNC } from '@/services/permissions/check'
 import { mockedOrganizationId, mockedOrganizationVersionId } from '@/tests/utils/models/organization'
 import { mockedAccountId, mockedUserId } from '@/tests/utils/models/user'
 import { sendActivationRequest } from '@abc-transitionbascarbone/services/email/email'
+import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
 import { getCompanyName, getValidAssociationNameBySiret } from '../associationApi'
 import { getDeactivableFeatureRestrictions } from './deactivableFeatures'
 import { activateEmail, signUpWithSiretOrCNC } from './user'
