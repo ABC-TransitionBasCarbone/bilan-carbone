@@ -47,6 +47,8 @@ interface Props {
   crOrga?: boolean
   canEditSelfRole?: boolean
   canBeUntrainedRole?: boolean
+  setDeletingMember: (value: string) => void
+  deletingMember: string
 }
 
 type DeletionErrorData = {
@@ -69,13 +71,14 @@ const TeamTableCommon = ({
   canEditSelfRole,
   canBeUntrainedRole,
   changeRole,
+  setDeletingMember,
+  deletingMember,
 }: Props) => {
   const t = useTranslations('team.table')
   const tAction = useTranslations('common.action')
   const tLevel = useTranslations('level')
   const tRole = useTranslations('role')
   const [displayRoles, setDisplayRoles] = useState(false)
-  const [deletingMember, setDeletingMember] = useState('')
 
   const columns = useMemo(() => {
     const col: ColumnDef<TeamMemberCommon>[] = [

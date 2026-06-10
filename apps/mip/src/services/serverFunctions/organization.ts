@@ -1,38 +1,29 @@
 'use server'
 
+import { updateAccountMip } from '@/db/accountMip'
+import { getUserByEmail } from '@/db/user'
 import { withServerResponse } from '@/utils/serverResponse'
-
+import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
+import { dbActualizedAuth } from '../auth'
+import { canDeleteMember } from '../permissions/organization'
 
 export const deleteOrganizationMember = async (email: string) =>
   withServerResponse('deleteOrganizationMember', async () => {
-    // const session = await dbActualizedAuth()
-  //   if (!session || !(await canDeleteMember(email))) {
-  //     throw new Error(NOT_AUTHORIZED)
-  //   }
+    const session = await dbActualizedAuth()
+    if (!session || !(await canDeleteMember(email))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  //   const targetMember = await getUserByEmail(email)
+    const targetMember = await getUserByEmail(email)
 
-  //   const targetMemberAccount = targetMember?.accounts.find(
-  //     (account) => account.organizationVersionId === session.user.organizationVersionId,
-  //   )
+    const targetMemberAccountMip = targetMember?.accountsMip.find(
+      (accountMip) => accountMip.organizationVersionMipId === session.user.organizationVersionMipId,
+    )
 
-  //   if (!targetMemberAccount || !targetMemberAccount.organizationVersionId) {
-  //     throw new Error(NOT_AUTHORIZED)
-  //   }
-  //   const organizationVersions = await getAccountOrganizationVersions(targetMemberAccount.id)
+    if (!targetMemberAccountMip || !targetMemberAccountMip.organizationVersionMipId) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  //   const blockingStudies = await getStudiesWithOnlyValidator(email, targetMemberAccount, organizationVersions)
-  //   if (blockingStudies.length) {
-  //     return {
-  //       code: 'necessaryAdmin',
-  //       studies: blockingStudies,
-  //     }
-  //   }
-
-  //   await deleteStudyMemberFromOrganization(
-  //     targetMemberAccount.id,
-  //     organizationVersions.map((organizationVersion) => organizationVersion.id),
-  //   )
-  //   await updateAccount(targetMemberAccount.id, { organizationVersion: { disconnect: true } }, {})
-  //   return null
+    await updateAccountMip(targetMemberAccountMip.id, { organizationVersionMip: { disconnect: true } }, {})
+    return null
   })
