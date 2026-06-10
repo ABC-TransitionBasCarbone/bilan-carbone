@@ -25,7 +25,7 @@
     "seed": "yarn workspace bilan-carbone prisma db seed",
     "postinstall": "yarn compile:publicodes && yarn db:generate",
     "db:generate": "rm -rf packages/db-common/src/generated/prisma && yarn workspace @abc-transitionbascarbone/db-common run db:generate",
-    "compile:publicodes": "sh -c 'set -e; if [ \"$APP_TARGET\" = \"mip\" ]; then rm -rf packages/publicodes-packages/publicodes-mip/node_modules && yarn workspace @abc-transitionbascarbone/publicodes-mip run compile; else for dir in packages/publicodes-packages/publicodes-clickson packages/publicodes-packages/publicodes-count packages/publicodes-packages/publicodes-tilt; do (cd \"$dir\" && yarn compile); done; fi'",
+    "compile:publicodes": "sh -c 'set -e; if [ \"$APP_TARGET\" = \"mip\" ]; then rm -rf packages/publicodes-packages/publicodes-mip/node_modules && ln -s ../../../node_modules packages/publicodes-packages/publicodes-mip/node_modules; set +e; (cd packages/publicodes-packages/publicodes-mip && yarn compile); status=$?; set -e; rm -f packages/publicodes-packages/publicodes-mip/node_modules; exit $status; else for dir in packages/publicodes-packages/publicodes-clickson packages/publicodes-packages/publicodes-count packages/publicodes-packages/publicodes-tilt; do (cd \"$dir\" && yarn compile); done; fi'",
     "compile:publicodes-windows": "for /d %d in (\"packages\\publicodes-packages\\publicodes-*\") do (@cd /d \"%d\" && yarn install && yarn compile && cd ..\\..\\..))"
   },
   "devDependencies": {
