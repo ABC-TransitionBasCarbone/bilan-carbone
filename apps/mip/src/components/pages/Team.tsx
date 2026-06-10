@@ -14,8 +14,6 @@ interface Props {
 
 const TeamPage = ({ user, team }: Props) => {
   const tNav = useTranslations('nav')
-  console.log('user, ', user)
-  console.log('team, ', team)
 
   return (
     <SessionProvider>

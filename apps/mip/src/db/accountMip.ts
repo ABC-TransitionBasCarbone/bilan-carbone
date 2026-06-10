@@ -1,4 +1,5 @@
 import { canEditMemberRole } from '@/utils/user'
+import { Prisma } from '@abc-transitionbascarbone/db-common'
 import { Role, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { UserSession } from 'next-auth'
 import { AccountMipWithUserSelect } from './accountMip.select'
@@ -47,4 +48,17 @@ export const changeAccountMipRole = (id: string, role: Role) =>
   prismaClient.accountMip.update({
     data: { role },
     where: { id },
+  })
+
+export const updateAccountMip = (
+  accountMipId: string,
+  data: Partial<Prisma.AccountMipUpdateInput & { role: Exclude<Role, 'SUPER_ADMIN'> | undefined }>,
+  userData?: Partial<Prisma.UserUpdateInput>,
+) =>
+  prismaClient.accountMip.update({
+    where: { id: accountMipId },
+    data: {
+      ...data,
+      user: { update: { ...userData } },
+    },
   })
