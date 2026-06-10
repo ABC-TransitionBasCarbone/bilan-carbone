@@ -353,6 +353,7 @@ function collectWarningsAndAmbiguities(
   }
 }
 
+// Match each row to an emission factor: use choices if provided, otherwise auto-match and collect warnings/ambiguities
 export async function resolveEmissionFactorRows(
   rows: ParsedEmissionSourceRow[],
   choices: FEChoices,

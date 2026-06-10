@@ -35,7 +35,7 @@ interface Props<TPreviewRow> {
   onClose: () => void
   onSuccess: () => void
   onValidate: (file: File) => Promise<ValidateEmissionSourcesResult>
-  onResolve?: (
+  onResolve: (
     file: File,
     choices: FEChoices,
   ) => Promise<{ status: 'error'; errors: ImportError[] } | { status: 'ok'; rows: TPreviewRow[] }>
@@ -100,15 +100,13 @@ const ImportFileModal = <TPreviewRow,>({
     startTransition(async () => {
       const result = await onValidate(file)
       if (result.status === 'ok') {
-        if (onResolve) {
-          const resolved = await onResolve(file, {})
-          if (resolved.status === 'ok') {
-            setPreviewRows(resolved.rows)
-            setPhase('preview')
-          } else {
-            setErrors(groupByLine(resolved.errors))
-            setPhase('error')
-          }
+        const resolved = await onResolve(file, {})
+        if (resolved.status === 'ok') {
+          setPreviewRows(resolved.rows)
+          setPhase('preview')
+        } else {
+          setErrors(groupByLine(resolved.errors))
+          setPhase('error')
         }
       } else if (result.status === 'warnings') {
         setWarnings(groupByLine(result.warnings))
@@ -125,9 +123,6 @@ const ImportFileModal = <TPreviewRow,>({
   }
 
   const resolveAndPreview = (file: File, choices: FEChoices) => {
-    if (!onResolve) {
-      return
-    }
     startTransition(async () => {
       const result = await onResolve(file, choices)
       if (result.status === 'ok') {

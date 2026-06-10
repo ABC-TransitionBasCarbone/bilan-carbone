@@ -49,7 +49,7 @@ import {
 } from '../uncertainty'
 import { getEmissionFactorsByIds } from './emissionFactor'
 
-type ValidImportRow = {
+type NewEmissionSourceRow = {
   studySiteId: string
   studyId: string
   subPost: SubPost
@@ -126,7 +126,7 @@ export async function validateEmissionSourcesFromFile(
   return { status: 'ok' }
 }
 
-// Apply user choices and return the resolved preview rows
+// Preview-only: parse the file, apply user choices, and return display rows without persisting anything
 export async function resolveEmissionSourcesFromFile(
   file: File,
   studyId: string,
@@ -175,6 +175,7 @@ export async function resolveEmissionSourcesFromFile(
   return { status: 'ok', rows }
 }
 
+// Final import: parse the file, apply choices, persist emission sources to the database
 export async function importEmissionSourcesFromFile(
   file: File,
   studyId: string,
@@ -198,7 +199,7 @@ export async function importEmissionSourcesFromFile(
   const organizationId = study.organizationVersion.organization?.id ?? ''
   const versionIds = study.emissionFactorVersions.map((v) => v.importVersionId)
 
-  const validRows: ValidImportRow[] = []
+  const newEmissionSourceRows: NewEmissionSourceRow[] = []
 
   for (const row of result.rows) {
     const lineNumber = row.lineNumber
@@ -270,7 +271,7 @@ export async function importEmissionSourcesFromFile(
     }
 
     const casFields = getHectareAndDuration(isCASSubPost(row.subPost, efUnit), row.value)
-    validRows.push({
+    newEmissionSourceRows.push({
       studySiteId: row.studySiteId,
       studyId,
       subPost: row.subPost,
@@ -296,7 +297,7 @@ export async function importEmissionSourcesFromFile(
     })
   }
 
-  await createEmissionSourcesOnStudy(validRows)
+  await createEmissionSourcesOnStudy(newEmissionSourceRows)
 
   return { success: true, errors: [], warnings: [] }
 }
