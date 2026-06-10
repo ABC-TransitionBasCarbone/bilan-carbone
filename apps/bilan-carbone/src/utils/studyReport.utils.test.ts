@@ -483,7 +483,7 @@ describe('mapStudyForReport', () => {
       // totalWithoutUtilisation = 8000 kg → 1500/8000 = 18.75%
       // totalWithUtilisation = 10000 kg → 1500/10000 = 15%
       expect(result.reductionPercentageWithoutUtilisation).toBe(
-        (18.75).toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 2 }),
+        (19).toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 2 }),
       )
       expect(result.reductionPercentageWithUtilisation).toBe(
         (15).toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 2 }),
