@@ -355,12 +355,12 @@ function collectWarningsAndAmbiguities(
 
 export async function resolveEmissionFactorRows(
   rows: ParsedEmissionSourceRow[],
-  choices: FEChoices | undefined,
+  choices: FEChoices,
   locale: LocaleType,
   organizationId: string,
   versionIds: string[],
 ): Promise<ResolveEfRowsResult> {
-  const resolvingChoices = choices !== undefined
+  const hasChoices = Object.keys(choices).length > 0
   const warnings: ImportWarning[] = []
   const ambiguousRows: AmbiguousRow[] = []
   const resolvedByLine = new Map<number, ResolvedEf>()
@@ -368,7 +368,7 @@ export async function resolveEmissionFactorRows(
   for (const row of rows) {
     const lineNumber = row.lineNumber
 
-    if (choices !== undefined && lineNumber in choices) {
+    if (lineNumber in choices) {
       const chosenId = choices[lineNumber]
       if (chosenId) {
         const chosenEf = await findEmissionFactorByIdForMatch(chosenId)
@@ -399,13 +399,13 @@ export async function resolveEmissionFactorRows(
       versionIds,
     )
 
-    if (!resolvingChoices) {
+    if (!hasChoices) {
       collectWarningsAndAmbiguities(row, ef, warnings, ambiguousRows, locale)
     }
 
     if (ef && ef.matchType !== EmissionFactorMatchType.NameAmbiguous) {
       resolvedByLine.set(lineNumber, {
-        efId: ef.importedFrom === 'Manual' ? '' : (ef.importedId ?? ''),
+        efId: ef.importedFrom === Import.Manual ? '' : (ef.importedId ?? ''),
         efName: ef.foundTitle ?? '',
         efValue: String(ef.foundValue),
         efUnit: formatPrefixedUnitDisplayOptional(locale, ef.foundUnit),

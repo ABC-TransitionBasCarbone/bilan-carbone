@@ -113,7 +113,7 @@ export async function validateEmissionSourcesFromFile(
   const organizationId = study.organizationVersion.organization?.id ?? ''
   const versionIds = study.emissionFactorVersions.map((v) => v.importVersionId)
 
-  const resolved = await resolveEmissionFactorRows(result.rows, undefined, locale, organizationId, versionIds)
+  const resolved = await resolveEmissionFactorRows(result.rows, {}, locale, organizationId, versionIds)
 
   if (resolved.type === 'warnings') {
     return { status: 'warnings', warnings: resolved.warnings, ambiguousRows: resolved.ambiguousRows }
@@ -178,7 +178,7 @@ export async function resolveEmissionSourcesFromFile(
 export async function importEmissionSourcesFromFile(
   file: File,
   studyId: string,
-  choices?: FEChoices,
+  choices: FEChoices,
 ): Promise<ImportResult> {
   const account = await getAuthenticatedAccount()
 
@@ -206,7 +206,7 @@ export async function importEmissionSourcesFromFile(
     let emissionFactorId: string | undefined
     let efUnit: string | undefined
 
-    if (choices !== undefined && lineNumber in choices) {
+    if (lineNumber in choices) {
       const chosenId = choices[lineNumber]
       emissionFactorId = chosenId ?? undefined
       if (emissionFactorId) {

@@ -39,7 +39,7 @@ interface Props<TPreviewRow> {
     file: File,
     choices: FEChoices,
   ) => Promise<{ status: 'error'; errors: ImportError[] } | { status: 'ok'; rows: TPreviewRow[] }>
-  onConfirmImport: (file: File, choices?: FEChoices) => Promise<ImportResult>
+  onConfirmImport: (file: File, choices: FEChoices) => Promise<ImportResult>
   onDownloadTemplate: () => Promise<void>
   renderPreviewTable: (rows: TPreviewRow[]) => ReactNode
   previewTitle: (count: number) => string
