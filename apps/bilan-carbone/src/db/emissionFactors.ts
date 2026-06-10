@@ -598,7 +598,6 @@ export const findEmissionFactorByImportedIdForMatch = (id: string, organizationI
   prismaClient.emissionFactor.findFirst({
     where: {
       importedId: id,
-      status: { not: EmissionFactorStatus.Archived },
       OR: getOrganizationAndImportedVersionsFilters(organizationId, versionIds),
     },
     select: {
