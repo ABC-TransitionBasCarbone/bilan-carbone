@@ -1538,7 +1538,7 @@
     "acceptedFormats": "Accepted formats: .xlsx, .xls",
     "errorTitle": "Errors detected",
     "warningTitle": "Warnings",
-    "confirmAnyway": "Import anyway",
+    "confirmAnyway": "Continue anyway",
     "previewWarning": "Please review the data below before confirming the import.",
     "warningEfNotFound": "Emission factor not found for \"{searched}\"",
     "warningEfReplacedBy": "It will be replaced by",
@@ -1578,7 +1578,12 @@
     "missingEmissionFactorName": "Emission factor name is missing",
     "missingEmissionFactorValue": "Emission factor value is missing",
     "missingEmissionFactorUnit": "Emission factor unit is missing",
-    "warningEfMissing": "No emission factor provided for \"{sourceName}\""
+    "warningEfMissing": "No emission factor provided for \"{sourceName}\"",
+    "warningEfMissingUnit": "Emission factor \"{searched}\" not found — unit is missing",
+    "ambiguousTitle": "Multiple emission factors match for the following sources. Select the one to use:",
+    "ambiguousSearched": "Searched: \"{name}\"",
+    "ambiguousTooMany": "Too many emission factors match this input. Refine the name in your file to reduce results. This source will be imported without an emission factor.",
+    "leaveEmpty": "Leave empty"
   },
   "emissionFactors": {
     "manualSectionLabel": "Manage your manual EFs",

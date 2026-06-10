@@ -4,7 +4,7 @@ import {
   SubPost,
   Unit,
 } from '@abc-transitionbascarbone/db-common/enums'
-import { ImportError } from './import.types'
+import { AmbiguousRow, ImportError, ImportWarning } from './import.types'
 
 export type PreviewEmissionSourceRow = {
   site: string
@@ -19,9 +19,15 @@ export type PreviewEmissionSourceRow = {
   emissionFactorUnit: string
 }
 
-export type PreviewEmissionSourcesResult =
-  | { success: true; rows: PreviewEmissionSourceRow[] }
-  | { success: false; errors: ImportError[] }
+export type ValidateEmissionSourcesResult =
+  | { status: 'error'; errors: ImportError[] }
+  | { status: 'warnings'; warnings: ImportWarning[]; ambiguousRows: AmbiguousRow[] }
+  | { status: 'ambiguous'; rows: AmbiguousRow[] }
+  | { status: 'ok' }
+
+export type ResolveEmissionSourcesResult =
+  | { status: 'error'; errors: ImportError[] }
+  | { status: 'ok'; rows: PreviewEmissionSourceRow[] }
 
 export type ParsedEmissionSourceRow = {
   lineNumber: number

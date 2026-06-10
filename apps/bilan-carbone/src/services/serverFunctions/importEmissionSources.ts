@@ -1,22 +1,26 @@
 'use server'
 
-import { KG_CO2E_PREFIX_REGEX } from '@/constants/import'
-import { EmissionFactorList } from '@/db/emissionFactors'
+import { EmissionFactorList, findEmissionFactorByIdForMatch } from '@/db/emissionFactors'
 import { createEmissionSourcesOnStudy } from '@/db/emissionSource'
 import { FullStudy, getStudyById } from '@/db/study'
 import { getLocale } from '@/i18n/locale'
 import { Post, subPostsByPost } from '@/services/posts'
 import { AccountWithUser } from '@/types/account.types'
-import { ImportResult, ImportWarning } from '@/types/import.types'
+import { FEChoices, ImportResult } from '@/types/import.types'
 import {
   PreviewEmissionSourceRow,
-  PreviewEmissionSourcesResult,
+  ResolveEmissionSourcesResult,
   SOURCE_IMPORT_COLUMNS,
+  ValidateEmissionSourcesResult,
 } from '@/types/importEmissionSources.types'
 import { getEmissionFactorFullName, getEmissionFactorValue } from '@/utils/emissionFactors'
 import { EmissionFactorMatchType, findEmissionFactorMatch } from '@/utils/findEmissionFactor.utils'
-import { formatPrefixedUnitDisplay, formatPrefixedUnitDisplayOptional } from '@/utils/import.utils'
-import { getImportEmissionSourcesTranslations, parseEmissionSourcesFile } from '@/utils/importEmissionSources.utils'
+import { formatPrefixedUnitDisplay } from '@/utils/import.utils'
+import {
+  getImportEmissionSourcesTranslations,
+  parseEmissionSourcesFile,
+  resolveEmissionFactorRows,
+} from '@/utils/importEmissionSources.utils'
 import { getPost } from '@/utils/post'
 import { withServerResponse } from '@/utils/serverResponse'
 import { formatEmissionValueForExport, isCASSubPost } from '@/utils/study'
@@ -45,7 +49,7 @@ import {
 } from '../uncertainty'
 import { getEmissionFactorsByIds } from './emissionFactor'
 
-type ValidImportRow = {
+type NewEmissionSourceRow = {
   studySiteId: string
   studyId: string
   subPost: SubPost
@@ -87,10 +91,10 @@ async function getStudyOrThrow(studyId: string, account: AccountWithUser): Promi
   return study
 }
 
-export async function previewEmissionSourcesFromFile(
+export async function validateEmissionSourcesFromFile(
   file: File,
   studyId: string,
-): Promise<PreviewEmissionSourcesResult> {
+): Promise<ValidateEmissionSourcesResult> {
   const account = await getAuthenticatedAccount()
 
   const study = await getStudyOrThrow(studyId, account)
@@ -103,14 +107,57 @@ export async function previewEmissionSourcesFromFile(
   const result = parseEmissionSourcesFile(buffer, locale, study.sites)
 
   if (!result.success) {
-    return result
+    return { status: 'error', errors: result.errors }
   }
+
+  const organizationId = study.organizationVersion.organization?.id ?? ''
+  const versionIds = study.emissionFactorVersions.map((v) => v.importVersionId)
+
+  const resolved = await resolveEmissionFactorRows(result.rows, {}, locale, organizationId, versionIds)
+
+  if (resolved.type === 'warnings') {
+    return { status: 'warnings', warnings: resolved.warnings, ambiguousRows: resolved.ambiguousRows }
+  }
+
+  if (resolved.type === 'ambiguous') {
+    return { status: 'ambiguous', rows: resolved.ambiguousRows }
+  }
+
+  return { status: 'ok' }
+}
+
+// Preview-only: parse the file, apply user choices, and return display rows without persisting anything
+export async function resolveEmissionSourcesFromFile(
+  file: File,
+  studyId: string,
+  choices: FEChoices,
+): Promise<ResolveEmissionSourcesResult> {
+  const account = await getAuthenticatedAccount()
+
+  const study = await getStudyOrThrow(studyId, account)
+  if (!(await hasStudyBasicRights(account, study))) {
+    throw new Error(NOT_AUTHORIZED)
+  }
+
+  const locale = await getLocale()
+  const buffer = Buffer.from(await file.arrayBuffer())
+  const result = parseEmissionSourcesFile(buffer, locale, study.sites)
+
+  if (!result.success) {
+    return { status: 'error', errors: result.errors }
+  }
+
+  const organizationId = study.organizationVersion.organization?.id ?? ''
+  const versionIds = study.emissionFactorVersions.map((v) => v.importVersionId)
+
+  const resolved = await resolveEmissionFactorRows(result.rows, choices, locale, organizationId, versionIds)
 
   const bc = getBcTranslations(locale)
   const postTranslations = bc.emissionFactors.post as unknown as Record<string, string>
 
   const rows: PreviewEmissionSourceRow[] = result.rows.map((row) => {
     const post = getPost(row.subPost)
+    const ef = resolved.type === 'resolved' ? resolved.resolvedByLine.get(row.lineNumber) : undefined
     return {
       site: row.siteName,
       post: post ? (postTranslations[post] ?? post) : '',
@@ -118,20 +165,21 @@ export async function previewEmissionSourcesFromFile(
       name: row.name,
       value: row.value !== undefined ? String(row.value) : '',
       unit: row.unit ?? '',
-      emissionFactorId: row.emissionFactorId ?? '',
-      emissionFactorName: row.emissionFactorName ?? '',
-      emissionFactorValue: row.emissionFactorValue !== undefined ? String(row.emissionFactorValue) : '',
-      emissionFactorUnit: formatPrefixedUnitDisplayOptional(locale, row.emissionFactorUnit),
+      emissionFactorId: ef?.efId ?? '',
+      emissionFactorName: ef?.efName ?? '',
+      emissionFactorValue: ef?.efValue ?? '',
+      emissionFactorUnit: ef?.efUnit ?? '',
     }
   })
 
-  return { success: true, rows }
+  return { status: 'ok', rows }
 }
 
+// Final import: parse the file, apply choices, persist emission sources to the database
 export async function importEmissionSourcesFromFile(
   file: File,
   studyId: string,
-  forceImport = false,
+  choices: FEChoices,
 ): Promise<ImportResult> {
   const account = await getAuthenticatedAccount()
 
@@ -151,90 +199,36 @@ export async function importEmissionSourcesFromFile(
   const organizationId = study.organizationVersion.organization?.id ?? ''
   const versionIds = study.emissionFactorVersions.map((v) => v.importVersionId)
 
-  const rowWarnings: ImportWarning[] = []
-  const validRows: ValidImportRow[] = []
+  const newEmissionSourceRows: NewEmissionSourceRow[] = []
 
-  for (let i = 0; i < result.rows.length; i++) {
-    const row = result.rows[i]
+  for (const row of result.rows) {
     const lineNumber = row.lineNumber
-
-    if (
-      row.emissionFactorUnitRaw &&
-      row.emissionFactorUnit &&
-      row.emissionFactorUnit !== Unit.CUSTOM &&
-      !KG_CO2E_PREFIX_REGEX.test(row.emissionFactorUnitRaw)
-    ) {
-      rowWarnings.push({
-        type: 'unitMissingPrefix',
-        lineNumber,
-        sourceName: row.name,
-        foundUnit: row.emissionFactorUnitRaw,
-        resolvedValue: formatPrefixedUnitDisplayOptional(locale, row.emissionFactorUnit),
-      })
-    }
-
-    const ef = await findEmissionFactorMatch(
-      row.emissionFactorId,
-      row.emissionFactorName,
-      row.emissionFactorValue,
-      row.emissionFactorUnit,
-      locale,
-      organizationId,
-      versionIds,
-    )
-
-    const hasSomeEfData = !!(row.emissionFactorId || row.emissionFactorName)
 
     let emissionFactorId: string | undefined
     let efUnit: string | undefined
-    if (!ef) {
-      if (hasSomeEfData) {
-        rowWarnings.push({
-          type: 'efNotFound',
-          lineNumber,
-          sourceName: row.name,
-          searchedName: row.emissionFactorName,
-          searchedValue: row.emissionFactorValue,
-          searchedUnit: formatPrefixedUnitDisplayOptional(locale, row.emissionFactorUnit),
-        })
-      } else {
-        rowWarnings.push({
-          type: 'efMissing',
-          lineNumber,
-          sourceName: row.name,
-        })
+
+    if (lineNumber in choices) {
+      const chosenId = choices[lineNumber]
+      emissionFactorId = chosenId ?? undefined
+      if (emissionFactorId) {
+        const byId = await findEmissionFactorByIdForMatch(emissionFactorId)
+        efUnit = byId?.customUnit ?? byId?.unit ?? undefined
       }
-    } else if (ef.matchType === EmissionFactorMatchType.NameAmbiguous) {
-      rowWarnings.push({
-        type: 'efNotFound',
-        lineNumber,
-        sourceName: row.name,
-        searchedName: row.emissionFactorName,
-        searchedValue: row.emissionFactorValue,
-        searchedUnit: formatPrefixedUnitDisplayOptional(locale, row.emissionFactorUnit),
-        candidates: ef.candidates.map((c) => ({
-          foundTitle: c.foundTitle,
-          foundValue: c.foundValue,
-          foundUnit: formatPrefixedUnitDisplayOptional(locale, c.foundUnit),
-        })),
-      })
-    } else if (ef.matchType !== EmissionFactorMatchType.Exact) {
-      rowWarnings.push({
-        type: 'efNotFound',
-        lineNumber,
-        sourceName: row.name,
-        searchedName: row.emissionFactorName,
-        searchedValue: row.emissionFactorValue,
-        searchedUnit: formatPrefixedUnitDisplayOptional(locale, row.emissionFactorUnit),
-        foundTitle: ef.foundTitle,
-        foundValue: ef.foundValue,
-        foundUnit: formatPrefixedUnitDisplayOptional(locale, ef.foundUnit),
-      })
-      emissionFactorId = ef.id
-      efUnit = ef.foundUnit
     } else {
-      emissionFactorId = ef.id
-      efUnit = ef.foundUnit
+      const ef = await findEmissionFactorMatch(
+        row.emissionFactorId,
+        row.emissionFactorName,
+        row.emissionFactorValue,
+        row.emissionFactorUnit,
+        locale,
+        organizationId,
+        versionIds,
+      )
+
+      if (ef && ef.matchType !== EmissionFactorMatchType.NameAmbiguous) {
+        emissionFactorId = ef.id
+        efUnit = ef.foundUnit
+      }
     }
 
     let validated = row.validated
@@ -260,7 +254,6 @@ export async function importEmissionSourcesFromFile(
       )
       if (!canValidate) {
         validated = false
-        rowWarnings.push({ type: 'validationSkipped', lineNumber: lineNumber, sourceName: row.name })
       }
     }
 
@@ -278,7 +271,7 @@ export async function importEmissionSourcesFromFile(
     }
 
     const casFields = getHectareAndDuration(isCASSubPost(row.subPost, efUnit), row.value)
-    validRows.push({
+    newEmissionSourceRows.push({
       studySiteId: row.studySiteId,
       studyId,
       subPost: row.subPost,
@@ -304,11 +297,7 @@ export async function importEmissionSourcesFromFile(
     })
   }
 
-  if (rowWarnings.length > 0 && !forceImport) {
-    return { success: false, warnings: rowWarnings }
-  }
-
-  await createEmissionSourcesOnStudy(validRows)
+  await createEmissionSourcesOnStudy(newEmissionSourceRows)
 
   return { success: true, errors: [], warnings: [] }
 }
