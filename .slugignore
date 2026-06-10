@@ -8,3 +8,7 @@ packages/*/node_modules
 node_modules/.cache
 .cache
 cypress
+apps/mip/.next
+apps/mip/.next/cache
+packages/publicodes-packages/*/node_modules
+packages/publicodes-packages/publicodes-mip
