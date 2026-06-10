@@ -65,6 +65,8 @@ export const authOptions: NextAuthOptions = {
         session.user = {
           ...session.user,
           id: token.id as string,
+          userId: token.userId as string,
+          accountMipId: token.accountMipId as string,
           firstName: token.firstName as string,
           lastName: token.lastName as string,
           role: token.role as RoleMip,
