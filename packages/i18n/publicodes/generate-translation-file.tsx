@@ -29,7 +29,6 @@ const LOCALES_CLICKSON = [
 ] as const
 const LOCALES_TILT = [Locale.FR, Locale.EN]
 const LOCALES_CUT = [Locale.FR, Locale.EN, Locale.ES] as const
-const LOCALES_MIP = [Locale.FR, Locale.EN] as const
 const getLocales = () => {
   switch (model) {
     case 'clickson':
@@ -38,8 +37,6 @@ const getLocales = () => {
       return LOCALES_TILT
     case 'cut':
       return LOCALES_CUT
-    case 'mip':
-      return LOCALES_MIP
     default:
       throw new Error(`Unsupported model: ${model}`)
   }
