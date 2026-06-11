@@ -274,7 +274,7 @@
     fuse.js "^7.0.0"
     styled-components "^6.1.1"
 
-"@publicodes/tools@^1.10.2":
+"@publicodes/tools@":
   version "1.10.2"
   resolved "https://registry.yarnpkg.com/@publicodes/tools/-/tools-1.10.2.tgz#b51f1baa82401422740e03317a90cb3d49e9bffb"
   integrity sha512-s/fd3bIrv0yLXHUhWEjEDfeznpC/JdExJSx7E1v+L++qRPe9QjKW1xY3cXi/QhSc2TQtTn0QPm5NVtxYqadcEA==
