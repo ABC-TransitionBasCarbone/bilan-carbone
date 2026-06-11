@@ -12,7 +12,7 @@
     "dev:test": "dotenv -e .env.test -- next dev --port 3001",
     "start:test": "dotenv -e .env.test -- env PORT=3001 node .next/standalone/apps/bilan-carbone/server.js",
     "prebuild": "yarn run publicodes-tilt:compile && yarn run publicodes-count:compile && yarn run publicodes-clickson:compile",
-    "build": "next build . && node copy-assets.js",
+    "build": "next build && node copy-assets.js",
     "start": "node -r dotenv/config .next/standalone/apps/bilan-carbone/server.js dotenv_config_path=.env",
     "ts": "tsc --noEmit",
     "lint": "prettier --check . && eslint .",
