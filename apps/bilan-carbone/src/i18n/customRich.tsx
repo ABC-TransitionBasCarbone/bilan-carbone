@@ -23,7 +23,6 @@ export const customRich = (
   const faq = getEnvVarClient('FAQ_LINK', env)
   const support = getEnvVarClient('SUPPORT_EMAIL', Environment.BC)
   const abc = getEnvVarClient('ABC_SITE', Environment.BC)
-  const abcAssociation = getEnvVarClient('ABC_SITE_PRESENTATION', Environment.TILT)
 
   return t.rich(key, {
     error: (children: ReactNode) => <span className={classNames('error', styles.error)}>{children}</span>,
@@ -45,7 +44,7 @@ export const customRich = (
       </Link>
     ),
     abcAssociation: (children) => (
-      <Link href={abcAssociation} target="_blank" rel="noreferrer noopener" className={styles.faq}>
+      <Link href={abc} target="_blank" rel="noreferrer noopener" className={styles.abcAssociation}>
         {children}
       </Link>
     ),

@@ -35,7 +35,7 @@ const PublicPage = ({ question, children }: Props) => {
     <PublicContainer>
       <div className={classNames(styles.info, 'grow p2 text-center')}>
         <p className="title-h4 mb1">{t('welcome')}</p>
-        <p>{customRich(t, 'explanation', {}, Environment.BC, { faq: styles.link })}</p>
+        <p>{customRich(t, 'explanation', {}, Environment.BC, { faq: styles.link, abcAssociation: styles.link })}</p>
         <Image
           src="/logos/monogramme_BC_noir.png"
           alt="logo"

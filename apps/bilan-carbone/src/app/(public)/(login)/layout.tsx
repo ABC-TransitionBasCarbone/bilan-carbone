@@ -12,7 +12,11 @@ interface Props {
 
 const PublicLayout = async ({ children }: Props) => {
   const t = await getTranslations('login')
-  const question = customRich(t, 'question', {}, undefined, { faq: styles.link, support: styles.link })
+  const question = customRich(t, 'question', {}, undefined, {
+    faq: styles.link,
+    support: styles.link,
+    abcAssociation: styles.link,
+  })
 
   return (
     <DynamicTheme environment={Environment.BC}>
