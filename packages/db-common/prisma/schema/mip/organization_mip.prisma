@@ -9,6 +9,9 @@ model OrganizationVersionMip {
 
   userAccountMips AccountMip[]
 
+  environment Environment @default(MIP)
+
+  @@unique([organizationId, environment])
   @@map("organization_versions_mip")
   @@schema("mip")
 }
