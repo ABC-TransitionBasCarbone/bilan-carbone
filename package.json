@@ -4,7 +4,8 @@
   "packageManager": "yarn@1.22.22",
   "workspaces": [
     "apps/*",
-    "packages/*"
+    "packages/*",
+    "packages/publicodes-packages/*"
   ],
   "engines": {
     "node": "22.16.0",
@@ -14,7 +15,7 @@
     "dev": "turbo run dev",
     "dev:bc": "turbo run dev --filter=bilan-carbone",
     "dev:mip": "turbo run dev --filter=mip",
-    "build": "turbo run build",
+    "build": "sh -c 'if [ \"$APP_TARGET\" = \"mip\" ]; then turbo run build --filter=mip; else turbo run build --filter=bilan-carbone; fi'",
     "test": "turbo run test",
     "start": "turbo run start",
     "ts": "turbo run ts",
@@ -22,9 +23,10 @@
     "format": "turbo run format",
     "prisma": "yarn workspace @abc-transitionbascarbone/db-common run prisma",
     "seed": "yarn workspace bilan-carbone prisma db seed",
-    "postinstall": "yarn compile:publicodes",
-    "compile:publicodes": "for dir in packages/publicodes-packages/publicodes-*; do (cd $dir && yarn compile); done",
-    "compile:publicodes-windows": "for /d %d in (\"packages\\publicodes-packages\\publicodes-*\") do (@cd /d \"%d\" && yarn install && yarn compile && cd ..\\..\\..))"
+    "postinstall": "yarn compile:publicodes && yarn db:generate",
+    "db:generate": "rm -rf packages/db-common/src/generated/prisma && yarn workspace @abc-transitionbascarbone/db-common run db:generate",
+    "compile:publicodes": "sh -c 'set -e; if [ \"$APP_TARGET\" = \"mip\" ]; then rm -rf packages/publicodes-packages/publicodes-mip/node_modules && ln -s ../../../node_modules packages/publicodes-packages/publicodes-mip/node_modules; set +e; (cd packages/publicodes-packages/publicodes-mip && yarn compile); status=$?; set -e; rm -f packages/publicodes-packages/publicodes-mip/node_modules; exit $status; else for dir in packages/publicodes-packages/publicodes-clickson packages/publicodes-packages/publicodes-count packages/publicodes-packages/publicodes-tilt; do (cd \"$dir\" && yarn compile); done; fi'",
+    "compile:publicodes-windows": "for /d %d in (\"packages\\publicodes-packages\\publicodes-*\") do (@cd /d \"%d\" && yarn install && yarn compile && cd ..\\..\\..)"
   },
   "devDependencies": {
     "turbo": "^2.9.12"
@@ -34,6 +36,8 @@
     "hono": "^4.12.18",
     "postcss": "^8.5.12",
     "fast-uri": "^3.1.2",
-    "fast-xml-builder": "^1.1.6"
+    "fast-xml-builder": "^1.1.6",
+    "@publicodes/react-ui": "1.10.0",
+    "publicodes": "1.10.1"
   }
 }

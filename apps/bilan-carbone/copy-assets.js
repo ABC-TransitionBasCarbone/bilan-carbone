@@ -1,12 +1,6 @@
 const fs = require('fs').promises
 const path = require('path')
 
-const staticSrcPath = path.join(__dirname, '.next/static')
-const staticDestPath = path.join(__dirname, '.next/standalone/apps/bilan-carbone/.next/static')
-
-const publicSrcPath = path.join(__dirname, 'public')
-const publicDestPath = path.join(__dirname, '.next/standalone/apps/bilan-carbone/public')
-
 function copyAssets(src, dest) {
   return fs
     .mkdir(dest, { recursive: true })
@@ -33,14 +27,32 @@ function copyAssets(src, dest) {
 const greenTick = `\x1b[32m\u2713\x1b[0m`
 const redCross = `\x1b[31m\u274C\x1b[0m`
 
-// Also copy i18n translation files for production i18n support
-const i18nSrcPath = path.join(__dirname, 'src', 'i18n', 'translations')
-const i18nDestPath = path.join(__dirname, '.next/standalone/apps/bilan-carbone/src/i18n/translations')
+function copyNextStandaloneAssets({ appDirectory, standaloneAppDirectory }) {
+  const staticSrcPath = path.join(appDirectory, '.next/static')
+  const staticDestPath = path.join(appDirectory, `.next/standalone/${standaloneAppDirectory}/.next/static`)
 
-Promise.all([
-  copyAssets(staticSrcPath, staticDestPath),
-  copyAssets(publicSrcPath, publicDestPath),
-  copyAssets(i18nSrcPath, i18nDestPath),
-])
-  .then(() => console.log(`${greenTick} Assets copied successfully`))
-  .catch((err) => console.error(`${redCross} Failed to copy assets: ${err}`))
+  const publicSrcPath = path.join(appDirectory, 'public')
+  const publicDestPath = path.join(appDirectory, `.next/standalone/${standaloneAppDirectory}/public`)
+
+  const i18nSrcPath = path.join(appDirectory, 'src', 'i18n', 'translations')
+  const i18nDestPath = path.join(appDirectory, `.next/standalone/${standaloneAppDirectory}/src/i18n/translations`)
+
+  return Promise.all([
+    copyAssets(staticSrcPath, staticDestPath),
+    copyAssets(publicSrcPath, publicDestPath),
+    copyAssets(i18nSrcPath, i18nDestPath),
+  ])
+}
+
+module.exports = {
+  copyNextStandaloneAssets,
+}
+
+if (require.main === module) {
+  copyNextStandaloneAssets({
+    appDirectory: __dirname,
+    standaloneAppDirectory: 'apps/bilan-carbone',
+  })
+    .then(() => console.log(`${greenTick} Assets copied successfully`))
+    .catch((err) => console.error(`${redCross} Failed to copy assets: ${err}`))
+}
