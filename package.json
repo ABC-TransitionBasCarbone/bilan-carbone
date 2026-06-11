@@ -4,7 +4,8 @@
   "packageManager": "yarn@1.22.22",
   "workspaces": [
     "apps/*",
-    "packages/*"
+    "packages/*",
+    "packages/publicodes-packages/*"
   ],
   "engines": {
     "node": "22.16.0",
@@ -14,7 +15,8 @@
     "dev": "turbo run dev",
     "dev:bc": "turbo run dev --filter=bilan-carbone",
     "dev:mip": "turbo run dev --filter=mip",
-    "build": "sh -c 'if [ \"$APP_TARGET\" = \"mip\" ]; then turbo run build --filter=mip; else turbo run build --filter=bilan-carbone; fi'",
+    "build": "turbo run build --filter=bilan-carbone",
+    "build:mip": "turbo run build --filter=mip",
     "test": "turbo run test",
     "start": "turbo run start",
     "ts": "turbo run ts",
@@ -22,8 +24,10 @@
     "format": "turbo run format",
     "prisma": "yarn workspace @abc-transitionbascarbone/db-common run prisma",
     "seed": "yarn workspace bilan-carbone prisma db seed",
-    "postinstall": "yarn compile:publicodes",
-    "compile:publicodes": "for dir in packages/publicodes-packages/publicodes-*; do (cd $dir && yarn compile); done",
+    "postinstall": "yarn compile:publicodes && yarn db:generate",
+    "db:generate": "rm -rf packages/db-common/src/generated/prisma && yarn workspace @abc-transitionbascarbone/db-common run db:generate",
+    "compile:publicodes": "for dir in packages/publicodes-packages/publicodes-clickson packages/publicodes-packages/publicodes-count packages/publicodes-packages/publicodes-tilt; do (cd \"$dir\" && yarn compile); done",
+    "compile:publicodes:mip": "rm -rf packages/publicodes-packages/publicodes-mip/node_modules && ln -s ../../../node_modules packages/publicodes-packages/publicodes-mip/node_modules && (cd packages/publicodes-packages/publicodes-mip && yarn compile); status=$?; rm -f packages/publicodes-packages/publicodes-mip/node_modules; exit $status",
     "compile:publicodes-windows": "for /d %d in (\"packages\\publicodes-packages\\publicodes-*\") do (@cd /d \"%d\" && yarn install && yarn compile && cd ..\\..\\..))"
   },
   "devDependencies": {
