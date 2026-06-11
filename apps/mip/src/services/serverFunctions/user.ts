@@ -6,16 +6,24 @@ import {
   getAccountMipById,
   getAccountMipFromUserOrganization,
 } from '@/db/accountMip'
-import { getUserByEmail } from '@/db/user'
+import { getOrgNameByOrgVersionMipId } from '@/db/organization'
+import { getUserByEmail, handleAddingUser } from '@/db/user'
 import { withServerResponse } from '@/utils/serverResponse'
+import { User } from '@abc-transitionbascarbone/db-common'
 import { updateUserResetTokenForEmail } from '@abc-transitionbascarbone/db-common/db'
-import { Role } from '@abc-transitionbascarbone/db-common/enums'
-import { sendResetPassword } from '@abc-transitionbascarbone/services/email/email'
+import { Environment, Role, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
+import {
+  sendAddedActiveUserEmail,
+  sendNewUserEmail,
+  sendResetPassword,
+} from '@abc-transitionbascarbone/services/email/email'
 import { MORE_THAN_ONE, NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
-import { HOUR, TIME_IN_MS } from '@abc-transitionbascarbone/utils'
+import { updateUserResetToken } from '@abc-transitionbascarbone/services/serverFunctions/user'
+import { AddMemberCommand } from '@abc-transitionbascarbone/services/serverFunctions/user.command'
+import { DAY, HOUR, TIME_IN_MS } from '@abc-transitionbascarbone/utils'
 import jwt from 'jsonwebtoken'
 import { dbActualizedAuth } from '../auth'
-import { canEditSelfRole } from '../permissions/user'
+import { canAddMember, canEditSelfRole } from '../permissions/user'
 
 export const resetPassword = async (email: string) =>
   withServerResponse('resetPassword', async () => {
@@ -68,4 +76,39 @@ export const changeRole = async (email: string, role: Role) =>
       throw new Error(NOT_AUTHORIZED)
     }
     await changeAccountMipRole(accountMipToChange.id, role)
+  })
+
+export const addMember = async (member: AddMemberCommand) =>
+  withServerResponse('addMember', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user || !session.user.organizationVersionMipId || member.role === Role.SUPER_ADMIN) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!canAddMember(session.user, member, session.user.organizationVersionMipId)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    await handleAddingUser(session.user, member)
+  })
+
+export const sendEmailToAddedUser = async (email: string, user: User, newUserName: string, orgaVersionMipId: string) =>
+  withServerResponse('sendEmailToAddedUser', async () => {
+    const addedMember = await getUserByEmail(email)
+    const activeAccountMips = addedMember?.accountsMip.filter((accountMip) => accountMip.status === UserStatus.ACTIVE)
+    const name = await getOrgNameByOrgVersionMipId(orgaVersionMipId)
+
+    if (activeAccountMips?.length && activeAccountMips.length > 0) {
+      return sendAddedActiveUserEmail(
+        email,
+        `${user.firstName} ${user.lastName}`,
+        newUserName,
+        Environment.MIP,
+        activeAccountMips.map((accountMip) => accountMip.environment),
+        name || '',
+      )
+    }
+
+    const token = await updateUserResetToken(email, 1 * DAY)
+    return sendNewUserEmail(email, token, `${user.firstName} ${user.lastName}`, newUserName, Environment.MIP)
   })
