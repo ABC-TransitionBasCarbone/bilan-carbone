@@ -301,5 +301,23 @@
     "saved": "Nouveau rôle sauvegardé",
     "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
     "More than one": "Il doit y avoir au moins un·e administrateur·rice ou gestionnaire dans l'organisation"
+  },
+  "newMember": {
+    "title": "Inviter un·e utilisateur·rice",
+    "email": "Email",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "role": "Rôle",
+    "level": "Formation",
+    "create": "Inviter l'utilisateur·rice",
+    "Not authorized": "Impossible d'inviter cette utilisateur·rice. Veuillez contacter le <link>support</link> pour plus d'informations.",
+    "validation": {
+      "email": "Veuillez renseigner un email valide",
+      "firstName": "Veuillez renseigner un prénom",
+      "lastName": "Veuillez renseigner un nom",
+      "level": "Veuillez renseigner un niveau de formation",
+      "role": "Veuillez renseigner un rôle"
+    },
+    "addedMember": "L'utilisateur·rice a bien été ajouté à votre organisation"
   }
 }

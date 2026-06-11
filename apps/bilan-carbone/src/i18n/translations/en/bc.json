@@ -1990,24 +1990,6 @@
     "CRON": "Cron",
     "TUNISIE": "Tunisia"
   },
-  "newMember": {
-    "title": "Invite a User",
-    "email": "Email",
-    "firstName": "First Name",
-    "lastName": "Last Name",
-    "role": "Role",
-    "level": "Training",
-    "create": "Invite User",
-    "Not authorized": "User invitation not authorized. Please contact <link>the support</link> for more information.",
-    "validation": {
-      "email": "Please enter a valid email",
-      "firstName": "Please enter a first name",
-      "lastName": "Please enter a last name",
-      "level": "Please enter a training level",
-      "role": "Please enter a role"
-    },
-    "addedMember": "The user has been successfully invited to your organisation."
-  },
   "units": {
     "selectAll": "Select all",
     "unSelectAll": "Unselect all",
