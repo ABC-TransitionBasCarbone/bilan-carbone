@@ -1531,7 +1531,11 @@ describe('calculateTrajectory', () => {
     const relativeDifference = (difference / expected) * 100
     if (relativeDifference > BUDGET_PRECISION_TOLERANCE_PERCENT) {
       console.warn(
-        `WARNING: Budget precision exceeds ${BUDGET_PRECISION_TOLERANCE_PERCENT}% threshold. Actual precision: ${relativeDifference.toFixed(2)}%`,
+        `🚨 Budget precision of ${relativeDifference.toFixed(2)}% exceeds ${BUDGET_PRECISION_TOLERANCE_PERCENT}% threshold.`,
+      )
+    } else {
+      console.log(
+        `✅ Budget precision of ${relativeDifference.toFixed(2)}% is within ${BUDGET_PRECISION_TOLERANCE_PERCENT}% threshold.`,
       )
     }
     expect(relativeDifference).toBeLessThanOrEqual(BUDGET_PRECISION_TOLERANCE_PERCENT)
@@ -1617,6 +1621,55 @@ describe('calculateTrajectory', () => {
       testBudgetEqualityWithCompensation(2023, 2025, 1000, 1200, objectives, createPastStudies([2023, 1000]))
       testBudgetEqualityWithCompensation(2022, 2025, 1000, 1200, objectives, createPastStudies([2022, 1000]))
       testBudgetEqualityWithCompensation(2020, 2025, 1000, 1200, objectives, createPastStudies([2020, 1000]))
+    })
+
+    test('past objective: one objective in the past, two in the future — budget conserved within 1%', () => {
+      const objectives = [
+        { targetYear: 2023, reductionRate: 0.05 }, // past — already elapsed at study time
+        { targetYear: 2035, reductionRate: 0.05 },
+        { targetYear: 2050, reductionRate: 0.03 },
+      ]
+      testBudgetEqualityWithCompensation(
+        2020,
+        2026,
+        1000,
+        900,
+        objectives,
+        createPastStudies([2020, 1000], [2023, 850]),
+      )
+    })
+
+    test('past objective: stronger overshoot with past objective — budget conserved within 1%', () => {
+      const objectives = [
+        { targetYear: 2022, reductionRate: 0.04 }, // past
+        { targetYear: 2030, reductionRate: 0.06 },
+        { targetYear: 2045, reductionRate: 0.04 },
+      ]
+      testBudgetEqualityWithCompensation(
+        2020,
+        2025,
+        1000,
+        1100,
+        objectives,
+        createPastStudies([2020, 1000], [2022, 920]),
+      )
+    })
+
+    test('past objective: multiple past objectives, only future ones carry the compensation — budget conserved within 1%', () => {
+      const objectives = [
+        { targetYear: 2021, reductionRate: 0.03 }, // past
+        { targetYear: 2023, reductionRate: 0.04 }, // past
+        { targetYear: 2030, reductionRate: 0.05 },
+        { targetYear: 2050, reductionRate: 0.03 },
+      ]
+      testBudgetEqualityWithCompensation(
+        2020,
+        2026,
+        1000,
+        1000,
+        objectives,
+        createPastStudies([2020, 1000], [2021, 970], [2023, 892]),
+      )
     })
   })
 

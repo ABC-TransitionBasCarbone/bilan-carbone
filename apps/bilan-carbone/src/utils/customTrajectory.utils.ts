@@ -229,7 +229,9 @@ export const calculateCustomTrajectory = ({
     return dataPoints
   }
 
-  let sortedObjectives = [...objectives].sort((a, b) => a.targetYear - b.targetYear)
+  let sortedObjectives = [...objectives]
+    .sort((a, b) => a.targetYear - b.targetYear)
+    .filter((o) => o.targetYear > studyStartYear)
 
   if (overshootAdjustment) {
     sortedObjectives = getObjectivesWithOvershootCompensation(
