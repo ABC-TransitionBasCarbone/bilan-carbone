@@ -51,8 +51,45 @@ function getEfFullName(ef: EfRow, locale: string): string {
   )
 }
 
-function findExactFullNameMatch(efs: EfRow[], normalizedSearch: string, locale: string): EfRow | undefined {
-  return efs.find((ef) => normalizeStringForSearch(getEfFullName(ef, locale)) === normalizedSearch)
+/**
+ * Match emission factors by exact full name.
+ *
+ * If there is only one exact match, we return the exact match.
+ * If there is more than one exact match, we check if the value is close to the exact match.
+ */
+function matchByExactFullName(
+  efs: EfRow[],
+  normalizedSearch: string,
+  locale: string,
+  value: number | undefined,
+  epsilon: number,
+): EfMatchResult | null {
+  const matches = efs.filter((ef) => normalizeStringForSearch(getEfFullName(ef, locale)) === normalizedSearch)
+  if (matches.length === 1) {
+    return toEfMatch(matches[0], EmissionFactorMatchType.Exact, locale)
+  }
+
+  if (matches.length > 1) {
+    if (value !== undefined) {
+      const exactByValue = matches.filter((ef) => Math.abs(Number(ef.totalCo2) - value) < epsilon)
+      if (exactByValue.length === 1) {
+        return toEfMatch(exactByValue[0], EmissionFactorMatchType.Exact, locale)
+      }
+
+      if (exactByValue.length > 1) {
+        return {
+          matchType: EmissionFactorMatchType.NameAmbiguous,
+          candidates: exactByValue.map((ef) => toEfMatch(ef, EmissionFactorMatchType.NameAndUnitOnly, locale)),
+        }
+      }
+    }
+
+    return {
+      matchType: EmissionFactorMatchType.NameAmbiguous,
+      candidates: matches.map((ef) => toEfMatch(ef, EmissionFactorMatchType.NameAndUnitOnly, locale)),
+    }
+  }
+  return null
 }
 
 function toEfMatch(
@@ -114,9 +151,9 @@ export async function findEmissionFactorMatch(
   }
 
   if (byNameAndUnit.length > 1 && title) {
-    const exactFullName = findExactFullNameMatch(byNameAndUnit, normalizeStringForSearch(title), locale)
-    if (exactFullName) {
-      return toEfMatch(exactFullName, EmissionFactorMatchType.Exact, locale)
+    const result = matchByExactFullName(byNameAndUnit, normalizeStringForSearch(title), locale, value, epsilon)
+    if (result) {
+      return result
     }
   }
 
@@ -133,12 +170,12 @@ export async function findEmissionFactorMatch(
     if (title) {
       const normalizedSearch = normalizeStringForSearch(title)
 
-      const exactFullName = findExactFullNameMatch(byUnit, normalizedSearch, locale)
-      if (exactFullName) {
-        return toEfMatch(exactFullName, EmissionFactorMatchType.Exact, locale)
+      const exactResult = matchByExactFullName(byUnit, normalizedSearch, locale, value, epsilon)
+      if (exactResult) {
+        return exactResult
       }
 
-      const candidates = byUnit.map((ef) => ({
+      const candidates: { ef: EfRow; normalizedFullName: string }[] = byUnit.map((ef) => ({
         ef,
         normalizedFullName: normalizeStringForSearch(getEfFullName(ef, locale)),
       }))
