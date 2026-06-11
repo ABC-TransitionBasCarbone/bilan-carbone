@@ -18,6 +18,7 @@ import {
 import { prepareReport } from '@/services/serverFunctions/study'
 import { downloadStudyResults, getDetailedEmissionResults } from '@/services/study'
 import { sortAlphabetically } from '@/services/utils'
+import { BCEnvironment } from '@/types/environment'
 import { AdditionalResultTypes, ResultType } from '@/types/study.types'
 import { getPost } from '@/utils/post'
 import { calculateMonetaryRatio, convertValue } from '@/utils/study'
@@ -139,7 +140,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
       tPost,
       siteId,
       !!validatedOnly,
-      study.organizationVersion.environment,
+      study.organizationVersion.environment as BCEnvironment,
       t,
       true,
       type,
@@ -220,7 +221,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
       siteId,
       true,
       !!validatedOnly,
-      environmentPostMapping[study.organizationVersion.environment],
+      environmentPostMapping[study.organizationVersion.environment as BCEnvironment],
       study.organizationVersion.environment,
       type,
     )
@@ -231,7 +232,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
       siteId,
       false,
       !!validatedOnly,
-      environmentPostMapping[study.organizationVersion.environment],
+      environmentPostMapping[study.organizationVersion.environment as BCEnvironment],
       study.organizationVersion.environment,
       type,
     )
@@ -243,7 +244,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
       siteId,
       true,
       !!validatedOnly,
-      environmentPostMapping[study.organizationVersion.environment],
+      environmentPostMapping[study.organizationVersion.environment as BCEnvironment],
       study.organizationVersion.environment,
       type,
     )
@@ -351,7 +352,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
       tGHGP,
       tUnits,
       tBase,
-      environment,
+      environment as BCEnvironment,
     )
   }
 

@@ -2,15 +2,16 @@
 
 import { hasAccessToManualImport } from '@/services/permissions/environment'
 import { getEmissionFactorImportVersions, getFELocations } from '@/services/serverFunctions/emissionFactor'
+import { BCEnvironment } from '@/types/environment'
 import type { EmissionFactorImportVersion } from '@abc-transitionbascarbone/db-common'
-import { Environment, Import } from '@abc-transitionbascarbone/db-common/enums'
+import { Import } from '@abc-transitionbascarbone/db-common/enums'
 import { useTranslations } from 'next-intl'
 import { Suspense, useEffect, useState } from 'react'
 import EmissionFactorsFiltersAndTable from './EmissionFactorsFiltersAndTable'
 
 interface Props {
   userOrganizationId?: string
-  environment: Environment
+  environment: BCEnvironment
   hasActiveLicence: boolean
 }
 

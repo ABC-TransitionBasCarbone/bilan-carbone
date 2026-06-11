@@ -1,9 +1,10 @@
 import { KG_CO2E_PREFIX_REGEX } from '@/constants/import'
 import { environmentPostMapping, environmentSubPostsMapping } from '@/services/posts'
 import { EmissionFactorCommandValidation } from '@/services/serverFunctions/emissionFactor.command'
+import { BCEnvironment } from '@/types/environment'
 import { ImportWarning } from '@/types/import.types'
 import { COLUMNS, ImportError, ParsedRow, ParseResult } from '@/types/importEmissionFactors.types'
-import { EmissionFactorBase, Environment, SubPost, Unit } from '@abc-transitionbascarbone/db-common/enums'
+import { EmissionFactorBase, SubPost, Unit } from '@abc-transitionbascarbone/db-common/enums'
 import { LocaleType } from '@abc-transitionbascarbone/i18n/config'
 import { ManualEmissionFactorUnitList } from './emissionFactors'
 import { parseExcelSheet } from './excel.utils'
@@ -37,7 +38,7 @@ function matchBaseLabelFromTranslations(
 function matchPostLabelFromTranslations(
   label: string | undefined | null,
   locale: LocaleType,
-  environment: Environment,
+  environment: BCEnvironment,
 ): string | null {
   const envPosts = environmentPostMapping[environment]
   return matchLabelFromTranslations(label, locale, (bc) =>
@@ -52,7 +53,7 @@ function matchPostLabelFromTranslations(
 function matchSubPostLabelFromTranslations(
   label: string | undefined | null,
   locale: LocaleType,
-  environment: Environment,
+  environment: BCEnvironment,
 ): SubPost | null {
   const envSubPosts = Object.values(environmentSubPostsMapping[environment]).flat()
   return matchLabelFromTranslations(label, locale, (bc) =>
@@ -77,7 +78,7 @@ export function getUnitLabel(unit: Unit, locale: LocaleType): string {
  * "Post1 : SubPost1 | SubPost2 || Post2 : SubPost3"
  * Returns the locale-specific all-posts label when all env subposts are covered.
  */
-export function buildPostsAndSubPostsCell(subPosts: SubPost[], locale: LocaleType, environment: Environment): string {
+export function buildPostsAndSubPostsCell(subPosts: SubPost[], locale: LocaleType, environment: BCEnvironment): string {
   const subPostsByPost = environmentSubPostsMapping[environment] as Record<string, SubPost[]>
   const allEnvSubPosts = Object.values(subPostsByPost).flat()
   if (allEnvSubPosts.every((sp) => subPosts.includes(sp))) {
@@ -129,7 +130,7 @@ export type ParsePostsResult =
 export function parsePostsAndSubPostsCell(
   cell: string | undefined | null,
   locale: LocaleType,
-  environment: Environment,
+  environment: BCEnvironment,
 ): ParsePostsResult {
   const trimmed = cell?.trim() ?? ''
   if (!trimmed || trimmed.toLowerCase() === getAllPostsLabel(locale).toLowerCase()) {
@@ -173,7 +174,7 @@ export function parsePostsAndSubPostsCell(
   return { success: true, subPosts: result }
 }
 
-export function parseImportFile(buffer: Buffer, locale: LocaleType, environment: Environment): ParseResult {
+export function parseImportFile(buffer: Buffer, locale: LocaleType, environment: BCEnvironment): ParseResult {
   const sheetResult = parseExcelSheet(buffer, {
     ignoredColumns: [COLUMNS.base],
     rowFilter: (_row, i, value) =>

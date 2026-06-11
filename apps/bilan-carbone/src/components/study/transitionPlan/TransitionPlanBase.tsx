@@ -5,6 +5,7 @@ import type { FullStudy } from '@/db/study'
 import { useTransitionPlan } from '@/hooks/useTransitionPlan'
 import { useTransitionPlanFilters } from '@/hooks/useTransitionPlanFilters'
 import { environmentSubPostsMapping } from '@/services/posts'
+import { BCEnvironment } from '@/types/environment'
 import type {
   ActionWithRelations,
   ObjectiveGroup,
@@ -89,7 +90,7 @@ const TransitionPlanBase = ({
     setSelectedTagIds,
   } = useTransitionPlanFilters(study.id, allTagIdsWithOther, allSiteIds)
 
-  const envSubPostsByPost = environmentSubPostsMapping[study.organizationVersion.environment]
+  const envSubPostsByPost = environmentSubPostsMapping[study.organizationVersion.environment as BCEnvironment]
   const allEnvSubPosts = Array.from(new Set(Object.values(envSubPostsByPost).flat()))
   const sitesFiltered = allSiteIds.length > 0 && selectedSiteIds.length < allSiteIds.length
   const subPostsFiltered = allEnvSubPosts.length > 0 && selectedSubPosts.length < allEnvSubPosts.length

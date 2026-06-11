@@ -5,6 +5,7 @@ import { PostSubPostFilter } from '@/components/form/PostSubPostFilter'
 import { TagFilter } from '@/components/form/TagFilter'
 import { FullStudy, StudyTagFamilyWithTags } from '@/db/study'
 import { environmentSubPostsMapping, Post, subPostsByPost } from '@/services/posts'
+import { BCEnvironment } from '@/types/environment'
 import { getAllTagIds } from '@/utils/tag.utils'
 import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { FormControl, InputLabel } from '@mui/material'
@@ -37,7 +38,7 @@ const TransitionPlanFilters = ({
   const initializedRef = useRef(false)
 
   const { envPosts, envSubPosts } = useMemo(() => {
-    const envSubPostsByPost = environmentSubPostsMapping[study.organizationVersion.environment]
+    const envSubPostsByPost = environmentSubPostsMapping[study.organizationVersion.environment as BCEnvironment]
     const posts = Object.keys(envSubPostsByPost) as Post[]
     const subPosts = posts.reduce((acc, post) => acc.concat(subPostsByPost[post] || []), [] as SubPost[])
     return {

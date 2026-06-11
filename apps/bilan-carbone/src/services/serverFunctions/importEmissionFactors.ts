@@ -3,6 +3,7 @@
 import { createEmissionFactorWithParts, getManualEmissionFactorsByOrganization } from '@/db/emissionFactors'
 import { getLocale } from '@/i18n/locale'
 import { AccountWithUser } from '@/types/account.types'
+import { BCEnvironment } from '@/types/environment'
 import {
   COLUMNS,
   ImportEmissionFactorsResult,
@@ -50,7 +51,7 @@ export async function previewEmissionFactorsFromFile(file: File): Promise<Previe
 
   const locale = await getLocale()
   const buffer = Buffer.from(await file.arrayBuffer())
-  const result = parseImportFile(buffer, locale, account.environment)
+  const result = parseImportFile(buffer, locale, account.environment as BCEnvironment)
 
   if (!result.success) {
     return result
@@ -92,7 +93,7 @@ export async function importEmissionFactorsFromFile(
 
   const locale = await getLocale()
   const buffer = Buffer.from(await file.arrayBuffer())
-  const result = parseImportFile(buffer, locale, account.environment)
+  const result = parseImportFile(buffer, locale, account.environment as BCEnvironment)
 
   if (!result.success) {
     return result
@@ -153,7 +154,7 @@ export async function exportManualEmissionFactorsToFile(): Promise<ArrayBuffer> 
       ef.hfc ?? '',
       ef.pfc ?? '',
       ef.otherGES ?? '',
-      buildPostsAndSubPostsCell(ef.subPosts, locale, account.environment),
+      buildPostsAndSubPostsCell(ef.subPosts, locale, account.environment as BCEnvironment),
       ef.base ? (baseTranslations[ef.base] ?? ef.base) : '',
       ef.createdAt.toLocaleDateString(locale),
     ]

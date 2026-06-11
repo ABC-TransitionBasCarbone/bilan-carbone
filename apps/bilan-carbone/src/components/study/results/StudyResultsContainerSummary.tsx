@@ -5,6 +5,7 @@ import type { FullStudy } from '@/db/study'
 import { customRich } from '@/i18n/customRich'
 import { hasAccessToStudyResults, hasRoleOnStudy } from '@/services/permissions/environment'
 import { getDetailedEmissionResults } from '@/services/study'
+import { BCEnvironment } from '@/types/environment'
 import { formatNumber } from '@/utils/number'
 import { getDisplayedRoleOnStudy } from '@/utils/study'
 import { HelpIcon } from '@abc-transitionbascarbone/components'
@@ -44,7 +45,7 @@ const StudyResultsContainerSummary = ({
   const tDocumentation = useTranslations('documentationUrl')
   const [glossary, setGlossary] = useState('')
   const [withDep, setWithDependencies] = useState(!!withDependencies)
-  const environment = study.organizationVersion.environment
+  const environment = study.organizationVersion.environment as BCEnvironment
 
   const [
     formattedWithDepValue,
