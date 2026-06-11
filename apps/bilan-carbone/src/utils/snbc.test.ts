@@ -328,7 +328,12 @@ describe('SNBC Trajectory', () => {
   describe('calculateCustomSNBCSectoralTrajectory - budget equality with overshoot', () => {
     const expectBudgetsEqual = (actual: number, expected: number) => {
       const relativeDifference = Math.abs(actual - expected) / expected
-      expect(relativeDifference).toBeLessThan(0.05) // 5% max
+      if (relativeDifference > 0.01) {
+        console.warn(`🚨 Budget precision of ${(relativeDifference * 100).toFixed(2)}% exceeds 5% threshold.`)
+      } else {
+        console.log(`✅ Budget precision of ${(relativeDifference * 100).toFixed(2)}% is within 5% threshold.`)
+      }
+      expect(relativeDifference).toBeLessThan(0.01) // 5% max
     }
 
     const testSNBCSectoralBudgetEquality = (
