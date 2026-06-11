@@ -28,6 +28,7 @@ import type { BaseResultsByPost } from '@/services/posts'
 import { generateStudySummaryPDF } from '@/services/serverFunctions/pdf'
 import { downloadStudyResults } from '@/services/study'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { BCEnvironment } from '@/types/environment'
 import type { BaseResultsBySite } from '@/types/study.types'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { SiteCAUnit } from '@abc-transitionbascarbone/db-common/enums'
@@ -158,7 +159,7 @@ const AllResults = ({
                 tGHGP,
                 tUnits,
                 tBase,
-                study.organizationVersion.environment,
+                study.organizationVersion.environment as BCEnvironment,
                 computedResultsBySite,
                 computedResults,
                 studySite,

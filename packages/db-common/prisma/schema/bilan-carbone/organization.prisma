@@ -6,15 +6,6 @@ enum SiteCAUnit {
   @@schema("bilan_carbone")
 }
 
-enum Environment {
-  BC
-  CUT
-  TILT
-  CLICKSON
-
-  @@schema("bilan_carbone")
-}
-
 enum Country {
   ALBANIA
   ANDORRA

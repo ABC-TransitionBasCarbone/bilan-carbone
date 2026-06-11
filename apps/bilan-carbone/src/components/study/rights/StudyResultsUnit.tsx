@@ -1,12 +1,12 @@
 'use client'
 
-import { FormSelect } from '@/components/form/Select'
 import type { FullStudy } from '@/db/study'
 import { changeStudyResultsUnit } from '@/services/serverFunctions/study'
 import {
   ChangeStudyResultsUnitCommand,
   ChangeStudyResultsUnitCommandValidation,
 } from '@/services/serverFunctions/study.command'
+import { FormSelect } from '@abc-transitionbascarbone/components/src/form/Select'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { StudyResultUnit } from '@abc-transitionbascarbone/db-common/enums'
 import { zodResolver } from '@hookform/resolvers/zod'

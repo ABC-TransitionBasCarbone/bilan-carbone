@@ -1,7 +1,7 @@
 import { Translations } from '@abc-transitionbascarbone/lib'
 import { FormControl, FormHelperText, SelectProps } from '@mui/material'
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form'
-import { Select } from '../base/Select'
+import { Select } from '@abc-transitionbascarbone/components/src/base/Select'
 import styles from './Form.module.css'
 
 interface Props<T extends FieldValues> {

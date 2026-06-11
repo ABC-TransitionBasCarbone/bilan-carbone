@@ -1,7 +1,8 @@
-import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
+import withAuth from '@/components/hoc/withAuth'
+import NewMemberPage from '@/components/pages/NewMember'
 
-const NewMember = ({ user }: UserSessionProps) => {
-  return <p>New Member </p>
+const NewMember = () => {
+  return <NewMemberPage />
 }
 
 export default withAuth(NewMember)
