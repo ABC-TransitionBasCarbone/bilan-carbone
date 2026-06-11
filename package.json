@@ -4,8 +4,7 @@
   "packageManager": "yarn@1.22.22",
   "workspaces": [
     "apps/*",
-    "packages/*",
-    "packages/publicodes-packages/*"
+    "packages/*"
   ],
   "engines": {
     "node": "22.16.0",
