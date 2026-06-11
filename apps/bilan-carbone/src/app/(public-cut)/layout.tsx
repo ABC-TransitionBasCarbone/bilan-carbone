@@ -18,7 +18,11 @@ export const metadata: Metadata = {
 
 const PublicLayout = async ({ children }: Props) => {
   const t = await getTranslations('login')
-  const question = customRich(t, 'question', {}, Environment.CUT, { faq: styles.link, support: styles.link })
+  const question = customRich(t, 'question', {}, Environment.CUT, {
+    faq: styles.link,
+    support: styles.link,
+    abcAssociation: styles.link,
+  })
   return (
     <DynamicTheme environment={Environment.CUT}>
       <main className="h100">
