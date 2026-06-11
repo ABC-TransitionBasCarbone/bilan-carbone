@@ -1,9 +1,8 @@
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { useTranslations } from 'next-intl'
-import { UserSessionProps } from '../hoc/withAuth'
-// import NewMemberForm from '../team/NewMemberForm'
+import NewMemberForm from '../team/NewMemberForm'
 
-const NewMemberPage = ({ user }: UserSessionProps) => {
+const NewMemberPage = () => {
   const tNav = useTranslations('nav')
   const t = useTranslations('newMember')
   return (
@@ -16,7 +15,7 @@ const NewMemberPage = ({ user }: UserSessionProps) => {
         ]}
       /> */}
       <Block title={t('title')} as="h1">
-        {/* <NewMemberForm environment={user.environment} /> */}
+        <NewMemberForm />
       </Block>
     </>
   )
