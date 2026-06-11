@@ -25,4 +25,5 @@ export const AccountMipWithUserSelect = {
       source: true,
     },
   },
+  environment: true,
 }

@@ -4,6 +4,7 @@ import { TeamMember } from '@/db/accountMip'
 import { UserStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { UserSession } from 'next-auth'
 import { SessionProvider } from 'next-auth/react'
+import PendingInvitations from '../team/PendingInvitations'
 import Team from '../team/TeamTable'
 
 interface Props {
@@ -20,7 +21,7 @@ const TeamPage = ({ user, team }: Props) => {
         usersToValidate={team.filter((member) => member.status === UserStatus.PENDING_REQUEST)}
         user={user}
       /> */}
-      {/* <PendingInvitations team={team.filter((member) => member.status === UserStatus.VALIDATED)} user={user} /> */}
+      <PendingInvitations team={team.filter((member) => member.status === UserStatus.VALIDATED)} user={user} />
       <Team team={team.filter((member) => member.status === UserStatus.ACTIVE)} user={user} />
     </SessionProvider>
   )
