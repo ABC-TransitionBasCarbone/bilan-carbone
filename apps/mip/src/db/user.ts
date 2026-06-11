@@ -6,7 +6,7 @@ import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/c
 import { AddMemberCommand } from '@abc-transitionbascarbone/services/serverFunctions/user.command'
 import { signPassword } from '@abc-transitionbascarbone/utils/auth'
 import { UserSession } from 'next-auth'
-import { addAccountMip, updateAccountMip } from './accountMip'
+import { addAccountMip, getAccountMipByEmailAndOrganizationVersionMipId, updateAccountMip } from './accountMip'
 import { prismaClient } from './client.server'
 
 export const getUserByEmail = (email: string) =>
@@ -152,4 +152,16 @@ export const handleAddingUser = async (creator: UserSession, newUser: AddMemberC
     newUser.firstName,
     creator.organizationVersionMipId,
   )
+}
+
+export const deleteAccountMipFromOrgaVersionMip = async (email: string, organizationVersionMipId: string | null) => {
+  const accountMip = await getAccountMipByEmailAndOrganizationVersionMipId(email, organizationVersionMipId)
+  if (!accountMip) {
+    return null
+  }
+
+  await prismaClient.accountMip.update({
+    where: { id: accountMip.id },
+    data: { organizationVersionMipId: null, status: UserStatus.IMPORTED },
+  })
 }

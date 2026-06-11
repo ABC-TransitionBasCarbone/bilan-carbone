@@ -17,10 +17,11 @@ export type TeamMemberCommon = {
     email: string
     firstName: string
     lastName: string
-    level: Level
+    level: Level | null
   }
   formationName?: string | null
   role: Role
+  updatedAt: Date
 }
 
 interface Props {

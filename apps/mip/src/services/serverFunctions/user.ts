@@ -7,8 +7,10 @@ import {
   getAccountMipFromUserOrganization,
 } from '@/db/accountMip'
 import { getOrgNameByOrgVersionMipId } from '@/db/organization'
-import { getUserByEmail, handleAddingUser } from '@/db/user'
+import { deleteAccountMipFromOrgaVersionMip, getUserByEmail, handleAddingUser } from '@/db/user'
+import { AccountMipWithUser } from '@/types/accountMip.types'
 import { withServerResponse } from '@/utils/serverResponse'
+import { userSessionToDbUser } from '@/utils/userAccounts'
 import { User } from '@abc-transitionbascarbone/db-common'
 import { updateUserResetTokenForEmail } from '@abc-transitionbascarbone/db-common/db'
 import { Environment, Role, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
@@ -23,7 +25,7 @@ import { AddMemberCommand } from '@abc-transitionbascarbone/services/serverFunct
 import { DAY, HOUR, TIME_IN_MS } from '@abc-transitionbascarbone/utils'
 import jwt from 'jsonwebtoken'
 import { dbActualizedAuth } from '../auth'
-import { canAddMember, canEditSelfRole } from '../permissions/user'
+import { canAddMember, canDeleteMember, canEditSelfRole } from '../permissions/user'
 
 export const resetPassword = async (email: string) =>
   withServerResponse('resetPassword', async () => {
@@ -111,4 +113,41 @@ export const sendEmailToAddedUser = async (email: string, user: User, newUserNam
 
     const token = await updateUserResetToken(email, 1 * DAY)
     return sendNewUserEmail(email, token, `${user.firstName} ${user.lastName}`, newUserName, Environment.MIP)
+  })
+
+export const resendInvitation = async (email: string) =>
+  withServerResponse('resendInvitation', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user || !session.user.organizationVersionMipId) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const member = await getAccountMipByEmailAndOrganizationVersionMipId(email, session.user.organizationVersionMipId)
+    if (!member || !canAddMember(session.user, member, member.organizationVersionMipId)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    await sendEmailToAddedUser(
+      member.user.email,
+      userSessionToDbUser(session.user),
+      member.user.firstName,
+      session.user.organizationVersionMipId,
+    )
+  })
+
+export const deleteMember = async (email: string) =>
+  withServerResponse('deleteMember', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const accountMipToRemove = await getAccountMipByEmailAndOrganizationVersionMipId(
+      email,
+      session.user.organizationVersionMipId,
+    )
+    if (!canDeleteMember(session.user, accountMipToRemove as AccountMipWithUser)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    await deleteAccountMipFromOrgaVersionMip(email, session.user.organizationVersionMipId)
   })
