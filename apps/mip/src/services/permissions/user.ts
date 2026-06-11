@@ -1,6 +1,6 @@
 import { AccountMipWithUser } from '@/types/accountMip.types'
 import { canEditMemberRole } from '@/utils/user'
-import { RoleMip } from '@abc-transitionbascarbone/db-common/enums'
+import { RoleMip, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { UserSession } from 'next-auth'
 import type { Prisma } from '@abc-transitionbascarbone/db-common'
 
@@ -26,6 +26,26 @@ export const canAddMember = (
   if (organizationVersionMipId !== user.organizationVersionMipId) {
     return false
   }
+  return true
+}
+
+export const canDeleteMember = (user: UserSession, member: AccountMipWithUser | null) => {
+  if (!member) {
+    return false
+  }
+
+  if (user.organizationVersionMipId !== member.organizationVersionMipId) {
+    return false
+  }
+
+  if (!canEditMemberRole(user)) {
+    return false
+  }
+
+  if (member.status === UserStatus.ACTIVE) {
+    return false
+  }
+
   return true
 }
 

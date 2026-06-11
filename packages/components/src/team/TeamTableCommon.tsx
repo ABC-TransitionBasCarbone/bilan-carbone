@@ -21,6 +21,7 @@ export type TeamMemberCommon = {
   }
   formationName?: string | null
   role: Role | RoleMip
+  updatedAt: Date
 }
 
 interface Props {
