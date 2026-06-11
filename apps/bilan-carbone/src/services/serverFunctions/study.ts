@@ -26,7 +26,6 @@ import {
   getOrganizationVersionsByOrganizationId,
   getOrganizationWithSitesById,
   getOrgSitesWithCNCByOrgVersionId,
-  isOrganizationVersionCR,
   OrganizationVersionWithOrganization,
 } from '@/db/organization'
 import { updateSituationFields } from '@/db/situation'
@@ -54,6 +53,7 @@ import {
   getPendingStudyCommentsCountFromAuthor,
   getSourcesLatestImportVersionId,
   getStudiesSitesFromIds,
+  getStudyAllowedUsersUnfiltered,
   getStudyById,
   getStudyCommentsCountFromOrganizationVersionId,
   getStudyCommentsFromOrganizationVersionId,
@@ -87,10 +87,10 @@ import {
 import { getLocale } from '@/i18n/locale'
 import { StudySiteFields, studySiteToSituation, TiltStudySiteFields } from '@/services/studySiteToSituation'
 import { AccountWithUser } from '@/types/account.types'
-import { getNestedValue, groupBy } from '@/utils/array'
+import { groupBy } from '@/utils/array'
 import { mapCncToStudySite } from '@/utils/cnc'
 import { calculateDistanceFromParis } from '@/utils/distance'
-import { CA_UNIT_VALUES, defaultCAUnit, formatNumber } from '@/utils/number'
+import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 import { canEditOrganizationVersion } from '@/utils/organization'
 import { withServerResponse } from '@/utils/serverResponse'
 import {
@@ -100,14 +100,14 @@ import {
   getUserRoleOnPublicStudy,
   hasDeprecationPeriod,
   hasEditionRights,
+  hasSufficientLevel,
 } from '@/utils/study'
+import { mapStudyForReport } from '@/utils/studyReport.utils'
 import { isAdmin } from '@/utils/user'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import { LocaleType } from '@abc-transitionbascarbone/i18n/config'
-import { formatDateFr } from '@abc-transitionbascarbone/utils'
 import type { IsSuccess } from '@abc-transitionbascarbone/utils/serverResponse'
 
-import { hasSufficientLevel } from '@/utils/study'
 import type {
   Account,
   Document,
@@ -125,7 +125,6 @@ import {
   Environment,
   Export,
   Import,
-  Level,
   Role,
   StudyResultUnit,
   StudyRole,
@@ -133,10 +132,10 @@ import {
   UserChecklist,
   UserStatus,
 } from '@abc-transitionbascarbone/db-common/enums'
-import Docxtemplater from 'docxtemplater'
+import createReport from 'docx-templates'
+import fs from 'fs/promises'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
-import PizZip from 'pizzip'
 import { v4 as uuidv4 } from 'uuid'
 import { auth, dbActualizedAuth } from '../auth'
 import { customDataToSituationByEnvironment, TiltCustomDataFields } from '../customDataToSituation'
@@ -1892,97 +1891,6 @@ export const getCncByCncCode = async (cncCode: string) =>
     return await findCncByCncCode(cncCode)
   })
 
-export const mapStudyForReport = async (
-  study: FullStudy,
-  results: {
-    monetaryRatio: number
-    nonSpecificMonetaryRatio: number
-  },
-) => {
-  const isParentCR = !!(
-    study.organizationVersion.parentId && (await isOrganizationVersionCR(study.organizationVersion.parentId))
-  )
-
-  const allowedUsers = study.allowedUsers.map((user) => {
-    const { firstName, lastName } = user.account.user
-    return {
-      accountId: user.accountId,
-      name: `${firstName} ${lastName}`,
-      role: user.role,
-      createdAt: user.createdAt,
-      isInternal: isParentCR
-        ? user.account.organizationVersionId !== study.organizationVersion.parentId // All members that are not in the parent CR
-        : user.account.organizationVersionId === study.organizationVersionId, // All members that are in the same organization as the study
-      isExternal: isParentCR
-        ? user.account.organizationVersionId === study.organizationVersion.parentId // All members that are in the parent CR
-        : user.account.organizationVersionId !== study.organizationVersionId, // All members that are not in the same organization as the study
-    }
-  })
-
-  const contributors: { accountId: string; name: string; isInternal: boolean; isExternal: boolean }[] = []
-  study.contributors.forEach((contributor) => {
-    if (!contributors.some((c) => c.accountId === contributor.accountId)) {
-      const { firstName, lastName } = contributor.account.user
-      contributors.push({
-        accountId: contributor.accountId,
-        name: `${firstName} ${lastName}`,
-        isInternal: isParentCR
-          ? contributor.account.organizationVersionId !== study.organizationVersion.parentId // All contributors that are not in the parent CR
-          : false, // No contributors can be internal in a regular organization scenario
-        isExternal: false, // No contributors can be external
-      })
-    }
-  })
-
-  const admin =
-    allowedUsers
-      .filter((user) => user.role === StudyRole.Validator)
-      .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())[0] || null
-  const remainingMembers = allowedUsers.filter((user) => user.accountId !== admin?.accountId)
-  const internalTeam = [
-    ...remainingMembers.filter((user) => user.isInternal),
-    ...contributors.filter((contributor) => contributor.isInternal),
-  ]
-  const externalTeam = [
-    ...remainingMembers.filter((user) => user.isExternal),
-    ...contributors.filter((contributor) => contributor.isExternal),
-  ]
-
-  const sites = study.sites.map((studySite) => ({
-    id: studySite.id,
-    name: studySite.site.name,
-    city: studySite.site.city,
-    postalCode: studySite.site.postalCode,
-  }))
-
-  const monetaryRatioPercentage = formatNumber(results.monetaryRatio, 2)
-  const nonSpecificMonetaryRatioPercentage = formatNumber(results.nonSpecificMonetaryRatio, 2)
-  const specificMonetaryRatioPercentage = formatNumber(results.monetaryRatio - results.nonSpecificMonetaryRatio, 2)
-
-  const tLevel = await getTranslations('level')
-
-  return {
-    ...study,
-    level: tLevel(study.level),
-    // We need all cases here because docxtemplater doesn't support logical operators in conditions
-    isInitialOrStandard: study.level === Level.Initial || study.level === Level.Standard,
-    isStandardOrAdvanced: study.level === Level.Standard || study.level === Level.Advanced,
-    isInitial: study.level === Level.Initial,
-    isStandard: study.level === Level.Standard,
-    isAdvanced: study.level === Level.Advanced,
-    year: study.startDate.getFullYear(),
-    startDate: formatDateFr(study.startDate),
-    endDate: formatDateFr(study.endDate),
-    admin,
-    internalTeam,
-    externalTeam,
-    monetaryRatioPercentage: monetaryRatioPercentage,
-    specificMonetaryRatioPercentage: specificMonetaryRatioPercentage,
-    nonSpecificMonetaryRatioPercentage: nonSpecificMonetaryRatioPercentage,
-    sites,
-  }
-}
-
 export const prepareReport = async (
   study: FullStudy,
   results: {
@@ -1991,43 +1899,34 @@ export const prepareReport = async (
   },
 ) =>
   withServerResponse('prepareReport', async () => {
-    const templateKey = process.env.SCW_REPORT_TEMPLATE_KEY
-    if (!templateKey) {
-      throw new Error('Report template key not configured')
+    let template: Buffer
+    const localTemplatePath = process.env.LOCAL_REPORT_TEMPLATE_PATH
+    if (localTemplatePath) {
+      template = await fs.readFile(localTemplatePath)
+    } else {
+      const templateKey = process.env.SCW_REPORT_TEMPLATE_KEY
+      if (!templateKey) {
+        throw new Error('Report template key not configured')
+      }
+      const contentResult = await getFileFromBucket(templateKey)
+      if (!contentResult.success) {
+        throw new Error('Failed to fetch report template from Scaleway')
+      }
+      template = contentResult.data
     }
 
-    const contentResult = await getFileFromBucket(templateKey)
-    if (!contentResult.success) {
-      throw new Error('Failed to fetch report template from Scaleway')
-    }
-
-    const content = contentResult.data
-    const zip = new PizZip(content)
-
-    const doc = new Docxtemplater(zip, {
-      paragraphLoop: true,
-      linebreaks: true,
-      parser: (key: string) => ({
-        get(scope) {
-          if (key.includes('.')) {
-            return getNestedValue(scope, key)
-          }
-          return scope[key]
-        },
-      }),
+    const allowedUsers = await getStudyAllowedUsersUnfiltered(study.id)
+    const studyForReport = { ...study, allowedUsers }
+    const studyData = await mapStudyForReport(studyForReport, results)
+    return createReport({
+      template,
+      data: {
+        study: studyData,
+        organization: study.organizationVersion.organization,
+      },
+      noSandbox: true,
+      cmdDelimiter: ['{', '}'],
     })
-
-    doc.render({
-      study: await mapStudyForReport(study, results),
-      organization: study.organizationVersion.organization,
-    })
-    const buffer = doc.toBuffer()
-    const arrayBuffer = new ArrayBuffer(buffer.length)
-    const view = new Uint8Array(arrayBuffer)
-    for (let i = 0; i < buffer.length; ++i) {
-      view[i] = buffer[i]
-    }
-    return arrayBuffer
   })
 
 export const setStudyTemplate = async (template: DuplicableStudy, environment: Environment, studyId: string) => {

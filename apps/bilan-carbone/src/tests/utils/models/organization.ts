@@ -22,6 +22,7 @@ export const mockedDbSite = {
 export const mockedOrganization = {
   id: mockedOrganizationId,
   name: 'Mocked Organization',
+  wordpressId: null,
 }
 
 export const mockedOrganizationVersion = {

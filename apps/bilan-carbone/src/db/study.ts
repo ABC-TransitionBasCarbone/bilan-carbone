@@ -305,6 +305,7 @@ const fullStudyInclude = {
         select: {
           id: true,
           name: true,
+          wordpressId: true,
         },
       },
     },
@@ -519,6 +520,14 @@ const fetchStudyById = cache(async (id: string) => {
     include: fullStudyInclude,
   })
 })
+
+export const getStudyAllowedUsersUnfiltered = async (studyId: string) => {
+  const study = await prismaClient.study.findUnique({
+    where: { id: studyId },
+    include: { allowedUsers: fullStudyInclude.allowedUsers },
+  })
+  return study ? normalizeAllowedUsers(study.allowedUsers, study.level, study.organizationVersionId) : []
+}
 
 // IMPORTANT: Do not use unless you need the full study with all its fields and relations.
 export const getStudyById = async (id: string, organizationVersionId: string | null, tx?: Prisma.TransactionClient) => {
