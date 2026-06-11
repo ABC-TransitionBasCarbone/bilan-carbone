@@ -5,8 +5,9 @@ import { environmentSubPostsMapping, Post, subPostsByPost } from '@/services/pos
 import { EmissionFactorWithMetaData, getEmissionFactors } from '@/services/serverFunctions/emissionFactor'
 import { getStudyExports } from '@/services/serverFunctions/study'
 import { BCUnit } from '@/services/unit'
+import { BCEnvironment } from '@/types/environment'
 import { FeFilters } from '@/types/filters'
-import { EmissionFactorBase, Environment, Export, SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { EmissionFactorBase, Export, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { PaginationState } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
@@ -16,7 +17,7 @@ import { EmissionFactorsTable } from './EmissionFactorsTable'
 
 interface Props {
   userOrganizationId?: string | null
-  environment: Environment
+  environment: BCEnvironment
   initialImportVersions: string[]
   importVersions: ImportVersionForFilters[]
   locationOptions: string[]
