@@ -1,9 +1,9 @@
-import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { BCEnvironment } from '@/types/environment'
 import { create } from 'zustand'
 
 interface AppEnvironmentState {
-  environment?: Environment
-  setEnvironment: (newEnvironment: Environment) => void
+  environment?: BCEnvironment
+  setEnvironment: (newEnvironment: BCEnvironment) => void
   isLoading: boolean
   setIsLoading: (isLoading: boolean) => void
 }
@@ -11,7 +11,7 @@ interface AppEnvironmentState {
 export const useAppEnvironmentStore = create<AppEnvironmentState>((set) => {
   return {
     environment: undefined,
-    setEnvironment: (newEnvironment: Environment) => {
+    setEnvironment: (newEnvironment: BCEnvironment) => {
       set({ environment: newEnvironment })
     },
     isLoading: false,
