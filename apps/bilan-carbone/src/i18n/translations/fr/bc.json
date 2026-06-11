@@ -185,20 +185,14 @@
     "ges": "Émissions de GES ({unit})"
   },
   "nav": {
-    "backToHome": "Retour à l'accueil",
     "emissionFactors": "Facteurs d'émission",
-    "home": "Accueil",
     "newOrganization": "Ajouter une nouvelle organisation",
     "newStudy": "Ajouter une nouvelle étude",
     "studyPerimeter": "Périmètre",
     "newStudyContributor": "Ajouter un·e contributeur·rice",
     "editStudyContributor": "Modifier un·e contributeur·rice",
     "newStudyRight": "Ajouter une personne",
-    "notFound": "Page non trouvée",
-    "organization": "Organisation",
-    "edit": "Modifier",
     "studyRights": "Cadrage",
-    "team": "Équipe",
     "actualities": "Actualités"
   },
   "actuality": {
@@ -263,12 +257,10 @@
     "fe": "FE",
     "help": "Aide",
     "admin": "Admin",
-    "home": "Accueil",
     "profile": "Profil",
     "study": "Étude",
     "organization": "Mon organisation",
     "transition": "Transition BC+",
-    "logout": "Se déconnecter",
     "methodology": "Méthodologie",
     "organizations": "Mes Bilans Carbone®",
     "footprints": "Mes Empreintes",

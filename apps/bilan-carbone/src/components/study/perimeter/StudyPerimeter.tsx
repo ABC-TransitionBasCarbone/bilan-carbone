@@ -1,6 +1,5 @@
 'use client'
 
-import Block from '@/components/base/Block'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import SelectStudySite from '@/components/study/site/SelectStudySite'
@@ -15,6 +14,7 @@ import {
 } from '@/services/serverFunctions/study.command'
 import { hasEditionRights } from '@/utils/study'
 import { HelpIcon } from '@abc-transitionbascarbone/components'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import IconLabel from '@abc-transitionbascarbone/components/src/base/IconLabel'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { ControlMode, Export, SiteCAUnit, StudyRole } from '@abc-transitionbascarbone/db-common/enums'

@@ -1,9 +1,9 @@
 'use server'
 
 import { getMainActualitiesLocale } from '@/db/actuality.server'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import classNames from 'classnames'
 import { getTranslations } from 'next-intl/server'
-import Block from '../base/Block'
 import ActualityRow from './Actuality'
 import NoActualities from './NoActualities'
 import styles from './styles.module.css'

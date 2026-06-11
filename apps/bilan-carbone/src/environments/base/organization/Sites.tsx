@@ -1,11 +1,11 @@
 'use client'
 
-import LinkButton from '@/components/base/LinkButton'
 import { TableActionButton } from '@/components/base/TableActionButton'
 import { FormCheckbox } from '@/components/form/Checkbox'
 import GlobalSites from '@/components/organization/Sites'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
 import { CA_UNIT_VALUES, displayCA, formatNumber } from '@/utils/number'
+import LinkButton from '@abc-transitionbascarbone/components/src/base/LinkButton'
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { Environment, SiteCAUnit } from '@abc-transitionbascarbone/db-common/enums'
 import EditIcon from '@mui/icons-material/Edit'

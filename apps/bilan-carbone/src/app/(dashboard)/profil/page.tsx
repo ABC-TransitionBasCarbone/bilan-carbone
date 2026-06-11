@@ -1,8 +1,8 @@
 'use server'
 
-import Block from '@/components/base/Block'
 import withAuth from '@/components/hoc/withAuth'
 import ProfilePage from '@/components/pages/Profile'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { useTranslations } from 'next-intl'
 import pakage from '../../../../package.json'
 

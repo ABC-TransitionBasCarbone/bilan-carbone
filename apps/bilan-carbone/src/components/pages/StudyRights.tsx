@@ -5,10 +5,10 @@ import DynamicStudyRights from '@/environments/core/study/DynamicStudyRights'
 import { getEmissionFactorImportVersions } from '@/services/serverFunctions/emissionFactor'
 import { defaultCAUnit } from '@/utils/number'
 import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
+import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
-import NotFound from './NotFound'
 
 interface Props {
   study: FullStudy

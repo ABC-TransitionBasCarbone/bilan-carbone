@@ -1,3 +1,13 @@
+enum Role {
+  ADMIN
+  SUPER_ADMIN
+  GESTIONNAIRE
+  COLLABORATOR
+  DEFAULT
+
+  @@schema("common")
+}
+
 enum UserSource {
   CRON
   TUNISIE

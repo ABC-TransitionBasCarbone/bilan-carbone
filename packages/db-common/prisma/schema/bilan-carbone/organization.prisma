@@ -77,25 +77,6 @@ enum EstablishmentType {
   @@schema("bilan_carbone")
 }
 
-model Organization {
-  id               String    @id @default(uuid())
-  oldBCId          String?   @map("old_bc_id")
-  createdAt        DateTime  @default(now()) @map("created_at")
-  updatedAt        DateTime  @default(now()) @updatedAt @map("updated_at")
-  importedFileDate DateTime? @map("imported_file_date")
-
-  name        String
-  wordpressId String? @map("wordpress_id")
-
-  sites     Site[]
-  emissions EmissionFactor[]
-
-  organizationVersions OrganizationVersion[]
-
-  @@map("organizations")
-  @@schema("bilan_carbone")
-}
-
 model OrganizationVersion {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now()) @map("created_at")

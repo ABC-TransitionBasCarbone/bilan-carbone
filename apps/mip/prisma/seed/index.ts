@@ -1,5 +1,5 @@
 import { PrismaClient } from '@abc-transitionbascarbone/db-common'
-import { UserStatus } from '@abc-transitionbascarbone/db-common/enums'
+import { Role, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { signPassword } from '@abc-transitionbascarbone/utils/auth'
 import { PrismaPg } from '@prisma/adapter-pg'
 
@@ -10,9 +10,32 @@ const adapter = new PrismaPg({
 const prisma = new PrismaClient({ adapter }) as PrismaClient
 
 const main = async () => {
-  const password = await signPassword('password-0')
-  await prisma.accountMip.deleteMany()
+  const accountsMip = await prisma.accountMip.findMany({ select: { userId: true } })
+  const userIds = accountsMip.map((a) => a.userId)
 
+  await prisma.accountMip.deleteMany()
+  await prisma.user.deleteMany({ where: { id: { in: userIds } } })
+
+  const organizationVersionsMip = await prisma.organizationVersionMip.findMany({ select: { organizationId: true } })
+  const organizationIds = organizationVersionsMip.map((a) => a.organizationId)
+
+  await prisma.organizationVersionMip.deleteMany()
+  await prisma.user.deleteMany({ where: { id: { in: organizationIds } } })
+
+  const organization = await prisma.organization.create({
+    data: {
+      name: 'MIP Organization with mip versions',
+    },
+  })
+
+  const organizationVersionMip = await prisma.organizationVersionMip.create({
+    data: {
+      organizationId: organization.id,
+      name: 'MIP Organization Version',
+    },
+  })
+
+  const password = await signPassword('password-0')
   const user = await prisma.user.upsert({
     where: { email: 'mip-admin-0@yopmail.com' },
     update: {},
@@ -28,6 +51,8 @@ const main = async () => {
     data: {
       userId: user.id,
       status: UserStatus.ACTIVE,
+      role: Role.ADMIN,
+      organizationVersionMipId: organizationVersionMip.id,
     },
   })
 }

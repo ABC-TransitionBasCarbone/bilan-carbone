@@ -1,11 +1,11 @@
 'use client'
+import LinkButton from '@abc-transitionbascarbone/components/src/base/LinkButton'
 import LoadingButton, { Props as LoadingButtonProps } from '@abc-transitionbascarbone/components/src/base/LoadingButton'
 import { Button } from '@abc-transitionbascarbone/ui'
 import CloseIcon from '@mui/icons-material/Close'
 import { ButtonProps, IconButton, Modal as MUIModal, Typography } from '@mui/material'
 import classNames from 'classnames'
 import Box from '../base/Box'
-import LinkButton from '../base/LinkButton'
 import styles from './Modal.module.css'
 
 export interface Props {

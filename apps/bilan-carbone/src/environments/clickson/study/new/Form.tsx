@@ -1,8 +1,8 @@
 'use client'
 
-import Block from '@/components/base/Block'
 import GlobalNewStudyForm from '@/components/study/new/Form'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { Level } from '@abc-transitionbascarbone/db-common/enums'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useState } from 'react'

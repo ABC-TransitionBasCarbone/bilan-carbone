@@ -1,5 +1,5 @@
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { useTranslations } from 'next-intl'
-import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import { UserSessionProps } from '../hoc/withAuth'
 import NewMemberForm from '../team/NewMemberForm'
