@@ -1,4 +1,5 @@
 'use client'
+import { customRich } from '@/i18n/customRich'
 import { switchEnvironment } from '@/i18n/environment'
 import { getLocale, switchLocale } from '@/i18n/locale'
 import PublicContainer from '@abc-transitionbascarbone/components/src/base/PublicContainer'
@@ -37,7 +38,7 @@ const PublicTiltPage = ({ children, question }: Props) => {
           <p className="title-h4 mb1">{t('welcome')}</p>
           <p className="title-h6 bold">{t('subtext')}</p>
         </div>
-        <p>{t('explanation')}</p>
+        <p>{customRich(t, 'explanation', {}, Environment.TILT, { faq: styles.link, abcAssociation: styles.link })}</p>
         <div className="flex-cc gapped1 w100 p1">
           <Image src="/logos/abc/logo_abc.png" alt="ABC logo" fill className="w50 hauto" />
           <CloseIcon />

@@ -43,6 +43,11 @@ export const customRich = (
         {children}
       </Link>
     ),
+    abcAssociation: (children) => (
+      <Link href={abc} target="_blank" rel="noreferrer noopener" className={styles.abcAssociation}>
+        {children}
+      </Link>
+    ),
     br: () => <br />,
     green: (children) => <span style={{ color: 'var(--mui-palette-ghgp-main)', fontSize: 'unset' }}>{children}</span>,
     purple: (children) => (
