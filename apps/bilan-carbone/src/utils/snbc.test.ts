@@ -329,11 +329,11 @@ describe('SNBC Trajectory', () => {
     const expectBudgetsEqual = (actual: number, expected: number) => {
       const relativeDifference = Math.abs(actual - expected) / expected
       if (relativeDifference > 0.01) {
-        console.warn(`🚨 Budget precision of ${(relativeDifference * 100).toFixed(2)}% exceeds 5% threshold.`)
+        console.warn(`🚨 Budget precision of ${(relativeDifference * 100).toFixed(2)}% exceeds 1% threshold.`)
       } else {
-        console.log(`✅ Budget precision of ${(relativeDifference * 100).toFixed(2)}% is within 5% threshold.`)
+        console.log(`✅ Budget precision of ${(relativeDifference * 100).toFixed(2)}% is within 1% threshold.`)
       }
-      expect(relativeDifference).toBeLessThan(0.01) // 5% max
+      expect(relativeDifference).toBeLessThan(0.01) // 1% max
     }
 
     const testSNBCSectoralBudgetEquality = (

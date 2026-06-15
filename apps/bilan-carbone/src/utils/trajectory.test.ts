@@ -1623,6 +1623,24 @@ describe('calculateTrajectory', () => {
       testBudgetEqualityWithCompensation(2020, 2025, 1000, 1200, objectives, createPastStudies([2020, 1000]))
     })
 
+    test('budget equality with 10 year gap between referenceYear and currentYear', () => {
+      const objectives = [
+        { targetYear: 2030, reductionRate: 0.02 },
+        { targetYear: 2040, reductionRate: 0.04 },
+      ]
+
+      testBudgetEqualityWithCompensation(2015, 2025, 1000, 1200, objectives, createPastStudies([2015, 1000]))
+    })
+
+    test('budget equality with 20 year gap between referenceYear and currentYear', () => {
+      const objectives = [
+        { targetYear: 2030, reductionRate: 0.02 },
+        { targetYear: 2040, reductionRate: 0.04 },
+      ]
+
+      testBudgetEqualityWithCompensation(2005, 2025, 1000, 1200, objectives, createPastStudies([2005, 1000]))
+    })
+
     test('past objective: one objective in the past, two in the future — budget conserved within 1%', () => {
       const objectives = [
         { targetYear: 2023, reductionRate: 0.05 }, // past — already elapsed at study time
