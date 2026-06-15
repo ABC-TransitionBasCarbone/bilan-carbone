@@ -7,7 +7,6 @@ import { deleteOrganizationMember } from '@/services/serverFunctions/organizatio
 import { changeRole } from '@/services/serverFunctions/user'
 import { canBeUntrainedRole, canEditMemberRole, getEnvironmentRoles } from '@/utils/user'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
-import type { TeamMemberCommon } from '@abc-transitionbascarbone/components/src/team/TeamTableCommon'
 import TeamTableCommon from '@abc-transitionbascarbone/components/src/team/TeamTableCommon'
 import { UserSession } from 'next-auth'
 import { useRouter } from 'next/navigation'
@@ -60,7 +59,7 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
     <>
       <TeamTableCommon
         email={user.email}
-        team={team as TeamMemberCommon[]}
+        team={team}
         canUpdateTeam={canUpdateTeam}
         environmentRoles={getEnvironmentRoles(user.environment)}
         deleteMember={deleteMember}
