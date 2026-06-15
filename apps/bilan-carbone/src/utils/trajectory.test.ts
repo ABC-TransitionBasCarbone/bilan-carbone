@@ -1,4 +1,9 @@
-import { SBTI_REDUCTION_RATE_15, SBTI_REDUCTION_RATE_WB2C, TARGET_YEAR } from '@/constants/trajectory.constants'
+import {
+  BUDGET_PRECISION_TOLERANCE_PERCENT,
+  SBTI_REDUCTION_RATE_15,
+  SBTI_REDUCTION_RATE_WB2C,
+  TARGET_YEAR,
+} from '@/constants/trajectory.constants'
 import type { BaseObjective, PastStudy, TrajectoryDataPoint, TrajectoryWithObjectives } from '@/types/trajectory.types'
 import { Action } from '@abc-transitionbascarbone/db-common'
 import { StudyResultUnit, TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
@@ -1523,8 +1528,6 @@ describe('calculateTrajectory', () => {
       })
     })
   })
-
-  const BUDGET_PRECISION_TOLERANCE_PERCENT = 1
 
   const expectBudgetsApproximatelyEqual = (actual: number, expected: number) => {
     const difference = Math.abs(actual - expected)
