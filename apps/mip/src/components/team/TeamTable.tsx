@@ -1,12 +1,10 @@
 'use client'
 
 import { TeamMember } from '@/db/accountMip'
-import { canEditSelfRole } from '@/services/permissions/user'
 import { deleteOrganizationMember } from '@/services/serverFunctions/organization'
 import { changeRole } from '@/services/serverFunctions/user'
 import { canEditMemberRole } from '@/utils/user'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
-import type { TeamMemberCommon } from '@abc-transitionbascarbone/components/src/team/TeamTableCommon'
 import TeamTableCommon from '@abc-transitionbascarbone/components/src/team/TeamTableCommon'
 import { Role } from '@abc-transitionbascarbone/db-common/enums'
 import { UserSession } from 'next-auth'
@@ -36,13 +34,12 @@ const TeamTable = ({ user, team }: Props) => {
   const deleteMember = useCallback(async () => {
     setDeletionErrorData(undefined)
     await callServerFunction(() => deleteOrganizationMember(deletingMember), {
-      onSuccess: (data) => {
-        if (data) {
-          setDeletionError(data)
-        } else {
-          setDeletingMember('')
-          router.refresh()
-        }
+      onSuccess: () => {
+        setDeletingMember('')
+        router.refresh()
+      },
+      onError: (error) => {
+        setDeletionError(error)
       },
     })
   }, [deletingMember, callServerFunction, router])
@@ -51,7 +48,7 @@ const TeamTable = ({ user, team }: Props) => {
     <>
       <TeamTableCommon
         email={user.email}
-        team={team as TeamMemberCommon[]}
+        team={team}
         canUpdateTeam={canUpdateTeam}
         environmentRoles={Role}
         deleteMember={deleteMember}
@@ -59,7 +56,7 @@ const TeamTable = ({ user, team }: Props) => {
         deletionError={deletionError}
         deletionErrorData={deletionErrorData}
         setDeletionErrorData={setDeletionErrorData}
-        canEditSelfRole={canEditSelfRole(user.role)}
+        canEditSelfRole={false}
         canBeUntrainedRole={true}
         changeRole={changeRole}
         setDeletingMember={setDeletingMember}

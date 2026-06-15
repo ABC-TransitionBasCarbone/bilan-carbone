@@ -67,10 +67,12 @@ const SelectRoleCommon = ({
     }
   }
 
+
   const disabled = useMemo(
     () => (!canEditSelfRole && currentUserEmail === email) || currentRole === Role.SUPER_ADMIN,
     [currentUserEmail, email, currentRole],
   )
+  console.log("canEditSelfRole", canEditSelfRole, currentUserEmail, email, disabled)
 
   return (
     <Select className={styles.select} value={role} onChange={selectNewRole} disabled={disabled}>

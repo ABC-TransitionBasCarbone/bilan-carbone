@@ -25,5 +25,4 @@ export const deleteOrganizationMember = async (email: string) =>
     }
 
     await updateAccountMip(targetMemberAccountMip.id, { organizationVersionMip: { disconnect: true } }, {})
-    return null
   })

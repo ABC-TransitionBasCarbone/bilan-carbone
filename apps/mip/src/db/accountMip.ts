@@ -1,5 +1,6 @@
 import { canEditMemberRole } from '@/utils/user'
 import { Prisma } from '@abc-transitionbascarbone/db-common'
+import { findUserInfoSelect } from '@abc-transitionbascarbone/db-common/db'
 import { Role, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { UserSession } from 'next-auth'
 import { AccountMipWithUserSelect } from './accountMip.select'
@@ -23,20 +24,7 @@ export const getAccountMipById = (id: string) =>
 
 export const getAccountMipFromUserOrganization = (user: UserSession) =>
   prismaClient.accountMip.findMany({
-    select: {
-      user: {
-        select: {
-          email: true,
-          firstName: true,
-          lastName: true,
-          level: true,
-          updatedAt: true,
-        },
-      },
-      status: true,
-      role: true,
-      updatedAt: true,
-    },
+    ...findUserInfoSelect(),
     where: canEditMemberRole(user)
       ? { organizationVersionMipId: user.organizationVersionMipId }
       : { status: UserStatus.ACTIVE, organizationVersionMipId: user.organizationVersionMipId },
