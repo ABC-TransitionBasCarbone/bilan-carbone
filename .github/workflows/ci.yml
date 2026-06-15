@@ -135,6 +135,38 @@ jobs:
       - name: Launch unit tests
         run: yarn run test
 
+  mip-unit-tests:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/mip
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.16.0
+          cache: 'yarn'
+      - name: Copy .env
+        run: cp .env.dist .env
+        working-directory: apps/mip
+      - name: Copy .env to db-common
+        run: |
+          cp apps/mip/.env.dist packages/db-common/.env
+          cp apps/mip/.env.dist apps/bilan-carbone/.env
+        working-directory: ${{ github.workspace }}
+      - name: Install dependencies
+        run: yarn install --immutable --immutable-cache --check-cache
+        working-directory: .
+      # TODO Remettre prebuild après rebase ?
+      # - name: Prebuild application
+        # run: yarn prebuild
+      - name: Generate prisma files
+        run: yarn workspace @abc-transitionbascarbone/db-common prisma generate
+        working-directory: .
+      - name: Launch unit tests
+        run: yarn run test
+
   unit-tests-publicodes:
     timeout-minutes: 10
     runs-on: ubuntu-latest

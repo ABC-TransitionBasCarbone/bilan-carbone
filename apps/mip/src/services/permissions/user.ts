@@ -8,6 +8,10 @@ export const canChangeRole = (user: UserSession, member: AccountMipWithUser | nu
     return false
   }
 
+  if (user.accountMipId === member.id) {
+    return false
+  }
+
   if (!canEditMemberRole(user)) {
     return false
   }

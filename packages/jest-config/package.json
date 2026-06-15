@@ -1,0 +1,6 @@
+{
+  "name": "@abc-transitionbascarbone/jest-config",
+  "version": "0.0.1",
+  "main": "jest.base.ts",
+  "private": true
+}
