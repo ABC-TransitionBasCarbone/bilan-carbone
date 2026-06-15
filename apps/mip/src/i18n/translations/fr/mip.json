@@ -65,6 +65,7 @@
     "subtitle": "Résultats anonymisés de la campagne de sensibilisation",
     "stats": {
       "averageFootprint": "Empreinte moyenne par collaborateur",
+<<<<<<< HEAD
       "respondents": "Répondants"
     },
     "objective": {
@@ -75,6 +76,11 @@
       "aboveTarget": "Aujourd'hui, vous êtes au-dessus des {target} tonnes, l'objectif intermédiaire que nous proposons pour 2030.",
       "paceTitle": "Votre rythme indicatif pour parvenir à {target} T en {year}",
       "paceUnit": "kg par an"
+=======
+      "respondents": "Répondants",
+      "responseRate": "Taux de réponse",
+      "respondentsDetail": "{count} sur {total} destinataires ({rate}%)"
+>>>>>>> 03b783d33 (feat(mip): add survey results dashboard with sample data)
     },
     "filter": {
       "title": "Filtrer par entité"
@@ -165,7 +171,13 @@
       }
     },
     "export": {
-      "print": "Imprimer"
+      "comments": {
+        "title": "Commentaires des collaborateurs"
+      },
+      "export": {
+        "visual": "Exporter (visuel)",
+        "print": "Imprimer"
+      }
     }
   }
 }

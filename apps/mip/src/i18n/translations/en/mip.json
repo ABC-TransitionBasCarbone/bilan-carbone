@@ -67,7 +67,9 @@
       "unit": "tonnes CO₂e / year",
       "aboveTarget": "Today you are above {target} tonnes, the intermediate target we propose for 2030.",
       "paceTitle": "Your indicative pace to reach {target} T by {year}",
-      "paceUnit": "kg per year"
+      "paceUnit": "kg per year",
+      "responseRate": "Response rate",
+      "respondentsDetail": "{count} out of {total} recipients ({rate}%)"
     },
     "filter": {
       "title": "Filter by entity"
@@ -158,7 +160,13 @@
       }
     },
     "export": {
-      "print": "Print"
+      "comments": {
+        "title": "Collaborator comments"
+      },
+      "export": {
+        "visual": "Export (visual)",
+        "print": "Print"
+      }
     }
   }
 }
