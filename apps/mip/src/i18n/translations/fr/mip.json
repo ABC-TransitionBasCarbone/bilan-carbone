@@ -4,7 +4,8 @@
     "completed": {
       "title": "Sondage terminé !",
       "description": "Merci d'avoir complété le sondage.",
-      "responseId": "ID de réponse : {id}"
+      "responseId": "ID de réponse : {id}",
+      "viewResults": "Voir les résultats de la campagne"
     },
     "notFound": "Aucune question trouvée",
     "progress": {
@@ -25,6 +26,34 @@
       "addedActiveUser": "Vous avez été invité sur un nouvel environnement Mon Impact Pro",
       "activation": "Vous avez activé votre compte sur Mon Impact Pro",
       "activationRequest": "Demande d'accès à votre organisation Mon Impact Pro"
+    }
+  },
+  "results": {
+    "title": "Tableau de bord des résultats",
+    "subtitle": "Résultats anonymisés de la campagne de sensibilisation",
+    "stats": {
+      "averageFootprint": "Empreinte moyenne par collaborateur",
+      "respondents": "Répondants",
+      "responseRate": "Taux de réponse",
+      "respondentsDetail": "{count} sur {total} destinataires ({rate}%)"
+    },
+    "filter": {
+      "title": "Filtrer par entité"
+    },
+    "categories": {
+      "title": "Détail par poste d'émission",
+      "commute": "Déplacements domicile-travail",
+      "travel": "Déplacements professionnels",
+      "food": "Alimentation",
+      "digital": "Numérique",
+      "office": "Bureaux"
+    },
+    "comments": {
+      "title": "Commentaires des collaborateurs"
+    },
+    "export": {
+      "visual": "Exporter (visuel)",
+      "print": "Imprimer"
     }
   }
 }
