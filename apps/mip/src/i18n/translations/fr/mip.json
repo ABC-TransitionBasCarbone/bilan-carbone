@@ -18,5 +18,13 @@
     },
     "resume": "Reprendre le sondage",
     "characterCount": "{current} / {max} caractères"
+  },
+  "email": {
+    "subject": {
+      "newUser": "Vous avez été invité sur Mon Impact Pro",
+      "addedActiveUser": "Vous avez été invité sur un nouvel environnement Mon Impact Pro",
+      "activation": "Vous avez activé votre compte sur Mon Impact Pro",
+      "activationRequest": "Demande d'accès à votre organisation Mon Impact Pro"
+    }
   }
 }

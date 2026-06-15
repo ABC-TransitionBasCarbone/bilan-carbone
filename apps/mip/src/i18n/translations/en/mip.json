@@ -18,5 +18,13 @@
     },
     "resume": "Resume survey",
     "characterCount": "{current} / {max} characters"
+  },
+  "email": {
+    "subject": {
+      "newUser": "You have been invited on My Impact Pro",
+      "addedActiveUser": "You have been invited on a new environment My Impact Pro",
+      "activation": "You have activated you account on My Impact Pro",
+      "activationRequest": "Access request to your My Impact Pro organization"
+    }
   }
 }
