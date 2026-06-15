@@ -924,6 +924,7 @@
       "columnEmissionFactorName": "Name",
       "columnEmissionFactorValue": "Value",
       "columnEmissionFactorUnit": "Unit",
+      "columnEmissionFactorLocalization": "Localization",
       "columnEfSource": "Source (1)",
       "columnEfType": "Type (1)",
       "columnFeGlobalUncertainty": "Global uncertainty (1)",

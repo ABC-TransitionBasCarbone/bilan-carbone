@@ -155,9 +155,10 @@ export async function resolveEmissionSourcesFromFile(
   const bc = getBcTranslations(locale)
   const postTranslations = bc.emissionFactors.post as unknown as Record<string, string>
 
+  const resolvedByLine = resolved.type !== 'ambiguous' ? resolved.resolvedByLine : new Map<number, never>()
   const rows: PreviewEmissionSourceRow[] = result.rows.map((row) => {
     const post = getPost(row.subPost)
-    const ef = resolved.type === 'resolved' ? resolved.resolvedByLine.get(row.lineNumber) : undefined
+    const ef = resolvedByLine.get(row.lineNumber)
     return {
       site: row.siteName,
       post: post ? (postTranslations[post] ?? post) : '',
@@ -223,6 +224,7 @@ export async function importEmissionSourcesFromFile(
         locale,
         organizationId,
         versionIds,
+        row.emissionFactorLocalization,
       )
 
       if (ef && ef.matchType !== EmissionFactorMatchType.NameAmbiguous) {
@@ -309,9 +311,9 @@ function buildEmissionSourcesSheet(study: FullStudy, locale: LocaleType, dataRow
   const DA_START = 6
   const DA_END = 18
   const FE_START = 19
-  const FE_END = 31
-  const BC_START = 32
-  const BC_END = 35
+  const FE_END = 32
+  const BC_START = 33
+  const BC_END = 36
 
   const empty = (n: number) => Array(n).fill('')
 
@@ -506,6 +508,7 @@ function buildEmissionSourceRow(
   const unitRaw = ef?.unit ? (unitTranslations[ef.unit] ?? ef.unit) : ''
   const unitLabel = unitRaw ? getSingularForm(unitRaw) : ''
   const efTitle = getEmissionFactorFullName(ef?.metaData, '', ef?.importedFrom)
+  const efLocalization = ef?.location ?? ''
   const efValue = ef ? getEmissionFactorValue(ef, study.organizationVersion.environment) : ''
   const efUnitLabel = ef?.unit ? formatPrefixedUnitDisplay(locale, ef.unit) : ''
   const feSpecificQuality = ef ? getSpecificEmissionFactorQuality(es) : null
@@ -559,6 +562,7 @@ function buildEmissionSourceRow(
   row[C.emissionFactorName] = efTitle
   row[C.emissionFactorValue] = efValue
   row[C.emissionFactorUnit] = efUnitLabel
+  row[C.emissionFactorLocalization] = efLocalization
   row[C.feGlobalUncertainty] = feQualityLabel
   row[C.feReliability] = feSpecificQuality ? getQualityFieldLabel(feSpecificQuality.reliability) : ''
   row[C.feTechnicalRepresentativeness] = feSpecificQuality

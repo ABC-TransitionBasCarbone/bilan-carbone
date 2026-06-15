@@ -41,6 +41,7 @@ export type ParsedEmissionSourceRow = {
   emissionFactorValue: number | undefined
   emissionFactorUnit: Unit | undefined
   emissionFactorUnitRaw?: string
+  emissionFactorLocalization: string | undefined
   value: number | undefined
   type: EmissionSourceType | undefined
   caracterisation: EmissionSourceCaracterisation | undefined
@@ -82,17 +83,18 @@ export const SOURCE_IMPORT_COLUMNS = {
   emissionFactorName: 20,
   emissionFactorValue: 21,
   emissionFactorUnit: 22,
-  feGlobalUncertainty: 23,
-  feReliability: 24,
-  feTechnicalRepresentativeness: 25,
-  feGeographicRepresentativeness: 26,
-  feTemporalRepresentativeness: 27,
-  feCompleteness: 28,
-  efSource: 29,
-  efType: 30,
-  feComment: 31,
-  validation: 32,
-  calculatedValue: 33,
-  calculatedUnit: 34,
-  calculatedUncertainty: 35,
+  emissionFactorLocalization: 23,
+  feGlobalUncertainty: 24,
+  feReliability: 25,
+  feTechnicalRepresentativeness: 26,
+  feGeographicRepresentativeness: 27,
+  feTemporalRepresentativeness: 28,
+  feCompleteness: 29,
+  efSource: 30,
+  efType: 31,
+  feComment: 32,
+  validation: 33,
+  calculatedValue: 34,
+  calculatedUnit: 35,
+  calculatedUncertainty: 36,
 } as const

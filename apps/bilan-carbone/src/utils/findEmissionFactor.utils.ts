@@ -41,7 +41,13 @@ export type EfRow = {
   totalCo2: number
   unit: string | null
   customUnit: string | null
-  metaData: { title: string | null; attribute: string | null; frontiere: string | null; language: string }[]
+  location?: string | null
+  metaData: {
+    title: string | null
+    attribute: string | null
+    frontiere: string | null
+    language: string
+  }[]
 }
 
 function getEfFullName(ef: EfRow, locale: string): string {
@@ -111,6 +117,20 @@ function toEfMatch(
   }
 }
 
+function resolveByLocalization(
+  candidates: EfRow[],
+  localization: string,
+  locale: string,
+  matchType:
+    | EmissionFactorMatchType.Exact
+    | EmissionFactorMatchType.NameAndUnitOnly
+    | EmissionFactorMatchType.ValueAndUnitOnly,
+): EfMatchResult | null {
+  const normalized = localization.trim().toLowerCase()
+  const match = candidates.find((ef) => ef.location?.trim().toLowerCase() === normalized)
+  return match ? toEfMatch(match, matchType, locale) : null
+}
+
 export async function findEmissionFactorMatch(
   id: string | undefined,
   title: string | undefined,
@@ -119,6 +139,7 @@ export async function findEmissionFactorMatch(
   locale: string,
   organizationId: string,
   versionIds: string[],
+  localization?: string,
 ): Promise<EfMatchResult | null> {
   if (id) {
     const byId = await findEmissionFactorByImportedIdForMatch(id, organizationId, versionIds)
@@ -158,6 +179,12 @@ export async function findEmissionFactorMatch(
   }
 
   if (byNameAndUnit.length > 1) {
+    if (localization) {
+      const byLoc = resolveByLocalization(byNameAndUnit, localization, locale, EmissionFactorMatchType.Exact)
+      if (byLoc) {
+        return byLoc
+      }
+    }
     return {
       matchType: EmissionFactorMatchType.NameAmbiguous,
       candidates: byNameAndUnit.map((ef) => toEfMatch(ef, EmissionFactorMatchType.NameAndUnitOnly, locale)),
@@ -172,6 +199,17 @@ export async function findEmissionFactorMatch(
 
       const exactResult = matchByExactFullName(byUnit, normalizedSearch, locale, value, epsilon)
       if (exactResult) {
+        if (localization && exactResult.matchType === EmissionFactorMatchType.NameAmbiguous) {
+          const byLoc = resolveByLocalization(
+            byUnit.filter((ef) => exactResult.candidates.some((c) => c.id === ef.id)),
+            localization,
+            locale,
+            EmissionFactorMatchType.Exact,
+          )
+          if (byLoc) {
+            return byLoc
+          }
+        }
         return exactResult
       }
 
@@ -196,6 +234,18 @@ export async function findEmissionFactorMatch(
           const exactByValue = results.find((r) => Math.abs(Number(r.item.ef.totalCo2) - value) < epsilon)
           if (exactByValue) {
             return toEfMatch(exactByValue.item.ef, EmissionFactorMatchType.Exact, locale)
+          }
+        }
+
+        if (localization) {
+          const byLoc = resolveByLocalization(
+            results.map((r) => r.item.ef),
+            localization,
+            locale,
+            EmissionFactorMatchType.Exact,
+          )
+          if (byLoc) {
+            return byLoc
           }
         }
 
