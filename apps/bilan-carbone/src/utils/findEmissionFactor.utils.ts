@@ -117,6 +117,19 @@ function toEfMatch(
   }
 }
 
+function resolveAmbiguousByLocalization(
+  result: EfMatchResult,
+  candidates: EfRow[],
+  localization: string | undefined,
+  locale: string,
+): EfMatchResult {
+  if (result.matchType !== EmissionFactorMatchType.NameAmbiguous || !localization) {
+    return result
+  }
+  const ambiguousCandidates = candidates.filter((ef) => result.candidates.some((c) => c.id === ef.id))
+  return resolveByLocalization(ambiguousCandidates, localization, locale, EmissionFactorMatchType.Exact) ?? result
+}
+
 function resolveByLocalization(
   candidates: EfRow[],
   localization: string,
@@ -173,22 +186,17 @@ export async function findEmissionFactorMatch(
 
   if (byNameAndUnit.length > 1 && title) {
     const result = matchByExactFullName(byNameAndUnit, normalizeStringForSearch(title), locale, value, epsilon)
-    if (result) {
+    if (result && result.matchType === EmissionFactorMatchType.Exact) {
       return result
     }
   }
 
   if (byNameAndUnit.length > 1) {
-    if (localization) {
-      const byLoc = resolveByLocalization(byNameAndUnit, localization, locale, EmissionFactorMatchType.Exact)
-      if (byLoc) {
-        return byLoc
-      }
-    }
-    return {
+    const ambiguous: EfMatchResult = {
       matchType: EmissionFactorMatchType.NameAmbiguous,
       candidates: byNameAndUnit.map((ef) => toEfMatch(ef, EmissionFactorMatchType.NameAndUnitOnly, locale)),
     }
+    return resolveAmbiguousByLocalization(ambiguous, byNameAndUnit, localization, locale)
   }
 
   if (unit && (title || value !== undefined)) {
@@ -199,18 +207,7 @@ export async function findEmissionFactorMatch(
 
       const exactResult = matchByExactFullName(byUnit, normalizedSearch, locale, value, epsilon)
       if (exactResult) {
-        if (localization && exactResult.matchType === EmissionFactorMatchType.NameAmbiguous) {
-          const byLoc = resolveByLocalization(
-            byUnit.filter((ef) => exactResult.candidates.some((c) => c.id === ef.id)),
-            localization,
-            locale,
-            EmissionFactorMatchType.Exact,
-          )
-          if (byLoc) {
-            return byLoc
-          }
-        }
-        return exactResult
+        return resolveAmbiguousByLocalization(exactResult, byUnit, localization, locale)
       }
 
       const candidates: { ef: EfRow; normalizedFullName: string }[] = byUnit.map((ef) => ({
@@ -237,22 +234,16 @@ export async function findEmissionFactorMatch(
           }
         }
 
-        if (localization) {
-          const byLoc = resolveByLocalization(
-            results.map((r) => r.item.ef),
-            localization,
-            locale,
-            EmissionFactorMatchType.Exact,
-          )
-          if (byLoc) {
-            return byLoc
-          }
-        }
-
-        return {
+        const fuzzyAmbiguous: EfMatchResult = {
           matchType: EmissionFactorMatchType.NameAmbiguous,
           candidates: results.map((r) => toEfMatch(r.item.ef, EmissionFactorMatchType.NameAndUnitOnly, locale)),
         }
+        return resolveAmbiguousByLocalization(
+          fuzzyAmbiguous,
+          results.map((r) => r.item.ef),
+          localization,
+          locale,
+        )
       }
     }
 
