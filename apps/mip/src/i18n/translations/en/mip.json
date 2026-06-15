@@ -4,7 +4,8 @@
     "completed": {
       "title": "Survey Completed!",
       "description": "Thank you for completing the survey.",
-      "responseId": "Response ID: {id}"
+      "responseId": "Response ID: {id}",
+      "viewResults": "View campaign results"
     },
     "notFound": "No question found",
     "progress": {
@@ -51,5 +52,33 @@
     "add": "Add new campaign",
     "edit": "Save changes",
     "success": "campaigns changed successfully"
+  },
+  "results": {
+    "title": "Results Dashboard",
+    "subtitle": "Anonymised results from the awareness campaign",
+    "stats": {
+      "averageFootprint": "Average footprint per collaborator",
+      "respondents": "Respondents",
+      "responseRate": "Response rate",
+      "respondentsDetail": "{count} out of {total} recipients ({rate}%)"
+    },
+    "filter": {
+      "title": "Filter by entity"
+    },
+    "categories": {
+      "title": "Breakdown by emission category",
+      "commute": "Commute",
+      "travel": "Professional travel",
+      "food": "Food",
+      "digital": "Digital",
+      "office": "Office"
+    },
+    "comments": {
+      "title": "Collaborator comments"
+    },
+    "export": {
+      "visual": "Export (visual)",
+      "print": "Print"
+    }
   }
 }
