@@ -1,7 +1,8 @@
 import { globalTheme } from '@abc-transitionbascarbone/css'
 import { createTheme } from '@mui/material/styles'
 
-const baseTheme = createTheme({
+const baseTheme = createTheme(globalTheme, {
+  cssVariables: true,
   palette: {
     mode: 'light',
     primary: {
@@ -14,7 +15,7 @@ const baseTheme = createTheme({
   typography: globalTheme.typography,
 })
 
-export const theme = createTheme(globalTheme, baseTheme, {
+export const theme = createTheme(baseTheme, {
   custom: {
     box: {
       backgroundColor: baseTheme.palette.background.paper,

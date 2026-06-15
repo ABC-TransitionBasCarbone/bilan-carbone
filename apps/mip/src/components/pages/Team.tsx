@@ -15,12 +15,6 @@ interface Props {
 const TeamPage = ({ user, team }: Props) => {
   return (
     <SessionProvider>
-      <>test</>
-      {/* 
-      <InvitationsToValidate
-        usersToValidate={team.filter((member) => member.status === UserStatus.PENDING_REQUEST)}
-        user={user}
-      /> */}
       <PendingInvitations team={team.filter((member) => member.status === UserStatus.VALIDATED)} user={user} />
       <Team team={team.filter((member) => member.status === UserStatus.ACTIVE)} user={user} />
     </SessionProvider>
