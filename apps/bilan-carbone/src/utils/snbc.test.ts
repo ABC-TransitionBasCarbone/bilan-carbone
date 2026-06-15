@@ -1,4 +1,5 @@
 import {
+  BUDGET_PRECISION_TOLERANCE_PERCENT,
   SNBC_SECTOR_TARGET_EMISSIONS,
   TRAJECTORY_SNBC_ENERGY_ID,
   TRAJECTORY_SNBC_GENERAL_ID,
@@ -327,8 +328,17 @@ describe('SNBC Trajectory', () => {
 
   describe('calculateCustomSNBCSectoralTrajectory - budget equality with overshoot', () => {
     const expectBudgetsEqual = (actual: number, expected: number) => {
-      const relativeDifference = Math.abs(actual - expected) / expected
-      expect(relativeDifference).toBeLessThan(0.05) // 5% max
+      const relativeDifference = (Math.abs(actual - expected) / expected) * 100
+      if (relativeDifference > BUDGET_PRECISION_TOLERANCE_PERCENT) {
+        console.warn(
+          `🚨 Budget precision of ${relativeDifference.toFixed(2)}% exceeds ${BUDGET_PRECISION_TOLERANCE_PERCENT}% threshold.`,
+        )
+      } else {
+        console.log(
+          `✅ Budget precision of ${relativeDifference.toFixed(2)}% is within ${BUDGET_PRECISION_TOLERANCE_PERCENT}% threshold.`,
+        )
+      }
+      expect(relativeDifference).toBeLessThan(BUDGET_PRECISION_TOLERANCE_PERCENT) // 1% max
     }
 
     const testSNBCSectoralBudgetEquality = (

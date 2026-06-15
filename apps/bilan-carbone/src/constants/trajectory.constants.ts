@@ -28,3 +28,5 @@ export const TARGET_YEAR = 2050
 export const OVERSHOOT_THRESHOLD = 0.05
 export const SNBC_REFERENCE_YEAR = 1990
 export const SNBC_FINAL_TARGET_YEAR = 2050
+
+export const BUDGET_PRECISION_TOLERANCE_PERCENT = 1 // 1%
