@@ -19,7 +19,7 @@
     "seed": "dotenv -e .env tsx prisma/seed/index.ts",
     "tsx": "dotenv -e .env -- tsx",
     "prebuild": "yarn run publicodes-mip:compile",
-    "publicodes-mip:compile": "cd ../../packages/publicodes-packages/publicodes-mip && yarn run compile",
+    "publicodes-mip:compile": "cd ../../packages/publicodes-packages/publicodes-mip && yarn install --non-interactive && yarn run compile",
     "publicodes-mip:watch": "cd ../../packages/publicodes-packages/publicodes-mip && yarn run watch ",
     "publicodes-mip:test": "cd ../../packages/publicodes-packages/publicodes-mip && yarn test",
     "publicodes-mip:translate": "yarn run publicodes-mip:compile && npx tsx ../../packages/i18n/publicodes/generate-translation-file.tsx -m mip"
@@ -36,6 +36,7 @@
     "@abc-transitionbascarbone/publicodes": "*",
     "@abc-transitionbascarbone/survey": "*",
     "@abc-transitionbascarbone/services": "*",
+    "@abc-transitionbascarbone/publicodes-mip": "file:../../packages/publicodes-packages/publicodes-mip/",
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
@@ -57,7 +58,6 @@
     "zod": "^4.4.3",
     "zustand": "^5.0.13",
     "publicodes": "^1.10.1",
-    "@publicodes/forms": "^0.6.1",
     "@base-ui-components/react": "^1.0.0-rc.0"
   },
   "devDependencies": {

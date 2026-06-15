@@ -4,8 +4,7 @@
   "packageManager": "yarn@1.22.22",
   "workspaces": [
     "apps/*",
-    "packages/*",
-    "packages/publicodes-packages/*"
+    "packages/*"
   ],
   "engines": {
     "node": "22.16.0",
@@ -36,8 +35,6 @@
     "hono": "^4.12.18",
     "postcss": "^8.5.12",
     "fast-uri": "^3.1.2",
-    "fast-xml-builder": "^1.1.6",
-    "@publicodes/react-ui": "1.10.0",
-    "publicodes": "1.10.1"
+    "fast-xml-builder": "^1.1.6"
   }
 }
