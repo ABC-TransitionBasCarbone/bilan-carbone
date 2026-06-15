@@ -1,0 +1,135 @@
+.container {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.title {
+  margin-bottom: 0.5rem !important;
+}
+
+.subtitle {
+  margin-bottom: 2rem !important;
+  color: var(--neutral-500);
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.statCard {
+  padding: 1.25rem !important;
+  text-align: center;
+}
+
+.statValue {
+  font-size: 2.5rem !important;
+  font-weight: 700 !important;
+  color: var(--primary) !important;
+  line-height: 1.1 !important;
+}
+
+.statUnit {
+  font-size: 1rem !important;
+  font-weight: 400 !important;
+  color: var(--neutral-500) !important;
+}
+
+.statLabel {
+  margin-top: 0.25rem !important;
+  color: var(--neutral-500) !important;
+}
+
+.statRespondents {
+  font-size: 0.875rem !important;
+  color: var(--neutral-500) !important;
+  margin-top: 0.25rem !important;
+}
+
+.section {
+  margin-bottom: 2rem;
+}
+
+.sectionTitle {
+  margin-bottom: 1rem !important;
+}
+
+.filterRow {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.filterChip {
+  cursor: pointer;
+}
+
+.chartCard {
+  padding: 1.5rem !important;
+}
+
+.chartRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.chartLabel {
+  width: 220px;
+  flex-shrink: 0;
+  font-size: 0.875rem !important;
+}
+
+.chartBarTrack {
+  flex: 1;
+  background-color: var(--neutral-50, #e9eff9);
+  border-radius: 4px;
+  height: 1.5rem;
+  overflow: hidden;
+}
+
+.chartBar {
+  height: 100%;
+  width: var(--bar-width);
+  background-color: var(--bar-color);
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+.chartValue {
+  width: 60px;
+  text-align: right;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  flex-shrink: 0;
+}
+
+.commentsCard {
+  padding: 1.5rem !important;
+}
+
+.commentItem {
+  padding: 1rem 0 !important;
+}
+
+.commentCategory {
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  color: var(--primary) !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.commentText {
+  color: var(--neutral-500) !important;
+}
+
+.exportRow {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}

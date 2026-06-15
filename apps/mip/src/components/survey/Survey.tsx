@@ -177,6 +177,9 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
               <Typography variant="body1" color="text.secondary" paragraph>
                 {t('completed.description')}
               </Typography>
+              <Button variant="contained" href={`/survey/${surveyId}/results`}>
+                {t('completed.viewResults')}
+              </Button>
             </div>
           </CardContent>
         </Card>
