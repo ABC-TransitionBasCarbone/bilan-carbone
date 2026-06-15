@@ -7,6 +7,7 @@ import {
   getAccountMipFromUserOrganization,
 } from '@/db/accountMip'
 import { getUserByEmail } from '@/db/user'
+import { AccountMipWithUser } from '@/types/accountMip.types'
 import { withServerResponse } from '@/utils/serverResponse'
 import { updateUserResetTokenForEmail } from '@abc-transitionbascarbone/db-common/db'
 import { Role } from '@abc-transitionbascarbone/db-common/enums'
@@ -15,7 +16,7 @@ import { MORE_THAN_ONE, NOT_AUTHORIZED } from '@abc-transitionbascarbone/service
 import { HOUR, TIME_IN_MS } from '@abc-transitionbascarbone/utils'
 import jwt from 'jsonwebtoken'
 import { dbActualizedAuth } from '../auth'
-import { canEditSelfRole } from '../permissions/user'
+import { canChangeRole, canEditSelfRole } from '../permissions/user'
 
 export const resetPassword = async (email: string) =>
   withServerResponse('resetPassword', async () => {
@@ -50,9 +51,9 @@ export const changeRole = async (email: string, role: Role) =>
     if (!accountMipToChange) {
       throw new Error(NOT_AUTHORIZED)
     }
-    // if (!canChangeRole(session.user, accountToChange as AccountWithUser, role)) {
-    //   throw new Error(NOT_AUTHORIZED)
-    // }
+    if (!canChangeRole(session.user, accountMipToChange as AccountMipWithUser, role)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
     const team = await getAccountMipFromUserOrganization(session.user)
     const selfEditRolesCount = team.filter((member) => canEditSelfRole(member.role)).length
     if (
