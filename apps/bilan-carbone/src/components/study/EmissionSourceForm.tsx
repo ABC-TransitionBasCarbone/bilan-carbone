@@ -381,7 +381,7 @@ const EmissionSourceForm = ({
               <HelpIcon onClick={() => setGlossary('version')} label={t('information')} />
             </p>
           )}
-          <p className={classNames(emissionFactorStyles.header, 'align-end')}>
+          <div className={classNames(emissionFactorStyles.header, 'align-end')}>
             {getEmissionFactorFullName(selectedFactor.metaData, '', selectedFactor.importedFrom)}
             {selectedFactor.location ? ` - ${selectedFactor.location}` : ''}
             {selectedFactor.metaData?.location ? ` - ${selectedFactor.metaData.location}` : ''} -{' '}
@@ -409,7 +409,7 @@ const EmissionSourceForm = ({
                 <BaseChip base={selectedFactor.base} />
               </div>
             )}
-          </p>
+          </div>
           {selectedFactor.metaData && (
             <p className={emissionFactorStyles.detail}>{getDetail(selectedFactor.metaData)}</p>
           )}
