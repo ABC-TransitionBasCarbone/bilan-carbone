@@ -16,6 +16,17 @@ export type SurveyComment = {
   text: string
 }
 
+export type KeyStat = {
+  key: string
+  value: number
+  unit: 'percent' | 'number'
+}
+
+export type KeyStatGroup = {
+  key: string
+  stats: KeyStat[]
+}
+
 export type SurveyResults = {
   surveyId: string
   totalRespondents: number
@@ -24,6 +35,7 @@ export type SurveyResults = {
   categories: EmissionCategory[]
   entities: EntityFilter[]
   comments: SurveyComment[]
+  keyStats: KeyStatGroup[]
 }
 
 export const sampleResults: SurveyResults = {
@@ -72,6 +84,44 @@ export const sampleResults: SurveyResults = {
       text: 'Le chauffage est souvent trop fort en hiver, on ouvre les fenêtres.',
     },
   ],
+  keyStats: [
+    {
+      key: 'transport',
+      stats: [
+        { key: 'plane', value: 12, unit: 'percent' },
+        { key: 'longHaulPlane', value: 5, unit: 'percent' },
+        { key: 'carKm', value: 18500, unit: 'number' },
+        { key: 'carPassengers', value: 1.3, unit: 'number' },
+      ],
+    },
+    {
+      key: 'housing',
+      stats: [
+        { key: 'electricHeating', value: 34, unit: 'percent' },
+        { key: 'gasHeating', value: 41, unit: 'percent' },
+        { key: 'oilHeating', value: 8, unit: 'percent' },
+        { key: 'woodHeating', value: 11, unit: 'percent' },
+        { key: 'airConditioning', value: 27, unit: 'percent' },
+      ],
+    },
+    {
+      key: 'food',
+      stats: [
+        { key: 'vegan', value: 4, unit: 'percent' },
+        { key: 'redMeatDaily', value: 22, unit: 'percent' },
+        { key: 'localSeasonal', value: 36, unit: 'percent' },
+        { key: 'bottledWater', value: 18, unit: 'percent' },
+        { key: 'zeroWaste', value: 9, unit: 'percent' },
+      ],
+    },
+    {
+      key: 'misc',
+      stats: [
+        { key: 'newClothes', value: 14, unit: 'number' },
+        { key: 'socialMediaOver3h', value: 28, unit: 'percent' },
+      ],
+    },
+  ],
 }
 
 export function getResultsForEntity(results: SurveyResults, entityId: string): SurveyResults {
@@ -92,5 +142,13 @@ export function getResultsForEntity(results: SurveyResults, entityId: string): S
       ...c,
       valueTCO2e: Math.round(c.valueTCO2e * factor * 10) / 10,
     })),
+    keyStats: results.keyStats.map((group) => ({
+      ...group,
+      stats: group.stats.map((s) => ({
+        ...s,
+        value: s.unit === 'percent' ? Math.min(100, Math.round(s.value * factor)) : Math.round(s.value * factor),
+      })),
+    })),
   }
 }
+

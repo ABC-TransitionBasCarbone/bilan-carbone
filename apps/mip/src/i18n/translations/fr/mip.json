@@ -73,8 +73,40 @@
       "digital": "Numérique",
       "office": "Bureaux"
     },
+    "keyStats": {
+      "title": "Chiffres clés",
+      "transport": {
+        "title": "Transport",
+        "plane": "Prennent l'avion",
+        "longHaulPlane": "Prennent l'avion long courrier",
+        "carKm": "Kilomètres parcourus en moyenne en voiture",
+        "carPassengers": "Voyageurs en moyenne en voiture"
+      },
+      "housing": {
+        "title": "Logement",
+        "electricHeating": "Se chauffent à l'électricité",
+        "gasHeating": "Se chauffent au gaz",
+        "oilHeating": "Se chauffent au fioul",
+        "woodHeating": "Se chauffent au bois",
+        "airConditioning": "Ont un système de climatisation"
+      },
+      "food": {
+        "title": "Alimentation",
+        "vegan": "Sont végétaliens",
+        "redMeatDaily": "Mangent de la viande rouge au moins une fois par jour",
+        "localSeasonal": "Achètent local et de saison",
+        "bottledWater": "Boivent de l'eau en bouteille",
+        "zeroWaste": "Sont Zéro déchet"
+      },
+      "misc": {
+        "title": "Divers",
+        "newClothes": "Vêtements neufs achetés chaque année",
+        "socialMediaOver3h": "Passent plus de 3h par jour sur les réseaux hors bureau"
+      }
+    },
     "comments": {
-      "title": "Commentaires des collaborateurs"
+      "title": "Commentaires des collaborateurs",
+      "noComments": "Aucun commentaire pour l'instant"
     },
     "export": {
       "visual": "Exporter (visuel)",
