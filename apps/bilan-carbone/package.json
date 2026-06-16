@@ -135,7 +135,7 @@
     "@typescript-eslint/eslint-plugin": "^8.61.1",
     "@typescript-eslint/parser": "^8.61.1",
     "babel-plugin-react-compiler": "^1.0.0",
-    "csv-parse": "^6.2.1",
+    "csv-parse": "^7.0.0",
     "cypress": "^15.17.0",
     "dotenv-cli": "^11.0.0",
     "eslint": "^9.39.2",
