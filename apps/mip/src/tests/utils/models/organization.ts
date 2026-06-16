@@ -1,10 +1,5 @@
-export const mockedOrganizationId = 'mocked-organization-id'
+import { mockedOrganization, mockedOrganizationId } from '@abc-transitionbascarbone/services/tests/models/organization'
 export const mockedOrganizationVersionMipId = 'mocked-organization-version-mip-id'
-
-export const mockedOrganization = {
-  id: mockedOrganizationId,
-  name: 'Mocked Organization',
-}
 
 export const mockedOrganizationVersionMip = {
   id: mockedOrganizationVersionMipId,

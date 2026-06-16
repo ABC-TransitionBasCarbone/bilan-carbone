@@ -1,29 +1,11 @@
 import type { Account, Prisma, User } from '@abc-transitionbascarbone/db-common'
-import { Environment, Level, Role, UserSource, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
+import { Environment, Level, Role, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
+import { mockedOrganizationId } from '@abc-transitionbascarbone/services/tests/models/organization'
+import { mockedDbUser, mockedUser, mockedUserId } from '@abc-transitionbascarbone/services/tests/models/user'
 import { Session, UserSession } from 'next-auth'
-import { mockedOrganizationId, mockedOrganizationVersionId } from './organization'
+import { mockedOrganizationVersionId } from './organization'
 
-export const mockedUserId = 'mocked-user-id'
 export const mockedAccountId = 'mocked-account-id'
-
-export const mockedUser = {
-  id: mockedUserId,
-  email: 'mocked@email.com',
-  firstName: 'Mocked',
-  lastName: 'User',
-  level: Level.Initial,
-}
-
-export const mockedDbUser = {
-  ...mockedUser,
-  createdAt: new Date('2025-01-01T00:00:00.000Z'),
-  updatedAt: new Date('2025-01-01T00:00:00.000Z'),
-  importedFileDate: null,
-  password: null,
-  resetToken: null,
-  formationFormStartTime: null,
-  source: UserSource.CRON,
-}
 
 const mockedAccount = {
   id: mockedAccountId,
