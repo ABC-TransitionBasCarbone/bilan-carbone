@@ -123,7 +123,7 @@
     "@smithy/types" "^4.14.3"
     tslib "^2.6.2"
 
-"@aws-sdk/client-s3@^3.1045.0":
+"@aws-sdk/client-s3@^3.1069.0":
   version "3.1069.0"
   resolved "https://registry.yarnpkg.com/@aws-sdk/client-s3/-/client-s3-3.1069.0.tgz#9fa4cb9af3ebf25c2901fec88c34d2601d747c1c"
   integrity sha512-zkwCW4D88foQ0YHyjVyFhDOIWG+IWiTGXYg8+kUgH6M19son3OsZLvioZGyZdNtlRgLNYfQGBjfArSJOYYt2QQ==
@@ -301,7 +301,7 @@
     "@smithy/types" "^4.14.3"
     tslib "^2.6.2"
 
-"@aws-sdk/s3-request-presigner@^3.1045.0":
+"@aws-sdk/s3-request-presigner@^3.1069.0":
   version "3.1069.0"
   resolved "https://registry.yarnpkg.com/@aws-sdk/s3-request-presigner/-/s3-request-presigner-3.1069.0.tgz#0a2da72681d33d689ec63df35562f8112bec0c8a"
   integrity sha512-/s8zMe/C4bLLilx8Jlh3neN2sbaGmQTdi5dxu/GG1D9wlg+3MDemqyzYy9Gi1W2m/iD2+qf6kEpNk97qEEBcZA==
