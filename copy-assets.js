@@ -12,20 +12,14 @@ function copyAssets(src, dest) {
 
         if (item.isDirectory()) {
           return copyAssets(srcPath, destPath)
-        } else {
-          return fs.copyFile(srcPath, destPath)
         }
+
+        return fs.copyFile(srcPath, destPath)
       })
+
       return Promise.all(promises)
     })
-    .catch((err) => {
-      console.error(`Error: ${err}`)
-      throw err
-    })
 }
-
-const greenTick = `\x1b[32m\u2713\x1b[0m`
-const redCross = `\x1b[31m\u274C\x1b[0m`
 
 function copyNextStandaloneAssets({ appDirectory, standaloneAppDirectory }) {
   const staticSrcPath = path.join(appDirectory, '.next/static')
@@ -49,10 +43,20 @@ module.exports = {
 }
 
 if (require.main === module) {
+  const standaloneAppDirectory = process.argv[2]
+
+  if (!standaloneAppDirectory) {
+    console.error('Missing standalone app directory argument. Example: node copy-assets.js apps/mip')
+    process.exit(1)
+  }
+
   copyNextStandaloneAssets({
-    appDirectory: __dirname,
-    standaloneAppDirectory: 'apps/bilan-carbone',
+    appDirectory: process.cwd(),
+    standaloneAppDirectory,
   })
-    .then(() => console.log(`${greenTick} Assets copied successfully`))
-    .catch((err) => console.error(`${redCross} Failed to copy assets: ${err}`))
+    .then(() => console.log(`[OK] Assets copied successfully for ${standaloneAppDirectory}`))
+    .catch((err) => {
+      console.error(`[ERROR] Failed to copy assets for ${standaloneAppDirectory}: ${err}`)
+      process.exit(1)
+    })
 }
