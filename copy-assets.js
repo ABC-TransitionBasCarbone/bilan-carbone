@@ -42,6 +42,9 @@ module.exports = {
   copyNextStandaloneAssets,
 }
 
+const greenTick = `\x1b[32m\u2713\x1b[0m`
+const redCross = `\x1b[31m\u274C\x1b[0m`
+
 if (require.main === module) {
   const standaloneAppDirectory = process.argv[2]
 
@@ -54,9 +57,9 @@ if (require.main === module) {
     appDirectory: process.cwd(),
     standaloneAppDirectory,
   })
-    .then(() => console.log(`[OK] Assets copied successfully for ${standaloneAppDirectory}`))
-    .catch((err) => {
-      console.error(`[ERROR] Failed to copy assets for ${standaloneAppDirectory}: ${err}`)
-      process.exit(1)
-    })
+  .then(() => console.log(`${greenTick} Assets copied successfully for ${standaloneAppDirectory}`))
+  .catch((err) => {
+    console.error(`${redCross} Failed to copy assets: ${err} for ${standaloneAppDirectory}`)
+    process.exit(1)
+  })
 }
