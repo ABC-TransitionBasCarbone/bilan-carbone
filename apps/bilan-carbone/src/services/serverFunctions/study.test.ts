@@ -141,7 +141,6 @@ jest.mock('../posts', () => ({
     DechetsDirects: 'DechetsDirects',
     IntrantsBiensEtMatieres: 'IntrantsBiensEtMatieres',
   },
-  getSubPostByPostTiltSimplified: jest.fn(),
 }))
 jest.mock('../../utils/post', () => ({
   withInfobulle: jest.fn(),

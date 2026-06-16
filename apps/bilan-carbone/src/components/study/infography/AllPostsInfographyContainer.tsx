@@ -68,7 +68,12 @@ const AllPostsInfographyContainer = ({ study, studySiteId, siteId }: Props) => {
           </PublicodesSituationProvider>
         ),
         [Environment.TILT]: study.simplified ? (
-          <PublicodesSituationProvider environment={Environment.TILT} studyId={study.id} studySiteId={studySiteId}>
+          <PublicodesSituationProvider
+            environment={Environment.TILT}
+            studyId={study.id}
+            studySiteId={studySiteId}
+            subPostsConfigVersion={study.subPostsConfigVersion}
+          >
             <AllPostsInfographySimplified study={study} />
           </PublicodesSituationProvider>
         ) : (

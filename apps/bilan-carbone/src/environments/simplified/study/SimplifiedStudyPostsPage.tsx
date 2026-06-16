@@ -78,7 +78,12 @@ const SimplifiedStudyPostsPage = ({ environment, post, currentSubPost, study, st
   const isLastStep = activeStep >= subPosts.length - 1
 
   return (
-    <PublicodesFormProvider environment={environment} studyId={study.id} studySiteId={studySiteId}>
+    <PublicodesFormProvider
+      environment={environment}
+      studyId={study.id}
+      studySiteId={studySiteId}
+      subPostsConfigVersion={study.subPostsConfigVersion}
+    >
       <Block
         title={tPost(post)}
         as="h1"

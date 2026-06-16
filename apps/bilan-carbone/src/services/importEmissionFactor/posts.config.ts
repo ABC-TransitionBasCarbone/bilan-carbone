@@ -24770,6 +24770,12 @@ export const elementsBySubPost: Record<SubPost, string[]> = {
   [SubPost.UtilisationEnDependanceFuitesEtAutresConsommations]: [],
   [SubPost.TeletravailSalaries]: [],
   [SubPost.TeletravailBenevoles]: [],
+  [SubPost.DechetsEmisParLOrganisation]: [],
+  [SubPost.DeplacementsBenevoles]: [],
+  [SubPost.BienMatieres]: [],
+  [SubPost.ConsommationsEnergieUtilisationProduits]: [],
+  [SubPost.TeletravailSalariesBenevoles]: [],
+  [SubPost.FinDeVieProduitsVendusFournisBeneficiaires]: [],
 
   [SubPost.Combustibles]: [],
   [SubPost.AutresGaz]: [],

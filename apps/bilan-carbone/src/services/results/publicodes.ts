@@ -30,7 +30,7 @@ function safeEvaluate(engine: Engine, ruleName: string | undefined): number {
 export function computeBaseResultsByPostFromEngine<P extends Post>(
   engine: Engine,
   posts: P[],
-  subPostsByPost: Record<P, SubPost[]>,
+  subPostsByPost: Partial<Record<P, SubPost[]>>,
   tPost: (key: string) => string,
   getPostRuleName: (post: P) => string,
   getSubPostRuleName: (subPost: SubPost) => string | undefined,
@@ -45,7 +45,7 @@ export function computeBaseResultsByPostFromEngine<P extends Post>(
         post,
         label: tPost(post),
         value: postValue,
-        children: subPostsByPost[post]
+        children: (subPostsByPost[post] ?? [])
           .map((subPost) => {
             const subPostRuleName = getSubPostRuleName(subPost)
             const subPostValue = safeEvaluate(engine, subPostRuleName)

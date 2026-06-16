@@ -168,6 +168,7 @@ import {
   getEnvironmentsForDuplication,
 } from '../permissions/study'
 import { isAdminOnStudyOrga } from '../permissions/study.utils'
+import { TILT_SIMPLIFIED_POSTS_CONFIG_VERSION } from '../publicodes/simplifiedPublicodesConfig'
 import { deleteFileFromBucket, getFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'
 import { getTransEnvironmentSubPost } from '../study'
 import { UpdateEmissionSourceCommand } from './emissionSource.command'
@@ -353,6 +354,9 @@ export const createStudyCommand = async (
         },
       },
       tagFamilies,
+      subPostsConfigVersion: isTiltSimplified(session.user.environment, studyCommand.simplified ?? false)
+        ? TILT_SIMPLIFIED_POSTS_CONFIG_VERSION
+        : undefined,
     } satisfies Prisma.StudyCreateInput
 
     if (!(await canCreateSpecificStudy(session.user, study, organizationVersionId))) {

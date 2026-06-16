@@ -7,7 +7,7 @@ import { Translations } from '@abc-transitionbascarbone/lib'
 import { AdditionalResultTypes, ResultsByPost, ResultType } from '../../types/study.types'
 import { getEmissionResults, getEmissionSourcesTotalMonetaryCo2 } from '../emissionSource'
 import { hasCustomPostOrder } from '../permissions/environment'
-import { BCPost, ClicksonPost, convertTiltSubPostToBCSubPost, CutPost, Post, subPostsByPost, TiltPost } from '../posts'
+import { BCPost, convertTiltSubPostToBCSubPost, Post, subPostsByPost } from '../posts'
 import { getSquaredStandardDeviationForEmissionSourceArray } from '../uncertainty'
 import { filterWithDependencies, getSiteEmissionSourcesWithoutMarketBase } from './utils'
 
@@ -17,7 +17,7 @@ export const computeResultsByPostFromEmissionSources = (
   siteId: string,
   withDependencies: boolean,
   validatedOnly: boolean = true,
-  postValues: typeof Post | typeof CutPost | typeof BCPost | typeof TiltPost | typeof ClicksonPost = BCPost,
+  postValues: Record<string, Post> = BCPost,
   environment: Environment,
   type?: ResultType,
 ): ResultsByPost[] => {
@@ -40,7 +40,7 @@ export const computeResultsByPostFromEmissionSources = (
     ...getEmissionResults(emissionSource, environment),
   }))
 
-  let postInfos = Object.values(convertToBc ? BCPost : postValues).map((post: Post) => {
+  let postInfos = Object.values(convertToBc ? BCPost : postValues).map((post) => {
     const subPosts = subPostsByPost[post]
       .filter((subPost) => filterWithDependencies(subPost, withDependencies))
       .map((subPost) => {

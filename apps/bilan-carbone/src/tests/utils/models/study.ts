@@ -63,6 +63,7 @@ export const mockedStudy = {
   organizationVersionId: mockedOrganizationVersionId,
   resultsUnit: StudyResultUnit.K,
   simplified: false,
+  subPostsConfigVersion: null,
 }
 
 export const mockedDdStudy = {
@@ -281,6 +282,7 @@ export const getMockeFullStudy = (overrides = {}): FullStudy => ({
   id: TEST_IDS.sourceStudy,
   name: 'Source Study',
   simplified: false,
+  subPostsConfigVersion: null,
   resultsUnit: StudyResultUnit.K,
   organizationVersionId: TEST_IDS.orgVersion,
   exports: { types: [Export.Beges], control: ControlMode.Operational },
