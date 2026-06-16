@@ -64,7 +64,8 @@
     "uuid": "^14.0.1",
     "zod": "^4.4.3",
     "zustand": "^5.0.14",
-    "@base-ui-components/react": "^1.0.0-rc.0"
+    "@base-ui-components/react": "^1.0.0-rc.0",
+    "html-to-image": "^1.11.11"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.4",

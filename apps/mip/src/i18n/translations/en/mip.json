@@ -76,7 +76,7 @@
     "charts": {
       "title": "Carbon footprint distribution",
       "pieTitle": "Breakdown by emission category (averages)",
-      "barTitle": "Carbon footprint distribution",
+      "barTitle": "Average carbon footprint",
       "target2050": "2050 target: 2 tCO₂e"
     },
     "keyStats": {
