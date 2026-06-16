@@ -151,4 +151,3 @@ export function getResultsForEntity(results: SurveyResults, entityId: string): S
     })),
   }
 }
-
