@@ -1,0 +1,39 @@
+.chart {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.label {
+  width: 220px;
+  flex-shrink: 0;
+}
+
+.barTrack {
+  flex: 1;
+  background-color: var(--neutral-50, #e9eff9);
+  border-radius: 4px;
+  height: 1.5rem;
+  overflow: hidden;
+}
+
+.bar {
+  width: var(--bar-width);
+  height: 100%;
+  background-color: var(--bar-color);
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+.value {
+  width: 60px;
+  text-align: right;
+  font-weight: 600 !important;
+  flex-shrink: 0;
+}

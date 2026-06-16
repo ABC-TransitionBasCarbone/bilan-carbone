@@ -48,8 +48,40 @@
       "digital": "Digital",
       "office": "Office"
     },
+    "keyStats": {
+      "title": "Key figures",
+      "transport": {
+        "title": "Transport",
+        "plane": "Take the plane",
+        "longHaulPlane": "Take long-haul flights",
+        "carKm": "Kilometres driven by car on average",
+        "carPassengers": "Average passengers per car"
+      },
+      "housing": {
+        "title": "Housing",
+        "electricHeating": "Heat with electricity",
+        "gasHeating": "Heat with gas",
+        "oilHeating": "Heat with oil",
+        "woodHeating": "Heat with wood",
+        "airConditioning": "Have air conditioning"
+      },
+      "food": {
+        "title": "Food",
+        "vegan": "Are vegan",
+        "redMeatDaily": "Eat red meat at least once a day",
+        "localSeasonal": "Buy local and seasonal",
+        "bottledWater": "Drink bottled water",
+        "zeroWaste": "Are Zero waste"
+      },
+      "misc": {
+        "title": "Miscellaneous",
+        "newClothes": "New clothes bought each year",
+        "socialMediaOver3h": "Spend more than 3h/day on social media outside work"
+      }
+    },
     "comments": {
-      "title": "Collaborator comments"
+      "title": "Collaborator comments",
+      "noComments": "No comments yet"
     },
     "export": {
       "visual": "Export (visual)",
