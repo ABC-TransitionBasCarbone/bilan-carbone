@@ -119,15 +119,15 @@ function toEfMatch(
 
 function resolveAmbiguousByLocalization(
   result: EfMatchResult,
-  candidates: EfRow[],
+  sourceRows: EfRow[],
   localization: string | undefined,
   locale: string,
 ): EfMatchResult {
   if (result.matchType !== EmissionFactorMatchType.NameAmbiguous || !localization) {
     return result
   }
-  const ambiguousCandidates = candidates.filter((ef) => result.candidates.some((c) => c.id === ef.id))
-  return resolveByLocalization(ambiguousCandidates, localization, locale, EmissionFactorMatchType.Exact) ?? result
+  const ambiguousRows = sourceRows.filter((ef) => result.candidates.some((c) => c.id === ef.id))
+  return resolveByLocalization(ambiguousRows, localization, locale, EmissionFactorMatchType.Exact) ?? result
 }
 
 function resolveByLocalization(
