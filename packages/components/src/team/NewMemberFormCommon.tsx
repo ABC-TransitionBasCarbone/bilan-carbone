@@ -18,16 +18,7 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 
 interface Props {
-  environmentRoles:
-    | Role
-    | {
-        ADMIN: 'ADMIN'
-        DEFAULT: 'DEFAULT'
-      }
-    | {
-        ADMIN: 'ADMIN'
-        COLLABORATOR: 'COLLABORATOR'
-      }
+  environmentRoles: typeof Role
   addMember: (command: AddMemberCommand) => Promise<ApiResponse<void>>
 }
 const NewMemberFormCommon = ({ environmentRoles, addMember }: Props) => {

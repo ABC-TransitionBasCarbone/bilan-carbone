@@ -52,7 +52,7 @@ export const updateAccountMip = (
   })
 
 export const addAccountMip = async (
-  accountMip: Prisma.AccountMipCreateInput & { role: Exclude<Role, 'SUPER_ADMIN'> },
+  accountMip: Prisma.AccountMipCreateInput & { role: Exclude<RoleMip, 'SUPER_ADMIN'> },
 ) => {
   return prismaClient.accountMip.create({
     data: accountMip,
