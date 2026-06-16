@@ -72,7 +72,6 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
       setIsResumed(true)
     }
     setIsLoading(false)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [surveyId])
 
   useEffect(() => {
