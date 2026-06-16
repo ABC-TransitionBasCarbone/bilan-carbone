@@ -163,9 +163,6 @@ jobs:
       # TODO Remettre prebuild après rebase ?
       # - name: Prebuild application
         # run: yarn prebuild
-      - name: Generate prisma files
-        run: yarn workspace @abc-transitionbascarbone/db-common prisma generate
-        working-directory: .
       - name: Launch unit tests
         run: yarn run test
 
