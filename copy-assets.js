@@ -1,6 +1,12 @@
 const fs = require('fs').promises
 const path = require('path')
 
+const staticSrcPath = path.join(__dirname, '.next/static')
+const staticDestPath = path.join(__dirname, '.next/standalone/apps/bilan-carbone/.next/static')
+
+const publicSrcPath = path.join(__dirname, 'public')
+const publicDestPath = path.join(__dirname, '.next/standalone/apps/bilan-carbone/public')
+
 function copyAssets(src, dest) {
   return fs
     .mkdir(dest, { recursive: true })
@@ -12,54 +18,30 @@ function copyAssets(src, dest) {
 
         if (item.isDirectory()) {
           return copyAssets(srcPath, destPath)
+        } else {
+          return fs.copyFile(srcPath, destPath)
         }
-
-        return fs.copyFile(srcPath, destPath)
       })
-
       return Promise.all(promises)
+    })
+    .catch((err) => {
+      console.error(`Error: ${err}`)
+      throw err
     })
 }
 
-function copyNextStandaloneAssets({ appDirectory, standaloneAppDirectory }) {
-  const staticSrcPath = path.join(appDirectory, '.next/static')
-  const staticDestPath = path.join(appDirectory, `.next/standalone/${standaloneAppDirectory}/.next/static`)
-
-  const publicSrcPath = path.join(appDirectory, 'public')
-  const publicDestPath = path.join(appDirectory, `.next/standalone/${standaloneAppDirectory}/public`)
-
-  const i18nSrcPath = path.join(appDirectory, 'src', 'i18n', 'translations')
-  const i18nDestPath = path.join(appDirectory, `.next/standalone/${standaloneAppDirectory}/src/i18n/translations`)
-
-  return Promise.all([
-    copyAssets(staticSrcPath, staticDestPath),
-    copyAssets(publicSrcPath, publicDestPath),
-    copyAssets(i18nSrcPath, i18nDestPath),
-  ])
-}
-
-module.exports = {
-  copyNextStandaloneAssets,
-}
-
-const greenTick = `\x1b[32m\u2713\x1b[0m`
 const redCross = `\x1b[31m\u274C\x1b[0m`
+const greenTick = `\x1b[32m\u2713\x1b[0m`
 
-if (require.main === module) {
-  const standaloneAppDirectory = process.argv[2]
+// Also copy i18n translation files for production i18n support
+const i18nSrcPath = path.join(__dirname, 'src', 'i18n', 'translations')
+const i18nDestPath = path.join(__dirname, '.next/standalone/apps/bilan-carbone/src/i18n/translations')
 
-  if (!standaloneAppDirectory) {
-    console.error('Missing standalone app directory argument. Example: node copy-assets.js apps/mip')
-    process.exit(1)
-  }
-
-  copyNextStandaloneAssets({
-    appDirectory: process.cwd(),
-    standaloneAppDirectory,
-  })
-  .then(() => console.log(`${greenTick} Assets copied successfully for ${standaloneAppDirectory}`))
-  .catch((err) => {
-    console.error(`${redCross} Failed to copy assets: ${err} for ${standaloneAppDirectory}`)
-    process.exit(1)
-  })
-}
+Promise.all([
+  copyAssets(staticSrcPath, staticDestPath),
+  copyAssets(publicSrcPath, publicDestPath),
+  copyAssets(i18nSrcPath, i18nDestPath),
+])
+  .then(() => console.log(`${greenTick} Assets copied successfully`))
+  .catch((err) => console.error(`${redCross} Failed to copy assets: ${err}`))
+  
