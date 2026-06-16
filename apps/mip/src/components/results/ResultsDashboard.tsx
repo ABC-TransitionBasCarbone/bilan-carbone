@@ -1,7 +1,9 @@
 'use client'
-import { getResultsForEntity, SurveyResults } from '@/data/sampleResults'
+import BarChart from '@/components/study/charts/BarChart'
+import { getResultsForEntity, KeyStatGroup, SurveyResults } from '@/data/sampleResults'
+import { BaseStyledChip } from '@abc-transitionbascarbone/ui'
 import { Download, Print } from '@mui/icons-material'
-import { Button, Card, CardContent, Chip, Divider, Typography } from '@mui/material'
+import { Button, Card, CardContent, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import styles from './ResultsDashboard.module.css'
@@ -10,48 +12,81 @@ interface Props {
   results: SurveyResults
 }
 
+function KeyStatGroupSection({ group, t }: { group: KeyStatGroup; t: ReturnType<typeof useTranslations<'results'>> }) {
+  return (
+    <div className="mb2">
+      <Typography variant="h6" className="mb1">
+        {t(`keyStats.${group.key}.title` as Parameters<typeof t>[0])}
+      </Typography>
+      <div className="flex-col gapped-2">
+        {group.stats.map((stat) => (
+          <div key={stat.key} className={`flex justify-between ${styles.statRow}`}>
+            <Typography variant="body2">
+              {t(`keyStats.${group.key}.${stat.key}` as Parameters<typeof t>[0])}
+            </Typography>
+            <Typography variant="body2" className="bold">
+              {stat.unit === 'percent' ? `${stat.value} %` : stat.value}
+            </Typography>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export default function ResultsDashboard({ results }: Props) {
   const t = useTranslations('results')
   const [selectedEntity, setSelectedEntity] = useState('all')
 
   const filtered = getResultsForEntity(results, selectedEntity)
-  const maxCategoryValue = Math.max(...filtered.categories.map((c) => c.valueTCO2e))
-
   const responseRate = Math.round((filtered.totalRespondents / filtered.totalInvited) * 100)
+
+  const barChartItems = filtered.categories.map((c) => ({
+    key: c.key,
+    label: t(`categories.${c.key}` as Parameters<typeof t>[0]),
+    value: c.valueTCO2e,
+    color: c.color,
+  }))
+
+  const groupedComments = filtered.comments.reduce(
+    (acc, comment) => {
+      if (!acc[comment.category]) {
+        acc[comment.category] = []
+      }
+      acc[comment.category].push(comment)
+      return acc
+    },
+    {} as Record<string, typeof filtered.comments>,
+  )
 
   const handlePrint = () => {
     window.print()
   }
 
   return (
-    <div className={styles.container}>
-      <Typography variant="h4" className={styles.title}>
+    <div className={styles.page}>
+      <Typography variant="h4" className="mb-2">
         {t('title')}
       </Typography>
-      <Typography variant="body1" className={styles.subtitle}>
+      <Typography variant="body1" className="mb2">
         {t('subtitle')}
       </Typography>
 
       <div className={styles.statsGrid}>
         <Card>
-          <CardContent className={styles.statCard}>
+          <CardContent className="p125">
             <Typography className={styles.statValue}>
               {filtered.averageFootprintTCO2e.toFixed(1)}
               <span className={styles.statUnit}> tCO₂e</span>
             </Typography>
-            <Typography variant="body2" className={styles.statLabel}>
-              {t('stats.averageFootprint')}
-            </Typography>
+            <Typography variant="body2">{t('stats.averageFootprint')}</Typography>
           </CardContent>
         </Card>
-
         <Card>
-          <CardContent className={styles.statCard}>
+          <CardContent className="p125">
             <Typography className={styles.statValue}>{filtered.totalRespondents}</Typography>
-            <Typography variant="body2" className={styles.statLabel}>
-              {t('stats.respondents')}
-            </Typography>
-            <Typography className={styles.statRespondents}>
+            <Typography variant="body2">{t('stats.respondents')}</Typography>
+            <Typography variant="body2">
               {t('stats.respondentsDetail', {
                 count: filtered.totalRespondents,
                 total: filtered.totalInvited,
@@ -60,90 +95,87 @@ export default function ResultsDashboard({ results }: Props) {
             </Typography>
           </CardContent>
         </Card>
-
         <Card>
-          <CardContent className={styles.statCard}>
+          <CardContent className="p125">
             <Typography className={styles.statValue}>
               {responseRate}
               <span className={styles.statUnit}> %</span>
             </Typography>
-            <Typography variant="body2" className={styles.statLabel}>
-              {t('stats.responseRate')}
-            </Typography>
+            <Typography variant="body2">{t('stats.responseRate')}</Typography>
           </CardContent>
         </Card>
       </div>
 
-      <div className={styles.section}>
-        <Typography variant="h6" className={styles.sectionTitle}>
+      <section className="mb2">
+        <Typography variant="h6" className="mb1">
           {t('filter.title')}
         </Typography>
-        <div className={styles.filterRow}>
+        <div className="flex wrap gapped-2">
           {results.entities.map((entity) => (
-            <Chip
+            <BaseStyledChip
               key={entity.id}
               label={entity.name}
-              className={styles.filterChip}
               color={selectedEntity === entity.id ? 'primary' : 'default'}
               onClick={() => setSelectedEntity(entity.id)}
+              clickable
             />
           ))}
         </div>
-      </div>
+      </section>
 
-      <div className={styles.section}>
-        <Typography variant="h6" className={styles.sectionTitle}>
+      <section className="mb2">
+        <Typography variant="h6" className="mb1">
           {t('categories.title')}
         </Typography>
         <Card>
-          <CardContent className={styles.chartCard}>
-            {filtered.categories.map((category) => (
-              <div key={category.key} className={styles.chartRow}>
-                <Typography variant="body2" className={styles.chartLabel}>
-                  {t(`categories.${category.key}`)}
-                </Typography>
-                <div className={styles.chartBarTrack}>
-                  <div
-                    className={styles.chartBar}
-                    style={
-                      {
-                        '--bar-width': `${(category.valueTCO2e / maxCategoryValue) * 100}%`,
-                        '--bar-color': category.color,
-                      } as React.CSSProperties
-                    }
-                  />
-                </div>
-                <Typography variant="body2" className={styles.chartValue}>
-                  {category.valueTCO2e.toFixed(1)} t
-                </Typography>
-              </div>
-            ))}
+          <CardContent className="p15">
+            <BarChart items={barChartItems} unit="t" />
           </CardContent>
         </Card>
-      </div>
+      </section>
 
-      <div className={styles.section}>
-        <Typography variant="h6" className={styles.sectionTitle}>
-          {t('comments.title')}
+      <section className="mb2">
+        <Typography variant="h6" className="mb1">
+          {t('keyStats.title')}
         </Typography>
         <Card>
-          <CardContent className={styles.commentsCard}>
-            {filtered.comments.map((comment, index) => (
-              <div key={comment.id}>
-                {index > 0 && <Divider />}
-                <div className={styles.commentItem}>
-                  <Typography className={styles.commentCategory}>{comment.category}</Typography>
-                  <Typography variant="body2" className={styles.commentText}>
-                    {comment.text}
-                  </Typography>
-                </div>
-              </div>
-            ))}
+          <CardContent className="p15">
+            <div className={styles.keyStatsGrid}>
+              {filtered.keyStats.map((group) => (
+                <KeyStatGroupSection key={group.key} group={group} t={t} />
+              ))}
+            </div>
           </CardContent>
         </Card>
-      </div>
+      </section>
 
-      <div className={styles.exportRow}>
+      <section className="mb2">
+        <Typography variant="h6" className="mb1">
+          {t('comments.title')}
+        </Typography>
+        {Object.keys(groupedComments).length === 0 ? (
+          <Typography variant="body2">{t('comments.noComments')}</Typography>
+        ) : (
+          Object.entries(groupedComments).map(([category, categoryComments]) => (
+            <Card key={category} className="mb1">
+              <CardContent className="p15">
+                <Typography variant="subtitle1" className={`bold mb1 ${styles.commentCategory}`}>
+                  {category}
+                </Typography>
+                <div className="flex-col gapped1">
+                  {categoryComments.map((comment) => (
+                    <Typography key={comment.id} variant="body2" className={styles.commentText}>
+                      {comment.text}
+                    </Typography>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          ))
+        )}
+      </section>
+
+      <div className="flex gapped1">
         <Button variant="outlined" startIcon={<Download />} onClick={handlePrint}>
           {t('export.visual')}
         </Button>
