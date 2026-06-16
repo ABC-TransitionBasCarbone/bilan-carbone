@@ -6,7 +6,7 @@ import { BaseStyledChip } from '@abc-transitionbascarbone/ui'
 import { Download, Print } from '@mui/icons-material'
 import { Button, Card, CardContent, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
-import { useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import styles from './ResultsDashboard.module.css'
 
 interface Props {
@@ -38,16 +38,24 @@ function KeyStatGroupSection({ group, t }: { group: KeyStatGroup; t: ReturnType<
 export default function ResultsDashboard({ results }: Props) {
   const t = useTranslations('results')
   const [selectedEntity, setSelectedEntity] = useState('all')
+  const dashboardRef = useRef<HTMLDivElement>(null)
 
   const filtered = getResultsForEntity(results, selectedEntity)
   const responseRate = Math.round((filtered.totalRespondents / filtered.totalInvited) * 100)
 
-  const barChartItems = filtered.categories.map((c) => ({
+  const pieChartItems = filtered.categories.map((c) => ({
     key: c.key,
     label: t(`categories.${c.key}` as Parameters<typeof t>[0]),
     value: c.valueTCO2e,
     color: c.color,
   }))
+
+  const totalBarItem = {
+    key: 'total',
+    label: t('charts.barTitle'),
+    value: filtered.averageFootprintTCO2e,
+    color: '#6366f1',
+  }
 
   const groupedComments = filtered.comments.reduce(
     (acc, comment) => {
@@ -60,12 +68,22 @@ export default function ResultsDashboard({ results }: Props) {
     {} as Record<string, typeof filtered.comments>,
   )
 
+  const handleExportPng = useCallback(async () => {
+    if (!dashboardRef.current) return
+    const { toPng } = await import('html-to-image')
+    const dataUrl = await toPng(dashboardRef.current, { quality: 1 })
+    const link = document.createElement('a')
+    link.download = 'resultats-campagne.png'
+    link.href = dataUrl
+    link.click()
+  }, [])
+
   const handlePrint = () => {
     window.print()
   }
 
   return (
-    <div className={styles.page}>
+    <div className={styles.page} ref={dashboardRef}>
       <Typography variant="h4" className="mb-2">
         {t('title')}
       </Typography>
@@ -132,17 +150,17 @@ export default function ResultsDashboard({ results }: Props) {
           <Card>
             <CardContent className="p15">
               <Typography variant="subtitle1" className="mb1">
-                {t('charts.pieTitle')}
+                {t('charts.barTitle')}
               </Typography>
-              <PieChart items={barChartItems} />
+              <BarChart items={[totalBarItem]} unit="tCO₂e" targetValue={2} targetLabel={t('charts.target2050')} />
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p15">
               <Typography variant="subtitle1" className="mb1">
-                {t('charts.barTitle')}
+                {t('charts.pieTitle')}
               </Typography>
-              <BarChart items={barChartItems} unit="t" targetValue={2} targetLabel={t('charts.target2050')} />
+              <PieChart items={pieChartItems} />
             </CardContent>
           </Card>
         </div>
@@ -190,7 +208,7 @@ export default function ResultsDashboard({ results }: Props) {
       </section>
 
       <div className="flex gapped1">
-        <Button variant="outlined" startIcon={<Download />} onClick={handlePrint}>
+        <Button variant="outlined" startIcon={<Download />} onClick={handleExportPng}>
           {t('export.visual')}
         </Button>
         <Button variant="outlined" startIcon={<Print />} onClick={handlePrint}>
