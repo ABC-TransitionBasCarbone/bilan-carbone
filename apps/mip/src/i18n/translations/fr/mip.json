@@ -76,7 +76,7 @@
     "charts": {
       "title": "Répartition des empreintes carbone",
       "pieTitle": "Répartition par poste d'émission (moyennes)",
-      "barTitle": "Répartition des empreintes carbone",
+      "barTitle": "Empreinte carbone moyenne",
       "target2050": "Objectif 2050 : 2 tCO₂e"
     },
     "keyStats": {

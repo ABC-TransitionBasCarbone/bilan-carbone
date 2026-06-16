@@ -1,55 +1,48 @@
 .chart {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
-.targetLegend {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  justify-content: flex-end;
-}
-
-.targetLegendMarker {
-  width: 2px;
-  height: 1rem;
-  background-color: #111827;
-}
-
-.targetLegendText {
-  color: var(--neutral-500) !important;
-}
-
-.row {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.label {
-  width: 220px;
-  flex-shrink: 0;
-}
-
-.barSvg {
-  flex: 1;
-  height: 1.5rem;
-}
-
-.barTrack {
+.track {
   fill: var(--neutral-50, #e9eff9);
 }
 
 .targetLine {
-  stroke: #111827;
-  stroke-width: 0.8;
-  stroke-dasharray: 3 2;
+  stroke: #c026d3;
+  stroke-width: 1.5;
+  stroke-dasharray: 5 3;
 }
 
-.value {
-  width: 60px;
-  text-align: right;
-  font-weight: 600 !important;
-  flex-shrink: 0;
+.targetLineLegend {
+  stroke: #c026d3;
+  stroke-width: 1.5;
+  stroke-dasharray: 5 3;
+}
+
+.targetLabel {
+  font-size: 0.65rem;
+  fill: #c026d3;
+  font-weight: 600;
+}
+
+.axisLine {
+  stroke: #d1d5db;
+  stroke-width: 1;
+}
+
+.axisTick {
+  stroke: #9ca3af;
+  stroke-width: 1;
+}
+
+.axisLabel {
+  font-size: 0.65rem;
+  fill: #6b7280;
+}
+
+.valueLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  fill: #111827;
 }
