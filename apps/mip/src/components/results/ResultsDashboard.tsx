@@ -135,7 +135,7 @@ export default function ResultsDashboard({ results }: Props) {
         </Typography>
         <div className={styles.chartsGrid}>
           <Card>
-            <CardContent className="p15">
+            <CardContent>
               <Typography variant="subtitle1" className="mb1">
                 {t('charts.barTitle')}
               </Typography>
@@ -143,7 +143,7 @@ export default function ResultsDashboard({ results }: Props) {
             </CardContent>
           </Card>
           <Card>
-            <CardContent className="p15">
+            <CardContent>
               <Typography variant="subtitle1" className="mb1">
                 {t('charts.pieTitle')}
               </Typography>
