@@ -3,10 +3,10 @@ import BarChart from '@/components/study/charts/BarChart'
 import PieChart from '@/components/study/charts/PieChart'
 import { getResultsForEntity, KeyStatGroup, SurveyResults } from '@/data/sampleResults'
 import { BaseStyledChip } from '@abc-transitionbascarbone/ui'
-import { Download, Print } from '@mui/icons-material'
+import { Print } from '@mui/icons-material'
 import { Button, Card, CardContent, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
-import { useCallback, useRef, useState } from 'react'
+import { useState } from 'react'
 import styles from './ResultsDashboard.module.css'
 
 interface Props {
@@ -38,7 +38,6 @@ function KeyStatGroupSection({ group, t }: { group: KeyStatGroup; t: ReturnType<
 export default function ResultsDashboard({ results }: Props) {
   const t = useTranslations('results')
   const [selectedEntity, setSelectedEntity] = useState('all')
-  const dashboardRef = useRef<HTMLDivElement>(null)
 
   const filtered = getResultsForEntity(results, selectedEntity)
   const responseRate = Math.round((filtered.totalRespondents / filtered.totalInvited) * 100)
@@ -68,22 +67,12 @@ export default function ResultsDashboard({ results }: Props) {
     {} as Record<string, typeof filtered.comments>,
   )
 
-  const handleExportPng = useCallback(async () => {
-    if (!dashboardRef.current) return
-    const { toPng } = await import('html-to-image')
-    const dataUrl = await toPng(dashboardRef.current, { quality: 1 })
-    const link = document.createElement('a')
-    link.download = 'resultats-campagne.png'
-    link.href = dataUrl
-    link.click()
-  }, [])
-
   const handlePrint = () => {
     window.print()
   }
 
   return (
-    <div className={styles.page} ref={dashboardRef}>
+    <div className={styles.page}>
       <Typography variant="h4" className="mb-2">
         {t('title')}
       </Typography>
@@ -208,9 +197,6 @@ export default function ResultsDashboard({ results }: Props) {
       </section>
 
       <div className="flex gapped1">
-        <Button variant="outlined" startIcon={<Download />} onClick={handleExportPng}>
-          {t('export.visual')}
-        </Button>
         <Button variant="outlined" startIcon={<Print />} onClick={handlePrint}>
           {t('export.print')}
         </Button>
