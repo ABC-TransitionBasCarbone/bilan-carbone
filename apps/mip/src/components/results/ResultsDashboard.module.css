@@ -47,3 +47,10 @@
 .commentText {
   color: var(--neutral-500) !important;
 }
+
+@media print {
+  .page {
+    overflow: visible;
+    padding: 0;
+  }
+}
