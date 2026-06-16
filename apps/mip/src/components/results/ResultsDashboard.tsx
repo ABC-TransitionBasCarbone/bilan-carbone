@@ -22,9 +22,7 @@ function KeyStatGroupSection({ group, t }: { group: KeyStatGroup; t: ReturnType<
       <div className="flex-col gapped-2">
         {group.stats.map((stat) => (
           <div key={stat.key} className={`flex justify-between ${styles.statRow}`}>
-            <Typography variant="body2">
-              {t(`keyStats.${group.key}.${stat.key}` as Parameters<typeof t>[0])}
-            </Typography>
+            <Typography variant="body2">{t(`keyStats.${group.key}.${stat.key}` as Parameters<typeof t>[0])}</Typography>
             <Typography variant="body2" className="bold">
               {stat.unit === 'percent' ? `${stat.value} %` : stat.value}
             </Typography>
