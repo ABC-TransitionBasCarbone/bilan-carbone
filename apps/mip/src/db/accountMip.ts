@@ -1,6 +1,6 @@
 import { canEditMemberRole } from '@/utils/user'
 import { Prisma } from '@abc-transitionbascarbone/db-common'
-import { findUserInfoSelect } from '@abc-transitionbascarbone/db-common/db'
+import { findUserInfoSelect } from '@abc-transitionbascarbone/db-common/db/common.select'
 import { Role, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { UserSession } from 'next-auth'
 import { AccountMipWithUserSelect } from './accountMip.select'
