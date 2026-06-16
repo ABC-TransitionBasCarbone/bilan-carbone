@@ -29,6 +29,11 @@
   gap: 2rem;
 }
 
+.chartsGrid {
+  display: grid;
+  gap: 1rem;
+}
+
 .statRow {
   border-bottom: 1px solid var(--neutral-50, #e9eff9);
   padding-bottom: 0.25rem;
