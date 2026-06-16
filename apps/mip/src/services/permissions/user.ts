@@ -4,8 +4,6 @@ import { RoleMip, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { UserSession } from 'next-auth'
 import type { Prisma } from '@abc-transitionbascarbone/db-common'
 
-export const canEditSelfRole = (userRole: RoleMip) => userRole === RoleMip.ADMIN
-
 export const canAddMember = (
   user: UserSession,
   member: Pick<Prisma.AccountMipCreateInput, 'role'>,
