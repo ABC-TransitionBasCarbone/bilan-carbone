@@ -73,7 +73,7 @@ export const updateUserResetTokenForEmail = async (email: string, resetToken: st
 export const addUser = async (
   newMember: Omit<Prisma.UserCreateInput, 'accountsMip'> & {
     accountsMip: { create: Omit<Prisma.AccountMipCreateInput, 'user'> }
-    role?: Exclude<Role, 'SUPER_ADMIN'>
+    role?: Exclude<Role, 'SUPER_ADMIN' | 'GESTIONNAIRE'>
   },
 ) => {
   return prismaClient.user.create({
