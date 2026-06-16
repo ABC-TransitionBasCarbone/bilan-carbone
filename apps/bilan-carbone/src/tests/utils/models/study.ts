@@ -11,8 +11,9 @@ import {
   SubPost,
   Unit,
 } from '@abc-transitionbascarbone/db-common/enums'
+import { mockedUser } from '@abc-transitionbascarbone/services/tests/models/user'
 import { mockedOrganizationVersion, mockedOrganizationVersionId } from './organization'
-import { mockedAccountId, mockedUser } from './user'
+import { mockedAccountId } from './user'
 
 export const COMMON_DATES = {
   startDate: new Date('2024-01-01'),

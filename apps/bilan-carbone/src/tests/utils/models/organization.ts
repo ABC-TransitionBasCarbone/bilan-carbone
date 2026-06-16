@@ -1,6 +1,6 @@
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { mockedOrganization, mockedOrganizationId } from '@abc-transitionbascarbone/services/tests/models/organization'
 
-export const mockedOrganizationId = 'mocked-organization-id'
 export const mockedOrganizationVersionId = 'mocked-organization-version-id'
 
 export const mockedSite = {
@@ -17,12 +17,6 @@ export const mockedDbSite = {
   city: null,
   createdAt: new Date('2025-01-01T00:00:00.000Z'),
   updatedAt: new Date('2025-01-01T00:00:00.000Z'),
-}
-
-export const mockedOrganization = {
-  id: mockedOrganizationId,
-  name: 'Mocked Organization',
-  wordpressId: null,
 }
 
 export const mockedOrganizationVersion = {

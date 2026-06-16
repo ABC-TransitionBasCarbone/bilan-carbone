@@ -8,11 +8,11 @@ import {
   getMockedDbActualizedAuth,
   mockedAccountId,
   mockedSession,
-  mockedUserId,
 } from '@/tests/utils/models/user'
 import * as organizationUtils from '@/utils/organization'
 import * as studyUtils from '@/utils/study'
 import { Environment, Level, Role, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
+import { mockedUserId } from '@abc-transitionbascarbone/services/tests/models/user'
 import { expect } from '@jest/globals'
 import * as authModule from '../auth'
 import * as userModule from '../serverFunctions/user'
