@@ -1,0 +1,48 @@
+.chart {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.track {
+  fill: var(--neutral-50, #e9eff9);
+}
+
+.targetLine {
+  stroke: #c026d3;
+  stroke-width: 1.5;
+  stroke-dasharray: 5 3;
+}
+
+.targetLineLegend {
+  stroke: #c026d3;
+  stroke-width: 1.5;
+  stroke-dasharray: 5 3;
+}
+
+.targetLabel {
+  font-size: 0.65rem;
+  fill: #c026d3;
+  font-weight: 600;
+}
+
+.axisLine {
+  stroke: #d1d5db;
+  stroke-width: 1;
+}
+
+.axisTick {
+  stroke: #9ca3af;
+  stroke-width: 1;
+}
+
+.axisLabel {
+  font-size: 0.65rem;
+  fill: #6b7280;
+}
+
+.valueLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  fill: #111827;
+}

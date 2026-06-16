@@ -78,8 +78,8 @@ const ResultsDashboard = ({ results, model }: Props) => {
         <Button variant="outlined" startIcon={<Print />} onClick={handlePrint}>
           {t('export.print')}
         </Button>
-      </div>
-    </div>
+      </div >
+    </div >
   )
 }
 
