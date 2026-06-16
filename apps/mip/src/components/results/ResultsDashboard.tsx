@@ -1,5 +1,6 @@
 'use client'
 import BarChart from '@/components/study/charts/BarChart'
+import PieChart from '@/components/study/charts/PieChart'
 import { getResultsForEntity, KeyStatGroup, SurveyResults } from '@/data/sampleResults'
 import { BaseStyledChip } from '@abc-transitionbascarbone/ui'
 import { Download, Print } from '@mui/icons-material'
@@ -125,13 +126,26 @@ export default function ResultsDashboard({ results }: Props) {
 
       <section className="mb2">
         <Typography variant="h6" className="mb1">
-          {t('categories.title')}
+          {t('charts.title')}
         </Typography>
-        <Card>
-          <CardContent className="p15">
-            <BarChart items={barChartItems} unit="t" />
-          </CardContent>
-        </Card>
+        <div className={styles.chartsGrid}>
+          <Card>
+            <CardContent className="p15">
+              <Typography variant="subtitle1" className="mb1">
+                {t('charts.pieTitle')}
+              </Typography>
+              <PieChart items={barChartItems} />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p15">
+              <Typography variant="subtitle1" className="mb1">
+                {t('charts.barTitle')}
+              </Typography>
+              <BarChart items={barChartItems} unit="t" targetValue={2} targetLabel={t('charts.target2050')} />
+            </CardContent>
+          </Card>
+        </div>
       </section>
 
       <section className="mb2">

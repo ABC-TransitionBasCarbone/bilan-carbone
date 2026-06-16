@@ -73,6 +73,12 @@
       "digital": "Numérique",
       "office": "Bureaux"
     },
+    "charts": {
+      "title": "Répartition des empreintes carbone",
+      "pieTitle": "Répartition par poste d'émission (moyennes)",
+      "barTitle": "Répartition des empreintes carbone",
+      "target2050": "Objectif 2050 : 2 tCO₂e"
+    },
     "keyStats": {
       "title": "Chiffres clés",
       "transport": {
