@@ -28,8 +28,8 @@
     "compile:publicodes-windows": "for /d %d in (\"packages\\publicodes-packages\\publicodes-*\") do (@cd /d \"%d\" && yarn install && yarn compile && cd ..\\..\\..)"
   },
   "devDependencies": {
-    "turbo": "^2.9.12"
-  }, 
+    "turbo": "^2.9.18"
+  },
   "resolutions": {
     "@hono/node-server": "^1.19.13",
     "hono": "^4.12.18",

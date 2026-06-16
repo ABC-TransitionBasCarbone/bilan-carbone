@@ -28,6 +28,5 @@
     "vitest": "^4.1.6"
   },
   "resolutions": {
-    "postcss": "^8.5.14"
   }
 }

@@ -6,6 +6,6 @@
   "types": "src/index.ts",
   "dependencies": {
     "uuid": "^14.0.0",
-    "zustand": "^5.0.13"
+    "zustand": "^5.0.14"
   }
 }
