@@ -1,7 +1,7 @@
 import { isSimplified } from '@/services/permissions/environment'
 import { ClicksonRoles, CutRoles } from '@/services/roles'
 import type { Prisma } from '@abc-transitionbascarbone/db-common'
-import { findUserInfoSelect } from '@abc-transitionbascarbone/db-common/db'
+import { findUserInfoSelect } from '@abc-transitionbascarbone/db-common/db/common.select'
 import { Environment, Role, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { UserSession } from 'next-auth'
 
