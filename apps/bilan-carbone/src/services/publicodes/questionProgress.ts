@@ -17,7 +17,7 @@ export type StatsResult = Partial<Record<SimplifiedPost, Partial<Record<SubPost,
 export const getQuestionProgressBySubPost = <RuleName extends string = string>(
   engine: Engine<RuleName>,
   listLayoutSituations: ListLayoutSituations<RuleName>,
-  subPostsByPost: Partial<Record<SimplifiedPost, SubPost[]>>,
+  subPostsByPost: Record<SimplifiedPost, SubPost[]>,
   getSubPostLayouts: (subPost: SubPost) => FormLayout<RuleName>[] | undefined,
 ): StatsResult => {
   return typedEntries(subPostsByPost).reduce<StatsResult>((postAcc, [post, subPosts]) => {

@@ -1,6 +1,6 @@
 import { customPostOrder } from '@/environments/clickson/utils/constant'
 import { hasCustomPostOrder } from '@/services/permissions/environment'
-import { BCPost, ClicksonPost, CutPost, Post, subPostsByPost, TiltPost } from '@/services/posts'
+import { BCPost, ClicksonPost, CutPost, Post, subPostsByPost, TiltAdvancedPost } from '@/services/posts'
 import type { ResultType } from '@/types/study.types'
 import { AdditionalResultTypes } from '@/types/study.types'
 import { Environment, SubPost } from '@abc-transitionbascarbone/db-common/enums'
@@ -76,7 +76,7 @@ export const getPostValues = (environment: Environment | undefined, type?: Resul
 
   switch (environment) {
     case Environment.TILT:
-      return type === AdditionalResultTypes.ENV_SPECIFIC_EXPORT ? TiltPost : BCPost
+      return type === AdditionalResultTypes.ENV_SPECIFIC_EXPORT ? TiltAdvancedPost : BCPost
     case Environment.CUT:
       return CutPost
     case Environment.CLICKSON:

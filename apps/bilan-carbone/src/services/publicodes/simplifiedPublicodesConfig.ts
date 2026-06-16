@@ -33,41 +33,41 @@ import {
 
 export const TILT_SIMPLIFIED_POSTS_CONFIG_VERSION = 'tilt-simplified-posts-v1'
 
-export interface SimplifiedPublicodesConfig {
-  posts: SimplifiedPost[]
-  subPostsByPost: Partial<Record<SimplifiedPost, SubPost[]>>
+export interface SimplifiedPublicodesConfig<TPost extends SimplifiedPost = SimplifiedPost> {
+  posts: TPost[]
+  subPostsByPost: Record<TPost, SubPost[]>
   getFormLayout: (subPost: SubPost) => FormLayout<string>[]
-  getPostRuleName: (post: string) => string
+  getPostRuleName: (post: TPost) => string
   getSubPostRuleName: (subPost: SubPost) => string | undefined
   getEngine: () => Engine
   modelVersion: string
 }
 
-const TILT_SIMPLIFIED_POSTS_CONFIG: SimplifiedPublicodesConfig = {
+const TILT_SIMPLIFIED_POSTS_CONFIG: SimplifiedPublicodesConfig<TiltSimplifiedPost> = {
   posts: Object.values(TiltSimplifiedPost),
   subPostsByPost: subPostsByPostTILTSimplified,
   getFormLayout: getFormLayoutsForSubPostTILT,
-  getPostRuleName: (post) => getPostRuleNameTilt(post as TiltSimplifiedPost),
+  getPostRuleName: (post) => getPostRuleNameTilt(post),
   getSubPostRuleName: getSubPostRuleNameTilt,
   getEngine: getTiltEngine,
   modelVersion: PUBLICODES_TILT_VERSION,
 }
 
-const CUT_CONFIG: SimplifiedPublicodesConfig = {
+const CUT_CONFIG: SimplifiedPublicodesConfig<CutPost> = {
   posts: Object.values(CutPost),
   subPostsByPost: subPostsByPostCUT,
   getFormLayout: getFormLayoutsForSubPostCUT,
-  getPostRuleName: (post) => getPostRuleNameCut(post as CutPost),
+  getPostRuleName: (post) => getPostRuleNameCut(post),
   getSubPostRuleName: getSubPostRuleNameCut,
   getEngine: getCutEngine,
   modelVersion: PUBLICODES_COUNT_VERSION,
 }
 
-const CLICKSON_CONFIG: SimplifiedPublicodesConfig = {
+const CLICKSON_CONFIG: SimplifiedPublicodesConfig<ClicksonPost> = {
   posts: Object.values(ClicksonPost),
   subPostsByPost: subPostsByPostClickson,
   getFormLayout: getFormLayoutsForSubPostClickson,
-  getPostRuleName: (post) => getPostRuleNameClickson(post as ClicksonPost),
+  getPostRuleName: (post) => getPostRuleNameClickson(post),
   getSubPostRuleName: getSubPostRuleNameClickson,
   getEngine: getClicksonEngine,
   modelVersion: PUBLICODES_CLICKSON_VERSION,
@@ -80,13 +80,12 @@ const SIMPLIFIED_PUBLICODES_CONFIGS = {
 }
 
 // subPostsConfigVersion parameter will be relevant when additional versions are added (e.g. tilt-simplified-posts-v2)
-// For now it is only present to illustrate the logic
 export const getSimplifiedPublicodesConfig = (
   env: EnvironmentWithSimplifiedStudies,
   subPostsConfigVersion: string | null | undefined,
-) => {
+): SimplifiedPublicodesConfig => {
   if (subPostsConfigVersion === TILT_SIMPLIFIED_POSTS_CONFIG_VERSION) {
-    return TILT_SIMPLIFIED_POSTS_CONFIG
+    return TILT_SIMPLIFIED_POSTS_CONFIG as SimplifiedPublicodesConfig
   }
-  return SIMPLIFIED_PUBLICODES_CONFIGS[env]
+  return SIMPLIFIED_PUBLICODES_CONFIGS[env] as SimplifiedPublicodesConfig
 }

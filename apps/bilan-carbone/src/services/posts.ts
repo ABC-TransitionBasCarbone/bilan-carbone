@@ -222,7 +222,7 @@ export const subPostsByPostClickson: Record<ClicksonPost, SubPost[]> = {
 export const environmentPostMapping = {
   [Environment.BC]: BCPost,
   [Environment.CUT]: CutPost,
-  [Environment.TILT]: TiltPost,
+  [Environment.TILT]: TiltAdvancedPost,
   [Environment.CLICKSON]: ClicksonPost,
 }
 
