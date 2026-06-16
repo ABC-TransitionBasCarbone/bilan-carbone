@@ -4,14 +4,16 @@ import {
   changeAccountMipRole,
   getAccountMipByEmailAndOrganizationVersionMipId,
   getAccountMipById,
+  getAccountMipFromUserOrganization,
 } from '@/db/accountMip'
 import { getUserByEmail } from '@/db/user'
 import { AccountMipWithUser } from '@/types/accountMip.types'
 import { withServerResponse } from '@/utils/serverResponse'
+import { isAdmin } from '@/utils/user'
 import { updateUserResetTokenForEmail } from '@abc-transitionbascarbone/db-common/db'
 import { Role } from '@abc-transitionbascarbone/db-common/enums'
 import { sendResetPassword } from '@abc-transitionbascarbone/services/email/email'
-import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
+import { MORE_THAN_ONE, NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
 import { HOUR, TIME_IN_MS } from '@abc-transitionbascarbone/utils'
 import jwt from 'jsonwebtoken'
 import { dbActualizedAuth } from '../auth'
@@ -52,6 +54,12 @@ export const changeRole = async (email: string, role: Role) =>
     }
     if (!canChangeRole(session.user, accountMipToChange as AccountMipWithUser, role)) {
       throw new Error(NOT_AUTHORIZED)
+    }
+
+    const team = await getAccountMipFromUserOrganization(session.user)
+    const adminCount = team.filter((member) => isAdmin(member.role)).length
+    if (isAdmin(accountMipToChange.role) && adminCount === 1) {
+      return MORE_THAN_ONE
     }
 
     const targetAccountMip = await getAccountMipById(accountMipToChange.id)
