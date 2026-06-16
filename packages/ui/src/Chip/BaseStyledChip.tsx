@@ -1,3 +1,5 @@
+'use client'
+
 import { alpha, Chip, ChipProps, styled } from '@mui/material'
 
 const BaseStyledChip = styled(Chip)(({ theme, color = 'default' }) => {

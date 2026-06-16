@@ -8,7 +8,7 @@ export default async function ResultsPage({ params }: { params: Promise<{ id: st
   const results = id === sampleResults.surveyId ? sampleResults : { ...sampleResults, surveyId: id }
   return (
     <div className={styles.scrollWrapper}>
-      <Container maxWidth="md">
+      <Container maxWidth="lg">
         <ResultsDashboard results={results} />
       </Container>
     </div>
