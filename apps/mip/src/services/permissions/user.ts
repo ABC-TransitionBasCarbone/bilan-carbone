@@ -1,9 +1,9 @@
 import { AccountMipWithUser } from '@/types/accountMip.types'
 import { canEditMemberRole } from '@/utils/user'
-import { Role } from '@abc-transitionbascarbone/db-common/enums'
+import { RoleMip } from '@abc-transitionbascarbone/db-common/enums'
 import { UserSession } from 'next-auth'
 
-export const canChangeRole = (user: UserSession, member: AccountMipWithUser | null, newRole: Role) => {
+export const canChangeRole = (user: UserSession, member: AccountMipWithUser | null, newRole: RoleMip) => {
   if (!member) {
     return false
   }
@@ -20,7 +20,7 @@ export const canChangeRole = (user: UserSession, member: AccountMipWithUser | nu
     return false
   }
 
-  if (newRole === Role.SUPER_ADMIN) {
+  if (newRole === RoleMip.SUPER_ADMIN) {
     return false
   }
 

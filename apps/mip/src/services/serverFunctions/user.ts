@@ -11,7 +11,7 @@ import { AccountMipWithUser } from '@/types/accountMip.types'
 import { withServerResponse } from '@/utils/serverResponse'
 import { isAdmin } from '@/utils/user'
 import { updateUserResetTokenForEmail } from '@abc-transitionbascarbone/db-common/db'
-import { Role } from '@abc-transitionbascarbone/db-common/enums'
+import { Role, RoleMip } from '@abc-transitionbascarbone/db-common/enums'
 import { sendResetPassword } from '@abc-transitionbascarbone/services/email/email'
 import { MORE_THAN_ONE, NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
 import { HOUR, TIME_IN_MS } from '@abc-transitionbascarbone/utils'
@@ -39,7 +39,7 @@ export const resetPassword = async (email: string) =>
     }
   })
 
-export const changeRole = async (email: string, role: Role) =>
+export const changeRole = async (email: string, role: RoleMip | Role) =>
   withServerResponse('changeRole', async () => {
     const session = await dbActualizedAuth()
     if (!session || !session.user || !session.user.organizationVersionMipId) {
@@ -52,7 +52,7 @@ export const changeRole = async (email: string, role: Role) =>
     if (!accountMipToChange) {
       throw new Error(NOT_AUTHORIZED)
     }
-    if (!canChangeRole(session.user, accountMipToChange as AccountMipWithUser, role)) {
+    if (!canChangeRole(session.user, accountMipToChange as AccountMipWithUser, role as RoleMip)) {
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -66,5 +66,5 @@ export const changeRole = async (email: string, role: Role) =>
     if (!targetAccountMip || targetAccountMip.organizationVersionMipId !== session.user.organizationVersionMipId) {
       throw new Error(NOT_AUTHORIZED)
     }
-    await changeAccountMipRole(accountMipToChange.id, role)
+    await changeAccountMipRole(accountMipToChange.id, role as RoleMip)
   })

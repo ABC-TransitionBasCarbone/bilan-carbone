@@ -1,5 +1,5 @@
 import type { AccountMip, Prisma, User } from '@abc-transitionbascarbone/db-common'
-import { Environment, Level, Role, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
+import { Environment, Level, RoleMip, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { mockedOrganizationId } from '@abc-transitionbascarbone/services/tests/models/organization'
 import { mockedDbUser, mockedUser, mockedUserId } from '@abc-transitionbascarbone/services/tests/models/user'
 import { Session, UserSession } from 'next-auth'
@@ -14,7 +14,7 @@ const mockedAccountMip = {
     id: mockedOrganizationVersionMipId,
     organizationId: mockedOrganizationId,
   },
-  role: Role.ADMIN,
+  role: RoleMip.ADMIN,
   status: UserStatus.ACTIVE,
 }
 const mockedDbAccountMip = {
@@ -85,7 +85,7 @@ export const getMockedDbActualizedAuth = (
     userId: mockedUserId,
     firstName: 'mocked-first-name',
     lastName: 'mocked-last-name',
-    role: Role.ADMIN,
+    role: RoleMip.ADMIN,
     organizationVersionMipId: mockedDbAccountMip.organizationVersionMipId,
     ...userProps,
   },

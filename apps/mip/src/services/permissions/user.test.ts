@@ -1,7 +1,7 @@
 import { getMockedAuthUser, getMockedDbAccountMip, mockedAccountMipId } from '@/tests/utils/models/user'
 import { AccountMipWithUser } from '@/types/accountMip.types'
 import * as userUtils from '@/utils/user'
-import { Role } from '@abc-transitionbascarbone/db-common/enums'
+import { RoleMip } from '@abc-transitionbascarbone/db-common/enums'
 import { expect } from '@jest/globals'
 import { canChangeRole } from './user'
 
@@ -11,7 +11,7 @@ jest.mock('@/utils/user', () => ({
 
 const mockCanEditMemberRole = userUtils.canEditMemberRole as jest.Mock
 
-const adminUser = getMockedAuthUser({ role: Role.ADMIN })
+const adminUser = getMockedAuthUser({ role: RoleMip.ADMIN })
 
 const otherAccountId = 'mocked-other-account-mip-id'
 
@@ -22,22 +22,22 @@ describe('User permission functions', () => {
 
   describe('canChangeRole', () => {
     it('returns false if member is null', () => {
-      const result = canChangeRole(adminUser, null, Role.ADMIN)
+      const result = canChangeRole(adminUser, null, RoleMip.ADMIN)
       expect(result).toBe(false)
       expect(mockCanEditMemberRole).toHaveBeenCalledTimes(0)
     })
 
     it('returns false if editing own role', () => {
       const collaboratorResult = canChangeRole(
-        getMockedAuthUser({ id: 'mocked-user-id', accountMipId: 'mocked-account-mip-id', role: Role.ADMIN }),
+        getMockedAuthUser({ id: 'mocked-user-id', accountMipId: 'mocked-account-mip-id', role: RoleMip.ADMIN }),
         getMockedDbAccountMip({ id: 'mocked-account-mip-id' }) as AccountMipWithUser,
-        Role.GESTIONNAIRE,
+        RoleMip.COLLABORATOR,
       )
       expect(collaboratorResult).toBe(false)
       const memberResult = canChangeRole(
-        getMockedAuthUser({ id: mockedAccountMipId, role: Role.DEFAULT }),
+        getMockedAuthUser({ id: mockedAccountMipId, role: RoleMip.COLLABORATOR }),
         getMockedDbAccountMip({ id: mockedAccountMipId }) as AccountMipWithUser,
-        Role.ADMIN,
+        RoleMip.ADMIN,
       )
       expect(memberResult).toBe(false)
       expect(mockCanEditMemberRole).toHaveBeenCalledTimes(0)
@@ -48,7 +48,7 @@ describe('User permission functions', () => {
       const result = canChangeRole(
         adminUser,
         getMockedDbAccountMip({ id: otherAccountId }) as AccountMipWithUser,
-        Role.ADMIN,
+        RoleMip.ADMIN,
       )
       expect(result).toBe(false)
       expect(mockCanEditMemberRole).toHaveBeenCalledTimes(1)
@@ -62,7 +62,7 @@ describe('User permission functions', () => {
           id: otherAccountId,
           organizationVersionMipId: 'mocked-other-organization-id',
         }) as AccountMipWithUser,
-        Role.ADMIN,
+        RoleMip.ADMIN,
       )
       expect(result).toBe(false)
       expect(mockCanEditMemberRole).toHaveBeenCalledTimes(1)
@@ -73,7 +73,7 @@ describe('User permission functions', () => {
       const result = canChangeRole(
         adminUser,
         getMockedDbAccountMip({ id: otherAccountId }) as AccountMipWithUser,
-        Role.SUPER_ADMIN,
+        RoleMip.SUPER_ADMIN,
       )
       expect(result).toBe(false)
       expect(mockCanEditMemberRole).toHaveBeenCalledTimes(1)
@@ -84,7 +84,7 @@ describe('User permission functions', () => {
       const untrainedResult = canChangeRole(
         adminUser,
         getMockedDbAccountMip({ id: otherAccountId }, { level: null }) as AccountMipWithUser,
-        Role.GESTIONNAIRE,
+        RoleMip.COLLABORATOR,
       )
       expect(untrainedResult).toBe(true)
       expect(mockCanEditMemberRole).toHaveBeenCalledTimes(1)
@@ -93,7 +93,7 @@ describe('User permission functions', () => {
       const trainedResult = canChangeRole(
         adminUser,
         getMockedDbAccountMip({ id: otherAccountId }) as AccountMipWithUser,
-        Role.ADMIN,
+        RoleMip.ADMIN,
       )
       expect(trainedResult).toBe(true)
       expect(mockCanEditMemberRole).toHaveBeenCalledTimes(2)

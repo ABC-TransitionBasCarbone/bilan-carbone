@@ -4,7 +4,7 @@ import { Table as BaseTable, HelpIcon } from '@abc-transitionbascarbone/componen
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { TableActionButton } from '@abc-transitionbascarbone/components/src/base/TableActionButton'
 import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
-import { Level, Role } from '@abc-transitionbascarbone/db-common/enums'
+import { Level, Role, RoleMip } from '@abc-transitionbascarbone/db-common/enums'
 import { ApiResponse } from '@abc-transitionbascarbone/utils/serverResponse'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
@@ -20,7 +20,7 @@ export type TeamMemberCommon = {
     level: Level | null
   }
   formationName?: string | null
-  role: Role
+  role: Role | RoleMip
 }
 
 interface Props {
@@ -29,6 +29,7 @@ interface Props {
   canUpdateTeam: boolean
   environmentRoles:
     | Role
+    | RoleMip
     | {
         ADMIN: 'ADMIN'
         DEFAULT: 'DEFAULT'
@@ -41,7 +42,7 @@ interface Props {
   isAdvanced?: boolean
   deletionError: string
   setDeletionErrorData: (data: DeletionErrorData[] | undefined) => void
-  changeRole: (email: string, newRole: Role) => Promise<ApiResponse>
+  changeRole: (email: string, newRole: Role | RoleMip) => Promise<ApiResponse>
 
   deletionErrorData?: DeletionErrorData[]
   crOrga?: boolean
