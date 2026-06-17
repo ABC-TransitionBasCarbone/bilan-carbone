@@ -87,6 +87,7 @@ const users = async () => {
   await prisma.user.deleteMany()
 
   await prisma.organizationVersion.deleteMany()
+  await prisma.modelCampaign.deleteMany()
   await prisma.organizationVersionMip.deleteMany()
   await prisma.organization.deleteMany()
 

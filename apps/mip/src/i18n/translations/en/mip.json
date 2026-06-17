@@ -26,5 +26,13 @@
       "activation": "You have activated you account on My Impact Pro",
       "activationRequest": "Access request to your My Impact Pro organization"
     }
+  },
+  "models": {
+    "editModels": "Edit campaign models",
+    "name": "Model name",
+    "namePlaceholder": "Name of the model",
+    "organizationName": "Name of the linked organization",
+    "json": "JSON",
+    "edit": "Save changes"
   }
 }

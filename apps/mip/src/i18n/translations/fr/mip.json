@@ -26,5 +26,13 @@
       "activation": "Vous avez activé votre compte sur Mon Impact Pro",
       "activationRequest": "Demande d'accès à votre organisation Mon Impact Pro"
     }
+  },
+  "models": {
+    "editModels": "Modifer les modèles d'enquête",
+    "name": "Nom du modèle",
+    "namePlaceholder": "Nom du modèle",
+    "organizationName": "Nom de l'organisation liée",
+    "json": "JSON",
+    "edit": "Valider la modification"
   }
 }
