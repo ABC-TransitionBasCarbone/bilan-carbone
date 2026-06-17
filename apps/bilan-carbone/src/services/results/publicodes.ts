@@ -45,7 +45,7 @@ export function computeBaseResultsByPostFromEngine<P extends Post>(
         post,
         label: tPost(post),
         value: postValue,
-        children: (subPostsByPost[post] ?? [])
+        children: subPostsByPost[post]
           .map((subPost) => {
             const subPostRuleName = getSubPostRuleName(subPost)
             const subPostValue = safeEvaluate(engine, subPostRuleName)

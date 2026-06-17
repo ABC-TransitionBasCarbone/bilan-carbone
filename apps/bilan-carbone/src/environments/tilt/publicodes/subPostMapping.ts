@@ -64,12 +64,8 @@ const SUBPOST_TO_RULENAME: Partial<Record<SubPost, TiltRuleName>> = {
 } as const
 
 const input = (rule: TiltRuleName): FormLayout<TiltRuleName> => inputLayout<TiltRuleName>(rule)
-// const group = (title: string, rules: TiltRuleName[]): FormLayout<TiltRuleName> =>
-//   groupLayout<TiltRuleName>(title, rules)
 const table = (title: string, headers: string[], rows: TiltRuleName[][]): FormLayout<TiltRuleName> =>
   tableLayout<TiltRuleName>(title, headers, rows)
-// const list = (targetRule: TiltRuleName, rules: TiltRuleName[]): FormLayout<TiltRuleName> =>
-//   listLayout<TiltRuleName>(targetRule, rules)
 
 export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRuleName>[]>> = {
   Batiments: [
