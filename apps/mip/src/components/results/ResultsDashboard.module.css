@@ -40,14 +40,6 @@
   padding-bottom: 0.25rem;
 }
 
-.commentCategory {
-  color: var(--primary) !important;
-}
-
-.commentText {
-  color: var(--neutral-500) !important;
-}
-
 @media print {
   .page {
     overflow: visible;

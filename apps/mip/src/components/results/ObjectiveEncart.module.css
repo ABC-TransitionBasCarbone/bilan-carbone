@@ -1,0 +1,106 @@
+.encart {
+  border: 1.5px solid #d6006c;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.header {
+  background-color: #272768;
+  color: #fff;
+  padding: 1rem 1.5rem;
+}
+
+.targetBadge {
+  font-size: 1.1rem;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.headerDescription {
+  font-size: 0.875rem;
+  margin: 0;
+  opacity: 0.9;
+}
+
+.body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  background-color: #fff;
+  align-items: center;
+}
+
+@media (max-width: 640px) {
+  .body {
+    grid-template-columns: 1fr;
+  }
+}
+
+.userSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.youLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #272768;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.footprintValue {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #272768;
+  margin: 0;
+  line-height: 1.1;
+}
+
+.footprintUnit {
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.contextMessage {
+  font-size: 0.875rem;
+  color: #444;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.paceBox {
+  background-color: #eef1f8;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  margin-top: 0.25rem;
+}
+
+.paceTitle {
+  font-size: 0.8rem;
+  color: #555;
+  margin: 0 0 0.25rem 0;
+  line-height: 1.4;
+}
+
+.paceValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #d6006c;
+  margin: 0;
+}
+
+.paceUnit {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: #444;
+}
+
+.chartSection {
+  width: 100%;
+}

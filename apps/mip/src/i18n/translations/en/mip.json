@@ -33,9 +33,16 @@
     "subtitle": "Anonymised results from the awareness campaign",
     "stats": {
       "averageFootprint": "Average footprint per collaborator",
-      "respondents": "Respondents",
-      "responseRate": "Response rate",
-      "respondentsDetail": "{count} out of {total} recipients ({rate}%)"
+      "respondents": "Respondents"
+    },
+    "objective": {
+      "nationalTarget": "National target: {value} t CO₂e per person by 2050",
+      "nationalTargetDescription": "France's goal to reach carbon neutrality by 2050 and help limit global warming to +2 °C.",
+      "you": "You",
+      "unit": "tonnes CO₂e / year",
+      "aboveTarget": "Today you are above {target} tonnes, the intermediate target we propose for 2030.",
+      "paceTitle": "Your indicative pace to reach {target} T by {year}",
+      "paceUnit": "kg per year"
     },
     "filter": {
       "title": "Filter by entity"
