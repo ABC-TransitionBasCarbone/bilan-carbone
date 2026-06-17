@@ -1,7 +1,7 @@
 import { getAccountMipById } from '@/db/accountMip'
 import { getUserByEmailWithSensibleInformations } from '@/db/user'
 import { AccountMipWithUser } from '@/types/accountMip.types'
-import { Role, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
+import { RoleMip, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { DAY } from '@abc-transitionbascarbone/utils'
 import bcrypt from 'bcryptjs'
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next'
@@ -67,7 +67,7 @@ export const authOptions: NextAuthOptions = {
           id: token.id as string,
           firstName: token.firstName as string,
           lastName: token.lastName as string,
-          role: token.role as Role,
+          role: token.role as RoleMip,
           organizationVersionMipId: token.organizationVersionMipId as string,
           organizationId: token.organizationId as string,
         }
