@@ -1,5 +1,6 @@
 'use client'
 import BarChart from '@/components/study/charts/BarChart'
+import ObjectiveEncart from '@/components/results/ObjectiveEncart'
 import PieChart from '@/components/study/charts/PieChart'
 import { getResultsForEntity, KeyStatGroup, SurveyResults } from '@/data/sampleResults'
 import { BaseStyledChip } from '@abc-transitionbascarbone/ui'
@@ -38,7 +39,6 @@ export default function ResultsDashboard({ results }: Props) {
   const [selectedEntity, setSelectedEntity] = useState('all')
 
   const filtered = getResultsForEntity(results, selectedEntity)
-  const responseRate = Math.round((filtered.totalRespondents / filtered.totalInvited) * 100)
 
   const pieChartItems = filtered.categories.map((c) => ({
     key: c.key,
@@ -53,17 +53,6 @@ export default function ResultsDashboard({ results }: Props) {
     value: filtered.averageFootprintTCO2e,
     color: '#6366f1',
   }
-
-  const groupedComments = filtered.comments.reduce(
-    (acc, comment) => {
-      if (!acc[comment.category]) {
-        acc[comment.category] = []
-      }
-      acc[comment.category].push(comment)
-      return acc
-    },
-    {} as Record<string, typeof filtered.comments>,
-  )
 
   const handlePrint = () => {
     window.print()
@@ -92,25 +81,11 @@ export default function ResultsDashboard({ results }: Props) {
           <CardContent className="p125">
             <Typography className={styles.statValue}>{filtered.totalRespondents}</Typography>
             <Typography variant="body2">{t('stats.respondents')}</Typography>
-            <Typography variant="body2">
-              {t('stats.respondentsDetail', {
-                count: filtered.totalRespondents,
-                total: filtered.totalInvited,
-                rate: responseRate,
-              })}
-            </Typography>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p125">
-            <Typography className={styles.statValue}>
-              {responseRate}
-              <span className={styles.statUnit}> %</span>
-            </Typography>
-            <Typography variant="body2">{t('stats.responseRate')}</Typography>
           </CardContent>
         </Card>
       </div>
+
+      <ObjectiveEncart averageFootprintTCO2e={filtered.averageFootprintTCO2e} />
 
       <section className="mb2">
         <Typography variant="h6" className="mb1">
@@ -166,32 +141,6 @@ export default function ResultsDashboard({ results }: Props) {
             </div>
           </CardContent>
         </Card>
-      </section>
-
-      <section className="mb2">
-        <Typography variant="h6" className="mb1">
-          {t('comments.title')}
-        </Typography>
-        {Object.keys(groupedComments).length === 0 ? (
-          <Typography variant="body2">{t('comments.noComments')}</Typography>
-        ) : (
-          Object.entries(groupedComments).map(([category, categoryComments]) => (
-            <Card key={category} className="mb1">
-              <CardContent className="p15">
-                <Typography variant="subtitle1" className={`bold mb1 ${styles.commentCategory}`}>
-                  {category}
-                </Typography>
-                <div className="flex-col gapped1">
-                  {categoryComments.map((comment) => (
-                    <Typography key={comment.id} variant="body2" className={styles.commentText}>
-                      {comment.text}
-                    </Typography>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          ))
-        )}
       </section>
 
       <div className="flex gapped1">
