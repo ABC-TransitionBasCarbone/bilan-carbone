@@ -1,15 +1,9 @@
-import { TiltPost } from '@/services/posts.enums'
+import { TiltSimplifiedPost } from '@/services/posts.enums'
 import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
-import {
-  FormLayout,
-  groupLayout,
-  inputLayout,
-  listLayout,
-  tableLayout,
-} from '@abc-transitionbascarbone/publicodes/form/layouts'
+import { FormLayout, inputLayout, tableLayout } from '@abc-transitionbascarbone/publicodes/form/layouts'
 import { TiltRuleName } from './types'
 
-export const getPostRuleNameTilt = (post: TiltPost): TiltRuleName | '' => {
+export const getPostRuleNameTilt = (post: TiltSimplifiedPost): TiltRuleName | '' => {
   return POST_TO_RULENAME[post] ?? ''
 }
 
@@ -25,20 +19,20 @@ export const getFormLayoutsForSubPostTILT = (subPost: SubPost): FormLayout<TiltR
   return SUBPOST_TO_FORM_LAYOUTS[subPost] || []
 }
 
-export const POST_TO_RULENAME: Partial<Record<TiltPost, TiltRuleName>> = {
-  [TiltPost.ConstructionDesLocaux]: 'construction',
-  [TiltPost.Energies]: 'énergie',
-  [TiltPost.DechetsDirects]: 'déchets',
-  [TiltPost.FroidEtClim]: 'froid et clim',
-  [TiltPost.DeplacementsDePersonne]: 'déplacements',
-  [TiltPost.TransportDeMarchandises]: 'fret',
-  [TiltPost.IntrantsBiensEtMatieresTilt]: 'intrants-biens-et-matières',
-  [TiltPost.Alimentation]: 'alimentation',
-  [TiltPost.IntrantsServices]: 'intrants-services',
-  [TiltPost.EquipementsEtImmobilisations]: 'équipements et immobilisations',
-  [TiltPost.Utilisation]: 'utilisation',
-  [TiltPost.FinDeVie]: 'fin de vie',
-  [TiltPost.Teletravail]: 'télétravail',
+export const POST_TO_RULENAME: Record<TiltSimplifiedPost, TiltRuleName> = {
+  [TiltSimplifiedPost.LocauxSimplified]: 'construction',
+  [TiltSimplifiedPost.EnergiesSimplified]: 'énergie',
+  [TiltSimplifiedPost.DechetsSimplified]: 'déchets',
+  [TiltSimplifiedPost.FroidEtClimSimplified]: 'froid et clim',
+  [TiltSimplifiedPost.DeplacementsDePersonneSimplified]: 'déplacements',
+  [TiltSimplifiedPost.TransportDeMarchandisesSimplified]: 'fret',
+  [TiltSimplifiedPost.IntrantsBiensEtMatieresTiltSimplified]: 'intrants-biens-et-matières',
+  [TiltSimplifiedPost.AlimentationSimplified]: 'alimentation',
+  [TiltSimplifiedPost.ServiceEtNumeriqueSimplified]: 'intrants-services',
+  [TiltSimplifiedPost.EquipementsEtImmobilisationsSimplified]: 'équipements et immobilisations',
+  [TiltSimplifiedPost.UtilisationSimplified]: 'utilisation',
+  [TiltSimplifiedPost.FinDeVieSimplified]: 'fin de vie',
+  [TiltSimplifiedPost.TeletravailSimplified]: 'télétravail',
 } as const
 
 const SUBPOST_TO_RULENAME: Partial<Record<SubPost, TiltRuleName>> = {
@@ -49,54 +43,29 @@ const SUBPOST_TO_RULENAME: Partial<Record<SubPost, TiltRuleName>> = {
   ReseauxDeChaleurEtDeVapeur: 'énergie . réseaux de chaleur',
   ReseauxDeFroid: 'énergie . réseaux de froid',
   Electricite: 'énergie . électricité',
-  DechetsDEmballagesEtPlastiques: 'déchets . emballages et plastiques',
-  // DechetsOrganiques: "",
-  // DechetsOrduresMenageres: "",
+  DechetsEmisParLOrganisation: 'déchets . emballages et plastiques',
   FroidEtClim: 'froid et clim',
-  // EmissionsLieesAuChangementDAffectationDesSolsCas,
   DeplacementsDomicileTravailSalaries: 'déplacements . DT-salariés',
-  DeplacementsDomicileTravailBenevoles: 'déplacements . DT-bénévoles',
+  DeplacementsBenevoles: 'déplacements . DT-bénévoles',
   DeplacementsDansLeCadreDUneMissionAssociativeSalaries: 'déplacements . DM-salariés',
-  DeplacementsDansLeCadreDUneMissionAssociativeBenevoles: 'déplacements . DM-bénévoles',
   DeplacementsDesBeneficiaires: 'déplacements . bénéficiaires',
   DeplacementsFabricationDesVehicules: 'déplacements . fabrication',
-  Entrant: 'fret . transport',
-  // Interne: "",
-  // Sortant: "",
-  //TransportFabricationDesVehicules: "",
-  MetauxPlastiquesEtVerre: 'intrants-biens-et-matières . ratios monétaires',
-  // PapiersCartons: "",
-  // MateriauxDeConstruction: "",
-  // ProduitsChimiquesEtHydrogene: "",
-  // MatiereDestineeAuxEmballages: "",
-  // AutresIntrants: "",
-  // BiensEtMatieresEnApprocheMonetaire,
+  Fret: 'fret . transport',
+  BienMatieres: 'intrants-biens-et-matières . ratios monétaires',
   RepasPrisParLesSalaries: 'alimentation . salariés',
   RepasPrisParLesBenevoles: 'alimentation . bénévoles',
   RepasPrisParLesBeneficiaires: 'alimentation . bénéficiaires',
   UsagesNumeriques: 'intrants-services . numérique',
   ServicesEnApprocheMonetaire: 'intrants-services . services',
   EquipementsDesSalaries: 'équipements et immobilisations',
-  // ParcInformatiqueDesSalaries,
-  // EquipementsDesBenevoles,
-  // ParcInformatiqueDesBenevoles,
-  UtilisationEnResponsabiliteConsommationDEnergie: 'utilisation . responsabilite conso energie',
-  // InvestissementsFinanciersRealises,
-  // ConsommationDEnergieEnFinDeVie,
-  TraitementDesDechetsEnFinDeVie: 'fin de vie . déchets',
-  // FuitesOuEmissionsNonEnergetiques,
-  // TraitementDesEmballagesEnFinDeVie,
-  TeletravailSalaries: 'télétravail',
-  // TeletravailBenevoles,
+  ConsommationsEnergieUtilisationProduits: 'utilisation . responsabilite conso energie',
+  FinDeVieProduitsVendusFournisBeneficiaires: 'fin de vie . déchets',
+  TeletravailSalariesBenevoles: 'télétravail',
 } as const
 
 const input = (rule: TiltRuleName): FormLayout<TiltRuleName> => inputLayout<TiltRuleName>(rule)
-const group = (title: string, rules: TiltRuleName[]): FormLayout<TiltRuleName> =>
-  groupLayout<TiltRuleName>(title, rules)
 const table = (title: string, headers: string[], rows: TiltRuleName[][]): FormLayout<TiltRuleName> =>
   tableLayout<TiltRuleName>(title, headers, rows)
-const list = (targetRule: TiltRuleName, rules: TiltRuleName[]): FormLayout<TiltRuleName> =>
-  listLayout<TiltRuleName>(targetRule, rules)
 
 export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRuleName>[]>> = {
   Batiments: [
@@ -125,7 +94,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('énergie . électricité . autoproduction . autoproduction'),
   ],
   FroidEtClim: [input('froid et clim . nombre')],
-  DechetsDEmballagesEtPlastiques: [
+  DechetsEmisParLOrganisation: [
     table(
       'DechetsDirects.question',
       ['DechetsDirects.typeDéchets', 'DechetsDirects.poids'],
@@ -149,11 +118,11 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
       ],
     ),
   ],
-  TraitementDesDechetsEnFinDeVie: [
+  FinDeVieProduitsVendusFournisBeneficiaires: [
     input('fin de vie . déchets . fin de vie présente'),
     input('fin de vie . déchets . poids'),
   ],
-  UtilisationEnResponsabiliteConsommationDEnergie: [
+  ConsommationsEnergieUtilisationProduits: [
     input('utilisation . responsabilite conso energie . élec présente'),
     input('utilisation . responsabilite conso energie . élec . conso'),
     input('utilisation . responsabilite conso energie . fossiles présents'),
@@ -277,7 +246,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('alimentation . salariés . végétarien . nombre de repas'),
     input('alimentation . salariés . végétalien . nombre de repas'),
   ],
-  MetauxPlastiquesEtVerre: [
+  BienMatieres: [
     table(
       'IntrantsBiensEtMatieresTilt.question',
       ['IntrantsBiensEtMatieresTilt.typeBien', 'IntrantsBiensEtMatieresTilt.montantDepense'],
@@ -321,7 +290,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
       ],
     ),
   ],
-  Entrant: [
+  Fret: [
     input('fret . transport . présent'),
     input('fret . transport . VUL . nombre'),
     input('fret . transport . PL . nombre'),
@@ -402,7 +371,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
       ],
     ),
   ],
-  DeplacementsDomicileTravailBenevoles: [
+  DeplacementsBenevoles: [
     input('déplacements . DT-bénévoles . avec . distance'),
     input('déplacements . DT-bénévoles . avec . réponse MEP'),
     table(
@@ -512,5 +481,5 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     ),
   ],
   DeplacementsFabricationDesVehicules: [input('déplacements . fabrication . voitures . nombre')],
-  TeletravailSalaries: [input('télétravail . salariés . j'), input('télétravail . bénévoles . h')],
+  TeletravailSalariesBenevoles: [input('télétravail . salariés . j'), input('télétravail . bénévoles . h')],
 } as const

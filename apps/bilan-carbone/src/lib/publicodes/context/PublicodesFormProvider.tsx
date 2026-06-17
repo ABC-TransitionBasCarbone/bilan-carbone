@@ -22,6 +22,7 @@ interface PublicodesFormProviderProps {
   environment: EnvironmentWithSimplifiedStudies
   studyId: string
   studySiteId: string
+  subPostsConfigVersion?: string | null
   syncIntervalMs?: number
   children: ReactNode
 }
@@ -30,11 +31,17 @@ export function PublicodesFormProvider({
   environment,
   studyId,
   studySiteId,
+  subPostsConfigVersion,
   syncIntervalMs,
   children,
 }: PublicodesFormProviderProps) {
   return (
-    <PublicodesSituationProvider environment={environment} studyId={studyId} studySiteId={studySiteId}>
+    <PublicodesSituationProvider
+      environment={environment}
+      studyId={studyId}
+      studySiteId={studySiteId}
+      subPostsConfigVersion={subPostsConfigVersion}
+    >
       <PublicodesAutoSaveProvider environment={environment} studyId={studyId} syncIntervalMs={syncIntervalMs}>
         {children}
       </PublicodesAutoSaveProvider>

@@ -25,7 +25,7 @@ export enum CutPost {
   BilletterieEtCommunication = 'BilletterieEtCommunication',
 }
 
-export enum TiltPost {
+export enum TiltAdvancedPost {
   ConstructionDesLocaux = 'ConstructionDesLocaux',
   Energies = BCPost.Energies,
   DechetsDirects = BCPost.DechetsDirects,
@@ -40,6 +40,22 @@ export enum TiltPost {
   Utilisation = 'Utilisation',
   FinDeVie = BCPost.FinDeVie,
   Teletravail = 'Teletravail',
+}
+
+export enum TiltSimplifiedPost {
+  LocauxSimplified = 'LocauxSimplified',
+  EnergiesSimplified = 'EnergiesSimplified',
+  DechetsSimplified = 'DechetsSimplified',
+  FroidEtClimSimplified = 'FroidEtClimSimplified',
+  DeplacementsDePersonneSimplified = 'DeplacementsDePersonneSimplified',
+  TransportDeMarchandisesSimplified = 'TransportDeMarchandisesSimplified',
+  IntrantsBiensEtMatieresTiltSimplified = 'IntrantsBiensEtMatieresTiltSimplified',
+  AlimentationSimplified = 'AlimentationSimplified',
+  ServiceEtNumeriqueSimplified = 'ServiceEtNumeriqueSimplified',
+  EquipementsEtImmobilisationsSimplified = 'EquipementsEtImmobilisationsSimplified',
+  UtilisationSimplified = 'UtilisationSimplified',
+  FinDeVieSimplified = 'FinDeVieSimplified',
+  TeletravailSimplified = 'TeletravailSimplified',
 }
 
 export enum ClicksonPost {

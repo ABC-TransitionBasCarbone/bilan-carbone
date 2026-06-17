@@ -141,7 +141,16 @@ jest.mock('../posts', () => ({
     DechetsDirects: 'DechetsDirects',
     IntrantsBiensEtMatieres: 'IntrantsBiensEtMatieres',
   },
-  getSubPostByPostTiltSimplified: jest.fn(),
+  TiltSimplifiedPost: {},
+  subPostsByPostTILTSimplified: {},
+  subPostsByPostCUT: {},
+  subPostsByPostClickson: {},
+  CutPost: {},
+  ClicksonPost: {},
+}))
+jest.mock('../publicodes/simplifiedPublicodesConfig', () => ({
+  TILT_SIMPLIFIED_POSTS_CONFIG_VERSION: 'tilt-simplified-posts-v1',
+  getSimplifiedPublicodesConfig: jest.fn(),
 }))
 jest.mock('../../utils/post', () => ({
   withInfobulle: jest.fn(),

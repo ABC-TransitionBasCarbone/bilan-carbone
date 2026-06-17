@@ -1,4 +1,4 @@
-import { TiltPost } from '@/services/posts.enums'
+import { TiltSimplifiedPost } from '@/services/posts'
 import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
 import { mockedOrganizationVersion } from '@/tests/utils/models/organization'
 import { COMMON_DATES, getMockeFullStudy, getMockedDetailedFullStudySite } from '@/tests/utils/models/study'
@@ -258,7 +258,7 @@ describe('Study Service', () => {
       const t = ((key: string) => key) as unknown as Translations
       const mockResults = [
         {
-          post: TiltPost.Energies,
+          post: TiltSimplifiedPost.EnergiesSimplified,
           label: 'Énergies',
           value: 100_000,
           children: [

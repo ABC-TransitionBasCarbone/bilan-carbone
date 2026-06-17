@@ -1,7 +1,7 @@
 import type { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import { PublicodesSituationProvider } from '@/lib/publicodes/context'
-import { CutPost, TiltPost } from '@/services/posts'
+import { CutPost, TiltAdvancedPost } from '@/services/posts'
 import { computeResultsByPostFromEmissionSources } from '@/services/results/consolidated'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
@@ -47,7 +47,7 @@ const AllPostsInfographyContainer = ({ study, studySiteId, siteId }: Props) => {
         siteId,
         true,
         validatedOnly,
-        environment === Environment.TILT ? TiltPost : environment === Environment.CUT ? CutPost : undefined,
+        environment === Environment.TILT ? TiltAdvancedPost : environment === Environment.CUT ? CutPost : undefined,
         environment,
       ),
     [study, tPost, siteId, validatedOnly, environment],
@@ -68,7 +68,12 @@ const AllPostsInfographyContainer = ({ study, studySiteId, siteId }: Props) => {
           </PublicodesSituationProvider>
         ),
         [Environment.TILT]: study.simplified ? (
-          <PublicodesSituationProvider environment={Environment.TILT} studyId={study.id} studySiteId={studySiteId}>
+          <PublicodesSituationProvider
+            environment={Environment.TILT}
+            studyId={study.id}
+            studySiteId={studySiteId}
+            subPostsConfigVersion={study.subPostsConfigVersion}
+          >
             <AllPostsInfographySimplified study={study} />
           </PublicodesSituationProvider>
         ) : (
