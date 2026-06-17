@@ -121,6 +121,21 @@
       "title": "Collaborator comments",
       "noComments": "No comments yet"
     },
+    "collectiveEffort": {
+      "title": "Important: it is also a collective effort",
+      "state": {
+        "label": "The French State",
+        "description": "It can accelerate the <strong>decarbonisation</strong> of society by <strong>passing laws</strong> and <strong>targeted financial support</strong>, as well as through its investments."
+      },
+      "collectivities": {
+        "label": "Local authorities",
+        "description": "Through their land-use planning choices, they contribute to <strong>the adoption of more sustainable practices</strong> at a local level."
+      },
+      "companies": {
+        "label": "Companies",
+        "description": "Under the impetus of the State and citizens, companies are working towards the <strong>progressive reduction of the footprint of goods and services</strong>."
+      }
+    },
     "export": {
       "print": "Print"
     }

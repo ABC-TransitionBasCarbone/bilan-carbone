@@ -121,6 +121,21 @@
       "title": "Commentaires des collaborateurs",
       "noComments": "Aucun commentaire pour l'instant"
     },
+    "collectiveEffort": {
+      "title": "Important : c'est aussi un effort collectif",
+      "state": {
+        "label": "L'État français",
+        "description": "Il peut accélérer la <strong>décarbonation</strong> de la société en <strong>votant des lois</strong> et des <strong>aides financières ciblées</strong>, ainsi qu'au travers de ses investissements."
+      },
+      "collectivities": {
+        "label": "Les collectivités",
+        "description": "Par leurs choix d'aménagements du territoire, elles participent à <strong>l'adoption de nouvelles pratiques plus durables</strong> à l'échelle locale."
+      },
+      "companies": {
+        "label": "Les entreprises",
+        "description": "Sous l'impulsion de l'État et des citoyens, les entreprises travaillent à la <strong>réduction progressive de l'empreinte des biens et services</strong>."
+      }
+    },
     "export": {
       "print": "Imprimer"
     }
