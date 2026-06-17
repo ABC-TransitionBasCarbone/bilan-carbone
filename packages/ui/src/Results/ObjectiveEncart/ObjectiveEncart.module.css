@@ -12,15 +12,15 @@
 }
 
 .targetBadge {
-  font-size: 1.1rem;
-  font-weight: 700;
+  font-size: 1.1rem !important;
+  font-weight: 700 !important;
   display: block;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.25rem !important;
 }
 
 .headerDescription {
-  font-size: 0.875rem;
-  margin: 0;
+  font-size: 0.875rem !important;
+  margin: 0 !important;
   opacity: 0.9;
 }
 
@@ -46,20 +46,20 @@
 }
 
 .youLabel {
-  font-size: 0.875rem;
-  font-weight: 600;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
   color: #272768;
-  margin: 0;
+  margin: 0 !important;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .footprintValue {
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: 2rem !important;
+  font-weight: 700 !important;
   color: #272768;
-  margin: 0;
-  line-height: 1.1;
+  margin: 0 !important;
+  line-height: 1.1 !important;
 }
 
 .footprintUnit {
@@ -68,10 +68,10 @@
 }
 
 .contextMessage {
-  font-size: 0.875rem;
+  font-size: 0.875rem !important;
   color: #444;
-  margin: 0;
-  line-height: 1.5;
+  margin: 0 !important;
+  line-height: 1.5 !important;
 }
 
 .paceBox {
@@ -82,17 +82,17 @@
 }
 
 .paceTitle {
-  font-size: 0.8rem;
+  font-size: 0.8rem !important;
   color: #555;
-  margin: 0 0 0.25rem 0;
-  line-height: 1.4;
+  margin: 0 0 0.25rem 0 !important;
+  line-height: 1.4 !important;
 }
 
 .paceValue {
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
   color: #d6006c;
-  margin: 0;
+  margin: 0 !important;
 }
 
 .paceUnit {

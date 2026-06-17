@@ -7,9 +7,9 @@
 }
 
 .title {
-  font-weight: 700;
-  font-size: 1rem;
-  margin: 0 0 1rem 0;
+  font-weight: 700 !important;
+  font-size: 1rem !important;
+  margin: 0 0 1rem 0 !important;
   color: #272768;
 }
 
@@ -40,9 +40,24 @@
   width: fit-content;
 }
 
+.state {
+  color: #8b5cf6;
+  background-color: #ede9fe;
+}
+
+.collectivities {
+  color: #f59e0b;
+  background-color: #fef3c7;
+}
+
+.companies {
+  color: #d6006c;
+  background-color: #fce7f3;
+}
+
 .description {
-  font-size: 0.875rem;
+  font-size: 0.875rem !important;
   color: #333;
-  margin: 0;
-  line-height: 1.6;
+  margin: 0 !important;
+  line-height: 1.6 !important;
 }
