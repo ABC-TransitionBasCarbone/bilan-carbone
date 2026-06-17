@@ -233,6 +233,7 @@ export function parseEmissionSourcesFile(
       emissionFactorValue,
       emissionFactorUnit,
       emissionFactorUnitRaw: rawEmissionFactorUnit || undefined,
+      emissionFactorLocalization: col('emissionFactorLocalization') || undefined,
       value,
       type,
       caracterisation,
@@ -269,7 +270,12 @@ export function parseEmissionSourcesFile(
 type ResolvedEf = { efId: string; efName: string; efValue: string; efUnit: string }
 
 export type ResolveEfRowsResult =
-  | { type: 'warnings'; warnings: ImportWarning[]; ambiguousRows: AmbiguousRow[] }
+  | {
+      type: 'warnings'
+      warnings: ImportWarning[]
+      ambiguousRows: AmbiguousRow[]
+      resolvedByLine: Map<number, ResolvedEf>
+    }
   | { type: 'ambiguous'; ambiguousRows: AmbiguousRow[] }
   | { type: 'resolved'; resolvedByLine: Map<number, ResolvedEf> }
 
@@ -398,6 +404,7 @@ export async function resolveEmissionFactorRows(
       locale,
       organizationId,
       versionIds,
+      row.emissionFactorLocalization,
     )
 
     if (!hasChoices) {
@@ -415,7 +422,7 @@ export async function resolveEmissionFactorRows(
   }
 
   if (warnings.length > 0) {
-    return { type: 'warnings', warnings, ambiguousRows }
+    return { type: 'warnings', warnings, ambiguousRows, resolvedByLine }
   }
 
   if (ambiguousRows.length > 0) {
