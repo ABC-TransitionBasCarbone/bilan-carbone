@@ -58,9 +58,16 @@
     "subtitle": "Résultats anonymisés de la campagne de sensibilisation",
     "stats": {
       "averageFootprint": "Empreinte moyenne par collaborateur",
-      "respondents": "Répondants",
-      "responseRate": "Taux de réponse",
-      "respondentsDetail": "{count} sur {total} destinataires ({rate}%)"
+      "respondents": "Répondants"
+    },
+    "objective": {
+      "nationalTarget": "Objectif national : {value} t de CO₂e par personne en 2050",
+      "nationalTargetDescription": "L'objectif de la France pour atteindre la neutralité carbone en 2050 et aider à limiter le réchauffement mondial à + 2 °C.",
+      "you": "Vous",
+      "unit": "tonnes CO₂e / an",
+      "aboveTarget": "Aujourd'hui, vous êtes au-dessus des {target} tonnes, l'objectif intermédiaire que nous proposons pour 2030.",
+      "paceTitle": "Votre rythme indicatif pour parvenir à {target} T en {year}",
+      "paceUnit": "kg par an"
     },
     "filter": {
       "title": "Filtrer par entité"
