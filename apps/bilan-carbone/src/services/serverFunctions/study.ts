@@ -146,7 +146,6 @@ import {
   EnvironmentWithSimplifiedStudies,
   hasReaderRoleOnStudyAsContributor,
   hasSimplifiedStudies,
-  isClickson,
 } from '../permissions/environment'
 import { hasAccessToEngagementActions, isTiltSimplified } from '../permissions/environmentAdvanced'
 import { isInOrgaOrParentFromId } from '../permissions/organization'
@@ -315,7 +314,7 @@ export const createStudyCommand = async (
       createdBy: { connect: { id: session.user.accountId } },
       organizationVersion: { connect: { id: organizationVersionId } },
       isPublic: isPublic === 'true',
-      resultsUnit: isClickson(session.user.environment) ? StudyResultUnit.T : resultsUnit || StudyResultUnit.T,
+      resultsUnit: resultsUnit || StudyResultUnit.T,
       allowedUsers: {
         createMany: { data: rights },
       },
