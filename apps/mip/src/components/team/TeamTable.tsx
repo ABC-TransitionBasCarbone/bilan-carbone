@@ -6,7 +6,7 @@ import { changeRole } from '@/services/serverFunctions/user'
 import { canEditMemberRole } from '@/utils/user'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import TeamTableCommon from '@abc-transitionbascarbone/components/src/team/TeamTableCommon'
-import { Role } from '@abc-transitionbascarbone/db-common/enums'
+import { RoleMip } from '@abc-transitionbascarbone/db-common/enums'
 import { UserSession } from 'next-auth'
 import { useRouter } from 'next/navigation'
 import { useCallback, useState } from 'react'
@@ -50,7 +50,7 @@ const TeamTable = ({ user, team }: Props) => {
         email={user.email}
         team={team}
         canUpdateTeam={canUpdateTeam}
-        environmentRoles={Role}
+        environmentRoles={RoleMip}
         deleteMember={deleteMember}
         isAdvanced={false}
         deletionError={deletionError}

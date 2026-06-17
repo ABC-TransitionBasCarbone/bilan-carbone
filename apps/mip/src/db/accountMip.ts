@@ -1,7 +1,7 @@
 import { canEditMemberRole } from '@/utils/user'
 import { Prisma } from '@abc-transitionbascarbone/db-common'
 import { findUserInfoSelect } from '@abc-transitionbascarbone/db-common/db/common.select'
-import { Role, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
+import { RoleMip, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { UserSession } from 'next-auth'
 import { AccountMipWithUserSelect } from './accountMip.select'
 import { prismaClient } from './client.server'
@@ -32,7 +32,7 @@ export const getAccountMipFromUserOrganization = (user: UserSession) =>
   })
 export type TeamMember = AsyncReturnType<typeof getAccountMipFromUserOrganization>[number]
 
-export const changeAccountMipRole = (id: string, role: Role) =>
+export const changeAccountMipRole = (id: string, role: RoleMip) =>
   prismaClient.accountMip.update({
     data: { role },
     where: { id },
@@ -40,7 +40,7 @@ export const changeAccountMipRole = (id: string, role: Role) =>
 
 export const updateAccountMip = (
   accountMipId: string,
-  data: Partial<Prisma.AccountMipUpdateInput & { role: Exclude<Role, 'SUPER_ADMIN'> | undefined }>,
+  data: Partial<Prisma.AccountMipUpdateInput & { role: Exclude<RoleMip, 'SUPER_ADMIN'> | undefined }>,
   userData?: Partial<Prisma.UserUpdateInput>,
 ) =>
   prismaClient.accountMip.update({
