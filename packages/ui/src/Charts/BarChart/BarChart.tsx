@@ -1,7 +1,7 @@
 'use client'
 
 import { Typography } from '@mui/material'
-import { BarChart as MuiBarChart } from '@mui/x-charts'
+import { BarChart as MuiBarChart, ChartsReferenceLine } from '@mui/x-charts'
 import styles from './BarChart.module.css'
 import { BarChartData, BarChartSeriesData } from '../types'
 
@@ -21,6 +21,7 @@ interface Props {
   showLabelsOnBars?: boolean
   skipAnimation?: boolean
   emissionsLabel?: string
+  targetValue?: number
   unitLabel: string
   formatNumber: (value?: number, dec?: number) => string
 }
@@ -35,6 +36,7 @@ const BarChart = ({
   showLabelsOnBars = true,
   skipAnimation = false,
   emissionsLabel,
+  targetValue,
   unitLabel,
   formatNumber,
 }: Props) => {
@@ -65,30 +67,30 @@ const BarChart = ({
             colorMap:
               seriesData.length === 0
                 ? {
-                    type: 'ordinal' as const,
-                    values: barData.labels,
-                    colors: barData.colors,
-                  }
+                  type: 'ordinal' as const,
+                  values: barData.labels,
+                  colors: barData.colors,
+                }
                 : undefined,
           },
         ]}
         series={
           seriesData.length > 0
             ? seriesData.map((series, index) => ({
-                data: series.data,
-                valueFormatter: (value: number | null) => (value && value > 0 ? formatNumber(value, 0) : null),
-                label: series.label,
-                stack: series.stack,
-                color: series.color,
-                id: `series-${index}`,
-              }))
+              data: series.data,
+              valueFormatter: (value: number | null) => (value && value > 0 ? formatNumber(value, 0) : null),
+              label: series.label,
+              stack: series.stack,
+              color: series.color,
+              id: `series-${index}`,
+            }))
             : [
-                {
-                  data: barData.values,
-                  valueFormatter: (value: number | null) => formatNumber(value ?? 0, 0),
-                  label: showLegend ? emissionsLabel : undefined,
-                },
-              ]
+              {
+                data: barData.values,
+                valueFormatter: (value: number | null) => formatNumber(value ?? 0, 0),
+                label: showLegend ? emissionsLabel : undefined,
+              },
+            ]
         }
         grid={{ horizontal: true }}
         yAxis={[{ label: unitLabel }]}
@@ -97,7 +99,16 @@ const BarChart = ({
         slots={showLegend && seriesData.length === 0 ? undefined : { legend: () => null }}
         height={height}
         borderRadius={10}
-      />
+      >
+        {typeof targetValue === 'number' && (
+          <ChartsReferenceLine
+            y={targetValue}
+            lineStyle={{ stroke: '#ef4444', strokeDasharray: '6 4', strokeWidth: 2 }}
+            label={`Objectif: ${formatNumber(targetValue, 0)}`}
+            labelAlign="end"
+          />
+        )}
+      </MuiBarChart>
       {showTitle && (
         <Typography variant="h6" align="center" className={styles.chartTitle}>
           {title}

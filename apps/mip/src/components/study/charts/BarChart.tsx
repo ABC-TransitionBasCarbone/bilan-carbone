@@ -13,6 +13,7 @@ interface Props {
   items: BarChartItem[]
   unit?: string
   targetLabel?: string
+  targetValue?: number
   title?: string
   height?: number
   showTitle?: boolean
@@ -25,6 +26,7 @@ const BarChart = ({
   items,
   unit = 'tCO₂e',
   targetLabel,
+  targetValue,
   title,
   height = 400,
   showTitle = true,
@@ -51,6 +53,7 @@ const BarChart = ({
       showLabelsOnBars={showLabelsOnBars}
       skipAnimation={skipAnimation}
       emissionsLabel={targetLabel}
+      targetValue={targetValue}
       unitLabel={unit}
       formatNumber={formatNumber}
     />
