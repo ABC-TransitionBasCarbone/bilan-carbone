@@ -123,35 +123,7 @@ export async function exportManualEmissionFactorsToFile(): Promise<ArrayBuffer> 
   const organizationId = account.organizationVersion.organizationId
   const emissionFactors = await getManualEmissionFactorsByOrganization(organizationId)
 
-  const c = bc.emissionFactors.create
-  const tbl = bc.emissionFactors.table
-  const header = [
-    c.name,
-    c.attribute,
-    c.unit,
-    c.isMonetary,
-    c.source,
-    c.location,
-    tbl.technicalRepresentativeness.replace(/ :$/, ''),
-    tbl.geographicRepresentativeness.replace(/ :$/, ''),
-    tbl.temporalRepresentativeness.replace(/ :$/, ''),
-    tbl.completeness.replace(/ :$/, ''),
-    tbl.reliability.replace(/ :$/, ''),
-    c.comment,
-    c.totalCo2,
-    c.co2f,
-    c.ch4f,
-    c.ch4b,
-    c.n2o,
-    c.co2b,
-    c.sf6,
-    c.hfc,
-    c.pfc,
-    c.otherGES,
-    c.post,
-    c.base,
-    c.addedDate,
-  ]
+  const header = buildEmissionFactorsHeader(locale)
   const rows: (string | number)[][] = emissionFactors.map((ef) => {
     const metaData = ef.metaData.find((m) => m.language === locale) ?? ef.metaData[0]
     return [
@@ -190,7 +162,7 @@ export async function exportManualEmissionFactorsToFile(): Promise<ArrayBuffer> 
   return prepareExcel([{ name: "Facteurs d'émission", data: [header, ...rows], options: {} }])
 }
 
-function buildEmissionFactorsTemplateHeader(locale: LocaleType): string[] {
+function buildEmissionFactorsHeader(locale: LocaleType): string[] {
   const bc = getBcTranslations(locale)
   const c = bc.emissionFactors.create
   const tbl = bc.emissionFactors.table
@@ -220,6 +192,7 @@ function buildEmissionFactorsTemplateHeader(locale: LocaleType): string[] {
     c.otherGES,
     modal.templatePostsHeader,
     modal.templateBaseHeader,
+    c.addedDate,
   ]
 }
 
@@ -256,7 +229,7 @@ export const getImportEmissionFactorsTemplate = async () =>
     emptyRow[COLUMNS.postsAndSubPosts] = allPostsLabel
     emptyRow[COLUMNS.base] = bc.emissionFactors.base[EmissionFactorBase.LocationBased]
 
-    const header = buildEmissionFactorsTemplateHeader(locale)
+    const header = buildEmissionFactorsHeader(locale)
     const dataRows = [exampleRow, ...Array.from({ length: 100 }, () => [...emptyRow])]
     const sheetName = modal.sheetName
 

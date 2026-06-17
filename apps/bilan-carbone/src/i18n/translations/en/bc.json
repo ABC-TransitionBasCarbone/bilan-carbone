@@ -1563,7 +1563,7 @@
     "invalidPost": "Invalid post: \"{value}\"",
     "invalidSubPost": "Invalid sub-post: \"{value}\"",
     "missingSubPosts": "Missing sub-post(s) for post \"{value}\"",
-    "missingBase": "Scope 2 approach (GHG Protocol) missing for the Electricity sub-post",
+    "invalidBase": "Invalid Scope 2 approach (GHG Protocol) for the Electricity sub-post: \"{value}\". Accepted values: Location-based, Market-based",
     "incompatibleSubPosts": "Sub-post(s) incompatible with their post: {value}",
     "validationError": "Validation error on field \"{value}\"",
     "noRows": "The file contains no data to import",
