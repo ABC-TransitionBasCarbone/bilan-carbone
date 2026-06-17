@@ -5,7 +5,7 @@ import LoadingButton from '@abc-transitionbascarbone/components/src/base/Loading
 import { FormSelect } from '@abc-transitionbascarbone/components/src/form/Select'
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
-import { Role } from '@abc-transitionbascarbone/db-common/enums'
+import { Role, RoleMip } from '@abc-transitionbascarbone/db-common/enums'
 import {
   AddMemberCommand,
   AddMemberCommandValidation,
@@ -18,7 +18,7 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 
 interface Props {
-  environmentRoles: typeof Role
+  environmentRoles: typeof Role | typeof RoleMip
   addMember: (command: AddMemberCommand) => Promise<ApiResponse<void>>
 }
 const NewMemberFormCommon = ({ environmentRoles, addMember }: Props) => {

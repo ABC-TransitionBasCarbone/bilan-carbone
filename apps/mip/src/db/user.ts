@@ -1,7 +1,7 @@
 import { sendEmailToAddedUser } from '@/services/serverFunctions/user'
 import { userSessionToDbUser } from '@/utils/userAccounts'
 import { Prisma } from '@abc-transitionbascarbone/db-common'
-import { Role, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
+import { RoleMip, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
 import { AddMemberCommand } from '@abc-transitionbascarbone/services/serverFunctions/user.command'
 import { signPassword } from '@abc-transitionbascarbone/utils/auth'
@@ -73,7 +73,7 @@ export const updateUserResetTokenForEmail = async (email: string, resetToken: st
 export const addUser = async (
   newMember: Omit<Prisma.UserCreateInput, 'accountsMip'> & {
     accountsMip: { create: Omit<Prisma.AccountMipCreateInput, 'user'> }
-    role?: Exclude<Role, 'SUPER_ADMIN' | 'GESTIONNAIRE'>
+    role?: Exclude<RoleMip, 'SUPER_ADMIN'>
   },
 ) => {
   return prismaClient.user.create({
@@ -95,12 +95,7 @@ export const handleAddingUser = async (creator: UserSession, newUser: AddMemberC
   const isMemberActiveInSomeEnv = memberExists?.accountsMip.some((a) => a.status === UserStatus.ACTIVE)
   const memberAccountMip = memberExists?.accountsMip[0]
 
-  if (
-    memberAccountMip?.role === Role.SUPER_ADMIN ||
-    memberAccountMip?.role === Role.GESTIONNAIRE ||
-    newUser.role === Role.SUPER_ADMIN ||
-    newUser.role === Role.GESTIONNAIRE
-  ) {
+  if (memberAccountMip?.role === RoleMip.SUPER_ADMIN || newUser.role === RoleMip.SUPER_ADMIN) {
     throw new Error(NOT_AUTHORIZED)
   }
 
@@ -118,7 +113,7 @@ export const handleAddingUser = async (creator: UserSession, newUser: AddMemberC
       source: userFromDb.source,
       accountsMip: {
         create: {
-          role: newUser.role,
+          role: newUser.role as RoleMip,
           status: UserStatus.VALIDATED,
           organizationVersionMipId: creator.organizationVersionMipId,
         },
@@ -129,7 +124,7 @@ export const handleAddingUser = async (creator: UserSession, newUser: AddMemberC
   } else if (!memberAccountMip) {
     await addAccountMip({
       status: isMemberActiveInSomeEnv ? UserStatus.ACTIVE : UserStatus.VALIDATED,
-      role: newUser.role,
+      role: newUser.role as Exclude<RoleMip, 'SUPER_ADMIN'>,
       user: { connect: { id: memberExists.id } },
       organizationVersionMip: { connect: { id: creator.organizationVersionMipId } },
     })

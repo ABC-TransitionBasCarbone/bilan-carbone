@@ -85,10 +85,6 @@ export const addMember = async (member: AddMemberCommand) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (member.role === Role.GESTIONNAIRE) {
-      throw new Error(NOT_AUTHORIZED)
-    }
-
     if (
       !canAddMember(session.user, { ...member, role: member.role as RoleMip }, session.user.organizationVersionMipId)
     ) {
