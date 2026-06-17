@@ -14,13 +14,13 @@ import { isAdmin } from '@/utils/user'
 import { userSessionToDbUser } from '@/utils/userAccounts'
 import { User } from '@abc-transitionbascarbone/db-common'
 import { updateUserResetTokenForEmail } from '@abc-transitionbascarbone/db-common/db'
-import { MORE_THAN_ONE, NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
-import { Environment, RoleMip, Role, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
+import { Environment, Role, RoleMip, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
 import {
   sendAddedActiveUserEmail,
   sendNewUserEmail,
   sendResetPassword,
 } from '@abc-transitionbascarbone/services/email/email'
+import { MORE_THAN_ONE, NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
 import { updateUserResetToken } from '@abc-transitionbascarbone/services/serverFunctions/user'
 import { AddMemberCommand } from '@abc-transitionbascarbone/services/serverFunctions/user.command'
 import { DAY, HOUR, TIME_IN_MS } from '@abc-transitionbascarbone/utils'
@@ -89,7 +89,9 @@ export const addMember = async (member: AddMemberCommand) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (!canAddMember(session.user, { ...member, role: member.role as RoleMip }, session.user.organizationVersionMipId)) {
+    if (
+      !canAddMember(session.user, { ...member, role: member.role as RoleMip }, session.user.organizationVersionMipId)
+    ) {
       throw new Error(NOT_AUTHORIZED)
     }
 

@@ -1,8 +1,8 @@
 import { AccountMipWithUser } from '@/types/accountMip.types'
 import { canEditMemberRole } from '@/utils/user'
+import type { Prisma } from '@abc-transitionbascarbone/db-common'
 import { RoleMip, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { UserSession } from 'next-auth'
-import type { Prisma } from '@abc-transitionbascarbone/db-common'
 
 export const canAddMember = (
   user: UserSession,
