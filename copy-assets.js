@@ -44,4 +44,3 @@ Promise.all([
 ])
   .then(() => console.log(`${greenTick} Assets copied successfully`))
   .catch((err) => console.error(`${redCross} Failed to copy assets: ${err}`))
-  
