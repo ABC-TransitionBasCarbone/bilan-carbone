@@ -1,5 +1,6 @@
 'use client'
 import BarChart from '@/components/study/charts/BarChart'
+import CollectiveEffortEncart from '@/components/results/CollectiveEffortEncart'
 import ObjectiveEncart from '@/components/results/ObjectiveEncart'
 import PieChart from '@/components/study/charts/PieChart'
 import { getResultsForEntity, KeyStatGroup, SurveyResults } from '@/data/sampleResults'
@@ -85,8 +86,6 @@ export default function ResultsDashboard({ results }: Props) {
         </Card>
       </div>
 
-      <ObjectiveEncart averageFootprintTCO2e={filtered.averageFootprintTCO2e} />
-
       <section className="mb2">
         <Typography variant="h6" className="mb1">
           {t('filter.title')}
@@ -103,6 +102,8 @@ export default function ResultsDashboard({ results }: Props) {
           ))}
         </div>
       </section>
+
+      <ObjectiveEncart averageFootprintTCO2e={filtered.averageFootprintTCO2e} />
 
       <section className="mb2">
         <Typography variant="h6" className="mb1">
@@ -142,6 +143,8 @@ export default function ResultsDashboard({ results }: Props) {
           </CardContent>
         </Card>
       </section>
+
+      <CollectiveEffortEncart />
 
       <div className="flex gapped1">
         <Button variant="outlined" startIcon={<Print />} onClick={handlePrint}>
