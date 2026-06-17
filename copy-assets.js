@@ -28,7 +28,7 @@ function copyAssets(src, dest) {
       return Promise.all(promises)
     })
     .catch((err) => {
-      console.error(`Error: ${err}`)
+      console.error(`${redCross} Failed to copy assets: ${err}`)
       throw err
     })
 }
@@ -46,8 +46,8 @@ async function main() {
   try {
     await fs.access(i18nSrcPath)
     copyPromises.push(copyAssets(i18nSrcPath, i18nDestPath))
-  } catch {
-    // Some apps do not expose i18n translations from src/i18n/translations.
+  } catch (err) {
+    console.error(`${redCross} Failed to access i18n translations at ${i18nSrcPath}: ${err}`)
   }
 
   await Promise.all(copyPromises)
