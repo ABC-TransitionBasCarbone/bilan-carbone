@@ -22,8 +22,10 @@
   },
   "devDependencies": {
     "@publicodes/tools": "^1.10.2",
-    "vitest": "^4.1.6"
+    "vitest": "^4.1.9"
   },
   "resolutions": {
+    "esbuild": "^0.28.1",
+    "postcss": "^8.5.14"
   }
 }
