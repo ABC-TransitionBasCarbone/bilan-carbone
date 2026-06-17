@@ -33,7 +33,9 @@ export default function ObjectiveEncart({ averageFootprintTCO2e }: Props) {
       footprintValue={averageFootprintTCO2e.toFixed(1).replace('.', ',')}
       unit={t('unit')}
       aboveTargetMessage={aboveTarget ? t('aboveTarget', { target: TARGET_2030_T }) : undefined}
-      paceTitle={aboveTarget && yearlyReductionKg > 0 ? t('paceTitle', { target: TARGET_2030_T, year: TARGET_YEAR }) : undefined}
+      paceTitle={
+        aboveTarget && yearlyReductionKg > 0 ? t('paceTitle', { target: TARGET_2030_T, year: TARGET_YEAR }) : undefined
+      }
       paceValue={aboveTarget && yearlyReductionKg > 0 ? yearlyReductionKg.toLocaleString('fr-FR') : undefined}
       paceUnit={aboveTarget && yearlyReductionKg > 0 ? t('paceUnit') : undefined}
       chart={<TrajectoryChart currentValue={averageFootprintTCO2e} />}

@@ -1,6 +1,7 @@
 'use client'
 
 import { Box, Typography } from '@mui/material'
+import { ReactNode } from 'react'
 import styles from './CollectiveEffortEncart.module.css'
 
 export type CollectiveEffortTone = 'state' | 'collectivities' | 'companies'
@@ -8,7 +9,7 @@ export type CollectiveEffortTone = 'state' | 'collectivities' | 'companies'
 export interface CollectiveEffortEncartItem {
   key: string
   label: string
-  description: string
+  description: ReactNode
   tone: CollectiveEffortTone
 }
 

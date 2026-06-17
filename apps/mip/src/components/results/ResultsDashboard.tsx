@@ -1,7 +1,7 @@
 'use client'
-import BarChart from '@/components/study/charts/BarChart'
 import CollectiveEffortEncart from '@/components/results/CollectiveEffortEncart'
 import ObjectiveEncart from '@/components/results/ObjectiveEncart'
+import BarChart from '@/components/study/charts/BarChart'
 import PieChart from '@/components/study/charts/PieChart'
 import { getResultsForEntity, KeyStatGroup, SurveyResults } from '@/data/sampleResults'
 import { BaseStyledChip } from '@abc-transitionbascarbone/ui'
