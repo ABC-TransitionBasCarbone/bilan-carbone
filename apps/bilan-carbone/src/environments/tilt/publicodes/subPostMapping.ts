@@ -51,7 +51,6 @@ const SUBPOST_TO_RULENAME: Partial<Record<SubPost, TiltRuleName>> = {
   DeplacementsDesBeneficiaires: 'déplacements . bénéficiaires',
   DeplacementsFabricationDesVehicules: 'déplacements . fabrication',
   Fret: 'fret . transport',
-  MetauxPlastiquesEtVerre: 'intrants-biens-et-matières . ratios monétaires',
   BienMatieres: 'intrants-biens-et-matières . ratios monétaires',
   RepasPrisParLesSalaries: 'alimentation . salariés',
   RepasPrisParLesBenevoles: 'alimentation . bénévoles',
@@ -59,10 +58,9 @@ const SUBPOST_TO_RULENAME: Partial<Record<SubPost, TiltRuleName>> = {
   UsagesNumeriques: 'intrants-services . numérique',
   ServicesEnApprocheMonetaire: 'intrants-services . services',
   EquipementsDesSalaries: 'équipements et immobilisations',
-  UtilisationEnResponsabiliteConsommationDEnergie: 'utilisation . responsabilite conso energie',
   ConsommationsEnergieUtilisationProduits: 'utilisation . responsabilite conso energie',
-  TraitementDesDechetsEnFinDeVie: 'fin de vie . déchets',
-  TeletravailSalaries: 'télétravail',
+  FinDeVieProduitsVendusFournisBeneficiaires: 'fin de vie . déchets',
+  TeletravailSalariesBenevoles: 'télétravail',
 } as const
 
 const input = (rule: TiltRuleName): FormLayout<TiltRuleName> => inputLayout<TiltRuleName>(rule)
@@ -100,7 +98,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('énergie . électricité . autoproduction . autoproduction'),
   ],
   FroidEtClim: [input('froid et clim . nombre')],
-  DechetsDEmballagesEtPlastiques: [
+  DechetsEmisParLOrganisation: [
     table(
       'DechetsDirects.question',
       ['DechetsDirects.typeDéchets', 'DechetsDirects.poids'],
@@ -124,20 +122,11 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
       ],
     ),
   ],
-  TraitementDesDechetsEnFinDeVie: [
+  FinDeVieProduitsVendusFournisBeneficiaires: [
     input('fin de vie . déchets . fin de vie présente'),
     input('fin de vie . déchets . poids'),
   ],
   ConsommationsEnergieUtilisationProduits: [
-    input('utilisation . responsabilite conso energie . élec présente'),
-    input('utilisation . responsabilite conso energie . élec . conso'),
-    input('utilisation . responsabilite conso energie . fossiles présents'),
-    input('utilisation . responsabilite conso energie . fioul . conso'),
-    input('utilisation . responsabilite conso energie . essence . conso'),
-    input('utilisation . responsabilite conso energie . gazole . conso'),
-    input('utilisation . responsabilite conso energie . gaz naturel . conso'),
-  ],
-  UtilisationEnResponsabiliteConsommationDEnergie: [
     input('utilisation . responsabilite conso energie . élec présente'),
     input('utilisation . responsabilite conso energie . élec . conso'),
     input('utilisation . responsabilite conso energie . fossiles présents'),
@@ -305,51 +294,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
       ],
     ),
   ],
-  MetauxPlastiquesEtVerre: [
-    table(
-      'IntrantsBiensEtMatieresTilt.question',
-      ['IntrantsBiensEtMatieresTilt.typeBien', 'IntrantsBiensEtMatieresTilt.montantDepense'],
-      [
-        [
-          'intrants-biens-et-matières . ratios monétaires . petites-fournitures',
-          'intrants-biens-et-matières . ratios monétaires . petites-fournitures . nombre',
-        ],
-        [
-          'intrants-biens-et-matières . ratios monétaires . meubles',
-          'intrants-biens-et-matières . ratios monétaires . meubles . nombre',
-        ],
-        [
-          'intrants-biens-et-matières . ratios monétaires . machines-équipements',
-          'intrants-biens-et-matières . ratios monétaires . machines-équipements . nombre',
-        ],
-        [
-          'intrants-biens-et-matières . ratios monétaires . textiles',
-          'intrants-biens-et-matières . ratios monétaires . textiles . nombre',
-        ],
-        [
-          'intrants-biens-et-matières . ratios monétaires . produits-pharmaceutiques',
-          'intrants-biens-et-matières . ratios monétaires . produits-pharmaceutiques . nombre',
-        ],
-        [
-          'intrants-biens-et-matières . ratios monétaires . produits-chimiques',
-          'intrants-biens-et-matières . ratios monétaires . produits-chimiques . nombre',
-        ],
-        [
-          'intrants-biens-et-matières . ratios monétaires . papier-carton',
-          'intrants-biens-et-matières . ratios monétaires . papier-carton . nombre',
-        ],
-        [
-          'intrants-biens-et-matières . ratios monétaires . produits-métalliques',
-          'intrants-biens-et-matières . ratios monétaires . produits-métalliques . nombre',
-        ],
-        [
-          'intrants-biens-et-matières . ratios monétaires . autres-produits-manufacturés',
-          'intrants-biens-et-matières . ratios monétaires . autres-produits-manufacturés . nombre',
-        ],
-      ],
-    ),
-  ],
-  Entrant: [
+  Fret: [
     input('fret . transport . présent'),
     input('fret . transport . VUL . nombre'),
     input('fret . transport . PL . nombre'),
@@ -466,42 +411,6 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
       ],
     ),
   ],
-  DeplacementsDomicileTravailBenevoles: [
-    input('déplacements . DT-bénévoles . avec . distance'),
-    input('déplacements . DT-bénévoles . avec . réponse MEP'),
-    table(
-      'DeplacementsDomicileTravailBenevoles.question',
-      ['DeplacementsDomicileTravailBenevoles.ModeTransport', 'DeplacementsDomicileTravailBenevoles.TauxTransport'],
-      [
-        ['déplacements . DT-bénévoles . sans . part voiture', 'déplacements . DT-bénévoles . sans . part voiture'],
-        ['déplacements . DT-bénévoles . sans . part train', 'déplacements . DT-bénévoles . sans . part train'],
-        [
-          'déplacements . DT-bénévoles . sans . part deux roues',
-          'déplacements . DT-bénévoles . sans . part deux roues',
-        ],
-        [
-          'déplacements . DT-bénévoles . sans . part transport en commun',
-          'déplacements . DT-bénévoles . sans . part transport en commun',
-        ],
-      ],
-    ),
-    table(
-      'DeplacementsDomicileTravailBenevoles.question2',
-      ['DeplacementsDomicileTravailBenevoles.ModeTransport2', 'DeplacementsDomicileTravailBenevoles.DistanceMoyenne'],
-      [
-        ['déplacements . DT-bénévoles . sans . voiture', 'déplacements . DT-bénévoles . sans . voiture . distance'],
-        ['déplacements . DT-bénévoles . sans . train', 'déplacements . DT-bénévoles . sans . train . distance'],
-        [
-          'déplacements . DT-bénévoles . sans . deux roues',
-          'déplacements . DT-bénévoles . sans . deux roues . distance',
-        ],
-        [
-          'déplacements . DT-bénévoles . sans . transports en commun',
-          'déplacements . DT-bénévoles . sans . transports en commun . distance',
-        ],
-      ],
-    ),
-  ],
   DeplacementsDansLeCadreDUneMissionAssociativeSalaries: [
     input('déplacements . DM-salariés . avec . émissions MEP . voiture'),
     input('déplacements . DM-salariés . avec . émissions MEP . train'),
@@ -576,5 +485,5 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     ),
   ],
   DeplacementsFabricationDesVehicules: [input('déplacements . fabrication . voitures . nombre')],
-  TeletravailSalaries: [input('télétravail . salariés . j'), input('télétravail . bénévoles . h')],
+  TeletravailSalariesBenevoles: [input('télétravail . salariés . j'), input('télétravail . bénévoles . h')],
 } as const
