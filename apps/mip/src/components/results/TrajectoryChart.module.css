@@ -1,70 +1,10 @@
 .wrapper {
   background-color: #eef1f8;
   border-radius: 0.75rem;
+  width: 100%;
   padding: 0.5rem;
+}
+
+.chart {
   width: 100%;
-}
-
-.svg {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-.line {
-  stroke: #d6006c;
-  stroke-width: 3;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.arrow {
-  stroke: #d6006c;
-  stroke-width: 3;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.dot {
-  fill: #d6006c;
-}
-
-.firstLabel {
-  font-size: 11px;
-  fill: #d6006c;
-  font-weight: 600;
-  font-family: gilroy-regular, sans-serif;
-}
-
-.currentValue {
-  font-size: 22px;
-  fill: #272768;
-  font-weight: 700;
-  font-family: gilroy-regular, sans-serif;
-}
-
-.yearLabel {
-  font-size: 11px;
-  fill: #666;
-  font-family: gilroy-regular, sans-serif;
-}
-
-.valueLabel {
-  font-size: 18px;
-  fill: #272768;
-  font-weight: 700;
-  font-family: gilroy-regular, sans-serif;
-}
-
-.lastYearLabel {
-  font-size: 11px;
-  fill: #666;
-  font-family: gilroy-regular, sans-serif;
-}
-
-.lastValueLabel {
-  font-size: 18px;
-  fill: #272768;
-  font-weight: 700;
-  font-family: gilroy-regular, sans-serif;
 }

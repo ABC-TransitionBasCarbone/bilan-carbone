@@ -1,7 +1,8 @@
 'use client'
+
+import { ObjectiveEncart as UiObjectiveEncart } from '@abc-transitionbascarbone/ui'
 import { useTranslations } from 'next-intl'
 import TrajectoryChart from './TrajectoryChart'
-import styles from './ObjectiveEncart.module.css'
 
 const TARGET_2030_T = 7
 const TARGET_2050_T = 2
@@ -25,40 +26,17 @@ export default function ObjectiveEncart({ averageFootprintTCO2e }: Props) {
   const aboveTarget = averageFootprintTCO2e > TARGET_2030_T
 
   return (
-    <div className={styles.encart}>
-      <div className={styles.header}>
-        <span className={styles.targetBadge}>
-          {t('nationalTarget', { value: TARGET_2050_T })}
-        </span>
-        <p className={styles.headerDescription}>{t('nationalTargetDescription')}</p>
-      </div>
-
-      <div className={styles.body}>
-        <div className={styles.userSection}>
-          <p className={styles.youLabel}>{t('you')}</p>
-          <p className={styles.footprintValue}>
-            {averageFootprintTCO2e.toFixed(1).replace('.', ',')}
-            <span className={styles.footprintUnit}> {t('unit')}</span>
-          </p>
-          {aboveTarget && (
-            <p className={styles.contextMessage}>{t('aboveTarget', { target: TARGET_2030_T })}</p>
-          )}
-
-          {aboveTarget && yearlyReductionKg > 0 && (
-            <div className={styles.paceBox}>
-              <p className={styles.paceTitle}>{t('paceTitle', { target: TARGET_2030_T, year: TARGET_YEAR })}</p>
-              <p className={styles.paceValue}>
-                {yearlyReductionKg.toLocaleString('fr-FR')}
-                <span className={styles.paceUnit}> {t('paceUnit')}</span>
-              </p>
-            </div>
-          )}
-        </div>
-
-        <div className={styles.chartSection}>
-          <TrajectoryChart currentValue={averageFootprintTCO2e} />
-        </div>
-      </div>
-    </div>
+    <UiObjectiveEncart
+      nationalTarget={t('nationalTarget', { value: TARGET_2050_T })}
+      nationalTargetDescription={t('nationalTargetDescription')}
+      youLabel={t('you')}
+      footprintValue={averageFootprintTCO2e.toFixed(1).replace('.', ',')}
+      unit={t('unit')}
+      aboveTargetMessage={aboveTarget ? t('aboveTarget', { target: TARGET_2030_T }) : undefined}
+      paceTitle={aboveTarget && yearlyReductionKg > 0 ? t('paceTitle', { target: TARGET_2030_T, year: TARGET_YEAR }) : undefined}
+      paceValue={aboveTarget && yearlyReductionKg > 0 ? yearlyReductionKg.toLocaleString('fr-FR') : undefined}
+      paceUnit={aboveTarget && yearlyReductionKg > 0 ? t('paceUnit') : undefined}
+      chart={<TrajectoryChart currentValue={averageFootprintTCO2e} />}
+    />
   )
 }
