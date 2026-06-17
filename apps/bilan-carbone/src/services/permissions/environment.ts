@@ -28,6 +28,7 @@ export const hasAccessToStudyFlowExample = isAdvanced
 export const hasWasteImpact = isAdvanced
 
 export const hasAccessToBcExport = isTilt
+export const hasAccessToSimplifiedBcExport = isCut
 
 export const hasAccessToDependencyMatrix = isTilt
 

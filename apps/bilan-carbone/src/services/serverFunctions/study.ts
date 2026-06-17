@@ -142,7 +142,7 @@ import { customDataToSituationByEnvironment, TiltCustomDataFields } from '../cus
 import { getCaracterisationsBySubPost } from '../emissionSource'
 import { allowedFlowFileTypes, isAllowedFileType } from '../file'
 import { ALREADY_IN_STUDY, NOT_AUTHORIZED, TOO_MANY_COMMENTS } from '../permissions/check'
-import { hasReaderRoleOnStudyAsContributor } from '../permissions/environment'
+import { hasReaderRoleOnStudyAsContributor, isClickson } from '../permissions/environment'
 import { hasAccessToEngagementActions, isTiltSimplified } from '../permissions/environmentAdvanced'
 import { isInOrgaOrParentFromId } from '../permissions/organization'
 import {
@@ -314,7 +314,7 @@ export const createStudyCommand = async (
       createdBy: { connect: { id: session.user.accountId } },
       organizationVersion: { connect: { id: organizationVersionId } },
       isPublic: isPublic === 'true',
-      resultsUnit: resultsUnit || StudyResultUnit.T,
+      resultsUnit: isClickson(session.user.environment) ? StudyResultUnit.T : resultsUnit || StudyResultUnit.T,
       allowedUsers: {
         createMany: { data: rights },
       },
