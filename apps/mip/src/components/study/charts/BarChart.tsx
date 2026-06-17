@@ -12,7 +12,6 @@ export type BarChartItem = {
 interface Props {
   items: BarChartItem[]
   unit?: string
-  targetValue?: number
   targetLabel?: string
   title?: string
   height?: number
@@ -25,7 +24,6 @@ interface Props {
 const BarChart = ({
   items,
   unit = 'tCO₂e',
-  targetValue,
   targetLabel,
   title,
   height = 400,
