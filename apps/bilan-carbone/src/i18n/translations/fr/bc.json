@@ -1563,7 +1563,7 @@
     "invalidPost": "Poste invalide : \"{value}\"",
     "invalidSubPost": "Sous-poste invalide : \"{value}\"",
     "missingSubPosts": "Sous-poste(s) manquant(s) pour le poste \"{value}\"",
-    "missingBase": "Approche scope 2 (GHG Protocol) manquante pour le sous-poste Électricité",
+    "invalidBase": "Approche scope 2 (GHG Protocol) invalide pour le sous-poste Électricité : \"{value}\". Valeurs acceptées : Location-based, Market-based",
     "incompatibleSubPosts": "Sous-poste(s) incompatible(s) avec leur poste : {value}",
     "validationError": "Erreur de validation sur le champ \"{value}\"",
     "noRows": "Le fichier ne contient aucune donnée à importer",

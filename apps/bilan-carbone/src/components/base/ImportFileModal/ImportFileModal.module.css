@@ -41,6 +41,10 @@
   border-radius: 0.25rem;
 }
 
+.tableWrapper thead th {
+  background-color: var(--mui-palette-background-paper) !important;
+}
+
 .cellName {
   max-width: 16rem;
 }

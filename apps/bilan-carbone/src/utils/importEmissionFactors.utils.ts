@@ -264,6 +264,7 @@ export function parseImportFile(buffer: Buffer, locale: LocaleType, environment:
     const completeness = parseQuality('completeness', 'invalidCompleteness', row, locale, rowErrors)
 
     const rawPostsAndSubPosts = String(row[COLUMNS.postsAndSubPosts] ?? '').trim()
+    const normalizedPostsAndSubPosts = rawPostsAndSubPosts || getAllPostsLabel(locale)
     const parsedPosts = parsePostsAndSubPostsCell(rawPostsAndSubPosts, locale, environment)
 
     if (!parsedPosts.success) {
@@ -283,10 +284,10 @@ export function parseImportFile(buffer: Buffer, locale: LocaleType, environment:
     }
 
     const rawBase = String(row[COLUMNS.base] ?? '').trim()
-    const base = matchBaseLabelFromTranslations(rawBase, locale)
+    const base = matchBaseLabelFromTranslations(rawBase, locale) ?? (rawBase ? null : EmissionFactorBase.LocationBased)
 
-    if (flatSubPosts.includes(SubPost.Electricite) && !base) {
-      rowErrors.push({ key: 'missingBase', value: rawBase || undefined })
+    if (flatSubPosts.includes(SubPost.Electricite) && rawBase && !base) {
+      rowErrors.push({ key: 'invalidBase', value: rawBase })
     }
 
     if (rowErrors.length > 0) {
@@ -339,7 +340,7 @@ export function parseImportFile(buffer: Buffer, locale: LocaleType, environment:
       continue
     }
 
-    parsedRows.push({ ...validation.data, rawPostsAndSubPosts, rawUnit } as ParsedRow)
+    parsedRows.push({ ...validation.data, rawPostsAndSubPosts: normalizedPostsAndSubPosts, rawUnit } as ParsedRow)
   }
 
   if (errors.length > 0) {
