@@ -14,6 +14,7 @@ import styles from './ObjectivesTable.module.css'
 
 export type ObjectiveRow = {
   id: string
+  name?: string | null
   period: string
   reductionRate: number
   correctedRate?: number

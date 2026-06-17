@@ -157,6 +157,7 @@ const ObjectivesExpandedRow = ({
 
     return {
       id: objective.id,
+      name: objective.name,
       period: getPeriod(prevYear, objective.targetYear),
       reductionRate: objective.reductionRate,
       correctedRate,

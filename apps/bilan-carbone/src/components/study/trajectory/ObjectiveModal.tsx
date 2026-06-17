@@ -71,11 +71,10 @@ const ObjectiveModal = ({
         ],
       }
     : {
-        name: '',
         siteIds: allSiteIds,
         tagIds: allTagIds,
         subPosts: allEnvSubPosts,
-        objectives: [{ startYear: '', targetYear: '', reductionRate: 0 }],
+        objectives: [{ name: '', startYear: '', targetYear: '', reductionRate: 0 }],
       }
 
   const { control, handleSubmit, watch, reset, setValue, formState } = useForm<ObjectiveModalFormData>({

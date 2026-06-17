@@ -85,7 +85,10 @@ interface Props {
 }
 
 const fuseOptions = {
-  keys: [{ name: 'name', weight: 1 }],
+  keys: [
+    { name: 'name', weight: 1 },
+    { name: 'objectives.name', weight: 0.5 },
+  ],
   ...DEFAULT_FUZZY_OPTIONS,
 }
 
