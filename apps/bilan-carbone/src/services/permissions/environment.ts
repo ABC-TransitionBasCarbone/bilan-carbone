@@ -26,7 +26,6 @@ export const hasAccessToStudyFlowExample = isAdvanced
 export const hasWasteImpact = isAdvanced
 
 export const hasAccessToBcExport = isTilt
-export const hasAccessToSimplifiedBcExport = isCut
 
 export const hasAccessToDependencyMatrix = isTilt
 
@@ -118,7 +117,7 @@ export const hasAccessToPDFExport = (environment: Environment) =>
 export const hasAccessToFeedbackButton = isTilt
 
 export const hasBCExportWithSimplifiedStudy = (environment: Environment) => {
-  return environment === Environment.CUT || environment === Environment.CLICKSON
+  return environment === Environment.CUT
 }
 
 const environmentWithSimplifiedStudies = [Environment.CUT, Environment.CLICKSON, Environment.TILT] as const

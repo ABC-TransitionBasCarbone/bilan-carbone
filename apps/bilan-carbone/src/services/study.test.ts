@@ -237,7 +237,7 @@ describe('Study Service', () => {
       return prepareExcelMock.mock.calls[0][0]
     }
 
-    it('adds "(tCO2e)" to clickson exported value header', () => {
+    it('adds "(tCO2e)" to clickson exported value header in column C (index 2)', () => {
       const data = formatComputedResultsForExport(
         getMockeFullStudy({ resultsUnit: StudyResultUnit.T }),
         [{ name: 'Tous les sites', siteId: 'all', studySiteId: 'all' }],
@@ -248,10 +248,10 @@ describe('Study Service', () => {
         Environment.CLICKSON,
       )
 
-      expect(data.data[1][3]).toBe('Valeur (tCO2e)')
+      expect(data.data[1][2]).toBe('Valeur (tCO2e)')
     })
 
-    it('keeps dynamic unit translation for non-clickson exports', () => {
+    it('does not add unit to value header for non-clickson exports (CUT)', () => {
       const data = formatComputedResultsForExport(
         getMockeFullStudy({ resultsUnit: StudyResultUnit.K }),
         [{ name: 'Tous les sites', siteId: 'all', studySiteId: 'all' }],
@@ -262,7 +262,7 @@ describe('Study Service', () => {
         Environment.CUT,
       )
 
-      expect(data.data[1][2]).toBe('Valeur (kgCO2e)')
+      expect(data.data[1][2]).toBe('Valeur')
     })
 
     it('does not include "Export au format Bilan Carbone®" sheet for CLICKSON', async () => {

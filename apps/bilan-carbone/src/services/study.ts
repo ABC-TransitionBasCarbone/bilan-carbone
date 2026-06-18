@@ -34,7 +34,7 @@ import type { ResultType } from '../types/study.types'
 import { AdditionalResultTypes, BaseResultsBySite, ResultsByPost } from '../types/study.types'
 import { getEmissionResults, getEmissionSourceEmission } from './emissionSource'
 import { download } from './file'
-import { hasAccessToBcExport, hasAccessToSimplifiedBcExport } from './permissions/environment'
+import { hasAccessToBcExport, hasBCExportWithSimplifiedStudy } from './permissions/environment'
 import { isTiltSimplified } from './permissions/environmentAdvanced'
 import {
   BaseResultsByPost,
@@ -330,6 +330,7 @@ export const downloadStudyEmissionSources = async (
 const getHeadersForEnv = (environment: Environment) => {
   switch (environment) {
     case Environment.CUT:
+    case Environment.CLICKSON:
       return resultsExportHeadersSimplified
     case Environment.BC:
     default:
@@ -344,7 +345,9 @@ const getFormattedHeadersForEnv = (
 ) => {
   const headers = getHeadersForEnv(environment)
 
-  return headers.map((header) => (header !== 'value' ? tStudy(header) : tStudy(header, { unit: tUnits(unit) })))
+  return headers.map((header) =>
+    header === 'value' && environment === Environment.CLICKSON ? `${tStudy(header)} (${tUnits(unit)})` : tStudy(header),
+  )
 }
 
 const getFormattedSimplifiedHeaders = (tStudy: Translations, tUnits: Translations, unit: StudyResultUnit) =>
@@ -898,7 +901,7 @@ export const downloadStudyResults = async (
     )
   }
 
-  if (hasAccessToSimplifiedBcExport(environment) && resultsBySite) {
+  if (hasBCExportWithSimplifiedStudy(environment) && resultsBySite) {
     data.push(formatBaseResultsToBCExport(study, siteList, resultsBySite, tExport, tPost))
   }
 
