@@ -32,3 +32,32 @@ export const updateModelCampaign = async ({ modelCampaigns }: UpdateModelCampaig
     }),
   ])
 }
+
+export const getModelCampaignById = (id: string) => {
+  return prismaClient.modelCampaign.findFirst({
+    where: { id },
+    select: { name: true, id: true, organizationVersionMip: { select: { id: true } } },
+  })
+}
+
+export const addOrganizationVersionMipIdToModelCampaign = async (
+  modelCampaignId: string,
+  organizationVersionMipId: string,
+) => {
+  const org = await prismaClient.organizationVersionMip.findUnique({
+    where: { id: organizationVersionMipId },
+  })
+
+  if (!org) {
+    throw new Error('OrganizationVersionMip not found')
+  }
+
+  return prismaClient.modelCampaign.update({
+    where: { id: modelCampaignId },
+    data: {
+      organizationVersionMip: {
+        connect: { id: organizationVersionMipId },
+      },
+    },
+  })
+}
