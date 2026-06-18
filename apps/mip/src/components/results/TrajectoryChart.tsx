@@ -40,7 +40,7 @@ export default function TrajectoryChart({ currentValue }: { currentValue: number
         ]}
         height={240}
         margin={{ top: 20, bottom: 40, left: 40, right: 20 }}
-        slotProps={{ legend: { hidden: true } }}
+        hideLegend
       />
     </div>
   )
