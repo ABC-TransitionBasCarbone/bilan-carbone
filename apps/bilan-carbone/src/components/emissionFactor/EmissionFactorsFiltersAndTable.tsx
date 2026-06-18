@@ -48,7 +48,7 @@ const EmissionFactorsFiltersAndTable = ({
 
   const [action, setAction] = useState<'edit' | 'delete' | undefined>(undefined)
   const [targetedEmission, setTargetedEmission] = useState('')
-  const [refreshKey, setRefreshKey] = useState(0)
+  const [refreshKey, setRefreshKey] = useState(Date.now())
   const [emissionFactors, setEmissionFactors] = useState<EmissionFactorList[]>([])
   const [hasGHGPExport, setHasGHGPExport] = useState(false)
   const [skip, setSkip] = useState(0)
@@ -199,7 +199,7 @@ const EmissionFactorsFiltersAndTable = ({
         emissionFactorId={targetedEmission}
         action={action}
         setAction={setAction}
-        onDelete={() => setRefreshKey((k) => k + 1)}
+        onDelete={() => setRefreshKey(Date.now())}
       />
     </>
   )
