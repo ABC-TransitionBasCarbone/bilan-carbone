@@ -1,8 +1,6 @@
 import { FeFilters } from '@/types/filters'
 import { ReadonlyURLSearchParams } from 'next/navigation'
 
-const SUBPOSTS_NONE_SENTINEL = 'none'
-
 export function convertFiltersToSearchParams(filters: FeFilters): URLSearchParams {
   const params = new URLSearchParams()
 
@@ -17,7 +15,7 @@ export function convertFiltersToSearchParams(filters: FeFilters): URLSearchParam
   filters.units.forEach((v) => params.append('units', v as string))
   if (!(filters.subPosts.length === 1 && filters.subPosts[0] === 'all')) {
     if (filters.subPosts.length === 0) {
-      params.set('subPosts', SUBPOSTS_NONE_SENTINEL)
+      params.set('subPosts', 'none')
     } else {
       filters.subPosts.forEach((v) => params.append('subPosts', v as string))
     }
@@ -40,7 +38,7 @@ export function convertSearchParamsToFilters(
   let subPosts: FeFilters['subPosts']
   if (!params.has('subPosts')) {
     subPosts = ['all']
-  } else if (subPostsFromUrl[0] === SUBPOSTS_NONE_SENTINEL) {
+  } else if (subPostsFromUrl[0] === 'none') {
     subPosts = []
   } else {
     subPosts = subPostsFromUrl as FeFilters['subPosts']
