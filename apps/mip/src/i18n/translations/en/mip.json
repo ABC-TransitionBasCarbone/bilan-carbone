@@ -35,6 +35,7 @@
     "uploadJson": "Upload JSON file",
     "json": "JSON",
     "add": "Add new model",
-    "edit": "Save changes"
+    "edit": "Save changes",
+    "success": "Models changed successfully"
   }
 }

@@ -35,6 +35,7 @@
     "uploadJson": "Charger un fichier JSON",
     "json": "JSON",
     "add": "Ajouter un nouveau modèle",
-    "edit": "Valider la modification"
+    "edit": "Valider la modification",
+    "success": "Les modèles ont été modifié avec succès"
   }
 }

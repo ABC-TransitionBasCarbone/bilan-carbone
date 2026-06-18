@@ -14,7 +14,7 @@ import LoadingButton from '@abc-transitionbascarbone/components/src/base/Loading
 import { TableActionButton } from '@abc-transitionbascarbone/components/src/base/TableActionButton'
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
-import { Button } from '@abc-transitionbascarbone/ui'
+import { Button, useToast } from '@abc-transitionbascarbone/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import DownloadIcon from '@mui/icons-material/Download'
 import UploadIcon from '@mui/icons-material/Upload'
@@ -32,6 +32,7 @@ interface Props {
 const SuperAdminPage = ({ modelCampaigns }: Props) => {
   const t = useTranslations('models')
   const router = useRouter()
+  const { showSuccessToast, showErrorToast } = useToast()
 
   const form = useForm<UpdateModelCampaignCommand>({
     resolver: zodResolver(UpdateModelCampaignCommandValidation),
@@ -55,7 +56,9 @@ const SuperAdminPage = ({ modelCampaigns }: Props) => {
 
     input.onchange = async (e) => {
       const file = (e.target as HTMLInputElement).files?.[0]
-      if (!file) return
+      if (!file) {
+        return
+      }
 
       try {
         const text = await file.text()
@@ -66,7 +69,7 @@ const SuperAdminPage = ({ modelCampaigns }: Props) => {
         })
       } catch (err) {
         console.error('Invalid JSON file', err)
-        alert('Invalid JSON file')
+        showErrorToast('Invalid JSON file')
       }
     }
 
@@ -76,6 +79,7 @@ const SuperAdminPage = ({ modelCampaigns }: Props) => {
   const onSubmit = async (command: UpdateModelCampaignCommand) => {
     await callServerFunction(() => updateModelCampaignCommand(command), {
       onSuccess: () => {
+        showSuccessToast(t('success'))
         router.refresh()
       },
     })
@@ -154,6 +158,7 @@ const SuperAdminPage = ({ modelCampaigns }: Props) => {
           ),
         },
       ] as ColumnDef<UpdateModelCampaignCommand['modelCampaigns'][0]>[],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [control, t],
   )
 
