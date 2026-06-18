@@ -34,6 +34,7 @@
     "organizationName": "Nom de l'organisation liée",
     "uploadJson": "Charger un fichier JSON",
     "json": "JSON",
+    "add": "Ajouter un nouveau modèle",
     "edit": "Valider la modification"
   }
 }

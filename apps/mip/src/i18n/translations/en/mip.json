@@ -34,6 +34,7 @@
     "organizationName": "Name of the linked organization",
     "uploadJson": "Upload JSON file",
     "json": "JSON",
+    "add": "Add new model",
     "edit": "Save changes"
   }
 }
