@@ -1,6 +1,7 @@
 'use client'
 
 import { ModelCampaignsWithOrga } from '@/db/campaign'
+import { updateModelCampaignCommand } from '@/services/serverFunctions/campaign'
 import { UpdateModelCampaignCommand } from '@/services/serverFunctions/modelCampaign.command'
 import { Table as BaseTable } from '@abc-transitionbascarbone/components'
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
@@ -8,9 +9,12 @@ import Form from '@abc-transitionbascarbone/components/src/base/Form'
 import LinkButton from '@abc-transitionbascarbone/components/src/base/LinkButton'
 import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import DownloadIcon from '@mui/icons-material/Download'
+import UploadIcon from '@mui/icons-material/Upload'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
+import { useRouter } from 'next/navigation'
 import { Control, useForm } from 'react-hook-form'
 
 interface Props {
@@ -19,6 +23,7 @@ interface Props {
 
 const SuperAdminPage = ({ modelCampaigns }: Props) => {
   const t = useTranslations('models')
+  const router = useRouter()
 
   const form = useForm<UpdateModelCampaignCommand>({
     defaultValues: {
@@ -28,7 +33,40 @@ const SuperAdminPage = ({ modelCampaigns }: Props) => {
     },
   })
 
-  const onSubmit = async (command: UpdateModelCampaignCommand) => {}
+  const { callServerFunction } = useServerFunction()
+
+  const handleUploadJson = (rowIndex: number) => {
+    const input = document.createElement('input')
+    input.type = 'file'
+    input.accept = 'application/json'
+
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0]
+      if (!file) return
+
+      try {
+        const text = await file.text()
+        const json = JSON.parse(text)
+        form.setValue(`modelCampaigns.${rowIndex}.model`, json, {
+          shouldDirty: true,
+          shouldValidate: true,
+        })
+      } catch (err) {
+        console.error('Invalid JSON file', err)
+        alert('Invalid JSON file')
+      }
+    }
+
+    input.click()
+  }
+
+  const onSubmit = async (command: UpdateModelCampaignCommand) => {
+    await callServerFunction(() => updateModelCampaignCommand(command), {
+      onSuccess: () => {
+        router.refresh()
+      },
+    })
+  }
   const control = form?.control as Control<UpdateModelCampaignCommand>
 
   const columns = [
@@ -45,6 +83,15 @@ const SuperAdminPage = ({ modelCampaigns }: Props) => {
           placeholder={t('namePlaceholder')}
           fullWidth
         />
+      ),
+    },
+    {
+      id: 'upload',
+      header: () => t('uploadJson'),
+      cell: ({ row }) => (
+        <LinkButton onClick={() => handleUploadJson(row.index)}>
+          <UploadIcon />
+        </LinkButton>
       ),
     },
     {

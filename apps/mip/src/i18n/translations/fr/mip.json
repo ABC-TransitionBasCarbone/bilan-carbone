@@ -32,6 +32,7 @@
     "name": "Nom du modèle",
     "namePlaceholder": "Nom du modèle",
     "organizationName": "Nom de l'organisation liée",
+    "uploadJson": "Charger un fichier JSON",
     "json": "JSON",
     "edit": "Valider la modification"
   }
