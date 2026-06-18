@@ -28,6 +28,9 @@ const WarningItem = ({ w, lineNumber, t }: Props) => {
       resolvedValue: w.resolvedValue ?? '',
     })
   }
+  if (w.type === 'tagNotFound') {
+    warningMessage = t('warningTagNotFound', { tagName: w.searchedName ?? '' })
+  }
   if (warningMessage) {
     return (
       <ListItem disableGutters className={lineNumber !== null ? 'pl15' : undefined}>
