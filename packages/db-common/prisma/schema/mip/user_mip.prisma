@@ -17,6 +17,9 @@ model AccountMip {
   organizationVersionMip           OrganizationVersionMip?  @relation(fields: [organizationVersionMipId], references: [id])
   organizationVersionMipId         String?                  @map("organization_version_mip_id")
 
+  environment Environment @default(MIP)
+
+  @@unique([userId, environment])
   @@map("accounts_mip")
   @@schema("mip")
 }

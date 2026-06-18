@@ -1,4 +1,5 @@
 import { SUBPOSTS_PUBLICODE_FROM_ENV } from '@/environments/core/publicodes/subposts'
+import { BCEnvironment } from '@/types/environment'
 import { Environment, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { BCPost, ClicksonPost, CutPost, TiltPost } from './posts.enums'
 
@@ -238,10 +239,10 @@ export const convertTiltSubPostToBCSubPost = (subPost: SubPost): SubPost => {
   return subPostTiltToBcSubPostMapping[subPost] ?? subPost
 }
 
-export const getEnvPosts = (environment: Environment | null | undefined): Post[] =>
+export const getEnvPosts = (environment: BCEnvironment | null | undefined): Post[] =>
   environment ? Object.values(environmentPostMapping[environment]) : []
 
-export const getEnvSubPosts = (environment: Environment | null | undefined): SubPost[] =>
+export const getEnvSubPosts = (environment: BCEnvironment | null | undefined): SubPost[] =>
   environment ? Object.values(environmentSubPostsMapping[environment]).flat() : []
 
 const getSubPostBCToSubPostTiltMapping = (): Partial<Record<SubPost, SubPost[]>> => {

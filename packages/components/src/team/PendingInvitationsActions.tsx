@@ -1,7 +1,5 @@
 'use client'
 
-import { TeamMember } from '@/db/account'
-import { deleteMember, resendInvitation } from '@/services/serverFunctions/user'
 import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import classNames from 'classnames'
@@ -9,12 +7,14 @@ import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import styles from './InvitationsActions.module.css'
+import { ApiResponse } from '@abc-transitionbascarbone/utils/serverResponse'
 
 interface Props {
-  member: TeamMember
+  resendInvitation: () => Promise<ApiResponse>
+  deleteMember: () => Promise<ApiResponse>
 }
 
-const PendingInvitationsActions = ({ member }: Props) => {
+const PendingInvitationsActions = ({ resendInvitation, deleteMember }: Props) => {
   const t = useTranslations('team')
   const { callServerFunction } = useServerFunction()
   const [sending, setSending] = useState(false)
@@ -26,7 +26,7 @@ const PendingInvitationsActions = ({ member }: Props) => {
         loading={sending}
         onClick={async () => {
           setSending(true)
-          await callServerFunction(() => resendInvitation(member.user.email), {
+          await callServerFunction(() => resendInvitation(), {
             onSuccess: () => {
               router.refresh()
             },
@@ -40,7 +40,7 @@ const PendingInvitationsActions = ({ member }: Props) => {
         loading={deleting}
         onClick={async () => {
           setDeleting(true)
-          await callServerFunction(() => deleteMember(member.user.email), {
+          await callServerFunction(() => deleteMember(), {
             onSuccess: () => {
               router.refresh()
             },

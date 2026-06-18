@@ -1,9 +1,10 @@
+import { mockedOrganizationVersionMipId } from '@/tests/utils/models/organization'
 import { getMockedAuthUser, getMockedDbAccountMip, mockedAccountMipId } from '@/tests/utils/models/user'
 import { AccountMipWithUser } from '@/types/accountMip.types'
 import * as userUtils from '@/utils/user'
-import { RoleMip } from '@abc-transitionbascarbone/db-common/enums'
+import { RoleMip, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { expect } from '@jest/globals'
-import { canChangeRole } from './user'
+import { canAddMember, canChangeRole, canDeleteMember } from './user'
 
 jest.mock('@/utils/user', () => ({
   canEditMemberRole: jest.fn(),
@@ -97,6 +98,117 @@ describe('User permission functions', () => {
       )
       expect(trainedResult).toBe(true)
       expect(mockCanEditMemberRole).toHaveBeenCalledTimes(2)
+    })
+  })
+
+  describe('canAddMember', () => {
+    it('returns false if organizationVersionMipId is null', () => {
+      const result = canAddMember(adminUser, { role: RoleMip.ADMIN }, null)
+      expect(result).toBe(false)
+      expect(mockCanEditMemberRole).toHaveBeenCalledTimes(0)
+    })
+
+    it('returns true if user is SuperAdmin', () => {
+      mockCanEditMemberRole.mockReturnValue(true)
+      const result = canAddMember(
+        getMockedAuthUser({ role: RoleMip.SUPER_ADMIN }),
+        { role: RoleMip.COLLABORATOR },
+        mockedOrganizationVersionMipId,
+      )
+      expect(result).toBe(true)
+      expect(mockCanEditMemberRole).toHaveBeenCalledTimes(1)
+    })
+
+    it('returns true if user is Admin', () => {
+      mockCanEditMemberRole.mockReturnValue(true)
+      const result = canAddMember(
+        getMockedAuthUser({ role: RoleMip.ADMIN }),
+        { role: RoleMip.COLLABORATOR },
+        mockedOrganizationVersionMipId,
+      )
+      expect(result).toBe(true)
+    })
+
+    it('returns false if user is Collaborator', () => {
+      mockCanEditMemberRole.mockReturnValue(false)
+      const result = canAddMember(
+        getMockedAuthUser({ role: RoleMip.COLLABORATOR }),
+        { role: RoleMip.COLLABORATOR },
+        mockedOrganizationVersionMipId,
+      )
+      expect(result).toBe(false)
+      expect(mockCanEditMemberRole).toHaveBeenCalledTimes(1)
+    })
+
+    it('returns false if trying to add SUPER_ADMIN', () => {
+      mockCanEditMemberRole.mockReturnValue(true)
+      const result = canAddMember(adminUser, { role: RoleMip.SUPER_ADMIN }, mockedOrganizationVersionMipId)
+      expect(result).toBe(false)
+      expect(mockCanEditMemberRole).toHaveBeenCalledTimes(1)
+    })
+
+    it('returns false if user not from same organization', () => {
+      mockCanEditMemberRole.mockReturnValue(true)
+      const result = canAddMember(
+        getMockedAuthUser({ role: RoleMip.ADMIN, organizationVersionMipId: 'mocked-user-organization-id' }),
+        { role: RoleMip.COLLABORATOR },
+        mockedOrganizationVersionMipId,
+      )
+      expect(result).toBe(false)
+      expect(mockCanEditMemberRole).toHaveBeenCalledTimes(1)
+    })
+
+    it('returns true when has rights, target is not SUPER_ADMIN and organization matches', () => {
+      mockCanEditMemberRole.mockReturnValue(true)
+      const result = canAddMember(adminUser, { role: RoleMip.ADMIN }, mockedOrganizationVersionMipId)
+      expect(result).toBe(true)
+      expect(mockCanEditMemberRole).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('canDeleteMember', () => {
+    it('returns false if member is null', () => {
+      expect(canDeleteMember(adminUser, null)).toBe(false)
+      expect(mockCanEditMemberRole).toHaveBeenCalledTimes(0)
+    })
+
+    it('returns false if member is not from user organization', () => {
+      const result = canDeleteMember(
+        getMockedAuthUser({ role: RoleMip.ADMIN, organizationVersionMipId: 'mocked-user-organization-version-id' }),
+        getMockedDbAccountMip({ role: RoleMip.ADMIN }) as AccountMipWithUser,
+      )
+      expect(result).toBe(false)
+      expect(mockCanEditMemberRole).toHaveBeenCalledTimes(0)
+    })
+
+    it('returns true if user is SuperAdmin', () => {
+      mockCanEditMemberRole.mockReturnValue(true)
+      const result = canDeleteMember(
+        getMockedAuthUser({ role: RoleMip.SUPER_ADMIN }),
+        getMockedDbAccountMip({ status: UserStatus.IMPORTED }) as AccountMipWithUser,
+      )
+      expect(result).toBe(true)
+      expect(mockCanEditMemberRole).toHaveBeenCalledTimes(1)
+    })
+
+    it('returns true if user is Admin', () => {
+      mockCanEditMemberRole.mockReturnValue(true)
+      const result = canDeleteMember(
+        getMockedAuthUser({ role: RoleMip.ADMIN }),
+        getMockedDbAccountMip({ status: UserStatus.IMPORTED }) as AccountMipWithUser,
+      )
+      expect(result).toBe(true)
+      expect(mockCanEditMemberRole).toHaveBeenCalledTimes(1)
+    })
+
+    it('returns false if user is Collaborator', () => {
+      mockCanEditMemberRole.mockReturnValue(false)
+      const result = canDeleteMember(
+        getMockedAuthUser({ role: RoleMip.COLLABORATOR }),
+        getMockedDbAccountMip({ status: UserStatus.IMPORTED }) as AccountMipWithUser,
+      )
+      expect(result).toBe(false)
+      expect(mockCanEditMemberRole).toHaveBeenCalledTimes(1)
     })
   })
 })

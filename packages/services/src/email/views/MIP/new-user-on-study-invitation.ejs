@@ -1,0 +1,20 @@
+<html>
+  <%- include('../partials/style'); %>
+  <body>
+    <div>
+      <p>Bonjour,</p>
+      <br />
+      <p>Bienvenue sur le Mon Impact Pro !</p>
+      <p>
+        Vous avez été ajouté par <span><%= creatorName %></span> en tant que <span><%= role %></span> sur l'empreinte
+        <a href="<%= studyLink %>"><%= studyName %></a> pour l'enquête <span><%= organizationName %></span> sur Mon Impact Pro.
+      </p>
+      <p>
+        Pour avoir acces à l’empreinte, vous pouvez finaliser la création de votre compte sur
+        <a href="<%= link %>">ce lien</a>.
+      </p>
+      <br />
+      <%- include('./partials/signature'); %>
+    </div>
+  </body>
+</html>

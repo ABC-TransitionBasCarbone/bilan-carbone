@@ -1,0 +1,24 @@
+<html>
+    <%- include('../partials/style'); %>
+  <body>
+    <div>
+      <p>Bonjour,</p>
+      <br />
+      <span>
+        <ul>
+          <% results.forEach(function(result) { %>
+            <li>
+              <% for (const [key, value] of Object.entries(result)) { %>
+                <strong>
+                  <%= key %>:
+                </strong>
+                <%= value %><br />
+                  <% } %>
+            </li>
+            <% }); %>
+        </ul>
+      </span>
+      <br />
+    </div>
+  </body>
+</html>

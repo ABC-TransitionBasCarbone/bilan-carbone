@@ -1,9 +1,9 @@
 'use client'
 
 import ColorPicker from '@/components/base/ColorPicker'
-import { FormSelect } from '@/components/form/Select'
 import { StudyTagFamilyWithTags } from '@/db/study'
 import { CustomFormLabel } from '@abc-transitionbascarbone/components/src/form/CustomFormLabel'
+import { FormSelect } from '@abc-transitionbascarbone/components/src/form/Select'
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { Translations } from '@abc-transitionbascarbone/lib'
 import { MenuItem } from '@mui/material'

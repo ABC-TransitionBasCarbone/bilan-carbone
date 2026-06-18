@@ -1,9 +1,9 @@
+import { FormSelect } from '@abc-transitionbascarbone/components/src/form/Select'
 import { DayOfWeek } from '@abc-transitionbascarbone/db-common'
 import { Checkbox, FormControlLabel, MenuItem } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { Control, FieldPath, FieldValues } from 'react-hook-form'
 import styles from './Form.module.css'
-import { FormSelect } from './Select'
 
 interface Props<T extends FieldValues> {
   name: {

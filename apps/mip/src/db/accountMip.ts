@@ -50,3 +50,12 @@ export const updateAccountMip = (
       user: { update: { ...userData } },
     },
   })
+
+export const addAccountMip = async (
+  accountMip: Prisma.AccountMipCreateInput & { role: Exclude<RoleMip, 'SUPER_ADMIN'> },
+) => {
+  return prismaClient.accountMip.create({
+    data: accountMip,
+    select: AccountMipWithUserSelect,
+  })
+}
