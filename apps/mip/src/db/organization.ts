@@ -5,10 +5,10 @@ export const getOrgNameByOrgVersionMipId = async (id: string | null) => {
     return null
   }
 
-  const organizationVersion = await prismaClient.organizationVersion.findUnique({
+  const organizationVersionMip = await prismaClient.organizationVersionMip.findUnique({
     where: { id },
     select: { organization: { select: { name: true } } },
   })
 
-  return organizationVersion?.organization?.name
+  return organizationVersionMip?.organization?.name
 }
