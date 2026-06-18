@@ -18,23 +18,15 @@ const region = process.env.SCW_REGION
 
 const endpoint = `https://${bucketName}.s3.${region}.scw.cloud`
 
-let s3: S3Client | null = null
-
-const getS3Client = () => {
-  if (!s3) {
-    s3 = new S3Client({
-      credentials: {
-        accessKeyId: accessKey,
-        secretAccessKey: secretKey,
-      },
-      region,
-      endpoint,
-      forcePathStyle: true,
-    })
-  }
-
-  return s3
-}
+const s3 = new S3Client({
+  credentials: {
+    accessKeyId: accessKey,
+    secretAccessKey: secretKey,
+  },
+  region,
+  endpoint,
+  forcePathStyle: true,
+})
 
 export const uploadFileToBucket = async (file: File) =>
   withServerResponse('uploadFileToBucket', async () => {
@@ -49,30 +41,25 @@ export const uploadFileToBucket = async (file: File) =>
       ContentType: file.type,
     }
 
-    const data = await getS3Client().send(new PutObjectCommand(params))
+    const data = await s3.send(new PutObjectCommand(params))
     return { key: bucketFileKey, ETag: data.ETag || '' }
   })
 
 export const deleteFileFromBucket = async (fileKey: string) =>
   withServerResponse('deleteFileFromBucket', async () => {
-    return getS3Client().send(new DeleteObjectCommand({ Bucket: bucketName, Key: fileKey }))
+    return s3.send(new DeleteObjectCommand({ Bucket: bucketName, Key: fileKey }))
   })
 
 export const getFileUrlFromBucket = async (fileKey: string) =>
   withServerResponse('getFileUrlFromBucket', async () => {
     // Check if the file exists, otherwise throw an error
-    const client = getS3Client()
-    if (!client) {
-      console.error('[getFileUrlFromBucket] S3 client is null', { fileKey })
-      throw new Error('S3 client is not initialized')
-    }
-    await client.send(new HeadObjectCommand({ Bucket: bucketName, Key: fileKey }))
-    return getSignedUrl(client, new GetObjectCommand({ Bucket: bucketName, Key: fileKey }), { expiresIn: 3600 })
+    await s3.send(new HeadObjectCommand({ Bucket: bucketName, Key: fileKey }))
+    return getSignedUrl(s3, new GetObjectCommand({ Bucket: bucketName, Key: fileKey }), { expiresIn: 3600 })
   })
 
 export const getFileFromBucket = async (fileKey: string) =>
   withServerResponse('getFileFromBucket', async () => {
-    const response = await getS3Client().send(new GetObjectCommand({ Bucket: bucketName, Key: fileKey }))
+    const response = await s3.send(new GetObjectCommand({ Bucket: bucketName, Key: fileKey }))
     if (!response.Body) {
       throw new Error('No file content received')
     }
