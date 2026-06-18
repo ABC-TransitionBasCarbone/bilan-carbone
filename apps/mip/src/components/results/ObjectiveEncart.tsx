@@ -12,7 +12,9 @@ const YEARS_TO_TARGET = Math.max(1, TARGET_YEAR - CURRENT_YEAR)
 
 function computeYearlyReductionKg(currentTCO2e: number): number {
   const reductionT = currentTCO2e - TARGET_2030_T
-  if (reductionT <= 0) return 0
+  if (reductionT <= 0) {
+    return 0
+  }
   return Math.round((reductionT * 1000) / YEARS_TO_TARGET)
 }
 
