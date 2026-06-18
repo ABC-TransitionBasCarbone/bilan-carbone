@@ -11,6 +11,7 @@ import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import Form from '@abc-transitionbascarbone/components/src/base/Form'
 import LinkButton from '@abc-transitionbascarbone/components/src/base/LinkButton'
 import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
+import { TableActionButton } from '@abc-transitionbascarbone/components/src/base/TableActionButton'
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { Button } from '@abc-transitionbascarbone/ui'
@@ -21,7 +22,7 @@ import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useMemo } from 'react'
-import { Control, useForm, UseFormSetValue, useWatch } from 'react-hook-form'
+import { Control, useForm, UseFormGetValues, UseFormSetValue, useWatch } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
 
 interface Props {
@@ -41,6 +42,7 @@ const SuperAdminPage = ({ modelCampaigns }: Props) => {
     },
   })
   const setValue = form?.setValue as UseFormSetValue<UpdateModelCampaignCommand>
+  const getValues = form?.getValues as UseFormGetValues<UpdateModelCampaignCommand>
   const newModelCampaign = () =>
     ({ id: uuidv4(), name: '', model: '' }) as UpdateModelCampaignCommand['modelCampaigns'][0]
 
@@ -133,6 +135,23 @@ const SuperAdminPage = ({ modelCampaigns }: Props) => {
           id: 'org',
           header: () => <div>{t('organizationName')}</div>,
           cell: ({ row }) => <span>{row.original.organizationVersionMip?.name ?? '-'}</span>,
+        },
+        {
+          id: 'actions',
+          header: '',
+          accessorKey: 'id',
+          cell: ({ getValue }) => (
+            <TableActionButton
+              type="delete"
+              onClick={() => {
+                const id = getValue<string>()
+                setValue(
+                  'modelCampaigns',
+                  getValues('modelCampaigns').filter((modelCampaign) => modelCampaign.id !== id),
+                )
+              }}
+            />
+          ),
         },
       ] as ColumnDef<UpdateModelCampaignCommand['modelCampaigns'][0]>[],
     [control, t],
