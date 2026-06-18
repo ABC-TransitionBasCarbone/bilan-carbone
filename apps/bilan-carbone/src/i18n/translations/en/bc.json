@@ -1581,6 +1581,7 @@
     "missingEmissionFactorUnit": "Emission factor unit is missing",
     "warningEfMissing": "No emission factor provided for \"{sourceName}\"",
     "warningEfMissingUnit": "Emission factor \"{searched}\" not found — unit is missing",
+    "warningTagNotFound": "Tag \"{tagName}\" not found in study — it will be skipped",
     "ambiguousTitle": "Multiple emission factors match for the following sources. Select the one to use:",
     "ambiguousSearched": "Searched: \"{name}\"",
     "ambiguousTooMany": "Too many emission factors match this input. Refine the name in your file to reduce results. This source will be imported without an emission factor.",

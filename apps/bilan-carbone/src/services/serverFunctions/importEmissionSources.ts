@@ -1,12 +1,13 @@
 'use server'
 
+import { prismaClient } from '@/db/client.server'
 import { EmissionFactorList, findEmissionFactorByIdForMatch } from '@/db/emissionFactors'
-import { createEmissionSourcesOnStudy } from '@/db/emissionSource'
-import { FullStudy, getStudyById } from '@/db/study'
+import { createEmissionSourcesWithReturn, getFamilyTagsForStudy } from '@/db/emissionSource'
+import { createEmissionSourceTags, FullStudy, getStudyById } from '@/db/study'
 import { getLocale } from '@/i18n/locale'
 import { Post, subPostsByPost } from '@/services/posts'
 import { AccountWithUser } from '@/types/account.types'
-import { FEChoices, ImportResult } from '@/types/import.types'
+import { FEChoices, ImportResult, ImportWarning } from '@/types/import.types'
 import {
   PreviewEmissionSourceRow,
   ResolveEmissionSourcesResult,
@@ -113,10 +114,38 @@ export async function validateEmissionSourcesFromFile(
   const organizationId = study.organizationVersion.organization?.id ?? ''
   const versionIds = study.emissionFactorVersions.map((v) => v.importVersionId)
 
-  const resolved = await resolveEmissionFactorRows(result.rows, {}, locale, organizationId, versionIds)
+  const [resolved, tagFamilies] = await Promise.all([
+    resolveEmissionFactorRows(result.rows, {}, locale, organizationId, versionIds),
+    getFamilyTagsForStudy(studyId),
+  ])
 
-  if (resolved.type === 'warnings') {
-    return { status: 'warnings', warnings: resolved.warnings, ambiguousRows: resolved.ambiguousRows }
+  const allTags = tagFamilies.flatMap((f) => f.tags)
+  const tagWarnings: ImportWarning[] = result.rows.flatMap((row) => {
+    if (!row.tag) {
+      return []
+    }
+    return row.tag
+      .split(',')
+      .map((t) => t.trim())
+      .filter(Boolean)
+      .filter((name) => !allTags.some((t) => t.name.toLowerCase() === name.toLowerCase()))
+      .map((name) => ({
+        type: 'tagNotFound' as const,
+        lineNumber: row.lineNumber,
+        sourceName: row.name,
+        searchedName: name,
+      }))
+  })
+
+  const efWarnings = resolved.type === 'warnings' ? resolved.warnings : []
+  const allWarnings = [...efWarnings, ...tagWarnings]
+
+  if (allWarnings.length > 0) {
+    return {
+      status: 'warnings',
+      warnings: allWarnings,
+      ambiguousRows: resolved.type === 'warnings' ? resolved.ambiguousRows : [],
+    }
   }
 
   if (resolved.type === 'ambiguous') {
@@ -201,6 +230,7 @@ export async function importEmissionSourcesFromFile(
   const versionIds = study.emissionFactorVersions.map((v) => v.importVersionId)
 
   const newEmissionSourceRows: NewEmissionSourceRow[] = []
+  const tagNamesByRowIndex: string[][] = []
 
   for (const row of result.rows) {
     const lineNumber = row.lineNumber
@@ -297,9 +327,33 @@ export async function importEmissionSourcesFromFile(
       duration: casFields.duration ?? undefined,
       validated,
     })
+    tagNamesByRowIndex.push(
+      row.tag
+        ? row.tag
+            .split(',')
+            .map((t) => t.trim())
+            .filter(Boolean)
+        : [],
+    )
   }
 
-  await createEmissionSourcesOnStudy(newEmissionSourceRows)
+  const tagFamilies = await getFamilyTagsForStudy(studyId)
+  const allTags = tagFamilies.flatMap((f) => f.tags)
+
+  await prismaClient.$transaction(async (tx) => {
+    const createdSources = await createEmissionSourcesWithReturn(newEmissionSourceRows, tx)
+
+    const emissionSourceTagsData = createdSources.flatMap((source, index) => {
+      const tagNames = tagNamesByRowIndex[index] ?? []
+      return tagNames.flatMap((name) => {
+        const tag = allTags.find((t) => t.name.toLowerCase() === name.toLowerCase())
+        return tag ? [{ emissionSourceId: source.id, tagId: tag.id }] : []
+      })
+    })
+    if (emissionSourceTagsData.length > 0) {
+      await createEmissionSourceTags(emissionSourceTagsData, tx)
+    }
+  })
 
   return { success: true, errors: [], warnings: [] }
 }
