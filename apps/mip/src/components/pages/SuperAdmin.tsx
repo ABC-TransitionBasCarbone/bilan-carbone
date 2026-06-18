@@ -16,6 +16,7 @@ import { FormTextField } from '@abc-transitionbascarbone/components/src/form/Tex
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { Button, useToast } from '@abc-transitionbascarbone/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
+import CopyIcon from '@mui/icons-material/ContentCopy'
 import DownloadIcon from '@mui/icons-material/Download'
 import UploadIcon from '@mui/icons-material/Upload'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
@@ -136,9 +137,27 @@ const SuperAdminPage = ({ modelCampaigns }: Props) => {
           ),
         },
         {
-          id: 'org',
+          id: 'organization',
           header: () => <div>{t('organizationName')}</div>,
-          cell: ({ row }) => <span>{row.original.organizationVersionMip?.name ?? '-'}</span>,
+          cell: ({ row }) => {
+            const org = row.original.organizationVersionMip
+
+            const link = typeof window !== 'undefined' ? `${window.location.origin}/add-model/${row.original.id}` : ''
+
+            const handleCopy = async () => {
+              await navigator.clipboard.writeText(link)
+            }
+
+            if (org?.name) {
+              return <span>{org.name}</span>
+            }
+
+            return (
+              <LinkButton onClick={handleCopy}>
+                <CopyIcon />
+              </LinkButton>
+            )
+          },
         },
         {
           id: 'actions',
