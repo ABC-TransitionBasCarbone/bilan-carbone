@@ -1,3 +1,10 @@
+enum CampaignStatus {
+  OPEN
+  CLOSED
+
+  @@schema("mip")
+}
+
 model ModelCampaign {
   id             String          @id @default(uuid())
   createdAt      DateTime        @default(now()) @map("created_at")
@@ -5,9 +12,38 @@ model ModelCampaign {
   name           String
 
   model          Json
+  campaigns Campaign[]
+
 
   organizationVersionMip  OrganizationVersionMip?
 
   @@map("model_campaigns")
+  @@schema("mip")
+}
+
+model Campaign {
+  id        String         @id @default(uuid())
+  createdAt DateTime       @default(now()) @map("created_at")
+  updatedAt DateTime       @updatedAt @map("updated_at")
+  name      String
+  status    CampaignStatus @default(OPEN)
+  modelCampaignId String         @map("model_campaign_id")
+  modelCampaign ModelCampaign        @relation(fields: [modelCampaignId], references: [id])
+
+  responses Response[]
+
+  @@map("campaigns")
+  @@schema("mip")
+}
+
+model Response {
+  id         String   @id @default(uuid())
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  campaignId String   @map("campaign_id")
+  campaign   Campaign @relation(fields: [campaignId], references: [id])
+  answers    Json
+
+  @@map("responses")
   @@schema("mip")
 }
