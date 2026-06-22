@@ -74,6 +74,9 @@ import {
   sendResetPassword,
   sendUserOnStudyInvitationEmail,
 } from '@abc-transitionbascarbone/services/email/email'
+import { MORE_THAN_ONE, NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
+import { updateUserResetToken } from '@abc-transitionbascarbone/services/serverFunctions/user'
+import { AddMemberCommand } from '@abc-transitionbascarbone/services/serverFunctions/user.command'
 import { DAY, HOUR, MIN, TIME_IN_MS, YEAR } from '@abc-transitionbascarbone/utils'
 import { environmentsWithChecklist } from '@abc-transitionbascarbone/utils/environments'
 import jwt from 'jsonwebtoken'
@@ -83,9 +86,7 @@ import { auth, dbActualizedAuth } from '../auth'
 import { getUserCheckList } from '../checklist'
 import {
   EMAIL_SENT,
-  MORE_THAN_ONE,
   NOT_ASSOCIATION_SIRET,
-  NOT_AUTHORIZED,
   REQUEST_SENT,
   UNKNOWN_SCHOOL,
   UNKNOWN_SIRET_OR_CNC,
@@ -94,18 +95,7 @@ import { isBC, isTilt } from '../permissions/environment'
 import { canAddMember, canChangeRole, canDeleteMember, canEditSelfRole } from '../permissions/user'
 import { establishmentTypeMap, School } from '../schoolApi'
 import { getDeactivableFeatureRestrictions } from './deactivableFeatures'
-import { AddMemberCommand, EditProfileCommand, EditSettingsCommand } from './user.command'
-
-const updateUserResetToken = async (email: string, duration: number) => {
-  const resetToken = Math.random().toString(36)
-  const payload = {
-    email,
-    resetToken,
-    exp: Math.round(Date.now() / TIME_IN_MS) + duration,
-  }
-  await updateUserResetTokenForEmail(email, resetToken)
-  return jwt.sign(payload, process.env.NEXTAUTH_SECRET as string)
-}
+import { EditProfileCommand, EditSettingsCommand } from './user.command'
 
 export const sendEmailToAddedUser = async (
   email: string,

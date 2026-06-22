@@ -2,22 +2,15 @@
 
 import { TeamMember } from '@/db/account'
 import { isAdvanced } from '@/services/permissions/environment'
+import { canEditSelfRole } from '@/services/permissions/user'
 import { deleteOrganizationMember } from '@/services/serverFunctions/organization'
-import { useAppEnvironmentStore } from '@/store/AppEnvironment'
-import { canEditMemberRole, getEnvironmentRoles } from '@/utils/user'
-import { Table as BaseTable, HelpIcon } from '@abc-transitionbascarbone/components'
+import { changeRole } from '@/services/serverFunctions/user'
+import { canBeUntrainedRole, canEditMemberRole, getEnvironmentRoles } from '@/utils/user'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
-import { Role } from '@abc-transitionbascarbone/db-common/enums'
-import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
+import TeamTableCommon from '@abc-transitionbascarbone/components/src/team/TeamTableCommon'
 import { UserSession } from 'next-auth'
-import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useCallback, useMemo, useState } from 'react'
-import Block from '../base/Block'
-import { TableActionButton } from '../base/TableActionButton'
-import Modal from '../modals/Modal'
-import SelectRole from './SelectRole'
-import styles from './TeamTable.module.css'
+import { useCallback, useState } from 'react'
 
 interface Props {
   user: UserSession
@@ -32,11 +25,6 @@ type DeletionErrorData = {
 }
 
 const TeamTable = ({ user, team, crOrga }: Props) => {
-  const t = useTranslations('team.table')
-  const tAction = useTranslations('common.action')
-  const tLevel = useTranslations('level')
-  const tRole = useTranslations('role')
-  const [displayRoles, setDisplayRoles] = useState(false)
   const [deletingMember, setDeletingMember] = useState('')
   const [deletionError, setDeletionError] = useState('')
   const [deletionErrorData, setDeletionErrorData] = useState<DeletionErrorData[] | undefined>(undefined)
@@ -44,69 +32,6 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
   const { callServerFunction } = useServerFunction()
 
   const router = useRouter()
-
-  const { environment } = useAppEnvironmentStore()
-
-  const columns = useMemo(() => {
-    const col: ColumnDef<TeamMember>[] = [
-      {
-        header: t('firstName'),
-        accessorKey: 'user.firstName',
-      },
-      { header: t('lastName'), accessorKey: 'user.lastName' },
-      { header: t('email'), accessorKey: 'user.email' },
-    ]
-
-    if (environment && isAdvanced(environment)) {
-      col.push({
-        header: t('level'),
-        accessorFn: (member: TeamMember) =>
-          member.formationName ? member.formationName : tLevel(member.user.level ? member.user.level : 'noLevel'),
-      })
-    }
-
-    col.push({
-      header: t('role'),
-      accessorKey: 'role',
-      cell: ({ getValue, row }) => {
-        const role = getValue() as Role
-        return canUpdateTeam ? (
-          <SelectRole
-            currentUserEmail={user.email}
-            currentRole={role}
-            email={row.original.user.email}
-            level={row.original.user.level}
-            environment={user.environment}
-          />
-        ) : (
-          <>{tRole(role)}</>
-        )
-      },
-    })
-
-    if (canUpdateTeam) {
-      col.push({
-        id: 'actions',
-        header: '',
-        cell: ({ row }) => {
-          return row.original.user.email !== user.email ? (
-            <TableActionButton
-              type="delete"
-              onClick={() => setDeletingMember(row.original.user.email)}
-              data-testid="delete-member-button"
-            />
-          ) : null
-        },
-      })
-    }
-    return col
-  }, [t, environment, canUpdateTeam, tLevel, user.email, user.environment, tRole])
-
-  const table = useReactTable({
-    columns,
-    data: team,
-    getCoreRowModel: getCoreRowModel(),
-  })
 
   const deleteMember = useCallback(async () => {
     setDeletionErrorData(undefined)
@@ -130,92 +55,25 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
     })
   }, [deletingMember, callServerFunction, router])
 
-  const onClose = useCallback(() => {
-    setDeletingMember('')
-    setDeletionErrorData(undefined)
-  }, [setDeletingMember, setDeletionErrorData])
-
   return (
     <>
-      <Block
-        title={t('title')}
-        icon={<HelpIcon onClick={() => setDisplayRoles(!displayRoles)} label={tRole('guide')} />}
-        iconPosition="after"
-        expIcon
-        id="team-table-title"
-        actions={
-          canUpdateTeam
-            ? [
-                {
-                  actionType: 'link',
-                  href: '/equipe/ajouter',
-                  'data-testid': 'add-member-link',
-                  children: t('newUser'),
-                },
-              ]
-            : undefined
-        }
-      >
-        <BaseTable table={table} testId="team" />
-      </Block>
-      <Modal
-        open={displayRoles}
-        label="organization-roles"
-        title={tRole('guide')}
-        onClose={() => setDisplayRoles(false)}
-        actions={[
-          {
-            actionType: 'button',
-            ['data-testid']: 'organization-roles-cancel',
-            onClick: () => setDisplayRoles(false),
-            children: tAction('cancel'),
-          },
-        ]}
-      >
-        {Object.keys(getEnvironmentRoles(user.environment))
-          .filter((role) => role !== Role.SUPER_ADMIN)
-          .map((role) => (
-            <p key={role} className="mb-2">
-              <b>{tRole(role)} :</b> {tRole(`${role}_description${crOrga ? '_CR' : ''}`)}
-            </p>
-          ))}
-      </Modal>
-      <Modal
-        open={!!deletingMember}
-        label="member-deletion"
-        title={t('userDeletion')}
-        onClose={onClose}
-        actions={[
-          {
-            actionType: 'button',
-            ['data-testid']: 'delete-member-cancel',
-            onClick: onClose,
-            className: 'secondary',
-            children: tAction('cancel'),
-          },
-          {
-            actionType: 'button',
-            ['data-testid']: 'delete-member-validation',
-            onClick: deleteMember,
-            children: tAction('confirm'),
-            disabled: !!deletionErrorData,
-          },
-        ]}
-      >
-        {t('userDeletionDescription')}
-        {deletionErrorData && (
-          <div className="error mt1">
-            <span>{t(deletionError)}</span>
-            <ul className={styles.studiesList}>
-              {deletionErrorData?.map((study) => (
-                <li key={study.id}>
-                  <a href={`/etudes/${study.id}`}>{study.name}</a> ({study.organization})
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </Modal>
+      <TeamTableCommon
+        email={user.email}
+        team={team}
+        canUpdateTeam={canUpdateTeam}
+        environmentRoles={getEnvironmentRoles(user.environment)}
+        deleteMember={deleteMember}
+        isAdvanced={isAdvanced(user.environment)}
+        deletionError={deletionError}
+        deletionErrorData={deletionErrorData}
+        setDeletionErrorData={setDeletionErrorData}
+        crOrga={crOrga}
+        canEditSelfRole={canEditSelfRole(user.role)}
+        canBeUntrainedRole={canBeUntrainedRole(user.role, user.environment)}
+        changeRole={changeRole}
+        setDeletingMember={setDeletingMember}
+        deletingMember={deletingMember}
+      />
     </>
   )
 }

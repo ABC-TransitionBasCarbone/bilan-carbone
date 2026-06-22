@@ -1,7 +1,7 @@
 'use client'
 
-import Modal from '@/components/modals/Modal'
 import { customRich } from '@/i18n/customRich'
+import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import styles from './DuplicateSiteModal.module.css'

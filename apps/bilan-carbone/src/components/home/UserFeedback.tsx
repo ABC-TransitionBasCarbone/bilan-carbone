@@ -1,15 +1,15 @@
 'use client'
 
 import { answerFeeback, delayFeeback } from '@/services/serverFunctions/user'
-import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { BCEnvironment } from '@/types/environment'
+import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
 import { DAY, TIME_IN_MS } from '@abc-transitionbascarbone/utils'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
-import Modal from '../modals/Modal'
 import FeedbackForm from './FeedbackForm'
 
 interface Props {
-  environment: Environment
+  environment: BCEnvironment
 }
 
 const delayDuration = process.env.NEXT_PUBLIC_FEEDBACK_TYPEFORM_DELAY

@@ -5,6 +5,7 @@ import { EditSettingsCommand, EditSettingsCommandValidation } from '@/services/s
 import { HelpIcon } from '@abc-transitionbascarbone/components'
 import Form from '@abc-transitionbascarbone/components/src/base/Form'
 import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
+import { FormSelect } from '@abc-transitionbascarbone/components/src/form/Select'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { UserApplicationSettings } from '@abc-transitionbascarbone/db-common'
 import { SiteCAUnit } from '@abc-transitionbascarbone/db-common/enums'
@@ -13,7 +14,6 @@ import { FormControl, FormControlLabel, FormLabel, MenuItem, Switch } from '@mui
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { FormSelect } from '../form/Select'
 import GlossaryModal from '../modals/GlossaryModal'
 import styles from './Settings.module.css'
 

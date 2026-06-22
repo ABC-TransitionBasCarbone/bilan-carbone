@@ -1,11 +1,11 @@
 'use client'
 
-import Block from '@/components/base/Block'
 import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
 import type { FullStudy } from '@/db/study'
 import { useTransitionPlan } from '@/hooks/useTransitionPlan'
 import { useTransitionPlanFilters } from '@/hooks/useTransitionPlanFilters'
 import { environmentSubPostsMapping } from '@/services/posts'
+import { BCEnvironment } from '@/types/environment'
 import type {
   ActionWithRelations,
   ObjectiveGroup,
@@ -16,6 +16,7 @@ import { buildObjectiveGroups } from '@/utils/scope.utils'
 import { scopeMatchesUIFilters } from '@/utils/scopeFilter'
 import { getActionReductionRatio } from '@/utils/study'
 import { getAllTagIds } from '@/utils/tag.utils'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import type { ExternalStudy, SectenInfo, SubPost } from '@abc-transitionbascarbone/db-common'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useMemo } from 'react'
@@ -89,7 +90,7 @@ const TransitionPlanBase = ({
     setSelectedTagIds,
   } = useTransitionPlanFilters(study.id, allTagIdsWithOther, allSiteIds)
 
-  const envSubPostsByPost = environmentSubPostsMapping[study.organizationVersion.environment]
+  const envSubPostsByPost = environmentSubPostsMapping[study.organizationVersion.environment as BCEnvironment]
   const allEnvSubPosts = Array.from(new Set(Object.values(envSubPostsByPost).flat()))
   const sitesFiltered = allSiteIds.length > 0 && selectedSiteIds.length < allSiteIds.length
   const subPostsFiltered = allEnvSubPosts.length > 0 && selectedSubPosts.length < allEnvSubPosts.length

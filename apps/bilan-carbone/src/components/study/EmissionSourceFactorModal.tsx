@@ -1,14 +1,15 @@
 import { EmissionFactorWithMetaData, getFELocations } from '@/services/serverFunctions/emissionFactor'
-import { Environment, SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { BCEnvironment } from '@/types/environment'
+import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
+import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import { ImportVersionForFilters } from '../emissionFactor/EmissionFactorsFilters'
 import EmissionFactorsFiltersAndTable from '../emissionFactor/EmissionFactorsFiltersAndTable'
-import Modal from '../modals/Modal'
 
 interface Props {
   open: boolean
-  environment: Environment
+  environment: BCEnvironment
   userOrganizationId?: string
   defaultSubPost: SubPost
   importVersions: ImportVersionForFilters[]

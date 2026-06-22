@@ -1,6 +1,6 @@
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import Block from '../base/Block'
 
 const ResetLinkAlreadyUsed = () => {
   const t = useTranslations('login.form')

@@ -30,6 +30,8 @@ import { SECTEN_SEED_DATA } from './sectenSeedData'
 import { createRealStudy } from './study'
 import { getClicksonRoleFromBase, getCutRoleFromBase, getRolesFromEnvironment } from './utils'
 
+import type { BCEnvironment } from '@/types/environment'
+
 const program = new Command()
 type Params = {
   importFactors: string | undefined
@@ -50,6 +52,8 @@ const adapter = new PrismaPg({
 const prisma = new PrismaClient({
   adapter,
 }) as PrismaClient
+
+const { MIP: _, ...BCEnvironment } = Environment
 
 const users = async () => {
   await prisma.emissionFactorPartMetaData.deleteMany()
@@ -83,6 +87,7 @@ const users = async () => {
   await prisma.user.deleteMany()
 
   await prisma.organizationVersion.deleteMany()
+  await prisma.organizationVersionMip.deleteMany()
   await prisma.organization.deleteMany()
 
   await prisma.cnc.deleteMany()
@@ -505,7 +510,7 @@ const users = async () => {
       return { user, accounts: [{ account, organizationVersion }] }
     }),
     ...Object.keys(Role).flatMap((role) => [
-      ...Object.keys(Environment).flatMap((environment) => [
+      ...Object.keys(BCEnvironment).flatMap((environment) => [
         ...Array.from({ length: 2 }).map(async (_, index) => {
           const user = await prisma.user.create({
             data: {
@@ -517,7 +522,7 @@ const users = async () => {
             },
           })
 
-          const organizationVersionArray = environmentOrganizationVersions[environment as Environment]
+          const organizationVersionArray = environmentOrganizationVersions[environment as BCEnvironment]
           const account = await prisma.account.create({
             data: {
               organizationVersionId: organizationVersionArray[index % organizationVersionArray.length].id,

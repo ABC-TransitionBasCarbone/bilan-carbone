@@ -2,13 +2,16 @@
 
 import TopLeftNavBar from '@/components/navbar/TopLeftNavBar'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import { signOutEnv } from '@/services/auth.utils'
 import { hasAccessToStudyComments, isClickson, isTilt } from '@/services/permissions/environment'
 import { hasAccessToMethodology, hasAccessToSettings } from '@/services/permissions/environmentAdvanced'
 import { hasAccessToFormation } from '@/services/permissions/formations'
 import { getUserActiveAccounts } from '@/services/serverFunctions/user'
 import { Environment, Role } from '@abc-transitionbascarbone/db-common/enums'
 import { Locale } from '@abc-transitionbascarbone/i18n/config'
+import { signOutEnv } from '@abc-transitionbascarbone/services/auth/auth.utils'
+import AppBar from '@abc-transitionbascarbone/ui/navbar/AppBar'
+import NavbarButton from '@abc-transitionbascarbone/ui/navbar/NavbarButton'
+import NavbarLink from '@abc-transitionbascarbone/ui/navbar/NavbarLink'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
@@ -23,10 +26,7 @@ import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import { useEffect, useMemo, useState } from 'react'
 import { Logo } from '../base/Logo'
-import AppBar from './AppBar'
-import NavbarButton from './NavbarButton'
 import NavbarComments from './NavbarComments'
-import NavbarLink from './NavbarLink'
 
 const CutTopLeftNavBar = dynamic(() => import('@/environments/cut/navbar/TopLeftNavBar'))
 

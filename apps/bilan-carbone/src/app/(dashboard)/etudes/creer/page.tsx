@@ -1,7 +1,6 @@
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import withStudyCreation, { StudyCreationProps } from '@/components/hoc/withStudyCreation'
 import NewStudyPage from '@/components/pages/NewStudy'
-import NotFound from '@/components/pages/NotFound'
 import TiltSimplifiedComingSoon from '@/components/pages/TiltSimplifiedComingSoon'
 import { getAccountOrganizationVersions } from '@/db/account'
 import { getOrganizationVersionAccounts, getOrganizationVersionForRightsCheck } from '@/db/organization'
@@ -10,6 +9,7 @@ import { canCreateAStudy } from '@/services/permissions/study'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { defaultCAUnit } from '@/utils/number'
 import { hasActiveLicence } from '@/utils/organization'
+import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 import { redirect } from 'next/navigation'
 
 const NewStudy = async ({ user, duplicateStudyId, isSimplified }: UserSessionProps & StudyCreationProps) => {

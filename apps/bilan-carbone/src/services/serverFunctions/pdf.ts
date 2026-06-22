@@ -2,10 +2,11 @@
 
 import { dbActualizedAuth } from '@/services/auth'
 import { withServerResponse } from '@/utils/serverResponse'
+import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
 import axios, { isAxiosError } from 'axios'
 import jwt from 'jsonwebtoken'
 import { getLocale } from 'next-intl/server'
-import { NOT_AUTHORIZED, SERVER_ERROR } from '../permissions/check'
+import { SERVER_ERROR } from '../permissions/check'
 
 export const generateStudySummaryPDF = async (studyId: string, studyName: string, referenceYear: number) =>
   withServerResponse('generateStudySummaryPDF', async () => {

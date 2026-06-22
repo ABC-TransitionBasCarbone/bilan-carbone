@@ -1,6 +1,6 @@
+import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
 import { Translations } from '@abc-transitionbascarbone/lib'
 import { useTranslations } from 'next-intl'
-import Modal from './Modal'
 
 interface Props {
   glossary: string

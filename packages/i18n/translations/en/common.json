@@ -94,6 +94,8 @@
     }
   },
   "navigation": {
+    "home": "Home",
+    "logout": "Log out",
     "comments": "Comments"
   },
   "country": {
@@ -252,5 +254,70 @@
       "contributorInvitation": "Contribution request on the study {studyName}",
       "addedUsersByFile": "Authorization for user import"
     }
+  },
+  "nav": {
+    "backToHome": "Back to home",
+    "home": "Home",
+    "notFound": "Page not found",
+    "organization": "Organisation",
+    "edit": "Edit",
+    "team": "Team"
+  },
+  "team": {
+    "pending": "Pending invitations",
+    "invitationDate": "Invitation sent on",
+    "toValidate": "Invitations to validate",
+    "addedDate": "Added on",
+    "delete": "Delete user",
+    "resend": "Resend invitation",
+    "table": {
+      "title": "My team",
+      "newUser": "Invite a user",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "level": "Training",
+      "role": "Role",
+      "action": " ",
+      "deleteMember": "Delete member",
+      "userDeletion": "User deletion",
+      "userDeletionDescription": "Are you sure you want to delete this user? He will no longer have access to your organisation's account, but will still have access to the studies for which he has been invited by other organisations.",
+      "necessaryAdmin": "This administrator cannot be removed. He/she is the sole validator of the following studies: "
+    }
+  },
+  "level": {
+    "Initial": "Initial",
+    "Standard": "Intermediate",
+    "Advanced": "Advanced",
+    "noLevel": "No formation"
+  },
+  "role": {
+    "SUPER_ADMIN": "Global Administrator",
+    "ADMIN": "Administrator",
+    "COLLABORATOR": "Collaborator",
+    "ADMIN_description": "An administrator has full rights to the organisation's account and to all studies for his organisation (whether public or private). It is impossible to change an administrator role on a study of his organisation.",
+    "COLLABORATOR_description": "A collaborator is a person trained in the Bilan Carbone® method. They have no rights to the organisation's account but can create studies. They have access to their organisation's public studies with the role editor by default.",
+    "guide": "Roles guide",
+    "saved": "New role saved",
+    "Not authorized": "You are not allowed to do this action",
+    "More than one": "There must be at least one admin or manager in the organisation"
+  },
+  "newMember": {
+    "title": "Invite a User",
+    "email": "Email",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "role": "Role",
+    "level": "Training",
+    "create": "Invite User",
+    "Not authorized": "User invitation not authorized. Please contact <link>the support</link> for more information.",
+    "validation": {
+      "email": "Please enter a valid email",
+      "firstName": "Please enter a first name",
+      "lastName": "Please enter a last name",
+      "level": "Please enter a training level",
+      "role": "Please enter a role"
+    },
+    "addedMember": "The user has been successfully invited to your organisation."
   }
 }

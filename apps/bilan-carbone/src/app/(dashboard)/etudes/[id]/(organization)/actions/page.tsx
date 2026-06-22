@@ -3,9 +3,9 @@ import { StudyProps } from '@/components/hoc/withStudy'
 import withStudyDetails from '@/components/hoc/withStudyDetails'
 import withTransitionPlan, { TransitionPlanProps } from '@/components/hoc/withTransitionPlan'
 import ActionsPage from '@/components/pages/ActionsPage'
-import NotFound from '@/components/pages/NotFound'
 import { loadTransitionPlanPageData } from '@/components/study/transitionPlan/transitionPlanPageData'
 import { hasTransitionPlan } from '@/db/transitionPlan'
+import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 import { redirect } from 'next/navigation'
 
 const Actions = async ({ study, canEdit, user }: StudyProps & UserSessionProps & TransitionPlanProps) => {

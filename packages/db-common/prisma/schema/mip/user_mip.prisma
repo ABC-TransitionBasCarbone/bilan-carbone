@@ -1,3 +1,11 @@
+enum RoleMip {
+  ADMIN
+  SUPER_ADMIN
+  COLLABORATOR
+
+  @@schema("mip")
+}
+
 model AccountMip {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now()) @map("created_at")
@@ -5,7 +13,13 @@ model AccountMip {
   userId    String   @map("user_id")
   user      User     @relation(fields: [userId], references: [id])
   status    UserStatus
+  role RoleMip
+  organizationVersionMip           OrganizationVersionMip?  @relation(fields: [organizationVersionMipId], references: [id])
+  organizationVersionMipId         String?                  @map("organization_version_mip_id")
 
+  environment Environment @default(MIP)
+
+  @@unique([userId, environment])
   @@map("accounts_mip")
   @@schema("mip")
 }

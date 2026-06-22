@@ -1,8 +1,8 @@
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
-import NotFound from '@/components/pages/NotFound'
 import OrganizationPage from '@/components/pages/Organization'
 import { getOrganizationVersionWithSitesById, OrganizationVersionWithOrganization } from '@/db/organization'
 import { isInOrgaOrParent } from '@/utils/organization'
+import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 import { UUID } from 'crypto'
 
 interface Props {

@@ -24,7 +24,7 @@ jest.mock('../permissions/environment', () => ({
   hasAccessToCreateStudyTag: jest.fn(),
 }))
 
-jest.mock('../permissions/check', () => ({
+jest.mock('@abc-transitionbascarbone/services/permissions/check', () => ({
   NOT_AUTHORIZED: 'Not authorized',
 }))
 

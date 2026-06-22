@@ -7,6 +7,7 @@ export const EnvironmentNames = {
   [Environment.CUT]: 'Count',
   [Environment.TILT]: 'Tilt',
   [Environment.CLICKSON]: 'ClicksOn',
+  [Environment.MIP]: 'Mon Impact Pro',
 }
 
 export enum EnvironmentMode {

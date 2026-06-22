@@ -1,14 +1,15 @@
 'use client'
 
-import Box from '@/components/base/Box'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import type { FullStudy } from '@/db/study'
 import { customRich } from '@/i18n/customRich'
 import { hasAccessToStudyResults, hasRoleOnStudy } from '@/services/permissions/environment'
 import { getDetailedEmissionResults } from '@/services/study'
+import { BCEnvironment } from '@/types/environment'
 import { formatNumber } from '@/utils/number'
 import { getDisplayedRoleOnStudy } from '@/utils/study'
 import { HelpIcon } from '@abc-transitionbascarbone/components'
+import Box from '@abc-transitionbascarbone/components/src/base/Box'
 import { Button } from '@abc-transitionbascarbone/ui'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import classNames from 'classnames'
@@ -44,7 +45,7 @@ const StudyResultsContainerSummary = ({
   const tDocumentation = useTranslations('documentationUrl')
   const [glossary, setGlossary] = useState('')
   const [withDep, setWithDependencies] = useState(!!withDependencies)
-  const environment = study.organizationVersion.environment
+  const environment = study.organizationVersion.environment as BCEnvironment
 
   const [
     formattedWithDepValue,

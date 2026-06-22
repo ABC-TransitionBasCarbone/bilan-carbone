@@ -22,6 +22,7 @@
     ".": "./src/index.ts",
     "./enums": "./src/enums.ts",
     "./types": "./src/types.ts",
-    "./db": "./src/db/index.ts"
+    "./db": "./src/db/index.ts",
+    "./db/common.select": "./src/db/common.select.ts"
   }
 }

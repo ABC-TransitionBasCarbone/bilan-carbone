@@ -1,8 +1,8 @@
 import { OrganizationVersionWithOrganization } from '@/db/organization'
+import Box from '@abc-transitionbascarbone/components/src/base/Box'
 import CorporateFareIcon from '@mui/icons-material/CorporateFare'
 import classNames from 'classnames'
 import Link from 'next/link'
-import Box from '../base/Box'
 import styles from './CRClient.module.css'
 
 interface Props {

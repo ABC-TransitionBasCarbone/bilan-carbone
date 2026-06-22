@@ -1,7 +1,5 @@
 'use client'
 
-import Block from '@/components/base/Block'
-import Box from '@/components/base/Box'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import type { FullStudy } from '@/db/study'
 import { useTransitionPlanFilters } from '@/hooks/useTransitionPlanFilters'
@@ -20,10 +18,13 @@ import {
 import { prepareReport } from '@/services/serverFunctions/study'
 import { downloadStudyResults, getDetailedEmissionResults } from '@/services/study'
 import { sortAlphabetically } from '@/services/utils'
+import { BCEnvironment } from '@/types/environment'
 import { AdditionalResultTypes, ResultType } from '@/types/study.types'
 import { getPost } from '@/utils/post'
 import { calculateMonetaryRatio, convertValue } from '@/utils/study'
 import { getAllTagIds } from '@/utils/tag.utils'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
+import Box from '@abc-transitionbascarbone/components/src/base/Box'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import type { ExportRule } from '@abc-transitionbascarbone/db-common'
 import {
@@ -139,7 +140,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
       tPost,
       siteId,
       !!validatedOnly,
-      study.organizationVersion.environment,
+      study.organizationVersion.environment as BCEnvironment,
       t,
       true,
       type,
@@ -220,7 +221,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
       siteId,
       true,
       !!validatedOnly,
-      environmentPostMapping[study.organizationVersion.environment],
+      environmentPostMapping[study.organizationVersion.environment as BCEnvironment],
       study.organizationVersion.environment,
       type,
     )
@@ -231,7 +232,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
       siteId,
       false,
       !!validatedOnly,
-      environmentPostMapping[study.organizationVersion.environment],
+      environmentPostMapping[study.organizationVersion.environment as BCEnvironment],
       study.organizationVersion.environment,
       type,
     )
@@ -243,7 +244,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
       siteId,
       true,
       !!validatedOnly,
-      environmentPostMapping[study.organizationVersion.environment],
+      environmentPostMapping[study.organizationVersion.environment as BCEnvironment],
       study.organizationVersion.environment,
       type,
     )
@@ -351,7 +352,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
       tGHGP,
       tUnits,
       tBase,
-      environment,
+      environment as BCEnvironment,
     )
   }
 

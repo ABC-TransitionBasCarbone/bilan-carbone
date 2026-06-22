@@ -2,16 +2,16 @@
 
 import { getUserWithAccountsAndOrganizationsById } from '@/db/user'
 import { switchEnvironment } from '@/i18n/environment'
-import { accountHandler } from '@/services/auth.utils'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { accountHandler } from '@abc-transitionbascarbone/services/auth/auth.utils'
 import { EnvironmentNames } from '@abc-transitionbascarbone/utils/environments'
 import PermIdentityIcon from '@mui/icons-material/PermIdentity'
 import { Chip, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import Block from '../base/Block'
 
 interface Props {
   user: UserSession

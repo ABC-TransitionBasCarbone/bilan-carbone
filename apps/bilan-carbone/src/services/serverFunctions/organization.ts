@@ -25,8 +25,10 @@ import { withServerResponse } from '@/utils/serverResponse'
 import { isAdmin } from '@/utils/user'
 import type { Account, Prisma, User } from '@abc-transitionbascarbone/db-common'
 import { StudyRole, UserChecklist } from '@abc-transitionbascarbone/db-common/enums'
+import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
+import { AddMemberCommand } from '@abc-transitionbascarbone/services/serverFunctions/user.command'
 import { auth, dbActualizedAuth } from '../auth'
-import { NOT_AUTHORIZED, UNKNOWN_ERROR } from '../permissions/check'
+import { UNKNOWN_ERROR } from '../permissions/check'
 import { hasAccessToCreateOrganization } from '../permissions/environment'
 import {
   canCreateOrganization,
@@ -38,7 +40,7 @@ import { CreateOrganizationCommand, UpdateOrganizationCommand } from './organiza
 import { getStudy } from './study'
 import { DeleteCommand, SitesCommand } from './study.command'
 import { addMember, addUserChecklistItem } from './user'
-import { AddMemberCommand, OnboardingCommand } from './user.command'
+import { OnboardingCommand } from './user.command'
 
 /**
  *

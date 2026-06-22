@@ -11,8 +11,10 @@ const StyledBox = styled(MuiBox, {
   shouldForwardProp: (prop) => prop !== 'selected',
 })<Props>(({ theme, selected, color = 'primary' }) => {
   const paletteColor = theme.palette[color] as PaletteColor
+  const customBox = (theme as any).custom?.box
+
   return {
-    ...theme.custom.box,
+    ...customBox,
     borderColor: selected ? paletteColor.main : theme.palette.grey[300],
   }
 })

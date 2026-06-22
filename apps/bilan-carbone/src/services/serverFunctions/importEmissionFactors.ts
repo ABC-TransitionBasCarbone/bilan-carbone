@@ -3,6 +3,7 @@
 import { createEmissionFactorWithParts, getManualEmissionFactorsByOrganization } from '@/db/emissionFactors'
 import { getLocale } from '@/i18n/locale'
 import { AccountWithUser } from '@/types/account.types'
+import { BCEnvironment } from '@/types/environment'
 import {
   COLUMNS,
   ImportEmissionFactorsResult,
@@ -18,8 +19,8 @@ import { withServerResponse } from '@/utils/serverResponse'
 import { getBcTranslations, getCommonTranslations } from '@/utils/translation.utils'
 import { EmissionFactorBase, EmissionFactorStatus, Import, Unit } from '@abc-transitionbascarbone/db-common/enums'
 import { LocaleType } from '@abc-transitionbascarbone/i18n/config'
+import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
 import { getAuthenticatedAccount } from '../permissions/account.permissions'
-import { NOT_AUTHORIZED } from '../permissions/check'
 import { canReadEmissionFactor } from '../permissions/emissionFactor'
 import { canCreateEmissionFactor } from '../permissions/emissionFactor.server'
 import { prepareExcel } from './file'
@@ -50,7 +51,7 @@ export async function previewEmissionFactorsFromFile(file: File): Promise<Previe
 
   const locale = await getLocale()
   const buffer = Buffer.from(await file.arrayBuffer())
-  const result = parseImportFile(buffer, locale, account.environment)
+  const result = parseImportFile(buffer, locale, account.environment as BCEnvironment)
 
   if (!result.success) {
     return result
@@ -92,7 +93,7 @@ export async function importEmissionFactorsFromFile(
 
   const locale = await getLocale()
   const buffer = Buffer.from(await file.arrayBuffer())
-  const result = parseImportFile(buffer, locale, account.environment)
+  const result = parseImportFile(buffer, locale, account.environment as BCEnvironment)
 
   if (!result.success) {
     return result
@@ -153,7 +154,7 @@ export async function exportManualEmissionFactorsToFile(): Promise<ArrayBuffer> 
       ef.hfc ?? '',
       ef.pfc ?? '',
       ef.otherGES ?? '',
-      buildPostsAndSubPostsCell(ef.subPosts, locale, account.environment),
+      buildPostsAndSubPostsCell(ef.subPosts, locale, account.environment as BCEnvironment),
       ef.base ? (baseTranslations[ef.base] ?? ef.base) : '',
       ef.createdAt.toLocaleDateString(locale),
     ]

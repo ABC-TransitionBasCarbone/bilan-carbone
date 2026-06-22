@@ -7,6 +7,7 @@ import {
 } from '@/constants/exports'
 import type { EmissionFactorWithParts } from '@/db/emissionFactors'
 import type { FullStudy } from '@/db/study'
+import { BCEnvironment } from '@/types/environment'
 import { getEmissionFactorFullName, getEmissionFactorValue } from '@/utils/emissionFactors'
 import { getEmissionSourcesTotalCo2 } from '@/utils/emissionSources'
 import { getGHGPRuleName } from '@/utils/ghgp'
@@ -470,7 +471,7 @@ const formatConsolidatedStudyResultsForExport = (
   tQuality: Translations,
   tUnits: Translations,
   validatedEmissionSourcesOnly?: boolean,
-  environment: Environment = Environment.BC,
+  environment: BCEnvironment = Environment.BC,
   type: ResultType = AdditionalResultTypes.CONSOLIDATED,
 ) => {
   const dataForExport = []
@@ -747,7 +748,7 @@ export const downloadStudyResults = async (
   tGHGP: Translations,
   tUnits: Translations,
   tBase: Translations,
-  environment: Environment = Environment.BC,
+  environment: BCEnvironment = Environment.BC,
   resultsBySite?: BaseResultsBySite,
   resultsByPost?: BaseResultsByPost[],
   selectedSiteId?: string,
@@ -912,7 +913,7 @@ export const getDetailedEmissionResults = (
   tPost: Translations,
   siteId: string,
   validatedOnly: boolean,
-  environment: Environment,
+  environment: BCEnvironment,
   tStudyResults: Translations,
   withDependencies: boolean = true,
   type?: ResultType,

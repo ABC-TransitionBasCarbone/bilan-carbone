@@ -1,6 +1,6 @@
-import Modal from '@/components/modals/Modal'
 import { deleteEmissionFactor } from '@/services/serverFunctions/emissionFactor'
 import { handleWarningText } from '@/utils/components'
+import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'

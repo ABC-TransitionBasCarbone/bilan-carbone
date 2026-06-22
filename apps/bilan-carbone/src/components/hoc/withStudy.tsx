@@ -1,5 +1,5 @@
-import NotFound from '@/components/pages/NotFound'
 import { FullStudy, getStudyById } from '@/db/study'
+import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 import React from 'react'
 import { UserSessionProps } from './withAuth'
 

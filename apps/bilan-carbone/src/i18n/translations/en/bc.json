@@ -185,20 +185,14 @@
     "ges": "GHG emissions ({unit})"
   },
   "nav": {
-    "backToHome": "Back to home",
     "emissionFactors": "Emission Factors",
-    "home": "Home",
     "newOrganization": "Add an organisation",
     "newStudy": "Add a New Study",
     "studyPerimeter": "Perimeter",
     "newStudyContributor": "Add a contributor",
     "editStudyContributor": "Edit a contributor",
     "newStudyRight": "Add a Person",
-    "notFound": "Page not found",
-    "organization": "Organisation",
-    "edit": "Edit",
     "studyRights": "Role",
-    "team": "Team",
     "actualities": "News"
   },
   "actuality": {
@@ -262,13 +256,11 @@
     "factors": "Emission factors",
     "fe": "EF",
     "help": "Help",
-    "home": "Home",
     "admin": "Admin",
     "profile": "Profile",
     "study": "Study",
     "organization": "My organisation",
     "transition": "BC+ transition",
-    "logout": "Log out",
     "methodology": "Methodology",
     "organizations": "My Bilan Carbone®",
     "footprints": "Mes Empreintes",
@@ -1978,30 +1970,15 @@
     },
     "forbidden": "You need to complete your general data first"
   },
-  "level": {
-    "Initial": "Initial",
-    "Standard": "Intermediate",
-    "Advanced": "Advanced",
-    "noLevel": "No formation"
-  },
   "role": {
-    "SUPER_ADMIN": "Global Administrator",
-    "ADMIN": "Administrator",
     "GESTIONNAIRE": "Manager",
-    "COLLABORATOR": "Collaborator",
     "DEFAULT": "Member",
-    "ADMIN_description": "An administrator has full rights to the organisation's account and to all studies for his organisation (whether public or private). It is impossible to change an administrator role on a study of his organisation.",
     "ADMIN_description_CR": "An administrator has full rights to the organisation's and the organisation clients' account and studies (whether public or private). It is impossible to change an administrator role on a study of his organisation or one of its clients.",
     "GESTIONNAIRE_description": "A manager has full rights over the organisation's account, but no rights over studies. He is by default reader on public studies of his organisation.",
     "GESTIONNAIRE_description_CR": "A manager has full rights over the organisation's account, but no rights over customers or studies. He is by default reader on its organisation's or its clients public studies.",
-    "COLLABORATOR_description": "A collaborator is a person trained in the Bilan Carbone® method. They have no rights to the organisation's account but can create studies. They have access to their organisation's public studies with the role editor by default.",
     "COLLABORATOR_description_CR": "A collaborator is a person trained in the Bilan Carbone® method. They have no rights to the organisation's account but can create clients and studies. They only have access to their organisation's or their organisation clients public studies with the role editor by default.",
     "DEFAULT_description": "A member of the organisation has no specific rights over the organisation, the team or studies. By default, they are readers of all their organisation's public Bilans Carbone®.",
-    "DEFAULT_description_CR": "A member of the organisation has no specific rights over the organisation, the team, their clients or studies. By default, they are readers of all their organisation's or their organisation's clients public Bilans Carbone®.",
-    "guide": "Roles guide",
-    "saved": "New role saved",
-    "Not authorized": "You are not allowed to do this action",
-    "More than one": "There must be at least one admin or manager in the organisation"
+    "DEFAULT_description_CR": "A member of the organisation has no specific rights over the organisation, the team, their clients or studies. By default, they are readers of all their organisation's or their organisation's clients public Bilans Carbone®."
   },
   "environment": {
     "BC": "BC+ 2.0",
@@ -2012,46 +1989,6 @@
   "source": {
     "CRON": "Cron",
     "TUNISIE": "Tunisia"
-  },
-  "team": {
-    "pending": "Pending invitations",
-    "invitationDate": "Invitation sent on",
-    "toValidate": "Invitations to validate",
-    "addedDate": "Added on",
-    "delete": "Delete user",
-    "resend": "Resend invitation",
-    "table": {
-      "title": "My team",
-      "newUser": "Invite a user",
-      "firstName": "First Name",
-      "lastName": "Last Name",
-      "email": "Email",
-      "level": "Training",
-      "role": "Role",
-      "action": " ",
-      "deleteMember": "Delete member",
-      "userDeletion": "User deletion",
-      "userDeletionDescription": "Are you sure you want to delete this user? He will no longer have access to your organisation's account, but will still have access to the studies for which he has been invited by other organisations.",
-      "necessaryAdmin": "This administrator cannot be removed. He/she is the sole validator of the following studies: "
-    }
-  },
-  "newMember": {
-    "title": "Invite a User",
-    "email": "Email",
-    "firstName": "First Name",
-    "lastName": "Last Name",
-    "role": "Role",
-    "level": "Training",
-    "create": "Invite User",
-    "Not authorized": "User invitation not authorized. Please contact <link>the support</link> for more information.",
-    "validation": {
-      "email": "Please enter a valid email",
-      "firstName": "Please enter a first name",
-      "lastName": "Please enter a last name",
-      "level": "Please enter a training level",
-      "role": "Please enter a role"
-    },
-    "addedMember": "The user has been successfully invited to your organisation."
   },
   "units": {
     "selectAll": "Select all",

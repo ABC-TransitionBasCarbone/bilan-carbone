@@ -1,0 +1,15 @@
+.big {
+  display: block;
+
+  @media screen and (max-width: 60rem) {
+    display: none;
+  }
+}
+
+.small {
+  display: none;
+
+  @media screen and (max-width: 60rem) {
+    display: block;
+  }
+}

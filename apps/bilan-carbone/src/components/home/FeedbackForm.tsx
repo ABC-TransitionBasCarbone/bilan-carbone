@@ -1,3 +1,4 @@
+import { BCEnvironment } from '@/types/environment'
 import { appendForm } from '@/utils/form'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { useEffect } from 'react'
@@ -8,9 +9,9 @@ const tiltTypeformId = process.env.NEXT_PUBLIC_TILT_FEEDBACK_TYPEFORM_ID
 const clicksonTypeformId = process.env.NEXT_PUBLIC_CLICKSON_FEEDBACK_TYPEFORM_ID
 
 interface Props {
-  environment: Environment
+  environment: BCEnvironment
 }
-const formPerEnvironmentTab: Record<Environment, string | undefined> = {
+const formPerEnvironmentTab: Record<BCEnvironment, string | undefined> = {
   [Environment.BC]: typeformId,
   [Environment.CUT]: cutTypeformId,
   [Environment.TILT]: tiltTypeformId,
