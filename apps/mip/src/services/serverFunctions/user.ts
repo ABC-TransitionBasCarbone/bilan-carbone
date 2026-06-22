@@ -1,13 +1,24 @@
 'use server'
 
 import {
+  addAccountMip,
   changeAccountMipRole,
+  getAccountMipByEmailAndEnvironment,
   getAccountMipByEmailAndOrganizationVersionMipId,
   getAccountMipById,
   getAccountMipFromUserOrganization,
+  updateAccountMip,
 } from '@/db/accountMip'
-import { getOrgNameByOrgVersionMipId } from '@/db/organization'
-import { deleteAccountMipFromOrgaVersionMip, getUserByEmail, handleAddingUser } from '@/db/user'
+import { addOrganizationVersionMipIdToModelCampaign } from '@/db/campaign'
+import { createOrganizationWithVersionMip, getOrgNameByOrgVersionMipId } from '@/db/organization'
+import {
+  addUser,
+  deleteAccountMipFromOrgaVersionMip,
+  getUserByEmail,
+  handleAddingUser,
+  UserWithAccountsMip,
+  validateUser,
+} from '@/db/user'
 import { AccountMipWithUser } from '@/types/accountMip.types'
 import { withServerResponse } from '@/utils/serverResponse'
 import { isAdmin } from '@/utils/user'
@@ -20,7 +31,7 @@ import {
   sendNewUserEmail,
   sendResetPassword,
 } from '@abc-transitionbascarbone/services/email/email'
-import { MORE_THAN_ONE, NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
+import { EMAIL_SENT, MORE_THAN_ONE, NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
 import { updateUserResetToken } from '@abc-transitionbascarbone/services/serverFunctions/user'
 import { AddMemberCommand } from '@abc-transitionbascarbone/services/serverFunctions/user.command'
 import { DAY, HOUR, TIME_IN_MS } from '@abc-transitionbascarbone/utils'
@@ -150,4 +161,69 @@ export const deleteMember = async (email: string) =>
       throw new Error(NOT_AUTHORIZED)
     }
     await deleteAccountMipFromOrgaVersionMip(email, session.user.organizationVersionMipId)
+  })
+
+const sendActivation = async (email: string, user: User, organizationVersionMipId: string) => {
+  return sendEmailToAddedUser(email, user, '', organizationVersionMipId)
+}
+
+export const signUpWithModelCampaign = async (email: string, modelCampaignId: string) =>
+  withServerResponse('signUpWithModelCampaign', async () => {
+    const trimmedEmail = email.trim().toLowerCase()
+    if (!modelCampaignId) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const accountMipAlreadyCreated = await getAccountMipByEmailAndEnvironment(trimmedEmail, Environment.MIP)
+    if (accountMipAlreadyCreated && accountMipAlreadyCreated.organizationVersionMipId) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    let user = await getUserByEmail(trimmedEmail)
+    let accountMip = null
+
+    if (!user) {
+      user = (await addUser({
+        email: trimmedEmail,
+        firstName: '',
+        lastName: '',
+        accountsMip: {
+          create: {
+            status: UserStatus.PENDING_REQUEST,
+            role: Role.ADMIN,
+          },
+        },
+      })) as UserWithAccountsMip
+      accountMip = user?.accountsMip[0]
+    } else {
+      accountMip =
+        accountMipAlreadyCreated ||
+        ((await addAccountMip({
+          user: { connect: { id: user.id } },
+          role: Role.ADMIN,
+          status: UserStatus.PENDING_REQUEST,
+        })) as AccountMipWithUser)
+    }
+    if (!user || !accountMip) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const organizationVersionMip = await createOrganizationWithVersionMip(
+      { name: '' },
+      { name: '', environment: Environment.MIP },
+    )
+
+    if (!organizationVersionMip) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    await updateAccountMip(accountMip.id, {
+      role: Role.ADMIN,
+      organizationVersionMip: { connect: { id: organizationVersionMip.id } },
+    })
+    await addOrganizationVersionMipIdToModelCampaign(modelCampaignId, organizationVersionMip.id)
+
+    await validateUser(accountMip.id)
+    await sendActivation(trimmedEmail, user, organizationVersionMip.id)
+    return EMAIL_SENT
   })

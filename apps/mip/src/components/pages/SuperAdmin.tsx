@@ -46,7 +46,12 @@ const SuperAdminPage = ({ modelCampaigns }: Props) => {
   const setValue = form?.setValue as UseFormSetValue<UpdateModelCampaignCommand>
   const getValues = form?.getValues as UseFormGetValues<UpdateModelCampaignCommand>
   const newModelCampaign = () =>
-    ({ id: uuidv4(), name: '', model: '' }) as UpdateModelCampaignCommand['modelCampaigns'][0]
+    ({
+      id: uuidv4(),
+      name: '',
+      model: '',
+      organizationVersionMip: null,
+    }) as UpdateModelCampaignCommand['modelCampaigns'][0]
 
   const { callServerFunction } = useServerFunction()
 
@@ -142,14 +147,15 @@ const SuperAdminPage = ({ modelCampaigns }: Props) => {
           cell: ({ row }) => {
             const org = row.original.organizationVersionMip
 
-            const link = typeof window !== 'undefined' ? `${window.location.origin}/add-model/${row.original.id}` : ''
+            const link =
+              typeof window !== 'undefined' ? `${window.location.origin}/register?modelId=${row.original.id}` : ''
 
-            const handleCopy = async () => {
+            const handleCopy = async (): Promise<void> => {
               await navigator.clipboard.writeText(link)
             }
 
-            if (org?.name) {
-              return <span>{org.name}</span>
+            if (org?.id) {
+              return <span>{org.name || org.id}</span>
             }
 
             return (
@@ -194,7 +200,10 @@ const SuperAdminPage = ({ modelCampaigns }: Props) => {
       <Form onSubmit={form.handleSubmit(onSubmit)}>
         <BaseTable table={table} className="mt1" testId="sites" />
         <div className="mt1 justify-end">
-          <Button onClick={() => setValue('modelCampaigns', [...currentModelCampaigns, newModelCampaign()])}>
+          <Button
+            type="button"
+            onClick={() => setValue('modelCampaigns', [...currentModelCampaigns, newModelCampaign()])}
+          >
             {t('add')}
           </Button>
         </div>

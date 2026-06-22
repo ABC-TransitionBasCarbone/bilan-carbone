@@ -1,7 +1,7 @@
 import { canEditMemberRole } from '@/utils/user'
 import { Prisma } from '@abc-transitionbascarbone/db-common'
 import { findUserInfoSelect } from '@abc-transitionbascarbone/db-common/db/common.select'
-import { RoleMip, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
+import { Environment, RoleMip, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { UserSession } from 'next-auth'
 import { AccountMipWithUserSelect } from './accountMip.select'
 import { prismaClient } from './client.server'
@@ -56,6 +56,13 @@ export const addAccountMip = async (
 ) => {
   return prismaClient.accountMip.create({
     data: accountMip,
+    select: AccountMipWithUserSelect,
+  })
+}
+
+export const getAccountMipByEmailAndEnvironment = (email: string, environment: Environment) => {
+  return prismaClient.accountMip.findFirst({
+    where: { user: { email }, environment },
     select: AccountMipWithUserSelect,
   })
 }
