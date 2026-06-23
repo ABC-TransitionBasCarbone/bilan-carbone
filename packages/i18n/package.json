@@ -6,13 +6,13 @@
   "types": "src/index.ts",
   "dependencies": {
     "@abc-transitionbascarbone/publicodes": "*",
-    "prettier": "^3.0.0",
+    "prettier": "^3.8.4",
     "publicodes": "^1.0.0",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "tsx": "^4.0.0",
-    "typescript": "^5.0.0",
-    "@types/node": "^20.0.0"
+    "@types/node": "^25.9.3",
+    "tsx": "^4.22.4",
+    "typescript": "^5.0.0"
   }
 }
