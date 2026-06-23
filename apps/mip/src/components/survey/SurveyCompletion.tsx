@@ -17,7 +17,6 @@ import {
 } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { useEffect } from 'react'
 import styles from './SurveyCompletion.module.css'
 
 type ModelRule = {
@@ -56,10 +55,6 @@ interface Props {
 const SurveyCompletion = ({ onRestart, surveyId }: Props) => {
   const t = useTranslations('survey.completion')
   const { engine } = useMipPublicodes()
-
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }, [])
 
   const totalEval = engine.evaluate('bilan')
   const totalKg = typeof totalEval.nodeValue === 'number' ? Math.max(0, totalEval.nodeValue) : 0
