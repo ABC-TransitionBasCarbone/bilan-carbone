@@ -1,7 +1,7 @@
 import { StudyResultUnit, SubPost } from '@abc-transitionbascarbone/db-common'
 import { Translations } from '@abc-transitionbascarbone/lib'
+import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import { Theme } from '@mui/material'
-import { formatNumber } from './number'
 import { isPost } from './post'
 import { STUDY_UNIT_VALUES } from './study'
 

@@ -4,11 +4,11 @@ import { getActions, getTransitionPlanByStudyId } from '@/db/transitionPlan'
 import { getLocale } from '@/i18n/locale'
 import { getEmissionResults } from '@/services/emissionSource'
 import { getActionReductionStats } from '@/utils/actionTrajectory.utils'
-import { formatNumber } from '@/utils/number'
 import { getPostsFromSubPosts } from '@/utils/post'
 import { getBcTranslations } from '@/utils/translation.utils'
 import { Environment, Level, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
 import { formatDateFr } from '@abc-transitionbascarbone/utils'
+import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import { getTranslations } from 'next-intl/server'
 
 const getActionDetails = (

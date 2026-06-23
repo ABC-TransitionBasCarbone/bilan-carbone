@@ -1,7 +1,7 @@
-import { formatNumber } from '@/utils/number'
 import Box from '@abc-transitionbascarbone/components/src/base/Box'
 import Title from '@abc-transitionbascarbone/components/src/base/Title'
 import { Export, StudyResultUnit } from '@abc-transitionbascarbone/db-common'
+import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import styles from '../ResultsContainer.module.css'
