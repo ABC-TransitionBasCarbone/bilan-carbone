@@ -11,12 +11,13 @@ import {
   patchFormElement,
 } from '@abc-transitionbascarbone/publicodes/form'
 import { ArrowBack, ArrowForward, Check } from '@mui/icons-material'
-import { Button, Card, CardContent, Container, LinearProgress, Typography } from '@mui/material'
+import { Button, Container, LinearProgress, Typography } from '@mui/material'
 import { EvaluatedFormElement, FormBuilder, FormPageElementProp, FormState } from '@publicodes/forms'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import Category from './Category/Category'
+import SurveyCompletion from './SurveyCompletion'
 import styles from './Survey.module.css'
 
 function getStorageKey(surveyId: string) {

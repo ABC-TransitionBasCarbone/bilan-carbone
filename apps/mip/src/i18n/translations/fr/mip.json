@@ -18,7 +18,31 @@
       "restart": "Recommencer"
     },
     "resume": "Reprendre le sondage",
-    "characterCount": "{current} / {max} caractères"
+    "characterCount": "{current} / {max} caractères",
+    "completion": {
+      "title": "Mon empreinte professionnelle",
+      "unit": "kg de CO₂e",
+      "kgUnit": "kg",
+      "target": "Objectif 2050 : 2 tCO₂e",
+      "ofFootprint": "de votre empreinte",
+      "topCategories": {
+        "title": "Mes principaux postes d'émissions"
+      },
+      "summary": {
+        "title": "Le détail de mon empreinte"
+      },
+      "faq": {
+        "alone": {
+          "question": "Est-ce que je peux y arriver tout seul ?",
+          "answer": "Non, la transition écologique est un effort collectif. L'État, les collectivités et les entreprises ont un rôle essentiel à jouer. Vos actions individuelles sont néanmoins importantes pour montrer l'exemple et accélérer le changement."
+        },
+        "start": {
+          "question": "Par où commencer ?",
+          "answer": "Concentrez-vous sur vos deux ou trois principales sources d'émissions. Les actions à plus fort impact sont celles qui réduisent vos déplacements en voiture, améliorent votre alimentation, et limitent vos achats numériques inutiles."
+        }
+      },
+      "restart": "Recommencer le sondage"
+    }
   },
   "study": {
     "results": {
