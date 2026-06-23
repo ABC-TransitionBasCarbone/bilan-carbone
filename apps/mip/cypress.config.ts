@@ -1,15 +1,11 @@
 import { defineConfig } from 'cypress'
-import * as dotenv from 'dotenv'
-
-dotenv.config({ path: '.env.test' })
 
 export default defineConfig({
   e2e: {
     specPattern: 'src/tests/end-to-end/**/*.cy.{js,jsx,ts,tsx}',
-    baseUrl: process.env.CYPRESS_URL || 'http://localhost:3001',
+    baseUrl: process.env.CYPRESS_URL || 'http://localhost:3002',
     supportFile: 'cypress/support/index.ts',
-    experimentalStudio: true,
-    defaultCommandTimeout: 15000, // default value, change if needed during local tests
+    defaultCommandTimeout: 15000,
     retries: 2,
     experimentalMemoryManagement: true,
     numTestsKeptInMemory: process.env.CYPRESS_UI === 'true' ? 10 : 0,
