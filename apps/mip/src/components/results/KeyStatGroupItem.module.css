@@ -1,4 +1,4 @@
 .statRow {
-  border-bottom: 1px solid var(--neutral-50, #e9eff9);
+  border-bottom: 1px solid var(--neutral-50);
   padding-bottom: 0.25rem;
 }

@@ -15,21 +15,12 @@ interface Props {
   unit?: string
   title?: string
   height?: number
-  showTitle?: boolean
-  showLabelsOnPie?: boolean
 }
 
 const formatValueAndUnit = (value: number | null, unitValue: string, dec = 2) =>
   `${formatNumber(value ?? 0, dec)} ${unitValue}`
 
-const PieChart = ({
-  items,
-  unit = 'tCO₂e',
-  title,
-  height = 400,
-  showTitle = true,
-  showLabelsOnPie = true,
-}: Props) => {
+const PieChart = ({ items, unit = 'tCO₂e', title, height = 400 }: Props) => {
   const innerRingData: ProcessedChartData[] = items.map((item) => ({
     label: item.label,
     value: item.value,
@@ -43,8 +34,8 @@ const PieChart = ({
       unitLabel={unit}
       title={title}
       height={height}
-      showTitle={showTitle}
-      showLabelsOnPie={showLabelsOnPie}
+      showTitle={true}
+      showLabelsOnPie={true}
       type="post"
       formatNumber={formatNumber}
       formatValueAndUnit={formatValueAndUnit}

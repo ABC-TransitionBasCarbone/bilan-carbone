@@ -1,9 +1,9 @@
 'use client'
 
 import { BasicTypeCharts, formatValueAndUnit, processPieChartData } from '@/utils/charts'
-import { formatNumber } from '@/utils/number'
 import { StudyResultUnit } from '@abc-transitionbascarbone/db-common'
 import { PieChart as UiPieChart } from '@abc-transitionbascarbone/ui'
+import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import { useTheme } from '@mui/material'
 import { PieChartProps } from '@mui/x-charts'
 import { useTranslations } from 'next-intl'
