@@ -1,3 +1,6 @@
+// TODO: Remove this file when plugged in with the real database.
+// All types below (EmissionCategory, EntityFilter, SurveyComment, KeyStat, KeyStatGroup, SurveyResults)
+// will be replaced by database models and API responses.
 export type EmissionCategory = {
   key: string
   labelFr: string
@@ -38,6 +41,7 @@ export type SurveyResults = {
   keyStats: KeyStatGroup[]
 }
 
+// TODO: Remove sampleResults constant and getResultsForEntity function when plugged in with the real database.
 export const sampleResults: SurveyResults = {
   surveyId: 'sample-survey-1',
   totalRespondents: 47,

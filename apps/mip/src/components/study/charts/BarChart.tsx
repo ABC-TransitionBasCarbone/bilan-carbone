@@ -1,6 +1,7 @@
 'use client'
 
 import { BarChartData, BarChart as UiBarChart } from '@abc-transitionbascarbone/ui'
+import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 
 export type BarChartItem = {
   key: string
@@ -39,9 +40,6 @@ const BarChart = ({
     values: items.map((item) => item.value),
     colors: items.map((item) => item.color),
   }
-
-  const formatNumber = (value?: number, dec = 0) =>
-    (value || 0).toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: dec })
 
   return (
     <UiBarChart

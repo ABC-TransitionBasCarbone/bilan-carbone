@@ -10,7 +10,7 @@
   font-weight: 700 !important;
   font-size: 1rem !important;
   margin: 0 0 1rem 0 !important;
-  color: #272768;
+  color: var(--info);
 }
 
 .grid {
@@ -41,23 +41,23 @@
 }
 
 .state {
-  color: #8b5cf6;
-  background-color: #ede9fe;
+  color: var(--trajectory-snbc-industry, #8b5cf6);
+  background-color: color-mix(in srgb, var(--trajectory-snbc-industry, #8b5cf6) 15%, white);
 }
 
 .collectivities {
-  color: #f59e0b;
-  background-color: #fef3c7;
+  color: var(--warning, #fc8514);
+  background-color: color-mix(in srgb, var(--warning, #fc8514) 15%, white);
 }
 
 .companies {
-  color: #d6006c;
-  background-color: #fce7f3;
+  color: var(--primary, #272768);
+  background-color: color-mix(in srgb, var(--primary, #272768) 12%, white);
 }
 
 .description {
   font-size: 0.875rem !important;
-  color: #333;
+  color: var(--grayscale-950, #333);
   margin: 0 !important;
   line-height: 1.6 !important;
 }

@@ -1,0 +1,18 @@
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.statValue {
+  font-size: 2.5rem !important;
+  font-weight: 700 !important;
+  color: var(--info) !important;
+  line-height: 1.1 !important;
+}
+
+.statUnit {
+  font-size: 1rem !important;
+  font-weight: 400 !important;
+}
