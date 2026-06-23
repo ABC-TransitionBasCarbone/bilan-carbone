@@ -1,6 +1,5 @@
 import ResultsDashboard from '@/components/results/ResultsDashboard'
 import { sampleResults } from '@/data/sampleResults'
-import { Container } from '@mui/material'
 import styles from './ResultsPage.module.css'
 
 export default async function ResultsPage({ params }: { params: Promise<{ id: string }> }) {
@@ -8,9 +7,9 @@ export default async function ResultsPage({ params }: { params: Promise<{ id: st
   const results = id === sampleResults.surveyId ? sampleResults : { ...sampleResults, surveyId: id }
   return (
     <div className={styles.scrollWrapper}>
-      <Container maxWidth="lg">
+      <main className="main-container">
         <ResultsDashboard results={results} />
-      </Container>
+      </main>
     </div>
   )
 }

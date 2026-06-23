@@ -1,41 +1,23 @@
 'use client'
-import CollectiveEffortEncart from '@/components/results/CollectiveEffortEncart'
-import ObjectiveEncart from '@/components/results/ObjectiveEncart'
-import BarChart from '@/components/study/charts/BarChart'
-import PieChart from '@/components/study/charts/PieChart'
-import { getResultsForEntity, KeyStatGroup, SurveyResults } from '@/data/sampleResults'
-import { BaseStyledChip } from '@abc-transitionbascarbone/ui'
+
+import { getResultsForEntity, SurveyResults } from '@/data/sampleResults'
 import { Print } from '@mui/icons-material'
-import { Button, Card, CardContent, Typography } from '@mui/material'
+import { Button, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
+import ChartsSection from './ChartsSection'
+import CollectiveEffortEncart from './CollectiveEffortEncart'
+import EntityFilterSection from './EntityFilterSection'
+import KeyStatsSection from './KeyStatsSection'
+import ObjectiveEncart from './ObjectiveEncart'
 import styles from './ResultsDashboard.module.css'
+import StatsSection from './StatsSection'
 
 interface Props {
   results: SurveyResults
 }
 
-function KeyStatGroupSection({ group, t }: { group: KeyStatGroup; t: ReturnType<typeof useTranslations<'results'>> }) {
-  return (
-    <div className="mb2">
-      <Typography variant="h6" className="mb1">
-        {t(`keyStats.${group.key}.title` as Parameters<typeof t>[0])}
-      </Typography>
-      <div className="flex-col gapped-2">
-        {group.stats.map((stat) => (
-          <div key={stat.key} className={`flex justify-between ${styles.statRow}`}>
-            <Typography variant="body2">{t(`keyStats.${group.key}.${stat.key}` as Parameters<typeof t>[0])}</Typography>
-            <Typography variant="body2" className="bold">
-              {stat.unit === 'percent' ? `${stat.value} %` : stat.value}
-            </Typography>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-export default function ResultsDashboard({ results }: Props) {
+const ResultsDashboard = ({ results }: Props) => {
   const t = useTranslations('results')
   const [selectedEntity, setSelectedEntity] = useState('all')
 
@@ -68,81 +50,19 @@ export default function ResultsDashboard({ results }: Props) {
         {t('subtitle')}
       </Typography>
 
-      <div className={styles.statsGrid}>
-        <Card>
-          <CardContent className="p125">
-            <Typography className={styles.statValue}>
-              {filtered.averageFootprintTCO2e.toFixed(1)}
-              <span className={styles.statUnit}> tCO₂e</span>
-            </Typography>
-            <Typography variant="body2">{t('stats.averageFootprint')}</Typography>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p125">
-            <Typography className={styles.statValue}>{filtered.totalRespondents}</Typography>
-            <Typography variant="body2">{t('stats.respondents')}</Typography>
-          </CardContent>
-        </Card>
-      </div>
+      <StatsSection results={filtered} />
 
-      <section className="mb2">
-        <Typography variant="h6" className="mb1">
-          {t('filter.title')}
-        </Typography>
-        <div className="flex wrap gapped-2">
-          {results.entities.map((entity) => (
-            <BaseStyledChip
-              key={entity.id}
-              label={entity.name}
-              color={selectedEntity === entity.id ? 'primary' : 'default'}
-              onClick={() => setSelectedEntity(entity.id)}
-              clickable
-            />
-          ))}
-        </div>
-      </section>
+      <EntityFilterSection
+        entities={results.entities}
+        selectedEntity={selectedEntity}
+        onSelectEntity={setSelectedEntity}
+      />
 
       <ObjectiveEncart averageFootprintTCO2e={filtered.averageFootprintTCO2e} />
 
-      <section className="mb2">
-        <Typography variant="h6" className="mb1">
-          {t('charts.title')}
-        </Typography>
-        <div className={styles.chartsGrid}>
-          <Card>
-            <CardContent>
-              <Typography variant="subtitle1" className="mb1">
-                {t('charts.barTitle')}
-              </Typography>
-              <BarChart items={[totalBarItem]} unit="tCO₂e" targetValue={2} targetLabel={t('charts.target2050')} />
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent>
-              <Typography variant="subtitle1" className="mb1">
-                {t('charts.pieTitle')}
-              </Typography>
-              <PieChart items={pieChartItems} />
-            </CardContent>
-          </Card>
-        </div>
-      </section>
+      <ChartsSection pieChartItems={pieChartItems} totalBarItem={totalBarItem} />
 
-      <section className="mb2">
-        <Typography variant="h6" className="mb1">
-          {t('keyStats.title')}
-        </Typography>
-        <Card>
-          <CardContent className="p15">
-            <div className={styles.keyStatsGrid}>
-              {filtered.keyStats.map((group) => (
-                <KeyStatGroupSection key={group.key} group={group} t={t} />
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </section>
+      <KeyStatsSection keyStats={filtered.keyStats} />
 
       <CollectiveEffortEncart />
 
@@ -154,3 +74,5 @@ export default function ResultsDashboard({ results }: Props) {
     </div>
   )
 }
+
+export default ResultsDashboard
