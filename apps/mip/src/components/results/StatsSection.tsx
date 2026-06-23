@@ -1,10 +1,10 @@
 'use client'
 
 import { SurveyResults } from '@/data/sampleResults'
+import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import { Card, CardContent, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import styles from './StatsSection.module.css'
-import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 
 interface Props {
   results: SurveyResults
