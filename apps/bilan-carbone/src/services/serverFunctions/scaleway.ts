@@ -11,22 +11,30 @@ import {
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { v4 as uuidv4 } from 'uuid'
 
-const accessKey = process.env.SCW_ACCESS_KEY as string
-const secretKey = process.env.SCW_SECRET_KEY as string
+let s3Instance: S3Client | null = null
+
+const getS3Client = () => {
+  if (!s3Instance) {
+    const accessKey = process.env.SCW_ACCESS_KEY as string
+    const secretKey = process.env.SCW_SECRET_KEY as string
+    const bucketName = process.env.SCW_BUCKET_NAME as string
+    const region = process.env.SCW_REGION
+    const endpoint = `https://${bucketName}.s3.${region}.scw.cloud`
+
+    s3Instance = new S3Client({
+      credentials: {
+        accessKeyId: accessKey,
+        secretAccessKey: secretKey,
+      },
+      region,
+      endpoint,
+      forcePathStyle: true,
+    })
+  }
+  return s3Instance
+}
+
 const bucketName = process.env.SCW_BUCKET_NAME as string
-const region = process.env.SCW_REGION
-
-const endpoint = `https://${bucketName}.s3.${region}.scw.cloud`
-
-const s3 = new S3Client({
-  credentials: {
-    accessKeyId: accessKey,
-    secretAccessKey: secretKey,
-  },
-  region,
-  endpoint,
-  forcePathStyle: true,
-})
 
 export const uploadFileToBucket = async (file: File) =>
   withServerResponse('uploadFileToBucket', async () => {
@@ -41,25 +49,25 @@ export const uploadFileToBucket = async (file: File) =>
       ContentType: file.type,
     }
 
-    const data = await s3.send(new PutObjectCommand(params))
+    const data = await getS3Client().send(new PutObjectCommand(params))
     return { key: bucketFileKey, ETag: data.ETag || '' }
   })
 
 export const deleteFileFromBucket = async (fileKey: string) =>
   withServerResponse('deleteFileFromBucket', async () => {
-    return s3.send(new DeleteObjectCommand({ Bucket: bucketName, Key: fileKey }))
+    return getS3Client().send(new DeleteObjectCommand({ Bucket: bucketName, Key: fileKey }))
   })
 
 export const getFileUrlFromBucket = async (fileKey: string) =>
   withServerResponse('getFileUrlFromBucket', async () => {
     // Check if the file exists, otherwise throw an error
-    await s3.send(new HeadObjectCommand({ Bucket: bucketName, Key: fileKey }))
-    return getSignedUrl(s3, new GetObjectCommand({ Bucket: bucketName, Key: fileKey }), { expiresIn: 3600 })
+    await getS3Client().send(new HeadObjectCommand({ Bucket: bucketName, Key: fileKey }))
+    return getSignedUrl(getS3Client(), new GetObjectCommand({ Bucket: bucketName, Key: fileKey }), { expiresIn: 3600 })
   })
 
 export const getFileFromBucket = async (fileKey: string) =>
   withServerResponse('getFileFromBucket', async () => {
-    const response = await s3.send(new GetObjectCommand({ Bucket: bucketName, Key: fileKey }))
+    const response = await getS3Client().send(new GetObjectCommand({ Bucket: bucketName, Key: fileKey }))
     if (!response.Body) {
       throw new Error('No file content received')
     }
