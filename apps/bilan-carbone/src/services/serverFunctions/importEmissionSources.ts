@@ -42,6 +42,7 @@ import { canBeValidated, getCaracterisationsBySubPost, getEmissionSourceEmission
 import { getAuthenticatedAccount } from '../permissions/account.permissions'
 import { hasStudyBasicRights } from '../permissions/emissionSource'
 import { canReadStudy } from '../permissions/study'
+import { getStudyOrganizationId } from '../study.server'
 import {
   getQualitativeUncertaintyFromQuality,
   getQualitativeUncertaintyFromSquaredStandardDeviation,
@@ -111,7 +112,7 @@ export async function validateEmissionSourcesFromFile(
     return { status: 'error', errors: result.errors }
   }
 
-  const organizationId = study.organizationVersion.organization?.id ?? ''
+  const organizationId = await getStudyOrganizationId(studyId, account.organizationVersionId)
   const versionIds = study.emissionFactorVersions.map((v) => v.importVersionId)
 
   const [resolved, tagFamilies] = await Promise.all([
@@ -176,7 +177,7 @@ export async function resolveEmissionSourcesFromFile(
     return { status: 'error', errors: result.errors }
   }
 
-  const organizationId = study.organizationVersion.organization?.id ?? ''
+  const organizationId = await getStudyOrganizationId(studyId, account.organizationVersionId)
   const versionIds = study.emissionFactorVersions.map((v) => v.importVersionId)
 
   const resolved = await resolveEmissionFactorRows(result.rows, choices, locale, organizationId, versionIds)
@@ -226,7 +227,8 @@ export async function importEmissionSourcesFromFile(
     return result
   }
 
-  const organizationId = study.organizationVersion.organization?.id ?? ''
+  const organizationId = await getStudyOrganizationId(studyId, account.organizationVersionId)
+
   const versionIds = study.emissionFactorVersions.map((v) => v.importVersionId)
 
   const newEmissionSourceRows: NewEmissionSourceRow[] = []
