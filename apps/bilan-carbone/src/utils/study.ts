@@ -18,11 +18,11 @@ import {
   SubPost,
   Unit,
 } from '@abc-transitionbascarbone/db-common/enums'
+import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import { Getter } from '@tanstack/react-table'
 import { UserSession } from 'next-auth'
 import { unique } from './array'
 import { getEmissionSourcesTotalCo2 } from './emissionSources'
-import { formatNumber } from './number'
 import { hasActiveLicence, isInOrgaOrParent } from './organization'
 
 export const getUserRoleOnPublicStudy = (

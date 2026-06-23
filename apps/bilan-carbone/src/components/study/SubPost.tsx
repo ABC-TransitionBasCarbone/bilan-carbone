@@ -6,7 +6,6 @@ import { getCaracterisationsBySubPost, getEmissionResults } from '@/services/emi
 import { Post } from '@/services/posts'
 import { EmissionFactorWithMetaData, getEmissionFactors } from '@/services/serverFunctions/emissionFactor'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
-import { formatNumber } from '@/utils/number'
 import { withInfobulle } from '@/utils/post'
 import { postColors, STUDY_UNIT_VALUES } from '@/utils/study'
 import { HelpIcon } from '@abc-transitionbascarbone/components'
@@ -17,6 +16,7 @@ import {
   StudyRole,
   SubPost as SubPostEnum,
 } from '@abc-transitionbascarbone/db-common/enums'
+import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
 import classNames from 'classnames'

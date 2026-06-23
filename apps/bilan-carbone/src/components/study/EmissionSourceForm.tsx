@@ -21,7 +21,7 @@ import {
   getEmissionFactorFullName,
   getEmissionFactorValue,
 } from '@/utils/emissionFactors'
-import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
+import { formatEmissionFactorNumber } from '@/utils/number'
 import { formatEmissionFromNumber, hasDeprecationPeriod, hasEditionRights, isCAS } from '@/utils/study'
 import { HelpIcon } from '@abc-transitionbascarbone/components'
 import LinkButton from '@abc-transitionbascarbone/components/src/base/LinkButton'
@@ -38,6 +38,7 @@ import {
   Unit,
 } from '@abc-transitionbascarbone/db-common/enums'
 import { Button } from '@abc-transitionbascarbone/ui'
+import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import AddIcon from '@mui/icons-material/Add'
 import CopyIcon from '@mui/icons-material/ContentCopy'
 import EditIcon from '@mui/icons-material/Edit'
