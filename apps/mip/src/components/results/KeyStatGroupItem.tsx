@@ -15,12 +15,12 @@ const KeyStatGroupItem = ({ group }: Props) => {
   return (
     <div className="mb2">
       <Typography variant="h6" className="mb1">
-        {t(`keyStats.${group.key}.title` as Parameters<typeof t>[0])}
+        {t(`keyStats.${group.key}.title`)}
       </Typography>
       <div className="flex-col gapped-2">
         {group.stats.map((stat) => (
           <div key={stat.key} className={`flex justify-between ${styles.statRow}`}>
-            <Typography variant="body2">{t(`keyStats.${group.key}.${stat.key}` as Parameters<typeof t>[0])}</Typography>
+            <Typography variant="body2">{t(`keyStats.${group.key}.${stat.key}`)}</Typography>
             <Typography variant="body2" className="bold">
               {stat.unit === 'percent' ? `${stat.value} %` : stat.value}
             </Typography>

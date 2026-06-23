@@ -7,7 +7,7 @@
 
 .header {
   background-color: var(--info);
-  color: #fff;
+  color: white;
   padding: 1rem 1.5rem;
 }
 
@@ -29,7 +29,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
   padding: 1.25rem 1.5rem;
-  background-color: #fff;
+  background-color: white;
   align-items: center;
 }
 
