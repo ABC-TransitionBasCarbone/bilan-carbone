@@ -6,8 +6,8 @@ import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 
 import { BasicTypeCharts, processBarChartData } from '@/utils/charts'
-import { formatNumber } from '@/utils/number'
 import { StudyResultUnit } from '@abc-transitionbascarbone/db-common'
+import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 
 interface Props<T> {
   results: T[]
