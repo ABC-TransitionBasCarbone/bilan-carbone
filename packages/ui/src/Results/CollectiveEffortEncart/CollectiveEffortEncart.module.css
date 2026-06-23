@@ -3,7 +3,7 @@
   border-radius: 0.75rem;
   padding: 1.25rem 1.5rem;
   margin-bottom: 2rem;
-  background-color: white;
+  background-color: var(--white);
 }
 
 .title {
@@ -42,17 +42,17 @@
 
 .state {
   color: var(--trajectory-snbc-industry);
-  background-color: color-mix(in srgb, var(--trajectory-snbc-industry) 15%, white);
+  background-color: color-mix(in srgb, var(--trajectory-snbc-industry) 15%, var(--white));
 }
 
 .collectivities {
   color: var(--warning);
-  background-color: color-mix(in srgb, var(--warning) 15%, white);
+  background-color: color-mix(in srgb, var(--warning) 15%, var(--white));
 }
 
 .companies {
   color: var(--info);
-  background-color: color-mix(in srgb, var(--info) 12%, white);
+  background-color: color-mix(in srgb, var(--info) 12%, var(--white));
 }
 
 .description {
