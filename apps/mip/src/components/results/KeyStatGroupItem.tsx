@@ -7,9 +7,10 @@ import styles from './KeyStatGroupItem.module.css'
 
 interface Props {
   group: KeyStatGroup
+  statQuestions?: Record<string, string>
 }
 
-const KeyStatGroupItem = ({ group }: Props) => {
+const KeyStatGroupItem = ({ group, statQuestions }: Props) => {
   const t = useTranslations('results')
 
   return (
@@ -20,7 +21,7 @@ const KeyStatGroupItem = ({ group }: Props) => {
       <div className="flex-col gapped-2">
         {group.stats.map((stat) => (
           <div key={stat.key} className={`flex justify-between ${styles.statRow}`}>
-            <Typography variant="body2">{t(`keyStats.${group.key}.${stat.key}`)}</Typography>
+            <Typography variant="body2">{statQuestions?.[stat.key] ?? t(`keyStats.${group.key}.${stat.key}`)}</Typography>
             <Typography variant="body2" className="bold">
               {stat.unit === 'percent' ? `${stat.value} %` : stat.value}
             </Typography>
