@@ -34,5 +34,10 @@ export const updateCampaignCommand = async (command: UpdateCampaignCommand) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    await updateCampaign(command)
+    await updateCampaign(
+      command,
+      session.user.accountMipId,
+      session.user.organizationVersionMipId,
+      isAdmin(session.user.role),
+    )
   })

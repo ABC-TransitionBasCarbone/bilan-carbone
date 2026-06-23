@@ -1,7 +1,8 @@
 'use server'
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import CampaignsPage from '@/components/pages/Campaigns'
-import { getAllCampaigns,  getModelCampaignByOrganizationVersionMipId } from '@/db/campaign'
+import { getAllAllowedCampaigns, getAllCampaigns, getModelCampaignByOrganizationVersionMipId } from '@/db/campaign'
+import { isAdmin } from '@/utils/user'
 import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 
 const Campaigns = async ({ user }: UserSessionProps) => {
@@ -9,10 +10,8 @@ const Campaigns = async ({ user }: UserSessionProps) => {
   if (!modelCampaign) {
     return <NotFound />
   }
-  const allCampaigns = await getAllCampaigns()
+  const allCampaigns = isAdmin(user.role) ? await getAllCampaigns() : await getAllAllowedCampaigns(user.accountMipId)
   return <CampaignsPage campaigns={allCampaigns} modelCampaign={modelCampaign} accountMipId={user.accountMipId} />
 }
 
 export default withAuth(Campaigns)
-
-

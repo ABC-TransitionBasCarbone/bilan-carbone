@@ -37,5 +37,18 @@
     "add": "Add new model",
     "edit": "Save changes",
     "success": "Models changed successfully"
+  },
+  "campaigns": {
+    "editCampaigns": "Edit campaign",
+    "name": "campaign name",
+    "namePlaceholder": "Name of the campaign",
+    "json": "JSON",
+    "status": "status",
+    "OPEN": "Open",
+    "CLOSED": "Close",
+    "responsesCount": "Number of responses",
+    "add": "Add new campaign",
+    "edit": "Save changes",
+    "success": "campaigns changed successfully"
   }
 }

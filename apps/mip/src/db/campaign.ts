@@ -82,6 +82,7 @@ export const getAllCampaigns = async () => {
       createdBy: { select: { id: true } },
       allowedAccounts: { select: { accountMipId: true } },
       _count: { select: { responses: true } },
+      modelCampaignId: true,
     },
   })
 
@@ -90,17 +91,50 @@ export const getAllCampaigns = async () => {
 
 export type CampaignsWithResponses = AsyncReturnType<typeof getAllCampaigns>
 
-export const updateCampaign = async ({ campaigns }: UpdateCampaignCommand) => {
-  const campaignIds = campaigns.map((campaign) => campaign.id)
+export const getAllAllowedCampaigns = async (accountMipId: string) => {
+  const campaigns = await prismaClient.campaign.findMany({
+    select: {
+      id: true,
+      name: true,
+      status: true,
+      createdBy: { select: { id: true } },
+      allowedAccounts: { select: { accountMipId: true } },
+      _count: { select: { responses: true } },
+      modelCampaignId: true,
+    },
+    where: { allowedAccounts: { some: { accountMipId } } },
+  })
+
+  return campaigns
+}
+
+export const updateCampaign = async (
+  command: UpdateCampaignCommand,
+  accountMipId: string,
+  organizationVersionMipId: string,
+  isAdmin?: boolean,
+) => {
+  const campaignIds = command.campaigns.map((campaign) => campaign.id)
+
+  const campaignWhereBase = {
+    id: { notIn: campaignIds },
+    modelCampaign: { organizationVersionMip: { id: organizationVersionMipId } },
+  }
+
+  const campaignWhere = isAdmin
+    ? campaignWhereBase
+    : { ...campaignWhereBase, allowedAccounts: { some: { accountMipId } } }
+
+  const campaignsToDelete = await prismaClient.campaign.findMany({
+    where: campaignWhere,
+    select: { id: true },
+  })
+  const campaignIdsToDelete = campaignsToDelete.map((c) => c.id)
 
   return prismaClient.$transaction([
-    prismaClient.accountOnCampaign.deleteMany({
-      where: { campaignId: { notIn: campaignIds } },
-    }),
-    prismaClient.response.deleteMany({
-      where: { campaignId: { notIn: campaignIds } },
-    }),
-    ...campaigns.map((campaign) =>
+    prismaClient.accountOnCampaign.deleteMany({ where: { campaign: { id: { in: campaignIdsToDelete } } } }),
+    prismaClient.response.deleteMany({ where: { campaign: { id: { in: campaignIdsToDelete } } } }),
+    ...command.campaigns.map((campaign) =>
       prismaClient.campaign.upsert({
         where: { id: campaign.id },
         create: {
@@ -122,8 +156,6 @@ export const updateCampaign = async ({ campaigns }: UpdateCampaignCommand) => {
         },
       }),
     ),
-    prismaClient.campaign.deleteMany({
-      where: { id: { notIn: campaigns.map((campaign) => campaign.id) } },
-    }),
+    prismaClient.campaign.deleteMany({ where: { id: { in: campaignIdsToDelete } } }),
   ])
 }

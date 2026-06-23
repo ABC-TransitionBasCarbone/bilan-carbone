@@ -1,5 +1,5 @@
-import z, { string } from 'zod'
 import { CampaignStatus } from '@abc-transitionbascarbone/db-common/enums'
+import z from 'zod'
 
 export const UpdateCampaignCommandValidation = z.object({
   campaigns: z.array(
@@ -9,7 +9,7 @@ export const UpdateCampaignCommandValidation = z.object({
       status: z.enum(CampaignStatus),
       allowedAccounts: z.array(z.string()),
       createdBy: z.string(),
-      modelCampaignId: z.string()
+      modelCampaignId: z.string(),
     }),
   ),
 })
