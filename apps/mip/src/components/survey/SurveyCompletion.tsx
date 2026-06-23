@@ -15,8 +15,8 @@ import {
   LinearProgress,
   Typography,
 } from '@mui/material'
-import Link from 'next/link'
 import { useTranslations } from 'next-intl'
+import Link from 'next/link'
 import { useEffect } from 'react'
 import styles from './SurveyCompletion.module.css'
 
@@ -108,20 +108,20 @@ const SurveyCompletion = ({ onRestart, surveyId }: Props) => {
     <div className={styles.scrollWrapper}>
       <Container maxWidth="md" className={styles.page}>
         <section className={styles.hero} data-testid="survey-completion-hero">
-        <Typography variant="h4" className={styles.heroTitle}>
-          {t('title')}
-        </Typography>
-        <div className={styles.footprintDisplay}>
-          <Typography className={styles.footprintValue}>{formatNumber(Math.round(totalKg))}</Typography>
-          <Typography className={styles.footprintUnit}>{t('unit')}</Typography>
-        </div>
-        <div className={styles.targetBar}>
-          <LinearProgress variant="determinate" value={targetBarValue} />
-          <div className={styles.targetBarLabels}>
-            <Typography className={styles.targetBarLabel}>0</Typography>
-            <Typography className={styles.targetBarLabel}>{t('target')}</Typography>
+          <Typography variant="h4" className={styles.heroTitle}>
+            {t('title')}
+          </Typography>
+          <div className={styles.footprintDisplay}>
+            <Typography className={styles.footprintValue}>{formatNumber(Math.round(totalKg))}</Typography>
+            <Typography className={styles.footprintUnit}>{t('unit')}</Typography>
           </div>
-        </div>
+          <div className={styles.targetBar}>
+            <LinearProgress variant="determinate" value={targetBarValue} />
+            <div className={styles.targetBarLabels}>
+              <Typography className={styles.targetBarLabel}>0</Typography>
+              <Typography className={styles.targetBarLabel}>{t('target')}</Typography>
+            </div>
+          </div>
         </section>
 
         <section className={styles.section} data-testid="survey-completion-top-categories">
