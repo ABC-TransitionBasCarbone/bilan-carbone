@@ -8,7 +8,7 @@ import { useTranslations } from 'next-intl'
 
 const ACTOR_KEYS = ['state', 'collectivities', 'companies'] as const
 
-export default function CollectiveEffortEncart() {
+const CollectiveEffortEncart = () => {
   const t = useTranslations('results.collectiveEffort')
 
   const items: CollectiveEffortEncartItem[] = ACTOR_KEYS.map((key) => ({
@@ -22,3 +22,5 @@ export default function CollectiveEffortEncart() {
 
   return <UiCollectiveEffortEncart title={t('title')} items={items} />
 }
+
+export default CollectiveEffortEncart

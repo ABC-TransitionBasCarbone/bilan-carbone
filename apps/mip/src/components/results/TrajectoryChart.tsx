@@ -6,7 +6,7 @@ import styles from './TrajectoryChart.module.css'
 const YEARS = [new Date().getFullYear().toString(), '2030', '2040', '2050']
 const TARGET_TRAJECTORY = [0, 7, 4, 2]
 
-export default function TrajectoryChart({ currentValue }: { currentValue: number }) {
+const TrajectoryChart = ({ currentValue }: { currentValue: number }) => {
   const data = [currentValue, ...TARGET_TRAJECTORY.slice(1)]
 
   return (
@@ -32,7 +32,6 @@ export default function TrajectoryChart({ currentValue }: { currentValue: number
           {
             data,
             label: 'tCO₂e/an',
-            color: '#d6006c',
             curve: 'linear',
             showMark: true,
             valueFormatter: (value) => `${(value ?? 0).toFixed(1).replace('.', ',')} t`,
@@ -45,3 +44,5 @@ export default function TrajectoryChart({ currentValue }: { currentValue: number
     </div>
   )
 }
+
+export default TrajectoryChart
