@@ -16,8 +16,8 @@ import { EvaluatedFormElement, FormBuilder, FormPageElementProp, FormState } fro
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import Category from './Category/Category'
-import SurveyCompletion from './SurveyCompletion'
 import styles from './Survey.module.css'
+import SurveyCompletion from './SurveyCompletion'
 
 function getStorageKey(surveyId: string) {
   return `mip-publicodes-state-${surveyId}`
