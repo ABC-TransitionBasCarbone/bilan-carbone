@@ -5,32 +5,44 @@ enum CampaignStatus {
   @@schema("mip")
 }
 
-model ModelCampaign {
-  id             String          @id @default(uuid())
-  createdAt      DateTime        @default(now()) @map("created_at")
-  updatedAt      DateTime        @updatedAt @map("updated_at")
-  name           String
+enum CampaignRole {
+  Validator
+  Editor
+  Reader
 
-  model          Json
+  @@schema("mip")
+}
+
+model ModelCampaign {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  name      String
+
+  model     Json
   campaigns Campaign[]
 
-
-  organizationVersionMip  OrganizationVersionMip?
+  organizationVersionMip OrganizationVersionMip?
 
   @@map("model_campaigns")
   @@schema("mip")
 }
 
 model Campaign {
-  id        String         @id @default(uuid())
-  createdAt DateTime       @default(now()) @map("created_at")
-  updatedAt DateTime       @updatedAt @map("updated_at")
-  name      String
-  status    CampaignStatus @default(OPEN)
+  id              String         @id @default(uuid())
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+  name            String
+  status          CampaignStatus @default(OPEN)
   modelCampaignId String         @map("model_campaign_id")
-  modelCampaign ModelCampaign        @relation(fields: [modelCampaignId], references: [id])
+  modelCampaign   ModelCampaign  @relation(fields: [modelCampaignId], references: [id])
 
   responses Response[]
+
+  createdById String     @map("created_by_account_mip_id")
+  createdBy   AccountMip @relation(fields: [createdById], references: [id])
+
+  allowedAccounts AccountOnCampaign[]
 
   @@map("campaigns")
   @@schema("mip")
@@ -45,5 +57,21 @@ model Response {
   answers    Json
 
   @@map("responses")
+  @@schema("mip")
+}
+
+model AccountOnCampaign {
+  campaign     Campaign   @relation(fields: [campaignId], references: [id])
+  campaignId   String     @map("stcampaignd")
+  accountMip   AccountMip @relation(fields: [accountMipId], references: [id])
+  accountMipId String     @map("account_mip_id")
+
+  role CampaignRole
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@id([campaignId, accountMipId])
+  @@map("accounts_on_campaign")
   @@schema("mip")
 }
