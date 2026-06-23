@@ -13,7 +13,7 @@ interface Props {
 
 type PublicodesRule = {
   question?: string | null
-}
+} | null
 
 const questionRuleByStatKey: Record<string, string> = {
   plane: 'transport . avion . présent',
