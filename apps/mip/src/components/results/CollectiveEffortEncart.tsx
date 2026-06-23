@@ -14,8 +14,8 @@ const CollectiveEffortEncart = () => {
   const items: CollectiveEffortEncartItem[] = ACTOR_KEYS.map((key) => ({
     key,
     tone: key,
-    label: t(`${key}.label` as Parameters<typeof t>[0]),
-    description: t.rich(`${key}.description` as Parameters<typeof t>[0], {
+    label: t(`${key}.label`),
+    description: t.rich(`${key}.description`, {
       strong: (chunks) => <strong>{chunks}</strong>,
     }),
   }))
