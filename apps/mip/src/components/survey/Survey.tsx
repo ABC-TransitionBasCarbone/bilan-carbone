@@ -10,11 +10,12 @@ import {
   patchFormElement,
 } from '@abc-transitionbascarbone/publicodes/form'
 import { ArrowBack, ArrowForward, Check } from '@mui/icons-material'
-import { Button, Card, CardContent, Container, LinearProgress, Typography } from '@mui/material'
+import { Button, Container, LinearProgress, Typography } from '@mui/material'
 import { EvaluatedFormElement, FormBuilder, FormPageElementProp, FormState } from '@publicodes/forms'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import Category from './Category/Category'
+import SurveyCompletion from './SurveyCompletion'
 import styles from './Survey.module.css'
 
 function getStorageKey(surveyId: string) {
@@ -158,26 +159,7 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   }
 
   if (isComplete) {
-    return (
-      <Container maxWidth="md" className={styles.container}>
-        <Card>
-          <CardContent>
-            <div className={styles.completedContent}>
-              <Check className={styles.checkIcon} />
-              <Typography variant="h4" gutterBottom>
-                {t('completed.title')}
-              </Typography>
-              <Typography variant="body1" color="text.secondary" paragraph>
-                {t('completed.description')}
-              </Typography>
-              <Button variant="contained" href={`/survey/${surveyId}/results`}>
-                {t('completed.viewResults')}
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </Container>
-    )
+    return <SurveyCompletion onRestart={handleRestart} />
   }
 
   return (
