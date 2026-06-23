@@ -1,4 +1,6 @@
+import { UpdateCampaignCommand } from '@/services/serverFunctions/campaign.command'
 import { UpdateModelCampaignCommand } from '@/services/serverFunctions/modelCampaign.command'
+import { CampaignRole } from '@abc-transitionbascarbone/db-common/enums'
 import { prismaClient } from './client.server'
 
 export const getAllModelCampaigns = async () => {
@@ -40,6 +42,15 @@ export const getModelCampaignById = (id: string) => {
   })
 }
 
+export const getModelCampaignByOrganizationVersionMipId = (organizationVersionMipId: string) => {
+  return prismaClient.modelCampaign.findFirst({
+    where: { organizationVersionMip: { id: organizationVersionMipId } },
+    select: { name: true, id: true, model: true },
+  })
+}
+
+export type ModelCampaignLight = AsyncReturnType<typeof getModelCampaignByOrganizationVersionMipId>
+
 export const addOrganizationVersionMipIdToModelCampaign = async (
   modelCampaignId: string,
   organizationVersionMipId: string,
@@ -60,4 +71,59 @@ export const addOrganizationVersionMipIdToModelCampaign = async (
       },
     },
   })
+}
+
+export const getAllCampaigns = async () => {
+  const campaigns = await prismaClient.campaign.findMany({
+    select: {
+      id: true,
+      name: true,
+      status: true,
+      createdBy: { select: { id: true } },
+      allowedAccounts: { select: { accountMipId: true } },
+      _count: { select: { responses: true } },
+    },
+  })
+
+  return campaigns
+}
+
+export type CampaignsWithResponses = AsyncReturnType<typeof getAllCampaigns>
+
+export const updateCampaign = async ({ campaigns }: UpdateCampaignCommand) => {
+  const campaignIds = campaigns.map((campaign) => campaign.id)
+
+  return prismaClient.$transaction([
+    prismaClient.accountOnCampaign.deleteMany({
+      where: { campaignId: { notIn: campaignIds } },
+    }),
+    prismaClient.response.deleteMany({
+      where: { campaignId: { notIn: campaignIds } },
+    }),
+    ...campaigns.map((campaign) =>
+      prismaClient.campaign.upsert({
+        where: { id: campaign.id },
+        create: {
+          id: campaign.id,
+          name: campaign.name,
+          status: campaign.status,
+          modelCampaign: { connect: { id: campaign.modelCampaignId } },
+          createdBy: { connect: { id: campaign.createdBy } },
+          allowedAccounts: {
+            connectOrCreate: (campaign.allowedAccounts || []).map((accountMipId: string) => ({
+              where: { campaignId_accountMipId: { campaignId: campaign.id, accountMipId } },
+              create: { accountMipId, role: CampaignRole.Editor },
+            })),
+          },
+        },
+        update: {
+          name: campaign.name,
+          status: campaign.status,
+        },
+      }),
+    ),
+    prismaClient.campaign.deleteMany({
+      where: { id: { notIn: campaigns.map((campaign) => campaign.id) } },
+    }),
+  ])
 }
