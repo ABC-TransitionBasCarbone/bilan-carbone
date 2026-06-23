@@ -4,6 +4,7 @@ import { SurveyResults } from '@/data/sampleResults'
 import { Card, CardContent, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import styles from './StatsSection.module.css'
+import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 
 interface Props {
   results: SurveyResults
@@ -17,7 +18,7 @@ const StatsSection = ({ results }: Props) => {
       <Card>
         <CardContent className="p125">
           <Typography className={styles.statValue}>
-            {results.averageFootprintTCO2e.toFixed(1)}
+            {formatNumber(results.averageFootprintTCO2e, 1)}
             <span className={styles.statUnit}> tCO₂e</span>
           </Typography>
           <Typography variant="body2">{t('stats.averageFootprint')}</Typography>
