@@ -2,8 +2,8 @@
 
 import { Box, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
-import TrajectoryChart from './TrajectoryChart'
 import styles from './ObjectiveEncart.module.css'
+import TrajectoryChart from './TrajectoryChart'
 
 const TARGET_2030_T = 7
 const TARGET_2050_T = 2
@@ -46,11 +46,15 @@ const ObjectiveEncart = ({ averageFootprintTCO2e }: Props) => {
             </Box>
           </Typography>
 
-          {aboveTarget && <Typography className={styles.contextMessage}>{t('aboveTarget', { target: TARGET_2030_T })}</Typography>}
+          {aboveTarget && (
+            <Typography className={styles.contextMessage}>{t('aboveTarget', { target: TARGET_2030_T })}</Typography>
+          )}
 
           {aboveTarget && yearlyReductionKg > 0 && (
             <Box className={styles.paceBox}>
-              <Typography className={styles.paceTitle}>{t('paceTitle', { target: TARGET_2030_T, year: TARGET_YEAR })}</Typography>
+              <Typography className={styles.paceTitle}>
+                {t('paceTitle', { target: TARGET_2030_T, year: TARGET_YEAR })}
+              </Typography>
               <Typography className={styles.paceValue}>
                 {yearlyReductionKg.toLocaleString('fr-FR')}
                 <Box component="span" className={styles.paceUnit}>
