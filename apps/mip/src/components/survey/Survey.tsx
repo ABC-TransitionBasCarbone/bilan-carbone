@@ -159,7 +159,7 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   }
 
   if (isComplete) {
-    return <SurveyCompletion onRestart={handleRestart} />
+    return <SurveyCompletion onRestart={handleRestart} surveyId={surveyId} />
   }
 
   return (
