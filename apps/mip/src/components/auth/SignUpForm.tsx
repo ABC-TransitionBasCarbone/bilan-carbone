@@ -56,13 +56,14 @@ const SignUpForm = ({ modelCampaignId }: Props) => {
     <Form onSubmit={handleSubmit(onSubmit)} className="grow justify-center">
       <FormControl className={authStyles.form}>
         <FormTextField
+          data-testid="input-email"
           control={control}
           name="email"
           className={authStyles.input}
           label={t('email')}
           placeholder={t('emailPlaceholder')}
         />
-        <LoadingButton type="submit" loading={submitting} variant="contained" fullWidth>
+        <LoadingButton type="submit" loading={submitting} variant="contained" data-testid="submit-button" fullWidth>
           {t('validate')}
         </LoadingButton>
         {message && (

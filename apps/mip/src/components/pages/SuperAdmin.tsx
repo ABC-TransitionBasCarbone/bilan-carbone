@@ -99,9 +99,9 @@ const SuperAdminPage = ({ modelCampaigns }: Props) => {
           id: 'name',
           header: () => <div className="align-center gapped">{t('name')}</div>,
           accessorKey: 'name',
-          cell: ({ row, getValue }) => (
+          cell: ({ row }) => (
             <FormTextField
-              data-testid="edit-site-name"
+              data-testid={`input-name-${row.index}`}
               size="small"
               control={control}
               name={`modelCampaigns.${row.index}.name`}
@@ -159,7 +159,7 @@ const SuperAdminPage = ({ modelCampaigns }: Props) => {
             }
 
             return (
-              <LinkButton onClick={handleCopy}>
+              <LinkButton onClick={handleCopy} data-testid="copy-invitation-url" data-link={link}>
                 <CopyIcon />
               </LinkButton>
             )
@@ -203,11 +203,12 @@ const SuperAdminPage = ({ modelCampaigns }: Props) => {
           <Button
             type="button"
             onClick={() => setValue('modelCampaigns', [...currentModelCampaigns, newModelCampaign()])}
+            data-testid="add-model-button"
           >
             {t('add')}
           </Button>
         </div>
-        <LoadingButton type="submit" loading={form.formState.isSubmitting}>
+        <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="validate-model-update">
           {t('edit')}
         </LoadingButton>
       </Form>

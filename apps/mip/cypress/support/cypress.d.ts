@@ -6,5 +6,6 @@ declare namespace Cypress {
     ): Chainable<JQuery<HTMLElement>>
     resetTestDatabase(): Chainable<void>
     login(email?: string, password?: string): Chainable<void>
+    logout(): Chainable<void>
   }
 }

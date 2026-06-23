@@ -18,3 +18,8 @@ Cypress.Commands.add('login', (email = 'mip-admin-0@yopmail.com', password = 'pa
   cy.getByTestId('login-button').click()
   cy.wait(`@login`)
 })
+
+Cypress.Commands.add('logout', () => {
+  cy.visit('/logout')
+  cy.wait(`@logout`)
+})
