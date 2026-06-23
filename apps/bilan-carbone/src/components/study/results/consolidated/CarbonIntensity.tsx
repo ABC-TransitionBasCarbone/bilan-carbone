@@ -1,6 +1,6 @@
 import { hasAccessToCarbonResponsibilityIntensitiesAdvanced } from '@/services/permissions/environmentAdvanced'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
-import { formatNumber } from '@/utils/number'
+import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Data from './Data'

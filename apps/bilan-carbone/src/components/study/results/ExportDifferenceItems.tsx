@@ -1,7 +1,7 @@
 import type { FullStudy } from '@/db/study'
 import { customRich } from '@/i18n/customRich'
-import { formatNumber } from '@/utils/number'
 import { Export, StudyResultUnit, SubPost } from '@abc-transitionbascarbone/db-common'
+import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import TrendingUpIcon from '@mui/icons-material/TrendingUpOutlined'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
