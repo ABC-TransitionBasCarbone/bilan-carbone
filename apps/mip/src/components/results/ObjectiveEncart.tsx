@@ -13,12 +13,12 @@ const getEnvNumber = (value: string | undefined, fallback: number): number => {
   return Number.isFinite(parsed) ? parsed : fallback
 }
 
-const TARGET_2030_T = getEnvNumber(process.env.NEXT_PUBLIC_TARGET_2030_T ?? process.env.TARGET_2030_T, 7)
-const TARGET_2050_T = getEnvNumber(process.env.NEXT_PUBLIC_TARGET_2050_T ?? process.env.TARGET_2050_T, 2)
-const TARGET_YEAR_2030 = getEnvNumber(process.env.NEXT_PUBLIC_TARGET_YEAR_2030 ?? process.env.TARGET_YEAR_2030, 2030)
-const TARGET_YEAR_2050 = getEnvNumber(process.env.NEXT_PUBLIC_TARGET_YEAR ?? process.env.TARGET_YEAR, 2050)
+const TARGET_2030_T = getEnvNumber(process.env.TARGET_2030_T, 7)
+const TARGET_2050_T = getEnvNumber(process.env.TARGET_2050_T, 2)
+const TARGET_YEAR_1 = getEnvNumber(process.env.TARGET_YEAR_1, 2030)
+const TARGET_YEAR_2 = getEnvNumber(process.env.TARGET_YEAR_2, 2050)
 const CURRENT_YEAR = new Date().getFullYear()
-const YEARS_TO_TARGET = Math.max(1, TARGET_YEAR_2030 - CURRENT_YEAR)
+const YEARS_TO_TARGET = Math.max(1, TARGET_YEAR_1 - CURRENT_YEAR)
 
 const computeYearlyReductionKg = (currentTCO2e: number): number => {
   const reductionT = currentTCO2e - TARGET_2030_T
@@ -41,7 +41,7 @@ const ObjectiveEncart = ({ averageFootprintTCO2e }: Props) => {
     <Box component="section" className={styles.encart}>
       <Box className={styles.header}>
         <Typography className={styles.targetBadge}>
-          {t('nationalTarget', { value: TARGET_2050_T, year: TARGET_YEAR_2050 })}
+          {t('nationalTarget', { value: TARGET_2050_T, year: TARGET_YEAR_2 })}
         </Typography>
         <Typography className={styles.headerDescription}>{t('nationalTargetDescription')}</Typography>
       </Box>
@@ -64,7 +64,7 @@ const ObjectiveEncart = ({ averageFootprintTCO2e }: Props) => {
           {aboveTarget && yearlyReductionKg > 0 && (
             <Box className={styles.paceBox}>
               <Typography className={styles.paceTitle}>
-                {t('paceTitle', { target: TARGET_2030_T, year: TARGET_YEAR_2030 })}
+                {t('paceTitle', { target: TARGET_2030_T, year: TARGET_YEAR_1 })}
               </Typography>
               <Typography className={styles.paceValue}>
                 {yearlyReductionKg.toLocaleString('fr-FR')}

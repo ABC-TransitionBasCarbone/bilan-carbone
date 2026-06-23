@@ -83,19 +83,20 @@ const BarChart = ({
               stack: series.stack,
               color: series.color,
               id: `series-${index}`,
+              barLabel: showLabelsOnBars ? getBarLabel : undefined,
             }))
             : [
               {
                 data: barData.values,
                 valueFormatter: (value: number | null) => formatNumber(value ?? 0, 0),
                 label: showLegend ? emissionsLabel : undefined,
+                barLabel: showLabelsOnBars ? getBarLabel : undefined,
               },
             ]
         }
         grid={{ horizontal: true }}
         yAxis={[{ label: unitLabel }]}
         axisHighlight={{ x: 'none' }}
-        barLabel={showLabelsOnBars ? getBarLabel : undefined}
         slots={showLegend && seriesData.length === 0 ? undefined : { legend: () => null }}
         height={height}
         borderRadius={10}

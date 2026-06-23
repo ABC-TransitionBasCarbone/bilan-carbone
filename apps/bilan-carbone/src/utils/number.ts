@@ -2,8 +2,6 @@ import { SiteCAUnit } from '@abc-transitionbascarbone/db-common/enums'
 import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import Big from 'big.js'
 
-export { formatNumber }
-
 export const parseFloatString = (value: string): number | undefined => {
   if (!value || value.trim() === '') {
     return undefined
