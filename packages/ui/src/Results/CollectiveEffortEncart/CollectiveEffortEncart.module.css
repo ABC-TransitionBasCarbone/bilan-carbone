@@ -1,9 +1,9 @@
 .encart {
-  border: 1.5px solid var(--neutral-50, #e9eff9);
+  border: 1.5px solid var(--neutral-50);
   border-radius: 0.75rem;
   padding: 1.25rem 1.5rem;
   margin-bottom: 2rem;
-  background-color: #fff;
+  background-color: white;
 }
 
 .title {
@@ -41,23 +41,23 @@
 }
 
 .state {
-  color: var(--trajectory-snbc-industry, #8b5cf6);
-  background-color: color-mix(in srgb, var(--trajectory-snbc-industry, #8b5cf6) 15%, white);
+  color: var(--trajectory-snbc-industry);
+  background-color: color-mix(in srgb, var(--trajectory-snbc-industry) 15%, white);
 }
 
 .collectivities {
-  color: var(--warning, #fc8514);
-  background-color: color-mix(in srgb, var(--warning, #fc8514) 15%, white);
+  color: var(--warning);
+  background-color: color-mix(in srgb, var(--warning) 15%, white);
 }
 
 .companies {
-  color: var(--primary, #272768);
-  background-color: color-mix(in srgb, var(--primary, #272768) 12%, white);
+  color: var(--info);
+  background-color: color-mix(in srgb, var(--info) 12%, white);
 }
 
 .description {
   font-size: 0.875rem !important;
-  color: var(--grayscale-950, #333);
+  color: var(--grayscale-950);
   margin: 0 !important;
   line-height: 1.6 !important;
 }

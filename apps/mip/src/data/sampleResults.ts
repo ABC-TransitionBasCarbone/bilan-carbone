@@ -1,6 +1,16 @@
 // TODO: Remove this file when plugged in with the real database.
 // All types below (EmissionCategory, EntityFilter, SurveyComment, KeyStat, KeyStatGroup, SurveyResults)
 // will be replaced by database models and API responses.
+
+// Colors matching CSS variables from packages/css/style/colors.css
+export const CATEGORY_COLORS: Record<string, string> = {
+  commute: '#346fef', // --primary-500
+  travel: '#272768', // --info
+  food: '#1d9c5c', // --success-100
+  digital: '#e04949', // --error-50
+  office: '#fc8514', // --warning
+}
+
 export type EmissionCategory = {
   key: string
   labelFr: string
@@ -48,11 +58,11 @@ export const sampleResults: SurveyResults = {
   totalInvited: 120,
   averageFootprintTCO2e: 8.4,
   categories: [
-    { key: 'commute', labelFr: 'Déplacements domicile-travail', valueTCO2e: 2.1, color: '#346fef' },
-    { key: 'travel', labelFr: 'Déplacements professionnels', valueTCO2e: 1.8, color: '#272768' },
-    { key: 'food', labelFr: 'Alimentation', valueTCO2e: 2.5, color: '#1d9c5c' },
-    { key: 'digital', labelFr: 'Numérique', valueTCO2e: 0.9, color: '#e04949' },
-    { key: 'office', labelFr: 'Bureaux', valueTCO2e: 1.1, color: '#f59e0b' },
+    { key: 'commute', labelFr: 'Déplacements domicile-travail', valueTCO2e: 2.1, color: CATEGORY_COLORS.commute },
+    { key: 'travel', labelFr: 'Déplacements professionnels', valueTCO2e: 1.8, color: CATEGORY_COLORS.travel },
+    { key: 'food', labelFr: 'Alimentation', valueTCO2e: 2.5, color: CATEGORY_COLORS.food },
+    { key: 'digital', labelFr: 'Numérique', valueTCO2e: 0.9, color: CATEGORY_COLORS.digital },
+    { key: 'office', labelFr: 'Bureaux', valueTCO2e: 1.1, color: CATEGORY_COLORS.office },
   ],
   entities: [
     { id: 'all', name: 'Tous' },

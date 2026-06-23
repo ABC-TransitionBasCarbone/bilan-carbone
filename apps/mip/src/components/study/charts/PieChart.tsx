@@ -1,6 +1,7 @@
 'use client'
 
 import { ProcessedChartData, PieChart as UiPieChart } from '@abc-transitionbascarbone/ui'
+import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 
 export type PieChartItem = {
   key: string
@@ -16,8 +17,10 @@ interface Props {
   height?: number
   showTitle?: boolean
   showLabelsOnPie?: boolean
-  type?: 'post' | 'tag'
 }
+
+const formatValueAndUnit = (value: number | null, unitValue: string, dec = 2) =>
+  `${formatNumber(value ?? 0, dec)} ${unitValue}`
 
 const PieChart = ({
   items,
@@ -26,18 +29,12 @@ const PieChart = ({
   height = 400,
   showTitle = true,
   showLabelsOnPie = true,
-  type = 'post',
 }: Props) => {
   const innerRingData: ProcessedChartData[] = items.map((item) => ({
     label: item.label,
     value: item.value,
     color: item.color,
   }))
-
-  const formatNumber = (value?: number, dec = 0) =>
-    (value || 0).toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: dec })
-  const formatValueAndUnit = (value: number | null, unitValue: string, dec = 2) =>
-    `${formatNumber(value ?? 0, dec)} ${unitValue}`
 
   return (
     <UiPieChart
@@ -48,7 +45,7 @@ const PieChart = ({
       height={height}
       showTitle={showTitle}
       showLabelsOnPie={showLabelsOnPie}
-      type={type}
+      type="post"
       formatNumber={formatNumber}
       formatValueAndUnit={formatValueAndUnit}
     />

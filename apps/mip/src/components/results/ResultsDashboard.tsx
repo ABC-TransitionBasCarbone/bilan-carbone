@@ -25,7 +25,7 @@ const ResultsDashboard = ({ results }: Props) => {
 
   const pieChartItems = filtered.categories.map((c) => ({
     key: c.key,
-    label: t(`categories.${c.key}` as Parameters<typeof t>[0]),
+    label: t(`categories.${c.key}`),
     value: c.valueTCO2e,
     color: c.color,
   }))
@@ -34,7 +34,7 @@ const ResultsDashboard = ({ results }: Props) => {
     key: 'total',
     label: t('charts.barTitle'),
     value: filtered.averageFootprintTCO2e,
-    color: '#6366f1',
+    color: '#346fef',
   }
 
   const handlePrint = () => {
@@ -42,7 +42,7 @@ const ResultsDashboard = ({ results }: Props) => {
   }
 
   return (
-    <div className={styles.page}>
+    <div className={`${styles.page} pt2`}>
       <Typography variant="h4" className="mb-2">
         {t('title')}
       </Typography>
