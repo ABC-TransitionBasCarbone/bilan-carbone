@@ -21,7 +21,9 @@ const KeyStatGroupItem = ({ group, statQuestions }: Props) => {
       <div className="flex-col gapped-2">
         {group.stats.map((stat) => (
           <div key={stat.key} className={`flex justify-between ${styles.statRow}`}>
-            <Typography variant="body2">{statQuestions?.[stat.key] ?? t(`keyStats.${group.key}.${stat.key}`)}</Typography>
+            <Typography variant="body2">
+              {statQuestions?.[stat.key] ?? t(`keyStats.${group.key}.${stat.key}`)}
+            </Typography>
             <Typography variant="body2" className="bold">
               {stat.unit === 'percent' ? `${stat.value} %` : stat.value}
             </Typography>
