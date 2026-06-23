@@ -1,3 +1,8 @@
+.scrollWrapper {
+  height: 100vh;
+  overflow-y: auto;
+}
+
 .page {
   padding-top: 2rem;
   padding-bottom: 3rem;
@@ -216,6 +221,8 @@
 .footerActions {
   display: flex;
   justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
   margin-top: 1rem;
 }
 

@@ -41,7 +41,8 @@
           "answer": "Concentrez-vous sur vos deux ou trois principales sources d'émissions. Les actions à plus fort impact sont celles qui réduisent vos déplacements en voiture, améliorent votre alimentation, et limitent vos achats numériques inutiles."
         }
       },
-      "restart": "Recommencer le sondage"
+      "restart": "Recommencer le sondage",
+      "adminResults": "Voir les resultats administrateurs"
     }
   },
   "email": {
