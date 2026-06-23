@@ -256,7 +256,6 @@
     "factors": "Emission factors",
     "fe": "EF",
     "help": "Help",
-    "admin": "Admin",
     "profile": "Profile",
     "study": "Study",
     "organization": "My organisation",
@@ -265,7 +264,6 @@
     "organizations": "My Bilan Carbone®",
     "footprints": "Mes Empreintes",
     "settings": "Settings",
-    "team": "My team",
     "information": "Overview",
     "formation": "Training",
     "selectAccount": "Select account"

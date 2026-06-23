@@ -14,9 +14,6 @@ model OrganizationVersionMip {
   modelCampaignId String?        @unique @map("model_campaign_id")
   modelCampaign   ModelCampaign? @relation(fields: [modelCampaignId], references: [id])
 
-
-
-
   @@unique([organizationId, environment])
   @@map("organization_versions_mip")
   @@schema("mip")

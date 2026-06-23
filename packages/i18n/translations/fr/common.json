@@ -97,7 +97,9 @@
   "navigation": {
     "home": "Accueil",
     "logout": "Se déconnecter",
-    "comments": "Commentaires"
+    "comments": "Commentaires",
+    "admin": "Admin",
+    "team": "Mon équipe"
   },
   "country": {
     "ALBANIA": "Albanie",
