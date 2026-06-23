@@ -69,7 +69,7 @@ const ObjectiveEncart = ({ averageFootprint, resultsUnit }: Props) => {
             <Box className={styles.paceBox}>
               <Typography className={styles.paceTitle}>
                 {t('paceTitle', { target: TARGET_2030_T, year: TARGET_YEAR_1 })}
-              </Typography>
+              </Typography >
               <Typography className={styles.paceValue}>
                 {yearlyReduction.toLocaleString('fr-FR')}
                 <Box component="span" className={styles.paceUnit}>
@@ -77,15 +77,15 @@ const ObjectiveEncart = ({ averageFootprint, resultsUnit }: Props) => {
                   {t('paceUnit')}
                 </Box>
               </Typography>
-            </Box>
+            </Box >
           )}
-        </Box>
+        </Box >
 
         <Box className={styles.chartSection}>
           <TrajectoryChart currentValue={averageFootprintT} />
         </Box>
-      </Box>
-    </Box>
+      </Box >
+    </Box >
   )
 }
 
