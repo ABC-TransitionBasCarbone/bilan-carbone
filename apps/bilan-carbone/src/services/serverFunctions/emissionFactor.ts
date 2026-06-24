@@ -20,7 +20,6 @@ import {
   type EmissionFactorList,
 } from '@/db/emissionFactors'
 import { getOrganizationVersionByOrganizationIdAndEnvironment, getOrgVersionWithOrgId } from '@/db/organization'
-import { getStudyOrganizationVersion } from '@/db/study'
 import { getLocale } from '@/i18n/locale'
 import { unitsMatrix } from '@/services/importEmissionFactor/historyUnits'
 import { FeFilters } from '@/types/filters'
@@ -34,7 +33,7 @@ import type { IsSuccess } from '@abc-transitionbascarbone/utils/serverResponse'
 import { auth, dbActualizedAuth } from '../auth'
 import { canCreateEmissionFactor } from '../permissions/emissionFactor.server'
 import { canReadStudy } from '../permissions/study'
-import { getStudyParentOrganizationVersionId } from '../study.server'
+import { getStudyParentOrganizationId, getStudyParentOrganizationVersionId } from '../study.server'
 import { sortAlphabetically } from '../utils'
 import { EmissionFactorCommand, UpdateEmissionFactorCommand } from './emissionFactor.command'
 
@@ -98,21 +97,6 @@ export type EmissionFactorWithMetaData = IsSuccess<
   AsyncReturnType<typeof getEmissionFactors>
 >['emissionFactors'][number]
 
-const getStudyOrganizationId = async (studyId: string) => {
-  const organizationVersion = await getStudyOrganizationVersion(studyId)
-  if (!organizationVersion) {
-    throw Error("Organization version doesn't exist")
-  }
-
-  const finalOrganizationVersionId = organizationVersion.parentId || organizationVersion.id
-
-  const finalOrganizationVersion = await getOrgVersionWithOrgId(finalOrganizationVersionId)
-  if (!finalOrganizationVersion) {
-    throw Error("Organization doesn't exist")
-  }
-  return finalOrganizationVersion.organizationId
-}
-
 export const getEmissionFactorsByIds = async (ids: string[], studyId: string) =>
   withServerResponse('getEmissionFactorsByIds', async () => {
     try {
@@ -124,7 +108,7 @@ export const getEmissionFactorsByIds = async (ids: string[], studyId: string) =>
         return []
       }
 
-      const emissionFactorOrganization = await getStudyOrganizationId(studyId)
+      const emissionFactorOrganization = await getStudyParentOrganizationId(studyId, session.user.organizationVersionId)
 
       const emissionFactors = await getAllEmissionFactorsByIds(ids, emissionFactorOrganization)
 

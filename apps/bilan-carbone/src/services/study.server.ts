@@ -1,4 +1,4 @@
-import { getOrganizationVersionById } from '@/db/organization'
+import { getOrgVersionWithOrgId } from '@/db/organization'
 import { getStudyById } from '@/db/study'
 
 export const getStudyParentOrganizationVersionId = async (
@@ -13,9 +13,9 @@ export const getStudyParentOrganizationVersionId = async (
   return study.organizationVersion.parentId || study.organizationVersion.id
 }
 
-export const getStudyOrganizationId = async (studyId: string, userOrganizationVersionId: string | null) => {
+export const getStudyParentOrganizationId = async (studyId: string, userOrganizationVersionId: string | null) => {
   const organizationVersionId = await getStudyParentOrganizationVersionId(studyId, userOrganizationVersionId)
-  const organizationVersion = await getOrganizationVersionById(organizationVersionId)
+  const organizationVersion = await getOrgVersionWithOrgId(organizationVersionId)
 
   if (!organizationVersion) {
     throw new Error('Organization version not found')
