@@ -47,6 +47,7 @@
     "OPEN": "Open",
     "CLOSED": "Close",
     "responsesCount": "Number of responses",
+    "shareLink": "Link to share",
     "add": "Add new campaign",
     "edit": "Save changes",
     "success": "campaigns changed successfully"

@@ -15,6 +15,7 @@ import { useServerFunction } from '@abc-transitionbascarbone/components/src/hook
 import { CampaignStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { Button, useToast } from '@abc-transitionbascarbone/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
+import CopyIcon from '@mui/icons-material/ContentCopy'
 import DownloadIcon from '@mui/icons-material/Download'
 import { MenuItem } from '@mui/material'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
@@ -135,6 +136,23 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
           cell: ({ row }) => {
             const count = campaigns.find((campaign) => (campaign.id = row.original.id))?._count.responses
             return <div>{count}</div>
+          },
+        },
+        {
+          id: 'shareLink',
+          header: () => <div>{t('shareLink')}</div>,
+          cell: ({ row }) => {
+            const link = typeof window !== 'undefined' ? `${window.location.origin}/survey/${row.original.id}` : ''
+
+            const handleCopy = async (): Promise<void> => {
+              await navigator.clipboard.writeText(link)
+            }
+
+            return (
+              <LinkButton onClick={handleCopy}>
+                <CopyIcon />
+              </LinkButton>
+            )
           },
         },
         {
