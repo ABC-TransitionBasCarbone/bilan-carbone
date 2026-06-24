@@ -1,7 +1,7 @@
 import { isSimplified } from '@/services/permissions/environment'
 import { ClicksonRoles, CutRoles } from '@/services/roles'
 import type { Prisma } from '@abc-transitionbascarbone/db-common'
-import { findUserInfoSelect } from '@abc-transitionbascarbone/db-common/db/common.select'
+import { findAccountSelect } from '@abc-transitionbascarbone/db-common/db/common.select'
 import { Environment, Role, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { UserSession } from 'next-auth'
 
@@ -9,7 +9,7 @@ export const isAdmin = (userRole: Role) => userRole === Role.ADMIN || userRole =
 
 export const findUserInfo = (user: UserSession) =>
   ({
-    ...findUserInfoSelect({ formationName: true }),
+    select: findAccountSelect({ formationName: true }),
     where: canEditMemberRole(user)
       ? { organizationVersionId: user.organizationVersionId }
       : { status: UserStatus.ACTIVE, organizationVersionId: user.organizationVersionId },
