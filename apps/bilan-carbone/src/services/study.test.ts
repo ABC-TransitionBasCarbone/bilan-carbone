@@ -263,7 +263,7 @@ describe('Study Service', () => {
         Environment.CUT,
       )
 
-      expect(data.data[1][2]).toBe('Valeur')
+      expect(data.data[1][2]).toBe('Valeur' + ' (kgCO2e)')
     })
 
     it('does not include "Export au format Bilan Carbone®" sheet for CLICKSON', async () => {
