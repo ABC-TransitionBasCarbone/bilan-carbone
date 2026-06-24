@@ -1,7 +1,7 @@
 'use client'
 
 import { Typography } from '@mui/material'
-import { BarChart as MuiBarChart, ChartsReferenceLine } from '@mui/x-charts'
+import { BarChart as MuiXBarChart, ChartsReferenceLine } from '@mui/x-charts'
 import styles from './BarChart.module.css'
 import { BarChartData, BarChartSeriesData } from '../types'
 
@@ -26,7 +26,7 @@ interface Props {
   formatNumber: (value?: number, dec?: number) => string
 }
 
-const BarChart = ({
+const UiBarChart = ({
   barData,
   seriesData = [],
   title,
@@ -49,7 +49,7 @@ const BarChart = ({
 
   return (
     <div className={styles.barChart}>
-      <MuiBarChart
+      <MuiXBarChart
         skipAnimation={skipAnimation}
         colors={seriesData.length > 0 ? seriesData.map((series) => series.color) : undefined}
         xAxis={[
@@ -109,7 +109,7 @@ const BarChart = ({
             labelAlign="end"
           />
         )}
-      </MuiBarChart>
+      </MuiXBarChart>
       {showTitle && (
         <Typography variant="h6" align="center" className={styles.chartTitle}>
           {title}
@@ -119,4 +119,4 @@ const BarChart = ({
   )
 }
 
-export default BarChart
+export default UiBarChart

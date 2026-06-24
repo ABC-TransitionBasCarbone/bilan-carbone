@@ -23,7 +23,7 @@ interface Props {
   skipAnimation?: boolean
 }
 
-const BarChart = ({
+const StudyBarChart = ({
   items,
   unit = 'tCO₂e',
   targetLabel,
@@ -58,4 +58,4 @@ const BarChart = ({
   )
 }
 
-export default BarChart
+export default StudyBarChart
