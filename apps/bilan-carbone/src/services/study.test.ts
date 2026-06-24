@@ -197,6 +197,7 @@ describe('Study Service', () => {
     })
   })
 
+  // TODO : i only test the export functions for the different environments and not the whole downloadStudyResults function
   describe('exports', () => {
     const t = ((key: string) => key) as unknown as Translations
     const tStudy = ((key: string, values?: { unit?: string }) =>
