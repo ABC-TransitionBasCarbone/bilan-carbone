@@ -1,8 +1,7 @@
 'use client'
 import { Situation } from 'publicodes'
 import { createContext, ReactNode, useContext, useState } from 'react'
-import { createMipEngine } from './mip-engine'
-import model from './publicodes-mip.model.json'
+import { createMipEngine, RawRules } from './mip-engine'
 
 interface MipPublicodesContextValue {
   engine: ReturnType<typeof createMipEngine>
@@ -12,7 +11,7 @@ interface MipPublicodesContextValue {
 
 const MipPublicodesContext = createContext<MipPublicodesContextValue | null>(null)
 
-export function MipPublicodesProvider({ children }: { children: ReactNode }) {
+export function MipPublicodesProvider({ children, model }: { children: ReactNode; model: RawRules }) {
   const engine = createMipEngine(model)
   const [situation, setSituationState] = useState<Situation<string>>({})
 

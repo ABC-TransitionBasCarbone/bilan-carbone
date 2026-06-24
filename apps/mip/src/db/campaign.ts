@@ -158,3 +158,10 @@ export const updateCampaign = async (
     prismaClient.campaign.deleteMany({ where: { id: { in: campaignIdsToDelete } } }),
   ])
 }
+
+export const getCampaignById = (id: string) => {
+  return prismaClient.campaign.findFirst({
+    where: { id },
+    select: { id: true, status: true, modelCampaign: { select: { id: true, model: true } } },
+  })
+}
