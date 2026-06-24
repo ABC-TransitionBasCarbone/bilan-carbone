@@ -5,14 +5,6 @@ enum CampaignStatus {
   @@schema("mip")
 }
 
-enum CampaignRole {
-  Validator
-  Editor
-  Reader
-
-  @@schema("mip")
-}
-
 model ModelCampaign {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now()) @map("created_at")
@@ -65,8 +57,6 @@ model AccountOnCampaign {
   campaignId   String     @map("stcampaignd")
   accountMip   AccountMip @relation(fields: [accountMipId], references: [id])
   accountMipId String     @map("account_mip_id")
-
-  role CampaignRole
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")

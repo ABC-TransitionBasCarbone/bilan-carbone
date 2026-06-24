@@ -1,6 +1,5 @@
 import { UpdateCampaignCommand } from '@/services/serverFunctions/campaign.command'
 import { UpdateModelCampaignCommand } from '@/services/serverFunctions/modelCampaign.command'
-import { CampaignRole } from '@abc-transitionbascarbone/db-common/enums'
 import { prismaClient } from './client.server'
 
 export const getAllModelCampaigns = async () => {
@@ -146,7 +145,7 @@ export const updateCampaign = async (
           allowedAccounts: {
             connectOrCreate: (campaign.allowedAccounts || []).map((accountMipId: string) => ({
               where: { campaignId_accountMipId: { campaignId: campaign.id, accountMipId } },
-              create: { accountMipId, role: CampaignRole.Editor },
+              create: { accountMipId },
             })),
           },
         },
