@@ -25,12 +25,7 @@ const ChartsSection = ({ pieChartItems, totalBarItem }: Props) => {
             <Typography variant="subtitle1" className="mb1">
               {t('charts.barTitle')}
             </Typography>
-            <StudyBarChart
-              items={[totalBarItem]}
-              unit="tCO₂e"
-              targetValue={2}
-              targetLabel={t('charts.target2050')}
-            />
+            <StudyBarChart items={[totalBarItem]} unit="tCO₂e" targetValue={2} targetLabel={t('charts.target2050')} />
           </CardContent>
         </Card>
         <Card>
