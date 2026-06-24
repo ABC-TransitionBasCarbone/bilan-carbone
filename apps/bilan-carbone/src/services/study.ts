@@ -345,9 +345,7 @@ const getFormattedHeadersForEnv = (
 ) => {
   const headers = getHeadersForEnv(environment)
 
-  return headers.map((header) =>
-    header === 'value' && environment === Environment.CLICKSON ? `${tStudy(header)} (${tUnits(unit)})` : tStudy(header),
-  )
+  return headers.map((header) => (header !== 'value' ? tStudy(header) : tStudy(header, { unit: tUnits(unit) })))
 }
 
 const getFormattedSimplifiedHeaders = (tStudy: Translations, tUnits: Translations, unit: StudyResultUnit) =>
