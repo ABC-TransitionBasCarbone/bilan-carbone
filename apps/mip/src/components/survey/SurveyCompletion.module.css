@@ -4,21 +4,17 @@
 }
 
 .page {
-  padding-top: 2rem;
   padding-bottom: 3rem;
 }
 
-/* Hero */
-.hero {
+.footprintBanner {
   background-color: var(--info);
   border-radius: 0.75rem;
-  padding: 2rem;
-  margin-bottom: 2rem;
   color: var(--white);
   text-align: center;
 }
 
-.heroTitle {
+.footprintBannerTitle {
   color: var(--white) !important;
   margin-bottom: 1rem !important;
   font-weight: 700 !important;
@@ -46,21 +42,10 @@
   margin-top: 1.5rem;
 }
 
-.targetBarLabels {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 0.5rem;
-}
-
 .targetBarLabel {
   font-size: 0.8rem !important;
   color: var(--white) !important;
   opacity: 0.8;
-}
-
-/* Sections */
-.section {
-  margin-bottom: 2rem;
 }
 
 .sectionTitle {
@@ -68,17 +53,7 @@
   font-weight: 600 !important;
 }
 
-/* Top categories */
-.topCategoriesList {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
 .topCategoryItem {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
   padding: 1rem 1.25rem;
   background-color: var(--grayscale-50);
   border-radius: 0.5rem;
@@ -106,12 +81,7 @@
   color: var(--info) !important;
 }
 
-/* Category actions section */
 .categoryHeader {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
   flex-wrap: wrap;
 }
 
@@ -133,13 +103,6 @@
   font-size: 0.875rem !important;
   color: var(--grayscale-700) !important;
   margin-left: auto;
-}
-
-/* Actions list */
-.actionsList {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
 }
 
 .actionCard {
@@ -176,17 +139,8 @@
   font-weight: 600 !important;
 }
 
-/* Summary */
-.summaryList {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
 .summaryItem {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
+  /* targeted by responsive media query below */
 }
 
 .summaryIcon {
@@ -210,20 +164,6 @@
   font-weight: 600 !important;
   font-size: 0.875rem !important;
   color: var(--info) !important;
-}
-
-/* FAQ */
-.faqSection {
-  margin-bottom: 2rem;
-}
-
-/* Actions (footer) */
-.footerActions {
-  display: flex;
-  justify-content: center;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  margin-top: 1rem;
 }
 
 @media (max-width: 600px) {
