@@ -101,9 +101,9 @@ const SurveyCompletion = ({ onRestart, surveyId }: Props) => {
 
   return (
     <div className={styles.scrollWrapper}>
-      <Container maxWidth="md" className={styles.page}>
-        <section className={styles.hero} data-testid="survey-completion-hero">
-          <Typography variant="h4" className={styles.heroTitle}>
+      <Container maxWidth="md" className={`${styles.page} pt2`}>
+        <section className={`${styles.footprintBanner} p2 mb2`} data-testid="survey-completion-footprint-banner">
+          <Typography variant="h4" className={styles.footprintBannerTitle}>
             {t('title')}
           </Typography>
           <div className={styles.footprintDisplay}>
@@ -112,20 +112,20 @@ const SurveyCompletion = ({ onRestart, surveyId }: Props) => {
           </div>
           <div className={styles.targetBar}>
             <LinearProgress variant="determinate" value={targetBarValue} />
-            <div className={styles.targetBarLabels}>
+            <div className="justify-between mt-2">
               <Typography className={styles.targetBarLabel}>0</Typography>
               <Typography className={styles.targetBarLabel}>{t('target')}</Typography>
             </div>
           </div>
         </section>
 
-        <section className={styles.section} data-testid="survey-completion-top-categories">
+        <section className="mb2" data-testid="survey-completion-top-categories">
           <Typography variant="h6" className={styles.sectionTitle}>
             {t('topCategories.title')}
           </Typography>
-          <div className={styles.topCategoriesList}>
+          <div className="flex-col gapped075">
             {topCategories.map((cat, index) => (
-              <div key={cat.key} className={styles.topCategoryItem}>
+              <div key={cat.key} className={`${styles.topCategoryItem} align-center gapped1`}>
                 <Typography className={styles.topCategoryRank}>{index + 1}</Typography>
                 <Typography className={styles.topCategoryIcon}>{cat.icônes}</Typography>
                 <Typography className={styles.topCategoryName}>{cat.titre}</Typography>
@@ -145,15 +145,15 @@ const SurveyCompletion = ({ onRestart, surveyId }: Props) => {
           const catPercent = totalKg > 0 ? Math.round((cat.valueKg / totalKg) * 100) : 0
 
           return (
-            <section key={cat.key} className={styles.section} data-testid={`category-actions-${cat.key}`}>
-              <div className={styles.categoryHeader}>
+            <section key={cat.key} className="mb2" data-testid={`category-actions-${cat.key}`}>
+              <div className={`${styles.categoryHeader} align-center gapped075 mb1`}>
                 <Typography className={styles.categoryRankBadge}>{index + 1}</Typography>
                 <Typography variant="h6">{cat.titre}</Typography>
                 <Typography className={styles.categoryPercent}>
                   {catPercent} % {t('ofFootprint')}
                 </Typography>
               </div>
-              <div className={styles.actionsList}>
+              <div className="flex-col gapped-2">
                 {catActions.map((action) => {
                   const actionPercent = totalKg > 0 ? Math.round((action.savingsKg / totalKg) * 100) : 0
                   return (
@@ -177,15 +177,15 @@ const SurveyCompletion = ({ onRestart, surveyId }: Props) => {
           )
         })}
 
-        <section className={styles.section} data-testid="survey-completion-summary">
+        <section className="mb2" data-testid="survey-completion-summary">
           <Typography variant="h6" className={styles.sectionTitle}>
             {t('summary.title')}
           </Typography>
-          <div className={styles.summaryList}>
+          <div className="flex-col gapped075">
             {categories.map((cat) => {
               const catPercent = totalKg > 0 ? Math.min(100, (cat.valueKg / totalKg) * 100) : 0
               return (
-                <div key={cat.key} className={styles.summaryItem}>
+                <div key={cat.key} className={`${styles.summaryItem} align-center gapped075`}>
                   <Typography className={styles.summaryIcon}>{cat.icônes}</Typography>
                   <Typography className={styles.summaryName}>{cat.titre}</Typography>
                   <div className={styles.summaryBar}>
@@ -200,7 +200,7 @@ const SurveyCompletion = ({ onRestart, surveyId }: Props) => {
           </div>
         </section>
 
-        <section className={styles.faqSection} data-testid="survey-completion-faq">
+        <section className="mb2" data-testid="survey-completion-faq">
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMore />}>
               <Typography>{t('faq.alone.question')}</Typography>
@@ -219,7 +219,7 @@ const SurveyCompletion = ({ onRestart, surveyId }: Props) => {
           </Accordion>
         </section>
 
-        <div className={styles.footerActions}>
+        <div className="justify-center wrap gapped075 mt1">
           <Button variant="outlined" startIcon={<Refresh />} onClick={onRestart}>
             {t('restart')}
           </Button>
