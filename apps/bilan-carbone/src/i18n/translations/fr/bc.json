@@ -696,7 +696,7 @@
       "format": "Format",
       "post": "Poste",
       "subPost": "Sous-poste",
-      "value": "Valeur",
+      "value": "Valeur ({unit})",
       "tag": "Tag",
       "download": "Télécharger",
       "downloadResults": "Résultats",

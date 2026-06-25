@@ -331,6 +331,7 @@ export const downloadStudyEmissionSources = async (
 const getHeadersForEnv = (environment: Environment) => {
   switch (environment) {
     case Environment.CUT:
+    case Environment.CLICKSON:
       return resultsExportHeadersSimplified
     case Environment.BC:
     default:
