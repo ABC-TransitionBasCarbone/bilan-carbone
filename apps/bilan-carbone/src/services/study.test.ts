@@ -211,7 +211,7 @@ describe('Study Service', () => {
       bySite: {},
     }
 
-    const getWorkbookSheets = async (environment: Environment) => {
+    const getWorkbookSheets = async (environment: BCEnvironment) => {
       const prepareExcelMock = jest.mocked(prepareExcel)
       prepareExcelMock.mockClear()
 
