@@ -73,8 +73,15 @@ export const addOrganizationVersionMipIdToModelCampaign = async (
   })
 }
 
-export const getAllCampaigns = async () => {
+export const getAllOrganizationVersionMipCampaigns = async (organizationVersionMipId: string) => {
   const campaigns = await prismaClient.campaign.findMany({
+    where: {
+      modelCampaign: {
+        organizationVersionMip: {
+          id: organizationVersionMipId,
+        },
+      },
+    },
     select: {
       id: true,
       name: true,
@@ -89,10 +96,18 @@ export const getAllCampaigns = async () => {
   return campaigns
 }
 
-export type CampaignsWithResponses = AsyncReturnType<typeof getAllCampaigns>
+export type CampaignsWithResponses = AsyncReturnType<typeof getAllOrganizationVersionMipCampaigns>
 
-export const getAllAllowedCampaigns = async (accountMipId: string) => {
+export const getAllAllowedCampaigns = async (accountMipId: string, organizationVersionMipId: string) => {
   const campaigns = await prismaClient.campaign.findMany({
+    where: {
+      modelCampaign: {
+        organizationVersionMip: {
+          id: organizationVersionMipId,
+        },
+      },
+      allowedAccounts: { some: { accountMipId } },
+    },
     select: {
       id: true,
       name: true,
@@ -102,7 +117,6 @@ export const getAllAllowedCampaigns = async (accountMipId: string) => {
       _count: { select: { responses: true } },
       modelCampaignId: true,
     },
-    where: { allowedAccounts: { some: { accountMipId } } },
   })
 
   return campaigns
