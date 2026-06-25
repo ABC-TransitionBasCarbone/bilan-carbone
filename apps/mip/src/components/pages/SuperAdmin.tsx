@@ -82,6 +82,28 @@ const SuperAdminPage = ({ modelCampaigns }: Props) => {
     input.click()
   }
 
+  const handleDownloadJson = (name: string, json: string) => {
+    const blob = new Blob([JSON.stringify(json, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `${name}.json`
+    a.click()
+
+    URL.revokeObjectURL(url)
+  }
+  const handleCopy = async (link: string): Promise<void> => {
+    await navigator.clipboard.writeText(link)
+  }
+
+  const handleDelete = (id: string) => {
+    setValue(
+      'modelCampaigns',
+      getValues('modelCampaigns').filter((modelCampaign) => modelCampaign.id !== id),
+    )
+  }
+
   const onSubmit = async (command: UpdateModelCampaignCommand) => {
     await callServerFunction(() => updateModelCampaignCommand(command), {
       onSuccess: () => {
@@ -123,20 +145,7 @@ const SuperAdminPage = ({ modelCampaigns }: Props) => {
           id: 'download',
           header: () => t('json'),
           cell: ({ row }) => (
-            <LinkButton
-              onClick={() => {
-                const model = row.original.model
-                const blob = new Blob([JSON.stringify(model, null, 2)], { type: 'application/json' })
-                const url = URL.createObjectURL(blob)
-
-                const a = document.createElement('a')
-                a.href = url
-                a.download = `${row.original.name}.json`
-                a.click()
-
-                URL.revokeObjectURL(url)
-              }}
-            >
+            <LinkButton onClick={() => handleDownloadJson(row.original.name, row.original.model)}>
               <DownloadIcon />
             </LinkButton>
           ),
@@ -150,16 +159,12 @@ const SuperAdminPage = ({ modelCampaigns }: Props) => {
             const link =
               typeof window !== 'undefined' ? `${window.location.origin}/register?modelId=${row.original.id}` : ''
 
-            const handleCopy = async (): Promise<void> => {
-              await navigator.clipboard.writeText(link)
-            }
-
             if (org?.id) {
               return <span>{org.name || org.id}</span>
             }
 
             return (
-              <LinkButton onClick={handleCopy} data-testid="copy-invitation-url" data-link={link}>
+              <LinkButton onClick={() => handleCopy(link)} data-testid="copy-invitation-url" data-link={link}>
                 <CopyIcon />
               </LinkButton>
             )
@@ -169,18 +174,7 @@ const SuperAdminPage = ({ modelCampaigns }: Props) => {
           id: 'actions',
           header: '',
           accessorKey: 'id',
-          cell: ({ getValue }) => (
-            <TableActionButton
-              type="delete"
-              onClick={() => {
-                const id = getValue<string>()
-                setValue(
-                  'modelCampaigns',
-                  getValues('modelCampaigns').filter((modelCampaign) => modelCampaign.id !== id),
-                )
-              }}
-            />
-          ),
+          cell: ({ getValue }) => <TableActionButton type="delete" onClick={() => handleDelete(getValue<string>())} />,
         },
       ] as ColumnDef<UpdateModelCampaignCommand['modelCampaigns'][0]>[],
     // eslint-disable-next-line react-hooks/exhaustive-deps
