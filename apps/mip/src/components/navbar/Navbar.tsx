@@ -33,6 +33,7 @@ const Navbar = ({ user }: Props) => {
           <div className="flex gapped1">
             <Box>
               <div className="h100 align-center">
+                <NavbarLink href="/campaigns">{t('campaigns')}</NavbarLink>
                 {user.role === RoleMip.SUPER_ADMIN && <NavbarLink href="/super-admin">{t('admin')}</NavbarLink>}
                 <NavbarButton title={t('logout')} aria-label={t('logout')} onClick={() => signOutEnv()}>
                   <PowerSettingsNewIcon />
