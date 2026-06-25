@@ -99,7 +99,8 @@
     "logout": "Log out",
     "comments": "Comments",
     "admin": "Admin",
-    "team": "My team"
+    "team": "My team",
+    "campaigns": "Campaigns"
   },
   "country": {
     "ALBANIA": "Albania",
