@@ -89,6 +89,7 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
           accessorKey: 'name',
           cell: ({ row }) => (
             <FormTextField
+              data-testid={`input-name-${row.original.id}`}
               size="small"
               control={control}
               name={`campaigns.${row.index}.name`}
@@ -171,11 +172,15 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
       <Form onSubmit={form.handleSubmit(onSubmit)}>
         <BaseTable table={table} className="mt1" testId="sites" />
         <div className="mt1 justify-end">
-          <Button type="button" onClick={() => setValue('campaigns', [...currentcampaigns, newCampaign()])}>
+          <Button
+            type="button"
+            onClick={() => setValue('campaigns', [...currentcampaigns, newCampaign()])}
+            data-testid="add-campaign-button"
+          >
             {t('add')}
           </Button>
         </div>
-        <LoadingButton type="submit" loading={form.formState.isSubmitting}>
+        <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="validate-campaign-update">
           {t('edit')}
         </LoadingButton>
       </Form>

@@ -13,6 +13,8 @@ const main = async () => {
   const accountsMip = await prisma.accountMip.findMany({ select: { userId: true } })
   const userIds = accountsMip.map((a) => a.userId)
 
+  await prisma.accountOnCampaign.deleteMany()
+  await prisma.campaign.deleteMany()
   await prisma.accountMip.deleteMany()
   await prisma.user.deleteMany({ where: { id: { in: userIds } } })
 
@@ -74,6 +76,36 @@ const main = async () => {
     },
     data: {
       modelCampaignId: modelCampaign.id,
+    },
+  })
+
+  const adminAccount = await prisma.accountMip.findFirstOrThrow({
+    where: { user: { email: 'mip-admin-0@yopmail.com' } },
+  })
+  const collaboratorAccount = await prisma.accountMip.findFirstOrThrow({
+    where: { user: { email: 'mip-collaborator-0@yopmail.com' } },
+  })
+
+  await prisma.campaign.create({
+    data: {
+      id: 'campaign-admin-seed-id',
+      name: 'Campaign admin',
+      modelCampaignId: modelCampaign.id,
+      createdById: adminAccount.id,
+    },
+  })
+
+  await prisma.campaign.create({
+    data: {
+      id: 'campaign-collaborator-seed-id',
+      name: 'Campaign collaborator',
+      modelCampaignId: modelCampaign.id,
+      createdById: collaboratorAccount.id,
+      allowedAccounts: {
+        create: {
+          accountMipId: collaboratorAccount.id,
+        },
+      },
     },
   })
 }
