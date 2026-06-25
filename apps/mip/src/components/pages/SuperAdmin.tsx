@@ -6,6 +6,7 @@ import {
   UpdateModelCampaignCommand,
   UpdateModelCampaignCommandValidation,
 } from '@/services/serverFunctions/modelCampaign.command'
+import { handleCopy, handleDownloadJson } from '@/utils/campaign'
 import { Table as BaseTable } from '@abc-transitionbascarbone/components'
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import Form from '@abc-transitionbascarbone/components/src/base/Form'
@@ -80,21 +81,6 @@ const SuperAdminPage = ({ modelCampaigns }: Props) => {
     }
 
     input.click()
-  }
-
-  const handleDownloadJson = (name: string, json: string) => {
-    const blob = new Blob([JSON.stringify(json, null, 2)], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `${name}.json`
-    a.click()
-
-    URL.revokeObjectURL(url)
-  }
-  const handleCopy = async (link: string): Promise<void> => {
-    await navigator.clipboard.writeText(link)
   }
 
   const handleDelete = (id: string) => {

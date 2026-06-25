@@ -3,6 +3,7 @@
 import { CampaignsWithResponses, ModelCampaignLight } from '@/db/campaign'
 import { updateCampaignCommand } from '@/services/serverFunctions/campaign'
 import { UpdateCampaignCommand, UpdateCampaignCommandValidation } from '@/services/serverFunctions/campaign.command'
+import { handleCopy, handleDownloadJson } from '@/utils/campaign'
 import { Table as BaseTable } from '@abc-transitionbascarbone/components'
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import Form from '@abc-transitionbascarbone/components/src/base/Form'
@@ -69,6 +70,14 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
       },
     })
   }
+
+  const handleDelete = (id: string) => {
+    setValue(
+      'campaigns',
+      getValues('campaigns').filter((campaign) => campaign.id !== id),
+    )
+  }
+
   const control = form?.control as Control<UpdateCampaignCommand>
 
   const columns = useMemo(
@@ -111,20 +120,7 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
           id: 'download',
           header: () => t('json'),
           cell: ({ row }) => (
-            <LinkButton
-              onClick={() => {
-                const model = modelCampaign?.model
-                const blob = new Blob([JSON.stringify(model, null, 2)], { type: 'application/json' })
-                const url = URL.createObjectURL(blob)
-
-                const a = document.createElement('a')
-                a.href = url
-                a.download = `${row.original.name}.json`
-                a.click()
-
-                URL.revokeObjectURL(url)
-              }}
-            >
+            <LinkButton onClick={() => handleDownloadJson(row.original.name, modelCampaign?.model as string)}>
               <DownloadIcon />
             </LinkButton>
           ),
@@ -144,12 +140,8 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
           cell: ({ row }) => {
             const link = typeof window !== 'undefined' ? `${window.location.origin}/survey/${row.original.id}` : ''
 
-            const handleCopy = async (): Promise<void> => {
-              await navigator.clipboard.writeText(link)
-            }
-
             return (
-              <LinkButton onClick={handleCopy}>
+              <LinkButton onClick={() => handleCopy(link)}>
                 <CopyIcon />
               </LinkButton>
             )
@@ -159,18 +151,7 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
           id: 'actions',
           header: '',
           accessorKey: 'id',
-          cell: ({ getValue }) => (
-            <TableActionButton
-              type="delete"
-              onClick={() => {
-                const id = getValue<string>()
-                setValue(
-                  'campaigns',
-                  getValues('campaigns').filter((campaign) => campaign.id !== id),
-                )
-              }}
-            />
-          ),
+          cell: ({ getValue }) => <TableActionButton type="delete" onClick={() => handleDelete(getValue<string>())} />,
         },
       ] as ColumnDef<UpdateCampaignCommand['campaigns'][0]>[],
     // eslint-disable-next-line react-hooks/exhaustive-deps
