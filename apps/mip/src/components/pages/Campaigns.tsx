@@ -134,7 +134,7 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
           header: () => t('responsesCount'),
           accessorKey: 'responsesCount',
           cell: ({ row }) => {
-            const count = campaigns.find((campaign) => (campaign.id = row.original.id))?._count.responses
+            const count = campaigns.find((campaign) => campaign.id === row.original.id)?._count.responses || 0
             return <div>{count}</div>
           },
         },

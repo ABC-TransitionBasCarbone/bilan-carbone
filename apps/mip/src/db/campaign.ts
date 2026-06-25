@@ -1,5 +1,6 @@
 import { UpdateCampaignCommand } from '@/services/serverFunctions/campaign.command'
 import { UpdateModelCampaignCommand } from '@/services/serverFunctions/modelCampaign.command'
+import { Prisma } from '@abc-transitionbascarbone/db-common'
 import { prismaClient } from './client.server'
 
 export const getAllModelCampaigns = async () => {
@@ -165,3 +166,11 @@ export const getCampaignById = (id: string) => {
     select: { id: true, status: true, modelCampaign: { select: { id: true, model: true } } },
   })
 }
+
+export const createResponse = async (campaignId: string, data: Prisma.ResponseCreateInput) =>
+  prismaClient.response.create({
+    data: {
+      ...data,
+      campaign: { connect: { id: campaignId } },
+    },
+  })

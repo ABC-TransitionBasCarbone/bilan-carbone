@@ -1,6 +1,6 @@
 'use server'
 
-import { updateCampaign, updateModelCampaign } from '@/db/campaign'
+import { createResponse, updateCampaign, updateModelCampaign } from '@/db/campaign'
 import { UpdateModelCampaignCommand } from '@/services/serverFunctions/modelCampaign.command'
 import { withServerResponse } from '@/utils/serverResponse'
 import { isAdmin } from '@/utils/user'
@@ -40,4 +40,9 @@ export const updateCampaignCommand = async (command: UpdateCampaignCommand) =>
       session.user.organizationVersionMipId,
       isAdmin(session.user.role),
     )
+  })
+
+export const createResponseWithJson = async (campaignId: string, answers: string) =>
+  withServerResponse('createReponseWithJson', async () => {
+    await createResponse(campaignId, { answers })
   })

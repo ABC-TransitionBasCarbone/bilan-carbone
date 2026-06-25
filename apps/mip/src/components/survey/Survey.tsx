@@ -1,5 +1,6 @@
 'use client'
 import { useMipPublicodes } from '@/publicodes/MipPublicodesProvider'
+import { createResponseWithJson } from '@/services/serverFunctions/campaign'
 import {
   buildPageBuilder,
   getMosaicParent,
@@ -85,6 +86,11 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
     localStorage.removeItem(getStorageKey(surveyId))
     setIsResumed(false)
     setState(initState())
+  }
+
+  const completeSurvey = () => {
+    updateState(formBuilder.goToNextPage(state))
+    createResponseWithJson(surveyId, JSON.stringify(state))
   }
 
   const { elements } = formBuilder.currentPage(state)
@@ -230,7 +236,7 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
         ) : (
           <div />
         )}
-        {hasNextPage ? (
+        {pageCount !== current + 1 ? (
           <Button
             variant="contained"
             endIcon={<ArrowForward />}
@@ -239,12 +245,7 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
             {tCommon('next')}
           </Button>
         ) : (
-          <Button
-            variant="contained"
-            color="success"
-            endIcon={<Check />}
-            onClick={() => updateState(formBuilder.goToNextPage(state))}
-          >
+          <Button variant="contained" color="success" endIcon={<Check />} onClick={completeSurvey}>
             {t('navigation.complete')}
           </Button>
         )}
