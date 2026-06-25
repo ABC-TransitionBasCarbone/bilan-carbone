@@ -256,7 +256,6 @@
     "factors": "Facteurs d'émission",
     "fe": "FE",
     "help": "Aide",
-    "admin": "Admin",
     "profile": "Profil",
     "study": "Étude",
     "organization": "Mon organisation",
@@ -265,7 +264,6 @@
     "organizations": "Mes Bilans Carbone®",
     "footprints": "Mes Empreintes",
     "settings": "Paramètres",
-    "team": "Mon équipe",
     "information": "Informations générales",
     "formation": "Formation",
     "selectAccount": "Sélection du compte"

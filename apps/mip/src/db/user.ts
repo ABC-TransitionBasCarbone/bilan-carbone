@@ -9,7 +9,9 @@ import { UserSession } from 'next-auth'
 import { addAccountMip, getAccountMipByEmailAndOrganizationVersionMipId, updateAccountMip } from './accountMip'
 import { prismaClient } from './client.server'
 
-export const getUserByEmail = (email: string) =>
+export type UserWithAccountsMip = Prisma.UserGetPayload<{ include: { accountsMip: true } }>
+
+export const getUserByEmail = (email: string): Promise<UserWithAccountsMip | null> =>
   prismaClient.user.findUnique({ where: { email }, include: { accountsMip: true } })
 
 export const getUserByEmailWithSensibleInformations = (email: string) =>
@@ -165,3 +167,9 @@ export const deleteAccountMipFromOrgaVersionMip = async (email: string, organiza
     data: { organizationVersionMipId: null, status: UserStatus.IMPORTED },
   })
 }
+
+export const validateUser = (accountMipId: string) =>
+  prismaClient.accountMip.update({
+    where: { id: accountMipId },
+    data: { status: UserStatus.VALIDATED },
+  })

@@ -1,5 +1,6 @@
 'use client'
 
+import { RoleMip } from '@abc-transitionbascarbone/db-common/enums'
 import { signOutEnv } from '@abc-transitionbascarbone/services/auth/auth.utils'
 import AppBar from '@abc-transitionbascarbone/ui/navbar/AppBar'
 import NavbarButton from '@abc-transitionbascarbone/ui/navbar/NavbarButton'
@@ -25,10 +26,14 @@ const Navbar = ({ user }: Props) => {
             <NavbarLink href="/" aria-label={t('home')} title={t('home')}>
               Home
             </NavbarLink>
+            <NavbarLink href="/equipe" aria-label={t('team')}>
+              {t('team')}
+            </NavbarLink>
           </Box>
           <div className="flex gapped1">
             <Box>
               <div className="h100 align-center">
+                {user.role === RoleMip.SUPER_ADMIN && <NavbarLink href="/super-admin">{t('admin')}</NavbarLink>}
                 <NavbarButton title={t('logout')} aria-label={t('logout')} onClick={() => signOutEnv()}>
                   <PowerSettingsNewIcon />
                 </NavbarButton>

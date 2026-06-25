@@ -74,7 +74,7 @@ import {
   sendResetPassword,
   sendUserOnStudyInvitationEmail,
 } from '@abc-transitionbascarbone/services/email/email'
-import { MORE_THAN_ONE, NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
+import { EMAIL_SENT, MORE_THAN_ONE, NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
 import { updateUserResetToken } from '@abc-transitionbascarbone/services/serverFunctions/user'
 import { AddMemberCommand } from '@abc-transitionbascarbone/services/serverFunctions/user.command'
 import { DAY, HOUR, MIN, TIME_IN_MS, YEAR } from '@abc-transitionbascarbone/utils'
@@ -84,13 +84,7 @@ import { UserSession } from 'next-auth'
 import { getCompanyName, getValidAssociationNameBySiret } from '../associationApi'
 import { auth, dbActualizedAuth } from '../auth'
 import { getUserCheckList } from '../checklist'
-import {
-  EMAIL_SENT,
-  NOT_ASSOCIATION_SIRET,
-  REQUEST_SENT,
-  UNKNOWN_SCHOOL,
-  UNKNOWN_SIRET_OR_CNC,
-} from '../permissions/check'
+import { NOT_ASSOCIATION_SIRET, REQUEST_SENT, UNKNOWN_SCHOOL, UNKNOWN_SIRET_OR_CNC } from '../permissions/check'
 import { isBC, isTilt } from '../permissions/environment'
 import { canAddMember, canChangeRole, canDeleteMember, canEditSelfRole } from '../permissions/user'
 import { establishmentTypeMap, School } from '../schoolApi'

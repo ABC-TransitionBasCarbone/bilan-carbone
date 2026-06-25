@@ -1,0 +1,13 @@
+model ModelCampaign {
+  id             String          @id @default(uuid())
+  createdAt      DateTime        @default(now()) @map("created_at")
+  updatedAt      DateTime        @updatedAt @map("updated_at")
+  name           String
+
+  model          Json
+
+  organizationVersionMip  OrganizationVersionMip?
+
+  @@map("model_campaigns")
+  @@schema("mip")
+}

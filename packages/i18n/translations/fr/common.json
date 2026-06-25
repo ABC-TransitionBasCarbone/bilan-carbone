@@ -89,6 +89,7 @@
     "validate": "Valider",
     "Request sent": "Une demande d'activation de votre compte a été envoyé à vos collègues",
     "Email sent": "Vous allez recevoir un mail pour finaliser l'activation de votre compte.",
+    "support": "Un problème est survenu. Réessayez. Si cela ne fonctionne pas, contactez notre support",
     "validation": {
       "email": "Veuillez entrer un email"
     }
@@ -96,7 +97,9 @@
   "navigation": {
     "home": "Accueil",
     "logout": "Se déconnecter",
-    "comments": "Commentaires"
+    "comments": "Commentaires",
+    "admin": "Admin",
+    "team": "Mon équipe"
   },
   "country": {
     "ALBANIA": "Albanie",

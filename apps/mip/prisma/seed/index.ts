@@ -19,6 +19,7 @@ const main = async () => {
   const organizationVersionsMip = await prisma.organizationVersionMip.findMany({ select: { organizationId: true } })
   const organizationIds = organizationVersionsMip.map((a) => a.organizationId)
 
+  await prisma.modelCampaign.deleteMany()
   await prisma.organizationVersionMip.deleteMany()
   await prisma.user.deleteMany({ where: { id: { in: organizationIds } } })
 
@@ -57,6 +58,24 @@ const main = async () => {
       },
     })
   }
+
+  const modelCampaign = await prisma.modelCampaign.create({
+    data: {
+      name: 'Test Model Campaign',
+      model: {
+        hello: 'Hello',
+      },
+    },
+  })
+
+  await prisma.organizationVersionMip.update({
+    where: {
+      id: organizationVersionMip.id,
+    },
+    data: {
+      modelCampaignId: modelCampaign.id,
+    },
+  })
 }
 
 if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
