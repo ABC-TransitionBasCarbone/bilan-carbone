@@ -167,10 +167,7 @@ export const getCampaignById = (id: string) => {
   })
 }
 
-export const createResponse = async (campaignId: string, data: Prisma.ResponseCreateInput) =>
+export const createResponse = async (data: Prisma.ResponseCreateInput) =>
   prismaClient.response.create({
-    data: {
-      ...data,
-      campaign: { connect: { id: campaignId } },
-    },
+    data,
   })

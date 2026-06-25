@@ -2,6 +2,7 @@ import { TiltSimplifiedPost } from '@/services/posts'
 import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
 import { mockedOrganizationVersion } from '@/tests/utils/models/organization'
 import { COMMON_DATES, getMockeFullStudy, getMockedDetailedFullStudySite } from '@/tests/utils/models/study'
+import { BCEnvironment } from '@/types/environment'
 import { BaseResultsBySite } from '@/types/study.types'
 import { hasSufficientLevel } from '@/utils/study'
 import { ControlMode, Environment, Level, StudyResultUnit, SubPost } from '@abc-transitionbascarbone/db-common/enums'
@@ -231,7 +232,7 @@ describe('Study Service', () => {
         t,
         tUnits,
         t,
-        environment,
+        environment as BCEnvironment,
         computedResults,
       )
 

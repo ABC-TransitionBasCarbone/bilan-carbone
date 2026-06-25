@@ -44,5 +44,8 @@ export const updateCampaignCommand = async (command: UpdateCampaignCommand) =>
 
 export const createResponseWithJson = async (campaignId: string, answers: string) =>
   withServerResponse('createReponseWithJson', async () => {
-    await createResponse(campaignId, { answers })
+    await createResponse({
+      answers,
+      campaign: { connect: { id: campaignId } },
+    })
   })
