@@ -121,7 +121,7 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
           id: 'download',
           header: () => t('json'),
           cell: ({ row }) => (
-            <LinkButton onClick={() => handleDownloadJson(row.original.name, modelCampaign?.model as string)}>
+            <LinkButton onClick={() => handleDownloadJson(row.original.name, modelCampaign?.model)}>
               <DownloadIcon />
             </LinkButton>
           ),

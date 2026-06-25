@@ -1,8 +1,10 @@
+import type { JsonValue } from '@abc-transitionbascarbone/db-common/types'
+
 export const handleCopy = async (link: string): Promise<void> => {
   await navigator.clipboard.writeText(link)
 }
 
-export const handleDownloadJson = (name: string, json?: string) => {
+export const handleDownloadJson = (name: string, json?: JsonValue) => {
   if (!json) {
     return
   }
