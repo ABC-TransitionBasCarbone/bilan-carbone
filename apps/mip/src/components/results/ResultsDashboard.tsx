@@ -1,6 +1,7 @@
 'use client'
 
 import { getResultsForEntity, SurveyResults } from '@/data/sampleResults'
+import { RawRules } from '@/publicodes/mip-engine'
 import { Print } from '@mui/icons-material'
 import { Button, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
@@ -15,9 +16,10 @@ import StatsSection from './StatsSection'
 
 interface Props {
   results: SurveyResults
+  model: RawRules
 }
 
-const ResultsDashboard = ({ results }: Props) => {
+const ResultsDashboard = ({ results, model }: Props) => {
   const t = useTranslations('results')
   const [selectedEntity, setSelectedEntity] = useState('all')
 
@@ -62,7 +64,7 @@ const ResultsDashboard = ({ results }: Props) => {
 
       <ChartsSection pieChartItems={pieChartItems} totalBarItem={totalBarItem} />
 
-      <KeyStatsSection keyStats={filtered.keyStats} />
+      <KeyStatsSection keyStats={filtered.keyStats} model={model} />
 
       <CollectiveEffortEncart />
 

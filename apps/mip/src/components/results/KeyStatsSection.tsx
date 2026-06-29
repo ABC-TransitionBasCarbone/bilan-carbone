@@ -1,7 +1,7 @@
 'use client'
 
 import { KeyStatGroup } from '@/data/sampleResults'
-import publicodesModel from '@/publicodes/publicodes-mip.model.json'
+import { RawRules } from '@/publicodes/mip-engine'
 import { Card, CardContent, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import KeyStatGroupItem from './KeyStatGroupItem'
@@ -9,6 +9,7 @@ import styles from './KeyStatsSection.module.css'
 
 interface Props {
   keyStats: KeyStatGroup[]
+  model: RawRules
 }
 
 type PublicodesRule = {
@@ -33,10 +34,9 @@ const questionRuleByStatKey: Record<string, string> = {
   newClothes: 'divers . autres produits . niveau de dépenses',
 }
 
-const publicodesRules = publicodesModel as Record<string, PublicodesRule>
-
-const KeyStatsSection = ({ keyStats }: Props) => {
+const KeyStatsSection = ({ keyStats, model }: Props) => {
   const t = useTranslations('results')
+  const publicodesRules = model as Record<string, PublicodesRule>
 
   return (
     <section className="mb2">
