@@ -25,15 +25,15 @@ export const customRich = (
   const abc = getEnvVarClient('ABC_SITE', Environment.BC)
 
   return t.rich(key, {
-    error: (children: ReactNode) => <span className={classNames('error', styles.error)}>{children}</span>,
-    b: (children: ReactNode) => <span className={classNames('bold', styles.b)}>{children}</span>,
-    i: (children: ReactNode) => <span className={classNames('italic', styles.i)}>{children}</span>,
-    faq: (children: ReactNode) => (
+    error: (children) => <span className={classNames('error', styles.error)}>{children}</span>,
+    b: (children) => <span className={classNames('bold', styles.b)}>{children}</span>,
+    i: (children) => <span className={classNames('italic', styles.i)}>{children}</span>,
+    faq: (children) => (
       <Link href={faq} target="_blank" rel="noreferrer noopener" className={styles.faq}>
         {children}
       </Link>
     ),
-    support: (children: ReactNode) => (
+    support: (children) => (
       <Link href={`mailto:${support}`} className={styles.support}>
         {children}
       </Link>
