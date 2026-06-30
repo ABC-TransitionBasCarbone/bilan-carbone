@@ -113,6 +113,7 @@
       "export": "Exporter mes résultats"
     },
     "results": {
+      "reportName": "{studyName} - Bilan Carbone® - Sphère associative",
       "feedback": {
         "button": "Faites-nous vos retours ! ✨",
         "title": "Faites-nous vos retours ! ✨"

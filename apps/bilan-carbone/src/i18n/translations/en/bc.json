@@ -699,6 +699,7 @@
       "download": "Download",
       "downloadResults": "Results",
       "downloadReport": "Download report",
+      "reportName": "{studyName} - Report Bilan Carbone®",
       "downloadPDF": "Download the summary",
       "downloadingPDF": "Downloading (at least 15 seconds)...",
       "emissions": "Emissions",

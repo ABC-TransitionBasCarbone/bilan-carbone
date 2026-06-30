@@ -305,10 +305,10 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   const downloadReport = useCallback(async () => {
     callServerFunction(() => prepareReport(study, { monetaryRatio, nonSpecificMonetaryRatio }), {
       onSuccess: (data) => {
-        download([data.buffer as ArrayBuffer], `${study.name}_report.docx`, 'docx')
+        download([data.buffer as ArrayBuffer], `${t('reportName', { studyName: study.name })}.docx`, 'docx')
       },
     })
-  }, [study, monetaryRatio, nonSpecificMonetaryRatio, callServerFunction])
+  }, [study, monetaryRatio, nonSpecificMonetaryRatio, callServerFunction, t])
 
   const hasAccessToEmissionSourcesDownload = useMemo(
     () => hasAccessToDownloadStudyEmissionSourcesButton(study.organizationVersion.environment),
