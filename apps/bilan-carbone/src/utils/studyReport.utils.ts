@@ -65,13 +65,68 @@ const getActionDetails = (
   return { actions, reductionPercentageWithoutUtilisation, reductionPercentageWithUtilisation, yearsUntilLastActionEnd }
 }
 
+type returnTypeMapStudyForReport = Omit<FullStudy, 'level' | 'startDate' | 'endDate' | 'sites'> & {
+  siret: string
+  level: string
+  isInitialOrStandard: boolean
+  isStandardOrAdvanced: boolean
+  isInitial: boolean
+  isStandard: boolean
+  isAdvanced: boolean
+  year: number
+  startDate: string
+  endDate: string
+  admin: Partial<{
+    accountId: string
+    name: string
+    role: StudyRole
+    createdAt: Date
+    isInternal: boolean
+    isExternal: boolean
+  }>
+  internalTeam: Array<{
+    accountId: string
+    name: string
+    isInternal: boolean
+    isExternal: boolean
+  }>
+  externalTeam: Array<{
+    accountId: string
+    name: string
+    isInternal: boolean
+    isExternal: boolean
+  }>
+  monetaryRatioPercentage: string
+  specificMonetaryRatioPercentage: string
+  nonSpecificMonetaryRatioPercentage: string
+  sites: Array<{
+    id: string
+    name: string
+    city: string | null
+    postalCode: string | null
+  }>
+  totalEtp: number | string
+  exportTypesList: string
+  engagementActions: Array<{
+    name: string
+    targets: string
+    steps: string
+    phase: string
+    description: string
+  }>
+  actions: ReturnType<typeof getActionDetails>['actions']
+  reductionPercentageWithoutUtilisation: ReturnType<typeof getActionDetails>['reductionPercentageWithoutUtilisation']
+  reductionPercentageWithUtilisation: ReturnType<typeof getActionDetails>['reductionPercentageWithUtilisation']
+  yearsUntilLastActionEnd: ReturnType<typeof getActionDetails>['yearsUntilLastActionEnd']
+}
+
 export const mapStudyForReport = async (
   study: FullStudy,
   results: {
     monetaryRatio: number
     nonSpecificMonetaryRatio: number
   },
-) => {
+): Promise<returnTypeMapStudyForReport> => {
   const isParentCR = !!(
     study.organizationVersion.parentId && (await isOrganizationVersionCR(study.organizationVersion.parentId))
   )
@@ -110,10 +165,10 @@ export const mapStudyForReport = async (
     }
   })
 
-  const admin =
-    allowedUsers
-      .filter((user) => user.role === StudyRole.Validator)
-      .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())[0] || null
+  const sortedValidators = allowedUsers
+    .filter((user) => user.role === StudyRole.Validator)
+    .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+  const admin = sortedValidators.length ? sortedValidators[0] : null
   const remainingMembers = allowedUsers.filter((user) => user.accountId !== admin?.accountId)
   const internalTeam = [
     ...remainingMembers.filter((user) => user.isInternal),
@@ -164,7 +219,7 @@ export const mapStudyForReport = async (
 
   return {
     ...study,
-    siret: study.organizationVersion.organization.wordpressId,
+    siret: study.organizationVersion.organization.wordpressId ?? '',
     level: tLevel(study.level),
     isInitialOrStandard: study.level === Level.Initial || study.level === Level.Standard,
     isStandardOrAdvanced: study.level === Level.Standard || study.level === Level.Advanced,
@@ -174,7 +229,7 @@ export const mapStudyForReport = async (
     year: study.startDate.getFullYear(),
     startDate: formatDateFr(study.startDate),
     endDate: formatDateFr(study.endDate),
-    admin,
+    admin: admin ?? {},
     internalTeam,
     externalTeam,
     monetaryRatioPercentage,
