@@ -1,17 +1,11 @@
 'use client'
 
 import { BarChartData, BarChart as UiBarChart } from '@abc-transitionbascarbone/ui'
+import { BasicTypeCharts } from '@abc-transitionbascarbone/utils/charts'
 import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 
-export type BarChartItem = {
-  key: string
-  label: string
-  value: number
-  color: string
-}
-
 interface Props {
-  items: BarChartItem[]
+  items: BasicTypeCharts[]
   unit?: string
   targetLabel?: string
   targetValue?: number
@@ -38,7 +32,7 @@ const StudyBarChart = ({
   const barData: BarChartData = {
     labels: items.map((item) => item.label),
     values: items.map((item) => item.value),
-    colors: items.map((item) => item.color),
+    colors: items.map((item) => item.color || ''),
   }
 
   return (

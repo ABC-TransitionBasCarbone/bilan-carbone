@@ -1,14 +1,16 @@
 'use client'
 
-import StudyBarChart, { BarChartItem } from '@/components/study/charts/BarChart'
-import PieChart from '@/components/study/charts/PieChart'
+import StudyBarChart from '@/components/study/charts/BarChart'
+import { StudyResultUnit } from '@abc-transitionbascarbone/db-common/enums'
+import { PieChart } from '@abc-transitionbascarbone/ui'
+import { BasicTypeCharts } from '@abc-transitionbascarbone/utils/charts'
 import { Card, CardContent, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import styles from './ChartsSection.module.css'
 
 interface Props {
-  pieChartItems: BarChartItem[]
-  totalBarItem: BarChartItem
+  pieChartItems: BasicTypeCharts[]
+  totalBarItem: BasicTypeCharts
 }
 
 const ChartsSection = ({ pieChartItems, totalBarItem }: Props) => {
@@ -33,7 +35,15 @@ const ChartsSection = ({ pieChartItems, totalBarItem }: Props) => {
             <Typography variant="subtitle1" className="mb1">
               {t('charts.pieTitle')}
             </Typography>
-            <PieChart items={pieChartItems} />
+            <PieChart
+              resultsUnit={StudyResultUnit.T}
+              showTitle={true}
+              title={t('charts.pieTitle')}
+              showLabelsOnPie={true}
+              skipAnimation={true}
+              results={pieChartItems}
+              type="post"
+            />
           </CardContent>
         </Card>
       </div>

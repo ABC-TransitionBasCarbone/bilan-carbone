@@ -1,10 +1,14 @@
 'use client'
 
+import { StudyResultUnit } from '@abc-transitionbascarbone/db-common'
 import { Typography, useMediaQuery, useTheme } from '@mui/material'
 import { PieChart as MuiPieChart, PieChartProps } from '@mui/x-charts'
+import classNames from 'classnames'
+import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
+import { formatNumber } from '@abc-transitionbascarbone/utils/number'
+import { BasicTypeCharts, formatValueAndUnit, processPieChartData } from '@abc-transitionbascarbone/utils/charts'
 import styles from './PieChart.module.css'
-import { ProcessedChartData } from '../types'
 
 const PIE_CHART_CONSTANTS = {
   INNER_RING: {
@@ -21,34 +25,35 @@ const PIE_CHART_CONSTANTS = {
   },
 } as const
 
-interface Props extends Omit<PieChartProps, 'series'> {
-  innerRingData: ProcessedChartData[]
-  outerRingData?: ProcessedChartData[]
-  unitLabel: string
+interface Props<T> extends Omit<PieChartProps, 'series'> {
+  resultsUnit: StudyResultUnit
+  results: T[]
   title?: string
   height?: number
   showTitle?: boolean
   showLabelsOnPie?: boolean
+  showSubLevel?: boolean
   type?: 'post' | 'tag'
-  formatNumber: (value?: number, dec?: number) => string
-  formatValueAndUnit: (value: number | null, unit: string, dec?: number) => string
 }
 
-const PieChart = ({
-  innerRingData,
-  outerRingData = [],
-  unitLabel,
+const PieChart = <T extends BasicTypeCharts>({
+  resultsUnit,
+  results,
   title,
   height = 400,
   showTitle = true,
   showLabelsOnPie = true,
+  showSubLevel = false,
   type = 'post',
-  formatNumber,
-  formatValueAndUnit,
   ...pieChartProps
-}: Props) => {
+}: Props<T>) => {
+  const tUnits = useTranslations('study.results.units')
   const theme = useTheme()
   const noSpaceForLegend = useMediaQuery(theme.breakpoints.between('lg', 'xl')) && type === 'tag'
+
+  const { innerRingData, outerRingData } = useMemo(() => {
+    return processPieChartData(results, type, showSubLevel, theme, resultsUnit)
+  }, [type, showSubLevel, results, theme, resultsUnit])
 
   const series = useMemo(() => {
     const seriesArray = []
@@ -61,7 +66,7 @@ const PieChart = ({
         arcLabelRadius: PIE_CHART_CONSTANTS.INNER_RING.ARC_LABEL_RADIUS,
         innerRadius: PIE_CHART_CONSTANTS.INNER_RING.INNER_RADIUS,
         outerRadius: PIE_CHART_CONSTANTS.INNER_RING.OUTER_RADIUS,
-        valueFormatter: (item: { value: number }) => formatValueAndUnit(item.value, unitLabel, 0),
+        valueFormatter: (item: { value: number }) => formatValueAndUnit(item.value, tUnits(resultsUnit), 0),
       })
     }
 
@@ -73,12 +78,12 @@ const PieChart = ({
         arcLabelRadius: PIE_CHART_CONSTANTS.OUTER_RING.ARC_LABEL_RADIUS,
         innerRadius: PIE_CHART_CONSTANTS.OUTER_RING.INNER_RADIUS,
         outerRadius: PIE_CHART_CONSTANTS.OUTER_RING.OUTER_RADIUS,
-        valueFormatter: (item: { value: number }) => formatValueAndUnit(item.value, unitLabel, 0),
+        valueFormatter: (item: { value: number }) => formatValueAndUnit(item.value, tUnits(resultsUnit), 0),
       })
     }
 
     return seriesArray
-  }, [innerRingData, outerRingData, showLabelsOnPie, formatNumber, formatValueAndUnit, unitLabel])
+  }, [innerRingData, outerRingData, showLabelsOnPie, tUnits, resultsUnit])
 
   const legendData = useMemo(() => {
     const maxLabelLength = type === 'tag' ? 20 : 50
@@ -90,16 +95,16 @@ const PieChart = ({
 
   return (
     <div className={styles.pieChart}>
-      <div className="flex-cc gapped2">
+      <div className={classNames('flex-cc', 'gapped2')}>
         <MuiPieChart series={series} height={height} hideLegend {...pieChartProps} />
         {legendData.length > 0 && !noSpaceForLegend && (
-          <div className="flex-col pr2">
+          <div className={classNames('flex-col', 'pr2')}>
             {legendData.map((item, index) => (
-              <div key={index} className="align-center gapped1 py025">
-                <svg viewBox="0 0 12 12" className={styles.legendColor} aria-hidden="true">
-                  <circle cx="6" cy="6" r="6" fill={item.color} />
-                </svg>
-                <Typography variant="body2">{item.label}</Typography>
+              <div key={index} className={classNames('align-center', 'gapped1', 'py025')}>
+                <div className={styles.legendColor} style={{ backgroundColor: item.color }} />
+                <Typography variant="body2" className={styles.legendLabel}>
+                  {item.label}
+                </Typography>
               </div>
             ))}
           </div>

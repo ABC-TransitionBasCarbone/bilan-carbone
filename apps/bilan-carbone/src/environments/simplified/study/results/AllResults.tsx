@@ -1,7 +1,6 @@
 'use client'
 
 import BarChart from '@/components/study/charts/BarChart'
-import PieChart from '@/components/study/charts/PieChart'
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
 
@@ -32,6 +31,7 @@ import { BCEnvironment } from '@/types/environment'
 import type { BaseResultsBySite } from '@/types/study.types'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { SiteCAUnit } from '@abc-transitionbascarbone/db-common/enums'
+import { PieChart } from '@abc-transitionbascarbone/ui'
 import DownloadIcon from '@mui/icons-material/Download'
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
 import { Box, Button, Tab, Tabs, Typography } from '@mui/material'

@@ -2,10 +2,17 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "paths": {
-      "@abc-transitionbascarbone/css": ["../../packages/css/index.ts"],
-      "@abc-transitionbascarbone/survey": ["../../packages/survey/src/index.ts"]
+      "@abc-transitionbascarbone/css": [
+        "../../packages/css/index.ts"
+      ]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.d.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

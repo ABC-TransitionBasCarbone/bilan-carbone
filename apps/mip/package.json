@@ -37,7 +37,6 @@
     "@abc-transitionbascarbone/lib": "*",
     "@abc-transitionbascarbone/publicodes": "*",
     "@abc-transitionbascarbone/services": "*",
-    "@abc-transitionbascarbone/survey": "*",
     "@abc-transitionbascarbone/typeguards": "*",
     "@abc-transitionbascarbone/ui": "*",
     "@abc-transitionbascarbone/utils": "*",

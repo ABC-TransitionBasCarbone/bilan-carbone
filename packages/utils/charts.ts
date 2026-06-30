@@ -1,9 +1,21 @@
 import { StudyResultUnit, SubPost } from '@abc-transitionbascarbone/db-common'
 import { Translations } from '@abc-transitionbascarbone/lib'
+import { BCPost, ClicksonPost, CutPost, TiltAdvancedPost, TiltSimplifiedPost, TiltPost } from '@abc-transitionbascarbone/services/results/posts.enums'
 import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import { Theme } from '@mui/material'
-import { isPost } from './post'
-import { STUDY_UNIT_VALUES } from './study'
+
+export const STUDY_UNIT_VALUES: Record<StudyResultUnit, number> = {
+  K: 1,
+  T: 1000,
+}
+
+export type Post = BCPost | TiltAdvancedPost | TiltSimplifiedPost | CutPost | ClicksonPost
+
+export const Post = { ...BCPost, ...CutPost, ...TiltPost, ...ClicksonPost }
+
+export const isPost = (post: string): post is Post => {
+  return post in Post
+}
 
 export interface BasicTypeCharts {
   value: number
@@ -58,7 +70,7 @@ export const getChildColor = (type: 'post' | 'tag', theme: Theme, child: Omit<Ba
   if (type === 'tag') {
     return child.color || theme.palette.primary.light
   }
-  return getSubpostColor(theme, child.post as SubPost)
+  return getSubpostColor(theme, child?.post as SubPost)
 }
 
 export const getPostLabel = (label?: string, post?: string, tPost?: Translations) => {
@@ -123,10 +135,10 @@ export const processPieChartData = <T extends BasicTypeCharts>(
     isParent: boolean,
     index?: number,
   ): ProcessedChartData => {
-    const convertedValue = item.value / STUDY_UNIT_VALUES[resultsUnit]
+    const convertedValue = item?.value / STUDY_UNIT_VALUES[resultsUnit]
 
     return {
-      label: item.label,
+      label: item?.label,
       value: convertedValue,
       color: isParent ? getParentColor(type, theme, item, index) : getChildColor(type, theme, item),
     }

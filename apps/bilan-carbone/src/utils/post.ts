@@ -65,10 +65,6 @@ const withInfobulleList: (Post | SubPost)[] = [
 
 export const withInfobulle = (post: Post | SubPost) => withInfobulleList.includes(post)
 
-export const isPost = (post: string): post is Post => {
-  return post in Post
-}
-
 export const getPostValues = (environment: Environment | undefined, type?: ResultType) => {
   if (!environment) {
     return BCPost

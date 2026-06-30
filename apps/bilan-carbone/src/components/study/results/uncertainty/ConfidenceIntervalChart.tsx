@@ -1,5 +1,5 @@
-import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { StudyResultUnit } from '@abc-transitionbascarbone/db-common'
+import { STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/utils/charts'
 import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

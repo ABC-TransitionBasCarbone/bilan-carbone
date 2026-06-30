@@ -18,7 +18,6 @@ import {
   SubPost,
   Unit,
 } from '@abc-transitionbascarbone/db-common/enums'
-import { STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/utils/charts'
 import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import { Getter } from '@tanstack/react-table'
 import { UserSession } from 'next-auth'
@@ -176,6 +175,11 @@ export const hasDeprecationPeriod = (subPost: SubPost) =>
     SubPost.Electromenager,
     SubPost.Batiment,
   ].includes(subPost)
+
+export const STUDY_UNIT_VALUES: Record<StudyResultUnit, number> = {
+  K: 1,
+  T: 1000,
+}
 
 export const defaultStudyResultUnit = StudyResultUnit.T
 

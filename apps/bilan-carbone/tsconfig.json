@@ -29,7 +29,8 @@
     "src/**/*.tsx",
     "cypress/**/*.ts",
     "**/*.cy.ts",
-    "prisma/**/*.ts"
+    "prisma/**/*.ts",
+    "../../packages/services/src/results/posts.enums.ts"
   ],
   "exclude": ["node_modules", "../../packages/publicodes-packages"]
 }
