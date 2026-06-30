@@ -1,9 +1,13 @@
 'use client'
 
-import { Typography } from '@mui/material'
-import { BarChart as MuiXBarChart, ChartsReferenceLine } from '@mui/x-charts'
+import { Typography, useTheme } from '@mui/material'
+import { BarChart as MuiBarChart } from '@mui/x-charts'
+import { useTranslations } from 'next-intl'
+import { useMemo } from 'react'
 import styles from './BarChart.module.css'
-import { BarChartData, BarChartSeriesData } from '../types'
+import { StudyResultUnit } from '@abc-transitionbascarbone/db-common'
+import { BasicTypeCharts, processBarChartData } from '@abc-transitionbascarbone/utils/charts'
+import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 
 const BAR_CHART_CONSTANTS = {
   TICK_ANGLE: -20,
@@ -11,35 +15,41 @@ const BAR_CHART_CONSTANTS = {
   AXIS_HEIGHT: 80,
 } as const
 
-interface Props {
-  barData: BarChartData
-  seriesData?: BarChartSeriesData[]
+interface Props<T> {
+  results: T[]
+  resultsUnit: StudyResultUnit
   title?: string
   height?: number
   showTitle?: boolean
   showLegend?: boolean
   showLabelsOnBars?: boolean
   skipAnimation?: boolean
-  emissionsLabel?: string
-  targetValue?: number
-  unitLabel: string
-  formatNumber: (value?: number, dec?: number) => string
+  showSubLevel?: boolean
+  type?: 'post' | 'tag'
 }
 
-const UiBarChart = ({
-  barData,
-  seriesData = [],
+const BarChart = <T extends BasicTypeCharts>({
+  results,
+  resultsUnit,
   title,
   height = 400,
   showTitle = true,
   showLegend = true,
   showLabelsOnBars = true,
   skipAnimation = false,
-  emissionsLabel,
-  targetValue,
-  unitLabel,
-  formatNumber,
-}: Props) => {
+  showSubLevel = false,
+  type = 'post',
+}: Props<T>) => {
+  const tResults = useTranslations('study.results')
+  const tUnits = useTranslations('study.results.units')
+  const tPost = useTranslations('emissionFactors.post')
+  const theme = useTheme()
+
+  const { barData, seriesData } = useMemo(() => {
+    console.log('BarChart results:', results)
+    return processBarChartData(results, type, showSubLevel, theme, resultsUnit, tPost)
+  }, [results, type, showSubLevel, theme, resultsUnit, tPost])
+
   const getBarLabel = (item: { value: number | null }) => {
     if (!showLabelsOnBars || !item.value) {
       return ''
@@ -49,9 +59,9 @@ const UiBarChart = ({
 
   return (
     <div className={styles.barChart}>
-      <MuiXBarChart
+      <MuiBarChart
         skipAnimation={skipAnimation}
-        colors={seriesData.length > 0 ? seriesData.map((series) => series.color) : undefined}
+        colors={seriesData.length > 0 ? seriesData.map((s) => s.color) : undefined}
         xAxis={[
           {
             data: barData.labels,
@@ -67,7 +77,7 @@ const UiBarChart = ({
             colorMap:
               seriesData.length === 0
                 ? {
-                  type: 'ordinal' as const,
+                  type: 'ordinal',
                   values: barData.labels,
                   colors: barData.colors,
                 }
@@ -78,38 +88,28 @@ const UiBarChart = ({
           seriesData.length > 0
             ? seriesData.map((series, index) => ({
               data: series.data,
-              valueFormatter: (value: number | null) => (value && value > 0 ? formatNumber(value, 0) : null),
+              valueFormatter: (value) => (value && value > 0 ? formatNumber(value, 0) : null),
               label: series.label,
               stack: series.stack,
               color: series.color,
               id: `series-${index}`,
-              barLabel: showLabelsOnBars ? getBarLabel : undefined,
             }))
             : [
               {
                 data: barData.values,
-                valueFormatter: (value: number | null) => formatNumber(value ?? 0, 0),
-                label: showLegend ? emissionsLabel : undefined,
-                barLabel: showLabelsOnBars ? getBarLabel : undefined,
+                valueFormatter: (value) => formatNumber(value ?? 0, 0),
+                label: showLegend ? tResults('emissions') : undefined,
               },
             ]
         }
         grid={{ horizontal: true }}
-        yAxis={[{ label: unitLabel }]}
+        yAxis={[{ label: tUnits(resultsUnit) }]}
         axisHighlight={{ x: 'none' }}
+        barLabel={showLabelsOnBars ? getBarLabel : undefined}
         slots={showLegend && seriesData.length === 0 ? undefined : { legend: () => null }}
         height={height}
         borderRadius={10}
-      >
-        {typeof targetValue === 'number' && (
-          <ChartsReferenceLine
-            y={targetValue}
-            lineStyle={{ stroke: '#ef4444', strokeDasharray: '6 4', strokeWidth: 2 }}
-            label={`Objectif: ${formatNumber(targetValue, 0)}`}
-            labelAlign="end"
-          />
-        )}
-      </MuiXBarChart>
+      />
       {showTitle && (
         <Typography variant="h6" align="center" className={styles.chartTitle}>
           {title}
@@ -119,4 +119,4 @@ const UiBarChart = ({
   )
 }
 
-export default UiBarChart
+export default BarChart

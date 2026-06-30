@@ -4,6 +4,7 @@
 
 // Colors matching CSS variables from packages/css/style/colors.css
 export const CATEGORY_COLORS: Record<string, string> = {
+  total: '#346fef', // --primary-600
   commute: '#346fef', // --primary-500
   travel: '#272768', // --info
   food: '#1d9c5c', // --success-100

@@ -1,7 +1,8 @@
 'use client'
 
-import { getResultsForEntity, SurveyResults } from '@/data/sampleResults'
+import { CATEGORY_COLORS, getResultsForEntity, SurveyResults } from '@/data/sampleResults'
 import { RawRules } from '@/publicodes/mip-engine'
+import { BasicTypeCharts } from '@abc-transitionbascarbone/utils/charts'
 import { Print } from '@mui/icons-material'
 import { Button, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
@@ -25,19 +26,22 @@ const ResultsDashboard = ({ results, model }: Props) => {
 
   const filtered = getResultsForEntity(results, selectedEntity)
 
-  const pieChartItems = filtered.categories.map((c) => ({
-    key: c.key,
-    label: t(`categories.${c.key}`),
-    value: c.valueTCO2e,
-    color: c.color,
-  }))
+  const pieChartItems = filtered.categories.map(
+    (c) =>
+      ({
+        post: c.key,
+        label: t(`categories.${c.key}`),
+        value: c.valueTCO2e * 1000,
+        color: c.color,
+      }) as BasicTypeCharts,
+  )
 
   const totalBarItem = {
-    key: 'total',
+    post: 'somme',
     label: t('charts.barTitle'),
-    value: filtered.averageFootprintTCO2e,
-    color: '#346fef',
-  }
+    value: filtered.averageFootprintTCO2e * 1000,
+    color: CATEGORY_COLORS.total,
+  } as BasicTypeCharts
 
   const handlePrint = () => {
     window.print()

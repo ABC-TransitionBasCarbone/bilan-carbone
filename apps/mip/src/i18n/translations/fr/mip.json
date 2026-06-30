@@ -20,6 +20,13 @@
     "resume": "Reprendre le sondage",
     "characterCount": "{current} / {max} caractères"
   },
+  "study": {
+    "results": {
+      "units": {
+        "T": "tonnes"
+      }
+    }
+  },
   "email": {
     "subject": {
       "newUser": "Vous avez été invité sur Mon Impact Pro",
