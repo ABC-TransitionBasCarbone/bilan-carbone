@@ -5,6 +5,7 @@ import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import { Card, CardContent, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import styles from './StatsSection.module.css'
+import classNames from 'classnames'
 
 interface Props {
   results: SurveyResults
@@ -14,7 +15,7 @@ const StatsSection = ({ results }: Props) => {
   const t = useTranslations('results')
 
   return (
-    <div className={styles.statsGrid}>
+    <div className={classNames('gap-1rem', 'mb-2rem', 'grid')}>
       <Card>
         <CardContent className="p125">
           <Typography className={styles.statValue}>
