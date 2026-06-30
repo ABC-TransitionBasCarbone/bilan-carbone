@@ -14,7 +14,10 @@ export const StyledPostHeader = styled('div', { shouldForwardProp: (prop) => pro
   }),
 )
 
-export const StyledIconColumn = styled('div')(({ theme }) => ({
+export const StyledIconColumn = styled('div')<{
+  post: Post
+}>(({ theme, post }) => ({
+  color: theme.custom.postColors[post]?.customTitleColor || theme.palette.primary.contrastText,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -43,9 +46,11 @@ export const StyledTitle = styled('div')<{
   textAlign: 'left',
 }))
 
-export const StyledEmissionValue = styled('div')({
+export const StyledEmissionValue = styled('div')<{
+  post: Post
+}>(({ theme, post }) => ({
+  color: theme.custom.postColors[post]?.customTitleColor || theme.palette.primary.contrastText,
   fontSize: '1.25rem',
   fontWeight: 800,
   textAlign: 'left',
-  color: 'white',
-})
+}))
