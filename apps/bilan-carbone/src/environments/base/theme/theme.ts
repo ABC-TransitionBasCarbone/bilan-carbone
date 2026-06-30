@@ -1,6 +1,6 @@
-import { Post } from '@/services/posts'
 import { globalTheme } from '@abc-transitionbascarbone/css'
 import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
 import { createTheme } from '@mui/material/styles'
 
 const base = createTheme({

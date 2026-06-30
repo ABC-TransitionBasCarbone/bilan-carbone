@@ -12,7 +12,7 @@ import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 const BAR_CHART_CONSTANTS = {
   TICK_ANGLE: -20,
   TICK_FONT_SIZE: 10,
-  AXIS_HEIGHT: 80,
+  AXIS_HEIGHT: 80
 } as const
 
 interface Props<T> {

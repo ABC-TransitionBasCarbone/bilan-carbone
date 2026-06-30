@@ -1,8 +1,8 @@
 'use client'
 
 import type { FullStudy } from '@/db/study'
-import { Post } from '@/services/posts'
 import { StudyRole, SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
 import classNames from 'classnames'
 import { SessionProvider } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'

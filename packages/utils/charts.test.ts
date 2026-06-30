@@ -1,4 +1,4 @@
-import { Post } from '@/services/posts'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
 import { translationMock } from '@/tests/utils/models/translationsMock'
 import { StudyResultUnit, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { expect } from '@jest/globals'

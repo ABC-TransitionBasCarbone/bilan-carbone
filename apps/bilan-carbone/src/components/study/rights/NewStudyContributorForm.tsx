@@ -7,7 +7,7 @@ import {
   displayingStudyRightModalForAddingContributors,
   hasAccessToNamingInAddContributor,
 } from '@/services/permissions/environment'
-import { environmentPostMapping, Post, subPostsByPost } from '@/services/posts'
+import { environmentPostMapping, subPostsByPost } from '@/services/posts'
 import { newStudyContributor } from '@/services/serverFunctions/study'
 import {
   NewStudyContributorCommand,
@@ -20,6 +20,7 @@ import LoadingButton from '@abc-transitionbascarbone/components/src/base/Loading
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'

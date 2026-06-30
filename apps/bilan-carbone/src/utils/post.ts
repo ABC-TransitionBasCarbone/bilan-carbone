@@ -1,10 +1,11 @@
 import { customPostOrder } from '@/environments/clickson/utils/constant'
 import { hasCustomPostOrder } from '@/services/permissions/environment'
-import { BCPost, ClicksonPost, CutPost, Post, subPostsByPost, TiltAdvancedPost } from '@/services/posts'
+import { BCPost, ClicksonPost, CutPost, subPostsByPost, TiltAdvancedPost } from '@/services/posts'
 import type { ResultType } from '@/types/study.types'
 import { AdditionalResultTypes } from '@/types/study.types'
 import { Environment, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { Translations } from '@abc-transitionbascarbone/lib'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
 import { sortByCustomOrder } from './array'
 
 export const getPost = (subPost?: SubPost) =>

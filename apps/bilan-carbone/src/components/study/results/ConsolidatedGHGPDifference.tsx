@@ -1,7 +1,6 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import type { FullStudy } from '@/db/study'
 import { getEmissionResults } from '@/services/emissionSource'
-import { Post } from '@/services/posts'
 import { getDefaultRule, PostInfos } from '@/services/results/exports'
 import { getGHGPEmissionValue, getLine } from '@/services/results/ghgp'
 import { getAllSiteEmissionSources } from '@/services/results/utils'
@@ -17,7 +16,7 @@ import {
   Export,
   SubPost,
 } from '@abc-transitionbascarbone/db-common/enums'
-import { STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/utils/charts'
+import { Post, STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/utils/charts'
 import WarningAmberIcon from '@mui/icons-material/WarningAmberOutlined'
 import { useTranslations } from 'next-intl'
 import { useCallback, useMemo } from 'react'

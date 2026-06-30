@@ -5,7 +5,7 @@ import { EmissionFactorList, findEmissionFactorByIdForMatch } from '@/db/emissio
 import { createEmissionSourcesWithReturn, getFamilyTagsForStudy } from '@/db/emissionSource'
 import { createEmissionSourceTags, FullStudy, getStudyById } from '@/db/study'
 import { getLocale } from '@/i18n/locale'
-import { Post, subPostsByPost } from '@/services/posts'
+import { subPostsByPost } from '@/services/posts'
 import { AccountWithUser } from '@/types/account.types'
 import { FEChoices, ImportResult, ImportWarning } from '@/types/import.types'
 import {
@@ -37,6 +37,7 @@ import {
 import { LocaleType } from '@abc-transitionbascarbone/i18n/config'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
 import { yearToDate } from '@abc-transitionbascarbone/utils'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
 import xlsx from 'node-xlsx'
 import { canBeValidated, getCaracterisationsBySubPost, getEmissionSourceEmission } from '../emissionSource'
 import { getAuthenticatedAccount } from '../permissions/account.permissions'

@@ -1,4 +1,4 @@
-import { Post } from '@/services/posts'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
 import { AutresEmissionsNonEnergetiquesIcon } from './autresemissionsnonenergetiques'
 import { BilletterieEtCommunicationIcon } from './billetterieetcommunication'
 import { ConfiseriesEtBoissonsIcon } from './confiseriesetboissons'
