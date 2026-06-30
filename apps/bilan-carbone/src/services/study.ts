@@ -29,7 +29,7 @@ import {
 } from '@abc-transitionbascarbone/db-common/enums'
 import { Translations } from '@abc-transitionbascarbone/lib'
 import { formatDateFr } from '@abc-transitionbascarbone/utils'
-import { STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/utils/charts'
+import { Post, STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/utils/charts'
 import dayjs from 'dayjs'
 import type { ResultType } from '../types/study.types'
 import { AdditionalResultTypes, BaseResultsBySite, ResultsByPost } from '../types/study.types'
@@ -42,7 +42,6 @@ import {
   convertSimplifiedEnvToBilanCarbone,
   convertTiltSubPostToBCSubPost,
   environmentPostMapping,
-  Post,
   subPostBCToSubPostTiltMapping,
 } from './posts'
 import { rulesSpans as begesRulesSpans, computeBegesResult } from './results/beges'

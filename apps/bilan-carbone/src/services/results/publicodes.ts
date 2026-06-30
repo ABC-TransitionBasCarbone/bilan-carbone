@@ -2,10 +2,10 @@ import { TOTAL_RULE } from '@/constants/publicodes'
 import { customPostOrder } from '@/environments/clickson/utils/constant'
 import { sortByCustomOrder } from '@/utils/array'
 import { Environment, StudyResultUnit, SubPost } from '@abc-transitionbascarbone/db-common'
-import { STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/utils/charts'
+import { Post, STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/utils/charts'
 import Engine from 'publicodes'
 import { hasCustomPostOrder } from '../permissions/environment'
-import type { BaseResultsByPost, Post } from '../posts'
+import type { BaseResultsByPost } from '../posts'
 
 function safeEvaluate(engine: Engine, ruleName: string | undefined): number {
   if (!ruleName) {

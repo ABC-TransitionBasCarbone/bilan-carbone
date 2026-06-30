@@ -6,11 +6,11 @@ import { getPost } from '@/utils/post'
 import { formatEmissionValueForExport, hasDeprecationPeriod, isCAS } from '@/utils/study'
 import { Environment, Level, StudyResultUnit, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { Translations } from '@abc-transitionbascarbone/lib'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
 import { formatDateFr } from '@abc-transitionbascarbone/utils/time'
 import dayjs from 'dayjs'
 import { getEmissionResults, getEmissionSourceEmission } from './emissionSource'
 import { download } from './file'
-import { Post } from './posts'
 import { EmissionFactorWithMetaData, getEmissionFactorsByIds } from './serverFunctions/emissionFactor'
 import {
   getEmissionSourcesConfidenceInterval,
