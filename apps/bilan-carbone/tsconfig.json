@@ -2,18 +2,31 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "tsBuildInfoFile": ".next/cache/tsbuildinfo.json",
-    "types": ["cypress", "node"],
+    "types": [
+      "cypress",
+      "node"
+    ],
     "plugins": [
       {
         "name": "next"
       }
     ],
     "paths": {
-      "@/*": ["./src/*"],
-      "@abc-transitionbascarbone/css": ["../../packages/css/index.ts"],
-      "@abc-transitionbascarbone/publicodes-count": ["../../packages/publicodes-packages/publicodes-count"],
-      "@abc-transitionbascarbone/publicodes-clickson": ["../../packages/publicodes-packages/publicodes-clickson"],
-      "@abc-transitionbascarbone/publicodes-tilt": ["../../packages/publicodes-packages/publicodes-tilt"]
+      "@/*": [
+        "./src/*"
+      ],
+      "@abc-transitionbascarbone/css": [
+        "../../packages/css/index.ts"
+      ],
+      "@abc-transitionbascarbone/publicodes-count": [
+        "../../packages/publicodes-packages/publicodes-count"
+      ],
+      "@abc-transitionbascarbone/publicodes-clickson": [
+        "../../packages/publicodes-packages/publicodes-clickson"
+      ],
+      "@abc-transitionbascarbone/publicodes-tilt": [
+        "../../packages/publicodes-packages/publicodes-tilt"
+      ]
     }
   },
   "ts-node": {
@@ -30,7 +43,11 @@
     "cypress/**/*.ts",
     "**/*.cy.ts",
     "prisma/**/*.ts",
-    "../../packages/services/src/results/posts.enums.ts"
+    "../../packages/services/src/results/posts.enums.ts",
+    "../../packages/tests/utils/models/translationsMock.tsx"
   ],
-  "exclude": ["node_modules", "../../packages/publicodes-packages"]
+  "exclude": [
+    "node_modules",
+    "../../packages/publicodes-packages"
+  ]
 }

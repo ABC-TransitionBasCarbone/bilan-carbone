@@ -1,4 +1,3 @@
-import { translationMock } from '@/tests/utils/models/translationsMock'
 import { StudyResultUnit, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import {
   BasicTypeCharts,
@@ -14,6 +13,7 @@ import {
 } from '@abc-transitionbascarbone/utils/charts'
 import { expect } from '@jest/globals'
 import { Theme } from '@mui/material'
+import { translationMock } from '../../../../packages/tests/utils/models/translationsMock'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('../services/file', () => ({ download: jest.fn() }))

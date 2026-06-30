@@ -3,5 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "main": "time.ts",
-  "types": "time.ts"
+  "types": "time.ts",
+  "devDependencies": {
+    "@types/node": "^25.9.3"
+  }
 }
