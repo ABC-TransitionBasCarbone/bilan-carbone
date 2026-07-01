@@ -4,8 +4,8 @@ import { getMockeFullStudy } from '@/tests/utils/models/study'
 import * as studyUtilsModule from '@/utils/study'
 import { Environment, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { expect } from '@jest/globals'
-import { computeResultsByTag } from './consolidated'
 import { translationMock } from '../../../../../packages/tests/utils/models/translationsMock'
+import { computeResultsByTag } from './consolidated'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('../file', () => ({ download: jest.fn() }))
