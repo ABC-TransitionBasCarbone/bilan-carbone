@@ -6,8 +6,8 @@ import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import LockIcon from '@mui/icons-material/Lock'
 import LockOpenIcon from '@mui/icons-material/LockOpen'
 import { useFormatter, useTranslations } from 'next-intl'
-import StudyManagementActions from './StudyManagementActions'
 import styles from './StudyDetailsHeader.module.css'
+import StudyManagementActions from './StudyManagementActions'
 import SelectStudySite from './site/SelectStudySite'
 
 interface Props {
