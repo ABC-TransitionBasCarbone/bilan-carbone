@@ -1,11 +1,8 @@
 'use client'
 
-import EmissionSourceButtons from '@/components/study/buttons/EmissionSourceButtons'
 import type { FullStudy } from '@/db/study'
-import { hasAccessToDownloadStudyEmissionSourcesButton } from '@/services/permissions/environment'
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { Environment, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
-import { useToast } from '@abc-transitionbascarbone/ui'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -25,7 +22,7 @@ interface Props {
   organizationVersionId: string | null
 }
 
-const StudyContributionPage = ({
+const StudyDataEntryInfographyPage = ({
   study,
   userRole,
   canDeleteStudy,
@@ -35,9 +32,7 @@ const StudyContributionPage = ({
 }: Props) => {
   const tNav = useTranslations('nav')
   const tStudyNav = useTranslations('study.navigation')
-  const tImport = useTranslations('study.importEmissionSourcesModal')
   const { siteId, studySiteId, setSite } = useStudySite(study)
-  const { showSuccessToast } = useToast()
   const router = useRouter()
 
   return (
@@ -62,33 +57,14 @@ const StudyContributionPage = ({
         canDeleteStudy={canDeleteStudy}
         canDuplicateStudy={canDuplicateStudy}
         duplicableEnvironments={duplicableEnvironments}
+        userRole={userRole}
+        siteId={siteId}
       >
         {(studyActions) => (
           <Block
             title={tStudyNav('dataEntry')}
             as="h2"
-            actions={[
-              ...(hasAccessToDownloadStudyEmissionSourcesButton(study.organizationVersion.environment) && !study.simplified
-                ? [
-                    {
-                      actionType: 'node' as const,
-                      node: (
-                        <EmissionSourceButtons
-                          studyId={study.id}
-                          userRole={userRole}
-                          siteId={siteId}
-                          hasEmissionSources={study.emissionSources.length > 0}
-                          onSuccess={() => {
-                            showSuccessToast(tImport('success'))
-                            router.refresh()
-                          }}
-                        />
-                      ),
-                    },
-                  ]
-                : []),
-              ...studyActions,
-            ]}
+            actions={[...(studyActions ?? [])]}
             rightComponent={
               <SelectStudySite sites={study.sites} defaultValue={siteId} setSite={setSite} showAllOption={false} />
             }
@@ -101,4 +77,4 @@ const StudyContributionPage = ({
   )
 }
 
-export default StudyContributionPage
+export default StudyDataEntryInfographyPage
