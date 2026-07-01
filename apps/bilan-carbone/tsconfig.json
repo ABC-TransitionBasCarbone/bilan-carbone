@@ -30,7 +30,7 @@
     "cypress/**/*.ts",
     "**/*.cy.ts",
     "prisma/**/*.ts",
-    "../../packages/types/mui.d.ts",
+    "../../packages/types/*",
     "../../packages/services/src/results/posts.enums.ts",
     "../../packages/tests/utils/models/translationsMock.tsx"
   ],
