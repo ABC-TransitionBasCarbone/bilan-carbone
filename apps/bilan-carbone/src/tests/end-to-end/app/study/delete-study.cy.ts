@@ -19,6 +19,7 @@ describe('Delete study', () => {
         cy.getByTestId('study-link').click()
       })
 
+    cy.url().should('include', '/comptabilisation/saisie-des-donnees')
     cy.getByTestId('delete-study').click()
     cy.get('#delete-study-modal-title').should('be.visible')
     cy.get('#delete-study-modal-content').should('be.visible')

@@ -66,7 +66,7 @@ export const getStudyNavbarMenu = (
   if (environment === Environment.CLICKSON) {
     return {
       title: {
-        href: `/etudes/${studyId}`,
+        href: `/etudes/${studyId}?showHome=true`,
         label: studyName,
       },
       sections: [
