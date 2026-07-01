@@ -9,11 +9,12 @@ export enum DefaultStudyTagNames {
   NUMERIQUE = 'Numérique',
 }
 
+type StudyTags = {
+  name: string
+  color: string
+}[]
 type DefaultStudyTags = {
-  [key in Environment]?: {
-    name: string
-    color: string
-  }[]
+  [key in Environment]?: { name: string; tags: StudyTags }[]
 }
 
 export enum StudyTagColors {
@@ -26,10 +27,18 @@ export enum StudyTagColors {
 
 export const DefaultStudyTags: DefaultStudyTags = {
   [Environment.TILT]: [
-    { name: DefaultStudyTagNames.PERIMETRE_INTERNE, color: StudyTagColors.GREEN },
-    { name: DefaultStudyTagNames.PERIMETRE_BENEVOLES, color: StudyTagColors.RED },
-    { name: DefaultStudyTagNames.PERIMETRE_BENEFICIAIRES, color: StudyTagColors.ORANGE },
-    { name: DefaultStudyTagNames.NUMERIQUE, color: StudyTagColors.BLUE },
+    {
+      name: 'DEFAULT_FAMILY_TAG',
+      tags: [
+        { name: DefaultStudyTagNames.PERIMETRE_INTERNE, color: StudyTagColors.GREEN },
+        { name: DefaultStudyTagNames.PERIMETRE_BENEVOLES, color: StudyTagColors.RED },
+        { name: DefaultStudyTagNames.PERIMETRE_BENEFICIAIRES, color: StudyTagColors.ORANGE },
+      ],
+    },
+    {
+      name: 'DEFAULT_FAMILY_TAG_NUMERIQUE',
+      tags: [{ name: DefaultStudyTagNames.NUMERIQUE, color: StudyTagColors.BLUE }],
+    },
   ],
 }
 type DefaultStudyTagMap = {

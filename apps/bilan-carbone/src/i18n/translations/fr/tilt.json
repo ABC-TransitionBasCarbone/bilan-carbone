@@ -77,7 +77,9 @@
   },
   "study": {
     "perimeter": {
-      "preset": "Type de public"
+      "preset": "Type de public",
+      "preset_numerique": "Numérique"
+
     },
     "new": {
       "postalCode": "Quel est le code postal de l'association ?",

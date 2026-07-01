@@ -839,19 +839,21 @@ const users = async () => {
               })),
             },
           },
-          tagFamilies: {
-            create: [
-              {
-                name: 'DEFAULT_FAMILY_TAG',
-                tags: {
-                  create: (DefaultStudyTags[Environment.TILT] ?? []).map((tag) => ({
-                    name: tag.name,
-                    color: tag.color,
+          ...(DefaultStudyTags[Environment.TILT]?.length
+            ? {
+                tagFamilies: {
+                  create: (DefaultStudyTags[Environment.TILT] ?? []).map((familyTag) => ({
+                    name: familyTag.name,
+                    tags: {
+                      create: familyTag.tags.map((tag) => ({
+                        name: tag.name,
+                        color: tag.color,
+                      })),
+                    },
                   })),
                 },
-              },
-            ],
-          },
+              }
+            : {}),
         },
       })
     }),

@@ -291,21 +291,12 @@ export const createStudyCommand = async (
 
     const environmentTags = DefaultStudyTags[session.user.environment as keyof typeof DefaultStudyTags]
     const tagFamilies: Prisma.StudyTagFamilyCreateNestedManyWithoutStudyInput = {
-      create: sourceTagFamilies
-        ? sourceTagFamilies.map((tagFamily) => ({
-            name: tagFamily.name,
-            tags: {
-              create: tagFamily.tags.map((tag) => ({ name: tag.name, color: tag.color })),
-            },
-          }))
-        : environmentTags
-          ? [
-              {
-                name: 'DEFAULT_FAMILY_TAG',
-                tags: { create: environmentTags.map((tag) => ({ name: tag.name, color: tag.color })) },
-              },
-            ]
-          : [],
+      create: (sourceTagFamilies ?? environmentTags ?? []).map((tagFamily) => ({
+        name: tagFamily.name,
+        tags: {
+          create: tagFamily.tags.map((tag) => ({ name: tag.name, color: tag.color })),
+        },
+      })),
     }
 
     const { exports, controlMode, isPublic, ...studyCommand } = command

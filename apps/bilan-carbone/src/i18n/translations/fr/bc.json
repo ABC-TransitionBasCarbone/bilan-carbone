@@ -616,6 +616,7 @@
       "emissionSourceTags": "Tags",
       "emissionSourceTagLabel": "Libellé",
       "preset": "Pré-set",
+      "preset_numerique": "Numérique",
       "color": "Couleur",
       "emissionSourceTagsPlaceholder": "Votre tag",
       "createEmissionSourceTag": "Créer mon tag",

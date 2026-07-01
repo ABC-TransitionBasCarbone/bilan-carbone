@@ -120,7 +120,11 @@ const StudyTags = ({ studyId }: Props) => {
                 <Title
                   as="h6"
                   className="flex mb0"
-                  title={family.name === 'DEFAULT_FAMILY_TAG' ? t('preset') : family.name}
+                  title={
+                    family.name.match('DEFAULT_FAMILY_TAG')
+                      ? t(`preset${family.name.replace('DEFAULT_FAMILY_TAG', '').toLowerCase()}`)
+                      : family.name
+                  }
                 />
                 <div className="flex">
                   <MuiButton
