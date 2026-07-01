@@ -2,7 +2,7 @@ import { StudyContributorDeleteParams } from '@/components/study/rights/StudyCon
 import { isSourceForEnv } from '@/services/importEmissionFactor/import'
 import { hasAccessToCreateStudyWithEmissionFactorVersions } from '@/services/permissions/environment'
 import { filterAllowedStudies } from '@/services/permissions/study'
-import { Post, subPostsByPost } from '@/services/posts'
+import { subPostsByPost } from '@/services/posts'
 import { ChangeStudyCinemaCommand } from '@/services/serverFunctions/study.command'
 import { mapCncToStudySite } from '@/utils/cnc'
 import { isAdminOnOrga } from '@/utils/organization'
@@ -31,6 +31,7 @@ import { deleteTransitionPlan } from '../services/serverFunctions/transitionPlan
 import { getAccountOrganizationVersions } from './account'
 import { AccountWithUserSelect } from './account.select'
 import { prismaClient } from './client.server'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
 
 export type StudyTagFamilyWithTags = Omit<StudyTagFamily, 'createdAt' | 'updatedAt'> & {
   tags: Omit<StudyTag, 'familyId' | 'createdAt' | 'updatedAt'>[]
@@ -343,14 +344,14 @@ const normalizeAllowedUsers = (
     return organizationVersionId && allowedUser.account.organizationVersionId === organizationVersionId
       ? { ...allowedUser, account: { ...allowedUser.account, readerOnly } }
       : {
-          ...allowedUser,
-          account: {
-            ...allowedUser.account,
-            organizationVersionId: undefined,
-            level: undefined,
-            readerOnly,
-          },
-        }
+        ...allowedUser,
+        account: {
+          ...allowedUser.account,
+          organizationVersionId: undefined,
+          level: undefined,
+          readerOnly,
+        },
+      }
   })
 
 export const getOrganizationVersionStudiesOrderedByStartDate = async (
@@ -446,15 +447,15 @@ export const getAllowedStudyIdByAccount = async (account: UserSession) => {
         { allowedUsers: { some: { accountId: account.id, role: { notIn: [StudyRole.Reader] } } } },
         ...(isAllowedOnPublicStudies
           ? [
-              {
-                AND: [
-                  { organizationVersionId: { in: organizationVersionIds } },
-                  ...(isAdmin(account.role)
-                    ? []
-                    : [{ isPublic: true, level: { in: getAllowedLevels(account.level) } }]),
-                ],
-              },
-            ]
+            {
+              AND: [
+                { organizationVersionId: { in: organizationVersionIds } },
+                ...(isAdmin(account.role)
+                  ? []
+                  : [{ isPublic: true, level: { in: getAllowedLevels(account.level) } }]),
+              ],
+            },
+          ]
           : []),
       ],
     },
@@ -497,18 +498,18 @@ export const getAllowedStudiesByUserAndOrganization = async (
       ...(isAdminOnOrga(user, organizationVersion)
         ? {}
         : {
-            OR: [
-              { allowedUsers: { some: { accountId: user.accountId } } },
-              { contributors: { some: { accountId: user.accountId } } },
-              { isPublic: true, organizationVersionId: user.organizationVersionId as string },
-              {
-                isPublic: true,
-                organizationVersionId: {
-                  in: childOrganizations.map((organizationVersion) => organizationVersion.id),
-                },
+          OR: [
+            { allowedUsers: { some: { accountId: user.accountId } } },
+            { contributors: { some: { accountId: user.accountId } } },
+            { isPublic: true, organizationVersionId: user.organizationVersionId as string },
+            {
+              isPublic: true,
+              organizationVersionId: {
+                in: childOrganizations.map((organizationVersion) => organizationVersion.id),
               },
-            ],
-          }),
+            },
+          ],
+        }),
     },
   })
   return filterAllowedStudies(user, studies)
