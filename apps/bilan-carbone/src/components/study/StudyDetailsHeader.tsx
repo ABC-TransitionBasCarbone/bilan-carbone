@@ -1,10 +1,12 @@
 'use client'
 
 import type { FullStudy } from '@/db/study'
+import { getAccountRoleOnStudy } from '@/utils/study'
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import LockIcon from '@mui/icons-material/Lock'
 import LockOpenIcon from '@mui/icons-material/LockOpen'
+import { UserSession } from 'next-auth'
 import { useFormatter, useTranslations } from 'next-intl'
 import styles from './StudyDetailsHeader.module.css'
 import StudyManagementActions from './StudyManagementActions'
@@ -17,6 +19,7 @@ interface Props {
   canDuplicateStudy?: boolean
   duplicableEnvironments: Environment[]
   studySite: string
+  user: UserSession
   setSite: (site: string) => void
 }
 
@@ -27,10 +30,16 @@ const StudyDetailsHeader = ({
   canDuplicateStudy,
   duplicableEnvironments,
   studySite,
+  user,
   setSite,
 }: Props) => {
   const format = useFormatter()
   const tExport = useTranslations('exports')
+  const userRole = getAccountRoleOnStudy(user, study)
+
+  if (!userRole) {
+    return null
+  }
 
   return (
     <StudyManagementActions
@@ -39,6 +48,8 @@ const StudyDetailsHeader = ({
       canDeleteStudy={canDeleteStudy}
       canDuplicateStudy={canDuplicateStudy}
       duplicableEnvironments={duplicableEnvironments}
+      userRole={userRole}
+      siteId={studySite}
     >
       {(actions) => (
         <Block
