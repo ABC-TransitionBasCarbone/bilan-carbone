@@ -22,6 +22,7 @@ describe('Duplicate study', () => {
         cy.getByTestId('study-link').click()
       })
 
+    cy.url().should('include', '/comptabilisation/saisie-des-donnees')
     cy.getByTestId('duplicate-study').click()
     cy.get('#duplicate-study-modal-title').should('be.visible')
     cy.get('#duplicate-study-modal-description').should('be.visible')

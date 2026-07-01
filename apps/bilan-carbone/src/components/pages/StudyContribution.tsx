@@ -4,12 +4,13 @@ import EmissionSourceButtons from '@/components/study/buttons/EmissionSourceButt
 import type { FullStudy } from '@/db/study'
 import { hasAccessToDownloadStudyEmissionSourcesButton } from '@/services/permissions/environment'
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
-import { StudyRole } from '@abc-transitionbascarbone/db-common/enums'
+import { Environment, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
 import { useToast } from '@abc-transitionbascarbone/ui'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
+import StudyManagementActions from '../study/StudyManagementActions'
 import AllPostsInfographyContainer from '../study/infography/AllPostsInfographyContainer'
 import SelectStudySite from '../study/site/SelectStudySite'
 import useStudySite from '../study/site/useStudySite'
@@ -18,9 +19,20 @@ interface Props {
   study: FullStudy
   userRole: StudyRole
   user: UserSession
+  canDeleteStudy?: boolean
+  canDuplicateStudy?: boolean
+  duplicableEnvironments: Environment[]
+  organizationVersionId: string | null
 }
 
-const StudyContributionPage = ({ study, userRole }: Props) => {
+const StudyContributionPage = ({
+  study,
+  userRole,
+  canDeleteStudy,
+  canDuplicateStudy,
+  duplicableEnvironments,
+  organizationVersionId,
+}: Props) => {
   const tNav = useTranslations('nav')
   const tStudyNav = useTranslations('study.navigation')
   const tImport = useTranslations('study.importEmissionSourcesModal')
@@ -44,36 +56,47 @@ const StudyContributionPage = ({ study, userRole }: Props) => {
           { label: study.name, link: `/etudes/${study.id}` },
         ].filter((link) => link !== undefined)}
       />
-      <Block
-        title={tStudyNav('dataEntry')}
-        as="h2"
-        actions={
-          hasAccessToDownloadStudyEmissionSourcesButton(study.organizationVersion.environment) && !study.simplified
-            ? [
-                {
-                  actionType: 'node',
-                  node: (
-                    <EmissionSourceButtons
-                      studyId={study.id}
-                      userRole={userRole}
-                      siteId={siteId}
-                      hasEmissionSources={study.emissionSources.length > 0}
-                      onSuccess={() => {
-                        showSuccessToast(tImport('success'))
-                        router.refresh()
-                      }}
-                    />
-                  ),
-                },
-              ]
-            : []
-        }
-        rightComponent={
-          <SelectStudySite sites={study.sites} defaultValue={siteId} setSite={setSite} showAllOption={false} />
-        }
+      <StudyManagementActions
+        study={study}
+        organizationVersionId={organizationVersionId}
+        canDeleteStudy={canDeleteStudy}
+        canDuplicateStudy={canDuplicateStudy}
+        duplicableEnvironments={duplicableEnvironments}
       >
-        <AllPostsInfographyContainer study={study} studySiteId={studySiteId} siteId={siteId} />
-      </Block>
+        {(studyActions) => (
+          <Block
+            title={tStudyNav('dataEntry')}
+            as="h2"
+            actions={[
+              ...(hasAccessToDownloadStudyEmissionSourcesButton(study.organizationVersion.environment) && !study.simplified
+                ? [
+                    {
+                      actionType: 'node' as const,
+                      node: (
+                        <EmissionSourceButtons
+                          studyId={study.id}
+                          userRole={userRole}
+                          siteId={siteId}
+                          hasEmissionSources={study.emissionSources.length > 0}
+                          onSuccess={() => {
+                            showSuccessToast(tImport('success'))
+                            router.refresh()
+                          }}
+                        />
+                      ),
+                    },
+                  ]
+                : []),
+              ...studyActions,
+            ]}
+            rightComponent={
+              <SelectStudySite sites={study.sites} defaultValue={siteId} setSite={setSite} showAllOption={false} />
+            }
+          >
+            <AllPostsInfographyContainer study={study} studySiteId={studySiteId} siteId={siteId} />
+          </Block>
+        )}
+      </StudyManagementActions>
     </>
   )
 }
