@@ -7,6 +7,7 @@ import { canBeValidated, getEmissionResults } from './emissionSource'
 jest.mock('./file', () => ({ download: jest.fn() }))
 jest.mock('./permissions/study.utils', () => ({ isAdminOnStudyOrga: jest.fn() }))
 jest.mock('./study', () => ({ hasSufficientLevel: jest.fn() }))
+jest.mock('@/services/serverFunctions/situation', () => ({ loadSituation: jest.fn() }))
 
 const defaultEmissionSource = {
   id: 'random',

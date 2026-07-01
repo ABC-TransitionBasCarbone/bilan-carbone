@@ -1,4 +1,4 @@
-import * as situationDbModule from '@/db/situation'
+import * as situationServerModule from '@/services/serverFunctions/situation'
 import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
 import { getMockedFullStudySite, mockedEmissionSourceEmissionFactor } from '@/tests/utils/models/study'
 import { getMockedAuthUser } from '@/tests/utils/models/user'
@@ -16,10 +16,10 @@ import {
 jest.mock('../services/file', () => ({ download: jest.fn() }))
 jest.mock('@/services/permissions/study.utils', () => ({ isAdminOnStudyOrga: jest.fn() }))
 jest.mock('@/utils/user', () => ({ isAdmin: jest.fn() }))
-jest.mock('@/db/situation', () => ({ getSituationByStudySite: jest.fn() }))
+jest.mock('@/services/serverFunctions/situation', () => ({ loadSituation: jest.fn() }))
 
 const mockIsAdmin = UserUtilsModule.isAdmin as unknown as jest.Mock
-const mockGetSituationByStudySite = jest.mocked(situationDbModule.getSituationByStudySite)
+const mockLoadSituation = jest.mocked(situationServerModule.loadSituation)
 
 const emissionSources = [
   getMockedFullStudyEmissionSource({
@@ -168,15 +168,18 @@ describe('StudyUtils functions', () => {
     })
 
     it('redirects simplified TILT to framing when general data is incomplete', async () => {
-      mockGetSituationByStudySite.mockResolvedValueOnce({
-        id: 'situation-id',
-        situation: { 'général . code postal': '75001' },
-        listLayoutSituations: {},
-        studySiteId: 'mocked-study-site-id',
-        publicodesVersion: '1.0',
-        modelVersion: '1.0',
-        createdAt: new Date(),
-        updatedAt: new Date(),
+      mockLoadSituation.mockResolvedValueOnce({
+        success: true,
+        data: {
+          id: 'situation-id',
+          situation: { 'général . code postal': '75001' },
+          listLayoutSituations: {},
+          studySiteId: 'mocked-study-site-id',
+          publicodesVersion: '1.0',
+          modelVersion: '1.0',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
       })
       expect(await getStudyDefaultLandingPath(Environment.TILT, 'study-id', [getMockedFullStudySite()], true)).toBe(
         '/etudes/study-id/cadrage',
@@ -184,15 +187,18 @@ describe('StudyUtils functions', () => {
     })
 
     it('redirects simplified TILT to data entry when general data is complete', async () => {
-      mockGetSituationByStudySite.mockResolvedValueOnce({
-        id: 'situation-id',
-        situation: { 'général . code postal': '75001', 'général . type': "'Club de loisirs'" },
-        listLayoutSituations: {},
-        studySiteId: 'mocked-study-site-id',
-        publicodesVersion: '1.0',
-        modelVersion: '1.0',
-        createdAt: new Date(),
-        updatedAt: new Date(),
+      mockLoadSituation.mockResolvedValueOnce({
+        success: true,
+        data: {
+          id: 'situation-id',
+          situation: { 'général . code postal': '75001', 'général . type': "'Club de loisirs'" },
+          listLayoutSituations: {},
+          studySiteId: 'mocked-study-site-id',
+          publicodesVersion: '1.0',
+          modelVersion: '1.0',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
       })
       expect(await getStudyDefaultLandingPath(Environment.TILT, 'study-id', [getMockedFullStudySite()], true)).toBe(
         '/etudes/study-id/comptabilisation/saisie-des-donnees',

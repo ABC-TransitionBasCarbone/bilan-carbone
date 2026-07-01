@@ -21,6 +21,7 @@ jest.mock('@/db/emissionFactors', () => ({
   findEmissionFactorsByUnit: jest.fn(),
   findEmissionFactorByImportedIdForMatch: jest.fn(),
 }))
+jest.mock('@/services/serverFunctions/situation', () => ({ loadSituation: jest.fn() }))
 jest.mock('./findEmissionFactor.utils', () => ({
   EmissionFactorMatchType: {
     Exact: 'exact',

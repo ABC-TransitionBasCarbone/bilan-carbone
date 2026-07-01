@@ -4,6 +4,7 @@ import { getQualitativeUncertaintyFromQuality, getSquaredStandardDeviationForQua
 jest.mock('./file', () => ({ download: jest.fn() }))
 jest.mock('./permissions/study.utils', () => ({ isAdminOnStudyOrga: jest.fn() }))
 jest.mock('./study', () => ({ hasSufficientLevel: jest.fn() }))
+jest.mock('@/services/serverFunctions/situation', () => ({ loadSituation: jest.fn() }))
 
 describe('Uncertainty Service', () => {
   describe('getSquaredStandardDeviationForQuality', () => {

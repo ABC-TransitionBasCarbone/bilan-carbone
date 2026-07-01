@@ -54,6 +54,8 @@ jest.mock('@/services/emissionSource', () => ({
   getEmissionResults: jest.fn((es) => ({ emissionValue: (es as { emissionValue?: number }).emissionValue ?? 0 })),
 }))
 
+jest.mock('@/services/serverFunctions/situation', () => ({ loadSituation: jest.fn() }))
+
 jest.mock('@/db/organization', () => ({
   isOrganizationVersionCR: jest.fn().mockResolvedValue(false),
 }))
