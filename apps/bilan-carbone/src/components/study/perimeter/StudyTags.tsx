@@ -121,7 +121,7 @@ const StudyTags = ({ studyId }: Props) => {
                   as="h6"
                   className="flex mb0"
                   title={
-                    family.name.match('DEFAULT_FAMILY_TAG')
+                    family.name.startsWith('DEFAULT_FAMILY_TAG')
                       ? t(`preset${family.name.replace('DEFAULT_FAMILY_TAG', '').toLowerCase()}`)
                       : family.name
                   }

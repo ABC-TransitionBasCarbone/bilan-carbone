@@ -1,6 +1,4 @@
-import { DefaultStudyTags } from '@/constants/tag.constants'
 import type { Prisma } from '@abc-transitionbascarbone/db-common'
-import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { prismaClient } from './client.server'
 
 export const getEmissionSourceById = (id: string) =>
@@ -71,50 +69,4 @@ export const upsertTagFamilyById = async (studyId: string, name: string, familyI
 export const removeTagFamilyById = async (familyId: string) => {
   await prismaClient.studyTag.deleteMany({ where: { familyId } })
   return prismaClient.studyTagFamily.delete({ where: { id: familyId } })
-}
-
-export const createTagFamilyAndRelatedTags = async (
-  studyId: string,
-  data: { familyName: string; tags: { name: string; color: string }[] }[],
-  environment: Environment,
-) => {
-  const environmentTags = DefaultStudyTags[environment as keyof typeof DefaultStudyTags]
-
-  const familyTagsToCreate = data.filter((d) => !d.familyName.match('DEFAULT_FAMILY_TAG'))
-  const tagsToCreate = data.map((family) => {
-    if (family.familyName.match('DEFAULT_FAMILY_TAG')) {
-      return {
-        ...family,
-        tags: family.tags.filter((tag) => !environmentTags?.some((envTag) => envTag.name === tag.name)),
-      }
-    }
-
-    return family
-  })
-
-  await prismaClient.studyTagFamily.createMany({
-    data: familyTagsToCreate.map((item) => ({
-      name: item.familyName,
-      studyId,
-    })),
-  })
-
-  const studyFamilyTags = await prismaClient.studyTagFamily.findMany({ where: { studyId } })
-
-  await prismaClient.studyTag.createMany({
-    data: tagsToCreate.flatMap((d) => {
-      return d.tags
-        .map((tag) => ({
-          name: tag.name,
-          color: tag.color,
-          familyId: studyFamilyTags.find((family) => family.name === d.familyName)?.id ?? '',
-        }))
-        .filter((tag) => tag.familyId !== '')
-    }),
-  })
-
-  return prismaClient.studyTagFamily.findMany({
-    where: { id: { in: studyFamilyTags.map((family) => family.id) } },
-    select: { id: true, name: true, tags: { select: { id: true, name: true } } },
-  })
 }
