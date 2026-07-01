@@ -289,9 +289,9 @@ export const createStudyCommand = async (
     const userCAUnit = (await getUserApplicationSettings(session.user.accountId))?.caUnit
     const caUnit = CA_UNIT_VALUES[userCAUnit || defaultCAUnit]
 
-    const environmentTags = DefaultStudyTags[session.user.environment as keyof typeof DefaultStudyTags]
+    const environmentFamilyTags = DefaultStudyTags[session.user.environment as keyof typeof DefaultStudyTags]
     const tagFamilies: Prisma.StudyTagFamilyCreateNestedManyWithoutStudyInput = {
-      create: (sourceTagFamilies ?? environmentTags ?? []).map((tagFamily) => ({
+      create: (sourceTagFamilies ?? environmentFamilyTags ?? []).map((tagFamily) => ({
         name: tagFamily.name,
         tags: {
           create: tagFamily.tags.map((tag) => ({ name: tag.name, color: tag.color })),
