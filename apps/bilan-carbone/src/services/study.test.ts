@@ -211,7 +211,7 @@ describe('Study Service', () => {
       bySite: {},
     }
 
-    const getWorkbookSheets = async (environment: BCEnvironment) => {
+    const getWorkbookSheets = async (environment: Environment) => {
       const prepareExcelMock = jest.mocked(prepareExcel)
       prepareExcelMock.mockClear()
 
@@ -247,7 +247,7 @@ describe('Study Service', () => {
         tStudy,
         tExport,
         tUnits,
-        Environment.CLICKSON,
+        Environment.CLICKSON as BCEnvironment,
       )
 
       expect(data.data[1][2]).toBe('Valeur (tCO2e)')

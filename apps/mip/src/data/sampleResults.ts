@@ -44,7 +44,7 @@ export type KeyStatGroup = {
 export type SurveyResults = {
   surveyId: string
   totalRespondents: number
-  averageFootprintTCO2e: number
+  averageFootprint: number
   categories: EmissionCategory[]
   entities: EntityFilter[]
   comments: SurveyComment[]
@@ -55,7 +55,7 @@ export type SurveyResults = {
 export const sampleResults: SurveyResults = {
   surveyId: 'sample-survey-1',
   totalRespondents: 47,
-  averageFootprintTCO2e: 8400,
+  averageFootprint: 8400,
   categories: [
     { key: 'commute', labelFr: 'Déplacements domicile-travail', value: 2100, color: CATEGORY_COLORS.commute },
     { key: 'travel', labelFr: 'Déplacements professionnels', value: 1800, color: CATEGORY_COLORS.travel },
@@ -150,7 +150,7 @@ export function getResultsForEntity(results: SurveyResults, entityId: string): S
   const factor = entityFactors[entityId] ?? 1
   return {
     ...results,
-    averageFootprintTCO2e: Math.round(results.averageFootprintTCO2e * factor),
+    averageFootprint: Math.round(results.averageFootprint * factor),
     categories: results.categories.map((c) => ({
       ...c,
       value: Math.round(c.value * factor),

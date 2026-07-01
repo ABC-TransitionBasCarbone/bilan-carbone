@@ -19,7 +19,7 @@ const StatsSection = ({ results }: Props) => {
       <Card>
         <CardContent className="p125">
           <Typography className={styles.statValue}>
-            {formatNumber(results.averageFootprintTCO2e, 1)}
+            {formatNumber(results.averageFootprint / 1000, 1)}
             <span className={styles.statUnit}> tCO₂e</span>
           </Typography>
           <Typography variant="body2">{t('stats.averageFootprint')}</Typography>

@@ -29,13 +29,13 @@ const computeYearlyReduction = (currentTCO2e: number): number => {
 }
 
 interface Props {
-  averageFootprintTCO2e: number
+  averageFootprint: number
 }
 
-const ObjectiveEncart = ({ averageFootprintTCO2e }: Props) => {
+const ObjectiveEncart = ({ averageFootprint }: Props) => {
   const t = useTranslations('results.objective')
-  const yearlyReduction = computeYearlyReduction(averageFootprintTCO2e)
-  const aboveTarget = averageFootprintTCO2e > TARGET_2030_T
+  const yearlyReduction = computeYearlyReduction(averageFootprint)
+  const aboveTarget = averageFootprint > TARGET_2030_T
 
   return (
     <Box component="section" className={styles.encart}>
@@ -50,7 +50,7 @@ const ObjectiveEncart = ({ averageFootprintTCO2e }: Props) => {
         <Box className={styles.userSection}>
           <Typography className={styles.youLabel}>{t('you')}</Typography>
           <Typography className={styles.footprintValue}>
-            {averageFootprintTCO2e.toFixed(1).replace('.', ',')}
+            {averageFootprint.toFixed(1).replace('.', ',')}
             <Box component="span" className={styles.footprintUnit}>
               {' '}
               {t('unit')}
@@ -78,7 +78,7 @@ const ObjectiveEncart = ({ averageFootprintTCO2e }: Props) => {
         </Box>
 
         <Box className={styles.chartSection}>
-          <TrajectoryChart currentValue={averageFootprintTCO2e} />
+          <TrajectoryChart currentValue={averageFootprint} />
         </Box>
       </Box>
     </Box>

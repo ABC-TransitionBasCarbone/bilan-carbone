@@ -135,10 +135,10 @@ export const processPieChartData = <T extends BasicTypeCharts>(
     isParent: boolean,
     index?: number,
   ): ProcessedChartData => {
-    const convertedValue = item?.value / STUDY_UNIT_VALUES[resultsUnit]
+    const convertedValue = (item?.value ?? 0) / STUDY_UNIT_VALUES[resultsUnit]
 
     return {
-      label: item?.label,
+      label: item?.label ?? '',
       value: convertedValue,
       color: isParent ? getParentColor(type, theme, item, index) : getChildColor(type, theme, item),
     }
@@ -175,7 +175,6 @@ export const processBarChartData = <T extends BasicTypeCharts>(
 ): ProcessedBarChartData => {
   const filteredData = results.filter((result) => result.post !== 'total' && result.label !== 'total')
 
-  console.log('processBarChartData filteredData:', filteredData)
   const isTag = type === 'tag'
 
   if (!showSubLevel) {

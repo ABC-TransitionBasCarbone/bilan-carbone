@@ -39,7 +39,7 @@ const ResultsDashboard = ({ results, model }: Props) => {
   const totalBarItem = {
     post: 'somme',
     label: t('charts.barTitle'),
-    value: filtered.averageFootprintTCO2e,
+    value: filtered.averageFootprint,
     color: CATEGORY_COLORS.total,
   } as BasicTypeCharts
 
@@ -64,7 +64,7 @@ const ResultsDashboard = ({ results, model }: Props) => {
         onSelectEntity={setSelectedEntity}
       />
 
-      <ObjectiveEncart averageFootprintTCO2e={filtered.averageFootprintTCO2e} />
+      <ObjectiveEncart averageFootprint={filtered.averageFootprint / 1000} />
 
       <ChartsSection pieChartItems={pieChartItems} totalBarItem={totalBarItem} />
 
