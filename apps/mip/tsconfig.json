@@ -1,18 +1,37 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "types": ["cypress", "node", "jest"],
+    "types": [
+      "cypress",
+      "node",
+      "jest"
+    ],
     "plugins": [
       {
         "name": "next"
       }
     ],
     "paths": {
-      "@/*": ["./src/*"],
-      "@abc-transitionbascarbone/css": ["../../packages/css/index.ts"],
-      "@abc-transitionbascarbone/publicodes-mip": ["../../packages/publicodes-packages/publicodes-mip"]
+      "@/*": [
+        "./src/*"
+      ],
+      "@abc-transitionbascarbone/css": [
+        "../../packages/css/index.ts"
+      ],
+      "@abc-transitionbascarbone/publicodes-mip": [
+        "../../packages/publicodes-packages/publicodes-mip"
+      ]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "cypress/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "cypress/**/*.ts",
+    "../../packages/types/mui.d.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
