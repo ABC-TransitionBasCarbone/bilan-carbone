@@ -4,7 +4,13 @@ import { getMockedAuthUser } from '@/tests/utils/models/user'
 import * as UserUtilsModule from '@/utils/user'
 import { EmissionFactorBase, Environment, Level, Role } from '@abc-transitionbascarbone/db-common/enums'
 import { expect } from '@jest/globals'
-import { getBaseFilteredEmissionSources, getDuplicableEnvironments, getUserRoleOnPublicStudy } from './study'
+import {
+  getBaseFilteredEmissionSources,
+  getDuplicableEnvironments,
+  getStudyDefaultLandingPath,
+  getUserRoleOnPublicStudy,
+  hasCompletedTiltSimplifiedGeneralData,
+} from './study'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('../services/file', () => ({ download: jest.fn() }))
@@ -145,6 +151,47 @@ describe('StudyUtils functions', () => {
       expect(res[1].id).toBe('2')
       expect(res[2].id).toBe('3')
       expect(res[3].id).toBe('4')
+    })
+  })
+
+  describe('hasCompletedTiltSimplifiedGeneralData', () => {
+    it('returns true when required keys are present and non-empty', () => {
+      expect(
+        hasCompletedTiltSimplifiedGeneralData({
+          'général . code postal': '75001',
+          'général . type': "'Club de loisirs'",
+        }),
+      ).toBe(true)
+    })
+
+    it('returns false when required keys are missing', () => {
+      expect(
+        hasCompletedTiltSimplifiedGeneralData({
+          'général . code postal': '75001',
+        }),
+      ).toBe(false)
+    })
+  })
+
+  describe('getStudyDefaultLandingPath', () => {
+    it('redirects BC advanced studies to data entry', () => {
+      expect(getStudyDefaultLandingPath(Environment.BC, 'study-id', [], false)).toBe(
+        '/etudes/study-id/comptabilisation/saisie-des-donnees',
+      )
+    })
+
+    it('redirects CUT studies to framing', () => {
+      expect(getStudyDefaultLandingPath(Environment.CUT, 'study-id', [], true)).toBe('/etudes/study-id/cadrage')
+    })
+
+    it('redirects simplified TILT to framing when general data is incomplete', () => {
+      expect(getStudyDefaultLandingPath(Environment.TILT, 'study-id', [], true)).toBe('/etudes/study-id/cadrage')
+    })
+
+    it('redirects simplified TILT to data entry when general data is complete', () => {
+      expect(getStudyDefaultLandingPath(Environment.TILT, 'study-id', [], true)).toBe(
+        '/etudes/study-id/comptabilisation/saisie-des-donnees',
+      )
     })
   })
 })

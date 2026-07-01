@@ -1,7 +1,7 @@
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import { StudyProps } from '@/components/hoc/withStudy'
 import withStudyDetails from '@/components/hoc/withStudyDetails'
-import StudyContributionPage from '@/components/pages/StudyContribution'
+import StudyDataEntryInfographyPage from '@/components/pages/StudyDataEntryInfographyPage'
 import { isOrganizationVersionCR } from '@/db/organization'
 import { canDeleteStudy, canDuplicateStudy, getEnvironmentsForDuplication } from '@/services/permissions/study'
 import { getAccountRoleOnStudy } from '@/utils/study'
@@ -21,7 +21,7 @@ const DataEntry = async ({ study, user }: StudyProps & UserSessionProps) => {
     return <NotFound />
   }
   return (
-    <StudyContributionPage
+    <StudyDataEntryInfographyPage
       study={study}
       userRole={userRole}
       user={user}

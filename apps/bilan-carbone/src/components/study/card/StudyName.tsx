@@ -21,7 +21,7 @@ const StudyName = ({ studyId, name, role }: Props) => {
       icon={<SpaIcon />}
       roleClass={role ? role.toLowerCase() : 'validator'} // For env without role default to green design
       component="a"
-      href={`/etudes/${studyId}`}
+      href={`/etudes/${studyId}?showHome=true`}
       clickable
     />
   )

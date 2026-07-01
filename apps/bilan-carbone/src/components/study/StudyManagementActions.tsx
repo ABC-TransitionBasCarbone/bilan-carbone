@@ -1,20 +1,23 @@
 'use client'
 
-import type { FullStudy } from '@/db/study'
+import { FullStudy } from '@/db/study'
+import { hasAccessToDownloadStudyEmissionSourcesButton } from '@/services/permissions/environment'
 import { deleteStudyCommand } from '@/services/serverFunctions/study'
 import { DeleteCommand, DeleteCommandValidation } from '@/services/serverFunctions/study.command'
-import Block, { BlockProps } from '@abc-transitionbascarbone/components/src/base/Block'
+import { Props as BlockProps } from '@abc-transitionbascarbone/components/src/base/Block'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
-import { Environment } from '@abc-transitionbascarbone/db-common/enums'
-import CopyIcon from '@mui/icons-material/FileCopy'
-import DeleteIcon from '@mui/icons-material/Delete'
+import { Environment, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
+import { useToast } from '@abc-transitionbascarbone/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useRouter } from 'next/navigation'
+import DeleteIcon from '@mui/icons-material/Delete'
+import CopyIcon from '@mui/icons-material/FileCopy'
 import { useTranslations } from 'next-intl'
+import { useRouter } from 'next/navigation'
 import { ReactNode, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import DeletionModal from '../modals/DeletionModal'
 import DuplicateStudyModal from '../modals/DuplicateStudyModal'
+import EmissionSourceButtons from './buttons/EmissionSourceButtons'
 
 interface Props {
   study: FullStudy
@@ -22,6 +25,8 @@ interface Props {
   canDeleteStudy?: boolean
   canDuplicateStudy?: boolean
   duplicableEnvironments: Environment[]
+  userRole: StudyRole
+  siteId: string
   children: (actions: BlockProps['actions']) => ReactNode
 }
 
@@ -31,6 +36,8 @@ const StudyManagementActions = ({
   canDeleteStudy,
   canDuplicateStudy,
   duplicableEnvironments,
+  userRole,
+  siteId,
   children,
 }: Props) => {
   const [deleting, setDeleting] = useState(false)
@@ -38,8 +45,10 @@ const StudyManagementActions = ({
   const { callServerFunction } = useServerFunction()
   const t = useTranslations('study')
   const tStudyDelete = useTranslations('study.delete')
+  const tImport = useTranslations('study.importEmissionSourcesModal')
   const tCommon = useTranslations('common')
   const router = useRouter()
+  const { showSuccessToast } = useToast()
 
   const form = useForm<DeleteCommand>({
     resolver: zodResolver(DeleteCommandValidation),
@@ -88,13 +97,33 @@ const StudyManagementActions = ({
       ]
     : []
 
+  const downloadEmissionSourceAction: BlockProps['actions'] =
+    hasAccessToDownloadStudyEmissionSourcesButton(study.organizationVersion.environment) && !study.simplified
+      ? [
+          {
+            actionType: 'node',
+            node: (
+              <EmissionSourceButtons
+                studyId={study.id}
+                userRole={userRole}
+                siteId={siteId}
+                hasEmissionSources={study.emissionSources.length > 0}
+                onSuccess={() => {
+                  showSuccessToast(tImport('success'))
+                  router.refresh()
+                }}
+              />
+            ),
+          },
+        ]
+      : []
+
   return (
     <>
-      {children([...duplicateAction, ...deleteAction])}
+      {children([...duplicateAction, ...deleteAction, ...downloadEmissionSourceAction])}
       {deleting && (
         <DeletionModal
           form={form}
-          title={study.name}
           type="study"
           onDelete={onDelete}
           onClose={() => setDeleting(false)}

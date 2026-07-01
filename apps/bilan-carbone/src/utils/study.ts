@@ -1,9 +1,13 @@
+import { getSituationByStudySite } from '@/db/situation'
 import type { FullStudy } from '@/db/study'
+import { mappedTiltSituationToCustomDataFields } from '@/services/customDataToSituation'
 import { getEmissionResults } from '@/services/emissionSource'
+import { hasAccessToStudyHomePage } from '@/services/permissions/environment'
 import { isTiltSimplified } from '@/services/permissions/environmentAdvanced'
 import { isAdminOnStudyOrga } from '@/services/permissions/study.utils'
 import { Post, subPostsByPost } from '@/services/posts'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
+import { sortAlphabetically } from '@/services/utils'
 import { ResultsByPost } from '@/types/study.types'
 import { isAdmin } from '@/utils/user'
 import {
@@ -415,3 +419,43 @@ export const getAllowedLevels = (level: Level | null) => {
 
 export const hasSufficientLevel = (userLevel: Level | null, targetLevel: Level) =>
   userLevel ? getAllowedLevels(userLevel).includes(targetLevel) : false
+
+export const hasCompletedTiltSimplifiedGeneralData = (situation: Record<string, unknown>) => {
+  const mappedKeys = Object.keys(mappedTiltSituationToCustomDataFields)
+  return mappedKeys.every((key) => {
+    const value = situation[key]
+    if (typeof value === 'string') {
+      return value.trim() !== ''
+    }
+    return value !== undefined && value !== null
+  })
+}
+
+export const getStudyDefaultLandingPath = async (
+  environment: Environment,
+  studyId: string,
+  sites: FullStudy['sites'],
+  simplified?: boolean | null,
+) => {
+  let isTiltSimplifiedGeneralDataCompleted = false
+  if (isTiltSimplified(environment, simplified) && sites.length > 0) {
+    const studySite = sites.sort((a, b) => sortAlphabetically(a.id, b.id))[0]
+
+    const situation = await getSituationByStudySite(studySite.id)
+    if (situation) {
+      isTiltSimplifiedGeneralDataCompleted = hasCompletedTiltSimplifiedGeneralData(situation)
+    }
+  }
+
+  if (isTiltSimplified(environment, simplified)) {
+    return isTiltSimplifiedGeneralDataCompleted
+      ? `/etudes/${studyId}/comptabilisation/saisie-des-donnees`
+      : `/etudes/${studyId}/cadrage`
+  }
+
+  if (!hasAccessToStudyHomePage(environment)) {
+    return `/etudes/${studyId}/cadrage`
+  }
+
+  return `/etudes/${studyId}/comptabilisation/saisie-des-donnees`
+}
