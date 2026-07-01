@@ -1,7 +1,7 @@
 import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { FormLayout, inputLayout, tableLayout } from '@abc-transitionbascarbone/publicodes/form/layouts'
-import { TiltRuleName } from './types'
 import { TiltSimplifiedPost } from '@abc-transitionbascarbone/services/results/posts.enums'
+import { TiltRuleName } from './types'
 
 export const getPostRuleNameTilt = (post: TiltSimplifiedPost): TiltRuleName | '' => {
   return POST_TO_RULENAME[post] ?? ''

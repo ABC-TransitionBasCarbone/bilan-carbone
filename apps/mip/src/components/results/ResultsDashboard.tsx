@@ -31,7 +31,7 @@ const ResultsDashboard = ({ results, model }: Props) => {
       ({
         post: c.key,
         label: t(`categories.${c.key}`),
-        value: c.valueTCO2e * 1000,
+        value: c.valueTCO2e,
         color: c.color,
       }) as BasicTypeCharts,
   )
@@ -39,7 +39,7 @@ const ResultsDashboard = ({ results, model }: Props) => {
   const totalBarItem = {
     post: 'somme',
     label: t('charts.barTitle'),
-    value: filtered.averageFootprintTCO2e * 1000,
+    value: filtered.averageFootprintTCO2e,
     color: CATEGORY_COLORS.total,
   } as BasicTypeCharts
 

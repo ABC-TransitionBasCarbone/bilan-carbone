@@ -20,12 +20,12 @@ const TARGET_YEAR_2 = getEnvNumber(process.env.TARGET_YEAR_2, 2050)
 const CURRENT_YEAR = new Date().getFullYear()
 const YEARS_TO_TARGET = Math.max(1, TARGET_YEAR_1 - CURRENT_YEAR)
 
-const computeYearlyReductionKg = (currentTCO2e: number): number => {
+const computeYearlyReduction = (currentTCO2e: number): number => {
   const reductionT = currentTCO2e - TARGET_2030_T
   if (reductionT <= 0) {
     return 0
   }
-  return Math.round((reductionT * 1000) / YEARS_TO_TARGET)
+  return Math.round(reductionT / YEARS_TO_TARGET)
 }
 
 interface Props {
@@ -34,7 +34,7 @@ interface Props {
 
 const ObjectiveEncart = ({ averageFootprintTCO2e }: Props) => {
   const t = useTranslations('results.objective')
-  const yearlyReductionKg = computeYearlyReductionKg(averageFootprintTCO2e)
+  const yearlyReduction = computeYearlyReduction(averageFootprintTCO2e)
   const aboveTarget = averageFootprintTCO2e > TARGET_2030_T
 
   return (
@@ -61,13 +61,13 @@ const ObjectiveEncart = ({ averageFootprintTCO2e }: Props) => {
             <Typography className={styles.contextMessage}>{t('aboveTarget', { target: TARGET_2030_T })}</Typography>
           )}
 
-          {aboveTarget && yearlyReductionKg > 0 && (
+          {aboveTarget && yearlyReduction > 0 && (
             <Box className={styles.paceBox}>
               <Typography className={styles.paceTitle}>
                 {t('paceTitle', { target: TARGET_2030_T, year: TARGET_YEAR_1 })}
               </Typography>
               <Typography className={styles.paceValue}>
-                {yearlyReductionKg.toLocaleString('fr-FR')}
+                {yearlyReduction.toLocaleString('fr-FR')}
                 <Box component="span" className={styles.paceUnit}>
                   {' '}
                   {t('paceUnit')}
