@@ -25,7 +25,7 @@ const SignUpForm = ({ modelCampaignId }: Props) => {
   const [message, setMessage] = useState('')
   const [success, setSuccess] = useState(false)
 
-  const { control, getValues, setValue, handleSubmit } = useForm<SignUpCommand>({
+  const { control, getValues, handleSubmit } = useForm<SignUpCommand>({
     resolver: zodResolver(SignUpCommandValidation),
     mode: 'onBlur',
     reValidateMode: 'onChange',

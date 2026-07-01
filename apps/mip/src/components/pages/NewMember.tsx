@@ -3,7 +3,6 @@ import { useTranslations } from 'next-intl'
 import NewMemberForm from '../team/NewMemberForm'
 
 const NewMemberPage = () => {
-  const tNav = useTranslations('nav')
   const t = useTranslations('newMember')
   return (
     <>
