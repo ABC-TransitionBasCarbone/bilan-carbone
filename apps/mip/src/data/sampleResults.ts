@@ -15,7 +15,7 @@ export const CATEGORY_COLORS: Record<string, string> = {
 export type EmissionCategory = {
   key: string
   labelFr: string
-  valueTCO2e: number
+  value: number
   color: string
 }
 
@@ -44,7 +44,6 @@ export type KeyStatGroup = {
 export type SurveyResults = {
   surveyId: string
   totalRespondents: number
-  totalInvited: number
   averageFootprintTCO2e: number
   categories: EmissionCategory[]
   entities: EntityFilter[]
@@ -56,14 +55,13 @@ export type SurveyResults = {
 export const sampleResults: SurveyResults = {
   surveyId: 'sample-survey-1',
   totalRespondents: 47,
-  totalInvited: 120,
-  averageFootprintTCO2e: 8.4,
+  averageFootprintTCO2e: 8400,
   categories: [
-    { key: 'commute', labelFr: 'Déplacements domicile-travail', valueTCO2e: 2.1, color: CATEGORY_COLORS.commute },
-    { key: 'travel', labelFr: 'Déplacements professionnels', valueTCO2e: 1.8, color: CATEGORY_COLORS.travel },
-    { key: 'food', labelFr: 'Alimentation', valueTCO2e: 2.5, color: CATEGORY_COLORS.food },
-    { key: 'digital', labelFr: 'Numérique', valueTCO2e: 0.9, color: CATEGORY_COLORS.digital },
-    { key: 'office', labelFr: 'Bureaux', valueTCO2e: 1.1, color: CATEGORY_COLORS.office },
+    { key: 'commute', labelFr: 'Déplacements domicile-travail', value: 2100, color: CATEGORY_COLORS.commute },
+    { key: 'travel', labelFr: 'Déplacements professionnels', value: 1800, color: CATEGORY_COLORS.travel },
+    { key: 'food', labelFr: 'Alimentation', value: 2500, color: CATEGORY_COLORS.food },
+    { key: 'digital', labelFr: 'Numérique', value: 900, color: CATEGORY_COLORS.digital },
+    { key: 'office', labelFr: 'Bureaux', value: 1100, color: CATEGORY_COLORS.office },
   ],
   entities: [
     { id: 'all', name: 'Tous' },
@@ -152,10 +150,10 @@ export function getResultsForEntity(results: SurveyResults, entityId: string): S
   const factor = entityFactors[entityId] ?? 1
   return {
     ...results,
-    averageFootprintTCO2e: Math.round(results.averageFootprintTCO2e * factor * 10) / 10,
+    averageFootprintTCO2e: Math.round(results.averageFootprintTCO2e * factor),
     categories: results.categories.map((c) => ({
       ...c,
-      valueTCO2e: Math.round(c.valueTCO2e * factor * 10) / 10,
+      value: Math.round(c.value * factor),
     })),
     keyStats: results.keyStats.map((group) => ({
       ...group,

@@ -46,7 +46,6 @@ const BarChart = <T extends BasicTypeCharts>({
   const theme = useTheme()
 
   const { barData, seriesData } = useMemo(() => {
-    console.log('BarChart results:', results)
     return processBarChartData(results, type, showSubLevel, theme, resultsUnit, tPost)
   }, [results, type, showSubLevel, theme, resultsUnit, tPost])
 

@@ -31,7 +31,7 @@ const ResultsDashboard = ({ results, model }: Props) => {
       ({
         post: c.key,
         label: t(`categories.${c.key}`),
-        value: c.valueTCO2e,
+        value: c.value,
         color: c.color,
       }) as BasicTypeCharts,
   )
