@@ -443,7 +443,9 @@ export const getStudyDefaultLandingPath = async (
 
     const situation = await getSituationByStudySite(studySite.id)
     if (situation) {
-      isTiltSimplifiedGeneralDataCompleted = hasCompletedTiltSimplifiedGeneralData(situation)
+      isTiltSimplifiedGeneralDataCompleted = hasCompletedTiltSimplifiedGeneralData(
+        situation.situation as Record<string, unknown>,
+      )
     }
   }
 
