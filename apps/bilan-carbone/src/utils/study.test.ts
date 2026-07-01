@@ -174,22 +174,22 @@ describe('StudyUtils functions', () => {
   })
 
   describe('getStudyDefaultLandingPath', () => {
-    it('redirects BC advanced studies to data entry', () => {
-      expect(getStudyDefaultLandingPath(Environment.BC, 'study-id', [], false)).toBe(
+    it('redirects BC advanced studies to data entry', async () => {
+      expect(await getStudyDefaultLandingPath(Environment.BC, 'study-id', [], false)).toBe(
         '/etudes/study-id/comptabilisation/saisie-des-donnees',
       )
     })
 
-    it('redirects CUT studies to framing', () => {
-      expect(getStudyDefaultLandingPath(Environment.CUT, 'study-id', [], true)).toBe('/etudes/study-id/cadrage')
+    it('redirects CUT studies to framing', async () => {
+      expect(await getStudyDefaultLandingPath(Environment.CUT, 'study-id', [], true)).toBe('/etudes/study-id/cadrage')
     })
 
-    it('redirects simplified TILT to framing when general data is incomplete', () => {
-      expect(getStudyDefaultLandingPath(Environment.TILT, 'study-id', [], true)).toBe('/etudes/study-id/cadrage')
+    it('redirects simplified TILT to framing when general data is incomplete', async () => {
+      expect(await getStudyDefaultLandingPath(Environment.TILT, 'study-id', [], true)).toBe('/etudes/study-id/cadrage')
     })
 
-    it('redirects simplified TILT to data entry when general data is complete', () => {
-      expect(getStudyDefaultLandingPath(Environment.TILT, 'study-id', [], true)).toBe(
+    it('redirects simplified TILT to data entry when general data is complete', async () => {
+      expect(await getStudyDefaultLandingPath(Environment.TILT, 'study-id', [], true)).toBe(
         '/etudes/study-id/comptabilisation/saisie-des-donnees',
       )
     })

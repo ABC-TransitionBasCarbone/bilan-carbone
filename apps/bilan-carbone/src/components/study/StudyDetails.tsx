@@ -45,6 +45,7 @@ const StudyDetails = ({
         duplicableEnvironments={duplicableEnvironments}
         studySite={siteId}
         setSite={setSite}
+        user={user}
       />
       <Block>
         <DynamicComponent

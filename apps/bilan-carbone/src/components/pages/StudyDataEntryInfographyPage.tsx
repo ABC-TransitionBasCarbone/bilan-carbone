@@ -5,7 +5,6 @@ import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { Environment, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
-import { useRouter } from 'next/navigation'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import StudyManagementActions from '../study/StudyManagementActions'
 import AllPostsInfographyContainer from '../study/infography/AllPostsInfographyContainer'
@@ -33,7 +32,6 @@ const StudyDataEntryInfographyPage = ({
   const tNav = useTranslations('nav')
   const tStudyNav = useTranslations('study.navigation')
   const { siteId, studySiteId, setSite } = useStudySite(study)
-  const router = useRouter()
 
   return (
     <>
