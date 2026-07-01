@@ -1,4 +1,3 @@
-import { getSituationByStudySite } from '@/db/situation'
 import type { FullStudy } from '@/db/study'
 import { mappedTiltSituationToCustomDataFields } from '@/services/customDataToSituation'
 import { getEmissionResults } from '@/services/emissionSource'
@@ -7,6 +6,7 @@ import { isTiltSimplified } from '@/services/permissions/environmentAdvanced'
 import { isAdminOnStudyOrga } from '@/services/permissions/study.utils'
 import { subPostsByPost } from '@/services/posts'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
+import { loadSituation } from '@/services/serverFunctions/situation'
 import { sortAlphabetically } from '@/services/utils'
 import { ResultsByPost } from '@/types/study.types'
 import { isAdmin } from '@/utils/user'
@@ -437,11 +437,10 @@ export const getStudyDefaultLandingPath = async (
   if (isTiltSimplified(environment, simplified) && sites.length > 0) {
     const studySite = sites.sort((a, b) => sortAlphabetically(a.id, b.id))[0]
 
-    const situation = await getSituationByStudySite(studySite.id)
-    if (situation) {
-      isTiltSimplifiedGeneralDataCompleted = hasCompletedTiltSimplifiedGeneralData(
-        situation.situation as Record<string, unknown>,
-      )
+    const situationResponse = await loadSituation(studyId, studySite.id)
+    if (situationResponse && situationResponse.success && situationResponse.data && situationResponse.data.situation) {
+      const situation = situationResponse.data.situation
+      isTiltSimplifiedGeneralDataCompleted = hasCompletedTiltSimplifiedGeneralData(situation as Record<string, unknown>)
     }
   }
 
