@@ -113,10 +113,12 @@
       "export": "Export my results"
     },
     "results": {
+      "reportName": "{studyName} - Bilan Carbone® - Associative sphere",
       "feedback": {
         "button": "Give us your feedback ! ✨",
         "title": "Give us your feedback ! ✨"
-      }
+      },
+      "resultsWord": "Bilan Carbone® report - Associative Sphere"
     },
     "structure": {
       "'Club de loisirs'": "Leisure Club",

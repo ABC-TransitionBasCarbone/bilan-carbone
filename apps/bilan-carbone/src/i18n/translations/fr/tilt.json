@@ -113,10 +113,12 @@
       "export": "Exporter mes résultats"
     },
     "results": {
+      "reportName": "{studyName} - Bilan Carbone® - Sphère associative",
       "feedback": {
         "button": "Faites-nous vos retours ! ✨",
         "title": "Faites-nous vos retours ! ✨"
-      }
+      },
+      "resultsWord": "Rapport Bilan Carbone® - Sphère associative"
     },
     "structure": {
       "'Club de loisirs'": "Club de loisirs",
