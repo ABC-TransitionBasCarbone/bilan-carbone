@@ -1,5 +1,6 @@
+import * as situationDbModule from '@/db/situation'
 import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
-import { mockedEmissionSourceEmissionFactor } from '@/tests/utils/models/study'
+import { getMockedFullStudySite, mockedEmissionSourceEmissionFactor } from '@/tests/utils/models/study'
 import { getMockedAuthUser } from '@/tests/utils/models/user'
 import * as UserUtilsModule from '@/utils/user'
 import { EmissionFactorBase, Environment, Level, Role } from '@abc-transitionbascarbone/db-common/enums'
@@ -9,15 +10,16 @@ import {
   getDuplicableEnvironments,
   getStudyDefaultLandingPath,
   getUserRoleOnPublicStudy,
-  hasCompletedTiltSimplifiedGeneralData,
 } from './study'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('../services/file', () => ({ download: jest.fn() }))
 jest.mock('@/services/permissions/study.utils', () => ({ isAdminOnStudyOrga: jest.fn() }))
 jest.mock('@/utils/user', () => ({ isAdmin: jest.fn() }))
+jest.mock('@/db/situation', () => ({ getSituationByStudySite: jest.fn() }))
 
 const mockIsAdmin = UserUtilsModule.isAdmin as unknown as jest.Mock
+const mockGetSituationByStudySite = jest.mocked(situationDbModule.getSituationByStudySite)
 
 const emissionSources = [
   getMockedFullStudyEmissionSource({
@@ -154,25 +156,6 @@ describe('StudyUtils functions', () => {
     })
   })
 
-  describe('hasCompletedTiltSimplifiedGeneralData', () => {
-    it('returns true when required keys are present and non-empty', () => {
-      expect(
-        hasCompletedTiltSimplifiedGeneralData({
-          'général . code postal': '75001',
-          'général . type': "'Club de loisirs'",
-        }),
-      ).toBe(true)
-    })
-
-    it('returns false when required keys are missing', () => {
-      expect(
-        hasCompletedTiltSimplifiedGeneralData({
-          'général . code postal': '75001',
-        }),
-      ).toBe(false)
-    })
-  })
-
   describe('getStudyDefaultLandingPath', () => {
     it('redirects BC advanced studies to data entry', async () => {
       expect(await getStudyDefaultLandingPath(Environment.BC, 'study-id', [], false)).toBe(
@@ -185,11 +168,33 @@ describe('StudyUtils functions', () => {
     })
 
     it('redirects simplified TILT to framing when general data is incomplete', async () => {
-      expect(await getStudyDefaultLandingPath(Environment.TILT, 'study-id', [], true)).toBe('/etudes/study-id/cadrage')
+      mockGetSituationByStudySite.mockResolvedValueOnce({
+        id: 'situation-id',
+        situation: { 'général . code postal': '75001' },
+        listLayoutSituations: {},
+        studySiteId: 'mocked-study-site-id',
+        publicodesVersion: '1.0',
+        modelVersion: '1.0',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })
+      expect(await getStudyDefaultLandingPath(Environment.TILT, 'study-id', [getMockedFullStudySite()], true)).toBe(
+        '/etudes/study-id/cadrage',
+      )
     })
 
     it('redirects simplified TILT to data entry when general data is complete', async () => {
-      expect(await getStudyDefaultLandingPath(Environment.TILT, 'study-id', [], true)).toBe(
+      mockGetSituationByStudySite.mockResolvedValueOnce({
+        id: 'situation-id',
+        situation: { 'général . code postal': '75001', 'général . type': "'Club de loisirs'" },
+        listLayoutSituations: {},
+        studySiteId: 'mocked-study-site-id',
+        publicodesVersion: '1.0',
+        modelVersion: '1.0',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })
+      expect(await getStudyDefaultLandingPath(Environment.TILT, 'study-id', [getMockedFullStudySite()], true)).toBe(
         '/etudes/study-id/comptabilisation/saisie-des-donnees',
       )
     })

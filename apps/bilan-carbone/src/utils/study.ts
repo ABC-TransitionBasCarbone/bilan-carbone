@@ -416,7 +416,7 @@ export const getAllowedLevels = (level: Level | null) => {
 export const hasSufficientLevel = (userLevel: Level | null, targetLevel: Level) =>
   userLevel ? getAllowedLevels(userLevel).includes(targetLevel) : false
 
-export const hasCompletedTiltSimplifiedGeneralData = (situation: Record<string, unknown>) => {
+const hasCompletedTiltSimplifiedGeneralData = (situation: Record<string, unknown>) => {
   const mappedKeys = Object.keys(mappedTiltSituationToCustomDataFields)
   return mappedKeys.every((key) => {
     const value = situation[key]
@@ -439,7 +439,9 @@ export const getStudyDefaultLandingPath = async (
 
     const situation = await getSituationByStudySite(studySite.id)
     if (situation) {
-      isTiltSimplifiedGeneralDataCompleted = hasCompletedTiltSimplifiedGeneralData(situation)
+      isTiltSimplifiedGeneralDataCompleted = hasCompletedTiltSimplifiedGeneralData(
+        situation.situation as Record<string, unknown>,
+      )
     }
   }
 
