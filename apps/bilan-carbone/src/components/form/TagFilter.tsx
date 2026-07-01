@@ -41,7 +41,9 @@ export const TagFilter = ({
           if (tagInfos.length > 0) {
             acc[tagFamily.id] = {
               id: tagFamily.id,
-              name: tagFamily.name === 'DEFAULT_FAMILY_TAG' ? tPerimeter('preset') : tagFamily.name,
+              name: tagFamily.name.startsWith('DEFAULT_FAMILY_TAG')
+                ? tPerimeter(`preset${tagFamily.name.replace('DEFAULT_FAMILY_TAG', '').toLowerCase()}`)
+                : tagFamily.name,
               children: tagInfos,
             }
           }

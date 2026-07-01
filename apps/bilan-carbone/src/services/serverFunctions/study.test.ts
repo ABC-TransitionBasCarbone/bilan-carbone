@@ -114,7 +114,6 @@ jest.mock('../../db/emissionFactors', () => ({
   getEmissionFactorsImportActiveVersion: jest.fn(),
 }))
 jest.mock('../../db/emissionSource', () => ({
-  createTagFamilyAndRelatedTags: jest.fn(),
   getFamilyTagsForStudy: jest.fn(),
   createEmissionSourcesWithReturn: jest.fn(),
 }))
@@ -205,7 +204,6 @@ const mockCanDuplicateStudy = studyPermissionsModule.canDuplicateStudy as jest.M
 const mockGetEmissionFactorsImportActiveVersion =
   emissionFactorsModule.getEmissionFactorsImportActiveVersion as jest.Mock
 const mockIsAdmin = userUtilsModule.isAdmin as unknown as jest.Mock
-const mockCreateTagFamilyAndRelatedTags = emissionSourcesModule.createTagFamilyAndRelatedTags as jest.Mock
 const mockGetFamilyTagsForStudy = emissionSourcesModule.getFamilyTagsForStudy as jest.Mock
 const mockCreateEmissionSourcesWithReturn = emissionSourcesModule.createEmissionSourcesWithReturn as jest.Mock
 const mockCanChangeSites = studyPermissionsModule.canChangeSites as jest.Mock
@@ -223,7 +221,6 @@ const mockGetLinkedAndExternalStudies = (
 describe('study', () => {
   describe('duplicateStudyCommand', () => {
     const setupSuccessfullDuplication = () => {
-      mockCreateTagFamilyAndRelatedTags.mockResolvedValue([])
       mockCreateEmissionSourceTags.mockResolvedValue(undefined)
       mockCreateEmissionSourcesWithReturn.mockResolvedValue([{ id: TEST_IDS.emissionSource }])
       mockGetFamilyTagsForStudy.mockResolvedValue([])
