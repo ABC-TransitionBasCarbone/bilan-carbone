@@ -72,7 +72,12 @@ const StudyResultsContainerSummary = ({
       {withDependencies === undefined && showTitle && (
         <div className={`${styles.header} flex justify-between mb1`}>
           <div className={styles.studyNameContainer}>
-            <StudyName studyId={study.id} name={study.name} role={showRoleInChip ? accountRoleOnStudy : null} />
+            <StudyName
+              studyId={study.id}
+              name={study.name}
+              role={showRoleInChip ? accountRoleOnStudy : null}
+              simplified={study.simplified}
+            />
           </div>
           <Button className={styles.seeResultsButton} href={`/etudes/${study.id}/comptabilisation/resultats`}>
             {t('seeResults')}
