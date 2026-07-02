@@ -4,7 +4,8 @@
     "completed": {
       "title": "Sondage terminé !",
       "description": "Merci d'avoir complété le sondage.",
-      "responseId": "ID de réponse : {id}"
+      "responseId": "ID de réponse : {id}",
+      "viewResults": "Voir les résultats de la campagne"
     },
     "notFound": "Aucune question trouvée",
     "progress": {
@@ -18,6 +19,13 @@
     },
     "resume": "Reprendre le sondage",
     "characterCount": "{current} / {max} caractères"
+  },
+  "study": {
+    "results": {
+      "units": {
+        "T": "tonnes"
+      }
+    }
   },
   "email": {
     "subject": {
@@ -51,5 +59,92 @@
     "add": "Ajouter une nouvelle campagne",
     "edit": "Valider la modification",
     "success": "Les campagnesont été modifiées avec succès"
+  },
+  "results": {
+    "title": "Tableau de bord des résultats",
+    "subtitle": "Résultats anonymisés de la campagne de sensibilisation",
+    "stats": {
+      "averageFootprint": "Empreinte moyenne par collaborateur",
+      "respondents": "Répondants"
+    },
+    "objective": {
+      "nationalTarget": "Objectif national : {value} t de CO₂e par personne en 2050",
+      "nationalTargetDescription": "L'objectif de la France pour atteindre la neutralité carbone en 2050 et aider à limiter le réchauffement mondial à + 2 °C.",
+      "you": "Vous",
+      "unit": "tonnes CO₂e / an",
+      "aboveTarget": "Aujourd'hui, vous êtes au-dessus des {target} tonnes, l'objectif intermédiaire que nous proposons pour 2030.",
+      "paceTitle": "Votre rythme indicatif pour parvenir à {target} T en {year}",
+      "paceUnit": "kg par an"
+    },
+    "filter": {
+      "title": "Filtrer par entité"
+    },
+    "categories": {
+      "title": "Détail par poste d'émission",
+      "commute": "Déplacements domicile-travail",
+      "travel": "Déplacements professionnels",
+      "food": "Alimentation",
+      "digital": "Numérique",
+      "office": "Bureaux"
+    },
+    "charts": {
+      "title": "Répartition des empreintes carbone",
+      "pieTitle": "Répartition par poste d'émission (moyennes)",
+      "barTitle": "Empreinte carbone moyenne",
+      "target2050": "Objectif 2050 : 2 tCO₂e"
+    },
+    "keyStats": {
+      "title": "Chiffres clés",
+      "transport": {
+        "title": "Transport",
+        "plane": "Prennent l'avion",
+        "longHaulPlane": "Prennent l'avion long courrier",
+        "carKm": "Kilomètres parcourus en moyenne en voiture",
+        "carPassengers": "Voyageurs en moyenne en voiture"
+      },
+      "housing": {
+        "title": "Logement",
+        "electricHeating": "Se chauffent à l'électricité",
+        "gasHeating": "Se chauffent au gaz",
+        "oilHeating": "Se chauffent au fioul",
+        "woodHeating": "Se chauffent au bois",
+        "airConditioning": "Ont un système de climatisation"
+      },
+      "food": {
+        "title": "Alimentation",
+        "vegan": "Sont végétaliens",
+        "redMeatDaily": "Mangent de la viande rouge au moins une fois par jour",
+        "localSeasonal": "Achètent local et de saison",
+        "bottledWater": "Boivent de l'eau en bouteille",
+        "zeroWaste": "Sont Zéro déchet"
+      },
+      "misc": {
+        "title": "Divers",
+        "newClothes": "Vêtements neufs achetés chaque année",
+        "socialMediaOver3h": "Passent plus de 3h par jour sur les réseaux hors bureau"
+      }
+    },
+    "comments": {
+      "title": "Commentaires des collaborateurs",
+      "noComments": "Aucun commentaire pour l'instant"
+    },
+    "collectiveEffort": {
+      "title": "Important : c'est aussi un effort collectif",
+      "state": {
+        "label": "L'État français",
+        "description": "Il peut accélérer la <strong>décarbonation</strong> de la société en <strong>votant des lois</strong> et des <strong>aides financières ciblées</strong>, ainsi qu'au travers de ses investissements."
+      },
+      "collectivities": {
+        "label": "Les collectivités",
+        "description": "Par leurs choix d'aménagements du territoire, elles participent à <strong>l'adoption de nouvelles pratiques plus durables</strong> à l'échelle locale."
+      },
+      "companies": {
+        "label": "Les entreprises",
+        "description": "Sous l'impulsion de l'État et des citoyens, les entreprises travaillent à la <strong>réduction progressive de l'empreinte des biens et services</strong>."
+      }
+    },
+    "export": {
+      "print": "Imprimer"
+    }
   }
 }

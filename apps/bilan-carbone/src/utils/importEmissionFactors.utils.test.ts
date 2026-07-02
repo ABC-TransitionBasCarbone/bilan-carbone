@@ -1,7 +1,7 @@
-import { Post } from '@/services/posts'
 import { COLUMNS } from '@/types/importEmissionFactors.types'
 import { EmissionFactorBase, Environment, SubPost, Unit } from '@abc-transitionbascarbone/db-common/enums'
 import { Locale } from '@abc-transitionbascarbone/i18n/config'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
 import { expect } from '@jest/globals'
 import xlsx from 'node-xlsx'
 import {
@@ -13,6 +13,7 @@ import {
 
 // TODO: ESM module issue with Jest. Remove these mocks when moving to Vitest
 jest.mock('../services/auth', () => ({ auth: jest.fn() }))
+jest.mock('next-intl', () => ({ useTranslations: jest.fn(() => (key: string) => key), useFormatter: jest.fn() }))
 jest.mock('next-intl/server', () => ({ getTranslations: jest.fn(() => (key: string) => key) }))
 
 // Ordered by COLUMNS index

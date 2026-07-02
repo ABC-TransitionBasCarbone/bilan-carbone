@@ -2,6 +2,8 @@
 // This file contains ONLY enum definitions to avoid circular dependencies
 // All logic and mappings are in posts.ts
 
+
+
 export enum BCPost {
   Energies = 'Energies',
   AutresEmissionsNonEnergetiques = 'AutresEmissionsNonEnergetiques',
@@ -65,3 +67,5 @@ export enum ClicksonPost {
   Achats = 'Achats',
   ImmobilisationsClickson = 'ImmobilisationsClickson',
 }
+
+export const TiltPost = { ...TiltAdvancedPost, ...TiltSimplifiedPost }

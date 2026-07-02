@@ -50,6 +50,7 @@
     "@abc-transitionbascarbone/publicodes-tilt": "file:../../packages/publicodes-packages/publicodes-tilt/",
     "@abc-transitionbascarbone/services": "*",
     "@abc-transitionbascarbone/types": "*",
+    "@abc-transitionbascarbone/tests": "*",
     "@abc-transitionbascarbone/ui": "*",
     "@abc-transitionbascarbone/utils": "*",
     "@aws-sdk/client-s3": "^3.1075.0",

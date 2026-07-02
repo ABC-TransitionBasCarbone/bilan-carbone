@@ -1,15 +1,14 @@
 import GlossaryModal from '@/components/modals/GlossaryModal'
-import { BasicTypeCharts } from '@/utils/charts'
 import Box from '@abc-transitionbascarbone/components/src/base/Box'
 import Title from '@abc-transitionbascarbone/components/src/base/Title'
 import { StudyResultUnit } from '@abc-transitionbascarbone/db-common/enums'
+import { BarChart, PieChart } from '@abc-transitionbascarbone/ui'
+import { BasicTypeCharts } from '@abc-transitionbascarbone/utils/charts'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
 import { Checkbox, FormControlLabel, Menu, Tab, Tabs } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useMemo, useState } from 'react'
-import BarChart from '../charts/BarChart'
-import PieChart from '../charts/PieChart'
 import styles from './ResultsTableAndGraphs.module.css'
 
 export enum TabsPossibilities {

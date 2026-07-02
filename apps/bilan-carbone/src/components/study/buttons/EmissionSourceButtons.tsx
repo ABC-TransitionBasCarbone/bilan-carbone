@@ -2,7 +2,6 @@
 
 import ImportEmissionSourcesModal from '@/components/study/ImportEmissionSourcesModal'
 import { download } from '@/services/file'
-import { Post } from '@/services/posts'
 import {
   exportEmissionSourcesToCSV,
   exportEmissionSourcesToExcel,
@@ -11,6 +10,7 @@ import { hasEditionRights } from '@/utils/study'
 import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { StudyRole } from '@abc-transitionbascarbone/db-common/enums'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
 import FileDownloadIcon from '@mui/icons-material/FileDownload'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import UploadFileIcon from '@mui/icons-material/UploadFile'

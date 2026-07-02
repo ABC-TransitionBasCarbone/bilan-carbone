@@ -11,15 +11,10 @@ const nextConfig = {
   turbopack: {
     resolveAlias: {
       '@abc-transitionbascarbone/publicodes-mip': '../../packages/publicodes-packages/publicodes-mip/',
-      '@abc-transitionbascarbone/survey': '../../packages/survey/src/index.ts',
     },
     resolveExtensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
   },
-  transpilePackages: [
-    'mui-color-input',
-    '@abc-transitionbascarbone/survey',
-    '@abc-transitionbascarbone/publicodes-mip',
-  ],
+  transpilePackages: ['mui-color-input', '@abc-transitionbascarbone/publicodes-mip'],
   reactStrictMode: true,
   headers: async () => [
     {

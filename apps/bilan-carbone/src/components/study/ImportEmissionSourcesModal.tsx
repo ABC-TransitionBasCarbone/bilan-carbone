@@ -2,7 +2,6 @@
 
 import ImportFileModal from '@/components/base/ImportFileModal/ImportFileModal'
 import { download } from '@/services/file'
-import { Post } from '@/services/posts'
 import {
   getImportEmissionSourcesTemplate,
   importEmissionSourcesFromFile,
@@ -10,6 +9,7 @@ import {
   validateEmissionSourcesFromFile,
 } from '@/services/serverFunctions/importEmissionSources'
 import { PreviewEmissionSourceRow } from '@/types/importEmissionSources.types'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

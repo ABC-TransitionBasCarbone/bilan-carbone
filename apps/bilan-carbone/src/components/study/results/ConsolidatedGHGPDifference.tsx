@@ -1,14 +1,13 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import type { FullStudy } from '@/db/study'
 import { getEmissionResults } from '@/services/emissionSource'
-import { Post } from '@/services/posts'
 import { getDefaultRule, PostInfos } from '@/services/results/exports'
 import { getGHGPEmissionValue, getLine } from '@/services/results/ghgp'
 import { getAllSiteEmissionSources } from '@/services/results/utils'
 import { ResultsByPost } from '@/types/study.types'
 import { getEmissionFactor } from '@/utils/emissionSources'
 import { computeDifferenceForTableEmissions, formatDifferenceTableEmissions } from '@/utils/exports'
-import { hasDeprecationPeriod, hasFabricationPart, STUDY_UNIT_VALUES } from '@/utils/study'
+import { hasDeprecationPeriod, hasFabricationPart } from '@/utils/study'
 import { ExportRule } from '@abc-transitionbascarbone/db-common'
 import {
   EmissionFactorBase,
@@ -17,6 +16,7 @@ import {
   Export,
   SubPost,
 } from '@abc-transitionbascarbone/db-common/enums'
+import { Post, STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/utils/charts'
 import WarningAmberIcon from '@mui/icons-material/WarningAmberOutlined'
 import { useTranslations } from 'next-intl'
 import { useCallback, useMemo } from 'react'

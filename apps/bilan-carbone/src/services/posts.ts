@@ -1,15 +1,18 @@
 import { BCEnvironment } from '@/types/environment'
 import { Environment, SubPost } from '@abc-transitionbascarbone/db-common/enums'
-import { BCPost, ClicksonPost, CutPost, TiltAdvancedPost, TiltSimplifiedPost } from './posts.enums'
+import {
+  BCPost,
+  ClicksonPost,
+  CutPost,
+  TiltAdvancedPost,
+  TiltSimplifiedPost,
+} from '@abc-transitionbascarbone/services/results/posts.enums'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
 
 // Re-export enums for backward compatibility
 export { BCPost, ClicksonPost, CutPost, TiltAdvancedPost, TiltSimplifiedPost }
 
-export const TiltPost = { ...TiltAdvancedPost, ...TiltSimplifiedPost }
-
-export const Post = { ...BCPost, ...CutPost, ...TiltPost, ...ClicksonPost }
 export type SimplifiedPost = CutPost | ClicksonPost | TiltSimplifiedPost
-export type Post = BCPost | TiltAdvancedPost | TiltSimplifiedPost | CutPost | ClicksonPost
 
 export type BaseResultsByPost = {
   post: Post | SubPost | 'total'

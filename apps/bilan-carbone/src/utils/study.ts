@@ -2,7 +2,7 @@ import type { FullStudy } from '@/db/study'
 import { getEmissionResults } from '@/services/emissionSource'
 import { isTiltSimplified } from '@/services/permissions/environmentAdvanced'
 import { isAdminOnStudyOrga } from '@/services/permissions/study.utils'
-import { Post, subPostsByPost } from '@/services/posts'
+import { subPostsByPost } from '@/services/posts'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { ResultsByPost } from '@/types/study.types'
 import { isAdmin } from '@/utils/user'
@@ -18,11 +18,12 @@ import {
   SubPost,
   Unit,
 } from '@abc-transitionbascarbone/db-common/enums'
+import { Post, STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/utils/charts'
+import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import { Getter } from '@tanstack/react-table'
 import { UserSession } from 'next-auth'
 import { unique } from './array'
 import { getEmissionSourcesTotalCo2 } from './emissionSources'
-import { formatNumber } from './number'
 import { hasActiveLicence, isInOrgaOrParent } from './organization'
 
 export const getUserRoleOnPublicStudy = (
@@ -175,11 +176,6 @@ export const hasDeprecationPeriod = (subPost: SubPost) =>
     SubPost.Electromenager,
     SubPost.Batiment,
   ].includes(subPost)
-
-export const STUDY_UNIT_VALUES: Record<StudyResultUnit, number> = {
-  K: 1,
-  T: 1000,
-}
 
 export const defaultStudyResultUnit = StudyResultUnit.T
 

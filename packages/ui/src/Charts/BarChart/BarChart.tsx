@@ -5,15 +5,14 @@ import { BarChart as MuiBarChart } from '@mui/x-charts'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import styles from './BarChart.module.css'
-
-import { BasicTypeCharts, processBarChartData } from '@/utils/charts'
-import { formatNumber } from '@/utils/number'
 import { StudyResultUnit } from '@abc-transitionbascarbone/db-common'
+import { BasicTypeCharts, processBarChartData } from '@abc-transitionbascarbone/utils/charts'
+import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 
 const BAR_CHART_CONSTANTS = {
   TICK_ANGLE: -20,
   TICK_FONT_SIZE: 10,
-  AXIS_HEIGHT: 80,
+  AXIS_HEIGHT: 80
 } as const
 
 interface Props<T> {
@@ -77,30 +76,30 @@ const BarChart = <T extends BasicTypeCharts>({
             colorMap:
               seriesData.length === 0
                 ? {
-                    type: 'ordinal',
-                    values: barData.labels,
-                    colors: barData.colors,
-                  }
+                  type: 'ordinal',
+                  values: barData.labels,
+                  colors: barData.colors,
+                }
                 : undefined,
           },
         ]}
         series={
           seriesData.length > 0
             ? seriesData.map((series, index) => ({
-                data: series.data,
-                valueFormatter: (value) => (value && value > 0 ? formatNumber(value, 0) : null),
-                label: series.label,
-                stack: series.stack,
-                color: series.color,
-                id: `series-${index}`,
-              }))
+              data: series.data,
+              valueFormatter: (value) => (value && value > 0 ? formatNumber(value, 0) : null),
+              label: series.label,
+              stack: series.stack,
+              color: series.color,
+              id: `series-${index}`,
+            }))
             : [
-                {
-                  data: barData.values,
-                  valueFormatter: (value) => formatNumber(value ?? 0, 0),
-                  label: showLegend ? tResults('emissions') : undefined,
-                },
-              ]
+              {
+                data: barData.values,
+                valueFormatter: (value) => formatNumber(value ?? 0, 0),
+                label: showLegend ? tResults('emissions') : undefined,
+              },
+            ]
         }
         grid={{ horizontal: true }}
         yAxis={[{ label: tUnits(resultsUnit) }]}

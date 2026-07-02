@@ -1,0 +1,11 @@
+.page {
+  padding-bottom: 4rem;
+  overflow-y: auto;
+}
+
+@media print {
+  .page {
+    overflow: visible;
+    padding: 0;
+  }
+}

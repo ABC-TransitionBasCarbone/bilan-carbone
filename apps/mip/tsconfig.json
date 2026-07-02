@@ -13,6 +13,13 @@
       "@abc-transitionbascarbone/publicodes-mip": ["../../packages/publicodes-packages/publicodes-mip"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "cypress/**/*.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "cypress/**/*.ts",
+    "../../packages/types/mui.d.ts"
+  ],
   "exclude": ["node_modules"]
 }

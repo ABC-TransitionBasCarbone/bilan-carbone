@@ -5,8 +5,8 @@ import { getBegesEmissionTotal } from '@/services/results/beges'
 import { getGHGPEmissionTotal } from '@/services/results/ghgp'
 import { Environment, Export, StudyResultUnit } from '@abc-transitionbascarbone/db-common/enums'
 import { Translations } from '@abc-transitionbascarbone/lib'
-import { formatNumber } from './number'
-import { STUDY_UNIT_VALUES } from './study'
+import { STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/utils/charts'
+import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 
 const getExportEmissionTotal = (
   emissionSource: FullStudy['emissionSources'][number],

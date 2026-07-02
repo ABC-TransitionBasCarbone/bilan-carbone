@@ -4,7 +4,8 @@
     "completed": {
       "title": "Survey Completed!",
       "description": "Thank you for completing the survey.",
-      "responseId": "Response ID: {id}"
+      "responseId": "Response ID: {id}",
+      "viewResults": "View campaign results"
     },
     "notFound": "No question found",
     "progress": {
@@ -51,5 +52,92 @@
     "add": "Add new campaign",
     "edit": "Save changes",
     "success": "campaigns changed successfully"
+  },
+  "results": {
+    "title": "Results Dashboard",
+    "subtitle": "Anonymised results from the awareness campaign",
+    "stats": {
+      "averageFootprint": "Average footprint per collaborator",
+      "respondents": "Respondents"
+    },
+    "objective": {
+      "nationalTarget": "National target: {value} t CO₂e per person by 2050",
+      "nationalTargetDescription": "France's goal to reach carbon neutrality by 2050 and help limit global warming to +2 °C.",
+      "you": "You",
+      "unit": "tonnes CO₂e / year",
+      "aboveTarget": "Today you are above {target} tonnes, the intermediate target we propose for 2030.",
+      "paceTitle": "Your indicative pace to reach {target} T by {year}",
+      "paceUnit": "kg per year"
+    },
+    "filter": {
+      "title": "Filter by entity"
+    },
+    "categories": {
+      "title": "Breakdown by emission category",
+      "commute": "Commute",
+      "travel": "Professional travel",
+      "food": "Food",
+      "digital": "Digital",
+      "office": "Office"
+    },
+    "charts": {
+      "title": "Carbon footprint distribution",
+      "pieTitle": "Breakdown by emission category (averages)",
+      "barTitle": "Average carbon footprint",
+      "target2050": "2050 target: 2 tCO₂e"
+    },
+    "keyStats": {
+      "title": "Key figures",
+      "transport": {
+        "title": "Transport",
+        "plane": "Take the plane",
+        "longHaulPlane": "Take long-haul flights",
+        "carKm": "Kilometres driven by car on average",
+        "carPassengers": "Average passengers per car"
+      },
+      "housing": {
+        "title": "Housing",
+        "electricHeating": "Heat with electricity",
+        "gasHeating": "Heat with gas",
+        "oilHeating": "Heat with oil",
+        "woodHeating": "Heat with wood",
+        "airConditioning": "Have air conditioning"
+      },
+      "food": {
+        "title": "Food",
+        "vegan": "Are vegan",
+        "redMeatDaily": "Eat red meat at least once a day",
+        "localSeasonal": "Buy local and seasonal",
+        "bottledWater": "Drink bottled water",
+        "zeroWaste": "Are Zero waste"
+      },
+      "misc": {
+        "title": "Miscellaneous",
+        "newClothes": "New clothes bought each year",
+        "socialMediaOver3h": "Spend more than 3h/day on social media outside work"
+      }
+    },
+    "comments": {
+      "title": "Collaborator comments",
+      "noComments": "No comments yet"
+    },
+    "collectiveEffort": {
+      "title": "Important: it is also a collective effort",
+      "state": {
+        "label": "The French State",
+        "description": "It can accelerate the <strong>decarbonisation</strong> of society by <strong>passing laws</strong> and <strong>targeted financial support</strong>, as well as through its investments."
+      },
+      "collectivities": {
+        "label": "Local authorities",
+        "description": "Through their land-use planning choices, they contribute to <strong>the adoption of more sustainable practices</strong> at a local level."
+      },
+      "companies": {
+        "label": "Companies",
+        "description": "Under the impetus of the State and citizens, companies are working towards the <strong>progressive reduction of the footprint of goods and services</strong>."
+      }
+    },
+    "export": {
+      "print": "Print"
+    }
   }
 }

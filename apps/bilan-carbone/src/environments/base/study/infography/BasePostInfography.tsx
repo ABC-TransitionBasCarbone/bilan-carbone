@@ -1,8 +1,8 @@
 import { PostHeader } from '@/components/study/infography/PostHeader'
 import { SubPostInfography } from '@/components/study/infography/SubPostInfography'
-import { Post } from '@/services/posts'
 import { defaultPostColor, postColors } from '@/utils/study'
 import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
 import { styled } from '@mui/material/styles'
 import { useEffect, useMemo, useRef, useState } from 'react'
 

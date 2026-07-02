@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -13,6 +17,9 @@
     "jsx": "react-jsx",
     "target": "ES2017",
     "incremental": true,
-    "types": ["node"]
+    "types": [
+      "node",
+      "jest"
+    ]
   }
 }

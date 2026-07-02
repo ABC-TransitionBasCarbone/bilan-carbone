@@ -2,7 +2,7 @@ import { StudyContributorDeleteParams } from '@/components/study/rights/StudyCon
 import { isSourceForEnv } from '@/services/importEmissionFactor/import'
 import { hasAccessToCreateStudyWithEmissionFactorVersions } from '@/services/permissions/environment'
 import { filterAllowedStudies } from '@/services/permissions/study'
-import { Post, subPostsByPost } from '@/services/posts'
+import { subPostsByPost } from '@/services/posts'
 import { ChangeStudyCinemaCommand } from '@/services/serverFunctions/study.command'
 import { mapCncToStudySite } from '@/utils/cnc'
 import { isAdminOnOrga } from '@/utils/organization'
@@ -25,6 +25,7 @@ import {
   StudyRole,
 } from '@abc-transitionbascarbone/db-common/enums'
 import { getEnvVar } from '@abc-transitionbascarbone/lib/environment'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
 import { UserSession } from 'next-auth'
 import { cache } from 'react'
 import { deleteTransitionPlan } from '../services/serverFunctions/transitionPlan'

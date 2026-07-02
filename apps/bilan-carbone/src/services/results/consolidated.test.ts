@@ -1,10 +1,10 @@
 import type { FullStudy } from '@/db/study'
 import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
 import { getMockeFullStudy } from '@/tests/utils/models/study'
-import { translationMock } from '@/tests/utils/models/translationsMock'
 import * as studyUtilsModule from '@/utils/study'
 import { Environment, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { expect } from '@jest/globals'
+import { translationMock } from '../../../../../packages/tests/utils/models/translationsMock'
 import { computeResultsByTag } from './consolidated'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not

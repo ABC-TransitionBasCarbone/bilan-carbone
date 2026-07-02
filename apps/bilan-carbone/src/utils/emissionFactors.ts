@@ -1,9 +1,10 @@
 import { wasteImpact } from '@/constants/emissions'
 import { wasteEmissionFactors } from '@/constants/wasteEmissionFactors'
 import { hasWasteImpact } from '@/services/permissions/environment'
-import { convertTiltSubPostToBCSubPost, Post, subPostsByPostBC } from '@/services/posts'
+import { convertTiltSubPostToBCSubPost, subPostsByPostBC } from '@/services/posts'
 import type { EmissionFactor, Prisma } from '@abc-transitionbascarbone/db-common'
 import { Environment, Import, SubPost, Unit } from '@abc-transitionbascarbone/db-common/enums'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
 import { unique } from './array'
 
 export const getEmissionFactorValue = (

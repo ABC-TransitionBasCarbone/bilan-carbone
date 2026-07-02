@@ -37,10 +37,10 @@
     "@abc-transitionbascarbone/lib": "*",
     "@abc-transitionbascarbone/publicodes": "*",
     "@abc-transitionbascarbone/services": "*",
-    "@abc-transitionbascarbone/survey": "*",
     "@abc-transitionbascarbone/typeguards": "*",
     "@abc-transitionbascarbone/ui": "*",
     "@abc-transitionbascarbone/utils": "*",
+    "@tanstack/react-table": "^8.21.3",
     "@abc-transitionbascarbone/publicodes-mip": "file:../../packages/publicodes-packages/publicodes-mip/",
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
@@ -63,8 +63,9 @@
     "react-hook-form": "^7.80.0",
     "uuid": "^14.0.1",
     "zod": "^4.4.3",
-    "zustand": "^5.0.14",
-    "@base-ui-components/react": "^1.0.0-rc.0"
+    "@base-ui-components/react": "^1.0.0-rc.0",
+    "html-to-image": "^1.11.11",
+    "zustand": "^5.0.13"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.4",
