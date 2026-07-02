@@ -1,5 +1,7 @@
 'use client'
 
+import { StudyResultUnit } from '@abc-transitionbascarbone/db-common'
+import { STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/utils/charts'
 import { Box, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import styles from './ObjectiveEncart.module.css'
@@ -30,12 +32,14 @@ const computeYearlyReduction = (currentTCO2e: number): number => {
 
 interface Props {
   averageFootprint: number
+  resultsUnit: StudyResultUnit
 }
 
-const ObjectiveEncart = ({ averageFootprint }: Props) => {
+const ObjectiveEncart = ({ averageFootprint, resultsUnit }: Props) => {
   const t = useTranslations('results.objective')
-  const yearlyReduction = computeYearlyReduction(averageFootprint)
-  const aboveTarget = averageFootprint > TARGET_2030_T
+  const averageFootprintT = averageFootprint / STUDY_UNIT_VALUES[resultsUnit]
+  const yearlyReduction = computeYearlyReduction(averageFootprintT)
+  const aboveTarget = averageFootprintT > TARGET_2030_T
 
   return (
     <Box component="section" className={styles.encart}>
@@ -50,7 +54,7 @@ const ObjectiveEncart = ({ averageFootprint }: Props) => {
         <Box className={styles.userSection}>
           <Typography className={styles.youLabel}>{t('you')}</Typography>
           <Typography className={styles.footprintValue}>
-            {averageFootprint.toFixed(1).replace('.', ',')}
+            {averageFootprintT.toFixed(1).replace('.', ',')}
             <Box component="span" className={styles.footprintUnit}>
               {' '}
               {t('unit')}
@@ -78,7 +82,7 @@ const ObjectiveEncart = ({ averageFootprint }: Props) => {
         </Box>
 
         <Box className={styles.chartSection}>
-          <TrajectoryChart currentValue={averageFootprint} />
+          <TrajectoryChart currentValue={averageFootprintT} />
         </Box>
       </Box>
     </Box>

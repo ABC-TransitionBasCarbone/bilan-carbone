@@ -135,10 +135,10 @@ export const processPieChartData = <T extends BasicTypeCharts>(
     isParent: boolean,
     index?: number,
   ): ProcessedChartData => {
-    const convertedValue = (item?.value ?? 0) / STUDY_UNIT_VALUES[resultsUnit]
+    const convertedValue = item.value / STUDY_UNIT_VALUES[resultsUnit]
 
     return {
-      label: item?.label ?? '',
+      label: item.label,
       value: convertedValue,
       color: isParent ? getParentColor(type, theme, item, index) : getChildColor(type, theme, item),
     }

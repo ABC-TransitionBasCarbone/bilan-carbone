@@ -2,6 +2,7 @@
 
 import { CATEGORY_COLORS, getResultsForEntity, SurveyResults } from '@/data/sampleResults'
 import { RawRules } from '@/publicodes/mip-engine'
+import { StudyResultUnit } from '@abc-transitionbascarbone/db-common/enums'
 import { BasicTypeCharts } from '@abc-transitionbascarbone/utils/charts'
 import { Print } from '@mui/icons-material'
 import { Button, Typography } from '@mui/material'
@@ -33,6 +34,7 @@ const ResultsDashboard = ({ results, model }: Props) => {
         label: t(`categories.${c.key}`),
         value: c.value,
         color: c.color,
+        children: [],
       }) as BasicTypeCharts,
   )
 
@@ -56,7 +58,7 @@ const ResultsDashboard = ({ results, model }: Props) => {
         {t('subtitle')}
       </Typography>
 
-      <StatsSection results={filtered} />
+      <StatsSection results={filtered} resultsUnit={StudyResultUnit.T} />
 
       <EntityFilterSection
         entities={results.entities}
@@ -64,7 +66,7 @@ const ResultsDashboard = ({ results, model }: Props) => {
         onSelectEntity={setSelectedEntity}
       />
 
-      <ObjectiveEncart averageFootprint={filtered.averageFootprint / 1000} />
+      <ObjectiveEncart averageFootprint={filtered.averageFootprint} resultsUnit={StudyResultUnit.T} />
 
       <ChartsSection pieChartItems={pieChartItems} totalBarItem={totalBarItem} />
 
