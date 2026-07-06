@@ -57,41 +57,34 @@ const PieChart = <T extends BasicTypeCharts>({
     return processPieChartData(results, type, showSubLevel, theme, resultsUnit)
   }, [type, showSubLevel, results, theme, resultsUnit])
 
+  const valueFormatter = useMemo(
+    () => (item: { value: number; label?: string | ((location: 'legend' | 'tooltip' | 'arc') => string) }) =>
+      tooltipValueFormatter
+        ? tooltipValueFormatter({ label: typeof item.label === 'string' ? item.label : '', value: item.value })
+        : formatValueAndUnit(item.value, tUnits(resultsUnit), 0),
+    [tooltipValueFormatter, tUnits, resultsUnit],
+  )
+
+  const arcLabel = showLabelsOnPie ? (item: { value: number }) => formatNumber(item.value, 0) : undefined
+
   const series = useMemo(() => {
-    const seriesArray = []
+    const rings = [
+      { data: innerRingData, constants: PIE_CHART_CONSTANTS.INNER_RING },
+      { data: outerRingData, constants: PIE_CHART_CONSTANTS.OUTER_RING },
+    ]
 
-    if (innerRingData.length > 0) {
-      seriesArray.push({
-        data: innerRingData,
-        arcLabel: showLabelsOnPie ? (item: { value: number }) => formatNumber(item.value, 0) : undefined,
-        arcLabelMinAngle: PIE_CHART_CONSTANTS.INNER_RING.ARC_LABEL_MIN_ANGLE,
-        arcLabelRadius: PIE_CHART_CONSTANTS.INNER_RING.ARC_LABEL_RADIUS,
-        innerRadius: PIE_CHART_CONSTANTS.INNER_RING.INNER_RADIUS,
-        outerRadius: PIE_CHART_CONSTANTS.INNER_RING.OUTER_RADIUS,
-        valueFormatter: (item: { value: number; label?: string }) =>
-          tooltipValueFormatter
-            ? tooltipValueFormatter({ label: item.label ?? '', value: item.value })
-            : formatValueAndUnit(item.value, tUnits(resultsUnit), 0),
-      })
-    }
-
-    if (outerRingData.length > 0) {
-      seriesArray.push({
-        data: outerRingData,
-        arcLabel: showLabelsOnPie ? (item: { value: number }) => formatNumber(item.value, 0) : undefined,
-        arcLabelMinAngle: PIE_CHART_CONSTANTS.OUTER_RING.ARC_LABEL_MIN_ANGLE,
-        arcLabelRadius: PIE_CHART_CONSTANTS.OUTER_RING.ARC_LABEL_RADIUS,
-        innerRadius: PIE_CHART_CONSTANTS.OUTER_RING.INNER_RADIUS,
-        outerRadius: PIE_CHART_CONSTANTS.OUTER_RING.OUTER_RADIUS,
-        valueFormatter: (item: { value: number; label?: string }) =>
-          tooltipValueFormatter
-            ? tooltipValueFormatter({ label: item.label ?? '', value: item.value })
-            : formatValueAndUnit(item.value, tUnits(resultsUnit), 0),
-      })
-    }
-
-    return seriesArray
-  }, [innerRingData, outerRingData, showLabelsOnPie, tUnits, resultsUnit, tooltipValueFormatter])
+    return rings
+      .filter(({ data }) => data.length > 0)
+      .map(({ data, constants }) => ({
+        data,
+        arcLabel,
+        arcLabelMinAngle: constants.ARC_LABEL_MIN_ANGLE,
+        arcLabelRadius: constants.ARC_LABEL_RADIUS,
+        innerRadius: constants.INNER_RADIUS,
+        outerRadius: constants.OUTER_RADIUS,
+        valueFormatter,
+      }))
+  }, [innerRingData, outerRingData, arcLabel, valueFormatter])
 
   const legendData = useMemo(() => {
     const maxLabelLength = type === 'tag' ? 20 : 50

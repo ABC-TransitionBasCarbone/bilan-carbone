@@ -37,7 +37,7 @@ const ChartsSection = ({ pieChartItems, barChartItems, averageFootprint, totalRe
       label: item.label,
       tco2e,
       respondentEquivalent,
-      colorClassName: postColorClassByKey[item.post] ?? styles.postDetailColorNeutral,
+      colorClassName: (item.post && postColorClassByKey[item.post]) ?? styles.postDetailColorNeutral,
     }
   })
 
