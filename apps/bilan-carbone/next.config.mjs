@@ -8,11 +8,6 @@ const scalewayUrl = `${bucketName}.s3.${region}.scw.cloud`
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    serverActions: {
-      bodySizeLimit: '5mb',
-    },
-  },
   reactCompiler: {
     compilationMode: 'annotation',
   },
