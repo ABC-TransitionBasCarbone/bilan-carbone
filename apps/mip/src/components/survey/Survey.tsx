@@ -220,6 +220,7 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
             <InputQuestion
               key={group.el.id}
               formElement={group.el}
+              engine={engine}
               onChange={(ruleName, value) => updateState(formBuilder.handleInputChange(state, ruleName, value))}
             />
           ),

@@ -9,9 +9,10 @@ import { OnFieldChange } from './utils'
 export interface PublicodesInputFieldProps<RuleName extends string> {
   formElement: EvaluatedFormElement<RuleName>
   onChange: OnFieldChange<RuleName>
+  suggestions?: Record<string, number>
 }
 
-export function InputField<RuleName extends string>({ formElement, onChange }: PublicodesInputFieldProps<RuleName>) {
+export function InputField<RuleName extends string>({ formElement, onChange, suggestions }: PublicodesInputFieldProps<RuleName>) {
   /*
    * TODO: to check if we want to support more input types in the future
    * eslint-disable no-fallthrough
@@ -20,7 +21,7 @@ export function InputField<RuleName extends string>({ formElement, onChange }: P
     case 'input':
       switch (formElement.type) {
         case 'number':
-          return <NumberWithUnitInput formElement={formElement} onChange={onChange} />
+          return <NumberWithUnitInput formElement={formElement} onChange={onChange} suggestions={suggestions} />
         // TODO: handle month type properly
         // case 'month':
         case 'date':
