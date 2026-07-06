@@ -151,7 +151,7 @@
     "prettier-plugin-organize-imports": "^4.2.0",
     "prettier-plugin-prisma": "^5.0.0",
     "ts-jest": "^29.4.11",
-    "typescript": "^6.0.3",
+    "typescript": "^5.9.3",
     "yargs": "^18.0.0"
   }
 }
