@@ -23,10 +23,18 @@ const BAR_GAP = 12
 const AXIS_H = 32
 
 function niceUpperBound(value: number): number {
-  if (value <= 5) { return 6 }
-  if (value <= 10) { return 12 }
-  if (value <= 15) { return 16 }
-  if (value <= 20) { return 20 }
+  if (value <= 5) {
+    return 6
+  }
+  if (value <= 10) {
+    return 12
+  }
+  if (value <= 15) {
+    return 16
+  }
+  if (value <= 20) {
+    return 20
+  }
   const step = 10
   return Math.ceil(value / step) * step
 }
@@ -37,7 +45,9 @@ export default function BarChart({ items, unit = 'tCO₂e', targetValue = 2, tar
 
   const tickStep = maxValue <= 12 ? 2 : maxValue <= 20 ? 5 : 10
   const ticks: number[] = []
-  for (let v = 0; v <= maxValue; v += tickStep) { ticks.push(v) }
+  for (let v = 0; v <= maxValue; v += tickStep) {
+    ticks.push(v)
+  }
 
   const totalBarsH = items.length * BAR_H + Math.max(0, items.length - 1) * BAR_GAP
   const svgH = PAD_TOP + totalBarsH + AXIS_H

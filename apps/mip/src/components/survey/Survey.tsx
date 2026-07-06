@@ -1,5 +1,6 @@
 'use client'
 import { useMipPublicodes } from '@/publicodes/MipPublicodesProvider'
+import type { RawRules } from '@/publicodes/mip-engine'
 import { createResponseWithJson } from '@/services/serverFunctions/campaign'
 import {
   buildPageBuilder,
@@ -39,6 +40,7 @@ function loadState(surveyId: string): FormState<string> | null {
 
 interface MipSurveyProps {
   surveyId: string
+  model: RawRules
   rootRule?: string
 }
 
@@ -46,7 +48,7 @@ type GroupedElement =
   | { type: 'single'; el: EvaluatedFormElement<string> & FormPageElementProp; questionType: MipQuestionType }
   | { type: 'mosaic'; parent: string; elements: Array<EvaluatedFormElement<string> & FormPageElementProp> }
 
-export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps) {
+export default function Survey({ surveyId, model, rootRule = 'bilan' }: MipSurveyProps) {
   const t = useTranslations('survey')
   const tCommon = useTranslations('common')
   const { engine } = useMipPublicodes()

@@ -16,7 +16,7 @@ export default async function SurveyPage({ params }: { params: Promise<{ id: str
 
   return (
     <MipPublicodesProvider model={campaign.modelCampaign.model as RawRules}>
-      <SurveyClient surveyId={id} />
+      <SurveyClient surveyId={id} model={campaign.modelCampaign.model as RawRules} />
     </MipPublicodesProvider>
   )
 }
