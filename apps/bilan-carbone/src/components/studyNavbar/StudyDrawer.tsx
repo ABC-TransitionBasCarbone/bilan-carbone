@@ -48,7 +48,7 @@ const StudyDrawer = ({
   return (
     <div className={styles.drawerContent}>
       <div className={classNames(styles.titleContainer, { [styles.hasRole]: userRole })}>
-        <StudyName studyId={studyId} name={title.label} role={userRole} simplified={studySimplified} />
+        <StudyName studyId={studyId} name={title.label} role={userRole} />
       </div>
 
       <div className={styles.menuContainer}>

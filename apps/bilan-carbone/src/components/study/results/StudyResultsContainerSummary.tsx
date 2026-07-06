@@ -3,40 +3,28 @@
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import type { FullStudy } from '@/db/study'
 import { customRich } from '@/i18n/customRich'
-import { hasAccessToStudyResults, hasRoleOnStudy } from '@/services/permissions/environment'
+import { hasAccessToStudyResults } from '@/services/permissions/environment'
 import { getDetailedEmissionResults } from '@/services/study'
 import { BCEnvironment } from '@/types/environment'
-import { getDisplayedRoleOnStudy } from '@/utils/study'
 import { HelpIcon } from '@abc-transitionbascarbone/components'
 import Box from '@abc-transitionbascarbone/components/src/base/Box'
-import { BarChart, Button } from '@abc-transitionbascarbone/ui'
+import { BarChart } from '@abc-transitionbascarbone/ui'
 import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import classNames from 'classnames'
-import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
-import StudyName from '../card/StudyName'
 import styles from './ResultsContainer.module.css'
 
 interface Props {
-  user: UserSession
   study: FullStudy
   studySite: string
-  showTitle?: boolean
   validatedOnly?: boolean
   withDependencies?: boolean
 }
 
-const StudyResultsContainerSummary = ({
-  user,
-  study,
-  studySite,
-  showTitle,
-  validatedOnly,
-  withDependencies,
-}: Props) => {
+const StudyResultsContainerSummary = ({ study, studySite, validatedOnly, withDependencies }: Props) => {
   const t = useTranslations('study')
   const tPost = useTranslations('emissionFactors.post')
   const tResultUnits = useTranslations('study.results.units')
@@ -64,27 +52,8 @@ const StudyResultsContainerSummary = ({
     ]
   }, [environment, study, studySite, tPost, tResults, validatedOnly])
 
-  const showRoleInChip = user && hasRoleOnStudy(user.environment)
-  const accountRoleOnStudy = user && getDisplayedRoleOnStudy(user, study)
-
   return (
     <>
-      {withDependencies === undefined && showTitle && (
-        <div className={`${styles.header} flex justify-between mb1`}>
-          <div className={styles.studyNameContainer}>
-            <StudyName
-              studyId={study.id}
-              name={study.name}
-              role={showRoleInChip ? accountRoleOnStudy : null}
-              simplified={study.simplified}
-            />
-          </div>
-          <Button className={styles.seeResultsButton} href={`/etudes/${study.id}/comptabilisation/resultats`}>
-            {t('seeResults')}
-          </Button>
-        </div>
-      )}
-
       <div className={styles.container}>
         {hasAccessToStudyResults(environment) && (
           <fieldset className={classNames(styles.selector, 'flex grow')} aria-label={t('results.withDependencies')}>
