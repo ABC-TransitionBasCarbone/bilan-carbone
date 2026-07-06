@@ -2,7 +2,7 @@
 
 import type { TeamMember } from '@/db/accountMip'
 import { UserStatus } from '@abc-transitionbascarbone/db-common/enums'
-import { UserSession } from 'next-auth'
+import type { UserSession } from 'next-auth'
 import { SessionProvider } from 'next-auth/react'
 import PendingInvitations from '../team/PendingInvitations'
 import Team from '../team/TeamTable'
