@@ -83,38 +83,45 @@
     "charts": {
       "title": "Carbon footprint distribution",
       "pieTitle": "Breakdown by emission category (averages)",
-      "barTitle": "Average carbon footprint",
+      "barTitle": "Average carbon footprint by category",
+      "totalLimitColumn": "Total (2 tCO₂e limit)",
+      "postDetail": "{tco2e} tCO₂e",
+      "postDetailHover": "{tco2e} tCO₂e, around {people} people equivalent",
       "target2050": "2050 target: 2 tCO₂e"
     },
     "keyStats": {
       "title": "Key figures",
-      "transport": {
-        "title": "Transport",
-        "plane": "Take the plane",
-        "longHaulPlane": "Take long-haul flights",
-        "carKm": "Kilometres driven by car on average",
-        "carPassengers": "Average passengers per car"
+      "commute": {
+        "title": "Commute",
+        "carModeShare": "Commute trips are done by car",
+        "publicTransportModeShare": "Commute trips are done by public transport",
+        "activeModeShare": "Commute trips are done by active mobility",
+        "avgCarKm": "Average distance travelled by car (commute)",
+        "avgPublicTransportKm": "Average distance travelled by public transport (commute)",
+        "avgEmissionPerMode": "Average carbon footprint from commute trips"
       },
-      "housing": {
-        "title": "Housing",
-        "electricHeating": "Heat with electricity",
-        "gasHeating": "Heat with gas",
-        "oilHeating": "Heat with oil",
-        "woodHeating": "Heat with wood",
-        "airConditioning": "Have air conditioning"
+      "travel": {
+        "title": "Business travel",
+        "trainModeShare": "Business trips are done by train",
+        "carTravelModeShare": "Business trips are done by car",
+        "planeTravelModeShare": "Business trips are done by plane",
+        "avgTravelKmByMode": "Average distance of business trips",
+        "avgTravelEmissionByMode": "Average carbon footprint from business trips",
+        "avgTravelNights": "Average number of nights per business trip"
       },
       "food": {
         "title": "Food",
-        "vegan": "Are vegan",
-        "redMeatDaily": "Eat red meat at least once a day",
-        "localSeasonal": "Buy local and seasonal",
-        "bottledWater": "Drink bottled water",
-        "zeroWaste": "Are Zero waste"
+        "vegMealsShare": "Consumed meals are vegetarian",
+        "veganMealsShare": "Consumed meals are vegan",
+        "fullyVegetarianEmployees": "Employees are 100% vegetarian",
+        "fullyVeganEmployees": "Employees are 100% vegan",
+        "redMeatDailyEmployees": "Employees eat red meat every day"
       },
-      "misc": {
-        "title": "Miscellaneous",
-        "newClothes": "New clothes bought each year",
-        "socialMediaOver3h": "Spend more than 3h/day on social media outside work"
+      "digital": {
+        "title": "Digital",
+        "aiRequestsPerDay": "Average number of AI requests per employee per day",
+        "videoHoursPerDay": "Average videoconference hours per employee per day",
+        "internetHoursPerDay": "Average internet hours per employee per day"
       }
     },
     "comments": {

@@ -90,38 +90,45 @@
     "charts": {
       "title": "Répartition des empreintes carbone",
       "pieTitle": "Répartition par poste d'émission (moyennes)",
-      "barTitle": "Empreinte carbone moyenne",
+      "barTitle": "Empreinte carbone moyenne par poste",
+      "totalLimitColumn": "Total (limite 2 tCO₂e)",
+      "postDetail": "{tco2e} tCO₂e",
+      "postDetailHover": "{tco2e} tCO₂e, soit environ {people} personnes",
       "target2050": "Objectif 2050 : 2 tCO₂e"
     },
     "keyStats": {
       "title": "Chiffres clés",
-      "transport": {
-        "title": "Transport",
-        "plane": "Prennent l'avion",
-        "longHaulPlane": "Prennent l'avion long courrier",
-        "carKm": "Kilomètres parcourus en moyenne en voiture",
-        "carPassengers": "Voyageurs en moyenne en voiture"
+      "commute": {
+        "title": "Déplacements domicile-travail",
+        "carModeShare": "Les trajets domicile-travail se font en voiture",
+        "publicTransportModeShare": "Les trajets domicile-travail se font en transport en commun",
+        "activeModeShare": "Les trajets domicile-travail se font en modes actifs",
+        "avgCarKm": "La distance moyenne parcourue en voiture (DT)",
+        "avgPublicTransportKm": "La distance moyenne parcourue en transport en commun (DT)",
+        "avgEmissionPerMode": "L'empreinte carbone moyenne des déplacements domicile-travail"
       },
-      "housing": {
-        "title": "Logement",
-        "electricHeating": "Se chauffent à l'électricité",
-        "gasHeating": "Se chauffent au gaz",
-        "oilHeating": "Se chauffent au fioul",
-        "woodHeating": "Se chauffent au bois",
-        "airConditioning": "Ont un système de climatisation"
+      "travel": {
+        "title": "Déplacements professionnels",
+        "trainModeShare": "Les déplacements professionnels se font en train",
+        "carTravelModeShare": "Les déplacements professionnels se font en voiture",
+        "planeTravelModeShare": "Les déplacements professionnels se font en avion",
+        "avgTravelKmByMode": "La distance moyenne des déplacements professionnels",
+        "avgTravelEmissionByMode": "L'empreinte carbone moyenne des déplacements professionnels",
+        "avgTravelNights": "Le nombre moyen de nuits par déplacement professionnel"
       },
       "food": {
         "title": "Alimentation",
-        "vegan": "Sont végétaliens",
-        "redMeatDaily": "Mangent de la viande rouge au moins une fois par jour",
-        "localSeasonal": "Achètent local et de saison",
-        "bottledWater": "Boivent de l'eau en bouteille",
-        "zeroWaste": "Sont Zéro déchet"
+        "vegMealsShare": "Les plats consommés sont végétariens",
+        "veganMealsShare": "Les plats consommés sont végans",
+        "fullyVegetarianEmployees": "Les salariés sont 100% végétariens",
+        "fullyVeganEmployees": "Les salariés sont 100% végans",
+        "redMeatDailyEmployees": "Les salariés mangent de la viande rouge tous les jours"
       },
-      "misc": {
-        "title": "Divers",
-        "newClothes": "Vêtements neufs achetés chaque année",
-        "socialMediaOver3h": "Passent plus de 3h par jour sur les réseaux hors bureau"
+      "digital": {
+        "title": "Numérique",
+        "aiRequestsPerDay": "Le nombre moyen de requêtes IA par salarié et par jour",
+        "videoHoursPerDay": "Le nombre moyen d'heures de visioconférence par salarié et par jour",
+        "internetHoursPerDay": "Le nombre moyen d'heures d'internet par salarié et par jour"
       }
     },
     "comments": {

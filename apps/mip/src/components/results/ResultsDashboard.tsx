@@ -38,12 +38,16 @@ const ResultsDashboard = ({ results, model }: Props) => {
       }) as BasicTypeCharts,
   )
 
-  const totalBarItem = {
-    post: 'somme',
-    label: t('charts.barTitle'),
-    value: filtered.averageFootprint,
-    color: CATEGORY_COLORS.total,
-  } as BasicTypeCharts
+  const barChartItems = [
+    ...pieChartItems,
+    {
+      post: 'total-limit',
+      label: t('charts.totalLimitColumn'),
+      value: 2000,
+      color: CATEGORY_COLORS.total,
+      children: [],
+    } as BasicTypeCharts,
+  ]
 
   const handlePrint = () => {
     window.print()
@@ -68,7 +72,12 @@ const ResultsDashboard = ({ results, model }: Props) => {
 
       <ObjectiveEncart averageFootprint={filtered.averageFootprint} resultsUnit={StudyResultUnit.T} />
 
-      <ChartsSection pieChartItems={pieChartItems} totalBarItem={totalBarItem} />
+      <ChartsSection
+        pieChartItems={pieChartItems}
+        barChartItems={barChartItems}
+        averageFootprint={filtered.averageFootprint}
+        totalRespondents={filtered.totalRespondents}
+      />
 
       <KeyStatsSection keyStats={filtered.keyStats} model={model} />
 

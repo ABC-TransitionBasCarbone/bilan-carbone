@@ -10,33 +10,55 @@ import styles from './KeyStatsSection.module.css'
 interface Props {
   keyStats: KeyStatGroup[]
   model: RawRules
+  visibleStatsByGroup?: Partial<Record<string, string[]>>
 }
 
-type PublicodesRule = {
-  question?: string | null
-} | null
-
-const questionRuleByStatKey: Record<string, string> = {
-  plane: 'transport . avion . présent',
-  longHaulPlane: 'transport . avion . long courrier . heures de vol',
-  carKm: 'DT . voiture . km',
-  carPassengers: 'DT . voiture . voyageurs',
-  electricHeating: 'logement . chauffage . électricité . présent',
-  gasHeating: 'logement . chauffage . gaz . présent',
-  oilHeating: 'logement . chauffage . fioul . présent',
-  woodHeating: 'logement . chauffage . bois . présent',
-  airConditioning: 'logement . climatisation . présent',
-  vegan: 'alimentation . plats . végétalien . nombre',
-  redMeatDaily: 'alimentation . plats . viande rouge . nombre',
-  localSeasonal: 'alimentation . de saison . consommation',
-  bottledWater: 'alimentation . boisson . eau en bouteille . consommateur',
-  zeroWaste: 'alimentation . déchets . gestes',
-  newClothes: 'divers . autres produits . niveau de dépenses',
+const DEFAULT_VISIBLE_STATS_BY_GROUP: Partial<Record<string, string[]>> = {
+  commute: [
+    'carModeShare',
+    'publicTransportModeShare',
+    'activeModeShare',
+    'avgCarKm',
+    'avgPublicTransportKm',
+    'avgEmissionPerMode',
+  ],
+  travel: [
+    'trainModeShare',
+    'carTravelModeShare',
+    'planeTravelModeShare',
+    'avgTravelKmByMode',
+    'avgTravelEmissionByMode',
+    'avgTravelNights',
+  ],
+  food: [
+    'vegMealsShare',
+    'veganMealsShare',
+    'fullyVegetarianEmployees',
+    'fullyVeganEmployees',
+    'redMeatDailyEmployees',
+  ],
+  digital: ['aiRequestsPerDay', 'videoHoursPerDay', 'internetHoursPerDay'],
 }
 
-const KeyStatsSection = ({ keyStats, model }: Props) => {
+const KeyStatsSection = ({ keyStats, model, visibleStatsByGroup = DEFAULT_VISIBLE_STATS_BY_GROUP }: Props) => {
   const t = useTranslations('results')
-  const publicodesRules = model as Record<string, PublicodesRule>
+
+  void model
+
+  const filteredGroups = keyStats
+    .map((group) => {
+      const visibleStats = visibleStatsByGroup[group.key]
+      if (!visibleStats || visibleStats.length === 0) {
+        return group
+      }
+
+      const visibleSet = new Set(visibleStats)
+      return {
+        ...group,
+        stats: group.stats.filter((stat) => visibleSet.has(stat.key)),
+      }
+    })
+    .filter((group) => group.stats.length > 0)
 
   return (
     <section className="mb2">
@@ -46,19 +68,8 @@ const KeyStatsSection = ({ keyStats, model }: Props) => {
       <Card>
         <CardContent className="p15">
           <div className={styles.keyStatsGrid}>
-            {keyStats.map((group) => (
-              <KeyStatGroupItem
-                key={group.key}
-                group={group}
-                statQuestions={Object.fromEntries(
-                  group.stats
-                    .map((stat) => {
-                      const question = publicodesRules[questionRuleByStatKey[stat.key]]?.question
-                      return typeof question === 'string' ? [stat.key, question] : null
-                    })
-                    .filter((entry): entry is [string, string] => entry !== null),
-                )}
-              />
+            {filteredGroups.map((group) => (
+              <KeyStatGroupItem key={group.key} group={group} />
             ))}
           </div>
         </CardContent>

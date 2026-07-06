@@ -1,5 +1,44 @@
 .chartsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1rem;
+}
+
+.postDetailList {
+  border-top: 1px solid var(--neutral-50);
+}
+
+.postDetailRow {
+  border-bottom: 1px solid var(--neutral-50);
+}
+
+.postDetailColor {
+  border-radius: 999px;
+  display: inline-block;
+  flex-shrink: 0;
+  height: 0.625rem;
+  width: 0.625rem;
+}
+
+.postDetailColorCommute {
+  background-color: var(--primary-500);
+}
+
+.postDetailColorTravel {
+  background-color: var(--info);
+}
+
+.postDetailColorFood {
+  background-color: var(--success-100);
+}
+
+.postDetailColorDigital {
+  background-color: var(--error-50);
+}
+
+.postDetailColorOffice {
+  background-color: var(--warning);
+}
+
+.postDetailColorNeutral {
+  background-color: var(--neutral-300);
 }

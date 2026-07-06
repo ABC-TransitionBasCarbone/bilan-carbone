@@ -34,6 +34,7 @@ interface Props<T> extends Omit<PieChartProps, 'series'> {
   showLabelsOnPie?: boolean
   showSubLevel?: boolean
   type?: 'post' | 'tag'
+  tooltipValueFormatter?: (item: { label: string; value: number }) => string
 }
 
 const PieChart = <T extends BasicTypeCharts>({
@@ -45,6 +46,7 @@ const PieChart = <T extends BasicTypeCharts>({
   showLabelsOnPie = true,
   showSubLevel = false,
   type = 'post',
+  tooltipValueFormatter,
   ...pieChartProps
 }: Props<T>) => {
   const tUnits = useTranslations('study.results.units')
@@ -66,7 +68,10 @@ const PieChart = <T extends BasicTypeCharts>({
         arcLabelRadius: PIE_CHART_CONSTANTS.INNER_RING.ARC_LABEL_RADIUS,
         innerRadius: PIE_CHART_CONSTANTS.INNER_RING.INNER_RADIUS,
         outerRadius: PIE_CHART_CONSTANTS.INNER_RING.OUTER_RADIUS,
-        valueFormatter: (item: { value: number }) => formatValueAndUnit(item.value, tUnits(resultsUnit), 0),
+        valueFormatter: (item: { value: number; label?: string }) =>
+          tooltipValueFormatter
+            ? tooltipValueFormatter({ label: item.label ?? '', value: item.value })
+            : formatValueAndUnit(item.value, tUnits(resultsUnit), 0),
       })
     }
 
@@ -78,12 +83,15 @@ const PieChart = <T extends BasicTypeCharts>({
         arcLabelRadius: PIE_CHART_CONSTANTS.OUTER_RING.ARC_LABEL_RADIUS,
         innerRadius: PIE_CHART_CONSTANTS.OUTER_RING.INNER_RADIUS,
         outerRadius: PIE_CHART_CONSTANTS.OUTER_RING.OUTER_RADIUS,
-        valueFormatter: (item: { value: number }) => formatValueAndUnit(item.value, tUnits(resultsUnit), 0),
+        valueFormatter: (item: { value: number; label?: string }) =>
+          tooltipValueFormatter
+            ? tooltipValueFormatter({ label: item.label ?? '', value: item.value })
+            : formatValueAndUnit(item.value, tUnits(resultsUnit), 0),
       })
     }
 
     return seriesArray
-  }, [innerRingData, outerRingData, showLabelsOnPie, tUnits, resultsUnit])
+  }, [innerRingData, outerRingData, showLabelsOnPie, tUnits, resultsUnit, tooltipValueFormatter])
 
   const legendData = useMemo(() => {
     const maxLabelLength = type === 'tag' ? 20 : 50
