@@ -20,13 +20,17 @@ const CIRCUMFERENCE = 2 * Math.PI * RADIUS
 export default function PieChart({ items, unit = 'tCO₂e' }: Props) {
   const total = items.reduce((sum, item) => sum + item.value, 0)
 
-  let cumulativeLength = 0
-  const segments = items.map((item) => {
-    const segmentLength = total > 0 ? (item.value / total) * CIRCUMFERENCE : 0
-    const strokeDashoffset = -cumulativeLength
-    cumulativeLength += segmentLength
-    return { key: item.key, color: item.color, segmentLength, strokeDashoffset }
-  })
+  const segments = items.reduce<Array<{ key: string; color: string; segmentLength: number; strokeDashoffset: number }>>(
+    (acc, item) => {
+      const segmentLength = total > 0 ? (item.value / total) * CIRCUMFERENCE : 0
+      const previous = acc[acc.length - 1]
+      const strokeDashoffset = previous ? previous.strokeDashoffset - previous.segmentLength : 0
+
+      acc.push({ key: item.key, color: item.color, segmentLength, strokeDashoffset })
+      return acc
+    },
+    [],
+  )
 
   return (
     <div className={styles.wrapper}>

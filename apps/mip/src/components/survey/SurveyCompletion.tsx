@@ -1,7 +1,7 @@
 'use client'
 
 import { useMipPublicodes } from '@/publicodes/MipPublicodesProvider'
-import model from '@/publicodes/publicodes-mip.model.json'
+import type { RawRules } from '@/publicodes/mip-engine'
 import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import { ExpandMore, Refresh } from '@mui/icons-material'
 import {
@@ -24,9 +24,6 @@ type ModelRule = {
   icônes?: string
   somme?: Array<string | number>
 }
-type RawModel = Record<string, ModelRule | { somme?: Array<string | number> } | null>
-
-const modelRules = model as RawModel
 
 const CATEGORY_KEYS = ['DT', 'transport', 'alimentation', 'divers', 'logement'] as const
 
@@ -50,9 +47,10 @@ interface ActionResult {
 interface Props {
   onRestart: () => void
   surveyId: string
+  model: RawRules
 }
 
-const SurveyCompletion = ({ onRestart, surveyId }: Props) => {
+const SurveyCompletion = ({ onRestart, surveyId, model }: Props) => {
   const t = useTranslations('survey.completion')
   const { engine } = useMipPublicodes()
 
@@ -62,7 +60,7 @@ const SurveyCompletion = ({ onRestart, surveyId }: Props) => {
   const categories: CategoryResult[] = CATEGORY_KEYS.map((key) => {
     const result = engine.evaluate(key)
     const valueKg = typeof result.nodeValue === 'number' ? Math.max(0, result.nodeValue) : 0
-    const rule = modelRules[key] as ModelRule | undefined
+    const rule = model?.[key] as ModelRule | undefined
     return {
       key,
       titre: rule?.titre ?? key,
@@ -71,7 +69,7 @@ const SurveyCompletion = ({ onRestart, surveyId }: Props) => {
     }
   }).sort((a, b) => b.valueKg - a.valueKg)
 
-  const actionsRule = modelRules['actions'] as { somme?: Array<string | number> } | null | undefined
+  const actionsRule = model?.['actions'] as { somme?: Array<string | number> } | null | undefined
   const actionKeys = (actionsRule?.somme ?? []).filter((value): value is string => typeof value === 'string')
 
   const actions: ActionResult[] = actionKeys
@@ -79,7 +77,7 @@ const SurveyCompletion = ({ onRestart, surveyId }: Props) => {
       try {
         const result = engine.evaluate(key)
         const savingsKg = typeof result.nodeValue === 'number' ? Math.max(0, result.nodeValue) : 0
-        const rule = modelRules[key] as ModelRule | undefined
+        const rule = model?.[key] as ModelRule | undefined
         return [
           {
             key,
