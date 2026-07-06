@@ -181,6 +181,13 @@ export const getCampaignById = (id: string) => {
   })
 }
 
+export const getCampaignResponses = (campaignId: string) => {
+  return prismaClient.response.findMany({
+    where: { campaignId },
+    select: { id: true, answers: true },
+  })
+}
+
 export const createResponse = async (data: Prisma.ResponseCreateInput) =>
   prismaClient.response.create({
     data,
