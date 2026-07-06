@@ -6,6 +6,7 @@ import { UpdateCampaignCommand, UpdateCampaignCommandValidation } from '@/servic
 import { handleCopy } from '@/utils/campaign'
 import { UpdateCampaignCommandValidation } from '@/services/serverFunctions/campaign.command'
 import type { UpdateCampaignCommand } from '@/services/serverFunctions/campaign.command'
+import { UpdateCampaignCommandValidation } from '@/services/serverFunctions/campaign.command'
 import { handleCopy, handleDownloadJson } from '@/utils/campaign'
 import { Table as BaseTable } from '@abc-transitionbascarbone/components'
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
