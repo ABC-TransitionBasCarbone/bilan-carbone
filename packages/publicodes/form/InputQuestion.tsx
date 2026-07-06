@@ -11,7 +11,7 @@ interface InputQuestionProps<RuleName extends string> {
 }
 
 export function InputQuestion<RuleName extends string>({ formElement, onChange }: InputQuestionProps<RuleName>) {
-  const { question } = usePublicodesRuleTranslation(formElement.id)
+  const question = usePublicodesRuleTranslation(formElement.id)?.question
   return (
     <Box key={formElement.id} className="mb2">
       <QuestionContainer label={question ?? formElement.label ?? formElement.id}>
