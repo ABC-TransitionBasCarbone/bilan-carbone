@@ -24,7 +24,7 @@ const formatStatValue = (value: number, unit: 'percent' | 'number' | 'km' | 'hou
   }
 
   if (unit === 'nights') {
-    return `${formatNumber(value, 1)} nuit${value > 1 ? 's' : ''}`
+    return `${formatNumber(value, 1)} nuit${value === 1 ? '' : 's'}`
   }
 
   return formatNumber(value, value % 1 === 0 ? 0 : 1)

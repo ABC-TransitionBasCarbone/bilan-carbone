@@ -3,14 +3,6 @@
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
-.postDetailList {
-  border-top: 1px solid var(--neutral-50);
-}
-
-.postDetailRow {
-  border-bottom: 1px solid var(--neutral-50);
-}
-
 .postDetailColor {
   border-radius: 999px;
   display: inline-block;

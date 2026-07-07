@@ -18,10 +18,9 @@ import StatsSection from './StatsSection'
 
 interface Props {
   results: SurveyResults
-  model: RawRules
 }
 
-const ResultsDashboard = ({ results, model }: Props) => {
+const ResultsDashboard = ({ results }: Props) => {
   const t = useTranslations('results')
   const [selectedEntity, setSelectedEntity] = useState('all')
 
@@ -79,7 +78,7 @@ const ResultsDashboard = ({ results, model }: Props) => {
         totalRespondents={filtered.totalRespondents}
       />
 
-      <KeyStatsSection keyStats={filtered.keyStats} model={model} />
+      <KeyStatsSection keyStats={filtered.keyStats} />
 
       <CollectiveEffortEncart />
 

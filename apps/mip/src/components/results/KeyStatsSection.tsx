@@ -1,7 +1,6 @@
 'use client'
 
 import { KeyStatGroup } from '@/data/sampleResults'
-import { RawRules } from '@/publicodes/mip-engine'
 import { Card, CardContent, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import KeyStatGroupItem from './KeyStatGroupItem'
@@ -9,7 +8,6 @@ import styles from './KeyStatsSection.module.css'
 
 interface Props {
   keyStats: KeyStatGroup[]
-  model: RawRules
   visibleStatsByGroup?: Partial<Record<string, string[]>>
 }
 
@@ -40,10 +38,8 @@ const DEFAULT_VISIBLE_STATS_BY_GROUP: Partial<Record<string, string[]>> = {
   digital: ['aiRequestsPerDay', 'videoHoursPerDay', 'internetHoursPerDay'],
 }
 
-const KeyStatsSection = ({ keyStats, model, visibleStatsByGroup = DEFAULT_VISIBLE_STATS_BY_GROUP }: Props) => {
+const KeyStatsSection = ({ keyStats, visibleStatsByGroup = DEFAULT_VISIBLE_STATS_BY_GROUP }: Props) => {
   const t = useTranslations('results')
-
-  void model
 
   const filteredGroups = keyStats
     .map((group) => {
