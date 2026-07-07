@@ -6,7 +6,6 @@ import { isTiltSimplified } from '@/services/permissions/environmentAdvanced'
 import { isAdminOnStudyOrga } from '@/services/permissions/study.utils'
 import { subPostsByPost } from '@/services/posts'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
-import { loadSituation } from '@/services/serverFunctions/situation'
 import { sortAlphabetically } from '@/services/utils'
 import { ResultsByPost } from '@/types/study.types'
 import { isAdmin } from '@/utils/user'
@@ -435,8 +434,9 @@ export const getStudyDefaultLandingPath = async (
 ) => {
   let isTiltSimplifiedGeneralDataCompleted = false
   if (isTiltSimplified(environment, simplified) && sites.length > 0) {
-    const studySite = sites.sort((a, b) => sortAlphabetically(a.id, b.id))[0]
+    const studySite = [...sites].sort((a, b) => sortAlphabetically(a.id, b.id))[0]
 
+    const { loadSituation } = await import('@/services/serverFunctions/situation')
     const situationResponse = await loadSituation(studyId, studySite.id)
     if (situationResponse && situationResponse.success && situationResponse.data && situationResponse.data.situation) {
       const situation = situationResponse.data.situation
