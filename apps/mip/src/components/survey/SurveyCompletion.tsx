@@ -23,7 +23,7 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Situation } from 'publicodes'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import styles from './SurveyCompletion.module.css'
 
 type ModelRule = {
@@ -84,19 +84,14 @@ const SurveyCompletion = ({ onRestart, surveyId, model, restoreFromStorage = fal
   const { engine } = useMipPublicodes()
   const router = useRouter()
   const [activeTab, setActiveTab] = useState<'keyActions' | 'library'>('keyActions')
-  const [isHydrated, setIsHydrated] = useState(!restoreFromStorage)
 
-  useEffect(() => {
-    if (!restoreFromStorage) {
-      return
-    }
-
+  useState(() => {
+    if (!restoreFromStorage) return
     const savedState = loadSurveyState<StoredSurveyState>(surveyId)
     if (hasStoredSituation(savedState)) {
       engine.setSituation(savedState.situation)
     }
-    setIsHydrated(true)
-  }, [engine, restoreFromStorage, surveyId])
+  })
 
   const totalEval = engine.evaluate('bilan')
   const totalKg = typeof totalEval.nodeValue === 'number' ? Math.max(0, totalEval.nodeValue) : 0
@@ -155,10 +150,6 @@ const SurveyCompletion = ({ onRestart, surveyId, model, restoreFromStorage = fal
       return
     }
     router.push(`/survey/${surveyId}`)
-  }
-
-  if (!isHydrated) {
-    return <Typography>{t('loadingState')}</Typography>
   }
 
   return (
