@@ -10,7 +10,7 @@ interface Props {
   groupedElements: GroupedElement[]
   engine: MipEngine
   state: FormState<string>
-  formBuilder: FormBuilder
+  formBuilder: FormBuilder<string>
   updateState: (newState: FormState<string>) => void
 }
 
