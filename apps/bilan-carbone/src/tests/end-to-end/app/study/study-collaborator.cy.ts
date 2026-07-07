@@ -15,7 +15,10 @@ describe('Study collaborators', () => {
 
     cy.getByTestId('new-study', { timeout: 20000 }).should('be.visible').click()
 
-    cy.getByTestId('organization-sites-checkbox', { timeout: 20000 }).first().should('be.visible').click({ force: true })
+    cy.getByTestId('organization-sites-checkbox', { timeout: 20000 })
+      .first()
+      .should('be.visible')
+      .click({ force: true })
     cy.getByTestId('new-study-organization-button').click()
 
     cy.getByTestId('new-study-name').type('Collaborator study')
