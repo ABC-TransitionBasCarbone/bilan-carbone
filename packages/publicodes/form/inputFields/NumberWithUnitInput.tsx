@@ -2,6 +2,7 @@ import { usePublicodesUnitTranslation } from '@abc-transitionbascarbone/publicod
 import { NumberField } from '@base-ui-components/react/number-field'
 import { InputAdornment, OutlinedInput } from '@mui/material'
 import { EvaluatedNumberInput } from '@publicodes/forms'
+import classNames from 'classnames'
 import { OnFieldChange } from '../utils'
 import { useSimpleInputState } from './hooks/useSimpleInputState'
 import styles from './NumberWithUnitInput.module.css'
@@ -30,7 +31,7 @@ const NumberWithUnitInput = <RuleName extends string>({
   return (
     <div>
       <NumberField.Root
-        className={styles.inputWrapper}
+        className={classNames(styles.inputWrapper, 'wfit')}
         value={localValue}
         onFocus={handleFocus}
         onValueChange={handleValueChange}
@@ -45,12 +46,12 @@ const NumberWithUnitInput = <RuleName extends string>({
         />
       </NumberField.Root>
       {suggestionEntries.length > 0 && (
-        <div className={styles.suggestions}>
+        <div className={classNames('flex', 'wrap', 'gapped-2', styles.suggestions)}>
           {suggestionEntries.map(([label, value]) => (
             <button
               key={label}
               type="button"
-              className={styles.suggestionChip}
+              className={classNames(styles.suggestionChip, 'pointer')}
               onClick={() => {
                 handleValueChange(value)
                 handleValueCommitted(value)

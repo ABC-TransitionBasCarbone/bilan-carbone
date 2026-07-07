@@ -1,137 +1,93 @@
-# Copilot Instructions for `bilan-carbone`
+# Copilot Instructions for bilan-carbone and mip
 
-## Project Overview
+## Scope
 
-This is a Next.js monorepo for the "Bilan Carbone" platform, focused on carbon accounting and emissions management. The codebase is organized by feature and domain, with clear separation between API, UI, database, and integration logic.
+Monorepo Next.js (Yarn workspaces + Turbo) for carbon accounting products:
+- apps/bilan-carbone
+- apps/mip
+- packages/* shared libs (db-common, i18n, components, services, typeguards, publicodes, ui, utils)
 
-## Architecture & Key Components
+## Architecture Essentials
 
-- **Frontend**: Located in `src/app/` and `src/components/`. Uses Next.js app router, with feature folders for dashboard, public views, and admin.
-- **Backend/DB**: Prisma ORM is used for PostgreSQL, with models in `prisma/schema/` and queries/services in `src/db/`.
-- **API**: Endpoints are in `src/app/api/`. Server-side logic is often abstracted into `src/services/` and `src/db/`.
-- **Types & Constants**: Shared types in `src/types/`, constants in `src/constants/`.
-- **Testing**: Cypress for E2E (`cypress/`), Jest for unit/integration (`src/tests/`).
-  - Prefer unit tests on server methods/business logic; avoid component tests unless explicitly requested.
-- **Scripts**: Data import/export and maintenance scripts in `src/scripts/`.
+- UI routes/components: apps/*/src/app and apps/*/src/components
+- APIs: apps/*/src/app/api
+- DB schema: packages/db-common/prisma/schema
+- DB access and business logic: apps/*/src/db and apps/*/src/services
+- Shared types/constants: src/types and src/constants (or shared packages when reusable)
 
-## Developer Workflows
+## Preferred Commands
 
-- **Build/Dev**:
-  - Start dev server: `npx next dev --turbopack --port 3001`
-  - Prisma Studio: `npx prisma studio`
-- **Testing**:
-  - Run Cypress: `npx cypress run --spec "src/tests/end-to-end/app/auth/register-cut.cy.ts"`
-  - Run Jest: `npx jest`
-- **Data Import**:
-  - Example:  
-    `npx tsx src/scripts/baseEmpreinte/getEmissionFactors.ts -f src/scripts/baseEmpreinte/Base_Carbone_V23.7.csv -n 23.7`
-  - For multiple scripts in PowerShell, use `;` to chain commands.
-- **Environment**:
-  - Environment variables in `.env` (see comments for staging/production/test URLs).
-  - Use correct `POSTGRES_PRISMA_URL` for your environment.
+Run from repo root unless specified:
+- Dev all: yarn dev
+- Dev BC only: yarn dev:bc
+- Dev MIP only: yarn dev:mip
+- Lint: yarn lint
+- Typecheck: yarn ts
+- Tests: yarn test
+- App-local tests: (cd apps/bilan-carbone && yarn test) or (cd apps/mip && yarn test)
 
-## Project-Specific Patterns
+## Core Conventions
 
-- **Prisma Usage**:
-  - Raw SQL queries use `Prisma.sql` and are only passed to `$queryRaw` for SELECTs.
-  - All mutations (INSERT/UPDATE/DELETE) use Prisma model methods, not raw SQL.
-  - **Never modify already-applied Prisma migrations.** If a schema change is needed (e.g., moving triggers/functions to a new schema), create a new migration instead of editing existing ones.
-- **Feature Folders**:
-  - UI and logic are grouped by feature (e.g., `src/components/emissionFactor/`, `src/app/(dashboard)/`).
-- **Metadata Handling**:
-  - Emission factors and their metadata are always joined and filtered by locale.
-  - See `src/db/emissionFactors.ts` for query patterns.
-- **Custom Units**:
-  - Custom units are handled via the `customUnit` field and `setEmissionFactorUnitAsCustom` function.
-- **Authorization / Permissions**:
-  - All authorization logic must be extracted to `src/services/permissions/` (not inlined in server functions).
-  - Permission helper functions should type their inputs with only the fields they actually use, not full Prisma relation types (e.g., `{ contributors: Array<{ accountId: string }> }` instead of `Pick<FullStudy, 'contributors'>`).
-  - Always add a `console.error()` with contextual details (function name, relevant IDs) immediately before every `throw new Error(NOT_AUTHORIZED)`, so authorization failures are traceable in server logs.
+- TypeScript strict typing everywhere. Avoid unknown chains and double casting.
+- Async server/data flows use async/await.
+- User-facing text must be localized with next-intl.
+- No leading semicolons. Use project prettier style.
+- Keep logic in the right layer: permissions in services/permissions, not inline in route/server handlers.
 
-## Integration Points
+## Prisma Rules
 
-- **External APIs**:
-  - INSEE, Association Service, PDF Service, etc. (see `.env` for URLs and secrets).
-- **Mail**:
-  - Configured via `.env` for different environments.
-- **FTP**:
-  - Used for file exports/imports, credentials in `.env`.
+- Use Prisma model methods for mutations (insert/update/delete).
+- Raw SQL is select-only via Prisma.sql + $queryRaw.
+- Never edit already applied migrations. Create a new migration.
 
-## Conventions
+## React / Next.js Rules
 
-- **TypeScript everywhere**; strict typing for all models and API responses. Avoid `unknown` and `as unknown as` casts — define proper named types instead (e.g. a `UserImportRecord` type instead of `Record<string, string>` when fields have mixed types).
-- **Constants and enums** are centralized in `src/constants/`.
-- **Async data flows**: All DB/service calls are async/await.
-- **Localization**: All user-facing data is filtered by `locale`.
-- **No leading semicolons**: Do not use semicolons at the start of lines (e.g., `;(mock as jest.Mock)`). The project uses `"semi": false` in Prettier. For mocking in Jest, use `jest.mocked(fn)` to type mock functions instead of casting with leading semicolons.
-- **PR descriptions**: Always write PR descriptions that describe all changes made in the entire PR, not just the latest commit. Include every functional change, test addition, refactor, and convention update.
+- Default to Server Components. Use client components only when hooks/browser APIs are needed.
+- Avoid useEffect for server-loadable data.
+- For localStorage or URL-derived initial client state, use lazy useState initialization.
+- Use arrow function components, including route page components and section components.
 
-## Best Practices
+## Styling Rules
 
-### React & Next.js
+- No inline style and no MUI sx prop in app code.
+- Use CSS modules for local styles.
+- Prefer shared utility classes from packages/css/style first.
+- Use classNames when composing global utilities with module classes.
+- Use shared color CSS variables (no hardcoded hex, no white/#fff literals).
+- Keep typography consistent with project theme conventions.
 
-- **Server Components First**: Pages should be server components by default. Use `await params` instead of `React.use(params)` in page components.
-- **Avoid useEffect for Data Loading**: Load data server-side rather than in useEffect. This is an anti-pattern in React 19.
-- **Client-Side Initialization**: For client-side state that reads from localStorage or URL params, use `useState` with a lazy initializer (`useState(() => computeInitialValue())`) instead of `useEffect`. This is the React 19 recommended approach.
-- **Client Components**: Only use `'use client'` when you need hooks, event handlers, or browser APIs.
-- **Component Naming**: Page files export a component matching the route purpose (e.g., `SurveyPage` for a survey page route).
-- **Arrow Function Components**: Always define React components using arrow function syntax (`const MyComponent = () => {}`), not the `function` keyword (`function MyComponent() {}`). This applies to all components including section sub-components.
+## Code Organization
 
-### Styling
+- One component per file.
+- Group by feature folder.
+- Do not add app-local empty re-export files.
+- Before creating app-local types/components, check if it belongs in shared packages.
+- Survey reusable UI/types should live in shared packages and be imported from there.
 
-- **No Inline Styles or sx Prop**: Never use inline `style` attributes or MUI's `sx` prop. Use CSS modules (`.module.css`) instead.
-- **Typography**: Use Gilroy font family (`gilroy-regular, sans-serif`) consistently across all apps.
-- **Theme Consistency**: Follow the base theme patterns from `apps/bilan-carbone/src/environments/base/theme/theme.ts`.
-- **MUI Component Props**: Use `slotProps` instead of the deprecated `inputProps`. For example, use `slotProps={{ htmlInput: { maxLength: 100 } }}` on a `TextField`.
-- **Colors via CSS Variables**: Never use hardcoded color hex values in CSS module files. Always use CSS custom properties defined in `packages/css/style/colors.css` (e.g., `var(--info)`, `var(--primary)`, `var(--neutral-50)`, `var(--warning)`). For colors not in the shared palette, use `color-mix()` to derive tints from existing variables.
-- **No `white` / `#fff` literals**: Do not use `white`, `#fff`, or `#ffffff` directly in CSS modules. Always use a token from `packages/css/style/colors.css` (e.g., `var(--white)`).
-- **Global CSS Classes**: Prefer global utility classes (e.g., `flex`, `flex-col`, `mb2`, `mb1`, `gapped1`, `p125`, `bold`) over per-component CSS module rules for layout and spacing where possible.
+## Tooling Rules
 
-### Code Organization
+- Root prettier/eslint/tsconfig base are canonical.
+- Do not add per-app prettier configs.
+- Keep app tsconfig focused on app-specific overrides only.
+- Keep README footprint minimal:
+  - root README.md
+  - apps/bilan-carbone/README.md
+  - apps/mip/README.md
 
-- **Separate Components**: Each component should be in its own file. Avoid multiple component definitions in a single file.
-- **Feature Folders**: Group related components by feature (e.g., `src/components/survey/`).
-- **No Empty Re-export Files**: Do not create app-local files that only re-export from a shared package (e.g., `types/translation.ts` that just re-exports from `@abc-transitionbascarbone/lib`). Instead, import directly from the shared package (`@abc-transitionbascarbone/lib`, `@abc-transitionbascarbone/typeguards`, etc.).
-- **Shared Packages First**: Before creating a new file in an app (e.g., `types/survey.ts`, component files), check if an equivalent already exists in the packages/ directory. If not and the logic is reusable across apps, add it to the appropriate package.
-- **Survey Components**: MIP survey input components live in `packages/components/src/survey/`. MIP survey types live in `packages/typeguards/question.ts`. Import from `@abc-transitionbascarbone/components` and `@abc-transitionbascarbone/typeguards`.
-- **Limit Comments**: Avoid unnecessary comments. Code should be self-documenting. Only add comments for:
-  - Complex business logic that isn't obvious from the code
-  - Non-obvious technical decisions or workarounds
-  - Public API documentation (JSDoc for exported functions/types)
-  - DO NOT add simple descriptive comments like `// Text Question Input Component` or `// Progress Bar`
-  - DO NOT add file/module-level JSDoc block comments (e.g., `/** Sample Survey Configuration */`)
+## Authorization Logging Requirement
 
-### Tooling
+Immediately before each throw new Error(NOT_AUTHORIZED), add console.error with contextual identifiers (function name + relevant IDs).
 
-- **Prettier**: A single `.prettierrc.json` and `.prettierignore` at the monorepo root are the canonical configs. Do not add per-app prettier config or ignore files.
-- **ESLint**: Shared rules are defined in `eslint.config.base.mjs` at the monorepo root. Each app's `eslint.config.mjs` imports `sharedRules` and `dtsOverride` from the root base and adds only Next.js-specific extends on top. Ideally, only the root config should exist.
-- **TypeScript**: `tsconfig.base.json` at the monorepo root is the canonical config with all common compiler options. App-level `tsconfig.json` files should only extend it and add app-specific overrides (Next.js plugin, `paths`, `include`/`exclude`). Do not duplicate base options in app configs.
-- **READMEs**: Only 3 README files should exist: one at the monorepo root, one in `apps/bilan-carbone/`, and one in `apps/mip/`. Do not add READMEs to packages.
-- **.notes Folder**: The `.notes` folder is in `.gitignore` to allow local AI notes without committing them. Do not commit anything in `.notes`.
+## Review Behavior
 
-### Internationalization
+When implementing review feedback:
+- Apply requested code changes.
+- Do not post replies to human peer review comments.
 
-- **Use Translations**: All user-facing strings should use the i18n system (next-intl), not hardcoded text.
-- **Translation Pattern**: Use `useTranslations('namespace')` in client components, `getTranslations('namespace')` in server components.
-- **Translation Files**: Store translations in `src/i18n/translations/{locale}/{namespace}.json`.
+## Important Locations
 
-## AI Behaviour in Code Review
-
-- **Do not reply to human peer review comments**: When implementing changes based on review feedback, apply the code changes but do not post replies to human review threads. Only humans communicate with humans in peer review.
-
-## Key Files & Directories
-
-- `src/db/emissionFactors.ts`: Main DB logic for emission factors.
-- `prisma/schema/`: Database schema definitions.
-- `src/components/`: UI components, grouped by feature.
-- `src/app/api/`: API endpoints.
-- `.env`: Environment configuration.
-
----
-
-For more details, see the [README.md](../README.md) and comments in relevant files.
-
----
-
-**Feedback Requested:**  
-Please indicate if any workflows, conventions, or integration points are unclear or missing. Specify any domain-specific logic or patterns that should be documented for future AI agents.
+- apps/bilan-carbone/src/db/emissionFactors.ts
+- packages/db-common/prisma/schema
+- apps/*/src/components
+- apps/*/src/app/api
+- .env

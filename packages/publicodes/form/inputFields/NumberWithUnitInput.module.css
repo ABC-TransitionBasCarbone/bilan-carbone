@@ -1,5 +1,4 @@
 .inputWrapper {
-  max-width: fit-content;
   min-width: 8rem;
 }
 
@@ -15,9 +14,6 @@
 }
 
 .suggestions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
   margin-top: 0.75rem;
 }
 
@@ -27,7 +23,6 @@
   border-radius: 1rem;
   padding: 0.25rem 0.875rem;
   font-size: 0.875rem;
-  cursor: pointer;
   color: var(--info);
   transition: background-color 0.15s;
 }
@@ -35,4 +30,3 @@
 .suggestionChip:hover {
   background-color: var(--primary-200);
 }
-

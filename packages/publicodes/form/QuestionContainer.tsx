@@ -2,6 +2,7 @@
 
 import { InfoOutlined } from '@mui/icons-material'
 import { Box, IconButton } from '@mui/material'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import {
@@ -25,7 +26,7 @@ const QuestionContainer = ({ label, description, children }: QuestionContainerPr
   return (
     <StyledQuestionContainer>
       <StyledQuestionHeader>
-        <Box className="align-center gapped1">
+        <Box className={classNames('align-center', 'gapped1')}>
           <StyledQuestionTitle>{label}</StyledQuestionTitle>
         </Box>
         {description && (
@@ -43,7 +44,11 @@ const QuestionContainer = ({ label, description, children }: QuestionContainerPr
       {description && isDescriptionOpen && (
         <div className={styles.descriptionBubble}>
           <p className={styles.descriptionText}>{description}</p>
-          <button type="button" className={styles.closeButton} onClick={() => setIsDescriptionOpen(false)}>
+          <button
+            type="button"
+            className={classNames(styles.closeButton, 'pointer')}
+            onClick={() => setIsDescriptionOpen(false)}
+          >
             {t('action.close')}
           </button>
         </div>
