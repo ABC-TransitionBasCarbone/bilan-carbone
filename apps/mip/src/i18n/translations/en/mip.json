@@ -18,7 +18,42 @@
       "restart": "Restart"
     },
     "resume": "Resume survey",
-    "characterCount": "{current} / {max} characters"
+    "characterCount": "{current} / {max} characters",
+    "completion": {
+      "title": "My work-related footprint",
+      "unit": "kg CO₂e",
+      "loadingState": "Loading your results...",
+      "headlineDescription": "Your highest emission categories and the most effective actions to reduce them.",
+      "kgUnit": "kg",
+      "target": "2050 target: 2 tCO₂e",
+      "ofFootprint": "of your footprint",
+      "actions": {
+        "title": "Take action",
+        "keyTab": "Key actions",
+        "libraryTab": "Full library",
+        "noActions": "No actions are available for this category yet.",
+        "available": "actions"
+      },
+      "topCategories": {
+        "title": "My main emission categories"
+      },
+      "summary": {
+        "title": "My footprint details",
+        "subPosts": "Sub-categories"
+      },
+      "faq": {
+        "alone": {
+          "question": "Can I do it all on my own?",
+          "answer": "No. The ecological transition is a collective effort. The State, local authorities and companies all have a key role. Individual actions still matter to lead by example and accelerate change."
+        },
+        "start": {
+          "question": "Where should I start?",
+          "answer": "Focus on your two or three biggest emission sources first. High-impact actions usually reduce car travel, improve food habits, and avoid unnecessary digital purchases."
+        }
+      },
+      "restart": "Restart survey",
+      "adminResults": "View admin results"
+    }
   },
   "email": {
     "subject": {

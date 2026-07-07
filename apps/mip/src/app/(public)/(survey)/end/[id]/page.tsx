@@ -1,12 +1,13 @@
 'use server'
-import SurveyClient from '@/components/survey/SurveyClient'
+
+import SurveyCompletion from '@/components/survey/SurveyCompletion'
 import { getCampaignById } from '@/db/campaign'
 import { RawRules } from '@/publicodes/mip-engine'
 import { MipPublicodesProvider } from '@/publicodes/MipPublicodesProvider'
 import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 import { CampaignStatus } from '@abc-transitionbascarbone/db-common/enums'
 
-export default async function SurveyPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function SurveyEndPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
 
   const campaign = await getCampaignById(id)
@@ -16,7 +17,7 @@ export default async function SurveyPage({ params }: { params: Promise<{ id: str
 
   return (
     <MipPublicodesProvider model={campaign.modelCampaign.model as RawRules}>
-      <SurveyClient surveyId={id} model={campaign.modelCampaign.model as RawRules} />
+      <SurveyCompletion surveyId={id} model={campaign.modelCampaign.model as RawRules} restoreFromStorage />
     </MipPublicodesProvider>
   )
 }

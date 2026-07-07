@@ -22,14 +22,24 @@
     "completion": {
       "title": "Mon empreinte professionnelle",
       "unit": "kg de CO₂e",
+      "loadingState": "Chargement de vos résultats...",
+      "headlineDescription": "Vos principaux postes d'émissions et les actions les plus efficaces pour les réduire.",
       "kgUnit": "kg",
       "target": "Objectif 2050 : 2 tCO₂e",
       "ofFootprint": "de votre empreinte",
+      "actions": {
+        "title": "Passer à l'action",
+        "keyTab": "Actions clés",
+        "libraryTab": "Toutes les actions",
+        "noActions": "Aucune action disponible sur ce poste pour le moment.",
+        "available": "actions"
+      },
       "topCategories": {
         "title": "Mes principaux postes d'émissions"
       },
       "summary": {
-        "title": "Le détail de mon empreinte"
+        "title": "Le détail de mon empreinte",
+        "subPosts": "Sous-postes"
       },
       "faq": {
         "alone": {
@@ -42,7 +52,7 @@
         }
       },
       "restart": "Recommencer le sondage",
-      "adminResults": "Voir les resultats administrateurs"
+      "adminResults": "Voir les résultats administrateurs"
     }
   },
   "study": {
