@@ -30,23 +30,8 @@ const NumberWithUnitInput = <RuleName extends string>({
 
   return (
     <div>
-      <NumberField.Root
-        className={classNames(styles.inputWrapper, 'wfit')}
-        value={localValue}
-        onFocus={handleFocus}
-        onValueChange={handleValueChange}
-        onValueCommitted={handleValueCommitted}
-        disabled={isDisabled}
-      >
-        <NumberField.Input
-          className={styles.input}
-          render={
-            <OutlinedInput endAdornment={unit ? <InputAdornment position="end">{unit}</InputAdornment> : undefined} />
-          }
-        />
-      </NumberField.Root>
       {suggestionEntries.length > 0 && (
-        <div className={classNames('flex', 'wrap', 'gapped-2', styles.suggestions)}>
+        <div className={classNames('flex', 'wrap', 'gapped-2', 'pb-2', styles.suggestions)}>
           {suggestionEntries.map(([label, value]) => (
             <button
               key={label}
@@ -62,6 +47,21 @@ const NumberWithUnitInput = <RuleName extends string>({
           ))}
         </div>
       )}
+      <NumberField.Root
+        className={classNames(styles.inputWrapper, 'wfit')}
+        value={localValue}
+        onFocus={handleFocus}
+        onValueChange={handleValueChange}
+        onValueCommitted={handleValueCommitted}
+        disabled={isDisabled}
+      >
+        <NumberField.Input
+          className={styles.input}
+          render={
+            <OutlinedInput endAdornment={unit ? <InputAdornment position="end">{unit}</InputAdornment> : undefined} />
+          }
+        />
+      </NumberField.Root>
     </div>
   )
 }

@@ -1,35 +1,22 @@
 .container {
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+  padding-bottom: 5rem;
 }
-.header {
-  margin-bottom: 1.5rem;
-}
-.progress {
-  margin-bottom: 1.5rem;
-}
-.progressLabels {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.25rem;
-}
-.questionCard {
-  margin-bottom: 1.5rem;
-}
-.questionLabel {
-  margin-bottom: 1rem;
-}
+
 .navigation {
-  display: flex;
-  justify-content: space-between;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--background-color, #fff);
+  border-top: 1px solid var(--border-color, #e0e0e0);
+  z-index: 100;
 }
+
 .completedContent {
   text-align: center;
-  padding-top: 2rem;
-  padding-bottom: 2rem;
 }
+
 .checkIcon {
   font-size: 5rem !important;
   color: var(--success);
-  margin-bottom: 1rem;
 }
