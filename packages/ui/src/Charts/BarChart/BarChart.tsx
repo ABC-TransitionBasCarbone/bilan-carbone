@@ -53,7 +53,7 @@ const BarChart = <T extends BasicTypeCharts>({
     if (!showLabelsOnBars || !item.value) {
       return ''
     }
-    return formatNumber(item.value)
+    return formatNumber(item.value, 1)
   }
 
   return (

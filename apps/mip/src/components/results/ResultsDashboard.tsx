@@ -43,7 +43,7 @@ const ResultsDashboard = ({ results, model }: Props) => {
     {
       post: 'total-limit',
       label: t('charts.totalLimitColumn'),
-      value: 2000,
+      value: pieChartItems.reduce((acc, c) => acc + c.value, 0),
       color: CATEGORY_COLORS.total,
       children: [],
     } as BasicTypeCharts,
