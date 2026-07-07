@@ -86,7 +86,9 @@ const SurveyCompletion = ({ onRestart, surveyId, model, restoreFromStorage = fal
   const [activeTab, setActiveTab] = useState<'keyActions' | 'library'>('keyActions')
 
   useState(() => {
-    if (!restoreFromStorage) return
+    if (!restoreFromStorage) {
+      return
+    }
     const savedState = loadSurveyState<StoredSurveyState>(surveyId)
     if (hasStoredSituation(savedState)) {
       engine.setSituation(savedState.situation)
