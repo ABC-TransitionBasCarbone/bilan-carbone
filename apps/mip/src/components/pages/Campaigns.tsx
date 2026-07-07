@@ -3,7 +3,7 @@
 import { CampaignsWithResponses, ModelCampaignLight } from '@/db/campaign'
 import { updateCampaignCommand } from '@/services/serverFunctions/campaign'
 import { UpdateCampaignCommand, UpdateCampaignCommandValidation } from '@/services/serverFunctions/campaign.command'
-import { handleCopy, handleDownloadJson } from '@/utils/campaign'
+import { handleCopy } from '@/utils/campaign'
 import { Table as BaseTable } from '@abc-transitionbascarbone/components'
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import Form from '@abc-transitionbascarbone/components/src/base/Form'
@@ -17,7 +17,7 @@ import { CampaignStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { Button, useToast } from '@abc-transitionbascarbone/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import CopyIcon from '@mui/icons-material/ContentCopy'
-import DownloadIcon from '@mui/icons-material/Download'
+import BarChartIcon from '@mui/icons-material/BarChart'
 import { MenuItem } from '@mui/material'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
@@ -118,11 +118,11 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
           ),
         },
         {
-          id: 'download',
-          header: () => t('json'),
+          id: 'results',
+          header: () => t('viewResults'),
           cell: ({ row }) => (
-            <LinkButton onClick={() => handleDownloadJson(row.original.name, modelCampaign?.model)}>
-              <DownloadIcon />
+            <LinkButton href={`/survey/${row.original.id}/results`} target="_blank" rel="noopener noreferrer">
+              <BarChartIcon />
             </LinkButton>
           ),
         },
