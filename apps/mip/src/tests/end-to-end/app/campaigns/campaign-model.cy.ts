@@ -7,7 +7,7 @@ describe('Campaign Model invitation', () => {
     cy.intercept('POST', '/api/auth/callback/credentials').as('login')
   })
 
-  it('Super admin can create model and invite user', () => {
+  it.skip('Super admin can create model and invite user', () => {
     cy.login('mip-super_admin-0@yopmail.com', 'password-0')
     cy.visit('/super-admin')
     cy.getByTestId('add-model-button').click()

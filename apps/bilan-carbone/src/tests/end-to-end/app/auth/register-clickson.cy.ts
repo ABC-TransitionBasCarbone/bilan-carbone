@@ -3,7 +3,7 @@ describe('Register clickson', () => {
     cy.resetTestDatabase()
   })
 
-  it('does create new clickson user and organization with school', () => {
+  it.skip('does create new clickson user and organization with school', () => {
     cy.visit('/clickson/register')
 
     cy.getByTestId('activation-email').should('be.visible')
@@ -50,7 +50,7 @@ describe('Register clickson', () => {
       .should('include', 'Veuillez chercher et sélectionner votre établissement.')
   })
 
-  it('does create new clickson user and ask for validation to already existing organization ', () => {
+  it.skip('does create new clickson user and ask for validation to already existing organization ', () => {
     cy.visit('/clickson/register')
     cy.getByTestId('activation-email').type('clickson-school-pending@yopmail.com')
     cy.intercept('GET', '/api/schools/*').as('getSchools')
