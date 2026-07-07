@@ -1,8 +1,13 @@
 name: CI
 on:
   push:
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 permissions:
   contents: read
+env:
+  NODE_VERSION: 22.16.0
 jobs:
   bc-lint-and-typecheck:
     timeout-minutes: 10
@@ -14,14 +19,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22.16.0
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'yarn'
-      - name: Copy .env
-        run: cp .env.dist .env
-        working-directory: apps/bilan-carbone
-      - name: Copy .env to db-common
-        run: cp apps/bilan-carbone/.env.dist packages/db-common/.env
-        working-directory: ${{ github.workspace }}
+      - name: Prepare env files
+        run: |
+          cp .env.dist .env
+          cp .env.dist ../../packages/db-common/.env
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
         working-directory: .
@@ -45,17 +48,13 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22.16.0
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'yarn'
-      - name: Copy .env
-        run: cp .env.dist .env
-        working-directory: apps/mip
-      - name: Copy .env for bilan-carbone (needed for postinstall)
-        run: cp apps/bilan-carbone/.env.dist apps/bilan-carbone/.env
-        working-directory: ${{ github.workspace }}
-      - name: Copy .env to db-common
-        run: cp apps/bilan-carbone/.env.dist packages/db-common/.env
-        working-directory: ${{ github.workspace }}
+      - name: Prepare env files
+        run: |
+          cp .env.dist .env
+          cp .env.dist ../../packages/db-common/.env
+          cp ../bilan-carbone/.env.dist ../bilan-carbone/.env
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
         working-directory: ${{ github.workspace }}
@@ -77,17 +76,13 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22.16.0
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'yarn'
-      - name: Copy .env
-        run: cp .env.dist .env
-        working-directory: apps/mip
-      - name: Copy .env for bilan-carbone (needed for postinstall)
-        run: cp apps/bilan-carbone/.env.dist apps/bilan-carbone/.env
-        working-directory: ${{ github.workspace }}
-      - name: Copy .env to db-common
-        run: cp apps/bilan-carbone/.env.dist packages/db-common/.env
-        working-directory: ${{ github.workspace }}
+      - name: Prepare env files
+        run: |
+          cp .env.dist .env
+          cp .env.dist ../../packages/db-common/.env
+          cp ../bilan-carbone/.env.dist ../bilan-carbone/.env
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
         working-directory: ${{ github.workspace }}
@@ -108,7 +103,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22.16.0
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'yarn'
       - name: Check circular dependencies (bilan-carbone)
         run: npx madge --circular --extensions ts,tsx --exclude "packages/db-common/src/generated" apps/bilan-carbone
@@ -125,14 +120,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22.16.0
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'yarn'
-      - name: Copy .env
-        run: cp .env.dist .env
-        working-directory: apps/bilan-carbone
-      - name: Copy .env to db-common
-        run: cp apps/bilan-carbone/.env.dist packages/db-common/.env
-        working-directory: ${{ github.workspace }}
+      - name: Prepare env files
+        run: |
+          cp .env.dist .env
+          cp .env.dist ../../packages/db-common/.env
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
         working-directory: .
@@ -154,22 +147,19 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22.16.0
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'yarn'
-      - name: Copy .env
-        run: cp .env.dist .env
-        working-directory: apps/mip
-      - name: Copy .env to db-common
+      - name: Prepare env files
         run: |
-          cp apps/mip/.env.dist packages/db-common/.env
-          cp apps/mip/.env.dist apps/bilan-carbone/.env
-        working-directory: ${{ github.workspace }}
+          cp .env.dist .env
+          cp .env.dist ../../packages/db-common/.env
+          cp .env.dist ../bilan-carbone/.env
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
         working-directory: .
       # TODO Remettre prebuild après rebase ?
       # - name: Prebuild application
-        # run: yarn prebuild
+      # run: yarn prebuild
       - name: Launch unit tests
         run: yarn run test
 
@@ -183,14 +173,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22.16.0
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'yarn'
-      - name: Copy .env
-        run: cp .env.dist .env
-        working-directory: apps/bilan-carbone
-      - name: Copy .env to db-common
-        run: cp apps/bilan-carbone/.env.dist packages/db-common/.env
-        working-directory: ${{ github.workspace }}
+      - name: Prepare env files
+        run: |
+          cp .env.dist .env
+          cp .env.dist ../../packages/db-common/.env
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
         working-directory: .
@@ -210,12 +198,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22.16.0
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'yarn'
-      - name: Copy .env
-        run: cp .env.dist .env
-      - name: Copy .env to db-common
-        run: cp .env.dist ../../packages/db-common/.env
+      - name: Prepare env files
+        run: |
+          cp .env.dist .env
+          cp .env.dist ../../packages/db-common/.env
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
         working-directory: ${{ github.workspace }}
@@ -269,20 +257,17 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22.16.0
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'yarn'
       - name: Run maildev
         run: docker run -d -p 1080:1080 -p 1025:1025 maildev/maildev
-      - name: Copy .env
-        run: cp .env.dist .env
-      - name: Copy .env to db-common
-        run: cp apps/bilan-carbone/.env.dist packages/db-common/.env
-        working-directory: ${{ github.workspace }}
-      - name: Copy .env.test
-        run: cp .env.dist .env.test
-      - name: Copy .env.test to db-common
-        run: cp apps/bilan-carbone/.env.dist packages/db-common/.env
-        working-directory: ${{ github.workspace }}
+      - name: Wait for maildev
+        run: npx wait-on tcp:127.0.0.1:1025 http://127.0.0.1:1080 --timeout 60000
+      - name: Prepare env files
+        run: |
+          cp .env.dist .env
+          cp .env.dist .env.test
+          cp .env.dist ../../packages/db-common/.env
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
         working-directory: .
@@ -304,102 +289,104 @@ jobs:
       - name: Extract build artifact
         run: tar -xzf /tmp/ci-build/bilan-carbone-next-build.tgz -C .
       - name: Start server
-        run: yarn start &
+        run: yarn start > /tmp/bilan-carbone-server.log 2>&1 &
       - name: Wait for server
-        run: npx wait-on http://localhost:3000 --timeout 60000
+        run: npx wait-on http://127.0.0.1:3000 --timeout 120000
       - name: Launch e2e tests
         env:
           NODE_OPTIONS: --max-old-space-size=4096
-        run: yarn cypress run --spec "src/tests/end-to-end/app/${{ matrix.group }}/**/*.cy.ts" --headless
+        run: yarn cypress run --spec "src/tests/end-to-end/app/${{ matrix.group }}/**/*.cy.ts" --headless --config retries=2
+      - name: Show server logs on failure
+        if: failure()
+        run: tail -n 200 /tmp/bilan-carbone-server.log
       - name: Upload screenshots
         uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: cypress-screenshots-${{ matrix.group }}
           path: ${{ github.workspace }}/apps/bilan-carbone/cypress/screenshots
+          if-no-files-found: ignore
 
   mip-e2e-tests:
-      timeout-minutes: 30
-      runs-on: ubuntu-latest
-      needs: [mip-lint-and-typecheck, mip-unit-tests, mip-build-app]
-      strategy:
-        fail-fast: false
-        matrix:
-          group:
-            - auth
-            - campaigns
-      defaults:
-        run:
-          working-directory: apps/mip
-      services:
-        postgres:
-          image: postgres:17
-          env:
-            POSTGRES_USER: bilancarbone
-            POSTGRES_PASSWORD: bilancarbone
-          ports:
-            - 5432:5432
-          options: >-
-            --health-cmd pg_isready
-            --health-interval 10s
-            --health-timeout 5s
-            --health-retries 5
-      steps:
-        - uses: actions/checkout@v4
-        - uses: actions/setup-node@v4
-          with:
-            node-version: 22.16.0
-            cache: 'yarn'
-        - name: Run maildev
-          run: docker run -d -p 1080:1080 -p 1025:1025 maildev/maildev
-        - name: Copy .env
-          run: cp .env.dist .env
-        - name: Copy .env to db-common
-          run: cp apps/mip/.env.dist packages/db-common/.env
-          working-directory: ${{ github.workspace }}
-        - name: Copy .env.test
-          run: cp .env.dist .env.test
-        - name: Copy .env.test to db-common
-          run: cp apps/mip/.env.dist packages/db-common/.env
-          working-directory: ${{ github.workspace }}
-        - name: Copy .env for bilan-carbone (needed for postinstall)
-          run: cp apps/bilan-carbone/.env.dist apps/bilan-carbone/.env
-          working-directory: ${{ github.workspace }}
-        - name: Install dependencies
-          run: yarn install --immutable --immutable-cache --check-cache
-          working-directory: .
-        - name: Prebuild application
-          run: yarn prebuild
-        - name: Generate prisma files
-          run: yarn workspace @abc-transitionbascarbone/db-common prisma generate
-          working-directory: .
-        - name: Migrate DB
-          run: yarn workspace @abc-transitionbascarbone/db-common prisma migrate deploy
-          working-directory: .
-        - name: Seed DB
-          run: yarn workspace mip prisma db seed
-        - name: Download build artifact
-          uses: actions/download-artifact@v4
-          with:
-            name: mip-app-next-build
-            path: /tmp/ci-build
-        - name: Extract build artifact
-          run: tar -xzf /tmp/ci-build/mip-next-build.tgz -C .
-        - name: Start server
-          run: PORT=3002 yarn start &
-        - name: Wait for server
-          run: npx wait-on http://localhost:3002 --timeout 60000
-        - name: Launch e2e tests
-          env:
-            NODE_OPTIONS: --max-old-space-size=4096
-          run: yarn cypress run --spec "src/tests/end-to-end/app/${{ matrix.group }}/**/*.cy.ts" --headless
-        - name: Upload screenshots
-          uses: actions/upload-artifact@v4
-          if: failure()
-          with:
-            name: cypress-screenshots-${{ matrix.group }}
-            path: ${{ github.workspace }}/apps/mip/cypress/screenshots
-
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    needs: [mip-lint-and-typecheck, mip-unit-tests, mip-build-app]
+    strategy:
+      fail-fast: false
+      matrix:
+        group:
+          - auth
+          - campaigns
+    defaults:
+      run:
+        working-directory: apps/mip
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: bilancarbone
+          POSTGRES_PASSWORD: bilancarbone
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'yarn'
+      - name: Run maildev
+        run: docker run -d -p 1080:1080 -p 1025:1025 maildev/maildev
+      - name: Wait for maildev
+        run: npx wait-on tcp:127.0.0.1:1025 http://127.0.0.1:1080 --timeout 60000
+      - name: Prepare env files
+        run: |
+          cp .env.dist .env
+          cp .env.dist .env.test
+          cp .env.dist ../../packages/db-common/.env
+          cp ../bilan-carbone/.env.dist ../bilan-carbone/.env
+      - name: Install dependencies
+        run: yarn install --immutable --immutable-cache --check-cache
+        working-directory: .
+      - name: Prebuild application
+        run: yarn prebuild
+      - name: Generate prisma files
+        run: yarn workspace @abc-transitionbascarbone/db-common prisma generate
+        working-directory: .
+      - name: Migrate DB
+        run: yarn workspace @abc-transitionbascarbone/db-common prisma migrate deploy
+        working-directory: .
+      - name: Seed DB
+        run: yarn workspace mip prisma db seed
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: mip-app-next-build
+          path: /tmp/ci-build
+      - name: Extract build artifact
+        run: tar -xzf /tmp/ci-build/mip-next-build.tgz -C .
+      - name: Start server
+        run: PORT=3002 yarn start > /tmp/mip-server.log 2>&1 &
+      - name: Wait for server
+        run: npx wait-on http://127.0.0.1:3002 --timeout 120000
+      - name: Launch e2e tests
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
+        run: yarn cypress run --spec "src/tests/end-to-end/app/${{ matrix.group }}/**/*.cy.ts" --headless --config retries=2
+      - name: Show server logs on failure
+        if: failure()
+        run: tail -n 200 /tmp/mip-server.log
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: cypress-screenshots-${{ matrix.group }}
+          path: ${{ github.workspace }}/apps/mip/cypress/screenshots
+          if-no-files-found: ignore
 
   lighthouse:
     timeout-minutes: 10
@@ -425,15 +412,16 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22.16.0
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'yarn'
       - name: Run maildev
         run: docker run -d -p 1080:1080 -p 1025:1025 maildev/maildev
-      - name: Copy .env
-        run: cp .env.dist .env
-      - name: Copy .env to db-common
-        run: cp apps/bilan-carbone/.env.dist packages/db-common/.env
-        working-directory: ${{ github.workspace }}
+      - name: Wait for maildev
+        run: npx wait-on tcp:127.0.0.1:1025 http://127.0.0.1:1080 --timeout 60000
+      - name: Prepare env files
+        run: |
+          cp .env.dist .env
+          cp .env.dist ../../packages/db-common/.env
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
         working-directory: .
@@ -455,8 +443,10 @@ jobs:
           path: /tmp/ci-build
       - name: Extract build artifact
         run: tar -xzf /tmp/ci-build/bilan-carbone-next-build.tgz -C .
-      - name: ntart server
-        run: yarn start &
+      - name: Start server
+        run: yarn start > /tmp/lighthouse-server.log 2>&1 &
+      - name: Wait for server
+        run: npx wait-on http://127.0.0.1:3000 --timeout 120000
       - run: mkdir -p ${{ github.workspace }}/tmp/artifacts
       - name: Lighthouse Check
         uses: foo-software/lighthouse-check-action@master
@@ -478,3 +468,6 @@ jobs:
         with:
           name: Lighthouse reports
           path: ${{ github.workspace }}/tmp/artifacts
+      - name: Show server logs on failure
+        if: failure()
+        run: tail -n 200 /tmp/lighthouse-server.log

@@ -1,12 +1,10 @@
 describe('Register clickson', () => {
-  const uniqueClicksonEmail = `clickson-school-${Date.now()}@yopmail.com`
-  const uniqueClicksonPendingEmail = `clickson-pending-${Date.now()}@yopmail.com`
-
   before(() => {
     cy.resetTestDatabase()
   })
 
   it('does create new clickson user and organization with school', () => {
+    const uniqueClicksonEmail = `clickson-school-${Date.now()}-${Cypress._.random(1000, 9999)}@yopmail.com`
     cy.visit('/clickson/register')
 
     cy.getByTestId('activation-email').should('be.visible')
@@ -54,6 +52,7 @@ describe('Register clickson', () => {
   })
 
   it('does create new clickson user and ask for validation to already existing organization ', () => {
+    const uniqueClicksonPendingEmail = `clickson-pending-${Date.now()}-${Cypress._.random(1000, 9999)}@yopmail.com`
     cy.visit('/clickson/register')
     cy.getByTestId('activation-email').type(uniqueClicksonPendingEmail)
     cy.intercept('GET', '/api/schools/*').as('getSchools')

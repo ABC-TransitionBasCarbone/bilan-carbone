@@ -1,8 +1,6 @@
 import { Role } from '@abc-transitionbascarbone/db-common/enums'
 
 describe('Team', () => {
-  const invitedMemberEmail = `user-test-${Date.now()}@test.fr`
-
   before(() => {
     cy.resetTestDatabase()
   })
@@ -128,6 +126,7 @@ describe('Team', () => {
   })
 
   it('should add a new member', () => {
+    const invitedMemberEmail = `user-test-${Date.now()}-${Cypress._.random(1000, 9999)}@test.fr`
     cy.login('bc-admin-1@yopmail.com', 'password-1')
     cy.visit('/equipe')
 
