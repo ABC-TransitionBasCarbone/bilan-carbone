@@ -16,9 +16,9 @@ export function InputQuestion<RuleName extends string>({ formElement, onChange, 
   const translation = usePublicodesRuleTranslation(formElement.id)
   const question = translation?.question
 
-  const rawNode = engine?.getParsedRules()[formElement.id]?.rawNode
-  const description = rawNode?.description ?? translation?.description
-  const rawSuggestions = rawNode?.suggestions
+  const publicodeRules = engine?.getParsedRules()[formElement.id]?.rawNode
+  const description = publicodeRules?.description ?? translation?.description
+  const rawSuggestions = publicodeRules?.suggestions
   const suggestions = rawSuggestions
     ? Object.fromEntries(
       Object.entries(rawSuggestions).filter((entry): entry is [string, number] => typeof entry[1] === 'number'),
