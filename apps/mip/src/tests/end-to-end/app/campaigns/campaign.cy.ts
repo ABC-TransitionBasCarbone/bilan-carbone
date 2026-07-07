@@ -19,9 +19,7 @@ describe('Campaign creation', () => {
     cy.login('mip-collaborator-0@yopmail.com', 'password-0')
     cy.visit('/campaigns')
     cy.getByTestId('add-campaign-button').click()
-    cy.get('[data-testid^="input-name-"]')
-      .last()
-      .type('New campaign collaborator')
+    cy.get('[data-testid^="input-name-"]').last().type('New campaign collaborator')
     cy.getByTestId('validate-campaign-update').click()
   })
 
