@@ -1,10 +1,13 @@
 describe('Register cut', () => {
+  const uniqueCutEmail = `cut-cnc-${Date.now()}@yopmail.com`
+  const uniqueCutPendingEmail = `cut-pending-${Date.now()}@yopmail.com`
+
   before(() => {
     cy.resetTestDatabase()
   })
 
   it('does create new cut user and organization with CNC', () => {
-    cy.signupCut('cut-cnc@yopmail.com', '1321')
+    cy.signupCut(uniqueCutEmail, '1321')
 
     cy.wait('@signupCut')
 
@@ -64,7 +67,7 @@ describe('Register cut', () => {
   })
 
   it('does create new cut user and ask for validation to already existing organization ', () => {
-    cy.signupCut('cut-pending@yopmail.com', '1234567891234')
+    cy.signupCut(uniqueCutPendingEmail, '1234567891234')
 
     cy.getByTestId('activation-form-message').should('be.visible')
     cy.getByTestId('activation-form-message')

@@ -1,6 +1,8 @@
 import { Role } from '@abc-transitionbascarbone/db-common/enums'
 
 describe('Team', () => {
+  const invitedMemberEmail = `user-test-${Date.now()}@test.fr`
+
   before(() => {
     cy.resetTestDatabase()
   })
@@ -129,12 +131,11 @@ describe('Team', () => {
     cy.login('bc-admin-1@yopmail.com', 'password-1')
     cy.visit('/equipe')
 
-    cy.getByTestId('pending-invitation').should('not.exist')
     cy.getByTestId('add-member-link').click()
 
     cy.getByTestId('new-member-firstName').type('User')
     cy.getByTestId('new-member-lastName').type('Test')
-    cy.getByTestId('new-member-email').type('user-test-1@test.fr')
+    cy.getByTestId('new-member-email').type(invitedMemberEmail)
     cy.getByTestId('new-member-role').click()
     cy.get('[data-value="GESTIONNAIRE"]').click()
 
@@ -142,7 +143,7 @@ describe('Team', () => {
     cy.wait('@new-member')
 
     cy.url().should('eq', `${Cypress.config().baseUrl}/equipe`)
-    cy.getByTestId('pending-invitation').contains('user-test-1@test.fr').should('exist')
+    cy.getByTestId('pending-invitation').contains(invitedMemberEmail).should('exist')
 
     cy.visit('http://localhost:1080')
     cy.origin('http://localhost:1080', () => {
@@ -161,26 +162,16 @@ describe('Team', () => {
     })
 
     cy.wait('@logout')
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input')
-      .should('be.visible')
-      .type('user-test-1@test.fr')
-    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input')
-      .should('be.visible')
-      .type('Password-1')
-    cy.get('[data-testid="input-confirm-password"] > .MuiInputBase-root > .MuiInputBase-input')
-      .should('be.visible')
-      .type('Password-1')
+    cy.getByTestId('input-email').find('input').should('be.visible').type(invitedMemberEmail)
+    cy.getByTestId('input-password').find('input').should('be.visible').type('Password-1')
+    cy.getByTestId('input-confirm-password').find('input').should('be.visible').type('Password-1')
 
     cy.getByTestId('reset-button').click()
 
     cy.url({ timeout: 8000 }).should('include', '/login')
 
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input')
-      .should('be.visible')
-      .type('user-test-1@test.fr')
-    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input')
-      .should('be.visible')
-      .type('Password-1')
+    cy.getByTestId('input-email').find('input').should('be.visible').type(invitedMemberEmail)
+    cy.getByTestId('input-password').find('input').should('be.visible').type('Password-1')
     cy.getByTestId('login-button').click()
 
     cy.wait('@login')

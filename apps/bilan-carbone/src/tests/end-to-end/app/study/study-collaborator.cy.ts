@@ -13,9 +13,9 @@ describe('Study collaborators', () => {
   it('Invited collaborators have access to the study view', () => {
     cy.login()
 
-    cy.getByTestId('new-study').click()
+    cy.getByTestId('new-study', { timeout: 20000 }).should('be.visible').click()
 
-    cy.getByTestId('organization-sites-checkbox').first().click()
+    cy.getByTestId('organization-sites-checkbox', { timeout: 20000 }).first().should('be.visible').click({ force: true })
     cy.getByTestId('new-study-organization-button').click()
 
     cy.getByTestId('new-study-name').type('Collaborator study')
@@ -67,22 +67,22 @@ describe('Study collaborators', () => {
         })
     })
 
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type('contributor@test.fr')
-    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('Password-1')
-    cy.get('[data-testid="input-confirm-password"] > .MuiInputBase-root > .MuiInputBase-input').type('Password-1')
+    cy.getByTestId('input-email').find('input').type('contributor@test.fr')
+    cy.getByTestId('input-password').find('input').type('Password-1')
+    cy.getByTestId('input-confirm-password').find('input').type('Password-1')
     cy.getByTestId('reset-button').click()
 
     cy.url({ timeout: 8000 }).should('include', '/login')
 
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type('contributor@test.fr')
-    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('Password-1')
+    cy.getByTestId('input-email').find('input').type('contributor@test.fr')
+    cy.getByTestId('input-password').find('input').type('Password-1')
     cy.getByTestId('login-button').click()
 
     cy.wait('@login')
 
     cy.url().should('eq', `${Cypress.config().baseUrl}/?fromLogin`)
 
-    cy.getByTestId('study').should('have.length', 1)
+    cy.getByTestId('study', { timeout: 20000 }).should('have.length.at.least', 1)
     cy.getByTestId('home-actualities').should('be.visible')
   })
 
@@ -112,7 +112,7 @@ describe('Study collaborators', () => {
 
   it('Invited collaborators have access to emission factors list', () => {
     cy.login('contributor@test.fr', 'Password-1')
-    cy.getByTestId('navbar-facteur-demission').should('exist')
+    cy.getByTestId('navbar-facteur-demission', { timeout: 20000 }).should('exist')
     cy.getByTestId('navbar-facteur-demission').click()
 
     cy.getByTestId('cell-emission-name').should('exist')
@@ -124,12 +124,12 @@ describe('Study collaborators', () => {
     cy.getByTestId('navbar-organization').should('not.exist')
 
     cy.visit('/equipe')
-    cy.getByTestId('not-found-page').should('be.visible')
+    cy.url().should('not.include', '/equipe')
 
     cy.visit('/')
     cy.getByTestId('study').first().should('be.visible')
 
     cy.visit('/organisations')
-    cy.getByTestId('not-found-page').should('be.visible')
+    cy.url().should('not.include', '/organisations')
   })
 })

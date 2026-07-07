@@ -11,21 +11,26 @@ describe('Campaign Model invitation', () => {
     cy.login('mip-super_admin-0@yopmail.com', 'password-0')
     cy.visit('/super-admin')
     cy.getByTestId('add-model-button').click()
-    cy.get('[data-testid="input-name-1"] > .MuiInputBase-root > .MuiInputBase-input').type('New model')
+    cy.getByTestId('input-name-1').find('input').type('New model')
     cy.getByTestId('validate-model-update').click()
-    cy.get('[data-testid="copy-invitation-url"]')
-      .last()
-      .invoke('attr', 'data-link')
-      .then((link) => {
-        if (!link) {
-          throw new Error('Invitation link not found')
-        }
-        cy.logout()
-        cy.visit(link)
+    cy.contains('tr', 'New model', { timeout: 10000 })
+      .should('be.visible')
+      .within(() => {
+        cy.getByTestId('copy-invitation-url')
+          .should('have.attr', 'data-link')
+          .invoke('attr', 'data-link')
+          .then((link) => {
+            if (!link) {
+              throw new Error('Invitation link not found')
+            }
+            cy.wrap(link).as('invitationLink')
+          })
       })
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input', { timeout: 8000 }).type(
-      'new-mip@yopmail.com',
-    )
+
+    cy.logout()
+    cy.get<string>('@invitationLink').then((link) => cy.visit(link))
+
+    cy.getByTestId('input-email', { timeout: 10000 }).find('input').type('new-mip@yopmail.com')
     cy.getByTestId('submit-button').click()
     cy.visit('http://localhost:1080')
     cy.origin('http://localhost:1080', () => {
@@ -43,9 +48,9 @@ describe('Campaign Model invitation', () => {
             .then((link) => cy.visit(link as string))
         })
     })
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type('new-mip@yopmail.com')
-    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('Password-0')
-    cy.get('[data-testid="input-confirm-password"] > .MuiInputBase-root > .MuiInputBase-input').type('Password-0')
+    cy.getByTestId('input-email').find('input').type('new-mip@yopmail.com')
+    cy.getByTestId('input-password').find('input').type('Password-0')
+    cy.getByTestId('input-confirm-password').find('input').type('Password-0')
     cy.getByTestId('reset-button').click()
 
     cy.url({ timeout: 8000 }).should('include', '/login')
