@@ -47,7 +47,7 @@ describe('Duplicate study', () => {
       .contains('BC V8.10')
       .parents('[data-testid="study"]')
       .within(() => {
-        cy.getByTestId('study-link').click()
+        cy.getByTestId('study-name-chip').click()
       })
     cy.getByTestId('withDep-total-result').invoke('text').should('contain', '280') // 280.45
     cy.getByTestId('withoutDep-total-result').invoke('text').should('contain', '280') // 280.45

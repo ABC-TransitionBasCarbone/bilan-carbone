@@ -16,6 +16,7 @@ const StudyName = ({ studyId, name, role }: Props) => {
   return (
     <StyledChip
       color="success"
+      data-testid="study-name-chip"
       label={name}
       subtitle={role ? tRole(role) : undefined}
       icon={<SpaIcon />}
