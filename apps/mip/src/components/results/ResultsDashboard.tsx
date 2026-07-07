@@ -1,7 +1,6 @@
 'use client'
 
 import { CATEGORY_COLORS, getResultsForEntity, SurveyResults } from '@/data/sampleResults'
-import { RawRules } from '@/publicodes/mip-engine'
 import { StudyResultUnit } from '@abc-transitionbascarbone/db-common/enums'
 import { BasicTypeCharts } from '@abc-transitionbascarbone/utils/charts'
 import { Print } from '@mui/icons-material'
