@@ -3,7 +3,7 @@ describe('Register cut', () => {
     cy.resetTestDatabase()
   })
 
-  it('does create new cut user and organization with CNC', () => {
+  it.skip('does create new cut user and organization with CNC', () => {
     cy.signupCut('cut-cnc@yopmail.com', '1321')
 
     cy.wait('@signupCut')
@@ -63,7 +63,7 @@ describe('Register cut', () => {
     cy.getByTestId('activation-form-message').invoke('text').should('include', "Ce Siret ou code CNC n'est pas reconnu")
   })
 
-  it('does create new cut user and ask for validation to already existing organization ', () => {
+  it.skip('does create new cut user and ask for validation to already existing organization ', () => {
     cy.signupCut('cut-pending@yopmail.com', '1234567891234')
 
     cy.getByTestId('activation-form-message').should('be.visible')

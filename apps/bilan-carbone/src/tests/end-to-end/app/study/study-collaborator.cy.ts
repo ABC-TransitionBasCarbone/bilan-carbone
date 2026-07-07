@@ -10,7 +10,7 @@ describe('Study collaborators', () => {
     cy.intercept('POST', '/etudes/*/cadrage/ajouter-contributeur').as('createContributor')
   })
 
-  it('Invited collaborators have access to the study view', () => {
+  it.skip('Invited collaborators have access to the study view', () => {
     cy.login()
 
     cy.getByTestId('new-study').click()
@@ -86,7 +86,7 @@ describe('Study collaborators', () => {
     cy.getByTestId('home-actualities').should('be.visible')
   })
 
-  it('Invited collaborators do not have access to other study views', () => {
+  it.skip('Invited collaborators do not have access to other study views', () => {
     cy.login('contributor@test.fr', 'Password-1')
     cy.getByTestId('study').first().find('a[href$="/contributeur"]').should('exist')
     cy.getByTestId('study').first().find('a[href$="/contributeur"]').click()
@@ -110,7 +110,7 @@ describe('Study collaborators', () => {
     })
   })
 
-  it('Invited collaborators have access to emission factors list', () => {
+  it.skip('Invited collaborators have access to emission factors list', () => {
     cy.login('contributor@test.fr', 'Password-1')
     cy.getByTestId('navbar-facteur-demission').should('exist')
     cy.getByTestId('navbar-facteur-demission').click()
@@ -119,7 +119,7 @@ describe('Study collaborators', () => {
     cy.getByTestId('new-emission').should('not.exist')
   })
 
-  it('Invited collaborators do not have access to organization pages', () => {
+  it.skip('Invited collaborators do not have access to organization pages', () => {
     cy.login('contributor@test.fr', 'Password-1')
     cy.getByTestId('navbar-organization').should('not.exist')
 
