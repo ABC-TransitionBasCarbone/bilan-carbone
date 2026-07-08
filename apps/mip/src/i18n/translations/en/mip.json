@@ -101,6 +101,19 @@
         "avgPublicTransportKm": "Average distance travelled by public transport (commute)",
         "avgEmissionPerMode": "Average carbon footprint from commute trips"
       },
+      "units": {
+        "percent": "%",
+        "km": "km",
+        "hours": "hours",
+        "nights": "nights"
+      },
+      "transport": {
+        "title": "Transport",
+        "plane": "Take the plane",
+        "longHaulPlane": "Take long-haul flights",
+        "carKm": "Kilometres driven by car on average",
+        "carPassengers": "Average passengers per car"
+      },
       "travel": {
         "title": "Business travel",
         "trainModeShare": "Business trips are done by train",

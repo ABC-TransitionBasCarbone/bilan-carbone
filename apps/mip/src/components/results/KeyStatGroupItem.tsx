@@ -1,7 +1,7 @@
 'use client'
 
-import { KeyStatGroup } from '@/data/sampleResults'
 import { formatNumber } from '@abc-transitionbascarbone/utils/number'
+import { KeyStatGroup, KeyStatUnit } from '@/data/sampleResults'
 import { Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import styles from './KeyStatGroupItem.module.css'
@@ -10,7 +10,7 @@ interface Props {
   group: KeyStatGroup
 }
 
-const formatStatValue = (value: number, unit: 'percent' | 'number' | 'km' | 'hours' | 'nights') => {
+const formatStatValue = (value: number, unit: KeyStatUnit) => {
   if (unit === 'percent') {
     return `${formatNumber(value, 0)} %`
   }
@@ -32,6 +32,13 @@ const formatStatValue = (value: number, unit: 'percent' | 'number' | 'km' | 'hou
 
 const KeyStatGroupItem = ({ group }: Props) => {
   const t = useTranslations('results')
+  const formatStatValue = (value: number, unit: KeyStatUnit) => {
+    if (unit === 'number') {
+      return value
+    }
+
+    return `${value} ${t(`keyStats.units.${unit}`)}`
+  }
 
   return (
     <div className="mb2">

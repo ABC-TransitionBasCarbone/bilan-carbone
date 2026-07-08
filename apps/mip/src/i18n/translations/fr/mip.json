@@ -108,6 +108,19 @@
         "avgPublicTransportKm": "La distance moyenne parcourue en transport en commun (DT)",
         "avgEmissionPerMode": "L'empreinte carbone moyenne des déplacements domicile-travail"
       },
+      "units": {
+        "percent": "%",
+        "km": "km",
+        "hours": "heures",
+        "nights": "nuits"
+      },
+      "transport": {
+        "title": "Transport",
+        "plane": "Prennent l'avion",
+        "longHaulPlane": "Prennent l'avion long courrier",
+        "carKm": "Kilomètres parcourus en moyenne en voiture",
+        "carPassengers": "Voyageurs en moyenne en voiture"
+      },
       "travel": {
         "title": "Déplacements professionnels",
         "trainModeShare": "Les déplacements professionnels se font en train",
