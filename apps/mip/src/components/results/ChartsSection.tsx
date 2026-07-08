@@ -29,19 +29,16 @@ const ChartsSection = ({ pieChartItems, barChartItems, averageFootprint, totalRe
 
   const peopleEquivalentByPost = pieChartItems.map((item) => {
     const tco2e = item.value / STUDY_UNIT_VALUES[StudyResultUnit.T]
-    const respondentEquivalent =
-      averageFootprint > 0 ? Math.round((item.value / averageFootprint) * totalRespondents) : 0
 
     return {
       key: item.post,
       label: item.label,
       tco2e,
-      respondentEquivalent,
       colorClassName: (item.post && postColorClassByKey[item.post]) ?? styles.postDetailColorNeutral,
     }
   })
 
-  const peopleByLabel = new Map(peopleEquivalentByPost.map((post) => [post.label, post.respondentEquivalent]))
+  const peopleByLabel = new Map(peopleEquivalentByPost.map((post) => [post.label, post.tco2e]))
 
   return (
     <section className="mb2">

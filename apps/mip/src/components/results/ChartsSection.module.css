@@ -3,14 +3,6 @@
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
-.postDetailColor {
-  border-radius: 999px;
-  display: inline-block;
-  flex-shrink: 0;
-  height: 0.625rem;
-  width: 0.625rem;
-}
-
 .postDetailColorCommute {
   background-color: var(--primary-500);
 }
