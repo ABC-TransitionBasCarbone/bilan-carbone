@@ -91,9 +91,10 @@
       "title": "Répartition des empreintes carbone",
       "pieTitle": "Répartition par poste d'émission (moyennes)",
       "barTitle": "Empreinte carbone moyenne par poste",
-      "totalLimitColumn": "Total (limite 2 tCO₂e)",
+      "totalLimitColumn": "Total",
       "postDetail": "{tco2e} tCO₂e",
       "postDetailHover": "{tco2e} tCO₂e, soit environ {people} personnes",
+      "postDetailHoverPercent": "{percent} %",
       "target2050": "Objectif 2050 : 2 tCO₂e"
     },
     "keyStats": {

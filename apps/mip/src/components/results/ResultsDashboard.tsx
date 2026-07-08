@@ -8,10 +8,8 @@ import { Button, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import ChartsSection from './ChartsSection'
-import CollectiveEffortEncart from './CollectiveEffortEncart'
 import EntityFilterSection from './EntityFilterSection'
 import KeyStatsSection from './KeyStatsSection'
-import ObjectiveEncart from './ObjectiveEncart'
 import styles from './ResultsDashboard.module.css'
 import StatsSection from './StatsSection'
 
@@ -68,7 +66,6 @@ const ResultsDashboard = ({ results }: Props) => {
         onSelectEntity={setSelectedEntity}
       />
 
-      <ObjectiveEncart averageFootprint={filtered.averageFootprint} resultsUnit={StudyResultUnit.T} />
 
       <ChartsSection
         pieChartItems={pieChartItems}
@@ -78,8 +75,6 @@ const ResultsDashboard = ({ results }: Props) => {
       />
 
       <KeyStatsSection keyStats={filtered.keyStats} />
-
-      <CollectiveEffortEncart />
 
       <div className="flex gapped1">
         <Button variant="outlined" startIcon={<Print />} onClick={handlePrint}>

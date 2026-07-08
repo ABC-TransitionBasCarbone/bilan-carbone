@@ -32,9 +32,10 @@ interface Props<T> extends Omit<PieChartProps, 'series'> {
   height?: number
   showTitle?: boolean
   showLabelsOnPie?: boolean
+  displayAsPercentage?: boolean
   showSubLevel?: boolean
   type?: 'post' | 'tag'
-  tooltipValueFormatter?: (item: { label: string; value: number }) => string
+  tooltipValueFormatter?: (item: { label: string; value: number; percentage: number }) => string
 }
 
 const PieChart = <T extends BasicTypeCharts>({
@@ -44,6 +45,7 @@ const PieChart = <T extends BasicTypeCharts>({
   height = 400,
   showTitle = true,
   showLabelsOnPie = true,
+  displayAsPercentage = false,
   showSubLevel = false,
   type = 'post',
   tooltipValueFormatter,
@@ -57,16 +59,6 @@ const PieChart = <T extends BasicTypeCharts>({
     return processPieChartData(results, type, showSubLevel, theme, resultsUnit)
   }, [type, showSubLevel, results, theme, resultsUnit])
 
-  const valueFormatter = useMemo(
-    () => (item: { value: number; label?: string | ((location: 'legend' | 'tooltip' | 'arc') => string) }) =>
-      tooltipValueFormatter
-        ? tooltipValueFormatter({ label: typeof item.label === 'string' ? item.label : '', value: item.value })
-        : formatValueAndUnit(item.value, tUnits(resultsUnit), 0),
-    [tooltipValueFormatter, tUnits, resultsUnit],
-  )
-
-  const arcLabel = showLabelsOnPie ? (item: { value: number }) => formatNumber(item.value, 0) : undefined
-
   const series = useMemo(() => {
     const rings = [
       { data: innerRingData, constants: PIE_CHART_CONSTANTS.INNER_RING },
@@ -75,16 +67,38 @@ const PieChart = <T extends BasicTypeCharts>({
 
     return rings
       .filter(({ data }) => data.length > 0)
-      .map(({ data, constants }) => ({
-        data,
-        arcLabel,
-        arcLabelMinAngle: constants.ARC_LABEL_MIN_ANGLE,
-        arcLabelRadius: constants.ARC_LABEL_RADIUS,
-        innerRadius: constants.INNER_RADIUS,
-        outerRadius: constants.OUTER_RADIUS,
-        valueFormatter,
-      }))
-  }, [innerRingData, outerRingData, arcLabel, valueFormatter])
+      .map(({ data, constants }) => {
+        const total = data.reduce((sum, item) => sum + item.value, 0)
+        const getPercentage = (value: number) => (total > 0 ? (value / total) * 100 : 0)
+
+        return {
+          data,
+          arcLabel: showLabelsOnPie
+            ? (item: { value: number }) =>
+              displayAsPercentage ? `${formatNumber(getPercentage(item.value), 0)}%` : formatNumber(item.value, 0)
+            : undefined,
+          arcLabelMinAngle: constants.ARC_LABEL_MIN_ANGLE,
+          arcLabelRadius: constants.ARC_LABEL_RADIUS,
+          innerRadius: constants.INNER_RADIUS,
+          outerRadius: constants.OUTER_RADIUS,
+          valueFormatter: (item: { value: number; label?: string | ((location: 'legend' | 'tooltip' | 'arc') => string) }) => {
+            const percentage = getPercentage(item.value)
+
+            if (tooltipValueFormatter) {
+              return tooltipValueFormatter({
+                label: typeof item.label === 'string' ? item.label : '',
+                value: item.value,
+                percentage,
+              })
+            }
+
+            return displayAsPercentage
+              ? `${formatNumber(percentage, 1)} %`
+              : formatValueAndUnit(item.value, tUnits(resultsUnit), 0)
+          },
+        }
+      })
+  }, [innerRingData, outerRingData, showLabelsOnPie, displayAsPercentage, tooltipValueFormatter, tUnits, resultsUnit])
 
   const legendData = useMemo(() => {
     const maxLabelLength = type === 'tag' ? 20 : 50

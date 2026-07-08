@@ -87,6 +87,7 @@
       "totalLimitColumn": "Total (2 tCO₂e limit)",
       "postDetail": "{tco2e} tCO₂e",
       "postDetailHover": "{tco2e} tCO₂e, around {people} people equivalent",
+      "postDetailHoverPercent": "{percent}%",
       "target2050": "2050 target: 2 tCO₂e"
     },
     "keyStats": {

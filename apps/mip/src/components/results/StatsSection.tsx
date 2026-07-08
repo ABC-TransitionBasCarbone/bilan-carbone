@@ -18,7 +18,7 @@ const StatsSection = ({ results, resultsUnit }: Props) => {
   const t = useTranslations('results')
 
   return (
-    <div className={classNames('gap-1rem', 'mb-2rem', 'grid')}>
+    <div className={classNames('mb-2rem', 'flex', 'gapped', 'wrap')}>
       <Card>
         <CardContent className="p125">
           <Typography className={styles.statValue}>
