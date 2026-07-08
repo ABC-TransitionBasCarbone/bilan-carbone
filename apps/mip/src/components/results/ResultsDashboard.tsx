@@ -66,7 +66,6 @@ const ResultsDashboard = ({ results }: Props) => {
         onSelectEntity={setSelectedEntity}
       />
 
-
       <ChartsSection
         pieChartItems={pieChartItems}
         barChartItems={barChartItems}
