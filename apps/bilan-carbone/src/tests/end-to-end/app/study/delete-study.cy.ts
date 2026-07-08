@@ -1,17 +1,12 @@
 describe('Delete study', () => {
-  before(() => {
+  beforeEach(() => {
     cy.resetTestDatabase()
   })
 
-  beforeEach(() => {
-    cy.intercept('POST', '/etudes/creer').as('create')
-    cy.intercept('POST', '/etudes/*').as('delete')
-  })
-
   it('should be able to delete a study', () => {
-    cy.login()
+    cy.login('bc-admin-0@yopmail.com', 'password-0')
 
-    cy.getByTestId('study')
+    cy.getByTestId('study-name-chip')
       .contains('Study to delete')
       .scrollIntoView()
       .parents('[data-testid="study"]')
@@ -36,7 +31,6 @@ describe('Delete study', () => {
       cy.getByTestId('confirm-study-deletion').click()
       cy.getByTestId('alert-toaster').should('not.exist')
 
-      cy.wait('@delete')
       cy.url().should('eq', `${Cypress.config().baseUrl}/`)
 
       cy.visit(savedUrl)

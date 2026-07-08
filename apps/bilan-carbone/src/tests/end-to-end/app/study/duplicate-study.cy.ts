@@ -3,11 +3,6 @@ describe('Duplicate study', () => {
     cy.resetTestDatabase()
   })
 
-  beforeEach(() => {
-    cy.intercept('POST', '/etudes/creer').as('create')
-    cy.intercept('POST', '/etudes/*').as('delete')
-  })
-
   it('Should be able to duplicate a study', () => {
     cy.login('all-env-admin-0@yopmail.com', 'password-0')
     cy.url({ timeout: 10000 }).should('eq', `${Cypress.config().baseUrl}/selection-du-compte`)
