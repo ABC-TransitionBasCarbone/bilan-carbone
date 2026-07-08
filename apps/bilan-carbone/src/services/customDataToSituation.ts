@@ -1,6 +1,5 @@
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
-import { SimplifiedEnvironment } from './publicodes/simplifiedPublicodesConfig'
-
+import { EnvironmentWithSimplifiedStudies } from './permissions/environment'
 export interface TiltCustomDataFields {
   postalCode?: string | undefined
   structure?: string | undefined
@@ -32,7 +31,7 @@ export const TiltStructureOptions: string[] = [
 ]
 
 export const customDataToSituationByEnvironment = (
-  environment: SimplifiedEnvironment,
+  environment: EnvironmentWithSimplifiedStudies,
   data: TiltCustomDataFields | undefined,
 ): Record<string, string | null> => {
   switch (environment) {

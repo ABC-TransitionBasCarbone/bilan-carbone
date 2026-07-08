@@ -19,11 +19,17 @@ const WarningItem = ({ w, lineNumber, t }: Props) => {
   if (w.type === 'efMissing') {
     warningMessage = t('warningEfMissing', { sourceName: w.sourceName ?? '' })
   }
+  if (w.type === 'efMissingUnit') {
+    warningMessage = t('warningEfMissingUnit', { searched: w.searchedName ?? '' })
+  }
   if (w.type === 'unitMissingPrefix') {
     warningMessage = t('warningUnitMissingPrefix', {
       foundUnit: w.foundUnit ?? '',
       resolvedValue: w.resolvedValue ?? '',
     })
+  }
+  if (w.type === 'tagNotFound') {
+    warningMessage = t('warningTagNotFound', { tagName: w.searchedName ?? '' })
   }
   if (warningMessage) {
     return (

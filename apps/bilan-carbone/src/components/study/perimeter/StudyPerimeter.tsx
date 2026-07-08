@@ -1,14 +1,10 @@
 'use client'
 
-import Block from '@/components/base/Block'
-import HelpIcon from '@/components/base/HelpIcon'
-import IconLabel from '@/components/base/IconLabel'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import SelectStudySite from '@/components/study/site/SelectStudySite'
 import { OrganizationWithSites } from '@/db/account'
 import type { FullStudy } from '@/db/study'
-import { useServerFunction } from '@/hooks/useServerFunction'
 import { changeStudyDates, changeStudyExports } from '@/services/serverFunctions/study'
 import {
   ChangeStudyDatesCommand,
@@ -17,6 +13,10 @@ import {
   StudyExportsCommandValidation,
 } from '@/services/serverFunctions/study.command'
 import { hasEditionRights } from '@/utils/study'
+import { HelpIcon } from '@abc-transitionbascarbone/components'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
+import IconLabel from '@abc-transitionbascarbone/components/src/base/IconLabel'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { ControlMode, Export, SiteCAUnit, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
 import { zodResolver } from '@hookform/resolvers/zod'
 import classNames from 'classnames'

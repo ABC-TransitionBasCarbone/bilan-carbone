@@ -11,8 +11,9 @@ import {
   SubPost,
   Unit,
 } from '@abc-transitionbascarbone/db-common/enums'
+import { mockedUser } from '@abc-transitionbascarbone/services/tests/models/user'
 import { mockedOrganizationVersion, mockedOrganizationVersionId } from './organization'
-import { mockedAccountId, mockedUser } from './user'
+import { mockedAccountId } from './user'
 
 export const COMMON_DATES = {
   startDate: new Date('2024-01-01'),
@@ -63,6 +64,7 @@ export const mockedStudy = {
   organizationVersionId: mockedOrganizationVersionId,
   resultsUnit: StudyResultUnit.K,
   simplified: false,
+  subPostsConfigVersion: null,
 }
 
 export const mockedDdStudy = {
@@ -281,6 +283,7 @@ export const getMockeFullStudy = (overrides = {}): FullStudy => ({
   id: TEST_IDS.sourceStudy,
   name: 'Source Study',
   simplified: false,
+  subPostsConfigVersion: null,
   resultsUnit: StudyResultUnit.K,
   organizationVersionId: TEST_IDS.orgVersion,
   exports: { types: [Export.Beges], control: ControlMode.Operational },

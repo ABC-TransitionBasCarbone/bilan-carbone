@@ -1,9 +1,5 @@
-import { environmentsWithChecklist } from '@/constants/environments'
-import { signPassword } from '@/services/auth'
-import { NOT_AUTHORIZED } from '@/services/permissions/check'
 import { getDeactivableFeatureRestrictions } from '@/services/serverFunctions/deactivableFeatures'
 import { addUserChecklistItem, sendEmailToAddedUser } from '@/services/serverFunctions/user'
-import { AddMemberCommand } from '@/services/serverFunctions/user.command'
 import { AuthorizedInOrgaUserStatus } from '@/services/users'
 import { getRoleToSetForUntrained } from '@/utils/user'
 import { userSessionToDbUser } from '@/utils/userAccounts'
@@ -15,6 +11,10 @@ import {
   UserChecklist,
   UserStatus,
 } from '@abc-transitionbascarbone/db-common/enums'
+import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
+import { AddMemberCommand } from '@abc-transitionbascarbone/services/serverFunctions/user.command'
+import { signPassword } from '@abc-transitionbascarbone/utils/auth'
+import { environmentsWithChecklist } from '@abc-transitionbascarbone/utils/environments'
 import { UserSession } from 'next-auth'
 import { addAccount, getAccountByEmailAndEnvironment, getAccountByEmailAndOrganizationVersionId } from './account'
 import { prismaClient } from './client.server'
@@ -130,12 +130,6 @@ export const updateUserPasswordForEmail = async (email: string, password: string
 
   return user
 }
-
-export const updateUserResetTokenForEmail = async (email: string, resetToken: string) =>
-  prismaClient.user.update({
-    where: { email: email.toLowerCase() },
-    data: { resetToken },
-  })
 
 export const deleteUserFromOrga = async (email: string, organizationVersionId: string | null) => {
   const account = await getAccountByEmailAndOrganizationVersionId(email, organizationVersionId)

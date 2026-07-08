@@ -2,14 +2,14 @@
 
 import { customRich } from '@/i18n/customRich'
 import { duplicateStudyInOtherEnvironment } from '@/services/serverFunctions/study'
+import { Select } from '@abc-transitionbascarbone/components/src/base/Select'
+import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { Toast, ToastColors } from '@abc-transitionbascarbone/ui'
 import { MenuItem } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
-import { Select } from '../base/Select'
-import Modal from './Modal'
 
 const emptyToast = { text: '', color: 'info' } as const
 const toastPosition = { vertical: 'bottom', horizontal: 'left' } as const

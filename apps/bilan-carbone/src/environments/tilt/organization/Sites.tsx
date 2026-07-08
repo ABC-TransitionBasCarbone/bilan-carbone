@@ -1,9 +1,9 @@
 'use client'
 
-import { FormTextField } from '@/components/form/TextField'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
-import { formatNumber } from '@/utils/number'
+import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { Environment, SiteCAUnit } from '@abc-transitionbascarbone/db-common/enums'
+import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import { ColumnDef } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
@@ -31,6 +31,7 @@ const Sites = <T extends SitesCommand>({
 }: Props<T>) => {
   const t = useTranslations('organization.sites')
   const control = form?.control as Control<SitesCommand>
+
   const columns = useMemo(
     () =>
       [
@@ -81,7 +82,7 @@ const Sites = <T extends SitesCommand>({
             ),
         },
       ] as ColumnDef<SitesCommand['sites'][number]>[],
-    [form, disabled],
+    [t, form, disabled, control],
   )
 
   return (

@@ -1,9 +1,9 @@
 import { getOrganizationVersionForRightsCheck } from '@/db/organization'
+import { BCEnvironment } from '@/types/environment'
 import { hasActiveLicence } from '@/utils/organization'
-import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { getTranslations } from 'next-intl/server'
 import { Suspense } from 'react'
-import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import EmissionFactorButtons from '../emissionFactor/EmissionFactorButtons'
 import EmissionFactors from '../emissionFactor/EmissionFactors'
@@ -11,7 +11,7 @@ import withAuth, { UserSessionProps } from '../hoc/withAuth'
 
 interface Props {
   userOrganizationId?: string
-  environment: Environment
+  environment: BCEnvironment
 }
 
 const EmissionFactorsPage = async ({ userOrganizationId, environment, user }: Props & UserSessionProps) => {

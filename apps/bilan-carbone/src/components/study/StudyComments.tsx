@@ -1,7 +1,6 @@
 'use client'
 
 import { FullStudyComments } from '@/db/study'
-import { useServerFunction } from '@/hooks/useServerFunction'
 import {
   approveStudyComment,
   createStudyCommentCommand,
@@ -9,6 +8,7 @@ import {
   editStudyComment,
   getStudyComments,
 } from '@/services/serverFunctions/study'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { CommentStatus, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { Button } from '@abc-transitionbascarbone/ui'
 import { Card, CardContent, TextField } from '@mui/material'

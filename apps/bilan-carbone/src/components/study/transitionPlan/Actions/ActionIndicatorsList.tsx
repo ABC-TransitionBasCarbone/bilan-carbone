@@ -1,5 +1,5 @@
-import { FormTextField } from '@/components/form/TextField'
 import { AddActionFormCommand } from '@/services/serverFunctions/action.command'
+import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { ActionIndicatorType } from '@abc-transitionbascarbone/db-common'
 import AddIcon from '@mui/icons-material/Add'
 import DeleteIcon from '@mui/icons-material/Delete'

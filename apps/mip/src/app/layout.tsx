@@ -6,6 +6,7 @@ import type { Metadata } from 'next'
 import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
 import { headers } from 'next/headers'
+import { MuiThemeProvider } from './providers'
 
 export const metadata: Metadata = {
   title: 'MIP : Mon Impact Pro',
@@ -27,12 +28,14 @@ const RootLayout = async ({ children }: Readonly<Props>) => {
     <html lang="fr">
       <body>
         <AppRouterCacheProvider options={providerOptions}>
-          <NextIntlClientProvider messages={messages}>
-            <Providers>
-              <CssBaseline />
-              {children}
-            </Providers>
-          </NextIntlClientProvider>
+          <MuiThemeProvider>
+            <NextIntlClientProvider messages={messages}>
+              <Providers>
+                <CssBaseline />
+                {children}
+              </Providers>
+            </NextIntlClientProvider>
+          </MuiThemeProvider>
         </AppRouterCacheProvider>
       </body>
     </html>

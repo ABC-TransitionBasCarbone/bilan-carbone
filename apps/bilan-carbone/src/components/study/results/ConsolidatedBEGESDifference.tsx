@@ -1,14 +1,12 @@
 import { wasteEmissionFactors } from '@/constants/wasteEmissionFactors'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import type { FullStudy } from '@/db/study'
-import { Post } from '@/services/posts'
 import { PostInfos } from '@/services/results/exports'
 import { getSiteEmissionSourcesWithoutMarketBase } from '@/services/results/utils'
 import { ResultsByPost } from '@/types/study.types'
 import { computeDifferenceForTableEmissions, formatDifferenceTableEmissions } from '@/utils/exports'
-import { formatNumber } from '@/utils/number'
-import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { Export, SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { Post, STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/utils/charts'
 import WarningAmberIcon from '@mui/icons-material/WarningAmberOutlined'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
@@ -35,10 +33,7 @@ const ConsolatedBEGESDifference = ({
   studySite,
   navigateToEmissionSource,
 }: Props) => {
-  const t = useTranslations('study.results.difference')
   const tPost = useTranslations('emissionFactors.post')
-  const tUnits = useTranslations('study.results.units')
-  const unit = tUnits(study.resultsUnit)
   const unitValue = STUDY_UNIT_VALUES[study.resultsUnit]
 
   const environment = useMemo(() => study.organizationVersion.environment, [study])
@@ -56,7 +51,6 @@ const ConsolatedBEGESDifference = ({
   const utilisationEnDependanceValue = utilisationEnDependanceInfos
     ? -utilisationEnDependanceInfos.value / unitValue
     : 0
-  const utilisationEnDependanceValueToDisplay = formatNumber(Math.round(utilisationEnDependanceValue), 0)
 
   // Find an emission source for the "en dépendance" sub-post to use in navigation
   const utilisationEnDependanceEmissionSources = useMemo(
@@ -150,7 +144,7 @@ const ConsolatedBEGESDifference = ({
           emissionSources={utilisationEnDependanceEmissionSources}
           exportType={Export.Beges}
           studySite={studySite}
-          value={utilisationEnDependanceValueToDisplay}
+          value={utilisationEnDependanceValue}
           resultsUnit={study.resultsUnit}
           navigateToEmissionSource={navigateToEmissionSource}
         />
@@ -176,7 +170,7 @@ const ConsolatedBEGESDifference = ({
           emissionSources={missingCaract}
           exportType={Export.Beges}
           studySite={studySite}
-          value={formatNumber(missingCaractDifference, 0)}
+          value={missingCaractDifference}
           resultsUnit={study.resultsUnit}
           navigateToEmissionSource={navigateToEmissionSource}
           Icon={WarningAmberIcon}

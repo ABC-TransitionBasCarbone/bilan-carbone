@@ -2,10 +2,10 @@
 
 import type { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { UserSession } from 'next-auth'
 import dynamic from 'next/dynamic'
-import Block from '../base/Block'
 import StudyResultsContainerSummary from './results/StudyResultsContainerSummary'
 import useStudySite from './site/useStudySite'
 import StudyDetailsHeader from './StudyDetailsHeader'

@@ -75,6 +75,7 @@ This is a Next.js monorepo for the "Bilan Carbone" platform, focused on carbon a
 - **Client-Side Initialization**: For client-side state that reads from localStorage or URL params, use `useState` with a lazy initializer (`useState(() => computeInitialValue())`) instead of `useEffect`. This is the React 19 recommended approach.
 - **Client Components**: Only use `'use client'` when you need hooks, event handlers, or browser APIs.
 - **Component Naming**: Page files export a component matching the route purpose (e.g., `SurveyPage` for a survey page route).
+- **Arrow Function Components**: Always define React components using arrow function syntax (`const MyComponent = () => {}`), not the `function` keyword (`function MyComponent() {}`). This applies to all components including section sub-components.
 
 ### Styling
 
@@ -82,6 +83,9 @@ This is a Next.js monorepo for the "Bilan Carbone" platform, focused on carbon a
 - **Typography**: Use Gilroy font family (`gilroy-regular, sans-serif`) consistently across all apps.
 - **Theme Consistency**: Follow the base theme patterns from `apps/bilan-carbone/src/environments/base/theme/theme.ts`.
 - **MUI Component Props**: Use `slotProps` instead of the deprecated `inputProps`. For example, use `slotProps={{ htmlInput: { maxLength: 100 } }}` on a `TextField`.
+- **Colors via CSS Variables**: Never use hardcoded color hex values in CSS module files. Always use CSS custom properties defined in `packages/css/style/colors.css` (e.g., `var(--info)`, `var(--primary)`, `var(--neutral-50)`, `var(--warning)`). For colors not in the shared palette, use `color-mix()` to derive tints from existing variables.
+- **No `white` / `#fff` literals**: Do not use `white`, `#fff`, or `#ffffff` directly in CSS modules. Always use a token from `packages/css/style/colors.css` (e.g., `var(--white)`).
+- **Global CSS Classes**: Prefer global utility classes (e.g., `flex`, `flex-col`, `mb2`, `mb1`, `gapped1`, `p125`, `bold`) over per-component CSS module rules for layout and spacing where possible.
 
 ### Code Organization
 

@@ -22,6 +22,7 @@ export const createObjectiveSchema = () =>
   z
     .object({
       id: z.string().optional(),
+      name: z.string().optional(),
       startYear: z.string().optional().nullable(),
       targetYear: z.string().optional().nullable(),
       reductionRate: z

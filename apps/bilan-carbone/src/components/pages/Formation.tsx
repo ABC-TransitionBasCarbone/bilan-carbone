@@ -1,9 +1,9 @@
 'use server'
 
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { Formation } from '@abc-transitionbascarbone/db-common'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
-import Block from '../base/Block'
 import FormationView from '../formation/Formation'
 
 interface Props {

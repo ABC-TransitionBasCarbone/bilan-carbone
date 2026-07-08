@@ -1,16 +1,16 @@
 'use client'
 import { OrganizationVersionWithStudyComments } from '@/db/study'
-import { useServerFunction } from '@/hooks/useServerFunction'
 import {
   approveStudyComment,
   declineStudyComment,
   editStudyComment,
   getPendingStudyCommentsFromOrganizationVersionId,
 } from '@/services/serverFunctions/study'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useState } from 'react'
-import Block from '../base/Block'
 import StudyCommentComponent from '../study/StudyComment'
 
 interface Props {

@@ -1,9 +1,9 @@
 'use server'
 
 import { createEmissionFactorWithParts, getManualEmissionFactorsByOrganization } from '@/db/emissionFactors'
-import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
 import { AccountWithUser } from '@/types/account.types'
+import { BCEnvironment } from '@/types/environment'
 import {
   COLUMNS,
   ImportEmissionFactorsResult,
@@ -18,8 +18,9 @@ import { flattenSubposts } from '@/utils/post'
 import { withServerResponse } from '@/utils/serverResponse'
 import { getBcTranslations, getCommonTranslations } from '@/utils/translation.utils'
 import { EmissionFactorBase, EmissionFactorStatus, Import, Unit } from '@abc-transitionbascarbone/db-common/enums'
+import { LocaleType } from '@abc-transitionbascarbone/i18n/config'
+import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
 import { getAuthenticatedAccount } from '../permissions/account.permissions'
-import { NOT_AUTHORIZED } from '../permissions/check'
 import { canReadEmissionFactor } from '../permissions/emissionFactor'
 import { canCreateEmissionFactor } from '../permissions/emissionFactor.server'
 import { prepareExcel } from './file'
@@ -50,7 +51,7 @@ export async function previewEmissionFactorsFromFile(file: File): Promise<Previe
 
   const locale = await getLocale()
   const buffer = Buffer.from(await file.arrayBuffer())
-  const result = parseImportFile(buffer, locale, account.environment)
+  const result = parseImportFile(buffer, locale, account.environment as BCEnvironment)
 
   if (!result.success) {
     return result
@@ -92,7 +93,7 @@ export async function importEmissionFactorsFromFile(
 
   const locale = await getLocale()
   const buffer = Buffer.from(await file.arrayBuffer())
-  const result = parseImportFile(buffer, locale, account.environment)
+  const result = parseImportFile(buffer, locale, account.environment as BCEnvironment)
 
   if (!result.success) {
     return result
@@ -123,39 +124,11 @@ export async function exportManualEmissionFactorsToFile(): Promise<ArrayBuffer> 
   const organizationId = account.organizationVersion.organizationId
   const emissionFactors = await getManualEmissionFactorsByOrganization(organizationId)
 
-  const c = bc.emissionFactors.create
-  const tbl = bc.emissionFactors.table
-  const header = [
-    c.name,
-    c.attribute,
-    c.unit,
-    c.isMonetary,
-    c.source,
-    c.location,
-    tbl.technicalRepresentativeness.replace(/ :$/, ''),
-    tbl.geographicRepresentativeness.replace(/ :$/, ''),
-    tbl.temporalRepresentativeness.replace(/ :$/, ''),
-    tbl.completeness.replace(/ :$/, ''),
-    tbl.reliability.replace(/ :$/, ''),
-    c.comment,
-    c.totalCo2,
-    c.co2f,
-    c.ch4f,
-    c.ch4b,
-    c.n2o,
-    c.co2b,
-    c.sf6,
-    c.hfc,
-    c.pfc,
-    c.otherGES,
-    c.post,
-    c.base,
-    c.addedDate,
-  ]
+  const header = buildEmissionFactorsHeader(locale)
   const rows: (string | number)[][] = emissionFactors.map((ef) => {
     const metaData = ef.metaData.find((m) => m.language === locale) ?? ef.metaData[0]
     return [
-      getEmissionFactorFullName(metaData),
+      getEmissionFactorFullName(metaData, '', Import.Manual),
       metaData?.attribute ?? '',
       ef.customUnit
         ? formatPrefixedUnitDisplay(locale, Unit.CUSTOM, ef.customUnit)
@@ -181,7 +154,7 @@ export async function exportManualEmissionFactorsToFile(): Promise<ArrayBuffer> 
       ef.hfc ?? '',
       ef.pfc ?? '',
       ef.otherGES ?? '',
-      buildPostsAndSubPostsCell(ef.subPosts, locale, account.environment),
+      buildPostsAndSubPostsCell(ef.subPosts, locale, account.environment as BCEnvironment),
       ef.base ? (baseTranslations[ef.base] ?? ef.base) : '',
       ef.createdAt.toLocaleDateString(locale),
     ]
@@ -190,7 +163,7 @@ export async function exportManualEmissionFactorsToFile(): Promise<ArrayBuffer> 
   return prepareExcel([{ name: "Facteurs d'émission", data: [header, ...rows], options: {} }])
 }
 
-function buildEmissionFactorsTemplateHeader(locale: LocaleType): string[] {
+function buildEmissionFactorsHeader(locale: LocaleType): string[] {
   const bc = getBcTranslations(locale)
   const c = bc.emissionFactors.create
   const tbl = bc.emissionFactors.table
@@ -220,6 +193,7 @@ function buildEmissionFactorsTemplateHeader(locale: LocaleType): string[] {
     c.otherGES,
     modal.templatePostsHeader,
     modal.templateBaseHeader,
+    c.addedDate,
   ]
 }
 
@@ -256,7 +230,7 @@ export const getImportEmissionFactorsTemplate = async () =>
     emptyRow[COLUMNS.postsAndSubPosts] = allPostsLabel
     emptyRow[COLUMNS.base] = bc.emissionFactors.base[EmissionFactorBase.LocationBased]
 
-    const header = buildEmissionFactorsTemplateHeader(locale)
+    const header = buildEmissionFactorsHeader(locale)
     const dataRows = [exampleRow, ...Array.from({ length: 100 }, () => [...emptyRow])]
     const sheetName = modal.sheetName
 

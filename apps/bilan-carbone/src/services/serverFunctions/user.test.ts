@@ -17,17 +17,14 @@ import {
 } from '@/db/organization'
 import { addSite } from '@/db/site'
 import { addUser, getUserByEmail, organizationVersionActiveAccountsCount, updateAccount, validateUser } from '@/db/user'
-import {
-  EMAIL_SENT,
-  NOT_ASSOCIATION_SIRET,
-  NOT_AUTHORIZED,
-  REQUEST_SENT,
-  UNKNOWN_SIRET_OR_CNC,
-} from '@/services/permissions/check'
-import { mockedOrganizationId, mockedOrganizationVersionId } from '@/tests/utils/models/organization'
-import { mockedAccountId, mockedUserId } from '@/tests/utils/models/user'
+import { NOT_ASSOCIATION_SIRET, REQUEST_SENT, UNKNOWN_SIRET_OR_CNC } from '@/services/permissions/check'
+import { mockedOrganizationVersionId } from '@/tests/utils/models/organization'
+import { mockedAccountId } from '@/tests/utils/models/user'
+import { sendActivationRequest } from '@abc-transitionbascarbone/services/email/email'
+import { EMAIL_SENT, NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
+import { mockedOrganizationId } from '@abc-transitionbascarbone/services/tests/models/organization'
+import { mockedUserId } from '@abc-transitionbascarbone/services/tests/models/user'
 import { getCompanyName, getValidAssociationNameBySiret } from '../associationApi'
-import { sendActivationRequest } from '../email/email'
 import { getDeactivableFeatureRestrictions } from './deactivableFeatures'
 import { activateEmail, signUpWithSiretOrCNC } from './user'
 
@@ -52,7 +49,8 @@ jest.mock('@/db/site')
 jest.mock('@/db/study', () => ({}))
 jest.mock('@/db/user')
 jest.mock('@/services/associationApi')
-jest.mock('@/services/email/email', () => ({
+jest.mock('@abc-transitionbascarbone/db-common/db')
+jest.mock('@abc-transitionbascarbone/services/email/email', () => ({
   sendActivationEmail: jest.fn(),
   sendActivationRequest: jest.fn(),
 }))

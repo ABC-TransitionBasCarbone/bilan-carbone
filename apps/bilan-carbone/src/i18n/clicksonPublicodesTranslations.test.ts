@@ -3,7 +3,10 @@ import fs from 'fs'
 import path from 'path'
 
 describe('Clickson publicodes transport labels', () => {
-  const filePath = path.join(__dirname, 'translations', 'fr', 'publicodes', 'clickson-rules.json')
+  const i18nPackagePath = path.dirname(require.resolve('@abc-transitionbascarbone/i18n/package.json'))
+
+  const filePath = path.join(i18nPackagePath, 'translations', 'fr', 'publicodes', 'clickson-rules.json')
+
   const clicksonRules = JSON.parse(fs.readFileSync(filePath, 'utf8'))['publicodes-rules']
 
   it('uses a distinct title for electric bus in student transport', () => {

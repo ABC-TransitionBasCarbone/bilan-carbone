@@ -1,5 +1,5 @@
-import NotFound from '@/components/pages/NotFound'
 import { canDuplicateStudy } from '@/services/permissions/study'
+import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 import React from 'react'
 import { UserSessionProps } from './withAuth'
 

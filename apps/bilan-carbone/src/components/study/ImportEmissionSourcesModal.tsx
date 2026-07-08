@@ -2,13 +2,14 @@
 
 import ImportFileModal from '@/components/base/ImportFileModal/ImportFileModal'
 import { download } from '@/services/file'
-import { Post } from '@/services/posts'
 import {
   getImportEmissionSourcesTemplate,
   importEmissionSourcesFromFile,
-  previewEmissionSourcesFromFile,
+  resolveEmissionSourcesFromFile,
+  validateEmissionSourcesFromFile,
 } from '@/services/serverFunctions/importEmissionSources'
 import { PreviewEmissionSourceRow } from '@/types/importEmissionSources.types'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -84,9 +85,9 @@ const ImportEmissionSourcesModal = ({ studyId, post, siteId, open, onClose, onSu
       title={t('title')}
       onClose={onClose}
       onSuccess={onSuccess}
-      onPreview={(file) => previewEmissionSourcesFromFile(file, studyId)}
-      onConfirmImport={(file) => importEmissionSourcesFromFile(file, studyId)}
-      onForceImport={(file) => importEmissionSourcesFromFile(file, studyId, true)}
+      onValidate={(file) => validateEmissionSourcesFromFile(file, studyId)}
+      onResolve={(file, choices) => resolveEmissionSourcesFromFile(file, studyId, choices)}
+      onConfirmImport={(file, choices) => importEmissionSourcesFromFile(file, studyId, choices)}
       onDownloadTemplate={handleDownloadTemplate}
       renderPreviewTable={renderPreviewTable}
       previewTitle={(count) => t('previewTitle', { count })}

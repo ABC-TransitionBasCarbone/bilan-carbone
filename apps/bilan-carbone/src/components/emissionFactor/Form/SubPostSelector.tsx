@@ -1,10 +1,12 @@
 'use client'
 
-import { Select } from '@/components/base/Select'
 import { ALL_SUB_POSTS_VALUE } from '@/constants/post.constants'
-import { environmentPostMapping, Post, subPostsByPost } from '@/services/posts'
+import { environmentPostMapping, subPostsByPost } from '@/services/posts'
+import { BCEnvironment } from '@/types/environment'
 import { getSortedPosts } from '@/utils/post'
+import { Select } from '@abc-transitionbascarbone/components/src/base/Select'
 import { Environment, SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
 import { Checkbox, ListItemText, ListSubheader, MenuItem, SelectChangeEvent } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
@@ -15,7 +17,7 @@ interface Props {
   selectedSubPosts?: SubPost[]
   sortedSubPosts: SubPost[]
   onSelectSubPost: (subPosts: SubPost[]) => void
-  environment?: Environment
+  environment?: BCEnvironment
 }
 
 type SubPostValue = SubPost | typeof ALL_SUB_POSTS_VALUE

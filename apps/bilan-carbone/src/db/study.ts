@@ -1,9 +1,8 @@
 import { StudyContributorDeleteParams } from '@/components/study/rights/StudyContributorsTable'
-import { getEnvVar } from '@/lib/environment'
 import { isSourceForEnv } from '@/services/importEmissionFactor/import'
 import { hasAccessToCreateStudyWithEmissionFactorVersions } from '@/services/permissions/environment'
 import { filterAllowedStudies } from '@/services/permissions/study'
-import { Post, subPostsByPost } from '@/services/posts'
+import { subPostsByPost } from '@/services/posts'
 import { ChangeStudyCinemaCommand } from '@/services/serverFunctions/study.command'
 import { mapCncToStudySite } from '@/utils/cnc'
 import { isAdminOnOrga } from '@/utils/organization'
@@ -25,6 +24,8 @@ import {
   Import,
   StudyRole,
 } from '@abc-transitionbascarbone/db-common/enums'
+import { getEnvVar } from '@abc-transitionbascarbone/lib/environment'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
 import { UserSession } from 'next-auth'
 import { cache } from 'react'
 import { deleteTransitionPlan } from '../services/serverFunctions/transitionPlan'
@@ -45,7 +46,12 @@ export const createStudy = async (
   const client = tx ?? prismaClient
   const dbStudy = await client.study.create({
     data,
-    select: { id: true, exports: { select: { types: true } }, sites: { select: { id: true, country: true } } },
+    select: {
+      id: true,
+      exports: { select: { types: true } },
+      sites: { select: { id: true, country: true, volunteerNumber: true, etp: true, beneficiaryNumber: true } },
+      simplified: true,
+    },
   })
 
   if (hasAccessToCreateStudyWithEmissionFactorVersions(environment) || shouldCreateFEVersions) {
@@ -300,6 +306,7 @@ const fullStudyInclude = {
         select: {
           id: true,
           name: true,
+          wordpressId: true,
         },
       },
     },
@@ -514,6 +521,14 @@ const fetchStudyById = cache(async (id: string) => {
     include: fullStudyInclude,
   })
 })
+
+export const getStudyAllowedUsersUnfiltered = async (studyId: string) => {
+  const study = await prismaClient.study.findUnique({
+    where: { id: studyId },
+    include: { allowedUsers: fullStudyInclude.allowedUsers },
+  })
+  return study ? normalizeAllowedUsers(study.allowedUsers, study.level, study.organizationVersionId) : []
+}
 
 // IMPORTANT: Do not use unless you need the full study with all its fields and relations.
 export const getStudyById = async (id: string, organizationVersionId: string | null, tx?: Prisma.TransactionClient) => {

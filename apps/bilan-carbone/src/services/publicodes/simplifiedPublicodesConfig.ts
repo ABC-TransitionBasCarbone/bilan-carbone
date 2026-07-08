@@ -1,4 +1,3 @@
-import { FormLayout } from '@/components/publicodes-form/layouts/formLayout'
 import { PUBLICODES_CLICKSON_VERSION, PUBLICODES_COUNT_VERSION, PUBLICODES_TILT_VERSION } from '@/constants/versions'
 import { getClicksonEngine } from '@/environments/clickson/publicodes/clickson-engine'
 import {
@@ -6,7 +5,6 @@ import {
   getPostRuleNameClickson,
   getSubPostRuleNameClickson,
 } from '@/environments/clickson/publicodes/subPostMapping'
-import { POSTS_PUBLICODE_FROM_ENV } from '@/environments/core/publicodes/subposts'
 import { getCutEngine } from '@/environments/cut/publicodes/cut-engine'
 import {
   getFormLayoutsForSubPostCUT,
@@ -19,57 +17,75 @@ import {
   getSubPostRuleNameTilt,
 } from '@/environments/tilt/publicodes/subPostMapping'
 import { getTiltEngine } from '@/environments/tilt/publicodes/tilt-engine'
+import { EnvironmentWithSimplifiedStudies } from '@/services/permissions/environment'
 import { Environment, SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { FormLayout } from '@abc-transitionbascarbone/publicodes/form/layouts'
 import Engine from 'publicodes'
-import { getSubPostByPostTiltSimplified, SimplifiedPost, subPostsByPostClickson, subPostsByPostCUT } from '../posts'
-import { ClicksonPost, CutPost } from '../posts.enums'
+import {
+  ClicksonPost,
+  CutPost,
+  SimplifiedPost,
+  subPostsByPostClickson,
+  subPostsByPostCUT,
+  subPostsByPostTILTSimplified,
+  TiltSimplifiedPost,
+} from '../posts'
 
-export type SimplifiedEnvironment = 'CUT' | 'CLICKSON' | 'TILT'
+export const TILT_SIMPLIFIED_POSTS_CONFIG_VERSION = 'tilt-simplified-posts-v1'
 
-export const isSimplifiedEnvironment = (env: Environment): env is SimplifiedEnvironment => {
-  return env === Environment.CUT || env === Environment.CLICKSON
-}
-
-export interface SimplifiedPublicodesConfig<RuleName extends string = string> {
-  posts: SimplifiedPost[]
-  subPostsByPost: Record<SimplifiedPost, SubPost[]>
+export interface SimplifiedPublicodesConfig<TPost extends SimplifiedPost = SimplifiedPost> {
+  posts: TPost[]
+  subPostsByPost: Record<TPost, SubPost[]>
   getFormLayout: (subPost: SubPost) => FormLayout<string>[]
-  getPostRuleName: (post: SimplifiedPost) => RuleName
-  getSubPostRuleName: (subPost: SubPost) => RuleName | undefined
-  getEngine: () => Engine<RuleName>
+  getPostRuleName: (post: TPost) => string
+  getSubPostRuleName: (subPost: SubPost) => string | undefined
+  getEngine: () => Engine
   modelVersion: string
 }
 
-const SIMPLIFIED_PUBLICODES_CONFIGS = {
-  [Environment.CUT]: {
-    posts: Object.values(CutPost),
-    subPostsByPost: subPostsByPostCUT as Record<SimplifiedPost, SubPost[]>,
-    getFormLayout: getFormLayoutsForSubPostCUT,
-    getPostRuleName: getPostRuleNameCut as (post: SimplifiedPost) => string,
-    getSubPostRuleName: getSubPostRuleNameCut,
-    getEngine: getCutEngine,
-    modelVersion: PUBLICODES_COUNT_VERSION,
-  } satisfies SimplifiedPublicodesConfig,
-  [Environment.CLICKSON]: {
-    posts: Object.values(ClicksonPost),
-    subPostsByPost: subPostsByPostClickson as Record<SimplifiedPost, SubPost[]>,
-    getFormLayout: getFormLayoutsForSubPostClickson,
-    getPostRuleName: getPostRuleNameClickson as (post: SimplifiedPost) => string,
-    getSubPostRuleName: getSubPostRuleNameClickson,
-    getEngine: getClicksonEngine,
-    modelVersion: PUBLICODES_CLICKSON_VERSION,
-  } satisfies SimplifiedPublicodesConfig,
-  [Environment.TILT]: {
-    posts: POSTS_PUBLICODE_FROM_ENV[Environment.TILT] ?? [],
-    subPostsByPost: getSubPostByPostTiltSimplified(),
-    getFormLayout: getFormLayoutsForSubPostTILT,
-    getPostRuleName: getPostRuleNameTilt as (post: SimplifiedPost) => string,
-    getSubPostRuleName: getSubPostRuleNameTilt,
-    getEngine: getTiltEngine,
-    modelVersion: PUBLICODES_TILT_VERSION,
-  } satisfies SimplifiedPublicodesConfig,
-} satisfies Record<SimplifiedEnvironment, SimplifiedPublicodesConfig>
+const TILT_SIMPLIFIED_POSTS_CONFIG: SimplifiedPublicodesConfig<TiltSimplifiedPost> = {
+  posts: Object.values(TiltSimplifiedPost),
+  subPostsByPost: subPostsByPostTILTSimplified,
+  getFormLayout: getFormLayoutsForSubPostTILT,
+  getPostRuleName: (post) => getPostRuleNameTilt(post),
+  getSubPostRuleName: getSubPostRuleNameTilt,
+  getEngine: getTiltEngine,
+  modelVersion: PUBLICODES_TILT_VERSION,
+}
 
-export const getSimplifiedPublicodesConfig = (env: SimplifiedEnvironment): SimplifiedPublicodesConfig => {
-  return SIMPLIFIED_PUBLICODES_CONFIGS[env]
+const CUT_CONFIG: SimplifiedPublicodesConfig<CutPost> = {
+  posts: Object.values(CutPost),
+  subPostsByPost: subPostsByPostCUT,
+  getFormLayout: getFormLayoutsForSubPostCUT,
+  getPostRuleName: (post) => getPostRuleNameCut(post),
+  getSubPostRuleName: getSubPostRuleNameCut,
+  getEngine: getCutEngine,
+  modelVersion: PUBLICODES_COUNT_VERSION,
+}
+
+const CLICKSON_CONFIG: SimplifiedPublicodesConfig<ClicksonPost> = {
+  posts: Object.values(ClicksonPost),
+  subPostsByPost: subPostsByPostClickson,
+  getFormLayout: getFormLayoutsForSubPostClickson,
+  getPostRuleName: (post) => getPostRuleNameClickson(post),
+  getSubPostRuleName: getSubPostRuleNameClickson,
+  getEngine: getClicksonEngine,
+  modelVersion: PUBLICODES_CLICKSON_VERSION,
+}
+
+const SIMPLIFIED_PUBLICODES_CONFIGS = {
+  [Environment.CUT]: CUT_CONFIG,
+  [Environment.CLICKSON]: CLICKSON_CONFIG,
+  [Environment.TILT]: TILT_SIMPLIFIED_POSTS_CONFIG,
+}
+
+// subPostsConfigVersion parameter will be relevant when additional versions are added (e.g. tilt-simplified-posts-v2)
+export const getSimplifiedPublicodesConfig = (
+  env: EnvironmentWithSimplifiedStudies,
+  subPostsConfigVersion: string | null | undefined,
+): SimplifiedPublicodesConfig => {
+  if (subPostsConfigVersion === TILT_SIMPLIFIED_POSTS_CONFIG_VERSION) {
+    return TILT_SIMPLIFIED_POSTS_CONFIG as SimplifiedPublicodesConfig
+  }
+  return SIMPLIFIED_PUBLICODES_CONFIGS[env] as SimplifiedPublicodesConfig
 }

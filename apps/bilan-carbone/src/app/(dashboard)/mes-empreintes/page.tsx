@@ -1,9 +1,9 @@
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
-import NotFound from '@/components/pages/NotFound'
 import SimplifiedStudies from '@/components/pages/SimplifiedStudies'
 import TiltSimplifiedComingSoon from '@/components/pages/TiltSimplifiedComingSoon'
 import { getOrgNameByOrgVersionId } from '@/db/organization'
 import { hasAccessToSimplifiedStudies, isTilt, isTiltSimplifiedFeatureActive } from '@/services/permissions/environment'
+import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 
 const MyFootprints = async ({ user }: UserSessionProps) => {
   if (!user.organizationVersionId || !hasAccessToSimplifiedStudies(user.environment)) {

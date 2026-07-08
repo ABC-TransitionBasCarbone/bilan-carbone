@@ -1,6 +1,6 @@
 import PostIcon from '@/components/study/infography/icons/PostIcon'
-import { Post } from '@/services/posts'
 import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
 import { useTranslations } from 'next-intl'
 import styles from './PostHeader.module.css'
 import {
@@ -28,12 +28,12 @@ export const SimplifiedPostHeader = ({ post, mainPost, emissionValue, percent }:
 
   return (
     <StyledPostHeader post={mainPost}>
-      <StyledIconColumn>
+      <StyledIconColumn post={mainPost}>
         <PostIcon className={styles.postIcon} post={mainPost} />
       </StyledIconColumn>
       <StyledContentColumn>
         <StyledTitle post={post as Post}>{t(post)}</StyledTitle>
-        <StyledEmissionValue>{emissionValue}</StyledEmissionValue>
+        <StyledEmissionValue post={post as Post}>{emissionValue}</StyledEmissionValue>
         <div className="mt-2 w100">
           <SimplifiedProgressBar value={percent} />
         </div>

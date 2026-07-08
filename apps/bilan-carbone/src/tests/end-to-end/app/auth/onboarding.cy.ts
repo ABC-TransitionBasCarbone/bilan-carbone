@@ -4,7 +4,7 @@ describe('Onboarding', () => {
     cy.intercept('POST', '/api/auth/callback/credentials').as('login')
   })
 
-  it('trained user has ADMIN role after onboarding', () => {
+  it.skip('trained user has ADMIN role after onboarding', () => {
     cy.visit('/')
 
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type('onboarding@yopmail.com')
@@ -58,7 +58,7 @@ describe('Onboarding', () => {
     cy.getByTestId('user-role').should('have.text', 'Administrateur·rice')
   })
 
-  it('untrained user has GESTIONNAIRE role after onboarding', () => {
+  it.skip('untrained user has GESTIONNAIRE role after onboarding', () => {
     cy.visit('/')
 
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type(

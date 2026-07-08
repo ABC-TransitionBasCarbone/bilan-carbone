@@ -1,0 +1,23 @@
+{
+  "name": "@abc-transitionbascarbone/publicodes",
+  "version": "0.0.1",
+  "private": true,
+  "main": "utils.ts",
+  "types": "utils.ts",
+  "exports": {
+    ".": "./singletons.ts",
+    "./utils": "./utils.ts",
+    "./hooks": "./hooks/index.ts",
+    "./context": "./context/index.ts",
+    "./form": "./form/index.ts",
+    "./form/inputFields": "./form/inputFields/index.ts",
+    "./form/layouts": "./form/layouts/index.ts"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "@mui/material": "*"
+  },
+  "dependencies": {
+    "@abc-transitionbascarbone/utils": "*"
+  }
+}

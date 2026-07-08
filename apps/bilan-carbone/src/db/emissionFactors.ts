@@ -1,4 +1,3 @@
-import { LocaleType } from '@/i18n/config'
 import { isSourceForEnv } from '@/services/importEmissionFactor/import'
 import { EmissionFactorCommand, UpdateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { FeFilters } from '@/types/filters'
@@ -14,6 +13,7 @@ import {
   SubPost,
   Unit,
 } from '@abc-transitionbascarbone/db-common/enums'
+import { LocaleType } from '@abc-transitionbascarbone/i18n/config'
 import { Session } from 'next-auth'
 import { prismaClient } from './client.server'
 import { getOrgVersionWithOrgId } from './organization'
@@ -594,6 +594,21 @@ const getOrganizationAndImportedVersionsFilters = (organizationId: string, versi
   { organizationId, importedFrom: Import.Manual },
 ]
 
+export const findEmissionFactorByIdForMatch = (id: string) =>
+  prismaClient.emissionFactor.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      importedId: true,
+      importedFrom: true,
+      totalCo2: true,
+      unit: true,
+      customUnit: true,
+      location: true,
+      metaData: { select: { title: true, attribute: true, frontiere: true, language: true } },
+    },
+  })
+
 export const findEmissionFactorByImportedIdForMatch = (id: string, organizationId: string, versionIds: string[]) =>
   prismaClient.emissionFactor.findFirst({
     where: {
@@ -602,9 +617,12 @@ export const findEmissionFactorByImportedIdForMatch = (id: string, organizationI
     },
     select: {
       id: true,
+      importedId: true,
+      importedFrom: true,
       totalCo2: true,
       unit: true,
       customUnit: true,
+      location: true,
       metaData: { select: { title: true, attribute: true, frontiere: true, language: true } },
     },
   })
@@ -620,13 +638,17 @@ export const findEmissionFactorsByNameAndUnit = (
     where: {
       ...(unit ? { AND: [{ OR: [{ unit }, { customUnit: unit }] }] } : {}),
       metaData: { some: { language: locale, title: { equals: title, mode: Prisma.QueryMode.insensitive } } },
+      status: { not: EmissionFactorStatus.Archived },
       OR: getOrganizationAndImportedVersionsFilters(organizationId, versionIds),
     },
     select: {
       id: true,
+      importedId: true,
+      importedFrom: true,
       totalCo2: true,
       unit: true,
       customUnit: true,
+      location: true,
       metaData: { select: { title: true, attribute: true, frontiere: true, language: true } },
     },
   })
@@ -635,13 +657,17 @@ export const findEmissionFactorsByUnit = (organizationId: string, unit: Unit, ve
   prismaClient.emissionFactor.findMany({
     where: {
       AND: [{ OR: [{ unit }, { customUnit: unit }] }],
+      status: { not: EmissionFactorStatus.Archived },
       OR: getOrganizationAndImportedVersionsFilters(organizationId, versionIds),
     },
     select: {
       id: true,
+      importedId: true,
+      importedFrom: true,
       totalCo2: true,
       unit: true,
       customUnit: true,
+      location: true,
       metaData: { select: { title: true, attribute: true, frontiere: true, language: true } },
     },
   })

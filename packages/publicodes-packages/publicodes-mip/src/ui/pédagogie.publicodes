@@ -1,0 +1,151 @@
+ui . pédagogie:
+  description: |
+    L'objectif ici est de permettre d'afficher certaines informations du modèle (sans sa contrainte) au niveau de l'écran de fin ou des actions par exemple via des calculs de nouvelles variables plus pertinentes pour l'utilisateur.
+
+    On introduit ici un attribut `actions` qui permet de relier des actions du modèle à des sous catégories custom. Aucun test n'est réalisé pour l'instant pour vérifier que les actions sont bien des règles présentes dans le modèle. De même, on ne s'assure que les sous catégories comblent l'empreinte complète.
+
+    On introduit également un attribut `cachée` qui permet de ne pas afficher la sous catégorie dans l'interface utilisateur.
+
+ui . pédagogie . sous catégories:
+ui . pédagogie . sous catégories . transport:
+ui . pédagogie . sous catégories . DT:
+ui . pédagogie . sous catégories . logement:
+ui . pédagogie . sous catégories . divers:
+
+###################################################################
+### Pédagogie pour les déplacements professionnels ###
+###################################################################
+ui . pédagogie . sous catégories . transport . voiture:
+  titre: déplacements professionnels en voiture
+  icônes: 🚗
+  formule: transport . voiture
+  actions:
+    - transport . voiture . éco-conduite
+    - transport . voiture . location réduire taille #Parfois l'action ne s'affiche pas car le recalcul est négatif car l'empreinte de la construction est négligeable (et certaines consos moyennes pénalisent les petits gabarits)
+    - transport . voiture . covoiturage un
+    - transport . voiture . covoiturage deux
+    - transport . voiture . location voiture électrique
+    - transport . voiture . limitation autoroute
+    - transport . voiture . prendre le train
+
+ui . pédagogie . sous catégories . transport . deux roues:
+  titre: déplacements professionnels en deux roues
+  icônes: 🏍️
+  formule: transport . deux roues
+  actions:
+    - transport . deux roues . limitation autoroute
+    - transport . deux roues . scooter électrique
+  informations:
+    - informations regionales . transport . alternartives
+    - informations regionales . transport . alternartives train
+
+ui . pédagogie . sous catégories . transport . train:
+  titre: déplacements professionnels en train
+  icônes: 🚋
+  formule: transport . train
+  actions:
+    - transport . train déplacements pro
+
+ui . pédagogie . sous catégories . transport . avion:
+  titre: déplacements professionnels en avion
+  icônes: ✈️
+  formule: transport . avion
+  actions:
+    - transport . avion . arrêter l'avion
+    - transport . avion . arrêter l'avion court
+    - transport . avion . prendre moins l'avion
+
+ui . pédagogie . sous catégories . transport . métro ou tram:
+  titre: déplacements professionnels en métro, tramway ou train de banlieue
+  icônes: 🚊
+  valeur: transport . transports commun . type . métro ou tram
+
+#############################
+### Pédagogie pour les DT ###
+#############################
+
+ui . pédagogie . sous catégories . DT . voiture:
+  titre: déplacement domicile - travail en voiture
+  icônes: 🚗
+  formule: DT . voiture
+  actions:
+    - DT . voiture . éco-conduite
+    - DT . voiture . opter transport commun
+    - DT . voiture . intensifier transport commun
+    - DT . voiture . sans voiture
+  informations:
+    - informations regionales . DT . covoiturage
+
+ui . pédagogie . sous catégories . DT . deux roues:
+  titre: déplacement domicile - travail en deux roues
+  icônes: 🏍️
+  formule: DT . deux roues
+  actions:
+    - transport . deux roues . limitation autoroute
+    - transport . deux roues . scooter électrique
+
+ui . pédagogie . sous catégories . DT . train:
+  titre: déplacement domicile - travail en train
+  icônes: 🚋
+  formule: DT . train
+  actions:
+    - DT . train déplacements domicile travail
+
+#####################################
+### Pédagogie pour l'alimentation ###
+#####################################
+ui . pédagogie . sous catégories . alimentation:
+  titre: Votre alimentation au travail
+  icônes: 🍴
+  formule:
+    somme: #Obliger de passer par une somme de repas et boisson car la variable alimentation dans "formule" ne fonctionne pas
+      - alimentation . repas
+      - alimentation . boisson
+  actions:
+    - alimentation . repas . réduire viande . max 1 par jour
+    - alimentation . repas . viande faible empreinte
+    - alimentation . devenir végétarien
+    - alimentation . devenir végétalien
+    - alimentation . boisson . réduire café . remplace un café par jour par thé
+  informations:
+    - informations regionales . alimentation . défi
+
+ui . pédagogie . sous catégories . alimentation . poisson:
+  titre: Repas avec poisson
+  icônes: 🐟
+  formule:
+    somme:
+      - alimentation . plats . poisson gras
+      - alimentation . plats . poisson blanc
+  actions:
+    - alimentation . repas . poisson faible empreinte
+    - alimentation . devenir végétarien
+    - alimentation . bonus . manger de saison
+    - alimentation . bonus . manger local
+
+ui . pédagogie . sous catégories . alimentation . boisson:
+  titre: Votre consommation de boissons au travail
+  icônes: 🥤
+  formule: alimentation . boisson
+  actions:
+    - alimentation . boisson . réduire café . max deux par jour
+    - alimentation . boisson . réduire café . remplace un café par jour par thé
+    - alimentation . boisson . réduire café . remplace par chicorée
+    - alimentation . boisson . réduire chocolat chaud . max un par jour
+
+#####################################
+### Pédagogie pour le numérique   ###
+#####################################
+
+ui . pédagogie . sous catégories . divers . numérique:
+  icônes: 📺
+  formule: divers . numérique
+  actions:
+    - divers . numérique . appareils . allongement
+    - divers . numérique . internet . diminuer
+    - divers . numérique . reconditionné
+    - divers . numérique . réduire ia
+  informations:
+    - informations regionales . numérique . défi
+    - informations regionales . numérique . bonnes pratiques
+    - informations regionales . numérique . ia

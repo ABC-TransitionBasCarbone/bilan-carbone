@@ -1,9 +1,9 @@
 'use client'
 
+import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
 import { TextField, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useState } from 'react'
-import Modal from './Modal'
 
 interface ConfirmDeleteModalProps {
   open: boolean

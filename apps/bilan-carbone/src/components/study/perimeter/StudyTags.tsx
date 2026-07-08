@@ -1,18 +1,18 @@
 'use client'
 
-import Block from '@/components/base/Block'
-import Box from '@/components/base/Box'
-import Form from '@/components/base/Form'
-import HelpIcon from '@/components/base/HelpIcon'
 import TagChip from '@/components/base/TagChip'
-import Title from '@/components/base/Title'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { StudyTagColors } from '@/constants/tag.constants'
 import { StudyTagFamilyWithTags } from '@/db/study'
-import { useServerFunction } from '@/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
 import { createTag, deleteTag, getTagFamiliesByStudyId, updateTag } from '@/services/serverFunctions/emissionSource'
 import { NewStudyTagCommand, NewStudyTagCommandValidation } from '@/services/serverFunctions/emissionSource.command'
+import { HelpIcon } from '@abc-transitionbascarbone/components'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
+import Box from '@abc-transitionbascarbone/components/src/base/Box'
+import Form from '@abc-transitionbascarbone/components/src/base/Form'
+import Title from '@abc-transitionbascarbone/components/src/base/Title'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { StudyTagFamily } from '@abc-transitionbascarbone/db-common'
 import { Button } from '@abc-transitionbascarbone/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -120,7 +120,11 @@ const StudyTags = ({ studyId }: Props) => {
                 <Title
                   as="h6"
                   className="flex mb0"
-                  title={family.name === 'DEFAULT_FAMILY_TAG' ? t('preset') : family.name}
+                  title={
+                    family.name.startsWith('DEFAULT_FAMILY_TAG')
+                      ? t(`preset${family.name.replace('DEFAULT_FAMILY_TAG', '').toLowerCase()}`)
+                      : family.name
+                  }
                 />
                 <div className="flex">
                   <MuiButton

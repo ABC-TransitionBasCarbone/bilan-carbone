@@ -1,10 +1,7 @@
 'use client'
 
-import Block from '@/components/base/Block'
-import Box from '@/components/base/Box'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import type { FullStudy } from '@/db/study'
-import { useServerFunction } from '@/hooks/useServerFunction'
 import { useTransitionPlanFilters } from '@/hooks/useTransitionPlanFilters'
 import { download } from '@/services/file'
 import { hasAccessToBcExport, hasAccessToDownloadStudyEmissionSourcesButton } from '@/services/permissions/environment'
@@ -21,10 +18,14 @@ import {
 import { prepareReport } from '@/services/serverFunctions/study'
 import { downloadStudyResults, getDetailedEmissionResults } from '@/services/study'
 import { sortAlphabetically } from '@/services/utils'
+import { BCEnvironment } from '@/types/environment'
 import { AdditionalResultTypes, ResultType } from '@/types/study.types'
 import { getPost } from '@/utils/post'
 import { calculateMonetaryRatio, convertValue } from '@/utils/study'
 import { getAllTagIds } from '@/utils/tag.utils'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
+import Box from '@abc-transitionbascarbone/components/src/base/Box'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import type { ExportRule } from '@abc-transitionbascarbone/db-common'
 import {
   ControlMode,
@@ -36,9 +37,7 @@ import {
   StudyResultUnit,
   SubPost,
 } from '@abc-transitionbascarbone/db-common/enums'
-import { Button } from '@abc-transitionbascarbone/ui'
 import DownloadIcon from '@mui/icons-material/Download'
-import SummarizeIcon from '@mui/icons-material/Summarize'
 import { FormControl, InputLabel, MenuItem, Select, Tab, Tabs } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -141,7 +140,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
       tPost,
       siteId,
       !!validatedOnly,
-      study.organizationVersion.environment,
+      study.organizationVersion.environment as BCEnvironment,
       t,
       true,
       type,
@@ -222,7 +221,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
       siteId,
       true,
       !!validatedOnly,
-      environmentPostMapping[study.organizationVersion.environment],
+      environmentPostMapping[study.organizationVersion.environment as BCEnvironment],
       study.organizationVersion.environment,
       type,
     )
@@ -233,7 +232,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
       siteId,
       false,
       !!validatedOnly,
-      environmentPostMapping[study.organizationVersion.environment],
+      environmentPostMapping[study.organizationVersion.environment as BCEnvironment],
       study.organizationVersion.environment,
       type,
     )
@@ -245,7 +244,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
       siteId,
       true,
       !!validatedOnly,
-      environmentPostMapping[study.organizationVersion.environment],
+      environmentPostMapping[study.organizationVersion.environment as BCEnvironment],
       study.organizationVersion.environment,
       type,
     )
@@ -291,11 +290,11 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   const computedGHGPData = useMemo(
     () =>
       computeGHGPResult(
-        study,
+        study.emissionSources,
+        study.startDate,
         ghgpRules,
         emissionFactorsWithParts,
         siteId,
-        false,
         validatedOnly,
         selectedGHGPTable,
         environment,
@@ -306,10 +305,10 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   const downloadReport = useCallback(async () => {
     callServerFunction(() => prepareReport(study, { monetaryRatio, nonSpecificMonetaryRatio }), {
       onSuccess: (data) => {
-        download([data], `${study.name}_report.docx`, 'docx')
+        download([data.buffer as ArrayBuffer], `${t('reportName', { studyName: study.name })}.docx`, 'docx')
       },
     })
-  }, [study, monetaryRatio, nonSpecificMonetaryRatio, callServerFunction])
+  }, [study, monetaryRatio, nonSpecificMonetaryRatio, callServerFunction, t])
 
   const hasAccessToEmissionSourcesDownload = useMemo(
     () => hasAccessToDownloadStudyEmissionSourcesButton(study.organizationVersion.environment),
@@ -353,7 +352,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
       tGHGP,
       tUnits,
       tBase,
-      environment,
+      environment as BCEnvironment,
     )
   }
 
@@ -381,7 +380,8 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
           <Select
             id="download-results-dropdown"
             labelId="download-results-dropdown"
-            value="download"
+            value=""
+            displayEmpty
             renderValue={() => (
               <div className="align-center">
                 <DownloadIcon className="mr-2" /> {t('download')}
@@ -403,12 +403,20 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
                 {t('downloadResults')}
               </div>
             </MenuItem>
+            {isDownloadReportActive && (
+              <MenuItem>
+                <div
+                  className="grow justify-start"
+                  onClick={(e) => {
+                    preventClose(e)
+                    downloadReport()
+                  }}
+                >
+                  {t('resultsWord')}
+                </div>
+              </MenuItem>
+            )}
           </Select>
-          {isDownloadReportActive && (
-            <Button onClick={downloadReport} title={t('downloadReport')} variant="outlined">
-              <SummarizeIcon className="mr-2" /> {t('resultsWord')}
-            </Button>
-          )}
           <SelectStudySite sites={study.sites} defaultValue={siteId} setSite={setSite} />
         </div>
       }

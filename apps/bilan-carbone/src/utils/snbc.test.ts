@@ -1,4 +1,5 @@
 import {
+  BUDGET_PRECISION_TOLERANCE_PERCENT,
   SNBC_SECTOR_TARGET_EMISSIONS,
   TRAJECTORY_SNBC_ENERGY_ID,
   TRAJECTORY_SNBC_GENERAL_ID,
@@ -7,7 +8,12 @@ import {
 import type { PastStudy, TrajectoryDataPoint } from '@/types/trajectory.types'
 import { expect } from '@jest/globals'
 import { createGeneralSectenData, createSectenDataWithSectors } from './secten.test-utils'
-import { calculateSNBCTrajectory, getSNBCData } from './snbc'
+import {
+  calculateCustomSNBCSectoralTrajectory,
+  calculateSNBCTrajectory,
+  calculateSectoralSNBCReductionRates,
+  getSNBCData,
+} from './snbc'
 import { calculateTrajectoryIntegral } from './trajectory-shared.utils'
 
 // TODO: ESM module issue with Jest. Remove these mocks when moving to Vitest
@@ -253,6 +259,257 @@ describe('SNBC Trajectory', () => {
 
         expect(relativeDifference).toBeLessThan(1)
       })
+    })
+  })
+
+  describe('calculateCustomSNBCSectoralTrajectory - basic', () => {
+    test('100% energy sector matches pure energy trajectory scaled to study emissions', () => {
+      const sectenData = createSectenDataWithSectors()
+      const studyEmissions = STANDARD_STUDY_EMISSIONS
+      const studyStartYear = 2020
+
+      const sectorPercentages = { energy: 100, industry: 0, waste: 0, buildings: 0, agriculture: 0, transportation: 0 }
+      const combined = calculateCustomSNBCSectoralTrajectory(
+        { studyEmissions, studyStartYear, sectenData, pastStudies: [] },
+        sectorPercentages,
+      )
+
+      const pureEnergy = calculateSNBCTrajectory(
+        { studyEmissions, studyStartYear, sectenData, pastStudies: [] },
+        'energy',
+      )
+
+      expect(combined.find((p) => p.year === 2030)?.value).toBeCloseTo(
+        pureEnergy.find((p) => p.year === 2030)!.value,
+        0,
+      )
+      expect(combined.find((p) => p.year === 2050)?.value).toBeCloseTo(
+        pureEnergy.find((p) => p.year === 2050)!.value,
+        0,
+      )
+    })
+
+    test('sum of weighted sub-trajectories equals combined trajectory at every year', () => {
+      const sectenData = createSectenDataWithSectors()
+      const studyEmissions = STANDARD_STUDY_EMISSIONS
+      const studyStartYear = 2020
+      const sectorPercentages = { energy: 30, industry: 0, waste: 0, buildings: 0, agriculture: 0, transportation: 40 }
+      const generalPercentage = 30
+
+      const combined = calculateCustomSNBCSectoralTrajectory(
+        { studyEmissions, studyStartYear, sectenData, pastStudies: [] },
+        sectorPercentages,
+      )
+
+      const energyTrajectory = calculateSNBCTrajectory(
+        { studyEmissions: studyEmissions * 0.3, studyStartYear, sectenData, pastStudies: [] },
+        'energy',
+      )
+      const transportTrajectory = calculateSNBCTrajectory(
+        { studyEmissions: studyEmissions * 0.4, studyStartYear, sectenData, pastStudies: [] },
+        'transportation',
+      )
+      const generalTrajectory = calculateSNBCTrajectory({
+        studyEmissions: studyEmissions * (generalPercentage / 100),
+        studyStartYear,
+        sectenData,
+        pastStudies: [],
+      })
+
+      for (const year of [2020, 2025, 2030, 2040, 2050]) {
+        const expectedSum =
+          (energyTrajectory.find((p) => p.year === year)?.value ?? 0) +
+          (transportTrajectory.find((p) => p.year === year)?.value ?? 0) +
+          (generalTrajectory.find((p) => p.year === year)?.value ?? 0)
+        expect(combined.find((p) => p.year === year)?.value).toBeCloseTo(expectedSum, 0)
+      }
+    })
+  })
+
+  describe('calculateCustomSNBCSectoralTrajectory - budget equality with overshoot', () => {
+    const expectBudgetsEqual = (actual: number, expected: number) => {
+      const relativeDifference = (Math.abs(actual - expected) / expected) * 100
+      if (relativeDifference > BUDGET_PRECISION_TOLERANCE_PERCENT) {
+        console.warn(
+          `🚨 Budget precision of ${relativeDifference.toFixed(2)}% exceeds ${BUDGET_PRECISION_TOLERANCE_PERCENT}% threshold.`,
+        )
+      } else {
+        console.log(
+          `✅ Budget precision of ${relativeDifference.toFixed(2)}% is within ${BUDGET_PRECISION_TOLERANCE_PERCENT}% threshold.`,
+        )
+      }
+      expect(relativeDifference).toBeLessThan(BUDGET_PRECISION_TOLERANCE_PERCENT) // 1% max
+    }
+
+    const testSNBCSectoralBudgetEquality = (
+      referenceYear: number,
+      currentYear: number,
+      referenceEmissions: number,
+      currentEmissions: number,
+      sectorPercentages: {
+        energy: number
+        industry: number
+        waste: number
+        buildings: number
+        agriculture: number
+        transportation: number
+      },
+      sectenData: ReturnType<typeof createSectenDataWithSectors>,
+      pastStudies: PastStudy[],
+    ) => {
+      const referenceTrajectory = calculateCustomSNBCSectoralTrajectory(
+        {
+          studyEmissions: referenceEmissions,
+          studyStartYear: referenceYear,
+          sectenData,
+          pastStudies: pastStudies.filter((s) => s.year < referenceYear),
+        },
+        sectorPercentages,
+      )
+
+      const currentTrajectory = calculateCustomSNBCSectoralTrajectory(
+        {
+          studyEmissions: currentEmissions,
+          studyStartYear: currentYear,
+          sectenData,
+          pastStudies,
+          overshootAdjustment: { referenceTrajectory, referenceStudyYear: referenceYear },
+        },
+        sectorPercentages,
+      )
+
+      const referenceBudget = calculateTrajectoryIntegral(referenceTrajectory, referenceYear, 2050)
+      const currentBudget = calculateTrajectoryIntegral(currentTrajectory, referenceYear, 2050)
+
+      expectBudgetsEqual(currentBudget, referenceBudget)
+    }
+
+    test('100% general — current budget stays within range of reference across gap sizes', () => {
+      const sectenData = createGeneralSectenData()
+      const sectorPercentages = { energy: 0, industry: 0, waste: 0, buildings: 0, agriculture: 0, transportation: 0 }
+
+      testSNBCSectoralBudgetEquality(2022, 2023, 1000, 1200, sectorPercentages, sectenData, [
+        createPastStudy(2022, 1000),
+      ])
+      testSNBCSectoralBudgetEquality(2015, 2025, 1000, 1200, sectorPercentages, sectenData, [
+        createPastStudy(2015, 1000),
+      ])
+      testSNBCSectoralBudgetEquality(2026, 2027, 1000, 1200, sectorPercentages, sectenData, [
+        createPastStudy(2026, 1000),
+      ])
+    })
+
+    test('partial sectors (40% general) — current budget stays within range for varying overshoot magnitudes', () => {
+      const sectenData = createGeneralSectenData()
+      const sectorPercentages = { energy: 30, industry: 0, waste: 0, buildings: 0, agriculture: 0, transportation: 30 }
+
+      testSNBCSectoralBudgetEquality(2022, 2025, 1000, 1100, sectorPercentages, sectenData, [
+        createPastStudy(2022, 1000),
+      ])
+      testSNBCSectoralBudgetEquality(2015, 2025, 1000, 1200, sectorPercentages, sectenData, [
+        createPastStudy(2015, 1000),
+      ])
+      testSNBCSectoralBudgetEquality(2026, 2027, 1000, 1500, sectorPercentages, sectenData, [
+        createPastStudy(2026, 1000),
+      ])
+    })
+
+    test('partial sectors with multiple past studies — current budget stays within range', () => {
+      const sectenData = createGeneralSectenData()
+      const sectorPercentages = { energy: 20, industry: 0, waste: 0, buildings: 0, agriculture: 0, transportation: 10 }
+
+      testSNBCSectoralBudgetEquality(2022, 2025, 1000, 1300, sectorPercentages, sectenData, [
+        createPastStudy(2015, 1100),
+        createPastStudy(2022, 1000),
+      ])
+      testSNBCSectoralBudgetEquality(2023, 2025, 1000, 1200, sectorPercentages, sectenData, [
+        createPastStudy(2021, 1150),
+        createPastStudy(2023, 1000),
+      ])
+    })
+  })
+
+  describe('calculateSectoralSNBCReductionRates', () => {
+    test('returns rates consistent with the combined trajectory values at 2030 and 2050', () => {
+      const sectenData = createSectenDataWithSectors()
+      const studyEmissions = STANDARD_STUDY_EMISSIONS
+      const studyStartYear = 2020
+      const sectorPercentages = { energy: 30, industry: 0, waste: 0, buildings: 0, agriculture: 0, transportation: 40 }
+
+      const params = { studyEmissions, studyStartYear, sectenData, pastStudies: [] }
+      const rates = calculateSectoralSNBCReductionRates(params, sectorPercentages)
+      const trajectory = calculateCustomSNBCSectoralTrajectory(params, sectorPercentages)
+
+      expect(rates).not.toBeNull()
+
+      const baseline = trajectory.find((p) => p.year === studyStartYear)!.value
+      const value2030 = trajectory.find((p) => p.year === 2030)!.value
+      const value2050 = trajectory.find((p) => p.year === 2050)!.value
+
+      const expectedRate2030 = (baseline - value2030) / baseline / (2030 - studyStartYear)
+      const expectedRate2050 = (value2030 - value2050) / value2030 / (2050 - 2030)
+
+      expect(rates!.rateTo2030).toBeCloseTo(expectedRate2030)
+      expect(rates!.rateTo2050).toBeCloseTo(expectedRate2050)
+    })
+
+    test('returns rateTo2015 when studyStartYear is before 2015', () => {
+      const sectenData = createSectenDataWithSectors()
+      const studyStartYear = 2010
+      const params = {
+        studyEmissions: STANDARD_STUDY_EMISSIONS,
+        studyStartYear,
+        sectenData,
+        pastStudies: [],
+      }
+      const sectorPercentages = { energy: 50, industry: 0, waste: 0, buildings: 0, agriculture: 0, transportation: 50 }
+
+      const rates = calculateSectoralSNBCReductionRates(params, sectorPercentages)
+
+      expect(rates).not.toBeNull()
+      expect(rates!.rateTo2015).toBeDefined()
+      expect(rates!.rateTo2015).toBeGreaterThan(0)
+    })
+  })
+
+  describe('getSNBCData - with sectoral IDs', () => {
+    test('energy sector ID produces a non-empty trajectory', () => {
+      const sectenData = createSectenDataWithSectors()
+      const result = getSNBCData(['energy'], sectenData, null, [], 2020, STANDARD_STUDY_EMISSIONS, 2050)
+
+      expect(result['energy']).not.toBeNull()
+      expect(result['energy']!.currentTrajectory.length).toBeGreaterThan(0)
+    })
+
+    test('transportation sector ID trajectory respects 2030 and 2050 targets direction', () => {
+      const sectenData = createSectenDataWithSectors()
+      const result = getSNBCData(['transportation'], sectenData, null, [], 2020, STANDARD_STUDY_EMISSIONS, 2050)
+
+      const trajectory = result['transportation']!.currentTrajectory
+      const value2020 = trajectory.find((p) => p.year === 2020)?.value ?? 0
+      const value2030 = trajectory.find((p) => p.year === 2030)?.value ?? 0
+      const value2050 = trajectory.find((p) => p.year === 2050)?.value ?? 0
+
+      expect(value2030).toBeLessThan(value2020)
+      expect(value2050).toBeLessThan(value2030)
+    })
+
+    test('multiple sector IDs returned in single call', () => {
+      const sectenData = createSectenDataWithSectors()
+      const result = getSNBCData(
+        ['energy', 'transportation', TRAJECTORY_SNBC_GENERAL_ID],
+        sectenData,
+        null,
+        [],
+        2020,
+        STANDARD_STUDY_EMISSIONS,
+        2050,
+      )
+
+      expect(Object.keys(result)).toHaveLength(3)
+      expect(result['energy']!.currentTrajectory.length).toBeGreaterThan(0)
+      expect(result['transportation']!.currentTrajectory.length).toBeGreaterThan(0)
+      expect(result[TRAJECTORY_SNBC_GENERAL_ID]!.currentTrajectory.length).toBeGreaterThan(0)
     })
   })
 

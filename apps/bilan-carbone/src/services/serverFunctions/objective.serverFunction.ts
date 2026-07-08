@@ -18,7 +18,7 @@ import { getTrajectoryType, updateTrajectoryType } from '@/db/trajectory'
 import { getTrajectoryWithTransitionPlan } from '@/db/transitionPlan'
 import { withServerResponse } from '@/utils/serverResponse'
 import { SubPost, TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
-import { NOT_AUTHORIZED } from '../permissions/check'
+import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
 import { hasEditAccessOnStudy } from '../permissions/study'
 
 export interface CreateObjectiveInput {
@@ -94,6 +94,7 @@ export const createSubObjectives = async (inputs: CreateObjectiveInput[]) =>
       const createdObjectives = await createManyObjectivesAndReturn(
         inputs.map((input) => ({
           trajectoryId: input.trajectoryId,
+          name: input.name,
           targetYear: input.targetYear,
           startYear: input.startYear,
           reductionRate: input.reductionRate,

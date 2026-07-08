@@ -1,9 +1,9 @@
 'use client'
 
-import BaseTable from '@/components/base/Table'
-import { TableActionButton } from '@/components/base/TableActionButton'
 import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
 import { customRich } from '@/i18n/customRich'
+import { Table as BaseTable } from '@abc-transitionbascarbone/components'
+import { TableActionButton } from '@abc-transitionbascarbone/components/src/base/TableActionButton'
 import { Link, Typography } from '@mui/material'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'
@@ -14,6 +14,7 @@ import styles from './ObjectivesTable.module.css'
 
 export type ObjectiveRow = {
   id: string
+  name?: string | null
   period: string
   reductionRate: number
   correctedRate?: number

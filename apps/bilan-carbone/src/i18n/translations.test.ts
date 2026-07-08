@@ -1,7 +1,7 @@
+import { Locale } from '@abc-transitionbascarbone/i18n/config'
 import { expect } from '@jest/globals'
 import fs from 'fs'
 import path from 'path'
-import { Locale } from './config'
 
 type Translation = { [k: string]: string | Translation }
 

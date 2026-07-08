@@ -1,9 +1,9 @@
-import { Post } from '@/services/posts'
 import { BCUnit, useUnitLabel } from '@/services/unit'
 import { FeFilters } from '@/types/filters'
 import type { EmissionFactorImportVersion } from '@abc-transitionbascarbone/db-common'
 import { EmissionFactorBase, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { Button } from '@abc-transitionbascarbone/ui'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
 import {
   Autocomplete,
   Checkbox,
@@ -34,6 +34,7 @@ interface Props {
   envPosts: Post[]
   envSubPosts: SubPost[]
   filters: FeFilters
+  resolvedSubPosts: SubPost[]
   locationOptions: string[]
   setFilters: Dispatch<SetStateAction<FeFilters>>
 }
@@ -44,6 +45,7 @@ export const EmissionFactorsFilters = ({
   envPosts,
   envSubPosts,
   filters,
+  resolvedSubPosts,
   locationOptions,
   setFilters,
 }: Props) => {
@@ -249,8 +251,13 @@ export const EmissionFactorsFilters = ({
           <PostSubPostFilter
             envPosts={envPosts}
             envSubPosts={envSubPosts}
-            selectedSubPosts={filters.subPosts.filter((sp) => sp !== 'all')}
-            onChange={(subPosts) => setFilters((prevFilters) => ({ ...prevFilters, subPosts }))}
+            selectedSubPosts={resolvedSubPosts}
+            onChange={(subPosts) =>
+              setFilters((prevFilters) => ({
+                ...prevFilters,
+                subPosts: subPosts.length === envSubPosts.length ? ['all'] : subPosts,
+              }))
+            }
             showSeparateLabel={true}
             className={styles.selector}
           />

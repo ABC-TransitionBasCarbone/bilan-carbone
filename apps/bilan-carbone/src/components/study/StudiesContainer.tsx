@@ -15,16 +15,16 @@ import {
 } from '@/services/permissions/environment'
 import { canCreateAStudy } from '@/services/permissions/study'
 import { hasActiveLicence } from '@/utils/organization'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
+import Box from '@abc-transitionbascarbone/components/src/base/Box'
+import LinkButton from '@abc-transitionbascarbone/components/src/base/LinkButton'
+import Image from '@abc-transitionbascarbone/components/src/document/Image'
 import AddIcon from '@mui/icons-material/Add'
 import { Alert, Box as MUIBox } from '@mui/material'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Link from 'next/link'
-import Block from '../base/Block'
-import Box from '../base/Box'
-import LinkButton from '../base/LinkButton'
-import Image from '../document/Image'
 import Studies from './Studies'
 import styles from './StudiesContainer.module.css'
 
@@ -116,6 +116,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
           user={user}
           collaborations={!organizationVersionId && isCR}
           simplified
+          showBetaBanner={isTilt(user.environment) && displaySimplifiedStudies}
         />
       )}
       {!!collaborationStudies.length && (

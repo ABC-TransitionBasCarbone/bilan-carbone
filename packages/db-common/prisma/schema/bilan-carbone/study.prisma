@@ -176,6 +176,7 @@ model Study {
   realizationEndDate   DateTime?       @map("realization_end_date") @db.Date
   level                Level
   simplified           Boolean         @default(false)
+  subPostsConfigVersion String?        @map("sub_posts_config_version")
   resultsUnit          StudyResultUnit @default(T) @map("results_unit")
   exports              StudyExport?
 

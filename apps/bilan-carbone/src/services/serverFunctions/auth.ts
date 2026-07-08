@@ -3,8 +3,8 @@
 import { getUserByEmailWithSensibleInformations, updateUserPasswordForEmail } from '@/db/user'
 import { withServerResponse } from '@/utils/serverResponse'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { computePasswordValidation } from '@abc-transitionbascarbone/utils/auth'
 import jwt from 'jsonwebtoken'
-import { computePasswordValidation } from '../utils'
 
 export const checkToken = async (token: string) => {
   try {
@@ -16,11 +16,11 @@ export const checkToken = async (token: string) => {
     const user = await getUserByEmailWithSensibleInformations(tokenValues.email)
     return !user?.resetToken
   } catch (error) {
-    // Le token est expiré
+    // The token has expired
     if (error instanceof jwt.TokenExpiredError) {
       return true
     }
-    // Autres erreurs (token invalide, etc.)
+    // Other errors (invalid token, etc.)
     return true
   }
 }

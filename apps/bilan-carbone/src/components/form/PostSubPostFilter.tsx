@@ -1,5 +1,6 @@
-import { Post, subPostsByPost } from '@/services/posts'
+import { subPostsByPost } from '@/services/posts'
 import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
 import { Checkbox, FormControl, FormLabel, InputLabel, ListItemText, MenuItem, Select } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

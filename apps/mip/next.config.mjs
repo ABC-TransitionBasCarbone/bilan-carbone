@@ -4,11 +4,29 @@ const withNextIntl = createNextIntlPlugin()
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-  transpilePackages: ['@mui/material', '@mui/icons-material', '@abc-transitionbascarbone/survey'],
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '5mb',
+    },
+  },
   reactCompiler: {
     compilationMode: 'annotation',
   },
+  output: 'standalone', // we use the standalone output to be able to reduce bundle size by copying only the necessary assets in the standalone folder (see copy-assets.js)
+  turbopack: {
+    resolveAlias: {
+      '@abc-transitionbascarbone/publicodes-mip': '../../packages/publicodes-packages/publicodes-mip/',
+    },
+    resolveExtensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
+  },
+  transpilePackages: ['mui-color-input', '@abc-transitionbascarbone/publicodes-mip'],
+  reactStrictMode: true,
+  headers: async () => [
+    {
+      source: '/(.*)',
+      headers: [{ key: 'X-Frame-Options', value: 'SAMEORIGIN' }],
+    },
+  ],
 }
 
 export default withNextIntl(nextConfig)

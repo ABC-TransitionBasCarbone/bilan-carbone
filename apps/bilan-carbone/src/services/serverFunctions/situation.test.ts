@@ -28,7 +28,7 @@ jest.mock('../permissions/situation', () => ({
   canSaveSituationOnStudy: jest.fn(),
 }))
 
-jest.mock('../permissions/check', () => ({
+jest.mock('@abc-transitionbascarbone/services/permissions/check', () => ({
   NOT_AUTHORIZED: 'NOT_AUTHORIZED',
 }))
 

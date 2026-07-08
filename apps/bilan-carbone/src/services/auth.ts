@@ -8,11 +8,6 @@ import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next
 import { getServerSession, NextAuthOptions, Session } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 
-export const signPassword = async (password: string) => {
-  const salt = await bcrypt.genSalt(10)
-  return bcrypt.hashSync(password, salt)
-}
-
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: 'jwt',

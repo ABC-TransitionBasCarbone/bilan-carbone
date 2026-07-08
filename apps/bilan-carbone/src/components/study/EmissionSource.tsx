@@ -2,8 +2,6 @@
 
 import { keepOnlyOneMetadata } from '@/db/emissionFactors.utils'
 import type { FullStudy } from '@/db/study'
-import { useServerFunction } from '@/hooks/useServerFunction'
-import { Locale } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
 import { getEmissionResults } from '@/services/emissionSource'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
@@ -19,8 +17,9 @@ import { AccountWithUser } from '@/types/account.types'
 import { EmissionSourcesStatus } from '@/types/emissionSource.types'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { getEmissionSourceStatus } from '@/utils/emissionSources'
-import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
-import { hasEditionRights, STUDY_UNIT_VALUES } from '@/utils/study'
+import { formatEmissionFactorNumber } from '@/utils/number'
+import { hasEditionRights } from '@/utils/study'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import {
   EmissionSourceCaracterisation,
   Export,
@@ -31,7 +30,10 @@ import {
   SubPost,
   Unit,
 } from '@abc-transitionbascarbone/db-common/enums'
+import { Locale } from '@abc-transitionbascarbone/i18n/config'
 import { formatDateFr } from '@abc-transitionbascarbone/utils'
+import { STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/utils/charts'
+import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import SavedIcon from '@mui/icons-material/CloudUpload'
 import { Alert, CircularProgress, FormLabel, TextField } from '@mui/material'
 import classNames from 'classnames'

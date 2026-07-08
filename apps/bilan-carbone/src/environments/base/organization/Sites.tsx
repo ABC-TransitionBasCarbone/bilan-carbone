@@ -1,13 +1,14 @@
 'use client'
 
-import LinkButton from '@/components/base/LinkButton'
-import { TableActionButton } from '@/components/base/TableActionButton'
 import { FormCheckbox } from '@/components/form/Checkbox'
-import { FormTextField } from '@/components/form/TextField'
 import GlobalSites from '@/components/organization/Sites'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
-import { CA_UNIT_VALUES, displayCA, formatNumber } from '@/utils/number'
+import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
+import LinkButton from '@abc-transitionbascarbone/components/src/base/LinkButton'
+import { TableActionButton } from '@abc-transitionbascarbone/components/src/base/TableActionButton'
+import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { Environment, SiteCAUnit } from '@abc-transitionbascarbone/db-common/enums'
+import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import EditIcon from '@mui/icons-material/Edit'
 import { ColumnDef } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
@@ -177,6 +178,7 @@ const Sites = <T extends SitesCommand>({
     return columns
     // TODO: This component needs refactoring because the form is not properly defined
     // Without removing some deps the form refreshes on every keystroke
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [t, form, caUnit, onDuplicate])
 
   return (

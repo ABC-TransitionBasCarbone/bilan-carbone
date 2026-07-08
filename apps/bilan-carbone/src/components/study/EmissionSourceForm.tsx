@@ -21,8 +21,12 @@ import {
   getEmissionFactorFullName,
   getEmissionFactorValue,
 } from '@/utils/emissionFactors'
-import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
+import { formatEmissionFactorNumber } from '@/utils/number'
 import { formatEmissionFromNumber, hasDeprecationPeriod, hasEditionRights, isCAS } from '@/utils/study'
+import { HelpIcon } from '@abc-transitionbascarbone/components'
+import LinkButton from '@abc-transitionbascarbone/components/src/base/LinkButton'
+import { Select } from '@abc-transitionbascarbone/components/src/base/Select'
+import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
 import type { StudyTag } from '@abc-transitionbascarbone/db-common'
 import {
   EmissionSourceCaracterisation,
@@ -34,6 +38,7 @@ import {
   Unit,
 } from '@abc-transitionbascarbone/db-common/enums'
 import { Button } from '@abc-transitionbascarbone/ui'
+import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import AddIcon from '@mui/icons-material/Add'
 import CopyIcon from '@mui/icons-material/ContentCopy'
 import EditIcon from '@mui/icons-material/Edit'
@@ -47,14 +52,10 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import { Path } from 'react-hook-form'
-import HelpIcon from '../base/HelpIcon'
-import LinkButton from '../base/LinkButton'
-import { Select } from '../base/Select'
 import TagChip from '../base/TagChip'
 import BaseChip from '../emissionFactor/BaseChip'
 import { ImportVersionForFilters } from '../emissionFactor/EmissionFactorsFilters'
 import GlossaryModal from '../modals/GlossaryModal'
-import Modal from '../modals/Modal'
 import DeleteEmissionSource from './DeleteEmissionSource'
 import styles from './EmissionSource.module.css'
 import EmissionSourceFactor from './EmissionSourceFactor'
@@ -381,8 +382,8 @@ const EmissionSourceForm = ({
               <HelpIcon onClick={() => setGlossary('version')} label={t('information')} />
             </p>
           )}
-          <p className={classNames(emissionFactorStyles.header, 'align-end')}>
-            {getEmissionFactorFullName(selectedFactor.metaData)}
+          <div className={classNames(emissionFactorStyles.header, 'align-end')}>
+            {getEmissionFactorFullName(selectedFactor.metaData, '', selectedFactor.importedFrom)}
             {selectedFactor.location ? ` - ${selectedFactor.location}` : ''}
             {selectedFactor.metaData?.location ? ` - ${selectedFactor.metaData.location}` : ''} -{' '}
             {formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor, environment))}
@@ -409,7 +410,7 @@ const EmissionSourceForm = ({
                 <BaseChip base={selectedFactor.base} />
               </div>
             )}
-          </p>
+          </div>
           {selectedFactor.metaData && (
             <p className={emissionFactorStyles.detail}>{getDetail(selectedFactor.metaData)}</p>
           )}

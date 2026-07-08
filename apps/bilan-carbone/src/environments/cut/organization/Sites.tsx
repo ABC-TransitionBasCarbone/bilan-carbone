@@ -1,13 +1,13 @@
 'use client'
 
-import { TableActionButton } from '@/components/base/TableActionButton'
 import { FormCheckbox } from '@/components/form/Checkbox'
-import { FormTextField } from '@/components/form/TextField'
 import GlobalSites from '@/components/organization/Sites'
 import EnvironmentLoader from '@/environments/core/utils/EnvironmentLoader'
-import { useServerFunction } from '@/hooks/useServerFunction'
 import { getAllCNCs } from '@/services/serverFunctions/cnc'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
+import { TableActionButton } from '@abc-transitionbascarbone/components/src/base/TableActionButton'
+import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import type { Cnc } from '@abc-transitionbascarbone/db-common'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { Autocomplete, TextField } from '@mui/material'
@@ -276,7 +276,7 @@ const Sites = ({ sites, form, withSelection, disabled = false }: Props) => {
       })
     }
     return columns
-  }, [t, form, withSelection, cncs, setCncData])
+  }, [t, form, withSelection, disabled, cncs, setCncData])
 
   if (cncs === null) {
     return <EnvironmentLoader />

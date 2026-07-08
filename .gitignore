@@ -4,6 +4,7 @@ CLAUDE.md
 .claude/
 .vscode/
 notes/
+docs/
 .notes
 next-env.d.ts
 # Additional ignores from sub .gitignore files

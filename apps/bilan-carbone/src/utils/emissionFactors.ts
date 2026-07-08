@@ -1,9 +1,10 @@
 import { wasteImpact } from '@/constants/emissions'
 import { wasteEmissionFactors } from '@/constants/wasteEmissionFactors'
 import { hasWasteImpact } from '@/services/permissions/environment'
-import { convertTiltSubPostToBCSubPost, Post, subPostsByPostBC } from '@/services/posts'
+import { convertTiltSubPostToBCSubPost, subPostsByPostBC } from '@/services/posts'
 import type { EmissionFactor, Prisma } from '@abc-transitionbascarbone/db-common'
 import { Environment, Import, SubPost, Unit } from '@abc-transitionbascarbone/db-common/enums'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
 import { unique } from './array'
 
 export const getEmissionFactorValue = (
@@ -27,9 +28,13 @@ export const emissionFactorDefautQualityStar = '☆'
 export function getEmissionFactorFullName(
   metaData: { title?: string | null; attribute?: string | null; frontiere?: string | null } | null | undefined,
   valueIfMissing = '',
+  importedFrom?: Import | null,
 ): string {
   if (!metaData) {
     return valueIfMissing
+  }
+  if (importedFrom === Import.Manual) {
+    return metaData.title || valueIfMissing
   }
   return [metaData.title, metaData.attribute, metaData.frontiere].filter(Boolean).join(' - ') || valueIfMissing
 }

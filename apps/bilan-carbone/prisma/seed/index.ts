@@ -1,8 +1,6 @@
-import { environmentsWithChecklist } from '@/constants/environments'
 import { DefaultStudyTags } from '@/constants/tag.constants'
 import { reCreateBegesRules, reCreateGHGPRules } from '@/db/exports'
 import { getSectenVersion, updateSectenVersion } from '@/scripts/secten/secten'
-import { signPassword } from '@/services/auth'
 import { getEmissionFactorsFromAPI } from '@/services/importEmissionFactor/baseEmpreinte/getEmissionFactorsFromAPI'
 import { getAllowedLevels } from '@/utils/study'
 import type { Account, User } from '@abc-transitionbascarbone/db-common'
@@ -20,6 +18,8 @@ import {
   UserChecklist,
   UserStatus,
 } from '@abc-transitionbascarbone/db-common/enums'
+import { signPassword } from '@abc-transitionbascarbone/utils/auth'
+import { environmentsWithChecklist } from '@abc-transitionbascarbone/utils/environments'
 import { faker } from '@faker-js/faker'
 import { PrismaPg } from '@prisma/adapter-pg'
 
@@ -29,6 +29,8 @@ import { ACTUALITIES } from '../legacy_data/actualities'
 import { SECTEN_SEED_DATA } from './sectenSeedData'
 import { createRealStudy } from './study'
 import { getClicksonRoleFromBase, getCutRoleFromBase, getRolesFromEnvironment } from './utils'
+
+import type { BCEnvironment } from '@/types/environment'
 
 const program = new Command()
 type Params = {
@@ -50,6 +52,8 @@ const adapter = new PrismaPg({
 const prisma = new PrismaClient({
   adapter,
 }) as PrismaClient
+
+const { MIP: _, ...BCEnvironment } = Environment
 
 const users = async () => {
   await prisma.emissionFactorPartMetaData.deleteMany()
@@ -79,9 +83,16 @@ const users = async () => {
   await prisma.userCheckedStep.deleteMany()
   await prisma.userApplicationSettings.deleteMany()
   await prisma.account.deleteMany()
+
+  await prisma.accountOnCampaign.deleteMany()
+  await prisma.campaign.deleteMany()
+  await prisma.accountMip.deleteMany()
+
   await prisma.user.deleteMany()
 
   await prisma.organizationVersion.deleteMany()
+  await prisma.modelCampaign.deleteMany()
+  await prisma.organizationVersionMip.deleteMany()
   await prisma.organization.deleteMany()
 
   await prisma.cnc.deleteMany()
@@ -504,7 +515,7 @@ const users = async () => {
       return { user, accounts: [{ account, organizationVersion }] }
     }),
     ...Object.keys(Role).flatMap((role) => [
-      ...Object.keys(Environment).flatMap((environment) => [
+      ...Object.keys(BCEnvironment).flatMap((environment) => [
         ...Array.from({ length: 2 }).map(async (_, index) => {
           const user = await prisma.user.create({
             data: {
@@ -516,7 +527,7 @@ const users = async () => {
             },
           })
 
-          const organizationVersionArray = environmentOrganizationVersions[environment as Environment]
+          const organizationVersionArray = environmentOrganizationVersions[environment as BCEnvironment]
           const account = await prisma.account.create({
             data: {
               organizationVersionId: organizationVersionArray[index % organizationVersionArray.length].id,
@@ -828,19 +839,21 @@ const users = async () => {
               })),
             },
           },
-          tagFamilies: {
-            create: [
-              {
-                name: 'DEFAULT_FAMILY_TAG',
-                tags: {
-                  create: (DefaultStudyTags[Environment.TILT] ?? []).map((tag) => ({
-                    name: tag.name,
-                    color: tag.color,
+          ...(DefaultStudyTags[Environment.TILT]?.length
+            ? {
+                tagFamilies: {
+                  create: (DefaultStudyTags[Environment.TILT] ?? []).map((familyTag) => ({
+                    name: familyTag.name,
+                    tags: {
+                      create: familyTag.tags.map((tag) => ({
+                        name: tag.name,
+                        color: tag.color,
+                      })),
+                    },
                   })),
                 },
-              },
-            ],
-          },
+              }
+            : {}),
         },
       })
     }),

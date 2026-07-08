@@ -7,6 +7,7 @@ import {
 } from '@/constants/exports'
 import type { EmissionFactorWithParts } from '@/db/emissionFactors'
 import type { FullStudy } from '@/db/study'
+import { BCEnvironment } from '@/types/environment'
 import { getEmissionFactorFullName, getEmissionFactorValue } from '@/utils/emissionFactors'
 import { getEmissionSourcesTotalCo2 } from '@/utils/emissionSources'
 import { getGHGPRuleName } from '@/utils/ghgp'
@@ -17,7 +18,6 @@ import {
   formatEmissionValueForExport,
   hasDeprecationPeriod,
   isCAS,
-  STUDY_UNIT_VALUES,
 } from '@/utils/study'
 import type { ExportRule } from '@abc-transitionbascarbone/db-common'
 import {
@@ -29,22 +29,21 @@ import {
 } from '@abc-transitionbascarbone/db-common/enums'
 import { Translations } from '@abc-transitionbascarbone/lib'
 import { formatDateFr } from '@abc-transitionbascarbone/utils'
+import { Post, STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/utils/charts'
 import dayjs from 'dayjs'
 import type { ResultType } from '../types/study.types'
 import { AdditionalResultTypes, BaseResultsBySite, ResultsByPost } from '../types/study.types'
 import { getEmissionResults, getEmissionSourceEmission } from './emissionSource'
 import { download } from './file'
-import { hasAccessToBcExport } from './permissions/environment'
+import { hasAccessToBcExport, hasBCExportWithSimplifiedStudy } from './permissions/environment'
 import { isTiltSimplified } from './permissions/environmentAdvanced'
 import {
   BaseResultsByPost,
   convertSimplifiedEnvToBilanCarbone,
   convertTiltSubPostToBCSubPost,
   environmentPostMapping,
-  Post,
   subPostBCToSubPostTiltMapping,
 } from './posts'
-import { isSimplifiedEnvironment } from './publicodes/simplifiedPublicodesConfig'
 import { rulesSpans as begesRulesSpans, computeBegesResult } from './results/beges'
 import { computeResultsByPostFromEmissionSources, computeResultsByTag } from './results/consolidated'
 import { PostInfos } from './results/exports'
@@ -161,7 +160,7 @@ const getEmissionSourcesRows = (
           emissionFactor?.unit ? tUnit(emissionFactor.unit, { count: 1 }) : '',
           getQuality(getQualitativeUncertaintyFromQuality(emissionSource), tQuality),
           emissionSource.comment || '',
-          getEmissionFactorFullName(emissionFactor?.metaData, t('noFactor')),
+          getEmissionFactorFullName(emissionFactor?.metaData, t('noFactor'), emissionFactor?.importedFrom),
           emissionFactor
             ? getEmissionFactorValue(emissionFactor, environment).toLocaleString('fr-FR', { useGrouping: false })
             : '',
@@ -331,6 +330,7 @@ export const downloadStudyEmissionSources = async (
 const getHeadersForEnv = (environment: Environment) => {
   switch (environment) {
     case Environment.CUT:
+    case Environment.CLICKSON:
       return resultsExportHeadersSimplified
     case Environment.BC:
     default:
@@ -471,7 +471,7 @@ const formatConsolidatedStudyResultsForExport = (
   tQuality: Translations,
   tUnits: Translations,
   validatedEmissionSourcesOnly?: boolean,
-  environment: Environment = Environment.BC,
+  environment: BCEnvironment = Environment.BC,
   type: ResultType = AdditionalResultTypes.CONSOLIDATED,
 ) => {
   const dataForExport = []
@@ -748,7 +748,7 @@ export const downloadStudyResults = async (
   tGHGP: Translations,
   tUnits: Translations,
   tBase: Translations,
-  environment: Environment = Environment.BC,
+  environment: BCEnvironment = Environment.BC,
   resultsBySite?: BaseResultsBySite,
   resultsByPost?: BaseResultsByPost[],
   selectedSiteId?: string,
@@ -863,11 +863,11 @@ export const downloadStudyResults = async (
         `${tExport(Export.GHGP)} - ${tBase(EmissionFactorBase.LocationBased)}`,
         (siteId: string) =>
           computeGHGPResult(
-            study,
+            study.emissionSources,
+            study.startDate,
             ghgpRules,
             emissionFactorsWithParts,
             siteId,
-            true,
             validatedEmissionSourcesOnly,
             EmissionFactorBase.LocationBased,
             environment,
@@ -886,11 +886,11 @@ export const downloadStudyResults = async (
         `${tExport(Export.GHGP)} - ${tBase(EmissionFactorBase.MarketBased)}`,
         (siteId: string) =>
           computeGHGPResult(
-            study,
+            study.emissionSources,
+            study.startDate,
             ghgpRules,
             emissionFactorsWithParts,
             siteId,
-            true,
             validatedEmissionSourcesOnly,
             EmissionFactorBase.MarketBased,
             environment,
@@ -899,7 +899,7 @@ export const downloadStudyResults = async (
     )
   }
 
-  if (isSimplifiedEnvironment(environment) && resultsBySite) {
+  if (hasBCExportWithSimplifiedStudy(environment) && resultsBySite) {
     data.push(formatBaseResultsToBCExport(study, siteList, resultsBySite, tExport, tPost))
   }
 
@@ -913,7 +913,7 @@ export const getDetailedEmissionResults = (
   tPost: Translations,
   siteId: string,
   validatedOnly: boolean,
-  environment: Environment,
+  environment: BCEnvironment,
   tStudyResults: Translations,
   withDependencies: boolean = true,
   type?: ResultType,

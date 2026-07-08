@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -13,15 +17,9 @@
     "jsx": "react-jsx",
     "target": "ES2017",
     "incremental": true,
-    "types": ["node"],
-    "paths": {
-      "@abc-transitionbascarbone/db-common": ["packages/db-common/src/index.ts"],
-      "@abc-transitionbascarbone/db-common/enums": ["packages/db-common/src/enums.ts"],
-      "@abc-transitionbascarbone/db-common/types": ["packages/db-common/src/types.ts"],
-      "@abc-transitionbascarbone/css": ["packages/css/index.ts"],
-      "@abc-transitionbascarbone/survey": ["packages/survey/src/index.ts"],
-      "@abc-transitionbascarbone/lib": ["packages/lib/src/index.ts"],
-      "@abc-transitionbascarbone/i18n/*": ["packages/i18n/*"]
-    }
+    "types": [
+      "node",
+      "jest"
+    ]
   }
 }

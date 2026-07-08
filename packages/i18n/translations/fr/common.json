@@ -1,0 +1,327 @@
+{
+  "common": {
+    "colon": " :",
+    "error": "Une erreur est survenue. Si le problème persiste, contactez le support.",
+    "yes": "Oui",
+    "no": "Non",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "all": "Tous",
+    "allSites": "Tous les sites",
+    "allSubPosts": "Tous les sous-postes",
+    "allPosts": "Tous les postes",
+    "allTags": "Tous les tags",
+    "xSites": "{count} sites",
+    "xSubPosts": "{count} sous-postes",
+    "xTags": "{count} tags",
+    "none": "Aucun",
+    "unknown": "Inconnu",
+    "subPosts": "Sous postes",
+    "onDate": "le",
+    "by": "par",
+    "scope": "Périmètre",
+    "sites": "Sites",
+    "tags": "Tags",
+    "noTagsAvailable": "Aucun tag disponible",
+    "posts": "Postes",
+    "selectedPlural": "sélectionnés",
+    "moreInfo": "En savoir plus",
+    "mandatory": "* obligatoire",
+    "and": "et",
+    "year": "Année",
+    "action": {
+      "create": "Créer",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "add": "Ajouter",
+      "duplicate": "Dupliquer",
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "confirm": "Confirmer",
+      "update": "Mettre à jour",
+      "start": "Démarrer",
+      "close": "Fermer",
+      "approve": "Approuver",
+      "selectAll": "Tout sélectionner",
+      "unselectAll": "Tout désélectionner",
+      "back": "Retour",
+      "import": "Importer",
+      "export": "Exporter",
+      "continue": "Continuer"
+    },
+    "questions": {
+      "glossary": {
+        "title": "Informations supplémentaires sur la question",
+        "close": "Fermer"
+      }
+    },
+    "label": {
+      "start": "Début",
+      "end": "Fin",
+      "sites": "Sites",
+      "date": "Date",
+      "startYear": "Année de début",
+      "targetYear": "Année cible",
+      "line": "Ligne {line}",
+      "labelName": "Libellé",
+      "source": "Source",
+      "unit": "Unité",
+      "emissionsKg": "Émissions (kgCO2e)"
+    },
+    "notAuthorized": "Action non authorisée",
+    "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
+    "typeToConfirm": "Tapez \"{name}\" pour confirmer",
+    "perPerson": "par personne",
+    "carbonIntensities": "Intensités carbone"
+  },
+  "saveStatus": {
+    "saving": "Sauvegarde des réponses en cours...",
+    "saved": "Réponses sauvegardées",
+    "error": "Erreur de sauvegarde des réponses",
+    "ready": "Prêt à sauvegarder",
+    "at": "à",
+    "syncedFromOtherUser": "Données mises à jour par un·e autre utilisateur·ice"
+  },
+  "signup": {
+    "email": "Email",
+    "emailPlaceholder": "Email utilisé lors de votre formation",
+    "emailRequired": "Veuillez entrer un email",
+    "validate": "Valider",
+    "Request sent": "Une demande d'activation de votre compte a été envoyé à vos collègues",
+    "Email sent": "Vous allez recevoir un mail pour finaliser l'activation de votre compte.",
+    "support": "Un problème est survenu. Réessayez. Si cela ne fonctionne pas, contactez notre support",
+    "validation": {
+      "email": "Veuillez entrer un email"
+    }
+  },
+  "navigation": {
+    "home": "Accueil",
+    "logout": "Se déconnecter",
+    "comments": "Commentaires",
+    "admin": "Admin",
+    "team": "Mon équipe",
+    "campaigns": "Campagnes"
+  },
+  "country": {
+    "ALBANIA": "Albanie",
+    "ANDORRA": "Andorre",
+    "AUSTRIA": "Autriche",
+    "BELARUS": "Biélorussie",
+    "BELGIUM": "Belgique",
+    "BOSNIA_AND_HERZEGOVINA": "Bosnie-Herzégovine",
+    "BULGARIA": "Bulgarie",
+    "CROATIA": "Croatie",
+    "CYPRUS": "Chypre",
+    "CZECH_REPUBLIC": "République tchèque",
+    "DENMARK": "Danemark",
+    "ESTONIA": "Estonie",
+    "FINLAND": "Finlande",
+    "FRANCE": "France",
+    "GERMANY": "Allemagne",
+    "GREECE": "Grèce",
+    "HUNGARY": "Hongrie",
+    "ICELAND": "Islande",
+    "IRELAND": "Irlande",
+    "ITALY": "Italie",
+    "KOSOVO": "Kosovo",
+    "LATVIA": "Lettonie",
+    "LIECHTENSTEIN": "Liechtenstein",
+    "LITHUANIA": "Lituanie",
+    "LUXEMBOURG": "Luxembourg",
+    "MALTA": "Malte",
+    "MOLDOVA": "Moldavie",
+    "MONACO": "Monaco",
+    "MONTENEGRO": "Monténégro",
+    "NETHERLANDS": "Pays-Bas",
+    "NORTH_MACEDONIA": "Macédoine du Nord",
+    "NORWAY": "Norvège",
+    "POLAND": "Pologne",
+    "PORTUGAL": "Portugal",
+    "ROMANIA": "Roumanie",
+    "RUSSIA": "Russie",
+    "SAN_MARINO": "Saint-Marin",
+    "SERBIA": "Serbie",
+    "SLOVAKIA": "Slovaquie",
+    "SLOVENIA": "Slovénie",
+    "SPAIN": "Espagne",
+    "SWEDEN": "Suède",
+    "SWITZERLAND": "Suisse",
+    "UKRAINE": "Ukraine",
+    "UNITED_KINGDOM": "Royaume-Uni",
+    "VATICAN_CITY": "Cité du Vatican",
+    "OTHER": "Autre"
+  },
+  "study": {
+    "results": {
+      "chartTypes": {
+        "table": "Tableau",
+        "bar": "Diagramme en barres",
+        "pie": "Diagramme circulaire",
+        "ratio": "Intensités carbone"
+      }
+    },
+    "questions": {
+      "actions": "Actions",
+      "add": "Ajouter",
+      "error": "Erreur lors de la mise à jour du champs",
+      "next": "Sous-poste suivant",
+      "previous": "Sous-poste précédent",
+      "numberOfYears": "Nombre d'années",
+      "format": {
+        "text": "Texte",
+        "postalCode": "Code postal",
+        "phone": "Téléphone",
+        "year": "Année",
+        "hour": "Heure",
+        "number": "Nombre"
+      },
+      "errorLoadingQuestions": "Erreur lors du chargement des questions",
+      "retry": "Réessayer",
+      "finish": "Terminer",
+      "noQuestions": "Aucune question trouvée pour ce sous-poste",
+      "autoSaveError": "Certaines réponses n'ont pas pu être sauvegardées automatiquement. Veuillez vérifier votre connexion et réessayer."
+    },
+    "infography": {
+      "form": {
+        "backToInfography": "Afficher les postes"
+      }
+    }
+  },
+  "locale": {
+    "en": "English",
+    "fr": "Français",
+    "es": "Español",
+    "el": "ελληνικά",
+    "hr": "hrvatski",
+    "hu": "magyar",
+    "it": "Italiano",
+    "ro": "Română",
+    "selector": "Langue du site"
+  },
+  "login": {
+    "welcome": "Bienvenue",
+    "form": {
+      "activate": "Activer mon compte",
+      "firstConnection": "Première connexion ?",
+      "alreadyRegistered": "Déjà un compte ?",
+      "resetTitle": "Vous avez demandé de créer ou réinitialiser votre mot de passe. Rentrez les informations demandées ci-dessous pour confirmer votre création de compte ou réinitialisation de mot de passe.",
+      "login": "Se connecter",
+      "email": "Email",
+      "emailPlaceholder": "Renseignez votre adresse email",
+      "password": "Mot de passe",
+      "passwordPlaceholder": "Renseignez votre mot de passe",
+      "confirmPassword": "Confirmer le mot de passe",
+      "hidePassword": "Cacher le mot de passe",
+      "showPassword": "Montrer le mot de passe",
+      "notMatching": "Les mots de passe ne correspondent pas",
+      "passwordLength": "Le mot de passe doit avoir au moins 8 caractères",
+      "passwordUppercase": "Le mot de passe doit avoir au moins une majuscule",
+      "passwordLowercase": "Le mot de passe doit avoir au moins une minuscule",
+      "passwordSpecialChar": "Le mot de passe doit avoir au moins un caractère spécial",
+      "passwordDigit": "Le mot de passe doit avoir au moins un chiffre",
+      "forgotPassword": "Mot de passe oublié ?",
+      "reset": "Confirmer",
+      "error": "Veuillez verifier votre email et votre mot de passe",
+      "expired": "Ce lien de réinitialisation de mot de passe a expiré",
+      "backToHome": "Retour à l'accueil",
+      "resetError": "Certaines informations ne sont pas bonnes. Si vous pensez avoir tout rempli correctement, contactez nous.",
+      "emailRequired": "Veuillez entrer un email",
+      "emailAndPasswordRequired": "Veuillez entrer un email et un mot de passe",
+      "emailSent": "Si votre email est correct, vous allez recevoir un mail pour réinitialiser votre mot de passe",
+      "validated": "Votre mot de passe a été réinitialisé",
+      "validation": {
+        "email": "Veuillez entrer un email",
+        "password": "Veuillez entrer un mot de passe"
+      }
+    }
+  },
+  "spinner": {
+    "loading": "Chargement"
+  },
+  "error": {
+    "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
+    "Not found": "La ressource demandée n'a pas été trouvée",
+    "Server error": "Une erreur serveur est survenue, veuillez contacter le support",
+    "default": "Une erreur s'est produite, veuillez reessayer. Si le problème persiste, contactez le support.",
+    "error": "Une erreur s'est produite...",
+    "contactSupport": "Un problème est survenu. Essayez de revenir sur <link>la page d'accueil</link>. <p>Si cela ne fonctionne pas, contactez notre support à <m></m> ou essayez de vous <logout>reconnecter</logout>.</p>",
+    "duplicateScopeCombination": "Un objectif avec le même périmètre (sites, tags, sous-postes) et la même année cible existe déjà pour cette trajectoire"
+  },
+  "email": {
+    "subject": {
+      "resetPassword": "Mot de passe oublié",
+      "newUser": "Vous avez été invité au BC+",
+      "addedActiveUser": "Vous avez été invité sur un nouvel environnement du BC+",
+      "activation": "Vous avez activé votre compte sur le BC+",
+      "activationRequest": "Demande d'accès à votre organisation BC+",
+      "userOnStudyInvitation": "Ajout sur l'étude {studyName}",
+      "contributorInvitation": "Demande de contribution sur l'étude {studyName}",
+      "addedUsersByFile": "Autorisation pour l'ajout d'utilisateurs"
+    }
+  },
+  "nav": {
+    "backToHome": "Retour à l'accueil",
+    "home": "Accueil",
+    "notFound": "Page non trouvée",
+    "organization": "Organisation",
+    "edit": "Modifier",
+    "team": "Équipe"
+  },
+  "team": {
+    "pending": "Invitations en attentes",
+    "invitationDate": "Invitation envoyé le",
+    "toValidate": "Invitations à valider",
+    "addedDate": "Ajouté le",
+    "delete": "Supprimer l'utilisateur·rice",
+    "resend": "Renvoyer l'invitation",
+    "table": {
+      "title": "Mon équipe",
+      "newUser": "Inviter un·e utilisateur·rice",
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "email": "Email",
+      "level": "Formation",
+      "role": "Rôle",
+      "action": " ",
+      "deleteMember": "Supprimer le·a membre",
+      "userDeletion": "Suppression d'un·e utilisateur·rice",
+      "userDeletionDescription": "Êtes vous sur de vouloir supprimer cet·te utilisateur·rice ? Il n'aura plus accès au compte de votre organisation, mais aura toujours accès aux études pour lesquelles il a été invité par d'autres organisations.",
+      "necessaryAdmin": "La suppression de cet administrateur est impossible. Il est le seul validateur·rice des études suivantes : "
+    }
+  },
+  "level": {
+    "Initial": "Initial",
+    "Standard": "Standard",
+    "Advanced": "Avancé",
+    "noLevel": "Non formé·e"
+  },
+  "role": {
+    "SUPER_ADMIN": "Administrateur·rice Global",
+    "ADMIN": "Administrateur·rice",
+    "COLLABORATOR": "Collaborateur·rice",
+    "ADMIN_description": "Un·e administrateur·rice possède tous les droits sur le compte de l'organisation ainsi que sur l'ensemble des études pour son organisation (qu'elles soient publiques ou privées). Il est impossible de changer le rôle d'un·e administrateur·rice sur une étude de son organisation.",
+    "COLLABORATOR_description": "Un·e collaborateur·rice est une personne formée à la méthode Bilan Carbone®. Il n'a aucun droit sur le compte de l'organisation mais peut créer des études pour son organisation. Il est par défaut éditeur·rice sur tous les Bilans Carbone® publics de son organisation.",
+    "guide": "Guide des rôles",
+    "saved": "Nouveau rôle sauvegardé",
+    "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
+    "More than one": "Il doit y avoir au moins un·e administrateur·rice ou gestionnaire dans l'organisation"
+  },
+  "newMember": {
+    "title": "Inviter un·e utilisateur·rice",
+    "email": "Email",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "role": "Rôle",
+    "level": "Formation",
+    "create": "Inviter l'utilisateur·rice",
+    "Not authorized": "Impossible d'inviter cette utilisateur·rice. Veuillez contacter le <link>support</link> pour plus d'informations.",
+    "validation": {
+      "email": "Veuillez renseigner un email valide",
+      "firstName": "Veuillez renseigner un prénom",
+      "lastName": "Veuillez renseigner un nom",
+      "level": "Veuillez renseigner un niveau de formation",
+      "role": "Veuillez renseigner un rôle"
+    },
+    "addedMember": "L'utilisateur·rice a bien été ajouté à votre organisation"
+  }
+}

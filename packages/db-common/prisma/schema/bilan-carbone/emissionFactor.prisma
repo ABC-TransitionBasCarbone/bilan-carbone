@@ -143,7 +143,7 @@ enum SubPost {
   // Dechets
   FroidEtClim
 
-  // Autres émissions 
+  // Autres émissions
   ActivitesAgricoles
   ActivitesIndustrielles
 
@@ -161,7 +161,7 @@ enum SubPost {
   Sortant
   TransportFabricationDesVehicules
 
-  // Alimentation 
+  // Alimentation
   RepasPrisParLesSalaries
   RepasPrisParLesBenevoles
   RepasPrisParLesBeneficiaires
@@ -176,9 +176,17 @@ enum SubPost {
   UtilisationEnDependanceConsommationDEnergie
   UtilisationEnDependanceFuitesEtAutresConsommations
 
-  // Télétravail 
+  // Télétravail
   TeletravailSalaries
   TeletravailBenevoles
+
+  // TILT Simplifié
+  DechetsEmisParLOrganisation
+  DeplacementsBenevoles
+  BienMatieres
+  ConsommationsEnergieUtilisationProduits
+  TeletravailSalariesBenevoles
+  FinDeVieProduitsVendusFournisBeneficiaires
 
   // Équipements et immobilisations
   EquipementsDesSalaries
@@ -243,11 +251,11 @@ model EmissionFactorImportVersion {
 
 // Link table between EmissionFactor and EmissionFactorImportVersion
 model EmissionFactorVersion {
-  emissionFactorId String         @map("emission_factor_id")
-  emissionFactor   EmissionFactor @relation(fields: [emissionFactorId], references: [id])
-  importVersionId  String         @map("import_version_id")
+  emissionFactorId String                      @map("emission_factor_id")
+  emissionFactor   EmissionFactor              @relation(fields: [emissionFactorId], references: [id])
+  importVersionId  String                      @map("import_version_id")
   importVersion    EmissionFactorImportVersion @relation(fields: [importVersionId], references: [id])
-  createdAt        DateTime       @default(now()) @map("created_at")
+  createdAt        DateTime                    @default(now()) @map("created_at")
 
   @@id([emissionFactorId, importVersionId])
   @@index([importVersionId])

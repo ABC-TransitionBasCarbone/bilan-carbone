@@ -3,12 +3,11 @@
 import type { FullStudy } from '@/db/study'
 import { customRich } from '@/i18n/customRich'
 import { getCaracterisationsBySubPost, getEmissionResults } from '@/services/emissionSource'
-import { Post } from '@/services/posts'
 import { EmissionFactorWithMetaData, getEmissionFactors } from '@/services/serverFunctions/emissionFactor'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
-import { formatNumber } from '@/utils/number'
 import { withInfobulle } from '@/utils/post'
-import { postColors, STUDY_UNIT_VALUES } from '@/utils/study'
+import { postColors } from '@/utils/study'
+import { HelpIcon } from '@abc-transitionbascarbone/components'
 import {
   ControlMode,
   Environment,
@@ -16,13 +15,14 @@ import {
   StudyRole,
   SubPost as SubPostEnum,
 } from '@abc-transitionbascarbone/db-common/enums'
+import { Post, STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/utils/charts'
+import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
 import classNames from 'classnames'
 import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import HelpIcon from '../base/HelpIcon'
 import ElectricityBaseDifference from './ElectricityBaseDifference'
 import EmissionSource from './EmissionSource'
 import NewEmissionSource from './NewEmissionSource'

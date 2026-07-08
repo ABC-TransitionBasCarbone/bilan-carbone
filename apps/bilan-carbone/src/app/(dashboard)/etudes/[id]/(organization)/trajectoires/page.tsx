@@ -2,10 +2,10 @@ import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import { StudyProps } from '@/components/hoc/withStudy'
 import withStudyDetails from '@/components/hoc/withStudyDetails'
 import withTransitionPlan, { TransitionPlanProps } from '@/components/hoc/withTransitionPlan'
-import NotFound from '@/components/pages/NotFound'
 import TrajectoryPage from '@/components/pages/TrajectoryPage'
 import { loadTransitionPlanPageData } from '@/components/study/transitionPlan/transitionPlanPageData'
 import { hasTransitionPlan } from '@/db/transitionPlan'
+import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 import { redirect } from 'next/navigation'
 
 const TrajectoryReduction = async ({ study, canEdit, user }: StudyProps & UserSessionProps & TransitionPlanProps) => {

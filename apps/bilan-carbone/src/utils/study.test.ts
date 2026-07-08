@@ -138,12 +138,13 @@ describe('StudyUtils functions', () => {
       expect(res[2].id).toBe('3')
     })
 
-    it('Should filter location-based emission source', () => {
+    it('Should return all ES if markerBased', () => {
       const res = getBaseFilteredEmissionSources(emissionSources, EmissionFactorBase.MarketBased)
-      expect(res).toHaveLength(3)
+      expect(res).toHaveLength(4)
       expect(res[0].id).toBe('1')
       expect(res[1].id).toBe('2')
-      expect(res[2].id).toBe('4')
+      expect(res[2].id).toBe('3')
+      expect(res[3].id).toBe('4')
     })
   })
 })

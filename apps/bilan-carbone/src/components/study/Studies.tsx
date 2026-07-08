@@ -1,13 +1,18 @@
 'use server'
 
 import { StudyCardItem } from '@/db/study'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import AddIcon from '@mui/icons-material/Add'
 import { Box } from '@mui/material'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
-import Block from '../base/Block'
+import dynamic from 'next/dynamic'
 import styles from './Studies.module.css'
 import StudyCard from './card/StudyCard'
+
+const BetaBanner = dynamic(() => import('@/components/base/BetaBanner/BetaBanner'), {
+  ssr: true,
+})
 
 interface Props {
   studies: StudyCardItem[]
@@ -16,9 +21,18 @@ interface Props {
   user: UserSession
   collaborations?: boolean
   simplified?: boolean
+  showBetaBanner?: boolean
 }
 
-const Studies = async ({ studies, canAddStudy, creationUrl, user, collaborations, simplified }: Props) => {
+const Studies = async ({
+  studies,
+  canAddStudy,
+  creationUrl,
+  user,
+  collaborations,
+  simplified,
+  showBetaBanner,
+}: Props) => {
   const t = await getTranslations('study')
 
   let title = ''
@@ -54,6 +68,7 @@ const Studies = async ({ studies, canAddStudy, creationUrl, user, collaborations
           : undefined
       }
     >
+      {showBetaBanner && <BetaBanner />}
       <Box className="flex-col grow">
         {studies.length && (
           <ul className={styles.grid}>

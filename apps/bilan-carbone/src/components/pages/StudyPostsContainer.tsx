@@ -1,18 +1,19 @@
 'use client'
-import { EnvironmentMode } from '@/constants/environments'
 import type { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import { customRich } from '@/i18n/customRich'
-import { Post, subPostsByPost } from '@/services/posts'
-import { SimplifiedEnvironment } from '@/services/publicodes/simplifiedPublicodesConfig'
+import { EnvironmentWithSimplifiedStudies } from '@/services/permissions/environment'
+import { subPostsByPost } from '@/services/posts'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { StudyRole, SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
+import { EnvironmentMode } from '@abc-transitionbascarbone/utils/environments'
 import { CircularProgress } from '@mui/material'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
-import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import GlossaryModal from '../modals/GlossaryModal'
 import StudyPostsCard from '../study/card/StudyPostsCard'
@@ -112,7 +113,7 @@ const StudyPostsPageContainer = ({ post, currentSubPost, study, userRole, user }
             />
           ) : (
             <SimplifiedStudyPostsPage
-              environment={environment as SimplifiedEnvironment}
+              environment={environment as EnvironmentWithSimplifiedStudies}
               currentSubPost={currentSubPost}
               post={post}
               study={study}
@@ -123,7 +124,7 @@ const StudyPostsPageContainer = ({ post, currentSubPost, study, userRole, user }
         environmentComponents={{
           [EnvironmentMode.SIMPLIFIED]: (
             <SimplifiedStudyPostsPage
-              environment={environment as SimplifiedEnvironment}
+              environment={environment as EnvironmentWithSimplifiedStudies}
               currentSubPost={currentSubPost}
               post={post}
               study={study}

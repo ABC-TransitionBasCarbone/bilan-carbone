@@ -1,5 +1,5 @@
-import Modal from '@/components/modals/Modal'
 import { handleWarningText } from '@/utils/components'
+import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
 import { useTranslations } from 'next-intl'
 
 interface Props {

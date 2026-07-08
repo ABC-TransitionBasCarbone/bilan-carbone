@@ -1,8 +1,8 @@
 import withAuth from '@/components/hoc/withAuth'
 import EmissionsFactorsPage from '@/components/pages/EmissionFactors'
-import NotFound from '@/components/pages/NotFound'
 import { getOrganizationVersionById } from '@/db/organization'
 import { hasAccessToEmissionFactors } from '@/services/permissions/environmentAdvanced'
+import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 import { UserSession } from 'next-auth'
 
 interface Props {

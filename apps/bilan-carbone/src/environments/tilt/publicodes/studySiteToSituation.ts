@@ -17,5 +17,17 @@ export function studySiteToTiltSituation(studySite: StudySiteFields | undefined)
     situation['général . code postal'] = studySite.distanceToParis
   }
 
+  if (studySite.volunteerNumber) {
+    situation['général . bénévoles'] = studySite.volunteerNumber
+  }
+
+  if (studySite.beneficiaryNumber) {
+    situation['général . bénéficiaires'] = studySite.beneficiaryNumber
+  }
+
+  if (studySite.etp) {
+    situation['général . salariés'] = studySite.etp
+  }
+
   return situation
 }

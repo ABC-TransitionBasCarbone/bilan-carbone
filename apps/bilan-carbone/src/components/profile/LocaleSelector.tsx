@@ -1,9 +1,9 @@
 'use client'
 
-import { Locale, LocaleType, defaultLocale } from '@/i18n/config'
 import { getLocale, switchLocale } from '@/i18n/locale'
 import { hasAccessToAllLocales } from '@/services/permissions/environment'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { Locale, LocaleType, defaultLocale } from '@abc-transitionbascarbone/i18n/config'
 import { InputLabel, MenuItem, Select } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'

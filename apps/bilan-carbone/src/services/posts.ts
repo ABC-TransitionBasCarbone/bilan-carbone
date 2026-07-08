@@ -1,13 +1,18 @@
-import { SUBPOSTS_PUBLICODE_FROM_ENV } from '@/environments/core/publicodes/subposts'
+import { BCEnvironment } from '@/types/environment'
 import { Environment, SubPost } from '@abc-transitionbascarbone/db-common/enums'
-import { BCPost, ClicksonPost, CutPost, TiltPost } from './posts.enums'
+import {
+  BCPost,
+  ClicksonPost,
+  CutPost,
+  TiltAdvancedPost,
+  TiltSimplifiedPost,
+} from '@abc-transitionbascarbone/services/results/posts.enums'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
 
 // Re-export enums for backward compatibility
-export { BCPost, ClicksonPost, CutPost, TiltPost }
+export { BCPost, ClicksonPost, CutPost, TiltAdvancedPost, TiltSimplifiedPost }
 
-export const Post = { ...BCPost, ...CutPost, ...TiltPost, ...ClicksonPost }
-export type SimplifiedPost = CutPost | ClicksonPost | TiltPost
-export type Post = BCPost | TiltPost | CutPost | ClicksonPost
+export type SimplifiedPost = CutPost | ClicksonPost | TiltSimplifiedPost
 
 export type BaseResultsByPost = {
   post: Post | SubPost | 'total'
@@ -98,17 +103,17 @@ export const subPostsByPostCUT: Record<CutPost, SubPost[]> = {
   ],
 }
 
-export const subPostsByPostTILT: Record<TiltPost, SubPost[]> = {
-  [TiltPost.ConstructionDesLocaux]: [SubPost.Batiments, SubPost.AutresInfrastructures],
-  [TiltPost.Energies]: subPostsByPostBC[BCPost.Energies],
-  [TiltPost.DechetsDirects]: subPostsByPostBC[BCPost.DechetsDirects],
-  [TiltPost.FroidEtClim]: [SubPost.FroidEtClim],
-  [TiltPost.AutresEmissions]: [
+export const subPostsByPostTILT: Record<TiltAdvancedPost, SubPost[]> = {
+  [TiltAdvancedPost.ConstructionDesLocaux]: [SubPost.Batiments, SubPost.AutresInfrastructures],
+  [TiltAdvancedPost.Energies]: subPostsByPostBC[BCPost.Energies],
+  [TiltAdvancedPost.DechetsDirects]: subPostsByPostBC[BCPost.DechetsDirects],
+  [TiltAdvancedPost.FroidEtClim]: [SubPost.FroidEtClim],
+  [TiltAdvancedPost.AutresEmissions]: [
     SubPost.ActivitesAgricoles,
     SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas,
     SubPost.ActivitesIndustrielles,
   ],
-  [TiltPost.DeplacementsDePersonne]: [
+  [TiltAdvancedPost.DeplacementsDePersonne]: [
     SubPost.DeplacementsDomicileTravailSalaries,
     SubPost.DeplacementsDomicileTravailBenevoles,
     SubPost.DeplacementsDansLeCadreDUneMissionAssociativeSalaries,
@@ -116,28 +121,28 @@ export const subPostsByPostTILT: Record<TiltPost, SubPost[]> = {
     SubPost.DeplacementsDesBeneficiaires,
     SubPost.DeplacementsFabricationDesVehicules,
   ],
-  [TiltPost.TransportDeMarchandises]: [
+  [TiltAdvancedPost.TransportDeMarchandises]: [
     SubPost.Entrant,
     SubPost.Interne,
     SubPost.Sortant,
     SubPost.TransportFabricationDesVehicules,
   ],
-  [TiltPost.IntrantsBiensEtMatieresTilt]: subPostsByPostBC[BCPost.IntrantsBiensEtMatieres].filter(
+  [TiltAdvancedPost.IntrantsBiensEtMatieresTilt]: subPostsByPostBC[BCPost.IntrantsBiensEtMatieres].filter(
     (sp) => sp !== SubPost.NourritureRepasBoissons,
   ),
-  [TiltPost.Alimentation]: [
+  [TiltAdvancedPost.Alimentation]: [
     SubPost.RepasPrisParLesSalaries,
     SubPost.RepasPrisParLesBenevoles,
     SubPost.RepasPrisParLesBeneficiaires,
   ],
-  [TiltPost.IntrantsServices]: subPostsByPostBC[BCPost.IntrantsServices],
-  [TiltPost.EquipementsEtImmobilisations]: [
+  [TiltAdvancedPost.IntrantsServices]: subPostsByPostBC[BCPost.IntrantsServices],
+  [TiltAdvancedPost.EquipementsEtImmobilisations]: [
     SubPost.EquipementsDesSalaries,
     SubPost.ParcInformatiqueDesSalaries,
     SubPost.EquipementsDesBenevoles,
     SubPost.ParcInformatiqueDesBenevoles,
   ],
-  [TiltPost.Utilisation]: [
+  [TiltAdvancedPost.Utilisation]: [
     SubPost.UtilisationEnResponsabiliteConsommationDeBiens,
     SubPost.UtilisationEnResponsabiliteConsommationNumerique,
     SubPost.UtilisationEnResponsabiliteConsommationDEnergie,
@@ -148,8 +153,46 @@ export const subPostsByPostTILT: Record<TiltPost, SubPost[]> = {
     SubPost.UtilisationEnDependanceFuitesEtAutresConsommations,
     SubPost.InvestissementsFinanciersRealises,
   ],
-  [TiltPost.FinDeVie]: subPostsByPostBC[BCPost.FinDeVie],
-  [TiltPost.Teletravail]: [SubPost.TeletravailSalaries, SubPost.TeletravailBenevoles],
+  [TiltAdvancedPost.FinDeVie]: subPostsByPostBC[BCPost.FinDeVie],
+  [TiltAdvancedPost.Teletravail]: [SubPost.TeletravailSalaries, SubPost.TeletravailBenevoles],
+}
+
+export const subPostsByPostTILTSimplified: Record<TiltSimplifiedPost, SubPost[]> = {
+  [TiltSimplifiedPost.LocauxSimplified]: [SubPost.Batiments, SubPost.AutresInfrastructures],
+  [TiltSimplifiedPost.EnergiesSimplified]: [
+    SubPost.CombustiblesFossiles,
+    SubPost.CombustiblesOrganiques,
+    SubPost.ReseauxDeChaleurEtDeVapeur,
+    SubPost.ReseauxDeFroid,
+    SubPost.Electricite,
+  ],
+  [TiltSimplifiedPost.DechetsSimplified]: [SubPost.DechetsEmisParLOrganisation],
+  [TiltSimplifiedPost.FroidEtClimSimplified]: [SubPost.FroidEtClim],
+  [TiltSimplifiedPost.DeplacementsDePersonneSimplified]: [
+    SubPost.DeplacementsDomicileTravailSalaries,
+    SubPost.DeplacementsBenevoles,
+    SubPost.DeplacementsDansLeCadreDUneMissionAssociativeSalaries,
+    SubPost.DeplacementsDesBeneficiaires,
+    SubPost.DeplacementsFabricationDesVehicules,
+  ],
+  [TiltSimplifiedPost.TransportDeMarchandisesSimplified]: [SubPost.Fret],
+  [TiltSimplifiedPost.IntrantsBiensEtMatieresTiltSimplified]: [SubPost.BienMatieres],
+  [TiltSimplifiedPost.AlimentationSimplified]: [
+    SubPost.RepasPrisParLesSalaries,
+    SubPost.RepasPrisParLesBenevoles,
+    SubPost.RepasPrisParLesBeneficiaires,
+  ],
+  [TiltSimplifiedPost.ServiceEtNumeriqueSimplified]: [SubPost.UsagesNumeriques, SubPost.ServicesEnApprocheMonetaire],
+
+  [TiltSimplifiedPost.EquipementsEtImmobilisationsSimplified]: [
+    SubPost.EquipementsDesSalaries,
+    SubPost.ParcInformatiqueDesSalaries,
+    SubPost.EquipementsDesBenevoles,
+    SubPost.ParcInformatiqueDesBenevoles,
+  ],
+  [TiltSimplifiedPost.UtilisationSimplified]: [SubPost.ConsommationsEnergieUtilisationProduits],
+  [TiltSimplifiedPost.FinDeVieSimplified]: [SubPost.FinDeVieProduitsVendusFournisBeneficiaires],
+  [TiltSimplifiedPost.TeletravailSimplified]: [SubPost.TeletravailSalariesBenevoles],
 }
 
 export const subPostsByPostClickson: Record<ClicksonPost, SubPost[]> = {
@@ -183,7 +226,7 @@ export const subPostsByPostClickson: Record<ClicksonPost, SubPost[]> = {
 export const environmentPostMapping = {
   [Environment.BC]: BCPost,
   [Environment.CUT]: CutPost,
-  [Environment.TILT]: TiltPost,
+  [Environment.TILT]: TiltAdvancedPost,
   [Environment.CLICKSON]: ClicksonPost,
 }
 
@@ -191,6 +234,7 @@ export const subPostsByPost: Record<Post, SubPost[]> = {
   ...subPostsByPostBC,
   ...subPostsByPostCUT,
   ...subPostsByPostTILT,
+  ...subPostsByPostTILTSimplified,
   ...subPostsByPostClickson,
 }
 
@@ -238,10 +282,10 @@ export const convertTiltSubPostToBCSubPost = (subPost: SubPost): SubPost => {
   return subPostTiltToBcSubPostMapping[subPost] ?? subPost
 }
 
-export const getEnvPosts = (environment: Environment | null | undefined): Post[] =>
+export const getEnvPosts = (environment: BCEnvironment | null | undefined): Post[] =>
   environment ? Object.values(environmentPostMapping[environment]) : []
 
-export const getEnvSubPosts = (environment: Environment | null | undefined): SubPost[] =>
+export const getEnvSubPosts = (environment: BCEnvironment | null | undefined): SubPost[] =>
   environment ? Object.values(environmentSubPostsMapping[environment]).flat() : []
 
 const getSubPostBCToSubPostTiltMapping = (): Partial<Record<SubPost, SubPost[]>> => {
@@ -282,20 +326,6 @@ export const convertSimplifiedEnvToBilanCarbone = (results: BaseResultsByPost[])
   })
 
   return aggregatedResults
-}
-
-export const getSubPostByPostTiltSimplified = (): Record<SimplifiedPost, SubPost[]> => {
-  return Object.fromEntries(
-    Object.entries(subPostsByPostTILT || {})
-      .map(([post, subPosts]) => {
-        const allowedSubPosts = subPosts.filter((subPost) =>
-          (SUBPOSTS_PUBLICODE_FROM_ENV[Environment.TILT] ?? []).includes(subPost),
-        )
-
-        return [post, allowedSubPosts]
-      })
-      .filter(([, subPosts]) => subPosts.length > 0),
-  ) as Record<SimplifiedPost, SubPost[]>
 }
 
 export const subPostToBCPostMapping: Partial<Record<SubPost, BCPost>> = {

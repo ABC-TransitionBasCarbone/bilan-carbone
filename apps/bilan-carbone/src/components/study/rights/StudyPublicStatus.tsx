@@ -1,15 +1,15 @@
 'use client'
 
-import HelpIcon from '@/components/base/HelpIcon'
 import { FormRadio } from '@/components/form/Radio'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import type { FullStudy } from '@/db/study'
-import { useServerFunction } from '@/hooks/useServerFunction'
 import { changeStudyPublicStatus } from '@/services/serverFunctions/study'
 import {
   ChangeStudyPublicStatusCommand,
   ChangeStudyPublicStatusCommandValidation,
 } from '@/services/serverFunctions/study.command'
+import { HelpIcon } from '@abc-transitionbascarbone/components'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControlLabel, Radio } from '@mui/material'
 import { UserSession } from 'next-auth'

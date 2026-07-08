@@ -26,11 +26,13 @@ const makeEf = (
   title: string,
   attribute: string | null = null,
   frontiere: string | null = null,
+  location: string | null = null,
 ): EfRow => ({
   id,
   totalCo2,
   unit,
   customUnit: null,
+  location,
   metaData: [{ title, attribute, frontiere, language: locale }],
 })
 
@@ -119,7 +121,7 @@ describe('findEmissionFactorMatch', () => {
       expect(result).toMatchObject({ matchType: 'nameAndUnitOnly', id: 'ef-1' })
     })
 
-    it('returns nameOnly when single match and no value provided', async () => {
+    it('returns exact when single match and no value provided', async () => {
       const ef = makeEf('ef-1', 3.0, 'KG', 'Électricité')
       mockFindByNameAndUnit.mockResolvedValue([ef])
 
@@ -133,12 +135,12 @@ describe('findEmissionFactorMatch', () => {
         versionIds,
       )
 
-      expect(result).toMatchObject({ matchType: 'nameAndUnitOnly', id: 'ef-1' })
+      expect(result).toMatchObject({ matchType: 'exact', id: 'ef-1' })
     })
 
     it('returns nameAmbiguous when multiple matches by name+unit and value matches none', async () => {
-      const ef1 = makeEf('ef-1', 2.5, 'KG', 'Électricité')
-      const ef2 = makeEf('ef-2', 3.0, 'KG', 'Électricité')
+      const ef1 = makeEf('ef-1', 2.5, 'KG', 'Électricité', 'France')
+      const ef2 = makeEf('ef-2', 3.0, 'KG', 'Électricité', 'Allemagne')
       mockFindByNameAndUnit.mockResolvedValue([ef1, ef2])
 
       const result = await findEmissionFactorMatch(
@@ -238,6 +240,25 @@ describe('findEmissionFactorMatch', () => {
       expect(result).toMatchObject({ matchType: 'exact', id: 'ef-3' })
     })
 
+    it('returns exact when full name matches exactly despite multiple fuzzy candidates in byUnit pool', async () => {
+      mockFindByNameAndUnit.mockResolvedValue([])
+      const ef1 = makeEf('ef-1', 938, 'KG', 'Acier ou fer blanc', 'France')
+      const ef2 = makeEf('ef-2', 938, 'KG', 'Acier ou fer blanc', 'Allemagne')
+      mockFindByUnit.mockResolvedValue([ef1, ef2])
+
+      const result = await findEmissionFactorMatch(
+        undefined,
+        'Acier ou fer blanc - France',
+        undefined,
+        'KG',
+        locale,
+        organizationId,
+        versionIds,
+      )
+
+      expect(result).toMatchObject({ matchType: 'exact', id: 'ef-1' })
+    })
+
     it('returns nameAmbiguous when fuzzy finds multiple candidates and value matches none', async () => {
       mockFindByNameAndUnit.mockResolvedValue([])
       const ef1 = makeEf('ef-1', 3190, 'KG', 'Acier ou fer blanc')
@@ -317,6 +338,91 @@ describe('findEmissionFactorMatch', () => {
     })
   })
 
+  describe('localization after ambiguous results', () => {
+    it('resolves ambiguous name+unit matches using localization', async () => {
+      const ef1 = makeEf('ef-1', 2.5, 'KG', 'Électricité', null, null, 'France')
+      const ef2 = makeEf('ef-2', 3.0, 'KG', 'Électricité', null, null, 'Allemagne')
+      mockFindByNameAndUnit.mockResolvedValue([ef1, ef2])
+
+      const result = await findEmissionFactorMatch(
+        undefined,
+        'Électricité',
+        9.9,
+        'KG',
+        locale,
+        organizationId,
+        versionIds,
+        'France',
+      )
+
+      expect(result).toMatchObject({ matchType: 'exact', id: 'ef-1' })
+    })
+
+    it('returns nameAmbiguous when multiple name+unit matches and no localization provided', async () => {
+      const ef1 = makeEf('ef-1', 2.5, 'KG', 'Électricité', null, null, 'France')
+      const ef2 = makeEf('ef-2', 3.0, 'KG', 'Électricité', null, null, 'Allemagne')
+      mockFindByNameAndUnit.mockResolvedValue([ef1, ef2])
+
+      const result = await findEmissionFactorMatch(
+        undefined,
+        'Électricité',
+        9.9,
+        'KG',
+        locale,
+        organizationId,
+        versionIds,
+      )
+
+      expect(result).toMatchObject({
+        matchType: 'nameAmbiguous',
+        candidates: expect.arrayContaining([
+          expect.objectContaining({ id: 'ef-1' }),
+          expect.objectContaining({ id: 'ef-2' }),
+        ]),
+      })
+    })
+
+    it('resolves ambiguous exact-name byUnit matches using localization', async () => {
+      const ef1 = makeEf('ef-1', 2.5, 'KG', 'Électricité', null, null, 'France')
+      const ef2 = makeEf('ef-2', 3.0, 'KG', 'Électricité', null, null, 'Allemagne')
+      mockFindByNameAndUnit.mockResolvedValue([])
+      mockFindByUnit.mockResolvedValue([ef1, ef2])
+
+      const result = await findEmissionFactorMatch(
+        undefined,
+        'Électricité',
+        undefined,
+        'KG',
+        locale,
+        organizationId,
+        versionIds,
+        'Allemagne',
+      )
+
+      expect(result).toMatchObject({ matchType: 'exact', id: 'ef-2' })
+    })
+
+    it('resolves ambiguous fuzzy byUnit matches using localization', async () => {
+      const ef1 = makeEf('ef-1', 2.5, 'KG', 'Acier ou fer blanc', null, null, 'France')
+      const ef2 = makeEf('ef-2', 3.0, 'KG', 'Acier ou fer blanc', null, null, 'Allemagne')
+      mockFindByNameAndUnit.mockResolvedValue([])
+      mockFindByUnit.mockResolvedValue([ef1, ef2])
+
+      const result = await findEmissionFactorMatch(
+        undefined,
+        'Acier ou fer blan',
+        undefined,
+        'KG',
+        locale,
+        organizationId,
+        versionIds,
+        'France',
+      )
+
+      expect(result).toMatchObject({ matchType: 'exact', id: 'ef-1' })
+    })
+  })
+
   describe('version isolation', () => {
     it('returns null when EF is not in study versions (DB returns nothing)', async () => {
       mockFindById.mockResolvedValue(null)
@@ -367,7 +473,7 @@ describe('findEmissionFactorMatch', () => {
         versionIds,
       )
 
-      expect(result).toMatchObject({ matchType: 'nameAndUnitOnly', id: 'ef-1' })
+      expect(result).toMatchObject({ matchType: 'exact', id: 'ef-1' })
     })
 
     it('finds EF when import name is "title - attribute - frontiere" and returns full name as foundTitle', async () => {
@@ -387,7 +493,7 @@ describe('findEmissionFactorMatch', () => {
       )
 
       expect(result).toMatchObject({
-        matchType: 'nameAndUnitOnly',
+        matchType: 'exact',
         id: 'ef-1',
         foundTitle: 'Emballages - Acier - Stockage - Impacts',
       })
@@ -409,7 +515,7 @@ describe('findEmissionFactorMatch', () => {
         versionIds,
       )
 
-      expect(result).toMatchObject({ matchType: 'nameAndUnitOnly', id: 'ef-1' })
+      expect(result).toMatchObject({ matchType: 'exact', id: 'ef-1' })
     })
 
     it('matches despite extra spaces around dashes', async () => {
@@ -428,7 +534,7 @@ describe('findEmissionFactorMatch', () => {
         versionIds,
       )
 
-      expect(result).toMatchObject({ matchType: 'nameAndUnitOnly', id: 'ef-1' })
+      expect(result).toMatchObject({ matchType: 'exact', id: 'ef-1' })
     })
 
     it('still calls findEmissionFactorsByNameAndUnit once with raw trimmed title', async () => {

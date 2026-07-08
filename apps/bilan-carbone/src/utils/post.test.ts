@@ -1,6 +1,7 @@
-import { BCPost, CutPost, Post, subPostsByPost, TiltPost } from '@/services/posts'
+import { BCPost, CutPost, subPostsByPost, TiltAdvancedPost } from '@/services/posts'
 import { AdditionalResultTypes } from '@/types/study.types'
 import { Environment, SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
 import { expect } from '@jest/globals'
 import { getPost, getPostValues } from './post'
 
@@ -33,8 +34,8 @@ describe('PostUtils functions', () => {
       expect(getPostValues(Environment.CUT, AdditionalResultTypes.CONSOLIDATED)).toBe(CutPost)
     })
 
-    test('should return TiltPost for Environment.TILT with AdditionalResultTypes.ENV_SPECIFIC_EXPORT', () => {
-      expect(getPostValues(Environment.TILT, AdditionalResultTypes.ENV_SPECIFIC_EXPORT)).toBe(TiltPost)
+    test('should return TiltAdvancedPost for Environment.TILT with AdditionalResultTypes.ENV_SPECIFIC_EXPORT', () => {
+      expect(getPostValues(Environment.TILT, AdditionalResultTypes.ENV_SPECIFIC_EXPORT)).toBe(TiltAdvancedPost)
     })
 
     test('should return BCPost for Environment.TILT without AdditionalResultTypes.ENV_SPECIFIC_EXPORT', () => {
@@ -57,7 +58,7 @@ describe('PostUtils functions', () => {
     })
 
     test('should return TransportDeMarchandises for TransportFabricationDesVehicules subpost', () => {
-      expect(getPost(SubPost.TransportFabricationDesVehicules)).toBe(TiltPost.TransportDeMarchandises)
+      expect(getPost(SubPost.TransportFabricationDesVehicules)).toBe(TiltAdvancedPost.TransportDeMarchandises)
     })
 
     test('should return a post that includes the subPost', () => {

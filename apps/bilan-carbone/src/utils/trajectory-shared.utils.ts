@@ -405,20 +405,9 @@ export const getObjectivesWithOvershootCompensation = (
     return objectives
   }
 
-  const referenceEmissionsAtStudyYear = getTrajectoryEmissionsAtYear(referenceTrajectory, studyYear)
-  if (referenceEmissionsAtStudyYear === null) {
-    return objectives
-  }
-
-  // Calculate future budget if we were at reference emissions
-  // Use objectives directly since they represent the actual trajectory behavior
-  // (for SNBC_SECTORAL, objectives are derived from the combined sectoral trajectory)
-  const referenceFutureBudget = calculateBudgetWithObjectivesAndMultiplier(
-    referenceEmissionsAtStudyYear,
-    studyYear,
-    objectives,
-    1,
-  )
+  // Read the reference future budget directly from referenceTrajectory for accurate comparison
+  const lastObjectiveYear = objectives[objectives.length - 1].targetYear
+  const referenceFutureBudget = calculateTrajectoryIntegral(referenceTrajectory, studyYear, lastObjectiveYear)
 
   // Reduce future budget to compensate for past overshoot
   const remainingTotalBudget = referenceFutureBudget - pastOvershoot

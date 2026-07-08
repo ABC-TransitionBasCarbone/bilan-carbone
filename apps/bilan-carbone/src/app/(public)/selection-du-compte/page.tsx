@@ -1,9 +1,9 @@
 'use server'
 
-import NotFound from '@/components/pages/NotFound'
 import SelectAccountPage from '@/components/pages/SelectAccount'
 import { getUserWithAccountsAndOrganizationsById } from '@/db/user'
 import { auth } from '@/services/auth'
+import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 
 const SelectAccount = async () => {
   const session = await auth()

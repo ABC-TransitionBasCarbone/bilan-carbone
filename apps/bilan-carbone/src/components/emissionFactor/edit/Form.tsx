@@ -1,10 +1,7 @@
 'use client'
 
-import Form from '@/components/base/Form'
 import { gazKeys } from '@/constants/emissions'
 import { DetailedEmissionFactor } from '@/db/emissionFactors'
-import { useServerFunction } from '@/hooks/useServerFunction'
-import { Post } from '@/services/posts'
 import { updateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor'
 import {
   maxParts,
@@ -12,7 +9,10 @@ import {
   UpdateEmissionFactorCommandValidation,
 } from '@/services/serverFunctions/emissionFactor.command'
 import { getPost } from '@/utils/post'
+import Form from '@abc-transitionbascarbone/components/src/base/Form'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { FormEvent, useMemo, useState } from 'react'

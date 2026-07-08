@@ -185,20 +185,14 @@
     "ges": "GHG emissions ({unit})"
   },
   "nav": {
-    "backToHome": "Back to home",
     "emissionFactors": "Emission Factors",
-    "home": "Home",
     "newOrganization": "Add an organisation",
     "newStudy": "Add a New Study",
     "studyPerimeter": "Perimeter",
     "newStudyContributor": "Add a contributor",
     "editStudyContributor": "Edit a contributor",
     "newStudyRight": "Add a Person",
-    "notFound": "Page not found",
-    "organization": "Organisation",
-    "edit": "Edit",
     "studyRights": "Role",
-    "team": "Team",
     "actualities": "News"
   },
   "actuality": {
@@ -229,58 +223,13 @@
   "legalNotices": {
     "profile": "Return to profile"
   },
-  "locale": {
-    "en": "English",
-    "fr": "French",
-    "es": "Español",
-    "el": "ελληνικά",
-    "hr": "hrvatski",
-    "hu": "magyar",
-    "it": "Italiano",
-    "ro": "Română",
-    "selector": "Site language"
-  },
   "login": {
     "welcome": "Welcome",
     "subtext": "",
     "explanation": "The tool dedicated to the application of the Bilan Carbone® method, developed by the Association for Low Carbon Transition (ABC), and accessible to all of our members consortiums: Consulting and Research, Business, Association and Public Sector",
     "question": "A question? Read the <faq>FAQ</faq> or <support>contact us</support>!",
     "cineo": "Tool developed thanks to the Bilan Carbone® assessments of Cineo",
-    "explanation2": "Operation supported by the State as part of the 'Support Green Alternatives 2' initiative under France 2030, operated by the Banque des Territoires (Caisse des Dépôts)",
-    "form": {
-      "activate": "Activate my account",
-      "firstConnection": "First login ?",
-      "alreadyRegistered": "Already Registered?",
-      "resetTitle": "You have requested to create or reset your password. Enter the requested information below to confirm your account creation or password reset.",
-      "login": "Log in",
-      "email": "Email",
-      "emailPlaceholder": "Enter a mail address",
-      "password": "Password",
-      "passwordPlaceholder": "Enter your password",
-      "confirmPassword": "Confirm password",
-      "hidePassword": "Hide password",
-      "showPassword": "Show password",
-      "notMatching": "Passwords do not match",
-      "passwordLength": "Password should have at least 8 characters",
-      "passwordUppercase": "Password should have at least one upper case letter",
-      "passwordLowercase": "Password should have at least one lower case letter",
-      "passwordSpecialChar": "Password should have at least one special character",
-      "passwordDigit": "Password should have at least one digit",
-      "forgotPassword": "Forgot password ?",
-      "reset": "Confirm",
-      "error": "Please check your email and your password",
-      "expired": "This password reset link has expired",
-      "backToHome": "Back to home",
-      "resetError": "Some information is not correct. If you think you have filled everything correctly, contact us.",
-      "emailRequired": "Please enter an email",
-      "emailAndPasswordRequired": "Please enter an email and a password",
-      "emailSent": "if your email is correct, you will receive an email to reset your password",
-      "validated": "Your password has been reset",
-      "validation": {
-        "email": "Please enter an email",
-        "password": "Please enter a password"
-      }
-    }
+    "explanation2": "Operation supported by the State as part of the 'Support Green Alternatives 2' initiative under France 2030, operated by the Banque des Territoires (Caisse des Dépôts)"
   },
   "activation": {
     "description": "Please use the same email you used when joining the Association for Low Carbon Transition.",
@@ -307,18 +256,14 @@
     "factors": "Emission factors",
     "fe": "EF",
     "help": "Help",
-    "home": "Home",
-    "admin": "Admin",
     "profile": "Profile",
     "study": "Study",
     "organization": "My organisation",
     "transition": "BC+ transition",
-    "logout": "Log out",
     "methodology": "Methodology",
     "organizations": "My Bilan Carbone®",
     "footprints": "Mes Empreintes",
     "settings": "Settings",
-    "team": "My team",
     "information": "Overview",
     "formation": "Training",
     "selectAccount": "Select account"
@@ -671,6 +616,7 @@
       "emissionSourceTags": "Tags",
       "emissionSourceTagLabel": "Label",
       "preset": "Preset",
+      "preset_numerique": "Digital",
       "color": "Color",
       "emissionSourceTagsPlaceholder": "Your tag",
       "createEmissionSourceTag": "Create my tag",
@@ -754,6 +700,7 @@
       "download": "Download",
       "downloadResults": "Results",
       "downloadReport": "Download report",
+      "reportName": "{studyName} - Report Bilan Carbone®",
       "downloadPDF": "Download the summary",
       "downloadingPDF": "Downloading (at least 15 seconds)...",
       "emissions": "Emissions",
@@ -969,6 +916,7 @@
       "columnEmissionFactorName": "Name",
       "columnEmissionFactorValue": "Value",
       "columnEmissionFactorUnit": "Unit",
+      "columnEmissionFactorLocalization": "Localization",
       "columnEfSource": "Source (1)",
       "columnEfType": "Type (1)",
       "columnFeGlobalUncertainty": "Global uncertainty (1)",
@@ -1571,6 +1519,9 @@
         "CoConstruction": "Co-construction",
         "FeedbackAndCommunication": "Feedback and communication"
       }
+    },
+    "contributor": {
+      "noData": "No data to display, an editor of the study needs to add some emission sources first."
     }
   },
   "importFileModal": {
@@ -1580,7 +1531,7 @@
     "acceptedFormats": "Accepted formats: .xlsx, .xls",
     "errorTitle": "Errors detected",
     "warningTitle": "Warnings",
-    "confirmAnyway": "Import anyway",
+    "confirmAnyway": "Continue anyway",
     "previewWarning": "Please review the data below before confirming the import.",
     "warningEfNotFound": "Emission factor not found for \"{searched}\"",
     "warningEfReplacedBy": "It will be replaced by",
@@ -1604,7 +1555,7 @@
     "invalidPost": "Invalid post: \"{value}\"",
     "invalidSubPost": "Invalid sub-post: \"{value}\"",
     "missingSubPosts": "Missing sub-post(s) for post \"{value}\"",
-    "missingBase": "Scope 2 approach (GHG Protocol) missing for the Electricity sub-post",
+    "invalidBase": "Invalid Scope 2 approach (GHG Protocol) for the Electricity sub-post: \"{value}\". Accepted values: Location-based, Market-based",
     "incompatibleSubPosts": "Sub-post(s) incompatible with their post: {value}",
     "validationError": "Validation error on field \"{value}\"",
     "noRows": "The file contains no data to import",
@@ -1620,7 +1571,13 @@
     "missingEmissionFactorName": "Emission factor name is missing",
     "missingEmissionFactorValue": "Emission factor value is missing",
     "missingEmissionFactorUnit": "Emission factor unit is missing",
-    "warningEfMissing": "No emission factor provided for \"{sourceName}\""
+    "warningEfMissing": "No emission factor provided for \"{sourceName}\"",
+    "warningEfMissingUnit": "Emission factor \"{searched}\" not found — unit is missing",
+    "warningTagNotFound": "Tag \"{tagName}\" not found in study — it will be skipped",
+    "ambiguousTitle": "Multiple emission factors match for the following sources. Select the one to use:",
+    "ambiguousSearched": "Searched: \"{name}\"",
+    "ambiguousTooMany": "Too many emission factors match this input. Refine the name in your file to reduce results. This source will be imported without an emission factor.",
+    "leaveEmpty": "Leave empty"
   },
   "emissionFactors": {
     "manualSectionLabel": "Manage your manual EFs",
@@ -1767,6 +1724,25 @@
       "Teletravail": "Remote work",
       "TeletravailSalaries": "Remote work by employees",
       "TeletravailBenevoles": "Remote work by volunteers",
+      "LocauxSimplified": "Premises",
+      "EnergiesSimplified": "Energies",
+      "DechetsSimplified": "Waste",
+      "FroidEtClimSimplified": "Cooling and air conditioning",
+      "DeplacementsDePersonneSimplified": "People transportation",
+      "TransportDeMarchandisesSimplified": "Freight",
+      "IntrantsBiensEtMatieresTiltSimplified": "Goods and materials inputs",
+      "AlimentationSimplified": "Food",
+      "ServiceEtNumeriqueSimplified": "Services & digital",
+      "EquipementsEtImmobilisationsSimplified": "Equipment and fixed assets",
+      "UtilisationSimplified": "Use",
+      "FinDeVieSimplified": "End of life",
+      "TeletravailSimplified": "Remote work",
+      "DeplacementsBenevoles": "Volunteers travel",
+      "BienMatieres": "Goods & materials",
+      "ConsommationsEnergieUtilisationProduits": "Energy consumption for the use of products sold or provided to beneficiaries",
+      "TeletravailSalariesBenevoles": "Remote work (employees and volunteers)",
+      "FinDeVieProduitsVendusFournisBeneficiaires": "End of life of products sold or provided to beneficiaries",
+      "DechetsEmisParLOrganisation": "Waste emitted by the organisation",
       "glossary": "Glossary",
       "glossaryDescription": {
         "DechetsDirects": "This category covers all emissions linked to the management of waste produced (collection and treatment) within the organisation. It is divided into multiple subcategories, each covering a different type of waste.",
@@ -1994,30 +1970,15 @@
     },
     "forbidden": "You need to complete your general data first"
   },
-  "level": {
-    "Initial": "Initial",
-    "Standard": "Intermediate",
-    "Advanced": "Advanced",
-    "noLevel": "No formation"
-  },
   "role": {
-    "SUPER_ADMIN": "Global Administrator",
-    "ADMIN": "Administrator",
     "GESTIONNAIRE": "Manager",
-    "COLLABORATOR": "Collaborator",
     "DEFAULT": "Member",
-    "ADMIN_description": "An administrator has full rights to the organisation's account and to all studies for his organisation (whether public or private). It is impossible to change an administrator role on a study of his organisation.",
     "ADMIN_description_CR": "An administrator has full rights to the organisation's and the organisation clients' account and studies (whether public or private). It is impossible to change an administrator role on a study of his organisation or one of its clients.",
     "GESTIONNAIRE_description": "A manager has full rights over the organisation's account, but no rights over studies. He is by default reader on public studies of his organisation.",
     "GESTIONNAIRE_description_CR": "A manager has full rights over the organisation's account, but no rights over customers or studies. He is by default reader on its organisation's or its clients public studies.",
-    "COLLABORATOR_description": "A collaborator is a person trained in the Bilan Carbone® method. They have no rights to the organisation's account but can create studies. They have access to their organisation's public studies with the role editor by default.",
     "COLLABORATOR_description_CR": "A collaborator is a person trained in the Bilan Carbone® method. They have no rights to the organisation's account but can create clients and studies. They only have access to their organisation's or their organisation clients public studies with the role editor by default.",
     "DEFAULT_description": "A member of the organisation has no specific rights over the organisation, the team or studies. By default, they are readers of all their organisation's public Bilans Carbone®.",
-    "DEFAULT_description_CR": "A member of the organisation has no specific rights over the organisation, the team, their clients or studies. By default, they are readers of all their organisation's or their organisation's clients public Bilans Carbone®.",
-    "guide": "Roles guide",
-    "saved": "New role saved",
-    "Not authorized": "You are not allowed to do this action",
-    "More than one": "There must be at least one admin or manager in the organisation"
+    "DEFAULT_description_CR": "A member of the organisation has no specific rights over the organisation, the team, their clients or studies. By default, they are readers of all their organisation's or their organisation's clients public Bilans Carbone®."
   },
   "environment": {
     "BC": "BC+ 2.0",
@@ -2028,46 +1989,6 @@
   "source": {
     "CRON": "Cron",
     "TUNISIE": "Tunisia"
-  },
-  "team": {
-    "pending": "Pending invitations",
-    "invitationDate": "Invitation sent on",
-    "toValidate": "Invitations to validate",
-    "addedDate": "Added on",
-    "delete": "Delete user",
-    "resend": "Resend invitation",
-    "table": {
-      "title": "My team",
-      "newUser": "Invite a user",
-      "firstName": "First Name",
-      "lastName": "Last Name",
-      "email": "Email",
-      "level": "Training",
-      "role": "Role",
-      "action": " ",
-      "deleteMember": "Delete member",
-      "userDeletion": "User deletion",
-      "userDeletionDescription": "Are you sure you want to delete this user? He will no longer have access to your organisation's account, but will still have access to the studies for which he has been invited by other organisations.",
-      "necessaryAdmin": "This administrator cannot be removed. He/she is the sole validator of the following studies: "
-    }
-  },
-  "newMember": {
-    "title": "Invite a User",
-    "email": "Email",
-    "firstName": "First Name",
-    "lastName": "Last Name",
-    "role": "Role",
-    "level": "Training",
-    "create": "Invite User",
-    "Not authorized": "User invitation not authorized. Please contact <link>the support</link> for more information.",
-    "validation": {
-      "email": "Please enter a valid email",
-      "firstName": "Please enter a first name",
-      "lastName": "Please enter a last name",
-      "level": "Please enter a training level",
-      "role": "Please enter a role"
-    },
-    "addedMember": "The user has been successfully invited to your organisation."
   },
   "units": {
     "selectAll": "Select all",
@@ -2080,6 +2001,7 @@
     "RACE_KM": "race.km",
     "CAR": "{count, plural, one {car} other {cars}}",
     "EURO_SPENT": "{count, plural, one {euro spent} other {euros spent}}",
+    "EQUIPEMENT": "equipment",
     "FRANC_CFP": "{count, plural, one {CFP Franc} other {CFP Francs}}",
     "GJ_PCI": "GJ PCI",
     "GJ_PCS": "GJ PCS",
@@ -2160,6 +2082,7 @@
     "KWH_PER_PASSENGER_KM": "kWh / passenger.km",
     "KWH_THERM_TON": "kWh heat / ton",
     "KWH_PCI_TON": "kWh PCI / ton",
+    "KW_PER_YEAR_ELECTRIC_POWER": "kW.year",
     "LITER": "Liter",
     "LITER_LIQUID": "{count, plural, one {Liter of liquid} other {Liters of liquid}}",
     "LITER_PER_ERRAND_KM": "{count, plural, one {Liter / errand.km} other {Liters / errand.km}}",
@@ -2213,6 +2136,7 @@
     "TON_PRODUCTED": "{count, plural, one {ton produced} other {tons produced}}",
     "TON_PROCESSED": "{count, plural, one {ton processed} other {tons processed}}",
     "UNIT": "{count, plural, one {unit} other {units}}",
+    "UNITLESS": "unitless",
     "IMPORTED_UNIT_PIECE_SHRUB_POT": "{count, plural, one {Imported unit (shrub in pot)} other {Imported units (shrub in pot)}}",
     "VEHICLE_YEAR": "vehicle/year",
     "VEHICLE_KM": "vehicle.km",
@@ -2461,21 +2385,9 @@
     "4": "Good",
     "5": "Very good"
   },
-  "error": {
-    "Not authorized": "You are not allowed to do this action",
-    "Not found": "The requested resource was not found",
-    "Server error": "A server error occurred, please contact support",
-    "default": "Something went wrong ..., please try again. If the problem persists, please contact support",
-    "error": "Something went wrong ...",
-    "contactSupport": "A problem has occurred. Try returning to the <link>home page</link>. <p>If this does not work, contact our support at <m></m> or try to <logout>reconnect</logout>.</p>",
-    "duplicateScopeCombination": "An objective with the same scope (sites, tags, sub-posts) and target year already exists for this pathway"
-  },
   "upload": {
     "fileTooBig": "File too big (max size {size} MB)",
     "noFileSelected": "No file selected"
-  },
-  "spinner": {
-    "loading": "Loading"
   },
   "onboarding": {
     "title-1": "Welcome to BC+! Before you start, please set up your organisation",
@@ -2594,18 +2506,6 @@
       "date": "Please enter a valid date (DD/MM/YYYY)",
       "phone": "Please enter a valid phone number",
       "required": "This field is required"
-    }
-  },
-  "email": {
-    "subject": {
-      "resetPassword": "Forgot password",
-      "newUser": "You have been invited to BC+",
-      "addedActiveUser": "You have been invited to a new environment on BC+",
-      "activation": "You have activated your account on BC+",
-      "activationRequest": "Access request to your BC+ organisation",
-      "userOnStudyInvitation": "Added to the study {studyName}",
-      "contributorInvitation": "Contribution request on the study {studyName}",
-      "addedUsersByFile": "Authorization for user import"
     }
   },
   "table": {

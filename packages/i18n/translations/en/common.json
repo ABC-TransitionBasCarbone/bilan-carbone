@@ -1,0 +1,327 @@
+{
+  "common": {
+    "colon": ":",
+    "error": "An error occurred. If the problem persists, please contact support.",
+    "yes": "Yes",
+    "no": "No",
+    "previous": "Previous",
+    "next": "Next",
+    "all": "All",
+    "allSites": "All sites",
+    "allSubPosts": "All sub posts",
+    "allPosts": "All posts",
+    "allTags": "All tags",
+    "xSites": "{count} sites",
+    "xSubPosts": "{count} sub posts",
+    "xTags": "{count} tags",
+    "none": "None",
+    "unknown": "Unknown",
+    "subPosts": "Sub posts",
+    "onDate": "on",
+    "by": "by",
+    "scope": "Scope",
+    "sites": "Sites",
+    "tags": "Tags",
+    "noTagsAvailable": "No tags available",
+    "posts": "Posts",
+    "selectedPlural": "selected",
+    "moreInfo": "More info",
+    "mandatory": "* mandatory",
+    "and": "and",
+    "year": "Year",
+    "action": {
+      "create": "Create",
+      "edit": "Edit",
+      "delete": "Delete",
+      "add": "Add",
+      "duplicate": "Duplicate",
+      "save": "Save",
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "update": "Update",
+      "start": "Start",
+      "close": "Close",
+      "approve": "Approve",
+      "selectAll": "Select all",
+      "unselectAll": "Unselect all",
+      "back": "Back",
+      "import": "Import",
+      "export": "Export",
+      "continue": "Continue"
+    },
+    "questions": {
+      "glossary": {
+        "title": "More info on the question",
+        "close": "Close"
+      }
+    },
+    "label": {
+      "start": "Start",
+      "end": "End",
+      "sites": "Sites",
+      "date": "Date",
+      "startYear": "Start year",
+      "targetYear": "Target year",
+      "line": "Line {line}",
+      "labelName": "Label",
+      "source": "Source",
+      "unit": "Unit",
+      "emissionsKg": "Emissions (kgCO2e)"
+    },
+    "notAuthorized": "Action not authorized",
+    "Not authorized": "You are not allowed to do this action",
+    "typeToConfirm": "Type \"{name}\" to confirm",
+    "perPerson": "per person",
+    "carbonIntensities": "Carbon intensities"
+  },
+  "saveStatus": {
+    "saving": "Saving answers...",
+    "saved": "Answers saved",
+    "error": "Error saving answers",
+    "ready": "Ready to save",
+    "at": "at",
+    "syncedFromOtherUser": "Data updated by another user"
+  },
+  "signup": {
+    "email": "Email",
+    "emailPlaceholder": "Email used during your training",
+    "emailRequired": "Please enter an email",
+    "validate": "Validate",
+    "Request sent": "A request has been sent to your colleagues",
+    "Email sent": "You will receive an email to finish your account validation.",
+    "support": "A problem has occurred. Try again. If this does not work, contact our support",
+    "validation": {
+      "email": "Please enter an email"
+    }
+  },
+  "navigation": {
+    "home": "Home",
+    "logout": "Log out",
+    "comments": "Comments",
+    "admin": "Admin",
+    "team": "My team",
+    "campaigns": "Campaigns"
+  },
+  "country": {
+    "ALBANIA": "Albania",
+    "ANDORRA": "Andorra",
+    "AUSTRIA": "Austria",
+    "BELARUS": "Belarus",
+    "BELGIUM": "Belgium",
+    "BOSNIA_AND_HERZEGOVINA": "Bosnia and Herzegovina",
+    "BULGARIA": "Bulgaria",
+    "CROATIA": "Croatia",
+    "CYPRUS": "Cyprus",
+    "CZECH_REPUBLIC": "Czech Republic",
+    "DENMARK": "Denmark",
+    "ESTONIA": "Estonia",
+    "FINLAND": "Finland",
+    "FRANCE": "France",
+    "GERMANY": "Germany",
+    "GREECE": "Greece",
+    "HUNGARY": "Hungary",
+    "ICELAND": "Iceland",
+    "IRELAND": "Ireland",
+    "ITALY": "Italy",
+    "KOSOVO": "Kosovo",
+    "LATVIA": "Latvia",
+    "LIECHTENSTEIN": "Liechtenstein",
+    "LITHUANIA": "Lithuania",
+    "LUXEMBOURG": "Luxembourg",
+    "MALTA": "Malta",
+    "MOLDOVA": "Moldova",
+    "MONACO": "Monaco",
+    "MONTENEGRO": "Montenegro",
+    "NETHERLANDS": "Netherlands",
+    "NORTH_MACEDONIA": "North Macedonia",
+    "NORWAY": "Norway",
+    "POLAND": "Poland",
+    "PORTUGAL": "Portugal",
+    "ROMANIA": "Romania",
+    "RUSSIA": "Russia",
+    "SAN_MARINO": "San Marino",
+    "SERBIA": "Serbia",
+    "SLOVAKIA": "Slovakia",
+    "SLOVENIA": "Slovenia",
+    "SPAIN": "Spain",
+    "SWEDEN": "Sweden",
+    "SWITZERLAND": "Switzerland",
+    "UKRAINE": "Ukraine",
+    "UNITED_KINGDOM": "United Kingdom",
+    "VATICAN_CITY": "Vatican City",
+    "OTHER": "Other"
+  },
+  "study": {
+    "results": {
+      "chartTypes": {
+        "table": "Table",
+        "bar": "Bar chart",
+        "pie": "Pie chart",
+        "ratio": "Carbon intensities"
+      }
+    },
+    "questions": {
+      "actions": "Actions",
+      "add": "Add a question",
+      "error": "Error during saving",
+      "next": "Next sub-post",
+      "previous": "Previous sub-post",
+      "numberOfYears": "Number of years",
+      "format": {
+        "text": "Text",
+        "postalCode": "Postal code",
+        "phone": "Phone number",
+        "year": "Year",
+        "hour": "Hour",
+        "number": "Number"
+      },
+      "errorLoadingQuestions": "Error while loading questions",
+      "retry": "Retry",
+      "finish": "Finish",
+      "noQuestions": "No questions available for this sub-post.",
+      "autoSaveError": "Some answers could not be saved automatically. Please check your connection and try again."
+    },
+    "infography": {
+      "form": {
+        "backToInfography": "Afficher les postes"
+      }
+    }
+  },
+  "locale": {
+    "en": "English",
+    "fr": "French",
+    "es": "Español",
+    "el": "ελληνικά",
+    "hr": "hrvatski",
+    "hu": "magyar",
+    "it": "Italiano",
+    "ro": "Română",
+    "selector": "Site language"
+  },
+  "login": {
+    "welcome": "Welcome",
+    "form": {
+      "activate": "Activate my account",
+      "firstConnection": "First login ?",
+      "alreadyRegistered": "Already Registered?",
+      "resetTitle": "You have requested to create or reset your password. Enter the requested information below to confirm your account creation or password reset.",
+      "login": "Log in",
+      "email": "Email",
+      "emailPlaceholder": "Enter a mail address",
+      "password": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "confirmPassword": "Confirm password",
+      "hidePassword": "Hide password",
+      "showPassword": "Show password",
+      "notMatching": "Passwords do not match",
+      "passwordLength": "Password should have at least 8 characters",
+      "passwordUppercase": "Password should have at least one upper case letter",
+      "passwordLowercase": "Password should have at least one lower case letter",
+      "passwordSpecialChar": "Password should have at least one special character",
+      "passwordDigit": "Password should have at least one digit",
+      "forgotPassword": "Forgot password ?",
+      "reset": "Confirm",
+      "error": "Please check your email and your password",
+      "expired": "This password reset link has expired",
+      "backToHome": "Back to home",
+      "resetError": "Some information is not correct. If you think you have filled everything correctly, contact us.",
+      "emailRequired": "Please enter an email",
+      "emailAndPasswordRequired": "Please enter an email and a password",
+      "emailSent": "if your email is correct, you will receive an email to reset your password",
+      "validated": "Your password has been reset",
+      "validation": {
+        "email": "Please enter an email",
+        "password": "Please enter a password"
+      }
+    }
+  },
+  "spinner": {
+    "loading": "Loading"
+  },
+  "error": {
+    "Not authorized": "You are not allowed to do this action",
+    "Not found": "The requested resource was not found",
+    "Server error": "A server error occurred, please contact support",
+    "default": "Something went wrong ..., please try again. If the problem persists, please contact support",
+    "error": "Something went wrong ...",
+    "contactSupport": "A problem has occurred. Try returning to the <link>home page</link>. <p>If this does not work, contact our support at <m></m> or try to <logout>reconnect</logout>.</p>",
+    "duplicateScopeCombination": "An objective with the same scope (sites, tags, sub-posts) and target year already exists for this pathway"
+  },
+  "email": {
+    "subject": {
+      "resetPassword": "Forgot password",
+      "newUser": "You have been invited to BC+",
+      "addedActiveUser": "You have been invited to a new environment on BC+",
+      "activation": "You have activated your account on BC+",
+      "activationRequest": "Access request to your BC+ organisation",
+      "userOnStudyInvitation": "Added to the study {studyName}",
+      "contributorInvitation": "Contribution request on the study {studyName}",
+      "addedUsersByFile": "Authorization for user import"
+    }
+  },
+  "nav": {
+    "backToHome": "Back to home",
+    "home": "Home",
+    "notFound": "Page not found",
+    "organization": "Organisation",
+    "edit": "Edit",
+    "team": "Team"
+  },
+  "team": {
+    "pending": "Pending invitations",
+    "invitationDate": "Invitation sent on",
+    "toValidate": "Invitations to validate",
+    "addedDate": "Added on",
+    "delete": "Delete user",
+    "resend": "Resend invitation",
+    "table": {
+      "title": "My team",
+      "newUser": "Invite a user",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "level": "Training",
+      "role": "Role",
+      "action": " ",
+      "deleteMember": "Delete member",
+      "userDeletion": "User deletion",
+      "userDeletionDescription": "Are you sure you want to delete this user? He will no longer have access to your organisation's account, but will still have access to the studies for which he has been invited by other organisations.",
+      "necessaryAdmin": "This administrator cannot be removed. He/she is the sole validator of the following studies: "
+    }
+  },
+  "level": {
+    "Initial": "Initial",
+    "Standard": "Intermediate",
+    "Advanced": "Advanced",
+    "noLevel": "No formation"
+  },
+  "role": {
+    "SUPER_ADMIN": "Global Administrator",
+    "ADMIN": "Administrator",
+    "COLLABORATOR": "Collaborator",
+    "ADMIN_description": "An administrator has full rights to the organisation's account and to all studies for his organisation (whether public or private). It is impossible to change an administrator role on a study of his organisation.",
+    "COLLABORATOR_description": "A collaborator is a person trained in the Bilan Carbone® method. They have no rights to the organisation's account but can create studies. They have access to their organisation's public studies with the role editor by default.",
+    "guide": "Roles guide",
+    "saved": "New role saved",
+    "Not authorized": "You are not allowed to do this action",
+    "More than one": "There must be at least one admin or manager in the organisation"
+  },
+  "newMember": {
+    "title": "Invite a User",
+    "email": "Email",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "role": "Role",
+    "level": "Training",
+    "create": "Invite User",
+    "Not authorized": "User invitation not authorized. Please contact <link>the support</link> for more information.",
+    "validation": {
+      "email": "Please enter a valid email",
+      "firstName": "Please enter a first name",
+      "lastName": "Please enter a last name",
+      "level": "Please enter a training level",
+      "role": "Please enter a role"
+    },
+    "addedMember": "The user has been successfully invited to your organisation."
+  }
+}

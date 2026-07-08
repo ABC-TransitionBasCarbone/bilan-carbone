@@ -1,6 +1,6 @@
 import theme from '@/environments/base/theme/theme'
-import { Post } from '@/services/posts'
 import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
 import { createTheme } from '@mui/material/styles'
 
 const clicksonTheme = createTheme(theme, {

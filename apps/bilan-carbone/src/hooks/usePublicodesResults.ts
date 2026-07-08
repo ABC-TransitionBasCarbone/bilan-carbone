@@ -1,17 +1,17 @@
 'use client'
 import type { FullStudy } from '@/db/study'
+import { EnvironmentWithSimplifiedStudies } from '@/services/permissions/environment'
 import type { BaseResultsByPost } from '@/services/posts'
 import {
   getSimplifiedPublicodesConfig,
-  SimplifiedEnvironment,
-  SimplifiedPublicodesConfig,
+  type SimplifiedPublicodesConfig,
 } from '@/services/publicodes/simplifiedPublicodesConfig'
 import { aggregateBaseResultsByPost, computeBaseResultsByPostFromEngine } from '@/services/results/publicodes'
 import { loadSituations } from '@/services/serverFunctions/situation'
 import type { BaseResultsBySite } from '@/types/study.types'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { useTranslations } from 'next-intl'
-import { Situation } from 'publicodes'
+import Engine, { Situation } from 'publicodes'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 interface UsePublicodesResultsReturn extends BaseResultsBySite {
@@ -20,26 +20,36 @@ interface UsePublicodesResultsReturn extends BaseResultsBySite {
   refresh: () => void
 }
 
+function computeResultsFromConfig(
+  engine: Engine,
+  situation: Situation<string>,
+  config: SimplifiedPublicodesConfig,
+  tPost: (key: string) => string,
+  environment: Environment,
+): BaseResultsByPost[] {
+  const engineCopy = engine.shallowCopy()
+  engineCopy.setSituation(situation)
+  return computeBaseResultsByPostFromEngine(
+    engineCopy,
+    config.posts,
+    config.subPostsByPost,
+    tPost,
+    config.getPostRuleName,
+    config.getSubPostRuleName,
+    environment,
+  )
+}
+
 const computeResultsForAllSitesFromSituations = (
   situations: Record<string, Situation<string>>,
   config: SimplifiedPublicodesConfig,
   tPost: (key: string) => string,
   environment: Environment,
 ): BaseResultsBySite => {
+  const engine = config.getEngine()
   const bySite = Object.entries(situations).reduce(
     (bySite, [siteId, situation]) => {
-      const engine = config.getEngine().shallowCopy()
-      engine.setSituation(situation)
-      bySite[siteId] = computeBaseResultsByPostFromEngine(
-        engine,
-        config.posts,
-        config.subPostsByPost,
-        tPost,
-        config.getPostRuleName,
-        config.getSubPostRuleName,
-        environment,
-      )
-
+      bySite[siteId] = computeResultsFromConfig(engine, situation, config, tPost, environment)
       return bySite
     },
     {} as Record<string, BaseResultsByPost[]>,
@@ -61,13 +71,19 @@ export function usePublicodesResults(
   const [situationBySiteId, setSituationsBySiteId] = useState<Record<string, Situation<string>>>({})
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const config = useMemo(() => getSimplifiedPublicodesConfig(environment as SimplifiedEnvironment), [environment])
+
+  const config = useMemo(
+    () => getSimplifiedPublicodesConfig(environment as EnvironmentWithSimplifiedStudies, study.subPostsConfigVersion),
+    [environment, study.subPostsConfigVersion],
+  )
+
   const studySiteIds = useMemo(() => {
     if (studySite === 'all') {
       return study.sites.map((s) => s.id).toSorted()
     }
     return [studySite]
   }, [study.sites, studySite])
+
   const studySiteIdsKey = useMemo(() => studySiteIds.join(','), [studySiteIds])
 
   const [refreshTrigger, setRefreshTrigger] = useState(0)

@@ -1,17 +1,13 @@
 'use client'
 
-import Form from '@/components/base/Form'
-import LoadingButton from '@/components/base/LoadingButton'
 import MultiplePosts from '@/components/emissionFactor/Form/MultiplePosts'
-import { FormTextField } from '@/components/form/TextField'
 import { getOrganizationVersionAccounts } from '@/db/organization'
 import type { FullStudy } from '@/db/study'
-import { useServerFunction } from '@/hooks/useServerFunction'
 import {
   displayingStudyRightModalForAddingContributors,
   hasAccessToNamingInAddContributor,
 } from '@/services/permissions/environment'
-import { environmentPostMapping, Post, subPostsByPost } from '@/services/posts'
+import { environmentPostMapping, subPostsByPost } from '@/services/posts'
 import { newStudyContributor } from '@/services/serverFunctions/study'
 import {
   NewStudyContributorCommand,
@@ -19,7 +15,12 @@ import {
 } from '@/services/serverFunctions/study.command'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { AccountWithUser } from '@/types/account.types'
+import Form from '@abc-transitionbascarbone/components/src/base/Form'
+import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
+import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'

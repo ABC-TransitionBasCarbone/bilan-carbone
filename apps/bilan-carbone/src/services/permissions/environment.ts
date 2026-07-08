@@ -115,3 +115,14 @@ export const hasAccessToPDFExport = (environment: Environment) =>
   ([CUT, CLICKSON] as Environment[]).includes(environment)
 
 export const hasAccessToFeedbackButton = isTilt
+
+export const hasBCExportWithSimplifiedStudy = (environment: Environment) => {
+  return environment === Environment.CUT
+}
+
+const environmentWithSimplifiedStudies = [Environment.CUT, Environment.CLICKSON, Environment.TILT] as const
+export type EnvironmentWithSimplifiedStudies = (typeof environmentWithSimplifiedStudies)[number]
+
+export const hasSimplifiedStudies = (env: Environment): env is EnvironmentWithSimplifiedStudies => {
+  return environmentWithSimplifiedStudies.includes(env as EnvironmentWithSimplifiedStudies)
+}

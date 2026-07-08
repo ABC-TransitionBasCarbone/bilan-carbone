@@ -1,15 +1,16 @@
 'use client'
 
-import Block from '@/components/base/Block'
 import Stepper from '@/components/base/Stepper'
 import TabsWithGreenStyling from '@/components/dynamic-form/TabsWithGreenStyling'
 import type { FullStudy } from '@/db/study'
 import { SUBPOSTS_PUBLICODE_FROM_ENV } from '@/environments/core/publicodes/subposts'
 import { PublicodesFormProvider } from '@/lib/publicodes/context'
-import { Post, subPostsByPost } from '@/services/posts'
-import { SimplifiedEnvironment } from '@/services/publicodes/simplifiedPublicodesConfig'
+import { EnvironmentWithSimplifiedStudies } from '@/services/permissions/environment'
+import { subPostsByPost } from '@/services/posts'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { Button } from '@abc-transitionbascarbone/ui'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
 import CheckIcon from '@mui/icons-material/Check'
 import { ArrowLeftIcon, ArrowRightIcon } from '@mui/x-date-pickers'
 import { useTranslations } from 'next-intl'
@@ -20,7 +21,7 @@ import SaveStatusIndicator from '../study/SaveStatusIndicator'
 import RealTimeResults from './RealTimeResults'
 
 interface Props {
-  environment: SimplifiedEnvironment
+  environment: EnvironmentWithSimplifiedStudies
   post: Post
   currentSubPost: SubPost | undefined
   study: FullStudy
@@ -78,7 +79,12 @@ const SimplifiedStudyPostsPage = ({ environment, post, currentSubPost, study, st
   const isLastStep = activeStep >= subPosts.length - 1
 
   return (
-    <PublicodesFormProvider environment={environment} studyId={study.id} studySiteId={studySiteId}>
+    <PublicodesFormProvider
+      environment={environment}
+      studyId={study.id}
+      studySiteId={studySiteId}
+      subPostsConfigVersion={study.subPostsConfigVersion}
+    >
       <Block
         title={tPost(post)}
         as="h1"

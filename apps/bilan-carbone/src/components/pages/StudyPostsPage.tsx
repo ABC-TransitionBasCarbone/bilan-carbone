@@ -2,7 +2,7 @@
 
 import type { FullStudy } from '@/db/study'
 import { getCaracterisationsBySubPost } from '@/services/emissionSource'
-import { Post, subPostsByPost } from '@/services/posts'
+import { subPostsByPost } from '@/services/posts'
 import { EmissionSourcesStatus } from '@/types/emissionSource.types'
 import { EmissionSourcesFilters, EmissionSourcesSort } from '@/types/filters'
 import { unique } from '@/utils/array'
@@ -18,6 +18,7 @@ import {
   StudyRole,
 } from '@abc-transitionbascarbone/db-common/enums'
 import { useToast } from '@abc-transitionbascarbone/ui'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
 import Fuse from 'fuse.js'
 import { UserSession } from 'next-auth'
 import { useLocale, useTranslations } from 'next-intl'

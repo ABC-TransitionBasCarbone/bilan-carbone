@@ -10,6 +10,7 @@ import UploadFileIcon from '@mui/icons-material/UploadFile'
 import { ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useState, useTransition } from 'react'
 import styles from './EmissionFactorButtons.module.css'
 
@@ -19,6 +20,9 @@ const EmissionFactorButtons = () => {
   const t = useTranslations('emissionFactors')
   const tCommon = useTranslations('common.action')
   const { showSuccessToast } = useToast()
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
   const [open, setOpen] = useState(false)
   const [menuAnchor, setMenuAnchor] = useState<HTMLButtonElement | null>(null)
   const [isExporting, startExportTransition] = useTransition()
@@ -28,6 +32,9 @@ const EmissionFactorButtons = () => {
   const handleSuccess = () => {
     handleClose()
     showSuccessToast(t('importModal.success'))
+    const params = new URLSearchParams(searchParams.toString())
+    params.set('refreshKey', Date.now().toString())
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false })
   }
 
   const handleExport = () => {

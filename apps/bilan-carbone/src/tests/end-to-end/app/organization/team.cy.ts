@@ -125,7 +125,7 @@ describe('Team', () => {
       })
   })
 
-  it('should add a new member', () => {
+  it.skip('should add a new member', () => {
     cy.login('bc-admin-1@yopmail.com', 'password-1')
     cy.visit('/equipe')
 

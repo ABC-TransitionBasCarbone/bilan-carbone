@@ -77,7 +77,8 @@
   },
   "study": {
     "perimeter": {
-      "preset": "Audience type"
+      "preset": "Audience type",
+      "preset_numerique": "Digital"
     },
     "new": {
       "postalCode": "What is the postal code of the non-profit organisation?",
@@ -113,10 +114,12 @@
       "export": "Export my results"
     },
     "results": {
+      "reportName": "{studyName} - Bilan Carbone® - Associative sphere",
       "feedback": {
         "button": "Give us your feedback ! ✨",
         "title": "Give us your feedback ! ✨"
-      }
+      },
+      "resultsWord": "Bilan Carbone® report - Associative Sphere"
     },
     "structure": {
       "'Club de loisirs'": "Leisure Club",
@@ -189,5 +192,10 @@
   "navigation": {
     "footprints": "My Footprints",
     "information": "My Association"
+  },
+  "betaBanner": {
+    "badge": "Beta",
+    "title": "Beta Version of the Cap Carbone Tool",
+    "description": "Cap Carbone is currently in beta! Thank you for being our first users and testers 🎉 Feel free to reach out to us at <support>support@abc-transitionbascarbone.fr</support> if you have any feedback! As the application is in beta, some questions in the form may change, meaning that answers to modified questions could be deleted in future updates. Make sure to check the completion of your posts on the data entry page before viewing your results to verify that all your answers are still available."
   }
 }

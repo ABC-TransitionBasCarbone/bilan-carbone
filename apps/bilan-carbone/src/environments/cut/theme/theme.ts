@@ -1,5 +1,5 @@
-import { Post } from '@/services/posts'
 import { globalTheme } from '@abc-transitionbascarbone/css'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
 import { createTheme } from '@mui/material/styles'
 
 const base = createTheme({
@@ -208,7 +208,7 @@ const cutTheme = createTheme(base, {
       [Post.Fonctionnement]: { light: '#FF8145' },
       [Post.MobiliteSpectateurs]: { light: '#FEBC0C' },
       [Post.TourneesAvantPremieres]: { light: '#3CCDB4' },
-      [Post.Dechets]: { light: '#9A61FA' },
+      [Post.Dechets]: { light: '#9A61FA', customTitleColor: '#2C303A' },
       [Post.ConfiseriesEtBoissons]: { light: '#FF49A2' },
       [Post.BilletterieEtCommunication]: { light: '#FF4052' },
       [Post.SallesEtCabines]: { light: '#6AA8FF' },

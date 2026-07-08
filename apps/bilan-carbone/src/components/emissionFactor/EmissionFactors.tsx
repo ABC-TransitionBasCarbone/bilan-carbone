@@ -2,28 +2,32 @@
 
 import { hasAccessToManualImport } from '@/services/permissions/environment'
 import { getEmissionFactorImportVersions, getFELocations } from '@/services/serverFunctions/emissionFactor'
+import { BCEnvironment } from '@/types/environment'
 import type { EmissionFactorImportVersion } from '@abc-transitionbascarbone/db-common'
-import { Environment, Import } from '@abc-transitionbascarbone/db-common/enums'
+import { Import } from '@abc-transitionbascarbone/db-common/enums'
 import { useTranslations } from 'next-intl'
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import EmissionFactorsFiltersAndTable from './EmissionFactorsFiltersAndTable'
 
 interface Props {
   userOrganizationId?: string
-  environment: Environment
+  environment: BCEnvironment
   hasActiveLicence: boolean
+}
+
+type FilterInfos = {
+  importVersions: EmissionFactorImportVersion[]
+  initialImportVersions: string[]
+  locationOptions: string[]
 }
 
 const EmissionFactors = ({ userOrganizationId, environment, hasActiveLicence }: Props) => {
   const t = useTranslations('emissionFactors')
 
-  const [importVersions, setImportVersions] = useState<EmissionFactorImportVersion[]>([])
-  const [initialImportVersions, setInitialImportVersions] = useState<string[]>([])
-  const [locationOptions, setLocationOptions] = useState<string[]>([])
-  const [init, setInit] = useState(false)
+  const [filterInfos, setFilterInfos] = useState<FilterInfos | null>(null)
 
   useEffect(() => {
-    async function fetchFiltersInfos() {
+    async function fetchFilterInfos() {
       const importVersionsResponse = await getEmissionFactorImportVersions()
 
       if (!importVersionsResponse.success) {
@@ -44,7 +48,7 @@ const EmissionFactors = ({ userOrganizationId, environment, hasActiveLicence }: 
       }
       const selectedImportVersionsArray = Object.values(selectedImportVersions)
 
-      setLocationOptions(locationFromBdd.flatMap((loc) => (loc.location ? [loc.location] : [])))
+      const locationOptions = locationFromBdd.flatMap((loc) => (loc.location ? [loc.location] : []))
 
       const importVersions = importVersionsFromBdd.sort((a, b) => {
         if (a.source === b.source) {
@@ -59,37 +63,42 @@ const EmissionFactors = ({ userOrganizationId, environment, hasActiveLicence }: 
         .filter((id) => selectedImportVersionsArray.includes(id))
 
       if (hasAccessToManualImport(environment)) {
-        setInitialImportVersions(
-          importVersionsFromBdd.length > 0 ? [Import.Manual, ...initialImportVersions] : [Import.Manual],
-        )
-        const manualImport = { id: Import.Manual, source: Import.Manual, name: '' }
-        setImportVersions([manualImport as EmissionFactorImportVersion, ...importVersions])
+        setFilterInfos({
+          locationOptions,
+          initialImportVersions:
+            importVersionsFromBdd.length > 0 ? [Import.Manual, ...initialImportVersions] : [Import.Manual],
+          importVersions: [
+            { id: Import.Manual, source: Import.Manual, name: '' } as EmissionFactorImportVersion,
+            ...importVersions,
+          ],
+        })
       } else {
-        setImportVersions(importVersions)
-        setInitialImportVersions(initialImportVersions || [])
+        setFilterInfos({
+          locationOptions,
+          importVersions,
+          initialImportVersions,
+        })
       }
     }
 
-    fetchFiltersInfos()
-  }, [])
+    fetchFilterInfos()
+  }, [environment])
 
-  useEffect(() => {
-    if (importVersions.length > 0 && locationOptions.length >= 0 && initialImportVersions.length > 0) {
-      setInit(true)
-    }
-  }, [importVersions, initialImportVersions.length, locationOptions])
+  if (!filterInfos) {
+    return <div>{t('loading')}</div>
+  }
 
-  return init ? (
-    <EmissionFactorsFiltersAndTable
-      userOrganizationId={userOrganizationId}
-      environment={environment}
-      importVersions={importVersions}
-      initialImportVersions={initialImportVersions}
-      locationOptions={locationOptions}
-      hasActiveLicence={hasActiveLicence}
-    />
-  ) : (
-    <div>{t('loading')}</div>
+  return (
+    <Suspense fallback={<div>{t('loading')}</div>}>
+      <EmissionFactorsFiltersAndTable
+        userOrganizationId={userOrganizationId}
+        environment={environment}
+        importVersions={filterInfos.importVersions}
+        initialImportVersions={filterInfos.initialImportVersions}
+        locationOptions={filterInfos.locationOptions}
+        hasActiveLicence={hasActiveLicence}
+      />
+    </Suspense>
   )
 }
 

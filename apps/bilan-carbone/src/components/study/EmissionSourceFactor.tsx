@@ -8,6 +8,7 @@ import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { getEmissionFactorFullName, getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
 import { displayOnlyExistingDataWithDash } from '@/utils/string'
+import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
 import { EmissionFactorStatus, StudyResultUnit, SubPost, Unit } from '@abc-transitionbascarbone/db-common/enums'
 import { Button } from '@abc-transitionbascarbone/ui'
 import ClearIcon from '@mui/icons-material/Clear'
@@ -19,7 +20,6 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Path } from 'react-hook-form'
 import DebouncedInput from '../base/DebouncedInput'
 import { ImportVersionForFilters } from '../emissionFactor/EmissionFactorsFilters'
-import Modal from '../modals/Modal'
 import styles from './EmissionSourceFactor.module.css'
 import EmissionSourceFactorModal from './EmissionSourceFactorModal'
 
@@ -115,7 +115,7 @@ const EmissionSourceFactor = ({
   }, [])
 
   useEffect(() => {
-    setValue(getEmissionFactorFullName(selectedFactor?.metaData))
+    setValue(getEmissionFactorFullName(selectedFactor?.metaData, '', selectedFactor?.importedFrom))
   }, [selectedFactor])
 
   const fuse = useMemo(() => {
@@ -196,7 +196,7 @@ const EmissionSourceFactor = ({
             >
               <p className={styles.header}>
                 {displayOnlyExistingDataWithDash([
-                  getEmissionFactorFullName(result.metaData) || undefined,
+                  getEmissionFactorFullName(result.metaData, '', result.importedFrom) || undefined,
                   result.location,
                   result.metaData?.location,
                   formatEmissionFactorNumber(getEmissionFactorValue(result, environment)),

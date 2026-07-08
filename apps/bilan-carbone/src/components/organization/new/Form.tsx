@@ -1,15 +1,15 @@
 'use client'
 
-import Block from '@/components/base/Block'
-import Form from '@/components/base/Form'
-import LoadingButton from '@/components/base/LoadingButton'
-import { FormTextField } from '@/components/form/TextField'
-import { useServerFunction } from '@/hooks/useServerFunction'
 import { createOrganizationCommand } from '@/services/serverFunctions/organization'
 import {
   CreateOrganizationCommand,
   CreateOrganizationCommandValidation,
 } from '@/services/serverFunctions/organization.command'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
+import Form from '@abc-transitionbascarbone/components/src/base/Form'
+import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
+import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'

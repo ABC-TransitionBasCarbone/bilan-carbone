@@ -1,10 +1,10 @@
 'use server'
 
-import Block from '@/components/base/Block'
 import { getOrganizationVersionStudiesOrderedByStartDate } from '@/db/study'
 import { getUserApplicationSettings } from '@/db/user'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import { canReadStudy } from '@/services/permissions/study'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'

@@ -1,7 +1,9 @@
 import type { FullStudy } from '@/db/study'
-import { environmentSubPostsMapping, Post, subPostsByPost } from '@/services/posts'
+import { environmentSubPostsMapping, subPostsByPost } from '@/services/posts'
+import { BCEnvironment } from '@/types/environment'
 import type { ResultType } from '@/types/study.types'
 import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { PostSubPostFilter } from '../../form/PostSubPostFilter'
 import { TagFilter } from '../../form/TagFilter'
@@ -46,7 +48,7 @@ const ResultFilters = ({
   }, [study.tagFamilies])
 
   const { envPosts, envSubPosts } = useMemo(() => {
-    const envSubPostsByPost = environmentSubPostsMapping[study.organizationVersion.environment]
+    const envSubPostsByPost = environmentSubPostsMapping[study.organizationVersion.environment as BCEnvironment]
     const posts = Object.keys(envSubPostsByPost) as Post[]
     const subPosts = posts.reduce((acc, post) => acc.concat(subPostsByPost[post] || []), [] as SubPost[])
 

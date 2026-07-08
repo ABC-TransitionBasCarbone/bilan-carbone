@@ -1,17 +1,22 @@
 import { KG_CO2E_PREFIX_REGEX } from '@/constants/import'
-import { Locale, LocaleType } from '@/i18n/config'
+import { findEmissionFactorByIdForMatch } from '@/db/emissionFactors'
 import { qualityKeys } from '@/services/uncertainty'
-import { ImportError } from '@/types/import.types'
+import { AmbiguousRow, FEChoices, ImportError, ImportWarning } from '@/types/import.types'
 import { ParsedEmissionSourceRow, SOURCE_IMPORT_COLUMNS } from '@/types/importEmissionSources.types'
 import {
   EmissionSourceCaracterisation,
   EmissionSourceType,
+  Import,
   SubPost,
   Unit,
 } from '@abc-transitionbascarbone/db-common/enums'
+import { Locale, LocaleType } from '@abc-transitionbascarbone/i18n/config'
+import { getEmissionFactorFullName } from './emissionFactors'
 import { parseExcelSheet } from './excel.utils'
+import { EmissionFactorMatchType, findEmissionFactorMatch } from './findEmissionFactor.utils'
 import {
   buildLabelMap,
+  formatPrefixedUnitDisplayOptional,
   matchLabelFromMap,
   matchLabelFromTranslations,
   matchUnitLabelFromTranslations,
@@ -20,6 +25,7 @@ import { parseNumericValue } from './number'
 import { getBcTranslations, getCommonTranslations } from './translation.utils'
 
 export const SOURCE_IMPORT_HEADER_ROW_INDEX = 9
+const MAX_FE_CANDIDATES = 10
 
 type StudySiteForImport = { id: string; site: { name: string } | null }
 
@@ -35,7 +41,7 @@ export function getExampleRowPrefixes(): string[] {
   })
 }
 
-function resolveStudySiteId(siteName: string, sites: StudySiteForImport[]): string | null {
+function buildStudySiteNameMap(sites: StudySiteForImport[]): Record<string, string> {
   const map: Record<string, string> = {}
   for (const studySite of sites) {
     const name = studySite.site?.name
@@ -43,7 +49,11 @@ function resolveStudySiteId(siteName: string, sites: StudySiteForImport[]): stri
       map[name.toLowerCase()] = studySite.id
     }
   }
-  return matchLabelFromMap(siteName, map)
+  return map
+}
+
+function resolveStudySiteId(siteName: string, siteMap: Record<string, string>): string | null {
+  return matchLabelFromMap(siteName, siteMap)
 }
 
 function matchTypeLabelFromTranslations(
@@ -138,6 +148,7 @@ export function parseEmissionSourcesFile(
   const errors: ImportError[] = []
   const parsedRows: ParsedEmissionSourceRow[] = []
   const exampleRowPrefixes = getExampleRowPrefixes()
+  const studySiteNameMap = buildStudySiteNameMap(studySites)
 
   for (let i = 0; i < dataRows.length; i++) {
     const row = dataRows[i] as unknown[]
@@ -152,7 +163,7 @@ export function parseEmissionSourcesFile(
     }
 
     const siteName = col('site')
-    const resolvedStudySiteId = siteName ? resolveStudySiteId(siteName, studySites) : null
+    const resolvedStudySiteId = siteName ? resolveStudySiteId(siteName, studySiteNameMap) : null
     if (!siteName) {
       rowErrors.push({ key: 'missingSite' })
     } else if (!resolvedStudySiteId) {
@@ -222,6 +233,7 @@ export function parseEmissionSourcesFile(
       emissionFactorValue,
       emissionFactorUnit,
       emissionFactorUnitRaw: rawEmissionFactorUnit || undefined,
+      emissionFactorLocalization: col('emissionFactorLocalization') || undefined,
       value,
       type,
       caracterisation,
@@ -253,4 +265,169 @@ export function parseEmissionSourcesFile(
   }
 
   return { success: true, rows: parsedRows }
+}
+
+type ResolvedEf = { efId: string; efName: string; efValue: string; efUnit: string }
+
+export type ResolveEfRowsResult =
+  | {
+      type: 'warnings'
+      warnings: ImportWarning[]
+      ambiguousRows: AmbiguousRow[]
+      resolvedByLine: Map<number, ResolvedEf>
+    }
+  | { type: 'ambiguous'; ambiguousRows: AmbiguousRow[] }
+  | { type: 'resolved'; resolvedByLine: Map<number, ResolvedEf> }
+
+type EmissionFactorMatch = NonNullable<Awaited<ReturnType<typeof findEmissionFactorMatch>>>
+
+function collectWarningsAndAmbiguities(
+  row: ParsedEmissionSourceRow,
+  ef: EmissionFactorMatch | null,
+  warnings: ImportWarning[],
+  ambiguousRows: AmbiguousRow[],
+  locale: LocaleType,
+): void {
+  const lineNumber = row.lineNumber
+
+  if (
+    row.emissionFactorUnitRaw &&
+    row.emissionFactorUnit &&
+    row.emissionFactorUnit !== Unit.CUSTOM &&
+    !KG_CO2E_PREFIX_REGEX.test(row.emissionFactorUnitRaw)
+  ) {
+    warnings.push({
+      type: 'unitMissingPrefix',
+      lineNumber,
+      sourceName: row.name,
+      foundUnit: row.emissionFactorUnitRaw,
+      resolvedValue: formatPrefixedUnitDisplayOptional(locale, row.emissionFactorUnit),
+    })
+  }
+
+  if (!ef) {
+    const hasSomeEfData = !!(row.emissionFactorId || row.emissionFactorName)
+    if (hasSomeEfData) {
+      const missingUnit = !!row.emissionFactorName && !row.emissionFactorUnit
+      warnings.push({
+        type: missingUnit ? 'efMissingUnit' : 'efNotFound',
+        lineNumber,
+        sourceName: row.name,
+        searchedName: row.emissionFactorName,
+        searchedValue: row.emissionFactorValue,
+        searchedUnit: formatPrefixedUnitDisplayOptional(locale, row.emissionFactorUnit),
+      })
+    } else {
+      warnings.push({ type: 'efMissing', lineNumber, sourceName: row.name })
+    }
+    return
+  }
+
+  if (ef.matchType === EmissionFactorMatchType.NameAmbiguous) {
+    const tooMany = ef.candidates.length > MAX_FE_CANDIDATES
+    ambiguousRows.push({
+      lineNumber,
+      sourceName: row.name,
+      searchedName: row.emissionFactorName,
+      searchedValue: row.emissionFactorValue,
+      searchedUnit: formatPrefixedUnitDisplayOptional(locale, row.emissionFactorUnit),
+      tooMany,
+      candidates: tooMany
+        ? []
+        : ef.candidates.map((c) => ({
+            id: c.id,
+            foundTitle: c.foundTitle,
+            foundValue: c.foundValue,
+            foundUnit: formatPrefixedUnitDisplayOptional(locale, c.foundUnit),
+          })),
+    })
+    return
+  }
+
+  if (ef.matchType !== EmissionFactorMatchType.Exact) {
+    warnings.push({
+      type: 'efNotFound',
+      lineNumber,
+      sourceName: row.name,
+      searchedName: row.emissionFactorName,
+      searchedValue: row.emissionFactorValue,
+      searchedUnit: formatPrefixedUnitDisplayOptional(locale, row.emissionFactorUnit),
+      foundTitle: ef.foundTitle,
+      foundValue: ef.foundValue,
+      foundUnit: formatPrefixedUnitDisplayOptional(locale, ef.foundUnit),
+    })
+  }
+}
+
+// Match each row to an emission factor: use choices if provided, otherwise auto-match and collect warnings/ambiguities
+export async function resolveEmissionFactorRows(
+  rows: ParsedEmissionSourceRow[],
+  choices: FEChoices,
+  locale: LocaleType,
+  organizationId: string,
+  versionIds: string[],
+): Promise<ResolveEfRowsResult> {
+  const hasChoices = Object.keys(choices).length > 0
+  const warnings: ImportWarning[] = []
+  const ambiguousRows: AmbiguousRow[] = []
+  const resolvedByLine = new Map<number, ResolvedEf>()
+
+  for (const row of rows) {
+    const lineNumber = row.lineNumber
+
+    if (lineNumber in choices) {
+      const chosenId = choices[lineNumber]
+      if (chosenId) {
+        const chosenEf = await findEmissionFactorByIdForMatch(chosenId)
+        if (chosenEf) {
+          resolvedByLine.set(lineNumber, {
+            efId: chosenEf.importedFrom === Import.Manual ? '' : (chosenEf.importedId ?? ''),
+            efName:
+              getEmissionFactorFullName(
+                chosenEf.metaData.find((m) => m.language === locale) ??
+                  chosenEf.metaData[0] ?? { title: null, attribute: null, frontiere: null },
+              ) ||
+              (row.emissionFactorName ?? ''),
+            efValue: String(chosenEf.totalCo2),
+            efUnit: formatPrefixedUnitDisplayOptional(locale, chosenEf.customUnit ?? chosenEf.unit ?? undefined),
+          })
+        }
+      }
+      continue
+    }
+
+    const ef = await findEmissionFactorMatch(
+      row.emissionFactorId,
+      row.emissionFactorName,
+      row.emissionFactorValue,
+      row.emissionFactorUnit,
+      locale,
+      organizationId,
+      versionIds,
+      row.emissionFactorLocalization,
+    )
+
+    if (!hasChoices) {
+      collectWarningsAndAmbiguities(row, ef, warnings, ambiguousRows, locale)
+    }
+
+    if (ef && ef.matchType !== EmissionFactorMatchType.NameAmbiguous) {
+      resolvedByLine.set(lineNumber, {
+        efId: ef.importedFrom === Import.Manual ? '' : (ef.importedId ?? ''),
+        efName: ef.foundTitle ?? '',
+        efValue: String(ef.foundValue),
+        efUnit: formatPrefixedUnitDisplayOptional(locale, ef.foundUnit),
+      })
+    }
+  }
+
+  if (warnings.length > 0) {
+    return { type: 'warnings', warnings, ambiguousRows, resolvedByLine }
+  }
+
+  if (ambiguousRows.length > 0) {
+    return { type: 'ambiguous', ambiguousRows }
+  }
+
+  return { type: 'resolved', resolvedByLine }
 }

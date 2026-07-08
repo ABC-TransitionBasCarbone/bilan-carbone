@@ -1,13 +1,12 @@
-import BaseTable from '@/components/base/Table'
-import { usePublicodesTranslation } from '@/hooks/usePublicodesTranslation'
+import { Table as BaseTable } from '@abc-transitionbascarbone/components'
+import { InputField, OnFieldChange } from '@abc-transitionbascarbone/publicodes/form'
+import { EvaluatedTableLayout } from '@abc-transitionbascarbone/publicodes/form/layouts'
+import { usePublicodesTranslation } from '@abc-transitionbascarbone/publicodes/hooks'
 import { Paper, TableContainer } from '@mui/material'
 import { EvaluatedFormElement } from '@publicodes/forms'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
-import InputField from './InputField'
-import { EvaluatedTableLayout } from './layouts/evaluatedFormLayout'
-import { OnFieldChange } from './utils'
 
 interface TableLayoutProps<RuleName extends string> {
   tableLayout: EvaluatedTableLayout<RuleName>

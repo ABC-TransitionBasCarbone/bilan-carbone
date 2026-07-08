@@ -1,12 +1,12 @@
 import { getOrganizationVersionAccounts } from '@/db/organization'
 import type { FullStudy } from '@/db/study'
 import { getAccountRoleOnStudy } from '@/utils/study'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
+import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
-import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import NewStudyRightForm from '../study/rights/NewStudyRightForm'
-import NotFound from './NotFound'
 
 interface Props {
   study: FullStudy

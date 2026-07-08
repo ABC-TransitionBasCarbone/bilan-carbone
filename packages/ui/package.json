@@ -6,7 +6,12 @@
   "types": "src/index.ts",
   "peerDependencies": {
     "react": "*",
-    "@mui/material": "*"
+    "@mui/material": "*",
+    "@mui/x-charts": "*"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*.tsx"
   },
   "dependencies": {
     "@abc-transitionbascarbone/utils": "*"

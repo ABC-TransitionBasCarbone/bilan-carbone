@@ -44,6 +44,6 @@ export const objectWithoutNullAttributes = (object?: Record<string, any>) => {
   return object
 }
 
-export const typedEntries = <K extends string, V>(obj: Record<K, V>): Array<[K, V]> => {
+export const typedEntries = <K extends string, V>(obj: Partial<Record<K, V>>): Array<[K, V]> => {
   return Object.entries(obj) as Array<[K, V]>
 }

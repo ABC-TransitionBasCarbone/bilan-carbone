@@ -1,12 +1,12 @@
 import { DeleteCommand } from '@/services/serverFunctions/study.command'
 import { handleWarningText } from '@/utils/components'
+import Form from '@abc-transitionbascarbone/components/src/base/Form'
+import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
+import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { Translations } from '@abc-transitionbascarbone/lib'
 import { Button } from '@abc-transitionbascarbone/ui'
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import { Control, UseFormReturn, useWatch } from 'react-hook-form'
-import Form from '../base/Form'
-import LoadingButton from '../base/LoadingButton'
-import { FormTextField } from '../form/TextField'
 
 interface Props<T extends DeleteCommand> {
   form: UseFormReturn<T>

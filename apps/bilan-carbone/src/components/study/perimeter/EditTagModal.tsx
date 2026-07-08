@@ -1,7 +1,8 @@
 'use client'
 
-import Form from '@/components/base/Form'
 import { StudyTagFamilyWithTags } from '@/db/study'
+import Form from '@abc-transitionbascarbone/components/src/base/Form'
+import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl } from '@mui/material'
 import { useTranslations } from 'next-intl'
@@ -9,7 +10,6 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import Modal from '../../modals/Modal'
 import TagForm from './TagForm'
 
 interface Props {

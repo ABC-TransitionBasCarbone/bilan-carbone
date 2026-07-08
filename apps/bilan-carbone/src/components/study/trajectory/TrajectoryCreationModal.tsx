@@ -1,9 +1,6 @@
 'use client'
 
-import LoadingButton from '@/components/base/LoadingButton'
-import Modal from '@/components/modals/Modal'
 import { SBTI_START_YEAR, SNBC_FINAL_TARGET_YEAR } from '@/constants/trajectory.constants'
-import { useServerFunction } from '@/hooks/useServerFunction'
 import {
   createTrajectorySchema,
   SectorPercentages,
@@ -27,6 +24,9 @@ import {
   getDefaultObjectivesForTrajectoryType,
   getDisplayedReferenceYearForTrajectoryType,
 } from '@/utils/trajectory'
+import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
+import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
 import type { SectenInfo } from '@abc-transitionbascarbone/db-common'
 import { TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
 import { getYearFromDateStr } from '@abc-transitionbascarbone/utils/time'
@@ -63,6 +63,7 @@ const getDefaultValues = (defaultSnbcSectoralPercentages?: SectorPercentages | n
   description: '',
   referenceYear: SBTI_START_YEAR.toString(),
   objectives: Array.from({ length: 2 }).map(() => ({
+    name: '',
     targetYear: null,
     reductionRate: null,
   })),
@@ -163,6 +164,7 @@ const TrajectoryCreationModal = ({
         description: trajectory.description || '',
         referenceYear: trajectory.referenceYear?.toString(),
         objectives: defaultObjectives.map((obj) => ({
+          name: obj.name ?? '',
           targetYear: obj.targetYear.toString(),
           reductionRate: Number((obj.reductionRate * 100).toFixed(2)),
         })),
@@ -350,6 +352,7 @@ const TrajectoryCreationModal = ({
           .filter((obj) => obj.targetYear && obj.reductionRate !== null && obj.reductionRate !== undefined)
           .map((obj, index) => ({
             id: defaultObjectives[index]?.id,
+            name: obj.name,
             targetYear: getYearFromDateStr(obj.targetYear!),
             reductionRate: Number((obj.reductionRate! / 100).toFixed(4)),
           }))
@@ -391,6 +394,7 @@ const TrajectoryCreationModal = ({
 
     if (data.trajectoryType === TrajectoryType.CUSTOM) {
       input.objectives = data.objectives.map((obj) => ({
+        name: obj.name,
         targetYear: getYearFromDateStr(obj.targetYear!),
         reductionRate: Number((obj.reductionRate! / 100).toFixed(4)), // Keep precision of 2 digits percentage so 0.01% = 0.0001 => 4 digits
       }))

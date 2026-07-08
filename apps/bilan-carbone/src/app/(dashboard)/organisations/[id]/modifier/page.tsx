@@ -1,9 +1,9 @@
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import EditOrganizationPage from '@/components/pages/EditOrganization'
-import NotFound from '@/components/pages/NotFound'
 import { getOrganizationVersionWithSitesById, OrganizationVersionWithOrganization } from '@/db/organization'
 import { hasAlwaysAccessToOrganizationVersion } from '@/services/permissions/environment'
 import { canEditOrganizationVersion } from '@/utils/organization'
+import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 import { UUID } from 'crypto'
 
 interface Props {

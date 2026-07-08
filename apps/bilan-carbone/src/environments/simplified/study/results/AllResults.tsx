@@ -1,9 +1,8 @@
 'use client'
 
-import Block from '@/components/base/Block'
-import LoadingButton from '@/components/base/LoadingButton'
-import BarChart from '@/components/study/charts/BarChart'
-import PieChart from '@/components/study/charts/PieChart'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
+import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
+
 import CarbonIntensities from '@/components/study/results/consolidated/CarbonIntensities'
 import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
 import SelectStudySite from '@/components/study/site/SelectStudySite'
@@ -13,7 +12,6 @@ import type { FullStudy } from '@/db/study'
 import EmissionsAnalysisClickson from '@/environments/clickson/study/results/consolidated/EmissionsAnalysisClickson'
 import CarbonIntensitiesCut from '@/environments/cut/study/results/CarbonIntensitiesCut'
 import SheetIcon from '@/environments/simplified/icons/SheetIcon'
-import { useServerFunction } from '@/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
 import {
   hasAccessToAdvancedEmissionAnalysis,
@@ -28,8 +26,11 @@ import type { BaseResultsByPost } from '@/services/posts'
 import { generateStudySummaryPDF } from '@/services/serverFunctions/pdf'
 import { downloadStudyResults } from '@/services/study'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { BCEnvironment } from '@/types/environment'
 import type { BaseResultsBySite } from '@/types/study.types'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { SiteCAUnit } from '@abc-transitionbascarbone/db-common/enums'
+import { BarChart, PieChart } from '@abc-transitionbascarbone/ui'
 import DownloadIcon from '@mui/icons-material/Download'
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
 import { Box, Button, Tab, Tabs, Typography } from '@mui/material'
@@ -157,7 +158,7 @@ const AllResults = ({
                 tGHGP,
                 tUnits,
                 tBase,
-                study.organizationVersion.environment,
+                study.organizationVersion.environment as BCEnvironment,
                 computedResultsBySite,
                 computedResults,
                 studySite,

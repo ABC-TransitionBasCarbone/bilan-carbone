@@ -2,7 +2,7 @@ import type { FullStudy } from '@/db/study'
 import { getEmissionResults } from '@/services/emissionSource'
 import { isTiltSimplified } from '@/services/permissions/environmentAdvanced'
 import { isAdminOnStudyOrga } from '@/services/permissions/study.utils'
-import { Post, subPostsByPost } from '@/services/posts'
+import { subPostsByPost } from '@/services/posts'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { ResultsByPost } from '@/types/study.types'
 import { isAdmin } from '@/utils/user'
@@ -18,11 +18,12 @@ import {
   SubPost,
   Unit,
 } from '@abc-transitionbascarbone/db-common/enums'
+import { Post, STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/utils/charts'
+import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import { Getter } from '@tanstack/react-table'
 import { UserSession } from 'next-auth'
 import { unique } from './array'
 import { getEmissionSourcesTotalCo2 } from './emissionSources'
-import { formatNumber } from './number'
 import { hasActiveLicence, isInOrgaOrParent } from './organization'
 
 export const getUserRoleOnPublicStudy = (
@@ -133,6 +134,19 @@ export const postColors: Record<Post, string> = {
   [Post.EquipementsEtImmobilisations]: 'blue',
   [Post.Utilisation]: 'orange',
   [Post.Teletravail]: 'darkBlue',
+  [Post.LocauxSimplified]: 'darkBlue',
+  [Post.EnergiesSimplified]: 'darkBlue',
+  [Post.DechetsSimplified]: 'darkBlue',
+  [Post.FroidEtClimSimplified]: 'darkBlue',
+  [Post.DeplacementsDePersonneSimplified]: 'green',
+  [Post.TransportDeMarchandisesSimplified]: 'green',
+  [Post.IntrantsBiensEtMatieresTiltSimplified]: 'blue',
+  [Post.AlimentationSimplified]: 'blue',
+  [Post.ServiceEtNumeriqueSimplified]: 'blue',
+  [Post.EquipementsEtImmobilisationsSimplified]: 'blue',
+  [Post.UtilisationSimplified]: 'orange',
+  [Post.FinDeVieSimplified]: 'orange',
+  [Post.TeletravailSimplified]: 'darkBlue',
 
   [Post.Restauration]: 'darkBlue',
   [Post.Achats]: 'darkBlue',
@@ -162,11 +176,6 @@ export const hasDeprecationPeriod = (subPost: SubPost) =>
     SubPost.Electromenager,
     SubPost.Batiment,
   ].includes(subPost)
-
-export const STUDY_UNIT_VALUES: Record<StudyResultUnit, number> = {
-  K: 1,
-  T: 1000,
-}
 
 export const defaultStudyResultUnit = StudyResultUnit.T
 
@@ -262,13 +271,20 @@ export const formatConfidenceInterval = (confidenceInterval: number[], resultsUn
 export const getBaseFilteredEmissionSources = <T extends Pick<FullStudy['emissionSources'][number], 'emissionFactor'>>(
   emissionSources: T[],
   base: EmissionFactorBase = EmissionFactorBase.LocationBased,
-) =>
-  emissionSources.filter(
-    (emissionSource) =>
-      !emissionSource.emissionFactor ||
-      !emissionSource.emissionFactor.base ||
-      emissionSource.emissionFactor.base === base,
-  )
+) => {
+  return emissionSources.filter((emissionSource) => {
+    if (!emissionSource.emissionFactor || !emissionSource.emissionFactor.base) {
+      return true
+    }
+
+    const isMarketBased = base === EmissionFactorBase.MarketBased
+    if (!isMarketBased) {
+      return emissionSource.emissionFactor.base === base
+    }
+
+    return true
+  })
+}
 
 /**
  * Computes emissions after applying filters coming from DB scope or UI selectors.

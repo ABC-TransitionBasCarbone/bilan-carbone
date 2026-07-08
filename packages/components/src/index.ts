@@ -1,3 +1,6 @@
+export * from './base/HelpIcon'
+export * from './base/Table'
+export * from './base/TablePagination'
 export { ChoiceQuestionInput } from './survey/ChoiceQuestionInput'
 export { QuestionRenderer } from './survey/QuestionRenderer'
 export { TextQuestionInput } from './survey/TextQuestionInput'

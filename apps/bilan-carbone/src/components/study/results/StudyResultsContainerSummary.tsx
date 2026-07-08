@@ -1,15 +1,16 @@
 'use client'
 
-import Box from '@/components/base/Box'
-import HelpIcon from '@/components/base/HelpIcon'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import type { FullStudy } from '@/db/study'
 import { customRich } from '@/i18n/customRich'
 import { hasAccessToStudyResults, hasRoleOnStudy } from '@/services/permissions/environment'
 import { getDetailedEmissionResults } from '@/services/study'
-import { formatNumber } from '@/utils/number'
+import { BCEnvironment } from '@/types/environment'
 import { getDisplayedRoleOnStudy } from '@/utils/study'
-import { Button } from '@abc-transitionbascarbone/ui'
+import { HelpIcon } from '@abc-transitionbascarbone/components'
+import Box from '@abc-transitionbascarbone/components/src/base/Box'
+import { BarChart, Button } from '@abc-transitionbascarbone/ui'
+import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
@@ -17,7 +18,6 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import StudyName from '../card/StudyName'
-import BarChart from '../charts/BarChart'
 import styles from './ResultsContainer.module.css'
 
 interface Props {
@@ -44,7 +44,7 @@ const StudyResultsContainerSummary = ({
   const tDocumentation = useTranslations('documentationUrl')
   const [glossary, setGlossary] = useState('')
   const [withDep, setWithDependencies] = useState(!!withDependencies)
-  const environment = study.organizationVersion.environment
+  const environment = study.organizationVersion.environment as BCEnvironment
 
   const [
     formattedWithDepValue,

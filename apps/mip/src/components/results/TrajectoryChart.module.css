@@ -1,0 +1,10 @@
+.wrapper {
+  background-color: var(--neutral-50);
+  border-radius: 0.75rem;
+  width: 100%;
+  padding: 0.5rem;
+}
+
+.chart {
+  width: 100%;
+}

@@ -35,7 +35,7 @@
     "title": "Calculer votre empreinte carbone simplifiée vous permettra de :"
   },
   "exports": {
-    "env_specific_export": "Empreinte carbone simplifiée",
+    "env_specific_export": "Bilan Carbone® - Sphère associative",
     "simplified": {
       "disclaimerExcel1": "Attention, les résultats que vous obtenez ici sont uniquement issus d'un calcul d'empreinte carbone simplifié réalisé par Cap Carbone. Ils ne doivent en aucun cas être présentés ou utilisés comme des résultats Bilan Carbone®,",
       "disclaimerExcel2": "car même si les résultats obtenus peuvent déjà vous permettre de comprendre comment réduire votre impact, votre démarche se limite à une estimation.",
@@ -77,7 +77,8 @@
   },
   "study": {
     "perimeter": {
-      "preset": "Type de public"
+      "preset": "Type de public",
+      "preset_numerique": "Numérique"
     },
     "new": {
       "postalCode": "Quel est le code postal de l'association ?",
@@ -113,10 +114,12 @@
       "export": "Exporter mes résultats"
     },
     "results": {
+      "reportName": "{studyName} - Bilan Carbone® - Sphère associative",
       "feedback": {
         "button": "Faites-nous vos retours ! ✨",
         "title": "Faites-nous vos retours ! ✨"
-      }
+      },
+      "resultsWord": "Rapport Bilan Carbone® - Sphère associative"
     },
     "structure": {
       "'Club de loisirs'": "Club de loisirs",
@@ -189,5 +192,10 @@
   "navigation": {
     "footprints": "Mes empreintes",
     "information": "Mon Association"
+  },
+  "betaBanner": {
+    "badge": "Bêta",
+    "title": "Version Bêta de l'outil Cap Carbone",
+    "description": "Cap Carbone est aujourd'hui en version bêta ! Merci d'être nos premiers utilisateurs et testeurs 🎉 N'hésitez pas à nous contacter à l'adresse <support>support@abc-transitionbascarbone.fr</support> si vous avez des retours ! L'application étant en bêta il est possible que certaines questions changent dans le formulaire et donc que les réponses des questions modifiées soient supprimées dans de futures mise à jour. Pensez à regarder la complétion de vos postes sur la page saisie des données avant d'aller voir vos résultats pour vérifier que toutes vos réponses sont toujours disponibles."
   }
 }

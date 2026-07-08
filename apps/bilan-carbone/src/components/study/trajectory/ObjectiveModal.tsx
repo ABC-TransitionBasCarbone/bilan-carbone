@@ -1,10 +1,7 @@
 'use client'
 
-import { CustomFormLabel } from '@/components/form/CustomFormLabel'
 import ScopeSelectors, { TagFamily } from '@/components/form/ScopeSelectors'
-import Modal from '@/components/modals/Modal'
 import { OTHER_TAG_ID } from '@/constants/tag.constants'
-import { useServerFunction } from '@/hooks/useServerFunction'
 import { getEnvSubPosts } from '@/services/posts'
 import { createObjectiveModalSchema, ObjectiveModalFormData } from '@/services/serverFunctions/objective.command'
 import { createSubObjectives, updateSubObjective } from '@/services/serverFunctions/objective.serverFunction'
@@ -12,6 +9,9 @@ import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { ObjectiveWithScope, TrajectoryWithObjectivesAndScope } from '@/types/trajectory.types'
 import { toScopedValues } from '@/utils/scope.utils'
 import { getDisplayedReferenceYearForTrajectoryType } from '@/utils/trajectory'
+import { CustomFormLabel } from '@abc-transitionbascarbone/components/src/form/CustomFormLabel'
+import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
+import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
 import { getYearFromDateStr } from '@abc-transitionbascarbone/utils/time'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'
@@ -71,11 +71,10 @@ const ObjectiveModal = ({
         ],
       }
     : {
-        name: '',
         siteIds: allSiteIds,
         tagIds: allTagIds,
         subPosts: allEnvSubPosts,
-        objectives: [{ startYear: '', targetYear: '', reductionRate: 0 }],
+        objectives: [{ name: '', startYear: '', targetYear: '', reductionRate: 0 }],
       }
 
   const { control, handleSubmit, watch, reset, setValue, formState } = useForm<ObjectiveModalFormData>({

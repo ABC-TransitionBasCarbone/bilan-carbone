@@ -1,8 +1,9 @@
 'use server'
 
 import { getLatestSectenVersion as dbGetLatestSectenVersion, getSectenData as dbGetSectenData } from '@/db/secten'
-import { ApiResponse, withServerResponse } from '@/utils/serverResponse'
+import { withServerResponse } from '@/utils/serverResponse'
 import type { SectenInfo, SectenVersion } from '@abc-transitionbascarbone/db-common'
+import type { ApiResponse } from '@abc-transitionbascarbone/utils/serverResponse'
 
 export const getSectenData = async (versionId?: string): Promise<ApiResponse<SectenInfo[]>> =>
   withServerResponse('getSectenData', async () => {

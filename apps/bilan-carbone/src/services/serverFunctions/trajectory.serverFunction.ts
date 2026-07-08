@@ -11,10 +11,11 @@ import {
   studyHasObjectives,
 } from '@/db/transitionPlan'
 import { TrajectoryWithObjectivesAndScope } from '@/types/trajectory.types'
-import { ApiResponse, withServerResponse } from '@/utils/serverResponse'
+import { withServerResponse } from '@/utils/serverResponse'
 import { getDefaultObjectivesForTrajectoryType } from '@/utils/trajectory'
 import { TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
-import { NOT_AUTHORIZED } from '../permissions/check'
+import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
+import type { ApiResponse } from '@abc-transitionbascarbone/utils/serverResponse'
 import { hasEditAccessOnStudy, hasReadAccessOnStudy } from '../permissions/study'
 import { SectorPercentages } from './trajectory.command'
 
@@ -60,6 +61,7 @@ export interface CreateTrajectoryInput {
   sectorPercentages?: SectorPercentages | null
   isDefault?: boolean
   objectives?: {
+    name?: string
     targetYear: number
     reductionRate: number
   }[]
@@ -71,7 +73,7 @@ export interface UpdateTrajectoryInput {
   type?: TrajectoryType
   referenceYear?: number | null
   sectorPercentages?: SectorPercentages | null
-  objectives?: Array<{ id?: string; targetYear: number; reductionRate: number }>
+  objectives?: Array<{ id?: string; name?: string; targetYear: number; reductionRate: number }>
 }
 
 export const createTrajectoryWithObjectives = async (input: CreateTrajectoryInput) =>
@@ -229,6 +231,7 @@ export const updateTrajectory = async (id: string, data: UpdateTrajectoryInput) 
               return tx.objective.update({
                 where: { id: obj.id },
                 data: {
+                  name: obj.name,
                   targetYear: obj.targetYear,
                   reductionRate: obj.reductionRate,
                 },
@@ -237,6 +240,7 @@ export const updateTrajectory = async (id: string, data: UpdateTrajectoryInput) 
               return tx.objective.create({
                 data: {
                   trajectoryId: id,
+                  name: obj.name,
                   targetYear: obj.targetYear,
                   reductionRate: obj.reductionRate,
                   isDefault: true,

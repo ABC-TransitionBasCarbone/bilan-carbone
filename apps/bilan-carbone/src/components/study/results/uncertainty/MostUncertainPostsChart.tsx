@@ -1,7 +1,7 @@
-import { Post } from '@/services/posts'
 import { getQualitativeUncertaintyFromSquaredStandardDeviation } from '@/services/uncertainty'
 import { ResultsByPost } from '@/types/study.types'
 import { postColors } from '@/utils/study'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import PostIcon from '../../infography/icons/PostIcon'

@@ -1,9 +1,10 @@
 'use client'
 
-import { Post, SimplifiedPost } from '@/services/posts'
+import { SimplifiedPost } from '@/services/posts'
 import { QuestionStats } from '@/services/publicodes/questionProgress'
 import { ResultsByPost } from '@/types/study.types'
 import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { Post } from '@abc-transitionbascarbone/utils/charts'
 import CheckCircleOutlineSharp from '@mui/icons-material/CheckCircleOutlineSharp'
 import EditIcon from '@mui/icons-material/Edit'
 import { useTranslations } from 'next-intl'

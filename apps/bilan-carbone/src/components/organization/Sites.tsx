@@ -1,21 +1,20 @@
 'use client'
 
-import BaseTable from '@/components/base/Table'
 import {
   hasAccessToStudySiteAddAndSelection,
   hasCustomGlossaryTextForEstablishment,
 } from '@/services/permissions/environment'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
 import { defaultCAUnit } from '@/utils/number'
+import { Table as BaseTable, HelpIcon as Help } from '@abc-transitionbascarbone/components'
 import { Environment, SiteCAUnit } from '@abc-transitionbascarbone/db-common/enums'
 import { Button } from '@abc-transitionbascarbone/ui'
 import { Checkbox, FormControlLabel } from '@mui/material'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { UseFormReturn, UseFormSetValue } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
-import Help from '../base/HelpIcon'
 import GlossaryModal from '../modals/GlossaryModal'
 
 type TypeDef = SitesCommand['sites'][number]
@@ -39,6 +38,7 @@ const Sites = <T extends SitesCommand>({
   environment,
   disabled,
 }: Props<T>) => {
+  'use memo'
   const t = useTranslations('organization.sites')
   const tCommon = useTranslations('common.action')
   const tGlossary = useTranslations('organization.sites.glossary')
@@ -53,7 +53,7 @@ const Sites = <T extends SitesCommand>({
 
   const newSite = () => ({ id: uuidv4(), name: '', selected: false }) as SitesCommand['sites'][0]
 
-  const headerCAUnit = useMemo(() => tUnit(caUnit ?? defaultCAUnit), [caUnit, tUnit])
+  const headerCAUnit = tUnit(caUnit ?? defaultCAUnit)
 
   const table = useReactTable({
     columns,
@@ -110,7 +110,7 @@ const Sites = <T extends SitesCommand>({
       <GlossaryModal
         glossary={showGlossary ? 'title' : ''}
         onClose={() => setShowGlossary(false)}
-        label="create-emission-factor"
+        label="sites-glossary"
         t={tGlossary}
       >
         {' '}

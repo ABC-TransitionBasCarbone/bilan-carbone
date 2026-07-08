@@ -41,6 +41,10 @@
   border-radius: 0.25rem;
 }
 
+.tableWrapper thead th {
+  background-color: var(--mui-palette-background-paper) !important;
+}
+
 .cellName {
   max-width: 16rem;
 }
@@ -70,4 +74,16 @@
 .warningArrow {
   font-size: 0.9rem !important;
   flex-shrink: 0;
+}
+
+.ambiguousWrapper {
+  max-height: 28rem;
+  overflow-y: auto;
+}
+
+.ambiguousRow {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--mui-palette-divider);
+  border-radius: 0.5rem;
+  background-color: var(--mui-palette-grey-50);
 }

@@ -2,10 +2,10 @@ import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import { StudyProps } from '@/components/hoc/withStudy'
 import withStudyDetails from '@/components/hoc/withStudyDetails'
 import EditStudyContributorPage from '@/components/pages/EditStudyContributor'
-import NotFound from '@/components/pages/NotFound'
 import { getAccountById } from '@/db/account'
 import { AccountWithUser } from '@/types/account.types'
 import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
+import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 import { redirect } from 'next/navigation'
 
 interface Props {

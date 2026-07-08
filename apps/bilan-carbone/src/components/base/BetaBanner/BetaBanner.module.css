@@ -1,0 +1,10 @@
+.banner {
+  border: 2px solid var(--warning);
+  border-radius: 1rem;
+  background-color: #fffaf5;
+}
+
+.chip {
+  color: white;
+  font-weight: 800;
+}

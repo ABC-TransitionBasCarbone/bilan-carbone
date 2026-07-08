@@ -13,7 +13,7 @@
   "dependencies": {
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "7.8.0",
-    "pg": "^8.20.0"
+    "pg": "^8.22.0"
   },
   "prisma": {
     "schema": "prisma/schema"
@@ -21,6 +21,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./enums": "./src/enums.ts",
-    "./types": "./src/types.ts"
+    "./types": "./src/types.ts",
+    "./db": "./src/db/index.ts",
+    "./db/common.select": "./src/db/common.select.ts"
   }
 }

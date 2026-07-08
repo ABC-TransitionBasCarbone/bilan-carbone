@@ -1,0 +1,46 @@
+transport . deux roues . limitation autoroute:
+  titre: Rouler à 110km/h sur l'autoroute pour venir en Hauts-de-France
+  icônes: 🏍️🛣️
+  applicable si: deux roues . km > 0
+  formule: transport . deux roues . empreinte au km * km autoroute * réduction
+  description: |
+    Diminuer sa vitesse de 20 km/h sur l’autoroute permet de réduire sa consommation de carburant de l’ordre de 20 %.
+
+transport . deux roues . limitation autoroute . km autoroute:
+  formule: voiture . km * 0.9
+  note: |
+    On considère que 90 % des km faits pour venir en Hauts-de-France le seront sur autoroute.
+  unité: km
+
+transport . deux roues . limitation autoroute . réduction:
+  titre: Gain de consommation 130 -> 110
+  formule: transport . voiture . limitation autoroute . réduction
+  note: |
+    En première approche, on fait l'hypothèse que la réduction de consommation pour une moto est identique à celle d'une voiture. C'est un choix méthodologique à affiner à posteriori.
+
+transport . deux roues . scooter électrique:
+  titre: Opter pour un scooter électrique
+  icônes: 🔌🛵
+  applicable si:
+    toutes ces conditions:
+      - est non défini: transport . deux roues . présent
+      - est défini: DT . deux roues . présent
+      - DT . deux roues . présent
+      - DT . deux roues . type = 'scooter thermique'
+  non applicable si:
+    toutes ces conditions:
+      - est défini: transport . deux roues . présent
+      - transport . deux roues . présent
+      - une de ces conditions:
+          - transport . deux roues . type = 'moto inf 250'
+          - transport . deux roues . type = 'moto sup 250'
+  formule: DT . deux roues - transport . deux roues . scooter électrique . recalcul
+  description: |
+    Rapidité, facilité pour se garer, consommation de carburant réduite… vous êtes nombreux à opter pour des scooters qui peuvent être une alternative à la voiture car ils émettent moins de CO2 et sont 3 à 4 fois moins vorace en place.
+
+    Le marché évolue dans le bon sens : les fabricants sortent des alternatives peu polluantes : comme des scooters électriques.
+
+transport . deux roues . scooter électrique . recalcul:
+  valeur: DT . deux roues
+  contexte:
+    DT . deux roues . type: "'scooter électrique'"
