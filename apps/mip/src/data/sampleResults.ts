@@ -35,11 +35,7 @@ export type KeyStatUnit = 'percent' | 'number' | 'km' | 'hours' | 'nights'
 export type KeyStat = {
   key: string
   value: number
-<<<<<<< HEAD
-  unit: 'percent' | 'number' | 'km' | 'hours' | 'nights'
-=======
   unit: KeyStatUnit
->>>>>>> 14a3cc555 (add key stat unit type and update translations for key stats)
 }
 
 export type KeyStatGroup = {
