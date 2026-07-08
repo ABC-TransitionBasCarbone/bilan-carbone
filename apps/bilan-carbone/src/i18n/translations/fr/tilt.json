@@ -35,7 +35,7 @@
     "title": "Calculer votre empreinte carbone simplifiée vous permettra de :"
   },
   "exports": {
-    "env_specific_export": "Empreinte carbone simplifiée",
+    "env_specific_export": "Bilan Carbone® - Sphère associative",
     "simplified": {
       "disclaimerExcel1": "Attention, les résultats que vous obtenez ici sont uniquement issus d'un calcul d'empreinte carbone simplifié réalisé par Cap Carbone. Ils ne doivent en aucun cas être présentés ou utilisés comme des résultats Bilan Carbone®,",
       "disclaimerExcel2": "car même si les résultats obtenus peuvent déjà vous permettre de comprendre comment réduire votre impact, votre démarche se limite à une estimation.",
