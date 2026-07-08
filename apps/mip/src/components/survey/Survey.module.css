@@ -7,8 +7,8 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: var(--background-color, #fff);
-  border-top: 1px solid var(--border-color, #e0e0e0);
+  background-color: var(--background-color);
+  border-top: 1px solid var(--border-color);
   z-index: 100;
 }
 
