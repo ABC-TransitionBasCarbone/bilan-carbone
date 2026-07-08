@@ -23,7 +23,7 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Situation } from 'publicodes'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import styles from './SurveyCompletion.module.css'
 
 type ModelRule = {
@@ -85,7 +85,7 @@ const SurveyCompletion = ({ onRestart, surveyId, model, restoreFromStorage = fal
   const router = useRouter()
   const [activeTab, setActiveTab] = useState<'keyActions' | 'library'>('keyActions')
 
-  useState(() => {
+  useEffect(() => {
     if (!restoreFromStorage) {
       return
     }
@@ -93,7 +93,7 @@ const SurveyCompletion = ({ onRestart, surveyId, model, restoreFromStorage = fal
     if (hasStoredSituation(savedState)) {
       engine.setSituation(savedState.situation)
     }
-  })
+  }, [engine, restoreFromStorage, surveyId])
 
   const totalEval = engine.evaluate('bilan')
   const totalKg = typeof totalEval.nodeValue === 'number' ? Math.max(0, totalEval.nodeValue) : 0

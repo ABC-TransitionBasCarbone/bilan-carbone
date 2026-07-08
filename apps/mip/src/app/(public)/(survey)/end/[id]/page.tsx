@@ -7,7 +7,7 @@ import { MipPublicodesProvider } from '@/publicodes/MipPublicodesProvider'
 import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 import { CampaignStatus } from '@abc-transitionbascarbone/db-common/enums'
 
-export default async function SurveyEndPage({ params }: { params: Promise<{ id: string }> }) {
+const SurveyEndPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params
 
   const campaign = await getCampaignById(id)
@@ -21,3 +21,5 @@ export default async function SurveyEndPage({ params }: { params: Promise<{ id: 
     </MipPublicodesProvider>
   )
 }
+
+export default SurveyEndPage

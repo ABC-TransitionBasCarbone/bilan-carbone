@@ -43,10 +43,11 @@ export const buildGroupedElements = (engine: MipEngine, elements: SurveyFormElem
       continue
     }
 
+    const questionType = getQuestionType(engine, el.id)
     groupedElements.push({
       type: 'single',
-      el: patchFormElement(el, getQuestionType(engine, el.id)),
-      questionType: getQuestionType(engine, el.id),
+      el: patchFormElement(el, questionType),
+      questionType,
     })
   }
 

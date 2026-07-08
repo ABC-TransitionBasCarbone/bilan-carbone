@@ -89,8 +89,8 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
 
   const completeSurvey = async () => {
     const completedState = formBuilder.goToNextPage(state)
-    updateState(completedState)
     await createResponseWithJson(surveyId, JSON.stringify(completedState))
+    updateState(completedState)
     router.push(`/end/${surveyId}`)
   }
 

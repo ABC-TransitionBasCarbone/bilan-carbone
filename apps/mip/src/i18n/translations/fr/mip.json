@@ -207,10 +207,8 @@
       "comments": {
         "title": "Commentaires des collaborateurs"
       },
-      "export": {
-        "visual": "Exporter (visuel)",
-        "print": "Imprimer"
-      }
+      "visual": "Exporter (visuel)",
+      "print": "Imprimer"
     }
   }
 }

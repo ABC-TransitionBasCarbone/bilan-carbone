@@ -25,6 +25,7 @@ import { FormControl, FormHelperText, IconButton, MenuItem, TextField, Tooltip }
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
+import { useCallback, useMemo } from 'react'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
 import styles from './Campaign.module.css'
@@ -73,38 +74,45 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
     showErrorToast(result.errorMessage)
   }
 
-  const handleDelete = (id: string) => {
-    form.setValue(
-      'campaigns',
-      form.getValues('campaigns').filter((campaign) => campaign.id !== id),
-    )
-  }
+  const handleDelete = useCallback(
+    (id: string) => {
+      form.setValue(
+        'campaigns',
+        form.getValues('campaigns').filter((campaign) => campaign.id !== id),
+      )
+    },
+    [form],
+  )
 
   const control = form.control
 
-  const columns = [
-    {
-      id: 'name',
-      header: () => <div className="align-center gapped">{t('name')}</div>,
-      accessorKey: 'name',
-      cell: ({ row }) => (
-        <Controller
-          control={control}
-          name={`campaigns.${row.index}.name`}
-          render={({ field, fieldState: { error } }) => (
-            <TextField
-              {...field}
-              value={field.value ?? ''}
-              size="small"
-              placeholder={t('namePlaceholder')}
-              fullWidth
-              error={!!error}
-              helperText={error?.message}
-              slotProps={{
-                htmlInput: {
-                  'data-testid': `input-name-${row.original.id}`,
-                },
-              }}
+  const columns = useMemo(
+    () =>
+      [
+        {
+          id: 'name',
+          header: () => <div className="align-center gapped">{t('name')}</div>,
+          accessorKey: 'name',
+          cell: ({ row }) => (
+            <Controller
+              control={control}
+              name={`campaigns.${row.index}.name`}
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  value={field.value ?? ''}
+                  size="small"
+                  placeholder={t('namePlaceholder')}
+                  fullWidth
+                  error={!!error}
+                  helperText={error?.message}
+                  slotProps={{
+                    htmlInput: {
+                      'data-testid': `input-name-${row.original.id}`,
+                    },
+                  }}
+                />
+              )}
             />
           ),
         },
@@ -151,26 +159,28 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
           cell: ({ row }) => {
             const link = typeof window !== 'undefined' ? `${window.location.origin}/survey/${row.original.id}` : ''
 
-        return (
-          <LinkButton onClick={() => handleCopy(link)}>
-            <CopyIcon />
-          </LinkButton>
-        )
-      },
-    },
-    {
-      id: 'actions',
-      header: '',
-      accessorKey: 'id',
-      cell: ({ getValue }) => (
-        <Tooltip title={t('delete')}>
-          <IconButton size="medium" color="primary" onClick={() => handleDelete(getValue<string>())}>
-            <DeleteOutlinedIcon color="error" fontSize="medium" />
-          </IconButton>
-        </Tooltip>
-      ),
-    },
-  ] as ColumnDef<UpdateCampaignCommand['campaigns'][0]>[]
+            return (
+              <LinkButton onClick={() => handleCopy(link)}>
+                <CopyIcon />
+              </LinkButton>
+            )
+          },
+        },
+        {
+          id: 'actions',
+          header: '',
+          accessorKey: 'id',
+          cell: ({ getValue }) => (
+            <Tooltip title={t('delete')}>
+              <IconButton size="medium" color="primary" onClick={() => handleDelete(getValue<string>())}>
+                <DeleteOutlinedIcon color="error" fontSize="medium" />
+              </IconButton>
+            </Tooltip>
+          ),
+        },
+      ] as ColumnDef<UpdateCampaignCommand['campaigns'][0]>[],
+    [campaigns, control, handleDelete, modelCampaign?.model, t],
+  )
 
   const currentCampaigns = useWatch({ control, name: 'campaigns' }) ?? []
 

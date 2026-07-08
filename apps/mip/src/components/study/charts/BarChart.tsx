@@ -39,7 +39,7 @@ function niceUpperBound(value: number): number {
   return Math.ceil(value / step) * step
 }
 
-export default function BarChart({ items, unit = 'tCO₂e', targetValue = 2, targetLabel }: Props) {
+const BarChart = ({ items, unit = 'tCO₂e', targetValue = 2, targetLabel }: Props) => {
   const dataMax = Math.max(...items.map((i) => i.value))
   const maxValue = niceUpperBound(Math.max(dataMax, targetValue))
 
@@ -100,3 +100,5 @@ export default function BarChart({ items, unit = 'tCO₂e', targetValue = 2, tar
     </svg>
   )
 }
+
+export default BarChart

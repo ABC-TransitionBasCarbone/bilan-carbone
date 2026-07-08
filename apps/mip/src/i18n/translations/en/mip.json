@@ -199,10 +199,8 @@
       "comments": {
         "title": "Collaborator comments"
       },
-      "export": {
-        "visual": "Export (visual)",
-        "print": "Print"
-      }
+      "visual": "Export (visual)",
+      "print": "Print"
     }
   }
 }

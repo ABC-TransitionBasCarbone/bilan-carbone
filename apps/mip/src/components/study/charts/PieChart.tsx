@@ -17,7 +17,7 @@ const RADIUS = 90
 const STROKE_WIDTH = 40
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS
 
-export default function PieChart({ items, unit = 'tCO₂e' }: Props) {
+const PieChart = ({ items, unit = 'tCO₂e' }: Props) => {
   const total = items.reduce((sum, item) => sum + item.value, 0)
 
   const segments = items.reduce<Array<{ key: string; color: string; segmentLength: number; strokeDashoffset: number }>>(
@@ -77,3 +77,5 @@ export default function PieChart({ items, unit = 'tCO₂e' }: Props) {
     </div>
   )
 }
+
+export default PieChart
