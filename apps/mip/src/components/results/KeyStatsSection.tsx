@@ -1,6 +1,6 @@
 'use client'
 
-import { KeyStatGroup } from '@/data/sampleResults'
+import { KeyStatGroup } from '@/types/results.types'
 import { Card, CardContent, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import KeyStatGroupItem from './KeyStatGroupItem'
@@ -41,20 +41,23 @@ const DEFAULT_VISIBLE_STATS_BY_GROUP: Partial<Record<string, string[]>> = {
 const KeyStatsSection = ({ keyStats, visibleStatsByGroup = DEFAULT_VISIBLE_STATS_BY_GROUP }: Props) => {
   const t = useTranslations('results')
 
-  const filteredGroups = keyStats
-    .map((group) => {
-      const visibleStats = visibleStatsByGroup[group.key]
-      if (!visibleStats || visibleStats.length === 0) {
-        return group
-      }
+  const filteredGroups = keyStats.reduce<KeyStatGroup[]>((acc, group) => {
+    const visibleStats = visibleStatsByGroup[group.key]
 
-      const visibleSet = new Set(visibleStats)
-      return {
-        ...group,
-        stats: group.stats.filter((stat) => visibleSet.has(stat.key)),
+    if (!visibleStats?.length) {
+      if (group.stats.length > 0) {
+        acc.push(group)
       }
-    })
-    .filter((group) => group.stats.length > 0)
+      return acc
+    }
+
+    const stats = group.stats.filter((stat) => visibleStats.includes(stat.key))
+    if (stats.length > 0) {
+      acc.push({ ...group, stats })
+    }
+
+    return acc
+  }, [])
 
   return (
     <section className="mb2">
@@ -63,7 +66,7 @@ const KeyStatsSection = ({ keyStats, visibleStatsByGroup = DEFAULT_VISIBLE_STATS
       </Typography>
       <Card>
         <CardContent className="p15">
-          <div className={styles.keyStatsGrid}>
+          <div className={`${styles.keyStatsGrid} gapped15`}>
             {filteredGroups.map((group) => (
               <KeyStatGroupItem key={group.key} group={group} />
             ))}

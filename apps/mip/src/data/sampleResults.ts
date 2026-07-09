@@ -1,6 +1,8 @@
+import { SurveyResults } from '@/types/results.types'
+
 // TODO: Remove this file when plugged in with the real database.
-// All types below (EmissionCategory, EntityFilter, SurveyComment, KeyStat, KeyStatGroup, SurveyResults)
-// will be replaced by database models and API responses.
+// SurveyResults and nested types are defined in src/types/results.types.ts
+// and will be replaced by database models and API responses.
 
 // Colors matching CSS variables from packages/css/style/colors.css
 export const CATEGORY_COLORS: Record<string, string> = {
@@ -10,47 +12,6 @@ export const CATEGORY_COLORS: Record<string, string> = {
   food: '#1d9c5c', // --success-100
   digital: '#e04949', // --error-50
   office: '#fc8514', // --warning
-}
-
-export type EmissionCategory = {
-  key: string
-  labelFr: string
-  value: number
-  color: string
-}
-
-export type EntityFilter = {
-  id: string
-  name: string
-}
-
-export type SurveyComment = {
-  id: string
-  category: string
-  text: string
-}
-
-export type KeyStatUnit = 'percent' | 'number' | 'km' | 'hours' | 'nights'
-
-export type KeyStat = {
-  key: string
-  value: number
-  unit: KeyStatUnit
-}
-
-export type KeyStatGroup = {
-  key: string
-  stats: KeyStat[]
-}
-
-export type SurveyResults = {
-  surveyId: string
-  totalRespondents: number
-  averageFootprint: number
-  categories: EmissionCategory[]
-  entities: EntityFilter[]
-  comments: SurveyComment[]
-  keyStats: KeyStatGroup[]
 }
 
 // TODO: Remove sampleResults constant and getResultsForEntity function when plugged in with the real database.

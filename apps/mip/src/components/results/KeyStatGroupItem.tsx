@@ -1,6 +1,6 @@
 'use client'
 
-import { KeyStatGroup, KeyStatUnit } from '@/data/sampleResults'
+import { KeyStatGroup, KeyStatUnit } from '@/types/results.types'
 import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import { Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
@@ -10,34 +10,24 @@ interface Props {
   group: KeyStatGroup
 }
 
-const formatStatValue = (value: number, unit: KeyStatUnit) => {
-  if (unit === 'percent') {
-    return `${formatNumber(value, 0)} %`
-  }
-
-  if (unit === 'km') {
-    return `${formatNumber(value, 0)} km`
-  }
-
-  if (unit === 'hours') {
-    return `${formatNumber(value, 1)} h`
-  }
-
-  if (unit === 'nights') {
-    return `${formatNumber(value, 1)} nuit${value === 1 ? '' : 's'}`
-  }
-
-  return formatNumber(value, value % 1 === 0 ? 0 : 1)
-}
-
 const KeyStatGroupItem = ({ group }: Props) => {
   const t = useTranslations('results')
+
+  const formatStatNumber = (value: number) => {
+    const hasDecimals = !Number.isInteger(value)
+    return formatNumber(value, hasDecimals ? 1 : 0)
+  }
+
   const formatStatValue = (value: number, unit: KeyStatUnit) => {
     if (unit === 'number') {
-      return value
+      return formatStatNumber(value)
     }
 
-    return `${value} ${t(`keyStats.units.${unit}`)}`
+    if (unit === 'percent') {
+      return `${formatStatNumber(value)}${t('keyStats.units.percent')}`
+    }
+
+    return `${formatStatNumber(value)} ${t(`keyStats.units.${unit}`, { count: value })}`
   }
 
   return (
@@ -47,9 +37,11 @@ const KeyStatGroupItem = ({ group }: Props) => {
       </Typography>
       <div className="flex-col gapped-2">
         {group.stats.map((stat) => (
-          <div key={stat.key} className={`flex justify-between ${styles.statRow}`}>
-            <Typography variant="body2">{t(`keyStats.${group.key}.${stat.key}`)}</Typography>
-            <Typography variant="body2" className="bold">
+          <div key={stat.key} className={`flex justify-between align-start gapped1 py025 ${styles.statRow}`}>
+            <Typography variant="body2" className={styles.statLabel}>
+              {t(`keyStats.${group.key}.${stat.key}`)}
+            </Typography>
+            <Typography variant="body2" className={`bold ${styles.statValue}`}>
               {formatStatValue(stat.value, stat.unit)}
             </Typography>
           </div>

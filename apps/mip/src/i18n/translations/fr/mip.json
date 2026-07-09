@@ -101,18 +101,18 @@
       "title": "Chiffres clés",
       "commute": {
         "title": "Déplacements domicile-travail",
-        "carModeShare": "Les trajets domicile-travail se font en voiture",
-        "publicTransportModeShare": "Les trajets domicile-travail se font en transport en commun",
-        "activeModeShare": "Les trajets domicile-travail se font en modes actifs",
-        "avgCarKm": "La distance moyenne parcourue en voiture (DT)",
-        "avgPublicTransportKm": "La distance moyenne parcourue en transport en commun (DT)",
-        "avgEmissionPerMode": "L'empreinte carbone moyenne des déplacements domicile-travail"
+        "carModeShare": "Part des trajets domicile-travail en voiture",
+        "publicTransportModeShare": "Part des trajets domicile-travail en transport en commun",
+        "activeModeShare": "Part des trajets domicile-travail en modes actifs",
+        "avgCarKm": "Distance moyenne parcourue en voiture (DT)",
+        "avgPublicTransportKm": "Distance moyenne parcourue en transport en commun (DT)",
+        "avgEmissionPerMode": "Empreinte carbone moyenne des déplacements domicile-travail"
       },
       "units": {
         "percent": "%",
         "km": "km",
-        "hours": "heures",
-        "nights": "nuits"
+        "hours": "{count, plural, one {heure} other {heures}}",
+        "nights": "{count, plural, one {nuit} other {nuits}}"
       },
       "transport": {
         "title": "Transport",
@@ -123,26 +123,26 @@
       },
       "travel": {
         "title": "Déplacements professionnels",
-        "trainModeShare": "Les déplacements professionnels se font en train",
-        "carTravelModeShare": "Les déplacements professionnels se font en voiture",
-        "planeTravelModeShare": "Les déplacements professionnels se font en avion",
-        "avgTravelKmByMode": "La distance moyenne des déplacements professionnels",
-        "avgTravelEmissionByMode": "L'empreinte carbone moyenne des déplacements professionnels",
-        "avgTravelNights": "Le nombre moyen de nuits par déplacement professionnel"
+        "trainModeShare": "Part des déplacements professionnels en train",
+        "carTravelModeShare": "Part des déplacements professionnels en voiture",
+        "planeTravelModeShare": "Part des déplacements professionnels en avion",
+        "avgTravelKmByMode": "Distance moyenne des déplacements professionnels",
+        "avgTravelEmissionByMode": "Empreinte carbone moyenne des déplacements professionnels",
+        "avgTravelNights": "Nombre moyen de nuits par déplacement professionnel"
       },
       "food": {
         "title": "Alimentation",
-        "vegMealsShare": "Les plats consommés sont végétariens",
-        "veganMealsShare": "Les plats consommés sont végans",
-        "fullyVegetarianEmployees": "Les salariés sont 100% végétariens",
-        "fullyVeganEmployees": "Les salariés sont 100% végans",
-        "redMeatDailyEmployees": "Les salariés mangent de la viande rouge tous les jours"
+        "vegMealsShare": "Part des plats consommés végétariens",
+        "veganMealsShare": "Part des plats consommés végans",
+        "fullyVegetarianEmployees": "Salariés 100% végétariens",
+        "fullyVeganEmployees": "Salariés 100% végans",
+        "redMeatDailyEmployees": "Salariés qui mangent de la viande rouge tous les jours"
       },
       "digital": {
         "title": "Numérique",
-        "aiRequestsPerDay": "Le nombre moyen de requêtes IA par salarié et par jour",
-        "videoHoursPerDay": "Le nombre moyen d'heures de visioconférence par salarié et par jour",
-        "internetHoursPerDay": "Le nombre moyen d'heures d'internet par salarié et par jour"
+        "aiRequestsPerDay": "Nombre moyen de requêtes IA par salarié et par jour",
+        "videoHoursPerDay": "Nombre moyen d'heures de visioconférence par salarié et par jour",
+        "internetHoursPerDay": "Nombre moyen d'heures d'internet par salarié et par jour"
       }
     },
     "comments": {

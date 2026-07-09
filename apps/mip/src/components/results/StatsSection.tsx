@@ -1,6 +1,6 @@
 'use client'
 
-import { SurveyResults } from '@/data/sampleResults'
+import { SurveyResults } from '@/types/results.types'
 import { STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/utils/charts'
 import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import { Card, CardContent, Typography } from '@mui/material'

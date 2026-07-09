@@ -94,9 +94,9 @@
       "title": "Key figures",
       "commute": {
         "title": "Commute",
-        "carModeShare": "Commute trips are done by car",
-        "publicTransportModeShare": "Commute trips are done by public transport",
-        "activeModeShare": "Commute trips are done by active mobility",
+        "carModeShare": "Share of commute trips by car",
+        "publicTransportModeShare": "Share of commute trips by public transport",
+        "activeModeShare": "Share of commute trips by active mobility",
         "avgCarKm": "Average distance travelled by car (commute)",
         "avgPublicTransportKm": "Average distance travelled by public transport (commute)",
         "avgEmissionPerMode": "Average carbon footprint from commute trips"
@@ -104,8 +104,8 @@
       "units": {
         "percent": "%",
         "km": "km",
-        "hours": "hours",
-        "nights": "nights"
+        "hours": "{count, plural, one {hour} other {hours}}",
+        "nights": "{count, plural, one {night} other {nights}}"
       },
       "transport": {
         "title": "Transport",
@@ -116,24 +116,24 @@
       },
       "travel": {
         "title": "Business travel",
-        "trainModeShare": "Business trips are done by train",
-        "carTravelModeShare": "Business trips are done by car",
-        "planeTravelModeShare": "Business trips are done by plane",
+        "trainModeShare": "Share of business trips by train",
+        "carTravelModeShare": "Share of business trips by car",
+        "planeTravelModeShare": "Share of business trips by plane",
         "avgTravelKmByMode": "Average distance of business trips",
         "avgTravelEmissionByMode": "Average carbon footprint from business trips",
-        "avgTravelNights": "Average number of nights per business trip"
+        "avgTravelNights": "Average nights per business trip"
       },
       "food": {
         "title": "Food",
-        "vegMealsShare": "Consumed meals are vegetarian",
-        "veganMealsShare": "Consumed meals are vegan",
-        "fullyVegetarianEmployees": "Employees are 100% vegetarian",
-        "fullyVeganEmployees": "Employees are 100% vegan",
-        "redMeatDailyEmployees": "Employees eat red meat every day"
+        "vegMealsShare": "Share of consumed meals that are vegetarian",
+        "veganMealsShare": "Share of consumed meals that are vegan",
+        "fullyVegetarianEmployees": "Employees who are 100% vegetarian",
+        "fullyVeganEmployees": "Employees who are 100% vegan",
+        "redMeatDailyEmployees": "Employees who eat red meat every day"
       },
       "digital": {
         "title": "Digital",
-        "aiRequestsPerDay": "Average number of AI requests per employee per day",
+        "aiRequestsPerDay": "Average AI requests per employee per day",
         "videoHoursPerDay": "Average videoconference hours per employee per day",
         "internetHoursPerDay": "Average internet hours per employee per day"
       }
