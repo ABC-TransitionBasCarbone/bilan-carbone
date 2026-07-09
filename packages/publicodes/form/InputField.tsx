@@ -9,7 +9,7 @@ import { OnFieldChange } from './utils'
 export interface PublicodesInputFieldProps<RuleName extends string> {
   formElement: EvaluatedFormElement<RuleName>
   onChange: OnFieldChange<RuleName>
-  suggestions?: Record<string, number>
+  suggestions?: Record<string, string | number | Record<string, unknown>> | undefined
 }
 
 export function InputField<RuleName extends string>({ formElement, onChange, suggestions }: PublicodesInputFieldProps<RuleName>) {

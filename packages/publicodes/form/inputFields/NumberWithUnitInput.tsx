@@ -10,7 +10,7 @@ import { BaseInputProps } from './utils'
 
 interface NumberWithUnitInputProps<RuleName extends string> extends BaseInputProps<RuleName> {
   formElement: EvaluatedNumberInput<RuleName>
-  suggestions?: Record<string, number>
+  suggestions?: Record<string, string | number | Record<string, unknown>> | undefined
 }
 
 const NumberWithUnitInput = <RuleName extends string>({
@@ -38,8 +38,10 @@ const NumberWithUnitInput = <RuleName extends string>({
               type="button"
               className={classNames(styles.suggestionChip, 'pointer')}
               onClick={() => {
-                handleValueChange(value)
-                handleValueCommitted(value)
+                if (typeof value === 'number') {
+                  handleValueChange(value)
+                  handleValueCommitted(value)
+                }
               }}
             >
               {label}

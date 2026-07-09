@@ -18,8 +18,7 @@ export function InputQuestion<RuleName extends string>({ formElement, onChange, 
 
   const publicodeRules = engine?.getParsedRules()[formElement.id]?.rawNode
   const description = publicodeRules?.description ?? translation?.description
-  // We force the suggestions to be a Record<string, number> because the PublicodesInputField expects it to be of that type. If the suggestions are not in that format, they will be ignored.
-  const suggestions = publicodeRules?.suggestions as Record<string, number> | undefined
+  const suggestions = publicodeRules?.suggestions
 
   return (
     <Box key={formElement.id} className="mb2">
