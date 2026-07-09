@@ -1,6 +1,7 @@
 'use client'
 
 import TrajectoryChart from '@/components/results/TrajectoryChart'
+import { STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/utils/charts'
 import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import { Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
@@ -13,7 +14,7 @@ interface Props {
 
 const TransitionEncart = ({ totalKg, targetT = 2 }: Props) => {
   const t = useTranslations('survey.completion')
-  const totalT = totalKg / 1000
+  const totalT = totalKg / STUDY_UNIT_VALUES['T']
 
   return (
     <section className="mb2" data-testid="survey-completion-transition-encart">

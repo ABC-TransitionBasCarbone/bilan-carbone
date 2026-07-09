@@ -1,16 +1,16 @@
 .description {
-    color: var(--grayscale-900);
+  color: var(--grayscale-900);
 }
 
 .comparatorCard {
-    border: 1px solid var(--neutral-400);
-    border-radius: 0.75rem;
-    background-color: var(--neutral-50);
-    min-height: 34rem;
+  border: 1px solid var(--neutral-400);
+  border-radius: 0.75rem;
+  background-color: var(--neutral-50);
+  min-height: 34rem;
 }
 
 @media (max-width: 640px) {
-    .comparatorCard {
-        min-height: 28rem;
-    }
+  .comparatorCard {
+    min-height: 28rem;
+  }
 }

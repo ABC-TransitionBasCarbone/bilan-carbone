@@ -1,5 +1,6 @@
 'use client'
 
+import { STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/utils/charts'
 import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import { Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
@@ -14,7 +15,7 @@ const LIMIT_T = 2
 
 const FootprintBanner = ({ totalKg }: Props) => {
   const t = useTranslations('survey.completion')
-  const totalT = totalKg / 1000
+  const totalT = totalKg / STUDY_UNIT_VALUES['T']
   const currentPercent = Math.max(0, Math.min(100, (totalT / MAX_T) * 100))
   const limitPercent = (LIMIT_T / MAX_T) * 100
 
@@ -24,23 +25,27 @@ const FootprintBanner = ({ totalKg }: Props) => {
         {t('title')}
       </Typography>
 
-      <div className={styles.rangeLegend}>
-        <Typography className={styles.rangeTickLabel}>{t('range.minLabel')}</Typography>
-        <Typography className={styles.rangeTickLabel}>{t('range.maxLabel')}</Typography>
-      </div>
+      <div className={styles.rangeChartWrapper}>
+        <div className={styles.rangeChartRow}>
+          <div className={styles.rangeBarColumn}>
+            <Typography className={styles.rangeCurrentValue} style={{ left: `${currentPercent}%` }}>
+              {formatNumber(totalT, 1)}
+            </Typography>
 
-      <div className={styles.rangeTrackWrapper}>
-        <div className={styles.rangeTrack}>
-          <div className={styles.limitMarker} style={{ left: `${limitPercent}%` }} />
-          <div className={styles.currentMarker} style={{ left: `${currentPercent}%` }} />
+            <div className={styles.rangeBarTrack}>
+              <div className={styles.rangeBarFill} style={{ width: `${currentPercent}%` }} />
+              <div className={styles.rangeLimitLine} style={{ left: `${limitPercent}%` }} />
+            </div>
+
+            <div className={styles.rangeAxis}>
+              <Typography className={styles.rangeAxisLabel}>{t('range.minLabel')}</Typography>
+              <Typography className={styles.rangeAxisLabel}>{t('range.maxLabel')}</Typography>
+            </div>
+          </div>
         </div>
 
         <Typography className={styles.limitLabel} style={{ left: `${limitPercent}%` }}>
           {t('range.limitLabel', { limit: LIMIT_T })}
-        </Typography>
-
-        <Typography className={styles.currentLabel} style={{ left: `${currentPercent}%` }}>
-          {t('range.currentLabel', { value: formatNumber(totalT, 1) })}
         </Typography>
       </div>
     </section>
