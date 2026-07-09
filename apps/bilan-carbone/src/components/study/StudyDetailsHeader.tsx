@@ -1,23 +1,15 @@
 'use client'
 
 import type { FullStudy } from '@/db/study'
-import { deleteStudyCommand } from '@/services/serverFunctions/study'
-import { DeleteCommand, DeleteCommandValidation } from '@/services/serverFunctions/study.command'
-import Block, { Props as BlockProps } from '@abc-transitionbascarbone/components/src/base/Block'
-import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
+import { getAccountRoleOnStudy } from '@/utils/study'
+import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
-import { zodResolver } from '@hookform/resolvers/zod'
-import CopyIcon from '@mui/icons-material/ContentCopy'
-import DeleteIcon from '@mui/icons-material/Delete'
 import LockIcon from '@mui/icons-material/Lock'
 import LockOpenIcon from '@mui/icons-material/LockOpen'
+import { UserSession } from 'next-auth'
 import { useFormatter, useTranslations } from 'next-intl'
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import DeletionModal from '../modals/DeletionModal'
-import DuplicateStudyModal from '../modals/DuplicateStudyModal'
 import styles from './StudyDetailsHeader.module.css'
+import StudyManagementActions from './StudyManagementActions'
 import SelectStudySite from './site/SelectStudySite'
 
 interface Props {
@@ -27,6 +19,7 @@ interface Props {
   canDuplicateStudy?: boolean
   duplicableEnvironments: Environment[]
   studySite: string
+  user: UserSession
   setSite: (site: string) => void
 }
 
@@ -37,105 +30,50 @@ const StudyDetailsHeader = ({
   canDuplicateStudy,
   duplicableEnvironments,
   studySite,
+  user,
   setSite,
 }: Props) => {
-  const [deleting, setDeleting] = useState(false)
-  const [duplicating, setDuplicating] = useState(false)
-  const { callServerFunction } = useServerFunction()
   const format = useFormatter()
-  const t = useTranslations('study')
-  const tStudyDelete = useTranslations('study.delete')
   const tExport = useTranslations('exports')
-  const tCommon = useTranslations('common')
-  const router = useRouter()
+  const userRole = getAccountRoleOnStudy(user, study)
 
-  const form = useForm<DeleteCommand>({
-    resolver: zodResolver(DeleteCommandValidation),
-    mode: 'onBlur',
-    reValidateMode: 'onChange',
-    defaultValues: {
-      id: study.id,
-      name: '',
-    },
-  })
-
-  const onDelete = async () => {
-    await callServerFunction(() => deleteStudyCommand(form.getValues()), {
-      getErrorMessage: (error) => (tStudyDelete.has(error) ? tStudyDelete(error) : tCommon('error')),
-      onSuccess: () => {
-        router.push('/')
-      },
-    })
+  if (!userRole) {
+    return null
   }
 
-  const deleteAction: BlockProps['actions'] = canDeleteStudy
-    ? [
-        {
-          actionType: 'button',
-          'data-testid': 'delete-study',
-          onClick: () => setDeleting(true),
-          children: <DeleteIcon />,
-          title: t('deleteStudy'),
-          variant: 'contained',
-          color: 'error',
-        },
-      ]
-    : []
-
-  const duplicateAction: BlockProps['actions'] = canDuplicateStudy
-    ? [
-        {
-          actionType: 'button',
-          'data-testid': 'duplicate-study',
-          onClick: () => setDuplicating(true),
-          children: <CopyIcon />,
-          title: t('duplicate'),
-        },
-      ]
-    : []
-
   return (
-    <>
-      <Block
-        title={study.name}
-        as="h2"
-        icon={study.isPublic ? <LockOpenIcon /> : <LockIcon />}
-        actions={[...duplicateAction, ...deleteAction]}
-        description={
-          <div className={styles.studyInfo}>
-            <p>
-              {format.dateTime(study.startDate, { year: 'numeric', day: 'numeric', month: 'long' })} -{' '}
-              {format.dateTime(study.endDate, { year: 'numeric', day: 'numeric', month: 'long' })}
-            </p>
-            {study.exports && study.exports.types.length > 0 && (
+    <StudyManagementActions
+      study={study}
+      organizationVersionId={organizationVersionId}
+      canDeleteStudy={canDeleteStudy}
+      canDuplicateStudy={canDuplicateStudy}
+      duplicableEnvironments={duplicableEnvironments}
+      userRole={userRole}
+      siteId={studySite}
+    >
+      {(actions) => (
+        <Block
+          title={study.name}
+          as="h2"
+          icon={study.isPublic ? <LockOpenIcon /> : <LockIcon />}
+          actions={actions}
+          description={
+            <div className={styles.studyInfo}>
               <p>
-                {tExport('title')} {study.exports.types.join(', ')}
+                {format.dateTime(study.startDate, { year: 'numeric', day: 'numeric', month: 'long' })} -{' '}
+                {format.dateTime(study.endDate, { year: 'numeric', day: 'numeric', month: 'long' })}
               </p>
-            )}
-          </div>
-        }
-        rightComponent={<SelectStudySite sites={study.sites} defaultValue={studySite} setSite={setSite} />}
-      />
-      {deleting && (
-        <DeletionModal
-          form={form}
-          type="study"
-          onDelete={onDelete}
-          onClose={() => setDeleting(false)}
-          t={tStudyDelete}
+              {study.exports && study.exports.types.length > 0 && (
+                <p>
+                  {tExport('title')} {study.exports.types.join(', ')}
+                </p>
+              )}
+            </div>
+          }
+          rightComponent={<SelectStudySite sites={study.sites} defaultValue={studySite} setSite={setSite} />}
         />
       )}
-      {duplicating && (
-        <DuplicateStudyModal
-          studyId={study.id}
-          organizationVersionId={organizationVersionId}
-          sourceEnvironment={study.organizationVersion.environment}
-          environments={duplicableEnvironments}
-          onClose={() => setDuplicating(false)}
-          open
-        />
-      )}
-    </>
+    </StudyManagementActions>
   )
 }
 

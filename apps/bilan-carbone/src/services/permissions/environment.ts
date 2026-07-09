@@ -126,3 +126,5 @@ export type EnvironmentWithSimplifiedStudies = (typeof environmentWithSimplified
 export const hasSimplifiedStudies = (env: Environment): env is EnvironmentWithSimplifiedStudies => {
   return environmentWithSimplifiedStudies.includes(env as EnvironmentWithSimplifiedStudies)
 }
+
+export const isRedirectedToCadrage = (environment: Environment) => isCut(environment) || isClickson(environment)

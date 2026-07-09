@@ -1,17 +1,25 @@
+import * as situationServerModule from '@/services/serverFunctions/situation'
 import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
-import { mockedEmissionSourceEmissionFactor } from '@/tests/utils/models/study'
+import { getMockedFullStudySite, mockedEmissionSourceEmissionFactor } from '@/tests/utils/models/study'
 import { getMockedAuthUser } from '@/tests/utils/models/user'
 import * as UserUtilsModule from '@/utils/user'
 import { EmissionFactorBase, Environment, Level, Role } from '@abc-transitionbascarbone/db-common/enums'
 import { expect } from '@jest/globals'
-import { getBaseFilteredEmissionSources, getDuplicableEnvironments, getUserRoleOnPublicStudy } from './study'
+import {
+  getBaseFilteredEmissionSources,
+  getDuplicableEnvironments,
+  getStudyDefaultLandingPath,
+  getUserRoleOnPublicStudy,
+} from './study'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('../services/file', () => ({ download: jest.fn() }))
 jest.mock('@/services/permissions/study.utils', () => ({ isAdminOnStudyOrga: jest.fn() }))
 jest.mock('@/utils/user', () => ({ isAdmin: jest.fn() }))
+jest.mock('@/services/serverFunctions/situation', () => ({ loadSituation: jest.fn() }))
 
 const mockIsAdmin = UserUtilsModule.isAdmin as unknown as jest.Mock
+const mockLoadSituation = jest.mocked(situationServerModule.loadSituation)
 
 const emissionSources = [
   getMockedFullStudyEmissionSource({
@@ -145,6 +153,56 @@ describe('StudyUtils functions', () => {
       expect(res[1].id).toBe('2')
       expect(res[2].id).toBe('3')
       expect(res[3].id).toBe('4')
+    })
+  })
+
+  describe('getStudyDefaultLandingPath', () => {
+    it('redirects BC advanced studies to data entry', async () => {
+      expect(await getStudyDefaultLandingPath(Environment.BC, 'study-id', [], false)).toBe(
+        '/etudes/study-id/comptabilisation/saisie-des-donnees',
+      )
+    })
+
+    it('redirects CUT studies to framing', async () => {
+      expect(await getStudyDefaultLandingPath(Environment.CUT, 'study-id', [], true)).toBe('/etudes/study-id/cadrage')
+    })
+
+    it('redirects simplified TILT to framing when general data is incomplete', async () => {
+      mockLoadSituation.mockResolvedValueOnce({
+        success: true,
+        data: {
+          id: 'situation-id',
+          situation: { 'général . code postal': '75001' },
+          listLayoutSituations: {},
+          studySiteId: 'mocked-study-site-id',
+          publicodesVersion: '1.0',
+          modelVersion: '1.0',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      })
+      expect(await getStudyDefaultLandingPath(Environment.TILT, 'study-id', [getMockedFullStudySite()], true)).toBe(
+        '/etudes/study-id/cadrage',
+      )
+    })
+
+    it('redirects simplified TILT to data entry when general data is complete', async () => {
+      mockLoadSituation.mockResolvedValueOnce({
+        success: true,
+        data: {
+          id: 'situation-id',
+          situation: { 'général . code postal': '75001', 'général . type': "'Club de loisirs'" },
+          listLayoutSituations: {},
+          studySiteId: 'mocked-study-site-id',
+          publicodesVersion: '1.0',
+          modelVersion: '1.0',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      })
+      expect(await getStudyDefaultLandingPath(Environment.TILT, 'study-id', [getMockedFullStudySite()], true)).toBe(
+        '/etudes/study-id/comptabilisation/saisie-des-donnees',
+      )
     })
   })
 })

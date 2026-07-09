@@ -45,6 +45,7 @@ const StudyDetails = ({
         duplicableEnvironments={duplicableEnvironments}
         studySite={siteId}
         setSite={setSite}
+        user={user}
       />
       <Block>
         <DynamicComponent
@@ -52,7 +53,7 @@ const StudyDetails = ({
             [Environment.CUT]: <StudyResultsContainerSummaryPublicodes study={study} />,
           }}
           defaultComponent={
-            <StudyResultsContainerSummary user={user} study={study} studySite={siteId} validatedOnly={validatedOnly} />
+            <StudyResultsContainerSummary study={study} studySite={siteId} validatedOnly={validatedOnly} />
           }
         />
       </Block>
