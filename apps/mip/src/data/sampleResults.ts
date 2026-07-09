@@ -1,6 +1,8 @@
+import { SurveyResults } from '@/types/results.types'
+
 // TODO: Remove this file when plugged in with the real database.
-// All types below (EmissionCategory, EntityFilter, SurveyComment, KeyStat, KeyStatGroup, SurveyResults)
-// will be replaced by database models and API responses.
+// SurveyResults and nested types are defined in src/types/results.types.ts
+// and will be replaced by database models and API responses.
 
 // Colors matching CSS variables from packages/css/style/colors.css
 export const CATEGORY_COLORS: Record<string, string> = {
@@ -10,45 +12,6 @@ export const CATEGORY_COLORS: Record<string, string> = {
   food: '#1d9c5c', // --success-100
   digital: '#e04949', // --error-50
   office: '#fc8514', // --warning
-}
-
-export type EmissionCategory = {
-  key: string
-  labelFr: string
-  value: number
-  color: string
-}
-
-export type EntityFilter = {
-  id: string
-  name: string
-}
-
-export type SurveyComment = {
-  id: string
-  category: string
-  text: string
-}
-
-export type KeyStat = {
-  key: string
-  value: number
-  unit: 'percent' | 'number'
-}
-
-export type KeyStatGroup = {
-  key: string
-  stats: KeyStat[]
-}
-
-export type SurveyResults = {
-  surveyId: string
-  totalRespondents: number
-  averageFootprint: number
-  categories: EmissionCategory[]
-  entities: EntityFilter[]
-  comments: SurveyComment[]
-  keyStats: KeyStatGroup[]
 }
 
 // TODO: Remove sampleResults constant and getResultsForEntity function when plugged in with the real database.
@@ -99,39 +62,43 @@ export const sampleResults: SurveyResults = {
   ],
   keyStats: [
     {
-      key: 'transport',
+      key: 'commute',
       stats: [
-        { key: 'plane', value: 12, unit: 'percent' },
-        { key: 'longHaulPlane', value: 5, unit: 'percent' },
-        { key: 'carKm', value: 18500, unit: 'number' },
-        { key: 'carPassengers', value: 1.3, unit: 'number' },
+        { key: 'carModeShare', value: 48, unit: 'percent' },
+        { key: 'publicTransportModeShare', value: 33, unit: 'percent' },
+        { key: 'activeModeShare', value: 19, unit: 'percent' },
+        { key: 'avgCarKm', value: 26, unit: 'km' },
+        { key: 'avgPublicTransportKm', value: 18, unit: 'km' },
+        { key: 'avgEmissionPerMode', value: 0.8, unit: 'number' },
       ],
     },
     {
-      key: 'housing',
+      key: 'travel',
       stats: [
-        { key: 'electricHeating', value: 34, unit: 'percent' },
-        { key: 'gasHeating', value: 41, unit: 'percent' },
-        { key: 'oilHeating', value: 8, unit: 'percent' },
-        { key: 'woodHeating', value: 11, unit: 'percent' },
-        { key: 'airConditioning', value: 27, unit: 'percent' },
+        { key: 'trainModeShare', value: 39, unit: 'percent' },
+        { key: 'carTravelModeShare', value: 21, unit: 'percent' },
+        { key: 'planeTravelModeShare', value: 40, unit: 'percent' },
+        { key: 'avgTravelKmByMode', value: 420, unit: 'km' },
+        { key: 'avgTravelEmissionByMode', value: 0.7, unit: 'number' },
+        { key: 'avgTravelNights', value: 2.1, unit: 'nights' },
       ],
     },
     {
       key: 'food',
       stats: [
-        { key: 'vegan', value: 4, unit: 'percent' },
-        { key: 'redMeatDaily', value: 22, unit: 'percent' },
-        { key: 'localSeasonal', value: 36, unit: 'percent' },
-        { key: 'bottledWater', value: 18, unit: 'percent' },
-        { key: 'zeroWaste', value: 9, unit: 'percent' },
+        { key: 'vegMealsShare', value: 28, unit: 'percent' },
+        { key: 'veganMealsShare', value: 7, unit: 'percent' },
+        { key: 'fullyVegetarianEmployees', value: 9, unit: 'percent' },
+        { key: 'fullyVeganEmployees', value: 4, unit: 'percent' },
+        { key: 'redMeatDailyEmployees', value: 22, unit: 'percent' },
       ],
     },
     {
-      key: 'misc',
+      key: 'digital',
       stats: [
-        { key: 'newClothes', value: 14, unit: 'number' },
-        { key: 'socialMediaOver3h', value: 28, unit: 'percent' },
+        { key: 'aiRequestsPerDay', value: 11, unit: 'number' },
+        { key: 'videoHoursPerDay', value: 1.4, unit: 'hours' },
+        { key: 'internetHoursPerDay', value: 4.2, unit: 'hours' },
       ],
     },
   ],

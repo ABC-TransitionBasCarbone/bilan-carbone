@@ -1,7 +1,7 @@
 'use client'
 
-import { CATEGORY_COLORS, getResultsForEntity, SurveyResults } from '@/data/sampleResults'
-import { RawRules } from '@/publicodes/mip-engine'
+import { CATEGORY_COLORS, getResultsForEntity } from '@/data/sampleResults'
+import { SurveyResults } from '@/types/results.types'
 import { StudyResultUnit } from '@abc-transitionbascarbone/db-common/enums'
 import { BasicTypeCharts } from '@abc-transitionbascarbone/utils/charts'
 import { Print } from '@mui/icons-material'
@@ -9,19 +9,16 @@ import { Button, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import ChartsSection from './ChartsSection'
-import CollectiveEffortEncart from './CollectiveEffortEncart'
 import EntityFilterSection from './EntityFilterSection'
 import KeyStatsSection from './KeyStatsSection'
-import ObjectiveEncart from './ObjectiveEncart'
 import styles from './ResultsDashboard.module.css'
 import StatsSection from './StatsSection'
 
 interface Props {
   results: SurveyResults
-  model: RawRules
 }
 
-const ResultsDashboard = ({ results, model }: Props) => {
+const ResultsDashboard = ({ results }: Props) => {
   const t = useTranslations('results')
   const [selectedEntity, setSelectedEntity] = useState('all')
 
@@ -38,12 +35,16 @@ const ResultsDashboard = ({ results, model }: Props) => {
       }) as BasicTypeCharts,
   )
 
-  const totalBarItem = {
-    post: 'somme',
-    label: t('charts.barTitle'),
-    value: filtered.averageFootprint,
-    color: CATEGORY_COLORS.total,
-  } as BasicTypeCharts
+  const barChartItems = [
+    ...pieChartItems,
+    {
+      post: 'total-limit',
+      label: t('charts.totalLimitColumn'),
+      value: pieChartItems.reduce((acc, c) => acc + c.value, 0),
+      color: CATEGORY_COLORS.total,
+      children: [],
+    } as BasicTypeCharts,
+  ]
 
   const handlePrint = () => {
     window.print()
@@ -66,13 +67,14 @@ const ResultsDashboard = ({ results, model }: Props) => {
         onSelectEntity={setSelectedEntity}
       />
 
-      <ObjectiveEncart averageFootprint={filtered.averageFootprint} resultsUnit={StudyResultUnit.T} />
+      <ChartsSection
+        pieChartItems={pieChartItems}
+        barChartItems={barChartItems}
+        averageFootprint={filtered.averageFootprint}
+        totalRespondents={filtered.totalRespondents}
+      />
 
-      <ChartsSection pieChartItems={pieChartItems} totalBarItem={totalBarItem} />
-
-      <KeyStatsSection keyStats={filtered.keyStats} model={model} />
-
-      <CollectiveEffortEncart />
+      <KeyStatsSection keyStats={filtered.keyStats} />
 
       <div className="flex gapped1">
         <Button variant="outlined" startIcon={<Print />} onClick={handlePrint}>

@@ -43,7 +43,7 @@
     "editCampaigns": "Edit campaign",
     "name": "campaign name",
     "namePlaceholder": "Name of the campaign",
-    "json": "JSON",
+    "viewResults": "View results",
     "status": "status",
     "OPEN": "Open",
     "CLOSED": "Close",
@@ -83,11 +83,30 @@
     "charts": {
       "title": "Carbon footprint distribution",
       "pieTitle": "Breakdown by emission category (averages)",
-      "barTitle": "Average carbon footprint",
+      "barTitle": "Average carbon footprint by category",
+      "totalLimitColumn": "Total (2 tCO₂e limit)",
+      "postDetail": "{tco2e} tCO₂e",
+      "postDetailHover": "{tco2e} tCO₂e, around {people} people equivalent",
+      "postDetailHoverPercent": "{percent}%",
       "target2050": "2050 target: 2 tCO₂e"
     },
     "keyStats": {
       "title": "Key figures",
+      "commute": {
+        "title": "Commute",
+        "carModeShare": "Share of commute trips by car",
+        "publicTransportModeShare": "Share of commute trips by public transport",
+        "activeModeShare": "Share of commute trips by active mobility",
+        "avgCarKm": "Average distance travelled by car (commute)",
+        "avgPublicTransportKm": "Average distance travelled by public transport (commute)",
+        "avgEmissionPerMode": "Average carbon footprint from commute trips"
+      },
+      "units": {
+        "percent": "%",
+        "km": "km",
+        "hours": "{count, plural, one {hour} other {hours}}",
+        "nights": "{count, plural, one {night} other {nights}}"
+      },
       "transport": {
         "title": "Transport",
         "plane": "Take the plane",
@@ -95,26 +114,28 @@
         "carKm": "Kilometres driven by car on average",
         "carPassengers": "Average passengers per car"
       },
-      "housing": {
-        "title": "Housing",
-        "electricHeating": "Heat with electricity",
-        "gasHeating": "Heat with gas",
-        "oilHeating": "Heat with oil",
-        "woodHeating": "Heat with wood",
-        "airConditioning": "Have air conditioning"
+      "travel": {
+        "title": "Business travel",
+        "trainModeShare": "Share of business trips by train",
+        "carTravelModeShare": "Share of business trips by car",
+        "planeTravelModeShare": "Share of business trips by plane",
+        "avgTravelKmByMode": "Average distance of business trips",
+        "avgTravelEmissionByMode": "Average carbon footprint from business trips",
+        "avgTravelNights": "Average nights per business trip"
       },
       "food": {
         "title": "Food",
-        "vegan": "Are vegan",
-        "redMeatDaily": "Eat red meat at least once a day",
-        "localSeasonal": "Buy local and seasonal",
-        "bottledWater": "Drink bottled water",
-        "zeroWaste": "Are Zero waste"
+        "vegMealsShare": "Share of consumed meals that are vegetarian",
+        "veganMealsShare": "Share of consumed meals that are vegan",
+        "fullyVegetarianEmployees": "Employees who are 100% vegetarian",
+        "fullyVeganEmployees": "Employees who are 100% vegan",
+        "redMeatDailyEmployees": "Employees who eat red meat every day"
       },
-      "misc": {
-        "title": "Miscellaneous",
-        "newClothes": "New clothes bought each year",
-        "socialMediaOver3h": "Spend more than 3h/day on social media outside work"
+      "digital": {
+        "title": "Digital",
+        "aiRequestsPerDay": "Average AI requests per employee per day",
+        "videoHoursPerDay": "Average videoconference hours per employee per day",
+        "internetHoursPerDay": "Average internet hours per employee per day"
       }
     },
     "comments": {

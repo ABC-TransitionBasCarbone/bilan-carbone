@@ -50,7 +50,7 @@
     "editCampaigns": "Modifier les campagnes",
     "name": "Nom de la campagne",
     "namePlaceholder": "Nom de la campagne",
-    "json": "JSON",
+    "viewResults": "Voir les résultats",
     "status": "status",
     "OPEN": "Ouverte",
     "CLOSED": "Fermée",
@@ -90,11 +90,30 @@
     "charts": {
       "title": "Répartition des empreintes carbone",
       "pieTitle": "Répartition par poste d'émission (moyennes)",
-      "barTitle": "Empreinte carbone moyenne",
+      "barTitle": "Empreinte carbone moyenne par poste",
+      "totalLimitColumn": "Total",
+      "postDetail": "{tco2e} tCO₂e",
+      "postDetailHover": "{tco2e} tCO₂e, soit environ {people} personnes",
+      "postDetailHoverPercent": "{percent} %",
       "target2050": "Objectif 2050 : 2 tCO₂e"
     },
     "keyStats": {
       "title": "Chiffres clés",
+      "commute": {
+        "title": "Déplacements domicile-travail",
+        "carModeShare": "Part des trajets domicile-travail en voiture",
+        "publicTransportModeShare": "Part des trajets domicile-travail en transport en commun",
+        "activeModeShare": "Part des trajets domicile-travail en modes actifs",
+        "avgCarKm": "Distance moyenne parcourue en voiture (DT)",
+        "avgPublicTransportKm": "Distance moyenne parcourue en transport en commun (DT)",
+        "avgEmissionPerMode": "Empreinte carbone moyenne des déplacements domicile-travail"
+      },
+      "units": {
+        "percent": "%",
+        "km": "km",
+        "hours": "{count, plural, one {heure} other {heures}}",
+        "nights": "{count, plural, one {nuit} other {nuits}}"
+      },
       "transport": {
         "title": "Transport",
         "plane": "Prennent l'avion",
@@ -102,26 +121,28 @@
         "carKm": "Kilomètres parcourus en moyenne en voiture",
         "carPassengers": "Voyageurs en moyenne en voiture"
       },
-      "housing": {
-        "title": "Logement",
-        "electricHeating": "Se chauffent à l'électricité",
-        "gasHeating": "Se chauffent au gaz",
-        "oilHeating": "Se chauffent au fioul",
-        "woodHeating": "Se chauffent au bois",
-        "airConditioning": "Ont un système de climatisation"
+      "travel": {
+        "title": "Déplacements professionnels",
+        "trainModeShare": "Part des déplacements professionnels en train",
+        "carTravelModeShare": "Part des déplacements professionnels en voiture",
+        "planeTravelModeShare": "Part des déplacements professionnels en avion",
+        "avgTravelKmByMode": "Distance moyenne des déplacements professionnels",
+        "avgTravelEmissionByMode": "Empreinte carbone moyenne des déplacements professionnels",
+        "avgTravelNights": "Nombre moyen de nuits par déplacement professionnel"
       },
       "food": {
         "title": "Alimentation",
-        "vegan": "Sont végétaliens",
-        "redMeatDaily": "Mangent de la viande rouge au moins une fois par jour",
-        "localSeasonal": "Achètent local et de saison",
-        "bottledWater": "Boivent de l'eau en bouteille",
-        "zeroWaste": "Sont Zéro déchet"
+        "vegMealsShare": "Part des plats consommés végétariens",
+        "veganMealsShare": "Part des plats consommés végans",
+        "fullyVegetarianEmployees": "Salariés 100% végétariens",
+        "fullyVeganEmployees": "Salariés 100% végans",
+        "redMeatDailyEmployees": "Salariés qui mangent de la viande rouge tous les jours"
       },
-      "misc": {
-        "title": "Divers",
-        "newClothes": "Vêtements neufs achetés chaque année",
-        "socialMediaOver3h": "Passent plus de 3h par jour sur les réseaux hors bureau"
+      "digital": {
+        "title": "Numérique",
+        "aiRequestsPerDay": "Nombre moyen de requêtes IA par salarié et par jour",
+        "videoHoursPerDay": "Nombre moyen d'heures de visioconférence par salarié et par jour",
+        "internetHoursPerDay": "Nombre moyen d'heures d'internet par salarié et par jour"
       }
     },
     "comments": {
