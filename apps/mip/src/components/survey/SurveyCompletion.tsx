@@ -20,7 +20,6 @@ import {
   Typography,
 } from '@mui/material'
 import { useTranslations } from 'next-intl'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Situation } from 'publicodes'
 import { useEffect, useMemo, useState } from 'react'
