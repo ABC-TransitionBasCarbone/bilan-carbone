@@ -350,9 +350,6 @@ const SurveyCompletion = ({ onRestart, surveyId, model, restoreFromStorage = fal
           <Button variant="outlined" startIcon={<Refresh />} onClick={handleRestart}>
             {t('restart')}
           </Button>
-          <Button component={Link} href={`/dashboard/${surveyId}`} variant="contained">
-            {t('adminResults')}
-          </Button>
         </div>
       </Container>
     </div>

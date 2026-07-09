@@ -52,6 +52,7 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
 
   const [isResumed, setIsResumed] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [isCompleting, setIsCompleting] = useState(false)
   const [state, setState] = useState<FormState<string>>(initState)
   const updateState = (newState: FormState<string>) => setState(newState)
 
@@ -72,14 +73,14 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   }, [surveyId, state, isLoading])
 
   useEffect(() => {
-    if (!isLoading && !isResumed) {
+    if (!isLoading && !isResumed && !isCompleting) {
       const { current, pageCount, hasNextPage } = formBuilder.pagination(state)
       const isComplete = !hasNextPage && current === pageCount
       if (isComplete) {
         router.replace(`/end/${surveyId}`)
       }
     }
-  }, [formBuilder, isLoading, isResumed, router, state, surveyId])
+  }, [formBuilder, isCompleting, isLoading, isResumed, router, state, surveyId])
 
   const handleRestart = () => {
     clearSurveyState(surveyId)
@@ -88,10 +89,20 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   }
 
   const completeSurvey = async () => {
+    if (isCompleting) {
+      return
+    }
+
+    setIsCompleting(true)
     const completedState = formBuilder.goToNextPage(state)
-    await createResponseWithJson(surveyId, JSON.stringify(completedState))
-    updateState(completedState)
-    router.push(`/end/${surveyId}`)
+
+    try {
+      await createResponseWithJson(surveyId, JSON.stringify(completedState))
+      saveSurveyState(surveyId, completedState)
+      router.push(`/end/${surveyId}`)
+    } finally {
+      setIsCompleting(false)
+    }
   }
 
   const { elements } = formBuilder.currentPage(state)
@@ -118,7 +129,7 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   }
 
   if (isComplete) {
-    return <Typography>{t('loading')}</Typography>
+    return null
   }
 
   return (
@@ -145,6 +156,7 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
       <SurveyNavigation
         hasPreviousPage={hasPreviousPage}
         isLastPage={pageCount === current + 1}
+        isSubmittingCompletion={isCompleting}
         previousLabel={tCommon('previous')}
         nextLabel={tCommon('next')}
         completeLabel={t('navigation.complete')}
