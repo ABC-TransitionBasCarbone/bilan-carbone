@@ -19,6 +19,7 @@ const NumberWithUnitInput = <RuleName extends string>({
   disabled,
   suggestions,
 }: NumberWithUnitInputProps<RuleName>) => {
+
   const unit = usePublicodesUnitTranslation(formElement.unit)
   const isDisabled = disabled || !formElement.applicable
   const { localValue, handleValueChange, handleValueCommitted, handleFocus } = useSimpleInputState<number>(
@@ -26,7 +27,10 @@ const NumberWithUnitInput = <RuleName extends string>({
     onChange as OnFieldChange,
   )
 
-  const suggestionEntries = suggestions ? Object.entries(suggestions) : []
+  const suggestionEntries = suggestions
+    ?
+    Object.entries(suggestions).filter((entry): entry is [string, number] => typeof entry[1] === 'number')
+    : []
 
   return (
     <div>
@@ -38,10 +42,8 @@ const NumberWithUnitInput = <RuleName extends string>({
               type="button"
               className={classNames(styles.suggestionChip, 'pointer')}
               onClick={() => {
-                if (typeof value === 'number') {
-                  handleValueChange(value)
-                  handleValueCommitted(value)
-                }
+                handleValueChange(value)
+                handleValueCommitted(value)
               }}
             >
               {label}
