@@ -1,19 +1,6 @@
 'use client'
 import { useMipPublicodes } from '@/publicodes/MipPublicodesProvider'
 import { createResponseWithJson } from '@/services/serverFunctions/campaign'
-import {
-  buildPageBuilder,
-  getMosaicParent,
-  getQuestionType,
-  InputQuestion,
-  MipQuestionType,
-  MosaicQuestion,
-  patchFormElement,
-} from '@abc-transitionbascarbone/publicodes/form'
-import { ArrowBack, ArrowForward, Check } from '@mui/icons-material'
-import { Button, Container, LinearProgress, Typography } from '@mui/material'
-import { EvaluatedFormElement, FormBuilder, FormPageElementProp, FormState } from '@publicodes/forms'
-import classNames from 'classnames'
 import { buildPageBuilder } from '@abc-transitionbascarbone/publicodes/form'
 import { Container, Typography } from '@mui/material'
 import { FormBuilder, FormState } from '@publicodes/forms'

@@ -63,19 +63,20 @@ const ResultsDashboard = ({ results }: Props) => {
 
       <StatsSection results={filtered} resultsUnit={StudyResultUnit.T} />
 
-      <ObjectiveEncart averageFootprint={filtered.averageFootprint} resultsUnit={StudyResultUnit.T} />
-
       <EntityFilterSection
         entities={results.entities}
         selectedEntity={selectedEntity}
         onSelectEntity={setSelectedEntity}
       />
 
-      <ChartsSection pieChartItems={pieChartItems} totalBarItem={totalBarItem} />
+      <ChartsSection
+        pieChartItems={pieChartItems}
+        barChartItems={barChartItems}
+        averageFootprint={filtered.averageFootprint}
+        totalRespondents={filtered.totalRespondents}
+      />
 
-      <KeyStatsSection keyStats={filtered.keyStats} model={model} />
-
-      <CollectiveEffortEncart />
+      <KeyStatsSection keyStats={filtered.keyStats} />
 
       <div className="flex gapped1 mt1">
         <Button variant="outlined" startIcon={<Print />} onClick={handlePrint}>

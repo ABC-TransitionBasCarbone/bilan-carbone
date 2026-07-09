@@ -1,6 +1,5 @@
 'use client'
 
-import CollectiveEffortEncart from '@/components/results/CollectiveEffortEncart'
 import ActionsTabsSection from '@/components/survey/completion/ActionsTabsSection'
 import FaqSection from '@/components/survey/completion/FaqSection'
 import FootprintBanner from '@/components/survey/completion/FootprintBanner'
@@ -150,8 +149,6 @@ const SurveyCompletion = ({ onRestart, surveyId, model, restoreFromStorage = fal
           categoryToneClasses={CATEGORY_TONE_CLASSES}
         />
         <TopCategoriesSection topCategories={topCategories} />
-
-        <CollectiveEffortEncart />
 
         <FaqSection />
 
