@@ -20,29 +20,121 @@
   font-weight: 700 !important;
 }
 
-.footprintDisplay {
-  margin-bottom: 0.75rem;
+.rangeLegend {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
 }
 
-.footprintValue {
-  font-size: 3.5rem !important;
+.rangeTickLabel {
+  color: var(--white) !important;
+  font-size: 0.9rem !important;
+  font-weight: 600 !important;
+}
+
+.rangeTrackWrapper {
+  position: relative;
+  padding-top: 1.5rem;
+  padding-bottom: 2.25rem;
+}
+
+.rangeTrack {
+  position: relative;
+  height: 0.6rem;
+  width: 100%;
+  border-radius: 999px;
+  background-color: color-mix(in srgb, var(--white) 30%, transparent);
+}
+
+.limitMarker {
+  position: absolute;
+  top: -0.3rem;
+  transform: translateX(-50%);
+  width: 0.25rem;
+  height: 1.2rem;
+  border-radius: 999px;
+  background-color: var(--warning);
+}
+
+.currentMarker {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  border: 2px solid var(--white);
+  background-color: var(--primary-200);
+}
+
+.limitLabel {
+  position: absolute;
+  bottom: 0.9rem;
+  transform: translateX(-50%);
+  font-size: 0.75rem !important;
+  color: var(--white) !important;
+  white-space: nowrap;
+}
+
+.currentLabel {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  font-size: 0.8rem !important;
+  color: var(--white) !important;
+  background-color: color-mix(in srgb, var(--info) 70%, var(--white) 30%);
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+  white-space: nowrap;
+}
+
+.transitionEncart {
+  border: 1px solid var(--neutral-300);
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.transitionHeader {
+  background-color: var(--info);
+  color: var(--white);
+  padding: 1rem 1.5rem;
+}
+
+.transitionTitle {
+  color: var(--white) !important;
   font-weight: 700 !important;
-  color: var(--white) !important;
-  line-height: 1 !important;
+  margin-bottom: 0.25rem !important;
 }
 
-.footprintUnit {
-  font-size: 1.1rem !important;
+.transitionDescription {
   color: var(--white) !important;
   opacity: 0.9;
-  margin-top: 0.25rem !important;
 }
 
-.bannerDescription {
-  color: var(--white) !important;
-  opacity: 0.9;
-  max-width: 40rem;
-  margin: 0 auto !important;
+.transitionBody {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 1rem;
+  align-items: center;
+  background-color: var(--white);
+}
+
+.transitionMetricLabel {
+  color: var(--neutral-700) !important;
+  font-size: 0.9rem !important;
+}
+
+.transitionMetricValue {
+  font-weight: 700 !important;
+  font-size: 1.75rem !important;
+  color: var(--info) !important;
+  line-height: 1.1 !important;
+}
+
+.transitionGoalText {
+  color: var(--primary-600) !important;
+  font-weight: 600 !important;
 }
 
 .tabs {
@@ -143,20 +235,6 @@
   white-space: nowrap;
 }
 
-.libraryAccordion {
-  border: 1px solid var(--neutral-200) !important;
-  box-shadow: none !important;
-}
-
-.libraryTitle {
-  font-weight: 600 !important;
-}
-
-.libraryCount {
-  color: var(--neutral-700) !important;
-  font-size: 0.825rem !important;
-}
-
 .libraryActionRow {
   display: grid;
   grid-template-columns: 1.5rem 1fr auto;
@@ -245,12 +323,11 @@
   font-size: 0.825rem !important;
 }
 
-.emptyActions {
-  color: var(--neutral-700) !important;
-  font-style: italic;
-}
-
 @media (max-width: 600px) {
+  .transitionBody {
+    grid-template-columns: 1fr;
+  }
+
   .summaryItem {
     grid-template-columns: 2rem 1fr;
     row-gap: 0.5rem;

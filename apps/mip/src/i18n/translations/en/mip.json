@@ -30,15 +30,26 @@
       "actions": {
         "title": "Take action",
         "keyTab": "Key actions",
-        "libraryTab": "Full library",
-        "noActions": "No actions are available for this category yet.",
+        "equivalentTab": "What does it correspond to?",
         "available": "actions"
+      },
+      "transition": {
+        "title": "Trajectory to {target} tCO₂e",
+        "description": "You start from {current} tCO₂e/year to move toward the {target} tCO₂e goal.",
+        "startLabel": "Starting footprint",
+        "goalLabel": "Final target: {target} tCO₂e/year"
+      },
+      "range": {
+        "minLabel": "0 tCO₂e",
+        "maxLabel": "12 tCO₂e",
+        "limitLabel": "2050 target: {limit} tCO₂e",
+        "currentLabel": "You: {value} tCO₂e"
       },
       "topCategories": {
         "title": "My main emission categories"
       },
       "summary": {
-        "title": "My footprint details",
+        "title": "Summary",
         "subPosts": "Sub-categories"
       },
       "faq": {
@@ -193,6 +204,10 @@
         "label": "Companies",
         "description": "Under the impetus of the State and citizens, companies are working towards the <strong>progressive reduction of the footprint of goods and services</strong>."
       }
+    },
+    "equivalent": {
+      "title": "What does it correspond to?",
+      "description": "Compare the campaign's average footprint with concrete references to better understand its impact."
     },
     "export": {
       "comments": {

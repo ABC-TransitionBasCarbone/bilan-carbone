@@ -30,15 +30,26 @@
       "actions": {
         "title": "Passer à l'action",
         "keyTab": "Actions clés",
-        "libraryTab": "Toutes les actions",
-        "noActions": "Aucune action disponible sur ce poste pour le moment.",
+        "equivalentTab": "A quoi cela équivaut ?",
         "available": "actions"
+      },
+      "transition": {
+        "title": "Cap vers {target} tCO₂e",
+        "description": "Vous partez de {current} tCO₂e/an pour aller vers l'objectif de {target} tCO₂e.",
+        "startLabel": "Empreinte de départ",
+        "goalLabel": "Objectif final : {target} tCO₂e/an"
+      },
+      "range": {
+        "minLabel": "0 tCO₂e",
+        "maxLabel": "12 tCO₂e",
+        "limitLabel": "L'objectif pour 2050 : {limit} tCO₂e",
+        "currentLabel": "Vous : {value} tCO₂e"
       },
       "topCategories": {
         "title": "Mes principaux postes d'émissions"
       },
       "summary": {
-        "title": "Le détail de mon empreinte",
+        "title": "Résumé",
         "subPosts": "Sous-postes"
       },
       "faq": {
@@ -201,6 +212,10 @@
         "label": "Les entreprises",
         "description": "Sous l'impulsion de l'État et des citoyens, les entreprises travaillent à la <strong>réduction progressive de l'empreinte des biens et services</strong>."
       }
+    },
+    "equivalent": {
+      "title": "A quoi cela équivaut ?",
+      "description": "Comparez l'empreinte moyenne de la campagne avec des ordres de grandeur concrets pour mieux situer son impact."
     },
     "export": {
       "comments": {
