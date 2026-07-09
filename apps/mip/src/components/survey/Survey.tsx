@@ -13,6 +13,7 @@ import {
 import { ArrowBack, ArrowForward, Check } from '@mui/icons-material'
 import { Button, Card, CardContent, Container, LinearProgress, Typography } from '@mui/material'
 import { EvaluatedFormElement, FormBuilder, FormPageElementProp, FormState } from '@publicodes/forms'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import Category from './Category/Category'
@@ -165,11 +166,11 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
 
   if (isComplete) {
     return (
-      <Container maxWidth="md" className={styles.container}>
+      <Container maxWidth="md" className={classNames(styles.container, 'pt2')}>
         <Card>
           <CardContent>
-            <div className={styles.completedContent}>
-              <Check className={styles.checkIcon} />
+            <div className={classNames(styles.completedContent, 'py2')}>
+              <Check className={classNames(styles.checkIcon, 'mb1')} />
               <Typography variant="h4" gutterBottom>
                 {t('completed.title')}
               </Typography>
@@ -187,11 +188,11 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   }
 
   return (
-    <Container maxWidth="md" className={styles.container}>
-      <div className={styles.header}>
+    <Container maxWidth="md" className={classNames(styles.container, 'pt2')}>
+      <div className="mb2">
         <Category title={currentTitle.label} icons={currentTitle.icons} />
-        <div className={styles.progress}>
-          <div className={styles.progressLabels}>
+        <div className="mb2">
+          <div className="justify-between mb-2">
             <Typography variant="body2" color="text.secondary">
               {t('progress.question', {
                 current: Math.min(current, pageCount),
@@ -206,7 +207,7 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
         </div>
       </div>
 
-      <div className={styles.questionCard}>
+      <div className="mb2">
         {groupedElements.map((group) =>
           group.type === 'mosaic' ? (
             <MosaicQuestion
@@ -220,13 +221,14 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
             <InputQuestion
               key={group.el.id}
               formElement={group.el}
+              engine={engine}
               onChange={(ruleName, value) => updateState(formBuilder.handleInputChange(state, ruleName, value))}
             />
           ),
         )}
       </div>
 
-      <div className={styles.navigation}>
+      <div className={classNames(styles.navigation, 'flex-cc', 'gapped1', 'py1', 'px2')}>
         {hasPreviousPage ? (
           <Button
             variant="outlined"
