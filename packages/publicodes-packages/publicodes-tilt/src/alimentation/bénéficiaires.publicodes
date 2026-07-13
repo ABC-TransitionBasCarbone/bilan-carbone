@@ -32,7 +32,6 @@ alimentation . bénéficiaires . viande rouge:
     nombre de repas:
       question: Combien de repas à base de viande rouge sont consommés par vos bénéficiaires chaque année ?
       unité: repas
-      par défaut: 0
 
 alimentation . bénéficiaires . viande blanche:
   applicable si:
@@ -49,7 +48,6 @@ alimentation . bénéficiaires . viande blanche:
     nombre de repas:
       question: Combien de repas à base de viande blanche sont consommés par vos bénéficiaires chaque année ?
       unité: repas
-      par défaut: 0
 
 alimentation . bénéficiaires . poisson blanc:
   applicable si:
@@ -66,7 +64,6 @@ alimentation . bénéficiaires . poisson blanc:
     nombre de repas:
       question: Combien de repas à base de poisson blanc sont consommés par vos bénéficiaires chaque année ?
       unité: repas
-      par défaut: 0
 
 alimentation . bénéficiaires . poisson gras:
   applicable si:
@@ -83,7 +80,6 @@ alimentation . bénéficiaires . poisson gras:
     nombre de repas:
       question: Combien de repas à base de poisson gras sont consommés par vos bénéficiaires chaque année ?
       unité: repas
-      par défaut: 0
 
 alimentation . bénéficiaires . végétarien:
   applicable si:
@@ -100,7 +96,6 @@ alimentation . bénéficiaires . végétarien:
     nombre de repas:
       question: Combien de repas végétariens sont consommés par vos bénéficiaires chaque année ?
       unité: repas
-      par défaut: 0
 
 alimentation . bénéficiaires . végétalien:
   applicable si:
@@ -117,4 +112,287 @@ alimentation . bénéficiaires . végétalien:
     nombre de repas:
       question: Combien de repas végétaliens sont consommés par vos bénéficiaires chaque année ?
       unité: repas
-      par défaut: 0
+
+alimentation . mosaic:
+  ordre: 1
+  icônes: 🍽️
+  mosaique:
+    type: nombre
+    options:
+      - végétalien . nombre
+      - végétarien . nombre
+      - viande blanche . nombre
+      - viande rouge . nombre
+      - poisson gras . nombre
+      - poisson blanc . nombre
+  question: Comment vont se composer vos déjeuners et dîners durant le séjour ?
+  titre: Empreinte des repas
+  description: |
+    En cohérence avec la durée de votre séjour, renseignez le nombre et les types de plats que vous allez probablement manger. Par exemple, si vous restez trois jours en 
+    Hauts-de-France vous devez renseigner 6 repas.
+  formule:
+    somme:
+      - végétalien
+      - végétarien
+      - viande blanche
+      - viande rouge
+      - poisson gras
+      - poisson blanc
+  note: |
+    Pour le moment, nous proposons 6 repas types pour 6 régimes différents. Il a été choisi de limiter la granularité du modèle via 6 menus représentatifs
+    des régimes associés pour simplifier l'estimation de l'empreinte du poste alimentation pour l'utilisateur
+    (les spécificités de l'alimentation de chacun pourraient donner lieu à un simulateur complet dédié à l'alimentation).
+
+    Ils ne sont pas directement basés sur les régimes de la Base Empreinte, [documentés par l'ADEME](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm), jugés obsolètes (peu exhaustifs, FE non issus d'Agribalyse).
+
+    En revanche, nous avons travaillé sur des repas types basés sur une consolidation multi-facteurs (quantité totale d'aliments consommés, quantité de viande et poisson consommés, apports énergétiques, empreinte carbone moyenne d'un repas)
+    basé sur les données de [l'étude INCA 3](https://www.anses.fr/fr/system/files/NUT2014SA0234Ra.pdf), permettant de se rapprocher du régime moyen d'un Français.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
+alimentation . mosaic . végétalien:
+  titre: Végétalien
+  formule: empreinte * nombre
+  icônes: 🌾🥜🥗
+  description: |
+    Repas sans produits animaux.
+
+alimentation . mosaic . végétalien . empreinte:
+  formule: empreinte carbone
+
+alimentation . mosaic . végétalien . empreinte carbone:
+  titre: Empreinte carbone d'un repas végétalien
+  formule: 0.66
+  unité: kgCO2e/repas
+  note: |
+    Repas contenant du tofu, un accompagnement "moyen" (issu d'un travail de consolidation sur les moyennes de consommation des français tirées de l'étude INCA3 pour les légumes, légumineuses, riz, céréales et pâtes), huile.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
+alimentation . mosaic . végétalien . empreinte eau:
+  titre: Empreinte eau d'un repas végétalien
+  formule: 1623
+  unité: l/repas
+  note: |
+    Repas contenant du tofu, un accompagnement "moyen" (issu d'un travail de consolidation sur les moyennes de consommation des français tirées de l'étude INCA3 pour les légumes, légumineuses, riz, céréales et pâtes), huile.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
+alimentation . mosaic . végétalien . nombre:
+  question: Nombre de plats végétaliens
+  plancher: 0
+  unité: repas
+
+alimentation . mosaic . végétarien:
+  titre: Végétarien
+  formule: empreinte * nombre
+  icônes: 🥗🍳🧀
+  description: |
+    Repas sans chair animale, avec des œufs ou un peu de fromage.
+
+alimentation . mosaic . végétarien . empreinte:
+  formule: empreinte carbone
+
+alimentation . mosaic . végétarien . empreinte carbone:
+  titre: Empreinte carbone d'un repas végétarien
+  formule: 0.97
+  unité: kgCO2e/repas
+  note: |
+    Repas contenant des œufs, un accompagnement "moyen" (issu d'un travail de consolidation sur les moyennes de consommation des français tirées de l'étude INCA3 pour les légumes, légumineuses, riz, céréales et pâtes), huile.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
+alimentation . mosaic . végétarien . empreinte eau:
+  titre: Empreinte eau d'un repas végétarien
+  formule: 1466
+  unité: l/repas
+  note: |
+    Repas contenant des œufs, un accompagnement "moyen" (issu d'un travail de consolidation sur les moyennes de consommation des français tirées de l'étude INCA3 pour les légumes, légumineuses, riz, céréales et pâtes), huile.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
+alimentation . mosaic . végétarien . nombre:
+  question: Nombre de plats végétariens
+  unité: repas
+  note: 36% = 5 repas végétarien sur 14 par défaut dans le modèle NGC
+
+alimentation . mosaic . viande blanche:
+  titre: Viande blanche
+  icônes: 🍗🥓
+  formule: empreinte * nombre
+  description: |
+    Repas contenant une pièce de poulet, porc.
+
+alimentation . mosaic . viande blanche . empreinte:
+  formule:  empreinte carbone
+
+alimentation . mosaic . viande blanche . empreinte carbone:
+  titre: Empreinte carbone d'un repas de type viande blanche (poulet, porc)
+  formule: 1.75
+  unité: kgCO2e/repas
+  note: |
+    Repas contenant 150g d'une viande blanche moyenne (issue d'un travail de consolidation sur les consommations moyennes de viande blanche de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
+alimentation . mosaic . viande blanche . empreinte eau:
+  titre: Empreinte eau d'un repas de type viande blanche (poulet, porc, fromage)
+  formule: 1852
+  unité: l/repas
+  note: |
+    Repas contenant 150g d'une viande blanche moyenne (issue d'un travail de consolidation sur les consommations moyennes de viande blanche de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
+alimentation . mosaic . viande blanche . nombre:
+  question: Nombre de plats viande blanche
+  plancher: 0
+  unité: repas
+  note: 29% = 4 repas viande blanche sur 14 par défaut dans le modèle NGC
+
+alimentation . mosaic . viande rouge:
+  titre: Viande rouge
+  icônes: 🥩🍖
+  formule: empreinte * nombre
+  description: |
+    Repas contenant une pièce de bœuf, veau, ou agneau.
+
+alimentation . mosaic . viande rouge . empreinte:
+  formule: empreinte carbone
+
+alimentation . mosaic . viande rouge . empreinte carbone:
+  titre: Empreinte carbone d'un repas de type viande rouge (bœuf, veau, agneau)
+  formule:
+    somme:
+      - 5.19
+      - déforestation
+  unité: kgCO2e/repas
+  note: |
+    Repas contenant 150g d'une viande rouge moyenne (issue d'un travail de consolidation sur les consommations moyennes de viande rouge de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    Pour la partie déforestation, notre alimentation est vectrice de déforestation à l'étranger, à l'impact carbone non négligeable. Cette empreinte n'est pas comprise dans les facteurs d'émission d'Agribalyse.
+
+    D'après l'étude [Pendril & al.](https://iopscience.iop.org/article/10.1088/1748-9326/ab0d41), une part de cette déforestation est spécifiquement associée à la consommation de viande d'élevage.
+    Nous considérons que cette part associée aux "viandes d'élevage" est majoritairement associée à la consommation de viande rouge, c'est pourquoi nous ajoutons cette part de déforestation aux repas de viande rouge.
+
+alimentation . mosaic . viande rouge . empreinte eau:
+  titre: Empreinte eau d'un repas de type viande rouge (bœuf, veau, agneau)
+  formule: 2017
+  unité: l/repas
+  description: |
+    Repas contenant 150g d'une viande rouge moyenne (issue d'un travail de consolidation sur les consommations moyennes de viande rouge de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
+alimentation . mosaic . viande rouge . déforestation:
+  formule:
+    variations:
+      - si: déforestation
+        alors: 0.218
+      - sinon: 0
+  unité: kgCO2e/repas
+  note: |
+    L’étude [Pendril & al.](https://iopscience.iop.org/article/10.1088/1748-9326/ab0d41) donne une empreinte moyenne de 34 kgCO2e / personne de déforestation importée liée à la consommation de viandes d'élevage.
+    Nous partons du principe que ces émissions liées à la production de viandes d'élevage appartiennent majoritairement à la catégorie "viande rouge" : c'est la catégorie la plus consommatrice de terres et de ressources.
+    La consommation moyenne par français de viande rouge se situe autour de 3 repas par semaine, soit 156 repas par an.
+
+    En conséquence, nous ajoutons à l'empreinte des repas une empreinte moyenne de 0.218 kgCO2e / repas de viande rouge.
+
+alimentation . mosaic . viande rouge . nombre:
+  question: Nombre de plats viande rouge
+  plancher: 0
+  unité: repas
+  note: 21% = 3 repas viande rouge sur 14 par défaut dans le modèle NGC
+
+alimentation . mosaic . poisson gras:
+  titre: Poisson gras
+  formule: empreinte * nombre
+  icônes: 🍣🥧
+  description: |
+    Repas contenant thon, saumon, sardine ou maquereau.
+
+alimentation . mosaic . poisson gras . empreinte:
+  formule: empreinte carbone
+
+alimentation . mosaic . poisson gras . empreinte carbone:
+  titre: Empreinte carbone d'un repas de type poisson gras (thon, saumon, sardine, maquereau)
+  formule: 1.21
+  unité: kgCO2e/repas
+  description: |
+    Repas contenant 150g d'un poisson gras moyen (issu d'un travail de consolidation sur les consommations moyennes de poissons gras de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
+alimentation . mosaic . poisson gras . empreinte eau:
+  titre: Empreinte eau d'un repas de type poisson gras (thon, saumon, sardine, maquereau)
+  formule: 2031
+  unité: l/repas
+  description: |
+    Repas contenant 150g d'un poisson gras moyen (issu d'un travail de consolidation sur les consommations moyennes de poissons gras de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
+alimentation . mosaic . poisson gras . nombre:
+  question: Nombre de plats poisson gras
+  plancher: 0
+  unité: repas
+  note: 14% = 2 repas poisson gras sur 14 par défaut dans le modèle NGC
+
+alimentation . mosaic . poisson blanc:
+  titre: Poisson blanc
+  formule: empreinte * nombre
+  icônes: 🐟🍚
+  description: |
+    Repas avec un filet de poisson blanc.
+
+alimentation . mosaic . poisson blanc . empreinte:
+  formule: empreinte carbone
+
+alimentation . mosaic . poisson blanc . empreinte carbone:
+  titre: Empreinte carbone d'un repas de type poisson blanc
+  formule: 2.29
+  unité: kgCO2e/repas
+  description: |
+    Repas contenant 150g d'un poisson blanc moyen (issu d'un travail de consolidation sur les consommations moyennes de poissons blancs de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
+alimentation . mosaic . poisson blanc . empreinte eau:
+  titre: Empreinte eau d'un repas de type poisson blanc
+  formule: 1422
+  unité: l/repas
+  description: |
+    Repas contenant 150g d'un poisson blanc moyen (issu d'un travail de consolidation sur les consommations moyennes de poissons blancs de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
+alimentation . mosaic . poisson blanc . nombre:
+  question: Nombre de plats poisson blanc
+  plancher: 0
+  unité: repas

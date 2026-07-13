@@ -8,11 +8,14 @@
  * TODO: we should allow to extends this type with custom layouts from the
  * consumer side.
  */
+import { EvaluatedFormElement, FormPageElementProp } from '@publicodes/forms'
+
 export type FormLayout<RuleName extends string = string> =
   | InputLayout<RuleName>
   | GroupLayout<RuleName>
   | TableLayout<RuleName>
   | ListLayout<RuleName>
+  | MosaicLayout<RuleName>
 
 export interface InputLayout<RuleName extends string> {
   type: 'input'
@@ -21,6 +24,15 @@ export interface InputLayout<RuleName extends string> {
 
 export function inputLayout<RuleName extends string>(rule: RuleName): InputLayout<RuleName> {
   return { type: 'input', rule }
+}
+
+export interface MosaicLayout<RuleName extends string> {
+  type: 'mosaic'
+  parent: string
+  children: RuleName[]
+}
+export const mosaicLayout = <RuleName extends string>(parent: RuleName, children: RuleName[]): MosaicLayout<RuleName> => {
+  return { type: 'mosaic', parent, children }
 }
 
 export interface TableLayout<RuleName extends string> {

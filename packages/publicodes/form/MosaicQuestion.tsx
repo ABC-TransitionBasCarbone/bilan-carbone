@@ -4,14 +4,20 @@ import MosaicNumberInput from '@abc-transitionbascarbone/ui/Form/MosaicNumberInp
 import { EvaluatedFormElement, FormPageElementProp } from '@publicodes/forms'
 import Engine from 'publicodes'
 
-type Props = {
+type Props<RuleName> = {
   parent: string
-  elements: Array<EvaluatedFormElement<string> & FormPageElementProp>
+  elements: {
+    id: string
+    element: 'input' | 'RadioGroup' | 'select' | 'textarea'
+    type?: string
+    value?: string | number | boolean
+    defaultValue?: string | number | boolean
+  }[]
   engine: Engine
-  onChange: (ruleName: string, value: string | number | boolean | undefined) => void
+  onChange: (ruleName: RuleName, value: string | number | boolean | undefined) => void
 }
 
-export function MosaicQuestion({ parent, elements, engine, onChange }: Props) {
+export function MosaicQuestion<RuleName extends string>({ parent, elements, engine, onChange }: Props<RuleName>) {
   const rules = engine.getParsedRules()
   const parentRaw = rules[parent]?.rawNode as any
   const mosaicType = parentRaw?.mosaique?.type
@@ -40,7 +46,7 @@ export function MosaicQuestion({ parent, elements, engine, onChange }: Props) {
                 icons={icons}
                 description={description}
                 value={value as number | undefined}
-                onChange={(value) => onChange(el.id, value)}
+                onChange={(value) => onChange(el.id as RuleName, value)}
               />
             )
           }
@@ -55,7 +61,7 @@ export function MosaicQuestion({ parent, elements, engine, onChange }: Props) {
                 icons={icons}
                 description={description}
                 value={currentValue}
-                onChange={(value) => onChange(el.id, value)}
+                onChange={(value) => onChange(el.id as RuleName, value)}
                 index={index}
               />
             )
