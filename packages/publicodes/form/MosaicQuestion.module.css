@@ -1,10 +1,7 @@
 .mosaicContainer {
   display: flex;
   flex-wrap: wrap;
-  /* Permet le retour à la ligne */
   gap: 1rem;
-  /* Espacement horizontal */
   row-gap: 0.5rem;
-  /* Espacement vertical (si gap n'est pas supporté, utilise margin) */
   padding: 1rem;
 }

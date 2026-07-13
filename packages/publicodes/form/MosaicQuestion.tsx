@@ -6,9 +6,9 @@ import Engine from 'publicodes'
 import styles from './MosaicQuestion.module.css'
 
 type Props<RuleName> = {
-  parent: string
+  parent: RuleName
   elements: {
-    id: string
+    id: RuleName
     element: 'input' | 'RadioGroup' | 'select' | 'textarea'
     type?: string
     value?: string | number | boolean
@@ -47,7 +47,7 @@ export function MosaicQuestion<RuleName extends string>({ parent, elements, engi
                 icons={icons}
                 description={description}
                 value={value as number | undefined}
-                onChange={(value) => onChange(el.id as RuleName, value)}
+                onChange={(value) => onChange(el.id, value)}
               />
             )
           }
@@ -62,7 +62,7 @@ export function MosaicQuestion<RuleName extends string>({ parent, elements, engi
                 icons={icons}
                 description={description}
                 value={currentValue}
-                onChange={(value) => onChange(el.id as RuleName, value)}
+                onChange={(value) => onChange(el.id, value)}
                 index={index}
               />
             )

@@ -28,7 +28,7 @@ export function inputLayout<RuleName extends string>(rule: RuleName): InputLayou
 
 export interface MosaicLayout<RuleName extends string> {
   type: 'mosaic'
-  parent: string
+  parent: RuleName
   children: RuleName[]
 }
 export const mosaicLayout = <RuleName extends string>(parent: RuleName, children: RuleName[]): MosaicLayout<RuleName> => {
