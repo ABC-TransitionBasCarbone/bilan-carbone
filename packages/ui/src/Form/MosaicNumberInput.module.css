@@ -1,15 +1,15 @@
-.container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+.element {
+  width: fit-content;
   border-radius: 0.75rem;
   border: 2px solid #cdd9f8;
   background-color: white;
-  padding: 0.5rem;
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
-  width: fit-content;
+  padding: 1.25rem;
+}
+
+.content {
+  display: flex;
+  flex-direction: row;
+  gap: 1.25rem;
 }
 
 .info {
@@ -60,6 +60,7 @@
   font-size: 1rem;
 
   -moz-appearance: textfield;
+
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {
     -webkit-appearance: none;

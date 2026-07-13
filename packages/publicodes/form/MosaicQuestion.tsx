@@ -1,8 +1,9 @@
 import { QuestionContainer } from '@abc-transitionbascarbone/publicodes/form'
 import MosaicBooleanInput from '@abc-transitionbascarbone/ui/Form/MosaicBooleanInput'
 import MosaicNumberInput from '@abc-transitionbascarbone/ui/Form/MosaicNumberInput'
-import { EvaluatedFormElement, FormPageElementProp } from '@publicodes/forms'
+import classNames from 'classnames'
 import Engine from 'publicodes'
+import styles from './MosaicQuestion.module.css'
 
 type Props<RuleName> = {
   parent: string
@@ -25,7 +26,7 @@ export function MosaicQuestion<RuleName extends string>({ parent, elements, engi
 
   return (
     <QuestionContainer label={label}>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+      <div className={styles.mosaicContainer}>
         {elements.map((el, index) => {
           const parts = el.id.split(' . ')
           const lastSegment = parts.slice(-2, -1)[0]
