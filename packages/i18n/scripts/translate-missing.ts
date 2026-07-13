@@ -2,24 +2,43 @@
  * Detects missing translation keys vs the FR source and fills them using Claude.
  * Glossary is fetched at runtime from the methode-bilan-carbone repo.
  *
+ * Covers common (packages/i18n), bc/clickson/cut/tilt (apps/bilan-carbone) and mip (apps/mip).
+ *
+ * Modes:
+ *   default        backfill — every key missing/empty in the target (use via subscription)
+ *   --changed-only incremental — only FR keys added/modified since --base (default HEAD~1); the pipeline/API mode
+ *
  * Usage:
- *   yarn tsx scripts/translate-missing.ts --locale en
- *   yarn tsx scripts/translate-missing.ts --locale es --file all
- *   yarn tsx scripts/translate-missing.ts --all-locales
+ *   yarn tsx scripts/translate-missing.ts --locale en                    # backfill, English
+ *   yarn tsx scripts/translate-missing.ts --locale es --file bc          # a single file
+ *   yarn tsx scripts/translate-missing.ts --all-locales                  # backfill, all files, all locales
+ *   yarn tsx scripts/translate-missing.ts --all-locales --changed-only   # incremental (pipeline)
  *   ANTHROPIC_API_KEY=sk-... yarn tsx scripts/translate-missing.ts --locale en
  */
 
 import Anthropic from '@anthropic-ai/sdk'
+import { execSync } from 'child_process'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
-import { dirname, join } from 'path'
+import { dirname, join, relative, sep } from 'path'
 
-const TRANSLATIONS_DIR = join(__dirname, '../translations')
+// Repo root, resolved from packages/i18n/scripts → ../../..
+const REPO_ROOT = join(__dirname, '../../..')
 
 const GLOSSARY_URL =
   'https://raw.githubusercontent.com/ABC-TransitionBasCarbone/methode-bilan-carbone/main/glossaire.csv'
 
-// Explicit list of BC+ files to translate — excludes other projects (Clickson, CUT, TILT, etc.)
-const BC_FILES = ['common']
+// Translation targets: each points to a `<locale>/<file>.json` tree with its own FR source.
+// `publicodes/**` is intentionally excluded — only flat UI string files are translated.
+type Target = { dir: string; file: string }
+
+const TRANSLATION_TARGETS: Target[] = [
+  { dir: join(__dirname, '../translations'), file: 'common' },
+  { dir: join(REPO_ROOT, 'apps/bilan-carbone/src/i18n/translations'), file: 'bc' },
+  { dir: join(REPO_ROOT, 'apps/bilan-carbone/src/i18n/translations'), file: 'clickson' },
+  { dir: join(REPO_ROOT, 'apps/bilan-carbone/src/i18n/translations'), file: 'cut' },
+  { dir: join(REPO_ROOT, 'apps/bilan-carbone/src/i18n/translations'), file: 'tilt' },
+  { dir: join(REPO_ROOT, 'apps/mip/src/i18n/translations'), file: 'mip' },
+]
 
 const LOCALE_NAMES: Record<string, string> = {
   en: 'English',
@@ -80,6 +99,8 @@ function getMissingKeys(source: JsonObject, target: JsonObject, path = ''): Reco
     const currentPath = path ? `${path}.${key}` : key
 
     if (typeof value === 'string') {
+      // Only translate keys that are filled in FR and missing/empty in the target.
+      if (value === '') continue
       const targetValue = target[key]
       if (targetValue === undefined || targetValue === '') {
         missing[currentPath] = value
@@ -106,6 +127,43 @@ function setNestedKey(obj: JsonObject, path: string, value: string): void {
     current = current[parts[i]] as JsonObject
   }
   current[parts[parts.length - 1]] = value
+}
+
+// Flattens an object to { "a.b.c": "value" } for string leaves only.
+function flattenStrings(obj: JsonObject, path = ''): Record<string, string> {
+  const out: Record<string, string> = {}
+  for (const [key, value] of Object.entries(obj)) {
+    const currentPath = path ? `${path}.${key}` : key
+    if (typeof value === 'string') {
+      out[currentPath] = value
+    } else if (value && typeof value === 'object' && !Array.isArray(value)) {
+      Object.assign(out, flattenStrings(value as JsonObject, currentPath))
+    }
+  }
+  return out
+}
+
+// Reads a JSON file as it was at a given git ref; null if it didn't exist then.
+function readJsonAtRef(repoRelPath: string, ref: string): JsonObject | null {
+  try {
+    const out = execSync(`git show ${ref}:${repoRelPath}`, { encoding: 'utf-8', stdio: ['ignore', 'pipe', 'ignore'] })
+    return JSON.parse(out) as JsonObject
+  } catch {
+    return null
+  }
+}
+
+// Paths whose FR value was added or modified vs the base ref — the only keys
+// the incremental (--changed-only) mode sends to the API.
+function getChangedPaths(current: JsonObject, base: JsonObject | null): Record<string, string> {
+  const cur = flattenStrings(current)
+  const old = base ? flattenStrings(base) : {}
+  const changed: Record<string, string> = {}
+  for (const [path, value] of Object.entries(cur)) {
+    // Ignore empty FR sources — nothing to translate.
+    if (value !== '' && old[path] !== value) changed[path] = value
+  }
+  return changed
 }
 
 // ── Claude call ───────────────────────────────────────────────────────────────
@@ -152,17 +210,28 @@ Return a JSON object with the exact same keys and translated values.`
 
 // ── File translation ──────────────────────────────────────────────────────────
 
+type Mode = { changedOnly: boolean; base: string }
+
 async function translateFile(
+  dir: string,
   file: string,
   locale: string,
   glossary: string,
   client: Anthropic,
+  mode: Mode,
 ): Promise<void> {
-  const frPath = join(TRANSLATIONS_DIR, 'fr', `${file}.json`)
-  const targetPath = join(TRANSLATIONS_DIR, locale, `${file}.json`)
+  const frPath = join(dir, 'fr', `${file}.json`)
+  const targetPath = join(dir, locale, `${file}.json`)
 
   if (!existsSync(frPath)) {
     console.warn(`  Skipping ${file}: fr/${file}.json not found`)
+    return
+  }
+
+  // Only fill locales the product already ships — don't create new language folders
+  // (e.g. MIP only has fr/en, so es/it/… are skipped rather than invented).
+  if (!existsSync(join(dir, locale))) {
+    console.log(`  ⤷ Skipping ${file}: locale "${locale}" not present in ${dir}`)
     return
   }
 
@@ -176,17 +245,29 @@ async function translateFile(
     mkdirSync(dirname(targetPath), { recursive: true })
   }
 
-  const missing = getMissingKeys(frContent, targetContent)
-  const missingCount = Object.keys(missing).length
+  // Two modes:
+  // - changed-only (pipeline/API): only keys added or modified in FR since `base` → small deltas.
+  //   Changed keys are re-translated even if the target already has a value (FR changed → stale).
+  // - default (backfill/subscription): every key missing or empty in the target.
+  let toTranslate: Record<string, string>
+  if (mode.changedOnly) {
+    const repoRel = relative(REPO_ROOT, frPath).split(sep).join('/')
+    const base = readJsonAtRef(repoRel, mode.base)
+    toTranslate = getChangedPaths(frContent, base)
+  } else {
+    toTranslate = getMissingKeys(frContent, targetContent)
+  }
+  const count = Object.keys(toTranslate).length
 
-  if (missingCount === 0) {
-    console.log(`  ✓ ${locale}/${file}.json — nothing missing`)
+  if (count === 0) {
+    console.log(`  ✓ ${locale}/${file}.json — nothing to translate`)
     return
   }
 
-  console.log(`  Translating ${missingCount} missing key(s) in ${locale}/${file}.json...`)
+  const label = mode.changedOnly ? 'changed' : 'missing'
+  console.log(`  Translating ${count} ${label} key(s) in ${locale}/${file}.json...`)
 
-  const entries = Object.entries(missing)
+  const entries = Object.entries(toTranslate)
   for (let i = 0; i < entries.length; i += CHUNK_SIZE) {
     const chunk = Object.fromEntries(entries.slice(i, i + CHUNK_SIZE))
     const translated = await translateBatch(chunk, locale, glossary, client)
@@ -212,7 +293,10 @@ async function main() {
   const localeIdx = args.indexOf('--locale')
   const locale = localeIdx !== -1 ? args[localeIdx + 1] : 'en'
   const fileIdx = args.indexOf('--file')
-  const fileArg = fileIdx !== -1 ? args[fileIdx + 1] : 'common'
+  const fileArg = fileIdx !== -1 ? args[fileIdx + 1] : 'all'
+  const changedOnly = args.includes('--changed-only')
+  const baseIdx = args.indexOf('--base')
+  const base = baseIdx !== -1 ? args[baseIdx + 1] : 'HEAD~1'
 
   const localesToProcess = allLocales ? Object.keys(LOCALE_NAMES) : [locale]
 
@@ -228,17 +312,26 @@ async function main() {
   }
 
   const client = new Anthropic({ apiKey })
-  const filesToProcess = fileArg === 'all' ? BC_FILES : [fileArg]
+  const targets = fileArg === 'all' ? TRANSLATION_TARGETS : TRANSLATION_TARGETS.filter((t) => t.file === fileArg)
+
+  if (targets.length === 0) {
+    const known = [...new Set(TRANSLATION_TARGETS.map((t) => t.file))].join(', ')
+    console.error(`Unknown file "${fileArg}". Supported: all, ${known}`)
+    process.exit(1)
+  }
 
   console.log('\nFetching glossary...')
   const glossary = await loadGlossary()
 
+  const mode: Mode = { changedOnly, base }
+  if (changedOnly) console.log(`Mode: changed-only (diff vs ${base}) — incremental keys only`)
+
   for (const loc of localesToProcess) {
     console.log(`\nTranslating to: ${LOCALE_NAMES[loc]} (${loc})`)
-    console.log(`Files: ${filesToProcess.join(', ')}`)
+    console.log(`Files: ${targets.map((t) => t.file).join(', ')}`)
 
-    for (const file of filesToProcess) {
-      await translateFile(file, loc, glossary, client)
+    for (const target of targets) {
+      await translateFile(target.dir, target.file, loc, glossary, client, mode)
     }
   }
 

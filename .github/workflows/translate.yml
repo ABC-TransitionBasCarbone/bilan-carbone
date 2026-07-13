@@ -1,11 +1,13 @@
 name: Translate missing i18n keys
 
 on:
-  # Automatic: triggers when FR translation files are updated on develop
+  # Automatic: triggers when any FR translation file is updated on develop
   push:
     branches: [develop]
     paths:
       - 'packages/i18n/translations/fr/**'
+      - 'apps/bilan-carbone/src/i18n/translations/fr/**'
+      - 'apps/mip/src/i18n/translations/fr/**'
 
   # Manual: allows choosing a specific locale and file
   workflow_dispatch:
@@ -17,9 +19,11 @@ on:
         type: choice
         options: ['', en, es, it, ro, hr, hu, el]
       file:
-        description: 'File to translate (common | all)'
+        description: 'File to translate (all = every environment)'
         required: false
-        default: 'common'
+        default: 'all'
+        type: choice
+        options: [all, common, bc, clickson, cut, tilt, mip]
 
 jobs:
   translate:
@@ -30,8 +34,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2 # needed so --changed-only can diff FR against HEAD~1
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 22.16.0
           cache: yarn
@@ -48,10 +54,14 @@ jobs:
       - name: Run translation script
         working-directory: packages/i18n
         run: |
-          if [ "${{ github.event_name }}" = "push" ] || [ -z "${{ inputs.locale }}" ]; then
-            yarn tsx scripts/translate-missing.ts --all-locales --file ${{ inputs.file || 'common' }}
+          if [ "${{ github.event_name }}" = "push" ]; then
+            # Incremental: only keys changed in this push → keeps API usage minimal.
+            yarn tsx scripts/translate-missing.ts --all-locales --changed-only --file all
+          elif [ -z "${{ inputs.locale }}" ]; then
+            # Manual, all locales: fills whatever is missing for the chosen file(s).
+            yarn tsx scripts/translate-missing.ts --all-locales --file ${{ inputs.file || 'all' }}
           else
-            yarn tsx scripts/translate-missing.ts --locale ${{ inputs.locale }} --file ${{ inputs.file || 'common' }}
+            yarn tsx scripts/translate-missing.ts --locale ${{ inputs.locale }} --file ${{ inputs.file || 'all' }}
           fi
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -69,7 +79,7 @@ jobs:
             |---|---|
             | Trigger | `${{ github.event_name }}` |
             | Locale | `${{ inputs.locale || 'all' }}` |
-            | File | `${{ inputs.file || 'common' }}` |
+            | File | `${{ inputs.file || 'all' }}` |
             | Model | `claude-opus-4-8` |
             | Glossary | [methode-bilan-carbone/glossaire.csv](https://github.com/ABC-TransitionBasCarbone/methode-bilan-carbone/blob/main/glossaire.csv) |
 
