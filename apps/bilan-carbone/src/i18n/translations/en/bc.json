@@ -8,11 +8,11 @@
       "2": "Build a reduction pathway"
     },
     "message": {
-      "core": "Welcome to COUNT, the first ecological impact calculator dedicated to movie theaters.\nThis tool was developed by the association CUT! Cinema United for Transition, in cooperation with the Association for Low Carbon Transition (ABC).\nThis initiative is supported by the French State as part of the 'Support Green Alternatives 2' program under France 2030, operated by the Banque des Territoires (Caisse des Dépôts).\nCUT is supported by the CNC.",
       "0": "Completing your impact assessment will allow you to:",
       "1": "Understand the impact assessment of your establishment",
       "2": "Identify priority actions",
-      "3": "Build a reduction pathway"
+      "3": "Build a reduction pathway",
+      "core": "Welcome to COUNT, the first ecological impact calculator dedicated to movie theaters.\nThis tool was developed by the association CUT! Cinema United for Transition, in cooperation with the Association for Low Carbon Transition (ABC).\nThis initiative is supported by the French State as part of the 'Support Green Alternatives 2' program under France 2030, operated by the Banque des Territoires (Caisse des Dépôts).\nCUT is supported by the CNC."
     },
     "navigation": {
       "collaborators": {
@@ -85,16 +85,15 @@
     "rule": "Rule",
     "subTotal": "Sub total",
     "category": {
-      "title": "Category",
       "1": "Direct GHG emissions",
       "2": "Indirect emissions associated with energy",
       "3": "Indirect emissions associated with transport",
       "4": "Indirect emissions associated with purchased products",
       "5": "Indirect emissions associated with sold products",
-      "6": "Other indirect emissions"
+      "6": "Other indirect emissions",
+      "title": "Category"
     },
     "post": {
-      "title": "Emission category",
       "1": {
         "1": "Direct emissions from stationary combustion sources",
         "2": "Direct emissions from mobile combustion sources",
@@ -128,7 +127,8 @@
       },
       "6": {
         "1": "Other indirect emissions"
-      }
+      },
+      "title": "Emission category"
     },
     "other": "Other gases",
     "total": "Total",
@@ -139,14 +139,13 @@
     "rule": "Rule",
     "subTotal": "Subtotal",
     "category": {
-      "title": "Category",
       "1": "Scope 1",
       "2": "Scope 2",
       "3": "Upstream Scope 3",
-      "4": "Downstream Scope 3"
+      "4": "Downstream Scope 3",
+      "title": "Category"
     },
     "post": {
-      "title": "Subcategory",
       "1": {
         "1": "Stationary combustion",
         "2": "Mobile combustion",
@@ -169,15 +168,16 @@
         "other": "Other upstream indirect emissions"
       },
       "4": {
-        "09": "Downstream transportation and distribution",
         "10": "Processing of sold products",
         "11": "Use of sold products",
         "12": "End-of-life treatment of sold products",
         "13": "Downstream leased assets",
         "14": "Franchises",
         "15": "Investments",
+        "09": "Downstream transportation and distribution",
         "other": "Other downstream indirect emissions"
-      }
+      },
+      "title": "Subcategory"
     },
     "other": "Other gases",
     "total": "Total",
@@ -727,7 +727,7 @@
       },
       "tagGlossary": "Double count on charts by tags",
       "tagGlossaryDescription": "Emission sources can have multiple tags, so these are counted in each tag on this graph. It is therefore normal that you have a larger total here than in your study.",
-      "info": "",
+      "info": "This simplified carbon footprint aims to estimate the greenhouse gas emissions of your activity, and therefore your contribution to climate change as well as your potential dependence on fossil fuels, which are vulnerabilities. \n\nBy ratifying the Paris Agreement, the European Union has committed to carbon neutrality by 2050. To contribute to this goal, your cinema should reduce its impact by 5% per year. \n\nWe therefore invite you to redo this simplified carbon footprint next year to check that you are on the right track!",
       "difference": {
         "button": "Explanation of the differences between Bilan Carbone® and {type}",
         "modalTitle": "Explanation of the difference between the results",
@@ -1199,8 +1199,8 @@
           "benefit3": "To <b>use a pathway that was already approved</b> within my organization"
         },
         "sbtiType": {
-          "title": "SBTi pathway type",
           "15": "1.5°C aligned",
+          "title": "SBTi pathway type",
           "wb2c": "WB2C (Well below 2 degrees)"
         },
         "snbcType": {

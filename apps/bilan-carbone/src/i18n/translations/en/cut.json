@@ -1,0 +1,204 @@
+{
+  "navigation": {
+    "organizations": "My Footprints",
+    "organization": "My Collaborators",
+    "information": "My Cinemas",
+    "team": "My Collaborators"
+  },
+  "signup": {
+    "description": "Create a CUT account by entering your email along with a CNC number (recommended) or Siret",
+    "siretOrCNC": "CNC number (recommended) or Siret",
+    "siretOrCNCPlaceholder": "Your CNC number (recommended) or Siret",
+    "siretOrCNCRequired": "Please enter a CNC number (recommended) or Siret",
+    "clear": "Clear the value",
+    "Unknown CNC": "This CNC code is not recognised. Please check your entry or contact support if you believe this is an error.",
+    "Unknown SIRET or CNC": "This Siret or CNC code is not recognised. Please check your entry or contact support if you believe this is an error.",
+    "Not authorized": "This email is already registered with a CUT account, or there was a problem creating it. Feel free to check <link>the FAQ</link> or contact <support>support</support> if you believe this is an error.",
+    "validation": {
+      "siretOrCNC": "Please enter a CNC number (recommended) or Siret"
+    }
+  },
+  "home": {
+    "navigation": {
+      "collaborators": {
+        "title": "My Collaborators",
+        "message": "Here you will find the list of people authorised to work on your various carbon footprints"
+      },
+      "footprints": {
+        "title": "My Footprints",
+        "message": "Create your first footprint here. You can then view your footprints or create new ones at any time."
+      },
+      "sites": {
+        "title": "My Cinemas",
+        "message": "Here you will find the list of establishments linked to your account"
+      }
+    },
+    "title": "Calculating your simplified carbon footprint will allow you to:",
+    "alert": {
+      "info": "The Count calculator lets you estimate the climate impact of your activity. It is above all an awareness-raising tool. It is not a low-carbon transition approach but a simplified carbon footprint — in the sense of the <link>Guide to communicating about carbon accounting</link> — focused on the main emission categories linked to cinema operations."
+    },
+    "info": {
+      "0": "Understand the impact assessment of your establishment",
+      "1": "Identify action priorities",
+      "2": "In the long term, and through more in-depth work, build a reduction trajectory"
+    }
+  },
+  "study": {
+    "create": "Add a footprint",
+    "myCollaborations": "My collaborations",
+    "myStudies": "My footprints",
+    "createFirstStudy": "Create my first footprint",
+    "createFirstSimplifiedStudy": "Create my first Footprint",
+    "firstSimplifiedStudyMessage": "It is time to get started! We invite you to create your first Footprint.",
+    "see": "View my footprint",
+    "validatedSources": "<data>{validated} / {total}</data> Questions answered",
+    "validatedOnlyDescription": "For each footprint, one or more validators can be defined. They are responsible for validating the emission sources once these have been filled in by the study's contributors and editors. By default, only validated emissions appear in your results, but you can change this behaviour via the \"Settings\" menu.",
+    "selectSite": "Before filling in the data, choose a cinema",
+    "lastStudyTitle": "Most recent footprint",
+    "navigation": {
+      "framing": "General data",
+      "organizations": "My cinemas",
+      "team": "My Collaborators",
+      "title": "My Footprint"
+    },
+    "new": {
+      "title": "Information about the new footprint",
+      "name": "Footprint name",
+      "studyDates": "Base year of the footprint",
+      "suggestion": {
+        "name": "Footprint - {orga} {studyStartDate}",
+        "yourOrga": "Your cinema"
+      },
+      "info": {
+        "date": "Estimates are generally made over a 12-month period"
+      },
+      "glossary": {
+        "studyDates": "Base year of the footprint",
+        "studyDatesDescription": "Please indicate the reference period covered by your simplified carbon footprint. Ideally, the reference period should be twelve months."
+      },
+      "goToDataEntry": "Go to data entry",
+      "cncInfo": "If you provided your cinema's CNC number, the data below is pre-filled with information from {year}. You can edit it if it is not up to date."
+    },
+    "perimeter": {
+      "editSites": "Edit the list of cinemas",
+      "deleteDialog": {
+        "title": "Are you sure you want to delete {count, plural, =1 {this cinema} other {these cinemas}}?"
+      }
+    },
+    "export": {
+      "export": "Export my results"
+    },
+    "results": {
+      "simplifiedFeedback": "Well done! You have just completed the simplified carbon footprint of your cinema. It is an excellent introduction to carbon accounting! Please kindly fill in <questionnaire>this questionnaire</questionnaire> to help us improve the tool and fix any bugs!",
+      "infoWithLinks": "By ratifying the Paris Agreement, the European Union has committed to carbon neutrality by 2050. To contribute to this goal, your cinema should reduce its impact by 5% per year. The simplified carbon footprint you have just obtained can already help you better understand how to reduce your impact by identifying your most emitting activities.\n\nWe invite you to redo this simplified carbon footprint next year to check that you are on the right track, or, better still, to carry out a full Bilan Carbone® to gain precision in estimating your emissions and build a genuine transition plan! Getting started is easy: simply <formation>get trained</formation> in the method, contact us at <email>count@cut-collectif.fr</email>, or reach out to another <prestataire>Bilan Carbone® practitioner</prestataire>.",
+      "intensities": {
+        "screen": "screen",
+        "entrie": "admission",
+        "superficy": "m²",
+        "session": "screening",
+        "movie": "film",
+        "chair": "seat",
+        "ca": "k€"
+      }
+    },
+    "rights": {
+      "title": "General study data: {name}"
+    },
+    "organization": {
+      "site": "Cinema",
+      "allSites": "All cinemas",
+      "noSites": "There are no cinemas configured for the organisation",
+      "addSite": "Create a cinema",
+      "sites": "The organisation's cinemas",
+      "next": "Next",
+      "select": "Organisation",
+      "validation": {
+        "sites": "Please select at least one cinema involved in the study"
+      }
+    }
+  },
+  "organization": {
+    "card": {
+      "myOrganization": "My cinemas"
+    },
+    "form": {
+      "editTitle": "Edit my cinemas"
+    },
+    "sites": {
+      "title": "Which cinemas should the footprint cover?",
+      "noSites": "There are no cinemas configured for the organisation",
+      "name": "Name",
+      "namePlaceholder": "Cinema name",
+      "etp": "Number of Full-Time Equivalents",
+      "etpPlaceholder": "Enter your number of FTEs for this cinema here",
+      "ca": "Revenue ({unit})",
+      "caPlaceholder": "Enter your revenue for this cinema in {unit} here",
+      "actions": "Actions",
+      "delete": "Delete",
+      "add": "Add a cinema"
+    }
+  },
+  "checklist": {
+    "title": "Getting started with COUNT",
+    "AddClientDetails": "Add your first client to start your footprints",
+    "CreateFirstStudy": "Create your first footprint",
+    "CreateFirstStudyDetails": "Off you go with your first footprint! Fill in the initial information such as the date, the name...",
+    "CreateFirstEmissionSource": "Answer the first questions",
+    "CreateFirstEmissionSourceDetails": "Go to the first category/sub-category you want to fill in! Answer the questions.",
+    "finished": "You are ready to start using COUNT! Feel free to check the <faq>FAQ</faq> or contact us if needed."
+  },
+  "actuality": {
+    "title": "COUNT news"
+  },
+  "role": {
+    "DEFAULT": "Collaborator",
+    "ADMIN_description": "An administrator has all rights over the organisation's account as well as over all of its studies (whether public or private).",
+    "DEFAULT_description": "A collaborator can edit studies. They do not have access to the organisation's settings."
+  },
+  "login": {
+    "welcome": "Welcome to",
+    "subtext": "The first environmental impact calculator dedicated to cinemas.",
+    "explanation": "This tool was developed by the association <b>CUT! Cinéma Uni pour la Transition,</b> in cooperation with <b>ABC, the Association for Building the Low Carbon Transition.</b>",
+    "question": "A question? Read the <faq>FAQ</faq> or <support>contact us</support>!",
+    "explanation2": "Operation supported by the French State under the “Soutenir les alternatives vertes 2” scheme of France 2030, operated by the Banque des Territoires (Caisse des Dépôts).",
+    "form": {
+      "activate": "Create my account"
+    }
+  },
+  "email": {
+    "subject": {
+      "resetPassword": "Forgotten password",
+      "newUser": "You have been invited to Count",
+      "addedActiveUser": "You have been invited to a new Count environment",
+      "activation": "You have activated your Count account",
+      "activationRequest": "Request for access to your Count organisation",
+      "userOnStudyInvitation": "Added to the study {studyName}",
+      "contributorInvitation": "Contribution request for the study {studyName}",
+      "addedUsersByFile": "Authorisation to add users"
+    }
+  },
+  "ressources": {
+    "contacterViaFormulaire": "Write directly to {supportEmail}",
+    "enSavoirPlusBilan": "To go further than the simplified footprint calculation offered by Count:"
+  },
+  "emissionFactors": {
+    "post": {
+      "questions": {
+        "numberOfYears": "Number of years",
+        "bonbons": "Sweets - Quantity ({value}g bags)",
+        "chips": "Crisps - Quantity ({value}g bags)",
+        "Electromenager": "For each of these household appliances, please fill in:",
+        "FretCadence": "Freight - Frequency (times/month)",
+        "FretPoids moyen": "Freight - Average weight (kg)",
+        "FretProvenance": "Where is your main supplier based?",
+        "Refrigerateurs": "Refrigerators",
+        "Congelateurs": "Freezers",
+        "Warmers": "Warmers",
+        "Distributeurs": "Snack / drink vending machines"
+      }
+    }
+  },
+  "exports": {
+    "env_specific_export": "Simplified carbon footprint"
+  }
+}
