@@ -2157,6 +2157,154 @@
     "myOrganization": "Organizzazione",
     "myOrganizations": "I miei clienti attuali",
     "seeLess": "Vedi meno",
-    "seeMore": "Vedi di più"
+    "seeMore": "Vedi di più",
+    "name": "Nome: ",
+    "title": "Organizzazione",
+    "createFirstClient": "Crea il mio primo cliente",
+    "firstClientMessage": "Ti invitiamo a creare il tuo primo cliente e poi a creare il tuo primo Bilan Carbone®",
+    "form": {
+      "create": "Crea l'organizzazione",
+      "editTitle": "Modifica la mia organizzazione",
+      "edit": "Convalida la modifica",
+      "name": "Nome dell'organizzazione",
+      "title": "Informazioni sulla nuova organizzazione",
+      "Unknown error": "Si è verificato un errore sconosciuto. Contatta l'assistenza"
+    },
+    "sites": {
+      "title": "Siti dell'organizzazione interessati dallo studio",
+      "noSites": "Non ci sono siti configurati nell'organizzazione",
+      "name": "Nome",
+      "namePlaceholder": "Nome del sito",
+      "etp": "Numero di Equivalenti a Tempo Pieno",
+      "etpPlaceholder": "Inserisci qui il tuo numero di ETP per questo sito",
+      "ca": "Fatturato ({unit})",
+      "caPlaceholder": "Inserisci qui il tuo fatturato per questo sito in {unit}",
+      "postalCode": "Codice postale",
+      "postalCodePlaceholder": "Codice postale",
+      "city": "Città",
+      "cityPlaceholder": "Città",
+      "volunteerNumber": "Numero di volontari",
+      "volunteerNumberPlaceholder": "Inserisci qui il numero di volontari per questo sito",
+      "beneficiaryNumber": "Numero di beneficiari",
+      "beneficiaryNumberPlaceholder": "Inserisci qui il numero di beneficiari per questo sito",
+      "actions": "Azioni",
+      "delete": "Elimina",
+      "duplicate": "Duplica",
+      "add": "Aggiungi un sito",
+      "update": "Modifica l'elenco",
+      "cnc": "Numero CNC",
+      "cncPlaceholder": "Numero CNC",
+      "glossary": {
+        "title": "Glossario",
+        "etp": "Numero di Equivalenti a Tempo Pieno",
+        "etpDescription": "Questi dati saranno utilizzati in futuro per calcolare intensità di carbonio (kgCO₂e/ETP).",
+        "ca": "Fatturato ({unit})",
+        "caDescription": "Questi dati saranno utilizzati in futuro per calcolare intensità di carbonio (kgCO₂e/{unit} di fatturato)."
+      },
+      "validation": {
+        "name": "Inserisci un nome",
+        "etp": "Inserisci un numero di dipendenti",
+        "ca": "Inserisci un fatturato"
+      }
+    },
+    "studySites": {
+      "title": "Non puoi eliminare questi siti",
+      "description": "Esistono studi con i seguenti siti. <warning>Devi prima eliminarli dagli studi interessati prima di poterli eliminare dalla tua organizzazione.</warning>",
+      "existingSite": "<name></name>: <link></link>",
+      "existingUnauthorizedSite": "{name}: {count, plural, =1 {1 studio a cui} other {# studi a cui}} non hai accesso"
+    },
+    "card": {
+      "method": "Consulta la metodologia Bilan Carbone®",
+      "myOrganization": "La mia organizzazione",
+      "myClient": "Il mio cliente",
+      "update": "Modifica le mie informazioni",
+      "updateClient": "Modifica il mio cliente",
+      "renewUpcoming": "La tua adesione {currentYear} sta per scadere; ricordati di rinnovarla per continuare a utilizzare i servizi nel {nextYear}. Senza un'adesione valida, per i tuoi studi su BC+ resterà disponibile solo l'accesso in lettura.",
+      "renew": "La tua adesione è scaduta; ricordati di rinnovarla per continuare a utilizzare i servizi nel {currentYear}. Senza un'adesione valida, per i tuoi studi su BC+ resterà disponibile solo l'accesso in lettura.",
+      "renewLink": "Rinnova"
+    },
+    "delete": {
+      "button": "Elimina l'organizzazione",
+      "title": "Sei sicuro di voler eliminare questo cliente?",
+      "content": "Sei sicuro di voler eliminare questo cliente? <warning>Tutti i suoi dati e studi saranno eliminati definitivamente e sarà impossibile recuperarli.</warning> Se è così, scrivi il nome dell'organizzazione nel campo sottostante:",
+      "name": "Nome del cliente",
+      "cancel": "Annulla",
+      "confirm": "Conferma",
+      "Not authorized": "Non hai i permessi per eseguire questa azione",
+      "wrongName": "Il nome del cliente non corrisponde",
+      "unexpectedAssociations": "Si è verificato un evento imprevisto durante l'eliminazione di questo cliente. Contatta l'assistenza."
+    }
+  },
+  "emissionSource": {
+    "in": "in ",
+    "emissionSource": "Dato di attività:",
+    "emissionFactor": "Fattore di emissione:",
+    "clear": "Cancella il valore",
+    "advancedSearch": "Ricerca avanzata",
+    "noResults": "Cerca con più filtri",
+    "seeMore": "...Vedi di più e cerca con più filtri",
+    "delete": "Elimina la fonte",
+    "label": "Etichetta della fonte di emissione",
+    "addPlaceholder": "Dai un titolo alla tua nuova fonte di emissione",
+    "createEmissionFactor": "Crea un fattore di emissione",
+    "saved": "Salvato",
+    "validate": "Convalida i dati",
+    "unvalidate": "Modifica i dati",
+    "mandartoryFields": "Informazioni obbligatorie",
+    "optionalFields": "Informazioni facoltative",
+    "resetFESpecific": "Ripristina i valori predefiniti",
+    "duplicate": "Duplica la fonte di emissione",
+    "information": "Informazione",
+    "oldVersion": "Fattore di emissione proveniente da una versione obsoleta",
+    "lastValidation": "Ultima convalida",
+    "lastEdition": "Ultima modifica",
+    "glossary": {
+      "title": "Glossario",
+      "type": "Tipo",
+      "typeDescription": "Il tipo di dato è una denominazione introdotta dal nuovo metodo Bilan Carbone®, che integra il calcolo delle incertezze. Per maggiori informazioni sui diversi tipi di dati, ti invitiamo a consultare <link>questa pagina</link>.",
+      "quality": "Qualità",
+      "qualityDescription": "Le incertezze sono ora calcolate grazie a punteggi qualitativi assegnati alla qualità del fattore di emissione e alla qualità del dato di attività. I punteggi associati al fattore di emissione provengono direttamente dai database, ma quelli legati al dato di attività devono essere inseriti. Per maggiori informazioni sull'attribuzione dei punteggi, ti invitiamo a consultare <link>questa pagina</link>.",
+      "specificEmissionFactorQuality": "Puoi regolare specificamente la qualità del fattore di emissione nella tua fonte di emissione. Il valore generico del fattore di emissione è indicato dal simbolo {marker}.",
+      "version": "Fattore di emissione di una versione precedente",
+      "versionDescription": "Stai modificando uno studio che proviene dal vecchio BC+. Poiché questo fattore di emissione non esiste nella versione della base empreinte collegata al tuo studio ({bcVersion}), se lo modifichi, non potrai più ripristinarlo."
+    },
+    "deleteDialog": {
+      "button": "Elimina la fonte",
+      "delete": "Elimina questa fonte di emissione",
+      "title": "Sei sicuro di voler eliminare questa fonte di emissione?",
+      "description": "<warning>Tutti i dati inseriti andranno definitivamente persi</warning>, e gli eventuali contributori non avranno più accesso a questa fonte di emissione.",
+      "accept": "Sì",
+      "decline": "No"
+    },
+    "duplicateDialog": {
+      "title": "Vuoi duplicare questa fonte di emissione?",
+      "content": "Puoi duplicare questa fonte di emissione. Potrai poi modificarla.",
+      "selectSite": "Indica per quale sito dello studio vuoi duplicare questa fonte.",
+      "cancel": "Annulla",
+      "confirm": "Conferma"
+    },
+    "saving": "Salvataggio in corso...",
+    "status": {
+      "all": "Tutti gli stati",
+      "valid": "Convalidata",
+      "waiting": "In compilazione",
+      "waitingContributor": "In attesa di un contributore",
+      "toVerify": "Da verificare"
+    },
+    "type": {
+      "all": "Tutti i tipi",
+      "Physical": "Fisico",
+      "Accounting": "Contabile",
+      "Extrapolated": "Estrapolato",
+      "Statistical": "Statistico",
+      "Approched": "Approssimato"
+    },
+    "informations": "Informazioni:",
+    "results": {
+      "title": "Risultati:",
+      "emission": "Emissione:",
+      "confiance": "Intervallo di confidenza del 95%:",
+      "alpha": "Alfa:"
+    }
   }
 }
