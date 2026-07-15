@@ -1205,7 +1205,159 @@
         },
         "siteFilterWarning": "{count, plural, =1 {Hai selezionato il sito {siteNames} ma le traiettorie devono essere definite per l'intera organizzazione.} other {Hai selezionato i siti {siteNames} ma le traiettorie devono essere definite per l'intera organizzazione.}} La tua traiettoria sarà quindi definita per tutti i siti. Potrai poi definire sotto-obiettivi per siti, categorie, sottocategorie o tag.",
         "name": "Nome della mia traiettoria",
-        "namePlaceholder": "Dai un nome alla mia traiettoria"
+        "namePlaceholder": "Dai un nome alla mia traiettoria",
+        "description": "Descrizione della mia traiettoria",
+        "descriptionPlaceholder": "Descrivi la tua traiettoria",
+        "referenceYear": "Anno di riferimento",
+        "objectives": {
+          "title": "Obiettivi di riduzione",
+          "sbtiDescription": "Questi obiettivi di riduzione sono legati alla traiettoria di riferimento SBTi e sono predefiniti. Potrai aggiungere obiettivi intermedi nella sezione \"I miei obiettivi di riduzione\".",
+          "snbcDescription": "Questi obiettivi di riduzione sono legati alla traiettoria di riferimento SNBC e sono predefiniti. Potrai aggiungere obiettivi intermedi nella sezione \"I miei obiettivi di riduzione\".",
+          "global": "OBIETTIVO GLOBALE",
+          "horizon2030": "Orizzonte 2030",
+          "horizon2050": "Orizzonte 2050",
+          "year": "Anno dell'obiettivo",
+          "yearPlaceholder": "Scegli un anno",
+          "reductionRate": "Percentuale di riduzione annuale",
+          "reductionRatePlaceholder": "Indica una % di riduzione (es.: 2.5)",
+          "referenceRate": "Tasso di riduzione annuale di riferimento",
+          "correctedRate": "Tasso di riduzione annuale corretto",
+          "overshootInfo": "Tasso corretto per compensare l'overshoot",
+          "name": "Nome",
+          "namePlaceholder": "Dai un nome al mio sotto-obiettivo"
+        },
+        "validation": {
+          "required": "Campi obbligatori",
+          "objectiveBothRequired": "L'anno e il tasso di riduzione sono entrambi obbligatori",
+          "atLeastOneObjective": "È richiesto almeno un obiettivo completo per le traiettorie personalizzate"
+        },
+        "glossary": {
+          "title": "Glossario",
+          "referenceYear": "Anno di riferimento",
+          "referenceYearDescription": "L'anno di riferimento corrisponde all'anno di partenza della tua traiettoria di riduzione. Questo anno serve come punto di partenza per calcolare gli obiettivi di riduzione. Per le traiettorie SBTi e SNBC, l'anno di riferimento è predefinito e non può essere modificato. Per le traiettorie personalizzate, puoi scegliere liberamente questo anno.",
+          "referenceYearMethod": "Anno di riferimento {method}",
+          "referenceYearMethodDescription": "Non puoi modificare la data di riferimento per una traiettoria di tipo {method}, poiché è determinata da questo standard.",
+          "referenceYearMethodLink": "Per maggiori informazioni, clicca qui.",
+          "correctedRate": "Calcolo del tasso corretto",
+          "correctedRateDescription": "Se scegli una traiettoria il cui anno di riferimento è vecchio, è possibile che la tua organizzazione non abbia rispettato la traiettoria finora. Ciò comporta un <b>superamento del <link>budget di carbonio</link> che ti era stato inizialmente assegnato</b>, chiamato overshoot. <br></br><br></br> In questo caso, la traiettoria viene <b>corretta per conservare il budget di carbonio che ti era stato inizialmente assegnato</b>, e viene quindi applicato un tasso di riduzione annuale corretto. Avrai quindi due visualizzazioni: <br></br> - <b>La traiettoria nel suo stato iniziale</b>, con il tasso di riduzione annuale di riferimento <br></br> - <b>La traiettoria corretta</b> per l'anno in corso, con il tasso di riduzione annuale corretto"
+        }
+      },
+      "scope": {
+        "scopeSelection": "Selezione del perimetro"
+      },
+      "objectiveModal": {
+        "title": "Aggiungi sotto-obiettivi alla traiettoria: ",
+        "editTitle": "Modifica il sotto-obiettivo della traiettoria: ",
+        "cancel": "Annulla",
+        "submit": "Aggiungi i sotto-obiettivi",
+        "update": "Aggiorna il sotto-obiettivo",
+        "scopeSelection": "Selezione del perimetro",
+        "objectives": "Sotto-obiettivi",
+        "sites": "Siti",
+        "tags": "Tag",
+        "subPosts": "Sottocategorie"
+      },
+      "conversionWarning": {
+        "title": "Conversione del tipo di traiettoria",
+        "warningTitle": "Questa azione convertirà la tua traiettoria al tipo PERSONALIZZATO.",
+        "message": "L'aggiunta di un obiettivo specifico alla traiettoria \"{trajectoryName}\" di tipo {trajectoryType} la convertirà automaticamente in una traiettoria di tipo PERSONALIZZATO. Questa azione è irreversibile.",
+        "explanation": "Una volta convertita, la traiettoria conserverà gli obiettivi predefiniti già definiti, ma non seguirà più le regole specifiche delle traiettorie di tipo {trajectoryType}.",
+        "cancel": "Annulla",
+        "confirm": "Continua"
+      },
+      "objectives": {
+        "title": "Obiettivi di riduzione",
+        "custom": "Personalizzata",
+        "snbcGeneral": "SNBC Generale",
+        "snbcSectoral": "SNBC Settoriale",
+        "defaultSnbcSectoral": "Traiettoria di riferimento",
+        "objectiveNumber": "Obiettivo {number}",
+        "defaultSnbcTooltip": "Questa traiettoria è legata ai dati inseriti durante l'inizializzazione del piano di transizione e non può essere modificata o eliminata",
+        "search": "Cerca una traiettoria",
+        "add": "Aggiungi una traiettoria",
+        "table": {
+          "name": "Nome",
+          "type": "Tipo",
+          "startYear": "Anno di partenza",
+          "targetYear": "Anno obiettivo",
+          "rates": "Tasso di riduzione annuale: riferimento/corretto",
+          "ratesWithFilters": "(con filtri)",
+          "ratesGlossary": {
+            "title": "Tasso di riduzione di riferimento e tasso di riduzione corretto",
+            "description": "I tassi visualizzati qui sono sempre calcolati tra l'anno di riferimento e l'anno obiettivo. Il primo tasso è definito al momento della creazione della traiettoria (o calcolato a partire dai diversi tassi definiti alla creazione), mentre il secondo corrisponde alla riduzione annuale che devi seguire attualmente per rispettare questa traiettoria conservando il <b><link>budget di carbonio</link> che ti era stato inizialmente assegnato</b>. <br></br> Se è presente un solo tasso, significa che per il momento sei allineato con la traiettoria corrispondente e che rispetti il budget di carbonio che ti è stato assegnato."
+          },
+          "referenceYear": "Anno di riferimento",
+          "actions": "Azioni",
+          "period": "Periodo",
+          "defaultObjectives": "Obiettivi predefiniti",
+          "subObjectives": "Sotto-obiettivi",
+          "addSubObjective": "Aggiungi un sotto-obiettivo",
+          "noSubObjectives": "Nessun sotto-obiettivo per il momento"
+        },
+        "cancel": "Annulla",
+        "deleteTrajectory": {
+          "title": "Elimina la traiettoria",
+          "message": "Sei sicuro di voler eliminare questa traiettoria? Questa azione eliminerà anche tutti gli obiettivi associati."
+        },
+        "deleteObjective": {
+          "title": "Elimina l'obiettivo",
+          "message": "Sei sicuro di voler eliminare questo obiettivo?"
+        },
+        "onboarding": {
+          "title": "Aggiungi traiettorie alternative o dettaglia i tuoi obiettivi di riduzione",
+          "description": "Hai già creato una traiettoria di riferimento ma desideri aggiungerne altre per testare diverse ipotesi e diversi livelli di ambizione? Qui puoi creare nuove traiettorie o aggiungere obiettivi intermedi per un monitoraggio più preciso e non perdere di vista l'obiettivo finale!",
+          "detailedInfo": "Quando compili la tua prima traiettoria top-down, gli obiettivi associati, con orizzonte 2030 e 2050, saranno compilati in questa tabella. Puoi poi dettagliare questi obiettivi indicando obiettivi intermedi aggiuntivi, che possono riguardare o tutte le categorie e tutti i siti del Bilan Carbone® (nel qual caso le riduzioni saranno calcolate automaticamente per mantenere la coerenza con gli obiettivi 2030 e 2050), oppure determinate categorie e siti in particolare. Puoi anche indicare la crescita prevista del tuo fatturato, al fine di ottenere le riduzioni annuali tenendo conto di questa crescita. Infine, puoi aggiungere altre traiettorie top-down, in particolare allo scopo di visualizzare diverse traiettorie nella pagina precedente prima di scegliere quella che seguirai."
+        },
+        "glossary": {
+          "label": "Glossario"
+        }
+      },
+      "actions": {
+        "title": "Piano d'azione",
+        "search": "Cerca la tua azione qui",
+        "add": "Aggiungi un'azione",
+        "table": {
+          "sectionTitle": "Elenco delle azioni",
+          "enabled": "Attivata",
+          "enabledGlossaryIconLabel": "Attivazione e disattivazione delle mie azioni",
+          "enabledGlossaryTitle": "Attivazione e disattivazione delle mie azioni",
+          "enabledGlossaryDescription": "Le riduzioni legate alle azioni che hai attivato vengono considerate nella visualizzazione delle traiettorie di riduzione, nella tua traiettoria bottom-up. Le riduzioni legate alle azioni disattivate non saranno visibili. Attivare o disattivare azioni ti permette così di <b>considerare diversi scenari per raggiungere i tuoi obiettivi di riduzione</b>.",
+          "title": "Titolo",
+          "priority": "Priorità",
+          "actionType": "Tipo di azione",
+          "implementation": "Attuazione",
+          "potential": "Potenziale di riduzione <br></br>(Con filtri)",
+          "owner": "Responsabile",
+          "allOwners": "Tutti i responsabili",
+          "noOwner": "Senza responsabile",
+          "budget": "Budget",
+          "errorChangingEnabled": "Errore durante la modifica dello stato dell'azione",
+          "relevance": "Livelli di pertinenza",
+          "scope": "Perimetro",
+          "sites": "Siti",
+          "posts": "Categorie",
+          "tags": "Tag"
+        },
+        "addModal": {
+          "add": "Aggiungi un'azione",
+          "update": "Aggiorna",
+          "subTitle": "Per aggiungere un'azione al tuo piano d'azione, devi compilare le informazioni obbligatorie",
+          "optionalSubtitle": "Dovrai completare la compilazione di questi campi",
+          "previous": "Precedente",
+          "next": "Successivo",
+          "clear": "Cancella il valore",
+          "title": "Titolo dell'azione",
+          "titlePlaceholder": "Dai un titolo alla tua azione",
+          "subSteps": "Sotto-fasi",
+          "stepTitlePlaceholder": "Descrivi la tua sotto-fase",
+          "detailedDescription": "Descrizione dettagliata dell'azione e del coinvolgimento delle parti interessate",
+          "detailedDescriptionPlaceholder": "Descrizione dettagliata",
+          "potentialDeduction": "Potenziale di riduzione delle emissioni",
+          "potentialDeductionPlaceholder": "Seleziona un'opzione",
+          "reductionValue": "Valore",
+          "reductionDetails": "Dettagli e ipotesi sul potenziale di riduzione dell'azione",
+          "reductionDetailsPlaceholder": "Descrivi i dettagli e le ipotesi"
+        }
       }
     }
   }
