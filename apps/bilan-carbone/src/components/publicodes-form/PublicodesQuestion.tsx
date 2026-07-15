@@ -1,7 +1,8 @@
-import { InputQuestion, OnFieldChange } from '@abc-transitionbascarbone/publicodes/form'
+import { InputQuestion, MosaicQuestion, OnFieldChange } from '@abc-transitionbascarbone/publicodes/form'
 import { EvaluatedFormLayout, EvaluatedListLayout } from '@abc-transitionbascarbone/publicodes/form/layouts'
 import { usePublicodesRuleTranslation } from '@abc-transitionbascarbone/publicodes/hooks'
 import { useTranslations } from 'next-intl'
+import Engine from 'publicodes'
 import GroupQuestion from './GroupQuestion'
 import ListQuestion from './ListQuestion'
 import QuestionContainer from './QuestionContainer'
@@ -26,9 +27,11 @@ function ListQuestionContainer<RuleName extends string>({
 export interface PublicodesQuestionProps<RuleName extends string> {
   formLayout: EvaluatedFormLayout<RuleName>
   onChange: OnFieldChange<RuleName>
+  engine: Engine
 }
 
 export default function PublicodesQuestion<RuleName extends string>({
+  engine,
   formLayout,
   onChange,
 }: PublicodesQuestionProps<RuleName>) {
@@ -37,6 +40,16 @@ export default function PublicodesQuestion<RuleName extends string>({
   switch (formLayout.type) {
     case 'input': {
       return <InputQuestion formElement={formLayout.evaluatedElement} onChange={onChange} />
+    }
+    case 'mosaic': {
+      return (
+        <MosaicQuestion
+          onChange={onChange}
+          engine={engine}
+          parent={formLayout.parent}
+          elements={formLayout.evaluatedChildren}
+        />
+      )
     }
     case 'group': {
       return (

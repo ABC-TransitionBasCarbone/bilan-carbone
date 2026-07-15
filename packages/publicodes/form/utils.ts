@@ -26,6 +26,8 @@ export function evaluatedLayoutIsApplicable<RuleName extends string>(layout: Eva
   switch (layout.type) {
     case 'input':
       return layout.evaluatedElement.applicable
+    case 'mosaic':
+      return layout.evaluatedParent.applicable
     case 'group':
       return layout.evaluatedElements.some((el) => el.applicable)
     case 'table':

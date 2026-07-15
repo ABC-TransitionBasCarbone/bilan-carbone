@@ -37,7 +37,7 @@ const StudyCard = async ({ study, user, simplified }: Props) => {
     <li data-testid="study" className="flex">
       <Box className={classNames(styles.card, 'flex-col grow w100')}>
         <div className="justify-center">
-          <StudyName studyId={id} name={name} role={showRoleInChip ? accountRoleOnStudy : null} />
+          <StudyName studyId={id} name={name} role={showRoleInChip ? accountRoleOnStudy : null} clickable />
         </div>
         {hasAccessToEmissionSourceValidation(user.environment, simplified) && (
           <Box>

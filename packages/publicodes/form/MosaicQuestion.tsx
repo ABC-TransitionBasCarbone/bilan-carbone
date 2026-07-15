@@ -1,17 +1,24 @@
 import { QuestionContainer } from '@abc-transitionbascarbone/publicodes/form'
 import MosaicBooleanInput from '@abc-transitionbascarbone/ui/Form/MosaicBooleanInput'
 import MosaicNumberInput from '@abc-transitionbascarbone/ui/Form/MosaicNumberInput'
-import { EvaluatedFormElement, FormPageElementProp } from '@publicodes/forms'
+import classNames from 'classnames'
 import Engine from 'publicodes'
+import styles from './MosaicQuestion.module.css'
 
-type Props = {
-  parent: string
-  elements: Array<EvaluatedFormElement<string> & FormPageElementProp>
+type Props<RuleName> = {
+  parent: RuleName
+  elements: {
+    id: RuleName
+    element: 'input' | 'RadioGroup' | 'select' | 'textarea'
+    type?: string
+    value?: string | number | boolean
+    defaultValue?: string | number | boolean
+  }[]
   engine: Engine
-  onChange: (ruleName: string, value: string | number | boolean | undefined) => void
+  onChange: (ruleName: RuleName, value: string | number | boolean | undefined) => void
 }
 
-export function MosaicQuestion({ parent, elements, engine, onChange }: Props) {
+export function MosaicQuestion<RuleName extends string>({ parent, elements, engine, onChange }: Props<RuleName>) {
   const rules = engine.getParsedRules()
   const parentRaw = rules[parent]?.rawNode as any
   const mosaicType = parentRaw?.mosaique?.type
@@ -19,7 +26,7 @@ export function MosaicQuestion({ parent, elements, engine, onChange }: Props) {
 
   return (
     <QuestionContainer label={label}>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+      <div className={styles.mosaicContainer}>
         {elements.map((el, index) => {
           const parts = el.id.split(' . ')
           const lastSegment = parts.slice(-2, -1)[0]

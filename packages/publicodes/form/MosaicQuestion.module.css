@@ -1,0 +1,7 @@
+.mosaicContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  row-gap: 0.5rem;
+  padding: 1rem;
+}
