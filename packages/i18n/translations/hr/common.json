@@ -147,6 +147,180 @@
     "SWITZERLAND": "Švicarska",
     "UKRAINE": "Ukrajina",
     "UNITED_KINGDOM": "Ujedinjeno Kraljevstvo",
-    "VATICAN_CITY": "Vatikan"
+    "VATICAN_CITY": "Vatikan",
+    "OTHER": "Ostalo"
+  },
+  "study": {
+    "results": {
+      "chartTypes": {
+        "table": "Tablica",
+        "bar": "Stupčasti grafikon",
+        "pie": "Kružni grafikon",
+        "ratio": "Intenziteti ugljika"
+      }
+    },
+    "questions": {
+      "actions": "Radnje",
+      "add": "Dodaj",
+      "error": "Pogreška pri ažuriranju polja",
+      "next": "Sljedeća potkategorija",
+      "previous": "Prethodna potkategorija",
+      "numberOfYears": "Broj godina",
+      "format": {
+        "text": "Tekst",
+        "postalCode": "Poštanski broj",
+        "phone": "Telefon",
+        "year": "Godina",
+        "hour": "Sat",
+        "number": "Broj"
+      },
+      "errorLoadingQuestions": "Pogreška pri učitavanju pitanja",
+      "retry": "Pokušaj ponovno",
+      "finish": "Završi",
+      "noQuestions": "Nije pronađeno nijedno pitanje za ovu potkategoriju",
+      "autoSaveError": "Neki odgovori nisu mogli biti automatski spremljeni. Provjerite svoju vezu i pokušajte ponovno."
+    },
+    "infography": {
+      "form": {
+        "backToInfography": "Prikaži kategorije"
+      }
+    }
+  },
+  "locale": {
+    "en": "English",
+    "fr": "Français",
+    "es": "Español",
+    "el": "ελληνικά",
+    "hr": "hrvatski",
+    "hu": "magyar",
+    "it": "Italiano",
+    "ro": "Română",
+    "selector": "Jezik stranice"
+  },
+  "login": {
+    "welcome": "Dobrodošli",
+    "form": {
+      "activate": "Aktiviraj moj račun",
+      "firstConnection": "Prva prijava?",
+      "alreadyRegistered": "Već imate račun?",
+      "resetTitle": "Zatražili ste izradu ili ponovno postavljanje lozinke. Unesite tražene podatke u nastavku za potvrdu izrade računa ili ponovnog postavljanja lozinke.",
+      "login": "Prijava",
+      "email": "Email",
+      "emailPlaceholder": "Unesite svoju email adresu",
+      "password": "Lozinka",
+      "passwordPlaceholder": "Unesite svoju lozinku",
+      "confirmPassword": "Potvrdite lozinku",
+      "hidePassword": "Sakrij lozinku",
+      "showPassword": "Prikaži lozinku",
+      "notMatching": "Lozinke se ne podudaraju",
+      "passwordLength": "Lozinka mora imati najmanje 8 znakova",
+      "passwordUppercase": "Lozinka mora sadržavati najmanje jedno veliko slovo",
+      "passwordLowercase": "Lozinka mora sadržavati najmanje jedno malo slovo",
+      "passwordSpecialChar": "Lozinka mora sadržavati najmanje jedan poseban znak",
+      "passwordDigit": "Lozinka mora sadržavati najmanje jednu znamenku",
+      "forgotPassword": "Zaboravili ste lozinku?",
+      "reset": "Potvrdi",
+      "error": "Provjerite svoj email i lozinku",
+      "expired": "Ova poveznica za ponovno postavljanje lozinke je istekla",
+      "backToHome": "Natrag na početnu",
+      "resetError": "Neki podaci nisu točni. Ako mislite da ste sve ispravno ispunili, obratite nam se.",
+      "emailRequired": "Unesite email",
+      "emailAndPasswordRequired": "Unesite email i lozinku",
+      "emailSent": "Ako je vaš email točan, primit ćete poruku za ponovno postavljanje lozinke",
+      "validated": "Vaša lozinka je ponovno postavljena",
+      "validation": {
+        "email": "Unesite email",
+        "password": "Unesite lozinku"
+      }
+    }
+  },
+  "spinner": {
+    "loading": "Učitavanje"
+  },
+  "error": {
+    "Not authorized": "Nemate ovlasti za izvođenje ove radnje",
+    "Not found": "Traženi resurs nije pronađen",
+    "Server error": "Došlo je do pogreške poslužitelja, obratite se podršci",
+    "default": "Došlo je do pogreške, pokušajte ponovno. Ako se problem nastavi, obratite se podršci.",
+    "error": "Došlo je do pogreške...",
+    "contactSupport": "Došlo je do problema. Pokušajte se vratiti na <link>početnu stranicu</link>. <p>Ako ne radi, obratite se našoj podršci na <m></m> ili se pokušajte <logout>ponovno prijaviti</logout>.</p>",
+    "duplicateScopeCombination": "Cilj s istim opsegom (lokacije, oznake, potkategorije) i istom ciljnom godinom već postoji za ovu putanju"
+  },
+  "email": {
+    "subject": {
+      "resetPassword": "Zaboravljena lozinka",
+      "newUser": "Pozvani ste na BC+",
+      "addedActiveUser": "Pozvani ste u novo BC+ okruženje",
+      "activation": "Aktivirali ste svoj račun na BC+",
+      "activationRequest": "Zahtjev za pristup vašoj BC+ organizaciji",
+      "userOnStudyInvitation": "Dodano u studiju {studyName}",
+      "contributorInvitation": "Zahtjev za doprinos studiji {studyName}",
+      "addedUsersByFile": "Odobrenje za dodavanje korisnika"
+    }
+  },
+  "nav": {
+    "backToHome": "Natrag na početnu",
+    "home": "Početna",
+    "notFound": "Stranica nije pronađena",
+    "organization": "Organizacija",
+    "edit": "Uredi",
+    "team": "Tim"
+  },
+  "team": {
+    "pending": "Pozivnice na čekanju",
+    "invitationDate": "Pozivnica poslana dana",
+    "toValidate": "Pozivnice za potvrdu",
+    "addedDate": "Dodano dana",
+    "delete": "Izbriši korisnika",
+    "resend": "Ponovno pošalji pozivnicu",
+    "table": {
+      "title": "Moj tim",
+      "newUser": "Pozovi korisnika",
+      "firstName": "Ime",
+      "lastName": "Prezime",
+      "email": "Email",
+      "level": "Obuka",
+      "role": "Uloga",
+      "action": " ",
+      "deleteMember": "Izbriši člana",
+      "userDeletion": "Brisanje korisnika",
+      "userDeletionDescription": "Jeste li sigurni da želite izbrisati ovog korisnika? Više neće imati pristup računu vaše organizacije, ali će zadržati pristup studijama za koje su ga pozvale druge organizacije.",
+      "necessaryAdmin": "Brisanje ovog administratora nije moguće. On je jedini validator sljedećih studija: "
+    }
+  },
+  "level": {
+    "Initial": "Početni",
+    "Standard": "Standardni",
+    "Advanced": "Napredni",
+    "noLevel": "Bez obuke"
+  },
+  "role": {
+    "SUPER_ADMIN": "Globalni administrator",
+    "ADMIN": "Administrator",
+    "COLLABORATOR": "Suradnik",
+    "ADMIN_description": "Administrator ima sva prava nad računom organizacije te nad svim studijama svoje organizacije (bilo javnim ili privatnim). Nije moguće promijeniti ulogu administratora na studiji njegove organizacije.",
+    "COLLABORATOR_description": "Suradnik je osoba obučena za metodu Bilan Carbone®. Nema nikakva prava nad računom organizacije, ali može stvarati studije za svoju organizaciju. Prema zadanim postavkama je urednik svih javnih Bilan Carbone® svoje organizacije.",
+    "guide": "Vodič za uloge",
+    "saved": "Nova uloga spremljena",
+    "Not authorized": "Nemate ovlasti za izvođenje ove radnje",
+    "More than one": "U organizaciji mora postojati najmanje jedan administrator ili upravitelj"
+  },
+  "newMember": {
+    "title": "Pozovi korisnika",
+    "email": "Email",
+    "firstName": "Ime",
+    "lastName": "Prezime",
+    "role": "Uloga",
+    "level": "Obuka",
+    "create": "Pozovi korisnika",
+    "Not authorized": "Nije moguće pozvati ovog korisnika. Obratite se <link>podršci</link> za više informacija.",
+    "validation": {
+      "email": "Unesite valjan email",
+      "firstName": "Unesite ime",
+      "lastName": "Unesite prezime",
+      "level": "Unesite razinu obuke",
+      "role": "Unesite ulogu"
+    },
+    "addedMember": "Korisnik je uspješno dodan u vašu organizaciju"
   }
 }
