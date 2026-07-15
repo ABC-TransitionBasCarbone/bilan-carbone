@@ -1,0 +1,326 @@
+{
+  "common": {
+    "colon": " :",
+    "error": "Hiba történt. Ha a probléma továbbra is fennáll, forduljon az ügyfélszolgálathoz.",
+    "yes": "Igen",
+    "no": "Nem",
+    "previous": "Előző",
+    "next": "Következő",
+    "all": "Összes",
+    "allSites": "Összes telephely",
+    "allSubPosts": "Összes alkategória",
+    "allPosts": "Összes kategória",
+    "allTags": "Összes címke",
+    "xSites": "{count} telephely",
+    "xSubPosts": "{count} alkategória",
+    "xTags": "{count} címke",
+    "none": "Egyik sem",
+    "unknown": "Ismeretlen",
+    "subPosts": "Alkategóriák",
+    "onDate": "ekkor:",
+    "by": "által",
+    "scope": "Hatókör",
+    "sites": "Telephelyek",
+    "tags": "Címkék",
+    "noTagsAvailable": "Nincs elérhető címke",
+    "posts": "Kategóriák",
+    "selectedPlural": "kiválasztva",
+    "moreInfo": "Tudjon meg többet",
+    "mandatory": "* kötelező",
+    "and": "és",
+    "year": "Év",
+    "action": {
+      "create": "Létrehozás",
+      "edit": "Módosítás",
+      "delete": "Törlés",
+      "add": "Hozzáadás",
+      "duplicate": "Másolat készítése",
+      "save": "Mentés",
+      "cancel": "Mégse",
+      "confirm": "Megerősítés",
+      "update": "Frissítés",
+      "start": "Indítás",
+      "close": "Bezárás",
+      "approve": "Jóváhagyás",
+      "selectAll": "Összes kijelölése",
+      "unselectAll": "Kijelölés megszüntetése",
+      "back": "Vissza",
+      "import": "Importálás",
+      "export": "Exportálás",
+      "continue": "Folytatás"
+    },
+    "questions": {
+      "glossary": {
+        "title": "További információk a kérdésről",
+        "close": "Bezárás"
+      }
+    },
+    "label": {
+      "start": "Kezdés",
+      "end": "Befejezés",
+      "sites": "Telephelyek",
+      "date": "Dátum",
+      "startYear": "Kezdő év",
+      "targetYear": "Célév",
+      "line": "{line}. sor",
+      "labelName": "Megnevezés",
+      "source": "Forrás",
+      "unit": "Mértékegység",
+      "emissionsKg": "Kibocsátás (kgCO2e)"
+    },
+    "notAuthorized": "Nem engedélyezett művelet",
+    "Not authorized": "Nincs jogosultsága a művelet végrehajtásához",
+    "typeToConfirm": "Írja be a(z) \"{name}\" szót a megerősítéshez",
+    "perPerson": "személyenként",
+    "carbonIntensities": "Szénintenzitások"
+  },
+  "saveStatus": {
+    "saving": "Válaszok mentése folyamatban...",
+    "saved": "Válaszok elmentve",
+    "error": "Hiba a válaszok mentésekor",
+    "ready": "Mentésre kész",
+    "at": "ekkor:",
+    "syncedFromOtherUser": "Az adatokat egy másik felhasználó frissítette"
+  },
+  "signup": {
+    "email": "E-mail",
+    "emailPlaceholder": "A képzése során használt e-mail-cím",
+    "emailRequired": "Adjon meg egy e-mail-címet",
+    "validate": "Érvényesítés",
+    "Request sent": "Fiókja aktiválására vonatkozó kérelmet küldtünk kollégáinak",
+    "Email sent": "E-mailt fog kapni a fiókja aktiválásának véglegesítéséhez.",
+    "support": "Hiba történt. Próbálja újra. Ha nem működik, forduljon ügyfélszolgálatunkhoz",
+    "validation": {
+      "email": "Adjon meg egy e-mail-címet"
+    }
+  },
+  "navigation": {
+    "home": "Kezdőlap",
+    "logout": "Kijelentkezés",
+    "comments": "Megjegyzések",
+    "admin": "Adminisztráció",
+    "team": "Csapatom"
+  },
+  "country": {
+    "ALBANIA": "Albánia",
+    "ANDORRA": "Andorra",
+    "AUSTRIA": "Ausztria",
+    "BELARUS": "Fehéroroszország",
+    "BELGIUM": "Belgium",
+    "BOSNIA_AND_HERZEGOVINA": "Bosznia-Hercegovina",
+    "BULGARIA": "Bulgária",
+    "CROATIA": "Horvátország",
+    "CYPRUS": "Ciprus",
+    "CZECH_REPUBLIC": "Csehország",
+    "DENMARK": "Dánia",
+    "ESTONIA": "Észtország",
+    "FINLAND": "Finnország",
+    "FRANCE": "Franciaország",
+    "GERMANY": "Németország",
+    "GREECE": "Görögország",
+    "HUNGARY": "Magyarország",
+    "ICELAND": "Izland",
+    "IRELAND": "Írország",
+    "ITALY": "Olaszország",
+    "KOSOVO": "Koszovó",
+    "LATVIA": "Lettország",
+    "LIECHTENSTEIN": "Liechtenstein",
+    "LITHUANIA": "Litvánia",
+    "LUXEMBOURG": "Luxemburg",
+    "MALTA": "Málta",
+    "MOLDOVA": "Moldova",
+    "MONACO": "Monaco",
+    "MONTENEGRO": "Montenegró",
+    "NETHERLANDS": "Hollandia",
+    "NORTH_MACEDONIA": "Észak-Macedónia",
+    "NORWAY": "Norvégia",
+    "POLAND": "Lengyelország",
+    "PORTUGAL": "Portugália",
+    "ROMANIA": "Románia",
+    "RUSSIA": "Oroszország",
+    "SAN_MARINO": "San Marino",
+    "SERBIA": "Szerbia",
+    "SLOVAKIA": "Szlovákia",
+    "SLOVENIA": "Szlovénia",
+    "SPAIN": "Spanyolország",
+    "SWEDEN": "Svédország",
+    "SWITZERLAND": "Svájc",
+    "UKRAINE": "Ukrajna",
+    "UNITED_KINGDOM": "Egyesült Királyság",
+    "VATICAN_CITY": "Vatikánváros",
+    "OTHER": "Egyéb"
+  },
+  "study": {
+    "results": {
+      "chartTypes": {
+        "table": "Táblázat",
+        "bar": "Oszlopdiagram",
+        "pie": "Kördiagram",
+        "ratio": "Szénintenzitások"
+      }
+    },
+    "questions": {
+      "actions": "Műveletek",
+      "add": "Hozzáadás",
+      "error": "Hiba a mező frissítésekor",
+      "next": "Következő alkategória",
+      "previous": "Előző alkategória",
+      "numberOfYears": "Évek száma",
+      "format": {
+        "text": "Szöveg",
+        "postalCode": "Irányítószám",
+        "phone": "Telefon",
+        "year": "Év",
+        "hour": "Óra",
+        "number": "Szám"
+      },
+      "errorLoadingQuestions": "Hiba a kérdések betöltésekor",
+      "retry": "Újrapróbálkozás",
+      "finish": "Befejezés",
+      "noQuestions": "Ehhez az alkategóriához nem található kérdés",
+      "autoSaveError": "Egyes válaszokat nem sikerült automatikusan menteni. Kérjük, ellenőrizze a kapcsolatot, és próbálja újra."
+    },
+    "infography": {
+      "form": {
+        "backToInfography": "Kategóriák megjelenítése"
+      }
+    }
+  },
+  "locale": {
+    "en": "English",
+    "fr": "Français",
+    "es": "Español",
+    "el": "ελληνικά",
+    "hr": "hrvatski",
+    "hu": "magyar",
+    "it": "Italiano",
+    "ro": "Română",
+    "selector": "A webhely nyelve"
+  },
+  "login": {
+    "welcome": "Üdvözöljük",
+    "form": {
+      "activate": "Fiókom aktiválása",
+      "firstConnection": "Első bejelentkezés?",
+      "alreadyRegistered": "Már van fiókja?",
+      "resetTitle": "Jelszavának létrehozását vagy visszaállítását kérte. Fiókja létrehozásának vagy jelszava visszaállításának megerősítéséhez adja meg az alább kért adatokat.",
+      "login": "Bejelentkezés",
+      "email": "E-mail",
+      "emailPlaceholder": "Adja meg az e-mail-címét",
+      "password": "Jelszó",
+      "passwordPlaceholder": "Adja meg a jelszavát",
+      "confirmPassword": "Jelszó megerősítése",
+      "hidePassword": "Jelszó elrejtése",
+      "showPassword": "Jelszó megjelenítése",
+      "notMatching": "A jelszavak nem egyeznek",
+      "passwordLength": "A jelszónak legalább 8 karakterből kell állnia",
+      "passwordUppercase": "A jelszónak legalább egy nagybetűt kell tartalmaznia",
+      "passwordLowercase": "A jelszónak legalább egy kisbetűt kell tartalmaznia",
+      "passwordSpecialChar": "A jelszónak legalább egy speciális karaktert kell tartalmaznia",
+      "passwordDigit": "A jelszónak legalább egy számjegyet kell tartalmaznia",
+      "forgotPassword": "Elfelejtette a jelszavát?",
+      "reset": "Megerősítés",
+      "error": "Kérjük, ellenőrizze az e-mail-címét és a jelszavát",
+      "expired": "Ez a jelszó-visszaállító hivatkozás lejárt",
+      "backToHome": "Vissza a kezdőlapra",
+      "resetError": "Egyes adatok hibásak. Ha úgy gondolja, hogy mindent helyesen töltött ki, vegye fel velünk a kapcsolatot.",
+      "emailRequired": "Adjon meg egy e-mail-címet",
+      "emailAndPasswordRequired": "Adjon meg egy e-mail-címet és egy jelszót",
+      "emailSent": "Ha az e-mail-címe helyes, e-mailt fog kapni a jelszava visszaállításához",
+      "validated": "Jelszavát visszaállítottuk",
+      "validation": {
+        "email": "Adjon meg egy e-mail-címet",
+        "password": "Adjon meg egy jelszót"
+      }
+    }
+  },
+  "spinner": {
+    "loading": "Betöltés"
+  },
+  "error": {
+    "Not authorized": "Nincs jogosultsága a művelet végrehajtásához",
+    "Not found": "A kért erőforrás nem található",
+    "Server error": "Szerverhiba történt, kérjük, forduljon az ügyfélszolgálathoz",
+    "default": "Hiba történt, kérjük, próbálja újra. Ha a probléma továbbra is fennáll, forduljon az ügyfélszolgálathoz.",
+    "error": "Hiba történt...",
+    "contactSupport": "Hiba történt. Próbáljon visszatérni a <link>kezdőlapra</link>. <p>Ha ez nem működik, forduljon ügyfélszolgálatunkhoz a <m></m> címen, vagy próbáljon meg újra <logout>bejelentkezni</logout>.</p>",
+    "duplicateScopeCombination": "Ehhez a pályához már létezik egy azonos hatókörű (telephelyek, címkék, alkategóriák) és azonos célévű célkitűzés"
+  },
+  "email": {
+    "subject": {
+      "resetPassword": "Elfelejtett jelszó",
+      "newUser": "Meghívást kapott a BC+-ba",
+      "addedActiveUser": "Meghívást kapott egy új BC+ környezetbe",
+      "activation": "Aktiválta fiókját a BC+-on",
+      "activationRequest": "Hozzáférési kérelem a BC+ szervezetéhez",
+      "userOnStudyInvitation": "Hozzáadás a(z) {studyName} tanulmányhoz",
+      "contributorInvitation": "Közreműködési kérelem a(z) {studyName} tanulmányhoz",
+      "addedUsersByFile": "Engedély a felhasználók hozzáadásához"
+    }
+  },
+  "nav": {
+    "backToHome": "Vissza a kezdőlapra",
+    "home": "Kezdőlap",
+    "notFound": "Az oldal nem található",
+    "organization": "Szervezet",
+    "edit": "Módosítás",
+    "team": "Csapat"
+  },
+  "team": {
+    "pending": "Függőben lévő meghívók",
+    "invitationDate": "Meghívó elküldve ekkor:",
+    "toValidate": "Jóváhagyandó meghívók",
+    "addedDate": "Hozzáadva ekkor:",
+    "delete": "Felhasználó törlése",
+    "resend": "Meghívó újraküldése",
+    "table": {
+      "title": "Csapatom",
+      "newUser": "Felhasználó meghívása",
+      "firstName": "Keresztnév",
+      "lastName": "Vezetéknév",
+      "email": "E-mail",
+      "level": "Képzés",
+      "role": "Szerepkör",
+      "action": " ",
+      "deleteMember": "Tag törlése",
+      "userDeletion": "Felhasználó törlése",
+      "userDeletionDescription": "Biztosan törölni szeretné ezt a felhasználót? Többé nem fér hozzá a szervezete fiókjához, de továbbra is hozzáfér azokhoz a tanulmányokhoz, amelyekhez más szervezetek meghívták.",
+      "necessaryAdmin": "Ennek az adminisztrátornak a törlése nem lehetséges. Ő az egyedüli jóváhagyója a következő tanulmányoknak: "
+    }
+  },
+  "level": {
+    "Initial": "Kezdő",
+    "Standard": "Standard",
+    "Advanced": "Haladó",
+    "noLevel": "Nem képzett"
+  },
+  "role": {
+    "SUPER_ADMIN": "Globális adminisztrátor",
+    "ADMIN": "Adminisztrátor",
+    "COLLABORATOR": "Közreműködő",
+    "ADMIN_description": "Az adminisztrátor minden jogosultsággal rendelkezik a szervezet fiókja, valamint a szervezet összes tanulmánya felett (legyenek azok nyilvánosak vagy privátak). A szervezet tanulmányán belül nem lehet megváltoztatni egy adminisztrátor szerepkörét.",
+    "COLLABORATOR_description": "A közreműködő a Bilan Carbone® módszerben képzett személy. Nincs jogosultsága a szervezet fiókja felett, de létrehozhat tanulmányokat a szervezete számára. Alapértelmezés szerint szerkesztő a szervezete összes nyilvános Bilan Carbone®-ján.",
+    "guide": "Szerepkör-útmutató",
+    "saved": "Új szerepkör elmentve",
+    "Not authorized": "Nincs jogosultsága a művelet végrehajtásához",
+    "More than one": "A szervezetben legalább egy adminisztrátornak vagy kezelőnek kell lennie"
+  },
+  "newMember": {
+    "title": "Felhasználó meghívása",
+    "email": "E-mail",
+    "firstName": "Keresztnév",
+    "lastName": "Vezetéknév",
+    "role": "Szerepkör",
+    "level": "Képzés",
+    "create": "Felhasználó meghívása",
+    "Not authorized": "Nem lehet meghívni ezt a felhasználót. További információért forduljon a <link>ügyfélszolgálathoz</link>.",
+    "validation": {
+      "email": "Adjon meg egy érvényes e-mail-címet",
+      "firstName": "Adjon meg egy keresztnevet",
+      "lastName": "Adjon meg egy vezetéknevet",
+      "level": "Adjon meg egy képzési szintet",
+      "role": "Adjon meg egy szerepkört"
+    },
+    "addedMember": "A felhasználó sikeresen hozzáadva a szervezetéhez"
+  }
+}
