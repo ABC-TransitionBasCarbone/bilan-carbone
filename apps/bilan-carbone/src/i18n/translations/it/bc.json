@@ -2460,5 +2460,73 @@
       "title": "Presto disponibile",
       "message": "Il calcolatore di impronta semplificato per le associazioni è in fase di costruzione e sarà disponibile tra qualche mese. Grazie per la tua pazienza!"
     }
+  },
+  "feedback": {
+    "title": "Dai la tua opinione su BC+!",
+    "body": " Se hai qualche minuto, saremmo lieti di ricevere i tuoi feedback su BC+! Questi ci permetteranno di rispondere al meglio alle tue esigenze con i nostri prossimi sviluppi. Se non è il momento giusto, puoi rimandare la tua risposta.",
+    "reject": "Non rispondere",
+    "delay": "Più tardi ({time} giorni)",
+    "answer": "Do la mia opinione"
+  },
+  "form": {
+    "validation": {
+      "number": "Inserisci un numero valido",
+      "postalCode": "Inserisci un codice postale valido di 5 cifre",
+      "date": "Inserisci una data valida (GG/MM/AAAA)",
+      "phone": "Inserisci un numero di telefono valido",
+      "required": "Questo campo è obbligatorio"
+    }
+  },
+  "table": {
+    "page": "Pagina {page} di {total}",
+    "goTo": "Vai alla pagina",
+    "items": "Elementi per pagina"
+  },
+  "validation": {
+    "required": "Compila questo campo",
+    "invalidEnum": "Seleziona un valore valido",
+    "invalidEmail": "Inserisci un indirizzo email valido",
+    "invalidDate": "Inserisci una data valida",
+    "invalidNumber": "Inserisci un numero valido",
+    "invalidPostalCode": "Inserisci un codice postale valido",
+    "invalidPhone": "Inserisci un numero di telefono valido",
+    "invalidString": "Compila questo campo",
+    "endDateBeforeStartDate": "La data di fine deve essere successiva alla data di inizio",
+    "noSiteSelected": "Seleziona almeno un sito",
+    "siretInvalid": "Il SIRET deve contenere esattamente 14 cifre",
+    "nameMaxLength": "Il nome non può superare i 64 caratteri",
+    "subPostRequired": "Seleziona almeno una sottocategoria",
+    "objectiveIncomplete": "Compila tutti i campi dell'obiettivo",
+    "atLeastOneObjective": "Aggiungi almeno un obiettivo",
+    "positiveNumber": "Inserisci un numero positivo",
+    "tooSmall": "Inserisci un valore più grande",
+    "tooBig": "Inserisci un valore più piccolo",
+    "studyYearMustBeBeforeCurrent": "L'anno dello studio deve essere anteriore all'anno dello studio attuale",
+    "studyYearMustBeAfterLinkedStudies": "Impossibile indicare una data anteriore a quelle dei tuoi studi collegati nel tuo piano di transizione",
+    "studyIsLinkedInTransitionPlan": "Questo studio è collegato nel piano di transizione dello studio «{studyName}». La nuova data deve essere anteriore a quella di questo studio.",
+    "maxTwoDecimals": "Il tasso di riduzione deve avere al massimo 2 decimali",
+    "startYearMustBeBeforeTargetYear": "L'anno di inizio deve essere anteriore all'anno obiettivo",
+    "yearMustBeAfterReferenceYear": "L'anno deve essere posteriore all'anno di riferimento della traiettoria",
+    "referenceYearMustBeBeforeObjectiveTargetYear": "L'anno di riferimento deve essere strettamente anteriore all'anno obiettivo degli obiettivi globali",
+    "referenceYearMustBeBeforeSubObjectiveStartYear": "L'anno di riferimento deve essere inferiore o uguale all'anno di inizio dei sotto-obiettivi",
+    "referenceYearMustBeBeforeOrEqualToStudyYear": "L'anno di riferimento deve essere inferiore o uguale all'anno dello studio",
+    "sectorPercentagesTotalExceeds100": "Il totale delle percentuali non può superare il 100%",
+    "sectorPercentagesRequired": "Le percentuali dei settori sono obbligatorie",
+    "scopeRequired": "Seleziona almeno un sito, tag o sottocategoria",
+    "atLeastOneValidObjective": "Aggiungi almeno un obiettivo valido con anno di inizio, anno obiettivo e tasso di riduzione"
+  },
+  "documentationUrl": {
+    "dependencyMatrix": "https://www.bilancarbone-methode.com/2-perimetre-de-la-demarche/2.5-identification-des-risques-et-opportunites-de-transition",
+    "flows": "https://www.bilancarbone-methode.com/2-perimetre-de-la-demarche/2.4-perimetre-operationnel",
+    "actionRelevance": "https://www.bilancarbone-methode.com/5-plan-de-transition/5.2-construction-du-plan-daction#caracteriser-la-pertinence-de-laction",
+    "dataType": "https://www.bilancarbone-methode.com/4-comptabilisation/4.2-methode-de-collecte-des-donnees-dactivite#les-differents-types-de-donnees-dactivite",
+    "maturity": "https://www.bilancarbone-methode.com/1-cadrage-de-la-demarche/1.1-definir-son-niveau-de-maturite-bilan-carbone-r",
+    "monetaryRatio": "https://www.bilancarbone-methode.com/4-comptabilisation/4.3-methode-de-selection-des-facteurs-demission#fe-en-ratios-monetaires",
+    "dependencyAndResponsability": "https://www.bilancarbone-methode.com/annexes/annexes/annexe-1-grands-principes-de-comptabilisation-du-bilan-carbone-r#zoom-sur-les-sous-postes-utilisation-en-responsabilite-et-utilisation-en-dependance",
+    "uncertainties": "https://www.bilancarbone-methode.com/4-comptabilisation/4.4-methode-destimation-des-incertitudes/4.4.2-comment-les-determiner#determination-qualitative",
+    "SNBC": "https://www.ecologie.gouv.fr/politiques-publiques/strategie-nationale-bas-carbone-snbc",
+    "SBTi": "https://sciencebasedtargets.org/net-zero",
+    "carbonBudget": "https://www.bilancarbone-methode.com/annexes/glossaire#b",
+    "carbonNeutrality": "https://www.bilancarbone-methode.com/annexes/glossaire#n"
   }
 }
