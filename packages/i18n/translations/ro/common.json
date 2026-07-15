@@ -147,6 +147,180 @@
     "SWITZERLAND": "Elveția",
     "UKRAINE": "Ucraina",
     "UNITED_KINGDOM": "Regatul Unit",
-    "VATICAN_CITY": "Cetatea Vaticanului"
+    "VATICAN_CITY": "Cetatea Vaticanului",
+    "OTHER": "Altă țară"
+  },
+  "study": {
+    "results": {
+      "chartTypes": {
+        "table": "Tabel",
+        "bar": "Diagramă cu bare",
+        "pie": "Diagramă circulară",
+        "ratio": "Intensități de carbon"
+      }
+    },
+    "questions": {
+      "actions": "Acțiuni",
+      "add": "Adaugă",
+      "error": "Eroare la actualizarea câmpului",
+      "next": "Subcategoria următoare",
+      "previous": "Subcategoria anterioară",
+      "numberOfYears": "Număr de ani",
+      "format": {
+        "text": "Text",
+        "postalCode": "Cod poștal",
+        "phone": "Telefon",
+        "year": "An",
+        "hour": "Oră",
+        "number": "Număr"
+      },
+      "errorLoadingQuestions": "Eroare la încărcarea întrebărilor",
+      "retry": "Reîncearcă",
+      "finish": "Finalizează",
+      "noQuestions": "Nicio întrebare găsită pentru această subcategorie",
+      "autoSaveError": "Unele răspunsuri nu au putut fi salvate automat. Verificați conexiunea și încercați din nou."
+    },
+    "infography": {
+      "form": {
+        "backToInfography": "Afișează categoriile"
+      }
+    }
+  },
+  "locale": {
+    "en": "English",
+    "fr": "Français",
+    "es": "Español",
+    "el": "ελληνικά",
+    "hr": "hrvatski",
+    "hu": "magyar",
+    "it": "Italiano",
+    "ro": "Română",
+    "selector": "Limba site-ului"
+  },
+  "login": {
+    "welcome": "Bine ați venit",
+    "form": {
+      "activate": "Activează-mi contul",
+      "firstConnection": "Prima conectare?",
+      "alreadyRegistered": "Aveți deja un cont?",
+      "resetTitle": "Ați solicitat crearea sau resetarea parolei. Introduceți informațiile solicitate mai jos pentru a confirma crearea contului sau resetarea parolei.",
+      "login": "Conectare",
+      "email": "Email",
+      "emailPlaceholder": "Introduceți adresa dvs. de email",
+      "password": "Parolă",
+      "passwordPlaceholder": "Introduceți parola dvs.",
+      "confirmPassword": "Confirmați parola",
+      "hidePassword": "Ascunde parola",
+      "showPassword": "Afișează parola",
+      "notMatching": "Parolele nu se potrivesc",
+      "passwordLength": "Parola trebuie să aibă cel puțin 8 caractere",
+      "passwordUppercase": "Parola trebuie să conțină cel puțin o literă mare",
+      "passwordLowercase": "Parola trebuie să conțină cel puțin o literă mică",
+      "passwordSpecialChar": "Parola trebuie să conțină cel puțin un caracter special",
+      "passwordDigit": "Parola trebuie să conțină cel puțin o cifră",
+      "forgotPassword": "Ați uitat parola?",
+      "reset": "Confirmă",
+      "error": "Verificați email-ul și parola",
+      "expired": "Acest link de resetare a parolei a expirat",
+      "backToHome": "Înapoi la pagina principală",
+      "resetError": "Unele informații nu sunt corecte. Dacă credeți că ați completat totul corect, contactați-ne.",
+      "emailRequired": "Introduceți un email",
+      "emailAndPasswordRequired": "Introduceți un email și o parolă",
+      "emailSent": "Dacă email-ul dvs. este corect, veți primi un mesaj pentru a vă reseta parola",
+      "validated": "Parola dvs. a fost resetată",
+      "validation": {
+        "email": "Introduceți un email",
+        "password": "Introduceți o parolă"
+      }
+    }
+  },
+  "spinner": {
+    "loading": "Se încarcă"
+  },
+  "error": {
+    "Not authorized": "Nu aveți permisiunea de a efectua această acțiune",
+    "Not found": "Resursa solicitată nu a fost găsită",
+    "Server error": "A apărut o eroare de server, contactați asistența",
+    "default": "A apărut o eroare, încercați din nou. Dacă problema persistă, contactați asistența.",
+    "error": "A apărut o eroare...",
+    "contactSupport": "A apărut o problemă. Încercați să reveniți la <link>pagina principală</link>. <p>Dacă nu funcționează, contactați asistența noastră la <m></m> sau încercați să vă <logout>reconectați</logout>.</p>",
+    "duplicateScopeCombination": "Un obiectiv cu același perimetru (site-uri, etichete, subcategorii) și același an țintă există deja pentru această traiectorie"
+  },
+  "email": {
+    "subject": {
+      "resetPassword": "Parolă uitată",
+      "newUser": "Ați fost invitat pe BC+",
+      "addedActiveUser": "Ați fost invitat într-un nou mediu BC+",
+      "activation": "V-ați activat contul pe BC+",
+      "activationRequest": "Cerere de acces la organizația dvs. BC+",
+      "userOnStudyInvitation": "Adăugat la studiul {studyName}",
+      "contributorInvitation": "Cerere de contribuție la studiul {studyName}",
+      "addedUsersByFile": "Autorizare pentru adăugarea de utilizatori"
+    }
+  },
+  "nav": {
+    "backToHome": "Înapoi la pagina principală",
+    "home": "Acasă",
+    "notFound": "Pagină negăsită",
+    "organization": "Organizație",
+    "edit": "Modifică",
+    "team": "Echipă"
+  },
+  "team": {
+    "pending": "Invitații în așteptare",
+    "invitationDate": "Invitație trimisă la",
+    "toValidate": "Invitații de validat",
+    "addedDate": "Adăugat la",
+    "delete": "Șterge utilizatorul",
+    "resend": "Retrimite invitația",
+    "table": {
+      "title": "Echipa mea",
+      "newUser": "Invită un utilizator",
+      "firstName": "Prenume",
+      "lastName": "Nume",
+      "email": "Email",
+      "level": "Formare",
+      "role": "Rol",
+      "action": " ",
+      "deleteMember": "Șterge membrul",
+      "userDeletion": "Ștergerea unui utilizator",
+      "userDeletionDescription": "Sigur doriți să ștergeți acest utilizator? Nu va mai avea acces la contul organizației dvs., dar va păstra accesul la studiile pentru care a fost invitat de alte organizații.",
+      "necessaryAdmin": "Ștergerea acestui administrator este imposibilă. Este singurul validator al următoarelor studii: "
+    }
+  },
+  "level": {
+    "Initial": "Inițial",
+    "Standard": "Standard",
+    "Advanced": "Avansat",
+    "noLevel": "Fără formare"
+  },
+  "role": {
+    "SUPER_ADMIN": "Administrator global",
+    "ADMIN": "Administrator",
+    "COLLABORATOR": "Colaborator",
+    "ADMIN_description": "Un administrator deține toate drepturile asupra contului organizației, precum și asupra tuturor studiilor organizației sale (fie ele publice sau private). Nu este posibilă modificarea rolului unui administrator pe un studiu al organizației sale.",
+    "COLLABORATOR_description": "Un colaborator este o persoană formată în metoda Bilan Carbone®. Nu are niciun drept asupra contului organizației, dar poate crea studii pentru organizația sa. Este implicit editor al tuturor Bilan Carbone® publice ale organizației sale.",
+    "guide": "Ghidul rolurilor",
+    "saved": "Rol nou salvat",
+    "Not authorized": "Nu aveți permisiunea de a efectua această acțiune",
+    "More than one": "Trebuie să existe cel puțin un administrator sau gestionar în organizație"
+  },
+  "newMember": {
+    "title": "Invită un utilizator",
+    "email": "Email",
+    "firstName": "Prenume",
+    "lastName": "Nume",
+    "role": "Rol",
+    "level": "Formare",
+    "create": "Invită utilizatorul",
+    "Not authorized": "Nu se poate invita acest utilizator. Contactați <link>asistența</link> pentru mai multe informații.",
+    "validation": {
+      "email": "Introduceți un email valid",
+      "firstName": "Introduceți un prenume",
+      "lastName": "Introduceți un nume",
+      "level": "Introduceți un nivel de formare",
+      "role": "Introduceți un rol"
+    },
+    "addedMember": "Utilizatorul a fost adăugat cu succes la organizația dvs."
   }
 }
