@@ -892,7 +892,161 @@
       "columnEmissionFactorValue": "Valore",
       "columnEmissionFactorUnit": "Unità",
       "columnEmissionFactorLocalization": "Localizzazione",
-      "columnEfSource": "Fonte (1)"
+      "columnEfSource": "Fonte (1)",
+      "columnEfType": "Tipo (1)",
+      "columnFeGlobalUncertainty": "Incertezza globale (1)",
+      "columnFeReliability": "Affidabilità (1)",
+      "columnFeTechnicalRepresentativeness": "Correlazione tecnica (1)",
+      "columnFeGeographicRepresentativeness": "Correlazione geografica (1)",
+      "columnFeTemporalRepresentativeness": "Correlazione temporale (1)",
+      "columnFeCompleteness": "Completezza (1)",
+      "efTypeBDD": "FE proveniente da un database",
+      "efTypeOrga": "FE aggiunto dall'utente",
+      "efTypeMonetaryNonSpecific": "Ratio monetario non specifico",
+      "efTypeMonetarySpecific": "Ratio monetario specifico",
+      "templateInfoLine1": "La riga di esempio presente in questo modello di importazione non sarà importata in BC+. Le colonne le cui intestazioni presentano asterischi (*) devono essere obbligatoriamente compilate.",
+      "templateInfoLine2": "Inoltre, le qualità delle colonne da M a Q saranno utilizzate preferenzialmente rispetto alla qualità globale della colonna L se tutte le colonne sono compilate. La qualità globale sarà quindi ricalcolata nello strumento.",
+      "templateInfoLine3": "(1) Queste colonne sono conservate affinché tu possa esportare tutti i dati di uno studio e reimportarli, ma non vengono utilizzate durante l'importazione,",
+      "templateInfoLine4": "poiché i dati sono già presenti nello strumento per quanto riguarda il fattore di emissione, oppure perché lo strumento ricalcola il resto dei valori (emissioni, ecc.)."
+    },
+    "flow": {
+      "loading": "Caricamento del documento...",
+      "add": "Aggiungi una mappatura dei flussi",
+      "documentNotFound": "Documento non trovato",
+      "download": "Scarica il flusso",
+      "flows": "Mappature dei flussi",
+      "information": "Informazione",
+      "documentSelector": "Mappatura da visualizzare",
+      "invalidFileType": "Tipo di file non supportato",
+      "newFlow": "Aggiungi una mappatura dei flussi",
+      "noDocument": "Nessuna mappatura dei flussi da visualizzare",
+      "notAuthorized": "Azione non autorizzata",
+      "removeDocument": "Elimina la mappatura",
+      "Not authorized": "Non hai i permessi per eseguire questa azione",
+      "info": "Puoi scaricare un esempio di mappatura dei flussi per aiutarti a costruire la tua. In seguito, se desideri inviare la tua mappatura dei flussi per aiutare altre organizzazioni fornendo loro una base di lavoro, inviala a <mail>methodologie@abc-transitionbascarbone.fr</mail>",
+      "downloadSample": "Scarica un esempio"
+    },
+    "dependencyMatrix": {
+      "loading": "Caricamento del documento...",
+      "add": "Aggiungi una matrice",
+      "documentNotFound": "Documento non trovato",
+      "download": "Scarica la matrice",
+      "dependencyMatrices": "Matrici di rischio e di dipendenza",
+      "information": "Informazione",
+      "documentSelector": "Matrice di rischio e di dipendenza da visualizzare",
+      "invalidFileType": "Tipo di file non supportato",
+      "noDocument": "Nessuna matrice di rischio e di dipendenza da visualizzare",
+      "notAuthorized": "Azione non autorizzata",
+      "removeDocument": "Elimina la matrice di rischio e di dipendenza",
+      "Not authorized": "Non hai i permessi per eseguire questa azione",
+      "info": "Puoi scaricare un esempio di matrice di rischio e di dipendenza per aiutarti a costruire la tua. In seguito, se desideri inviare la tua matrice di rischio e di dipendenza per aiutare altre organizzazioni fornendo loro una base di lavoro, inviala a <mail>methodologie@abc-transitionbascarbone.fr</mail>",
+      "downloadSample": "Scarica un esempio"
+    },
+    "delete": {
+      "cancel": "Annulla",
+      "confirm": "Conferma",
+      "delete": "Elimina lo studio",
+      "content": "Sei sicuro di voler eliminare questo studio? <warning>Tutti i suoi dati saranno eliminati definitivamente e sarà impossibile recuperarli.</warning> Se è così, scrivi il nome dello studio nel campo sottostante:",
+      "name": "Nome dello studio",
+      "Not authorized": "Non hai i permessi per eseguire questa azione",
+      "title": "Eliminazione di uno studio",
+      "wrongName": "Il nome dello studio non corrisponde"
+    },
+    "transitionPlan": {
+      "notInitialized": "Il piano di transizione di questo studio non è ancora stato inizializzato.",
+      "validatorRequired": "Deve occuparsene un validatore o editor dello studio.",
+      "startButton": "Avvia il mio piano di transizione",
+      "emptyState": {
+        "title": "Piano di transizione",
+        "subtitle": "Definisci le traiettorie di riduzione delle emissioni della tua organizzazione e monitora le tue azioni nel tempo."
+      },
+      "modal": {
+        "title": "Scegli un piano di transizione",
+        "description": "Benvenuto/a nel piano di transizione del tuo studio. Puoi scegliere di riutilizzare un piano di transizione esistente o di definirne uno nuovo.",
+        "createNew": "Crea un nuovo piano di transizione",
+        "createNewDescription": "Avvia un nuovo piano di transizione da zero",
+        "reuseExisting": "Riutilizza un piano di transizione esistente",
+        "reuseExistingDescription": "Riutilizza un piano di transizione esistente per questo studio. Questo sarà duplicato; qualsiasi modifica apportata qui non influirà su quella apportata nello studio precedente.",
+        "noAvailablePlans": "Nessun piano di transizione disponibile in questa organizzazione",
+        "cancel": "Annulla",
+        "confirm": "Conferma",
+        "selectPlaceholder": "Seleziona un piano di transizione esistente",
+        "studyPrefix": "Studio:"
+      },
+      "onboarding": {
+        "badge": "Primi passi",
+        "learnMore": "Scopri di più",
+        "hideDetails": "Nascondi i dettagli"
+      },
+      "initialization": {
+        "title": "Inizializzazione del tuo piano di transizione",
+        "onboarding": {
+          "title": "Prepara il tuo piano di transizione",
+          "description": "La costruzione del piano di transizione implica le seguenti sotto-fasi: <br></br><br></br> 1 - Visualizzare gli <b>obiettivi e le traiettorie di riferimento</b> la cui ambizione a livello planetario è quella dell'Accordo di Parigi. <br></br> 2 - Selezionare una <b>traiettoria di decarbonizzazione discendente o «top-down»</b>, ossia la traiettoria teorica che la tua organizzazione dovrebbe seguire. <br></br> 3 - Costruire il tuo <b>piano d'azione</b>. <br></br> 4 - Stimare l'impatto previsto dell'attuazione del tuo piano d'azione, calcolandone il <b>potenziale di riduzione</b>, per costruire la tua <b>traiettoria di decarbonizzazione ascendente o «bottom-up»</b>. <br></br> 5 - Verificare la coerenza: la <b>traiettoria bottom-up derivata dal tuo piano d'azione giustifica la credibilità della tua traiettoria top-down</b> a più o meno lungo termine a seconda del tuo livello di maturità. <br></br><br></br> Questa pagina ti permette di visualizzare le traiettorie di riferimento derivanti dalla <b>Strategia Nazionale a Basse Emissioni di Carbonio</b> (SNBC) e dalla <b>Science-Based Target initiative</b> (SBTi). Per farlo, puoi configurare la tua organizzazione indicando i tuoi eventuali bilanci passati e ripartendo le tue emissioni per settore di attività della SNBC.",
+          "detailedInfo": "In fondo a questa pagina ti vengono proposte due traiettorie di riferimento, la SNBC e SBTi. Puoi visualizzare la traiettoria di decarbonizzazione che la tua organizzazione dovrebbe seguire secondo l'una e l'altra. Queste traiettorie rispondono a una <b>logica scientifica solida</b>, ma derivano anche da <b>scelte socioeconomiche</b> (definizione dei bisogni, variazione della domanda e dell'offerta, orientamenti politici, redditività, ecc.). <br></br><br></br> Essendo la SNBC declinata secondo i grandi settori di attività dell'economia francese, puoi selezionare il settore che ti corrisponde meglio oppure ripartire le tue emissioni tra i diversi settori. Lo strumento applica quindi le traiettorie settoriali alle emissioni scelte e <b>combina poi l'insieme in una traiettoria SNBC per la tua organizzazione</b>. Se questi settori non si adattano alla tua attività, conviene utilizzare la traiettoria generale. Se ripartisci le tue emissioni tra i diversi settori, puoi ovviamente mantenere una parte di emissioni assegnata alla traiettoria generale. Maggiori informazioni sulla SNBC sono disponibili <link1>qui</link1>. <br></br><br></br> SBTi fornisce una traiettoria volta a limitare il riscaldamento globale a <b>1,5°C</b>, e una seconda volta a limitarlo <b>ben al di sotto dei 2°C</b>. Devi inoltre scegliere quale di queste due traiettorie desideri visualizzare. Maggiori informazioni su SBTi sono disponibili <link2>qui</link2>. <br></br><br></br> Le traiettorie di riferimento hanno due scopi distinti: <br></br> - <b>Raggiungere la <link4>neutralità carbonica</link4></b> a livello planetario entro un certo orizzonte temporale <br></br> - <b>Conservare un certo <link3>budget di carbonio</link3></b> <br></br> Se le tue emissioni reali non seguono la traiettoria scelta, il budget di carbonio inizialmente assegnato sarà superato. Occorre quindi ricalcolare la traiettoria da seguire per ridurre ancora di più e <b>controbilanciare questo superamento, che viene chiamato «overshoot»</b>. Nello strumento, la traiettoria viene ricalcolata automaticamente non appena le tue emissioni reali dell'anno superano le emissioni previste di almeno il 5%. A ogni nuovo bilancio realizzato, le tue traiettorie si aggiorneranno e ti indicheranno quali riduzioni restano da realizzare."
+        },
+        "createButton": "Crea la mia prima traiettoria top-down",
+        "skipOnboarding": "Salta l'introduzione",
+        "stepLinkStudy": {
+          "title": "Bilan Carbone® passati",
+          "description": "Questa funzionalità serve a ricostruire lo storico delle tue emissioni, idealmente a partire dal tuo anno di riferimento. Puoi indicare Bilan Carbone® provenienti da BC+ o da strumenti di terze parti. Questi dati alimenteranno i tuoi grafici e le tue traiettorie di riduzione.",
+          "glossaryTitle": "Bilan Carbone® passati",
+          "linkStudyButton": "Collega un Bilan Carbone®"
+        },
+        "stepSectorAllocation": {
+          "title": "Ripartizione settoriale",
+          "description": "Indica la parte delle tue emissioni relativa ai settori della SNBC. Lo strumento applicherà le traiettorie settoriali della SNBC alle emissioni scelte e le combinerà per ottenere la traiettoria SNBC della tua organizzazione. Se questi settori non si adattano alla tua attività, conviene utilizzare la traiettoria generale (basta non indicare alcuna emissione settoriale).",
+          "glossaryTitle": "Ripartizione settoriale SNBC",
+          "glossaryDescription": "La SNBC definisce obiettivi di riduzione differenziati per settore (energia, industria, edifici, trasporti…). Indicando la parte delle tue emissioni in ciascun settore, la piattaforma calcola una traiettoria SNBC ponderata, rappresentativa del tuo mix di attività."
+        },
+        "stepSelectReferenceTrajectories": {
+          "title": "Traiettorie di riferimento",
+          "description": "Scegli le traiettorie di riferimento da visualizzare sul tuo grafico: la Strategia Nazionale a Basse Emissioni di Carbonio (SNBC) e/o la Science-Based Target initiative (SBTi). Queste traiettorie servono come riferimento per costruire la tua traiettoria top-down.",
+          "glossaryTitle": "Traiettorie di riferimento",
+          "glossaryDescription": "La SNBC (Strategia Nazionale a Basse Emissioni di Carbonio) è la traiettoria ufficiale francese di riduzione delle emissioni. Le traiettorie SBTi (Science Based Targets initiative) sono standard internazionali allineati agli obiettivi dell'Accordo di Parigi."
+        },
+        "stepVisualization": {
+          "title": "Visualizzazione delle traiettorie",
+          "description": "Visualizza le traiettorie di riferimento applicate alla tua organizzazione. Questo grafico sarà arricchito nel tempo con le tue traiettorie di riduzione.",
+          "glossaryTitle": "Grafico delle traiettorie",
+          "glossaryDescription": "Questo grafico rappresenta l'evoluzione delle emissioni della tua organizzazione nel tempo, in relazione alle traiettorie di riferimento. L'asse verticale indica le emissioni totali, l'asse orizzontale rappresenta gli anni."
+        },
+        "sectorBlock": {
+          "title": "Ripartizione settoriale SNBC",
+          "description": "Indica la parte delle tue emissioni relativa ai settori della SNBC. Ciò permetterà di combinare le traiettorie settoriali della SNBC per ottenere la tua traiettoria SNBC.",
+          "snbcSectorialName": "La tua traiettoria SNBC",
+          "update": "Salva le modifiche"
+        }
+      },
+      "trajectories": {
+        "title": "Traiettorie e obiettivi",
+        "tableTitle": "Elenco delle traiettorie e degli obiettivi",
+        "snbcButton": "Traiettoria SNBC",
+        "sbtiButton": "Traiettorie SBTi",
+        "customButton": "Scelgo la mia traiettoria",
+        "customSubtitle": "Riprendi una traiettoria esistente o crea la tua traiettoria di riduzione per iniziare a costruire il tuo piano di transizione",
+        "myTrajectories": "Le mie traiettorie",
+        "addTrajectory": "Aggiungi una traiettoria di riduzione",
+        "selectTrajectories": "Seleziona le tue traiettorie",
+        "delete": {
+          "title": "Eliminazione del piano di transizione",
+          "description": "Vuoi davvero eliminare il tuo piano di transizione? Tutti i dati del tuo piano di transizione saranno eliminati. Ciò non influirà sugli studi e i piani di transizione collegati.",
+          "confirm": "Elimina",
+          "cancel": "Annulla"
+        },
+        "snbcCard": {
+          "title": "Traiettorie SNBC",
+          "description": "La Strategia Nazionale a Basse Emissioni di Carbonio (SNBC) è la tabella di marcia della Francia per lottare contro il cambiamento climatico. Definisce una traiettoria di riduzione delle emissioni di gas serra fino al 2050 e fissa obiettivi con orizzonte 2030.",
+          "methodLabel": "Metodi",
+          "general": "Generale",
+          "energy": "Energia",
+          "industry": "Industria",
+          "waste": "Rifiuti",
+          "buildings": "Edifici",
+          "agriculture": "Agricoltura",
+          "transportation": "Trasporti"
+        }
+      }
     }
   }
 }
