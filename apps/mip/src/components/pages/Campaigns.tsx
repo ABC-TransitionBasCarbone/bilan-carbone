@@ -1,6 +1,7 @@
 'use client'
 
 import type { CampaignsWithResponses, ModelCampaignLight } from '@/db/campaign'
+import { updateCampaignCommand } from '@/services/serverFunctions/campaign'
 import { UpdateCampaignCommand, UpdateCampaignCommandValidation } from '@/services/serverFunctions/campaign.command'
 import { handleCopy } from '@/utils/campaign'
 import { Table as BaseTable } from '@abc-transitionbascarbone/components'
