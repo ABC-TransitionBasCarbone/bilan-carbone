@@ -8,7 +8,6 @@
  * TODO: we should allow to extends this type with custom layouts from the
  * consumer side.
  */
-import { EvaluatedFormElement, FormPageElementProp } from '@publicodes/forms'
 
 export type FormLayout<RuleName extends string = string> =
   | InputLayout<RuleName>
