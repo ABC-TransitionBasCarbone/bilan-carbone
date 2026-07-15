@@ -165,6 +165,160 @@
       },
       "title": "Categoria di emissione"
     },
-    "other": "Altri gas"
+    "other": "Altri gas",
+    "total": "Totale",
+    "uncertainty": "Incertezza",
+    "ges": "Emissioni di GES ({unit})"
+  },
+  "nav": {
+    "emissionFactors": "Fattori di emissione",
+    "newOrganization": "Aggiungi una nuova organizzazione",
+    "newStudy": "Aggiungi un nuovo studio",
+    "studyPerimeter": "Perimetro",
+    "newStudyContributor": "Aggiungi un contributore",
+    "editStudyContributor": "Modifica un contributore",
+    "newStudyRight": "Aggiungi una persona",
+    "studyRights": "Inquadramento",
+    "actualities": "Novità"
+  },
+  "actuality": {
+    "title": "Le novità di BC+",
+    "allActualities": "Vedi tutte le novità",
+    "noItems": "Nessuna novità per il momento",
+    "seeLess": "Vedi meno",
+    "seeMore": "Vedi di più"
+  },
+  "ressources": {
+    "title": "Risorse",
+    "description": "Il calcolatore d'impatto COUNT è omologato dall'ABC. È stato costruito sulla base di diverse fonti di fattori di emissione (Base Empreinte dell'ADEME, EcoInvent, Boavizta, CNC in particolare). Altri fattori di emissione sono stati costruiti specificamente nell'ambito della creazione dello strumento da Resilio.<br></br>Le ipotesi di calcolo sono state costruite a partire da:<br></br> - 15 bilanci di carbonio completi realizzati in collaborazione con il gruppo di cinema CINEO<br></br> - Molteplici colloqui con parti interessate della sala cinematografica (fornitori, integratori, esercenti indipendenti, circuiti di esercizio ecc.)<br></br> - Visite a sale cinematografiche di varie tipologie",
+    "france2030": "Nell'ambito del Piano France 2030, il programma «Alternatives Vertes 2», dotato di 25 M€ su 3 tornate e gestito dalla Banque des Territoires (gruppo Caisse des Dépôts) in collaborazione con il Ministero della Cultura, il Ministero della Transizione Ecologica e il Segretariato generale per gli investimenti, mira ad accelerare la transizione ecologica delle imprese culturali per farne un settore di riferimento in materia di responsabilità ambientale. Delle 51 candidature ricevute per la prima tornata di «Alternatives Vertes 2», sono stati selezionati 13 progetti, tra cui il progetto promosso da CUT! La giuria ha in particolare apprezzato la forte ambizione collettiva al servizio della transizione ecologica del cinema e dell'audiovisivo del progetto, che abbraccia l'intera catena del valore del cinema, con il patrocinio di personalità carismatiche del settore.",
+    "methodeAssociative": "Per tutte le domande sul metodo associativo:",
+    "sphereAssociative": "Settore associativo",
+    "enSavoirPlusBilan": "Per saperne di più sul metodo Bilan Carbone®:",
+    "methodeBilanCarbone": "Guida metodologica del Bilan Carbone®",
+    "countMethods": "Per saperne di più sulle metodologie di Count:",
+    "countMethodLink": "Metodologia Count",
+    "resilioMethodLink": "Metodologia Resilio",
+    "questionMethodo": "In caso di domanda metodologica:",
+    "openCarbonPractice": "Open Carbon Practice",
+    "contacterViaFormulaire": "Contatta direttamente l'ABC tramite il modulo",
+    "questionTechnique": "In caso di domanda tecnica o di necessità di assistenza informatica:",
+    "lireLaFAQ": "Leggi le FAQ",
+    "ecrireMail": "Scrivi direttamente a {supportEmail}"
+  },
+  "legalNotices": {
+    "profile": "Torna al profilo"
+  },
+  "login": {
+    "welcome": "Benvenuto/a su Bilan Carbone® +",
+    "explanation": "Lo strumento dedicato all'applicazione del metodo Bilan Carbone®, sviluppato dall'Association pour la transition Bas Carbone (ABC) e accessibile a tutti i nostri membri Consulenza e Ricerca, Impresa, Associazione e Settore Pubblico",
+    "question": "Hai una domanda? Leggi le <faq>FAQ</faq> o <support>contattaci</support>!",
+    "cineo": "Strumento sviluppato grazie ai Bilan Carbone® di Cineo",
+    "explanation2": "Operazione sostenuta dallo Stato francese nell'ambito del programma «Soutenir les alternatives vertes 2» di France 2030, gestito dalla Banque des Territoires (Caisse des Dépôts)"
+  },
+  "activation": {
+    "description": "Utilizza la stessa email che hai usato al momento della tua adesione all'Association pour la Transition Bas Carbone",
+    "email": "Email",
+    "emailPlaceholder": "Email utilizzata durante la tua formazione",
+    "emailRequired": "Inserisci un'email",
+    "validate": "Convalida",
+    "Not authorized": "Non sei membro o non sei formato. Non esitare a consultare <link>le FAQ</link> o a contattare <support>l'assistenza</support> se ritieni che si tratti di un errore.",
+    "Request sent": "Una richiesta di attivazione del tuo account è stata inviata ai tuoi colleghi",
+    "Email sent": "Riceverai un'email per completare l'attivazione del tuo account.",
+    "validation": {
+      "email": "Inserisci un'email"
+    }
+  },
+  "navigation": {
+    "factors": "Fattori di emissione",
+    "fe": "FE",
+    "help": "Aiuto",
+    "profile": "Profilo",
+    "study": "Studio",
+    "organization": "La mia organizzazione",
+    "transition": "Transizione BC+",
+    "methodology": "Metodologia",
+    "organizations": "I miei Bilan Carbone®",
+    "footprints": "Le mie Impronte",
+    "settings": "Impostazioni",
+    "information": "Informazioni generali",
+    "formation": "Formazione",
+    "selectAccount": "Selezione dell'account"
+  },
+  "profile": {
+    "title": "Il mio profilo",
+    "legalNotices": "Note legali",
+    "firstName": "Nome",
+    "lastName": "Cognome",
+    "cancelUpdate": "Annulla",
+    "update": "Aggiorna",
+    "updating": "Aggiornamento",
+    "version": "Versione di BC+: ",
+    "validation": {
+      "firstName": "Almeno 1 carattere",
+      "lastName": "Almeno 1 carattere"
+    }
+  },
+  "settings": {
+    "title": "Le mie impostazioni dell'applicazione",
+    "validate": "Salva",
+    "validatedEmissionSourcesOnly": "Tenere conto delle emissioni non convalidate nei Bilan Carbone®",
+    "yes": "Sì",
+    "no": "No",
+    "glossary": {
+      "title": "Glossario",
+      "exports": "Tenere conto delle emissioni non convalidate",
+      "exportsDescription": "In un Bilan Carbone®, puoi scegliere di visualizzare tutte le emissioni che hai indicato oppure solo quelle che sono state convalidate da un validatore.",
+      "caUnits": "Unità dei fatturati",
+      "caUnitsDescription": "Indica l'unità che desideri utilizzare per i fatturati."
+    },
+    "caUnit": {
+      "label": "Unità dei fatturati dei siti",
+      "U": "€",
+      "K": "k€",
+      "M": "M€"
+    }
+  },
+  "admin": {
+    "title": "Amministrazione di BC+",
+    "csvOnly": "Sono accettati solo file CSV",
+    "uploadButton": "Importa un file CSV di utenti"
+  },
+  "study": {
+    "create": "Aggiungi un Bilan Carbone®",
+    "duplicate": "Duplica lo studio",
+    "duplicateEnvironment": "Duplica lo studio in un altro ambiente",
+    "deleteStudy": "Elimina lo studio",
+    "duplicateCopy": " - Copia",
+    "duplicateDialog": {
+      "title": "Duplicazione dello studio",
+      "description": "Desideri duplicare questo studio? Verrai reindirizzato alla pagina di creazione di uno studio, tutti i campi saranno precompilati con le informazioni dello studio che potrai modificare e, una volta convalidata la creazione, l'intero studio e le sue fonti di emissione saranno duplicati. I documenti allegati allo studio originale non saranno duplicati. Attenzione, dopo la duplicazione, le fonti di emissione del nuovo studio creato dovranno essere nuovamente convalidate per comparire nei risultati. <br></br>Gli studi sono indipendenti dopo la duplicazione; qualsiasi modifica apportata a uno non si rifletterà sull'altro.",
+      "duplicatedDescription": "Il tuo studio è stato duplicato. Puoi trovarlo nel tuo ambiente {environment}.",
+      "otherEnvironnment": "Desideri duplicare questo studio nel tuo ambiente {environment}? Tutte le informazioni saranno copiate nel nuovo studio.",
+      "cancel": "Annulla",
+      "confirm": "Duplica",
+      "selectEnvironment": "Seleziona l'ambiente di destinazione"
+    },
+    "myCollaborations": "Le mie collaborazioni",
+    "myStudies": "I miei Bilan Carbone®",
+    "createFirstStudy": "Crea il mio primo Bilan Carbone®",
+    "seeResults": "Vedi i risultati",
+    "firstStudyMessage": "È ora di iniziare! Ti invitiamo a creare il tuo primo Bilan Carbone®.",
+    "validatedSources": "<data>{validated} / {total}</data> Fonti di emissione convalidate",
+    "see": "Vedi il mio Bilan Carbone®",
+    "information": "Informazioni",
+    "validatedOnly": "Fonti di emissione convalidate",
+    "validatedOnlyDescription": "Per ogni Bilan Carbone® è possibile definire uno o più validatori. Questi hanno la responsabilità di convalidare le fonti di emissione una volta che sono state compilate dai contributori e dagli editor dello studio. Per impostazione predefinita, nei tuoi risultati compaiono solo le emissioni convalidate, ma puoi modificare questo comportamento dal menu \"Impostazioni\".",
+    "withDependenciesDescription": "Il nuovo metodo Bilan Carbone® introduce il concetto di responsabilità e di dipendenza. Si raccomanda vivamente di presentare i risultati del Bilan Carbone® con e senza la sottocategoria \"Uso in dipendenza\", poiché l'organizzazione generalmente non è in grado di agire facilmente su questa sottocategoria. Tuttavia, essa resta fondamentale per comprendere i rischi a cui è esposta l'organizzazione, in particolare se dipende da settori o attività ad alta intensità di carbonio. Il risultato finale da considerare deve includere la dipendenza. Per maggiori informazioni su questi nuovi concetti, ti invitiamo a consultare <link>questa pagina</link>.",
+    "monetaryRatioDescription": "Si sconsiglia vivamente di utilizzare fattori di emissione in ratio monetario quando è possibile un'alternativa. Puoi trovare maggiori informazioni sulla <monetaryLink>metodologia dell'ABC</monetaryLink>.",
+    "selectSite": "Prima di compilare i dati, scegli un sito",
+    "navigation": {
+      "homepage": "Home",
+      "framing": "Inquadramento",
+      "scope": "Perimetro",
+      "accounting": "Contabilizzazione",
+      "dataEntry": "Inserimento dei dati",
+      "results": "Risultati"
+    }
   }
 }
