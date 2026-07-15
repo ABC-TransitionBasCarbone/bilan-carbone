@@ -1,0 +1,198 @@
+{
+  "login": {
+    "subtext": "Varijanta za udruženu (neprofitnu) sferu",
+    "explanation": "Alat namijenjen udrugama koje žele primijeniti metodu Bilan Carbone® i njezinu sektorsku varijantu za udruženu sferu. Nastao je zahvaljujući partnerstvu između Association pour la transition Bas Carbone, nositeljice metode Bilan Carbone®, i Mouvement Tilt, koji prati sve udruge u njihovoj niskougljičnoj tranziciji. Alat je besplatno dostupan svim francuskim udrugama educiranima u metodi.",
+    "form": {
+      "activate": "Stvori moj račun"
+    }
+  },
+  "signup": {
+    "description": "Stvorite račun na Tiltu unosom svog emaila te broja Siret",
+    "siret": "Siret",
+    "siretPlaceholder": "Vaš Siret",
+    "siretRequired": "Unesite Siret",
+    "Not authorized": "Ovaj email već je registriran s Tilt računom ili ovaj SIRET nije valjan. Slobodno pogledajte <link>česta pitanja</link> ili se obratite <support>podršci</support> ako mislite da je riječ o pogrešci.",
+    "Not association SIRET": "Korištenje ovog alata rezervirano je za udruge. Molimo koristite klasičnu verziju Bilan Carbone®+.",
+    "validation": {
+      "siret": "Unesite Siret"
+    }
+  },
+  "home": {
+    "navigation": {
+      "collaborators": {
+        "title": "Moji suradnici",
+        "message": "Ovdje pronađite popis osoba ovlaštenih za rad na vašim različitim ugljičnim otiscima"
+      },
+      "footprints": {
+        "title": "Moji otisci",
+        "message": "Ovdje stvorite svoj prvi otisak. Zatim ćete moći pregledavati svoje otiske ili stvarati nove u bilo kojem trenutku."
+      },
+      "sites": {
+        "title": "Moja udruga",
+        "message": "Ovdje pronađite popis ustanova povezanih s vašim računom"
+      }
+    },
+    "title": "Izračun vašeg pojednostavljenog ugljičnog otiska omogućit će vam da:"
+  },
+  "exports": {
+    "env_specific_export": "Pojednostavljeni ugljični otisak",
+    "simplified": {
+      "disclaimerExcel1": "Pažnja, rezultati koje ovdje dobivate proizlaze isključivo iz izračuna pojednostavljenog ugljičnog otiska koji provodi Cap Carbone. Ni u kojem slučaju ne smiju se prikazivati ili koristiti kao rezultati Bilan Carbone®,",
+      "disclaimerExcel2": "jer, iako vam dobiveni rezultati već mogu pomoći da razumijete kako smanjiti svoj utjecaj, vaš postupak ograničen je na procjenu.",
+      "disclaimerExcel3": "S druge strane, ovaj pojednostavljeni ugljični otisak upravo je prvi korak prema cjelovitijem postupku poput Bilan Carbone®!",
+      "disclaimerExcel4": "Sljedećih godina možete ili ponoviti mjerenje pojednostavljenog ugljičnog otiska s Cap Carbone, ili izraditi Bilan Carbone®.",
+      "disclaimerExcel5": "Ako želite ići dalje u svom postupku, više informacija dostupno je ovdje: https://abc-transitionbascarbone.fr/transition-association-abc-tilt/#",
+      "metadata": {
+        "organization": "Organizacija",
+        "site": "Lokacija",
+        "startDate": "Datum početka studije",
+        "endDate": "Datum završetka studije"
+      }
+    }
+  },
+  "email": {
+    "subject": {
+      "newUser": "Pozvani ste na Tilt",
+      "addedActiveUser": "Pozvani ste u novo Tilt okruženje",
+      "activation": "Aktivirali ste svoj račun na Tiltu",
+      "activationRequest": "Zahtjev za pristup vašoj Tilt organizaciji"
+    }
+  },
+  "organization": {
+    "sites": {
+      "ca": "Proračun ({unit})",
+      "etp": "Broj zaposlenika",
+      "glossary": {
+        "etp": "Broj zaposlenika",
+        "etpDescription": "Ti se podaci koriste za izračun ugljičnih intenziteta (kgCO₂e/zaposleniku).",
+        "ca": "Proračun ({unit})",
+        "caDescription": "Ti se podaci koriste za izračun ugljičnih intenziteta (kgCO₂e/{unit} proračuna). Pažnja, proračun treba unijeti u tisućama eura (k€).",
+        "volunteer": "Broj volontera",
+        "volunteerDescription": "Broj volontera koji ovdje unesete poslužit će jednostavno za izračun ugljičnog intenziteta po volonteru, u tCO₂e/volonteru. Možete unijeti broj volontera, broj aktivnih volontera, uračunati ili ne članove Upravnog odbora... Najvažnije nije odabir načina brojanja volontera, već korištenje iste metode za vaše buduće Bilance Carbone®, kako biste mogli usporediti kretanje svojih emisija u odnosu na promjene u aktivnostima vaše udruge."
+      },
+      "validation": {
+        "ca": "Proračun ({unit})"
+      }
+    }
+  },
+  "study": {
+    "perimeter": {
+      "preset": "Vrsta publike"
+    },
+    "new": {
+      "postalCode": "Koji je poštanski broj udruge?",
+      "sites": "Koje su lokacije obuhvaćene otiskom i njihove značajke?",
+      "structure": "Kojoj je vrsti strukture vaša udruga najbliža?",
+      "structureOther": "Navedite vrstu strukture",
+      "dates": "Na koje razdoblje se odnosi vaš ugljični otisak?",
+      "numberOfTTEmployee": "Koliko se dana tjedno radi na daljinu za vaše zaposlenike?",
+      "numberOfTTVolunteer": "Koliko se dana tjedno radi na daljinu za vaše volontere?",
+      "glossary": {
+        "postalCode": "Poštanski broj udruge",
+        "postalCodeGlossary": "Poštanski broj sjedišta ako postoji više lokacija, 5 znamenki"
+      }
+    },
+    "flow": {
+      "info": "Možete preuzeti primjer mapiranja tokova koji će vam pomoći izraditi vlastiti. Nakon toga, ako želite podnijeti vlastito mapiranje tokova kako biste pomogli drugim udrugama pružajući im radnu osnovu, molimo pošaljite ga na <mail>methodologie@abc-transitionbascarbone.fr</mail>"
+    },
+    "dependencyMatrix": {
+      "info": "Možete preuzeti primjer matrice rizika i ovisnosti koja će vam pomoći izraditi vlastitu. Nakon toga, ako želite podnijeti vlastito mapiranje tokova kako biste pomogli drugim udrugama pružajući im radnu osnovu, molimo pošaljite ga na <mail>methodologie@abc-transitionbascarbone.fr</mail>"
+    },
+    "firstSimplifiedStudyMessage": "Vrijeme je da započnete! Pozivamo vas da stvorite svoj prvi Otisak.",
+    "createFirstSimplifiedStudy": "Stvori moj prvi Otisak",
+    "createSimplified": "Stvori Otisak",
+    "mySimplifiedStudies": "Moji otisci",
+    "seeSimplified": "Pogledaj moj otisak",
+    "cannotCreateStudy": "Za izradu Bilanci Carbone® potrebno je biti educiran u metodi! <link>Saznajte više</link>",
+    "canCreateFootPrint": "Ipak možete izraditi <link>ugljični otisak</link> koji vam omogućuje procjenu vašeg utjecaja",
+    "navigation": {
+      "generalData": "Opći podaci",
+      "title": "Moj Otisak"
+    },
+    "export": {
+      "export": "Izvezi moje rezultate"
+    },
+    "results": {
+      "feedback": {
+        "button": "Pošaljite nam svoje povratne informacije! ✨",
+        "title": "Pošaljite nam svoje povratne informacije! ✨"
+      }
+    },
+    "structure": {
+      "'Club de loisirs'": "Klub za slobodno vrijeme",
+      "'Association étudiante'": "Studentska udruga",
+      "'Association culturelle'": "Kulturna udruga",
+      "'Association de voisinage'": "Susjedska udruga",
+      "'Hôpital'": "Bolnica",
+      "'Maison de retraite'": "Dom za starije",
+      "'Association d'aide à domicile'": "Udruga za pomoć u kući",
+      "'Association humanitaire'": "Humanitarna udruga",
+      "'Autres structures sociales et solidaires'": "Ostale socijalne i solidarne strukture",
+      "'Association de défense de l'environnement'": "Udruga za zaštitu okoliša",
+      "'Association d'enseignement ou de formation'": "Udruga za obrazovanje ili osposobljavanje",
+      "'Autre'": "Ostalo"
+    }
+  },
+  "emissionFactors": {
+    "post": {
+      "seeTypeform": "Pogledaj tipski upitnik",
+      "seeTypeformDescription": "Ovaj alat omogućuje vam da imate primjer tipskog upitnika koji ćete poslati svojim dionicima za prikupljanje podataka o njihovim službenim putovanjima.",
+      "glossaryDescription": {
+        "postInfo": "Informacije o ovoj kategoriji",
+        "close": "Zatvori",
+        "informations": "informacije o ovoj kategoriji",
+        "IntrantsBiensEtMatieresTilt": "Za više informacija o različitim načinima uzimanja u obzir Ulaznih dobara, molimo pogledajte <link>udruženu metodu</link>.",
+        "IntrantsBiensEtMatieresTiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/intrants-biens-et-services#intrants-biens-et-matieres",
+        "Alimentation": "Za više informacija o uzimanju u obzir prehrane, za različite dionike udruga, molimo pogledajte <link>udruženu metodu</link>.",
+        "AlimentationLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/alimentation",
+        "IntrantsServices": "Za više informacija o različitim načinima uzimanja u obzir Ulaznih usluga, molimo pogledajte <link>udruženu metodu</link>.",
+        "IntrantsServicesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/intrants-biens-et-services#intrants-services",
+        "EquipementsEtImmobilisations": "Za više informacija o načinu uzimanja u obzir opreme i ostalih dugotrajnih sredstava, molimo pogledajte <link>udruženu metodu</link>.",
+        "EquipementsEtImmobilisationsLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/intrants-biens-et-services#equipements-et-immobilisations",
+        "ConstructionDesLocaux": "Za više informacija o uzimanju u obzir prostora udruga, molimo pogledajte <link>udruženu metodu</link>.",
+        "ConstructionDesLocauxLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#construction-des-locaux",
+        "Energies": "Za više informacija o uzimanju u obzir energetske potrošnje organizacije, molimo pogledajte <link>Plan Carbone Général</link>.",
+        "EnergiesLink": "https://www.plancarbonegeneral.com/perimetre-collaborateurs/locaux/exploitation",
+        "DechetsDirectstilt": "Za više informacija o uzimanju u obzir otpada organizacije, molimo pogledajte <link>Plan Carbone Général</link>.",
+        "DechetsDirectstiltLink": "https://www.plancarbonegeneral.com/perimetre-collaborateurs/locaux/exploitation",
+        "FroidEtClim": "Za više informacija o uzimanju u obzir klimatizacije i ostalih uređaja koji troše rashladne fluide u organizaciji, molimo pogledajte <link>Plan Carbone Général</link>.",
+        "FroidEtClimLink": "https://www.plancarbonegeneral.com/perimetre-collaborateurs/locaux/exploitation",
+        "Utilisation": "Za više informacija o uzimanju u obzir korištenja proizvoda koje udruge distribuiraju ili prodaju te usluga koje pružaju, molimo pogledajte <link>udruženu metodu</link>.",
+        "UtilisationLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/utilisation-et-fin-de-vie",
+        "FinDeVietilt": "Za više informacija o uzimanju u obzir kraja životnog vijeka proizvoda koje udruge distribuiraju ili prodaju, molimo pogledajte <link>udruženu metodu</link>.",
+        "FinDeVietiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/utilisation-et-fin-de-vie",
+        "Teletravail": "Za više informacija o uzimanju u obzir rada na daljinu, molimo pogledajte <link>udruženu metodu</link>.",
+        "TeletravailLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/teletravail",
+        "DeplacementsFabricationDesVehicules": "Proizvodnja vozila u nekim slučajevima već može biti uzeta u obzir unutar faktora emisije koji se koriste za obračun putovanja. Za više informacija o njezinu uzimanju u obzir, molimo pogledajte <link>udruženu metodu</link>.",
+        "DeplacementsFabricationDesVehiculesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#fabrication-des-vehicules",
+        "DeplacementsDomicileTravailSalaries": "Za više informacija o vrsti putovanja koja treba uključiti u ovu kategoriju, molimo pogledajte <link>udruženu metodu</link>.",
+        "DeplacementsDomicileTravailSalariesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-entre-le-domicile-et-lassociation",
+        "DeplacementsDomicileTravailBenevoles": "Za više informacija o vrsti putovanja koja treba uključiti u ovu kategoriju, molimo pogledajte <link>udruženu metodu</link>.",
+        "DeplacementsDomicileTravailBenevolesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-entre-le-domicile-et-lassociation",
+        "DeplacementsDansLeCadreDUneMissionAssociativeSalaries": "Za više informacija o vrsti putovanja koja treba uključiti u ovu kategoriju, molimo pogledajte <link>udruženu metodu</link>.",
+        "DeplacementsDansLeCadreDUneMissionAssociativeSalariesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-dans-le-cadre-dune-mission-associative",
+        "DeplacementsDansLeCadreDUneMissionAssociativeBenevoles": "Za više informacija o vrsti putovanja koja treba uključiti u ovu kategoriju, molimo pogledajte <link>udruženu metodu</link>.",
+        "DeplacementsDansLeCadreDUneMissionAssociativeBenevolesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-dans-le-cadre-dune-mission-associative",
+        "DeplacementsDesBeneficiaires": "Za više informacija o vrsti putovanja koja treba uključiti u ovu kategoriju, molimo pogledajte <link>udruženu metodu</link>.",
+        "DeplacementsDesBeneficiairesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-des-beneficiaires",
+        "TransportDeMarchandises": "Za više informacija o različitim metodama uzimanja u obzir prijevoza robe, molimo pogledajte <link>udruženu metodu</link>.",
+        "TransportDeMarchandisesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#transport-de-marchandises",
+        "TransportFabricationDesVehicules": "Proizvodnja vozila u nekim slučajevima već može biti uzeta u obzir unutar faktora emisije koji se koriste za obračun putovanja. Za više informacija o njezinu uzimanju u obzir, molimo pogledajte <link>udruženu metodu</link>.",
+        "TransportFabricationDesVehiculesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#fabrication-des-vehicules",
+        "Agriculturetilt": "Za više informacija o uzimanju u obzir emisija povezanih s poljoprivrednim aktivnostima, molimo pogledajte <link>udruženu metodu</link>.",
+        "AgriculturetiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
+        "ActivitesIndustrielles": "Za više informacija o uzimanju u obzir emisija povezanih s eventualnim industrijskim aktivnostima, molimo pogledajte <link>udruženu metodu</link>.",
+        "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux"
+      }
+    }
+  },
+  "navigation": {
+    "footprints": "Moji otisci",
+    "information": "Moja udruga"
+  },
+  "betaBanner": {
+    "badge": "Beta",
+    "title": "Beta verzija alata Cap Carbone",
+    "description": "Cap Carbone je danas u beta verziji! Hvala vam što ste naši prvi korisnici i testeri 🎉 Slobodno nas kontaktirajte na adresu <support>support@abc-transitionbascarbone.fr</support> ako imate povratne informacije! Budući da je aplikacija u beta fazi, moguće je da se neka pitanja u obrascu promijene te da se odgovori na izmijenjena pitanja izbrišu u budućim ažuriranjima. Ne zaboravite provjeriti popunjenost svojih kategorija na stranici za unos podataka prije nego što pogledate rezultate, kako biste provjerili jesu li svi vaši odgovori i dalje dostupni."
+  }
+}
