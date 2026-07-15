@@ -69,12 +69,7 @@ const ResultsDashboard = ({ results }: Props) => {
         onSelectEntity={setSelectedEntity}
       />
 
-      <ChartsSection
-        pieChartItems={pieChartItems}
-        barChartItems={barChartItems}
-        averageFootprint={filtered.averageFootprint}
-        totalRespondents={filtered.totalRespondents}
-      />
+      <ChartsSection pieChartItems={pieChartItems} barChartItems={barChartItems} />
 
       <KeyStatsSection keyStats={filtered.keyStats} />
 
