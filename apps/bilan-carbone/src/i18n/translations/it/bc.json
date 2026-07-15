@@ -1,0 +1,170 @@
+{
+  "home": {
+    "userToValidate": "Un utente è stato aggiunto alla tua organizzazione perché si è appena formato al metodo Bilan Carbone®. Vai alla <link>pagina del tuo team</link> per convalidare il suo account",
+    "title": "Realizzare il tuo bilancio d'impatto ti permetterà di:",
+    "info": {
+      "0": "Comprendere la misurazione dell'impatto della tua sede",
+      "1": "Individuare le priorità d'azione",
+      "2": "Costruire una traiettoria di riduzione"
+    },
+    "message": {
+      "0": "Realizzare il tuo bilancio d'impatto ti permetterà di:",
+      "1": "Comprendere la misurazione dell'impatto della tua sede",
+      "2": "Individuare le priorità d'azione",
+      "3": "Costruire una traiettoria di riduzione",
+      "core": "Benvenuto/a su COUNT, il primo calcolatore di impatto ecologico dedicato alle sale cinematografiche.\nQuesto strumento è stato sviluppato dall'associazione CUT! Cinéma Uni pour la transition, in collaborazione con l'ABC, association pour la transition bas carbone\nOperazione sostenuta dallo Stato francese nell'ambito del programma «Soutenir les alternatives vertes 2» di France 2030, gestito dalla Banque des Territoires (Caisse des Dépôts)\nCUT beneficia del sostegno del CNC"
+    }
+  },
+  "exports": {
+    "title": "Esportazioni:",
+    "exportFilename": "risultati_studio_{studyName}",
+    "consolidated": "Bilan Carbone®",
+    "Beges": "Bilancio GES normativo",
+    "GHGP": "GHG Protocol",
+    "ISO14069": "ISO 14069",
+    "env_specific_export": "Bilan Carbone®",
+    "bc": {
+      "title": "Esportazione in formato Bilan Carbone®",
+      "category": "Categoria Bilan Carbone®",
+      "emissions": "Emissioni (tCO2e)",
+      "disclaimerExcel1": "Attenzione, i risultati che ottieni qui derivano unicamente dall'impronta di carbonio semplificata Count e non devono in alcun caso essere utilizzati come risultati Bilan Carbone®.",
+      "disclaimerExcel2": "Il percorso che hai seguito tramite lo strumento Count NON è un percorso Bilan Carbone®, anche se i risultati ottenuti possono già aiutarti a capire meglio come ridurre il tuo impatto, individuando le tue attività più inquinanti.",
+      "disclaimerExcel3": "Al contrario, questa impronta di carbonio semplificata è il primo passo verso un percorso più completo come il Bilan Carbone®!",
+      "disclaimerExcel4": "Per gli anni successivi, puoi quindi rinnovare la tua misurazione dell'impronta di carbonio semplificata con lo strumento Count oppure realizzare un Bilan Carbone®.",
+      "disclaimerExcel5": "Un Bilan Carbone® segue una metodologia ben precisa e deve soddisfare un certo numero di criteri oggettivi. Ad esempio, nel corso di un Bilan Carbone®, la direzione deve essere coinvolta, le diverse parti interessate dell'organizzazione devono essere mobilitate, le incertezze devono essere calcolate e associate alle emissioni e, soprattutto, deve essere costruito un solido piano di transizione per impegnare l'organizzazione in una transizione a basse emissioni di carbonio.",
+      "disclaimerExcel6": "Se desideri intraprendere un Bilan Carbone® nei prossimi anni, tutto inizia con la formazione al metodo, contattandoci all'indirizzo count@cut-collectif.fr, oppure facendoti accompagnare da un fornitore Bilan Carbone®!"
+    },
+    "glossary": {
+      "GHGP": {
+        "title": "Esportazione in formato GHG-Protocol",
+        "warning": "Attenzione, affinché la tua esportazione sia conforme al GHG-Protocol, dovrai:",
+        "item1": "Aver tenuto conto dell'incenerimento dei rifiuti nelle emissioni legate alle reti di teleriscaldamento utilizzate.",
+        "item2": "Aver indicato correttamente, all'interno della categoria Immobilizzazioni, se il bene in questione è stato costruito nell'anno del bilancio.",
+        "item3": "Avere una doppia contabilizzazione dell'elettricità consumata, da un lato in <b><green>location-based (location-based method, LBM)</green></b> e dall'altro in <b><purple>market-based (market-based method, MBM)</purple></b>. Per farlo, ti basta <b>contabilizzare due volte i tuoi kWh di energia consumati</b>, <green>una volta tramite fattori di emissione dedicati al <b>location-based</b></green>, e <purple>una seconda volta tramite fattori di emissione dedicati al <b>market-based</b></purple>. Come promemoria:<ul><li>Il metodo <b><green>location-based</green></b> si basa sull'utilizzo di fattori di emissione che rappresentano il mix elettrico medio su perimetri geografici e temporali definiti. In Francia, i fattori di emissione utilizzati hanno tipicamente la forma \"Mix medio - Anno interessato - Francia\".</li><li>Il metodo <b><purple>market-based</purple></b> si basa sull'utilizzo di fattori di emissione rappresentativi dell'elettricità prodotta dai produttori di elettricità a cui l'organizzazione è contrattualmente legata tramite l'acquisto di Garanzie di Origine (GO) o di Renewable Energy Certificates (RECs) negli Stati Uniti, Power Purchase Agreement (PPAs, VPPAs), ecc. Tutta l'elettricità non coperta dai contratti menzionati deve quindi essere considerata tramite i fattori di emissione relativi ai mix residui, ossia i fattori di emissione dei mix elettrici da cui è stata rimossa tutta l'elettricità oggetto dei contratti menzionati.</li></ul>",
+        "item4": "La parte relativa alla fabbricazione dei veicoli non è considerata per impostazione predefinita nel GHG Protocol per le categorie Spostamenti e Trasporto merci. Devi quindi indicarla nella categoria Immobilizzazioni, solo se il veicolo è stato fabbricato nel corso dell'anno considerato.",
+        "conclusion": "<b>È inoltre opportuno che l'utente padroneggi l'insieme delle specificità metodologiche legate al GHG-Protocol al fine di generare un'esportazione che soddisfi i requisiti di questo metodo.</b>"
+      }
+    }
+  },
+  "categorisations": {
+    "all": "Tutte le categorizzazioni",
+    "Operated": "Gestito",
+    "NotOperated": "Non gestito",
+    "OperatedProcedeed": "Gestito, processo",
+    "OperatedFugitive": "Gestito, fuggitive",
+    "OperatedCAS": "Gestito, CAS",
+    "NotOperatedSupported": "Non gestito, sostenuto",
+    "NotOperatedNotSupported": "Non gestito, non sostenuto",
+    "Rented": "Dato in locazione",
+    "FinalClient": "Utilizzato dal cliente finale",
+    "Held": "Di proprietà",
+    "NotHeldSimpleRent": "Non di proprietà, locazione semplice",
+    "NotHeldOther": "Non di proprietà, altro",
+    "HeldProcedeed": "Di proprietà, processi",
+    "HeldFugitive": "Di proprietà, fuggitive",
+    "HeldCAS": "Di proprietà, CAS",
+    "NotHeldSupported": "Non di proprietà, sostenuto",
+    "NotHeldNotSupported": "Non di proprietà, non sostenuto",
+    "UsedByIntermediary": "Utilizzato da un intermediario"
+  },
+  "beges": {
+    "rule": "Regola",
+    "subTotal": "Subtotale",
+    "category": {
+      "1": "Emissioni dirette di GES",
+      "2": "Emissioni indirette associate all'energia",
+      "3": "Emissioni indirette associate al trasporto",
+      "4": "Emissioni indirette associate ai prodotti acquistati",
+      "5": "Emissioni indirette associate ai prodotti venduti",
+      "6": "Altre emissioni indirette",
+      "title": "Categoria"
+    },
+    "post": {
+      "1": {
+        "1": "Emissioni dirette delle fonti fisse di combustione",
+        "2": "Emissioni dirette delle fonti mobili di combustione",
+        "3": "Emissioni dirette dei processi non energetici",
+        "4": "Emissioni dirette fuggitive",
+        "5": "Emissioni derivanti dalla biomassa (suoli e foreste)"
+      },
+      "2": {
+        "1": "Emissioni indirette legate al consumo di elettricità",
+        "2": "Emissioni indirette legate al consumo di vapore, calore o freddo"
+      },
+      "3": {
+        "1": "Trasporto merci a monte",
+        "2": "Trasporto merci a valle",
+        "3": "Spostamenti casa-lavoro",
+        "4": "Trasporto di visitatori e clienti",
+        "5": "Spostamenti professionali"
+      },
+      "4": {
+        "1": "Acquisti di beni",
+        "2": "Immobilizzazioni di beni",
+        "3": "Gestione dei rifiuti",
+        "4": "Attività in leasing a monte",
+        "5": "Acquisti di servizi"
+      },
+      "5": {
+        "1": "Uso dei prodotti venduti",
+        "2": "Attività in leasing a valle",
+        "3": "Fine vita",
+        "4": "Investimenti"
+      },
+      "6": {
+        "1": "Altre emissioni indirette"
+      },
+      "title": "Categoria di emissione"
+    },
+    "other": "Altri gas",
+    "total": "Totale",
+    "uncertainty": "Incertezza",
+    "ges": "Emissioni di GES ({unit})"
+  },
+  "ghgp": {
+    "rule": "Regola",
+    "subTotal": "Subtotale",
+    "category": {
+      "1": "Scope 1",
+      "2": "Scope 2",
+      "3": "Scope 3 a monte",
+      "4": "Scope 3 a valle",
+      "title": "Categoria"
+    },
+    "post": {
+      "1": {
+        "1": "Emissioni dirette delle fonti fisse di combustione",
+        "2": "Emissioni dirette delle fonti mobili di combustione",
+        "3": "Emissioni dirette dei processi",
+        "4": "Emissioni dirette fuggitive"
+      },
+      "2": {
+        "1": "Emissioni indirette legate al consumo",
+        "2": "Emissioni indirette legate al consumo di vapore"
+      },
+      "3": {
+        "1": "Prodotti e servizi acquistati",
+        "2": "Beni immobilizzati",
+        "3": "Emissioni legate alle combustioni e all'energia (non incluse nello scope 1 o nello scope 2)",
+        "4": "Trasporto merci a monte e distribuzione",
+        "5": "Rifiuti generati",
+        "6": "Spostamenti professionali",
+        "7": "Spostamenti casa-lavoro",
+        "8": "Attività in leasing a monte",
+        "other": "Altre emissioni indirette a monte"
+      },
+      "4": {
+        "10": "Trasformazione dei prodotti venduti",
+        "11": "Uso dei prodotti venduti",
+        "12": "Fine vita dei prodotti venduti",
+        "13": "Attività in leasing a valle",
+        "14": "Franchising",
+        "15": "Investimenti",
+        "09": "Trasporto merci a valle e distribuzione",
+        "other": "Altre emissioni indirette a valle"
+      },
+      "title": "Categoria di emissione"
+    },
+    "other": "Altri gas"
+  }
+}
