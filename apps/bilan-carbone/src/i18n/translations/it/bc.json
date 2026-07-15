@@ -1044,8 +1044,168 @@
           "waste": "Rifiuti",
           "buildings": "Edifici",
           "agriculture": "Agricoltura",
-          "transportation": "Trasporti"
+          "transportation": "Trasporti",
+          "placeholder": "Nessuna traiettoria selezionata",
+          "sectenUpdateButton": "Aggiornamento dei secten disponibili",
+          "sectenUpdateModal": {
+            "title": "Aggiornamento dei valori secten",
+            "description": "È disponibile una nuova versione dei valori secten. Puoi aggiornare questi valori affinché si applichino alle tue traiettorie. Ecco le modifiche:"
+          }
+        },
+        "sbtiCard": {
+          "title": "Traiettorie SBTi",
+          "description": "La Science Based Targets Initiative definisce due traiettorie volte a limitare il riscaldamento globale a 1,5°C (SBTi 1.5°C) o \"Well below 2 degrees\" (SBTi WB2C).",
+          "methodLabel": "Metodi",
+          "optionSNBC": "SNBC",
+          "option15": "SBTi 1,5°C",
+          "optionWB2C": "SBTi WB2C",
+          "placeholder": "Nessuna traiettoria selezionata"
+        },
+        "graph": {
+          "title": "Visualizzazione delle traiettorie di riduzione",
+          "subtitle": "Visualizza le traiettorie di riferimento applicate alla tua organizzazione. Questo grafico sarà arricchito nel tempo con le tue traiettorie di riduzione.",
+          "trajectory15": "SBTi 1,5°C",
+          "trajectoryWB2C": "SBTi WB2C",
+          "trajectorySNBC": "SNBC",
+          "actionBasedTrajectory": "Traiettoria bottom-up",
+          "yAxisLabel": "Emissioni",
+          "unvalidatedSourcesWarning": "{count, plural, =1 {Una fonte di emissione non è convalidata nello studio attuale e non viene quindi considerata nel calcolo delle traiettorie.} other {{count} fonti di emissione non sono convalidate nello studio attuale e non vengono quindi considerate nel calcolo delle traiettorie.}}",
+          "unvalidatedSourcesLinkedStudiesWarning": "{count, plural, =1 {Una fonte di emissione non è convalidata nel seguente studio passato:} other {{count} fonti di emissione non sono convalidate nei seguenti studi passati:}}",
+          "unvalidatedSourcesLinkedStudyCount": " ({count, plural, =1 {1 fonte non convalidata} other {{count} fonti non convalidate}})",
+          "noEmissionSourcesWarning": "Nessuna fonte di emissione è superiore a 0. Le traiettorie non possono essere calcolate.",
+          "noEmissionSourcesDisabledButton": "Nessuna fonte di emissione è superiore a 0. Indica almeno una fonte di emissione prima di creare una traiettoria personalizzata.",
+          "yearRangeLabel": "Periodo di visualizzazione",
+          "sbtiSnbc": "Traiettorie SBTi/SNBC",
+          "custom": "Le mie traiettorie personalizzate",
+          "legendFilter": "Filtra le traiettorie",
+          "previousTrajectories": "Riferimento ({year})",
+          "currentTrajectories": "Attuale ({year})",
+          "failedTrajectories": "Le seguenti traiettorie non possono essere visualizzate correttamente in futuro perché hai già consumato l'intero budget di carbonio da esse previsto:",
+          "estimatedPast": "Passato stimato",
+          "glossary": {
+            "title": "Ricostruzione delle emissioni passate su BC+",
+            "description": "Le emissioni storiche visualizzate sono: <br></br> - O provenienti dai tuoi Bilan Carbone® passati, che hai indicato nella pagina «Inizializzazione» <br></br> - O ricostruite a partire dagli inventari nazionali francesi per gli anni precedenti al tuo primo bilancio. In assenza di informazioni, lo strumento presuppone quindi che la tua organizzazione si sia decarbonizzata allo stesso ritmo della Francia."
+          },
+          "overshootTrajectoryGlossary": {
+            "title": "Traiettoria corretta",
+            "description": "La tua organizzazione non si è decarbonizzata al ritmo richiesto inizialmente da questa traiettoria. Di conseguenza, questa è stata <b>corretta per rispettare il <link>budget di carbonio</link> che ti era stato inizialmente assegnato</b>. Avrai quindi due visualizzazioni: <br></br> - <b>La traiettoria nel suo stato iniziale</b>, con il tasso di riduzione annuale di riferimento <br></br> - <b>La traiettoria corretta</b> per l'anno in corso, con il tasso di riduzione annuale corretto <br></br><br></br> La traiettoria risultante da questa correzione è <b>più ambiziosa</b>: sta a te scegliere se conformarti ad essa o costruirne una nuova. Nota che se decidi oggi di seguire una traiettoria il cui anno di riferimento è vecchio, è del tutto normale che tu sia al di sotto delle sue previsioni. La correzione delle traiettorie si attiva solo quando si constata uno scarto <b>di oltre il 5% tra le previsioni e il Bilan Carbone®</b>."
+          }
+        },
+        "linkedStudies": {
+          "linked": "Studi collegati",
+          "add": "Aggiungi",
+          "save": "Salva",
+          "linkStudy": "Collega uno studio",
+          "editStudy": "Modifica lo studio",
+          "source": "Fonte",
+          "study": "Studio interessato",
+          "oldStudy": "Studi BC+",
+          "externalStudy": "Studio proveniente da un'altra piattaforma",
+          "name": "Nome",
+          "namePlaceholder": "Inserisci un nome",
+          "date": "Anno",
+          "totalCo2": "Emissioni totali",
+          "totalCo2Placeholder": "256",
+          "yearAlreadySet": "Uno studio è già configurato per questo anno",
+          "studyYearMustBeBeforeCurrent": "L'anno dello studio deve essere anteriore all'anno dello studio attuale",
+          "Not authorized": "Non hai i permessi per eseguire questa azione",
+          "noAvailableStudies": "Nessuno studio passato disponibile",
+          "information": "Informazioni",
+          "table": {
+            "name": "Nome",
+            "year": "Anno",
+            "type": "Tipo",
+            "typeLinked": "Studio esistente",
+            "typeExternal": "Studio esterno",
+            "emissions": "Emissioni",
+            "see": "Vedi",
+            "delete": "Elimina"
+          },
+          "deleteModal": {
+            "title": "Elimina lo studio collegato",
+            "message": "Sei sicuro di voler eliminare questo studio collegato? Questa azione è irreversibile.",
+            "confirm": "Elimina",
+            "cancel": "Annulla"
+          },
+          "validation": {
+            "required": "Campi obbligatori"
+          }
+        },
+        "onboarding": {
+          "title": "Crea le tue traiettorie top-down e dettaglia i tuoi obiettivi di riduzione",
+          "description": "La costruzione del piano di transizione implica le seguenti sotto-fasi: <br></br><br></br> 1 - Visualizzare gli <b>obiettivi e le traiettorie di riferimento</b> la cui ambizione a livello planetario è quella dell'Accordo di Parigi. <br></br> 2 - Selezionare una <b>traiettoria di decarbonizzazione discendente o «top-down»</b>, ossia la traiettoria teorica che la tua organizzazione dovrebbe seguire. <br></br> 3 - Costruire il tuo <b>piano d'azione</b>. <br></br> 4 - Stimare l'impatto previsto dell'attuazione del tuo piano d'azione, calcolandone il <b>potenziale di riduzione</b>, per costruire la tua <b>traiettoria di decarbonizzazione ascendente o «bottom-up»</b>. <br></br> 5 - Verificare la coerenza: la <b>traiettoria bottom-up derivata dal tuo piano d'azione giustifica la credibilità della tua traiettoria top-down</b> a più o meno lungo termine a seconda del tuo livello di maturità. <br></br><br></br> Questa pagina ti permette di creare <b>le tue traiettorie top-down</b>, basandoti sulle traiettorie di riferimento oppure creando i tuoi obiettivi. Puoi poi <b>dettagliare queste traiettorie aggiungendo sotto-obiettivi</b> relativi ai tuoi diversi siti, categorie o tag."
         }
+      },
+      "trajectoryModal": {
+        "title": "Scelgo la mia traiettoria e gli obiettivi associati",
+        "addTitle": "Aggiungi una traiettoria",
+        "editTitle": "Modifica la mia traiettoria",
+        "submit": "Convalida",
+        "save": "Salva",
+        "cancel": "Annulla",
+        "success": "Hai creato la tua prima traiettoria!",
+        "successSubtitle": "Per modificare la tua traiettoria e gli obiettivi associati, puoi andare nella sezione <link>I miei obiettivi di riduzione</link>.",
+        "steps": {
+          "chooseTrajectory": "Scelta della mia traiettoria",
+          "defineObjectives": "Definizione dei miei obiettivi di riduzione"
+        },
+        "subtitle": "Segui una delle traiettorie di riferimento o crea la tua traiettoria di riduzione con un approccio discendente, o top-down, per iniziare a costruire il tuo piano di transizione",
+        "sbti": {
+          "title": "SBTi",
+          "subtitle": "Seguo una delle traiettorie SBTi",
+          "benefit1": "Per puntare a una coerenza e a un riconoscimento <strong>a livello internazionale</strong>",
+          "benefit2": "Per puntare a un <strong>livello di maturità Standard</strong>",
+          "benefit3": "Per allinearmi a una <b>limitazione del riscaldamento globale a 1,5°C o 2°C</b>"
+        },
+        "snbc": {
+          "title": "SNBC",
+          "subtitle": "Seguo una delle traiettorie SNBC",
+          "benefit1": "Per puntare a una coerenza a <b>livello nazionale</b>",
+          "benefit2": "Per puntare a un <b>livello di maturità Iniziale</b>",
+          "benefit3": "Per comprendere le <b>aspettative normative francesi</b>"
+        },
+        "custom": {
+          "title": "PERSONALIZZATA",
+          "subtitle": "Seguo la mia traiettoria",
+          "benefit1": "Per adattare l'insieme degli obiettivi alla <b>mia situazione</b>",
+          "benefit2": "Per <b>dettagliare obiettivi intermedi</b>, per categoria, per sito, ...",
+          "benefit3": "Per <b>riutilizzare una traiettoria già convalidata</b> all'interno della mia organizzazione"
+        },
+        "sbtiType": {
+          "15": "Allineata 1,5°C",
+          "title": "Tipo di traiettoria SBTi",
+          "wb2c": "WB2C (Well below 2 degrees)"
+        },
+        "snbcType": {
+          "title": "Tipo di traiettoria SNBC",
+          "generale": "Generale",
+          "sectorielle": "Settoriale"
+        },
+        "sectorAllocation": {
+          "title": "Assegnazione per settore",
+          "description": "Percentuale di emissioni attribuita a ciascun settore. Per aggiornare questi valori, vai alla pagina di inizializzazione del piano di transizione."
+        },
+        "sectors": {
+          "energy": "Energia",
+          "industry": "Industria",
+          "waste": "Rifiuti",
+          "buildings": "Edifici",
+          "agriculture": "Agricoltura",
+          "transportation": "Trasporti",
+          "remainingGeneral": "Emissioni generali rimanenti",
+          "errorOverLimit": "Il totale delle percentuali non può superare il 100%",
+          "placeholder": "0-100"
+        },
+        "selectedTrajectory": {
+          "SBTI_15": "Seguo una delle traiettorie SBTi",
+          "SBTI_WB2C": "Seguo una delle traiettorie SBTi",
+          "SNBC_GENERAL": "Seguo una delle traiettorie SNBC",
+          "SNBC_SECTORAL": "Seguo una delle traiettorie SNBC",
+          "CUSTOM": "Seguo la mia traiettoria"
+        },
+        "siteFilterWarning": "{count, plural, =1 {Hai selezionato il sito {siteNames} ma le traiettorie devono essere definite per l'intera organizzazione.} other {Hai selezionato i siti {siteNames} ma le traiettorie devono essere definite per l'intera organizzazione.}} La tua traiettoria sarà quindi definita per tutti i siti. Potrai poi definire sotto-obiettivi per siti, categorie, sottocategorie o tag.",
+        "name": "Nome della mia traiettoria",
+        "namePlaceholder": "Dai un nome alla mia traiettoria"
       }
     }
   }
