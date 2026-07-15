@@ -460,7 +460,159 @@
     "role": {
       "Validator": "Validatore",
       "Editor": "Editor",
-      "Reader": "Lettore"
+      "Reader": "Lettore",
+      "Contributor": "Contributore",
+      "guide": "Guida dei ruoli",
+      "introduction": "Da questa pagina puoi gestire i membri del tuo team coinvolti in questo Bilan Carbone®. In tutti i casi, gli amministratori della tua organizzazione hanno accesso a tutti i tuoi studi come validatori. Se il tuo studio è pubblico, i membri della tua organizzazione (collaboratori, gestori) vi hanno accesso automatico in modalità lettura. Puoi anche aggiungere persone esterne alla tua organizzazione tramite questo menu.",
+      "Validator_description": "Ha tutti i diritti sullo studio e può convalidare le fonti di emissione compilate dai validatori, dagli editor e dai contributori.",
+      "Editor_description": "Ha tutti i diritti sullo studio, ad eccezione della convalida delle fonti di emissione.",
+      "Reader_description": "Può accedere allo studio solo in modalità lettura ed esportarne le informazioni.",
+      "saved": "Nuovo ruolo salvato"
+    },
+    "title": "Studio",
+    "rights": {
+      "title": "Inquadramento dello studio: {name}",
+      "general": "Generale",
+      "edit": "Rinomina lo studio",
+      "new": {
+        "title": "Aggiungi una persona allo studio: {name}",
+        "email": "Email",
+        "role": "Ruolo",
+        "create": "Aggiungi la persona",
+        "clear": "Cancella il valore",
+        "Already in study": "Questa persona ha già accesso allo studio.",
+        "Not authorized": "Azione non autorizzata. Non esitare a consultare le FAQ o a contattare l'assistenza se ritieni che si tratti di un errore.",
+        "validation": {
+          "email": "Utilizza un'email valida",
+          "emailRequired": "Inserisci un'email",
+          "role": "Seleziona un permesso",
+          "name": "Inserisci un nome"
+        },
+        "dialog": {
+          "title": "Sei sicuro di voler aggiungere questa persona al tuo studio?",
+          "otherOrganization": "<warning>Non fa parte della tua organizzazione.</warning> Questa persona avrà quindi accesso ai dati del tuo studio nonché ai fattori di emissione manuali della tua azienda.",
+          "rightsWarning": "Se non soddisfa le condizioni necessarie per aggiungerla con questo ruolo, potrai darle accesso solo a questo studio con i permessi di LETTURA o di contribuzione. Le verrà inviata un'email per darle accesso allo studio.",
+          "accept": "Sì",
+          "decline": "No"
+        }
+      },
+      "newContributor": {
+        "titleEdit": "Modifica un contributore nello studio: {name}",
+        "title": "Aggiungi un contributore allo studio: {name}",
+        "email": "Email",
+        "firstName": "Nome",
+        "lastName": "Cognome",
+        "post": "Categoria",
+        "subPost": "Sottocategoria",
+        "create": "Aggiungi la persona",
+        "edit": "Modifica i permessi",
+        "Already in study": "Questa persona ha già accesso allo studio.",
+        "Not authorized": "Azione non autorizzata. Non esitare a consultare le FAQ o a contattare l'assistenza se ritieni che si tratti di un errore.",
+        "validation": {
+          "email": "Inserisci un'email valida",
+          "post": "Seleziona una categoria"
+        }
+      },
+      "contributorsTable": {
+        "actions": " ",
+        "delete": "Elimina il contributore",
+        "email": "Email",
+        "post": "Categoria",
+        "subPosts": "Sottocategorie",
+        "title": "Contributori",
+        "newContributorLink": "Aggiungi un contributore",
+        "andXOthers": "e {count, plural, =1 {1 altro} other {# altri}}",
+        "deleting": {
+          "title": "Conferma",
+          "confirmation": "Sei sicuro di voler eliminare {email} dai contributori di questo studio?",
+          "confirmationPost": "Sei sicuro di voler eliminare l'accesso di {email} alla categoria {post}?",
+          "yes": "Sì",
+          "no": "No",
+          "Not authorized": "Non hai i permessi per eseguire questa azione"
+        },
+        "role": {
+          "information": "Informazioni",
+          "description": "Qui puoi gestire i contributori del tuo studio. Questi avranno accesso a determinate categorie e sottocategorie (che puoi definire) e potranno compilare alcune informazioni per fonti di emissione che hai già creato nello studio. Per maggiori informazioni sull'interfaccia dei contributori, non esitare a consultare le nostre <link>FAQ</link>"
+        }
+      },
+      "table": {
+        "actions": " ",
+        "delete": "Elimina il membro",
+        "email": "Email",
+        "role": "Ruolo",
+        "title": "Gestione del team",
+        "newRightLink": "Aggiungi una persona allo studio",
+        "deleting": {
+          "title": "Conferma",
+          "confirmation": "Sei sicuro di voler eliminare {email} dai membri di questo studio?",
+          "yes": "Sì",
+          "no": "No",
+          "Not authorized": "Non hai i permessi per eseguire questa azione"
+        }
+      },
+      "versions": {
+        "list": "Versioni dei fattori di emissione dello studio",
+        "upgradeSource": "Aggiorna",
+        "Not authorized": "Non hai i permessi per eseguire questa azione",
+        "latest": "Stai già utilizzando l'ultima versione di {name}",
+        "title": "Sei sicuro di voler aggiornare la fonte {name}?",
+        "unchanged": "I risultati dello studio rimarranno invariati",
+        "updated": "I seguenti fattori di emissione sono stati aggiornati",
+        "wastedUpdated": "I fattori contrassegnati saranno diversi solo per le esportazioni BEGES. Puoi trovare una spiegazione nella pagina \"Risultati\" del tuo studio",
+        "deleted": "I seguenti fattori di emissione sono stati eliminati",
+        "deletionDetails": "Le fonti di emissione associate non avranno più un fattore di emissione e saranno invalidate",
+        "confirm": "Conferma",
+        "cancel": "Annulla"
+      }
+    },
+    "perimeter": {
+      "general": "Generale",
+      "studyDates": "Perimetro temporale dello studio",
+      "realizationDates": "Date di realizzazione dello studio",
+      "dates": "Dal {startDate} al {endDate}",
+      "realizationFrom": "Studio realizzato a partire dal {date}",
+      "realizationUntil": "Studio realizzato fino al {date}",
+      "realizedDates": "Studio realizzato dal {startDate} al {endDate}",
+      "title": "Perimetro dello studio: {name}",
+      "save": "Modifica",
+      "editSites": "Modifica l'elenco dei siti",
+      "cancelEditSites": "Annulla la modifica",
+      "validSites": "Convalida le modifiche",
+      "validSitesToRecalculate": "Convalida le modifiche (ricalcolo delle emissioni)",
+      "siteDataChangeModal": {
+        "title": "Modifica che influisce sui risultati esistenti",
+        "description": "La modifica che hai appena apportato influirà sui calcoli delle emissioni esistenti.",
+        "affectedCalculations": "Questo ricalcolerà le emissioni per le seguenti domande:",
+        "confirmation": "Sei sicuro di voler continuare?",
+        "cancel": "Annulla",
+        "proceed": "Conferma le modifiche"
+      },
+      "exports": "Esportazioni",
+      "control": "Modalità di controllo delle esportazioni",
+      "emissionSourceTagFamily": "Famiglia",
+      "emissionSourceTags": "Tag",
+      "emissionSourceTagLabel": "Etichetta",
+      "preset": "Preimpostazione",
+      "color": "Colore",
+      "emissionSourceTagsPlaceholder": "Il tuo tag",
+      "createEmissionSourceTag": "Crea il mio tag",
+      "editTagTitle": "Modifica il tag",
+      "updateTag": "Conferma",
+      "cancel": "Annulla",
+      "validate": "Convalida",
+      "deleteDialog": {
+        "accept": "Sì",
+        "decline": "No",
+        "delete": "Elimina",
+        "description": "{count, plural, =1 {Contiene} other {Alcuni contengono}} fonti di emissione. <warning>Tutti i dati inseriti andranno definitivamente persi.</warning>",
+        "title": "Sei sicuro di voler eliminare {count, plural, =1 {questo sito} other {questi siti}}?"
+      },
+      "controlModeWarning": {
+        "title": "Modifica della modalità di controllo",
+        "description": "Stai per cambiare la modalità di controllo da {currentMode} a {newMode}. <warning>Questa azione eliminerà la maggior parte delle caratterizzazioni esistenti e invaliderà le fonti di emissione associate</warning>, poiché non corrispondono più alla nuova modalità di controllo. Vuoi continuare?",
+        "continue": "Continua",
+        "cancel": "Annulla"
+      }
     }
   }
 }
