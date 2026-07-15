@@ -2305,6 +2305,160 @@
       "emission": "Emissione:",
       "confiance": "Intervallo di confidenza del 95%:",
       "alpha": "Alfa:"
+    },
+    "form": {
+      "validate": "Convalidata",
+      "name": "Nome",
+      "caracterisation": "Caratterizzazione",
+      "constructionYear": "Anno di acquisizione",
+      "emissionFactor": "Fattore di emissione",
+      "activity": "Dato di attività",
+      "value": "Valore del dato di attività",
+      "sign": "Valore solo positivo",
+      "source": "Fonte e data del dato raccolto",
+      "type": "Tipo",
+      "depreciationPeriod": "Periodo di ammortamento",
+      "hectare": "Ettaro",
+      "duration": "Durata",
+      "years": "anni",
+      "reliability": "Affidabilità",
+      "technicalRepresentativeness": "Correlazione tecnica",
+      "geographicRepresentativeness": "Correlazione geografica",
+      "temporalRepresentativeness": "Correlazione temporale",
+      "completeness": "Completezza",
+      "quality": "Qualità",
+      "expand": "Espandi le qualità",
+      "shrink": "Semplifica le qualità",
+      "comment": "Ipotesi DA",
+      "tag": "Tag",
+      "create": "Crea {tag}",
+      "see": "Vedi",
+      "feComment": "FE desiderato/Ipotesi effettuate"
+    },
+    "cut": {
+      "form": {
+        "value": "Numero"
+      }
+    },
+    "emissionFactorDialog": {
+      "title": "Scegli un fattore di emissione",
+      "cancel": "Annulla"
+    },
+    "validation": {
+      "required": "Campi obbligatori"
+    }
+  },
+  "quality": {
+    "1": "Molto scarsa",
+    "2": "Scarsa",
+    "3": "Media",
+    "4": "Buona",
+    "5": "Molto buona"
+  },
+  "upload": {
+    "fileTooBig": "File troppo grande (dimensione massima {size} MB)",
+    "noFileSelected": "Nessun file selezionato"
+  },
+  "onboarding": {
+    "title-1": "Benvenuto/a su BC+! Prima di iniziare, configura la tua organizzazione",
+    "titleDescription-1": "Abbiamo precompilato alcune informazioni relative alla tua organizzazione (associazione, impresa, ...) a seguito della tua adesione all'ABC. Puoi modificare il nome della tua organizzazione ora, oppure in qualsiasi momento in BC+ tramite la sezione \"Organizzazione\".",
+    "title-2": "Gestione del tuo team",
+    "titleDescription-2": "Puoi già aggiungere i tuoi collaboratori al tuo team! Potrai sempre aggiungere nuove persone in seguito tramite la sezione \"Il mio team\" situata nel menu \"La mia organizzazione\".",
+    "previous": "Precedente",
+    "next": "Successivo",
+    "validate": "Convalida",
+    "step1": {
+      "name": "Nome della mia organizzazione",
+      "role": "Il mio ruolo all'interno dell'organizzazione",
+      "information": "Le mie informazioni",
+      "firstName": "Nome",
+      "lastName": "Cognome",
+      "adminDescription": "Sei stato formato al Bilan Carbone®: il ruolo che ti è stato assegnato è quello di amministratore della tua organizzazione.",
+      "gestionnaireDescription": "Non sei stato formato al Bilan Carbone®: il ruolo che ti è stato assegnato è quello di gestore della tua organizzazione."
+    },
+    "step2": {
+      "addCollaborator": "Aggiungi un collaboratore",
+      "email": "Indirizzo email",
+      "emailPlaceholder": "Aggiungi un indirizzo email qui",
+      "role": "Ruolo",
+      "adminDescription": "Possiede l'insieme dei diritti esistenti",
+      "collaboratorDescription": "Crea e completa Bilan Carbone®",
+      "crCollaboratorDescription": "Crea clienti e realizza il loro Bilan Carbone®",
+      "gestionnaireDescription": "Gestisce l'account dell'organizzazione ma non ha accesso agli studi",
+      "memberDescription": "Non ha alcun diritto sull'organizzazione e non è necessariamente formato al metodo Bilan Carbone®",
+      "validation": {
+        "email": "Indirizzo email non valido",
+        "requiredEmail": "Email obbligatoria",
+        "requiredRole": "Ruolo obbligatorio"
+      }
+    }
+  },
+  "checklist": {
+    "title": "Iniziare bene su BC+",
+    "done": "Fatto",
+    "CreateAccount": "Crea il tuo account",
+    "AddCollaborator": "Aggiungi collaboratori",
+    "AddCollaboratorDetails": "Aggiungi i tuoi colleghi affinché possano aiutarti a realizzare il Bilan Carbone® della tua azienda.",
+    "AddClient": "Crea il tuo primo cliente",
+    "AddClientDetails": "Aggiungi il tuo primo cliente per iniziare i tuoi Bilan Carbone®",
+    "AddSiteCR": "Aggiungi i siti",
+    "AddSiteCRDetails": "Aggiungi siti alla tua <orga>organizzazione</orga> o a <client>uno dei tuoi clienti</client> affinché tu possa stabilire le emissioni di ciascun sito. Se la tua organizzazione o cliente ha un solo sito, crea un sito 'Tutti i siti'",
+    "AddSiteCRCollaborator": "Aggiungi i siti",
+    "AddSiteCRCollaboratorDetails": "Aggiungi siti a <client>uno dei tuoi clienti</client> affinché tu possa stabilire le emissioni di ciascun sito. Se il tuo cliente ha un solo sito, crea un sito 'Tutti i siti'",
+    "AddSiteOrga": "Aggiungi i siti",
+    "AddSiteOrgaDetails": "Aggiungi siti alla tua <orga>organizzazione</orga> affinché tu possa stabilire le emissioni di ciascun sito. Se la tua organizzazione ha un solo sito, crea un sito 'Tutti i siti'",
+    "CreateFirstStudy": "Crea il tuo primo Bilan Carbone®",
+    "CreateFirstStudyDetails": "Si parte con il tuo primo Bilan Carbone®! Compila le prime informazioni come il titolo del Bilan Carbone®, il perimetro temporale, ...",
+    "CreateFirstEmissionSource": "Crea la tua prima fonte di emissione",
+    "CreateFirstEmissionSourceDetails": "Vai alla prima categoria/sottocategoria che desideri compilare! Scegli il tuo fattore di emissione, inserisci il tuo dato di attività ed effettua i tuoi primi calcoli",
+    "ConsultResults": "Vai a vedere i tuoi primi risultati",
+    "ConsultResultsDetails": "Vai ora alla pagina \"Risultati\" per vedere le tue emissioni, esportarle...",
+    "optional": "Facoltativo",
+    "markAsDone": "Segna come fatto",
+    "go": "Vai",
+    "finished": "Sei pronto a iniziare a usare BC+! Non esitare a consultare le <faq>FAQ</faq> o a contattarci in caso di necessità."
+  },
+  "formation": {
+    "title": "Formazione",
+    "explanation": "Di seguito troverai la formazione di aggiornamento del metodo Bilan Carbone®. Guarda i video, rispondi al questionario e ricevi il tuo attestato di superamento! <b>Il tempo di visione dei video è di circa 2 ore. Puoi poi, quando lo desideri, rispondere al test, che dura al massimo {time} minuti. Questa formazione di aggiornamento è disponibile per tutto il 2025.</b>",
+    "warning": "Avviso",
+    "warningMessage": "<error>Verifica sul tuo account BC+ il nome della tua organizzazione nella pagina <i>La mia organizzazione > Informazioni generali</i>, nonché il tuo nome e cognome nel tuo profilo (in alto a destra). Queste informazioni saranno utilizzate per generare il tuo attestato personalizzato.</error><br></br>Attualmente sei connesso come {name}, dell'organizzazione {organization}, e sei formato al livello {level}. Se quest'ultima informazione non è corretta, invia il tuo attestato di formazione all'indirizzo <support>assistenza</support>.<br></br><b>Promemoria:</b> la formazione deve essere svolta con <b>il tuo account personale</b> e <b>il tuo indirizzo email nominativo</b>, e non con un account generico dell'azienda. Puoi aggiungere altri membri della tua organizzazione da BC+: pagina <i>La mia organizzazione > Il mio team</i>.",
+    "videos": "Video",
+    "videoExplanation": "Tieni presente che la valutazione associata a questa formazione «condensata» non contiene alcun tranello se guardi la formazione con attenzione. Il suo superamento ti permetterà di ottenere gratuitamente un attestato di formazione aggiornato. Al contrario, un risultato insufficiente comporterebbe il tuo reinserimento nel percorso di formazione completo (nuovo modulo Iniziazione se eri formato M1 sulla V8, o nuovo modulo Professionale se eri formato M2 sulla V8).",
+    "evaluation": "Valutazione delle conoscenze",
+    "evaluationEnded": "Hai già risposto al questionario",
+    "evaluationBlocked": "L'accesso alla formazione di aggiornamento non è più disponibile per la tua adesione.",
+    "evaluationSubtitle": "Rispondi ora al questionario di valutazione delle conoscenze per ricevere il tuo attestato di formazione di aggiornamento. <b>Quest'ultimo è cronometrato e avrai al massimo {time} minuti per rispondere alle domande. Puoi rispondere al questionario una sola volta.</b><error> Una volta avviato, non è possibile tornare indietro. Il questionario contiene esercizi pratici. Ti invitiamo, prima di iniziarlo, ad aprire la guida online nonché lo strumento Excel Bilan Carbone® v9 (ricorda che è disponibile nel tuo spazio soci). Saranno utili e necessari per alcune domande.</error>",
+    "acceptation": "Ho capito che potrò avviare il questionario una sola volta e che avrò un tempo limitato per rispondere alle domande. Sono nelle condizioni adeguate per iniziare il mio test.",
+    "answer": "Rispondi al questionario",
+    "timer": "Tempo rimanente: ",
+    "alertMessage": "Ti restano solo 10 minuti. Trascorso questo termine, il modulo resterà accessibile e potrai ancora inviare le tue risposte. Tuttavia, se superi il limite di {time} minuti prima di inviarle, queste non saranno considerate e non riceverai un attestato di superamento.",
+    "form": "Questionario Typeform",
+    "forbidden": {
+      "title": "Accesso bloccato",
+      "message": "Non figuri nel nostro database delle persone formate, quindi non puoi accedere alla scheda formazione per svolgere la formazione di aggiornamento. Se ritieni che si tratti di un errore, segui la procedura indicata nelle nostre <faq>FAQ</faq>.<br></br><br></br> Se contatti l'<support>assistenza</support>, assicurati di aver <b>creato in anticipo un account</b> su <abc>il sito dell'ABC</abc> con la tua email di connessione a BC+ (non è necessaria alcuna adesione aggiuntiva; questo permette solo di aggiungerti al nostro database delle persone formate). Invia inoltre all'assistenza <b>il tuo attestato di formazione</b> e indica l'email con cui ti connetti a BC+.<br></br><br></br> Se sei già stato in contatto con l'assistenza e non vedi alcun cambiamento, attendi 1 ora e poi <b>disconnettiti e riconnettiti a BC+.</b>",
+      "backToHome": "Torna alla home"
+    }
+  },
+  "deactivableFeatures": {
+    "title": "Funzionalità disattivabili",
+    "Formation": "Formazione",
+    "Feedback": "Feedback",
+    "Creation": "Creazione",
+    "DownloadReport": "Download del rapporto Bilan Carbone®",
+    "FormationStudy": "Studio di formazione",
+    "TransitionPlan": "Piano di transizione",
+    "TiltSimplified": "TILT Semplificato",
+    "source": "Fonti",
+    "environment": "Ambienti",
+    "true": "Attivata",
+    "false": "Disattivata",
+    "Not authorized": "Non hai i permessi per eseguire questa azione"
+  },
+  "tiltSimplified": {
+    "comingSoon": {
+      "title": "Presto disponibile",
+      "message": "Il calcolatore di impronta semplificato per le associazioni è in fase di costruzione e sarà disponibile tra qualche mese. Grazie per la tua pazienza!"
     }
   }
 }
