@@ -20,6 +20,8 @@ import {
   hasAccessToResultsRatioTab,
   hasAccessToSimplifiedEmissionAnalysis,
   isClickson,
+  isCut,
+  isTilt,
   showResultsInfoText,
 } from '@/services/permissions/environment'
 import type { BaseResultsByPost } from '@/services/posts'
@@ -34,13 +36,11 @@ import { BarChart, PieChart } from '@abc-transitionbascarbone/ui'
 import DownloadIcon from '@mui/icons-material/Download'
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
 import { Box, Button, Tab, Tabs, Typography } from '@mui/material'
-import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { SyntheticEvent, useMemo, useState } from 'react'
-import styles from './AllResults.module.css'
 import { a11yProps, ChartType, defaultChartOrder, tabsLabels } from './utils'
 
 const FeedbackModal = dynamic(() => import('./FeedbackModal'))
@@ -185,21 +185,15 @@ const AllResults = ({
     >
       {/* Default info text for environments that show it */}
       {environment && showResultsInfoText(environment) && (
-        <>
-          <Box component="section" className="mb2">
-            <Typography>
-              {customRich(tResults, 'simplifiedFeedback', {
+        <Box component="section" className="mb2">
+          <Typography>
+            {customRich(tResults, 'simplifiedFeedback', {
+              ...(isCut(environment) && {
                 questionnaire: (children) => (
                   <Link href={process.env.NEXT_PUBLIC_CUT_FEEDBACK_TYPEFORM_LINK ?? ''} target="_blank">
                     <strong>{children}</strong>
                   </Link>
                 ),
-              })}
-            </Typography>
-          </Box>
-          <Box component="section">
-            <Typography className={classNames(styles.infoContainer)}>
-              {customRich(tResults, 'infoWithLinks', {
                 formation: (children) => (
                   <Link href={process.env.NEXT_PUBLIC_FORMATION_URL ?? ''} target="_blank">
                     <strong>{children}</strong>
@@ -215,10 +209,17 @@ const AllResults = ({
                     <strong>{children}</strong>
                   </Link>
                 ),
-              })}
-            </Typography>
-          </Box>
-        </>
+              }),
+              ...(isTilt(environment) && {
+                link: (children) => (
+                  <Link href={process.env.NEXT_PUBLIC_ABC_TILT_LINK ?? ''} target="_blank">
+                    <strong>{children}</strong>
+                  </Link>
+                ),
+              }),
+            })}
+          </Typography>
+        </Box>
       )}
 
       {/* Emissions analysis for environments that have it */}
