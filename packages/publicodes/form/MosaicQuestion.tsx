@@ -27,7 +27,7 @@ export function MosaicQuestion<RuleName extends string>({ parent, elements, engi
   const label = translation?.question ?? translation?.titre ?? parent
 
   return (
-    <QuestionContainer label={label}>
+    <QuestionContainer label={label} description={translation?.description}>
       <div className={styles.mosaicContainer}>
         {elements.map((el, index) => {
           const parts = el.id.split(' . ')

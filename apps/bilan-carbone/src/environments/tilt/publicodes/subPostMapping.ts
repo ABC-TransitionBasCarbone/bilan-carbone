@@ -64,8 +64,12 @@ const SUBPOST_TO_RULENAME: Partial<Record<SubPost, TiltRuleName>> = {
 } as const
 
 const input = (rule: TiltRuleName): FormLayout<TiltRuleName> => inputLayout<TiltRuleName>(rule)
-const table = (title: string, headers: string[], rows: TiltRuleName[][]): FormLayout<TiltRuleName> =>
-  tableLayout<TiltRuleName>(title, headers, rows)
+const table = (
+  title: string,
+  headers: string[],
+  rows: TiltRuleName[][],
+  description?: string,
+): FormLayout<TiltRuleName> => tableLayout<TiltRuleName>(title, headers, rows, description)
 const mosaic = (parent: TiltRuleName, children: TiltRuleName[]): FormLayout<TiltRuleName> =>
   mosaicLayout<TiltRuleName>(parent, children)
 
@@ -223,6 +227,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
           'intrants-services . services . programmation-conseil . montant-dépensé',
         ],
       ],
+      'IntrantsServices.description',
     ),
   ],
   UsagesNumeriques: [
