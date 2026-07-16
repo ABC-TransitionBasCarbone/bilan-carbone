@@ -33,6 +33,7 @@
     "../../packages/types/*",
     "../../packages/services/src/results/posts.enums.ts",
     "../../packages/tests/utils/models/translationsMock.tsx",
-    "../../packages/utils/environmentClient.ts"  ],
+    "../../packages/utils/environmentClient.ts"
+  ],
   "exclude": ["node_modules", "../../packages/publicodes-packages"]
 }
