@@ -9,7 +9,7 @@ import LoadingButton from '@abc-transitionbascarbone/components/src/base/Loading
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { Country, Environment } from '@abc-transitionbascarbone/db-common/enums'
-import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import { getEnvRoute } from '@abc-transitionbascarbone/services/email/utils'
 import { getEnvVarClient } from '@abc-transitionbascarbone/utils/environmentClient'
 import { zodResolver } from '@hookform/resolvers/zod'

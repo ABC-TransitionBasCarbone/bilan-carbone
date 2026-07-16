@@ -5,7 +5,7 @@ import { TrajectoryFormData } from '@/services/serverFunctions/trajectory.comman
 import type { BaseObjective } from '@/types/trajectory.types'
 import { HelpIcon } from '@abc-transitionbascarbone/components'
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
-import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { IconButton } from '@mui/material'
 import Typography from '@mui/material/Typography'

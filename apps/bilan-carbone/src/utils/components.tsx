@@ -1,4 +1,4 @@
-import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import { Translations } from '@abc-transitionbascarbone/lib'
 
 export const handleWarningText = (t: Translations, text: string) => {

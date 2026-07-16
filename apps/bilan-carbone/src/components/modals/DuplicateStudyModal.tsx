@@ -4,7 +4,7 @@ import { duplicateStudyInOtherEnvironment } from '@/services/serverFunctions/stu
 import { Select } from '@abc-transitionbascarbone/components/src/base/Select'
 import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
-import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import { Toast, ToastColors } from '@abc-transitionbascarbone/ui'
 import { MenuItem } from '@mui/material'
 import { useTranslations } from 'next-intl'

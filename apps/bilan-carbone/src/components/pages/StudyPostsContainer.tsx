@@ -5,7 +5,7 @@ import { EnvironmentWithSimplifiedStudies } from '@/services/permissions/environ
 import { subPostsByPost } from '@/services/posts'
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { StudyRole, SubPost } from '@abc-transitionbascarbone/db-common/enums'
-import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import { Post } from '@abc-transitionbascarbone/utils/charts'
 import { EnvironmentMode } from '@abc-transitionbascarbone/utils/environments'
 import { CircularProgress } from '@mui/material'

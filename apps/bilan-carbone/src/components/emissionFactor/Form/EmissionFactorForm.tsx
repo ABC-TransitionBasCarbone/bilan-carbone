@@ -11,7 +11,7 @@ import LinkButton from '@abc-transitionbascarbone/components/src/base/LinkButton
 import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
 import { FormSelect } from '@abc-transitionbascarbone/components/src/form/Select'
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
-import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import { FormControlLabel, FormLabel, MenuItem, Switch } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
