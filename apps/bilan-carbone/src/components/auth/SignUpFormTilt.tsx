@@ -1,7 +1,5 @@
 'use client'
 
-import { customRich } from '@/i18n/customRich'
-import { getEnvVarClient } from '@/lib/environmentClient'
 import { signUpWithSiretOrCNC } from '@/services/serverFunctions/user'
 import { SignUpTiltCommand, SignUpTiltCommandValidation } from '@/services/serverFunctions/user.command'
 import Form from '@abc-transitionbascarbone/components/src/base/Form'
@@ -9,6 +7,8 @@ import LoadingButton from '@abc-transitionbascarbone/components/src/base/Loading
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { getEnvRoute } from '@abc-transitionbascarbone/services/email/utils'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
+import { getEnvVarClient } from '@abc-transitionbascarbone/utils/environmentClient'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl } from '@mui/material'
 import classNames from 'classnames'

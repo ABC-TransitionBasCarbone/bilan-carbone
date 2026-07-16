@@ -1,7 +1,5 @@
 'use client'
 
-import { customRich } from '@/i18n/customRich'
-import { getEnvVarClient } from '@/lib/environmentClient'
 import { UNKNOWN_SCHOOL } from '@/services/permissions/check'
 import { getSchoolsFromPostalCodeOrName, School } from '@/services/schoolApi'
 import { signUpWithSchool } from '@/services/serverFunctions/user'
@@ -12,6 +10,8 @@ import { FormTextField } from '@abc-transitionbascarbone/components/src/form/Tex
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { Country, Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { getEnvRoute } from '@abc-transitionbascarbone/services/email/utils'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
+import { getEnvVarClient } from '@abc-transitionbascarbone/utils/environmentClient'
 import { zodResolver } from '@hookform/resolvers/zod'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import { FormControl } from '@mui/material'

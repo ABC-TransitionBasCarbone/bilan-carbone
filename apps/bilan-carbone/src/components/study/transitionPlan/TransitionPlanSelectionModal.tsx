@@ -1,9 +1,9 @@
 'use client'
 
-import { customRich } from '@/i18n/customRich'
 import { getAvailableTransitionPlans } from '@/services/serverFunctions/transitionPlan'
 import type { TransitionPlanWithStudies } from '@/types/trajectory.types'
 import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import { FormControl, FormControlLabel, MenuItem, Radio, RadioGroup, Select } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

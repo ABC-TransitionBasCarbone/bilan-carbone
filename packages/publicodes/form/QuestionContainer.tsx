@@ -14,8 +14,8 @@ import {
 import styles from './QuestionContainer.module.css'
 
 export interface QuestionContainerProps {
-  label: string
-  description?: string
+  label: React.ReactNode
+  description?: React.ReactNode
   children: React.ReactNode
 }
 

@@ -1,5 +1,7 @@
 import { useTranslations } from 'next-intl'
 import { getI18nKeyRuleName, getI18nUnitKey } from '../utils'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
+import { EvaluatedGroupLayout, EvaluatedTableLayout } from '../form/layouts'
 
 export function usePublicodesTranslation() {
   const tRules = useTranslations('publicodes-rules')
@@ -22,9 +24,18 @@ export function usePublicodesRuleTranslation(ruleName: string) {
   const tOptions = useTranslations(`publicodes-rules.${ruleKey}.options`)
 
   return {
-    question: tRules(`${ruleKey}.question`),
-    description: tRules.has(`${ruleKey}.description`) ? tRules(`${ruleKey}.description`) : undefined,
-    getOptionLabel: (value: string | boolean | number): string =>
-      typeof value === 'boolean' ? tCommon(value ? 'yes' : 'no') : tOptions(String(value)),
+    question: customRich(tRules, `${ruleKey}.question`),
+    titre: customRich(tRules, `${ruleKey}.titre`),
+    description: tRules.has(`${ruleKey}.description`) ? customRich(tRules,`${ruleKey}.description`) : undefined,
+    getOptionLabel: (value: string | boolean | number) =>
+      typeof value === 'boolean' ? customRich(tCommon, value ? 'yes' : 'no') : customRich(tOptions, String(value)),
+  }
+}
+
+export const usePublicodesLayoutTranslation = <RuleName extends string>(formLayout: EvaluatedTableLayout<RuleName> | EvaluatedGroupLayout<RuleName>, type: string) => {
+  const tLayout = useTranslations('publicodes-layout')
+  return {
+    title: customRich(tLayout, `${type}.${formLayout.title}`),
+    description: tLayout.has(`${type}.${formLayout.description}`) ? customRich(tLayout, `${type}.${formLayout.description}`) : undefined,
   }
 }

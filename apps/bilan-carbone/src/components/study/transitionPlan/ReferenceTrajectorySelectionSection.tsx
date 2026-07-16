@@ -10,10 +10,10 @@ import {
   TRAJECTORY_SNBC_WASTE_ID,
   TRAJECTORY_WB2C_ID,
 } from '@/constants/trajectory.constants'
-import { customRich } from '@/i18n/customRich'
 import { TrajectoryWithObjectives } from '@/types/trajectory.types'
 import Box from '@abc-transitionbascarbone/components/src/base/Box'
 import { Button } from '@abc-transitionbascarbone/ui'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import { Typography } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

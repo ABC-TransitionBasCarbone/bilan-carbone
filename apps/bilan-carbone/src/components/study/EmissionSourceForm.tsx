@@ -2,7 +2,6 @@
 
 import { EmissionFactorList } from '@/db/emissionFactors'
 import type { FullStudy } from '@/db/study'
-import { customRich } from '@/i18n/customRich'
 import { getEmissionResults } from '@/services/emissionSource'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { getTagFamiliesByStudyId } from '@/services/serverFunctions/emissionSource'
@@ -38,6 +37,7 @@ import {
   Unit,
 } from '@abc-transitionbascarbone/db-common/enums'
 import { Button } from '@abc-transitionbascarbone/ui'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import AddIcon from '@mui/icons-material/Add'
 import CopyIcon from '@mui/icons-material/ContentCopy'

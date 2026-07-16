@@ -1,12 +1,12 @@
 'use client'
 
-import { customRich } from '@/i18n/customRich'
 import { getFormationFormStart, startFormationForm } from '@/services/serverFunctions/user'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
 import { Formation } from '@abc-transitionbascarbone/db-common'
 import { Button } from '@abc-transitionbascarbone/ui'
 import { MIN, TIME_IN_MS } from '@abc-transitionbascarbone/utils'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import { Checkbox } from '@mui/material'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'

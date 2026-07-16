@@ -16,7 +16,6 @@ import {
 import type { FullStudy } from '@/db/study'
 import { useTransitionPlan } from '@/hooks/useTransitionPlan'
 import { useTransitionPlanFilters } from '@/hooks/useTransitionPlanFilters'
-import { customRich } from '@/i18n/customRich'
 import { SectorPercentages } from '@/services/serverFunctions/trajectory.command'
 import { createTrajectoryWithObjectives, updateTrajectory } from '@/services/serverFunctions/trajectory.serverFunction'
 import {
@@ -36,6 +35,7 @@ import { useServerFunction } from '@abc-transitionbascarbone/components/src/hook
 import type { ExternalStudy, SectenInfo, SectenVersion, TransitionPlan } from '@abc-transitionbascarbone/db-common'
 import { TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
 import { Button } from '@abc-transitionbascarbone/ui'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import DeleteIcon from '@mui/icons-material/Delete'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

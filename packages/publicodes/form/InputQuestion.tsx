@@ -15,9 +15,9 @@ interface InputQuestionProps<RuleName extends string> {
 export function InputQuestion<RuleName extends string>({ formElement, onChange, engine }: InputQuestionProps<RuleName>) {
   const translation = usePublicodesRuleTranslation(formElement.id)
   const question = translation?.question
+  const description = translation?.description
 
   const publicodeRules = engine?.getParsedRules()[formElement.id]?.rawNode
-  const description = publicodeRules?.description ?? translation?.description
   const suggestions = publicodeRules?.suggestions
 
   return (
