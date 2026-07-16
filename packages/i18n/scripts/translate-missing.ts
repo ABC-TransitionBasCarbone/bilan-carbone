@@ -56,7 +56,7 @@ type JsonArray = JsonValue[]
 
 // ── Glossary ──────────────────────────────────────────────────────────────────
 
-async function loadGlossary(): Promise<string> {
+const loadGlossary = async (): Promise<string> => {
   try {
     const res = await fetch(GLOSSARY_URL)
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
@@ -72,10 +72,10 @@ async function loadGlossary(): Promise<string> {
       }
     }
 
-    console.log(`  Loaded ${entries.length} glossary terms from methode-bilan-carbone`)
+    console.log(`Loaded ${entries.length} glossary terms from methode-bilan-carbone`)
     return entries.join('\n')
   } catch (e) {
-    console.warn(`  Could not fetch glossary (${e}), using fallback`)
+    console.warn(`Could not fetch glossary (${e}), using fallback`)
     return `
 Bilan Carbone® → Bilan Carbone® (proper name/trademark, never translate)
 Poste / Postes → Category / Categories
@@ -92,7 +92,7 @@ Bilan GES → GHG Assessment
 
 // ── Diff helpers ──────────────────────────────────────────────────────────────
 
-function getMissingKeys(source: JsonObject, target: JsonObject, path = ''): Record<string, string> {
+const getMissingKeys = (source: JsonObject, target: JsonObject, path = ''): Record<string, string> => {
   const missing: Record<string, string> = {}
 
   for (const [key, value] of Object.entries(source)) {
@@ -117,7 +117,7 @@ function getMissingKeys(source: JsonObject, target: JsonObject, path = ''): Reco
   return missing
 }
 
-function setNestedKey(obj: JsonObject, path: string, value: string): void {
+const setNestedKey = (obj: JsonObject, path: string, value: string): void => {
   const parts = path.split('.')
   let current = obj
   for (let i = 0; i < parts.length - 1; i++) {
@@ -130,7 +130,7 @@ function setNestedKey(obj: JsonObject, path: string, value: string): void {
 }
 
 // Flattens an object to { "a.b.c": "value" } for string leaves only.
-function flattenStrings(obj: JsonObject, path = ''): Record<string, string> {
+const flattenStrings = (obj: JsonObject, path = ''): Record<string, string> => {
   const out: Record<string, string> = {}
   for (const [key, value] of Object.entries(obj)) {
     const currentPath = path ? `${path}.${key}` : key
@@ -144,7 +144,7 @@ function flattenStrings(obj: JsonObject, path = ''): Record<string, string> {
 }
 
 // Reads a JSON file as it was at a given git ref; null if it didn't exist then.
-function readJsonAtRef(repoRelPath: string, ref: string): JsonObject | null {
+const readJsonAtRef = (repoRelPath: string, ref: string): JsonObject | null => {
   try {
     const out = execSync(`git show ${ref}:${repoRelPath}`, { encoding: 'utf-8', stdio: ['ignore', 'pipe', 'ignore'] })
     return JSON.parse(out) as JsonObject
@@ -155,7 +155,7 @@ function readJsonAtRef(repoRelPath: string, ref: string): JsonObject | null {
 
 // Paths whose FR value was added or modified vs the base ref — the only keys
 // the incremental (--changed-only) mode sends to the API.
-function getChangedPaths(current: JsonObject, base: JsonObject | null): Record<string, string> {
+const getChangedPaths = (current: JsonObject, base: JsonObject | null): Record<string, string> => {
   const cur = flattenStrings(current)
   const old = base ? flattenStrings(base) : {}
   const changed: Record<string, string> = {}
@@ -170,12 +170,12 @@ function getChangedPaths(current: JsonObject, base: JsonObject | null): Record<s
 
 const CHUNK_SIZE = 50
 
-async function translateBatch(
+const translateBatch = async (
   strings: Record<string, string>,
   targetLocale: string,
   glossary: string,
   client: Anthropic,
-): Promise<Record<string, string>> {
+): Promise<Record<string, string>> => {
   const langName = LOCALE_NAMES[targetLocale] ?? targetLocale
 
   const prompt = `You are translating UI strings for Bilan Carbone®, a carbon footprint assessment tool used by organisations.
@@ -212,26 +212,26 @@ Return a JSON object with the exact same keys and translated values.`
 
 type Mode = { changedOnly: boolean; base: string }
 
-async function translateFile(
+const translateFile = async (
   dir: string,
   file: string,
   locale: string,
   glossary: string,
   client: Anthropic,
   mode: Mode,
-): Promise<void> {
+): Promise<void> => {
   const frPath = join(dir, 'fr', `${file}.json`)
   const targetPath = join(dir, locale, `${file}.json`)
 
   if (!existsSync(frPath)) {
-    console.warn(`  Skipping ${file}: fr/${file}.json not found`)
+    console.warn(`Skipping ${file}: fr/${file}.json not found`)
     return
   }
 
   // Only fill locales the product already ships — don't create new language folders
   // (e.g. MIP only has fr/en, so es/it/… are skipped rather than invented).
   if (!existsSync(join(dir, locale))) {
-    console.log(`  ⤷ Skipping ${file}: locale "${locale}" not present in ${dir}`)
+    console.log(`⤷ Skipping ${file}: locale "${locale}" not present in ${dir}`)
     return
   }
 
@@ -241,7 +241,7 @@ async function translateFile(
   if (existsSync(targetPath)) {
     targetContent = JSON.parse(readFileSync(targetPath, 'utf-8')) as JsonObject
   } else {
-    console.log(`  No existing ${locale}/${file}.json — will create from scratch`)
+    console.log(`No existing ${locale}/${file}.json — will create from scratch`)
     mkdirSync(dirname(targetPath), { recursive: true })
   }
 
@@ -260,12 +260,12 @@ async function translateFile(
   const count = Object.keys(toTranslate).length
 
   if (count === 0) {
-    console.log(`  ✓ ${locale}/${file}.json — nothing to translate`)
+    console.log(`✓ ${locale}/${file}.json — nothing to translate`)
     return
   }
 
   const label = mode.changedOnly ? 'changed' : 'missing'
-  console.log(`  Translating ${count} ${label} key(s) in ${locale}/${file}.json...`)
+  console.log(`Translating ${count} ${label} key(s) in ${locale}/${file}.json...`)
 
   const entries = Object.entries(toTranslate)
   for (let i = 0; i < entries.length; i += CHUNK_SIZE) {
@@ -277,16 +277,16 @@ async function translateFile(
     }
 
     const end = Math.min(i + CHUNK_SIZE, entries.length)
-    console.log(`    ✓ keys ${i + 1}–${end}`)
+    console.log(`✓ keys ${i + 1}–${end}`)
   }
 
   writeFileSync(targetPath, JSON.stringify(targetContent, null, 2) + '\n', 'utf-8')
-  console.log(`  → Written ${locale}/${file}.json`)
+  console.log(`→ Written ${locale}/${file}.json`)
 }
 
 // ── Main ──────────────────────────────────────────────────────────────────────
 
-async function main() {
+const main = async () => {
   const args = process.argv.slice(2)
 
   const allLocales = args.includes('--all-locales')
