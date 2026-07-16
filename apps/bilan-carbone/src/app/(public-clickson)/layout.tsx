@@ -1,7 +1,7 @@
 import PublicClicksonPage from '@/components/pages/PublicClickson'
 import DynamicTheme from '@/environments/core/providers/DynamicTheme'
-import { customRich } from '@/i18n/customRich'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
 import { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 import { ReactNode } from 'react'

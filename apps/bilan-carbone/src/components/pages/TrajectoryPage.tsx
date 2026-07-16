@@ -2,11 +2,11 @@
 
 import TransitionPlanBase from '@/components/study/transitionPlan/TransitionPlanBase'
 import type { FullStudy } from '@/db/study'
-import { customRich } from '@/i18n/customRich'
 import { getStudyTotalCo2Emissions } from '@/services/study'
 import type { ActionWithRelations, TrajectoryWithObjectivesAndScope } from '@/types/trajectory.types'
 import { getDefaultSnbcSectoralPercentages, getDefaultSnbcSectoralTrajectory } from '@/utils/snbc'
 import type { ExternalStudy, SectenInfo, TransitionPlan } from '@abc-transitionbascarbone/db-common'
+import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
 import { Button } from '@abc-transitionbascarbone/ui'
 import AddIcon from '@mui/icons-material/Add'
 import { Tooltip, Typography } from '@mui/material'

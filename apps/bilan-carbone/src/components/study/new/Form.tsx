@@ -2,7 +2,6 @@
 
 import { FormDatePicker } from '@/components/form/DatePicker'
 import StudyDuplicationForm, { InviteOptions } from '@/components/study/duplication/StudyDuplicationForm'
-import { customRich } from '@/i18n/customRich'
 import { createStudyCommand, duplicateStudyCommand } from '@/services/serverFunctions/study'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
 import { HelpIcon } from '@abc-transitionbascarbone/components'
@@ -12,6 +11,7 @@ import LoadingButton from '@abc-transitionbascarbone/components/src/base/Loading
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import GlossaryModal from '@abc-transitionbascarbone/components/src/modals/GlossaryModal'
+import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'

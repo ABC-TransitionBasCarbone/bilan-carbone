@@ -1,7 +1,6 @@
 'use client'
 
 import type { FullStudy } from '@/db/study'
-import { customRich } from '@/i18n/customRich'
 import { changeStudyLevel } from '@/services/serverFunctions/study'
 import { ChangeStudyLevelCommand, ChangeStudyLevelCommandValidation } from '@/services/serverFunctions/study.command'
 import { getAllowedLevels } from '@/utils/study'
@@ -10,6 +9,7 @@ import { FormSelect } from '@abc-transitionbascarbone/components/src/form/Select
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import GlossaryModal from '@abc-transitionbascarbone/components/src/modals/GlossaryModal'
 import { Level } from '@abc-transitionbascarbone/db-common/enums'
+import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
 import { UserSession } from 'next-auth'

@@ -7,7 +7,6 @@ import {
   getStudiesForCards,
   getStudiesValidatedEmissionsSources,
 } from '@/db/study'
-import { customRich } from '@/i18n/customRich'
 import {
   canCreateStudyOnlyAsAdministrator,
   isTilt,
@@ -19,6 +18,7 @@ import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import Box from '@abc-transitionbascarbone/components/src/base/Box'
 import LinkButton from '@abc-transitionbascarbone/components/src/base/LinkButton'
 import Image from '@abc-transitionbascarbone/components/src/document/Image'
+import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
 import AddIcon from '@mui/icons-material/Add'
 import { Alert, Box as MUIBox } from '@mui/material'
 import classNames from 'classnames'

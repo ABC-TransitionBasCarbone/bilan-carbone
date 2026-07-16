@@ -1,10 +1,10 @@
 'use client'
 
-import { customRich } from '@/i18n/customRich'
-import { getEnvVarClient } from '@/lib/environmentClient'
 import LoginFormCommon from '@abc-transitionbascarbone/components/src/auth/LoginFormCommon'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
 import { getEnvRoute } from '@abc-transitionbascarbone/services/email/utils'
+import { getEnvVarClient } from '@abc-transitionbascarbone/utils/environmentClient'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 

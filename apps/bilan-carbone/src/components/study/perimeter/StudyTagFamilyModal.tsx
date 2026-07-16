@@ -1,4 +1,3 @@
-import { customRich } from '@/i18n/customRich'
 import { createOrUpdateStudyTagFamily, deleteStudyTagFamily } from '@/services/serverFunctions/emissionSource'
 import {
   NewStudyTagFamilyCommand,
@@ -8,6 +7,7 @@ import Form from '@abc-transitionbascarbone/components/src/base/Form'
 import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { StudyTagFamily } from '@abc-transitionbascarbone/db-common'
+import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
 import { Button } from '@abc-transitionbascarbone/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'

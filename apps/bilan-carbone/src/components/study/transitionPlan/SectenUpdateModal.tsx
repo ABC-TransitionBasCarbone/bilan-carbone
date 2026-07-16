@@ -1,9 +1,9 @@
 'use client'
 
 import { SECTEN_SECTORS } from '@/constants/trajectory.constants'
-import { customRich } from '@/i18n/customRich'
 import { SectenVersionDiff } from '@/utils/secten'
 import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
+import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import styles from './SectenUpdateModal.module.css'
