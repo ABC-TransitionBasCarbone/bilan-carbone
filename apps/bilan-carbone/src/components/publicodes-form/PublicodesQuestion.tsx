@@ -1,11 +1,15 @@
-import { InputQuestion, MosaicQuestion, OnFieldChange } from '@abc-transitionbascarbone/publicodes/form'
+import {
+  InputQuestion,
+  MosaicQuestion,
+  OnFieldChange,
+  QuestionContainer,
+} from '@abc-transitionbascarbone/publicodes/form'
 import { EvaluatedFormLayout, EvaluatedListLayout } from '@abc-transitionbascarbone/publicodes/form/layouts'
 import { usePublicodesRuleTranslation } from '@abc-transitionbascarbone/publicodes/hooks'
 import { useTranslations } from 'next-intl'
 import Engine from 'publicodes'
 import GroupQuestion from './GroupQuestion'
 import ListQuestion from './ListQuestion'
-import QuestionContainer from './QuestionContainer'
 import TableQuestion from './TableQuestion'
 
 function ListQuestionContainer<RuleName extends string>({
@@ -18,7 +22,7 @@ function ListQuestionContainer<RuleName extends string>({
   const { question, description } = usePublicodesRuleTranslation(listLayout.targetRule)
 
   return (
-    <QuestionContainer label={question} helperText={description}>
+    <QuestionContainer label={question} description={description}>
       <ListQuestion listLayout={listLayout} onChange={onChange} />
     </QuestionContainer>
   )
