@@ -35,7 +35,6 @@
     "km/bénéficiaires/an": "[TO_TRANSLATE] km/bénéficiaires.an",
     "place": "[UPDATED] place",
     "m²": "[TO_TRANSLATE] m²",
-    "jours": "[TO_TRANSLATE] jours",
     "repas": "[UPDATED] repas"
   },
   "publicodes-rules": {
@@ -77,7 +76,8 @@
           "Accompagnement des personnes en situation de handicap": "[TO_TRANSLATE] Accompagnement des personnes en situation de handicap",
           "Protection de l'enfance": "[TO_TRANSLATE] Protection de l'enfance",
           "Autres structures sociales et solidaires": "Other social and solidarity structures",
-          "Défense de l'environnement": "[TO_TRANSLATE] Défense de l'environnement",
+          "Association de défense de l'environnement": "Environmental protection association",
+          "Association d'enseignement ou de formation": "Teaching or training association",
           "Autre": "[TO_TRANSLATE] Autre"
         }
       },
@@ -935,6 +935,41 @@
         "végétalien": {
           "nombre de repas": {
             "question": "How many vegan meals are consumed by your beneficiaries each year?"
+          }
+        }
+      },
+      "mosaic": {
+        "titre": "[TO_TRANSLATE] Empreinte des repas",
+        "description": "[TO_TRANSLATE] En cohérence avec la durée de votre séjour, renseignez le nombre et les types de plats que vous allez probablement manger. Par exemple, si vous restez trois jours en \nHauts-de-France vous devez renseigner 6 repas.",
+        "question": "[TO_TRANSLATE] Comment <green>vont se composer vos déjeuners et dîners</green> durant le séjour ?",
+        "végétalien": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de plats végétaliens"
+          }
+        },
+        "végétarien": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de plats végétariens"
+          }
+        },
+        "viande blanche": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de plats viande blanche"
+          }
+        },
+        "viande rouge": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de plats viande rouge"
+          }
+        },
+        "poisson gras": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de plats poisson gras"
+          }
+        },
+        "poisson blanc": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de plats poisson blanc"
           }
         }
       }

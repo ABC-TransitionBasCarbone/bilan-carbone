@@ -14,7 +14,7 @@ import {
   UPDATED_PREFIX,
 } from './utils'
 
-const { model, destLang } = getArgs()
+const { model } = getArgs()
 
 // Définition statique des locales prises en charge pour chaque modèle
 const LOCALES_CLICKSON = [
