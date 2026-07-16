@@ -1,5 +1,5 @@
 import { appendForm } from '@/utils/form'
-import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import { MIN, TIME_IN_MS } from '@abc-transitionbascarbone/utils'
 import classNames from 'classnames'
 import dayjs from 'dayjs'

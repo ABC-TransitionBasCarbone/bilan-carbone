@@ -16,7 +16,7 @@ import { FormTextField } from '@abc-transitionbascarbone/components/src/form/Tex
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
 import { SiteCAUnit } from '@abc-transitionbascarbone/db-common/enums'
-import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import type { IsSuccess } from '@abc-transitionbascarbone/utils/serverResponse'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'

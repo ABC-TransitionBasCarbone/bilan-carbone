@@ -3,7 +3,7 @@ import { hasAccessToEmissionSourceValidation } from '@/services/permissions/envi
 import { subPostsByPost } from '@/services/posts'
 import { withInfobulle } from '@/utils/post'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
-import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import { Post } from '@abc-transitionbascarbone/utils/charts'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import classNames from 'classnames'

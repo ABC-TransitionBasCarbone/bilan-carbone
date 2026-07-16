@@ -10,7 +10,7 @@ import { TableActionButton } from '@abc-transitionbascarbone/components/src/base
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
-import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import { Post } from '@abc-transitionbascarbone/utils/charts'
 import { getEnvVarClient } from '@abc-transitionbascarbone/utils/environmentClient'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'

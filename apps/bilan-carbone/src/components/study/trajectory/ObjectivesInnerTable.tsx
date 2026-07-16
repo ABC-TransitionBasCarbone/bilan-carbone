@@ -3,7 +3,7 @@
 import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
 import { Table as BaseTable } from '@abc-transitionbascarbone/components'
 import { TableActionButton } from '@abc-transitionbascarbone/components/src/base/TableActionButton'
-import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import { Link, Typography } from '@mui/material'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'

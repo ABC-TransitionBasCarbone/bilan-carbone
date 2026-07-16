@@ -12,7 +12,7 @@ import {
 } from '@/constants/trajectory.constants'
 import { TrajectoryWithObjectives } from '@/types/trajectory.types'
 import Box from '@abc-transitionbascarbone/components/src/base/Box'
-import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import { Button } from '@abc-transitionbascarbone/ui'
 import { Typography } from '@mui/material'
 import classNames from 'classnames'

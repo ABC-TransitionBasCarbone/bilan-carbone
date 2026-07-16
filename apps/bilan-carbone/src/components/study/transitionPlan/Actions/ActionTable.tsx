@@ -13,7 +13,7 @@ import styles from '@abc-transitionbascarbone/components/src/base/Table.module.c
 import { TableActionButton } from '@abc-transitionbascarbone/components/src/base/TableActionButton'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { ActionPotentialDeduction, StudyResultUnit } from '@abc-transitionbascarbone/db-common/enums'
-import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import { getYearFromDateStr } from '@abc-transitionbascarbone/utils/time'
 import ArrowRight from '@mui/icons-material/ArrowRight'

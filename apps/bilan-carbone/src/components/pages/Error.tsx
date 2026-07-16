@@ -2,7 +2,7 @@
 
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
-import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import { getEnvVarClient } from '@abc-transitionbascarbone/utils/environmentClient'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'

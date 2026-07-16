@@ -5,7 +5,7 @@ import PublicContainer from '@abc-transitionbascarbone/components/src/base/Publi
 import Image from '@abc-transitionbascarbone/components/src/document/Image'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { defaultLocale, Locale, LocaleType } from '@abc-transitionbascarbone/i18n/config'
-import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import { alpha, Box, Container, Divider, styled, Typography } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
