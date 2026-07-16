@@ -4,6 +4,7 @@ import MosaicNumberInput from '@abc-transitionbascarbone/ui/Form/MosaicNumberInp
 import classNames from 'classnames'
 import Engine from 'publicodes'
 import styles from './MosaicQuestion.module.css'
+import { usePublicodesRuleTranslation } from '../hooks'
 
 type Props<RuleName> = {
   parent: RuleName
@@ -22,7 +23,9 @@ export function MosaicQuestion<RuleName extends string>({ parent, elements, engi
   const rules = engine.getParsedRules()
   const parentRaw = rules[parent]?.rawNode as any
   const mosaicType = parentRaw?.mosaique?.type
-  const label = parentRaw?.question ?? parentRaw?.titre ?? parent
+  const translation = usePublicodesRuleTranslation(parent)
+  
+  const label = translation?.question ?? translation?.titre ?? parent
 
   return (
     <QuestionContainer label={label}>
