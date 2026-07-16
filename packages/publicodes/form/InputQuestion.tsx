@@ -5,7 +5,6 @@ import Engine from 'publicodes'
 import { InputField as PublicodesInputField } from './InputField'
 import { QuestionContainer } from './QuestionContainer'
 import { OnFieldChange } from './utils'
-import { useTranslations } from 'next-intl'
 
 interface InputQuestionProps<RuleName extends string> {
   formElement: EvaluatedFormElement<RuleName>
