@@ -2,8 +2,8 @@
 
 import LoginFormCommon from '@abc-transitionbascarbone/components/src/auth/LoginFormCommon'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
-import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import { getEnvRoute } from '@abc-transitionbascarbone/services/email/utils'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import { getEnvVarClient } from '@abc-transitionbascarbone/utils/environmentClient'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
