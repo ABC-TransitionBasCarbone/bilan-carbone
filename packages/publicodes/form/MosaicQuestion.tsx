@@ -1,7 +1,6 @@
 import { QuestionContainer } from '@abc-transitionbascarbone/publicodes/form'
 import MosaicBooleanInput from '@abc-transitionbascarbone/ui/Form/MosaicBooleanInput'
 import MosaicNumberInput from '@abc-transitionbascarbone/ui/Form/MosaicNumberInput'
-import classNames from 'classnames'
 import Engine from 'publicodes'
 import styles from './MosaicQuestion.module.css'
 import { usePublicodesRuleTranslation } from '../hooks'
