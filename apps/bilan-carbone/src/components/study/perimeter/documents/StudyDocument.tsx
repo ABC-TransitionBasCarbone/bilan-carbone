@@ -2,7 +2,6 @@
 
 import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
 import type { FullStudy } from '@/db/study'
-import { customRich } from '@/i18n/customRich'
 import { DEFAULT_SAMPLE_TITLE, SAMPLE_TITLES } from '@/services/documents'
 import { allowedFlowFileTypes, downloadFromUrl, maxAllowedFileSize, MB } from '@/services/file'
 import {
@@ -18,6 +17,7 @@ import LoadingButton from '@abc-transitionbascarbone/components/src/base/Loading
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import type { Document } from '@abc-transitionbascarbone/db-common'
 import { DocumentCategory } from '@abc-transitionbascarbone/db-common/enums'
+import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
 import { Translations } from '@abc-transitionbascarbone/lib'
 import { Button, useToast } from '@abc-transitionbascarbone/ui'
 import DeleteIcon from '@mui/icons-material/Delete'

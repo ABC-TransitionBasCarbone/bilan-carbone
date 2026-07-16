@@ -1,7 +1,6 @@
 'use client'
 
 import type { FullStudy } from '@/db/study'
-import { customRich } from '@/i18n/customRich'
 import { getCaracterisationsBySubPost, getEmissionResults } from '@/services/emissionSource'
 import { EmissionFactorWithMetaData, getEmissionFactors } from '@/services/serverFunctions/emissionFactor'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
@@ -15,6 +14,7 @@ import {
   StudyRole,
   SubPost as SubPostEnum,
 } from '@abc-transitionbascarbone/db-common/enums'
+import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
 import { Post, STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/utils/charts'
 import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'

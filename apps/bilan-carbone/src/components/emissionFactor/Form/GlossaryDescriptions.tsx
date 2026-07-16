@@ -1,4 +1,4 @@
-import { customRich } from '@/i18n/customRich'
+import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
 import { useTranslations } from 'next-intl'
 import styles from './GlossaryDescriptions.module.css'
 

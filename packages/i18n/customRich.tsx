@@ -1,4 +1,4 @@
-import { getEnvVarClient } from '@/lib/environmentClient'
+import { getEnvVarClient } from '@abc-transitionbascarbone/utils/environmentClient'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { Translations } from '@abc-transitionbascarbone/lib'
 import classNames from 'classnames'
