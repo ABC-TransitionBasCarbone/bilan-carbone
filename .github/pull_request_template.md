@@ -1,4 +1,14 @@
 PR liée au(x) ticket(s) :
+- 
+
+### Points d'attention particuliers pendant la relecture
+- 
+
+### Améliorations possibles (je crée une issue pour les traiter dans un futur proche)
+- 
+
+### Améliorations possibles (dans un futur lointain)
+- 
 
 ### Tests
 
