@@ -1,6 +1,6 @@
 import { useTranslations } from 'next-intl'
 import { getI18nKeyRuleName, getI18nUnitKey } from '../utils'
-import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import { EvaluatedGroupLayout, EvaluatedTableLayout } from '../form/layouts'
 
 export function usePublicodesTranslation() {

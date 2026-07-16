@@ -4,7 +4,7 @@ import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emission
 import { exportSpecificFields } from '@/utils/study'
 import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
 import { Export } from '@abc-transitionbascarbone/db-common/enums'
-import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 

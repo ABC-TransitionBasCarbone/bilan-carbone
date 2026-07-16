@@ -17,7 +17,7 @@ import LoadingButton from '@abc-transitionbascarbone/components/src/base/Loading
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import type { Document } from '@abc-transitionbascarbone/db-common'
 import { DocumentCategory } from '@abc-transitionbascarbone/db-common/enums'
-import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import { Translations } from '@abc-transitionbascarbone/lib'
 import { Button, useToast } from '@abc-transitionbascarbone/ui'
 import DeleteIcon from '@mui/icons-material/Delete'

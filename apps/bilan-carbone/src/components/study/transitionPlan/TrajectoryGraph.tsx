@@ -15,7 +15,7 @@ import { calculateTrajectoriesWithHistory, getYearsToDisplay } from '@/utils/tra
 import GlossaryModal from '@abc-transitionbascarbone/components/src/modals/GlossaryModal'
 import { Action, SectenInfo } from '@abc-transitionbascarbone/db-common'
 import { TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
-import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import { Alert, Slider, SvgIcon, Typography } from '@mui/material'
 import {

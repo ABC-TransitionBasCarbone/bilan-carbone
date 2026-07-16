@@ -37,7 +37,7 @@ import {
   SubPost,
   Unit,
 } from '@abc-transitionbascarbone/db-common/enums'
-import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import { Button } from '@abc-transitionbascarbone/ui'
 import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import AddIcon from '@mui/icons-material/Add'
