@@ -12,7 +12,6 @@ import type { FullStudy } from '@/db/study'
 import EmissionsAnalysisClickson from '@/environments/clickson/study/results/consolidated/EmissionsAnalysisClickson'
 import CarbonIntensitiesCut from '@/environments/cut/study/results/CarbonIntensitiesCut'
 import SheetIcon from '@/environments/simplified/icons/SheetIcon'
-import { customRich } from '@/i18n/customRich'
 import {
   hasAccessToAdvancedEmissionAnalysis,
   hasAccessToFeedbackButton,
@@ -32,6 +31,7 @@ import { BCEnvironment } from '@/types/environment'
 import type { BaseResultsBySite } from '@/types/study.types'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { SiteCAUnit } from '@abc-transitionbascarbone/db-common/enums'
+import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
 import { BarChart, PieChart } from '@abc-transitionbascarbone/ui'
 import DownloadIcon from '@mui/icons-material/Download'
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'

@@ -2,12 +2,12 @@
 
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import type { FullStudy } from '@/db/study'
-import { customRich } from '@/i18n/customRich'
 import { hasAccessToStudyResults } from '@/services/permissions/environment'
 import { getDetailedEmissionResults } from '@/services/study'
 import { BCEnvironment } from '@/types/environment'
 import { HelpIcon } from '@abc-transitionbascarbone/components'
 import Box from '@abc-transitionbascarbone/components/src/base/Box'
+import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
 import { BarChart } from '@abc-transitionbascarbone/ui'
 import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'

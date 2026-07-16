@@ -1,7 +1,5 @@
 'use client'
 
-import { customRich } from '@/i18n/customRich'
-import { getEnvVarClient } from '@/lib/environmentClient'
 import { getAllCNCs } from '@/services/serverFunctions/cnc'
 import { signUpWithSiretOrCNC } from '@/services/serverFunctions/user'
 import { SignUpCutCommand, SignUpCutCommandValidation } from '@/services/serverFunctions/user.command'
@@ -11,7 +9,9 @@ import { FormTextField } from '@abc-transitionbascarbone/components/src/form/Tex
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import type { Cnc } from '@abc-transitionbascarbone/db-common'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
 import { getEnvRoute } from '@abc-transitionbascarbone/services/email/utils'
+import { getEnvVarClient } from '@abc-transitionbascarbone/utils/environmentClient'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl } from '@mui/material'
 import classNames from 'classnames'

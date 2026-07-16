@@ -1,10 +1,10 @@
 'use client'
 
 import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
-import { customRich } from '@/i18n/customRich'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { Select } from '@abc-transitionbascarbone/components/src/base/Select'
 import { EmissionFactorBase, SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
 import { FormControl, FormHelperText, MenuItem } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo } from 'react'

@@ -1,7 +1,7 @@
 'use client'
 
-import { customRich } from '@/i18n/customRich'
 import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
+import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
 import { useTranslations } from 'next-intl'
 
 interface Props {

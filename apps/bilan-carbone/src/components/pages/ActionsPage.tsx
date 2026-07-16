@@ -2,9 +2,9 @@
 
 import TransitionPlanBase from '@/components/study/transitionPlan/TransitionPlanBase'
 import type { FullStudy } from '@/db/study'
-import { customRich } from '@/i18n/customRich'
 import type { ActionWithRelations, TrajectoryWithObjectivesAndScope } from '@/types/trajectory.types'
 import type { ExternalStudy, SectenInfo } from '@abc-transitionbascarbone/db-common'
+import { customRich } from '@abc-transitionbascarbone/i18n/customRich'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import Actions from '../study/transitionPlan/Actions/Actions'
