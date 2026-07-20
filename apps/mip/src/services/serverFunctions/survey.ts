@@ -26,7 +26,9 @@ export const createSurveyResponse = async (campaignId: string, answers: string) 
 
 export const getSurveyResults = async (campaignId: string): Promise<SurveyResults | null> => {
   const campaign = await getCampaignWithModelForSurvey(campaignId)
-  if (!campaign) return null
+  if (!campaign) {
+    return null
+  }
 
   const responses = await getResponsesByCampaignId(campaignId)
   const totalRespondents = responses.length
