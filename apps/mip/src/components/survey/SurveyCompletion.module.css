@@ -1,0 +1,356 @@
+.scrollWrapper {
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.page {
+  padding-bottom: 3rem;
+}
+
+.footprintBanner {
+  background: linear-gradient(120deg, var(--primary-700), var(--info));
+  border-radius: 0.75rem;
+  color: var(--white);
+  text-align: center;
+}
+
+.footprintBannerTitle {
+  color: var(--white) !important;
+  margin-bottom: 1rem !important;
+  font-weight: 700 !important;
+}
+
+.rangeChartWrapper {
+  position: relative;
+  padding-top: 1.6rem;
+  padding-bottom: 1.8rem;
+}
+
+.rangeChartRow {
+  display: flex;
+  align-items: end;
+  gap: 0.75rem;
+}
+
+.rangeBarColumn {
+  position: relative;
+  flex: 1;
+}
+
+.rangeCurrentValue {
+  position: absolute;
+  top: -1.35rem;
+  transform: translateX(-50%);
+  color: var(--white) !important;
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+}
+
+.rangeBarTrack {
+  position: relative;
+  background-color: color-mix(in srgb, var(--white) 35%, transparent);
+  height: 2.25rem;
+  border-radius: 0.2rem;
+  overflow: hidden;
+}
+
+.rangeBarFill {
+  height: 2.25rem;
+  background: repeating-linear-gradient(var(--primary-200));
+}
+
+.rangeLimitLine {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  width: 0.2rem;
+  height: 2.25rem;
+  background-color: var(--warning);
+}
+
+.rangeAxis {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 0.25rem;
+}
+
+.rangeAxisLabel {
+  color: var(--white) !important;
+  font-size: 0.85rem !important;
+  font-weight: 700 !important;
+}
+
+.rangeMaxValue {
+  color: var(--white) !important;
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+}
+
+.limitLabel {
+  position: absolute;
+  bottom: 0;
+  transform: translateX(-50%);
+  font-size: 0.75rem !important;
+  color: var(--white) !important;
+  opacity: 0.95;
+  white-space: nowrap;
+}
+
+.transitionEncart {
+  border: 1px solid var(--neutral-300);
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.transitionHeader {
+  background-color: var(--info);
+  color: var(--white);
+  padding: 1rem 1.5rem;
+}
+
+.transitionTitle {
+  color: var(--white) !important;
+  font-weight: 700 !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.transitionDescription {
+  color: var(--white) !important;
+  opacity: 0.9;
+}
+
+.transitionBody {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 1rem;
+  align-items: center;
+  background-color: var(--white);
+}
+
+.transitionMetricLabel {
+  color: var(--neutral-700) !important;
+  font-size: 0.9rem !important;
+}
+
+.transitionMetricValue {
+  font-weight: 700 !important;
+  font-size: 1.75rem !important;
+  color: var(--info) !important;
+  line-height: 1.1 !important;
+}
+
+.transitionGoalText {
+  color: var(--primary-600) !important;
+  font-weight: 600 !important;
+}
+
+.tabs {
+  border-bottom: 1px solid var(--neutral-200);
+}
+
+.sectionTitle {
+  margin-bottom: 1rem !important;
+  font-weight: 600 !important;
+}
+
+.keyCategoryCard {
+  border: 1px solid var(--neutral-200) !important;
+  box-shadow: none !important;
+}
+
+.keyCategoryTitle {
+  font-weight: 600 !important;
+}
+
+.topCategoryItem {
+  padding: 1rem 1.25rem;
+  background-color: var(--neutral-50);
+  border-radius: 0.5rem;
+  border-left: 4px solid var(--primary-500);
+}
+
+.topCategoryRank {
+  font-size: 1.25rem !important;
+  font-weight: 700 !important;
+  color: var(--primary-500) !important;
+  min-width: 1.5rem;
+}
+
+.topCategoryIcon {
+  font-size: 1.5rem !important;
+}
+
+.topCategoryName {
+  flex: 1;
+  font-weight: 500 !important;
+}
+
+.topCategoryValue {
+  font-weight: 700 !important;
+  color: var(--info) !important;
+}
+
+.categoryRankBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: var(--info);
+  color: var(--white) !important;
+  font-weight: 700 !important;
+  font-size: 0.9rem !important;
+  flex-shrink: 0;
+}
+
+.categoryEmoji {
+  font-size: 1.25rem !important;
+}
+
+.categoryPercent {
+  font-size: 0.875rem !important;
+  color: var(--neutral-700) !important;
+  margin-left: auto;
+}
+
+.actionRow {
+  display: grid;
+  grid-template-columns: 1.5rem 1fr auto;
+  align-items: start;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.5rem;
+  background-color: var(--neutral-50);
+}
+
+.actionIcon {
+  font-size: 1.1rem !important;
+  flex-shrink: 0;
+  line-height: 1.2 !important;
+}
+
+.actionTitle {
+  font-weight: 500 !important;
+  line-height: 1.35 !important;
+}
+
+.actionImpact {
+  font-size: 0.825rem !important;
+  color: var(--success) !important;
+  font-weight: 600 !important;
+  white-space: nowrap;
+}
+
+.libraryActionRow {
+  display: grid;
+  grid-template-columns: 1.5rem 1fr auto;
+  align-items: start;
+  gap: 0.75rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--neutral-100);
+}
+
+.libraryActionRow:last-child {
+  border-bottom: none;
+}
+
+.summaryAccordion {
+  border: 1px solid var(--neutral-200) !important;
+  box-shadow: none !important;
+}
+
+.summaryItem {
+  display: grid;
+  width: 100%;
+  align-items: center;
+  grid-template-columns: 2rem minmax(9rem, 13rem) minmax(8rem, 1fr) minmax(6rem, auto) minmax(3rem, auto);
+}
+
+.summaryIcon {
+  font-size: 1.25rem !important;
+  min-width: 2rem;
+  text-align: center;
+}
+
+.summaryName {
+  font-size: 0.9rem !important;
+  font-weight: 500 !important;
+}
+
+.equalBarTrack {
+  width: 100%;
+  min-height: 0.7rem;
+  border-radius: 999px;
+  background-color: var(--neutral-100);
+  overflow: hidden;
+}
+
+.equalBarFill {
+  height: 100%;
+  width: 100%;
+}
+
+.toneDt {
+  background-color: var(--primary-500);
+}
+
+.toneTransport {
+  background-color: var(--info);
+}
+
+.toneAlimentation {
+  background-color: var(--success);
+}
+
+.toneDivers {
+  background-color: var(--warning);
+}
+
+.toneLogement {
+  background-color: var(--error);
+}
+
+.summaryValue {
+  text-align: right;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  color: var(--info) !important;
+}
+
+.summaryPercent {
+  color: var(--neutral-700) !important;
+  font-weight: 600 !important;
+  text-align: right;
+  font-size: 0.85rem !important;
+}
+
+.subPostsLabel {
+  color: var(--neutral-700) !important;
+  font-size: 0.825rem !important;
+}
+
+@media (max-width: 600px) {
+  .transitionBody {
+    grid-template-columns: 1fr;
+  }
+
+  .summaryItem {
+    grid-template-columns: 2rem 1fr;
+    row-gap: 0.5rem;
+  }
+
+  .topCategoryItem {
+    flex-wrap: wrap;
+  }
+
+  .equalBarTrack {
+    grid-column: 1 / 3;
+  }
+
+  .summaryValue,
+  .summaryPercent {
+    text-align: left;
+  }
+}

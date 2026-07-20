@@ -1,6 +1,6 @@
 'use client'
 
-import { ModelCampaignsWithOrga } from '@/db/campaign'
+import type { ModelCampaignsWithOrga } from '@/db/campaign'
 import { updateModelCampaignCommand } from '@/services/serverFunctions/campaign'
 import {
   UpdateModelCampaignCommand,

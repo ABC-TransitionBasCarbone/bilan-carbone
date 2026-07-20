@@ -1,0 +1,10 @@
+.comparatorCard {
+  background-color: var(--neutral-50);
+  min-height: 34rem;
+}
+
+@media (max-width: 640px) {
+  .comparatorCard {
+    min-height: 28rem;
+  }
+}

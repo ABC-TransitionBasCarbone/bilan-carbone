@@ -52,12 +52,14 @@ const ResultsDashboard = ({ results }: Props) => {
 
   return (
     <div className={`${styles.page} pt2`}>
-      <Typography variant="h4" className="mb-2">
-        {t('title')}
-      </Typography>
-      <Typography variant="body1" className="mb2">
-        {t('subtitle')}
-      </Typography>
+      <section className="mb1">
+        <Typography variant="h4" className="mb-2">
+          {t('title')}
+        </Typography>
+        <Typography variant="body1" color="text.secondary" className="mb0">
+          {t('subtitle')}
+        </Typography>
+      </section>
 
       <StatsSection results={filtered} resultsUnit={StudyResultUnit.T} />
 
@@ -67,16 +69,11 @@ const ResultsDashboard = ({ results }: Props) => {
         onSelectEntity={setSelectedEntity}
       />
 
-      <ChartsSection
-        pieChartItems={pieChartItems}
-        barChartItems={barChartItems}
-        averageFootprint={filtered.averageFootprint}
-        totalRespondents={filtered.totalRespondents}
-      />
+      <ChartsSection pieChartItems={pieChartItems} barChartItems={barChartItems} />
 
       <KeyStatsSection keyStats={filtered.keyStats} />
 
-      <div className="flex gapped1">
+      <div className="flex gapped1 mt1">
         <Button variant="outlined" startIcon={<Print />} onClick={handlePrint}>
           {t('export.print')}
         </Button>

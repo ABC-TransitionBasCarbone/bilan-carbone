@@ -13,8 +13,14 @@ export default getRequestConfig(async () => {
     .then((m) => m.default)
     .catch(() => import(`./translations/${Locale.FR}/mip.json`).then((m) => m.default))
 
+  const mipRulesMessages = await import(`../../../../packages/i18n/translations/${locale}/publicodes/mip-rules.json`)
+    .then((m) => m.default)
+    .catch(() =>
+      import(`../../../../packages/i18n/translations/${Locale.FR}/publicodes/mip-rules.json`).then((m) => m.default),
+    )
+
   return {
     locale,
-    messages: { ...commonMessages, ...mipMessages },
+    messages: { ...commonMessages, ...mipMessages, ...mipRulesMessages },
   }
 })

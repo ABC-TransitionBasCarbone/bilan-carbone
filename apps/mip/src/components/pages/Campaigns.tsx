@@ -1,6 +1,6 @@
 'use client'
 
-import { CampaignsWithResponses, ModelCampaignLight } from '@/db/campaign'
+import type { CampaignsWithResponses, ModelCampaignLight } from '@/db/campaign'
 import { updateCampaignCommand } from '@/services/serverFunctions/campaign'
 import { UpdateCampaignCommand, UpdateCampaignCommandValidation } from '@/services/serverFunctions/campaign.command'
 import { handleCopy } from '@/utils/campaign'
@@ -8,22 +8,19 @@ import { Table as BaseTable } from '@abc-transitionbascarbone/components'
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import Form from '@abc-transitionbascarbone/components/src/base/Form'
 import LinkButton from '@abc-transitionbascarbone/components/src/base/LinkButton'
-import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
-import { TableActionButton } from '@abc-transitionbascarbone/components/src/base/TableActionButton'
 import { FormSelect } from '@abc-transitionbascarbone/components/src/form/Select'
-import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
-import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import { CampaignStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { Button, useToast } from '@abc-transitionbascarbone/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import BarChartIcon from '@mui/icons-material/BarChart'
 import CopyIcon from '@mui/icons-material/ContentCopy'
-import { MenuItem } from '@mui/material'
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
+import { IconButton, MenuItem, TextField, Tooltip } from '@mui/material'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useMemo } from 'react'
-import { Control, useForm, UseFormGetValues, UseFormSetValue, useWatch } from 'react-hook-form'
+import { useCallback, useMemo } from 'react'
+import { Controller, useForm, useWatch } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
 import styles from './Campaign.module.css'
 
@@ -36,7 +33,7 @@ interface Props {
 const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
   const t = useTranslations('campaigns')
   const router = useRouter()
-  const { showSuccessToast } = useToast()
+  const { showErrorToast, showSuccessToast } = useToast()
 
   const form = useForm<UpdateCampaignCommand>({
     resolver: zodResolver(UpdateCampaignCommandValidation),
@@ -48,8 +45,7 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
       })),
     },
   })
-  const setValue = form?.setValue as UseFormSetValue<UpdateCampaignCommand>
-  const getValues = form?.getValues as UseFormGetValues<UpdateCampaignCommand>
+
   const newCampaign = () =>
     ({
       id: uuidv4(),
@@ -60,25 +56,29 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
       allowedAccounts: [accountMipId],
     }) as UpdateCampaignCommand['campaigns'][0]
 
-  const { callServerFunction } = useServerFunction()
-
   const onSubmit = async (command: UpdateCampaignCommand) => {
-    await callServerFunction(() => updateCampaignCommand(command), {
-      onSuccess: () => {
-        showSuccessToast(t('success'))
-        router.refresh()
-      },
-    })
+    const result = await updateCampaignCommand(command)
+
+    if (result.success) {
+      showSuccessToast(t('success'))
+      router.refresh()
+      return
+    }
+
+    showErrorToast(result.errorMessage)
   }
 
-  const handleDelete = (id: string) => {
-    setValue(
-      'campaigns',
-      getValues('campaigns').filter((campaign) => campaign.id !== id),
-    )
-  }
+  const handleDelete = useCallback(
+    (id: string) => {
+      form.setValue(
+        'campaigns',
+        form.getValues('campaigns').filter((campaign) => campaign.id !== id),
+      )
+    },
+    [form],
+  )
 
-  const control = form?.control as Control<UpdateCampaignCommand>
+  const control = form.control
 
   const columns = useMemo(
     () =>
@@ -88,13 +88,25 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
           header: () => <div className="align-center gapped">{t('name')}</div>,
           accessorKey: 'name',
           cell: ({ row }) => (
-            <FormTextField
-              data-testid={`input-name-${row.original.id}`}
-              size="small"
+            <Controller
               control={control}
               name={`campaigns.${row.index}.name`}
-              placeholder={t('namePlaceholder')}
-              fullWidth
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  value={field.value ?? ''}
+                  size="small"
+                  placeholder={t('namePlaceholder')}
+                  fullWidth
+                  error={!!error}
+                  helperText={error?.message}
+                  slotProps={{
+                    htmlInput: {
+                      'data-testid': `input-name-${row.original.id}`,
+                    },
+                  }}
+                />
+              )}
             />
           ),
         },
@@ -121,7 +133,7 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
           id: 'results',
           header: () => t('viewResults'),
           cell: ({ row }) => (
-            <LinkButton href={`/survey/${row.original.id}/results`} target="_blank" rel="noopener noreferrer">
+            <LinkButton href={`/campaigns/${row.original.id}`} target="_blank" rel="noopener noreferrer">
               <BarChartIcon />
             </LinkButton>
           ),
@@ -139,7 +151,7 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
           id: 'shareLink',
           header: () => <div>{t('shareLink')}</div>,
           cell: ({ row }) => {
-            const link = typeof window !== 'undefined' ? `${window.location.origin}/survey/${row.original.id}` : ''
+            const link = typeof window !== 'undefined' ? `${window.location.origin}/${row.original.id}/survey` : ''
 
             return (
               <LinkButton onClick={() => handleCopy(link)}>
@@ -152,18 +164,23 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
           id: 'actions',
           header: '',
           accessorKey: 'id',
-          cell: ({ getValue }) => <TableActionButton type="delete" onClick={() => handleDelete(getValue<string>())} />,
+          cell: ({ getValue }) => (
+            <Tooltip title={t('delete')}>
+              <IconButton size="medium" color="primary" onClick={() => handleDelete(getValue<string>())}>
+                <DeleteOutlinedIcon color="error" fontSize="medium" />
+              </IconButton>
+            </Tooltip>
+          ),
         },
       ] as ColumnDef<UpdateCampaignCommand['campaigns'][0]>[],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [control, t],
+    [campaigns, control, handleDelete, modelCampaign?.model, t],
   )
 
-  const currentcampaigns = useWatch({ control, name: 'campaigns' })
+  const currentCampaigns = useWatch({ control, name: 'campaigns' }) ?? []
 
   const table = useReactTable({
     columns,
-    data: currentcampaigns,
+    data: currentCampaigns,
     getCoreRowModel: getCoreRowModel(),
   })
 
@@ -174,15 +191,15 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
         <div className="mt1 justify-end">
           <Button
             type="button"
-            onClick={() => setValue('campaigns', [...currentcampaigns, newCampaign()])}
+            onClick={() => form.setValue('campaigns', [...currentCampaigns, newCampaign()])}
             data-testid="add-campaign-button"
           >
             {t('add')}
           </Button>
         </div>
-        <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="validate-campaign-update">
+        <Button type="submit" disabled={form.formState.isSubmitting} data-testid="validate-campaign-update">
           {t('edit')}
-        </LoadingButton>
+        </Button>
       </Form>
     </Block>
   )

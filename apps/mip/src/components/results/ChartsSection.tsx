@@ -12,11 +12,9 @@ import styles from './ChartsSection.module.css'
 interface Props {
   pieChartItems: BasicTypeCharts[]
   barChartItems: BasicTypeCharts[]
-  averageFootprint: number
-  totalRespondents: number
 }
 
-const ChartsSection = ({ pieChartItems, barChartItems, averageFootprint, totalRespondents }: Props) => {
+const ChartsSection = ({ pieChartItems, barChartItems }: Props) => {
   const t = useTranslations('results')
 
   return (

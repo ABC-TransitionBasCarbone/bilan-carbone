@@ -18,7 +18,52 @@
       "restart": "Recommencer"
     },
     "resume": "Reprendre le sondage",
-    "characterCount": "{current} / {max} caractères"
+    "characterCount": "{current} / {max} caractères",
+    "completion": {
+      "title": "Mon empreinte professionnelle",
+      "unit": "kg de CO₂e",
+      "loadingState": "Chargement de vos résultats...",
+      "headlineDescription": "Vos principaux postes d'émissions et les actions les plus efficaces pour les réduire.",
+      "kgUnit": "kg",
+      "target": "Objectif 2050 : 2 tCO₂e",
+      "ofFootprint": "de votre empreinte",
+      "actions": {
+        "title": "Passer à l'action",
+        "keyTab": "Actions clés",
+        "equivalentTab": "A quoi cela équivaut ?",
+        "available": "actions"
+      },
+      "transition": {
+        "title": "Cap vers {target} tCO₂e",
+        "description": "Vous partez de {current} tCO₂e/an pour aller vers l'objectif de {target} tCO₂e.",
+        "startLabel": "Empreinte de départ",
+        "goalLabel": "Objectif final : {target} tCO₂e/an"
+      },
+      "range": {
+        "minLabel": "0 tCO₂e",
+        "maxLabel": "12 tCO₂e",
+        "limitLabel": "L'objectif pour 2050 : {limit} tCO₂e",
+        "currentLabel": "Vous : {value} tCO₂e"
+      },
+      "topCategories": {
+        "title": "Mes principaux postes d'émissions"
+      },
+      "summary": {
+        "title": "Résumé",
+        "subPosts": "Sous-postes"
+      },
+      "faq": {
+        "alone": {
+          "question": "Est-ce que je peux y arriver tout seul ?",
+          "answer": "Non, la transition écologique est un effort collectif. L'État, les collectivités et les entreprises ont un rôle essentiel à jouer. Vos actions individuelles sont néanmoins importantes pour montrer l'exemple et accélérer le changement."
+        },
+        "start": {
+          "question": "Par où commencer ?",
+          "answer": "Concentrez-vous sur vos deux ou trois principales sources d'émissions. Les actions à plus fort impact sont celles qui réduisent vos déplacements en voiture, améliorent votre alimentation, et limitent vos achats numériques inutiles."
+        }
+      },
+      "restart": "Recommencer le sondage"
+    }
   },
   "study": {
     "results": {
@@ -56,6 +101,7 @@
     "CLOSED": "Fermée",
     "responsesCount": "Nombre de réponses",
     "shareLink": "Lien à partager",
+    "delete": "Supprimer",
     "add": "Ajouter une nouvelle campagne",
     "edit": "Valider la modification",
     "success": "Les campagnesont été modifiées avec succès"
@@ -74,7 +120,10 @@
       "unit": "tonnes CO₂e / an",
       "aboveTarget": "Aujourd'hui, vous êtes au-dessus des {target} tonnes, l'objectif intermédiaire que nous proposons pour 2030.",
       "paceTitle": "Votre rythme indicatif pour parvenir à {target} T en {year}",
-      "paceUnit": "kg par an"
+      "paceUnit": "kg par an",
+      "respondents": "Répondants",
+      "responseRate": "Taux de réponse",
+      "respondentsDetail": "{count} sur {total} destinataires ({rate}%)"
     },
     "filter": {
       "title": "Filtrer par entité"
@@ -164,7 +213,15 @@
         "description": "Sous l'impulsion de l'État et des citoyens, les entreprises travaillent à la <strong>réduction progressive de l'empreinte des biens et services</strong>."
       }
     },
+    "equivalent": {
+      "title": "A quoi cela équivaut ?",
+      "description": "Comparez l'empreinte moyenne de la campagne avec des ordres de grandeur concrets pour mieux situer son impact."
+    },
     "export": {
+      "comments": {
+        "title": "Commentaires des collaborateurs"
+      },
+      "visual": "Exporter (visuel)",
       "print": "Imprimer"
     }
   }

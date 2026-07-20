@@ -92,6 +92,7 @@ const BarChart = <T extends BasicTypeCharts>({
               stack: series.stack,
               color: series.color,
               id: `series-${index}`,
+              barLabel: showLabelsOnBars ? getBarLabel : undefined,
             }))
             : [
               {
@@ -104,7 +105,6 @@ const BarChart = <T extends BasicTypeCharts>({
         grid={{ horizontal: true }}
         yAxis={[{ label: tUnits(resultsUnit) }]}
         axisHighlight={{ x: 'none' }}
-        barLabel={showLabelsOnBars ? getBarLabel : undefined}
         slots={showLegend && seriesData.length === 0 ? undefined : { legend: () => null }}
         height={height}
         borderRadius={10}

@@ -1,6 +1,6 @@
 import ResultsDashboard from '@/components/results/ResultsDashboard'
 import { sampleResults } from '@/data/sampleResults'
-import styles from './ResultsPage.module.css'
+import styles from '../../../../components/pages/ResultsPage.module.css'
 
 export default async function ResultsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
