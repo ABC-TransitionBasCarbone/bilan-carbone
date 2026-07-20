@@ -1,5 +1,6 @@
 'use client'
 import { useMipPublicodes } from '@/publicodes/MipPublicodesProvider'
+import { createSurveyResponse } from '@/services/serverFunctions/survey'
 import { buildPageBuilder } from '@abc-transitionbascarbone/publicodes/form'
 import { Container, Typography } from '@mui/material'
 import { FormBuilder, FormState } from '@publicodes/forms'
@@ -13,7 +14,6 @@ import SurveyProgressHeader from './SurveyProgressHeader'
 import SurveyQuestionList from './SurveyQuestionList'
 import SurveyResumeCard from './SurveyResumeCard'
 import { clearSurveyState, loadSurveyState, saveSurveyState } from './surveyStateStorage'
-import { createSurveyResponse } from '@/services/serverFunctions/survey'
 
 interface MipSurveyProps {
   surveyId: string
