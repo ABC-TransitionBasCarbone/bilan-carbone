@@ -76,7 +76,9 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   }
 
   const completeSurvey = async () => {
-    if (isCompleting) return
+    if (isCompleting) {
+      return
+    }
     setIsCompleting(true)
 
     const completedState = formBuilder.goToNextPage(state)
