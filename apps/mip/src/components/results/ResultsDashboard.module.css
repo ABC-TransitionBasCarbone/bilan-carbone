@@ -3,11 +3,6 @@
   overflow-y: auto;
 }
 
-.pageSubtitle {
-  margin-bottom: 0 !important;
-  color: var(--grayscale-900);
-}
-
 @media print {
   .page {
     overflow: visible;

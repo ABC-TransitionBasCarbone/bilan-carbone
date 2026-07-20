@@ -27,7 +27,6 @@ type ModelRule = {
 const CATEGORY_KEYS = ['DT', 'transport', 'alimentation', 'divers', 'logement']
 
 interface Props {
-  onRestart?: () => void
   surveyId: string
   model: RawRules
   restoreFromStorage?: boolean
@@ -50,11 +49,9 @@ const isSituation = (value: unknown): value is Situation<string> => {
   )
 }
 
-const hasStoredSituation = (value: StoredSurveyState | null): value is { situation: Situation<string> } => {
-  return Boolean(value && isSituation(value.situation))
-}
+const getPositiveNodeValue = (nodeValue: unknown) => (typeof nodeValue === 'number' ? Math.max(0, nodeValue) : 0)
 
-const SurveyCompletion = ({ onRestart, surveyId, model, restoreFromStorage = false }: Props) => {
+const SurveyCompletion = ({ surveyId, model, restoreFromStorage = false }: Props) => {
   const t = useTranslations('survey.completion')
   const { engine } = useMipPublicodes()
   const router = useRouter()
@@ -63,25 +60,24 @@ const SurveyCompletion = ({ onRestart, surveyId, model, restoreFromStorage = fal
     if (!restoreFromStorage) {
       return
     }
-    const savedState = loadSurveyState<StoredSurveyState>(surveyId)
-    if (hasStoredSituation(savedState)) {
-      engine.setSituation(savedState.situation)
+    const savedSituation = loadSurveyState<StoredSurveyState>(surveyId)?.situation
+    if (isSituation(savedSituation)) {
+      engine.setSituation(savedSituation)
     }
   }, [engine, restoreFromStorage, surveyId])
 
   const totalEval = engine.evaluate('bilan')
-  const totalKg = typeof totalEval.nodeValue === 'number' ? Math.max(0, totalEval.nodeValue) : 0
+  const totalKg = getPositiveNodeValue(totalEval.nodeValue)
 
   const categories = useMemo<CategoryResult[]>(() => {
     return CATEGORY_KEYS.map((key) => {
       const result = engine.evaluate(key)
-      const valueKg = typeof result.nodeValue === 'number' ? Math.max(0, result.nodeValue) : 0
       const rule = model?.[key] as ModelRule | undefined
       return {
         key,
         titre: rule?.titre ?? key,
         icones: rule?.icônes ?? '',
-        valueKg,
+        valueKg: getPositiveNodeValue(result.nodeValue),
       }
     }).sort((a, b) => b.valueKg - a.valueKg)
   }, [engine, model])
@@ -94,7 +90,7 @@ const SurveyCompletion = ({ onRestart, surveyId, model, restoreFromStorage = fal
       .flatMap((key) => {
         try {
           const result = engine.evaluate(key)
-          const savingsKg = typeof result.nodeValue === 'number' ? Math.max(0, result.nodeValue) : 0
+          const savingsKg = getPositiveNodeValue(result.nodeValue)
           const rule = model?.[key] as ModelRule | undefined
           return [
             {
@@ -113,26 +109,32 @@ const SurveyCompletion = ({ onRestart, surveyId, model, restoreFromStorage = fal
       .sort((a, b) => b.savingsKg - a.savingsKg)
   }, [engine, model])
 
+  const actionsByCategoryMap = useMemo(() => {
+    return actions.reduce<Record<string, ActionResult[]>>((acc, action) => {
+      if (!acc[action.categoryKey]) {
+        acc[action.categoryKey] = []
+      }
+      acc[action.categoryKey].push(action)
+      return acc
+    }, {})
+  }, [actions])
+
   const topCategories = categories.slice(0, 3)
   const keyActionCategories = topCategories
     .map((category) => ({
       ...category,
-      actions: actions.filter((action) => action.categoryKey === category.key).slice(0, 4),
+      actions: (actionsByCategoryMap[category.key] ?? []).slice(0, 4),
     }))
     .filter((category) => category.actions.length > 0)
 
   const actionsByCategory = categories.map((category) => ({
     ...category,
-    actions: actions.filter((action) => action.categoryKey === category.key),
+    actions: actionsByCategoryMap[category.key] ?? [],
   }))
 
   const handleRestart = () => {
     clearSurveyState(surveyId)
-    if (onRestart) {
-      onRestart()
-      return
-    }
-    router.push(`/survey/${surveyId}`)
+    router.replace(`/${surveyId}/survey`)
   }
 
   return (

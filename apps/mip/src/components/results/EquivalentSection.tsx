@@ -1,6 +1,7 @@
 'use client'
 
 import { Typography } from '@mui/material'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useRef } from 'react'
 import styles from './EquivalentSection.module.css'
@@ -9,14 +10,16 @@ interface Props {
   averageFootprintKg: number
 }
 
-const COMPARISONS = 'game-of-thrones,alimentationordinateur,repasavecdulieunoir'
+// Comparison identifiers are defined by the external Impact CO2 widget API.
+const IMPACT_CO2_COMPARISON_IDS = ['game-of-thrones', 'alimentationordinateur', 'repasavecdulieunoir']
 
 const EquivalentSection = ({ averageFootprintKg }: Props) => {
   const t = useTranslations('results.equivalent')
   const mountRef = useRef<HTMLDivElement | null>(null)
 
   const scriptSearch = useMemo(
-    () => `?value=${Math.max(1, Math.round(averageFootprintKg))}&comparisons=${COMPARISONS}&language=fr&theme=default`,
+    () =>
+      `?value=${Math.max(1, Math.round(averageFootprintKg))}&comparisons=${IMPACT_CO2_COMPARISON_IDS.join(',')}&language=fr&theme=default`,
     [averageFootprintKg],
   )
 
@@ -48,8 +51,10 @@ const EquivalentSection = ({ averageFootprintKg }: Props) => {
       <Typography variant="h6" className="mb-2">
         {t('title')}
       </Typography>
-      <Typography className={`${styles.description} mb1`}>{t('description')}</Typography>
-      <div className={`${styles.comparatorCard} p1`}>
+      <Typography color="text.secondary" className="mb1">
+        {t('description')}
+      </Typography>
+      <div className={classNames(styles.comparatorCard, 'p1')}>
         <div className="w100" ref={mountRef} />
       </div>
     </section>

@@ -56,7 +56,7 @@ const ResultsDashboard = ({ results }: Props) => {
         <Typography variant="h4" className="mb-2">
           {t('title')}
         </Typography>
-        <Typography variant="body1" className={styles.pageSubtitle}>
+        <Typography variant="body1" color="text.secondary" className="mb0">
           {t('subtitle')}
         </Typography>
       </section>

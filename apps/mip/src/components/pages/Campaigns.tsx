@@ -151,7 +151,7 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
           id: 'shareLink',
           header: () => <div>{t('shareLink')}</div>,
           cell: ({ row }) => {
-            const link = typeof window !== 'undefined' ? `${window.location.origin}/survey/${row.original.id}` : ''
+            const link = typeof window !== 'undefined' ? `${window.location.origin}/${row.original.id}/survey` : ''
 
             return (
               <LinkButton onClick={() => handleCopy(link)}>

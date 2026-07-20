@@ -43,10 +43,6 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   const [state, setState] = useState<FormState<string>>(initState)
   const updateState = (newState: FormState<string>) => setState(newState)
 
-  const { elements } = formBuilder.currentPage(state)
-  const { current, pageCount, hasNextPage, hasPreviousPage } = formBuilder.pagination(state)
-  const isComplete = !hasNextPage && current === pageCount
-
   useEffect(() => {
     const saved = loadSurveyState<FormState<string>>(surveyId)
     if (saved) {
@@ -64,10 +60,14 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   }, [surveyId, state, isLoading])
 
   useEffect(() => {
-    if (!isLoading && !isResumed && !isCompleting && isComplete) {
-      router.replace(`/end/${surveyId}`)
+    if (!isLoading && !isResumed && !isCompleting) {
+      const { current, pageCount, hasNextPage } = formBuilder.pagination(state)
+      const isComplete = !hasNextPage && current === pageCount
+      if (isComplete) {
+        router.replace(`/${surveyId}/results`)
+      }
     }
-  }, [isCompleting, isLoading, isResumed, isComplete, router, surveyId])
+  }, [formBuilder, isCompleting, isLoading, isResumed, router, state, surveyId])
 
   const handleRestart = () => {
     clearSurveyState(surveyId)
@@ -79,19 +79,22 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
     if (isCompleting) {
       return
     }
-    setIsCompleting(true)
 
+    setIsCompleting(true)
     const completedState = formBuilder.goToNextPage(state)
-    saveSurveyState(surveyId, completedState)
-    router.push(`/end/${surveyId}`)
 
     try {
       await createResponseWithJson(surveyId, JSON.stringify(completedState))
+      saveSurveyState(surveyId, completedState)
+      router.push(`/${surveyId}/results`)
     } finally {
       setIsCompleting(false)
     }
   }
 
+  const { elements } = formBuilder.currentPage(state)
+  const { current, pageCount, hasNextPage, hasPreviousPage } = formBuilder.pagination(state)
+  const isComplete = !hasNextPage && current === pageCount
   const progress = Math.round((current / pageCount) * 100)
   const groupedElements = buildGroupedElements(engine, elements)
   const currentTitle = getCurrentSectionTitle(engine, groupedElements)
@@ -117,7 +120,7 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   }
 
   return (
-    <Container maxWidth="md" className={`${styles.container} mt1`}>
+    <Container maxWidth="md" className={styles.container}>
       <SurveyProgressHeader
         title={currentTitle.label}
         icons={currentTitle.icons}
@@ -139,7 +142,7 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
 
       <SurveyNavigation
         hasPreviousPage={hasPreviousPage}
-        isLastPage={isComplete}
+        isLastPage={pageCount === current + 1}
         isSubmittingCompletion={isCompleting}
         previousLabel={tCommon('previous')}
         nextLabel={tCommon('next')}
