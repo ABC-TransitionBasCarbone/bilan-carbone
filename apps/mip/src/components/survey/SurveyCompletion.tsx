@@ -63,6 +63,7 @@ const SurveyCompletion = ({ surveyId, model, restoreFromStorage = false }: Props
     const savedSituation = loadSurveyState<StoredSurveyState>(surveyId)?.situation
     if (isSituation(savedSituation)) {
       engine.setSituation(savedSituation)
+      return
     }
   }, [engine, restoreFromStorage, surveyId])
 

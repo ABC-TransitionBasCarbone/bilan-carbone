@@ -1,4 +1,3 @@
-'use server'
 import SurveyClient from '@/components/survey/SurveyClient'
 import { getCampaignById } from '@/db/campaign'
 import { RawRules } from '@/publicodes/mip-engine'
@@ -17,9 +16,14 @@ export default async function SurveyPage({ params }: { params: Promise<{ id: str
     return <NotFound />
   }
 
+  const model = campaign.modelCampaign?.model
+  if (!model || typeof model !== 'object') {
+    return <NotFound />
+  }
+
   return (
     <NextIntlClientProvider messages={messages}>
-      <MipPublicodesProvider model={campaign.modelCampaign.model as RawRules}>
+      <MipPublicodesProvider model={model as RawRules}>
         <SurveyClient surveyId={id} />
       </MipPublicodesProvider>
     </NextIntlClientProvider>

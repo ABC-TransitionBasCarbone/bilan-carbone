@@ -16,10 +16,15 @@ const SurveyEndPage = async ({ params }: { params: Promise<{ id: string }> }) =>
     return <NotFound />
   }
 
+  const model = campaign.modelCampaign?.model
+  if (!model || typeof model !== 'object') {
+    return <NotFound />
+  }
+
   return (
     <NextIntlClientProvider messages={messages}>
-      <MipPublicodesProvider model={campaign.modelCampaign.model as RawRules}>
-        <SurveyCompletion surveyId={id} model={campaign.modelCampaign.model as RawRules} restoreFromStorage />
+      <MipPublicodesProvider model={model as RawRules}>
+        <SurveyCompletion surveyId={id} model={model as RawRules} restoreFromStorage />
       </MipPublicodesProvider>
     </NextIntlClientProvider>
   )
