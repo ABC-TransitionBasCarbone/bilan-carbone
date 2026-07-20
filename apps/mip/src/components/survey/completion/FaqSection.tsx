@@ -6,26 +6,29 @@ import { useTranslations } from 'next-intl'
 
 const FaqSection = () => {
   const t = useTranslations('survey.completion')
+  const faqItems = [
+    {
+      questionKey: 'faq.alone.question',
+      answerKey: 'faq.alone.answer',
+    },
+    {
+      questionKey: 'faq.start.question',
+      answerKey: 'faq.start.answer',
+    },
+  ]
 
   return (
     <section className="mb2" data-testid="survey-completion-faq">
-      <Accordion>
-        <AccordionSummary expandIcon={<ExpandMore />}>
-          <Typography>{t('faq.alone.question')}</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>{t('faq.alone.answer')}</Typography>
-        </AccordionDetails>
-      </Accordion>
-
-      <Accordion>
-        <AccordionSummary expandIcon={<ExpandMore />}>
-          <Typography>{t('faq.start.question')}</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>{t('faq.start.answer')}</Typography>
-        </AccordionDetails>
-      </Accordion>
+      {faqItems.map(({ questionKey, answerKey }) => (
+        <Accordion key={questionKey}>
+          <AccordionSummary expandIcon={<ExpandMore />}>
+            <Typography>{t(questionKey)}</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography>{t(answerKey)}</Typography>
+          </AccordionDetails>
+        </Accordion>
+      ))}
     </section>
   )
 }

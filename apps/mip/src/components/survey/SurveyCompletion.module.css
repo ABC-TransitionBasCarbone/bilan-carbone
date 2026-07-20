@@ -292,23 +292,23 @@
   width: 100%;
 }
 
-.toneA {
+.toneDt {
   background-color: var(--primary-500);
 }
 
-.toneB {
+.toneTransport {
   background-color: var(--info);
 }
 
-.toneC {
+.toneAlimentation {
   background-color: var(--success);
 }
 
-.toneD {
+.toneDivers {
   background-color: var(--warning);
 }
 
-.toneE {
+.toneLogement {
   background-color: var(--error);
 }
 

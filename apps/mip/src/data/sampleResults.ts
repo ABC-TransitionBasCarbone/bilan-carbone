@@ -108,25 +108,30 @@ export function getResultsForEntity(results: SurveyResults, entityId: string): S
   if (entityId === 'all') {
     return results
   }
-  const entityFactors: Record<string, number> = {
-    rh: 0.85,
-    it: 1.15,
-    commercial: 1.3,
-    direction: 0.95,
+  // Per-entity, per-category factors so pie chart proportions actually differ between entities
+  const categoryFactors: Record<string, Record<string, number>> = {
+    rh: { commute: 1.1, travel: 0.6, food: 0.9, digital: 0.7, office: 1.2 },
+    it: { commute: 0.8, travel: 0.9, food: 1.0, digital: 1.8, office: 1.1 },
+    commercial: { commute: 1.2, travel: 2.1, food: 1.0, digital: 0.9, office: 0.8 },
+    direction: { commute: 0.7, travel: 1.4, food: 1.1, digital: 1.0, office: 1.3 },
   }
-  const factor = entityFactors[entityId] ?? 1
+  const factors = categoryFactors[entityId] ?? {}
+  const scaledCategories = results.categories.map((c) => ({
+    ...c,
+    value: Math.round(c.value * (factors[c.key] ?? 1)),
+  }))
+  const totalFactor =
+    scaledCategories.reduce((sum, c) => sum + c.value, 0) / results.categories.reduce((sum, c) => sum + c.value, 0)
   return {
     ...results,
-    averageFootprint: Math.round(results.averageFootprint * factor),
-    categories: results.categories.map((c) => ({
-      ...c,
-      value: Math.round(c.value * factor),
-    })),
+    averageFootprint: Math.round(results.averageFootprint * totalFactor),
+    categories: scaledCategories,
     keyStats: results.keyStats.map((group) => ({
       ...group,
       stats: group.stats.map((s) => ({
         ...s,
-        value: s.unit === 'percent' ? Math.min(100, Math.round(s.value * factor)) : Math.round(s.value * factor),
+        value:
+          s.unit === 'percent' ? Math.min(100, Math.round(s.value * totalFactor)) : Math.round(s.value * totalFactor),
       })),
     })),
   }

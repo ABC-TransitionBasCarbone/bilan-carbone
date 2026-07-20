@@ -7,13 +7,14 @@ import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Typogr
 import { useTranslations } from 'next-intl'
 import styles from '../SurveyCompletion.module.css'
 
+type CategoryToneClassByKey = Record<'DT' | 'transport' | 'alimentation' | 'divers' | 'logement', string>
+
 interface Props {
   actionsByCategory: CategoryWithActions[]
   totalKg: number
-  categoryToneClasses: string[]
 }
 
-const SummarySection = ({ actionsByCategory, totalKg, categoryToneClasses }: Props) => {
+const SummarySection = ({ actionsByCategory, totalKg }: Props) => {
   const t = useTranslations('survey.completion')
 
   return (
@@ -23,8 +24,9 @@ const SummarySection = ({ actionsByCategory, totalKg, categoryToneClasses }: Pro
       </Typography>
 
       <div className="flex-col gapped1">
-        {actionsByCategory.map((category, index) => {
-          const toneClass = categoryToneClasses[index % categoryToneClasses.length]
+        {actionsByCategory.map((category) => {
+          const toneClass =
+            styles[`tone${category.key.charAt(0).toUpperCase() + category.key.slice(1)}`] ?? styles.toneDt
           const categoryShare = totalKg > 0 ? Math.round((category.valueKg / totalKg) * 100) : 0
 
           return (

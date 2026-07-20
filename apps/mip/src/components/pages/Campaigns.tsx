@@ -133,7 +133,7 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
           id: 'results',
           header: () => t('viewResults'),
           cell: ({ row }) => (
-            <LinkButton href={`/survey/${row.original.id}/results`} target="_blank" rel="noopener noreferrer">
+            <LinkButton href={`/campaigns/${row.original.id}`} target="_blank" rel="noopener noreferrer">
               <BarChartIcon />
             </LinkButton>
           ),

@@ -37,9 +37,7 @@ const SurveyNavigation = ({
         >
           {previousLabel}
         </Button>
-      ) : (
-        <div />
-      )}
+      ) : null}
       {isLastPage ? (
         <Button
           variant="contained"

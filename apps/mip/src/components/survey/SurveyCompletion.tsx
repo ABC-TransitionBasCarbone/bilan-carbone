@@ -24,9 +24,7 @@ type ModelRule = {
   somme?: Array<string | number>
 }
 
-const CATEGORY_KEYS = ['DT', 'transport', 'alimentation', 'divers', 'logement'] as const
-
-const CATEGORY_TONE_CLASSES = [styles.toneA, styles.toneB, styles.toneC, styles.toneD, styles.toneE]
+const CATEGORY_KEYS = ['DT', 'transport', 'alimentation', 'divers', 'logement']
 
 interface Props {
   onRestart?: () => void
@@ -143,11 +141,7 @@ const SurveyCompletion = ({ onRestart, surveyId, model, restoreFromStorage = fal
         <FootprintBanner totalKg={totalKg} />
         <TransitionEncart totalKg={totalKg} />
         <ActionsTabsSection keyActionCategories={keyActionCategories} totalKg={totalKg} />
-        <SummarySection
-          actionsByCategory={actionsByCategory}
-          totalKg={totalKg}
-          categoryToneClasses={CATEGORY_TONE_CLASSES}
-        />
+        <SummarySection actionsByCategory={actionsByCategory} totalKg={totalKg} />
         <TopCategoriesSection topCategories={topCategories} />
 
         <FaqSection />
