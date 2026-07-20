@@ -53,7 +53,7 @@ const getPositiveNodeValue = (nodeValue: unknown) => (typeof nodeValue === 'numb
 
 const SurveyCompletion = ({ surveyId, model, restoreFromStorage = false }: Props) => {
   const t = useTranslations('survey.completion')
-  const { engine } = useMipPublicodes()
+  const { engine, situation, setSituation } = useMipPublicodes()
   const router = useRouter()
 
   useEffect(() => {
@@ -62,10 +62,10 @@ const SurveyCompletion = ({ surveyId, model, restoreFromStorage = false }: Props
     }
     const savedSituation = loadSurveyState<StoredSurveyState>(surveyId)?.situation
     if (isSituation(savedSituation)) {
-      engine.setSituation(savedSituation)
+      setSituation(savedSituation)
       return
     }
-  }, [engine, restoreFromStorage, surveyId])
+  }, [restoreFromStorage, setSituation, surveyId])
 
   const totalEval = engine.evaluate('bilan')
   const totalKg = getPositiveNodeValue(totalEval.nodeValue)
@@ -81,7 +81,7 @@ const SurveyCompletion = ({ surveyId, model, restoreFromStorage = false }: Props
         valueKg: getPositiveNodeValue(result.nodeValue),
       }
     }).sort((a, b) => b.valueKg - a.valueKg)
-  }, [engine, model])
+  }, [engine, model, situation])
 
   const actions = useMemo<ActionResult[]>(() => {
     const actionsRule = model?.['actions'] as { somme?: Array<string | number> } | null | undefined
@@ -108,7 +108,7 @@ const SurveyCompletion = ({ surveyId, model, restoreFromStorage = false }: Props
       })
       .filter((action) => action.savingsKg > 0)
       .sort((a, b) => b.savingsKg - a.savingsKg)
-  }, [engine, model])
+  }, [engine, model, situation])
 
   const actionsByCategoryMap = useMemo(() => {
     return actions.reduce<Record<string, ActionResult[]>>((acc, action) => {
