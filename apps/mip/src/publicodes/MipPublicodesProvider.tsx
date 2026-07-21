@@ -1,6 +1,6 @@
 'use client'
 import { Situation } from 'publicodes'
-import { createContext, ReactNode, useContext, useState } from 'react'
+import { createContext, ReactNode, useCallback, useContext, useMemo, useState } from 'react'
 import { createMipEngine, RawRules } from './mip-engine'
 
 interface MipPublicodesContextValue {
@@ -12,19 +12,20 @@ interface MipPublicodesContextValue {
 const MipPublicodesContext = createContext<MipPublicodesContextValue | null>(null)
 
 export function MipPublicodesProvider({ children, model }: { children: ReactNode; model: RawRules }) {
-  const engine = createMipEngine(model)
+  const engine = useMemo(() => createMipEngine(model), [model])
   const [situation, setSituationState] = useState<Situation<string>>({})
 
-  const setSituation = (newSituation: Situation<string>) => {
-    engine.setSituation(newSituation)
-    setSituationState(newSituation)
-  }
-
-  return (
-    <MipPublicodesContext.Provider value={{ engine, situation, setSituation }}>
-      {children}
-    </MipPublicodesContext.Provider>
+  const setSituation = useCallback(
+    (newSituation: Situation<string>) => {
+      engine.setSituation(newSituation)
+      setSituationState(newSituation)
+    },
+    [engine],
   )
+
+  const contextValue = useMemo(() => ({ engine, situation, setSituation }), [engine, situation, setSituation])
+
+  return <MipPublicodesContext.Provider value={contextValue}>{children}</MipPublicodesContext.Provider>
 }
 
 export function useMipPublicodes() {
