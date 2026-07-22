@@ -39,6 +39,7 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
 
   const [isResumed, setIsResumed] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [isCompleting, setIsCompleting] = useState(false)
   const [state, setState] = useState<FormState<string>>(initState)
   const updateState = (newState: FormState<string>) => setState(newState)
 
@@ -74,9 +75,22 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
     setState(initState())
   }
 
-  const completeSurvey = () => {
-    updateState(formBuilder.goToNextPage(state))
-    createSurveyResponse(surveyId, JSON.stringify(state))
+  const completeSurvey = async () => {
+    if (isCompleting) {
+      return
+    }
+
+    const completedState = formBuilder.goToNextPage(state)
+    setIsCompleting(true)
+
+    try {
+      await createSurveyResponse(surveyId, JSON.stringify(completedState))
+      updateState(completedState)
+    } catch (error) {
+      console.error('Survey completion failed', { surveyId, error })
+    } finally {
+      setIsCompleting(false)
+    }
   }
 
   const { elements } = formBuilder.currentPage(state)
@@ -130,14 +144,13 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
       <SurveyNavigation
         hasPreviousPage={hasPreviousPage}
         isLastPage={pageCount === current + 1}
+        isCompleting={isCompleting}
         previousLabel={tCommon('previous')}
         nextLabel={tCommon('next')}
         completeLabel={t('navigation.complete')}
         onPrevious={() => updateState(formBuilder.goToPreviousPage(state))}
         onNext={() => updateState(formBuilder.goToNextPage(state))}
-        onComplete={() => {
-          void completeSurvey()
-        }}
+        onComplete={completeSurvey}
       />
     </Container>
   )

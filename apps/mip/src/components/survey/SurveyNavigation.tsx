@@ -5,17 +5,19 @@ import styles from './Survey.module.css'
 interface Props {
   hasPreviousPage: boolean
   isLastPage: boolean
+  isCompleting: boolean
   previousLabel: string
   nextLabel: string
   completeLabel: string
   onPrevious: () => void
   onNext: () => void
-  onComplete: () => void
+  onComplete: () => Promise<void>
 }
 
 const SurveyNavigation = ({
   hasPreviousPage,
   isLastPage,
+  isCompleting,
   previousLabel,
   nextLabel,
   completeLabel,
@@ -35,7 +37,10 @@ const SurveyNavigation = ({
           variant="contained"
           color="success"
           endIcon={<Check />}
-          onClick={onComplete}
+          onClick={() => {
+            void onComplete()
+          }}
+          disabled={isCompleting}
           data-testid="survey-complete-button"
         >
           {completeLabel}
