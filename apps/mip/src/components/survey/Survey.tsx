@@ -31,7 +31,7 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
     pageBuilder: buildPageBuilder(engine),
   })
 
-  function initState() {
+  const initState = () => {
     let s = FormBuilder.newState()
     s = formBuilder.start(s, rootRule)
     return s
@@ -39,7 +39,6 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
 
   const [isResumed, setIsResumed] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  const [isCompleting, setIsCompleting] = useState(false)
   const [state, setState] = useState<FormState<string>>(initState)
   const updateState = (newState: FormState<string>) => setState(newState)
 
@@ -60,14 +59,14 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   }, [surveyId, state, isLoading])
 
   useEffect(() => {
-    if (!isLoading && !isResumed && !isCompleting) {
+    if (!isLoading && !isResumed) {
       const { current, pageCount, hasNextPage } = formBuilder.pagination(state)
       const isComplete = !hasNextPage && current === pageCount
       if (isComplete) {
         router.replace(`/${surveyId}/results`)
       }
     }
-  }, [formBuilder, isCompleting, isLoading, isResumed, router, state, surveyId])
+  }, [formBuilder, isLoading, isResumed, router, state, surveyId])
 
   const handleRestart = () => {
     clearSurveyState(surveyId)
@@ -131,7 +130,6 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
       <SurveyNavigation
         hasPreviousPage={hasPreviousPage}
         isLastPage={pageCount === current + 1}
-        isSubmittingCompletion={isCompleting}
         previousLabel={tCommon('previous')}
         nextLabel={tCommon('next')}
         completeLabel={t('navigation.complete')}

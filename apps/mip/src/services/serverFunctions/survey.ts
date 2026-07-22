@@ -1,30 +1,15 @@
 'use server'
 
-import { CATEGORY_COLORS } from '@/data/sampleResults'
+import { CATEGORY_COLORS } from '@/constants/style'
+import { CATEGORY_MAP, DEFAULT_ENTITY_FILTERS } from '@/constants/survey'
 import { createResponse } from '@/db/campaign'
 import { getCampaignWithModelForSurvey, getResponsesByCampaignId } from '@/db/survey'
 import { createMipEngine, RawRules } from '@/publicodes/mip-engine'
-import { EmissionCategory, EntityFilter, KeyStatGroup, SurveyResults } from '@/types/results.types'
+import { EmissionCategory, KeyStatGroup, SurveyResults } from '@/types/results.types'
 import { withServerResponse } from '@/utils/serverResponse'
 import { average, safePercent, toNumber } from '@abc-transitionbascarbone/utils/number'
 import { isYesValue } from '@abc-transitionbascarbone/utils/parsing'
 import { Situation } from 'publicodes'
-
-const CATEGORY_MAP = [
-  { key: 'commute', rule: 'DT' },
-  { key: 'travel', rule: 'transport' },
-  { key: 'food', rule: 'alimentation' },
-  { key: 'digital', rule: 'divers' },
-  { key: 'office', rule: 'logement' },
-] as const
-
-const DEFAULT_ENTITY_FILTERS: EntityFilter[] = [
-  { id: 'all', name: 'Tous' },
-  { id: 'rh', name: 'Ressources humaines' },
-  { id: 'it', name: 'Informatique' },
-  { id: 'commercial', name: 'Commercial' },
-  { id: 'direction', name: 'Direction' },
-]
 
 type StoredFormState = {
   situation?: Situation<string>

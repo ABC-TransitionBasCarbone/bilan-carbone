@@ -22,6 +22,11 @@ export const safePercent = (part: number, total: number): number => {
   return Math.round((part / total) * 100)
 }
 
+export const roundTo = (value: number, decimals: number): number => {
+  const factor = 10 ** decimals
+  return Math.round(value * factor) / factor
+}
+
 export const average = (values: number[], decimals = 0): number => {
   if (values.length === 0) {
     return 0
