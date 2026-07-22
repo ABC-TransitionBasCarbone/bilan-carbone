@@ -26,7 +26,7 @@ export function MosaicQuestion<RuleName extends string>({ parent, elements, engi
 
   return (
     <QuestionContainer label={label}>
-      <div className={styles.mosaicContainer}>
+      <div className={`${styles.mosaicContainer} gapped1 p1 grid`}>
         {elements.map((el, index) => {
           const parts = el.id.split(' . ')
           const lastSegment = parts.slice(-2, -1)[0]

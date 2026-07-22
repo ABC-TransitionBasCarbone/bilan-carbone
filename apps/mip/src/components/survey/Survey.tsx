@@ -7,7 +7,6 @@ import { FormBuilder, FormState } from '@publicodes/forms'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import styles from './Survey.module.css'
 import { buildGroupedElements, getCurrentSectionTitle } from './surveyGrouping'
 import SurveyNavigation from './SurveyNavigation'
 import SurveyProgressHeader from './SurveyProgressHeader'
@@ -121,7 +120,7 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   }
 
   return (
-    <Container maxWidth="md" className={styles.container}>
+    <Container maxWidth="md" className="pt1 pb5">
       <SurveyProgressHeader
         title={currentTitle.label}
         icons={currentTitle.icons}

@@ -9,7 +9,7 @@ import { EmissionCategory, KeyStatGroup, SurveyResults } from '@/types/results.t
 import { withServerResponse } from '@/utils/serverResponse'
 import { average, safePercent, toNumber } from '@abc-transitionbascarbone/utils/number'
 import { isYesValue } from '@abc-transitionbascarbone/utils/parsing'
-import { Situation } from 'publicodes'
+import Engine, { Situation } from 'publicodes'
 
 type StoredFormState = {
   situation?: Situation<string>
@@ -33,22 +33,14 @@ const parseStoredFormState = (answers: unknown): StoredFormState => {
 }
 
 const buildKeyStats = (
+  engine: Engine,
   situations: Situation<string>[],
   commuteEmissionsKg: number[],
   travelEmissionsKg: number[],
 ): KeyStatGroup[] => {
   const respondentCount = situations.length
 
-  const read = (situation: Situation<string>, key: string): unknown => situation[key]
-
-  const countYes = (key: string) => situations.filter((situation) => isYesValue(read(situation, key))).length
-  const getNumericValues = (key: string) =>
-    situations.map((situation) => toNumber(read(situation, key))).filter((value): value is number => value !== null)
-
-  const dtCarKmValues = getNumericValues('DT . voiture . km')
-  const dtPublicTransportKmValues = getNumericValues('DT . transports commun . km')
-
-  const travelKmKeys = [
+  const travelKmRules = [
     'transport . voiture . km',
     'transport . train . km',
     'transport . taxi . km',
@@ -56,93 +48,97 @@ const buildKeyStats = (
     'transport . transports commun . km',
     'transport . deux roues . km',
   ]
-  const travelKmValues = situations
-    .map((situation) =>
-      travelKmKeys.map((key) => toNumber(read(situation, key)) ?? 0).reduce((sum, value) => sum + value, 0),
-    )
-    .filter((value) => value > 0)
 
-  const veganMeals = getNumericValues('alimentation . plats . végétalien . nombre')
-  const vegetarianMeals = getNumericValues('alimentation . plats . végétarien . nombre')
-  const mealCountByRespondent = situations.map((situation) => {
-    const keys = [
-      'alimentation . plats . végétalien . nombre',
-      'alimentation . plats . végétarien . nombre',
-      'alimentation . plats . viande blanche . nombre',
-      'alimentation . plats . viande rouge . nombre',
-      'alimentation . plats . poisson gras . nombre',
-      'alimentation . plats . poisson blanc . nombre',
-    ]
+  const mealRules = [
+    'alimentation . plats . végétalien . nombre',
+    'alimentation . plats . végétarien . nombre',
+    'alimentation . plats . viande blanche . nombre',
+    'alimentation . plats . viande rouge . nombre',
+    'alimentation . plats . poisson gras . nombre',
+    'alimentation . plats . poisson blanc . nombre',
+  ] as const
 
-    return keys.map((key) => toNumber(read(situation, key)) ?? 0).reduce((sum, value) => sum + value, 0)
+  const rows = situations.map((situation) => {
+    engine.setSituation(situation)
+    const ev = (key: string): unknown => {
+      try {
+        return engine.evaluate(key).nodeValue
+      } catch {
+        return undefined
+      }
+    }
+    const num = (key: string) => toNumber(ev(key))
+
+    const [vegan, vegetarian, whiteMeat, redMeat, fatFish, whiteFish] = mealRules.map((k) => num(k) ?? 0)
+    const knownMeals = vegan + vegetarian + whiteMeat + redMeat + fatFish + whiteFish
+    const travelKm = travelKmRules.map((k) => num(k) ?? 0).reduce((a, b) => a + b, 0)
+
+    return {
+      dtCarPresent: isYesValue(ev('DT . voiture . présent')),
+      dtPublicTransportPresent: isYesValue(ev('DT . transports commun . présent')),
+      dtActiveModePresent:
+        isYesValue(ev('DT . mobilité douce . présent')) || isYesValue(ev('DT . deux roues . présent')),
+      dtCarKm: num('DT . voiture . km'),
+      dtPublicTransportKm: num('DT . transports commun . km'),
+      travelKm: travelKm > 0 ? travelKm : null,
+      veganMeals: num('alimentation . plats . végétalien . nombre'),
+      vegetarianMeals: num('alimentation . plats . végétarien . nombre'),
+      totalMeals: knownMeals,
+      fullyVegetarian: knownMeals > 0 && vegan + vegetarian > 0 && whiteMeat + redMeat + fatFish + whiteFish === 0,
+      fullyVegan: vegan > 0 && vegetarian + whiteMeat + redMeat + fatFish + whiteFish === 0,
+      redMeatDaily: redMeat >= 5,
+      aiRequests: num('divers . numérique . ia . nombre de requêtes par jour'),
+      videoHours: num('divers . numérique . visio . durée journalière'),
+      internetHours: num('divers . numérique . internet . durée journalière'),
+      trainPresent: isYesValue(ev('transport . train . présent')),
+      carTravelPresent: isYesValue(ev('transport . voiture . présent')),
+      planePresent: isYesValue(ev('transport . avion . présent')),
+      travelNights: num('transport . hébergement . nuitées . nombre'),
+    }
   })
 
-  const totalMeals = mealCountByRespondent.reduce((sum, value) => sum + value, 0)
-  const fullyVegetarianCount = situations.filter((situation) => {
-    const vegan = toNumber(read(situation, 'alimentation . plats . végétalien . nombre')) ?? 0
-    const vegetarian = toNumber(read(situation, 'alimentation . plats . végétarien . nombre')) ?? 0
-    const whiteMeat = toNumber(read(situation, 'alimentation . plats . viande blanche . nombre')) ?? 0
-    const redMeat = toNumber(read(situation, 'alimentation . plats . viande rouge . nombre')) ?? 0
-    const fish =
-      (toNumber(read(situation, 'alimentation . plats . poisson gras . nombre')) ?? 0) +
-      (toNumber(read(situation, 'alimentation . plats . poisson blanc . nombre')) ?? 0)
-    const knownMeals = vegan + vegetarian + whiteMeat + redMeat + fish
+  type Row = (typeof rows)[0]
+  const countTrue = (fn: (row: Row) => boolean) => rows.filter(fn).length
+  const numericValues = (fn: (row: Row) => number | null) => rows.map(fn).filter((v): v is number => v !== null)
 
-    return knownMeals > 0 && vegan + vegetarian > 0 && whiteMeat + redMeat + fish === 0
-  }).length
+  const totalMeals = rows.reduce((sum, r) => sum + r.totalMeals, 0)
+  const totalVeganMeals = rows.reduce((sum, r) => sum + (r.veganMeals ?? 0), 0)
+  const totalVegetarianMeals = rows.reduce((sum, r) => sum + (r.vegetarianMeals ?? 0), 0)
 
-  const fullyVeganCount = situations.filter((situation) => {
-    const vegan = toNumber(read(situation, 'alimentation . plats . végétalien . nombre')) ?? 0
-    const others =
-      (toNumber(read(situation, 'alimentation . plats . végétarien . nombre')) ?? 0) +
-      (toNumber(read(situation, 'alimentation . plats . viande blanche . nombre')) ?? 0) +
-      (toNumber(read(situation, 'alimentation . plats . viande rouge . nombre')) ?? 0) +
-      (toNumber(read(situation, 'alimentation . plats . poisson gras . nombre')) ?? 0) +
-      (toNumber(read(situation, 'alimentation . plats . poisson blanc . nombre')) ?? 0)
-    return vegan > 0 && others === 0
-  }).length
-
-  const redMeatDailyCount = situations.filter((situation) => {
-    const redMeat = toNumber(read(situation, 'alimentation . plats . viande rouge . nombre')) ?? 0
-    return redMeat >= 5
-  }).length
-
-  const aiRequests = getNumericValues('divers . numérique . ia . nombre de requêtes par jour')
-  const videoHours = getNumericValues('divers . numérique . visio . durée journalière')
-  const internetHours = getNumericValues('divers . numérique . internet . durée journalière')
-
-  const groups: KeyStatGroup[] = [
+  return [
     {
       key: 'commute',
       stats: [
         {
           key: 'carModeShare',
-          value: safePercent(countYes('DT . voiture . présent'), respondentCount),
+          value: safePercent(
+            countTrue((r) => r.dtCarPresent),
+            respondentCount,
+          ),
           unit: 'percent',
         },
         {
           key: 'publicTransportModeShare',
-          value: safePercent(countYes('DT . transports commun . présent'), respondentCount),
+          value: safePercent(
+            countTrue((r) => r.dtPublicTransportPresent),
+            respondentCount,
+          ),
           unit: 'percent',
         },
         {
           key: 'activeModeShare',
           value: safePercent(
-            situations.filter(
-              (situation) =>
-                isYesValue(read(situation, 'DT . mobilité douce . présent')) ||
-                isYesValue(read(situation, 'DT . deux roues . présent')),
-            ).length,
+            countTrue((r) => r.dtActiveModePresent),
             respondentCount,
           ),
           unit: 'percent',
         },
-        { key: 'avgCarKm', value: average(dtCarKmValues), unit: 'km' },
-        { key: 'avgPublicTransportKm', value: average(dtPublicTransportKmValues), unit: 'km' },
+        { key: 'avgCarKm', value: average(numericValues((r) => r.dtCarKm)), unit: 'km' },
+        { key: 'avgPublicTransportKm', value: average(numericValues((r) => r.dtPublicTransportKm)), unit: 'km' },
         {
           key: 'avgEmissionPerMode',
           value: average(
-            commuteEmissionsKg.map((value) => value / 1000),
+            commuteEmissionsKg.map((v) => v / 1000),
             1,
           ),
           unit: 'number',
@@ -154,31 +150,43 @@ const buildKeyStats = (
       stats: [
         {
           key: 'trainModeShare',
-          value: safePercent(countYes('transport . train . présent'), respondentCount),
+          value: safePercent(
+            countTrue((r) => r.trainPresent),
+            respondentCount,
+          ),
           unit: 'percent',
         },
         {
           key: 'carTravelModeShare',
-          value: safePercent(countYes('transport . voiture . présent'), respondentCount),
+          value: safePercent(
+            countTrue((r) => r.carTravelPresent),
+            respondentCount,
+          ),
           unit: 'percent',
         },
         {
           key: 'planeTravelModeShare',
-          value: safePercent(countYes('transport . avion . présent'), respondentCount),
+          value: safePercent(
+            countTrue((r) => r.planePresent),
+            respondentCount,
+          ),
           unit: 'percent',
         },
-        { key: 'avgTravelKmByMode', value: average(travelKmValues), unit: 'km' },
+        { key: 'avgTravelKmByMode', value: average(numericValues((r) => r.travelKm)), unit: 'km' },
         {
           key: 'avgTravelEmissionByMode',
           value: average(
-            travelEmissionsKg.map((value) => value / 1000),
+            travelEmissionsKg.map((v) => v / 1000),
             1,
           ),
           unit: 'number',
         },
         {
           key: 'avgTravelNights',
-          value: average(getNumericValues('transport . hébergement . nuitées . nombre'), 1),
+          value: average(
+            numericValues((r) => r.travelNights),
+            1,
+          ),
           unit: 'nights',
         },
       ],
@@ -186,38 +194,57 @@ const buildKeyStats = (
     {
       key: 'food',
       stats: [
+        { key: 'vegMealsShare', value: safePercent(totalVegetarianMeals, totalMeals), unit: 'percent' },
+        { key: 'veganMealsShare', value: safePercent(totalVeganMeals, totalMeals), unit: 'percent' },
         {
-          key: 'vegMealsShare',
+          key: 'fullyVegetarianEmployees',
           value: safePercent(
-            vegetarianMeals.reduce((sum, value) => sum + value, 0),
-            totalMeals,
+            countTrue((r) => r.fullyVegetarian),
+            respondentCount,
           ),
           unit: 'percent',
         },
         {
-          key: 'veganMealsShare',
+          key: 'fullyVeganEmployees',
           value: safePercent(
-            veganMeals.reduce((sum, value) => sum + value, 0),
-            totalMeals,
+            countTrue((r) => r.fullyVegan),
+            respondentCount,
           ),
           unit: 'percent',
         },
-        { key: 'fullyVegetarianEmployees', value: safePercent(fullyVegetarianCount, respondentCount), unit: 'percent' },
-        { key: 'fullyVeganEmployees', value: safePercent(fullyVeganCount, respondentCount), unit: 'percent' },
-        { key: 'redMeatDailyEmployees', value: safePercent(redMeatDailyCount, respondentCount), unit: 'percent' },
+        {
+          key: 'redMeatDailyEmployees',
+          value: safePercent(
+            countTrue((r) => r.redMeatDaily),
+            respondentCount,
+          ),
+          unit: 'percent',
+        },
       ],
     },
     {
       key: 'digital',
       stats: [
-        { key: 'aiRequestsPerDay', value: average(aiRequests), unit: 'number' },
-        { key: 'videoHoursPerDay', value: average(videoHours, 1), unit: 'hours' },
-        { key: 'internetHoursPerDay', value: average(internetHours, 1), unit: 'hours' },
+        { key: 'aiRequestsPerDay', value: average(numericValues((r) => r.aiRequests)), unit: 'number' },
+        {
+          key: 'videoHoursPerDay',
+          value: average(
+            numericValues((r) => r.videoHours),
+            1,
+          ),
+          unit: 'hours',
+        },
+        {
+          key: 'internetHoursPerDay',
+          value: average(
+            numericValues((r) => r.internetHours),
+            1,
+          ),
+          unit: 'hours',
+        },
       ],
     },
   ]
-
-  return groups
 }
 
 export const createSurveyResponse = async (campaignId: string, answers: string) =>
@@ -289,7 +316,7 @@ export const getSurveyResults = async (campaignId: string): Promise<SurveyResult
     }
   }
 
-  const keyStats = buildKeyStats(situations, commuteEmissionsKg, travelEmissionsKg)
+  const keyStats = buildKeyStats(engine, situations, commuteEmissionsKg, travelEmissionsKg)
 
   return {
     surveyId: campaignId,
