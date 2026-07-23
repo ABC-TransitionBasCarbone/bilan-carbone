@@ -9,6 +9,7 @@ export default async function ResultsPage({ params }: { params: Promise<{ id: st
   if (!results) {
     return <NotFound />
   }
+
   return (
     <div className={styles.scrollWrapper}>
       <main className="main-container">

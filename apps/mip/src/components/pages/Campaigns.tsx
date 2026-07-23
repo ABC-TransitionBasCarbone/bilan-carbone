@@ -5,11 +5,12 @@ import { updateCampaignCommand } from '@/services/serverFunctions/campaign'
 import { UpdateCampaignCommand, UpdateCampaignCommandValidation } from '@/services/serverFunctions/campaign.command'
 import { exportSurveyResponsesToCSV } from '@/services/serverFunctions/survey'
 import { handleCopy } from '@/utils/campaign'
-import { Table as BaseTable } from '@abc-transitionbascarbone/components'
+import { Table as BaseTable, HelpIcon } from '@abc-transitionbascarbone/components'
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import Form from '@abc-transitionbascarbone/components/src/base/Form'
 import LinkButton from '@abc-transitionbascarbone/components/src/base/LinkButton'
 import { FormSelect } from '@abc-transitionbascarbone/components/src/form/Select'
+import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
 import { CampaignStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { Button, useToast } from '@abc-transitionbascarbone/ui'
 import { downloadCsvFile } from '@abc-transitionbascarbone/utils/download'
@@ -22,7 +23,7 @@ import { IconButton, MenuItem, TextField, Tooltip } from '@mui/material'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
 import styles from './Campaign.module.css'
@@ -35,8 +36,10 @@ interface Props {
 
 const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
   const t = useTranslations('campaigns')
+  const tAction = useTranslations('common.action')
   const router = useRouter()
   const { showErrorToast, showSuccessToast } = useToast()
+  const [displayCampaignHelp, setDisplayCampaignHelp] = useState(false)
 
   const form = useForm<UpdateCampaignCommand>({
     resolver: zodResolver(UpdateCampaignCommandValidation),
@@ -217,23 +220,56 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
   })
 
   return (
-    <Block as="h1" title={t('editCampaigns')}>
-      <Form onSubmit={form.handleSubmit(onSubmit)}>
-        <BaseTable table={table} className="mt1" testId="sites" />
-        <div className="mt1 justify-end">
-          <Button
-            type="button"
-            onClick={() => form.setValue('campaigns', [...currentCampaigns, newCampaign()])}
-            data-testid="add-campaign-button"
-          >
-            {t('add')}
+    <>
+      <Block
+        as="h2"
+        title={t('editCampaigns')}
+        icon={<HelpIcon onClick={() => setDisplayCampaignHelp(true)} label={t('guide.title')} />}
+        iconPosition="after"
+        expIcon
+      >
+        <Form onSubmit={form.handleSubmit(onSubmit)}>
+          <BaseTable table={table} className="mt1" testId="sites" />
+          <div className="mt1 justify-end">
+            <Button
+              type="button"
+              onClick={() => form.setValue('campaigns', [...currentCampaigns, newCampaign()])}
+              data-testid="add-campaign-button"
+            >
+              {t('add')}
+            </Button>
+          </div>
+          <Button type="submit" disabled={form.formState.isSubmitting} data-testid="validate-campaign-update">
+            {t('edit')}
           </Button>
-        </div>
-        <Button type="submit" disabled={form.formState.isSubmitting} data-testid="validate-campaign-update">
-          {t('edit')}
-        </Button>
-      </Form>
-    </Block>
+        </Form>
+      </Block>
+      <Modal
+        open={displayCampaignHelp}
+        label="campaign-guide"
+        title={t('guide.title')}
+        onClose={() => setDisplayCampaignHelp(false)}
+        actions={[
+          {
+            actionType: 'button',
+            ['data-testid']: 'campaign-guide-close',
+            onClick: () => setDisplayCampaignHelp(false),
+            children: tAction('cancel'),
+          },
+        ]}
+      >
+        <p>{t('guide.description')}</p>
+        <p>
+          <b>{t('guide.resultsTitle')}</b> {t('guide.resultsDescription')}
+        </p>
+        <p>
+          <b>{t('guide.csvTitle')}</b> {t('guide.csvDescription')}
+        </p>
+        <p>
+          <b>{t('guide.shareTitle')}</b> {t('guide.shareDescription')}
+        </p>
+      </Modal>
+    </>
   )
 }
 

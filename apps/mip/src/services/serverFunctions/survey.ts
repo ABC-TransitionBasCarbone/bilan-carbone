@@ -294,6 +294,13 @@ export const createSurveyResponse = async (campaignId: string, answers: string) 
   })
 
 export const getSurveyResults = async (campaignId: string): Promise<SurveyResults | null> => {
+  const session = await dbActualizedAuth()
+  if (!session?.user) {
+    return null
+  }
+
+  const canAccessEntityFilter = isAdmin(session.user.role)
+
   const campaign = await getCampaignWithModelForSurvey(campaignId)
   if (!campaign) {
     return null
@@ -315,7 +322,7 @@ export const getSurveyResults = async (campaignId: string): Promise<SurveyResult
       totalRespondents: 0,
       averageFootprint: 0,
       categories: emptyCategories,
-      entities: DEFAULT_ENTITY_FILTERS,
+      entities: canAccessEntityFilter ? DEFAULT_ENTITY_FILTERS : [],
       comments: [],
       keyStats: [],
     }
@@ -366,7 +373,7 @@ export const getSurveyResults = async (campaignId: string): Promise<SurveyResult
       value: Math.round(categoryTotals[key] / totalRespondents),
       color: CATEGORY_COLORS[key],
     })),
-    entities: DEFAULT_ENTITY_FILTERS,
+    entities: canAccessEntityFilter ? DEFAULT_ENTITY_FILTERS : [],
     comments: [],
     keyStats,
   }

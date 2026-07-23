@@ -79,11 +79,13 @@ const ResultsDashboard = ({ results }: Props) => {
 
       <StatsSection results={filtered} resultsUnit={StudyResultUnit.T} />
 
-      <EntityFilterSection
-        entities={results.entities}
-        selectedEntity={selectedEntity}
-        onSelectEntity={setSelectedEntity}
-      />
+      {results.entities.length > 0 && (
+        <EntityFilterSection
+          entities={results.entities}
+          selectedEntity={selectedEntity}
+          onSelectEntity={setSelectedEntity}
+        />
+      )}
 
       <ChartsSection pieChartItems={pieChartItems} barChartItems={barChartItems} />
 

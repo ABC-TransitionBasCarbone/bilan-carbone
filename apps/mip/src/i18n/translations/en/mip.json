@@ -98,7 +98,28 @@
     "delete": "Delete",
     "add": "Add new campaign",
     "edit": "Save changes",
-    "success": "campaigns changed successfully"
+    "success": "campaigns changed successfully",
+    "guide": {
+      "title": "Campaign guide",
+      "description": "Each row corresponds to a survey campaign sent to your employees.",
+      "resultsTitle": "View results:",
+      "resultsDescription": "click the chart icon to open the campaign dashboard (average footprint, response rate, category breakdown).",
+      "csvTitle": "Export responses (CSV):",
+      "csvDescription": "click the download icon to export responses as a CSV file and analyze them in your reporting tools.",
+      "shareTitle": "Share the survey link:",
+      "shareDescription": "click the copy icon in \"Link to share\", then send the link to your employees (email, intranet, internal messaging)."
+    }
+  },
+  "role": {
+    "SUPER_ADMIN": "Global Administrator",
+    "ADMIN": "Administrator",
+    "COLLABORATOR": "Collaborator",
+    "ADMIN_description": "An administrator manages My Impact Pro organization settings, campaigns, and team members.",
+    "COLLABORATOR_description": "A collaborator can answer the survey and view results depending on assigned permissions.",
+    "guide": "Roles guide",
+    "saved": "New role saved",
+    "Not authorized": "You are not allowed to do this action",
+    "More than one": "There must be at least one admin or manager in the organisation"
   },
   "results": {
     "title": "Results Dashboard",
