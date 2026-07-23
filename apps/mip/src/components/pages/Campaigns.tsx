@@ -10,7 +10,7 @@ import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import Form from '@abc-transitionbascarbone/components/src/base/Form'
 import LinkButton from '@abc-transitionbascarbone/components/src/base/LinkButton'
 import { FormSelect } from '@abc-transitionbascarbone/components/src/form/Select'
-import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
+import GlossaryModal from '@abc-transitionbascarbone/components/src/modals/GlossaryModal'
 import { CampaignStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { Button, useToast } from '@abc-transitionbascarbone/ui'
 import { downloadCsvFile } from '@abc-transitionbascarbone/utils/download'
@@ -36,7 +36,6 @@ interface Props {
 
 const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
   const t = useTranslations('campaigns')
-  const tAction = useTranslations('common.action')
   const router = useRouter()
   const { showErrorToast, showSuccessToast } = useToast()
   const [displayCampaignHelp, setDisplayCampaignHelp] = useState(false)
@@ -244,31 +243,25 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
           </Button>
         </Form>
       </Block>
-      <Modal
-        open={displayCampaignHelp}
-        label="campaign-guide"
-        title={t('guide.title')}
-        onClose={() => setDisplayCampaignHelp(false)}
-        actions={[
-          {
-            actionType: 'button',
-            ['data-testid']: 'campaign-guide-close',
-            onClick: () => setDisplayCampaignHelp(false),
-            children: tAction('cancel'),
-          },
-        ]}
-      >
-        <p>{t('guide.description')}</p>
-        <p>
-          <b>{t('guide.resultsTitle')}</b> {t('guide.resultsDescription')}
-        </p>
-        <p>
-          <b>{t('guide.csvTitle')}</b> {t('guide.csvDescription')}
-        </p>
-        <p>
-          <b>{t('guide.shareTitle')}</b> {t('guide.shareDescription')}
-        </p>
-      </Modal>
+      {displayCampaignHelp && (
+        <GlossaryModal
+          glossary="guide.title"
+          label="campaign-guide"
+          t={t}
+          onClose={() => setDisplayCampaignHelp(false)}
+        >
+          <p>{t('guide.description')}</p>
+          <p>
+            <b>{t('guide.resultsTitle')}</b> {t('guide.resultsDescription')}
+          </p>
+          <p>
+            <b>{t('guide.csvTitle')}</b> {t('guide.csvDescription')}
+          </p>
+          <p>
+            <b>{t('guide.shareTitle')}</b> {t('guide.shareDescription')}
+          </p>
+        </GlossaryModal>
+      )}
     </>
   )
 }

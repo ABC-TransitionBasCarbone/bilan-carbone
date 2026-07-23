@@ -1,6 +1,8 @@
-import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
-import { Translations } from '@abc-transitionbascarbone/lib'
+'use client'
 import { useTranslations } from 'next-intl'
+import Modal from './Modal'
+
+type Translations = ReturnType<typeof useTranslations>
 
 interface Props {
   glossary: string

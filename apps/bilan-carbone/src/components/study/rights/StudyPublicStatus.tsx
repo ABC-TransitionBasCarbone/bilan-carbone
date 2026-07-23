@@ -1,7 +1,6 @@
 'use client'
 
 import { FormRadio } from '@/components/form/Radio'
-import GlossaryModal from '@/components/modals/GlossaryModal'
 import type { FullStudy } from '@/db/study'
 import { changeStudyPublicStatus } from '@/services/serverFunctions/study'
 import {
@@ -10,6 +9,7 @@ import {
 } from '@/services/serverFunctions/study.command'
 import { HelpIcon } from '@abc-transitionbascarbone/components'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
+import GlossaryModal from '@abc-transitionbascarbone/components/src/modals/GlossaryModal'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControlLabel, Radio } from '@mui/material'
 import { UserSession } from 'next-auth'

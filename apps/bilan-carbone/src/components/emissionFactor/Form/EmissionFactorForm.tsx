@@ -1,7 +1,6 @@
 'use client'
 
 import { FormAutocomplete } from '@/components/form/Autocomplete'
-import GlossaryModal from '@/components/modals/GlossaryModal'
 import QualitySelectGroup from '@/components/study/QualitySelectGroup'
 import { customRich } from '@/i18n/customRich'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
@@ -12,6 +11,7 @@ import LinkButton from '@abc-transitionbascarbone/components/src/base/LinkButton
 import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
 import { FormSelect } from '@abc-transitionbascarbone/components/src/form/Select'
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
+import GlossaryModal from '@abc-transitionbascarbone/components/src/modals/GlossaryModal'
 import { FormControlLabel, FormLabel, MenuItem, Switch } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
