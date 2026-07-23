@@ -105,7 +105,7 @@
     "delete": "Supprimer",
     "add": "Ajouter une nouvelle campagne",
     "edit": "Valider la modification",
-    "success": "Les campagnesont été modifiées avec succès",
+    "success": "Les campagnes ont été modifiées avec succès",
     "guide": {
       "title": "Guide des campagnes",
       "description": "Chaque ligne correspond à une campagne de sondage envoyée à vos collaborateurs.",
