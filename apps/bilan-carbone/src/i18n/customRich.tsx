@@ -46,8 +46,9 @@ export const customRich = (
     br: () => <br />,
     underline: (children) => <span style={{ textDecoration: 'underline' }}>{children}</span>,
     green: (children) => <span style={{ color: 'var(--mui-palette-ghgp-main)', fontSize: 'unset' }}>{children}</span>,
-    purple: (children) => 
-      <span style={{ color: 'var(--mui-palette-ghgp-complementary)', fontSize: 'unset' }}>{children}</span>,
+    purple: (children) => (
+      <span style={{ color: 'var(--mui-palette-ghgp-complementary)', fontSize: 'unset' }}>{children}</span>
+    ),
     white: (children) => <span style={{ color: 'white !important', fontSize: 'unset' }}>{children}</span>,
     ul: (children) => <ul>{children}</ul>,
     li: (children) => <li>{children}</li>,

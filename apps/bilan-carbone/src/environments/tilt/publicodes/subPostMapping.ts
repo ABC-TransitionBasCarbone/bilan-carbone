@@ -86,7 +86,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('construction . bâtiment . locaux . locaux partagés . pourcentage'),
     list('construction . bâtiment . locaux ponctuels', [
       'construction . bâtiment . locaux ponctuels . nom',
-      'construction . bâtiment . locaux ponctuels . calcul . surface', 
+      'construction . bâtiment . locaux ponctuels . calcul . surface',
       'construction . bâtiment . locaux ponctuels . calcul . durée',
     ]),
   ],
@@ -203,12 +203,18 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
           'intrants-services . approche monétaire . tableau détaillé . assurance-reassurance',
           'intrants-services . approche monétaire . tableau détaillé . assurance-reassurance . montant-dépensé',
         ],
-        ['intrants-services . approche monétaire . tableau détaillé . telecom', 'intrants-services . approche monétaire . tableau détaillé . telecom . montant-dépensé'],
+        [
+          'intrants-services . approche monétaire . tableau détaillé . telecom',
+          'intrants-services . approche monétaire . tableau détaillé . telecom . montant-dépensé',
+        ],
         [
           'intrants-services . approche monétaire . tableau détaillé . sante-humaine',
           'intrants-services . approche monétaire . tableau détaillé . sante-humaine . montant-dépensé',
         ],
-        ['intrants-services . approche monétaire . tableau détaillé . edition', 'intrants-services . approche monétaire . tableau détaillé . edition . montant-dépensé'],
+        [
+          'intrants-services . approche monétaire . tableau détaillé . edition',
+          'intrants-services . approche monétaire . tableau détaillé . edition . montant-dépensé',
+        ],
         [
           'intrants-services . approche monétaire . tableau détaillé . poste-courrier',
           'intrants-services . approche monétaire . tableau détaillé . poste-courrier . montant-dépensé',
@@ -217,7 +223,10 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
           'intrants-services . approche monétaire . tableau détaillé . restauration',
           'intrants-services . approche monétaire . tableau détaillé . restauration . montant-dépensé',
         ],
-        ['intrants-services . approche monétaire . tableau détaillé . formation', 'intrants-services . approche monétaire . tableau détaillé . formation . montant-dépensé'],
+        [
+          'intrants-services . approche monétaire . tableau détaillé . formation',
+          'intrants-services . approche monétaire . tableau détaillé . formation . montant-dépensé',
+        ],
         [
           'intrants-services . approche monétaire . tableau détaillé . reparation-installation',
           'intrants-services . approche monétaire . tableau détaillé . reparation-installation . montant-dépensé',
