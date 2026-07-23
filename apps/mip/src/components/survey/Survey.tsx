@@ -1,13 +1,12 @@
 'use client'
 import { useMipPublicodes } from '@/publicodes/MipPublicodesProvider'
-import { createResponseWithJson } from '@/services/serverFunctions/campaign'
+import { createSurveyResponse } from '@/services/serverFunctions/survey'
 import { buildPageBuilder } from '@abc-transitionbascarbone/publicodes/form'
 import { Container, Typography } from '@mui/material'
 import { FormBuilder, FormState } from '@publicodes/forms'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import styles from './Survey.module.css'
 import { buildGroupedElements, getCurrentSectionTitle } from './surveyGrouping'
 import SurveyNavigation from './SurveyNavigation'
 import SurveyProgressHeader from './SurveyProgressHeader'
@@ -31,7 +30,7 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
     pageBuilder: buildPageBuilder(engine),
   })
 
-  function initState() {
+  const initState = () => {
     let s = FormBuilder.newState()
     s = formBuilder.start(s, rootRule)
     return s
@@ -60,14 +59,14 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   }, [surveyId, state, isLoading])
 
   useEffect(() => {
-    if (!isLoading && !isResumed && !isCompleting) {
+    if (!isLoading && !isResumed) {
       const { current, pageCount, hasNextPage } = formBuilder.pagination(state)
       const isComplete = !hasNextPage && current === pageCount
       if (isComplete) {
         router.replace(`/${surveyId}/results`)
       }
     }
-  }, [formBuilder, isCompleting, isLoading, isResumed, router, state, surveyId])
+  }, [formBuilder, isLoading, isResumed, router, state, surveyId])
 
   const handleRestart = () => {
     clearSurveyState(surveyId)
@@ -80,13 +79,14 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
       return
     }
 
-    setIsCompleting(true)
     const completedState = formBuilder.goToNextPage(state)
+    setIsCompleting(true)
 
     try {
-      await createResponseWithJson(surveyId, JSON.stringify(completedState))
-      saveSurveyState(surveyId, completedState)
-      router.push(`/${surveyId}/results`)
+      await createSurveyResponse(surveyId, JSON.stringify(completedState))
+      updateState(completedState)
+    } catch (error) {
+      console.error('Survey completion failed', { surveyId, error })
     } finally {
       setIsCompleting(false)
     }
@@ -120,7 +120,7 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   }
 
   return (
-    <Container maxWidth="md" className={styles.container}>
+    <Container maxWidth="md" className="pt1 pb5">
       <SurveyProgressHeader
         title={currentTitle.label}
         icons={currentTitle.icons}
@@ -143,15 +143,13 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
       <SurveyNavigation
         hasPreviousPage={hasPreviousPage}
         isLastPage={pageCount === current + 1}
-        isSubmittingCompletion={isCompleting}
+        isCompleting={isCompleting}
         previousLabel={tCommon('previous')}
         nextLabel={tCommon('next')}
         completeLabel={t('navigation.complete')}
         onPrevious={() => updateState(formBuilder.goToPreviousPage(state))}
         onNext={() => updateState(formBuilder.goToNextPage(state))}
-        onComplete={() => {
-          void completeSurvey()
-        }}
+        onComplete={completeSurvey}
       />
     </Container>
   )

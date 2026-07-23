@@ -21,7 +21,7 @@ const TopCategoriesSection = ({ topCategories }: Props) => {
 
       <div className="flex-col gapped075">
         {topCategories.map((category, index) => (
-          <div key={category.key} className={`${styles.topCategoryItem} align-center gapped1`}>
+          <div key={category.key} className="wrap align-center gapped1">
             <Typography className={styles.topCategoryRank}>{index + 1}</Typography>
             <Typography className={styles.topCategoryIcon}>{category.icones}</Typography>
             <Typography className={styles.topCategoryName}>{category.titre}</Typography>

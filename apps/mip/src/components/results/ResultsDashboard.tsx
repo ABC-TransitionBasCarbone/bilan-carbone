@@ -1,7 +1,8 @@
 'use client'
 
-import { CATEGORY_COLORS, getResultsForEntity } from '@/data/sampleResults'
+import { CATEGORY_COLORS } from '@/constants/style'
 import { SurveyResults } from '@/types/results.types'
+import { getResultsForEntity } from '@/utils/survey'
 import { StudyResultUnit } from '@abc-transitionbascarbone/db-common/enums'
 import { BasicTypeCharts } from '@abc-transitionbascarbone/utils/charts'
 import { Print } from '@mui/icons-material'
