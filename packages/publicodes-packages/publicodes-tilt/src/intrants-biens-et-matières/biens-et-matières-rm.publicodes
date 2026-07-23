@@ -1,6 +1,7 @@
 intrants-biens-et-matières . ratios monétaires:
   titre: Intrants biens et matières
   question: Quels biens et matières avez-vous achetés en approche monétaire ?
+  description: Vous devez bien prendre en compte l'ensemble des biens, dons compris (invendus, fin de stock, etc). Il faut donc bien prendre en compte les informations disponibles sur les contributions volontaires en nature (compte 870).
   formule:
     somme:
       - petites-fournitures

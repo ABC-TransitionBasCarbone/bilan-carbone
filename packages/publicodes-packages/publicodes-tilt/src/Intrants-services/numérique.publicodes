@@ -13,6 +13,7 @@ intrants-services . numérique . streaming:
   avec:
     heures:
       question: Sur une année, combien d'heures de streaming vidéo ont été regardées ?
+      description: Les heures passées sur internet d'une manière générale sont ignorées, car l'empreinte associée est généralement très faible.
       par défaut: 0
       unité: h
 

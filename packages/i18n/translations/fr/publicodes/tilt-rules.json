@@ -24,6 +24,7 @@
     "kg": "kg",
     "%": "%",
     "tonne": "tonne",
+    "voitures": "voitures",
     "km": "km",
     "km/salariés/jours": "km/salariés.jours",
     "km/bénévoles/jours": "km/bénévoles.jours",
@@ -31,12 +32,10 @@
     "km/salarié/mois": "km/salarié.mois",
     "kgCO2e/an": "kgCO2e/an",
     "km/salarié/an": "km/salarié.an",
-    "km/bénévole/mois": "km/bénévole.mois",
-    "km/bénévoles/mois": "km/bénévoles.mois",
-    "km/bénévoles/an": "km/bénévoles.an",
     "km/bénéficiaires/an": "km/bénéficiaires.an",
     "place": "place",
-    "m2": "m2",
+    "m²": "m²",
+    "jours": "jours",
     "repas": "repas"
   },
   "publicodes-rules": {
@@ -65,17 +64,20 @@
       "type": {
         "question": "de quel type de structure votre association se rapproche t'elle le plus ?",
         "options": {
+          "Structure sportive": "Structure sportive",
           "Club de loisirs": "Club de loisirs",
-          "Association étudiante": "Association étudiante",
-          "Association culturelle": "Association culturelle",
+          "Éducation, formation et insertion professionnelle": "Éducation, formation et insertion professionnelle",
+          "Développement économique et local": "Développement économique et local",
+          "Développement international et humanitaire": "Développement international et humanitaire",
+          "Culture et patrimoine": "Culture et patrimoine",
           "Association de voisinage": "Association de voisinage",
           "Hôpital": "Hôpital",
           "Maison de retraite": "Maison de retraite",
           "Association d'aide à domicile": "Association d'aide à domicile",
-          "Association humanitaire": "Association humanitaire",
+          "Accompagnement des personnes en situation de handicap": "Accompagnement des personnes en situation de handicap",
+          "Protection de l'enfance": "Protection de l'enfance",
           "Autres structures sociales et solidaires": "Autres structures sociales et solidaires",
-          "Association de défense de l'environnement": "Association de défense de l'environnement",
-          "Association d'enseignement ou de formation": "Association d'enseignement ou de formation",
+          "Défense de l'environnement": "Défense de l'environnement",
           "Autre": "Autre"
         }
       },
@@ -251,73 +253,86 @@
       }
     },
     "intrants-services": {
-      "services": {
-        "description": "La liste est non exhaustive : si vous n’avez pas comptabilisé l’ensemble de vos dépenses, c’est tout à fait normal. Il peut s’agir de dépenses très faiblement émissives ou dont les émissions sont déjà prises en compte dans d’autres postes ou via d’autres questions reposant sur des données plus précises.",
-        "question": "Quel montant avez-vous dépensé dans les services immatériels suivants en [Année] ?",
-        "spectacles-musées": {
-          "titre": "Spectacles, musées et autres services culturels",
-          "montant-dépensé": {
-            "question": "Montant dépensé en services de spectacles, musées et autres services culturels"
+      "approche monétaire": {
+        "existant": {
+          "description": "La liste de vos dépenses est présente dans votre livres de comptes, et souvent déclarée sur Lecompteasso https://lecompteasso.associations.gouv.fr/client/login.",
+          "question": "Avez-vous accès aux détails des montants dépensés sur l'année dans des services immatériels ?"
+        },
+        "FE moyen": {
+          "description": "Si vous n'avez pas du tout accès à vos comptes, vous pouvez réaliser une estimation en partant du budget de fonctionnement de l'association, et en retranchant les coûts afférents aux éventuels salariés et aux charges connues.",
+          "montant dépensé": {
+            "description": "Vous devez bien prendre en compte l'ensemble des services, y compris ceux qui sont reçus gratuitement (mécénat de compétence, etc). Il faut donc bien prendre en compte les informations disponibles sur les contributions volontaires en nature (compte 870).",
+            "question": "Quel montant avez-vous dépensé sur l'année dans ces services immatériels ?"
           }
         },
-        "assurance-reassurance": {
-          "titre": "Services d'assurance",
-          "montant-dépensé": {
-            "question": "Montant dépensé en services d'assurance et réassurance"
-          }
-        },
-        "telecom": {
-          "titre": "Services de télécommunications",
-          "montant-dépensé": {
-            "question": "Montant dépensé en services de télécommunications"
-          }
-        },
-        "sante-humaine": {
-          "titre": "Services de santé humaine",
-          "montant-dépensé": {
-            "question": "Montant dépensé en services de santé humaine"
-          }
-        },
-        "edition": {
-          "titre": "Services d'édition",
-          "montant-dépensé": {
-            "question": "Montant dépensé en services d'édition"
-          }
-        },
-        "poste-courrier": {
-          "titre": "Services de poste et de courrier",
-          "montant-dépensé": {
-            "question": "Montant dépensé en services de poste et courrier"
-          }
-        },
-        "restauration": {
-          "titre": "Services de restauration et d'hébergement",
-          "montant-dépensé": {
-            "question": "Montant dépensé en services de restauration et hébergement"
-          }
-        },
-        "formation": {
-          "titre": "Services de formation",
-          "montant-dépensé": {
-            "question": "Montant dépensé en services de formation"
-          }
-        },
-        "reparation-installation": {
-          "titre": "Services de réparation et d'installation",
-          "montant-dépensé": {
-            "question": "Montant dépensé en services de réparation et installation"
-          }
-        },
-        "juridique-comptable": {
-          "titre": "Services de réparation et d'installation",
-          "montant-dépensé": {
-            "question": "Montant dépensé en services juridiques, comptables et assurances"
-          }
-        },
-        "programmation-conseil": {
-          "titre": "Services de programmation et de conseil",
-          "montant-dépensé": {
-            "question": "Montant dépensé en services de programmation et conseil informatique"
+        "tableau détaillé": {
+          "description": "La liste est non exhaustive : si vous n’avez pas comptabilisé l’ensemble de vos dépenses, c’est tout à fait normal. Il peut s’agir de dépenses très faiblement émissives ou dont les émissions sont déjà prises en compte dans d’autres postes ou via d’autres questions reposant sur des données plus précises.",
+          "question": "Quel montant avez-vous dépensé dans les services immatériels suivants en [Année] ?",
+          "spectacles-musées": {
+            "titre": "Spectacles, musées et autres services culturels",
+            "montant-dépensé": {
+              "question": "Montant dépensé en services de spectacles, musées et autres services culturels"
+            }
+          },
+          "assurance-reassurance": {
+            "titre": "Services d'assurance",
+            "montant-dépensé": {
+              "question": "Montant dépensé en services d'assurance et réassurance"
+            }
+          },
+          "telecom": {
+            "titre": "Services de télécommunications",
+            "montant-dépensé": {
+              "question": "Montant dépensé en services de télécommunications"
+            }
+          },
+          "sante-humaine": {
+            "titre": "Services de santé humaine",
+            "montant-dépensé": {
+              "question": "Montant dépensé en services de santé humaine"
+            }
+          },
+          "edition": {
+            "titre": "Services d'édition",
+            "montant-dépensé": {
+              "question": "Montant dépensé en services d'édition"
+            }
+          },
+          "poste-courrier": {
+            "titre": "Services de poste et de courrier",
+            "montant-dépensé": {
+              "question": "Montant dépensé en services de poste et courrier"
+            }
+          },
+          "restauration": {
+            "titre": "Services de restauration et d'hébergement",
+            "montant-dépensé": {
+              "question": "Montant dépensé en services de restauration et hébergement"
+            }
+          },
+          "formation": {
+            "titre": "Services de formation",
+            "montant-dépensé": {
+              "question": "Montant dépensé en services de formation"
+            }
+          },
+          "reparation-installation": {
+            "titre": "Services de réparation et d'installation",
+            "montant-dépensé": {
+              "question": "Montant dépensé en services de réparation et installation"
+            }
+          },
+          "juridique-comptable": {
+            "titre": "Services juridiques et comptables",
+            "montant-dépensé": {
+              "question": "Montant dépensé en services juridiques, comptables et assurances"
+            }
+          },
+          "programmation-conseil": {
+            "titre": "Services de programmation et de conseil",
+            "montant-dépensé": {
+              "question": "Montant dépensé en services de programmation et conseil informatique"
+            }
           }
         }
       },
@@ -325,6 +340,7 @@
         "question": "Veuillez indiquer les usages numériques en [Année] des salariés et bénévoles de votre association",
         "streaming": {
           "heures": {
+            "description": "Les heures passées sur internet d'une manière générale sont ignorées, car l'empreinte associée est généralement très faible.",
             "question": "Sur une année, combien d'heures de streaming vidéo ont été regardées ?"
           }
         },
@@ -348,6 +364,7 @@
     "intrants-biens-et-matières": {
       "ratios monétaires": {
         "titre": "Intrants biens et matières",
+        "description": "Vous devez bien prendre en compte l'ensemble des biens, dons compris (invendus, fin de stock, etc). Il faut donc bien prendre en compte les informations disponibles sur les contributions volontaires en nature (compte 870).",
         "question": "Quels biens et matières avez-vous achetés en approche monétaire ?",
         "petites-fournitures": {
           "titre": "Petites fournitures",
@@ -427,12 +444,15 @@
           }
         },
         "carburant": {
+          "titre": "consommation de carburant pour le fret possédé",
           "litre": {
+            "description": "Si vous n'avez accès qu'aux montants dépensés et non aux consommations, vous pouvez convertir celle-ci via le prix moyen du carburant concerné sur l'année. Sur l'année 2025, 1,648€/L pour le gazole, 1,727€/L pour le SP95, 1,714€/L pour le SP95-E10, 1,817€/L pour le SP98, 0,764€/L pour le superéthanol E85 et 0,992€/L pour le GPL-c.",
             "question": "Combien de litres de carburants ces véhicules ont-ils consommé ?"
           }
         },
         "livraisons": {
           "titre": "Nombre de livraisons",
+          "description": "Le nombre de livraisons renseigné ici doit exclure toutes les livraisons qui ont été faites par vos propres véhicules, car leur impact est déjà comptabilisé via les litres de carburants consommés.",
           "question": "En moyenne, combien de livraisons ont lieu par an ?"
         },
         "poids": {
@@ -516,10 +536,10 @@
         },
         "avec": {
           "distance": {
-            "question": "D'après les résultats de MEP, quelle est la distance moyenne parcourue par salarié par jour (A/R) pour des déplacements domicile-travail ?"
+            "question": "D'après les résultats de MEP, quelle est la distance moyenne parcourue par salarié par jour (A/R) pour des déplacements domicile-association ?"
           },
           "réponse MEP": {
-            "question": "D'après les résultats MEP, combien de kgCO2e représentent les déplacements domicile-travail des salariés ?"
+            "question": "D'après les résultats MEP, combien de kgCO2e représentent les déplacements domicile-association des salariés ?"
           }
         },
         "sans": {
@@ -543,25 +563,25 @@
             "titre": "Voiture",
             "description": "On considère ici toutes les motorisations de voiture individuelles, basée sur des moyennes nationales",
             "distance": {
-              "question": "Combien de km sont parcourus en moyenne par salarié en voiture par jour (A/R) pour des déplacements domicile-travail ?"
+              "question": "Combien de km sont parcourus en moyenne par salarié en voiture par jour (A/R) pour des déplacements domicile-association ?"
             }
           },
           "train": {
             "titre": "Train (TER)",
             "distance": {
-              "question": "Combien de km sont parcourus en moyenne par salarié en train par jour (A/R) pour des déplacements domicile-travail ?"
+              "question": "Combien de km sont parcourus en moyenne par salarié en train par jour (A/R) pour des déplacements domicile-association ?"
             }
           },
           "deux roues": {
             "titre": "Deux roues",
             "distance": {
-              "question": "Combien de km sont parcourus en moyenne par salarié en deux roues par jour (A/R) pour des déplacements domicile-travail ?"
+              "question": "Combien de km sont parcourus en moyenne par salarié en deux roues par jour (A/R) pour des déplacements domicile-association ?"
             }
           },
           "transports en commun": {
             "titre": "Transports en commun (Métro, tramway, RER, bus, ...)",
             "distance": {
-              "question": "Combien de km sont parcourus en moyenne par salarié en transports en commun par jour (A/R) pour des déplacements domicile-travail ?"
+              "question": "Combien de km sont parcourus en moyenne par salarié en transports en commun par jour (A/R) pour des déplacements domicile-association ?"
             }
           }
         }
@@ -572,49 +592,49 @@
             "question": "D'après les résultats de MEP, quelle est la distance moyenne parcourue par jour (A/R) par bénévole pour des déplacements domicile-travail ?"
           },
           "réponse MEP": {
-            "question": "D'après les résultats MEP, combien de kgCO2e représentent les déplacements domicile-travail des bénévoles ?"
+            "question": "D'après les résultats MEP, combien de kgCO2e représentent les déplacements domicile-association des bénévoles ?"
           }
         },
         "sans": {
           "part voiture": {
             "titre": "Voiture",
-            "question": "Quel pourcentage des bénévoles se rend à son lieu habituel de bénévolat en voiture ?"
+            "question": "Quand les bénévoles se déplacent, quel pourcentage d'entre eux utilise la voiture ?"
           },
           "part train": {
             "titre": "Train (TER)",
-            "question": "Quel pourcentage des bénévoles se rend à son lieu habituel de bénévolat en train (TER) ?"
+            "question": "Quand les bénévoles se déplacent, quel pourcentage d'entre eux utilise le train ?"
           },
           "part deux roues": {
             "titre": "Deux roues",
-            "question": "Quel pourcentage des bénévoles se rend à son lieu habituel de bénévolat en deux roues ?"
+            "question": "Quand les bénévoles se déplacent, quel pourcentage d'entre eux utilise un deux roues ?"
           },
           "part transport en commun": {
             "titre": "Transports en commun (Métro, tramway, RER, bus, ...)",
-            "question": "Quel pourcentage des bénévoles se rend à son lieu habituel de bénévolat en transports en commun (Métro, Tramway, Bus) ?"
+            "question": "Quand les bénévoles se déplacent, quel pourcentage d'entre eux utilise les transports en commun (Métro, Tramway, Bus) ?"
           },
           "voiture": {
             "titre": "Voiture",
             "description": "On considère ici toutes les motorisations de voiture individuelles, basée sur des moyennes nationales",
             "distance": {
-              "question": "Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en voiture pour des déplacements domicile-travail ?"
+              "question": "Quand les bénévoles se déplacent en voiture, combien de km parcourent-ils en moyenne par jour (A/R) ?"
             }
           },
           "train": {
             "titre": "Train (TER)",
             "distance": {
-              "question": "Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en train pour des déplacements domicile-travail ?"
+              "question": "Quand les bénévoles se déplacent en train, combien de km parcourent-ils en moyenne par jour (A/R) ?"
             }
           },
           "transports en commun": {
             "titre": "Transports en commun (Métro, tramway, RER, bus, ...)",
             "distance": {
-              "question": "Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en transports en commun pour des déplacements domicile-travail ?"
+              "question": "Quand les bénévoles se déplacent en transport en commun (métro, tramway, RER, bus), combien de km parcourent-ils en moyenne par jour (A/R) ?"
             }
           },
           "deux roues": {
             "titre": "Deux roues",
             "distance": {
-              "question": "Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en deux roues pour des déplacements domicile-travail ?"
+              "question": "Quand les bénévoles se déplacent en deux roues, combien de km parcourent-ils en moyenne par jour (A/R) ?"
             }
           }
         }
@@ -687,77 +707,9 @@
           }
         }
       },
-      "DM-bénévoles": {
-        "avec": {
-          "émissions MEP": {
-            "voiture": {
-              "question": "D'après MEP, quelle est la moyenne d'émissions par bénévole pour des déplacements en voiture liés à des missions ?"
-            },
-            "train": {
-              "question": "D'après MEP, quelle est la moyenne d'émissions par bénévole pour des déplacements en train liés à des missions ?"
-            },
-            "avion": {
-              "question": "D'après MEP, quelle est la moyenne d'émissions par bénévole pour des déplacements en avion liés à des missions ?"
-            },
-            "transports en commun": {
-              "question": "D'après MEP, quelle est la moyenne d'émissions par bénévole pour des déplacements en transports en commun liés à des missions ?"
-            },
-            "deux roues": {
-              "question": "D'après MEP, quelle est la moyenne d'émissions par bénévole pour des déplacements en deux roues liés à des missions ?"
-            }
-          }
-        },
-        "sans": {
-          "voiture": {
-            "titre": "Voiture, par mois",
-            "distance": {
-              "description": "On considère ici toutes les motorisations de voiture individuelles, basée sur des moyennes nationales",
-              "question": "Combien de km sont parcourus en moyenne par mois par bénévole en voiture pour des déplacements liés à des missions ?"
-            }
-          },
-          "train": {
-            "titre": "Train (TER), par mois",
-            "distance": {
-              "question": "Combien de km sont parcourus en moyenne par mois par bénévole en train pour des déplacements liés à des missions ?"
-            }
-          },
-          "deux roues": {
-            "titre": "Deux roues, par mois",
-            "distance": {
-              "question": "Combien de km sont parcourus en moyenne par mois par bénévole en deux roues pour des déplacements liés à des missions ?"
-            }
-          },
-          "transports en commun": {
-            "titre": "Transports en commun (Métro, tramway, RER, bus, ...), par mois",
-            "distance": {
-              "question": "Combien de km sont parcourus en moyenne par mois par bénévole en transports en commun pour des déplacements liés à des missions ?"
-            }
-          },
-          "avion": {
-            "court courrier": {
-              "titre": "Avion, court courrier, par an",
-              "distance": {
-                "question": "Combien de km ont été parcourus cette année par bénévole avion court courrier pour des déplacements liés à des missions ?"
-              }
-            },
-            "moyen courrier": {
-              "titre": "Avion, moyen courrier, par an",
-              "distance": {
-                "question": "Combien de km ont été parcourus cette année par bénévole avion moyen courrier pour des déplacements liés à des missions ?"
-              }
-            },
-            "long courrier": {
-              "titre": "Avion, long courrier, par an",
-              "distance": {
-                "question": "Combien de km ont été parcourus cette année par bénévole avion long courrier pour des déplacements liés à des missions ?"
-              }
-            }
-          }
-        }
-      },
       "bénéficiaires": {
         "se déplacent": {
-          "question": "Les bénéficiaires de vos produits ou services se déplacent-ils pour en profiter ?"
+          "question": "Les bénéficiaires de vos missions se déplacent-ils pour en profiter ?"
         },
         "part voiture": {
           "titre": "Voiture",
@@ -856,15 +808,31 @@
           },
           "locaux seuls": {
             "surface": {
+              "description": "Vous devez ici renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites, vous pouvez soit sommer l'ensemble des surfaces ici, soit créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans, vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année.",
               "question": "Quelle est la surface de ces locaux ? (On considère uniquement les locaux possédés ou loués depuis moins de 50 ans)"
             }
           },
           "locaux partagés": {
             "surface": {
+              "description": "Vous devez ici renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites et que ces différents sites ont tous des locaux partagés, vous devez créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans, vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année.",
               "question": "Quelle est la surface de ces locaux ? (On considère uniquement les locaux possédés ou loués depuis moins de 50 ans)"
             },
             "pourcentage": {
               "question": "Quelle est la part de la surface de ces locaux attribuables à votre association ?"
+            }
+          }
+        },
+        "locaux ponctuels": {
+          "question": "Louez-vous des locaux ponctuellement, que ce soit en plus de vos locaux principaux ou à la place de ceux-ci ?",
+          "nom": {
+            "question": "Nom de la location"
+          },
+          "calcul": {
+            "surface": {
+              "question": "Quelle est la surface de la location ?"
+            },
+            "durée": {
+              "question": "Combien de jours dure la location sur l'année ?"
             }
           }
         }
