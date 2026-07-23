@@ -24,11 +24,3 @@
 .form {
   max-width: 30rem;
 }
-
-.colorInput {
-  max-height: fit-content;
-}
-
-.selector {
-  width: 10rem;
-}

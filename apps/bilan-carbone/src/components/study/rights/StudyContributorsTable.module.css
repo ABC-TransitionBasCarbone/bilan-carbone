@@ -2,16 +2,6 @@
   overflow-x: auto;
 }
 
-.header {
-  text-align: left;
-  padding: 1rem 0.5rem;
-  border-bottom: 1px solid var(--neutral-300);
-}
-
-.headerWidth {
-  width: 30%;
-}
-
 .expandable {
   cursor: pointer;
   width: 100%;

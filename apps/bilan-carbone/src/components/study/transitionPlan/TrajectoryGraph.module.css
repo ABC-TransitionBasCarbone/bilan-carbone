@@ -35,11 +35,6 @@
   margin-right: 2rem;
 }
 
-.filtersAccordion {
-  background: var(--mui-palette-primary-light);
-  border-radius: 0.5rem;
-}
-
 .filtersAccordion :global(.MuiAccordionSummary-root) {
   transition: padding 0.2s ease;
   min-height: auto;
