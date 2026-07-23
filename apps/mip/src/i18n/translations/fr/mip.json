@@ -15,7 +15,30 @@
     "navigation": {
       "complete": "Terminer",
       "continue": "Continuer",
-      "restart": "Recommencer"
+      "restart": "Recommencer",
+      "backToExplanation": "Précédent"
+    },
+    "explanation": {
+      "start": "Passer le test",
+      "cover": {
+        "title": "Connaissez-vous votre empreinte carbone professionnelle ?",
+        "subtitle": "Obtenez une estimation en seulement 5 minutes !"
+      },
+      "why": {
+        "title": "Pourquoi cet outil ?",
+        "description": "[PROTOTYPE] Cet outil de calcul d'empreinte carbone professionnelle s'inscrit dans la démarche de transition de votre organisation en proposant une estimation des ordres de grandeur des émissions de GES liées aux pratiques professionnelles. Il permet de sensibiliser en rendant le sujet plus tangible, tout en abordant la question des émissions à l'échelle des employés. En ce sens, il fait le lien entre actions individuelles et enjeux structurels, et constitue un point d'appui pour mieux comprendre les principaux postes d'émissions et nourrir une réflexion collective sur les leviers de réduction à l'échelle de l'organisation."
+      },
+      "about": {
+        "title": "A propos du développement de l'outil ?",
+        "description": "Cet outil a été développé par l'Association pour la transition Bas Carbone en partenariat avec des organisations engagées. Cette déclinaison s'appuie librement sur la version officielle de Nos Gestes Climat développée par l'ADEME (Agence de la transition écologique) en partenariat avec l'ABC (Association pour la Transition Bas Carbone)."
+      },
+      "partners": {
+        "title": "Organisations partenaires"
+      },
+      "note": {
+        "title": "Note",
+        "description": "Cet outil est actuellement à l'état de prototype : il peut donc comporter des bugs, des fonctionnalités incomplètes ou certaines informations et messages encore manquants, qui seront progressivement corrigés et enrichis."
+      }
     },
     "resume": "Reprendre le sondage",
     "characterCount": "{current} / {max} caractères",

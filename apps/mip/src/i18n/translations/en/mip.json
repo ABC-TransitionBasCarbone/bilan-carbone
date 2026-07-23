@@ -15,7 +15,30 @@
     "navigation": {
       "complete": "Complete",
       "continue": "Continue",
-      "restart": "Restart"
+      "restart": "Restart",
+      "backToExplanation": "Back to explanation page"
+    },
+    "explanation": {
+      "start": "Take the test",
+      "cover": {
+        "title": "Do you know your professional carbon footprint?",
+        "subtitle": "Get an estimate in just 5 minutes!"
+      },
+      "why": {
+        "title": "Why this tool?",
+        "description": "[PROTOTYPE] This work-related carbon footprint tool is part of your organisation's transition approach by providing an order-of-magnitude estimate of greenhouse gas emissions linked to professional practices. It raises awareness by making the topic more tangible, while addressing emissions at employee level. In that sense, it connects individual actions with structural challenges and provides a useful entry point to better understand the main emission categories and foster collective thinking on reduction levers at organisation level."
+      },
+      "about": {
+        "title": "About the development of this tool",
+        "description": "This tool was developed by the Association pour la Transition Bas Carbone with committed partner organisations. This version is freely based on the official Nos Gestes Climat version developed by ADEME (French Agency for Ecological Transition) in partnership with ABC (Association pour la Transition Bas Carbone)."
+      },
+      "partners": {
+        "title": "Partner organisations"
+      },
+      "note": {
+        "title": "Note",
+        "description": "This tool is currently a prototype: it may contain bugs, incomplete features, or some missing information and messages. These will be progressively fixed and improved."
+      }
     },
     "resume": "Resume survey",
     "characterCount": "{current} / {max} characters",
