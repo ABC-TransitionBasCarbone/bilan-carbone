@@ -93,6 +93,7 @@
     "OPEN": "Open",
     "CLOSED": "Close",
     "responsesCount": "Number of responses",
+    "exportCsv": "Export responses (CSV)",
     "shareLink": "Link to share",
     "delete": "Delete",
     "add": "Add new campaign",
@@ -213,6 +214,7 @@
       "comments": {
         "title": "Collaborator comments"
       },
+      "dataCsv": "Export data (CSV)",
       "visual": "Export (visual)",
       "print": "Print"
     }

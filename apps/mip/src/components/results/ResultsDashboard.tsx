@@ -1,11 +1,15 @@
 'use client'
 
 import { CATEGORY_COLORS } from '@/constants/style'
+import { exportSurveyResponsesToCSV } from '@/services/serverFunctions/survey'
 import { SurveyResults } from '@/types/results.types'
 import { getResultsForEntity } from '@/utils/survey'
 import { StudyResultUnit } from '@abc-transitionbascarbone/db-common/enums'
+import { useToast } from '@abc-transitionbascarbone/ui'
 import { BasicTypeCharts } from '@abc-transitionbascarbone/utils/charts'
+import { downloadCsvFile } from '@abc-transitionbascarbone/utils/download'
 import { Print } from '@mui/icons-material'
+import DownloadIcon from '@mui/icons-material/Download'
 import { Button, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
@@ -21,6 +25,7 @@ interface Props {
 
 const ResultsDashboard = ({ results }: Props) => {
   const t = useTranslations('results')
+  const { showErrorToast } = useToast()
   const [selectedEntity, setSelectedEntity] = useState('all')
 
   const filtered = getResultsForEntity(results, selectedEntity)
@@ -51,6 +56,16 @@ const ResultsDashboard = ({ results }: Props) => {
     window.print()
   }
 
+  const handleExportCsv = async () => {
+    const result = await exportSurveyResponsesToCSV(results.surveyId)
+    if (!result.success) {
+      showErrorToast(result.errorMessage)
+      return
+    }
+
+    downloadCsvFile(result.data.fileName, result.data.csvContent)
+  }
+
   return (
     <div className={`${styles.page} pt2`}>
       <section className="mb1">
@@ -75,6 +90,14 @@ const ResultsDashboard = ({ results }: Props) => {
       <KeyStatsSection keyStats={filtered.keyStats} />
 
       <div className="flex gapped1 mt1">
+        <Button
+          variant="outlined"
+          startIcon={<DownloadIcon />}
+          onClick={handleExportCsv}
+          data-testid="export-data-csv-button"
+        >
+          {t('export.dataCsv')}
+        </Button>
         <Button variant="outlined" startIcon={<Print />} onClick={handlePrint}>
           {t('export.print')}
         </Button>

@@ -3,16 +3,25 @@
 import { CATEGORY_COLORS } from '@/constants/style'
 import { CATEGORY_MAP, DEFAULT_ENTITY_FILTERS } from '@/constants/survey'
 import { createResponse } from '@/db/campaign'
+import { prismaClient } from '@/db/client.server'
 import { getCampaignWithModelForSurvey, getResponsesByCampaignId } from '@/db/survey'
 import { createMipEngine, RawRules } from '@/publicodes/mip-engine'
+import { dbActualizedAuth } from '@/services/auth'
 import { EmissionCategory, KeyStatGroup, SurveyResults } from '@/types/results.types'
 import { withServerResponse } from '@/utils/serverResponse'
+import { isAdmin } from '@/utils/user'
+import { buildCsv, sanitizeFileName, serializeCsvValue } from '@abc-transitionbascarbone/utils/csv'
 import { average, safePercent, toNumber } from '@abc-transitionbascarbone/utils/number'
 import { isYesValue } from '@abc-transitionbascarbone/utils/parsing'
 import Engine, { Situation } from 'publicodes'
 
 type StoredFormState = {
   situation?: Situation<string>
+}
+
+type SurveyQuestionColumn = {
+  ruleName: string
+  headerLabel: string
 }
 
 const parseStoredFormState = (answers: unknown): StoredFormState => {
@@ -30,6 +39,35 @@ const parseStoredFormState = (answers: unknown): StoredFormState => {
   }
 
   return {}
+}
+
+const getSurveyQuestionColumns = (rules: RawRules): SurveyQuestionColumn[] => {
+  const typedRules = rules as Record<string, unknown>
+
+  return Object.entries(typedRules)
+    .map(([ruleName, ruleValue]) => {
+      if (!ruleValue || typeof ruleValue !== 'object') {
+        return null
+      }
+
+      const typedRule = ruleValue as Record<string, unknown>
+      const question = typedRule.question
+      if (typeof question !== 'string' || question.trim().length === 0) {
+        return null
+      }
+
+      const unit = typedRule['unité']
+      const normalizedUnit = typeof unit === 'string' ? unit.trim() : ''
+      const headerLabel = normalizedUnit
+        ? `${question.trim()} [${ruleName}] (${normalizedUnit})`
+        : `${question.trim()} [${ruleName}]`
+
+      return {
+        ruleName,
+        headerLabel,
+      }
+    })
+    .filter((column): column is SurveyQuestionColumn => column !== null)
 }
 
 const buildKeyStats = (
@@ -333,3 +371,85 @@ export const getSurveyResults = async (campaignId: string): Promise<SurveyResult
     keyStats,
   }
 }
+
+export const exportSurveyResponsesToCSV = async (campaignId: string) =>
+  withServerResponse('exportSurveyResponsesToCSV', async () => {
+    const session = await dbActualizedAuth()
+    if (!session?.user) {
+      throw new Error('Unauthorized')
+    }
+
+    const canAccessAllOrganizationCampaigns = isAdmin(session.user.role)
+
+    const campaign = await prismaClient.campaign.findFirst({
+      where: {
+        id: campaignId,
+        modelCampaign: {
+          organizationVersionMip: {
+            id: session.user.organizationVersionMipId,
+          },
+        },
+        ...(canAccessAllOrganizationCampaigns
+          ? {}
+          : { allowedAccounts: { some: { accountMipId: session.user.accountMipId } } }),
+      },
+      select: {
+        id: true,
+        name: true,
+        responses: {
+          select: {
+            id: true,
+            createdAt: true,
+            answers: true,
+          },
+          orderBy: {
+            createdAt: 'asc',
+          },
+        },
+        modelCampaign: {
+          select: {
+            model: true,
+            organizationVersionMip: {
+              select: {
+                modelCampaign: {
+                  select: {
+                    model: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    })
+
+    if (!campaign) {
+      throw new Error('Campaign not found')
+    }
+
+    const model = (campaign.modelCampaign.organizationVersionMip?.modelCampaign?.model ??
+      campaign.modelCampaign.model) as RawRules
+    const questionColumns = getSurveyQuestionColumns(model)
+
+    const rows = campaign.responses.map((response, index) => {
+      const parsedAnswers = parseStoredFormState(response.answers)
+      const situation = (parsedAnswers.situation ?? {}) as Record<string, unknown>
+
+      return [
+        String(index + 1),
+        response.createdAt.toISOString(),
+        ...questionColumns.map((column) => serializeCsvValue(situation[column.ruleName])),
+      ]
+    })
+
+    const csvContent = buildCsv(
+      ['Index reponse', 'Date reponse', ...questionColumns.map((column) => column.headerLabel)],
+      rows,
+    )
+
+    const safeCampaignName = sanitizeFileName(campaign.name)
+    return {
+      fileName: `${safeCampaignName || 'campagne'}-reponses-utilisateurs.csv`,
+      csvContent,
+    }
+  })
