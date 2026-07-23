@@ -31,7 +31,7 @@ déplacements . bénéficiaires:
   par défaut: 0
 
 déplacements . bénéficiaires . se déplacent:
-  question: Les bénéficiaires de vos produits ou services se déplacent-ils pour en profiter ?
+  question: Les bénéficiaires de vos missions se déplacent-ils pour en profiter ?
 
 déplacements . bénéficiaires . part voiture:
   titre: Voiture

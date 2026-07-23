@@ -24,6 +24,7 @@
     "kg": "kg",
     "%": "%",
     "tonne": "[UPDATED] tonne",
+    "voitures": "[TO_TRANSLATE] voitures",
     "km": "km",
     "km/salariés/jours": "[TO_TRANSLATE] km/salariés.jours",
     "km/bénévoles/jours": "[TO_TRANSLATE] km/bénévoles.jours",
@@ -31,12 +32,10 @@
     "km/salarié/mois": "[TO_TRANSLATE] km/salarié.mois",
     "kgCO2e/an": "[TO_TRANSLATE] kgCO2e/an",
     "km/salarié/an": "[TO_TRANSLATE] km/salarié.an",
-    "km/bénévole/mois": "[TO_TRANSLATE] km/bénévole.mois",
-    "km/bénévoles/mois": "[TO_TRANSLATE] km/bénévoles.mois",
-    "km/bénévoles/an": "[TO_TRANSLATE] km/bénévoles.an",
     "km/bénéficiaires/an": "[TO_TRANSLATE] km/bénéficiaires.an",
     "place": "[UPDATED] place",
-    "m2": "[UPDATED] m2",
+    "m²": "[TO_TRANSLATE] m²",
+    "jours": "[TO_TRANSLATE] jours",
     "repas": "[UPDATED] repas"
   },
   "publicodes-rules": {
@@ -65,18 +64,25 @@
       "type": {
         "question": "Which type of structure does your association most closely resemble?",
         "options": {
+          "Structure sportive": "[TO_TRANSLATE] Structure sportive",
           "Club de loisirs": "Leisure club",
-          "Association étudiante": "Student association",
-          "Association culturelle": "Cultural association",
+          "Éducation, formation et insertion professionnelle": "[TO_TRANSLATE] Éducation, formation et insertion professionnelle",
+          "Développement économique et local": "[TO_TRANSLATE] Développement économique et local",
+          "Développement international et humanitaire": "[TO_TRANSLATE] Développement international et humanitaire",
+          "Culture et patrimoine": "[TO_TRANSLATE] Culture et patrimoine",
           "Association de voisinage": "Neighborhood association",
           "Hôpital": "Hospital",
           "Maison de retraite": "Retirement home",
           "Association d'aide à domicile": "Home help association",
-          "Association humanitaire": "Humanitarian association",
+          "Accompagnement des personnes en situation de handicap": "[TO_TRANSLATE] Accompagnement des personnes en situation de handicap",
+          "Protection de l'enfance": "[TO_TRANSLATE] Protection de l'enfance",
           "Autres structures sociales et solidaires": "Other social and solidarity structures",
-          "Association de défense de l'environnement": "Environmental protection association",
-          "Association d'enseignement ou de formation": "Teaching or training association"
+          "Défense de l'environnement": "[TO_TRANSLATE] Défense de l'environnement",
+          "Autre": "[TO_TRANSLATE] Autre"
         }
+      },
+      "type autre": {
+        "question": "[TO_TRANSLATE] Précisez le type de structure"
       }
     },
     "équipements et immobilisations": {
@@ -247,73 +253,86 @@
       }
     },
     "intrants-services": {
-      "services": {
-        "description": "The list is not exhaustive: if you have not accounted for all your expenses, that's perfectly normal. These may be very low-emission expenses or emissions already accounted for in other items or via other questions based on more precise data.",
-        "question": "How much did you spend on the following intangible services in [Year]?",
-        "spectacles-musées": {
-          "titre": "Shows, museums and other cultural services",
-          "montant-dépensé": {
-            "question": "Amount spent on shows, museums and other cultural services"
+      "approche monétaire": {
+        "existant": {
+          "description": "[UPDATED] La liste de vos dépenses est présente dans votre livres de comptes, et souvent déclarée sur Lecompteasso https://lecompteasso.associations.gouv.fr/client/login.",
+          "question": "[TO_TRANSLATE] Avez-vous accès aux détails des montants dépensés sur l'année dans des services immatériels ?"
+        },
+        "FE moyen": {
+          "description": "[TO_TRANSLATE] Si vous n'avez pas du tout accès à vos comptes, vous pouvez réaliser une estimation en partant du budget de fonctionnement de l'association, et en retranchant les coûts afférents aux éventuels salariés et aux charges connues.",
+          "montant dépensé": {
+            "description": "[UPDATED] Vous devez bien prendre en compte l'ensemble des services, y compris ceux qui sont reçus gratuitement (mécénat de compétence, etc). Il faut donc bien prendre en compte les informations disponibles sur les contributions volontaires en nature (compte 870).",
+            "question": "[UPDATED] Quel montant avez-vous dépensé sur l'année dans ces services immatériels ?"
           }
         },
-        "assurance-reassurance": {
-          "titre": "Insurance services",
-          "montant-dépensé": {
-            "question": "Amount spent on insurance and reinsurance services"
-          }
-        },
-        "telecom": {
-          "titre": "Telecommunications services",
-          "montant-dépensé": {
-            "question": "Amount spent on telecommunications services"
-          }
-        },
-        "sante-humaine": {
-          "titre": "Human health services",
-          "montant-dépensé": {
-            "question": "Amount spent on human health services"
-          }
-        },
-        "edition": {
-          "titre": "Publishing services",
-          "montant-dépensé": {
-            "question": "Amount spent on publishing services"
-          }
-        },
-        "poste-courrier": {
-          "titre": "Postal and mail services",
-          "montant-dépensé": {
-            "question": "Amount spent on postal and mail services"
-          }
-        },
-        "restauration": {
-          "titre": "Catering and accommodation services",
-          "montant-dépensé": {
-            "question": "Amount spent on catering and accommodation services"
-          }
-        },
-        "formation": {
-          "titre": "Training services",
-          "montant-dépensé": {
-            "question": "Amount spent on training services"
-          }
-        },
-        "reparation-installation": {
-          "titre": "Repair and installation services",
-          "montant-dépensé": {
-            "question": "Amount spent on repair and installation services"
-          }
-        },
-        "juridique-comptable": {
-          "titre": "Legal, accounting and insurance services",
-          "montant-dépensé": {
-            "question": "Amount spent on legal, accounting and insurance services"
-          }
-        },
-        "programmation-conseil": {
-          "titre": "Programming and consulting services",
-          "montant-dépensé": {
-            "question": "Amount spent on IT programming and consulting services"
+        "tableau détaillé": {
+          "description": "[TO_TRANSLATE] La liste est non exhaustive : si vous n’avez pas comptabilisé l’ensemble de vos dépenses, c’est tout à fait normal. Il peut s’agir de dépenses très faiblement émissives ou dont les émissions sont déjà prises en compte dans d’autres postes ou via d’autres questions reposant sur des données plus précises.",
+          "question": "[TO_TRANSLATE] Quel montant avez-vous dépensé dans les services immatériels suivants en [Année] ?",
+          "spectacles-musées": {
+            "titre": "[TO_TRANSLATE] Spectacles, musées et autres services culturels",
+            "montant-dépensé": {
+              "question": "[TO_TRANSLATE] Montant dépensé en services de spectacles, musées et autres services culturels"
+            }
+          },
+          "assurance-reassurance": {
+            "titre": "[TO_TRANSLATE] Services d'assurance",
+            "montant-dépensé": {
+              "question": "[TO_TRANSLATE] Montant dépensé en services d'assurance et réassurance"
+            }
+          },
+          "telecom": {
+            "titre": "[TO_TRANSLATE] Services de télécommunications",
+            "montant-dépensé": {
+              "question": "[TO_TRANSLATE] Montant dépensé en services de télécommunications"
+            }
+          },
+          "sante-humaine": {
+            "titre": "[TO_TRANSLATE] Services de santé humaine",
+            "montant-dépensé": {
+              "question": "[TO_TRANSLATE] Montant dépensé en services de santé humaine"
+            }
+          },
+          "edition": {
+            "titre": "[TO_TRANSLATE] Services d'édition",
+            "montant-dépensé": {
+              "question": "[TO_TRANSLATE] Montant dépensé en services d'édition"
+            }
+          },
+          "poste-courrier": {
+            "titre": "[TO_TRANSLATE] Services de poste et de courrier",
+            "montant-dépensé": {
+              "question": "[TO_TRANSLATE] Montant dépensé en services de poste et courrier"
+            }
+          },
+          "restauration": {
+            "titre": "[TO_TRANSLATE] Services de restauration et d'hébergement",
+            "montant-dépensé": {
+              "question": "[TO_TRANSLATE] Montant dépensé en services de restauration et hébergement"
+            }
+          },
+          "formation": {
+            "titre": "[TO_TRANSLATE] Services de formation",
+            "montant-dépensé": {
+              "question": "[TO_TRANSLATE] Montant dépensé en services de formation"
+            }
+          },
+          "reparation-installation": {
+            "titre": "[TO_TRANSLATE] Services de réparation et d'installation",
+            "montant-dépensé": {
+              "question": "[TO_TRANSLATE] Montant dépensé en services de réparation et installation"
+            }
+          },
+          "juridique-comptable": {
+            "titre": "[UPDATED] Services juridiques et comptables",
+            "montant-dépensé": {
+              "question": "[TO_TRANSLATE] Montant dépensé en services juridiques, comptables et assurances"
+            }
+          },
+          "programmation-conseil": {
+            "titre": "[TO_TRANSLATE] Services de programmation et de conseil",
+            "montant-dépensé": {
+              "question": "[TO_TRANSLATE] Montant dépensé en services de programmation et conseil informatique"
+            }
           }
         }
       },
@@ -321,6 +340,7 @@
         "question": "Please indicate the digital usage in [Year] by the employees and volunteers of your association",
         "streaming": {
           "heures": {
+            "description": "[TO_TRANSLATE] Les heures passées sur internet d'une manière générale sont ignorées, car l'empreinte associée est généralement très faible.",
             "question": "Over a year, how many hours of video streaming were watched?"
           }
         },
@@ -344,6 +364,7 @@
     "intrants-biens-et-matières": {
       "ratios monétaires": {
         "titre": "Goods and materials inputs",
+        "description": "[TO_TRANSLATE] Vous devez bien prendre en compte l'ensemble des biens, dons compris (invendus, fin de stock, etc). Il faut donc bien prendre en compte les informations disponibles sur les contributions volontaires en nature (compte 870).",
         "question": "What goods and materials did you purchase using the monetary approach?",
         "petites-fournitures": {
           "titre": "Small supplies",
@@ -423,12 +444,15 @@
           }
         },
         "carburant": {
+          "titre": "[TO_TRANSLATE] consommation de carburant pour le fret possédé",
           "litre": {
+            "description": "[TO_TRANSLATE] Si vous n'avez accès qu'aux montants dépensés et non aux consommations, vous pouvez convertir celle-ci via le prix moyen du carburant concerné sur l'année. Sur l'année 2025, 1,648€/L pour le gazole, 1,727€/L pour le SP95, 1,714€/L pour le SP95-E10, 1,817€/L pour le SP98, 0,764€/L pour le superéthanol E85 et 0,992€/L pour le GPL-c.",
             "question": "How many liters of fuel have these vehicles consumed?"
           }
         },
         "livraisons": {
           "titre": "Number of deliveries",
+          "description": "[UPDATED] Le nombre de livraisons renseigné ici doit exclure toutes les livraisons qui ont été faites par vos propres véhicules, car leur impact est déjà comptabilisé via les litres de carburants consommés.",
           "question": "On average, how many deliveries take place per year?"
         },
         "poids": {
@@ -512,10 +536,10 @@
         },
         "avec": {
           "distance": {
-            "question": "According to MEP results, what is the average distance traveled per employee per day (round trip) for commuting?"
+            "question": "[UPDATED] D'après les résultats de MEP, quelle est la distance moyenne parcourue par salarié par jour (A/R) pour des déplacements domicile-association ?"
           },
           "réponse MEP": {
-            "question": "According to MEP results, how many kgCO2e are represented by employee business travel?"
+            "question": "[UPDATED] D'après les résultats MEP, combien de kgCO2e représentent les déplacements domicile-association des salariés ?"
           }
         },
         "sans": {
@@ -539,25 +563,25 @@
             "titre": "Car",
             "description": "All types of individual car engines are considered here, based on national averages.",
             "distance": {
-              "question": "How many km are traveled on average per employee by car per day (round trip) for commuting?"
+              "question": "[UPDATED] Combien de km sont parcourus en moyenne par salarié en voiture par jour (A/R) pour des déplacements domicile-association ?"
             }
           },
           "train": {
             "titre": "Train (TER)",
             "distance": {
-              "question": "How many km are traveled on average per employee by train per day (round trip) for commuting?"
+              "question": "[UPDATED] Combien de km sont parcourus en moyenne par salarié en train par jour (A/R) pour des déplacements domicile-association ?"
             }
           },
           "deux roues": {
             "titre": "Two-wheeler",
             "distance": {
-              "question": "How many km are traveled on average per employee by public transport per day (round trip) for commuting?"
+              "question": "[UPDATED] Combien de km sont parcourus en moyenne par salarié en deux roues par jour (A/R) pour des déplacements domicile-association ?"
             }
           },
           "transports en commun": {
             "titre": "Public transport (Metro, tram, RER, bus, ...)",
             "distance": {
-              "question": "How many km are traveled on average per employee by two-wheeler per day (round trip) for commuting?"
+              "question": "[UPDATED] Combien de km sont parcourus en moyenne par salarié en transports en commun par jour (A/R) pour des déplacements domicile-association ?"
             }
           }
         }
@@ -568,49 +592,49 @@
             "question": "According to MEP results, what is the average distance traveled per day (round trip) by a volunteer for commuting?"
           },
           "réponse MEP": {
-            "question": "According to MEP results, how many kgCO2e are represented by volunteer commuting?"
+            "question": "[UPDATED] D'après les résultats MEP, combien de kgCO2e représentent les déplacements domicile-association des bénévoles ?"
           }
         },
         "sans": {
           "part voiture": {
             "titre": "Car",
-            "question": "What percentage of volunteers go to their usual volunteering place by car?"
+            "question": "[UPDATED] Quand les bénévoles se déplacent, quel pourcentage d'entre eux utilise la voiture ?"
           },
           "part train": {
             "titre": "Train (TER)",
-            "question": "What percentage of volunteers go to their usual volunteering place by train (TER)?"
+            "question": "[UPDATED] Quand les bénévoles se déplacent, quel pourcentage d'entre eux utilise le train ?"
           },
           "part deux roues": {
             "titre": "Two-wheeler",
-            "question": "What percentage of volunteers go to their usual volunteering place by two-wheeler?"
+            "question": "[UPDATED] Quand les bénévoles se déplacent, quel pourcentage d'entre eux utilise un deux roues ?"
           },
           "part transport en commun": {
             "titre": "Public transport (Metro, tram, RER, bus, ...)",
-            "question": "What percentage of volunteers go to their usual volunteering place by public transport (Metro, Tramway, Bus)?"
+            "question": "[UPDATED] Quand les bénévoles se déplacent, quel pourcentage d'entre eux utilise les transports en commun (Métro, Tramway, Bus) ?"
           },
           "voiture": {
             "titre": "Car",
             "description": "All types of individual car engines are considered here, based on national averages.",
             "distance": {
-              "question": "How many km are traveled on average per day (round trip) by a volunteer by car for commuting?"
+              "question": "[UPDATED] Quand les bénévoles se déplacent en voiture, combien de km parcourent-ils en moyenne par jour (A/R) ?"
             }
           },
           "train": {
             "titre": "Train (TER)",
             "distance": {
-              "question": "How many km are traveled on average per day (round trip) by a volunteer by train for commuting?"
+              "question": "[UPDATED] Quand les bénévoles se déplacent en train, combien de km parcourent-ils en moyenne par jour (A/R) ?"
             }
           },
           "transports en commun": {
             "titre": "Public transport (Metro, tram, RER, bus, ...)",
             "distance": {
-              "question": "How many km are traveled on average per day (round trip) by a volunteer by two-wheeler for commuting?"
+              "question": "[UPDATED] Quand les bénévoles se déplacent en transport en commun (métro, tramway, RER, bus), combien de km parcourent-ils en moyenne par jour (A/R) ?"
             }
           },
           "deux roues": {
             "titre": "Two-wheeler",
             "distance": {
-              "question": "How many km are traveled on average per day (round trip) by a volunteer by public transport for commuting?"
+              "question": "[UPDATED] Quand les bénévoles se déplacent en deux roues, combien de km parcourent-ils en moyenne par jour (A/R) ?"
             }
           }
         }
@@ -683,77 +707,9 @@
           }
         }
       },
-      "DM-bénévoles": {
-        "avec": {
-          "émissions MEP": {
-            "voiture": {
-              "question": "According to MEP, what is the average emissions per volunteer for business travel by car?"
-            },
-            "train": {
-              "question": "According to MEP, what is the average emissions per volunteer for business travel by train?"
-            },
-            "avion": {
-              "question": "According to MEP, what is the average emissions per volunteer for business travel by plane?"
-            },
-            "transports en commun": {
-              "question": "According to MEP, what is the average emissions per volunteer for business travel by public transport?"
-            },
-            "deux roues": {
-              "question": "According to MEP, what is the average emissions per volunteer for business travel by two-wheeler?"
-            }
-          }
-        },
-        "sans": {
-          "voiture": {
-            "titre": "Car, per month",
-            "distance": {
-              "description": "All types of individual car engines are considered here, based on national averages.",
-              "question": "How many km are traveled on average per month per volunteer by car for business travel?"
-            }
-          },
-          "train": {
-            "titre": "Train (TER), per month",
-            "distance": {
-              "question": "How many km are traveled on average per month per volunteer by train for business travel?"
-            }
-          },
-          "deux roues": {
-            "titre": "Two-wheeler, per month",
-            "distance": {
-              "question": "How many km are traveled on average per month per volunteer by public transport for business travel?"
-            }
-          },
-          "transports en commun": {
-            "titre": "Public transport (Metro, tram, RER, bus, ...), per month",
-            "distance": {
-              "question": "How many km are traveled on average per month per volunteer by two-wheeler for business travel?"
-            }
-          },
-          "avion": {
-            "court courrier": {
-              "titre": "Plane, short-haul, per year",
-              "distance": {
-                "question": "How many km were traveled this year per volunteer by short-haul plane for business travel?"
-              }
-            },
-            "moyen courrier": {
-              "titre": "Plane, medium-haul, per year",
-              "distance": {
-                "question": "How many km were traveled this year per volunteer by medium-haul plane for business travel?"
-              }
-            },
-            "long courrier": {
-              "titre": "Plane, long-haul, per year",
-              "distance": {
-                "question": "How many km were traveled this year per volunteer by long-haul plane for business travel?"
-              }
-            }
-          }
-        }
-      },
       "bénéficiaires": {
         "se déplacent": {
-          "question": "Do the beneficiaries of your products or services travel to benefit from them?"
+          "question": "[UPDATED] Les bénéficiaires de vos missions se déplacent-ils pour en profiter ?"
         },
         "part voiture": {
           "titre": "[TO_TRANSLATE] Voiture",
@@ -852,15 +808,31 @@
           },
           "locaux seuls": {
             "surface": {
+              "description": "[UPDATED] Vous devez ici renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites, vous pouvez soit sommer l'ensemble des surfaces ici, soit créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans, vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année.",
               "question": "What is the surface area of these premises? (Only premises owned or rented for less than 50 years are considered)"
             }
           },
           "locaux partagés": {
             "surface": {
+              "description": "[TO_TRANSLATE] Vous devez ici renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites et que ces différents sites ont tous des locaux partagés, vous devez créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans, vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année.",
               "question": "What is the surface area of these premises? (Only premises owned or rented for less than 50 years are considered)"
             },
             "pourcentage": {
               "question": "What proportion of the surface area of these premises is attributable to your association?"
+            }
+          }
+        },
+        "locaux ponctuels": {
+          "question": "[TO_TRANSLATE] Louez-vous des locaux ponctuellement, que ce soit en plus de vos locaux principaux ou à la place de ceux-ci ?",
+          "nom": {
+            "question": "[TO_TRANSLATE] Nom de la location"
+          },
+          "calcul": {
+            "surface": {
+              "question": "[TO_TRANSLATE] Quelle est la surface de la location ?"
+            },
+            "durée": {
+              "question": "[TO_TRANSLATE] Combien de jours dure la location sur l'année ?"
             }
           }
         }

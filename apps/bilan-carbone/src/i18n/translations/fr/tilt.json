@@ -1,7 +1,7 @@
 {
   "login": {
-    "subtext": "Déclinaison pour la sphère associative",
-    "explanation": "L'outil dédié aux associations souhaitant appliquer la méthode Bilan Carbone® et sa déclinaison sectorielle pour la sphère associative. Il voit le jour grâce au partenariat entre l'Association pour la transition Bas Carbone, porteuse de la méthode Bilan Carbone®, et le Mouvement Tilt, qui accompagne l'ensemble des associations dans leur transition bas carbone. L'outil est accessible gratuitement pour l'ensemble des associations française formées à la méthode.",
+    "subtext": "Déclinaison pour la sphère associative <br></br> & <br></br> Cap Carbone",
+    "explanation": "Parce que les méthodes de transition bas carbone ont longtemps été pensées pour les entreprises, nous avons co-construit des déclinaisons spécifiques de nos outils, <b>avec et pour le monde associatif</b>. <br></br><br></br> L’<b>ABC</b> et le <b>Mouvement Tilt</b> sont deux associations qui unissent ici leurs expertises pour vous présenter deux outils : <b>Cap Carbone</b>, qui vous permet, <b>sans condition</b>, de réaliser une empreinte carbone simplifiée et accessible pour franchir le premier pas sans formation préalable, et le <b>Bilan Carbone®+ associatif</b>, qui vous permet d'appliquer la méthode Bilan Carbone® et sa déclinaison sectorielle pour la sphère associative. Cette seconde partie de l'outil est <b>accessible gratuitement pour l'ensemble des associations française formées à la méthode</b>. <br></br><br></br> Pour plus d'informations, <link><white><underline>cliquez ici</underline></white></link> !",
     "form": {
       "activate": "Créer mon compte"
     }
@@ -123,17 +123,20 @@
       "resultsWord": "Rapport Bilan Carbone® - Sphère associative"
     },
     "structure": {
+      "'Structure sportive'": "Structure sportive",
       "'Club de loisirs'": "Club de loisirs",
-      "'Association étudiante'": "Association étudiante",
-      "'Association culturelle'": "Association culturelle",
-      "'Association de voisinage'": "Association de voisinage",
-      "'Hôpital'": "Hôpital",
-      "'Maison de retraite'": "Maison de retraite",
+      "'Éducation, formation et insertion professionnelle'": "Éducation, formation et insertion professionnelle",
+      "'Développement économique et local'": "Développement économique et local",
+      "'Développement international et humanitaire'": "Développement international et humanitaire",
+      "'Culture et patrimoine'": "Culture et patrimoine",
+      "'Association de voisinage": "Association de voisinage",
+      "'Hôpital": "Hôpital",
+      "'Maison de retraite": "Maison de retraite",
       "'Association d'aide à domicile'": "Association d'aide à domicile",
-      "'Association humanitaire'": "Association humanitaire",
+      "'Accompagnement des personnes en situation de handicap'": "Accompagnement des personnes en situation de handicap",
+      "'Protection de l'enfance": "Protection de l'enfance",
       "'Autres structures sociales et solidaires'": "Autres structures sociales et solidaires",
-      "'Association de défense de l'environnement'": "Association de défense de l'environnement",
-      "'Association d'enseignement ou de formation'": "Association d'enseignement ou de formation",
+      "'Défense de l'environnement'": "Défense de l'environnement",
       "'Autre'": "Autre"
     }
   },
@@ -198,5 +201,8 @@
     "badge": "Bêta",
     "title": "Version Bêta de l'outil Cap Carbone",
     "description": "Cap Carbone est aujourd'hui en version bêta ! Merci d'être nos premiers utilisateurs et testeurs 🎉 N'hésitez pas à nous contacter à l'adresse <support>support@abc-transitionbascarbone.fr</support> si vous avez des retours ! L'application étant en bêta il est possible que certaines questions changent dans le formulaire et donc que les réponses des questions modifiées soient supprimées dans de futures mise à jour. Pensez à regarder la complétion de vos postes sur la page saisie des données avant d'aller voir vos résultats pour vérifier que toutes vos réponses sont toujours disponibles."
+  },
+  "documentationUrlTilt": {
+    "tiltABCPage": "https://abc-transitionbascarbone.fr/transition-association-abc-tilt/#"
   }
 }

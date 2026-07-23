@@ -48,6 +48,7 @@ const SUBPOST_TO_RULENAME: Partial<Record<SubPost, TiltRuleName>> = {
   DeplacementsDomicileTravailSalaries: 'déplacements . DT-salariés',
   DeplacementsBenevoles: 'déplacements . DT-bénévoles',
   DeplacementsDansLeCadreDUneMissionAssociativeSalaries: 'déplacements . DM-salariés',
+  //DeplacementsDansLeCadreDUneMissionAssociativeBenevoles,
   DeplacementsDesBeneficiaires: 'déplacements . bénéficiaires',
   DeplacementsFabricationDesVehicules: 'déplacements . fabrication',
   Fret: 'fret . transport',
@@ -83,6 +84,11 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('construction . bâtiment . locaux . locaux seuls . surface'),
     input('construction . bâtiment . locaux . locaux partagés . surface'),
     input('construction . bâtiment . locaux . locaux partagés . pourcentage'),
+    list('construction . bâtiment . locaux ponctuels', [
+      'construction . bâtiment . locaux ponctuels . nom',
+      'construction . bâtiment . locaux ponctuels . calcul . surface',
+      'construction . bâtiment . locaux ponctuels . calcul . durée',
+    ]),
   ],
   AutresInfrastructures: [
     input('construction . infrastructure . parking présent'),
@@ -183,44 +189,55 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('équipements et immobilisations . pondération . reconditionné'),
   ],
   ServicesEnApprocheMonetaire: [
+    input('intrants-services . approche monétaire . existant'),
+    input('intrants-services . approche monétaire . FE moyen . montant dépensé'),
     table(
       'IntrantsServices.question',
       ['IntrantsServices.typeService', 'IntrantsServices.montantDepense'],
       [
         [
-          'intrants-services . services . spectacles-musées',
-          'intrants-services . services . spectacles-musées . montant-dépensé',
+          'intrants-services . approche monétaire . tableau détaillé . spectacles-musées',
+          'intrants-services . approche monétaire . tableau détaillé . spectacles-musées . montant-dépensé',
         ],
         [
-          'intrants-services . services . assurance-reassurance',
-          'intrants-services . services . assurance-reassurance . montant-dépensé',
-        ],
-        ['intrants-services . services . telecom', 'intrants-services . services . telecom . montant-dépensé'],
-        [
-          'intrants-services . services . sante-humaine',
-          'intrants-services . services . sante-humaine . montant-dépensé',
-        ],
-        ['intrants-services . services . edition', 'intrants-services . services . edition . montant-dépensé'],
-        [
-          'intrants-services . services . poste-courrier',
-          'intrants-services . services . poste-courrier . montant-dépensé',
+          'intrants-services . approche monétaire . tableau détaillé . assurance-reassurance',
+          'intrants-services . approche monétaire . tableau détaillé . assurance-reassurance . montant-dépensé',
         ],
         [
-          'intrants-services . services . restauration',
-          'intrants-services . services . restauration . montant-dépensé',
-        ],
-        ['intrants-services . services . formation', 'intrants-services . services . formation . montant-dépensé'],
-        [
-          'intrants-services . services . reparation-installation',
-          'intrants-services . services . reparation-installation . montant-dépensé',
+          'intrants-services . approche monétaire . tableau détaillé . telecom',
+          'intrants-services . approche monétaire . tableau détaillé . telecom . montant-dépensé',
         ],
         [
-          'intrants-services . services . juridique-comptable',
-          'intrants-services . services . juridique-comptable . montant-dépensé',
+          'intrants-services . approche monétaire . tableau détaillé . sante-humaine',
+          'intrants-services . approche monétaire . tableau détaillé . sante-humaine . montant-dépensé',
         ],
         [
-          'intrants-services . services . programmation-conseil',
-          'intrants-services . services . programmation-conseil . montant-dépensé',
+          'intrants-services . approche monétaire . tableau détaillé . edition',
+          'intrants-services . approche monétaire . tableau détaillé . edition . montant-dépensé',
+        ],
+        [
+          'intrants-services . approche monétaire . tableau détaillé . poste-courrier',
+          'intrants-services . approche monétaire . tableau détaillé . poste-courrier . montant-dépensé',
+        ],
+        [
+          'intrants-services . approche monétaire . tableau détaillé . restauration',
+          'intrants-services . approche monétaire . tableau détaillé . restauration . montant-dépensé',
+        ],
+        [
+          'intrants-services . approche monétaire . tableau détaillé . formation',
+          'intrants-services . approche monétaire . tableau détaillé . formation . montant-dépensé',
+        ],
+        [
+          'intrants-services . approche monétaire . tableau détaillé . reparation-installation',
+          'intrants-services . approche monétaire . tableau détaillé . reparation-installation . montant-dépensé',
+        ],
+        [
+          'intrants-services . approche monétaire . tableau détaillé . juridique-comptable',
+          'intrants-services . approche monétaire . tableau détaillé . juridique-comptable . montant-dépensé',
+        ],
+        [
+          'intrants-services . approche monétaire . tableau détaillé . programmation-conseil',
+          'intrants-services . approche monétaire . tableau détaillé . programmation-conseil . montant-dépensé',
         ],
       ],
     ),
@@ -381,7 +398,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
       ],
     ),
   ],
-  DeplacementsBenevoles: [
+  DeplacementsDomicileTravailBenevoles: [
     input('déplacements . DT-bénévoles . avec . distance'),
     input('déplacements . DT-bénévoles . avec . réponse MEP'),
     table(
@@ -448,44 +465,6 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
         [
           'déplacements . DM-salariés . sans . avion . long courrier',
           'déplacements . DM-salariés . sans . avion . long courrier . distance',
-        ],
-      ],
-    ),
-  ],
-  DeplacementsDansLeCadreDUneMissionAssociativeBenevoles: [
-    input('déplacements . DM-bénévoles . avec . émissions MEP . voiture'),
-    input('déplacements . DM-bénévoles . avec . émissions MEP . train'),
-    input('déplacements . DM-bénévoles . avec . émissions MEP . avion'),
-    input('déplacements . DM-bénévoles . avec . émissions MEP . transports en commun'),
-    input('déplacements . DM-bénévoles . avec . émissions MEP . deux roues'),
-    table(
-      'DeplacementsDansLeCadreDUneMissionAssociativeBenevoles.question',
-      [
-        'DeplacementsDansLeCadreDUneMissionAssociativeBenevoles.ModeTransport',
-        'DeplacementsDansLeCadreDUneMissionAssociativeBenevoles.DistanceMoyenne',
-      ],
-      [
-        ['déplacements . DM-bénévoles . sans . voiture', 'déplacements . DM-bénévoles . sans . voiture . distance'],
-        ['déplacements . DM-bénévoles . sans . train', 'déplacements . DM-bénévoles . sans . train . distance'],
-        [
-          'déplacements . DM-bénévoles . sans . deux roues',
-          'déplacements . DM-bénévoles . sans . deux roues . distance',
-        ],
-        [
-          'déplacements . DM-bénévoles . sans . transports en commun',
-          'déplacements . DM-bénévoles . sans . transports en commun . distance',
-        ],
-        [
-          'déplacements . DM-bénévoles . sans . avion . court courrier',
-          'déplacements . DM-bénévoles . sans . avion . court courrier . distance',
-        ],
-        [
-          'déplacements . DM-bénévoles . sans . avion . moyen courrier',
-          'déplacements . DM-bénévoles . sans . avion . moyen courrier . distance',
-        ],
-        [
-          'déplacements . DM-bénévoles . sans . avion . long courrier',
-          'déplacements . DM-bénévoles . sans . avion . long courrier . distance',
         ],
       ],
     ),

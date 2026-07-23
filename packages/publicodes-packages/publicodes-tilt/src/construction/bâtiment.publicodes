@@ -52,15 +52,54 @@ construction . bâtiment . locaux . locaux seuls . surface:
   question: Quelle est la surface de ces locaux ? (On considère uniquement les locaux possédés ou loués depuis moins de 50 ans)
   unité: m²
   par défaut: 0
+  form:
+    à traduire: oui 
+  description: Vous devez ici renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites, vous pouvez soit sommer l'ensemble des surfaces ici, soit créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans, vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année.
 
 construction . bâtiment . locaux . locaux partagés . surface:
   applicable si: locaux = 'locaux partagés'
   question: Quelle est la surface de ces locaux ? (On considère uniquement les locaux possédés ou loués depuis moins de 50 ans)
   unité: m²
   par défaut: 0
+  form:
+    à traduire: oui 
+  description: Vous devez ici renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites et que ces différents sites ont tous des locaux partagés, vous devez créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans, vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année.
 
 construction . bâtiment . locaux . locaux partagés . pourcentage:
   applicable si: locaux = 'locaux partagés'
   question: Quelle est la part de la surface de ces locaux attribuables à votre association ?
   unité: "%"
   par défaut: 0
+
+construction . bâtiment . locaux ponctuels:
+  question: Louez-vous des locaux ponctuellement, que ce soit en plus de vos locaux principaux ou à la place de ceux-ci ? 
+  
+construction . bâtiment . locaux ponctuels . nom:
+  applicable si: 
+    toutes ces conditions: 
+      - est défini: construction . bâtiment . locaux ponctuels
+      - construction . bâtiment . locaux ponctuels = "oui"
+  question: Nom de la location
+  type: texte
+
+construction . bâtiment . locaux ponctuels . calcul: 
+  titre: Veuillez renseigner ici les informations sur ces locations
+  applicable si: 
+    toutes ces conditions: 
+      - est défini: construction . bâtiment . locaux ponctuels
+      - construction . bâtiment . locaux ponctuels = "oui"
+  formule: surface * construction . bâtiment . FE * (durée / 365) * (1 / construction . bâtiment . amortissement)
+  avec:
+    surface:
+      question: Quelle est la surface de la location ? 
+      unité: m²
+      par défaut: 0 
+    durée: 
+      question: Combien de jours dure la location sur l'année ?   
+      unité: jours
+      par défaut: 0
+  par défaut: 0
+  
+
+
+
