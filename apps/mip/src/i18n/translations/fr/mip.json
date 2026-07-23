@@ -105,7 +105,28 @@
     "delete": "Supprimer",
     "add": "Ajouter une nouvelle campagne",
     "edit": "Valider la modification",
-    "success": "Les campagnesont été modifiées avec succès"
+    "success": "Les campagnes ont été modifiées avec succès",
+    "guide": {
+      "title": "Guide des campagnes",
+      "description": "Chaque ligne correspond à une campagne de sondage envoyée à vos collaborateurs.",
+      "resultsTitle": "Voir les résultats :",
+      "resultsDescription": "cliquez sur l'icône graphique pour ouvrir le tableau de bord de la campagne (empreinte moyenne, taux de réponse, détails par poste).",
+      "csvTitle": "Exporter les réponses (CSV) :",
+      "csvDescription": "cliquez sur l'icône téléchargement pour récupérer les réponses en format CSV et les analyser dans votre outil de reporting.",
+      "shareTitle": "Partager le lien du sondage :",
+      "shareDescription": "cliquez sur l'icône de copie dans \"Lien à partager\", puis envoyez le lien à vos collaborateurs (email, intranet, messagerie interne)."
+    }
+  },
+  "role": {
+    "SUPER_ADMIN": "Administrateur·rice Global",
+    "ADMIN": "Administrateur·rice",
+    "COLLABORATOR": "Collaborateur·rice",
+    "ADMIN_description": "Un·e administrateur·rice gère toutes les campagnes et les membres de l'équipe.",
+    "COLLABORATOR_description": "Un·e collaborateur·rice gère uniquement les campagnes qu'il a créé.",
+    "guide": "Guide des rôles",
+    "saved": "Nouveau rôle sauvegardé",
+    "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
+    "More than one": "Il doit y avoir au moins un·e administrateur·rice ou gestionnaire dans l'organisation"
   },
   "results": {
     "title": "Tableau de bord des résultats",

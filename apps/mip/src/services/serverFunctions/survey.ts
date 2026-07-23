@@ -3,8 +3,7 @@
 import { CATEGORY_COLORS } from '@/constants/style'
 import { CATEGORY_MAP, DEFAULT_ENTITY_FILTERS } from '@/constants/survey'
 import { createResponse } from '@/db/campaign'
-import { prismaClient } from '@/db/client.server'
-import { getCampaignWithModelForSurvey, getResponsesByCampaignId } from '@/db/survey'
+import { getSurveyCampaignForCsvExport, getSurveyCampaignForResults } from '@/db/survey'
 import { createMipEngine, RawRules } from '@/publicodes/mip-engine'
 import { dbActualizedAuth } from '@/services/auth'
 import { EmissionCategory, KeyStatGroup, SurveyResults } from '@/types/results.types'
@@ -295,12 +294,26 @@ export const createSurveyResponse = async (campaignId: string, answers: string) 
   })
 
 export const getSurveyResults = async (campaignId: string): Promise<SurveyResults | null> => {
-  const campaign = await getCampaignWithModelForSurvey(campaignId)
+  const session = await dbActualizedAuth()
+  if (!session?.user) {
+    return null
+  }
+
+  const canAccessAllOrganizationCampaigns = isAdmin(session.user.role)
+  const canAccessEntityFilter = isAdmin(session.user.role)
+
+  const campaign = await getSurveyCampaignForResults({
+    campaignId,
+    organizationVersionMipId: session.user.organizationVersionMipId,
+    canAccessAllOrganizationCampaigns,
+    accountMipId: session.user.accountMipId,
+  })
+
   if (!campaign) {
     return null
   }
 
-  const responses = await getResponsesByCampaignId(campaignId)
+  const responses = campaign.responses
   const totalRespondents = responses.length
 
   const emptyCategories: EmissionCategory[] = CATEGORY_MAP.map(({ key }) => ({
@@ -316,7 +329,7 @@ export const getSurveyResults = async (campaignId: string): Promise<SurveyResult
       totalRespondents: 0,
       averageFootprint: 0,
       categories: emptyCategories,
-      entities: DEFAULT_ENTITY_FILTERS,
+      entities: canAccessEntityFilter ? DEFAULT_ENTITY_FILTERS : [],
       comments: [],
       keyStats: [],
     }
@@ -367,7 +380,7 @@ export const getSurveyResults = async (campaignId: string): Promise<SurveyResult
       value: Math.round(categoryTotals[key] / totalRespondents),
       color: CATEGORY_COLORS[key],
     })),
-    entities: DEFAULT_ENTITY_FILTERS,
+    entities: canAccessEntityFilter ? DEFAULT_ENTITY_FILTERS : [],
     comments: [],
     keyStats,
   }
@@ -383,46 +396,11 @@ export const exportSurveyResponsesToCSV = async (campaignId: string) =>
 
     const canAccessAllOrganizationCampaigns = isAdmin(session.user.role)
 
-    const campaign = await prismaClient.campaign.findFirst({
-      where: {
-        id: campaignId,
-        modelCampaign: {
-          organizationVersionMip: {
-            id: session.user.organizationVersionMipId,
-          },
-        },
-        ...(canAccessAllOrganizationCampaigns
-          ? {}
-          : { allowedAccounts: { some: { accountMipId: session.user.accountMipId } } }),
-      },
-      select: {
-        id: true,
-        name: true,
-        responses: {
-          select: {
-            id: true,
-            createdAt: true,
-            answers: true,
-          },
-          orderBy: {
-            createdAt: 'asc',
-          },
-        },
-        modelCampaign: {
-          select: {
-            model: true,
-            organizationVersionMip: {
-              select: {
-                modelCampaign: {
-                  select: {
-                    model: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
+    const campaign = await getSurveyCampaignForCsvExport({
+      campaignId,
+      organizationVersionMipId: session.user.organizationVersionMipId,
+      canAccessAllOrganizationCampaigns,
+      accountMipId: session.user.accountMipId,
     })
 
     if (!campaign) {

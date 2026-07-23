@@ -176,7 +176,7 @@ const SuperAdminPage = ({ modelCampaigns }: Props) => {
   })
 
   return (
-    <Block as="h1" title={t('editModels')}>
+    <Block as="h2" title={t('editModels')}>
       <Form onSubmit={form.handleSubmit(onSubmit)}>
         <BaseTable table={table} className="mt1" testId="sites" />
         <div className="mt1 justify-end">
