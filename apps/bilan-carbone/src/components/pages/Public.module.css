@@ -7,9 +7,11 @@
 .header {
   @media screen and (max-width: 37rem) {
     flex-direction: column;
+
     .welcomeLogo {
       width: 100%;
     }
+
     .locales {
       justify-content: flex-end;
     }
@@ -45,8 +47,13 @@
   border: 0.125rem solid var(--primary-800);
 }
 
-.link {
+.richLinks a {
   color: white;
+}
+
+.richLinksCut a {
+  color: white;
+  font-weight: 600;
 }
 
 .image {
