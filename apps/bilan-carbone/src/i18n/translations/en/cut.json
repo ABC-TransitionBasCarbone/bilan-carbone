@@ -90,7 +90,6 @@
     },
     "results": {
       "simplifiedFeedback": "Well done! You have just completed the simplified carbon footprint of your cinema. It is an excellent introduction to carbon accounting! Please kindly fill in <questionnaire>this questionnaire</questionnaire> to help us improve the tool and fix any bugs!",
-      "infoWithLinks": "By ratifying the Paris Agreement, the European Union has committed to carbon neutrality by 2050. To contribute to this goal, your cinema should reduce its impact by 5% per year. The simplified carbon footprint you have just obtained can already help you better understand how to reduce your impact by identifying your most emitting activities.\n\nWe invite you to redo this simplified carbon footprint next year to check that you are on the right track, or, better still, to carry out a full Bilan Carbone® to gain precision in estimating your emissions and build a genuine transition plan! Getting started is easy: simply <formation>get trained</formation> in the method, contact us at <email>count@cut-collectif.fr</email>, or reach out to another <prestataire>Bilan Carbone® practitioner</prestataire>.",
       "intensities": {
         "screen": "screen",
         "entrie": "admission",

@@ -129,6 +129,38 @@ const setNestedKey = (obj: JsonObject, path: string, value: string): void => {
   current[parts[parts.length - 1]] = value
 }
 
+// Removes keys that exist in target but no longer exist in FR source.
+// This keeps locale trees structurally aligned with FR (required by tests).
+const pruneExtraKeys = (source: JsonObject, target: JsonObject, path = ''): string[] => {
+  const removed: string[] = []
+
+  for (const key of Object.keys(target)) {
+    const currentPath = path ? `${path}.${key}` : key
+    const sourceValue = source[key]
+    const targetValue = target[key]
+
+    if (sourceValue === undefined) {
+      delete target[key]
+      removed.push(currentPath)
+      continue
+    }
+
+    const sourceIsObject = !!sourceValue && typeof sourceValue === 'object' && !Array.isArray(sourceValue)
+    const targetIsObject = !!targetValue && typeof targetValue === 'object' && !Array.isArray(targetValue)
+
+    if (targetIsObject) {
+      if (!sourceIsObject) {
+        delete target[key]
+        removed.push(currentPath)
+      } else {
+        removed.push(...pruneExtraKeys(sourceValue as JsonObject, targetValue as JsonObject, currentPath))
+      }
+    }
+  }
+
+  return removed
+}
+
 // Flattens an object to { "a.b.c": "value" } for string leaves only.
 const flattenStrings = (obj: JsonObject, path = ''): Record<string, string> => {
   const out: Record<string, string> = {}
@@ -245,6 +277,11 @@ const translateFile = async (
     mkdirSync(dirname(targetPath), { recursive: true })
   }
 
+  const removedPaths = pruneExtraKeys(frContent, targetContent)
+  if (removedPaths.length > 0) {
+    console.log(`Pruned ${removedPaths.length} stale key(s) from ${locale}/${file}.json`)
+  }
+
   // Two modes:
   // - changed-only (pipeline/API): only keys added or modified in FR since `base` → small deltas.
   //   Changed keys are re-translated even if the target already has a value (FR changed → stale).
@@ -259,8 +296,14 @@ const translateFile = async (
   }
   const count = Object.keys(toTranslate).length
 
-  if (count === 0) {
+  if (count === 0 && removedPaths.length === 0) {
     console.log(`✓ ${locale}/${file}.json — nothing to translate`)
+    return
+  }
+
+  if (count === 0) {
+    writeFileSync(targetPath, JSON.stringify(targetContent, null, 2) + '\n', 'utf-8')
+    console.log(`→ Written ${locale}/${file}.json`)
     return
   }
 
