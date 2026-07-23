@@ -1,0 +1,203 @@
+{
+  "navigation": {
+    "organizations": "Le mie Impronte",
+    "organization": "I miei collaboratori",
+    "information": "I miei cinema",
+    "team": "I miei collaboratori"
+  },
+  "signup": {
+    "description": "Crea un account su CUT inserendo la tua email e un numero CNC (consigliato) o Siret",
+    "siretOrCNC": "Numero CNC (consigliato) o Siret",
+    "siretOrCNCPlaceholder": "Il tuo numero CNC (consigliato) o Siret",
+    "siretOrCNCRequired": "Inserisci un numero CNC (consigliato) o Siret",
+    "clear": "Cancella il valore",
+    "Unknown CNC": "Questo codice CNC non è riconosciuto. Verifica i dati inseriti o contatta l'assistenza se ritieni che si tratti di un errore.",
+    "Unknown SIRET or CNC": "Questo Siret o codice CNC non è riconosciuto. Verifica i dati inseriti o contatta l'assistenza se ritieni che si tratti di un errore.",
+    "Not authorized": "Questa email è già registrata con un account CUT oppure si è verificato un problema durante la sua creazione. Non esitare a consultare <link>le FAQ</link> o a contattare <support>l'assistenza</support> se ritieni che si tratti di un errore.",
+    "validation": {
+      "siretOrCNC": "Inserisci un numero CNC (consigliato) o Siret"
+    }
+  },
+  "home": {
+    "navigation": {
+      "collaborators": {
+        "title": "I miei collaboratori",
+        "message": "Qui trovi l'elenco delle persone autorizzate a intervenire sulle tue diverse impronte di carbonio"
+      },
+      "footprints": {
+        "title": "Le mie Impronte",
+        "message": "Crea qui la tua prima impronta. Potrai poi consultare le tue impronte o crearne di nuove in qualsiasi momento."
+      },
+      "sites": {
+        "title": "I miei cinema",
+        "message": "Qui trovi l'elenco delle sedi collegate al tuo account"
+      }
+    },
+    "title": "Calcolare la tua impronta di carbonio semplificata ti permetterà di:",
+    "alert": {
+      "info": "Il calcolatore Count ti permette di stimare l'impatto sul clima della tua attività. È prima di tutto uno strumento di sensibilizzazione. Non si tratta di un percorso di transizione a basse emissioni di carbonio, ma di un'impronta di carbonio semplificata — ai sensi della <link>Guida alla comunicazione sulla contabilità del carbonio</link> — incentrata sulle principali categorie di emissioni legate all'attività delle sale cinematografiche."
+    },
+    "info": {
+      "0": "Comprendere la misurazione dell'impatto della tua sede",
+      "1": "Individuare le priorità d'azione",
+      "2": "A lungo termine, e attraverso un lavoro più approfondito, costruire una traiettoria di riduzione"
+    }
+  },
+  "study": {
+    "create": "Aggiungi un'impronta",
+    "myCollaborations": "Le mie collaborazioni",
+    "myStudies": "Le mie impronte",
+    "createFirstStudy": "Crea la mia prima impronta",
+    "createFirstSimplifiedStudy": "Crea la mia prima Impronta",
+    "firstSimplifiedStudyMessage": "È ora di iniziare! Ti invitiamo a creare la tua prima Impronta.",
+    "see": "Vedi la mia impronta",
+    "validatedSources": "<data>{validated} / {total}</data> Domande risposte",
+    "validatedOnlyDescription": "Per ogni impronta è possibile definire uno o più validatori. Questi hanno la responsabilità di convalidare le fonti di emissione una volta che sono state compilate dai collaboratori e dagli editor dello studio. Per impostazione predefinita, nei tuoi risultati compaiono solo le emissioni convalidate, ma puoi modificare questo comportamento dal menu \"Impostazioni\".",
+    "selectSite": "Prima di compilare i dati, scegli un cinema",
+    "lastStudyTitle": "Ultima impronta effettuata",
+    "navigation": {
+      "framing": "Dati generali",
+      "organizations": "I miei cinema",
+      "team": "I miei collaboratori",
+      "title": "La mia Impronta"
+    },
+    "new": {
+      "title": "Informazioni sulla nuova impronta",
+      "name": "Nome dell'impronta",
+      "studyDates": "Anno di riferimento dell'impronta",
+      "suggestion": {
+        "name": "Impronta - {orga} {studyStartDate}",
+        "yourOrga": "Il tuo cinema"
+      },
+      "info": {
+        "date": "Le stime vengono generalmente effettuate su un periodo di 12 mesi"
+      },
+      "glossary": {
+        "studyDates": "Anno di riferimento dell'impronta",
+        "studyDatesDescription": "Indica il periodo di riferimento a cui si riferisce la tua impronta di carbonio semplificata. Idealmente, il periodo di riferimento deve essere di dodici mesi."
+      },
+      "goToDataEntry": "Passa all'inserimento dei dati",
+      "cncInfo": "Se hai indicato il numero CNC del tuo cinema, i dati seguenti sono precompilati con le informazioni del {year}. Puoi modificarli se non sono aggiornati."
+    },
+    "perimeter": {
+      "editSites": "Modifica l'elenco dei cinema",
+      "deleteDialog": {
+        "title": "Sei sicuro di voler eliminare {count, plural, =1 {questo cinema} other {questi cinema}}?"
+      }
+    },
+    "export": {
+      "export": "Esporta i miei risultati"
+    },
+    "results": {
+      "simplifiedFeedback": "Bravo! Hai appena realizzato l'impronta di carbonio semplificata del tuo cinema. È un'ottima introduzione alla contabilità del carbonio! Ti ringraziamo di voler compilare <questionnaire>questo questionario</questionnaire>, per aiutarci a migliorare lo strumento e a correggere eventuali bug!",
+      "intensities": {
+        "screen": "schermo",
+        "entrie": "ingresso",
+        "superficy": "m²",
+        "session": "proiezione",
+        "movie": "film",
+        "chair": "poltrona",
+        "ca": "k€"
+      }
+    },
+    "rights": {
+      "title": "Dati generali dello studio: {name}"
+    },
+    "organization": {
+      "site": "Cinema",
+      "allSites": "Tutti i cinema",
+      "noSites": "Non ci sono cinema configurati nell'organizzazione",
+      "addSite": "Crea un cinema",
+      "sites": "I cinema dell'organizzazione",
+      "next": "Successivo",
+      "select": "Organizzazione",
+      "validation": {
+        "sites": "Seleziona almeno un cinema interessato dallo studio"
+      }
+    }
+  },
+  "organization": {
+    "card": {
+      "myOrganization": "I miei cinema"
+    },
+    "form": {
+      "editTitle": "Modifica i miei cinema"
+    },
+    "sites": {
+      "title": "Su quali cinema deve vertere l'impronta?",
+      "noSites": "Non ci sono cinema configurati nell'organizzazione",
+      "name": "Nome",
+      "namePlaceholder": "Nome del cinema",
+      "etp": "Numero di Equivalenti a Tempo Pieno",
+      "etpPlaceholder": "Inserisci qui il tuo numero di ETP per questo cinema",
+      "ca": "Fatturato ({unit})",
+      "caPlaceholder": "Inserisci qui il tuo fatturato per questo cinema in {unit}",
+      "actions": "Azioni",
+      "delete": "Elimina",
+      "add": "Aggiungi un cinema"
+    }
+  },
+  "checklist": {
+    "title": "Iniziare bene con COUNT",
+    "AddClientDetails": "Aggiungi il tuo primo cliente per iniziare le tue impronte",
+    "CreateFirstStudy": "Crea la tua prima impronta",
+    "CreateFirstStudyDetails": "Si parte con la tua prima impronta! Compila le prime informazioni come la data, il nome...",
+    "CreateFirstEmissionSource": "Rispondi alle prime domande",
+    "CreateFirstEmissionSourceDetails": "Vai alla prima categoria/sottocategoria che desideri compilare! Rispondi alle domande.",
+    "finished": "Sei pronto a iniziare a usare COUNT! Non esitare a consultare le <faq>FAQ</faq> o a contattarci in caso di necessità."
+  },
+  "actuality": {
+    "title": "Le novità di COUNT"
+  },
+  "role": {
+    "DEFAULT": "Collaboratore",
+    "ADMIN_description": "Un amministratore possiede tutti i diritti sull'account dell'organizzazione nonché sull'insieme degli studi della propria organizzazione (siano essi pubblici o privati).",
+    "DEFAULT_description": "Un collaboratore può modificare gli studi. Non ha accesso alle impostazioni dell'organizzazione."
+  },
+  "login": {
+    "welcome": "Benvenuto/a su",
+    "subtext": "Il primo calcolatore di impatto ecologico dedicato alle sale cinematografiche.",
+    "explanation": "Questo strumento è stato sviluppato dall'associazione <b>CUT! Cinéma Uni pour la Transition,</b> in collaborazione con <b>l'ABC, association pour la Transition bas carbone.</b>",
+    "question": "Hai una domanda? Leggi le <faq>FAQ</faq> o <support>contattaci</support>!",
+    "explanation2": "Operazione sostenuta dallo Stato francese nell'ambito del programma «Soutenir les alternatives vertes 2» di France 2030, gestito dalla Banque des Territoires (Caisse des Dépôts).",
+    "form": {
+      "activate": "Crea il mio account"
+    }
+  },
+  "email": {
+    "subject": {
+      "resetPassword": "Password dimenticata",
+      "newUser": "Sei stato invitato su Count",
+      "addedActiveUser": "Sei stato invitato su un nuovo ambiente Count",
+      "activation": "Hai attivato il tuo account su Count",
+      "activationRequest": "Richiesta di accesso alla tua organizzazione Count",
+      "userOnStudyInvitation": "Aggiunto allo studio {studyName}",
+      "contributorInvitation": "Richiesta di contributo allo studio {studyName}",
+      "addedUsersByFile": "Autorizzazione per l'aggiunta di utenti"
+    }
+  },
+  "ressources": {
+    "contacterViaFormulaire": "Scrivi direttamente a {supportEmail}",
+    "enSavoirPlusBilan": "Per andare oltre il calcolo dell'impronta semplificata offerto da Count:"
+  },
+  "emissionFactors": {
+    "post": {
+      "questions": {
+        "numberOfYears": "Numero di anni",
+        "bonbons": "Caramelle - Quantità (buste da {value} g)",
+        "chips": "Patatine - Quantità (buste da {value} g)",
+        "Electromenager": "Per ciascuno di questi elettrodomestici, indica:",
+        "FretCadence": "Trasporto merci - Frequenza (volte/mese)",
+        "FretPoids moyen": "Trasporto merci - Peso medio (kg)",
+        "FretProvenance": "Dove ha sede il tuo principale fornitore?",
+        "Refrigerateurs": "Frigoriferi",
+        "Congelateurs": "Congelatori",
+        "Warmers": "Scaldavivande",
+        "Distributeurs": "Distributori snack / bevande"
+      }
+    }
+  },
+  "exports": {
+    "env_specific_export": "Impronta di carbonio semplificata"
+  }
+}

@@ -1,0 +1,203 @@
+{
+  "navigation": {
+    "organizations": "Mis Huellas",
+    "organization": "Mis Colaboradores/as",
+    "information": "Mis Cines",
+    "team": "Mis Colaboradores/as"
+  },
+  "signup": {
+    "description": "Cree una cuenta en CUT introduciendo su correo electrónico y un número CNC (recomendado) o Siret",
+    "siretOrCNC": "Número CNC (recomendado) o Siret",
+    "siretOrCNCPlaceholder": "Su número CNC (recomendado) o Siret",
+    "siretOrCNCRequired": "Introduzca un número CNC (recomendado) o Siret",
+    "clear": "Borrar el valor",
+    "Unknown CNC": "Este código CNC no se reconoce. Verifique su entrada o póngase en contacto con el soporte si cree que se trata de un error.",
+    "Unknown SIRET or CNC": "Este Siret o código CNC no se reconoce. Verifique su entrada o póngase en contacto con el soporte si cree que se trata de un error.",
+    "Not authorized": "Este correo electrónico ya está registrado con una cuenta CUT o ha habido un problema al crearla. No dude en consultar <link>las preguntas frecuentes</link> o en contactar con <support>el soporte</support> si cree que se trata de un error.",
+    "validation": {
+      "siretOrCNC": "Introduzca un número CNC (recomendado) o Siret"
+    }
+  },
+  "home": {
+    "navigation": {
+      "collaborators": {
+        "title": "Mis Colaboradores/as",
+        "message": "Aquí encontrará la lista de personas autorizadas a intervenir en sus distintas huellas de carbono"
+      },
+      "footprints": {
+        "title": "Mis Huellas",
+        "message": "Cree aquí su primera huella. Después podrá consultar sus huellas o crear otras nuevas en cualquier momento."
+      },
+      "sites": {
+        "title": "Mis Cines",
+        "message": "Aquí encontrará la lista de establecimientos vinculados a su cuenta"
+      }
+    },
+    "title": "Calcular su huella de carbono simplificada le permitirá:",
+    "alert": {
+      "info": "La calculadora Count le permite estimar el impacto climático de su actividad. Es ante todo una herramienta de sensibilización. No se trata de un enfoque de transición baja en carbono, sino de una huella de carbono simplificada —en el sentido de la <link>Guía de comunicación sobre la contabilidad de carbono</link>—, centrada en las principales categorías de emisiones vinculadas a la actividad de las salas de cine."
+    },
+    "info": {
+      "0": "Comprender la medición del impacto de su establecimiento",
+      "1": "Identificar las prioridades de acción",
+      "2": "A largo plazo, y mediante un trabajo más profundo, construir una trayectoria de reducción"
+    }
+  },
+  "study": {
+    "create": "Añadir una huella",
+    "myCollaborations": "Mis colaboraciones",
+    "myStudies": "Mis huellas",
+    "createFirstStudy": "Crear mi primera huella",
+    "createFirstSimplifiedStudy": "Crear mi primera Huella",
+    "firstSimplifiedStudyMessage": "¡Es hora de empezar! Le invitamos a crear su primera Huella.",
+    "see": "Ver mi huella",
+    "validatedSources": "<data>{validated} / {total}</data> Preguntas respondidas",
+    "validatedOnlyDescription": "Para cada huella se pueden definir uno o varios validadores/as. Son responsables de validar las fuentes de emisión una vez que estas hayan sido cumplimentadas por los contribuidores/as y editores/as del estudio. Por defecto, en sus resultados solo aparecen las emisiones validadas, pero puede cambiar este comportamiento en el menú \"Configuración\".",
+    "selectSite": "Antes de rellenar los datos, elija un cine",
+    "lastStudyTitle": "Última huella realizada",
+    "navigation": {
+      "framing": "Datos generales",
+      "organizations": "Mis cines",
+      "team": "Mis Colaboradores/as",
+      "title": "Mi Huella"
+    },
+    "new": {
+      "title": "Información sobre la nueva huella",
+      "name": "Nombre de la huella",
+      "studyDates": "Año de referencia de la huella",
+      "suggestion": {
+        "name": "Huella - {orga} {studyStartDate}",
+        "yourOrga": "Su cine"
+      },
+      "info": {
+        "date": "Las estimaciones se realizan generalmente sobre un periodo de 12 meses"
+      },
+      "glossary": {
+        "studyDates": "Año de referencia de la huella",
+        "studyDatesDescription": "Indique el periodo de referencia que cubre su huella de carbono simplificada. Idealmente, el periodo de referencia debe ser de doce meses."
+      },
+      "goToDataEntry": "Pasar a la introducción de datos",
+      "cncInfo": "Si ha indicado el número CNC de su cine, los datos siguientes se rellenan automáticamente con la información de {year}. Puede modificarlos si no están actualizados."
+    },
+    "perimeter": {
+      "editSites": "Modificar la lista de cines",
+      "deleteDialog": {
+        "title": "¿Está seguro de que desea eliminar {count, plural, =1 {este cine} other {estos cines}}?"
+      }
+    },
+    "export": {
+      "export": "Exportar mis resultados"
+    },
+    "results": {
+      "simplifiedFeedback": "¡Enhorabuena! Acaba de realizar la huella de carbono simplificada de su cine. ¡Es una excelente iniciación a la contabilidad de carbono! Le agradecemos que rellene <questionnaire>este cuestionario</questionnaire> para ayudarnos a mejorar la herramienta y a corregir posibles errores.",
+      "intensities": {
+        "screen": "pantalla",
+        "entrie": "entrada",
+        "superficy": "m²",
+        "session": "sesión",
+        "movie": "película",
+        "chair": "butaca",
+        "ca": "k€"
+      }
+    },
+    "rights": {
+      "title": "Datos generales del estudio: {name}"
+    },
+    "organization": {
+      "site": "Cine",
+      "allSites": "Todos los cines",
+      "noSites": "No hay cines configurados en la organización",
+      "addSite": "Crear un cine",
+      "sites": "Los cines de la organización",
+      "next": "Siguiente",
+      "select": "Organización",
+      "validation": {
+        "sites": "Seleccione al menos un cine afectado por el estudio"
+      }
+    }
+  },
+  "organization": {
+    "card": {
+      "myOrganization": "Mis cines"
+    },
+    "form": {
+      "editTitle": "Modificar mis cines"
+    },
+    "sites": {
+      "title": "¿Sobre qué cines debe centrarse la huella?",
+      "noSites": "No hay cines configurados en la organización",
+      "name": "Nombre",
+      "namePlaceholder": "Nombre del cine",
+      "etp": "Número de equivalentes a tiempo completo",
+      "etpPlaceholder": "Introduzca aquí su número de ETC para este cine",
+      "ca": "Volumen de negocio ({unit})",
+      "caPlaceholder": "Introduzca aquí su volumen de negocio para este cine en {unit}",
+      "actions": "Acciones",
+      "delete": "Eliminar",
+      "add": "Añadir un cine"
+    }
+  },
+  "checklist": {
+    "title": "Empezar bien en COUNT",
+    "AddClientDetails": "Añada su primer cliente/a para empezar sus huellas",
+    "CreateFirstStudy": "Cree su primera huella",
+    "CreateFirstStudyDetails": "¡Adelante con su primera huella! Rellene la información inicial, como la fecha, el nombre...",
+    "CreateFirstEmissionSource": "Responda a las primeras preguntas",
+    "CreateFirstEmissionSourceDetails": "¡Diríjase a la primera categoría/subcategoría que desee cumplimentar! Responda a las preguntas.",
+    "finished": "¡Ya está listo para empezar a usar COUNT! No dude en consultar las <faq>preguntas frecuentes</faq> o en contactar con nosotros si lo necesita."
+  },
+  "actuality": {
+    "title": "Las novedades de COUNT"
+  },
+  "role": {
+    "DEFAULT": "Colaborador/a",
+    "ADMIN_description": "Un administrador/a posee todos los derechos sobre la cuenta de la organización, así como sobre el conjunto de estudios de su organización (ya sean públicos o privados).",
+    "DEFAULT_description": "Un colaborador/a puede modificar estudios. No tiene acceso a la configuración de la organización."
+  },
+  "login": {
+    "welcome": "Bienvenido/a a",
+    "subtext": "La primera calculadora de impacto ecológico dedicada a las salas de cine.",
+    "explanation": "Esta herramienta ha sido desarrollada por la asociación <b>CUT! Cinéma Uni pour la Transition,</b> en cooperación con <b>la ABC, association pour la Transition bas carbone.</b>",
+    "question": "¿Tiene alguna pregunta? Lea las <faq>preguntas frecuentes</faq> o <support>contáctenos</support>.",
+    "explanation2": "Operación financiada por el Estado francés en el marco del programa «Soutenir les alternatives vertes 2» de France 2030, gestionado por la Banque des Territoires (Caisse des Dépôts).",
+    "form": {
+      "activate": "Crear mi cuenta"
+    }
+  },
+  "email": {
+    "subject": {
+      "resetPassword": "Contraseña olvidada",
+      "newUser": "Ha sido invitado a Count",
+      "addedActiveUser": "Ha sido invitado a un nuevo entorno de Count",
+      "activation": "Ha activado su cuenta en Count",
+      "activationRequest": "Solicitud de acceso a su organización Count",
+      "userOnStudyInvitation": "Añadido al estudio {studyName}",
+      "contributorInvitation": "Solicitud de contribución al estudio {studyName}",
+      "addedUsersByFile": "Autorización para añadir usuarios"
+    }
+  },
+  "ressources": {
+    "contacterViaFormulaire": "Escribir directamente a {supportEmail}",
+    "enSavoirPlusBilan": "Para ir más allá del cálculo de huella simplificada que ofrece Count:"
+  },
+  "emissionFactors": {
+    "post": {
+      "questions": {
+        "numberOfYears": "Número de años",
+        "bonbons": "Golosinas - Cantidad (bolsas de {value} g)",
+        "chips": "Patatas fritas - Cantidad (bolsas de {value} g)",
+        "Electromenager": "Para cada uno de estos electrodomésticos, indique:",
+        "FretCadence": "Transporte de mercancías - Frecuencia (veces/mes)",
+        "FretPoids moyen": "Transporte de mercancías - Peso medio (kg)",
+        "FretProvenance": "¿Dónde se ubica su principal proveedor?",
+        "Refrigerateurs": "Frigoríficos",
+        "Congelateurs": "Congeladores",
+        "Warmers": "Calentadores",
+        "Distributeurs": "Máquinas expendedoras de aperitivos / bebidas"
+      }
+    }
+  },
+  "exports": {
+    "env_specific_export": "Huella de carbono simplificada"
+  }
+}

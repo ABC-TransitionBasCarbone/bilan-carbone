@@ -1,0 +1,198 @@
+{
+  "login": {
+    "subtext": "Változat az egyesületi (nonprofit) szféra számára",
+    "explanation": "A Bilan Carbone® módszert és annak egyesületi szférára szabott ágazati változatát alkalmazni kívánó egyesületeknek szánt eszköz. A Bilan Carbone® módszert gondozó Association pour la transition Bas Carbone és az egyesületeket alacsony szén-dioxid-kibocsátású átállásukban támogató Mouvement Tilt partnersége révén jött létre. Az eszköz ingyenesen elérhető minden, a módszerben képzett francia egyesület számára.",
+    "form": {
+      "activate": "Fiókom létrehozása"
+    }
+  },
+  "signup": {
+    "description": "Hozzon létre fiókot a Tilten e-mail-címe, valamint Siret-száma megadásával",
+    "siret": "Siret",
+    "siretPlaceholder": "Az Ön Siret-száma",
+    "siretRequired": "Adjon meg egy Siret-számot",
+    "Not authorized": "Ez az e-mail-cím már regisztrálva van egy Tilt-fiókkal, vagy ez a SIRET nem érvényes. Nyugodtan tekintse meg a <link>gyakori kérdéseket</link>, vagy forduljon az <support>ügyfélszolgálathoz</support>, ha úgy gondolja, hogy hibáról van szó.",
+    "Not association SIRET": "Ennek az eszköznek a használata egyesületek számára van fenntartva. Kérjük, használja a Bilan Carbone®+ klasszikus verzióját.",
+    "validation": {
+      "siret": "Adjon meg egy Siret-számot"
+    }
+  },
+  "home": {
+    "navigation": {
+      "collaborators": {
+        "title": "Munkatársaim",
+        "message": "Itt találja azoknak a személyeknek a listáját, akik jogosultak a különböző szénlábnyomain dolgozni"
+      },
+      "footprints": {
+        "title": "Lenyomataim",
+        "message": "Itt hozza létre első lenyomatát. Ezután bármikor megtekintheti lenyomatait, vagy létrehozhat újakat."
+      },
+      "sites": {
+        "title": "Egyesületem",
+        "message": "Itt találja a fiókjához kapcsolódó létesítmények listáját"
+      }
+    },
+    "title": "Egyszerűsített szénlábnyomának kiszámítása lehetővé teszi, hogy:"
+  },
+  "exports": {
+    "env_specific_export": "Egyszerűsített szénlábnyom",
+    "simplified": {
+      "disclaimerExcel1": "Figyelem, az itt kapott eredmények kizárólag a Cap Carbone által végzett egyszerűsített szénlábnyom-számításból származnak. Semmilyen esetben sem szabad Bilan Carbone® eredményekként bemutatni vagy felhasználni őket,",
+      "disclaimerExcel2": "mert még ha a kapott eredmények már most is segíthetnek megérteni, hogyan csökkentse hatását, az Ön eljárása egy becslésre korlátozódik.",
+      "disclaimerExcel3": "Ezzel szemben ez az egyszerűsített szénlábnyom valóban az első lépés egy teljesebb eljárás, például a Bilan Carbone® felé!",
+      "disclaimerExcel4": "A következő években vagy megismételheti egyszerűsített szénlábnyom-mérését a Cap Carbone-nal, vagy készíthet egy Bilan Carbone®-t.",
+      "disclaimerExcel5": "Ha tovább szeretne lépni eljárásában, további információk itt érhetők el: https://abc-transitionbascarbone.fr/transition-association-abc-tilt/#",
+      "metadata": {
+        "organization": "Szervezet",
+        "site": "Telephely",
+        "startDate": "A tanulmány kezdő dátuma",
+        "endDate": "A tanulmány záró dátuma"
+      }
+    }
+  },
+  "email": {
+    "subject": {
+      "newUser": "Meghívást kapott a Tiltre",
+      "addedActiveUser": "Meghívást kapott egy új Tilt környezetbe",
+      "activation": "Aktiválta fiókját a Tilten",
+      "activationRequest": "Hozzáférési kérelem a Tilt szervezetéhez"
+    }
+  },
+  "organization": {
+    "sites": {
+      "ca": "Költségvetés ({unit})",
+      "etp": "Alkalmazottak száma",
+      "glossary": {
+        "etp": "Alkalmazottak száma",
+        "etpDescription": "Ezeket az adatokat a szénintenzitások kiszámítására használjuk (kgCO₂e/alkalmazott).",
+        "ca": "Költségvetés ({unit})",
+        "caDescription": "Ezeket az adatokat a szénintenzitások kiszámítására használjuk (kgCO₂e/{unit} költségvetés). Figyelem, a költségvetést ezer euróban (k€) kell megadni.",
+        "volunteer": "Önkéntesek száma",
+        "volunteerDescription": "Az itt megadott önkéntesek száma egyszerűen egy önkéntesenkénti szénintenzitás kiszámítására szolgál, tCO₂e/önkéntes egységben. Megadhatja az önkéntesek számát, az aktív önkéntesek számát, beleszámíthatja vagy sem az Igazgatótanács tagjait... A legfontosabb nem az önkéntesek számbavételi módjának megválasztása, hanem ugyanannak a módszernek a használata a jövőbeli Bilan Carbone®-jaiban, hogy össze tudja hasonlítani kibocsátásai alakulását egyesülete tevékenységeinek változásai fényében."
+      },
+      "validation": {
+        "ca": "Költségvetés ({unit})"
+      }
+    }
+  },
+  "study": {
+    "perimeter": {
+      "preset": "Közönség típusa"
+    },
+    "new": {
+      "postalCode": "Mi az egyesület irányítószáma?",
+      "sites": "Mely telephelyek érintettek a lenyomatban, és milyenek a jellemzőik?",
+      "structure": "Melyik struktúratípushoz áll a legközelebb az Ön egyesülete?",
+      "structureOther": "Adja meg a struktúra típusát",
+      "dates": "Milyen időszakra vonatkozik a szénlábnyoma?",
+      "numberOfTTEmployee": "Hány napot dolgoznak hetente távmunkában az alkalmazottai?",
+      "numberOfTTVolunteer": "Hány napot dolgoznak hetente távmunkában az önkéntesei?",
+      "glossary": {
+        "postalCode": "Az egyesület irányítószáma",
+        "postalCodeGlossary": "A székhely irányítószáma több telephely esetén, 5 számjegy"
+      }
+    },
+    "flow": {
+      "info": "Letölthet egy példát az áramlások feltérképezésére, amely segít elkészíteni a sajátját. Ezt követően, ha be szeretné nyújtani saját áramlástérképét, hogy más egyesületeknek munkaalapot biztosítson, kérjük, küldje el a következő címre: <mail>methodologie@abc-transitionbascarbone.fr</mail>"
+    },
+    "dependencyMatrix": {
+      "info": "Letölthet egy példát a kockázati és függőségi mátrixra, amely segít elkészíteni a sajátját. Ezt követően, ha be szeretné nyújtani saját áramlástérképét, hogy más egyesületeknek munkaalapot biztosítson, kérjük, küldje el a következő címre: <mail>methodologie@abc-transitionbascarbone.fr</mail>"
+    },
+    "firstSimplifiedStudyMessage": "Itt az ideje, hogy belevágjon! Meghívjuk, hogy hozza létre első Lenyomatát.",
+    "createFirstSimplifiedStudy": "Első Lenyomatom létrehozása",
+    "createSimplified": "Lenyomat létrehozása",
+    "mySimplifiedStudies": "Lenyomataim",
+    "seeSimplified": "Lenyomatom megtekintése",
+    "cannotCreateStudy": "A Bilan Carbone®-ok elkészítéséhez képzettnek kell lenni a módszerben! <link>Tudjon meg többet</link>",
+    "canCreateFootPrint": "Ugyanakkor készíthet egy <link>szénlábnyomot</link>, amely lehetővé teszi hatásának becslését",
+    "navigation": {
+      "generalData": "Általános adatok",
+      "title": "Lenyomatom"
+    },
+    "export": {
+      "export": "Eredményeim exportálása"
+    },
+    "results": {
+      "feedback": {
+        "button": "Küldje el visszajelzéseit! ✨",
+        "title": "Küldje el visszajelzéseit! ✨"
+      }
+    },
+    "structure": {
+      "'Club de loisirs'": "Szabadidőklub",
+      "'Association étudiante'": "Diákegyesület",
+      "'Association culturelle'": "Kulturális egyesület",
+      "'Association de voisinage'": "Szomszédsági egyesület",
+      "'Hôpital'": "Kórház",
+      "'Maison de retraite'": "Idősek otthona",
+      "'Association d'aide à domicile'": "Házi segítségnyújtó egyesület",
+      "'Association humanitaire'": "Humanitárius egyesület",
+      "'Autres structures sociales et solidaires'": "Egyéb szociális és szolidáris struktúrák",
+      "'Association de défense de l'environnement'": "Környezetvédelmi egyesület",
+      "'Association d'enseignement ou de formation'": "Oktatási vagy képzési egyesület",
+      "'Autre'": "Egyéb"
+    }
+  },
+  "emissionFactors": {
+    "post": {
+      "seeTypeform": "Mintakérdőív megtekintése",
+      "seeTypeformDescription": "Ez az eszköz lehetővé teszi, hogy legyen egy példa a mintakérdőívre, amelyet elküldhet érdekelt feleinek, hogy adatokat gyűjtsön szakmai utazásaikról.",
+      "glossaryDescription": {
+        "postInfo": "Információk erről a kategóriáról",
+        "close": "Bezárás",
+        "informations": "információk erről a kategóriáról",
+        "IntrantsBiensEtMatieresTilt": "Az Inputok figyelembevételének különböző módjairól bővebb információért kérjük, tekintse meg az <link>egyesületi módszert</link>.",
+        "IntrantsBiensEtMatieresTiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/intrants-biens-et-services#intrants-biens-et-matieres",
+        "Alimentation": "Az élelmezés figyelembevételéről, az egyesületek különböző érdekelt feleire vonatkozóan, bővebb információért kérjük, tekintse meg az <link>egyesületi módszert</link>.",
+        "AlimentationLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/alimentation",
+        "IntrantsServices": "Az Inputok figyelembevételének különböző módjairól bővebb információért kérjük, tekintse meg az <link>egyesületi módszert</link>.",
+        "IntrantsServicesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/intrants-biens-et-services#intrants-services",
+        "EquipementsEtImmobilisations": "A berendezések és egyéb tárgyi eszközök figyelembevételének módjáról bővebb információért kérjük, tekintse meg az <link>egyesületi módszert</link>.",
+        "EquipementsEtImmobilisationsLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/intrants-biens-et-services#equipements-et-immobilisations",
+        "ConstructionDesLocaux": "Az egyesületek helyiségeinek figyelembevételéről bővebb információért kérjük, tekintse meg az <link>egyesületi módszert</link>.",
+        "ConstructionDesLocauxLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#construction-des-locaux",
+        "Energies": "Egy szervezet energiafogyasztásának figyelembevételéről bővebb információért kérjük, tekintse meg a <link>Plan Carbone Général</link>-t.",
+        "EnergiesLink": "https://www.plancarbonegeneral.com/perimetre-collaborateurs/locaux/exploitation",
+        "DechetsDirectstilt": "Egy szervezet hulladékának figyelembevételéről bővebb információért kérjük, tekintse meg a <link>Plan Carbone Général</link>-t.",
+        "DechetsDirectstiltLink": "https://www.plancarbonegeneral.com/perimetre-collaborateurs/locaux/exploitation",
+        "FroidEtClim": "Egy szervezet klímaberendezéseinek és egyéb hűtőközeget fogyasztó készülékeinek figyelembevételéről bővebb információért kérjük, tekintse meg a <link>Plan Carbone Général</link>-t.",
+        "FroidEtClimLink": "https://www.plancarbonegeneral.com/perimetre-collaborateurs/locaux/exploitation",
+        "Utilisation": "Az egyesületek által forgalmazott vagy értékesített termékek és nyújtott szolgáltatások használatának figyelembevételéről bővebb információért kérjük, tekintse meg az <link>egyesületi módszert</link>.",
+        "UtilisationLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/utilisation-et-fin-de-vie",
+        "FinDeVietilt": "Az egyesületek által forgalmazott vagy értékesített termékek életciklusa végének figyelembevételéről bővebb információért kérjük, tekintse meg az <link>egyesületi módszert</link>.",
+        "FinDeVietiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/utilisation-et-fin-de-vie",
+        "Teletravail": "A távmunka figyelembevételéről bővebb információért kérjük, tekintse meg az <link>egyesületi módszert</link>.",
+        "TeletravailLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/teletravail",
+        "DeplacementsFabricationDesVehicules": "A járművek gyártása bizonyos esetekben már figyelembe vehető az utazások elszámolására használt kibocsátási tényezőkben. A figyelembevételéről bővebb információért kérjük, tekintse meg az <link>egyesületi módszert</link>.",
+        "DeplacementsFabricationDesVehiculesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#fabrication-des-vehicules",
+        "DeplacementsDomicileTravailSalaries": "Az ebbe a kategóriába tartozó utazások típusáról bővebb információért kérjük, tekintse meg az <link>egyesületi módszert</link>.",
+        "DeplacementsDomicileTravailSalariesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-entre-le-domicile-et-lassociation",
+        "DeplacementsDomicileTravailBenevoles": "Az ebbe a kategóriába tartozó utazások típusáról bővebb információért kérjük, tekintse meg az <link>egyesületi módszert</link>.",
+        "DeplacementsDomicileTravailBenevolesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-entre-le-domicile-et-lassociation",
+        "DeplacementsDansLeCadreDUneMissionAssociativeSalaries": "Az ebbe a kategóriába tartozó utazások típusáról bővebb információért kérjük, tekintse meg az <link>egyesületi módszert</link>.",
+        "DeplacementsDansLeCadreDUneMissionAssociativeSalariesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-dans-le-cadre-dune-mission-associative",
+        "DeplacementsDansLeCadreDUneMissionAssociativeBenevoles": "Az ebbe a kategóriába tartozó utazások típusáról bővebb információért kérjük, tekintse meg az <link>egyesületi módszert</link>.",
+        "DeplacementsDansLeCadreDUneMissionAssociativeBenevolesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-dans-le-cadre-dune-mission-associative",
+        "DeplacementsDesBeneficiaires": "Az ebbe a kategóriába tartozó utazások típusáról bővebb információért kérjük, tekintse meg az <link>egyesületi módszert</link>.",
+        "DeplacementsDesBeneficiairesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-des-beneficiaires",
+        "TransportDeMarchandises": "Az áruszállítás figyelembevételének különböző módszereiről bővebb információért kérjük, tekintse meg az <link>egyesületi módszert</link>.",
+        "TransportDeMarchandisesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#transport-de-marchandises",
+        "TransportFabricationDesVehicules": "A járművek gyártása bizonyos esetekben már figyelembe vehető az utazások elszámolására használt kibocsátási tényezőkben. A figyelembevételéről bővebb információért kérjük, tekintse meg az <link>egyesületi módszert</link>.",
+        "TransportFabricationDesVehiculesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#fabrication-des-vehicules",
+        "Agriculturetilt": "A mezőgazdasági tevékenységekhez kapcsolódó kibocsátások figyelembevételéről bővebb információért kérjük, tekintse meg az <link>egyesületi módszert</link>.",
+        "AgriculturetiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
+        "ActivitesIndustrielles": "Az esetleges ipari tevékenységekhez kapcsolódó kibocsátások figyelembevételéről bővebb információért kérjük, tekintse meg az <link>egyesületi módszert</link>.",
+        "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux"
+      }
+    }
+  },
+  "navigation": {
+    "footprints": "Lenyomataim",
+    "information": "Egyesületem"
+  },
+  "betaBanner": {
+    "badge": "Béta",
+    "title": "A Cap Carbone eszköz béta verziója",
+    "description": "A Cap Carbone jelenleg béta verzióban van! Köszönjük, hogy Ön az egyik első felhasználónk és tesztelőnk 🎉 Nyugodtan lépjen velünk kapcsolatba a <support>support@abc-transitionbascarbone.fr</support> címen, ha van visszajelzése! Mivel az alkalmazás béta fázisban van, előfordulhat, hogy egyes kérdések megváltoznak az űrlapon, és így a módosított kérdésekre adott válaszok törlődnek a jövőbeli frissítésekben. Ne felejtse el ellenőrizni kategóriái kitöltöttségét az adatbeviteli oldalon, mielőtt megnézné eredményeit, hogy ellenőrizze, minden válasza továbbra is elérhető-e."
+  }
+}
