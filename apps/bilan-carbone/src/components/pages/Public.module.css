@@ -54,11 +54,11 @@
   border: 0.125rem solid var(--primary-800);
 }
 
-.link {
+.richLinks a {
   color: white;
 }
 
-.linkCut {
+.richLinksCut a {
   color: white;
   font-weight: 600;
 }

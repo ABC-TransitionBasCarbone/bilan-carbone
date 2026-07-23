@@ -61,15 +61,12 @@ const PublicCutPage = ({ children, question }: Props) => {
             <div className="justify-center">
               <Divider sx={{ borderColor: 'primary.contrastText' }} className={styles.divider} />
             </div>
-            <Typography className={styles.explanation}>
-              {customRich(t, 'explanation', {}, Environment.CUT, {
-                faq: styles.linkCut,
-                abcAssociation: styles.linkCut,
-              })}
+            <Typography className={classNames(styles.explanation, styles.richLinksCut)}>
+              {customRich(t, 'explanation', {}, Environment.CUT)}
             </Typography>
           </Box>
         </Box>
-        <p>{question}</p>
+        <p className={styles.richLinks}>{question}</p>
         <Box className="justify-between" padding="1.2rem">
           <Image
             className={styles.france2030Logo}

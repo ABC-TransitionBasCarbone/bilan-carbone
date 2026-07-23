@@ -1,4 +1,3 @@
-import styles from '@/components/pages/Public.module.css'
 import PublicTiltPage from '@/components/pages/PublicTilt'
 import DynamicTheme from '@/environments/core/providers/DynamicTheme'
 import { customRich } from '@/i18n/customRich'
@@ -18,11 +17,7 @@ export const metadata: Metadata = {
 
 const PublicLayout = async ({ children }: Props) => {
   const t = await getTranslations('login')
-  const question = customRich(t, 'question', {}, Environment.TILT, {
-    faq: styles.link,
-    support: styles.link,
-    abcAssociation: styles.link,
-  })
+  const question = customRich(t, 'question', {}, Environment.TILT)
   return (
     <DynamicTheme environment={Environment.TILT}>
       <main className="h100">
