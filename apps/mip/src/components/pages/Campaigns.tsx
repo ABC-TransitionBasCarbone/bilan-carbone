@@ -3,6 +3,7 @@
 import type { CampaignsWithResponses, ModelCampaignLight } from '@/db/campaign'
 import { updateCampaignCommand } from '@/services/serverFunctions/campaign'
 import { UpdateCampaignCommand, UpdateCampaignCommandValidation } from '@/services/serverFunctions/campaign.command'
+import { exportSurveyResponsesToCSV } from '@/services/serverFunctions/survey'
 import { handleCopy } from '@/utils/campaign'
 import { Table as BaseTable } from '@abc-transitionbascarbone/components'
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
@@ -11,10 +12,12 @@ import LinkButton from '@abc-transitionbascarbone/components/src/base/LinkButton
 import { FormSelect } from '@abc-transitionbascarbone/components/src/form/Select'
 import { CampaignStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { Button, useToast } from '@abc-transitionbascarbone/ui'
+import { downloadCsvFile } from '@abc-transitionbascarbone/utils/download'
 import { zodResolver } from '@hookform/resolvers/zod'
 import BarChartIcon from '@mui/icons-material/BarChart'
 import CopyIcon from '@mui/icons-material/ContentCopy'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
+import DownloadIcon from '@mui/icons-material/Download'
 import { IconButton, MenuItem, TextField, Tooltip } from '@mui/material'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
@@ -79,6 +82,19 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
   )
 
   const control = form.control
+
+  const handleExportCampaignCsv = useCallback(
+    async (campaignId: string, campaignName: string) => {
+      const result = await exportSurveyResponsesToCSV(campaignId)
+      if (!result.success) {
+        showErrorToast(result.errorMessage)
+        return
+      }
+
+      downloadCsvFile(result.data.fileName ?? `${campaignName}-reponses-utilisateurs.csv`, result.data.csvContent)
+    },
+    [showErrorToast],
+  )
 
   const columns = useMemo(
     () =>
@@ -161,6 +177,22 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
           },
         },
         {
+          id: 'exportCsv',
+          header: () => t('exportCsv'),
+          cell: ({ row }) => (
+            <Tooltip title={t('exportCsv')}>
+              <IconButton
+                size="medium"
+                color="primary"
+                data-testid={`export-campaign-csv-${row.original.id}`}
+                onClick={() => handleExportCampaignCsv(row.original.id, row.original.name)}
+              >
+                <DownloadIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+          ),
+        },
+        {
           id: 'actions',
           header: '',
           accessorKey: 'id',
@@ -173,7 +205,7 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
           ),
         },
       ] as ColumnDef<UpdateCampaignCommand['campaigns'][0]>[],
-    [campaigns, control, handleDelete, modelCampaign?.model, t],
+    [campaigns, control, handleDelete, handleExportCampaignCsv, t],
   )
 
   const currentCampaigns = useWatch({ control, name: 'campaigns' }) ?? []
