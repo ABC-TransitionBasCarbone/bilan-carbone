@@ -1,4 +1,43 @@
-intrants-services . services:
+intrants-services . approche monétaire:
+  formule: 
+      somme:
+        - FE moyen
+        - tableau détaillé
+  par défaut: 0 
+
+intrants-services . approche monétaire . existant:
+  question: Avez-vous accès aux détails des montants dépensés sur l'année dans des services immatériels ? 
+  description: La liste de vos dépenses est présente dans votre livres de comptes, et souvent déclarée sur Lecompteasso https://lecompteasso.associations.gouv.fr/client/login.
+  form:
+    à traduire: oui
+
+intrants-services . approche monétaire . FE moyen:
+  applicable si: 
+    toutes ces conditions:
+      - est défini: intrants-services . approche monétaire . existant
+      - intrants-services . approche monétaire . existant = non
+  formule: montant dépensé * FE
+  form:
+    à traduire: oui
+  avec: 
+    montant dépensé:
+      question: Quel montant avez-vous dépensé sur l'année dans ces services immatériels ? 
+      description: Vous devez bien prendre en compte l'ensemble des services, y compris ceux qui sont reçus gratuitement (mécénat de compétence, etc). Il faut donc bien prendre en compte les informations disponibles sur les contributions volontaires en nature (compte 870).
+      par défaut: 0
+      unité: k€ HT
+    FE: 
+      valeur: 300
+      unité: kgCO2e/k€ HT
+      meta: 
+        source: moyenne des FE ratios monétaires ADEME, à repréciser
+  unité: kgCO2e
+  description: Si vous n'avez pas du tout accès à vos comptes, vous pouvez réaliser une estimation en partant du budget de fonctionnement de l'association, et en retranchant les coûts afférents aux éventuels salariés et aux charges connues.
+
+intrants-services . approche monétaire . tableau détaillé:
+  applicable si: 
+    toutes ces conditions:
+      - est défini: intrants-services . approche monétaire . existant
+      - intrants-services . approche monétaire . existant = oui
   question: Quel montant avez-vous dépensé dans les services immatériels suivants en [Année] ?
   formule:
     somme:
@@ -15,9 +54,9 @@ intrants-services . services:
       - programmation-conseil
   unité: kgCO2e
   description: |
-    La liste est non exhaustive : si vous n’avez pas comptabilisé l’ensemble de vos dépenses, c’est tout à fait normal. Il peut s’agir de dépenses très faiblement émissives ou dont les émissions sont déjà prises en compte dans d’autres postes ou via d’autres questions reposant sur des données plus précises.
+     La liste est non exhaustive : si vous n’avez pas comptabilisé l’ensemble de vos dépenses, c’est tout à fait normal. Il peut s’agir de dépenses très faiblement émissives ou dont les émissions sont déjà prises en compte dans d’autres postes ou via d’autres questions reposant sur des données plus précises.
 
-intrants-services . services . spectacles-musées:
+intrants-services . approche monétaire . tableau détaillé . spectacles-musées:
   formule: montant-dépensé * FE
   form:
     à traduire: oui
@@ -37,7 +76,7 @@ intrants-services . services . spectacles-musées:
         source: ADEME
   unité: kgCO2e
 
-intrants-services . services . assurance-reassurance:
+intrants-services . approche monétaire . tableau détaillé . assurance-reassurance:
   formule: montant-dépensé * FE
   form:
     à traduire: oui
@@ -56,7 +95,7 @@ intrants-services . services . assurance-reassurance:
         nom: Assurance, réassurance
   unité: kgCO2e
 
-intrants-services . services . telecom:
+intrants-services . approche monétaire . tableau détaillé . telecom:
   formule: montant-dépensé * FE
   form:
     à traduire: oui
@@ -74,7 +113,7 @@ intrants-services . services . telecom:
         nom: Services de télécommunications
   unité: kgCO2e
 
-intrants-services . services . sante-humaine:
+intrants-services . approche monétaire . tableau détaillé . sante-humaine:
   formule: montant-dépensé * FE
   form:
     à traduire: oui
@@ -93,7 +132,7 @@ intrants-services . services . sante-humaine:
         nom: Services de santé humaine
   unité: kgCO2e
 
-intrants-services . services . edition:
+intrants-services . approche monétaire . tableau détaillé . edition:
   formule: montant-dépensé * FE
   form:
     à traduire: oui
@@ -112,7 +151,7 @@ intrants-services . services . edition:
         nom: Édition - 2023
   unité: kgCO2e
 
-intrants-services . services . poste-courrier:
+intrants-services . approche monétaire . tableau détaillé . poste-courrier:
   formule: montant-dépensé * FE
   form:
     à traduire: oui
@@ -131,7 +170,7 @@ intrants-services . services . poste-courrier:
         nom: Services de poste et de courrier
   unité: kgCO2e
 
-intrants-services . services . restauration:
+intrants-services . approche monétaire . tableau détaillé . restauration:
   formule: montant-dépensé * FE
   form:
     à traduire: oui
@@ -150,7 +189,7 @@ intrants-services . services . restauration:
         nom: Services de restauration et d'hébergement
   unité: kgCO2e
 
-intrants-services . services . formation:
+intrants-services . approche monétaire . tableau détaillé . formation:
   formule: montant-dépensé * FE
   form:
     à traduire: oui
@@ -169,7 +208,7 @@ intrants-services . services . formation:
         nom: Services de l'enseignement
   unité: kgCO2e
 
-intrants-services . services . reparation-installation:
+intrants-services . approche monétaire . tableau détaillé . reparation-installation:
   formule: montant-dépensé * FE / 1000
   form:
     à traduire: oui
@@ -188,11 +227,11 @@ intrants-services . services . reparation-installation:
         nom: Services de réparation et installation de machines
   unité: kgCO2e
 
-intrants-services . services . juridique-comptable:
+intrants-services . approche monétaire . tableau détaillé . juridique-comptable:
   formule: montant-dépensé * FE
   form:
     à traduire: oui
-  titre: Services de réparation et d'installation
+  titre: Services juridiques et comptables
   avec:
     montant-dépensé:
       question: Montant dépensé en services juridiques, comptables et assurances
@@ -207,7 +246,7 @@ intrants-services . services . juridique-comptable:
         nom: Services juridiques et comptables/ services des sièges sociaux/ conseil de gestion - 2023
   unité: kgCO2e
 
-intrants-services . services . programmation-conseil:
+intrants-services . approche monétaire . tableau détaillé . programmation-conseil:
   formule: montant-dépensé * FE / 1000
   form:
     à traduire: oui

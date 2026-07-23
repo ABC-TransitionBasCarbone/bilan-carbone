@@ -70,9 +70,14 @@ fret . transport . carburant:
       - présent = oui
   formule: litre * FE
   unité: kgCO2e
+  form: 
+    à traduire: oui 
   avec:
     litre:
       question: Combien de litres de carburants ces véhicules ont-ils consommé ?
+      form: 
+        à traduire: oui 
+      description: Si vous n'avez accès qu'aux montants dépensés et non aux consommations, vous pouvez convertir celle-ci via le prix moyen du carburant concerné sur l'année. Sur l'année 2025, 1,648€/L pour le gazole, 1,727€/L pour le SP95, 1,714€/L pour le SP95-E10, 1,817€/L pour le SP98, 0,764€/L pour le superéthanol E85 et 0,992€/L pour le GPL-c. 
       unité: litre
       par défaut: 0
     FE:
@@ -95,8 +100,11 @@ fret . transport . empreinte:
 
 fret . transport . livraisons:
   titre: Nombre de livraisons
-  question: En moyenne, combien de livraisons ont lieu par an ?
+  question: En moyenne, combien de livraisons ont lieu par an ? 
   unité: unité
+  form: 
+    à traduire
+  description: Le nombre de livraisons renseigné ici doit exclure toutes les livraisons qui ont été faites par vos propres véhicules, car leur impact est déjà comptabilisé via les litres de carburants consommés.
 
 fret . transport . poids:
   titre: Poids moyen des livraisons

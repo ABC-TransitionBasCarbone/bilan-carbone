@@ -1,5 +1,5 @@
 déplacements . DT-salariés:
-  titre: Emissions des trajets domicile travail des salariés
+  titre: Emissions des trajets domicile-association des salariés
   formule:
     somme:
       - avec
@@ -13,7 +13,7 @@ déplacements . DT-salariés . avec:
     toutes ces conditions:
       - est défini: déplacements . DT-salariés . MEP présent
       - déplacements . DT-salariés . MEP présent = oui
-  titre: émissions des trajets domiciles travail des salariés (avec enquête MEP)
+  titre: émissions des trajets domicile-association des salariés (avec enquête MEP)
   formule:
     somme:
       - produit:
@@ -27,7 +27,7 @@ déplacements . DT-salariés . avec:
       - réponse MEP
   avec:
     distance:
-      question: D'après les résultats de MEP, quelle est la distance moyenne parcourue par salarié par jour (A/R) pour des déplacements domicile-travail ?
+      question: D'après les résultats de MEP, quelle est la distance moyenne parcourue par salarié par jour (A/R) pour des déplacements domicile-association ?
       unité: km
       par défaut: 0
 
@@ -53,7 +53,7 @@ déplacements . DT-salariés . avec:
           note: On néglige l'impact des modes actifs (vélo, marche, trottinette...)
 
     réponse MEP:
-      question: D'après les résultats MEP, combien de kgCO2e représentent les déplacements domicile-travail des salariés ?
+      question: D'après les résultats MEP, combien de kgCO2e représentent les déplacements domicile-association des salariés ?
       unité: kgCO2e
       par défaut: 0
   unité: kgCO2e
@@ -61,7 +61,7 @@ déplacements . DT-salariés . avec:
 ## Ici on calcule les émissions dans le cas ou il n'y pas eu de campagne MEP
 
 déplacements . DT-salariés . sans:
-  titre: émissions des trajets domiciles travail des salariés (sans enquête MEP)
+  titre: émissions des trajets domicile-association des salariés (sans enquête MEP)
   formule:
     somme:
       - voiture * part voiture
@@ -129,7 +129,7 @@ déplacements . DT-salariés . sans . voiture:
   formule: distance * split * général . salariés * commun . nombre de semaines travaillées par an * (5 - télétravail . salariés . j)
   avec:
     distance:
-      question: Combien de km sont parcourus en moyenne par salarié en voiture par jour (A/R) pour des déplacements domicile-travail ?
+      question: Combien de km sont parcourus en moyenne par salarié en voiture par jour (A/R) pour des déplacements domicile-association ?
       type: nombre
       unité: km/salariés.jours
       par défaut: 0
@@ -185,7 +185,7 @@ déplacements . DT-salariés . sans . train:
   formule: distance * FE * général . salariés * commun . nombre de semaines travaillées par an * (5 - télétravail . salariés . j)
   avec:
     distance:
-      question: Combien de km sont parcourus en moyenne par salarié en train par jour (A/R) pour des déplacements domicile-travail ?
+      question: Combien de km sont parcourus en moyenne par salarié en train par jour (A/R) pour des déplacements domicile-association ?
       type: nombre
       unité: km/salariés.jours
       par défaut: 0
@@ -209,7 +209,7 @@ déplacements . DT-salariés . sans . deux roues:
   formule: distance * FE  * général . salariés * commun . nombre de semaines travaillées par an * (5 - télétravail . salariés . j)
   avec:
     distance:
-      question: Combien de km sont parcourus en moyenne par salarié en deux roues par jour (A/R) pour des déplacements domicile-travail ?
+      question: Combien de km sont parcourus en moyenne par salarié en deux roues par jour (A/R) pour des déplacements domicile-association ?
       type: nombre
       unité: km/salariés.jours
       par défaut: 0
@@ -232,7 +232,7 @@ déplacements . DT-salariés . sans . transports en commun:
   formule: distance * split * général . salariés * commun . nombre de semaines travaillées par an * (5 - télétravail . salariés . j)
   avec:
     distance:
-      question: Combien de km sont parcourus en moyenne par salarié en transports en commun par jour (A/R) pour des déplacements domicile-travail ?
+      question: Combien de km sont parcourus en moyenne par salarié en transports en commun par jour (A/R) pour des déplacements domicile-association ?
       type: nombre
       unité: km/salariés.jours
       par défaut: 0
