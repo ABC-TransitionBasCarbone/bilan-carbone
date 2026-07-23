@@ -1,0 +1,14 @@
+.interstitial {
+  gap: 1rem;
+}
+
+.widgetCard {
+  background-color: var(--neutral-50);
+  min-height: 32rem;
+}
+
+@media (max-width: 640px) {
+  .widgetCard {
+    min-height: 26rem;
+  }
+}

@@ -54,17 +54,27 @@ export const buildGroupedElements = (engine: MipEngine, elements: SurveyFormElem
   return groupedElements
 }
 
+export const getCategoryKey = (groupedElements: GroupedElement[]): string | null => {
+  if (groupedElements[0]?.type === 'mosaic') {
+    return groupedElements[0].parent.split(' . ')[0]
+  }
+  if (groupedElements[0]?.type === 'single') {
+    return groupedElements[0].el.id.split(' . ')[0]
+  }
+  return null
+}
+
 export const getCurrentSectionTitle = (engine: MipEngine, groupedElements: GroupedElement[]) => {
-  const getCategoryKey = (ruleName: string) => ruleName.split(' . ')[0]
+  const getCategoryKeyLocal = (ruleName: string) => ruleName.split(' . ')[0]
 
   if (groupedElements[0]?.type === 'mosaic') {
-    const key = getCategoryKey(groupedElements[0].parent)
+    const key = getCategoryKeyLocal(groupedElements[0].parent)
     const raw = engine.getParsedRules()[key]?.rawNode
     return { label: raw?.titre ?? '', icons: raw?.icônes }
   }
 
   if (groupedElements[0]?.type === 'single') {
-    const key = getCategoryKey(groupedElements[0].el.id)
+    const key = getCategoryKeyLocal(groupedElements[0].el.id)
     const raw = engine.getParsedRules()[key]?.rawNode
     return { label: raw?.titre ?? '', icons: raw?.icônes }
   }

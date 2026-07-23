@@ -41,6 +41,9 @@
       }
     },
     "resume": "Reprendre le sondage",
+    "interstitial": {
+      "title": "Quelques ordres de grandeur pour comparaison :"
+    },
     "characterCount": "{current} / {max} caractères",
     "completion": {
       "title": "Mon empreinte professionnelle",

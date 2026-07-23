@@ -1,0 +1,11 @@
+.widgetCard {
+  background-color: var(--neutral-50);
+  min-height: 34rem;
+  margin-top: 1rem;
+}
+
+@media (max-width: 640px) {
+  .widgetCard {
+    min-height: 28rem;
+  }
+}

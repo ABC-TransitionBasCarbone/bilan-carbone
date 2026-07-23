@@ -1,3 +1,20 @@
+.surveyLayout {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.surveyMain {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .surveyLayout {
+    flex-direction: column-reverse;
+  }
+}
+
 .navigation {
   position: fixed;
   bottom: 0;
