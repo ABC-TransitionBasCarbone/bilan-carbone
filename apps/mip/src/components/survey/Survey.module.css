@@ -13,20 +13,31 @@
   z-index: 100;
 }
 
-.completedContent {
-  text-align: center;
-}
-
-.checkIcon {
-  font-size: 5rem !important;
-  color: var(--success);
-}
-
 .explanationPage {
   height: 100vh;
   overflow-y: auto;
   padding: 1.5rem 0 3rem;
   background: var(--grayscale-100);
+}
+
+.header {
+  margin-bottom: 1rem;
+}
+
+.progress {
+  margin-top: 0.75rem;
+}
+
+.progressLabels {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.questionCard {
+  background: var(--white);
+  border-radius: 0.75rem;
+  padding: 1rem;
 }
 
 .coverTitle {

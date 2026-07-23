@@ -2,14 +2,12 @@
 import { useMipPublicodes } from '@/publicodes/MipPublicodesProvider'
 import { createSurveyResponse } from '@/services/serverFunctions/survey'
 import { buildPageBuilder } from '@abc-transitionbascarbone/publicodes/form'
-import { Button, Container, Typography } from '@mui/material'
+import { Container, Typography } from '@mui/material'
 import { FormBuilder, FormState } from '@publicodes/forms'
-import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import styles from './Survey.module.css'
+import SurveyExplanation from './SurveyExplanation'
 import { buildGroupedElements, getCurrentSectionTitle } from './surveyGrouping'
 import SurveyNavigation from './SurveyNavigation'
 import SurveyProgressHeader from './SurveyProgressHeader'
@@ -143,53 +141,7 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   }
 
   if (isExplanationVisible) {
-    return (
-      <div className={styles.explanationPage}>
-        <Container maxWidth="md" className={classNames('text-center pt1 pb2')}>
-          <Typography variant="h3" component="h1" className={styles.coverTitle}>
-            {t('explanation.cover.title')}
-          </Typography>
-          <Typography className={styles.coverSubtitle}>{t('explanation.cover.subtitle')}</Typography>
-          <div className="justify-center">
-            <Button variant="contained" onClick={() => setIsExplanationVisible(false)}>
-              {t('explanation.start')}
-            </Button>
-          </div>
-        </Container>
-
-        <Container maxWidth="md" className={classNames(styles.explanationCard, 'pt2 pb2')}>
-          <div className={styles.logosRow}>
-            {partnerLogos.map((logo) => (
-              <div key={logo.src} className={styles.logoItem}>
-                <Image src={logo.src} alt={logo.alt} width={168} height={72} className={styles.logoImage} />
-              </div>
-            ))}
-          </div>
-
-          <section className="mb2">
-            <Typography variant="h4" component="h2" className={styles.explanationTitle}>
-              {t('explanation.why.title')}
-            </Typography>
-            <div className={styles.titleUnderline} />
-            <Typography>{t('explanation.why.description')}</Typography>
-          </section>
-
-          <section className="mb2">
-            <Typography variant="h5" component="h2" className={styles.explanationSubtitle}>
-              {t('explanation.about.title')}
-            </Typography>
-            <Typography>{t('explanation.about.description')}</Typography>
-          </section>
-
-          <section className="mb2">
-            <Typography variant="h5" component="h2" className={styles.explanationSubtitle}>
-              {t('explanation.note.title')}
-            </Typography>
-            <Typography>{t('explanation.note.description')}</Typography>
-          </section>
-        </Container>
-      </div>
-    )
+    return <SurveyExplanation partnerLogos={partnerLogos} onStart={() => setIsExplanationVisible(false)} />
   }
 
   if (isComplete) {
@@ -197,40 +149,42 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   }
 
   return (
-    <Container maxWidth="md" className="pt1 pb5">
-      <SurveyProgressHeader
-        title={currentTitle.label}
-        icons={currentTitle.icons}
-        progress={progress}
-        questionLabel={t('progress.question', {
-          current: Math.min(current, pageCount),
-          total: pageCount,
-        })}
-        completionLabel={t('progress.complete', { percent: progress })}
-      />
+    <>
+      <Container maxWidth="md" className="pt1 pb5">
+        <SurveyProgressHeader
+          title={currentTitle.label}
+          icons={currentTitle.icons}
+          progress={progress}
+          questionLabel={t('progress.question', {
+            current: Math.min(current, pageCount),
+            total: pageCount,
+          })}
+          completionLabel={t('progress.complete', { percent: progress })}
+        />
 
-      <SurveyQuestionList
-        groupedElements={groupedElements}
-        engine={engine}
-        state={state}
-        formBuilder={formBuilder}
-        updateState={updateState}
-      />
+        <SurveyQuestionList
+          groupedElements={groupedElements}
+          engine={engine}
+          state={state}
+          formBuilder={formBuilder}
+          updateState={updateState}
+        />
 
-      <SurveyNavigation
-        hasPreviousPage={hasPreviousPage}
-        canGoBackToExplanation={!hasPreviousPage}
-        isLastPage={pageCount === current + 1}
-        isCompleting={isCompleting}
-        backToExplanationLabel={t('navigation.backToExplanation')}
-        previousLabel={tCommon('previous')}
-        nextLabel={tCommon('next')}
-        completeLabel={t('navigation.complete')}
-        onBackToExplanation={() => setIsExplanationVisible(true)}
-        onPrevious={() => updateState(formBuilder.goToPreviousPage(state))}
-        onNext={() => updateState(formBuilder.goToNextPage(state))}
-        onComplete={completeSurvey}
-      />
-    </Container>
+        <SurveyNavigation
+          hasPreviousPage={hasPreviousPage}
+          canGoBackToExplanation={!hasPreviousPage}
+          isLastPage={pageCount === current + 1}
+          isCompleting={isCompleting}
+          backToExplanationLabel={t('navigation.backToExplanation')}
+          previousLabel={tCommon('previous')}
+          nextLabel={tCommon('next')}
+          completeLabel={t('navigation.complete')}
+          onBackToExplanation={() => setIsExplanationVisible(true)}
+          onPrevious={() => updateState(formBuilder.goToPreviousPage(state))}
+          onNext={() => updateState(formBuilder.goToNextPage(state))}
+          onComplete={completeSurvey}
+        />
+      </Container>
+    </>
   )
 }
