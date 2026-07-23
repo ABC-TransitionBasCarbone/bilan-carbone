@@ -154,7 +154,7 @@ export const mergeRowWithOverride = (
     if (normalizeValue(overrideVal) !== normalizeValue(oldVal)) {
       const key = col as keyof ImportEmissionFactor
       if (key in merged) {
-        ; (merged[key] as string | number) = numberColumns.includes(key) ? Number(overrideVal) : overrideVal
+        ;(merged[key] as string | number) = numberColumns.includes(key) ? Number(overrideVal) : overrideVal
       }
     }
   }

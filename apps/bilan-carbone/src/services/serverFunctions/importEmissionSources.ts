@@ -334,9 +334,9 @@ export async function importEmissionSourcesFromFile(
     tagNamesByRowIndex.push(
       row.tag
         ? row.tag
-          .split(',')
-          .map((t) => t.trim())
-          .filter(Boolean)
+            .split(',')
+            .map((t) => t.trim())
+            .filter(Boolean)
         : [],
     )
   }
