@@ -10,6 +10,7 @@ import { dbActualizedAuth } from '@/services/auth'
 import { EmissionCategory, KeyStatGroup, SurveyResults } from '@/types/results.types'
 import { withServerResponse } from '@/utils/serverResponse'
 import { isAdmin } from '@/utils/user'
+import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
 import { buildCsv, sanitizeFileName, serializeCsvValue } from '@abc-transitionbascarbone/utils/csv'
 import { average, safePercent, toNumber } from '@abc-transitionbascarbone/utils/number'
 import { isYesValue } from '@abc-transitionbascarbone/utils/parsing'
@@ -376,7 +377,8 @@ export const exportSurveyResponsesToCSV = async (campaignId: string) =>
   withServerResponse('exportSurveyResponsesToCSV', async () => {
     const session = await dbActualizedAuth()
     if (!session?.user) {
-      throw new Error('Unauthorized')
+      console.error('exportSurveyResponsesToCSV: unauthorized access', { campaignId })
+      throw new Error(NOT_AUTHORIZED)
     }
 
     const canAccessAllOrganizationCampaigns = isAdmin(session.user.role)
