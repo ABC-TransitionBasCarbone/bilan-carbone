@@ -1,4 +1,3 @@
-import styles from '@/components/pages/Public.module.css'
 import PublicClicksonPage from '@/components/pages/PublicClickson'
 import DynamicTheme from '@/environments/core/providers/DynamicTheme'
 import { customRich } from '@/i18n/customRich'
@@ -18,7 +17,7 @@ export const metadata: Metadata = {
 
 const PublicLayout = async ({ children }: Props) => {
   const t = await getTranslations('login')
-  const question = customRich(t, 'question', {}, Environment.CLICKSON, { faq: styles.link, support: styles.link })
+  const question = customRich(t, 'question', {}, Environment.CLICKSON)
   return (
     <DynamicTheme environment={Environment.CLICKSON}>
       <main className="h100">
