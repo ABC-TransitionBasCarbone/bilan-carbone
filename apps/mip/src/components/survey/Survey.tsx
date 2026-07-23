@@ -7,6 +7,7 @@ import { FormBuilder, FormState } from '@publicodes/forms'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import SurveyExplanation from './SurveyExplanation'
 import { buildGroupedElements, getCurrentSectionTitle } from './surveyGrouping'
 import SurveyNavigation from './SurveyNavigation'
 import SurveyProgressHeader from './SurveyProgressHeader'
@@ -18,6 +19,29 @@ interface MipSurveyProps {
   surveyId: string
   rootRule?: string
 }
+
+const partnerLogos = [
+  {
+    src: '/logos/partners/abc.png',
+    alt: 'ABC',
+  },
+  {
+    src: '/logos/partners/grdf.png',
+    alt: 'GRDF',
+  },
+  {
+    src: '/logos/partners/ag2r-la-mondiale.png',
+    alt: 'AG2R La Mondiale',
+  },
+  {
+    src: '/logos/partners/edf.png',
+    alt: 'EDF',
+  },
+  {
+    src: '/logos/partners/france-travail.png',
+    alt: 'France Travail',
+  },
+]
 
 export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps) {
   const t = useTranslations('survey')
@@ -37,6 +61,7 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   }
 
   const [isResumed, setIsResumed] = useState(false)
+  const [isExplanationVisible, setIsExplanationVisible] = useState(true)
   const [isLoading, setIsLoading] = useState(true)
   const [isCompleting, setIsCompleting] = useState(false)
   const [state, setState] = useState<FormState<string>>(initState)
@@ -115,42 +140,51 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
     )
   }
 
+  if (isExplanationVisible) {
+    return <SurveyExplanation partnerLogos={partnerLogos} onStart={() => setIsExplanationVisible(false)} />
+  }
+
   if (isComplete) {
     return null
   }
 
   return (
-    <Container maxWidth="md" className="pt1 pb5">
-      <SurveyProgressHeader
-        title={currentTitle.label}
-        icons={currentTitle.icons}
-        progress={progress}
-        questionLabel={t('progress.question', {
-          current: Math.min(current, pageCount),
-          total: pageCount,
-        })}
-        completionLabel={t('progress.complete', { percent: progress })}
-      />
+    <>
+      <Container maxWidth="md" className="pt1 pb5">
+        <SurveyProgressHeader
+          title={currentTitle.label}
+          icons={currentTitle.icons}
+          progress={progress}
+          questionLabel={t('progress.question', {
+            current: Math.min(current, pageCount),
+            total: pageCount,
+          })}
+          completionLabel={t('progress.complete', { percent: progress })}
+        />
 
-      <SurveyQuestionList
-        groupedElements={groupedElements}
-        engine={engine}
-        state={state}
-        formBuilder={formBuilder}
-        updateState={updateState}
-      />
+        <SurveyQuestionList
+          groupedElements={groupedElements}
+          engine={engine}
+          state={state}
+          formBuilder={formBuilder}
+          updateState={updateState}
+        />
 
-      <SurveyNavigation
-        hasPreviousPage={hasPreviousPage}
-        isLastPage={pageCount === current + 1}
-        isCompleting={isCompleting}
-        previousLabel={tCommon('previous')}
-        nextLabel={tCommon('next')}
-        completeLabel={t('navigation.complete')}
-        onPrevious={() => updateState(formBuilder.goToPreviousPage(state))}
-        onNext={() => updateState(formBuilder.goToNextPage(state))}
-        onComplete={completeSurvey}
-      />
-    </Container>
+        <SurveyNavigation
+          hasPreviousPage={hasPreviousPage}
+          canGoBackToExplanation={!hasPreviousPage}
+          isLastPage={pageCount === current + 1}
+          isCompleting={isCompleting}
+          backToExplanationLabel={t('navigation.backToExplanation')}
+          previousLabel={tCommon('previous')}
+          nextLabel={tCommon('next')}
+          completeLabel={t('navigation.complete')}
+          onBackToExplanation={() => setIsExplanationVisible(true)}
+          onPrevious={() => updateState(formBuilder.goToPreviousPage(state))}
+          onNext={() => updateState(formBuilder.goToNextPage(state))}
+          onComplete={completeSurvey}
+        />
+      </Container>
+    </>
   )
 }

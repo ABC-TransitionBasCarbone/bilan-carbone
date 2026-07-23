@@ -4,35 +4,9 @@
   }
 }
 
-.modal {
-  overflow-y: scroll;
-}
-
-.form {
-  gap: 1rem !important;
-}
-
-.drawer {
-  background-color: white !important;
-}
-
-.centered {
-  justify-content: center !important;
-}
-
 .addButton {
   border-radius: 0.75rem;
   height: 3.5rem;
-}
-
-.reductionValue {
-  width: 10rem;
-  flex-shrink: 0;
-}
-
-.reductionYear {
-  flex: 1;
-  min-width: 0;
 }
 
 .ownerFilter {

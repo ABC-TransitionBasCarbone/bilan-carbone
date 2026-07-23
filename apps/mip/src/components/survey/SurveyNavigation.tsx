@@ -4,11 +4,14 @@ import styles from './Survey.module.css'
 
 interface Props {
   hasPreviousPage: boolean
+  canGoBackToExplanation?: boolean
   isLastPage: boolean
   isCompleting: boolean
+  backToExplanationLabel?: string
   previousLabel: string
   nextLabel: string
   completeLabel: string
+  onBackToExplanation?: () => void
   onPrevious: () => void
   onNext: () => void
   onComplete: () => Promise<void>
@@ -16,11 +19,14 @@ interface Props {
 
 const SurveyNavigation = ({
   hasPreviousPage,
+  canGoBackToExplanation = false,
   isLastPage,
   isCompleting,
+  backToExplanationLabel,
   previousLabel,
   nextLabel,
   completeLabel,
+  onBackToExplanation,
   onPrevious,
   onNext,
   onComplete,
@@ -30,6 +36,15 @@ const SurveyNavigation = ({
       {hasPreviousPage ? (
         <Button variant="outlined" startIcon={<ArrowBack />} onClick={onPrevious} data-testid="survey-previous-button">
           {previousLabel}
+        </Button>
+      ) : canGoBackToExplanation && onBackToExplanation && backToExplanationLabel ? (
+        <Button
+          variant="outlined"
+          startIcon={<ArrowBack />}
+          onClick={onBackToExplanation}
+          data-testid="survey-back-to-explanation-button"
+        >
+          {backToExplanationLabel}
         </Button>
       ) : null}
       {isLastPage ? (

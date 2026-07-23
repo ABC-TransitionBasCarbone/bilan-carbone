@@ -3,10 +3,6 @@
   border-radius: 1rem;
 }
 
-.cardContent {
-  padding: 0rem !important;
-}
-
 .cardHeader {
   background: var(--mui-palette-primary-light);
   min-height: 6.5rem;

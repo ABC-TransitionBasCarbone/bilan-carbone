@@ -1,12 +1,3 @@
-.logo {
-  position: absolute;
-  left: 0;
-  top: 50vh;
-  transform: translateY(-50%);
-  max-width: 90%;
-  height: auto;
-}
-
 .loginForm {
   padding: 2rem;
   border: var(--border-dark);
@@ -58,17 +49,8 @@
   color: white;
 }
 
-.linkCut {
-  color: white;
-  font-weight: 600;
-}
-
 .image {
   height: auto;
-}
-
-.title {
-  margin-bottom: 1rem !important;
 }
 
 .divider {

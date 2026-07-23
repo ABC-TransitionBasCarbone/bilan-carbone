@@ -2,27 +2,3 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
-
-.postDetailColorCommute {
-  background-color: var(--primary-500);
-}
-
-.postDetailColorTravel {
-  background-color: var(--info);
-}
-
-.postDetailColorFood {
-  background-color: var(--success-100);
-}
-
-.postDetailColorDigital {
-  background-color: var(--error-50);
-}
-
-.postDetailColorOffice {
-  background-color: var(--warning);
-}
-
-.postDetailColorNeutral {
-  background-color: var(--neutral-300);
-}
