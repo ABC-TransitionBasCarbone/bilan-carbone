@@ -41,6 +41,9 @@
       }
     },
     "resume": "Resume survey",
+    "interstitial": {
+      "title": "Some orders of magnitude for comparison:"
+    },
     "characterCount": "{current} / {max} characters",
     "completion": {
       "title": "My work-related footprint",
