@@ -27,10 +27,13 @@ const SummarySection = ({ actionsByCategory, totalKg }: Props) => {
         {actionsByCategory.map((category) => {
           const toneClass =
             styles[`tone${category.key.charAt(0).toUpperCase() + category.key.slice(1)}`] ?? styles.toneDt
+          const summaryToneClass =
+            styles[`summaryAccordion${category.key.charAt(0).toUpperCase() + category.key.slice(1)}`] ??
+            styles.summaryAccordionDt
           const categoryShare = totalKg > 0 ? Math.round((category.valueKg / totalKg) * 100) : 0
 
           return (
-            <Accordion key={category.key} className={styles.summaryAccordion}>
+            <Accordion key={category.key} className={`${styles.summaryAccordion} ${summaryToneClass}`}>
               <AccordionSummary expandIcon={<ExpandMore />}>
                 <div className={`${styles.summaryItem} gapped075`}>
                   <Typography className={styles.summaryIcon}>{category.icones}</Typography>

@@ -24,6 +24,7 @@ const SurveyQuestionList = ({ groupedElements, engine, state, formBuilder, updat
             parent={group.parent}
             elements={group.elements}
             engine={engine}
+            containerVariant="flat"
             onChange={(ruleName, value) => updateState(formBuilder.handleInputChange(state, ruleName, value))}
           />
         ) : (
@@ -31,6 +32,7 @@ const SurveyQuestionList = ({ groupedElements, engine, state, formBuilder, updat
             key={group.el.id}
             formElement={group.el}
             engine={engine}
+            containerVariant="flat"
             onChange={(ruleName, value) => updateState(formBuilder.handleInputChange(state, ruleName, value))}
           />
         ),

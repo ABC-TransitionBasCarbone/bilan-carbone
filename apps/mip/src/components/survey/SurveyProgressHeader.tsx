@@ -1,16 +1,22 @@
 import Category from '@/components/survey/Category/Category'
 import { LinearProgress, Typography } from '@mui/material'
+import classNames from 'classnames'
 import styles from './Survey.module.css'
 
 interface Props {
   title: string
   icons?: string
   progress: number
+  categoryKey?: string | null
   questionLabel: string
   completionLabel: string
 }
 
-const SurveyProgressHeader = ({ title, icons, progress, questionLabel, completionLabel }: Props) => {
+const SurveyProgressHeader = ({ title, icons, progress, categoryKey, questionLabel, completionLabel }: Props) => {
+  const toneSuffix =
+    categoryKey === 'DT' ? 'Dt' : (categoryKey?.charAt(0).toUpperCase() ?? '') + (categoryKey?.slice(1) ?? '')
+  const toneClass = toneSuffix ? styles[`progressTone${toneSuffix}`] : undefined
+
   return (
     <div className={styles.header}>
       <Category title={title} icons={icons} />
@@ -23,7 +29,7 @@ const SurveyProgressHeader = ({ title, icons, progress, questionLabel, completio
             {completionLabel}
           </Typography>
         </div>
-        <LinearProgress variant="determinate" value={progress} />
+        <LinearProgress className={classNames(styles.progressBar, toneClass)} variant="determinate" value={progress} />
       </div>
     </div>
   )

@@ -261,6 +261,56 @@
   box-shadow: none !important;
 }
 
+.summaryAccordionDt :global(.MuiAccordionSummary-root) {
+  background-color: var(--mip-category-dt-bg);
+  color: var(--mip-category-dt-text);
+}
+
+.summaryAccordionTransport :global(.MuiAccordionSummary-root) {
+  background-color: var(--mip-category-transport-bg);
+  color: var(--mip-category-transport-text);
+}
+
+.summaryAccordionAlimentation :global(.MuiAccordionSummary-root) {
+  background-color: var(--mip-category-alimentation-bg);
+  color: var(--mip-category-alimentation-text);
+}
+
+.summaryAccordionDivers :global(.MuiAccordionSummary-root) {
+  background-color: var(--mip-category-divers-bg);
+  color: var(--mip-category-divers-text);
+}
+
+.summaryAccordionLogement :global(.MuiAccordionSummary-root) {
+  background-color: var(--mip-category-logement-bg);
+  color: var(--mip-category-logement-text);
+}
+
+.summaryAccordionDt .summaryValue,
+.summaryAccordionDt .summaryPercent {
+  color: var(--mip-category-dt-text) !important;
+}
+
+.summaryAccordionTransport .summaryValue,
+.summaryAccordionTransport .summaryPercent {
+  color: var(--mip-category-transport-text) !important;
+}
+
+.summaryAccordionAlimentation .summaryValue,
+.summaryAccordionAlimentation .summaryPercent {
+  color: var(--mip-category-alimentation-text) !important;
+}
+
+.summaryAccordionDivers .summaryValue,
+.summaryAccordionDivers .summaryPercent {
+  color: var(--mip-category-divers-text) !important;
+}
+
+.summaryAccordionLogement .summaryValue,
+.summaryAccordionLogement .summaryPercent {
+  color: var(--mip-category-logement-text) !important;
+}
+
 .summaryItem {
   display: grid;
   width: 100%;
@@ -293,23 +343,23 @@
 }
 
 .toneDt {
-  background-color: var(--primary-500);
+  background-color: var(--mip-category-dt-text);
 }
 
 .toneTransport {
-  background-color: var(--info);
+  background-color: var(--mip-category-transport-text);
 }
 
 .toneAlimentation {
-  background-color: var(--success);
+  background-color: var(--mip-category-alimentation-text);
 }
 
 .toneDivers {
-  background-color: var(--warning);
+  background-color: var(--mip-category-divers-text);
 }
 
 .toneLogement {
-  background-color: var(--error);
+  background-color: var(--mip-category-logement-text);
 }
 
 .summaryValue {

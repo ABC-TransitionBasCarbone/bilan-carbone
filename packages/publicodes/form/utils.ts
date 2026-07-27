@@ -103,24 +103,96 @@ export function getMosaicParent(engine: Engine, ruleName: string): string | null
   return null
 }
 
+const DEFAULT_SURVEY_CATEGORY_ORDER = ['DT', 'transport', 'alimentation', 'divers', 'logement']
+
+const getRuleOrder = (rawNode: unknown): number | null => {
+  if (!rawNode || typeof rawNode !== 'object') {
+    return null
+  }
+
+  const ordre = (rawNode as { ordre?: unknown }).ordre
+  if (typeof ordre === 'number' && Number.isFinite(ordre)) {
+    return ordre
+  }
+
+  if (typeof ordre === 'string') {
+    const parsedOrder = Number.parseFloat(ordre)
+    if (Number.isFinite(parsedOrder)) {
+      return parsedOrder
+    }
+  }
+
+  return null
+}
+
+const compareRuleNames = (
+  a: string,
+  b: string,
+  parsedRules: ReturnType<Engine['getParsedRules']>,
+  initialIndexes: Map<string, number>,
+) => {
+  const [aRoot] = a.split(' . ')
+  const [bRoot] = b.split(' . ')
+
+  const categoryOrderA = DEFAULT_SURVEY_CATEGORY_ORDER.indexOf(aRoot)
+  const categoryOrderB = DEFAULT_SURVEY_CATEGORY_ORDER.indexOf(bRoot)
+  const normalizedCategoryOrderA = categoryOrderA === -1 ? Number.MAX_SAFE_INTEGER : categoryOrderA
+  const normalizedCategoryOrderB = categoryOrderB === -1 ? Number.MAX_SAFE_INTEGER : categoryOrderB
+
+  if (normalizedCategoryOrderA !== normalizedCategoryOrderB) {
+    return normalizedCategoryOrderA - normalizedCategoryOrderB
+  }
+
+  const aParts = a.split(' . ')
+  const bParts = b.split(' . ')
+  const maxDepth = Math.max(aParts.length, bParts.length)
+
+  for (let depth = 1; depth <= maxDepth; depth++) {
+    const aSegment = aParts.slice(0, depth).join(' . ')
+    const bSegment = bParts.slice(0, depth).join(' . ')
+
+    const aOrder = getRuleOrder(parsedRules[aSegment]?.rawNode)
+    const bOrder = getRuleOrder(parsedRules[bSegment]?.rawNode)
+
+    if (aOrder !== null || bOrder !== null) {
+      const normalizedAOrder = aOrder ?? Number.MAX_SAFE_INTEGER
+      const normalizedBOrder = bOrder ?? Number.MAX_SAFE_INTEGER
+
+      if (normalizedAOrder !== normalizedBOrder) {
+        return normalizedAOrder - normalizedBOrder
+      }
+    }
+  }
+
+  const initialOrderA = initialIndexes.get(a) ?? Number.MAX_SAFE_INTEGER
+  const initialOrderB = initialIndexes.get(b) ?? Number.MAX_SAFE_INTEGER
+  if (initialOrderA !== initialOrderB) {
+    return initialOrderA - initialOrderB
+  }
+
+  return a.localeCompare(b)
+}
+
 export function buildPageBuilder(engine: Engine) {
   return (fields: string[]): FormPages<string> => {
     const rules = engine.getParsedRules()
+    const initialIndexes = new Map(fields.map((field, index) => [field, index]))
     const filteredFields = fields.filter((field) => {
       const raw = rules[field]?.rawNode as any
       return raw?.question !== undefined
     })
+    const sortedFields = [...filteredFields].sort((a, b) => compareRuleNames(a, b, rules, initialIndexes))
 
     const pages: FormPages<string> = []
     const seen = new Set<string>()
 
-    for (const field of filteredFields) {
+    for (const field of sortedFields) {
       const mosaicParent = getMosaicParent(engine, field)
       if (mosaicParent) {
         if (!seen.has(mosaicParent)) {
           seen.add(mosaicParent)
           pages.push({
-            elements: filteredFields.filter((f) => getMosaicParent(engine, f) === mosaicParent),
+            elements: sortedFields.filter((f) => getMosaicParent(engine, f) === mosaicParent),
             title: (engine.getParsedRules()[mosaicParent]?.rawNode as any)?.question,
           })
         }

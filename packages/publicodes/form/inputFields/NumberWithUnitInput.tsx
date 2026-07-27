@@ -19,6 +19,10 @@ const NumberWithUnitInput = <RuleName extends string>({
   disabled,
   suggestions,
 }: NumberWithUnitInputProps<RuleName>) => {
+  const categoryKey = formElement.id.split(' . ')[0]
+  const suggestionToneClass =
+    styles[`suggestionTone${categoryKey === 'DT' ? 'Dt' : categoryKey.charAt(0).toUpperCase() + categoryKey.slice(1)}`] ??
+    undefined
 
   const unit = usePublicodesUnitTranslation(formElement.unit)
   const isDisabled = disabled || !formElement.applicable
@@ -40,7 +44,7 @@ const NumberWithUnitInput = <RuleName extends string>({
             <button
               key={label}
               type="button"
-              className={classNames(styles.suggestionChip, 'pointer')}
+              className={classNames(styles.suggestionChip, suggestionToneClass, 'pointer')}
               onClick={() => {
                 handleValueChange(value)
                 handleValueCommitted(value)

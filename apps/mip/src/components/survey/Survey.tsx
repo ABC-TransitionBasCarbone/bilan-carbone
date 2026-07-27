@@ -192,6 +192,7 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
                 title={currentTitle.label}
                 icons={currentTitle.icons}
                 progress={progress}
+                categoryKey={categoryKey}
                 questionLabel={t('progress.question', {
                   current: Math.min(current, pageCount),
                   total: pageCount,

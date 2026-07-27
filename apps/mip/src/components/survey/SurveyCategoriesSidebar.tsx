@@ -40,10 +40,14 @@ const SurveyCategoriesSidebar = ({ activeCategoryKey }: Props) => {
     <aside className={styles.sidebar} data-testid="survey-categories-sidebar">
       {categories.map((cat) => {
         const isActive = cat.key === activeCategoryKey
+        const isAnswered = cat.valueKg > 0
+        const categoryToneClass =
+          styles[`category${cat.key.charAt(0).toUpperCase() + cat.key.slice(1)}`] ?? styles.categoryDt
         return (
           <div
             key={cat.key}
             className={classNames(styles.categoryItem, 'justify-between', 'align-center', {
+              [categoryToneClass]: isAnswered,
               [styles.active]: isActive,
             })}
           >
@@ -51,11 +55,9 @@ const SurveyCategoriesSidebar = ({ activeCategoryKey }: Props) => {
               <span>{cat.icones}</span>
               <span className={styles.title}>{cat.titre}</span>
             </div>
-            {cat.valueKg > 0 && (
-              <span className={classNames(styles.value, { [styles.activeValue]: isActive })}>
-                {formatCategoryValue(cat.valueKg)}
-              </span>
-            )}
+            <span className={classNames(styles.value, { [styles.activeValue]: isActive })}>
+              {formatCategoryValue(cat.valueKg)}
+            </span>
           </div>
         )
       })}

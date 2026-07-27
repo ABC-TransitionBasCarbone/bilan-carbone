@@ -17,16 +17,18 @@ export interface QuestionContainerProps {
   label: React.ReactNode
   description?: React.ReactNode
   children: React.ReactNode
+  variant?: 'default' | 'flat'
 }
 
-const QuestionContainer = ({ label, description, children }: QuestionContainerProps) => {
+const QuestionContainer = ({ label, description, children, variant = 'default' }: QuestionContainerProps) => {
   const t = useTranslations('common')
   const [isDescriptionOpen, setIsDescriptionOpen] = useState(false)
+  const isFlat = variant === 'flat'
 
   return (
     <StyledQuestionContainer>
-      <StyledQuestionHeader>
-        <Box className={classNames('align-center', 'gapped1')}>
+      <StyledQuestionHeader flat={isFlat}>
+        <Box>
           <StyledQuestionTitle>{label}</StyledQuestionTitle>
         </Box>
         {description && (
@@ -42,11 +44,11 @@ const QuestionContainer = ({ label, description, children }: QuestionContainerPr
       </StyledQuestionHeader>
 
       {description && isDescriptionOpen && (
-        <div className={styles.descriptionBubble}>
+        <div className={classNames(styles.descriptionBubble, { [styles.descriptionBubbleFlat]: isFlat })}>
           <p className={styles.descriptionText}>{description}</p>
           <button
             type="button"
-            className={classNames(styles.closeButton, 'pointer')}
+            className={classNames(styles.closeButton, 'pointer', { [styles.closeButtonFlat]: isFlat })}
             onClick={() => setIsDescriptionOpen(false)}
           >
             {t('action.close')}
@@ -54,7 +56,7 @@ const QuestionContainer = ({ label, description, children }: QuestionContainerPr
         </div>
       )}
 
-      <StyledQuestionContent>{children}</StyledQuestionContent>
+      <StyledQuestionContent flat={isFlat}>{children}</StyledQuestionContent>
     </StyledQuestionContainer>
   )
 }

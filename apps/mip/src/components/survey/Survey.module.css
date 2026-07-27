@@ -45,6 +45,45 @@
   margin-top: 0.75rem;
 }
 
+.progressBar {
+  --progress-track: var(--primary-100);
+  --progress-fill: var(--primary-600);
+  height: 0.35rem !important;
+  border-radius: 999px;
+  overflow: hidden;
+  background-color: var(--progress-track) !important;
+}
+
+.progressBar :global(.MuiLinearProgress-bar) {
+  background-color: var(--progress-fill) !important;
+  border-radius: 999px;
+}
+
+.progressToneDt {
+  --progress-track: var(--mip-category-dt-bg);
+  --progress-fill: var(--mip-category-dt-text);
+}
+
+.progressToneTransport {
+  --progress-track: var(--mip-category-transport-bg);
+  --progress-fill: var(--mip-category-transport-text);
+}
+
+.progressToneAlimentation {
+  --progress-track: var(--mip-category-alimentation-bg);
+  --progress-fill: var(--mip-category-alimentation-text);
+}
+
+.progressToneDivers {
+  --progress-track: var(--mip-category-divers-bg);
+  --progress-fill: var(--mip-category-divers-text);
+}
+
+.progressToneLogement {
+  --progress-track: var(--mip-category-logement-bg);
+  --progress-fill: var(--mip-category-logement-text);
+}
+
 .progressLabels {
   display: flex;
   justify-content: space-between;
@@ -52,9 +91,9 @@
 }
 
 .questionCard {
-  background: var(--white);
-  border-radius: 0.75rem;
-  padding: 1rem;
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
 }
 
 .coverTitle {

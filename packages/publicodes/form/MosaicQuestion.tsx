@@ -17,14 +17,21 @@ type Props<RuleName> = {
   }[]
   engine: Engine
   onChange: (ruleName: RuleName, value: string | number | boolean | undefined) => void
+  containerVariant?: 'default' | 'flat'
 }
 
-export function MosaicQuestion<RuleName extends string>({ parent, elements, engine, onChange }: Props<RuleName>) {
+export function MosaicQuestion<RuleName extends string>({
+  parent,
+  elements,
+  engine,
+  onChange,
+  containerVariant = 'default',
+}: Props<RuleName>) {
   const rules = engine.getParsedRules()
   const parentRaw = rules[parent]?.rawNode as any
   const mosaicType = parentRaw?.mosaique?.type
   const translation = usePublicodesRuleTranslation(parent)
-  
+
   const label = translation?.question ?? translation?.titre ?? parent
 
   return (
