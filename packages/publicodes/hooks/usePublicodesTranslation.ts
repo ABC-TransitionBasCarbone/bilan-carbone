@@ -24,8 +24,8 @@ export function usePublicodesRuleTranslation(ruleName: string) {
   const tOptions = useTranslations(`publicodes-rules.${ruleKey}.options`)
 
   return {
-    question: customRich(tRules, `${ruleKey}.question`),
-    titre: customRich(tRules, `${ruleKey}.titre`),
+    question: tRules.has(`${ruleKey}.question`) ? customRich(tRules, `${ruleKey}.question`) : undefined,
+    titre: tRules.has(`${ruleKey}.titre`) ? customRich(tRules, `${ruleKey}.titre`) : undefined,
     description: tRules.has(`${ruleKey}.description`) ? customRich(tRules,`${ruleKey}.description`) : undefined,
     getOptionLabel: (value: string | boolean | number) =>
       typeof value === 'boolean' ? customRich(tCommon, value ? 'yes' : 'no') : customRich(tOptions, String(value)),
@@ -35,7 +35,7 @@ export function usePublicodesRuleTranslation(ruleName: string) {
 export const usePublicodesLayoutTranslation = <RuleName extends string>(formLayout: EvaluatedTableLayout<RuleName> | EvaluatedGroupLayout<RuleName>, type: string) => {
   const tLayout = useTranslations('publicodes-layout')
   return {
-    title: customRich(tLayout, `${type}.${formLayout.title}`),
+    title: tLayout.has(`${type}.${formLayout.title}`) ? customRich(tLayout, `${type}.${formLayout.title}`) : undefined,
     description: tLayout.has(`${type}.${formLayout.description}`) ? customRich(tLayout, `${type}.${formLayout.description}`) : undefined,
   }
 }
