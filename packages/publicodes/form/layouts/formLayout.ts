@@ -39,24 +39,27 @@ export interface TableLayout<RuleName extends string> {
   title: string
   headers: string[]
   rows: RuleName[][]
+  description?: string
 }
 
 export function tableLayout<RuleName extends string>(
   title: string,
   headers: string[],
   rows: RuleName[][],
+  description?: string,
 ): TableLayout<RuleName> {
-  return { type: 'table', title, headers, rows }
+  return { type: 'table', title, headers, rows, description }
 }
 
 export interface GroupLayout<RuleName extends string> {
   type: 'group'
   title: string
   rules: RuleName[]
+  description?: string
 }
 
-export function groupLayout<RuleName extends string>(title: string, rules: RuleName[]): GroupLayout<RuleName> {
-  return { type: 'group', title, rules }
+export function groupLayout<RuleName extends string>(title: string, rules: RuleName[], description?: string): GroupLayout<RuleName> {
+  return { type: 'group', title, rules, description }
 }
 
 export interface ListLayout<RuleName extends string> {

@@ -1,5 +1,5 @@
-import { customRich } from '@/i18n/customRich'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import Chip from '@mui/material/Chip'
 import { getTranslations } from 'next-intl/server'
 import styles from './BetaBanner.module.css'

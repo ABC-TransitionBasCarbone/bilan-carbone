@@ -7,6 +7,7 @@ const baseTheme = createTheme(globalTheme, {
     mode: 'light',
     primary: {
       main: '#272768',
+      light: '#ebf2ff',
     },
     secondary: {
       main: '#346fef',

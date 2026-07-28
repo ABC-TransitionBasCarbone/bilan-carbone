@@ -9,9 +9,9 @@
 }
 
 .descriptionBubble {
-  background-color: var(--primary-50);
+  background-color: var(--mui-palette-primary-light);
   padding: 0.875rem 1.5rem;
-  border: 1px solid var(--primary-100);
+  border: 1px solid var(--mui-palette-primary-main);
   border-top: none;
   border-bottom: none;
 }
@@ -25,7 +25,7 @@
 
 .closeButton {
   background: none;
-  border: 1px solid var(--primary-300);
+  border: 1px solid var(--mui-palette-primary-main);
   border-radius: 1rem;
   padding: 0.25rem 0.875rem;
   font-size: 0.875rem;
@@ -33,5 +33,6 @@
 }
 
 .closeButton:hover {
-  background-color: var(--primary-100);
+  background-color: var(--mui-palette-primary-main);
+  color: white
 }

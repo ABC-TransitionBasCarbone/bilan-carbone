@@ -2,7 +2,6 @@
 
 import { FormAutocomplete } from '@/components/form/Autocomplete'
 import QualitySelectGroup from '@/components/study/QualitySelectGroup'
-import { customRich } from '@/i18n/customRich'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { qualityKeys, specificFEQualityKeys } from '@/services/uncertainty'
 import { BCUnit, useUnitLabel } from '@/services/unit'
@@ -12,6 +11,7 @@ import LoadingButton from '@abc-transitionbascarbone/components/src/base/Loading
 import { FormSelect } from '@abc-transitionbascarbone/components/src/form/Select'
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import GlossaryModal from '@abc-transitionbascarbone/components/src/modals/GlossaryModal'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import { FormControlLabel, FormLabel, MenuItem, Switch } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

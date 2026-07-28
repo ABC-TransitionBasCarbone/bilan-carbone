@@ -1,8 +1,6 @@
 'use client'
 
 import type { FullStudy } from '@/db/study'
-import { customRich } from '@/i18n/customRich'
-import { getEnvVarClient } from '@/lib/environmentClient'
 import { environmentPostMapping, subPostsByPost } from '@/services/posts'
 import { deleteStudyContributor } from '@/services/serverFunctions/study'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
@@ -13,6 +11,8 @@ import { useServerFunction } from '@abc-transitionbascarbone/components/src/hook
 import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { Post } from '@abc-transitionbascarbone/utils/charts'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
+import { getEnvVarClient } from '@abc-transitionbascarbone/utils/environmentClient'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { IconButton } from '@mui/material'

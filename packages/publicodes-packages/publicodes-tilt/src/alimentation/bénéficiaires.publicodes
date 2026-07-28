@@ -125,7 +125,7 @@ alimentation . mosaic:
       - viande rouge . nombre
       - poisson gras . nombre
       - poisson blanc . nombre
-  question: Comment vont se composer vos déjeuners et dîners durant le séjour ?
+  question: Comment <green>vont se composer vos déjeuners et dîners</green> durant le séjour ?
   titre: Empreinte des repas
   description: |
     En cohérence avec la durée de votre séjour, renseignez le nombre et les types de plats que vous allez probablement manger. Par exemple, si vous restez trois jours en 

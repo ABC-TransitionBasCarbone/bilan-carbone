@@ -1,7 +1,7 @@
 import PublicPage from '@/components/pages/Public'
 import DynamicTheme from '@/environments/core/providers/DynamicTheme'
-import { customRich } from '@/i18n/customRich'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import { getTranslations } from 'next-intl/server'
 import { ReactNode } from 'react'
 
