@@ -5,12 +5,25 @@ import { useTranslations } from 'next-intl'
 import { useEffect, useRef } from 'react'
 import styles from './SurveyCategoryInterstitial.module.css'
 
-const SurveyCategoryInterstitial = () => {
+const CATEGORY_TO_IMPACTCO2_TYPE: Record<string, string> = {
+  DT: 'transport',
+  transport: 'transport',
+  alimentation: 'alimentation',
+  divers: 'numerique',
+  logement: 'quiz',
+}
+
+interface Props {
+  categoryKey: string
+}
+
+const SurveyCategoryInterstitial = ({ categoryKey }: Props) => {
   const t = useTranslations('survey')
   const mountRef = useRef<HTMLDivElement | null>(null)
+  const type = CATEGORY_TO_IMPACTCO2_TYPE[categoryKey]
 
   useEffect(() => {
-    if (!mountRef.current) {
+    if (!mountRef.current || !type) {
       return
     }
 
@@ -20,7 +33,7 @@ const SurveyCategoryInterstitial = () => {
     script.src = 'https://impactco2.fr/iframe.js'
     script.async = true
     script.dataset.name = 'impact-co2'
-    script.dataset.type = 'quiz'
+    script.dataset.type = type
     script.dataset.search = '?language=fr&theme=default'
 
     mountRef.current.appendChild(script)
@@ -30,7 +43,7 @@ const SurveyCategoryInterstitial = () => {
         mountRef.current.innerHTML = ''
       }
     }
-  }, [])
+  }, [type])
 
   return (
     <div className={`${styles.interstitial} flex-col`} data-testid="survey-category-interstitial">

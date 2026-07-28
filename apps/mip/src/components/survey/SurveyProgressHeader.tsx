@@ -18,10 +18,10 @@ const SurveyProgressHeader = ({ title, icons, progress, categoryKey, questionLab
   const toneClass = toneSuffix ? styles[`progressTone${toneSuffix}`] : undefined
 
   return (
-    <div className={styles.header}>
+    <div className="mb1">
       <Category title={title} icons={icons} />
       <div className={styles.progress}>
-        <div className={styles.progressLabels}>
+        <div className="justify-between mb-2">
           <Typography variant="body2" color="text.secondary">
             {questionLabel}
           </Typography>

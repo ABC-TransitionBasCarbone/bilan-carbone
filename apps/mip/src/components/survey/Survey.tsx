@@ -4,6 +4,7 @@ import { createSurveyResponse } from '@/services/serverFunctions/survey'
 import { buildPageBuilder } from '@abc-transitionbascarbone/publicodes/form'
 import { Container, Typography } from '@mui/material'
 import { FormBuilder, FormState } from '@publicodes/forms'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -68,7 +69,7 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   const [isLoading, setIsLoading] = useState(true)
   const [isCompleting, setIsCompleting] = useState(false)
   const [state, setState] = useState<FormState<string>>(initState)
-  const [interstitialCategoryKey, setInterstitialCategoryKey] = useState<string | null>(null)
+  const [interstitialQueue, setInterstitialQueue] = useState<string[]>([])
   const updateState = (newState: FormState<string>) => setState(newState)
 
   useEffect(() => {
@@ -97,10 +98,12 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
     }
   }, [formBuilder, isLoading, isResumed, router, state, surveyId])
 
+  const CATEGORY_ORDER = ['DT', 'transport', 'alimentation', 'divers', 'logement']
+
   const handleRestart = () => {
     clearSurveyState(surveyId)
     setIsResumed(false)
-    setInterstitialCategoryKey(null)
+    setInterstitialQueue([])
     setState(initState())
   }
 
@@ -110,11 +113,16 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
     const newGrouped = buildGroupedElements(engine, newElements)
     const newCategoryKey = getCategoryKey(newGrouped)
 
-    updateState(newState)
-
-    if (interstitialCategoryKey && newCategoryKey && newCategoryKey !== interstitialCategoryKey) {
-      setInterstitialCategoryKey(newCategoryKey)
+    if (categoryKey && newCategoryKey !== categoryKey) {
+      const currentIdx = CATEGORY_ORDER.indexOf(categoryKey)
+      const nextIdx = newCategoryKey ? CATEGORY_ORDER.indexOf(newCategoryKey) : CATEGORY_ORDER.length
+      const queue = CATEGORY_ORDER.slice(currentIdx, nextIdx)
+      if (queue.length > 0) {
+        setInterstitialQueue(queue)
+        return
+      }
     }
+    updateState(newState)
   }
 
   const completeSurvey = async () => {
@@ -169,11 +177,11 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
 
   return (
     <Container maxWidth="lg" className="pt1 pb5">
-      <div className={styles.surveyLayout}>
-        <div className={styles.surveyMain}>
-          {interstitialCategoryKey ? (
+      <div className={classNames(styles.surveyLayout, 'align-start', 'gapped2')}>
+        <div className={classNames(styles.surveyMain, 'grow')}>
+          {interstitialQueue.length > 0 ? (
             <>
-              <SurveyCategoryInterstitial />
+              <SurveyCategoryInterstitial categoryKey={interstitialQueue[0]} />
               <SurveyNavigation
                 hasPreviousPage={true}
                 isLastPage={false}
@@ -181,8 +189,16 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
                 previousLabel={tCommon('previous')}
                 nextLabel={tCommon('next')}
                 completeLabel={t('navigation.complete')}
-                onPrevious={() => setInterstitialCategoryKey(null)}
-                onNext={() => setInterstitialCategoryKey(null)}
+                onPrevious={() => setInterstitialQueue([])}
+                onNext={() => {
+                  const nextQueue = interstitialQueue.slice(1)
+                  if (nextQueue.length > 0) {
+                    setInterstitialQueue(nextQueue)
+                  } else {
+                    setInterstitialQueue([])
+                    updateState(formBuilder.goToNextPage(state))
+                  }
+                }}
                 onComplete={completeSurvey}
               />
             </>
@@ -218,13 +234,13 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
                 completeLabel={t('navigation.complete')}
                 onBackToExplanation={() => setIsExplanationVisible(true)}
                 onPrevious={() => updateState(formBuilder.goToPreviousPage(state))}
-                onNext={() => updateState(formBuilder.goToNextPage(state))}
+                onNext={handleNext}
                 onComplete={completeSurvey}
               />
             </>
           )}
         </div>
-        <SurveyCategoriesSidebar activeCategoryKey={interstitialCategoryKey ?? categoryKey} />
+        <SurveyCategoriesSidebar activeCategoryKey={interstitialQueue[0] ?? categoryKey} />
       </div>
     </Container>
   )

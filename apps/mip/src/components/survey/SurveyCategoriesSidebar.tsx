@@ -37,7 +37,7 @@ const SurveyCategoriesSidebar = ({ activeCategoryKey }: Props) => {
   })
 
   return (
-    <aside className={styles.sidebar} data-testid="survey-categories-sidebar">
+    <aside className={classNames(styles.sidebar, 'flex-col', 'gapped-2')} data-testid="survey-categories-sidebar">
       {categories.map((cat) => {
         const isActive = cat.key === activeCategoryKey
         const isAnswered = cat.valueKg > 0
@@ -46,12 +46,12 @@ const SurveyCategoriesSidebar = ({ activeCategoryKey }: Props) => {
         return (
           <div
             key={cat.key}
-            className={classNames(styles.categoryItem, 'justify-between', 'align-center', {
+            className={classNames(styles.categoryItem, 'justify-between', 'align-center', 'gapped-2', {
               [categoryToneClass]: isAnswered,
               [styles.active]: isActive,
             })}
           >
-            <div className={classNames(styles.categoryLabel, 'align-center')}>
+            <div className={classNames(styles.categoryLabel, 'align-center', 'gapped-2')}>
               <span>{cat.icones}</span>
               <span className={styles.title}>{cat.titre}</span>
             </div>

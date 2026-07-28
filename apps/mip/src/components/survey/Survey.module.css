@@ -1,168 +1,140 @@
 .surveyLayout {
-  display: flex;
-  gap: 2rem;
-  align-items: flex-start;
-}
-
-.surveyMain {
-  flex: 1;
-  min-width: 0;
-}
-
-@media (max-width: 768px) {
-  .surveyLayout {
-    flex-direction: column-reverse;
+  .surveyMain {
+    min-width: 0;
   }
-}
 
-.navigation {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem 1rem;
-  background-color: var(--background-color);
-  border-top: 1px solid var(--border-color);
-  z-index: 100;
-}
+  @media (max-width: 768px) {
+    .surveyLayout {
+      flex-direction: column-reverse;
+    }
+  }
 
-.explanationPage {
-  height: 100vh;
-  overflow-y: auto;
-  padding: 1.5rem 0 3rem;
-  background: var(--grayscale-100);
-}
+  .navigation {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0.75rem 1rem;
+    background-color: var(--background-color);
+    border-top: 1px solid var(--border-color);
+    z-index: 100;
+  }
 
-.header {
-  margin-bottom: 1rem;
-}
+  .explanationPage {
+    height: 100vh;
+    overflow-y: auto;
+    padding: 1.5rem 0 3rem;
+    background: var(--grayscale-100);
+  }
 
-.progress {
-  margin-top: 0.75rem;
-}
+  .progress {
+    margin-top: 0.75rem;
+  }
 
-.progressBar {
-  --progress-track: var(--primary-100);
-  --progress-fill: var(--primary-600);
-  height: 0.35rem !important;
-  border-radius: 999px;
-  overflow: hidden;
-  background-color: var(--progress-track) !important;
-}
+  .progressBar {
+    --progress-track: var(--primary-100);
+    --progress-fill: var(--primary-600);
+    height: 0.35rem !important;
+    border-radius: 999px;
+    overflow: hidden;
+    background-color: var(--progress-track) !important;
+  }
 
-.progressBar :global(.MuiLinearProgress-bar) {
-  background-color: var(--progress-fill) !important;
-  border-radius: 999px;
-}
+  .progressBar :global(.MuiLinearProgress-bar) {
+    background-color: var(--progress-fill) !important;
+    border-radius: 999px;
+  }
 
-.progressToneDt {
-  --progress-track: var(--mip-category-dt-bg);
-  --progress-fill: var(--mip-category-dt-text);
-}
+  .progressToneDt {
+    --progress-track: var(--mip-category-dt-bg);
+    --progress-fill: var(--mip-category-dt-text);
+  }
 
-.progressToneTransport {
-  --progress-track: var(--mip-category-transport-bg);
-  --progress-fill: var(--mip-category-transport-text);
-}
+  .progressToneTransport {
+    --progress-track: var(--mip-category-transport-bg);
+    --progress-fill: var(--mip-category-transport-text);
+  }
 
-.progressToneAlimentation {
-  --progress-track: var(--mip-category-alimentation-bg);
-  --progress-fill: var(--mip-category-alimentation-text);
-}
+  .progressToneAlimentation {
+    --progress-track: var(--mip-category-alimentation-bg);
+    --progress-fill: var(--mip-category-alimentation-text);
+  }
 
-.progressToneDivers {
-  --progress-track: var(--mip-category-divers-bg);
-  --progress-fill: var(--mip-category-divers-text);
-}
+  .progressToneDivers {
+    --progress-track: var(--mip-category-divers-bg);
+    --progress-fill: var(--mip-category-divers-text);
+  }
 
-.progressToneLogement {
-  --progress-track: var(--mip-category-logement-bg);
-  --progress-fill: var(--mip-category-logement-text);
-}
+  .progressToneLogement {
+    --progress-track: var(--mip-category-logement-bg);
+    --progress-fill: var(--mip-category-logement-text);
+  }
 
-.progressLabels {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.5rem;
-}
+  .questionCard {
+    background: transparent;
+    border-radius: 0;
+    padding: 0;
+  }
 
-.questionCard {
-  background: transparent;
-  border-radius: 0;
-  padding: 0;
-}
+  .coverTitle {
+    margin: 0 auto;
+    font-weight: 700;
+  }
 
-.coverTitle {
-  margin: 0 auto;
-  font-weight: 700;
-}
-
-.coverSubtitle {
-  margin-top: 1rem;
-  margin-bottom: 1.25rem;
-  font-size: 1.5rem;
-}
-
-.explanationCard {
-  background: var(--white);
-  border-top-left-radius: 2.75rem;
-  border-top-right-radius: 2.75rem;
-}
-
-.explanationTitle {
-  margin-bottom: 0.75rem;
-}
-
-.explanationSubtitle {
-  margin-bottom: 0.75rem;
-}
-
-.titleUnderline {
-  width: 2.5rem;
-  height: 0.2rem;
-  border-radius: 999px;
-  background: var(--primary-600);
-  margin-bottom: 1rem;
-}
-
-.logosRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: nowrap;
-  gap: 0.75rem;
-  overflow-x: auto;
-  padding-bottom: 0.5rem;
-  margin-bottom: 2rem;
-}
-
-.logoItem {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 120px;
-  flex: 1 0 auto;
-}
-
-.logoImage {
-  width: auto;
-  height: auto;
-  max-width: 100%;
-  max-height: 3.25rem;
-  object-fit: contain;
-}
-
-@media (max-width: 768px) {
   .coverSubtitle {
-    font-size: 1.25rem;
+    margin-top: 1rem;
+    margin-bottom: 1.25rem;
+    font-size: 1.5rem;
   }
 
   .explanationCard {
-    border-top-left-radius: 2rem;
-    border-top-right-radius: 2rem;
+    background: var(--white);
+    border-top-left-radius: 2.75rem;
+    border-top-right-radius: 2.75rem;
+  }
+
+  .explanationTitle {
+    margin-bottom: 0.75rem;
+  }
+
+  .explanationSubtitle {
+    margin-bottom: 0.75rem;
+  }
+
+  .titleUnderline {
+    width: 2.5rem;
+    height: 0.2rem;
+    border-radius: 999px;
+    background: var(--primary-600);
+    margin-bottom: 1rem;
+  }
+
+  .logosRow {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+
+  .logoItem {
+    min-width: 120px;
+    flex: 1 0 auto;
+  }
+
+  .logoImage {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 3.25rem;
+    object-fit: contain;
+  }
+
+  @media (max-width: 768px) {
+    .coverSubtitle {
+      font-size: 1.25rem;
+    }
+
+    .explanationCard {
+      border-top-left-radius: 2rem;
+      border-top-right-radius: 2rem;
+    }
   }
 }

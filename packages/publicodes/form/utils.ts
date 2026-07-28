@@ -43,18 +43,8 @@ export function areRulesReferencedInApplicability<RuleName extends string>(
   previous: RuleName[],
 ): boolean {
   return currents.some((current) => {
-    const currentNode = getRuleNode(current)
-    if (areReferencedInApplicability(currentNode, previous)) {
-      return true
-    }
-
-    const parents = utils.ruleParents(current) as RuleName[]
-    for (const parent of parents) {
-      const parentNode = getRuleNode(parent)
-      if (areReferencedInApplicability(parentNode, previous)) {
-        return true
-      }
-    }
+    const allNodes = [current, ...(utils.ruleParents(current) as RuleName[])]
+    return allNodes.some((name) => areReferencedInApplicability(getRuleNode(name), previous))
   })
 }
 
@@ -104,24 +94,16 @@ export function getMosaicParent(engine: Engine, ruleName: string): string | null
 }
 
 const DEFAULT_SURVEY_CATEGORY_ORDER = ['DT', 'transport', 'alimentation', 'divers', 'logement']
+const MAX = Number.MAX_SAFE_INTEGER
+const normalize = (n: number) => (n === -1 ? MAX : n)
 
 const getRuleOrder = (rawNode: unknown): number | null => {
-  if (!rawNode || typeof rawNode !== 'object') {
-    return null
-  }
-
-  const ordre = (rawNode as { ordre?: unknown }).ordre
-  if (typeof ordre === 'number' && Number.isFinite(ordre)) {
-    return ordre
-  }
-
+  const ordre = (rawNode as { ordre?: unknown } | null)?.ordre
+  if (typeof ordre === 'number' && Number.isFinite(ordre)) return ordre
   if (typeof ordre === 'string') {
-    const parsedOrder = Number.parseFloat(ordre)
-    if (Number.isFinite(parsedOrder)) {
-      return parsedOrder
-    }
+    const n = Number.parseFloat(ordre)
+    if (Number.isFinite(n)) return n
   }
-
   return null
 }
 
@@ -134,69 +116,45 @@ const compareRuleNames = (
   const [aRoot] = a.split(' . ')
   const [bRoot] = b.split(' . ')
 
-  const categoryOrderA = DEFAULT_SURVEY_CATEGORY_ORDER.indexOf(aRoot)
-  const categoryOrderB = DEFAULT_SURVEY_CATEGORY_ORDER.indexOf(bRoot)
-  const normalizedCategoryOrderA = categoryOrderA === -1 ? Number.MAX_SAFE_INTEGER : categoryOrderA
-  const normalizedCategoryOrderB = categoryOrderB === -1 ? Number.MAX_SAFE_INTEGER : categoryOrderB
-
-  if (normalizedCategoryOrderA !== normalizedCategoryOrderB) {
-    return normalizedCategoryOrderA - normalizedCategoryOrderB
-  }
+  const catDiff = normalize(DEFAULT_SURVEY_CATEGORY_ORDER.indexOf(aRoot)) - normalize(DEFAULT_SURVEY_CATEGORY_ORDER.indexOf(bRoot))
+  if (catDiff !== 0) return catDiff
 
   const aParts = a.split(' . ')
   const bParts = b.split(' . ')
-  const maxDepth = Math.max(aParts.length, bParts.length)
 
-  for (let depth = 1; depth <= maxDepth; depth++) {
-    const aSegment = aParts.slice(0, depth).join(' . ')
-    const bSegment = bParts.slice(0, depth).join(' . ')
-
-    const aOrder = getRuleOrder(parsedRules[aSegment]?.rawNode)
-    const bOrder = getRuleOrder(parsedRules[bSegment]?.rawNode)
-
+  for (let depth = 1; depth <= Math.max(aParts.length, bParts.length); depth++) {
+    const aOrder = getRuleOrder(parsedRules[aParts.slice(0, depth).join(' . ')]?.rawNode)
+    const bOrder = getRuleOrder(parsedRules[bParts.slice(0, depth).join(' . ')]?.rawNode)
     if (aOrder !== null || bOrder !== null) {
-      const normalizedAOrder = aOrder ?? Number.MAX_SAFE_INTEGER
-      const normalizedBOrder = bOrder ?? Number.MAX_SAFE_INTEGER
-
-      if (normalizedAOrder !== normalizedBOrder) {
-        return normalizedAOrder - normalizedBOrder
-      }
+      const diff = (aOrder ?? MAX) - (bOrder ?? MAX)
+      if (diff !== 0) return diff
     }
   }
 
-  const initialOrderA = initialIndexes.get(a) ?? Number.MAX_SAFE_INTEGER
-  const initialOrderB = initialIndexes.get(b) ?? Number.MAX_SAFE_INTEGER
-  if (initialOrderA !== initialOrderB) {
-    return initialOrderA - initialOrderB
-  }
-
-  return a.localeCompare(b)
+  const initDiff = (initialIndexes.get(a) ?? MAX) - (initialIndexes.get(b) ?? MAX)
+  return initDiff !== 0 ? initDiff : a.localeCompare(b)
 }
 
 export function buildPageBuilder(engine: Engine) {
   return (fields: string[]): FormPages<string> => {
     const rules = engine.getParsedRules()
-    const initialIndexes = new Map(fields.map((field, index) => [field, index]))
-    const filteredFields = fields.filter((field) => {
-      const raw = rules[field]?.rawNode as any
-      return raw?.question !== undefined
-    })
-    const sortedFields = [...filteredFields].sort((a, b) => compareRuleNames(a, b, rules, initialIndexes))
+    const initialIndexes = new Map(fields.map((f, i) => [f, i]))
+    const sortedFields = fields
+      .filter((f) => (rules[f]?.rawNode as any)?.question !== undefined)
+      .sort((a, b) => compareRuleNames(a, b, rules, initialIndexes))
 
     const pages: FormPages<string> = []
     const seen = new Set<string>()
 
     for (const field of sortedFields) {
       const mosaicParent = getMosaicParent(engine, field)
-      if (mosaicParent) {
-        if (!seen.has(mosaicParent)) {
-          seen.add(mosaicParent)
-          pages.push({
-            elements: sortedFields.filter((f) => getMosaicParent(engine, f) === mosaicParent),
-            title: (engine.getParsedRules()[mosaicParent]?.rawNode as any)?.question,
-          })
-        }
-      } else {
+      if (mosaicParent && !seen.has(mosaicParent)) {
+        seen.add(mosaicParent)
+        pages.push({
+          elements: sortedFields.filter((f) => getMosaicParent(engine, f) === mosaicParent),
+          title: (engine.getParsedRules()[mosaicParent]?.rawNode as any)?.question,
+        })
+      } else if (!mosaicParent) {
         pages.push({ elements: [field] })
       }
     }

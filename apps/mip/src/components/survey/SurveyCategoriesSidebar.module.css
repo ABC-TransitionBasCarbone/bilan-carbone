@@ -1,13 +1,9 @@
 .sidebar {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
   width: 15rem;
   flex-shrink: 0;
 }
 
 .categoryItem {
-  gap: 0.5rem;
   padding: 0.625rem 0.75rem;
   border-radius: 0.5rem;
   border: 1px solid var(--neutral-200);
@@ -50,7 +46,6 @@
 }
 
 .categoryLabel {
-  gap: 0.5rem;
   min-width: 0;
 }
 
