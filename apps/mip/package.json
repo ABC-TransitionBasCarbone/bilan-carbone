@@ -68,7 +68,7 @@
     "zustand": "^5.0.13"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.3.6",
+    "@eslint/eslintrc": "^3.3.4",
     "@testing-library/jest-dom": "^6.6.4",
     "@types/bcryptjs": "^3.0.0",
     "@types/jest": "^30.0.0",
@@ -79,9 +79,9 @@
     "babel-plugin-react-compiler": "^1.0.0",
     "cypress": "^15.19.0",
     "eslint": "^9.39.2",
-    "eslint-config-next": "16.2.12",
+    "eslint-config-next": "16.2.9",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-cypress": "^6.4.3",
+    "eslint-plugin-cypress": "^6.4.1",
     "eslint-plugin-prettier": "^5.5.6",
     "eslint-plugin-react-compiler": "^19.1.0-rc.2",
     "jest": "^30.4.2",
