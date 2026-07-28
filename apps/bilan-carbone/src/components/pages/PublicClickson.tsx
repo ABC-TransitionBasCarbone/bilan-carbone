@@ -52,7 +52,7 @@ const PublicClicksonPage = ({ children, question }: Props) => {
             className={classNames(styles.image, 'w50')}
           />
         </div>
-        <p>{question}</p>
+        <p className={styles.richLinks}>{question}</p>
       </div>
       <div className={classNames(styles.loginForm, 'grow flex-col')}>
         <div className={classNames(styles.header, 'justify-between')}>
