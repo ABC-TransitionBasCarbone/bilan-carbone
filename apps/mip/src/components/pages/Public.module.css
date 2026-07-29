@@ -3,11 +3,6 @@
   border-radius: 0 1rem 1rem 0;
 }
 
-.loginLogoItem {
-  height: 2.25rem;
-  min-width: 4.5rem;
-}
-
 .loginLogoImage {
   object-fit: contain;
 }
