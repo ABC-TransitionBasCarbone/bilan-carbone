@@ -1,7 +1,7 @@
 'use server'
 
 import { CATEGORY_COLORS } from '@/constants/style'
-import { CATEGORY_MAP, DEFAULT_ENTITY_FILTERS } from '@/constants/survey'
+import { DEFAULT_ENTITY_FILTERS } from '@/constants/survey'
 import { createResponse } from '@/db/campaign'
 import { getSurveyCampaignForCsvExport, getSurveyCampaignForResults } from '@/db/survey'
 import { createMipEngine, RawRules } from '@/publicodes/mip-engine'
@@ -9,6 +9,7 @@ import { dbActualizedAuth } from '@/services/auth'
 import { EmissionCategory, KeyStatGroup, SurveyResults } from '@/types/results.types'
 import { withServerResponse } from '@/utils/serverResponse'
 import { isAdmin } from '@/utils/user'
+import { SURVEY_CATEGORY_KEYS } from '@abc-transitionbascarbone/publicodes/form/utils'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
 import { buildCsv, sanitizeFileName, serializeCsvValue } from '@abc-transitionbascarbone/utils/csv'
 import { average, safePercent, toNumber } from '@abc-transitionbascarbone/utils/number'
@@ -145,7 +146,7 @@ const buildKeyStats = (
 
   return [
     {
-      key: 'commute',
+      key: 'DT',
       stats: [
         {
           key: 'carModeShare',
@@ -184,7 +185,7 @@ const buildKeyStats = (
       ],
     },
     {
-      key: 'travel',
+      key: 'transport',
       stats: [
         {
           key: 'trainModeShare',
@@ -230,7 +231,7 @@ const buildKeyStats = (
       ],
     },
     {
-      key: 'food',
+      key: 'alimentation',
       stats: [
         { key: 'vegMealsShare', value: safePercent(totalVegetarianMeals, totalMeals), unit: 'percent' },
         { key: 'veganMealsShare', value: safePercent(totalVeganMeals, totalMeals), unit: 'percent' },
@@ -261,7 +262,7 @@ const buildKeyStats = (
       ],
     },
     {
-      key: 'digital',
+      key: 'divers',
       stats: [
         { key: 'aiRequestsPerDay', value: average(numericValues((r) => r.aiRequests)), unit: 'number' },
         {
@@ -316,7 +317,7 @@ export const getSurveyResults = async (campaignId: string): Promise<SurveyResult
   const responses = campaign.responses
   const totalRespondents = responses.length
 
-  const emptyCategories: EmissionCategory[] = CATEGORY_MAP.map(({ key }) => ({
+  const emptyCategories: EmissionCategory[] = SURVEY_CATEGORY_KEYS.map((key) => ({
     key,
     labelFr: '',
     value: 0,
@@ -336,7 +337,7 @@ export const getSurveyResults = async (campaignId: string): Promise<SurveyResult
   }
 
   const engine = createMipEngine(campaign.modelCampaign.model as RawRules)
-  const categoryTotals: Record<string, number> = Object.fromEntries(CATEGORY_MAP.map(({ key }) => [key, 0]))
+  const categoryTotals: Record<string, number> = Object.fromEntries(SURVEY_CATEGORY_KEYS.map((key) => [key, 0]))
   const situations: Situation<string>[] = []
   const commuteEmissionsKg: number[] = []
   const travelEmissionsKg: number[] = []
@@ -362,8 +363,8 @@ export const getSurveyResults = async (campaignId: string): Promise<SurveyResult
       travelEmissionsKg.push(Math.max(0, travelEmission))
     }
 
-    for (const { key, rule } of CATEGORY_MAP) {
-      const value = engine.evaluate(rule).nodeValue
+    for (const key of SURVEY_CATEGORY_KEYS) {
+      const value = engine.evaluate(key).nodeValue
       categoryTotals[key] += typeof value === 'number' ? value : 0
     }
   }
@@ -374,7 +375,7 @@ export const getSurveyResults = async (campaignId: string): Promise<SurveyResult
     surveyId: campaignId,
     totalRespondents,
     averageFootprint: Math.round(footprintTotal / totalRespondents),
-    categories: CATEGORY_MAP.map(({ key }) => ({
+    categories: SURVEY_CATEGORY_KEYS.map((key) => ({
       key,
       labelFr: '',
       value: Math.round(categoryTotals[key] / totalRespondents),

@@ -182,11 +182,11 @@
     },
     "categories": {
       "title": "Détail par poste d'émission",
-      "commute": "Déplacements domicile-travail",
-      "travel": "Déplacements professionnels",
-      "food": "Alimentation",
-      "digital": "Numérique",
-      "office": "Bureaux"
+      "DT": "Déplacements domicile-travail",
+      "transport": "Déplacements professionnels",
+      "alimentation": "Alimentation",
+      "divers": "Numérique",
+      "logement": "Bureaux"
     },
     "charts": {
       "title": "Répartition des empreintes carbone",
@@ -200,7 +200,7 @@
     },
     "keyStats": {
       "title": "Chiffres clés",
-      "commute": {
+      "DT": {
         "title": "Déplacements domicile-travail",
         "carModeShare": "Part des trajets domicile-travail en voiture",
         "publicTransportModeShare": "Part des trajets domicile-travail en transport en commun",
@@ -216,13 +216,6 @@
         "nights": "{count, plural, one {nuit} other {nuits}}"
       },
       "transport": {
-        "title": "Transport",
-        "plane": "Prennent l'avion",
-        "longHaulPlane": "Prennent l'avion long courrier",
-        "carKm": "Kilomètres parcourus en moyenne en voiture",
-        "carPassengers": "Voyageurs en moyenne en voiture"
-      },
-      "travel": {
         "title": "Déplacements professionnels",
         "trainModeShare": "Part des déplacements professionnels en train",
         "carTravelModeShare": "Part des déplacements professionnels en voiture",
@@ -231,7 +224,7 @@
         "avgTravelEmissionByMode": "Empreinte carbone moyenne des déplacements professionnels",
         "avgTravelNights": "Nombre moyen de nuits par déplacement professionnel"
       },
-      "food": {
+      "alimentation": {
         "title": "Alimentation",
         "vegMealsShare": "Part des plats consommés végétariens",
         "veganMealsShare": "Part des plats consommés végans",
@@ -239,7 +232,7 @@
         "fullyVeganEmployees": "Salariés 100% végans",
         "redMeatDailyEmployees": "Salariés qui mangent de la viande rouge tous les jours"
       },
-      "digital": {
+      "divers": {
         "title": "Numérique",
         "aiRequestsPerDay": "Nombre moyen de requêtes IA par salarié et par jour",
         "videoHoursPerDay": "Nombre moyen d'heures de visioconférence par salarié et par jour",

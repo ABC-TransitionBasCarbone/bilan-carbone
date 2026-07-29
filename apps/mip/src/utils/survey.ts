@@ -3,11 +3,7 @@ import { SurveyResults } from '@/types/results.types'
 import { roundTo } from '@abc-transitionbascarbone/utils/number'
 
 const getGroupFactor = (groupKey: string, factors: Partial<Record<SurveyCategoryKey, number>>) => {
-  if (groupKey === 'commute' || groupKey === 'travel' || groupKey === 'food' || groupKey === 'digital') {
-    return factors[groupKey] ?? 1
-  }
-
-  return 1
+  return factors[groupKey as SurveyCategoryKey] ?? 1
 }
 
 export function getResultsForEntity(results: SurveyResults, entityId: string): SurveyResults {

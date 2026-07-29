@@ -174,11 +174,11 @@
     },
     "categories": {
       "title": "Breakdown by emission category",
-      "commute": "Commute",
-      "travel": "Professional travel",
-      "food": "Food",
-      "digital": "Digital",
-      "office": "Office"
+      "DT": "Commute",
+      "transport": "Professional travel",
+      "alimentation": "Food",
+      "divers": "Digital",
+      "logement": "Office"
     },
     "charts": {
       "title": "Carbon footprint distribution",
@@ -192,7 +192,7 @@
     },
     "keyStats": {
       "title": "Key figures",
-      "commute": {
+      "DT": {
         "title": "Commute",
         "carModeShare": "Share of commute trips by car",
         "publicTransportModeShare": "Share of commute trips by public transport",
@@ -208,13 +208,6 @@
         "nights": "{count, plural, one {night} other {nights}}"
       },
       "transport": {
-        "title": "Transport",
-        "plane": "Take the plane",
-        "longHaulPlane": "Take long-haul flights",
-        "carKm": "Kilometres driven by car on average",
-        "carPassengers": "Average passengers per car"
-      },
-      "travel": {
         "title": "Business travel",
         "trainModeShare": "Share of business trips by train",
         "carTravelModeShare": "Share of business trips by car",
@@ -223,7 +216,7 @@
         "avgTravelEmissionByMode": "Average carbon footprint from business trips",
         "avgTravelNights": "Average nights per business trip"
       },
-      "food": {
+      "alimentation": {
         "title": "Food",
         "vegMealsShare": "Share of consumed meals that are vegetarian",
         "veganMealsShare": "Share of consumed meals that are vegan",
@@ -231,7 +224,7 @@
         "fullyVeganEmployees": "Employees who are 100% vegan",
         "redMeatDailyEmployees": "Employees who eat red meat every day"
       },
-      "digital": {
+      "divers": {
         "title": "Digital",
         "aiRequestsPerDay": "Average AI requests per employee per day",
         "videoHoursPerDay": "Average videoconference hours per employee per day",

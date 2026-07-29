@@ -10,6 +10,7 @@
     "./hooks": "./hooks/index.ts",
     "./context": "./context/index.ts",
     "./form": "./form/index.ts",
+    "./form/utils": "./form/utils.ts",
     "./form/inputFields": "./form/inputFields/index.ts",
     "./form/layouts": "./form/layouts/index.ts"
   },

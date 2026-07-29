@@ -1,14 +1,8 @@
 import { EntityFilter } from '@/types/results.types'
+import { SURVEY_CATEGORY_KEYS } from '@abc-transitionbascarbone/publicodes/form/utils'
 
-export const CATEGORY_MAP = [
-  { key: 'commute', rule: 'DT' },
-  { key: 'travel', rule: 'transport' },
-  { key: 'food', rule: 'alimentation' },
-  { key: 'digital', rule: 'divers' },
-  { key: 'office', rule: 'logement' },
-] as const
-
-export type SurveyCategoryKey = (typeof CATEGORY_MAP)[number]['key']
+export { SURVEY_CATEGORY_KEYS }
+export type SurveyCategoryKey = (typeof SURVEY_CATEGORY_KEYS)[number]
 
 export const DEFAULT_ENTITY_FILTERS: EntityFilter[] = [
   { id: 'all', name: 'Tous' },
@@ -19,10 +13,10 @@ export const DEFAULT_ENTITY_FILTERS: EntityFilter[] = [
 ]
 
 export const ENTITY_CATEGORY_FACTORS: Record<string, Partial<Record<SurveyCategoryKey, number>>> = {
-  rh: { commute: 1.1, travel: 0.6, food: 0.9, digital: 0.7, office: 1.2 },
-  it: { commute: 0.8, travel: 0.9, food: 1.0, digital: 1.8, office: 1.1 },
-  commercial: { commute: 1.2, travel: 2.1, food: 1.0, digital: 0.9, office: 0.8 },
-  direction: { commute: 0.7, travel: 1.4, food: 1.1, digital: 1.0, office: 1.3 },
+  rh: { DT: 1.1, transport: 0.6, alimentation: 0.9, divers: 0.7, logement: 1.2 },
+  it: { DT: 0.8, transport: 0.9, alimentation: 1.0, divers: 1.8, logement: 1.1 },
+  commercial: { DT: 1.2, transport: 2.1, alimentation: 1.0, divers: 0.9, logement: 0.8 },
+  direction: { DT: 0.7, transport: 1.4, alimentation: 1.1, divers: 1.0, logement: 1.3 },
 }
 
 export const MIN_RESPONDENTS_FOR_CSV_EXPORT = 10
