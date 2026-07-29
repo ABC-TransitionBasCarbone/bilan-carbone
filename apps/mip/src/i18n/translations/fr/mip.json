@@ -19,6 +19,7 @@
       "backToExplanation": "Précédent"
     },
     "explanation": {
+      "title": "Mon empreinte professionnelle",
       "start": "Passer le test",
       "cover": {
         "title": "Connaissez-vous votre empreinte carbone professionnelle ?",
@@ -26,7 +27,8 @@
       },
       "why": {
         "title": "Pourquoi cet outil ?",
-        "description": "[PROTOTYPE] Cet outil de calcul d'empreinte carbone professionnelle s'inscrit dans la démarche de transition de votre organisation en proposant une estimation des ordres de grandeur des émissions de GES liées aux pratiques professionnelles. Il permet de sensibiliser en rendant le sujet plus tangible, tout en abordant la question des émissions à l'échelle des employés. En ce sens, il fait le lien entre actions individuelles et enjeux structurels, et constitue un point d'appui pour mieux comprendre les principaux postes d'émissions et nourrir une réflexion collective sur les leviers de réduction à l'échelle de l'organisation."
+        "description": "[PROTOTYPE] Cet outil de calcul d'empreinte carbone professionnelle s'inscrit dans la démarche de transition de votre organisation en proposant une estimation des ordres de grandeur des émissions de GES liées aux pratiques professionnelles. Il permet de sensibiliser en rendant le sujet plus tangible, tout en abordant la question des émissions à l'échelle des employés. En ce sens, il fait le lien entre actions individuelles et enjeux structurels, et constitue un point d'appui pour mieux comprendre les principaux postes d'émissions et nourrir une réflexion collective sur les leviers de réduction à l'échelle de l'organisation.",
+        "summary": "Cet outil est un prototype de calcul d'empreinte carbone professionnelle développé par l'Association pour la transition Bas Carbone en partenariat avec des organisations engagées. Il permet d'obtenir une estimation des ordres de grandeur des émissions de GES liées aux pratiques professionnelles, et de sensibiliser les collaborateurs aux enjeux de la transition écologique."
       },
       "about": {
         "title": "A propos du développement de l'outil ?",
@@ -37,7 +39,8 @@
       },
       "note": {
         "title": "Note",
-        "description": "Cet outil est actuellement à l'état de prototype : il peut donc comporter des bugs, des fonctionnalités incomplètes ou certaines informations et messages encore manquants, qui seront progressivement corrigés et enrichis."
+        "description": "Cet outil est actuellement à l'état de prototype : il peut donc comporter des bugs, des fonctionnalités incomplètes ou certaines informations et messages encore manquants, qui seront progressivement corrigés et enrichis.",
+        "summary": "Cet outil est actuellement à l'état de prototype : il peut donc comporter des bugs, des fonctionnalités incomplètes ou certaines informations et messages encore manquants, qui seront progressivement corrigés et enrichis."
       }
     },
     "resume": "Reprendre le sondage",

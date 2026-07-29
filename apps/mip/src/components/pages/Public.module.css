@@ -1,15 +1,25 @@
 .loginForm {
-  padding: 2rem;
   border: var(--border-dark);
   border-radius: 0 1rem 1rem 0;
+}
+
+.loginLogoItem {
+  height: 2.25rem;
+  min-width: 4.5rem;
+}
+
+.loginLogoImage {
+  object-fit: contain;
 }
 
 .header {
   @media screen and (max-width: 37rem) {
     flex-direction: column;
+
     .welcomeLogo {
       width: 100%;
     }
+
     .locales {
       justify-content: flex-end;
     }
