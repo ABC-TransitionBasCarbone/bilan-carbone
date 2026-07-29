@@ -11,12 +11,19 @@ type PartnerLogo = {
   alt: string
 }
 
+const partnerLogos: PartnerLogo[] = [
+  { src: '/logos/partners/abc.png', alt: 'ABC' },
+  { src: '/logos/partners/grdf.png', alt: 'GRDF' },
+  { src: '/logos/partners/ag2r-la-mondiale.png', alt: 'AG2R La Mondiale' },
+  { src: '/logos/partners/edf.png', alt: 'EDF' },
+  { src: '/logos/partners/france-travail.png', alt: 'France Travail' },
+]
+
 interface Props {
-  partnerLogos: PartnerLogo[]
   onStart: () => void
 }
 
-const SurveyExplanation = ({ partnerLogos, onStart }: Props) => {
+const SurveyExplanation = ({ onStart }: Props) => {
   const t = useTranslations('survey')
 
   return (
@@ -33,11 +40,17 @@ const SurveyExplanation = ({ partnerLogos, onStart }: Props) => {
         </div>
       </Container>
 
-      <Container maxWidth="md" className={classNames(styles.explanationCard, 'pt2', 'pb2')}>
-        <div className={classNames(styles.logosRow, 'justify-between', 'align-center', 'gapped075', 'pb-2', 'mb2')}>
+      <Container maxWidth="lg" className={classNames(styles.explanationCard, 'pt2', 'pb2')}>
+        <div className={classNames(styles.logoRow, 'align-center', 'gapped075', 'pb-2', 'mb2')}>
           {partnerLogos.map((logo) => (
-            <div key={logo.src} className="flex-cc">
-              <Image src={logo.src} alt={logo.alt} width={168} height={72} className={styles.logoImage} />
+            <div key={logo.src} className={classNames(styles.logoSlot, 'flex-cc')}>
+              <Image
+                src={logo.src}
+                alt={logo.alt}
+                fill
+                sizes="(max-width: 768px) 38vw, 168px"
+                className={styles.logoFit}
+              />
             </div>
           ))}
         </div>

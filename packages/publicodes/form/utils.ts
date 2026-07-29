@@ -1,4 +1,5 @@
 import { EvaluatedFormElement, FormPageElementProp, FormPages } from '@publicodes/forms'
+import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import Engine, { reduceAST, RuleNode, utils } from 'publicodes'
 import { EvaluatedFormLayout } from './layouts/evaluatedFormLayout'
 import { FormLayout } from './layouts/formLayout'
@@ -9,6 +10,31 @@ export type OnFieldChange<RuleName extends string = string> = (
   ruleName: RuleName,
   value: string | number | boolean | undefined,
 ) => void
+
+export const SURVEY_CATEGORY_KEYS = ['DT', 'transport', 'alimentation', 'divers', 'logement'] as const
+const SURVEY_CATEGORY_ORDER: readonly string[] = SURVEY_CATEGORY_KEYS
+
+export function getRuleCategoryKey(ruleName: string): string {
+  return ruleName.split(' . ')[0]
+}
+
+export function getCategoryToneSuffix(categoryKey?: string | null): string {
+  if (!categoryKey) {
+    return ''
+  }
+  return categoryKey === 'DT' ? 'Dt' : categoryKey.charAt(0).toUpperCase() + categoryKey.slice(1)
+}
+
+export function formatMassKilograms(valueKg: number): string {
+  if (valueKg >= 1000) {
+    return `${formatNumber(valueKg / 1000, 1)} t`
+  }
+  return `${formatNumber(Math.round(valueKg))} kg`
+}
+
+export function getPositiveNodeValue(nodeValue: unknown): number {
+  return typeof nodeValue === 'number' ? Math.max(0, nodeValue) : 0
+}
 
 export function getRuleNamesFromLayout<RuleName extends string>(layout: FormLayout<RuleName>): RuleName[] | undefined {
   switch (layout.type) {
@@ -85,7 +111,7 @@ export function getMosaicParent(engine: Engine, ruleName: string): string | null
     if (parentRule?.mosaique) {
       const options = parentRule.mosaique.options ?? []
       const relativeRuleName = parts.slice(i).join(' . ')
-      if (options.includes(relativeRuleName)) {
+      if (options.includes(relativeRuleName) || options.includes(ruleName)) {
         return parent
       }
     }
@@ -93,7 +119,6 @@ export function getMosaicParent(engine: Engine, ruleName: string): string | null
   return null
 }
 
-const DEFAULT_SURVEY_CATEGORY_ORDER = ['DT', 'transport', 'alimentation', 'divers', 'logement']
 const MAX = Number.MAX_SAFE_INTEGER
 const normalize = (n: number) => (n === -1 ? MAX : n)
 
@@ -113,10 +138,10 @@ const compareRuleNames = (
   parsedRules: ReturnType<Engine['getParsedRules']>,
   initialIndexes: Map<string, number>,
 ) => {
-  const [aRoot] = a.split(' . ')
-  const [bRoot] = b.split(' . ')
+  const aRoot = getRuleCategoryKey(a)
+  const bRoot = getRuleCategoryKey(b)
 
-  const catDiff = normalize(DEFAULT_SURVEY_CATEGORY_ORDER.indexOf(aRoot)) - normalize(DEFAULT_SURVEY_CATEGORY_ORDER.indexOf(bRoot))
+  const catDiff = normalize(SURVEY_CATEGORY_ORDER.indexOf(aRoot)) - normalize(SURVEY_CATEGORY_ORDER.indexOf(bRoot))
   if (catDiff !== 0) return catDiff
 
   const aParts = a.split(' . ')

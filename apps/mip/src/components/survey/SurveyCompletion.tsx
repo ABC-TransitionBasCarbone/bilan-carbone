@@ -10,6 +10,7 @@ import { ActionResult, CategoryResult } from '@/components/survey/completion/typ
 import { clearSurveyState, loadSurveyState } from '@/components/survey/surveyStateStorage'
 import { useMipPublicodes } from '@/publicodes/MipPublicodesProvider'
 import type { RawRules } from '@/publicodes/mip-engine'
+import { getPositiveNodeValue, SURVEY_CATEGORY_KEYS } from '@abc-transitionbascarbone/publicodes/form'
 import { Refresh } from '@mui/icons-material'
 import { Button, Container } from '@mui/material'
 import { useTranslations } from 'next-intl'
@@ -24,7 +25,7 @@ type ModelRule = {
   somme?: Array<string | number>
 }
 
-const CATEGORY_KEYS = ['DT', 'transport', 'alimentation', 'divers', 'logement']
+const CATEGORY_KEYS = SURVEY_CATEGORY_KEYS
 
 interface Props {
   surveyId: string
@@ -48,8 +49,6 @@ const isSituation = (value: unknown): value is Situation<string> => {
     (entry) => entry === null || typeof entry === 'string' || typeof entry === 'number' || typeof entry === 'boolean',
   )
 }
-
-const getPositiveNodeValue = (nodeValue: unknown) => (typeof nodeValue === 'number' ? Math.max(0, nodeValue) : 0)
 
 const SurveyCompletion = ({ surveyId, model, restoreFromStorage = false }: Props) => {
   const t = useTranslations('survey.completion')

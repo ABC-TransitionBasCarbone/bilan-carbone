@@ -1,13 +1,11 @@
 'use client'
 
 import { CategoryWithActions } from '@/components/survey/completion/types'
-import { formatNumber } from '@abc-transitionbascarbone/utils/number'
+import { formatMassKilograms, getCategoryToneSuffix } from '@abc-transitionbascarbone/publicodes/form'
 import { ExpandMore } from '@mui/icons-material'
 import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import styles from '../SurveyCompletion.module.css'
-
-type CategoryToneClassByKey = Record<'DT' | 'transport' | 'alimentation' | 'divers' | 'logement', string>
 
 interface Props {
   actionsByCategory: CategoryWithActions[]
@@ -25,11 +23,9 @@ const SummarySection = ({ actionsByCategory, totalKg }: Props) => {
 
       <div className="flex-col gapped1">
         {actionsByCategory.map((category) => {
-          const toneClass =
-            styles[`tone${category.key.charAt(0).toUpperCase() + category.key.slice(1)}`] ?? styles.toneDt
-          const summaryToneClass =
-            styles[`summaryAccordion${category.key.charAt(0).toUpperCase() + category.key.slice(1)}`] ??
-            styles.summaryAccordionDt
+          const toneSuffix = getCategoryToneSuffix(category.key)
+          const toneClass = styles[`tone${toneSuffix}`] ?? styles.toneDt
+          const summaryToneClass = styles[`summaryAccordion${toneSuffix}`] ?? styles.summaryAccordionDt
           const categoryShare = totalKg > 0 ? Math.round((category.valueKg / totalKg) * 100) : 0
 
           return (
@@ -41,9 +37,7 @@ const SummarySection = ({ actionsByCategory, totalKg }: Props) => {
                   <div className={styles.equalBarTrack}>
                     <div className={`${styles.equalBarFill} ${toneClass}`} />
                   </div>
-                  <Typography className={styles.summaryValue}>
-                    {formatNumber(Math.round(category.valueKg))} {t('kgUnit')}
-                  </Typography>
+                  <Typography className={styles.summaryValue}>{formatMassKilograms(category.valueKg)}</Typography>
                   <Typography className={styles.summaryPercent}>{categoryShare} %</Typography>
                 </div>
               </AccordionSummary>
@@ -55,9 +49,7 @@ const SummarySection = ({ actionsByCategory, totalKg }: Props) => {
                       <div key={action.key} className={styles.libraryActionRow}>
                         <Typography className={styles.actionIcon}>{action.icones}</Typography>
                         <Typography className={styles.actionTitle}>{action.titre}</Typography>
-                        <Typography className={styles.actionImpact}>
-                          {formatNumber(Math.round(action.savingsKg))} {t('kgUnit')}
-                        </Typography>
+                        <Typography className={styles.actionImpact}>{formatMassKilograms(action.savingsKg)}</Typography>
                       </div>
                     ))}
                   </div>

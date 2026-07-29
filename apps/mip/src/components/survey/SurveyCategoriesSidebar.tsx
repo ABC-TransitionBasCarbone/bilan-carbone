@@ -1,66 +1,79 @@
 'use client'
 
 import { useMipPublicodes } from '@/publicodes/MipPublicodesProvider'
-import { formatNumber } from '@abc-transitionbascarbone/utils/number'
+import {
+  formatMassKilograms,
+  getCategoryToneSuffix,
+  getPositiveNodeValue,
+  SURVEY_CATEGORY_KEYS,
+} from '@abc-transitionbascarbone/publicodes/form'
 import classNames from 'classnames'
 import styles from './SurveyCategoriesSidebar.module.css'
 
-export const SURVEY_CATEGORY_KEYS = ['DT', 'transport', 'alimentation', 'divers', 'logement']
-
-const getPositiveNodeValue = (nodeValue: unknown) => (typeof nodeValue === 'number' ? Math.max(0, nodeValue) : 0)
-
-const formatCategoryValue = (kg: number): string => {
-  if (kg >= 1000) {
-    return `${formatNumber(kg / 1000, 1)} t`
-  }
-  return `${formatNumber(Math.round(kg))} kg`
-}
-
 interface Props {
   activeCategoryKey: string | null
+}
+
+interface CategoryItem {
+  key: string
+  titre: string
+  icones: string
+  valueKg: number
+  isActive: boolean
+  isAnswered: boolean
+  toneClassName: string
+}
+
+interface SidebarItemProps {
+  item: CategoryItem
+}
+
+const SidebarItem = ({ item }: SidebarItemProps) => {
+  return (
+    <div
+      className={classNames(styles.categoryItem, 'justify-between', 'align-center', 'gapped-2', {
+        [item.toneClassName]: item.isAnswered,
+        [styles.active]: item.isActive,
+      })}
+    >
+      <div className={classNames(styles.categoryLabel, 'align-center', 'gapped-2')}>
+        <span>{item.icones}</span>
+        <span className={styles.title}>{item.titre}</span>
+      </div>
+      <span className={classNames(styles.value, { [styles.activeValue]: item.isActive })}>
+        {formatMassKilograms(item.valueKg)}
+      </span>
+    </div>
+  )
 }
 
 const SurveyCategoriesSidebar = ({ activeCategoryKey }: Props) => {
   const { engine } = useMipPublicodes()
   const rules = engine.getParsedRules()
 
-  const categories = SURVEY_CATEGORY_KEYS.map((key) => {
+  const categories: CategoryItem[] = SURVEY_CATEGORY_KEYS.map((key) => {
     const raw = rules[key]?.rawNode as { titre?: string; icônes?: string } | undefined
     const result = engine.evaluate(key)
     const valueKg = getPositiveNodeValue(result.nodeValue)
+    const isActive = key === activeCategoryKey
+    const toneSuffix = getCategoryToneSuffix(key)
+
     return {
       key,
       titre: raw?.titre ?? key,
       icones: raw?.icônes ?? '',
       valueKg,
+      isActive,
+      isAnswered: valueKg > 0,
+      toneClassName: styles[`category${toneSuffix}`] ?? styles.categoryDt,
     }
   })
 
   return (
     <aside className={classNames(styles.sidebar, 'flex-col', 'gapped-2')} data-testid="survey-categories-sidebar">
-      {categories.map((cat) => {
-        const isActive = cat.key === activeCategoryKey
-        const isAnswered = cat.valueKg > 0
-        const categoryToneClass =
-          styles[`category${cat.key.charAt(0).toUpperCase() + cat.key.slice(1)}`] ?? styles.categoryDt
-        return (
-          <div
-            key={cat.key}
-            className={classNames(styles.categoryItem, 'justify-between', 'align-center', 'gapped-2', {
-              [categoryToneClass]: isAnswered,
-              [styles.active]: isActive,
-            })}
-          >
-            <div className={classNames(styles.categoryLabel, 'align-center', 'gapped-2')}>
-              <span>{cat.icones}</span>
-              <span className={styles.title}>{cat.titre}</span>
-            </div>
-            <span className={classNames(styles.value, { [styles.activeValue]: isActive })}>
-              {formatCategoryValue(cat.valueKg)}
-            </span>
-          </div>
-        )
-      })}
+      {categories.map((category) => (
+        <SidebarItem key={category.key} item={category} />
+      ))}
     </aside>
   )
 }

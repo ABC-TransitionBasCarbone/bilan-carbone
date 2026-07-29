@@ -1,4 +1,5 @@
 import Category from '@/components/survey/Category/Category'
+import { getCategoryToneSuffix } from '@abc-transitionbascarbone/publicodes/form'
 import { LinearProgress, Typography } from '@mui/material'
 import classNames from 'classnames'
 import styles from './Survey.module.css'
@@ -13,8 +14,7 @@ interface Props {
 }
 
 const SurveyProgressHeader = ({ title, icons, progress, categoryKey, questionLabel, completionLabel }: Props) => {
-  const toneSuffix =
-    categoryKey === 'DT' ? 'Dt' : (categoryKey?.charAt(0).toUpperCase() ?? '') + (categoryKey?.slice(1) ?? '')
+  const toneSuffix = getCategoryToneSuffix(categoryKey)
   const toneClass = toneSuffix ? styles[`progressTone${toneSuffix}`] : undefined
 
   return (

@@ -2,6 +2,7 @@ import { createMipEngine } from '@/publicodes/mip-engine'
 import {
   getMosaicParent,
   getQuestionType,
+  getRuleCategoryKey,
   MipQuestionType,
   patchFormElement,
 } from '@abc-transitionbascarbone/publicodes/form'
@@ -56,25 +57,23 @@ export const buildGroupedElements = (engine: MipEngine, elements: SurveyFormElem
 
 export const getCategoryKey = (groupedElements: GroupedElement[]): string | null => {
   if (groupedElements[0]?.type === 'mosaic') {
-    return groupedElements[0].parent.split(' . ')[0]
+    return getRuleCategoryKey(groupedElements[0].parent)
   }
   if (groupedElements[0]?.type === 'single') {
-    return groupedElements[0].el.id.split(' . ')[0]
+    return getRuleCategoryKey(groupedElements[0].el.id)
   }
   return null
 }
 
 export const getCurrentSectionTitle = (engine: MipEngine, groupedElements: GroupedElement[]) => {
-  const getCategoryKeyLocal = (ruleName: string) => ruleName.split(' . ')[0]
-
   if (groupedElements[0]?.type === 'mosaic') {
-    const key = getCategoryKeyLocal(groupedElements[0].parent)
+    const key = getRuleCategoryKey(groupedElements[0].parent)
     const raw = engine.getParsedRules()[key]?.rawNode
     return { label: raw?.titre ?? '', icons: raw?.icônes }
   }
 
   if (groupedElements[0]?.type === 'single') {
-    const key = getCategoryKeyLocal(groupedElements[0].el.id)
+    const key = getRuleCategoryKey(groupedElements[0].el.id)
     const raw = engine.getParsedRules()[key]?.rawNode
     return { label: raw?.titre ?? '', icons: raw?.icônes }
   }
