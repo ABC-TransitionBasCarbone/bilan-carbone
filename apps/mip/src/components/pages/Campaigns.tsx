@@ -1,5 +1,6 @@
 'use client'
 
+import { MIN_RESPONDENTS_FOR_CSV_EXPORT } from '@/constants/survey'
 import type { CampaignsWithResponses, ModelCampaignLight } from '@/db/campaign'
 import { updateCampaignCommand } from '@/services/serverFunctions/campaign'
 import { UpdateCampaignCommand, UpdateCampaignCommandValidation } from '@/services/serverFunctions/campaign.command'
@@ -181,18 +182,25 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
         {
           id: 'exportCsv',
           header: () => t('exportCsv'),
-          cell: ({ row }) => (
-            <Tooltip title={t('exportCsv')}>
-              <IconButton
-                size="medium"
-                color="primary"
-                data-testid={`export-campaign-csv-${row.original.id}`}
-                onClick={() => handleExportCampaignCsv(row.original.id, row.original.name)}
-              >
-                <DownloadIcon fontSize="small" />
-              </IconButton>
-            </Tooltip>
-          ),
+          cell: ({ row }) => {
+            const count = campaigns.find((campaign) => campaign.id === row.original.id)?._count.responses ?? 0
+            const isDisabled = count < MIN_RESPONDENTS_FOR_CSV_EXPORT
+            return (
+              <Tooltip title={isDisabled ? t('exportCsvDisabledMinRespondents') : t('exportCsv')}>
+                <span>
+                  <IconButton
+                    size="medium"
+                    color="primary"
+                    disabled={isDisabled}
+                    data-testid={`export-campaign-csv-${row.original.id}`}
+                    onClick={() => handleExportCampaignCsv(row.original.id, row.original.name)}
+                  >
+                    <DownloadIcon fontSize="small" />
+                  </IconButton>
+                </span>
+              </Tooltip>
+            )
+          },
         },
         {
           id: 'actions',

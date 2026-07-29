@@ -24,3 +24,5 @@ export const ENTITY_CATEGORY_FACTORS: Record<string, Partial<Record<SurveyCatego
   commercial: { commute: 1.2, travel: 2.1, food: 1.0, digital: 0.9, office: 0.8 },
   direction: { commute: 0.7, travel: 1.4, food: 1.1, digital: 1.0, office: 1.3 },
 }
+
+export const MIN_RESPONDENTS_FOR_CSV_EXPORT = 10

@@ -123,6 +123,7 @@
     "CLOSED": "Close",
     "responsesCount": "Number of responses",
     "exportCsv": "Export responses (CSV)",
+    "exportCsvDisabledMinRespondents": "CSV export is not available: at least 10 respondents are required to protect respondent anonymity.",
     "shareLink": "Link to share",
     "delete": "Delete",
     "add": "Add new campaign",
@@ -265,6 +266,7 @@
         "title": "Collaborator comments"
       },
       "dataCsv": "Export data (CSV)",
+      "disabledMinRespondents": "CSV export is not available: at least 10 respondents are required to protect respondent anonymity.",
       "visual": "Export (visual)",
       "print": "Print"
     }
