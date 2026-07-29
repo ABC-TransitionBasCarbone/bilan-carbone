@@ -13,7 +13,7 @@ interface Props {
 
 const PublicPage = ({ children }: Props) => {
   const t = useTranslations('survey')
-  const logo = partnerLogos.find((logo) => logo.alt === 'ABC')
+  const logo = PARTNER_LOGOS.find((logo) => logo.alt === 'ABC')
 
   return (
     <PublicContainer>
