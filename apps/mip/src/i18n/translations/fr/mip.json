@@ -130,6 +130,7 @@
     "CLOSED": "Fermée",
     "responsesCount": "Nombre de réponses",
     "exportCsv": "Exporter les réponses (CSV)",
+    "exportCsvDisabledMinRespondents": "L'export CSV n'est pas disponible : il faut au moins 10 répondants pour protéger l'anonymat des répondants.",
     "shareLink": "Lien à partager",
     "delete": "Supprimer",
     "add": "Ajouter une nouvelle campagne",
