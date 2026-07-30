@@ -261,6 +261,56 @@
   box-shadow: none !important;
 }
 
+.summaryAccordionDt :global(.MuiAccordionSummary-root) {
+  background-color: color-mix(in srgb, var(--mui-palette-primary-light) 86%, var(--white));
+  color: var(--mui-palette-primary-main);
+}
+
+.summaryAccordionTransport :global(.MuiAccordionSummary-root) {
+  background-color: color-mix(in srgb, var(--mui-palette-info-light) 14%, var(--white));
+  color: var(--mui-palette-info-main);
+}
+
+.summaryAccordionAlimentation :global(.MuiAccordionSummary-root) {
+  background-color: color-mix(in srgb, var(--mui-palette-warning-light) 22%, var(--white));
+  color: var(--mui-palette-warning-main);
+}
+
+.summaryAccordionDivers :global(.MuiAccordionSummary-root) {
+  background-color: color-mix(in srgb, var(--mui-palette-error-light) 20%, var(--white));
+  color: var(--mui-palette-error-main);
+}
+
+.summaryAccordionLogement :global(.MuiAccordionSummary-root) {
+  background-color: color-mix(in srgb, var(--mui-palette-success-light) 30%, var(--white));
+  color: var(--mui-palette-success-main);
+}
+
+.summaryAccordionDt .summaryValue,
+.summaryAccordionDt .summaryPercent {
+  color: var(--mui-palette-primary-main) !important;
+}
+
+.summaryAccordionTransport .summaryValue,
+.summaryAccordionTransport .summaryPercent {
+  color: var(--mui-palette-info-main) !important;
+}
+
+.summaryAccordionAlimentation .summaryValue,
+.summaryAccordionAlimentation .summaryPercent {
+  color: var(--mui-palette-warning-main) !important;
+}
+
+.summaryAccordionDivers .summaryValue,
+.summaryAccordionDivers .summaryPercent {
+  color: var(--mui-palette-error-main) !important;
+}
+
+.summaryAccordionLogement .summaryValue,
+.summaryAccordionLogement .summaryPercent {
+  color: var(--mui-palette-success-main) !important;
+}
+
 .summaryItem {
   display: grid;
   width: 100%;
@@ -293,23 +343,23 @@
 }
 
 .toneDt {
-  background-color: var(--primary-500);
+  background-color: var(--mui-palette-primary-main);
 }
 
 .toneTransport {
-  background-color: var(--info);
+  background-color: var(--mui-palette-info-main);
 }
 
 .toneAlimentation {
-  background-color: var(--success);
+  background-color: var(--mui-palette-warning-main);
 }
 
 .toneDivers {
-  background-color: var(--warning);
+  background-color: var(--mui-palette-error-main);
 }
 
 .toneLogement {
-  background-color: var(--error);
+  background-color: var(--mui-palette-success-main);
 }
 
 .summaryValue {

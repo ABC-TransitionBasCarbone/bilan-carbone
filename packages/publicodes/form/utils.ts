@@ -1,4 +1,5 @@
 import { EvaluatedFormElement, FormPageElementProp, FormPages } from '@publicodes/forms'
+import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import Engine, { reduceAST, RuleNode, utils } from 'publicodes'
 import { EvaluatedFormLayout } from './layouts/evaluatedFormLayout'
 import { FormLayout } from './layouts/formLayout'
@@ -9,6 +10,39 @@ export type OnFieldChange<RuleName extends string = string> = (
   ruleName: RuleName,
   value: string | number | boolean | undefined,
 ) => void
+
+export const SURVEY_CATEGORY_KEYS = ['DT', 'transport', 'alimentation', 'divers', 'logement'] as const
+const SURVEY_CATEGORY_ORDER: readonly string[] = SURVEY_CATEGORY_KEYS
+const RULE_NAME_SEPARATOR = ' . '
+
+export const getRuleNameParts = (ruleName: string): string[] => ruleName.split(RULE_NAME_SEPARATOR)
+
+export const joinRuleNameParts = (parts: string[]): string => parts.join(RULE_NAME_SEPARATOR)
+
+export const getRuleParentName = (ruleName: string): string | null => {
+  const parts = getRuleNameParts(ruleName)
+  return parts.length > 1 ? joinRuleNameParts(parts.slice(0, -1)) : null
+}
+
+export const getRuleCategoryKey = (ruleName: string): string => getRuleNameParts(ruleName)[0]
+
+export const getCategoryClassSuffix = (categoryKey?: string | null): string => {
+  if (!categoryKey) {
+    return ''
+  }
+  return categoryKey.charAt(0).toUpperCase() + categoryKey.slice(1).toLowerCase()
+}
+
+export function formatMassKilograms(valueKg: number): string {
+  if (valueKg >= 1000) {
+    return `${formatNumber(valueKg / 1000, 1)} t`
+  }
+  return `${formatNumber(Math.round(valueKg))} kg`
+}
+
+export function getPositiveNodeValue(nodeValue: unknown): number {
+  return typeof nodeValue === 'number' ? Math.max(0, nodeValue) : 0
+}
 
 export function getRuleNamesFromLayout<RuleName extends string>(layout: FormLayout<RuleName>): RuleName[] | undefined {
   switch (layout.type) {
@@ -43,18 +77,8 @@ export function areRulesReferencedInApplicability<RuleName extends string>(
   previous: RuleName[],
 ): boolean {
   return currents.some((current) => {
-    const currentNode = getRuleNode(current)
-    if (areReferencedInApplicability(currentNode, previous)) {
-      return true
-    }
-
-    const parents = utils.ruleParents(current) as RuleName[]
-    for (const parent of parents) {
-      const parentNode = getRuleNode(parent)
-      if (areReferencedInApplicability(parentNode, previous)) {
-        return true
-      }
-    }
+    const allNodes = [current, ...(utils.ruleParents(current) as RuleName[])]
+    return allNodes.some((name) => areReferencedInApplicability(getRuleNode(name), previous))
   })
 }
 
@@ -87,14 +111,14 @@ function areReferencedInApplicability<RuleName extends string>(
 
 export function getMosaicParent(engine: Engine, ruleName: string): string | null {
   const rules = engine.getParsedRules()
-  const parts = ruleName.split(' . ')
+  const parts = getRuleNameParts(ruleName)
 
   for (let i = parts.length - 1; i > 0; i--) {
-    const parent = parts.slice(0, i).join(' . ')
+    const parent = joinRuleNameParts(parts.slice(0, i))
     const parentRule = rules[parent]?.rawNode as any
     if (parentRule?.mosaique) {
       const options = parentRule.mosaique.options ?? []
-      const relativeRuleName = parts.slice(i).join(' . ')
+      const relativeRuleName = joinRuleNameParts(parts.slice(i))
       if (options.includes(relativeRuleName)) {
         return parent
       }
@@ -103,29 +127,80 @@ export function getMosaicParent(engine: Engine, ruleName: string): string | null
   return null
 }
 
+const MAX = Number.MAX_SAFE_INTEGER
+
+const getCategoryOrderIndex = (categoryKey: string): number => {
+  const index = SURVEY_CATEGORY_ORDER.indexOf(categoryKey)
+  return index === -1 ? MAX : index
+}
+
+const getRuleOrder = (rawNode: unknown): number | null => {
+  const ordre = (rawNode as { ordre?: unknown } | null)?.ordre
+  if (typeof ordre === 'number' && Number.isFinite(ordre)) return ordre
+  if (typeof ordre === 'string') {
+    const n = Number.parseFloat(ordre)
+    if (Number.isFinite(n)) return n
+  }
+  return null
+}
+
+const compareRuleNames = (
+  a: string,
+  b: string,
+  parsedRules: ReturnType<Engine['getParsedRules']>,
+  initialIndexes: Map<string, number>,
+) => {
+  const aRoot = getRuleCategoryKey(a)
+  const bRoot = getRuleCategoryKey(b)
+
+  // Keep survey questions grouped by top-level category before applying explicit Publicodes ordering.
+  const catDiff = getCategoryOrderIndex(aRoot) - getCategoryOrderIndex(bRoot)
+  if (catDiff !== 0) return catDiff
+
+  const aParts = getRuleNameParts(a)
+  const bParts = getRuleNameParts(b)
+
+  for (let depth = 1; depth <= Math.max(aParts.length, bParts.length); depth++) {
+    const aOrder = getRuleOrder(parsedRules[joinRuleNameParts(aParts.slice(0, depth))]?.rawNode)
+    const bOrder = getRuleOrder(parsedRules[joinRuleNameParts(bParts.slice(0, depth))]?.rawNode)
+    if (aOrder !== null || bOrder !== null) {
+      const diff = (aOrder ?? MAX) - (bOrder ?? MAX)
+      if (diff !== 0) return diff
+    }
+  }
+
+  const initDiff = (initialIndexes.get(a) ?? MAX) - (initialIndexes.get(b) ?? MAX)
+  return initDiff !== 0 ? initDiff : a.localeCompare(b)
+}
+
 export function buildPageBuilder(engine: Engine) {
   return (fields: string[]): FormPages<string> => {
     const rules = engine.getParsedRules()
-    const filteredFields = fields.filter((field) => {
-      const raw = rules[field]?.rawNode as any
-      return raw?.question !== undefined
-    })
+    const initialIndexes = new Map(fields.map((f, i) => [f, i]))
+    const sortedFields = fields
+      .filter((f) => (rules[f]?.rawNode as any)?.question !== undefined)
+      .sort((a, b) => compareRuleNames(a, b, rules, initialIndexes))
 
     const pages: FormPages<string> = []
-    const seen = new Set<string>()
+    const mosaicPagesByParent = new Map<string, FormPages<string>[number]>()
 
-    for (const field of filteredFields) {
+    for (const field of sortedFields) {
       const mosaicParent = getMosaicParent(engine, field)
-      if (mosaicParent) {
-        if (!seen.has(mosaicParent)) {
-          seen.add(mosaicParent)
-          pages.push({
-            elements: filteredFields.filter((f) => getMosaicParent(engine, f) === mosaicParent),
-            title: (engine.getParsedRules()[mosaicParent]?.rawNode as any)?.question,
-          })
-        }
-      } else {
+      if (!mosaicParent) {
         pages.push({ elements: [field] })
+        continue
+      }
+
+      const existingPage = mosaicPagesByParent.get(mosaicParent)
+      if (existingPage) {
+        existingPage.elements.push(field)
+      } else {
+        const newPage = {
+          elements: [field],
+          title: (rules[mosaicParent]?.rawNode as any)?.question,
+        }
+        mosaicPagesByParent.set(mosaicParent, newPage)
+        pages.push(newPage)
       }
     }
     return pages

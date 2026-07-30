@@ -1,5 +1,6 @@
 import { ArrowBack, ArrowForward, Check } from '@mui/icons-material'
 import { Button } from '@mui/material'
+import classNames from 'classnames'
 import styles from './Survey.module.css'
 
 interface Props {
@@ -32,7 +33,7 @@ const SurveyNavigation = ({
   onComplete,
 }: Props) => {
   return (
-    <div className={styles.navigation}>
+    <div className={classNames(styles.navigation, 'flex-cc', 'gapped075')}>
       {hasPreviousPage ? (
         <Button variant="outlined" startIcon={<ArrowBack />} onClick={onPrevious} data-testid="survey-previous-button">
           {previousLabel}

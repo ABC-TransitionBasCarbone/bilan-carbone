@@ -10,9 +10,15 @@ interface InputQuestionProps<RuleName extends string> {
   formElement: EvaluatedFormElement<RuleName>
   onChange: OnFieldChange<RuleName>
   engine?: Engine<RuleName>
+  containerVariant?: 'default' | 'flat'
 }
 
-export function InputQuestion<RuleName extends string>({ formElement, onChange, engine }: InputQuestionProps<RuleName>) {
+export function InputQuestion<RuleName extends string>({
+  formElement,
+  onChange,
+  engine,
+  containerVariant = 'default',
+}: InputQuestionProps<RuleName>) {
   const translation = usePublicodesRuleTranslation(formElement.id)
   const question = translation?.question
   const description = translation?.description
@@ -22,7 +28,11 @@ export function InputQuestion<RuleName extends string>({ formElement, onChange, 
 
   return (
     <Box key={formElement.id} className="mb2">
-      <QuestionContainer label={question ?? formElement.label ?? formElement.id} description={description}>
+      <QuestionContainer
+        label={question ?? formElement.label ?? formElement.id}
+        description={description}
+        variant={containerVariant}
+      >
         <PublicodesInputField formElement={formElement} onChange={onChange} suggestions={suggestions} />
       </QuestionContainer>
     </Box>

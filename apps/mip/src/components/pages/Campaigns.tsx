@@ -1,5 +1,6 @@
 'use client'
 
+import { isCsvExportDisabled } from '@/constants/survey'
 import type { CampaignsWithResponses, ModelCampaignLight } from '@/db/campaign'
 import { updateCampaignCommand } from '@/services/serverFunctions/campaign'
 import { UpdateCampaignCommand, UpdateCampaignCommandValidation } from '@/services/serverFunctions/campaign.command'
@@ -36,6 +37,7 @@ interface Props {
 
 const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
   const t = useTranslations('campaigns')
+  const tResults = useTranslations('results')
   const router = useRouter()
   const { showErrorToast, showSuccessToast } = useToast()
   const [displayCampaignHelp, setDisplayCampaignHelp] = useState(false)
@@ -161,7 +163,7 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
           header: () => t('responsesCount'),
           accessorKey: 'responsesCount',
           cell: ({ row }) => {
-            const count = campaigns.find((campaign) => campaign.id === row.original.id)?._count.responses || 0
+            const count = campaigns.find((campaign) => campaign.id === row.original.id)?.responsesCount || 0
             return <div>{count}</div>
           },
         },
@@ -181,18 +183,25 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
         {
           id: 'exportCsv',
           header: () => t('exportCsv'),
-          cell: ({ row }) => (
-            <Tooltip title={t('exportCsv')}>
-              <IconButton
-                size="medium"
-                color="primary"
-                data-testid={`export-campaign-csv-${row.original.id}`}
-                onClick={() => handleExportCampaignCsv(row.original.id, row.original.name)}
-              >
-                <DownloadIcon fontSize="small" />
-              </IconButton>
-            </Tooltip>
-          ),
+          cell: ({ row }) => {
+            const count = campaigns.find((campaign) => campaign.id === row.original.id)?.responsesCount ?? 0
+            const isDisabled = isCsvExportDisabled(count)
+            return (
+              <Tooltip title={isDisabled ? tResults('export.disabledMinRespondents') : t('exportCsv')}>
+                <span>
+                  <IconButton
+                    size="medium"
+                    color="primary"
+                    disabled={isDisabled}
+                    data-testid={`export-campaign-csv-${row.original.id}`}
+                    onClick={() => handleExportCampaignCsv(row.original.id, row.original.name)}
+                  >
+                    <DownloadIcon fontSize="small" />
+                  </IconButton>
+                </span>
+              </Tooltip>
+            )
+          },
         },
         {
           id: 'actions',

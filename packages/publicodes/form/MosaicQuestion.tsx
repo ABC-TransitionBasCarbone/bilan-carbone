@@ -1,10 +1,11 @@
 import { QuestionContainer } from '@abc-transitionbascarbone/publicodes/form'
 import MosaicBooleanInput from '@abc-transitionbascarbone/ui/Form/MosaicBooleanInput'
 import MosaicNumberInput from '@abc-transitionbascarbone/ui/Form/MosaicNumberInput'
+import classNames from 'classnames'
 import Engine from 'publicodes'
 import styles from './MosaicQuestion.module.css'
 import { usePublicodesRuleTranslation } from '../hooks'
-import classNames from 'classnames'
+import { getRuleNameParts, getRuleParentName } from './utils'
 
 type Props<RuleName> = {
   parent: RuleName
@@ -17,24 +18,30 @@ type Props<RuleName> = {
   }[]
   engine: Engine
   onChange: (ruleName: RuleName, value: string | number | boolean | undefined) => void
+  containerVariant?: 'default' | 'flat'
 }
 
-export function MosaicQuestion<RuleName extends string>({ parent, elements, engine, onChange }: Props<RuleName>) {
+export const MosaicQuestion = <RuleName extends string,>({
+  parent,
+  elements,
+  engine,
+  onChange,
+}: Props<RuleName>) => {
   const rules = engine.getParsedRules()
   const parentRaw = rules[parent]?.rawNode as any
   const mosaicType = parentRaw?.mosaique?.type
   const translation = usePublicodesRuleTranslation(parent)
-  
+
   const label = translation?.question ?? translation?.titre ?? parent
 
   return (
     <QuestionContainer label={label} description={translation?.description}>
       <div className={classNames(styles.mosaicContainer, 'gapped1 p1 grid')}>
         {elements.map((el, index) => {
-          const parts = el.id.split(' . ')
+          const parts = getRuleNameParts(el.id)
           const lastSegment = parts.slice(-2, -1)[0]
-          const directParentName = parts.slice(0, -1).join(' . ')
-          const directParentRaw = rules[directParentName]?.rawNode as any
+          const directParentName = getRuleParentName(el.id)
+          const directParentRaw = directParentName ? ((rules[directParentName]?.rawNode as any) ?? undefined) : undefined
           const nombreRaw = rules[el.id]?.rawNode as any
 
           const title = nombreRaw?.titre ?? lastSegment

@@ -3,7 +3,7 @@ import { NumberField } from '@base-ui-components/react/number-field'
 import { InputAdornment, OutlinedInput } from '@mui/material'
 import { EvaluatedNumberInput } from '@publicodes/forms'
 import classNames from 'classnames'
-import { OnFieldChange } from '../utils'
+import { getCategoryClassSuffix, getRuleCategoryKey, OnFieldChange } from '../utils'
 import { useSimpleInputState } from './hooks/useSimpleInputState'
 import styles from './NumberWithUnitInput.module.css'
 import { BaseInputProps } from './utils'
@@ -19,6 +19,8 @@ const NumberWithUnitInput = <RuleName extends string>({
   disabled,
   suggestions,
 }: NumberWithUnitInputProps<RuleName>) => {
+  const categoryClassSuffix = getCategoryClassSuffix(getRuleCategoryKey(formElement.id))
+  const suggestionToneClass = categoryClassSuffix ? styles[`suggestionTone${categoryClassSuffix}`] : undefined
 
   const unit = usePublicodesUnitTranslation(formElement.unit)
   const isDisabled = disabled || !formElement.applicable
@@ -40,7 +42,7 @@ const NumberWithUnitInput = <RuleName extends string>({
             <button
               key={label}
               type="button"
-              className={classNames(styles.suggestionChip, 'pointer')}
+              className={classNames(styles.suggestionChip, suggestionToneClass, 'pointer')}
               onClick={() => {
                 handleValueChange(value)
                 handleValueCommitted(value)

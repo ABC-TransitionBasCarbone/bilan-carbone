@@ -1,22 +1,17 @@
 'use client'
 
+import { PARTNER_LOGOS } from '@/constants/logos'
 import { Button, Container, Typography } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import styles from './Survey.module.css'
 
-type PartnerLogo = {
-  src: string
-  alt: string
-}
-
 interface Props {
-  partnerLogos: PartnerLogo[]
   onStart: () => void
 }
 
-const SurveyExplanation = ({ partnerLogos, onStart }: Props) => {
+const SurveyExplanation = ({ onStart }: Props) => {
   const t = useTranslations('survey')
 
   return (
@@ -33,11 +28,17 @@ const SurveyExplanation = ({ partnerLogos, onStart }: Props) => {
         </div>
       </Container>
 
-      <Container maxWidth="md" className={classNames(styles.explanationCard, 'pt2', 'pb2')}>
-        <div className={styles.logosRow}>
-          {partnerLogos.map((logo) => (
-            <div key={logo.src} className={styles.logoItem}>
-              <Image src={logo.src} alt={logo.alt} width={168} height={72} className={styles.logoImage} />
+      <Container maxWidth="lg" className={classNames(styles.explanationCard, 'pt2', 'pb2')}>
+        <div className={classNames(styles.logoRow, 'align-center', 'gapped075', 'pb-2', 'mb2')}>
+          {PARTNER_LOGOS.map((logo) => (
+            <div key={logo.src} className={classNames(styles.logoSlot, 'flex-cc')}>
+              <Image
+                src={logo.src}
+                alt={logo.alt}
+                fill
+                sizes="(max-width: 768px) 38vw, 168px"
+                className={styles.logoFit}
+              />
             </div>
           ))}
         </div>

@@ -2,7 +2,7 @@
 
 import EquivalentSection from '@/components/results/EquivalentSection'
 import { CategoryWithActions } from '@/components/survey/completion/types'
-import { formatNumber } from '@abc-transitionbascarbone/utils/number'
+import { formatMassKilograms } from '@abc-transitionbascarbone/publicodes/form'
 import { Card, CardContent, Tab, Tabs, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
@@ -56,9 +56,7 @@ const ActionsTabsSection = ({ keyActionCategories, totalKg }: Props) => {
                       <div key={action.key} className={styles.actionRow}>
                         <Typography className={styles.actionIcon}>{action.icones}</Typography>
                         <Typography className={styles.actionTitle}>{action.titre}</Typography>
-                        <Typography className={styles.actionImpact}>
-                          {formatNumber(Math.round(action.savingsKg))} {t('kgUnit')}
-                        </Typography>
+                        <Typography className={styles.actionImpact}>{formatMassKilograms(action.savingsKg)}</Typography>
                       </div>
                     ))}
                   </div>

@@ -1,6 +1,7 @@
 'use client'
 
 import { CATEGORY_COLORS } from '@/constants/style'
+import { isCsvExportDisabled } from '@/constants/survey'
 import { exportSurveyResponsesToCSV } from '@/services/serverFunctions/survey'
 import { SurveyResults } from '@/types/results.types'
 import { getResultsForEntity } from '@/utils/survey'
@@ -10,7 +11,7 @@ import { BasicTypeCharts } from '@abc-transitionbascarbone/utils/charts'
 import { downloadCsvFile } from '@abc-transitionbascarbone/utils/download'
 import { Print } from '@mui/icons-material'
 import DownloadIcon from '@mui/icons-material/Download'
-import { Button, Typography } from '@mui/material'
+import { Button, Tooltip, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import ChartsSection from './ChartsSection'
@@ -56,6 +57,8 @@ const ResultsDashboard = ({ results }: Props) => {
     window.print()
   }
 
+  const isExportDisabled = isCsvExportDisabled(results.totalRespondents)
+
   const handleExportCsv = async () => {
     const result = await exportSurveyResponsesToCSV(results.surveyId)
     if (!result.success) {
@@ -92,14 +95,19 @@ const ResultsDashboard = ({ results }: Props) => {
       <KeyStatsSection keyStats={filtered.keyStats} />
 
       <div className="flex gapped1 mt1">
-        <Button
-          variant="outlined"
-          startIcon={<DownloadIcon />}
-          onClick={handleExportCsv}
-          data-testid="export-data-csv-button"
-        >
-          {t('export.dataCsv')}
-        </Button>
+        <Tooltip title={isExportDisabled ? t('export.disabledMinRespondents') : ''}>
+          <span>
+            <Button
+              variant="outlined"
+              startIcon={<DownloadIcon />}
+              onClick={handleExportCsv}
+              disabled={isExportDisabled}
+              data-testid="export-data-csv-button"
+            >
+              {t('export.dataCsv')}
+            </Button>
+          </span>
+        </Tooltip>
         <Button variant="outlined" startIcon={<Print />} onClick={handlePrint}>
           {t('export.print')}
         </Button>

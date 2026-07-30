@@ -1,12 +1,23 @@
+.scrollWrapper {
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.surveyLayout {
+  .surveyMain {
+    min-width: 0;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column-reverse;
+  }
+}
+
 .navigation {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.75rem;
   padding: 0.75rem 1rem;
   background-color: var(--background-color);
   border-top: 1px solid var(--border-color);
@@ -20,24 +31,53 @@
   background: var(--grayscale-100);
 }
 
-.header {
-  margin-bottom: 1rem;
-}
-
 .progress {
   margin-top: 0.75rem;
 }
 
-.progressLabels {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.5rem;
+.progressBar {
+  --progress-track: var(--primary-100);
+  --progress-fill: var(--primary-600);
+  height: 0.35rem !important;
+  border-radius: 999px;
+  overflow: hidden;
+  background-color: var(--progress-track) !important;
+}
+
+.progressBar :global(.MuiLinearProgress-bar) {
+  background-color: var(--progress-fill) !important;
+  border-radius: 999px;
+}
+
+.progressToneDt {
+  --progress-track: color-mix(in srgb, var(--mui-palette-primary-light) 86%, var(--white));
+  --progress-fill: var(--mui-palette-primary-main);
+}
+
+.progressToneTransport {
+  --progress-track: color-mix(in srgb, var(--mui-palette-info-light) 14%, var(--white));
+  --progress-fill: var(--mui-palette-info-main);
+}
+
+.progressToneAlimentation {
+  --progress-track: color-mix(in srgb, var(--mui-palette-warning-light) 22%, var(--white));
+  --progress-fill: var(--mui-palette-warning-main);
+}
+
+.progressToneDivers {
+  --progress-track: color-mix(in srgb, var(--mui-palette-error-light) 20%, var(--white));
+  --progress-fill: var(--mui-palette-error-main);
+}
+
+.progressToneLogement {
+  --progress-track: color-mix(in srgb, var(--mui-palette-success-light) 30%, var(--white));
+  --progress-fill: var(--mui-palette-success-main);
 }
 
 .questionCard {
-  background: var(--white);
-  border-radius: 0.75rem;
-  padding: 1rem;
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
 }
 
 .coverTitle {
@@ -57,10 +97,7 @@
   border-top-right-radius: 2.75rem;
 }
 
-.explanationTitle {
-  margin-bottom: 0.75rem;
-}
-
+.explanationTitle,
 .explanationSubtitle {
   margin-bottom: 0.75rem;
 }
@@ -73,30 +110,21 @@
   margin-bottom: 1rem;
 }
 
-.logosRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: nowrap;
-  gap: 0.75rem;
-  overflow-x: auto;
-  padding-bottom: 0.5rem;
-  margin-bottom: 2rem;
-}
-
-.logoItem {
-  display: flex;
-  align-items: center;
+.logoRow {
+  flex-wrap: wrap;
+  overflow-x: hidden;
   justify-content: center;
-  min-width: 120px;
-  flex: 1 0 auto;
 }
 
-.logoImage {
-  width: auto;
-  height: auto;
-  max-width: 100%;
-  max-height: 3.25rem;
+.logoSlot {
+  position: relative;
+  width: 10.5rem;
+  min-width: 8rem;
+  height: 4.5rem;
+  flex: 0 0 auto;
+}
+
+.logoFit {
   object-fit: contain;
 }
 
@@ -108,5 +136,10 @@
   .explanationCard {
     border-top-left-radius: 2rem;
     border-top-right-radius: 2rem;
+  }
+
+  .logoSlot {
+    width: 8.75rem;
+    height: 3.75rem;
   }
 }

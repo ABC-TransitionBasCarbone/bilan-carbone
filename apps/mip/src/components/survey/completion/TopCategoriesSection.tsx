@@ -1,7 +1,7 @@
 'use client'
 
 import { CategoryResult } from '@/components/survey/completion/types'
-import { formatNumber } from '@abc-transitionbascarbone/utils/number'
+import { formatMassKilograms } from '@abc-transitionbascarbone/publicodes/form'
 import { Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import styles from '../SurveyCompletion.module.css'
@@ -25,9 +25,7 @@ const TopCategoriesSection = ({ topCategories }: Props) => {
             <Typography className={styles.topCategoryRank}>{index + 1}</Typography>
             <Typography className={styles.topCategoryIcon}>{category.icones}</Typography>
             <Typography className={styles.topCategoryName}>{category.titre}</Typography>
-            <Typography className={styles.topCategoryValue}>
-              {formatNumber(Math.round(category.valueKg))} {t('kgUnit')}
-            </Typography>
+            <Typography className={styles.topCategoryValue}>{formatMassKilograms(category.valueKg)}</Typography>
           </div>
         ))}
       </div>

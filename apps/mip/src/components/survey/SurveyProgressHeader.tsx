@@ -1,21 +1,27 @@
 import Category from '@/components/survey/Category/Category'
+import { getCategoryClassSuffix } from '@abc-transitionbascarbone/publicodes/form'
 import { LinearProgress, Typography } from '@mui/material'
+import classNames from 'classnames'
 import styles from './Survey.module.css'
 
 interface Props {
   title: string
   icons?: string
   progress: number
+  categoryKey?: string | null
   questionLabel: string
   completionLabel: string
 }
 
-const SurveyProgressHeader = ({ title, icons, progress, questionLabel, completionLabel }: Props) => {
+const SurveyProgressHeader = ({ title, icons, progress, categoryKey, questionLabel, completionLabel }: Props) => {
+  const categoryClassSuffix = getCategoryClassSuffix(categoryKey)
+  const toneClass = categoryClassSuffix ? styles[`progressTone${categoryClassSuffix}`] : undefined
+
   return (
-    <div className={styles.header}>
+    <div className="mb1">
       <Category title={title} icons={icons} />
       <div className={styles.progress}>
-        <div className={styles.progressLabels}>
+        <div className="justify-between mb-2">
           <Typography variant="body2" color="text.secondary">
             {questionLabel}
           </Typography>
@@ -23,7 +29,7 @@ const SurveyProgressHeader = ({ title, icons, progress, questionLabel, completio
             {completionLabel}
           </Typography>
         </div>
-        <LinearProgress variant="determinate" value={progress} />
+        <LinearProgress className={classNames(styles.progressBar, toneClass)} variant="determinate" value={progress} />
       </div>
     </div>
   )
