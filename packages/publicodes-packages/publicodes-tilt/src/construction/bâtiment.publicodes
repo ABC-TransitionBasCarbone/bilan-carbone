@@ -4,21 +4,24 @@ construction . bâtiment:
       - construction . bâtiment . empreinte
 
 construction . bâtiment . empreinte:
+  formule: FE * surface finale / amortissement
+  par défaut: 0
+  unité: kgCO2e
+
+construction . bâtiment . surface finale:
+  applicable si:
+    toutes ces conditions:
+      - est défini: locaux
   formule:
     variations:
-      - si:
-          toutes ces conditions:
-            - est défini: locaux
-        alors:
-          variations:
-            - si: locaux = 'locaux seuls'
-              alors: FE * locaux . locaux seuls . surface / amortissement
-            - si: locaux = 'locaux partagés'
-              alors: FE * locaux . locaux partagés . surface * locaux . locaux partagés . pourcentage / amortissement
-            - si: locaux = 'pas de locaux'
-              alors: 0
-            - sinon: 0
-  unité: kgCO2e
+      - si: locaux = 'locaux seuls'
+        alors: locaux . locaux seuls . surface
+      - si: locaux = 'locaux partagés'
+        alors: locaux . locaux partagés . surface * locaux . locaux partagés . pourcentage
+      - si: locaux = 'pas de locaux'
+        alors: 0
+      - sinon: 0
+  unité: m²
 
 construction . bâtiment . amortissement:
   valeur: 50

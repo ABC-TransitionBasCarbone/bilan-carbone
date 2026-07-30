@@ -59,10 +59,15 @@
       "EquipementsEtImmobilisations": {
         "question": "Pour chacun de ces équipements informatiques, veuillez indiquer combien sont possédés ou loués depuis moins de 3 ans :",
         "typeEquipement": "Type d'équipement",
-        "nombreEquipement": "Quantité"
+        "nombreEquipement": "Quantité",
+        "description": "Tous les équipements informatiques datant de plus de 3 ans sont considérés comme totalement amortis. Leurs émissions ne sont pas à prendre en compte ici. <br></br> Que les équipements soient possédés ou loués ne fait aucune différence, dans la mesure ou ces équipements sont généralement loués à l'année. Si vous avez recours à des locations ponctuelles, nous vous invitons à ne pas en tenir compte ici."
       }
     },
-    "group": {},
+    "group": {
+      "EnergieTest": {
+        "question": "Quels types d'énergies utilisez-vous pour le chauffage, l'éclairage et les autres consommations énergétiques de vos locaux ?"
+      }
+    },
     "list": {}
   }
 }
