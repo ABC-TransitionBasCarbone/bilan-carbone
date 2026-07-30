@@ -10,11 +10,10 @@ import { useTranslations } from 'next-intl'
 import styles from './ChartsSection.module.css'
 
 interface Props {
-  pieChartItems: BasicTypeCharts[]
-  barChartItems: BasicTypeCharts[]
+  chartItems: BasicTypeCharts[]
 }
 
-const ChartsSection = ({ pieChartItems, barChartItems }: Props) => {
+const ChartsSection = ({ chartItems }: Props) => {
   const t = useTranslations('results')
 
   return (
@@ -24,7 +23,7 @@ const ChartsSection = ({ pieChartItems, barChartItems }: Props) => {
       </Typography>
       <div className={classNames(styles.chartsGrid, 'gapped1')}>
         <BarChart
-          results={barChartItems}
+          results={chartItems}
           resultsUnit={StudyResultUnit.T}
           title={t('charts.barTitle')}
           showLegend={false}
@@ -37,7 +36,7 @@ const ChartsSection = ({ pieChartItems, barChartItems }: Props) => {
           showLabelsOnPie
           displayAsPercentage
           skipAnimation
-          results={pieChartItems}
+          results={chartItems}
           type="post"
           tooltipValueFormatter={({ percentage }) =>
             t('charts.postDetailHoverPercent', {

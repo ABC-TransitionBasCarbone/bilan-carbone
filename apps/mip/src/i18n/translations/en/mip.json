@@ -63,10 +63,9 @@
         "available": "actions"
       },
       "transition": {
-        "title": "Trajectory to {target} tCO₂e",
-        "description": "You start from {current} tCO₂e/year to move toward the {target} tCO₂e goal.",
-        "startLabel": "Starting footprint",
-        "goalLabel": "Final target: {target} tCO₂e/year"
+        "title": "Your reduction trajectory",
+        "context": "This reduction trajectory is your organisation’s reduction pathway applied to your personal footprint. Your footprint will not follow this path exactly, but it will tend to decrease in this way through changes in your work practices — and above all through the structural changes led by your organisation.",
+        "startLabel": "Starting footprint"
       },
       "range": {
         "minLabel": "0 tCO₂e",
@@ -123,6 +122,7 @@
     "CLOSED": "Close",
     "responsesCount": "Number of responses",
     "exportCsv": "Export responses (CSV)",
+    "exportCsvDisabledMinRespondents": "CSV export is not available: at least 10 respondents are required to protect respondent anonymity.",
     "shareLink": "Link to share",
     "delete": "Delete",
     "add": "Add new campaign",
@@ -173,11 +173,11 @@
     },
     "categories": {
       "title": "Breakdown by emission category",
-      "commute": "Commute",
-      "travel": "Professional travel",
-      "food": "Food",
-      "digital": "Digital",
-      "office": "Office"
+      "DT": "Commute",
+      "transport": "Professional travel",
+      "alimentation": "Food",
+      "divers": "Digital",
+      "logement": "Office"
     },
     "charts": {
       "title": "Carbon footprint distribution",
@@ -191,7 +191,7 @@
     },
     "keyStats": {
       "title": "Key figures",
-      "commute": {
+      "DT": {
         "title": "Commute",
         "carModeShare": "Share of commute trips by car",
         "publicTransportModeShare": "Share of commute trips by public transport",
@@ -207,13 +207,6 @@
         "nights": "{count, plural, one {night} other {nights}}"
       },
       "transport": {
-        "title": "Transport",
-        "plane": "Take the plane",
-        "longHaulPlane": "Take long-haul flights",
-        "carKm": "Kilometres driven by car on average",
-        "carPassengers": "Average passengers per car"
-      },
-      "travel": {
         "title": "Business travel",
         "trainModeShare": "Share of business trips by train",
         "carTravelModeShare": "Share of business trips by car",
@@ -222,7 +215,7 @@
         "avgTravelEmissionByMode": "Average carbon footprint from business trips",
         "avgTravelNights": "Average nights per business trip"
       },
-      "food": {
+      "alimentation": {
         "title": "Food",
         "vegMealsShare": "Share of consumed meals that are vegetarian",
         "veganMealsShare": "Share of consumed meals that are vegan",
@@ -230,7 +223,7 @@
         "fullyVeganEmployees": "Employees who are 100% vegan",
         "redMeatDailyEmployees": "Employees who eat red meat every day"
       },
-      "digital": {
+      "divers": {
         "title": "Digital",
         "aiRequestsPerDay": "Average AI requests per employee per day",
         "videoHoursPerDay": "Average videoconference hours per employee per day",

@@ -1,6 +1,5 @@
 'use client'
 
-import { CATEGORY_COLORS } from '@/constants/style'
 import { isCsvExportDisabled } from '@/constants/survey'
 import { exportSurveyResponsesToCSV } from '@/services/serverFunctions/survey'
 import { SurveyResults } from '@/types/results.types'
@@ -31,7 +30,7 @@ const ResultsDashboard = ({ results }: Props) => {
 
   const filtered = getResultsForEntity(results, selectedEntity)
 
-  const pieChartItems = filtered.categories.map(
+  const chartItems = filtered.categories.map(
     (c) =>
       ({
         post: c.key,
@@ -41,17 +40,6 @@ const ResultsDashboard = ({ results }: Props) => {
         children: [],
       }) as BasicTypeCharts,
   )
-
-  const barChartItems = [
-    ...pieChartItems,
-    {
-      post: 'total-limit',
-      label: t('charts.totalLimitColumn'),
-      value: pieChartItems.reduce((acc, c) => acc + c.value, 0),
-      color: CATEGORY_COLORS.total,
-      children: [],
-    } as BasicTypeCharts,
-  ]
 
   const handlePrint = () => {
     window.print()
@@ -90,7 +78,7 @@ const ResultsDashboard = ({ results }: Props) => {
         />
       )}
 
-      <ChartsSection pieChartItems={pieChartItems} barChartItems={barChartItems} />
+      <ChartsSection chartItems={chartItems} />
 
       <KeyStatsSection keyStats={filtered.keyStats} />
 

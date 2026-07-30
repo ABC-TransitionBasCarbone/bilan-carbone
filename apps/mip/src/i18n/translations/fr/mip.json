@@ -63,10 +63,9 @@
         "available": "actions"
       },
       "transition": {
-        "title": "Cap vers {target} tCO₂e",
-        "description": "Vous partez de {current} tCO₂e/an pour aller vers l'objectif de {target} tCO₂e.",
-        "startLabel": "Empreinte de départ",
-        "goalLabel": "Objectif final : {target} tCO₂e/an"
+        "title": "Votre trajectoire de réduction",
+        "context": "Cette trajectoire de réduction est la trajectoire de votre entreprise appliquée à votre empreinte. Votre empreinte ne suivra pas exactement ce chemin, mais baissera tendanciellement de cette manière via les changements de vos pratiques au travail, mais essentiellement par les changements structuraux menés par votre entreprise.",
+        "startLabel": "Empreinte de départ"
       },
       "range": {
         "minLabel": "0 tCO₂e",
@@ -130,6 +129,7 @@
     "CLOSED": "Fermée",
     "responsesCount": "Nombre de réponses",
     "exportCsv": "Exporter les réponses (CSV)",
+    "exportCsvDisabledMinRespondents": "L'export CSV n'est pas disponible : il faut au moins 10 répondants pour protéger l'anonymat des répondants.",
     "shareLink": "Lien à partager",
     "delete": "Supprimer",
     "add": "Ajouter une nouvelle campagne",
@@ -181,11 +181,11 @@
     },
     "categories": {
       "title": "Détail par poste d'émission",
-      "commute": "Déplacements domicile-travail",
-      "travel": "Déplacements professionnels",
-      "food": "Alimentation",
-      "digital": "Numérique",
-      "office": "Bureaux"
+      "DT": "Déplacements domicile-travail",
+      "transport": "Déplacements professionnels",
+      "alimentation": "Alimentation",
+      "divers": "Numérique",
+      "logement": "Bureaux"
     },
     "charts": {
       "title": "Répartition des empreintes carbone",
@@ -199,7 +199,7 @@
     },
     "keyStats": {
       "title": "Chiffres clés",
-      "commute": {
+      "DT": {
         "title": "Déplacements domicile-travail",
         "carModeShare": "Part des trajets domicile-travail en voiture",
         "publicTransportModeShare": "Part des trajets domicile-travail en transport en commun",
@@ -215,13 +215,6 @@
         "nights": "{count, plural, one {nuit} other {nuits}}"
       },
       "transport": {
-        "title": "Transport",
-        "plane": "Prennent l'avion",
-        "longHaulPlane": "Prennent l'avion long courrier",
-        "carKm": "Kilomètres parcourus en moyenne en voiture",
-        "carPassengers": "Voyageurs en moyenne en voiture"
-      },
-      "travel": {
         "title": "Déplacements professionnels",
         "trainModeShare": "Part des déplacements professionnels en train",
         "carTravelModeShare": "Part des déplacements professionnels en voiture",
@@ -230,7 +223,7 @@
         "avgTravelEmissionByMode": "Empreinte carbone moyenne des déplacements professionnels",
         "avgTravelNights": "Nombre moyen de nuits par déplacement professionnel"
       },
-      "food": {
+      "alimentation": {
         "title": "Alimentation",
         "vegMealsShare": "Part des plats consommés végétariens",
         "veganMealsShare": "Part des plats consommés végans",
@@ -238,7 +231,7 @@
         "fullyVeganEmployees": "Salariés 100% végans",
         "redMeatDailyEmployees": "Salariés qui mangent de la viande rouge tous les jours"
       },
-      "digital": {
+      "divers": {
         "title": "Numérique",
         "aiRequestsPerDay": "Nombre moyen de requêtes IA par salarié et par jour",
         "videoHoursPerDay": "Nombre moyen d'heures de visioconférence par salarié et par jour",

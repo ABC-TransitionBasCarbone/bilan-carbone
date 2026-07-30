@@ -1,8 +1,8 @@
 export const CATEGORY_COLORS: Record<string, string> = {
   total: 'var(--primary-600)',
-  commute: 'var(--primary-500)',
-  travel: 'var(--info)',
-  food: 'var(--success-100)',
-  digital: 'var(--error-50)',
-  office: 'var(--warning)',
+  DT: 'var(--mip-category-dt-text)',
+  transport: 'var(--mip-category-transport-text)',
+  alimentation: 'var(--mip-category-alimentation-text)',
+  divers: 'var(--mip-category-divers-text)',
+  logement: 'var(--mip-category-logement-text)',
 }
