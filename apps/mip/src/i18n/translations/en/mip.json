@@ -63,8 +63,8 @@
         "available": "actions"
       },
       "transition": {
-        "title": "Your reduction trajectory",
-        "context": "This reduction trajectory is your organisation’s reduction pathway applied to your personal footprint. Your footprint will not follow this path exactly, but it will tend to decrease in this way through changes in your work practices — and above all through the structural changes led by your organisation.",
+        "title": "Your reduction pathway",
+        "context": "This reduction pathway is your company's pathway applied to your footprint. Your footprint will not follow this path exactly, but will tend to decrease in this way through changes in your practices at work, but essentially through structural changes led by your company.",
         "startLabel": "Starting footprint"
       },
       "range": {
@@ -122,7 +122,7 @@
     "CLOSED": "Close",
     "responsesCount": "Number of responses",
     "exportCsv": "Export responses (CSV)",
-    "exportCsvDisabledMinRespondents": "CSV export is not available: at least 10 respondents are required to protect respondent anonymity.",
+    "exportCsvDisabledMinRespondents": "CSV export is not available: at least 10 respondents are required to protect respondents' anonymity.",
     "shareLink": "Link to share",
     "delete": "Delete",
     "add": "Add new campaign",
@@ -173,11 +173,11 @@
     },
     "categories": {
       "title": "Breakdown by emission category",
-      "DT": "Commute",
-      "transport": "Professional travel",
+      "DT": "Home-work commuting",
+      "transport": "Business travel",
       "alimentation": "Food",
       "divers": "Digital",
-      "logement": "Office"
+      "logement": "Offices"
     },
     "charts": {
       "title": "Carbon footprint distribution",
@@ -192,13 +192,13 @@
     "keyStats": {
       "title": "Key figures",
       "DT": {
-        "title": "Commute",
-        "carModeShare": "Share of commute trips by car",
-        "publicTransportModeShare": "Share of commute trips by public transport",
-        "activeModeShare": "Share of commute trips by active mobility",
-        "avgCarKm": "Average distance travelled by car (commute)",
-        "avgPublicTransportKm": "Average distance travelled by public transport (commute)",
-        "avgEmissionPerMode": "Average carbon footprint from commute trips"
+        "title": "Home-work commuting",
+        "carModeShare": "Share of home-work commutes by car",
+        "publicTransportModeShare": "Share of home-work commutes by public transport",
+        "activeModeShare": "Share of home-work commutes by active modes",
+        "avgCarKm": "Average distance travelled by car (commuting)",
+        "avgPublicTransportKm": "Average distance travelled by public transport (commuting)",
+        "avgEmissionPerMode": "Average carbon footprint of home-work commuting"
       },
       "units": {
         "percent": "%",
@@ -208,26 +208,26 @@
       },
       "transport": {
         "title": "Business travel",
-        "trainModeShare": "Share of business trips by train",
-        "carTravelModeShare": "Share of business trips by car",
-        "planeTravelModeShare": "Share of business trips by plane",
-        "avgTravelKmByMode": "Average distance of business trips",
-        "avgTravelEmissionByMode": "Average carbon footprint from business trips",
-        "avgTravelNights": "Average nights per business trip"
+        "trainModeShare": "Share of business travel by train",
+        "carTravelModeShare": "Share of business travel by car",
+        "planeTravelModeShare": "Share of business travel by plane",
+        "avgTravelKmByMode": "Average distance of business travel",
+        "avgTravelEmissionByMode": "Average carbon footprint of business travel",
+        "avgTravelNights": "Average number of nights per business trip"
       },
       "alimentation": {
         "title": "Food",
-        "vegMealsShare": "Share of consumed meals that are vegetarian",
-        "veganMealsShare": "Share of consumed meals that are vegan",
-        "fullyVegetarianEmployees": "Employees who are 100% vegetarian",
-        "fullyVeganEmployees": "Employees who are 100% vegan",
+        "vegMealsShare": "Share of vegetarian meals consumed",
+        "veganMealsShare": "Share of vegan meals consumed",
+        "fullyVegetarianEmployees": "100% vegetarian employees",
+        "fullyVeganEmployees": "100% vegan employees",
         "redMeatDailyEmployees": "Employees who eat red meat every day"
       },
       "divers": {
         "title": "Digital",
-        "aiRequestsPerDay": "Average AI requests per employee per day",
-        "videoHoursPerDay": "Average videoconference hours per employee per day",
-        "internetHoursPerDay": "Average internet hours per employee per day"
+        "aiRequestsPerDay": "Average number of AI requests per employee per day",
+        "videoHoursPerDay": "Average number of videoconference hours per employee per day",
+        "internetHoursPerDay": "Average number of internet hours per employee per day"
       }
     },
     "comments": {
