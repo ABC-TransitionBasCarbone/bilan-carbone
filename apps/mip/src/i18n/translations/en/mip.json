@@ -19,6 +19,7 @@
       "backToExplanation": "Back to explanation page"
     },
     "explanation": {
+      "title": "Mon Impact Pro",
       "start": "Take the test",
       "cover": {
         "title": "Do you know your professional carbon footprint?",
@@ -26,7 +27,8 @@
       },
       "why": {
         "title": "Why this tool?",
-        "description": "[PROTOTYPE] This work-related carbon footprint tool is part of your organisation's transition approach by providing an order-of-magnitude estimate of greenhouse gas emissions linked to professional practices. It raises awareness by making the topic more tangible, while addressing emissions at employee level. In that sense, it connects individual actions with structural challenges and provides a useful entry point to better understand the main emission categories and foster collective thinking on reduction levers at organisation level."
+        "description": "[PROTOTYPE] This work-related carbon footprint tool is part of your organisation's transition approach by providing an order-of-magnitude estimate of greenhouse gas emissions linked to professional practices. It raises awareness by making the topic more tangible, while addressing emissions at employee level. In that sense, it connects individual actions with structural challenges and provides a useful entry point to better understand the main emission categories and foster collective thinking on reduction levers at organisation level.",
+        "summary": "[PROTOTYPE] This work-related carbon footprint tool is part of your organisation's transition approach by providing an order-of-magnitude estimate of greenhouse gas emissions linked to professional practices. It raises awareness by making the topic more tangible, while addressing emissions at employee level. In that sense, it connects individual actions with structural challenges and provides a useful entry point to better understand the main emission categories and foster collective thinking on reduction levers at organisation level."
       },
       "about": {
         "title": "About the development of this tool",
@@ -37,7 +39,8 @@
       },
       "note": {
         "title": "Note",
-        "description": "This tool is currently a prototype: it may contain bugs, incomplete features, or some missing information and messages. These will be progressively fixed and improved."
+        "description": "This tool is currently a prototype: it may contain bugs, incomplete features, or some missing information and messages. These will be progressively fixed and improved.",
+        "summary": "This tool is currently a prototype: it may contain bugs, incomplete features, or some missing information and messages. These will be progressively fixed and improved."
       }
     },
     "resume": "Resume survey",
