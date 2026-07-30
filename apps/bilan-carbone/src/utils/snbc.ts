@@ -17,6 +17,7 @@ import type {
 import { TrajectoryData } from '@/types/trajectory.types'
 import type { SectenInfo } from '@abc-transitionbascarbone/db-common'
 import { TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
+import { calculateRateForSegment, ReductionRates } from '@abc-transitionbascarbone/utils/trajectory'
 import { isSectenSector } from './secten'
 import {
   computePastOrPresentValue,
@@ -56,11 +57,7 @@ interface TrajectoryTargetEmissions {
   2050: number
 }
 
-export interface ReductionRates {
-  rateTo2015?: number
-  rateTo2030: number
-  rateTo2050: number
-}
+export type { ReductionRates }
 
 export const getSectenEmissionsByYear = (
   sectenData: SectenInfo[],
@@ -122,25 +119,6 @@ const getTrajectoryTargetEmissions = (
     2030: emissions1990 * (1 - SNBC_2030_REDUCTION_RATE),
     2050: emissions1990 * (1 - SNBC_2050_REDUCTION_RATE),
   }
-}
-
-const calculateRateForSegment = (
-  fromEmissions: number,
-  toEmissions: number,
-  fromYear: number,
-  toYear: number,
-): number | null => {
-  if (fromEmissions <= 0 || fromEmissions <= toEmissions) {
-    return 0
-  }
-
-  const years = toYear - fromYear
-  if (years <= 0) {
-    return null
-  }
-
-  const totalReduction = (fromEmissions - toEmissions) / fromEmissions
-  return totalReduction / years
 }
 
 const getReductionStartYear = (studyStartYear: number, latestSectenYear: number): number => {

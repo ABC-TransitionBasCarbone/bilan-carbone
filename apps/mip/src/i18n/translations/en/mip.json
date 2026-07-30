@@ -63,10 +63,9 @@
         "available": "actions"
       },
       "transition": {
-        "title": "Trajectory to {target} tCO₂e",
-        "description": "You start from {current} tCO₂e/year to move toward the {target} tCO₂e goal.",
-        "startLabel": "Starting footprint",
-        "goalLabel": "Final target: {target} tCO₂e/year"
+        "title": "Your reduction trajectory",
+        "context": "This reduction trajectory is your organisation’s reduction pathway applied to your personal footprint. Your footprint will not follow this path exactly, but it will tend to decrease in this way through changes in your work practices — and above all through the structural changes led by your organisation.",
+        "startLabel": "Starting footprint"
       },
       "range": {
         "minLabel": "0 tCO₂e",
