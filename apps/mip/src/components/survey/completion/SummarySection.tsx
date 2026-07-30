@@ -1,7 +1,7 @@
 'use client'
 
 import { CategoryWithActions } from '@/components/survey/completion/types'
-import { formatMassKilograms, getCategoryToneSuffix } from '@abc-transitionbascarbone/publicodes/form'
+import { formatMassKilograms, getCategoryClassSuffix } from '@abc-transitionbascarbone/publicodes/form'
 import { ExpandMore } from '@mui/icons-material'
 import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
@@ -23,9 +23,9 @@ const SummarySection = ({ actionsByCategory, totalKg }: Props) => {
 
       <div className="flex-col gapped1">
         {actionsByCategory.map((category) => {
-          const toneSuffix = getCategoryToneSuffix(category.key)
-          const toneClass = styles[`tone${toneSuffix}`] ?? styles.toneDt
-          const summaryToneClass = styles[`summaryAccordion${toneSuffix}`] ?? styles.summaryAccordionDt
+          const categoryClassSuffix = getCategoryClassSuffix(category.key)
+          const toneClass = styles[`tone${categoryClassSuffix}`] ?? styles.toneDt
+          const summaryToneClass = styles[`summaryAccordion${categoryClassSuffix}`] ?? styles.summaryAccordionDt
           const categoryShare = totalKg > 0 ? Math.round((category.valueKg / totalKg) * 100) : 0
 
           return (

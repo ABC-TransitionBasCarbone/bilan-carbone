@@ -7,7 +7,7 @@ import { FormBuilder, FormState } from '@publicodes/forms'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import styles from './Survey.module.css'
 import SurveyCategoriesSidebar from './SurveyCategoriesSidebar'
 import SurveyCategoryInterstitial from './SurveyCategoryInterstitial'
@@ -30,22 +30,22 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   const { engine } = useMipPublicodes()
   const router = useRouter()
 
-  const formBuilder = new FormBuilder({
-    engine,
-    pageBuilder: buildPageBuilder(engine),
-  })
+  const formBuilder = useMemo(
+    () =>
+      new FormBuilder({
+        engine,
+        pageBuilder: buildPageBuilder(engine),
+      }),
+    [engine],
+  )
 
-  const initState = () => {
-    let s = FormBuilder.newState()
-    s = formBuilder.start(s, rootRule)
-    return s
-  }
+  const initState = () => formBuilder.start(FormBuilder.newState(), rootRule)
 
   const [isResumed, setIsResumed] = useState(false)
   const [isExplanationVisible, setIsExplanationVisible] = useState(true)
   const [isLoading, setIsLoading] = useState(true)
   const [isCompleting, setIsCompleting] = useState(false)
-  const [state, setState] = useState<FormState<string>>(initState)
+  const [state, setState] = useState<FormState<string>>(() => initState())
   const [interstitialCategoryKey, setInterstitialCategoryKey] = useState<string | null>(null)
   const updateState = (newState: FormState<string>) => setState(newState)
 

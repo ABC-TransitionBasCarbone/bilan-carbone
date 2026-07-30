@@ -35,31 +35,31 @@
 }
 
 .suggestionToneDt {
-  --suggestion-bg: var(--mip-category-dt-bg, var(--primary-100));
-  --suggestion-text: var(--mip-category-dt-text, var(--info));
-  --suggestion-bg-hover: color-mix(in srgb, var(--mip-category-dt-text, var(--info)) 16%, white);
+  --suggestion-bg: color-mix(in srgb, var(--mui-palette-primary-light) 86%, var(--white));
+  --suggestion-text: var(--mui-palette-primary-main);
+  --suggestion-bg-hover: color-mix(in srgb, var(--mui-palette-primary-main) 16%, var(--white));
 }
 
 .suggestionToneTransport {
-  --suggestion-bg: var(--mip-category-transport-bg, var(--primary-100));
-  --suggestion-text: var(--mip-category-transport-text, var(--info));
-  --suggestion-bg-hover: color-mix(in srgb, var(--mip-category-transport-text, var(--info)) 16%, white);
+  --suggestion-bg: color-mix(in srgb, var(--mui-palette-info-light) 14%, var(--white));
+  --suggestion-text: var(--mui-palette-info-main);
+  --suggestion-bg-hover: color-mix(in srgb, var(--mui-palette-info-main) 16%, var(--white));
 }
 
 .suggestionToneAlimentation {
-  --suggestion-bg: var(--mip-category-alimentation-bg, var(--primary-100));
-  --suggestion-text: var(--mip-category-alimentation-text, var(--info));
-  --suggestion-bg-hover: color-mix(in srgb, var(--mip-category-alimentation-text, var(--info)) 16%, white);
+  --suggestion-bg: color-mix(in srgb, var(--mui-palette-warning-light) 22%, var(--white));
+  --suggestion-text: var(--mui-palette-warning-main);
+  --suggestion-bg-hover: color-mix(in srgb, var(--mui-palette-warning-main) 16%, var(--white));
 }
 
 .suggestionToneDivers {
-  --suggestion-bg: var(--mip-category-divers-bg, var(--primary-100));
-  --suggestion-text: var(--mip-category-divers-text, var(--info));
-  --suggestion-bg-hover: color-mix(in srgb, var(--mip-category-divers-text, var(--info)) 16%, white);
+  --suggestion-bg: color-mix(in srgb, var(--mui-palette-error-light) 20%, var(--white));
+  --suggestion-text: var(--mui-palette-error-main);
+  --suggestion-bg-hover: color-mix(in srgb, var(--mui-palette-error-main) 16%, var(--white));
 }
 
 .suggestionToneLogement {
-  --suggestion-bg: var(--mip-category-logement-bg, var(--primary-100));
-  --suggestion-text: var(--mip-category-logement-text, var(--info));
-  --suggestion-bg-hover: color-mix(in srgb, var(--mip-category-logement-text, var(--info)) 16%, white);
+  --suggestion-bg: color-mix(in srgb, var(--mui-palette-success-light) 30%, var(--white));
+  --suggestion-text: var(--mui-palette-success-main);
+  --suggestion-bg-hover: color-mix(in srgb, var(--mui-palette-success-main) 16%, var(--white));
 }

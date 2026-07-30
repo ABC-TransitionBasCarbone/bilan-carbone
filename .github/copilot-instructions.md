@@ -80,11 +80,9 @@ Run from repo root unless specified:
 
 Immediately before each throw new Error(NOT_AUTHORIZED), add console.error with contextual identifiers (function name + relevant IDs).
 
-## Review Behavior
+## Github Behavior
 
-When implementing review feedback:
-- Apply requested code changes.
-- Do not post replies to human peer review comments.
+Only read github and never write, comment, resolve, or close issues/pull requests or comments.
 
 ## Important Locations
 

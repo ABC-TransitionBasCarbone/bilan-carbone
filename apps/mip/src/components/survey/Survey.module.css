@@ -45,28 +45,28 @@
 }
 
 .progressToneDt {
-  --progress-track: var(--mip-category-dt-bg);
-  --progress-fill: var(--mip-category-dt-text);
+  --progress-track: color-mix(in srgb, var(--mui-palette-primary-light) 86%, var(--white));
+  --progress-fill: var(--mui-palette-primary-main);
 }
 
 .progressToneTransport {
-  --progress-track: var(--mip-category-transport-bg);
-  --progress-fill: var(--mip-category-transport-text);
+  --progress-track: color-mix(in srgb, var(--mui-palette-info-light) 14%, var(--white));
+  --progress-fill: var(--mui-palette-info-main);
 }
 
 .progressToneAlimentation {
-  --progress-track: var(--mip-category-alimentation-bg);
-  --progress-fill: var(--mip-category-alimentation-text);
+  --progress-track: color-mix(in srgb, var(--mui-palette-warning-light) 22%, var(--white));
+  --progress-fill: var(--mui-palette-warning-main);
 }
 
 .progressToneDivers {
-  --progress-track: var(--mip-category-divers-bg);
-  --progress-fill: var(--mip-category-divers-text);
+  --progress-track: color-mix(in srgb, var(--mui-palette-error-light) 20%, var(--white));
+  --progress-fill: var(--mui-palette-error-main);
 }
 
 .progressToneLogement {
-  --progress-track: var(--mip-category-logement-bg);
-  --progress-fill: var(--mip-category-logement-text);
+  --progress-track: color-mix(in srgb, var(--mui-palette-success-light) 30%, var(--white));
+  --progress-fill: var(--mui-palette-success-main);
 }
 
 .questionCard {

@@ -3,7 +3,7 @@
 import { useMipPublicodes } from '@/publicodes/MipPublicodesProvider'
 import {
   formatMassKilograms,
-  getCategoryToneSuffix,
+  getCategoryClassSuffix,
   getPositiveNodeValue,
   SURVEY_CATEGORY_KEYS,
 } from '@abc-transitionbascarbone/publicodes/form'
@@ -56,7 +56,7 @@ const SurveyCategoriesSidebar = ({ activeCategoryKey }: Props) => {
     const result = engine.evaluate(key)
     const valueKg = getPositiveNodeValue(result.nodeValue)
     const isActive = key === activeCategoryKey
-    const toneSuffix = getCategoryToneSuffix(key)
+    const categoryClassSuffix = getCategoryClassSuffix(key)
 
     return {
       key,
@@ -65,7 +65,7 @@ const SurveyCategoriesSidebar = ({ activeCategoryKey }: Props) => {
       valueKg,
       isActive,
       isAnswered: valueKg > 0,
-      toneClassName: styles[`category${toneSuffix}`] ?? styles.categoryDt,
+      toneClassName: styles[`category${categoryClassSuffix}`] ?? styles.categoryDt,
     }
   })
 

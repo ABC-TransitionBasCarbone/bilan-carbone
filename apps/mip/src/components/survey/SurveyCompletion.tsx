@@ -10,7 +10,11 @@ import { ActionResult, CategoryResult } from '@/components/survey/completion/typ
 import { clearSurveyState, loadSurveyState } from '@/components/survey/surveyStateStorage'
 import { useMipPublicodes } from '@/publicodes/MipPublicodesProvider'
 import type { RawRules } from '@/publicodes/mip-engine'
-import { getPositiveNodeValue, SURVEY_CATEGORY_KEYS } from '@abc-transitionbascarbone/publicodes/form'
+import {
+  getPositiveNodeValue,
+  getRuleCategoryKey,
+  SURVEY_CATEGORY_KEYS,
+} from '@abc-transitionbascarbone/publicodes/form'
 import { Refresh } from '@mui/icons-material'
 import { Button, Container } from '@mui/material'
 import { useTranslations } from 'next-intl'
@@ -97,7 +101,7 @@ const SurveyCompletion = ({ surveyId, model, restoreFromStorage = false }: Props
               key,
               titre: rule?.titre ?? key,
               icones: rule?.icônes ?? '',
-              categoryKey: key.split(' . ')[0],
+              categoryKey: getRuleCategoryKey(key),
               savingsKg,
             },
           ]

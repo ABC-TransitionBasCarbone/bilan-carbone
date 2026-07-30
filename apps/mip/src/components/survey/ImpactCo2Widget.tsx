@@ -12,11 +12,13 @@ const ImpactCo2Widget = ({ type, className, testId }: Props) => {
   const mountRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
-    if (!mountRef.current || !type) {
+    const mountElement = mountRef.current
+
+    if (!mountElement || !type) {
       return
     }
 
-    mountRef.current.innerHTML = ''
+    mountElement.innerHTML = ''
 
     const script = document.createElement('script')
     script.src = 'https://impactco2.fr/iframe.js'
@@ -25,12 +27,10 @@ const ImpactCo2Widget = ({ type, className, testId }: Props) => {
     script.dataset.type = type
     script.dataset.search = '?language=fr&theme=default'
 
-    mountRef.current.appendChild(script)
+    mountElement.appendChild(script)
 
     return () => {
-      if (mountRef.current) {
-        mountRef.current.innerHTML = ''
-      }
+      mountElement.innerHTML = ''
     }
   }, [type])
 

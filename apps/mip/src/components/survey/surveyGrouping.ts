@@ -26,20 +26,36 @@ export type GroupedElement = GroupedSingleElement | GroupedMosaicElement
 
 type MipEngine = ReturnType<typeof createMipEngine>
 
+const getGroupedElementRuleName = (groupedElement?: GroupedElement): string | null => {
+  if (!groupedElement) {
+    return null
+  }
+
+  if (groupedElement.type === 'single') {
+    return groupedElement.el.id
+  }
+
+  return groupedElement.elements[0]?.id ?? groupedElement.parent
+}
+
 export const buildGroupedElements = (engine: MipEngine, elements: SurveyFormElement[]): GroupedElement[] => {
   const groupedElements: GroupedElement[] = []
-  const seen = new Set<string>()
+  const mosaicGroupsByParent = new Map<string, GroupedMosaicElement>()
 
   for (const el of elements) {
     const mosaicParent = getMosaicParent(engine, el.id)
     if (mosaicParent) {
-      if (!seen.has(mosaicParent)) {
-        seen.add(mosaicParent)
-        groupedElements.push({
+      const existingGroup = mosaicGroupsByParent.get(mosaicParent)
+      if (existingGroup) {
+        existingGroup.elements.push(el)
+      } else {
+        const newGroup: GroupedMosaicElement = {
           type: 'mosaic',
           parent: mosaicParent,
-          elements: elements.filter((element) => getMosaicParent(engine, element.id) === mosaicParent),
-        })
+          elements: [el],
+        }
+        mosaicGroupsByParent.set(mosaicParent, newGroup)
+        groupedElements.push(newGroup)
       }
       continue
     }
@@ -56,27 +72,12 @@ export const buildGroupedElements = (engine: MipEngine, elements: SurveyFormElem
 }
 
 export const getCategoryKey = (groupedElements: GroupedElement[]): string | null => {
-  if (groupedElements[0]?.type === 'mosaic') {
-    return getRuleCategoryKey(groupedElements[0].parent)
-  }
-  if (groupedElements[0]?.type === 'single') {
-    return getRuleCategoryKey(groupedElements[0].el.id)
-  }
-  return null
+  const ruleName = getGroupedElementRuleName(groupedElements[0])
+  return ruleName ? getRuleCategoryKey(ruleName) : null
 }
 
 export const getCurrentSectionTitle = (engine: MipEngine, groupedElements: GroupedElement[]) => {
-  if (groupedElements[0]?.type === 'mosaic') {
-    const key = getRuleCategoryKey(groupedElements[0].parent)
-    const raw = engine.getParsedRules()[key]?.rawNode
-    return { label: raw?.titre ?? '', icons: raw?.icônes }
-  }
-
-  if (groupedElements[0]?.type === 'single') {
-    const key = getRuleCategoryKey(groupedElements[0].el.id)
-    const raw = engine.getParsedRules()[key]?.rawNode
-    return { label: raw?.titre ?? '', icons: raw?.icônes }
-  }
-
-  return { label: '', icons: undefined }
+  const categoryKey = getCategoryKey(groupedElements)
+  const raw = categoryKey ? engine.getParsedRules()[categoryKey]?.rawNode : undefined
+  return { label: raw?.titre ?? '', icons: raw?.icônes }
 }

@@ -13,17 +13,28 @@ export type OnFieldChange<RuleName extends string = string> = (
 
 export const SURVEY_CATEGORY_KEYS = ['DT', 'transport', 'alimentation', 'divers', 'logement'] as const
 const SURVEY_CATEGORY_ORDER: readonly string[] = SURVEY_CATEGORY_KEYS
+const RULE_NAME_SEPARATOR = ' . '
 
-export function getRuleCategoryKey(ruleName: string): string {
-  return ruleName.split(' . ')[0]
+export const getRuleNameParts = (ruleName: string): string[] => ruleName.split(RULE_NAME_SEPARATOR)
+
+export const joinRuleNameParts = (parts: string[]): string => parts.join(RULE_NAME_SEPARATOR)
+
+export const getRuleParentName = (ruleName: string): string | null => {
+  const parts = getRuleNameParts(ruleName)
+  return parts.length > 1 ? joinRuleNameParts(parts.slice(0, -1)) : null
 }
 
-export function getCategoryToneSuffix(categoryKey?: string | null): string {
+export const getRuleCategoryKey = (ruleName: string): string => getRuleNameParts(ruleName)[0]
+
+export const getCategoryClassSuffix = (categoryKey?: string | null): string => {
   if (!categoryKey) {
     return ''
   }
   return categoryKey === 'DT' ? 'Dt' : categoryKey.charAt(0).toUpperCase() + categoryKey.slice(1)
 }
+
+export const getRuleCategoryClassSuffix = (ruleName?: string | null): string =>
+  getCategoryClassSuffix(ruleName ? getRuleCategoryKey(ruleName) : null)
 
 export function formatMassKilograms(valueKg: number): string {
   if (valueKg >= 1000) {
@@ -103,15 +114,15 @@ function areReferencedInApplicability<RuleName extends string>(
 
 export function getMosaicParent(engine: Engine, ruleName: string): string | null {
   const rules = engine.getParsedRules()
-  const parts = ruleName.split(' . ')
+  const parts = getRuleNameParts(ruleName)
 
   for (let i = parts.length - 1; i > 0; i--) {
-    const parent = parts.slice(0, i).join(' . ')
+    const parent = joinRuleNameParts(parts.slice(0, i))
     const parentRule = rules[parent]?.rawNode as any
     if (parentRule?.mosaique) {
       const options = parentRule.mosaique.options ?? []
-      const relativeRuleName = parts.slice(i).join(' . ')
-      if (options.includes(relativeRuleName) || options.includes(ruleName)) {
+      const relativeRuleName = joinRuleNameParts(parts.slice(i))
+      if (options.includes(relativeRuleName)) {
         return parent
       }
     }
@@ -120,7 +131,11 @@ export function getMosaicParent(engine: Engine, ruleName: string): string | null
 }
 
 const MAX = Number.MAX_SAFE_INTEGER
-const normalize = (n: number) => (n === -1 ? MAX : n)
+
+const getCategoryOrderIndex = (categoryKey: string): number => {
+  const index = SURVEY_CATEGORY_ORDER.indexOf(categoryKey)
+  return index === -1 ? MAX : index
+}
 
 const getRuleOrder = (rawNode: unknown): number | null => {
   const ordre = (rawNode as { ordre?: unknown } | null)?.ordre
@@ -141,15 +156,16 @@ const compareRuleNames = (
   const aRoot = getRuleCategoryKey(a)
   const bRoot = getRuleCategoryKey(b)
 
-  const catDiff = normalize(SURVEY_CATEGORY_ORDER.indexOf(aRoot)) - normalize(SURVEY_CATEGORY_ORDER.indexOf(bRoot))
+  // Keep survey questions grouped by top-level category before applying explicit Publicodes ordering.
+  const catDiff = getCategoryOrderIndex(aRoot) - getCategoryOrderIndex(bRoot)
   if (catDiff !== 0) return catDiff
 
-  const aParts = a.split(' . ')
-  const bParts = b.split(' . ')
+  const aParts = getRuleNameParts(a)
+  const bParts = getRuleNameParts(b)
 
   for (let depth = 1; depth <= Math.max(aParts.length, bParts.length); depth++) {
-    const aOrder = getRuleOrder(parsedRules[aParts.slice(0, depth).join(' . ')]?.rawNode)
-    const bOrder = getRuleOrder(parsedRules[bParts.slice(0, depth).join(' . ')]?.rawNode)
+    const aOrder = getRuleOrder(parsedRules[joinRuleNameParts(aParts.slice(0, depth))]?.rawNode)
+    const bOrder = getRuleOrder(parsedRules[joinRuleNameParts(bParts.slice(0, depth))]?.rawNode)
     if (aOrder !== null || bOrder !== null) {
       const diff = (aOrder ?? MAX) - (bOrder ?? MAX)
       if (diff !== 0) return diff
@@ -169,18 +185,25 @@ export function buildPageBuilder(engine: Engine) {
       .sort((a, b) => compareRuleNames(a, b, rules, initialIndexes))
 
     const pages: FormPages<string> = []
-    const seen = new Set<string>()
+    const mosaicPagesByParent = new Map<string, FormPages<string>[number]>()
 
     for (const field of sortedFields) {
       const mosaicParent = getMosaicParent(engine, field)
-      if (mosaicParent && !seen.has(mosaicParent)) {
-        seen.add(mosaicParent)
-        pages.push({
-          elements: sortedFields.filter((f) => getMosaicParent(engine, f) === mosaicParent),
-          title: (engine.getParsedRules()[mosaicParent]?.rawNode as any)?.question,
-        })
-      } else if (!mosaicParent) {
+      if (!mosaicParent) {
         pages.push({ elements: [field] })
+        continue
+      }
+
+      const existingPage = mosaicPagesByParent.get(mosaicParent)
+      if (existingPage) {
+        existingPage.elements.push(field)
+      } else {
+        const newPage = {
+          elements: [field],
+          title: (rules[mosaicParent]?.rawNode as any)?.question,
+        }
+        mosaicPagesByParent.set(mosaicParent, newPage)
+        pages.push(newPage)
       }
     }
     return pages

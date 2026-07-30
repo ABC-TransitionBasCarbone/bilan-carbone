@@ -2,16 +2,9 @@
 
 import { Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
+import { getImpactCo2WidgetType } from './impactCo2'
 import ImpactCo2Widget from './ImpactCo2Widget'
 import styles from './SurveyCategoryInterstitial.module.css'
-
-const INTERSTITIAL_WIDGET_BY_CATEGORY: Record<string, string> = {
-  DT: 'transport',
-  transport: 'transport',
-  alimentation: 'alimentation',
-  divers: 'numerique',
-  logement: 'quiz',
-}
 
 interface Props {
   categoryKey: string
@@ -19,7 +12,7 @@ interface Props {
 
 const SurveyCategoryInterstitial = ({ categoryKey }: Props) => {
   const t = useTranslations('survey')
-  const type = INTERSTITIAL_WIDGET_BY_CATEGORY[categoryKey]
+  const type = getImpactCo2WidgetType(categoryKey, 'interstitial')
 
   return (
     <div className="flex-col gapped1" data-testid="survey-category-interstitial">
