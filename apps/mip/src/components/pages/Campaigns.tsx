@@ -1,6 +1,6 @@
 'use client'
 
-import { MIN_RESPONDENTS_FOR_CSV_EXPORT } from '@/constants/survey'
+import { isCsvExportDisabled } from '@/constants/survey'
 import type { CampaignsWithResponses, ModelCampaignLight } from '@/db/campaign'
 import { updateCampaignCommand } from '@/services/serverFunctions/campaign'
 import { UpdateCampaignCommand, UpdateCampaignCommandValidation } from '@/services/serverFunctions/campaign.command'
@@ -37,6 +37,7 @@ interface Props {
 
 const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
   const t = useTranslations('campaigns')
+  const tResults = useTranslations('results')
   const router = useRouter()
   const { showErrorToast, showSuccessToast } = useToast()
   const [displayCampaignHelp, setDisplayCampaignHelp] = useState(false)
@@ -162,7 +163,7 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
           header: () => t('responsesCount'),
           accessorKey: 'responsesCount',
           cell: ({ row }) => {
-            const count = campaigns.find((campaign) => campaign.id === row.original.id)?._count.responses || 0
+            const count = campaigns.find((campaign) => campaign.id === row.original.id)?.responsesCount || 0
             return <div>{count}</div>
           },
         },
@@ -183,10 +184,10 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
           id: 'exportCsv',
           header: () => t('exportCsv'),
           cell: ({ row }) => {
-            const count = campaigns.find((campaign) => campaign.id === row.original.id)?._count.responses ?? 0
-            const isDisabled = count < MIN_RESPONDENTS_FOR_CSV_EXPORT
+            const count = campaigns.find((campaign) => campaign.id === row.original.id)?.responsesCount ?? 0
+            const isDisabled = isCsvExportDisabled(count)
             return (
-              <Tooltip title={isDisabled ? t('exportCsvDisabledMinRespondents') : t('exportCsv')}>
+              <Tooltip title={isDisabled ? tResults('export.disabledMinRespondents') : t('exportCsv')}>
                 <span>
                   <IconButton
                     size="medium"

@@ -26,3 +26,5 @@ export const ENTITY_CATEGORY_FACTORS: Record<string, Partial<Record<SurveyCatego
 }
 
 export const MIN_RESPONDENTS_FOR_CSV_EXPORT = 10
+
+export const isCsvExportDisabled = (respondentsCount: number) => respondentsCount < MIN_RESPONDENTS_FOR_CSV_EXPORT

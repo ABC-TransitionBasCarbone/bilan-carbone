@@ -422,10 +422,9 @@ export const exportSurveyResponsesToCSV = async (campaignId: string) =>
       ]
     })
 
-    const csvContent = buildCsv(
-      ['Index reponse', 'Date reponse', ...questionColumns.map((column) => column.ruleName)],
-      rows,
-    )
+    const questionHeaderVariableNames = questionColumns.map((column) => column.ruleName)
+
+    const csvContent = buildCsv(['Index reponse', 'Date reponse', ...questionHeaderVariableNames], rows)
 
     const safeCampaignName = sanitizeFileName(campaign.name)
     return {

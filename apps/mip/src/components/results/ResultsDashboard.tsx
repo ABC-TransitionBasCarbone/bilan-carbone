@@ -1,7 +1,7 @@
 'use client'
 
 import { CATEGORY_COLORS } from '@/constants/style'
-import { MIN_RESPONDENTS_FOR_CSV_EXPORT } from '@/constants/survey'
+import { isCsvExportDisabled } from '@/constants/survey'
 import { exportSurveyResponsesToCSV } from '@/services/serverFunctions/survey'
 import { SurveyResults } from '@/types/results.types'
 import { getResultsForEntity } from '@/utils/survey'
@@ -57,7 +57,7 @@ const ResultsDashboard = ({ results }: Props) => {
     window.print()
   }
 
-  const isExportDisabled = results.totalRespondents < MIN_RESPONDENTS_FOR_CSV_EXPORT
+  const isExportDisabled = isCsvExportDisabled(results.totalRespondents)
 
   const handleExportCsv = async () => {
     const result = await exportSurveyResponsesToCSV(results.surveyId)
