@@ -1,6 +1,6 @@
 'use client'
 
-import { partnerLogos } from '@/constant'
+import { PARTNER_LOGOS } from '@/constants/logos'
 import { Button, Container, Typography } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -30,7 +30,7 @@ const SurveyExplanation = ({ onStart }: Props) => {
 
       <Container maxWidth="lg" className={classNames(styles.explanationCard, 'pt2', 'pb2')}>
         <div className={classNames(styles.logoRow, 'align-center', 'gapped075', 'pb-2', 'mb2')}>
-          {partnerLogos.map((logo) => (
+          {PARTNER_LOGOS.map((logo) => (
             <div key={logo.src} className={classNames(styles.logoSlot, 'flex-cc')}>
               <Image
                 src={logo.src}

@@ -3,7 +3,7 @@ type PartnerLogo = {
   alt: string
 }
 
-export const partnerLogos: PartnerLogo[] = [
+export const PARTNER_LOGOS: PartnerLogo[] = [
   { src: '/logos/partners/abc.png', alt: 'ABC' },
   { src: '/logos/partners/grdf.png', alt: 'GRDF' },
   { src: '/logos/partners/ag2r-la-mondiale.png', alt: 'AG2R La Mondiale' },

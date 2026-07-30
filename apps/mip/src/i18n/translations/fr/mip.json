@@ -273,6 +273,7 @@
         "title": "Commentaires des collaborateurs"
       },
       "dataCsv": "Exporter les données (CSV)",
+      "disabledMinRespondents": "L'export CSV n'est pas disponible : il faut au moins 10 répondants pour protéger l'anonymat des répondants.",
       "visual": "Exporter (visuel)",
       "print": "Imprimer"
     }

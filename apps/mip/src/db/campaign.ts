@@ -93,7 +93,10 @@ export const getAllOrganizationVersionMipCampaigns = async (organizationVersionM
     },
   })
 
-  return campaigns
+  return campaigns.map(({ _count, ...campaign }) => ({
+    ...campaign,
+    responsesCount: _count.responses,
+  }))
 }
 
 export type CampaignsWithResponses = AsyncReturnType<typeof getAllOrganizationVersionMipCampaigns>
@@ -119,7 +122,10 @@ export const getAllAllowedCampaigns = async (accountMipId: string, organizationV
     },
   })
 
-  return campaigns
+  return campaigns.map(({ _count, ...campaign }) => ({
+    ...campaign,
+    responsesCount: _count.responses,
+  }))
 }
 
 export const updateCampaign = async (

@@ -265,6 +265,7 @@
         "title": "Collaborator comments"
       },
       "dataCsv": "Export data (CSV)",
+      "disabledMinRespondents": "CSV export is not available: at least 10 respondents are required to protect respondent anonymity.",
       "visual": "Export (visual)",
       "print": "Print"
     }

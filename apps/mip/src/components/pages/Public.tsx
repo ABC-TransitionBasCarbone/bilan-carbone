@@ -1,5 +1,5 @@
 'use client'
-import { partnerLogos } from '@/constant'
+import { PARTNER_LOGOS } from '@/constants/logos'
 import PublicContainer from '@abc-transitionbascarbone/components/src/base/PublicContainer'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -13,7 +13,7 @@ interface Props {
 
 const PublicPage = ({ children }: Props) => {
   const t = useTranslations('survey')
-  const logo = partnerLogos.find((logo) => logo.alt === 'ABC')
+  const logo = PARTNER_LOGOS.find((logo) => logo.alt === 'ABC')
 
   return (
     <PublicContainer>
