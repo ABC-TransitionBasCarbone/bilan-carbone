@@ -1,5 +1,5 @@
 import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
-import { FormLayout, inputLayout, mosaicLayout, tableLayout } from '@abc-transitionbascarbone/publicodes/form/layouts'
+import { FormLayout, groupLayout, inputLayout, mosaicLayout, listLayout, tableLayout } from '@abc-transitionbascarbone/publicodes/form/layouts'
 import { TiltSimplifiedPost } from '@abc-transitionbascarbone/services/results/posts.enums'
 import { TiltRuleName } from './types'
 
@@ -57,7 +57,7 @@ const SUBPOST_TO_RULENAME: Partial<Record<SubPost, TiltRuleName>> = {
   RepasPrisParLesBenevoles: 'alimentation . bénévoles',
   RepasPrisParLesBeneficiaires: 'alimentation . bénéficiaires',
   UsagesNumeriques: 'intrants-services . numérique',
-  ServicesEnApprocheMonetaire: 'intrants-services . services',
+  ServicesEnApprocheMonetaire: 'intrants-services . approche monétaire',
   EquipementsDesSalaries: 'équipements et immobilisations',
   ConsommationsEnergieUtilisationProduits: 'utilisation . responsabilite conso energie',
   FinDeVieProduitsVendusFournisBeneficiaires: 'fin de vie . déchets',
@@ -65,6 +65,7 @@ const SUBPOST_TO_RULENAME: Partial<Record<SubPost, TiltRuleName>> = {
 } as const
 
 const input = (rule: TiltRuleName): FormLayout<TiltRuleName> => inputLayout<TiltRuleName>(rule)
+const group = (title: string, rules: CutRuleName[]): FormLayout<CutRuleName> => groupLayout<CutRuleName>(title, rules)
 const table = (
   title: string,
   headers: string[],
@@ -73,6 +74,8 @@ const table = (
 ): FormLayout<TiltRuleName> => tableLayout<TiltRuleName>(title, headers, rows, description)
 const mosaic = (parent: TiltRuleName, children: TiltRuleName[]): FormLayout<TiltRuleName> =>
   mosaicLayout<TiltRuleName>(parent, children)
+const list = (targetRule: TiltRuleName, rules: TiltRuleName[]): FormLayout<TiltRuleName> =>
+  listLayout<TiltRuleName>(targetRule, rules)
 
 export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRuleName>[]>> = {
   Batiments: [
@@ -103,8 +106,17 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('énergie . fossiles . fioul . consommation'),
   ],
   CombustiblesOrganiques: [
-    input('énergie . combustibles organiques . bois . consommation'),
-    input('énergie . combustibles organiques . granulés . consommation'),
+    group('EnergieTest.question', [ 
+      'énergie . combustibles organiques . types . électricité présent',
+      'énergie . combustibles organiques . types . gaz présent',
+    ]),
+    input('énergie . combustibles organiques . types . chauffage électrique'),
+    mosaic('énergie . combustibles organiques . emissions', [
+      'énergie . combustibles organiques . emissions . électricité . consommation',
+      'énergie . combustibles organiques . emissions . gaz . consommation',
+    ]),
+    // input('énergie . combustibles organiques . bois . consommation'),
+    // input('énergie . combustibles organiques . granulés . consommation'),
   ],
 
   ReseauxDeChaleurEtDeVapeur: [input('énergie . réseaux de chaleur . consommation')],
@@ -139,8 +151,9 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     ),
   ],
   FinDeVieProduitsVendusFournisBeneficiaires: [
-    input('fin de vie . déchets . fin de vie présente'),
-    input('fin de vie . déchets . poids'),
+    input('fin de vie . fin de vie présente'),
+    input('fin de vie . total sans reconditionné . poids'),
+    input('fin de vie . pondération . reconditionné'),
   ],
   ConsommationsEnergieUtilisationProduits: [
     input('utilisation . responsabilite conso energie . élec présente'),

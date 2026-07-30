@@ -1,7 +1,7 @@
 'use client'
 
 import { FormDatePicker } from '@/components/form/DatePicker'
-import GlossaryModal from '@/components/modals/GlossaryModal'
+import GlossaryModal from '@abc-transitionbascarbone/components/src/modals/GlossaryModal'
 import StudyDuplicationForm, { InviteOptions } from '@/components/study/duplication/StudyDuplicationForm'
 import { createStudyCommand, duplicateStudyCommand } from '@/services/serverFunctions/study'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'

@@ -1,6 +1,6 @@
 'use client'
 
-import GlossaryModal from '@/components/modals/GlossaryModal'
+import GlossaryModal from '@abc-transitionbascarbone/components/src/modals/GlossaryModal'
 import type { FullStudy } from '@/db/study'
 import { hasAccessToStudyResults } from '@/services/permissions/environment'
 import { getDetailedEmissionResults } from '@/services/study'
