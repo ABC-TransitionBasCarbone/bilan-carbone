@@ -13,6 +13,7 @@ interface Props {
 
 const PublicPage = ({ children }: Props) => {
   const t = useTranslations('survey')
+  const logo = partnerLogos.find((logo) => logo.alt === 'ABC')
 
   return (
     <PublicContainer>
@@ -23,19 +24,17 @@ const PublicPage = ({ children }: Props) => {
         </div>
         <div className={classNames(styles.loginForm, 'grow flex-col p2')}>
           <div className={classNames('wrap justify-center gapped-2 mb1')}>
-            {partnerLogos
-              .filter((logo) => logo.alt === 'ABC')
-              .map((logo) => (
-                <div key={logo.src} className="flex-cc">
-                  <Image
-                    src={logo.src}
-                    alt={logo.alt}
-                    width={176}
-                    height={72}
-                    className={classNames(styles.loginLogoImage, 'wauto h100')}
-                  />
-                </div>
-              ))}
+            {logo && (
+              <div key={logo.src} className="flex-cc">
+                <Image
+                  src={logo.src}
+                  alt={logo.alt}
+                  width={176}
+                  height={72}
+                  className={classNames(styles.loginLogoImage, 'wauto h100')}
+                />
+              </div>
+            )}
           </div>
           {children}
         </div>
