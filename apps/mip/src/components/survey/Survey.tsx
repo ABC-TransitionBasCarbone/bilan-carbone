@@ -146,67 +146,69 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   }
 
   return (
-    <Container maxWidth="lg" className="pt1 pb5">
-      <div className={classNames(styles.surveyLayout, 'align-start', 'gapped2')}>
-        <div className={classNames(styles.surveyMain, 'grow')}>
-          {interstitialCategoryKey ? (
-            <>
-              <SurveyCategoryInterstitial categoryKey={interstitialCategoryKey} />
-              <SurveyNavigation
-                hasPreviousPage={true}
-                isLastPage={false}
-                isCompleting={false}
-                previousLabel={tCommon('previous')}
-                nextLabel={tCommon('next')}
-                completeLabel={t('navigation.complete')}
-                onPrevious={() => setInterstitialCategoryKey(null)}
-                onNext={() => {
-                  setInterstitialCategoryKey(null)
-                  updateState(formBuilder.goToNextPage(state))
-                }}
-                onComplete={completeSurvey}
-              />
-            </>
-          ) : (
-            <>
-              <SurveyProgressHeader
-                title={currentTitle.label}
-                icons={currentTitle.icons}
-                progress={progress}
-                categoryKey={categoryKey}
-                questionLabel={t('progress.question', {
-                  current: Math.min(current, pageCount),
-                  total: pageCount,
-                })}
-                completionLabel={t('progress.complete', { percent: progress })}
-              />
+    <div className={styles.scrollWrapper}>
+      <Container maxWidth="lg" className="pt1 pb5">
+        <div className={classNames(styles.surveyLayout, 'align-start', 'gapped2')}>
+          <div className={classNames(styles.surveyMain, 'grow')}>
+            {interstitialCategoryKey ? (
+              <>
+                <SurveyCategoryInterstitial categoryKey={interstitialCategoryKey} />
+                <SurveyNavigation
+                  hasPreviousPage={true}
+                  isLastPage={false}
+                  isCompleting={false}
+                  previousLabel={tCommon('previous')}
+                  nextLabel={tCommon('next')}
+                  completeLabel={t('navigation.complete')}
+                  onPrevious={() => setInterstitialCategoryKey(null)}
+                  onNext={() => {
+                    setInterstitialCategoryKey(null)
+                    updateState(formBuilder.goToNextPage(state))
+                  }}
+                  onComplete={completeSurvey}
+                />
+              </>
+            ) : (
+              <>
+                <SurveyProgressHeader
+                  title={currentTitle.label}
+                  icons={currentTitle.icons}
+                  progress={progress}
+                  categoryKey={categoryKey}
+                  questionLabel={t('progress.question', {
+                    current: Math.min(current, pageCount),
+                    total: pageCount,
+                  })}
+                  completionLabel={t('progress.complete', { percent: progress })}
+                />
 
-              <SurveyQuestionList
-                groupedElements={groupedElements}
-                engine={engine}
-                state={state}
-                formBuilder={formBuilder}
-                updateState={updateState}
-              />
-              <SurveyNavigation
-                hasPreviousPage={hasPreviousPage}
-                canGoBackToExplanation={!hasPreviousPage}
-                isLastPage={pageCount === current + 1}
-                isCompleting={isCompleting}
-                backToExplanationLabel={t('navigation.backToExplanation')}
-                previousLabel={tCommon('previous')}
-                nextLabel={tCommon('next')}
-                completeLabel={t('navigation.complete')}
-                onBackToExplanation={() => setIsExplanationVisible(true)}
-                onPrevious={() => updateState(formBuilder.goToPreviousPage(state))}
-                onNext={handleNext}
-                onComplete={completeSurvey}
-              />
-            </>
-          )}
+                <SurveyQuestionList
+                  groupedElements={groupedElements}
+                  engine={engine}
+                  state={state}
+                  formBuilder={formBuilder}
+                  updateState={updateState}
+                />
+                <SurveyNavigation
+                  hasPreviousPage={hasPreviousPage}
+                  canGoBackToExplanation={!hasPreviousPage}
+                  isLastPage={pageCount === current + 1}
+                  isCompleting={isCompleting}
+                  backToExplanationLabel={t('navigation.backToExplanation')}
+                  previousLabel={tCommon('previous')}
+                  nextLabel={tCommon('next')}
+                  completeLabel={t('navigation.complete')}
+                  onBackToExplanation={() => setIsExplanationVisible(true)}
+                  onPrevious={() => updateState(formBuilder.goToPreviousPage(state))}
+                  onNext={handleNext}
+                  onComplete={completeSurvey}
+                />
+              </>
+            )}
+          </div>
+          <SurveyCategoriesSidebar activeCategoryKey={interstitialCategoryKey ?? categoryKey} />
         </div>
-        <SurveyCategoriesSidebar activeCategoryKey={interstitialCategoryKey ?? categoryKey} />
-      </div>
-    </Container>
+      </Container>
+    </div>
   )
 }

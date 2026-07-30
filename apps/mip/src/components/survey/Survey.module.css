@@ -1,3 +1,8 @@
+.scrollWrapper {
+  height: 100vh;
+  overflow-y: auto;
+}
+
 .surveyLayout {
   .surveyMain {
     min-width: 0;

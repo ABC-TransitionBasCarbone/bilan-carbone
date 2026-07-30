@@ -30,11 +30,8 @@ export const getCategoryClassSuffix = (categoryKey?: string | null): string => {
   if (!categoryKey) {
     return ''
   }
-  return categoryKey === 'DT' ? 'Dt' : categoryKey.charAt(0).toUpperCase() + categoryKey.slice(1)
+  return categoryKey.charAt(0).toUpperCase() + categoryKey.slice(1).toLowerCase()
 }
-
-export const getRuleCategoryClassSuffix = (ruleName?: string | null): string =>
-  getCategoryClassSuffix(ruleName ? getRuleCategoryKey(ruleName) : null)
 
 export function formatMassKilograms(valueKg: number): string {
   if (valueKg >= 1000) {
