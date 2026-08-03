@@ -1,5 +1,5 @@
 'use client'
-import { customRich } from '@/i18n/customRich'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import { switchEnvironment } from '@/i18n/environment'
 import { getLocale, switchLocale } from '@/i18n/locale'
 import PublicContainer from '@abc-transitionbascarbone/components/src/base/PublicContainer'
