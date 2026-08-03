@@ -40,6 +40,10 @@ export const sendEmail = async (
   template: string,
   templateData: Record<string, unknown>,
 ) => {
+  if (to.length === 0) {
+    throw new Error('No recipient')
+  }
+
   const faq = await getEnvVar('FAQ_LINK', env)
   const support = await getEnvVar('SUPPORT_EMAIL', env)
   const from = await getEnvVar('MAIL_USER', env)
