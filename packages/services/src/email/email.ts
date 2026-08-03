@@ -28,14 +28,13 @@ export const sendNewUserEmail = async (
   userName: string,
   env: Environment,
 ) => {
-  const t = await getTranslations('email.body')
   return sendEmail(env, [toEmail], await tSubject('newUser'), 'new-user', {
     link: getEnvResetLink('reset-password', token, env),
     userName,
     creatorName,
-    t_helloName: t('helloName', { name: userName }),
-    t_added: t('newUser.added', { creatorName }),
-    t_access: t('newUser.access'),
+    t_helloName: await tBody('helloName', { name: userName }),
+    t_added: await tBody('newUser.added', { creatorName }),
+    t_access: await tBody('newUser.access'),
   })
 }
 
@@ -58,12 +57,11 @@ export const sendAddedActiveUserEmail = async (
   oldEnvs: Environment[],
   orga: string,
 ) => {
-  const t = await getTranslations('email.body')
   const envInfo = await getEnvInfo(newEnv)
   const oldEnvsText =
     oldEnvs.length > 1
-      ? t('addedActiveUser.oldEnvsMultiple', { envNames: oldEnvs.map((env) => EnvironmentNames[env]).join(', ') })
-      : t('addedActiveUser.oldEnvsSingle', { envName: EnvironmentNames[oldEnvs[0]] })
+      ? await tBody('addedActiveUser.oldEnvsMultiple', { envNames: oldEnvs.map((env) => EnvironmentNames[env]).join(', ') })
+      : await tBody('addedActiveUser.oldEnvsSingle', { envName: EnvironmentNames[oldEnvs[0]] })
   return sendEmail(newEnv, [toEmail], await tSubject('addedActiveUser'), 'added-active-user', {
     link: `${BASE_URL}/login`,
     userName,
@@ -72,10 +70,10 @@ export const sendAddedActiveUserEmail = async (
     oldEnvs: oldEnvsText,
     envInfo,
     orga,
-    t_helloName: t('helloName', { name: userName }),
-    t_added: t('addedActiveUser.added', { creatorName, orga, newEnv: EnvironmentNames[newEnv], envInfo }),
-    t_alreadyHadAccess: t('addedActiveUser.alreadyHadAccess', { oldEnvs: oldEnvsText }),
-    t_loginInfo: t('addedActiveUser.loginInfo'),
+    t_helloName: await tBody('helloName', { name: userName }),
+    t_added: await tBody('addedActiveUser.added', { creatorName, orga, newEnv: EnvironmentNames[newEnv], envInfo }),
+    t_alreadyHadAccess: await tBody('addedActiveUser.alreadyHadAccess', { oldEnvs: oldEnvsText }),
+    t_loginInfo: await tBody('addedActiveUser.loginInfo'),
   })
 }
 
@@ -115,7 +113,6 @@ export const sendUserOnStudyInvitationEmail = async (
   roleOnStudy: string,
   env: Environment,
 ) => {
-  const t = await getTranslations('email.body')
   return sendEmail(env, [toEmail], await tSubject('userOnStudyInvitation', { studyName }), 'user-on-study-invitation', {
     link: BASE_URL,
     userName,
@@ -125,9 +122,9 @@ export const sendUserOnStudyInvitationEmail = async (
     organizationName,
     creatorName,
     role: roleOnStudy,
-    t_helloName: t('helloName', { name: userName }),
-    t_added: t('userOnStudyInvitation.added', { creatorName, role: roleOnStudy, studyName, organizationName }),
-    t_access: t('userOnStudyInvitation.access'),
+    t_helloName: await tBody('helloName', { name: userName }),
+    t_added: await tBody('userOnStudyInvitation.added', { creatorName, role: roleOnStudy, studyName, organizationName }),
+    t_access: await tBody('userOnStudyInvitation.access'),
   })
 }
 
@@ -141,7 +138,6 @@ export const sendNewUserOnStudyInvitationEmail = async (
   roleOnStudy: string,
   env: Environment,
 ) => {
-  const t = await getTranslations('email.body')
   return sendEmail(
     env,
     [toEmail],
@@ -155,9 +151,9 @@ export const sendNewUserOnStudyInvitationEmail = async (
       organizationName,
       creatorName,
       role: roleOnStudy,
-      t_welcome: t('newUserOnStudyInvitation.welcome'),
-      t_added: t('newUserOnStudyInvitation.added', { creatorName, role: roleOnStudy, studyName, organizationName }),
-      t_access: t('newUserOnStudyInvitation.access'),
+      t_welcome: await tBody('newUserOnStudyInvitation.welcome'),
+      t_added: await tBody('newUserOnStudyInvitation.added', { creatorName, role: roleOnStudy, studyName, organizationName }),
+      t_access: await tBody('newUserOnStudyInvitation.access'),
     },
   )
 }
@@ -171,7 +167,6 @@ export const sendContributorInvitationEmail = async (
   userName: string,
   env: Environment,
 ) => {
-  const t = await getTranslations('email.body')
   return sendEmail(env, [toEmail], await tSubject('contributorInvitation', { studyName }), 'contributor-invitation', {
     link: BASE_URL,
     userName,
@@ -180,10 +175,10 @@ export const sendContributorInvitationEmail = async (
     studyLink: `${BASE_URL}/etudes/${studyId}`,
     organizationName,
     creatorName,
-    t_helloName: t('helloName', { name: userName }),
-    t_added: t('contributorInvitation.added', { creatorName, studyName, organizationName }),
-    t_access: t('contributorInvitation.access'),
-    t_accessContributionSpace: t('contributorInvitation.accessContributionSpace'),
+    t_helloName: await tBody('helloName', { name: userName }),
+    t_added: await tBody('contributorInvitation.added', { creatorName, studyName, organizationName }),
+    t_access: await tBody('contributorInvitation.access'),
+    t_accessContributionSpace: await tBody('contributorInvitation.accessContributionSpace'),
   })
 }
 
@@ -196,7 +191,6 @@ export const sendNewContributorInvitationEmail = async (
   creatorName: string,
   env: Environment,
 ) => {
-  const t = await getTranslations('email.body')
   return sendEmail(
     env,
     [toEmail],
@@ -209,10 +203,10 @@ export const sendNewContributorInvitationEmail = async (
       studyLink: `${BASE_URL}/etudes/${studyId}`,
       organizationName,
       creatorName,
-      t_welcome: t('newContributorInvitation.welcome'),
-      t_added: t('newContributorInvitation.added', { creatorName, studyName, organizationName }),
-      t_access: t('newContributorInvitation.access'),
-      t_accessPost: t('newContributorInvitation.accessPost'),
+      t_welcome: await tBody('newContributorInvitation.welcome'),
+      t_added: await tBody('newContributorInvitation.added', { creatorName, studyName, organizationName }),
+      t_access: await tBody('newContributorInvitation.access'),
+      t_accessPost: await tBody('newContributorInvitation.accessPost'),
     },
   )
 }
