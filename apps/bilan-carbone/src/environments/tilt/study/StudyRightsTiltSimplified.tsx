@@ -130,8 +130,12 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
   }, [form, study.id, studySite])
 
   const handleStudySiteUpdate = useCallback(
-    async (studySiteId: string, data: ChangeStudySiteTiltSimplifiedCommand & TiltStudySiteFields) => {
-      await callServerFunction(() => changeStudySiteTiltSimplified(studySiteId, data))
+    async (data: ChangeStudySiteTiltSimplifiedCommand & TiltStudySiteFields) => {
+      const promises = []
+      for (const studySite of study.sites) {
+        promises.push(callServerFunction(() => changeStudySiteTiltSimplified(studySite.id, data)))
+      }
+      await Promise.all(promises)
     },
     [callServerFunction],
   )
@@ -160,22 +164,10 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
 
   const onStudySiteUpdate = useCallback(() => {
     form.handleSubmit(
-      (data) => handleStudySiteUpdate(studySite.id, data),
+      (data) => handleStudySiteUpdate(data),
       (e) => console.log('invalid', e),
     )()
   }, [form, handleStudySiteUpdate, studySite])
-
-  const handleSiteChange = useCallback(
-    async (siteId: string, data: ChangeStudySiteTiltSimplifiedCommand & TiltStudySiteFields) => {
-      const studySite = study.sites.find((site) => site.site.id === siteId)
-      if (studySite) {
-        await handleStudySiteUpdate(studySite.id, data)
-      } else {
-        showErrorToast(tGeneralError('default'))
-      }
-    },
-    [handleStudySiteUpdate, showErrorToast, study.sites, tGeneralError],
-  )
 
   return (
     <>
@@ -212,7 +204,6 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
                   user={user}
                   userRoleOnStudy={userRoleOnStudy}
                   organizationVersion={organizationVersion}
-                  handleSpecificChange={handleSiteChange}
                 />
               )}
               <FormAutocomplete

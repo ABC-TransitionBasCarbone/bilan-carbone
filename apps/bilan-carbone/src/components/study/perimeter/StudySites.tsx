@@ -46,13 +46,9 @@ interface Props {
   userRoleOnStudy: StudyRole
   caUnit: SiteCAUnit
   user: UserSession
-  handleSpecificChange?: (
-    siteId: string,
-    data: ChangeStudySiteTiltSimplifiedCommand & TiltStudySiteFields,
-  ) => Promise<void>
 }
 
-const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user, handleSpecificChange }: Props) => {
+const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user }: Props) => {
   const tGlossary = useTranslations('study.new.glossary')
   const t = useTranslations('study.perimeter')
   const [open, setOpen] = useState(false)
@@ -147,8 +143,6 @@ const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user,
 
   const updateStudySites = async () => {
     setOpen(false)
-    const formValue = siteForm.getValues()
-
     await callServerFunction(() => changeStudySites(study.id, siteForm.getValues()), {
       onSuccess: async () => {
         const canUpdateOrganization = await getUpdateOrganizationVersionPermission(study.organizationVersionId)
@@ -160,19 +154,6 @@ const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user,
         }
       },
     })
-
-    if (handleSpecificChange) {
-      for (const site of formValue.sites) {
-        if (site.selected) {
-          await handleSpecificChange(site.id, {
-            volunteerNumber: site.volunteerNumber ?? 0,
-            beneficiaryNumber: site.beneficiaryNumber ?? 0,
-            postalCode: site.postalCode,
-            etp: site.etp ?? 0,
-          })
-        }
-      }
-    }
   }
 
   const onReplicateSitesChanges = (replicate: boolean) => {
@@ -239,7 +220,6 @@ const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user,
               withSelection
               onDuplicate={!isEditing && hasEditionRole ? setDuplicatingSiteId : undefined}
               organizationId={isFromStudyOrganizationOrParent ? study.organizationVersion.id : undefined}
-              {...(handleSpecificChange && { handleSpecificChange })}
             />
           ),
         }}
