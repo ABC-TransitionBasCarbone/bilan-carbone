@@ -28,6 +28,12 @@ import type { CreateStudyCommand, DuplicateSiteCommand } from './study.command'
 // TODO: ESM module issue with Jest. Remove these mocks when moving to Vitest
 jest.mock('../file', () => ({ download: jest.fn() }))
 jest.mock('../auth', () => ({ auth: jest.fn() }))
+jest.mock('./scaleway', () => ({
+  uploadFileToBucket: jest.fn(),
+  deleteFileFromBucket: jest.fn(),
+  getFileUrlFromBucket: jest.fn(),
+  getFileFromBucket: jest.fn(),
+}))
 jest.mock('next-intl/server', () => ({
   getTranslations: jest.fn(() => (key: string) => key),
 }))
