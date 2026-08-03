@@ -94,8 +94,7 @@ function matchSubPostLabelFromTranslations(label: string | undefined | null, loc
 }
 
 type ParseEmissionSourcesResult =
-  | { success: true; rows: ParsedEmissionSourceRow[] }
-  | { success: false; errors: ImportError[] }
+  { success: true; rows: ParsedEmissionSourceRow[] } | { success: false; errors: ImportError[] }
 
 function parseOptionalLabel<T>(
   label: string,

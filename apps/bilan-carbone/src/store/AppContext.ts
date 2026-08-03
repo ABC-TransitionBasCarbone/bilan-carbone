@@ -13,11 +13,9 @@ interface AppContextState {
   setContextId: (newContextId: string) => void
 }
 
-export const useAppContextStore = create<AppContextState>(
-  (set): AppContextState => ({
-    context: OTHER,
-    contextId: '',
-    setContext: (context: Context) => set({ context }),
-    setContextId: (contextId: string) => set({ contextId }),
-  }),
-)
+export const useAppContextStore = create<AppContextState>((set): AppContextState => ({
+  context: OTHER,
+  contextId: '',
+  setContext: (context: Context) => set({ context }),
+  setContextId: (contextId: string) => set({ contextId }),
+}))

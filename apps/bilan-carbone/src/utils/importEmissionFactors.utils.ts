@@ -122,8 +122,7 @@ function parseQuality(
 }
 
 export type ParsePostsResult =
-  | { success: true; subPosts: Record<string, SubPost[]> }
-  | { success: false; errors: ParseError[] }
+  { success: true; subPosts: Record<string, SubPost[]> } | { success: false; errors: ParseError[] }
 
 // Format: "Post1 : SubPost1 | SubPost2 || Post2 : SubPost3"
 // || separates post groups, | separates subposts within a group, : binds post to its first subpost

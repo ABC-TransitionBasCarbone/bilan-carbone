@@ -10,6 +10,7 @@ Cypress.Commands.add('resetTestDatabase', () => {
 
 Cypress.Commands.add('login', (email = 'mip-admin-0@yopmail.com', password = 'password-0') => {
   cy.visit('/login')
+  cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').scrollIntoView()
   cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input')
     .should('be.visible')
     .should('not.be.disabled')

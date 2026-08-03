@@ -26,8 +26,7 @@ export type ValidateEmissionSourcesResult =
   | { status: 'ok' }
 
 export type ResolveEmissionSourcesResult =
-  | { status: 'error'; errors: ImportError[] }
-  | { status: 'ok'; rows: PreviewEmissionSourceRow[] }
+  { status: 'error'; errors: ImportError[] } | { status: 'ok'; rows: PreviewEmissionSourceRow[] }
 
 export type ParsedEmissionSourceRow = {
   lineNumber: number

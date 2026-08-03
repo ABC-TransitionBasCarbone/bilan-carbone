@@ -4,8 +4,7 @@ import { EmissionFactorBase, SubPost, Unit } from '@abc-transitionbascarbone/db-
 export type { ImportError }
 
 export type ImportEmissionFactorsResult =
-  | { success: true; count: number }
-  | { success: false; errors?: ImportError[]; warnings?: ImportWarning[] }
+  { success: true; count: number } | { success: false; errors?: ImportError[]; warnings?: ImportWarning[] }
 
 export type PreviewRow = {
   name: string
@@ -16,8 +15,7 @@ export type PreviewRow = {
 }
 
 export type PreviewEmissionFactorsResult =
-  | { success: true; rows: PreviewRow[] }
-  | { success: false; errors: ImportError[] }
+  { success: true; rows: PreviewRow[] } | { success: false; errors: ImportError[] }
 
 export const COLUMNS = {
   name: 0,
@@ -78,5 +76,4 @@ export type ParsedRow = {
 }
 
 export type ParseResult =
-  | { success: true; rows: ParsedRow[]; warnings: ImportWarning[] }
-  | { success: false; errors: ImportError[] }
+  { success: true; rows: ParsedRow[]; warnings: ImportWarning[] } | { success: false; errors: ImportError[] }

@@ -1,5 +1,5 @@
 import { DatePicker } from '@mui/x-date-pickers'
-import { PickerValue } from '@mui/x-date-pickers/internals/models'
+import { PickerValue } from '@mui/x-date-pickers/internals'
 import { EvaluatedStringInput } from '@publicodes/forms'
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
