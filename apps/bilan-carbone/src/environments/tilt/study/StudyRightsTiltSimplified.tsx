@@ -131,13 +131,9 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
 
   const handleStudySiteUpdate = useCallback(
     async (data: ChangeStudySiteTiltSimplifiedCommand & TiltStudySiteFields) => {
-      const promises = []
-      for (const studySite of study.sites) {
-        promises.push(callServerFunction(() => changeStudySiteTiltSimplified(studySite.id, data)))
-      }
-      await Promise.all(promises)
+      await callServerFunction(() => changeStudySiteTiltSimplified(study.sites, data))
     },
-    [callServerFunction],
+    [callServerFunction, study.sites],
   )
 
   const handleDateChange = useCallback(async () => {

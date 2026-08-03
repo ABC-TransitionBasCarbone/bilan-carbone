@@ -2405,19 +2405,19 @@ export const changeStudyEstablishment = async (studySiteId: string, data: Change
   })
 
 export const changeStudySiteTiltSimplified = async (
-  studySiteId: string,
+  studySites: { id: string }[],
   data: ChangeStudySiteTiltSimplifiedCommand & TiltStudySiteFields,
 ) =>
   withServerResponse('changeStudySiteTiltSimplified', async () => {
     // this function only updates situation for now not the study site because we don't have the fields
-    const studySites = await getStudiesSitesFromIds([studySiteId])
+    const studySitesInfos = await getStudiesSitesFromIds(studySites.map((s) => s.id))
 
     if (!studySites || studySites.length === 0) {
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const study = studySites[0].study
-    if (!study) {
+    const study = studySitesInfos[0].study
+    if (!study.id) {
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -2426,24 +2426,27 @@ export const changeStudySiteTiltSimplified = async (
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (!studySites[0].situation) {
-      await saveSituationInDB(study.id, studySiteId, {}, {}, '')
+    for (const studySite of studySitesInfos) {
+      const studySiteId = studySite.id
+      if (!studySite.situation) {
+        await saveSituationInDB(study.id, studySiteId, {}, {}, '')
+      }
+
+      const { postalCode, structure, volunteerNumber, beneficiaryNumber, etp } = data
+
+      await updateSituationWithCustomData(
+        studySiteId,
+        { postalCode, structure },
+        informations.user.environment,
+        study.simplified,
+      )
+      await updateSituationWithStudySiteData(
+        studySiteId,
+        { volunteerNumber, beneficiaryNumber, etp },
+        informations.user.environment,
+        study.simplified,
+      )
     }
-
-    const { postalCode, structure, volunteerNumber, beneficiaryNumber, etp } = data
-
-    await updateSituationWithCustomData(
-      studySiteId,
-      { postalCode, structure },
-      informations.user.environment,
-      study.simplified,
-    )
-    await updateSituationWithStudySiteData(
-      studySiteId,
-      { volunteerNumber, beneficiaryNumber, etp },
-      informations.user.environment,
-      study.simplified,
-    )
   })
 
 export const addEngagementAction = async ({ studyId, sites, ...command }: AddEngagementActionCommand) =>
