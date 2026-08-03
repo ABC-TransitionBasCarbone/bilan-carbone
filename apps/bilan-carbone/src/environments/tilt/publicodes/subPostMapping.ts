@@ -60,7 +60,7 @@ const SUBPOST_TO_RULENAME: Partial<Record<SubPost, TiltRuleName>> = {
   ServicesEnApprocheMonetaire: 'intrants-services . approche monétaire',
   EquipementsDesSalaries: 'équipements et immobilisations',
   ConsommationsEnergieUtilisationProduits: 'utilisation . responsabilite conso energie',
-  FinDeVieProduitsVendusFournisBeneficiaires: 'fin de vie . déchets',
+  FinDeVieProduitsVendusFournisBeneficiaires: 'fin de vie',
   TeletravailSalariesBenevoles: 'télétravail',
 } as const
 
