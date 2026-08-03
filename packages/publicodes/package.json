@@ -19,7 +19,6 @@
     "@mui/material": "*"
   },
   "dependencies": {
-    "@abc-transitionbascarbone/utils": "*",
-    "@abc-transitionbascarbone/i18n": "*"
+    "@abc-transitionbascarbone/utils": "*"
   }
 }
