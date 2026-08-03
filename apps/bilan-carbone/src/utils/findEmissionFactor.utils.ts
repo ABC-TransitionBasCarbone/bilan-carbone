@@ -101,9 +101,7 @@ function matchByExactFullName(
 function toEfMatch(
   ef: EfRow,
   matchType:
-    | EmissionFactorMatchType.Exact
-    | EmissionFactorMatchType.NameAndUnitOnly
-    | EmissionFactorMatchType.ValueAndUnitOnly,
+    EmissionFactorMatchType.Exact | EmissionFactorMatchType.NameAndUnitOnly | EmissionFactorMatchType.ValueAndUnitOnly,
   locale: string,
 ) {
   return {
@@ -135,9 +133,7 @@ function resolveByLocalization(
   localization: string,
   locale: string,
   matchType:
-    | EmissionFactorMatchType.Exact
-    | EmissionFactorMatchType.NameAndUnitOnly
-    | EmissionFactorMatchType.ValueAndUnitOnly,
+    EmissionFactorMatchType.Exact | EmissionFactorMatchType.NameAndUnitOnly | EmissionFactorMatchType.ValueAndUnitOnly,
 ): EfMatchResult | null {
   const normalized = localization.trim().toLowerCase()
   const match = candidates.find((ef) => ef.location?.trim().toLowerCase() === normalized)
