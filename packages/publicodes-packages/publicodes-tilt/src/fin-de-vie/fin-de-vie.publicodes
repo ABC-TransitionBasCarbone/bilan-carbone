@@ -19,6 +19,7 @@ fin de vie . pondération:
   par défaut: 1
 
 fin de vie . pondération . reconditionné:
+  titre: Savoir quel taux de biens est reconditionné 
   applicable si:
     toutes ces conditions:
       - est défini: fin de vie présente
@@ -56,10 +57,12 @@ fin de vie . total sans reconditionné:
   unité: kgCO2e
 
 fin de vie . fin de vie présente:
+  titre: Savoir si l'association fournit des biens matériels à ses bénéficiaires
   question: Fournissez-vous des biens matériels à vos bénéficiaires ?
   description: Les biens matériels fournis à vos bénéficiaires deviendront un jour des déchets, et devront donc être stockés, incinérés, recyclés, ... C'est ce que l'on appelle la fin de vie des produits, et il faut donc prendre en compte les émissions qui y sont associées.
 
 fin de vie . total sans reconditionné . poids:
+  titre: Poids des biens matériels fournis aux bénéficiaires
   applicable si:
     toutes ces conditions:
       - est défini: fin de vie présente

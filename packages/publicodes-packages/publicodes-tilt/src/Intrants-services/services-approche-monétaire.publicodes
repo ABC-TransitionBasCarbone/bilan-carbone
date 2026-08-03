@@ -6,8 +6,9 @@ intrants-services . approche monétaire:
   par défaut: 0 
 
 intrants-services . approche monétaire . existant:
+  titre: L'utilisateur a-t'il accès aux montants dépensés dans des services immatériels de manière détaillée ?
   question: Avez-vous accès aux détails des montants dépensés sur l'année dans des services immatériels ? 
-  description: La liste de vos dépenses est présente dans votre livres de comptes, et souvent déclarée sur Lecompteasso https://lecompteasso.associations.gouv.fr/client/login.
+  description: La liste de vos dépenses est présente dans votre livres de comptes, et souvent déclarée sur <link>Lecompteasso</link> .
   form:
     à traduire: oui
 
@@ -21,8 +22,9 @@ intrants-services . approche monétaire . FE moyen:
     à traduire: oui
   avec: 
     montant dépensé:
+      titre: Montant dépensé dans des services immatériels sur l'année
       question: Quel montant avez-vous dépensé sur l'année dans ces services immatériels ? 
-      description: Vous devez bien prendre en compte l'ensemble des services, y compris ceux qui sont reçus gratuitement (mécénat de compétence, etc). Il faut donc bien prendre en compte les informations disponibles sur les contributions volontaires en nature (compte 870).
+      description: Veuillez indiquer le montant dépensé pour chaque service immatériel. Si vous ne connaissez pas le montant exact, vous pouvez fournir une estimation. Vous devez bien inclure l'ensemble des services, <b>y compris ceux qui sont reçus gratuitement (mécénat de compétence, ...)</b>. Il faut donc bien prendre en compte les informations disponibles sur les contributions volontaires en nature, décrites dans le compte 870. Attention, ce compte intègre les biens et les services, il faut donc estimer la part de chacun. <br></br> Cette liste des catégories de service est non exhaustive. <b>Si vous n’avez pas comptabilisé l’ensemble de vos dépenses, c’est tout à fait normal</b>. Il peut s’agir de dépenses très faiblement émissives, ou d'activités dont les émissions sont déjà prises en compte dans d’autres postes ou via d’autres questions reposant sur des données plus précises (comptabiliser les dépenses associées ici reviendrait donc à faire un double-compte).
       par défaut: 0
       unité: k€ HT
     FE: 
