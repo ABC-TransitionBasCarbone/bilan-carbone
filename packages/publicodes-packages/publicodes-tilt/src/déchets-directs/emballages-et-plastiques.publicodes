@@ -14,7 +14,7 @@ déchets . emballages et plastiques . poubelle jaune:
   form:
     à traduire: oui
   unité: kgCO2e
-  par défaut: 0
+  par défaut: général . salariés * 85
   avec:
     FE:
       valeur: 41
@@ -52,7 +52,7 @@ déchets . emballages et plastiques . poubelle noire:
   form:
     à traduire: oui
   unité: kgCO2e
-  par défaut: 0
+  par défaut: général . salariés * 55
   avec:
     FE:
       valeur: 374
