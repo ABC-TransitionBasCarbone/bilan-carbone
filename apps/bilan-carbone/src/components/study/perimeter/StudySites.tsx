@@ -12,10 +12,8 @@ import { changeStudySites, duplicateSiteAndEmissionSources, hasActivityData } fr
 import {
   ChangeStudySitesCommand,
   ChangeStudySitesCommandValidation,
-  ChangeStudySiteTiltSimplifiedCommand,
   SitesCommand,
 } from '@/services/serverFunctions/study.command'
-import { TiltStudySiteFields } from '@/services/studySiteToSituation'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
 import { canEditOrganizationVersion, isInOrgaOrParent } from '@/utils/organization'
 import { hasEditionRights } from '@/utils/study'
