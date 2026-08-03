@@ -9,7 +9,6 @@
     "kWh": "kWh",
     "m3": "m3",
     "litre": "litre",
-    "stères": "stères",
     "h/semaine": "h/semaine",
     "jours/semaine": "jours/semaine",
     "kgCO2e": "kgCO2e",
@@ -150,8 +149,6 @@
       }
     },
     "énergie": {
-      "titre": "Énergie",
-      "question": "Qu'utilisez-vous pour le chauffage, l'éclairage et les autres consommations énergétiques de vos locaux ?",
       "électricité": {
         "consommation": {
           "question": "Quelle est votre consommation annuelle d'électricité ? (issue de votre facture et n'incluant pas votre autoconsommation, ni la consommation des véhicules électriques)"
@@ -185,22 +182,34 @@
         }
       },
       "combustibles organiques": {
-        "choix": {
-          "question": "Utilisez-vous des bûches ou des granulés ?",
-          "options": {
-            "bûches": "Bûches",
-            "granulés": "Granulés",
-            "aucun": "Aucun"
+        "types": {
+          "électricité présent": {
+            "question": "Électricité"
+          },
+          "gaz présent": {
+            "question": "Gaz"
+          },
+          "chauffage électrique": {
+            "description": "Cette information sert à proposer des estimations de consommations pour l'électricité par la suite. Les estimations incluent le chauffage si celui-ci est électrique.",
+            "question": "Le chauffage de vos locaux est-il électrique ?"
           }
         },
-        "granulés": {
-          "consommation": {
-            "question": "Combien de kWh issus de la combustion de granulés de bois ont été consommés chaque année ?"
-          }
-        },
-        "bois": {
-          "consommation": {
-            "question": "Quelle est votre consommation annuelle de bois ?"
+        "emissions": {
+          "titre": "Consommations énergétiques",
+          "description": "Par défaut, des valeurs sont saisies en fonction des mètres-carrés que vous avez renseignés pour vos locaux, Ces valeurs sont issues de données statistiques de la Base Empreinte, Elles sont imprécises et datées, Si vous disposez de données plus précises via vos factures ou autres éléments de suivi, nous vous invitons à les renseigner à la place des données par défaut",
+          "question": "Veuillez indiquer vos consommations d'énergie pour les types d'énergie suivants",
+          "électricité": {
+            "consommation": {
+              "titre": "Consommation annuelle d'électricité",
+              "description": "Cette consommation doit être issue de votre facture et ne pas inclure pas votre autoconsommation (panneaux solaires, etc), ni la consommation des véhicules électriques qui est prise en compte au sein d'autres catégories (Fret, Déplacements).",
+              "question": "Quelle est votre consommation annuelle d'électricité ?"
+            }
+          },
+          "gaz": {
+            "consommation": {
+              "titre": "Gaz naturel",
+              "question": "Quelle est votre consommation annuelle de gaz naturel ?"
+            }
           }
         }
       }
@@ -504,11 +513,23 @@
       }
     },
     "fin de vie": {
-      "déchets": {
-        "fin de vie présente": {
-          "description": "Les biens matériels fournis à vos bénéficiaires deviendront un jour des déchets, et devront donc être stockés, incinérés, recyclés, ... C'est ce que l'on appelle la fin de vie des produits, et il faut donc prendre en compte les émissions qui y sont associées.",
-          "question": "Fournissez-vous des biens matériels à vos bénéficiaires ?"
-        },
+      "pondération": {
+        "reconditionné": {
+          "description": "En fonction de votre réponse, une partie de ces biens seront valorisés comme étant reconditionnés. Un bien reconditionné sera considéré comme moitié moins émetteur qu'un bien neuf. Autrement dit, la durée de première vie du bien est considéré comme égale à la moitié de sa durée de vie totale.",
+          "question": "Les biens que vous fournissez à vos bénéficiaires sont-ils reconditionné ou issus de seconde main ?",
+          "options": {
+            "toujours": "Toujours",
+            "souvent": "Souvent",
+            "parfois": "Parfois",
+            "jamais": "Jamais"
+          }
+        }
+      },
+      "fin de vie présente": {
+        "description": "Les biens matériels fournis à vos bénéficiaires deviendront un jour des déchets, et devront donc être stockés, incinérés, recyclés, ... C'est ce que l'on appelle la fin de vie des produits, et il faut donc prendre en compte les émissions qui y sont associées.",
+        "question": "Fournissez-vous des biens matériels à vos bénéficiaires ?"
+      },
+      "total sans reconditionné": {
         "poids": {
           "question": "Quel est le poids total de ces biens délivrés sur une année ?"
         }
