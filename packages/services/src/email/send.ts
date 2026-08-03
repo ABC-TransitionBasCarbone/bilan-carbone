@@ -2,6 +2,7 @@ import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { getEnvVar } from '@abc-transitionbascarbone/lib/environment'
 import ejs from 'ejs'
 import fs from 'fs'
+import { getTranslations } from 'next-intl/server'
 import path from 'path'
 import { getTransporter } from './transposter'
 
@@ -43,10 +44,20 @@ export const sendEmail = async (
   const support = await getEnvVar('SUPPORT_EMAIL', env)
   const from = await getEnvVar('MAIL_USER', env)
 
+  const t = await getTranslations('email.body')
+
   const data = {
     ...templateData,
     faq,
     support,
+    t_hello: t('hello'),
+    t_thisLink: t('thisLink'),
+    t_goodDay: t('goodDay'),
+    t_regards: t('regards'),
+    t_team: t('team'),
+    t_faqContent: t('faqContent'),
+    t_faqLinkText: t('faqLinkText'),
+    t_faqOrEmail: t('faqOrEmail'),
   }
 
   const transporter = await getTransporter(env)
