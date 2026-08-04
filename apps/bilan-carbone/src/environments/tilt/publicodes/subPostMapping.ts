@@ -53,8 +53,8 @@ const SUBPOST_TO_RULENAME: Partial<Record<SubPost, TiltRuleName>> = {
   DeplacementsFabricationDesVehicules: 'déplacements . fabrication',
   Fret: 'fret . transport',
   BienMatieres: 'intrants-biens-et-matières . ratios monétaires',
-  RepasPrisParLesSalaries: 'alimentation . salariés',
-  RepasPrisParLesBenevoles: 'alimentation . bénévoles',
+  RepasPrisParLesSalaries: 'alimentation . mosaic salariés',
+  RepasPrisParLesBenevoles: 'alimentation . mosaic bénévoles',
   RepasPrisParLesBeneficiaires: 'alimentation . bénéficiaires',
   UsagesNumeriques: 'intrants-services . numérique',
   ServicesEnApprocheMonetaire: 'intrants-services . approche monétaire',
@@ -65,7 +65,7 @@ const SUBPOST_TO_RULENAME: Partial<Record<SubPost, TiltRuleName>> = {
 } as const
 
 const input = (rule: TiltRuleName): FormLayout<TiltRuleName> => inputLayout<TiltRuleName>(rule)
-const group = (title: string, rules: CutRuleName[]): FormLayout<CutRuleName> => groupLayout<CutRuleName>(title, rules)
+const group = (title: string, rules: TiltRuleName[]): FormLayout<TiltRuleName> => groupLayout<TiltRuleName>(title, rules)
 const table = (
   title: string,
   headers: string[],
@@ -102,14 +102,24 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     group('EnergieTest.question', [ 
       'énergie . combustibles organiques . types . électricité présent',
       'énergie . combustibles organiques . types . gaz présent',
+      'énergie . combustibles organiques . types . fioul présent',
+      'énergie . combustibles organiques . types . bois présent',
+      'énergie . combustibles organiques . types . granulés présent',
+      'énergie . combustibles organiques . types . réseaux de chaleur présent',
+      'énergie . combustibles organiques . types . réseaux de froid présent',
     ]),
     input('énergie . combustibles organiques . types . chauffage électrique'),
     mosaic('énergie . combustibles organiques . emissions', [
       'énergie . combustibles organiques . emissions . électricité . consommation',
       'énergie . combustibles organiques . emissions . gaz . consommation',
+      'énergie . combustibles organiques . emissions . fioul . consommation',
+      'énergie . combustibles organiques . emissions . bois . consommation',
+      'énergie . combustibles organiques . emissions . granulés . consommation',
+      'énergie . combustibles organiques . emissions . réseaux de chaleur . consommation',
+      'énergie . combustibles organiques . emissions . réseaux de froid . consommation',
     ]),
-    // input('énergie . combustibles organiques . bois . consommation'),
-    // input('énergie . combustibles organiques . granulés . consommation'),
+    input('énergie . combustibles organiques . autoproduction électricité présente'),
+    input('énergie . combustibles organiques . autoconsommation électricité . autoconsommation'),
   ],
 
   ReseauxDeChaleurEtDeVapeur: [input('énergie . réseaux de chaleur . consommation')],

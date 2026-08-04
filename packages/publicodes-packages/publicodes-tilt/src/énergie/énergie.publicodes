@@ -2,12 +2,7 @@
   titre: Énergie
   formule:
     somme:
-      - énergie . électricité
-      - énergie . fossiles
       - énergie . combustibles organiques
-      - énergie . réseaux de chaleur
-      - énergie . réseaux de froid
-      - énergie . électricité . autoproduction
   par défaut: 0
 
 

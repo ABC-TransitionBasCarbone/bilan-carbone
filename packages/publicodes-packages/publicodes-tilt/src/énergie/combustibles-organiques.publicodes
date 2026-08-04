@@ -1,68 +1,10 @@
+# TO DO : Virer les . combustibles organiques partout, ça ne sert plus à rien si un seul sp. Penser à aussi changer dnas énergie. Idem clean chauffe-eau si valid que c'est fine en l'état. Check les valeurs des FE réseaux au cas ou.
+
 énergie . combustibles organiques:
   formule:
     somme:
       - emissions
-
-# énergie . combustibles organiques . empreinte:
-#   applicable si:
-#     toutes ces conditions:
-#       - est défini: choix
-#       - choix != "aucun"
-#   titre: Combustibles organiques
-#   formule:
-#     somme:
-#       - granulés
-#       - bois
-#   par défaut: 0
-#   unité: kgCO2e
-
-# énergie . combustibles organiques . choix:
-#   question: Utilisez-vous des bûches ou des granulés ?
-#   par défaut: 0
-#   une possibilité:
-#     - bûches
-#     - granulés
-#     - aucun
-#   avec:
-#     bûches:
-#       titre: Bûches
-#     granulés:
-#       titre: Granulés
-#     aucun:
-#       titre: Aucun
-
-# énergie . combustibles organiques . granulés:
-#   titre: Bois granulés
-#   formule: consommation * FE
-#   unité: kgCO2e
-#   par défaut: 0
-#   avec:
-#     consommation:
-#       question: Combien de kWh issus de la combustion de granulés de bois ont été consommés chaque année ?
-#       unité: kWh
-#       par défaut: 0
-#     FE:
-#       valeur: 0.5198
-#       note: 0,0113 kgCO2e/kWh avec 4,6 kWh pour un kg (cf Empreinte Carbone Personnelle)
-#       unité: kgCO2e/kg
-#       meta:
-#         id: 34942
-
-# énergie . combustibles organiques . bois:
-#   titre: Bois bûches
-#   formule: consommation * FE
-#   unité: kgCO2e
-#   avec:
-#     consommation:
-#       question: Quelle est votre consommation annuelle de bois ?
-#       unité: stères
-#       par défaut: 0
-#     FE:
-#       valeur: 74.06
-#       note: 0,046 kgCO2e/kWh avec 1610 kWh pour un stère (cf Empreinte Carbone Personnelle)
-#       unité: kgCO2e/stère
-#       meta:
-#         id: 25834
+      - autoconsommation électricité
 
 énergie . combustibles organiques . types:
   titre: Types d'énergie
@@ -81,62 +23,47 @@
         saisie: case à cocher
       par défaut: non
 
-#   mosaique:
-#      type: nombre
-#      options:
-#        - électricité . présent
-#        - gaz . présent
-#        - fioul . présent
-#        - bois . présent
-#        - granulés . présent
-#        - réseaux de chaleur . présent
-#        - réseaux de froid . présent
-#        - panneaux PV ou chauffe eau solaire . présent
-#   question: Quels types d'énergies utilisez-vous pour le chauffage, l'éclairage et les autres consommations énergétiques de vos locaux ?
-#   titre: Types d'énergie utilisés
-#   suggestions:
-#     aucun:
-#       électricité . présent: oui
-#       gaz . présent: non
-#       fioul . présent: non
-#       bois . présent: non
-#       granulés . présent: non
-#       réseaux de chaleur . présent: non
-#       réseaux de froid . présent: non
-#       panneaux PV ou chauffe eau solaire . présent: non
-#   note: Pour proposer des réponses par défaut en fonction des mètres-carrés renseignés pour les locaux, il faut spécifiquement demander si la chaudière des locaux est électrique.
+    fioul présent:
+      type: booléen
+      question: Fioul domestique
+      form:
+        saisie: case à cocher
+      par défaut: non
 
-# énergie . types . électricité . présent:
-#  question: Utilisez-vous de l'électricité pour le chauffage, l'éclairage ou les autres consommations énergétiques de vos locaux ?
-#  par défaut: oui
+    bois présent:
+      type: booléen
+      question: Bois-bûches
+      form:
+        saisie: case à cocher
+      par défaut: non
 
-# énergie . types . gaz . présent:
-#  question: Utilisez-vous du gaz pour le chauffage, l'éclairage ou les autres consommations énergétiques de vos locaux ?
-#  par défaut: non
+    granulés présent:
+      type: booléen
+      question: Granulés de bois
+      form:
+        saisie: case à cocher
+      par défaut: non
 
-# énergie . types . fioul . présent:
-#  question: Utilisez-vous du fioul pour le chauffage, l'éclairage ou les autres consommations énergétiques de vos locaux ?
-#  par défaut: non
+    réseaux de chaleur présent:
+      type: booléen
+      question: Réseau de chaleur
+      form:
+        saisie: case à cocher
+      par défaut: non
 
-# énergie . types . bois . présent:
-#  question: Utilisez-vous du bois pour le chauffage, l'éclairage ou les autres consommations énergétiques de vos locaux ?
-#  par défaut: non
+    réseaux de froid présent:
+      type: booléen
+      question: Réseau de froid
+      form:
+        saisie: case à cocher
+      par défaut: non
 
-# énergie . types . granulés . présent:
-#  question: Utilisez-vous des granulés pour le chauffage, l'éclairage ou les autres consommations énergétiques de vos locaux ?
-#  par défaut: non
-
-# énergie . types . réseaux de chaleur . présent:
-#  question: Utilisez-vous des réseaux de chaleur pour le chauffage, l'éclairage ou les autres consommations énergétiques de vos locaux ?
-#  par défaut: non
-
-# énergie . types . réseaux de froid . présent:
-#  question: Utilisez-vous des réseaux de froid pour le chauffage, l'éclairage ou les autres consommations énergétiques de vos locaux ?
-#  par défaut: non
-
-# énergie . types . panneaux PV ou chauffe eau solaire . présent:
-#   question: Utilisez-vous des panneaux photovoltaïques ou un chauffe-eau solaire pour le  chauffage, l'éclairage ou les autres consommations énergétiques de vos locaux ?
-#   par défaut: non
+    # panneaux PV ou chauffe eau solaire présent:
+    #   type: booléen
+    #   question: Panneaux photovoltaïque ou chauffe-eau solaire
+    #   form:
+    #     saisie: case à cocher
+    #   par défaut: non
 
 énergie . combustibles organiques . types . chauffage électrique: 
   question: Le chauffage de vos locaux est-il électrique ? 
@@ -150,11 +77,11 @@
     options:
       - électricité . consommation
       - gaz . consommation
-      # - fioul . consommation
-      # - bois . consommation
-      # - granulés . consommation
-      # - réseaux de chaleur . consommation
-      # - réseaux de froid . consommation
+      - fioul . consommation
+      - bois . consommation
+      - granulés . consommation
+      - réseaux de chaleur . consommation
+      - réseaux de froid . consommation
       # - panneaux PV ou chauffe eau solaire . consommation
   question: Veuillez indiquer vos consommations d'énergie pour les types d'énergie suivants
   titre: Consommations énergétiques
@@ -163,13 +90,12 @@
     somme:
       - électricité
       - gaz
-      # - fioul
-      # - bois
-      # - granulés
-      # - réseaux de chaleur
-      # - réseaux de froid
+      - fioul
+      - bois
+      - granulés
+      - réseaux de chaleur
+      - réseaux de froid
       # - panneaux PV ou chauffe eau solaire
-  note:
 
 énergie . combustibles organiques . emissions . électricité:
   titre: Électricité
@@ -228,7 +154,7 @@
       - est défini:  énergie . combustibles organiques . types . gaz présent
       - énergie . combustibles organiques . types . gaz présent = oui
   question: Quelle est votre consommation annuelle de gaz naturel ? 
-  titre: Gaz naturel
+  titre: Consommation annuelle de gaz naturel
   unité: m3
   par défaut: construction . bâtiment . surface finale * donnée statistique
   avec: 
@@ -237,3 +163,173 @@
       unité: m3/m².an
       meta: 
         nom: Consommation moyenne de gaz naturel pour des bureaux à l'année, statistiques Base Carbone® (la statistique originelle est en kWh PCI/m².an)
+
+énergie . combustibles organiques . emissions . fioul:
+  titre: Fioul domestique
+  formule: consommation * FE
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    FE:
+      valeur: 3.19
+      unité: kgCO2e/litre
+      meta:
+        nom: Fioul domestique
+        id: 14086
+        source: Base Carbone®
+
+énergie . combustibles organiques . emissions . fioul . consommation:
+  applicable si:
+    toutes ces conditions:
+      - est défini:  énergie . combustibles organiques . types . fioul présent
+      - énergie . combustibles organiques . types . fioul présent = oui
+  question: Quelle est votre consommation annuelle de fioul domestique ? 
+  titre: Consommation annuelle de fioul domestique
+  unité: litre
+  par défaut: construction . bâtiment . surface finale * donnée statistique
+  avec: 
+    donnée statistique:
+      valeur: 24.88 
+      unité: litre/m².an
+      meta: 
+        nom: Consommation moyenne de fioul domestique pour des bureaux à l'année, statistiques Base Carbone® (la statistique originelle est en kWh PCI/m².an)
+
+énergie . combustibles organiques . emissions . bois:
+  titre: Bois-bûches
+  formule: consommation * FE
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    FE:
+      valeur: 74.06
+      note: 0,046 kgCO2e/kWh avec 1610 kWh pour un stère (cf Empreinte Carbone Personnelle)
+      unité: kgCO2e/stère
+      meta:
+        id: 25834
+
+énergie . combustibles organiques . emissions . bois . consommation:
+  applicable si:
+    toutes ces conditions:
+      - est défini:  énergie . combustibles organiques . types . bois présent
+      - énergie . combustibles organiques . types . bois présent = oui
+  question: Quelle est votre consommation annuelle de bûches de bois ? 
+  titre: Consommation annuelle de bûches de bois
+  unité: stère
+  par défaut: 0
+
+énergie . combustibles organiques . emissions . granulés:
+  titre: Granulés de bois
+  formule: consommation * FE
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    FE:
+      valeur: 0.5198
+      note: 0,0113 kgCO2e/kWh avec 4,6 kWh pour un kg (cf Empreinte Carbone Personnelle)
+      unité: kgCO2e/kg
+      meta:
+        id: 34942
+
+énergie . combustibles organiques . emissions . granulés . consommation:
+  applicable si:
+    toutes ces conditions:
+      - est défini:  énergie . combustibles organiques . types . granulés présent
+      - énergie . combustibles organiques . types . granulés présent = oui
+  question: Quelle est votre consommation annuelle de bûches de bois ? 
+  titre: Consommation annuelle de granulés de bois
+  unité: kg
+  par défaut: 0
+  note: Pas de consommation par défaut ici, faute de données fiables
+
+énergie . combustibles organiques . emissions . réseaux de chaleur:
+  titre: Réseaux de chaleur
+  formule: consommation * FE
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    FE:
+      valeur: 0.385
+      unité: kgCO2e/kWh
+      meta:
+        id: 47684
+
+énergie . combustibles organiques . emissions . réseaux de chaleur . consommation:
+  applicable si:
+    toutes ces conditions:
+      - est défini:  énergie . combustibles organiques . types . réseaux de chaleur présent
+      - énergie . combustibles organiques . types . réseaux de chaleur présent = oui
+  question: Quelle est votre consommation de kWh issus de réseaux de chaleur ?
+  titre: Consommation annuelle de kWh issus de réseaux de chaleur
+  unité: kWh
+  par défaut: 0
+  note: Pas de consommation par défaut ici, faute de données fiables
+
+énergie . combustibles organiques . emissions . réseaux de froid:
+  titre: Réseaux de froid
+  formule: consommation * FE
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    FE:
+      valeur: 0.12
+      unité: kgCO2e/kWh
+      meta:
+        id: 46762
+
+énergie . combustibles organiques . emissions . réseaux de froid . consommation:
+  applicable si:
+    toutes ces conditions:
+      - est défini:  énergie . combustibles organiques . types . réseaux de froid présent
+      - énergie . combustibles organiques . types . réseaux de froid présent = oui
+  question: Quelle est votre consommation de kWh issus de réseaux de froid ?
+  titre: Consommation annuelle de kWh issus de réseaux de froid
+  unité: kWh
+  par défaut: 0
+  note: Pas de consommation par défaut ici, faute de données fiables
+
+# énergie . combustibles organiques . emissions . panneaux PV ou chauffe eau solaire:
+#   titre: Panneaux PV ou chauffe eau solaire
+#   formule: consommation * FE
+#   unité: kgCO2e
+#   par défaut: 0
+#   avec:
+#     FE:
+#       valeur: 0.12
+#       unité: kgCO2e/kWh
+#       meta:
+#         id: 46762
+
+# énergie . combustibles organiques . emissions . panneaux PV ou chauffe eau solaire . consommation:
+#   applicable si:
+#     toutes ces conditions:
+#       - est défini:  énergie . combustibles organiques . types . panneaux PV ou chauffe eau solaire présent
+#       - énergie . combustibles organiques . types . panneaux PV ou chauffe eau solaire présent = oui
+#   question: Quelle est votre consommation de kWh issus de panneaux PV ou chauffe eau solaire ?
+#   titre: Consommation annuelle de kWh issus de panneaux PV ou chauffe eau solaire
+#   unité: kWh
+#   par défaut: 0
+#   note: Pas de consommation par défaut ici, faute de données fiables
+
+énergie . combustibles organiques . autoproduction électricité présente:
+  question: Autoproduisez-vous de l'électricité, par exemple à l'aide de panneaux photovoltaïques ?
+  description: Si c'est le cas, vos autres consommations d'électricité ne doivent pas inclure une éventuelle autoconsommation
+
+énergie . combustibles organiques . autoconsommation électricité:
+  applicable si: 
+    toutes ces conditions: 
+      - est défini: énergie . combustibles organiques . autoproduction électricité présente
+      - énergie . combustibles organiques . autoproduction électricité présente = oui
+  titre: Autoconsommation d'électricité
+  formule: autoconsommation * FE
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    autoconsommation:
+      question: Quelle est votre autoconsommation annuelle d'électricité ?
+      unité: kWh
+    FE:
+      valeur: 0.00439
+      unité: kgCO2e/kWh
+      meta:
+        id: 34720
+
