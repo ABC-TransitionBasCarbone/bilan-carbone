@@ -1,11 +1,11 @@
 'use client'
-import { customRich } from '@/i18n/customRich'
 import { switchEnvironment } from '@/i18n/environment'
 import { getLocale, switchLocale } from '@/i18n/locale'
 import PublicContainer from '@abc-transitionbascarbone/components/src/base/PublicContainer'
 import Image from '@abc-transitionbascarbone/components/src/document/Image'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { defaultLocale, Locale, LocaleType } from '@abc-transitionbascarbone/i18n/config'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useEffect, useState } from 'react'
@@ -35,7 +35,7 @@ const PublicPage = ({ question, children }: Props) => {
     <PublicContainer>
       <div className={classNames(styles.info, 'grow p2 text-center')}>
         <p className="title-h4 mb1">{t('welcome')}</p>
-        <p>{customRich(t, 'explanation')}</p>
+        <p className={styles.richLinks}>{customRich(t, 'explanation', {}, Environment.BC)}</p>
         <Image
           src="/logos/monogramme_BC_noir.png"
           alt="logo"
@@ -43,7 +43,7 @@ const PublicPage = ({ question, children }: Props) => {
           height={400}
           className={classNames(styles.image, 'w100')}
         />
-        <p>{question}</p>
+        <p className={styles.richLinks}>{question}</p>
       </div>
       <div className={classNames(styles.loginForm, 'grow flex-col')}>
         <div className={classNames(styles.header, 'justify-between')}>

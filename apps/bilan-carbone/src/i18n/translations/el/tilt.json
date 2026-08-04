@@ -1,0 +1,198 @@
+{
+  "login": {
+    "subtext": "Παραλλαγή για τη σφαίρα των συλλόγων",
+    "explanation": "Το εργαλείο που απευθύνεται στους συλλόγους που επιθυμούν να εφαρμόσουν τη μέθοδο Bilan Carbone® και την τομεακή της παραλλαγή για τη σφαίρα των συλλόγων. Δημιουργήθηκε χάρη στη συνεργασία μεταξύ της Association pour la transition Bas Carbone, φορέα της μεθόδου Bilan Carbone®, και του Mouvement Tilt, που συνοδεύει το σύνολο των συλλόγων στη μετάβασή τους προς χαμηλές εκπομπές άνθρακα. Το εργαλείο είναι προσβάσιμο δωρεάν για το σύνολο των γαλλικών συλλόγων που έχουν εκπαιδευτεί στη μέθοδο.",
+    "form": {
+      "activate": "Δημιουργία του λογαριασμού μου"
+    }
+  },
+  "signup": {
+    "description": "Δημιουργήστε λογαριασμό στο Tilt εισάγοντας το email σας καθώς και έναν αριθμό Siret",
+    "siret": "Siret",
+    "siretPlaceholder": "Το Siret σας",
+    "siretRequired": "Εισαγάγετε ένα Siret",
+    "Not authorized": "Αυτό το email είναι ήδη καταχωρημένο με λογαριασμό Tilt ή αυτό το SIRET δεν είναι έγκυρο. Μη διστάσετε να συμβουλευτείτε τις <link>συχνές ερωτήσεις</link> ή να επικοινωνήσετε με την <support>υποστήριξη</support> εάν πιστεύετε ότι πρόκειται για σφάλμα.",
+    "Not association SIRET": "Η χρήση αυτού του εργαλείου προορίζεται για συλλόγους. Χρησιμοποιήστε την κλασική έκδοση του Bilan Carbone®+.",
+    "validation": {
+      "siret": "Εισαγάγετε ένα Siret"
+    }
+  },
+  "home": {
+    "navigation": {
+      "collaborators": {
+        "title": "Οι συνεργάτες μου",
+        "message": "Βρείτε εδώ τη λίστα των ατόμων που είναι εξουσιοδοτημένα να εργάζονται στα διάφορα αποτυπώματα άνθρακά σας"
+      },
+      "footprints": {
+        "title": "Τα αποτυπώματά μου",
+        "message": "Δημιουργήστε εδώ το πρώτο σας αποτύπωμα. Στη συνέχεια, θα μπορείτε να συμβουλεύεστε τα αποτυπώματά σας ή να δημιουργείτε νέα ανά πάσα στιγμή."
+      },
+      "sites": {
+        "title": "Ο σύλλογός μου",
+        "message": "Βρείτε εδώ τη λίστα των εγκαταστάσεων που συνδέονται με τον λογαριασμό σας"
+      }
+    },
+    "title": "Ο υπολογισμός του απλοποιημένου αποτυπώματος άνθρακά σας θα σας επιτρέψει να:"
+  },
+  "exports": {
+    "env_specific_export": "Απλοποιημένο αποτύπωμα άνθρακα",
+    "simplified": {
+      "disclaimerExcel1": "Προσοχή, τα αποτελέσματα που λαμβάνετε εδώ προέρχονται αποκλειστικά από έναν υπολογισμό απλοποιημένου αποτυπώματος άνθρακα που πραγματοποιήθηκε από το Cap Carbone. Σε καμία περίπτωση δεν πρέπει να παρουσιάζονται ή να χρησιμοποιούνται ως αποτελέσματα Bilan Carbone®,",
+      "disclaimerExcel2": "διότι, ακόμη κι αν τα αποτελέσματα που λαμβάνετε μπορούν ήδη να σας επιτρέψουν να κατανοήσετε πώς να μειώσετε τον αντίκτυπό σας, η διαδικασία σας περιορίζεται σε μια εκτίμηση.",
+      "disclaimerExcel3": "Αντιθέτως, αυτό το απλοποιημένο αποτύπωμα άνθρακα είναι όντως το πρώτο βήμα προς μια πιο ολοκληρωμένη διαδικασία όπως το Bilan Carbone®!",
+      "disclaimerExcel4": "Για τα επόμενα χρόνια, μπορείτε είτε να επαναλάβετε τη μέτρηση του απλοποιημένου αποτυπώματος άνθρακά σας με το Cap Carbone, είτε να πραγματοποιήσετε ένα Bilan Carbone®.",
+      "disclaimerExcel5": "Εάν επιθυμείτε να προχωρήσετε περαιτέρω στη διαδικασία σας, περισσότερες πληροφορίες είναι διαθέσιμες εδώ: https://abc-transitionbascarbone.fr/transition-association-abc-tilt/#",
+      "metadata": {
+        "organization": "Οργανισμός",
+        "site": "Τοποθεσία",
+        "startDate": "Ημερομηνία έναρξης της μελέτης",
+        "endDate": "Ημερομηνία λήξης της μελέτης"
+      }
+    }
+  },
+  "email": {
+    "subject": {
+      "newUser": "Προσκληθήκατε στο Tilt",
+      "addedActiveUser": "Προσκληθήκατε σε ένα νέο περιβάλλον Tilt",
+      "activation": "Ενεργοποιήσατε τον λογαριασμό σας στο Tilt",
+      "activationRequest": "Αίτημα πρόσβασης στον οργανισμό σας Tilt"
+    }
+  },
+  "organization": {
+    "sites": {
+      "ca": "Προϋπολογισμός ({unit})",
+      "etp": "Αριθμός εργαζομένων",
+      "glossary": {
+        "etp": "Αριθμός εργαζομένων",
+        "etpDescription": "Αυτά τα δεδομένα χρησιμοποιούνται για τον υπολογισμό των εντάσεων άνθρακα (kgCO₂e/εργαζόμενο).",
+        "ca": "Προϋπολογισμός ({unit})",
+        "caDescription": "Αυτά τα δεδομένα χρησιμοποιούνται για τον υπολογισμό των εντάσεων άνθρακα (kgCO₂e/{unit} προϋπολογισμού). Προσοχή, ο προϋπολογισμός πρέπει να καταχωρηθεί σε χιλιάδες ευρώ (k€).",
+        "volunteer": "Αριθμός εθελοντών",
+        "volunteerDescription": "Ο αριθμός εθελοντών που καταχωρείται εδώ θα χρησιμεύσει απλώς για τον υπολογισμό μιας έντασης άνθρακα ανά εθελοντή, σε tCO₂e/εθελοντή. Μπορείτε να καταχωρήσετε τον αριθμό των εθελοντών, τον αριθμό των ενεργών εθελοντών, να συμπεριλάβετε ή όχι τα μέλη του Διοικητικού Συμβουλίου... Το πιο σημαντικό δεν είναι η επιλογή του τρόπου καταμέτρησης των εθελοντών, αλλά η χρήση της ίδιας μεθόδου για τα μελλοντικά σας Bilan Carbone®, ώστε να μπορείτε να συγκρίνετε την εξέλιξη των εκπομπών σας σε σχέση με τις μεταβολές των δραστηριοτήτων του συλλόγου σας."
+      },
+      "validation": {
+        "ca": "Προϋπολογισμός ({unit})"
+      }
+    }
+  },
+  "study": {
+    "perimeter": {
+      "preset": "Τύπος κοινού"
+    },
+    "new": {
+      "postalCode": "Ποιος είναι ο ταχυδρομικός κώδικας του συλλόγου;",
+      "sites": "Ποιες είναι οι τοποθεσίες που αφορά το αποτύπωμα και τα χαρακτηριστικά τους;",
+      "structure": "Με ποιον τύπο δομής μοιάζει περισσότερο ο σύλλογός σας;",
+      "structureOther": "Προσδιορίστε τον τύπο της δομής",
+      "dates": "Σε ποια περίοδο αφορά το αποτύπωμα άνθρακά σας;",
+      "numberOfTTEmployee": "Πόσες ημέρες την εβδομάδα εργάζονται από απόσταση οι εργαζόμενοί σας;",
+      "numberOfTTVolunteer": "Πόσες ημέρες την εβδομάδα εργάζονται από απόσταση οι εθελοντές σας;",
+      "glossary": {
+        "postalCode": "Ταχυδρομικός κώδικας του συλλόγου",
+        "postalCodeGlossary": "ΤΚ της έδρας εάν υπάρχουν πολλές τοποθεσίες, 5 ψηφία"
+      }
+    },
+    "flow": {
+      "info": "Μπορείτε να κατεβάσετε ένα παράδειγμα χαρτογράφησης ροών για να σας βοηθήσει να δημιουργήσετε τη δική σας. Στη συνέχεια, εάν επιθυμείτε να υποβάλετε τη δική σας χαρτογράφηση ροών για να βοηθήσετε άλλους συλλόγους παρέχοντάς τους μια βάση εργασίας, παρακαλούμε υποβάλετέ την στη διεύθυνση <mail>methodologie@abc-transitionbascarbone.fr</mail>"
+    },
+    "dependencyMatrix": {
+      "info": "Μπορείτε να κατεβάσετε ένα παράδειγμα μήτρας κινδύνου και εξάρτησης για να σας βοηθήσει να δημιουργήσετε τη δική σας. Στη συνέχεια, εάν επιθυμείτε να υποβάλετε τη δική σας χαρτογράφηση ροών για να βοηθήσετε άλλους συλλόγους παρέχοντάς τους μια βάση εργασίας, παρακαλούμε υποβάλετέ την στη διεύθυνση <mail>methodologie@abc-transitionbascarbone.fr</mail>"
+    },
+    "firstSimplifiedStudyMessage": "Ήρθε η ώρα να ξεκινήσετε! Σας προσκαλούμε να δημιουργήσετε το πρώτο σας Αποτύπωμα.",
+    "createFirstSimplifiedStudy": "Δημιουργία του πρώτου μου Αποτυπώματος",
+    "createSimplified": "Δημιουργία Αποτυπώματος",
+    "mySimplifiedStudies": "Τα αποτυπώματά μου",
+    "seeSimplified": "Προβολή του αποτυπώματός μου",
+    "cannotCreateStudy": "Για να μπορείτε να κάνετε Bilan Carbone® πρέπει να είστε εκπαιδευμένοι στη μέθοδο! <link>Μάθετε περισσότερα</link>",
+    "canCreateFootPrint": "Μπορείτε ωστόσο να κάνετε <link>ένα αποτύπωμα άνθρακα</link> που σας επιτρέπει να πραγματοποιήσετε μια εκτίμηση του αντικτύπου σας",
+    "navigation": {
+      "generalData": "Γενικά δεδομένα",
+      "title": "Το Αποτύπωμά μου"
+    },
+    "export": {
+      "export": "Εξαγωγή των αποτελεσμάτων μου"
+    },
+    "results": {
+      "feedback": {
+        "button": "Στείλτε μας τα σχόλιά σας! ✨",
+        "title": "Στείλτε μας τα σχόλιά σας! ✨"
+      }
+    },
+    "structure": {
+      "'Club de loisirs'": "Λέσχη αναψυχής",
+      "'Association étudiante'": "Φοιτητικός σύλλογος",
+      "'Association culturelle'": "Πολιτιστικός σύλλογος",
+      "'Association de voisinage'": "Σύλλογος γειτονιάς",
+      "'Hôpital'": "Νοσοκομείο",
+      "'Maison de retraite'": "Οίκος ευγηρίας",
+      "'Association d'aide à domicile'": "Σύλλογος κατ' οίκον βοήθειας",
+      "'Association humanitaire'": "Ανθρωπιστικός σύλλογος",
+      "'Autres structures sociales et solidaires'": "Άλλες κοινωνικές και αλληλέγγυες δομές",
+      "'Association de défense de l'environnement'": "Σύλλογος προστασίας του περιβάλλοντος",
+      "'Association d'enseignement ou de formation'": "Σύλλογος εκπαίδευσης ή κατάρτισης",
+      "'Autre'": "Άλλο"
+    }
+  },
+  "emissionFactors": {
+    "post": {
+      "seeTypeform": "Προβολή του τυπικού ερωτηματολογίου",
+      "seeTypeformDescription": "Αυτό το εργαλείο σας επιτρέπει να έχετε ένα παράδειγμα τυπικού ερωτηματολογίου προς αποστολή στα ενδιαφερόμενα μέρη σας για τη συλλογή δεδομένων σχετικά με τις επαγγελματικές τους μετακινήσεις.",
+      "glossaryDescription": {
+        "postInfo": "Πληροφορίες για αυτή την κατηγορία",
+        "close": "Κλείσιμο",
+        "informations": "πληροφορίες για αυτή την κατηγορία",
+        "IntrantsBiensEtMatieresTilt": "Για περισσότερες πληροφορίες σχετικά με τους διάφορους τρόπους συνυπολογισμού των Εισροών, ανατρέξτε στη <link>μέθοδο για συλλόγους</link>.",
+        "IntrantsBiensEtMatieresTiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/intrants-biens-et-services#intrants-biens-et-matieres",
+        "Alimentation": "Για περισσότερες πληροφορίες σχετικά με τον συνυπολογισμό της διατροφής, για τα διάφορα ενδιαφερόμενα μέρη των συλλόγων, ανατρέξτε στη <link>μέθοδο για συλλόγους</link>.",
+        "AlimentationLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/alimentation",
+        "IntrantsServices": "Για περισσότερες πληροφορίες σχετικά με τους διάφορους τρόπους συνυπολογισμού των Εισροών, ανατρέξτε στη <link>μέθοδο για συλλόγους</link>.",
+        "IntrantsServicesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/intrants-biens-et-services#intrants-services",
+        "EquipementsEtImmobilisations": "Για περισσότερες πληροφορίες σχετικά με τον τρόπο συνυπολογισμού του εξοπλισμού και άλλων παγίων στοιχείων, ανατρέξτε στη <link>μέθοδο για συλλόγους</link>.",
+        "EquipementsEtImmobilisationsLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/intrants-biens-et-services#equipements-et-immobilisations",
+        "ConstructionDesLocaux": "Για περισσότερες πληροφορίες σχετικά με τον συνυπολογισμό των χώρων των συλλόγων, ανατρέξτε στη <link>μέθοδο για συλλόγους</link>.",
+        "ConstructionDesLocauxLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#construction-des-locaux",
+        "Energies": "Για περισσότερες πληροφορίες σχετικά με τον συνυπολογισμό της ενεργειακής κατανάλωσης ενός οργανισμού, ανατρέξτε στο <link>Plan Carbone Général</link>.",
+        "EnergiesLink": "https://www.plancarbonegeneral.com/perimetre-collaborateurs/locaux/exploitation",
+        "DechetsDirectstilt": "Για περισσότερες πληροφορίες σχετικά με τον συνυπολογισμό των αποβλήτων ενός οργανισμού, ανατρέξτε στο <link>Plan Carbone Général</link>.",
+        "DechetsDirectstiltLink": "https://www.plancarbonegeneral.com/perimetre-collaborateurs/locaux/exploitation",
+        "FroidEtClim": "Για περισσότερες πληροφορίες σχετικά με τον συνυπολογισμό των κλιματιστικών και άλλων συσκευών που καταναλώνουν ψυκτικά μέσα ενός οργανισμού, ανατρέξτε στο <link>Plan Carbone Général</link>.",
+        "FroidEtClimLink": "https://www.plancarbonegeneral.com/perimetre-collaborateurs/locaux/exploitation",
+        "Utilisation": "Για περισσότερες πληροφορίες σχετικά με τον συνυπολογισμό της χρήσης των προϊόντων που διανέμονται ή πωλούνται και των υπηρεσιών που παρέχονται από τους συλλόγους, ανατρέξτε στη <link>μέθοδο για συλλόγους</link>.",
+        "UtilisationLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/utilisation-et-fin-de-vie",
+        "FinDeVietilt": "Για περισσότερες πληροφορίες σχετικά με τον συνυπολογισμό του τέλους ζωής των προϊόντων που διανέμονται ή πωλούνται από τους συλλόγους, ανατρέξτε στη <link>μέθοδο για συλλόγους</link>.",
+        "FinDeVietiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/utilisation-et-fin-de-vie",
+        "Teletravail": "Για περισσότερες πληροφορίες σχετικά με τον συνυπολογισμό της τηλεργασίας, ανατρέξτε στη <link>μέθοδο για συλλόγους</link>.",
+        "TeletravailLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/teletravail",
+        "DeplacementsFabricationDesVehicules": "Η κατασκευή των οχημάτων μπορεί ήδη, σε ορισμένες περιπτώσεις, να συνυπολογίζεται εντός των συντελεστών εκπομπών που χρησιμοποιούνται για την καταμέτρηση των μετακινήσεων. Για περισσότερες πληροφορίες σχετικά με τον συνυπολογισμό της, ανατρέξτε στη <link>μέθοδο για συλλόγους</link>.",
+        "DeplacementsFabricationDesVehiculesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#fabrication-des-vehicules",
+        "DeplacementsDomicileTravailSalaries": "Για περισσότερες πληροφορίες σχετικά με τον τύπο των μετακινήσεων που πρέπει να συμπεριληφθούν σε αυτή την κατηγορία, ανατρέξτε στη <link>μέθοδο για συλλόγους</link>.",
+        "DeplacementsDomicileTravailSalariesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-entre-le-domicile-et-lassociation",
+        "DeplacementsDomicileTravailBenevoles": "Για περισσότερες πληροφορίες σχετικά με τον τύπο των μετακινήσεων που πρέπει να συμπεριληφθούν σε αυτή την κατηγορία, ανατρέξτε στη <link>μέθοδο για συλλόγους</link>.",
+        "DeplacementsDomicileTravailBenevolesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-entre-le-domicile-et-lassociation",
+        "DeplacementsDansLeCadreDUneMissionAssociativeSalaries": "Για περισσότερες πληροφορίες σχετικά με τον τύπο των μετακινήσεων που πρέπει να συμπεριληφθούν σε αυτή την κατηγορία, ανατρέξτε στη <link>μέθοδο για συλλόγους</link>.",
+        "DeplacementsDansLeCadreDUneMissionAssociativeSalariesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-dans-le-cadre-dune-mission-associative",
+        "DeplacementsDansLeCadreDUneMissionAssociativeBenevoles": "Για περισσότερες πληροφορίες σχετικά με τον τύπο των μετακινήσεων που πρέπει να συμπεριληφθούν σε αυτή την κατηγορία, ανατρέξτε στη <link>μέθοδο για συλλόγους</link>.",
+        "DeplacementsDansLeCadreDUneMissionAssociativeBenevolesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-dans-le-cadre-dune-mission-associative",
+        "DeplacementsDesBeneficiaires": "Για περισσότερες πληροφορίες σχετικά με τον τύπο των μετακινήσεων που πρέπει να συμπεριληφθούν σε αυτή την κατηγορία, ανατρέξτε στη <link>μέθοδο για συλλόγους</link>.",
+        "DeplacementsDesBeneficiairesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-des-beneficiaires",
+        "TransportDeMarchandises": "Για περισσότερες πληροφορίες σχετικά με τις διάφορες μεθόδους συνυπολογισμού των εμπορευματικών μεταφορών, ανατρέξτε στη <link>μέθοδο για συλλόγους</link>.",
+        "TransportDeMarchandisesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#transport-de-marchandises",
+        "TransportFabricationDesVehicules": "Η κατασκευή των οχημάτων μπορεί ήδη, σε ορισμένες περιπτώσεις, να συνυπολογίζεται εντός των συντελεστών εκπομπών που χρησιμοποιούνται για την καταμέτρηση των μετακινήσεων. Για περισσότερες πληροφορίες σχετικά με τον συνυπολογισμό της, ανατρέξτε στη <link>μέθοδο για συλλόγους</link>.",
+        "TransportFabricationDesVehiculesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#fabrication-des-vehicules",
+        "Agriculturetilt": "Για περισσότερες πληροφορίες σχετικά με τον συνυπολογισμό των εκπομπών που σχετίζονται με τις γεωργικές δραστηριότητες, ανατρέξτε στη <link>μέθοδο για συλλόγους</link>.",
+        "AgriculturetiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
+        "ActivitesIndustrielles": "Για περισσότερες πληροφορίες σχετικά με τον συνυπολογισμό των εκπομπών που σχετίζονται με ενδεχόμενες βιομηχανικές δραστηριότητες, ανατρέξτε στη <link>μέθοδο για συλλόγους</link>.",
+        "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux"
+      }
+    }
+  },
+  "navigation": {
+    "footprints": "Τα αποτυπώματά μου",
+    "information": "Ο σύλλογός μου"
+  },
+  "betaBanner": {
+    "badge": "Βήτα",
+    "title": "Έκδοση Βήτα του εργαλείου Cap Carbone",
+    "description": "Το Cap Carbone βρίσκεται σήμερα σε έκδοση βήτα! Σας ευχαριστούμε που είστε οι πρώτοι μας χρήστες και δοκιμαστές 🎉 Μη διστάσετε να επικοινωνήσετε μαζί μας στη διεύθυνση <support>support@abc-transitionbascarbone.fr</support> εάν έχετε σχόλια! Καθώς η εφαρμογή βρίσκεται σε βήτα φάση, είναι πιθανό ορισμένες ερωτήσεις να αλλάξουν στη φόρμα και έτσι οι απαντήσεις των τροποποιημένων ερωτήσεων να διαγραφούν σε μελλοντικές ενημερώσεις. Θυμηθείτε να ελέγξετε τη συμπλήρωση των κατηγοριών σας στη σελίδα καταχώρησης δεδομένων προτού δείτε τα αποτελέσματά σας, για να επιβεβαιώσετε ότι όλες οι απαντήσεις σας εξακολουθούν να είναι διαθέσιμες."
+  }
+}

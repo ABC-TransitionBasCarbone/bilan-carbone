@@ -1,7 +1,7 @@
-import { customRich } from '@/i18n/customRich'
 import { getUserCheckList, mandatoryParentSteps } from '@/services/checklist'
 import type { OrganizationVersion } from '@abc-transitionbascarbone/db-common'
 import { Level, Role, UserChecklist } from '@abc-transitionbascarbone/db-common/enums'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'

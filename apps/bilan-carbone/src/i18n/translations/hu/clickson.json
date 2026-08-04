@@ -1,7 +1,8 @@
 {
   "nav": {
     "newStudyContributor": "Diák hozzáadása",
-    "home": "Kezdőlap"
+    "home": "Kezdőlap",
+    "team": "Pilotcsapat"
   },
   "navigation": {
     "organizations": "Saját karbonlábnyomaim",
@@ -32,12 +33,17 @@
       "0": "Megérteni az intézményed hatásának mérését",
       "1": "Az intézkedési prioritások azonosítása",
       "2": "Hosszú távon, alaposabb munkával, egy csökkentési pálya felépítése"
-    }
+    },
+    "subtitle": "Létesítménye szénlábnyomának kiszámítása azt jelenti:"
   },
   "team": {
     "table": {
-      "title": "Pilótacsapat"
-    }
+      "title": "Pilótacsapat",
+      "newUser": "Adminisztrátor / munkatárs meghívása",
+      "userDeletion": "Adminisztrátor / munkatárs törlése",
+      "userDeletionDescription": "Biztosan törölni szeretné ezt az adminisztrátort / munkatársat? Többé nem fér hozzá a szervezete fiókjához, de továbbra is hozzáfér azokhoz a tanulmányokhoz, amelyekhez más szervezetek meghívták."
+    },
+    "delete": "Adminisztrátor / munkatárs törlése"
   },
   "study": {
     "create": "Lábnyom hozzáadása",
@@ -67,19 +73,27 @@
       "inviteContributors": "Ugyanazok a diákok meghívása",
       "glossary": {
         "validatorEmailDescription": "Diákként hozzáférésem van, mint közreműködő, egy vagy több kibocsátási ponthoz.",
-        "duplicationOptionsDescription": "Tanulmány másolásakor kiválaszthatod, hogy az eredeti tanulmányból ugyanazokat a csapattagokat és diákokat hívd meg az új tanulmányhoz. Ez segít a kollaboráció folytonosságának fenntartásában."
+        "duplicationOptionsDescription": "Tanulmány másolásakor kiválaszthatod, hogy az eredeti tanulmányból ugyanazokat a csapattagokat és diákokat hívd meg az új tanulmányhoz. Ez segít a kollaboráció folytonosságának fenntartásában.",
+        "studyDates": "A tanulmányom időszaka",
+        "studyDatesDescription": "Ez az az időszak, amelyre az aktivitási adataimat gyűjteni fogom. Alapértelmezés szerint ez a folyó tanév. A kezdő és záró dátumok módosíthatók."
       },
       "etp": "Dolgozók száma (tanárok és nem oktatók)",
       "goToDataEntry": "Adatok kitöltése",
       "studentNumber": "Diákok száma",
-      "superficy": "Intézmény területe"
+      "superficy": "Intézmény területe",
+      "title": "A szénlábnyomom adatai",
+      "studyDates": "A tanulmányom időszaka",
+      "create": "Szénlábnyomom létrehozása",
+      "superficyPlaceholder": "csak a beépített terület, m²-ben",
+      "country": "A létesítmény országa"
     },
     "role": {
       "Contributor": "Diák"
     },
     "rights": {
       "newContributor": {
-        "title": "Diák hozzáadása a tanulmányhoz: {name}"
+        "title": "Diák hozzáadása a tanulmányhoz: {name}",
+        "edit": "Érvényesítés"
       },
       "contributorsTable": {
         "delete": "Diák eltávolítása",
@@ -91,6 +105,9 @@
         "role": {
           "description": "Itt kezelheted a tanulmány diákjait. Hozzáférést kapnak bizonyos ponthoz és alponthoz (amit meghatározhatsz), és kitölthetik az általad már létrehozott kibocsátási források adatait. További információkért a közreműködői felületről, lásd a <link>GYIK</link>."
         }
+      },
+      "versions": {
+        "list": "A kibocsátási tényezők forrása:"
       }
     },
     "export": {
@@ -144,6 +161,10 @@
         "bar": "Oszlopdiagram",
         "pie": "Kördiagram"
       }
+    },
+    "firstStudyMessage": "Itt az ideje, hogy belevágjon! Meghívjuk, hogy hozza létre első Lenyomatát.",
+    "perimeter": {
+      "studyDates": "A tanulmányom időszaka"
     }
   },
   "emissionFactors": {
@@ -168,6 +189,12 @@
       "TransportDuPersonnel": "Személyzet szállítása",
       "TypesDeRepasServis": "Tálalt ételek típusai",
       "VoyagesScolaires": "Iskolai utazások"
+    },
+    "underDevelopment": "Ez a funkció fejlesztés alatt áll",
+    "create": {
+      "glossary": {
+        "post_studyContributorDescription": "Itt rendelje hozzá a kategóriákat és alkategóriákat a tanulóihoz"
+      }
     }
   },
   "organization": {
@@ -202,7 +229,8 @@
       },
       "studentNumber": "Diákok száma",
       "studentNumberPlaceholder": "Diákok teljes száma"
-    }
+    },
+    "myOrganization": "Létesítményem"
   },
   "login": {
     "welcome": "Üdv a Clickson PEBC-n",
@@ -258,5 +286,33 @@
     "modelsDataCollect": "Adatgyűjtési segédanyagok mintái",
     "game": "Játék: saját intézkedési terv tárgyalásának bevezetése:",
     "classEarth": "Földem az osztályban"
+  },
+  "newMember": {
+    "title": "Adminisztrátor / munkatárs meghívása",
+    "create": "Adminisztrátor / munkatárs meghívása",
+    "Not authorized": "Nem lehet meghívni ezt az adminisztrátort / munkatársat. További információért forduljon a <link>ügyfélszolgálathoz</link>.",
+    "addedMember": "Az adminisztrátort / munkatársat sikeresen hozzáadtuk a szervezetéhez"
+  },
+  "role": {
+    "ADMIN_description": "Az adminisztrátor minden jogosultsággal rendelkezik a létesítmény fiókja, valamint az összes szénlábnyom felett. Az adminisztrátor nem változtathat szerepkört. Változás esetén továbbítania kell a bejelentkezési adatokat az új személynek.",
+    "COLLABORATOR_description": "A munkatárs minden olyan személy, aki jogosult aktivitási adatok bevitelére a létesítmény számára egy vagy több kibocsátási kategóriában, de nincs joga módosítani a létesítmény fiókját. "
+  },
+  "onboarding": {
+    "title-1": "Üdvözöljük a Clicks On kalkulátorban! Mielőtt elkezdené, kérjük, konfigurálja létesítményét.",
+    "titleDescription-1": "Egyes információkat előre kitöltöttünk, amelyeket most vagy bármikor módosíthat a \"Létesítményem\" menüpontban.",
+    "title-2": "Pilotcsapatának kezelése",
+    "titleDescription-2": "Máris hozzáadhatja munkatársait (tanulók, tanárok és nem oktató személyzet) a csapatához! Később bármikor hozzáadhat új személyeket a \"Pilotcsapat\" menüpontban.",
+    "step1": {
+      "name": "Létesítményem neve",
+      "role": "Szerepköröm a létesítményen belül",
+      "information": "Adataim",
+      "firstName": "Keresztnév",
+      "lastName": "Vezetéknév",
+      "adminDescription": "Az Önnek kiosztott szerepkör a létesítménye adminisztrátoráé.",
+      "gestionnaireDescription": "Az Önnek kiosztott szerepkör a létesítménye munkatársáé."
+    }
+  },
+  "exports": {
+    "env_specific_export": "Egyszerűsített szénlábnyom"
   }
 }

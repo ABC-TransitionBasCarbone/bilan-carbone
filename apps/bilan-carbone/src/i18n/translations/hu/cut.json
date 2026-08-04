@@ -1,0 +1,203 @@
+{
+  "navigation": {
+    "organizations": "Lenyomataim",
+    "organization": "Munkatársaim",
+    "information": "Mozijaim",
+    "team": "Munkatársaim"
+  },
+  "signup": {
+    "description": "Hozzon létre fiókot a CUT-on e-mail-címe, valamint CNC-száma (ajánlott) vagy Siret-száma megadásával",
+    "siretOrCNC": "CNC-szám (ajánlott) vagy Siret",
+    "siretOrCNCPlaceholder": "Az Ön CNC-száma (ajánlott) vagy Siret-száma",
+    "siretOrCNCRequired": "Adjon meg egy CNC- (ajánlott) vagy Siret-számot",
+    "clear": "Érték törlése",
+    "Unknown CNC": "Ez a CNC-kód nem ismerhető fel. Ellenőrizze a bevitelt, vagy forduljon az ügyfélszolgálathoz, ha úgy gondolja, hogy hibáról van szó.",
+    "Unknown SIRET or CNC": "Ez a Siret- vagy CNC-kód nem ismerhető fel. Ellenőrizze a bevitelt, vagy forduljon az ügyfélszolgálathoz, ha úgy gondolja, hogy hibáról van szó.",
+    "Not authorized": "Ez az e-mail-cím már regisztrálva van egy CUT-fiókkal, vagy probléma merült fel annak létrehozásakor. Nyugodtan tekintse meg a <link>gyakori kérdéseket</link>, vagy forduljon az <support>ügyfélszolgálathoz</support>, ha úgy gondolja, hogy hibáról van szó.",
+    "validation": {
+      "siretOrCNC": "Adjon meg egy CNC- (ajánlott) vagy Siret-számot"
+    }
+  },
+  "home": {
+    "navigation": {
+      "collaborators": {
+        "title": "Munkatársaim",
+        "message": "Itt találja azoknak a személyeknek a listáját, akik jogosultak a különböző szénlábnyomain dolgozni"
+      },
+      "footprints": {
+        "title": "Lenyomataim",
+        "message": "Itt hozza létre első lenyomatát. Ezután bármikor megtekintheti lenyomatait, vagy létrehozhat újakat."
+      },
+      "sites": {
+        "title": "Mozijaim",
+        "message": "Itt találja a fiókjához kapcsolódó létesítmények listáját"
+      }
+    },
+    "title": "Egyszerűsített szénlábnyomának kiszámítása lehetővé teszi, hogy:",
+    "alert": {
+      "info": "A Count kalkulátor lehetővé teszi tevékenysége éghajlatra gyakorolt hatásának becslését. Ez elsősorban egy szemléletformáló eszköz. Nem egy alacsony szén-dioxid-kibocsátású átállási folyamatról van szó, hanem egy egyszerűsített szénlábnyomról – a <link>Szénelszámolásról szóló kommunikációs útmutató</link> értelmében –, amely a mozitermek tevékenységéhez kapcsolódó fő kibocsátási kategóriákra összpontosít."
+    },
+    "info": {
+      "0": "Megérteni létesítménye hatásának mértékét",
+      "1": "Azonosítani a cselekvési prioritásokat",
+      "2": "Hosszú távon, mélyrehatóbb munkával, csökkentési pályát felépíteni"
+    }
+  },
+  "study": {
+    "create": "Lenyomat hozzáadása",
+    "myCollaborations": "Együttműködéseim",
+    "myStudies": "Lenyomataim",
+    "createFirstStudy": "Első lenyomatom létrehozása",
+    "createFirstSimplifiedStudy": "Első Lenyomatom létrehozása",
+    "firstSimplifiedStudyMessage": "Itt az ideje, hogy belevágjon! Meghívjuk, hogy hozza létre első Lenyomatát.",
+    "see": "Lenyomatom megtekintése",
+    "validatedSources": "<data>{validated} / {total}</data> Megválaszolt kérdés",
+    "validatedOnlyDescription": "Minden lenyomathoz egy vagy több validátor határozható meg. Ők felelősek a kibocsátási források validálásáért, miután a tanulmány közreműködői és szerkesztői kitöltötték azokat. Alapértelmezés szerint csak a validált kibocsátások jelennek meg az eredményekben, de ezt a viselkedést a \"Beállítások\" menüben módosíthatja.",
+    "selectSite": "Az adatbevitel előtt válasszon egy mozit",
+    "lastStudyTitle": "Utoljára létrehozott lenyomat",
+    "navigation": {
+      "framing": "Általános adatok",
+      "organizations": "Mozijaim",
+      "team": "Munkatársaim",
+      "title": "Lenyomatom"
+    },
+    "new": {
+      "title": "Az új lenyomat adatai",
+      "name": "A lenyomat neve",
+      "studyDates": "A lenyomat referenciaéve",
+      "suggestion": {
+        "name": "Lenyomat - {orga} {studyStartDate}",
+        "yourOrga": "Az Ön mozija"
+      },
+      "info": {
+        "date": "A becslések általában 12 hónapos időszakra készülnek"
+      },
+      "glossary": {
+        "studyDates": "A lenyomat referenciaéve",
+        "studyDatesDescription": "Adja meg azt a referencia-időszakot, amelyre az egyszerűsített szénlábnyoma vonatkozik. Ideális esetben a referencia-időszak tizenkét hónap."
+      },
+      "goToDataEntry": "Ugrás az adatbevitelre",
+      "cncInfo": "Ha megadta mozija CNC-számát, az alábbi adatok a(z) {year}. évi információkkal vannak előre kitöltve. Módosíthatja őket, ha nem naprakészek."
+    },
+    "perimeter": {
+      "editSites": "Mozik listájának módosítása",
+      "deleteDialog": {
+        "title": "Biztosan törölni szeretné {count, plural, =1 {ezt a mozit} other {ezeket a mozikat}}?"
+      }
+    },
+    "export": {
+      "export": "Eredményeim exportálása"
+    },
+    "results": {
+      "simplifiedFeedback": "Gratulálunk! Éppen elkészítette mozija egyszerűsített szénlábnyomát. Ez kiváló bevezetés a szénelszámolásba! Köszönjük, hogy kitölti <questionnaire>ezt a kérdőívet</questionnaire>, hogy segítsen nekünk javítani az eszközt és kijavítani az esetleges hibákat!",
+      "intensities": {
+        "screen": "vászon",
+        "entrie": "belépőjegy",
+        "superficy": "m²",
+        "session": "vetítés",
+        "movie": "film",
+        "chair": "ülőhely",
+        "ca": "k€"
+      }
+    },
+    "rights": {
+      "title": "A tanulmány általános adatai: {name}"
+    },
+    "organization": {
+      "site": "Mozi",
+      "allSites": "Összes mozi",
+      "noSites": "Nincs mozi konfigurálva a szervezetben",
+      "addSite": "Mozi létrehozása",
+      "sites": "A szervezet mozijai",
+      "next": "Következő",
+      "select": "Szervezet",
+      "validation": {
+        "sites": "Válasszon legalább egy, a tanulmány által lefedett mozit"
+      }
+    }
+  },
+  "organization": {
+    "card": {
+      "myOrganization": "Mozijaim"
+    },
+    "form": {
+      "editTitle": "Mozijaim módosítása"
+    },
+    "sites": {
+      "title": "Mely mozikra kell vonatkoznia a lenyomatnak?",
+      "noSites": "Nincs mozi konfigurálva a szervezetben",
+      "name": "Név",
+      "namePlaceholder": "A mozi neve",
+      "etp": "Teljes munkaidős egyenértékek száma",
+      "etpPlaceholder": "Adja meg itt a teljes munkaidős egyenértékek számát ehhez a mozihoz",
+      "ca": "Árbevétel ({unit})",
+      "caPlaceholder": "Adja meg itt a mozi árbevételét {unit} egységben",
+      "actions": "Műveletek",
+      "delete": "Törlés",
+      "add": "Mozi hozzáadása"
+    }
+  },
+  "checklist": {
+    "title": "Jó kezdés a COUNT-tal",
+    "AddClientDetails": "Adja hozzá első ügyfelét a lenyomatai megkezdéséhez",
+    "CreateFirstStudy": "Hozza létre első lenyomatát",
+    "CreateFirstStudyDetails": "Kezdjük az első lenyomatával! Töltse ki az első információkat, például a dátumot, a nevet...",
+    "CreateFirstEmissionSource": "Válaszoljon az első kérdésekre",
+    "CreateFirstEmissionSourceDetails": "Lépjen az első kategóriára/alkategóriára, amelyet ki szeretne tölteni! Válaszoljon a kérdésekre.",
+    "finished": "Készen áll a COUNT használatának megkezdésére! Nyugodtan tekintse meg a <faq>gyakori kérdéseket</faq>, vagy vegye fel velünk a kapcsolatot szükség esetén."
+  },
+  "actuality": {
+    "title": "A COUNT hírei"
+  },
+  "role": {
+    "DEFAULT": "Közreműködő",
+    "ADMIN_description": "Az adminisztrátor minden jogosultsággal rendelkezik a szervezet fiókja, valamint a szervezete összes tanulmánya felett (legyenek azok nyilvánosak vagy privátak).",
+    "DEFAULT_description": "A közreműködő módosíthatja a tanulmányokat. Nincs hozzáférése a szervezet beállításaihoz."
+  },
+  "login": {
+    "welcome": "Üdvözöljük itt:",
+    "subtext": "A mozitermeknek szánt első környezetihatás-kalkulátor.",
+    "explanation": "Ezt az eszközt a <b>CUT! Cinéma Uni pour la Transition</b> egyesület fejlesztette az <b>ABC, association pour la Transition bas carbone</b> együttműködésével.",
+    "question": "Kérdése van? Olvassa el a <faq>gyakori kérdéseket</faq>, vagy <support>vegye fel velünk a kapcsolatot</support>!",
+    "explanation2": "Az állam által a France 2030 «Soutenir les alternatives vertes 2» programja keretében támogatott művelet, amelyet a Banque des Territoires (Caisse des Dépôts) kezel.",
+    "form": {
+      "activate": "Fiókom létrehozása"
+    }
+  },
+  "email": {
+    "subject": {
+      "resetPassword": "Elfelejtett jelszó",
+      "newUser": "Meghívást kapott a Count-ra",
+      "addedActiveUser": "Meghívást kapott egy új Count környezetbe",
+      "activation": "Aktiválta fiókját a Count-on",
+      "activationRequest": "Hozzáférési kérelem a Count szervezetéhez",
+      "userOnStudyInvitation": "Hozzáadás a(z) {studyName} tanulmányhoz",
+      "contributorInvitation": "Közreműködési kérelem a(z) {studyName} tanulmányhoz",
+      "addedUsersByFile": "Engedély a felhasználók hozzáadásához"
+    }
+  },
+  "ressources": {
+    "contacterViaFormulaire": "Írjon közvetlenül a következő címre: {supportEmail}",
+    "enSavoirPlusBilan": "A Count által kínált egyszerűsített lenyomat kiszámításán túl:"
+  },
+  "emissionFactors": {
+    "post": {
+      "questions": {
+        "numberOfYears": "Évek száma",
+        "bonbons": "Édességek - Mennyiség ({value} g-os zacskók)",
+        "chips": "Chips - Mennyiség ({value} g-os zacskók)",
+        "Electromenager": "Az alábbi háztartási gépek mindegyikéhez adja meg:",
+        "FretCadence": "Áruszállítás - Gyakoriság (alkalom/hónap)",
+        "FretPoids moyen": "Áruszállítás - Átlagos tömeg (kg)",
+        "FretProvenance": "Hol található a fő beszállítója?",
+        "Refrigerateurs": "Hűtőszekrények",
+        "Congelateurs": "Fagyasztók",
+        "Warmers": "Melegítők",
+        "Distributeurs": "Snack- / italautomaták"
+      }
+    }
+  },
+  "exports": {
+    "env_specific_export": "Egyszerűsített szénlábnyom"
+  }
+}

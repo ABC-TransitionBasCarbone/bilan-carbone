@@ -71,7 +71,8 @@
     "Not authorized": "No tiene permisos para realizar esta acción",
     "typeToConfirm": "Escriba \"{name}\" para confirmar",
     "perPerson": "per persona",
-    "carbonIntensities": "Intensidades de carbono"
+    "carbonIntensities": "Intensidades de carbono",
+    "unknown": "Desconocido"
   },
   "saveStatus": {
     "saving": "Guardando respuestas...",
@@ -90,10 +91,15 @@
     "Email sent": "Recibirá un correo electrónico para terminar la validación de su cuenta.",
     "validation": {
       "email": "Por favor, ingrese un correo electrónico"
-    }
+    },
+    "support": "Se ha producido un problema. Inténtelo de nuevo. Si no funciona, póngase en contacto con nuestro soporte"
   },
   "navigation": {
-    "comments": "Comentarios"
+    "comments": "Comentarios",
+    "home": "Inicio",
+    "logout": "Cerrar sesión",
+    "admin": "Admin",
+    "team": "Mi equipo"
   },
   "country": {
     "ALBANIA": "Albania",
@@ -179,5 +185,142 @@
       "noQuestions": "Aucune question trouvée pour ce sous-poste",
       "autoSaveError": "Certaines réponses n'ont pas pu être sauvegardées automatiquement. Veuillez vérifier votre connexion et réessayer."
     }
+  },
+  "locale": {
+    "en": "English",
+    "fr": "Français",
+    "es": "Español",
+    "el": "ελληνικά",
+    "hr": "hrvatski",
+    "hu": "magyar",
+    "it": "Italiano",
+    "ro": "Română",
+    "selector": "Idioma del sitio"
+  },
+  "login": {
+    "welcome": "Bienvenido/a",
+    "form": {
+      "activate": "Activar mi cuenta",
+      "firstConnection": "¿Primera conexión?",
+      "alreadyRegistered": "¿Ya tiene una cuenta?",
+      "resetTitle": "Ha solicitado crear o restablecer su contraseña. Introduzca la información solicitada a continuación para confirmar la creación de su cuenta o el restablecimiento de su contraseña.",
+      "login": "Iniciar sesión",
+      "email": "Correo electrónico",
+      "emailPlaceholder": "Introduzca su dirección de correo electrónico",
+      "password": "Contraseña",
+      "passwordPlaceholder": "Introduzca su contraseña",
+      "confirmPassword": "Confirmar la contraseña",
+      "hidePassword": "Ocultar la contraseña",
+      "showPassword": "Mostrar la contraseña",
+      "notMatching": "Las contraseñas no coinciden",
+      "passwordLength": "La contraseña debe tener al menos 8 caracteres",
+      "passwordUppercase": "La contraseña debe tener al menos una mayúscula",
+      "passwordLowercase": "La contraseña debe tener al menos una minúscula",
+      "passwordSpecialChar": "La contraseña debe tener al menos un carácter especial",
+      "passwordDigit": "La contraseña debe tener al menos un número",
+      "forgotPassword": "¿Ha olvidado su contraseña?",
+      "reset": "Confirmar",
+      "error": "Verifique su correo electrónico y su contraseña",
+      "expired": "Este enlace de restablecimiento de contraseña ha caducado",
+      "backToHome": "Volver al inicio",
+      "resetError": "Algunos datos no son correctos. Si cree que ha rellenado todo correctamente, póngase en contacto con nosotros.",
+      "emailRequired": "Introduzca un correo electrónico",
+      "emailAndPasswordRequired": "Introduzca un correo electrónico y una contraseña",
+      "emailSent": "Si su correo electrónico es correcto, recibirá un mensaje para restablecer su contraseña",
+      "validated": "Su contraseña ha sido restablecida",
+      "validation": {
+        "email": "Introduzca un correo electrónico",
+        "password": "Introduzca una contraseña"
+      }
+    }
+  },
+  "spinner": {
+    "loading": "Cargando"
+  },
+  "error": {
+    "Not authorized": "No tiene permisos para realizar esta acción",
+    "Not found": "No se ha encontrado el recurso solicitado",
+    "Server error": "Se ha producido un error del servidor, póngase en contacto con el soporte",
+    "default": "Se ha producido un error, inténtelo de nuevo. Si el problema persiste, póngase en contacto con el soporte.",
+    "error": "Se ha producido un error...",
+    "contactSupport": "Se ha producido un problema. Intente volver a <link>la página de inicio</link>. <p>Si no funciona, póngase en contacto con nuestro soporte en <m></m> o intente <logout>volver a iniciar sesión</logout>.</p>",
+    "duplicateScopeCombination": "Ya existe un objetivo con el mismo perímetro (sitios, etiquetas, subcategorías) y el mismo año objetivo para esta trayectoria"
+  },
+  "email": {
+    "subject": {
+      "resetPassword": "Contraseña olvidada",
+      "newUser": "Ha sido invitado a BC+",
+      "addedActiveUser": "Ha sido invitado a un nuevo entorno de BC+",
+      "activation": "Ha activado su cuenta en BC+",
+      "activationRequest": "Solicitud de acceso a su organización BC+",
+      "userOnStudyInvitation": "Añadido al estudio {studyName}",
+      "contributorInvitation": "Solicitud de contribución al estudio {studyName}",
+      "addedUsersByFile": "Autorización para añadir usuarios"
+    }
+  },
+  "nav": {
+    "backToHome": "Volver al inicio",
+    "home": "Inicio",
+    "notFound": "Página no encontrada",
+    "organization": "Organización",
+    "edit": "Editar",
+    "team": "Equipo"
+  },
+  "team": {
+    "pending": "Invitaciones pendientes",
+    "invitationDate": "Invitación enviada el",
+    "toValidate": "Invitaciones por validar",
+    "addedDate": "Añadido el",
+    "delete": "Eliminar al usuario/a",
+    "resend": "Reenviar la invitación",
+    "table": {
+      "title": "Mi equipo",
+      "newUser": "Invitar a un usuario/a",
+      "firstName": "Nombre",
+      "lastName": "Apellidos",
+      "email": "Correo electrónico",
+      "level": "Formación",
+      "role": "Rol",
+      "action": " ",
+      "deleteMember": "Eliminar al miembro",
+      "userDeletion": "Eliminación de un usuario/a",
+      "userDeletionDescription": "¿Está seguro de que desea eliminar a este usuario/a? Ya no tendrá acceso a la cuenta de su organización, pero seguirá teniendo acceso a los estudios para los que fue invitado por otras organizaciones.",
+      "necessaryAdmin": "No es posible eliminar a este administrador. Es el único validador/a de los siguientes estudios: "
+    }
+  },
+  "level": {
+    "Initial": "Inicial",
+    "Standard": "Estándar",
+    "Advanced": "Avanzado",
+    "noLevel": "Sin formación"
+  },
+  "role": {
+    "SUPER_ADMIN": "Administrador/a global",
+    "ADMIN": "Administrador/a",
+    "COLLABORATOR": "Colaborador/a",
+    "ADMIN_description": "Un administrador/a posee todos los derechos sobre la cuenta de la organización, así como sobre el conjunto de estudios de su organización (ya sean públicos o privados). No es posible cambiar el rol de un administrador/a en un estudio de su organización.",
+    "COLLABORATOR_description": "Un colaborador/a es una persona formada en el método Bilan Carbone®. No tiene ningún derecho sobre la cuenta de la organización, pero puede crear estudios para su organización. Es, por defecto, editor/a de todos los Bilan Carbone® públicos de su organización.",
+    "guide": "Guía de roles",
+    "saved": "Nuevo rol guardado",
+    "Not authorized": "No tiene permisos para realizar esta acción",
+    "More than one": "Debe haber al menos un administrador/a o gestor/a en la organización"
+  },
+  "newMember": {
+    "title": "Invitar a un usuario/a",
+    "email": "Correo electrónico",
+    "firstName": "Nombre",
+    "lastName": "Apellidos",
+    "role": "Rol",
+    "level": "Formación",
+    "create": "Invitar al usuario/a",
+    "Not authorized": "No es posible invitar a este usuario/a. Póngase en contacto con el <link>soporte</link> para más información.",
+    "validation": {
+      "email": "Introduzca un correo electrónico válido",
+      "firstName": "Introduzca un nombre",
+      "lastName": "Introduzca unos apellidos",
+      "level": "Introduzca un nivel de formación",
+      "role": "Introduzca un rol"
+    },
+    "addedMember": "El usuario/a se ha añadido correctamente a su organización"
   }
 }

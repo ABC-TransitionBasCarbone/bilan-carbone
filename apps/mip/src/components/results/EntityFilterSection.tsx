@@ -1,6 +1,6 @@
 'use client'
 
-import { EntityFilter } from '@/data/sampleResults'
+import { EntityFilter } from '@/types/results.types'
 import { BaseStyledChip } from '@abc-transitionbascarbone/ui'
 import { Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'

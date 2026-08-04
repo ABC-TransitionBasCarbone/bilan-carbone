@@ -1,33 +1,36 @@
 'use client'
 
-import { CATEGORY_COLORS, getResultsForEntity, SurveyResults } from '@/data/sampleResults'
-import { RawRules } from '@/publicodes/mip-engine'
+import { isCsvExportDisabled } from '@/constants/survey'
+import { exportSurveyResponsesToCSV } from '@/services/serverFunctions/survey'
+import { SurveyResults } from '@/types/results.types'
+import { getResultsForEntity } from '@/utils/survey'
 import { StudyResultUnit } from '@abc-transitionbascarbone/db-common/enums'
+import { useToast } from '@abc-transitionbascarbone/ui'
 import { BasicTypeCharts } from '@abc-transitionbascarbone/utils/charts'
+import { downloadCsvFile } from '@abc-transitionbascarbone/utils/download'
 import { Print } from '@mui/icons-material'
-import { Button, Typography } from '@mui/material'
+import DownloadIcon from '@mui/icons-material/Download'
+import { Button, Tooltip, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import ChartsSection from './ChartsSection'
-import CollectiveEffortEncart from './CollectiveEffortEncart'
 import EntityFilterSection from './EntityFilterSection'
 import KeyStatsSection from './KeyStatsSection'
-import ObjectiveEncart from './ObjectiveEncart'
 import styles from './ResultsDashboard.module.css'
 import StatsSection from './StatsSection'
 
 interface Props {
   results: SurveyResults
-  model: RawRules
 }
 
-const ResultsDashboard = ({ results, model }: Props) => {
+const ResultsDashboard = ({ results }: Props) => {
   const t = useTranslations('results')
+  const { showErrorToast } = useToast()
   const [selectedEntity, setSelectedEntity] = useState('all')
 
   const filtered = getResultsForEntity(results, selectedEntity)
 
-  const pieChartItems = filtered.categories.map(
+  const chartItems = filtered.categories.map(
     (c) =>
       ({
         post: c.key,
@@ -38,43 +41,61 @@ const ResultsDashboard = ({ results, model }: Props) => {
       }) as BasicTypeCharts,
   )
 
-  const totalBarItem = {
-    post: 'somme',
-    label: t('charts.barTitle'),
-    value: filtered.averageFootprint,
-    color: CATEGORY_COLORS.total,
-  } as BasicTypeCharts
-
   const handlePrint = () => {
     window.print()
   }
 
+  const isExportDisabled = isCsvExportDisabled(results.totalRespondents)
+
+  const handleExportCsv = async () => {
+    const result = await exportSurveyResponsesToCSV(results.surveyId)
+    if (!result.success) {
+      showErrorToast(result.errorMessage)
+      return
+    }
+
+    downloadCsvFile(result.data.fileName, result.data.csvContent)
+  }
+
   return (
     <div className={`${styles.page} pt2`}>
-      <Typography variant="h4" className="mb-2">
-        {t('title')}
-      </Typography>
-      <Typography variant="body1" className="mb2">
-        {t('subtitle')}
-      </Typography>
+      <section className="mb1">
+        <Typography variant="h4" className="mb-2">
+          {t('title')}
+        </Typography>
+        <Typography variant="body1" color="text.secondary" className="mb0">
+          {t('subtitle')}
+        </Typography>
+      </section>
 
       <StatsSection results={filtered} resultsUnit={StudyResultUnit.T} />
 
-      <EntityFilterSection
-        entities={results.entities}
-        selectedEntity={selectedEntity}
-        onSelectEntity={setSelectedEntity}
-      />
+      {results.entities.length > 0 && (
+        <EntityFilterSection
+          entities={results.entities}
+          selectedEntity={selectedEntity}
+          onSelectEntity={setSelectedEntity}
+        />
+      )}
 
-      <ObjectiveEncart averageFootprint={filtered.averageFootprint} resultsUnit={StudyResultUnit.T} />
+      <ChartsSection chartItems={chartItems} />
 
-      <ChartsSection pieChartItems={pieChartItems} totalBarItem={totalBarItem} />
+      <KeyStatsSection keyStats={filtered.keyStats} />
 
-      <KeyStatsSection keyStats={filtered.keyStats} model={model} />
-
-      <CollectiveEffortEncart />
-
-      <div className="flex gapped1">
+      <div className="flex gapped1 mt1">
+        <Tooltip title={isExportDisabled ? t('export.disabledMinRespondents') : ''}>
+          <span>
+            <Button
+              variant="outlined"
+              startIcon={<DownloadIcon />}
+              onClick={handleExportCsv}
+              disabled={isExportDisabled}
+              data-testid="export-data-csv-button"
+            >
+              {t('export.dataCsv')}
+            </Button>
+          </span>
+        </Tooltip>
         <Button variant="outlined" startIcon={<Print />} onClick={handlePrint}>
           {t('export.print')}
         </Button>

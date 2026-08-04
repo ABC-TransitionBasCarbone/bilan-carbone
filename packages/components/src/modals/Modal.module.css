@@ -20,10 +20,7 @@
   min-height: 0;
 }
 
-.closeIcon {
-  padding: 0 !important;
-  min-width: 0 !important;
-}
+
 
 .content {
   overflow-y: auto;
@@ -34,7 +31,4 @@
   gap: 1rem;
 }
 
-.error {
-  font-size: small;
-  color: var(--error-100);
-}
+

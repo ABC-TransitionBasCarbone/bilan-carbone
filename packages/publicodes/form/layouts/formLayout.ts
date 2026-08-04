@@ -8,11 +8,13 @@
  * TODO: we should allow to extends this type with custom layouts from the
  * consumer side.
  */
+
 export type FormLayout<RuleName extends string = string> =
   | InputLayout<RuleName>
   | GroupLayout<RuleName>
   | TableLayout<RuleName>
   | ListLayout<RuleName>
+  | MosaicLayout<RuleName>
 
 export interface InputLayout<RuleName extends string> {
   type: 'input'
@@ -23,29 +25,41 @@ export function inputLayout<RuleName extends string>(rule: RuleName): InputLayou
   return { type: 'input', rule }
 }
 
+export interface MosaicLayout<RuleName extends string> {
+  type: 'mosaic'
+  parent: RuleName
+  children: RuleName[]
+}
+export const mosaicLayout = <RuleName extends string>(parent: RuleName, children: RuleName[]): MosaicLayout<RuleName> => {
+  return { type: 'mosaic', parent, children }
+}
+
 export interface TableLayout<RuleName extends string> {
   type: 'table'
   title: string
   headers: string[]
   rows: RuleName[][]
+  description?: string
 }
 
 export function tableLayout<RuleName extends string>(
   title: string,
   headers: string[],
   rows: RuleName[][],
+  description?: string,
 ): TableLayout<RuleName> {
-  return { type: 'table', title, headers, rows }
+  return { type: 'table', title, headers, rows, description }
 }
 
 export interface GroupLayout<RuleName extends string> {
   type: 'group'
   title: string
   rules: RuleName[]
+  description?: string
 }
 
-export function groupLayout<RuleName extends string>(title: string, rules: RuleName[]): GroupLayout<RuleName> {
-  return { type: 'group', title, rules }
+export function groupLayout<RuleName extends string>(title: string, rules: RuleName[], description?: string): GroupLayout<RuleName> {
+  return { type: 'group', title, rules, description }
 }
 
 export interface ListLayout<RuleName extends string> {

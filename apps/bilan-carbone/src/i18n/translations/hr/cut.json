@@ -1,0 +1,203 @@
+{
+  "navigation": {
+    "organizations": "Moji otisci",
+    "organization": "Moji suradnici",
+    "information": "Moja kina",
+    "team": "Moji suradnici"
+  },
+  "signup": {
+    "description": "Stvorite račun na CUT unosom svog emaila te broja CNC (preporučeno) ili Siret",
+    "siretOrCNC": "Broj CNC (preporučeno) ili Siret",
+    "siretOrCNCPlaceholder": "Vaš broj CNC (preporučeno) ili Siret",
+    "siretOrCNCRequired": "Unesite broj CNC (preporučeno) ili Siret",
+    "clear": "Izbriši vrijednost",
+    "Unknown CNC": "Ovaj CNC kod nije prepoznat. Provjerite unos ili se obratite podršci ako mislite da je riječ o pogrešci.",
+    "Unknown SIRET or CNC": "Ovaj Siret ili CNC kod nije prepoznat. Provjerite unos ili se obratite podršci ako mislite da je riječ o pogrešci.",
+    "Not authorized": "Ovaj email već je registriran s CUT računom ili je došlo do problema pri njegovoj izradi. Slobodno pogledajte <link>česta pitanja</link> ili se obratite <support>podršci</support> ako mislite da je riječ o pogrešci.",
+    "validation": {
+      "siretOrCNC": "Unesite broj CNC (preporučeno) ili Siret"
+    }
+  },
+  "home": {
+    "navigation": {
+      "collaborators": {
+        "title": "Moji suradnici",
+        "message": "Ovdje pronađite popis osoba ovlaštenih za rad na vašim različitim ugljičnim otiscima"
+      },
+      "footprints": {
+        "title": "Moji otisci",
+        "message": "Ovdje stvorite svoj prvi otisak. Zatim ćete moći pregledavati svoje otiske ili stvarati nove u bilo kojem trenutku."
+      },
+      "sites": {
+        "title": "Moja kina",
+        "message": "Ovdje pronađite popis ustanova povezanih s vašim računom"
+      }
+    },
+    "title": "Izračun vašeg pojednostavljenog ugljičnog otiska omogućit će vam da:",
+    "alert": {
+      "info": "Kalkulator Count omogućuje vam procjenu utjecaja vaše djelatnosti na klimu. To je prije svega alat za podizanje svijesti. Nije riječ o postupku niskougljične tranzicije, već o pojednostavljenom ugljičnom otisku — u smislu <link>Vodiča za komunikaciju o ugljičnom računovodstvu</link> — usmjerenom na glavne kategorije emisija povezane s djelatnošću kino dvorana."
+    },
+    "info": {
+      "0": "Razumjeti mjerenje utjecaja vaše ustanove",
+      "1": "Prepoznati prioritete djelovanja",
+      "2": "Dugoročno, i kroz dublji rad, izgraditi putanju smanjenja"
+    }
+  },
+  "study": {
+    "create": "Dodaj otisak",
+    "myCollaborations": "Moje suradnje",
+    "myStudies": "Moji otisci",
+    "createFirstStudy": "Stvori moj prvi otisak",
+    "createFirstSimplifiedStudy": "Stvori moj prvi Otisak",
+    "firstSimplifiedStudyMessage": "Vrijeme je da započnete! Pozivamo vas da stvorite svoj prvi Otisak.",
+    "see": "Pogledaj moj otisak",
+    "validatedSources": "<data>{validated} / {total}</data> Odgovorenih pitanja",
+    "validatedOnlyDescription": "Za svaki otisak može se definirati jedan ili više validatora. Oni su odgovorni za validaciju izvora emisija nakon što ih ispune suradnici i urednici studije. Prema zadanim postavkama, u vašim rezultatima prikazuju se samo validirane emisije, ali to ponašanje možete promijeniti putem izbornika \"Postavke\".",
+    "selectSite": "Prije unosa podataka odaberite kino",
+    "lastStudyTitle": "Posljednji izrađeni otisak",
+    "navigation": {
+      "framing": "Opći podaci",
+      "organizations": "Moja kina",
+      "team": "Moji suradnici",
+      "title": "Moj Otisak"
+    },
+    "new": {
+      "title": "Informacije o novom otisku",
+      "name": "Naziv otiska",
+      "studyDates": "Referentna godina otiska",
+      "suggestion": {
+        "name": "Otisak - {orga} {studyStartDate}",
+        "yourOrga": "Vaše kino"
+      },
+      "info": {
+        "date": "Procjene se općenito rade za razdoblje od 12 mjeseci"
+      },
+      "glossary": {
+        "studyDates": "Referentna godina otiska",
+        "studyDatesDescription": "Navedite referentno razdoblje na koje se odnosi vaš pojednostavljeni ugljični otisak. Idealno, referentno razdoblje treba biti dvanaest mjeseci."
+      },
+      "goToDataEntry": "Prijeđi na unos podataka",
+      "cncInfo": "Ako ste naveli CNC broj svog kina, podaci u nastavku unaprijed su ispunjeni informacijama iz {year}. Možete ih izmijeniti ako nisu ažurirani."
+    },
+    "perimeter": {
+      "editSites": "Izmijeni popis kina",
+      "deleteDialog": {
+        "title": "Jeste li sigurni da želite izbrisati {count, plural, =1 {ovo kino} other {ova kina}}?"
+      }
+    },
+    "export": {
+      "export": "Izvezi moje rezultate"
+    },
+    "results": {
+      "simplifiedFeedback": "Bravo! Upravo ste izradili pojednostavljeni ugljični otisak svog kina. To je izvrstan uvod u ugljično računovodstvo! Zahvaljujemo vam što ćete ispuniti <questionnaire>ovaj upitnik</questionnaire> kako biste nam pomogli poboljšati alat i ispraviti eventualne pogreške!",
+      "intensities": {
+        "screen": "ekran",
+        "entrie": "ulaznica",
+        "superficy": "m²",
+        "session": "projekcija",
+        "movie": "film",
+        "chair": "sjedalo",
+        "ca": "k€"
+      }
+    },
+    "rights": {
+      "title": "Opći podaci studije: {name}"
+    },
+    "organization": {
+      "site": "Kino",
+      "allSites": "Sva kina",
+      "noSites": "Nema kina konfiguriranih u organizaciji",
+      "addSite": "Stvori kino",
+      "sites": "Kina organizacije",
+      "next": "Sljedeći",
+      "select": "Organizacija",
+      "validation": {
+        "sites": "Odaberite najmanje jedno kino obuhvaćeno studijom"
+      }
+    }
+  },
+  "organization": {
+    "card": {
+      "myOrganization": "Moja kina"
+    },
+    "form": {
+      "editTitle": "Izmijeni moja kina"
+    },
+    "sites": {
+      "title": "Na koja kina se treba odnositi otisak?",
+      "noSites": "Nema kina konfiguriranih u organizaciji",
+      "name": "Naziv",
+      "namePlaceholder": "Naziv kina",
+      "etp": "Broj ekvivalenata punog radnog vremena",
+      "etpPlaceholder": "Ovdje unesite svoj broj EPRV za ovo kino",
+      "ca": "Prihod ({unit})",
+      "caPlaceholder": "Ovdje unesite svoj prihod za ovo kino u {unit}",
+      "actions": "Radnje",
+      "delete": "Izbriši",
+      "add": "Dodaj kino"
+    }
+  },
+  "checklist": {
+    "title": "Dobar početak s COUNT",
+    "AddClientDetails": "Dodajte svog prvog klijenta kako biste započeli svoje otiske",
+    "CreateFirstStudy": "Stvorite svoj prvi otisak",
+    "CreateFirstStudyDetails": "Krećemo s vašim prvim otiskom! Ispunite prve informacije poput datuma, naziva...",
+    "CreateFirstEmissionSource": "Odgovorite na prva pitanja",
+    "CreateFirstEmissionSourceDetails": "Idite na prvu kategoriju/potkategoriju koju želite ispuniti! Odgovorite na pitanja.",
+    "finished": "Spremni ste započeti s korištenjem COUNT-a! Slobodno pogledajte <faq>česta pitanja</faq> ili nas kontaktirajte u slučaju potrebe."
+  },
+  "actuality": {
+    "title": "Novosti COUNT-a"
+  },
+  "role": {
+    "DEFAULT": "Suradnik",
+    "ADMIN_description": "Administrator ima sva prava nad računom organizacije te nad svim studijama svoje organizacije (bilo javnim ili privatnim).",
+    "DEFAULT_description": "Suradnik može mijenjati studije. Nema pristup postavkama organizacije."
+  },
+  "login": {
+    "welcome": "Dobrodošli na",
+    "subtext": "Prvi kalkulator ekološkog utjecaja namijenjen kino dvoranama.",
+    "explanation": "Ovaj alat razvila je udruga <b>CUT! Cinéma Uni pour la Transition,</b> u suradnji s <b>ABC, association pour la Transition bas carbone.</b>",
+    "question": "Imate pitanje? Pročitajte <faq>česta pitanja</faq> ili nas <support>kontaktirajte</support>!",
+    "explanation2": "Operacija koju podupire država u okviru programa «Soutenir les alternatives vertes 2» iz France 2030, kojim upravlja Banque des Territoires (Caisse des Dépôts).",
+    "form": {
+      "activate": "Stvori moj račun"
+    }
+  },
+  "email": {
+    "subject": {
+      "resetPassword": "Zaboravljena lozinka",
+      "newUser": "Pozvani ste na Count",
+      "addedActiveUser": "Pozvani ste u novo Count okruženje",
+      "activation": "Aktivirali ste svoj račun na Count",
+      "activationRequest": "Zahtjev za pristup vašoj Count organizaciji",
+      "userOnStudyInvitation": "Dodano u studiju {studyName}",
+      "contributorInvitation": "Zahtjev za doprinos studiji {studyName}",
+      "addedUsersByFile": "Odobrenje za dodavanje korisnika"
+    }
+  },
+  "ressources": {
+    "contacterViaFormulaire": "Pišite izravno na {supportEmail}",
+    "enSavoirPlusBilan": "Za više od izračuna pojednostavljenog otiska koji nudi Count:"
+  },
+  "emissionFactors": {
+    "post": {
+      "questions": {
+        "numberOfYears": "Broj godina",
+        "bonbons": "Slatkiši - Količina (vrećice od {value} g)",
+        "chips": "Čips - Količina (vrećice od {value} g)",
+        "Electromenager": "Za svaki od ovih kućanskih aparata navedite:",
+        "FretCadence": "Prijevoz robe - Učestalost (puta/mjesec)",
+        "FretPoids moyen": "Prijevoz robe - Prosječna težina (kg)",
+        "FretProvenance": "Gdje se nalazi vaš glavni dobavljač?",
+        "Refrigerateurs": "Hladnjaci",
+        "Congelateurs": "Zamrzivači",
+        "Warmers": "Grijači",
+        "Distributeurs": "Automati za grickalice / pića"
+      }
+    }
+  },
+  "exports": {
+    "env_specific_export": "Pojednostavljeni ugljični otisak"
+  }
+}

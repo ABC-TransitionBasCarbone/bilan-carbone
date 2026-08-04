@@ -38,6 +38,7 @@ import { LocaleType } from '@abc-transitionbascarbone/i18n/config'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
 import { yearToDate } from '@abc-transitionbascarbone/utils'
 import { Post } from '@abc-transitionbascarbone/utils/charts'
+import { buildCsv } from '@abc-transitionbascarbone/utils/csv'
 import xlsx from 'node-xlsx'
 import { canBeValidated, getCaracterisationsBySubPost, getEmissionSourceEmission } from '../emissionSource'
 import { getAuthenticatedAccount } from '../permissions/account.permissions'
@@ -497,21 +498,11 @@ function buildEmissionSourcesCSV(locale: LocaleType, dataRows: (string | number)
   const modal = bc.study.importEmissionSourcesModal as Record<string, string>
   const t = (key: string) => modal[key] ?? key
 
-  const encodeField = (field: string | number = '') => {
-    if (typeof field === 'number') {
-      return String(field)
-    }
-    const escaped = field.replace(/"/g, '""')
-    if (escaped.includes(';') || escaped.includes('"') || escaped.includes('\n')) {
-      return `"${escaped}"`
-    }
-    return escaped
-  }
-
-  const headerRow = getEmissionSourcesHeaderRow(t).join(';')
-
-  const rows = dataRows.map((row) => row.map(encodeField).join(';'))
-  return [headerRow, ...rows].join('\n')
+  return buildCsv(
+    getEmissionSourcesHeaderRow(t),
+    dataRows.map((row) => row.map((field) => (field === undefined || field === null ? '' : String(field)))),
+    { separator: ';' },
+  )
 }
 
 type ExportTranslations = {

@@ -11,6 +11,7 @@ import {
   Unit,
 } from '@abc-transitionbascarbone/db-common/enums'
 import { getEnvVar } from '@abc-transitionbascarbone/lib/environment'
+import { serializeSimpleCsvRecord } from '@abc-transitionbascarbone/utils/csv'
 import { unitsMatrix } from './historyUnits'
 import { additionalParts } from './parts.config'
 
@@ -112,10 +113,7 @@ export const connectEmissionFactorToVersion = async (
  * The header line ensures comparisons remain correct even if column order changes between versions.
  */
 export const serializeRowAsCsv = (row: ImportEmissionFactor): string => {
-  const keys = Object.keys(row) as (keyof ImportEmissionFactor)[]
-  const header = keys.join(';')
-  const values = keys.map((k) => (row[k] !== undefined && row[k] !== null ? String(row[k]) : '')).join(';')
-  return `${header}\n${values}`
+  return serializeSimpleCsvRecord(row as Record<string, unknown>, { separator: ';' })
 }
 
 const normalizeValue = (val: string): string => {

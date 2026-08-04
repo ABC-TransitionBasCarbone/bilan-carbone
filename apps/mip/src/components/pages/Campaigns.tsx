@@ -1,29 +1,31 @@
 'use client'
 
-import { CampaignsWithResponses, ModelCampaignLight } from '@/db/campaign'
+import { isCsvExportDisabled } from '@/constants/survey'
+import type { CampaignsWithResponses, ModelCampaignLight } from '@/db/campaign'
 import { updateCampaignCommand } from '@/services/serverFunctions/campaign'
 import { UpdateCampaignCommand, UpdateCampaignCommandValidation } from '@/services/serverFunctions/campaign.command'
-import { handleCopy, handleDownloadJson } from '@/utils/campaign'
-import { Table as BaseTable } from '@abc-transitionbascarbone/components'
+import { exportSurveyResponsesToCSV } from '@/services/serverFunctions/survey'
+import { handleCopy } from '@/utils/campaign'
+import { Table as BaseTable, HelpIcon } from '@abc-transitionbascarbone/components'
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import Form from '@abc-transitionbascarbone/components/src/base/Form'
 import LinkButton from '@abc-transitionbascarbone/components/src/base/LinkButton'
-import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
-import { TableActionButton } from '@abc-transitionbascarbone/components/src/base/TableActionButton'
 import { FormSelect } from '@abc-transitionbascarbone/components/src/form/Select'
-import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
-import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
+import GlossaryModal from '@abc-transitionbascarbone/components/src/modals/GlossaryModal'
 import { CampaignStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { Button, useToast } from '@abc-transitionbascarbone/ui'
+import { downloadCsvFile } from '@abc-transitionbascarbone/utils/download'
 import { zodResolver } from '@hookform/resolvers/zod'
+import BarChartIcon from '@mui/icons-material/BarChart'
 import CopyIcon from '@mui/icons-material/ContentCopy'
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 import DownloadIcon from '@mui/icons-material/Download'
-import { MenuItem } from '@mui/material'
+import { IconButton, MenuItem, TextField, Tooltip } from '@mui/material'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useMemo } from 'react'
-import { Control, useForm, UseFormGetValues, UseFormSetValue, useWatch } from 'react-hook-form'
+import { useCallback, useMemo, useState } from 'react'
+import { Controller, useForm, useWatch } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
 import styles from './Campaign.module.css'
 
@@ -35,8 +37,10 @@ interface Props {
 
 const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
   const t = useTranslations('campaigns')
+  const tResults = useTranslations('results')
   const router = useRouter()
-  const { showSuccessToast } = useToast()
+  const { showErrorToast, showSuccessToast } = useToast()
+  const [displayCampaignHelp, setDisplayCampaignHelp] = useState(false)
 
   const form = useForm<UpdateCampaignCommand>({
     resolver: zodResolver(UpdateCampaignCommandValidation),
@@ -48,8 +52,7 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
       })),
     },
   })
-  const setValue = form?.setValue as UseFormSetValue<UpdateCampaignCommand>
-  const getValues = form?.getValues as UseFormGetValues<UpdateCampaignCommand>
+
   const newCampaign = () =>
     ({
       id: uuidv4(),
@@ -60,25 +63,42 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
       allowedAccounts: [accountMipId],
     }) as UpdateCampaignCommand['campaigns'][0]
 
-  const { callServerFunction } = useServerFunction()
-
   const onSubmit = async (command: UpdateCampaignCommand) => {
-    await callServerFunction(() => updateCampaignCommand(command), {
-      onSuccess: () => {
-        showSuccessToast(t('success'))
-        router.refresh()
-      },
-    })
+    const result = await updateCampaignCommand(command)
+
+    if (result.success) {
+      showSuccessToast(t('success'))
+      router.refresh()
+      return
+    }
+
+    showErrorToast(result.errorMessage)
   }
 
-  const handleDelete = (id: string) => {
-    setValue(
-      'campaigns',
-      getValues('campaigns').filter((campaign) => campaign.id !== id),
-    )
-  }
+  const handleDelete = useCallback(
+    (id: string) => {
+      form.setValue(
+        'campaigns',
+        form.getValues('campaigns').filter((campaign) => campaign.id !== id),
+      )
+    },
+    [form],
+  )
 
-  const control = form?.control as Control<UpdateCampaignCommand>
+  const control = form.control
+
+  const handleExportCampaignCsv = useCallback(
+    async (campaignId: string, campaignName: string) => {
+      const result = await exportSurveyResponsesToCSV(campaignId)
+      if (!result.success) {
+        showErrorToast(result.errorMessage)
+        return
+      }
+
+      downloadCsvFile(result.data.fileName ?? `${campaignName}-reponses-utilisateurs.csv`, result.data.csvContent)
+    },
+    [showErrorToast],
+  )
 
   const columns = useMemo(
     () =>
@@ -88,13 +108,25 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
           header: () => <div className="align-center gapped">{t('name')}</div>,
           accessorKey: 'name',
           cell: ({ row }) => (
-            <FormTextField
-              data-testid={`input-name-${row.original.id}`}
-              size="small"
+            <Controller
               control={control}
               name={`campaigns.${row.index}.name`}
-              placeholder={t('namePlaceholder')}
-              fullWidth
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  value={field.value ?? ''}
+                  size="small"
+                  placeholder={t('namePlaceholder')}
+                  fullWidth
+                  error={!!error}
+                  helperText={error?.message}
+                  slotProps={{
+                    htmlInput: {
+                      'data-testid': `input-name-${row.original.id}`,
+                    },
+                  }}
+                />
+              )}
             />
           ),
         },
@@ -118,11 +150,11 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
           ),
         },
         {
-          id: 'download',
-          header: () => t('json'),
+          id: 'results',
+          header: () => t('viewResults'),
           cell: ({ row }) => (
-            <LinkButton onClick={() => handleDownloadJson(row.original.name, modelCampaign?.model)}>
-              <DownloadIcon />
+            <LinkButton href={`/campaigns/${row.original.id}`} target="_blank" rel="noopener noreferrer">
+              <BarChartIcon />
             </LinkButton>
           ),
         },
@@ -131,7 +163,7 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
           header: () => t('responsesCount'),
           accessorKey: 'responsesCount',
           cell: ({ row }) => {
-            const count = campaigns.find((campaign) => campaign.id === row.original.id)?._count.responses || 0
+            const count = campaigns.find((campaign) => campaign.id === row.original.id)?.responsesCount || 0
             return <div>{count}</div>
           },
         },
@@ -139,7 +171,7 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
           id: 'shareLink',
           header: () => <div>{t('shareLink')}</div>,
           cell: ({ row }) => {
-            const link = typeof window !== 'undefined' ? `${window.location.origin}/survey/${row.original.id}` : ''
+            const link = typeof window !== 'undefined' ? `${window.location.origin}/${row.original.id}/survey` : ''
 
             return (
               <LinkButton onClick={() => handleCopy(link)}>
@@ -149,42 +181,97 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
           },
         },
         {
+          id: 'exportCsv',
+          header: () => t('exportCsv'),
+          cell: ({ row }) => {
+            const count = campaigns.find((campaign) => campaign.id === row.original.id)?.responsesCount ?? 0
+            const isDisabled = isCsvExportDisabled(count)
+            return (
+              <Tooltip title={isDisabled ? tResults('export.disabledMinRespondents') : t('exportCsv')}>
+                <span>
+                  <IconButton
+                    size="medium"
+                    color="primary"
+                    disabled={isDisabled}
+                    data-testid={`export-campaign-csv-${row.original.id}`}
+                    onClick={() => handleExportCampaignCsv(row.original.id, row.original.name)}
+                  >
+                    <DownloadIcon fontSize="small" />
+                  </IconButton>
+                </span>
+              </Tooltip>
+            )
+          },
+        },
+        {
           id: 'actions',
           header: '',
           accessorKey: 'id',
-          cell: ({ getValue }) => <TableActionButton type="delete" onClick={() => handleDelete(getValue<string>())} />,
+          cell: ({ getValue }) => (
+            <Tooltip title={t('delete')}>
+              <IconButton size="medium" color="primary" onClick={() => handleDelete(getValue<string>())}>
+                <DeleteOutlinedIcon color="error" fontSize="medium" />
+              </IconButton>
+            </Tooltip>
+          ),
         },
       ] as ColumnDef<UpdateCampaignCommand['campaigns'][0]>[],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [control, t],
+    [campaigns, control, handleDelete, handleExportCampaignCsv, t],
   )
 
-  const currentcampaigns = useWatch({ control, name: 'campaigns' })
+  const currentCampaigns = useWatch({ control, name: 'campaigns' }) ?? []
 
   const table = useReactTable({
     columns,
-    data: currentcampaigns,
+    data: currentCampaigns,
     getCoreRowModel: getCoreRowModel(),
   })
 
   return (
-    <Block as="h1" title={t('editCampaigns')}>
-      <Form onSubmit={form.handleSubmit(onSubmit)}>
-        <BaseTable table={table} className="mt1" testId="sites" />
-        <div className="mt1 justify-end">
-          <Button
-            type="button"
-            onClick={() => setValue('campaigns', [...currentcampaigns, newCampaign()])}
-            data-testid="add-campaign-button"
-          >
-            {t('add')}
+    <>
+      <Block
+        as="h2"
+        title={t('editCampaigns')}
+        icon={<HelpIcon onClick={() => setDisplayCampaignHelp(true)} label={t('guide.title')} />}
+        iconPosition="after"
+        expIcon
+      >
+        <Form onSubmit={form.handleSubmit(onSubmit)}>
+          <BaseTable table={table} className="mt1" testId="sites" />
+          <div className="mt1 justify-end">
+            <Button
+              type="button"
+              onClick={() => form.setValue('campaigns', [...currentCampaigns, newCampaign()])}
+              data-testid="add-campaign-button"
+            >
+              {t('add')}
+            </Button>
+          </div>
+          <Button type="submit" disabled={form.formState.isSubmitting} data-testid="validate-campaign-update">
+            {t('edit')}
           </Button>
-        </div>
-        <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="validate-campaign-update">
-          {t('edit')}
-        </LoadingButton>
-      </Form>
-    </Block>
+        </Form>
+      </Block>
+      {displayCampaignHelp && (
+        <GlossaryModal
+          glossary="guide.title"
+          label="campaign-guide"
+          t={t}
+          onClose={() => setDisplayCampaignHelp(false)}
+        >
+          <p>{t('guide.description')}</p>
+          <p>
+            <b>{t('guide.resultsTitle')}</b> {t('guide.resultsDescription')}
+          </p>
+          <p>
+            <b>{t('guide.csvTitle')}</b> {t('guide.csvDescription')}
+          </p>
+          <p>
+            <b>{t('guide.shareTitle')}</b> {t('guide.shareDescription')}
+          </p>
+        </GlossaryModal>
+      )}
+    </>
   )
 }
 

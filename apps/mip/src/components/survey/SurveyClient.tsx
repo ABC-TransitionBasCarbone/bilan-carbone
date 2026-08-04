@@ -3,4 +3,10 @@ import dynamic from 'next/dynamic'
 
 const Survey = dynamic(() => import('./Survey'), { ssr: false })
 
-export default Survey
+interface Props {
+  surveyId: string
+}
+
+const SurveyClient = ({ surveyId }: Props) => <Survey surveyId={surveyId} />
+
+export default SurveyClient

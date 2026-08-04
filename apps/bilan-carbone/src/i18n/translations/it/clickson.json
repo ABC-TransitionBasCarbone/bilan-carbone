@@ -1,6 +1,8 @@
 {
   "nav": {
-    "newStudyContributor": "Aggiungi uno studente"
+    "newStudyContributor": "Aggiungi uno studente",
+    "team": "Team pilota",
+    "home": "Home"
   },
   "navigation": {
     "organizations": "Le mie impronte di carbonio",
@@ -31,12 +33,17 @@
       "0": "Comprendere la misurazione dell'impatto del tuo istituto",
       "1": "Identificare le priorità di azione",
       "2": "A lungo termine, e attraverso un lavoro più approfondito, costruire una traiettoria di riduzione"
-    }
+    },
+    "subtitle": "Calcolare l'impronta di carbonio del tuo istituto significa:"
   },
   "team": {
     "table": {
-      "title": "Team pilota"
-    }
+      "title": "Team pilota",
+      "newUser": "Invita un amministratore / collaboratore",
+      "userDeletion": "Eliminazione di un amministratore / collaboratore",
+      "userDeletionDescription": "Sei sicuro di voler eliminare questo amministratore / collaboratore? Non avrà più accesso all'account della tua organizzazione, ma manterrà l'accesso agli studi per i quali è stato invitato da altre organizzazioni."
+    },
+    "delete": "Elimina l'amministratore / collaboratore"
   },
   "study": {
     "create": "Aggiungi un’impronta",
@@ -51,7 +58,12 @@
       "framing": "Dati generali",
       "organizations": "I miei istituti",
       "team": "I miei collaboratori",
-      "title": "La mia impronta"
+      "title": "La mia impronta",
+      "informationDefinition": "Definizione delle informazioni",
+      "dataAccounting": "Contabilizzazione dei dati",
+      "dataEntry": "Inserimento dei dati",
+      "results": "Risultati",
+      "transitionPlan": "Piano di transizione"
     },
     "validatedOnlyDescription": "Come studente, ho accesso come contributore a una o più categorie di emissione.",
     "new": {
@@ -61,19 +73,27 @@
       "inviteContributors": "Invita gli stessi studenti",
       "glossary": {
         "validatorEmailDescription": "Come studente, ho accesso come contributore a una o più categorie di emissione.",
-        "duplicationOptionsDescription": "Duplicando uno studio, puoi scegliere di invitare lo stesso team e gli stessi studenti dello studio originale. Ciò aiuta a mantenere la continuità della collaborazione."
+        "duplicationOptionsDescription": "Duplicando uno studio, puoi scegliere di invitare lo stesso team e gli stessi studenti dello studio originale. Ciò aiuta a mantenere la continuità della collaborazione.",
+        "studyDates": "Periodo del mio studio",
+        "studyDatesDescription": "Si tratta del periodo su cui raccoglierò i miei dati di attività. Per impostazione predefinita, si tratta dell'anno scolastico in corso. È possibile modificare le date di inizio e di fine."
       },
       "etp": "Nombre de personnels (enseignants et non-éducatifs)",
       "goToDataEntry": "Passer à la saisie des données",
       "studentNumber": "Nombre d'élèves",
-      "superficy": "Superficie de l'établissement"
+      "superficy": "Superficie de l'établissement",
+      "title": "Informazioni sulla mia impronta di carbonio",
+      "studyDates": "Periodo del mio studio",
+      "create": "Crea la mia impronta di carbonio",
+      "superficyPlaceholder": "solo costruito, in m²",
+      "country": "Paese dell'istituto"
     },
     "role": {
       "Contributor": "Studente"
     },
     "rights": {
       "newContributor": {
-        "title": "Aggiungi uno studente allo studio: {name}"
+        "title": "Aggiungi uno studente allo studio: {name}",
+        "edit": "Convalida"
       },
       "contributorsTable": {
         "delete": "Rimuovi lo studente",
@@ -85,6 +105,9 @@
         "role": {
           "description": "Qui puoi gestire gli studenti del tuo studio. Avranno accesso a certe categorie e sottocategorie (che puoi definire) e saranno in grado di compilare informazioni per le fonti di emissione che hai già creato. Per maggiori informazioni sull'interfaccia contributore, consulta le nostre <link>FAQ</link>."
         }
+      },
+      "versions": {
+        "list": "Fonte dei fattori di emissione:"
       }
     },
     "export": {
@@ -128,7 +151,20 @@
       "additionalInfo": "Les résultats que vous obtenez ici sont un calcul simplifié de l'empreinte carbone de votre établissement et ne répondent par aux exigences du Bilan Carbone®, ni de la réglementation en vigueur.  Ces résultats ont pour objet de vous accompagner dans la compréhension des enjeux climatiques et l'identification de vos priorités d'action.  Portant donc une valeur essentiellement pédagogique, le calcul de l'empreinte carbone de votre établissement via notre outil constitue donc une première étape dans votre adaptation aux conséquences du changement climatique."
     },
     "results": {
-      "carbonIntensities": "Empreinte carbone individuelle"
+      "carbonIntensities": "Empreinte carbone individuelle",
+      "analysis": "Analisi delle emissioni",
+      "total": "Totale delle emissioni",
+      "downloadPDF": "Scarica la sintesi",
+      "downloadingPDF": "Download della sintesi in corso...",
+      "chartTypes": {
+        "bar": "Grafico a barre",
+        "pie": "Grafico a torta",
+        "table": "Tabella"
+      }
+    },
+    "firstStudyMessage": "È ora di iniziare! Ti invitiamo a creare la tua prima Impronta.",
+    "perimeter": {
+      "studyDates": "Periodo del mio studio"
     }
   },
   "emissionFactors": {
@@ -153,6 +189,12 @@
       "TransportDuPersonnel": "Transport du personnel",
       "TypesDeRepasServis": "Types de repas servis",
       "VoyagesScolaires": "Voyages scolaires"
+    },
+    "underDevelopment": "Questa funzionalità è in fase di sviluppo",
+    "create": {
+      "glossary": {
+        "post_studyContributorDescription": "Assegna qui le categorie e sottocategorie ai tuoi studenti"
+      }
     }
   },
   "organization": {
@@ -187,7 +229,8 @@
       },
       "studentNumber": "Nombre d'élèves",
       "studentNumberPlaceholder": "Nombre total d'élèves"
-    }
+    },
+    "myOrganization": "Il mio istituto"
   },
   "login": {
     "welcome": "Benvenuto su Clickson PEBC",
@@ -243,5 +286,33 @@
     "modelsDataCollect": "Modèles de supports de collecte de données",
     "game": "Jeu : initiation à la négociation de son plan d'action :",
     "classEarth": "Ma Terre en classe"
+  },
+  "newMember": {
+    "title": "Invita un amministratore / collaboratore",
+    "create": "Invita l'amministratore / collaboratore",
+    "Not authorized": "Impossibile invitare questo amministratore / collaboratore. Contatta l'<link>assistenza</link> per maggiori informazioni.",
+    "addedMember": "L'amministratore / collaboratore è stato aggiunto correttamente alla tua organizzazione"
+  },
+  "role": {
+    "ADMIN_description": "Un amministratore possiede tutti i diritti sull'account dell'istituto nonché sull'insieme delle impronte di carbonio. Un amministratore non può cambiare ruolo. In caso di cambiamento, dovrai comunicare le credenziali alla nuova persona.",
+    "COLLABORATOR_description": "Il collaboratore è qualsiasi persona autorizzata a inserire dati di attività per l'istituto su una o più categorie di emissione, ma non possiede alcun diritto di modifica dell'account dell'istituto. "
+  },
+  "onboarding": {
+    "title-1": "Benvenuto/a nel calcolatore Clicks On! Prima di iniziare, configura il tuo istituto.",
+    "titleDescription-1": "Abbiamo precompilato alcune informazioni che puoi modificare subito o in qualsiasi momento nella sezione \"Il mio istituto\".",
+    "title-2": "Gestione del tuo team pilota",
+    "titleDescription-2": "Puoi già aggiungere i tuoi collaboratori (studenti, insegnanti e personale non docente) al tuo team! Potrai sempre aggiungere nuove persone in seguito nella sezione \"Il team pilota\".",
+    "step1": {
+      "name": "Nome del mio istituto",
+      "role": "Il mio ruolo all'interno dell'istituto",
+      "information": "Le mie informazioni",
+      "firstName": "Nome",
+      "lastName": "Cognome",
+      "adminDescription": "Il ruolo che ti è stato assegnato è quello di amministratore del tuo istituto.",
+      "gestionnaireDescription": "Il ruolo che ti è stato assegnato è quello di collaboratore del tuo istituto."
+    }
+  },
+  "exports": {
+    "env_specific_export": "Impronta di carbonio semplificata"
   }
 }

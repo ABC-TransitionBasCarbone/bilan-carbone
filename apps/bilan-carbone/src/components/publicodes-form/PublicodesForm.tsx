@@ -31,11 +31,13 @@ export default function PublicodesForm<RuleName extends string>({ formLayouts }:
       const key =
         formLayout.type === 'input'
           ? formLayout.rule
-          : formLayout.type === 'group'
-            ? `group-${index}`
-            : formLayout.type === 'list'
-              ? `list-${formLayout.targetRule}-${index}`
-              : `table-${formLayout.title}-${index}`
+          : formLayout.type === 'mosaic'
+            ? formLayout.parent
+            : formLayout.type === 'group'
+              ? `group-${index}`
+              : formLayout.type === 'list'
+                ? `list-${formLayout.targetRule}-${index}`
+                : `table-${formLayout.title}-${index}`
 
       const isApplicable = evaluatedLayoutIsApplicable(evaluatedFormLayout)
       return { evaluatedFormLayout, isLinkedToPreviousQuestion, key, isApplicable }
@@ -51,7 +53,7 @@ export default function PublicodesForm<RuleName extends string>({ formLayouts }:
           return isApplicable ? (
             <Box key={key}>
               {isLinkedToPreviousQuestion && <Box className={styles.relationLine} />}
-              <PublicodesQuestion formLayout={evaluatedFormLayout} onChange={updateField} />
+              <PublicodesQuestion formLayout={evaluatedFormLayout} onChange={updateField} engine={engine} />
             </Box>
           ) : null
         })}

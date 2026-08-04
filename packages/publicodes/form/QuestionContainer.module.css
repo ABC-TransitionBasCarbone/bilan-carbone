@@ -1,0 +1,51 @@
+.infoButton {
+  color: inherit;
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+.infoButton:hover {
+  opacity: 1;
+}
+
+.descriptionBubble {
+  background-color: var(--mui-palette-primary-light);
+  padding: 0.875rem 1.5rem;
+  border: 1px solid var(--mui-palette-primary-main);
+  border-top: none;
+  border-bottom: none;
+}
+
+.descriptionBubbleFlat {
+  background-color: transparent;
+  padding: 0 0 0.875rem;
+  border: none;
+}
+
+.descriptionText {
+  margin: 0 0 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
+.closeButton {
+  background: none;
+  border: 1px solid var(--mui-palette-primary-main);
+  border-radius: 1rem;
+  padding: 0.25rem 0.875rem;
+  font-size: 0.875rem;
+  color: inherit;
+}
+
+.closeButtonFlat {
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.closeButton:hover {
+  background-color: var(--mui-palette-primary-main);
+  color: white
+}

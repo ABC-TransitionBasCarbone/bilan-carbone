@@ -1,35 +1,145 @@
-.container {
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+.scrollWrapper {
+  height: 100vh;
+  overflow-y: auto;
 }
-.header {
-  margin-bottom: 1.5rem;
+
+.surveyLayout {
+  .surveyMain {
+    min-width: 0;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column-reverse;
+  }
 }
-.progress {
-  margin-bottom: 1.5rem;
-}
-.progressLabels {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.25rem;
-}
-.questionCard {
-  margin-bottom: 1.5rem;
-}
-.questionLabel {
-  margin-bottom: 1rem;
-}
+
 .navigation {
-  display: flex;
-  justify-content: space-between;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0.75rem 1rem;
+  background-color: var(--background-color);
+  border-top: 1px solid var(--border-color);
+  z-index: 100;
 }
-.completedContent {
-  text-align: center;
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+
+.explanationPage {
+  height: 100vh;
+  overflow-y: auto;
+  padding: 1.5rem 0 3rem;
+  background: var(--grayscale-100);
 }
-.checkIcon {
-  font-size: 5rem !important;
-  color: var(--success);
+
+.progress {
+  margin-top: 0.75rem;
+}
+
+.progressBar {
+  --progress-track: var(--primary-100);
+  --progress-fill: var(--primary-600);
+  height: 0.35rem !important;
+  border-radius: 999px;
+  overflow: hidden;
+  background-color: var(--progress-track) !important;
+}
+
+.progressBar :global(.MuiLinearProgress-bar) {
+  background-color: var(--progress-fill) !important;
+  border-radius: 999px;
+}
+
+.progressToneDt {
+  --progress-track: color-mix(in srgb, var(--mui-palette-primary-light) 86%, var(--white));
+  --progress-fill: var(--mui-palette-primary-main);
+}
+
+.progressToneTransport {
+  --progress-track: color-mix(in srgb, var(--mui-palette-info-light) 14%, var(--white));
+  --progress-fill: var(--mui-palette-info-main);
+}
+
+.progressToneAlimentation {
+  --progress-track: color-mix(in srgb, var(--mui-palette-warning-light) 22%, var(--white));
+  --progress-fill: var(--mui-palette-warning-main);
+}
+
+.progressToneDivers {
+  --progress-track: color-mix(in srgb, var(--mui-palette-error-light) 20%, var(--white));
+  --progress-fill: var(--mui-palette-error-main);
+}
+
+.progressToneLogement {
+  --progress-track: color-mix(in srgb, var(--mui-palette-success-light) 30%, var(--white));
+  --progress-fill: var(--mui-palette-success-main);
+}
+
+.questionCard {
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+}
+
+.coverTitle {
+  margin: 0 auto;
+  font-weight: 700;
+}
+
+.coverSubtitle {
+  margin-top: 1rem;
+  margin-bottom: 1.25rem;
+  font-size: 1.5rem;
+}
+
+.explanationCard {
+  background: var(--white);
+  border-top-left-radius: 2.75rem;
+  border-top-right-radius: 2.75rem;
+}
+
+.explanationTitle,
+.explanationSubtitle {
+  margin-bottom: 0.75rem;
+}
+
+.titleUnderline {
+  width: 2.5rem;
+  height: 0.2rem;
+  border-radius: 999px;
+  background: var(--primary-600);
   margin-bottom: 1rem;
+}
+
+.logoRow {
+  flex-wrap: wrap;
+  overflow-x: hidden;
+  justify-content: center;
+}
+
+.logoSlot {
+  position: relative;
+  width: 10.5rem;
+  min-width: 8rem;
+  height: 4.5rem;
+  flex: 0 0 auto;
+}
+
+.logoFit {
+  object-fit: contain;
+}
+
+@media (max-width: 768px) {
+  .coverSubtitle {
+    font-size: 1.25rem;
+  }
+
+  .explanationCard {
+    border-top-left-radius: 2rem;
+    border-top-right-radius: 2rem;
+  }
+
+  .logoSlot {
+    width: 8.75rem;
+    height: 3.75rem;
+  }
 }

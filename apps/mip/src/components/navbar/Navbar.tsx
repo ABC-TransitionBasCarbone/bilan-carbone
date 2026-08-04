@@ -7,7 +7,6 @@ import NavbarButton from '@abc-transitionbascarbone/ui/navbar/NavbarButton'
 import NavbarLink from '@abc-transitionbascarbone/ui/navbar/NavbarLink'
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew'
 import { Box, Container, Toolbar } from '@mui/material'
-import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 
@@ -22,18 +21,13 @@ const Navbar = ({ user }: Props) => {
     <AppBar position="sticky" elevation={0}>
       <Toolbar variant="dense">
         <Container maxWidth="lg" className="justify-between">
-          <Box className={classNames('flex-cc', 'gapped1')}>
-            <NavbarLink href="/" aria-label={t('home')} title={t('home')}>
-              Home
-            </NavbarLink>
-            <NavbarLink href="/equipe" aria-label={t('team')}>
-              {t('team')}
-            </NavbarLink>
-          </Box>
+          <NavbarLink href="/equipe" aria-label={t('team')}>
+            {t('team')}
+          </NavbarLink>
           <div className="flex gapped1">
             <Box>
               <div className="h100 align-center">
-                <NavbarLink href="/campaigns">{t('campaigns')}</NavbarLink>
+                {user.role !== RoleMip.SUPER_ADMIN && <NavbarLink href="/campaigns">{t('campaigns')}</NavbarLink>}
                 {user.role === RoleMip.SUPER_ADMIN && <NavbarLink href="/super-admin">{t('admin')}</NavbarLink>}
                 <NavbarButton title={t('logout')} aria-label={t('logout')} onClick={() => signOutEnv()}>
                   <PowerSettingsNewIcon />

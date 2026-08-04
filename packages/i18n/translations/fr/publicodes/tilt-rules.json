@@ -24,6 +24,7 @@
     "kg": "kg",
     "%": "%",
     "tonne": "tonne",
+    "voitures": "voitures",
     "km": "km",
     "km/salariés/jours": "km/salariés.jours",
     "km/bénévoles/jours": "km/bénévoles.jours",
@@ -36,7 +37,7 @@
     "km/bénévoles/an": "km/bénévoles.an",
     "km/bénéficiaires/an": "km/bénéficiaires.an",
     "place": "place",
-    "m2": "m2",
+    "m²": "m²",
     "repas": "repas"
   },
   "publicodes-rules": {
@@ -967,6 +968,41 @@
         "végétalien": {
           "nombre de repas": {
             "question": "Combien de repas végétaliens sont consommés par vos bénéficiaires chaque année ?"
+          }
+        }
+      },
+      "mosaic": {
+        "titre": "Empreinte des repas",
+        "description": "En cohérence avec la durée de votre séjour, renseignez le nombre et les types de plats que vous allez probablement manger. Par exemple, si vous restez trois jours en \nHauts-de-France vous devez renseigner 6 repas.",
+        "question": "Comment <green>vont se composer vos déjeuners et dîners</green> durant le séjour ?",
+        "végétalien": {
+          "nombre": {
+            "question": "Nombre de plats végétaliens"
+          }
+        },
+        "végétarien": {
+          "nombre": {
+            "question": "Nombre de plats végétariens"
+          }
+        },
+        "viande blanche": {
+          "nombre": {
+            "question": "Nombre de plats viande blanche"
+          }
+        },
+        "viande rouge": {
+          "nombre": {
+            "question": "Nombre de plats viande rouge"
+          }
+        },
+        "poisson gras": {
+          "nombre": {
+            "question": "Nombre de plats poisson gras"
+          }
+        },
+        "poisson blanc": {
+          "nombre": {
+            "question": "Nombre de plats poisson blanc"
           }
         }
       }

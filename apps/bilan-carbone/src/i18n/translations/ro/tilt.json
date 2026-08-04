@@ -1,0 +1,198 @@
+{
+  "login": {
+    "subtext": "Versiune pentru sfera asociativă",
+    "explanation": "Instrumentul dedicat asociațiilor care doresc să aplice metoda Bilan Carbone® și declinarea sa sectorială pentru sfera asociativă. Ia naștere datorită parteneriatului dintre Association pour la transition Bas Carbone, promotoarea metodei Bilan Carbone®, și Mouvement Tilt, care însoțește ansamblul asociațiilor în tranziția lor cu emisii reduse de carbon. Instrumentul este accesibil gratuit pentru toate asociațiile franceze formate în metodă.",
+    "form": {
+      "activate": "Creează-mi contul"
+    }
+  },
+  "signup": {
+    "description": "Creați un cont pe Tilt introducând email-ul dvs. și un Siret",
+    "siret": "Siret",
+    "siretPlaceholder": "Siret-ul dvs.",
+    "siretRequired": "Introduceți un Siret",
+    "Not authorized": "Acest email este deja înregistrat cu un cont Tilt sau acest SIRET nu este valid. Nu ezitați să consultați <link>întrebările frecvente</link> sau să contactați <support>asistența</support> dacă credeți că este o eroare.",
+    "Not association SIRET": "Utilizarea acestui instrument este rezervată asociațiilor. Utilizați versiunea clasică a Bilan Carbone®+",
+    "validation": {
+      "siret": "Introduceți un Siret"
+    }
+  },
+  "home": {
+    "navigation": {
+      "collaborators": {
+        "title": "Colaboratorii mei",
+        "message": "Găsiți aici lista persoanelor autorizate să intervină asupra diferitelor dvs. amprente de carbon"
+      },
+      "footprints": {
+        "title": "Amprentele mele",
+        "message": "Creați aici prima dvs. amprentă. Veți putea apoi să consultați amprentele dvs. sau să creați altele noi în orice moment."
+      },
+      "sites": {
+        "title": "Asociația mea",
+        "message": "Găsiți aici lista unităților asociate contului dvs."
+      }
+    },
+    "title": "Calcularea amprentei dvs. de carbon simplificate vă va permite să:"
+  },
+  "exports": {
+    "env_specific_export": "Amprentă de carbon simplificată",
+    "simplified": {
+      "disclaimerExcel1": "Atenție, rezultatele pe care le obțineți aici provin exclusiv dintr-un calcul de amprentă de carbon simplificată realizat de Cap Carbone. Ele nu trebuie în niciun caz prezentate sau utilizate ca rezultate Bilan Carbone®,",
+      "disclaimerExcel2": "deoarece, chiar dacă rezultatele obținute vă pot ajuta deja să înțelegeți cum să vă reduceți impactul, demersul dvs. se limitează la o estimare.",
+      "disclaimerExcel3": "În schimb, această amprentă de carbon simplificată este chiar primul pas către un demers mai complet precum Bilan Carbone®!",
+      "disclaimerExcel4": "Pentru anii următori, puteți fie să reînnoiți măsurarea amprentei de carbon simplificate cu Cap Carbone, fie să realizați un Bilan Carbone®.",
+      "disclaimerExcel5": "Dacă doriți să aprofundați demersul dvs., mai multe informații sunt disponibile aici: https://abc-transitionbascarbone.fr/transition-association-abc-tilt/#",
+      "metadata": {
+        "organization": "Organizație",
+        "site": "Site",
+        "startDate": "Data de început a studiului",
+        "endDate": "Data de sfârșit a studiului"
+      }
+    }
+  },
+  "email": {
+    "subject": {
+      "newUser": "Ați fost invitat pe Tilt",
+      "addedActiveUser": "Ați fost invitat într-un nou mediu Tilt",
+      "activation": "V-ați activat contul pe Tilt",
+      "activationRequest": "Cerere de acces la organizația dvs. Tilt"
+    }
+  },
+  "organization": {
+    "sites": {
+      "ca": "Buget ({unit})",
+      "etp": "Număr de angajați",
+      "glossary": {
+        "etp": "Număr de angajați",
+        "etpDescription": "Aceste date sunt utilizate pentru a calcula intensități de carbon (kgCO₂e/angajat).",
+        "ca": "Buget ({unit})",
+        "caDescription": "Aceste date sunt utilizate pentru a calcula intensități de carbon (kgCO₂e/{unit} buget). Atenție, bugetul trebuie indicat în mii de euro (k€).",
+        "volunteer": "Număr de voluntari",
+        "volunteerDescription": "Numărul de voluntari indicat aici va servi pur și simplu la calcularea unei intensități de carbon pe voluntar, în tCO₂e/voluntar. Puteți indica numărul de voluntari, numărul de voluntari activi, să includeți sau nu membrii Consiliului de Administrație... Cel mai important nu este alegerea modului de contabilizare a voluntarilor, ci utilizarea aceleiași metode pentru viitoarele dvs. Bilan Carbone®, pentru a putea compara evoluția emisiilor dvs. în raport cu variațiile activităților asociației dvs."
+      },
+      "validation": {
+        "ca": "Buget ({unit})"
+      }
+    }
+  },
+  "study": {
+    "perimeter": {
+      "preset": "Tip de public"
+    },
+    "new": {
+      "postalCode": "Care este codul poștal al asociației?",
+      "sites": "Care sunt site-urile vizate de amprentă și caracteristicile lor?",
+      "structure": "Cu ce tip de structură se aseamănă cel mai mult asociația dvs.?",
+      "structureOther": "Precizați tipul de structură",
+      "dates": "Pe ce perioadă se referă amprenta dvs. de carbon?",
+      "numberOfTTEmployee": "Câte zile pe săptămână lucrează în regim de telemuncă angajații dvs.?",
+      "numberOfTTVolunteer": "Câte zile pe săptămână lucrează în regim de telemuncă voluntarii dvs.?",
+      "glossary": {
+        "postalCode": "Codul poștal al asociației",
+        "postalCodeGlossary": "CP-ul sediului dacă există mai multe site-uri, 5 cifre"
+      }
+    },
+    "flow": {
+      "info": "Puteți descărca un exemplu de cartografiere a fluxurilor pentru a vă ajuta să o construiți pe a dvs. Ulterior, dacă doriți să trimiteți propria cartografiere a fluxurilor pentru a ajuta alte asociații oferindu-le o bază de lucru, trimiteți-o la <mail>methodologie@abc-transitionbascarbone.fr</mail>"
+    },
+    "dependencyMatrix": {
+      "info": "Puteți descărca un exemplu de matrice de risc și de dependență pentru a vă ajuta să o construiți pe a dvs. Ulterior, dacă doriți să trimiteți propria cartografiere a fluxurilor pentru a ajuta alte asociații oferindu-le o bază de lucru, trimiteți-o la <mail>methodologie@abc-transitionbascarbone.fr</mail>"
+    },
+    "firstSimplifiedStudyMessage": "Este momentul să începeți! Vă invităm să creați prima dvs. Amprentă.",
+    "createFirstSimplifiedStudy": "Creează prima mea Amprentă",
+    "createSimplified": "Creează o Amprentă",
+    "mySimplifiedStudies": "Amprentele mele",
+    "seeSimplified": "Vezi Amprenta mea",
+    "cannotCreateStudy": "Pentru a putea realiza Bilan Carbone® trebuie să fiți format în metodă! <link>Află mai multe</link>",
+    "canCreateFootPrint": "Puteți totuși realiza <link>o amprentă de carbon</link> care vă permite să estimați impactul dvs.",
+    "navigation": {
+      "generalData": "Date generale",
+      "title": "Amprenta mea"
+    },
+    "export": {
+      "export": "Exportă rezultatele mele"
+    },
+    "results": {
+      "feedback": {
+        "button": "Trimiteți-ne feedback-ul dvs.! ✨",
+        "title": "Trimiteți-ne feedback-ul dvs.! ✨"
+      }
+    },
+    "structure": {
+      "'Club de loisirs'": "Club de agrement",
+      "'Association étudiante'": "Asociație studențească",
+      "'Association culturelle'": "Asociație culturală",
+      "'Association de voisinage'": "Asociație de cartier",
+      "'Hôpital'": "Spital",
+      "'Maison de retraite'": "Cămin de bătrâni",
+      "'Association d'aide à domicile'": "Asociație de ajutor la domiciliu",
+      "'Association humanitaire'": "Asociație umanitară",
+      "'Autres structures sociales et solidaires'": "Alte structuri sociale și solidare",
+      "'Association de défense de l'environnement'": "Asociație pentru protecția mediului",
+      "'Association d'enseignement ou de formation'": "Asociație de învățământ sau formare",
+      "'Autre'": "Altul"
+    }
+  },
+  "emissionFactors": {
+    "post": {
+      "seeTypeform": "Vezi chestionarul tip",
+      "seeTypeformDescription": "Acest instrument vă permite să aveți un exemplu de chestionar tip de trimis părților dvs. interesate pentru a colecta date despre deplasările lor profesionale.",
+      "glossaryDescription": {
+        "postInfo": "Informații despre această categorie",
+        "close": "Închide",
+        "informations": "informații despre această categorie",
+        "IntrantsBiensEtMatieresTilt": "Pentru a obține mai multe informații despre diferitele moduri de a lua în considerare Intrările, consultați <link>metoda asociativă</link>.",
+        "IntrantsBiensEtMatieresTiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/intrants-biens-et-services#intrants-biens-et-matieres",
+        "Alimentation": "Pentru a obține mai multe informații despre luarea în considerare a alimentației, pentru diferitele părți interesate ale asociațiilor, consultați <link>metoda asociativă</link>.",
+        "AlimentationLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/alimentation",
+        "IntrantsServices": "Pentru a obține mai multe informații despre diferitele moduri de a lua în considerare Intrările, consultați <link>metoda asociativă</link>.",
+        "IntrantsServicesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/intrants-biens-et-services#intrants-services",
+        "EquipementsEtImmobilisations": "Pentru a obține mai multe informații despre modul de a lua în considerare echipamentele și alte imobilizări, consultați <link>metoda asociativă</link>.",
+        "EquipementsEtImmobilisationsLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/intrants-biens-et-services#equipements-et-immobilisations",
+        "ConstructionDesLocaux": "Pentru a obține mai multe informații despre luarea în considerare a spațiilor asociațiilor, consultați <link>metoda asociativă</link>.",
+        "ConstructionDesLocauxLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#construction-des-locaux",
+        "Energies": "Pentru a obține mai multe informații despre luarea în considerare a consumurilor energetice ale unei organizații, consultați <link>Plan Carbone Général</link>.",
+        "EnergiesLink": "https://www.plancarbonegeneral.com/perimetre-collaborateurs/locaux/exploitation",
+        "DechetsDirectstilt": "Pentru a obține mai multe informații despre luarea în considerare a deșeurilor unei organizații, consultați <link>Plan Carbone Général</link>.",
+        "DechetsDirectstiltLink": "https://www.plancarbonegeneral.com/perimetre-collaborateurs/locaux/exploitation",
+        "FroidEtClim": "Pentru a obține mai multe informații despre luarea în considerare a climatizărilor și a altor aparate care consumă fluide frigorifice ale unei organizații, consultați <link>Plan Carbone Général</link>.",
+        "FroidEtClimLink": "https://www.plancarbonegeneral.com/perimetre-collaborateurs/locaux/exploitation",
+        "Utilisation": "Pentru a obține mai multe informații despre luarea în considerare a utilizării produselor distribuite sau vândute și a serviciilor prestate de asociații, consultați <link>metoda asociativă</link>.",
+        "UtilisationLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/utilisation-et-fin-de-vie",
+        "FinDeVietilt": "Pentru a obține mai multe informații despre luarea în considerare a sfârșitului de viață al produselor distribuite sau vândute de asociații, consultați <link>metoda asociativă</link>.",
+        "FinDeVietiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/utilisation-et-fin-de-vie",
+        "Teletravail": "Pentru a obține mai multe informații despre luarea în considerare a telemuncii, consultați <link>metoda asociativă</link>.",
+        "TeletravailLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/teletravail",
+        "DeplacementsFabricationDesVehicules": "Fabricarea vehiculelor poate fi deja, în anumite cazuri, luată în considerare în cadrul factorilor de emisie utilizați pentru a contabiliza deplasările. Pentru mai multe informații despre luarea sa în considerare, consultați <link>metoda asociativă</link>.",
+        "DeplacementsFabricationDesVehiculesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#fabrication-des-vehicules",
+        "DeplacementsDomicileTravailSalaries": "Pentru a obține mai multe informații despre tipul de deplasări care trebuie incluse în această categorie, consultați <link>metoda asociativă</link>.",
+        "DeplacementsDomicileTravailSalariesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-entre-le-domicile-et-lassociation",
+        "DeplacementsDomicileTravailBenevoles": "Pentru a obține mai multe informații despre tipul de deplasări care trebuie incluse în această categorie, consultați <link>metoda asociativă</link>.",
+        "DeplacementsDomicileTravailBenevolesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-entre-le-domicile-et-lassociation",
+        "DeplacementsDansLeCadreDUneMissionAssociativeSalaries": "Pentru a obține mai multe informații despre tipul de deplasări care trebuie incluse în această categorie, consultați <link>metoda asociativă</link>.",
+        "DeplacementsDansLeCadreDUneMissionAssociativeSalariesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-dans-le-cadre-dune-mission-associative",
+        "DeplacementsDansLeCadreDUneMissionAssociativeBenevoles": "Pentru a obține mai multe informații despre tipul de deplasări care trebuie incluse în această categorie, consultați <link>metoda asociativă</link>.",
+        "DeplacementsDansLeCadreDUneMissionAssociativeBenevolesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-dans-le-cadre-dune-mission-associative",
+        "DeplacementsDesBeneficiaires": "Pentru a obține mai multe informații despre tipul de deplasări care trebuie incluse în această categorie, consultați <link>metoda asociativă</link>.",
+        "DeplacementsDesBeneficiairesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-des-beneficiaires",
+        "TransportDeMarchandises": "Pentru a obține mai multe informații despre diferitele metode de luare în considerare a transportului de marfă, consultați <link>metoda asociativă</link>.",
+        "TransportDeMarchandisesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#transport-de-marchandises",
+        "TransportFabricationDesVehicules": "Fabricarea vehiculelor poate fi deja, în anumite cazuri, luată în considerare în cadrul factorilor de emisie utilizați pentru a contabiliza deplasările. Pentru mai multe informații despre luarea sa în considerare, consultați <link>metoda asociativă</link>.",
+        "TransportFabricationDesVehiculesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#fabrication-des-vehicules",
+        "Agriculturetilt": "Pentru a obține mai multe informații despre luarea în considerare a emisiilor legate de activitățile agricole, consultați <link>metoda asociativă</link>.",
+        "AgriculturetiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
+        "ActivitesIndustrielles": "Pentru a obține mai multe informații despre luarea în considerare a emisiilor legate de eventualele activități industriale, consultați <link>metoda asociativă</link>.",
+        "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux"
+      }
+    }
+  },
+  "navigation": {
+    "footprints": "Amprentele mele",
+    "information": "Asociația mea"
+  },
+  "betaBanner": {
+    "badge": "Beta",
+    "title": "Versiunea Beta a instrumentului Cap Carbone",
+    "description": "Cap Carbone este în prezent în versiune beta! Vă mulțumim că sunteți primii noștri utilizatori și testeri 🎉 Nu ezitați să ne contactați la adresa <support>support@abc-transitionbascarbone.fr</support> dacă aveți feedback! Deoarece aplicația este în beta, este posibil ca unele întrebări să se schimbe în formular și, prin urmare, ca răspunsurile la întrebările modificate să fie șterse în viitoarele actualizări. Nu uitați să verificați completarea categoriilor dvs. pe pagina de introducere a datelor înainte de a vă consulta rezultatele, pentru a verifica dacă toate răspunsurile dvs. sunt încă disponibile."
+  }
+}

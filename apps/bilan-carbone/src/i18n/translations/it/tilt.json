@@ -1,0 +1,198 @@
+{
+  "login": {
+    "subtext": "Versione per il settore associativo",
+    "explanation": "Lo strumento dedicato alle associazioni che desiderano applicare il metodo Bilan Carbone® e la sua declinazione settoriale per il settore associativo. Nasce grazie alla collaborazione tra l'Association pour la transition Bas Carbone, promotrice del metodo Bilan Carbone®, e il Mouvement Tilt, che accompagna l'insieme delle associazioni nella loro transizione a basse emissioni di carbonio. Lo strumento è accessibile gratuitamente per tutte le associazioni francesi formate al metodo.",
+    "form": {
+      "activate": "Crea il mio account"
+    }
+  },
+  "signup": {
+    "description": "Crea un account su Tilt inserendo la tua email e un Siret",
+    "siret": "Siret",
+    "siretPlaceholder": "Il tuo Siret",
+    "siretRequired": "Inserisci un Siret",
+    "Not authorized": "Questa email è già registrata con un account Tilt oppure questo SIRET non è valido. Non esitare a consultare <link>le FAQ</link> o a contattare <support>l'assistenza</support> se ritieni che si tratti di un errore.",
+    "Not association SIRET": "L'uso di questo strumento è riservato alle associazioni. Utilizza la versione classica di Bilan Carbone®+",
+    "validation": {
+      "siret": "Inserisci un Siret"
+    }
+  },
+  "home": {
+    "navigation": {
+      "collaborators": {
+        "title": "I miei collaboratori",
+        "message": "Qui trovi l'elenco delle persone autorizzate a intervenire sulle tue diverse impronte di carbonio"
+      },
+      "footprints": {
+        "title": "Le mie Impronte",
+        "message": "Crea qui la tua prima impronta. Potrai poi consultare le tue impronte o crearne di nuove in qualsiasi momento."
+      },
+      "sites": {
+        "title": "La mia Associazione",
+        "message": "Qui trovi l'elenco delle sedi collegate al tuo account"
+      }
+    },
+    "title": "Calcolare la tua impronta di carbonio semplificata ti permetterà di:"
+  },
+  "exports": {
+    "env_specific_export": "Impronta di carbonio semplificata",
+    "simplified": {
+      "disclaimerExcel1": "Attenzione, i risultati che ottieni qui derivano unicamente da un calcolo di impronta di carbonio semplificata realizzato da Cap Carbone. Non devono in alcun caso essere presentati o utilizzati come risultati Bilan Carbone®,",
+      "disclaimerExcel2": "poiché, anche se i risultati ottenuti possono già aiutarti a capire come ridurre il tuo impatto, il tuo percorso si limita a una stima.",
+      "disclaimerExcel3": "Al contrario, questa impronta di carbonio semplificata è proprio il primo passo verso un percorso più completo come il Bilan Carbone®!",
+      "disclaimerExcel4": "Per gli anni successivi, puoi rinnovare la tua misurazione dell'impronta di carbonio semplificata con Cap Carbone oppure realizzare un Bilan Carbone®.",
+      "disclaimerExcel5": "Se desideri approfondire il tuo percorso, maggiori informazioni sono disponibili qui: https://abc-transitionbascarbone.fr/transition-association-abc-tilt/#",
+      "metadata": {
+        "organization": "Organizzazione",
+        "site": "Sito",
+        "startDate": "Data di inizio dello studio",
+        "endDate": "Data di fine dello studio"
+      }
+    }
+  },
+  "email": {
+    "subject": {
+      "newUser": "Sei stato invitato su Tilt",
+      "addedActiveUser": "Sei stato invitato su un nuovo ambiente Tilt",
+      "activation": "Hai attivato il tuo account su Tilt",
+      "activationRequest": "Richiesta di accesso alla tua organizzazione Tilt"
+    }
+  },
+  "organization": {
+    "sites": {
+      "ca": "Budget ({unit})",
+      "etp": "Numero di dipendenti",
+      "glossary": {
+        "etp": "Numero di dipendenti",
+        "etpDescription": "Questi dati sono utilizzati per calcolare intensità di carbonio (kgCO₂e/dipendente).",
+        "ca": "Budget ({unit})",
+        "caDescription": "Questi dati sono utilizzati per calcolare intensità di carbonio (kgCO₂e/{unit} di budget). Attenzione, il budget va indicato in migliaia di euro (k€).",
+        "volunteer": "Numero di volontari",
+        "volunteerDescription": "Il numero di volontari indicato qui servirà semplicemente a calcolare un'intensità di carbonio per volontario, in tCO₂e/volontario. Puoi indicare il numero di volontari, il numero di volontari attivi, contare o meno i membri del Consiglio di Amministrazione... La cosa più importante non è la scelta del metodo di conteggio dei volontari, ma l'utilizzo dello stesso metodo per i tuoi futuri Bilan Carbone®, al fine di poter confrontare l'evoluzione delle tue emissioni rispetto alle variazioni delle attività della tua associazione."
+      },
+      "validation": {
+        "ca": "Budget ({unit})"
+      }
+    }
+  },
+  "study": {
+    "perimeter": {
+      "preset": "Tipo di pubblico"
+    },
+    "new": {
+      "postalCode": "Qual è il codice postale dell'associazione?",
+      "sites": "Quali sono i siti interessati dall'impronta e le loro caratteristiche?",
+      "structure": "A quale tipo di struttura si avvicina di più la tua associazione?",
+      "structureOther": "Specifica il tipo di struttura",
+      "dates": "Su quale periodo verte la tua impronta di carbonio?",
+      "numberOfTTEmployee": "Quanti giorni a settimana lavorano in smart working i tuoi dipendenti?",
+      "numberOfTTVolunteer": "Quanti giorni a settimana lavorano in smart working i tuoi volontari?",
+      "glossary": {
+        "postalCode": "Codice postale dell'associazione",
+        "postalCodeGlossary": "CAP della sede se ci sono più siti, 5 cifre"
+      }
+    },
+    "flow": {
+      "info": "Puoi scaricare un esempio di mappatura dei flussi per aiutarti a costruire la tua. In seguito, se desideri inviare la tua mappatura dei flussi per aiutare altre associazioni fornendo loro una base di lavoro, inviala a <mail>methodologie@abc-transitionbascarbone.fr</mail>"
+    },
+    "dependencyMatrix": {
+      "info": "Puoi scaricare un esempio di matrice di rischio e di dipendenza per aiutarti a costruire la tua. In seguito, se desideri inviare la tua mappatura dei flussi per aiutare altre associazioni fornendo loro una base di lavoro, inviala a <mail>methodologie@abc-transitionbascarbone.fr</mail>"
+    },
+    "firstSimplifiedStudyMessage": "È ora di iniziare! Ti invitiamo a creare la tua prima Impronta.",
+    "createFirstSimplifiedStudy": "Crea la mia prima Impronta",
+    "createSimplified": "Crea un'Impronta",
+    "mySimplifiedStudies": "Le mie Impronte",
+    "seeSimplified": "Vedi la mia Impronta",
+    "cannotCreateStudy": "Per poter realizzare dei Bilan Carbone® è necessario essere formati al metodo! <link>Scopri di più</link>",
+    "canCreateFootPrint": "Puoi comunque realizzare <link>un'impronta di carbonio</link> che ti permette di effettuare una stima del tuo impatto",
+    "navigation": {
+      "generalData": "Dati generali",
+      "title": "La mia Impronta"
+    },
+    "export": {
+      "export": "Esporta i miei risultati"
+    },
+    "results": {
+      "feedback": {
+        "button": "Inviaci i tuoi feedback! ✨",
+        "title": "Inviaci i tuoi feedback! ✨"
+      }
+    },
+    "structure": {
+      "'Club de loisirs'": "Club ricreativo",
+      "'Association étudiante'": "Associazione studentesca",
+      "'Association culturelle'": "Associazione culturale",
+      "'Association de voisinage'": "Associazione di quartiere",
+      "'Hôpital'": "Ospedale",
+      "'Maison de retraite'": "Casa di riposo",
+      "'Association d'aide à domicile'": "Associazione di assistenza domiciliare",
+      "'Association humanitaire'": "Associazione umanitaria",
+      "'Autres structures sociales et solidaires'": "Altre strutture sociali e solidali",
+      "'Association de défense de l'environnement'": "Associazione per la difesa dell'ambiente",
+      "'Association d'enseignement ou de formation'": "Associazione di insegnamento o formazione",
+      "'Autre'": "Altro"
+    }
+  },
+  "emissionFactors": {
+    "post": {
+      "seeTypeform": "Vedi il questionario tipo",
+      "seeTypeformDescription": "Questo strumento ti permette di avere un esempio di questionario tipo da inviare alle tue parti interessate per raccogliere dati sui loro spostamenti professionali.",
+      "glossaryDescription": {
+        "postInfo": "Informazioni su questa categoria",
+        "close": "Chiudi",
+        "informations": "informazioni su questa categoria",
+        "IntrantsBiensEtMatieresTilt": "Per ottenere maggiori informazioni sulle diverse modalità di considerazione degli Input, consulta il <link>metodo associativo</link>.",
+        "IntrantsBiensEtMatieresTiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/intrants-biens-et-services#intrants-biens-et-matieres",
+        "Alimentation": "Per ottenere maggiori informazioni sulla considerazione dell'alimentazione, per le diverse parti interessate delle associazioni, consulta il <link>metodo associativo</link>.",
+        "AlimentationLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/alimentation",
+        "IntrantsServices": "Per ottenere maggiori informazioni sulle diverse modalità di considerazione degli Input, consulta il <link>metodo associativo</link>.",
+        "IntrantsServicesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/intrants-biens-et-services#intrants-services",
+        "EquipementsEtImmobilisations": "Per ottenere maggiori informazioni sul modo di considerare le attrezzature e le altre immobilizzazioni, consulta il <link>metodo associativo</link>.",
+        "EquipementsEtImmobilisationsLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/intrants-biens-et-services#equipements-et-immobilisations",
+        "ConstructionDesLocaux": "Per ottenere maggiori informazioni sulla considerazione dei locali delle associazioni, consulta il <link>metodo associativo</link>.",
+        "ConstructionDesLocauxLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#construction-des-locaux",
+        "Energies": "Per ottenere maggiori informazioni sulla considerazione dei consumi energetici di un'organizzazione, consulta il <link>Plan Carbone Général</link>.",
+        "EnergiesLink": "https://www.plancarbonegeneral.com/perimetre-collaborateurs/locaux/exploitation",
+        "DechetsDirectstilt": "Per ottenere maggiori informazioni sulla considerazione dei rifiuti di un'organizzazione, consulta il <link>Plan Carbone Général</link>.",
+        "DechetsDirectstiltLink": "https://www.plancarbonegeneral.com/perimetre-collaborateurs/locaux/exploitation",
+        "FroidEtClim": "Per ottenere maggiori informazioni sulla considerazione dei climatizzatori e di altri apparecchi che consumano gas refrigeranti di un'organizzazione, consulta il <link>Plan Carbone Général</link>.",
+        "FroidEtClimLink": "https://www.plancarbonegeneral.com/perimetre-collaborateurs/locaux/exploitation",
+        "Utilisation": "Per ottenere maggiori informazioni sulla considerazione dell'uso dei prodotti distribuiti o venduti e dei servizi resi dalle associazioni, consulta il <link>metodo associativo</link>.",
+        "UtilisationLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/utilisation-et-fin-de-vie",
+        "FinDeVietilt": "Per ottenere maggiori informazioni sulla considerazione del fine vita dei prodotti distribuiti o venduti dalle associazioni, consulta il <link>metodo associativo</link>.",
+        "FinDeVietiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/utilisation-et-fin-de-vie",
+        "Teletravail": "Per ottenere maggiori informazioni sulla considerazione dello smart working, consulta il <link>metodo associativo</link>.",
+        "TeletravailLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/teletravail",
+        "DeplacementsFabricationDesVehicules": "La fabbricazione dei veicoli può già, in alcuni casi, essere considerata all'interno dei fattori di emissione utilizzati per contabilizzare gli spostamenti. Per maggiori informazioni sulla sua considerazione, consulta il <link>metodo associativo</link>.",
+        "DeplacementsFabricationDesVehiculesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#fabrication-des-vehicules",
+        "DeplacementsDomicileTravailSalaries": "Per ottenere maggiori informazioni sul tipo di spostamenti da includere in questa categoria, consulta il <link>metodo associativo</link>.",
+        "DeplacementsDomicileTravailSalariesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-entre-le-domicile-et-lassociation",
+        "DeplacementsDomicileTravailBenevoles": "Per ottenere maggiori informazioni sul tipo di spostamenti da includere in questa categoria, consulta il <link>metodo associativo</link>.",
+        "DeplacementsDomicileTravailBenevolesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-entre-le-domicile-et-lassociation",
+        "DeplacementsDansLeCadreDUneMissionAssociativeSalaries": "Per ottenere maggiori informazioni sul tipo di spostamenti da includere in questa categoria, consulta il <link>metodo associativo</link>.",
+        "DeplacementsDansLeCadreDUneMissionAssociativeSalariesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-dans-le-cadre-dune-mission-associative",
+        "DeplacementsDansLeCadreDUneMissionAssociativeBenevoles": "Per ottenere maggiori informazioni sul tipo di spostamenti da includere in questa categoria, consulta il <link>metodo associativo</link>.",
+        "DeplacementsDansLeCadreDUneMissionAssociativeBenevolesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-dans-le-cadre-dune-mission-associative",
+        "DeplacementsDesBeneficiaires": "Per ottenere maggiori informazioni sul tipo di spostamenti da includere in questa categoria, consulta il <link>metodo associativo</link>.",
+        "DeplacementsDesBeneficiairesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-des-beneficiaires",
+        "TransportDeMarchandises": "Per ottenere maggiori informazioni sui diversi metodi di considerazione del trasporto merci, consulta il <link>metodo associativo</link>.",
+        "TransportDeMarchandisesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#transport-de-marchandises",
+        "TransportFabricationDesVehicules": "La fabbricazione dei veicoli può già, in alcuni casi, essere considerata all'interno dei fattori di emissione utilizzati per contabilizzare gli spostamenti. Per maggiori informazioni sulla sua considerazione, consulta il <link>metodo associativo</link>.",
+        "TransportFabricationDesVehiculesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#fabrication-des-vehicules",
+        "Agriculturetilt": "Per ottenere maggiori informazioni sulla considerazione delle emissioni legate alle attività agricole, consulta il <link>metodo associativo</link>.",
+        "AgriculturetiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
+        "ActivitesIndustrielles": "Per ottenere maggiori informazioni sulla considerazione delle emissioni legate a eventuali attività industriali, consulta il <link>metodo associativo</link>.",
+        "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux"
+      }
+    }
+  },
+  "navigation": {
+    "footprints": "Le mie impronte",
+    "information": "La mia Associazione"
+  },
+  "betaBanner": {
+    "badge": "Beta",
+    "title": "Versione Beta dello strumento Cap Carbone",
+    "description": "Cap Carbone è attualmente in versione beta! Grazie per essere i nostri primi utenti e tester 🎉 Non esitare a contattarci all'indirizzo <support>support@abc-transitionbascarbone.fr</support> se hai dei feedback! Essendo l'applicazione in beta, è possibile che alcune domande cambino nel modulo e che quindi le risposte alle domande modificate vengano eliminate in futuri aggiornamenti. Ricorda di controllare il completamento delle tue categorie nella pagina di inserimento dati prima di consultare i tuoi risultati, per verificare che tutte le tue risposte siano ancora disponibili."
+  }
+}

@@ -1,12 +1,19 @@
 import { getToken } from 'next-auth/jwt'
 import { NextRequest, NextResponse } from 'next/server'
 
-const publicRoutes = ['/login', '/reset-password', '/activation', '/register', '/survey']
-const assetsRoutes = ['/_next', '/img']
+const publicRoutes = ['/login', '/reset-password', '/activation', '/register']
+const assetsRoutes = ['/_next', '/img', '/.well-known']
+
+const isDynamicPublicRoute = (pathname: string) => /^\/[^/]+\/(survey|results)\/?$/.test(pathname)
 
 export async function proxy(req: NextRequest) {
-  if (![...publicRoutes, ...assetsRoutes].find((route) => req.nextUrl.pathname.startsWith(route))) {
+  const { pathname } = req.nextUrl
+  const isPublicRoute = [...publicRoutes, ...assetsRoutes].some((route) => pathname.startsWith(route))
+  const isDynamicRoute = isDynamicPublicRoute(pathname)
+
+  if (!isPublicRoute && !isDynamicRoute) {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
+
     if (!token) {
       const loginUrl = new URL('/login', req.url)
       return NextResponse.redirect(loginUrl)

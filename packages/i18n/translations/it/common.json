@@ -1,0 +1,326 @@
+{
+  "common": {
+    "colon": ":",
+    "error": "Si è verificato un errore. Se il problema persiste, contatta l'assistenza.",
+    "yes": "Sì",
+    "no": "No",
+    "previous": "Precedente",
+    "next": "Successivo",
+    "all": "Tutti",
+    "allSites": "Tutti i siti",
+    "allSubPosts": "Tutte le sottocategorie",
+    "allPosts": "Tutte le categorie",
+    "allTags": "Tutti i tag",
+    "xSites": "{count} siti",
+    "xSubPosts": "{count} sottocategorie",
+    "xTags": "{count} tag",
+    "none": "Nessuno",
+    "unknown": "Sconosciuto",
+    "subPosts": "Sottocategorie",
+    "onDate": "il",
+    "by": "da",
+    "scope": "Perimetro",
+    "sites": "Siti",
+    "tags": "Tag",
+    "noTagsAvailable": "Nessun tag disponibile",
+    "posts": "Categorie",
+    "selectedPlural": "selezionati",
+    "moreInfo": "Scopri di più",
+    "mandatory": "* obbligatorio",
+    "and": "e",
+    "year": "Anno",
+    "action": {
+      "create": "Crea",
+      "edit": "Modifica",
+      "delete": "Elimina",
+      "add": "Aggiungi",
+      "duplicate": "Duplica",
+      "save": "Salva",
+      "cancel": "Annulla",
+      "confirm": "Conferma",
+      "update": "Aggiorna",
+      "start": "Avvia",
+      "close": "Chiudi",
+      "approve": "Approva",
+      "selectAll": "Seleziona tutto",
+      "unselectAll": "Deseleziona tutto",
+      "back": "Indietro",
+      "import": "Importa",
+      "export": "Esporta",
+      "continue": "Continua"
+    },
+    "questions": {
+      "glossary": {
+        "title": "Ulteriori informazioni sulla domanda",
+        "close": "Chiudi"
+      }
+    },
+    "label": {
+      "start": "Inizio",
+      "end": "Fine",
+      "sites": "Siti",
+      "date": "Data",
+      "startYear": "Anno di inizio",
+      "targetYear": "Anno obiettivo",
+      "line": "Riga {line}",
+      "labelName": "Etichetta",
+      "source": "Fonte",
+      "unit": "Unità",
+      "emissionsKg": "Emissioni (kgCO2e)"
+    },
+    "notAuthorized": "Azione non autorizzata",
+    "Not authorized": "Non hai i permessi per eseguire questa azione",
+    "typeToConfirm": "Digita \"{name}\" per confermare",
+    "perPerson": "per persona",
+    "carbonIntensities": "Intensità di carbonio"
+  },
+  "saveStatus": {
+    "saving": "Salvataggio delle risposte in corso...",
+    "saved": "Risposte salvate",
+    "error": "Errore nel salvataggio delle risposte",
+    "ready": "Pronto per il salvataggio",
+    "at": "alle",
+    "syncedFromOtherUser": "Dati aggiornati da un altro utente"
+  },
+  "signup": {
+    "email": "Email",
+    "emailPlaceholder": "Email utilizzata durante la tua formazione",
+    "emailRequired": "Inserisci un'email",
+    "validate": "Convalida",
+    "Request sent": "Una richiesta di attivazione del tuo account è stata inviata ai tuoi colleghi",
+    "Email sent": "Riceverai un'email per completare l'attivazione del tuo account.",
+    "support": "Si è verificato un problema. Riprova. Se non funziona, contatta la nostra assistenza",
+    "validation": {
+      "email": "Inserisci un'email"
+    }
+  },
+  "navigation": {
+    "home": "Home",
+    "logout": "Disconnetti",
+    "comments": "Commenti",
+    "admin": "Admin",
+    "team": "Il mio team"
+  },
+  "country": {
+    "ALBANIA": "Albania",
+    "ANDORRA": "Andorra",
+    "AUSTRIA": "Austria",
+    "BELARUS": "Bielorussia",
+    "BELGIUM": "Belgio",
+    "BOSNIA_AND_HERZEGOVINA": "Bosnia ed Erzegovina",
+    "BULGARIA": "Bulgaria",
+    "CROATIA": "Croazia",
+    "CYPRUS": "Cipro",
+    "CZECH_REPUBLIC": "Repubblica Ceca",
+    "DENMARK": "Danimarca",
+    "ESTONIA": "Estonia",
+    "FINLAND": "Finlandia",
+    "FRANCE": "Francia",
+    "GERMANY": "Germania",
+    "GREECE": "Grecia",
+    "HUNGARY": "Ungheria",
+    "ICELAND": "Islanda",
+    "IRELAND": "Irlanda",
+    "ITALY": "Italia",
+    "KOSOVO": "Kosovo",
+    "LATVIA": "Lettonia",
+    "LIECHTENSTEIN": "Liechtenstein",
+    "LITHUANIA": "Lituania",
+    "LUXEMBOURG": "Lussemburgo",
+    "MALTA": "Malta",
+    "MOLDOVA": "Moldova",
+    "MONACO": "Monaco",
+    "MONTENEGRO": "Montenegro",
+    "NETHERLANDS": "Paesi Bassi",
+    "NORTH_MACEDONIA": "Macedonia del Nord",
+    "NORWAY": "Norvegia",
+    "POLAND": "Polonia",
+    "PORTUGAL": "Portogallo",
+    "ROMANIA": "Romania",
+    "RUSSIA": "Russia",
+    "SAN_MARINO": "San Marino",
+    "SERBIA": "Serbia",
+    "SLOVAKIA": "Slovacchia",
+    "SLOVENIA": "Slovenia",
+    "SPAIN": "Spagna",
+    "SWEDEN": "Svezia",
+    "SWITZERLAND": "Svizzera",
+    "UKRAINE": "Ucraina",
+    "UNITED_KINGDOM": "Regno Unito",
+    "VATICAN_CITY": "Città del Vaticano",
+    "OTHER": "Altro"
+  },
+  "study": {
+    "results": {
+      "chartTypes": {
+        "table": "Tabella",
+        "bar": "Grafico a barre",
+        "pie": "Grafico a torta",
+        "ratio": "Intensità di carbonio"
+      }
+    },
+    "questions": {
+      "actions": "Azioni",
+      "add": "Aggiungi",
+      "error": "Errore durante l'aggiornamento del campo",
+      "next": "Sottocategoria successiva",
+      "previous": "Sottocategoria precedente",
+      "numberOfYears": "Numero di anni",
+      "format": {
+        "text": "Testo",
+        "postalCode": "Codice postale",
+        "phone": "Telefono",
+        "year": "Anno",
+        "hour": "Ora",
+        "number": "Numero"
+      },
+      "errorLoadingQuestions": "Errore durante il caricamento delle domande",
+      "retry": "Riprova",
+      "finish": "Termina",
+      "noQuestions": "Nessuna domanda trovata per questa sottocategoria",
+      "autoSaveError": "Alcune risposte non sono state salvate automaticamente. Verifica la tua connessione e riprova."
+    },
+    "infography": {
+      "form": {
+        "backToInfography": "Mostra le categorie"
+      }
+    }
+  },
+  "locale": {
+    "en": "English",
+    "fr": "Français",
+    "es": "Español",
+    "el": "ελληνικά",
+    "hr": "hrvatski",
+    "hu": "magyar",
+    "it": "Italiano",
+    "ro": "Română",
+    "selector": "Lingua del sito"
+  },
+  "login": {
+    "welcome": "Benvenuto/a",
+    "form": {
+      "activate": "Attiva il mio account",
+      "firstConnection": "Primo accesso?",
+      "alreadyRegistered": "Hai già un account?",
+      "resetTitle": "Hai richiesto di creare o reimpostare la tua password. Inserisci le informazioni richieste qui sotto per confermare la creazione del tuo account o la reimpostazione della password.",
+      "login": "Accedi",
+      "email": "Email",
+      "emailPlaceholder": "Inserisci il tuo indirizzo email",
+      "password": "Password",
+      "passwordPlaceholder": "Inserisci la tua password",
+      "confirmPassword": "Conferma la password",
+      "hidePassword": "Nascondi la password",
+      "showPassword": "Mostra la password",
+      "notMatching": "Le password non corrispondono",
+      "passwordLength": "La password deve contenere almeno 8 caratteri",
+      "passwordUppercase": "La password deve contenere almeno una lettera maiuscola",
+      "passwordLowercase": "La password deve contenere almeno una lettera minuscola",
+      "passwordSpecialChar": "La password deve contenere almeno un carattere speciale",
+      "passwordDigit": "La password deve contenere almeno un numero",
+      "forgotPassword": "Password dimenticata?",
+      "reset": "Conferma",
+      "error": "Verifica la tua email e la tua password",
+      "expired": "Questo link di reimpostazione della password è scaduto",
+      "backToHome": "Torna alla home",
+      "resetError": "Alcune informazioni non sono corrette. Se pensi di aver compilato tutto correttamente, contattaci.",
+      "emailRequired": "Inserisci un'email",
+      "emailAndPasswordRequired": "Inserisci un'email e una password",
+      "emailSent": "Se la tua email è corretta, riceverai un messaggio per reimpostare la tua password",
+      "validated": "La tua password è stata reimpostata",
+      "validation": {
+        "email": "Inserisci un'email",
+        "password": "Inserisci una password"
+      }
+    }
+  },
+  "spinner": {
+    "loading": "Caricamento"
+  },
+  "error": {
+    "Not authorized": "Non hai i permessi per eseguire questa azione",
+    "Not found": "La risorsa richiesta non è stata trovata",
+    "Server error": "Si è verificato un errore del server, contatta l'assistenza",
+    "default": "Si è verificato un errore, riprova. Se il problema persiste, contatta l'assistenza.",
+    "error": "Si è verificato un errore...",
+    "contactSupport": "Si è verificato un problema. Prova a tornare alla <link>home page</link>. <p>Se non funziona, contatta la nostra assistenza a <m></m> o prova a <logout>riconnetterti</logout>.</p>",
+    "duplicateScopeCombination": "Esiste già un obiettivo con lo stesso perimetro (siti, tag, sottocategorie) e lo stesso anno obiettivo per questa traiettoria"
+  },
+  "email": {
+    "subject": {
+      "resetPassword": "Password dimenticata",
+      "newUser": "Sei stato invitato su BC+",
+      "addedActiveUser": "Sei stato invitato su un nuovo ambiente di BC+",
+      "activation": "Hai attivato il tuo account su BC+",
+      "activationRequest": "Richiesta di accesso alla tua organizzazione BC+",
+      "userOnStudyInvitation": "Aggiunto allo studio {studyName}",
+      "contributorInvitation": "Richiesta di contributo allo studio {studyName}",
+      "addedUsersByFile": "Autorizzazione per l'aggiunta di utenti"
+    }
+  },
+  "nav": {
+    "backToHome": "Torna alla home",
+    "home": "Home",
+    "notFound": "Pagina non trovata",
+    "organization": "Organizzazione",
+    "edit": "Modifica",
+    "team": "Team"
+  },
+  "team": {
+    "pending": "Inviti in attesa",
+    "invitationDate": "Invito inviato il",
+    "toValidate": "Inviti da convalidare",
+    "addedDate": "Aggiunto il",
+    "delete": "Elimina l'utente",
+    "resend": "Invia di nuovo l'invito",
+    "table": {
+      "title": "Il mio team",
+      "newUser": "Invita un utente",
+      "firstName": "Nome",
+      "lastName": "Cognome",
+      "email": "Email",
+      "level": "Formazione",
+      "role": "Ruolo",
+      "action": " ",
+      "deleteMember": "Elimina il membro",
+      "userDeletion": "Eliminazione di un utente",
+      "userDeletionDescription": "Sei sicuro di voler eliminare questo utente? Non avrà più accesso all'account della tua organizzazione, ma manterrà l'accesso agli studi per i quali è stato invitato da altre organizzazioni.",
+      "necessaryAdmin": "Non è possibile eliminare questo amministratore. È l'unico validatore dei seguenti studi: "
+    }
+  },
+  "level": {
+    "Initial": "Iniziale",
+    "Standard": "Standard",
+    "Advanced": "Avanzato",
+    "noLevel": "Senza formazione"
+  },
+  "role": {
+    "SUPER_ADMIN": "Amministratore globale",
+    "ADMIN": "Amministratore",
+    "COLLABORATOR": "Collaboratore",
+    "ADMIN_description": "Un amministratore possiede tutti i diritti sull'account dell'organizzazione nonché sull'insieme degli studi della propria organizzazione (siano essi pubblici o privati). Non è possibile modificare il ruolo di un amministratore su uno studio della propria organizzazione.",
+    "COLLABORATOR_description": "Un collaboratore è una persona formata al metodo Bilan Carbone®. Non ha alcun diritto sull'account dell'organizzazione, ma può creare studi per la propria organizzazione. È per impostazione predefinita editor di tutti i Bilan Carbone® pubblici della propria organizzazione.",
+    "guide": "Guida dei ruoli",
+    "saved": "Nuovo ruolo salvato",
+    "Not authorized": "Non hai i permessi per eseguire questa azione",
+    "More than one": "Deve esserci almeno un amministratore o gestore nell'organizzazione"
+  },
+  "newMember": {
+    "title": "Invita un utente",
+    "email": "Email",
+    "firstName": "Nome",
+    "lastName": "Cognome",
+    "role": "Ruolo",
+    "level": "Formazione",
+    "create": "Invita l'utente",
+    "Not authorized": "Impossibile invitare questo utente. Contatta l'<link>assistenza</link> per maggiori informazioni.",
+    "validation": {
+      "email": "Inserisci un'email valida",
+      "firstName": "Inserisci un nome",
+      "lastName": "Inserisci un cognome",
+      "level": "Inserisci un livello di formazione",
+      "role": "Inserisci un ruolo"
+    },
+    "addedMember": "L'utente è stato aggiunto correttamente alla tua organizzazione"
+  }
+}

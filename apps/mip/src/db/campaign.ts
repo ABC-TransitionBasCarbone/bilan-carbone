@@ -93,7 +93,10 @@ export const getAllOrganizationVersionMipCampaigns = async (organizationVersionM
     },
   })
 
-  return campaigns
+  return campaigns.map(({ _count, ...campaign }) => ({
+    ...campaign,
+    responsesCount: _count.responses,
+  }))
 }
 
 export type CampaignsWithResponses = AsyncReturnType<typeof getAllOrganizationVersionMipCampaigns>
@@ -119,7 +122,10 @@ export const getAllAllowedCampaigns = async (accountMipId: string, organizationV
     },
   })
 
-  return campaigns
+  return campaigns.map(({ _count, ...campaign }) => ({
+    ...campaign,
+    responsesCount: _count.responses,
+  }))
 }
 
 export const updateCampaign = async (
@@ -175,10 +181,43 @@ export const updateCampaign = async (
 }
 
 export const getCampaignById = (id: string) => {
-  return prismaClient.campaign.findFirst({
-    where: { id },
-    select: { id: true, status: true, modelCampaign: { select: { id: true, model: true } } },
-  })
+  return prismaClient.campaign
+    .findFirst({
+      where: { id },
+      select: {
+        id: true,
+        status: true,
+        modelCampaign: {
+          select: {
+            id: true,
+            model: true,
+            organizationVersionMip: {
+              select: {
+                modelCampaign: {
+                  select: {
+                    model: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    })
+    .then((campaign) => {
+      if (!campaign || !campaign.modelCampaign) {
+        return campaign
+      }
+
+      return {
+        id: campaign.id,
+        status: campaign.status,
+        modelCampaign: {
+          id: campaign.modelCampaign.id,
+          model: campaign.modelCampaign.organizationVersionMip?.modelCampaign?.model ?? campaign.modelCampaign.model,
+        },
+      }
+    })
 }
 
 export const createResponse = async (data: Prisma.ResponseCreateInput) =>

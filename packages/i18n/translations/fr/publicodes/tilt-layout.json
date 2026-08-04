@@ -4,7 +4,8 @@
       "IntrantsServices": {
         "question": "Quel montant avez-vous dépensé dans les services immatériels suivants ?",
         "typeService": "Type de service",
-        "montantDepense": "Montant dépensé"
+        "montantDepense": "Montant dépensé",
+        "description": "Veuillez indiquer le montant dépensé pour chaque service immatériel. Si vous ne connaissez pas le montant exact, vous pouvez fournir une estimation."
       },
       "IntrantsBiensEtMatieresTilt": {
         "question": "Quel montant avez-vous dépensé dans les biens suivants ?",

@@ -26,8 +26,7 @@
   },
   "resolutions": {
     "vite": "^6.4.3",
-    "postcss": "^8.5.14",
-    "react-router": "^7.15.1",
-    "brace-expansion": "^5.0.2"
+    "postcss": "^8.5.25",
+    "brace-expansion": "^5.0.8"
   }
 }

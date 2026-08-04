@@ -1,12 +1,3 @@
-.logo {
-  position: absolute;
-  left: 0;
-  top: 50vh;
-  transform: translateY(-50%);
-  max-width: 90%;
-  height: auto;
-}
-
 .loginForm {
   padding: 2rem;
   border: var(--border-dark);
@@ -16,9 +7,11 @@
 .header {
   @media screen and (max-width: 37rem) {
     flex-direction: column;
+
     .welcomeLogo {
       width: 100%;
     }
+
     .locales {
       justify-content: flex-end;
     }
@@ -54,21 +47,17 @@
   border: 0.125rem solid var(--primary-800);
 }
 
-.link {
+.richLinks a {
   color: white;
 }
 
-.linkCut {
+.richLinksCut a {
   color: white;
   font-weight: 600;
 }
 
 .image {
   height: auto;
-}
-
-.title {
-  margin-bottom: 1rem !important;
 }
 
 .divider {

@@ -1,6 +1,6 @@
 'use client'
 
-import { TeamMember } from '@/db/accountMip'
+import type { TeamMember } from '@/db/accountMip'
 import { deleteOrganizationMember } from '@/services/serverFunctions/organization'
 import { changeRole } from '@/services/serverFunctions/user'
 import { canEditMemberRole } from '@/utils/user'

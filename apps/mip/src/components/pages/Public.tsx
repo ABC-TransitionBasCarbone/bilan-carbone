@@ -1,11 +1,10 @@
 'use client'
-import { defaultLocale, Locale, LocaleType } from '@/i18n/config'
-import { getLocale, switchLocale } from '@/i18n/locale'
+import { PARTNER_LOGOS } from '@/constants/logos'
 import PublicContainer from '@abc-transitionbascarbone/components/src/base/PublicContainer'
-import Image from '@abc-transitionbascarbone/components/src/document/Image'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { ReactNode, useEffect, useState } from 'react'
+import Image from 'next/image'
+import { ReactNode } from 'react'
 import styles from './Public.module.css'
 
 interface Props {
@@ -13,60 +12,32 @@ interface Props {
 }
 
 const PublicPage = ({ children }: Props) => {
-  const t = useTranslations('login')
-  const tLocale = useTranslations('locale')
-  const [locale, setLocale] = useState<LocaleType>(defaultLocale)
-
-  useEffect(() => {
-    getLocale().then(setLocale)
-  }, [])
-
-  const languages = [
-    { name: tLocale('en'), code: 'GB', target: Locale.EN },
-    { name: tLocale('fr'), code: 'FR', target: Locale.FR },
-  ]
+  const t = useTranslations('survey')
+  const logo = PARTNER_LOGOS.find((logo) => logo.alt === 'ABC')
 
   return (
     <PublicContainer>
-      <div className={classNames(styles.info, 'grow p2 text-center')}>
-        <p className="title-h4 mb1">{t('welcome')}</p>
-        <Image
-          src="/logos/monogramme_BC_noir.png"
-          alt="logo"
-          width={400}
-          height={400}
-          className={classNames(styles.image, 'w100')}
-        />
-      </div>
-      <div className={classNames(styles.loginForm, 'grow flex-col')}>
-        <div className={classNames(styles.header, 'justify-between')}>
-          <div className={classNames(styles.locales, 'flex')}>
-            {languages.map((language) => (
-              <button
-                key={language.target}
-                title={language.name}
-                aria-label={language.name}
-                className={classNames(styles.flag, 'flex', {
-                  [styles.selected]: language.target === locale,
-                })}
-                onClick={() => {
-                  switchLocale(language.target)
-                  setLocale(language.target)
-                }}
-              >
-                <Image alt={language.name} src={`/logos/${language.code}.svg`} width={30} height={20} />
-              </button>
-            ))}
-          </div>
-          <Image
-            className={classNames(styles.welcomeLogo, 'align-end')}
-            src="/logos/logo_BC_noir.png"
-            alt="logo"
-            width={278}
-            height={136}
-          />
+      <div className={classNames('flex wrap w100')}>
+        <div className={classNames(styles.info, 'grow p2 text-center')}>
+          <p className="title-h4 mb1">{t('explanation.title')}</p>
+          <p className="mb1">{t('explanation.why.summary')}</p>
         </div>
-        {children}
+        <div className={classNames(styles.loginForm, 'grow flex-col p2')}>
+          <div className={classNames('wrap justify-center gapped-2 mb1')}>
+            {logo && (
+              <div key={logo.src} className="flex-cc">
+                <Image
+                  src={logo.src}
+                  alt={logo.alt}
+                  width={176}
+                  height={72}
+                  className={classNames(styles.loginLogoImage, 'wauto h100')}
+                />
+              </div>
+            )}
+          </div>
+          {children}
+        </div>
       </div>
     </PublicContainer>
   )

@@ -1,7 +1,8 @@
 {
   "nav": {
     "newStudyContributor": "Dodaj učenika",
-    "home": "Početna"
+    "home": "Početna",
+    "team": "Pilot tim"
   },
   "navigation": {
     "organizations": "Moji ugljični otisci",
@@ -32,12 +33,17 @@
       "0": "Razumijete mjerenje utjecaja vaše ustanove",
       "1": "Identificirate prioritete djelovanja",
       "2": "Dugoročno, kroz detaljniji rad, izgradite putanju smanjenja"
-    }
+    },
+    "subtitle": "Izračun ugljičnog otiska vaše ustanove znači:"
   },
   "team": {
     "table": {
-      "title": "Pilot tim"
-    }
+      "title": "Pilot tim",
+      "newUser": "Pozovi administratora / suradnika",
+      "userDeletion": "Uklanjanje administratora / suradnika",
+      "userDeletionDescription": "Jeste li sigurni da želite ukloniti ovog administratora / suradnika? Više neće imati pristup računu vaše organizacije, ali će i dalje imati pristup studijama za koje su ga pozvale druge organizacije."
+    },
+    "delete": "Ukloni administratora / suradnika"
   },
   "study": {
     "create": "Dodaj otisak",
@@ -67,19 +73,27 @@
       "inviteContributors": "Pozovi iste učenike",
       "glossary": {
         "validatorEmailDescription": "Kao učenik imam pristup kao suradnik jednom ili više emisijskih mjesta.",
-        "duplicationOptionsDescription": "Pri dupliciranju studije možete odabrati pozvati iste članove tima i učenike iz izvornog studija u novi. To pomaže održati kontinuitet suradnje."
+        "duplicationOptionsDescription": "Pri dupliciranju studije možete odabrati pozvati iste članove tima i učenike iz izvornog studija u novi. To pomaže održati kontinuitet suradnje.",
+        "studyDates": "Razdoblje moje studije",
+        "studyDatesDescription": "Riječ je o razdoblju za koje ću prikupljati svoje podatke o aktivnostima. Prema zadanim postavkama to je tekuća školska godina. Datume početka i završetka moguće je izmijeniti."
       },
       "etp": "Broj osoblja (nastavno i nenastavno)",
       "goToDataEntry": "Prijelaz na unos podataka",
       "studentNumber": "Broj učenika",
-      "superficy": "Površina ustanove"
+      "superficy": "Površina ustanove",
+      "title": "Informacije o mom ugljičnom otisku",
+      "studyDates": "Razdoblje moje studije",
+      "create": "Stvori moj ugljični otisak",
+      "superficyPlaceholder": "samo izgrađena površina, u m²",
+      "country": "Država ustanove"
     },
     "role": {
       "Contributor": "Učenik"
     },
     "rights": {
       "newContributor": {
-        "title": "Dodaj učenika u studiju: {name}"
+        "title": "Dodaj učenika u studiju: {name}",
+        "edit": "Potvrdi"
       },
       "contributorsTable": {
         "delete": "Ukloni učenika",
@@ -91,6 +105,9 @@
         "role": {
           "description": "Ovdje možete upravljati učenicima u svom studiju. Imat će pristup određenim mjestima i podmjestima (koje možete definirati) te će moći popuniti određene informacije za izvore emisija koje ste već kreirali u studiju. Za više informacija o sučelju suradnika pogledajte <link>FAQ</link>."
         }
+      },
+      "versions": {
+        "list": "Izvor faktora emisije:"
       }
     },
     "export": {
@@ -144,6 +161,10 @@
         "bar": "Stupčasti grafikon",
         "pie": "Kružni grafikon"
       }
+    },
+    "firstStudyMessage": "Vrijeme je da započnete! Pozivamo vas da stvorite svoj prvi Otisak.",
+    "perimeter": {
+      "studyDates": "Razdoblje moje studije"
     }
   },
   "emissionFactors": {
@@ -168,6 +189,12 @@
       "TransportDuPersonnel": "Prijevoz osoblja",
       "TypesDeRepasServis": "Vrste posluženih obroka",
       "VoyagesScolaires": "Školska putovanja"
+    },
+    "underDevelopment": "Ova je funkcionalnost u razvoju",
+    "create": {
+      "glossary": {
+        "post_studyContributorDescription": "Ovdje dodijelite kategorije i potkategorije svojim učenicima"
+      }
     }
   },
   "organization": {
@@ -202,7 +229,8 @@
       },
       "studentNumber": "Broj učenika",
       "studentNumberPlaceholder": "Ukupan broj učenika"
-    }
+    },
+    "myOrganization": "Moja ustanova"
   },
   "login": {
     "welcome": "Dobrodošli na Clickson PEBC",
@@ -258,5 +286,33 @@
     "modelsDataCollect": "Predlošci za prikupljanje podataka",
     "game": "Igra: uvod u pregovaranje o svom planu djelovanja:",
     "classEarth": "Moja Zemlja u razredu"
+  },
+  "newMember": {
+    "title": "Pozovi administratora / suradnika",
+    "create": "Pozovi administratora / suradnika",
+    "Not authorized": "Nije moguće pozvati ovog administratora / suradnika. Molimo kontaktirajte <link>podršku</link> za više informacija.",
+    "addedMember": "Administrator / suradnik uspješno je dodan u vašu organizaciju"
+  },
+  "role": {
+    "ADMIN_description": "Administrator ima sva prava nad računom ustanove kao i nad svim ugljičnim otiscima. Administrator ne može promijeniti ulogu. U slučaju promjene, morat ćete proslijediti pristupne podatke novoj osobi.",
+    "COLLABORATOR_description": "Suradnik je svaka osoba ovlaštena za unos podataka o aktivnostima za ustanovu za jednu ili više kategorija emisija, ali nema nikakvo pravo izmjene računa ustanove. "
+  },
+  "onboarding": {
+    "title-1": "Dobrodošli u kalkulator Clicks On! Prije početka, molimo konfigurirajte svoju ustanovu.",
+    "titleDescription-1": "Unaprijed smo ispunili neke informacije koje možete izmijeniti odmah ili u bilo kojem trenutku putem rubrike \"Moja ustanova\".",
+    "title-2": "Upravljanje vašim pilot timom",
+    "titleDescription-2": "Već sada možete dodati svoje suradnike (učenike, nastavnike i neobrazovno osoblje) u svoj tim! Nove osobe uvijek možete dodati kasnije putem rubrike \"Pilot tim\".",
+    "step1": {
+      "name": "Naziv moje ustanove",
+      "role": "Moja uloga unutar ustanove",
+      "information": "Moje informacije",
+      "firstName": "Ime",
+      "lastName": "Prezime",
+      "adminDescription": "Uloga koja vam je dodijeljena jest ona administratora vaše ustanove.",
+      "gestionnaireDescription": "Uloga koja vam je dodijeljena jest ona suradnika vaše ustanove."
+    }
+  },
+  "exports": {
+    "env_specific_export": "Pojednostavljeni ugljični otisak"
   }
 }

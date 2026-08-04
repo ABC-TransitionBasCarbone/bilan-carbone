@@ -1,3 +1,4 @@
+import { downloadFile, DownloadFileType } from '@abc-transitionbascarbone/utils/download'
 import { fileTypeFromBlob } from 'file-type'
 
 const KB = 1024
@@ -7,21 +8,8 @@ export const allowedFlowFileTypes = ['application/pdf', 'image/png', 'image/jpeg
 
 export const maxAllowedFileSize = 5 * MB
 
-type FileType = 'xlsx' | 'csv' | 'docx'
-const typeTab: Record<FileType, string> = {
-  xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  csv: 'text/csv;charset=utf-8;',
-  docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-}
-
-export const download = (fileContent: string[] | ArrayBuffer[], fileName: string, fileType: FileType) => {
-  const blob = new Blob(fileContent, { type: typeTab[fileType] })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = fileName
-  document.body.appendChild(a)
-  a.click()
+export const download = (fileContent: string[] | ArrayBuffer[], fileName: string, fileType: DownloadFileType) => {
+  downloadFile(fileContent, fileName, fileType)
 }
 
 export const downloadFromUrl = (url: string, fileName: string) => {

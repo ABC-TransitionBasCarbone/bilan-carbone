@@ -40,7 +40,6 @@ export function PublicodesSituationProvider<RuleName extends string = string>({
   const [situation, setSituationState] = useState<Situation<RuleName>>({})
   const [listLayoutSituations, setListLayoutSituationsState] = useState<ListLayoutSituations<RuleName>>({})
 
-  console.log('situation : ', situation)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const engine = useMemo(() => config.getEngine().shallowCopy() as Engine<RuleName>, [config])

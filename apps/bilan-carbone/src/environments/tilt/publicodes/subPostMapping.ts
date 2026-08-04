@@ -1,5 +1,5 @@
 import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
-import { FormLayout, inputLayout, tableLayout } from '@abc-transitionbascarbone/publicodes/form/layouts'
+import { FormLayout, inputLayout, mosaicLayout, tableLayout } from '@abc-transitionbascarbone/publicodes/form/layouts'
 import { TiltSimplifiedPost } from '@abc-transitionbascarbone/services/results/posts.enums'
 import { TiltRuleName } from './types'
 
@@ -64,11 +64,25 @@ const SUBPOST_TO_RULENAME: Partial<Record<SubPost, TiltRuleName>> = {
 } as const
 
 const input = (rule: TiltRuleName): FormLayout<TiltRuleName> => inputLayout<TiltRuleName>(rule)
-const table = (title: string, headers: string[], rows: TiltRuleName[][]): FormLayout<TiltRuleName> =>
-  tableLayout<TiltRuleName>(title, headers, rows)
+const table = (
+  title: string,
+  headers: string[],
+  rows: TiltRuleName[][],
+  description?: string,
+): FormLayout<TiltRuleName> => tableLayout<TiltRuleName>(title, headers, rows, description)
+const mosaic = (parent: TiltRuleName, children: TiltRuleName[]): FormLayout<TiltRuleName> =>
+  mosaicLayout<TiltRuleName>(parent, children)
 
 export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRuleName>[]>> = {
   Batiments: [
+    mosaic('alimentation . mosaic', [
+      'alimentation . mosaic . végétalien . nombre',
+      'alimentation . mosaic . végétarien . nombre',
+      'alimentation . mosaic . viande blanche . nombre',
+      'alimentation . mosaic . viande rouge . nombre',
+      'alimentation . mosaic . poisson gras . nombre',
+      'alimentation . mosaic . poisson blanc . nombre',
+    ]),
     input('construction . bâtiment . locaux'),
     input('construction . bâtiment . locaux . locaux seuls . surface'),
     input('construction . bâtiment . locaux . locaux partagés . surface'),
@@ -213,6 +227,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
           'intrants-services . services . programmation-conseil . montant-dépensé',
         ],
       ],
+      'IntrantsServices.description',
     ),
   ],
   UsagesNumeriques: [

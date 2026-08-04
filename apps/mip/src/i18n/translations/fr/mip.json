@@ -15,10 +15,83 @@
     "navigation": {
       "complete": "Terminer",
       "continue": "Continuer",
-      "restart": "Recommencer"
+      "restart": "Recommencer",
+      "backToExplanation": "Précédent"
+    },
+    "explanation": {
+      "title": "Mon Impact Pro",
+      "start": "Passer le test",
+      "cover": {
+        "title": "Connaissez-vous votre empreinte carbone professionnelle ?",
+        "subtitle": "Obtenez une estimation en seulement 5 minutes !"
+      },
+      "why": {
+        "title": "Pourquoi cet outil ?",
+        "description": "[PROTOTYPE] Cet outil de calcul d'empreinte carbone professionnelle s'inscrit dans la démarche de transition de votre organisation en proposant une estimation des ordres de grandeur des émissions de GES liées aux pratiques professionnelles. Il permet de sensibiliser en rendant le sujet plus tangible, tout en abordant la question des émissions à l'échelle des employés. En ce sens, il fait le lien entre actions individuelles et enjeux structurels, et constitue un point d'appui pour mieux comprendre les principaux postes d'émissions et nourrir une réflexion collective sur les leviers de réduction à l'échelle de l'organisation.",
+        "summary": "Cet outil est un calculateur d'empreinte carbone professionnelle développé par l'Association pour la transition Bas Carbone en partenariat avec des organisations engagées. Il permet d'obtenir une estimation des ordres de grandeur des émissions de GES liées aux pratiques professionnelles, et de sensibiliser les collaborateurs aux enjeux de la transition écologique."
+      },
+      "about": {
+        "title": "A propos du développement de l'outil ?",
+        "description": "Cet outil a été développé par l'Association pour la transition Bas Carbone en partenariat avec des organisations engagées. Cette déclinaison s'appuie librement sur la version officielle de Nos Gestes Climat développée par l'ADEME (Agence de la transition écologique) en partenariat avec l'ABC (Association pour la Transition Bas Carbone)."
+      },
+      "partners": {
+        "title": "Organisations partenaires"
+      },
+      "note": {
+        "title": "Note",
+        "description": "Cet outil est actuellement à l'état de prototype : il peut donc comporter des bugs, des fonctionnalités incomplètes ou certaines informations et messages encore manquants, qui seront progressivement corrigés et enrichis.",
+        "summary": "Cet outil est actuellement à l'état de prototype : il peut donc comporter des bugs, des fonctionnalités incomplètes ou certaines informations et messages encore manquants, qui seront progressivement corrigés et enrichis."
+      }
     },
     "resume": "Reprendre le sondage",
-    "characterCount": "{current} / {max} caractères"
+    "interstitial": {
+      "title": "Quelques ordres de grandeur pour comparaison :"
+    },
+    "characterCount": "{current} / {max} caractères",
+    "completion": {
+      "title": "Mon empreinte professionnelle",
+      "unit": "kg de CO₂e",
+      "loadingState": "Chargement de vos résultats...",
+      "headlineDescription": "Vos principaux postes d'émissions et les actions les plus efficaces pour les réduire.",
+      "kgUnit": "kg",
+      "target": "Objectif 2050 : 2 tCO₂e",
+      "ofFootprint": "de votre empreinte",
+      "actions": {
+        "title": "Passer à l'action",
+        "keyTab": "Actions clés",
+        "equivalentTab": "A quoi cela équivaut ?",
+        "available": "actions"
+      },
+      "transition": {
+        "title": "Votre trajectoire de réduction",
+        "context": "Cette trajectoire de réduction est la trajectoire de votre entreprise appliquée à votre empreinte. Votre empreinte ne suivra pas exactement ce chemin, mais baissera tendanciellement de cette manière via les changements de vos pratiques au travail, mais essentiellement par les changements structuraux menés par votre entreprise.",
+        "startLabel": "Empreinte de départ"
+      },
+      "range": {
+        "minLabel": "0 tCO₂e",
+        "maxLabel": "12 tCO₂e",
+        "limitLabel": "L'objectif pour 2050 : {limit} tCO₂e",
+        "currentLabel": "Vous : {value} tCO₂e"
+      },
+      "topCategories": {
+        "title": "Mes principaux postes d'émissions"
+      },
+      "summary": {
+        "title": "Résumé",
+        "subPosts": "Sous-postes"
+      },
+      "faq": {
+        "alone": {
+          "question": "Est-ce que je peux y arriver tout seul ?",
+          "answer": "Non, la transition écologique est un effort collectif. L'État, les collectivités et les entreprises ont un rôle essentiel à jouer. Vos actions individuelles sont néanmoins importantes pour montrer l'exemple et accélérer le changement."
+        },
+        "start": {
+          "question": "Par où commencer ?",
+          "answer": "Concentrez-vous sur vos deux ou trois principales sources d'émissions. Les actions à plus fort impact sont celles qui réduisent vos déplacements en voiture, améliorent votre alimentation, et limitent vos achats numériques inutiles."
+        }
+      },
+      "restart": "Recommencer le sondage"
+    }
   },
   "study": {
     "results": {
@@ -50,15 +123,39 @@
     "editCampaigns": "Modifier les campagnes",
     "name": "Nom de la campagne",
     "namePlaceholder": "Nom de la campagne",
-    "json": "JSON",
+    "viewResults": "Voir les résultats",
     "status": "status",
     "OPEN": "Ouverte",
     "CLOSED": "Fermée",
     "responsesCount": "Nombre de réponses",
+    "exportCsv": "Exporter les réponses (CSV)",
+    "exportCsvDisabledMinRespondents": "L'export CSV n'est pas disponible : il faut au moins 10 répondants pour protéger l'anonymat des répondants.",
     "shareLink": "Lien à partager",
+    "delete": "Supprimer",
     "add": "Ajouter une nouvelle campagne",
     "edit": "Valider la modification",
-    "success": "Les campagnesont été modifiées avec succès"
+    "success": "Les campagnes ont été modifiées avec succès",
+    "guide": {
+      "title": "Guide des campagnes",
+      "description": "Chaque ligne correspond à une campagne de sondage envoyée à vos collaborateurs.",
+      "resultsTitle": "Voir les résultats :",
+      "resultsDescription": "cliquez sur l'icône graphique pour ouvrir le tableau de bord de la campagne (empreinte moyenne, taux de réponse, détails par poste).",
+      "csvTitle": "Exporter les réponses (CSV) :",
+      "csvDescription": "cliquez sur l'icône téléchargement pour récupérer les réponses en format CSV et les analyser dans votre outil de reporting.",
+      "shareTitle": "Partager le lien du sondage :",
+      "shareDescription": "cliquez sur l'icône de copie dans \"Lien à partager\", puis envoyez le lien à vos collaborateurs (email, intranet, messagerie interne)."
+    }
+  },
+  "role": {
+    "SUPER_ADMIN": "Administrateur·rice Global",
+    "ADMIN": "Administrateur·rice",
+    "COLLABORATOR": "Collaborateur·rice",
+    "ADMIN_description": "Un·e administrateur·rice gère toutes les campagnes et les membres de l'équipe.",
+    "COLLABORATOR_description": "Un·e collaborateur·rice gère uniquement les campagnes qu'il a créé.",
+    "guide": "Guide des rôles",
+    "saved": "Nouveau rôle sauvegardé",
+    "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
+    "More than one": "Il doit y avoir au moins un·e administrateur·rice ou gestionnaire dans l'organisation"
   },
   "results": {
     "title": "Tableau de bord des résultats",
@@ -74,54 +171,71 @@
       "unit": "tonnes CO₂e / an",
       "aboveTarget": "Aujourd'hui, vous êtes au-dessus des {target} tonnes, l'objectif intermédiaire que nous proposons pour 2030.",
       "paceTitle": "Votre rythme indicatif pour parvenir à {target} T en {year}",
-      "paceUnit": "kg par an"
+      "paceUnit": "kg par an",
+      "respondents": "Répondants",
+      "responseRate": "Taux de réponse",
+      "respondentsDetail": "{count} sur {total} destinataires ({rate}%)"
     },
     "filter": {
       "title": "Filtrer par entité"
     },
     "categories": {
       "title": "Détail par poste d'émission",
-      "commute": "Déplacements domicile-travail",
-      "travel": "Déplacements professionnels",
-      "food": "Alimentation",
-      "digital": "Numérique",
-      "office": "Bureaux"
+      "DT": "Déplacements domicile-travail",
+      "transport": "Déplacements professionnels",
+      "alimentation": "Alimentation",
+      "divers": "Numérique",
+      "logement": "Bureaux"
     },
     "charts": {
       "title": "Répartition des empreintes carbone",
       "pieTitle": "Répartition par poste d'émission (moyennes)",
-      "barTitle": "Empreinte carbone moyenne",
+      "barTitle": "Empreinte carbone moyenne par poste",
+      "totalLimitColumn": "Total",
+      "postDetail": "{tco2e} tCO₂e",
+      "postDetailHover": "{tco2e} tCO₂e, soit environ {people} personnes",
+      "postDetailHoverPercent": "{percent} %",
       "target2050": "Objectif 2050 : 2 tCO₂e"
     },
     "keyStats": {
       "title": "Chiffres clés",
+      "DT": {
+        "title": "Déplacements domicile-travail",
+        "carModeShare": "Part des trajets domicile-travail en voiture",
+        "publicTransportModeShare": "Part des trajets domicile-travail en transport en commun",
+        "activeModeShare": "Part des trajets domicile-travail en modes actifs",
+        "avgCarKm": "Distance moyenne parcourue en voiture (DT)",
+        "avgPublicTransportKm": "Distance moyenne parcourue en transport en commun (DT)",
+        "avgEmissionPerMode": "Empreinte carbone moyenne des déplacements domicile-travail"
+      },
+      "units": {
+        "percent": "%",
+        "km": "km",
+        "hours": "{count, plural, one {heure} other {heures}}",
+        "nights": "{count, plural, one {nuit} other {nuits}}"
+      },
       "transport": {
-        "title": "Transport",
-        "plane": "Prennent l'avion",
-        "longHaulPlane": "Prennent l'avion long courrier",
-        "carKm": "Kilomètres parcourus en moyenne en voiture",
-        "carPassengers": "Voyageurs en moyenne en voiture"
+        "title": "Déplacements professionnels",
+        "trainModeShare": "Part des déplacements professionnels en train",
+        "carTravelModeShare": "Part des déplacements professionnels en voiture",
+        "planeTravelModeShare": "Part des déplacements professionnels en avion",
+        "avgTravelKmByMode": "Distance moyenne des déplacements professionnels",
+        "avgTravelEmissionByMode": "Empreinte carbone moyenne des déplacements professionnels",
+        "avgTravelNights": "Nombre moyen de nuits par déplacement professionnel"
       },
-      "housing": {
-        "title": "Logement",
-        "electricHeating": "Se chauffent à l'électricité",
-        "gasHeating": "Se chauffent au gaz",
-        "oilHeating": "Se chauffent au fioul",
-        "woodHeating": "Se chauffent au bois",
-        "airConditioning": "Ont un système de climatisation"
-      },
-      "food": {
+      "alimentation": {
         "title": "Alimentation",
-        "vegan": "Sont végétaliens",
-        "redMeatDaily": "Mangent de la viande rouge au moins une fois par jour",
-        "localSeasonal": "Achètent local et de saison",
-        "bottledWater": "Boivent de l'eau en bouteille",
-        "zeroWaste": "Sont Zéro déchet"
+        "vegMealsShare": "Part des plats consommés végétariens",
+        "veganMealsShare": "Part des plats consommés végans",
+        "fullyVegetarianEmployees": "Salariés 100% végétariens",
+        "fullyVeganEmployees": "Salariés 100% végans",
+        "redMeatDailyEmployees": "Salariés qui mangent de la viande rouge tous les jours"
       },
-      "misc": {
-        "title": "Divers",
-        "newClothes": "Vêtements neufs achetés chaque année",
-        "socialMediaOver3h": "Passent plus de 3h par jour sur les réseaux hors bureau"
+      "divers": {
+        "title": "Numérique",
+        "aiRequestsPerDay": "Nombre moyen de requêtes IA par salarié et par jour",
+        "videoHoursPerDay": "Nombre moyen d'heures de visioconférence par salarié et par jour",
+        "internetHoursPerDay": "Nombre moyen d'heures d'internet par salarié et par jour"
       }
     },
     "comments": {
@@ -143,7 +257,17 @@
         "description": "Sous l'impulsion de l'État et des citoyens, les entreprises travaillent à la <strong>réduction progressive de l'empreinte des biens et services</strong>."
       }
     },
+    "equivalent": {
+      "title": "A quoi cela équivaut ?",
+      "description": "Comparez l'empreinte moyenne de la campagne avec des ordres de grandeur concrets pour mieux situer son impact."
+    },
     "export": {
+      "comments": {
+        "title": "Commentaires des collaborateurs"
+      },
+      "dataCsv": "Exporter les données (CSV)",
+      "disabledMinRespondents": "L'export CSV n'est pas disponible : il faut au moins 10 répondants pour protéger l'anonymat des répondants.",
+      "visual": "Exporter (visuel)",
       "print": "Imprimer"
     }
   }

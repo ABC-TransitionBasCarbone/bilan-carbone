@@ -5,5 +5,6 @@ alimentation:
       - bénéficiaires
       - bénévoles
       - salariés
+      - mosaic
   unité: kgCO2e
   par défaut: 0

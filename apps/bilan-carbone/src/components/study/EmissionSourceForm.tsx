@@ -2,7 +2,6 @@
 
 import { EmissionFactorList } from '@/db/emissionFactors'
 import type { FullStudy } from '@/db/study'
-import { customRich } from '@/i18n/customRich'
 import { getEmissionResults } from '@/services/emissionSource'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { getTagFamiliesByStudyId } from '@/services/serverFunctions/emissionSource'
@@ -26,6 +25,7 @@ import { formatEmissionFromNumber, hasDeprecationPeriod, hasEditionRights, isCAS
 import { HelpIcon } from '@abc-transitionbascarbone/components'
 import LinkButton from '@abc-transitionbascarbone/components/src/base/LinkButton'
 import { Select } from '@abc-transitionbascarbone/components/src/base/Select'
+import GlossaryModal from '@abc-transitionbascarbone/components/src/modals/GlossaryModal'
 import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
 import type { StudyTag } from '@abc-transitionbascarbone/db-common'
 import {
@@ -38,6 +38,7 @@ import {
   Unit,
 } from '@abc-transitionbascarbone/db-common/enums'
 import { Button } from '@abc-transitionbascarbone/ui'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import AddIcon from '@mui/icons-material/Add'
 import CopyIcon from '@mui/icons-material/ContentCopy'
@@ -55,7 +56,6 @@ import { Path } from 'react-hook-form'
 import TagChip from '../base/TagChip'
 import BaseChip from '../emissionFactor/BaseChip'
 import { ImportVersionForFilters } from '../emissionFactor/EmissionFactorsFilters'
-import GlossaryModal from '../modals/GlossaryModal'
 import DeleteEmissionSource from './DeleteEmissionSource'
 import styles from './EmissionSource.module.css'
 import EmissionSourceFactor from './EmissionSourceFactor'

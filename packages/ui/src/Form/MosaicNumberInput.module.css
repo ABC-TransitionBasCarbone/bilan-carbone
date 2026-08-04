@@ -1,42 +1,21 @@
-.container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+.element {
+  width: 100%;
   border-radius: 0.75rem;
-  border: 2px solid #cdd9f8;
-  background-color: white;
-  padding: 0.5rem;
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
-  width: fit-content;
+  border: 2px solid var(--neutral-300);
+  background-color: var(--white);
 }
 
-.info {
-  display: flex;
-  flex-direction: column;
-}
+
 
 .title {
-  display: block;
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 500;
   margin-bottom: 0.25rem;
-
-  @media (min-width: 768px) {
-    font-size: 1.25rem;
-  }
 }
 
 .description {
-  margin: 0;
   font-size: 0.75rem;
   font-style: italic;
-}
-
-.controls {
-  display: flex;
-  align-items: center;
 }
 
 .button {
@@ -49,17 +28,18 @@
   align-items: center;
   justify-content: center;
   border-radius: 9999px !important;
-  background-color: #4949ba;
+  background-color: var(--info);
 }
 
 .input {
-  width: 2rem;
+  width: 3.5rem;
   text-align: center;
   border: none;
   outline: none;
   font-size: 1rem;
 
   -moz-appearance: textfield;
+
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {
     -webkit-appearance: none;

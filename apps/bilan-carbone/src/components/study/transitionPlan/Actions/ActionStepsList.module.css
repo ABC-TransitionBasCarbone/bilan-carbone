@@ -48,18 +48,6 @@
   margin-left: 0.5rem;
 }
 
-.stepInput {
-  font-size: 0.9375rem;
-}
-
-.arrow {
-  font-size: 1.5rem;
-  color: var(--mui-palette-primary-main);
-  width: 1rem;
-  text-align: center;
-  flex-shrink: 0;
-}
-
 .addStepButton {
   background-color: var(--mui-palette-primary-main);
   border-radius: 50%;

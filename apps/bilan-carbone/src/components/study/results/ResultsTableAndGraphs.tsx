@@ -1,6 +1,6 @@
-import GlossaryModal from '@/components/modals/GlossaryModal'
 import Box from '@abc-transitionbascarbone/components/src/base/Box'
 import Title from '@abc-transitionbascarbone/components/src/base/Title'
+import GlossaryModal from '@abc-transitionbascarbone/components/src/modals/GlossaryModal'
 import { StudyResultUnit } from '@abc-transitionbascarbone/db-common/enums'
 import { BarChart, PieChart } from '@abc-transitionbascarbone/ui'
 import { BasicTypeCharts } from '@abc-transitionbascarbone/utils/charts'

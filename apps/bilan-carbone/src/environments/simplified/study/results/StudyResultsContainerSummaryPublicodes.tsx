@@ -20,7 +20,7 @@ const StudyResultsContainerSummaryPublicodes = ({ study }: Props) => {
     <>
       <div className={`${styles.header} flex justify-between mb1`}>
         <div className={styles.studyNameContainer}>
-          <StudyName studyId={study.id} name={study.name} role={null} />
+          <StudyName studyId={study.id} name={study.name} role={null} clickable={false} />
         </div>
         <Button className={styles.seeResultsButton} href={`/etudes/${study.id}/comptabilisation/resultats`}>
           {t('seeResults')}

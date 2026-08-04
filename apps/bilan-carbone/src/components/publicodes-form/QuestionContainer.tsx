@@ -1,4 +1,5 @@
 import { HelpIcon } from '@abc-transitionbascarbone/components'
+import GlossaryModal from '@abc-transitionbascarbone/components/src/modals/GlossaryModal'
 import {
   StyledQuestionContainer,
   StyledQuestionContent,
@@ -8,7 +9,6 @@ import {
 import { Box } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
-import GlossaryModal from '../modals/GlossaryModal'
 
 export interface QuestionContainerProps {
   label: string

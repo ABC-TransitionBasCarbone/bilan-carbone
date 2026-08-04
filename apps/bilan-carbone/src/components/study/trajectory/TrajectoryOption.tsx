@@ -1,5 +1,5 @@
-import { customRich } from '@/i18n/customRich'
 import { TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import CheckIcon from '@mui/icons-material/Check'
 import { Typography } from '@mui/material'
 import classNames from 'classnames'

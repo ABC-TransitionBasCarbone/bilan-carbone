@@ -15,10 +15,83 @@
     "navigation": {
       "complete": "Complete",
       "continue": "Continue",
-      "restart": "Restart"
+      "restart": "Restart",
+      "backToExplanation": "Back to explanation page"
+    },
+    "explanation": {
+      "title": "Mon Impact Pro",
+      "start": "Take the test",
+      "cover": {
+        "title": "Do you know your professional carbon footprint?",
+        "subtitle": "Get an estimate in just 5 minutes!"
+      },
+      "why": {
+        "title": "Why this tool?",
+        "description": "[PROTOTYPE] This work-related carbon footprint tool is part of your organisation's transition approach by providing an order-of-magnitude estimate of greenhouse gas emissions linked to professional practices. It raises awareness by making the topic more tangible, while addressing emissions at employee level. In that sense, it connects individual actions with structural challenges and provides a useful entry point to better understand the main emission categories and foster collective thinking on reduction levers at organisation level.",
+        "summary": "[PROTOTYPE] This work-related carbon footprint tool is part of your organisation's transition approach by providing an order-of-magnitude estimate of greenhouse gas emissions linked to professional practices. It raises awareness by making the topic more tangible, while addressing emissions at employee level. In that sense, it connects individual actions with structural challenges and provides a useful entry point to better understand the main emission categories and foster collective thinking on reduction levers at organisation level."
+      },
+      "about": {
+        "title": "About the development of this tool",
+        "description": "This tool was developed by the Association pour la Transition Bas Carbone with committed partner organisations. This version is freely based on the official Nos Gestes Climat version developed by ADEME (French Agency for Ecological Transition) in partnership with ABC (Association pour la Transition Bas Carbone)."
+      },
+      "partners": {
+        "title": "Partner organisations"
+      },
+      "note": {
+        "title": "Note",
+        "description": "This tool is currently a prototype: it may contain bugs, incomplete features, or some missing information and messages. These will be progressively fixed and improved.",
+        "summary": "This tool is currently a prototype: it may contain bugs, incomplete features, or some missing information and messages. These will be progressively fixed and improved."
+      }
     },
     "resume": "Resume survey",
-    "characterCount": "{current} / {max} characters"
+    "interstitial": {
+      "title": "Some orders of magnitude for comparison:"
+    },
+    "characterCount": "{current} / {max} characters",
+    "completion": {
+      "title": "My work-related footprint",
+      "unit": "kg CO₂e",
+      "loadingState": "Loading your results...",
+      "headlineDescription": "Your highest emission categories and the most effective actions to reduce them.",
+      "kgUnit": "kg",
+      "target": "2050 target: 2 tCO₂e",
+      "ofFootprint": "of your footprint",
+      "actions": {
+        "title": "Take action",
+        "keyTab": "Key actions",
+        "equivalentTab": "What does it correspond to?",
+        "available": "actions"
+      },
+      "transition": {
+        "title": "Your reduction trajectory",
+        "context": "This reduction trajectory is your organisation’s reduction pathway applied to your personal footprint. Your footprint will not follow this path exactly, but it will tend to decrease in this way through changes in your work practices — and above all through the structural changes led by your organisation.",
+        "startLabel": "Starting footprint"
+      },
+      "range": {
+        "minLabel": "0 tCO₂e",
+        "maxLabel": "12 tCO₂e",
+        "limitLabel": "2050 target: {limit} tCO₂e",
+        "currentLabel": "You: {value} tCO₂e"
+      },
+      "topCategories": {
+        "title": "My main emission categories"
+      },
+      "summary": {
+        "title": "Summary",
+        "subPosts": "Sub-categories"
+      },
+      "faq": {
+        "alone": {
+          "question": "Can I do it all on my own?",
+          "answer": "No. The ecological transition is a collective effort. The State, local authorities and companies all have a key role. Individual actions still matter to lead by example and accelerate change."
+        },
+        "start": {
+          "question": "Where should I start?",
+          "answer": "Focus on your two or three biggest emission sources first. High-impact actions usually reduce car travel, improve food habits, and avoid unnecessary digital purchases."
+        }
+      },
+      "restart": "Restart survey"
+    }
   },
   "email": {
     "subject": {
@@ -43,15 +116,39 @@
     "editCampaigns": "Edit campaign",
     "name": "campaign name",
     "namePlaceholder": "Name of the campaign",
-    "json": "JSON",
+    "viewResults": "View results",
     "status": "status",
     "OPEN": "Open",
     "CLOSED": "Close",
     "responsesCount": "Number of responses",
+    "exportCsv": "Export responses (CSV)",
+    "exportCsvDisabledMinRespondents": "CSV export is not available: at least 10 respondents are required to protect respondent anonymity.",
     "shareLink": "Link to share",
+    "delete": "Delete",
     "add": "Add new campaign",
     "edit": "Save changes",
-    "success": "campaigns changed successfully"
+    "success": "campaigns changed successfully",
+    "guide": {
+      "title": "Campaign guide",
+      "description": "Each row corresponds to a survey campaign sent to your employees.",
+      "resultsTitle": "View results:",
+      "resultsDescription": "click the chart icon to open the campaign dashboard (average footprint, response rate, category breakdown).",
+      "csvTitle": "Export responses (CSV):",
+      "csvDescription": "click the download icon to export responses as a CSV file and analyze them in your reporting tools.",
+      "shareTitle": "Share the survey link:",
+      "shareDescription": "click the copy icon in \"Link to share\", then send the link to your employees (email, intranet, internal messaging)."
+    }
+  },
+  "role": {
+    "SUPER_ADMIN": "Global Administrator",
+    "ADMIN": "Administrator",
+    "COLLABORATOR": "Collaborator",
+    "ADMIN_description": "An administrator manages My Impact Pro organization settings, campaigns, and team members.",
+    "COLLABORATOR_description": "A collaborator can answer the survey and view results depending on assigned permissions.",
+    "guide": "Roles guide",
+    "saved": "New role saved",
+    "Not authorized": "You are not allowed to do this action",
+    "More than one": "There must be at least one admin or manager in the organisation"
   },
   "results": {
     "title": "Results Dashboard",
@@ -67,54 +164,70 @@
       "unit": "tonnes CO₂e / year",
       "aboveTarget": "Today you are above {target} tonnes, the intermediate target we propose for 2030.",
       "paceTitle": "Your indicative pace to reach {target} T by {year}",
-      "paceUnit": "kg per year"
+      "paceUnit": "kg per year",
+      "responseRate": "Response rate",
+      "respondentsDetail": "{count} out of {total} recipients ({rate}%)"
     },
     "filter": {
       "title": "Filter by entity"
     },
     "categories": {
       "title": "Breakdown by emission category",
-      "commute": "Commute",
-      "travel": "Professional travel",
-      "food": "Food",
-      "digital": "Digital",
-      "office": "Office"
+      "DT": "Commute",
+      "transport": "Professional travel",
+      "alimentation": "Food",
+      "divers": "Digital",
+      "logement": "Office"
     },
     "charts": {
       "title": "Carbon footprint distribution",
       "pieTitle": "Breakdown by emission category (averages)",
-      "barTitle": "Average carbon footprint",
+      "barTitle": "Average carbon footprint by category",
+      "totalLimitColumn": "Total (2 tCO₂e limit)",
+      "postDetail": "{tco2e} tCO₂e",
+      "postDetailHover": "{tco2e} tCO₂e, around {people} people equivalent",
+      "postDetailHoverPercent": "{percent}%",
       "target2050": "2050 target: 2 tCO₂e"
     },
     "keyStats": {
       "title": "Key figures",
+      "DT": {
+        "title": "Commute",
+        "carModeShare": "Share of commute trips by car",
+        "publicTransportModeShare": "Share of commute trips by public transport",
+        "activeModeShare": "Share of commute trips by active mobility",
+        "avgCarKm": "Average distance travelled by car (commute)",
+        "avgPublicTransportKm": "Average distance travelled by public transport (commute)",
+        "avgEmissionPerMode": "Average carbon footprint from commute trips"
+      },
+      "units": {
+        "percent": "%",
+        "km": "km",
+        "hours": "{count, plural, one {hour} other {hours}}",
+        "nights": "{count, plural, one {night} other {nights}}"
+      },
       "transport": {
-        "title": "Transport",
-        "plane": "Take the plane",
-        "longHaulPlane": "Take long-haul flights",
-        "carKm": "Kilometres driven by car on average",
-        "carPassengers": "Average passengers per car"
+        "title": "Business travel",
+        "trainModeShare": "Share of business trips by train",
+        "carTravelModeShare": "Share of business trips by car",
+        "planeTravelModeShare": "Share of business trips by plane",
+        "avgTravelKmByMode": "Average distance of business trips",
+        "avgTravelEmissionByMode": "Average carbon footprint from business trips",
+        "avgTravelNights": "Average nights per business trip"
       },
-      "housing": {
-        "title": "Housing",
-        "electricHeating": "Heat with electricity",
-        "gasHeating": "Heat with gas",
-        "oilHeating": "Heat with oil",
-        "woodHeating": "Heat with wood",
-        "airConditioning": "Have air conditioning"
-      },
-      "food": {
+      "alimentation": {
         "title": "Food",
-        "vegan": "Are vegan",
-        "redMeatDaily": "Eat red meat at least once a day",
-        "localSeasonal": "Buy local and seasonal",
-        "bottledWater": "Drink bottled water",
-        "zeroWaste": "Are Zero waste"
+        "vegMealsShare": "Share of consumed meals that are vegetarian",
+        "veganMealsShare": "Share of consumed meals that are vegan",
+        "fullyVegetarianEmployees": "Employees who are 100% vegetarian",
+        "fullyVeganEmployees": "Employees who are 100% vegan",
+        "redMeatDailyEmployees": "Employees who eat red meat every day"
       },
-      "misc": {
-        "title": "Miscellaneous",
-        "newClothes": "New clothes bought each year",
-        "socialMediaOver3h": "Spend more than 3h/day on social media outside work"
+      "divers": {
+        "title": "Digital",
+        "aiRequestsPerDay": "Average AI requests per employee per day",
+        "videoHoursPerDay": "Average videoconference hours per employee per day",
+        "internetHoursPerDay": "Average internet hours per employee per day"
       }
     },
     "comments": {
@@ -136,7 +249,17 @@
         "description": "Under the impetus of the State and citizens, companies are working towards the <strong>progressive reduction of the footprint of goods and services</strong>."
       }
     },
+    "equivalent": {
+      "title": "What does it correspond to?",
+      "description": "Compare the campaign's average footprint with concrete references to better understand its impact."
+    },
     "export": {
+      "comments": {
+        "title": "Collaborator comments"
+      },
+      "dataCsv": "Export data (CSV)",
+      "disabledMinRespondents": "CSV export is not available: at least 10 respondents are required to protect respondent anonymity.",
+      "visual": "Export (visual)",
       "print": "Print"
     }
   }

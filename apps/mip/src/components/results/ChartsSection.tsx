@@ -3,16 +3,17 @@
 import { StudyResultUnit } from '@abc-transitionbascarbone/db-common/enums'
 import { BarChart, PieChart } from '@abc-transitionbascarbone/ui'
 import { BasicTypeCharts } from '@abc-transitionbascarbone/utils/charts'
+import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import { Typography } from '@mui/material'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import styles from './ChartsSection.module.css'
 
 interface Props {
-  pieChartItems: BasicTypeCharts[]
-  totalBarItem: BasicTypeCharts
+  chartItems: BasicTypeCharts[]
 }
 
-const ChartsSection = ({ pieChartItems, totalBarItem }: Props) => {
+const ChartsSection = ({ chartItems }: Props) => {
   const t = useTranslations('results')
 
   return (
@@ -20,16 +21,28 @@ const ChartsSection = ({ pieChartItems, totalBarItem }: Props) => {
       <Typography variant="h6" className="mb1">
         {t('charts.title')}
       </Typography>
-      <div className={styles.chartsGrid}>
-        <BarChart results={[totalBarItem]} resultsUnit={StudyResultUnit.T} showLegend={false} type="post" />
+      <div className={classNames(styles.chartsGrid, 'gapped1')}>
+        <BarChart
+          results={chartItems}
+          resultsUnit={StudyResultUnit.T}
+          title={t('charts.barTitle')}
+          showLegend={false}
+          type="post"
+        />
         <PieChart
           resultsUnit={StudyResultUnit.T}
           showTitle
           title={t('charts.pieTitle')}
           showLabelsOnPie
+          displayAsPercentage
           skipAnimation
-          results={pieChartItems}
+          results={chartItems}
           type="post"
+          tooltipValueFormatter={({ percentage }) =>
+            t('charts.postDetailHoverPercent', {
+              percent: formatNumber(percentage, 1),
+            })
+          }
         />
       </div>
     </section>

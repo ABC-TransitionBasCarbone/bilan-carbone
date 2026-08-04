@@ -1,7 +1,8 @@
 {
   "nav": {
     "newStudyContributor": "Adaugă un elev",
-    "home": "Acasă"
+    "home": "Acasă",
+    "team": "Echipa pilot"
   },
   "navigation": {
     "organizations": "Amprentele mele de carbon",
@@ -32,12 +33,17 @@
       "0": "Înțelegi măsurarea impactului instituției tale",
       "1": "Identifici prioritățile de acțiune",
       "2": "Pe termen lung, și printr-o muncă mai aprofundată, construiești o traiectorie de reducere"
-    }
+    },
+    "subtitle": "Calcularea amprentei de carbon a instituției dvs. înseamnă:"
   },
   "team": {
     "table": {
-      "title": "Echipa pilot"
-    }
+      "title": "Echipa pilot",
+      "newUser": "Invită un administrator / colaborator",
+      "userDeletion": "Ștergerea unui administrator / colaborator",
+      "userDeletionDescription": "Sigur doriți să ștergeți acest administrator / colaborator? Nu va mai avea acces la contul organizației dvs., dar va păstra accesul la studiile pentru care a fost invitat de alte organizații."
+    },
+    "delete": "Șterge administratorul / colaboratorul"
   },
   "study": {
     "create": "Adaugă o amprentă",
@@ -67,19 +73,27 @@
       "inviteContributors": "Invită aceiași elevi",
       "glossary": {
         "validatorEmailDescription": "Ca elev, am acces ca contributor la unul sau mai multe posturi de emisii.",
-        "duplicationOptionsDescription": "Când duplici un studiu, poți alege să inviți aceeași echipă și aceiași elevi din studiul original. Acest lucru ajută la menținerea continuității colaborării."
+        "duplicationOptionsDescription": "Când duplici un studiu, poți alege să inviți aceeași echipă și aceiași elevi din studiul original. Acest lucru ajută la menținerea continuității colaborării.",
+        "studyDates": "Perioada studiului meu",
+        "studyDatesDescription": "Este vorba despre perioada în care voi colecta datele mele de activitate. În mod implicit, este vorba despre anul școlar în curs. Este posibil să modificați datele de început și de sfârșit."
       },
       "etp": "Număr de personal (didactic și nedidactic)",
       "goToDataEntry": "Treci la introducerea datelor",
       "studentNumber": "Număr de elevi",
-      "superficy": "Suprafața instituției"
+      "superficy": "Suprafața instituției",
+      "title": "Informații despre amprenta mea de carbon",
+      "studyDates": "Perioada studiului meu",
+      "create": "Creează amprenta mea de carbon",
+      "superficyPlaceholder": "doar construit, în m²",
+      "country": "Țara instituției"
     },
     "role": {
       "Contributor": "Elev"
     },
     "rights": {
       "newContributor": {
-        "title": "Adaugă un elev în studiu: {name}"
+        "title": "Adaugă un elev în studiu: {name}",
+        "edit": "Validează"
       },
       "contributorsTable": {
         "delete": "Elimină elevul",
@@ -91,6 +105,9 @@
         "role": {
           "description": "Aici poți gestiona elevii studiului tău. Ei vor avea acces la anumite posturi și subposturi (pe care le poți defini) și vor putea completa informații pentru anumite surse de emisii pe care le-ai creat deja în studiu. Pentru mai multe informații despre interfața contributorului, consultă <link>FAQ</link>."
         }
+      },
+      "versions": {
+        "list": "Sursa factorilor de emisie:"
       }
     },
     "export": {
@@ -144,6 +161,10 @@
         "bar": "Grafic cu bare",
         "pie": "Diagramă circulară"
       }
+    },
+    "firstStudyMessage": "Este momentul să începeți! Vă invităm să creați prima dvs. Amprentă.",
+    "perimeter": {
+      "studyDates": "Perioada studiului meu"
     }
   },
   "emissionFactors": {
@@ -168,6 +189,12 @@
       "TransportDuPersonnel": "Transportul personalului",
       "TypesDeRepasServis": "Tipuri de mese servite",
       "VoyagesScolaires": "Excursii școlare"
+    },
+    "underDevelopment": "Această funcționalitate este în curs de dezvoltare",
+    "create": {
+      "glossary": {
+        "post_studyContributorDescription": "Atribuiți aici categoriile și subcategoriile elevilor dvs."
+      }
     }
   },
   "organization": {
@@ -202,7 +229,8 @@
       },
       "studentNumber": "Numărul de elevi",
       "studentNumberPlaceholder": "Numărul total de elevi"
-    }
+    },
+    "myOrganization": "Instituția mea"
   },
   "login": {
     "welcome": "Bun venit pe Clickson PEBC",
@@ -258,5 +286,33 @@
     "modelsDataCollect": "Modele de suport pentru colectarea datelor",
     "game": "Joc: inițiere în negocierea planului de acțiune:",
     "classEarth": "Pământul meu în clasă"
+  },
+  "newMember": {
+    "title": "Invită un administrator / colaborator",
+    "create": "Invită administratorul / colaboratorul",
+    "Not authorized": "Nu se poate invita acest administrator / colaborator. Contactați <link>asistența</link> pentru mai multe informații.",
+    "addedMember": "Administratorul / colaboratorul a fost adăugat cu succes la organizația dvs."
+  },
+  "role": {
+    "ADMIN_description": "Un administrator deține toate drepturile asupra contului instituției, precum și asupra tuturor amprentelor de carbon. Un administrator nu își poate schimba rolul. În caz de schimbare, va trebui să comunicați datele de autentificare noii persoane.",
+    "COLLABORATOR_description": "Colaboratorul este orice persoană autorizată să introducă date de activitate pentru instituție pe una sau mai multe categorii de emisie, dar nu deține niciun drept de modificare a contului instituției. "
+  },
+  "onboarding": {
+    "title-1": "Bine ați venit pe calculatorul Clicks On! Înainte de a începe, configurați instituția dvs.",
+    "titleDescription-1": "Am precompletat unele informații pe care le puteți modifica chiar acum sau în orice moment prin secțiunea \"Instituția mea\".",
+    "title-2": "Gestionarea echipei dvs. pilot",
+    "titleDescription-2": "Puteți deja să adăugați colaboratorii dvs. (elevi, profesori și personal non-didactic) în echipa dvs.! Veți putea oricând să adăugați noi persoane mai târziu prin secțiunea \"Echipa pilot\".",
+    "step1": {
+      "name": "Numele instituției mele",
+      "role": "Rolul meu în cadrul instituției",
+      "information": "Informațiile mele",
+      "firstName": "Prenume",
+      "lastName": "Nume",
+      "adminDescription": "Rolul care v-a fost atribuit este cel de administrator al instituției dvs.",
+      "gestionnaireDescription": "Rolul care v-a fost atribuit este cel de colaborator al instituției dvs."
+    }
+  },
+  "exports": {
+    "env_specific_export": "Amprentă de carbon simplificată"
   }
 }

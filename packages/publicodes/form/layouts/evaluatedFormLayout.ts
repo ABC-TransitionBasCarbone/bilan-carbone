@@ -1,16 +1,22 @@
 import { EvaluatedFormElement, getEvaluatedFormElement } from '@publicodes/forms'
 import Engine, { Situation } from 'publicodes'
 import { ListLayoutSituations } from '../../context'
-import { FormLayout, GroupLayout, InputLayout, ListLayout, TableLayout } from './formLayout'
+import { FormLayout, GroupLayout, InputLayout, ListLayout, MosaicLayout, TableLayout } from './formLayout'
 
 export type EvaluatedFormLayout<RuleName extends string> =
   | EvaluatedInputLayout<RuleName>
+  | EvaluatedMosaicLayout<RuleName>
   | EvaluatedGroupLayout<RuleName>
   | EvaluatedTableLayout<RuleName>
   | EvaluatedListLayout<RuleName>
 
 export type EvaluatedInputLayout<RuleName extends string> = InputLayout<RuleName> & {
   evaluatedElement: EvaluatedFormElement<RuleName>
+}
+
+export type EvaluatedMosaicLayout<RuleName extends string> = MosaicLayout<RuleName> & {
+  evaluatedParent: EvaluatedFormElement<RuleName>
+  evaluatedChildren: EvaluatedFormElement<RuleName>[]
 }
 
 export type EvaluatedGroupLayout<RuleName extends string> = GroupLayout<RuleName> & {
@@ -50,6 +56,8 @@ export function getEvaluatedFormLayout<RuleName extends string>(
   switch (layout.type) {
     case 'input':
       return { ...layout, evaluatedElement: evaluateRule(layout.rule) }
+    case 'mosaic':
+      return { ...layout, evaluatedParent: evaluateRule(layout.parent as RuleName), evaluatedChildren: layout.children.map((c) => evaluateRule(c)) }
     case 'list': {
       const situations = listLayoutSituations?.[layout.targetRule] ?? []
       return {

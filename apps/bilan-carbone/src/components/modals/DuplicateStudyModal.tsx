@@ -1,11 +1,11 @@
 'use client'
 
-import { customRich } from '@/i18n/customRich'
 import { duplicateStudyInOtherEnvironment } from '@/services/serverFunctions/study'
 import { Select } from '@abc-transitionbascarbone/components/src/base/Select'
 import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { Toast, ToastColors } from '@abc-transitionbascarbone/ui'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import { MenuItem } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'

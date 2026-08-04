@@ -7,6 +7,7 @@ import {
 import { SitesCommand } from '@/services/serverFunctions/study.command'
 import { defaultCAUnit } from '@/utils/number'
 import { Table as BaseTable, HelpIcon as Help } from '@abc-transitionbascarbone/components'
+import GlossaryModal from '@abc-transitionbascarbone/components/src/modals/GlossaryModal'
 import { Environment, SiteCAUnit } from '@abc-transitionbascarbone/db-common/enums'
 import { Button } from '@abc-transitionbascarbone/ui'
 import { Checkbox, FormControlLabel } from '@mui/material'
@@ -15,7 +16,6 @@ import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { UseFormReturn, UseFormSetValue } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
-import GlossaryModal from '../modals/GlossaryModal'
 
 type TypeDef = SitesCommand['sites'][number]
 

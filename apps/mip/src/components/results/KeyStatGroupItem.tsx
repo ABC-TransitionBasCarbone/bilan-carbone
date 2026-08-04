@@ -1,17 +1,34 @@
 'use client'
 
-import { KeyStatGroup } from '@/data/sampleResults'
+import { KeyStatGroup, KeyStatUnit } from '@/types/results.types'
+import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import { Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import styles from './KeyStatGroupItem.module.css'
 
 interface Props {
   group: KeyStatGroup
-  statQuestions?: Record<string, string>
 }
 
-const KeyStatGroupItem = ({ group, statQuestions }: Props) => {
+const KeyStatGroupItem = ({ group }: Props) => {
   const t = useTranslations('results')
+
+  const formatStatNumber = (value: number) => {
+    const hasDecimals = !Number.isInteger(value)
+    return formatNumber(value, hasDecimals ? 1 : 0)
+  }
+
+  const formatStatValue = (value: number, unit: KeyStatUnit) => {
+    if (unit === 'number') {
+      return formatStatNumber(value)
+    }
+
+    if (unit === 'percent') {
+      return `${formatStatNumber(value)}${t('keyStats.units.percent')}`
+    }
+
+    return `${formatStatNumber(value)} ${t(`keyStats.units.${unit}`, { count: value })}`
+  }
 
   return (
     <div className="mb2">
@@ -20,12 +37,12 @@ const KeyStatGroupItem = ({ group, statQuestions }: Props) => {
       </Typography>
       <div className="flex-col gapped-2">
         {group.stats.map((stat) => (
-          <div key={stat.key} className={`flex justify-between ${styles.statRow}`}>
-            <Typography variant="body2">
-              {statQuestions?.[stat.key] ?? t(`keyStats.${group.key}.${stat.key}`)}
+          <div key={stat.key} className={`flex justify-between align-start gapped1 py025 ${styles.statRow}`}>
+            <Typography variant="body2" className={styles.statLabel}>
+              {t(`keyStats.${group.key}.${stat.key}`)}
             </Typography>
-            <Typography variant="body2" className="bold">
-              {stat.unit === 'percent' ? `${stat.value} %` : stat.value}
+            <Typography variant="body2" className={`bold ${styles.statValue}`}>
+              {formatStatValue(stat.value, stat.unit)}
             </Typography>
           </div>
         ))}

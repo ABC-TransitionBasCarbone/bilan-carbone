@@ -5,6 +5,7 @@ import PublicContainer from '@abc-transitionbascarbone/components/src/base/Publi
 import Image from '@abc-transitionbascarbone/components/src/document/Image'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { defaultLocale, Locale, LocaleType } from '@abc-transitionbascarbone/i18n/config'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import CloseIcon from '@mui/icons-material/Close'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -37,13 +38,13 @@ const PublicTiltPage = ({ children, question }: Props) => {
           <p className="title-h4 mb1">{t('welcome')}</p>
           <p className="title-h6 bold">{t('subtext')}</p>
         </div>
-        <p>{t('explanation')}</p>
+        <p className={styles.richLinks}>{customRich(t, 'explanation', {}, Environment.TILT)}</p>
         <div className="flex-cc gapped1 w100 p1">
           <Image src="/logos/abc/logo_abc.png" alt="ABC logo" fill className="w50 hauto" />
           <CloseIcon />
           <Image src="/logos/tilt/logo_tilt.svg" alt="TILT logo" fill className="w50 hauto" />
         </div>
-        <p>{question}</p>
+        <p className={styles.richLinks}>{question}</p>
       </div>
       <div className={classNames(styles.loginForm, 'grow flex-col')}>
         <div className={classNames(styles.header, 'justify-between')}>

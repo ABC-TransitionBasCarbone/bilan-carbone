@@ -1,10 +1,10 @@
 import ProgressBar from '@/components/base/ProgressBar'
 import { StudyCardItem } from '@/db/study'
-import { customRich } from '@/i18n/customRich'
 import { hasAccessToEmissionSourceValidation, hasRoleOnStudy } from '@/services/permissions/environment'
 import { getDisplayedRoleOnStudy } from '@/utils/study'
 import Box from '@abc-transitionbascarbone/components/src/base/Box'
 import { Button } from '@abc-transitionbascarbone/ui'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
@@ -37,7 +37,7 @@ const StudyCard = async ({ study, user, simplified }: Props) => {
     <li data-testid="study" className="flex">
       <Box className={classNames(styles.card, 'flex-col grow w100')}>
         <div className="justify-center">
-          <StudyName studyId={id} name={name} role={showRoleInChip ? accountRoleOnStudy : null} />
+          <StudyName studyId={id} name={name} role={showRoleInChip ? accountRoleOnStudy : null} clickable />
         </div>
         {hasAccessToEmissionSourceValidation(user.environment, simplified) && (
           <Box>

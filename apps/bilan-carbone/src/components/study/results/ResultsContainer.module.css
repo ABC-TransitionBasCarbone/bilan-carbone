@@ -1,7 +1,3 @@
-.studyNameLink {
-  text-decoration: none;
-}
-
 .header {
   align-items: end;
   gap: 1rem;
@@ -53,10 +49,6 @@
   gap: 1rem;
   padding-right: 3rem;
   padding-left: 3rem;
-
-  &.selected {
-    border-color: var(--primary-500);
-  }
 
   &.disabled {
     background-color: var(--grayscale-100);

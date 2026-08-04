@@ -1,4 +1,28 @@
 .statRow {
   border-bottom: 1px solid var(--neutral-50);
-  padding-bottom: 0.25rem;
+}
+
+.statLabel {
+  color: var(--black);
+  flex: 1;
+  line-height: 1.35;
+}
+
+.statValue {
+  color: var(--info);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.35;
+  text-align: right;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .statRow {
+    align-items: flex-start !important;
+    flex-direction: column;
+  }
+
+  .statValue {
+    text-align: left;
+  }
 }

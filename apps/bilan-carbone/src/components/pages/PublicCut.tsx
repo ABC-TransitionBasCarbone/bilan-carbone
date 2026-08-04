@@ -1,11 +1,11 @@
 'use client'
-import { customRich } from '@/i18n/customRich'
 import { switchEnvironment } from '@/i18n/environment'
 import { getLocale, switchLocale } from '@/i18n/locale'
 import PublicContainer from '@abc-transitionbascarbone/components/src/base/PublicContainer'
 import Image from '@abc-transitionbascarbone/components/src/document/Image'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { defaultLocale, Locale, LocaleType } from '@abc-transitionbascarbone/i18n/config'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import { alpha, Box, Container, Divider, styled, Typography } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -61,10 +61,12 @@ const PublicCutPage = ({ children, question }: Props) => {
             <div className="justify-center">
               <Divider sx={{ borderColor: 'primary.contrastText' }} className={styles.divider} />
             </div>
-            <Typography className={styles.explanation}>{customRich(t, 'explanation')}</Typography>
+            <Typography className={classNames(styles.explanation, styles.richLinksCut)}>
+              {customRich(t, 'explanation', {}, Environment.CUT)}
+            </Typography>
           </Box>
         </Box>
-        <p>{question}</p>
+        <p className={styles.richLinks}>{question}</p>
         <Box className="justify-between" padding="1.2rem">
           <Image
             className={styles.france2030Logo}

@@ -3,11 +3,6 @@ describe('Duplicate study', () => {
     cy.resetTestDatabase()
   })
 
-  beforeEach(() => {
-    cy.intercept('POST', '/etudes/creer').as('create')
-    cy.intercept('POST', '/etudes/*').as('delete')
-  })
-
   it('Should be able to duplicate a study', () => {
     cy.login('all-env-admin-0@yopmail.com', 'password-0')
     cy.url({ timeout: 10000 }).should('eq', `${Cypress.config().baseUrl}/selection-du-compte`)
@@ -22,6 +17,7 @@ describe('Duplicate study', () => {
         cy.getByTestId('study-link').click()
       })
 
+    cy.url().should('include', '/comptabilisation/saisie-des-donnees')
     cy.getByTestId('duplicate-study').click()
     cy.get('#duplicate-study-modal-title').should('be.visible')
     cy.get('#duplicate-study-modal-description').should('be.visible')
@@ -46,7 +42,7 @@ describe('Duplicate study', () => {
       .contains('BC V8.10')
       .parents('[data-testid="study"]')
       .within(() => {
-        cy.getByTestId('study-link').click()
+        cy.getByTestId('study-name-chip').click()
       })
     cy.getByTestId('withDep-total-result').invoke('text').should('contain', '280') // 280.45
     cy.getByTestId('withoutDep-total-result').invoke('text').should('contain', '280') // 280.45
