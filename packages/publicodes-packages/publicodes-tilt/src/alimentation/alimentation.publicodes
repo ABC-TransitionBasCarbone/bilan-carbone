@@ -3,8 +3,7 @@ alimentation:
   formule:
     somme:
       - bénéficiaires
-      - bénévoles
-      - salariés
-      - mosaic
+      - mosaic bénévoles
+      - mosaic salariés
   unité: kgCO2e
   par défaut: 0
