@@ -14,6 +14,7 @@ export const StyledQuestionHeader = styled(Box, {
   backgroundColor: flat ? 'transparent' : theme.palette.primary.light,
   padding: flat ? '0 0 1rem' : '1rem 1.5rem',
   borderRadius: flat ? 0 : '0.5rem 0.5rem 0 0',
+  border: flat ? 'none' : `2px solid ${theme.palette.divider}`,
   marginBottom: 0,
   width: '100%',
   display: 'flex',
@@ -27,7 +28,7 @@ export const StyledQuestionContent = styled(Box, {
   backgroundColor: flat ? 'transparent' : theme.palette.background.paper,
   padding: flat ? 0 : '1.5rem',
   borderRadius: flat ? 0 : '0 0 0.5rem 0.5rem',
-  border: flat ? 'none' : `1px solid ${theme.palette.divider}`,
+  border: flat ? 'none' : `2px solid ${theme.palette.divider}`,
   borderTop: flat ? 'none' : 'none',
 }))
 
