@@ -39,7 +39,7 @@ export const getStudyNavbarMenu = (
     return {
       title: {
         href: `/etudes/${studyId}`,
-        label: t('title'),
+        label: studyName,
       },
       sections: [
         {
