@@ -56,7 +56,7 @@
         "question": "Quelles quantités des déchets suivants sont jetées chaque année ?",
         "typeDéchets": "Type de déchet",
         "poids": "Quantité jetée",
-        "description": "Le guide <link>Éco-responsable au bureau de l'ADEME (version de mai 2017)</link> estime entre 120 et 140 kg de déchets par employé et par an pour le secteur tertiaire, dont entre 70 et 85 kg de papier (poubelle jaune), et entre 50 et 55 kg d'ordures ménagères (poubelle noire). Les valeurs par défaut qui sont renseignées découlent de ces estimations (avec les valeurs hautes). <br></br> Si vous disposez de données plus précises (par exemple en pesant votre production de déchets sur quelques semaines), nous vous invitons évidemment à les renseigner."
+        "description": "Le guide <guideecoresponsablebureautilttorefacto>Éco-responsable au bureau de l'ADEME (version de mai 2017)</guideecoresponsablebureautilttorefacto> estime entre 120 et 140 kg de déchets par employé et par an pour le secteur tertiaire, dont entre 70 et 85 kg de papier (poubelle jaune), et entre 50 et 55 kg d'ordures ménagères (poubelle noire). Les valeurs par défaut qui sont renseignées découlent de ces estimations (avec les valeurs hautes). <br></br> Si vous disposez de données plus précises (par exemple en pesant votre production de déchets sur quelques semaines), nous vous invitons évidemment à les renseigner."
       },
       "EquipementsEtImmobilisations": {
         "question": "Combien des équipements informatiques suivants possédez-vous ou louez-vous à l'année ?",

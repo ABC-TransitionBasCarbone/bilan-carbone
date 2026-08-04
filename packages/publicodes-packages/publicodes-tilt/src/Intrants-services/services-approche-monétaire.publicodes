@@ -8,7 +8,7 @@ intrants-services . approche monétaire:
 intrants-services . approche monétaire . existant:
   titre: L'utilisateur a-t'il accès aux montants dépensés dans des services immatériels de manière détaillée ?
   question: Avez-vous accès aux détails des montants dépensés sur l'année dans des services immatériels ? 
-  description: La liste de vos dépenses est présente dans votre livres de comptes, et souvent déclarée sur <link>Lecompteasso</link> .
+  description: La liste de vos dépenses est présente dans votre livres de comptes, et souvent déclarée sur <compteassotilttorefacto>Lecompteasso</compteassotilttorefacto>.
   form:
     à traduire: oui
 
