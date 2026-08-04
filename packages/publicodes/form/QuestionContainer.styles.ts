@@ -29,7 +29,7 @@ export const StyledQuestionContent = styled(Box, {
   padding: flat ? 0 : '1.5rem',
   borderRadius: flat ? 0 : '0 0 0.5rem 0.5rem',
   border: flat ? 'none' : `2px solid ${theme.palette.divider}`,
-  borderTop: flat ? 'none' : 'none',
+  borderTop: 'none',
 }))
 
 export const StyledQuestionTitle = styled(Typography)(({ theme }) => ({

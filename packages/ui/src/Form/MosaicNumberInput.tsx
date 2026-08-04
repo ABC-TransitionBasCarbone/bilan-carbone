@@ -32,6 +32,7 @@ export default function MosaicNumberInput({ title, icons, description, onChange,
             type="number"
             inputMode="numeric"
             value={rounded ?? ''}
+            size={String(rounded ?? 0).length}
             placeholder="0"
             onChange={(event) => onChange(Math.ceil(Number(event.target.value)))}
             {...props}

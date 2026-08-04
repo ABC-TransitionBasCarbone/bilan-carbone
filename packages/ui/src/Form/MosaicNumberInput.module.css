@@ -32,7 +32,8 @@
 }
 
 .input {
-  width: 2.5rem;
+  min-width: 2.5rem;
+  width: auto;
   text-align: center;
   border: 1px solid var(--info);
   outline: none;
@@ -42,6 +43,7 @@
   border-radius: 0.5rem;
   height: 2rem;
 
+  appearance: textfield;
   -moz-appearance: textfield;
 
   &::-webkit-outer-spin-button,
