@@ -2,16 +2,12 @@
   <%- include('../partials/style'); %>
   <body>
     <div>
-      <p>Bonjour <span><%= userName %></span>,</p>
+      <p><%= t_helloName %></p>
       <br />
+      <p><%= t_added %></p>
       <p>
-        Vous avez été ajouté par <span><%= creatorName %></span> en tant que contributeur sur l'étude
-        <a href="<%= studyLink %>"><%= studyName %></a> pour l'organisation <span><%= organizationName %></span>.
-      </p>
-      <p>
-        Afin de contributer, vous pouvez vous connecter sur le BC+ comme habituellement sur
-        <a href="<%= link %>">ce lien</a>, et vous pouvez retrouver cette étude dans <b>l'espace contribution</b> sur la
-        page d'accueil.
+        <%= t_access %>
+        <a href="<%= link %>"><%= t_thisLink %></a><%= t_accessContributionSpace %>
       </p>
       <br />
       <%- include('./partials/signature'); %>

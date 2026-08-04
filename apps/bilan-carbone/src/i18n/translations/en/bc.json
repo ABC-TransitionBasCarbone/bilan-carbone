@@ -240,6 +240,7 @@
     "Not authorized": "You are not authorized. Please see <link>the FAQ</link> or <support>contact support</support> if you think this is an error.",
     "Request sent": "A request has been sent to your colleagues",
     "Email sent": "You will receive an email to finish your account validation.",
+    "No recipient": "There has been an issue while sending the email. Please contact the <support>support</support>.",
     "validation": {
       "email": "Please enter an email"
     }

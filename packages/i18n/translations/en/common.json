@@ -257,6 +257,64 @@
       "userOnStudyInvitation": "Added to the study {studyName}",
       "contributorInvitation": "Contribution request on the study {studyName}",
       "addedUsersByFile": "Authorization for user import"
+    },
+    "body": {
+      "hello": "Hello,",
+      "helloName": "Hello {name},",
+      "thisLink": "this link",
+      "goodDay": "Have a good day,",
+      "regards": "Best regards,",
+      "team": "The BC+ team",
+      "faqContent": "If you have any questions, you can consult",
+      "faqLinkText": "our FAQ",
+      "faqOrEmail": "or send us an email at",
+      "resetPassword": {
+        "content": "You have requested a password reset. Here is the link to reset your password:",
+        "notYou": "If you did not make this request, you can ignore this email and your password will remain unchanged."
+      },
+      "activateAccount": {
+        "content": "Welcome to BC+! You have requested to activate your account. To finalise this, please click on"
+      },
+      "activateAccountFromReset": {
+        "content": "Welcome to BC+! You have requested a password reset but your account is not yet activated. If you wish to finalise its activation, please click on"
+      },
+      "activationRequest": {
+        "content": "You have an access request to your organisation's BC+ account from {userToActivate} (email: {emailToActivate}). You can find access requests in your account on the page \"My organisation > My team\". By accepting the access request, you will assign a role to this user within your organisation. They will then have access to the corresponding information and actions based on their role. If you decline, they will not have access to your organisation's account."
+      },
+      "addedActiveUser": {
+        "added": "You have been added by {creatorName} to the organisation {orga} and now have access to the {newEnv} environment {envInfo}",
+        "alreadyHadAccess": "You already had access to {oldEnvs} on our tool. You can therefore log in to this new environment with your usual password via",
+        "loginInfo": "Once logged in, the application will ask you which environment you wish to access. You can switch environments at any time via a new button on the main toolbar.",
+        "envInfoBC": "on which you will be able to carry out or participate in one or more Carbon Balance® assessments.",
+        "envInfoCUT": "on which you will be able to calculate the simplified carbon footprint of your cinema.",
+        "envInfoDefault": ".",
+        "oldEnvsSingle": "the {envName} environment",
+        "oldEnvsMultiple": "the {envNames} environments"
+      },
+      "contributorInvitation": {
+        "added": "You have been added by {creatorName} as a contributor on the study {studyName} for the organisation {organizationName}.",
+        "access": "To contribute, you can log in to BC+ as usual via",
+        "accessContributionSpace": ", and you can find this study in the contribution space on the home page."
+      },
+      "newContributorInvitation": {
+        "welcome": "Welcome to BC+!",
+        "added": "You have been added by {creatorName} as a contributor on the study {studyName} for the organisation {organizationName} on BC+.",
+        "access": "To contribute, you can finalise the creation of your account via",
+        "accessPost": ". You will then be able to contribute to the study on the tool."
+      },
+      "newUserOnStudyInvitation": {
+        "welcome": "Welcome to BC+!",
+        "added": "You have been added by {creatorName} as {role} on the study {studyName} for the organisation {organizationName} on BC+.",
+        "access": "To access the study, you can finalise the creation of your account via"
+      },
+      "newUser": {
+        "added": "Welcome to BC+! You have been added by {creatorName}.",
+        "access": "To access the application, you can finalise the creation of your account via"
+      },
+      "userOnStudyInvitation": {
+        "added": "You have been added by {creatorName} as {role} on the study {studyName} for the organisation {organizationName}.",
+        "access": "To access the study, you can log in to BC+ as usual via"
+      }
     }
   },
   "nav": {
