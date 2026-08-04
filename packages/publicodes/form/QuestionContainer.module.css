@@ -10,10 +10,12 @@
 
 .descriptionBubble {
   background-color: var(--mui-palette-primary-light);
-  padding: 0.875rem 1.5rem;
-  border: 1px solid var(--mui-palette-primary-main);
+  padding-bottom: 0.5rem;
+  border: 2px solid var(--mui-palette-divider);
+  padding-top: 0.5rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
   border-top: none;
-  border-bottom: none;
 }
 
 .descriptionBubbleFlat {

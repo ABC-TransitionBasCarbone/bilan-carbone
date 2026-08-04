@@ -32,12 +32,18 @@
 }
 
 .input {
-  width: 3.5rem;
+  min-width: 2.5rem;
+  width: auto;
   text-align: center;
-  border: none;
+  border: 1px solid var(--info);
   outline: none;
   font-size: 1rem;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  border-radius: 0.5rem;
+  height: 2rem;
 
+  appearance: textfield;
   -moz-appearance: textfield;
 
   &::-webkit-outer-spin-button,
