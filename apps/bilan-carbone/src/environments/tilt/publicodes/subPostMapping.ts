@@ -79,18 +79,11 @@ const list = (targetRule: TiltRuleName, rules: TiltRuleName[]): FormLayout<TiltR
 
 export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRuleName>[]>> = {
   Batiments: [
-    mosaic('alimentation . mosaic', [
-      'alimentation . mosaic . végétalien . nombre',
-      'alimentation . mosaic . végétarien . nombre',
-      'alimentation . mosaic . viande blanche . nombre',
-      'alimentation . mosaic . viande rouge . nombre',
-      'alimentation . mosaic . poisson gras . nombre',
-      'alimentation . mosaic . poisson blanc . nombre',
-    ]),
     input('construction . bâtiment . locaux'),
     input('construction . bâtiment . locaux . locaux seuls . surface'),
     input('construction . bâtiment . locaux . locaux partagés . surface'),
     input('construction . bâtiment . locaux . locaux partagés . pourcentage'),
+    input('construction . bâtiment . locaux ponctuels existants'),
     list('construction . bâtiment . locaux ponctuels', [
       'construction . bâtiment . locaux ponctuels . nom',
       'construction . bâtiment . locaux ponctuels . calcul . surface',
@@ -269,28 +262,37 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
   ],
   RepasPrisParLesBeneficiaires: [
     input('alimentation . bénéficiaires . repas présent'),
-    input('alimentation . bénéficiaires . viande rouge . nombre de repas'),
-    input('alimentation . bénéficiaires . viande blanche . nombre de repas'),
-    input('alimentation . bénéficiaires . poisson blanc . nombre de repas'),
-    input('alimentation . bénéficiaires . poisson gras . nombre de repas'),
-    input('alimentation . bénéficiaires . végétarien . nombre de repas'),
-    input('alimentation . bénéficiaires . végétalien . nombre de repas'),
+    mosaic('alimentation . bénéficiaires . mosaic bénéficiaires', [
+      'alimentation . bénéficiaires . mosaic bénéficiaires . végétalien . nombre',
+      'alimentation . bénéficiaires . mosaic bénéficiaires . végétarien . nombre',
+      'alimentation . bénéficiaires . mosaic bénéficiaires . viande blanche . nombre',
+      'alimentation . bénéficiaires . mosaic bénéficiaires . viande rouge . nombre',
+      'alimentation . bénéficiaires . mosaic bénéficiaires . poisson gras . nombre',
+      'alimentation . bénéficiaires . mosaic bénéficiaires . poisson blanc . nombre',
+      'alimentation . bénéficiaires . mosaic bénéficiaires . repas moyen . nombre',
+    ]),
   ],
   RepasPrisParLesBenevoles: [
-    input('alimentation . bénévoles . viande rouge . nombre de repas'),
-    input('alimentation . bénévoles . viande blanche . nombre de repas'),
-    input('alimentation . bénévoles . poisson blanc . nombre de repas'),
-    input('alimentation . bénévoles . poisson gras . nombre de repas'),
-    input('alimentation . bénévoles . végétarien . nombre de repas'),
-    input('alimentation . bénévoles . végétalien . nombre de repas'),
+    mosaic('alimentation . mosaic bénévoles', [
+      'alimentation . mosaic bénévoles . végétalien . nombre',
+      'alimentation . mosaic bénévoles . végétarien . nombre',
+      'alimentation . mosaic bénévoles . viande blanche . nombre',
+      'alimentation . mosaic bénévoles . viande rouge . nombre',
+      'alimentation . mosaic bénévoles . poisson gras . nombre',
+      'alimentation . mosaic bénévoles . poisson blanc . nombre',
+      'alimentation . mosaic bénévoles . repas moyen . nombre',
+    ]),
   ],
   RepasPrisParLesSalaries: [
-    input('alimentation . salariés . viande rouge . nombre de repas'),
-    input('alimentation . salariés . viande blanche . nombre de repas'),
-    input('alimentation . salariés . poisson blanc . nombre de repas'),
-    input('alimentation . salariés . poisson gras . nombre de repas'),
-    input('alimentation . salariés . végétarien . nombre de repas'),
-    input('alimentation . salariés . végétalien . nombre de repas'),
+    mosaic('alimentation . mosaic salariés', [
+      'alimentation . mosaic salariés . végétalien . nombre',
+      'alimentation . mosaic salariés . végétarien . nombre',
+      'alimentation . mosaic salariés . viande blanche . nombre',
+      'alimentation . mosaic salariés . viande rouge . nombre',
+      'alimentation . mosaic salariés . poisson gras . nombre',
+      'alimentation . mosaic salariés . poisson blanc . nombre',
+      'alimentation . mosaic salariés . repas moyen . nombre',
+    ]),
   ],
   BienMatieres: [
     table(
