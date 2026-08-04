@@ -81,7 +81,7 @@ fret . transport . carburant:
       unité: litre
       par défaut: 0
     FE:
-      valeur: 3.1
+      valeur: 3.33
       unité: kgCO2e/litre
       meta:
         id: 25775
