@@ -58,7 +58,7 @@ construction . bâtiment . locaux . locaux seuls . surface:
   par défaut: 0
   form:
     à traduire: oui 
-  description: Vous devez renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites, vous pouvez soit sommer l'ensemble des surfaces ici, soit créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans, vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année.
+  description: Vous devez renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites, vous pouvez soit sommer l'ensemble des surfaces ici, soit créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans (on parle bien de leur construction), vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année.
 
 construction . bâtiment . locaux . locaux partagés . surface:
   applicable si: locaux = 'locaux partagés'
@@ -67,7 +67,7 @@ construction . bâtiment . locaux . locaux partagés . surface:
   par défaut: 0
   form:
     à traduire: oui 
-  description: Vous devez renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites et que ces différents sites ont tous des locaux partagés, vous devez créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans, vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année. Seule une partie de l'impact carbone sera pris en compte, en fonction du pourcentage des locaux utilisé par votre association à renseigner dans la question suivante.
+  description: Vous devez renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites et que ces différents sites ont tous des locaux partagés, vous devez créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans (on parle bien de leur construction), vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année. Seule une partie de l'impact carbone sera pris en compte, en fonction du pourcentage des locaux utilisé par votre association à renseigner dans la question suivante.
 
 construction . bâtiment . locaux . locaux partagés . pourcentage:
   applicable si: locaux = 'locaux partagés'
