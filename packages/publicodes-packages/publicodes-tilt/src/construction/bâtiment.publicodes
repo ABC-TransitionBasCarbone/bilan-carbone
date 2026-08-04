@@ -36,6 +36,7 @@ construction . bâtiment . FE:
     nom: Bâtiment industriel, structure en béton
 
 construction . bâtiment . locaux:
+  titre: Locaux
   question: |
     Concernant vos locaux, diriez-vous que :
   une possibilité:
@@ -74,15 +75,25 @@ construction . bâtiment . locaux . locaux partagés . pourcentage:
   unité: "%"
   par défaut: 0
 
-construction . bâtiment . locaux ponctuels:
+construction . bâtiment . locaux ponctuels existants:
+  titre: L'association a-t'elle recourt à des locaux ponctuels ?
   question: Louez-vous des locaux ponctuellement, que ce soit en plus de vos locaux principaux ou à la place de ceux-ci ? 
-  description: Les locaux loués ponctuellement seront amortis sur 50 ans et 365 jours. Pour un local loué un jour, l'impact attribué sera 1/(365*50) de l'impact total de la construction du bâtiment.
   
+construction . bâtiment . locaux ponctuels:
+  applicable si: 
+      toutes ces conditions: 
+        - est défini: construction . bâtiment . locaux ponctuels existants
+        - construction . bâtiment . locaux ponctuels existants = oui
+  question: |
+    Veuillez renseigner vos différentes locations ponctuelles dans le tableau suivant :
+  description: Les locaux loués ponctuellement seront amortis sur 50 ans et 365 jours. Pour un local loué un jour, l'impact attribué sera 1/(365*50) de l'impact total de la construction du bâtiment.
+
+
 construction . bâtiment . locaux ponctuels . nom:
   applicable si: 
     toutes ces conditions: 
-      - est défini: construction . bâtiment . locaux ponctuels
-      - construction . bâtiment . locaux ponctuels = "oui"
+      - est défini: construction . bâtiment . locaux ponctuels existants
+      - construction . bâtiment . locaux ponctuels existants = oui
   question: Nom de la location
   type: texte
 
@@ -90,15 +101,17 @@ construction . bâtiment . locaux ponctuels . calcul:
   titre: Veuillez renseigner ici les informations sur ces locations
   applicable si: 
     toutes ces conditions: 
-      - est défini: construction . bâtiment . locaux ponctuels
-      - construction . bâtiment . locaux ponctuels = "oui"
+      - est défini: construction . bâtiment . locaux ponctuels existants
+      - construction . bâtiment . locaux ponctuels existants = oui
   formule: surface * construction . bâtiment . FE * (durée / 365) * (1 / construction . bâtiment . amortissement)
   avec:
     surface:
+      titre: Surface
       question: Quelle est la surface de la location ? 
       unité: m²
       par défaut: 0 
     durée: 
+      titre: Durée
       question: Combien de jours dure la location sur l'année ?   
       unité: jours
       par défaut: 0
