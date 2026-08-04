@@ -1,0 +1,9 @@
+{
+  "emissionFactors": {
+    "post": {
+      "DeplacementsDomicileTravailSalaries": "Deplasări domiciliu-asociație ale angajaților",
+      "DeplacementsDomicileTravailBenevoles": "Deplasări domiciliu-asociație ale voluntarilor",
+      "EnergiesSimplified": "Energie"
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "emissionFactors": {
+    "post": {
+      "DeplacementsDomicileTravailSalaries": "Μετακινήσεις κατοικίας-εργασίας των μισθωτών",
+      "DeplacementsDomicileTravailBenevoles": "Μετακινήσεις κατοικίας-εργασίας των εθελοντών",
+      "EnergiesSimplified": "Ενέργεια"
+    }
+  }
+}

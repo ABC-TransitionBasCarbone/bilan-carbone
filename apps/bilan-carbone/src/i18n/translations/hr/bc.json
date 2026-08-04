@@ -1,0 +1,9 @@
+{
+  "emissionFactors": {
+    "post": {
+      "DeplacementsDomicileTravailSalaries": "Putovanja od kuće do udruge zaposlenika",
+      "DeplacementsDomicileTravailBenevoles": "Putovanja od kuće do udruge volontera",
+      "EnergiesSimplified": "Energija"
+    }
+  }
+}

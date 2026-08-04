@@ -1,0 +1,9 @@
+{
+  "emissionFactors": {
+    "post": {
+      "DeplacementsDomicileTravailSalaries": "Alkalmazottak ingázása a szervezethez",
+      "DeplacementsDomicileTravailBenevoles": "Önkéntesek ingázása a szervezethez",
+      "EnergiesSimplified": "Energia"
+    }
+  }
+}
