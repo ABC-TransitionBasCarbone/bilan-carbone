@@ -32,11 +32,15 @@
 }
 
 .input {
-  width: 3.5rem;
+  width: 2.5rem;
   text-align: center;
-  border: none;
+  border: 1px solid var(--info);
   outline: none;
   font-size: 1rem;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  border-radius: 0.5rem;
+  height: 2rem;
 
   -moz-appearance: textfield;
 
