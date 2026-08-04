@@ -43,6 +43,16 @@ export const customRich = (
         {children}
       </Link>
     ),
+    guideecoresponsablebureautilttorefacto: (children) => (
+      <Link href="https://associationbilancarbone.sharepoint.com/:b:/s/AssociationBilanCarbone/IQDSk3R5vX9eQYAsjwE3LWPoASe80Sd7WvaOOcu_wE7Uhf8?e=EABlMq" target="_blank" rel="noreferrer noopener">
+        {children}
+      </Link>
+    ),
+    compteassotilttorefacto: (children) => (
+      <Link href="https://lecompteasso.associations.gouv.fr/client/login" target="_blank" rel="noreferrer noopener">
+        {children}
+      </Link>
+    ),
     br: () => <br />,
     underline: (children) => <span style={{ textDecoration: 'underline' }}>{children}</span>,
     green: (children) => <span style={{ color: 'var(--mui-palette-ghgp-main)', fontSize: 'unset' }}>{children}</span>,
