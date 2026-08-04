@@ -148,6 +148,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
           'déchets . emballages et plastiques . déchets verts . poids',
         ],
       ],
+      'DechetsDirects.description'
     ),
   ],
   FinDeVieProduitsVendusFournisBeneficiaires: [
@@ -333,6 +334,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
           'intrants-biens-et-matières . ratios monétaires . autres-produits-manufacturés . nombre',
         ],
       ],
+      'IntrantsBiensEtMatieresTilt.description'
     ),
   ],
   Fret: [
