@@ -12,8 +12,10 @@ import { changeStudySites, duplicateSiteAndEmissionSources, hasActivityData } fr
 import {
   ChangeStudySitesCommand,
   ChangeStudySitesCommandValidation,
+  ChangeStudySiteTiltSimplifiedCommand,
   SitesCommand,
 } from '@/services/serverFunctions/study.command'
+import { TiltStudySiteFields } from '@/services/studySiteToSituation'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
 import { canEditOrganizationVersion, isInOrgaOrParent } from '@/utils/organization'
 import { hasEditionRights } from '@/utils/study'
@@ -44,9 +46,13 @@ interface Props {
   userRoleOnStudy: StudyRole
   caUnit: SiteCAUnit
   user: UserSession
+  handleSpecificChange?: (
+    siteId: string,
+    data: ChangeStudySiteTiltSimplifiedCommand & TiltStudySiteFields,
+  ) => Promise<void>
 }
 
-const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user }: Props) => {
+const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user, handleSpecificChange }: Props) => {
   const tGlossary = useTranslations('study.new.glossary')
   const t = useTranslations('study.perimeter')
   const [open, setOpen] = useState(false)
@@ -141,6 +147,8 @@ const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user 
 
   const updateStudySites = async () => {
     setOpen(false)
+    const formValue = siteForm.getValues()
+
     await callServerFunction(() => changeStudySites(study.id, siteForm.getValues()), {
       onSuccess: async () => {
         const canUpdateOrganization = await getUpdateOrganizationVersionPermission(study.organizationVersionId)
@@ -152,6 +160,19 @@ const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user 
         }
       },
     })
+
+    if (handleSpecificChange) {
+      for (const site of formValue.sites) {
+        if (site.selected) {
+          await handleSpecificChange(site.id, {
+            volunteerNumber: site.volunteerNumber ?? 0,
+            beneficiaryNumber: site.beneficiaryNumber ?? 0,
+            postalCode: site.postalCode,
+            etp: site.etp ?? 0,
+          })
+        }
+      }
+    }
   }
 
   const onReplicateSitesChanges = (replicate: boolean) => {
@@ -218,6 +239,7 @@ const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user 
               withSelection
               onDuplicate={!isEditing && hasEditionRole ? setDuplicatingSiteId : undefined}
               organizationId={isFromStudyOrganizationOrParent ? study.organizationVersion.id : undefined}
+              {...(handleSpecificChange && { handleSpecificChange })}
             />
           ),
         }}

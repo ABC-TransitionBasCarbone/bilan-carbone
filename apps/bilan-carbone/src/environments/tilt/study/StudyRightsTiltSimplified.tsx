@@ -163,7 +163,19 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
       (data) => handleStudySiteUpdate(data),
       (e) => console.log('invalid', e),
     )()
-  }, [form, handleStudySiteUpdate, studySite])
+  }, [form, handleStudySiteUpdate])
+
+  const handleSiteChange = useCallback(
+    async (siteId: string, data: ChangeStudySiteTiltSimplifiedCommand & TiltStudySiteFields) => {
+      const studySite = study.sites.find((site) => site.site.id === siteId)
+      if (studySite) {
+        await handleStudySiteUpdate(data)
+      } else {
+        showErrorToast(tGeneralError('default'))
+      }
+    },
+    [handleStudySiteUpdate, showErrorToast, study.sites, tGeneralError],
+  )
 
   return (
     <>
@@ -200,6 +212,7 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
                   user={user}
                   userRoleOnStudy={userRoleOnStudy}
                   organizationVersion={organizationVersion}
+                  handleSpecificChange={handleSiteChange}
                 />
               )}
               <FormAutocomplete
