@@ -1,6 +1,7 @@
 import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { FormLayout, inputLayout, listLayout, tableLayout } from '@abc-transitionbascarbone/publicodes/form/layouts'
 import { ClicksonPost } from '@abc-transitionbascarbone/services/results/posts.enums'
+import clicksonLayout from '../../../../../packages/i18n/translations/fr/publicodes/clickson-layout.json'
 import { ClicksonRuleName } from './types'
 
 export const getPostRuleNameClickson = (post: ClicksonPost): ClicksonRuleName => {
@@ -49,8 +50,16 @@ const SUBPOST_TO_RULENAME: Partial<Record<SubPost, ClicksonRuleName>> = {
 } as const
 
 const input = (rule: ClicksonRuleName): FormLayout<ClicksonRuleName> => inputLayout<ClicksonRuleName>(rule)
-const table = (title: string, headers: string[], rows: ClicksonRuleName[][]): FormLayout<ClicksonRuleName> =>
-  tableLayout<ClicksonRuleName>(title, headers, rows)
+
+type ClicksonTableKey = keyof typeof clicksonLayout['publicodes-layout']['table']
+
+const table = (key: ClicksonTableKey, rows: ClicksonRuleName[][]): FormLayout<ClicksonRuleName> => {
+  const entry = clicksonLayout['publicodes-layout']['table'][key]
+  const title = `${key}.title`
+  const headers = (entry.headers as string[]).map((h) => `${key}.${h}`)
+  return tableLayout<ClicksonRuleName>(title, headers, rows)
+}
+
 const list = (targetRule: ClicksonRuleName, rules: ClicksonRuleName[]): FormLayout<ClicksonRuleName> =>
   listLayout<ClicksonRuleName>(targetRule, rules)
 
@@ -117,8 +126,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<Clickso
   ],
   TransportDesEleves: [
     table(
-      'TransportDesEleves.question',
-      ['TransportDesEleves.moyenTransport', 'TransportDesEleves.distance'],
+      'TransportDesEleves',
       [
         ['déplacements . transport des élèves . bus', 'déplacements . transport des élèves . bus . distance'],
         [
@@ -160,8 +168,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<Clickso
   ],
   TransportDuPersonnel: [
     table(
-      'TransportDuPersonnel.question',
-      ['TransportDuPersonnel.moyenTransport', 'TransportDuPersonnel.distance'],
+      'TransportDuPersonnel',
       [
         ['déplacements . transport du personnel . bus', 'déplacements . transport du personnel . bus . distance'],
         [
@@ -203,8 +210,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<Clickso
   ],
   VoyagesScolaires: [
     table(
-      'VoyagesScolaires.question',
-      ['VoyagesScolaires.moyenTransport', 'VoyagesScolaires.distance'],
+      'VoyagesScolaires',
       [
         [
           'déplacements . voyages scolaires . avion court courrier',
@@ -285,8 +291,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<Clickso
   Renovation: [input('immobilisations . rénovation . bâtiment scolaire structure béton rénové . surface')],
   EquipementsInformatiqueAudiovisuel: [
     table(
-      'EquipementsInformatiqueAudiovisuel.question',
-      ['EquipementsInformatiqueAudiovisuel.equipement', 'EquipementsInformatiqueAudiovisuel.nombre'],
+      'EquipementsInformatiqueAudiovisuel',
       [
         [
           'immobilisations . équipements informatique audiovisuel . ordinateur de bureau',
@@ -353,8 +358,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<Clickso
     input('immobilisations . équipements divers . table standard . nombre'),
     input('immobilisations . équipements divers . armoire standard . nombre'),
     table(
-      'EquipementsDivers.question',
-      ['EquipementsDivers.equipement', 'EquipementsDivers.nombre'],
+      'EquipementsDivers',
       [
         [
           'immobilisations . divers . tondeuse gazon thermique',

@@ -7,6 +7,7 @@ import {
   tableLayout,
 } from '@abc-transitionbascarbone/publicodes/form/layouts'
 import { CutPost } from '@abc-transitionbascarbone/services/results/posts.enums'
+import cutLayout from '../../../../../packages/i18n/translations/fr/publicodes/cut-layout.json'
 import { CutRuleName } from './types'
 
 export const getPostRuleNameCut = (post: CutPost): CutRuleName => {
@@ -58,8 +59,16 @@ const SUBPOST_TO_RULENAME: Partial<Record<SubPost, CutRuleName>> = {
 
 const input = (rule: CutRuleName): FormLayout<CutRuleName> => inputLayout<CutRuleName>(rule)
 const group = (title: string, rules: CutRuleName[]): FormLayout<CutRuleName> => groupLayout<CutRuleName>(title, rules)
-const table = (title: string, headers: string[], rows: CutRuleName[][]): FormLayout<CutRuleName> =>
-  tableLayout<CutRuleName>(title, headers, rows)
+
+type CutTableKey = keyof typeof cutLayout['publicodes-layout']['table']
+
+const table = (key: CutTableKey, rows: CutRuleName[][]): FormLayout<CutRuleName> => {
+  const entry = cutLayout['publicodes-layout']['table'][key]
+  const title = `${key}.title`
+  const headers = (entry.headers as string[]).map((h) => `${key}.${h}`)
+  return tableLayout<CutRuleName>(title, headers, rows)
+}
+
 const list = (targetRule: CutRuleName, rules: CutRuleName[]): FormLayout<CutRuleName> =>
   listLayout<CutRuleName>(targetRule, rules)
 
@@ -123,8 +132,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<CutRule
   MobiliteSpectateurs: [
     input('mobilité spectateurs . précision'),
     table(
-      'MobiliteSpectateurs.question',
-      ['MobiliteSpectateurs.moyenTransport', 'MobiliteSpectateurs.distance'],
+      'MobiliteSpectateurs',
       [
         [
           'mobilité spectateurs . résultat précis . empreinte . RER et transilien',
@@ -211,13 +219,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<CutRule
   Fret: [input('confiseries et boissons . fret . distance')],
   Electromenager: [
     table(
-      'Electromenager.question',
-      [
-        'Electromenager.typeEquipement',
-        'Electromenager.nombre',
-        'Electromenager.dateAchat',
-        'Electromenager.dureeLocation',
-      ],
+      'Electromenager',
       [
         [
           'confiseries et boissons . électroménager . réfrigérateurs',
@@ -248,13 +250,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<CutRule
   ],
   DechetsOrdinaires: [
     table(
-      'DechetsOrdinaires.question',
-      [
-        'DechetsOrdinaires.typeDechet',
-        'DechetsOrdinaires.nbBennes',
-        'DechetsOrdinaires.tailleBennes',
-        'DechetsOrdinaires.frequenceRamassage',
-      ],
+      'DechetsOrdinaires',
       [
         [
           'déchets . ordinaires . ordures ménagères',
@@ -289,8 +285,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<CutRule
   ],
   MaterielDistributeurs: [
     table(
-      'MaterielDistributeursAffiches.question',
-      ['MaterielDistributeursAffiches.typeMateriel', 'MaterielDistributeursAffiches.quantite'],
+      'MaterielDistributeursAffiches',
       [
         [
           'billetterie et communication . matériel distributeurs . affiches . affiches 120x160',
@@ -303,8 +298,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<CutRule
       ],
     ),
     table(
-      'MaterielDistributeursPLV.question',
-      ['MaterielDistributeursPLV.typeMateriel', 'MaterielDistributeursPLV.quantite'],
+      'MaterielDistributeursPLV',
       [
         [
           'billetterie et communication . matériel distributeurs . PLV . PLV comptoir',
@@ -319,8 +313,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<CutRule
   ],
   MaterielCinema: [
     table(
-      'MaterielCinema.question',
-      ['MaterielCinema.typeMateriel', 'MaterielCinema.quantite'],
+      'MaterielCinema',
       [
         [
           'billetterie et communication . matériel cinéma . production . programme',
