@@ -11,7 +11,7 @@
 .descriptionBubble {
   background-color: var(--mui-palette-primary-light);
   padding-bottom: 0.875rem;
-  padding-top: 0rem;
+  padding-top: 0;
   padding-left: 1.5rem;
   padding-right: 1.5rem;
   border: 1px solid var(--mui-palette-primary-main);
