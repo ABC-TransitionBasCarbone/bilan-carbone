@@ -178,6 +178,8 @@ export const hasDeprecationPeriod = (subPost: SubPost) =>
     ...subPostsByPost[Post.EquipementsEtImmobilisations],
     SubPost.Electromenager,
     SubPost.Batiment,
+    SubPost.TransportFabricationDesVehicules,
+    SubPost.DeplacementsFabricationDesVehicules,
   ].includes(subPost)
 
 export const defaultStudyResultUnit = StudyResultUnit.T
