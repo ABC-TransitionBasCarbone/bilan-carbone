@@ -14,7 +14,6 @@ déchets . emballages et plastiques . poubelle jaune:
   form:
     à traduire: oui
   unité: kgCO2e
-  par défaut: général . salariés * 85
   avec:
     FE:
       valeur: 41
@@ -26,6 +25,7 @@ déchets . emballages et plastiques . poubelle jaune:
     poids:
       question: Poubelle jaune (emballages et plastiques)
       unité: tonne
+      par défaut: général . salariés * 85 * 0.001
 
 déchets . emballages et plastiques . déchets verre:
   titre: Verre
@@ -52,7 +52,7 @@ déchets . emballages et plastiques . poubelle noire:
   form:
     à traduire: oui
   unité: kgCO2e
-  par défaut: général . salariés * 55
+  
   avec:
     FE:
       valeur: 374
@@ -60,10 +60,10 @@ déchets . emballages et plastiques . poubelle noire:
       meta:
         id: 34650
         nom: Ordures ménagères résiduelles - Incinération - Impacts
-
     poids:
       question: Poubelle noire (ordures ménagères)
       unité: tonne
+      par défaut: général . salariés * 55 * 0.001
 
 déchets . emballages et plastiques . déchets verts:
   titre: Déchets verts, compost et déchets organiques
