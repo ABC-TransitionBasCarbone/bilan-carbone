@@ -84,7 +84,6 @@ export const wasteEmissionFactors: Record<string, string> = {
   '34567': 'Emballages',
   '34565': 'Emballages',
   '34478': 'Emballages',
-  '34654': 'Ordures ménagères résiduelles',
   '34634': 'Piles et batteries en mélange',
   '34658': 'Piles et batteries en mélange',
   '34630': 'Textiles et linges de maison usagés',
