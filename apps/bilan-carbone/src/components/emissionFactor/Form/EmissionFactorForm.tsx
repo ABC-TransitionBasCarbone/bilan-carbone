@@ -21,7 +21,6 @@ import { Control, UseFormReturn, UseFormSetValue, useWatch } from 'react-hook-fo
 import Base from './Base'
 import DetailedGES from './DetailedGES'
 import MultiplePosts from './MultiplePosts'
-import GlossaryModal from '@abc-transitionbascarbone/components/src/modals/GlossaryModal'
 
 interface Props<T extends EmissionFactorCommand> {
   form: UseFormReturn<T>

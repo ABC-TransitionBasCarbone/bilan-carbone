@@ -1,5 +1,12 @@
 import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
-import { FormLayout, groupLayout, inputLayout, mosaicLayout, listLayout, tableLayout } from '@abc-transitionbascarbone/publicodes/form/layouts'
+import {
+  FormLayout,
+  groupLayout,
+  inputLayout,
+  listLayout,
+  mosaicLayout,
+  tableLayout,
+} from '@abc-transitionbascarbone/publicodes/form/layouts'
 import { TiltSimplifiedPost } from '@abc-transitionbascarbone/services/results/posts.enums'
 import { TiltRuleName } from './types'
 
@@ -65,7 +72,8 @@ const SUBPOST_TO_RULENAME: Partial<Record<SubPost, TiltRuleName>> = {
 } as const
 
 const input = (rule: TiltRuleName): FormLayout<TiltRuleName> => inputLayout<TiltRuleName>(rule)
-const group = (title: string, rules: TiltRuleName[]): FormLayout<TiltRuleName> => groupLayout<TiltRuleName>(title, rules)
+const group = (title: string, rules: TiltRuleName[]): FormLayout<TiltRuleName> =>
+  groupLayout<TiltRuleName>(title, rules)
 const table = (
   title: string,
   headers: string[],
@@ -99,7 +107,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('énergie . fossiles . fioul . consommation'),
   ],
   CombustiblesOrganiques: [
-    group('EnergieTest.question', [ 
+    group('EnergieTest.question', [
       'énergie . combustibles organiques . types . électricité présent',
       'énergie . combustibles organiques . types . gaz présent',
       'énergie . combustibles organiques . types . fioul présent',
@@ -151,7 +159,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
           'déchets . emballages et plastiques . déchets verts . poids',
         ],
       ],
-      'DechetsDirects.description'
+      'DechetsDirects.description',
     ),
   ],
   FinDeVieProduitsVendusFournisBeneficiaires: [
@@ -346,7 +354,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
           'intrants-biens-et-matières . ratios monétaires . autres-produits-manufacturés . nombre',
         ],
       ],
-      'IntrantsBiensEtMatieresTilt.description'
+      'IntrantsBiensEtMatieresTilt.description',
     ),
   ],
   Fret: [
