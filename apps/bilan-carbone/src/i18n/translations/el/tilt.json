@@ -1,7 +1,7 @@
 {
   "login": {
-    "subtext": "Παραλλαγή για τη σφαίρα των συλλόγων",
-    "explanation": "Το εργαλείο που απευθύνεται στους συλλόγους που επιθυμούν να εφαρμόσουν τη μέθοδο Bilan Carbone® και την τομεακή της παραλλαγή για τη σφαίρα των συλλόγων. Δημιουργήθηκε χάρη στη συνεργασία μεταξύ της Association pour la transition Bas Carbone, φορέα της μεθόδου Bilan Carbone®, και του Mouvement Tilt, που συνοδεύει το σύνολο των συλλόγων στη μετάβασή τους προς χαμηλές εκπομπές άνθρακα. Το εργαλείο είναι προσβάσιμο δωρεάν για το σύνολο των γαλλικών συλλόγων που έχουν εκπαιδευτεί στη μέθοδο.",
+    "subtext": "Παραλλαγή για τον συνεργατικό τομέα <br></br> & <br></br> Cap Carbone",
+    "explanation": "Επειδή οι μέθοδοι μετάβασης χαμηλών εκπομπών άνθρακα σχεδιάστηκαν για πολύ καιρό για τις επιχειρήσεις, δημιουργήσαμε από κοινού ειδικές παραλλαγές των εργαλείων μας, <b>με και για τον κόσμο των συλλόγων</b>. <br></br><br></br> Η <b>ABC</b> και το <b>Mouvement Tilt</b> είναι δύο σύλλογοι που ενώνουν εδώ την τεχνογνωσία τους για να σας παρουσιάσουν δύο εργαλεία: το <b>Cap Carbone</b>, το οποίο σας επιτρέπει, <b>χωρίς προϋποθέσεις</b>, να πραγματοποιήσετε ένα απλοποιημένο και προσβάσιμο αποτύπωμα άνθρακα για να κάνετε το πρώτο βήμα χωρίς προηγούμενη εκπαίδευση, και το <b>Bilan Carbone®+ associatif</b>, το οποίο σας επιτρέπει να εφαρμόσετε τη μέθοδο Bilan Carbone® και την τομεακή της παραλλαγή για τον συνεργατικό τομέα. Αυτό το δεύτερο μέρος του εργαλείου είναι <b>προσβάσιμο δωρεάν για όλους τους γαλλικούς συλλόγους που έχουν εκπαιδευτεί στη μέθοδο</b>. <br></br><br></br> Για περισσότερες πληροφορίες, <link><white><underline>κάντε κλικ εδώ</underline></white></link> !",
     "form": {
       "activate": "Δημιουργία του λογαριασμού μου"
     }
@@ -119,17 +119,17 @@
       }
     },
     "structure": {
-      "'Structure sportive'": "Sports facility",
-      "'Éducation, formation et insertion professionnelle'": "Education, training and professional integration",
-      "'Développement économique et local'": "Local and economic development",
-      "'Développement international et humanitaire'": "International development and humanitarian aid",
-      "'Culture et patrimoine'": "Culture and heritage",
-      "'Association de voisinage": "Neighborhood association",
-      "'Hôpital": "Hospital",
-      "'Maison de retraite": "Retirement home",
-      "'Accompagnement des personnes en situation de handicap'": "Support for people with disabilities",
-      "'Protection de l'enfance": "Child protection",
-      "'Défense de l'environnement'": "Environmental protection",
+      "'Structure sportive'": "Αθλητικός φορέας",
+      "'Éducation, formation et insertion professionnelle'": "Εκπαίδευση, κατάρτιση και επαγγελματική ένταξη",
+      "'Développement économique et local'": "Οικονομική και τοπική ανάπτυξη",
+      "'Développement international et humanitaire'": "Διεθνής και ανθρωπιστική ανάπτυξη",
+      "'Culture et patrimoine'": "Πολιτισμός και κληρονομιά",
+      "'Association de voisinage": "Σύλλογος γειτονιάς",
+      "'Hôpital": "Νοσοκομείο",
+      "'Maison de retraite": "Οίκος ευγηρίας",
+      "'Accompagnement des personnes en situation de handicap'": "Υποστήριξη ατόμων με αναπηρία",
+      "'Protection de l'enfance": "Προστασία της παιδικής ηλικίας",
+      "'Défense de l'environnement'": "Προστασία του περιβάλλοντος",
       "'Club de loisirs'": "Λέσχη αναψυχής",
       "'Association d'aide à domicile'": "Σύλλογος κατ' οίκον βοήθειας",
       "'Autres structures sociales et solidaires'": "Άλλες κοινωνικές και αλληλέγγυες δομές",

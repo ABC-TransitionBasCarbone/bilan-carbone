@@ -1,7 +1,7 @@
 {
   "login": {
-    "subtext": "Versiune pentru sfera asociativă",
-    "explanation": "Instrumentul dedicat asociațiilor care doresc să aplice metoda Bilan Carbone® și declinarea sa sectorială pentru sfera asociativă. Ia naștere datorită parteneriatului dintre Association pour la transition Bas Carbone, promotoarea metodei Bilan Carbone®, și Mouvement Tilt, care însoțește ansamblul asociațiilor în tranziția lor cu emisii reduse de carbon. Instrumentul este accesibil gratuit pentru toate asociațiile franceze formate în metodă.",
+    "subtext": "Declinare pentru sfera asociativă <br></br> & <br></br> Cap Carbone",
+    "explanation": "Deoarece metodele de tranziție bas carbone au fost mult timp gândite pentru întreprinderi, am coconstruit declinări specifice ale instrumentelor noastre, <b>cu și pentru lumea asociativă</b>. <br></br><br></br> <b>ABC</b> și <b>Mouvement Tilt</b> sunt două asociații care își unesc aici expertizele pentru a vă prezenta două instrumente: <b>Cap Carbone</b>, care vă permite, <b>fără condiții</b>, să realizați o amprentă de carbon simplificată și accesibilă pentru a face primul pas fără formare prealabilă, și <b>Bilan Carbone®+ associatif</b>, care vă permite să aplicați metoda Bilan Carbone® și declinarea sa sectorială pentru sfera asociativă. Această a doua parte a instrumentului este <b>accesibilă gratuit pentru toate asociațiile franceze formate în această metodă</b>. <br></br><br></br> Pentru mai multe informații, <link><white><underline>faceți clic aici</underline></white></link> !",
     "form": {
       "activate": "Creează-mi contul"
     }
@@ -119,17 +119,17 @@
       }
     },
     "structure": {
-      "'Structure sportive'": "Sports facility",
-      "'Éducation, formation et insertion professionnelle'": "Education, training and professional integration",
-      "'Développement économique et local'": "Local and economic development",
-      "'Développement international et humanitaire'": "International development and humanitarian aid",
-      "'Culture et patrimoine'": "Culture and heritage",
-      "'Association de voisinage": "Neighborhood association",
-      "'Hôpital": "Hospital",
-      "'Maison de retraite": "Retirement home",
-      "'Accompagnement des personnes en situation de handicap'": "Support for people with disabilities",
-      "'Protection de l'enfance": "Child protection",
-      "'Défense de l'environnement'": "Environmental protection",
+      "'Structure sportive'": "Structură sportivă",
+      "'Éducation, formation et insertion professionnelle'": "Educație, formare și inserție profesională",
+      "'Développement économique et local'": "Dezvoltare economică și locală",
+      "'Développement international et humanitaire'": "Dezvoltare internațională și umanitară",
+      "'Culture et patrimoine'": "Cultură și patrimoniu",
+      "'Association de voisinage": "Asociație de vecinătate",
+      "'Hôpital": "Spital",
+      "'Maison de retraite": "Casă de bătrâni",
+      "'Accompagnement des personnes en situation de handicap'": "Însoțirea persoanelor cu dizabilități",
+      "'Protection de l'enfance": "Protecția copilului",
+      "'Défense de l'environnement'": "Protecția mediului",
       "'Club de loisirs'": "Club de agrement",
       "'Association d'aide à domicile'": "Asociație de ajutor la domiciliu",
       "'Autres structures sociales et solidaires'": "Alte structuri sociale și solidare",

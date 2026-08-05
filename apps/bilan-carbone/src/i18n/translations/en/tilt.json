@@ -1,7 +1,7 @@
 {
   "login": {
-    "subtext": "Non-profit organisation specific version",
-    "explanation": "The tool dedicated to non-profit organisations wishing to apply the Bilan Carbone® method and its sectoral variant for the non-profit sphere. It came into being thanks to the partnership between <abcAssociation>the Association for Low Carbon Transition</abcAssociation>, which is the holder of the Bilan Carbone® method, and Tilt, which accompanies all non-profit organisations in their low-carbon transition. The tool is freely accessible for all French non-profit organisations trained in the method.",
+    "subtext": "Version for the non-profit sphere <br></br> & <br></br> Cap Carbone",
+    "explanation": "Because low-carbon transition methods have long been designed for companies, we have co-constructed specific versions of our tools, <b>with and for the non-profit world</b>. <br></br><br></br> The <b>ABC</b> and the <b>Tilt Movement</b> are two associations that here combine their expertise to present you with two tools: <b>Cap Carbone</b>, which allows you, <b>without any conditions</b>, to carry out a simplified and accessible carbon footprint to take the first step without prior training, and the <b>Bilan Carbone®+ associatif</b>, which allows you to apply the Bilan Carbone® method and its sector-specific version for the non-profit sphere. This second part of the tool is <b>freely accessible to all French associations trained in the method</b>. <br></br><br></br> For more information, <link><white><underline>click here</underline></white></link>!",
     "form": {
       "activate": "Create my account"
     }
@@ -123,12 +123,12 @@
       "resultsWord": "Bilan Carbone® report - Associative Sphere"
     },
     "structure": {
-      "'Structure sportive'": "Sports facility",
+      "'Structure sportive'": "Sports organisation",
       "'Éducation, formation et insertion professionnelle'": "Education, training and professional integration",
-      "'Développement économique et local'": "Local and economic development",
+      "'Développement économique et local'": "Economic and local development",
       "'Développement international et humanitaire'": "International development and humanitarian aid",
       "'Culture et patrimoine'": "Culture and heritage",
-      "'Association de voisinage": "Neighborhood association",
+      "'Association de voisinage": "Neighbourhood association",
       "'Hôpital": "Hospital",
       "'Maison de retraite": "Retirement home",
       "'Accompagnement des personnes en situation de handicap'": "Support for people with disabilities",
