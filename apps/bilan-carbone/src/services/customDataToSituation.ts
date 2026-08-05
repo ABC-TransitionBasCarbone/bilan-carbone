@@ -16,17 +16,20 @@ export const optionalTiltSituationToCustomDataFields: Record<string, keyof TiltC
 }
 
 export const TiltStructureOptions: string[] = [
+  "'Structure sportive'",
   "'Club de loisirs'",
-  "'Association étudiante'",
-  "'Association culturelle'",
-  "'Association de voisinage'",
-  "'Hôpital'",
-  "'Maison de retraite'",
+  "'Éducation, formation et insertion professionnelle'",
+  "'Développement économique et local'",
+  "'Développement international et humanitaire'",
+  "'Culture et patrimoine'",
+  "'Association de voisinage",
+  "'Hôpital",
+  "'Maison de retraite",
   "'Association d'aide à domicile'",
-  "'Association humanitaire'",
+  "'Accompagnement des personnes en situation de handicap'",
+  "'Protection de l'enfance",
   "'Autres structures sociales et solidaires'",
-  "'Association de défense de l'environnement'",
-  "'Association d'enseignement ou de formation'",
+  "'Défense de l'environnement'",
   "'Autre'",
 ]
 

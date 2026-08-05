@@ -1,10 +1,47 @@
 fin de vie:
-  formule:
-    somme:
-      - fin de vie . déchets
+  formule: total sans reconditionné * pondération
+  unité: kgCO2e
   par défaut: 0
 
-fin de vie . déchets:
+fin de vie . pondération:
+  titre: fin de vie
+  formule:
+    variations:
+      - si: reconditionné = 'toujours'
+        alors: équipements et immobilisations . pondération . reconditionné . toujours reconditionné
+      - si: reconditionné = 'souvent'
+        alors: équipements et immobilisations . pondération . reconditionné . souvent reconditionné
+      - si: reconditionné = 'parfois'
+        alors: équipements et immobilisations . pondération . reconditionné . parfois reconditionné
+      - si: reconditionné = 'jamais'
+        alors: équipements et immobilisations . pondération . reconditionné . jamais reconditionné
+        sinon: 1
+  par défaut: 1
+
+fin de vie . pondération . reconditionné:
+  titre: Savoir quel taux de biens est reconditionné 
+  applicable si:
+    toutes ces conditions:
+      - est défini: fin de vie présente
+      - fin de vie présente = oui
+  question: Les biens que vous fournissez à vos bénéficiaires sont-ils reconditionné ou issus de seconde main ?
+  description: En fonction de votre réponse, une partie de ces biens seront valorisés comme étant reconditionnés. Un bien reconditionné sera considéré comme moitié moins émetteur qu'un bien neuf. Autrement dit, la durée de première vie du bien est considéré comme égale à la moitié de sa durée de vie totale.
+  une possibilité:
+    - toujours
+    - souvent
+    - parfois
+    - jamais
+  avec:
+    toujours:
+      titre: Toujours
+    souvent:
+      titre: Souvent
+    parfois:
+      titre: Parfois
+    jamais:
+      titre: Jamais
+
+fin de vie . total sans reconditionné:
   titre: Fin de vie
   formule:
     variations:
@@ -19,11 +56,13 @@ fin de vie . déchets:
       - sinon: 0
   unité: kgCO2e
 
-fin de vie . déchets . fin de vie présente:
+fin de vie . fin de vie présente:
+  titre: Savoir si l'association fournit des biens matériels à ses bénéficiaires
   question: Fournissez-vous des biens matériels à vos bénéficiaires ?
   description: Les biens matériels fournis à vos bénéficiaires deviendront un jour des déchets, et devront donc être stockés, incinérés, recyclés, ... C'est ce que l'on appelle la fin de vie des produits, et il faut donc prendre en compte les émissions qui y sont associées.
 
-fin de vie . déchets . poids:
+fin de vie . total sans reconditionné . poids:
+  titre: Poids des biens matériels fournis aux bénéficiaires
   applicable si:
     toutes ces conditions:
       - est défini: fin de vie présente
@@ -31,7 +70,7 @@ fin de vie . déchets . poids:
   question: Quel est le poids total de ces biens délivrés sur une année ?
   unité: tonne
 
-fin de vie . déchets . poubelle noire:
+fin de vie . total sans reconditionné . poubelle noire:
   applicable si:
     est défini: poids
   formule: FE * pourcentage * poids
@@ -47,7 +86,7 @@ fin de vie . déchets . poubelle noire:
       valeur: 0.50
       note: Répartition moyenne des déchets en France - source ADEME/CITEO - Ordures ménagères résiduelles représentent environ 50% des déchets en fin de vie
 
-fin de vie . déchets . poubelle jaune:
+fin de vie . total sans reconditionné . poubelle jaune:
   applicable si:
     est défini: poids
   formule: FE * pourcentage * poids
@@ -63,7 +102,7 @@ fin de vie . déchets . poubelle jaune:
       valeur: 0.28
       note: Répartition moyenne des déchets en France - source ADEME/CITEO - Emballages et plastiques représentent environ 28% des déchets en fin de vie
 
-fin de vie . déchets . déchets verre:
+fin de vie . total sans reconditionné . déchets verre:
   applicable si:
     est défini: poids
   formule: FE * pourcentage * poids
@@ -79,7 +118,7 @@ fin de vie . déchets . déchets verre:
       valeur: 0.12
       note: Répartition moyenne des déchets en France - source ADEME/CITEO - Déchets verre représentent environ 12% des déchets en fin de vie
 
-fin de vie . déchets . déchets verts:
+fin de vie . total sans reconditionné . déchets verts:
   applicable si:
     est défini: poids
   formule: FE * pourcentage * poids

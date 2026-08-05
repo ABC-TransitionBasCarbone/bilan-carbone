@@ -13,15 +13,17 @@ intrants-services . numérique . streaming:
   avec:
     heures:
       question: Sur une année, combien d'heures de streaming vidéo ont été regardées ?
+      description: Les heures passées sur internet d'une manière générale sont ignorées, car l'empreinte associée est généralement très faible.
       par défaut: 0
       unité: h
 
     FE:
-      valeur: 0.0622
+      valeur: 0.0414
       unité: kgCO2e/h
       meta:
-        nom: Regarder 1h de streaming
-        source: Base Negaoctet
+        nom: Streaming vidéo pendant 1h 720p 30 fps via une connexion fixe
+        source: Base Empreinte®
+        note: On se base sur le FE 720p 30fps via une connexion fixe.
   unité: kgCO2e
 
 intrants-services . numérique . visioconférence:
@@ -33,11 +35,12 @@ intrants-services . numérique . visioconférence:
       unité: h
 
     FE:
-      valeur: 0.433
+      valeur: 0.53
       unité: kgCO2e/h
       meta:
-        nom: Réaliser une audioconférence
-        source: Base Negaoctet
+        nom: Webconférence d'une heure à 20 (connexion fixe)
+        source: Base Empreinte®
+        note: On majore volontairement en prenant le facteur d'émission le plus élevé. Idéalement, on souhaiterait aller vers un FE pour 5-6 personnes.
   unité: kgCO2e
 
 intrants-services . numérique . mails:
@@ -49,11 +52,11 @@ intrants-services . numérique . mails:
       unité: mail
 
     FE:
-      valeur: 0.00488
+      valeur: 0.0171
       unité: kgCO2e/mail
       meta:
-        nom: Rédiger, envoyer et lire 1 mail
-        source: Base Negaoctet
+        nom: Envoi d'1 mail sans pièce jointe à 5 destinataires connexion fixe
+        source: Base Empreinte®
   unité: kgCO2e
 
 intrants-services . numérique . stockage-cloud:
@@ -68,6 +71,6 @@ intrants-services . numérique . stockage-cloud:
       valeur: 0.0116
       unité: kgCO2e/Go
       meta:
-        nom: Stocker 1Go de données sur le cloud
-        source: Base Negaoctet
+        nom: Stockage de 1Go de données dans le cloud via une connexion fixe pendant 1 an
+        source: Base Empreinte®
   unité: kgCO2e

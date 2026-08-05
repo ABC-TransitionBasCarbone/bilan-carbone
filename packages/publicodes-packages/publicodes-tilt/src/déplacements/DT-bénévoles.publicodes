@@ -1,5 +1,5 @@
 déplacements . DT-bénévoles:
-  titre: Emissions des trajets domicile travail des bénévoles
+  titre: Emissions des trajets domicile-association des bénévoles
   formule:
     somme:
       - avec
@@ -14,7 +14,7 @@ déplacements . DT-bénévoles . avec:
     toutes ces conditions:
       - est défini: déplacements . DT-salariés . MEP présent
       - déplacements . DT-salariés . MEP présent = oui
-  titre: émissions des trajets domicile-travail des bénévoles (avec enquête MEP)
+  titre: émissions des trajets domicile-association des bénévoles (avec enquête MEP)
   formule:
     somme:
       - produit:
@@ -36,11 +36,11 @@ déplacements . DT-bénévoles . avec:
       note: Source de la répartition https://www.insee.fr/fr/statistiques/6454112
       avec:
         voiture:
-          valeur: déplacements . DM-bénévoles . sans . voiture . split
+          valeur: déplacements . DM-salariés . sans . voiture . split
           unité: kgCO2e/km
           par défaut: 0
         transports en commun:
-          valeur: déplacements . DM-bénévoles . sans . transports en commun . split
+          valeur: déplacements . DM-salariés . sans . transports en commun . split
           unité: kgCO2e/km
           par défaut: 0
         deux roues:
@@ -56,7 +56,7 @@ déplacements . DT-bénévoles . avec:
           par défaut: 0
           note: On néglige l'impact des modes actifs (vélo, marche, trottinette...)
     réponse MEP:
-      question: D'après les résultats MEP, combien de kgCO2e représentent les déplacements domicile-travail des bénévoles ?
+      question: D'après les résultats MEP, combien de kgCO2e représentent les déplacements domicile-association des bénévoles ?
       unité: kgCO2e
       par défaut: 0
   unité: kgCO2e
@@ -83,7 +83,7 @@ déplacements . DT-bénévoles . sans . part voiture:
     toutes ces conditions:
       - est défini: déplacements . DT-salariés . MEP présent
       - déplacements . DT-salariés . MEP présent = non
-  question: Quel pourcentage des bénévoles se rend à son lieu habituel de bénévolat en voiture ?
+  question: Quand les bénévoles se déplacent, quel pourcentage d'entre eux utilise la voiture ?
   unité: "%"
   par défaut: 0
 
@@ -95,7 +95,7 @@ déplacements . DT-bénévoles . sans . part train:
     toutes ces conditions:
       - est défini: déplacements . DT-salariés . MEP présent
       - déplacements . DT-salariés . MEP présent = non
-  question: Quel pourcentage des bénévoles se rend à son lieu habituel de bénévolat en train (TER) ?
+  question: Quand les bénévoles se déplacent, quel pourcentage d'entre eux utilise le train ?
   unité: "%"
   par défaut: 0
 
@@ -107,7 +107,7 @@ déplacements . DT-bénévoles . sans . part deux roues:
     toutes ces conditions:
       - est défini: déplacements . DT-salariés . MEP présent
       - déplacements . DT-salariés . MEP présent = non
-  question: Quel pourcentage des bénévoles se rend à son lieu habituel de bénévolat en deux roues ?
+  question: Quand les bénévoles se déplacent, quel pourcentage d'entre eux utilise un deux roues ?
   unité: "%"
   par défaut: 0
 
@@ -119,7 +119,7 @@ déplacements . DT-bénévoles . sans . part transport en commun:
     toutes ces conditions:
       - est défini: déplacements . DT-salariés . MEP présent
       - déplacements . DT-salariés . MEP présent = non
-  question: Quel pourcentage des bénévoles se rend à son lieu habituel de bénévolat en transports en commun (Métro, Tramway, Bus) ?
+  question: Quand les bénévoles se déplacent, quel pourcentage d'entre eux utilise les transports en commun (Métro, Tramway, Bus) ?
   unité: "%"
   par défaut: 0
 
@@ -134,7 +134,7 @@ déplacements . DT-bénévoles . sans . voiture:
   formule: distance * split * général . bénévoles * commun . nombre de semaines travaillées par an * (5 - télétravail . bénévoles . j)
   avec:
     distance:
-      question: Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en voiture pour des déplacements domicile-travail ?
+      question: Quand les bénévoles se déplacent en voiture, combien de km parcourent-ils en moyenne par jour (A/R) ? 
       type: nombre
       unité: km/bénévoles.jours
       par défaut: 0
@@ -195,7 +195,7 @@ déplacements . DT-bénévoles . sans . train:
   formule: distance * FE * général . bénévoles * commun . nombre de semaines travaillées par an * (5 - télétravail . bénévoles . j)
   avec:
     distance:
-      question: Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en train pour des déplacements domicile-travail ?
+      question: Quand les bénévoles se déplacent en train, combien de km parcourent-ils en moyenne par jour (A/R) ? 
       unité: km
 
     FE:
@@ -219,7 +219,7 @@ déplacements . DT-bénévoles . sans . transports en commun:
   formule: distance * split * général . bénévoles * commun . nombre de semaines travaillées par an * (5 - télétravail . bénévoles . j)
   avec:
     distance:
-      question: Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en transports en commun pour des déplacements domicile-travail ?
+      question: Quand les bénévoles se déplacent en transport en commun (métro, tramway, RER, bus), combien de km parcourent-ils en moyenne par jour (A/R) ? 
       type: nombre
       unité: km/bénévoles.jours
       par défaut: 0
@@ -254,7 +254,7 @@ déplacements . DT-bénévoles . sans . deux roues:
   formule: distance * FE * général . bénévoles * commun . nombre de semaines travaillées par an * (5 - télétravail . bénévoles . j)
   avec:
     distance:
-      question: Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en deux roues pour des déplacements domicile-travail ?
+      question: Quand les bénévoles se déplacent en deux roues, combien de km parcourent-ils en moyenne par jour (A/R) ? 
       type: nombre
       unité: km/bénévoles.jours
       par défaut: 0

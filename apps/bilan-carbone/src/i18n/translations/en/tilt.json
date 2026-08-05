@@ -123,17 +123,20 @@
       "resultsWord": "Bilan Carbone® report - Associative Sphere"
     },
     "structure": {
+      "'Structure sportive'": "Sports facility",
+      "'Éducation, formation et insertion professionnelle'": "Education, training and professional integration",
+      "'Développement économique et local'": "Local and economic development",
+      "'Développement international et humanitaire'": "International development and humanitarian aid",
+      "'Culture et patrimoine'": "Culture and heritage",
+      "'Association de voisinage": "Neighborhood association",
+      "'Hôpital": "Hospital",
+      "'Maison de retraite": "Retirement home",
+      "'Accompagnement des personnes en situation de handicap'": "Support for people with disabilities",
+      "'Protection de l'enfance": "Child protection",
+      "'Défense de l'environnement'": "Environmental protection",
       "'Club de loisirs'": "Leisure Club",
-      "'Association étudiante'": "Student Association",
-      "'Association culturelle'": "Cultural Association",
-      "'Association de voisinage'": "Neighborhood Association",
-      "'Hôpital'": "Hospital",
-      "'Maison de retraite'": "Retirement Home",
       "'Association d'aide à domicile'": "Home Care Association",
-      "'Association humanitaire'": "Humanitarian Association",
       "'Autres structures sociales et solidaires'": "Other Social and Solidarity Organizations",
-      "'Association de défense de l'environnement'": "Environmental Protection Association",
-      "'Association d'enseignement ou de formation'": "Educational or Training Association",
       "'Autre'": "Other"
     }
   },
@@ -198,5 +201,10 @@
     "badge": "Beta",
     "title": "Beta Version of the Cap Carbone Tool",
     "description": "Cap Carbone is currently in beta! Thank you for being our first users and testers 🎉 Feel free to reach out to us at <support>support@abc-transitionbascarbone.fr</support> if you have any feedback! As the application is in beta, some questions in the form may change, meaning that answers to modified questions could be deleted in future updates. Make sure to check the completion of your posts on the data entry page before viewing your results to verify that all your answers are still available."
+  },
+  "documentationUrlTilt": {
+    "tiltABCPage": "https://abc-transitionbascarbone.fr/transition-association-abc-tilt/#",
+    "GuideEcoResponsableBureau": "https://associationbilancarbone.sharepoint.com/:b:/s/AssociationBilanCarbone/IQDSk3R5vX9eQYAsjwE3LWPoAY3Gyp9pEStVl1MBejc0E6Y?e=tJFSFc",
+    "LeCompteAsso": "https://lecompteasso.associations.gouv.fr/client/login"
   }
 }

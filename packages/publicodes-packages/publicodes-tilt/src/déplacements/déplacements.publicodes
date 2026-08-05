@@ -2,7 +2,6 @@ déplacements:
   titre: Déplacements
   formule:
     somme:
-      - DM-bénévoles
       - DM-salariés
       - bénéficiaires
       - DT-bénévoles
