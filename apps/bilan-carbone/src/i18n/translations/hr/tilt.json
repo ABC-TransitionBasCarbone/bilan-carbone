@@ -1,7 +1,7 @@
 {
   "login": {
-    "subtext": "Varijanta za udruženu (neprofitnu) sferu",
-    "explanation": "Alat namijenjen udrugama koje žele primijeniti metodu Bilan Carbone® i njezinu sektorsku varijantu za udruženu sferu. Nastao je zahvaljujući partnerstvu između Association pour la transition Bas Carbone, nositeljice metode Bilan Carbone®, i Mouvement Tilt, koji prati sve udruge u njihovoj niskougljičnoj tranziciji. Alat je besplatno dostupan svim francuskim udrugama educiranima u metodi.",
+    "subtext": "Varijanta za udruženja <br></br> & <br></br> Cap Carbone",
+    "explanation": "Budući da su metode niskougljične tranzicije dugo bile osmišljene za poduzeća, zajednički smo izradili posebne varijante naših alata, <b>s udrugama i za njih</b>. <br></br><br></br> <b>ABC</b> i <b>Mouvement Tilt</b> dvije su udruge koje ovdje udružuju svoju stručnost kako bi vam predstavile dva alata: <b>Cap Carbone</b>, koji vam omogućuje, <b>bez uvjeta</b>, izradu pojednostavljenog i pristupačnog ugljičnog otiska za prvi korak bez prethodne izobrazbe, i <b>Bilan Carbone®+ za udruge</b>, koji vam omogućuje primjenu metode Bilan Carbone® i njezine sektorske varijante za sferu udruga. Ovaj drugi dio alata <b>besplatno je dostupan svim francuskim udrugama izobraženim za metodu</b>. <br></br><br></br> Za više informacija <link><white><underline>kliknite ovdje</underline></white></link>!",
     "form": {
       "activate": "Stvori moj račun"
     }
@@ -119,17 +119,17 @@
       }
     },
     "structure": {
-      "'Structure sportive'": "Sports facility",
-      "'Éducation, formation et insertion professionnelle'": "Education, training and professional integration",
-      "'Développement économique et local'": "Local and economic development",
-      "'Développement international et humanitaire'": "International development and humanitarian aid",
-      "'Culture et patrimoine'": "Culture and heritage",
-      "'Association de voisinage": "Neighborhood association",
-      "'Hôpital": "Hospital",
-      "'Maison de retraite": "Retirement home",
-      "'Accompagnement des personnes en situation de handicap'": "Support for people with disabilities",
-      "'Protection de l'enfance": "Child protection",
-      "'Défense de l'environnement'": "Environmental protection",
+      "'Structure sportive'": "Sportska organizacija",
+      "'Éducation, formation et insertion professionnelle'": "Obrazovanje, izobrazba i profesionalna integracija",
+      "'Développement économique et local'": "Gospodarski i lokalni razvoj",
+      "'Développement international et humanitaire'": "Međunarodni i humanitarni razvoj",
+      "'Culture et patrimoine'": "Kultura i baština",
+      "'Association de voisinage": "Susjedska udruga",
+      "'Hôpital": "Bolnica",
+      "'Maison de retraite": "Dom za starije osobe",
+      "'Accompagnement des personnes en situation de handicap'": "Podrška osobama s invaliditetom",
+      "'Protection de l'enfance": "Zaštita djece",
+      "'Défense de l'environnement'": "Zaštita okoliša",
       "'Club de loisirs'": "Klub za slobodno vrijeme",
       "'Association d'aide à domicile'": "Udruga za pomoć u kući",
       "'Autres structures sociales et solidaires'": "Ostale socijalne i solidarne strukture",

@@ -1,7 +1,7 @@
 {
   "login": {
-    "subtext": "Versione per il settore associativo",
-    "explanation": "Lo strumento dedicato alle associazioni che desiderano applicare il metodo Bilan Carbone® e la sua declinazione settoriale per il settore associativo. Nasce grazie alla collaborazione tra l'Association pour la transition Bas Carbone, promotrice del metodo Bilan Carbone®, e il Mouvement Tilt, che accompagna l'insieme delle associazioni nella loro transizione a basse emissioni di carbonio. Lo strumento è accessibile gratuitamente per tutte le associazioni francesi formate al metodo.",
+    "subtext": "Declinazione per il settore associativo <br></br> & <br></br> Cap Carbone",
+    "explanation": "Poiché i metodi di transizione a basse emissioni di carbonio sono stati a lungo pensati per le imprese, abbiamo coprogettato declinazioni specifiche dei nostri strumenti, <b>con e per il mondo associativo</b>. <br></br><br></br> L’<b>ABC</b> e il <b>Mouvement Tilt</b> sono due associazioni che uniscono qui le loro competenze per presentarvi due strumenti: <b>Cap Carbone</b>, che vi consente, <b>senza condizioni</b>, di realizzare un'impronta di carbonio semplificata e accessibile per compiere il primo passo senza formazione preliminare, e il <b>Bilan Carbone®+ associativo</b>, che vi consente di applicare il metodo Bilan Carbone® e la sua declinazione settoriale per il settore associativo. Questa seconda parte dello strumento è <b>accessibile gratuitamente a tutte le associazioni francesi formate al metodo</b>. <br></br><br></br> Per maggiori informazioni, <link><white><underline>cliccate qui</underline></white></link> !",
     "form": {
       "activate": "Crea il mio account"
     }
@@ -119,17 +119,17 @@
       }
     },
     "structure": {
-      "'Structure sportive'": "Sports facility",
-      "'Éducation, formation et insertion professionnelle'": "Education, training and professional integration",
-      "'Développement économique et local'": "Local and economic development",
-      "'Développement international et humanitaire'": "International development and humanitarian aid",
-      "'Culture et patrimoine'": "Culture and heritage",
-      "'Association de voisinage": "Neighborhood association",
-      "'Hôpital": "Hospital",
-      "'Maison de retraite": "Retirement home",
-      "'Accompagnement des personnes en situation de handicap'": "Support for people with disabilities",
-      "'Protection de l'enfance": "Child protection",
-      "'Défense de l'environnement'": "Environmental protection",
+      "'Structure sportive'": "Struttura sportiva",
+      "'Éducation, formation et insertion professionnelle'": "Istruzione, formazione e inserimento professionale",
+      "'Développement économique et local'": "Sviluppo economico e locale",
+      "'Développement international et humanitaire'": "Sviluppo internazionale e umanitario",
+      "'Culture et patrimoine'": "Cultura e patrimonio",
+      "'Association de voisinage": "Associazione di quartiere",
+      "'Hôpital": "Ospedale",
+      "'Maison de retraite": "Casa di riposo",
+      "'Accompagnement des personnes en situation de handicap'": "Assistenza alle persone con disabilità",
+      "'Protection de l'enfance": "Protezione dell'infanzia",
+      "'Défense de l'environnement'": "Difesa dell'ambiente",
       "'Club de loisirs'": "Club ricreativo",
       "'Association d'aide à domicile'": "Associazione di assistenza domiciliare",
       "'Autres structures sociales et solidaires'": "Altre strutture sociali e solidali",
