@@ -590,7 +590,6 @@ async function updateSituationWithCustomData(
 ) {
   if (hasSimplifiedStudies(environment) || isTiltSimplified(environment, simplified)) {
     const situationUpdates = customDataToSituationByEnvironment(environment as EnvironmentWithSimplifiedStudies, data)
-    console.log('situationUpdates', situationUpdates)
     if (Object.keys(situationUpdates).length > 0) {
       await updateSituationFields(studySiteId, situationUpdates)
     }
