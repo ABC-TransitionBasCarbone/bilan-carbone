@@ -23,18 +23,22 @@ export const customRich = (
     b: (children) => <span className="bold">{children}</span>,
     i: (children) => <span className="italic">{children}</span>,
     faq: (children) => (
-      <Link href={faq} target="_blank" rel="noreferrer noopener">
+      <Link href={faq} target="_blank" rel="noreferrer noopener" style={{ fontSize: 'unset' }}>
         {children}
       </Link>
     ),
-    support: (children) => <Link href={`mailto:${support}`}>{children}</Link>,
+    support: (children) => (
+      <Link href={`mailto:${support}`} style={{ fontSize: 'unset' }}>
+        {children}
+      </Link>
+    ),
     abc: (children) => (
-      <Link href={abc} target="_blank" rel="noreferrer noopener">
+      <Link href={abc} target="_blank" rel="noreferrer noopener" style={{ fontSize: 'unset' }}>
         {children}
       </Link>
     ),
     abcAssociation: (children) => (
-      <Link href={abc} target="_blank" rel="noreferrer noopener">
+      <Link href={abc} target="_blank" rel="noreferrer noopener" style={{ fontSize: 'unset' }}>
         {children}
       </Link>
     ),
