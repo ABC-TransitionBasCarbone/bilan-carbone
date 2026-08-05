@@ -3,6 +3,7 @@ import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { Translations } from '@abc-transitionbascarbone/lib'
 import Link from 'next/link'
 import { ReactNode } from 'react'
+import classNames from 'classnames'
 
 type CustomRichParams = {
   [key: string]: ((children: ReactNode) => ReactNode) | ReactNode | string | number | undefined
@@ -23,22 +24,22 @@ export const customRich = (
     b: (children) => <span className="bold">{children}</span>,
     i: (children) => <span className="italic">{children}</span>,
     faq: (children) => (
-      <Link href={faq} target="_blank" rel="noreferrer noopener" style={{ fontSize: 'unset' }}>
+      <Link href={faq} target="_blank" rel="noreferrer noopener" className="unset">
         {children}
       </Link>
     ),
     support: (children) => (
-      <Link href={`mailto:${support}`} style={{ fontSize: 'unset' }}>
+      <Link href={`mailto:${support}`} className="unset">
         {children}
       </Link>
     ),
     abc: (children) => (
-      <Link href={abc} target="_blank" rel="noreferrer noopener" style={{ fontSize: 'unset' }}>
+      <Link href={abc} target="_blank" rel="noreferrer noopener" className="unset">
         {children}
       </Link>
     ),
     abcAssociation: (children) => (
-      <Link href={abc} target="_blank" rel="noreferrer noopener" style={{ fontSize: 'unset' }}>
+      <Link href={abc} target="_blank" rel="noreferrer noopener" className="unset">
         {children}
       </Link>
     ),
@@ -54,9 +55,9 @@ export const customRich = (
     ),
     br: () => <br />,
     underline: (children) => <span style={{ textDecoration: 'underline' }}>{children}</span>,
-    green: (children) => <span style={{ color: 'var(--mui-palette-ghgp-main)', fontSize: 'unset' }}>{children}</span>,
+    green: (children) => <span className="unset green-ghgp">{children}</span>,
     purple: (children) => (
-      <span style={{ color: 'var(--mui-palette-ghgp-complementary)', fontSize: 'unset' }}>{children}</span>
+      <span className="unset purple-ghgp">{children}</span>
     ),
     white: (children) => <span style={{ color: 'white !important', fontSize: 'unset' }}>{children}</span>,
     ul: (children) => <ul>{children}</ul>,

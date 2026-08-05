@@ -242,3 +242,15 @@ table {
 .fit-content {
   width: fit-content;
 }
+
+.unset {
+  font-size: unset;
+}
+
+.green-ghgp {
+  color: 'var(--mui-palette-ghgp-main)'
+}
+
+.purple-ghgp {
+  color: 'var(--mui-palette-ghgp-complementary)'
+}
