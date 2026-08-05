@@ -28,7 +28,7 @@ import {
   getOrgSitesWithCNCByOrgVersionId,
   OrganizationVersionWithOrganization,
 } from '@/db/organization'
-import { updateSituationFields } from '@/db/situation'
+import { getSituationByStudySite, updateSituationFields } from '@/db/situation'
 import {
   addSourceToStudy,
   clearEmissionSourceEmissionFactor,
@@ -85,7 +85,7 @@ import {
   UserWithAccounts,
 } from '@/db/user'
 import { getLocale } from '@/i18n/locale'
-import { StudySiteFields, studySiteToSituation, TiltStudySiteFields } from '@/services/studySiteToSituation'
+import { StudySiteFields, studySiteToSituation } from '@/services/studySiteToSituation'
 import { AccountWithUser } from '@/types/account.types'
 import { groupBy } from '@/utils/array'
 import { mapCncToStudySite } from '@/utils/cnc'
@@ -2404,19 +2404,16 @@ export const changeStudyEstablishment = async (studySiteId: string, data: Change
     await updateSituationWithStudySiteData(studySiteId, data, informations.user.environment, study.simplified)
   })
 
-export const changeStudySiteTiltSimplified = async (
-  studySiteId: string,
-  data: ChangeStudySiteTiltSimplifiedCommand & TiltStudySiteFields,
-) =>
+export const changeStudySiteTiltSimplified = async (studyId: string, data?: ChangeStudySiteTiltSimplifiedCommand) =>
   withServerResponse('changeStudySiteTiltSimplified', async () => {
     // this function only updates situation for now not the study site because we don't have the fields
-    const studySites = await getStudiesSitesFromIds([studySiteId])
-
-    if (!studySites || studySites.length === 0) {
+    const studyInfo = await getStudy(studyId)
+    if (!studyInfo.success) {
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const study = studySites[0].study
+    const study = studyInfo.data
+
     if (!study) {
       throw new Error(NOT_AUTHORIZED)
     }
@@ -2426,24 +2423,25 @@ export const changeStudySiteTiltSimplified = async (
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (!studySites[0].situation) {
-      await saveSituationInDB(study.id, studySiteId, {}, {}, '')
+    for (const studySite of study.sites) {
+      const studySiteId = studySite.id
+      const situation = await getSituationByStudySite(studySiteId)
+      if (!situation) {
+        await saveSituationInDB(study.id, studySiteId, {}, {}, '')
+      }
+
+      if (data) {
+        await updateSituationWithCustomData(studySiteId, data, informations.user.environment, study.simplified)
+      }
+
+      const { volunteerNumber, beneficiaryNumber, etp } = studySite
+      await updateSituationWithStudySiteData(
+        studySiteId,
+        { volunteerNumber, beneficiaryNumber, etp },
+        informations.user.environment,
+        study.simplified,
+      )
     }
-
-    const { postalCode, structure, volunteerNumber, beneficiaryNumber, etp } = data
-
-    await updateSituationWithCustomData(
-      studySiteId,
-      { postalCode, structure },
-      informations.user.environment,
-      study.simplified,
-    )
-    await updateSituationWithStudySiteData(
-      studySiteId,
-      { volunteerNumber, beneficiaryNumber, etp },
-      informations.user.environment,
-      study.simplified,
-    )
   })
 
 export const addEngagementAction = async ({ studyId, sites, ...command }: AddEngagementActionCommand) =>
