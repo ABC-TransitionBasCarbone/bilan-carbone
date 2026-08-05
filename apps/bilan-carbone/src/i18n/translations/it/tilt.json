@@ -119,17 +119,20 @@
       }
     },
     "structure": {
+      "'Structure sportive'": "Sports facility",
+      "'Éducation, formation et insertion professionnelle'": "Education, training and professional integration",
+      "'Développement économique et local'": "Local and economic development",
+      "'Développement international et humanitaire'": "International development and humanitarian aid",
+      "'Culture et patrimoine'": "Culture and heritage",
+      "'Association de voisinage": "Neighborhood association",
+      "'Hôpital": "Hospital",
+      "'Maison de retraite": "Retirement home",
+      "'Accompagnement des personnes en situation de handicap'": "Support for people with disabilities",
+      "'Protection de l'enfance": "Child protection",
+      "'Défense de l'environnement'": "Environmental protection",
       "'Club de loisirs'": "Club ricreativo",
-      "'Association étudiante'": "Associazione studentesca",
-      "'Association culturelle'": "Associazione culturale",
-      "'Association de voisinage'": "Associazione di quartiere",
-      "'Hôpital'": "Ospedale",
-      "'Maison de retraite'": "Casa di riposo",
       "'Association d'aide à domicile'": "Associazione di assistenza domiciliare",
-      "'Association humanitaire'": "Associazione umanitaria",
       "'Autres structures sociales et solidaires'": "Altre strutture sociali e solidali",
-      "'Association de défense de l'environnement'": "Associazione per la difesa dell'ambiente",
-      "'Association d'enseignement ou de formation'": "Associazione di insegnamento o formazione",
       "'Autre'": "Altro"
     }
   },
@@ -194,5 +197,10 @@
     "badge": "Beta",
     "title": "Versione Beta dello strumento Cap Carbone",
     "description": "Cap Carbone è attualmente in versione beta! Grazie per essere i nostri primi utenti e tester 🎉 Non esitare a contattarci all'indirizzo <support>support@abc-transitionbascarbone.fr</support> se hai dei feedback! Essendo l'applicazione in beta, è possibile che alcune domande cambino nel modulo e che quindi le risposte alle domande modificate vengano eliminate in futuri aggiornamenti. Ricorda di controllare il completamento delle tue categorie nella pagina di inserimento dati prima di consultare i tuoi risultati, per verificare che tutte le tue risposte siano ancora disponibili."
+  },
+  "documentationUrlTilt": {
+    "tiltABCPage": "https://abc-transitionbascarbone.fr/transition-association-abc-tilt/#",
+    "GuideEcoResponsableBureau": "https://associationbilancarbone.sharepoint.com/:b:/s/AssociationBilanCarbone/IQDSk3R5vX9eQYAsjwE3LWPoAY3Gyp9pEStVl1MBejc0E6Y?e=tJFSFc",
+    "LeCompteAsso": "https://lecompteasso.associations.gouv.fr/client/login"
   }
 }

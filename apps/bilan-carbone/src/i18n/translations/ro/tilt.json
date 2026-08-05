@@ -119,17 +119,20 @@
       }
     },
     "structure": {
+      "'Structure sportive'": "Sports facility",
+      "'Éducation, formation et insertion professionnelle'": "Education, training and professional integration",
+      "'Développement économique et local'": "Local and economic development",
+      "'Développement international et humanitaire'": "International development and humanitarian aid",
+      "'Culture et patrimoine'": "Culture and heritage",
+      "'Association de voisinage": "Neighborhood association",
+      "'Hôpital": "Hospital",
+      "'Maison de retraite": "Retirement home",
+      "'Accompagnement des personnes en situation de handicap'": "Support for people with disabilities",
+      "'Protection de l'enfance": "Child protection",
+      "'Défense de l'environnement'": "Environmental protection",
       "'Club de loisirs'": "Club de agrement",
-      "'Association étudiante'": "Asociație studențească",
-      "'Association culturelle'": "Asociație culturală",
-      "'Association de voisinage'": "Asociație de cartier",
-      "'Hôpital'": "Spital",
-      "'Maison de retraite'": "Cămin de bătrâni",
       "'Association d'aide à domicile'": "Asociație de ajutor la domiciliu",
-      "'Association humanitaire'": "Asociație umanitară",
       "'Autres structures sociales et solidaires'": "Alte structuri sociale și solidare",
-      "'Association de défense de l'environnement'": "Asociație pentru protecția mediului",
-      "'Association d'enseignement ou de formation'": "Asociație de învățământ sau formare",
       "'Autre'": "Altul"
     }
   },
@@ -194,5 +197,10 @@
     "badge": "Beta",
     "title": "Versiunea Beta a instrumentului Cap Carbone",
     "description": "Cap Carbone este în prezent în versiune beta! Vă mulțumim că sunteți primii noștri utilizatori și testeri 🎉 Nu ezitați să ne contactați la adresa <support>support@abc-transitionbascarbone.fr</support> dacă aveți feedback! Deoarece aplicația este în beta, este posibil ca unele întrebări să se schimbe în formular și, prin urmare, ca răspunsurile la întrebările modificate să fie șterse în viitoarele actualizări. Nu uitați să verificați completarea categoriilor dvs. pe pagina de introducere a datelor înainte de a vă consulta rezultatele, pentru a verifica dacă toate răspunsurile dvs. sunt încă disponibile."
+  },
+  "documentationUrlTilt": {
+    "tiltABCPage": "https://abc-transitionbascarbone.fr/transition-association-abc-tilt/#",
+    "GuideEcoResponsableBureau": "https://associationbilancarbone.sharepoint.com/:b:/s/AssociationBilanCarbone/IQDSk3R5vX9eQYAsjwE3LWPoAY3Gyp9pEStVl1MBejc0E6Y?e=tJFSFc",
+    "LeCompteAsso": "https://lecompteasso.associations.gouv.fr/client/login"
   }
 }

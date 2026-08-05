@@ -119,17 +119,20 @@
       }
     },
     "structure": {
+      "'Structure sportive'": "Sports facility",
+      "'Éducation, formation et insertion professionnelle'": "Education, training and professional integration",
+      "'Développement économique et local'": "Local and economic development",
+      "'Développement international et humanitaire'": "International development and humanitarian aid",
+      "'Culture et patrimoine'": "Culture and heritage",
+      "'Association de voisinage": "Neighborhood association",
+      "'Hôpital": "Hospital",
+      "'Maison de retraite": "Retirement home",
+      "'Accompagnement des personnes en situation de handicap'": "Support for people with disabilities",
+      "'Protection de l'enfance": "Child protection",
+      "'Défense de l'environnement'": "Environmental protection",
       "'Club de loisirs'": "Klub za slobodno vrijeme",
-      "'Association étudiante'": "Studentska udruga",
-      "'Association culturelle'": "Kulturna udruga",
-      "'Association de voisinage'": "Susjedska udruga",
-      "'Hôpital'": "Bolnica",
-      "'Maison de retraite'": "Dom za starije",
       "'Association d'aide à domicile'": "Udruga za pomoć u kući",
-      "'Association humanitaire'": "Humanitarna udruga",
       "'Autres structures sociales et solidaires'": "Ostale socijalne i solidarne strukture",
-      "'Association de défense de l'environnement'": "Udruga za zaštitu okoliša",
-      "'Association d'enseignement ou de formation'": "Udruga za obrazovanje ili osposobljavanje",
       "'Autre'": "Ostalo"
     }
   },
@@ -194,5 +197,10 @@
     "badge": "Beta",
     "title": "Beta verzija alata Cap Carbone",
     "description": "Cap Carbone je danas u beta verziji! Hvala vam što ste naši prvi korisnici i testeri 🎉 Slobodno nas kontaktirajte na adresu <support>support@abc-transitionbascarbone.fr</support> ako imate povratne informacije! Budući da je aplikacija u beta fazi, moguće je da se neka pitanja u obrascu promijene te da se odgovori na izmijenjena pitanja izbrišu u budućim ažuriranjima. Ne zaboravite provjeriti popunjenost svojih kategorija na stranici za unos podataka prije nego što pogledate rezultate, kako biste provjerili jesu li svi vaši odgovori i dalje dostupni."
+  },
+  "documentationUrlTilt": {
+    "tiltABCPage": "https://abc-transitionbascarbone.fr/transition-association-abc-tilt/#",
+    "GuideEcoResponsableBureau": "https://associationbilancarbone.sharepoint.com/:b:/s/AssociationBilanCarbone/IQDSk3R5vX9eQYAsjwE3LWPoAY3Gyp9pEStVl1MBejc0E6Y?e=tJFSFc",
+    "LeCompteAsso": "https://lecompteasso.associations.gouv.fr/client/login"
   }
 }
