@@ -45,11 +45,11 @@ export const POST_TO_RULENAME: Record<TiltSimplifiedPost, TiltRuleName> = {
 const SUBPOST_TO_RULENAME: Partial<Record<SubPost, TiltRuleName>> = {
   Batiments: 'construction . bâtiment',
   AutresInfrastructures: 'construction . infrastructure',
-  CombustiblesFossiles: 'énergie . fossiles',
+  // CombustiblesFossiles: 'énergie . fossiles',
   CombustiblesOrganiques: 'énergie . combustibles organiques',
-  ReseauxDeChaleurEtDeVapeur: 'énergie . réseaux de chaleur',
-  ReseauxDeFroid: 'énergie . réseaux de froid',
-  Electricite: 'énergie . électricité',
+  // ReseauxDeChaleurEtDeVapeur: 'énergie . réseaux de chaleur',
+  // ReseauxDeFroid: 'énergie . réseaux de froid',
+  // Electricite: 'énergie . électricité',
   DechetsEmisParLOrganisation: 'déchets . emballages et plastiques',
   FroidEtClim: 'froid et clim',
   DeplacementsDomicileTravailSalaries: 'déplacements . DT-salariés',
@@ -103,8 +103,8 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('construction . infrastructure . nombre de places'),
   ],
   CombustiblesFossiles: [
-    input('énergie . fossiles . gaz . consommation'),
-    input('énergie . fossiles . fioul . consommation'),
+    input('énergie . combustibles organiques . emissions . gaz . consommation'),
+    input('énergie . combustibles organiques . emissions . fioul . consommation'),
   ],
   CombustiblesOrganiques: [
     group('EnergieTest.question', [
@@ -130,11 +130,13 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('énergie . combustibles organiques . autoconsommation électricité . autoconsommation'),
   ],
 
-  ReseauxDeChaleurEtDeVapeur: [input('énergie . réseaux de chaleur . consommation')],
-  ReseauxDeFroid: [input('énergie . réseaux de froid . consommation')],
+  ReseauxDeChaleurEtDeVapeur: [
+    input('énergie . combustibles organiques . emissions . réseaux de chaleur . consommation'),
+  ],
+  ReseauxDeFroid: [input('énergie . combustibles organiques . emissions . réseaux de froid . consommation')],
   Electricite: [
-    input('énergie . électricité . consommation'),
-    input('énergie . électricité . autoproduction . autoproduction'),
+    input('énergie . combustibles organiques . emissions . électricité . consommation'),
+    input('énergie . combustibles organiques . autoproduction électricité présente'),
   ],
   FroidEtClim: [input('froid et clim . nombre')],
   DechetsEmisParLOrganisation: [
