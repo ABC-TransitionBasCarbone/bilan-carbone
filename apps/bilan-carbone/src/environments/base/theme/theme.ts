@@ -345,6 +345,7 @@ const theme = createTheme(base, {
       [SubPost.ParcInformatiqueDesSalaries]: '#FF4500',
       [SubPost.EquipementsDesBenevoles]: '#FF6347',
       [SubPost.ParcInformatiqueDesBenevoles]: '#FF0000',
+      [SubPost.Evenement]: '#3cd815',
     },
     // Variants of secondary color
     tagFamilyColors: ['#85a9f5', '#9ab7f7', '#aec5f9', '#c2d4fa', '#d6e2fc'],

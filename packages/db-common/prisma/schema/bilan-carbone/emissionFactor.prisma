@@ -195,6 +195,9 @@ enum SubPost {
   EquipementsDesBenevoles
   ParcInformatiqueDesBenevoles
 
+  // Evenements
+  Evenement
+
   // CLICKSON
   // Energie
   Combustibles
