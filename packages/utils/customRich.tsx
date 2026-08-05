@@ -24,42 +24,42 @@ export const customRich = (
     b: (children) => <span className="bold">{children}</span>,
     i: (children) => <span className="italic">{children}</span>,
     faq: (children) => (
-      <Link href={faq} target="_blank" rel="noreferrer noopener" className="unset">
+      <Link href={faq} target="_blank" rel="noreferrer noopener" className="font-inherit">
         {children}
       </Link>
     ),
     support: (children) => (
-      <Link href={`mailto:${support}`} className="unset">
+      <Link href={`mailto:${support}`} className="font-inherit">
         {children}
       </Link>
     ),
     abc: (children) => (
-      <Link href={abc} target="_blank" rel="noreferrer noopener" className="unset">
+      <Link href={abc} target="_blank" rel="noreferrer noopener" className="font-inherit">
         {children}
       </Link>
     ),
     abcAssociation: (children) => (
-      <Link href={abc} target="_blank" rel="noreferrer noopener" className="unset">
+      <Link href={abc} target="_blank" rel="noreferrer noopener" className="font-inherit">
         {children}
       </Link>
     ),
     guideecoresponsablebureautilttorefacto: (children) => (
-      <Link href="https://associationbilancarbone.sharepoint.com/:b:/s/AssociationBilanCarbone/IQDSk3R5vX9eQYAsjwE3LWPoASe80Sd7WvaOOcu_wE7Uhf8?e=EABlMq" target="_blank" rel="noreferrer noopener">
+      <Link className="font-inherit" href="https://associationbilancarbone.sharepoint.com/:b:/s/AssociationBilanCarbone/IQDSk3R5vX9eQYAsjwE3LWPoASe80Sd7WvaOOcu_wE7Uhf8?e=EABlMq" target="_blank" rel="noreferrer noopener">
         {children}
       </Link>
     ),
     compteassotilttorefacto: (children) => (
-      <Link href="https://lecompteasso.associations.gouv.fr/client/login" target="_blank" rel="noreferrer noopener">
+      <Link className="font-inherit" href="https://lecompteasso.associations.gouv.fr/client/login" target="_blank" rel="noreferrer noopener">
         {children}
       </Link>
     ),
     br: () => <br />,
     underline: (children) => <span style={{ textDecoration: 'underline' }}>{children}</span>,
-    green: (children) => <span className="unset green-ghgp">{children}</span>,
+    green: (children) => <span className="font-inherit green-ghgp">{children}</span>,
     purple: (children) => (
-      <span className="unset purple-ghgp">{children}</span>
+      <span className="font-inherit purple-ghgp">{children}</span>
     ),
-    white: (children) => <span style={{ color: 'white !important', fontSize: 'unset' }}>{children}</span>,
+    white: (children) => <span style={{ color: 'white !important', fontSize: 'font-inherit' }}>{children}</span>,
     ul: (children) => <ul>{children}</ul>,
     li: (children) => <li>{children}</li>,
     ...params,
