@@ -9,6 +9,8 @@
     "kWh": "kWh",
     "m3": "m3",
     "litre": "litre",
+    "stère": "stère",
+    "kg": "kg",
     "h/semaine": "h/semaine",
     "jours/semaine": "jours/semaine",
     "kgCO2e": "kgCO2e",
@@ -20,7 +22,6 @@
     "VUL": "VUL",
     "poids lourds": "poids lourds",
     "unité": "unité",
-    "kg": "kg",
     "%": "%",
     "tonne": "tonne",
     "voitures": "voitures",
@@ -149,38 +150,6 @@
       }
     },
     "énergie": {
-      "électricité": {
-        "consommation": {
-          "question": "Quelle est votre consommation annuelle d'électricité ? (issue de votre facture et n'incluant pas votre autoconsommation, ni la consommation des véhicules électriques)"
-        },
-        "autoproduction": {
-          "autoproduction": {
-            "question": "Quelle est votre autoproduction annuelle d'électricité ?"
-          }
-        }
-      },
-      "réseaux de froid": {
-        "consommation": {
-          "question": "Quelle est votre consommation annuelle de froid issue de réseaux ?"
-        }
-      },
-      "réseaux de chaleur": {
-        "consommation": {
-          "question": "Quelle est votre consommation annuelle de chaleur issue de réseaux ?"
-        }
-      },
-      "fossiles": {
-        "gaz": {
-          "consommation": {
-            "question": "Quelle est votre consommation annuelle de gaz naturel ? (hors consommation par les véhicules)"
-          }
-        },
-        "fioul": {
-          "consommation": {
-            "question": "Quelle est votre consommation annuelle de fioul (hors consommations par les véhicules)"
-          }
-        }
-      },
       "combustibles organiques": {
         "types": {
           "électricité présent": {
@@ -188,6 +157,21 @@
           },
           "gaz présent": {
             "question": "Gaz"
+          },
+          "fioul présent": {
+            "question": "Fioul domestique"
+          },
+          "bois présent": {
+            "question": "Bois-bûches"
+          },
+          "granulés présent": {
+            "question": "Granulés de bois"
+          },
+          "réseaux de chaleur présent": {
+            "question": "Réseau de chaleur"
+          },
+          "réseaux de froid présent": {
+            "question": "Réseau de froid"
           },
           "chauffage électrique": {
             "description": "Cette information sert à proposer des estimations de consommations pour l'électricité par la suite. Les estimations incluent le chauffage si celui-ci est électrique.",
@@ -207,9 +191,48 @@
           },
           "gaz": {
             "consommation": {
-              "titre": "Gaz naturel",
+              "titre": "Consommation annuelle de gaz naturel",
               "question": "Quelle est votre consommation annuelle de gaz naturel ?"
             }
+          },
+          "fioul": {
+            "consommation": {
+              "titre": "Consommation annuelle de fioul domestique",
+              "question": "Quelle est votre consommation annuelle de fioul domestique ?"
+            }
+          },
+          "bois": {
+            "consommation": {
+              "titre": "Consommation annuelle de bûches de bois",
+              "question": "Quelle est votre consommation annuelle de bûches de bois ?"
+            }
+          },
+          "granulés": {
+            "consommation": {
+              "titre": "Consommation annuelle de granulés de bois",
+              "question": "Quelle est votre consommation annuelle de bûches de bois ?"
+            }
+          },
+          "réseaux de chaleur": {
+            "consommation": {
+              "titre": "Consommation annuelle de kWh issus de réseaux de chaleur",
+              "question": "Quelle est votre consommation de kWh issus de réseaux de chaleur ?"
+            }
+          },
+          "réseaux de froid": {
+            "consommation": {
+              "titre": "Consommation annuelle de kWh issus de réseaux de froid",
+              "question": "Quelle est votre consommation de kWh issus de réseaux de froid ?"
+            }
+          }
+        },
+        "autoproduction électricité présente": {
+          "description": "Si c'est le cas, vos autres consommations d'électricité ne doivent pas inclure une éventuelle autoconsommation",
+          "question": "Autoproduisez-vous de l'électricité, par exemple à l'aide de panneaux photovoltaïques ?"
+        },
+        "autoconsommation électricité": {
+          "autoconsommation": {
+            "question": "Quelle est votre autoconsommation annuelle d'électricité ?"
           }
         }
       }
@@ -835,13 +858,13 @@
           },
           "locaux seuls": {
             "surface": {
-              "description": "Vous devez renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites, vous pouvez soit sommer l'ensemble des surfaces ici, soit créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans, vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année.",
+              "description": "Vous devez renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites, vous pouvez soit sommer l'ensemble des surfaces ici, soit créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans (on parle bien de leur construction), vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année.",
               "question": "Quelle est la surface de ces locaux ?"
             }
           },
           "locaux partagés": {
             "surface": {
-              "description": "Vous devez renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites et que ces différents sites ont tous des locaux partagés, vous devez créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans, vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année. Seule une partie de l'impact carbone sera pris en compte, en fonction du pourcentage des locaux utilisé par votre association à renseigner dans la question suivante.",
+              "description": "Vous devez renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites et que ces différents sites ont tous des locaux partagés, vous devez créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans (on parle bien de leur construction), vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année. Seule une partie de l'impact carbone sera pris en compte, en fonction du pourcentage des locaux utilisé par votre association à renseigner dans la question suivante.",
               "question": "Quelle est la surface de ces locaux ?"
             },
             "pourcentage": {
@@ -878,9 +901,6 @@
         "description": "On prend classiquement en compte l'empreinte carbone d'un repas par journée travaillée pour un salarié. L'option \"Repas moyen\" sert uniquement si vous n'avez aucune idée des types de repas consommés.",
         "question": "Combien de ces différents types de repas sont consommés par vos salariés chaque année ?",
         "végétalien": {
-          "titre": "Végétalien",
-          "description": "Repas sans produits animaux.",
-          "question": "Végétalien",
           "nombre": {
             "question": "Nombre de plats végétaliens"
           }

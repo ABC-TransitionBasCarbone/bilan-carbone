@@ -9,6 +9,8 @@
     "kWh": "[TO_TRANSLATE] kWh",
     "m3": "[TO_TRANSLATE] m3",
     "litre": "[TO_TRANSLATE] litre",
+    "stère": "[TO_TRANSLATE] stère",
+    "kg": "[TO_TRANSLATE] kg",
     "h/semaine": "[TO_TRANSLATE] h/semaine",
     "jours/semaine": "[TO_TRANSLATE] jours/semaine",
     "kgCO2e": "[TO_TRANSLATE] kgCO2e",
@@ -20,7 +22,6 @@
     "VUL": "[TO_TRANSLATE] VUL",
     "poids lourds": "[TO_TRANSLATE] poids lourds",
     "unité": "[TO_TRANSLATE] unité",
-    "kg": "[TO_TRANSLATE] kg",
     "%": "[TO_TRANSLATE] %",
     "tonne": "[TO_TRANSLATE] tonne",
     "voitures": "[TO_TRANSLATE] voitures",
@@ -149,38 +150,6 @@
       }
     },
     "énergie": {
-      "électricité": {
-        "consommation": {
-          "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle d'électricité ? (issue de votre facture et n'incluant pas votre autoconsommation, ni la consommation des véhicules électriques)"
-        },
-        "autoproduction": {
-          "autoproduction": {
-            "question": "[TO_TRANSLATE] Quelle est votre autoproduction annuelle d'électricité ?"
-          }
-        }
-      },
-      "réseaux de froid": {
-        "consommation": {
-          "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de froid issue de réseaux ?"
-        }
-      },
-      "réseaux de chaleur": {
-        "consommation": {
-          "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de chaleur issue de réseaux ?"
-        }
-      },
-      "fossiles": {
-        "gaz": {
-          "consommation": {
-            "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de gaz naturel ? (hors consommation par les véhicules)"
-          }
-        },
-        "fioul": {
-          "consommation": {
-            "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de fioul (hors consommations par les véhicules)"
-          }
-        }
-      },
       "combustibles organiques": {
         "types": {
           "électricité présent": {
@@ -188,6 +157,21 @@
           },
           "gaz présent": {
             "question": "[TO_TRANSLATE] Gaz"
+          },
+          "fioul présent": {
+            "question": "[TO_TRANSLATE] Fioul domestique"
+          },
+          "bois présent": {
+            "question": "[TO_TRANSLATE] Bois-bûches"
+          },
+          "granulés présent": {
+            "question": "[TO_TRANSLATE] Granulés de bois"
+          },
+          "réseaux de chaleur présent": {
+            "question": "[TO_TRANSLATE] Réseau de chaleur"
+          },
+          "réseaux de froid présent": {
+            "question": "[TO_TRANSLATE] Réseau de froid"
           },
           "chauffage électrique": {
             "description": "[TO_TRANSLATE] Cette information sert à proposer des estimations de consommations pour l'électricité par la suite. Les estimations incluent le chauffage si celui-ci est électrique.",
@@ -207,9 +191,48 @@
           },
           "gaz": {
             "consommation": {
-              "titre": "[TO_TRANSLATE] Gaz naturel",
+              "titre": "[TO_TRANSLATE] Consommation annuelle de gaz naturel",
               "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de gaz naturel ?"
             }
+          },
+          "fioul": {
+            "consommation": {
+              "titre": "[TO_TRANSLATE] Consommation annuelle de fioul domestique",
+              "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de fioul domestique ?"
+            }
+          },
+          "bois": {
+            "consommation": {
+              "titre": "[TO_TRANSLATE] Consommation annuelle de bûches de bois",
+              "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de bûches de bois ?"
+            }
+          },
+          "granulés": {
+            "consommation": {
+              "titre": "[TO_TRANSLATE] Consommation annuelle de granulés de bois",
+              "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de bûches de bois ?"
+            }
+          },
+          "réseaux de chaleur": {
+            "consommation": {
+              "titre": "[TO_TRANSLATE] Consommation annuelle de kWh issus de réseaux de chaleur",
+              "question": "[TO_TRANSLATE] Quelle est votre consommation de kWh issus de réseaux de chaleur ?"
+            }
+          },
+          "réseaux de froid": {
+            "consommation": {
+              "titre": "[TO_TRANSLATE] Consommation annuelle de kWh issus de réseaux de froid",
+              "question": "[TO_TRANSLATE] Quelle est votre consommation de kWh issus de réseaux de froid ?"
+            }
+          }
+        },
+        "autoproduction électricité présente": {
+          "description": "[TO_TRANSLATE] Si c'est le cas, vos autres consommations d'électricité ne doivent pas inclure une éventuelle autoconsommation",
+          "question": "[TO_TRANSLATE] Autoproduisez-vous de l'électricité, par exemple à l'aide de panneaux photovoltaïques ?"
+        },
+        "autoconsommation électricité": {
+          "autoconsommation": {
+            "question": "[TO_TRANSLATE] Quelle est votre autoconsommation annuelle d'électricité ?"
           }
         }
       }
@@ -835,13 +858,13 @@
           },
           "locaux seuls": {
             "surface": {
-              "description": "[TO_TRANSLATE] Vous devez renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites, vous pouvez soit sommer l'ensemble des surfaces ici, soit créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans, vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année.",
+              "description": "[TO_TRANSLATE] Vous devez renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites, vous pouvez soit sommer l'ensemble des surfaces ici, soit créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans (on parle bien de leur construction), vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année.",
               "question": "[TO_TRANSLATE] Quelle est la surface de ces locaux ?"
             }
           },
           "locaux partagés": {
             "surface": {
-              "description": "[TO_TRANSLATE] Vous devez renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites et que ces différents sites ont tous des locaux partagés, vous devez créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans, vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année. Seule une partie de l'impact carbone sera pris en compte, en fonction du pourcentage des locaux utilisé par votre association à renseigner dans la question suivante.",
+              "description": "[TO_TRANSLATE] Vous devez renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites et que ces différents sites ont tous des locaux partagés, vous devez créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans (on parle bien de leur construction), vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année. Seule une partie de l'impact carbone sera pris en compte, en fonction du pourcentage des locaux utilisé par votre association à renseigner dans la question suivante.",
               "question": "[TO_TRANSLATE] Quelle est la surface de ces locaux ?"
             },
             "pourcentage": {
@@ -878,9 +901,6 @@
         "description": "[TO_TRANSLATE] On prend classiquement en compte l'empreinte carbone d'un repas par journée travaillée pour un salarié. L'option \"Repas moyen\" sert uniquement si vous n'avez aucune idée des types de repas consommés.",
         "question": "[TO_TRANSLATE] Combien de ces différents types de repas sont consommés par vos salariés chaque année ?",
         "végétalien": {
-          "titre": "[TO_TRANSLATE] Végétalien",
-          "description": "[TO_TRANSLATE] Repas sans produits animaux.",
-          "question": "[TO_TRANSLATE] Végétalien",
           "nombre": {
             "question": "[TO_TRANSLATE] Nombre de plats végétaliens"
           }
