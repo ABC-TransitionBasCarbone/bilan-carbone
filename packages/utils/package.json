@@ -5,6 +5,6 @@
   "main": "time.ts",
   "types": "time.ts",
   "devDependencies": {
-    "@types/node": "^26.2.0"
+    "@types/node": "^24.13.3"
   }
 }
