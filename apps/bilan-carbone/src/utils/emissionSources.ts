@@ -37,7 +37,9 @@ export const getEmissionSourcesFuseOptions = (
     {
       name: 'emissionFactorName',
       getFn: (emissionSource: FullStudy['emissionSources'][number]) => {
-        const metaData = emissionSource.emissionFactor?.metaData.find((metaData) => metaData.language === locale)
+        const metaData =
+          emissionSource.emissionFactor?.metaData.find((metaData) => metaData.language === locale) ??
+          emissionSource.emissionFactor?.metaData[0]
         return metaData ? metaData.title || '' : ''
       },
       weight: 0.7,
@@ -97,9 +99,11 @@ export const getSortedEmissionSources = (
       case 'emissionFactor':
         return emissionSources.sort((a, b) => {
           const emissionFactorA =
-            a.emissionFactor?.metaData.find((metaData) => metaData.language === locale)?.title || ''
+            (a.emissionFactor?.metaData.find((metaData) => metaData.language === locale) ??
+              a.emissionFactor?.metaData[0])?.title || ''
           const emissionFactorB =
-            b.emissionFactor?.metaData.find((metaData) => metaData.language === locale)?.title || ''
+            (b.emissionFactor?.metaData.find((metaData) => metaData.language === locale) ??
+              b.emissionFactor?.metaData[0])?.title || ''
           return sort.order === 'asc'
             ? emissionFactorA.localeCompare(emissionFactorB)
             : emissionFactorB.localeCompare(emissionFactorA)
