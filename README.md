@@ -7,7 +7,7 @@ This monorepo contains apps and shared packages for Bilan Carbone & MEP Pro
 
 ### Prerequisites
 
-- Node.js >= 22.16.0
+- Node.js = 24.19.0
 - Yarn 1.22
 - Docker et Docker Compose
 
