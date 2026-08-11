@@ -41,6 +41,23 @@ export function getExampleRowPrefixes(): string[] {
   })
 }
 
+function getExampleRowNames(): string[] {
+  return Object.values(Locale).flatMap((locale) => {
+    const translations = getImportEmissionSourcesTranslations(locale)
+    const examplePrefix = translations.examplePrefix?.trim()
+    const exampleName = translations.exampleName?.trim()
+
+    if (!examplePrefix || !exampleName) {
+      return []
+    }
+
+    return [
+      `${examplePrefix}${exampleName}`.toLowerCase(),
+      `${examplePrefix} ${exampleName}`.toLowerCase(),
+    ]
+  })
+}
+
 function buildStudySiteNameMap(sites: StudySiteForImport[]): Record<string, string> {
   const map: Record<string, string> = {}
   for (const studySite of sites) {
@@ -146,7 +163,7 @@ export function parseEmissionSourcesFile(
   const { dataRows, headerRowIndex } = sheetResult
   const errors: ImportError[] = []
   const parsedRows: ParsedEmissionSourceRow[] = []
-  const exampleRowPrefixes = getExampleRowPrefixes()
+  const exampleRowNames = new Set(getExampleRowNames())
   const studySiteNameMap = buildStudySiteNameMap(studySites)
 
   for (let i = 0; i < dataRows.length; i++) {
@@ -157,7 +174,7 @@ export function parseEmissionSourcesFile(
     const col = (key: keyof typeof SOURCE_IMPORT_COLUMNS) => String(row[SOURCE_IMPORT_COLUMNS[key]] ?? '').trim()
 
     const name = col('name')
-    if (exampleRowPrefixes.some((prefix) => name.startsWith(prefix))) {
+    if (exampleRowNames.has(name.toLowerCase())) {
       continue
     }
 

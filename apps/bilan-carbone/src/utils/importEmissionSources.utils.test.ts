@@ -117,11 +117,20 @@ describe('parseEmissionSourcesFile', () => {
   })
 
   it('returns noRows when all data rows are example rows', () => {
-    const buffer = makeBuffer([{ ...VALID_ROW, name: 'Exemple : source ignorée' }])
+    const buffer = makeBuffer([{ ...VALID_ROW, name: 'Exemple : Acier' }])
     const result = parseEmissionSourcesFile(buffer, Locale.FR, TEST_STUDY_SITES)
     expect(result.success).toBe(false)
     if (!result.success) {
       expect(result.errors[0].key).toBe('noRows')
+    }
+  })
+
+  it('does not ignore names that only start with the example prefix', () => {
+    const buffer = makeBuffer([{ ...VALID_ROW, name: 'Exemple : source réelle' }])
+    const result = parseEmissionSourcesFile(buffer, Locale.FR, TEST_STUDY_SITES)
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.rows[0].name).toBe('Exemple : source réelle')
     }
   })
 
