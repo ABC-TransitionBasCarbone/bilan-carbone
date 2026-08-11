@@ -185,7 +185,7 @@ const getBaseFilterForEmissionFactors = (
   let importedFromConditionWithManual: object = { id: 'no-fe' }
 
   if (filters.sources.includes(Import.Manual) && filters.sources.length === 1 && organizationId) {
-    importedFromConditionWithManual = { OR: [{ importedFrom: Import.Manual, organizationId }] }
+    importedFromConditionWithManual = { importedFrom: Import.Manual, organizationId }
   } else if (filters.sources.includes(Import.Manual) && organizationId) {
     importedFromConditionWithManual = { importedFrom: Import.Manual, organizationId }
     importedFromConditionWithoutManual = {
