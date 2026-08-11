@@ -37,7 +37,9 @@ export const getEmissionSourcesFuseOptions = (
     {
       name: 'emissionFactorName',
       getFn: (emissionSource: FullStudy['emissionSources'][number]) => {
-        const metaData = emissionSource.emissionFactor?.metaData.find((metaData) => metaData.language === locale)
+        const metaData =
+          emissionSource.emissionFactor?.metaData.find((metaData) => metaData.language === locale) ??
+          emissionSource.emissionFactor?.metaData[0]
         return metaData ? metaData.title || '' : ''
       },
       weight: 0.7,
@@ -83,30 +85,36 @@ export const getSortedEmissionSources = (
   if (sort.field) {
     switch (sort.field) {
       case 'activityData':
-        return emissionSources.sort((a, b) =>
+        return [...emissionSources].sort((a, b) =>
           sort.order === 'asc' ? (a.value || 0) - (b.value || 0) : (b.value || 0) - (a.value || 0),
         )
 
       case 'emissions':
-        return emissionSources.sort((a, b) => {
+        return [...emissionSources].sort((a, b) => {
           const emissionA = (a.value || 0) * (a.emissionFactor?.totalCo2 || 0)
           const emissionB = (b.value || 0) * (b.emissionFactor?.totalCo2 || 0)
           return sort.order === 'asc' ? emissionA - emissionB : emissionB - emissionA
         })
 
       case 'emissionFactor':
-        return emissionSources.sort((a, b) => {
+        return [...emissionSources].sort((a, b) => {
           const emissionFactorA =
-            a.emissionFactor?.metaData.find((metaData) => metaData.language === locale)?.title || ''
+            (
+              a.emissionFactor?.metaData.find((metaData) => metaData.language === locale) ??
+              a.emissionFactor?.metaData[0]
+            )?.title || ''
           const emissionFactorB =
-            b.emissionFactor?.metaData.find((metaData) => metaData.language === locale)?.title || ''
+            (
+              b.emissionFactor?.metaData.find((metaData) => metaData.language === locale) ??
+              b.emissionFactor?.metaData[0]
+            )?.title || ''
           return sort.order === 'asc'
             ? emissionFactorA.localeCompare(emissionFactorB)
             : emissionFactorB.localeCompare(emissionFactorA)
         })
 
       case 'uncertainty':
-        return emissionSources.sort((a, b) => {
+        return [...emissionSources].sort((a, b) => {
           const alphaA = getEmissionResults(a, environment).alpha || 0
           const alphaB = getEmissionResults(b, environment).alpha || 0
           return sort.order === 'asc' ? alphaA - alphaB : alphaB - alphaA
