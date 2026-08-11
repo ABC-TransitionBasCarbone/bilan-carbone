@@ -115,7 +115,8 @@ export const getEmissionFactorsByIds = async (ids: string[], studyId: string) =>
       return emissionFactors
         .map((emissionFactor) => ({
           ...emissionFactor,
-          metaData: emissionFactor.metaData.find((metadata) => metadata.language === locale) ?? emissionFactor.metaData[0],
+          metaData:
+            emissionFactor.metaData.find((metadata) => metadata.language === locale) ?? emissionFactor.metaData[0],
         }))
         .filter((emissionFactor) => !!emissionFactor.metaData)
         .sort((a, b) => sortAlphabetically(a?.metaData?.title, b?.metaData?.title)) as unknown as EmissionFactorList[]
