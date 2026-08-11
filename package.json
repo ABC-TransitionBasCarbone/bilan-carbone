@@ -7,7 +7,7 @@
     "packages/*"
   ],
   "engines": {
-    "node": "24.18.1",
+    "node": "24.x",
     "yarn": "1.22"
   },
   "scripts": {
