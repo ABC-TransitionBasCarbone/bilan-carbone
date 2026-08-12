@@ -4,6 +4,9 @@
   "private": true,
   "main": "time.ts",
   "types": "time.ts",
+  "dependencies": {
+    "@abc-transitionbascarbone/db-common": "*"
+  },
   "devDependencies": {
     "@types/node": "^24.13.3"
   }
