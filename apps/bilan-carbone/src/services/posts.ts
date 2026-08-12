@@ -238,7 +238,7 @@ export const subPostsByPost: Record<Post, SubPost[]> = {
   ...subPostsByPostClickson,
 }
 
-export const environmentSubPostsMapping: Record<BCEnvironment, object> = {
+export const environmentSubPostsMapping = {
   [Environment.BC]: subPostsByPostBC,
   [Environment.CUT]: subPostsByPostCUT,
   [Environment.TILT]: subPostsByPostTILT,
