@@ -3,6 +3,7 @@ import { getSourceLatestImportVersionId } from '@/db/study'
 import { isMonetaryEmissionFactor } from '@/utils/emissionFactors'
 import type { Prisma } from '@abc-transitionbascarbone/db-common'
 import {
+  EmissionFactorBase,
   EmissionFactorPartType,
   EmissionFactorStatus,
   Environment,
@@ -14,6 +15,7 @@ import { getEnvVar } from '@abc-transitionbascarbone/lib/environment'
 import { serializeSimpleCsvRecord } from '@abc-transitionbascarbone/utils/csv'
 import { unitsMatrix } from './historyUnits'
 import { additionalParts } from './parts.config'
+import { elementsBySubPost } from './posts.config'
 
 export const validStatuses = ['Valide générique', 'Valide spécifique', 'Archivé']
 
@@ -411,53 +413,97 @@ export const getGases = (emissionFactor: ImportEmissionFactor) => {
   return gases
 }
 
-export const mapEmissionFactors = (
-  emissionFactor: ImportEmissionFactor,
-  importedFrom: Import,
-  getSubPost: (emissionFactor: ImportEmissionFactor) => SubPost[],
-) => ({
-  ...getGases(emissionFactor),
-  reliability: 5,
-  importedFrom,
-  importedId: emissionFactor["Identifiant_de_l'élément"],
-  status:
-    emissionFactor["Statut_de_l'élément"] === 'Archivé' ? EmissionFactorStatus.Archived : EmissionFactorStatus.Valid,
-  source: emissionFactor.Source,
-  location: emissionFactor.Localisation_géographique,
-  technicalRepresentativeness: emissionFactor.Qualité_TeR || getEmissionQuality(emissionFactor.Incertitude),
-  geographicRepresentativeness: emissionFactor.Qualité_GR || getEmissionQuality(emissionFactor.Incertitude),
-  temporalRepresentativeness: emissionFactor.Qualité_TiR || getEmissionQuality(emissionFactor.Incertitude),
-  completeness: emissionFactor.Qualité_C || getEmissionQuality(emissionFactor.Incertitude),
-  unit: getUnit(emissionFactor.Unité_français),
-  isMonetary: isMonetaryEmissionFactor({
+const subPostByNetworkType = {
+  froid: [SubPost.ReseauxDeFroid],
+  chaud: [SubPost.ReseauxDeChaleurEtDeVapeur],
+}
+
+const getSubPosts = (emissionFactor: ImportEmissionFactor, importedFrom: Import) => {
+  switch (importedFrom) {
+    case Import.Legifrance:
+      if (!emissionFactor.reseau || (emissionFactor.reseau !== 'chaud' && emissionFactor.reseau !== 'froid')) {
+        throw new Error(
+          `reseau is not provided for emission factor ${emissionFactor.Nom_base_français} - ${emissionFactor["Identifiant_de_l'élément"]}`,
+        )
+      }
+      return subPostByNetworkType[emissionFactor.reseau]
+    case Import.NegaOctet:
+      return [SubPost.UsagesNumeriques]
+    case Import.AIB:
+      return [SubPost.Electricite]
+    case Import.CUT:
+      return [SubPost.UsagesNumeriques]
+    case Import.GIEC:
+    case Import.BaseEmpreinte:
+    default:
+      return Object.entries(elementsBySubPost)
+        .filter(([, elements]) => elements.some((element) => element === emissionFactor["Identifiant_de_l'élément"]))
+        .map(([subPost]) => subPost as SubPost)
+  }
+}
+
+const getBaseFunc = (subPosts: SubPost[], importedFrom: Import) => {
+  switch (importedFrom) {
+    case Import.AIB:
+      return EmissionFactorBase.MarketBased
+    case Import.BaseEmpreinte:
+      return subPosts.includes(SubPost.Electricite) ? EmissionFactorBase.LocationBased : null
+    case Import.Legifrance:
+    case Import.NegaOctet:
+    case Import.GIEC:
+    default:
+      return null
+  }
+}
+
+export const mapEmissionFactors = (emissionFactor: ImportEmissionFactor, importedFrom: Import) => {
+  const subPosts = getSubPosts(emissionFactor, importedFrom)
+
+  return {
+    ...getGases(emissionFactor),
+    reliability: 5,
+    importedFrom,
+    importedId: emissionFactor["Identifiant_de_l'élément"],
+    status:
+      emissionFactor["Statut_de_l'élément"] === 'Archivé' ? EmissionFactorStatus.Archived : EmissionFactorStatus.Valid,
+    source: emissionFactor.Source,
+    location: emissionFactor.Localisation_géographique,
+    technicalRepresentativeness: emissionFactor.Qualité_TeR || getEmissionQuality(emissionFactor.Incertitude),
+    geographicRepresentativeness: emissionFactor.Qualité_GR || getEmissionQuality(emissionFactor.Incertitude),
+    temporalRepresentativeness: emissionFactor.Qualité_TiR || getEmissionQuality(emissionFactor.Incertitude),
+    completeness: emissionFactor.Qualité_C || getEmissionQuality(emissionFactor.Incertitude),
     unit: getUnit(emissionFactor.Unité_français),
-  }),
-  subPosts: getSubPost(emissionFactor),
-  metaData: {
-    createMany: {
-      data: [
-        {
-          language: 'fr',
-          title: escapeTranslation(emissionFactor.Nom_base_français),
-          attribute: escapeTranslation(emissionFactor.Nom_attribut_français),
-          frontiere: escapeTranslation(emissionFactor.Nom_frontière_français),
-          tag: escapeTranslation(emissionFactor.Tags_français),
-          location: escapeTranslation(emissionFactor['Sous-localisation_géographique_français']),
-          comment: escapeTranslation(emissionFactor.Commentaire_français),
-        },
-        {
-          language: 'en',
-          title: escapeTranslation(emissionFactor.Nom_base_anglais),
-          attribute: escapeTranslation(emissionFactor.Nom_attribut_anglais),
-          frontiere: escapeTranslation(emissionFactor.Nom_frontière_anglais),
-          tag: escapeTranslation(emissionFactor.Tags_anglais),
-          location: escapeTranslation(emissionFactor['Sous-localisation_géographique_anglais']),
-          comment: escapeTranslation(emissionFactor.Commentaire_anglais),
-        },
-      ],
+    isMonetary: isMonetaryEmissionFactor({
+      unit: getUnit(emissionFactor.Unité_français),
+    }),
+    subPosts,
+    base: getBaseFunc(subPosts, importedFrom),
+    metaData: {
+      createMany: {
+        data: [
+          {
+            language: 'fr',
+            title: escapeTranslation(emissionFactor.Nom_base_français),
+            attribute: escapeTranslation(emissionFactor.Nom_attribut_français),
+            frontiere: escapeTranslation(emissionFactor.Nom_frontière_français),
+            tag: escapeTranslation(emissionFactor.Tags_français),
+            location: escapeTranslation(emissionFactor['Sous-localisation_géographique_français']),
+            comment: escapeTranslation(emissionFactor.Commentaire_français),
+          },
+          {
+            language: 'en',
+            title: escapeTranslation(emissionFactor.Nom_base_anglais),
+            attribute: escapeTranslation(emissionFactor.Nom_attribut_anglais),
+            frontiere: escapeTranslation(emissionFactor.Nom_frontière_anglais),
+            tag: escapeTranslation(emissionFactor.Tags_anglais),
+            location: escapeTranslation(emissionFactor['Sous-localisation_géographique_anglais']),
+            comment: escapeTranslation(emissionFactor.Commentaire_anglais),
+          },
+        ],
+      },
     },
-  },
-})
+  }
+}
 
 export const saveEmissionFactorsParts = async (
   transaction: Prisma.TransactionClient,

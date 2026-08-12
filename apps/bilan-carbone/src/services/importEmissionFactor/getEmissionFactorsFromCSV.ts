@@ -12,6 +12,7 @@ import {
   getEmissionFactorImportVersion,
   ImportEmissionFactor,
   isRowUnchanged,
+  mapEmissionFactors,
   mergeRowWithOverride,
   numberColumns,
   propagatePartOverrides,
@@ -174,7 +175,6 @@ export const getEmissionFactorsFromCSV = async (
   name: string,
   file: string,
   importFrom: Import,
-  mapFunction: (emissionFactor: ImportEmissionFactor) => Prisma.EmissionFactorCreateInput,
   options: { dryRun?: boolean; overrideMode?: OverrideMode } = {},
 ): Promise<DryRunReport | void> => {
   const { dryRun = false, overrideMode } = options
@@ -256,7 +256,7 @@ export const getEmissionFactorsFromCSV = async (
           const rowToMap = shouldMergeOverride
             ? mergeRowWithOverride(emissionFactor, existing.importedRawCsv!, existing.overrideRawCsv!)
             : emissionFactor
-          const data = mapFunction(rowToMap)
+          const data = mapEmissionFactors(rowToMap, importFrom)
           const created = await transaction.emissionFactor.create({
             data: {
               ...data,

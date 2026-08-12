@@ -29,6 +29,7 @@ enum Import {
   CUT
   CLICKSON
   AIB
+  GIEC
 
   @@schema("bilan_carbone")
 }

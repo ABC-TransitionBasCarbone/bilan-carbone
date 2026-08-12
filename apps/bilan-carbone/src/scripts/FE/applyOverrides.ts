@@ -2,7 +2,6 @@ import { Import } from '@abc-transitionbascarbone/db-common/enums'
 import { Command } from 'commander'
 import * as XLSX from 'xlsx'
 import { applyOverridesFromRows } from '../../services/importEmissionFactor/applyOverrides'
-import { mapBaseEmpreinteEmissionFactors } from '../../services/importEmissionFactor/baseEmpreinte/import'
 import { parseSheetRows } from '../../services/importEmissionFactor/parseXlsx'
 
 const program = new Command()
@@ -19,4 +18,4 @@ const params = program.opts()
 
 const workbook = XLSX.readFile(params.file)
 const rows = parseSheetRows(workbook.Sheets[workbook.SheetNames[0]])
-applyOverridesFromRows(Import.BaseEmpreinte, rows, mapBaseEmpreinteEmissionFactors, params.dryRun)
+applyOverridesFromRows(Import.BaseEmpreinte, rows, params.dryRun)
