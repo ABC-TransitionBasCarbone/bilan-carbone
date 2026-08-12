@@ -286,7 +286,9 @@ export const getEnvPosts = (environment: BCEnvironment | null | undefined): Post
   environment ? Object.values(environmentPostMapping[environment]) : []
 
 export const getEnvSubPosts = (environment: BCEnvironment | null | undefined): SubPost[] =>
-  environment ? Object.values(environmentSubPostsMapping[environment]).flat() : []
+  environment && environmentSubPostsMapping[environment]
+    ? Object.values(environmentSubPostsMapping[environment]).flat()
+    : []
 
 const getSubPostBCToSubPostTiltMapping = (): Partial<Record<SubPost, SubPost[]>> => {
   const result = {} as Partial<Record<SubPost, SubPost[]>>
