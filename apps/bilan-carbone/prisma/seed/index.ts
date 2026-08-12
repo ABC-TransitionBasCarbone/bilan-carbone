@@ -31,6 +31,7 @@ import { createRealStudy } from './study'
 import { getClicksonRoleFromBase, getCutRoleFromBase, getRolesFromEnvironment } from './utils'
 
 import type { BCEnvironment } from '@/types/environment'
+import { getValidSubPostsForEnvironment } from '@/utils/importEmissionSources.utils'
 
 const program = new Command()
 type Params = {
@@ -1032,20 +1033,32 @@ const users = async () => {
 
   await Promise.all(
     studies.map(async (study) => {
-      return prisma.studyEmissionSource.createMany({
-        data: faker.helpers.arrayElements(subPosts, { min: 1, max: subPosts.length }).flatMap((subPost) => {
-          // Keep this study clean for e2e tests to prevent flakiness
-          if (study.id === '88c93e88-7c80-4be4-905b-f0bbd2ccc779' && subPost === SubPost.MetauxPlastiquesEtVerre) {
-            return []
-          }
+      const organizationVersion = await prisma.organizationVersion.findFirst({
+        where: { id: study.organizationVersionId },
+      })
 
-          return Array.from({ length: Math.ceil(Math.random() * 20) }).map(() => ({
-            studyId: study.id,
-            name: faker.lorem.words({ min: 2, max: 5 }),
-            subPost: subPost as SubPost,
-            studySiteId: faker.helpers.arrayElement(study.sites).id,
-          }))
-        }),
+      if (!organizationVersion) {
+        throw Error(`Organization version not found for study ${study.id}`)
+      }
+
+      const validSubPosts = getValidSubPostsForEnvironment(organizationVersion.environment)
+
+      return prisma.studyEmissionSource.createMany({
+        data: faker.helpers
+          .arrayElements(Array.from(validSubPosts), { min: 1, max: subPosts.length })
+          .flatMap((subPost) => {
+            // Keep this study clean for e2e tests to prevent flakiness
+            if (study.id === '88c93e88-7c80-4be4-905b-f0bbd2ccc779' && subPost === SubPost.MetauxPlastiquesEtVerre) {
+              return []
+            }
+
+            return Array.from({ length: Math.ceil(Math.random() * 20) }).map(() => ({
+              studyId: study.id,
+              name: faker.lorem.words({ min: 2, max: 5 }),
+              subPost: subPost as SubPost,
+              studySiteId: faker.helpers.arrayElement(study.sites).id,
+            }))
+          }),
       })
     }),
   )
