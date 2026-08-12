@@ -85,11 +85,13 @@ function matchCaracterisationLabelFromTranslations(
 }
 
 export function getValidSubPostsForEnvironment(environment: Environment): Set<string> {
-  const mapping = environmentSubPostsMapping[environment as keyof typeof environmentSubPostsMapping]
+  const mapping = environmentSubPostsMapping[environment]
+
   if (!mapping) {
-    return new Set(Object.values(SubPost) as string[])
+    return new Set([])
   }
-  return new Set(Object.values(mapping).flat() as string[])
+
+  return new Set(Object.values(mapping).flat())
 }
 
 function matchSubPostLabelFromTranslations(

@@ -22,8 +22,9 @@ const fixEmissionSourcesWithWrongEnvironmentSubPost = async (dryRun = true) => {
     const studies = await prismaClient.study.findMany({
       where: {
         organizationVersion: {
-          environment: { in: Object.values(Environment) },
+          environment: { in: [Environment.BC, Environment.TILT] },
         },
+        simplified: false,
       },
       select: {
         id: true,
@@ -49,7 +50,7 @@ const fixEmissionSourcesWithWrongEnvironmentSubPost = async (dryRun = true) => {
     }> = []
 
     for (const study of studies) {
-      const environment = study.organizationVersion.environment as Environment
+      const environment = study.organizationVersion.environment
       const validSubPosts = getValidSubPostsForEnvironment(environment)
 
       for (const source of study.emissionSources) {
@@ -85,7 +86,7 @@ const fixEmissionSourcesWithWrongEnvironmentSubPost = async (dryRun = true) => {
     }
 
     const idsToDelete = invalidSources.map((s) => s.emissionSourceId)
-    await prismaClient.emissionSource.deleteMany({
+    await prismaClient.studyEmissionSource.deleteMany({
       where: { id: { in: idsToDelete } },
     })
 
