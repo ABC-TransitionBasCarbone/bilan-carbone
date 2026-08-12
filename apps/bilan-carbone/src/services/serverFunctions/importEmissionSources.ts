@@ -108,7 +108,7 @@ export async function validateEmissionSourcesFromFile(
 
   const locale = await getLocale()
   const buffer = Buffer.from(await file.arrayBuffer())
-  const result = parseEmissionSourcesFile(buffer, locale, study.sites)
+  const result = parseEmissionSourcesFile(buffer, locale, study.sites, study.organizationVersion.environment)
 
   if (!result.success) {
     return { status: 'error', errors: result.errors }
@@ -173,7 +173,7 @@ export async function resolveEmissionSourcesFromFile(
 
   const locale = await getLocale()
   const buffer = Buffer.from(await file.arrayBuffer())
-  const result = parseEmissionSourcesFile(buffer, locale, study.sites)
+  const result = parseEmissionSourcesFile(buffer, locale, study.sites, study.organizationVersion.environment)
 
   if (!result.success) {
     return { status: 'error', errors: result.errors }
@@ -223,7 +223,7 @@ export async function importEmissionSourcesFromFile(
 
   const locale = await getLocale()
   const buffer = Buffer.from(await file.arrayBuffer())
-  const result = parseEmissionSourcesFile(buffer, locale, study.sites)
+  const result = parseEmissionSourcesFile(buffer, locale, study.sites, study.organizationVersion.environment)
 
   if (!result.success) {
     return result

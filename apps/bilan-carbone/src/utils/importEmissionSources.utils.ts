@@ -1,11 +1,13 @@
 import { KG_CO2E_PREFIX_REGEX } from '@/constants/import'
 import { findEmissionFactorByIdForMatch } from '@/db/emissionFactors'
+import { environmentSubPostsMapping } from '@/services/posts'
 import { qualityKeys } from '@/services/uncertainty'
 import { AmbiguousRow, FEChoices, ImportError, ImportWarning } from '@/types/import.types'
 import { ParsedEmissionSourceRow, SOURCE_IMPORT_COLUMNS } from '@/types/importEmissionSources.types'
 import {
   EmissionSourceCaracterisation,
   EmissionSourceType,
+  Environment,
   Import,
   SubPost,
   Unit,
@@ -82,12 +84,23 @@ function matchCaracterisationLabelFromTranslations(
   )
 }
 
-function matchSubPostLabelFromTranslations(label: string | undefined | null, locale: LocaleType): SubPost | null {
-  const subPostValues = new Set(Object.values(SubPost) as string[])
+export function getValidSubPostsForEnvironment(environment: Environment): Set<string> {
+  const mapping = environmentSubPostsMapping[environment as keyof typeof environmentSubPostsMapping]
+  if (!mapping) {
+    return new Set(Object.values(SubPost) as string[])
+  }
+  return new Set(Object.values(mapping).flat() as string[])
+}
+
+function matchSubPostLabelFromTranslations(
+  label: string | undefined | null,
+  locale: LocaleType,
+  validSubPosts: Set<string>,
+): SubPost | null {
   return matchLabelFromTranslations(label, locale, (bc) =>
     buildLabelMap(
       bc.emissionFactors.post as unknown as Record<string, unknown>,
-      (k) => subPostValues.has(k),
+      (k) => validSubPosts.has(k),
       (k) => k as SubPost,
     ),
   )
@@ -133,6 +146,7 @@ export function parseEmissionSourcesFile(
   buffer: Buffer,
   locale: LocaleType,
   studySites: StudySiteForImport[],
+  environment: Environment,
 ): ParseEmissionSourcesResult {
   const sheetResult = parseExcelSheet(buffer, {
     headerRowIndex: SOURCE_IMPORT_HEADER_ROW_INDEX,
@@ -148,6 +162,7 @@ export function parseEmissionSourcesFile(
   const parsedRows: ParsedEmissionSourceRow[] = []
   const exampleRowPrefixes = getExampleRowPrefixes()
   const studySiteNameMap = buildStudySiteNameMap(studySites)
+  const validSubPosts = getValidSubPostsForEnvironment(environment)
 
   for (let i = 0; i < dataRows.length; i++) {
     const row = dataRows[i] as unknown[]
@@ -170,7 +185,7 @@ export function parseEmissionSourcesFile(
     }
 
     const subPostLabel = col('subPost')
-    const subPost = matchSubPostLabelFromTranslations(subPostLabel, locale)
+    const subPost = matchSubPostLabelFromTranslations(subPostLabel, locale, validSubPosts)
     if (!subPostLabel) {
       rowErrors.push({ key: 'missingSubPost' })
     } else if (!subPost) {
