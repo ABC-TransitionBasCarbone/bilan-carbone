@@ -238,12 +238,11 @@ export const subPostsByPost: Record<Post, SubPost[]> = {
   ...subPostsByPostClickson,
 }
 
-export const environmentSubPostsMapping: Record<Environment, object | null> = {
+export const environmentSubPostsMapping: Record<BCEnvironment, object> = {
   [Environment.BC]: subPostsByPostBC,
   [Environment.CUT]: subPostsByPostCUT,
   [Environment.TILT]: subPostsByPostTILT,
   [Environment.CLICKSON]: subPostsByPostClickson,
-  [Environment.MIP]: null,
 }
 
 export const subPostTiltToBcSubPostMapping: Partial<Record<SubPost, SubPost>> = {
