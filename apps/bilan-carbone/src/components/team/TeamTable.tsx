@@ -5,7 +5,7 @@ import { isAdvanced } from '@/services/permissions/environment'
 import { canEditSelfRole } from '@/services/permissions/user'
 import { deleteOrganizationMember } from '@/services/serverFunctions/organization'
 import { changeRole } from '@/services/serverFunctions/user'
-import { canBeUntrainedRole, canEditMemberRole, getEnvironmentRoles } from '@/utils/user'
+import { canEditMemberRole, getEnvironmentRoles } from '@/utils/user'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import TeamTableCommon from '@abc-transitionbascarbone/components/src/team/TeamTableCommon'
 import { UserSession } from 'next-auth'
@@ -61,7 +61,7 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
         email={user.email}
         team={team}
         canUpdateTeam={canUpdateTeam}
-        environmentRoles={getEnvironmentRoles(user.environment)}
+        environmentRoles={Object.values(getEnvironmentRoles(user.environment))}
         deleteMember={deleteMember}
         isAdvanced={isAdvanced(user.environment)}
         deletionError={deletionError}
@@ -69,10 +69,10 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
         setDeletionErrorData={setDeletionErrorData}
         crOrga={crOrga}
         canEditSelfRole={canEditSelfRole(user.role)}
-        canBeUntrainedRole={canBeUntrainedRole(user.role, user.environment)}
         changeRole={changeRole}
         setDeletingMember={setDeletingMember}
         deletingMember={deletingMember}
+        environment={user.environment}
       />
     </>
   )

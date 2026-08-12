@@ -194,7 +194,7 @@ export const addMember = async (member: AddMemberCommand) =>
     await handleAddingUser(session.user, member)
   })
 
-export const validateMember = async (email: string) =>
+export const validateMember = async (email: string, role: Role) =>
   withServerResponse('validateMember', async () => {
     const session = await dbActualizedAuth()
     if (!session || !session.user || !session.user.organizationVersionId) {
@@ -207,6 +207,8 @@ export const validateMember = async (email: string) =>
     }
 
     await validateUser(member.id)
+
+    await changeRole(email, role)
 
     await sendEmailToAddedUser(
       member.user.email.toLowerCase(),
