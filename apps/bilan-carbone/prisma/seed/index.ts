@@ -1,7 +1,6 @@
 import { DefaultStudyTags } from '@/constants/tag.constants'
 import { reCreateBegesRules, reCreateGHGPRules } from '@/db/exports'
 import { getSectenVersion, updateSectenVersion } from '@/scripts/secten/secten'
-import { getEmissionFactorsFromAPI } from '@/services/importEmissionFactor/baseEmpreinte/getEmissionFactorsFromAPI'
 import { getAllowedLevels } from '@/utils/study'
 import type { Account, User } from '@abc-transitionbascarbone/db-common'
 import { PrismaClient } from '@abc-transitionbascarbone/db-common'
@@ -34,9 +33,6 @@ import type { BCEnvironment } from '@/types/environment'
 import { getValidSubPostsForEnvironment } from '@/utils/importEmissionSources.utils'
 
 const program = new Command()
-type Params = {
-  importFactors: string | undefined
-}
 
 type userAndAccountsAndOrganizationVersion = {
   user: User
@@ -1078,7 +1074,7 @@ const seedSecten = async () => {
   })
 }
 
-const main = async (params: Params) => {
+const main = async () => {
   await Promise.all([
     actualities(),
     users(),
@@ -1086,20 +1082,12 @@ const main = async (params: Params) => {
     reCreateGHGPRules(prismaClient),
     seedSecten(),
   ])
-  if (params.importFactors) {
-    await getEmissionFactorsFromAPI(prismaClient, params.importFactors)
-  }
 }
 
-program
-  .name('seed database')
-  .description('Clear and seed the database')
-  .version('1.0.0')
-  .option('-i, --import-factors <value>', 'Import BaseCarbone emission factors')
-  .parse(process.argv)
+program.name('seed database').description('Clear and seed the database').version('1.0.0').parse(process.argv)
 
 if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
-  main(program.opts())
+  main()
     .then(async () => {
       await prisma.$disconnect()
     })

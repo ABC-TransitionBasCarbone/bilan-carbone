@@ -418,7 +418,10 @@ const subPostByNetworkType = {
   chaud: [SubPost.ReseauxDeChaleurEtDeVapeur],
 }
 
-const getSubPosts = (emissionFactor: ImportEmissionFactor, importedFrom: Import) => {
+export const getSubPosts = (
+  emissionFactor: Pick<ImportEmissionFactor, 'reseau' | "Identifiant_de_l'élément" | 'Nom_base_français'>,
+  importedFrom: Import,
+) => {
   switch (importedFrom) {
     case Import.Legifrance:
       if (!emissionFactor.reseau || (emissionFactor.reseau !== 'chaud' && emissionFactor.reseau !== 'froid')) {
@@ -442,15 +445,16 @@ const getSubPosts = (emissionFactor: ImportEmissionFactor, importedFrom: Import)
   }
 }
 
-const getBaseFunc = (subPosts: SubPost[], importedFrom: Import) => {
+export const getBaseFunc = (subPosts: SubPost[], importedFrom: Import) => {
   switch (importedFrom) {
     case Import.AIB:
       return EmissionFactorBase.MarketBased
+    case Import.GIEC:
     case Import.BaseEmpreinte:
       return subPosts.includes(SubPost.Electricite) ? EmissionFactorBase.LocationBased : null
     case Import.Legifrance:
     case Import.NegaOctet:
-    case Import.GIEC:
+    case Import.CUT:
     default:
       return null
   }
