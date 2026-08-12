@@ -4,7 +4,7 @@ import { Table as BaseTable, HelpIcon } from '@abc-transitionbascarbone/componen
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { TableActionButton } from '@abc-transitionbascarbone/components/src/base/TableActionButton'
 import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
-import { Environment, Level, Role, RoleMip } from '@abc-transitionbascarbone/db-common/enums'
+import { Environment, Level, Role } from '@abc-transitionbascarbone/db-common/enums'
 import { ApiResponse } from '@abc-transitionbascarbone/utils/serverResponse'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
@@ -95,7 +95,7 @@ const TeamTableCommon = ({
       header: t('role'),
       accessorKey: 'role',
       cell: ({ getValue, row }) => {
-        const role = getValue() as Role
+        const role = getValue() as RoleBcOrMip
         return canUpdateTeam ? (
           <SelectRoleCommon
             currentUserEmail={email}

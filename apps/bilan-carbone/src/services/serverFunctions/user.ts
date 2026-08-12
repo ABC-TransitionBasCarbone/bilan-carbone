@@ -206,9 +206,12 @@ export const validateMember = async (email: string, role: Role) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    await validateUser(member.id)
+    const changeRoleResult = await changeRole(email, role)
+    if (!changeRoleResult.success) {
+      throw new Error(changeRoleResult.errorMessage)
+    }
 
-    await changeRole(email, role)
+    await validateUser(member.id)
 
     await sendEmailToAddedUser(
       member.user.email.toLowerCase(),

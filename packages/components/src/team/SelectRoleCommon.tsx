@@ -1,7 +1,7 @@
 'use client'
 
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
-import { Environment, Level, Role, RoleMip } from '@abc-transitionbascarbone/db-common/enums'
+import { Environment, Level, Role } from '@abc-transitionbascarbone/db-common/enums'
 import { ApiResponse } from '@abc-transitionbascarbone/utils/serverResponse'
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { useSession } from 'next-auth/react'
@@ -14,13 +14,13 @@ import { RoleBcOrMip } from '@abc-transitionbascarbone/utils/types'
 
 interface Props {
   currentUserEmail: string
-  currentRole: Role
+  currentRole: RoleBcOrMip
   email: string
   level: Level | null
   environmentRoles: RoleBcOrMip[]
   environment: Environment
-  changeRole?: (email: string, newRole: Role) => Promise<ApiResponse>
-  setLocalRole?: (newRole: Role) => void
+  changeRole?: (email: string, newRole: RoleBcOrMip) => Promise<ApiResponse>
+  setLocalRole?: (newRole: RoleBcOrMip) => void
   canEditSelfRole?: boolean
 }
 
@@ -46,8 +46,8 @@ const SelectRoleCommon = ({
     setRole(currentRole)
   }, [currentRole])
 
-  const selectNewRole = async (event: SelectChangeEvent<Role>) => {
-    const newRole = event.target.value as Role
+  const selectNewRole = async (event: SelectChangeEvent<RoleBcOrMip>) => {
+    const newRole = event.target.value as RoleBcOrMip
     if (newRole !== role && changeRole) {
       await callServerFunction(() => changeRole(email, newRole), {
         getSuccessMessage: () => t('saved'),
