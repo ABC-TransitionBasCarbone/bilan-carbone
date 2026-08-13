@@ -1,12 +1,8 @@
 import { isFeatureActiveForEnvironment } from '@/db/deactivableFeatures'
 import { DeactivatableFeature, Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { isAdvanced, isSimplified } from '@abc-transitionbascarbone/utils/environments'
 
 const { BC, CUT, TILT, CLICKSON } = Environment
-const advancedEnvironments: Environment[] = [BC, TILT]
-const simplifiedEnvironments: Environment[] = [CUT, CLICKSON]
-
-export const isAdvanced = (environment: Environment) => advancedEnvironments.includes(environment)
-export const isSimplified = (environment: Environment) => simplifiedEnvironments.includes(environment)
 
 export const isBC = (environment: Environment) => environment === BC
 export const isTilt = (environment: Environment) => environment === TILT
@@ -117,10 +113,10 @@ export const hasAccessToPDFExport = (environment: Environment) =>
 export const hasAccessToFeedbackButton = isTilt
 
 export const hasBCExportWithSimplifiedStudy = (environment: Environment) => {
-  return environment === Environment.CUT
+  return environment === CUT
 }
 
-const environmentWithSimplifiedStudies = [Environment.CUT, Environment.CLICKSON, Environment.TILT] as const
+const environmentWithSimplifiedStudies = [CUT, CLICKSON, TILT] as const
 export type EnvironmentWithSimplifiedStudies = (typeof environmentWithSimplifiedStudies)[number]
 
 export const hasSimplifiedStudies = (env: Environment): env is EnvironmentWithSimplifiedStudies => {
