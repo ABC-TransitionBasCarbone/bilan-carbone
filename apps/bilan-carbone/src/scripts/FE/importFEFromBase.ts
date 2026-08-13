@@ -31,7 +31,7 @@ const overrideMode: OverrideMode | undefined = params.keepOverrides
 
 const baseParams = params.base
 const baseImport = Import[baseParams as keyof typeof Import]
-if (!baseImport) {
+if (!baseImport || baseImport === Import.Manual) {
   throw Error("La base d'import n'est pas valide !")
 }
 

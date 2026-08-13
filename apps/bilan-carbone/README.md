@@ -74,10 +74,10 @@ If EFs have been manually corrected via `applyOverrides` and their CSV row has c
 
 ```bash
 # Preview an import without writing to the database
-yarn tsx src/scripts/FE/importFEFromBase.ts -n ${versionNumberBaseEmpreinte} -f ${pathToCSVFile} -b ${base}--dry-run
+yarn tsx src/scripts/FE/importFEFromBase.ts -n ${versionNumberBaseEmpreinte} -f ${pathToCSVFile} -b ${base} --dry-run
 
 # Import Base Empreinte
-yarn tsx src/scripts/FE/importFEFromBase.ts -n ${versionNumberBaseEmpreinte} -f ${pathToCSVFile}
+yarn tsx src/scripts/FE/importFEFromBase.ts -n ${versionNumberBaseEmpreinte} -f ${pathToCSVFile} -b ${base}
 
 # Import while keeping existing manual overrides on changed EFs
 yarn tsx src/scripts/FE/importFEFromBase.ts -n ${versionNumberBaseEmpreinte} -f ${pathToCSVFile} -b ${base} --keep-overrides
@@ -86,15 +86,15 @@ yarn tsx src/scripts/FE/importFEFromBase.ts -n ${versionNumberBaseEmpreinte} -f 
 yarn tsx src/scripts/FE/importFEFromBase.ts -n ${versionNumberBaseEmpreinte} -f ${pathToCSVFile} -b ${base} --discard-overrides
 
 # Backfill importedRawCsv on EFs imported before the field was introduced (one-timeon the last version before the field was introduced)
-yarn tsx src/scripts/baseEmpreinte/backfillImportedRawCsv.ts -n ${versionNumberBaseEmpreinte} -f ${pathToCSVFile} --dry-run
-yarn tsx src/scripts/baseEmpreinte/backfillImportedRawCsv.ts -n ${versionNumberBaseEmpreinte} -f ${pathToCSVFile}
+yarn tsx src/scripts/FE/backfillImportedRawCsv.ts -n ${versionNumberBaseEmpreinte} -f ${pathToCSVFile} --dry-run
+yarn tsx src/scripts/FE/backfillImportedRawCsv.ts -n ${versionNumberBaseEmpreinte} -f ${pathToCSVFile}
 
 # Preview manual corrections without writing to the database
-yarn tsx src/scripts/baseEmpreinte/applyOverrides.ts -f ${pathToXlsxFile} --dry-run
+yarn tsx src/scripts/FE/applyOverrides.ts -f ${pathToXlsxFile} --dry-run
 
 # Apply manual corrections to existing EFs (writes values directly onto the EF)
 # The Excel file must contain the same columns as the standard import CSV
-yarn tsx src/scripts/baseEmpreinte/applyOverrides.ts -f ${pathToXlsxFile}
+yarn tsx src/scripts/FE/applyOverrides.ts -f ${pathToXlsxFile}
 ```
 
 ### Create BEGES rules
