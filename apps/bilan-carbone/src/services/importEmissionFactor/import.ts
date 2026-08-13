@@ -90,12 +90,12 @@ export const getEmissionFactorImportVersion = async (
 ) => {
   const existingVersion = await transaction.emissionFactorImportVersion.findFirst({ where: { name, source } })
   if (existingVersion) {
-    return { id: existingVersion.id, alreadyExists: true }
+    return existingVersion.id
   }
   const newVersion = await transaction.emissionFactorImportVersion.create({
     data: { name, source },
   })
-  return { id: newVersion.id, alreadyExists: false }
+  return newVersion.id
 }
 
 export const connectEmissionFactorToVersion = async (

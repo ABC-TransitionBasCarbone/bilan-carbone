@@ -175,14 +175,14 @@ export const getEmissionFactorsFromCSV = async (
   name: string,
   file: string,
   importFrom: Import,
-  options: { dryRun?: boolean; overrideMode?: OverrideMode } = {},
+  options: { dryRun?: boolean; overrideMode?: OverrideMode; updateExisting?: boolean } = {},
 ): Promise<DryRunReport | void> => {
-  const { dryRun = false, overrideMode } = options
+  const { dryRun = false, overrideMode, updateExisting } = options
 
   const existingVersion = await prismaClient.emissionFactorImportVersion.findFirst({
     where: { name, source: importFrom },
   })
-  if (existingVersion) {
+  if (existingVersion && !updateExisting) {
     console.error(
       `Version "${name}" already exists for source "${importFrom}". Use a different name or use the override script.`,
     )
@@ -228,8 +228,7 @@ export const getEmissionFactorsFromCSV = async (
 
   return prismaClient.$transaction(
     async (transaction) => {
-      const emissionFactorImportVersion = await getEmissionFactorImportVersion(transaction, name, importFrom)
-      const importVersionId = emissionFactorImportVersion.id
+      const importVersionId = await getEmissionFactorImportVersion(transaction, name, importFrom)
 
       const importedIdToEfId = new Map<string, string>()
       const newEmissionFactorIds: string[] = []

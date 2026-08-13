@@ -14,6 +14,7 @@ program
   .option('--dry-run', 'Affiche un rapport sans écrire en base')
   .option('--keep-overrides', 'Progagates existing manual overrides onto the new EF values')
   .option('--discard-overrides', 'Discards existing manual overrides and imports the new CSV values')
+  .option('--update-existing', 'Updates an existing version with the same name instead of throwing an error')
   .parse(process.argv)
 
 const params = program.opts()
@@ -38,4 +39,5 @@ if (!baseImport || baseImport === Import.Manual) {
 getEmissionFactorsFromCSV(params.name, params.file, baseImport, {
   dryRun: params.dryRun,
   overrideMode,
+  updateExisting: params.updateExisting,
 })
