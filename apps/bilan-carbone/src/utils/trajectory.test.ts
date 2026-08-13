@@ -852,6 +852,77 @@ describe('calculateTrajectory', () => {
       const isFailed = isFailedTrajectory(2050, referenceYear, referenceTrajectory, currentTrajectory, false)
       expect(isFailed).toBe(false)
     })
+
+    describe('SNBC trajectory with objectiveGroups (bug fix: Secten reconstruction for historical data)', () => {
+      const studyEmissionsSnbc = 2200
+      const studyStartYearSnbc = 2026
+
+      test('SNBC_GENERAL with objectiveGroups uses Secten reconstruction for pre-study years', () => {
+        const sectenData = createGeneralSectenData()
+
+        // Without objectiveGroups: SNBC trajectory reconstructs 1990 from Secten
+        const snbcOnly = calculateSNBCTrajectory({
+          studyEmissions: studyEmissionsSnbc,
+          studyStartYear: studyStartYearSnbc,
+          sectenData,
+          pastStudies: [],
+          displayCurrentStudyValueOnTrajectory: true,
+        })
+        const snbc1990Value = snbcOnly.find((p) => p.year === 1990)?.value
+
+        // With objectiveGroups (energy 30% at -1%, global 70% at SNBC rate)
+        const objectiveGroups = [
+          { ratio: 0.3, objectives: [{ targetYear: 2030, reductionRate: 0.01 }, { targetYear: 2050, reductionRate: 0.036 }] },
+          { ratio: 0.7, objectives: [{ targetYear: 2030, reductionRate: 0.018 }, { targetYear: 2050, reductionRate: 0.036 }] },
+        ]
+
+        const result = calculateCustomTrajectory({
+          studyEmissions: studyEmissionsSnbc,
+          studyStartYear: studyStartYearSnbc,
+          objectives: [{ targetYear: 2030, reductionRate: 0.018 }, { targetYear: 2050, reductionRate: 0.036 }],
+          objectiveGroups,
+          trajectoryType: TrajectoryType.SNBC_GENERAL,
+          sectenData,
+          pastStudies: [],
+          defaultTrajectory: [],
+        })
+
+        // 1990 value should come from SNBC Secten reconstruction, not from studyEmissions
+        const result1990 = result.find((p) => p.year === 1990)
+        expect(result1990).toBeDefined()
+        expect(result1990!.value).toBeCloseTo(snbc1990Value!, 0)
+        // Must be significantly higher than studyEmissions (not a flat line)
+        expect(result1990!.value).toBeGreaterThan(studyEmissionsSnbc)
+
+        // Study year point must match studyEmissions exactly
+        const resultStudyYear = result.find((p) => p.year === studyStartYearSnbc)
+        expect(resultStudyYear?.value).toBeCloseTo(studyEmissionsSnbc, 0)
+      })
+
+      test('SNBC_GENERAL with objectiveGroups: future reduction applies scoped objectives', () => {
+        const sectenData = createGeneralSectenData()
+        const objectiveGroups = [
+          { ratio: 0.3, objectives: [{ targetYear: 2030, reductionRate: 0.01 }] },
+          { ratio: 0.7, objectives: [{ targetYear: 2030, reductionRate: 0.018 }] },
+        ]
+
+        const result = calculateCustomTrajectory({
+          studyEmissions: studyEmissionsSnbc,
+          studyStartYear: studyStartYearSnbc,
+          objectives: [{ targetYear: 2030, reductionRate: 0.018 }],
+          objectiveGroups,
+          trajectoryType: TrajectoryType.SNBC_GENERAL,
+          sectenData,
+          pastStudies: [],
+          defaultTrajectory: [],
+        })
+
+        // 2027 should reduce from 2026: sub (0.3 * 2200 * 0.01) + global (0.7 * 2200 * 0.018)
+        const expectedReduction = 0.3 * 2200 * 0.01 + 0.7 * 2200 * 0.018
+        const point2027 = result.find((p) => p.year === 2027)
+        expect(point2027?.value).toBeCloseTo(2200 - expectedReduction, 0)
+      })
+    })
   })
 
   describe('getReductionRatePerType', () => {

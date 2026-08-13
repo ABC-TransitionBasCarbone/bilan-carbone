@@ -121,6 +121,46 @@ const calculateObjectiveGroupTrajectory = (
   return dataPoints
 }
 
+/**
+ * Appends objectiveGroups-based future data to an existing historical data array.
+ * Applies overshoot compensation per group if an overshootAdjustment is provided.
+ */
+const appendObjectiveGroupsToDataPoints = (
+  dataPoints: TrajectoryDataPoint[],
+  studyEmissions: number,
+  studyStartYear: number,
+  objectiveGroups: ObjectiveGroup[],
+  maxYear: number | undefined,
+  overshootAdjustment: OvershootAdjustment | undefined,
+  pastStudies: PastStudy[],
+): TrajectoryDataPoint[] => {
+  if (!overshootAdjustment) {
+    const scopeDataPoints = calculateObjectiveGroupTrajectory(studyEmissions, studyStartYear, objectiveGroups, maxYear ?? 0)
+    dataPoints.push(...scopeDataPoints)
+    return dataPoints
+  }
+
+  // Apply overshoot compensation per group independently
+  const compensatedGroups: ObjectiveGroup[] = objectiveGroups.map((group) => {
+    const groupReferenceTrajectory = overshootAdjustment.referenceTrajectory.map((p) => ({
+      year: p.year,
+      value: p.value * group.ratio,
+    }))
+    const correctedObjectives = getObjectivesWithOvershootCompensation(
+      studyEmissions * group.ratio,
+      studyStartYear,
+      group.objectives,
+      { ...overshootAdjustment, referenceTrajectory: groupReferenceTrajectory },
+      pastStudies,
+    )
+    return { ratio: group.ratio, objectives: correctedObjectives }
+  })
+
+  const compensatedDataPoints = calculateObjectiveGroupTrajectory(studyEmissions, studyStartYear, compensatedGroups, maxYear ?? 0)
+  dataPoints.push(...compensatedDataPoints)
+  return dataPoints
+}
+
 export const calculateCustomTrajectory = ({
   studyEmissions,
   studyStartYear,
@@ -159,6 +199,32 @@ export const calculateCustomTrajectory = ({
       throw new Error('Sector percentages required for SNBC_SECTORAL trajectory')
     }
 
+    if (objectiveGroups && objectiveGroups.length > 0) {
+      // Use SNBC sectoral for historical data (Secten reconstruction), objectiveGroups for future
+      const snbcHistoricalTrajectory = calculateCustomSNBCSectoralTrajectory(
+        {
+          studyEmissions,
+          studyStartYear,
+          sectenData,
+          pastStudies,
+          displayCurrentStudyValueOnTrajectory: true,
+          overshootAdjustment: undefined,
+          maxYear: studyStartYear,
+        },
+        sectorPercentages,
+      )
+      const dataPoints = snbcHistoricalTrajectory.filter((p) => p.year <= studyStartYear)
+      return appendObjectiveGroupsToDataPoints(
+        dataPoints,
+        studyEmissions,
+        studyStartYear,
+        objectiveGroups,
+        maxYear,
+        overshootAdjustment,
+        pastStudies,
+      )
+    }
+
     return calculateCustomSNBCSectoralTrajectory(
       {
         studyEmissions,
@@ -174,6 +240,29 @@ export const calculateCustomTrajectory = ({
   }
 
   if (trajectoryType === TrajectoryType.SNBC_GENERAL) {
+    if (objectiveGroups && objectiveGroups.length > 0) {
+      // Use SNBC for historical data (Secten reconstruction), objectiveGroups for future
+      const snbcHistoricalTrajectory = calculateSNBCTrajectory({
+        studyEmissions,
+        studyStartYear,
+        sectenData,
+        pastStudies,
+        displayCurrentStudyValueOnTrajectory: true,
+        overshootAdjustment: undefined,
+        maxYear: studyStartYear,
+      })
+      const dataPoints = snbcHistoricalTrajectory.filter((p) => p.year <= studyStartYear)
+      return appendObjectiveGroupsToDataPoints(
+        dataPoints,
+        studyEmissions,
+        studyStartYear,
+        objectiveGroups,
+        maxYear,
+        overshootAdjustment,
+        pastStudies,
+      )
+    }
+
     return calculateSNBCTrajectory({
       studyEmissions,
       studyStartYear,
@@ -192,41 +281,15 @@ export const calculateCustomTrajectory = ({
   addHistoricalDataAndStudyPoint(dataPoints, pastStudies, studyEmissions, studyStartYear, minYear)
 
   if (objectiveGroups && objectiveGroups.length > 0) {
-    if (!overshootAdjustment) {
-      const scopeDataPoints = calculateObjectiveGroupTrajectory(
-        studyEmissions,
-        studyStartYear,
-        objectiveGroups,
-        maxYear ?? 0,
-      )
-      dataPoints.push(...scopeDataPoints)
-      return dataPoints
-    }
-
-    // Apply overshoot compensation per group independently
-    const compensatedGroups: ObjectiveGroup[] = objectiveGroups.map((group) => {
-      const groupReferenceTrajectory = overshootAdjustment.referenceTrajectory.map((p) => ({
-        year: p.year,
-        value: p.value * group.ratio,
-      }))
-      const correctedObjectives = getObjectivesWithOvershootCompensation(
-        studyEmissions * group.ratio,
-        studyStartYear,
-        group.objectives,
-        { ...overshootAdjustment, referenceTrajectory: groupReferenceTrajectory },
-        pastStudies,
-      )
-      return { ratio: group.ratio, objectives: correctedObjectives }
-    })
-
-    const compensatedDataPoints = calculateObjectiveGroupTrajectory(
+    return appendObjectiveGroupsToDataPoints(
+      dataPoints,
       studyEmissions,
       studyStartYear,
-      compensatedGroups,
-      maxYear ?? 0,
+      objectiveGroups,
+      maxYear,
+      overshootAdjustment,
+      pastStudies,
     )
-    dataPoints.push(...compensatedDataPoints)
-    return dataPoints
   }
 
   let sortedObjectives = [...objectives]

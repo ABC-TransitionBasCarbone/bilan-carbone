@@ -119,7 +119,7 @@ export const createSubObjectives = async (inputs: CreateObjectiveInput[]) =>
         createManyObjectiveSubPosts(objectiveSubPostsData, tx),
       ])
 
-      if (trajectoryData.type !== 'CUSTOM') {
+      if (trajectoryData.type !== TrajectoryType.CUSTOM && trajectoryData.type !== TrajectoryType.SNBC_GENERAL && trajectoryData.type !== TrajectoryType.SNBC_SECTORAL) {
         await updateTrajectoryType(inputs[0].trajectoryId, TrajectoryType.CUSTOM, tx)
       }
 
