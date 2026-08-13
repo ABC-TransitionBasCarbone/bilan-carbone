@@ -4,13 +4,14 @@ import { Table as BaseTable, HelpIcon } from '@abc-transitionbascarbone/componen
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { TableActionButton } from '@abc-transitionbascarbone/components/src/base/TableActionButton'
 import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
-import { Level, Role, RoleMip } from '@abc-transitionbascarbone/db-common/enums'
+import { Environment, Level, Role } from '@abc-transitionbascarbone/db-common/enums'
 import { ApiResponse } from '@abc-transitionbascarbone/utils/serverResponse'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useCallback, useMemo, useState } from 'react'
 import SelectRoleCommon from './SelectRoleCommon'
 import styles from './TeamTableCommon.module.css'
+import { RoleBcOrMip } from '@abc-transitionbascarbone/utils/types'
 
 export type TeamMemberCommon = {
   user: {
@@ -20,7 +21,7 @@ export type TeamMemberCommon = {
     level: Level | null
   }
   formationName?: string | null
-  role: Role | RoleMip
+  role: RoleBcOrMip
   updatedAt: Date
 }
 
@@ -28,29 +29,19 @@ interface Props {
   email: string
   team: TeamMemberCommon[]
   canUpdateTeam: boolean
-  environmentRoles:
-    | Role
-    | RoleMip
-    | {
-        ADMIN: 'ADMIN'
-        DEFAULT: 'DEFAULT'
-      }
-    | {
-        ADMIN: 'ADMIN'
-        COLLABORATOR: 'COLLABORATOR'
-      }
+  environmentRoles: RoleBcOrMip[]
   deleteMember: () => Promise<void>
   isAdvanced?: boolean
   deletionError: string
   setDeletionErrorData: (data: DeletionErrorData[] | undefined) => void
-  changeRole: (email: string, newRole: Role | RoleMip) => Promise<ApiResponse>
+  changeRole: (email: string, newRole: RoleBcOrMip) => Promise<ApiResponse>
 
   deletionErrorData?: DeletionErrorData[]
   crOrga?: boolean
   canEditSelfRole?: boolean
-  canBeUntrainedRole?: boolean
   setDeletingMember: (value: string) => void
   deletingMember: string
+  environment: Environment
 }
 
 type DeletionErrorData = {
@@ -71,10 +62,10 @@ const TeamTableCommon = ({
   setDeletionErrorData,
   crOrga,
   canEditSelfRole,
-  canBeUntrainedRole,
   changeRole,
   setDeletingMember,
   deletingMember,
+  environment
 }: Props) => {
   const t = useTranslations('team.table')
   const tAction = useTranslations('common.action')
@@ -104,7 +95,7 @@ const TeamTableCommon = ({
       header: t('role'),
       accessorKey: 'role',
       cell: ({ getValue, row }) => {
-        const role = getValue() as Role
+        const role = getValue() as RoleBcOrMip
         return canUpdateTeam ? (
           <SelectRoleCommon
             currentUserEmail={email}
@@ -113,8 +104,8 @@ const TeamTableCommon = ({
             level={row.original.user.level}
             environmentRoles={environmentRoles}
             canEditSelfRole={canEditSelfRole}
-            canBeUntrainedRole={canBeUntrainedRole}
             changeRole={changeRole}
+            environment={environment}
           />
         ) : (
           <>{tRole(role)}</>
@@ -188,7 +179,7 @@ const TeamTableCommon = ({
           },
         ]}
       >
-        {Object.keys(environmentRoles)
+        {environmentRoles
           .filter((role) => role !== Role.SUPER_ADMIN)
           .map((role) => (
             <p key={role} className="mb-2">

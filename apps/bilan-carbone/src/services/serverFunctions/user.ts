@@ -194,7 +194,7 @@ export const addMember = async (member: AddMemberCommand) =>
     await handleAddingUser(session.user, member)
   })
 
-export const validateMember = async (email: string) =>
+export const validateMember = async (email: string, role: Role) =>
   withServerResponse('validateMember', async () => {
     const session = await dbActualizedAuth()
     if (!session || !session.user || !session.user.organizationVersionId) {
@@ -204,6 +204,11 @@ export const validateMember = async (email: string) =>
     const member = await getAccountByEmailAndOrganizationVersionId(email, session.user.organizationVersionId)
     if (!member || !canAddMember(session.user, member, member.organizationVersionId)) {
       throw new Error(NOT_AUTHORIZED)
+    }
+
+    const changeRoleResult = await changeRole(email, role)
+    if (!changeRoleResult.success) {
+      throw new Error(changeRoleResult.errorMessage)
     }
 
     await validateUser(member.id)

@@ -2,7 +2,7 @@ import { CutRoles } from '@/services/roles'
 import { getMockedAuthUser } from '@/tests/utils/models/user'
 import { Environment, Role, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { expect } from '@jest/globals'
-import { canBeUntrainedRole, findUserInfo, getEnvironmentRoles, getRoleToSetForUntrained, isAdmin } from './user'
+import { findUserInfo, getEnvironmentRoles, getRoleToSetForUntrained, isAdmin } from './user'
 
 describe('userUtils functions', () => {
   describe('isAdmin', () => {
@@ -93,24 +93,6 @@ describe('userUtils functions', () => {
     test('should return DEFAULT for other roles in BASE environment', () => {
       expect(getRoleToSetForUntrained(Role.COLLABORATOR, Environment.BC)).toBe(Role.DEFAULT)
       expect(getRoleToSetForUntrained(Role.DEFAULT, Environment.BC)).toBe(Role.DEFAULT)
-    })
-  })
-
-  describe('canBeUntrainedRole', () => {
-    test('should return true for all roles in CUT environment', () => {
-      expect(canBeUntrainedRole(Role.ADMIN, Environment.CUT)).toBe(true)
-      expect(canBeUntrainedRole(Role.DEFAULT, Environment.CUT)).toBe(true)
-    })
-
-    test('should return true for GESTIONNAIRE and DEFAULT roles in BASE environment', () => {
-      expect(canBeUntrainedRole(Role.GESTIONNAIRE, Environment.BC)).toBe(true)
-      expect(canBeUntrainedRole(Role.DEFAULT, Environment.BC)).toBe(true)
-    })
-
-    test('should return false for other roles in BASE environment', () => {
-      expect(canBeUntrainedRole(Role.ADMIN, Environment.BC)).toBe(false)
-      expect(canBeUntrainedRole(Role.COLLABORATOR, Environment.BC)).toBe(false)
-      expect(canBeUntrainedRole(Role.SUPER_ADMIN, Environment.BC)).toBe(false)
     })
   })
 })

@@ -2,8 +2,10 @@
 
 import { TeamMember } from '@/db/account'
 import { deleteMember, validateMember } from '@/services/serverFunctions/user'
+import { getEnvironmentRoles } from '@/utils/user'
 import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
+import SelectRoleCommon from '@abc-transitionbascarbone/components/src/team/SelectRoleCommon'
 import { Role } from '@abc-transitionbascarbone/db-common/enums'
 import CheckIcon from '@mui/icons-material/Check'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -13,7 +15,6 @@ import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import styles from './InvitationsActions.module.css'
-import SelectRole from './SelectRole'
 
 interface Props {
   user: UserSession
@@ -26,16 +27,18 @@ const InvitationsToValidateActions = ({ user, member }: Props) => {
   const [validating, setValidating] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const router = useRouter()
-  const role = member.user.level ? member.role : Role.DEFAULT
+  const [role, setRole] = useState(member.user.level ? member.role : Role.DEFAULT)
 
   return (
     <div className={classNames(styles.buttons, 'flex')}>
-      <SelectRole
+      <SelectRoleCommon
         currentUserEmail={user.email}
-        email={member.user.email}
         currentRole={role}
+        email={member.user.email}
         level={member.user.level}
+        environmentRoles={Object.values(getEnvironmentRoles(user.environment))}
         environment={user.environment}
+        setLocalRole={setRole}
       />
       <LoadingButton
         data-testid="validate-invitation"
@@ -44,7 +47,7 @@ const InvitationsToValidateActions = ({ user, member }: Props) => {
         loading={validating}
         onClick={async () => {
           setValidating(true)
-          await callServerFunction(() => validateMember(member.user.email), {
+          await callServerFunction(() => validateMember(member.user.email, role), {
             onSuccess: () => {
               router.refresh()
             },
