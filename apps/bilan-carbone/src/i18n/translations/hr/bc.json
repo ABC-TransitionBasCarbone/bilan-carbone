@@ -1,0 +1,10 @@
+{
+  "emissionFactors": {
+    "table": {
+      "GIEC": "IPCC",
+      "importedFrom": {
+        "giec": "logo IPCC-a"
+      }
+    }
+  }
+}
