@@ -1,4 +1,3 @@
-import { mapBaseEmpreinteEmissionFactors } from '@/services/importEmissionFactor/baseEmpreinte/import'
 import { getEmissionFactorsFromCSV } from '@/services/importEmissionFactor/getEmissionFactorsFromCSV'
 import { addSourceToStudies } from '@/services/importEmissionFactor/import'
 import {
@@ -27,12 +26,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
     return null
   }
 
-  await getEmissionFactorsFromCSV(
-    'test',
-    './prisma/seed/Base_Carbone_Test.csv',
-    Import.BaseEmpreinte,
-    mapBaseEmpreinteEmissionFactors,
-  )
+  await getEmissionFactorsFromCSV('test', './prisma/seed/Base_Carbone_Test.csv', Import.BaseEmpreinte)
 
   await prisma.emissionFactorImportVersion.createMany({
     data: [
