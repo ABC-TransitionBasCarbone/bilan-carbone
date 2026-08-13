@@ -94,9 +94,9 @@ export const getOldestPastStudyYear = async (
   return years.length > 0 ? Math.min(...years) : null
 }
 
-export const getTrajectoryType = async (trajectoryId: string, tx: Prisma.TransactionClient) => {
+export const getTrajectory = async (trajectoryId: string, tx: Prisma.TransactionClient) => {
   return tx.trajectory.findUnique({
     where: { id: trajectoryId },
-    select: { type: true },
+    select: { type: true, referenceYear: true },
   })
 }

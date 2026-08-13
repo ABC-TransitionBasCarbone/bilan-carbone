@@ -40,7 +40,7 @@ jest.mock('../../db/objective.db', () => ({
 }))
 
 jest.mock('../../db/trajectory', () => ({
-  getTrajectoryType: jest.fn(),
+  getTrajectory: jest.fn(),
   getOldestPastStudyYear: jest.fn(),
   updateTrajectoryType: jest.fn(),
 }))
@@ -63,7 +63,7 @@ jest.mock('../auth', () => ({
 
 const mockGetSubObjectives = objectiveDbModule.getSubObjectives as jest.Mock
 const mockGetObjectiveWithTransitionPlan = objectiveDbModule.getObjectiveWithTransitionPlan as jest.Mock
-const mockGetTrajectoryType = trajectoryDbModule.getTrajectoryType as jest.Mock
+const mockGetTrajectory = trajectoryDbModule.getTrajectory as jest.Mock
 const mockGetOldestPastStudyYear = trajectoryDbModule.getOldestPastStudyYear as jest.Mock
 const mockCreateManyObjectivesAndReturn = objectiveDbModule.createManyObjectivesAndReturn as jest.Mock
 const mockCreateManyObjectiveSites = objectiveDbModule.createManyObjectiveSites as jest.Mock
@@ -99,7 +99,7 @@ describe('Objective Server Functions', () => {
     mockGetTrajectoryWithTransitionPlan.mockResolvedValue(mockTrajectory)
     mockGetObjectiveWithTransitionPlan.mockResolvedValue(mockObjective)
     mockHasEditAccessOnStudy.mockResolvedValue(true)
-    mockGetTrajectoryType.mockResolvedValue({ type: 'LINEAR' })
+    mockGetTrajectory.mockResolvedValue({ type: 'LINEAR' })
     mockCreateManyObjectivesAndReturn.mockResolvedValue([{ id: 'new-objective' }])
     mockCreateManyObjectiveSites.mockResolvedValue(undefined)
     mockCreateManyObjectiveTags.mockResolvedValue(undefined)
@@ -280,7 +280,7 @@ describe('Objective Server Functions', () => {
 
     it('converts non-SNBC trajectories to CUSTOM with null referenceYear', async () => {
       mockGetSubObjectives.mockResolvedValue([])
-      mockGetTrajectoryType.mockResolvedValue({ type: TrajectoryType.SBTI_15 })
+      mockGetTrajectory.mockResolvedValue({ type: TrajectoryType.SBTI_15 })
 
       await createSubObjectives([baseInput])
 
@@ -293,9 +293,24 @@ describe('Objective Server Functions', () => {
       expect(mockGetOldestPastStudyYear).not.toHaveBeenCalled()
     })
 
+    it('converts non-SNBC trajectories to CUSTOM with defined referenceYear', async () => {
+      mockGetSubObjectives.mockResolvedValue([])
+      mockGetTrajectory.mockResolvedValue({ type: TrajectoryType.SBTI_15, referenceYear: 2025 })
+
+      await createSubObjectives([baseInput])
+
+      expect(mockUpdateTrajectoryToCustom).toHaveBeenCalledWith(
+        'trajectory-1',
+        TrajectoryType.CUSTOM,
+        2025,
+        expect.anything(),
+      )
+      expect(mockGetOldestPastStudyYear).not.toHaveBeenCalled()
+    })
+
     it('converts SNBC_GENERAL trajectory to CUSTOM and sets referenceYear to oldest past study year', async () => {
       mockGetSubObjectives.mockResolvedValue([])
-      mockGetTrajectoryType.mockResolvedValue({ type: TrajectoryType.SNBC_GENERAL })
+      mockGetTrajectory.mockResolvedValue({ type: TrajectoryType.SNBC_GENERAL })
       mockGetOldestPastStudyYear.mockResolvedValue(2018)
 
       await createSubObjectives([baseInput])
@@ -311,7 +326,7 @@ describe('Objective Server Functions', () => {
 
     it('converts SNBC_SECTORAL trajectory to CUSTOM and sets referenceYear to oldest past study year', async () => {
       mockGetSubObjectives.mockResolvedValue([])
-      mockGetTrajectoryType.mockResolvedValue({ type: TrajectoryType.SNBC_SECTORAL })
+      mockGetTrajectory.mockResolvedValue({ type: TrajectoryType.SNBC_SECTORAL })
       mockGetOldestPastStudyYear.mockResolvedValue(2020)
 
       await createSubObjectives([baseInput])
@@ -327,7 +342,7 @@ describe('Objective Server Functions', () => {
 
     it('converts SNBC trajectory to CUSTOM with null referenceYear when no past studies exist', async () => {
       mockGetSubObjectives.mockResolvedValue([])
-      mockGetTrajectoryType.mockResolvedValue({ type: TrajectoryType.SNBC_GENERAL })
+      mockGetTrajectory.mockResolvedValue({ type: TrajectoryType.SNBC_GENERAL, referenceYear: 2010 })
       mockGetOldestPastStudyYear.mockResolvedValue(null)
 
       await createSubObjectives([baseInput])
@@ -335,7 +350,7 @@ describe('Objective Server Functions', () => {
       expect(mockUpdateTrajectoryToCustom).toHaveBeenCalledWith(
         'trajectory-1',
         TrajectoryType.CUSTOM,
-        null,
+        2010,
         expect.anything(),
       )
     })
