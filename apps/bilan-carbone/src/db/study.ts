@@ -1203,9 +1203,16 @@ export const removeSourceToStudy = async (source: Import, studyId: string) => {
       where: { studyId, emissionFactor: { importedFrom: source } },
       data: { emissionFactorId: null, validated: false },
     })
-    await tx.studyEmissionFactorVersion.delete({
-      where: { studyId_source: { studyId, source } },
+
+    await tx.studyEmissionFactorVersion.findFirst({
+      where: { studyId, source },
     })
+
+    if (tx.studyEmissionFactorVersion) {
+      await tx.studyEmissionFactorVersion.delete({
+        where: { studyId_source: { studyId, source } },
+      })
+    }
   })
 }
 

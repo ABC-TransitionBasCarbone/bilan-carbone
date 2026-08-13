@@ -690,6 +690,9 @@ export const changeStudyExports = async (studyId: string, types: Export[], contr
     if (!hasEditionRights(getAccountRoleOnStudy(session.user, study.data))) {
       throw new Error(NOT_AUTHORIZED)
     }
+
+    await adaptFeSourceWithExport(studyId, types)
+
     return upsertStudyExport(studyId, types, control)
   })
 
