@@ -125,7 +125,8 @@ export const createSubObjectives = async (inputs: CreateObjectiveInput[]) =>
           trajectoryData.type === TrajectoryType.SNBC_GENERAL ||
           trajectoryData.type === TrajectoryType.SNBC_SECTORAL
         ) {
-          referenceYear = await getOldestPastStudyYear(trajectory.transitionPlan.id, tx)
+          const oldestPastStudyYear = await getOldestPastStudyYear(trajectory.transitionPlan.id, tx)
+          referenceYear = oldestPastStudyYear ?? referenceYear
         }
         await updateTrajectoryType(inputs[0].trajectoryId, TrajectoryType.CUSTOM, referenceYear, tx)
       }

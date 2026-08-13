@@ -280,7 +280,7 @@ describe('Objective Server Functions', () => {
 
     it('converts non-SNBC trajectories to CUSTOM with null referenceYear', async () => {
       mockGetSubObjectives.mockResolvedValue([])
-      mockGetTrajectory.mockResolvedValue({ type: TrajectoryType.SBTI_15 })
+      mockGetTrajectory.mockResolvedValue({ type: TrajectoryType.SBTI_15, referenceYear: null })
 
       await createSubObjectives([baseInput])
 
