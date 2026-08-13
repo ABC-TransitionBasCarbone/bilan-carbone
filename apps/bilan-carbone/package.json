@@ -35,7 +35,6 @@
     "cypress": "cypress run",
     "cypress:gui": "cypress open",
     "db:test:reset": "dotenv -e .env.test -- prisma migrate reset --force --schema=../../packages/db-common/prisma/schema/schema.prisma && dotenv -e .env.test -- tsx prisma/seed/index.ts",
-    "seed:import": "prisma db seed -- -i",
     "question:import:google": "npx tsx src/scripts/cut/question/add.ts -s google -f",
     "question:import:excel": "npx tsx src/scripts/cut/question/add.ts -f"
   },

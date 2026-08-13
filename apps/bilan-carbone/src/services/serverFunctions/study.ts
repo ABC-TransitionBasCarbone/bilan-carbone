@@ -51,7 +51,6 @@ import {
   getEngagementActions,
   getOrganizationStudiesBeforeDate,
   getPendingStudyCommentsCountFromAuthor,
-  getSourcesLatestImportVersionId,
   getStudiesSitesFromIds,
   getStudyAllowedUsersUnfiltered,
   getStudyById,
@@ -2540,25 +2539,6 @@ export const deleteEngagementAction = async (id: string, studyId: string) =>
 
     await dbDeleteEngagementAction(id)
   })
-
-export const addMissingSourceToStudies = async (source: Import) => {
-  const version = (await getSourcesLatestImportVersionId([source]))[0]
-  if (!version) {
-    throw new Error('No imported emission factor version for this source : ' + source)
-  }
-  const studies = await prismaClient.study.findMany({ select: { id: true, emissionFactorVersions: true } })
-  const withMissingSources = studies.filter(
-    (study) =>
-      !study.emissionFactorVersions.some((studyEmissionFactorVersion) => studyEmissionFactorVersion.source === source),
-  )
-  return prismaClient.studyEmissionFactorVersion.createMany({
-    data: withMissingSources.map((study) => ({
-      source,
-      studyId: study.id,
-      importVersionId: version.id,
-    })),
-  })
-}
 
 export const getStudyExports = async (studyId: string | undefined) =>
   withServerResponse('getStudyExports', async () => {

@@ -1,4 +1,3 @@
-import { addMissingSourceToStudies } from '@/services/serverFunctions/study'
 import { Import } from '@abc-transitionbascarbone/db-common/enums'
 import { Command } from 'commander'
 import { getEmissionFactorsFromCSV, OverrideMode } from '../../services/importEmissionFactor/getEmissionFactorsFromCSV'
@@ -39,6 +38,4 @@ if (!baseImport) {
 getEmissionFactorsFromCSV(params.name, params.file, baseImport, {
   dryRun: params.dryRun,
   overrideMode,
-}).then(() => {
-  addMissingSourceToStudies(baseImport)
 })

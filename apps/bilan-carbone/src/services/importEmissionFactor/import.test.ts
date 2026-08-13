@@ -60,15 +60,16 @@ describe('import Service', () => {
       try {
         const ef = {
           ...baseEF,
-          reseau: 'fr5zfz7f' as ImportEmissionFactor['reseau'],
+          reseau: 'azerty' as ImportEmissionFactor['reseau'],
         }
 
         getSubPosts(ef, Import.Legifrance)
 
         expect(true).toBe(false)
       } catch (e) {
-        console.log(e)
-        expect(true).toBe(true)
+        // On ne peut pas gérer ce qui vient de e. Ici ca me parait ok d'avoir un any explicite.
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        expect((e as any).message).toMatch('reseau is not provided for emission factor')
       }
     })
 
