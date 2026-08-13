@@ -380,29 +380,33 @@ export const getEmissionQuality = (uncertainty?: number) => {
 
 export const getGases = (emissionFactor: ImportEmissionFactor) => {
   const gases = {
-    totalCo2: Number(emissionFactor.Total_poste_non_décomposé),
-    co2f: Number(emissionFactor.CO2f),
-    ch4f: Number(emissionFactor.CH4f),
-    ch4b: Number(emissionFactor.CH4b),
-    n2o: Number(emissionFactor.N2O),
-    co2b: Number(emissionFactor.CO2b),
+    totalCo2: emissionFactor.Total_poste_non_décomposé ? Number(emissionFactor.Total_poste_non_décomposé) : 0,
+    co2f: emissionFactor.CO2f ? Number(emissionFactor.CO2f) : 0,
+    ch4f: emissionFactor.CH4f ? Number(emissionFactor.CH4f) : 0,
+    ch4b: emissionFactor.CH4b ? Number(emissionFactor.CH4b) : 0,
+    n2o: emissionFactor.N2O ? Number(emissionFactor.N2O) : 0,
+    co2b: emissionFactor.CO2b ? Number(emissionFactor.CO2b) : 0,
     sf6: 0,
     hfc: 0,
     pfc: 0,
-    otherGES: Number(emissionFactor.Autres_GES),
+    otherGES: emissionFactor.Autres_GES ? Number(emissionFactor.Autres_GES) : 0,
   }
   if (emissionFactor.Valeur_gaz_supplémentaire_1) {
     if (emissionFactor.Code_gaz_supplémentaire_1 === 'SF6') {
-      gases.sf6 = Number(emissionFactor.Valeur_gaz_supplémentaire_1)
+      gases.sf6 = emissionFactor.Valeur_gaz_supplémentaire_1 ? Number(emissionFactor.Valeur_gaz_supplémentaire_1) : 0
     } else {
-      gases.otherGES = Number(emissionFactor.Valeur_gaz_supplémentaire_1) + gases.otherGES
+      gases.otherGES =
+        (emissionFactor.Valeur_gaz_supplémentaire_1 ? Number(emissionFactor.Valeur_gaz_supplémentaire_1) : 0) +
+        gases.otherGES
     }
   }
   if (emissionFactor.Valeur_gaz_supplémentaire_2) {
     if (emissionFactor.Code_gaz_supplémentaire_2 === 'SF6') {
-      gases.sf6 = Number(emissionFactor.Valeur_gaz_supplémentaire_2)
+      gases.sf6 = emissionFactor.Valeur_gaz_supplémentaire_2 ? Number(emissionFactor.Valeur_gaz_supplémentaire_2) : 0
     } else {
-      gases.otherGES = Number(emissionFactor.Valeur_gaz_supplémentaire_2) + gases.otherGES
+      gases.otherGES =
+        (emissionFactor.Valeur_gaz_supplémentaire_2 ? Number(emissionFactor.Valeur_gaz_supplémentaire_2) : 0) +
+        gases.otherGES
     }
   }
   const totalCo2 = gases.co2f + gases.ch4f + gases.n2o + gases.sf6 + gases.hfc + gases.pfc + gases.otherGES
@@ -513,7 +517,6 @@ export const saveEmissionFactorsParts = async (
   transaction: Prisma.TransactionClient,
   importedIdToEfId: Map<string, string>,
   parts: ImportEmissionFactor[],
-  reusedEfIds: Set<string> = new Set(),
 ) => {
   for (const [i, part] of parts.entries()) {
     if (i % 100 === 0) {
@@ -523,7 +526,13 @@ export const saveEmissionFactorsParts = async (
     if (!emissionFactorId) {
       throw new Error('No emission factor found for ' + part["Identifiant_de_l'élément"])
     }
-    if (reusedEfIds.has(emissionFactorId)) {
+
+    const partAlreadyExists = await transaction.emissionFactorPart.findFirst({
+      where: { emissionFactorId, type: getType(part.Type_poste) },
+      select: { id: true },
+    })
+
+    if (partAlreadyExists) {
       continue
     }
 

@@ -112,10 +112,6 @@ export const getGHGPLineAndPost = (
     return { line: null, post: null }
   }
 
-  if (emissionFactor.importedFrom === Import.Manual && EfHasParts) {
-    return { line, post: '3.3' }
-  }
-
   return { line, post }
 }
 

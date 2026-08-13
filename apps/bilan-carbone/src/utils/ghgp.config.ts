@@ -198,7 +198,7 @@ export const ghgpRules = [
   },
   {
     subPost: SubPost.Electricite,
-    operated: '2.1',
+    operated: '3.3',
     notOperated: '3.other',
     held: '2.1',
     notHeldSimpleRent: '3.8',

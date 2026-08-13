@@ -281,7 +281,7 @@ export const getEmissionFactorsFromCSV = async (
       })
 
       console.log(`Save ${parts.length} emission factors parts...`)
-      await saveEmissionFactorsParts(transaction, importedIdToEfId, parts, reusedEfIds)
+      await saveEmissionFactorsParts(transaction, importedIdToEfId, parts)
       await propagatePartOverrides(transaction, mergedOverrideEfIds)
       await cleanImport(transaction, newEmissionFactorIds)
 
