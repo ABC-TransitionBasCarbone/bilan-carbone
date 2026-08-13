@@ -3,7 +3,7 @@ import * as trajectoryDbModule from '@/db/trajectory'
 import * as transitionPlanDbModule from '@/db/transitionPlan'
 import * as authModule from '@/services/auth'
 import * as studyPermissionsModule from '@/services/permissions/study'
-import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { SubPost, TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
 import { expect } from '@jest/globals'
 import {
   createSubObjectives,
@@ -41,6 +41,7 @@ jest.mock('../../db/objective.db', () => ({
 
 jest.mock('../../db/trajectory', () => ({
   getTrajectoryType: jest.fn(),
+  getOldestPastStudyYear: jest.fn(),
   updateTrajectoryType: jest.fn(),
 }))
 
@@ -63,6 +64,7 @@ jest.mock('../auth', () => ({
 const mockGetSubObjectives = objectiveDbModule.getSubObjectives as jest.Mock
 const mockGetObjectiveWithTransitionPlan = objectiveDbModule.getObjectiveWithTransitionPlan as jest.Mock
 const mockGetTrajectoryType = trajectoryDbModule.getTrajectoryType as jest.Mock
+const mockGetOldestPastStudyYear = trajectoryDbModule.getOldestPastStudyYear as jest.Mock
 const mockCreateManyObjectivesAndReturn = objectiveDbModule.createManyObjectivesAndReturn as jest.Mock
 const mockCreateManyObjectiveSites = objectiveDbModule.createManyObjectiveSites as jest.Mock
 const mockCreateManyObjectiveTags = objectiveDbModule.createManyObjectiveTags as jest.Mock
@@ -80,7 +82,7 @@ const mockAuth = authModule.auth as jest.Mock
 const mockSession = { user: { id: 'user-123', email: 'test@example.com' } }
 const mockTrajectory = {
   id: 'trajectory-1',
-  transitionPlan: { studyId: 'study-1' },
+  transitionPlan: { id: 'transition-plan-1', studyId: 'study-1' },
 }
 const mockObjective = {
   id: 'objective-1',
@@ -107,6 +109,7 @@ describe('Objective Server Functions', () => {
     mockDeleteObjectiveTags.mockResolvedValue(undefined)
     mockDeleteObjectiveSubPosts.mockResolvedValue(undefined)
     mockUpdateTrajectoryToCustom.mockResolvedValue(undefined)
+    mockGetOldestPastStudyYear.mockResolvedValue(null)
     mockDeleteObjective.mockResolvedValue(undefined)
   })
 
@@ -273,6 +276,68 @@ describe('Objective Server Functions', () => {
 
       expect(result.success).toBe(false)
       expect(mockCreateManyObjectivesAndReturn).not.toHaveBeenCalled()
+    })
+
+    it('converts non-SNBC trajectories to CUSTOM with null referenceYear', async () => {
+      mockGetSubObjectives.mockResolvedValue([])
+      mockGetTrajectoryType.mockResolvedValue({ type: TrajectoryType.SBTI_15 })
+
+      await createSubObjectives([baseInput])
+
+      expect(mockUpdateTrajectoryToCustom).toHaveBeenCalledWith(
+        'trajectory-1',
+        TrajectoryType.CUSTOM,
+        null,
+        expect.anything(),
+      )
+      expect(mockGetOldestPastStudyYear).not.toHaveBeenCalled()
+    })
+
+    it('converts SNBC_GENERAL trajectory to CUSTOM and sets referenceYear to oldest past study year', async () => {
+      mockGetSubObjectives.mockResolvedValue([])
+      mockGetTrajectoryType.mockResolvedValue({ type: TrajectoryType.SNBC_GENERAL })
+      mockGetOldestPastStudyYear.mockResolvedValue(2018)
+
+      await createSubObjectives([baseInput])
+
+      expect(mockGetOldestPastStudyYear).toHaveBeenCalledWith('transition-plan-1', expect.anything())
+      expect(mockUpdateTrajectoryToCustom).toHaveBeenCalledWith(
+        'trajectory-1',
+        TrajectoryType.CUSTOM,
+        2018,
+        expect.anything(),
+      )
+    })
+
+    it('converts SNBC_SECTORAL trajectory to CUSTOM and sets referenceYear to oldest past study year', async () => {
+      mockGetSubObjectives.mockResolvedValue([])
+      mockGetTrajectoryType.mockResolvedValue({ type: TrajectoryType.SNBC_SECTORAL })
+      mockGetOldestPastStudyYear.mockResolvedValue(2020)
+
+      await createSubObjectives([baseInput])
+
+      expect(mockGetOldestPastStudyYear).toHaveBeenCalledWith('transition-plan-1', expect.anything())
+      expect(mockUpdateTrajectoryToCustom).toHaveBeenCalledWith(
+        'trajectory-1',
+        TrajectoryType.CUSTOM,
+        2020,
+        expect.anything(),
+      )
+    })
+
+    it('converts SNBC trajectory to CUSTOM with null referenceYear when no past studies exist', async () => {
+      mockGetSubObjectives.mockResolvedValue([])
+      mockGetTrajectoryType.mockResolvedValue({ type: TrajectoryType.SNBC_GENERAL })
+      mockGetOldestPastStudyYear.mockResolvedValue(null)
+
+      await createSubObjectives([baseInput])
+
+      expect(mockUpdateTrajectoryToCustom).toHaveBeenCalledWith(
+        'trajectory-1',
+        TrajectoryType.CUSTOM,
+        null,
+        expect.anything(),
+      )
     })
   })
 

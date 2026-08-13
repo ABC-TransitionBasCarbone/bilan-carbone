@@ -14,7 +14,7 @@ import {
   getSubObjectives,
   updateObjective,
 } from '@/db/objective.db'
-import { getTrajectoryType, updateTrajectoryType } from '@/db/trajectory'
+import { getOldestPastStudyYear, getTrajectoryType, updateTrajectoryType } from '@/db/trajectory'
 import { getTrajectoryWithTransitionPlan } from '@/db/transitionPlan'
 import { withServerResponse } from '@/utils/serverResponse'
 import { SubPost, TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
@@ -119,8 +119,15 @@ export const createSubObjectives = async (inputs: CreateObjectiveInput[]) =>
         createManyObjectiveSubPosts(objectiveSubPostsData, tx),
       ])
 
-      if (trajectoryData.type !== 'CUSTOM') {
-        await updateTrajectoryType(inputs[0].trajectoryId, TrajectoryType.CUSTOM, tx)
+      if (trajectoryData.type !== TrajectoryType.CUSTOM) {
+        let referenceYear: number | null = null
+        if (
+          trajectoryData.type === TrajectoryType.SNBC_GENERAL ||
+          trajectoryData.type === TrajectoryType.SNBC_SECTORAL
+        ) {
+          referenceYear = await getOldestPastStudyYear(trajectory.transitionPlan.id, tx)
+        }
+        await updateTrajectoryType(inputs[0].trajectoryId, TrajectoryType.CUSTOM, referenceYear, tx)
       }
 
       return createdObjectives

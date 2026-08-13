@@ -62,12 +62,36 @@ export const deleteTrajectory = async (id: string): Promise<void> => {
 export const updateTrajectoryType = async (
   trajectoryId: string,
   type: TrajectoryType,
+  referenceYear: number | null,
   tx: Prisma.TransactionClient,
 ) => {
   return tx.trajectory.update({
     where: { id: trajectoryId },
-    data: { type },
+    data: { type, referenceYear },
   })
+}
+
+export const getOldestPastStudyYear = async (
+  transitionPlanId: string,
+  tx: Prisma.TransactionClient,
+): Promise<number | null> => {
+  const [linkedStudies, externalStudies] = await Promise.all([
+    tx.transitionPlanStudy.findMany({
+      where: { transitionPlanId },
+      include: { study: { select: { startDate: true } } },
+    }),
+    tx.externalStudy.findMany({
+      where: { transitionPlanId },
+      select: { date: true },
+    }),
+  ])
+
+  const years = [
+    ...linkedStudies.map((s) => s.study.startDate.getFullYear()),
+    ...externalStudies.map((s) => s.date.getFullYear()),
+  ]
+
+  return years.length > 0 ? Math.min(...years) : null
 }
 
 export const getTrajectoryType = async (trajectoryId: string, tx: Prisma.TransactionClient) => {
