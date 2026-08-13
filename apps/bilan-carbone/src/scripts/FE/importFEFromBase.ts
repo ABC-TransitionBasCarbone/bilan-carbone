@@ -1,6 +1,5 @@
 import { Import } from '@abc-transitionbascarbone/db-common/enums'
 import { Command } from 'commander'
-import { mapBaseEmpreinteEmissionFactors } from '../../services/importEmissionFactor/baseEmpreinte/import'
 import { getEmissionFactorsFromCSV, OverrideMode } from '../../services/importEmissionFactor/getEmissionFactorsFromCSV'
 
 const program = new Command()
@@ -11,6 +10,7 @@ program
   .version('1.0.0')
   .requiredOption('-n, --name <value>', 'Nom de la version')
   .requiredOption('-f, --file <value>', 'Import depuis un fichier CSV complet')
+  .requiredOption('-b, --base <value>', 'Base depuis laquelle on importe les FEs')
   .option('--dry-run', 'Affiche un rapport sans écrire en base')
   .option('--keep-overrides', 'Progagates existing manual overrides onto the new EF values')
   .option('--discard-overrides', 'Discards existing manual overrides and imports the new CSV values')
@@ -29,7 +29,13 @@ const overrideMode: OverrideMode | undefined = params.keepOverrides
     ? 'discard'
     : undefined
 
-getEmissionFactorsFromCSV(params.name, params.file, Import.BaseEmpreinte, mapBaseEmpreinteEmissionFactors, {
+const baseParams = params.base
+const baseImport = Import[baseParams as keyof typeof Import]
+if (!baseImport || baseImport === Import.Manual) {
+  throw Error("La base d'import n'est pas valide !")
+}
+
+getEmissionFactorsFromCSV(params.name, params.file, baseImport, {
   dryRun: params.dryRun,
   overrideMode,
 })

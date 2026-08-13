@@ -1867,6 +1867,7 @@
       "NegaOctet": "NegaOctet",
       "Legifrance": "Légifrance",
       "AIB": "AIB",
+      "GIEC": "GIEC",
       "displayArchived": "Afficher les facteurs archivés",
       "goTo": "Aller à la page",
       "items": "Élements par page",
@@ -1903,6 +1904,7 @@
         "legifrance": "Logo de Légifrance",
         "negaOctet": "Logo de NegaOctet",
         "aib": "Logo de l'Association of Issuing Bodies",
+        "giec": "logo du GIEC",
         "manual": "Manuel"
       },
       "post": "Postes",

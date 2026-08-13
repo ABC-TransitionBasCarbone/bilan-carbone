@@ -1717,6 +1717,7 @@
         "legifrance": "Logo de Légifrance",
         "negaOctet": "Logo de NegaOctet",
         "aib": "Logo de la Association of Issuing Bodies",
+        "giec": "IPCC logo",
         "manual": "Manual"
       },
       "post": "Categorías",
@@ -1747,6 +1748,7 @@
       "NegaOctet": "NegaOctet",
       "Legifrance": "Légifrance",
       "AIB": "AIB",
+      "GIEC": "IPCC",
       "displayArchived": "Mostrar los factores archivados",
       "goTo": "Ir a la página",
       "items": "Elementos por página",

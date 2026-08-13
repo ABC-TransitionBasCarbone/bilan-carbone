@@ -214,23 +214,27 @@ const getBaseFilterForEmissionFactors = (
 
   return {
     where: {
-      OR: [
+      AND: [
         {
-          language: locale,
-          emissionFactor: { ...commonEmissionFactorFilters, ...importedFromConditionWithoutManual },
+          OR: [
+            {
+              language: locale,
+              emissionFactor: { ...commonEmissionFactorFilters, ...importedFromConditionWithoutManual },
+            },
+            { emissionFactor: { ...commonEmissionFactorFilters, ...importedFromConditionWithManual } },
+          ],
         },
-        { emissionFactor: { ...commonEmissionFactorFilters, ...importedFromConditionWithManual } },
+        filters.search
+          ? {
+              OR: [
+                { title: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
+                { attribute: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
+                { frontiere: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
+              ],
+            }
+          : {},
+        filters.locations.length > 0 ? { location: { in: filters.locations, mode: Prisma.QueryMode.insensitive } } : {},
       ],
-      ...(filters.search && {
-        OR: [
-          { title: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
-          { attribute: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
-          { frontiere: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
-        ],
-      }),
-      ...(filters.locations.length > 0
-        ? { location: { in: filters.locations, mode: Prisma.QueryMode.insensitive } }
-        : {}),
     },
   }
 }

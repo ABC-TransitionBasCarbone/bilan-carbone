@@ -88,6 +88,12 @@ export const EmissionFactorSourceCell = ({
           <img className={styles.importFrom} src="/logos/AIB_logo.jpg" title={t('importedFrom.aib')} alt="AIB" />
         </div>
       )
+    case Import.GIEC:
+      return (
+        <div className="flex-cc">
+          <img className={styles.importFrom} src="/logos/ipcc.svg" title={t('importedFrom.giec')} alt="IPCC" />
+        </div>
+      )
     default:
       return (
         <span className={classNames(styles.importFrom, 'flex-cc')}>

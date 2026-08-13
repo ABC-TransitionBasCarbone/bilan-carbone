@@ -3,14 +3,7 @@ import { MIN, TIME_IN_MS } from '@abc-transitionbascarbone/utils'
 import { prismaClient } from '../../db/client.server'
 import { getGases, getType, ImportEmissionFactor, mapEmissionFactors, serializeRowAsCsv } from './import'
 
-type MapFunction = (row: ImportEmissionFactor) => ReturnType<typeof mapEmissionFactors>
-
-export const applyOverridesFromRows = async (
-  source: Import,
-  rows: ImportEmissionFactor[],
-  mapFunction: MapFunction,
-  dryRun = false,
-) => {
+export const applyOverridesFromRows = async (source: Import, rows: ImportEmissionFactor[], dryRun = false) => {
   const efRows = rows.filter((r) => r.Type_Ligne !== 'Poste')
   const partRows = rows.filter((r) => r.Type_Ligne === 'Poste')
   const allImportedIds = [...new Set(efRows.map((r) => r["Identifiant_de_l'élément"]))]
@@ -52,7 +45,7 @@ export const applyOverridesFromRows = async (
           continue
         }
 
-        const mapped = mapFunction(row)
+        const mapped = mapEmissionFactors(row, source)
 
         await transaction.emissionFactor.update({
           where: { id: ef.id },
