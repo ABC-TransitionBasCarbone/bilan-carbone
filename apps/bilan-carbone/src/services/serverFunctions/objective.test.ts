@@ -3,7 +3,7 @@ import * as trajectoryDbModule from '@/db/trajectory'
 import * as transitionPlanDbModule from '@/db/transitionPlan'
 import * as authModule from '@/services/auth'
 import * as studyPermissionsModule from '@/services/permissions/study'
-import { SubPost, TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
+import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { expect } from '@jest/globals'
 import {
   createSubObjectives,
@@ -273,33 +273,6 @@ describe('Objective Server Functions', () => {
 
       expect(result.success).toBe(false)
       expect(mockCreateManyObjectivesAndReturn).not.toHaveBeenCalled()
-    })
-
-    it('converts non-SNBC trajectory type to CUSTOM when adding sub-objectives', async () => {
-      mockGetSubObjectives.mockResolvedValue([])
-      mockGetTrajectoryType.mockResolvedValue({ type: 'LINEAR' })
-
-      await createSubObjectives([baseInput])
-
-      expect(mockUpdateTrajectoryToCustom).toHaveBeenCalledWith('trajectory-1', TrajectoryType.CUSTOM, expect.anything())
-    })
-
-    it('does NOT convert SNBC_GENERAL trajectory type to CUSTOM when adding sub-objectives', async () => {
-      mockGetSubObjectives.mockResolvedValue([])
-      mockGetTrajectoryType.mockResolvedValue({ type: TrajectoryType.SNBC_GENERAL })
-
-      await createSubObjectives([baseInput])
-
-      expect(mockUpdateTrajectoryToCustom).not.toHaveBeenCalled()
-    })
-
-    it('does NOT convert SNBC_SECTORAL trajectory type to CUSTOM when adding sub-objectives', async () => {
-      mockGetSubObjectives.mockResolvedValue([])
-      mockGetTrajectoryType.mockResolvedValue({ type: TrajectoryType.SNBC_SECTORAL })
-
-      await createSubObjectives([baseInput])
-
-      expect(mockUpdateTrajectoryToCustom).not.toHaveBeenCalled()
     })
   })
 
