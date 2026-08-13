@@ -7,7 +7,7 @@ export const canBeUntrainedRole = (role: RoleBcOrMip, environment: Environment) 
     return true
   }
 
-  const untrainedRoles = [Role.GESTIONNAIRE, Role.DEFAULT] as Role[]
+  const untrainedRoles = [Role.GESTIONNAIRE, Role.DEFAULT] as RoleBcOrMip[]
 
   return untrainedRoles.includes(role)
 }

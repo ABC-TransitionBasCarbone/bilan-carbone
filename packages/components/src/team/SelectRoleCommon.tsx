@@ -59,7 +59,7 @@ const SelectRoleCommon = ({
           }
         },
       })
-    } else if (setLocalRole) {
+    } else if (newRole !== role && setLocalRole) {
       setLocalRole(newRole)
       setRole(newRole)
     }
