@@ -518,6 +518,19 @@ export const saveEmissionFactorsParts = async (
   importedIdToEfId: Map<string, string>,
   parts: ImportEmissionFactor[],
 ) => {
+  const idsFromDB = parts
+    .entries()
+    .map(([, part]) => importedIdToEfId.get(part["Identifiant_de_l'élément"]))
+    .toArray()
+    .filter((id) => !!id) as string[]
+
+  const existingParts = await transaction.emissionFactorPart.findMany({
+    where: { emissionFactorId: { in: idsFromDB } },
+    select: { emissionFactorId: true, type: true },
+  })
+
+  const existingPartsSet = new Set(existingParts.map((p) => `${p.emissionFactorId}-${p.type}`))
+
   for (const [i, part] of parts.entries()) {
     if (i % 100 === 0) {
       console.log(`${i}/${parts.length}`)
@@ -527,10 +540,7 @@ export const saveEmissionFactorsParts = async (
       throw new Error('No emission factor found for ' + part["Identifiant_de_l'élément"])
     }
 
-    const partAlreadyExists = await transaction.emissionFactorPart.findFirst({
-      where: { emissionFactorId, type: getType(part.Type_poste) },
-      select: { id: true },
-    })
+    const partAlreadyExists = existingPartsSet.has(`${emissionFactorId}-${getType(part.Type_poste)}`)
 
     if (partAlreadyExists) {
       continue

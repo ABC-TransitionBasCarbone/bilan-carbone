@@ -232,7 +232,6 @@ export const getEmissionFactorsFromCSV = async (
 
       const importedIdToEfId = new Map<string, string>()
       const newEmissionFactorIds: string[] = []
-      const reusedEfIds = new Set<string>()
       // Maps new EF id → old EF id, for EFs where override was merged (to propagate to parts)
       const mergedOverrideEfIds = new Map<string, string>()
 
@@ -249,7 +248,6 @@ export const getEmissionFactorsFromCSV = async (
         if (existing?.importedRawCsv && isRowUnchanged(existing.importedRawCsv, emissionFactor)) {
           await connectEmissionFactorToVersion(transaction, existing.id, importVersionId)
           importedIdToEfId.set(importedId, existing.id)
-          reusedEfIds.add(existing.id)
         } else {
           const shouldMergeOverride = overrideMode === 'keep' && existing?.overrideRawCsv && existing?.importedRawCsv
           const rowToMap = shouldMergeOverride

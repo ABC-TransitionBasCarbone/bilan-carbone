@@ -90,7 +90,6 @@ export const getGHGPLineAndPost = (
   value: number,
   emissionFactor: ExportEmissionFactor & { base: EmissionFactorBase | null },
   post: string,
-  EfHasParts: boolean,
   base: EmissionFactorBase = EmissionFactorBase.LocationBased,
 ) => {
   const line = getLine(value, emissionFactor)

@@ -1197,24 +1197,23 @@ export const addSourceToStudy = async (source: Import, studyId: string) => {
   }
 }
 
-export const removeSourceToStudy = async (source: Import, studyId: string) => {
+export const removeSourceToStudy = async (source: Import, studyId: string) =>
   prismaClient.$transaction(async (tx) => {
     await tx.studyEmissionSource.updateMany({
       where: { studyId, emissionFactor: { importedFrom: source } },
       data: { emissionFactorId: null, validated: false },
     })
 
-    await tx.studyEmissionFactorVersion.findFirst({
+    const emissionFactorVersion = await tx.studyEmissionFactorVersion.findFirst({
       where: { studyId, source },
     })
 
-    if (tx.studyEmissionFactorVersion) {
+    if (emissionFactorVersion) {
       await tx.studyEmissionFactorVersion.delete({
         where: { studyId_source: { studyId, source } },
       })
     }
   })
-}
 
 export const removeSourceToAllStudies = async (source: Import) => {
   await prismaClient.$transaction(async (tx) => {
