@@ -258,6 +258,7 @@
     "schoolSearchGlossaryTitle": "Retrouvez votre établissement scolaire.",
     "schoolSearchGlossary": "Retrouvez votre établissement scolaire en entrant son code postal ou son nom, puis en le sélectionnant dans la liste déroulante.",
     "close": "Fermer",
+    "emailPlaceholder": "Votre email",
     "schoolPostalCodeOrNameRequired": "Veuillez entrer le code postal ou le nom de l'établissement scolaire",
     "validate": "Valider",
     "clear": "Supprimer la valeur",
