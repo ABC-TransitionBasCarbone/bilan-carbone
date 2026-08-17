@@ -267,7 +267,7 @@
     "schoolName": "Nombre del centro educativo",
     "schoolNamePlaceholder": "Nombre del centro educativo",
     "city": "Ciudad",
-    "emailPlaceholder": "Your email address",
+    "emailPlaceholder": "Su correo electrónico",
     "cityPlaceholder": "Ciudad donde se encuentra el centro educativo",
     "validation": {
       "schoolPostalCodeOrName": "Por favor ingrese el código postal o nombre de la escuela"
