@@ -852,8 +852,10 @@ export const deleteStudy = async (id: string) => {
       transaction.contributors.deleteMany({ where: { studyId: id } }),
       transaction.studySite.deleteMany({ where: { studyId: id } }),
       transaction.document.deleteMany({ where: { studyId: id } }),
+      transaction.studyComment.deleteMany({ where: { studyId: id } }),
       transaction.studyEmissionFactorVersion.deleteMany({ where: { studyId: id } }),
       transaction.studyExport.deleteMany({ where: { studyId: id } }),
+      transaction.engagementAction.deleteMany({ where: { studyId: id } }),
       ...studySites.map((studySite) => transaction.openingHours.deleteMany({ where: { studySiteId: studySite.id } })),
       deleteTransitionPlan(id),
     ])
