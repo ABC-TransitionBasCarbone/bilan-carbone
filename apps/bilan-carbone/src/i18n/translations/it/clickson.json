@@ -249,7 +249,7 @@
     "schoolPostalCodeOrNameRequired": "Inserisci il codice postale o il nome della scuola",
     "validate": "Convalida",
     "clear": "Cancella valore",
-    "emailPlaceholder": "Your email address",
+    "emailPlaceholder": "La tua email",
     "Not authorized": "Questa email è già utilizzata per Clickson oppure c'è un problema con la creazione dell'account. Consulta le <link>FAQ</link> o <support>contatta il supporto</support> se pensi si tratti di un errore.",
     "Not known school": "Trova e seleziona il tuo istituto.",
     "validation": {
