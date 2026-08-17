@@ -74,7 +74,7 @@ export const updateTrajectoryType = async (
 export const getOldestPastStudyYear = async (
   transitionPlanId: string,
   tx: Prisma.TransactionClient,
-): Promise<number | null> => {
+): Promise<number> => {
   const [linkedStudies, externalStudies, study] = await Promise.all([
     tx.transitionPlanStudy.findMany({
       where: { transitionPlanId },
@@ -96,7 +96,7 @@ export const getOldestPastStudyYear = async (
     ...externalStudies.map((s) => s.date.getFullYear()),
   ]
 
-  return years.length > 0 ? Math.min(...years) : study?.startDate.getFullYear()
+  return years.length > 0 ? Math.min(...years) : study.startDate.getFullYear()
 }
 
 export const getTrajectoryTypeAndRefYear = async (trajectoryId: string, tx: Prisma.TransactionClient) => {

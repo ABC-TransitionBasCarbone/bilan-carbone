@@ -40,7 +40,7 @@ jest.mock('../../db/objective.db', () => ({
 }))
 
 jest.mock('../../db/trajectory', () => ({
-  getTrajectory: jest.fn(),
+  getTrajectoryTypeAndRefYear: jest.fn(),
   getOldestPastStudyYear: jest.fn(),
   updateTrajectoryType: jest.fn(),
 }))
@@ -109,7 +109,7 @@ describe('Objective Server Functions', () => {
     mockDeleteObjectiveTags.mockResolvedValue(undefined)
     mockDeleteObjectiveSubPosts.mockResolvedValue(undefined)
     mockUpdateTrajectoryToCustom.mockResolvedValue(undefined)
-    mockGetOldestPastStudyYear.mockResolvedValue(null)
+    mockGetOldestPastStudyYear.mockResolvedValue(2025)
     mockDeleteObjective.mockResolvedValue(undefined)
   })
 
@@ -340,17 +340,17 @@ describe('Objective Server Functions', () => {
       )
     })
 
-    it('converts SNBC trajectory to CUSTOM with null referenceYear when no past studies exist', async () => {
+    it('converts SNBC trajectory to CUSTOM with study year as referenceYear when no past studies exist', async () => {
       mockGetSubObjectives.mockResolvedValue([])
       mockGetTrajectory.mockResolvedValue({ type: TrajectoryType.SNBC_GENERAL, referenceYear: 2010 })
-      mockGetOldestPastStudyYear.mockResolvedValue(null)
+      mockGetOldestPastStudyYear.mockResolvedValue(2020)
 
       await createSubObjectives([baseInput])
 
       expect(mockUpdateTrajectoryToCustom).toHaveBeenCalledWith(
         'trajectory-1',
         TrajectoryType.CUSTOM,
-        2010,
+        2020,
         expect.anything(),
       )
     })
