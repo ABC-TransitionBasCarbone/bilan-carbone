@@ -519,9 +519,7 @@ export const saveEmissionFactorsParts = async (
   parts: ImportEmissionFactor[],
 ) => {
   const idsFromDB = parts
-    .entries()
-    .map(([, part]) => importedIdToEfId.get(part["Identifiant_de_l'élément"]))
-    .toArray()
+    .map((part) => importedIdToEfId.get(part["Identifiant_de_l'élément"]))
     .filter((id) => !!id) as string[]
 
   const existingParts = await transaction.emissionFactorPart.findMany({
