@@ -28,7 +28,6 @@ import { getEnvVar } from '@abc-transitionbascarbone/lib/environment'
 import { Post } from '@abc-transitionbascarbone/utils/charts'
 import { UserSession } from 'next-auth'
 import { cache } from 'react'
-import { deleteTransitionPlan } from '../services/serverFunctions/transitionPlan'
 import { getAccountOrganizationVersions } from './account'
 import { AccountWithUserSelect } from './account.select'
 import { prismaClient } from './client.server'
@@ -852,10 +851,12 @@ export const deleteStudy = async (id: string) => {
       transaction.contributors.deleteMany({ where: { studyId: id } }),
       transaction.studySite.deleteMany({ where: { studyId: id } }),
       transaction.document.deleteMany({ where: { studyId: id } }),
+      transaction.studyComment.deleteMany({ where: { studyId: id } }),
       transaction.studyEmissionFactorVersion.deleteMany({ where: { studyId: id } }),
       transaction.studyExport.deleteMany({ where: { studyId: id } }),
+      transaction.engagementAction.deleteMany({ where: { studyId: id } }),
       ...studySites.map((studySite) => transaction.openingHours.deleteMany({ where: { studySiteId: studySite.id } })),
-      deleteTransitionPlan(id),
+      transaction.transitionPlan.deleteMany({ where: { studyId: id } }),
     ])
     await transaction.study.delete({ where: { id } })
   })

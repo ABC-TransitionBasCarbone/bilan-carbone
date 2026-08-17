@@ -254,6 +254,7 @@
     "validation": {
       "schoolPostalCodeOrName": "Kérjük, add meg az iskola irányítószámát vagy nevét"
     },
+    "emailPlaceholder": "Your email address",
     "city": "Város",
     "cityPlaceholder": "Az iskola városa",
     "country": "Ország",

@@ -251,6 +251,7 @@
     "clear": "Καθαρισμός τιμής",
     "Not authorized": "Αυτό το email χρησιμοποιείται ήδη στο Clickson ή υπάρχει πρόβλημα με τη δημιουργία λογαριασμού. Δείτε τις <link>Συχνές Ερωτήσεις (FAQ)</link> ή <support>επικοινωνήστε με την υποστήριξη</support> αν νομίζετε ότι πρόκειται για σφάλμα.",
     "Not known school": "Βρείτε και επιλέξτε το σχολείο σας.",
+    "emailPlaceholder": "Your email address",
     "validation": {
       "schoolPostalCodeOrName": "Παρακαλώ εισάγετε ταχυδρομικό κωδικό ή όνομα σχολείου"
     },

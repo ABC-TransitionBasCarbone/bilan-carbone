@@ -254,6 +254,7 @@
     "validation": {
       "schoolPostalCodeOrName": "Molimo unesite poštanski broj ili ime škole"
     },
+    "emailPlaceholder": "Your email address",
     "city": "Grad",
     "cityPlaceholder": "Grad u kojem se nalazi škola",
     "country": "Vaša zemlja",
