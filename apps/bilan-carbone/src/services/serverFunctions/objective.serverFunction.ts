@@ -14,7 +14,7 @@ import {
   getSubObjectives,
   updateObjective,
 } from '@/db/objective.db'
-import { getOldestPastStudyYear, getTrajectory, updateTrajectoryType } from '@/db/trajectory'
+import { getOldestPastStudyYear, getTrajectoryTypeAndRefYear, updateTrajectoryType } from '@/db/trajectory'
 import { getTrajectoryWithTransitionPlan } from '@/db/transitionPlan'
 import { withServerResponse } from '@/utils/serverResponse'
 import { SubPost, TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
@@ -86,7 +86,7 @@ export const createSubObjectives = async (inputs: CreateObjectiveInput[]) =>
     }
 
     return prismaClient.$transaction(async (tx) => {
-      const trajectoryData = await getTrajectory(inputs[0].trajectoryId, tx)
+      const trajectoryData = await getTrajectoryTypeAndRefYear(inputs[0].trajectoryId, tx)
       if (!trajectoryData) {
         throw new Error('Trajectory not found')
       }
@@ -126,7 +126,7 @@ export const createSubObjectives = async (inputs: CreateObjectiveInput[]) =>
           trajectoryData.type === TrajectoryType.SNBC_SECTORAL
         ) {
           const oldestPastStudyYear = await getOldestPastStudyYear(trajectory.transitionPlan.id, tx)
-          referenceYear = oldestPastStudyYear ?? referenceYear
+          referenceYear = oldestPastStudyYear
         }
         await updateTrajectoryType(inputs[0].trajectoryId, TrajectoryType.CUSTOM, referenceYear, tx)
       }

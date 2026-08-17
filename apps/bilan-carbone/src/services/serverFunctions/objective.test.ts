@@ -63,7 +63,7 @@ jest.mock('../auth', () => ({
 
 const mockGetSubObjectives = objectiveDbModule.getSubObjectives as jest.Mock
 const mockGetObjectiveWithTransitionPlan = objectiveDbModule.getObjectiveWithTransitionPlan as jest.Mock
-const mockGetTrajectory = trajectoryDbModule.getTrajectory as jest.Mock
+const mockGetTrajectory = trajectoryDbModule.getTrajectoryTypeAndRefYear as jest.Mock
 const mockGetOldestPastStudyYear = trajectoryDbModule.getOldestPastStudyYear as jest.Mock
 const mockCreateManyObjectivesAndReturn = objectiveDbModule.createManyObjectivesAndReturn as jest.Mock
 const mockCreateManyObjectiveSites = objectiveDbModule.createManyObjectiveSites as jest.Mock
