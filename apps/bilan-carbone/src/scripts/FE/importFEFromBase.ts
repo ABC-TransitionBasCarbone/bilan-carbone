@@ -14,7 +14,10 @@ program
   .option('--dry-run', 'Affiche un rapport sans écrire en base')
   .option('--keep-overrides', 'Progagates existing manual overrides onto the new EF values')
   .option('--discard-overrides', 'Discards existing manual overrides and imports the new CSV values')
-  .option('--update-existing', 'Updates an existing version with the same name instead of throwing an error')
+  .option(
+    '--update-existing',
+    'Updates an existing version with the same name instead of throwing an error, to use when it is not overriding the base',
+  )
   .parse(process.argv)
 
 const params = program.opts()

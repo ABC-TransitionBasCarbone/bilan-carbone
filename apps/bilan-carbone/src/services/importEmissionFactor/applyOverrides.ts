@@ -3,15 +3,40 @@ import { MIN, TIME_IN_MS } from '@abc-transitionbascarbone/utils'
 import { prismaClient } from '../../db/client.server'
 import { getGases, getType, ImportEmissionFactor, mapEmissionFactors, serializeRowAsCsv } from './import'
 
-export const applyOverridesFromRows = async (source: Import, rows: ImportEmissionFactor[], dryRun = false) => {
+export const applyOverridesFromRows = async (
+  source: Import,
+  name: string,
+  rows: ImportEmissionFactor[],
+  dryRun = false,
+) => {
+  const efImport = await prismaClient.emissionFactorImportVersion.findFirst({
+    where: { name, source },
+  })
+  if (!efImport) {
+    throw Error(`Import not found for name "${name}" and source "${source}"`)
+  }
   const efRows = rows.filter((r) => r.Type_Ligne !== 'Poste')
   const partRows = rows.filter((r) => r.Type_Ligne === 'Poste')
   const allImportedIds = [...new Set(efRows.map((r) => r["Identifiant_de_l'élément"]))]
 
-  const existingEFs = await prismaClient.emissionFactor.findMany({
+  const existingFeForAllImport = await prismaClient.emissionFactor.findMany({
     where: { importedId: { in: allImportedIds }, importedFrom: source },
-    select: { id: true, importedId: true, emissionFactorParts: { select: { id: true, type: true } } },
+    select: { id: true, importedId: true },
   })
+
+  const existingFEIdsForSpecificImport = await prismaClient.emissionFactorVersion.findMany({
+    where: { emissionFactorId: { in: existingFeForAllImport.map((fe) => fe.id) }, importVersionId: efImport.id },
+    select: { emissionFactorId: true },
+  })
+
+  const existingEFs = await prismaClient.emissionFactor.findMany({
+    where: {
+      id: { in: existingFEIdsForSpecificImport.map((fe) => fe.emissionFactorId) },
+      importedFrom: source,
+    },
+    include: { versions: true, emissionFactorParts: true },
+  })
+
   const efByImportedId = new Map(existingEFs.map((ef) => [ef.importedId!, ef]))
   const notFound = efRows.filter((r) => !efByImportedId.has(r["Identifiant_de_l'élément"])).length
 
@@ -46,41 +71,66 @@ export const applyOverridesFromRows = async (source: Import, rows: ImportEmissio
         }
 
         const mapped = mapEmissionFactors(row, source)
+        const efData = {
+          totalCo2: mapped.totalCo2,
+          co2f: mapped.co2f,
+          ch4f: mapped.ch4f,
+          ch4b: mapped.ch4b,
+          n2o: mapped.n2o,
+          co2b: mapped.co2b,
+          sf6: mapped.sf6,
+          hfc: mapped.hfc,
+          pfc: mapped.pfc,
+          otherGES: mapped.otherGES,
+          unit: mapped.unit,
+          isMonetary: mapped.isMonetary,
+          status: mapped.status,
+          source: mapped.source,
+          location: mapped.location,
+          overrideRawCsv: serializeRowAsCsv(row),
+        }
 
-        await transaction.emissionFactor.update({
-          where: { id: ef.id },
-          data: {
-            totalCo2: mapped.totalCo2,
-            co2f: mapped.co2f,
-            ch4f: mapped.ch4f,
-            ch4b: mapped.ch4b,
-            n2o: mapped.n2o,
-            co2b: mapped.co2b,
-            sf6: mapped.sf6,
-            hfc: mapped.hfc,
-            pfc: mapped.pfc,
-            otherGES: mapped.otherGES,
-            unit: mapped.unit,
-            isMonetary: mapped.isMonetary,
-            status: mapped.status,
-            source: mapped.source,
-            location: mapped.location,
-            overrideRawCsv: serializeRowAsCsv(row),
-            metaData: {
-              updateMany: mapped.metaData.createMany.data.map((meta) => ({
-                where: { emissionFactorId: ef.id, language: meta.language },
-                data: {
-                  title: meta.title,
-                  attribute: meta.attribute,
-                  frontiere: meta.frontiere,
-                  tag: meta.tag,
-                  location: meta.location,
-                  comment: meta.comment,
-                },
-              })),
+        if (ef.versions.length > 1) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { versions, emissionFactorParts, id, ...efWithouVersion } = ef
+
+          const created = await transaction.emissionFactor.create({
+            data: {
+              ...efWithouVersion,
+              ...efData,
+              metaData: { createMany: { data: mapped.metaData.createMany.data } },
             },
-          },
-        })
+          })
+          await transaction.emissionFactorVersion.update({
+            where: {
+              emissionFactorId_importVersionId: {
+                emissionFactorId: ef.id,
+                importVersionId: efImport.id,
+              },
+            },
+            data: { emissionFactorId: created.id },
+          })
+        } else {
+          await transaction.emissionFactor.update({
+            where: { id: ef.id },
+            data: {
+              ...efData,
+              metaData: {
+                updateMany: mapped.metaData.createMany.data.map((meta) => ({
+                  where: { emissionFactorId: ef.id, language: meta.language },
+                  data: {
+                    title: meta.title,
+                    attribute: meta.attribute,
+                    frontiere: meta.frontiere,
+                    tag: meta.tag,
+                    location: meta.location,
+                    comment: meta.comment,
+                  },
+                })),
+              },
+            },
+          })
+        }
 
         applied++
       }
@@ -95,6 +145,7 @@ export const applyOverridesFromRows = async (source: Import, rows: ImportEmissio
         const partType = getType(partRow.Type_poste)
         const existingPart = ef.emissionFactorParts.find((p) => p.type === partType)
         if (!existingPart) {
+          console.log(ef)
           console.warn(`  Part type "${partRow.Type_poste}" not found for EF "${importedId}" — skipping`)
           continue
         }
