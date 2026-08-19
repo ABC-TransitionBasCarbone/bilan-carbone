@@ -11,7 +11,7 @@ describe('Unit service', () => {
     const allUnitValues = Object.values(allUnits)
 
     for (const unit of Object.values(Unit)) {
-      it(`should have unit ${unit} in BCUnit or CUTUnit`, () => {
+      it(`should have unit ${unit} in one env or old`, () => {
         expect(allUnitValues).toContain(unit)
       })
     }

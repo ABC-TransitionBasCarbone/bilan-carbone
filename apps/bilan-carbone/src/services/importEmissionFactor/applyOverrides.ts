@@ -92,11 +92,11 @@ export const applyOverridesFromRows = async (
 
         if (ef.versions.length > 1) {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { versions, emissionFactorParts, id, ...efWithouVersion } = ef
+          const { versions, emissionFactorParts, id, ...efWithoutVersion } = ef
 
-          const created = await transaction.emissionFactor.create({
+          await transaction.emissionFactor.create({
             data: {
-              ...efWithouVersion,
+              ...efWithoutVersion,
               ...efData,
               metaData: { createMany: { data: mapped.metaData.createMany.data } },
             },
@@ -108,8 +108,21 @@ export const applyOverridesFromRows = async (
                 importVersionId: efImport.id,
               },
             },
-            data: { emissionFactorId: created.id },
+            data: {
+              importVersionId: importedId,
+            },
           })
+
+          const newEF = await prismaClient.emissionFactor.findFirst({
+            where: { id },
+            include: { versions: true, emissionFactorParts: true },
+          })
+
+          if (!newEF) {
+            throw new Error(`Failed to create new EF for importedId "${importedId}"`)
+          }
+          efByImportedId.set(importedId, newEF)
+          console.log(`  Created new EF for importedId "${importedId}" with id "${newEF.id}"`)
         } else {
           await transaction.emissionFactor.update({
             where: { id: ef.id },
@@ -144,11 +157,6 @@ export const applyOverridesFromRows = async (
 
         const partType = getType(partRow.Type_poste)
         const existingPart = ef.emissionFactorParts.find((p) => p.type === partType)
-        if (!existingPart) {
-          console.log(ef)
-          console.warn(`  Part type "${partRow.Type_poste}" not found for EF "${importedId}" — skipping`)
-          continue
-        }
 
         const gases = getGases(partRow)
         const metaData: { title: string; language: string }[] = []
@@ -159,22 +167,36 @@ export const applyOverridesFromRows = async (
           metaData.push({ title: partRow.Nom_poste_anglais, language: 'en' })
         }
 
-        await transaction.emissionFactorPart.update({
-          where: { id: existingPart.id },
-          data: {
-            ...gases,
-            overrideRawCsv: serializeRowAsCsv(partRow),
-            metaData:
-              metaData.length > 0
-                ? {
-                    updateMany: metaData.map((m) => ({
-                      where: { emissionFactorPartId: existingPart.id, language: m.language },
-                      data: { title: m.title },
-                    })),
-                  }
-                : undefined,
-          },
-        })
+        if (existingPart) {
+          await transaction.emissionFactorPart.update({
+            where: { id: existingPart.id },
+            data: {
+              ...gases,
+              overrideRawCsv: serializeRowAsCsv(partRow),
+              metaData:
+                metaData.length > 0
+                  ? {
+                      updateMany: metaData.map((m) => ({
+                        where: { emissionFactorPartId: existingPart.id, language: m.language },
+                        data: { title: m.title },
+                      })),
+                    }
+                  : undefined,
+            },
+          })
+        } else {
+          await transaction.emissionFactorPart.create({
+            data: {
+              ...gases,
+              type: partType,
+              emissionFactor: { connect: { id: ef.id } },
+              importedRawCsv: serializeRowAsCsv(partRow),
+              metaData: {
+                createMany: { data: metaData },
+              },
+            },
+          })
+        }
       }
 
       const total = efRows.length
