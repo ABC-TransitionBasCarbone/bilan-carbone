@@ -1,8 +1,8 @@
 import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
 import * as studyUtilsModule from '@/utils/study'
-import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { EmissionFactorBase, Import, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { expect } from '@jest/globals'
-import { getGHGPEmissionValue } from './ghgp'
+import { getGHGPEmissionValue, getGHGPLineAndPost } from './ghgp'
 
 jest.mock('../../utils/study', () => ({ hasDeprecationPeriod: jest.fn(), hasFabricationPart: jest.fn() }))
 const mockHasDeprecationPeriod = studyUtilsModule.hasDeprecationPeriod as jest.Mock
@@ -85,6 +85,99 @@ describe('GHGP service functions', () => {
 
       expect(result).toEqual(0)
       expect(previousYearEmissionSource.value).toEqual(50)
+    })
+  })
+
+  describe('getGHGPLineAndPost', () => {
+    const value = 100
+    const emissionFactor = {
+      ch4b: 0,
+      ch4f: 0,
+      co2b: 0,
+      co2f: 0,
+      n2o: 10,
+      pfc: 0,
+      hfc: 0,
+      sf6: 0,
+      otherGES: 0,
+      totalCo2: 10,
+      importedFrom: Import.BaseEmpreinte,
+      importedId: '10250',
+    }
+    const post = '1.1'
+
+    const line = {
+      co2: 0,
+      ch4: 0,
+      n2o: 1000,
+      hfc: 0,
+      pfc: 0,
+      sf6: 0,
+      other: 0,
+      co2b: 0,
+      total: 1000,
+    }
+
+    test('Should return line and post if export is locationBased', () => {
+      const exportBase = EmissionFactorBase.LocationBased
+      const efBase = EmissionFactorBase.LocationBased
+
+      expect(getGHGPLineAndPost(value, { ...emissionFactor, base: efBase }, post, exportBase)).toEqual({
+        line,
+        post,
+      })
+    })
+
+    test('Should return line and post if locationBased and emissionFactor.base is null', () => {
+      const exportBase = EmissionFactorBase.LocationBased
+      const efBase = null
+
+      expect(getGHGPLineAndPost(value, { ...emissionFactor, base: efBase }, post, exportBase)).toEqual({
+        line,
+        post,
+      })
+    })
+
+    test('Should return line and post if export is marketBased and emissionFactor.base is location based and post is not scope 2', () => {
+      const exportBase = EmissionFactorBase.MarketBased
+      const efBase = EmissionFactorBase.LocationBased
+
+      expect(getGHGPLineAndPost(value, { ...emissionFactor, base: efBase }, post, exportBase)).toEqual({
+        line,
+        post,
+      })
+    })
+
+    test('Should return null if export is marketBased and emissionFactor.base is location based and post is scope 2', () => {
+      const exportBase = EmissionFactorBase.MarketBased
+      const efBase = EmissionFactorBase.LocationBased
+      const scope2Post = '2.1'
+
+      expect(getGHGPLineAndPost(value, { ...emissionFactor, base: efBase }, scope2Post, exportBase)).toEqual({
+        line: null,
+        post: null,
+      })
+    })
+
+    test('Should return null if export is marketBased and emissionFactor.base is market based and is not scope 2', () => {
+      const exportBase = EmissionFactorBase.MarketBased
+      const efBase = EmissionFactorBase.MarketBased
+
+      expect(getGHGPLineAndPost(value, { ...emissionFactor, base: efBase }, post, exportBase)).toEqual({
+        line: null,
+        post: null,
+      })
+    })
+
+    test('Should return line and post if export is marketBased and emissionFactor.base is market based and is scope 2', () => {
+      const exportBase = EmissionFactorBase.MarketBased
+      const efBase = EmissionFactorBase.MarketBased
+      const scope2Post = '2.1'
+
+      expect(getGHGPLineAndPost(value, { ...emissionFactor, base: efBase }, scope2Post, exportBase)).toEqual({
+        line,
+        post: scope2Post,
+      })
     })
   })
 })
