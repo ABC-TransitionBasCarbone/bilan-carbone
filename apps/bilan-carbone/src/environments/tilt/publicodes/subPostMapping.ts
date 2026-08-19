@@ -40,6 +40,7 @@ export const POST_TO_RULENAME: Record<TiltSimplifiedPost, TiltRuleName> = {
   [TiltSimplifiedPost.UtilisationSimplified]: 'utilisation',
   [TiltSimplifiedPost.FinDeVieSimplified]: 'fin de vie',
   [TiltSimplifiedPost.TeletravailSimplified]: 'télétravail',
+  [TiltSimplifiedPost.EvenementSimplified]: 'télétravail', // To change once publicodes is written
 } as const
 
 const SUBPOST_TO_RULENAME: Partial<Record<SubPost, TiltRuleName>> = {

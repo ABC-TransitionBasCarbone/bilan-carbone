@@ -150,6 +150,7 @@ export const postColors: Record<Post, string> = {
   [Post.UtilisationSimplified]: 'orange',
   [Post.FinDeVieSimplified]: 'orange',
   [Post.TeletravailSimplified]: 'darkBlue',
+  [Post.EvenementSimplified]: 'darkBlue',
 
   [Post.Restauration]: 'darkBlue',
   [Post.Achats]: 'darkBlue',
