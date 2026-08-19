@@ -32131,6 +32131,7 @@ export const elementsBySubPost: Record<SubPost, string[]> = {
   [SubPost.BienMatieres]: [],
   [SubPost.ConsommationsEnergieUtilisationProduits]: [],
   [SubPost.TeletravailSalariesBenevoles]: [],
+  [SubPost.Evenement]: [],
   [SubPost.FinDeVieProduitsVendusFournisBeneficiaires]: [],
 
   [SubPost.Combustibles]: [],
