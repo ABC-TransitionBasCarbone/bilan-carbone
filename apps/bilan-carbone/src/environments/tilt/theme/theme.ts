@@ -66,6 +66,7 @@ const tiltTheme = createTheme(theme, {
       [TiltSimplifiedPost.UtilisationSimplified]: { light: '#FBBC6B', dark: '#C88938' },
       [TiltSimplifiedPost.FinDeVieSimplified]: { light: '#FBBC6B', dark: '#C88938' },
       [TiltSimplifiedPost.TeletravailSimplified]: { light: '#3F5488', dark: '#0C2155', customTitleColor: '#ffffff' },
+      [TiltSimplifiedPost.EvenementSimplified]: { light: '#FF5C5C', dark: '#b24040', customTitleColor: '#ffffff' },
     },
   },
 })

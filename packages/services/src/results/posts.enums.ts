@@ -58,6 +58,7 @@ export enum TiltSimplifiedPost {
   UtilisationSimplified = 'UtilisationSimplified',
   FinDeVieSimplified = 'FinDeVieSimplified',
   TeletravailSimplified = 'TeletravailSimplified',
+  EvenementSimplified = 'EvenementSimplified',
 }
 
 export enum ClicksonPost {

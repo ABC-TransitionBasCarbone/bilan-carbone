@@ -193,6 +193,7 @@ export const subPostsByPostTILTSimplified: Record<TiltSimplifiedPost, SubPost[]>
   [TiltSimplifiedPost.UtilisationSimplified]: [SubPost.ConsommationsEnergieUtilisationProduits],
   [TiltSimplifiedPost.FinDeVieSimplified]: [SubPost.FinDeVieProduitsVendusFournisBeneficiaires],
   [TiltSimplifiedPost.TeletravailSimplified]: [SubPost.TeletravailSalariesBenevoles],
+  [TiltSimplifiedPost.EvenementSimplified]: [SubPost.Evenement],
 }
 
 export const subPostsByPostClickson: Record<ClicksonPost, SubPost[]> = {
