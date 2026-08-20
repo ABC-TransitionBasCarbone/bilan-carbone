@@ -976,7 +976,8 @@
         "message": "Añadir un objetivo específico a la trayectoria \"{trajectoryName}\" de tipo {trajectoryType} la convertirá automáticamente en una trayectoria de tipo PERSONALIZADO. Esta acción es irreversible.",
         "explanation": "Una vez convertida, la trayectoria conservará los objetivos por defecto ya definidos, pero dejará de seguir las reglas específicas de las trayectorias de tipo {trajectoryType}.",
         "cancel": "Cancelar",
-        "confirm": "Continuar"
+        "confirm": "Continuar",
+        "moreExplanationSNBC": "La fecha de referencia de su trayectoria ya no será 1990 como en la SNBC, sino la fecha de su primer estudio registrado en esta herramienta, es decir, {oldestStudyDate}."
       },
       "objectives": {
         "title": "Objetivos de reducción",

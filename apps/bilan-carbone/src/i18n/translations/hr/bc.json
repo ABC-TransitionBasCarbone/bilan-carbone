@@ -1,0 +1,9 @@
+{
+  "study": {
+    "transitionPlan": {
+      "conversionWarning": {
+        "moreExplanationSNBC": "Referentni datum vaše putanje više neće biti 1990. kao za SNBC, već će to biti datum vaše prve studije zabilježene u ovom alatu, odnosno {oldestStudyDate}."
+      }
+    }
+  }
+}
