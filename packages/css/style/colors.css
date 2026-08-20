@@ -126,4 +126,11 @@
   --trajectory-snbc-shade-8: #001518;
 
   --trajectory-gray-area: #fef5df;
+
+  /* MIP theme */
+  --mip-category-dt: #272768;
+  --mip-category-transport: #0288d1;
+  --mip-category-alimentation: #ed6c02;
+  --mip-category-divers: #d32f2f;
+  --mip-category-logement: #2e7d32;
 }
