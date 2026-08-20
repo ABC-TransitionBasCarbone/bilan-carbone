@@ -28,9 +28,6 @@ const fixEmissionSourcesWithWrongEnvironmentSubPost = async (dryRun = true) => {
         select: {
           id: true,
           name: true,
-          emissionSources: {
-            select: { id: true, name: true, subPost: true },
-          },
         },
       })
 
