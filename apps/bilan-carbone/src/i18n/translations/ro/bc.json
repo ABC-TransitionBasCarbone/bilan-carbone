@@ -1,0 +1,9 @@
+{
+  "study": {
+    "transitionPlan": {
+      "conversionWarning": {
+        "moreExplanationSNBC": "Data de referință a traiectoriei dumneavoastră nu va mai fi 1990 ca pentru SNBC, ci va fi data primului dumneavoastră studiu înregistrat în acest instrument, adică {oldestStudyDate}."
+      }
+    }
+  }
+}

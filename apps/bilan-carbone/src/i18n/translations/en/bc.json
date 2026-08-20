@@ -1290,7 +1290,7 @@
         "warningTitle": "This action will convert your pathway to CUSTOM type.",
         "message": "Adding a scope-specific objective to the pathway \"{trajectoryName}\" ({trajectoryType}) will automatically convert it to a CUSTOM pathway type. This action is irreversible.",
         "explanation": "Once converted to CUSTOM, the pathway will no longer follow the predefined {trajectoryType} reduction rates. You will have full control over all objectives.",
-        "moreExplanationSNBC": "The reference date for your trajectory will no longer be 1990, as it is for the SNBC, but rather the date of the first study you recorded in this tool: {oldestStudyDate}.",
+        "moreExplanationSNBC": "The base year of your pathway will no longer be 1990 as for the SNBC but will be the date of your first assessment recorded in this tool, i.e. {oldestStudyDate}.",
         "cancel": "Cancel",
         "confirm": "Continue"
       },

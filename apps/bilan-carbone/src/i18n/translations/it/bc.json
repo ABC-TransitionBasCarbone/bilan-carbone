@@ -1263,7 +1263,8 @@
         "message": "L'aggiunta di un obiettivo specifico alla traiettoria \"{trajectoryName}\" di tipo {trajectoryType} la convertirà automaticamente in una traiettoria di tipo PERSONALIZZATO. Questa azione è irreversibile.",
         "explanation": "Una volta convertita, la traiettoria conserverà gli obiettivi predefiniti già definiti, ma non seguirà più le regole specifiche delle traiettorie di tipo {trajectoryType}.",
         "cancel": "Annulla",
-        "confirm": "Continua"
+        "confirm": "Continua",
+        "moreExplanationSNBC": "La data di riferimento della tua traiettoria non sarà più il 1990 come per la SNBC, ma corrisponderà alla data del tuo primo studio registrato su questo strumento, ovvero {oldestStudyDate}."
       },
       "objectives": {
         "title": "Obiettivi di riduzione",
