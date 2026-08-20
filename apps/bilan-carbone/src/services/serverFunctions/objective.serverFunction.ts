@@ -67,6 +67,24 @@ export const validateUniqueScopeCombination = async (
   }
 }
 
+export const getOldestPastStudyYearForTrajectory = async (trajectoryId: string) =>
+  withServerResponse('getOldestPastStudyYearForTrajectory', async () => {
+    const trajectory = await getTrajectoryWithTransitionPlan(trajectoryId)
+    if (!trajectory) {
+      throw new Error('Trajectory not found')
+    }
+    const hasEditAccess = await hasEditAccessOnStudy(trajectory.transitionPlan.studyId)
+    if (!hasEditAccess) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const oldestYear = await getOldestPastStudyYear(trajectoryId, prismaClient)
+    if (oldestYear === null) {
+      throw new Error('No past studies found for this trajectory')
+    }
+    return oldestYear
+  })
+
 export const createSubObjectives = async (inputs: CreateObjectiveInput[]) =>
   withServerResponse('createSubObjectives', async () => {
     if (inputs.length === 0) {

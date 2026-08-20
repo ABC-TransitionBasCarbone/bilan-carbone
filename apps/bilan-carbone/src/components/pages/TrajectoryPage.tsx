@@ -29,6 +29,7 @@ interface Props {
   actions?: ActionWithRelations[]
   validatedOnly: boolean
   sectenData?: SectenInfo[]
+  oldestPastStudyYear: number
 }
 
 const TrajectoryPage = ({
@@ -41,6 +42,7 @@ const TrajectoryPage = ({
   actions = [],
   validatedOnly,
   sectenData = [],
+  oldestPastStudyYear,
 }: Props) => {
   const t = useTranslations('study.transitionPlan')
   const tStudyNav = useTranslations('study.navigation')
@@ -130,6 +132,7 @@ const TrajectoryPage = ({
               defaultSnbcSectoralTrajectoryId={defaultSnbcSectoralTrajectoryId}
               objectiveGroupsByTrajectoryId={objectiveGroupsByTrajectoryId}
               hasFilters={hasFilters}
+              oldestPastStudyYear={oldestPastStudyYear}
             />
           </div>
 

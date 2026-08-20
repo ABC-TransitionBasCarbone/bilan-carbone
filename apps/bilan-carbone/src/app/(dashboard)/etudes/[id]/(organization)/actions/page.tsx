@@ -14,7 +14,7 @@ const Actions = async ({ study, canEdit, user }: StudyProps & UserSessionProps &
     redirect(`/etudes/${study.id}/initialisation`)
   }
 
-  const data = await loadTransitionPlanPageData(study.id, user.accountId)
+  const data = await loadTransitionPlanPageData(study.id, user.accountId, study.startDate.getFullYear())
   if (!data || data.actions === null) {
     return <NotFound />
   }

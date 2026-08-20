@@ -1,8 +1,8 @@
 'use client'
 
-import { getTrajectoryTypeLabel } from '@/utils/trajectory'
+import { getTrajectoryTypeLabel, isTrajectorySNBC } from '@/utils/trajectory'
 import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
-import type { TrajectoryType } from '@abc-transitionbascarbone/db-common'
+import { TrajectoryType } from '@abc-transitionbascarbone/db-common'
 import { Typography } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -13,14 +13,22 @@ interface Props {
   onConfirm: () => void
   onCancel: () => void
   trajectoryName: string
-  trajectoryType: string
+  trajectoryType: TrajectoryType
+  oldestPastStudyYear: number
 }
 
-const TrajectoryConversionWarningModal = ({ open, onConfirm, onCancel, trajectoryName, trajectoryType }: Props) => {
+const TrajectoryConversionWarningModal = ({
+  open,
+  onConfirm,
+  onCancel,
+  trajectoryName,
+  trajectoryType,
+  oldestPastStudyYear,
+}: Props) => {
   const t = useTranslations('study.transitionPlan.conversionWarning')
   const tTypes = useTranslations('study.transitionPlan.objectives')
 
-  const trajectoryTypeLabel = getTrajectoryTypeLabel(trajectoryType as TrajectoryType, tTypes)
+  const trajectoryTypeLabel = getTrajectoryTypeLabel(trajectoryType, tTypes)
 
   return (
     <Modal
@@ -52,6 +60,11 @@ const TrajectoryConversionWarningModal = ({ open, onConfirm, onCancel, trajector
         <Typography variant="body1" color="textSecondary" className={classNames('p1', styles.explanation)}>
           {t('explanation', { trajectoryType: trajectoryTypeLabel })}
         </Typography>
+        {isTrajectorySNBC(trajectoryType) ? (
+          <Typography variant="body1" color="textSecondary" className={classNames('p1', styles.explanation)}>
+            {t('moreExplanationSNBC', { oldestPastStudyYear: oldestPastStudyYear })}
+          </Typography>
+        ) : null}
       </div>
     </Modal>
   )

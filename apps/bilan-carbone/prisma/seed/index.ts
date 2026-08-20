@@ -77,6 +77,7 @@ const users = async () => {
 
   await prisma.emissionFactorImportVersion.deleteMany()
 
+  await prisma.response.deleteMany()
   await prisma.site.deleteMany()
   await prisma.userCheckedStep.deleteMany()
   await prisma.userApplicationSettings.deleteMany()

@@ -82,6 +82,7 @@ interface Props {
   defaultSnbcSectoralTrajectoryId?: string | null
   objectiveGroupsByTrajectoryId: Map<string, ObjectiveGroup[]>
   hasFilters?: boolean
+  oldestPastStudyYear: number
 }
 
 const fuseOptions = {
@@ -107,6 +108,7 @@ const ObjectivesTable = ({
   defaultSnbcSectoralTrajectoryId,
   objectiveGroupsByTrajectoryId,
   hasFilters = false,
+  oldestPastStudyYear,
 }: Props) => {
   const locale = useLocale()
   const tAction = useTranslations('common.action')
@@ -518,6 +520,7 @@ const ObjectivesTable = ({
           onCancel={handleConversionCancel}
           trajectoryName={pendingTrajectory.name}
           trajectoryType={pendingTrajectory.type}
+          oldestPastStudyYear={oldestPastStudyYear}
         />
       )}
     </>

@@ -63,6 +63,10 @@ interface TrajectoryYearBounds {
   maxYear: number
 }
 
+export const isTrajectorySNBC = (trajectoryType: TrajectoryType): boolean => {
+  return trajectoryType === TrajectoryType.SNBC_GENERAL || trajectoryType === TrajectoryType.SNBC_SECTORAL
+}
+
 /**
  * Calculate consistent min and max years for all trajectory graphs
  */

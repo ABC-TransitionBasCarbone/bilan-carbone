@@ -1,4 +1,5 @@
 import { getUserApplicationSettings } from '@/db/user'
+import { getOldestPastStudyYearForTrajectory } from '@/services/serverFunctions/objective.serverFunction'
 import { getLatestSectenVersion, getSectenData } from '@/services/serverFunctions/secten'
 import { getTrajectories } from '@/services/serverFunctions/trajectory.serverFunction'
 import {
@@ -7,7 +8,7 @@ import {
   getStudyTransitionPlan,
 } from '@/services/serverFunctions/transitionPlan'
 
-export const loadTransitionPlanPageData = async (studyId: string, accountId: string) => {
+export const loadTransitionPlanPageData = async (studyId: string, accountId: string, studyYear: number) => {
   const [transitionPlanResponse, settings] = await Promise.all([
     getStudyTransitionPlan(studyId),
     getUserApplicationSettings(accountId),
@@ -40,6 +41,12 @@ export const loadTransitionPlanPageData = async (studyId: string, accountId: str
     transitionPlan.sectenVersionId !== null &&
     transitionPlan.sectenVersionId !== latestSectenVersion.id
 
+  const oldestPastStudyYearAPIResponse = await getOldestPastStudyYearForTrajectory(transitionPlan.id)
+  let oldestPastStudyYear = studyYear
+  if (oldestPastStudyYearAPIResponse.success && oldestPastStudyYearAPIResponse.data !== null) {
+    oldestPastStudyYear = oldestPastStudyYearAPIResponse.data
+  }
+
   return {
     transitionPlan,
     validatedOnly: settings.validatedEmissionSourcesOnly,
@@ -50,5 +57,6 @@ export const loadTransitionPlanPageData = async (studyId: string, accountId: str
     sectenData: sectenDataResponse.success ? sectenDataResponse.data : [],
     latestSectenVersion,
     isSectenOutdated,
+    oldestPastStudyYear,
   }
 }
