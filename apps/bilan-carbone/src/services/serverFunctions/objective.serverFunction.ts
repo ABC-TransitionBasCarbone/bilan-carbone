@@ -15,7 +15,7 @@ import {
   updateObjective,
 } from '@/db/objective.db'
 import { getOldestPastStudyYear, getTrajectoryTypeAndRefYear, updateTrajectoryType } from '@/db/trajectory'
-import { getTrajectoryWithTransitionPlan } from '@/db/transitionPlan'
+import { getTrajectoryWithTransitionPlan, getTransitionPlanById } from '@/db/transitionPlan'
 import { withServerResponse } from '@/utils/serverResponse'
 import { SubPost, TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
@@ -67,18 +67,18 @@ export const validateUniqueScopeCombination = async (
   }
 }
 
-export const getOldestPastStudyYearForTrajectory = async (trajectoryId: string) =>
-  withServerResponse('getOldestPastStudyYearForTrajectory', async () => {
-    const trajectory = await getTrajectoryWithTransitionPlan(trajectoryId)
-    if (!trajectory) {
-      throw new Error('Trajectory not found')
+export const getOldestPastStudyYearForTransitionPlan = async (transitionPlanId: string) =>
+  withServerResponse('getOldestPastStudyYearForTransitionPlan', async () => {
+    const transitionPlan = await getTransitionPlanById(transitionPlanId)
+    if (!transitionPlan) {
+      throw new Error('transitionPlan not found')
     }
-    const hasEditAccess = await hasEditAccessOnStudy(trajectory.transitionPlan.studyId)
+    const hasEditAccess = await hasEditAccessOnStudy(transitionPlan.studyId)
     if (!hasEditAccess) {
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const oldestYear = await getOldestPastStudyYear(trajectoryId, prismaClient)
+    const oldestYear = await getOldestPastStudyYear(transitionPlanId, prismaClient)
     if (oldestYear === null) {
       throw new Error('No past studies found for this trajectory')
     }

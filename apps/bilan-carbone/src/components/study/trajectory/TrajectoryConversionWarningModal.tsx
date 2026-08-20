@@ -62,7 +62,7 @@ const TrajectoryConversionWarningModal = ({
         </Typography>
         {isTrajectorySNBC(trajectoryType) ? (
           <Typography variant="body1" color="textSecondary" className={classNames('p1', styles.explanation)}>
-            {t('moreExplanationSNBC', { oldestPastStudyYear: oldestPastStudyYear })}
+            {t('moreExplanationSNBC', { oldestStudyDate: oldestPastStudyYear })}
           </Typography>
         ) : null}
       </div>

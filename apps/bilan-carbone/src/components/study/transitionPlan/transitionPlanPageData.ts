@@ -1,5 +1,5 @@
 import { getUserApplicationSettings } from '@/db/user'
-import { getOldestPastStudyYearForTrajectory } from '@/services/serverFunctions/objective.serverFunction'
+import { getOldestPastStudyYearForTransitionPlan } from '@/services/serverFunctions/objective.serverFunction'
 import { getLatestSectenVersion, getSectenData } from '@/services/serverFunctions/secten'
 import { getTrajectories } from '@/services/serverFunctions/trajectory.serverFunction'
 import {
@@ -41,7 +41,7 @@ export const loadTransitionPlanPageData = async (studyId: string, accountId: str
     transitionPlan.sectenVersionId !== null &&
     transitionPlan.sectenVersionId !== latestSectenVersion.id
 
-  const oldestPastStudyYearAPIResponse = await getOldestPastStudyYearForTrajectory(transitionPlan.id)
+  const oldestPastStudyYearAPIResponse = await getOldestPastStudyYearForTransitionPlan(transitionPlan.id)
   let oldestPastStudyYear = studyYear
   if (oldestPastStudyYearAPIResponse.success && oldestPastStudyYearAPIResponse.data !== null) {
     oldestPastStudyYear = oldestPastStudyYearAPIResponse.data
