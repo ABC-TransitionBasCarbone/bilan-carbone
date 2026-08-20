@@ -174,6 +174,7 @@ export const unitsMatrix: Record<string, Unit> = {
   'kg / km (passager)': Unit.KG_PER_KM_PASSENGER,
   'kg / passager.km': Unit.KG_PER_PASSENGER_KM,
   'kg / tonne.km': Unit.KG_PER_TON_KM,
+  'Kg de N': Unit.KG_N,
   'kg / voiture.km': Unit.KG_PER_CAR_KM,
   kgDBO: Unit.KGDBO,
   'kgDBO / m³': Unit.KGDBO_PER_M3,

@@ -3747,7 +3747,7 @@ export const elementsBySubPost: Record<SubPost, string[]> = {
     '15661',
     '15662',
   ],
-  [SubPost.Agriculture]: ['24275', '24276', '24273', '24274', '24270', '24271', '24272'],
+  [SubPost.Agriculture]: ['24275', '24276', '24273', '24274', '24270', '24271', '24272', 'ABC-24268-43016'],
   [SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas]: [
     '15321',
     '15325',

@@ -164,6 +164,7 @@ export const BCUnit = {
   KW_PER_YEAR_ELECTRIC_POWER: Unit.KW_PER_YEAR_ELECTRIC_POWER,
   TEU_KM: Unit.TEU_KM,
   UNITLESS: Unit.UNITLESS,
+  KG_N: Unit.KG_N,
   ...UnitCommon,
 }
 
