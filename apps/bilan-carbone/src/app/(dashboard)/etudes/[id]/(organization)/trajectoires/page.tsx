@@ -14,13 +14,21 @@ const TrajectoryReduction = async ({ study, canEdit, user }: StudyProps & UserSe
     redirect(`/etudes/${study.id}/initialisation`)
   }
 
-  const data = await loadTransitionPlanPageData(study.id, user.accountId)
+  const data = await loadTransitionPlanPageData(study.id, user.accountId, study.startDate.getFullYear())
   if (!data) {
     return <NotFound />
   }
 
-  const { transitionPlan, validatedOnly, trajectories, linkedStudies, linkedExternalStudies, actions, sectenData } =
-    data
+  const {
+    transitionPlan,
+    validatedOnly,
+    trajectories,
+    linkedStudies,
+    linkedExternalStudies,
+    actions,
+    sectenData,
+    oldestPastStudyYear,
+  } = data
 
   return (
     <TrajectoryPage
@@ -33,6 +41,7 @@ const TrajectoryReduction = async ({ study, canEdit, user }: StudyProps & UserSe
       actions={actions ?? []}
       validatedOnly={validatedOnly}
       sectenData={sectenData}
+      oldestPastStudyYear={oldestPastStudyYear}
     />
   )
 }

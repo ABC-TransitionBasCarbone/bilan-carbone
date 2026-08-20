@@ -14,8 +14,8 @@ import {
   getSubObjectives,
   updateObjective,
 } from '@/db/objective.db'
-import { getTrajectoryType, updateTrajectoryType } from '@/db/trajectory'
-import { getTrajectoryWithTransitionPlan } from '@/db/transitionPlan'
+import { getOldestPastStudyYear, getTrajectoryTypeAndRefYear, updateTrajectoryType } from '@/db/trajectory'
+import { getTrajectoryWithTransitionPlan, getTransitionPlanById } from '@/db/transitionPlan'
 import { withServerResponse } from '@/utils/serverResponse'
 import { SubPost, TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
@@ -67,6 +67,24 @@ export const validateUniqueScopeCombination = async (
   }
 }
 
+export const getOldestPastStudyYearForTransitionPlan = async (transitionPlanId: string) =>
+  withServerResponse('getOldestPastStudyYearForTransitionPlan', async () => {
+    const transitionPlan = await getTransitionPlanById(transitionPlanId)
+    if (!transitionPlan) {
+      throw new Error('transitionPlan not found')
+    }
+    const hasEditAccess = await hasEditAccessOnStudy(transitionPlan.studyId)
+    if (!hasEditAccess) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const oldestYear = await getOldestPastStudyYear(transitionPlanId, prismaClient)
+    if (oldestYear === null) {
+      throw new Error('No past studies found for this trajectory')
+    }
+    return oldestYear
+  })
+
 export const createSubObjectives = async (inputs: CreateObjectiveInput[]) =>
   withServerResponse('createSubObjectives', async () => {
     if (inputs.length === 0) {
@@ -86,7 +104,7 @@ export const createSubObjectives = async (inputs: CreateObjectiveInput[]) =>
     }
 
     return prismaClient.$transaction(async (tx) => {
-      const trajectoryData = await getTrajectoryType(inputs[0].trajectoryId, tx)
+      const trajectoryData = await getTrajectoryTypeAndRefYear(inputs[0].trajectoryId, tx)
       if (!trajectoryData) {
         throw new Error('Trajectory not found')
       }
@@ -119,8 +137,16 @@ export const createSubObjectives = async (inputs: CreateObjectiveInput[]) =>
         createManyObjectiveSubPosts(objectiveSubPostsData, tx),
       ])
 
-      if (trajectoryData.type !== 'CUSTOM') {
-        await updateTrajectoryType(inputs[0].trajectoryId, TrajectoryType.CUSTOM, tx)
+      if (trajectoryData.type !== TrajectoryType.CUSTOM) {
+        let referenceYear = trajectoryData.referenceYear
+        if (
+          trajectoryData.type === TrajectoryType.SNBC_GENERAL ||
+          trajectoryData.type === TrajectoryType.SNBC_SECTORAL
+        ) {
+          const oldestPastStudyYear = await getOldestPastStudyYear(trajectory.transitionPlan.id, tx)
+          referenceYear = oldestPastStudyYear
+        }
+        await updateTrajectoryType(inputs[0].trajectoryId, TrajectoryType.CUSTOM, referenceYear, tx)
       }
 
       return createdObjectives
