@@ -52,10 +52,17 @@ const KNOWN_SURVEY_CATEGORY_KEYS = ['DT', 'transport', 'alimentation', 'divers',
 
 const getSurveyCategoryKeysFromRules = (rules: Record<string, unknown>): string[] => {
   const bilanRule = rules.bilan
-  if (isObject(bilanRule) && Array.isArray(bilanRule.somme)) {
+  const bilanSum =
+    isObject(bilanRule) && Array.isArray(bilanRule.somme)
+      ? bilanRule.somme
+      : isObject(bilanRule) && isObject(bilanRule.rawNode) && Array.isArray(bilanRule.rawNode.somme)
+        ? bilanRule.rawNode.somme
+        : undefined
+
+  if (bilanSum) {
     const categoryKeys = new Set<string>()
 
-    for (const value of bilanRule.somme) {
+    for (const value of bilanSum) {
       if (typeof value !== 'string') {
         continue
       }
