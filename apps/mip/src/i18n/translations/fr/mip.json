@@ -185,7 +185,9 @@
       "transport": "Déplacements professionnels",
       "alimentation": "Alimentation",
       "divers": "Numérique",
-      "logement": "Bureaux"
+      "logement": "Bureaux",
+      "numérique": "Numérique",
+      "bureaux": "Bureaux"
     },
     "charts": {
       "title": "Répartition des empreintes carbone",

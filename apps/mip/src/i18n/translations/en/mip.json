@@ -177,7 +177,9 @@
       "transport": "Professional travel",
       "alimentation": "Food",
       "divers": "Digital",
-      "logement": "Office"
+      "logement": "Office",
+      "numérique": "Digital",
+      "bureaux": "Office"
     },
     "charts": {
       "title": "Carbon footprint distribution",
