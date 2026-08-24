@@ -103,10 +103,6 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('construction . infrastructure . parking présent'),
     input('construction . infrastructure . nombre de places'),
   ],
-  CombustiblesFossiles: [
-    input('énergie . combustibles organiques . emissions . gaz . consommation'),
-    input('énergie . combustibles organiques . emissions . fioul . consommation'),
-  ],
   CombustiblesOrganiques: [
     group('EnergieTest.question', [
       'énergie . combustibles organiques . types . électricité présent',
@@ -131,14 +127,6 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('énergie . combustibles organiques . autoconsommation électricité . autoconsommation'),
   ],
 
-  ReseauxDeChaleurEtDeVapeur: [
-    input('énergie . combustibles organiques . emissions . réseaux de chaleur . consommation'),
-  ],
-  ReseauxDeFroid: [input('énergie . combustibles organiques . emissions . réseaux de froid . consommation')],
-  Electricite: [
-    input('énergie . combustibles organiques . emissions . électricité . consommation'),
-    input('énergie . combustibles organiques . autoproduction électricité présente'),
-  ],
   FroidEtClim: [input('froid et clim . nombre')],
   DechetsEmisParLOrganisation: [
     table(
@@ -439,9 +427,10 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
           'déplacements . DT-salariés . sans . transports en commun . distance',
         ],
       ],
+      'DomicileTravailSalaries.description',
     ),
   ],
-  DeplacementsDomicileTravailBenevoles: [
+  DeplacementsBenevoles: [
     input('déplacements . DT-bénévoles . avec . distance'),
     input('déplacements . DT-bénévoles . avec . réponse MEP'),
     table(
@@ -475,6 +464,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
           'déplacements . DT-bénévoles . sans . transports en commun . distance',
         ],
       ],
+      'DeplacementsDomicileTravailBenevoles.description',
     ),
   ],
   DeplacementsDansLeCadreDUneMissionAssociativeSalaries: [
