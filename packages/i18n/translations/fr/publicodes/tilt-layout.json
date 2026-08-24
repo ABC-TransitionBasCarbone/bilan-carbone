@@ -24,7 +24,8 @@
         "TauxTransport": "Pourcentage des salariés",
         "question2": "Combien de km parcourt en moyenne, par jour, un salarié se rendant au travail via les modes de transports suivants ? Les distances doivent inclure l'aller et le retour.",
         "ModeTransport2": "Mode de transport",
-        "DistanceMoyenne": "Distance moyenne (A/R) parcourue par jour par un salarié"
+        "DistanceMoyenne": "Distance moyenne (A/R) parcourue par jour par un salarié",
+        "description": "Les distances par défaut proposées sont basées sur les <donneesdéplacementsdtINSEEetSDEStorefacto> statistiques de l'INSEE et du SDES pour l'année 2022 </donneesdéplacementsdtINSEEetSDEStorefacto>."
       },
       "DeplacementsDomicileTravailBenevoles": {
         "question": "Quel pourcentage des bénévoles se rend à son lieu habituel de bénévolat via les modes de transports suivants ?",
@@ -32,7 +33,8 @@
         "TauxTransport": "Pourcentage des bénévoles",
         "question2": "Combien de km parcourt en moyenne, par jour, un bénévole se rendant à son lieu habituel de bénévolat via les modes de transports suivants ? Les distances doivent inclure l'aller et le retour.",
         "ModeTransport2": "Mode de transport",
-        "DistanceMoyenne": "Distance moyenne (A/R) parcourue par jour par un bénévole"
+        "DistanceMoyenne": "Distance moyenne (A/R) parcourue par jour par un bénévole",
+        "description": "Les distances par défaut proposées sont basées sur les <donneesdéplacementsdtINSEEetSDEStorefacto> statistiques de l'INSEE et du SDES pour l'année 2022 </donneesdéplacementsdtINSEEetSDEStorefacto>."
       },
       "DeplacementsDansLeCadreDUneMissionAssociativeSalaries": {
         "question": "Combien de km parcourt en moyenne un salarié se déplaçant dans le cadre d'une mission associative via les modes de transports suivants ?",
