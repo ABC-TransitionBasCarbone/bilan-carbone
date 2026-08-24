@@ -1,14 +1,21 @@
 'use client'
 
+import { getMipEnvVarClient } from '@/utils/environmentClient'
 import { useEffect, useRef } from 'react'
 
 interface Props {
   type?: string
+  search?: string
   className?: string
   testId?: string
 }
 
-const ImpactCo2Widget = ({ type, className, testId }: Props) => {
+const ImpactCo2Widget = ({
+  type,
+  search = getMipEnvVarClient('IMPACT_CO2_DEFAULT_SEARCH'),
+  className,
+  testId,
+}: Props) => {
   const mountRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
@@ -21,18 +28,20 @@ const ImpactCo2Widget = ({ type, className, testId }: Props) => {
     mountElement.innerHTML = ''
 
     const script = document.createElement('script')
-    script.src = 'https://impactco2.fr/iframe.js'
+    script.src = getMipEnvVarClient('IMPACT_CO2_SCRIPT_SRC')
     script.async = true
     script.dataset.name = 'impact-co2'
     script.dataset.type = type
-    script.dataset.search = '?language=fr&theme=default'
+    script.dataset.search = search
 
     mountElement.appendChild(script)
 
     return () => {
-      mountElement.innerHTML = ''
+      if (mountRef.current) {
+        mountRef.current.innerHTML = ''
+      }
     }
-  }, [type])
+  }, [type, search])
 
   if (!type) {
     return null
