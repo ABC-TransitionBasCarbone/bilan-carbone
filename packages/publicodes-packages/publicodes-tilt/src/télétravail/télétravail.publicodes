@@ -21,6 +21,9 @@ télétravail . bénévoles . h:
   unité: h/semaine
   type: nombre
   par défaut: 0
+  form:
+    à traduire: oui 
+  description: Dans le cas où vous ne disposeriez pas de cette information, vous pouvez considérer le nombre total d'heures de bénévolat, estimer un % télétravaillé, et diviser ensuite par votre nombre de bénévoles.
 
 télétravail . bénévoles . j:
   formule: h / 7
