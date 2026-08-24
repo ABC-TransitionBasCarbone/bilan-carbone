@@ -58,7 +58,7 @@ déplacements . bénéficiaires . part train:
   par défaut: 0
 
 déplacements . bénéficiaires . part deux roues:
-  titre: Deux roues
+  titre: Deux roues (moto, scooter, ...)
   form:
     à traduire: oui
   applicable si:
@@ -130,7 +130,7 @@ déplacements . bénéficiaires . train:
   par défaut: 0
 
 déplacements . bénéficiaires . deux roues:
-  titre: Deux roues
+  titre: Deux roues (moto, scooter, ...)
   form:
     à traduire: oui
   applicable si:

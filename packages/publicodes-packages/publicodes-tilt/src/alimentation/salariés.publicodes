@@ -40,7 +40,7 @@ alimentation . mosaic salariés . végétalien:
   titre: Végétalien
   formule: FE * nombre
   icônes: 🌾🥜🥗
-  description: |
+  note: |
     Repas sans produits animaux.
 
 alimentation . mosaic salariés . végétalien . FE:
@@ -58,7 +58,7 @@ alimentation . mosaic salariés . végétarien:
   titre: Végétarien
   formule: FE * nombre
   icônes: 🥗🍳🧀
-  description: Repas sans chair animale, avec des œufs ou un peu de fromage.
+  note: Repas sans chair animale, avec des œufs ou un peu de fromage.
 
 alimentation . mosaic salariés . végétarien . FE:
   titre: Empreinte carbone d'un repas végétarien
@@ -75,7 +75,7 @@ alimentation . mosaic salariés . viande blanche:
   titre: Viande blanche
   icônes: 🍗🥓
   formule: FE * nombre
-  description: Repas contenant une pièce de poulet, porc.
+  note: Repas contenant une pièce de poulet, porc.
 
 alimentation . mosaic salariés . viande blanche . FE:
   titre: Empreinte carbone d'un repas de type viande blanche (poulet, porc)
@@ -93,7 +93,7 @@ alimentation . mosaic salariés . viande rouge:
   titre: Viande rouge
   icônes: 🥩🍖
   formule: FE * nombre
-  description: Repas contenant une pièce de bœuf, veau, ou agneau.
+  note: Repas contenant une pièce de bœuf, veau, ou agneau.
 
 alimentation . mosaic salariés . viande rouge . FE:
   titre: Empreinte carbone d'un repas de type viande rouge (bœuf, veau, agneau)
@@ -123,7 +123,7 @@ alimentation . mosaic salariés . poisson gras:
   titre: Poisson gras
   formule: FE * nombre
   icônes: 🍣🥧
-  description: Repas contenant thon, saumon, sardine ou maquereau.
+  note: Repas contenant thon, saumon, sardine ou maquereau.
 
 alimentation . mosaic salariés . poisson gras . FE:
   titre: Empreinte carbone d'un repas de type poisson gras (thon, saumon, sardine, maquereau)
@@ -141,7 +141,7 @@ alimentation . mosaic salariés . poisson blanc:
   titre: Poisson blanc
   formule: FE * nombre
   icônes: 🐟🍚
-  description: Repas avec un filet de poisson blanc.
+  note: Repas avec un filet de poisson blanc.
 
 alimentation . mosaic salariés . poisson blanc . FE:
   titre: Empreinte carbone d'un repas de type poisson blanc
@@ -158,7 +158,7 @@ alimentation . mosaic salariés . repas moyen:
   titre: Repas moyen
   formule: FE * nombre
   icônes: 🍗🧀🥗
-  description: Repas moyen d'un français
+  note: Repas moyen d'un français
 
 alimentation . mosaic salariés . repas moyen . FE:
   titre: Empreinte carbone d'un repas de type poisson blanc

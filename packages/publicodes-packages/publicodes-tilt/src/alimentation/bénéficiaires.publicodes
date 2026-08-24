@@ -28,7 +28,7 @@ alimentation . bénéficiaires . mosaic bénéficiaires:
   question: Combien de ces différents types de repas sont consommés par vos bénéficiaires chaque année ?
   titre: Empreinte des repas
   description: |
-    On prend classiquement en compte l'empreinte carbone d'un repas par journée travaillée pour un salarié. L'option "Repas moyen" sert uniquement si vous n'avez aucune idée des types de repas consommés. 
+    Il vous faut connaître le nombre de repas pris par vos bénéficiaires. Attention à ne pas créer de double-comptes avec d'éventuels repas déjà comptabilisés dans le cadre d'un événement. L'option "Repas moyen" sert uniquement si vous n'avez aucune idée des types de repas consommés. 
   formule:
     somme:
       - végétalien
@@ -54,7 +54,7 @@ alimentation . bénéficiaires . mosaic bénéficiaires . végétalien:
   titre: Végétalien
   formule: FE * nombre
   icônes: 🌾🥜🥗
-  description: |
+  note: |
     Repas sans produits animaux.
 
 alimentation . bénéficiaires . mosaic bénéficiaires . végétalien . FE:
@@ -72,7 +72,7 @@ alimentation . bénéficiaires . mosaic bénéficiaires . végétarien:
   titre: Végétarien
   formule: FE * nombre
   icônes: 🥗🍳🧀
-  description: Repas sans chair animale, avec des œufs ou un peu de fromage.
+  note: Repas sans chair animale, avec des œufs ou un peu de fromage.
 
 alimentation . bénéficiaires . mosaic bénéficiaires . végétarien . FE:
   titre: Empreinte carbone d'un repas végétarien
@@ -89,7 +89,7 @@ alimentation . bénéficiaires . mosaic bénéficiaires . viande blanche:
   titre: Viande blanche
   icônes: 🍗🥓
   formule: FE * nombre
-  description: Repas contenant une pièce de poulet, porc.
+  note: Repas contenant une pièce de poulet, porc.
 
 alimentation . bénéficiaires . mosaic bénéficiaires . viande blanche . FE:
   titre: Empreinte carbone d'un repas de type viande blanche (poulet, porc)
@@ -107,7 +107,7 @@ alimentation . bénéficiaires . mosaic bénéficiaires . viande rouge:
   titre: Viande rouge
   icônes: 🥩🍖
   formule: FE * nombre
-  description: Repas contenant une pièce de bœuf, veau, ou agneau.
+  note: Repas contenant une pièce de bœuf, veau, ou agneau.
 
 alimentation . bénéficiaires . mosaic bénéficiaires . viande rouge . FE:
   titre: Empreinte carbone d'un repas de type viande rouge (bœuf, veau, agneau)
@@ -137,7 +137,7 @@ alimentation . bénéficiaires . mosaic bénéficiaires . poisson gras:
   titre: Poisson gras
   formule: FE * nombre
   icônes: 🍣🥧
-  description: Repas contenant thon, saumon, sardine ou maquereau.
+  note: Repas contenant thon, saumon, sardine ou maquereau.
 
 alimentation . bénéficiaires . mosaic bénéficiaires . poisson gras . FE:
   titre: Empreinte carbone d'un repas de type poisson gras (thon, saumon, sardine, maquereau)
@@ -155,7 +155,7 @@ alimentation . bénéficiaires . mosaic bénéficiaires . poisson blanc:
   titre: Poisson blanc
   formule: FE * nombre
   icônes: 🐟🍚
-  description: Repas avec un filet de poisson blanc.
+  note: Repas avec un filet de poisson blanc.
 
 alimentation . bénéficiaires . mosaic bénéficiaires . poisson blanc . FE:
   titre: Empreinte carbone d'un repas de type poisson blanc
@@ -172,7 +172,7 @@ alimentation . bénéficiaires . mosaic bénéficiaires . repas moyen:
   titre: Repas moyen
   formule: FE * nombre
   icônes: 🍗🧀🥗
-  description: Repas moyen d'un français
+  note: Repas moyen d'un français
 
 alimentation . bénéficiaires . mosaic bénéficiaires . repas moyen . FE:
   titre: Empreinte carbone d'un repas de type poisson blanc
