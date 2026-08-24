@@ -17,6 +17,7 @@ const ImpactCo2Widget = ({
   testId,
 }: Props) => {
   const mountRef = useRef<HTMLDivElement | null>(null)
+  const scriptSrc = getMipEnvVarClient('IMPACT_CO2_SCRIPT_SRC')
 
   useEffect(() => {
     const mountElement = mountRef.current
@@ -25,14 +26,22 @@ const ImpactCo2Widget = ({
       return
     }
 
+    if (!scriptSrc) {
+      console.error('ImpactCo2Widget: missing IMPACT_CO2 script source', { type, search })
+      return
+    }
+
     mountElement.innerHTML = ''
 
     const script = document.createElement('script')
-    script.src = getMipEnvVarClient('IMPACT_CO2_SCRIPT_SRC')
+    script.src = scriptSrc
     script.async = true
     script.dataset.name = 'impact-co2'
     script.dataset.type = type
     script.dataset.search = search
+    script.onerror = () => {
+      console.error('ImpactCo2Widget: failed to load script', { src: scriptSrc, type, search })
+    }
 
     mountElement.appendChild(script)
 
@@ -41,7 +50,7 @@ const ImpactCo2Widget = ({
         mountRef.current.innerHTML = ''
       }
     }
-  }, [type, search])
+  }, [scriptSrc, type, search])
 
   if (!type) {
     return null

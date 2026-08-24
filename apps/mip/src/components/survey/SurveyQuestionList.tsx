@@ -2,7 +2,6 @@ import { GroupedElement } from '@/components/survey/surveyGrouping'
 import { createMipEngine } from '@/publicodes/mip-engine'
 import { InputQuestion, MosaicQuestion } from '@abc-transitionbascarbone/publicodes/form'
 import { FormBuilder, FormState } from '@publicodes/forms'
-import styles from './Survey.module.css'
 
 type MipEngine = ReturnType<typeof createMipEngine>
 
@@ -16,7 +15,7 @@ interface Props {
 
 const SurveyQuestionList = ({ groupedElements, engine, state, formBuilder, updateState }: Props) => {
   return (
-    <div className={styles.questionCard}>
+    <div className="p0">
       {groupedElements.map((group) =>
         group.type === 'mosaic' ? (
           <MosaicQuestion

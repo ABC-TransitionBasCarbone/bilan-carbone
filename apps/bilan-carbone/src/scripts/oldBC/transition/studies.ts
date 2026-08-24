@@ -19,6 +19,7 @@ import {
   SubPost,
   Unit,
 } from '@abc-transitionbascarbone/db-common/enums'
+import { removeDiacritics } from '@abc-transitionbascarbone/utils/parsing'
 import { getJsDateFromExcel } from 'excel-date-to-js'
 import { NewPostAndSubPosts, OldNewPostAndSubPostsMapping } from './newPostAndSubPosts'
 import {
@@ -258,9 +259,7 @@ const parseStudyExports = (
 }
 
 const mapToSubPost = (newSubPost: string) => {
-  const normalizedSubPost = newSubPost
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
+  const normalizedSubPost = removeDiacritics(newSubPost)
     .replace(/[\s,']/g, '')
     .toLowerCase()
 

@@ -1,3 +1,5 @@
+import { removeDiacritics } from '@abc-transitionbascarbone/utils/parsing'
+
 export const displayOnlyExistingDataWithDash = (data: (string | null | undefined | number)[]) =>
   data.filter((d) => !!d).join(' - ')
 
@@ -12,9 +14,7 @@ export const toCamelCase = (str: string) => str.charAt(0).toLowerCase() + str.sl
  * Convert to lower case and remove special characters and extra spaces
  */
 export function normalizeStringForSearch(s: string): string {
-  return s
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
+  return removeDiacritics(s)
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, ' ')
     .trim()
