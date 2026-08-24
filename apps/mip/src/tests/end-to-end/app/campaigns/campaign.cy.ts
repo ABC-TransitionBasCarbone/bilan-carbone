@@ -53,7 +53,9 @@ describe('Campaign creation', () => {
     cy.visit('/campaigns')
     cy.getByTestId('add-campaign-button').click()
     cy.get('[data-testid^="input-name-"]').last().type(campaignName)
+    cy.intercept('POST', '/campaigns').as('updateCampaign')
     cy.getByTestId('validate-campaign-update').click()
+    cy.wait('@updateCampaign')
 
     readMaildevEmails().then((emails) => {
       const notifications = emails.filter((email) => email.subject?.includes('Nouvelle campagne'))
