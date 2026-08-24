@@ -1,6 +1,32 @@
 import { Locale } from '@abc-transitionbascarbone/i18n/config'
+import { isObject } from '@abc-transitionbascarbone/utils/object'
 import { getRequestConfig } from 'next-intl/server'
 import { getLocale } from './locale'
+
+const deepMerge = (base: Record<string, unknown>, ...sources: Array<Record<string, unknown>>) => {
+  for (const source of sources) {
+    if (!isObject(source)) {
+      continue
+    }
+
+    for (const [key, value] of Object.entries(source)) {
+      const current = base[key]
+
+      if (isObject(value)) {
+        const target = isObject(current) ? current : {}
+        base[key] = target
+        deepMerge(target, value)
+        continue
+      }
+
+      if (value !== undefined) {
+        base[key] = value
+      }
+    }
+  }
+
+  return base
+}
 
 export default getRequestConfig(async () => {
   const locale = await getLocale()
@@ -21,6 +47,11 @@ export default getRequestConfig(async () => {
 
   return {
     locale,
-    messages: { ...commonMessages, ...mipMessages, ...mipRulesMessages },
+    messages: deepMerge(
+      {},
+      isObject(commonMessages) ? commonMessages : {},
+      isObject(mipMessages) ? mipMessages : {},
+      isObject(mipRulesMessages) ? mipRulesMessages : {},
+    ),
   }
 })

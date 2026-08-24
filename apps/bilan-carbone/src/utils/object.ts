@@ -1,7 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function isObject(item: any): boolean {
-  return item && typeof item === 'object' && !Array.isArray(item)
-}
+import { isObject } from '@abc-transitionbascarbone/utils/object'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function mergeObjects<T extends Record<string, any>>(target: T, ...sources: Partial<T>[]): T {
