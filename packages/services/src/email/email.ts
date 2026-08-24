@@ -217,3 +217,30 @@ export const sendAddedUsersByFile = async (results: Record<string, string>[], en
     results,
   })
 }
+
+export const sendCampaignCreatedByCollaboratorEmail = async (
+  toEmails: string[],
+  creatorName: string,
+  campaignNames: string[],
+  organizationName: string,
+) => {
+  const distinctCampaignNames = Array.from(new Set(campaignNames.map((name) => name.trim()).filter(Boolean)))
+
+  if (distinctCampaignNames.length === 0) {
+    return null
+  }
+
+  return sendEmail(
+    Environment.MIP,
+    toEmails,
+    'Nouvelle campagne lancée sur Mon Impact Pro',
+    'campaign-created-by-collaborator',
+    {
+      link: `${BASE_URL}/campaigns`,
+      creatorName,
+      campaignNames: distinctCampaignNames,
+      campaignCount: distinctCampaignNames.length,
+      organizationName,
+    },
+  )
+}

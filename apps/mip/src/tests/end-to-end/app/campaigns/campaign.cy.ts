@@ -1,4 +1,32 @@
 describe('Campaign creation', () => {
+  const clearMaildevInbox = () =>
+    cy.request({
+      method: 'DELETE',
+      url: 'http://localhost:1080/email/all',
+      failOnStatusCode: false,
+    })
+
+  const readMaildevEmails = (
+    tries = 0,
+  ): Cypress.Chainable<{ to?: { address?: string }[]; subject?: string; text?: string }[]> =>
+    cy
+      .request({
+        method: 'GET',
+        url: 'http://localhost:1080/email',
+        failOnStatusCode: false,
+      })
+      .then((response) => {
+        const emails = Array.isArray(response.body)
+          ? (response.body as { to?: { address?: string }[]; subject?: string; text?: string }[])
+          : []
+
+        if (emails.length > 0 || tries >= 5) {
+          return emails
+        }
+
+        return cy.wait(500).then(() => readMaildevEmails(tries + 1))
+      })
+
   before(() => {
     cy.resetTestDatabase()
   })
@@ -21,6 +49,28 @@ describe('Campaign creation', () => {
     cy.getByTestId('add-campaign-button').click()
     cy.get('[data-testid^="input-name-"]').last().type('New campaign collaborator')
     cy.getByTestId('validate-campaign-update').click()
+  })
+
+  it('Collaborator campaign creation notifies each admin by email', () => {
+    const campaignName = `Campaign notif ${Date.now()}`
+    clearMaildevInbox()
+
+    cy.login('mip-collaborator-0@yopmail.com', 'password-0')
+    cy.visit('/campaigns')
+    cy.getByTestId('add-campaign-button').click()
+    cy.get('[data-testid^="input-name-"]').last().type(campaignName)
+    cy.getByTestId('validate-campaign-update').click()
+
+    readMaildevEmails().then((emails) => {
+      const notifications = emails.filter((email) => email.subject?.includes('Nouvelle campagne'))
+      const recipients = notifications.flatMap((email) =>
+        (email.to || []).map((to) => (to.address || '').toLowerCase()),
+      )
+
+      expect(recipients).to.include('mip-admin-0@yopmail.com')
+      expect(recipients).to.include('mip-super_admin-0@yopmail.com')
+      expect(notifications.some((email) => (email.text || '').includes(campaignName))).to.equal(true)
+    })
   })
 
   it('Collaborator can not see admin campaign', () => {

@@ -1,0 +1,29 @@
+<html>
+  <%- include('../partials/style'); %>
+  <body>
+    <div>
+      <p>Bonjour,</p>
+      <br />
+      <p>
+        <span><%= creatorName %></span> a lance
+        <% if (campaignCount > 1) { %>
+          les campagnes suivantes
+        <% } else { %>
+          la campagne suivante
+        <% } %>
+        sur Mon Impact Pro pour l'organisation <span><%= organizationName || 'votre organisation' %></span> :
+      </p>
+      <ul>
+        <% campaignNames.forEach(function(campaignName) { %>
+          <li><%= campaignName %></li>
+        <% }) %>
+      </ul>
+      <p>
+        Vous pouvez consulter et coordonner ces campagnes sur
+        <a href="<%= link %>">ce lien</a>.
+      </p>
+      <br />
+      <%- include('./partials/signature'); %>
+    </div>
+  </body>
+</html>
