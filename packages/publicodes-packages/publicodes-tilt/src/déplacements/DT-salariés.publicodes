@@ -95,7 +95,7 @@ déplacements . DT-salariés . sans . part train:
   par défaut: 0
 
 déplacements . DT-salariés . sans . part deux roues:
-  titre: Deux roues
+  titre: Deux roues (moto, scooter, ...)
   form:
     à traduire: oui
   applicable si:
@@ -132,7 +132,7 @@ déplacements . DT-salariés . sans . voiture:
       question: Combien de km sont parcourus en moyenne par salarié en voiture par jour (A/R) pour des déplacements domicile-association ?
       type: nombre
       unité: km/salariés.jours
-      par défaut: 0
+      par défaut: 31.8
   description: On considère ici toutes les motorisations de voiture individuelles, basée sur des moyennes nationales
   unité: kgCO2e
 
@@ -188,7 +188,7 @@ déplacements . DT-salariés . sans . train:
       question: Combien de km sont parcourus en moyenne par salarié en train par jour (A/R) pour des déplacements domicile-association ?
       type: nombre
       unité: km/salariés.jours
-      par défaut: 0
+      par défaut: 29.4
     FE:
       valeur: 0.0277
       unité: kgCO2e/km
@@ -199,7 +199,7 @@ déplacements . DT-salariés . sans . train:
   unité: kgCO2e
 
 déplacements . DT-salariés . sans . deux roues:
-  titre: Deux roues
+  titre: Deux roues (Moto, scooter, ...)
   form:
     à traduire: oui
   applicable si:
@@ -212,7 +212,7 @@ déplacements . DT-salariés . sans . deux roues:
       question: Combien de km sont parcourus en moyenne par salarié en deux roues par jour (A/R) pour des déplacements domicile-association ?
       type: nombre
       unité: km/salariés.jours
-      par défaut: 0
+      par défaut: 21.4
     FE:
       valeur: 0.0851
       unité: kgCO2e/km
@@ -235,7 +235,7 @@ déplacements . DT-salariés . sans . transports en commun:
       question: Combien de km sont parcourus en moyenne par salarié en transports en commun par jour (A/R) pour des déplacements domicile-association ?
       type: nombre
       unité: km/salariés.jours
-      par défaut: 0
+      par défaut: 29.4
   unité: kgCO2e
 
 déplacements . DT-salariés . sans . transports en commun . split:

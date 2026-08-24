@@ -155,7 +155,7 @@ déplacements . DM-salariés . sans . train:
   unité: kgCO2e
 
 déplacements . DM-salariés . sans . deux roues:
-  titre: Deux roues, par mois
+  titre: Deux roues (moto, scooter, ...), par mois
   form:
     à traduire: oui
   applicable si:

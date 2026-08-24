@@ -100,7 +100,7 @@ déplacements . DT-bénévoles . sans . part train:
   par défaut: 0
 
 déplacements . DT-bénévoles . sans . part deux roues:
-  titre: Deux roues
+  titre: Deux roues (moto, scooter, ...)
   form:
     à traduire: oui
   applicable si:
@@ -137,7 +137,7 @@ déplacements . DT-bénévoles . sans . voiture:
       question: Quand les bénévoles se déplacent en voiture, combien de km parcourent-ils en moyenne par jour (A/R) ? 
       type: nombre
       unité: km/bénévoles.jours
-      par défaut: 0
+      par défaut: 31.8
   description: On considère ici toutes les motorisations de voiture individuelles, basée sur des moyennes nationales
   unité: kgCO2e
   par défaut: 0
@@ -196,8 +196,8 @@ déplacements . DT-bénévoles . sans . train:
   avec:
     distance:
       question: Quand les bénévoles se déplacent en train, combien de km parcourent-ils en moyenne par jour (A/R) ? 
-      unité: km
-
+      unité: km/bénévoles.jours
+      par défaut: 29.4
     FE:
       valeur: 0.0277
       unité: kgCO2e/km
@@ -222,7 +222,7 @@ déplacements . DT-bénévoles . sans . transports en commun:
       question: Quand les bénévoles se déplacent en transport en commun (métro, tramway, RER, bus), combien de km parcourent-ils en moyenne par jour (A/R) ? 
       type: nombre
       unité: km/bénévoles.jours
-      par défaut: 0
+      par défaut: 29.4
   unité: kgCO2e
   par défaut: 0
 
@@ -244,7 +244,7 @@ déplacements . DT-bénévoles . sans . transports en commun . split:
       note: source doc NGC https://nosgestesclimat.fr/documentation/transport/transports-commun/m%C3%A9tro-ou-tram
 
 déplacements . DT-bénévoles . sans . deux roues:
-  titre: Deux roues
+  titre: Deux roues (Moto, scooter, ...)
   form:
     à traduire: oui
   applicable si:
@@ -257,7 +257,7 @@ déplacements . DT-bénévoles . sans . deux roues:
       question: Quand les bénévoles se déplacent en deux roues, combien de km parcourent-ils en moyenne par jour (A/R) ? 
       type: nombre
       unité: km/bénévoles.jours
-      par défaut: 0
+      par défaut: 21.4
     FE:
       valeur: 0.0851
       unité: kgCO2e/km
