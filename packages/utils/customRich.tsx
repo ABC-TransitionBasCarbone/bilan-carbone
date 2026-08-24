@@ -53,6 +53,11 @@ export const customRich = (
         {children}
       </Link>
     ),
+    donneesdéplacementsdtINSEEetSDEStorefacto: (children) => (
+      <Link className="font-inherit" href="https://mobilites-durables.transports.gouv.fr/indicateurs/deplacements-domicile-travail/" target="_blank" rel="noreferrer noopener">
+        {children}
+      </Link>
+    ),
     br: () => <br />,
     underline: (children) => <span style={{ textDecoration: 'underline' }}>{children}</span>,
     green: (children) => <span className="font-inherit green-ghgp">{children}</span>,
