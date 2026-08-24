@@ -3,7 +3,11 @@
 import TrajectoryChart from '@/components/results/TrajectoryChart'
 import { STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/utils/charts'
 import { formatNumber } from '@abc-transitionbascarbone/utils/number'
-import { ReductionRates } from '@abc-transitionbascarbone/utils/trajectory'
+import {
+  calculateSimpleLinearTrajectory,
+  getSnbcDefaultReductionRates,
+  ReductionRates,
+} from '@abc-transitionbascarbone/utils/trajectory'
 import { Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import styles from '../SurveyCompletion.module.css'
@@ -17,6 +21,11 @@ interface Props {
 const TransitionEncart = ({ totalKg, reductionRates }: Props) => {
   const t = useTranslations('survey.completion')
   const totalT = totalKg / STUDY_UNIT_VALUES['T']
+  const currentYear = new Date().getFullYear()
+  const endYear = 2050
+  const rates = reductionRates ?? getSnbcDefaultReductionRates(currentYear)
+  const trajectory = calculateSimpleLinearTrajectory(totalT, currentYear, rates, [2030, 2040, endYear])
+  const endT = trajectory.find((point) => point.year === endYear)?.value ?? totalT
 
   return (
     <section className="mb2" data-testid="survey-completion-transition-encart">
@@ -28,8 +37,15 @@ const TransitionEncart = ({ totalKg, reductionRates }: Props) => {
 
         <div className={`${styles.transitionBody} p15`}>
           <div className="flex-col gapped075">
-            <Typography className={styles.transitionMetricLabel}>{t('transition.startLabel')}</Typography>
+            <Typography className={styles.transitionMetricLabel}>
+              {t('transition.startLabel', { year: currentYear })}
+            </Typography>
             <Typography className={styles.transitionMetricValue}>{formatNumber(totalT, 1)} tCO₂e/an</Typography>
+
+            <Typography className={styles.transitionMetricLabel}>
+              {t('transition.endLabel', { year: endYear })}
+            </Typography>
+            <Typography className={styles.transitionMetricValue}>{formatNumber(endT, 1)} tCO₂e/an</Typography>
           </div>
           <TrajectoryChart currentValue={totalT} reductionRates={reductionRates} />
         </div>

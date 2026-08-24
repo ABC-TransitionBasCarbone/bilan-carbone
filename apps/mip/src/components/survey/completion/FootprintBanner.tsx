@@ -10,14 +10,12 @@ interface Props {
   totalKg: number
 }
 
-const MAX_T = 12
-const LIMIT_T = 2
-
 const FootprintBanner = ({ totalKg }: Props) => {
   const t = useTranslations('survey.completion')
   const totalT = totalKg / STUDY_UNIT_VALUES['T']
-  const currentPercent = Math.max(0, Math.min(100, (totalT / MAX_T) * 100))
-  const limitPercent = (LIMIT_T / MAX_T) * 100
+  // Dynamic scale to avoid fixed thresholds in the banner.
+  const rangeMaxT = Math.max(1, totalT * 1.2)
+  const currentPercent = Math.max(0, Math.min(100, (totalT / rangeMaxT) * 100))
 
   return (
     <section className={`${styles.footprintBanner} p2 mb2`} data-testid="survey-completion-footprint-banner">
@@ -25,21 +23,19 @@ const FootprintBanner = ({ totalKg }: Props) => {
         {t('title')}
       </Typography>
 
-      <div className={styles.rangeChartWrapper}>
-        <div className={styles.rangeChartRow}>
-          <div className={styles.rangeBarColumn}>
+      <div className="relative pt1 pb2">
+        <div className="flex align-end gapped075">
+          <div className="relative grow">
             <Typography className={styles.rangeCurrentValue} style={{ left: `${currentPercent}%` }}>
               {formatNumber(totalT, 1)}
             </Typography>
 
             <div className={styles.rangeBarTrack}>
               <div className={styles.rangeBarFill} style={{ width: `${currentPercent}%` }} />
-              <div className={styles.rangeLimitLine} style={{ left: `${limitPercent}%` }} />
             </div>
 
-            <div className={styles.rangeAxis}>
+            <div className="justify-start pt025">
               <Typography className={styles.rangeAxisLabel}>{t('range.minLabel')}</Typography>
-              <Typography className={styles.rangeAxisLabel}>{t('range.maxLabel')}</Typography>
             </div>
           </div>
         </div>
