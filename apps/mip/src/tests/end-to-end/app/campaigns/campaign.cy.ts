@@ -1,4 +1,6 @@
 describe('Campaign creation', () => {
+  type MaildevEmail = { to?: { address?: string }[]; subject?: string; text?: string }
+
   const clearMaildevInbox = () =>
     cy.request({
       method: 'DELETE',
@@ -6,9 +8,7 @@ describe('Campaign creation', () => {
       failOnStatusCode: false,
     })
 
-  const readMaildevEmails = (
-    tries = 0,
-  ): Cypress.Chainable<{ to?: { address?: string }[]; subject?: string; text?: string }[]> =>
+  const readMaildevEmails = (): Cypress.Chainable<MaildevEmail[]> =>
     cy
       .request({
         method: 'GET',
@@ -16,15 +16,9 @@ describe('Campaign creation', () => {
         failOnStatusCode: false,
       })
       .then((response) => {
-        const emails = Array.isArray(response.body)
-          ? (response.body as { to?: { address?: string }[]; subject?: string; text?: string }[])
-          : []
+        const emails = Array.isArray(response.body) ? (response.body as MaildevEmail[]) : []
 
-        if (emails.length > 0 || tries >= 5) {
-          return emails
-        }
-
-        return cy.wait(500).then(() => readMaildevEmails(tries + 1))
+        return emails
       })
 
   before(() => {
