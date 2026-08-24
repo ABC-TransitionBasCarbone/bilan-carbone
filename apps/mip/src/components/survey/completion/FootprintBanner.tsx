@@ -43,10 +43,6 @@ const FootprintBanner = ({ totalKg }: Props) => {
             </div>
           </div>
         </div>
-
-        <Typography className={styles.limitLabel} style={{ left: `${limitPercent}%` }}>
-          {t('range.limitLabel', { limit: LIMIT_T })}
-        </Typography>
       </div>
     </section>
   )
