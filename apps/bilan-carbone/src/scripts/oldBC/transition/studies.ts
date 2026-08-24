@@ -571,10 +571,10 @@ class EmissionFactorsByImportedIdMap {
           unit: emissionFactor.unit,
           version: firstVersion
             ? {
-                id: firstVersion.id,
-                source: firstVersion.source,
-                createdAt: firstVersion.createdAt,
-              }
+              id: firstVersion.id,
+              source: firstVersion.source,
+              createdAt: firstVersion.createdAt,
+            }
             : null,
           importedId: emissionFactor.importedId,
           emissionFactorConsoValue: emissionFactor.totalCo2,

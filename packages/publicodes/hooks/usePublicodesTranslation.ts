@@ -26,7 +26,7 @@ export function usePublicodesRuleTranslation(ruleName: string) {
   return {
     question: tRules.has(`${ruleKey}.question`) ? customRich(tRules, `${ruleKey}.question`) : undefined,
     titre: tRules.has(`${ruleKey}.titre`) ? customRich(tRules, `${ruleKey}.titre`) : undefined,
-    description: tRules.has(`${ruleKey}.description`) ? customRich(tRules,`${ruleKey}.description`) : undefined,
+    description: tRules.has(`${ruleKey}.description`) ? customRich(tRules, `${ruleKey}.description`) : undefined,
     getOptionLabel: (value: string | boolean | number) => {
       if (typeof value === 'boolean') {
         return customRich(tCommon, value ? 'yes' : 'no')
