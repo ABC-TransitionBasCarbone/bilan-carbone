@@ -1,0 +1,867 @@
+{
+  "publicodes-units": {
+    "année": "année",
+    "salariés": "salariés",
+    "bénévoles": "bénévoles",
+    "bénéficiaires": "bénéficiaires",
+    "k€": "k€",
+    "mois": "mois",
+    "semaine": "semaine",
+    "jour": "jour",
+    "kgCO2e/repas": "kgCO2e/repas",
+    "kgCO2e/km": "kgCO2e/km",
+    "kgCO2e": "kgCO2e",
+    "kgCO2e/an": "kgCO2e/an",
+    "an": "an",
+    "kgCO2e/quantité": "kgCO2e/quantité",
+    "quantité": "quantité",
+    "kgCO2e/kWh": "kgCO2e/kWh",
+    "kWh": "kWh",
+    "kWh/m²/an": "kWh/m².an",
+    "kgCO2e/m3": "kgCO2e/m3",
+    "m3": "m3",
+    "m3/m²/an": "m3/m².an",
+    "kgCO2e/litre": "kgCO2e/litre",
+    "litre": "litre",
+    "litre/m²/an": "litre/m².an",
+    "kgCO2e/stère": "kgCO2e/stère",
+    "stère": "stère",
+    "kgCO2e/kg": "kgCO2e/kg",
+    "kg": "kg",
+    "kgCO2e/jours": "kgCO2e/jours",
+    "h/semaine": "h/semaine",
+    "jours/semaine": "jours/semaine",
+    "k€ HT": "k€ HT",
+    "kgCO2e/k€ HT": "kgCO2e/k€ HT",
+    "h": "h",
+    "kgCO2e/h": "kgCO2e/h",
+    "mail": "mail",
+    "kgCO2e/mail": "kgCO2e/mail",
+    "Go": "Go",
+    "kgCO2e/Go": "kgCO2e/Go",
+    "kgCO2e/climatiseur": "kgCO2e/climatiseur",
+    "climatiseur": "climatiseur",
+    "kW/m2": "kW/m2",
+    "kg/kW": "kg/kW",
+    "VUL": "VUL",
+    "tonnes/VUL": "tonnes/VUL",
+    "kgCO2e/tonnes": "kgCO2e/tonnes",
+    "poids lourds": "poids lourds",
+    "tonnes/poids lourds": "tonnes/poids lourds",
+    "unité": "unité",
+    "km": "km",
+    "kgCO2e/t/km": "kgCO2e/t.km",
+    "%": "%",
+    "kgCO2e/kg/km": "kgCO2e/kg.km",
+    "tonne": "tonne",
+    "kgCO2e/tonne": "kgCO2e/tonne",
+    "voitures": "voitures",
+    "tonnes/voitures": "tonnes/voitures",
+    "km/salariés/jours": "km/salariés.jours",
+    "km/bénévoles/jours": "km/bénévoles.jours",
+    "km/salariés/mois": "km/salariés.mois",
+    "km/salarié/mois": "km/salarié.mois",
+    "km/salarié/an": "km/salarié.an",
+    "km/bénéficiaires/an": "km/bénéficiaires.an",
+    "m²/place": "m²/place",
+    "kgCO2e/m²": "kgCO2e/m²",
+    "place": "place",
+    "m²": "m²",
+    "jours": "jours",
+    "repas": "repas"
+  },
+  "publicodes-rules": {
+    "général": {
+      "nom": {
+        "question": "Quel est le nom de l'association pour laquelle vous souhaitez réaliser une estimation d’impact carbone ?"
+      },
+      "code postal": {
+        "question": "Quel est le code postal de l'association ?"
+      },
+      "année": {
+        "question": "Pour quelle année réalisez-vous cette estimation d’impact ?"
+      },
+      "salariés": {
+        "question": "Combien de salariés compte l'association en [Année] ?"
+      },
+      "bénévoles": {
+        "question": "Combien de bénévoles compte l'association en [Année] ?"
+      },
+      "bénéficiaires": {
+        "question": "Combien de bénéficiaires ont profité des services de l'association en  [Année] ?"
+      },
+      "budget": {
+        "question": "Quel est le budget de fonctionnement de l'association ?"
+      },
+      "type": {
+        "question": "de quel type de structure votre association se rapproche t'elle le plus ?",
+        "options": {
+          "Structure sportive": "Structure sportive",
+          "Club de loisirs": "Club de loisirs",
+          "Éducation, formation et insertion professionnelle": "Éducation, formation et insertion professionnelle",
+          "Développement économique et local": "Développement économique et local",
+          "Développement international et humanitaire": "Développement international et humanitaire",
+          "Culture et patrimoine": "Culture et patrimoine",
+          "Association de voisinage": "Association de voisinage",
+          "Hôpital": "Hôpital",
+          "Maison de retraite": "Maison de retraite",
+          "Association d'aide à domicile": "Association d'aide à domicile",
+          "Accompagnement des personnes en situation de handicap": "Accompagnement des personnes en situation de handicap",
+          "Protection de l'enfance": "Protection de l'enfance",
+          "Autres structures sociales et solidaires": "Autres structures sociales et solidaires",
+          "Défense de l'environnement": "Défense de l'environnement",
+          "Autre": "Autre"
+        }
+      },
+      "type autre": {
+        "question": "Précisez le type de structure"
+      }
+    },
+    "commun": {
+      "titre": "Règles communes",
+      "nombre de mois par an": {
+        "titre": "Nombre de mois par an",
+        "description": "Nombre de mois pris en compte pour le calcul annuel."
+      },
+      "nombre de semaines par an": {
+        "titre": "Nombre de semaines par an",
+        "description": "Nombre de semaines prises en compte pour le calcul annuel."
+      },
+      "nombre de semaines travaillées par an": {
+        "titre": "Nombre de semaines travaillées par an"
+      },
+      "nombre de jours par an": {
+        "titre": "Nombre de jours par an",
+        "description": "Nombre de jours pris en compte pour le calcul annuel."
+      },
+      "année actuelle": {
+        "titre": "Année actuelle",
+        "description": "Année de référence pour le calcul des amortissements."
+      },
+      "FE": {
+        "description": "On regroupe ici les facteurs d'émission communs à plusieurs postes.",
+        "repas": {
+          "titre": "Facteur d'émission d'un repas moyen"
+        },
+        "moyen de transport": {
+          "titre": "Facteur d'émission moyens de transport",
+          "RER et transilien": {
+            "titre": "Facteur d'émission RER et transilien"
+          },
+          "métro ou tram": {
+            "titre": "Facteur d'émission métro, tramway"
+          },
+          "bus": {
+            "titre": "Facteur d'émission bus"
+          },
+          "vélo électrique": {
+            "titre": "Facteur d'émission vélo électrique"
+          },
+          "vélo classique": {
+            "titre": "Facteur d'émission vélo classique"
+          },
+          "marche": {
+            "titre": "Facteur d'émission marche"
+          },
+          "voiture diesel": {
+            "titre": "Facteur d'émission voiture diesel"
+          },
+          "voiture essence": {
+            "titre": "Facteur d'émission voiture essence"
+          },
+          "voiture hybride": {
+            "titre": "Facteur d'émission voiture hybride"
+          },
+          "voiture électrique": {
+            "titre": "Facteur d'émission voiture électrique"
+          },
+          "moto": {
+            "titre": "Facteur d'émission moto"
+          },
+          "scooter": {
+            "titre": "Facteur d'émission scooter"
+          },
+          "trottinette électrique": {
+            "titre": "Facteur d'émission trottinette électrique"
+          },
+          "TGV": {
+            "titre": "Facteur d'émission TGV"
+          },
+          "avion": {
+            "titre": "Facteur d'émission avion moyen-courrier"
+          }
+        }
+      }
+    },
+    "équipements et immobilisations": {
+      "pondération": {
+        "titre": "Équipements et immobilisations",
+        "reconditionné": {
+          "description": "En fonction de votre réponse, une partie de vos équipements seront valorisés comme étant reconditionnés. Un équipement reconditionné sera considéré comme moitié moins émetteur qu'un équipement neuf. Autrement dit, la durée de première vie de l'équipement est considéré comme égale à la moitié de sa durée de vie totale.",
+          "question": "Vos équipements sont-ils reconditionné ou issu de seconde main ?",
+          "options": {
+            "toujours": "Toujours",
+            "souvent": "Souvent",
+            "parfois": "Parfois",
+            "jamais": "Jamais"
+          },
+          "toujours": {
+            "titre": "Toujours"
+          },
+          "souvent": {
+            "titre": "Souvent"
+          },
+          "parfois": {
+            "titre": "Parfois"
+          },
+          "jamais": {
+            "titre": "Jamais"
+          }
+        }
+      },
+      "total sans reconditionné": {
+        "ordinateurs fixes": {
+          "titre": "Ordinateurs fixe de taille moyenne (2023-2025), Asie",
+          "quantité": {
+            "question": "Ordinateurs fixes"
+          }
+        },
+        "ordinateurs portables": {
+          "titre": "Ordinateurs portables",
+          "quantité": {
+            "question": "Ordinateurs portables"
+          }
+        },
+        "photocopieurs": {
+          "titre": "Photocopieurs",
+          "quantité": {
+            "question": "Photocopieurs"
+          }
+        },
+        "imprimantes": {
+          "titre": "Imprimantes",
+          "quantité": {
+            "question": "Imprimante multi-fonction"
+          }
+        },
+        "téléphones fixes": {
+          "titre": "Téléphones fixes",
+          "quantité": {
+            "question": "Téléphones fixes"
+          }
+        },
+        "téléphones portables": {
+          "titre": "Smartphone de taille moyenne (2023-2025), Asie",
+          "quantité": {
+            "question": "Smartphone"
+          }
+        },
+        "vidéoprojecteurs": {
+          "titre": "Vidéoprojecteurs (2020), Asie",
+          "quantité": {
+            "question": "Vidéoprojecteurs"
+          }
+        },
+        "autres écrans": {
+          "titre": "Autres écrans",
+          "quantité": {
+            "question": "Autres écrans (TV, écran secondaire, tablette, ...)"
+          }
+        }
+      }
+    },
+    "énergie": {
+      "titre": "Énergie",
+      "combustibles organiques": {
+        "types": {
+          "titre": "Types d'énergie",
+          "électricité présent": {
+            "question": "Électricité"
+          },
+          "gaz présent": {
+            "question": "Gaz"
+          },
+          "fioul présent": {
+            "question": "Fioul domestique"
+          },
+          "bois présent": {
+            "question": "Bois-bûches"
+          },
+          "granulés présent": {
+            "question": "Granulés de bois"
+          },
+          "réseaux de chaleur présent": {
+            "question": "Réseau de chaleur"
+          },
+          "réseaux de froid présent": {
+            "question": "Réseau de froid"
+          },
+          "chauffage électrique": {
+            "description": "Cette information sert à proposer des estimations de consommations pour l'électricité par la suite. Les estimations incluent le chauffage si celui-ci est électrique.",
+            "question": "Le chauffage de vos locaux est-il électrique ?"
+          }
+        },
+        "emissions": {
+          "titre": "Consommations énergétiques",
+          "description": "Par défaut, des valeurs sont saisies en fonction des mètres-carrés que vous avez renseignés pour vos locaux, Ces valeurs sont issues de données statistiques de la Base Empreinte, Elles sont imprécises et datées, Si vous disposez de données plus précises via vos factures ou autres éléments de suivi, nous vous invitons à les renseigner à la place des données par défaut",
+          "question": "Veuillez indiquer vos consommations d'énergie pour les types d'énergie suivants",
+          "électricité": {
+            "titre": "Électricité",
+            "consommation": {
+              "titre": "Consommation annuelle d'électricité",
+              "description": "Cette consommation doit être issue de votre facture et ne pas inclure pas votre autoconsommation (panneaux solaires, etc), ni la consommation des véhicules électriques qui est prise en compte au sein d'autres catégories (Fret, Déplacements).",
+              "question": "Quelle est votre consommation annuelle d'électricité ?"
+            },
+            "donnée statistique": {
+              "titre": "Consommation moyenne d'électricité pour des bureaux à l'année, statistiques Base Carbone® (hors ou avec chauffage)"
+            }
+          },
+          "gaz": {
+            "titre": "Gaz naturel",
+            "consommation": {
+              "titre": "Consommation annuelle de gaz naturel",
+              "question": "Quelle est votre consommation annuelle de gaz naturel ?"
+            }
+          },
+          "fioul": {
+            "titre": "Fioul domestique",
+            "consommation": {
+              "titre": "Consommation annuelle de fioul domestique",
+              "question": "Quelle est votre consommation annuelle de fioul domestique ?"
+            }
+          },
+          "bois": {
+            "titre": "Bois-bûches",
+            "consommation": {
+              "titre": "Consommation annuelle de bûches de bois",
+              "question": "Quelle est votre consommation annuelle de bûches de bois ?"
+            }
+          },
+          "granulés": {
+            "titre": "Granulés de bois",
+            "consommation": {
+              "titre": "Consommation annuelle de granulés de bois",
+              "question": "Quelle est votre consommation annuelle de bûches de bois ?"
+            }
+          },
+          "réseaux de chaleur": {
+            "titre": "Réseaux de chaleur",
+            "consommation": {
+              "titre": "Consommation annuelle de kWh issus de réseaux de chaleur",
+              "question": "Quelle est votre consommation de kWh issus de réseaux de chaleur ?"
+            }
+          },
+          "réseaux de froid": {
+            "titre": "Réseaux de froid",
+            "consommation": {
+              "titre": "Consommation annuelle de kWh issus de réseaux de froid",
+              "question": "Quelle est votre consommation de kWh issus de réseaux de froid ?"
+            }
+          }
+        },
+        "autoproduction électricité présente": {
+          "description": "Si c'est le cas, vos autres consommations d'électricité ne doivent pas inclure une éventuelle autoconsommation",
+          "question": "Autoproduisez-vous de l'électricité, par exemple à l'aide de panneaux photovoltaïques ?"
+        },
+        "autoconsommation électricité": {
+          "titre": "Autoconsommation d'électricité",
+          "autoconsommation": {
+            "question": "Quelle est votre autoconsommation annuelle d'électricité ?"
+          }
+        }
+      }
+    },
+    "utilisation": {
+      "titre": "Utilisation",
+      "responsabilite conso energie": {
+        "élec présente": {
+          "question": "Fournissez-vous des produits ou services qui entraînent des consommations d'électricité chez vos usagers ?"
+        },
+        "élec": {
+          "conso": {
+            "question": "À combien de kWh estimez-vous ces consommations d'électricité ?"
+          }
+        },
+        "fossiles présents": {
+          "question": "Fournissez-vous des produits ou services qui entraînent des consommations d'énergie fossiles chez vos usagers ?"
+        },
+        "fioul": {
+          "conso": {
+            "question": "Pour le fioul, à combien de litres estimez-vous ces consommations ?"
+          }
+        },
+        "essence": {
+          "conso": {
+            "question": "Pour l'essence, à combien de litres estimez-vous ces consommations ?"
+          }
+        },
+        "gazole": {
+          "conso": {
+            "question": "Pour le gazole, à combien de litres estimez-vous ces consommations ?"
+          }
+        },
+        "gaz naturel": {
+          "conso": {
+            "question": "Pour le gaz naturel, à combien de m3 estimez-vous ces consommations ?"
+          }
+        }
+      }
+    },
+    "télétravail": {
+      "titre": "Emissions liées au télétravail",
+      "bénévoles": {
+        "titre": "Télétravail - Bénévoles",
+        "h": {
+          "description": "Dans le cas où vous ne disposeriez pas de cette information, vous pouvez considérer le nombre total d'heures de bénévolat, estimer un % télétravaillé, et diviser ensuite par votre nombre de bénévoles.",
+          "question": "Combien d'heures sont en moyenne effectuées en télétravail par semaine pour vos bénévoles ?"
+        }
+      },
+      "salariés": {
+        "titre": "Télétravail - Salariés",
+        "j": {
+          "question": "Combien de jours sont en moyenne télétravaillés par semaine par vos salariés ?"
+        }
+      }
+    },
+    "intrants-services": {
+      "titre": "Intrants services"
+    },
+    "intrants-biens-et-matières": {
+      "titre": "Intrants biens et matières",
+      "ratios monétaires": {
+        "titre": "Intrants biens et matières",
+        "description": "Vous devez bien prendre en compte l'ensemble des biens, dons compris (invendus, fin de stock, etc). Il faut donc bien prendre en compte les informations disponibles sur les contributions volontaires en nature (compte 870).",
+        "question": "Quels biens et matières avez-vous achetés en approche monétaire ?",
+        "petites-fournitures": {
+          "titre": "Petites fournitures",
+          "nombre": {
+            "question": "Montant dépensé (k€) en petites fournitures"
+          }
+        },
+        "meubles": {
+          "titre": "Meubles",
+          "nombre": {
+            "question": "Montant dépensé (k€) en meubles"
+          }
+        },
+        "machines-équipements": {
+          "titre": "Machines et équipements",
+          "nombre": {
+            "question": "Montant dépensé (k€) en machines et équipements"
+          }
+        },
+        "textiles": {
+          "titre": "Textiles",
+          "nombre": {
+            "question": "Montant dépensé (k€) en textiles"
+          }
+        },
+        "produits-pharmaceutiques": {
+          "titre": "Produits pharmaceutiques",
+          "nombre": {
+            "question": "Montant dépensé (k€) en produits pharmaceutiques"
+          }
+        },
+        "produits-chimiques": {
+          "titre": "Produits chimiques",
+          "nombre": {
+            "question": "Montant dépensé (k€) en produits chimiques"
+          }
+        },
+        "papier-carton": {
+          "titre": "Papier et carton",
+          "nombre": {
+            "question": "Montant dépensé (k€) en papier et carton"
+          }
+        },
+        "produits-métalliques": {
+          "titre": "Produits métalliques",
+          "nombre": {
+            "question": "Montant dépensé (k€) en produits métalliques"
+          }
+        },
+        "autres-produits-manufacturés": {
+          "titre": "Autres produits manufacturés",
+          "nombre": {
+            "question": "Montant dépensé (k€) en autres produits manufacturés"
+          }
+        }
+      }
+    },
+    "froid et clim": {
+      "titre": "Froid et climatisation",
+      "nombre": {
+        "description": "La consommation d'électricité de vos climatisations est incluse dans vos factures d'électricité. Cette question sert donc uniquement à prendre en compte l'impact de la construction de l'équipement de climatisation, et des fuites de gaz frigorigènes.",
+        "question": "Combien de climatiseurs sont utilisés dans vos locaux ?"
+      },
+      "fuites": {
+        "locaux partagés": {
+          "titre": "Fuites de fluides frigoriègnes"
+        },
+        "locaux seuls": {
+          "titre": "Fuites de fluides frigoriègnes"
+        }
+      }
+    },
+    "fret": {
+      "titre": "Fret",
+      "fabrication": {
+        "titre": "Fabrication des véhicules",
+        "question": "Combien de véhicules sont possédés ou loués depuis moins de 5 ans parmi les catégories suivantes ?",
+        "VUL": {
+          "titre": "Véhicules utilitaires légers",
+          "nombre": {
+            "question": "Combien de véhicules utilitaires légers possédez-vous ou louez-vous depuis moins de 5 ans ?"
+          }
+        },
+        "PL": {
+          "titre": "Poids lourds",
+          "nombre": {
+            "question": "Combien de véhicules poids lourds possédez-vous ou louez-vous depuis moins de 5 ans ?"
+          }
+        }
+      }
+    },
+    "fin de vie": {
+      "pondération": {
+        "titre": "fin de vie",
+        "reconditionné": {
+          "titre": "Savoir quel taux de biens est reconditionné",
+          "description": "En fonction de votre réponse, une partie de ces biens seront valorisés comme étant reconditionnés. Un bien reconditionné sera considéré comme moitié moins émetteur qu'un bien neuf. Autrement dit, la durée de première vie du bien est considéré comme égale à la moitié de sa durée de vie totale.",
+          "question": "Les biens que vous fournissez à vos bénéficiaires sont-ils reconditionné ou issus de seconde main ?",
+          "options": {
+            "toujours": "Toujours",
+            "souvent": "Souvent",
+            "parfois": "Parfois",
+            "jamais": "Jamais"
+          },
+          "toujours": {
+            "titre": "Toujours"
+          },
+          "souvent": {
+            "titre": "Souvent"
+          },
+          "parfois": {
+            "titre": "Parfois"
+          },
+          "jamais": {
+            "titre": "Jamais"
+          }
+        }
+      },
+      "total sans reconditionné": {
+        "titre": "Fin de vie",
+        "poids": {
+          "titre": "Poids des biens matériels fournis aux bénéficiaires",
+          "question": "Quel est le poids total de ces biens délivrés sur une année ?"
+        }
+      },
+      "fin de vie présente": {
+        "titre": "Savoir si l'association fournit des biens matériels à ses bénéficiaires",
+        "description": "Les biens matériels fournis à vos bénéficiaires deviendront un jour des déchets, et devront donc être stockés, incinérés, recyclés, ... C'est ce que l'on appelle la fin de vie des produits, et il faut donc prendre en compte les émissions qui y sont associées.",
+        "question": "Fournissez-vous des biens matériels à vos bénéficiaires ?"
+      }
+    },
+    "déplacements": {
+      "titre": "Déplacements",
+      "DT-salariés": {
+        "titre": "Emissions des trajets domicile-association des salariés",
+        "avec": {
+          "titre": "émissions des trajets domicile-association des salariés (avec enquête MEP)",
+          "distance": {
+            "question": "D'après les résultats de MEP, quelle est la distance moyenne parcourue par salarié par jour (A/R) pour des déplacements domicile-association ?"
+          },
+          "réponse MEP": {
+            "question": "D'après les résultats MEP, combien de kgCO2e représentent les déplacements domicile-association des salariés ?"
+          }
+        },
+        "sans": {
+          "titre": "émissions des trajets domicile-association des salariés (sans enquête MEP)",
+          "part voiture": {
+            "titre": "Voiture",
+            "question": "Quel pourcentage des salariés se rend au travail en voiture ?"
+          },
+          "part train": {
+            "titre": "Train (TER)",
+            "question": "Quel pourcentage des salariés se rend au travail en train (TER) ?"
+          },
+          "part deux roues": {
+            "titre": "Deux roues (moto, scooter, ...)",
+            "question": "Quel pourcentage des salariés se rend au travail en deux roues ?"
+          },
+          "part transport en commun": {
+            "titre": "Transports en commun (Métro, tramway, RER, bus, ...)",
+            "question": "Quel pourcentage des salariés se rend au travail en transports en commun (Métro, Tramway, Bus) ?"
+          },
+          "voiture": {
+            "titre": "Voiture",
+            "description": "On considère ici toutes les motorisations de voiture individuelles, basée sur des moyennes nationales",
+            "distance": {
+              "question": "Combien de km sont parcourus en moyenne par salarié en voiture par jour (A/R) pour des déplacements domicile-association ?"
+            }
+          },
+          "train": {
+            "titre": "Train (TER)",
+            "distance": {
+              "question": "Combien de km sont parcourus en moyenne par salarié en train par jour (A/R) pour des déplacements domicile-association ?"
+            }
+          },
+          "deux roues": {
+            "titre": "Deux roues (Moto, scooter, ...)",
+            "distance": {
+              "question": "Combien de km sont parcourus en moyenne par salarié en deux roues par jour (A/R) pour des déplacements domicile-association ?"
+            }
+          },
+          "transports en commun": {
+            "titre": "Transports en commun (Métro, tramway, RER, bus, ...)",
+            "distance": {
+              "question": "Combien de km sont parcourus en moyenne par salarié en transports en commun par jour (A/R) pour des déplacements domicile-association ?"
+            }
+          }
+        }
+      },
+      "DT-bénévoles": {
+        "titre": "Emissions des trajets domicile-association des bénévoles",
+        "avec": {
+          "titre": "émissions des trajets domicile-association des bénévoles (avec enquête MEP)",
+          "distance": {
+            "question": "D'après les résultats de MEP, quelle est la distance moyenne parcourue par jour (A/R) par bénévole pour des déplacements domicile-travail ?"
+          },
+          "réponse MEP": {
+            "question": "D'après les résultats MEP, combien de kgCO2e représentent les déplacements domicile-association des bénévoles ?"
+          }
+        },
+        "sans": {
+          "titre": "émissions des trajets domiciles travail des bénévoles (sans enquête MEP)",
+          "part voiture": {
+            "titre": "Voiture",
+            "question": "Quand les bénévoles se déplacent, quel pourcentage d'entre eux utilise la voiture ?"
+          },
+          "part train": {
+            "titre": "Train (TER)",
+            "question": "Quand les bénévoles se déplacent, quel pourcentage d'entre eux utilise le train ?"
+          },
+          "part deux roues": {
+            "titre": "Deux roues (moto, scooter, ...)",
+            "question": "Quand les bénévoles se déplacent, quel pourcentage d'entre eux utilise un deux roues ?"
+          },
+          "part transport en commun": {
+            "titre": "Transports en commun (Métro, tramway, RER, bus, ...)",
+            "question": "Quand les bénévoles se déplacent, quel pourcentage d'entre eux utilise les transports en commun (Métro, Tramway, Bus) ?"
+          },
+          "voiture": {
+            "titre": "Voiture",
+            "description": "On considère ici toutes les motorisations de voiture individuelles, basée sur des moyennes nationales",
+            "distance": {
+              "question": "Quand les bénévoles se déplacent en voiture, combien de km parcourent-ils en moyenne par jour (A/R) ?"
+            }
+          },
+          "train": {
+            "titre": "Train (TER)",
+            "distance": {
+              "question": "Quand les bénévoles se déplacent en train, combien de km parcourent-ils en moyenne par jour (A/R) ?"
+            }
+          },
+          "transports en commun": {
+            "titre": "Transports en commun (Métro, tramway, RER, bus, ...)",
+            "distance": {
+              "question": "Quand les bénévoles se déplacent en transport en commun (métro, tramway, RER, bus), combien de km parcourent-ils en moyenne par jour (A/R) ?"
+            }
+          },
+          "deux roues": {
+            "titre": "Deux roues (Moto, scooter, ...)",
+            "distance": {
+              "question": "Quand les bénévoles se déplacent en deux roues, combien de km parcourent-ils en moyenne par jour (A/R) ?"
+            }
+          }
+        }
+      },
+      "DM-salariés": {
+        "titre": "Emissions des trajets liés à des missions des salariés",
+        "avec": {
+          "titre": "émissions des trajets liés à des missions des salariés (avec enquête MEP)",
+          "émissions MEP": {
+            "voiture": {
+              "question": "D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en voiture liés à des missions ?"
+            },
+            "train": {
+              "question": "D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en train liés à des missions ?"
+            },
+            "avion": {
+              "question": "D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en avion liés à des missions ?"
+            },
+            "transports en commun": {
+              "question": "D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en transports en commun liés à des missions ?"
+            },
+            "deux roues": {
+              "question": "D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en deux roues liés à des missions ?"
+            }
+          }
+        },
+        "sans": {
+          "titre": "émissions des trajets liés à des missions des salariés (sans enquête MEP)",
+          "voiture": {
+            "titre": "Voiture, par mois",
+            "description": "On considère ici toutes les motorisations de voiture individuelles, basée sur des moyennes nationales",
+            "distance": {
+              "question": "Combien de km sont parcourus en moyenne par mois par salarié en voiture pour des déplacements liés à des missions ?"
+            }
+          },
+          "train": {
+            "titre": "Train (TER), par mois",
+            "distance": {
+              "question": "Combien de km sont parcourus en moyenne par mois par salarié en train pour des déplacements liés à des missions ?"
+            }
+          },
+          "deux roues": {
+            "titre": "Deux roues (moto, scooter, ...), par mois",
+            "distance": {
+              "question": "Combien de km sont parcourus en moyenne par mois par salarié en deux roues pour des déplacements liés à des missions ?"
+            }
+          },
+          "transports en commun": {
+            "titre": "Transports en commun (Métro, tramway, RER, bus, ...), par mois",
+            "distance": {
+              "question": "Combien de km sont parcourus en moyenne par mois par salarié en transports en commun pour des déplacements liés à des missions ?"
+            }
+          },
+          "avion": {
+            "court courrier": {
+              "titre": "Avion, court courrier, par an",
+              "distance": {
+                "question": "Combien de km ont été parcourus cette année par salarié en avion court courrier pour des déplacements liés à des missions ?"
+              }
+            },
+            "moyen courrier": {
+              "titre": "Avion, moyen courrier, par an",
+              "distance": {
+                "question": "Combien de km ont été parcourus cette année par salarié en avion moyen courrier pour des déplacements liés à des missions ?"
+              }
+            },
+            "long courrier": {
+              "titre": "Avion, long courrier, par an",
+              "distance": {
+                "question": "Combien de km ont été parcourus cette année par salarié en avion long courrier pour des déplacements liés à des missions ?"
+              }
+            }
+          }
+        }
+      },
+      "bénéficiaires": {
+        "se déplacent": {
+          "question": "Les bénéficiaires de vos missions se déplacent-ils pour en profiter ?"
+        },
+        "part voiture": {
+          "titre": "Voiture",
+          "question": "Quel pourcentage des trajets se fait en voiture ?"
+        },
+        "part train": {
+          "titre": "Train (TER)",
+          "question": "Quel pourcentage des trajets se fait en train ?"
+        },
+        "part deux roues": {
+          "titre": "Deux roues (moto, scooter, ...)",
+          "question": "Quel pourcentage des trajets se fait en deux roues (scooter, moto) ?"
+        },
+        "part transport en commun": {
+          "titre": "Transport en commun (Métro, tramway, RER, bus, ...)",
+          "question": "Quel pourcentage des trajets se fait en transport en commun ?"
+        },
+        "part avion": {
+          "titre": "Avion",
+          "question": "Quel pourcentage des trajets se fait en avion ?"
+        },
+        "part actif": {
+          "titre": "Modes actifs (à pied, trottinette, ...)",
+          "question": "Quel pourcentage des trajets via des modes actifs (à pied, vélo, trottinette) ?"
+        },
+        "voiture": {
+          "titre": "Voiture",
+          "question": "Combien de km parcourent en moyenne sur l'année vos bénéficiaires en voiture ?"
+        },
+        "train": {
+          "titre": "Train (TER)",
+          "question": "Combien de km parcourent en moyenne sur l'année vos bénéficiaires en train ?"
+        },
+        "deux roues": {
+          "titre": "Deux roues (moto, scooter, ...)",
+          "question": "Combien de km parcourent en moyenne sur l'année vos bénéficiaires se déplaçant en deux roues (scooter, moto) ?"
+        },
+        "transport en commun": {
+          "titre": "Transport en commun (Métro, tramway, RER, bus, ...)",
+          "question": "Combien de km parcourent en moyenne sur l'année vos bénéficiaires en transport en commun ?"
+        },
+        "avion": {
+          "titre": "Avion",
+          "question": "Combien de km parcourent en moyenne sur l'année vos bénéficiaires en avion ?"
+        },
+        "actif": {
+          "titre": "Modes actifs (à pied, trottinette, ...)",
+          "question": "Combien de km parcourent en moyenne sur l'année vos bénéficiaires via des modes actifs (à pied, vélo, trottinette) ?"
+        }
+      }
+    },
+    "déchets": {
+      "titre": "Déchets directs"
+    },
+    "construction": {
+      "titre": "Construction",
+      "bâtiment": {
+        "locaux": {
+          "titre": "Locaux",
+          "question": "Concernant vos locaux, diriez-vous que :",
+          "options": {
+            "locaux seuls": "J'utilise des locaux qui sont entièrement dédiés à mon association",
+            "locaux partagés": "Mes locaux sont partagés avec d'autres stuctures (co-working, open-space partagés, ...)",
+            "pas de locaux": "Mes activités associatives ne nécessitent pas de locaux (télétravail à 100%, extérieur, ...)"
+          },
+          "locaux seuls": {
+            "titre": "J'utilise des locaux qui sont entièrement dédiés à mon association",
+            "surface": {
+              "description": "Vous devez renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites, vous pouvez soit sommer l'ensemble des surfaces ici, soit créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans (on parle bien de leur construction), vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année.",
+              "question": "Quelle est la surface de ces locaux ?"
+            }
+          },
+          "locaux partagés": {
+            "titre": "Mes locaux sont partagés avec d'autres stuctures (co-working, open-space partagés, ...)",
+            "surface": {
+              "description": "Vous devez renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites et que ces différents sites ont tous des locaux partagés, vous devez créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans (on parle bien de leur construction), vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année. Seule une partie de l'impact carbone sera pris en compte, en fonction du pourcentage des locaux utilisé par votre association à renseigner dans la question suivante.",
+              "question": "Quelle est la surface de ces locaux ?"
+            },
+            "pourcentage": {
+              "question": "Quelle est la part de la surface de ces locaux attribuables à votre association ?"
+            }
+          },
+          "pas de locaux": {
+            "titre": "Mes activités associatives ne nécessitent pas de locaux (télétravail à 100%, extérieur, ...)"
+          }
+        },
+        "locaux ponctuels existants": {
+          "titre": "L'association a-t'elle recourt à des locaux ponctuels ?",
+          "question": "Louez-vous des locaux ponctuellement, que ce soit en plus de vos locaux principaux ou à la place de ceux-ci ?"
+        },
+        "locaux ponctuels": {
+          "description": "Les locaux loués ponctuellement seront amortis sur 50 ans et 365 jours. Pour un local loué un jour, l'impact attribué sera 1/(365*50) de l'impact total de la construction du bâtiment.",
+          "question": "Veuillez renseigner vos différentes locations ponctuelles dans le tableau suivant :",
+          "nom": {
+            "question": "Nom de la location"
+          },
+          "calcul": {
+            "titre": "Veuillez renseigner ici les informations sur ces locations",
+            "surface": {
+              "titre": "Surface",
+              "question": "Quelle est la surface de la location ?"
+            },
+            "durée": {
+              "titre": "Durée",
+              "question": "Combien de jours dure la location sur l'année ?"
+            }
+          }
+        }
+      }
+    },
+    "alimentation": {
+      "titre": "Alimentation"
+    }
+  }
+}
