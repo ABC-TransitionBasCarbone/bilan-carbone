@@ -41,7 +41,9 @@ describe('Campaign creation', () => {
           (e) => e.subject.includes('Nouvelle campagne') && e.text.includes(campaignName),
         )
         if (!email) {
-          if (attempt >= 10) throw new Error(`Campaign notification email not found after ${attempt} retries`)
+          if (attempt >= 10) {
+            throw new Error(`Campaign notification email not found after ${attempt} retries`)
+          }
           cy.wait(2000)
           return pollMailbox(attempt + 1)
         }
