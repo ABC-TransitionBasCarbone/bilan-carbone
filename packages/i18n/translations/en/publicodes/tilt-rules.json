@@ -412,6 +412,7 @@
       "bénévoles": {
         "titre": "[TO_TRANSLATE] Télétravail - Bénévoles",
         "h": {
+          "description": "[TO_TRANSLATE] Dans le cas où vous ne disposeriez pas de cette information, vous pouvez considérer le nombre total d'heures de bénévolat, estimer un % télétravaillé, et diviser ensuite par votre nombre de bénévoles.",
           "question": "[TO_TRANSLATE] Combien d'heures sont en moyenne effectuées en télétravail par semaine pour vos bénévoles ?"
         }
       },
@@ -585,7 +586,7 @@
             "question": "[TO_TRANSLATE] Quel pourcentage des salariés se rend au travail en train (TER) ?"
           },
           "part deux roues": {
-            "titre": "[TO_TRANSLATE] Deux roues",
+            "titre": "[UPDATED] Deux roues (moto, scooter, ...)",
             "question": "[TO_TRANSLATE] Quel pourcentage des salariés se rend au travail en deux roues ?"
           },
           "part transport en commun": {
@@ -606,7 +607,7 @@
             }
           },
           "deux roues": {
-            "titre": "[TO_TRANSLATE] Deux roues",
+            "titre": "[UPDATED] Deux roues (Moto, scooter, ...)",
             "distance": {
               "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par salarié en deux roues par jour (A/R) pour des déplacements domicile-association ?"
             }
@@ -641,7 +642,7 @@
             "question": "[TO_TRANSLATE] Quand les bénévoles se déplacent, quel pourcentage d'entre eux utilise le train ?"
           },
           "part deux roues": {
-            "titre": "[TO_TRANSLATE] Deux roues",
+            "titre": "[UPDATED] Deux roues (moto, scooter, ...)",
             "question": "[TO_TRANSLATE] Quand les bénévoles se déplacent, quel pourcentage d'entre eux utilise un deux roues ?"
           },
           "part transport en commun": {
@@ -668,7 +669,7 @@
             }
           },
           "deux roues": {
-            "titre": "[TO_TRANSLATE] Deux roues",
+            "titre": "[UPDATED] Deux roues (Moto, scooter, ...)",
             "distance": {
               "question": "[TO_TRANSLATE] Quand les bénévoles se déplacent en deux roues, combien de km parcourent-ils en moyenne par jour (A/R) ?"
             }
@@ -713,7 +714,7 @@
             }
           },
           "deux roues": {
-            "titre": "[TO_TRANSLATE] Deux roues, par mois",
+            "titre": "[UPDATED] Deux roues (moto, scooter, ...), par mois",
             "distance": {
               "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par mois par salarié en deux roues pour des déplacements liés à des missions ?"
             }
@@ -759,7 +760,7 @@
           "question": "[TO_TRANSLATE] Quel pourcentage des trajets se fait en train ?"
         },
         "part deux roues": {
-          "titre": "[TO_TRANSLATE] Deux roues",
+          "titre": "[UPDATED] Deux roues (moto, scooter, ...)",
           "question": "[TO_TRANSLATE] Quel pourcentage des trajets se fait en deux roues (scooter, moto) ?"
         },
         "part transport en commun": {
@@ -783,7 +784,7 @@
           "question": "[TO_TRANSLATE] Combien de km parcourent en moyenne sur l'année vos bénéficiaires en train ?"
         },
         "deux roues": {
-          "titre": "[TO_TRANSLATE] Deux roues",
+          "titre": "[UPDATED] Deux roues (moto, scooter, ...)",
           "question": "[TO_TRANSLATE] Combien de km parcourent en moyenne sur l'année vos bénéficiaires se déplaçant en deux roues (scooter, moto) ?"
         },
         "transport en commun": {

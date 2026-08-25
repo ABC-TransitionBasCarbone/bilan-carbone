@@ -44,9 +44,9 @@
   "dependencies": {
     "@abc-transitionbascarbone/lib": "*",
     "@abc-transitionbascarbone/publicodes": "*",
-    "@abc-transitionbascarbone/publicodes-clickson": "file:../../packages/publicodes-packages/publicodes-clickson/",
-    "@abc-transitionbascarbone/publicodes-count": "file:../../packages/publicodes-packages/publicodes-count/",
-    "@abc-transitionbascarbone/publicodes-tilt": "file:../../packages/publicodes-packages/publicodes-tilt/",
+    "@abc-transitionbascarbone/publicodes-clickson": "*",
+    "@abc-transitionbascarbone/publicodes-count": "*",
+    "@abc-transitionbascarbone/publicodes-tilt": "*",
     "@abc-transitionbascarbone/services": "*",
     "@abc-transitionbascarbone/tests": "*",
     "@abc-transitionbascarbone/types": "*",
