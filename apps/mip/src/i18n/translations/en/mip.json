@@ -54,7 +54,7 @@
       "loadingState": "Loading your results...",
       "headlineDescription": "Your highest emission categories and the most effective actions to reduce them.",
       "kgUnit": "kg",
-      "target": "2050 target",
+      "target": "2050 Target",
       "ofFootprint": "of your footprint",
       "actions": {
         "title": "Take action",
@@ -70,8 +70,8 @@
       },
       "range": {
         "minLabel": "0 tCO₂e",
-        "maxLabel": "Upper reference",
-        "limitLabel": "2050 target"
+        "maxLabel": "Upper benchmark",
+        "limitLabel": "2050 Target"
       },
       "topCategories": {
         "title": "My main emission categories"
@@ -187,7 +187,7 @@
       "postDetail": "{tco2e} tCO₂e",
       "postDetailHover": "{tco2e} tCO₂e, around {people} people equivalent",
       "postDetailHoverPercent": "{percent}%",
-      "target2050": "2050 target"
+      "target2050": "2050 Target"
     },
     "keyStats": {
       "title": "Key figures",
