@@ -66,7 +66,7 @@
       "labelName": "Megnevezés",
       "source": "Forrás",
       "unit": "Mértékegység",
-      "emissionsKg": "Kibocsátás (kgCO2e)"
+      "emissionsKg": "Kibocsátás (kgCO₂e)"
     },
     "notAuthorized": "Nem engedélyezett művelet",
     "Not authorized": "Nincs jogosultsága a művelet végrehajtásához",

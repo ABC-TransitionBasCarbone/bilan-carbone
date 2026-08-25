@@ -7,13 +7,13 @@
     "k€": "[TO_TRANSLATE] k€",
     "quantité": "[TO_TRANSLATE] quantité",
     "kWh": "[TO_TRANSLATE] kWh",
-    "m3": "[TO_TRANSLATE] m3",
+    "m3": "[TO_TRANSLATE] m³",
     "litre": "[TO_TRANSLATE] litre",
     "stère": "[TO_TRANSLATE] stère",
     "kg": "[TO_TRANSLATE] kg",
     "h/semaine": "[TO_TRANSLATE] h/semaine",
     "jours/semaine": "[TO_TRANSLATE] jours/semaine",
-    "kgCO2e": "[TO_TRANSLATE] kgCO2e",
+    "kgCO2e": "[TO_TRANSLATE] kgCO₂e",
     "k€ HT": "[TO_TRANSLATE] k€ HT",
     "h": "[TO_TRANSLATE] h",
     "mail": "[TO_TRANSLATE] mail",
@@ -30,7 +30,7 @@
     "km/bénévoles/jours": "[TO_TRANSLATE] km/bénévoles.jours",
     "km/salariés/mois": "[TO_TRANSLATE] km/salariés.mois",
     "km/salarié/mois": "[TO_TRANSLATE] km/salarié.mois",
-    "kgCO2e/an": "[TO_TRANSLATE] kgCO2e/an",
+    "kgCO2e/an": "[TO_TRANSLATE] kgCO₂e/an",
     "km/salarié/an": "[TO_TRANSLATE] km/salarié.an",
     "km/bénéficiaires/an": "[TO_TRANSLATE] km/bénéficiaires.an",
     "place": "[TO_TRANSLATE] place",
@@ -267,7 +267,7 @@
         },
         "gaz naturel": {
           "conso": {
-            "question": "[TO_TRANSLATE] Pour le gaz naturel, à combien de m3 estimez-vous ces consommations ?"
+            "question": "[TO_TRANSLATE] Pour le gaz naturel, à combien de m³ estimez-vous ces consommations ?"
           }
         }
       }
@@ -588,7 +588,7 @@
             "question": "[TO_TRANSLATE] D'après les résultats de MEP, quelle est la distance moyenne parcourue par salarié par jour (A/R) pour des déplacements domicile-association ?"
           },
           "réponse MEP": {
-            "question": "[TO_TRANSLATE] D'après les résultats MEP, combien de kgCO2e représentent les déplacements domicile-association des salariés ?"
+            "question": "[TO_TRANSLATE] D'après les résultats MEP, combien de kgCO₂e représentent les déplacements domicile-association des salariés ?"
           }
         },
         "sans": {
@@ -641,7 +641,7 @@
             "question": "[TO_TRANSLATE] D'après les résultats de MEP, quelle est la distance moyenne parcourue par jour (A/R) par bénévole pour des déplacements domicile-travail ?"
           },
           "réponse MEP": {
-            "question": "[TO_TRANSLATE] D'après les résultats MEP, combien de kgCO2e représentent les déplacements domicile-association des bénévoles ?"
+            "question": "[TO_TRANSLATE] D'après les résultats MEP, combien de kgCO₂e représentent les déplacements domicile-association des bénévoles ?"
           }
         },
         "sans": {

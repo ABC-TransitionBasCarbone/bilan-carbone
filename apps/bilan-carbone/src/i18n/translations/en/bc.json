@@ -40,7 +40,7 @@
     "bc": {
       "title": "Export in Carbon Footprint® format",
       "category": "Carbon Footprint® Category",
-      "emissions": "Emissions (tCO2e)",
+      "emissions": "Emissions (tCO₂e)",
       "disclaimerExcel1": "Attention, the results you obtain here are solely from the Count simplified carbon footprint, and should under no circumstances be used as official Carbon Footprint® results.",
       "disclaimerExcel2": "The process you followed via the Count tool is NOT an official Carbon Footprint® assessment, even though the results obtained can already help you better understand how to reduce your impact by identifying your most emissive activities.",
       "disclaimerExcel3": "However, this simplified carbon footprint is the first step towards a more comprehensive approach like the Carbon Footprint®!",
@@ -816,8 +816,8 @@
       "charts": {
         "all": "Charts - All cinemas",
         "site": "Charts - {site}",
-        "allEmissions": "Emissions from all cinema activities, in tCO2e",
-        "siteEmissions": "Emissions from cinema {site} activities, in tCO2e"
+        "allEmissions": "Emissions from all cinema activities, in tCO₂e",
+        "siteEmissions": "Emissions from cinema {site} activities, in tCO₂e"
       },
       "labels": {
         "cinemas": "Cinemas",

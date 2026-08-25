@@ -66,7 +66,7 @@
       "labelName": "Oznaka",
       "source": "Izvor",
       "unit": "Jedinica",
-      "emissionsKg": "Emisije (kgCO2e)"
+      "emissionsKg": "Emisije (kgCO₂e)"
     },
     "notAuthorized": "Neovlaštena radnja",
     "Not authorized": "Nemate ovlasti za izvođenje ove radnje",

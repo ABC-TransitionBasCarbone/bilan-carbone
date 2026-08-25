@@ -9,7 +9,7 @@
     "bc": {
       "title": "Exportar en formato Huella de Carbono®",
       "category": "Categoría Huella de Carbono®",
-      "emissions": "Emisiones (tCO2e)",
+      "emissions": "Emisiones (tCO₂e)",
       "disclaimerExcel1": "Atención, los resultados que obtiene aquí provienen únicamente de la huella de carbono simplificada Count, y no deben utilizarse en ningún caso como resultados oficiales de Huella de Carbono®.",
       "disclaimerExcel2": "El proceso que ha seguido a través de la herramienta Count NO es una evaluación oficial de Huella de Carbono®, aunque los resultados obtenidos ya pueden ayudarle a comprender mejor cómo reducir su impacto, identificando sus actividades más emisivas.",
       "disclaimerExcel3": "Sin embargo, esta huella de carbono simplificada es el primer paso hacia un enfoque más completo como la Huella de Carbono®!",
@@ -686,8 +686,8 @@
       "charts": {
         "all": "Gráficos - Todos los cines",
         "site": "Gráficos - {site}",
-        "allEmissions": "Emisiones debidas a las actividades del conjunto de los cines, en tCO2e",
-        "siteEmissions": "Emisiones debidas a las actividades del cine {site}, en tCO2e"
+        "allEmissions": "Emisiones debidas a las actividades del conjunto de los cines, en tCO₂e",
+        "siteEmissions": "Emisiones debidas a las actividades del cine {site}, en tCO₂e"
       },
       "labels": {
         "cinemas": "Cines",

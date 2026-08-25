@@ -708,7 +708,7 @@
         "question rhétorique": {
           "titre": "Question d'information sur les consommation d'énergie associée à la vie de bureau et au télétravail (Chauffage, climatisation, électricité)",
           "description": "Cette catégorie ne dépend pas de vos réponses. L'empreinte associée est une moyenne nationale, nous procédons ainsi car définir précisément votre consommation d'énergie liée à votre activité professionnelle est complexe et necessiterait de nombreuses informations que vous n'avez pas forcement à disposition.",
-          "question": "Nous attribuons à chaque employé l'empreinte de sa \"vie de bureau\" sur son lieu de travail et chez lui (chauffage, climatisation, électricité...). Cela représente autour de 280kg de CO2e par personne par an."
+          "question": "Nous attribuons à chaque employé l'empreinte de sa \"vie de bureau\" sur son lieu de travail et chez lui (chauffage, climatisation, électricité...). Cela représente autour de 280kg de CO₂e par personne par an."
         }
       },
       "température": {
@@ -1048,14 +1048,14 @@
     "km/mois": "km/mois",
     "h/mois": "h/mois",
     "nuit": "nuit",
-    "m3": "m3",
+    "m3": "m³",
     "personne": "personne",
     "€/mois": "€/mois",
     "kWh": "kWh",
     "Wc": "Wc",
     "%": "%",
-    "kgCO2e/m2": "kgCO2e/m2",
-    "m2": "m2",
+    "kgCO2e/m2": "kgCO₂e/m²",
+    "m2": "m²",
     "climatiseur": "climatiseur",
     "bouteille": "bouteille",
     "kg": "kg",
@@ -1063,7 +1063,7 @@
     "€": "€",
     "stère": "stère",
     "requêtes/jour": "requêtes/jour",
-    "kgCO2e": "kgCO2e",
+    "kgCO2e": "kgCO₂e",
     "repas": "repas",
     "tasse/jour": "tasse/jour",
     "degré": "degré",

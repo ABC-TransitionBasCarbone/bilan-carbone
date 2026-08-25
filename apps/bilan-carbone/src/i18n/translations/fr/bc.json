@@ -40,7 +40,7 @@
     "bc": {
       "title": "Export au format Bilan Carbone®",
       "category": "Catégorie Bilan Carbone®",
-      "emissions": "Émissions (tCO2e)",
+      "emissions": "Émissions (tCO₂e)",
       "disclaimerExcel1": "Attention, les résultats que vous obtenez ici sont uniquement issus de l'empreinte carbone simplifiée Count, et ne doivent en aucun cas être utilisés comme des résultats Bilan Carbone®.",
       "disclaimerExcel2": "La démarche que vous avez suivi via l'outil Count n'est PAS une démarche Bilan Carbone®, même si les résultats obtenus peuvent déjà vous permettre de mieux comprendre comment réduire votre impact, en identifiant vos activités les plus émissives.",
       "disclaimerExcel3": "En revanche, cette empreinte carbone simplifiée est le premier pas vers une démarche plus complète comme le Bilan Carbone® !",
@@ -816,8 +816,8 @@
       "charts": {
         "all": "Graphiques - Tous cinémas",
         "site": "Graphiques - {site}",
-        "allEmissions": "Émissions dues aux activités de l'ensemble des cinémas, en tCO2e",
-        "siteEmissions": "Émissions dues aux activités du cinéma {site}, en tCO2e"
+        "allEmissions": "Émissions dues aux activités de l'ensemble des cinémas, en tCO₂e",
+        "siteEmissions": "Émissions dues aux activités du cinéma {site}, en tCO₂e"
       },
       "labels": {
         "cinemas": "Cinémas",
