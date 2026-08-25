@@ -36,7 +36,7 @@ describe('Campaign creation', () => {
 
     type MailDevEmail = { subject: string; text: string; to: Array<{ address: string }> }
     const pollMailbox = (attempt = 0): Cypress.Chainable =>
-      cy.request<MailDevEmail[]>('GET', 'http://localhost:1080/email').then((response) => {
+      cy.request<MailDevEmail[]>('GET', 'http://localhost:1080/api/email').then((response) => {
         const email = response.body.find(
           (e) => e.subject.includes('Nouvelle campagne') && e.text.includes(campaignName),
         )
