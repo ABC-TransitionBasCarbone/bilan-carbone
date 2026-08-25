@@ -235,6 +235,7 @@ const theme = createTheme(base, {
       [SubPost.ReseauxDeChaleurEtDeVapeur]: '#7987ac',
       [SubPost.ReseauxDeFroid]: '#8c98b8',
       [SubPost.Electricite]: '#9faac4',
+      [SubPost.EnergieSimplified]: '#6576a0',
 
       // AutresEmissionsNonEnergetiques subposts - variations of #3F5488
       [SubPost.Agriculture]: '#526594',
