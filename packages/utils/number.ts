@@ -35,3 +35,11 @@ export const average = (values: number[], decimals = 0): number => {
   const factor = 10 ** decimals
   return Math.round((values.reduce((sum, value) => sum + value, 0) / values.length) * factor) / factor
 }
+
+export const getNumericNodeValue = (nodeValue: unknown): number => {
+  return typeof nodeValue === 'number' && Number.isFinite(nodeValue) ? nodeValue : 0
+}
+
+export const getPositiveNodeValue = (nodeValue: unknown): number => {
+  return typeof nodeValue === 'number' && Number.isFinite(nodeValue) ? Math.max(0, nodeValue) : 0
+}

@@ -2,11 +2,8 @@
 
 import { useMipPublicodes } from '@/publicodes/MipPublicodesProvider'
 import { getSurveyCategoryKeysFromParsedRules } from '@/publicodes/mip-engine'
-import {
-  formatMassKilograms,
-  getCategoryClassSuffix,
-  getPositiveNodeValue,
-} from '@abc-transitionbascarbone/publicodes/form'
+import { formatMassKilograms, getCategoryClassSuffix } from '@abc-transitionbascarbone/publicodes/form'
+import { getPositiveNodeValue } from '@abc-transitionbascarbone/utils/number'
 import classNames from 'classnames'
 import styles from './SurveyCategoriesSidebar.module.css'
 

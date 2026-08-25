@@ -11,7 +11,7 @@ import { withServerResponse } from '@/utils/serverResponse'
 import { isAdmin } from '@/utils/user'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
 import { buildCsv, sanitizeFileName, serializeCsvValue } from '@abc-transitionbascarbone/utils/csv'
-import { average, safePercent, toNumber } from '@abc-transitionbascarbone/utils/number'
+import { average, getNumericNodeValue, safePercent, toNumber } from '@abc-transitionbascarbone/utils/number'
 import { isYesValue } from '@abc-transitionbascarbone/utils/parsing'
 import Engine, { Situation } from 'publicodes'
 
@@ -344,10 +344,9 @@ export const getSurveyResults = async (campaignId: string): Promise<SurveyResult
   const travelEmissionsKg: number[] = []
   let footprintTotal = 0
 
-  const getNumericNodeValue = (ruleName: string): number => {
+  const getRuleNumericNodeValue = (ruleName: string): number => {
     try {
-      const value = engine.evaluate(ruleName).nodeValue
-      return typeof value === 'number' ? value : 0
+      return getNumericNodeValue(engine.evaluate(ruleName).nodeValue)
     } catch {
       return 0
     }
@@ -360,20 +359,20 @@ export const getSurveyResults = async (campaignId: string): Promise<SurveyResult
 
     engine.setSituation(situation)
 
-    footprintTotal += getNumericNodeValue('bilan')
+    footprintTotal += getRuleNumericNodeValue('bilan')
 
-    const commuteEmission = getNumericNodeValue('DT')
+    const commuteEmission = getRuleNumericNodeValue('DT')
     if (commuteEmission > 0) {
       commuteEmissionsKg.push(Math.max(0, commuteEmission))
     }
 
-    const travelEmission = getNumericNodeValue('transport')
+    const travelEmission = getRuleNumericNodeValue('transport')
     if (travelEmission > 0) {
       travelEmissionsKg.push(Math.max(0, travelEmission))
     }
 
     for (const key of categoryKeys) {
-      categoryTotals[key] += getNumericNodeValue(key)
+      categoryTotals[key] += getRuleNumericNodeValue(key)
     }
   }
 
