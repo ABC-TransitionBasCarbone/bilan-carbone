@@ -34,14 +34,23 @@ describe('Campaign creation', () => {
     cy.getByTestId('validate-campaign-update').click()
     cy.wait('@updateCampaign')
 
-    cy.visit('http://localhost:1080')
-    cy.origin('http://localhost:1080', { args: { campaignName } }, ({ campaignName }) => {
-      cy.get('.email-item-link', { timeout: 15000 }).contains('Nouvelle campagne').click()
+    type MailDevEmail = { subject: string; text: string; to: Array<{ address: string }> }
+    const pollMailbox = (attempt = 0): Cypress.Chainable =>
+      cy.request<MailDevEmail[]>('GET', 'http://localhost:1080/email').then((response) => {
+        const email = response.body.find(
+          (e) => e.subject.includes('Nouvelle campagne') && e.text.includes(campaignName),
+        )
+        if (!email) {
+          if (attempt >= 10) throw new Error(`Campaign notification email not found after ${attempt} retries`)
+          cy.wait(2000)
+          return pollMailbox(attempt + 1)
+        }
+        const recipients = email.to.map((r) => r.address)
+        expect(recipients).to.include('mip-admin-0@yopmail.com')
+        expect(recipients).to.include('mip-super_admin-0@yopmail.com')
+      })
 
-      cy.contains(campaignName).should('be.visible')
-      cy.contains('mip-admin-0@yopmail.com').should('be.visible')
-      cy.contains('mip-super_admin-0@yopmail.com').should('be.visible')
-    })
+    pollMailbox()
   })
 
   it('Collaborator can not see admin campaign', () => {
