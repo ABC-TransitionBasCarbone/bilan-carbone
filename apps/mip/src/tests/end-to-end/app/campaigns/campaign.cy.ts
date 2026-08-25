@@ -1,35 +1,4 @@
 describe('Campaign creation', () => {
-  type MaildevEmail = { to?: { address?: string }[]; subject?: string; text?: string }
-
-  const clearMaildevInbox = () =>
-    cy.request({
-      method: 'DELETE',
-      url: 'http://localhost:1080/email/all',
-      failOnStatusCode: false,
-    })
-
-  const readMaildevEmails = (): Cypress.Chainable<MaildevEmail[]> =>
-    cy
-      .request({
-        method: 'GET',
-        url: 'http://localhost:1080/email',
-        failOnStatusCode: false,
-      })
-      .then((response) => {
-        const emails = Array.isArray(response.body) ? (response.body as MaildevEmail[]) : []
-
-        return emails
-      })
-
-  const waitForEmailsWithSubject = (subject: string, attempts = 0): Cypress.Chainable<MaildevEmail[]> =>
-    readMaildevEmails().then((emails) => {
-      const matching = emails.filter((e) => e.subject?.includes(subject))
-      if (matching.length > 0 || attempts >= 10) {
-        return cy.wrap(matching)
-      }
-      return cy.wait(500).then(() => waitForEmailsWithSubject(subject, attempts + 1))
-    })
-
   before(() => {
     cy.resetTestDatabase()
   })
@@ -57,7 +26,6 @@ describe('Campaign creation', () => {
 
   it('Collaborator campaign creation notifies each admin by email', () => {
     const campaignName = `Campaign notif ${Date.now()}`
-    clearMaildevInbox()
 
     cy.login('mip-collaborator-0@yopmail.com', 'password-0')
     cy.visit('/campaigns')
@@ -66,14 +34,13 @@ describe('Campaign creation', () => {
     cy.getByTestId('validate-campaign-update').click()
     cy.wait('@updateCampaign')
 
-    waitForEmailsWithSubject('Nouvelle campagne').then((notifications) => {
-      const recipients = notifications.flatMap((email) =>
-        (email.to || []).map((to) => (to.address || '').toLowerCase()),
-      )
+    cy.visit('http://localhost:1080')
+    cy.origin('http://localhost:1080', () => {
+      cy.get('.email-item-link', { timeout: 15000 }).contains('Nouvelle campagne').click()
 
-      expect(recipients).to.include('mip-admin-0@yopmail.com')
-      expect(recipients).to.include('mip-super_admin-0@yopmail.com')
-      expect(notifications.some((email) => (email.text || '').includes(campaignName))).to.equal(true)
+      cy.contains(campaignName).should('be.visible')
+      cy.contains('mip-admin-0@yopmail.com').should('be.visible')
+      cy.contains('mip-super_admin-0@yopmail.com').should('be.visible')
     })
   })
 
