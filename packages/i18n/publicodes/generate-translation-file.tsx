@@ -54,7 +54,7 @@ function extractTranslationKeysFromRules(
   const translations: Record<string, Partial<TranslationRecord>> = {}
 
   for (const [ruleName, rule] of Object.entries(rulesMap)) {
-    if (!rule?.question && rule?.['form']?.['à traduire'] !== 'oui') {
+    if (!rule || !KEYS_TO_TRANSLATE.some((key) => key in rule)) {
       continue
     }
 

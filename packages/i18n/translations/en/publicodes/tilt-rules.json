@@ -5,34 +5,66 @@
     "bénévoles": "[TO_TRANSLATE] bénévoles",
     "bénéficiaires": "[TO_TRANSLATE] bénéficiaires",
     "k€": "[TO_TRANSLATE] k€",
+    "mois": "[TO_TRANSLATE] mois",
+    "semaine": "[TO_TRANSLATE] semaine",
+    "jour": "[TO_TRANSLATE] jour",
+    "kgCO2e/repas": "[TO_TRANSLATE] kgCO2e/repas",
+    "kgCO2e/km": "[TO_TRANSLATE] kgCO2e/km",
+    "kgCO2e": "[TO_TRANSLATE] kgCO2e",
+    "kgCO2e/an": "[TO_TRANSLATE] kgCO2e/an",
+    "an": "[TO_TRANSLATE] an",
+    "kgCO2e/quantité": "[TO_TRANSLATE] kgCO2e/quantité",
     "quantité": "[TO_TRANSLATE] quantité",
+    "kgCO2e/kWh": "[TO_TRANSLATE] kgCO2e/kWh",
     "kWh": "[TO_TRANSLATE] kWh",
+    "kWh/m²/an": "[TO_TRANSLATE] kWh/m².an",
+    "kgCO2e/m3": "[TO_TRANSLATE] kgCO2e/m3",
     "m3": "[TO_TRANSLATE] m3",
+    "m3/m²/an": "[TO_TRANSLATE] m3/m².an",
+    "kgCO2e/litre": "[TO_TRANSLATE] kgCO2e/litre",
     "litre": "[TO_TRANSLATE] litre",
+    "litre/m²/an": "[TO_TRANSLATE] litre/m².an",
+    "kgCO2e/stère": "[TO_TRANSLATE] kgCO2e/stère",
     "stère": "[TO_TRANSLATE] stère",
+    "kgCO2e/kg": "[TO_TRANSLATE] kgCO2e/kg",
     "kg": "[TO_TRANSLATE] kg",
+    "kgCO2e/jours": "[TO_TRANSLATE] kgCO2e/jours",
     "h/semaine": "[TO_TRANSLATE] h/semaine",
     "jours/semaine": "[TO_TRANSLATE] jours/semaine",
-    "kgCO2e": "[TO_TRANSLATE] kgCO2e",
     "k€ HT": "[TO_TRANSLATE] k€ HT",
+    "kgCO2e/k€ HT": "[TO_TRANSLATE] kgCO2e/k€ HT",
     "h": "[TO_TRANSLATE] h",
+    "kgCO2e/h": "[TO_TRANSLATE] kgCO2e/h",
     "mail": "[TO_TRANSLATE] mail",
+    "kgCO2e/mail": "[TO_TRANSLATE] kgCO2e/mail",
     "Go": "[TO_TRANSLATE] Go",
+    "kgCO2e/Go": "[TO_TRANSLATE] kgCO2e/Go",
+    "kgCO2e/climatiseur": "[TO_TRANSLATE] kgCO2e/climatiseur",
     "climatiseur": "[TO_TRANSLATE] climatiseur",
+    "kW/m2": "[TO_TRANSLATE] kW/m2",
+    "kg/kW": "[TO_TRANSLATE] kg/kW",
     "VUL": "[TO_TRANSLATE] VUL",
+    "tonnes/VUL": "[TO_TRANSLATE] tonnes/VUL",
+    "kgCO2e/tonnes": "[TO_TRANSLATE] kgCO2e/tonnes",
     "poids lourds": "[TO_TRANSLATE] poids lourds",
+    "tonnes/poids lourds": "[TO_TRANSLATE] tonnes/poids lourds",
     "unité": "[TO_TRANSLATE] unité",
-    "%": "[TO_TRANSLATE] %",
-    "tonne": "[TO_TRANSLATE] tonne",
-    "voitures": "[TO_TRANSLATE] voitures",
     "km": "[TO_TRANSLATE] km",
+    "kgCO2e/t/km": "[TO_TRANSLATE] kgCO2e/t.km",
+    "%": "[TO_TRANSLATE] %",
+    "kgCO2e/kg/km": "[TO_TRANSLATE] kgCO2e/kg.km",
+    "tonne": "[TO_TRANSLATE] tonne",
+    "kgCO2e/tonne": "[TO_TRANSLATE] kgCO2e/tonne",
+    "voitures": "[TO_TRANSLATE] voitures",
+    "tonnes/voitures": "[TO_TRANSLATE] tonnes/voitures",
     "km/salariés/jours": "[TO_TRANSLATE] km/salariés.jours",
     "km/bénévoles/jours": "[TO_TRANSLATE] km/bénévoles.jours",
     "km/salariés/mois": "[TO_TRANSLATE] km/salariés.mois",
     "km/salarié/mois": "[TO_TRANSLATE] km/salarié.mois",
-    "kgCO2e/an": "[TO_TRANSLATE] kgCO2e/an",
     "km/salarié/an": "[TO_TRANSLATE] km/salarié.an",
     "km/bénéficiaires/an": "[TO_TRANSLATE] km/bénéficiaires.an",
+    "m²/place": "[TO_TRANSLATE] m²/place",
+    "kgCO2e/m²": "[TO_TRANSLATE] kgCO2e/m²",
     "place": "[TO_TRANSLATE] place",
     "m²": "[TO_TRANSLATE] m²",
     "jours": "[TO_TRANSLATE] jours",
@@ -85,8 +117,85 @@
         "question": "[TO_TRANSLATE] Précisez le type de structure"
       }
     },
+    "commun": {
+      "titre": "[TO_TRANSLATE] Règles communes",
+      "nombre de mois par an": {
+        "titre": "[TO_TRANSLATE] Nombre de mois par an",
+        "description": "[TO_TRANSLATE] Nombre de mois pris en compte pour le calcul annuel."
+      },
+      "nombre de semaines par an": {
+        "titre": "[TO_TRANSLATE] Nombre de semaines par an",
+        "description": "[TO_TRANSLATE] Nombre de semaines prises en compte pour le calcul annuel."
+      },
+      "nombre de semaines travaillées par an": {
+        "titre": "[TO_TRANSLATE] Nombre de semaines travaillées par an"
+      },
+      "nombre de jours par an": {
+        "titre": "[TO_TRANSLATE] Nombre de jours par an",
+        "description": "[TO_TRANSLATE] Nombre de jours pris en compte pour le calcul annuel."
+      },
+      "année actuelle": {
+        "titre": "[TO_TRANSLATE] Année actuelle",
+        "description": "[TO_TRANSLATE] Année de référence pour le calcul des amortissements."
+      },
+      "FE": {
+        "description": "[TO_TRANSLATE] On regroupe ici les facteurs d'émission communs à plusieurs postes.",
+        "repas": {
+          "titre": "[TO_TRANSLATE] Facteur d'émission d'un repas moyen"
+        },
+        "moyen de transport": {
+          "titre": "[TO_TRANSLATE] Facteur d'émission moyens de transport",
+          "RER et transilien": {
+            "titre": "[TO_TRANSLATE] Facteur d'émission RER et transilien"
+          },
+          "métro ou tram": {
+            "titre": "[TO_TRANSLATE] Facteur d'émission métro, tramway"
+          },
+          "bus": {
+            "titre": "[TO_TRANSLATE] Facteur d'émission bus"
+          },
+          "vélo électrique": {
+            "titre": "[TO_TRANSLATE] Facteur d'émission vélo électrique"
+          },
+          "vélo classique": {
+            "titre": "[TO_TRANSLATE] Facteur d'émission vélo classique"
+          },
+          "marche": {
+            "titre": "[TO_TRANSLATE] Facteur d'émission marche"
+          },
+          "voiture diesel": {
+            "titre": "[TO_TRANSLATE] Facteur d'émission voiture diesel"
+          },
+          "voiture essence": {
+            "titre": "[TO_TRANSLATE] Facteur d'émission voiture essence"
+          },
+          "voiture hybride": {
+            "titre": "[TO_TRANSLATE] Facteur d'émission voiture hybride"
+          },
+          "voiture électrique": {
+            "titre": "[TO_TRANSLATE] Facteur d'émission voiture électrique"
+          },
+          "moto": {
+            "titre": "[TO_TRANSLATE] Facteur d'émission moto"
+          },
+          "scooter": {
+            "titre": "[TO_TRANSLATE] Facteur d'émission scooter"
+          },
+          "trottinette électrique": {
+            "titre": "[TO_TRANSLATE] Facteur d'émission trottinette électrique"
+          },
+          "TGV": {
+            "titre": "[TO_TRANSLATE] Facteur d'émission TGV"
+          },
+          "avion": {
+            "titre": "[TO_TRANSLATE] Facteur d'émission avion moyen-courrier"
+          }
+        }
+      }
+    },
     "équipements et immobilisations": {
       "pondération": {
+        "titre": "[TO_TRANSLATE] Équipements et immobilisations",
         "reconditionné": {
           "description": "[TO_TRANSLATE] En fonction de votre réponse, une partie de vos équipements seront valorisés comme étant reconditionnés. Un équipement reconditionné sera considéré comme moitié moins émetteur qu'un équipement neuf. Autrement dit, la durée de première vie de l'équipement est considéré comme égale à la moitié de sa durée de vie totale.",
           "question": "[TO_TRANSLATE] Vos équipements sont-ils reconditionné ou issu de seconde main ?",
@@ -95,6 +204,18 @@
             "souvent": "[TO_TRANSLATE] Souvent",
             "parfois": "[TO_TRANSLATE] Parfois",
             "jamais": "[TO_TRANSLATE] Jamais"
+          },
+          "toujours": {
+            "titre": "[TO_TRANSLATE] Toujours"
+          },
+          "souvent": {
+            "titre": "[TO_TRANSLATE] Souvent"
+          },
+          "parfois": {
+            "titre": "[TO_TRANSLATE] Parfois"
+          },
+          "jamais": {
+            "titre": "[TO_TRANSLATE] Jamais"
           }
         }
       },
@@ -150,8 +271,10 @@
       }
     },
     "énergie": {
+      "titre": "[TO_TRANSLATE] Énergie",
       "combustibles organiques": {
         "types": {
+          "titre": "[TO_TRANSLATE] Types d'énergie",
           "électricité présent": {
             "question": "[TO_TRANSLATE] Électricité"
           },
@@ -183,43 +306,53 @@
           "description": "[TO_TRANSLATE] Par défaut, des valeurs sont saisies en fonction des mètres-carrés que vous avez renseignés pour vos locaux, Ces valeurs sont issues de données statistiques de la Base Empreinte, Elles sont imprécises et datées, Si vous disposez de données plus précises via vos factures ou autres éléments de suivi, nous vous invitons à les renseigner à la place des données par défaut",
           "question": "[TO_TRANSLATE] Veuillez indiquer vos consommations d'énergie pour les types d'énergie suivants",
           "électricité": {
+            "titre": "[TO_TRANSLATE] Électricité",
             "consommation": {
               "titre": "[TO_TRANSLATE] Consommation annuelle d'électricité",
               "description": "[TO_TRANSLATE] Cette consommation doit être issue de votre facture et ne pas inclure pas votre autoconsommation (panneaux solaires, etc), ni la consommation des véhicules électriques qui est prise en compte au sein d'autres catégories (Fret, Déplacements).",
               "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle d'électricité ?"
+            },
+            "donnée statistique": {
+              "titre": "[TO_TRANSLATE] Consommation moyenne d'électricité pour des bureaux à l'année, statistiques Base Carbone® (hors ou avec chauffage)"
             }
           },
           "gaz": {
+            "titre": "[TO_TRANSLATE] Gaz naturel",
             "consommation": {
               "titre": "[TO_TRANSLATE] Consommation annuelle de gaz naturel",
               "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de gaz naturel ?"
             }
           },
           "fioul": {
+            "titre": "[TO_TRANSLATE] Fioul domestique",
             "consommation": {
               "titre": "[TO_TRANSLATE] Consommation annuelle de fioul domestique",
               "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de fioul domestique ?"
             }
           },
           "bois": {
+            "titre": "[TO_TRANSLATE] Bois-bûches",
             "consommation": {
               "titre": "[TO_TRANSLATE] Consommation annuelle de bûches de bois",
               "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de bûches de bois ?"
             }
           },
           "granulés": {
+            "titre": "[TO_TRANSLATE] Granulés de bois",
             "consommation": {
               "titre": "[TO_TRANSLATE] Consommation annuelle de granulés de bois",
               "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de bûches de bois ?"
             }
           },
           "réseaux de chaleur": {
+            "titre": "[TO_TRANSLATE] Réseaux de chaleur",
             "consommation": {
               "titre": "[TO_TRANSLATE] Consommation annuelle de kWh issus de réseaux de chaleur",
               "question": "[TO_TRANSLATE] Quelle est votre consommation de kWh issus de réseaux de chaleur ?"
             }
           },
           "réseaux de froid": {
+            "titre": "[TO_TRANSLATE] Réseaux de froid",
             "consommation": {
               "titre": "[TO_TRANSLATE] Consommation annuelle de kWh issus de réseaux de froid",
               "question": "[TO_TRANSLATE] Quelle est votre consommation de kWh issus de réseaux de froid ?"
@@ -231,6 +364,7 @@
           "question": "[TO_TRANSLATE] Autoproduisez-vous de l'électricité, par exemple à l'aide de panneaux photovoltaïques ?"
         },
         "autoconsommation électricité": {
+          "titre": "[TO_TRANSLATE] Autoconsommation d'électricité",
           "autoconsommation": {
             "question": "[TO_TRANSLATE] Quelle est votre autoconsommation annuelle d'électricité ?"
           }
@@ -238,6 +372,7 @@
       }
     },
     "utilisation": {
+      "titre": "[TO_TRANSLATE] Utilisation",
       "responsabilite conso energie": {
         "élec présente": {
           "question": "[TO_TRANSLATE] Fournissez-vous des produits ou services qui entraînent des consommations d'électricité chez vos usagers ?"
@@ -273,129 +408,25 @@
       }
     },
     "télétravail": {
+      "titre": "[TO_TRANSLATE] Emissions liées au télétravail",
       "bénévoles": {
+        "titre": "[TO_TRANSLATE] Télétravail - Bénévoles",
         "h": {
           "question": "[TO_TRANSLATE] Combien d'heures sont en moyenne effectuées en télétravail par semaine pour vos bénévoles ?"
         }
       },
       "salariés": {
+        "titre": "[TO_TRANSLATE] Télétravail - Salariés",
         "j": {
           "question": "[TO_TRANSLATE] Combien de jours sont en moyenne télétravaillés par semaine par vos salariés ?"
         }
       }
     },
     "intrants-services": {
-      "approche monétaire": {
-        "existant": {
-          "titre": "[TO_TRANSLATE] L'utilisateur a-t'il accès aux montants dépensés dans des services immatériels de manière détaillée ?",
-          "description": "[TO_TRANSLATE] La liste de vos dépenses est présente dans votre livres de comptes, et souvent déclarée sur <compteassotilttorefacto>Lecompteasso</compteassotilttorefacto>.",
-          "question": "[TO_TRANSLATE] Avez-vous accès aux détails des montants dépensés sur l'année dans des services immatériels ?"
-        },
-        "FE moyen": {
-          "description": "[TO_TRANSLATE] Si vous n'avez pas du tout accès à vos comptes, vous pouvez réaliser une estimation en partant du budget de fonctionnement de l'association, et en retranchant les coûts afférents aux éventuels salariés et aux charges connues.",
-          "montant dépensé": {
-            "titre": "[TO_TRANSLATE] Montant dépensé dans des services immatériels sur l'année",
-            "description": "[TO_TRANSLATE] Veuillez indiquer le montant dépensé pour chaque service immatériel. Si vous ne connaissez pas le montant exact, vous pouvez fournir une estimation. Vous devez bien inclure l'ensemble des services, <b>y compris ceux qui sont reçus gratuitement (mécénat de compétence, ...)</b>. Il faut donc bien prendre en compte les informations disponibles sur les contributions volontaires en nature, décrites dans le compte 870. Attention, ce compte intègre les biens et les services, il faut donc estimer la part de chacun. <br></br> Cette liste des catégories de service est non exhaustive. <b>Si vous n’avez pas comptabilisé l’ensemble de vos dépenses, c’est tout à fait normal</b>. Il peut s’agir de dépenses très faiblement émissives, ou d'activités dont les émissions sont déjà prises en compte dans d’autres postes ou via d’autres questions reposant sur des données plus précises (comptabiliser les dépenses associées ici reviendrait donc à faire un double-compte).",
-            "question": "[TO_TRANSLATE] Quel montant avez-vous dépensé sur l'année dans ces services immatériels ?"
-          }
-        },
-        "tableau détaillé": {
-          "description": "[TO_TRANSLATE] La liste est non exhaustive : si vous n’avez pas comptabilisé l’ensemble de vos dépenses, c’est tout à fait normal. Il peut s’agir de dépenses très faiblement émissives ou dont les émissions sont déjà prises en compte dans d’autres postes ou via d’autres questions reposant sur des données plus précises.",
-          "question": "[TO_TRANSLATE] Quel montant avez-vous dépensé dans les services immatériels suivants en [Année] ?",
-          "spectacles-musées": {
-            "titre": "[TO_TRANSLATE] Spectacles, musées et autres services culturels",
-            "montant-dépensé": {
-              "question": "[TO_TRANSLATE] Montant dépensé en services de spectacles, musées et autres services culturels"
-            }
-          },
-          "assurance-reassurance": {
-            "titre": "[TO_TRANSLATE] Services d'assurance",
-            "montant-dépensé": {
-              "question": "[TO_TRANSLATE] Montant dépensé en services d'assurance et réassurance"
-            }
-          },
-          "telecom": {
-            "titre": "[TO_TRANSLATE] Services de télécommunications",
-            "montant-dépensé": {
-              "question": "[TO_TRANSLATE] Montant dépensé en services de télécommunications"
-            }
-          },
-          "sante-humaine": {
-            "titre": "[TO_TRANSLATE] Services de santé humaine",
-            "montant-dépensé": {
-              "question": "[TO_TRANSLATE] Montant dépensé en services de santé humaine"
-            }
-          },
-          "edition": {
-            "titre": "[TO_TRANSLATE] Services d'édition",
-            "montant-dépensé": {
-              "question": "[TO_TRANSLATE] Montant dépensé en services d'édition"
-            }
-          },
-          "poste-courrier": {
-            "titre": "[TO_TRANSLATE] Services de poste et de courrier",
-            "montant-dépensé": {
-              "question": "[TO_TRANSLATE] Montant dépensé en services de poste et courrier"
-            }
-          },
-          "restauration": {
-            "titre": "[TO_TRANSLATE] Services de restauration et d'hébergement",
-            "montant-dépensé": {
-              "question": "[TO_TRANSLATE] Montant dépensé en services de restauration et hébergement"
-            }
-          },
-          "formation": {
-            "titre": "[TO_TRANSLATE] Services de formation",
-            "montant-dépensé": {
-              "question": "[TO_TRANSLATE] Montant dépensé en services de formation"
-            }
-          },
-          "reparation-installation": {
-            "titre": "[TO_TRANSLATE] Services de réparation et d'installation",
-            "montant-dépensé": {
-              "question": "[TO_TRANSLATE] Montant dépensé en services de réparation et installation"
-            }
-          },
-          "juridique-comptable": {
-            "titre": "[TO_TRANSLATE] Services juridiques et comptables",
-            "montant-dépensé": {
-              "question": "[TO_TRANSLATE] Montant dépensé en services juridiques, comptables et assurances"
-            }
-          },
-          "programmation-conseil": {
-            "titre": "[TO_TRANSLATE] Services de programmation et de conseil",
-            "montant-dépensé": {
-              "question": "[TO_TRANSLATE] Montant dépensé en services de programmation et conseil informatique"
-            }
-          }
-        }
-      },
-      "numérique": {
-        "question": "[TO_TRANSLATE] Veuillez indiquer les usages numériques en [Année] des salariés et bénévoles de votre association",
-        "streaming": {
-          "heures": {
-            "description": "[TO_TRANSLATE] Les heures passées sur internet d'une manière générale sont ignorées, car l'empreinte associée est généralement très faible.",
-            "question": "[TO_TRANSLATE] Sur une année, combien d'heures de streaming vidéo ont été regardées ?"
-          }
-        },
-        "visioconférence": {
-          "heures": {
-            "question": "[TO_TRANSLATE] Sur une année, combien d'heures de visioconférence ont eu lieu ?"
-          }
-        },
-        "mails": {
-          "nombre": {
-            "question": "[TO_TRANSLATE] Sur une année, combien de mails ont été envoyés ?"
-          }
-        },
-        "stockage-cloud": {
-          "volume": {
-            "question": "[TO_TRANSLATE] Sur une année, combien de Go de données ont été stockées sur un cloud ?"
-          }
-        }
-      }
+      "titre": "[TO_TRANSLATE] Intrants services"
     },
     "intrants-biens-et-matières": {
+      "titre": "[TO_TRANSLATE] Intrants biens et matières",
       "ratios monétaires": {
         "titre": "[TO_TRANSLATE] Intrants biens et matières",
         "description": "[TO_TRANSLATE] Vous devez bien prendre en compte l'ensemble des biens, dons compris (invendus, fin de stock, etc). Il faut donc bien prendre en compte les informations disponibles sur les contributions volontaires en nature (compte 870).",
@@ -457,80 +488,33 @@
       }
     },
     "froid et clim": {
+      "titre": "[TO_TRANSLATE] Froid et climatisation",
       "nombre": {
         "description": "[TO_TRANSLATE] La consommation d'électricité de vos climatisations est incluse dans vos factures d'électricité. Cette question sert donc uniquement à prendre en compte l'impact de la construction de l'équipement de climatisation, et des fuites de gaz frigorigènes.",
         "question": "[TO_TRANSLATE] Combien de climatiseurs sont utilisés dans vos locaux ?"
+      },
+      "fuites": {
+        "locaux partagés": {
+          "titre": "[TO_TRANSLATE] Fuites de fluides frigoriègnes"
+        },
+        "locaux seuls": {
+          "titre": "[TO_TRANSLATE] Fuites de fluides frigoriègnes"
+        }
       }
     },
     "fret": {
-      "transport": {
-        "présent": {
-          "question": "[TO_TRANSLATE] Est-ce que votre association possède ou loue des véhicules pour transporter des marchandises ?"
-        },
-        "VUL": {
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de véhicules utilitaires légers possédez-vous ou louez-vous depuis moins de 5 ans ?"
-          }
-        },
-        "PL": {
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de véhicules poids lourds possédez-vous ou louez-vous depuis moins de 5 ans ?"
-          }
-        },
-        "carburant": {
-          "titre": "[TO_TRANSLATE] consommation de carburant pour le fret possédé",
-          "litre": {
-            "description": "[TO_TRANSLATE] Si vous n'avez accès qu'aux montants dépensés et non aux consommations, vous pouvez convertir celle-ci via le prix moyen du carburant concerné sur l'année. Sur l'année 2025, 1,648€/L pour le gazole, 1,727€/L pour le SP95, 1,714€/L pour le SP95-E10, 1,817€/L pour le SP98, 0,764€/L pour le superéthanol E85 et 0,992€/L pour le GPL-c.",
-            "question": "[TO_TRANSLATE] Combien de litres de carburants ces véhicules ont-ils consommé ?"
-          }
-        },
-        "livraisons": {
-          "titre": "[TO_TRANSLATE] Nombre de livraisons",
-          "description": "[TO_TRANSLATE] Le nombre de livraisons renseigné ici doit exclure toutes les livraisons qui ont été faites par vos propres véhicules, car leur impact est déjà comptabilisé via les litres de carburants consommés.",
-          "question": "[TO_TRANSLATE] En moyenne, combien de livraisons ont lieu par an ?"
-        },
-        "poids": {
-          "titre": "[TO_TRANSLATE] Poids moyen des livraisons",
-          "question": "[TO_TRANSLATE] En moyenne, pour une livraison, quel est le poids transporté ?"
-        },
-        "local": {
-          "titre": "[TO_TRANSLATE] Locale",
-          "provenance": {
-            "titre": "[TO_TRANSLATE] livraisons locales",
-            "question": "[TO_TRANSLATE] Sur ces livraisons, quelle part provient de fournisseurs locaux (moins de 50 km) ?"
-          }
-        },
-        "national": {
-          "titre": "[TO_TRANSLATE] France",
-          "provenance": {
-            "titre": "[TO_TRANSLATE] livraisons nationales",
-            "question": "[TO_TRANSLATE] Sur ces livraisons, quelle part provient de fournisseurs nationaux (entre 50 km et 500 km) ?"
-          }
-        },
-        "europe": {
-          "titre": "[TO_TRANSLATE] Europe",
-          "provenance": {
-            "titre": "[TO_TRANSLATE] livraisons européennes",
-            "question": "[TO_TRANSLATE] Sur ces livraisons, quelle part provient de fournisseurs européens (entre 500 km et 1500 km) ?"
-          }
-        },
-        "international": {
-          "titre": "[TO_TRANSLATE] Monde",
-          "provenance": {
-            "titre": "[TO_TRANSLATE] livraisons internationales",
-            "question": "[TO_TRANSLATE] Sur ces livraisons, quelle part provient de fournisseurs internationaux (plus de 1500 km) ?"
-          }
-        }
-      },
+      "titre": "[TO_TRANSLATE] Fret",
       "fabrication": {
         "titre": "[TO_TRANSLATE] Fabrication des véhicules",
         "question": "[TO_TRANSLATE] Combien de véhicules sont possédés ou loués depuis moins de 5 ans parmi les catégories suivantes ?",
         "VUL": {
+          "titre": "[TO_TRANSLATE] Véhicules utilitaires légers",
           "nombre": {
             "question": "[TO_TRANSLATE] Combien de véhicules utilitaires légers possédez-vous ou louez-vous depuis moins de 5 ans ?"
           }
         },
         "PL": {
+          "titre": "[TO_TRANSLATE] Poids lourds",
           "nombre": {
             "question": "[TO_TRANSLATE] Combien de véhicules poids lourds possédez-vous ou louez-vous depuis moins de 5 ans ?"
           }
@@ -539,6 +523,7 @@
     },
     "fin de vie": {
       "pondération": {
+        "titre": "[TO_TRANSLATE] fin de vie",
         "reconditionné": {
           "titre": "[TO_TRANSLATE] Savoir quel taux de biens est reconditionné",
           "description": "[TO_TRANSLATE] En fonction de votre réponse, une partie de ces biens seront valorisés comme étant reconditionnés. Un bien reconditionné sera considéré comme moitié moins émetteur qu'un bien neuf. Autrement dit, la durée de première vie du bien est considéré comme égale à la moitié de sa durée de vie totale.",
@@ -548,42 +533,40 @@
             "souvent": "[TO_TRANSLATE] Souvent",
             "parfois": "[TO_TRANSLATE] Parfois",
             "jamais": "[TO_TRANSLATE] Jamais"
+          },
+          "toujours": {
+            "titre": "[TO_TRANSLATE] Toujours"
+          },
+          "souvent": {
+            "titre": "[TO_TRANSLATE] Souvent"
+          },
+          "parfois": {
+            "titre": "[TO_TRANSLATE] Parfois"
+          },
+          "jamais": {
+            "titre": "[TO_TRANSLATE] Jamais"
           }
+        }
+      },
+      "total sans reconditionné": {
+        "titre": "[TO_TRANSLATE] Fin de vie",
+        "poids": {
+          "titre": "[TO_TRANSLATE] Poids des biens matériels fournis aux bénéficiaires",
+          "question": "[TO_TRANSLATE] Quel est le poids total de ces biens délivrés sur une année ?"
         }
       },
       "fin de vie présente": {
         "titre": "[TO_TRANSLATE] Savoir si l'association fournit des biens matériels à ses bénéficiaires",
         "description": "[TO_TRANSLATE] Les biens matériels fournis à vos bénéficiaires deviendront un jour des déchets, et devront donc être stockés, incinérés, recyclés, ... C'est ce que l'on appelle la fin de vie des produits, et il faut donc prendre en compte les émissions qui y sont associées.",
         "question": "[TO_TRANSLATE] Fournissez-vous des biens matériels à vos bénéficiaires ?"
-      },
-      "total sans reconditionné": {
-        "poids": {
-          "titre": "[TO_TRANSLATE] Poids des biens matériels fournis aux bénéficiaires",
-          "question": "[TO_TRANSLATE] Quel est le poids total de ces biens délivrés sur une année ?"
-        }
       }
     },
     "déplacements": {
-      "fabrication": {
-        "titre": "[TO_TRANSLATE] Fabrication des véhicules",
-        "question": "[TO_TRANSLATE] Combien de véhicules sont possédés ou loués depuis moins de 5 ans parmi les catégories suivantes ?",
-        "voitures": {
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de voitures particulières possédez-vous ou louez-vous depuis moins de 5 ans ?"
-          }
-        }
-      },
+      "titre": "[TO_TRANSLATE] Déplacements",
       "DT-salariés": {
-        "MEP présent": {
-          "question": "[TO_TRANSLATE] Avez-vous réalisé une campagne de sensibilisation via MEP ?",
-          "nombre bénévoles": {
-            "question": "[TO_TRANSLATE] Combien de bénévoles ont répondu à MEP ?"
-          },
-          "nombre salariés": {
-            "question": "[TO_TRANSLATE] Combien de salariés ont répondu à MEP ?"
-          }
-        },
+        "titre": "[TO_TRANSLATE] Emissions des trajets domicile-association des salariés",
         "avec": {
+          "titre": "[TO_TRANSLATE] émissions des trajets domicile-association des salariés (avec enquête MEP)",
           "distance": {
             "question": "[TO_TRANSLATE] D'après les résultats de MEP, quelle est la distance moyenne parcourue par salarié par jour (A/R) pour des déplacements domicile-association ?"
           },
@@ -592,6 +575,7 @@
           }
         },
         "sans": {
+          "titre": "[TO_TRANSLATE] émissions des trajets domicile-association des salariés (sans enquête MEP)",
           "part voiture": {
             "titre": "[TO_TRANSLATE] Voiture",
             "question": "[TO_TRANSLATE] Quel pourcentage des salariés se rend au travail en voiture ?"
@@ -636,7 +620,9 @@
         }
       },
       "DT-bénévoles": {
+        "titre": "[TO_TRANSLATE] Emissions des trajets domicile-association des bénévoles",
         "avec": {
+          "titre": "[TO_TRANSLATE] émissions des trajets domicile-association des bénévoles (avec enquête MEP)",
           "distance": {
             "question": "[TO_TRANSLATE] D'après les résultats de MEP, quelle est la distance moyenne parcourue par jour (A/R) par bénévole pour des déplacements domicile-travail ?"
           },
@@ -645,6 +631,7 @@
           }
         },
         "sans": {
+          "titre": "[TO_TRANSLATE] émissions des trajets domiciles travail des bénévoles (sans enquête MEP)",
           "part voiture": {
             "titre": "[TO_TRANSLATE] Voiture",
             "question": "[TO_TRANSLATE] Quand les bénévoles se déplacent, quel pourcentage d'entre eux utilise la voiture ?"
@@ -689,7 +676,9 @@
         }
       },
       "DM-salariés": {
+        "titre": "[TO_TRANSLATE] Emissions des trajets liés à des missions des salariés",
         "avec": {
+          "titre": "[TO_TRANSLATE] émissions des trajets liés à des missions des salariés (avec enquête MEP)",
           "émissions MEP": {
             "voiture": {
               "question": "[TO_TRANSLATE] D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en voiture liés à des missions ?"
@@ -709,6 +698,7 @@
           }
         },
         "sans": {
+          "titre": "[TO_TRANSLATE] émissions des trajets liés à des missions des salariés (sans enquête MEP)",
           "voiture": {
             "titre": "[TO_TRANSLATE] Voiture, par mois",
             "description": "[TO_TRANSLATE] On considère ici toutes les motorisations de voiture individuelles, basée sur des moyennes nationales",
@@ -811,42 +801,10 @@
       }
     },
     "déchets": {
-      "emballages et plastiques": {
-        "poubelle jaune": {
-          "titre": "[TO_TRANSLATE] Poubelle jaune",
-          "poids": {
-            "question": "[TO_TRANSLATE] Poubelle jaune (emballages et plastiques)"
-          }
-        },
-        "déchets verre": {
-          "titre": "[TO_TRANSLATE] Verre",
-          "poids": {
-            "question": "[TO_TRANSLATE] Déchets verre"
-          }
-        },
-        "poubelle noire": {
-          "titre": "[TO_TRANSLATE] Poubelle noire (ordures ménagères, autres déchets, etc)",
-          "poids": {
-            "question": "[TO_TRANSLATE] Poubelle noire (ordures ménagères)"
-          }
-        },
-        "déchets verts": {
-          "titre": "[TO_TRANSLATE] Déchets verts, compost et déchets organiques",
-          "poids": {
-            "question": "[TO_TRANSLATE] Déchets verts, compost et déchets organiques"
-          }
-        }
-      }
+      "titre": "[TO_TRANSLATE] Déchets directs"
     },
     "construction": {
-      "infrastructure": {
-        "nombre de places": {
-          "question": "[TO_TRANSLATE] De combien de places dispose ce ou ces parkings ?"
-        },
-        "parking présent": {
-          "question": "[TO_TRANSLATE] L'association dispose t'elle d'un (ou plusieurs) parkings artificialisés (béton, bitume, ...) ?"
-        }
-      },
+      "titre": "[TO_TRANSLATE] Construction",
       "bâtiment": {
         "locaux": {
           "titre": "[TO_TRANSLATE] Locaux",
@@ -857,19 +815,24 @@
             "pas de locaux": "[TO_TRANSLATE] Mes activités associatives ne nécessitent pas de locaux (télétravail à 100%, extérieur, ...)"
           },
           "locaux seuls": {
+            "titre": "[TO_TRANSLATE] J'utilise des locaux qui sont entièrement dédiés à mon association",
             "surface": {
-              "description": "[TO_TRANSLATE] Vous devez renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites, vous pouvez soit sommer l'ensemble des surfaces ici, soit créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans, vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année.",
+              "description": "[TO_TRANSLATE] Vous devez renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites, vous pouvez soit sommer l'ensemble des surfaces ici, soit créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans (on parle bien de leur construction), vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année.",
               "question": "[TO_TRANSLATE] Quelle est la surface de ces locaux ?"
             }
           },
           "locaux partagés": {
+            "titre": "[TO_TRANSLATE] Mes locaux sont partagés avec d'autres stuctures (co-working, open-space partagés, ...)",
             "surface": {
-              "description": "[TO_TRANSLATE] Vous devez renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites et que ces différents sites ont tous des locaux partagés, vous devez créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans, vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année. Seule une partie de l'impact carbone sera pris en compte, en fonction du pourcentage des locaux utilisé par votre association à renseigner dans la question suivante.",
+              "description": "[TO_TRANSLATE] Vous devez renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites et que ces différents sites ont tous des locaux partagés, vous devez créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans (on parle bien de leur construction), vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année. Seule une partie de l'impact carbone sera pris en compte, en fonction du pourcentage des locaux utilisé par votre association à renseigner dans la question suivante.",
               "question": "[TO_TRANSLATE] Quelle est la surface de ces locaux ?"
             },
             "pourcentage": {
               "question": "[TO_TRANSLATE] Quelle est la part de la surface de ces locaux attribuables à votre association ?"
             }
+          },
+          "pas de locaux": {
+            "titre": "[TO_TRANSLATE] Mes activités associatives ne nécessitent pas de locaux (télétravail à 100%, extérieur, ...)"
           }
         },
         "locaux ponctuels existants": {
@@ -883,6 +846,7 @@
             "question": "[TO_TRANSLATE] Nom de la location"
           },
           "calcul": {
+            "titre": "[TO_TRANSLATE] Veuillez renseigner ici les informations sur ces locations",
             "surface": {
               "titre": "[TO_TRANSLATE] Surface",
               "question": "[TO_TRANSLATE] Quelle est la surface de la location ?"
@@ -896,134 +860,7 @@
       }
     },
     "alimentation": {
-      "mosaic salariés": {
-        "titre": "[TO_TRANSLATE] Empreinte des repas",
-        "description": "[TO_TRANSLATE] On prend classiquement en compte l'empreinte carbone d'un repas par journée travaillée pour un salarié. L'option \"Repas moyen\" sert uniquement si vous n'avez aucune idée des types de repas consommés.",
-        "question": "[TO_TRANSLATE] Combien de ces différents types de repas sont consommés par vos salariés chaque année ?",
-        "végétalien": {
-          "titre": "[TO_TRANSLATE] Végétalien",
-          "description": "[TO_TRANSLATE] Repas sans produits animaux.",
-          "question": "[TO_TRANSLATE] Végétalien",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de plats végétaliens"
-          }
-        },
-        "végétarien": {
-          "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de plats végétariens"
-          }
-        },
-        "viande blanche": {
-          "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de plats viande blanche"
-          }
-        },
-        "viande rouge": {
-          "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de plats viande rouge"
-          }
-        },
-        "poisson gras": {
-          "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de plats poisson gras"
-          }
-        },
-        "poisson blanc": {
-          "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de plats poisson blanc"
-          }
-        },
-        "repas moyen": {
-          "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de repas moyen"
-          }
-        }
-      },
-      "mosaic bénévoles": {
-        "titre": "[TO_TRANSLATE] Empreinte des repas",
-        "description": "[TO_TRANSLATE] On prend classiquement en compte l'empreinte carbone d'un repas par journée travaillée pour un salarié. L'option \"Repas moyen\" sert uniquement si vous n'avez aucune idée des types de repas consommés.",
-        "question": "[TO_TRANSLATE] Combien de ces différents types de repas sont consommés par vos bénévoles chaque année ?",
-        "végétalien": {
-          "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de plats végétaliens"
-          }
-        },
-        "végétarien": {
-          "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de plats végétariens"
-          }
-        },
-        "viande blanche": {
-          "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de plats viande blanche"
-          }
-        },
-        "viande rouge": {
-          "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de plats viande rouge"
-          }
-        },
-        "poisson gras": {
-          "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de plats poisson gras"
-          }
-        },
-        "poisson blanc": {
-          "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de plats poisson blanc"
-          }
-        },
-        "repas moyen": {
-          "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de repas moyen"
-          }
-        }
-      },
-      "bénéficiaires": {
-        "repas présent": {
-          "question": "[TO_TRANSLATE] Le service proposé par l’association implique t'il de proposer des repas à ses bénéficiaires ? (évènements, activités humanitaires, ...)"
-        },
-        "mosaic bénéficiaires": {
-          "titre": "[TO_TRANSLATE] Empreinte des repas",
-          "description": "[TO_TRANSLATE] On prend classiquement en compte l'empreinte carbone d'un repas par journée travaillée pour un salarié. L'option \"Repas moyen\" sert uniquement si vous n'avez aucune idée des types de repas consommés.",
-          "question": "[TO_TRANSLATE] Combien de ces différents types de repas sont consommés par vos bénéficiaires chaque année ?",
-          "végétalien": {
-            "nombre": {
-              "question": "[TO_TRANSLATE] Nombre de plats végétaliens"
-            }
-          },
-          "végétarien": {
-            "nombre": {
-              "question": "[TO_TRANSLATE] Nombre de plats végétariens"
-            }
-          },
-          "viande blanche": {
-            "nombre": {
-              "question": "[TO_TRANSLATE] Nombre de plats viande blanche"
-            }
-          },
-          "viande rouge": {
-            "nombre": {
-              "question": "[TO_TRANSLATE] Nombre de plats viande rouge"
-            }
-          },
-          "poisson gras": {
-            "nombre": {
-              "question": "[TO_TRANSLATE] Nombre de plats poisson gras"
-            }
-          },
-          "poisson blanc": {
-            "nombre": {
-              "question": "[TO_TRANSLATE] Nombre de plats poisson blanc"
-            }
-          },
-          "repas moyen": {
-            "nombre": {
-              "question": "[TO_TRANSLATE] Nombre de repas moyen"
-            }
-          }
-        }
-      }
+      "titre": "[TO_TRANSLATE] Alimentation"
     }
   }
 }
