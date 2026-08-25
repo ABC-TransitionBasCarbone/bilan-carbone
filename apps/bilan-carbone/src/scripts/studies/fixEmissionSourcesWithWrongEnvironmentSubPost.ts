@@ -31,7 +31,7 @@ const fixEmissionSourcesWithWrongEnvironmentSubPost = async (dryRun = true) => {
         },
       })
 
-      console.log(`Found ${envStudies.length} studies for BC to check`)
+      console.log(`Found ${envStudies.length} studies for ${environment} to check`)
 
       const envInvalidSources = await prismaClient.studyEmissionSource.findMany({
         where: {
@@ -48,7 +48,7 @@ const fixEmissionSourcesWithWrongEnvironmentSubPost = async (dryRun = true) => {
 
       if (envInvalidSources.length === 0) {
         console.log('✅ No emission sources found with invalid subposts for their study environment.')
-        return
+        continue
       }
 
       console.log(`\n⚠️  Found ${envInvalidSources.length} emission source(s) with invalid subposts:\n`)
@@ -61,7 +61,7 @@ const fixEmissionSourcesWithWrongEnvironmentSubPost = async (dryRun = true) => {
 
       if (dryRun) {
         console.log('\n🔍 Dry run complete. Run with --fix to delete these emission sources.')
-        return
+        continue
       }
 
       const idsToDelete = envInvalidSources.map((s) => s.id)
