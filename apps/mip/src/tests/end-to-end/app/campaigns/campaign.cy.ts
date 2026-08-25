@@ -21,6 +21,13 @@ describe('Campaign creation', () => {
         return emails
       })
 
+  const waitForEmailsWithSubject = (subject: string, attempts = 0): Cypress.Chainable<MaildevEmail[]> =>
+    readMaildevEmails().then((emails) => {
+      const matching = emails.filter((e) => e.subject?.includes(subject))
+      if (matching.length > 0 || attempts >= 10) return cy.wrap(matching)
+      return cy.wait(500).then(() => waitForEmailsWithSubject(subject, attempts + 1))
+    })
+
   before(() => {
     cy.resetTestDatabase()
   })
@@ -57,8 +64,7 @@ describe('Campaign creation', () => {
     cy.getByTestId('validate-campaign-update').click()
     cy.wait('@updateCampaign')
 
-    readMaildevEmails().then((emails) => {
-      const notifications = emails.filter((email) => email.subject?.includes('Nouvelle campagne'))
+    waitForEmailsWithSubject('Nouvelle campagne').then((notifications) => {
       const recipients = notifications.flatMap((email) =>
         (email.to || []).map((to) => (to.address || '').toLowerCase()),
       )
