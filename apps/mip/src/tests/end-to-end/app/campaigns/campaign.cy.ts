@@ -24,7 +24,9 @@ describe('Campaign creation', () => {
   const waitForEmailsWithSubject = (subject: string, attempts = 0): Cypress.Chainable<MaildevEmail[]> =>
     readMaildevEmails().then((emails) => {
       const matching = emails.filter((e) => e.subject?.includes(subject))
-      if (matching.length > 0 || attempts >= 10) return cy.wrap(matching)
+      if (matching.length > 0 || attempts >= 10) {
+        return cy.wrap(matching)
+      }
       return cy.wait(500).then(() => waitForEmailsWithSubject(subject, attempts + 1))
     })
 
