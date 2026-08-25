@@ -8,8 +8,9 @@ import TopCategoriesSection from '@/components/survey/completion/TopCategoriesSe
 import TransitionEncart from '@/components/survey/completion/TransitionEncart'
 import { ActionResult, CategoryResult } from '@/components/survey/completion/types'
 import { clearSurveyState, loadSurveyState } from '@/components/survey/surveyStateStorage'
-import { useMipPublicodes } from '@/publicodes/MipPublicodesProvider'
 import type { RawRules } from '@/publicodes/mip-engine'
+import { useMipPublicodes } from '@/publicodes/MipPublicodesProvider'
+import { normalizeSituation } from '@/utils/survey'
 import {
   getPositiveNodeValue,
   getRuleCategoryKey,
@@ -41,19 +42,6 @@ type StoredSurveyState = {
   situation?: Situation<string>
 }
 
-const isRecord = (value: unknown): value is Record<string, unknown> => {
-  return typeof value === 'object' && value !== null
-}
-
-const isSituation = (value: unknown): value is Situation<string> => {
-  if (!isRecord(value)) {
-    return false
-  }
-  return Object.values(value).every(
-    (entry) => entry === null || typeof entry === 'string' || typeof entry === 'number' || typeof entry === 'boolean',
-  )
-}
-
 const SurveyCompletion = ({ surveyId, model, restoreFromStorage = false }: Props) => {
   const t = useTranslations('survey.completion')
   const { engine, situation, setSituation } = useMipPublicodes()
@@ -63,15 +51,15 @@ const SurveyCompletion = ({ surveyId, model, restoreFromStorage = false }: Props
     if (!restoreFromStorage) {
       return
     }
-    const savedSituation = loadSurveyState<StoredSurveyState>(surveyId)?.situation
-    if (isSituation(savedSituation)) {
+    const savedSituation = normalizeSituation(loadSurveyState<StoredSurveyState>(surveyId)?.situation)
+    if (savedSituation) {
       setSituation(savedSituation)
       return
     }
   }, [restoreFromStorage, setSituation, surveyId])
 
   const totalEval = engine.evaluate('bilan')
-  const totalKg = getPositiveNodeValue(totalEval.nodeValue)
+  const totalKgFromBilan = getPositiveNodeValue(totalEval.nodeValue)
 
   const categories = useMemo<CategoryResult[]>(() => {
     return CATEGORY_KEYS.map((key) => {
@@ -85,6 +73,9 @@ const SurveyCompletion = ({ surveyId, model, restoreFromStorage = false }: Props
       }
     }).sort((a, b) => b.valueKg - a.valueKg)
   }, [engine, model, situation])
+
+  const totalKgFromCategories = categories.reduce((sum, category) => sum + category.valueKg, 0)
+  const totalKg = totalKgFromBilan > 0 ? totalKgFromBilan : totalKgFromCategories
 
   const actions = useMemo<ActionResult[]>(() => {
     const actionsRule = model?.['actions'] as { somme?: Array<string | number> } | null | undefined

@@ -54,7 +54,7 @@
       "loadingState": "Chargement de vos résultats...",
       "headlineDescription": "Vos principaux postes d'émissions et les actions les plus efficaces pour les réduire.",
       "kgUnit": "kg",
-      "target": "Objectif 2050 : 2 tCO₂e",
+      "target": "Objectif 2050",
       "ofFootprint": "de votre empreinte",
       "actions": {
         "title": "Passer à l'action",
@@ -65,13 +65,13 @@
       "transition": {
         "title": "Votre trajectoire de réduction",
         "context": "Cette trajectoire de réduction est la trajectoire de votre entreprise appliquée à votre empreinte. Votre empreinte ne suivra pas exactement ce chemin, mais baissera tendanciellement de cette manière via les changements de vos pratiques au travail, mais essentiellement par les changements structuraux menés par votre entreprise.",
-        "startLabel": "Empreinte de départ"
+        "startLabel": "Empreinte de départ ({year})",
+        "endLabel": "Empreinte d'arrivée ({year})"
       },
       "range": {
         "minLabel": "0 tCO₂e",
-        "maxLabel": "12 tCO₂e",
-        "limitLabel": "L'objectif pour 2050 : {limit} tCO₂e",
-        "currentLabel": "Vous : {value} tCO₂e"
+        "maxLabel": "Repère haut",
+        "limitLabel": "Objectif 2050"
       },
       "topCategories": {
         "title": "Mes principaux postes d'émissions"
@@ -195,7 +195,7 @@
       "postDetail": "{tco2e} tCO₂e",
       "postDetailHover": "{tco2e} tCO₂e, soit environ {people} personnes",
       "postDetailHoverPercent": "{percent} %",
-      "target2050": "Objectif 2050 : 2 tCO₂e"
+      "target2050": "Objectif 2050"
     },
     "keyStats": {
       "title": "Chiffres clés",
