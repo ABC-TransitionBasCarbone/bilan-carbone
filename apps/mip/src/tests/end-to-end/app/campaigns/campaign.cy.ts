@@ -35,7 +35,7 @@ describe('Campaign creation', () => {
     cy.wait('@updateCampaign')
 
     cy.visit('http://localhost:1080')
-    cy.origin('http://localhost:1080', () => {
+    cy.origin('http://localhost:1080', { args: { campaignName } }, ({ campaignName }) => {
       cy.get('.email-item-link', { timeout: 15000 }).contains('Nouvelle campagne').click()
 
       cy.contains(campaignName).should('be.visible')
