@@ -20,7 +20,11 @@ export default function MosaicNumberInput({ title, icons, description, onChange,
             <span className={`${styles.title} block`}>
               {title}&nbsp;{icons}
             </span>
-          ) : null}
+          ) : (title ?
+            <span className={`${styles.title} block`}>
+              {title}
+            </span> : null
+          )}
           {description ? <p className={`${styles.description} m0`}>{description.split('\n')[0]}</p> : null}
         </div>
         <div className="align-center">
