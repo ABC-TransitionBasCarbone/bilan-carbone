@@ -1928,6 +1928,7 @@
       "comment": "Other informations:",
       "GESDecomposition": "Breakdown of GHGs:",
       "factorParts": "Emission Factor Parts:",
+      "wasteTooltip": "Emission factors dedicated to waste recycling (or to average end-of-life when it includes recycling) use a value of 41 kgCO₂e/t instead of the value assigned by Base Empreinte®. This value corresponds to the collection, transport and operation of metal storage on Base Empreinte®, and <b>therefore excludes material regeneration</b> which constitutes the majority of recycling-related emissions. This approach is chosen so as not to penalize recycling, which is nevertheless taken into account in inputs within the Bilan Carbone® (an input from recycled material generally emitting less than a new input). For the Mandatory GHG Inventory, the Base Empreinte® value will be used in your export. A modal explaining the possible differences between Bilan Carbone® and Mandatory GHG Inventory will be available at the top left of this export. For more details, please consult <link1>appendix 1</link1> of the Bilan Carbone® method or <link2>the pages concerning waste</link2> from Plan Carbone Général.",
       "yes": "Yes"
     },
     "edit": {

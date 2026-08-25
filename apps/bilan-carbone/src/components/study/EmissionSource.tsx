@@ -15,7 +15,7 @@ import { useUnitLabel } from '@/services/unit'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { AccountWithUser } from '@/types/account.types'
 import { EmissionSourcesStatus } from '@/types/emissionSource.types'
-import { getEmissionFactorValue } from '@/utils/emissionFactors'
+import { getEmissionFactorValue, isWasteEmissionFactor } from '@/utils/emissionFactors'
 import { getEmissionSourceStatus } from '@/utils/emissionSources'
 import { formatEmissionFactorNumber } from '@/utils/number'
 import { hasEditionRights } from '@/utils/study'
@@ -44,6 +44,7 @@ import { Path } from 'react-hook-form'
 import Label from '../base/Label'
 import BaseChip from '../emissionFactor/BaseChip'
 import { ImportVersionForFilters } from '../emissionFactor/EmissionFactorsFilters'
+import WasteEmissionFactorTooltip from '../emissionFactor/WasteEmissionFactorTooltip'
 import styles from './EmissionSource.module.css'
 import EmissionSourceEditorChip from './EmissionSourceEditorChip'
 import EmissionSourceForm from './EmissionSourceForm'
@@ -277,6 +278,7 @@ const EmissionSource = ({
                     <BaseChip base={selectedFactor.base} />
                   </div>
                 )}
+                {isWasteEmissionFactor(selectedFactor, environment) && <WasteEmissionFactorTooltip />}
               </div>
             )}
             {/* result */}
