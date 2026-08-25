@@ -189,6 +189,8 @@ enum SubPost {
   TeletravailSalariesBenevoles
   FinDeVieProduitsVendusFournisBeneficiaires
 
+  EnergieSimplified
+
   // Équipements et immobilisations
   EquipementsDesSalaries
   ParcInformatiqueDesSalaries
