@@ -36,11 +36,12 @@ describe('Legal Notices', () => {
     cy.getByTestId('legal-notices').should('be.visible')
 
     // EN-specific content
-    cy.contains(
+    cy.getByTestId('legal-notices').should(
+      'contain.text',
       'In accordance with the provisions of Articles 6-III and 19 of the French Law for Confidence in the Digital Economy',
-    ).should('be.visible')
-    cy.contains('Website Owner').should('be.visible')
-    cy.contains('The Bilan Carbone® Trademark').should('be.visible')
+    )
+    cy.getByTestId('legal-notices').should('contain.text', 'Website Owner')
+    cy.getByTestId('legal-notices').should('contain.text', 'The Bilan Carbone® Trademark')
 
     // Contact mail button
     cy.getByTestId('contact-mail').should('be.visible')
