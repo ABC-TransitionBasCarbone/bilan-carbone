@@ -1,7 +1,7 @@
 'use server'
 
 import { getAccountMipFromUserOrganization } from '@/db/accountMip'
-import { getAllOrganizationVersionMipCampaigns, updateCampaign, updateModelCampaign } from '@/db/campaign'
+import { getAllOrganizationVersionMipCampaigns, syncCampaigns, updateModelCampaign } from '@/db/campaign'
 import { getOrgNameByOrgVersionMipId } from '@/db/organization'
 import { UpdateModelCampaignCommand } from '@/services/serverFunctions/modelCampaign.command'
 import { withServerResponse } from '@/utils/serverResponse'
@@ -45,7 +45,7 @@ export const updateCampaignCommand = async (command: UpdateCampaignCommand) =>
       .filter((campaign) => !organizationCampaignIds.has(campaign.id))
       .map((campaign) => campaign.name)
 
-    await updateCampaign(command, session.user.accountMipId, session.user.organizationVersionMipId, userIsAdmin)
+    await syncCampaigns(command, session.user.accountMipId, session.user.organizationVersionMipId, userIsAdmin)
 
     if (createdCampaignNames.length > 0) {
       const organizationName = await getOrgNameByOrgVersionMipId(session.user.organizationVersionMipId)

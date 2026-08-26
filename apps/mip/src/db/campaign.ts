@@ -128,7 +128,7 @@ export const getAllAllowedCampaigns = async (accountMipId: string, organizationV
   }))
 }
 
-export const updateCampaign = async (
+export const syncCampaigns = async (
   command: UpdateCampaignCommand,
   accountMipId: string,
   organizationVersionMipId: string,
