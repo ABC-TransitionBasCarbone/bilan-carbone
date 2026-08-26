@@ -17,7 +17,7 @@ const PublicPage = ({ children }: Props) => {
 
   return (
     <PublicContainer>
-      <div className={classNames('flex wrap w100')}>
+      <div className={classNames(styles.content, 'flex w100')}>
         <div className={classNames(styles.info, 'grow p2 text-center')}>
           <p className="title-h4 mb1">{t('explanation.title')}</p>
           <p className="mb1">{t('explanation.why.summary')}</p>
@@ -31,7 +31,7 @@ const PublicPage = ({ children }: Props) => {
                   alt={logo.alt}
                   width={176}
                   height={72}
-                  className={classNames(styles.loginLogoImage, 'wauto h100')}
+                  className={classNames(styles.loginLogoImage, 'wauto hauto')}
                 />
               </div>
             )}
