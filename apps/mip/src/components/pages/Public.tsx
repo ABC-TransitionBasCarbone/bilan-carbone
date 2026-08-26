@@ -26,13 +26,7 @@ const PublicPage = ({ children }: Props) => {
           <div className={classNames('wrap justify-center gapped-2 mb1')}>
             {logo && (
               <div key={logo.src} className="flex-cc">
-                <Image
-                  src={logo.src}
-                  alt={logo.alt}
-                  width={176}
-                  height={72}
-                  className={classNames(styles.loginLogoImage, 'wauto hauto')}
-                />
+                <Image src={logo.src} alt={logo.alt} width={176} height={72} className={styles.loginLogoImage} />
               </div>
             )}
           </div>
