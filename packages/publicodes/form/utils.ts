@@ -40,10 +40,6 @@ export function formatMassKilograms(valueKg: number): string {
   return `${formatNumber(Math.round(valueKg))} kg`
 }
 
-export function getPositiveNodeValue(nodeValue: unknown): number {
-  return typeof nodeValue === 'number' ? Math.max(0, nodeValue) : 0
-}
-
 export function getRuleNamesFromLayout<RuleName extends string>(layout: FormLayout<RuleName>): RuleName[] | undefined {
   switch (layout.type) {
     case 'input':

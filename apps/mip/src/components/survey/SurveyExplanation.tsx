@@ -29,7 +29,17 @@ const SurveyExplanation = ({ onStart }: Props) => {
       </Container>
 
       <Container maxWidth="lg" className={classNames(styles.explanationCard, 'pt2', 'pb2')}>
-        <div className={classNames(styles.logoRow, 'align-center', 'gapped075', 'pb-2', 'mb2')}>
+        <div
+          className={classNames(
+            'wrap',
+            'overflow-hidden',
+            'justify-center',
+            'align-center',
+            'gapped075',
+            'pb-2',
+            'mb2',
+          )}
+        >
           {PARTNER_LOGOS.map((logo) => (
             <div key={logo.src} className={classNames(styles.logoSlot, 'flex-cc')}>
               <Image

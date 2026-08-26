@@ -1,4 +1,5 @@
 import { getI18nUnitKey } from '@abc-transitionbascarbone/publicodes/utils'
+import { isObject } from '@abc-transitionbascarbone/utils/object'
 import Engine, { Rule } from 'publicodes'
 import {
   getArgs,
@@ -90,7 +91,7 @@ function extractTranslationKeysFromRules(
 function removeEmptyObjects(obj: TranslationRecord): void {
   for (const key of Object.keys(obj)) {
     const value = obj[key]
-    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+    if (isObject<TranslationRecord>(value)) {
       removeEmptyObjects(value)
       if (Object.keys(value).length === 0) {
         delete obj[key]

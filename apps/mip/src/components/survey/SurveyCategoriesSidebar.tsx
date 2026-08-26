@@ -1,12 +1,9 @@
 'use client'
 
 import { useMipPublicodes } from '@/publicodes/MipPublicodesProvider'
-import {
-  formatMassKilograms,
-  getCategoryClassSuffix,
-  getPositiveNodeValue,
-  SURVEY_CATEGORY_KEYS,
-} from '@abc-transitionbascarbone/publicodes/form'
+import { getSurveyCategoryKeysFromParsedRules } from '@/publicodes/mip-engine'
+import { formatMassKilograms, getCategoryClassSuffix } from '@abc-transitionbascarbone/publicodes/form'
+import { getPositiveNodeValue } from '@abc-transitionbascarbone/utils/number'
 import classNames from 'classnames'
 import styles from './SurveyCategoriesSidebar.module.css'
 
@@ -50,10 +47,17 @@ const SidebarItem = ({ item }: SidebarItemProps) => {
 const SurveyCategoriesSidebar = ({ activeCategoryKey }: Props) => {
   const { engine } = useMipPublicodes()
   const rules = engine.getParsedRules()
+  const categoryKeys = getSurveyCategoryKeysFromParsedRules(rules)
 
-  const categories: CategoryItem[] = SURVEY_CATEGORY_KEYS.map((key) => {
+  const categories: CategoryItem[] = categoryKeys.map((key) => {
     const raw = rules[key]?.rawNode as { titre?: string; icônes?: string } | undefined
-    const result = engine.evaluate(key)
+    const result = (() => {
+      try {
+        return engine.evaluate(key)
+      } catch {
+        return { nodeValue: 0 }
+      }
+    })()
     const valueKg = getPositiveNodeValue(result.nodeValue)
     const isActive = key === activeCategoryKey
     const categoryClassSuffix = getCategoryClassSuffix(key)
