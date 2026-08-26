@@ -273,7 +273,9 @@ const EmissionSource = ({
                   </p>
                 </div>
                 {study.exports?.types.includes(Export.GHGP) && selectedFactor.base && (
-                  <BaseChip base={selectedFactor.base} />
+                  <div className="ml-2">
+                    <BaseChip base={selectedFactor.base} />
+                  </div>
                 )}
               </div>
             )}
