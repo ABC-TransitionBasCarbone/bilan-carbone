@@ -4,16 +4,22 @@ import { NextRequest, NextResponse } from 'next/server'
 const publicRoutes = ['/login', '/reset-password', '/activation', '/register']
 const assetsRoutes = ['/_next', '/img', '/.well-known']
 
-const isDynamicPublicRoute = (pathname: string) => {
-  const normalizedPathname = pathname.endsWith('/') && pathname !== '/' ? pathname.slice(0, -1) : pathname
+const normalizePathname = (pathname: string) => {
+  const pathnameWithoutTrailingSlash = pathname.endsWith('/') && pathname !== '/' ? pathname.slice(0, -1) : pathname
+  const pathnameWithoutLocalePrefix = pathnameWithoutTrailingSlash.replace(/^\/(?:fr|en)(?=\/|$)/, '')
 
-  return /^\/(?:(?:fr|en)\/)?[^/]+\/(survey|results)$/.test(normalizedPathname)
+  return pathnameWithoutLocalePrefix || '/'
+}
+
+const isDynamicPublicRoute = (pathname: string) => {
+  return /^\/[^/]+\/(survey|results)$/.test(pathname)
 }
 
 export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl
-  const isPublicRoute = [...publicRoutes, ...assetsRoutes].some((route) => pathname.startsWith(route))
-  const isDynamicRoute = isDynamicPublicRoute(pathname)
+  const normalizedPathname = normalizePathname(pathname)
+  const isPublicRoute = [...publicRoutes, ...assetsRoutes].some((route) => normalizedPathname.startsWith(route))
+  const isDynamicRoute = isDynamicPublicRoute(normalizedPathname)
 
   if (!isPublicRoute && !isDynamicRoute) {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
