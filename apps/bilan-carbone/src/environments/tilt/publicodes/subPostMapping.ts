@@ -28,7 +28,7 @@ export const getFormLayoutsForSubPostTILT = (subPost: SubPost): FormLayout<TiltR
 
 export const POST_TO_RULENAME: Record<TiltSimplifiedPost, TiltRuleName> = {
   [TiltSimplifiedPost.LocauxSimplified]: 'construction',
-  [TiltSimplifiedPost.EnergiesSimplified]: 'énergie',
+  [TiltSimplifiedPost.EnergieSimplified]: 'énergie',
   [TiltSimplifiedPost.DechetsSimplified]: 'déchets',
   [TiltSimplifiedPost.FroidEtClimSimplified]: 'froid et clim',
   [TiltSimplifiedPost.DeplacementsDePersonneSimplified]: 'déplacements',
