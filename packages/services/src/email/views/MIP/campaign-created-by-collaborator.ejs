@@ -1,0 +1,31 @@
+<html>
+<%- include('../partials/style'); %>
+
+    <body>
+        <div>
+            <p>
+                <%= t_hello %>
+            </p>
+            <br />
+            <p>
+                <%= t_campaignCreatedIntro %>
+            </p>
+            <ul>
+                <% campaignNames.forEach(function(campaignName) { %>
+                    <li>
+                        <%= campaignName %>
+                    </li>
+                    <% }) %>
+            </ul>
+            <p>
+                <%= t_campaignCreatedOutro %>
+                    <a href="<%= link %>">
+                        <%= t_thisLink %>
+                    </a>.
+            </p>
+            <br />
+            <%- include('./partials/signature'); %>
+        </div>
+    </body>
+
+</html>

@@ -257,7 +257,8 @@
       "activationRequest": "Demande d'accès à votre organisation BC+",
       "userOnStudyInvitation": "Ajout sur l'étude {studyName}",
       "contributorInvitation": "Demande de contribution sur l'étude {studyName}",
-      "addedUsersByFile": "Autorisation pour l'ajout d'utilisateurs"
+      "addedUsersByFile": "Autorisation pour l'ajout d'utilisateurs",
+      "campaignCreatedByCollaborator": "Nouvelle campagne lancée sur Mon Impact Pro"
     },
     "body": {
       "hello": "Bonjour,",
@@ -315,6 +316,11 @@
       "userOnStudyInvitation": {
         "added": "Vous avez été ajouté par {creatorName} en tant que {role} sur l'étude {studyName} pour l'organisation {organizationName}.",
         "access": "Pour avoir accès à l'étude, vous pouvez vous connecter sur le BC+ comme habituellement sur"
+      },
+      "campaignCreatedByCollaborator": {
+        "intro": "{creatorName} a lancé une nouvelle campagne sur Mon Impact Pro pour l'organisation {organizationName} :",
+        "outro": "Vous pouvez consulter et coordonner ces campagnes sur",
+        "organizationFallback": "votre organisation"
       }
     }
   },

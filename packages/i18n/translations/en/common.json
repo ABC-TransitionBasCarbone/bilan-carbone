@@ -257,7 +257,8 @@
       "activationRequest": "Access request to your BC+ organisation",
       "userOnStudyInvitation": "Added to the study {studyName}",
       "contributorInvitation": "Contribution request on the study {studyName}",
-      "addedUsersByFile": "Authorization for user import"
+      "addedUsersByFile": "Authorization for user import",
+      "campaignCreatedByCollaborator": "New campaign launched on Mon Impact Pro"
     },
     "body": {
       "hello": "Hello,",
@@ -315,6 +316,11 @@
       "userOnStudyInvitation": {
         "added": "You have been added by {creatorName} as {role} on the study {studyName} for the organisation {organizationName}.",
         "access": "To access the study, you can log in to BC+ as usual via"
+      },
+      "campaignCreatedByCollaborator": {
+        "intro": "{creatorName} has launched a new campaign on Mon Impact Pro for the organisation {organizationName}:",
+        "outro": "You can view and coordinate these campaigns on",
+        "organizationFallback": "your organisation"
       }
     }
   },
