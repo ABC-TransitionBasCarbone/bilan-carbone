@@ -2860,7 +2860,7 @@
   resolved "https://registry.yarnpkg.com/@publicodes/forms/-/forms-0.6.1.tgz#02da85cc618615198f892a4c7c2e3c89e5edf090"
   integrity sha512-idJZtrMD/e9hJ5kTe5iOG0/fbYFYHKaOWb1g9r1W2S96gzeKAw41s6RuN0DAAtObDgVQn70hdi7TK+9mPGPTFg==
 
-"@publicodes/react-ui@workspace:^":
+"@publicodes/react-ui@^1.10.0", "@publicodes/react-ui@workspace:^":
   version "1.10.0"
   resolved "https://registry.yarnpkg.com/@publicodes/react-ui/-/react-ui-1.10.0.tgz#8af9d9272e4bf8326cc7e84fcfc2ea88c43171d7"
   integrity sha512-ppo6WU0uBMlImxqaKVrL3+CsdbKUiBCzv3vMxn2p2KLutAxMMic6HunLS+e1afTMpQSH0JSxrzpkUiqgzzbrxw==
@@ -9853,7 +9853,7 @@ proxy-from-env@^2.1.0:
   resolved "https://registry.yarnpkg.com/proxy-from-env/-/proxy-from-env-2.1.0.tgz#a7487568adad577cfaaa7e88c49cab3ab3081aba"
   integrity sha512-cJ+oHTW1VAEa8cJslgmUZrc+sjRKgAKl3Zyse6+PV38hZe/V6Z14TbCuXcan9F9ghlz4QrFr2c92TNF82UkYHA==
 
-publicodes@^1.0.0, publicodes@^1.10.1, "publicodes@workspace:^":
+publicodes@^1.10.1, "publicodes@workspace:^":
   version "1.10.1"
   resolved "https://registry.yarnpkg.com/publicodes/-/publicodes-1.10.1.tgz#c80d489e9268504ab25fdb59e316cc1b9305df10"
   integrity sha512-NCEZgB5YfNyw5km71mYtpNdedeyt0EmB73X1h2k7bewwTLAlM/C6dsgRbw2R/si/nuob3Oh1wTswjM3A8Qjfrw==
