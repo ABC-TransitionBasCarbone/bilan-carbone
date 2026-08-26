@@ -20,12 +20,7 @@ export const getEmissionFactorValue = (
   emissionFactor: Pick<EmissionFactor, 'importedFrom' | 'importedId' | 'totalCo2'>,
   environment?: Environment,
 ) => {
-  if (
-    (!environment || hasWasteImpact(environment)) &&
-    emissionFactor.importedFrom === Import.BaseEmpreinte &&
-    emissionFactor.importedId &&
-    wasteEmissionFactors[emissionFactor.importedId]
-  ) {
+  if (isWasteEmissionFactor(emissionFactor, environment)) {
     return wasteImpact
   }
 
