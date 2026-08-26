@@ -35,7 +35,7 @@ const PublicTiltPage = ({ children, question }: Props) => {
 
   return (
     <PublicContainer>
-      <div className={classNames(styles.info, 'flex-col grow p2 text-center gapped4')}>
+      <div className={classNames(styles.info, 'flex-col grow p2 text-center gapped1')}>
         <div>
           <p className="title-h4 mb1">{t('welcome')}</p>
           <p className="title-h6 bold">{customRich(t, 'subtext')}</p>
@@ -43,16 +43,16 @@ const PublicTiltPage = ({ children, question }: Props) => {
         <p>
           {customRich(t, 'explanation', {
             link: (children) => (
-              <Link href={tDocumentation('tiltABCPage')} target="_blank" rel="noreferrer noopener">
+              <Link className="white" href={tDocumentation('tiltABCPage')} target="_blank" rel="noreferrer noopener">
                 {children}
               </Link>
             ),
           })}
         </p>
         <div className="flex-cc gapped1 w100 p1">
-          <Image src="/logos/abc/logo_abc.png" alt="ABC logo" fill className="w50 hauto" />
+          <Image src="/logos/abc/logo_abc.png" width="400" height="195" alt="ABC logo" className="w50 hauto" />
           <CloseIcon />
-          <Image src="/logos/tilt/logo_tilt.svg" alt="TILT logo" fill className="w50 hauto" />
+          <Image src="/logos/tilt/logo_tilt.svg" width="2511" height="857" alt="TILT logo" className="w50 hauto" />
         </div>
         <p className={styles.richLinks}>{question}</p>
       </div>
