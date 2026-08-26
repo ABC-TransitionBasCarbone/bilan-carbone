@@ -55,7 +55,6 @@ function extractTranslationKeysFromRules(
 
   for (const [ruleName, rule] of Object.entries(rulesMap)) {
     if (!rule) {
-      console.log(ruleName, rule)
       continue
     }
 
