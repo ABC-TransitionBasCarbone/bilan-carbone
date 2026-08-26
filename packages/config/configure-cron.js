@@ -15,14 +15,16 @@ const activeJobs = [
 ]
 
 function getCronConfig(appTarget) {
-  if (appTarget === 'mip') {
+  const normalizedTarget = typeof appTarget === 'string' ? appTarget.trim().toLowerCase() : ''
+
+  if (normalizedTarget === 'mip') {
     return { jobs: [] }
   }
 
   return { jobs: activeJobs }
 }
 
-function writeCronConfig(appTarget = process.env.APP_TARGET, cronPath = path.resolve(__dirname, 'cron.json')) {
+function writeCronConfig(appTarget = process.env.APP_TARGET, cronPath = path.resolve(__dirname, '../../cron.json')) {
   const config = getCronConfig(appTarget)
 
   fs.writeFileSync(cronPath, JSON.stringify(config, null, 2) + '\n', 'utf8')

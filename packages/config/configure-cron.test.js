@@ -8,6 +8,7 @@ const { activeJobs, getCronConfig, writeCronConfig } = require('./configure-cron
 
 test('returns no cron jobs for mip builds', () => {
   assert.deepEqual(getCronConfig('mip'), { jobs: [] })
+  assert.deepEqual(getCronConfig('MIP'), { jobs: [] })
 })
 
 test('returns active cron jobs for non-mip builds', () => {
