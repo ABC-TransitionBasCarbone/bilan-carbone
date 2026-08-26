@@ -16,6 +16,11 @@ export const updateModelCampaignCommand = async (command: UpdateModelCampaignCom
   withServerResponse('updateModelCampaignCommand', async () => {
     const session = await auth()
     if (!session || session.user.role !== Role.SUPER_ADMIN) {
+      console.error('updateModelCampaignCommand: NOT_AUTHORIZED', {
+        role: session?.user.role,
+        accountMipId: session?.user.accountMipId,
+        organizationVersionMipId: session?.user.organizationVersionMipId,
+      })
       throw new Error(NOT_AUTHORIZED)
     }
     await updateModelCampaign(command)
@@ -25,6 +30,7 @@ export const updateCampaignCommand = async (command: UpdateCampaignCommand) =>
   withServerResponse('updateCampaignCommand', async () => {
     const session = await auth()
     if (!session) {
+      console.error('updateCampaignCommand: NOT_AUTHORIZED missing session')
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -36,6 +42,10 @@ export const updateCampaignCommand = async (command: UpdateCampaignCommand) =>
         (campaign) => !campaign.allowedAccounts.some((accountId) => accountId === session.user.accountMipId),
       )
     if (hasUnauthorizedCampaigns) {
+      console.error('updateCampaignCommand: NOT_AUTHORIZED unauthorized campaign access', {
+        accountMipId: session.user.accountMipId,
+        organizationVersionMipId: session.user.organizationVersionMipId,
+      })
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -47,7 +57,7 @@ export const updateCampaignCommand = async (command: UpdateCampaignCommand) =>
 
     await syncCampaigns(command, session.user.accountMipId, session.user.organizationVersionMipId, userIsAdmin)
 
-    if (createdCampaignNames.length > 0) {
+    if (!userIsAdmin && createdCampaignNames.length > 0) {
       const organizationName = await getOrgNameByOrgVersionMipId(session.user.organizationVersionMipId)
       const organizationMembers = await getAccountMipFromUserOrganization(session.user)
       const adminEmails = Array.from(
