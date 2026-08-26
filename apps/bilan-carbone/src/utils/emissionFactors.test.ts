@@ -1,6 +1,6 @@
 import { Environment, Import, Unit } from '@abc-transitionbascarbone/db-common/enums'
 import { expect } from '@jest/globals'
-import { getEmissionFactorValue, isMonetaryEmissionFactor } from './emissionFactors'
+import { getEmissionFactorValue, isMonetaryEmissionFactor, isWasteEmissionFactor } from './emissionFactors'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('../services/file', () => ({ download: jest.fn() }))
@@ -76,6 +76,44 @@ describe('emissionFactors utils function', () => {
     test('should return false if FE is not monetary', () => {
       const emissionFactor = { unit: Unit.KG }
       const result = isMonetaryEmissionFactor(emissionFactor)
+      expect(result).toBe(false)
+    })
+  })
+
+  describe('isWasteEmissionFactor', () => {
+    test('should return true if FE is from base empreinte and is in wasteEmissionFactors', () => {
+      const emissionFactor = { importedFrom: Import.BaseEmpreinte, importedId: '34684' }
+      const env = Environment.BC
+
+      const result = isWasteEmissionFactor(emissionFactor, env)
+
+      expect(result).toBe(true)
+    })
+
+    test('should return false if FE is from base empreinte but is not in wasteEmissionFactors', () => {
+      const emissionFactor = { importedFrom: Import.BaseEmpreinte, importedId: '456789789787' }
+      const env = Environment.BC
+
+      const result = isWasteEmissionFactor(emissionFactor, env)
+
+      expect(result).toBe(false)
+    })
+
+    test('should return false if FE is not from base empreinte and is in wasteEmissionFactors', () => {
+      const emissionFactor = { importedFrom: Import.Legifrance, importedId: '34684' }
+      const env = Environment.BC
+
+      const result = isWasteEmissionFactor(emissionFactor, env)
+
+      expect(result).toBe(false)
+    })
+
+    test('should return false if FE is from base empreinte and is in wasteEmissionFactors but env is not BC or TILT', () => {
+      const emissionFactor = { importedFrom: Import.BaseEmpreinte, importedId: '34684' }
+      const env = Environment.CUT
+
+      const result = isWasteEmissionFactor(emissionFactor, env)
+
       expect(result).toBe(false)
     })
   })

@@ -3,7 +3,7 @@
 import { EmissionFactorList } from '@/db/emissionFactors'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { BCUnit, useUnitLabel } from '@/services/unit'
-import { getEmissionFactorFullName, getEmissionFactorValue } from '@/utils/emissionFactors'
+import { getEmissionFactorFullName, getEmissionFactorValue, isWasteEmissionFactor } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
 import { Environment, StudyResultUnit } from '@abc-transitionbascarbone/db-common/enums'
 import {
@@ -35,6 +35,7 @@ import { EmissionFactorActionCell } from './tableCells/EmissionFactorActionCell'
 import { EmissionFactorNameCell } from './tableCells/EmissionFactorNameCell'
 import { EmissionFactorSourceCell } from './tableCells/EmissionFactorSourceCell'
 import { EmissionFactorStatusCell } from './tableCells/EmissionFactorStatusCell'
+import WasteEmissionFactorModal from './WasteEmissionFactorModal'
 
 interface Props {
   data: EmissionFactorList[]
@@ -87,6 +88,12 @@ export const EmissionFactorsTable = ({
         header: t('value'),
         accessorFn: (emissionFactor) =>
           `${formatEmissionFactorNumber(getEmissionFactorValue(emissionFactor, environment))} ${tResultUnits(StudyResultUnit.K)}/${emissionFactor.unit === BCUnit.CUSTOM ? emissionFactor.customUnit : getUnitLabel(emissionFactor.unit || '')}`,
+        cell: ({ getValue, row }) => (
+          <div className="flex align-center">
+            <span>{getValue<string>()}</span>
+            <div>{isWasteEmissionFactor(row.original, environment) && <WasteEmissionFactorModal />}</div>
+          </div>
+        ),
       },
       {
         header: t('location'),

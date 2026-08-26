@@ -7,16 +7,20 @@ import { Environment, Import, SubPost, Unit } from '@abc-transitionbascarbone/db
 import { Post } from '@abc-transitionbascarbone/utils/charts'
 import { unique } from './array'
 
+export const isWasteEmissionFactor = (
+  emissionFactor: Pick<EmissionFactor, 'importedFrom' | 'importedId'>,
+  environment?: Environment,
+) =>
+  (!environment || hasWasteImpact(environment)) &&
+  emissionFactor.importedFrom === Import.BaseEmpreinte &&
+  !!emissionFactor.importedId &&
+  !!wasteEmissionFactors[emissionFactor.importedId]
+
 export const getEmissionFactorValue = (
   emissionFactor: Pick<EmissionFactor, 'importedFrom' | 'importedId' | 'totalCo2'>,
   environment?: Environment,
 ) => {
-  if (
-    (!environment || hasWasteImpact(environment)) &&
-    emissionFactor.importedFrom === Import.BaseEmpreinte &&
-    emissionFactor.importedId &&
-    wasteEmissionFactors[emissionFactor.importedId]
-  ) {
+  if (isWasteEmissionFactor(emissionFactor, environment)) {
     return wasteImpact
   }
 

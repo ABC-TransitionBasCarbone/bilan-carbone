@@ -19,6 +19,7 @@ import {
   emissionFactorDefautQualityStar,
   getEmissionFactorFullName,
   getEmissionFactorValue,
+  isWasteEmissionFactor,
 } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
 import { formatEmissionFromNumber, hasDeprecationPeriod, hasEditionRights, isCAS } from '@/utils/study'
@@ -56,6 +57,7 @@ import { Path } from 'react-hook-form'
 import TagChip from '../base/TagChip'
 import BaseChip from '../emissionFactor/BaseChip'
 import { ImportVersionForFilters } from '../emissionFactor/EmissionFactorsFilters'
+import WasteEmissionFactorModal from '../emissionFactor/WasteEmissionFactorModal'
 import DeleteEmissionSource from './DeleteEmissionSource'
 import styles from './EmissionSource.module.css'
 import EmissionSourceFactor from './EmissionSourceFactor'
@@ -389,6 +391,7 @@ const EmissionSourceForm = ({
             {formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor, environment))}
             {tResultUnits(StudyResultUnit.K)}/
             {selectedFactor.unit === Unit.CUSTOM ? selectedFactor.customUnit : getUnitLabel(selectedFactor.unit || '')}{' '}
+            {isWasteEmissionFactor(selectedFactor, environment) && <WasteEmissionFactorModal />}
             {feQualityRating && (
               <>
                 - {t('form.quality')} {tQuality(feQualityRating.toString())}

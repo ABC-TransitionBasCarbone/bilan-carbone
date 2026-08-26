@@ -1928,7 +1928,9 @@
       "completeness": "Complétude :",
       "comment": "Autres informations : ",
       "GESDecomposition": "Décomposition des GES : ",
-      "factorParts": "Composantes du facteur d'émission : "
+      "factorParts": "Composantes du facteur d'émission : ",
+      "wasteModalContent": "Les FE dédiés au recyclage des déchets (ou à la fin de vie moyenne lorsque celle-ci inclut du recyclage) utilisent une valeur de 41 kgCO₂e/t au lieu de la valeur que leur attribue la Base Empreinte®. Cette valeur correspond à la collecte, au transport et à l'exploitation du stockage des métaux sur la Base Empreinte®, et <b>exclut donc la régénération de la matière</b> qui constitue la majorité des émissions liées au recyclage. Ce fonctionnement est choisit pour ne pas pénaliser le recyclage, qui est néanmoins pris en compte dans les intrants au sein du Bilan Carbone® (un intrant issu d'une matière recyclée émettant généralement moins qu'un intrant neuf). Dans le cadre du Bilan GES Règlementaire, c'est bien la valeur de la Base Empreinte® qui sera utilisée dans votre export. Une modale explicitant les éventuelles différences entre Bilan Carbone® et Bilan GES Règlementaire sera disponible en haut à gauche de cet export. Pour plus de détail, nous vous invitons à consulter l' <link1>annexe 1</link1> de la méthode Bilan Carbone® ou <link2>les pages concernant les déchets</link2> du Plan Carbone Général.",
+      "wasteModalTitle": "Différence de valeurs FE recyclage"
     },
     "edit": {
       "title": "Modifier le facteur d'émissions ({name})",
