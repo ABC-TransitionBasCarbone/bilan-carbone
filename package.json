@@ -2,11 +2,18 @@
   "name": "bilan-carbone-monorepo",
   "private": true,
   "packageManager": "yarn@1.22.22",
-  "workspaces": [
-    "apps/*",
-    "packages/*",
-    "packages/publicodes-packages/*"
-  ],
+  "workspaces": {
+    "packages": [
+      "apps/*",
+      "packages/*",
+      "packages/publicodes-packages/*"
+    ],
+    "nohoist": [
+      "@abc-transitionbascarbone/publicodes-mip/@incubateur-ademe/publicodes-commun",
+      "@abc-transitionbascarbone/publicodes-mip/@incubateur-ademe/publicodes-acv-numerique",
+      "@abc-transitionbascarbone/publicodes-mip/futureco-data"
+    ]
+  },
   "engines": {
     "node": "24.x",
     "yarn": "1.22"
