@@ -35,7 +35,7 @@ import { EmissionFactorActionCell } from './tableCells/EmissionFactorActionCell'
 import { EmissionFactorNameCell } from './tableCells/EmissionFactorNameCell'
 import { EmissionFactorSourceCell } from './tableCells/EmissionFactorSourceCell'
 import { EmissionFactorStatusCell } from './tableCells/EmissionFactorStatusCell'
-import WasteEmissionFactorTooltip from './WasteEmissionFactorTooltip'
+import WasteEmissionFactorModal from './WasteEmissionFactorModal'
 
 interface Props {
   data: EmissionFactorList[]
@@ -91,11 +91,7 @@ export const EmissionFactorsTable = ({
         cell: ({ getValue, row }) => (
           <div className="flex align-center">
             <span>{getValue<string>()}</span>
-            {isWasteEmissionFactor(row.original, environment) && (
-              <span onClick={(e) => e.stopPropagation()}>
-                <WasteEmissionFactorTooltip />
-              </span>
-            )}
+            <div>{isWasteEmissionFactor(row.original, environment) && <WasteEmissionFactorModal />}</div>
           </div>
         ),
       },

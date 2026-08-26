@@ -44,7 +44,7 @@ import { Path } from 'react-hook-form'
 import Label from '../base/Label'
 import BaseChip from '../emissionFactor/BaseChip'
 import { ImportVersionForFilters } from '../emissionFactor/EmissionFactorsFilters'
-import WasteEmissionFactorTooltip from '../emissionFactor/WasteEmissionFactorTooltip'
+import WasteEmissionFactorModal from '../emissionFactor/WasteEmissionFactorModal'
 import styles from './EmissionSource.module.css'
 import EmissionSourceEditorChip from './EmissionSourceEditorChip'
 import EmissionSourceForm from './EmissionSourceForm'
@@ -278,7 +278,7 @@ const EmissionSource = ({
                     <BaseChip base={selectedFactor.base} />
                   </div>
                 )}
-                {isWasteEmissionFactor(selectedFactor, environment) && <WasteEmissionFactorTooltip />}
+                {isWasteEmissionFactor(selectedFactor, environment) && <WasteEmissionFactorModal />}
               </div>
             )}
             {/* result */}
