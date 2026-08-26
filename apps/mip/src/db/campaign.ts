@@ -180,44 +180,40 @@ export const updateCampaign = async (
   ])
 }
 
-export const getCampaignById = (id: string) => {
-  return prismaClient.campaign
-    .findFirst({
-      where: { id },
-      select: {
-        id: true,
-        status: true,
-        modelCampaign: {
-          select: {
-            id: true,
-            model: true,
-            organizationVersionMip: {
-              select: {
-                modelCampaign: {
-                  select: {
-                    model: true,
-                  },
+export const getCampaignById = async (id: string) => {
+  const campaign = await prismaClient.campaign.findFirst({
+    where: { id },
+    select: {
+      id: true,
+      status: true,
+      modelCampaign: {
+        select: {
+          id: true,
+          model: true,
+          organizationVersionMip: {
+            select: {
+              modelCampaign: {
+                select: {
+                  model: true,
                 },
               },
             },
           },
         },
       },
-    })
-    .then((campaign) => {
-      if (!campaign || !campaign.modelCampaign) {
-        return campaign
-      }
-
-      return {
-        id: campaign.id,
-        status: campaign.status,
-        modelCampaign: {
-          id: campaign.modelCampaign.id,
-          model: campaign.modelCampaign.organizationVersionMip?.modelCampaign?.model ?? campaign.modelCampaign.model,
-        },
-      }
-    })
+    },
+  })
+  if (!campaign || !campaign.modelCampaign) {
+    return campaign
+  }
+  return {
+    id: campaign.id,
+    status: campaign.status,
+    modelCampaign: {
+      id: campaign.modelCampaign.id,
+      model: campaign.modelCampaign.organizationVersionMip?.modelCampaign?.model ?? campaign.modelCampaign.model,
+    },
+  }
 }
 
 export const createResponse = async (data: Prisma.ResponseCreateInput) =>

@@ -39,18 +39,15 @@ export const updateCampaignCommand = async (command: UpdateCampaignCommand) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    let createdCampaignNames: string[] = []
-    if (!userIsAdmin) {
-      const organizationCampaigns = await getAllOrganizationVersionMipCampaigns(session.user.organizationVersionMipId)
-      const organizationCampaignIds = new Set(organizationCampaigns.map((campaign) => campaign.id))
-      createdCampaignNames = command.campaigns
-        .filter((campaign) => !organizationCampaignIds.has(campaign.id))
-        .map((campaign) => campaign.name)
-    }
+    const organizationCampaigns = await getAllOrganizationVersionMipCampaigns(session.user.organizationVersionMipId)
+    const organizationCampaignIds = new Set(organizationCampaigns.map((campaign) => campaign.id))
+    const createdCampaignNames = command.campaigns
+      .filter((campaign) => !organizationCampaignIds.has(campaign.id))
+      .map((campaign) => campaign.name)
 
     await updateCampaign(command, session.user.accountMipId, session.user.organizationVersionMipId, userIsAdmin)
 
-    if (!userIsAdmin && createdCampaignNames.length > 0) {
+    if (createdCampaignNames.length > 0) {
       const organizationName = await getOrgNameByOrgVersionMipId(session.user.organizationVersionMipId)
       const organizationMembers = await getAccountMipFromUserOrganization(session.user)
       const adminEmails = Array.from(
