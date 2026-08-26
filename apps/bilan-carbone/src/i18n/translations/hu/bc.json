@@ -1,0 +1,9 @@
+{
+  "study": {
+    "transitionPlan": {
+      "conversionWarning": {
+        "moreExplanationSNBC": "A pályagörbéje referencia dátuma többé nem 1990 lesz, mint az SNBC esetében, hanem az ezen az eszközön nyilvántartott első tanulmányának dátuma, azaz {oldestStudyDate}."
+      }
+    }
+  }
+}

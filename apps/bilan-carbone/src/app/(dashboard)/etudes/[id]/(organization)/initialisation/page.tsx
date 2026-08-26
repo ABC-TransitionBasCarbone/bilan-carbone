@@ -7,7 +7,7 @@ import { loadTransitionPlanPageData } from '@/components/study/transitionPlan/tr
 import { getUserApplicationSettings } from '@/db/user'
 
 const TransitionPlanInit = async ({ study, canEdit, user }: StudyProps & UserSessionProps & TransitionPlanProps) => {
-  const data = await loadTransitionPlanPageData(study.id, user.accountId)
+  const data = await loadTransitionPlanPageData(study.id, user.accountId, study.startDate.getFullYear())
 
   if (!data) {
     const settings = await getUserApplicationSettings(user.accountId)

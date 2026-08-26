@@ -2,15 +2,12 @@
   <%- include('../partials/style'); %>
   <body>
     <div>
-      <p>Bonjour <span><%= userName %></span>,</p>
+      <p><%= t_helloName %></p>
       <br />
+      <p><%= t_added %></p>
       <p>
-        Vous avez été ajouté par <span><%= creatorName %></span> en tant que <span><%= role %></span> sur l'étude
-        <a href="<%= studyLink %>"><%= studyName %></a> pour l'organisation <span><%= organizationName %></span>.
-      </p>
-      <p>
-        Pour avoir acces à l'étude, vous pouvez vous connecter sur le BC+ comme habituellement sur
-        <a href="<%= link %>">ce lien</a>.
+        <%= t_access %>
+        <a href="<%= link %>"><%= t_thisLink %></a>.
       </p>
       <br />
       <%- include('./partials/signature'); %>

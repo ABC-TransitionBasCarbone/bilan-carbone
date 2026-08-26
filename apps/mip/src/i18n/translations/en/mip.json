@@ -54,7 +54,7 @@
       "loadingState": "Loading your results...",
       "headlineDescription": "Your highest emission categories and the most effective actions to reduce them.",
       "kgUnit": "kg",
-      "target": "2050 target: 2 tCO₂e",
+      "target": "2050 Target",
       "ofFootprint": "of your footprint",
       "actions": {
         "title": "Take action",
@@ -65,13 +65,13 @@
       "transition": {
         "title": "Your reduction trajectory",
         "context": "This reduction trajectory is your organisation’s reduction pathway applied to your personal footprint. Your footprint will not follow this path exactly, but it will tend to decrease in this way through changes in your work practices — and above all through the structural changes led by your organisation.",
-        "startLabel": "Starting footprint"
+        "startLabel": "Starting footprint ({year})",
+        "endLabel": "Ending footprint ({year})"
       },
       "range": {
         "minLabel": "0 tCO₂e",
-        "maxLabel": "12 tCO₂e",
-        "limitLabel": "2050 target: {limit} tCO₂e",
-        "currentLabel": "You: {value} tCO₂e"
+        "maxLabel": "Upper benchmark",
+        "limitLabel": "2050 Target"
       },
       "topCategories": {
         "title": "My main emission categories"
@@ -183,11 +183,11 @@
       "title": "Carbon footprint distribution",
       "pieTitle": "Breakdown by emission category (averages)",
       "barTitle": "Average carbon footprint by category",
-      "totalLimitColumn": "Total (2 tCO₂e limit)",
+      "totalLimitColumn": "Total",
       "postDetail": "{tco2e} tCO₂e",
       "postDetailHover": "{tco2e} tCO₂e, around {people} people equivalent",
       "postDetailHoverPercent": "{percent}%",
-      "target2050": "2050 target: 2 tCO₂e"
+      "target2050": "2050 Target"
     },
     "keyStats": {
       "title": "Key figures",

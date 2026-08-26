@@ -12,6 +12,7 @@ import {
   getEmissionFactorImportVersion,
   ImportEmissionFactor,
   isRowUnchanged,
+  mapEmissionFactors,
   mergeRowWithOverride,
   numberColumns,
   propagatePartOverrides,
@@ -174,15 +175,14 @@ export const getEmissionFactorsFromCSV = async (
   name: string,
   file: string,
   importFrom: Import,
-  mapFunction: (emissionFactor: ImportEmissionFactor) => Prisma.EmissionFactorCreateInput,
-  options: { dryRun?: boolean; overrideMode?: OverrideMode } = {},
+  options: { dryRun?: boolean; overrideMode?: OverrideMode; updateExisting?: boolean } = {},
 ): Promise<DryRunReport | void> => {
-  const { dryRun = false, overrideMode } = options
+  const { dryRun = false, overrideMode, updateExisting } = options
 
   const existingVersion = await prismaClient.emissionFactorImportVersion.findFirst({
     where: { name, source: importFrom },
   })
-  if (existingVersion) {
+  if (existingVersion && !updateExisting) {
     console.error(
       `Version "${name}" already exists for source "${importFrom}". Use a different name or use the override script.`,
     )
@@ -228,12 +228,10 @@ export const getEmissionFactorsFromCSV = async (
 
   return prismaClient.$transaction(
     async (transaction) => {
-      const emissionFactorImportVersion = await getEmissionFactorImportVersion(transaction, name, importFrom)
-      const importVersionId = emissionFactorImportVersion.id
+      const importVersionId = await getEmissionFactorImportVersion(transaction, name, importFrom)
 
       const importedIdToEfId = new Map<string, string>()
       const newEmissionFactorIds: string[] = []
-      const reusedEfIds = new Set<string>()
       // Maps new EF id → old EF id, for EFs where override was merged (to propagate to parts)
       const mergedOverrideEfIds = new Map<string, string>()
 
@@ -250,13 +248,12 @@ export const getEmissionFactorsFromCSV = async (
         if (existing?.importedRawCsv && isRowUnchanged(existing.importedRawCsv, emissionFactor)) {
           await connectEmissionFactorToVersion(transaction, existing.id, importVersionId)
           importedIdToEfId.set(importedId, existing.id)
-          reusedEfIds.add(existing.id)
         } else {
           const shouldMergeOverride = overrideMode === 'keep' && existing?.overrideRawCsv && existing?.importedRawCsv
           const rowToMap = shouldMergeOverride
             ? mergeRowWithOverride(emissionFactor, existing.importedRawCsv!, existing.overrideRawCsv!)
             : emissionFactor
-          const data = mapFunction(rowToMap)
+          const data = mapEmissionFactors(rowToMap, importFrom)
           const created = await transaction.emissionFactor.create({
             data: {
               ...data,
@@ -282,7 +279,7 @@ export const getEmissionFactorsFromCSV = async (
       })
 
       console.log(`Save ${parts.length} emission factors parts...`)
-      await saveEmissionFactorsParts(transaction, importedIdToEfId, parts, reusedEfIds)
+      await saveEmissionFactorsParts(transaction, importedIdToEfId, parts)
       await propagatePartOverrides(transaction, mergedOverrideEfIds)
       await cleanImport(transaction, newEmissionFactorIds)
 

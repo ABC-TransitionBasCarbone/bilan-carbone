@@ -62,17 +62,46 @@ export const deleteTrajectory = async (id: string): Promise<void> => {
 export const updateTrajectoryType = async (
   trajectoryId: string,
   type: TrajectoryType,
+  referenceYear: number | null,
   tx: Prisma.TransactionClient,
 ) => {
   return tx.trajectory.update({
     where: { id: trajectoryId },
-    data: { type },
+    data: { type, referenceYear },
   })
 }
 
-export const getTrajectoryType = async (trajectoryId: string, tx: Prisma.TransactionClient) => {
+export const getOldestPastStudyYear = async (
+  transitionPlanId: string,
+  tx: Prisma.TransactionClient,
+): Promise<number> => {
+  const [linkedStudies, externalStudies, study] = await Promise.all([
+    tx.transitionPlanStudy.findMany({
+      where: { transitionPlanId },
+      include: { study: { select: { startDate: true } } },
+    }),
+    tx.externalStudy.findMany({
+      where: { transitionPlanId },
+      select: { date: true },
+    }),
+    tx.study.findFirst({ where: { transitionPlan: { id: transitionPlanId } }, select: { startDate: true } }),
+  ])
+
+  if (!study) {
+    throw new Error(`No study found for transition plan ${transitionPlanId}`)
+  }
+
+  const years = [
+    ...linkedStudies.map((s) => s.study.startDate.getFullYear()),
+    ...externalStudies.map((s) => s.date.getFullYear()),
+  ]
+
+  return years.length > 0 ? Math.min(...years) : study.startDate.getFullYear()
+}
+
+export const getTrajectoryTypeAndRefYear = async (trajectoryId: string, tx: Prisma.TransactionClient) => {
   return tx.trajectory.findUnique({
     where: { id: trajectoryId },
-    select: { type: true },
+    select: { type: true, referenceYear: true },
   })
 }

@@ -1,25 +1,8 @@
 import { Post } from '@abc-transitionbascarbone/utils/charts'
-import { AutresEmissionsNonEnergetiquesIcon } from './autresemissionsnonenergetiques'
-import { BilletterieEtCommunicationIcon } from './billetterieetcommunication'
-import { ConfiseriesEtBoissonsIcon } from './confiseriesetboissons'
-import { DechetsIcon } from './dechets'
-import { DechetsDirectsIcon } from './dechetsdirects'
-import { DeplacementsIcon } from './deplacements'
-import { EnergiesIcon } from './energies'
-import { FinDeVieIcon } from './findevie'
-import { FonctionnementIcon } from './fonctionnement'
-import { FretIcon } from './fret'
-import { ImmobilisationsIcon } from './immobilisations'
-import { IntrantsBiensEtMatieresIcon } from './intrantsbiensetmatieres'
-import { IntrantsServicesIcon } from './intrantsservices'
-import { MobiliteSpectateursIcon } from './mobilitespecctateurs'
-import { SallesEtCabinesIcon } from './sallesetcabines'
-import { TourneesAvantPremiereIcon } from './tourneesavantpremiere'
-import { UtilisationEtDependanceIcon } from './utilisationetdependance'
-
 import AcUnitOutlinedIcon from '@mui/icons-material/AcUnitOutlined'
 import BoltOutlinedIcon from '@mui/icons-material/BoltOutlined'
 import ComputerOutlinedIcon from '@mui/icons-material/ComputerOutlined'
+import EventIcon from '@mui/icons-material/Event'
 import FilterDramaOutlinedIcon from '@mui/icons-material/FilterDramaOutlined'
 import LightbulbOutlinedIcon from '@mui/icons-material/LightbulbOutlined'
 import LocalPizzaOutlinedIcon from '@mui/icons-material/LocalPizzaOutlined'
@@ -27,10 +10,27 @@ import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined
 import MapsHomeWorkOutlinedIcon from '@mui/icons-material/MapsHomeWorkOutlined'
 import TrainOutlinedIcon from '@mui/icons-material/TrainOutlined'
 import { AchatsIcon } from './achats'
+import { AutresEmissionsNonEnergetiquesIcon } from './autresemissionsnonenergetiques'
+import { BilletterieEtCommunicationIcon } from './billetterieetcommunication'
+import { ConfiseriesEtBoissonsIcon } from './confiseriesetboissons'
+import { DechetsIcon } from './dechets'
+import { DechetsDirectsIcon } from './dechetsdirects'
+import { DeplacementsIcon } from './deplacements'
 import { DeplacementsClicksonIcon } from './deplacementsClickson'
 import { EnergieClicksonIcon } from './energieClickson'
+import { EnergiesIcon } from './energies'
+import { FinDeVieIcon } from './findevie'
+import { FonctionnementIcon } from './fonctionnement'
+import { FretIcon } from './fret'
+import { ImmobilisationsIcon } from './immobilisations'
 import { ImmobilisationsClicksonIcon } from './immobilisationsClickson'
+import { IntrantsBiensEtMatieresIcon } from './intrantsbiensetmatieres'
+import { IntrantsServicesIcon } from './intrantsservices'
+import { MobiliteSpectateursIcon } from './mobilitespecctateurs'
 import { RestaurationIcon } from './restauration'
+import { SallesEtCabinesIcon } from './sallesetcabines'
+import { TourneesAvantPremiereIcon } from './tourneesavantpremiere'
+import { UtilisationEtDependanceIcon } from './utilisationetdependance'
 
 interface Props {
   post: Post
@@ -115,6 +115,8 @@ const PostIcon = ({ post, className }: Props) => {
       return <AchatsIcon className={className} />
     case Post.ImmobilisationsClickson:
       return <ImmobilisationsClicksonIcon className={className} />
+    case Post.EvenementSimplified:
+      return <EventIcon className={className} />
   }
 }
 

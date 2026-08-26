@@ -1,7 +1,7 @@
 {
   "login": {
-    "subtext": "Változat az egyesületi (nonprofit) szféra számára",
-    "explanation": "A Bilan Carbone® módszert és annak egyesületi szférára szabott ágazati változatát alkalmazni kívánó egyesületeknek szánt eszköz. A Bilan Carbone® módszert gondozó Association pour la transition Bas Carbone és az egyesületeket alacsony szén-dioxid-kibocsátású átállásukban támogató Mouvement Tilt partnersége révén jött létre. Az eszköz ingyenesen elérhető minden, a módszerben képzett francia egyesület számára.",
+    "subtext": "Változat az egyesületi szféra számára <br></br> & <br></br> Cap Carbone",
+    "explanation": "Mivel az alacsony szén-dioxid-kibocsátású átállási módszereket sokáig a vállalatok számára dolgozták ki, közösen kidolgoztunk eszközeink specifikus változatait, <b>az egyesületi világgal és annak számára</b>. <br></br><br></br> Az <b>ABC</b> és a <b>Mouvement Tilt</b> két egyesület, amelyek itt egyesítik szakértelmüket, hogy bemutassanak Önnek két eszközt: a <b>Cap Carbone</b>-t, amely lehetővé teszi Önnek, <b>feltétel nélkül</b>, hogy egyszerűsített és hozzáférhető szénlábnyomot készítsen, hogy előzetes képzés nélkül megtegye az első lépést, valamint a <b>Bilan Carbone®+ associatif</b>-ot, amely lehetővé teszi a Bilan Carbone® módszer és annak az egyesületi szférára vonatkozó ágazati változatának alkalmazását. Az eszköznek ez a második része <b>ingyenesen elérhető a módszerre kiképzett összes francia egyesület számára</b>. <br></br><br></br> További információért <link><white><underline>kattintson ide</underline></white></link>!",
     "form": {
       "activate": "Fiókom létrehozása"
     }
@@ -119,17 +119,20 @@
       }
     },
     "structure": {
-      "'Club de loisirs'": "Szabadidőklub",
-      "'Association étudiante'": "Diákegyesület",
-      "'Association culturelle'": "Kulturális egyesület",
+      "'Structure sportive'": "Sportszervezet",
+      "'Éducation, formation et insertion professionnelle'": "Oktatás, képzés és szakmai beilleszkedés",
+      "'Développement économique et local'": "Gazdasági és helyi fejlesztés",
+      "'Développement international et humanitaire'": "Nemzetközi és humanitárius fejlesztés",
+      "'Culture et patrimoine'": "Kultúra és örökség",
       "'Association de voisinage'": "Szomszédsági egyesület",
       "'Hôpital'": "Kórház",
       "'Maison de retraite'": "Idősek otthona",
+      "'Accompagnement des personnes en situation de handicap'": "Fogyatékossággal élő személyek támogatása",
+      "'Protection de l'enfance'": "Gyermekvédelem",
+      "'Défense de l'environnement'": "Környezetvédelem",
+      "'Club de loisirs'": "Szabadidőklub",
       "'Association d'aide à domicile'": "Házi segítségnyújtó egyesület",
-      "'Association humanitaire'": "Humanitárius egyesület",
       "'Autres structures sociales et solidaires'": "Egyéb szociális és szolidáris struktúrák",
-      "'Association de défense de l'environnement'": "Környezetvédelmi egyesület",
-      "'Association d'enseignement ou de formation'": "Oktatási vagy képzési egyesület",
       "'Autre'": "Egyéb"
     }
   },
@@ -194,5 +197,10 @@
     "badge": "Béta",
     "title": "A Cap Carbone eszköz béta verziója",
     "description": "A Cap Carbone jelenleg béta verzióban van! Köszönjük, hogy Ön az egyik első felhasználónk és tesztelőnk 🎉 Nyugodtan lépjen velünk kapcsolatba a <support>support@abc-transitionbascarbone.fr</support> címen, ha van visszajelzése! Mivel az alkalmazás béta fázisban van, előfordulhat, hogy egyes kérdések megváltoznak az űrlapon, és így a módosított kérdésekre adott válaszok törlődnek a jövőbeli frissítésekben. Ne felejtse el ellenőrizni kategóriái kitöltöttségét az adatbeviteli oldalon, mielőtt megnézné eredményeit, hogy ellenőrizze, minden válasza továbbra is elérhető-e."
+  },
+  "documentationUrlTilt": {
+    "tiltABCPage": "https://abc-transitionbascarbone.fr/transition-association-abc-tilt/#",
+    "GuideEcoResponsableBureau": "https://associationbilancarbone.sharepoint.com/:b:/s/AssociationBilanCarbone/IQDSk3R5vX9eQYAsjwE3LWPoAY3Gyp9pEStVl1MBejc0E6Y?e=tJFSFc",
+    "LeCompteAsso": "https://lecompteasso.associations.gouv.fr/client/login"
   }
 }

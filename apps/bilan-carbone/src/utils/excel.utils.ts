@@ -14,7 +14,7 @@ export function parseExcelSheet(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let workbook: ReturnType<typeof xlsx.parse<any[]>>
   try {
-    workbook = xlsx.parse(buffer, { raw: false })
+    workbook = xlsx.parse(buffer, { raw: true })
   } catch {
     return { success: false, errors: [{ lineNumber: null, key: 'invalidFileType' }] }
   }

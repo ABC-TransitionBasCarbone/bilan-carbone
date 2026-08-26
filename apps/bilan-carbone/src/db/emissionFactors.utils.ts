@@ -7,14 +7,15 @@ export const keepOnlyOneMetadata = <T extends { metaData: EmissionFactorList['me
 ): (T & { metaData: EmissionFactorList['metaData'] })[] => {
   return emissionFactors.map((ef) => ({
     ...ef,
-    metaData: ef.metaData.find((meta) => meta.language === locale) ?? {
-      language: locale,
-      title: null,
-      attribute: null,
-      comment: null,
-      location: null,
-      frontiere: null,
-      tag: null,
-    },
+    metaData: ef.metaData.find((meta) => meta.language === locale) ??
+      ef.metaData[0] ?? {
+        language: locale,
+        title: null,
+        attribute: null,
+        comment: null,
+        location: null,
+        frontiere: null,
+        tag: null,
+      },
   }))
 }

@@ -1,7 +1,7 @@
 {
   "login": {
-    "subtext": "Non-profit organisation specific version",
-    "explanation": "The tool dedicated to non-profit organisations wishing to apply the Bilan Carbone® method and its sectoral variant for the non-profit sphere. It came into being thanks to the partnership between <abcAssociation>the Association for Low Carbon Transition</abcAssociation>, which is the holder of the Bilan Carbone® method, and Tilt, which accompanies all non-profit organisations in their low-carbon transition. The tool is freely accessible for all French non-profit organisations trained in the method.",
+    "subtext": "Version for the non-profit sphere <br></br> & <br></br> Cap Carbone",
+    "explanation": "Because low-carbon transition methods have long been designed for companies, we have co-constructed specific versions of our tools, <b>with and for the non-profit world</b>. <br></br><br></br> The <b>ABC</b> and the <b>Tilt Movement</b> are two associations that here combine their expertise to present you with two tools: <b>Cap Carbone</b>, which allows you, <b>without any conditions</b>, to carry out a simplified and accessible carbon footprint to take the first step without prior training, and the <b>Bilan Carbone®+ associatif</b>, which allows you to apply the Bilan Carbone® method and its sector-specific version for the non-profit sphere. This second part of the tool is <b>freely accessible to all French associations trained in the method</b>. <br></br><br></br> For more information, <link><white><underline>click here</underline></white></link>!",
     "form": {
       "activate": "Create my account"
     }
@@ -123,17 +123,20 @@
       "resultsWord": "Bilan Carbone® report - Associative Sphere"
     },
     "structure": {
-      "'Club de loisirs'": "Leisure Club",
-      "'Association étudiante'": "Student Association",
-      "'Association culturelle'": "Cultural Association",
-      "'Association de voisinage'": "Neighborhood Association",
+      "'Structure sportive'": "Sports organisation",
+      "'Éducation, formation et insertion professionnelle'": "Education, training and professional integration",
+      "'Développement économique et local'": "Economic and local development",
+      "'Développement international et humanitaire'": "International development and humanitarian aid",
+      "'Culture et patrimoine'": "Culture and heritage",
+      "'Association de voisinage'": "Neighborhood association",
       "'Hôpital'": "Hospital",
-      "'Maison de retraite'": "Retirement Home",
+      "'Maison de retraite'": "Retirement home",
+      "'Accompagnement des personnes en situation de handicap'": "Support for people with disabilities",
+      "'Protection de l'enfance'": "Child protection",
+      "'Défense de l'environnement'": "Environmental protection",
+      "'Club de loisirs'": "Leisure Club",
       "'Association d'aide à domicile'": "Home Care Association",
-      "'Association humanitaire'": "Humanitarian Association",
       "'Autres structures sociales et solidaires'": "Other Social and Solidarity Organizations",
-      "'Association de défense de l'environnement'": "Environmental Protection Association",
-      "'Association d'enseignement ou de formation'": "Educational or Training Association",
       "'Autre'": "Other"
     }
   },
@@ -198,5 +201,10 @@
     "badge": "Beta",
     "title": "Beta Version of the Cap Carbone Tool",
     "description": "Cap Carbone is currently in beta! Thank you for being our first users and testers 🎉 Feel free to reach out to us at <support>support@abc-transitionbascarbone.fr</support> if you have any feedback! As the application is in beta, some questions in the form may change, meaning that answers to modified questions could be deleted in future updates. Make sure to check the completion of your posts on the data entry page before viewing your results to verify that all your answers are still available."
+  },
+  "documentationUrlTilt": {
+    "tiltABCPage": "https://abc-transitionbascarbone.fr/transition-association-abc-tilt/#",
+    "GuideEcoResponsableBureau": "https://associationbilancarbone.sharepoint.com/:b:/s/AssociationBilanCarbone/IQDSk3R5vX9eQYAsjwE3LWPoAY3Gyp9pEStVl1MBejc0E6Y?e=tJFSFc",
+    "LeCompteAsso": "https://lecompteasso.associations.gouv.fr/client/login"
   }
 }

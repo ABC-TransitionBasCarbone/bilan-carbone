@@ -90,7 +90,6 @@ export const getGHGPLineAndPost = (
   value: number,
   emissionFactor: ExportEmissionFactor & { base: EmissionFactorBase | null },
   post: string,
-  EfHasParts: boolean,
   base: EmissionFactorBase = EmissionFactorBase.LocationBased,
 ) => {
   const line = getLine(value, emissionFactor)
@@ -110,10 +109,6 @@ export const getGHGPLineAndPost = (
   // same, we are now in market based with ef in market based
   if (!post.startsWith('2.')) {
     return { line: null, post: null }
-  }
-
-  if (emissionFactor.importedFrom === Import.Manual && EfHasParts) {
-    return { line, post: '3.3' }
   }
 
   return { line, post }

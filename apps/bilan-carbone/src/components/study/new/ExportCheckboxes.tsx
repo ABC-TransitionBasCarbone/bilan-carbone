@@ -1,5 +1,5 @@
 import type { FullStudy } from '@/db/study'
-import { adaptFeSourceWithExport, updateStudySpecificExportFields } from '@/services/serverFunctions/study'
+import { updateStudySpecificExportFields } from '@/services/serverFunctions/study'
 import { sortAlphabetically } from '@/services/utils'
 import { exportSpecificFields, getAllSpecificFieldsForExports } from '@/utils/study'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
@@ -87,18 +87,12 @@ const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, dupli
       } else {
         const newExports = values.exports.concat(type)
         onChange(newExports)
-        if (study) {
-          await adaptFeSourceWithExport(study?.id, newExports)
-        }
       }
     } else if (shouldShowExportDeactivationWarning(type)) {
       setPendingExportUncheck(type)
     } else {
       const newExports = values.exports.filter((exportType) => exportType !== type)
       onChange(newExports)
-      if (study) {
-        await adaptFeSourceWithExport(study?.id, newExports)
-      }
     }
   }
 

@@ -83,7 +83,7 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   }
 
   const handleNext = () => {
-    const newState = formBuilder.goToNextPage(state)
+    const newState = formBuilder.goToNextPage({ ...state, pages: [...state.pages] })
     const { elements: newElements } = formBuilder.currentPage(newState)
     const newGrouped = buildGroupedElements(engine, newElements)
     const newCategoryKey = getCategoryKey(newGrouped)

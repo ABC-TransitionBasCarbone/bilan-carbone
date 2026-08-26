@@ -181,59 +181,60 @@ const getBaseFilterForEmissionFactors = (
   environment: Environment,
   organizationId?: string,
 ) => {
-  let importedFromCondition = {}
+  let importedFromConditionWithoutManual: object = { id: 'no-fe' }
+  let importedFromConditionWithManual: object = { id: 'no-fe' }
 
-  if (filters.sources.length === 0 || filters.subPosts.length === 0) {
-    importedFromCondition = { id: 'no-fe' }
-  } else {
-    if (filters.sources.includes(Import.Manual) && filters.sources.length === 1 && organizationId) {
-      importedFromCondition = { OR: [{ importedFrom: Import.Manual, organizationId }] }
-    } else if (filters.sources.includes(Import.Manual) && organizationId) {
-      importedFromCondition = {
-        OR: [
-          { versions: { some: { importVersionId: { in: filters.sources.filter((s) => s !== Import.Manual) } } } },
-          { importedFrom: Import.Manual, organizationId },
-        ],
-      }
-    } else {
-      importedFromCondition = {
-        OR: [{ versions: { some: { importVersionId: { in: filters.sources.filter((s) => s !== Import.Manual) } } } }],
-      }
+  if (filters.sources.includes(Import.Manual) && filters.sources.length === 1 && organizationId) {
+    importedFromConditionWithManual = { importedFrom: Import.Manual, organizationId }
+  } else if (filters.sources.includes(Import.Manual) && organizationId) {
+    importedFromConditionWithManual = { importedFrom: Import.Manual, organizationId }
+    importedFromConditionWithoutManual = {
+      versions: { some: { importVersionId: { in: filters.sources.filter((s) => s !== Import.Manual) } } },
     }
+  } else {
+    importedFromConditionWithoutManual = {
+      versions: { some: { importVersionId: { in: filters.sources.filter((s) => s !== Import.Manual) } } },
+    }
+  }
+
+  const commonEmissionFactorFilters = {
+    subPosts: filters.subPosts.some((sp) => sp === 'all')
+      ? { isEmpty: false }
+      : { hasSome: getEmissionFactorSubPostsMap(filters.subPosts as SubPost[], environment) },
+    ...(filters.archived ? {} : { status: { not: EmissionFactorStatus.Archived } }),
+    ...(filters.units.length > 0
+      ? {
+          OR: [{ unit: { in: filters.units as Unit[] } }, { customUnit: { in: filters.units as string[] } }],
+        }
+      : {}),
+    ...(filters.base && filters.base.length !== Object.values(EmissionFactorBase).length
+      ? { base: { in: filters.base } }
+      : {}),
   }
 
   return {
     where: {
-      language: locale,
-      ...(filters.search && {
-        OR: [
-          { title: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
-          { attribute: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
-          { frontiere: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
-        ],
-      }),
-      ...(filters.locations.length > 0
-        ? { location: { in: filters.locations, mode: Prisma.QueryMode.insensitive } }
-        : {}),
-      emissionFactor: {
-        AND: [
-          {
-            subPosts: filters.subPosts.some((sp) => sp === 'all')
-              ? { isEmpty: false }
-              : { hasSome: getEmissionFactorSubPostsMap(filters.subPosts as SubPost[], environment) },
-          },
-          filters.archived ? {} : { status: { not: EmissionFactorStatus.Archived } },
-          filters.units.length > 0
-            ? {
-                OR: [{ unit: { in: filters.units as Unit[] } }, { customUnit: { in: filters.units as string[] } }],
-              }
-            : {},
-          filters.base && filters.base.length !== Object.values(EmissionFactorBase).length
-            ? { base: { in: filters.base } }
-            : {},
-          importedFromCondition,
-        ],
-      },
+      AND: [
+        {
+          OR: [
+            {
+              language: locale,
+              emissionFactor: { ...commonEmissionFactorFilters, ...importedFromConditionWithoutManual },
+            },
+            { emissionFactor: { ...commonEmissionFactorFilters, ...importedFromConditionWithManual } },
+          ],
+        },
+        filters.search
+          ? {
+              OR: [
+                { title: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
+                { attribute: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
+                { frontiere: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
+              ],
+            }
+          : {},
+        filters.locations.length > 0 ? { location: { in: filters.locations, mode: Prisma.QueryMode.insensitive } } : {},
+      ],
     },
   }
 }

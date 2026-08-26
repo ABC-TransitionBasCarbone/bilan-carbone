@@ -71,16 +71,16 @@
 
 équipements et immobilisations . total sans reconditionné . ordinateurs fixes:
   formule: FE * quantité
-  titre: Ordinateurs fixes
+  titre: Ordinateurs fixe de taille moyenne (2023-2025), Asie
   form:
     à traduire: oui
   avec:
     FE:
-      valeur: 169
+      valeur: 371
       unité: kgCO2e/quantité
       meta:
-        id: 27003
-        nom: Ordinateurs fixes
+        id: 7f88396d-ae1b-44cf-812e-1804e58b2830
+        nom: Ordinateurs fixe de taille moyenne (2023-2025), Asie
     quantité:
       question: Ordinateurs fixes
       type: nombre
@@ -94,10 +94,10 @@
     à traduire: oui
   avec:
     FE:
-      valeur: 156
+      valeur: 128.3
       unité: kgCO2e/quantité
       meta:
-        id: 27002
+        id: 29dcfe4c-28b2-47a3-9224-ad469daeb815
         nom: Ordinateurs portables
     quantité:
       question: Ordinateurs portables
@@ -161,34 +161,34 @@
 
 équipements et immobilisations . total sans reconditionné . téléphones portables:
   formule: FE * quantité
-  titre: Téléphones portables
+  titre: Smartphone de taille moyenne (2023-2025), Asie 
   form:
     à traduire: oui
   avec:
     FE:
-      valeur: 16.5
+      valeur: 51.5
       unité: kgCO2e/quantité
       meta:
-        id: 27010
-        nom: Téléphones portables
+        id: 9b5eab6e-3c60-4c6e-ad39-eccaca77786a
+        nom: Smartphone de taille moyenne (2023-2025), Asie 
     quantité:
-      question: Téléphones portables
+      question: Smartphone
       type: nombre
       unité: quantité
       par défaut: 0
 
 équipements et immobilisations . total sans reconditionné . vidéoprojecteurs:
   formule: FE * quantité
-  titre: Vidéoprojecteurs
+  titre: Vidéoprojecteurs (2020), Asie
   form:
     à traduire: oui
   avec:
     FE:
-      valeur: 145
+      valeur: 39.1
       unité: kgCO2e/quantité
       meta:
-        id: 28313
-        nom: Vidéoprojecteurs
+        id: 5e5df079-6f73-45e0-97fb-343d9aced108
+        nom: Vidéoprojecteurs (2020), Asie
     quantité:
       question: Vidéoprojecteurs
       type: nombre
@@ -202,11 +202,11 @@
     à traduire: oui
   avec:
     FE:
-      valeur: 63.2
+      valeur: 58.1
       unité: kgCO2e/quantité
       meta:
-        id: 27010
-        nom: Tablettes
+        id: 4d2f0d84-94b0-424c-8109-b311400bd5d7
+        nom: Tablette de taille moyenne (2023-2025), Asie
     quantité:
       question: Autres écrans (TV, écran secondaire, tablette, ...)
       type: nombre

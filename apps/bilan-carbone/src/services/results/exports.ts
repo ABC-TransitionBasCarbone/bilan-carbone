@@ -63,7 +63,6 @@ type GetLineAndPostForExportFunctionType = (
   value: number,
   emissionFactor: ExportEmissionFactor & { base: EmissionFactorBase | null },
   post: string,
-  EfHasParts: boolean,
   base?: EmissionFactorBase,
 ) => { line: Omit<PostInfos, 'rule' | 'squaredStandardDeviation'> | null; post: string | null | undefined }
 
@@ -114,12 +113,11 @@ const getLineAndPost = (
   getLineAndPostForExport: GetLineAndPostForExportFunctionType,
   value: number,
   emissionFactor: ExportEmissionFactor & { base: EmissionFactorBase | null },
-  efHasParts: boolean,
   squaredStandardDeviation: number,
   base?: EmissionFactorBase,
 ) => {
   if (post && results[post]) {
-    const { line, post: overridedPost } = getLineAndPostForExport(value, emissionFactor, post, efHasParts, base)
+    const { line, post: overridedPost } = getLineAndPostForExport(value, emissionFactor, post, base)
 
     if (!overridedPost || !line) {
       return { line: null, post: null }
@@ -194,7 +192,6 @@ export const computeResult = (
             getLineAndPostForExport,
             value,
             emissionFactor,
-            false,
             squaredStandardDeviation,
             base,
           )
@@ -227,7 +224,6 @@ export const computeResult = (
               getLineAndPostForExport,
               value,
               { ...part, base: emissionFactor.base, importedFrom: emissionFactor.importedFrom },
-              true,
               squaredStandardDeviation,
               base,
             )

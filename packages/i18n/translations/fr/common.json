@@ -257,6 +257,64 @@
       "userOnStudyInvitation": "Ajout sur l'étude {studyName}",
       "contributorInvitation": "Demande de contribution sur l'étude {studyName}",
       "addedUsersByFile": "Autorisation pour l'ajout d'utilisateurs"
+    },
+    "body": {
+      "hello": "Bonjour,",
+      "helloName": "Bonjour {name},",
+      "thisLink": "ce lien",
+      "goodDay": "Bonne journée,",
+      "regards": "Cordialement,",
+      "team": "L'équipe BC+",
+      "faqContent": "En cas de question vous pouvez consulter",
+      "faqLinkText": "notre FAQ",
+      "faqOrEmail": "ou nous envoyer un email à",
+      "resetPassword": {
+        "content": "Vous avez fait une demande de réinitialisation de mot de passe. Voici le lien pour la réinitialisation :",
+        "notYou": "Si vous n'avez pas fait la demande, vous pourrez ignorer ce mail, votre mot de passe restera inchangé."
+      },
+      "activateAccount": {
+        "content": "Bienvenue sur le BC+ ! Vous avez fait une demande d'activation de votre compte. Pour finaliser celle-ci, veuillez cliquer sur"
+      },
+      "activateAccountFromReset": {
+        "content": "Bienvenue sur le BC+ ! Vous avez fait une demande de réinitialisation de mot de passe mais votre compte n'est pas encore activé. Si vous souhaitez finaliser l'activation de celui-ci, veuillez cliquer sur"
+      },
+      "activationRequest": {
+        "content": "Vous avez une demande d'accès au compte BC+ de votre organisation de la part de {userToActivate} (mail: {emailToActivate}). Vous pouvez retrouver les demandes d'accès dans votre compte dans la page \"Mon organisation > Mon équipe\". En acceptant sa demande d'accès, vous lui définirez un rôle sur votre organisation. Il aura alors accès suivant son rôle aux informations et actions correspondantes de votre compte. Si vous refusez, il n'aura pas accès au compte de votre organisation."
+      },
+      "addedActiveUser": {
+        "added": "Vous avez été ajouté par {creatorName} à l'organisation {orga} et avez donc à présent accès à l'environnement {newEnv} {envInfo}",
+        "alreadyHadAccess": "Vous aviez déjà accès {oldEnvs} sur notre outil. Vous pouvez donc vous connecter à ce nouvel environnement avec votre mot de passe habituel sur",
+        "loginInfo": "En vous connectant, l'application vous demandera dorénavant à quel environnement vous souhaitez accéder. Vous pourrez changer d'environnement à n'importe quel moment via un nouveau bouton sur le bandeau principal de l'outil.",
+        "envInfoBC": "sur lequel vous pourrez donc réaliser ou participer à la réalisation d'un ou plusieurs Bilan Carbone®.",
+        "envInfoCUT": "sur lequel vous pourrez réaliser l'empreinte carbone simplifiée de votre cinéma.",
+        "envInfoDefault": ".",
+        "oldEnvsSingle": "à l'environnement {envName}",
+        "oldEnvsMultiple": "aux environnements {envNames}"
+      },
+      "contributorInvitation": {
+        "added": "Vous avez été ajouté par {creatorName} en tant que contributeur sur l'étude {studyName} pour l'organisation {organizationName}.",
+        "access": "Afin de contributer, vous pouvez vous connecter sur le BC+ comme habituellement sur",
+        "accessContributionSpace": ", et vous pouvez retrouver cette étude dans l'espace contribution sur la page d'accueil."
+      },
+      "newContributorInvitation": {
+        "welcome": "Bienvenue sur le BC+ !",
+        "added": "Vous avez été ajouté par {creatorName} en tant que contributeur sur l'étude {studyName} pour l'organisation {organizationName} sur le BC+.",
+        "access": "Afin de contributer, vous pouvez finaliser la création de votre compte sur",
+        "accessPost": ". Vous pourrez ensuite contributer à l'étude sur l'outil."
+      },
+      "newUserOnStudyInvitation": {
+        "welcome": "Bienvenue sur le BC+ !",
+        "added": "Vous avez été ajouté par {creatorName} en tant que {role} sur l'étude {studyName} pour l'organisation {organizationName} sur le BC+.",
+        "access": "Pour avoir accès à l'étude, vous pouvez finaliser la création de votre compte sur"
+      },
+      "newUser": {
+        "added": "Bienvenue sur le BC+ ! Vous avez été ajouté par {creatorName}.",
+        "access": "Pour avoir accès à l'application, vous pouvez finaliser la création de votre compte sur"
+      },
+      "userOnStudyInvitation": {
+        "added": "Vous avez été ajouté par {creatorName} en tant que {role} sur l'étude {studyName} pour l'organisation {organizationName}.",
+        "access": "Pour avoir accès à l'étude, vous pouvez vous connecter sur le BC+ comme habituellement sur"
+      }
     }
   },
   "nav": {

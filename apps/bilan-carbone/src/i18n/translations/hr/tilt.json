@@ -1,7 +1,7 @@
 {
   "login": {
-    "subtext": "Varijanta za udruženu (neprofitnu) sferu",
-    "explanation": "Alat namijenjen udrugama koje žele primijeniti metodu Bilan Carbone® i njezinu sektorsku varijantu za udruženu sferu. Nastao je zahvaljujući partnerstvu između Association pour la transition Bas Carbone, nositeljice metode Bilan Carbone®, i Mouvement Tilt, koji prati sve udruge u njihovoj niskougljičnoj tranziciji. Alat je besplatno dostupan svim francuskim udrugama educiranima u metodi.",
+    "subtext": "Varijanta za udruženja <br></br> & <br></br> Cap Carbone",
+    "explanation": "Budući da su metode niskougljične tranzicije dugo bile osmišljene za poduzeća, zajednički smo izradili posebne varijante naših alata, <b>s udrugama i za njih</b>. <br></br><br></br> <b>ABC</b> i <b>Mouvement Tilt</b> dvije su udruge koje ovdje udružuju svoju stručnost kako bi vam predstavile dva alata: <b>Cap Carbone</b>, koji vam omogućuje, <b>bez uvjeta</b>, izradu pojednostavljenog i pristupačnog ugljičnog otiska za prvi korak bez prethodne izobrazbe, i <b>Bilan Carbone®+ za udruge</b>, koji vam omogućuje primjenu metode Bilan Carbone® i njezine sektorske varijante za sferu udruga. Ovaj drugi dio alata <b>besplatno je dostupan svim francuskim udrugama izobraženim za metodu</b>. <br></br><br></br> Za više informacija <link><white><underline>kliknite ovdje</underline></white></link>!",
     "form": {
       "activate": "Stvori moj račun"
     }
@@ -119,17 +119,20 @@
       }
     },
     "structure": {
-      "'Club de loisirs'": "Klub za slobodno vrijeme",
-      "'Association étudiante'": "Studentska udruga",
-      "'Association culturelle'": "Kulturna udruga",
+      "'Structure sportive'": "Sportska organizacija",
+      "'Éducation, formation et insertion professionnelle'": "Obrazovanje, izobrazba i profesionalna integracija",
+      "'Développement économique et local'": "Gospodarski i lokalni razvoj",
+      "'Développement international et humanitaire'": "Međunarodni i humanitarni razvoj",
+      "'Culture et patrimoine'": "Kultura i baština",
       "'Association de voisinage'": "Susjedska udruga",
       "'Hôpital'": "Bolnica",
-      "'Maison de retraite'": "Dom za starije",
+      "'Maison de retraite'": "Dom za starije osobe",
+      "'Accompagnement des personnes en situation de handicap'": "Podrška osobama s invaliditetom",
+      "'Protection de l'enfance'": "Zaštita djece",
+      "'Défense de l'environnement'": "Zaštita okoliša",
+      "'Club de loisirs'": "Klub za slobodno vrijeme",
       "'Association d'aide à domicile'": "Udruga za pomoć u kući",
-      "'Association humanitaire'": "Humanitarna udruga",
       "'Autres structures sociales et solidaires'": "Ostale socijalne i solidarne strukture",
-      "'Association de défense de l'environnement'": "Udruga za zaštitu okoliša",
-      "'Association d'enseignement ou de formation'": "Udruga za obrazovanje ili osposobljavanje",
       "'Autre'": "Ostalo"
     }
   },
@@ -194,5 +197,10 @@
     "badge": "Beta",
     "title": "Beta verzija alata Cap Carbone",
     "description": "Cap Carbone je danas u beta verziji! Hvala vam što ste naši prvi korisnici i testeri 🎉 Slobodno nas kontaktirajte na adresu <support>support@abc-transitionbascarbone.fr</support> ako imate povratne informacije! Budući da je aplikacija u beta fazi, moguće je da se neka pitanja u obrascu promijene te da se odgovori na izmijenjena pitanja izbrišu u budućim ažuriranjima. Ne zaboravite provjeriti popunjenost svojih kategorija na stranici za unos podataka prije nego što pogledate rezultate, kako biste provjerili jesu li svi vaši odgovori i dalje dostupni."
+  },
+  "documentationUrlTilt": {
+    "tiltABCPage": "https://abc-transitionbascarbone.fr/transition-association-abc-tilt/#",
+    "GuideEcoResponsableBureau": "https://associationbilancarbone.sharepoint.com/:b:/s/AssociationBilanCarbone/IQDSk3R5vX9eQYAsjwE3LWPoAY3Gyp9pEStVl1MBejc0E6Y?e=tJFSFc",
+    "LeCompteAsso": "https://lecompteasso.associations.gouv.fr/client/login"
   }
 }

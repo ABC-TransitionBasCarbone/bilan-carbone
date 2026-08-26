@@ -60,19 +60,13 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 These scripts must be run from apps/bilan-carbone:
 
-### Import emission factors from NegaOctet
+### Import emission factors from base
 
 ```bash
-yarn tsx src/scripts/negaOctet/getEmissionFactors.ts -n ${versionNumber} -f ${pathToCSVFile}
+yarn tsx src/scripts/FE/importFEFromBase.ts -n ${versionNumber} -f ${pathToCSVFile} -b ${base}
 ```
 
-### Import emission factors from Legifrance
-
-```bash
-yarn tsx src/scripts/legifrance/getEmissionFactors.ts -n ${versionNumber} -f ${pathToCSVFile}
-```
-
-### Import emission factors from Base Empreinte
+### Import emission factors from Base Empreinte (should work now for all bases ?)
 
 Unchanged EFs between two imports are reused (same DB row). Changed EFs create a new row. Comparison is done via the raw CSV line stored in `importedRawCsv` at import time.
 
@@ -80,27 +74,27 @@ If EFs have been manually corrected via `applyOverrides` and their CSV row has c
 
 ```bash
 # Preview an import without writing to the database
-yarn tsx src/scripts/baseEmpreinte/getEmissionFactors.ts -n ${versionNumberBaseEmpreinte} -f ${pathToCSVFile} --dry-run
+yarn tsx src/scripts/FE/importFEFromBase.ts -n ${versionNumberBaseEmpreinte} -f ${pathToCSVFile} -b ${base} --dry-run
 
 # Import Base Empreinte
-yarn tsx src/scripts/baseEmpreinte/getEmissionFactors.ts -n ${versionNumberBaseEmpreinte} -f ${pathToCSVFile}
+yarn tsx src/scripts/FE/importFEFromBase.ts -n ${versionNumberBaseEmpreinte} -f ${pathToCSVFile} -b ${base}
 
 # Import while keeping existing manual overrides on changed EFs
-yarn tsx src/scripts/baseEmpreinte/getEmissionFactors.ts -n ${versionNumberBaseEmpreinte} -f ${pathToCSVFile} --keep-overrides
+yarn tsx src/scripts/FE/importFEFromBase.ts -n ${versionNumberBaseEmpreinte} -f ${pathToCSVFile} -b ${base} --keep-overrides
 
 # Import while discarding existing manual overrides in favor of new CSV values
-yarn tsx src/scripts/baseEmpreinte/getEmissionFactors.ts -n ${versionNumberBaseEmpreinte} -f ${pathToCSVFile} --discard-overrides
+yarn tsx src/scripts/FE/importFEFromBase.ts -n ${versionNumberBaseEmpreinte} -f ${pathToCSVFile} -b ${base} --discard-overrides
 
 # Backfill importedRawCsv on EFs imported before the field was introduced (one-timeon the last version before the field was introduced)
-yarn tsx src/scripts/baseEmpreinte/backfillImportedRawCsv.ts -n ${versionNumberBaseEmpreinte} -f ${pathToCSVFile} --dry-run
-yarn tsx src/scripts/baseEmpreinte/backfillImportedRawCsv.ts -n ${versionNumberBaseEmpreinte} -f ${pathToCSVFile}
+yarn tsx src/scripts/FE/backfillImportedRawCsv.ts -n ${versionNumberBaseEmpreinte} -f ${pathToCSVFile} --dry-run
+yarn tsx src/scripts/FE/backfillImportedRawCsv.ts -n ${versionNumberBaseEmpreinte} -f ${pathToCSVFile}
 
 # Preview manual corrections without writing to the database
-yarn tsx src/scripts/baseEmpreinte/applyOverrides.ts -f ${pathToXlsxFile} --dry-run
+yarn tsx src/scripts/FE/applyOverrides.ts -f ${pathToXlsxFile} --dry-run
 
 # Apply manual corrections to existing EFs (writes values directly onto the EF)
 # The Excel file must contain the same columns as the standard import CSV
-yarn tsx src/scripts/baseEmpreinte/applyOverrides.ts -f ${pathToXlsxFile}
+yarn tsx src/scripts/FE/applyOverrides.ts -f ${pathToXlsxFile}
 ```
 
 ### Create BEGES rules

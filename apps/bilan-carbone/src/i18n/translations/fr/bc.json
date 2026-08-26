@@ -240,6 +240,7 @@
     "Not authorized": "Vous n'êtes pas adhérent ou pas formé. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
     "Request sent": "Une demande d'activation de votre compte a été envoyé à vos collègues",
     "Email sent": "Vous allez recevoir un mail pour finaliser l'activation de votre compte.",
+    "No recipient": "Problème lors de l'envoie du mail, merci de contacter le <support>support</support>",
     "validation": {
       "email": "Veuillez entrer un email"
     }
@@ -1289,6 +1290,7 @@
         "warningTitle": "Cette action convertira votre trajectoire en type PERSONNALISÉ.",
         "message": "L'ajout d'un objectif spécifique à la trajectoire \"{trajectoryName}\" de type {trajectoryType} la convertira automatiquement en trajectoire de type PERSONNALISÉ. Cette action est irréversible.",
         "explanation": "Une fois convertie, la trajectoire conservera les objectifs par défaut déjà définis mais ne suivra plus les règles spécifiques aux trajectoires de type {trajectoryType}.",
+        "moreExplanationSNBC": "La date de référence de votre trajectoire ne sera plus 1990 comme pour la SNBC mais sera à la date de votre première étude recensée sur cet outil, soit {oldestStudyDate}. Vous pourrez modifier l'année de référence ultérieurement en modifiant la trajectoire.",
         "cancel": "Annuler",
         "confirm": "Continuer"
       },
@@ -1664,6 +1666,8 @@
       "ParcInformatiqueDesSalaries": "Parc informatique des salariés",
       "EquipementsDesBenevoles": "Équipements des bénévoles",
       "ParcInformatiqueDesBenevoles": "Parc informatique des bénévoles",
+      "Evenement": "Évènement",
+      "EvenementSimplified": "Évènement",
       "UtilisationEnResponsabilite": "Utilisation en responsabilité",
       "UtilisationEnDependance": "Utilisation en dépendance",
       "InvestissementsFinanciersRealises": "Investissements financiers réalisés",
@@ -1694,8 +1698,8 @@
       "RepasPrisParLesBeneficiaires": "Repas pris par les bénéficiaires",
       "EquipementsEtImmobilisations": "Équipements et immobilisations",
       "DeplacementsDePersonne": "Déplacements de personnes",
-      "DeplacementsDomicileTravailSalaries": "Déplacements domicile travail des salariés",
-      "DeplacementsDomicileTravailBenevoles": "Déplacements domicile travail des bénévoles",
+      "DeplacementsDomicileTravailSalaries": "Déplacements domicile association des salariés",
+      "DeplacementsDomicileTravailBenevoles": "Déplacements domicile association des bénévoles",
       "DeplacementsDansLeCadreDUneMissionAssociativeSalaries": "Déplacements dans le cadre d'une mission associative des salariés",
       "DeplacementsDansLeCadreDUneMissionAssociativeBenevoles": "Déplacements dans le cadre d'une mission associative des bénévoles",
       "DeplacementsDesBeneficiaires": "Déplacements des bénéficiaires",
@@ -1725,7 +1729,7 @@
       "TeletravailSalaries": "Télétravail des salariés",
       "TeletravailBenevoles": "Télétravail des bénévoles",
       "LocauxSimplified": "Locaux",
-      "EnergiesSimplified": "Énergies",
+      "EnergiesSimplified": "Énergie",
       "DechetsSimplified": "Déchets",
       "FroidEtClimSimplified": "Froid et climatisation",
       "DeplacementsDePersonneSimplified": "Déplacements de personnes",
@@ -1866,6 +1870,7 @@
       "NegaOctet": "NegaOctet",
       "Legifrance": "Légifrance",
       "AIB": "AIB",
+      "GIEC": "GIEC",
       "displayArchived": "Afficher les facteurs archivés",
       "goTo": "Aller à la page",
       "items": "Élements par page",
@@ -1902,6 +1907,7 @@
         "legifrance": "Logo de Légifrance",
         "negaOctet": "Logo de NegaOctet",
         "aib": "Logo de l'Association of Issuing Bodies",
+        "giec": "logo du GIEC",
         "manual": "Manuel"
       },
       "post": "Postes",
@@ -2070,6 +2076,7 @@
     "KG_PER_KM_PASSENGER": "kg / km (passager)",
     "KG_PER_PASSENGER_KM": "kg / passager.km",
     "KG_PER_TON_KM": "kg / tonne.km",
+    "KG_N": "kg de N",
     "KM": "km",
     "KM_PER_JOURNEY": "km / voyage",
     "KM_PERSON": "km.personne",

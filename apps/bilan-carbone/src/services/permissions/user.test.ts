@@ -3,17 +3,20 @@ import { getMockedAuthUser, getMockedDbAccount, mockedAccountId } from '@/tests/
 import { AccountWithUser } from '@/types/account.types'
 import * as userUtils from '@/utils/user'
 import { Role, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
+import * as abcUserUtils from '@abc-transitionbascarbone/utils/user'
 import { expect } from '@jest/globals'
 import { canAddMember, canChangeRole, canDeleteMember, canEditSelfRole } from './user'
 
 jest.mock('@/utils/organization', () => ({}))
 jest.mock('@/utils/user', () => ({
-  canBeUntrainedRole: jest.fn(),
   canEditMemberRole: jest.fn(),
+}))
+jest.mock('@abc-transitionbascarbone/utils/user', () => ({
+  canBeUntrainedRole: jest.fn(),
 }))
 
 const mockCanEditMemberRole = userUtils.canEditMemberRole as jest.Mock
-const mockCanBeUntrainedRole = userUtils.canBeUntrainedRole as unknown as jest.Mock
+const mockCanBeUntrainedRole = abcUserUtils.canBeUntrainedRole as unknown as jest.Mock
 
 const adminUser = getMockedAuthUser({ role: Role.ADMIN })
 

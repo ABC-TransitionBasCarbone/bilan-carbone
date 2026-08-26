@@ -11,7 +11,7 @@ export default async function ResultsPage({ params }: { params: Promise<{ id: st
   }
 
   return (
-    <div className={styles.scrollWrapper}>
+    <div className={`${styles.scrollWrapper} grow`}>
       <main className="main-container">
         <ResultsDashboard results={results} />
       </main>

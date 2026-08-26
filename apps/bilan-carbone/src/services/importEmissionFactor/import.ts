@@ -3,6 +3,7 @@ import { getSourceLatestImportVersionId } from '@/db/study'
 import { isMonetaryEmissionFactor } from '@/utils/emissionFactors'
 import type { Prisma } from '@abc-transitionbascarbone/db-common'
 import {
+  EmissionFactorBase,
   EmissionFactorPartType,
   EmissionFactorStatus,
   Environment,
@@ -14,6 +15,7 @@ import { getEnvVar } from '@abc-transitionbascarbone/lib/environment'
 import { serializeSimpleCsvRecord } from '@abc-transitionbascarbone/utils/csv'
 import { unitsMatrix } from './historyUnits'
 import { additionalParts } from './parts.config'
+import { elementsBySubPost } from './posts.config'
 
 export const validStatuses = ['Valide générique', 'Valide spécifique', 'Archivé']
 
@@ -88,12 +90,12 @@ export const getEmissionFactorImportVersion = async (
 ) => {
   const existingVersion = await transaction.emissionFactorImportVersion.findFirst({ where: { name, source } })
   if (existingVersion) {
-    return { id: existingVersion.id, alreadyExists: true }
+    return existingVersion.id
   }
   const newVersion = await transaction.emissionFactorImportVersion.create({
     data: { name, source },
   })
-  return { id: newVersion.id, alreadyExists: false }
+  return newVersion.id
 }
 
 export const connectEmissionFactorToVersion = async (
@@ -378,29 +380,33 @@ export const getEmissionQuality = (uncertainty?: number) => {
 
 export const getGases = (emissionFactor: ImportEmissionFactor) => {
   const gases = {
-    totalCo2: Number(emissionFactor.Total_poste_non_décomposé),
-    co2f: Number(emissionFactor.CO2f),
-    ch4f: Number(emissionFactor.CH4f),
-    ch4b: Number(emissionFactor.CH4b),
-    n2o: Number(emissionFactor.N2O),
-    co2b: Number(emissionFactor.CO2b),
+    totalCo2: emissionFactor.Total_poste_non_décomposé ? Number(emissionFactor.Total_poste_non_décomposé) : 0,
+    co2f: emissionFactor.CO2f ? Number(emissionFactor.CO2f) : 0,
+    ch4f: emissionFactor.CH4f ? Number(emissionFactor.CH4f) : 0,
+    ch4b: emissionFactor.CH4b ? Number(emissionFactor.CH4b) : 0,
+    n2o: emissionFactor.N2O ? Number(emissionFactor.N2O) : 0,
+    co2b: emissionFactor.CO2b ? Number(emissionFactor.CO2b) : 0,
     sf6: 0,
     hfc: 0,
     pfc: 0,
-    otherGES: Number(emissionFactor.Autres_GES),
+    otherGES: emissionFactor.Autres_GES ? Number(emissionFactor.Autres_GES) : 0,
   }
   if (emissionFactor.Valeur_gaz_supplémentaire_1) {
     if (emissionFactor.Code_gaz_supplémentaire_1 === 'SF6') {
-      gases.sf6 = Number(emissionFactor.Valeur_gaz_supplémentaire_1)
+      gases.sf6 = emissionFactor.Valeur_gaz_supplémentaire_1 ? Number(emissionFactor.Valeur_gaz_supplémentaire_1) : 0
     } else {
-      gases.otherGES = Number(emissionFactor.Valeur_gaz_supplémentaire_1) + gases.otherGES
+      gases.otherGES =
+        (emissionFactor.Valeur_gaz_supplémentaire_1 ? Number(emissionFactor.Valeur_gaz_supplémentaire_1) : 0) +
+        gases.otherGES
     }
   }
   if (emissionFactor.Valeur_gaz_supplémentaire_2) {
     if (emissionFactor.Code_gaz_supplémentaire_2 === 'SF6') {
-      gases.sf6 = Number(emissionFactor.Valeur_gaz_supplémentaire_2)
+      gases.sf6 = emissionFactor.Valeur_gaz_supplémentaire_2 ? Number(emissionFactor.Valeur_gaz_supplémentaire_2) : 0
     } else {
-      gases.otherGES = Number(emissionFactor.Valeur_gaz_supplémentaire_2) + gases.otherGES
+      gases.otherGES =
+        (emissionFactor.Valeur_gaz_supplémentaire_2 ? Number(emissionFactor.Valeur_gaz_supplémentaire_2) : 0) +
+        gases.otherGES
     }
   }
   const totalCo2 = gases.co2f + gases.ch4f + gases.n2o + gases.sf6 + gases.hfc + gases.pfc + gases.otherGES
@@ -411,60 +417,118 @@ export const getGases = (emissionFactor: ImportEmissionFactor) => {
   return gases
 }
 
-export const mapEmissionFactors = (
-  emissionFactor: ImportEmissionFactor,
+const subPostByNetworkType = {
+  froid: [SubPost.ReseauxDeFroid],
+  chaud: [SubPost.ReseauxDeChaleurEtDeVapeur],
+}
+
+export const getSubPosts = (
+  emissionFactor: Pick<ImportEmissionFactor, 'reseau' | "Identifiant_de_l'élément" | 'Nom_base_français'>,
   importedFrom: Import,
-  getSubPost: (emissionFactor: ImportEmissionFactor) => SubPost[],
-) => ({
-  ...getGases(emissionFactor),
-  reliability: 5,
-  importedFrom,
-  importedId: emissionFactor["Identifiant_de_l'élément"],
-  status:
-    emissionFactor["Statut_de_l'élément"] === 'Archivé' ? EmissionFactorStatus.Archived : EmissionFactorStatus.Valid,
-  source: emissionFactor.Source,
-  location: emissionFactor.Localisation_géographique,
-  technicalRepresentativeness: emissionFactor.Qualité_TeR || getEmissionQuality(emissionFactor.Incertitude),
-  geographicRepresentativeness: emissionFactor.Qualité_GR || getEmissionQuality(emissionFactor.Incertitude),
-  temporalRepresentativeness: emissionFactor.Qualité_TiR || getEmissionQuality(emissionFactor.Incertitude),
-  completeness: emissionFactor.Qualité_C || getEmissionQuality(emissionFactor.Incertitude),
-  unit: getUnit(emissionFactor.Unité_français),
-  isMonetary: isMonetaryEmissionFactor({
+) => {
+  switch (importedFrom) {
+    case Import.Legifrance:
+      if (!emissionFactor.reseau || (emissionFactor.reseau !== 'chaud' && emissionFactor.reseau !== 'froid')) {
+        throw new Error(
+          `reseau is not provided for emission factor ${emissionFactor.Nom_base_français} - ${emissionFactor["Identifiant_de_l'élément"]}`,
+        )
+      }
+      return subPostByNetworkType[emissionFactor.reseau]
+    case Import.NegaOctet:
+      return [SubPost.UsagesNumeriques]
+    case Import.AIB:
+      return [SubPost.Electricite]
+    case Import.CUT:
+      return [SubPost.UsagesNumeriques]
+    case Import.GIEC:
+    case Import.BaseEmpreinte:
+    default:
+      return Object.entries(elementsBySubPost)
+        .filter(([, elements]) => elements.some((element) => element === emissionFactor["Identifiant_de_l'élément"]))
+        .map(([subPost]) => subPost as SubPost)
+  }
+}
+
+export const getBaseFunc = (subPosts: SubPost[], importedFrom: Import) => {
+  switch (importedFrom) {
+    case Import.AIB:
+      return EmissionFactorBase.MarketBased
+    case Import.GIEC:
+    case Import.BaseEmpreinte:
+      return subPosts.includes(SubPost.Electricite) ? EmissionFactorBase.LocationBased : null
+    case Import.Legifrance:
+    case Import.NegaOctet:
+    case Import.CUT:
+    default:
+      return null
+  }
+}
+
+export const mapEmissionFactors = (emissionFactor: ImportEmissionFactor, importedFrom: Import) => {
+  const subPosts = getSubPosts(emissionFactor, importedFrom)
+
+  return {
+    ...getGases(emissionFactor),
+    reliability: 5,
+    importedFrom,
+    importedId: emissionFactor["Identifiant_de_l'élément"],
+    status:
+      emissionFactor["Statut_de_l'élément"] === 'Archivé' ? EmissionFactorStatus.Archived : EmissionFactorStatus.Valid,
+    source: emissionFactor.Source,
+    location: emissionFactor.Localisation_géographique,
+    technicalRepresentativeness: emissionFactor.Qualité_TeR || getEmissionQuality(emissionFactor.Incertitude),
+    geographicRepresentativeness: emissionFactor.Qualité_GR || getEmissionQuality(emissionFactor.Incertitude),
+    temporalRepresentativeness: emissionFactor.Qualité_TiR || getEmissionQuality(emissionFactor.Incertitude),
+    completeness: emissionFactor.Qualité_C || getEmissionQuality(emissionFactor.Incertitude),
     unit: getUnit(emissionFactor.Unité_français),
-  }),
-  subPosts: getSubPost(emissionFactor),
-  metaData: {
-    createMany: {
-      data: [
-        {
-          language: 'fr',
-          title: escapeTranslation(emissionFactor.Nom_base_français),
-          attribute: escapeTranslation(emissionFactor.Nom_attribut_français),
-          frontiere: escapeTranslation(emissionFactor.Nom_frontière_français),
-          tag: escapeTranslation(emissionFactor.Tags_français),
-          location: escapeTranslation(emissionFactor['Sous-localisation_géographique_français']),
-          comment: escapeTranslation(emissionFactor.Commentaire_français),
-        },
-        {
-          language: 'en',
-          title: escapeTranslation(emissionFactor.Nom_base_anglais),
-          attribute: escapeTranslation(emissionFactor.Nom_attribut_anglais),
-          frontiere: escapeTranslation(emissionFactor.Nom_frontière_anglais),
-          tag: escapeTranslation(emissionFactor.Tags_anglais),
-          location: escapeTranslation(emissionFactor['Sous-localisation_géographique_anglais']),
-          comment: escapeTranslation(emissionFactor.Commentaire_anglais),
-        },
-      ],
+    isMonetary: isMonetaryEmissionFactor({
+      unit: getUnit(emissionFactor.Unité_français),
+    }),
+    subPosts,
+    base: getBaseFunc(subPosts, importedFrom),
+    metaData: {
+      createMany: {
+        data: [
+          {
+            language: 'fr',
+            title: escapeTranslation(emissionFactor.Nom_base_français),
+            attribute: escapeTranslation(emissionFactor.Nom_attribut_français),
+            frontiere: escapeTranslation(emissionFactor.Nom_frontière_français),
+            tag: escapeTranslation(emissionFactor.Tags_français),
+            location: escapeTranslation(emissionFactor['Sous-localisation_géographique_français']),
+            comment: escapeTranslation(emissionFactor.Commentaire_français),
+          },
+          {
+            language: 'en',
+            title: escapeTranslation(emissionFactor.Nom_base_anglais),
+            attribute: escapeTranslation(emissionFactor.Nom_attribut_anglais),
+            frontiere: escapeTranslation(emissionFactor.Nom_frontière_anglais),
+            tag: escapeTranslation(emissionFactor.Tags_anglais),
+            location: escapeTranslation(emissionFactor['Sous-localisation_géographique_anglais']),
+            comment: escapeTranslation(emissionFactor.Commentaire_anglais),
+          },
+        ],
+      },
     },
-  },
-})
+  }
+}
 
 export const saveEmissionFactorsParts = async (
   transaction: Prisma.TransactionClient,
   importedIdToEfId: Map<string, string>,
   parts: ImportEmissionFactor[],
-  reusedEfIds: Set<string> = new Set(),
 ) => {
+  const idsFromDB = parts
+    .map((part) => importedIdToEfId.get(part["Identifiant_de_l'élément"]))
+    .filter((id) => !!id) as string[]
+
+  const existingParts = await transaction.emissionFactorPart.findMany({
+    where: { emissionFactorId: { in: idsFromDB } },
+    select: { emissionFactorId: true, type: true },
+  })
+
+  const existingPartsSet = new Set(existingParts.map((p) => `${p.emissionFactorId}-${p.type}`))
+
   for (const [i, part] of parts.entries()) {
     if (i % 100 === 0) {
       console.log(`${i}/${parts.length}`)
@@ -473,7 +537,10 @@ export const saveEmissionFactorsParts = async (
     if (!emissionFactorId) {
       throw new Error('No emission factor found for ' + part["Identifiant_de_l'élément"])
     }
-    if (reusedEfIds.has(emissionFactorId)) {
+
+    const partAlreadyExists = existingPartsSet.has(`${emissionFactorId}-${getType(part.Type_poste)}`)
+
+    if (partAlreadyExists) {
       continue
     }
 

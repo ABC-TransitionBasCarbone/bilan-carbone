@@ -1,7 +1,7 @@
 {
   "login": {
-    "subtext": "Παραλλαγή για τη σφαίρα των συλλόγων",
-    "explanation": "Το εργαλείο που απευθύνεται στους συλλόγους που επιθυμούν να εφαρμόσουν τη μέθοδο Bilan Carbone® και την τομεακή της παραλλαγή για τη σφαίρα των συλλόγων. Δημιουργήθηκε χάρη στη συνεργασία μεταξύ της Association pour la transition Bas Carbone, φορέα της μεθόδου Bilan Carbone®, και του Mouvement Tilt, που συνοδεύει το σύνολο των συλλόγων στη μετάβασή τους προς χαμηλές εκπομπές άνθρακα. Το εργαλείο είναι προσβάσιμο δωρεάν για το σύνολο των γαλλικών συλλόγων που έχουν εκπαιδευτεί στη μέθοδο.",
+    "subtext": "Παραλλαγή για τον συνεργατικό τομέα <br></br> & <br></br> Cap Carbone",
+    "explanation": "Επειδή οι μέθοδοι μετάβασης χαμηλών εκπομπών άνθρακα σχεδιάστηκαν για πολύ καιρό για τις επιχειρήσεις, δημιουργήσαμε από κοινού ειδικές παραλλαγές των εργαλείων μας, <b>με και για τον κόσμο των συλλόγων</b>. <br></br><br></br> Η <b>ABC</b> και το <b>Mouvement Tilt</b> είναι δύο σύλλογοι που ενώνουν εδώ την τεχνογνωσία τους για να σας παρουσιάσουν δύο εργαλεία: το <b>Cap Carbone</b>, το οποίο σας επιτρέπει, <b>χωρίς προϋποθέσεις</b>, να πραγματοποιήσετε ένα απλοποιημένο και προσβάσιμο αποτύπωμα άνθρακα για να κάνετε το πρώτο βήμα χωρίς προηγούμενη εκπαίδευση, και το <b>Bilan Carbone®+ associatif</b>, το οποίο σας επιτρέπει να εφαρμόσετε τη μέθοδο Bilan Carbone® και την τομεακή της παραλλαγή για τον συνεργατικό τομέα. Αυτό το δεύτερο μέρος του εργαλείου είναι <b>προσβάσιμο δωρεάν για όλους τους γαλλικούς συλλόγους που έχουν εκπαιδευτεί στη μέθοδο</b>. <br></br><br></br> Για περισσότερες πληροφορίες, <link><white><underline>κάντε κλικ εδώ</underline></white></link> !",
     "form": {
       "activate": "Δημιουργία του λογαριασμού μου"
     }
@@ -119,17 +119,20 @@
       }
     },
     "structure": {
-      "'Club de loisirs'": "Λέσχη αναψυχής",
-      "'Association étudiante'": "Φοιτητικός σύλλογος",
-      "'Association culturelle'": "Πολιτιστικός σύλλογος",
+      "'Structure sportive'": "Αθλητικός φορέας",
+      "'Éducation, formation et insertion professionnelle'": "Εκπαίδευση, κατάρτιση και επαγγελματική ένταξη",
+      "'Développement économique et local'": "Οικονομική και τοπική ανάπτυξη",
+      "'Développement international et humanitaire'": "Διεθνής και ανθρωπιστική ανάπτυξη",
+      "'Culture et patrimoine'": "Πολιτισμός και κληρονομιά",
       "'Association de voisinage'": "Σύλλογος γειτονιάς",
       "'Hôpital'": "Νοσοκομείο",
       "'Maison de retraite'": "Οίκος ευγηρίας",
+      "'Accompagnement des personnes en situation de handicap'": "Υποστήριξη ατόμων με αναπηρία",
+      "'Protection de l'enfance'": "Προστασία της παιδικής ηλικίας",
+      "'Défense de l'environnement'": "Προστασία του περιβάλλοντος",
+      "'Club de loisirs'": "Λέσχη αναψυχής",
       "'Association d'aide à domicile'": "Σύλλογος κατ' οίκον βοήθειας",
-      "'Association humanitaire'": "Ανθρωπιστικός σύλλογος",
       "'Autres structures sociales et solidaires'": "Άλλες κοινωνικές και αλληλέγγυες δομές",
-      "'Association de défense de l'environnement'": "Σύλλογος προστασίας του περιβάλλοντος",
-      "'Association d'enseignement ou de formation'": "Σύλλογος εκπαίδευσης ή κατάρτισης",
       "'Autre'": "Άλλο"
     }
   },
@@ -194,5 +197,10 @@
     "badge": "Βήτα",
     "title": "Έκδοση Βήτα του εργαλείου Cap Carbone",
     "description": "Το Cap Carbone βρίσκεται σήμερα σε έκδοση βήτα! Σας ευχαριστούμε που είστε οι πρώτοι μας χρήστες και δοκιμαστές 🎉 Μη διστάσετε να επικοινωνήσετε μαζί μας στη διεύθυνση <support>support@abc-transitionbascarbone.fr</support> εάν έχετε σχόλια! Καθώς η εφαρμογή βρίσκεται σε βήτα φάση, είναι πιθανό ορισμένες ερωτήσεις να αλλάξουν στη φόρμα και έτσι οι απαντήσεις των τροποποιημένων ερωτήσεων να διαγραφούν σε μελλοντικές ενημερώσεις. Θυμηθείτε να ελέγξετε τη συμπλήρωση των κατηγοριών σας στη σελίδα καταχώρησης δεδομένων προτού δείτε τα αποτελέσματά σας, για να επιβεβαιώσετε ότι όλες οι απαντήσεις σας εξακολουθούν να είναι διαθέσιμες."
+  },
+  "documentationUrlTilt": {
+    "tiltABCPage": "https://abc-transitionbascarbone.fr/transition-association-abc-tilt/#",
+    "GuideEcoResponsableBureau": "https://associationbilancarbone.sharepoint.com/:b:/s/AssociationBilanCarbone/IQDSk3R5vX9eQYAsjwE3LWPoAY3Gyp9pEStVl1MBejc0E6Y?e=tJFSFc",
+    "LeCompteAsso": "https://lecompteasso.associations.gouv.fr/client/login"
   }
 }

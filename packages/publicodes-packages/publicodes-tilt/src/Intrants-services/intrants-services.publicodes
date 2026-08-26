@@ -3,5 +3,5 @@ intrants-services:
   formule:
     somme:
       - numérique
-      - services
+      - approche monétaire
   par défaut: 0

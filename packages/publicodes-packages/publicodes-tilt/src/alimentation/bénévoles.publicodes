@@ -1,88 +1,172 @@
-alimentation . bénévoles:
+alimentation . mosaic bénévoles:
+  ordre: 1
+  icônes: 🍽️
+  mosaique:
+    type: nombre
+    options:
+      - végétalien . nombre
+      - végétarien . nombre
+      - viande blanche . nombre
+      - viande rouge . nombre
+      - poisson gras . nombre
+      - poisson blanc . nombre
+      - repas moyen . nombre
+  question: Combien de ces différents types de repas sont consommés par vos bénévoles chaque année ?
+  titre: Empreinte des repas
+  description: |
+    On prend classiquement en compte l'empreinte carbone d'un repas par journée travaillée pour un salarié. L'option "Repas moyen" sert uniquement si vous n'avez aucune idée des types de repas consommés. 
   formule:
     somme:
-      - viande rouge
-      - viande blanche
-      - poisson blanc
-      - poisson gras
-      - végétarien
       - végétalien
-  unité: kgCO2e
-  par défaut: 0
+      - végétarien
+      - viande blanche
+      - viande rouge
+      - poisson gras
+      - poisson blanc
+      - repas moyen
+  note: |
+    Pour le moment, nous proposons 6 repas types pour 6 régimes différents, et un repas moyen au cas où l'association n'aurait pas accès au détail.
 
-alimentation . bénévoles . viande rouge:
-  formule: FE * nombre de repas
-  avec:
-    FE:
-      formule:
-        somme:
-          - 5.19
-          - déforestation
-      avec:
-        déforestation: 0 ##À compléter cf NGC
-      unité: kgCO2e/repas
-      description: Repas contenant 150g d'une viande rouge moyenne (issue d'un travail de consolidation sur les consommations moyennes de viande rouge de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Pour la partie déforestation, notre alimentation est vectrice de déforestation à l'étranger, à l'impact carbone non négligeable. Cette empreinte n'est pas comprise dans les facteurs d'émission d'Agribalyse. D'après l'étude [Pendril & al.](https://iopscience.iop.org/article/10.1088/1748-9326/ab0d41), une part de cette déforestation est spécifiquement associée à la consommation de viande d'élevage. Nous considérons que cette part associée aux "viandes d'élevage" est majoritairement associée à la consommation de viande rouge, c'est pourquoi nous ajoutons cette part de déforestation aux repas de viande rouge.
-    nombre de repas:
-      question: Combien de repas à base de viande rouge sont consommés par vos bénévoles chaque année ?
-      unité: repas
-      par défaut: 0
+    Ils ne sont pas directement basés sur les régimes de la Base Empreinte, [documentés par l'ADEME](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm), jugés obsolètes (peu exhaustifs, FE non issus d'Agribalyse).
 
-alimentation . bénévoles . viande blanche:
-  formule: FE * nombre de repas
-  avec:
-    FE:
-      valeur: 1.75
-      unité: kgCO2e/repas
-      description: Repas contenant 150g d'une viande blanche moyenne (issue d'un travail de consolidation sur les consommations moyennes de viande blanche de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
-    nombre de repas:
-      question: Combien de repas à base de viande blanche sont consommés par vos bénévoles chaque année ?
-      unité: repas
-      par défaut: 0
+    Les équipes de Nos Gestes Climat ont travaillé sur des repas types basés sur une consolidation multi-facteurs (quantité totale d'aliments consommés, quantité de viande et poisson consommés, apports énergétiques, empreinte carbone moyenne d'un repas)
+    basé sur les données de [l'étude INCA 3](https://www.anses.fr/fr/system/files/NUT2014SA0234Ra.pdf), permettant de se rapprocher du régime moyen d'un Français.
 
-alimentation . bénévoles . poisson blanc:
-  formule: FE * nombre de repas
-  avec:
-    FE:
-      valeur: 2.29
-      unité: kgCO2e/repas
-      description: Repas contenant 150g d'un poisson blanc moyen (issu d'un travail de consolidation sur les consommations moyennes de poissons blancs de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
-    nombre de repas:
-      question: Combien de repas à base de poisson blanc sont consommés par vos bénévoles chaque année ?
-      unité: repas
-      par défaut: 0
+    💡 Vous trouverez la documentation complète dans [le wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
 
-alimentation . bénévoles . poisson gras:
-  formule: FE * nombre de repas
-  avec:
-    FE:
-      valeur: 1.21
-      unité: kgCO2e/repas
-      description: Repas contenant 150g d'un poisson gras moyen (issu d'un travail de consolidation sur les consommations moyennes de poissons gras de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
-    nombre de repas:
-      question: Combien de repas à base de poisson gras sont consommés par vos bénévoles chaque année ?
-      unité: repas
-      par défaut: 0
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
 
-alimentation . bénévoles . végétarien:
-  formule: FE * nombre de repas
-  avec:
-    FE:
-      valeur: 0.97
-      unité: kgCO2e/repas
-      description: Repas contenant des œufs, un accompagnement "moyen" (issu d'un travail de consolidation sur les moyennes de consommation des français tirées de l'étude INCA3 pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
-    nombre de repas:
-      question: Combien de repas végétariens sont consommés par vos bénévoles chaque année ?
-      unité: repas
-      par défaut: 0
+alimentation . mosaic bénévoles . végétalien:
+  titre: Végétalien
+  formule: FE * nombre
+  icônes: 🌾🥜🥗
+  description: |
+    Repas sans produits animaux.
 
-alimentation . bénévoles . végétalien:
-  formule: FE * nombre de repas
-  avec:
-    FE:
-      valeur: 0.66
-      unité: kgCO2e/repas
-      description: Repas contenant du tofu, un accompagnement "moyen" (issu d'un travail de consolidation sur les moyennes de consommation des français tirées de l'étude INCA3 pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
-    nombre de repas:
-      question: Combien de repas végétaliens sont consommés par vos bénévoles chaque année ?
-      unité: repas
-      par défaut: 0
+alimentation . mosaic bénévoles . végétalien . FE:
+  titre: Empreinte carbone d'un repas végétalien
+  formule: 0.66
+  unité: kgCO2e/repas
+  description: Repas contenant du tofu, un accompagnement "moyen" (issu d'un travail de consolidation sur les moyennes de consommation des français tirées de l'étude INCA3 pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
+alimentation . mosaic bénévoles . végétalien . nombre:
+  question: Nombre de plats végétaliens
+  plancher: 0
+  unité: repas
+
+alimentation . mosaic bénévoles . végétarien:
+  titre: Végétarien
+  formule: FE * nombre
+  icônes: 🥗🍳🧀
+  description: Repas sans chair animale, avec des œufs ou un peu de fromage.
+
+alimentation . mosaic bénévoles . végétarien . FE:
+  titre: Empreinte carbone d'un repas végétarien
+  formule: 0.97
+  unité: kgCO2e/repas
+  description: Repas contenant des œufs, un accompagnement "moyen" (issu d'un travail de consolidation sur les moyennes de consommation des français tirées de l'étude INCA3 pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
+alimentation . mosaic bénévoles . végétarien . nombre:
+  question: Nombre de plats végétariens
+  unité: repas
+  note: 36% = 5 repas végétarien sur 14 par défaut dans le modèle NGC
+
+alimentation . mosaic bénévoles . viande blanche:
+  titre: Viande blanche
+  icônes: 🍗🥓
+  formule: FE * nombre
+  description: Repas contenant une pièce de poulet, porc.
+
+alimentation . mosaic bénévoles . viande blanche . FE:
+  titre: Empreinte carbone d'un repas de type viande blanche (poulet, porc)
+  formule: 1.75
+  unité: kgCO2e/repas
+  description: Repas contenant 150g d'une viande blanche moyenne (issue d'un travail de consolidation sur les consommations moyennes de viande blanche de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
+alimentation . mosaic bénévoles . viande blanche . nombre:
+  question: Nombre de plats viande blanche
+  plancher: 0
+  unité: repas
+  note: 29% = 4 repas viande blanche sur 14 par défaut dans le modèle NGC
+
+alimentation . mosaic bénévoles . viande rouge:
+  titre: Viande rouge
+  icônes: 🥩🍖
+  formule: FE * nombre
+  description: Repas contenant une pièce de bœuf, veau, ou agneau.
+
+alimentation . mosaic bénévoles . viande rouge . FE:
+  titre: Empreinte carbone d'un repas de type viande rouge (bœuf, veau, agneau)
+  formule:
+    somme:
+      - 5.19
+      - déforestation
+  unité: kgCO2e/repas
+  description: Repas contenant 150g d'une viande rouge moyenne (issue d'un travail de consolidation sur les consommations moyennes de viande rouge de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Pour la partie déforestation, notre alimentation est vectrice de déforestation à l'étranger, à l'impact carbone non négligeable. Cette empreinte n'est pas comprise dans les facteurs d'émission d'Agribalyse. D'après l'étude [Pendril & al.](https://iopscience.iop.org/article/10.1088/1748-9326/ab0d41), une part de cette déforestation est spécifiquement associée à la consommation de viande d'élevage. Nous considérons que cette part associée aux "viandes d'élevage" est majoritairement associée à la consommation de viande rouge, c'est pourquoi nous ajoutons cette part de déforestation aux repas de viande rouge.
+
+alimentation . mosaic bénévoles . viande rouge . déforestation:
+  formule:
+    variations:
+      - si: déforestation
+        alors: 0.218
+      - sinon: 0
+  unité: kgCO2e/repas
+  description: L’étude [Pendril & al.](https://iopscience.iop.org/article/10.1088/1748-9326/ab0d41) donne une empreinte moyenne de 34 kgCO2e / personne de déforestation importée liée à la consommation de viandes d'élevage. Nous partons du principe que ces émissions liées à la production de viandes d'élevage appartiennent majoritairement à la catégorie "viande rouge", car c'est la catégorie la plus consommatrice de terres et de ressources. La consommation moyenne par français de viande rouge se situe autour de 3 repas par semaine, soit 156 repas par an. En conséquence, nous ajoutons à l'empreinte des repas une empreinte moyenne de 0.218 kgCO2e / repas de viande rouge.
+
+alimentation . mosaic bénévoles . viande rouge . nombre:
+  question: Nombre de plats viande rouge
+  plancher: 0
+  unité: repas
+  note: 21% = 3 repas viande rouge sur 14 par défaut dans le modèle NGC
+
+alimentation . mosaic bénévoles . poisson gras:
+  titre: Poisson gras
+  formule: FE * nombre
+  icônes: 🍣🥧
+  description: Repas contenant thon, saumon, sardine ou maquereau.
+
+alimentation . mosaic bénévoles . poisson gras . FE:
+  titre: Empreinte carbone d'un repas de type poisson gras (thon, saumon, sardine, maquereau)
+  formule: 1.21
+  unité: kgCO2e/repas
+  description: Repas contenant 150g d'un poisson gras moyen (issu d'un travail de consolidation sur les consommations moyennes de poissons gras de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
+alimentation . mosaic bénévoles . poisson gras . nombre:
+  question: Nombre de plats poisson gras
+  plancher: 0
+  unité: repas
+  note: 14% = 2 repas poisson gras sur 14 par défaut dans le modèle NGC
+
+alimentation . mosaic bénévoles . poisson blanc:
+  titre: Poisson blanc
+  formule: FE * nombre
+  icônes: 🐟🍚
+  description: Repas avec un filet de poisson blanc.
+
+alimentation . mosaic bénévoles . poisson blanc . FE:
+  titre: Empreinte carbone d'un repas de type poisson blanc
+  formule: 2.29
+  unité: kgCO2e/repas
+  description: Repas contenant 150g d'un poisson blanc moyen (issu d'un travail de consolidation sur les consommations moyennes de poissons blancs de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
+alimentation . mosaic bénévoles . poisson blanc . nombre:
+  question: Nombre de plats poisson blanc
+  plancher: 0
+  unité: repas
+
+alimentation . mosaic bénévoles . repas moyen:
+  titre: Repas moyen
+  formule: FE * nombre
+  icônes: 🍗🧀🥗
+  description: Repas moyen d'un français
+
+alimentation . mosaic bénévoles . repas moyen . FE:
+  titre: Empreinte carbone d'un repas de type poisson blanc
+  formule: 2.04
+  unité: kgCO2e/repas
+  description: Ce facteur d'émission est élaboré à partir des données INCA 3, en compilant la consommation moyenne des différents ingrédients pour un déjeuner, et en utilisant les facteurs d'émission de chaque aliment. Plus de détails [ici](https://base-empreinte.ademe.fr/documentation/base-carbone?docLink=Repas_2)
+
+alimentation . mosaic bénévoles . repas moyen . nombre:
+  question: Nombre de repas moyen
+  plancher: 0
+  unité: repas

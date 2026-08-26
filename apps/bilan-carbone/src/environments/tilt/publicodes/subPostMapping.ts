@@ -1,5 +1,12 @@
 import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
-import { FormLayout, inputLayout, mosaicLayout, tableLayout } from '@abc-transitionbascarbone/publicodes/form/layouts'
+import {
+  FormLayout,
+  groupLayout,
+  inputLayout,
+  listLayout,
+  mosaicLayout,
+  tableLayout,
+} from '@abc-transitionbascarbone/publicodes/form/layouts'
 import { TiltSimplifiedPost } from '@abc-transitionbascarbone/services/results/posts.enums'
 import { TiltRuleName } from './types'
 
@@ -33,37 +40,41 @@ export const POST_TO_RULENAME: Record<TiltSimplifiedPost, TiltRuleName> = {
   [TiltSimplifiedPost.UtilisationSimplified]: 'utilisation',
   [TiltSimplifiedPost.FinDeVieSimplified]: 'fin de vie',
   [TiltSimplifiedPost.TeletravailSimplified]: 'télétravail',
+  [TiltSimplifiedPost.EvenementSimplified]: 'télétravail', // To change once publicodes is written
 } as const
 
 const SUBPOST_TO_RULENAME: Partial<Record<SubPost, TiltRuleName>> = {
   Batiments: 'construction . bâtiment',
   AutresInfrastructures: 'construction . infrastructure',
-  CombustiblesFossiles: 'énergie . fossiles',
+  // CombustiblesFossiles: 'énergie . fossiles',
   CombustiblesOrganiques: 'énergie . combustibles organiques',
-  ReseauxDeChaleurEtDeVapeur: 'énergie . réseaux de chaleur',
-  ReseauxDeFroid: 'énergie . réseaux de froid',
-  Electricite: 'énergie . électricité',
+  // ReseauxDeChaleurEtDeVapeur: 'énergie . réseaux de chaleur',
+  // ReseauxDeFroid: 'énergie . réseaux de froid',
+  // Electricite: 'énergie . électricité',
   DechetsEmisParLOrganisation: 'déchets . emballages et plastiques',
   FroidEtClim: 'froid et clim',
   DeplacementsDomicileTravailSalaries: 'déplacements . DT-salariés',
   DeplacementsBenevoles: 'déplacements . DT-bénévoles',
   DeplacementsDansLeCadreDUneMissionAssociativeSalaries: 'déplacements . DM-salariés',
+  //DeplacementsDansLeCadreDUneMissionAssociativeBenevoles,
   DeplacementsDesBeneficiaires: 'déplacements . bénéficiaires',
   DeplacementsFabricationDesVehicules: 'déplacements . fabrication',
   Fret: 'fret . transport',
   BienMatieres: 'intrants-biens-et-matières . ratios monétaires',
-  RepasPrisParLesSalaries: 'alimentation . salariés',
-  RepasPrisParLesBenevoles: 'alimentation . bénévoles',
+  RepasPrisParLesSalaries: 'alimentation . mosaic salariés',
+  RepasPrisParLesBenevoles: 'alimentation . mosaic bénévoles',
   RepasPrisParLesBeneficiaires: 'alimentation . bénéficiaires',
   UsagesNumeriques: 'intrants-services . numérique',
-  ServicesEnApprocheMonetaire: 'intrants-services . services',
+  ServicesEnApprocheMonetaire: 'intrants-services . approche monétaire',
   EquipementsDesSalaries: 'équipements et immobilisations',
   ConsommationsEnergieUtilisationProduits: 'utilisation . responsabilite conso energie',
-  FinDeVieProduitsVendusFournisBeneficiaires: 'fin de vie . déchets',
+  FinDeVieProduitsVendusFournisBeneficiaires: 'fin de vie',
   TeletravailSalariesBenevoles: 'télétravail',
 } as const
 
 const input = (rule: TiltRuleName): FormLayout<TiltRuleName> => inputLayout<TiltRuleName>(rule)
+const group = (title: string, rules: TiltRuleName[]): FormLayout<TiltRuleName> =>
+  groupLayout<TiltRuleName>(title, rules)
 const table = (
   title: string,
   headers: string[],
@@ -72,40 +83,61 @@ const table = (
 ): FormLayout<TiltRuleName> => tableLayout<TiltRuleName>(title, headers, rows, description)
 const mosaic = (parent: TiltRuleName, children: TiltRuleName[]): FormLayout<TiltRuleName> =>
   mosaicLayout<TiltRuleName>(parent, children)
+const list = (targetRule: TiltRuleName, rules: TiltRuleName[]): FormLayout<TiltRuleName> =>
+  listLayout<TiltRuleName>(targetRule, rules)
 
 export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRuleName>[]>> = {
   Batiments: [
-    mosaic('alimentation . mosaic', [
-      'alimentation . mosaic . végétalien . nombre',
-      'alimentation . mosaic . végétarien . nombre',
-      'alimentation . mosaic . viande blanche . nombre',
-      'alimentation . mosaic . viande rouge . nombre',
-      'alimentation . mosaic . poisson gras . nombre',
-      'alimentation . mosaic . poisson blanc . nombre',
-    ]),
     input('construction . bâtiment . locaux'),
     input('construction . bâtiment . locaux . locaux seuls . surface'),
     input('construction . bâtiment . locaux . locaux partagés . surface'),
     input('construction . bâtiment . locaux . locaux partagés . pourcentage'),
+    input('construction . bâtiment . locaux ponctuels existants'),
+    list('construction . bâtiment . locaux ponctuels', [
+      'construction . bâtiment . locaux ponctuels . nom',
+      'construction . bâtiment . locaux ponctuels . calcul . surface',
+      'construction . bâtiment . locaux ponctuels . calcul . durée',
+    ]),
   ],
   AutresInfrastructures: [
     input('construction . infrastructure . parking présent'),
     input('construction . infrastructure . nombre de places'),
   ],
   CombustiblesFossiles: [
-    input('énergie . fossiles . gaz . consommation'),
-    input('énergie . fossiles . fioul . consommation'),
+    input('énergie . combustibles organiques . emissions . gaz . consommation'),
+    input('énergie . combustibles organiques . emissions . fioul . consommation'),
   ],
   CombustiblesOrganiques: [
-    input('énergie . combustibles organiques . bois . consommation'),
-    input('énergie . combustibles organiques . granulés . consommation'),
+    group('EnergieTest.question', [
+      'énergie . combustibles organiques . types . électricité présent',
+      'énergie . combustibles organiques . types . gaz présent',
+      'énergie . combustibles organiques . types . fioul présent',
+      'énergie . combustibles organiques . types . bois présent',
+      'énergie . combustibles organiques . types . granulés présent',
+      'énergie . combustibles organiques . types . réseaux de chaleur présent',
+      'énergie . combustibles organiques . types . réseaux de froid présent',
+    ]),
+    input('énergie . combustibles organiques . types . chauffage électrique'),
+    mosaic('énergie . combustibles organiques . emissions', [
+      'énergie . combustibles organiques . emissions . électricité . consommation',
+      'énergie . combustibles organiques . emissions . gaz . consommation',
+      'énergie . combustibles organiques . emissions . fioul . consommation',
+      'énergie . combustibles organiques . emissions . bois . consommation',
+      'énergie . combustibles organiques . emissions . granulés . consommation',
+      'énergie . combustibles organiques . emissions . réseaux de chaleur . consommation',
+      'énergie . combustibles organiques . emissions . réseaux de froid . consommation',
+    ]),
+    input('énergie . combustibles organiques . autoproduction électricité présente'),
+    input('énergie . combustibles organiques . autoconsommation électricité . autoconsommation'),
   ],
 
-  ReseauxDeChaleurEtDeVapeur: [input('énergie . réseaux de chaleur . consommation')],
-  ReseauxDeFroid: [input('énergie . réseaux de froid . consommation')],
+  ReseauxDeChaleurEtDeVapeur: [
+    input('énergie . combustibles organiques . emissions . réseaux de chaleur . consommation'),
+  ],
+  ReseauxDeFroid: [input('énergie . combustibles organiques . emissions . réseaux de froid . consommation')],
   Electricite: [
-    input('énergie . électricité . consommation'),
-    input('énergie . électricité . autoproduction . autoproduction'),
+    input('énergie . combustibles organiques . emissions . électricité . consommation'),
+    input('énergie . combustibles organiques . autoproduction électricité présente'),
   ],
   FroidEtClim: [input('froid et clim . nombre')],
   DechetsEmisParLOrganisation: [
@@ -130,11 +162,13 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
           'déchets . emballages et plastiques . déchets verts . poids',
         ],
       ],
+      'DechetsDirects.description',
     ),
   ],
   FinDeVieProduitsVendusFournisBeneficiaires: [
-    input('fin de vie . déchets . fin de vie présente'),
-    input('fin de vie . déchets . poids'),
+    input('fin de vie . fin de vie présente'),
+    input('fin de vie . total sans reconditionné . poids'),
+    input('fin de vie . pondération . reconditionné'),
   ],
   ConsommationsEnergieUtilisationProduits: [
     input('utilisation . responsabilite conso energie . élec présente'),
@@ -187,44 +221,55 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('équipements et immobilisations . pondération . reconditionné'),
   ],
   ServicesEnApprocheMonetaire: [
+    input('intrants-services . approche monétaire . existant'),
+    input('intrants-services . approche monétaire . FE moyen . montant dépensé'),
     table(
       'IntrantsServices.question',
       ['IntrantsServices.typeService', 'IntrantsServices.montantDepense'],
       [
         [
-          'intrants-services . services . spectacles-musées',
-          'intrants-services . services . spectacles-musées . montant-dépensé',
+          'intrants-services . approche monétaire . tableau détaillé . spectacles-musées',
+          'intrants-services . approche monétaire . tableau détaillé . spectacles-musées . montant-dépensé',
         ],
         [
-          'intrants-services . services . assurance-reassurance',
-          'intrants-services . services . assurance-reassurance . montant-dépensé',
-        ],
-        ['intrants-services . services . telecom', 'intrants-services . services . telecom . montant-dépensé'],
-        [
-          'intrants-services . services . sante-humaine',
-          'intrants-services . services . sante-humaine . montant-dépensé',
-        ],
-        ['intrants-services . services . edition', 'intrants-services . services . edition . montant-dépensé'],
-        [
-          'intrants-services . services . poste-courrier',
-          'intrants-services . services . poste-courrier . montant-dépensé',
+          'intrants-services . approche monétaire . tableau détaillé . assurance-reassurance',
+          'intrants-services . approche monétaire . tableau détaillé . assurance-reassurance . montant-dépensé',
         ],
         [
-          'intrants-services . services . restauration',
-          'intrants-services . services . restauration . montant-dépensé',
-        ],
-        ['intrants-services . services . formation', 'intrants-services . services . formation . montant-dépensé'],
-        [
-          'intrants-services . services . reparation-installation',
-          'intrants-services . services . reparation-installation . montant-dépensé',
+          'intrants-services . approche monétaire . tableau détaillé . telecom',
+          'intrants-services . approche monétaire . tableau détaillé . telecom . montant-dépensé',
         ],
         [
-          'intrants-services . services . juridique-comptable',
-          'intrants-services . services . juridique-comptable . montant-dépensé',
+          'intrants-services . approche monétaire . tableau détaillé . sante-humaine',
+          'intrants-services . approche monétaire . tableau détaillé . sante-humaine . montant-dépensé',
         ],
         [
-          'intrants-services . services . programmation-conseil',
-          'intrants-services . services . programmation-conseil . montant-dépensé',
+          'intrants-services . approche monétaire . tableau détaillé . edition',
+          'intrants-services . approche monétaire . tableau détaillé . edition . montant-dépensé',
+        ],
+        [
+          'intrants-services . approche monétaire . tableau détaillé . poste-courrier',
+          'intrants-services . approche monétaire . tableau détaillé . poste-courrier . montant-dépensé',
+        ],
+        [
+          'intrants-services . approche monétaire . tableau détaillé . restauration',
+          'intrants-services . approche monétaire . tableau détaillé . restauration . montant-dépensé',
+        ],
+        [
+          'intrants-services . approche monétaire . tableau détaillé . formation',
+          'intrants-services . approche monétaire . tableau détaillé . formation . montant-dépensé',
+        ],
+        [
+          'intrants-services . approche monétaire . tableau détaillé . reparation-installation',
+          'intrants-services . approche monétaire . tableau détaillé . reparation-installation . montant-dépensé',
+        ],
+        [
+          'intrants-services . approche monétaire . tableau détaillé . juridique-comptable',
+          'intrants-services . approche monétaire . tableau détaillé . juridique-comptable . montant-dépensé',
+        ],
+        [
+          'intrants-services . approche monétaire . tableau détaillé . programmation-conseil',
+          'intrants-services . approche monétaire . tableau détaillé . programmation-conseil . montant-dépensé',
         ],
       ],
       'IntrantsServices.description',
@@ -238,28 +283,37 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
   ],
   RepasPrisParLesBeneficiaires: [
     input('alimentation . bénéficiaires . repas présent'),
-    input('alimentation . bénéficiaires . viande rouge . nombre de repas'),
-    input('alimentation . bénéficiaires . viande blanche . nombre de repas'),
-    input('alimentation . bénéficiaires . poisson blanc . nombre de repas'),
-    input('alimentation . bénéficiaires . poisson gras . nombre de repas'),
-    input('alimentation . bénéficiaires . végétarien . nombre de repas'),
-    input('alimentation . bénéficiaires . végétalien . nombre de repas'),
+    mosaic('alimentation . bénéficiaires . mosaic bénéficiaires', [
+      'alimentation . bénéficiaires . mosaic bénéficiaires . végétalien . nombre',
+      'alimentation . bénéficiaires . mosaic bénéficiaires . végétarien . nombre',
+      'alimentation . bénéficiaires . mosaic bénéficiaires . viande blanche . nombre',
+      'alimentation . bénéficiaires . mosaic bénéficiaires . viande rouge . nombre',
+      'alimentation . bénéficiaires . mosaic bénéficiaires . poisson gras . nombre',
+      'alimentation . bénéficiaires . mosaic bénéficiaires . poisson blanc . nombre',
+      'alimentation . bénéficiaires . mosaic bénéficiaires . repas moyen . nombre',
+    ]),
   ],
   RepasPrisParLesBenevoles: [
-    input('alimentation . bénévoles . viande rouge . nombre de repas'),
-    input('alimentation . bénévoles . viande blanche . nombre de repas'),
-    input('alimentation . bénévoles . poisson blanc . nombre de repas'),
-    input('alimentation . bénévoles . poisson gras . nombre de repas'),
-    input('alimentation . bénévoles . végétarien . nombre de repas'),
-    input('alimentation . bénévoles . végétalien . nombre de repas'),
+    mosaic('alimentation . mosaic bénévoles', [
+      'alimentation . mosaic bénévoles . végétalien . nombre',
+      'alimentation . mosaic bénévoles . végétarien . nombre',
+      'alimentation . mosaic bénévoles . viande blanche . nombre',
+      'alimentation . mosaic bénévoles . viande rouge . nombre',
+      'alimentation . mosaic bénévoles . poisson gras . nombre',
+      'alimentation . mosaic bénévoles . poisson blanc . nombre',
+      'alimentation . mosaic bénévoles . repas moyen . nombre',
+    ]),
   ],
   RepasPrisParLesSalaries: [
-    input('alimentation . salariés . viande rouge . nombre de repas'),
-    input('alimentation . salariés . viande blanche . nombre de repas'),
-    input('alimentation . salariés . poisson blanc . nombre de repas'),
-    input('alimentation . salariés . poisson gras . nombre de repas'),
-    input('alimentation . salariés . végétarien . nombre de repas'),
-    input('alimentation . salariés . végétalien . nombre de repas'),
+    mosaic('alimentation . mosaic salariés', [
+      'alimentation . mosaic salariés . végétalien . nombre',
+      'alimentation . mosaic salariés . végétarien . nombre',
+      'alimentation . mosaic salariés . viande blanche . nombre',
+      'alimentation . mosaic salariés . viande rouge . nombre',
+      'alimentation . mosaic salariés . poisson gras . nombre',
+      'alimentation . mosaic salariés . poisson blanc . nombre',
+      'alimentation . mosaic salariés . repas moyen . nombre',
+    ]),
   ],
   BienMatieres: [
     table(
@@ -303,6 +357,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
           'intrants-biens-et-matières . ratios monétaires . autres-produits-manufacturés . nombre',
         ],
       ],
+      'IntrantsBiensEtMatieresTilt.description',
     ),
   ],
   Fret: [
@@ -386,7 +441,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
       ],
     ),
   ],
-  DeplacementsBenevoles: [
+  DeplacementsDomicileTravailBenevoles: [
     input('déplacements . DT-bénévoles . avec . distance'),
     input('déplacements . DT-bénévoles . avec . réponse MEP'),
     table(
@@ -453,44 +508,6 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
         [
           'déplacements . DM-salariés . sans . avion . long courrier',
           'déplacements . DM-salariés . sans . avion . long courrier . distance',
-        ],
-      ],
-    ),
-  ],
-  DeplacementsDansLeCadreDUneMissionAssociativeBenevoles: [
-    input('déplacements . DM-bénévoles . avec . émissions MEP . voiture'),
-    input('déplacements . DM-bénévoles . avec . émissions MEP . train'),
-    input('déplacements . DM-bénévoles . avec . émissions MEP . avion'),
-    input('déplacements . DM-bénévoles . avec . émissions MEP . transports en commun'),
-    input('déplacements . DM-bénévoles . avec . émissions MEP . deux roues'),
-    table(
-      'DeplacementsDansLeCadreDUneMissionAssociativeBenevoles.question',
-      [
-        'DeplacementsDansLeCadreDUneMissionAssociativeBenevoles.ModeTransport',
-        'DeplacementsDansLeCadreDUneMissionAssociativeBenevoles.DistanceMoyenne',
-      ],
-      [
-        ['déplacements . DM-bénévoles . sans . voiture', 'déplacements . DM-bénévoles . sans . voiture . distance'],
-        ['déplacements . DM-bénévoles . sans . train', 'déplacements . DM-bénévoles . sans . train . distance'],
-        [
-          'déplacements . DM-bénévoles . sans . deux roues',
-          'déplacements . DM-bénévoles . sans . deux roues . distance',
-        ],
-        [
-          'déplacements . DM-bénévoles . sans . transports en commun',
-          'déplacements . DM-bénévoles . sans . transports en commun . distance',
-        ],
-        [
-          'déplacements . DM-bénévoles . sans . avion . court courrier',
-          'déplacements . DM-bénévoles . sans . avion . court courrier . distance',
-        ],
-        [
-          'déplacements . DM-bénévoles . sans . avion . moyen courrier',
-          'déplacements . DM-bénévoles . sans . avion . moyen courrier . distance',
-        ],
-        [
-          'déplacements . DM-bénévoles . sans . avion . long courrier',
-          'déplacements . DM-bénévoles . sans . avion . long courrier . distance',
         ],
       ],
     ),

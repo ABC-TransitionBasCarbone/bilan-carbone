@@ -21,7 +21,6 @@ import {
   ChangeStudySiteTiltSimplifiedCommand,
   ChangeStudySiteTiltSimplifiedValidation,
 } from '@/services/serverFunctions/study.command'
-import { TiltStudySiteFields } from '@/services/studySiteToSituation'
 import { sortAlphabetically } from '@/services/utils'
 import { HelpIcon } from '@abc-transitionbascarbone/components'
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
@@ -29,7 +28,6 @@ import { FormTextField } from '@abc-transitionbascarbone/components/src/form/Tex
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import GlossaryModal from '@abc-transitionbascarbone/components/src/modals/GlossaryModal'
 import { SiteCAUnit, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
-import { useToast } from '@abc-transitionbascarbone/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CircularProgress, Typography } from '@mui/material'
 import { getEvaluatedFormElement } from '@publicodes/forms'
@@ -60,8 +58,6 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
   const [glossary, setGlossary] = useState('')
   const [siteData, setSiteData] = useState<TiltCustomDataFields | undefined>()
   const [loading, setLoading] = useState(true)
-  const { showErrorToast } = useToast()
-  const tGeneralError = useTranslations('error')
 
   const studySite = useMemo(() => study.sites.sort((a, b) => sortAlphabetically(a.id, b.id))[0], [study.sites])
 
@@ -129,13 +125,6 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
     setStudySiteData()
   }, [form, study.id, studySite])
 
-  const handleStudySiteUpdate = useCallback(
-    async (studySiteId: string, data: ChangeStudySiteTiltSimplifiedCommand & TiltStudySiteFields) => {
-      await callServerFunction(() => changeStudySiteTiltSimplified(studySiteId, data))
-    },
-    [callServerFunction],
-  )
-
   const handleDateChange = useCallback(async () => {
     const isValid = await dateForm.trigger()
     if (isValid) {
@@ -160,22 +149,18 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
 
   const onStudySiteUpdate = useCallback(() => {
     form.handleSubmit(
-      (data) => handleStudySiteUpdate(studySite.id, data),
+      (data) =>
+        callServerFunction(() => {
+          setSiteData(data)
+          return changeStudySiteTiltSimplified(study.id, data)
+        }),
       (e) => console.log('invalid', e),
     )()
-  }, [form, handleStudySiteUpdate, studySite])
+  }, [callServerFunction, form, study.id])
 
-  const handleSiteChange = useCallback(
-    async (siteId: string, data: ChangeStudySiteTiltSimplifiedCommand & TiltStudySiteFields) => {
-      const studySite = study.sites.find((site) => site.site.id === siteId)
-      if (studySite) {
-        await handleStudySiteUpdate(studySite.id, data)
-      } else {
-        showErrorToast(tGeneralError('default'))
-      }
-    },
-    [handleStudySiteUpdate, showErrorToast, study.sites, tGeneralError],
-  )
+  const handleSiteChange = useCallback(async () => {
+    await callServerFunction(() => changeStudySiteTiltSimplified(study.id, siteData))
+  }, [callServerFunction, siteData, study.id])
 
   return (
     <>

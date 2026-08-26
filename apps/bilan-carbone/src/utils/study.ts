@@ -150,6 +150,7 @@ export const postColors: Record<Post, string> = {
   [Post.UtilisationSimplified]: 'orange',
   [Post.FinDeVieSimplified]: 'orange',
   [Post.TeletravailSimplified]: 'darkBlue',
+  [Post.EvenementSimplified]: 'darkBlue',
 
   [Post.Restauration]: 'darkBlue',
   [Post.Achats]: 'darkBlue',
@@ -178,6 +179,8 @@ export const hasDeprecationPeriod = (subPost: SubPost) =>
     ...subPostsByPost[Post.EquipementsEtImmobilisations],
     SubPost.Electromenager,
     SubPost.Batiment,
+    SubPost.TransportFabricationDesVehicules,
+    SubPost.DeplacementsFabricationDesVehicules,
   ].includes(subPost)
 
 export const defaultStudyResultUnit = StudyResultUnit.T

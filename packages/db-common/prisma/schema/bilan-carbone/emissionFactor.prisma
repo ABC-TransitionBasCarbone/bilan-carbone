@@ -29,6 +29,7 @@ enum Import {
   CUT
   CLICKSON
   AIB
+  GIEC
 
   @@schema("bilan_carbone")
 }
@@ -193,6 +194,9 @@ enum SubPost {
   ParcInformatiqueDesSalaries
   EquipementsDesBenevoles
   ParcInformatiqueDesBenevoles
+
+  // Evenements
+  Evenement
 
   // CLICKSON
   // Energie
