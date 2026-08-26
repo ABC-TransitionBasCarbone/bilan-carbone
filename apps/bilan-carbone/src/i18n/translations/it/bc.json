@@ -1900,7 +1900,9 @@
       "completeness": "Completezza:",
       "comment": "Altre informazioni: ",
       "GESDecomposition": "Scomposizione dei GES: ",
-      "factorParts": "Componenti del fattore di emissione: "
+      "factorParts": "Componenti del fattore di emissione: ",
+      "wasteModalContent": "I FE dedicati al riciclaggio dei rifiuti (o al fine vita medio quando questo include il riciclaggio) utilizzano un valore di 41 kgCO₂e/t invece del valore che assegna loro la Base Empreinte®. Questo valore corrisponde alla raccolta, al trasporto e allo sfruttamento dello stoccaggio dei metalli sulla Base Empreinte®, ed <b>esclude quindi la rigenerazione della materia</b> che costituisce la maggior parte delle emissioni legate al riciclaggio. Questo funzionamento è scelto per non penalizzare il riciclaggio, che è comunque preso in considerazione negli input all'interno del Bilan Carbone® (un input derivante da una materia riciclata emette generalmente meno di un input nuovo). Nell'ambito del Bilan GES règlementaire, sarà proprio il valore della Base Empreinte® a essere utilizzato nel vostro export. Una finestra modale che illustra le eventuali differenze tra Bilan Carbone® e Bilan GES règlementaire sarà disponibile in alto a sinistra di questo export. Per maggiori dettagli, vi invitiamo a consultare l'<link1>allegato 1</link1> del metodo Bilan Carbone® o <link2>le pagine relative ai rifiuti</link2> del Plan Carbone Général.",
+      "wasteModalTitle": "Differenza di valori FE riciclaggio"
     },
     "edit": {
       "title": "Modifica il fattore di emissione ({name})",

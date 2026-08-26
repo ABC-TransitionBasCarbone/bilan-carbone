@@ -5,5 +5,11 @@
         "moreExplanationSNBC": "A pályagörbéje referencia dátuma többé nem 1990 lesz, mint az SNBC esetében, hanem az ezen az eszközön nyilvántartott első tanulmányának dátuma, azaz {oldestStudyDate}."
       }
     }
+  },
+  "emissionFactors": {
+    "table": {
+      "wasteModalContent": "A hulladék újrahasznosításához (vagy az átlagos élettartam végéhez, amennyiben az újrahasznosítást is magában foglalja) kapcsolódó FE-k 41 kgCO₂e/t értéket használnak a Base Empreinte® által nekik tulajdonított érték helyett. Ez az érték a fémek gyűjtésének, szállításának és tárolásának üzemeltetésének felel meg a Base Empreinte® szerint, és <b>ezáltal kizárja az anyag regenerálását</b>, amely az újrahasznosításhoz kapcsolódó kibocsátások túlnyomó részét teszi ki. Ezt a működést azért választották, hogy ne büntesse az újrahasznosítást, amelyet mindazonáltal figyelembe vesznek a Bilan Carbone® bemenő anyagai között (egy újrahasznosított anyagból származó bemenő anyag általában kevesebbet bocsát ki, mint egy új). A Bilan GES règlementaire keretében azonban a Base Empreinte® értéke kerül felhasználásra az exportban. Egy modál, amely elmagyarázza a Bilan Carbone® és a Bilan GES règlementaire közötti esetleges különbségeket, ennek az exportnak a bal felső részén lesz elérhető. További részletekért kérjük, tekintse meg a Bilan Carbone® módszer <link1>1. mellékletét</link1> vagy a Plan Carbone Général <link2>hulladékra vonatkozó oldalait</link2>.",
+      "wasteModalTitle": "Az újrahasznosítási FE-értékek különbsége"
+    }
   }
 }
