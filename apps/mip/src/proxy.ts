@@ -4,7 +4,11 @@ import { NextRequest, NextResponse } from 'next/server'
 const publicRoutes = ['/login', '/reset-password', '/activation', '/register']
 const assetsRoutes = ['/_next', '/img', '/.well-known']
 
-const isDynamicPublicRoute = (pathname: string) => /^\/[^/]+\/(survey|results)\/?$/.test(pathname)
+const isDynamicPublicRoute = (pathname: string) => {
+  const normalizedPathname = pathname.endsWith('/') && pathname !== '/' ? pathname.slice(0, -1) : pathname
+
+  return /^\/(?:(?:fr|en)\/)?[^/]+\/(survey|results)$/.test(normalizedPathname)
+}
 
 export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl
