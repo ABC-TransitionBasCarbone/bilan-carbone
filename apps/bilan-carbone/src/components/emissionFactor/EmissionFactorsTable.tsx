@@ -91,7 +91,13 @@ export const EmissionFactorsTable = ({
         cell: ({ getValue, row }) => (
           <div className="flex align-center">
             <span>{getValue<string>()}</span>
-            <div>{isWasteEmissionFactor(row.original, environment) && <WasteEmissionFactorModal />}</div>
+            <div>
+              {isWasteEmissionFactor(row.original, environment) && (
+                <span onClick={(e) => e.stopPropagation()}>
+                  <WasteEmissionFactorModal />
+                </span>
+              )}
+            </div>
           </div>
         ),
       },
