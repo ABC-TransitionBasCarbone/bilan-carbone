@@ -5,5 +5,11 @@
         "moreExplanationSNBC": "Data de referință a traiectoriei dumneavoastră nu va mai fi 1990 ca pentru SNBC, ci va fi data primului dumneavoastră studiu înregistrat în acest instrument, adică {oldestStudyDate}."
       }
     }
+  },
+  "emissionFactors": {
+    "table": {
+      "wasteModalContent": "FE dedicați reciclării deșeurilor (sau sfârșitului de viață mediu atunci când acesta include reciclarea) utilizează o valoare de 41 kgCO₂e/t în loc de valoarea pe care le-o atribuie Base Empreinte®. Această valoare corespunde colectării, transportului și exploatării depozitării metalelor din Base Empreinte® și <b>exclude deci regenerarea materiei</b> care constituie majoritatea emisiilor legate de reciclare. Acest mod de funcționare este ales pentru a nu penaliza reciclarea, care este totuși luată în considerare în intrări în cadrul Bilan Carbone® (o intrare provenită dintr-o materie reciclată emițând în general mai puțin decât o intrare nouă). În cadrul Bilan GES règlementaire, valoarea din Base Empreinte® este cea care va fi utilizată în exportul dumneavoastră. O fereastră care explicitează eventualele diferențe dintre Bilan Carbone® și Bilan GES règlementaire va fi disponibilă în stânga sus a acestui export. Pentru mai multe detalii, vă invităm să consultați <link1>anexa 1</link1> a metodei Bilan Carbone® sau <link2>paginile privind deșeurile</link2> din Plan Carbone Général.",
+      "wasteModalTitle": "Diferență de valori FE reciclare"
+    }
   }
 }

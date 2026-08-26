@@ -1760,7 +1760,9 @@
       "locationSearch": "Buscar por localización",
       "locationSearchPlaceholder": "ej.: Europa",
       "unitSearch": "Buscar por unidad",
-      "unitSearchPlaceholder": "ej.: kg"
+      "unitSearchPlaceholder": "ej.: kg",
+      "wasteModalContent": "Los FE dedicados al reciclaje de residuos (o al fin de vida promedio cuando este incluye reciclaje) utilizan un valor de 41 kgCO₂e/t en lugar del valor que les asigna la Base Empreinte®. Este valor corresponde a la recogida, al transporte y a la explotación del almacenamiento de los metales en la Base Empreinte®, y <b>excluye por tanto la regeneración de la materia</b> que constituye la mayoría de las emisiones vinculadas al reciclaje. Este funcionamiento se ha elegido para no penalizar el reciclaje, que sin embargo se tiene en cuenta en los insumos dentro del Bilan Carbone® (un insumo procedente de una materia reciclada emite generalmente menos que un insumo nuevo). En el marco del Bilan GES règlementaire, será efectivamente el valor de la Base Empreinte® el que se utilice en su exportación. Un cuadro emergente que explica las posibles diferencias entre el Bilan Carbone® y el Bilan GES règlementaire estará disponible en la parte superior izquierda de esta exportación. Para más detalles, le invitamos a consultar el <link1>anexo 1</link1> del método Bilan Carbone® o <link2>las páginas relativas a los residuos</link2> del Plan Carbone Général.",
+      "wasteModalTitle": "Diferencia de valores FE reciclaje"
     },
     "edit": {
       "title": "Modificar el factor de emisión ({name})",
