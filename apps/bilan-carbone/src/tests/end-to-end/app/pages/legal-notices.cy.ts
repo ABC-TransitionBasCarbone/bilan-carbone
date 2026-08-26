@@ -27,4 +27,30 @@ describe('Legal Notices', () => {
     cy.getByTestId('profile-link').should('have.attr', 'href', '/profil')
     cy.getByTestId('profile-link').should('have.text', 'Retour au profil')
   })
+
+  it('Should display EN-specific legal notices content when NEXT_LOCALE=en', () => {
+    cy.setCookie('NEXT_LOCALE', 'en')
+    cy.visit('/mentions-legales')
+
+    // Body
+    cy.getByTestId('legal-notices').should('be.visible')
+
+    // EN-specific content
+    cy.contains(
+      'In accordance with the provisions of Articles 6-III and 19 of the French Law for Confidence in the Digital Economy',
+    ).should('be.visible')
+    cy.contains('Website Owner').should('be.visible')
+    cy.contains('The Bilan Carbone® Trademark').should('be.visible')
+
+    // Contact mail button
+    cy.getByTestId('contact-mail').should('be.visible')
+    cy.getByTestId('contact-mail').should('have.text', 'contact@associationbilancarbone.fr')
+    cy.getByTestId('contact-mail').should('have.attr', 'href', 'mailto:contact@associationbilancarbone.fr')
+
+    // Back to profile should be translated in EN
+    cy.getByTestId('profile-link').scrollIntoView()
+    cy.getByTestId('profile-link').should('be.visible')
+    cy.getByTestId('profile-link').should('have.attr', 'href', '/profil')
+    cy.getByTestId('profile-link').should('have.text', 'Back to profile')
+  })
 })
