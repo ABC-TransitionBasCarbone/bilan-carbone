@@ -72,7 +72,7 @@ export const updateCampaignCommand = async (command: UpdateCampaignCommand) =>
           console.error('updateCampaignCommand: failed to notify admins', {
             accountMipId: session.user.accountMipId,
             organizationVersionMipId: session.user.organizationVersionMipId,
-            campaignCount: createdCampaignNames.length,
+            createdCampaignNames,
             error,
           })
         }

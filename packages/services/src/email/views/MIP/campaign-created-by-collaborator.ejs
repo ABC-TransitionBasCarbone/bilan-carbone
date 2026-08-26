@@ -3,20 +3,10 @@
 
     <body>
         <div>
-            <p>Bonjour,</p>
+            <p><%= t_hello %></p>
             <br />
             <p>
-                <span>
-                    <%= creatorName %>
-                </span> a lance
-                <% if (campaignCount> 1) { %>
-                    les campagnes suivantes
-                    <% } else { %>
-                        la campagne suivante
-                        <% } %>
-                            sur Mon Impact Pro pour l'organisation <span>
-                                <%= organizationName || 'votre organisation' %>
-                            </span> :
+                <%= t_campaignCreatedIntro %>
             </p>
             <ul>
                 <% campaignNames.forEach(function(campaignName) { %>
@@ -26,7 +16,7 @@
                     <% }) %>
             </ul>
             <p>
-                Vous pouvez consulter et coordonner ces campagnes sur
+                <%= t_campaignCreatedOutro %>
                 <a href="<%= link %>">ce lien</a>.
             </p>
             <br />
