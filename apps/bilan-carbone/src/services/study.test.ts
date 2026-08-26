@@ -347,7 +347,7 @@ describe('Study Service', () => {
       const t = ((key: string) => key) as unknown as Translations
       const mockResults = [
         {
-          post: TiltSimplifiedPost.EnergiesSimplified,
+          post: TiltSimplifiedPost.EnergieSimplified,
           label: 'Énergies',
           value: 100_000,
           children: [
