@@ -1,3 +1,7 @@
+.content {
+  flex-wrap: nowrap;
+}
+
 .loginForm {
   border: var(--border-dark);
   border-radius: 0 1rem 1rem 0;
@@ -5,6 +9,8 @@
 
 .loginLogoImage {
   object-fit: contain;
+  width: min(100%, 11rem);
+  height: auto;
 }
 
 .header {
@@ -48,4 +54,18 @@
 .selected {
   margin: 0;
   border: 0.125rem solid var(--primary-800);
+}
+
+@media screen and (max-width: 62rem) {
+  .content {
+    flex-wrap: wrap;
+  }
+
+  .info {
+    border-radius: 1rem 1rem 0 0;
+  }
+
+  .loginForm {
+    border-radius: 0 0 1rem 1rem;
+  }
 }
