@@ -44,7 +44,7 @@ export const MosaicQuestion = <RuleName extends string,>({
           const directParentRaw = directParentName ? ((rules[directParentName]?.rawNode as any) ?? undefined) : undefined
           const nombreRaw = rules[el.id]?.rawNode as any
 
-          const title = nombreRaw?.titre ?? lastSegment
+          const title = nombreRaw?.titre ?? directParentRaw?.titre ?? lastSegment
           const icons = directParentRaw?.icônes
           const description = directParentRaw?.note
 

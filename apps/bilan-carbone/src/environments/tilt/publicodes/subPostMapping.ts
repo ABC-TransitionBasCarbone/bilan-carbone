@@ -28,7 +28,7 @@ export const getFormLayoutsForSubPostTILT = (subPost: SubPost): FormLayout<TiltR
 
 export const POST_TO_RULENAME: Record<TiltSimplifiedPost, TiltRuleName> = {
   [TiltSimplifiedPost.LocauxSimplified]: 'construction',
-  [TiltSimplifiedPost.EnergiesSimplified]: 'énergie',
+  [TiltSimplifiedPost.EnergieSimplified]: 'énergie',
   [TiltSimplifiedPost.DechetsSimplified]: 'déchets',
   [TiltSimplifiedPost.FroidEtClimSimplified]: 'froid et clim',
   [TiltSimplifiedPost.DeplacementsDePersonneSimplified]: 'déplacements',
@@ -47,7 +47,7 @@ const SUBPOST_TO_RULENAME: Partial<Record<SubPost, TiltRuleName>> = {
   Batiments: 'construction . bâtiment',
   AutresInfrastructures: 'construction . infrastructure',
   // CombustiblesFossiles: 'énergie . fossiles',
-  CombustiblesOrganiques: 'énergie . combustibles organiques',
+  EnergieSimplified: 'énergie . combustibles organiques',
   // ReseauxDeChaleurEtDeVapeur: 'énergie . réseaux de chaleur',
   // ReseauxDeFroid: 'énergie . réseaux de froid',
   // Electricite: 'énergie . électricité',
@@ -103,7 +103,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('construction . infrastructure . parking présent'),
     input('construction . infrastructure . nombre de places'),
   ],
-  CombustiblesOrganiques: [
+  EnergieSimplified: [
     group('EnergieTest.question', [
       'énergie . combustibles organiques . types . électricité présent',
       'énergie . combustibles organiques . types . gaz présent',

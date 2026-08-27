@@ -6,8 +6,14 @@ import { EvaluatedGroupLayout, EvaluatedTableLayout } from '../form/layouts'
 export function usePublicodesTranslation() {
   const tRules = useTranslations('publicodes-rules')
   return {
-    getQuestionTranslation: (ruleName: string): string => tRules(`${getI18nKeyRuleName(ruleName)}.question`),
-    getTitleTranslation: (ruleName: string): string => tRules(`${getI18nKeyRuleName(ruleName)}.titre`),
+    getQuestionTranslation: (ruleName: string): string => {
+      const key = `${getI18nKeyRuleName(ruleName)}.question`
+      return tRules.has(key) ? tRules(key) : ruleName
+    },
+    getTitleTranslation: (ruleName: string): string => {
+      const key = `${getI18nKeyRuleName(ruleName)}.titre`
+      return tRules.has(key) ? tRules(key) : ruleName
+    },
   }
 }
 

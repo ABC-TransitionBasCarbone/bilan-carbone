@@ -36,7 +36,7 @@
     "@abc-transitionbascarbone/components": "*",
     "@abc-transitionbascarbone/lib": "*",
     "@abc-transitionbascarbone/publicodes": "*",
-    "@abc-transitionbascarbone/publicodes-mip": "file:../../packages/publicodes-packages/publicodes-mip/",
+    "@abc-transitionbascarbone/publicodes-mip": "*",
     "@abc-transitionbascarbone/services": "*",
     "@abc-transitionbascarbone/typeguards": "*",
     "@abc-transitionbascarbone/ui": "*",

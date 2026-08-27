@@ -54,7 +54,15 @@ function extractTranslationKeysFromRules(
   const translations: Record<string, Partial<TranslationRecord>> = {}
 
   for (const [ruleName, rule] of Object.entries(rulesMap)) {
-    if (!rule?.question && rule?.['form']?.['à traduire'] !== 'oui') {
+    if (!rule) {
+      continue
+    }
+
+    if (
+      !rule?.question &&
+      rule?.['form']?.['à traduire'] !== 'oui' &&
+      !KEYS_TO_TRANSLATE.some((key) => key in rule)
+    ) {
       continue
     }
 
@@ -176,7 +184,7 @@ function buildTranslationsFromRules(
   existingTranslations: Record<Locale, TranslationRecord>,
 ): Record<Locale, TranslationRecord> {
   const updated: Record<Locale, TranslationRecord> = Object.fromEntries(
-    LOCALES.map((locale) => [locale, {}]),
+    LOCALES.map((locale) => [locale, { ...existingTranslations[locale] }]),
   ) as Record<Locale, TranslationRecord>
   const otherLocales = LOCALES.filter((l) => l !== 'fr')
   for (const [ruleName, translationKeys] of Object.entries(extractedTranslations)) {
@@ -191,7 +199,9 @@ function buildTranslationsFromRules(
     for (const locale of LOCALES) {
       parents[locale] = getNestedObject(updated[locale], parentPath, true)!
       existingParents[locale] = getNestedObject(existingTranslations[locale], parentPath)
-      parents[locale][lastNameSpace] = {}
+      if (!parents[locale][lastNameSpace]) {
+        parents[locale][lastNameSpace] = {}
+      }
     }
     for (const [key, value] of Object.entries(translationKeys)) {
       processTranslationValue(value, [lastNameSpace, key], parents, existingParents, otherLocales)

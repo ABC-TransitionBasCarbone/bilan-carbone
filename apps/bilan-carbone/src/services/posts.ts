@@ -159,13 +159,7 @@ export const subPostsByPostTILT: Record<TiltAdvancedPost, SubPost[]> = {
 
 export const subPostsByPostTILTSimplified: Record<TiltSimplifiedPost, SubPost[]> = {
   [TiltSimplifiedPost.LocauxSimplified]: [SubPost.Batiments, SubPost.AutresInfrastructures],
-  [TiltSimplifiedPost.EnergiesSimplified]: [
-    SubPost.CombustiblesFossiles,
-    SubPost.CombustiblesOrganiques,
-    SubPost.ReseauxDeChaleurEtDeVapeur,
-    SubPost.ReseauxDeFroid,
-    SubPost.Electricite,
-  ],
+  [TiltSimplifiedPost.EnergieSimplified]: [SubPost.EnergieSimplified],
   [TiltSimplifiedPost.DechetsSimplified]: [SubPost.DechetsEmisParLOrganisation],
   [TiltSimplifiedPost.FroidEtClimSimplified]: [SubPost.FroidEtClim],
   [TiltSimplifiedPost.DeplacementsDePersonneSimplified]: [
@@ -184,12 +178,7 @@ export const subPostsByPostTILTSimplified: Record<TiltSimplifiedPost, SubPost[]>
   ],
   [TiltSimplifiedPost.ServiceEtNumeriqueSimplified]: [SubPost.UsagesNumeriques, SubPost.ServicesEnApprocheMonetaire],
 
-  [TiltSimplifiedPost.EquipementsEtImmobilisationsSimplified]: [
-    SubPost.EquipementsDesSalaries,
-    SubPost.ParcInformatiqueDesSalaries,
-    SubPost.EquipementsDesBenevoles,
-    SubPost.ParcInformatiqueDesBenevoles,
-  ],
+  [TiltSimplifiedPost.EquipementsEtImmobilisationsSimplified]: [SubPost.EquipementsDesSalaries],
   [TiltSimplifiedPost.UtilisationSimplified]: [SubPost.ConsommationsEnergieUtilisationProduits],
   [TiltSimplifiedPost.FinDeVieSimplified]: [SubPost.FinDeVieProduitsVendusFournisBeneficiaires],
   [TiltSimplifiedPost.TeletravailSimplified]: [SubPost.TeletravailSalariesBenevoles],

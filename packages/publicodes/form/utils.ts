@@ -15,8 +15,13 @@ export const SURVEY_CATEGORY_KEYS = ['DT', 'transport', 'alimentation', 'divers'
 const SURVEY_CATEGORY_ORDER: readonly string[] = SURVEY_CATEGORY_KEYS
 const RULE_NAME_SEPARATOR = ' . '
 
-export const getRuleNameParts = (ruleName: string): string[] => ruleName.split(RULE_NAME_SEPARATOR)
+export const getRuleNameParts = (ruleName: string): string[] =>  {
+  if (!ruleName) {
+    return []
+  }
 
+  return ruleName.split(RULE_NAME_SEPARATOR)
+}
 export const joinRuleNameParts = (parts: string[]): string => parts.join(RULE_NAME_SEPARATOR)
 
 export const getRuleParentName = (ruleName: string): string | null => {
