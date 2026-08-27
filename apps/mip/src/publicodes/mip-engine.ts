@@ -1,6 +1,5 @@
 import { Question, Survey, SurveyResponse } from '@abc-transitionbascarbone/typeguards'
 import { isObject } from '@abc-transitionbascarbone/utils/object'
-import { normalizeCategoryKey } from '@abc-transitionbascarbone/utils/parsing'
 import Engine, { parsePublicodes } from 'publicodes'
 
 export type RawRules = Parameters<typeof parsePublicodes>[0]
@@ -131,6 +130,25 @@ export class SurveyEngine {
 
 const RULE_NAME_SEPARATOR = ' . '
 
+const ORDERED_SURVEY_CATEGORY_KEYS = ['DT', 'transport', 'alimentation', 'numérique', 'bureaux'] as const
+
+const normalizeSurveyCategoryKeyForOrder = (key: string): string => {
+  if (key === 'divers') {
+    return 'numérique'
+  }
+  if (key === 'logement') {
+    return 'bureaux'
+  }
+  return key
+}
+
+const getSurveyCategoryKeysFromCanonicalOrder = (rules: Record<string, unknown>): string[] => {
+  return ORDERED_SURVEY_CATEGORY_KEYS.flatMap((key) => {
+    const actualKey = key === 'numérique' ? 'divers' : key === 'bureaux' ? 'logement' : key
+    return actualKey in rules ? [actualKey] : []
+  })
+}
+
 const getMissingParentRuleNames = (rules: Record<string, unknown>): string[] => {
   const existing = new Set(Object.keys(rules))
   const missing = new Set<string>()
@@ -174,15 +192,27 @@ export function createMipEngine(rules: RawRules): Engine {
   })
 }
 
-const KNOWN_SURVEY_CATEGORY_KEYS = [
-  'DT',
-  'transport',
-  'alimentation',
-  'divers',
-  'logement',
-  'numerique',
-  'bureaux',
-] as const
+const orderSurveyCategoryKeys = (keys: string[]): string[] => {
+  const rankingByKey = new Map<string, number>(
+    ORDERED_SURVEY_CATEGORY_KEYS.map((key, index) => [normalizeSurveyCategoryKeyForOrder(key), index]),
+  )
+
+  return [...keys].sort((left, right) => {
+    const leftRank = rankingByKey.get(normalizeSurveyCategoryKeyForOrder(left))
+    const rightRank = rankingByKey.get(normalizeSurveyCategoryKeyForOrder(right))
+
+    if (leftRank === undefined && rightRank === undefined) {
+      return 0
+    }
+    if (leftRank === undefined) {
+      return 1
+    }
+    if (rightRank === undefined) {
+      return -1
+    }
+    return leftRank - rightRank
+  })
+}
 
 const getSurveyCategoryKeysFromRules = (rules: Record<string, unknown>): string[] => {
   const bilanRule = rules.bilan
@@ -210,21 +240,11 @@ const getSurveyCategoryKeysFromRules = (rules: Record<string, unknown>): string[
     }
 
     if (categoryKeys.size > 0) {
-      return [...categoryKeys]
+      return orderSurveyCategoryKeys([...categoryKeys])
     }
   }
 
-  const ruleKeysByNormalized = new Map<string, string>()
-  for (const ruleKey of Object.keys(rules)) {
-    const normalizedKey = normalizeCategoryKey(ruleKey)
-    if (!ruleKeysByNormalized.has(normalizedKey)) {
-      ruleKeysByNormalized.set(normalizedKey, ruleKey)
-    }
-  }
-
-  return KNOWN_SURVEY_CATEGORY_KEYS.map((key) => ruleKeysByNormalized.get(normalizeCategoryKey(key)) ?? null).filter(
-    (key): key is string => key !== null,
-  )
+  return orderSurveyCategoryKeys(getSurveyCategoryKeysFromCanonicalOrder(rules))
 }
 
 export const getSurveyCategoryKeysFromRawRules = (rules: RawRules): string[] => {

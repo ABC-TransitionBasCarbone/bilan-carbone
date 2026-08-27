@@ -3,6 +3,7 @@ import { NumberField } from '@base-ui-components/react/number-field'
 import { InputAdornment, OutlinedInput } from '@mui/material'
 import { EvaluatedNumberInput } from '@publicodes/forms'
 import classNames from 'classnames'
+import { SuggestionList } from '../SuggestionList'
 import { getCategoryClassSuffix, getRuleCategoryKey, OnFieldChange } from '../utils'
 import { useSimpleInputState } from './hooks/useSimpleInputState'
 import styles from './NumberWithUnitInput.module.css'
@@ -37,44 +38,29 @@ const NumberWithUnitInput = <RuleName extends string>({
 
   return (
     <div>
-      {hasSuggestions && (
-        <div className={classNames('flex', 'wrap', 'gapped-2', 'pb-2', styles.suggestions)}>
-          {suggestionEntries.map(([label, value]) => (
-            <button
-              key={label}
-              type="button"
-              className={classNames(styles.suggestionChip, suggestionToneClass, 'pointer', {
-                [styles.selectedSuggestionChip]: localValue === value,
-              })}
-              onClick={() => {
-                handleValueChange(value)
-                handleValueCommitted(value)
-              }}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-      )}
-      {!isLockedSuggestion && (
-        <NumberField.Root
-          className={classNames(styles.inputWrapper, 'wfit')}
-          value={localValue}
-          onFocus={handleFocus}
-          onValueChange={handleValueChange}
-          onValueCommitted={handleValueCommitted}
-        >
-          <NumberField.Input
-            className={styles.input}
-            inputMode="decimal"
-            render={
-              <OutlinedInput
-                endAdornment={unit ? <InputAdornment position="end">{unit}</InputAdornment> : undefined}
-              />
-            }
-          />
-        </NumberField.Root>
-      )}
+      <SuggestionList
+        suggestions={suggestionEntries}
+        containerClassName={classNames('flex', 'wrap', 'gapped-2', 'pb-2', styles.suggestions)}
+        buttonClassName={classNames(styles.suggestionChip, suggestionToneClass, 'pointer')}
+        onSelect={(_, value) => {
+          handleValueChange(value)
+          handleValueCommitted(value)
+        }}
+      />
+      <NumberField.Root
+        className={classNames(styles.inputWrapper, 'wfit')}
+        value={localValue}
+        onFocus={handleFocus}
+        onValueChange={handleValueChange}
+        onValueCommitted={handleValueCommitted}
+      >
+        <NumberField.Input
+          className={styles.input}
+          render={
+            <OutlinedInput endAdornment={unit ? <InputAdornment position="end">{unit}</InputAdornment> : undefined} />
+          }
+        />
+      </NumberField.Root>
     </div>
   )
 }

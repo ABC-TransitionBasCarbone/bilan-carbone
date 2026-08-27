@@ -4,6 +4,7 @@ import MosaicNumberInput from '@abc-transitionbascarbone/ui/Form/MosaicNumberInp
 import classNames from 'classnames'
 import Engine from 'publicodes'
 import styles from './MosaicQuestion.module.css'
+import { SuggestionList } from './SuggestionList'
 import { usePublicodesRuleTranslation } from '../hooks'
 import { getRuleNameParts, getRuleParentName } from './utils'
 
@@ -21,6 +22,8 @@ type Props<RuleName> = {
   containerVariant?: 'default' | 'flat'
 }
 
+type MosaicSuggestionValues = Record<string, string | number | boolean>
+
 export const MosaicQuestion = <RuleName extends string,>({
   parent,
   elements,
@@ -30,13 +33,41 @@ export const MosaicQuestion = <RuleName extends string,>({
   const rules = engine.getParsedRules()
   const parentRaw = rules[parent]?.rawNode as any
   const mosaicType = parentRaw?.mosaique?.type
+  const rawSuggestions = parentRaw?.mosaique?.suggestions
   const translation = usePublicodesRuleTranslation(parent)
 
-  const label = translation?.question ?? translation?.titre ?? parentRaw?.question ?? parentRaw?.titre ?? parent
-  const description = translation?.description ?? parentRaw?.description
+  const label = translation?.question ?? translation?.titre ?? parent
+  const suggestionEntries =
+    rawSuggestions && typeof rawSuggestions === 'object'
+      ? Object.entries(rawSuggestions).filter(
+        (entry): entry is [string, MosaicSuggestionValues] =>
+          typeof entry[0] === 'string' && !!entry[1] && typeof entry[1] === 'object' && !Array.isArray(entry[1]),
+      )
+      : []
+
+  const applySuggestion = (suggestionValues: MosaicSuggestionValues) => {
+    for (const [suggestionRuleName, suggestionValue] of Object.entries(suggestionValues)) {
+      const absoluteRuleName = suggestionRuleName.startsWith(`${parent} . `)
+        ? suggestionRuleName
+        : `${parent} . ${suggestionRuleName}`
+
+      const targetRuleName = rules[absoluteRuleName] ? absoluteRuleName : suggestionRuleName
+      if (!rules[targetRuleName]) {
+        continue
+      }
+
+      onChange(targetRuleName as RuleName, suggestionValue)
+    }
+  }
 
   return (
-    <QuestionContainer label={label} description={description}>
+    <QuestionContainer label={label} description={translation?.description}>
+      <SuggestionList
+        suggestions={suggestionEntries}
+        containerClassName={classNames('flex', 'wrap', 'gapped-2', 'pb-2', styles.suggestions)}
+        buttonClassName={classNames(styles.suggestionChip, 'pointer')}
+        onSelect={(_, suggestionValues) => applySuggestion(suggestionValues)}
+      />
       <div className={classNames(styles.mosaicContainer, 'gapped1 p1 grid')}>
         {elements.map((el, index) => {
           const parts = getRuleNameParts(el.id)
