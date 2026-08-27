@@ -43,7 +43,12 @@ const PublicTiltPage = ({ children, question }: Props) => {
         <p>
           {customRich(t, 'explanation', {
             link: (children) => (
-              <Link className="white" href={tDocumentation('tiltABCPage')} target="_blank" rel="noreferrer noopener">
+              <Link
+                href={tDocumentation('tiltABCPage')}
+                target="_blank"
+                rel="noreferrer noopener"
+                className={styles.info}
+              >
                 {children}
               </Link>
             ),
