@@ -47,7 +47,7 @@ construction . bâtiment . locaux:
     locaux seuls:
       titre: J'utilise des locaux qui sont entièrement dédiés à mon association
     locaux partagés:
-      titre: Mes locaux sont partagés avec d'autres stuctures (co-working, open-space partagés, ...)
+      titre: Mes locaux sont partagés avec d'autres structures (co-working, open-space partagés, ...)
     pas de locaux:
       titre: Mes activités associatives ne nécessitent pas de locaux (télétravail à 100%, extérieur, ...)
 
