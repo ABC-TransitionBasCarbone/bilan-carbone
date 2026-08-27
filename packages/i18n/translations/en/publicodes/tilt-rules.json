@@ -1032,7 +1032,7 @@
           "question": "[TO_TRANSLATE] Concernant vos locaux, diriez-vous que :",
           "options": {
             "locaux seuls": "[TO_TRANSLATE] J'utilise des locaux qui sont entièrement dédiés à mon association",
-            "locaux partagés": "[TO_TRANSLATE] Mes locaux sont partagés avec d'autres stuctures (co-working, open-space partagés, ...)",
+            "locaux partagés": "[UPDATED] Mes locaux sont partagés avec d'autres structures (co-working, open-space partagés, ...)",
             "pas de locaux": "[TO_TRANSLATE] Mes activités associatives ne nécessitent pas de locaux (télétravail à 100%, extérieur, ...)"
           },
           "locaux seuls": {
@@ -1043,7 +1043,7 @@
             }
           },
           "locaux partagés": {
-            "titre": "[TO_TRANSLATE] Mes locaux sont partagés avec d'autres stuctures (co-working, open-space partagés, ...)",
+            "titre": "[UPDATED] Mes locaux sont partagés avec d'autres structures (co-working, open-space partagés, ...)",
             "surface": {
               "description": "[TO_TRANSLATE] Vous devez renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites et que ces différents sites ont tous des locaux partagés, vous devez créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans (on parle bien de leur construction), vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année. Seule une partie de l'impact carbone sera pris en compte, en fonction du pourcentage des locaux utilisé par votre association à renseigner dans la question suivante.",
               "question": "[TO_TRANSLATE] Quelle est la surface de ces locaux ?"
