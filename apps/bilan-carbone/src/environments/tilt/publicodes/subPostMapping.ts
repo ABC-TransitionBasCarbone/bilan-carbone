@@ -397,11 +397,11 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     ),
   ],
   DeplacementsDomicileTravailSalaries: [
-    input('déplacements . DT-salariés . MEP présent'),
-    input('déplacements . DT-salariés . MEP présent . nombre bénévoles'),
-    input('déplacements . DT-salariés . MEP présent . nombre salariés'),
-    input('déplacements . DT-salariés . avec . distance'),
-    input('déplacements . DT-salariés . avec . réponse MEP'),
+    // input('déplacements . DT-salariés . MEP présent'),
+    // input('déplacements . DT-salariés . MEP présent . nombre bénévoles'),
+    // input('déplacements . DT-salariés . MEP présent . nombre salariés'),
+    // input('déplacements . DT-salariés . avec . distance'),
+    // input('déplacements . DT-salariés . avec . réponse MEP'),
     table(
       'DomicileTravailSalaries.question',
       ['DomicileTravailSalaries.ModeTransport', 'DomicileTravailSalaries.TauxTransport'],
@@ -431,8 +431,8 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     ),
   ],
   DeplacementsBenevoles: [
-    input('déplacements . DT-bénévoles . avec . distance'),
-    input('déplacements . DT-bénévoles . avec . réponse MEP'),
+    // input('déplacements . DT-bénévoles . avec . distance'),
+    // input('déplacements . DT-bénévoles . avec . réponse MEP'),
     table(
       'DeplacementsDomicileTravailBenevoles.question',
       ['DeplacementsDomicileTravailBenevoles.ModeTransport', 'DeplacementsDomicileTravailBenevoles.TauxTransport'],
@@ -468,11 +468,11 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     ),
   ],
   DeplacementsDansLeCadreDUneMissionAssociativeSalaries: [
-    input('déplacements . DM-salariés . avec . émissions MEP . voiture'),
-    input('déplacements . DM-salariés . avec . émissions MEP . train'),
-    input('déplacements . DM-salariés . avec . émissions MEP . avion'),
-    input('déplacements . DM-salariés . avec . émissions MEP . transports en commun'),
-    input('déplacements . DM-salariés . avec . émissions MEP . deux roues'),
+    // input('déplacements . DM-salariés . avec . émissions MEP . voiture'),
+    // input('déplacements . DM-salariés . avec . émissions MEP . train'),
+    // input('déplacements . DM-salariés . avec . émissions MEP . avion'),
+    // input('déplacements . DM-salariés . avec . émissions MEP . transports en commun'),
+    // input('déplacements . DM-salariés . avec . émissions MEP . deux roues'),
     table(
       'DeplacementsDansLeCadreDUneMissionAssociativeSalaries.question',
       [

@@ -10,21 +10,22 @@ déplacements:
   unité: kgCO2e
   par défaut: 0
 
-déplacements . DT-salariés . MEP présent:
-  question: Avez-vous réalisé une campagne de sensibilisation via MEP ?
+# GC : Commenté car pas de MIP à la sortie
+# déplacements . DT-salariés . MEP présent:
+#   question: Avez-vous réalisé une campagne de sensibilisation via MEP ?
 
-déplacements . DT-salariés . MEP présent . nombre bénévoles:
-  applicable si:
-    toutes ces conditions:
-      - est défini: MEP présent
-      - MEP présent = oui
-  question: Combien de bénévoles ont répondu à MEP ?
-  unité: unité
+# déplacements . DT-salariés . MEP présent . nombre bénévoles:
+#   applicable si:
+#     toutes ces conditions:
+#       - est défini: MEP présent
+#       - MEP présent = oui
+#   question: Combien de bénévoles ont répondu à MEP ?
+#   unité: unité
 
-déplacements . DT-salariés . MEP présent . nombre salariés:
-  applicable si:
-    toutes ces conditions:
-      - est défini: MEP présent
-      - MEP présent = oui
-  question: Combien de salariés ont répondu à MEP ?
-  unité: unité
+# déplacements . DT-salariés . MEP présent . nombre salariés:
+#   applicable si:
+#     toutes ces conditions:
+#       - est défini: MEP présent
+#       - MEP présent = oui
+#   question: Combien de salariés ont répondu à MEP ?
+#   unité: unité

@@ -2,61 +2,62 @@ déplacements . DT-salariés:
   titre: Emissions des trajets domicile-association des salariés
   formule:
     somme:
-      - avec
+      # - avec
       - sans
   unité: kgCO2e
 
 ## Cette fonction permet de calculer les émissions des salariés qui n'ont pas répondu à MEP à partir des kms moyens parcourus par ceux qui ont répondu, on utilise le split moyen français par mode pour les DT comme FE pour extrapoler
+#GC : Commenté car pas de MIP à la sortie. Remettre la somme "avec" et tous les applicables si dans les questions "sans" si on ajoute MIP. Idem pour tous les autres fichiers, faire des Ctrl+F
 
-déplacements . DT-salariés . avec:
-  applicable si:
-    toutes ces conditions:
-      - est défini: déplacements . DT-salariés . MEP présent
-      - déplacements . DT-salariés . MEP présent = oui
-  titre: émissions des trajets domicile-association des salariés (avec enquête MEP)
-  formule:
-    somme:
-      - produit:
-          - distance
-          - répartition
-          - (5 - télétravail . salariés . j)
-          - commun . nombre de semaines travaillées par an
-          - (général . salariés - déplacements . DT-salariés . MEP présent . nombre salariés)
-          # Pour la même raison que plus bas, j'enlève le taux d'occupation ici
-          # - 1 / sans . voiture . occupation
-      - réponse MEP
-  avec:
-    distance:
-      question: D'après les résultats de MEP, quelle est la distance moyenne parcourue par salarié par jour (A/R) pour des déplacements domicile-association ?
-      unité: km
-      par défaut: 0
+# déplacements . DT-salariés . avec:
+#   applicable si:
+#     toutes ces conditions:
+#       - est défini: déplacements . DT-salariés . MEP présent
+#       - déplacements . DT-salariés . MEP présent = oui
+#   titre: émissions des trajets domicile-association des salariés (avec enquête MEP)
+#   formule:
+#     somme:
+#       - produit:
+#           - distance
+#           - répartition
+#           - (5 - télétravail . salariés . j)
+#           - commun . nombre de semaines travaillées par an
+#           - (général . salariés - déplacements . DT-salariés . MEP présent . nombre salariés)
+#           # Pour la même raison que plus bas, j'enlève le taux d'occupation ici
+#           # - 1 / sans . voiture . occupation
+#       - réponse MEP
+#   avec:
+#     distance:
+#       question: D'après les résultats de MEP, quelle est la distance moyenne parcourue par salarié par jour (A/R) pour des déplacements domicile-association ?
+#       unité: km
+#       par défaut: 0
 
-    répartition:
-      formule: voiture * 0.76 + transports en commun * 0.16 + deux roues * 0.02 + actif * 0.09
-      note: Source de la répartition https://www.insee.fr/fr/statistiques/6454112
-      avec:
-        voiture:
-          valeur: déplacements . DT-salariés . sans . voiture . split
-          unité: kgCO2e/km
-        transports en commun:
-          valeur: déplacements . DT-salariés . sans . transports en commun . split
-          unité: kgCO2e/km
-        deux roues:
-          valeur: 0.0851
-          unité: kgCO2e/km
-          meta:
-            id: 43775
-            nom: Cyclomoteur/Mixte/2023
-        actif:
-          valeur: 0
-          unité: kgCO2e/km
-          note: On néglige l'impact des modes actifs (vélo, marche, trottinette...)
+#     répartition:
+#       formule: voiture * 0.76 + transports en commun * 0.16 + deux roues * 0.02 + actif * 0.09
+#       note: Source de la répartition https://www.insee.fr/fr/statistiques/6454112
+#       avec:
+#         voiture:
+#           valeur: déplacements . DT-salariés . sans . voiture . split
+#           unité: kgCO2e/km
+#         transports en commun:
+#           valeur: déplacements . DT-salariés . sans . transports en commun . split
+#           unité: kgCO2e/km
+#         deux roues:
+#           valeur: 0.0851
+#           unité: kgCO2e/km
+#           meta:
+#             id: 43775
+#             nom: Cyclomoteur/Mixte/2023
+#         actif:
+#           valeur: 0
+#           unité: kgCO2e/km
+#           note: On néglige l'impact des modes actifs (vélo, marche, trottinette...)
 
-    réponse MEP:
-      question: D'après les résultats MEP, combien de kgCO2e représentent les déplacements domicile-association des salariés ?
-      unité: kgCO2e
-      par défaut: 0
-  unité: kgCO2e
+#     réponse MEP:
+#       question: D'après les résultats MEP, combien de kgCO2e représentent les déplacements domicile-association des salariés ?
+#       unité: kgCO2e
+#       par défaut: 0
+#   unité: kgCO2e
 
 ## Ici on calcule les émissions dans le cas ou il n'y pas eu de campagne MEP
 
@@ -74,10 +75,10 @@ déplacements . DT-salariés . sans . part voiture:
   titre: Voiture
   form:
     à traduire: oui
-  applicable si:
-    toutes ces conditions:
-      - est défini: déplacements . DT-salariés . MEP présent
-      - déplacements . DT-salariés . MEP présent = non
+ # applicable si:
+ #   toutes ces conditions:
+ #     - est défini: déplacements . DT-salariés . MEP présent
+ #     - déplacements . 
   question: Quel pourcentage des salariés se rend au travail en voiture ?
   unité: "%"
   par défaut: 0
@@ -86,10 +87,10 @@ déplacements . DT-salariés . sans . part train:
   titre: Train (TER)
   form:
     à traduire: oui
-  applicable si:
-    toutes ces conditions:
-      - est défini: déplacements . DT-salariés . MEP présent
-      - déplacements . DT-salariés . MEP présent = non
+ # applicable si:
+ #   toutes ces conditions:
+ #     - est défini: déplacements . DT-salariés . MEP présent
+ #     - déplacements . 
   question: Quel pourcentage des salariés se rend au travail en train (TER) ?
   unité: "%"
   par défaut: 0
@@ -98,10 +99,10 @@ déplacements . DT-salariés . sans . part deux roues:
   titre: Deux roues (moto, scooter, ...)
   form:
     à traduire: oui
-  applicable si:
-    toutes ces conditions:
-      - est défini: déplacements . DT-salariés . MEP présent
-      - déplacements . DT-salariés . MEP présent = non
+ # applicable si:
+ #   toutes ces conditions:
+ #     - est défini: déplacements . DT-salariés . MEP présent
+ #     - déplacements . 
   question: Quel pourcentage des salariés se rend au travail en deux roues ?
   unité: "%"
   par défaut: 0
@@ -110,10 +111,10 @@ déplacements . DT-salariés . sans . part transport en commun:
   titre: Transports en commun (Métro, tramway, RER, bus, ...)
   form:
     à traduire: oui
-  applicable si:
-    toutes ces conditions:
-      - est défini: déplacements . DT-salariés . MEP présent
-      - déplacements . DT-salariés . MEP présent = non
+ # applicable si:
+ #   toutes ces conditions:
+ #     - est défini: déplacements . DT-salariés . MEP présent
+ #     - déplacements . 
   question: Quel pourcentage des salariés se rend au travail en transports en commun (Métro, Tramway, Bus) ?
   unité: "%"
   par défaut: 0
