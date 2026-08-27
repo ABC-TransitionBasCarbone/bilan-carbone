@@ -17,74 +17,42 @@ const LegalNotices = async () => {
           </Link>
         </div>
 
-        <p>
-          Conformément aux dispositions des articles 6-III et 19 de la loi pour la Confiance dans l’Économie Numérique,
-          nous vous informons que ce site est édité par :
-        </p>
-        <h1 className={styles.section}>Association pour la transition Bas Carbone</h1>
+        <p>{t('introduction')}</p>
+
+        <h1 className={styles.section}>{t('publisher.title')}</h1>
         <p className="flex-col">
-          <span>Association loi 1901 à but non lucratif</span>
-          <span>SIRET : 538 170 093 00032</span>
-          <span>Bureaux : 41 rue Beauregard – 75002 Paris – France</span>
-          <span>Téléphone : 09 81 10 27 93</span>
+          <span>{t('publisher.type')}</span>
+          <span>{t('publisher.siret')}</span>
+          <span>{t('publisher.office')}</span>
+          <span>{t('publisher.phone')}</span>
           <span>
-            Mail :{' '}
+            {t('publisher.mail')}{' '}
             <a data-testid="contact-mail" href={`mailto:${contactMail}`}>
               {contactMail}
             </a>
           </span>
-          <span>N° d’identification à la TVA : FR 96 53 81 70 093</span>
+          <span>{t('publisher.vat')}</span>
         </p>
 
-        <div className={styles.section}>Hébergeur </div>
-        <p>Scalingo - 9 Rue de la Krutenau, 67000 Strasbourg</p>
+        <div className={styles.section}>{t('provider.title')}</div>
+        <p>{t('provider.details')}</p>
 
-        <div className={styles.section}>Propriétaire du site </div>
-        <p>
-          Le présent site est la propriété de l’Association pour la transition bas carbone. Le contenu éditorial,
-          textes, images composant le site web sont la propriété de l’Association pour la transition bas carbone. Toute
-          représentation totale ou partielle de ce site, par quelques procédés que ce soient, sans autorisation
-          préalable de l’Association pour la transition bas carbone, est interdite et constituerait une contrefaçon
-          sanctionnée par les articles L335-2 et suivants du Code de la propriété intellectuelle. Tous les noms de
-          produits ou de sociétés mentionnés dans le site web sont les marques de leurs titulaires.
-        </p>
-        <p>Responsable de publication : Anna Creti</p>
+        <div className={styles.section}>{t('websiteOwner.title')}</div>
+        <p>{t('websiteOwner.description')}</p>
+        <p>{t('websiteOwner.editorInChief')}</p>
 
-        <div className={styles.section}>Propriété intellectuelle et copyright </div>
-        <p>
-          L’ensemble des éléments du site (textes, documents…) sont, sauf dispositions contraires, la propriété
-          intellectuelle exclusive de l'Association pour la transition bas carbone. Par conséquent, toute reproduction,
-          représentation, transmission, diffusion, partielle ou totale, est interdite selon les termes de l’article L.
-          122-4 du CPI sous réserve des exceptions prévues à l’article L. 122-5 du CPI. Toute utilisation de données
-          figurant sur ce site nécessite une autorisation préalable et expresse. A défaut, le délit de contrefaçon
-          constitué est sanctionné sur le fondement des articles L. 335-2 et suivants du CPI.
-        </p>
-        <p>
-          Pour toute exploitation autorisée de tout ou partie du contenu du site, faire figurer le nom de l’auteur, ses
-          qualités, l’année de publication et la source.
-        </p>
-        <div className={styles.section}>Liens hypertextes </div>
-        <p>
-          L’éditeur ne saurait engager sa responsabilité sur le contenu des informations figurant sur les pages
-          auxquelles les liens hypertextes du présent site renvoient.
-        </p>
-        <div className={styles.section}>Droits d’accès</div>
-        <p>
-          Conformément au Règlement (UE) 2016/679 relatif à la protection des données à caractère personnel, vous
-          disposez sur vos données des droit d’accès, droit de rectification et du droit d’opposition.
-        </p>
-        <div className={styles.section}>La marque Bilan Carbone®</div>
-        <p>
-          La marque Bilan Carbone® est une marque déposée en France depuis le 2 décembre 2003, enregistrée sous le
-          numéro 3260464.
-        </p>
-        <p>
-          Tous droits de reproduction ou d’utilisation sont réservés s’agissant des représentations iconographiques et
-          photographiques de la marque. La reproduction à des fins de diffusion ou d’exploitation de tout ou partie de
-          la marque Bilan Carbone® n’est possible qu’avec l’autorisation expresse de l’Association pour la transition
-          Bas Carbone. Le cas échéant, aucune modification de forme qui détournerait le sens et l’image Bilan Carbone®
-          ne pourra être apportée. Un lien devra être établi vers l’Association pour la transition Bas Carbone.
-        </p>
+        <div className={styles.section}>{t('intellectualProperty.title')}</div>
+        <p>{t('intellectualProperty.description1')}</p>
+        <p>{t('intellectualProperty.description2')}</p>
+
+        <div className={styles.section}>{t('hypertextLinks.title')}</div>
+        <p>{t('hypertextLinks.description')}</p>
+
+        <div className={styles.section}>{t('accessRights.title')}</div>
+        <p>{t('accessRights.description')}</p>
+
+        <div className={styles.section}>{t('trademark.title')}</div>
+        <p>{t('trademark.description1')}</p>
       </div>
     </Block>
   )

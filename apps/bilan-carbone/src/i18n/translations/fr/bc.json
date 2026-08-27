@@ -221,7 +221,43 @@
     "ecrireMail": "Écrire directement à {supportEmail}"
   },
   "legalNotices": {
-    "profile": "Retour au profil"
+    "profile": "Retour au profil",
+    "introduction": "Conformément aux dispositions des articles 6-III et 19 de la loi pour la Confiance dans l'Économie Numérique, nous vous informons que ce site est édité par :",
+    "publisher": {
+      "title": "Association pour la transition Bas Carbone",
+      "type": "Association loi 1901 à but non lucratif",
+      "siret": "SIRET : 538 170 093 00032",
+      "office": "Bureaux : 41 rue Beauregard – 75002 Paris – France",
+      "phone": "Téléphone : 09 81 10 27 93",
+      "mail": "Mail :",
+      "vat": "N° d'identification à la TVA : FR 96 53 81 70 093"
+    },
+    "provider": {
+      "title": "Hébergeur",
+      "details": "Scalingo - 9 Rue de la Krutenau, 67000 Strasbourg"
+    },
+    "websiteOwner": {
+      "title": "Propriétaire du site",
+      "description": "Le présent site est la propriété de l'Association pour la transition bas carbone. Le contenu éditorial, textes, images composant le site web sont la propriété de l'Association pour la transition bas carbone. Toute représentation totale ou partielle de ce site, par quelques procédés que ce soient, sans autorisation préalable de l'Association pour la transition bas carbone, est interdite et constituerait une contrefaçon sanctionnée par les articles L335-2 et suivants du Code de la propriété intellectuelle. Tous les noms de produits ou de sociétés mentionnés dans le site web sont les marques de leurs titulaires.",
+      "editorInChief": "Responsable de publication : Anna Creti"
+    },
+    "intellectualProperty": {
+      "title": "Propriété intellectuelle et copyright",
+      "description1": "L'ensemble des éléments du site (textes, documents…) sont, sauf dispositions contraires, la propriété intellectuelle exclusive de l'Association pour la transition bas carbone. Par conséquent, toute reproduction, représentation, transmission, diffusion, partielle ou totale, est interdite selon les termes de l'article L. 122-4 du CPI sous réserve des exceptions prévues à l'article L. 122-5 du CPI. Toute utilisation de données figurant sur ce site nécessite une autorisation préalable et expresse. A défaut, le délit de contrefaçon constitué est sanctionné sur le fondement des articles L. 335-2 et suivants du CPI.",
+      "description2": "Pour toute exploitation autorisée de tout ou partie du contenu du site, faire figurer le nom de l'auteur, ses qualités, l'année de publication et la source."
+    },
+    "hypertextLinks": {
+      "title": "Liens hypertextes",
+      "description": "L'éditeur ne saurait engager sa responsabilité sur le contenu des informations figurant sur les pages auxquelles les liens hypertextes du présent site renvoient."
+    },
+    "accessRights": {
+      "title": "Droits d'accès",
+      "description": "Conformément au Règlement (UE) 2016/679 relatif à la protection des données à caractère personnel, vous disposez sur vos données des droit d'accès, droit de rectification et du droit d'opposition."
+    },
+    "trademark": {
+      "title": "La marque Bilan Carbone®",
+      "description1": "La marque Bilan Carbone® est une marque déposée en France depuis le 2 décembre 2003, enregistrée sous le numéro 3260464. Tous droits de reproduction ou d'utilisation sont réservés s'agissant des représentations iconographiques et photographiques de la marque. La reproduction à des fins de diffusion ou d'exploitation de tout ou partie de la marque Bilan Carbone® n'est possible qu'avec l'autorisation expresse de l'Association pour la transition Bas Carbone. Le cas échéant, aucune modification de forme qui détournerait le sens et l'image Bilan Carbone® ne pourra être apportée. Un lien devra être établi vers l'Association pour la transition Bas Carbone."
+    }
   },
   "login": {
     "welcome": "Bienvenue sur le Bilan Carbone® +",

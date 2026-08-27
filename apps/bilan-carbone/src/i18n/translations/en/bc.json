@@ -221,7 +221,43 @@
     "ecrireMail": "Write directly to {supportEmail}"
   },
   "legalNotices": {
-    "profile": "Return to profile"
+    "profile": "Back to profile",
+    "introduction": "In accordance with the provisions of Articles 6-III and 19 of the French Law for Confidence in the Digital Economy (Loi pour la Confiance dans l'Économie Numérique), we inform you that this website is published by:",
+    "publisher": {
+      "title": "Association pour la transition Bas Carbone",
+      "type": "Non-profit association",
+      "siret": "SIRET : 538 170 093 00032",
+      "office": "Office : 41 rue Beauregard – 75002 Paris – France",
+      "phone": "Phone number : 09 81 10 27 93",
+      "mail": "Mail :",
+      "vat": "VAT identification number : FR 96 53 81 70 093"
+    },
+    "provider": {
+      "title": "Provider",
+      "details": "Scalingo - 9 Rue de la Krutenau, 67000 Strasbourg"
+    },
+    "websiteOwner": {
+      "title": "Website Owner",
+      "description": "This website is owned by the Association pour la transition bas carbone (Association for Low-Carbon Transition). All editorial content, texts, and images on this website are the property of the Association pour la transition bas carbone. Any full or partial reproduction of this site by any means without prior written permission from the Association pour la transition bas carbone is strictly prohibited and constitutes an infringement punishable under Articles L335-2 and following of the French Intellectual Property Code. All product or company names mentioned on this website are trademarks of their respective owners.",
+      "editorInChief": "Editor in Chief: Anna Creti"
+    },
+    "intellectualProperty": {
+      "title": "Intellectual Property and Copyright",
+      "description1": "All elements of this website (texts, documents, etc.), unless otherwise stated, are the exclusive intellectual property of the Association pour la transition bas carbone. Therefore, any reproduction, representation, transmission, or distribution—whether partial or total—is prohibited under the terms of Article L. 122-4 of the French Intellectual Property Code, except as provided for in Article L. 122-5 of the same code. Any use of data published on this website requires prior and express authorization. Failure to obtain such authorization constitutes an act of infringement, punishable under Articles L. 335-2 and following of the French Intellectual Property Code.",
+      "description2": "For any authorized use of all or part of the website's content, the author's name, title, year of publication, and source must be clearly indicated."
+    },
+    "hypertextLinks": {
+      "title": "Hypertext Links",
+      "description": "The publisher cannot be held liable for the content of information appearing on pages accessed via hypertext links from this website."
+    },
+    "accessRights": {
+      "title": "Access Rights",
+      "description": "In accordance with the EU General Data Protection Regulation (GDPR) 2016/679, you have the right to access, rectify, and object to the processing of your personal data."
+    },
+    "trademark": {
+      "title": "The Bilan Carbone® Trademark",
+      "description1": "The Bilan Carbone® trademark has been registered in France since December 2, 2003, under number 3260464. All rights to reproduce or use the trademark's iconographic and photographic representations are reserved. Reproduction for the purpose of dissemination or exploitation of all or part of the Bilan Carbone® trademark is only possible with the express authorization of the Association pour la transition Bas Carbone. In such cases, no modifications that could alter the meaning or image of Bilan Carbone® may be made. A link to the Association pour la transition Bas Carbone must be included."
+    }
   },
   "login": {
     "welcome": "Welcome",
