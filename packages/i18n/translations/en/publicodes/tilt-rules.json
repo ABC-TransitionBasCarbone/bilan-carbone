@@ -605,10 +605,10 @@
       },
       "fuites": {
         "locaux partagés": {
-          "titre": "[TO_TRANSLATE] Fuites de fluides frigorigènes"
+          "titre": "[UPDATED] Fuites de fluides frigoriègnes"
         },
         "locaux seuls": {
-          "titre": "[TO_TRANSLATE] Fuites de fluides frigorigènes"
+          "titre": "[UPDATED] Fuites de fluides frigoriègnes"
         }
       }
     },
@@ -760,7 +760,7 @@
             "question": "[TO_TRANSLATE] Quel pourcentage des salariés se rend au travail en train (TER) ?"
           },
           "part deux roues": {
-            "titre": "[UPDATED] Deux roues (moto, scooter, ...)",
+            "titre": "[UPDATED] Deux roues",
             "question": "[TO_TRANSLATE] Quel pourcentage des salariés se rend au travail en deux roues ?"
           },
           "part transport en commun": {
@@ -781,7 +781,7 @@
             }
           },
           "deux roues": {
-            "titre": "[UPDATED] Deux roues (Moto, scooter, ...)",
+            "titre": "[UPDATED] Deux roues",
             "distance": {
               "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par salarié en deux roues par jour (A/R) pour des déplacements domicile-association ?"
             }
@@ -825,7 +825,7 @@
             "question": "[TO_TRANSLATE] Quand les bénévoles se déplacent, quel pourcentage d'entre eux utilise le train ?"
           },
           "part deux roues": {
-            "titre": "[UPDATED] Deux roues (moto, scooter, ...)",
+            "titre": "[UPDATED] Deux roues",
             "question": "[TO_TRANSLATE] Quand les bénévoles se déplacent, quel pourcentage d'entre eux utilise un deux roues ?"
           },
           "part transport en commun": {
@@ -852,7 +852,7 @@
             }
           },
           "deux roues": {
-            "titre": "[UPDATED] Deux roues (Moto, scooter, ...)",
+            "titre": "[UPDATED] Deux roues",
             "distance": {
               "question": "[TO_TRANSLATE] Quand les bénévoles se déplacent en deux roues, combien de km parcourent-ils en moyenne par jour (A/R) ?"
             }
@@ -897,7 +897,7 @@
             }
           },
           "deux roues": {
-            "titre": "[UPDATED] Deux roues (moto, scooter, ...), par mois",
+            "titre": "[UPDATED] Deux roues, par mois",
             "distance": {
               "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par mois par salarié en deux roues pour des déplacements liés à des missions ?"
             }
@@ -943,7 +943,7 @@
           "question": "[TO_TRANSLATE] Quel pourcentage des trajets se fait en train ?"
         },
         "part deux roues": {
-          "titre": "[UPDATED] Deux roues (moto, scooter, ...)",
+          "titre": "[UPDATED] Deux roues",
           "question": "[TO_TRANSLATE] Quel pourcentage des trajets se fait en deux roues (scooter, moto) ?"
         },
         "part transport en commun": {
@@ -967,7 +967,7 @@
           "question": "[TO_TRANSLATE] Combien de km parcourent en moyenne sur l'année vos bénéficiaires en train ?"
         },
         "deux roues": {
-          "titre": "[UPDATED] Deux roues (moto, scooter, ...)",
+          "titre": "[UPDATED] Deux roues",
           "question": "[TO_TRANSLATE] Combien de km parcourent en moyenne sur l'année vos bénéficiaires se déplaçant en deux roues (scooter, moto) ?"
         },
         "transport en commun": {
@@ -1032,20 +1032,20 @@
           "question": "[TO_TRANSLATE] Concernant vos locaux, diriez-vous que :",
           "options": {
             "locaux seuls": "[TO_TRANSLATE] J'utilise des locaux qui sont entièrement dédiés à mon association",
-            "locaux partagés": "[UPDATED] Mes locaux sont partagés avec d'autres structures (co-working, open-space partagés, ...)",
+            "locaux partagés": "[UPDATED] Mes locaux sont partagés avec d'autres stuctures (co-working, open-space partagés, ...)",
             "pas de locaux": "[TO_TRANSLATE] Mes activités associatives ne nécessitent pas de locaux (télétravail à 100%, extérieur, ...)"
           },
           "locaux seuls": {
             "titre": "[TO_TRANSLATE] J'utilise des locaux qui sont entièrement dédiés à mon association",
             "surface": {
-              "description": "[TO_TRANSLATE] Vous devez renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites, vous pouvez soit sommer l'ensemble des surfaces ici, soit créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans (on parle bien de leur construction), vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année.",
+              "description": "[UPDATED] Vous devez renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites, vous pouvez soit sommer l'ensemble des surfaces ici, soit créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans, vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année.",
               "question": "[TO_TRANSLATE] Quelle est la surface de ces locaux ?"
             }
           },
           "locaux partagés": {
-            "titre": "[UPDATED] Mes locaux sont partagés avec d'autres structures (co-working, open-space partagés, ...)",
+            "titre": "[UPDATED] Mes locaux sont partagés avec d'autres stuctures (co-working, open-space partagés, ...)",
             "surface": {
-              "description": "[TO_TRANSLATE] Vous devez renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites et que ces différents sites ont tous des locaux partagés, vous devez créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans (on parle bien de leur construction), vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année. Seule une partie de l'impact carbone sera pris en compte, en fonction du pourcentage des locaux utilisé par votre association à renseigner dans la question suivante.",
+              "description": "[UPDATED] Vous devez renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites et que ces différents sites ont tous des locaux partagés, vous devez créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans, vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année. Seule une partie de l'impact carbone sera pris en compte, en fonction du pourcentage des locaux utilisé par votre association à renseigner dans la question suivante.",
               "question": "[TO_TRANSLATE] Quelle est la surface de ces locaux ?"
             },
             "pourcentage": {
@@ -1102,7 +1102,9 @@
           },
           "nombre": {
             "question": "[TO_TRANSLATE] Nombre de plats végétaliens"
-          }
+          },
+          "description": "[TO_TRANSLATE] Repas sans produits animaux.",
+          "question": "[TO_TRANSLATE] Végétalien"
         },
         "végétarien": {
           "titre": "[TO_TRANSLATE] Végétarien",
@@ -1112,7 +1114,8 @@
           },
           "nombre": {
             "question": "[TO_TRANSLATE] Nombre de plats végétariens"
-          }
+          },
+          "description": "[TO_TRANSLATE] Repas sans chair animale, avec des œufs ou un peu de fromage."
         },
         "viande blanche": {
           "titre": "[TO_TRANSLATE] Viande blanche",
@@ -1122,7 +1125,8 @@
           },
           "nombre": {
             "question": "[TO_TRANSLATE] Nombre de plats viande blanche"
-          }
+          },
+          "description": "[TO_TRANSLATE] Repas contenant une pièce de poulet, porc."
         },
         "viande rouge": {
           "titre": "[TO_TRANSLATE] Viande rouge",
@@ -1135,7 +1139,8 @@
           },
           "nombre": {
             "question": "[TO_TRANSLATE] Nombre de plats viande rouge"
-          }
+          },
+          "description": "[TO_TRANSLATE] Repas contenant une pièce de bœuf, veau, ou agneau."
         },
         "poisson gras": {
           "titre": "[TO_TRANSLATE] Poisson gras",
@@ -1145,7 +1150,8 @@
           },
           "nombre": {
             "question": "[TO_TRANSLATE] Nombre de plats poisson gras"
-          }
+          },
+          "description": "[TO_TRANSLATE] Repas contenant thon, saumon, sardine ou maquereau."
         },
         "poisson blanc": {
           "titre": "[TO_TRANSLATE] Poisson blanc",
@@ -1155,7 +1161,8 @@
           },
           "nombre": {
             "question": "[TO_TRANSLATE] Nombre de plats poisson blanc"
-          }
+          },
+          "description": "[TO_TRANSLATE] Repas avec un filet de poisson blanc."
         },
         "repas moyen": {
           "titre": "[TO_TRANSLATE] Repas moyen",
@@ -1165,12 +1172,13 @@
           },
           "nombre": {
             "question": "[TO_TRANSLATE] Nombre de repas moyen"
-          }
+          },
+          "description": "[TO_TRANSLATE] Repas moyen d'un français"
         }
       },
       "mosaic bénévoles": {
         "titre": "[TO_TRANSLATE] Empreinte des repas",
-        "description": "[TO_TRANSLATE] Pour un bénévole, un repas ne doit être considéré que si l'activité dure une journée complète ou si l'on est certain qu'elle inclut un repas. L'option \"Repas moyen\" sert uniquement si vous n'avez aucune idée des types de repas consommés. Dans le cas où l'association ne saurait pas associer un nombre de repas, elle peut considérer le nombre d’équivalents temps plein (ETP) calculés à partir du nombre de bénévoles et du nombre d'heures de bénévolat, puis associer un repas par jour travaillé par un ETP. L'hypothèse est majorante car elle associe un repas par jour, sans savoir si les plages horaires impliquent réellement la consommation d'un repas.",
+        "description": "[UPDATED] On prend classiquement en compte l'empreinte carbone d'un repas par journée travaillée pour un salarié. L'option \"Repas moyen\" sert uniquement si vous n'avez aucune idée des types de repas consommés.",
         "question": "[TO_TRANSLATE] Combien de ces différents types de repas sont consommés par vos bénévoles chaque année ?",
         "végétalien": {
           "titre": "[TO_TRANSLATE] Végétalien",
@@ -1180,7 +1188,8 @@
           },
           "nombre": {
             "question": "[TO_TRANSLATE] Nombre de plats végétaliens"
-          }
+          },
+          "description": "[TO_TRANSLATE] Repas sans produits animaux."
         },
         "végétarien": {
           "titre": "[TO_TRANSLATE] Végétarien",
@@ -1190,7 +1199,8 @@
           },
           "nombre": {
             "question": "[TO_TRANSLATE] Nombre de plats végétariens"
-          }
+          },
+          "description": "[TO_TRANSLATE] Repas sans chair animale, avec des œufs ou un peu de fromage."
         },
         "viande blanche": {
           "titre": "[TO_TRANSLATE] Viande blanche",
@@ -1200,7 +1210,8 @@
           },
           "nombre": {
             "question": "[TO_TRANSLATE] Nombre de plats viande blanche"
-          }
+          },
+          "description": "[TO_TRANSLATE] Repas contenant une pièce de poulet, porc."
         },
         "viande rouge": {
           "titre": "[TO_TRANSLATE] Viande rouge",
@@ -1213,7 +1224,8 @@
           },
           "nombre": {
             "question": "[TO_TRANSLATE] Nombre de plats viande rouge"
-          }
+          },
+          "description": "[TO_TRANSLATE] Repas contenant une pièce de bœuf, veau, ou agneau."
         },
         "poisson gras": {
           "titre": "[TO_TRANSLATE] Poisson gras",
@@ -1223,7 +1235,8 @@
           },
           "nombre": {
             "question": "[TO_TRANSLATE] Nombre de plats poisson gras"
-          }
+          },
+          "description": "[TO_TRANSLATE] Repas contenant thon, saumon, sardine ou maquereau."
         },
         "poisson blanc": {
           "titre": "[TO_TRANSLATE] Poisson blanc",
@@ -1233,7 +1246,8 @@
           },
           "nombre": {
             "question": "[TO_TRANSLATE] Nombre de plats poisson blanc"
-          }
+          },
+          "description": "[TO_TRANSLATE] Repas avec un filet de poisson blanc."
         },
         "repas moyen": {
           "titre": "[TO_TRANSLATE] Repas moyen",
@@ -1243,7 +1257,8 @@
           },
           "nombre": {
             "question": "[TO_TRANSLATE] Nombre de repas moyen"
-          }
+          },
+          "description": "[TO_TRANSLATE] Repas moyen d'un français"
         }
       },
       "bénéficiaires": {
@@ -1252,7 +1267,7 @@
         },
         "mosaic bénéficiaires": {
           "titre": "[TO_TRANSLATE] Empreinte des repas",
-          "description": "[TO_TRANSLATE] Il vous faut connaître le nombre de repas pris par vos bénéficiaires. Attention à ne pas créer de double-comptes avec d'éventuels repas déjà comptabilisés dans le cadre d'un événement. L'option \"Repas moyen\" sert uniquement si vous n'avez aucune idée des types de repas consommés.",
+          "description": "[UPDATED] On prend classiquement en compte l'empreinte carbone d'un repas par journée travaillée pour un salarié. L'option \"Repas moyen\" sert uniquement si vous n'avez aucune idée des types de repas consommés.",
           "question": "[TO_TRANSLATE] Combien de ces différents types de repas sont consommés par vos bénéficiaires chaque année ?",
           "végétalien": {
             "titre": "[TO_TRANSLATE] Végétalien",
@@ -1262,7 +1277,8 @@
             },
             "nombre": {
               "question": "[TO_TRANSLATE] Nombre de plats végétaliens"
-            }
+            },
+            "description": "[TO_TRANSLATE] Repas sans produits animaux."
           },
           "végétarien": {
             "titre": "[TO_TRANSLATE] Végétarien",
@@ -1272,7 +1288,8 @@
             },
             "nombre": {
               "question": "[TO_TRANSLATE] Nombre de plats végétariens"
-            }
+            },
+            "description": "[TO_TRANSLATE] Repas sans chair animale, avec des œufs ou un peu de fromage."
           },
           "viande blanche": {
             "titre": "[TO_TRANSLATE] Viande blanche",
@@ -1282,7 +1299,8 @@
             },
             "nombre": {
               "question": "[TO_TRANSLATE] Nombre de plats viande blanche"
-            }
+            },
+            "description": "[TO_TRANSLATE] Repas contenant une pièce de poulet, porc."
           },
           "viande rouge": {
             "titre": "[TO_TRANSLATE] Viande rouge",
@@ -1295,7 +1313,8 @@
             },
             "nombre": {
               "question": "[TO_TRANSLATE] Nombre de plats viande rouge"
-            }
+            },
+            "description": "[TO_TRANSLATE] Repas contenant une pièce de bœuf, veau, ou agneau."
           },
           "poisson gras": {
             "titre": "[TO_TRANSLATE] Poisson gras",
@@ -1305,7 +1324,8 @@
             },
             "nombre": {
               "question": "[TO_TRANSLATE] Nombre de plats poisson gras"
-            }
+            },
+            "description": "[TO_TRANSLATE] Repas contenant thon, saumon, sardine ou maquereau."
           },
           "poisson blanc": {
             "titre": "[TO_TRANSLATE] Poisson blanc",
@@ -1315,7 +1335,8 @@
             },
             "nombre": {
               "question": "[TO_TRANSLATE] Nombre de plats poisson blanc"
-            }
+            },
+            "description": "[TO_TRANSLATE] Repas avec un filet de poisson blanc."
           },
           "repas moyen": {
             "titre": "[TO_TRANSLATE] Repas moyen",
@@ -1325,7 +1346,8 @@
             },
             "nombre": {
               "question": "[TO_TRANSLATE] Nombre de repas moyen"
-            }
+            },
+            "description": "[TO_TRANSLATE] Repas moyen d'un français"
           }
         }
       }

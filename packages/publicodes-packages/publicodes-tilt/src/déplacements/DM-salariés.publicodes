@@ -2,60 +2,61 @@ déplacements . DM-salariés:
   titre: Emissions des trajets liés à des missions des salariés
   formule:
     somme:
-      - avec
+      # - avec
       - sans
   unité: kgCO2e
   par defaut: 0
 
-## Cette fonction permet de calculer les émissions totales des salariés à partir des émissions moyennes par mode de ceux qui ont répondu.
+## Cette fonction permet de calculer les émissions totales des salariés à partir des émissions moyennes par mode de ceux qui ont répondu. 
+#GC : Commenté car pas de MIP à la sortie. Remettre la somme "avec" et tous les applicables si dans les questions "sans" si on ajoute MIP. Idem pour tous les autres fichiers, faire des Ctrl+F
 
-déplacements . DM-salariés . avec:
-  applicable si:
-    toutes ces conditions:
-      - est défini: déplacements . DT-salariés . MEP présent
-      - déplacements . DT-salariés . MEP présent = oui
-  titre: émissions des trajets liés à des missions des salariés (avec enquête MEP)
-  formule:
-    produit:
-      - émissions MEP ##émissions unitaires par salarié
-      - général . salariés ##On extrapole les résultats par salarié issus de MEP à tous les salariés
-  avec:
-    émissions MEP:
-      valeur:
-        somme:
-          - voiture
-          - train
-          - avion
-          - transports en commun
-          - deux roues
-      avec:
-        voiture:
-          question: D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en voiture liés à des missions ?
-          type: nombre
-          unité: kgCO2e
-          par défaut: 0
-        train:
-          question: D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en train liés à des missions ?
-          type: nombre
-          unité: kgCO2e
-          par défaut: 0
-        avion:
-          question: D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en avion liés à des missions ?
-          type: nombre
-          unité: kgCO2e
-          par défaut: 0
-        transports en commun:
-          question: D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en transports en commun liés à des missions ?
-          type: nombre
-          unité: kgCO2e
-          par défaut: 0
-        deux roues:
-          question: D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en deux roues liés à des missions ?
-          type: nombre
-          unité: kgCO2e
-          par défaut: 0
-  unité: kgCO2e
-  par défaut: 0
+# déplacements . DM-salariés . avec:
+#   applicable si:
+#     toutes ces conditions:
+#       - est défini: déplacements . DT-salariés . MEP présent
+#       - déplacements . DT-salariés . MEP présent = oui
+#   titre: émissions des trajets liés à des missions des salariés (avec enquête MEP)
+#   formule:
+#     produit:
+#       - émissions MEP ##émissions unitaires par salarié
+#       - général . salariés ##On extrapole les résultats par salarié issus de MEP à tous les salariés
+#   avec:
+#     émissions MEP:
+#       valeur:
+#         somme:
+#           - voiture
+#           - train
+#           - avion
+#           - transports en commun
+#           - deux roues
+#       avec:
+#         voiture:
+#           question: D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en voiture liés à des missions ?
+#           type: nombre
+#           unité: kgCO2e
+#           par défaut: 0
+#         train:
+#           question: D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en train liés à des missions ?
+#           type: nombre
+#           unité: kgCO2e
+#           par défaut: 0
+#         avion:
+#           question: D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en avion liés à des missions ?
+#           type: nombre
+#           unité: kgCO2e
+#           par défaut: 0
+#         transports en commun:
+#           question: D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en transports en commun liés à des missions ?
+#           type: nombre
+#           unité: kgCO2e
+#           par défaut: 0
+#         deux roues:
+#           question: D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en deux roues liés à des missions ?
+#           type: nombre
+#           unité: kgCO2e
+#           par défaut: 0
+#   unité: kgCO2e
+#   par défaut: 0
 
 ## Ici on calcule les émissions dans le cas ou il n'y pas eu de campagne MEP
 
@@ -78,10 +79,10 @@ déplacements . DM-salariés . sans . voiture:
   titre: Voiture, par mois
   form:
     à traduire: oui
-  applicable si:
-    toutes ces conditions:
-      - est défini: déplacements . DT-salariés . MEP présent
-      - déplacements . DT-salariés . MEP présent = non
+  # applicable si:
+  #   toutes ces conditions:
+  #     - est défini: déplacements . DT-salariés . MEP présent
+  #     - déplacements . DT-salariés . MEP présent = non
   formule: distance * split * nombre de mois * général . salariés
   avec:
     distance:
@@ -134,10 +135,10 @@ déplacements . DM-salariés . sans . train:
   titre: Train (TER), par mois
   form:
     à traduire: oui
-  applicable si:
-    toutes ces conditions:
-      - est défini: déplacements . DT-salariés . MEP présent
-      - déplacements . DT-salariés . MEP présent = non
+  # applicable si:
+  #   toutes ces conditions:
+  #     - est défini: déplacements . DT-salariés . MEP présent
+  #     - déplacements . DT-salariés . MEP présent = non
   formule: distance * FE * nombre de mois * général . salariés
   avec:
     distance:
@@ -158,10 +159,10 @@ déplacements . DM-salariés . sans . deux roues:
   titre: Deux roues (moto, scooter, ...), par mois
   form:
     à traduire: oui
-  applicable si:
-    toutes ces conditions:
-      - est défini: déplacements . DT-salariés . MEP présent
-      - déplacements . DT-salariés . MEP présent = non
+  # applicable si:
+  #   toutes ces conditions:
+  #     - est défini: déplacements . DT-salariés . MEP présent
+  #     - déplacements . DT-salariés . MEP présent = non
   formule: distance * FE * nombre de mois * général . salariés
   avec:
     distance:
@@ -181,10 +182,10 @@ déplacements . DM-salariés . sans . transports en commun:
   titre: Transports en commun (Métro, tramway, RER, bus, ...), par mois
   form:
     à traduire: oui
-  applicable si:
-    toutes ces conditions:
-      - est défini: déplacements . DT-salariés . MEP présent
-      - déplacements . DT-salariés . MEP présent = non
+ # applicable si:
+ #   toutes ces conditions:
+ #     - est défini: déplacements . DT-salariés . MEP présent
+ #     - déplacements . 
   formule: distance * split * nombre de mois * général . salariés
   avec:
     distance:
@@ -220,10 +221,10 @@ déplacements . DM-salariés . sans . avion . court courrier:
   titre: Avion, court courrier, par an
   form:
     à traduire: oui
-  applicable si:
-    toutes ces conditions:
-      - est défini: déplacements . DT-salariés . MEP présent
-      - déplacements . DT-salariés . MEP présent = non
+ # applicable si:
+ #   toutes ces conditions:
+ #     - est défini: déplacements . DT-salariés . MEP présent
+ #     - déplacements . 
   formule: distance * FE * général . salariés
   avec:
     distance:
@@ -243,10 +244,10 @@ déplacements . DM-salariés . sans . avion . moyen courrier:
   titre: Avion, moyen courrier, par an
   form:
     à traduire: oui
-  applicable si:
-    toutes ces conditions:
-      - est défini: déplacements . DT-salariés . MEP présent
-      - déplacements . DT-salariés . MEP présent = non
+ # applicable si:
+ #   toutes ces conditions:
+ #     - est défini: déplacements . DT-salariés . MEP présent
+ #     - déplacements . 
   formule: distance * FE * général . salariés
   avec:
     distance:
@@ -266,10 +267,10 @@ déplacements . DM-salariés . sans . avion . long courrier:
   titre: Avion, long courrier, par an
   form:
     à traduire: oui
-  applicable si:
-    toutes ces conditions:
-      - est défini: déplacements . DT-salariés . MEP présent
-      - déplacements . DT-salariés . MEP présent = non
+ # applicable si:
+ #   toutes ces conditions:
+ #     - est défini: déplacements . DT-salariés . MEP présent
+ #     - déplacements . 
   formule: distance * FE * général . salariés
   avec:
     distance:
