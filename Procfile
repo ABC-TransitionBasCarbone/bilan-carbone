@@ -1,2 +1,2 @@
-web: sh -c 'if [ "$APP_TARGET" = "mip" ]; then exec env HOSTNAME=0.0.0.0 node apps/mip/.next/standalone/apps/mip/server.js; else exec env HOSTNAME=0.0.0.0 node apps/bilan-carbone/.next/standalone/apps/bilan-carbone/server.js; fi'
+web: node apps/$APP_TARGET/.next/standalone/apps/$APP_TARGET/server.js
 postdeploy: npx prisma migrate deploy --config packages/db-common/prisma.config.ts --schema packages/db-common/prisma/schema
