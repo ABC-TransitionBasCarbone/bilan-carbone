@@ -2,7 +2,7 @@ const fs = require('fs').promises
 const path = require('path')
 
 const appPathArg = process.argv[2] || 'apps/bilan-carbone'
-const appPath = path.resolve(__dirname, appPathArg)
+const appPath = path.resolve(__dirname, '..', '..', appPathArg)
 
 const staticSrcPath = path.join(appPath, '.next/static')
 const staticDestPath = path.join(appPath, '.next/standalone', appPathArg, '.next/static')
