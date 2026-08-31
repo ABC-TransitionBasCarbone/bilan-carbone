@@ -41,5 +41,8 @@
     "bc": {
       "emissions": "Emisii (tCO₂e)"
     }
+  },
+  "importFileModal": {
+    "emptyHeader": "Fișierul nu conține anteturile corecte. Vă rugăm să utilizați modelul de import."
   }
 }

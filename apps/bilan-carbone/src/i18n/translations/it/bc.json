@@ -1516,7 +1516,7 @@
     "tooManyFiles": "Importa un solo file alla volta",
     "invalidFileType": "Il file non è un file Excel valido",
     "emptyFile": "Il file è vuoto",
-    "emptyHeader": "Le fichier ne contient pas les bons en-têtes. Veuillez utiliser le modèle d'import.",
+    "emptyHeader": "Il file non contiene le intestazioni corrette. Si prega di utilizzare il modello di importazione.",
     "missingName": "L'etichetta è mancante",
     "missingSource": "Fonte mancante",
     "invalidUnit": "Unità non valida: \"{value}\"",
