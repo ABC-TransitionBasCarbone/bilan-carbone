@@ -1580,6 +1580,7 @@
     "tooManyFiles": "Veuillez importer un seul fichier à la fois",
     "invalidFileType": "Le fichier n'est pas un fichier Excel valide",
     "emptyFile": "Le fichier est vide",
+    "emptyHeader": "Le fichier ne contient pas les bons en-têtes. Veuillez utiliser le modèle d'import.",
     "missingName": "Le libellé est manquant",
     "missingSource": "Source manquante",
     "invalidUnit": "Unité invalide : \"{value}\"",

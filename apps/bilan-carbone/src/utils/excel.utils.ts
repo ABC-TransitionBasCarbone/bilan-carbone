@@ -20,7 +20,12 @@ export function parseExcelSheet(
   }
 
   const sheet = workbook[0]
-  const headerRowIndex = sheet.data.findIndex((row) => row[0] === options?.firstHeader)
+  const headerRowIndex = options?.firstHeader ? sheet.data.findIndex((row) => row[0] === options.firstHeader) : 0
+
+  if (headerRowIndex === -1) {
+    return { success: false, errors: [{ lineNumber: null, key: 'emptyHeader' }] }
+  }
+
   if (!sheet?.data || sheet.data.length < headerRowIndex + 2) {
     return { success: false, errors: [{ lineNumber: null, key: 'emptyFile' }] }
   }
