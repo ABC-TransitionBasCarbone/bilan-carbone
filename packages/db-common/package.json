@@ -15,6 +15,9 @@
     "@prisma/client": "7.10.0",
     "pg": "^8.23.0"
   },
+  "devDependencies": {
+    "@types/node": "^24.13.3"
+  },
   "prisma": {
     "schema": "prisma/schema"
   },

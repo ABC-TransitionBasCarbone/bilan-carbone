@@ -3,7 +3,7 @@ import { defineConfig, env } from 'prisma/config'
 
 export default defineConfig({
   migrations: {
-    seed: 'tsx prisma/seed/index.ts',
+    seed: 'tsx ../../packages/db-common/prisma/seed/index.ts',
   },
   datasource: {
     url: env('POSTGRES_PRISMA_URL'),

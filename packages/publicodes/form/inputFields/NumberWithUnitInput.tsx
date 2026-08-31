@@ -1,6 +1,6 @@
 import { usePublicodesUnitTranslation } from '@abc-transitionbascarbone/publicodes/hooks'
 import { NumberField } from '@base-ui-components/react/number-field'
-import { InputAdornment, OutlinedInput } from '@mui/material'
+import { InputAdornment, OutlinedInput, TextField } from '@mui/material'
 import { EvaluatedNumberInput } from '@publicodes/forms'
 import classNames from 'classnames'
 import { getCategoryClassSuffix, getRuleCategoryKey, OnFieldChange } from '../utils'
@@ -11,6 +11,7 @@ import { BaseInputProps } from './utils'
 interface NumberWithUnitInputProps<RuleName extends string> extends BaseInputProps<RuleName> {
   formElement: EvaluatedNumberInput<RuleName>
   suggestions?: Record<string, string | number | Record<string, unknown>> | undefined
+  lockToSuggestions?: boolean
 }
 
 const NumberWithUnitInput = <RuleName extends string>({
@@ -18,6 +19,7 @@ const NumberWithUnitInput = <RuleName extends string>({
   onChange,
   disabled,
   suggestions,
+  lockToSuggestions = false,
 }: NumberWithUnitInputProps<RuleName>) => {
   const categoryClassSuffix = getCategoryClassSuffix(getRuleCategoryKey(formElement.id))
   const suggestionToneClass = categoryClassSuffix ? styles[`suggestionTone${categoryClassSuffix}`] : undefined
@@ -33,16 +35,21 @@ const NumberWithUnitInput = <RuleName extends string>({
     ?
     Object.entries(suggestions).filter((entry): entry is [string, number] => typeof entry[1] === 'number')
     : []
+  const selectedSuggestionLabel = suggestionEntries.find(([, value]) => value === localValue)?.[0] ?? ''
+  const hasSuggestions = suggestionEntries.length > 0
+  const isLockedSuggestion = hasSuggestions && lockToSuggestions
 
   return (
     <div>
-      {suggestionEntries.length > 0 && (
+      {hasSuggestions && (
         <div className={classNames('flex', 'wrap', 'gapped-2', 'pb-2', styles.suggestions)}>
           {suggestionEntries.map(([label, value]) => (
             <button
               key={label}
               type="button"
-              className={classNames(styles.suggestionChip, suggestionToneClass, 'pointer')}
+              className={classNames(styles.suggestionChip, suggestionToneClass, 'pointer', {
+                [styles.selectedSuggestionChip]: localValue === value,
+              })}
               onClick={() => {
                 handleValueChange(value)
                 handleValueCommitted(value)
@@ -53,21 +60,39 @@ const NumberWithUnitInput = <RuleName extends string>({
           ))}
         </div>
       )}
-      <NumberField.Root
-        className={classNames(styles.inputWrapper, 'wfit')}
-        value={localValue}
-        onFocus={handleFocus}
-        onValueChange={handleValueChange}
-        onValueCommitted={handleValueCommitted}
-        disabled={isDisabled}
-      >
-        <NumberField.Input
-          className={styles.input}
-          render={
-            <OutlinedInput endAdornment={unit ? <InputAdornment position="end">{unit}</InputAdornment> : undefined} />
-          }
+      {isLockedSuggestion ? (
+        <TextField
+          className={classNames(styles.inputWrapper, 'wfit')}
+          value={selectedSuggestionLabel}
+          onFocus={handleFocus}
+          disabled
+          slotProps={{
+            input: {
+              readOnly: true,
+              endAdornment: unit ? <InputAdornment position="end">{unit}</InputAdornment> : undefined,
+            },
+          }}
         />
-      </NumberField.Root>
+      ) : (
+        <NumberField.Root
+          className={classNames(styles.inputWrapper, 'wfit')}
+          value={localValue}
+          onFocus={handleFocus}
+          onValueChange={handleValueChange}
+          onValueCommitted={handleValueCommitted}
+          disabled={isDisabled}
+        >
+          <NumberField.Input
+            className={styles.input}
+            inputMode="decimal"
+            render={
+              <OutlinedInput
+                endAdornment={unit ? <InputAdornment position="end">{unit}</InputAdornment> : undefined}
+              />
+            }
+          />
+        </NumberField.Root>
+      )}
     </div>
   )
 }

@@ -1,12 +1,11 @@
 'use server'
 
 import { CATEGORY_COLORS } from '@/constants/style'
-import { DEFAULT_ENTITY_FILTERS } from '@/constants/survey'
 import { createResponse } from '@/db/campaign'
 import { getSurveyCampaignForCsvExport, getSurveyCampaignForResults } from '@/db/survey'
 import { createMipEngine, getSurveyCategoryKeysFromRawRules, RawRules } from '@/publicodes/mip-engine'
 import { dbActualizedAuth } from '@/services/auth'
-import { EmissionCategory, KeyStatGroup, SurveyResults } from '@/types/results.types'
+import { EmissionCategory, EntityFilterResult, KeyStatGroup, SurveyResults } from '@/types/results.types'
 import { withServerResponse } from '@/utils/serverResponse'
 import { isAdmin } from '@/utils/user'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
@@ -285,6 +284,78 @@ const buildKeyStats = (
   ]
 }
 
+const FILTER_RULE_KEY = 'DT . filtrage'
+
+type EntityFilterDef = { name: string; value: number }
+
+const getEntityFilterDefsFromModel = (rules: RawRules): EntityFilterDef[] => {
+  const typedRules = rules as Record<string, unknown>
+  const filterRule = typedRules[FILTER_RULE_KEY]
+  if (!filterRule || typeof filterRule !== 'object') {
+    return []
+  }
+  const suggestions = (filterRule as Record<string, unknown>).suggestions
+  if (!suggestions || typeof suggestions !== 'object') {
+    return []
+  }
+  return Object.entries(suggestions as Record<string, number>)
+    .map(([name, value]) => ({ name, value }))
+    .sort((a, b) => a.value - b.value)
+}
+
+const computeAggregatesForSituations = (
+  engine: Engine,
+  filterSituations: Situation<string>[],
+  categoryKeys: string[],
+  emptyCategories: EmissionCategory[],
+): { totalRespondents: number; averageFootprint: number; categories: EmissionCategory[]; keyStats: KeyStatGroup[] } => {
+  if (filterSituations.length === 0) {
+    return { totalRespondents: 0, averageFootprint: 0, categories: emptyCategories, keyStats: [] }
+  }
+
+  const getRuleValue = (ruleName: string): number => {
+    try {
+      return getNumericNodeValue(engine.evaluate(ruleName).nodeValue)
+    } catch {
+      return 0
+    }
+  }
+
+  const categoryTotals = Object.fromEntries(categoryKeys.map((key) => [key, 0]))
+  const commuteEmissionsKg: number[] = []
+  const travelEmissionsKg: number[] = []
+  let footprintTotal = 0
+
+  for (const situation of filterSituations) {
+    engine.setSituation(situation)
+    footprintTotal += getRuleValue('bilan')
+    const commuteEmission = getRuleValue('DT')
+    if (commuteEmission > 0) {
+      commuteEmissionsKg.push(Math.max(0, commuteEmission))
+    }
+    const travelEmission = getRuleValue('transport')
+    if (travelEmission > 0) {
+      travelEmissionsKg.push(Math.max(0, travelEmission))
+    }
+    for (const key of categoryKeys) {
+      categoryTotals[key] += getRuleValue(key)
+    }
+  }
+
+  const count = filterSituations.length
+  return {
+    totalRespondents: count,
+    averageFootprint: Math.round(footprintTotal / count),
+    categories: categoryKeys.map((key) => ({
+      key,
+      labelFr: '',
+      value: Math.round(categoryTotals[key] / count),
+      color: CATEGORY_COLORS[key] ?? CATEGORY_COLORS.total,
+    })),
+    keyStats: buildKeyStats(engine, filterSituations, commuteEmissionsKg, travelEmissionsKg),
+  }
+}
+
 export const createSurveyResponse = async (campaignId: string, answers: string) =>
   withServerResponse('createSurveyResponse', async () => {
     await createResponse({
@@ -317,6 +388,7 @@ export const getSurveyResults = async (campaignId: string): Promise<SurveyResult
   const totalRespondents = responses.length
   const modelRules = campaign.modelCampaign.model as RawRules
   const categoryKeys = getSurveyCategoryKeysFromRawRules(modelRules)
+  const entityFilterDefs = canAccessEntityFilter ? getEntityFilterDefsFromModel(modelRules) : []
 
   const emptyCategories: EmissionCategory[] = categoryKeys.map((key) => ({
     key,
@@ -325,70 +397,62 @@ export const getSurveyResults = async (campaignId: string): Promise<SurveyResult
     color: CATEGORY_COLORS[key] ?? CATEGORY_COLORS.total,
   }))
 
+  const buildEntityFilterResults = (allSituations: Situation<string>[], engine: Engine): EntityFilterResult[] => {
+    const allAggregates = computeAggregatesForSituations(engine, allSituations, categoryKeys, emptyCategories)
+    const allFilter: EntityFilterResult = { id: 'all', name: 'Tous', ...allAggregates }
+    const entityFilters: EntityFilterResult[] = entityFilterDefs.map(({ name, value }) => {
+      const entitySituations = allSituations.filter((s) => Number(s[FILTER_RULE_KEY]) === value)
+      return {
+        id: String(value),
+        name,
+        ...computeAggregatesForSituations(engine, entitySituations, categoryKeys, emptyCategories),
+      }
+    })
+    return [allFilter, ...entityFilters]
+  }
+
   if (totalRespondents === 0) {
+    const emptyEntityFilters: EntityFilterResult[] = [
+      { id: 'all', name: 'Tous', totalRespondents: 0, averageFootprint: 0, categories: emptyCategories, keyStats: [] },
+      ...entityFilterDefs.map(({ name, value }) => ({
+        id: String(value),
+        name,
+        totalRespondents: 0,
+        averageFootprint: 0,
+        categories: emptyCategories,
+        keyStats: [],
+      })),
+    ]
     return {
       surveyId: campaignId,
       totalRespondents: 0,
       averageFootprint: 0,
       categories: emptyCategories,
-      entities: canAccessEntityFilter ? DEFAULT_ENTITY_FILTERS : [],
+      entities: canAccessEntityFilter ? emptyEntityFilters : [],
       comments: [],
       keyStats: [],
     }
   }
 
   const engine = createMipEngine(modelRules)
-  const categoryTotals: Record<string, number> = Object.fromEntries(categoryKeys.map((key) => [key, 0]))
-  const situations: Situation<string>[] = []
-  const commuteEmissionsKg: number[] = []
-  const travelEmissionsKg: number[] = []
-  let footprintTotal = 0
-
-  const getRuleNumericNodeValue = (ruleName: string): number => {
-    try {
-      return getNumericNodeValue(engine.evaluate(ruleName).nodeValue)
-    } catch {
-      return 0
-    }
-  }
-
-  for (const response of responses) {
+  const situations: Situation<string>[] = responses.map((response) => {
     const formState = parseStoredFormState(response.answers)
-    const situation = formState.situation ?? {}
-    situations.push(situation)
+    return formState.situation ?? {}
+  })
 
-    engine.setSituation(situation)
-
-    footprintTotal += getRuleNumericNodeValue('bilan')
-
-    const commuteEmission = getRuleNumericNodeValue('DT')
-    if (commuteEmission > 0) {
-      commuteEmissionsKg.push(Math.max(0, commuteEmission))
-    }
-
-    const travelEmission = getRuleNumericNodeValue('transport')
-    if (travelEmission > 0) {
-      travelEmissionsKg.push(Math.max(0, travelEmission))
-    }
-
-    for (const key of categoryKeys) {
-      categoryTotals[key] += getRuleNumericNodeValue(key)
-    }
-  }
-
-  const keyStats = buildKeyStats(engine, situations, commuteEmissionsKg, travelEmissionsKg)
+  const { averageFootprint, categories, keyStats } = computeAggregatesForSituations(
+    engine,
+    situations,
+    categoryKeys,
+    emptyCategories,
+  )
 
   return {
     surveyId: campaignId,
     totalRespondents,
-    averageFootprint: Math.round(footprintTotal / totalRespondents),
-    categories: categoryKeys.map((key) => ({
-      key,
-      labelFr: '',
-      value: Math.round(categoryTotals[key] / totalRespondents),
-      color: CATEGORY_COLORS[key] ?? CATEGORY_COLORS.total,
-    })),
-    entities: canAccessEntityFilter ? DEFAULT_ENTITY_FILTERS : [],
+    averageFootprint,
+    categories,
+    entities: canAccessEntityFilter ? buildEntityFilterResults(situations, engine) : [],
     comments: [],
     keyStats,
   }
