@@ -68,6 +68,7 @@ déplacements . DT-salariés . sans:
       - voiture * part voiture
       - train * part train
       - deux roues * part deux roues
+      - bus * part bus
       - transports en commun * part transport en commun
   unité: kgCO2e
 
@@ -95,6 +96,18 @@ déplacements . DT-salariés . sans . part train:
   unité: "%"
   par défaut: 0
 
+déplacements . DT-salariés . sans . part bus:
+  titre: Bus
+  form:
+    à traduire: oui
+ # applicable si:
+ #   toutes ces conditions:
+ #     - est défini: déplacements . DT-salariés . MEP présent
+ #     - déplacements . 
+  question: Quel pourcentage des salariés se rend au travail en bus ?
+  unité: "%"
+  par défaut: 0
+
 déplacements . DT-salariés . sans . part deux roues:
   titre: Deux roues (moto, scooter, ...)
   form:
@@ -108,7 +121,7 @@ déplacements . DT-salariés . sans . part deux roues:
   par défaut: 0
 
 déplacements . DT-salariés . sans . part transport en commun:
-  titre: Transports en commun (Métro, tramway, RER, bus, ...)
+  titre: Transports en commun (Métro, tramway, RER, ...)
   form:
     à traduire: oui
  # applicable si:
@@ -127,7 +140,7 @@ déplacements . DT-salariés . sans . voiture:
     toutes ces conditions:
       - est défini: part voiture
       - part voiture > 0
-  formule: distance * split * général . salariés * commun . nombre de semaines travaillées par an * (5 - télétravail . salariés . j)
+  formule: distance * commun . FE . moyen de transport . voiture moyenne France * général . salariés * commun . nombre de semaines travaillées par an * (5 - télétravail . salariés . j)
   avec:
     distance:
       question: Combien de km sont parcourus en moyenne par salarié en voiture par jour (A/R) pour des déplacements domicile-association ?
@@ -137,37 +150,6 @@ déplacements . DT-salariés . sans . voiture:
   description: On considère ici toutes les motorisations de voiture individuelles, basée sur des moyennes nationales
   unité: kgCO2e
 
-déplacements . DT-salariés . sans . voiture . split:
-  formule: hybride * 0.072 + électrique * 0.029 + gazole * 0.515 + essence * 0.384
-  note: source basée sur le parc automobile de voiture particulière en France en 2024 avec extrapolation pour ommettre les autres modes (GPL Hydrogène etc...) https://www.statistiques.developpement-durable.gouv.fr/donnees-sur-le-parc-automobile-francais-au-1er-janvier-2024
-  avec:
-    hybride:
-      valeur: 0.18
-      unité: kgCO2e/km
-      meta:
-        id: 28008
-        nom: Voiture particulière/Coeur de gamme - Véhicule compact/Hybride, full, P2
-    électrique:
-      valeur: 0.1
-      unité: kgCO2e/km
-      meta:
-        id: 28007
-        nom: Voiture particulière/Coeur de gamme - Véhicule compact/Electrique
-    gazole:
-      valeur: 0.34
-      unité: kgCO2e/km
-      meta:
-        id: db39062e-4e05-44a7-9d71-9aca18929005
-        nom: Transport de passagers en voiture de taille moyenne - gazole - EURO 4
-        note: Données ECOINVENT
-    essence:
-      valeur: 0.37
-      unité: kgCO2e/km
-      meta:
-        id: fb623fc8-b55b-4d98-ae54-3a83ebed431e
-        nom: Transport de passagers en voiture de taille moyenne - essence - EURO 5
-        note: Données ECOINVENT
-  unité: kgCO2e/km
 
 # GC : J'enlève cette partie, car on utilise des FE en kgCO2e/km et non en kgCO2e/passager.km. Les FE en kgCO2e/km prennent déjà en compte le taux d'occupation normalement.
 # déplacements . DT-salariés . sans . voiture . occupation:
@@ -199,6 +181,23 @@ déplacements . DT-salariés . sans . train:
         note: On considère que la majorité des déplacements en train pour du DT est en TER
   unité: kgCO2e
 
+déplacements . DT-salariés . sans . bus:
+  titre: Bus
+  form:
+    à traduire: oui
+  applicable si:
+    toutes ces conditions:
+      - est défini: part bus
+      - part bus > 0
+  formule: distance * commun . FE . moyen de transport . bus * général . salariés * commun . nombre de semaines travaillées par an * (5 - télétravail . salariés . j)
+  avec:
+    distance:
+      question: Combien de km sont parcourus en moyenne par salarié en bus par jour (A/R) pour des déplacements domicile-association ?
+      type: nombre
+      unité: km/salariés.jours
+      par défaut: 0
+  unité: kgCO2e
+
 déplacements . DT-salariés . sans . deux roues:
   titre: Deux roues (Moto, scooter, ...)
   form:
@@ -223,14 +222,14 @@ déplacements . DT-salariés . sans . deux roues:
   unité: kgCO2e
 
 déplacements . DT-salariés . sans . transports en commun:
-  titre: Transports en commun (Métro, tramway, RER, bus, ...)
+  titre: Transports en commun (Métro, tramway, RER)
   form:
     à traduire: oui
   applicable si:
     toutes ces conditions:
       - est défini: part transport en commun
       - part transport en commun > 0
-  formule: distance * split * général . salariés * commun . nombre de semaines travaillées par an * (5 - télétravail . salariés . j)
+  formule: distance * commun . FE . moyen de transport . transports en commun moyenne France * général . salariés * commun . nombre de semaines travaillées par an * (5 - télétravail . salariés . j)
   avec:
     distance:
       question: Combien de km sont parcourus en moyenne par salarié en transports en commun par jour (A/R) pour des déplacements domicile-association ?
@@ -238,18 +237,3 @@ déplacements . DT-salariés . sans . transports en commun:
       unité: km/salariés.jours
       par défaut: 29.4
   unité: kgCO2e
-
-déplacements . DT-salariés . sans . transports en commun . split:
-  formule: bus * 0.5 + rail * 0.5 ## à challenger
-  note:
-  avec:
-    bus:
-      valeur: 0.15
-      unité: kgCO2e/km
-      meta:
-        id: 28000
-        nom: Autobus moyen/Agglomération de plus de 250 000 habitants
-    rail:
-      valeur: 0.00356
-      unité: kgCO2e/km
-      note: source doc NGC https://nosgestesclimat.fr/documentation/transport/transports-commun/m%C3%A9tro-ou-tram
