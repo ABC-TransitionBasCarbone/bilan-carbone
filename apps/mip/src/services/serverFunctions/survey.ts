@@ -298,7 +298,8 @@ const getEntityFilterDefsFromModel = (rules: RawRules): EntityFilterDef[] => {
   if (!suggestions || typeof suggestions !== 'object') {
     return []
   }
-  return Object.entries(suggestions as Record<string, number>)
+  return Object.entries(suggestions)
+    .filter((entry): entry is [string, number] => typeof entry[1] === 'number' && Number.isFinite(entry[1]))
     .map(([name, value]) => ({ name, value }))
     .sort((a, b) => a.value - b.value)
 }
@@ -400,8 +401,24 @@ export const getSurveyResults = async (campaignId: string): Promise<SurveyResult
   const buildEntityFilterResults = (allSituations: Situation<string>[], engine: Engine): EntityFilterResult[] => {
     const allAggregates = computeAggregatesForSituations(engine, allSituations, categoryKeys, emptyCategories)
     const allFilter: EntityFilterResult = { id: 'all', name: 'Tous', ...allAggregates }
+
+    const situationsByFilter = new Map<number, Situation<string>[]>()
+    for (const situation of allSituations) {
+      const rawFilterValue = situation[FILTER_RULE_KEY]
+      const numericFilterValue = Number(rawFilterValue)
+      if (!Number.isFinite(numericFilterValue)) {
+        continue
+      }
+      const existing = situationsByFilter.get(numericFilterValue)
+      if (existing) {
+        existing.push(situation)
+      } else {
+        situationsByFilter.set(numericFilterValue, [situation])
+      }
+    }
+
     const entityFilters: EntityFilterResult[] = entityFilterDefs.map(({ name, value }) => {
-      const entitySituations = allSituations.filter((s) => Number(s[FILTER_RULE_KEY]) === value)
+      const entitySituations = situationsByFilter.get(value) ?? []
       return {
         id: String(value),
         name,

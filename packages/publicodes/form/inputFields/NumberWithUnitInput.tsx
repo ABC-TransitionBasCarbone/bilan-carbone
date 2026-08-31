@@ -35,7 +35,8 @@ const NumberWithUnitInput = <RuleName extends string>({
     ?
     Object.entries(suggestions).filter((entry): entry is [string, number] => typeof entry[1] === 'number')
     : []
-  const selectedSuggestionLabel = suggestionEntries.find(([, value]) => value === localValue)?.[0] ?? ''
+  const selectedSuggestionLabel = suggestionEntries.find(([, value]) => value === localValue)?.[0]
+  const displayedLockedValue = selectedSuggestionLabel ?? (localValue ?? '').toString()
   const hasSuggestions = suggestionEntries.length > 0
   const isLockedSuggestion = hasSuggestions && lockToSuggestions
 
@@ -63,9 +64,9 @@ const NumberWithUnitInput = <RuleName extends string>({
       {isLockedSuggestion ? (
         <TextField
           className={classNames(styles.inputWrapper, 'wfit')}
-          value={selectedSuggestionLabel}
+          value={displayedLockedValue}
           onFocus={handleFocus}
-          disabled
+          disabled={isDisabled}
           slotProps={{
             input: {
               readOnly: true,
