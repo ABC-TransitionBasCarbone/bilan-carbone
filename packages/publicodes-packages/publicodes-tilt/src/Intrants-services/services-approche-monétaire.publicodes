@@ -1,8 +1,8 @@
 intrants-services . approche monétaire:
   formule: 
-      somme:
-        - FE moyen
-        - tableau détaillé
+    somme:
+      - FE moyen
+      - tableau détaillé
   par défaut: 0 
 
 intrants-services . approche monétaire . existant:
