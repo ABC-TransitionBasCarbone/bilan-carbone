@@ -72,7 +72,7 @@
     "@testing-library/jest-dom": "^7.0.1",
     "@types/bcryptjs": "^3.0.0",
     "@types/jest": "^30.0.0",
-    "@types/node": "^26.4.0",
+    "@types/node": "^24.13.3",
     "@types/react": "19.2.18",
     "@types/react-dom": "19.2.5",
     "@types/uuid": "^11.0.0",
