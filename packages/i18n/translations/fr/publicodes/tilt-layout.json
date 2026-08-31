@@ -65,11 +65,23 @@
         "typeEquipement": "Type d'équipement",
         "nombreEquipement": "Quantité",
         "description": "Tous les équipements informatiques datant de plus de 3 ans sont considérés comme totalement amortis et ne sont donc pas à prendre en compte ici. <br></br> Que les équipements soient possédés ou loués ne fait aucune différence, dans la mesure ou ces équipements sont généralement loués à l'année. Si vous avez recours à des locations ponctuelles, nous vous invitons à ne pas en tenir compte ici."
+      },
+      "Evenement": {
+        "Deplacements": "Combien de kilomètres (au total, en comptant les allers et les retours) ont étés parcourus pour accéder à l'événement via les modes de transports suivants ?",
+        "ModeTransport": "Mode de transport",
+        "DistanceParcourue": "Distance parcourue",
+        "Hebergement": "Combien de nuits sont passées dans les hébergements suivants au cours de l'événement ?",
+        "TypeHebergement": "Type d'hébergement",
+        "NombreNuitees": "Nombre de nuitées"
       }
     },
     "group": {
-      "EnergieTest": {
+      "EnergieBooléen": {
         "question": "Quels types d'énergies utilisez-vous pour le chauffage, l'éclairage et les autres consommations énergétiques de vos locaux ?"
+      },
+      "EvenementBooléen": {
+        "question": "Quels sont les types d'énergie qui ont étés utilisés au cours de l'événement ?",
+        "description": "Dans le cas où un groupe électrogène est utilisé, vous pouvez renseigner sa consommation de diesel ou d'essence via la partie dédiée au fioul."
       }
     },
     "list": {}
