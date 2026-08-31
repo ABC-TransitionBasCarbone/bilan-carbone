@@ -67,8 +67,8 @@ déplacements . DT-salariés . sans:
     somme:
       - voiture * part voiture
       - train * part train
-      - deux roues * part deux roues
       - bus * part bus
+      - deux roues * part deux roues
       - transports en commun * part transport en commun
   unité: kgCO2e
 
@@ -195,7 +195,7 @@ déplacements . DT-salariés . sans . bus:
       question: Combien de km sont parcourus en moyenne par salarié en bus par jour (A/R) pour des déplacements domicile-association ?
       type: nombre
       unité: km/salariés.jours
-      par défaut: 0
+      par défaut: 29.4
   unité: kgCO2e
 
 déplacements . DT-salariés . sans . deux roues:
