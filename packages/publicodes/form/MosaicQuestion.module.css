@@ -2,20 +2,12 @@
   grid-template-columns: repeat(2, 1fr);
 }
 
-.suggestions {
-  padding-left: 0.25rem;
-}
-
 .suggestionChip {
+  --suggestion-bg: color-mix(in srgb, var(--mui-palette-warning-light) 20%, var(--white));
+  --suggestion-text: var(--mui-palette-warning-main);
+  --suggestion-bg-hover: color-mix(in srgb, var(--mui-palette-warning-main) 16%, var(--white));
   border: 1px solid var(--neutral-300);
-  background-color: color-mix(in srgb, var(--mui-palette-warning-light) 20%, var(--white));
-  color: var(--mui-palette-warning-main);
   border-radius: 9999px;
   padding: 0.375rem 0.75rem;
-  font-size: 0.875rem;
   line-height: 1;
-}
-
-.suggestionChip:hover {
-  background-color: color-mix(in srgb, var(--mui-palette-warning-main) 16%, var(--white));
 }

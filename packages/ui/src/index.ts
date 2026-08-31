@@ -1,4 +1,5 @@
 export { default as BaseStyledChip } from './Chip/BaseStyledChip'
+export { default as StyledChip } from './Chip/StyledChip'
 export { default as Button } from './Button/Button'
 export { default as Toast } from './Toast/Toast'
 export type { ToastColors } from './Toast/Toast'

@@ -1,10 +1,10 @@
 'use client'
 
-import StyledChip from '@/components/base/StyledChip'
 import type { FullStudy } from '@/db/study'
 import { AccountWithUser } from '@/types/account.types'
 import { getDisplayedRoleOnStudy } from '@/utils/study'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
+import { StyledChip } from '@abc-transitionbascarbone/ui'
 import SpaIcon from '@mui/icons-material/Spa'
 import { useTranslations } from 'next-intl'
 

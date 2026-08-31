@@ -4,6 +4,7 @@ import MosaicNumberInput from '@abc-transitionbascarbone/ui/Form/MosaicNumberInp
 import classNames from 'classnames'
 import Engine from 'publicodes'
 import styles from './MosaicQuestion.module.css'
+import numberWithUnitStyles from './inputFields/NumberWithUnitInput.module.css'
 import { SuggestionList } from './SuggestionList'
 import { usePublicodesRuleTranslation } from '../hooks'
 import { getRuleNameParts, getRuleParentName } from './utils'
@@ -38,7 +39,7 @@ export const MosaicQuestion = <RuleName extends string,>({
 
   const label = translation?.question ?? translation?.titre ?? parent
   const suggestionEntries =
-    rawSuggestions && typeof rawSuggestions === 'object'
+    rawSuggestions && typeof rawSuggestions === 'object' && !Array.isArray(rawSuggestions)
       ? Object.entries(rawSuggestions).filter(
         (entry): entry is [string, MosaicSuggestionValues] =>
           typeof entry[0] === 'string' && !!entry[1] && typeof entry[1] === 'object' && !Array.isArray(entry[1]),
@@ -64,8 +65,8 @@ export const MosaicQuestion = <RuleName extends string,>({
     <QuestionContainer label={label} description={translation?.description}>
       <SuggestionList
         suggestions={suggestionEntries}
-        containerClassName={classNames('flex', 'wrap', 'gapped-2', 'pb-2', styles.suggestions)}
-        buttonClassName={classNames(styles.suggestionChip, 'pointer')}
+        containerClassName={classNames('flex', 'wrap', 'gapped-2', 'pb-2', 'pl-4')}
+        buttonClassName={classNames(numberWithUnitStyles.suggestionChip, styles.suggestionChip, 'pointer')}
         onSelect={(_, suggestionValues) => applySuggestion(suggestionValues)}
       />
       <div className={classNames(styles.mosaicContainer, 'gapped1 p1 grid')}>

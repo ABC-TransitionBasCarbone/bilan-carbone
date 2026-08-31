@@ -17,8 +17,8 @@ export function SuggestionList<TValue>({
 
     return (
         <div className={containerClassName}>
-            {suggestions.map(([label, value]) => (
-                <button key={label} type="button" className={buttonClassName} onClick={() => onSelect(label, value)}>
+            {suggestions.map(([label, value], index) => (
+                <button key={`${label}-${index}`} type="button" className={buttonClassName} onClick={() => onSelect(label, value)}>
                     {label}
                 </button>
             ))}

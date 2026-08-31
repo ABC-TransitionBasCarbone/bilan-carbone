@@ -202,7 +202,8 @@ const orderSurveyCategoryKeys = (keys: string[]): string[] => {
     const rightRank = rankingByKey.get(normalizeSurveyCategoryKeyForOrder(right))
 
     if (leftRank === undefined && rightRank === undefined) {
-      return 0
+      // Keep sorting deterministic when both keys are outside the known ranking.
+      return left.localeCompare(right)
     }
     if (leftRank === undefined) {
       return 1

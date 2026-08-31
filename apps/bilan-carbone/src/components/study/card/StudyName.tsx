@@ -1,6 +1,6 @@
 'use client'
 
-import StyledChip from '@/components/base/StyledChip'
+import { StyledChip } from '@abc-transitionbascarbone/ui'
 import SpaIcon from '@mui/icons-material/Spa'
 import { useTranslations } from 'next-intl'
 
