@@ -246,7 +246,7 @@ const EmissionSource = ({
           <div className="grow align-center gapped">
             {/* activity data */}
             <div className={classNames(styles.emissionSource, 'flex-col justify-center align-center text-center')}>
-              {typeof emissionSource.value === 'number' && emissionSource.value !== 0 && (
+              {typeof emissionSource.value === 'number' && (
                 <>
                   <p className="text-center">{formatNumber(emissionSource.value)} </p>
                   <p className="text-center">
@@ -284,7 +284,7 @@ const EmissionSource = ({
               <p className={styles.resultText} data-testid="emission-source-value">
                 {`${formatNumber(emissionResults.emissionValue / STUDY_UNIT_VALUES[study.resultsUnit])} ${tResultstUnits(study.resultsUnit)}`}
               </p>
-              {!!emissionResults.emissionValue && (
+              {Number.isFinite(emissionResults.emissionValue) && (
                 <p
                   className={classNames(styles.resultQuality, styles.resultText)}
                   data-testid="emission-source-quality"
