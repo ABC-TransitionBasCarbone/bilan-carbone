@@ -44,7 +44,7 @@ const QuestionContainer = ({ label, description, children, variant = 'default' }
       </StyledQuestionHeader>
 
       {description && isDescriptionOpen && (
-        <div className={classNames(styles.descriptionBubble, { [styles.descriptionBubbleFlat]: isFlat })}>
+        <div className={classNames(styles.descriptionBubble, { [styles.descriptionBubbleNoTopBorder]: !isFlat })}>
           <p className={styles.descriptionText}>{description}</p>
           <button
             type="button"
