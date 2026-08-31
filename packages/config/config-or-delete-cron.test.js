@@ -4,7 +4,7 @@ const path = require('path')
 const test = require('node:test')
 const assert = require('node:assert/strict')
 
-const { shouldDeleteCron, writeCronConfig } = require('./configure-cron')
+const { shouldDeleteCron, writeCronConfig } = require('./config-or-delete-cron')
 
 test('identifies mip target for cron deletion', () => {
   assert.equal(shouldDeleteCron('mip'), true)
@@ -17,7 +17,7 @@ test('does not delete cron for non-mip targets', () => {
 })
 
 test('deletes cron.json for mip builds', () => {
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'configure-cron-'))
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'config-or-delete-cron-'))
   const cronPath = path.join(tempDir, 'cron.json')
 
   fs.writeFileSync(cronPath, JSON.stringify({ jobs: [{ command: 'test' }] }), 'utf8')
@@ -29,7 +29,7 @@ test('deletes cron.json for mip builds', () => {
 })
 
 test('keeps cron.json unchanged for non-mip builds', () => {
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'configure-cron-'))
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'config-or-delete-cron-'))
   const cronPath = path.join(tempDir, 'cron.json')
   const originalConfig = { jobs: [{ command: 'test' }] }
 

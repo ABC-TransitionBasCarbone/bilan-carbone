@@ -14,7 +14,7 @@
     "dev": "turbo run dev",
     "dev:bc": "turbo run dev --filter=bilan-carbone",
     "dev:mip": "turbo run dev --filter=mip",
-    "build": "sh -c 'if [ \"$APP_TARGET\" = \"mip\" ]; then node packages/config/configure-cron.js && turbo run build --filter=mip; else turbo run build --filter=bilan-carbone; fi'",
+    "build": "sh -c 'if [ \"$APP_TARGET\" = \"mip\" ]; then node packages/config/config-or-delete-cron.js && turbo run build --filter=mip; else turbo run build --filter=bilan-carbone; fi'",
     "test": "turbo run test",
     "start": "turbo run start",
     "ts": "turbo run ts",
