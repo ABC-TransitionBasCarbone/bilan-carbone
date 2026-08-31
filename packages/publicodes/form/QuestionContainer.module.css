@@ -15,10 +15,12 @@
   padding-top: 0.5rem;
   padding-left: 1.5rem;
   padding-right: 1.5rem;
+  border-radius: 0.5rem;
 }
 
 .descriptionBubbleNoTopBorder {
   border-top: none;
+  border-radius: 0rem;
 }
 
 .descriptionText {
