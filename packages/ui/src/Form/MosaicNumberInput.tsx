@@ -2,7 +2,6 @@ import { InputAdornment, OutlinedInput } from '@mui/material'
 import type { CSSProperties } from 'react'
 import Button from '../Button/Button'
 import styles from './MosaicNumberInput.module.css'
-import classNames from 'classnames'
 
 type Props = {
   title?: string
