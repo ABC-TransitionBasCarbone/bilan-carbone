@@ -1483,6 +1483,7 @@
     "tooManyFiles": "Importe un solo archivo a la vez",
     "invalidFileType": "El archivo no es un archivo Excel válido",
     "emptyFile": "El archivo está vacío",
+    "emptyHeader": "Le fichier ne contient pas les bons en-têtes. Veuillez utiliser le modèle d'import.",
     "missingName": "Falta la etiqueta",
     "missingSource": "Falta la fuente",
     "invalidUnit": "Unidad no válida: \"{value}\"",

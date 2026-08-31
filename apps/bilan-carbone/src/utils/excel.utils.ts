@@ -5,7 +5,7 @@ type ParseSheetError = { lineNumber: number | null; key: string }
 export function parseExcelSheet(
   buffer: Buffer,
   options?: {
-    headerRowIndex?: number
+    firstHeader?: string
     rowFilter?: (row: unknown[], cellIndex: number, value: string) => boolean
     ignoredColumns?: number[]
   },
@@ -19,9 +19,19 @@ export function parseExcelSheet(
     return { success: false, errors: [{ lineNumber: null, key: 'invalidFileType' }] }
   }
 
-  const headerRowIndex = options?.headerRowIndex ?? 0
   const sheet = workbook[0]
-  if (!sheet?.data || sheet.data.length < headerRowIndex + 2) {
+
+  if (!sheet?.data) {
+    return { success: false, errors: [{ lineNumber: null, key: 'emptyFile' }] }
+  }
+
+  const headerRowIndex = options?.firstHeader ? sheet.data.findIndex((row) => row[0] === options.firstHeader) : 0
+
+  if (headerRowIndex === -1) {
+    return { success: false, errors: [{ lineNumber: null, key: 'emptyHeader' }] }
+  }
+
+  if (sheet.data.length < headerRowIndex + 2) {
     return { success: false, errors: [{ lineNumber: null, key: 'emptyFile' }] }
   }
 
@@ -38,7 +48,6 @@ export function parseExcelSheet(
       return options?.rowFilter ? options.rowFilter(row, i, value) : true
     }),
   )
-
   if (dataRows.length === 0) {
     return { success: false, errors: [{ lineNumber: null, key: 'emptyFile' }] }
   }

@@ -26,7 +26,6 @@ import {
 import { parseNumericValue } from './number'
 import { getBcTranslations, getCommonTranslations } from './translation.utils'
 
-export const SOURCE_IMPORT_HEADER_ROW_INDEX = 9
 const MAX_FE_CANDIDATES = 10
 
 type StudySiteForImport = { id: string; site: { name: string } | null }
@@ -154,8 +153,11 @@ export function parseEmissionSourcesFile(
   studySites: StudySiteForImport[],
   environment: Environment,
 ): ParseEmissionSourcesResult {
+  const translation = getBcTranslations(locale)
+  const siteColumnLabel = translation.study.importEmissionSourcesModal.columnSite
+
   const sheetResult = parseExcelSheet(buffer, {
-    headerRowIndex: SOURCE_IMPORT_HEADER_ROW_INDEX,
+    firstHeader: siteColumnLabel,
     ignoredColumns: [SOURCE_IMPORT_COLUMNS.site, SOURCE_IMPORT_COLUMNS.post, SOURCE_IMPORT_COLUMNS.subPost],
   })
 
