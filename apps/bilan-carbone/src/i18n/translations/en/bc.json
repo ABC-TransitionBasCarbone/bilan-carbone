@@ -795,7 +795,7 @@
         "immobilisation1": "The difference shown here stems from the fact that, according to GHG Protocol, and unlike in the Bilan Carbone®, organisations should not depreciate, discount, or amortize the emissions from the production of capital goods over time. The cradle-to-gate emissions are therefore accounted for in the year of acquisition.",
         "otherEmissionsAval": "Travels from visitors or clients may be accounted for according to GHG Protocol. If those emissions are calculated, not operated ones will not be accounted for in this format, due to the lack of a suitable subcategory.",
         "otherEmissionsAmont": "Some emissions are not accounted for in the GHG Protocol format, especially if the activites they stem from are not directly operated by the organisation. This happens for instance with the transport and distribution losses for electricity, or the original emissions that stem from building the power capacities. In the regulatory GHG assessment format, these emissions are accounted for in subcategory 6.1, but GHG Protocol lacks a suitable subcategory for these emissions.",
-        "otherGas1": "Only greenhouse gases that are part of the Kyoto Protocol agreement (CO₂, CH₄, N₂O, HFC, PFC, SF₆) are accounted for in the GHG Protocol. Other GHG emissions (contrails, NF3, other air conditioning or industrial gases) are accounted for in the Bilan Carbone®, but not in the GHG Protocol.",
+        "otherGas1": "Only GHGs that are part of the Kyoto Protocol (CO₂, CH₄, N₂O, HFC, PFC, SF₆) are accounted for within the GHG Protocol. Emissions related to other GHGs (contrails, NF3, other air-conditioning or process GHGs) are therefore accounted for within the Bilan Carbone®, but not within the GHG Protocol.",
         "marketBased": "Part of the differences between market-based GHG Protocol and Bilan Carbone® simply stems from the difference between the results of the <green>location-based method</green> and the <purple>market-based method</purple>.",
         "fabrication": "You used emission factors that depends on the distance travelled (passenger.km, ...) for operated vehicles. Manufacturing emissions of these vehicles will not be accounted for in GHG Protocol. You should use the Capital goods category for vehicles that were acquired inside the temporal boundary of the assessment.",
         "additionalMissing": "+ {count} other emission {count, plural,  =1 {source} other {sources}}",
@@ -852,8 +852,8 @@
       "charts": {
         "all": "Charts - All cinemas",
         "site": "Charts - {site}",
-        "allEmissions": "Emissions from all cinema activities, in tCO₂e",
-        "siteEmissions": "Emissions from cinema {site} activities, in tCO₂e"
+        "allEmissions": "Emissions from the activities of all cinemas, in tCO₂e",
+        "siteEmissions": "Emissions from the activities of cinema {site}, in tCO₂e"
       },
       "labels": {
         "cinemas": "Cinemas",
