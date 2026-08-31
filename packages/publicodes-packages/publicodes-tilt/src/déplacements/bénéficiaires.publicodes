@@ -7,10 +7,11 @@ déplacements . bénéficiaires:
             - se déplacent = oui
         alors:
           somme:
-            - voiture * part voiture * général . bénéficiaires * déplacements . DT-bénévoles . sans . voiture . split ## on reprend car deja calculé
+            - voiture * part voiture * général . bénéficiaires * commun . FE . moyen de transport . voiture moyenne France
             - actif * part actif * général . bénéficiaires * 0 ## on néglige l'impact des modes actifs (vélo, marche, trottinette...)
             - deux roues * part deux roues * général . bénéficiaires * FE deux roues
-            - transport en commun * part transport en commun * général . bénéficiaires * déplacements . DT-salariés . sans . transports en commun . split ## on reprend car deja calculé
+            - bus * part bus * général . bénéficiaires * commun . FE . moyen de transport . bus
+            - transport en commun * part transport en commun * général . bénéficiaires * commun . FE . moyen de transport . transports en commun moyenne France
             - train * part train * général . bénéficiaires * FE train
             - avion * part avion * général . bénéficiaires * commun . FE . moyen de transport . avion ## on prend avion moyen courrier
           avec:
@@ -57,6 +58,18 @@ déplacements . bénéficiaires . part train:
   unité: "%"
   par défaut: 0
 
+déplacements . bénéficiaires . part bus:
+  titre: Bus
+  form:
+    à traduire: oui
+  applicable si:
+    toutes ces conditions:
+      - est défini: se déplacent
+      - se déplacent = oui
+  question: Quel pourcentage des trajets se fait en bus ?
+  unité: "%"
+  par défaut: 0
+
 déplacements . bénéficiaires . part deux roues:
   titre: Deux roues (moto, scooter, ...)
   form:
@@ -70,7 +83,7 @@ déplacements . bénéficiaires . part deux roues:
   par défaut: 0
 
 déplacements . bénéficiaires . part transport en commun:
-  titre: Transport en commun (Métro, tramway, RER, bus, ...)
+  titre: Transport en commun (Métro, tramway, RER, ...)
   form:
     à traduire: oui
   applicable si:
@@ -129,6 +142,18 @@ déplacements . bénéficiaires . train:
   unité: km/bénéficiaires.an
   par défaut: 0
 
+déplacements . bénéficiaires . bus:
+  titre: Bus
+  form:
+    à traduire: oui
+  applicable si:
+    toutes ces conditions:
+      - est défini: part bus
+      - part bus > 0
+  question: Combien de km parcourent en moyenne sur l'année vos bénéficiaires en bus ?
+  unité: km/bénéficiaires.an
+  par défaut: 0
+
 déplacements . bénéficiaires . deux roues:
   titre: Deux roues (moto, scooter, ...)
   form:
@@ -142,7 +167,7 @@ déplacements . bénéficiaires . deux roues:
   par défaut: 0
 
 déplacements . bénéficiaires . transport en commun:
-  titre: Transport en commun (Métro, tramway, RER, bus, ...)
+  titre: Transport en commun (Métro, tramway, RER, ...)
   form:
     à traduire: oui
   applicable si:
