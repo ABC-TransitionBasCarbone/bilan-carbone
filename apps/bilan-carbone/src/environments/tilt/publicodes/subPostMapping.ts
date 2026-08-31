@@ -40,7 +40,7 @@ export const POST_TO_RULENAME: Record<TiltSimplifiedPost, TiltRuleName> = {
   [TiltSimplifiedPost.UtilisationSimplified]: 'utilisation',
   [TiltSimplifiedPost.FinDeVieSimplified]: 'fin de vie',
   [TiltSimplifiedPost.TeletravailSimplified]: 'télétravail',
-  [TiltSimplifiedPost.EvenementSimplified]: 'télétravail', // To change once publicodes is written
+  [TiltSimplifiedPost.EvenementSimplified]: 'événement',
 } as const
 
 const SUBPOST_TO_RULENAME: Partial<Record<SubPost, TiltRuleName>> = {
@@ -70,11 +70,12 @@ const SUBPOST_TO_RULENAME: Partial<Record<SubPost, TiltRuleName>> = {
   ConsommationsEnergieUtilisationProduits: 'utilisation . responsabilite conso energie',
   FinDeVieProduitsVendusFournisBeneficiaires: 'fin de vie',
   TeletravailSalariesBenevoles: 'télétravail',
+  Evenement: 'événement',
 } as const
 
 const input = (rule: TiltRuleName): FormLayout<TiltRuleName> => inputLayout<TiltRuleName>(rule)
-const group = (title: string, rules: TiltRuleName[]): FormLayout<TiltRuleName> =>
-  groupLayout<TiltRuleName>(title, rules)
+const group = (title: string, rules: TiltRuleName[], description?: string,): FormLayout<TiltRuleName> =>
+  groupLayout<TiltRuleName>(title, rules, description)
 const table = (
   title: string,
   headers: string[],
@@ -104,7 +105,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('construction . infrastructure . nombre de places'),
   ],
   EnergieSimplified: [
-    group('EnergieTest.question', [
+    group('EnergieBooléen.question', [
       'énergie . combustibles organiques . types . électricité présent',
       'énergie . combustibles organiques . types . gaz présent',
       'énergie . combustibles organiques . types . fioul présent',
@@ -304,45 +305,47 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     ]),
   ],
   BienMatieres: [
+    input('intrants-biens-et-matières . ratios monétaires . existant'),
+    input('intrants-biens-et-matières . ratios monétaires . ratio moyen'),
     table(
       'IntrantsBiensEtMatieresTilt.question',
       ['IntrantsBiensEtMatieresTilt.typeBien', 'IntrantsBiensEtMatieresTilt.montantDepense'],
       [
         [
-          'intrants-biens-et-matières . ratios monétaires . petites-fournitures',
-          'intrants-biens-et-matières . ratios monétaires . petites-fournitures . nombre',
+          'intrants-biens-et-matières . ratios monétaires . tableau détaillé . petites-fournitures',
+          'intrants-biens-et-matières . ratios monétaires . tableau détaillé . petites-fournitures . nombre',
         ],
         [
-          'intrants-biens-et-matières . ratios monétaires . meubles',
-          'intrants-biens-et-matières . ratios monétaires . meubles . nombre',
+          'intrants-biens-et-matières . ratios monétaires . tableau détaillé . meubles',
+          'intrants-biens-et-matières . ratios monétaires . tableau détaillé . meubles . nombre',
         ],
         [
-          'intrants-biens-et-matières . ratios monétaires . machines-équipements',
-          'intrants-biens-et-matières . ratios monétaires . machines-équipements . nombre',
+          'intrants-biens-et-matières . ratios monétaires . tableau détaillé . machines-équipements',
+          'intrants-biens-et-matières . ratios monétaires . tableau détaillé . machines-équipements . nombre',
         ],
         [
-          'intrants-biens-et-matières . ratios monétaires . textiles',
-          'intrants-biens-et-matières . ratios monétaires . textiles . nombre',
+          'intrants-biens-et-matières . ratios monétaires . tableau détaillé . textiles',
+          'intrants-biens-et-matières . ratios monétaires . tableau détaillé . textiles . nombre',
         ],
         [
-          'intrants-biens-et-matières . ratios monétaires . produits-pharmaceutiques',
-          'intrants-biens-et-matières . ratios monétaires . produits-pharmaceutiques . nombre',
+          'intrants-biens-et-matières . ratios monétaires . tableau détaillé . produits-pharmaceutiques',
+          'intrants-biens-et-matières . ratios monétaires . tableau détaillé . produits-pharmaceutiques . nombre',
         ],
         [
-          'intrants-biens-et-matières . ratios monétaires . produits-chimiques',
-          'intrants-biens-et-matières . ratios monétaires . produits-chimiques . nombre',
+          'intrants-biens-et-matières . ratios monétaires . tableau détaillé . produits-chimiques',
+          'intrants-biens-et-matières . ratios monétaires . tableau détaillé . produits-chimiques . nombre',
         ],
         [
-          'intrants-biens-et-matières . ratios monétaires . papier-carton',
-          'intrants-biens-et-matières . ratios monétaires . papier-carton . nombre',
+          'intrants-biens-et-matières . ratios monétaires . tableau détaillé . papier-carton',
+          'intrants-biens-et-matières . ratios monétaires . tableau détaillé . papier-carton . nombre',
         ],
         [
-          'intrants-biens-et-matières . ratios monétaires . produits-métalliques',
-          'intrants-biens-et-matières . ratios monétaires . produits-métalliques . nombre',
+          'intrants-biens-et-matières . ratios monétaires . tableau détaillé . produits-métalliques',
+          'intrants-biens-et-matières . ratios monétaires . tableau détaillé . produits-métalliques . nombre',
         ],
         [
-          'intrants-biens-et-matières . ratios monétaires . autres-produits-manufacturés',
-          'intrants-biens-et-matières . ratios monétaires . autres-produits-manufacturés . nombre',
+          'intrants-biens-et-matières . ratios monétaires . tableau détaillé . autres-produits-manufacturés',
+          'intrants-biens-et-matières . ratios monétaires . tableau détaillé . autres-produits-manufacturés . nombre',
         ],
       ],
       'IntrantsBiensEtMatieresTilt.description',
@@ -374,6 +377,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
       [
         ['déplacements . bénéficiaires . part voiture', 'déplacements . bénéficiaires . part voiture'],
         ['déplacements . bénéficiaires . part train', 'déplacements . bénéficiaires . part train'],
+        ['déplacements . bénéficiaires . part bus', 'déplacements . bénéficiaires . part bus'],
         ['déplacements . bénéficiaires . part deux roues', 'déplacements . bénéficiaires . part deux roues'],
         [
           'déplacements . bénéficiaires . part transport en commun',
@@ -389,6 +393,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
       [
         ['déplacements . bénéficiaires . voiture', 'déplacements . bénéficiaires . voiture'],
         ['déplacements . bénéficiaires . train', 'déplacements . bénéficiaires . train'],
+        ['déplacements . bénéficiaires . bus', 'déplacements . bénéficiaires . bus'],
         ['déplacements . bénéficiaires . deux roues', 'déplacements . bénéficiaires . deux roues'],
         ['déplacements . bénéficiaires . transport en commun', 'déplacements . bénéficiaires . transport en commun'],
         ['déplacements . bénéficiaires . avion', 'déplacements . bénéficiaires . avion'],
@@ -408,11 +413,12 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
       [
         ['déplacements . DT-salariés . sans . part voiture', 'déplacements . DT-salariés . sans . part voiture'],
         ['déplacements . DT-salariés . sans . part train', 'déplacements . DT-salariés . sans . part train'],
-        ['déplacements . DT-salariés . sans . part deux roues', 'déplacements . DT-salariés . sans . part deux roues'],
+        ['déplacements . DT-salariés . sans . part bus', 'déplacements . DT-salariés . sans . part bus'],
         [
           'déplacements . DT-salariés . sans . part transport en commun',
           'déplacements . DT-salariés . sans . part transport en commun',
         ],
+        ['déplacements . DT-salariés . sans . part deux roues', 'déplacements . DT-salariés . sans . part deux roues'],
       ],
     ),
     table(
@@ -421,11 +427,12 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
       [
         ['déplacements . DT-salariés . sans . voiture', 'déplacements . DT-salariés . sans . voiture . distance'],
         ['déplacements . DT-salariés . sans . train', 'déplacements . DT-salariés . sans . train . distance'],
-        ['déplacements . DT-salariés . sans . deux roues', 'déplacements . DT-salariés . sans . deux roues . distance'],
+        ['déplacements . DT-salariés . sans . bus', 'déplacements . DT-salariés . sans . bus . distance'],
         [
           'déplacements . DT-salariés . sans . transports en commun',
           'déplacements . DT-salariés . sans . transports en commun . distance',
         ],
+        ['déplacements . DT-salariés . sans . deux roues', 'déplacements . DT-salariés . sans . deux roues . distance'],
       ],
       'DomicileTravailSalaries.description',
     ),
@@ -439,13 +446,14 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
       [
         ['déplacements . DT-bénévoles . sans . part voiture', 'déplacements . DT-bénévoles . sans . part voiture'],
         ['déplacements . DT-bénévoles . sans . part train', 'déplacements . DT-bénévoles . sans . part train'],
+        ['déplacements . DT-bénévoles . sans . part bus', 'déplacements . DT-bénévoles . sans . part bus'],
         [
-          'déplacements . DT-bénévoles . sans . part deux roues',
-          'déplacements . DT-bénévoles . sans . part deux roues',
+          'déplacements . DT-bénévoles . sans . part transport en commun',
+          'déplacements . DT-bénévoles . sans . part transport en commun',
         ],
         [
-          'déplacements . DT-bénévoles . sans . part transport en commun',
-          'déplacements . DT-bénévoles . sans . part transport en commun',
+          'déplacements . DT-bénévoles . sans . part deux roues',
+          'déplacements . DT-bénévoles . sans . part deux roues',
         ],
       ],
     ),
@@ -455,13 +463,14 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
       [
         ['déplacements . DT-bénévoles . sans . voiture', 'déplacements . DT-bénévoles . sans . voiture . distance'],
         ['déplacements . DT-bénévoles . sans . train', 'déplacements . DT-bénévoles . sans . train . distance'],
-        [
-          'déplacements . DT-bénévoles . sans . deux roues',
-          'déplacements . DT-bénévoles . sans . deux roues . distance',
-        ],
+        ['déplacements . DT-bénévoles . sans . bus', 'déplacements . DT-bénévoles . sans . bus . distance'],
         [
           'déplacements . DT-bénévoles . sans . transports en commun',
           'déplacements . DT-bénévoles . sans . transports en commun . distance',
+        ],        
+        [
+          'déplacements . DT-bénévoles . sans . deux roues',
+          'déplacements . DT-bénévoles . sans . deux roues . distance',
         ],
       ],
       'DeplacementsDomicileTravailBenevoles.description',
@@ -482,11 +491,12 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
       [
         ['déplacements . DM-salariés . sans . voiture', 'déplacements . DM-salariés . sans . voiture . distance'],
         ['déplacements . DM-salariés . sans . train', 'déplacements . DM-salariés . sans . train . distance'],
-        ['déplacements . DM-salariés . sans . deux roues', 'déplacements . DM-salariés . sans . deux roues . distance'],
+        ['déplacements . DM-salariés . sans . bus', 'déplacements . DM-salariés . sans . bus . distance'],
         [
           'déplacements . DM-salariés . sans . transports en commun',
           'déplacements . DM-salariés . sans . transports en commun . distance',
         ],
+        ['déplacements . DM-salariés . sans . deux roues', 'déplacements . DM-salariés . sans . deux roues . distance'],
         [
           'déplacements . DM-salariés . sans . avion . court courrier',
           'déplacements . DM-salariés . sans . avion . court courrier . distance',
@@ -504,4 +514,50 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
   ],
   DeplacementsFabricationDesVehicules: [input('déplacements . fabrication . voitures . nombre')],
   TeletravailSalariesBenevoles: [input('télétravail . salariés . j'), input('télétravail . bénévoles . h')],
+  Evenement: [
+    mosaic('événement . mosaic alimentation', [
+      'événement . mosaic alimentation . végétalien . nombre',
+      'événement . mosaic alimentation . végétarien . nombre',
+      'événement . mosaic alimentation . viande blanche . nombre',
+      'événement . mosaic alimentation . viande rouge . nombre',
+      'événement . mosaic alimentation . poisson gras . nombre',
+      'événement . mosaic alimentation . poisson blanc . nombre',
+      'événement . mosaic alimentation . repas moyen . nombre',
+    ]),
+    table(
+      'Evenement.Deplacements',
+      [
+        'Evenement.ModeTransport',
+        'Evenement.DistanceParcourue',
+      ],
+      [
+        ['événement . déplacements . voiture','événement . déplacements . voiture'],
+        ['événement . déplacements . train','événement . déplacements . train'],
+        ['événement . déplacements . TGV','événement . déplacements . TGV'],
+        ['événement . déplacements . bus','événement . déplacements . bus'], 
+        ['événement . déplacements . deux roues','événement . déplacements . deux roues'], 
+        ['événement . déplacements . transport en commun','événement . déplacements . transport en commun'], 
+        ['événement . déplacements . avion','événement . déplacements . avion'], 
+      ]
+    ),
+    group('EvenementBooléen.question', [
+      'événement . énergie . types . électricité présent',
+      'événement . énergie . types . gaz présent',
+      'événement . énergie . types . fioul présent',
+    ], 'EvenementBooléen.description'),
+    input('événement . énergie . électricité'),
+    input('événement . énergie . gaz'),
+    input('événement . énergie . fioul'),
+    input('événement . hébergement . existant'),
+    table(
+      'Evenement.Hebergement',
+      [
+        'Evenement.TypeHebergement',
+        'Evenement.NombreNuitees',
+      ],
+      [
+        ['événement . hébergement . camping', 'événement . hébergement . camping . nombre de nuits'],
+        ['événement . hébergement . hotel', 'événement . hébergement . hotel . nombre de nuits']
+      ])
+  ]
 } as const
