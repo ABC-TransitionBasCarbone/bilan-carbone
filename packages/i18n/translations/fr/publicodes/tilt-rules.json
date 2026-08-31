@@ -7,13 +7,13 @@
     "k€": "k€",
     "quantité": "quantité",
     "kWh": "kWh",
-    "m3": "m3",
+    "m3": "m³",
     "litre": "litre",
     "stère": "stère",
     "kg": "kg",
     "h/semaine": "h/semaine",
     "jours/semaine": "jours/semaine",
-    "kgCO2e": "kgCO2e",
+    "kgCO2e": "kgCO₂e",
     "k€ HT": "k€ HT",
     "h": "h",
     "mail": "mail",
@@ -30,7 +30,7 @@
     "km/bénévoles/jours": "km/bénévoles.jours",
     "km/salariés/mois": "km/salariés.mois",
     "km/salarié/mois": "km/salarié.mois",
-    "kgCO2e/an": "kgCO2e/an",
+    "kgCO2e/an": "kgCO₂e/an",
     "km/salarié/an": "km/salarié.an",
     "km/bénéficiaires/an": "km/bénéficiaires.an",
     "place": "place",
@@ -267,7 +267,7 @@
         },
         "gaz naturel": {
           "conso": {
-            "question": "Pour le gaz naturel, à combien de m3 estimez-vous ces consommations ?"
+            "question": "Pour le gaz naturel, à combien de m³ estimez-vous ces consommations ?"
           }
         }
       }
@@ -588,7 +588,7 @@
             "question": "D'après les résultats de MEP, quelle est la distance moyenne parcourue par salarié par jour (A/R) pour des déplacements domicile-association ?"
           },
           "réponse MEP": {
-            "question": "D'après les résultats MEP, combien de kgCO2e représentent les déplacements domicile-association des salariés ?"
+            "question": "D'après les résultats MEP, combien de kgCO₂e représentent les déplacements domicile-association des salariés ?"
           }
         },
         "sans": {
@@ -641,7 +641,7 @@
             "question": "D'après les résultats de MEP, quelle est la distance moyenne parcourue par jour (A/R) par bénévole pour des déplacements domicile-travail ?"
           },
           "réponse MEP": {
-            "question": "D'après les résultats MEP, combien de kgCO2e représentent les déplacements domicile-association des bénévoles ?"
+            "question": "D'après les résultats MEP, combien de kgCO₂e représentent les déplacements domicile-association des bénévoles ?"
           }
         },
         "sans": {

@@ -137,7 +137,7 @@
         "establishmentYear": "Année d'ouverture"
       },
       "charts": {
-        "siteEmissions": "Émissions en tCO2e de l'établissement scolaire {site} en {year}"
+        "siteEmissions": "Émissions en tCO₂e de l'établissement scolaire {site} en {year}"
       },
       "questions": {
         "goals-title": "OBJECTIFS",

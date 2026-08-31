@@ -66,7 +66,7 @@
       "labelName": "Etichetta",
       "source": "Fonte",
       "unit": "Unità",
-      "emissionsKg": "Emissioni (kgCO2e)"
+      "emissionsKg": "Emissioni (kgCO₂e)"
     },
     "notAuthorized": "Azione non autorizzata",
     "Not authorized": "Non hai i permessi per eseguire questa azione",
