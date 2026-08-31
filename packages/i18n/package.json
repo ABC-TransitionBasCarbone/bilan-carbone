@@ -13,8 +13,8 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@types/node": "^24.13.3",
-    "tsx": "^4.22.4",
+    "@types/node": "^26.4.0",
+    "tsx": "^4.23.13",
     "typescript": "^6.0.2"
   }
 }
