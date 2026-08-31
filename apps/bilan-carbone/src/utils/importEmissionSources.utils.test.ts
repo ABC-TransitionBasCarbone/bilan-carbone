@@ -10,11 +10,7 @@ import {
 import { Locale } from '@abc-transitionbascarbone/i18n/config'
 import xlsx from 'node-xlsx'
 import { EmissionFactorMatchType, findEmissionFactorMatch } from './findEmissionFactor.utils'
-import {
-  parseEmissionSourcesFile,
-  resolveEmissionFactorRows,
-  SOURCE_IMPORT_HEADER_ROW_INDEX,
-} from './importEmissionSources.utils'
+import { parseEmissionSourcesFile, resolveEmissionFactorRows } from './importEmissionSources.utils'
 
 jest.mock('@/db/emissionFactors', () => ({
   findEmissionFactorByIdForMatch: jest.fn(),
@@ -68,7 +64,7 @@ type RowInput = {
 
 function makeBuffer(rows: RowInput[]): Buffer {
   const colCount = 35
-  const headerRows = Array.from({ length: SOURCE_IMPORT_HEADER_ROW_INDEX + 1 }, () => new Array(colCount).fill(''))
+  const headerRows = Array.from({ length: 10 }, () => new Array(colCount).fill(''))
   const dataRows = rows.map((r) => {
     const row = new Array(colCount).fill('')
     row[SOURCE_IMPORT_COLUMNS.site] = r.site ?? ''
