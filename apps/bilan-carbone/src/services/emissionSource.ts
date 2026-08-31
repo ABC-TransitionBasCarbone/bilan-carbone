@@ -81,6 +81,10 @@ export const canBeValidated = (
 }
 
 export const getAlpha = (emission: number, confidenceInterval: number[]) => {
+  if (!emission) {
+    return 0
+  }
+
   return (confidenceInterval[1] - emission) / emission
 }
 
