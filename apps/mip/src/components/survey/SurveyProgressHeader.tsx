@@ -13,9 +13,24 @@ interface Props {
 }
 
 const SurveyProgressHeader = ({ title, icons, progress, categoryKey, questionLabel, completionLabel }: Props) => {
-  const categoryClassSuffix = getCategoryClassSuffix(categoryKey)
+  const normalizedCategoryKey = (() => {
+    switch (categoryKey) {
+      case 'numérique':
+        return 'divers'
+      case 'bureaux':
+        return 'logement'
+      default:
+        return categoryKey
+    }
+  })()
+
+  const categoryClassSuffix = getCategoryClassSuffix(normalizedCategoryKey)
   const toneClass =
     (categoryClassSuffix ? styles[`progressTone${categoryClassSuffix}`] : undefined) ?? styles.progressToneDt
+
+  const barClassName = classNames(styles.progressBar, toneClass, {
+    [styles.progressBarCategory]: !!normalizedCategoryKey,
+  })
 
   return (
     <div className="mb1">
@@ -33,7 +48,7 @@ const SurveyProgressHeader = ({ title, icons, progress, categoryKey, questionLab
             {completionLabel}
           </Typography>
         </div>
-        <LinearProgress className={classNames(styles.progressBar, toneClass)} variant="determinate" value={progress} />
+        <LinearProgress className={barClassName} variant="determinate" value={progress} />
       </div>
     </div>
   )

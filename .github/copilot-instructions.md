@@ -3,21 +3,23 @@
 ## Scope
 
 Monorepo Next.js (Yarn workspaces + Turbo) for carbon accounting products:
+
 - apps/bilan-carbone
 - apps/mip
 - packages/* shared libs (db-common, i18n, components, services, typeguards, publicodes, ui, utils)
 
 ## Architecture Essentials
 
-- UI routes/components: apps/*/src/app and apps/*/src/components
+- UI routes/components: apps/_/src/app and apps/_/src/components
 - APIs: apps/*/src/app/api
 - DB schema: packages/db-common/prisma/schema
-- DB access and business logic: apps/*/src/db and apps/*/src/services
+- DB access and business logic: apps/_/src/db and apps/_/src/services
 - Shared types/constants: src/types and src/constants (or shared packages when reusable)
 
 ## Preferred Commands
 
 Run from repo root unless specified:
+
 - Dev all: yarn dev
 - Dev BC only: yarn dev:bc
 - Dev MIP only: yarn dev:mip
@@ -33,6 +35,7 @@ Run from repo root unless specified:
 - User-facing text must be localized with next-intl.
 - No leading semicolons. Use project prettier style.
 - Keep logic in the right layer: permissions in services/permissions, not inline in route/server handlers.
+- Do not add component tests in this repo; the project does not currently test UI rendering or DOM behavior, and we prefer focused logic/unit tests over component-level tests.
 
 ## Prisma Rules
 

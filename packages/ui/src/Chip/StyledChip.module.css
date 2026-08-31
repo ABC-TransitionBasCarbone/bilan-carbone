@@ -17,17 +17,27 @@
 }
 
 .validator {
-    background-color: var(--validator-background) !important;
+    --chip-background: var(--validator-background);
+    --chip-color: var(--neutral-500);
+    --chip-label-color: var(--neutral-500);
+    --chip-icon-color: var(--success-100);
+    --chip-background-hover: color-mix(in srgb, var(--validator-background) 85%, var(--white));
 }
 
 .editor {
-    background-color: var(--editor-background) !important;
+    --chip-background: var(--editor-background);
+    --chip-color: var(--primary-700);
+    --chip-background-hover: color-mix(in srgb, var(--editor-background) 85%, var(--white));
 }
 
 .reader {
-    background-color: var(--reader-background) !important;
+    --chip-background: var(--reader-background);
+    --chip-color: var(--neutral-500);
+    --chip-background-hover: color-mix(in srgb, var(--reader-background) 85%, var(--white));
 }
 
 .contributor {
-    background-color: var(--contributor-background) !important;
+    --chip-background: var(--contributor-background);
+    --chip-color: var(--warning);
+    --chip-background-hover: color-mix(in srgb, var(--contributor-background) 85%, var(--white));
 }

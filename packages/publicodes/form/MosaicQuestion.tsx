@@ -3,11 +3,10 @@ import MosaicBooleanInput from '@abc-transitionbascarbone/ui/Form/MosaicBooleanI
 import MosaicNumberInput from '@abc-transitionbascarbone/ui/Form/MosaicNumberInput'
 import classNames from 'classnames'
 import Engine from 'publicodes'
-import styles from './MosaicQuestion.module.css'
-import numberWithUnitStyles from './inputFields/NumberWithUnitInput.module.css'
-import { SuggestionList } from './SuggestionList'
 import { usePublicodesRuleTranslation } from '../hooks'
-import { getRuleNameParts, getRuleParentName } from './utils'
+import styles from './MosaicQuestion.module.css'
+import { SuggestionList } from './SuggestionList'
+import { getCategoryClassSuffix, getRuleCategoryKey, getRuleNameParts, getRuleParentName } from './utils'
 
 type Props<RuleName> = {
   parent: RuleName
@@ -25,25 +24,22 @@ type Props<RuleName> = {
 
 type MosaicSuggestionValues = Record<string, string | number | boolean>
 
-export const MosaicQuestion = <RuleName extends string,>({
-  parent,
-  elements,
-  engine,
-  onChange,
-}: Props<RuleName>) => {
+export const MosaicQuestion = <RuleName extends string>({ parent, elements, engine, onChange }: Props<RuleName>) => {
   const rules = engine.getParsedRules()
   const parentRaw = rules[parent]?.rawNode as any
   const mosaicType = parentRaw?.mosaique?.type
   const rawSuggestions = parentRaw?.mosaique?.suggestions
   const translation = usePublicodesRuleTranslation(parent)
+  const categoryClassSuffix = getCategoryClassSuffix(getRuleCategoryKey(parent))
+  const suggestionToneClass = categoryClassSuffix ? styles[`suggestionTone${categoryClassSuffix}`] : undefined
 
   const label = translation?.question ?? translation?.titre ?? parent
   const suggestionEntries =
-    rawSuggestions && typeof rawSuggestions === 'object' && !Array.isArray(rawSuggestions)
+    rawSuggestions && typeof rawSuggestions === 'object'
       ? Object.entries(rawSuggestions).filter(
-        (entry): entry is [string, MosaicSuggestionValues] =>
-          typeof entry[0] === 'string' && !!entry[1] && typeof entry[1] === 'object' && !Array.isArray(entry[1]),
-      )
+          (entry): entry is [string, MosaicSuggestionValues] =>
+            typeof entry[0] === 'string' && !!entry[1] && typeof entry[1] === 'object' && !Array.isArray(entry[1]),
+        )
       : []
 
   const applySuggestion = (suggestionValues: MosaicSuggestionValues) => {
@@ -65,8 +61,8 @@ export const MosaicQuestion = <RuleName extends string,>({
     <QuestionContainer label={label} description={translation?.description}>
       <SuggestionList
         suggestions={suggestionEntries}
-        containerClassName={classNames('flex', 'wrap', 'gapped-2', 'pb-2', 'pl-4')}
-        buttonClassName={classNames(numberWithUnitStyles.suggestionChip, styles.suggestionChip, 'pointer')}
+        containerClassName={classNames('flex', 'wrap', 'gapped-2', 'pb-2', styles.suggestions)}
+        buttonClassName={classNames(styles.suggestionChip, suggestionToneClass, 'pointer')}
         onSelect={(_, suggestionValues) => applySuggestion(suggestionValues)}
       />
       <div className={classNames(styles.mosaicContainer, 'gapped1 p1 grid')}>
@@ -74,7 +70,9 @@ export const MosaicQuestion = <RuleName extends string,>({
           const parts = getRuleNameParts(el.id)
           const lastSegment = parts.slice(-2, -1)[0]
           const directParentName = getRuleParentName(el.id)
-          const directParentRaw = directParentName ? ((rules[directParentName]?.rawNode as any) ?? undefined) : undefined
+          const directParentRaw = directParentName
+            ? ((rules[directParentName]?.rawNode as any) ?? undefined)
+            : undefined
           const nombreRaw = rules[el.id]?.rawNode as any
 
           const title = nombreRaw?.titre ?? directParentRaw?.titre ?? lastSegment

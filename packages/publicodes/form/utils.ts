@@ -45,7 +45,17 @@ export const getCategoryClassSuffix = (categoryKey?: string | null): string => {
   if (!categoryKey) {
     return ''
   }
-  return categoryKey.charAt(0).toUpperCase() + categoryKey.slice(1).toLowerCase()
+
+  const normalizedKey = categoryKey
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9]/g, '')
+
+  if (!normalizedKey) {
+    return ''
+  }
+
+  return normalizedKey.charAt(0).toUpperCase() + normalizedKey.slice(1).toLowerCase()
 }
 
 export const formatMassKilograms = (valueKg: number): string => {

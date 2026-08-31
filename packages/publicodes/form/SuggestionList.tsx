@@ -1,3 +1,5 @@
+import { BaseStyledChip } from '@abc-transitionbascarbone/ui'
+
 type SuggestionListProps<TValue> = {
     suggestions: [string, TValue][]
     onSelect: (label: string, value: TValue) => void
@@ -18,9 +20,13 @@ export function SuggestionList<TValue>({
     return (
         <div className={containerClassName}>
             {suggestions.map(([label, value], index) => (
-                <button key={`${label}-${index}`} type="button" className={buttonClassName} onClick={() => onSelect(label, value)}>
-                    {label}
-                </button>
+                <BaseStyledChip
+                    key={`${label}-${index}`}
+                    clickable
+                    className={buttonClassName}
+                    label={label}
+                    onClick={() => onSelect(label, value)}
+                />
             ))}
         </div>
     )

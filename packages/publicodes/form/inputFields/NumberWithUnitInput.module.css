@@ -19,19 +19,39 @@
 
 .suggestionChip {
   --suggestion-bg: var(--primary-100);
-  --suggestion-text: var(--info);
+  --suggestion-text: var(--white);
   --suggestion-bg-hover: var(--primary-200);
-  background-color: var(--suggestion-bg);
+  --chip-background: var(--suggestion-bg);
+  --chip-color: var(--suggestion-text);
+  --chip-background-hover: var(--suggestion-bg-hover);
   border: none;
   border-radius: 1rem;
   padding: 0.25rem 0.875rem;
   font-size: 0.875rem;
-  color: var(--suggestion-text);
   transition: background-color 0.15s;
 }
 
-.suggestionChip:hover {
-  background-color: var(--suggestion-bg-hover);
+.suggestionChip.MuiChip-root {
+  background-color: var(--chip-background) !important;
+  color: var(--chip-color) !important;
+}
+
+.suggestionChip.MuiChip-root.MuiChip-colorDefault,
+.suggestionChip.MuiChip-root.MuiChip-filledDefault,
+.suggestionChip.MuiChip-root.MuiChip-colorSuccess,
+.suggestionChip.MuiChip-root.MuiChip-filledSuccess {
+  background-color: var(--chip-background) !important;
+  color: var(--chip-color) !important;
+}
+
+.suggestionChip.MuiChip-root .MuiChip-label,
+.suggestionChip.MuiChip-root .MuiChip-icon,
+.suggestionChip.MuiChip-root .MuiChip-deleteIcon {
+  color: var(--chip-color) !important;
+}
+
+.suggestionChip.MuiChip-root:hover {
+  background-color: var(--chip-background-hover) !important;
 }
 
 .selectedSuggestionChip {
@@ -39,31 +59,46 @@
 }
 
 .suggestionToneDt {
-  --suggestion-bg: color-mix(in srgb, var(--mui-palette-primary-light) 86%, var(--white));
-  --suggestion-text: var(--mui-palette-primary-main);
-  --suggestion-bg-hover: color-mix(in srgb, var(--mui-palette-primary-main) 16%, var(--white));
+  --suggestion-bg: var(--mip-category-dt);
+  --suggestion-text: var(--white);
+  --suggestion-bg-hover: color-mix(in srgb, var(--mip-category-dt) 85%, var(--white));
+  --chip-background: var(--suggestion-bg);
+  --chip-color: var(--suggestion-text);
+  --chip-background-hover: var(--suggestion-bg-hover);
 }
 
 .suggestionToneTransport {
-  --suggestion-bg: color-mix(in srgb, var(--mui-palette-info-light) 14%, var(--white));
-  --suggestion-text: var(--mui-palette-info-main);
-  --suggestion-bg-hover: color-mix(in srgb, var(--mui-palette-info-main) 16%, var(--white));
+  --suggestion-bg: var(--mip-category-transport);
+  --suggestion-text: var(--white);
+  --suggestion-bg-hover: color-mix(in srgb, var(--mip-category-transport) 85%, var(--white));
+  --chip-background: var(--suggestion-bg);
+  --chip-color: var(--suggestion-text);
+  --chip-background-hover: var(--suggestion-bg-hover);
 }
 
 .suggestionToneAlimentation {
-  --suggestion-bg: color-mix(in srgb, var(--mui-palette-warning-light) 22%, var(--white));
-  --suggestion-text: var(--mui-palette-warning-main);
-  --suggestion-bg-hover: color-mix(in srgb, var(--mui-palette-warning-main) 16%, var(--white));
+  --suggestion-bg: var(--mip-category-alimentation);
+  --suggestion-text: var(--white);
+  --suggestion-bg-hover: color-mix(in srgb, var(--mip-category-alimentation) 85%, var(--white));
+  --chip-background: var(--suggestion-bg);
+  --chip-color: var(--suggestion-text);
+  --chip-background-hover: var(--suggestion-bg-hover);
 }
 
 .suggestionToneDivers {
-  --suggestion-bg: color-mix(in srgb, var(--mui-palette-error-light) 20%, var(--white));
-  --suggestion-text: var(--mui-palette-error-main);
-  --suggestion-bg-hover: color-mix(in srgb, var(--mui-palette-error-main) 16%, var(--white));
+  --suggestion-bg: var(--mip-category-divers);
+  --suggestion-text: var(--white);
+  --suggestion-bg-hover: color-mix(in srgb, var(--mip-category-divers) 85%, var(--white));
+  --chip-background: var(--suggestion-bg);
+  --chip-color: var(--suggestion-text);
+  --chip-background-hover: var(--suggestion-bg-hover);
 }
 
 .suggestionToneLogement {
-  --suggestion-bg: color-mix(in srgb, var(--mui-palette-success-light) 30%, var(--white));
-  --suggestion-text: var(--mui-palette-success-main);
-  --suggestion-bg-hover: color-mix(in srgb, var(--mui-palette-success-main) 16%, var(--white));
+  --suggestion-bg: var(--mip-category-logement);
+  --suggestion-text: var(--white);
+  --suggestion-bg-hover: color-mix(in srgb, var(--mip-category-logement) 85%, var(--white));
+  --chip-background: var(--suggestion-bg);
+  --chip-color: var(--suggestion-text);
+  --chip-background-hover: var(--suggestion-bg-hover);
 }

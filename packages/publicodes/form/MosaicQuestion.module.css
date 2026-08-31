@@ -2,12 +2,80 @@
   grid-template-columns: repeat(2, 1fr);
 }
 
+.suggestions {
+  padding-left: 0.25rem;
+}
+
 .suggestionChip {
-  --suggestion-bg: color-mix(in srgb, var(--mui-palette-warning-light) 20%, var(--white));
-  --suggestion-text: var(--mui-palette-warning-main);
-  --suggestion-bg-hover: color-mix(in srgb, var(--mui-palette-warning-main) 16%, var(--white));
-  border: 1px solid var(--neutral-300);
-  border-radius: 9999px;
-  padding: 0.375rem 0.75rem;
-  line-height: 1;
+  --suggestion-bg: var(--primary-100);
+  --suggestion-text: var(--white);
+  --suggestion-bg-hover: var(--primary-200);
+  --chip-background: var(--suggestion-bg);
+  --chip-color: var(--suggestion-text);
+  --chip-background-hover: var(--suggestion-bg-hover);
+  border: none;
+  border-radius: 1rem;
+  padding: 0.25rem 0.875rem;
+  font-size: 0.875rem;
+  transition: background-color 0.15s;
+}
+
+.suggestionChip.MuiChip-root {
+  background-color: var(--chip-background) !important;
+  color: var(--chip-color) !important;
+}
+
+.suggestionChip.MuiChip-root .MuiChip-label,
+.suggestionChip.MuiChip-root .MuiChip-icon,
+.suggestionChip.MuiChip-root .MuiChip-deleteIcon {
+  color: var(--chip-color) !important;
+}
+
+.suggestionChip.MuiChip-root:hover {
+  background-color: var(--chip-background-hover) !important;
+}
+
+.suggestionToneDt {
+  --suggestion-bg: var(--mip-category-dt);
+  --suggestion-text: var(--white);
+  --suggestion-bg-hover: color-mix(in srgb, var(--mip-category-dt) 85%, var(--white));
+  --chip-background: var(--suggestion-bg);
+  --chip-color: var(--suggestion-text);
+  --chip-background-hover: var(--suggestion-bg-hover);
+}
+
+.suggestionToneTransport {
+  --suggestion-bg: var(--mip-category-transport);
+  --suggestion-text: var(--white);
+  --suggestion-bg-hover: color-mix(in srgb, var(--mip-category-transport) 85%, var(--white));
+  --chip-background: var(--suggestion-bg);
+  --chip-color: var(--suggestion-text);
+  --chip-background-hover: var(--suggestion-bg-hover);
+}
+
+.suggestionToneAlimentation {
+  --suggestion-bg: var(--mip-category-alimentation);
+  --suggestion-text: var(--white);
+  --suggestion-bg-hover: color-mix(in srgb, var(--mip-category-alimentation) 85%, var(--white));
+  --chip-background: var(--suggestion-bg);
+  --chip-color: var(--suggestion-text);
+  --chip-background-hover: var(--suggestion-bg-hover);
+}
+
+.suggestionToneDivers {
+  --suggestion-bg: var(--mip-category-divers);
+  --suggestion-text: var(--white);
+  --suggestion-bg-hover: color-mix(in srgb, var(--mip-category-divers) 85%, var(--white));
+  --chip-background: var(--suggestion-bg);
+  --chip-color: var(--suggestion-text);
+  --chip-background-hover: var(--suggestion-bg-hover);
+}
+
+.suggestionToneLogement {
+  --suggestion-bg: var(--mip-category-logement);
+  --suggestion-text: var(--white);
+  --suggestion-bg-hover: color-mix(in srgb, var(--mip-category-logement) 85%, var(--white));
+  --chip-background: var(--suggestion-bg);
+  --chip-color: var(--suggestion-text);
+  --chip-background-hover: var(--suggestion-bg-hover);
 }

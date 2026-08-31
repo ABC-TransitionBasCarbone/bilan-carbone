@@ -52,34 +52,41 @@
   background-color: var(--progress-track) !important;
 }
 
+.progressBarCategory {
+  --progress-track: var(--primary-100);
+  --progress-fill: var(--primary-600);
+}
+
 .progressBar :global(.MuiLinearProgress-bar) {
   background-color: var(--progress-fill) !important;
   border-radius: 999px;
 }
 
 .progressToneDt {
-  --progress-track: color-mix(in srgb, var(--mui-palette-primary-light) 86%, var(--white));
-  --progress-fill: var(--mui-palette-primary-main);
+  --progress-track: color-mix(in srgb, var(--mip-category-dt) 15%, var(--white));
+  --progress-fill: var(--mip-category-dt);
 }
 
 .progressToneTransport {
-  --progress-track: color-mix(in srgb, var(--mui-palette-info-light) 14%, var(--white));
-  --progress-fill: var(--mui-palette-info-main);
+  --progress-track: color-mix(in srgb, var(--mip-category-transport) 15%, var(--white));
+  --progress-fill: var(--mip-category-transport);
 }
 
 .progressToneAlimentation {
-  --progress-track: color-mix(in srgb, var(--mui-palette-warning-light) 22%, var(--white));
-  --progress-fill: var(--mui-palette-warning-main);
+  --progress-track: color-mix(in srgb, var(--mip-category-alimentation) 15%, var(--white));
+  --progress-fill: var(--mip-category-alimentation);
 }
 
-.progressToneDivers {
-  --progress-track: color-mix(in srgb, var(--mui-palette-error-light) 20%, var(--white));
-  --progress-fill: var(--mui-palette-error-main);
+.progressToneDivers,
+.progressToneNumerique {
+  --progress-track: color-mix(in srgb, var(--mip-category-divers) 15%, var(--white));
+  --progress-fill: var(--mip-category-divers);
 }
 
-.progressToneLogement {
-  --progress-track: color-mix(in srgb, var(--mui-palette-success-light) 30%, var(--white));
-  --progress-fill: var(--mui-palette-success-main);
+.progressToneLogement,
+.progressToneBureaux {
+  --progress-track: color-mix(in srgb, var(--mip-category-logement) 15%, var(--white));
+  --progress-fill: var(--mip-category-logement);
 }
 
 .progressToneNumerique {
