@@ -4,12 +4,42 @@
       "conversionWarning": {
         "moreExplanationSNBC": "Data de referință a traiectoriei dumneavoastră nu va mai fi 1990 ca pentru SNBC, ci va fi data primului dumneavoastră studiu înregistrat în acest instrument, adică {oldestStudyDate}."
       }
+    },
+    "results": {
+      "difference": {
+        "otherGas1": "Doar GES-urile care fac parte din Protocolul de Kyoto (CO₂, CH₄, N₂O, HFC, PFC, SF₆) sunt contabilizate în cadrul GHG Protocol. Emisiile legate de celelalte GES (traînées de condensation, NF3, alte GES de climatizare sau de procese) sunt deci contabilizate în cadrul Bilan Carbone®, dar nu în cadrul GHG Protocol."
+      }
+    },
+    "pdf": {
+      "charts": {
+        "allEmissions": "Emisii datorate activităților tuturor cinematografelor, în tCO₂e",
+        "siteEmissions": "Emisii datorate activităților cinematografului {site}, în tCO₂e"
+      }
     }
   },
   "emissionFactors": {
     "table": {
       "wasteModalContent": "FE dedicați reciclării deșeurilor (sau sfârșitului de viață mediu atunci când acesta include reciclarea) utilizează o valoare de 41 kgCO₂e/t în loc de valoarea pe care le-o atribuie Base Empreinte®. Această valoare corespunde colectării, transportului și exploatării depozitării metalelor din Base Empreinte® și <b>exclude deci regenerarea materiei</b> care constituie majoritatea emisiilor legate de reciclare. Acest mod de funcționare este ales pentru a nu penaliza reciclarea, care este totuși luată în considerare în intrări în cadrul Bilan Carbone® (o intrare provenită dintr-o materie reciclată emițând în general mai puțin decât o intrare nouă). În cadrul Bilan GES règlementaire, valoarea din Base Empreinte® este cea care va fi utilizată în exportul dumneavoastră. O fereastră care explicitează eventualele diferențe dintre Bilan Carbone® și Bilan GES règlementaire va fi disponibilă în stânga sus a acestui export. Pentru mai multe detalii, vă invităm să consultați <link1>anexa 1</link1> a metodei Bilan Carbone® sau <link2>paginile privind deșeurile</link2> din Plan Carbone Général.",
-      "wasteModalTitle": "Diferență de valori FE reciclare"
+      "wasteModalTitle": "Diferență de valori FE reciclare",
+      "co2f": "CO₂f :",
+      "ch4f": "CH₄f :",
+      "ch4b": "CH₄b :",
+      "n2o": "N₂O :",
+      "co2b": "CO₂b :",
+      "sf6": "SF₆ :"
+    },
+    "create": {
+      "co2f": "CO₂f (în kgCO₂e)",
+      "ch4f": "CH₄f (în kgCO₂e)",
+      "ch4b": "CH₄b (în kgCO₂e)",
+      "n2o": "N₂O (în kgCO₂e)",
+      "co2b": "CO₂b (în kgCO₂e)",
+      "sf6": "SF₆ (în kgCO₂e)"
+    }
+  },
+  "exports": {
+    "bc": {
+      "emissions": "Emisii (tCO₂e)"
     }
   }
 }

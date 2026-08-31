@@ -4,12 +4,42 @@
       "conversionWarning": {
         "moreExplanationSNBC": "A pályagörbéje referencia dátuma többé nem 1990 lesz, mint az SNBC esetében, hanem az ezen az eszközön nyilvántartott első tanulmányának dátuma, azaz {oldestStudyDate}."
       }
+    },
+    "results": {
+      "difference": {
+        "otherGas1": "A GHG Protocol keretében csak a Kiotói Jegyzőkönyv részét képező ÜHG-k (CO₂, CH₄, N₂O, HFC, PFC, SF₆) kerülnek elszámolásra. Az egyéb ÜHG-khoz kapcsolódó kibocsátások (kondenzcsíkok, NF3, egyéb klímatizálási vagy folyamathoz kapcsolódó ÜHG-k) tehát a Bilan Carbone® keretében elszámolásra kerülnek, de a GHG Protocol keretében nem."
+      }
+    },
+    "pdf": {
+      "charts": {
+        "allEmissions": "Az összes mozi tevékenységéhez kapcsolódó kibocsátás, tCO₂e-ben",
+        "siteEmissions": "A(z) {site} mozi tevékenységéhez kapcsolódó kibocsátás, tCO₂e-ben"
+      }
     }
   },
   "emissionFactors": {
     "table": {
       "wasteModalContent": "A hulladék újrahasznosításához (vagy az átlagos élettartam végéhez, amennyiben az újrahasznosítást is magában foglalja) kapcsolódó FE-k 41 kgCO₂e/t értéket használnak a Base Empreinte® által nekik tulajdonított érték helyett. Ez az érték a fémek gyűjtésének, szállításának és tárolásának üzemeltetésének felel meg a Base Empreinte® szerint, és <b>ezáltal kizárja az anyag regenerálását</b>, amely az újrahasznosításhoz kapcsolódó kibocsátások túlnyomó részét teszi ki. Ezt a működést azért választották, hogy ne büntesse az újrahasznosítást, amelyet mindazonáltal figyelembe vesznek a Bilan Carbone® bemenő anyagai között (egy újrahasznosított anyagból származó bemenő anyag általában kevesebbet bocsát ki, mint egy új). A Bilan GES règlementaire keretében azonban a Base Empreinte® értéke kerül felhasználásra az exportban. Egy modál, amely elmagyarázza a Bilan Carbone® és a Bilan GES règlementaire közötti esetleges különbségeket, ennek az exportnak a bal felső részén lesz elérhető. További részletekért kérjük, tekintse meg a Bilan Carbone® módszer <link1>1. mellékletét</link1> vagy a Plan Carbone Général <link2>hulladékra vonatkozó oldalait</link2>.",
-      "wasteModalTitle": "Az újrahasznosítási FE-értékek különbsége"
+      "wasteModalTitle": "Az újrahasznosítási FE-értékek különbsége",
+      "co2f": "CO₂f :",
+      "ch4f": "CH₄f :",
+      "ch4b": "CH₄b :",
+      "n2o": "N₂O :",
+      "co2b": "CO₂b :",
+      "sf6": "SF₆ :"
+    },
+    "create": {
+      "co2f": "CO₂f (kgCO₂e-ben)",
+      "ch4f": "CH₄f (kgCO₂e-ben)",
+      "ch4b": "CH₄b (kgCO₂e-ben)",
+      "n2o": "N₂O (kgCO₂e-ben)",
+      "co2b": "CO₂b (kgCO₂e-ben)",
+      "sf6": "SF₆ (kgCO₂e-ben)"
+    }
+  },
+  "exports": {
+    "bc": {
+      "emissions": "Kibocsátás (tCO₂e)"
     }
   }
 }

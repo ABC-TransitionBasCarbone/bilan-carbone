@@ -4,12 +4,42 @@
       "conversionWarning": {
         "moreExplanationSNBC": "Referentni datum vaše putanje više neće biti 1990. kao za SNBC, već će to biti datum vaše prve studije zabilježene u ovom alatu, odnosno {oldestStudyDate}."
       }
+    },
+    "results": {
+      "difference": {
+        "otherGas1": "Samo staklenički plinovi koji su dio Protokola iz Kyota (CO₂, CH₄, N₂O, HFC, PFC, SF₆) obračunavaju se unutar GHG Protocola. Emisije povezane s ostalim stakleničkim plinovima (traînées de condensation, NF3, ostali staklenički plinovi klimatizacije ili procesa) stoga se obračunavaju unutar Bilan Carbone®, ali ne i unutar GHG Protocola."
+      }
+    },
+    "pdf": {
+      "charts": {
+        "allEmissions": "Emisije uslijed aktivnosti svih kinodvorana, u tCO₂e",
+        "siteEmissions": "Emisije uslijed aktivnosti kinodvorane {site}, u tCO₂e"
+      }
     }
   },
   "emissionFactors": {
     "table": {
       "wasteModalContent": "FE-ovi namijenjeni recikliranju otpada (ili prosječnom kraju životnog vijeka kada on uključuje recikliranje) koriste vrijednost od 41 kgCO₂e/t umjesto vrijednosti koju im dodjeljuje Base Empreinte®. Ova vrijednost odgovara prikupljanju, prijevozu i eksploataciji skladištenja metala u Base Empreinte®, te <b>stoga isključuje regeneraciju materijala</b> koja predstavlja većinu emisija povezanih s recikliranjem. Ovaj način rada odabran je kako se ne bi kažnjavalo recikliranje, koje se ipak uzima u obzir u ulaznim tokovima unutar Bilan Carbone® (ulazni tok dobiven iz recikliranog materijala obično emitira manje od novog ulaznog toka). U okviru Bilan GES règlementaire, upravo će se vrijednost iz Base Empreinte® koristiti u vašem exportu. Modalni prozor koji objašnjava eventualne razlike između Bilan Carbone® i Bilan GES règlementaire bit će dostupan gore lijevo u ovom exportu. Za više detalja, pozivamo vas da pogledate <link1>prilog 1</link1> metode Bilan Carbone® ili <link2>stranice koje se odnose na otpad</link2> Plana Carbone Général.",
-      "wasteModalTitle": "Razlika u vrijednostima FE za recikliranje"
+      "wasteModalTitle": "Razlika u vrijednostima FE za recikliranje",
+      "co2f": "CO₂f :",
+      "ch4f": "CH₄f :",
+      "ch4b": "CH₄b :",
+      "n2o": "N₂O :",
+      "co2b": "CO₂b :",
+      "sf6": "SF₆ :"
+    },
+    "create": {
+      "co2f": "CO₂f (u kgCO₂e)",
+      "ch4f": "CH₄f (u kgCO₂e)",
+      "ch4b": "CH₄b (u kgCO₂e)",
+      "n2o": "N₂O (u kgCO₂e)",
+      "co2b": "CO₂b (u kgCO₂e)",
+      "sf6": "SF₆ (u kgCO₂e)"
+    }
+  },
+  "exports": {
+    "bc": {
+      "emissions": "Emisije (tCO₂e)"
     }
   }
 }
