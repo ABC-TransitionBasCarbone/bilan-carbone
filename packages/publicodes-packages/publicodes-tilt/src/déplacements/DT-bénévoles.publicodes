@@ -183,7 +183,6 @@ déplacements . DT-bénévoles . sans . train:
         nom: TER/2022/Traction moyenne
         note: On considère que la majorité des déplacements en train pour du DT est en TER
   unité: kgCO2e
-  par défaut: 0
 
 déplacements . DT-bénévoles . sans . bus:
   titre: Bus
