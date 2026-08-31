@@ -47,6 +47,7 @@ export const MosaicQuestion = <RuleName extends string,>({
           const title = nombreRaw?.titre ?? directParentRaw?.titre ?? lastSegment
           const icons = directParentRaw?.icônes
           const description = directParentRaw?.note
+          const unit = nombreRaw?.unité
 
           if (mosaicType === 'nombre') {
             const value = el.element === 'input' && el.type === 'number' ? (el.value ?? el.defaultValue) : undefined
@@ -55,6 +56,7 @@ export const MosaicQuestion = <RuleName extends string,>({
                 key={el.id}
                 title={title}
                 icons={icons}
+                unit={unit}
                 description={description}
                 value={value as number | undefined}
                 onChange={(value) => onChange(el.id, value)}
