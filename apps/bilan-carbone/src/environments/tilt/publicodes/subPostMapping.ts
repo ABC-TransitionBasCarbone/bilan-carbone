@@ -545,9 +545,9 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
       'événement . énergie . types . gaz présent',
       'événement . énergie . types . fioul présent',
     ], 'EvenementBooléen.description'),
-    input('événement . énergie . électricité'),
-    input('événement . énergie . gaz'),
-    input('événement . énergie . fioul'),
+    input('événement . énergie . électricité . consommation'),
+    input('événement . énergie . gaz . consommation'),
+    input('événement . énergie . fioul . consommation'),
     input('événement . hébergement . existant'),
     table(
       'Evenement.Hebergement',
