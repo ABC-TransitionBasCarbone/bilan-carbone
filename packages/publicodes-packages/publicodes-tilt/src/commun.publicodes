@@ -141,7 +141,8 @@ commun . FE . moyen de transport:
       valeur: 0.00293
       unité: kgCO2e/km
       meta:
-        id: 43256
+        id: 
+        nom: TGV/2022
 
     avion:
       titre: Facteur d'émission avion moyen-courrier
@@ -149,3 +150,40 @@ commun . FE . moyen de transport:
       unité: kgCO2e/km
       meta:
         id: 28132
+
+    voiture moyenne France:
+      formule: hybride * 0.072 + électrique * 0.029 + gazole * 0.515 + essence * 0.384
+      note: source basée sur le parc automobile de voiture particulière en France en 2024 avec extrapolation pour ommettre les autres modes (GPL Hydrogène etc...) https://www.statistiques.developpement-durable.gouv.fr/donnees-sur-le-parc-automobile-francais-au-1er-janvier-2024
+      avec:
+        hybride:
+          valeur: 0.18
+          unité: kgCO2e/km
+          meta:
+            id: 28008
+            nom: Voiture particulière/Coeur de gamme - Véhicule compact/Hybride, full, P2
+        électrique:
+          valeur: 0.1
+          unité: kgCO2e/km
+          meta:
+            id: 28007
+            nom: Voiture particulière/Coeur de gamme - Véhicule compact/Electrique
+        gazole:
+          valeur: 0.34
+          unité: kgCO2e/km
+          meta:
+            id: db39062e-4e05-44a7-9d71-9aca18929005
+            nom: Transport de passagers en voiture de taille moyenne - gazole - EURO 4
+            note: Données ECOINVENT
+        essence:
+          valeur: 0.37
+          unité: kgCO2e/km
+          meta:
+            id: fb623fc8-b55b-4d98-ae54-3a83ebed431e
+            nom: Transport de passagers en voiture de taille moyenne - essence - EURO 5
+            note: Données ECOINVENT
+      unité: kgCO2e/km
+
+    transports en commun moyenne France:
+      formule: 0.515 * métro ou tram + 0.362 * RER et transilien + 0.124 * métro ou tram
+      note: Les déplacements en bus et en TER sont questionnés à part, le bus car il est plus émissif, le TER car c'était déjà fait dans le code et qu'un FE spécifique est disponible. Les pourcentages sont donc extrapolés en enlevant le bus et les TER, et sont calculés à part des statistiques de l'INSEE pour 2024 https://www.insee.fr/fr/statistiques/8354649?sommaire=8354913 
+      unité: kgCO2e/km
