@@ -20,8 +20,90 @@ type StoredFormState = {
 
 type SurveyQuestionColumn = {
   ruleName: string
-  headerLabel: string
 }
+
+type KeyStatsRules = {
+  travelKmRules: string[]
+  travelNightsRules: string[]
+  dtCarPresent: string | null
+  dtPublicTransportPresent: string | null
+  dtActiveModePresent: string | null
+  dtTwoWheelsPresent: string | null
+  dtCarKm: string | null
+  dtPublicTransportKm: string | null
+  veganMeals: string | null
+  vegetarianMeals: string | null
+  whiteMeatMeals: string | null
+  redMeatMeals: string | null
+  fatFishMeals: string | null
+  whiteFishMeals: string | null
+  aiRequests: string | null
+  videoHours: string | null
+  internetHours: string | null
+  trainPresent: string | null
+  carTravelPresent: string | null
+  planePresent: string | null
+}
+
+const hasRule = (rules: RawRules, ruleName: string): boolean =>
+  Object.prototype.hasOwnProperty.call(rules as Record<string, unknown>, ruleName)
+
+const resolveFirstExistingRule = (rules: RawRules, candidates: readonly string[]): string | null => {
+  for (const candidate of candidates) {
+    if (hasRule(rules, candidate)) {
+      return candidate
+    }
+  }
+  return null
+}
+
+const resolveExistingRules = (rules: RawRules, candidateGroups: readonly (readonly string[])[]): string[] =>
+  candidateGroups
+    .map((candidates) => resolveFirstExistingRule(rules, candidates))
+    .filter((ruleName): ruleName is string => ruleName !== null)
+
+const resolveKeyStatsRules = (rules: RawRules): KeyStatsRules => ({
+  travelKmRules: resolveExistingRules(rules, [
+    ['transport . voiture . km'],
+    ['transport . train . km'],
+    ['transport . taxi . km'],
+    ['transport . avion . km'],
+    ['transport . transports commun . km'],
+    ['transport . deux roues . km'],
+  ]),
+  travelNightsRules: resolveExistingRules(rules, [
+    ['transport . hébergement . nuitées . nombre'],
+    ['transport . hébergement . nuitées . hotel . nombre de nuitées'],
+    ['transport . hébergement . nuitées . locations . nombre de nuitées'],
+  ]),
+  dtCarPresent: resolveFirstExistingRule(rules, ['DT . voiture . présent']),
+  dtPublicTransportPresent: resolveFirstExistingRule(rules, ['DT . transports commun . présent']),
+  dtActiveModePresent: resolveFirstExistingRule(rules, ['DT . mobilité douce . présent']),
+  dtTwoWheelsPresent: resolveFirstExistingRule(rules, ['DT . deux roues . présent']),
+  dtCarKm: resolveFirstExistingRule(rules, ['DT . voiture . km']),
+  dtPublicTransportKm: resolveFirstExistingRule(rules, ['DT . transports commun . km']),
+  veganMeals: resolveFirstExistingRule(rules, ['alimentation . plats . végétalien . nombre']),
+  vegetarianMeals: resolveFirstExistingRule(rules, ['alimentation . plats . végétarien . nombre']),
+  whiteMeatMeals: resolveFirstExistingRule(rules, ['alimentation . plats . viande blanche . nombre']),
+  redMeatMeals: resolveFirstExistingRule(rules, ['alimentation . plats . viande rouge . nombre']),
+  fatFishMeals: resolveFirstExistingRule(rules, ['alimentation . plats . poisson gras . nombre']),
+  whiteFishMeals: resolveFirstExistingRule(rules, ['alimentation . plats . poisson blanc . nombre']),
+  aiRequests: resolveFirstExistingRule(rules, [
+    'numérique . ia . nombre de requêtes par jour',
+    'divers . numérique . ia . nombre de requêtes par jour',
+  ]),
+  videoHours: resolveFirstExistingRule(rules, [
+    'numérique . visio . durée journalière',
+    'divers . numérique . visio . durée journalière',
+  ]),
+  internetHours: resolveFirstExistingRule(rules, [
+    'numérique . internet . durée journalière',
+    'divers . numérique . internet . durée journalière',
+  ]),
+  trainPresent: resolveFirstExistingRule(rules, ['transport . train . présent']),
+  carTravelPresent: resolveFirstExistingRule(rules, ['transport . voiture . présent']),
+  planePresent: resolveFirstExistingRule(rules, ['transport . avion . présent']),
+})
 
 const parseStoredFormState = (answers: unknown): StoredFormState => {
   if (typeof answers === 'string') {
@@ -55,15 +137,8 @@ const getSurveyQuestionColumns = (rules: RawRules): SurveyQuestionColumn[] => {
         return null
       }
 
-      const unit = typedRule['unité']
-      const normalizedUnit = typeof unit === 'string' ? unit.trim() : ''
-      const headerLabel = normalizedUnit
-        ? `${question.trim()} [${ruleName}] (${normalizedUnit})`
-        : `${question.trim()} [${ruleName}]`
-
       return {
         ruleName,
-        headerLabel,
       }
     })
     .filter((column): column is SurveyQuestionColumn => column !== null)
@@ -74,63 +149,56 @@ const buildKeyStats = (
   situations: Situation<string>[],
   commuteEmissionsKg: number[],
   travelEmissionsKg: number[],
+  keyStatsRules: KeyStatsRules,
 ): KeyStatGroup[] => {
   const respondentCount = situations.length
 
-  const travelKmRules = [
-    'transport . voiture . km',
-    'transport . train . km',
-    'transport . taxi . km',
-    'transport . avion . km',
-    'transport . transports commun . km',
-    'transport . deux roues . km',
-  ]
-
-  const mealRules = [
-    'alimentation . plats . végétalien . nombre',
-    'alimentation . plats . végétarien . nombre',
-    'alimentation . plats . viande blanche . nombre',
-    'alimentation . plats . viande rouge . nombre',
-    'alimentation . plats . poisson gras . nombre',
-    'alimentation . plats . poisson blanc . nombre',
-  ] as const
-
   const rows = situations.map((situation) => {
     engine.setSituation(situation)
-    const ev = (key: string): unknown => {
+    const ev = (key: string | null): unknown => {
+      if (!key) {
+        return undefined
+      }
       try {
         return engine.evaluate(key).nodeValue
       } catch {
         return undefined
       }
     }
-    const num = (key: string) => toNumber(ev(key))
+    const num = (key: string | null) => toNumber(ev(key))
+    const sumRules = (keys: string[]) => keys.map((key) => num(key) ?? 0).reduce((a, b) => a + b, 0)
 
-    const [vegan, vegetarian, whiteMeat, redMeat, fatFish, whiteFish] = mealRules.map((k) => num(k) ?? 0)
+    const vegan = num(keyStatsRules.veganMeals) ?? 0
+    const vegetarian = num(keyStatsRules.vegetarianMeals) ?? 0
+    const whiteMeat = num(keyStatsRules.whiteMeatMeals) ?? 0
+    const redMeat = num(keyStatsRules.redMeatMeals) ?? 0
+    const fatFish = num(keyStatsRules.fatFishMeals) ?? 0
+    const whiteFish = num(keyStatsRules.whiteFishMeals) ?? 0
     const knownMeals = vegan + vegetarian + whiteMeat + redMeat + fatFish + whiteFish
-    const travelKm = travelKmRules.map((k) => num(k) ?? 0).reduce((a, b) => a + b, 0)
+    const travelKm = sumRules(keyStatsRules.travelKmRules)
+    const travelNights = sumRules(keyStatsRules.travelNightsRules)
 
     return {
-      dtCarPresent: isYesValue(ev('DT . voiture . présent')),
-      dtPublicTransportPresent: isYesValue(ev('DT . transports commun . présent')),
+      dtCarPresent: isYesValue(ev(keyStatsRules.dtCarPresent)),
+      dtPublicTransportPresent: isYesValue(ev(keyStatsRules.dtPublicTransportPresent)),
       dtActiveModePresent:
-        isYesValue(ev('DT . mobilité douce . présent')) || isYesValue(ev('DT . deux roues . présent')),
-      dtCarKm: num('DT . voiture . km'),
-      dtPublicTransportKm: num('DT . transports commun . km'),
+        isYesValue(ev(keyStatsRules.dtActiveModePresent)) || isYesValue(ev(keyStatsRules.dtTwoWheelsPresent)),
+      dtCarKm: num(keyStatsRules.dtCarKm),
+      dtPublicTransportKm: num(keyStatsRules.dtPublicTransportKm),
       travelKm: travelKm > 0 ? travelKm : null,
-      veganMeals: num('alimentation . plats . végétalien . nombre'),
-      vegetarianMeals: num('alimentation . plats . végétarien . nombre'),
+      veganMeals: num(keyStatsRules.veganMeals),
+      vegetarianMeals: num(keyStatsRules.vegetarianMeals),
       totalMeals: knownMeals,
       fullyVegetarian: knownMeals > 0 && vegan + vegetarian > 0 && whiteMeat + redMeat + fatFish + whiteFish === 0,
       fullyVegan: vegan > 0 && vegetarian + whiteMeat + redMeat + fatFish + whiteFish === 0,
       redMeatDaily: redMeat >= 5,
-      aiRequests: num('divers . numérique . ia . nombre de requêtes par jour'),
-      videoHours: num('divers . numérique . visio . durée journalière'),
-      internetHours: num('divers . numérique . internet . durée journalière'),
-      trainPresent: isYesValue(ev('transport . train . présent')),
-      carTravelPresent: isYesValue(ev('transport . voiture . présent')),
-      planePresent: isYesValue(ev('transport . avion . présent')),
-      travelNights: num('transport . hébergement . nuitées . nombre'),
+      aiRequests: num(keyStatsRules.aiRequests),
+      videoHours: num(keyStatsRules.videoHours),
+      internetHours: num(keyStatsRules.internetHours),
+      trainPresent: isYesValue(ev(keyStatsRules.trainPresent)),
+      carTravelPresent: isYesValue(ev(keyStatsRules.carTravelPresent)),
+      planePresent: isYesValue(ev(keyStatsRules.planePresent)),
+      travelNights: travelNights > 0 ? travelNights : null,
     }
   })
 
@@ -309,6 +377,7 @@ const computeAggregatesForSituations = (
   filterSituations: Situation<string>[],
   categoryKeys: string[],
   emptyCategories: EmissionCategory[],
+  keyStatsRules: KeyStatsRules,
 ): { totalRespondents: number; averageFootprint: number; categories: EmissionCategory[]; keyStats: KeyStatGroup[] } => {
   if (filterSituations.length === 0) {
     return { totalRespondents: 0, averageFootprint: 0, categories: emptyCategories, keyStats: [] }
@@ -353,7 +422,7 @@ const computeAggregatesForSituations = (
       value: Math.round(categoryTotals[key] / count),
       color: CATEGORY_COLORS[key] ?? CATEGORY_COLORS.total,
     })),
-    keyStats: buildKeyStats(engine, filterSituations, commuteEmissionsKg, travelEmissionsKg),
+    keyStats: buildKeyStats(engine, filterSituations, commuteEmissionsKg, travelEmissionsKg, keyStatsRules),
   }
 }
 
@@ -388,6 +457,7 @@ export const getSurveyResults = async (campaignId: string): Promise<SurveyResult
   const responses = campaign.responses
   const totalRespondents = responses.length
   const modelRules = campaign.modelCampaign.model as RawRules
+  const keyStatsRules = resolveKeyStatsRules(modelRules)
   const categoryKeys = getSurveyCategoryKeysFromRawRules(modelRules)
   const entityFilterDefs = canAccessEntityFilter ? getEntityFilterDefsFromModel(modelRules) : []
 
@@ -399,7 +469,13 @@ export const getSurveyResults = async (campaignId: string): Promise<SurveyResult
   }))
 
   const buildEntityFilterResults = (allSituations: Situation<string>[], engine: Engine): EntityFilterResult[] => {
-    const allAggregates = computeAggregatesForSituations(engine, allSituations, categoryKeys, emptyCategories)
+    const allAggregates = computeAggregatesForSituations(
+      engine,
+      allSituations,
+      categoryKeys,
+      emptyCategories,
+      keyStatsRules,
+    )
     const allFilter: EntityFilterResult = { id: 'all', name: 'Tous', ...allAggregates }
 
     const situationsByFilter = new Map<number, Situation<string>[]>()
@@ -422,7 +498,7 @@ export const getSurveyResults = async (campaignId: string): Promise<SurveyResult
       return {
         id: String(value),
         name,
-        ...computeAggregatesForSituations(engine, entitySituations, categoryKeys, emptyCategories),
+        ...computeAggregatesForSituations(engine, entitySituations, categoryKeys, emptyCategories, keyStatsRules),
       }
     })
     return [allFilter, ...entityFilters]
@@ -462,6 +538,7 @@ export const getSurveyResults = async (campaignId: string): Promise<SurveyResult
     situations,
     categoryKeys,
     emptyCategories,
+    keyStatsRules,
   )
 
   return {
