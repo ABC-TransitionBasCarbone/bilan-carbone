@@ -1,5 +1,6 @@
 import { Question, Survey, SurveyResponse } from '@abc-transitionbascarbone/typeguards'
 import { isObject } from '@abc-transitionbascarbone/utils/object'
+import { normalizeCategoryKey } from '@abc-transitionbascarbone/utils/parsing'
 import Engine, { parsePublicodes } from 'publicodes'
 
 export type RawRules = Parameters<typeof parsePublicodes>[0]
@@ -173,7 +174,15 @@ export function createMipEngine(rules: RawRules): Engine {
   })
 }
 
-const KNOWN_SURVEY_CATEGORY_KEYS = ['DT', 'transport', 'alimentation', 'divers', 'logement'] as const
+const KNOWN_SURVEY_CATEGORY_KEYS = [
+  'DT',
+  'transport',
+  'alimentation',
+  'divers',
+  'logement',
+  'numerique',
+  'bureaux',
+] as const
 
 const getSurveyCategoryKeysFromRules = (rules: Record<string, unknown>): string[] => {
   const bilanRule = rules.bilan
@@ -205,7 +214,17 @@ const getSurveyCategoryKeysFromRules = (rules: Record<string, unknown>): string[
     }
   }
 
-  return KNOWN_SURVEY_CATEGORY_KEYS.filter((key) => key in rules)
+  const ruleKeysByNormalized = new Map<string, string>()
+  for (const ruleKey of Object.keys(rules)) {
+    const normalizedKey = normalizeCategoryKey(ruleKey)
+    if (!ruleKeysByNormalized.has(normalizedKey)) {
+      ruleKeysByNormalized.set(normalizedKey, ruleKey)
+    }
+  }
+
+  return KNOWN_SURVEY_CATEGORY_KEYS.map((key) => ruleKeysByNormalized.get(normalizeCategoryKey(key)) ?? null).filter(
+    (key): key is string => key !== null,
+  )
 }
 
 export const getSurveyCategoryKeysFromRawRules = (rules: RawRules): string[] => {

@@ -45,19 +45,40 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   const [isExplanationVisible, setIsExplanationVisible] = useState(true)
   const [isLoading, setIsLoading] = useState(true)
   const [isCompleting, setIsCompleting] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
   const [state, setState] = useState<FormState<string>>(() => initState())
   const [interstitialCategoryKey, setInterstitialCategoryKey] = useState<string | null>(null)
+  const [pendingNextState, setPendingNextState] = useState<FormState<string> | null>(null)
   const updateState = (newState: FormState<string>) => setState(newState)
 
   useEffect(() => {
     const saved = loadSurveyState<FormState<string>>(surveyId)
     if (saved) {
+      const startedState = formBuilder.start(
+        {
+          ...FormBuilder.newState<string>(),
+          situation: saved.situation,
+        },
+        rootRule,
+      )
+      const { pageCount } = formBuilder.pagination(startedState)
+      const targetPageIndex = Math.max(0, Math.min(saved.currentPageIndex ?? 0, pageCount - 1))
+
+      let rebuiltState = startedState
+      for (let index = 0; index < targetPageIndex; index++) {
+        rebuiltState = formBuilder.goToNextPage({
+          ...rebuiltState,
+          pages: [...rebuiltState.pages],
+          nextPages: [...rebuiltState.nextPages],
+        })
+      }
+
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setState(saved)
+      setState(rebuiltState)
       setIsResumed(true)
     }
     setIsLoading(false)
-  }, [surveyId])
+  }, [formBuilder, rootRule, surveyId])
 
   useEffect(() => {
     if (!isLoading) {
@@ -66,19 +87,16 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   }, [surveyId, state, isLoading])
 
   useEffect(() => {
-    if (!isLoading && !isResumed) {
-      const { current, pageCount, hasNextPage } = formBuilder.pagination(state)
-      const isComplete = !hasNextPage && current === pageCount
-      if (isComplete) {
-        router.replace(`/${surveyId}/results`)
-      }
+    if (isSubmitted) {
+      router.replace(`/${surveyId}/results`)
     }
-  }, [formBuilder, isLoading, isResumed, router, state, surveyId])
+  }, [isSubmitted, router, surveyId])
 
   const handleRestart = () => {
     clearSurveyState(surveyId)
     setIsResumed(false)
     setInterstitialCategoryKey(null)
+    setPendingNextState(null)
     setState(initState())
   }
 
@@ -90,8 +108,10 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
 
     if (categoryKey && newCategoryKey !== categoryKey) {
       setInterstitialCategoryKey(categoryKey)
+      setPendingNextState(newState)
       return
     }
+    setPendingNextState(null)
     updateState(newState)
   }
 
@@ -106,6 +126,7 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
     try {
       await createSurveyResponse(surveyId, JSON.stringify(completedState))
       updateState(completedState)
+      setIsSubmitted(true)
     } catch (error) {
       console.error('Survey completion failed', { surveyId, error })
     } finally {
@@ -115,7 +136,7 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
 
   const { elements } = formBuilder.currentPage(state)
   const { current, pageCount, hasNextPage, hasPreviousPage } = formBuilder.pagination(state)
-  const isComplete = !hasNextPage && current === pageCount
+  const isLastPage = !hasNextPage && current === pageCount
   const progress = Math.round((current / pageCount) * 100)
   const groupedElements = buildGroupedElements(engine, elements)
   const currentTitle = getCurrentSectionTitle(engine, groupedElements)
@@ -141,10 +162,6 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
     return <SurveyExplanation onStart={() => setIsExplanationVisible(false)} />
   }
 
-  if (isComplete) {
-    return null
-  }
-
   return (
     <div className={styles.scrollWrapper}>
       <Container maxWidth="lg" className="pt1 pb5">
@@ -160,10 +177,16 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
                   previousLabel={tCommon('previous')}
                   nextLabel={tCommon('next')}
                   completeLabel={t('navigation.complete')}
-                  onPrevious={() => setInterstitialCategoryKey(null)}
+                  onPrevious={() => {
+                    setInterstitialCategoryKey(null)
+                    setPendingNextState(null)
+                  }}
                   onNext={() => {
                     setInterstitialCategoryKey(null)
-                    updateState(formBuilder.goToNextPage(state))
+                    const nextState =
+                      pendingNextState ?? formBuilder.goToNextPage({ ...state, pages: [...state.pages] })
+                    setPendingNextState(null)
+                    updateState(nextState)
                   }}
                   onComplete={completeSurvey}
                 />
@@ -192,7 +215,7 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
                 <SurveyNavigation
                   hasPreviousPage={hasPreviousPage}
                   canGoBackToExplanation={!hasPreviousPage}
-                  isLastPage={pageCount === current + 1}
+                  isLastPage={isLastPage}
                   isCompleting={isCompleting}
                   backToExplanationLabel={t('navigation.backToExplanation')}
                   previousLabel={tCommon('previous')}

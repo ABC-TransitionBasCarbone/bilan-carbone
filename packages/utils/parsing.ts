@@ -14,3 +14,7 @@ export const isYesValue = (value: unknown): boolean => {
 export const removeDiacritics = (value: string): string => {
     return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
 }
+
+export const normalizeCategoryKey = (value: string): string => {
+    return removeDiacritics(value.trim().toLocaleLowerCase())
+}

@@ -9,8 +9,7 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@abc-transitionbascarbone/css": ["../../packages/css/index.ts"],
-      "@abc-transitionbascarbone/publicodes-mip": ["../../packages/publicodes-packages/publicodes-mip"]
+      "@abc-transitionbascarbone/css": ["../../packages/css/index.ts"]
     }
   },
   "include": [
