@@ -74,7 +74,7 @@ const SUBPOST_TO_RULENAME: Partial<Record<SubPost, TiltRuleName>> = {
 } as const
 
 const input = (rule: TiltRuleName): FormLayout<TiltRuleName> => inputLayout<TiltRuleName>(rule)
-const group = (title: string, rules: TiltRuleName[], description?: string,): FormLayout<TiltRuleName> =>
+const group = (title: string, rules: TiltRuleName[], description?: string): FormLayout<TiltRuleName> =>
   groupLayout<TiltRuleName>(title, rules, description)
 const table = (
   title: string,
@@ -467,7 +467,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
         [
           'déplacements . DT-bénévoles . sans . transports en commun',
           'déplacements . DT-bénévoles . sans . transports en commun . distance',
-        ],        
+        ],
         [
           'déplacements . DT-bénévoles . sans . deux roues',
           'déplacements . DT-bénévoles . sans . deux roues . distance',
@@ -526,38 +526,37 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     ]),
     table(
       'Evenement.Deplacements',
+      ['Evenement.ModeTransport', 'Evenement.DistanceParcourue'],
       [
-        'Evenement.ModeTransport',
-        'Evenement.DistanceParcourue',
+        ['événement . déplacements . voiture', 'événement . déplacements . voiture'],
+        ['événement . déplacements . train', 'événement . déplacements . train'],
+        ['événement . déplacements . TGV', 'événement . déplacements . TGV'],
+        ['événement . déplacements . bus', 'événement . déplacements . bus'],
+        ['événement . déplacements . deux roues', 'événement . déplacements . deux roues'],
+        ['événement . déplacements . transport en commun', 'événement . déplacements . transport en commun'],
+        ['événement . déplacements . avion', 'événement . déplacements . avion'],
       ],
-      [
-        ['événement . déplacements . voiture','événement . déplacements . voiture'],
-        ['événement . déplacements . train','événement . déplacements . train'],
-        ['événement . déplacements . TGV','événement . déplacements . TGV'],
-        ['événement . déplacements . bus','événement . déplacements . bus'], 
-        ['événement . déplacements . deux roues','événement . déplacements . deux roues'], 
-        ['événement . déplacements . transport en commun','événement . déplacements . transport en commun'], 
-        ['événement . déplacements . avion','événement . déplacements . avion'], 
-      ]
     ),
-    group('EvenementBooléen.question', [
-      'événement . énergie . types . électricité présent',
-      'événement . énergie . types . gaz présent',
-      'événement . énergie . types . fioul présent',
-    ], 'EvenementBooléen.description'),
+    group(
+      'EvenementBooléen.question',
+      [
+        'événement . énergie . types . électricité présent',
+        'événement . énergie . types . gaz présent',
+        'événement . énergie . types . fioul présent',
+      ],
+      'EvenementBooléen.description',
+    ),
     input('événement . énergie . électricité . consommation'),
     input('événement . énergie . gaz . consommation'),
     input('événement . énergie . fioul . consommation'),
     input('événement . hébergement . existant'),
     table(
       'Evenement.Hebergement',
-      [
-        'Evenement.TypeHebergement',
-        'Evenement.NombreNuitees',
-      ],
+      ['Evenement.TypeHebergement', 'Evenement.NombreNuitees'],
       [
         ['événement . hébergement . camping', 'événement . hébergement . camping . nombre de nuits'],
-        ['événement . hébergement . hotel', 'événement . hébergement . hotel . nombre de nuits']
-      ])
-  ]
+        ['événement . hébergement . hotel', 'événement . hébergement . hotel . nombre de nuits'],
+      ],
+    ),
+  ],
 } as const
