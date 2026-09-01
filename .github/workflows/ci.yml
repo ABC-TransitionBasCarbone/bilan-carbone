@@ -64,8 +64,6 @@ jobs:
         working-directory: ${{ github.workspace }}
       - name: Linter
         run: yarn lint
-      - name: Prebuild application
-        run: yarn prebuild
       - name: TypeScript check
         run: npx tsc --noEmit
 
@@ -170,9 +168,6 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
         working-directory: .
-      # TODO Remettre prebuild après rebase ?
-      # - name: Prebuild application
-        # run: yarn prebuild
       - name: Launch unit tests
         run: yarn run test
 
@@ -371,8 +366,6 @@ jobs:
         - name: Install dependencies
           run: yarn install --immutable --immutable-cache --check-cache
           working-directory: .
-        - name: Prebuild application
-          run: yarn prebuild
         - name: Generate prisma files
           run: yarn workspace @abc-transitionbascarbone/db-common prisma generate
           working-directory: .
