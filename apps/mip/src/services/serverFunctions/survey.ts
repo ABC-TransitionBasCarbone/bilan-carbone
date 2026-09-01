@@ -16,8 +16,8 @@ import {
 import { isAdmin } from '@/utils/user'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
 import { buildCsv, sanitizeFileName, serializeCsvValue } from '@abc-transitionbascarbone/utils/csv'
-import { toNumber, safePercent, average } from '@abc-transitionbascarbone/utils/number'
-import { isYesValue } from '@abc-transitionbascarbone/utils/parsing'
+import { average, safePercent, toNumber } from '@abc-transitionbascarbone/utils/number'
+import { isYesValue, removeDiacritics } from '@abc-transitionbascarbone/utils/parsing'
 import Engine, { Situation } from 'publicodes'
 
 type StoredFormState = {
@@ -83,12 +83,9 @@ const travelNightAggregateRules = [
 ]
 
 const isTravelNightDetailedRule = (ruleName: string): boolean => {
-  const normalizedRuleName = ruleName.toLowerCase()
+  const normalizedRuleName = removeDiacritics(ruleName).toLowerCase()
 
-  return (
-    (normalizedRuleName.includes('hébergement . nuitées') || normalizedRuleName.includes('hebergement . nuitées')) &&
-    (normalizedRuleName.endsWith('nombre de nuitées') || normalizedRuleName.endsWith('nombre de nuitees'))
-  )
+  return normalizedRuleName.includes('hebergement . nuitees') && normalizedRuleName.endsWith('nombre de nuitees')
 }
 
 const getTravelNightsValue = (situation: Situation<string>, num: (key: string) => number | null): number => {
