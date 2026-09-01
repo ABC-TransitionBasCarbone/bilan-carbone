@@ -14,25 +14,12 @@ export default getRequestConfig(async () => {
     .then((m) => m.default)
     .catch(() => import(`./translations/${Locale.FR}/mip.json`).then((m) => m.default))
 
-  const mipRulesMessages = await import(`../../../../packages/i18n/translations/${locale}/publicodes/mip-rules.json`)
-    .then((m) => m.default)
-    .catch(() =>
-      import(`../../../../packages/i18n/translations/${Locale.FR}/publicodes/mip-rules.json`).then((m) => m.default),
-    )
-
-  // Only keep publicodes-units from mip-rules; questions/titles must come directly from the publicodes model
-  const mipUnitsMessages =
-    isObject(mipRulesMessages) && isObject((mipRulesMessages as Record<string, unknown>)['publicodes-units'])
-      ? { 'publicodes-units': (mipRulesMessages as Record<string, unknown>)['publicodes-units'] }
-      : {}
-
   return {
     locale,
     messages: mergeObjects(
       {},
       isObject(commonMessages) ? commonMessages : {},
       isObject(mipMessages) ? mipMessages : {},
-      mipUnitsMessages,
     ),
   }
 })
