@@ -35,6 +35,11 @@
       "n2o": "N₂O (u kgCO₂e)",
       "co2b": "CO₂b (u kgCO₂e)",
       "sf6": "SF₆ (u kgCO₂e)"
+    },
+    "post": {
+      "Evenement": "Događaji",
+      "EvenementSimplified": "Događaji",
+      "EnergieSimplified": "Energija"
     }
   },
   "exports": {
