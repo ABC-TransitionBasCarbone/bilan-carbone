@@ -41,5 +41,8 @@
     "bc": {
       "emissions": "Emisije (tCO₂e)"
     }
+  },
+  "importFileModal": {
+    "emptyHeader": "Datoteka ne sadrži ispravna zaglavlja. Molimo koristite predložak za uvoz."
   }
 }

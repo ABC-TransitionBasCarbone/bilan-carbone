@@ -1581,7 +1581,7 @@
     "invalidFileType": "The file is not a valid Excel file",
     "emptyFile": "The file is empty",
     "missingName": "Label is missing",
-    "emptyHeader": "Le fichier ne contient pas les bons en-têtes. Veuillez utiliser le modèle d'import.",
+    "emptyHeader": "The file does not contain the correct headers. Please use the import template.",
     "missingSource": "Source is missing",
     "invalidUnit": "Invalid unit: \"{value}\"",
     "invalidTotalCo2": "Invalid total emissions (must be a number ≥ 0)",

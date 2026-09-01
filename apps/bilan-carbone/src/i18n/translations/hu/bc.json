@@ -41,5 +41,8 @@
     "bc": {
       "emissions": "Kibocsátás (tCO₂e)"
     }
+  },
+  "importFileModal": {
+    "emptyHeader": "A fájl nem tartalmazza a megfelelő fejléceket. Kérjük, használja az importsablont."
   }
 }
