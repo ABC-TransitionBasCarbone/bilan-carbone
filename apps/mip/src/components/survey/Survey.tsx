@@ -17,7 +17,13 @@ import SurveyNavigation from './SurveyNavigation'
 import SurveyProgressHeader from './SurveyProgressHeader'
 import SurveyQuestionList from './SurveyQuestionList'
 import SurveyResumeCard from './SurveyResumeCard'
-import { clearSurveyState, loadSurveyState, saveSurveyState } from './surveyStateStorage'
+import {
+  clearSurveyState,
+  loadSurveyState,
+  loadSurveySubmissionStatus,
+  saveSurveyState,
+  saveSurveySubmissionStatus,
+} from './surveyStateStorage'
 
 interface MipSurveyProps {
   surveyId: string
@@ -53,6 +59,7 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
 
   useEffect(() => {
     const saved = loadSurveyState<FormState<string>>(surveyId)
+    const wasSubmitted = loadSurveySubmissionStatus(surveyId)
     if (saved) {
       const startedState = formBuilder.start(
         {
@@ -77,14 +84,16 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
       setState(rebuiltState)
       setIsResumed(true)
     }
+    setIsSubmitted(wasSubmitted)
     setIsLoading(false)
   }, [formBuilder, rootRule, surveyId])
 
   useEffect(() => {
     if (!isLoading) {
       saveSurveyState(surveyId, state)
+      saveSurveySubmissionStatus(surveyId, isSubmitted)
     }
-  }, [surveyId, state, isLoading])
+  }, [surveyId, state, isLoading, isSubmitted])
 
   useEffect(() => {
     if (isSubmitted) {
@@ -120,13 +129,18 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
       return
     }
 
-    const completedState = formBuilder.goToNextPage(state)
+    const completedState = formBuilder.goToNextPage({
+      ...state,
+      pages: [...state.pages],
+      nextPages: [...state.nextPages],
+    })
     setIsCompleting(true)
 
     try {
       await createSurveyResponse(surveyId, JSON.stringify(completedState))
       updateState(completedState)
       setIsSubmitted(true)
+      saveSurveySubmissionStatus(surveyId, true)
     } catch (error) {
       console.error('Survey completion failed', { surveyId, error })
     } finally {

@@ -22,6 +22,22 @@ import { Situation } from 'publicodes'
 
 export const getEntityFilterDefsFromModel = async (rules: RawRules) => getEntityFilterDefsFromModelFromUtil(rules)
 
+export const getEntityFilterDefsFromModel = async (
+  model: RawRules,
+): Promise<Array<{ name: string; value: number }>> => {
+  const filtrationRule = model['DT . filtrage'] as Record<string, unknown> | undefined
+  const rawSuggestions = filtrationRule?.suggestions
+
+  if (!rawSuggestions || typeof rawSuggestions !== 'object') {
+    return []
+  }
+
+  return Object.entries(rawSuggestions)
+    .filter(([, value]) => typeof value === 'number' && Number.isFinite(value))
+    .map(([name, value]) => ({ name, value }))
+    .sort((left, right) => left.value - right.value)
+}
+
 export const createSurveyResponse = async (campaignId: string, answers: string) =>
   withServerResponse('createSurveyResponse', async () => {
     await createResponse({

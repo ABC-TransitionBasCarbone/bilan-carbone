@@ -16,5 +16,5 @@ export const removeDiacritics = (value: string): string => {
 }
 
 export const normalizeCategoryKey = (value: string): string => {
-    return removeDiacritics(value.trim().toLocaleLowerCase())
+    return removeDiacritics(value.trim()).toLowerCase()
 }
