@@ -1,7 +1,6 @@
 import ResultsDashboard from '@/components/results/ResultsDashboard'
 import { getSurveyResults } from '@/services/serverFunctions/survey'
 import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
-import styles from '../../../../components/pages/ResultsPage.module.css'
 
 export default async function ResultsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -11,7 +10,7 @@ export default async function ResultsPage({ params }: { params: Promise<{ id: st
   }
 
   return (
-    <div className={`${styles.scrollWrapper} grow`}>
+    <div className="h100 overflow-y-auto grow">
       <main className="main-container">
         <ResultsDashboard results={results} />
       </main>

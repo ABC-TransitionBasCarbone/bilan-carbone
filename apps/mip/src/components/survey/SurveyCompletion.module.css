@@ -1,8 +1,3 @@
-.scrollWrapper {
-  height: 100vh;
-  overflow-y: auto;
-}
-
 .page {
   padding-bottom: 3rem;
 }
@@ -189,7 +184,7 @@
 
 .actionImpact {
   font-size: 0.825rem !important;
-  color: var(--success) !important;
+  color: var(--success-100) !important;
   font-weight: 600 !important;
   white-space: nowrap;
 }
@@ -213,53 +208,53 @@
 }
 
 .summaryAccordionDt :global(.MuiAccordionSummary-root) {
-  background-color: color-mix(in srgb, var(--mui-palette-primary-light) 86%, var(--white));
-  color: var(--mui-palette-primary-main);
+  background-color: color-mix(in srgb, var(--mip-category-dt) 14%, var(--white));
+  color: var(--mip-category-dt);
 }
 
 .summaryAccordionTransport :global(.MuiAccordionSummary-root) {
-  background-color: color-mix(in srgb, var(--mui-palette-info-light) 14%, var(--white));
-  color: var(--mui-palette-info-main);
+  background-color: color-mix(in srgb, var(--mip-category-transport) 14%, var(--white));
+  color: var(--mip-category-transport);
 }
 
 .summaryAccordionAlimentation :global(.MuiAccordionSummary-root) {
-  background-color: color-mix(in srgb, var(--mui-palette-warning-light) 22%, var(--white));
-  color: var(--mui-palette-warning-main);
+  background-color: color-mix(in srgb, var(--mip-category-alimentation) 22%, var(--white));
+  color: var(--mip-category-alimentation);
 }
 
 .summaryAccordionDivers :global(.MuiAccordionSummary-root) {
-  background-color: color-mix(in srgb, var(--mui-palette-error-light) 20%, var(--white));
-  color: var(--mui-palette-error-main);
+  background-color: color-mix(in srgb, var(--mip-category-divers) 20%, var(--white));
+  color: var(--mip-category-divers);
 }
 
 .summaryAccordionLogement :global(.MuiAccordionSummary-root) {
-  background-color: color-mix(in srgb, var(--mui-palette-success-light) 30%, var(--white));
-  color: var(--mui-palette-success-main);
+  background-color: color-mix(in srgb, var(--mip-category-logement) 30%, var(--white));
+  color: var(--mip-category-logement);
 }
 
 .summaryAccordionDt .summaryValue,
 .summaryAccordionDt .summaryPercent {
-  color: var(--mui-palette-primary-main) !important;
+  color: var(--mip-category-dt) !important;
 }
 
 .summaryAccordionTransport .summaryValue,
 .summaryAccordionTransport .summaryPercent {
-  color: var(--mui-palette-info-main) !important;
+  color: var(--mip-category-transport) !important;
 }
 
 .summaryAccordionAlimentation .summaryValue,
 .summaryAccordionAlimentation .summaryPercent {
-  color: var(--mui-palette-warning-main) !important;
+  color: var(--mip-category-alimentation) !important;
 }
 
 .summaryAccordionDivers .summaryValue,
 .summaryAccordionDivers .summaryPercent {
-  color: var(--mui-palette-error-main) !important;
+  color: var(--mip-category-divers) !important;
 }
 
 .summaryAccordionLogement .summaryValue,
 .summaryAccordionLogement .summaryPercent {
-  color: var(--mui-palette-success-main) !important;
+  color: var(--mip-category-logement) !important;
 }
 
 .summaryItem {
@@ -294,23 +289,23 @@
 }
 
 .toneDt {
-  background-color: var(--mui-palette-primary-main);
+  background-color: var(--mip-category-dt);
 }
 
 .toneTransport {
-  background-color: var(--mui-palette-info-main);
+  background-color: var(--mip-category-transport);
 }
 
 .toneAlimentation {
-  background-color: var(--mui-palette-warning-main);
+  background-color: var(--mip-category-alimentation);
 }
 
 .toneDivers {
-  background-color: var(--mui-palette-error-main);
+  background-color: var(--mip-category-divers);
 }
 
 .toneLogement {
-  background-color: var(--mui-palette-success-main);
+  background-color: var(--mip-category-logement);
 }
 
 .summaryValue {

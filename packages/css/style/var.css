@@ -226,6 +226,10 @@
   height: 100%;
 }
 
+.h100vh {
+  height: 100vh;
+}
+
 .hauto {
   height: auto;
 }
@@ -298,4 +302,8 @@
 
 .overflow-hidden {
   overflow: hidden;
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
 }

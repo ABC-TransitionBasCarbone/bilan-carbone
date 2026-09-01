@@ -58,7 +58,7 @@ const ResultsDashboard = ({ results }: Props) => {
   }
 
   return (
-    <div className={`${styles.page} pt2`}>
+    <div className={`${styles.page} pt2 overflow-y-auto`}>
       <section className="mb1">
         <Typography variant="h4" className="mb-2">
           {t('title')}

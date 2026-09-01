@@ -12,7 +12,6 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import authStyles from './Auth.module.css'
 
 interface Props {
   modelCampaignId: string
@@ -54,12 +53,12 @@ const SignUpForm = ({ modelCampaignId }: Props) => {
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)} className="grow justify-center">
-      <FormControl className={authStyles.form}>
+      <FormControl className="flex-col gapped1">
         <FormTextField
           data-testid="input-email"
           control={control}
           name="email"
-          className={authStyles.input}
+          className="w100"
           label={t('email')}
           placeholder={t('emailPlaceholder')}
         />
@@ -68,7 +67,7 @@ const SignUpForm = ({ modelCampaignId }: Props) => {
         </LoadingButton>
         {message && (
           <>
-            <p className={classNames(!success ? 'error' : '')}>{t(message)}</p>
+            <p className={classNames({ error: !success })}>{t(message)}</p>
             {!success ? (
               <p>
                 {t('support')} : <Link href={`mailto:${contactMail}`}>{contactMail}</Link>
@@ -76,7 +75,7 @@ const SignUpForm = ({ modelCampaignId }: Props) => {
             ) : null}
           </>
         )}
-        <div className={authStyles.bottomLink}>
+        <div className="align-center">
           {tForm('alreadyRegistered')}
           <Link className="ml-2" href="/login" prefetch={false}>
             {tForm('login')}

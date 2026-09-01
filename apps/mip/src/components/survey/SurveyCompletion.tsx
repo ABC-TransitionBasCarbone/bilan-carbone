@@ -138,7 +138,7 @@ const SurveyCompletion = ({ surveyId, model, restoreFromStorage = false }: Props
   }
 
   return (
-    <div className={styles.scrollWrapper}>
+    <div className="h100vh overflow-y-auto">
       <Container maxWidth="md" className={`${styles.page} pt2`}>
         <FootprintBanner totalKg={totalKg} />
         <TransitionEncart totalKg={totalKg} />

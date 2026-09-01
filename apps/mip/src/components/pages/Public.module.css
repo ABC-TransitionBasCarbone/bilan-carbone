@@ -36,7 +36,7 @@
   background-color: var(--primary-800);
   border: var(--border-dark);
   border-radius: 1rem 0 0 1rem;
-  color: white;
+  color: var(--white);
 }
 
 .locales {

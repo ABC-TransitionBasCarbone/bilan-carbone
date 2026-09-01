@@ -146,7 +146,7 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   }
 
   return (
-    <div className={styles.scrollWrapper}>
+    <div className="h100vh overflow-y-auto">
       <Container maxWidth="lg" className="pt1 pb5">
         <div className={classNames(styles.surveyLayout, 'align-start', 'gapped2')}>
           <div className={classNames(styles.surveyMain, 'grow')}>

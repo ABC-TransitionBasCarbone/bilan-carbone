@@ -3,7 +3,7 @@
 }
 
 .statLabel {
-  color: var(--black);
+  color: var(--neutral-500);
   flex: 1;
   line-height: 1.35;
 }

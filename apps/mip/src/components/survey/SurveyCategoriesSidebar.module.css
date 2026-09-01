@@ -11,33 +11,33 @@
 }
 
 .categoryDt {
-  background-color: color-mix(in srgb, var(--mui-palette-primary-light) 86%, var(--white));
-  color: var(--mui-palette-primary-main);
-  border-color: var(--mui-palette-primary-main);
+  background-color: color-mix(in srgb, var(--mip-category-dt) 14%, var(--white));
+  color: var(--mip-category-dt);
+  border-color: var(--mip-category-dt);
 }
 
 .categoryTransport {
-  background-color: color-mix(in srgb, var(--mui-palette-info-light) 14%, var(--white));
-  color: var(--mui-palette-info-main);
-  border-color: var(--mui-palette-info-main);
+  background-color: color-mix(in srgb, var(--mip-category-transport) 14%, var(--white));
+  color: var(--mip-category-transport);
+  border-color: var(--mip-category-transport);
 }
 
 .categoryAlimentation {
-  background-color: color-mix(in srgb, var(--mui-palette-warning-light) 22%, var(--white));
-  color: var(--mui-palette-warning-main);
-  border-color: var(--mui-palette-warning-main);
+  background-color: color-mix(in srgb, var(--mip-category-alimentation) 22%, var(--white));
+  color: var(--mip-category-alimentation);
+  border-color: var(--mip-category-alimentation);
 }
 
 .categoryDivers {
-  background-color: color-mix(in srgb, var(--mui-palette-error-light) 20%, var(--white));
-  color: var(--mui-palette-error-main);
-  border-color: var(--mui-palette-error-main);
+  background-color: color-mix(in srgb, var(--mip-category-divers) 20%, var(--white));
+  color: var(--mip-category-divers);
+  border-color: var(--mip-category-divers);
 }
 
 .categoryLogement {
-  background-color: color-mix(in srgb, var(--mui-palette-success-light) 30%, var(--white));
-  color: var(--mui-palette-success-main);
-  border-color: var(--mui-palette-success-main);
+  background-color: color-mix(in srgb, var(--mip-category-logement) 30%, var(--white));
+  color: var(--mip-category-logement);
+  border-color: var(--mip-category-logement);
 }
 
 .categoryItem.active {

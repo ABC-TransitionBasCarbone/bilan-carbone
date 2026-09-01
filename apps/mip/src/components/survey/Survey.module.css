@@ -1,8 +1,3 @@
-.scrollWrapper {
-  height: 100vh;
-  overflow-y: auto;
-}
-
 .surveyLayout {
   .surveyMain {
     min-width: 0;
@@ -19,8 +14,8 @@
   left: 0;
   right: 0;
   padding: 0.75rem 1rem;
-  background-color: var(--background-color);
-  border-top: 1px solid var(--border-color);
+  background-color: var(--white);
+  border-top: 1px solid var(--neutral-200);
   z-index: 100;
 }
 
@@ -40,7 +35,7 @@
   font-size: 0.75rem;
   font-weight: 700;
   line-height: 1;
-  color: var(--primary);
+  color: var(--primary-600);
 }
 
 .progressBar {
@@ -58,28 +53,28 @@
 }
 
 .progressToneDt {
-  --progress-track: color-mix(in srgb, var(--mui-palette-primary-light) 86%, var(--white));
-  --progress-fill: var(--mui-palette-primary-main);
+  --progress-track: color-mix(in srgb, var(--mip-category-dt) 14%, var(--white));
+  --progress-fill: var(--mip-category-dt);
 }
 
 .progressToneTransport {
-  --progress-track: color-mix(in srgb, var(--mui-palette-info-light) 14%, var(--white));
-  --progress-fill: var(--mui-palette-info-main);
+  --progress-track: color-mix(in srgb, var(--mip-category-transport) 14%, var(--white));
+  --progress-fill: var(--mip-category-transport);
 }
 
 .progressToneAlimentation {
-  --progress-track: color-mix(in srgb, var(--mui-palette-warning-light) 22%, var(--white));
-  --progress-fill: var(--mui-palette-warning-main);
+  --progress-track: color-mix(in srgb, var(--mip-category-alimentation) 22%, var(--white));
+  --progress-fill: var(--mip-category-alimentation);
 }
 
 .progressToneDivers {
-  --progress-track: color-mix(in srgb, var(--mui-palette-error-light) 20%, var(--white));
-  --progress-fill: var(--mui-palette-error-main);
+  --progress-track: color-mix(in srgb, var(--mip-category-divers) 20%, var(--white));
+  --progress-fill: var(--mip-category-divers);
 }
 
 .progressToneLogement {
-  --progress-track: color-mix(in srgb, var(--mui-palette-success-light) 30%, var(--white));
-  --progress-fill: var(--mui-palette-success-main);
+  --progress-track: color-mix(in srgb, var(--mip-category-logement) 30%, var(--white));
+  --progress-fill: var(--mip-category-logement);
 }
 
 .coverTitle {
