@@ -32,8 +32,7 @@ const NumberWithUnitInput = <RuleName extends string>({
   )
 
   const suggestionEntries = suggestions
-    ?
-    Object.entries(suggestions).filter((entry): entry is [string, number] => typeof entry[1] === 'number')
+    ? Object.entries(suggestions).filter((entry): entry is [string, number] => typeof entry[1] === 'number')
     : []
   const hasSuggestions = suggestionEntries.length > 0
   const isLockedSuggestion = hasSuggestions && isFilteringQuestion
@@ -59,26 +58,25 @@ const NumberWithUnitInput = <RuleName extends string>({
           ))}
         </div>
       )}
-      {!isLockedSuggestion && (
-        <NumberField.Root
-          className={classNames(styles.inputWrapper, 'wfit')}
-          value={localValue}
-          onFocus={handleFocus}
-          onValueChange={handleValueChange}
-          onValueCommitted={handleValueCommitted}
-          disabled={isDisabled}
-        >
-          <NumberField.Input
-            className={styles.input}
-            inputMode="decimal"
-            render={
-              <OutlinedInput
-                endAdornment={unit ? <InputAdornment position="end">{unit}</InputAdornment> : undefined}
-              />
-            }
-          />
-        </NumberField.Root>
-      )}
+      <NumberField.Root
+        className={classNames(styles.inputWrapper, 'wfit')}
+        value={localValue}
+        onFocus={handleFocus}
+        onValueChange={handleValueChange}
+        onValueCommitted={handleValueCommitted}
+        disabled={isDisabled}
+        readOnly={isLockedSuggestion}
+      >
+        <NumberField.Input
+          className={styles.input}
+          inputMode="decimal"
+          render={
+            <OutlinedInput
+              endAdornment={unit ? <InputAdornment position="end">{unit}</InputAdornment> : undefined}
+            />
+          }
+        />
+      </NumberField.Root>
     </div>
   )
 }

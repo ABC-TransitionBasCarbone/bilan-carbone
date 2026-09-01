@@ -12,6 +12,7 @@ export type OnFieldChange<RuleName extends string = string> = (
 ) => void
 
 export const SURVEY_CATEGORY_KEYS = ['DT', 'transport', 'alimentation', 'divers', 'logement'] as const
+export const FILTER_RULE_KEY = 'DT . filtrage'
 const SURVEY_CATEGORY_ORDER: readonly string[] = SURVEY_CATEGORY_KEYS
 const RULE_NAME_SEPARATOR = ' . '
 
@@ -38,14 +39,14 @@ export const getCategoryClassSuffix = (categoryKey?: string | null): string => {
   return categoryKey.charAt(0).toUpperCase() + categoryKey.slice(1).toLowerCase()
 }
 
-export function formatMassKilograms(valueKg: number): string {
+export const formatMassKilograms = (valueKg: number) => {
   if (valueKg >= 1000) {
     return `${formatNumber(valueKg / 1000, 1)} t`
   }
   return `${formatNumber(Math.round(valueKg))} kg`
 }
 
-export function getRuleNamesFromLayout<RuleName extends string>(layout: FormLayout<RuleName>): RuleName[] | undefined {
+export const getRuleNamesFromLayout = <RuleName extends string>(layout: FormLayout<RuleName>) => {
   switch (layout.type) {
     case 'input':
       return [layout.rule]
@@ -57,7 +58,7 @@ export function getRuleNamesFromLayout<RuleName extends string>(layout: FormLayo
   }
 }
 
-export function evaluatedLayoutIsApplicable<RuleName extends string>(layout: EvaluatedFormLayout<RuleName>): boolean {
+export const evaluatedLayoutIsApplicable = <RuleName extends string>(layout: EvaluatedFormLayout<RuleName>) => {
   switch (layout.type) {
     case 'input':
       return layout.evaluatedElement.applicable
@@ -72,11 +73,11 @@ export function evaluatedLayoutIsApplicable<RuleName extends string>(layout: Eva
   }
 }
 
-export function areRulesReferencedInApplicability<RuleName extends string>(
+export const areRulesReferencedInApplicability = <RuleName extends string>(
   getRuleNode: (rule: RuleName) => RuleNode<RuleName>,
   currents: RuleName[],
   previous: RuleName[],
-): boolean {
+): boolean => {
   return currents.some((current) => {
     const allNodes = [current, ...(utils.ruleParents(current) as RuleName[])]
     return allNodes.some((name) => areReferencedInApplicability(getRuleNode(name), previous))
@@ -110,7 +111,7 @@ function areReferencedInApplicability<RuleName extends string>(
   )
 }
 
-export function getMosaicParent(engine: Engine, ruleName: string): string | null {
+export const getMosaicParent = (engine: Engine, ruleName: string): string | null => {
   const rules = engine.getParsedRules()
   const parts = getRuleNameParts(ruleName)
 
@@ -174,7 +175,7 @@ const compareRuleNames = (
   return initDiff !== 0 ? initDiff : a.localeCompare(b)
 }
 
-export function buildPageBuilder(engine: Engine) {
+export const buildPageBuilder = (engine: Engine) => {
   return (fields: string[]): FormPages<string> => {
     const rules = engine.getParsedRules()
     const initialIndexes = new Map(fields.map((f, i) => [f, i]))
@@ -218,7 +219,7 @@ export enum MipQuestionType {
 
 const booleanSecureTypes = ['présent', 'propriétaire']
 
-export function getQuestionType(engine: Engine, ruleName: string): MipQuestionType {
+export const getQuestionType = (engine: Engine, ruleName: string) => {
   const rules = engine.getParsedRules()
   const rule = rules[ruleName]
 
@@ -243,10 +244,10 @@ export function getQuestionType(engine: Engine, ruleName: string): MipQuestionTy
   return MipQuestionType.Number
 }
 
-export function patchFormElement<RuleName extends string>(
+export const patchFormElement = <RuleName extends string>(
   el: EvaluatedFormElement<RuleName> & FormPageElementProp,
   questionType: MipQuestionType,
-): EvaluatedFormElement<RuleName> & FormPageElementProp {
+): EvaluatedFormElement<RuleName> & FormPageElementProp => {
   if (el.element !== 'input') return el
 
   switch (questionType) {
