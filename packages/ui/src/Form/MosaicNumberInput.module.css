@@ -5,7 +5,19 @@
   background-color: var(--white);
 }
 
+.text {
+  flex: 1 1 auto;
+  min-width: 6rem;
+}
 
+.controls {
+  flex: 0 0 auto;
+}
+
+.unit {
+  margin-left: 0.25rem;
+  white-space: nowrap;
+}
 
 .title {
   font-size: 1rem;
@@ -32,17 +44,17 @@
 }
 
 .input {
-  min-width: 2.5rem;
-  width: auto;
-  text-align: center;
-  border: 1px solid var(--info);
-  outline: none;
   font-size: 1rem;
   margin-left: 0.5rem;
   margin-right: 0.5rem;
   border-radius: 0.5rem;
   height: 2rem;
+}
 
+.inputField {
+  width: calc(var(--num-len, 1) * 1ch);
+  min-width: 1ch;
+  text-align: center;
   appearance: textfield;
   -moz-appearance: textfield;
 

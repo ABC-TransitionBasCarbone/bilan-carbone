@@ -1,4 +1,45 @@
 intrants-biens-et-matières . ratios monétaires:
+  formule: 
+    somme: 
+      - ratio moyen
+      - tableau détaillé
+  par défaut: 0
+
+intrants-biens-et-matières . ratios monétaires . existant:
+  titre: L'utilisateur a-t'il accès aux montants dépensés dans des biens matériels de manière détaillée ?
+  question: Avez-vous accès aux détails des montants dépensés sur l'année dans des biens matériels ? 
+  description: La liste de vos dépenses est présente dans votre livres de comptes, et souvent déclarée sur <compteassotilttorefacto>Lecompteasso</compteassotilttorefacto>.
+  form:
+    à traduire: oui
+
+intrants-biens-et-matières . ratios monétaires . ratio moyen:
+  applicable si: 
+    toutes ces conditions:
+      - est défini: intrants-biens-et-matières . ratios monétaires . existant
+      - intrants-biens-et-matières . ratios monétaires . existant = non
+  formule: montant dépensé * FE
+  form:
+    à traduire: oui
+  avec: 
+    montant dépensé:
+      titre: Montant dépensé dans des services immatériels sur l'année
+      question: Quel montant avez-vous dépensé sur l'année dans ces biens matériels ? 
+      description: Veuillez indiquer le montant dépensé pour chaque bien matériel. Si vous ne connaissez pas le montant exact, vous pouvez fournir une estimation. Vous devez bien inclure l'ensemble des services, <b>y compris ceux qui sont reçus gratuitement (mécénat de compétence, ...)</b>. Il faut donc bien prendre en compte les informations disponibles sur les contributions volontaires en nature, décrites dans le compte 870. Attention, ce compte intègre les biens et les services, il faut donc estimer la part de chacun. <br></br> Cette liste des catégories de service est non exhaustive. <b>Si vous n’avez pas comptabilisé l’ensemble de vos dépenses, c’est tout à fait normal</b>. Il peut s’agir de dépenses très faiblement émissives, ou d'activités dont les émissions sont déjà prises en compte dans d’autres postes ou via d’autres questions reposant sur des données plus précises (comptabiliser les dépenses associées ici reviendrait donc à faire un double-compte).
+      par défaut: 0
+      unité: k€ HT
+    FE: 
+      valeur: 300
+      unité: kgCO2e/k€ HT
+      meta: 
+        source: moyenne des FE ratios monétaires ADEME, à repréciser
+  unité: kgCO2e
+  description: Si vous n'avez pas du tout accès à vos comptes, vous pouvez réaliser une estimation en partant du budget de fonctionnement de l'association, et en retranchant les coûts afférents aux éventuels salariés et aux charges connues.
+
+intrants-biens-et-matières . ratios monétaires . tableau détaillé:
+  applicable si: 
+    toutes ces conditions:
+      - est défini: intrants-biens-et-matières . ratios monétaires . existant
+      - intrants-biens-et-matières . ratios monétaires . existant = oui
   titre: Intrants biens et matières
   question: Quels biens et matières avez-vous achetés en approche monétaire ?
   description: Vous devez bien prendre en compte l'ensemble des biens, dons compris (invendus, fin de stock, etc). Il faut donc bien prendre en compte les informations disponibles sur les contributions volontaires en nature (compte 870).
@@ -15,7 +56,7 @@ intrants-biens-et-matières . ratios monétaires:
       - autres-produits-manufacturés
   unité: kgCO2e
 
-intrants-biens-et-matières . ratios monétaires . petites-fournitures:
+intrants-biens-et-matières . ratios monétaires . tableau détaillé . petites-fournitures:
   formule: nombre * FE
   form:
     à traduire: oui
@@ -34,7 +75,7 @@ intrants-biens-et-matières . ratios monétaires . petites-fournitures:
         id: 20556
   unité: kgCO2e
 
-intrants-biens-et-matières . ratios monétaires . meubles:
+intrants-biens-et-matières . ratios monétaires . tableau détaillé . meubles:
   formule: nombre * FE
   form:
     à traduire: oui
@@ -53,7 +94,7 @@ intrants-biens-et-matières . ratios monétaires . meubles:
         id: 43360
   unité: kgCO2e
 
-intrants-biens-et-matières . ratios monétaires . machines-équipements:
+intrants-biens-et-matières . ratios monétaires . tableau détaillé . machines-équipements:
   formule: nombre * FE
   form:
     à traduire: oui
@@ -72,7 +113,7 @@ intrants-biens-et-matières . ratios monétaires . machines-équipements:
         id: 43355
   unité: kgCO2e
 
-intrants-biens-et-matières . ratios monétaires . textiles:
+intrants-biens-et-matières . ratios monétaires . tableau détaillé . textiles:
   formule: nombre * FE
   form:
     à traduire: oui
@@ -91,7 +132,7 @@ intrants-biens-et-matières . ratios monétaires . textiles:
         id: 43405
   unité: kgCO2e
 
-intrants-biens-et-matières . ratios monétaires . produits-pharmaceutiques:
+intrants-biens-et-matières . ratios monétaires . tableau détaillé . produits-pharmaceutiques:
   formule: nombre * FE
   form:
     à traduire: oui
@@ -110,7 +151,7 @@ intrants-biens-et-matières . ratios monétaires . produits-pharmaceutiques:
         id: 43435
   unité: kgCO2e
 
-intrants-biens-et-matières . ratios monétaires . produits-chimiques:
+intrants-biens-et-matières . ratios monétaires . tableau détaillé . produits-chimiques:
   formule: nombre * FE
   form:
     à traduire: oui
@@ -129,7 +170,7 @@ intrants-biens-et-matières . ratios monétaires . produits-chimiques:
         id: 43380
   unité: kgCO2e
 
-intrants-biens-et-matières . ratios monétaires . papier-carton:
+intrants-biens-et-matières . ratios monétaires . tableau détaillé . papier-carton:
   formule: nombre * FE
   form:
     à traduire: oui
@@ -148,7 +189,7 @@ intrants-biens-et-matières . ratios monétaires . papier-carton:
         id: 43370
   unité: kgCO2e
 
-intrants-biens-et-matières . ratios monétaires . produits-métalliques:
+intrants-biens-et-matières . ratios monétaires . tableau détaillé . produits-métalliques:
   formule: nombre * FE
   form:
     à traduire: oui
@@ -167,7 +208,7 @@ intrants-biens-et-matières . ratios monétaires . produits-métalliques:
         id: 43425
   unité: kgCO2e
 
-intrants-biens-et-matières . ratios monétaires . autres-produits-manufacturés:
+intrants-biens-et-matières . ratios monétaires . tableau détaillé . autres-produits-manufacturés:
   formule: nombre * FE
   form:
     à traduire: oui

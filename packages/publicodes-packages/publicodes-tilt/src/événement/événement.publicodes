@@ -1,0 +1,405 @@
+événement:
+  titre: Événement
+  formule: 
+    somme: 
+      - mosaic alimentation
+      - déplacements
+      - énergie
+      - hébergement
+  unité: kgCO2e
+  par défaut: 0
+
+événement . mosaic alimentation:
+  ordre: 1
+  icônes: 🍽️
+  mosaique:
+    type: nombre
+    options:
+      - végétalien . nombre
+      - végétarien . nombre
+      - viande blanche . nombre
+      - viande rouge . nombre
+      - poisson gras . nombre
+      - poisson blanc . nombre
+      - repas moyen . nombre
+  question: Combien de ces différents types de repas ont étés consommés au cours de l'événement ?
+  titre: Empreinte des repas
+  description: L'option "Repas moyen" sert uniquement si vous n'avez aucune idée des types de repas consommés.
+  formule:
+    somme:
+      - végétalien
+      - végétarien
+      - viande blanche
+      - viande rouge
+      - poisson gras
+      - poisson blanc
+      - repas moyen
+  note: |
+    Pour le moment, nous proposons 6 repas types pour 6 régimes différents, et un repas moyen au cas où l'association n'aurait pas accès au détail.
+
+    Ils ne sont pas directement basés sur les régimes de la Base Empreinte, [documentés par l'ADEME](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm), jugés obsolètes (peu exhaustifs, FE non issus d'Agribalyse).
+
+    Les équipes de Nos Gestes Climat ont travaillé sur des repas types basés sur une consolidation multi-facteurs (quantité totale d'aliments consommés, quantité de viande et poisson consommés, apports énergétiques, empreinte carbone moyenne d'un repas)
+    basé sur les données de [l'étude INCA 3](https://www.anses.fr/fr/system/files/NUT2014SA0234Ra.pdf), permettant de se rapprocher du régime moyen d'un Français.
+
+    💡 Vous trouverez la documentation complète dans [le wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
+événement . mosaic alimentation . végétalien:
+  titre: Végétalien
+  formule: FE * nombre
+  icônes: 🌾🥜🥗
+  note: |
+    Repas sans produits animaux.
+
+événement . mosaic alimentation . végétalien . FE:
+  titre: Empreinte carbone d'un repas végétalien
+  formule: 0.66
+  unité: kgCO2e/repas
+  description: Repas contenant du tofu, un accompagnement "moyen" (issu d'un travail de consolidation sur les moyennes de consommation des français tirées de l'étude INCA3 pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
+événement . mosaic alimentation . végétalien . nombre:
+  par défaut: 0
+  question: Nombre de plats végétaliens
+  plancher: 0
+  unité: repas
+
+événement . mosaic alimentation . végétarien:
+  titre: Végétarien
+  formule: FE * nombre
+  icônes: 🥗🍳🧀
+  note: Repas sans chair animale, avec des œufs ou un peu de fromage.
+
+événement . mosaic alimentation . végétarien . FE:
+  titre: Empreinte carbone d'un repas végétarien
+  formule: 0.97
+  unité: kgCO2e/repas
+  description: Repas contenant des œufs, un accompagnement "moyen" (issu d'un travail de consolidation sur les moyennes de consommation des français tirées de l'étude INCA3 pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
+événement . mosaic alimentation . végétarien . nombre:
+  par défaut: 0
+  question: Nombre de plats végétariens
+  unité: repas
+  note: 36% = 5 repas végétarien sur 14 par défaut dans le modèle NGC
+
+événement . mosaic alimentation . viande blanche:
+  titre: Viande blanche
+  icônes: 🍗🥓
+  formule: FE * nombre
+  note: Repas contenant une pièce de poulet, porc.
+
+événement . mosaic alimentation . viande blanche . FE:
+  titre: Empreinte carbone d'un repas de type viande blanche (poulet, porc)
+  formule: 1.75
+  unité: kgCO2e/repas
+  description: Repas contenant 150g d'une viande blanche moyenne (issue d'un travail de consolidation sur les consommations moyennes de viande blanche de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
+événement . mosaic alimentation . viande blanche . nombre:
+  par défaut: 0
+  question: Nombre de plats viande blanche
+  plancher: 0
+  unité: repas
+  note: 29% = 4 repas viande blanche sur 14 par défaut dans le modèle NGC
+
+événement . mosaic alimentation . viande rouge:
+  titre: Viande rouge
+  icônes: 🥩🍖
+  formule: FE * nombre
+  note: Repas contenant une pièce de bœuf, veau, ou agneau.
+
+événement . mosaic alimentation . viande rouge . FE:
+  titre: Empreinte carbone d'un repas de type viande rouge (bœuf, veau, agneau)
+  formule:
+    somme:
+      - 5.19
+      - 0.218 
+  unité: kgCO2e/repas
+  description: Repas contenant 150g d'une viande rouge moyenne (issue d'un travail de consolidation sur les consommations moyennes de viande rouge de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Pour la partie déforestation, notre alimentation est vectrice de déforestation à l'étranger, à l'impact carbone non négligeable. Cette empreinte n'est pas comprise dans les facteurs d'émission d'Agribalyse. D'après l'étude [Pendril & al.](https://iopscience.iop.org/article/10.1088/1748-9326/ab0d41), une part de cette déforestation est spécifiquement associée à la consommation de viande d'élevage. Nous considérons que cette part associée aux "viandes d'élevage" est majoritairement associée à la consommation de viande rouge, c'est pourquoi nous ajoutons cette part de déforestation aux repas de viande rouge. L’étude [Pendril & al.](https://iopscience.iop.org/article/10.1088/1748-9326/ab0d41) donne une empreinte moyenne de 34 kgCO2e / personne de déforestation importée liée à la consommation de viandes d'élevage. Nous partons du principe que ces émissions liées à la production de viandes d'élevage appartiennent majoritairement à la catégorie "viande rouge", car c'est la catégorie la plus consommatrice de terres et de ressources. La consommation moyenne par français de viande rouge se situe autour de 3 repas par semaine, soit 156 repas par an. En conséquence, nous ajoutons à l'empreinte des repas une empreinte moyenne de 0.218 kgCO2e / repas de viande rouge.
+
+événement . mosaic alimentation . viande rouge . nombre:
+  par défaut: 0
+  question: Nombre de plats viande rouge
+  plancher: 0
+  unité: repas
+  note: 21% = 3 repas viande rouge sur 14 par défaut dans le modèle NGC
+
+événement . mosaic alimentation . poisson gras:
+  par défaut: 0
+  titre: Poisson gras
+  formule: FE * nombre
+  icônes: 🍣🥧
+  note: Repas contenant thon, saumon, sardine ou maquereau.
+
+événement . mosaic alimentation . poisson gras . FE:
+  titre: Empreinte carbone d'un repas de type poisson gras (thon, saumon, sardine, maquereau)
+  formule: 1.21
+  unité: kgCO2e/repas
+  description: Repas contenant 150g d'un poisson gras moyen (issu d'un travail de consolidation sur les consommations moyennes de poissons gras de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
+événement . mosaic alimentation . poisson gras . nombre:
+  par défaut: 0
+  question: Nombre de plats poisson gras
+  plancher: 0
+  unité: repas
+  note: 14% = 2 repas poisson gras sur 14 par défaut dans le modèle NGC
+
+événement . mosaic alimentation . poisson blanc:
+  titre: Poisson blanc
+  formule: FE * nombre
+  icônes: 🐟🍚
+  note: Repas avec un filet de poisson blanc.
+
+événement . mosaic alimentation . poisson blanc . FE:
+  titre: Empreinte carbone d'un repas de type poisson blanc
+  formule: 2.29
+  unité: kgCO2e/repas
+  description: Repas contenant 150g d'un poisson blanc moyen (issu d'un travail de consolidation sur les consommations moyennes de poissons blancs de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
+événement . mosaic alimentation . poisson blanc . nombre:
+  par défaut: 0
+  question: Nombre de plats poisson blanc
+  plancher: 0
+  unité: repas
+
+événement . mosaic alimentation . repas moyen:
+  titre: Repas moyen
+  formule: FE * nombre
+  icônes: 🍗🧀🥗
+  note: Repas moyen d'un français
+
+événement . mosaic alimentation . repas moyen . FE:
+  titre: Empreinte carbone d'un repas de type poisson blanc
+  formule: 2.04
+  unité: kgCO2e/repas
+  description: Ce facteur d'émission est élaboré à partir des données INCA 3, en compilant la consommation moyenne des différents ingrédients pour un déjeuner, et en utilisant les facteurs d'émission de chaque aliment. Plus de détails [ici](https://base-empreinte.ademe.fr/documentation/base-carbone?docLink=Repas_2)
+
+événement . mosaic alimentation . repas moyen . nombre:
+  par défaut: 0
+  question: Nombre de repas moyen
+  plancher: 0
+  unité: repas
+
+## Déplacements des personnes - On questionne directement les km totaux, parcourus par mode de transport, s'ils ne les ont pas ils compilent en amont. A priori ils peuvent faire plus précis ici que pour les bénéficiaires d'une manière générale.
+
+événement . déplacements:
+  formule:
+    somme:
+      - commun . FE . moyen de transport . voiture moyenne France
+      ## on néglige l'impact des modes actifs (vélo, marche, trottinette...)
+      - deux roues * FE deux roues
+      - transport en commun * commun . FE . moyen de transport . transports en commun moyenne France
+      - train * FE train
+      - bus * commun . FE . moyen de transport . bus
+      - TGV * commun . FE . moyen de transport . TGV
+      - avion * commun . FE . moyen de transport . avion ## On utilise le FE moyen courrier avec traînées
+    avec:
+      FE deux roues:
+        valeur: 0.0851
+        unité: kgCO2e/km
+        meta:
+          id: 43775
+          nom: Cyclomoteur/Mixte/2023
+      FE train:
+        valeur: 0.0277
+        unité: kgCO2e/km
+        meta:
+          id: 43255
+          nom: TER/2022/Traction moyenne
+  unité: kgCO2e
+  par défaut: 0
+
+événement . déplacements . voiture:
+  titre: Voiture
+  form:
+    à traduire: oui
+  question: Combien de km (AR) ont étés parcourus en voiture pour accéder à l'événement ?
+  unité: km
+  par défaut: 0
+
+événement . déplacements . train:
+  titre: Train (TER)
+  form:
+    à traduire: oui
+  question: Combien de km (AR) ont étés parcourus en TER pour accéder à l'événement ?
+  unité: km
+  par défaut: 0
+
+événement . déplacements . TGV:
+  titre: TGV
+  form:
+    à traduire: oui
+  question: Combien de km (AR) ont étés parcourus en TGV pour accéder à l'événement ?
+  unité: km
+  par défaut: 0
+
+événement . déplacements . bus:
+  titre: Bus
+  form:
+    à traduire: oui
+  question: Combien de km (AR) ont étés parcourus en bus pour accéder à l'événement ?
+  unité: km
+  par défaut: 0
+
+événement . déplacements . deux roues:
+  titre: Deux roues (moto, scooter, ...)
+  form:
+    à traduire: oui
+  question: Combien de km (AR) ont étés parcourus en deux roues (moto, scooter, ...) pour accéder à l'événement ?
+  unité: km
+  par défaut: 0
+
+événement . déplacements . transport en commun:
+  titre: Transport en commun (Métro, tramway, RER, bus, ...)
+  form:
+    à traduire: oui
+  question: Combien de km (AR) ont étés parcourus en transport en commun (métro, tramway, ...) pour accéder à l'événement ?
+  unité: km
+  par défaut: 0
+
+événement . déplacements . avion:
+  titre: Avion
+  form:
+    à traduire: oui
+  question: Combien de km (AR) ont étés parcourus en avion pour accéder à l'événement ?
+  unité: km
+  par défaut: 0
+
+événement . énergie:
+  formule:
+    somme:
+      - électricité
+      - gaz
+      - fioul
+  par défaut: 0
+
+événement . énergie . types: 
+  titre: Types d'énergie
+  avec:
+    électricité présent:
+      type: booléen
+      question: Électricité
+      form:
+        saisie: case à cocher
+      par défaut: oui
+
+    gaz présent:
+      type: booléen
+      question: Gaz
+      form:
+        saisie: case à cocher
+      par défaut: non
+
+    fioul présent:
+      type: booléen
+      question: Fioul domestique
+      form:
+        saisie: case à cocher
+      par défaut: non
+
+événement . énergie . électricité:
+  applicable si:
+    toutes ces conditions:
+      - est défini: types . électricité présent
+      - types . électricité présent = oui
+  titre: Quelle a été la consommation d'électricité au cours de l'événement ?
+  formule: consommation * FE
+  unité: kgCO2e
+  par défaut: 0 
+  avec: 
+    consommation:
+      question: Quelle a été la consommation d'électricité au cours de l'événement ?
+      unité: kWh
+    FE:
+      valeur: 0.0461
+      unité: kgCO2e/kWh
+      meta:
+        nom: Electricité/2025 - mix moyen/consommation
+        id: 48788
+        source: Base Empreinte®
+
+événement . énergie . gaz:
+  applicable si:
+    toutes ces conditions:
+      - est défini: types . gaz présent
+      - types . gaz présent = oui
+  titre: Quelle a été la consommation de gaz au cours de l'événement ? 
+  formule: consommation * FE
+  unité: kgCO2e
+  par défaut: 0 
+  avec: 
+    consommation:
+      question: Quelle a été la consommation de gaz au cours de l'événement ?
+      unité: m3
+    FE:
+      valeur: 2.32
+      unité: kgCO2e/m3
+      meta:
+        nom: Gaz naturel - 2022/mix moyen/consommation
+        id: 37138
+        source: Base Carbone®
+
+événement . énergie . fioul:
+  applicable si:
+    toutes ces conditions:
+      - est défini: types . fioul présent
+      - types . fioul présent = oui
+  titre: Quelle a été la consommation de fioul domestique au cours de l'événement ?
+  formule: consommation * FE
+  unité: kgCO2e
+  par défaut: 0 
+  avec: 
+    consommation:
+      question: Quelle a été la consommation de fioul au cours de l'événement ?
+      unité: litre
+    FE:
+      valeur: 3.19
+      unité: kgCO2e/litre
+      meta:
+        nom: Fioul domestique
+        id: 14086
+        source: Base Carbone®
+
+événement . hébergement:
+  formule:
+    somme:
+      - camping
+      - hotel
+  par défaut: 0
+
+événement . hébergement . existant:
+  question: Est-ce que les participant.es campent ou dorment à l'hôtel au cours de l'événement ? 
+
+événement . hébergement . camping:
+  applicable si:
+    toutes ces conditions: 
+      - est défini: événement . hébergement . existant
+      - événement . hébergement . existant = oui
+  titre: Camping
+  formule: FE * nombre de nuits
+  avec:
+    nombre de nuits:
+      question: Camping
+      unité: nuits
+    FE:
+      valeur: 1.4
+      unité: kgCO2e/nuits
+      meta: 
+        note: Ces données sont issues de la proposition de référentiel ADEME pour l'hôtellerie de plein air, étude effectuée sur 13 campings de l'Hérault conjointement entre Betterfly Tourism et l'ADEME. Les données sont fournies par Betterfly Tourism et datent de juin 2021. La moyenne de l'empreinte par nuitée sur les 13 campings étudiés est de 1,4 kg éqCO2. Le référentiel ADEME est présent dans la base Impacts depuis mai 2023.
+
+événement . hébergement . hotel:
+  applicable si:
+    toutes ces conditions: 
+      - est défini: existant
+      - existant = oui
+  titre: Hôtel
+  formule: FE * nombre de nuits
+  avec:
+    nombre de nuits:
+      question: Hôtel
+      unité: nuits
+    FE:
+      valeur: 8.47
+      unité: kgCO2e/nuits
+      meta: 
+        note: Cette valeur est issue de l'étude "Projet de pré-déploiement de l'affichage environnemental des hôtels" conduite par l'ADEME en mars 2020, et elle concerne les hôtels 3*. L'étude a depuis été dépubliée pour des raisons propres à l'affichage environnemental, mais les valeurs restent correctes.
