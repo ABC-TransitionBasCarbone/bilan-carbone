@@ -1,4 +1,5 @@
 import createNextIntlPlugin from 'next-intl/plugin'
+import path from 'path'
 
 const withNextIntl = createNextIntlPlugin()
 
@@ -18,6 +19,7 @@ const nextConfig = {
       '@abc-transitionbascarbone/publicodes-mip': '../../packages/publicodes-packages/publicodes-mip/',
     },
     resolveExtensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
+    root: path.resolve(__dirname, '../../'),
   },
   transpilePackages: ['mui-color-input', '@abc-transitionbascarbone/publicodes-mip'],
   reactStrictMode: true,

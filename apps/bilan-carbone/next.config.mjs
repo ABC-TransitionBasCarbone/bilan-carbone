@@ -1,4 +1,5 @@
 import createNextIntlPlugin from 'next-intl/plugin'
+import path from 'path'
 
 const withNextIntl = createNextIntlPlugin()
 
@@ -22,6 +23,7 @@ const nextConfig = {
       // '@publicodes/forms': '../../publicodes/publicodes/packages/forms/src/',
     },
     resolveExtensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
+    root: path.resolve(__dirname, '../../'),
   },
   images: {
     remotePatterns: [{ hostname: scalewayUrl }],
