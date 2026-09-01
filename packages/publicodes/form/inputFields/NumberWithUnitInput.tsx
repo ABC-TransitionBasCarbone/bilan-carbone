@@ -11,7 +11,7 @@ import { BaseInputProps } from './utils'
 interface NumberWithUnitInputProps<RuleName extends string> extends BaseInputProps<RuleName> {
   formElement: EvaluatedNumberInput<RuleName>
   suggestions?: Record<string, string | number | Record<string, unknown>> | undefined
-  lockToSuggestions?: boolean
+  isFilteringQuestion?: boolean
 }
 
 const NumberWithUnitInput = <RuleName extends string>({
@@ -19,7 +19,7 @@ const NumberWithUnitInput = <RuleName extends string>({
   onChange,
   disabled,
   suggestions,
-  lockToSuggestions = false,
+  isFilteringQuestion = false,
 }: NumberWithUnitInputProps<RuleName>) => {
   const categoryClassSuffix = getCategoryClassSuffix(getRuleCategoryKey(formElement.id))
   const suggestionToneClass = categoryClassSuffix ? styles[`suggestionTone${categoryClassSuffix}`] : undefined
@@ -36,7 +36,7 @@ const NumberWithUnitInput = <RuleName extends string>({
     Object.entries(suggestions).filter((entry): entry is [string, number] => typeof entry[1] === 'number')
     : []
   const hasSuggestions = suggestionEntries.length > 0
-  const isLockedSuggestion = hasSuggestions && lockToSuggestions
+  const isLockedSuggestion = hasSuggestions && isFilteringQuestion
 
   return (
     <div>

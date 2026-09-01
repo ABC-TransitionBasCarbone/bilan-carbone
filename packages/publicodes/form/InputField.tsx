@@ -10,14 +10,14 @@ export interface PublicodesInputFieldProps<RuleName extends string> {
   formElement: EvaluatedFormElement<RuleName>
   onChange: OnFieldChange<RuleName>
   suggestions?: Record<string, string | number | Record<string, unknown>> | undefined
-  lockToSuggestions?: boolean
+  isFilteringQuestion?: boolean
 }
 
 export function InputField<RuleName extends string>({
   formElement,
   onChange,
   suggestions,
-  lockToSuggestions = false,
+  isFilteringQuestion = false,
 }: PublicodesInputFieldProps<RuleName>) {
   /*
    * TODO: to check if we want to support more input types in the future
@@ -32,7 +32,7 @@ export function InputField<RuleName extends string>({
               formElement={formElement}
               onChange={onChange}
               suggestions={suggestions}
-              lockToSuggestions={lockToSuggestions}
+              isFilteringQuestion={isFilteringQuestion}
             />
           )
         // TODO: handle month type properly

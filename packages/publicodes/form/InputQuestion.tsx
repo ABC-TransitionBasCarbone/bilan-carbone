@@ -25,7 +25,7 @@ export function InputQuestion<RuleName extends string>({
 
   const publicodeRules = engine?.getParsedRules()[formElement.id]?.rawNode
   const suggestions = publicodeRules?.suggestions
-  const lockToSuggestions = formElement.id === 'DT . filtrage'
+  const isFilteringQuestion = formElement.id === 'DT . filtrage'
 
   return (
     <Box key={formElement.id} className="mb2">
@@ -38,7 +38,7 @@ export function InputQuestion<RuleName extends string>({
           formElement={formElement}
           onChange={onChange}
           suggestions={suggestions}
-          lockToSuggestions={lockToSuggestions}
+          isFilteringQuestion={isFilteringQuestion}
         />
       </QuestionContainer>
     </Box>
