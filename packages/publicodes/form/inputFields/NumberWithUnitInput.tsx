@@ -1,6 +1,6 @@
 import { usePublicodesUnitTranslation } from '@abc-transitionbascarbone/publicodes/hooks'
 import { NumberField } from '@base-ui-components/react/number-field'
-import { InputAdornment, OutlinedInput, TextField } from '@mui/material'
+import { InputAdornment, OutlinedInput } from '@mui/material'
 import { EvaluatedNumberInput } from '@publicodes/forms'
 import classNames from 'classnames'
 import { getCategoryClassSuffix, getRuleCategoryKey, OnFieldChange } from '../utils'
@@ -35,8 +35,6 @@ const NumberWithUnitInput = <RuleName extends string>({
     ?
     Object.entries(suggestions).filter((entry): entry is [string, number] => typeof entry[1] === 'number')
     : []
-  const selectedSuggestionLabel = suggestionEntries.find(([, value]) => value === localValue)?.[0]
-  const displayedLockedValue = selectedSuggestionLabel ?? (localValue ?? '').toString()
   const hasSuggestions = suggestionEntries.length > 0
   const isLockedSuggestion = hasSuggestions && lockToSuggestions
 
@@ -61,20 +59,7 @@ const NumberWithUnitInput = <RuleName extends string>({
           ))}
         </div>
       )}
-      {isLockedSuggestion ? (
-        <TextField
-          className={classNames(styles.inputWrapper, 'wfit')}
-          value={displayedLockedValue}
-          onFocus={handleFocus}
-          disabled={isDisabled}
-          slotProps={{
-            input: {
-              readOnly: true,
-              endAdornment: unit ? <InputAdornment position="end">{unit}</InputAdornment> : undefined,
-            },
-          }}
-        />
-      ) : (
+      {!isLockedSuggestion && (
         <NumberField.Root
           className={classNames(styles.inputWrapper, 'wfit')}
           value={localValue}
