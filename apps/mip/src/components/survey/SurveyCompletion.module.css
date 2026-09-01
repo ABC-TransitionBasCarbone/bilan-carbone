@@ -80,7 +80,6 @@
 }
 
 .rangeLimitLabel {
-  justify-self: center;
   padding: 0.08rem 0.4rem;
   border-radius: 999px;
   background: var(--primary-100);
