@@ -1,6 +1,10 @@
 import assert from 'node:assert/strict'
 import { getEntityFilterDefsFromModel } from './survey'
 
+jest.mock('@/services/auth', () => ({
+  dbActualizedAuth: jest.fn(),
+}))
+
 describe('getEntityFilterDefsFromModel', () => {
   it('ignores non-numeric suggestion values while keeping valid numeric entries sorted', async () => {
     const defs = await getEntityFilterDefsFromModel({

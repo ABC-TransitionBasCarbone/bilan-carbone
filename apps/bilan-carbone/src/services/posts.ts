@@ -159,7 +159,14 @@ export const subPostsByPostTILT: Record<TiltAdvancedPost, SubPost[]> = {
 
 export const subPostsByPostTILTSimplified: Record<TiltSimplifiedPost, SubPost[]> = {
   [TiltSimplifiedPost.LocauxSimplified]: [SubPost.Batiments, SubPost.AutresInfrastructures],
-  [TiltSimplifiedPost.EnergieSimplified]: [SubPost.EnergieSimplified],
+  [TiltSimplifiedPost.EnergiesSimplified]: [
+    SubPost.CombustiblesFossiles,
+    SubPost.CombustiblesOrganiques,
+    SubPost.ReseauxDeChaleurEtDeVapeur,
+    SubPost.ReseauxDeFroid,
+    SubPost.Electricite,
+    SubPost.EnergieSimplified,
+  ],
   [TiltSimplifiedPost.DechetsSimplified]: [SubPost.DechetsEmisParLOrganisation],
   [TiltSimplifiedPost.FroidEtClimSimplified]: [SubPost.FroidEtClim],
   [TiltSimplifiedPost.DeplacementsDePersonneSimplified]: [
