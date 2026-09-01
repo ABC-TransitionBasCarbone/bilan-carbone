@@ -200,7 +200,8 @@ function buildTranslationsFromRules(
     for (const locale of LOCALES) {
       parents[locale] = getNestedObject(updated[locale], parentPath, true)!
       existingParents[locale] = getNestedObject(existingTranslations[locale], parentPath)
-      if (!parents[locale][lastNameSpace]) {
+      const existing = parents[locale][lastNameSpace]
+      if (!existing || !isObject<TranslationRecord>(existing)) {
         parents[locale][lastNameSpace] = {}
       }
     }
