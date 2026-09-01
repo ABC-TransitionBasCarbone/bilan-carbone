@@ -1,7 +1,9 @@
 import createNextIntlPlugin from 'next-intl/plugin'
 import path from 'path'
+import { fileURLToPath } from 'url'
 
 const withNextIntl = createNextIntlPlugin()
+const monorepoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -19,7 +21,7 @@ const nextConfig = {
       '@abc-transitionbascarbone/publicodes-mip': '../../packages/publicodes-packages/publicodes-mip/',
     },
     resolveExtensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
-    root: path.resolve(__dirname, '../../'),
+    root: monorepoRoot,
   },
   transpilePackages: ['mui-color-input', '@abc-transitionbascarbone/publicodes-mip'],
   reactStrictMode: true,
