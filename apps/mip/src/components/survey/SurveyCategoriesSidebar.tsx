@@ -5,10 +5,12 @@ import { getSurveyCategoryKeysFromParsedRules } from '@/publicodes/mip-engine'
 import { formatMassKilograms, getCategoryClassSuffix } from '@abc-transitionbascarbone/publicodes/form'
 import { getPositiveNodeValue } from '@abc-transitionbascarbone/utils/number'
 import classNames from 'classnames'
+import { Situation } from 'publicodes'
 import styles from './SurveyCategoriesSidebar.module.css'
 
 interface Props {
   activeCategoryKey: string | null
+  situation: Situation<string>
 }
 
 interface CategoryItem {
@@ -44,16 +46,19 @@ const SidebarItem = ({ item }: SidebarItemProps) => {
   )
 }
 
-const SurveyCategoriesSidebar = ({ activeCategoryKey }: Props) => {
+const SurveyCategoriesSidebar = ({ activeCategoryKey, situation }: Props) => {
   const { engine } = useMipPublicodes()
-  const rules = engine.getParsedRules()
+  const previewEngine = engine.shallowCopy()
+  previewEngine.setSituation({ ...situation })
+
+  const rules = previewEngine.getParsedRules()
   const categoryKeys = getSurveyCategoryKeysFromParsedRules(rules)
 
   const categories: CategoryItem[] = categoryKeys.map((key) => {
     const raw = rules[key]?.rawNode as { titre?: string; icônes?: string } | undefined
     const result = (() => {
       try {
-        return engine.evaluate(key)
+        return previewEngine.evaluate(key)
       } catch {
         return { nodeValue: 0 }
       }

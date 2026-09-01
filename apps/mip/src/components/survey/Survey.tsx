@@ -206,7 +206,10 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
               </>
             )}
           </div>
-          <SurveyCategoriesSidebar activeCategoryKey={interstitialCategoryKey ?? categoryKey} />
+          <SurveyCategoriesSidebar
+            activeCategoryKey={interstitialCategoryKey ?? categoryKey}
+            situation={state.situation}
+          />
         </div>
       </Container>
     </div>
