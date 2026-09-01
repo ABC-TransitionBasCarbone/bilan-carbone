@@ -28,7 +28,7 @@ const main = async () => {
     })
 
     const target = (values.target ?? 'all') as SeedTarget
-    const continueOnError = values.continueOnError ?? target === 'all'
+    const continueOnError = values.continueOnError ?? false
 
     if (!['all', 'bc', 'mip'].includes(target)) {
         throw new Error(`Invalid --target value: ${target}. Expected one of: all, bc, mip`)
