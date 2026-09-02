@@ -63,6 +63,8 @@
     "tmp": "^0.2.6",
     "systeminformation": "^5.31.7",
     "nanoid": "^3.3.18",
+    "vite": "^6.4.3",
+    "mysql2": "^3.22.0",
     "deepmerge-ts": "^8.0.0"
   }
 }
