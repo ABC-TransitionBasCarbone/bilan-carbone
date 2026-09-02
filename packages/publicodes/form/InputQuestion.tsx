@@ -4,7 +4,7 @@ import { EvaluatedFormElement } from '@publicodes/forms'
 import Engine from 'publicodes'
 import { InputField as PublicodesInputField } from './InputField'
 import { QuestionContainer } from './QuestionContainer'
-import { OnFieldChange } from './utils'
+import { FILTER_RULE_KEY, OnFieldChange } from './utils'
 
 interface InputQuestionProps<RuleName extends string> {
   formElement: EvaluatedFormElement<RuleName>
@@ -13,18 +13,19 @@ interface InputQuestionProps<RuleName extends string> {
   containerVariant?: 'default' | 'flat'
 }
 
-export function InputQuestion<RuleName extends string>({
+export const InputQuestion = <RuleName extends string>({
   formElement,
   onChange,
   engine,
   containerVariant = 'default',
-}: InputQuestionProps<RuleName>) {
+}: InputQuestionProps<RuleName>) => {
   const translation = usePublicodesRuleTranslation(formElement.id)
   const question = translation?.question
   const description = translation?.description
 
   const publicodeRules = engine?.getParsedRules()[formElement.id]?.rawNode
   const suggestions = publicodeRules?.suggestions
+  const isFilteringQuestion = formElement.id === FILTER_RULE_KEY
 
   return (
     <Box key={formElement.id} className="mb2">
@@ -33,7 +34,12 @@ export function InputQuestion<RuleName extends string>({
         description={description}
         variant={containerVariant}
       >
-        <PublicodesInputField formElement={formElement} onChange={onChange} suggestions={suggestions} />
+        <PublicodesInputField
+          formElement={formElement}
+          onChange={onChange}
+          suggestions={suggestions}
+          isFilteringQuestion={isFilteringQuestion}
+        />
       </QuestionContainer>
     </Box>
   )

@@ -61,6 +61,7 @@ Run from repo root unless specified:
 - One component per file.
 - Group by feature folder.
 - Do not add app-local empty re-export files.
+- Do not declare functions inside other functions; move shared helpers to module scope.
 - follow eslint.config.base.mjs conventions for import order and grouping.
 - follow .prettierrc.json conventions for formatting.
 - Before creating app-local types/components, check if it belongs in shared packages.
