@@ -72,12 +72,14 @@ const ImportEmissionSourcesModal = ({ studyId, post, siteId, open, onClose, onSu
             <TableCell className={styles.groupFirstCell}>{row.emissionFactorId}</TableCell>
             <TableCell>{row.emissionFactorName}</TableCell>
             <TableCell>
-              {row.emissionFactorValue}
-              {row.emissionFactorIsWaste && (
-                <span className="ml-4" onClick={(e) => e.stopPropagation()}>
-                  <WasteEmissionFactorModal />
-                </span>
-              )}
+              <div className="flex">
+                {row.emissionFactorValue}
+                {row.emissionFactorIsWaste && (
+                  <span className="ml-4 justify-center" onClick={(e) => e.stopPropagation()}>
+                    <WasteEmissionFactorModal />
+                  </span>
+                )}
+              </div>
             </TableCell>
             <TableCell>{row.emissionFactorUnit}</TableCell>
           </TableRow>

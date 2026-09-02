@@ -392,7 +392,7 @@ const EmissionSourceForm = ({
             {tResultUnits(StudyResultUnit.K)}/
             {selectedFactor.unit === Unit.CUSTOM ? selectedFactor.customUnit : getUnitLabel(selectedFactor.unit || '')}{' '}
             {isWasteEmissionFactor(selectedFactor, environment) && (
-              <span className="mr-4 ml-4" onClick={(e) => e.stopPropagation()}>
+              <span className="mr-4 ml-4 justify-center" onClick={(e) => e.stopPropagation()}>
                 <WasteEmissionFactorModal />
               </span>
             )}
