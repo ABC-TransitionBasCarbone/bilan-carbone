@@ -17,7 +17,6 @@ interface NumberWithUnitInputProps<RuleName extends string> extends BaseInputPro
 const NumberWithUnitInput = <RuleName extends string>({
   formElement,
   onChange,
-  disabled,
   suggestions,
   isFilteringQuestion = false,
 }: NumberWithUnitInputProps<RuleName>) => {
@@ -25,7 +24,6 @@ const NumberWithUnitInput = <RuleName extends string>({
   const suggestionToneClass = categoryClassSuffix ? styles[`suggestionTone${categoryClassSuffix}`] : undefined
 
   const unit = usePublicodesUnitTranslation(formElement.unit)
-  const isDisabled = disabled || !formElement.applicable
   const { localValue, handleValueChange, handleValueCommitted, handleFocus } = useSimpleInputState<number>(
     formElement,
     onChange as OnFieldChange,
@@ -58,25 +56,25 @@ const NumberWithUnitInput = <RuleName extends string>({
           ))}
         </div>
       )}
-      <NumberField.Root
-        className={classNames(styles.inputWrapper, 'wfit')}
-        value={localValue}
-        onFocus={handleFocus}
-        onValueChange={handleValueChange}
-        onValueCommitted={handleValueCommitted}
-        disabled={isDisabled}
-        readOnly={isLockedSuggestion}
-      >
-        <NumberField.Input
-          className={styles.input}
-          inputMode="decimal"
-          render={
-            <OutlinedInput
-              endAdornment={unit ? <InputAdornment position="end">{unit}</InputAdornment> : undefined}
-            />
-          }
-        />
-      </NumberField.Root>
+      {!isLockedSuggestion && (
+        <NumberField.Root
+          className={classNames(styles.inputWrapper, 'wfit')}
+          value={localValue}
+          onFocus={handleFocus}
+          onValueChange={handleValueChange}
+          onValueCommitted={handleValueCommitted}
+        >
+          <NumberField.Input
+            className={styles.input}
+            inputMode="decimal"
+            render={
+              <OutlinedInput
+                endAdornment={unit ? <InputAdornment position="end">{unit}</InputAdornment> : undefined}
+              />
+            }
+          />
+        </NumberField.Root>
+      )}
     </div>
   )
 }
