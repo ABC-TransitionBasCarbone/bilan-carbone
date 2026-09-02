@@ -35,6 +35,11 @@
       "n2o": "N₂O (σε kgCO₂e)",
       "co2b": "CO₂b (σε kgCO₂e)",
       "sf6": "SF₆ (σε kgCO₂e)"
+    },
+    "post": {
+      "Evenement": "Εκδηλώσεις",
+      "EvenementSimplified": "Εκδηλώσεις",
+      "EnergieSimplified": "Ενέργεια"
     }
   },
   "exports": {

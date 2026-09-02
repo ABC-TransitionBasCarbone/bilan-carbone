@@ -35,6 +35,11 @@
       "n2o": "N₂O (kgCO₂e-ben)",
       "co2b": "CO₂b (kgCO₂e-ben)",
       "sf6": "SF₆ (kgCO₂e-ben)"
+    },
+    "post": {
+      "Evenement": "Események",
+      "EvenementSimplified": "Események",
+      "EnergieSimplified": "Energia"
     }
   },
   "exports": {
