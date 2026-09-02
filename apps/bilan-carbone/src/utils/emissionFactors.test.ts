@@ -15,7 +15,7 @@ jest.mock('next-intl/server', () => ({
 describe('emissionFactors utils function', () => {
   describe('getEmissionFactorValue', () => {
     test('should return waste impact if env is BC, FE is from base empreinte and is in wasteEmissionFactors', () => {
-      const emissionFactor = { importedFrom: Import.BaseEmpreinte, importedId: '34684', totalCo2: 123 }
+      const emissionFactor = { importedFrom: Import.BaseEmpreinte, importedId: '34662', totalCo2: 123 }
       const env = Environment.BC
 
       const result = getEmissionFactorValue(emissionFactor, env)
@@ -24,7 +24,7 @@ describe('emissionFactors utils function', () => {
     })
 
     test('should return waste impact if env is TILT, FE is from base empreinte and is in wasteEmissionFactors', () => {
-      const emissionFactor = { importedFrom: Import.BaseEmpreinte, importedId: '34684', totalCo2: 123 }
+      const emissionFactor = { importedFrom: Import.BaseEmpreinte, importedId: '34662', totalCo2: 123 }
       const env = Environment.TILT
 
       const result = getEmissionFactorValue(emissionFactor, env)
@@ -33,7 +33,7 @@ describe('emissionFactors utils function', () => {
     })
 
     test('should return FE value if env is CUT, FE is from base empreinte and is in wasteEmissionFactors', () => {
-      const emissionFactor = { importedFrom: Import.BaseEmpreinte, importedId: '34684', totalCo2: 123 }
+      const emissionFactor = { importedFrom: Import.BaseEmpreinte, importedId: '34662', totalCo2: 123 }
       const env = Environment.CUT
 
       const result = getEmissionFactorValue(emissionFactor, env)
@@ -51,7 +51,7 @@ describe('emissionFactors utils function', () => {
     })
 
     test('should return waste impact if env is BC, FE is not from base empreinte and is in wasteEmissionFactors', () => {
-      const emissionFactor = { importedFrom: Import.Legifrance, importedId: '34684', totalCo2: 123 }
+      const emissionFactor = { importedFrom: Import.Legifrance, importedId: '34662', totalCo2: 123 }
       const env = Environment.BC
 
       const result = getEmissionFactorValue(emissionFactor, env)
@@ -82,7 +82,7 @@ describe('emissionFactors utils function', () => {
 
   describe('isWasteEmissionFactor', () => {
     test('should return true if FE is from base empreinte and is in wasteEmissionFactors', () => {
-      const emissionFactor = { importedFrom: Import.BaseEmpreinte, importedId: '34684' }
+      const emissionFactor = { importedFrom: Import.BaseEmpreinte, importedId: '34662' }
       const env = Environment.BC
 
       const result = isWasteEmissionFactor(emissionFactor, env)
@@ -100,7 +100,7 @@ describe('emissionFactors utils function', () => {
     })
 
     test('should return false if FE is not from base empreinte and is in wasteEmissionFactors', () => {
-      const emissionFactor = { importedFrom: Import.Legifrance, importedId: '34684' }
+      const emissionFactor = { importedFrom: Import.Legifrance, importedId: '34662' }
       const env = Environment.BC
 
       const result = isWasteEmissionFactor(emissionFactor, env)
@@ -109,7 +109,7 @@ describe('emissionFactors utils function', () => {
     })
 
     test('should return false if FE is from base empreinte and is in wasteEmissionFactors but env is not BC or TILT', () => {
-      const emissionFactor = { importedFrom: Import.BaseEmpreinte, importedId: '34684' }
+      const emissionFactor = { importedFrom: Import.BaseEmpreinte, importedId: '34662' }
       const env = Environment.CUT
 
       const result = isWasteEmissionFactor(emissionFactor, env)
