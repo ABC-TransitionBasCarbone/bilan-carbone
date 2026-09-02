@@ -5,11 +5,17 @@ import { getEnvVar } from '@abc-transitionbascarbone/lib/environment'
 import { getLocale } from 'next-intl/server'
 
 export const getEnvironnementRessources = async (env: Environment, t: Translations) => {
+  const locale = await getLocale()
+
   const contactForm = await getEnvVar('CONTACT_FORM_URL', env)
-  const faq = await getEnvVar('FAQ_LINK', env)
+
+  const faq =
+    locale === Locale.EN
+      ? (await getEnvVar('EN_FAQ_LINK', env)) || (await getEnvVar('FAQ_LINK', env))
+      : await getEnvVar('FAQ_LINK', env)
+
   const supportEmail = await getEnvVar('SUPPORT_EMAIL', env)
 
-  const locale = await getLocale()
   const methodUrl =
     locale === Locale.FR
       ? 'https://www.bilancarbone-methode.com/'
@@ -30,7 +36,7 @@ export const getEnvironnementRessources = async (env: Environment, t: Translatio
     {
       title: t('questionTechnique'),
       links: [
-        { title: t('lireLaFAQ'), link: faq },
+        ...(faq ? [{ title: t('lireLaFAQ'), link: faq }] : []),
         {
           title: t('ecrireMail', { supportEmail }),
           link: `mailto:${supportEmail}`,

@@ -126,7 +126,7 @@
         "establishmentYear": "Godina otvaranja"
       },
       "charts": {
-        "siteEmissions": "Emisije u tCO2e ustanove {site} u {year}"
+        "siteEmissions": "Emisije u tCO₂e obrazovne ustanove {site} u {year}"
       },
       "questions": {
         "goals-title": "CILJEVI",

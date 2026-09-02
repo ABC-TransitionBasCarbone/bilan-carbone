@@ -4,15 +4,14 @@ import { CATEGORY_COLORS } from '@/constants/style'
 import { DEFAULT_ENTITY_FILTERS } from '@/constants/survey'
 import { createResponse } from '@/db/campaign'
 import { getSurveyCampaignForCsvExport, getSurveyCampaignForResults } from '@/db/survey'
-import { createMipEngine, RawRules } from '@/publicodes/mip-engine'
+import { createMipEngine, getSurveyCategoryKeysFromRawRules, RawRules } from '@/publicodes/mip-engine'
 import { dbActualizedAuth } from '@/services/auth'
 import { EmissionCategory, KeyStatGroup, SurveyResults } from '@/types/results.types'
 import { withServerResponse } from '@/utils/serverResponse'
 import { isAdmin } from '@/utils/user'
-import { SURVEY_CATEGORY_KEYS } from '@abc-transitionbascarbone/publicodes/form/utils'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
 import { buildCsv, sanitizeFileName, serializeCsvValue } from '@abc-transitionbascarbone/utils/csv'
-import { average, safePercent, toNumber } from '@abc-transitionbascarbone/utils/number'
+import { average, getNumericNodeValue, safePercent, toNumber } from '@abc-transitionbascarbone/utils/number'
 import { isYesValue } from '@abc-transitionbascarbone/utils/parsing'
 import Engine, { Situation } from 'publicodes'
 
@@ -316,12 +315,14 @@ export const getSurveyResults = async (campaignId: string): Promise<SurveyResult
 
   const responses = campaign.responses
   const totalRespondents = responses.length
+  const modelRules = campaign.modelCampaign.model as RawRules
+  const categoryKeys = getSurveyCategoryKeysFromRawRules(modelRules)
 
-  const emptyCategories: EmissionCategory[] = SURVEY_CATEGORY_KEYS.map((key) => ({
+  const emptyCategories: EmissionCategory[] = categoryKeys.map((key) => ({
     key,
     labelFr: '',
     value: 0,
-    color: CATEGORY_COLORS[key],
+    color: CATEGORY_COLORS[key] ?? CATEGORY_COLORS.total,
   }))
 
   if (totalRespondents === 0) {
@@ -336,12 +337,20 @@ export const getSurveyResults = async (campaignId: string): Promise<SurveyResult
     }
   }
 
-  const engine = createMipEngine(campaign.modelCampaign.model as RawRules)
-  const categoryTotals: Record<string, number> = Object.fromEntries(SURVEY_CATEGORY_KEYS.map((key) => [key, 0]))
+  const engine = createMipEngine(modelRules)
+  const categoryTotals: Record<string, number> = Object.fromEntries(categoryKeys.map((key) => [key, 0]))
   const situations: Situation<string>[] = []
   const commuteEmissionsKg: number[] = []
   const travelEmissionsKg: number[] = []
   let footprintTotal = 0
+
+  const getRuleNumericNodeValue = (ruleName: string): number => {
+    try {
+      return getNumericNodeValue(engine.evaluate(ruleName).nodeValue)
+    } catch {
+      return 0
+    }
+  }
 
   for (const response of responses) {
     const formState = parseStoredFormState(response.answers)
@@ -350,22 +359,20 @@ export const getSurveyResults = async (campaignId: string): Promise<SurveyResult
 
     engine.setSituation(situation)
 
-    const bilanValue = engine.evaluate('bilan').nodeValue
-    footprintTotal += typeof bilanValue === 'number' ? bilanValue : 0
+    footprintTotal += getRuleNumericNodeValue('bilan')
 
-    const commuteEmission = engine.evaluate('DT').nodeValue
-    if (typeof commuteEmission === 'number') {
+    const commuteEmission = getRuleNumericNodeValue('DT')
+    if (commuteEmission > 0) {
       commuteEmissionsKg.push(Math.max(0, commuteEmission))
     }
 
-    const travelEmission = engine.evaluate('transport').nodeValue
-    if (typeof travelEmission === 'number') {
+    const travelEmission = getRuleNumericNodeValue('transport')
+    if (travelEmission > 0) {
       travelEmissionsKg.push(Math.max(0, travelEmission))
     }
 
-    for (const key of SURVEY_CATEGORY_KEYS) {
-      const value = engine.evaluate(key).nodeValue
-      categoryTotals[key] += typeof value === 'number' ? value : 0
+    for (const key of categoryKeys) {
+      categoryTotals[key] += getRuleNumericNodeValue(key)
     }
   }
 
@@ -375,11 +382,11 @@ export const getSurveyResults = async (campaignId: string): Promise<SurveyResult
     surveyId: campaignId,
     totalRespondents,
     averageFootprint: Math.round(footprintTotal / totalRespondents),
-    categories: SURVEY_CATEGORY_KEYS.map((key) => ({
+    categories: categoryKeys.map((key) => ({
       key,
       labelFr: '',
       value: Math.round(categoryTotals[key] / totalRespondents),
-      color: CATEGORY_COLORS[key],
+      color: CATEGORY_COLORS[key] ?? CATEGORY_COLORS.total,
     })),
     entities: canAccessEntityFilter ? DEFAULT_ENTITY_FILTERS : [],
     comments: [],

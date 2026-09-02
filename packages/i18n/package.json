@@ -6,14 +6,15 @@
   "types": "src/index.ts",
   "dependencies": {
     "@abc-transitionbascarbone/publicodes": "*",
+    "@abc-transitionbascarbone/utils": "*",
     "@anthropic-ai/sdk": "^0.36.0",
     "prettier": "^3.8.4",
-    "publicodes": "^1.0.0",
+    "publicodes": "^1.10.1",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
     "@types/node": "^24.13.3",
-    "tsx": "^4.22.4",
+    "tsx": "^4.23.13",
     "typescript": "^6.0.2"
   }
 }

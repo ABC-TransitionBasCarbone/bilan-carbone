@@ -6,8 +6,14 @@ import { EvaluatedGroupLayout, EvaluatedTableLayout } from '../form/layouts'
 export function usePublicodesTranslation() {
   const tRules = useTranslations('publicodes-rules')
   return {
-    getQuestionTranslation: (ruleName: string): string => tRules(`${getI18nKeyRuleName(ruleName)}.question`),
-    getTitleTranslation: (ruleName: string): string => tRules(`${getI18nKeyRuleName(ruleName)}.titre`),
+    getQuestionTranslation: (ruleName: string): string => {
+      const key = `${getI18nKeyRuleName(ruleName)}.question`
+      return tRules.has(key) ? tRules(key) : ruleName
+    },
+    getTitleTranslation: (ruleName: string): string => {
+      const key = `${getI18nKeyRuleName(ruleName)}.titre`
+      return tRules.has(key) ? tRules(key) : ruleName
+    },
   }
 }
 
@@ -26,9 +32,15 @@ export function usePublicodesRuleTranslation(ruleName: string) {
   return {
     question: tRules.has(`${ruleKey}.question`) ? customRich(tRules, `${ruleKey}.question`) : undefined,
     titre: tRules.has(`${ruleKey}.titre`) ? customRich(tRules, `${ruleKey}.titre`) : undefined,
-    description: tRules.has(`${ruleKey}.description`) ? customRich(tRules,`${ruleKey}.description`) : undefined,
-    getOptionLabel: (value: string | boolean | number) =>
-      typeof value === 'boolean' ? customRich(tCommon, value ? 'yes' : 'no') : customRich(tOptions, String(value)),
+    description: tRules.has(`${ruleKey}.description`) ? customRich(tRules, `${ruleKey}.description`) : undefined,
+    getOptionLabel: (value: string | boolean | number) => {
+      if (typeof value === 'boolean') {
+        return customRich(tCommon, value ? 'yes' : 'no')
+      }
+
+      const optionKey = String(value)
+      return tOptions.has(optionKey) ? customRich(tOptions, optionKey) : optionKey
+    },
   }
 }
 

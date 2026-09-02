@@ -9,6 +9,7 @@ import {
   Import,
   SubPost,
 } from '@abc-transitionbascarbone/db-common/enums'
+import { removeDiacritics } from '@abc-transitionbascarbone/utils/parsing'
 import { v4 } from 'uuid'
 import { OldNewPostAndSubPostsMapping } from './newPostAndSubPosts'
 import { EmissionFactorRow, EmissionFactorsWorkSheet } from './oldBCWorkSheetsReader'
@@ -21,9 +22,7 @@ const getStringValue = (value: string | number) => {
 }
 
 const mapToSubPost = (newSubPost: string) => {
-  const normalizedSubPost = newSubPost
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
+  const normalizedSubPost = removeDiacritics(newSubPost)
     .replace(/[\s,']/g, '')
     .toLowerCase()
 

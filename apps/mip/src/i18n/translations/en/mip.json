@@ -99,6 +99,9 @@
       "addedActiveUser": "You have been invited on a new environment My Impact Pro",
       "activation": "You have activated you account on My Impact Pro",
       "activationRequest": "Access request to your My Impact Pro organization"
+    },
+    "body": {
+      "team": "The Mon Impact Pro team"
     }
   },
   "models": {
@@ -177,7 +180,9 @@
       "transport": "Professional travel",
       "alimentation": "Food",
       "divers": "Digital",
-      "logement": "Office"
+      "logement": "Office",
+      "numérique": "Digital",
+      "bureaux": "Office"
     },
     "charts": {
       "title": "Carbon footprint distribution",

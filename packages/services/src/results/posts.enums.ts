@@ -46,7 +46,7 @@ export enum TiltAdvancedPost {
 
 export enum TiltSimplifiedPost {
   LocauxSimplified = 'LocauxSimplified',
-  EnergiesSimplified = 'EnergiesSimplified',
+  EnergieSimplified = 'EnergieSimplified',
   DechetsSimplified = 'DechetsSimplified',
   FroidEtClimSimplified = 'FroidEtClimSimplified',
   DeplacementsDePersonneSimplified = 'DeplacementsDePersonneSimplified',

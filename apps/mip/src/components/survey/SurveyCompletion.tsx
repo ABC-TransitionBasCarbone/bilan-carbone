@@ -8,14 +8,11 @@ import TopCategoriesSection from '@/components/survey/completion/TopCategoriesSe
 import TransitionEncart from '@/components/survey/completion/TransitionEncart'
 import { ActionResult, CategoryResult } from '@/components/survey/completion/types'
 import { clearSurveyState, loadSurveyState } from '@/components/survey/surveyStateStorage'
-import type { RawRules } from '@/publicodes/mip-engine'
 import { useMipPublicodes } from '@/publicodes/MipPublicodesProvider'
+import { getSurveyCategoryKeysFromRawRules, type RawRules } from '@/publicodes/mip-engine'
 import { normalizeSituation } from '@/utils/survey'
-import {
-  getPositiveNodeValue,
-  getRuleCategoryKey,
-  SURVEY_CATEGORY_KEYS,
-} from '@abc-transitionbascarbone/publicodes/form'
+import { getRuleCategoryKey } from '@abc-transitionbascarbone/publicodes/form'
+import { getPositiveNodeValue } from '@abc-transitionbascarbone/utils/number'
 import { Refresh } from '@mui/icons-material'
 import { Button, Container } from '@mui/material'
 import { useTranslations } from 'next-intl'
@@ -29,8 +26,6 @@ type ModelRule = {
   icônes?: string
   somme?: Array<string | number>
 }
-
-const CATEGORY_KEYS = SURVEY_CATEGORY_KEYS
 
 interface Props {
   surveyId: string
@@ -60,19 +55,29 @@ const SurveyCompletion = ({ surveyId, model, restoreFromStorage = false }: Props
 
   const totalEval = engine.evaluate('bilan')
   const totalKgFromBilan = getPositiveNodeValue(totalEval.nodeValue)
+  const categoryKeys = useMemo(() => getSurveyCategoryKeysFromRawRules(model), [model])
+
+  const evaluateCategoryValue = (ruleName: string): number => {
+    try {
+      return getPositiveNodeValue(engine.evaluate(ruleName).nodeValue)
+    } catch {
+      return 0
+    }
+  }
 
   const categories = useMemo<CategoryResult[]>(() => {
-    return CATEGORY_KEYS.map((key) => {
-      const result = engine.evaluate(key)
-      const rule = model?.[key] as ModelRule | undefined
-      return {
-        key,
-        titre: rule?.titre ?? key,
-        icones: rule?.icônes ?? '',
-        valueKg: getPositiveNodeValue(result.nodeValue),
-      }
-    }).sort((a, b) => b.valueKg - a.valueKg)
-  }, [engine, model, situation])
+    return categoryKeys
+      .map((key) => {
+        const rule = model?.[key] as ModelRule | undefined
+        return {
+          key,
+          titre: rule?.titre ?? key,
+          icones: rule?.icônes ?? '',
+          valueKg: evaluateCategoryValue(key),
+        }
+      })
+      .sort((a, b) => b.valueKg - a.valueKg)
+  }, [categoryKeys, engine, model, situation])
 
   const totalKgFromCategories = categories.reduce((sum, category) => sum + category.valueKg, 0)
   const totalKg = totalKgFromBilan > 0 ? totalKgFromBilan : totalKgFromCategories

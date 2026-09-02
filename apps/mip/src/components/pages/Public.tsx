@@ -17,7 +17,7 @@ const PublicPage = ({ children }: Props) => {
 
   return (
     <PublicContainer>
-      <div className={classNames('flex wrap w100')}>
+      <div className={classNames(styles.content, 'flex w100')}>
         <div className={classNames(styles.info, 'grow p2 text-center')}>
           <p className="title-h4 mb1">{t('explanation.title')}</p>
           <p className="mb1">{t('explanation.why.summary')}</p>
@@ -26,13 +26,7 @@ const PublicPage = ({ children }: Props) => {
           <div className={classNames('wrap justify-center gapped-2 mb1')}>
             {logo && (
               <div key={logo.src} className="flex-cc">
-                <Image
-                  src={logo.src}
-                  alt={logo.alt}
-                  width={176}
-                  height={72}
-                  className={classNames(styles.loginLogoImage, 'wauto h100')}
-                />
+                <Image src={logo.src} alt={logo.alt} width={176} height={72} className={styles.loginLogoImage} />
               </div>
             )}
           </div>

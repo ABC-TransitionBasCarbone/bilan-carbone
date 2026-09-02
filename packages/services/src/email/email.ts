@@ -217,3 +217,34 @@ export const sendAddedUsersByFile = async (results: Record<string, string>[], en
     results,
   })
 }
+
+export const sendCampaignCreatedByCollaboratorEmail = async (
+  toEmails: string[],
+  creatorName: string,
+  campaignNames: string[],
+  organizationName: string,
+) => {
+  const distinctCampaignNames = Array.from(new Set(campaignNames.map((name) => name.trim()).filter(Boolean)))
+
+  if (distinctCampaignNames.length === 0) {
+    return null
+  }
+
+  const resolvedOrganizationName = organizationName || (await tBody('campaignCreatedByCollaborator.organizationFallback'))
+
+  return sendEmail(
+    Environment.MIP,
+    toEmails,
+    await tSubject('campaignCreatedByCollaborator'),
+    'campaign-created-by-collaborator',
+    {
+      link: `${BASE_URL}/campaigns`,
+      t_campaignCreatedIntro: await tBody('campaignCreatedByCollaborator.intro', {
+        creatorName,
+        organizationName: resolvedOrganizationName,
+      }),
+      t_campaignCreatedOutro: await tBody('campaignCreatedByCollaborator.outro'),
+      campaignNames: distinctCampaignNames,
+    },
+  )
+}

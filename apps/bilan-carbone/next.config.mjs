@@ -1,6 +1,9 @@
 import createNextIntlPlugin from 'next-intl/plugin'
+import path from 'path'
+import { fileURLToPath } from 'url'
 
 const withNextIntl = createNextIntlPlugin()
+const monorepoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 
 const bucketName = process.env.SCW_BUCKET_NAME
 const region = process.env.SCW_REGION
@@ -22,6 +25,7 @@ const nextConfig = {
       // '@publicodes/forms': '../../publicodes/publicodes/packages/forms/src/',
     },
     resolveExtensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
+    root: monorepoRoot,
   },
   images: {
     remotePatterns: [{ hostname: scalewayUrl }],

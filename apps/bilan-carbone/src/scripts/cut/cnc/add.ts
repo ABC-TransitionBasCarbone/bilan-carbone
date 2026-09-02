@@ -1,5 +1,6 @@
 import { getOrCreateCncVersion, upsertCNC } from '@/db/cnc'
 import type { Prisma } from '@abc-transitionbascarbone/db-common'
+import { removeDiacritics } from '@abc-transitionbascarbone/utils/parsing'
 import { Command } from 'commander'
 import { parse } from 'csv-parse'
 import fs from 'fs'
@@ -24,10 +25,7 @@ const addCNC = async (file: string, year: number) => {
         parse({
           columns: (headers: string[]) => {
             headers = headers.map((h) =>
-              h
-                .trim()
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '') // remove accents
+              removeDiacritics(h.trim())
                 .replace(/\s+/g, '') // remove spaces
                 .replace(/[^a-zA-Z0-9]/g, '') // remove special chars
                 .toLowerCase(),

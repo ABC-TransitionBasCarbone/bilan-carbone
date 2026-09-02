@@ -1,15 +1,11 @@
-declare namespace Cypress {
-  interface Chainable {
-    getByTestId(
-      testId: string,
-      params?: Partial<Cypress.Loggable & Cypress.Timeoutable & Cypress.Withinable & Cypress.Shadow>,
-    ): Chainable<JQuery<HTMLElement>>
+import '../../../../packages/types/cypress-commands'
 
-    login(email?: string, password?: string): Chainable<void>
-    loginForEnv(env: 'bc' | 'cut' | 'tilt' | 'clickson', email?: string, password?: string): Chainable<void>
-    logout(): Chainable<void>
-    signupCut(string?: string, string?: string): Chainable<void>
-    resetTestDatabase(): Chainable<void>
-    waitForStable(): Chainable<void>
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      loginForEnv(env: 'bc' | 'cut' | 'tilt' | 'clickson', email?: string, password?: string): Chainable<void>
+      signupCut(email?: string, cncOrSiret?: string): Chainable<void>
+      waitForStable(): Chainable<void>
+    }
   }
 }

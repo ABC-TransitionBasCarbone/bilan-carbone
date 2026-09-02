@@ -34,7 +34,7 @@ const tiltTheme = createTheme(theme, {
       [TiltAdvancedPost.FinDeVie]: { light: '#FBBC6B', dark: '#C88938' },
       [TiltAdvancedPost.Teletravail]: { light: '#3F5488', dark: '#0C2155', customTitleColor: '#ffffff' },
       [TiltSimplifiedPost.LocauxSimplified]: { light: '#3F5488', dark: '#0C2155', customTitleColor: '#ffffff' },
-      [TiltSimplifiedPost.EnergiesSimplified]: { light: '#3F5488', dark: '#0C2155', customTitleColor: '#ffffff' },
+      [TiltSimplifiedPost.EnergieSimplified]: { light: '#3F5488', dark: '#0C2155', customTitleColor: '#ffffff' },
       [TiltSimplifiedPost.DechetsSimplified]: { light: '#3F5488', dark: '#0C2155', customTitleColor: '#ffffff' },
       [TiltSimplifiedPost.FroidEtClimSimplified]: { light: '#3F5488', dark: '#0C2155', customTitleColor: '#ffffff' },
       [TiltSimplifiedPost.DeplacementsDePersonneSimplified]: {

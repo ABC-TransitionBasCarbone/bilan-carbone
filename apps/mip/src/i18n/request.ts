@@ -1,4 +1,5 @@
 import { Locale } from '@abc-transitionbascarbone/i18n/config'
+import { isObject, mergeObjects } from '@abc-transitionbascarbone/utils/object'
 import { getRequestConfig } from 'next-intl/server'
 import { getLocale } from './locale'
 
@@ -21,6 +22,11 @@ export default getRequestConfig(async () => {
 
   return {
     locale,
-    messages: { ...commonMessages, ...mipMessages, ...mipRulesMessages },
+    messages: mergeObjects(
+      {},
+      isObject(commonMessages) ? commonMessages : {},
+      isObject(mipMessages) ? mipMessages : {},
+      isObject(mipRulesMessages) ? mipRulesMessages : {},
+    ),
   }
 })

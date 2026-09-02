@@ -708,7 +708,7 @@
         "question rhétorique": {
           "titre": "[TO_TRANSLATE] Question d'information sur les consommation d'énergie associée à la vie de bureau et au télétravail (Chauffage, climatisation, électricité)",
           "description": "[TO_TRANSLATE] Cette catégorie ne dépend pas de vos réponses. L'empreinte associée est une moyenne nationale, nous procédons ainsi car définir précisément votre consommation d'énergie liée à votre activité professionnelle est complexe et necessiterait de nombreuses informations que vous n'avez pas forcement à disposition.",
-          "question": "[TO_TRANSLATE] Nous attribuons à chaque employé l'empreinte de sa \"vie de bureau\" sur son lieu de travail et chez lui (chauffage, climatisation, électricité...). Cela représente autour de 280kg de CO2e par personne par an."
+          "question": "[TO_TRANSLATE] Nous attribuons à chaque employé l'empreinte de sa \"vie de bureau\" sur son lieu de travail et chez lui (chauffage, climatisation, électricité...). Cela représente autour de 280kg de CO₂e par personne par an."
         }
       },
       "température": {
@@ -1048,14 +1048,14 @@
     "km/mois": "[TO_TRANSLATE] km/mois",
     "h/mois": "[TO_TRANSLATE] h/mois",
     "nuit": "[TO_TRANSLATE] nuit",
-    "m3": "[TO_TRANSLATE] m3",
+    "m3": "[TO_TRANSLATE] m³",
     "personne": "[UPDATED] personne",
     "€/mois": "[TO_TRANSLATE] €/mois",
     "kWh": "kWh",
     "Wc": "[TO_TRANSLATE] Wc",
     "%": "[TO_TRANSLATE] %",
-    "kgCO2e/m2": "[UPDATED] kgCO2e/m2",
-    "m2": "[UPDATED] m2",
+    "kgCO2e/m2": "[UPDATED] kgCO₂e/m²",
+    "m2": "[UPDATED] m²",
     "climatiseur": "[TO_TRANSLATE] climatiseur",
     "bouteille": "[UPDATED] bouteille",
     "kg": "kg",
@@ -1063,7 +1063,7 @@
     "€": "€",
     "stère": "[TO_TRANSLATE] stère",
     "requêtes/jour": "[TO_TRANSLATE] requêtes/jour",
-    "kgCO2e": "kgCO2e",
+    "kgCO2e": "kgCO₂e",
     "repas": "[UPDATED] repas",
     "tasse/jour": "[TO_TRANSLATE] tasse/jour",
     "degré": "[TO_TRANSLATE] degré",

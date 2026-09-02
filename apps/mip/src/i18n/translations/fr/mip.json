@@ -106,6 +106,9 @@
       "addedActiveUser": "Vous avez été invité sur un nouvel environnement Mon Impact Pro",
       "activation": "Vous avez activé votre compte sur Mon Impact Pro",
       "activationRequest": "Demande d'accès à votre organisation Mon Impact Pro"
+    },
+    "body": {
+      "team": "L'équipe Mon Impact Pro"
     }
   },
   "models": {
@@ -185,7 +188,9 @@
       "transport": "Déplacements professionnels",
       "alimentation": "Alimentation",
       "divers": "Numérique",
-      "logement": "Bureaux"
+      "logement": "Bureaux",
+      "numérique": "Numérique",
+      "bureaux": "Bureaux"
     },
     "charts": {
       "title": "Répartition des empreintes carbone",

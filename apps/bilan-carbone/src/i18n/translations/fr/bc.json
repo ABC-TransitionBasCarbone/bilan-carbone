@@ -40,7 +40,7 @@
     "bc": {
       "title": "Export au format Bilan Carbone®",
       "category": "Catégorie Bilan Carbone®",
-      "emissions": "Émissions (tCO2e)",
+      "emissions": "Émissions (tCO₂e)",
       "disclaimerExcel1": "Attention, les résultats que vous obtenez ici sont uniquement issus de l'empreinte carbone simplifiée Count, et ne doivent en aucun cas être utilisés comme des résultats Bilan Carbone®.",
       "disclaimerExcel2": "La démarche que vous avez suivi via l'outil Count n'est PAS une démarche Bilan Carbone®, même si les résultats obtenus peuvent déjà vous permettre de mieux comprendre comment réduire votre impact, en identifiant vos activités les plus émissives.",
       "disclaimerExcel3": "En revanche, cette empreinte carbone simplifiée est le premier pas vers une démarche plus complète comme le Bilan Carbone® !",
@@ -221,7 +221,43 @@
     "ecrireMail": "Écrire directement à {supportEmail}"
   },
   "legalNotices": {
-    "profile": "Retour au profil"
+    "profile": "Retour au profil",
+    "introduction": "Conformément aux dispositions des articles 6-III et 19 de la loi pour la Confiance dans l'Économie Numérique, nous vous informons que ce site est édité par :",
+    "publisher": {
+      "title": "Association pour la transition Bas Carbone",
+      "type": "Association loi 1901 à but non lucratif",
+      "siret": "SIRET : 538 170 093 00032",
+      "office": "Bureaux : 41 rue Beauregard – 75002 Paris – France",
+      "phone": "Téléphone : 09 81 10 27 93",
+      "mail": "Mail :",
+      "vat": "N° d'identification à la TVA : FR 96 53 81 70 093"
+    },
+    "provider": {
+      "title": "Hébergeur",
+      "details": "Scalingo - 9 Rue de la Krutenau, 67000 Strasbourg"
+    },
+    "websiteOwner": {
+      "title": "Propriétaire du site",
+      "description": "Le présent site est la propriété de l'Association pour la transition bas carbone. Le contenu éditorial, textes, images composant le site web sont la propriété de l'Association pour la transition bas carbone. Toute représentation totale ou partielle de ce site, par quelques procédés que ce soient, sans autorisation préalable de l'Association pour la transition bas carbone, est interdite et constituerait une contrefaçon sanctionnée par les articles L335-2 et suivants du Code de la propriété intellectuelle. Tous les noms de produits ou de sociétés mentionnés dans le site web sont les marques de leurs titulaires.",
+      "editorInChief": "Responsable de publication : Anna Creti"
+    },
+    "intellectualProperty": {
+      "title": "Propriété intellectuelle et copyright",
+      "description1": "L'ensemble des éléments du site (textes, documents…) sont, sauf dispositions contraires, la propriété intellectuelle exclusive de l'Association pour la transition bas carbone. Par conséquent, toute reproduction, représentation, transmission, diffusion, partielle ou totale, est interdite selon les termes de l'article L. 122-4 du CPI sous réserve des exceptions prévues à l'article L. 122-5 du CPI. Toute utilisation de données figurant sur ce site nécessite une autorisation préalable et expresse. A défaut, le délit de contrefaçon constitué est sanctionné sur le fondement des articles L. 335-2 et suivants du CPI.",
+      "description2": "Pour toute exploitation autorisée de tout ou partie du contenu du site, faire figurer le nom de l'auteur, ses qualités, l'année de publication et la source."
+    },
+    "hypertextLinks": {
+      "title": "Liens hypertextes",
+      "description": "L'éditeur ne saurait engager sa responsabilité sur le contenu des informations figurant sur les pages auxquelles les liens hypertextes du présent site renvoient."
+    },
+    "accessRights": {
+      "title": "Droits d'accès",
+      "description": "Conformément au Règlement (UE) 2016/679 relatif à la protection des données à caractère personnel, vous disposez sur vos données des droit d'accès, droit de rectification et du droit d'opposition."
+    },
+    "trademark": {
+      "title": "La marque Bilan Carbone®",
+      "description1": "La marque Bilan Carbone® est une marque déposée en France depuis le 2 décembre 2003, enregistrée sous le numéro 3260464. Tous droits de reproduction ou d'utilisation sont réservés s'agissant des représentations iconographiques et photographiques de la marque. La reproduction à des fins de diffusion ou d'exploitation de tout ou partie de la marque Bilan Carbone® n'est possible qu'avec l'autorisation expresse de l'Association pour la transition Bas Carbone. Le cas échéant, aucune modification de forme qui détournerait le sens et l'image Bilan Carbone® ne pourra être apportée. Un lien devra être établi vers l'Association pour la transition Bas Carbone."
+    }
   },
   "login": {
     "welcome": "Bienvenue sur le Bilan Carbone® +",
@@ -757,7 +793,7 @@
         "immobilisation1": "Le GHG Protocol prend en compte l'ensemble des émissions liées à la construction d'un bien l'année de son acquisition. Le Bilan Carbone®, lui, amortit les émissions sur plusieurs années, ce qui explique une partie des différences entre ces deux formats.",
         "otherEmissionsAval": "La prise en compte des déplacements des visiteurs ou des clients de l'organisation est facultative au sein du GHG Protocol. Si ces émissions sont néanmoins calculées et ne sont pas opérées, elles ne seront pas comptabilisées au sein de cet export, car il n'existe pas de poste adapté dans lequel les restituer.",
         "otherEmissionsAmont": "Certaines émissions ne sont pas prises en compte au sein du GHG Protocol, notamment si les activités associées ne sont pas opérées par l'organisation. C'est par exemple le cas de l'amont de la production et des pertes en lignes de l'électricité. Dans le Bilan GES réglementaire, celles-ci sont bien comptabilisées dans le poste 6.1 qui est dédié aux autres émissions indirectes, mais comme il n'existe pas d'équivalent de ce poste au sein du GHG Protocol, ces émissions ne sont pas prises en compte.",
-        "otherGas1": "Seuls les GES faisant partie du Protocole de Kyoto (CO2, CH4, N2O, HFC, PFC, SF6) sont comptabilisés au sein du GHG Protocol. Les émissions liées aux autres GES (traînées de condensation, NF3, autres GES de climatisation ou de procédés) sont donc comptabilisées au sein du Bilan Carbone®, mais pas au sein du GHG Protocol.",
+        "otherGas1": "Seuls les GES faisant partie du Protocole de Kyoto (CO₂, CH₄, N₂O, HFC, PFC, SF₆) sont comptabilisés au sein du GHG Protocol. Les émissions liées aux autres GES (traînées de condensation, NF3, autres GES de climatisation ou de procédés) sont donc comptabilisées au sein du Bilan Carbone®, mais pas au sein du GHG Protocol.",
         "marketBased": "Une partie des différences entre le GHG Protocol en market-based et le Bilan Carbone® provient simplement de la différence de résultats entre les méthodes <green>location-based</green> et <purple>market-based</purple>.",
         "fabrication": "Vous avez utilisé des facteurs d'émission utilisant les distances (passager.km, ...) pour des véhicules opérés. Les émissions liées à la fabrication de ces véhicules ne sont pas prises en compte dans le GHG Protocol. Veuillez utiliser le poste Immobilisations pour les émissions de fabrication des véhicules acquis l'année du bilan.",
         "additionalMissing": "+ {count, plural,  =1 {1 autre source} other {# autres sources}} d'émission",
@@ -816,8 +852,8 @@
       "charts": {
         "all": "Graphiques - Tous cinémas",
         "site": "Graphiques - {site}",
-        "allEmissions": "Émissions dues aux activités de l'ensemble des cinémas, en tCO2e",
-        "siteEmissions": "Émissions dues aux activités du cinéma {site}, en tCO2e"
+        "allEmissions": "Émissions dues aux activités de l'ensemble des cinémas, en tCO₂e",
+        "siteEmissions": "Émissions dues aux activités du cinéma {site}, en tCO₂e"
       },
       "labels": {
         "cinemas": "Cinémas",
@@ -1544,6 +1580,7 @@
     "tooManyFiles": "Veuillez importer un seul fichier à la fois",
     "invalidFileType": "Le fichier n'est pas un fichier Excel valide",
     "emptyFile": "Le fichier est vide",
+    "emptyHeader": "Le fichier ne contient pas les bons en-têtes. Veuillez utiliser le modèle d'import.",
     "missingName": "Le libellé est manquant",
     "missingSource": "Source manquante",
     "invalidUnit": "Unité invalide : \"{value}\"",
@@ -1666,8 +1703,9 @@
       "ParcInformatiqueDesSalaries": "Parc informatique des salariés",
       "EquipementsDesBenevoles": "Équipements des bénévoles",
       "ParcInformatiqueDesBenevoles": "Parc informatique des bénévoles",
-      "Evenement": "Évènement",
-      "EvenementSimplified": "Évènement",
+      "Evenement": "Évènements",
+      "EvenementSimplified": "Évènements",
+      "EnergieSimplified": "Consommation d'énergie",
       "UtilisationEnResponsabilite": "Utilisation en responsabilité",
       "UtilisationEnDependance": "Utilisation en dépendance",
       "InvestissementsFinanciersRealises": "Investissements financiers réalisés",
@@ -1729,7 +1767,7 @@
       "TeletravailSalaries": "Télétravail des salariés",
       "TeletravailBenevoles": "Télétravail des bénévoles",
       "LocauxSimplified": "Locaux",
-      "EnergiesSimplified": "Énergie",
+      "EnergieSimplified": "Énergie",
       "DechetsSimplified": "Déchets",
       "FroidEtClimSimplified": "Froid et climatisation",
       "DeplacementsDePersonneSimplified": "Déplacements de personnes",
@@ -1799,12 +1837,12 @@
       "yes": "Oui",
       "no": "Non",
       "totalCo2": "Émission totale de CO₂ (en kgCO₂e)",
-      "co2f": "CO2f (en kgCO₂e)",
-      "ch4f": "CH4f (en kgCO₂e)",
-      "ch4b": "CH4b (en kgCO₂e)",
-      "n2o": "N2O (en kgCO₂e)",
-      "co2b": "CO2b (en kgCO₂e)",
-      "sf6": "SF6 (en kgCO₂e)",
+      "co2f": "CO₂f (en kgCO₂e)",
+      "ch4f": "CH₄f (en kgCO₂e)",
+      "ch4b": "CH₄b (en kgCO₂e)",
+      "n2o": "N₂O (en kgCO₂e)",
+      "co2b": "CO₂b (en kgCO₂e)",
+      "sf6": "SF₆ (en kgCO₂e)",
       "hfc": "HFC (en kgCO₂e)",
       "pfc": "PFC (en kgCO₂e)",
       "otherGES": "Autres gaz (en kgCO₂e)",
@@ -1911,12 +1949,12 @@
         "manual": "Manuel"
       },
       "post": "Postes",
-      "co2f": "CO2f :",
-      "ch4f": "CH4f :",
-      "ch4b": "CH4b :",
-      "n2o": "N2O :",
-      "co2b": "CO2b :",
-      "sf6": "SF6 :",
+      "co2f": "CO₂f :",
+      "ch4f": "CH₄f :",
+      "ch4b": "CH₄b :",
+      "n2o": "N₂O :",
+      "co2b": "CO₂b :",
+      "sf6": "SF₆ :",
       "hfc": "HFC :",
       "pfc": "PFC :",
       "otherGES": "Autres gaz :",
@@ -1928,7 +1966,9 @@
       "completeness": "Complétude :",
       "comment": "Autres informations : ",
       "GESDecomposition": "Décomposition des GES : ",
-      "factorParts": "Composantes du facteur d'émission : "
+      "factorParts": "Composantes du facteur d'émission : ",
+      "wasteModalContent": "Les FE dédiés au recyclage des déchets (ou à la fin de vie moyenne lorsque celle-ci inclut du recyclage) utilisent une valeur de 41 kgCO₂e/t au lieu de la valeur que leur attribue la Base Empreinte®. Cette valeur correspond à la collecte, au transport et à l'exploitation du stockage des métaux sur la Base Empreinte®, et <b>exclut donc la régénération de la matière</b> qui constitue la majorité des émissions liées au recyclage. Ce fonctionnement est choisit pour ne pas pénaliser le recyclage, qui est néanmoins pris en compte dans les intrants au sein du Bilan Carbone® (un intrant issu d'une matière recyclée émettant généralement moins qu'un intrant neuf). Dans le cadre du Bilan GES Règlementaire, c'est bien la valeur de la Base Empreinte® qui sera utilisée dans votre export. Une modale explicitant les éventuelles différences entre Bilan Carbone® et Bilan GES Règlementaire sera disponible en haut à gauche de cet export. Pour plus de détail, nous vous invitons à consulter l' <link1>annexe 1</link1> de la méthode Bilan Carbone® ou <link2>les pages concernant les déchets</link2> du Plan Carbone Général.",
+      "wasteModalTitle": "Différence de valeurs FE recyclage"
     },
     "edit": {
       "title": "Modifier le facteur d'émissions ({name})",

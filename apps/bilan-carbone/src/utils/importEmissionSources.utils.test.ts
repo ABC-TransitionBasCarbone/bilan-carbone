@@ -10,11 +10,7 @@ import {
 import { Locale } from '@abc-transitionbascarbone/i18n/config'
 import xlsx from 'node-xlsx'
 import { EmissionFactorMatchType, findEmissionFactorMatch } from './findEmissionFactor.utils'
-import {
-  parseEmissionSourcesFile,
-  resolveEmissionFactorRows,
-  SOURCE_IMPORT_HEADER_ROW_INDEX,
-} from './importEmissionSources.utils'
+import { parseEmissionSourcesFile, resolveEmissionFactorRows } from './importEmissionSources.utils'
 
 jest.mock('@/db/emissionFactors', () => ({
   findEmissionFactorByIdForMatch: jest.fn(),
@@ -68,7 +64,8 @@ type RowInput = {
 
 function makeBuffer(rows: RowInput[]): Buffer {
   const colCount = 35
-  const headerRows = Array.from({ length: SOURCE_IMPORT_HEADER_ROW_INDEX + 1 }, () => new Array(colCount).fill(''))
+  const headerRows = [['Site *', ...new Array(colCount - 1).fill('')]]
+
   const dataRows = rows.map((r) => {
     const row = new Array(colCount).fill('')
     row[SOURCE_IMPORT_COLUMNS.site] = r.site ?? ''
@@ -109,11 +106,20 @@ const VALID_ROW: RowInput = {
 
 describe('parseEmissionSourcesFile', () => {
   it('returns emptyFile error for an empty sheet', () => {
-    const buffer = xlsx.build([{ name: 'Sheet1', data: [new Array(35).fill('')], options: {} }])
+    const buffer = makeBuffer([])
     const result = parseEmissionSourcesFile(Buffer.from(buffer), Locale.FR, [], Environment.BC)
     expect(result.success).toBe(false)
     if (!result.success) {
       expect(result.errors[0].key).toBe('emptyFile')
+    }
+  })
+
+  it('returns emptyHeader error if no header row', () => {
+    const buffer = xlsx.build([{ name: 'Sheet1', data: [new Array(35).fill('test')], options: {} }])
+    const result = parseEmissionSourcesFile(Buffer.from(buffer), Locale.FR, [], Environment.BC)
+    expect(result.success).toBe(false)
+    if (!result.success) {
+      expect(result.errors[0].key).toBe('emptyHeader')
     }
   })
 
@@ -245,7 +251,7 @@ describe('parseEmissionSourcesFile', () => {
       const result = parseEmissionSourcesFile(buffer, Locale.FR, TEST_STUDY_SITES, Environment.BC)
       expect(result.success).toBe(false)
       if (!result.success) {
-        expect(result.errors).toEqual([expect.objectContaining({ key: 'missingSite', lineNumber: 11 })])
+        expect(result.errors).toEqual([expect.objectContaining({ key: 'missingSite', lineNumber: 2 })])
       }
     })
 
@@ -255,7 +261,7 @@ describe('parseEmissionSourcesFile', () => {
       expect(result.success).toBe(false)
       if (!result.success) {
         expect(result.errors).toEqual([
-          expect.objectContaining({ key: 'siteNotFound', value: 'Site inconnu', lineNumber: 11 }),
+          expect.objectContaining({ key: 'siteNotFound', value: 'Site inconnu', lineNumber: 2 }),
         ])
       }
     })

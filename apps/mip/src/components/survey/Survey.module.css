@@ -35,6 +35,14 @@
   margin-top: 0.75rem;
 }
 
+.categoryHeaderLabel {
+  margin-bottom: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--primary);
+}
+
 .progressBar {
   --progress-track: var(--primary-100);
   --progress-fill: var(--primary-600);
@@ -74,12 +82,6 @@
   --progress-fill: var(--mui-palette-success-main);
 }
 
-.questionCard {
-  background: transparent;
-  border-radius: 0;
-  padding: 0;
-}
-
 .coverTitle {
   margin: 0 auto;
   font-weight: 700;
@@ -110,12 +112,6 @@
   margin-bottom: 1rem;
 }
 
-.logoRow {
-  flex-wrap: wrap;
-  overflow-x: hidden;
-  justify-content: center;
-}
-
 .logoSlot {
   position: relative;
   width: 10.5rem;
@@ -141,5 +137,12 @@
   .logoSlot {
     width: 8.75rem;
     height: 3.75rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .categoryHeaderLabel {
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
   }
 }

@@ -126,7 +126,7 @@
         "establishmentYear": "Έτος ίδρυσης"
       },
       "charts": {
-        "siteEmissions": "Εκπομπές σε tCO2e του σχολείου {site} το {year}"
+        "siteEmissions": "Εκπομπές σε tCO₂e της σχολικής μονάδας {site} το {year}"
       },
       "questions": {
         "goals-title": "ΣΤΟΧΟΙ",

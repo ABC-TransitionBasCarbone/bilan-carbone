@@ -126,7 +126,7 @@
         "establishmentYear": "Megnyitás éve"
       },
       "charts": {
-        "siteEmissions": "{site} intézmény kibocsátása tCO2e-ben {year}-ban"
+        "siteEmissions": "A(z) {site} oktatási intézmény kibocsátása tCO₂e-ben {year}-ben"
       },
       "questions": {
         "goals-title": "CÉLOK",

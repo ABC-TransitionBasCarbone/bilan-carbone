@@ -1,14 +1,8 @@
 export const wasteEmissionFactors: Record<string, string> = {
   // Recyclage
-  '34684': 'Déchets du bâtiment',
-  '34688': 'Déchets du bâtiment',
-  '34690': 'Déchets du bâtiment',
-  '34692': 'Déchets du bâtiment',
-  '34672': 'Déchets du bâtiment',
   '34662': 'Déchets du bâtiment',
   '34660': 'Déchets du bâtiment',
   '34664': 'Déchets du bâtiment',
-  '34686': 'Déchets du bâtiment',
   '34460': 'Emballages',
   '34480': 'Emballages',
   '34518': 'Emballages',
@@ -35,7 +29,6 @@ export const wasteEmissionFactors: Record<string, string> = {
   '34702': 'Plastique souple PE',
   '34704': 'Plastique souple PE, origine agricole',
   '34656': 'Souple PE',
-  '34632': 'Textiles et linges de maison usagés',
   // Fin de vie moyenne
   '34624': 'DEA Bois',
   '34626': 'DEA Literie',
