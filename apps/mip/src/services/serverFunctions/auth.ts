@@ -13,7 +13,7 @@ export const checkToken = async (token: string) => {
     }
 
     const user = await getUserByEmailWithSensibleInformations(tokenValues.email)
-    return !user?.resetToken
+    return !user?.resetToken || user.resetToken !== tokenValues.resetToken
   } catch (error) {
     // The token has expired
     if (error instanceof jwt.TokenExpiredError) {
@@ -24,19 +24,19 @@ export const checkToken = async (token: string) => {
   }
 }
 
-export const reset = async (email: string, password: string, token: string) =>
+export const reset = async (password: string, token: string) =>
   withServerResponse('reset', async () => {
     const tokenValues = jwt.verify(token, process.env.NEXTAUTH_SECRET as string) as {
       email: string
       resetToken: string
     }
 
-    if (tokenValues && tokenValues.email === email) {
-      const user = await getUserByEmailWithSensibleInformations(email)
+    if (tokenValues) {
+      const user = await getUserByEmailWithSensibleInformations(tokenValues.email)
       if (user && user.resetToken && user.resetToken === tokenValues.resetToken) {
         const passwordValidation = computePasswordValidation(password)
         if (Object.values(passwordValidation).every((value) => value)) {
-          await updateUserPasswordForEmail(email, password)
+          await updateUserPasswordForEmail(user.email, password)
           return true
         }
       }

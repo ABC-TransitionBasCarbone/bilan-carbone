@@ -67,7 +67,6 @@ describe('Study collaborators', () => {
         })
     })
 
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type('contributor@test.fr')
     cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('Password-1')
     cy.get('[data-testid="input-confirm-password"] > .MuiInputBase-root > .MuiInputBase-input').type('Password-1')
     cy.getByTestId('reset-button').click()

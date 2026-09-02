@@ -42,8 +42,8 @@ const ResetForm = ({ user, token, environment = Environment.BC }: Props) => {
 
   const loginLink = getEnvRoute('login', environment)
 
-  const resetPassword = async (email: string, password: string, token: string) => {
-    await callServerFunction(() => reset(email.toLowerCase(), password, token, environment), {
+  const resetPassword = async (password: string, token: string) => {
+    await callServerFunction(() => reset(password, token, environment), {
       getSuccessMessage: () => t('validated'),
       getErrorMessage: () => t('resetError'),
       onSuccess: () => {

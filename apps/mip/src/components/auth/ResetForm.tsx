@@ -41,8 +41,8 @@ const ResetForm = ({ user, token }: Props) => {
 
   const loginLink = '/login'
 
-  const resetPassword = async (email: string, password: string, token: string) => {
-    await callServerFunction(() => reset(email.toLowerCase(), password, token), {
+  const resetPassword = async (password: string, token: string) => {
+    await callServerFunction(() => reset(password, token), {
       getSuccessMessage: () => t('validated'),
       getErrorMessage: () => t('resetError'),
       onSuccess: () => {
