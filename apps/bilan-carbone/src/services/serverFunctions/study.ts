@@ -1902,9 +1902,11 @@ export const prepareReport = async (
     if (localTemplatePath) {
       template = await fs.readFile(localTemplatePath)
     } else {
-      const templateKey = process.env.SCW_REPORT_TEMPLATE_KEY
+      const locale = await getLocale()
+      const templateKey = process.env[`SCW_${locale.toUpperCase()}_REPORT_TEMPLATE_KEY`]
+
       if (!templateKey) {
-        throw new Error('Report template key not configured')
+        throw new Error(`Report template key not configured for locale ${locale}`)
       }
       const contentResult = await getFileFromBucket(templateKey)
       if (!contentResult.success) {
