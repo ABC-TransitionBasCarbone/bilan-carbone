@@ -1,5 +1,6 @@
 import { RawRules } from '@/publicodes/mip-engine'
 import { FILTER_RULE_KEY } from '@abc-transitionbascarbone/publicodes/form/utils'
+import { doesKeyExist } from '@abc-transitionbascarbone/utils/object'
 import { Situation } from 'publicodes'
 
 export type EntityFilterDef = {
@@ -7,11 +8,8 @@ export type EntityFilterDef = {
   value: number
 }
 
-const hasRule = (rules: RawRules, ruleName: string): boolean =>
-  Object.prototype.hasOwnProperty.call(rules as Record<string, unknown>, ruleName)
-
 export const keepOnlyExistingRules = (rules: RawRules, candidates: readonly string[]): string[] =>
-  candidates.filter((candidate) => hasRule(rules, candidate))
+  candidates.filter((candidate) => doesKeyExist(rules, candidate))
 
 export const getEntityFilterDefsFromModel = (rules: RawRules): EntityFilterDef[] => {
   const typedRules = rules as Record<string, unknown>

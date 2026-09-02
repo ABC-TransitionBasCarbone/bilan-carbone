@@ -2,6 +2,14 @@ export const isObject = <T extends Record<string, unknown>>(value: unknown): val
   return typeof value === 'object' && value !== null && !Array.isArray(value)
 }
 
+export const doesKeyExist = (object: unknown, key: string): boolean => {
+  if (!isObject<Record<string, unknown>>(object)) {
+    return false
+  }
+
+  return Object.prototype.hasOwnProperty.call(object, key)
+}
+
 const FORBIDDEN_MERGE_KEYS = new Set(['__proto__', 'prototype', 'constructor'])
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
