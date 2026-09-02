@@ -1,4 +1,3 @@
-import { wasteImpact } from '@/constants/emissions'
 import { KG_CO2E_PREFIX_REGEX } from '@/constants/import'
 import { findEmissionFactorByIdForMatch } from '@/db/emissionFactors'
 import { environmentSubPostsMapping } from '@/services/posts'
@@ -444,7 +443,16 @@ export async function resolveEmissionFactorRows(
       resolvedByLine.set(lineNumber, {
         efId: ef.importedFrom === Import.Manual ? '' : (ef.importedId ?? ''),
         efName: ef.foundTitle ?? '',
-        efValue: String(efIsWaste ? wasteImpact : ef.foundValue),
+        efValue: String(
+          getEmissionFactorValue(
+            {
+              importedFrom: (ef.importedFrom as Import) ?? undefined,
+              importedId: ef.importedId ?? undefined,
+              totalCo2: ef.foundValue ?? 0,
+            },
+            environment,
+          ),
+        ),
         efUnit: formatPrefixedUnitDisplayOptional(locale, ef.foundUnit),
         efIsWaste,
       })
