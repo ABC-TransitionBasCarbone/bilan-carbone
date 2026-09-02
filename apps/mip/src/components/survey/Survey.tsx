@@ -103,6 +103,7 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
 
   const handleRestart = () => {
     clearSurveyState(surveyId)
+    setIsSubmitted(false)
     setIsResumed(false)
     setInterstitialCategoryKey(null)
     setPendingNextState(null)
@@ -110,7 +111,11 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   }
 
   const handleNext = () => {
-    const newState = formBuilder.goToNextPage({ ...state, pages: [...state.pages] })
+    const newState = formBuilder.goToNextPage({
+      ...state,
+      pages: [...state.pages],
+      nextPages: [...state.nextPages],
+    })
     const { elements: newElements } = formBuilder.currentPage(newState)
     const newGrouped = buildGroupedElements(engine, newElements)
     const newCategoryKey = getCategoryKey(newGrouped)
@@ -198,7 +203,12 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
                   onNext={() => {
                     setInterstitialCategoryKey(null)
                     const nextState =
-                      pendingNextState ?? formBuilder.goToNextPage({ ...state, pages: [...state.pages] })
+                      pendingNextState ??
+                      formBuilder.goToNextPage({
+                        ...state,
+                        pages: [...state.pages],
+                        nextPages: [...state.nextPages],
+                      })
                     setPendingNextState(null)
                     updateState(nextState)
                   }}
