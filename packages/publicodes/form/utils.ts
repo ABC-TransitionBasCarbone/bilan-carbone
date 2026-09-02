@@ -1,5 +1,6 @@
-import { EvaluatedFormElement, FormPageElementProp, FormPages } from '@publicodes/forms'
 import { formatNumber } from '@abc-transitionbascarbone/utils/number'
+import { normalizeCategoryKey } from '@abc-transitionbascarbone/utils/parsing'
+import { EvaluatedFormElement, FormPageElementProp, FormPages } from '@publicodes/forms'
 import Engine, { reduceAST, RuleNode, utils } from 'publicodes'
 import { EvaluatedFormLayout } from './layouts/evaluatedFormLayout'
 import { FormLayout } from './layouts/formLayout'
@@ -11,12 +12,20 @@ export type OnFieldChange<RuleName extends string = string> = (
   value: string | number | boolean | undefined,
 ) => void
 
-export const SURVEY_CATEGORY_KEYS = ['DT', 'transport', 'alimentation', 'divers', 'logement'] as const
 export const FILTER_RULE_KEY = 'DT . filtrage'
+export const SURVEY_CATEGORY_KEYS = [
+  'DT',
+  'transport',
+  'alimentation',
+  'divers',
+  'logement',
+  'numerique',
+  'bureaux',
+] as const
 const SURVEY_CATEGORY_ORDER: readonly string[] = SURVEY_CATEGORY_KEYS
 const RULE_NAME_SEPARATOR = ' . '
 
-export const getRuleNameParts = (ruleName: string): string[] =>  {
+export const getRuleNameParts = (ruleName: string): string[] => {
   if (!ruleName) {
     return []
   }
@@ -39,14 +48,14 @@ export const getCategoryClassSuffix = (categoryKey?: string | null): string => {
   return categoryKey.charAt(0).toUpperCase() + categoryKey.slice(1).toLowerCase()
 }
 
-export const formatMassKilograms = (valueKg: number) => {
+export const formatMassKilograms = (valueKg: number): string => {
   if (valueKg >= 1000) {
     return `${formatNumber(valueKg / 1000, 1)} t`
   }
   return `${formatNumber(Math.round(valueKg))} kg`
 }
 
-export const getRuleNamesFromLayout = <RuleName extends string>(layout: FormLayout<RuleName>) => {
+export const getRuleNamesFromLayout = <RuleName extends string>(layout: FormLayout<RuleName>): RuleName[] | undefined => {
   switch (layout.type) {
     case 'input':
       return [layout.rule]
@@ -58,7 +67,7 @@ export const getRuleNamesFromLayout = <RuleName extends string>(layout: FormLayo
   }
 }
 
-export const evaluatedLayoutIsApplicable = <RuleName extends string>(layout: EvaluatedFormLayout<RuleName>) => {
+export const evaluatedLayoutIsApplicable = <RuleName extends string>(layout: EvaluatedFormLayout<RuleName>): boolean => {
   switch (layout.type) {
     case 'input':
       return layout.evaluatedElement.applicable
@@ -84,10 +93,10 @@ export const areRulesReferencedInApplicability = <RuleName extends string>(
   })
 }
 
-function areReferencedInApplicability<RuleName extends string>(
+const areReferencedInApplicability = <RuleName extends string>(
   currentNode: RuleNode<RuleName>,
   previous: RuleName[],
-): boolean {
+): boolean => {
   return reduceAST(
     (found, node) => {
       if (found) {
@@ -131,8 +140,10 @@ export const getMosaicParent = (engine: Engine, ruleName: string): string | null
 
 const MAX = Number.MAX_SAFE_INTEGER
 
+const SURVEY_CATEGORY_ORDER_NORMALIZED: readonly string[] = SURVEY_CATEGORY_ORDER.map(normalizeCategoryKey)
+
 const getCategoryOrderIndex = (categoryKey: string): number => {
-  const index = SURVEY_CATEGORY_ORDER.indexOf(categoryKey)
+  const index = SURVEY_CATEGORY_ORDER_NORMALIZED.indexOf(normalizeCategoryKey(categoryKey))
   return index === -1 ? MAX : index
 }
 
@@ -219,7 +230,7 @@ export enum MipQuestionType {
 
 const booleanSecureTypes = ['présent', 'propriétaire']
 
-export const getQuestionType = (engine: Engine, ruleName: string) => {
+export const getQuestionType = (engine: Engine, ruleName: string): MipQuestionType => {
   const rules = engine.getParsedRules()
   const rule = rules[ruleName]
 

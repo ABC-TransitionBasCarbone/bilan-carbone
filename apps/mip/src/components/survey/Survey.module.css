@@ -82,6 +82,16 @@
   --progress-fill: var(--mui-palette-success-main);
 }
 
+.progressToneNumerique {
+  --progress-track: color-mix(in srgb, var(--mui-palette-info-light) 14%, var(--white));
+  --progress-fill: var(--mui-palette-info-main);
+}
+
+.progressToneBureaux {
+  --progress-track: color-mix(in srgb, var(--mui-palette-success-light) 30%, var(--white));
+  --progress-fill: var(--mui-palette-success-main);
+}
+
 .coverTitle {
   margin: 0 auto;
   font-weight: 700;

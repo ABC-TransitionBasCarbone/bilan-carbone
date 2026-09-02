@@ -40,6 +40,18 @@
   border-color: var(--mui-palette-success-main);
 }
 
+.categoryNumerique {
+  background-color: color-mix(in srgb, var(--mui-palette-info-light) 14%, var(--white));
+  color: var(--mui-palette-info-main);
+  border-color: var(--mui-palette-info-main);
+}
+
+.categoryBureaux {
+  background-color: color-mix(in srgb, var(--mui-palette-success-light) 30%, var(--white));
+  color: var(--mui-palette-success-main);
+  border-color: var(--mui-palette-success-main);
+}
+
 .categoryItem.active {
   font-weight: 600;
   border-color: var(--neutral-300);

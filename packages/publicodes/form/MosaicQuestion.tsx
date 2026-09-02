@@ -32,10 +32,11 @@ export const MosaicQuestion = <RuleName extends string,>({
   const mosaicType = parentRaw?.mosaique?.type
   const translation = usePublicodesRuleTranslation(parent)
 
-  const label = translation?.question ?? translation?.titre ?? parent
+  const label = translation?.question ?? translation?.titre ?? parentRaw?.question ?? parentRaw?.titre ?? parent
+  const description = translation?.description ?? parentRaw?.description
 
   return (
-    <QuestionContainer label={label} description={translation?.description}>
+    <QuestionContainer label={label} description={description}>
       <div className={classNames(styles.mosaicContainer, 'gapped1 p1 grid')}>
         {elements.map((el, index) => {
           const parts = getRuleNameParts(el.id)

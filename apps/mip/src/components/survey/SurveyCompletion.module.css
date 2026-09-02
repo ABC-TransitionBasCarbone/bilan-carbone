@@ -237,6 +237,16 @@
   color: var(--mui-palette-success-main);
 }
 
+.summaryAccordionNumerique :global(.MuiAccordionSummary-root) {
+  background-color: color-mix(in srgb, var(--mui-palette-info-light) 14%, var(--white));
+  color: var(--mui-palette-info-main);
+}
+
+.summaryAccordionBureaux :global(.MuiAccordionSummary-root) {
+  background-color: color-mix(in srgb, var(--mui-palette-success-light) 30%, var(--white));
+  color: var(--mui-palette-success-main);
+}
+
 .summaryAccordionDt .summaryValue,
 .summaryAccordionDt .summaryPercent {
   color: var(--mui-palette-primary-main) !important;
@@ -259,6 +269,16 @@
 
 .summaryAccordionLogement .summaryValue,
 .summaryAccordionLogement .summaryPercent {
+  color: var(--mui-palette-success-main) !important;
+}
+
+.summaryAccordionNumerique .summaryValue,
+.summaryAccordionNumerique .summaryPercent {
+  color: var(--mui-palette-info-main) !important;
+}
+
+.summaryAccordionBureaux .summaryValue,
+.summaryAccordionBureaux .summaryPercent {
   color: var(--mui-palette-success-main) !important;
 }
 
@@ -310,6 +330,14 @@
 }
 
 .toneLogement {
+  background-color: var(--mui-palette-success-main);
+}
+
+.toneNumerique {
+  background-color: var(--mui-palette-info-main);
+}
+
+.toneBureaux {
   background-color: var(--mui-palette-success-main);
 }
 
