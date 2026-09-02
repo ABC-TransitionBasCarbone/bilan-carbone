@@ -93,7 +93,7 @@ export const EmissionFactorsTable = ({
             <span>{getValue<string>()}</span>
             <div>
               {isWasteEmissionFactor(row.original, environment) && (
-                <span onClick={(e) => e.stopPropagation()}>
+                <span className="justify-center" onClick={(e) => e.stopPropagation()}>
                   <WasteEmissionFactorModal />
                 </span>
               )}

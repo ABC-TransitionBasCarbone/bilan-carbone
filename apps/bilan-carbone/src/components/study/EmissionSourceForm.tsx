@@ -391,7 +391,11 @@ const EmissionSourceForm = ({
             {formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor, environment))}
             {tResultUnits(StudyResultUnit.K)}/
             {selectedFactor.unit === Unit.CUSTOM ? selectedFactor.customUnit : getUnitLabel(selectedFactor.unit || '')}{' '}
-            {isWasteEmissionFactor(selectedFactor, environment) && <WasteEmissionFactorModal />}
+            {isWasteEmissionFactor(selectedFactor, environment) && (
+              <span className="mr-4 ml-4 justify-center" onClick={(e) => e.stopPropagation()}>
+                <WasteEmissionFactorModal />
+              </span>
+            )}
             {feQualityRating && (
               <>
                 - {t('form.quality')} {tQuality(feQualityRating.toString())}
