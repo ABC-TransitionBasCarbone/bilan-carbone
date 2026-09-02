@@ -118,7 +118,14 @@ export async function validateEmissionSourcesFromFile(
   const versionIds = study.emissionFactorVersions.map((v) => v.importVersionId)
 
   const [resolved, tagFamilies] = await Promise.all([
-    resolveEmissionFactorRows(result.rows, {}, locale, organizationId, versionIds),
+    resolveEmissionFactorRows(
+      result.rows,
+      {},
+      locale,
+      organizationId,
+      versionIds,
+      study.organizationVersion.environment,
+    ),
     getFamilyTagsForStudy(studyId),
   ])
 
@@ -182,7 +189,14 @@ export async function resolveEmissionSourcesFromFile(
   const organizationId = await getStudyParentOrganizationId(studyId, account.organizationVersionId)
   const versionIds = study.emissionFactorVersions.map((v) => v.importVersionId)
 
-  const resolved = await resolveEmissionFactorRows(result.rows, choices, locale, organizationId, versionIds)
+  const resolved = await resolveEmissionFactorRows(
+    result.rows,
+    choices,
+    locale,
+    organizationId,
+    versionIds,
+    study.organizationVersion.environment,
+  )
 
   const bc = getBcTranslations(locale)
   const postTranslations = bc.emissionFactors.post as unknown as Record<string, string>
@@ -202,6 +216,7 @@ export async function resolveEmissionSourcesFromFile(
       emissionFactorName: ef?.efName ?? '',
       emissionFactorValue: ef?.efValue ?? '',
       emissionFactorUnit: ef?.efUnit ?? '',
+      emissionFactorIsWaste: ef?.efIsWaste ?? false,
     }
   })
 

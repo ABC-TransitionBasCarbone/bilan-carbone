@@ -1,3 +1,4 @@
+import { wasteImpact } from '@/constants/emissions'
 import { KG_CO2E_PREFIX_REGEX } from '@/constants/import'
 import { findEmissionFactorByIdForMatch } from '@/db/emissionFactors'
 import { environmentSubPostsMapping } from '@/services/posts'
@@ -13,7 +14,7 @@ import {
   Unit,
 } from '@abc-transitionbascarbone/db-common/enums'
 import { Locale, LocaleType } from '@abc-transitionbascarbone/i18n/config'
-import { getEmissionFactorFullName } from './emissionFactors'
+import { getEmissionFactorFullName, getEmissionFactorValue, isWasteEmissionFactor } from './emissionFactors'
 import { parseExcelSheet } from './excel.utils'
 import { EmissionFactorMatchType, findEmissionFactorMatch } from './findEmissionFactor.utils'
 import {
@@ -289,7 +290,7 @@ export function parseEmissionSourcesFile(
   return { success: true, rows: parsedRows }
 }
 
-type ResolvedEf = { efId: string; efName: string; efValue: string; efUnit: string }
+type ResolvedEf = { efId: string; efName: string; efValue: string; efUnit: string; efIsWaste: boolean }
 
 export type ResolveEfRowsResult =
   | {
@@ -388,6 +389,7 @@ export async function resolveEmissionFactorRows(
   locale: LocaleType,
   organizationId: string,
   versionIds: string[],
+  environment: Environment,
 ): Promise<ResolveEfRowsResult> {
   const hasChoices = Object.keys(choices).length > 0
   const warnings: ImportWarning[] = []
@@ -410,8 +412,9 @@ export async function resolveEmissionFactorRows(
                   chosenEf.metaData[0] ?? { title: null, attribute: null, frontiere: null },
               ) ||
               (row.emissionFactorName ?? ''),
-            efValue: String(chosenEf.totalCo2),
+            efValue: String(getEmissionFactorValue(chosenEf, environment)),
             efUnit: formatPrefixedUnitDisplayOptional(locale, chosenEf.customUnit ?? chosenEf.unit ?? undefined),
+            efIsWaste: isWasteEmissionFactor(chosenEf, environment),
           })
         }
       }
@@ -434,11 +437,16 @@ export async function resolveEmissionFactorRows(
     }
 
     if (ef && ef.matchType !== EmissionFactorMatchType.NameAmbiguous) {
+      const efIsWaste = isWasteEmissionFactor(
+        { importedFrom: (ef.importedFrom as Import) ?? null, importedId: ef.importedId ?? null },
+        environment,
+      )
       resolvedByLine.set(lineNumber, {
         efId: ef.importedFrom === Import.Manual ? '' : (ef.importedId ?? ''),
         efName: ef.foundTitle ?? '',
-        efValue: String(ef.foundValue),
+        efValue: String(efIsWaste ? wasteImpact : ef.foundValue),
         efUnit: formatPrefixedUnitDisplayOptional(locale, ef.foundUnit),
+        efIsWaste,
       })
     }
   }

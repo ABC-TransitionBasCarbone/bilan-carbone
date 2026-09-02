@@ -1,6 +1,7 @@
 'use client'
 
 import ImportFileModal from '@/components/base/ImportFileModal/ImportFileModal'
+import WasteEmissionFactorModal from '@/components/emissionFactor/WasteEmissionFactorModal'
 import { download } from '@/services/file'
 import {
   getImportEmissionSourcesTemplate,
@@ -70,7 +71,14 @@ const ImportEmissionSourcesModal = ({ studyId, post, siteId, open, onClose, onSu
             <TableCell>{row.unit}</TableCell>
             <TableCell className={styles.groupFirstCell}>{row.emissionFactorId}</TableCell>
             <TableCell>{row.emissionFactorName}</TableCell>
-            <TableCell>{row.emissionFactorValue}</TableCell>
+            <TableCell>
+              {row.emissionFactorValue}
+              {row.emissionFactorIsWaste && (
+                <span className="ml-4" onClick={(e) => e.stopPropagation()}>
+                  <WasteEmissionFactorModal />
+                </span>
+              )}
+            </TableCell>
             <TableCell>{row.emissionFactorUnit}</TableCell>
           </TableRow>
         ))}
