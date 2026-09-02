@@ -1,3 +1,4 @@
+import { getI18nUnitKey } from '@abc-transitionbascarbone/publicodes/utils'
 import { isObject } from '@abc-transitionbascarbone/utils/object'
 import Engine, { Rule } from 'publicodes'
 import {
@@ -29,7 +30,6 @@ const LOCALES_CLICKSON = [
 ] as const
 const LOCALES_TILT = [Locale.FR, Locale.EN]
 const LOCALES_CUT = [Locale.FR, Locale.EN, Locale.ES] as const
-const LOCALES_MIP = [Locale.FR, Locale.EN] as const
 const getLocales = () => {
   switch (model) {
     case 'clickson':
@@ -38,8 +38,6 @@ const getLocales = () => {
       return LOCALES_TILT
     case 'cut':
       return LOCALES_CUT
-    case 'mip':
-      return LOCALES_MIP
     default:
       throw new Error(`Unsupported model: ${model}`)
   }
@@ -49,6 +47,7 @@ const LOCALES = getLocales()
 function extractTranslationKeysFromRules(
   engine: Engine,
   rulesMap: Record<string, Rule & { form?: Record<string, string> }>,
+  unitsSet: Set<string>,
 ): Record<string, Partial<TranslationRecord>> {
   const translations: Record<string, Partial<TranslationRecord>> = {}
 
@@ -67,6 +66,12 @@ function extractTranslationKeysFromRules(
 
     const ruleTranslations: Partial<TranslationRecord> = {}
     for (const key of KEYS_TO_TRANSLATE) {
+      if (key === 'unité') {
+        if (rule[key]) {
+          unitsSet.add(rule[key] as string)
+        }
+        continue
+      }
       if (rule[key]) {
         ruleTranslations[key] = rule[key] as string
       }
@@ -204,24 +209,59 @@ function buildTranslationsFromRules(
   return updated
 }
 
+function buildUnitsFromTranslations(
+  unitsSet: Set<string>,
+  existingUnits: Record<Locale, TranslationRecord>,
+): Record<Locale, Record<string, string>> {
+  const unitsByLocale: Record<Locale, Record<string, string>> = Object.fromEntries(
+    LOCALES.map((locale) => [locale, {}]),
+  ) as Record<Locale, Record<string, string>>
+
+  for (const unit of unitsSet) {
+    unitsByLocale.fr[getI18nUnitKey(unit)] = unit
+  }
+  for (const locale of LOCALES) {
+    if (locale === 'fr') {
+      continue
+    }
+    for (const unit of unitsSet) {
+      const prev = existingUnits[locale]?.[unit]
+      const i18nUnitKey = getI18nUnitKey(unit)
+      if (!prev || typeof prev !== 'string') {
+        unitsByLocale[locale][i18nUnitKey] = `${TO_TRANSLATE_PREFIX} ${unit}`
+      } else if (prev.replace(/^\[.*?\]\s*/, '') !== unit) {
+        unitsByLocale[locale][i18nUnitKey] = `${UPDATED_PREFIX} ${unit}`
+      } else {
+        unitsByLocale[locale][i18nUnitKey] = prev
+      }
+    }
+  }
+  return unitsByLocale
+}
+
 async function generateNestedTranslationFile(): Promise<void> {
   const rules = await loadRulesForModel(model as Model)
   const engine = new Engine(rules)
   const translations = {} as Record<Locale, TranslationRecord>
   const existingRules = {} as Record<Locale, TranslationRecord>
+  const existingUnits = {} as Record<Locale, TranslationRecord>
 
   for (const locale of LOCALES) {
     translations[locale] = loadTranslation(locale, model as Model)
     existingRules[locale] = (translations[locale]['publicodes-rules'] ?? {}) as TranslationRecord
+    existingUnits[locale] = (translations[locale]['publicodes-units'] ?? {}) as TranslationRecord
   }
 
-  const extractedTranslations = extractTranslationKeysFromRules(engine, rules)
+  const unitsSet = new Set<string>()
+  const extractedTranslations = extractTranslationKeysFromRules(engine, rules, unitsSet)
+  const unitsByLocale = buildUnitsFromTranslations(unitsSet, existingUnits)
   const updated = buildTranslationsFromRules(extractedTranslations, existingRules)
 
   for (const locale of LOCALES) {
     removeEmptyObjects(updated[locale])
     await saveTranslation(locale, model as Model, {
       ...translations[locale],
+      'publicodes-units': unitsByLocale[locale],
       'publicodes-rules': updated[locale],
     })
   }

@@ -17,13 +17,7 @@ import SurveyNavigation from './SurveyNavigation'
 import SurveyProgressHeader from './SurveyProgressHeader'
 import SurveyQuestionList from './SurveyQuestionList'
 import SurveyResumeCard from './SurveyResumeCard'
-import {
-  clearSurveyState,
-  loadSurveyState,
-  loadSurveySubmissionStatus,
-  saveSurveyState,
-  saveSurveySubmissionStatus,
-} from './surveyStateStorage'
+import { clearSurveyState, loadSurveyState, saveSurveyState } from './surveyStateStorage'
 
 interface MipSurveyProps {
   surveyId: string
@@ -51,81 +45,53 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   const [isExplanationVisible, setIsExplanationVisible] = useState(true)
   const [isLoading, setIsLoading] = useState(true)
   const [isCompleting, setIsCompleting] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
   const [state, setState] = useState<FormState<string>>(() => initState())
   const [interstitialCategoryKey, setInterstitialCategoryKey] = useState<string | null>(null)
-  const [pendingNextState, setPendingNextState] = useState<FormState<string> | null>(null)
   const updateState = (newState: FormState<string>) => setState(newState)
 
   useEffect(() => {
     const saved = loadSurveyState<FormState<string>>(surveyId)
-    const wasSubmitted = loadSurveySubmissionStatus(surveyId)
     if (saved) {
-      const startedState = formBuilder.start(
-        {
-          ...FormBuilder.newState<string>(),
-          situation: saved.situation,
-        },
-        rootRule,
-      )
-      const { pageCount } = formBuilder.pagination(startedState)
-      const targetPageIndex = Math.max(0, Math.min(saved.currentPageIndex ?? 0, pageCount - 1))
-
-      let rebuiltState = startedState
-      for (let index = 0; index < targetPageIndex; index++) {
-        rebuiltState = formBuilder.goToNextPage({
-          ...rebuiltState,
-          pages: [...rebuiltState.pages],
-          nextPages: [...rebuiltState.nextPages],
-        })
-      }
-
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setState(rebuiltState)
+      setState(saved)
       setIsResumed(true)
     }
-    setIsSubmitted(wasSubmitted)
     setIsLoading(false)
-  }, [formBuilder, rootRule, surveyId])
+  }, [surveyId])
 
   useEffect(() => {
     if (!isLoading) {
       saveSurveyState(surveyId, state)
-      saveSurveySubmissionStatus(surveyId, isSubmitted)
     }
-  }, [surveyId, state, isLoading, isSubmitted])
+  }, [surveyId, state, isLoading])
 
   useEffect(() => {
-    if (isSubmitted) {
-      router.replace(`/${surveyId}/results`)
+    if (!isLoading && !isResumed) {
+      const { current, pageCount, hasNextPage } = formBuilder.pagination(state)
+      const isComplete = !hasNextPage && current === pageCount
+      if (isComplete) {
+        router.replace(`/${surveyId}/results`)
+      }
     }
-  }, [isSubmitted, router, surveyId])
+  }, [formBuilder, isLoading, isResumed, router, state, surveyId])
 
   const handleRestart = () => {
     clearSurveyState(surveyId)
-    setIsSubmitted(false)
     setIsResumed(false)
     setInterstitialCategoryKey(null)
-    setPendingNextState(null)
     setState(initState())
   }
 
   const handleNext = () => {
-    const newState = formBuilder.goToNextPage({
-      ...state,
-      pages: [...state.pages],
-      nextPages: [...state.nextPages],
-    })
+    const newState = formBuilder.goToNextPage({ ...state, pages: [...state.pages] })
     const { elements: newElements } = formBuilder.currentPage(newState)
     const newGrouped = buildGroupedElements(engine, newElements)
     const newCategoryKey = getCategoryKey(newGrouped)
 
     if (categoryKey && newCategoryKey !== categoryKey) {
       setInterstitialCategoryKey(categoryKey)
-      setPendingNextState(newState)
       return
     }
-    setPendingNextState(null)
     updateState(newState)
   }
 
@@ -134,18 +100,12 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
       return
     }
 
-    const completedState = formBuilder.goToNextPage({
-      ...state,
-      pages: [...state.pages],
-      nextPages: [...state.nextPages],
-    })
+    const completedState = formBuilder.goToNextPage(state)
     setIsCompleting(true)
 
     try {
       await createSurveyResponse(surveyId, JSON.stringify(completedState))
       updateState(completedState)
-      setIsSubmitted(true)
-      saveSurveySubmissionStatus(surveyId, true)
     } catch (error) {
       console.error('Survey completion failed', { surveyId, error })
     } finally {
@@ -155,7 +115,7 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
 
   const { elements } = formBuilder.currentPage(state)
   const { current, pageCount, hasNextPage, hasPreviousPage } = formBuilder.pagination(state)
-  const isLastPage = !hasNextPage && current === pageCount
+  const isComplete = !hasNextPage && current === pageCount
   const progress = Math.round((current / pageCount) * 100)
   const groupedElements = buildGroupedElements(engine, elements)
   const currentTitle = getCurrentSectionTitle(engine, groupedElements)
@@ -181,6 +141,10 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
     return <SurveyExplanation onStart={() => setIsExplanationVisible(false)} />
   }
 
+  if (isComplete) {
+    return null
+  }
+
   return (
     <div className={styles.scrollWrapper}>
       <Container maxWidth="lg" className="pt1 pb5">
@@ -196,21 +160,10 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
                   previousLabel={tCommon('previous')}
                   nextLabel={tCommon('next')}
                   completeLabel={t('navigation.complete')}
-                  onPrevious={() => {
-                    setInterstitialCategoryKey(null)
-                    setPendingNextState(null)
-                  }}
+                  onPrevious={() => setInterstitialCategoryKey(null)}
                   onNext={() => {
                     setInterstitialCategoryKey(null)
-                    const nextState =
-                      pendingNextState ??
-                      formBuilder.goToNextPage({
-                        ...state,
-                        pages: [...state.pages],
-                        nextPages: [...state.nextPages],
-                      })
-                    setPendingNextState(null)
-                    updateState(nextState)
+                    updateState(formBuilder.goToNextPage(state))
                   }}
                   onComplete={completeSurvey}
                 />
@@ -239,7 +192,7 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
                 <SurveyNavigation
                   hasPreviousPage={hasPreviousPage}
                   canGoBackToExplanation={!hasPreviousPage}
-                  isLastPage={isLastPage}
+                  isLastPage={pageCount === current + 1}
                   isCompleting={isCompleting}
                   backToExplanationLabel={t('navigation.backToExplanation')}
                   previousLabel={tCommon('previous')}
