@@ -96,8 +96,8 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('construction . bâtiment . locaux ponctuels existants'),
     list('construction . bâtiment . locaux ponctuels', [
       'construction . bâtiment . locaux ponctuels . nom',
-      'construction . bâtiment . locaux ponctuels . calcul . surface',
-      'construction . bâtiment . locaux ponctuels . calcul . durée',
+      'construction . bâtiment . locaux ponctuels . surface',
+      'construction . bâtiment . locaux ponctuels . durée',
     ]),
   ],
   AutresInfrastructures: [

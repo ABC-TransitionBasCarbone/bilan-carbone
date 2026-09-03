@@ -50,8 +50,10 @@ export function aggregateSituationValues<RuleName extends string = string>(
   return Object.values(listLayoutSituations)
     .map(({ situation }) => situation)
     .reduce((acc, situation) => {
+      const globalSituation = engine.getSituation()
       const localEngine = engine.shallowCopy()
-      localEngine.setSituation({ ...situation })
+      delete globalSituation[targetRule]
+      localEngine.setSituation({ ...globalSituation, ...situation })
 
       const evaluatedTarget = localEngine.evaluate(targetRule)
       const targetValue = evaluatedTarget.nodeValue
