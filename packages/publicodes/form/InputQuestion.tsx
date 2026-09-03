@@ -20,11 +20,11 @@ export const InputQuestion = <RuleName extends string>({
   containerVariant = 'default',
 }: InputQuestionProps<RuleName>) => {
   const translation = usePublicodesRuleTranslation(formElement.id)
+  const rawRule = engine?.getParsedRules()[formElement.id]?.rawNode as { description?: string; suggestions?: Record<string, string | number | Record<string, unknown>> } | undefined
   const question = translation?.question
-  const description = translation?.description
+  const description = translation?.description ?? rawRule?.description
 
-  const publicodeRules = engine?.getParsedRules()[formElement.id]?.rawNode
-  const suggestions = publicodeRules?.suggestions
+  const suggestions = rawRule?.suggestions
   const isFilteringQuestion = formElement.id === FILTER_RULE_KEY
 
   return (
