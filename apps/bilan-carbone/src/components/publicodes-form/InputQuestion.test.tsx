@@ -1,6 +1,21 @@
 import { InputQuestion } from '@abc-transitionbascarbone/publicodes/form'
+import type { EvaluatedFormElement } from '@publicodes/forms'
 import { render, screen } from '@testing-library/react'
 import Engine from 'publicodes'
+import type { ReactNode } from 'react'
+
+type MockQuestionContainerProps = {
+  label: ReactNode
+  description?: ReactNode
+  children: ReactNode
+}
+
+const formElement: EvaluatedFormElement<string> = {
+  id: 'DT . voiture . utilisateur',
+  label: 'Libelle',
+  element: 'input',
+  type: 'text',
+} as EvaluatedFormElement<string>
 
 jest.mock('@abc-transitionbascarbone/publicodes/hooks', () => ({
   usePublicodesRuleTranslation: () => ({
@@ -14,7 +29,7 @@ jest.mock('@abc-transitionbascarbone/publicodes/form', () => {
   return {
     ...actual,
     InputField: ({ formElement }: { formElement: { id: string } }) => <div>{formElement.id}</div>,
-    QuestionContainer: ({ label, description, children }: any) => (
+    QuestionContainer: ({ label, description, children }: MockQuestionContainerProps) => (
       <div>
         <span>{label}</span>
         {description ? <span data-testid="description">{description}</span> : null}
@@ -33,13 +48,7 @@ describe('InputQuestion', () => {
       },
     })
 
-    render(
-      <InputQuestion
-        formElement={{ id: 'DT . voiture . utilisateur', label: 'Libellé', element: 'input', type: 'text' } as any}
-        onChange={jest.fn()}
-        engine={engine}
-      />,
-    )
+    render(<InputQuestion formElement={formElement} onChange={jest.fn()} engine={engine} />)
 
     expect(screen.getByTestId('description')).toHaveTextContent(
       "Cette question influe sur l'empreinte des km parcourus en voiture.",
