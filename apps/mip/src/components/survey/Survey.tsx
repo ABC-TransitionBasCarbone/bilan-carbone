@@ -164,10 +164,6 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
                     setIsFinalInterstitial(false)
                   }}
                   onNext={() => {
-                    if (isFinalInterstitial) {
-                      void completeSurvey()
-                      return
-                    }
                     setInterstitialCategoryKey(null)
                     updateState(formBuilder.goToNextPage(state))
                   }}
