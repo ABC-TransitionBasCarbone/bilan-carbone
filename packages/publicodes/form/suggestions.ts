@@ -1,6 +1,5 @@
 import { isObject } from '@abc-transitionbascarbone/utils/object'
 import {
-  getNumericSuggestionEntries,
   getRelativeRuleName,
   isSuggestionInputValue,
   NumericSuggestionEntry,
