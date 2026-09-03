@@ -1,14 +1,14 @@
 const surveyId = 'campaign-admin-seed-id'
 
-const goToQuestion = (questionSnippet: string, remainingSteps = 250): Cypress.Chainable<void> => {
+const goToQuestion = (questionSnippet: string, remainingSteps = 250): Cypress.Chainable<any> => {
   if (remainingSteps <= 0) {
     throw new Error(`Could not find question containing: ${questionSnippet}`)
   }
 
-  return cy.get('body').then(($body): Cypress.Chainable<void> => {
+  return cy.get('body').then(($body): Cypress.Chainable<any> => {
     const pageText = $body.text()
     if (pageText.includes(questionSnippet)) {
-      return cy.wrap(undefined)
+      return cy.wrap(null)
     }
 
     if ($body.find('[data-testid="survey-start-button"]').length > 0) {
@@ -51,18 +51,24 @@ const getFirstVisibleQuestion = (questionSnippets: string[], remainingSteps = 25
     }
 
     if ($body.find('[data-testid="survey-start-button"]').length > 0) {
-      cy.getByTestId('survey-start-button').click()
-      return getFirstVisibleQuestion(questionSnippets, remainingSteps - 1)
+      return cy
+        .getByTestId('survey-start-button')
+        .click()
+        .then(() => getFirstVisibleQuestion(questionSnippets, remainingSteps - 1))
     }
 
     if ($body.find('[data-testid="survey-category-interstitial"]').length > 0) {
-      cy.getByTestId('survey-interstitial-continue').click()
-      return getFirstVisibleQuestion(questionSnippets, remainingSteps - 1)
+      return cy
+        .getByTestId('survey-interstitial-continue')
+        .click()
+        .then(() => getFirstVisibleQuestion(questionSnippets, remainingSteps - 1))
     }
 
     if ($body.find('[data-testid="survey-next-button"]').length > 0) {
-      cy.getByTestId('survey-next-button').click()
-      return getFirstVisibleQuestion(questionSnippets, remainingSteps - 1)
+      return cy
+        .getByTestId('survey-next-button')
+        .click()
+        .then(() => getFirstVisibleQuestion(questionSnippets, remainingSteps - 1))
     }
 
     throw new Error(`Navigation blocked before reaching one of: ${questionSnippets.join(', ')}`)
