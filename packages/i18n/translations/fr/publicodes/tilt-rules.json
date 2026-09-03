@@ -1194,6 +1194,14 @@
               "titre": "Durée",
               "question": "Combien de jours dure la location sur l'année ?"
             }
+          },
+          "surface": {
+            "titre": "Surface",
+            "question": "Quelle est la surface de la location ?"
+          },
+          "durée": {
+            "titre": "Durée",
+            "question": "Combien de jours dure la location sur l'année ?"
           }
         }
       }

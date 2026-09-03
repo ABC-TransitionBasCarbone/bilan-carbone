@@ -1194,6 +1194,14 @@
               "titre": "[TO_TRANSLATE] Durée",
               "question": "[TO_TRANSLATE] Combien de jours dure la location sur l'année ?"
             }
+          },
+          "surface": {
+            "titre": "[TO_TRANSLATE] Surface",
+            "question": "[TO_TRANSLATE] Quelle est la surface de la location ?"
+          },
+          "durée": {
+            "titre": "[TO_TRANSLATE] Durée",
+            "question": "[TO_TRANSLATE] Combien de jours dure la location sur l'année ?"
           }
         }
       }
