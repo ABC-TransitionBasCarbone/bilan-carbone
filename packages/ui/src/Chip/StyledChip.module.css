@@ -1,43 +1,47 @@
 .labelContainer {
-    margin-top: -0.125rem;
-    display: flex;
-    flex-direction: column;
-    padding: 0.5rem 0;
+  margin-top: -0.125rem;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0;
 }
 
 .title {
-    font-weight: 800;
+  font-weight: 800;
 }
 
 .subtitle {
-    margin-top: -0.125rem;
-    font-size: 0.85rem;
-    line-height: 1;
-    opacity: 0.7;
+  margin-top: -0.125rem;
+  font-size: 0.85rem;
+  line-height: 1;
+  opacity: 0.7;
+}
+
+.validator,
+.editor,
+.reader,
+.contributor {
+  --chip-background: var(--chip-role-background);
+  --chip-background-hover: color-mix(in srgb, var(--chip-role-background) 85%, var(--white));
 }
 
 .validator {
-    --chip-background: var(--validator-background);
-    --chip-color: var(--neutral-500);
-    --chip-label-color: var(--neutral-500);
-    --chip-icon-color: var(--success-100);
-    --chip-background-hover: color-mix(in srgb, var(--validator-background) 85%, var(--white));
+  --chip-role-background: var(--validator-background);
+  --chip-color: var(--neutral-500);
+  --chip-label-color: var(--neutral-500);
+  --chip-icon-color: var(--success-100);
 }
 
 .editor {
-    --chip-background: var(--editor-background);
-    --chip-color: var(--primary-700);
-    --chip-background-hover: color-mix(in srgb, var(--editor-background) 85%, var(--white));
+  --chip-role-background: var(--editor-background);
+  --chip-color: var(--primary-700);
 }
 
 .reader {
-    --chip-background: var(--reader-background);
-    --chip-color: var(--neutral-500);
-    --chip-background-hover: color-mix(in srgb, var(--reader-background) 85%, var(--white));
+  --chip-role-background: var(--reader-background);
+  --chip-color: var(--neutral-500);
 }
 
 .contributor {
-    --chip-background: var(--contributor-background);
-    --chip-color: var(--warning);
-    --chip-background-hover: color-mix(in srgb, var(--contributor-background) 85%, var(--white));
+  --chip-role-background: var(--contributor-background);
+  --chip-color: var(--warning);
 }
