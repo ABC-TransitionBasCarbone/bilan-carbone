@@ -1,32 +1,35 @@
 const surveyId = 'campaign-admin-seed-id'
 
-const goToQuestion = (questionSnippet: string, remainingSteps = 250) => {
+const goToQuestion = (questionSnippet: string, remainingSteps = 250): Cypress.Chainable<void> => {
   if (remainingSteps <= 0) {
     throw new Error(`Could not find question containing: ${questionSnippet}`)
   }
 
-  cy.get('body').then(($body) => {
+  return cy.get('body').then(($body): Cypress.Chainable<void> => {
     const pageText = $body.text()
     if (pageText.includes(questionSnippet)) {
-      return
+      return cy.wrap(undefined)
     }
 
     if ($body.find('[data-testid="survey-start-button"]').length > 0) {
-      cy.getByTestId('survey-start-button').click()
-      goToQuestion(questionSnippet, remainingSteps - 1)
-      return
+      return cy
+        .getByTestId('survey-start-button')
+        .click()
+        .then(() => goToQuestion(questionSnippet, remainingSteps - 1))
     }
 
     if ($body.find('[data-testid="survey-category-interstitial"]').length > 0) {
-      cy.getByTestId('survey-interstitial-continue').click()
-      goToQuestion(questionSnippet, remainingSteps - 1)
-      return
+      return cy
+        .getByTestId('survey-interstitial-continue')
+        .click()
+        .then(() => goToQuestion(questionSnippet, remainingSteps - 1))
     }
 
     if ($body.find('[data-testid="survey-next-button"]').length > 0) {
-      cy.getByTestId('survey-next-button').click()
-      goToQuestion(questionSnippet, remainingSteps - 1)
-      return
+      return cy
+        .getByTestId('survey-next-button')
+        .click()
+        .then(() => goToQuestion(questionSnippet, remainingSteps - 1))
     }
 
     throw new Error(`Navigation blocked before reaching question: ${questionSnippet}`)
@@ -110,7 +113,7 @@ describe('Survey suggestions behavior', () => {
     goToQuestion('Comment se composent vos repas du midi sur une semaine type de travail')
 
     cy.getByTestId('survey-suggestions').should('be.visible')
-    cy.contains('button', 'végétarien').click()
+    cy.getByTestId('survey-suggestion-1').click()
 
     cy.get('input').then(($inputs) => {
       const values = [...$inputs].map((input) => Number((input as HTMLInputElement).value || 0))
@@ -123,7 +126,7 @@ describe('Survey suggestions behavior', () => {
     goToQuestion('Quelle est votre consommation de boissons chaudes par jour')
 
     cy.getByTestId('survey-suggestions').should('be.visible')
-    cy.contains('button', 'un café matin et midi').click()
+    cy.getByTestId('survey-suggestion-1').click()
 
     cy.get('input').then(($inputs) => {
       const values = [...$inputs].map((input) => Number((input as HTMLInputElement).value || 0))
