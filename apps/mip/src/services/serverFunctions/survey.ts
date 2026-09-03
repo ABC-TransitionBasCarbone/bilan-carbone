@@ -5,7 +5,7 @@ import { getSurveyCampaignForCsvExport, getSurveyCampaignForResults } from '@/db
 import { createMipEngine, getSurveyCategoryKeysFromRawRules, RawRules } from '@/publicodes/mip-engine'
 import { dbActualizedAuth } from '@/services/auth'
 import { EmissionCategory, EntityFilterResult, KeyStatGroup, SurveyResults } from '@/types/results.types'
-import { getEntityFilterDefsFromModel, getEntityFilterDefsFromModel as getEntityFilterDefsFromModelFromUtil } from '@/utils/entityFilter'
+import { getEntityFilterDefsFromModel } from '@/utils/entityFilter'
 import { withServerResponse } from '@/utils/serverResponse'
 import {
   buildEntityFilterResults,
