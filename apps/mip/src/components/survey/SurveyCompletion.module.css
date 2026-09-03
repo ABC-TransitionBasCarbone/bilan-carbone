@@ -8,44 +8,85 @@
 }
 
 .footprintBanner {
-  background: linear-gradient(120deg, var(--primary-700), var(--info));
+  background: linear-gradient(180deg, var(--grayscale-50), var(--white));
+  border: 1px solid var(--neutral-300);
   border-radius: 0.75rem;
-  color: var(--white);
+  color: var(--neutral-900);
   text-align: center;
+  box-shadow: 0 0.75rem 2rem rgba(2, 1, 5, 0.06);
 }
 
 .footprintBannerTitle {
-  color: var(--white) !important;
-  margin-bottom: 1rem !important;
-  font-weight: 700 !important;
-}
-
-.rangeCurrentValue {
-  position: absolute;
-  top: -1.35rem;
-  transform: translateX(-50%);
-  color: var(--white) !important;
-  font-size: 0.95rem !important;
+  color: var(--neutral-900) !important;
+  margin-bottom: 0.65rem !important;
+  font-size: 1.7rem !important;
   font-weight: 700 !important;
 }
 
 .rangeBarTrack {
-  position: relative;
-  background-color: color-mix(in srgb, var(--white) 35%, transparent);
-  height: 2.25rem;
-  border-radius: 0.2rem;
-  overflow: hidden;
+  height: 0.75rem;
+  border-radius: 999px;
+  overflow: visible;
+  background-color: var(--grayscale-200);
 }
 
-.rangeBarFill {
-  height: 2.25rem;
-  background: repeating-linear-gradient(var(--primary-200));
+.rangeBarSpectrum {
+  inset: 0;
+  background: linear-gradient(90deg, var(--error-100) 0%, var(--warning) 48%, var(--success-100) 100%);
+  z-index: 1;
+  border-radius: inherit;
+}
+
+.rangeBarMarker {
+  top: -0.55rem;
+  transform: translateX(-50%);
+  gap: 0.2rem;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.rangeBarDot {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--white);
+  border: 0.15rem solid var(--primary-600);
+  box-shadow: 0 0 0 0.18rem var(--primary-100);
+}
+
+.rangeCurrentValue {
+  margin: 0 !important;
+  padding: 0.08rem 0.35rem;
+  border-radius: 999px;
+  background: var(--white);
+  color: var(--neutral-900) !important;
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  box-shadow: 0 0.2rem 0.7rem rgba(2, 1, 5, 0.14);
+}
+
+.rangeAxis {
+  margin-top: 0.45rem;
 }
 
 .rangeAxisLabel {
-  color: var(--white) !important;
-  font-size: 0.85rem !important;
+  color: var(--neutral-700) !important;
+  font-size: 0.75rem !important;
   font-weight: 700 !important;
+}
+
+.rangeAxisLabel:last-child {
+  text-align: right;
+}
+
+.rangeLimitLabel {
+  padding: 0.08rem 0.4rem;
+  border-radius: 999px;
+  background: var(--primary-100);
+  color: var(--primary-700) !important;
+  font-size: 0.68rem !important;
+  font-weight: 700 !important;
+  white-space: nowrap;
 }
 
 .transitionEncart {
