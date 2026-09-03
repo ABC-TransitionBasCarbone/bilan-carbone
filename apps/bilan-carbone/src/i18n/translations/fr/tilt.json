@@ -198,9 +198,9 @@
     "information": "Mon Association"
   },
   "betaBanner": {
-    "badge": "Bêta",
-    "title": "Version Bêta de l'outil Cap Carbone",
-    "description": "Cap Carbone est aujourd'hui en version bêta ! Merci d'être nos premiers utilisateurs et testeurs 🎉 N'hésitez pas à nous contacter à l'adresse <support>support@abc-transitionbascarbone.fr</support> si vous avez des retours ! L'application étant en bêta il est possible que certaines questions changent dans le formulaire et donc que les réponses des questions modifiées soient supprimées dans de futures mise à jour. Pensez à regarder la complétion de vos postes sur la page saisie des données avant d'aller voir vos résultats pour vérifier que toutes vos réponses sont toujours disponibles."
+    "badge": "À lire avant de démarrer !",
+    "title": "Documents utiles pour le calcul d'une empreinte carbone simplifiée",
+    "description": "Vous êtes sur le point de créer une nouvelle empreinte simplifiée. Avant de commencer votre calcul et pouvoir répondre à l'ensemble des questions, nous vous conseillons de disposer des informations suivantes : <br></br>- La surface de vos locaux, parkings, etc (via plans, bails, etc)<br></br>- Le nombre de climatiseurs présents dans ceux-ci<br></br>- Le type de chauffage utilisé, les factures énergétiques (chauffage, électricité)<br></br>- Le poids de vos déchets pour une semaine classique, ou tout autre intervalle de temps<br></br>- Un inventaire de votre parc informatique<br></br>- Un inventaire de votre parc de véhicules <br></br>- Votre livre de comptes, parfois les dépenses sont également déclarées sur <compteassotilttorefacto>Lecompteasso</compteassotilttorefacto><br></br>- Des factures, bons de commandes, etc, permettant de retracer vos achats<br></br>- Un questionnaire complété par les salariés et bénévoles de votre association détaillant leurs habitudes en termes de déplacements, d'usages numériques et de télétravail. Nous vous proposons <exemplequestionnairetorefacto>quelques pistes</exemplequestionnairetorefacto> pour implémenter ce questionnaire dans l'outil de sondage de votre choix (typeforms, Googleforms, etc)<br></br><br></br>S'il vous manque une de ces informations, pas de panique ! Vous pouvez utiliser une estimation, ou utiliser les valeurs par défaut qui sont parfois proposées dans l'outil !"
   },
   "documentationUrlTilt": {
     "tiltABCPage": "https://abc-transitionbascarbone.fr/transition-association-abc-tilt/#",
