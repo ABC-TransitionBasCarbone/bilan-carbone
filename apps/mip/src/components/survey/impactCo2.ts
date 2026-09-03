@@ -61,15 +61,14 @@ const IMPACT_CO2_WIDGET_BY_CATEGORY: Record<ImpactCo2DisplayMode, Partial<Record
   },
 }
 
+const TRANSPORT_WIDGET_SEARCH_BY_CATEGORY: Partial<Record<string, string>> = {
+  DT: buildTransportWidgetSearch(DT_TRANSPORT_MODES, ['voiturethermique', 'buselectrique']),
+  transport: buildTransportWidgetSearch(PRO_TRANSPORT_MODES, ['avion', 'intercites']),
+}
+
 const IMPACT_CO2_WIDGET_SEARCH_BY_CATEGORY: Record<ImpactCo2DisplayMode, Partial<Record<string, string>>> = {
-  interstitial: {
-    DT: buildTransportWidgetSearch(DT_TRANSPORT_MODES, ['voiturethermique', 'buselectrique']),
-    transport: buildTransportWidgetSearch(PRO_TRANSPORT_MODES, ['avion', 'intercites']),
-  },
-  section: {
-    DT: buildTransportWidgetSearch(DT_TRANSPORT_MODES, ['voiturethermique', 'buselectrique']),
-    transport: buildTransportWidgetSearch(PRO_TRANSPORT_MODES, ['avion', 'intercites']),
-  },
+  interstitial: TRANSPORT_WIDGET_SEARCH_BY_CATEGORY,
+  section: TRANSPORT_WIDGET_SEARCH_BY_CATEGORY,
 }
 
 const normalizeCategoryKey = (categoryKey: string): string => removeDiacritics(categoryKey).trim().toLowerCase()
