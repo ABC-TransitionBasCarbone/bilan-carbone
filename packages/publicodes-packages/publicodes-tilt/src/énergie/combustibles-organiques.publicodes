@@ -96,6 +96,7 @@
       - réseaux de chaleur
       - réseaux de froid
       # - panneaux PV ou chauffe eau solaire
+  unité: kgCO2e
 
 énergie . combustibles organiques . emissions . électricité:
   titre: Électricité
@@ -258,7 +259,7 @@
     toutes ces conditions:
       - est défini:  énergie . combustibles organiques . types . réseaux de chaleur présent
       - énergie . combustibles organiques . types . réseaux de chaleur présent = oui
-  question: Quelle est votre consommation de kWh issus de réseaux de chaleur ?
+  question: Quelle est votre consommation annuelle de kWh issus de réseaux de chaleur ?
   titre: Consommation annuelle de kWh issus de réseaux de chaleur
   unité: kWh
   par défaut: 0
@@ -281,7 +282,7 @@
     toutes ces conditions:
       - est défini:  énergie . combustibles organiques . types . réseaux de froid présent
       - énergie . combustibles organiques . types . réseaux de froid présent = oui
-  question: Quelle est votre consommation de kWh issus de réseaux de froid ?
+  question: Quelle est votre consommation annuelle de kWh issus de réseaux de froid ?
   titre: Consommation annuelle de kWh issus de réseaux de froid
   unité: kWh
   par défaut: 0

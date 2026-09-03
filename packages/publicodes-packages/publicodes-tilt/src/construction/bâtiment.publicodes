@@ -2,6 +2,7 @@ construction . bâtiment:
   formule:
     somme:
       - construction . bâtiment . empreinte
+      - construction . bâtiment . locaux ponctuels . calcul
 
 construction . bâtiment . empreinte:
   formule: FE * surface finale / amortissement
@@ -88,7 +89,6 @@ construction . bâtiment . locaux ponctuels:
     Veuillez renseigner vos différentes locations ponctuelles dans le tableau suivant :
   description: Les locaux loués ponctuellement seront amortis sur 50 ans et 365 jours. Pour un local loué un jour, l'impact attribué sera 1/(365*50) de l'impact total de la construction du bâtiment.
 
-
 construction . bâtiment . locaux ponctuels . nom:
   applicable si: 
     toutes ces conditions: 
@@ -116,6 +116,8 @@ construction . bâtiment . locaux ponctuels . calcul:
       unité: jours
       par défaut: 0
   par défaut: 0
+  unité: kgCO2e
+    
   
 
 

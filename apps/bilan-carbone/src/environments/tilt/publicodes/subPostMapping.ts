@@ -306,7 +306,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
   ],
   BienMatieres: [
     input('intrants-biens-et-matières . ratios monétaires . existant'),
-    input('intrants-biens-et-matières . ratios monétaires . ratio moyen'),
+    input('intrants-biens-et-matières . ratios monétaires . ratio moyen . montant dépensé'),
     table(
       'IntrantsBiensEtMatieresTilt.question',
       ['IntrantsBiensEtMatieresTilt.typeBien', 'IntrantsBiensEtMatieresTilt.montantDepense'],

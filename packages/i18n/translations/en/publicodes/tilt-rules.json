@@ -223,9 +223,10 @@
       },
       "total sans reconditionné": {
         "ordinateurs fixes": {
-          "titre": "[TO_TRANSLATE] Ordinateurs fixe de taille moyenne (2023-2025), Asie",
+          "titre": "[UPDATED] Ordinateurs fixe",
           "quantité": {
-            "question": "[TO_TRANSLATE] Ordinateurs fixes"
+            "question": "[TO_TRANSLATE] Ordinateurs fixes",
+            "titre": "[TO_TRANSLATE] Ordinateurs fixes"
           }
         },
         "ordinateurs portables": {
@@ -253,13 +254,13 @@
           }
         },
         "téléphones portables": {
-          "titre": "[TO_TRANSLATE] Smartphone de taille moyenne (2023-2025), Asie",
+          "titre": "[UPDATED] Smartphone",
           "quantité": {
             "question": "[TO_TRANSLATE] Smartphone"
           }
         },
         "vidéoprojecteurs": {
-          "titre": "[TO_TRANSLATE] Vidéoprojecteurs (2020), Asie",
+          "titre": "[UPDATED] Vidéoprojecteurs",
           "quantité": {
             "question": "[TO_TRANSLATE] Vidéoprojecteurs"
           }
@@ -350,14 +351,14 @@
             "titre": "[TO_TRANSLATE] Réseaux de chaleur",
             "consommation": {
               "titre": "[TO_TRANSLATE] Consommation annuelle de kWh issus de réseaux de chaleur",
-              "question": "[TO_TRANSLATE] Quelle est votre consommation de kWh issus de réseaux de chaleur ?"
+              "question": "[UPDATED] Quelle est votre consommation annuelle de kWh issus de réseaux de chaleur ?"
             }
           },
           "réseaux de froid": {
             "titre": "[TO_TRANSLATE] Réseaux de froid",
             "consommation": {
               "titre": "[TO_TRANSLATE] Consommation annuelle de kWh issus de réseaux de froid",
-              "question": "[TO_TRANSLATE] Quelle est votre consommation de kWh issus de réseaux de froid ?"
+              "question": "[UPDATED] Quelle est votre consommation annuelle de kWh issus de réseaux de froid ?"
             }
           }
         },
@@ -419,7 +420,7 @@
         }
       },
       "salariés": {
-        "titre": "[TO_TRANSLATE] Télétravail - Salariés",
+        "titre": "[UPDATED] Télétravail - Salariés",
         "j": {
           "question": "[TO_TRANSLATE] Combien de jours sont en moyenne télétravaillés par semaine par vos salariés ?"
         }
@@ -436,7 +437,7 @@
           "description": "[TO_TRANSLATE] Si vous n'avez pas du tout accès à vos comptes, vous pouvez réaliser une estimation en partant du budget de fonctionnement de l'association, et en retranchant les coûts afférents aux éventuels salariés et aux charges connues.",
           "montant dépensé": {
             "titre": "[TO_TRANSLATE] Montant dépensé dans des services immatériels sur l'année",
-            "description": "[TO_TRANSLATE] Veuillez indiquer le montant dépensé pour chaque service immatériel. Si vous ne connaissez pas le montant exact, vous pouvez fournir une estimation. Vous devez bien inclure l'ensemble des services, <b>y compris ceux qui sont reçus gratuitement (mécénat de compétence, ...)</b>. Il faut donc bien prendre en compte les informations disponibles sur les contributions volontaires en nature, décrites dans le compte 870. Attention, ce compte intègre les biens et les services, il faut donc estimer la part de chacun. <br></br> Cette liste des catégories de service est non exhaustive. <b>Si vous n’avez pas comptabilisé l’ensemble de vos dépenses, c’est tout à fait normal</b>. Il peut s’agir de dépenses très faiblement émissives, ou d'activités dont les émissions sont déjà prises en compte dans d’autres postes ou via d’autres questions reposant sur des données plus précises (comptabiliser les dépenses associées ici reviendrait donc à faire un double-compte).",
+            "description": "[UPDATED] Si vous n'avez pas du tout accès à vos comptes, vous pouvez réaliser une estimation en partant du budget de fonctionnement de l'association, et en retranchant les coûts afférents aux éventuels salariés et aux charges connues.",
             "question": "[TO_TRANSLATE] Quel montant avez-vous dépensé sur l'année dans ces services immatériels ?"
           }
         },
@@ -606,7 +607,7 @@
           "description": "[TO_TRANSLATE] Si vous n'avez pas du tout accès à vos comptes, vous pouvez réaliser une estimation en partant du budget de fonctionnement de l'association, et en retranchant les coûts afférents aux éventuels salariés et aux charges connues.",
           "montant dépensé": {
             "titre": "[TO_TRANSLATE] Montant dépensé dans des services immatériels sur l'année",
-            "description": "[TO_TRANSLATE] Veuillez indiquer le montant dépensé pour chaque bien matériel. Si vous ne connaissez pas le montant exact, vous pouvez fournir une estimation. Vous devez bien inclure l'ensemble des services, <b>y compris ceux qui sont reçus gratuitement (mécénat de compétence, ...)</b>. Il faut donc bien prendre en compte les informations disponibles sur les contributions volontaires en nature, décrites dans le compte 870. Attention, ce compte intègre les biens et les services, il faut donc estimer la part de chacun. <br></br> Cette liste des catégories de service est non exhaustive. <b>Si vous n’avez pas comptabilisé l’ensemble de vos dépenses, c’est tout à fait normal</b>. Il peut s’agir de dépenses très faiblement émissives, ou d'activités dont les émissions sont déjà prises en compte dans d’autres postes ou via d’autres questions reposant sur des données plus précises (comptabiliser les dépenses associées ici reviendrait donc à faire un double-compte).",
+            "description": "[UPDATED] La prise en compte des biens et des matières achetées via des ratios monétaires est déjà très imprécise, car le prix des produits peut flucter, tandis que les émissions restent les mêmes. Cela l'est encore plus si vous utilisez un ratio moyen comme ici, car les émissions sont en réalité très différentes en fonction du type de produit concerné. <b>Nous vous invitons donc plutôt à aller chercher le détail des montants dépensés sur l'année.</b>",
             "question": "[TO_TRANSLATE] Quel montant avez-vous dépensé sur l'année dans ces biens matériels ?"
           }
         },
@@ -1500,7 +1501,7 @@
           "titre": "[TO_TRANSLATE] Viande rouge",
           "FE": {
             "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas de type viande rouge (bœuf, veau, agneau)",
-            "description": "[UPDATED] Repas contenant 150g d'une viande rouge moyenne (issue d'un travail de consolidation sur les consommations moyennes de viande rouge de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Pour la partie déforestation, notre alimentation est vectrice de déforestation à l'étranger, à l'impact carbone non négligeable. Cette empreinte n'est pas comprise dans les facteurs d'émission d'Agribalyse. D'après l'étude [Pendril & al.](https://iopscience.iop.org/article/10.1088/1748-9326/ab0d41), une part de cette déforestation est spécifiquement associée à la consommation de viande d'élevage. Nous considérons que cette part associée aux \"viandes d'élevage\" est majoritairement associée à la consommation de viande rouge, c'est pourquoi nous ajoutons cette part de déforestation aux repas de viande rouge. L’étude [Pendril & al.](https://iopscience.iop.org/article/10.1088/1748-9326/ab0d41) donne une empreinte moyenne de 34 kgCO2e / personne de déforestation importée liée à la consommation de viandes d'élevage. Nous partons du principe que ces émissions liées à la production de viandes d'élevage appartiennent majoritairement à la catégorie \"viande rouge\", car c'est la catégorie la plus consommatrice de terres et de ressources. La consommation moyenne par français de viande rouge se situe autour de 3 repas par semaine, soit 156 repas par an. En conséquence, nous ajoutons à l'empreinte des repas une empreinte moyenne de 0.218 kgCO2e / repas de viande rouge."
+            "description": "[UPDATED] Repas contenant 150g d'une viande rouge moyenne (issue d'un travail de consolidation sur les consommations moyennes de viande rouge de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Pour la partie déforestation, notre alimentation est vectrice de déforestation à l'étranger, à l'impact carbone non négligeable. Cette empreinte n'est pas comprise dans les facteurs d'émission d'Agribalyse. D'après l'étude [Pendril & al.](https://iopscience.iop.org/article/10.1088/1748-9326/ab0d41), une part de cette déforestation est spécifiquement associée à la consommation de viande d'élevage. Nous considérons que cette part associée aux \"viandes d'élevage\" est majoritairement associée à la consommation de viande rouge, c'est pourquoi nous ajoutons cette part de déforestation aux repas de viande rouge."
           },
           "déforestation": {
             "description": "[TO_TRANSLATE] L’étude [Pendril & al.](https://iopscience.iop.org/article/10.1088/1748-9326/ab0d41) donne une empreinte moyenne de 34 kgCO2e / personne de déforestation importée liée à la consommation de viandes d'élevage. Nous partons du principe que ces émissions liées à la production de viandes d'élevage appartiennent majoritairement à la catégorie \"viande rouge\", car c'est la catégorie la plus consommatrice de terres et de ressources. La consommation moyenne par français de viande rouge se situe autour de 3 repas par semaine, soit 156 repas par an. En conséquence, nous ajoutons à l'empreinte des repas une empreinte moyenne de 0.218 kgCO2e / repas de viande rouge."

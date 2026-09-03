@@ -32,7 +32,7 @@ télétravail . bénévoles . j:
 
 télétravail . salariés:
   titre: Télétravail - Salariés
-  formule: FE * j * général . salariés * commun . nombre de semaines travaillées par an
+  formule: FE * télétravail . salariés . j * général . salariés * commun . nombre de semaines travaillées par an
   unité: kgCO2e
 
 télétravail . salariés . j:
