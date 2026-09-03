@@ -1,3 +1,4 @@
+import { RULE_NAME_SEPARATOR, SURVEY_CATEGORY_KEYS } from '@abc-transitionbascarbone/publicodes/form/utils'
 import { Question, Survey, SurveyResponse } from '@abc-transitionbascarbone/typeguards'
 import { isObject } from '@abc-transitionbascarbone/utils/object'
 import { normalizeCategoryKey } from '@abc-transitionbascarbone/utils/parsing'
@@ -129,8 +130,6 @@ export class SurveyEngine {
   }
 }
 
-const RULE_NAME_SEPARATOR = ' . '
-
 const getMissingParentRuleNames = (rules: Record<string, unknown>): string[] => {
   const existing = new Set(Object.keys(rules))
   const missing = new Set<string>()
@@ -174,16 +173,6 @@ export function createMipEngine(rules: RawRules): Engine {
   })
 }
 
-const KNOWN_SURVEY_CATEGORY_KEYS = [
-  'DT',
-  'transport',
-  'alimentation',
-  'divers',
-  'logement',
-  'numerique',
-  'bureaux',
-] as const
-
 const getSurveyCategoryKeysFromRules = (rules: Record<string, unknown>): string[] => {
   const bilanRule = rules.bilan
   const bilanSum =
@@ -222,7 +211,7 @@ const getSurveyCategoryKeysFromRules = (rules: Record<string, unknown>): string[
     }
   }
 
-  return KNOWN_SURVEY_CATEGORY_KEYS.map((key) => ruleKeysByNormalized.get(normalizeCategoryKey(key)) ?? null).filter(
+  return SURVEY_CATEGORY_KEYS.map((key) => ruleKeysByNormalized.get(normalizeCategoryKey(key)) ?? null).filter(
     (key): key is string => key !== null,
   )
 }
