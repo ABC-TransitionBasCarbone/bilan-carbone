@@ -3,11 +3,27 @@ import MosaicBooleanInput from '@abc-transitionbascarbone/ui/Form/MosaicBooleanI
 import MosaicNumberInput from '@abc-transitionbascarbone/ui/Form/MosaicNumberInput'
 import classNames from 'classnames'
 import Engine from 'publicodes'
+import { SuggestionChipOption, SuggestionChips } from './SuggestionChips'
+import { getMosaicSuggestionEntries, SuggestionsRecord } from './suggestions'
 import styles from './MosaicQuestion.module.css'
 import { usePublicodesRuleTranslation } from '../hooks'
 import { getRuleNameParts, getRuleParentName } from './utils'
 
-type Props<RuleName> = {
+type SuggestionChange<RuleName extends string> = {
+  ruleName: RuleName
+  value: string | number | boolean
+}
+
+const toSuggestionChipOptions = <RuleName extends string,>(
+  entries: ReturnType<typeof getMosaicSuggestionEntries<RuleName>>,
+): SuggestionChipOption<SuggestionChange<RuleName>[]>[] => {
+  return entries.map((entry) => ({
+    label: entry.label,
+    value: entry.values.map((item) => ({ ruleName: item.ruleName, value: item.value })),
+  }))
+}
+
+type Props<RuleName extends string> = {
   parent: RuleName
   elements: {
     id: RuleName
@@ -31,12 +47,24 @@ export const MosaicQuestion = <RuleName extends string,>({
   const parentRaw = rules[parent]?.rawNode as any
   const mosaicType = parentRaw?.mosaique?.type
   const translation = usePublicodesRuleTranslation(parent)
+  const rawSuggestions = (parentRaw?.mosaique?.suggestions ?? parentRaw?.suggestions) as SuggestionsRecord | undefined
+  const suggestionEntries = getMosaicSuggestionEntries(parent, elements, rawSuggestions)
+  const suggestionOptions = toSuggestionChipOptions(suggestionEntries)
 
   const label = translation?.question ?? translation?.titre ?? parentRaw?.question ?? parentRaw?.titre ?? parent
   const description = translation?.description ?? parentRaw?.description
 
   return (
     <QuestionContainer label={label} description={description}>
+      <SuggestionChips
+        ruleName={parent}
+        suggestions={suggestionOptions}
+        onSelect={(changes) => {
+          for (const change of changes) {
+            onChange(change.ruleName, change.value)
+          }
+        }}
+      />
       <div className={classNames(styles.mosaicContainer, 'gapped1 p1 grid')}>
         {elements.map((el, index) => {
           const parts = getRuleNameParts(el.id)

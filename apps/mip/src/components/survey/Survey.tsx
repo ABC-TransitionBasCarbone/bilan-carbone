@@ -47,7 +47,7 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   const [isCompleting, setIsCompleting] = useState(false)
   const [state, setState] = useState<FormState<string>>(() => initState())
   const [interstitialCategoryKey, setInterstitialCategoryKey] = useState<string | null>(null)
-  const updateState = (newState: FormState<string>) => setState(newState)
+  const updateState = setState
 
   useEffect(() => {
     const saved = loadSurveyState<FormState<string>>(surveyId)
@@ -185,7 +185,6 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
                 <SurveyQuestionList
                   groupedElements={groupedElements}
                   engine={engine}
-                  state={state}
                   formBuilder={formBuilder}
                   updateState={updateState}
                 />

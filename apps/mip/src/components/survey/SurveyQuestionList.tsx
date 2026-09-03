@@ -2,18 +2,18 @@ import { GroupedElement } from '@/components/survey/surveyGrouping'
 import { createMipEngine } from '@/publicodes/mip-engine'
 import { InputQuestion, MosaicQuestion } from '@abc-transitionbascarbone/publicodes/form'
 import { FormBuilder, FormState } from '@publicodes/forms'
+import { Dispatch, SetStateAction } from 'react'
 
 type MipEngine = ReturnType<typeof createMipEngine>
 
 interface Props {
   groupedElements: GroupedElement[]
   engine: MipEngine
-  state: FormState<string>
   formBuilder: FormBuilder<string>
-  updateState: (newState: FormState<string>) => void
+  updateState: Dispatch<SetStateAction<FormState<string>>>
 }
 
-const SurveyQuestionList = ({ groupedElements, engine, state, formBuilder, updateState }: Props) => {
+const SurveyQuestionList = ({ groupedElements, engine, formBuilder, updateState }: Props) => {
   return (
     <div className="p0">
       {groupedElements.map((group) =>
@@ -24,7 +24,9 @@ const SurveyQuestionList = ({ groupedElements, engine, state, formBuilder, updat
             elements={group.elements}
             engine={engine}
             containerVariant="flat"
-            onChange={(ruleName, value) => updateState(formBuilder.handleInputChange(state, ruleName, value))}
+            onChange={(ruleName, value) =>
+              updateState((prevState) => formBuilder.handleInputChange(prevState, ruleName, value))
+            }
           />
         ) : (
           <InputQuestion
@@ -32,7 +34,9 @@ const SurveyQuestionList = ({ groupedElements, engine, state, formBuilder, updat
             formElement={group.el}
             engine={engine}
             containerVariant="flat"
-            onChange={(ruleName, value) => updateState(formBuilder.handleInputChange(state, ruleName, value))}
+            onChange={(ruleName, value) =>
+              updateState((prevState) => formBuilder.handleInputChange(prevState, ruleName, value))
+            }
           />
         ),
       )}
