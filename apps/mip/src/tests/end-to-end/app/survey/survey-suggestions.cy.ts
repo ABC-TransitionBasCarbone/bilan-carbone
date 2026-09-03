@@ -1,11 +1,11 @@
 const surveyId = 'campaign-admin-seed-id'
 
-const goToQuestion = (questionSnippet: string, remainingSteps = 250): Cypress.Chainable<any> => {
+const goToQuestion = (questionSnippet: string, remainingSteps = 250): Cypress.Chainable<null> => {
   if (remainingSteps <= 0) {
     throw new Error(`Could not find question containing: ${questionSnippet}`)
   }
 
-  return cy.get('body').then(($body): Cypress.Chainable<any> => {
+  return cy.get('body').then(($body): Cypress.Chainable<null> => {
     const pageText = $body.text()
     if (pageText.includes(questionSnippet)) {
       return cy.wrap(null)
