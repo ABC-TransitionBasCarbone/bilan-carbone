@@ -145,7 +145,11 @@ déplacements . DT-bénévoles . sans . voiture:
     toutes ces conditions:
       - est défini: part voiture
       - part voiture > 0
-  formule: distance * commun . FE . moyen de transport . voiture moyenne France * général . bénévoles * commun . nombre de semaines travaillées par an * (5 - télétravail . bénévoles . j)
+  ##Il faut faire une boucle si pour utiliser les vrais temps bénévoles dès qu'on les connait et pas les 5 jours par défaut
+  formule: 
+    variation:
+      si: travail . bénévoles . j != 0
+        distance * commun . FE . moyen de transport . voiture moyenne France * général . bénévoles * commun . nombre de semaines travaillées par an * (5 - télétravail . bénévoles . j)
   avec:
     distance:
       question: Quand les bénévoles se déplacent en voiture, combien de km parcourent-ils en moyenne par jour (A/R) ? 

@@ -16,6 +16,20 @@ télétravail . bénévoles:
   formule: FE * j * général . bénévoles * commun . nombre de semaines travaillées par an
   unité: kgCO2e
 
+travail . bénévoles . h:
+  question: Combien d'heures de bénévolat sont en moyenne effectuées par semaine pour vos bénévoles ?
+  unité: h/semaine
+  type: nombre
+  par défaut: 0
+  form:
+    à traduire: oui 
+
+travail . bénévoles . j:
+  formule: h / 7
+  unité: jours/semaine
+  type: nombre
+  description: Dans le cas où vous ne disposeriez pas de cette information, vous pouvez considérer le nombre total d'heures de bénévolat et diviser ensuite par votre nombre de bénévoles. Le nombre d'heures de travail indiqué ici est utilisé dans le calcul des déplacements de vos bénévoles, ceux-ci étant considérés par défaut comme se déplaçant 5 jours dans la semaine. Il est donc normal que votre réponse modifie les totaux calculés dans le poste Déplacements de personnes.
+
 télétravail . bénévoles . h:
   question: Combien d'heures sont en moyenne effectuées en télétravail par semaine pour vos bénévoles ?
   unité: h/semaine

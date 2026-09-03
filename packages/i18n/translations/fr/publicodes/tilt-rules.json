@@ -416,13 +416,14 @@
         "titre": "Télétravail - Bénévoles",
         "h": {
           "question": "Combien d'heures sont en moyenne effectuées en télétravail par semaine pour vos bénévoles ?",
-          "description": "Dans le cas où vous ne disposeriez pas de cette information, vous pouvez considérer le nombre total d'heures de bénévolat, estimer un % télétravaillé, et diviser ensuite par votre nombre de bénévoles."
+          "description": "Dans le cas où vous ne disposeriez pas de cette information, vous pouvez considérer le nombre total d'heures de bénévolat, estimer un % télétravaillé, et diviser ensuite par votre nombre de bénévoles. Le nombre d'heures de télétravail indiqué ici est utilisé dans le calcul des déplacements de vos bénévoles, ceux-ci étant considérés par défaut comme se déplaçant 5 jours dans la semaine. Il est donc normal que votre réponse modifie les totaux calculés dans le poste Déplacements de personnes."
         }
       },
       "salariés": {
         "titre": "Télétravail - Salariés",
         "j": {
-          "question": "Combien de jours sont en moyenne télétravaillés par semaine par vos salariés ?"
+          "question": "Combien de jours sont en moyenne télétravaillés par semaine par vos salariés ?",
+          "description": "Le nombre de jours de télétravail indiqué ici est utilisé dans le calcul des déplacements de vos salariés, ceux-ci étant considérés par défaut comme se déplaçant 5 jours dans la semaine. Il est donc normal que votre réponse modifie les totaux calculés dans le poste Déplacements de personnes."
         }
       }
     },
