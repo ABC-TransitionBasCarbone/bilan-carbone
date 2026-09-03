@@ -1,34 +1,40 @@
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
-import { StudyProps } from '@/components/hoc/withStudy'
-import withStudyDetails from '@/components/hoc/withStudyDetails'
+import withStudyDetails, { StudyProps } from '@/components/hoc/withStudyDetails'
 import StudyDataEntryInfographyPage from '@/components/pages/StudyDataEntryInfographyPage'
-import { isOrganizationVersionCR } from '@/db/organization'
 import { canDeleteStudy, canDuplicateStudy, getEnvironmentsForDuplication } from '@/services/permissions/study'
-import { getAccountRoleOnStudy } from '@/utils/study'
+import { getStudySitesList } from '@/services/serverFunctions/study'
 import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 
-const DataEntry = async ({ study, user }: StudyProps & UserSessionProps) => {
-  const userRole = getAccountRoleOnStudy(user, study)
-
-  const [canDelete, canDuplicate, duplicableEnvironments, userOrgIsCR] = await Promise.all([
-    canDeleteStudy(study.id),
-    canDuplicateStudy(study.id),
-    getEnvironmentsForDuplication(study.id),
-    isOrganizationVersionCR(user.organizationVersionId),
+const DataEntry = async ({
+  studyId,
+  userStudyRole,
+  user,
+  studyOrganizationVersion,
+  studyName,
+  study: fullStudy, // TODO: remove at the end of refacto
+}: StudyProps & UserSessionProps) => {
+  const [canDelete, canDuplicate, duplicableEnvironments, studySites] = await Promise.all([
+    canDeleteStudy(studyId),
+    canDuplicateStudy(studyId),
+    getEnvironmentsForDuplication(studyId),
+    getStudySitesList(studyId),
   ])
 
-  if (!userRole) {
+  if (!userStudyRole || !studySites.success || !studySites.data) {
     return <NotFound />
   }
   return (
     <StudyDataEntryInfographyPage
-      study={study}
-      userRole={userRole}
+      userRole={userStudyRole}
       user={user}
       canDeleteStudy={canDelete}
       canDuplicateStudy={canDuplicate}
       duplicableEnvironments={duplicableEnvironments}
-      organizationVersionId={userOrgIsCR ? study.organizationVersionId : null}
+      studyOrganizationVersion={studyOrganizationVersion}
+      studySites={studySites.data}
+      studyName={studyName}
+      studyId={studyId}
+      fullStudy={fullStudy}
     />
   )
 }

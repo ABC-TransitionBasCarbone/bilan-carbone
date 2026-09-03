@@ -1,23 +1,23 @@
 'use client'
 
 import { storageKeys } from '@/constants/storage.constants'
-import type { FullStudy } from '@/db/study'
+import type { StudySiteWithName } from '@/db/study'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
-export default function useStudySite(study: FullStudy, allowAll?: boolean) {
+export default function useStudySite(studyId: string, studySites: StudySiteWithName[], allowAll?: boolean) {
   const [siteId, setSiteState] = useState('')
   const searchParams = useSearchParams()
   const router = useRouter()
-  const allSiteIds = useMemo(() => study.sites.map((s) => s.site.id), [study.sites])
-  const storageKey = storageKeys.studyFilterSites(study.id)
+  const allSiteIds = useMemo(() => studySites.map((s) => s.site.id), [studySites])
+  const storageKey = storageKeys.studyFilterSites(studyId)
   const userChangedRef = useRef(false)
 
   useEffect(() => {
     const siteFromUrl = searchParams.get('site')
     let resolvedSite: string | null = null
 
-    if (siteFromUrl && study.sites.some((s) => s.site.id === siteFromUrl)) {
+    if (siteFromUrl && studySites.some((s) => s.site.id === siteFromUrl)) {
       resolvedSite = siteFromUrl
       const params = new URLSearchParams(searchParams.toString())
       params.delete('site')
@@ -33,7 +33,7 @@ export default function useStudySite(study: FullStudy, allowAll?: boolean) {
             resolvedSite = 'all'
           } else {
             // If there are multiple sites, we need to find the first valid site
-            const firstValid = storedIds.find((id) => study.sites.some((s) => s.site.id === id))
+            const firstValid = storedIds.find((id) => studySites.some((s) => s.site.id === id))
             resolvedSite = firstValid ?? null
           }
         }
@@ -45,7 +45,7 @@ export default function useStudySite(study: FullStudy, allowAll?: boolean) {
     }
 
     setSiteState(resolvedSite)
-  }, [allSiteIds, allowAll, router, searchParams, storageKey, study.id, study.sites])
+  }, [allSiteIds, allowAll, router, searchParams, storageKey, studyId, studySites])
 
   const setSite = (site: string) => {
     userChangedRef.current = true
@@ -60,7 +60,7 @@ export default function useStudySite(study: FullStudy, allowAll?: boolean) {
     window.localStorage.setItem(storageKey, JSON.stringify(idsToStore))
   }, [siteId, storageKey, allSiteIds])
 
-  const studySiteId = useMemo(() => study.sites.find((s) => s.site.id === siteId)?.id ?? '', [study.sites, siteId])
+  const studySiteId = useMemo(() => studySites.find((s) => s.site.id === siteId)?.id ?? '', [studySites, siteId])
 
   return {
     siteId,

@@ -1,4 +1,5 @@
-import type { FullStudy } from '@/db/study'
+import { getOrganizationWithLicence } from '@/db/organization'
+import { normalizeAllowedUsers, type FullStudy, type StudyWithReadRights } from '@/db/study'
 import { mappedTiltSituationToCustomDataFields } from '@/services/customDataToSituation'
 import { getEmissionResults } from '@/services/emissionSource'
 import { hasAccessToStudyHomePage } from '@/services/permissions/environment'
@@ -29,6 +30,42 @@ import { unique } from './array'
 import { getEmissionSourcesTotalCo2 } from './emissionSources'
 import { hasActiveLicence, isInOrgaOrParent } from './organization'
 
+export const OLDgetAccountRoleOnStudy = (user: UserSession, study: StudyWithRoleFields) => {
+  if (isTiltSimplified(study.organizationVersion.environment, study.simplified)) {
+    return StudyRole.Editor
+  }
+  if (isAdminOnStudyOrga(user, study.organizationVersion)) {
+    return hasSufficientLevel(user.level, study.level) && hasActiveLicence(study.organizationVersion)
+      ? StudyRole.Validator
+      : StudyRole.Reader
+  }
+
+  const right = study.allowedUsers.find((right) => right.account.id === user.accountId)
+  if (right) {
+    return hasSufficientLevel(user.level, study.level) && hasActiveLicence(study.organizationVersion)
+      ? right.role
+      : StudyRole.Reader
+  }
+
+  if (
+    study.isPublic &&
+    isInOrgaOrParent(user.organizationVersionId, study.organizationVersion.id, study.organizationVersion.parentId)
+  ) {
+    return hasActiveLicence(study.organizationVersion) ? getUserRoleOnPublicStudy(user, study.level) : StudyRole.Reader
+  }
+
+  return null
+}
+
+export const OLDgetDisplayedRoleOnStudy = (
+  user: UserSession,
+  study: OLDStudyWithRoleFields & { contributors: { accountId: string }[] },
+) => {
+  return study.contributors.some((contributor) => contributor.accountId === user.accountId)
+    ? 'Contributor'
+    : OLDgetAccountRoleOnStudy(user, study)
+}
+
 export const getUserRoleOnPublicStudy = (
   user: Pick<UserSession, 'role' | 'level' | 'environment'>,
   studyLevel: Level,
@@ -46,6 +83,20 @@ export const getUserRoleOnPublicStudy = (
     : StudyRole.Reader
 }
 
+export type OLDStudyWithRoleFields = {
+  id: string
+  level: Level
+  isPublic: boolean
+  simplified: boolean
+  organizationVersion: {
+    id: string
+    parentId: string | null
+    environment: Environment
+    activatedLicence: number[]
+    parent: { activatedLicence: number[] } | null
+  }
+}
+
 export type StudyWithRoleFields = {
   id: string
   level: Level
@@ -58,28 +109,66 @@ export type StudyWithRoleFields = {
     activatedLicence: number[]
     parent: { activatedLicence: number[] } | null
   }
-  allowedUsers: { role: StudyRole; account: { id: string; user: { email: string } } }[]
+  allowedUsers: {
+    accountId: string
+    createdAt: Date
+    account: {
+      id: string
+      organizationVersionId: string | null
+      user: {
+        id: string
+        email: string
+        firstName: string
+        lastName: string
+        level: Level | null
+      }
+    }
+    role: StudyRole
+  }[]
 }
 
-export const getAccountRoleOnStudy = (user: UserSession, study: StudyWithRoleFields) => {
+type studyGetAccountRoleOnStudy = {
+  organizationVersion: Pick<StudyWithReadRights['organizationVersion'], 'id' | 'parentId' | 'environment'>
+  allowedUsers: {
+    account: { id: string }
+    role: StudyRole
+  }[]
+} & Pick<StudyWithReadRights, 'level' | 'isPublic' | 'simplified'>
+export const getAccountRoleOnStudy = async (user: UserSession, study: studyGetAccountRoleOnStudy) => {
   if (isTiltSimplified(study.organizationVersion.environment, study.simplified)) {
     return StudyRole.Editor
   }
+
+  const organizationVersionWithLicence = await getOrganizationWithLicence(study.organizationVersion.id)
+
+  if (!organizationVersionWithLicence) {
+    return null
+  }
+
   if (isAdminOnStudyOrga(user, study.organizationVersion)) {
-    return hasSufficientLevel(user.level, study.level) && hasActiveLicence(study.organizationVersion)
+    return hasSufficientLevel(user.level, study.level) && hasActiveLicence(organizationVersionWithLicence)
       ? StudyRole.Validator
       : StudyRole.Reader
   }
 
   const right = study.allowedUsers.find((right) => right.account.id === user.accountId)
   if (right) {
-    return hasSufficientLevel(user.level, study.level) && hasActiveLicence(study.organizationVersion)
+    return hasSufficientLevel(user.level, study.level) && hasActiveLicence(organizationVersionWithLicence)
       ? right.role
       : StudyRole.Reader
   }
 
-  if (study.isPublic && isInOrgaOrParent(user.organizationVersionId, study.organizationVersion)) {
-    return hasActiveLicence(study.organizationVersion) ? getUserRoleOnPublicStudy(user, study.level) : StudyRole.Reader
+  if (
+    study.isPublic &&
+    isInOrgaOrParent(
+      user.organizationVersionId,
+      organizationVersionWithLicence.id,
+      organizationVersionWithLicence.parent?.id ?? null,
+    )
+  ) {
+    return hasActiveLicence(organizationVersionWithLicence)
+      ? getUserRoleOnPublicStudy(user, study.level)
+      : StudyRole.Reader
   }
 
   return null
@@ -87,11 +176,27 @@ export const getAccountRoleOnStudy = (user: UserSession, study: StudyWithRoleFie
 
 export const getDisplayedRoleOnStudy = (
   user: UserSession,
-  study: StudyWithRoleFields & { contributors: { accountId: string }[] },
+  study: Omit<studyGetAccountRoleOnStudy, 'allowedUsers'> & {
+    allowedUsers: {
+      role: StudyRole
+      account: {
+        id: string
+        organizationVersionId: string
+        user: {
+          level: Level | null
+        }
+      }
+    }[]
+  } & { contributors: StudyWithReadRights['contributors'] },
 ) => {
+  const studyWithNormalizedAllowedUsers = {
+    ...study,
+    allowedUsers: normalizeAllowedUsers(study.allowedUsers, study.level, study.organizationVersion.id),
+  }
+
   return study.contributors.some((contributor) => contributor.accountId === user.accountId)
     ? 'Contributor'
-    : getAccountRoleOnStudy(user, study)
+    : getAccountRoleOnStudy(user, studyWithNormalizedAllowedUsers)
 }
 
 export const getAllowedRolesFromDefaultRole = (role: StudyRole) => {

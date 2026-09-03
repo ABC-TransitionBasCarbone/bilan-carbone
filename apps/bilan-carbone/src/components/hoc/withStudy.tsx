@@ -1,11 +1,7 @@
-import { FullStudy, getStudyById } from '@/db/study'
+import { getStudyById } from '@/db/study'
 import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 import React from 'react'
 import { UserSessionProps } from './withAuth'
-
-export type StudyProps = {
-  study: FullStudy
-}
 
 interface Props {
   params: Promise<{
@@ -14,7 +10,7 @@ interface Props {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const withStudy = (WrappedComponent: React.ComponentType<any & UserSessionProps & StudyProps>) => {
+const withStudy = (WrappedComponent: React.ComponentType<any & UserSessionProps>) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Component = async (props: any & Props & UserSessionProps) => {
     const params = await props.params

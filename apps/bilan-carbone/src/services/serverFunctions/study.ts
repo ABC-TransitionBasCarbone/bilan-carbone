@@ -59,7 +59,9 @@ import {
   getStudyCommentsWithStudyIdAndSubPost,
   getStudyNameById,
   getStudySites,
+  getStudySitesWithName,
   getStudyTemplate,
+  getStudyWithReadRights,
   getUsersOnStudy,
   removeSourceToStudy,
   updateEmissionSourceEmissionFactor,
@@ -200,11 +202,27 @@ export const getStudy = async (studyId: string) =>
       return null
     }
     const study = await getStudyById(studyId, session.user.organizationVersionId)
-    if (!study || !hasAccessToStudy(session.user, study)) {
+    if (!study || !(await hasAccessToStudy(session.user, study))) {
       return null
     }
 
     return study
+  })
+
+export const getStudySitesList = async (studyId: string) =>
+  withServerResponse('getStudySitesList', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user || !session.user.organizationVersionId) {
+      return null
+    }
+
+    const studySites = await getStudySitesWithName(studyId)
+    const studyRights = await getStudyWithReadRights(studyId, session.user.organizationVersionId)
+    if (!studyRights || !(await hasAccessToStudy(session.user, studyRights))) {
+      return null
+    }
+
+    return studySites
   })
 
 export const getStudySite = async (studySiteId: string) =>
@@ -221,7 +239,7 @@ export const getStudySite = async (studySiteId: string) =>
     }
 
     const study = await getStudyById(studySites[0].studyId, session.user.organizationVersionId)
-    if (!study || !hasAccessToStudy(session.user, study)) {
+    if (!study || !(await hasAccessToStudy(session.user, study))) {
       return null
     }
 
@@ -687,7 +705,7 @@ export const changeStudyExports = async (studyId: string, types: Export[], contr
     if (!session || !session.user || !study.success || !study.data) {
       throw new Error(NOT_AUTHORIZED)
     }
-    if (!hasEditionRights(getAccountRoleOnStudy(session.user, study.data))) {
+    if (!hasEditionRights(await getAccountRoleOnStudy(session.user, study.data))) {
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -717,7 +735,7 @@ export const adaptFeSourceWithExport = async (studyId: string, types: Export[]) 
   if (!session || !session.user || !study.success || !study.data) {
     throw new Error(NOT_AUTHORIZED)
   }
-  if (!hasEditionRights(getAccountRoleOnStudy(session.user, study.data))) {
+  if (!hasEditionRights(await getAccountRoleOnStudy(session.user, study.data))) {
     throw new Error(NOT_AUTHORIZED)
   }
 
@@ -734,7 +752,7 @@ export const updateStudySpecificExportFields = async (studyId: string, controlMo
     if (!session || !session.user || !study.success || !study.data) {
       throw new Error(NOT_AUTHORIZED)
     }
-    if (!hasEditionRights(getAccountRoleOnStudy(session.user, study.data))) {
+    if (!hasEditionRights(await getAccountRoleOnStudy(session.user, study.data))) {
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -1052,7 +1070,7 @@ export const newStudyContributor = async (
 
     if (
       existingAccount &&
-      getAccountRoleOnStudy(accountWithUserToUserSession(existingAccount as AccountWithUser), studyWithRights)
+      (await getAccountRoleOnStudy(accountWithUserToUserSession(existingAccount as AccountWithUser), studyWithRights))
     ) {
       throw new Error(ALREADY_IN_STUDY)
     }
@@ -1141,7 +1159,10 @@ export const deleteDocumentFromStudy = async (document: Document, studyId: strin
     }
   })
 
-const hasAccessToStudy = (user: UserSession, study: AsyncReturnType<typeof getStudiesSitesFromIds>[0]['study']) => {
+const hasAccessToStudy = async (
+  user: UserSession,
+  study: { allowedUsers: { accountId: string }[]; contributors: { accountId: string }[] },
+) => {
   // The function does not return the user's role, which is sensitive information.
   // We don't need to know the role, only whether or not the user has one
   // We therefore arbitrarily use the "Reader" role
@@ -1151,7 +1172,7 @@ const hasAccessToStudy = (user: UserSession, study: AsyncReturnType<typeof getSt
   }))
   const studyObject = { ...study, allowedUsers: allowedUsers }
   return (
-    getAccountRoleOnStudy(user, studyObject as FullStudy) ||
+    (await getAccountRoleOnStudy(user, studyObject as FullStudy)) ||
     study.contributors.some((contributor) => contributor.accountId === user.accountId)
   )
 }
@@ -1161,13 +1182,20 @@ export const findStudiesWithSites = async (siteIds: string[]) =>
     const [session, studySites] = await Promise.all([dbActualizedAuth(), getStudiesSitesFromIds(siteIds)])
 
     const user = session?.user
+
+    if (!user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
     const authorizedStudySites: AsyncReturnType<typeof getStudiesSitesFromIds> = []
     const unauthorizedStudySites: (Pick<AsyncReturnType<typeof getStudiesSitesFromIds>[0], 'site' | 'study'> & {
       count: number
     })[] = []
 
+    const hasAccess = await hasAccessToStudy(user, studySites[0].study)
+
     studySites.forEach((studySite) => {
-      if (user && hasAccessToStudy(user, studySite.study)) {
+      if (hasAccess) {
         authorizedStudySites.push(studySite)
       } else {
         const targetedSite = unauthorizedStudySites.find(
@@ -1196,7 +1224,7 @@ export const deleteStudyMember = async (member: FullStudy['allowedUsers'][0], st
       !session?.user ||
       !study.success ||
       !study.data ||
-      !hasEditionRights(getAccountRoleOnStudy(session.user, study.data))
+      !hasEditionRights(await getAccountRoleOnStudy(session.user, study.data))
     ) {
       throw new Error(NOT_AUTHORIZED)
     }
@@ -1211,7 +1239,7 @@ export const deleteStudyContributor = async (contributor: StudyContributorDelete
       !session?.user ||
       !study.success ||
       !study.data ||
-      !hasEditionRights(getAccountRoleOnStudy(session.user, study.data))
+      !hasEditionRights(await getAccountRoleOnStudy(session.user, study.data))
     ) {
       throw new Error(NOT_AUTHORIZED)
     }
@@ -1852,7 +1880,7 @@ export const duplicateStudyEmissionSource = async (
     if (
       !study ||
       !getAccountRoleOnStudy(session.user, study) ||
-      !hasEditionRights(getAccountRoleOnStudy(session.user, study))
+      !hasEditionRights(await getAccountRoleOnStudy(session.user, study))
     ) {
       throw new Error(NOT_AUTHORIZED)
     }
@@ -2329,7 +2357,7 @@ export const approveStudyComment = async (commentId: string, studyId: string) =>
     if (!study) {
       throw new Error(NOT_AUTHORIZED)
     }
-    const userRole = getAccountRoleOnStudy(session.user, study)
+    const userRole = await getAccountRoleOnStudy(session.user, study)
 
     if (!userRole || userRole === StudyRole.Reader) {
       throw new Error(NOT_AUTHORIZED)
@@ -2353,7 +2381,7 @@ export const declineStudyComment = async (commentId: string, studyId: string) =>
     if (!study) {
       throw new Error(NOT_AUTHORIZED)
     }
-    const userRole = getAccountRoleOnStudy(session.user, study)
+    const userRole = await getAccountRoleOnStudy(session.user, study)
 
     if (!userRole || userRole === StudyRole.Reader) {
       throw new Error(NOT_AUTHORIZED)
@@ -2373,7 +2401,7 @@ export const editStudyComment = async (commentId: string, newComment: string, st
     if (!study) {
       throw new Error(NOT_AUTHORIZED)
     }
-    const userRole = getAccountRoleOnStudy(session.user, study)
+    const userRole = await getAccountRoleOnStudy(session.user, study)
 
     if (!userRole || userRole === StudyRole.Reader) {
       throw new Error(NOT_AUTHORIZED)

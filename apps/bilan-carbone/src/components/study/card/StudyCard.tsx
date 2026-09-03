@@ -1,7 +1,7 @@
 import ProgressBar from '@/components/base/ProgressBar'
 import { StudyCardItem } from '@/db/study'
 import { hasAccessToEmissionSourceValidation, hasRoleOnStudy } from '@/services/permissions/environment'
-import { getDisplayedRoleOnStudy } from '@/utils/study'
+import { OLDgetDisplayedRoleOnStudy } from '@/utils/study'
 import Box from '@abc-transitionbascarbone/components/src/base/Box'
 import { Button } from '@abc-transitionbascarbone/ui'
 import { customRich } from '@abc-transitionbascarbone/utils/customRich'
@@ -23,7 +23,7 @@ const StudyCard = async ({ study, user, simplified }: Props) => {
   const { id, name, validatedSources } = study
 
   const showRoleInChip = hasRoleOnStudy(user.environment)
-  const accountRoleOnStudy = getDisplayedRoleOnStudy(user, study)
+  const accountRoleOnStudy = await OLDgetDisplayedRoleOnStudy(user, study)
 
   if (!accountRoleOnStudy) {
     return null

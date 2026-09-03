@@ -1,10 +1,19 @@
-import { getStudyById } from '@/db/study'
+import { FullStudy, getStudyById, getStudyWithReadRights, StudyWithReadRights } from '@/db/study'
 import { canReadStudy, canReadStudyDetail } from '@/services/permissions/study'
+import { getAccountRoleOnStudy } from '@/utils/study'
 import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
+import { StudyRole } from '@abc-transitionbascarbone/db-common/enums'
 import { redirect } from 'next/navigation'
 import React from 'react'
 import { UserSessionProps } from './withAuth'
-import { StudyProps } from './withStudy'
+
+export type StudyProps = {
+  studyId: string
+  userStudyRole: StudyRole
+  studyOrganizationVersion: StudyWithReadRights['organizationVersion']
+  study: FullStudy //TODO : remove at the end of refacto
+  studyName: string
+}
 
 interface Props {
   params: Promise<{
@@ -22,7 +31,11 @@ const WithStudyDetails = (WrappedComponent: React.ComponentType<any & UserSessio
       return <NotFound />
     }
 
-    const study = await getStudyById(id, props.user.organizationVersionId)
+    const fullStudy = await getStudyById(id, props.user.organizationVersionId)
+    if (!fullStudy) {
+      return <NotFound />
+    }
+    const study = await getStudyWithReadRights(id, props.user.organizationVersionId)
     if (!study) {
       return <NotFound />
     }
@@ -34,7 +47,21 @@ const WithStudyDetails = (WrappedComponent: React.ComponentType<any & UserSessio
       return redirect(`/etudes/${study.id}/contributeur`)
     }
 
-    return <WrappedComponent {...props} study={study} />
+    const userStudyRole = getAccountRoleOnStudy(props.user, study)
+    if (!userStudyRole) {
+      return <NotFound />
+    }
+
+    return (
+      <WrappedComponent
+        {...props}
+        studyId={study.id}
+        userRole={userStudyRole}
+        studyOrganizationVersion={study.organizationVersion}
+        study={fullStudy}
+        studyName={study.name}
+      />
+    )
   }
 
   Component.displayName = 'WithStudyDetails'

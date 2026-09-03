@@ -12,6 +12,7 @@ import type {
   DuplicableStudy,
   Level,
   Prisma,
+  StudySite,
   StudyTag,
   StudyTagFamily,
   SubPost,
@@ -332,8 +333,17 @@ const fullStudyInclude = {
   },
 } satisfies Prisma.StudyInclude
 
-const normalizeAllowedUsers = (
-  allowedUsers: Prisma.StudyGetPayload<{ include: typeof fullStudyInclude }>['allowedUsers'],
+export const normalizeAllowedUsers = <
+  T extends {
+    account: {
+      organizationVersionId: string | null
+      user: {
+        level: Level | null
+      }
+    }
+  },
+>(
+  allowedUsers: T[],
   studyLevel: Level,
   organizationVersionId: string | null,
 ) =>
@@ -529,6 +539,50 @@ export const getStudyAllowedUsersUnfiltered = async (studyId: string) => {
   return study ? normalizeAllowedUsers(study.allowedUsers, study.level, study.organizationVersionId) : []
 }
 
+export type StudyWithReadRights = {
+  id: string
+  name?: string
+  organizationVersion: {
+    id: string
+    parentId: string | null
+    environment: Environment
+    organization: { name: string }
+  }
+  isPublic: boolean
+  allowedUsers: FullStudy['allowedUsers']
+  contributors: { accountId: string }[]
+  level: Level
+  simplified: boolean
+}
+export const getStudyWithReadRights = async (
+  id: string,
+  organizationVersionId: string,
+): Promise<StudyWithReadRights | null> => {
+  const study = await prismaClient.study.findUnique({
+    where: { id },
+    include: {
+      id: true,
+      name: true,
+      organizationVersion: {
+        select: { id: true, parentId: true, environment: true, organization: { select: { name: true } } },
+      },
+      isPublic: true,
+      allowedUsers: fullStudyInclude.allowedUsers,
+      contributors: {
+        select: {
+          accountId: true,
+        },
+      },
+      level: true,
+      simplified: true,
+    },
+  })
+  if (!study) {
+    return null
+  }
+  return { ...study, allowedUsers: normalizeAllowedUsers(study.allowedUsers, study.level, organizationVersionId) }
+}
+
 // IMPORTANT: Do not use unless you need the full study with all its fields and relations.
 export const getStudyById = async (id: string, organizationVersionId: string | null, tx?: Prisma.TransactionClient) => {
   const study = tx ? await tx.study.findUnique({ where: { id }, include: fullStudyInclude }) : await fetchStudyById(id)
@@ -561,12 +615,7 @@ export const getStudyForNavbar = async (id: string): Promise<StudyForNavbar | nu
           parent: { select: { activatedLicence: true } },
         },
       },
-      allowedUsers: {
-        select: {
-          role: true,
-          account: { select: { id: true, user: { select: { email: true } } } },
-        },
-      },
+      allowedUsers: fullStudyInclude.allowedUsers,
     },
   })
 }
@@ -733,6 +782,12 @@ export const downgradeStudyUserRoles = (studyId: string, accountIds: string[]) =
   )
 
 export const getStudySites = (studyId: string) => prismaClient.studySite.findMany({ where: { studyId } })
+
+export type StudySiteWithName = StudySite & {
+  site: { name: string; id: string }
+}
+export const getStudySitesWithName = (studyId: string) =>
+  prismaClient.studySite.findMany({ where: { studyId }, include: { site: { select: { name: true, id: true } } } })
 
 export const updateStudySiteData = async (studySiteId: string, data: Prisma.StudySiteUpdateInput) => {
   return prismaClient.studySite.update({
@@ -1245,4 +1300,12 @@ export const removeSourceToAllStudies = async (source: Import) => {
       },
     })
   })
+}
+
+export const doesStudyExist = async (studyId: string) => {
+  const study = await prismaClient.study.findUnique({
+    where: { id: studyId },
+    select: { id: true },
+  })
+  return !!study
 }

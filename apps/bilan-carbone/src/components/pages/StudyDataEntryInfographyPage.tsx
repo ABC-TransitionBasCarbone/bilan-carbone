@@ -1,8 +1,8 @@
 'use client'
 
-import type { FullStudy } from '@/db/study'
+import { FullStudy, StudySiteWithName, StudyWithReadRights } from '@/db/study'
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
-import { Environment, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
+import { Environment, StudyRole } from '@abc-transitionbascarbone/db-common'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
@@ -12,26 +12,32 @@ import SelectStudySite from '../study/site/SelectStudySite'
 import useStudySite from '../study/site/useStudySite'
 
 interface Props {
-  study: FullStudy
+  studyId: string
   userRole: StudyRole
   user: UserSession
   canDeleteStudy?: boolean
   canDuplicateStudy?: boolean
   duplicableEnvironments: Environment[]
-  organizationVersionId: string | null
+  studyOrganizationVersion: StudyWithReadRights['organizationVersion']
+  studySites: StudySiteWithName[]
+  studyName: string
+  fullStudy: FullStudy
 }
 
 const StudyDataEntryInfographyPage = ({
-  study,
+  studyId,
   userRole,
   canDeleteStudy,
   canDuplicateStudy,
   duplicableEnvironments,
-  organizationVersionId,
+  studyOrganizationVersion,
+  studySites,
+  studyName,
+  fullStudy,
 }: Props) => {
   const tNav = useTranslations('nav')
-  const tStudyNav = useTranslations('study.navigation')
-  const { siteId, studySiteId, setSite } = useStudySite(study)
+  const tStudyNav = useTranslations('fullStudy.navigation')
+  const { siteId, studySiteId, setSite } = useStudySite(studyId, studySites)
 
   return (
     <>
@@ -39,19 +45,19 @@ const StudyDataEntryInfographyPage = ({
         current={tStudyNav('dataEntry')}
         links={[
           { label: tNav('home'), link: '/' },
-          study.organizationVersion.isCR
+          studyOrganizationVersion
             ? {
-                label: study.organizationVersion.organization.name,
-                link: `/organisations/${study.organizationVersion.id}`,
+                label: studyOrganizationVersion.organization.name,
+                link: `/organisations/${studyOrganizationVersion.id}`,
               }
             : undefined,
 
-          { label: study.name, link: `/etudes/${study.id}` },
+          { label: studyName, link: `/etudes/${studyId}` },
         ].filter((link) => link !== undefined)}
       />
       <StudyManagementActions
-        study={study}
-        organizationVersionId={organizationVersionId}
+        study={fullStudy}
+        organizationVersionId={studyOrganizationVersion?.id}
         canDeleteStudy={canDeleteStudy}
         canDuplicateStudy={canDuplicateStudy}
         duplicableEnvironments={duplicableEnvironments}
@@ -64,10 +70,10 @@ const StudyDataEntryInfographyPage = ({
             as="h2"
             actions={[...(studyActions ?? [])]}
             rightComponent={
-              <SelectStudySite sites={study.sites} defaultValue={siteId} setSite={setSite} showAllOption={false} />
+              <SelectStudySite sites={studySites} defaultValue={siteId} setSite={setSite} showAllOption={false} />
             }
           >
-            <AllPostsInfographyContainer study={study} studySiteId={studySiteId} siteId={siteId} />
+            <AllPostsInfographyContainer study={fullStudy} studySiteId={studySiteId} siteId={siteId} />
           </Block>
         )}
       </StudyManagementActions>

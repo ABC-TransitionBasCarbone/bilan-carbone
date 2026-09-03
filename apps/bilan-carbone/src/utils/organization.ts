@@ -10,17 +10,17 @@ export const isAdminOnOrga = (
     id: string
     parentId: string | null
   },
-) => isAdmin(account.role) && isInOrgaOrParent(account.organizationVersionId, organizationVersion)
+) =>
+  isAdmin(account.role) &&
+  isInOrgaOrParent(account.organizationVersionId, organizationVersion.id, organizationVersion.parentId)
 
 export const isInOrgaOrParent = (
   userOrganizationVersionId: string | null,
-  organizationVersion: {
-    id: string
-    parentId: string | null
-  },
+  organizationVersionId: string,
+  parentId: string | null,
 ) =>
   userOrganizationVersionId &&
-  (userOrganizationVersionId === organizationVersion.id || userOrganizationVersionId === organizationVersion.parentId)
+  (userOrganizationVersionId === organizationVersionId || userOrganizationVersionId === parentId)
 
 export const hasEditionRole = (isCR: boolean, userRole: Role) =>
   isCR ? userRole !== Role.DEFAULT : isAdmin(userRole) || userRole === Role.GESTIONNAIRE
@@ -32,7 +32,10 @@ export const canEditOrganizationVersion = (
     parentId: string | null
   },
 ) => {
-  if (organizationVersion && !isInOrgaOrParent(account.organizationVersionId, organizationVersion)) {
+  if (
+    organizationVersion &&
+    !isInOrgaOrParent(account.organizationVersionId, organizationVersion.id, organizationVersion.parentId)
+  ) {
     return false
   }
 

@@ -13,6 +13,7 @@ interface Props {
 
 const StudyName = ({ studyId, name, role, clickable = false }: Props) => {
   const tRole = useTranslations('study.role')
+  console.log(role)
 
   return (
     <StyledChip

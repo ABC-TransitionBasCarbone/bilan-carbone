@@ -1,7 +1,5 @@
-import type { FullStudy } from '@/db/study'
-
 export const getSelectStudySiteValue = (
-  sites: FullStudy['sites'] | null | undefined,
+  sites: { site: { id: string } }[],
   siteId: string,
   showAllOption = true,
 ): string => {

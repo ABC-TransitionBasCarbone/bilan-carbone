@@ -4,13 +4,7 @@ import { getOrganizationVersionForRightsCheck, getOrganizationVersionsByOrganiza
 import { FullStudy, getStudyById } from '@/db/study'
 import { getAccountByIdWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
 import { canEditOrganizationVersion, hasActiveLicence, isInOrgaOrParent } from '@/utils/organization'
-import {
-  getAccountRoleOnStudy,
-  getDuplicableEnvironments,
-  hasEditionRights,
-  hasSufficientLevel,
-  StudyWithRoleFields,
-} from '@/utils/study'
+import { getAccountRoleOnStudy, getDuplicableEnvironments, hasEditionRights, hasSufficientLevel } from '@/utils/study'
 import type { Prisma, Study, User } from '@abc-transitionbascarbone/db-common'
 import { DeactivatableFeature, Environment, Level, Role, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
 import { UserSession } from 'next-auth'
@@ -40,7 +34,8 @@ export const canReadStudy = async (user: UserSession | UserWithAllowedStudies, s
 
   if (
     isAdminOnStudyOrga(user as UserSession, study.organizationVersion) ||
-    (study.isPublic && isInOrgaOrParent(user.organizationVersionId, study.organizationVersion))
+    (study.isPublic &&
+      isInOrgaOrParent(user.organizationVersionId, study.organizationVersion.id, study.organizationVersion.parentId))
   ) {
     return true
   }
@@ -186,7 +181,7 @@ const canEditStudy = async (user: UserSession, study: FullStudy) => {
     return true
   }
 
-  const userRightsOnStudy = getAccountRoleOnStudy(user, study)
+  const userRightsOnStudy = await getAccountRoleOnStudy(user, study)
   if (!userRightsOnStudy || !hasEditionRights(userRightsOnStudy)) {
     return false
   }
@@ -234,7 +229,7 @@ export const canChangeOpeningHours = async (user: UserSession, study: FullStudy)
   return canEditStudy(user, study)
 }
 
-export const canAddRightOnStudy = (
+export const canAddRightOnStudy = async (
   user: UserSession,
   study: FullStudy,
   userToAddOnStudy: User | null,
@@ -248,7 +243,7 @@ export const canAddRightOnStudy = (
     return false
   }
 
-  const userRoleOnStudy = getAccountRoleOnStudy(user, study)
+  const userRoleOnStudy = await getAccountRoleOnStudy(user, study)
 
   if (!userRoleOnStudy || userRoleOnStudy === StudyRole.Reader) {
     return false
@@ -261,12 +256,12 @@ export const canAddRightOnStudy = (
   return true
 }
 
-export const canAddContributorOnStudy = (user: UserSession, study: FullStudy) => {
+export const canAddContributorOnStudy = async (user: UserSession, study: FullStudy) => {
   if (isAdminOnStudyOrga(user, study.organizationVersion)) {
     return true
   }
 
-  const userRightsOnStudy = getAccountRoleOnStudy(user, study)
+  const userRightsOnStudy = await getAccountRoleOnStudy(user, study)
   if (!userRightsOnStudy || userRightsOnStudy === StudyRole.Reader) {
     return false
   }
@@ -291,7 +286,7 @@ export const canDeleteStudy = async (studyId: string) => {
     return true
   }
 
-  const accountRoleOnStudy = getAccountRoleOnStudy(session.user, study)
+  const accountRoleOnStudy = await getAccountRoleOnStudy(session.user, study)
 
   if (accountRoleOnStudy && accountRoleOnStudy === StudyRole.Validator) {
     return true
@@ -322,7 +317,7 @@ export const canDuplicateStudy = async (studyId: string) => {
     return false
   }
 
-  const accountRoleOnStudy = getAccountRoleOnStudy(session.user, study)
+  const accountRoleOnStudy = await getAccountRoleOnStudy(session.user, study)
   if (!accountRoleOnStudy || accountRoleOnStudy !== StudyRole.Validator) {
     return false
   }
@@ -387,7 +382,12 @@ export const filterStudyEmissionSources = (user: UserSession, study: FullStudy) 
   }
 }
 
-export const canReadStudyDetail = async (user: UserSession, study: StudyWithRoleFields) => {
+export const canReadStudyDetail = async (
+  user: UserSession,
+  study: Pick<FullStudy, 'id' | 'isPublic' | 'allowedUsers'> & {
+    organizationVersion: { id: string; parentId: string | null }
+  },
+) => {
   const studyRight = await canReadStudy(user, study.id)
   if (!studyRight) {
     return false
@@ -395,7 +395,8 @@ export const canReadStudyDetail = async (user: UserSession, study: StudyWithRole
 
   if (
     isAdminOnStudyOrga(user, study.organizationVersion) ||
-    (study.isPublic && isInOrgaOrParent(user.organizationVersionId, study.organizationVersion))
+    (study.isPublic &&
+      isInOrgaOrParent(user.organizationVersionId, study.organizationVersion.id, study.organizationVersion.parentId))
   ) {
     return true
   }
@@ -434,7 +435,7 @@ export const canEditStudyFlows = async (studyId: string) => {
     return false
   }
 
-  const userRoleOnStudy = getAccountRoleOnStudy(session.user, study)
+  const userRoleOnStudy = await getAccountRoleOnStudy(session.user, study)
   if (!userRoleOnStudy || userRoleOnStudy === StudyRole.Reader) {
     return false
   }

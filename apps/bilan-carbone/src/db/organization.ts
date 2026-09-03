@@ -413,3 +413,15 @@ export const createOrUpdateOrganization = async (
 
   return updatedOrganization
 }
+
+export const getOrganizationWithLicence = async (organizationVersionId: string) => {
+  return prismaClient.organizationVersion.findUnique({
+    where: { id: organizationVersionId },
+    select: {
+      id: true,
+      environment: true,
+      activatedLicence: true,
+      parent: { select: { id: true, activatedLicence: true } },
+    },
+  })
+}
