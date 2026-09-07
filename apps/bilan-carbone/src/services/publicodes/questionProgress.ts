@@ -9,11 +9,16 @@ import {
   FormLayout,
   getEvaluatedFormLayout,
 } from '@abc-transitionbascarbone/publicodes/form/layouts'
+import { EvaluatedFormElement } from '@publicodes/forms'
 import Engine from 'publicodes'
 import { SimplifiedPost } from '../posts'
 
 export type QuestionStats = { answered: number; total: number }
 export type StatsResult = Partial<Record<SimplifiedPost, Partial<Record<SubPost, QuestionStats>>>>
+
+const hasDefaultValue = (el: EvaluatedFormElement<string>): boolean => {
+  return 'defaultValue' in el && el.defaultValue !== null && el.defaultValue !== undefined && el.defaultValue !== 0
+}
 
 export const getQuestionProgressBySubPost = <RuleName extends string = string>(
   engine: Engine<RuleName>,
@@ -37,7 +42,7 @@ export const getQuestionProgressBySubPost = <RuleName extends string = string>(
             case 'input':
               if (evaluatedLayout.evaluatedElement.applicable) {
                 acc.total += 1
-                if (evaluatedLayout.evaluatedElement.answered) {
+                if (evaluatedLayout.evaluatedElement.answered || hasDefaultValue(evaluatedLayout.evaluatedElement)) {
                   acc.answered += 1
                 }
               }
@@ -103,7 +108,9 @@ const isListLayoutApplicable = (layout: EvaluatedListLayout<string>): boolean =>
 }
 
 const isListLayoutAnswered = (layout: EvaluatedListLayout<string>): boolean => {
-  return layout.evaluatedListRows.some((el) => el.elements.every((e) => !e.applicable || e.answered))
+  return layout.evaluatedListRows.some((el) =>
+    el.elements.every((e) => !e.applicable || e.answered || hasDefaultValue(e)),
+  )
 }
 
 const isTableLayoutApplicable = (layout: EvaluatedTableLayout<string>): boolean => {
@@ -115,7 +122,7 @@ const isTableLayoutAnswered = (layout: EvaluatedTableLayout<string>): boolean =>
     row.every(
       (el, i) =>
         // NOTE: the first column is the label, so we consider it answered
-        i === 0 || !el.applicable || el.answered,
+        i === 0 || !el.applicable || el.answered || hasDefaultValue(el),
     ),
   )
 }
@@ -126,8 +133,4 @@ const isMosaicLayoutApplicable = (layout: EvaluatedMosaicLayout<string>): boolea
 
 const isMosaicLayoutAnswered = (layout: EvaluatedMosaicLayout<string>): boolean => {
   return layout.evaluatedChildren.some((el) => el.applicable && (el.answered || hasDefaultValue(el)))
-}
-
-const hasDefaultValue = (el: EvaluatedMosaicLayout<string>['evaluatedChildren'][number]): boolean => {
-  return 'defaultValue' in el && el.defaultValue != null
 }
