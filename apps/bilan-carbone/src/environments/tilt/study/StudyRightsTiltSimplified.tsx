@@ -1,7 +1,6 @@
 'use client'
 
 import { FormAutocomplete } from '@/components/form/Autocomplete'
-import { FormDatePicker } from '@/components/form/DatePicker'
 import StudySites from '@/components/study/perimeter/StudySites'
 import SelectStudySite from '@/components/study/site/SelectStudySite'
 import { OrganizationWithSites } from '@/db/account'
@@ -16,15 +15,16 @@ import {
 import { loadMappedSituation } from '@/services/serverFunctions/situation'
 import { changeStudyDates, changeStudySiteTiltSimplified } from '@/services/serverFunctions/study'
 import {
-  ChangeStudyDatesCommand,
-  ChangeStudyDatesCommandValidation,
   ChangeStudySiteTiltSimplifiedCommand,
   ChangeStudySiteTiltSimplifiedValidation,
+  ChangeTiltStudyDatesCommand,
+  ChangeTiltStudyDatesCommandValidation,
 } from '@/services/serverFunctions/study.command'
 import { sortAlphabetically } from '@/services/utils'
 import { HelpIcon } from '@abc-transitionbascarbone/components'
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
+import YearPicker from '@abc-transitionbascarbone/components/src/form/YearPicker'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import GlossaryModal from '@abc-transitionbascarbone/components/src/modals/GlossaryModal'
 import { SiteCAUnit, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
@@ -35,7 +35,7 @@ import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useForm, useWatch } from 'react-hook-form'
+import { Controller, useForm, useWatch } from 'react-hook-form'
 import styles from './StudyRightsTiltSimplified.module.css'
 
 interface Props {
@@ -88,14 +88,13 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
     }
   }, [isOtherStructure, form])
 
-  const dateForm = useForm<ChangeStudyDatesCommand>({
-    resolver: zodResolver(ChangeStudyDatesCommandValidation),
+  const dateForm = useForm<ChangeTiltStudyDatesCommand>({
+    resolver: zodResolver(ChangeTiltStudyDatesCommandValidation),
     mode: 'onSubmit',
     reValidateMode: 'onChange',
     defaultValues: {
       studyId: study.id,
-      startDate: study.startDate.toISOString(),
-      endDate: study.endDate.toISOString(),
+      studyDate: study.startDate.getFullYear().toString(),
     },
   })
 
@@ -125,27 +124,32 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
     setStudySiteData()
   }, [form, study.id, studySite])
 
-  const handleDateChange = useCallback(async () => {
-    const isValid = await dateForm.trigger()
-    if (isValid) {
-      const values = dateForm.getValues()
-      await callServerFunction(() => changeStudyDates(values), {
-        onSuccess: () => {
-          router.refresh()
-        },
-        onError: () => {
-          router.refresh()
+  const handleDateChange = useCallback(
+    async (studyDate: string) => {
+      dateForm.setValue('studyDate', studyDate, { shouldValidate: true })
+      const isValid = await dateForm.trigger('studyDate')
+      if (isValid) {
+        const values = dateForm.getValues()
+        const payload = {
+          studyId: values.studyId,
+          startDate: new Date(`${values.studyDate}-01-01`).toISOString(),
+          endDate: new Date(`${values.studyDate}-12-31`).toISOString(),
+        }
+        await callServerFunction(() => changeStudyDates(payload), {
+          onError: () => {
+            router.refresh()
 
-          dateForm.reset({
-            studyId: study.id,
-            startDate: study.startDate.toISOString(),
-            endDate: study.endDate.toISOString(),
-          })
-        },
-        getErrorMessage: (errorMessage: string) => tValidation(errorMessage),
-      })
-    }
-  }, [dateForm, callServerFunction, router, tValidation, study])
+            dateForm.reset({
+              studyId: study.id,
+              studyDate: study.startDate.getFullYear().toString(),
+            })
+          },
+          getErrorMessage: (errorMessage: string) => tValidation(errorMessage),
+        })
+      }
+    },
+    [dateForm, callServerFunction, router, tValidation, study],
+  )
 
   const onStudySiteUpdate = useCallback(() => {
     form.handleSubmit(
@@ -224,18 +228,19 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
               )}
               <Typography className="bold">{t('dates')}</Typography>
               <div className={styles.dates}>
-                <FormDatePicker
+                <Controller
                   control={dateForm.control}
-                  name="startDate"
-                  label={tLabel('start')}
-                  onAccept={handleDateChange}
-                />
-                <FormDatePicker
-                  control={dateForm.control}
-                  name="endDate"
-                  label={tLabel('end')}
-                  data-testid="new-study-endDate"
-                  onAccept={handleDateChange}
+                  name="studyDate"
+                  render={({ field: { onChange, value } }) => (
+                    <YearPicker
+                      label={tLabel('targetYear')}
+                      value={value}
+                      onChange={(newStudyDate) => {
+                        onChange(newStudyDate)
+                        void handleDateChange(newStudyDate)
+                      }}
+                    />
+                  )}
                 />
               </div>
             </div>

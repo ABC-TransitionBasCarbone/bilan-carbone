@@ -43,7 +43,7 @@ const YearPickerInput = <RuleName extends string = string>({
 
   return (
     <DatePicker
-      label={''}
+      label={label ?? ''}
       value={convertedValue}
       onChange={handleYearChange}
       disabled={formElement.applicable === false}
