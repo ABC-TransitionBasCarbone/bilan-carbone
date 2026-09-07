@@ -1,7 +1,7 @@
 import { usePublicodesRuleTranslation } from '@abc-transitionbascarbone/publicodes/hooks'
 import Box from '@mui/material/Box'
 import { EvaluatedFormElement } from '@publicodes/forms'
-import Engine from 'publicodes'
+import Engine, { type Rule } from 'publicodes'
 import { InputField as PublicodesInputField } from './InputField'
 import { QuestionContainer } from './QuestionContainer'
 import { FILTER_RULE_KEY, OnFieldChange } from './utils'
@@ -20,7 +20,7 @@ export const InputQuestion = <RuleName extends string>({
   containerVariant = 'default',
 }: InputQuestionProps<RuleName>) => {
   const translation = usePublicodesRuleTranslation(formElement.id)
-  const rawRule = engine?.getParsedRules()[formElement.id]?.rawNode as { description?: string; suggestions?: Record<string, string | number | Record<string, unknown>> } | undefined
+  const rawRule: Rule | undefined = engine?.getParsedRules()[formElement.id]?.rawNode
   const question = translation?.question
   const description = translation?.description ?? rawRule?.description
 
