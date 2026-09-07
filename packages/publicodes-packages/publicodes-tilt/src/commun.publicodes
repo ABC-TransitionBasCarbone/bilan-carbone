@@ -152,7 +152,7 @@ commun . FE . moyen de transport:
         id: 28132
 
     voiture moyenne France:
-      formule: hybride * 0.072 + électrique * 0.029 + gazole * 0.515 + essence * 0.384
+      formule: hybride * 0.072 + électrique * 0.029 + gazole * 0.515 + essence * 0.384 #Résultat : 0.333
       note: source basée sur le parc automobile de voiture particulière en France en 2024 avec extrapolation pour ommettre les autres modes (GPL Hydrogène etc...) https://www.statistiques.developpement-durable.gouv.fr/donnees-sur-le-parc-automobile-francais-au-1er-janvier-2024
       avec:
         hybride:

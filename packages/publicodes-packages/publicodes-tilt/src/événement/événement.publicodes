@@ -185,7 +185,7 @@
 événement . déplacements:
   formule:
     somme:
-      - commun . FE . moyen de transport . voiture moyenne France
+      - voiture * commun . FE . moyen de transport . voiture moyenne France
       ## on néglige l'impact des modes actifs (vélo, marche, trottinette...)
       - deux roues * FE deux roues
       - transport en commun * commun . FE . moyen de transport . transports en commun moyenne France
@@ -330,10 +330,10 @@
   avec: 
     consommation:
       question: Quelle a été la consommation de gaz au cours de l'événement ?
-      unité: m3
+      unité: m³
     FE:
       valeur: 2.32
-      unité: kgCO2e/m3
+      unité: kgCO2e/m³
       meta:
         nom: Gaz naturel - 2022/mix moyen/consommation
         id: 37138
@@ -381,6 +381,7 @@
     nombre de nuits:
       question: Camping
       unité: nuits
+      par défaut: 0
     FE:
       valeur: 1.4
       unité: kgCO2e/nuits
@@ -398,6 +399,7 @@
     nombre de nuits:
       question: Hôtel
       unité: nuits
+      par défaut: 0
     FE:
       valeur: 8.47
       unité: kgCO2e/nuits

@@ -84,8 +84,8 @@ fret . transport . carburant:
       valeur: 3.33
       unité: kgCO2e/litre
       meta:
-        id: 25775
-        nom: Gazole routier (B7)
+        id: 48823
+        nom: Diesel B7 (7% biodiesel) - usage routier
 
 fret . transport . empreinte:
   titre: Empreinte des livraisons par des modes non possédés
@@ -130,8 +130,8 @@ fret . transport . local . split:
   formule: routier * 1
   avec:
     routier:
-      valeur: 0.84
-      unité: kgCO2e/t.km
+      valeur: 0.00084
+      unité: kgCO2e/kg.km
       meta:
         id: 43735
         nom: VUL/< 3,5 tonnes/Diesel routier, incorporation 7 % de biodiesel

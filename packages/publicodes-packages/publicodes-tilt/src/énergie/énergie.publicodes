@@ -1,5 +1,3 @@
-# TO DO : Virer les partout, ça ne sert plus à rien si un seul sp. Penser à aussi changer dnas énergie. Idem clean chauffe-eau si valid que c'est fine en l'état. Check les valeurs des FE réseaux au cas ou.
-
 énergie:
   formule:
     somme:
