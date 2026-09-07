@@ -1,0 +1,131 @@
+utilisation . conso energie:
+  formule: emissions
+  unité: kgCO2e
+
+utilisation . conso energie . présente:
+  question: Fournissez-vous des produits ou services qui entraînent des consommations d'énergie chez vos usagers ?
+
+utilisation . conso energie . emissions:
+  applicable si:
+    toutes ces conditions:
+      - est défini: utilisation . conso energie . présente
+      - utilisation . conso energie . présente = oui
+  icônes: 
+  mosaique:
+    type: nombre
+    options:
+      - électricité . consommation
+      - gaz . consommation
+      - fioul . consommation
+      - essence . consommation
+      - diesel . consommation
+  question: Veuillez indiquer les consommations des usagers de vos produits ou services pour les types d'énergie suivants
+  titre: Consommations énergétiques
+  description: À compléter uniquement si vous fournissez des produits ou services qui entraînent des consommations d'énergie chez vos usagers. On renseigne habituellement les kWh qui seront utilisés par tous les produits ou services fournis sur leur durée de vie. Par exemple, si une batterie rechargeable d'une durée de vie estimée de 5 ans est fournie, on prendra en compte les kWh consommés pour une utilisation moyenne durant 5 ans.
+  formule: 
+    somme:
+      - électricité
+      - gaz
+      - fioul
+      - essence
+      - diesel
+  unité: kgCO2e
+
+utilisation . conso energie . emissions . électricité:
+  titre: Électricité
+  formule: consommation * FE
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    FE:
+      valeur: 0.0461
+      unité: kgCO2e/kWh
+      meta:
+        nom: Electricité/2025 - mix moyen/consommation
+        id: 48788
+        source: Base Empreinte®
+
+utilisation . conso energie . emissions . électricité . consommation:
+  question: À combien de kWh estimez-vous les consommations d'électricité ?
+  titre: Consommation d'électricité par les usagers
+  unité: kWh
+  par défaut: 0
+
+utilisation . conso energie . emissions . gaz:
+  titre: Gaz naturel
+  formule: consommation * FE
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    FE:
+      valeur: 2.32 
+      unité: kgCO2e/m³
+      meta:
+        nom: Gaz naturel - 2022/mix moyen/consommation
+        id: 37138
+        source: Base Carbone®
+
+utilisation . conso energie . emissions . gaz . consommation:
+  question: À combien de m³ estimez-vous les consommations de gaz ?
+  titre: Consommation de gaz par les usagers
+  unité: m³
+  par défaut: 0
+
+utilisation . conso energie . emissions . fioul:
+  titre: Fioul domestique
+  formule: consommation * FE
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    FE:
+      valeur: 3.24
+      unité: kgCO2e/litre
+      meta:
+        nom: Fioul domestique
+        id: 14087
+        source: Base Carbone®
+
+utilisation . conso energie . emissions . fioul . consommation:
+  question: À combien de litres estimez-vous les consommations de fioul ?
+  titre: Consommation de fioul par les usagers
+  unité: litre
+  par défaut: 0
+
+utilisation . conso energie . emissions . essence:
+  titre: Essence E10
+  formule: consommation * FE
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    FE:
+      valeur: 2.85
+      unité: kgCO2e/litre
+      meta:
+        id: 48825
+        nom: Essence E10 (10% bioéthanol) - usage routier
+
+utilisation . conso energie . emissions . essence . consommation:
+  question: À combien de litres estimez-vous les consommations d'essence ?
+  titre: Consommation d'essence par les usagers
+  unité: litre
+  par défaut: 0
+
+utilisation . conso energie . emissions . diesel:
+  titre: Diesel B7
+  formule: consommation * FE
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    FE:
+      valeur: 3.3
+      unité: kgCO2e/litre
+      meta:
+        id: 48823
+        nom: Diesel B7 (7% biodiesel) - usage routier
+
+utilisation . conso energie . emissions . diesel . consommation:
+  question: À combien de litres estimez-vous les consommations de diesel ?
+  titre: Consommation de diesel par les usagers
+  unité: litre
+  par défaut: 0
+
