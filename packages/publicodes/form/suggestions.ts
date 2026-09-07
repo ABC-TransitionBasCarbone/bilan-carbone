@@ -1,8 +1,10 @@
 import { isObject } from '@abc-transitionbascarbone/utils/object'
 import {
+  compareSuggestionEntries,
   getRelativeRuleName,
   isSuggestionInputValue,
   NumericSuggestionEntry,
+  SuggestionEntry,
   SuggestionInputValue,
 } from './utils'
 
@@ -16,6 +18,22 @@ export type MosaicSuggestionEntry<RuleName extends string> = {
     ruleName: RuleName
     value: SuggestionInputValue
   }[]
+}
+
+const getSuggestionEntries = (suggestions?: Record<string, unknown>): SuggestionEntry[] => {
+  if (!suggestions || !isObject(suggestions)) {
+    return []
+  }
+
+  return Object.entries(suggestions)
+    .filter((entry): entry is [string, SuggestionInputValue] => isSuggestionInputValue(entry[1]))
+    .map(([label, value]) => ({ label, value }))
+}
+
+export const getNumericSuggestionEntries = (suggestions?: Record<string, unknown>): NumericSuggestionEntry[] => {
+  return getSuggestionEntries(suggestions)
+    .filter((entry): entry is NumericSuggestionEntry => typeof entry.value === 'number' && Number.isFinite(entry.value))
+    .sort(compareSuggestionEntries)
 }
 
 
@@ -45,11 +63,7 @@ export const getMosaicSuggestionEntries = <RuleName extends string>(
 
     const values: MosaicSuggestionEntry<RuleName>['values'] = []
 
-    for (const [relativeRuleName, rawValue] of Object.entries(rawSuggestion)) {
-      if (!isSuggestionInputValue(rawValue)) {
-        continue
-      }
-
+    for (const { label: relativeRuleName, value } of getSuggestionEntries(rawSuggestion)) {
       const fullRuleName = fullRuleByRelativeName.get(relativeRuleName)
       if (!fullRuleName) {
         continue
@@ -57,7 +71,7 @@ export const getMosaicSuggestionEntries = <RuleName extends string>(
 
       values.push({
         ruleName: fullRuleName,
-        value: rawValue,
+        value,
       })
     }
 

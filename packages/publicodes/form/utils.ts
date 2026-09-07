@@ -1,5 +1,4 @@
 import { formatNumber } from '@abc-transitionbascarbone/utils/number'
-import { isObject } from '@abc-transitionbascarbone/utils/object'
 import { normalizeCategoryKey } from '@abc-transitionbascarbone/utils/parsing'
 import { EvaluatedFormElement, FormPageElementProp, FormPages } from '@publicodes/forms'
 import Engine, { reduceAST, RuleNode, utils } from 'publicodes'
@@ -15,10 +14,12 @@ export type OnFieldChange<RuleName extends string = string> = (
 
 export type SuggestionInputValue = string | number | boolean
 
-export type NumericSuggestionEntry = {
+export type SuggestionEntry<Value = SuggestionInputValue> = {
   label: string
-  value: number
+  value: Value
 }
+
+export type NumericSuggestionEntry = SuggestionEntry<number>
 
 export const FILTER_RULE_KEY = 'DT . filtrage'
 export const SURVEY_CATEGORY_KEYS = [
@@ -73,17 +74,6 @@ export const isSuggestionInputValue = (value: unknown): value is SuggestionInput
   }
 
   return typeof value === 'string' || typeof value === 'boolean'
-}
-
-export const getNumericSuggestionEntries = (suggestions?: Record<string, unknown>): NumericSuggestionEntry[] => {
-  if (!suggestions || !isObject(suggestions)) {
-    return []
-  }
-
-  return Object.entries(suggestions)
-    .filter((entry): entry is [string, number] => typeof entry[1] === 'number' && Number.isFinite(entry[1]))
-    .map(([label, value]) => ({ label, value }))
-    .sort(compareSuggestionEntries)
 }
 
 export const getRuleParentName = (ruleName: string): string | null => {
