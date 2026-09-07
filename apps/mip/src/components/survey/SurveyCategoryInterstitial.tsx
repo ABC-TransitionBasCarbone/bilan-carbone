@@ -13,7 +13,7 @@ interface Props {
 const SurveyCategoryInterstitial = ({ categoryKey }: Props) => {
   const t = useTranslations('survey')
   const type = getImpactCo2WidgetType(categoryKey, 'interstitial')
-  const search = getImpactCo2WidgetSearch(categoryKey, 'interstitial')
+  const search = getImpactCo2WidgetSearch(categoryKey)
 
   return (
     <div className="flex-col gapped1" data-testid="survey-category-interstitial">

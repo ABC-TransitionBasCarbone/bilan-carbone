@@ -10,7 +10,7 @@ interface Props {
 
 const SurveyImpactCo2Section = ({ categoryKey }: Props) => {
   const type = getImpactCo2WidgetType(categoryKey, 'section')
-  const search = getImpactCo2WidgetSearch(categoryKey, 'section')
+  const search = getImpactCo2WidgetSearch(categoryKey)
 
   if (!type) {
     return null

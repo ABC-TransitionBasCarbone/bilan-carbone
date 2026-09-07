@@ -66,11 +66,6 @@ const TRANSPORT_WIDGET_SEARCH_BY_CATEGORY: Partial<Record<string, string>> = {
   transport: buildTransportWidgetSearch(PRO_TRANSPORT_MODES, ['avion', 'intercites']),
 }
 
-const IMPACT_CO2_WIDGET_SEARCH_BY_CATEGORY: Record<ImpactCo2DisplayMode, Partial<Record<string, string>>> = {
-  interstitial: TRANSPORT_WIDGET_SEARCH_BY_CATEGORY,
-  section: TRANSPORT_WIDGET_SEARCH_BY_CATEGORY,
-}
-
 const normalizeCategoryKey = (categoryKey: string): string => removeDiacritics(categoryKey).trim().toLowerCase()
 
 const CATEGORY_KEY_ALIASES: Record<string, string> = {
@@ -83,31 +78,18 @@ const resolveCategoryKey = (categoryKey: string): string => {
   return CATEGORY_KEY_ALIASES[normalized] ?? normalized
 }
 
+const resolveCategoryValue = (values: Partial<Record<string, string>>, categoryKey: string): string | undefined => {
+  return values[categoryKey] ?? values[resolveCategoryKey(categoryKey)]
+}
+
 const DEFAULT_WIDGET_BY_MODE: Partial<Record<ImpactCo2DisplayMode, string>> = {
   interstitial: 'transport',
 }
 
 export const getImpactCo2WidgetType = (categoryKey: string, mode: ImpactCo2DisplayMode): string | undefined => {
-  const direct = IMPACT_CO2_WIDGET_BY_CATEGORY[mode][categoryKey]
-  if (direct) {
-    return direct
-  }
-
-  const resolvedKey = resolveCategoryKey(categoryKey)
-  const resolved = IMPACT_CO2_WIDGET_BY_CATEGORY[mode][resolvedKey]
-  if (resolved) {
-    return resolved
-  }
-
-  return DEFAULT_WIDGET_BY_MODE[mode]
+  return resolveCategoryValue(IMPACT_CO2_WIDGET_BY_CATEGORY[mode], categoryKey) ?? DEFAULT_WIDGET_BY_MODE[mode]
 }
 
-export const getImpactCo2WidgetSearch = (categoryKey: string, mode: ImpactCo2DisplayMode): string | undefined => {
-  const direct = IMPACT_CO2_WIDGET_SEARCH_BY_CATEGORY[mode][categoryKey]
-  if (direct) {
-    return direct
-  }
-
-  const resolvedKey = resolveCategoryKey(categoryKey)
-  return IMPACT_CO2_WIDGET_SEARCH_BY_CATEGORY[mode][resolvedKey]
+export const getImpactCo2WidgetSearch = (categoryKey: string): string | undefined => {
+  return resolveCategoryValue(TRANSPORT_WIDGET_SEARCH_BY_CATEGORY, categoryKey)
 }
