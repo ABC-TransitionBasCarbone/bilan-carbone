@@ -35,7 +35,7 @@ import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Controller, useForm, useWatch } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import styles from './StudyRightsTiltSimplified.module.css'
 
 interface Props {
@@ -228,20 +228,7 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
               )}
               <Typography className="bold">{t('dates')}</Typography>
               <div className={styles.dates}>
-                <Controller
-                  control={dateForm.control}
-                  name="studyDate"
-                  render={({ field: { onChange, value } }) => (
-                    <YearPicker
-                      label={tLabel('targetYear')}
-                      value={value}
-                      onChange={(newStudyDate) => {
-                        onChange(newStudyDate)
-                        void handleDateChange(newStudyDate)
-                      }}
-                    />
-                  )}
-                />
+                <YearPicker control={dateForm.control} label={tLabel('targetYear')} handleChange={handleDateChange} />
               </div>
             </div>
           </>
