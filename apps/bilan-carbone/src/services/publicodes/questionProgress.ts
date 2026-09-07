@@ -17,7 +17,7 @@ export type QuestionStats = { answered: number; total: number }
 export type StatsResult = Partial<Record<SimplifiedPost, Partial<Record<SubPost, QuestionStats>>>>
 
 const hasDefaultValue = (el: EvaluatedFormElement<string>): boolean => {
-  return 'defaultValue' in el && !!el.defaultValue
+  return 'defaultValue' in el && el.defaultValue !== null && el.defaultValue !== undefined && el.defaultValue !== 0
 }
 
 export const getQuestionProgressBySubPost = <RuleName extends string = string>(
