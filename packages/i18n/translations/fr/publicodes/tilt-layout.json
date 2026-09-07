@@ -39,12 +39,8 @@
       "DeplacementsDansLeCadreDUneMissionAssociativeSalaries": {
         "question": "Combien de km parcourt en moyenne un salarié se déplaçant dans le cadre d'une mission associative via les modes de transports suivants ?",
         "ModeTransport": "Mode de transport",
-        "DistanceMoyenne": "Distance moyenne parcourue par un salarié pour un déplacement dans le cadre d'une mission associative"
-      },
-      "DeplacementsDansLeCadreDUneMissionAssociativeBenevoles": {
-        "question": "Combien de km parcourt en moyenne un bénévole se déplaçant dans le cadre d'une mission associative via les modes de transports suivants ?",
-        "ModeTransport": "Mode de transport",
-        "DistanceMoyenne": "Distance moyenne parcourue par un bénévole pour un déplacement dans le cadre d'une mission associative"
+        "DistanceMoyenne": "Distance moyenne parcourue par un salarié pour un déplacement dans le cadre d'une mission associative",
+        "description": "Attention, les déplacements en avion doivent être renseignés sur l'année, tandis que les autres moyens de transport doivent l'être sur un mois. Si vous connaissez directement le nombre de kilomètres parcourus dans l'année par l'ensemble des salariés, vous pouvez simplement les diviser par le nombre de salariés et renseigner les résultats dans ce tableau."
       },
       "DeplacementsDesBeneficiaires": {
         "question": "Quel pourcentage des déplacements des bénéficiaires servant à accéder aux produits et services de l'association se font via les modes de transports suivants ?",

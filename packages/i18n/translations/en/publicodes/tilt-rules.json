@@ -15,8 +15,8 @@
     "km": "[TO_TRANSLATE] km",
     "kWh": "[TO_TRANSLATE] kWh",
     "kgCO2e/kWh": "[TO_TRANSLATE] kgCO2e/kWh",
-    "m3": "[TO_TRANSLATE] m3",
-    "kgCO2e/m3": "[TO_TRANSLATE] kgCO2e/m3",
+    "m³": "[TO_TRANSLATE] m³",
+    "kgCO2e/m³": "[TO_TRANSLATE] kgCO2e/m³",
     "litre": "[TO_TRANSLATE] litre",
     "kgCO2e/litre": "[TO_TRANSLATE] kgCO2e/litre",
     "nuits": "[TO_TRANSLATE] nuits",
@@ -26,15 +26,15 @@
     "kgCO2e/quantité": "[TO_TRANSLATE] kgCO2e/quantité",
     "quantité": "[TO_TRANSLATE] quantité",
     "kWh/m²/an": "[TO_TRANSLATE] kWh/m².an",
-    "m3/m²/an": "[TO_TRANSLATE] m3/m².an",
+    "m³/m²/an": "[TO_TRANSLATE] m³/m².an",
     "litre/m²/an": "[TO_TRANSLATE] litre/m².an",
     "kgCO2e/stère": "[TO_TRANSLATE] kgCO2e/stère",
     "stère": "[TO_TRANSLATE] stère",
     "kgCO2e/kg": "[TO_TRANSLATE] kgCO2e/kg",
     "kg": "[TO_TRANSLATE] kg",
-    "kgCO2e/jours": "[TO_TRANSLATE] kgCO2e/jours",
     "h/semaine": "[TO_TRANSLATE] h/semaine",
     "jours/semaine": "[TO_TRANSLATE] jours/semaine",
+    "kgCO2e/jours": "[TO_TRANSLATE] kgCO2e/jours",
     "k€ HT": "[TO_TRANSLATE] k€ HT",
     "kgCO2e/k€ HT": "[TO_TRANSLATE] kgCO2e/k€ HT",
     "h": "[TO_TRANSLATE] h",
@@ -54,8 +54,8 @@
     "tonnes/poids lourds": "[TO_TRANSLATE] tonnes/poids lourds",
     "unité": "[TO_TRANSLATE] unité",
     "kgCO2e/t/km": "[TO_TRANSLATE] kgCO2e/t.km",
-    "%": "[TO_TRANSLATE] %",
     "kgCO2e/kg/km": "[TO_TRANSLATE] kgCO2e/kg.km",
+    "%": "[TO_TRANSLATE] %",
     "tonne": "[TO_TRANSLATE] tonne",
     "kgCO2e/tonne": "[TO_TRANSLATE] kgCO2e/tonne",
     "voitures": "[TO_TRANSLATE] voitures",
@@ -372,6 +372,102 @@
             "question": "[TO_TRANSLATE] Quelle est votre autoconsommation annuelle d'électricité ?"
           }
         }
+      },
+      "types": {
+        "titre": "[TO_TRANSLATE] Types d'énergie",
+        "électricité présent": {
+          "question": "[TO_TRANSLATE] Électricité"
+        },
+        "gaz présent": {
+          "question": "[TO_TRANSLATE] Gaz"
+        },
+        "fioul présent": {
+          "question": "[TO_TRANSLATE] Fioul domestique"
+        },
+        "bois présent": {
+          "question": "[TO_TRANSLATE] Bois-bûches"
+        },
+        "granulés présent": {
+          "question": "[TO_TRANSLATE] Granulés de bois"
+        },
+        "réseaux de chaleur présent": {
+          "question": "[TO_TRANSLATE] Réseau de chaleur"
+        },
+        "réseaux de froid présent": {
+          "question": "[TO_TRANSLATE] Réseau de froid"
+        },
+        "chauffage électrique": {
+          "description": "[TO_TRANSLATE] Cette information sert à proposer des estimations de consommations pour l'électricité par la suite. Les estimations incluent le chauffage si celui-ci est électrique.",
+          "question": "[TO_TRANSLATE] Le chauffage de vos locaux est-il électrique ?"
+        }
+      },
+      "emissions": {
+        "titre": "[TO_TRANSLATE] Consommations énergétiques",
+        "description": "[TO_TRANSLATE] Par défaut, des valeurs sont saisies en fonction des mètres-carrés que vous avez renseignés pour vos locaux, Ces valeurs sont issues de données statistiques de la Base Empreinte, Elles sont imprécises et datées, Si vous disposez de données plus précises via vos factures ou autres éléments de suivi, nous vous invitons à les renseigner à la place des données par défaut",
+        "question": "[TO_TRANSLATE] Veuillez indiquer vos consommations d'énergie pour les types d'énergie suivants",
+        "électricité": {
+          "titre": "[TO_TRANSLATE] Électricité",
+          "consommation": {
+            "titre": "[TO_TRANSLATE] Consommation annuelle d'électricité",
+            "description": "[TO_TRANSLATE] Cette consommation doit être issue de votre facture et ne pas inclure pas votre autoconsommation (panneaux solaires, etc), ni la consommation des véhicules électriques qui est prise en compte au sein d'autres catégories (Fret, Déplacements).",
+            "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle d'électricité ?"
+          },
+          "donnée statistique": {
+            "titre": "[TO_TRANSLATE] Consommation moyenne d'électricité pour des bureaux à l'année, statistiques Base Carbone® (hors ou avec chauffage)"
+          }
+        },
+        "gaz": {
+          "titre": "[TO_TRANSLATE] Gaz naturel",
+          "consommation": {
+            "titre": "[TO_TRANSLATE] Consommation annuelle de gaz naturel",
+            "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de gaz naturel ?"
+          }
+        },
+        "fioul": {
+          "titre": "[TO_TRANSLATE] Fioul domestique",
+          "consommation": {
+            "titre": "[TO_TRANSLATE] Consommation annuelle de fioul domestique",
+            "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de fioul domestique ?"
+          }
+        },
+        "bois": {
+          "titre": "[TO_TRANSLATE] Bois-bûches",
+          "consommation": {
+            "titre": "[TO_TRANSLATE] Consommation annuelle de bûches de bois",
+            "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de bûches de bois ?"
+          }
+        },
+        "granulés": {
+          "titre": "[TO_TRANSLATE] Granulés de bois",
+          "consommation": {
+            "titre": "[TO_TRANSLATE] Consommation annuelle de granulés de bois",
+            "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de bûches de bois ?"
+          }
+        },
+        "réseaux de chaleur": {
+          "titre": "[TO_TRANSLATE] Réseaux de chaleur",
+          "consommation": {
+            "titre": "[TO_TRANSLATE] Consommation annuelle de kWh issus de réseaux de chaleur",
+            "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de kWh issus de réseaux de chaleur ?"
+          }
+        },
+        "réseaux de froid": {
+          "titre": "[TO_TRANSLATE] Réseaux de froid",
+          "consommation": {
+            "titre": "[TO_TRANSLATE] Consommation annuelle de kWh issus de réseaux de froid",
+            "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de kWh issus de réseaux de froid ?"
+          }
+        }
+      },
+      "autoproduction électricité présente": {
+        "description": "[TO_TRANSLATE] Si c'est le cas, vos autres consommations d'électricité ne doivent pas inclure une éventuelle autoconsommation",
+        "question": "[TO_TRANSLATE] Autoproduisez-vous de l'électricité, par exemple à l'aide de panneaux photovoltaïques ?"
+      },
+      "autoconsommation électricité": {
+        "titre": "[TO_TRANSLATE] Autoconsommation d'électricité",
+        "autoconsommation": {
+          "question": "[TO_TRANSLATE] Quelle est votre autoconsommation annuelle d'électricité ?"
+        }
       }
     },
     "utilisation": {
@@ -406,6 +502,52 @@
         "gaz naturel": {
           "conso": {
             "question": "[TO_TRANSLATE] Pour le gaz naturel, à combien de m3 estimez-vous ces consommations ?"
+          }
+        }
+      },
+      "conso energie": {
+        "présente": {
+          "question": "[TO_TRANSLATE] Fournissez-vous des produits ou services qui entraînent des consommations d'énergie chez vos usagers ?"
+        },
+        "emissions": {
+          "titre": "[TO_TRANSLATE] Consommations énergétiques",
+          "description": "[UPDATED] À compléter uniquement si vous fournissez des produits ou services qui entraînent des consommations d'énergie chez vos usagers. On renseigne habituellement les kWh qui seront utilisés par tous les produits ou services fournis sur leur durée de vie. Par exemple, si une batterie rechargeable d'une durée de vie estimée de 5 ans est fournie, on prendra en compte les kWh consommés pour une utilisation moyenne durant 5 ans.",
+          "question": "[UPDATED] Veuillez indiquer les consommations des usagers de vos produits ou services pour les types d'énergie suivants",
+          "électricité": {
+            "titre": "[TO_TRANSLATE] Électricité",
+            "consommation": {
+              "titre": "[TO_TRANSLATE] Consommation d'électricité par les usagers",
+              "description": "[TO_TRANSLATE] On renseigne habituellement les kWh qui seront utilisés par tous les produits ou services fournis sur leur durée de vie. Par exemple, si une batterie rechargeable d'une durée de vie estimée de 5 ans est fournie, on prendra en compte les kWh consommés pour une utilisation moyenne durant 5 ans.",
+              "question": "[TO_TRANSLATE] À combien de kWh estimez-vous les consommations d'électricité ?"
+            }
+          },
+          "gaz": {
+            "titre": "[TO_TRANSLATE] Gaz naturel",
+            "consommation": {
+              "titre": "[TO_TRANSLATE] Consommation de gaz par les usagers",
+              "question": "[UPDATED] À combien de m³ estimez-vous les consommations de gaz ?"
+            }
+          },
+          "fioul": {
+            "titre": "[TO_TRANSLATE] Fioul domestique",
+            "consommation": {
+              "titre": "[TO_TRANSLATE] Consommation de fioul par les usagers",
+              "question": "[TO_TRANSLATE] À combien de litres estimez-vous les consommations de fioul ?"
+            }
+          },
+          "essence": {
+            "titre": "[TO_TRANSLATE] Essence E10",
+            "consommation": {
+              "titre": "[TO_TRANSLATE] Consommation d'essence par les usagers",
+              "question": "[TO_TRANSLATE] À combien de litres estimez-vous les consommations d'essence ?"
+            }
+          },
+          "diesel": {
+            "titre": "[TO_TRANSLATE] Diesel B7",
+            "consommation": {
+              "titre": "[TO_TRANSLATE] Consommation de diesel par les usagers",
+              "question": "[TO_TRANSLATE] À combien de litres estimez-vous les consommations de diesel ?"
+            }
           }
         }
       }
@@ -676,7 +818,7 @@
     "froid et clim": {
       "titre": "[TO_TRANSLATE] Froid et climatisation",
       "nombre": {
-        "description": "[TO_TRANSLATE] La consommation d'électricité de vos climatisations est incluse dans vos factures d'électricité. Cette question sert donc uniquement à prendre en compte l'impact de la construction de l'équipement de climatisation, et des fuites de gaz frigorigènes.",
+        "description": "[UPDATED] La consommation d'électricité de vos climatisations est incluse dans vos factures d'électricité. Cette question sert donc uniquement à prendre en compte l'impact de la construction de l'équipement de climatisation, et des fuites de gaz frigorigènes. Les locations ponctuelles de locaux sont ignorées par souci de simplicité.",
         "question": "[TO_TRANSLATE] Combien de climatiseurs sont utilisés dans vos locaux ?"
       },
       "fuites": {
@@ -1627,6 +1769,16 @@
           "nombre de nuits": {
             "question": "[TO_TRANSLATE] Hôtel"
           }
+        }
+      }
+    },
+    "travail": {
+      "titre": "[TO_TRANSLATE] Temps de travail des différentes personnes",
+      "bénévoles": {
+        "titre": "[TO_TRANSLATE] Temps de travail des bénévoles",
+        "h": {
+          "description": "[TO_TRANSLATE] Dans le cas où vous ne disposeriez pas de cette information, vous pouvez considérer le nombre total d'heures de bénévolat et diviser ensuite par votre nombre de bénévoles. Le nombre d'heures de travail indiqué ici est utilisé dans le calcul des déplacements de vos bénévoles, ceux-ci étant considérés par défaut comme se déplaçant 5 jours dans la semaine. Il est donc normal que votre réponse modifie les totaux calculés dans le poste Déplacements de personnes.",
+          "question": "[TO_TRANSLATE] Combien d'heures de bénévolat sont en moyenne effectuées par semaine pour vos bénévoles ?"
         }
       }
     }
