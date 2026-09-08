@@ -196,6 +196,163 @@
         }
       }
     },
+    "événement": {
+      "titre": "[TO_TRANSLATE] Événement",
+      "mosaic alimentation": {
+        "titre": "[TO_TRANSLATE] Empreinte des repas",
+        "description": "[TO_TRANSLATE] L'option \"Repas moyen\" sert uniquement si vous n'avez aucune idée des types de repas consommés.",
+        "question": "[TO_TRANSLATE] Combien de ces différents types de repas ont étés consommés au cours de l'événement ?",
+        "végétalien": {
+          "titre": "[TO_TRANSLATE] Végétalien",
+          "FE": {
+            "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas végétalien",
+            "description": "[TO_TRANSLATE] Repas contenant du tofu, un accompagnement \"moyen\" (issu d'un travail de consolidation sur les moyennes de consommation des français tirées de l'étude INCA3 pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur."
+          },
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de plats végétaliens"
+          }
+        },
+        "végétarien": {
+          "titre": "[TO_TRANSLATE] Végétarien",
+          "FE": {
+            "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas végétarien",
+            "description": "[TO_TRANSLATE] Repas contenant des œufs, un accompagnement \"moyen\" (issu d'un travail de consolidation sur les moyennes de consommation des français tirées de l'étude INCA3 pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur."
+          },
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de plats végétariens"
+          }
+        },
+        "viande blanche": {
+          "titre": "[TO_TRANSLATE] Viande blanche",
+          "FE": {
+            "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas de type viande blanche (poulet, porc)",
+            "description": "[TO_TRANSLATE] Repas contenant 150g d'une viande blanche moyenne (issue d'un travail de consolidation sur les consommations moyennes de viande blanche de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur."
+          },
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de plats viande blanche"
+          }
+        },
+        "viande rouge": {
+          "titre": "[TO_TRANSLATE] Viande rouge",
+          "FE": {
+            "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas de type viande rouge (bœuf, veau, agneau)",
+            "description": "[TO_TRANSLATE] Repas contenant 150g d'une viande rouge moyenne (issue d'un travail de consolidation sur les consommations moyennes de viande rouge de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Pour la partie déforestation, notre alimentation est vectrice de déforestation à l'étranger, à l'impact carbone non négligeable. Cette empreinte n'est pas comprise dans les facteurs d'émission d'Agribalyse. D'après l'étude [Pendril & al.](https://iopscience.iop.org/article/10.1088/1748-9326/ab0d41), une part de cette déforestation est spécifiquement associée à la consommation de viande d'élevage. Nous considérons que cette part associée aux \"viandes d'élevage\" est majoritairement associée à la consommation de viande rouge, c'est pourquoi nous ajoutons cette part de déforestation aux repas de viande rouge."
+          },
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de plats viande rouge"
+          }
+        },
+        "poisson gras": {
+          "titre": "[TO_TRANSLATE] Poisson gras",
+          "FE": {
+            "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas de type poisson gras (thon, saumon, sardine, maquereau)",
+            "description": "[TO_TRANSLATE] Repas contenant 150g d'un poisson gras moyen (issu d'un travail de consolidation sur les consommations moyennes de poissons gras de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur."
+          },
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de plats poisson gras"
+          }
+        },
+        "poisson blanc": {
+          "titre": "[TO_TRANSLATE] Poisson blanc",
+          "FE": {
+            "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas de type poisson blanc",
+            "description": "[TO_TRANSLATE] Repas contenant 150g d'un poisson blanc moyen (issu d'un travail de consolidation sur les consommations moyennes de poissons blancs de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur."
+          },
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de plats poisson blanc"
+          }
+        },
+        "repas moyen": {
+          "titre": "[TO_TRANSLATE] Repas moyen",
+          "FE": {
+            "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas de type poisson blanc",
+            "description": "[TO_TRANSLATE] Ce facteur d'émission est élaboré à partir des données INCA 3, en compilant la consommation moyenne des différents ingrédients pour un déjeuner, et en utilisant les facteurs d'émission de chaque aliment. Plus de détails [ici](https://base-empreinte.ademe.fr/documentation/base-carbone?docLink=Repas_2)"
+          },
+          "nombre": {
+            "question": "[TO_TRANSLATE] Nombre de repas moyen"
+          }
+        }
+      },
+      "déplacements": {
+        "voiture": {
+          "titre": "[TO_TRANSLATE] Voiture",
+          "question": "[TO_TRANSLATE] Combien de km (AR) ont étés parcourus en voiture pour accéder à l'événement ?"
+        },
+        "train": {
+          "titre": "[TO_TRANSLATE] Train (TER)",
+          "question": "[TO_TRANSLATE] Combien de km (AR) ont étés parcourus en TER pour accéder à l'événement ?"
+        },
+        "TGV": {
+          "titre": "[TO_TRANSLATE] TGV",
+          "question": "[TO_TRANSLATE] Combien de km (AR) ont étés parcourus en TGV pour accéder à l'événement ?"
+        },
+        "bus": {
+          "titre": "[TO_TRANSLATE] Bus",
+          "question": "[TO_TRANSLATE] Combien de km (AR) ont étés parcourus en bus pour accéder à l'événement ?"
+        },
+        "deux roues": {
+          "titre": "[TO_TRANSLATE] Deux roues (moto, scooter, ...)",
+          "question": "[TO_TRANSLATE] Combien de km (AR) ont étés parcourus en deux roues (moto, scooter, ...) pour accéder à l'événement ?"
+        },
+        "transport en commun": {
+          "titre": "[TO_TRANSLATE] Transport en commun (Métro, tramway, RER, bus, ...)",
+          "question": "[TO_TRANSLATE] Combien de km (AR) ont étés parcourus en transport en commun (métro, tramway, ...) pour accéder à l'événement ?"
+        },
+        "avion": {
+          "titre": "[TO_TRANSLATE] Avion",
+          "question": "[TO_TRANSLATE] Combien de km (AR) ont étés parcourus en avion pour accéder à l'événement ?"
+        }
+      },
+      "énergie": {
+        "types": {
+          "titre": "[TO_TRANSLATE] Types d'énergie",
+          "électricité présent": {
+            "question": "[TO_TRANSLATE] Électricité"
+          },
+          "gaz présent": {
+            "question": "[TO_TRANSLATE] Gaz"
+          },
+          "fioul présent": {
+            "question": "[TO_TRANSLATE] Fioul domestique"
+          }
+        },
+        "électricité": {
+          "titre": "[TO_TRANSLATE] Quelle a été la consommation d'électricité au cours de l'événement ?",
+          "consommation": {
+            "question": "[TO_TRANSLATE] Quelle a été la consommation d'électricité au cours de l'événement ?"
+          }
+        },
+        "gaz": {
+          "titre": "[TO_TRANSLATE] Quelle a été la consommation de gaz au cours de l'événement ?",
+          "consommation": {
+            "question": "[TO_TRANSLATE] Quelle a été la consommation de gaz au cours de l'événement ?"
+          }
+        },
+        "fioul": {
+          "titre": "[TO_TRANSLATE] Quelle a été la consommation de fioul domestique au cours de l'événement ?",
+          "consommation": {
+            "question": "[TO_TRANSLATE] Quelle a été la consommation de fioul au cours de l'événement ?"
+          }
+        }
+      },
+      "hébergement": {
+        "existant": {
+          "question": "[TO_TRANSLATE] Est-ce que les participant.es campent ou dorment à l'hôtel au cours de l'événement ?"
+        },
+        "camping": {
+          "titre": "[TO_TRANSLATE] Camping",
+          "nombre de nuits": {
+            "question": "[TO_TRANSLATE] Camping"
+          }
+        },
+        "hotel": {
+          "titre": "[TO_TRANSLATE] Hôtel",
+          "nombre de nuits": {
+            "question": "[TO_TRANSLATE] Hôtel"
+          }
+        }
+      }
+    },
     "équipements et immobilisations": {
       "pondération": {
         "titre": "[TO_TRANSLATE] Équipements et immobilisations",
@@ -224,10 +381,9 @@
       },
       "total sans reconditionné": {
         "ordinateurs fixes": {
-          "titre": "[UPDATED] Ordinateurs fixe",
+          "titre": "[TO_TRANSLATE] Ordinateurs fixe",
           "quantité": {
-            "question": "[TO_TRANSLATE] Ordinateurs fixes",
-            "titre": "[TO_TRANSLATE] Ordinateurs fixes"
+            "question": "[TO_TRANSLATE] Ordinateurs fixes"
           }
         },
         "ordinateurs portables": {
@@ -255,13 +411,13 @@
           }
         },
         "téléphones portables": {
-          "titre": "[UPDATED] Smartphone",
+          "titre": "[TO_TRANSLATE] Smartphone",
           "quantité": {
             "question": "[TO_TRANSLATE] Smartphone"
           }
         },
         "vidéoprojecteurs": {
-          "titre": "[UPDATED] Vidéoprojecteurs",
+          "titre": "[TO_TRANSLATE] Vidéoprojecteurs",
           "quantité": {
             "question": "[TO_TRANSLATE] Vidéoprojecteurs"
           }
@@ -275,105 +431,6 @@
       }
     },
     "énergie": {
-      "titre": "[TO_TRANSLATE] Énergie",
-      "combustibles organiques": {
-        "types": {
-          "titre": "[TO_TRANSLATE] Types d'énergie",
-          "électricité présent": {
-            "question": "[TO_TRANSLATE] Électricité"
-          },
-          "gaz présent": {
-            "question": "[TO_TRANSLATE] Gaz"
-          },
-          "fioul présent": {
-            "question": "[TO_TRANSLATE] Fioul domestique"
-          },
-          "bois présent": {
-            "question": "[TO_TRANSLATE] Bois-bûches"
-          },
-          "granulés présent": {
-            "question": "[TO_TRANSLATE] Granulés de bois"
-          },
-          "réseaux de chaleur présent": {
-            "question": "[TO_TRANSLATE] Réseau de chaleur"
-          },
-          "réseaux de froid présent": {
-            "question": "[TO_TRANSLATE] Réseau de froid"
-          },
-          "chauffage électrique": {
-            "description": "[TO_TRANSLATE] Cette information sert à proposer des estimations de consommations pour l'électricité par la suite. Les estimations incluent le chauffage si celui-ci est électrique.",
-            "question": "[TO_TRANSLATE] Le chauffage de vos locaux est-il électrique ?"
-          }
-        },
-        "emissions": {
-          "titre": "[TO_TRANSLATE] Consommations énergétiques",
-          "description": "[TO_TRANSLATE] Par défaut, des valeurs sont saisies en fonction des mètres-carrés que vous avez renseignés pour vos locaux, Ces valeurs sont issues de données statistiques de la Base Empreinte, Elles sont imprécises et datées, Si vous disposez de données plus précises via vos factures ou autres éléments de suivi, nous vous invitons à les renseigner à la place des données par défaut",
-          "question": "[TO_TRANSLATE] Veuillez indiquer vos consommations d'énergie pour les types d'énergie suivants",
-          "électricité": {
-            "titre": "[TO_TRANSLATE] Électricité",
-            "consommation": {
-              "titre": "[TO_TRANSLATE] Consommation annuelle d'électricité",
-              "description": "[TO_TRANSLATE] Cette consommation doit être issue de votre facture et ne pas inclure pas votre autoconsommation (panneaux solaires, etc), ni la consommation des véhicules électriques qui est prise en compte au sein d'autres catégories (Fret, Déplacements).",
-              "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle d'électricité ?"
-            },
-            "donnée statistique": {
-              "titre": "[TO_TRANSLATE] Consommation moyenne d'électricité pour des bureaux à l'année, statistiques Base Carbone® (hors ou avec chauffage)"
-            }
-          },
-          "gaz": {
-            "titre": "[TO_TRANSLATE] Gaz naturel",
-            "consommation": {
-              "titre": "[TO_TRANSLATE] Consommation annuelle de gaz naturel",
-              "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de gaz naturel ?"
-            }
-          },
-          "fioul": {
-            "titre": "[TO_TRANSLATE] Fioul domestique",
-            "consommation": {
-              "titre": "[TO_TRANSLATE] Consommation annuelle de fioul domestique",
-              "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de fioul domestique ?"
-            }
-          },
-          "bois": {
-            "titre": "[TO_TRANSLATE] Bois-bûches",
-            "consommation": {
-              "titre": "[TO_TRANSLATE] Consommation annuelle de bûches de bois",
-              "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de bûches de bois ?"
-            }
-          },
-          "granulés": {
-            "titre": "[TO_TRANSLATE] Granulés de bois",
-            "consommation": {
-              "titre": "[TO_TRANSLATE] Consommation annuelle de granulés de bois",
-              "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de bûches de bois ?"
-            }
-          },
-          "réseaux de chaleur": {
-            "titre": "[TO_TRANSLATE] Réseaux de chaleur",
-            "consommation": {
-              "titre": "[TO_TRANSLATE] Consommation annuelle de kWh issus de réseaux de chaleur",
-              "question": "[UPDATED] Quelle est votre consommation annuelle de kWh issus de réseaux de chaleur ?"
-            }
-          },
-          "réseaux de froid": {
-            "titre": "[TO_TRANSLATE] Réseaux de froid",
-            "consommation": {
-              "titre": "[TO_TRANSLATE] Consommation annuelle de kWh issus de réseaux de froid",
-              "question": "[UPDATED] Quelle est votre consommation annuelle de kWh issus de réseaux de froid ?"
-            }
-          }
-        },
-        "autoproduction électricité présente": {
-          "description": "[TO_TRANSLATE] Si c'est le cas, vos autres consommations d'électricité ne doivent pas inclure une éventuelle autoconsommation",
-          "question": "[TO_TRANSLATE] Autoproduisez-vous de l'électricité, par exemple à l'aide de panneaux photovoltaïques ?"
-        },
-        "autoconsommation électricité": {
-          "titre": "[TO_TRANSLATE] Autoconsommation d'électricité",
-          "autoconsommation": {
-            "question": "[TO_TRANSLATE] Quelle est votre autoconsommation annuelle d'électricité ?"
-          }
-        }
-      },
       "types": {
         "titre": "[TO_TRANSLATE] Types d'énergie",
         "électricité présent": {
@@ -473,52 +530,18 @@
     },
     "utilisation": {
       "titre": "[TO_TRANSLATE] Utilisation",
-      "responsabilite conso energie": {
-        "élec présente": {
-          "question": "[TO_TRANSLATE] Fournissez-vous des produits ou services qui entraînent des consommations d'électricité chez vos usagers ?"
-        },
-        "élec": {
-          "conso": {
-            "question": "[TO_TRANSLATE] À combien de kWh estimez-vous ces consommations d'électricité ?"
-          }
-        },
-        "fossiles présents": {
-          "question": "[TO_TRANSLATE] Fournissez-vous des produits ou services qui entraînent des consommations d'énergie fossiles chez vos usagers ?"
-        },
-        "fioul": {
-          "conso": {
-            "question": "[TO_TRANSLATE] Pour le fioul, à combien de litres estimez-vous ces consommations ?"
-          }
-        },
-        "essence": {
-          "conso": {
-            "question": "[TO_TRANSLATE] Pour l'essence, à combien de litres estimez-vous ces consommations ?"
-          }
-        },
-        "gazole": {
-          "conso": {
-            "question": "[TO_TRANSLATE] Pour le gazole, à combien de litres estimez-vous ces consommations ?"
-          }
-        },
-        "gaz naturel": {
-          "conso": {
-            "question": "[TO_TRANSLATE] Pour le gaz naturel, à combien de m3 estimez-vous ces consommations ?"
-          }
-        }
+      "conso energie présente": {
+        "question": "[TO_TRANSLATE] Fournissez-vous des produits ou services qui entraînent des consommations d'énergie chez vos usagers ?"
       },
       "conso energie": {
-        "présente": {
-          "question": "[TO_TRANSLATE] Fournissez-vous des produits ou services qui entraînent des consommations d'énergie chez vos usagers ?"
-        },
         "emissions": {
-          "titre": "[UPDATED] Consommations énergétiques",
-          "description": "[UPDATED] À compléter uniquement si vous fournissez des produits ou services qui entraînent des consommations d'énergie chez vos usagers. On renseigne habituellement les kWh qui seront utilisés par tous les produits ou services fournis sur leur durée de vie. Par exemple, si une batterie rechargeable d'une durée de vie estimée de 5 ans est fournie, on prendra en compte les kWh consommés pour une utilisation moyenne durant 5 ans.",
-          "question": "[UPDATED] Veuillez indiquer les consommations des usagers de vos produits ou services pour les types d'énergie suivants",
+          "titre": "[TO_TRANSLATE] Consommations énergétiques",
+          "description": "[TO_TRANSLATE] À compléter uniquement si vous fournissez des produits ou services qui entraînent des consommations d'énergie chez vos usagers. On renseigne habituellement les kWh qui seront utilisés par tous les produits ou services fournis sur leur durée de vie. Par exemple, si une batterie rechargeable d'une durée de vie estimée de 5 ans est fournie, on prendra en compte les kWh consommés pour une utilisation moyenne durant 5 ans.",
+          "question": "[TO_TRANSLATE] Veuillez indiquer les consommations des usagers de vos produits ou services pour les types d'énergie suivants",
           "électricité": {
             "titre": "[TO_TRANSLATE] Électricité",
             "consommation": {
               "titre": "[TO_TRANSLATE] Consommation d'électricité par les usagers",
-              "description": "[TO_TRANSLATE] On renseigne habituellement les kWh qui seront utilisés par tous les produits ou services fournis sur leur durée de vie. Par exemple, si une batterie rechargeable d'une durée de vie estimée de 5 ans est fournie, on prendra en compte les kWh consommés pour une utilisation moyenne durant 5 ans.",
               "question": "[TO_TRANSLATE] À combien de kWh estimez-vous les consommations d'électricité ?"
             }
           },
@@ -526,7 +549,7 @@
             "titre": "[TO_TRANSLATE] Gaz naturel",
             "consommation": {
               "titre": "[TO_TRANSLATE] Consommation de gaz par les usagers",
-              "question": "[UPDATED] À combien de m³ estimez-vous les consommations de gaz ?"
+              "question": "[TO_TRANSLATE] À combien de m³ estimez-vous les consommations de gaz ?"
             }
           },
           "fioul": {
@@ -549,17 +572,8 @@
               "titre": "[TO_TRANSLATE] Consommation de diesel par les usagers",
               "question": "[TO_TRANSLATE] À combien de litres estimez-vous les consommations de diesel ?"
             }
-          },
-          "autoconsommation": {
-            "question": "[TO_TRANSLATE] Quelle est votre autoconsommation annuelle d'électricité ?"
-          },
-          "consommation": {
-            "question": "[TO_TRANSLATE] Quelle est votre autoconsommation annuelle d'électricité ?"
           }
         }
-      },
-      "conso energie présente": {
-        "question": "[TO_TRANSLATE] Fournissez-vous des produits ou services qui entraînent des consommations d'énergie chez vos usagers ?"
       }
     },
     "télétravail": {
@@ -567,15 +581,25 @@
       "bénévoles": {
         "titre": "[TO_TRANSLATE] Télétravail - Bénévoles",
         "h": {
-          "question": "[TO_TRANSLATE] Combien d'heures sont en moyenne effectuées en télétravail par semaine pour vos bénévoles ?",
-          "description": "[UPDATED] Dans le cas où vous ne disposeriez pas de cette information, vous pouvez considérer le nombre total d'heures de bénévolat, estimer un % télétravaillé, et diviser ensuite par votre nombre de bénévoles. Le nombre d'heures de télétravail indiqué ici est utilisé dans le calcul des déplacements de vos bénévoles, ceux-ci étant considérés par défaut comme se déplaçant 5 jours dans la semaine. Il est donc normal que votre réponse modifie les totaux calculés dans le poste Déplacements de personnes."
+          "description": "[TO_TRANSLATE] Dans le cas où vous ne disposeriez pas de cette information, vous pouvez considérer le nombre total d'heures de bénévolat, estimer un % télétravaillé, et diviser ensuite par votre nombre de bénévoles. Le nombre d'heures de télétravail indiqué ici est utilisé dans le calcul des déplacements de vos bénévoles, ceux-ci étant considérés par défaut comme se déplaçant 5 jours dans la semaine. Il est donc normal que votre réponse modifie les totaux calculés dans le poste Déplacements de personnes.",
+          "question": "[TO_TRANSLATE] Combien d'heures sont en moyenne effectuées en télétravail par semaine pour vos bénévoles ?"
         }
       },
       "salariés": {
-        "titre": "[UPDATED] Télétravail - Salariés",
+        "titre": "[TO_TRANSLATE] Télétravail - Salariés",
         "j": {
-          "question": "[TO_TRANSLATE] Combien de jours sont en moyenne télétravaillés par semaine par vos salariés ?",
-          "description": "[TO_TRANSLATE] Le nombre de jours de télétravail indiqué ici est utilisé dans le calcul des déplacements de vos salariés, ceux-ci étant considérés par défaut comme se déplaçant 5 jours dans la semaine. Il est donc normal que votre réponse modifie les totaux calculés dans le poste Déplacements de personnes."
+          "description": "[TO_TRANSLATE] Le nombre de jours de télétravail indiqué ici est utilisé dans le calcul des déplacements de vos salariés, ceux-ci étant considérés par défaut comme se déplaçant 5 jours dans la semaine. Il est donc normal que votre réponse modifie les totaux calculés dans le poste Déplacements de personnes.",
+          "question": "[TO_TRANSLATE] Combien de jours sont en moyenne télétravaillés par semaine par vos salariés ?"
+        }
+      }
+    },
+    "travail": {
+      "titre": "[TO_TRANSLATE] Temps de travail des différentes personnes",
+      "bénévoles": {
+        "titre": "[TO_TRANSLATE] Temps de travail des bénévoles",
+        "h": {
+          "description": "[TO_TRANSLATE] Dans le cas où vous ne disposeriez pas de cette information, vous pouvez considérer le nombre total d'heures de bénévolat et diviser ensuite par votre nombre de bénévoles. Le nombre d'heures de travail indiqué ici est utilisé dans le calcul des déplacements de vos bénévoles, ceux-ci étant considérés par défaut comme se déplaçant 5 jours dans la semaine. Il est donc normal que votre réponse modifie les totaux calculés dans le poste Déplacements de personnes.",
+          "question": "[TO_TRANSLATE] Combien d'heures de bénévolat sont en moyenne effectuées par semaine pour vos bénévoles ?"
         }
       }
     },
@@ -587,10 +611,9 @@
           "question": "[TO_TRANSLATE] Avez-vous accès aux détails des montants dépensés sur l'année dans des services immatériels ?"
         },
         "FE moyen": {
-          "description": "[TO_TRANSLATE] Si vous n'avez pas du tout accès à vos comptes, vous pouvez réaliser une estimation en partant du budget de fonctionnement de l'association, et en retranchant les coûts afférents aux éventuels salariés et aux charges connues.",
           "montant dépensé": {
             "titre": "[TO_TRANSLATE] Montant dépensé dans des services immatériels sur l'année",
-            "description": "[UPDATED] Si vous n'avez pas du tout accès à vos comptes, vous pouvez réaliser une estimation en partant du budget de fonctionnement de l'association, et en retranchant les coûts afférents aux éventuels salariés et aux charges connues.",
+            "description": "[TO_TRANSLATE] Si vous n'avez pas du tout accès à vos comptes, vous pouvez réaliser une estimation en partant du budget de fonctionnement de l'association, et en retranchant les coûts afférents aux éventuels salariés et aux charges connues.",
             "question": "[TO_TRANSLATE] Quel montant avez-vous dépensé sur l'année dans ces services immatériels ?"
           }
         },
@@ -693,80 +716,65 @@
     },
     "intrants-biens-et-matières": {
       "titre": "[TO_TRANSLATE] Intrants biens et matières",
+      "textiles": {
+        "t-shirt polyester": {
+          "titre": "[TO_TRANSLATE] T-shirts (polyester)",
+          "nombre": {
+            "question": "[TO_TRANSLATE] T-shirts en polyester"
+          }
+        },
+        "t-shirt coton": {
+          "titre": "[TO_TRANSLATE] T-shirts (coton)",
+          "nombre": {
+            "question": "[TO_TRANSLATE] T-shirts en coton"
+          }
+        },
+        "chaussures de sport": {
+          "titre": "[TO_TRANSLATE] Chaussures de sport",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Chaussures de sport"
+          }
+        },
+        "chaussures en tissu": {
+          "titre": "[TO_TRANSLATE] Chaussures en tissu",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Chaussures en tissu"
+          }
+        },
+        "sweat en coton": {
+          "titre": "[TO_TRANSLATE] Sweat en coton",
+          "nombre": {
+            "question": "[TO_TRANSLATE] T-shirts (coton)"
+          }
+        },
+        "polo": {
+          "titre": "[TO_TRANSLATE] Polo",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Polo"
+          }
+        },
+        "manteau": {
+          "titre": "[TO_TRANSLATE] Manteau",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Manteau"
+          }
+        }
+      },
       "ratios monétaires": {
-        "titre": "[TO_TRANSLATE] Intrants biens et matières",
-        "description": "[TO_TRANSLATE] Vous devez bien prendre en compte l'ensemble des biens, dons compris (invendus, fin de stock, etc). Il faut donc bien prendre en compte les informations disponibles sur les contributions volontaires en nature (compte 870).",
-        "question": "[TO_TRANSLATE] Quels biens et matières avez-vous achetés en approche monétaire ?",
-        "petites-fournitures": {
-          "titre": "[TO_TRANSLATE] Petites fournitures",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Montant dépensé (k€) en petites fournitures"
-          }
-        },
-        "meubles": {
-          "titre": "[TO_TRANSLATE] Meubles",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Montant dépensé (k€) en meubles"
-          }
-        },
-        "machines-équipements": {
-          "titre": "[TO_TRANSLATE] Machines et équipements",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Montant dépensé (k€) en machines et équipements"
-          }
-        },
-        "textiles": {
-          "titre": "[TO_TRANSLATE] Textiles",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Montant dépensé (k€) en textiles"
-          }
-        },
-        "produits-pharmaceutiques": {
-          "titre": "[TO_TRANSLATE] Produits pharmaceutiques",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Montant dépensé (k€) en produits pharmaceutiques"
-          }
-        },
-        "produits-chimiques": {
-          "titre": "[TO_TRANSLATE] Produits chimiques",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Montant dépensé (k€) en produits chimiques"
-          }
-        },
-        "papier-carton": {
-          "titre": "[TO_TRANSLATE] Papier et carton",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Montant dépensé (k€) en papier et carton"
-          }
-        },
-        "produits-métalliques": {
-          "titre": "[TO_TRANSLATE] Produits métalliques",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Montant dépensé (k€) en produits métalliques"
-          }
-        },
-        "autres-produits-manufacturés": {
-          "titre": "[TO_TRANSLATE] Autres produits manufacturés",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Montant dépensé (k€) en autres produits manufacturés"
-          }
-        },
         "existant": {
           "titre": "[TO_TRANSLATE] L'utilisateur a-t'il accès aux montants dépensés dans des biens matériels de manière détaillée ?",
           "description": "[TO_TRANSLATE] La liste de vos dépenses est présente dans votre livres de comptes, et souvent déclarée sur <compteassotilttorefacto>Lecompteasso</compteassotilttorefacto>.",
           "question": "[TO_TRANSLATE] Avez-vous accès aux détails des montants dépensés sur l'année dans des biens matériels ?"
         },
         "ratio moyen": {
-          "description": "[TO_TRANSLATE] Si vous n'avez pas du tout accès à vos comptes, vous pouvez réaliser une estimation en partant du budget de fonctionnement de l'association, et en retranchant les coûts afférents aux éventuels salariés et aux charges connues.",
           "montant dépensé": {
             "titre": "[TO_TRANSLATE] Montant dépensé dans des services immatériels sur l'année",
-            "description": "[UPDATED] La prise en compte des biens et des matières achetées via des ratios monétaires est déjà très imprécise, car le prix des produits peut flucter, tandis que les émissions restent les mêmes. Cela l'est encore plus si vous utilisez un ratio moyen comme ici, car les émissions sont en réalité très différentes en fonction du type de produit concerné. <b>Nous vous invitons donc plutôt à aller chercher le détail des montants dépensés sur l'année.</b>",
+            "description": "[TO_TRANSLATE] La prise en compte des biens et des matières achetées via des ratios monétaires est déjà très imprécise, car le prix des produits peut flucter, tandis que les émissions restent les mêmes. Cela l'est encore plus si vous utilisez un ratio moyen comme ici, car les émissions sont en réalité très différentes en fonction du type de produit concerné. <b>Nous vous invitons donc plutôt à aller chercher le détail des montants dépensés sur l'année.</b>",
             "question": "[TO_TRANSLATE] Quel montant avez-vous dépensé sur l'année dans ces biens matériels ?"
           }
         },
         "tableau détaillé": {
           "titre": "[TO_TRANSLATE] Intrants biens et matières",
-          "description": "[TO_TRANSLATE] Vous devez bien prendre en compte l'ensemble des biens, dons compris (invendus, fin de stock, etc). Il faut donc bien prendre en compte les informations disponibles sur les contributions volontaires en nature (compte 870).",
           "question": "[TO_TRANSLATE] Quels biens et matières avez-vous achetés en approche monétaire ?",
           "petites-fournitures": {
             "titre": "[TO_TRANSLATE] Petites fournitures",
@@ -823,64 +831,20 @@
             }
           }
         }
-      },
-      "textiles": {
-        "t-shirt polyester": {
-          "titre": "[TO_TRANSLATE] T-shirts (polyester)",
-          "nombre": {
-            "question": "[UPDATED] T-shirts en polyester"
-          }
-        },
-        "t-shirt coton": {
-          "titre": "[TO_TRANSLATE] T-shirts (coton)",
-          "nombre": {
-            "question": "[UPDATED] T-shirts en coton"
-          }
-        },
-        "chaussures de sport": {
-          "titre": "[TO_TRANSLATE] Chaussures de sport",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Chaussures de sport"
-          }
-        },
-        "chaussures en tissu": {
-          "titre": "[TO_TRANSLATE] Chaussures en tissu",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Chaussures en tissu"
-          }
-        },
-        "sweat en coton": {
-          "titre": "[TO_TRANSLATE] Sweat en coton",
-          "nombre": {
-            "question": "[TO_TRANSLATE] T-shirts (coton)"
-          }
-        },
-        "polo": {
-          "titre": "[TO_TRANSLATE] Polo",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Polo"
-          }
-        },
-        "manteau": {
-          "titre": "[TO_TRANSLATE] Manteau",
-          "nombre": {
-            "question": "[TO_TRANSLATE] Manteau"
-          }
-        }
       }
     },
     "froid et clim": {
       "titre": "[TO_TRANSLATE] Froid et climatisation",
       "nombre": {
-        "description": "[UPDATED] La consommation d'électricité de vos climatisations est incluse dans vos factures d'électricité. Cette question sert donc uniquement à prendre en compte l'impact de la construction de l'équipement de climatisation, et des fuites de gaz frigorigènes. Les locations ponctuelles de locaux sont ignorées par souci de simplicité.",
+        "description": "[TO_TRANSLATE] La consommation d'électricité de vos climatisations est incluse dans vos factures d'électricité. Cette question sert donc uniquement à prendre en compte l'impact de la construction de l'équipement de climatisation, et des fuites de gaz frigorigènes. Les locations ponctuelles de locaux sont ignorées par souci de simplicité.",
         "question": "[TO_TRANSLATE] Combien de climatiseurs sont utilisés dans vos locaux ?"
       },
       "fuites": {
         "locaux partagés": {
-          "titre": "[UPDATED] Fuites de fluides frigorigènes"
+          "titre": "[TO_TRANSLATE] Fuites de fluides frigorigènes"
         },
         "locaux seuls": {
-          "titre": "[UPDATED] Fuites de fluides frigorigènes"
+          "titre": "[TO_TRANSLATE] Fuites de fluides frigorigènes"
         }
       }
     },
@@ -1021,25 +985,7 @@
       },
       "titre": "[TO_TRANSLATE] Déplacements",
       "DT-salariés": {
-        "MEP présent": {
-          "question": "[TO_TRANSLATE] Avez-vous réalisé une campagne de sensibilisation via MEP ?",
-          "nombre bénévoles": {
-            "question": "[TO_TRANSLATE] Combien de bénévoles ont répondu à MEP ?"
-          },
-          "nombre salariés": {
-            "question": "[TO_TRANSLATE] Combien de salariés ont répondu à MEP ?"
-          }
-        },
         "titre": "[TO_TRANSLATE] Emissions des trajets domicile-association des salariés",
-        "avec": {
-          "titre": "[TO_TRANSLATE] émissions des trajets domicile-association des salariés (avec enquête MEP)",
-          "distance": {
-            "question": "[TO_TRANSLATE] D'après les résultats de MEP, quelle est la distance moyenne parcourue par salarié par jour (A/R) pour des déplacements domicile-association ?"
-          },
-          "réponse MEP": {
-            "question": "[TO_TRANSLATE] D'après les résultats MEP, combien de kgCO2e représentent les déplacements domicile-association des salariés ?"
-          }
-        },
         "sans": {
           "titre": "[TO_TRANSLATE] émissions des trajets domicile-association des salariés (sans enquête MEP)",
           "part voiture": {
@@ -1050,12 +996,16 @@
             "titre": "[TO_TRANSLATE] Train (TER)",
             "question": "[TO_TRANSLATE] Quel pourcentage des salariés se rend au travail en train (TER) ?"
           },
+          "part bus": {
+            "titre": "[TO_TRANSLATE] Bus",
+            "question": "[TO_TRANSLATE] Quel pourcentage des salariés se rend au travail en bus ?"
+          },
           "part deux roues": {
-            "titre": "[UPDATED] Deux roues (moto, scooter, ...)",
+            "titre": "[TO_TRANSLATE] Deux roues (moto, scooter, ...)",
             "question": "[TO_TRANSLATE] Quel pourcentage des salariés se rend au travail en deux roues ?"
           },
           "part transport en commun": {
-            "titre": "[UPDATED] Transports en commun (Métro, tramway, RER, ...)",
+            "titre": "[TO_TRANSLATE] Transports en commun (Métro, tramway, RER, ...)",
             "question": "[TO_TRANSLATE] Quel pourcentage des salariés se rend au travail en transports en commun (Métro, Tramway, Bus) ?"
           },
           "voiture": {
@@ -1071,41 +1021,28 @@
               "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par salarié en train par jour (A/R) pour des déplacements domicile-association ?"
             }
           },
+          "bus": {
+            "titre": "[TO_TRANSLATE] Bus",
+            "distance": {
+              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par salarié en bus par jour (A/R) pour des déplacements domicile-association ?"
+            }
+          },
           "deux roues": {
-            "titre": "[UPDATED] Deux roues (Moto, scooter, ...)",
+            "titre": "[TO_TRANSLATE] Deux roues (Moto, scooter, ...)",
             "distance": {
               "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par salarié en deux roues par jour (A/R) pour des déplacements domicile-association ?"
             }
           },
           "transports en commun": {
-            "titre": "[UPDATED] Transports en commun (Métro, tramway, RER)",
+            "titre": "[TO_TRANSLATE] Transports en commun (Métro, tramway, RER)",
             "distance": {
               "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par salarié en transports en commun par jour (A/R) pour des déplacements domicile-association ?"
-            }
-          },
-          "part bus": {
-            "titre": "[UPDATED] Bus",
-            "question": "[TO_TRANSLATE] Quel pourcentage des salariés se rend au travail en bus ?"
-          },
-          "bus": {
-            "titre": "[TO_TRANSLATE] Bus",
-            "distance": {
-              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par salarié en bus par jour (A/R) pour des déplacements domicile-association ?"
             }
           }
         }
       },
       "DT-bénévoles": {
         "titre": "[TO_TRANSLATE] Emissions des trajets domicile-association des bénévoles",
-        "avec": {
-          "titre": "[TO_TRANSLATE] émissions des trajets domicile-association des bénévoles (avec enquête MEP)",
-          "distance": {
-            "question": "[TO_TRANSLATE] D'après les résultats de MEP, quelle est la distance moyenne parcourue par jour (A/R) par bénévole pour des déplacements domicile-travail ?"
-          },
-          "réponse MEP": {
-            "question": "[TO_TRANSLATE] D'après les résultats MEP, combien de kgCO2e représentent les déplacements domicile-association des bénévoles ?"
-          }
-        },
         "sans": {
           "titre": "[TO_TRANSLATE] émissions des trajets domiciles travail des bénévoles (sans enquête MEP)",
           "part voiture": {
@@ -1116,8 +1053,12 @@
             "titre": "[TO_TRANSLATE] Train (TER)",
             "question": "[TO_TRANSLATE] Quand les bénévoles se déplacent, quel pourcentage d'entre eux utilise le train ?"
           },
+          "part bus": {
+            "titre": "[TO_TRANSLATE] Bus",
+            "question": "[TO_TRANSLATE] Quand les bénévoles se déplacent, quel pourcentage d'entre eux utilise le bus ?"
+          },
           "part deux roues": {
-            "titre": "[UPDATED] Deux roues (moto, scooter, ...)",
+            "titre": "[TO_TRANSLATE] Deux roues (moto, scooter, ...)",
             "question": "[TO_TRANSLATE] Quand les bénévoles se déplacent, quel pourcentage d'entre eux utilise un deux roues ?"
           },
           "part transport en commun": {
@@ -1137,52 +1078,28 @@
               "question": "[TO_TRANSLATE] Quand les bénévoles se déplacent en train, combien de km parcourent-ils en moyenne par jour (A/R) ?"
             }
           },
-          "transports en commun": {
-            "titre": "[TO_TRANSLATE] Transports en commun (Métro, tramway, RER, bus, ...)",
-            "distance": {
-              "question": "[UPDATED] Quand les bénévoles se déplacent en transport en commun (métro, tramway, RER), combien de km parcourent-ils en moyenne par jour (A/R) ?"
-            }
-          },
-          "deux roues": {
-            "titre": "[UPDATED] Deux roues (Moto, scooter, ...)",
-            "distance": {
-              "question": "[TO_TRANSLATE] Quand les bénévoles se déplacent en deux roues, combien de km parcourent-ils en moyenne par jour (A/R) ?"
-            }
-          },
-          "part bus": {
-            "titre": "[TO_TRANSLATE] Bus",
-            "question": "[TO_TRANSLATE] Quand les bénévoles se déplacent, quel pourcentage d'entre eux utilise le bus ?"
-          },
           "bus": {
             "titre": "[TO_TRANSLATE] Bus",
             "distance": {
               "question": "[TO_TRANSLATE] Quand les bénévoles se déplacent en train, combien de km parcourent-ils en moyenne par jour (A/R) ?"
+            }
+          },
+          "transports en commun": {
+            "titre": "[TO_TRANSLATE] Transports en commun (Métro, tramway, RER, bus, ...)",
+            "distance": {
+              "question": "[TO_TRANSLATE] Quand les bénévoles se déplacent en transport en commun (métro, tramway, RER), combien de km parcourent-ils en moyenne par jour (A/R) ?"
+            }
+          },
+          "deux roues": {
+            "titre": "[TO_TRANSLATE] Deux roues (Moto, scooter, ...)",
+            "distance": {
+              "question": "[TO_TRANSLATE] Quand les bénévoles se déplacent en deux roues, combien de km parcourent-ils en moyenne par jour (A/R) ?"
             }
           }
         }
       },
       "DM-salariés": {
         "titre": "[TO_TRANSLATE] Emissions des trajets liés à des missions des salariés",
-        "avec": {
-          "titre": "[TO_TRANSLATE] émissions des trajets liés à des missions des salariés (avec enquête MEP)",
-          "émissions MEP": {
-            "voiture": {
-              "question": "[TO_TRANSLATE] D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en voiture liés à des missions ?"
-            },
-            "train": {
-              "question": "[TO_TRANSLATE] D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en train liés à des missions ?"
-            },
-            "avion": {
-              "question": "[TO_TRANSLATE] D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en avion liés à des missions ?"
-            },
-            "transports en commun": {
-              "question": "[TO_TRANSLATE] D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en transports en commun liés à des missions ?"
-            },
-            "deux roues": {
-              "question": "[TO_TRANSLATE] D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en deux roues liés à des missions ?"
-            }
-          }
-        },
         "sans": {
           "titre": "[TO_TRANSLATE] émissions des trajets liés à des missions des salariés (sans enquête MEP)",
           "voiture": {
@@ -1198,8 +1115,14 @@
               "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par mois par salarié en train pour des déplacements liés à des missions ?"
             }
           },
+          "bus": {
+            "titre": "[TO_TRANSLATE] Bus, par mois",
+            "distance": {
+              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par mois par salarié en bus pour des déplacements liés à des missions ?"
+            }
+          },
           "deux roues": {
-            "titre": "[UPDATED] Deux roues (moto, scooter, ...), par mois",
+            "titre": "[TO_TRANSLATE] Deux roues (moto, scooter, ...), par mois",
             "distance": {
               "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par mois par salarié en deux roues pour des déplacements liés à des missions ?"
             }
@@ -1229,12 +1152,6 @@
                 "question": "[TO_TRANSLATE] Combien de km ont été parcourus cette année par salarié en avion long courrier pour des déplacements liés à des missions ?"
               }
             }
-          },
-          "bus": {
-            "titre": "[TO_TRANSLATE] Bus, par mois",
-            "distance": {
-              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par mois par salarié en bus pour des déplacements liés à des missions ?"
-            }
           }
         }
       },
@@ -1250,12 +1167,16 @@
           "titre": "[TO_TRANSLATE] Train (TER)",
           "question": "[TO_TRANSLATE] Quel pourcentage des trajets se fait en train ?"
         },
+        "part bus": {
+          "titre": "[TO_TRANSLATE] Bus",
+          "question": "[TO_TRANSLATE] Quel pourcentage des trajets se fait en bus ?"
+        },
         "part deux roues": {
-          "titre": "[UPDATED] Deux roues (moto, scooter, ...)",
+          "titre": "[TO_TRANSLATE] Deux roues (moto, scooter, ...)",
           "question": "[TO_TRANSLATE] Quel pourcentage des trajets se fait en deux roues (scooter, moto) ?"
         },
         "part transport en commun": {
-          "titre": "[UPDATED] Transport en commun (Métro, tramway, RER, ...)",
+          "titre": "[TO_TRANSLATE] Transport en commun (Métro, tramway, RER, ...)",
           "question": "[TO_TRANSLATE] Quel pourcentage des trajets se fait en transport en commun ?"
         },
         "part avion": {
@@ -1274,12 +1195,16 @@
           "titre": "[TO_TRANSLATE] Train (TER)",
           "question": "[TO_TRANSLATE] Combien de km parcourent en moyenne sur l'année vos bénéficiaires en train ?"
         },
+        "bus": {
+          "titre": "[TO_TRANSLATE] Bus",
+          "question": "[TO_TRANSLATE] Combien de km parcourent en moyenne sur l'année vos bénéficiaires en bus ?"
+        },
         "deux roues": {
-          "titre": "[UPDATED] Deux roues (moto, scooter, ...)",
+          "titre": "[TO_TRANSLATE] Deux roues (moto, scooter, ...)",
           "question": "[TO_TRANSLATE] Combien de km parcourent en moyenne sur l'année vos bénéficiaires se déplaçant en deux roues (scooter, moto) ?"
         },
         "transport en commun": {
-          "titre": "[UPDATED] Transport en commun (Métro, tramway, RER, ...)",
+          "titre": "[TO_TRANSLATE] Transport en commun (Métro, tramway, RER, ...)",
           "question": "[TO_TRANSLATE] Combien de km parcourent en moyenne sur l'année vos bénéficiaires en transport en commun ?"
         },
         "avion": {
@@ -1289,14 +1214,6 @@
         "actif": {
           "titre": "[TO_TRANSLATE] Modes actifs (à pied, trottinette, ...)",
           "question": "[TO_TRANSLATE] Combien de km parcourent en moyenne sur l'année vos bénéficiaires via des modes actifs (à pied, vélo, trottinette) ?"
-        },
-        "part bus": {
-          "titre": "[TO_TRANSLATE] Bus",
-          "question": "[TO_TRANSLATE] Quel pourcentage des trajets se fait en bus ?"
-        },
-        "bus": {
-          "titre": "[TO_TRANSLATE] Bus",
-          "question": "[TO_TRANSLATE] Combien de km parcourent en moyenne sur l'année vos bénéficiaires en bus ?"
         }
       }
     },
@@ -1346,20 +1263,20 @@
           "question": "[TO_TRANSLATE] Concernant vos locaux, diriez-vous que :",
           "options": {
             "locaux seuls": "[TO_TRANSLATE] J'utilise des locaux qui sont entièrement dédiés à mon association",
-            "locaux partagés": "[UPDATED] Mes locaux sont partagés avec d'autres structures (co-working, open-space partagés, ...)",
+            "locaux partagés": "[TO_TRANSLATE] Mes locaux sont partagés avec d'autres structures (co-working, open-space partagés, ...)",
             "pas de locaux": "[TO_TRANSLATE] Mes activités associatives ne nécessitent pas de locaux (télétravail à 100%, extérieur, ...)"
           },
           "locaux seuls": {
             "titre": "[TO_TRANSLATE] J'utilise des locaux qui sont entièrement dédiés à mon association",
             "surface": {
-              "description": "[UPDATED] Vous devez renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites, vous pouvez soit sommer l'ensemble des surfaces ici, soit créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans (on parle bien de leur construction), vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année.",
+              "description": "[TO_TRANSLATE] Vous devez renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites, vous pouvez soit sommer l'ensemble des surfaces ici, soit créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans (on parle bien de leur construction), vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année.",
               "question": "[TO_TRANSLATE] Quelle est la surface de ces locaux ?"
             }
           },
           "locaux partagés": {
-            "titre": "[UPDATED] Mes locaux sont partagés avec d'autres structures (co-working, open-space partagés, ...)",
+            "titre": "[TO_TRANSLATE] Mes locaux sont partagés avec d'autres structures (co-working, open-space partagés, ...)",
             "surface": {
-              "description": "[UPDATED] Vous devez renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites et que ces différents sites ont tous des locaux partagés, vous devez créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans (on parle bien de leur construction), vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année. Seule une partie de l'impact carbone sera pris en compte, en fonction du pourcentage des locaux utilisé par votre association à renseigner dans la question suivante.",
+              "description": "[TO_TRANSLATE] Vous devez renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites et que ces différents sites ont tous des locaux partagés, vous devez créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans (on parle bien de leur construction), vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année. Seule une partie de l'impact carbone sera pris en compte, en fonction du pourcentage des locaux utilisé par votre association à renseigner dans la question suivante.",
               "question": "[TO_TRANSLATE] Quelle est la surface de ces locaux ?"
             },
             "pourcentage": {
@@ -1377,20 +1294,6 @@
         "locaux ponctuels": {
           "description": "[TO_TRANSLATE] Les locaux loués ponctuellement seront amortis sur 50 ans et 365 jours. Pour un local loué un jour, l'impact attribué sera 1/(365*50) de l'impact total de la construction du bâtiment.",
           "question": "[TO_TRANSLATE] Veuillez renseigner vos différentes locations ponctuelles dans le tableau suivant :",
-          "nom": {
-            "question": "[TO_TRANSLATE] Nom de la location"
-          },
-          "calcul": {
-            "titre": "[TO_TRANSLATE] Veuillez renseigner ici les informations sur ces locations",
-            "surface": {
-              "titre": "[TO_TRANSLATE] Surface",
-              "question": "[TO_TRANSLATE] Quelle est la surface de la location ?"
-            },
-            "durée": {
-              "titre": "[TO_TRANSLATE] Durée",
-              "question": "[TO_TRANSLATE] Combien de jours dure la location sur l'année ?"
-            }
-          },
           "surface": {
             "titre": "[TO_TRANSLATE] Surface",
             "question": "[TO_TRANSLATE] Quelle est la surface de la location ?"
@@ -1398,6 +1301,9 @@
           "durée": {
             "titre": "[TO_TRANSLATE] Durée",
             "question": "[TO_TRANSLATE] Combien de jours dure la location sur l'année ?"
+          },
+          "nom": {
+            "question": "[TO_TRANSLATE] Nom de la location"
           }
         }
       }
@@ -1409,8 +1315,6 @@
         "question": "[TO_TRANSLATE] Combien de ces différents types de repas sont consommés par vos salariés chaque année ?",
         "végétalien": {
           "titre": "[TO_TRANSLATE] Végétalien",
-          "description": "[TO_TRANSLATE] Repas sans produits animaux.",
-          "question": "[TO_TRANSLATE] Végétalien",
           "FE": {
             "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas végétalien",
             "description": "[TO_TRANSLATE] Repas contenant du tofu, un accompagnement \"moyen\" (issu d'un travail de consolidation sur les moyennes de consommation des français tirées de l'étude INCA3 pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur."
@@ -1421,7 +1325,6 @@
         },
         "végétarien": {
           "titre": "[TO_TRANSLATE] Végétarien",
-          "description": "[TO_TRANSLATE] Repas sans chair animale, avec des œufs ou un peu de fromage.",
           "FE": {
             "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas végétarien",
             "description": "[TO_TRANSLATE] Repas contenant des œufs, un accompagnement \"moyen\" (issu d'un travail de consolidation sur les moyennes de consommation des français tirées de l'étude INCA3 pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur."
@@ -1432,7 +1335,6 @@
         },
         "viande blanche": {
           "titre": "[TO_TRANSLATE] Viande blanche",
-          "description": "[TO_TRANSLATE] Repas contenant une pièce de poulet, porc.",
           "FE": {
             "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas de type viande blanche (poulet, porc)",
             "description": "[TO_TRANSLATE] Repas contenant 150g d'une viande blanche moyenne (issue d'un travail de consolidation sur les consommations moyennes de viande blanche de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur."
@@ -1443,13 +1345,9 @@
         },
         "viande rouge": {
           "titre": "[TO_TRANSLATE] Viande rouge",
-          "description": "[TO_TRANSLATE] Repas contenant une pièce de bœuf, veau, ou agneau.",
           "FE": {
             "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas de type viande rouge (bœuf, veau, agneau)",
             "description": "[TO_TRANSLATE] Repas contenant 150g d'une viande rouge moyenne (issue d'un travail de consolidation sur les consommations moyennes de viande rouge de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Pour la partie déforestation, notre alimentation est vectrice de déforestation à l'étranger, à l'impact carbone non négligeable. Cette empreinte n'est pas comprise dans les facteurs d'émission d'Agribalyse. D'après l'étude [Pendril & al.](https://iopscience.iop.org/article/10.1088/1748-9326/ab0d41), une part de cette déforestation est spécifiquement associée à la consommation de viande d'élevage. Nous considérons que cette part associée aux \"viandes d'élevage\" est majoritairement associée à la consommation de viande rouge, c'est pourquoi nous ajoutons cette part de déforestation aux repas de viande rouge."
-          },
-          "déforestation": {
-            "description": "[TO_TRANSLATE] L’étude [Pendril & al.](https://iopscience.iop.org/article/10.1088/1748-9326/ab0d41) donne une empreinte moyenne de 34 kgCO2e / personne de déforestation importée liée à la consommation de viandes d'élevage. Nous partons du principe que ces émissions liées à la production de viandes d'élevage appartiennent majoritairement à la catégorie \"viande rouge\", car c'est la catégorie la plus consommatrice de terres et de ressources. La consommation moyenne par français de viande rouge se situe autour de 3 repas par semaine, soit 156 repas par an. En conséquence, nous ajoutons à l'empreinte des repas une empreinte moyenne de 0.218 kgCO2e / repas de viande rouge."
           },
           "nombre": {
             "question": "[TO_TRANSLATE] Nombre de plats viande rouge"
@@ -1457,7 +1355,6 @@
         },
         "poisson gras": {
           "titre": "[TO_TRANSLATE] Poisson gras",
-          "description": "[TO_TRANSLATE] Repas contenant thon, saumon, sardine ou maquereau.",
           "FE": {
             "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas de type poisson gras (thon, saumon, sardine, maquereau)",
             "description": "[TO_TRANSLATE] Repas contenant 150g d'un poisson gras moyen (issu d'un travail de consolidation sur les consommations moyennes de poissons gras de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur."
@@ -1468,7 +1365,6 @@
         },
         "poisson blanc": {
           "titre": "[TO_TRANSLATE] Poisson blanc",
-          "description": "[TO_TRANSLATE] Repas avec un filet de poisson blanc.",
           "FE": {
             "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas de type poisson blanc",
             "description": "[TO_TRANSLATE] Repas contenant 150g d'un poisson blanc moyen (issu d'un travail de consolidation sur les consommations moyennes de poissons blancs de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur."
@@ -1479,7 +1375,6 @@
         },
         "repas moyen": {
           "titre": "[TO_TRANSLATE] Repas moyen",
-          "description": "[TO_TRANSLATE] Repas moyen d'un français",
           "FE": {
             "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas de type poisson blanc",
             "description": "[TO_TRANSLATE] Ce facteur d'émission est élaboré à partir des données INCA 3, en compilant la consommation moyenne des différents ingrédients pour un déjeuner, et en utilisant les facteurs d'émission de chaque aliment. Plus de détails [ici](https://base-empreinte.ademe.fr/documentation/base-carbone?docLink=Repas_2)"
@@ -1491,11 +1386,10 @@
       },
       "mosaic bénévoles": {
         "titre": "[TO_TRANSLATE] Empreinte des repas",
-        "description": "[UPDATED] Pour un bénévole, un repas ne doit être considéré que si l'activité dure une journée complète ou si l'on est certain qu'elle inclut un repas. L'option \"Repas moyen\" sert uniquement si vous n'avez aucune idée des types de repas consommés. Dans le cas où l'association ne saurait pas associer un nombre de repas, elle peut considérer le nombre d’équivalents temps plein (ETP) calculés à partir du nombre de bénévoles et du nombre d'heures de bénévolat, puis associer un repas par jour travaillé par un ETP. L'hypothèse est majorante car elle associe un repas par jour, sans savoir si les plages horaires impliquent réellement la consommation d'un repas.",
+        "description": "[TO_TRANSLATE] Pour un bénévole, un repas ne doit être considéré que si l'activité dure une journée complète ou si l'on est certain qu'elle inclut un repas. L'option \"Repas moyen\" sert uniquement si vous n'avez aucune idée des types de repas consommés. Dans le cas où l'association ne saurait pas associer un nombre de repas, elle peut considérer le nombre d’équivalents temps plein (ETP) calculés à partir du nombre de bénévoles et du nombre d'heures de bénévolat, puis associer un repas par jour travaillé par un ETP. L'hypothèse est majorante car elle associe un repas par jour, sans savoir si les plages horaires impliquent réellement la consommation d'un repas.",
         "question": "[TO_TRANSLATE] Combien de ces différents types de repas sont consommés par vos bénévoles chaque année ?",
         "végétalien": {
           "titre": "[TO_TRANSLATE] Végétalien",
-          "description": "[TO_TRANSLATE] Repas sans produits animaux.",
           "FE": {
             "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas végétalien",
             "description": "[TO_TRANSLATE] Repas contenant du tofu, un accompagnement \"moyen\" (issu d'un travail de consolidation sur les moyennes de consommation des français tirées de l'étude INCA3 pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur."
@@ -1506,7 +1400,6 @@
         },
         "végétarien": {
           "titre": "[TO_TRANSLATE] Végétarien",
-          "description": "[TO_TRANSLATE] Repas sans chair animale, avec des œufs ou un peu de fromage.",
           "FE": {
             "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas végétarien",
             "description": "[TO_TRANSLATE] Repas contenant des œufs, un accompagnement \"moyen\" (issu d'un travail de consolidation sur les moyennes de consommation des français tirées de l'étude INCA3 pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur."
@@ -1517,7 +1410,6 @@
         },
         "viande blanche": {
           "titre": "[TO_TRANSLATE] Viande blanche",
-          "description": "[TO_TRANSLATE] Repas contenant une pièce de poulet, porc.",
           "FE": {
             "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas de type viande blanche (poulet, porc)",
             "description": "[TO_TRANSLATE] Repas contenant 150g d'une viande blanche moyenne (issue d'un travail de consolidation sur les consommations moyennes de viande blanche de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur."
@@ -1528,13 +1420,9 @@
         },
         "viande rouge": {
           "titre": "[TO_TRANSLATE] Viande rouge",
-          "description": "[TO_TRANSLATE] Repas contenant une pièce de bœuf, veau, ou agneau.",
           "FE": {
             "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas de type viande rouge (bœuf, veau, agneau)",
             "description": "[TO_TRANSLATE] Repas contenant 150g d'une viande rouge moyenne (issue d'un travail de consolidation sur les consommations moyennes de viande rouge de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Pour la partie déforestation, notre alimentation est vectrice de déforestation à l'étranger, à l'impact carbone non négligeable. Cette empreinte n'est pas comprise dans les facteurs d'émission d'Agribalyse. D'après l'étude [Pendril & al.](https://iopscience.iop.org/article/10.1088/1748-9326/ab0d41), une part de cette déforestation est spécifiquement associée à la consommation de viande d'élevage. Nous considérons que cette part associée aux \"viandes d'élevage\" est majoritairement associée à la consommation de viande rouge, c'est pourquoi nous ajoutons cette part de déforestation aux repas de viande rouge."
-          },
-          "déforestation": {
-            "description": "[TO_TRANSLATE] L’étude [Pendril & al.](https://iopscience.iop.org/article/10.1088/1748-9326/ab0d41) donne une empreinte moyenne de 34 kgCO2e / personne de déforestation importée liée à la consommation de viandes d'élevage. Nous partons du principe que ces émissions liées à la production de viandes d'élevage appartiennent majoritairement à la catégorie \"viande rouge\", car c'est la catégorie la plus consommatrice de terres et de ressources. La consommation moyenne par français de viande rouge se situe autour de 3 repas par semaine, soit 156 repas par an. En conséquence, nous ajoutons à l'empreinte des repas une empreinte moyenne de 0.218 kgCO2e / repas de viande rouge."
           },
           "nombre": {
             "question": "[TO_TRANSLATE] Nombre de plats viande rouge"
@@ -1542,7 +1430,6 @@
         },
         "poisson gras": {
           "titre": "[TO_TRANSLATE] Poisson gras",
-          "description": "[TO_TRANSLATE] Repas contenant thon, saumon, sardine ou maquereau.",
           "FE": {
             "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas de type poisson gras (thon, saumon, sardine, maquereau)",
             "description": "[TO_TRANSLATE] Repas contenant 150g d'un poisson gras moyen (issu d'un travail de consolidation sur les consommations moyennes de poissons gras de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur."
@@ -1553,7 +1440,6 @@
         },
         "poisson blanc": {
           "titre": "[TO_TRANSLATE] Poisson blanc",
-          "description": "[TO_TRANSLATE] Repas avec un filet de poisson blanc.",
           "FE": {
             "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas de type poisson blanc",
             "description": "[TO_TRANSLATE] Repas contenant 150g d'un poisson blanc moyen (issu d'un travail de consolidation sur les consommations moyennes de poissons blancs de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur."
@@ -1564,7 +1450,6 @@
         },
         "repas moyen": {
           "titre": "[TO_TRANSLATE] Repas moyen",
-          "description": "[TO_TRANSLATE] Repas moyen d'un français",
           "FE": {
             "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas de type poisson blanc",
             "description": "[TO_TRANSLATE] Ce facteur d'émission est élaboré à partir des données INCA 3, en compilant la consommation moyenne des différents ingrédients pour un déjeuner, et en utilisant les facteurs d'émission de chaque aliment. Plus de détails [ici](https://base-empreinte.ademe.fr/documentation/base-carbone?docLink=Repas_2)"
@@ -1580,11 +1465,10 @@
         },
         "mosaic bénéficiaires": {
           "titre": "[TO_TRANSLATE] Empreinte des repas",
-          "description": "[UPDATED] Il vous faut connaître le nombre de repas pris par vos bénéficiaires. Attention à ne pas créer de double-comptes avec d'éventuels repas déjà comptabilisés dans le cadre d'un événement. L'option \"Repas moyen\" sert uniquement si vous n'avez aucune idée des types de repas consommés.",
+          "description": "[TO_TRANSLATE] Il vous faut connaître le nombre de repas pris par vos bénéficiaires. Attention à ne pas créer de double-comptes avec d'éventuels repas déjà comptabilisés dans le cadre d'un événement. L'option \"Repas moyen\" sert uniquement si vous n'avez aucune idée des types de repas consommés.",
           "question": "[TO_TRANSLATE] Combien de ces différents types de repas sont consommés par vos bénéficiaires chaque année ?",
           "végétalien": {
             "titre": "[TO_TRANSLATE] Végétalien",
-            "description": "[TO_TRANSLATE] Repas sans produits animaux.",
             "FE": {
               "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas végétalien",
               "description": "[TO_TRANSLATE] Repas contenant du tofu, un accompagnement \"moyen\" (issu d'un travail de consolidation sur les moyennes de consommation des français tirées de l'étude INCA3 pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur."
@@ -1595,7 +1479,6 @@
           },
           "végétarien": {
             "titre": "[TO_TRANSLATE] Végétarien",
-            "description": "[TO_TRANSLATE] Repas sans chair animale, avec des œufs ou un peu de fromage.",
             "FE": {
               "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas végétarien",
               "description": "[TO_TRANSLATE] Repas contenant des œufs, un accompagnement \"moyen\" (issu d'un travail de consolidation sur les moyennes de consommation des français tirées de l'étude INCA3 pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur."
@@ -1606,7 +1489,6 @@
           },
           "viande blanche": {
             "titre": "[TO_TRANSLATE] Viande blanche",
-            "description": "[TO_TRANSLATE] Repas contenant une pièce de poulet, porc.",
             "FE": {
               "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas de type viande blanche (poulet, porc)",
               "description": "[TO_TRANSLATE] Repas contenant 150g d'une viande blanche moyenne (issue d'un travail de consolidation sur les consommations moyennes de viande blanche de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur."
@@ -1617,13 +1499,9 @@
           },
           "viande rouge": {
             "titre": "[TO_TRANSLATE] Viande rouge",
-            "description": "[TO_TRANSLATE] Repas contenant une pièce de bœuf, veau, ou agneau.",
             "FE": {
               "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas de type viande rouge (bœuf, veau, agneau)",
               "description": "[TO_TRANSLATE] Repas contenant 150g d'une viande rouge moyenne (issue d'un travail de consolidation sur les consommations moyennes de viande rouge de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Pour la partie déforestation, notre alimentation est vectrice de déforestation à l'étranger, à l'impact carbone non négligeable. Cette empreinte n'est pas comprise dans les facteurs d'émission d'Agribalyse. D'après l'étude [Pendril & al.](https://iopscience.iop.org/article/10.1088/1748-9326/ab0d41), une part de cette déforestation est spécifiquement associée à la consommation de viande d'élevage. Nous considérons que cette part associée aux \"viandes d'élevage\" est majoritairement associée à la consommation de viande rouge, c'est pourquoi nous ajoutons cette part de déforestation aux repas de viande rouge."
-            },
-            "déforestation": {
-              "description": "[TO_TRANSLATE] L’étude [Pendril & al.](https://iopscience.iop.org/article/10.1088/1748-9326/ab0d41) donne une empreinte moyenne de 34 kgCO2e / personne de déforestation importée liée à la consommation de viandes d'élevage. Nous partons du principe que ces émissions liées à la production de viandes d'élevage appartiennent majoritairement à la catégorie \"viande rouge\", car c'est la catégorie la plus consommatrice de terres et de ressources. La consommation moyenne par français de viande rouge se situe autour de 3 repas par semaine, soit 156 repas par an. En conséquence, nous ajoutons à l'empreinte des repas une empreinte moyenne de 0.218 kgCO2e / repas de viande rouge."
             },
             "nombre": {
               "question": "[TO_TRANSLATE] Nombre de plats viande rouge"
@@ -1631,7 +1509,6 @@
           },
           "poisson gras": {
             "titre": "[TO_TRANSLATE] Poisson gras",
-            "description": "[TO_TRANSLATE] Repas contenant thon, saumon, sardine ou maquereau.",
             "FE": {
               "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas de type poisson gras (thon, saumon, sardine, maquereau)",
               "description": "[TO_TRANSLATE] Repas contenant 150g d'un poisson gras moyen (issu d'un travail de consolidation sur les consommations moyennes de poissons gras de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur."
@@ -1642,7 +1519,6 @@
           },
           "poisson blanc": {
             "titre": "[TO_TRANSLATE] Poisson blanc",
-            "description": "[TO_TRANSLATE] Repas avec un filet de poisson blanc.",
             "FE": {
               "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas de type poisson blanc",
               "description": "[TO_TRANSLATE] Repas contenant 150g d'un poisson blanc moyen (issu d'un travail de consolidation sur les consommations moyennes de poissons blancs de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur."
@@ -1653,7 +1529,6 @@
           },
           "repas moyen": {
             "titre": "[TO_TRANSLATE] Repas moyen",
-            "description": "[TO_TRANSLATE] Repas moyen d'un français",
             "FE": {
               "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas de type poisson blanc",
               "description": "[TO_TRANSLATE] Ce facteur d'émission est élaboré à partir des données INCA 3, en compilant la consommation moyenne des différents ingrédients pour un déjeuner, et en utilisant les facteurs d'émission de chaque aliment. Plus de détails [ici](https://base-empreinte.ademe.fr/documentation/base-carbone?docLink=Repas_2)"
@@ -1665,176 +1540,6 @@
         }
       },
       "titre": "[TO_TRANSLATE] Alimentation"
-    },
-    "événement": {
-      "titre": "[TO_TRANSLATE] Événement",
-      "mosaic alimentation": {
-        "titre": "[TO_TRANSLATE] Empreinte des repas",
-        "description": "[UPDATED] L'option \"Repas moyen\" sert uniquement si vous n'avez aucune idée des types de repas consommés.",
-        "question": "[UPDATED] Combien de ces différents types de repas ont étés consommés au cours de l'événement ?",
-        "végétalien": {
-          "titre": "[TO_TRANSLATE] Végétalien",
-          "FE": {
-            "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas végétalien",
-            "description": "[TO_TRANSLATE] Repas contenant du tofu, un accompagnement \"moyen\" (issu d'un travail de consolidation sur les moyennes de consommation des français tirées de l'étude INCA3 pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur."
-          },
-          "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de plats végétaliens"
-          }
-        },
-        "végétarien": {
-          "titre": "[TO_TRANSLATE] Végétarien",
-          "FE": {
-            "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas végétarien",
-            "description": "[TO_TRANSLATE] Repas contenant des œufs, un accompagnement \"moyen\" (issu d'un travail de consolidation sur les moyennes de consommation des français tirées de l'étude INCA3 pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur."
-          },
-          "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de plats végétariens"
-          }
-        },
-        "viande blanche": {
-          "titre": "[TO_TRANSLATE] Viande blanche",
-          "FE": {
-            "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas de type viande blanche (poulet, porc)",
-            "description": "[TO_TRANSLATE] Repas contenant 150g d'une viande blanche moyenne (issue d'un travail de consolidation sur les consommations moyennes de viande blanche de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur."
-          },
-          "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de plats viande blanche"
-          }
-        },
-        "viande rouge": {
-          "titre": "[TO_TRANSLATE] Viande rouge",
-          "FE": {
-            "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas de type viande rouge (bœuf, veau, agneau)",
-            "description": "[UPDATED] Repas contenant 150g d'une viande rouge moyenne (issue d'un travail de consolidation sur les consommations moyennes de viande rouge de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Pour la partie déforestation, notre alimentation est vectrice de déforestation à l'étranger, à l'impact carbone non négligeable. Cette empreinte n'est pas comprise dans les facteurs d'émission d'Agribalyse. D'après l'étude [Pendril & al.](https://iopscience.iop.org/article/10.1088/1748-9326/ab0d41), une part de cette déforestation est spécifiquement associée à la consommation de viande d'élevage. Nous considérons que cette part associée aux \"viandes d'élevage\" est majoritairement associée à la consommation de viande rouge, c'est pourquoi nous ajoutons cette part de déforestation aux repas de viande rouge."
-          },
-          "déforestation": {
-            "description": "[TO_TRANSLATE] L’étude [Pendril & al.](https://iopscience.iop.org/article/10.1088/1748-9326/ab0d41) donne une empreinte moyenne de 34 kgCO2e / personne de déforestation importée liée à la consommation de viandes d'élevage. Nous partons du principe que ces émissions liées à la production de viandes d'élevage appartiennent majoritairement à la catégorie \"viande rouge\", car c'est la catégorie la plus consommatrice de terres et de ressources. La consommation moyenne par français de viande rouge se situe autour de 3 repas par semaine, soit 156 repas par an. En conséquence, nous ajoutons à l'empreinte des repas une empreinte moyenne de 0.218 kgCO2e / repas de viande rouge."
-          },
-          "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de plats viande rouge"
-          }
-        },
-        "poisson gras": {
-          "titre": "[TO_TRANSLATE] Poisson gras",
-          "FE": {
-            "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas de type poisson gras (thon, saumon, sardine, maquereau)",
-            "description": "[TO_TRANSLATE] Repas contenant 150g d'un poisson gras moyen (issu d'un travail de consolidation sur les consommations moyennes de poissons gras de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur."
-          },
-          "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de plats poisson gras"
-          }
-        },
-        "poisson blanc": {
-          "titre": "[TO_TRANSLATE] Poisson blanc",
-          "FE": {
-            "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas de type poisson blanc",
-            "description": "[TO_TRANSLATE] Repas contenant 150g d'un poisson blanc moyen (issu d'un travail de consolidation sur les consommations moyennes de poissons blancs de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile. Vous trouverez la documentation complète dans le [wiki de Nos Gestes Climat](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23). Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur."
-          },
-          "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de plats poisson blanc"
-          }
-        },
-        "repas moyen": {
-          "titre": "[TO_TRANSLATE] Repas moyen",
-          "FE": {
-            "titre": "[TO_TRANSLATE] Empreinte carbone d'un repas de type poisson blanc",
-            "description": "[TO_TRANSLATE] Ce facteur d'émission est élaboré à partir des données INCA 3, en compilant la consommation moyenne des différents ingrédients pour un déjeuner, et en utilisant les facteurs d'émission de chaque aliment. Plus de détails [ici](https://base-empreinte.ademe.fr/documentation/base-carbone?docLink=Repas_2)"
-          },
-          "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de repas moyen"
-          }
-        }
-      },
-      "déplacements": {
-        "voiture": {
-          "titre": "[TO_TRANSLATE] Voiture",
-          "question": "[TO_TRANSLATE] Combien de km (AR) ont étés parcourus en voiture pour accéder à l'événement ?"
-        },
-        "train": {
-          "titre": "[TO_TRANSLATE] Train (TER)",
-          "question": "[TO_TRANSLATE] Combien de km (AR) ont étés parcourus en TER pour accéder à l'événement ?"
-        },
-        "TGV": {
-          "titre": "[UPDATED] TGV",
-          "question": "[TO_TRANSLATE] Combien de km (AR) ont étés parcourus en TGV pour accéder à l'événement ?"
-        },
-        "deux roues": {
-          "titre": "[TO_TRANSLATE] Deux roues (moto, scooter, ...)",
-          "question": "[TO_TRANSLATE] Combien de km (AR) ont étés parcourus en deux roues (moto, scooter, ...) pour accéder à l'événement ?"
-        },
-        "transport en commun": {
-          "titre": "[TO_TRANSLATE] Transport en commun (Métro, tramway, RER, bus, ...)",
-          "question": "[TO_TRANSLATE] Combien de km (AR) ont étés parcourus en transport en commun (métro, tramway, ...) pour accéder à l'événement ?"
-        },
-        "avion": {
-          "titre": "[TO_TRANSLATE] Avion",
-          "question": "[TO_TRANSLATE] Combien de km (AR) ont étés parcourus en avion pour accéder à l'événement ?"
-        },
-        "bus": {
-          "titre": "[TO_TRANSLATE] Bus",
-          "question": "[TO_TRANSLATE] Combien de km (AR) ont étés parcourus en bus pour accéder à l'événement ?"
-        }
-      },
-      "énergie": {
-        "types": {
-          "titre": "[TO_TRANSLATE] Types d'énergie",
-          "électricité présent": {
-            "question": "[TO_TRANSLATE] Électricité"
-          },
-          "gaz présent": {
-            "question": "[TO_TRANSLATE] Gaz"
-          },
-          "fioul présent": {
-            "question": "[TO_TRANSLATE] Fioul domestique"
-          }
-        },
-        "électricité": {
-          "titre": "[UPDATED] Quelle a été la consommation d'électricité au cours de l'événement ?",
-          "consommation": {
-            "question": "[TO_TRANSLATE] Quelle a été la consommation d'électricité au cours de l'événement ?"
-          }
-        },
-        "gaz": {
-          "titre": "[UPDATED] Quelle a été la consommation de gaz au cours de l'événement ?",
-          "consommation": {
-            "question": "[TO_TRANSLATE] Quelle a été la consommation de gaz au cours de l'événement ?"
-          }
-        },
-        "fioul": {
-          "titre": "[UPDATED] Quelle a été la consommation de fioul domestique au cours de l'événement ?",
-          "consommation": {
-            "question": "[TO_TRANSLATE] Quelle a été la consommation de fioul au cours de l'événement ?"
-          }
-        }
-      },
-      "hébergement": {
-        "existant": {
-          "question": "[UPDATED] Est-ce que les participant.es campent ou dorment à l'hôtel au cours de l'événement ?"
-        },
-        "camping": {
-          "titre": "[TO_TRANSLATE] Camping",
-          "nombre de nuits": {
-            "question": "[TO_TRANSLATE] Camping"
-          }
-        },
-        "hotel": {
-          "titre": "[TO_TRANSLATE] Hôtel",
-          "nombre de nuits": {
-            "question": "[TO_TRANSLATE] Hôtel"
-          }
-        }
-      }
-    },
-    "travail": {
-      "titre": "[TO_TRANSLATE] Temps de travail des différentes personnes",
-      "bénévoles": {
-        "titre": "[TO_TRANSLATE] Temps de travail des bénévoles",
-        "h": {
-          "description": "[TO_TRANSLATE] Dans le cas où vous ne disposeriez pas de cette information, vous pouvez considérer le nombre total d'heures de bénévolat et diviser ensuite par votre nombre de bénévoles. Le nombre d'heures de travail indiqué ici est utilisé dans le calcul des déplacements de vos bénévoles, ceux-ci étant considérés par défaut comme se déplaçant 5 jours dans la semaine. Il est donc normal que votre réponse modifie les totaux calculés dans le poste Déplacements de personnes.",
-          "question": "[TO_TRANSLATE] Combien d'heures de bénévolat sont en moyenne effectuées par semaine pour vos bénévoles ?"
-        }
-      }
     }
   }
 }
