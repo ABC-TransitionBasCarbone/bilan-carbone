@@ -3,4 +3,349 @@ intrants-biens-et-matières:
   formule:
     somme:
       - ratios monétaires
+      - textiles
   par défaut: 0
+
+intrants-biens-et-matières . textiles:
+  formule: 
+    somme:
+      - t-shirt polyester
+      - t-shirt coton
+      - chaussures de sport
+      - chaussures en tissu
+      - sweat en coton
+      - polo
+      - manteau
+
+intrants-biens-et-matières . textiles . t-shirt polyester: 
+  titre: T-shirts (polyester)
+  formule: FE * nombre 
+  avec: 
+    FE:
+      valeur: 5.5
+      unité: kgCO2e/unité
+      meta: 
+        nom: T-shirt/en polyester
+        id: 27045
+        UUID: 4fd13508-7094-324f-af2c-042867796733
+    nombre:
+      question: T-shirts en polyester
+      par défaut: 0
+
+intrants-biens-et-matières . textiles . t-shirt coton: 
+  titre: T-shirts (coton)
+  formule: FE * nombre 
+  avec: 
+    FE:
+      valeur: 5.2
+      unité: kgCO2e/unité
+      meta: 
+        nom: T-shirt/en coton
+        id: 27044
+        UUID: 100e4d7d-69e9-3e51-a2d6-5235fd2c663a
+    nombre:
+      question: T-shirts en coton
+      par défaut: 0
+
+intrants-biens-et-matières . textiles . chaussures de sport: 
+  titre: Chaussures de sport
+  formule: FE * nombre 
+  avec: 
+    FE:
+      valeur: 18.7
+      unité: kgCO2e/unité
+      meta: 
+        nom: Chaussures/de sport
+        id: 27060
+        UUID: ba23daf8-0fd4-382a-b2d5-ceb0a0f76323
+    nombre:
+      question: Chaussures de sport
+      par défaut: 0
+
+intrants-biens-et-matières . textiles . chaussures en tissu: 
+  titre: Chaussures en tissu
+  formule: FE * nombre 
+  avec: 
+    FE:
+      valeur: 17.3
+      unité: kgCO2e/unité
+      meta: 
+        nom: Chaussures/en tissu
+        id: 27059
+        UUID: 802facd6-b456-335a-8d17-ce1262402965
+    nombre:
+      question: Chaussures en tissu
+      par défaut: 0
+
+intrants-biens-et-matières . textiles . sweat en coton: 
+  titre: Sweat en coton
+  formule: FE * nombre 
+  avec: 
+    FE:
+      valeur: 27.4
+      unité: kgCO2e/unité
+      meta: 
+        nom: Sweat/(CO)
+        id: 27049
+        UUID: 45f8b156-eaff-324d-a1ff-e72e43421e94
+    nombre:
+      question: T-shirts (coton)
+      par défaut: 0
+
+intrants-biens-et-matières . textiles . polo: 
+  titre: Polo
+  formule: FE * nombre 
+  avec: 
+    FE:
+      valeur: 8.20
+      unité: kgCO2e/unité
+      meta: 
+        nom: Polo
+        id: 27046
+        UUID: 4a6e1cc9-24c1-320d-9d05-d1aa1d48af54
+    nombre:
+      question: Polo
+      par défaut: 0
+
+intrants-biens-et-matières . textiles . manteau: 
+  titre: Manteau
+  formule: FE * nombre 
+  avec: 
+    FE:
+      valeur: 85.8
+      unité: kgCO2e/unité
+      meta: 
+        nom: Manteau/composition moyenne
+        id: 27052
+        UUID: 435557d5-a4a2-33b1-9348-7bb5a7fae8b7
+    nombre:
+      question: Manteau
+      par défaut: 0
+
+intrants-biens-et-matières . ratios monétaires:
+  formule: 
+    somme: 
+      - ratio moyen
+      - tableau détaillé
+  par défaut: 0
+
+intrants-biens-et-matières . ratios monétaires . existant:
+  titre: L'utilisateur a-t'il accès aux montants dépensés dans des biens matériels de manière détaillée ?
+  question: Avez-vous accès aux détails des montants dépensés sur l'année dans des biens matériels ? 
+  description: La liste de vos dépenses est présente dans votre livres de comptes, et souvent déclarée sur <compteassotilttorefacto>Lecompteasso</compteassotilttorefacto>.
+  form:
+    à traduire: oui
+
+intrants-biens-et-matières . ratios monétaires . ratio moyen:
+  applicable si: 
+    toutes ces conditions:
+      - est défini: intrants-biens-et-matières . ratios monétaires . existant
+      - intrants-biens-et-matières . ratios monétaires . existant = non
+  formule: montant dépensé * FE
+  form:
+    à traduire: oui
+  avec: 
+    montant dépensé:
+      titre: Montant dépensé dans des services immatériels sur l'année
+      question: Quel montant avez-vous dépensé sur l'année dans ces biens matériels ? 
+      description: La prise en compte des biens et des matières achetées via des ratios monétaires est déjà très imprécise, car le prix des produits peut flucter, tandis que les émissions restent les mêmes. Cela l'est encore plus si vous utilisez un ratio moyen comme ici, car les émissions sont en réalité très différentes en fonction du type de produit concerné. <b>Nous vous invitons donc plutôt à aller chercher le détail des montants dépensés sur l'année.</b>
+      par défaut: 0
+      unité: k€ HT
+    FE: 
+      valeur: 400
+      unité: kgCO2e/k€ HT
+      meta: 
+        source: Moyenne approximative des FE utilisés dans le cas du tableau. Cette moyenne devrait être pondérée par le poids des différents types de produits dans l'économie, mais seul le SDES dispose de ces modèles.
+  unité: kgCO2e
+  description: 
+
+intrants-biens-et-matières . ratios monétaires . tableau détaillé:
+  applicable si: 
+    toutes ces conditions:
+      - est défini: intrants-biens-et-matières . ratios monétaires . existant
+      - intrants-biens-et-matières . ratios monétaires . existant = oui
+  titre: Intrants biens et matières
+  question: Quels biens et matières avez-vous achetés en approche monétaire ?
+  formule:
+    somme:
+      - petites-fournitures
+      - meubles
+      - machines-équipements
+      - textiles
+      - produits-pharmaceutiques
+      - produits-chimiques
+      - papier-carton
+      - produits-métalliques
+      - autres-produits-manufacturés
+  unité: kgCO2e
+
+intrants-biens-et-matières . ratios monétaires . tableau détaillé . petites-fournitures:
+  formule: nombre * FE
+  form:
+    à traduire: oui
+  titre: Petites fournitures
+  avec:
+    nombre:
+      question: Montant dépensé (k€) en petites fournitures
+      par défaut: 0
+      unité: k€ HT
+
+    FE:
+      valeur: 367
+      unité: kgCO2e/k€ HT
+      meta:
+        nom: Petites Fournitures
+        id: 20556
+  unité: kgCO2e
+
+intrants-biens-et-matières . ratios monétaires . tableau détaillé . meubles:
+  formule: nombre * FE
+  form:
+    à traduire: oui
+  titre: Meubles
+  avec:
+    nombre:
+      question: Montant dépensé (k€) en meubles
+      par défaut: 0
+      unité: k€ HT
+
+    FE:
+      valeur: 231
+      unité: kgCO2e/k€ HT
+      meta:
+        nom: Meubles - 2023
+        id: 43360
+  unité: kgCO2e
+
+intrants-biens-et-matières . ratios monétaires . tableau détaillé . machines-équipements:
+  formule: nombre * FE
+  form:
+    à traduire: oui
+  titre: Machines et équipements
+  avec:
+    nombre:
+      question: Montant dépensé (k€) en machines et équipements
+      par défaut: 0
+      unité: k€ HT
+
+    FE:
+      valeur: 273
+      unité: kgCO2e/k€ HT
+      meta:
+        nom: Machines et équipements
+        id: 43355
+  unité: kgCO2e
+
+intrants-biens-et-matières . ratios monétaires . tableau détaillé . textiles:
+  formule: nombre * FE
+  form:
+    à traduire: oui
+  titre: Textiles
+  avec:
+    nombre:
+      question: Montant dépensé (k€) en textiles
+      par défaut: 0
+      unité: k€ HT
+
+    FE:
+      valeur: 271
+      unité: kgCO2e/k€ HT
+      meta:
+        nom: Produits de l'industrie textile
+        id: 43405
+  unité: kgCO2e
+
+intrants-biens-et-matières . ratios monétaires . tableau détaillé . produits-pharmaceutiques:
+  formule: nombre * FE
+  form:
+    à traduire: oui
+  titre: Produits pharmaceutiques
+  avec:
+    nombre:
+      question: Montant dépensé (k€) en produits pharmaceutiques
+      par défaut: 0
+      unité: k€ HT
+
+    FE:
+      valeur: 194
+      unité: kgCO2e/k€ HT
+      meta:
+        nom: Produits pharmaceutiques
+        id: 43435
+  unité: kgCO2e
+
+intrants-biens-et-matières . ratios monétaires . tableau détaillé . produits-chimiques:
+  formule: nombre * FE
+  form:
+    à traduire: oui
+  titre: Produits chimiques
+  avec:
+    nombre:
+      question: Montant dépensé (k€) en produits chimiques
+      par défaut: 0
+      unité: k€ HT
+
+    FE:
+      valeur: 603
+      unité: kgCO2e/k€ HT
+      meta:
+        nom: Produits chimiques - 2023
+        id: 43380
+  unité: kgCO2e
+
+intrants-biens-et-matières . ratios monétaires . tableau détaillé . papier-carton:
+  formule: nombre * FE
+  form:
+    à traduire: oui
+  titre: Papier et carton
+  avec:
+    nombre:
+      question: Montant dépensé (k€) en papier et carton
+      par défaut: 0
+      unité: k€ HT
+
+    FE:
+      valeur: 357
+      unité: kgCO2e/k€ HT
+      meta:
+        nom: Papier et carton - 2023
+        id: 43370
+  unité: kgCO2e
+
+intrants-biens-et-matières . ratios monétaires . tableau détaillé . produits-métalliques:
+  formule: nombre * FE
+  form:
+    à traduire: oui
+  titre: Produits métalliques
+  avec:
+    nombre:
+      question: Montant dépensé (k€) en produits métalliques
+      par défaut: 0
+      unité: k€ HT
+
+    FE:
+      valeur: 317
+      unité: kgCO2e/k€ HT
+      meta:
+        nom: Produits métalliques, à l'exclusion des machines et équipements - 2023
+        id: 43425
+  unité: kgCO2e
+
+intrants-biens-et-matières . ratios monétaires . tableau détaillé . autres-produits-manufacturés:
+  formule: nombre * FE
+  form:
+    à traduire: oui
+  titre: Autres produits manufacturés
+  avec:
+    nombre:
+      question: Montant dépensé (k€) en autres produits manufacturés
+      par défaut: 0
+      unité: k€ HT
+
+    FE:
+      valeur: 231
+      unité: kgCO2e/k€ HT
+      meta:
+        nom: Autres produits manufacturés
+        id: 43365
+  unité: kgCO2e

@@ -60,7 +60,7 @@ const SUBPOST_TO_RULENAME: Partial<Record<SubPost, TiltRuleName>> = {
   DeplacementsDesBeneficiaires: 'déplacements . bénéficiaires',
   DeplacementsFabricationDesVehicules: 'déplacements . fabrication',
   Fret: 'fret . transport',
-  BienMatieres: 'intrants-biens-et-matières . ratios monétaires',
+  BienMatieres: 'intrants-biens-et-matières',
   RepasPrisParLesSalaries: 'alimentation . mosaic salariés',
   RepasPrisParLesBenevoles: 'alimentation . mosaic bénévoles',
   RepasPrisParLesBeneficiaires: 'alimentation . bénéficiaires',
