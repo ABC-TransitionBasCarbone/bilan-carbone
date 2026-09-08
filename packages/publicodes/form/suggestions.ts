@@ -14,7 +14,7 @@ export type SuggestionsRecord = Record<string, SuggestionValue>
 
 export type MosaicSuggestionEntry<RuleName extends string> = {
   label: string
-  values: {
+  value: {
     ruleName: RuleName
     value: SuggestionInputValue
   }[]
@@ -66,6 +66,6 @@ export const getMosaicSuggestionEntries = <RuleName extends string>(
       return [{ ruleName, value }]
     })
 
-    return values.length === 0 ? [] : [{ label, values }]
+    return values.length === 0 ? [] : [{ label, value: values }]
   })
 }

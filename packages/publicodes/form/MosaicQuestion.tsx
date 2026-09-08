@@ -34,12 +34,7 @@ export const MosaicQuestion = <RuleName extends string,>({
   const mosaicType = parentRaw?.mosaique?.type
   const translation = usePublicodesRuleTranslation(parent)
   const rawSuggestions = (parentRaw?.mosaique?.suggestions ?? parentRaw?.suggestions) as SuggestionsRecord | undefined
-  const suggestionEntries = getMosaicSuggestionEntries(parent, elements, rawSuggestions).map(
-    ({ label, values: suggestionValues }) => ({
-      label,
-      value: suggestionValues.map(({ ruleName, value: ruleValue }) => ({ ruleName, value: ruleValue })),
-    }),
-  )
+  const suggestionEntries = getMosaicSuggestionEntries(parent, elements, rawSuggestions)
 
   const label = translation?.question ?? translation?.titre ?? parentRaw?.question ?? parentRaw?.titre ?? parent
   const description = translation?.description ?? parentRaw?.description
