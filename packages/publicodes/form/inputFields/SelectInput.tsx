@@ -34,11 +34,14 @@ const SelectInput = <RuleName extends string>({
 }: SelectInputProps<RuleName>) => {
   const { getOptionLabel } = usePublicodesRuleTranslation(formElement.id)
 
+  const currentOption = formElement.options.find((option) => option.value === formElement.value)
+
   const getCurrentValueLabel = (): React.ReactNode => {
     const value = formElement.value
-    if (value === undefined || value === null) return ''
+    if (value === undefined || value === null || value === '') {
+      return ''
+    }
 
-    const currentOption = formElement.options.find((option) => option.value === value)
     return getOptionLabel(value, currentOption?.label)
   }
 
