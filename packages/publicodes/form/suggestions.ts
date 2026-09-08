@@ -25,9 +25,9 @@ export const parseSuggestionRecord = (suggestions?: Record<string, unknown>): Su
     return []
   }
 
-  return Object.entries(suggestions)
-    .filter((entry): entry is [string, SuggestionInputValue] => isSuggestionInputValue(entry[1]))
-    .map(([label, value]) => ({ label, value }))
+  return Object.entries(suggestions).flatMap(([label, value]) =>
+    isSuggestionInputValue(value) ? [{ label, value }] : [],
+  )
 }
 
 export const getNumericSuggestionEntries = (suggestions?: Record<string, unknown>): NumericSuggestionEntry[] => {
@@ -35,19 +35,6 @@ export const getNumericSuggestionEntries = (suggestions?: Record<string, unknown
     .filter((entry): entry is NumericSuggestionEntry => typeof entry.value === 'number' && Number.isFinite(entry.value))
     .sort(compareSuggestionEntries)
 }
-
-const getMosaicRuleMap = <RuleName extends string>(parentRuleName: RuleName, elements: { id: RuleName }[]) => {
-  const fullRuleByRelativeName = new Map<string, RuleName>()
-  for (const element of elements) {
-    const relativeRuleName = getRelativeRuleName(parentRuleName, element.id)
-    if (relativeRuleName) {
-      fullRuleByRelativeName.set(relativeRuleName, element.id)
-    }
-  }
-
-  return fullRuleByRelativeName
-}
-
 
 export const getMosaicSuggestionEntries = <RuleName extends string>(
   parentRuleName: RuleName,
@@ -58,30 +45,27 @@ export const getMosaicSuggestionEntries = <RuleName extends string>(
     return []
   }
 
-  const fullRuleByRelativeName = getMosaicRuleMap(parentRuleName, elements)
-  const entries: MosaicSuggestionEntry<RuleName>[] = []
+  const fullRuleByRelativeName = new Map<string, RuleName>(
+    elements.flatMap((element) => {
+      const relativeRuleName = getRelativeRuleName(parentRuleName, element.id)
+      return relativeRuleName ? [[relativeRuleName, element.id] as const] : []
+    }),
+  )
 
-  for (const [label, rawSuggestion] of Object.entries(suggestions)) {
+  return Object.entries(suggestions).flatMap(([label, rawSuggestion]) => {
     if (!isObject(rawSuggestion)) {
-      continue
+      return []
     }
 
-    const parsedSuggestion = parseSuggestionRecord(rawSuggestion)
-    const values = parsedSuggestion
-      .map(({ label: relativeRuleName, value }) => {
-        const fullRuleName = fullRuleByRelativeName.get(relativeRuleName)
-        if (!fullRuleName) {
-          return null
-        }
+    const values = Object.entries(rawSuggestion).flatMap(([relativeRuleName, value]) => {
+      const ruleName = fullRuleByRelativeName.get(relativeRuleName)
+      if (!ruleName || !isSuggestionInputValue(value)) {
+        return []
+      }
 
-        return { ruleName: fullRuleName, value }
-      })
-      .filter((value): value is MosaicSuggestionEntry<RuleName>['values'][number] => value !== null)
+      return [{ ruleName, value }]
+    })
 
-    if (values.length > 0) {
-      entries.push({ label, values })
-    }
-  }
-
-  return entries
+    return values.length === 0 ? [] : [{ label, values }]
+  })
 }

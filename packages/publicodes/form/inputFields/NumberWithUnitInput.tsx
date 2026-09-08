@@ -28,10 +28,7 @@ const NumberWithUnitInput = <RuleName extends string>({
     onChange as OnFieldChange,
   )
 
-  const suggestionEntries: SuggestionChipOption<number>[] = getNumericSuggestionEntries(suggestions).map((suggestion) => ({
-    label: suggestion.label,
-    value: suggestion.value,
-  }))
+  const suggestionEntries: SuggestionChipOption<number>[] = getNumericSuggestionEntries(suggestions)
   const hasSuggestions = suggestionEntries.length > 0
   const isLockedSuggestion = hasSuggestions && isFilteringQuestion
 
