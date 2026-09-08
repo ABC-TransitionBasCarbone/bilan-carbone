@@ -31,7 +31,6 @@ import { SiteCAUnit, StudyRole } from '@abc-transitionbascarbone/db-common/enums
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CircularProgress, Typography } from '@mui/material'
 import { getEvaluatedFormElement } from '@publicodes/forms'
-import dayjs from 'dayjs'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -96,7 +95,7 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
     defaultValues: {
       studyId: study.id,
       // Need to add 1 day for timezones to not impact the year displayed
-      studyDate: dayjs(study.startDate).add(1, 'day').year().toString(),
+      studyDate: study.startDate.getUTCFullYear().toString(),
     },
   })
 
@@ -136,10 +135,11 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
       const isValid = await dateForm.trigger('studyDate')
       if (isValid) {
         const values = dateForm.getValues()
+        const year = parseInt(values.studyDate, 10)
         const payload = {
           studyId: values.studyId,
-          startDate: dayjs(values.studyDate, 'YYYY').startOf('year').toISOString(),
-          endDate: dayjs(values.studyDate, 'YYYY').endOf('year').toISOString(),
+          startDate: new Date(Date.UTC(year, 0, 1, 0, 0, 0, 0)).toISOString(),
+          endDate: new Date(Date.UTC(year, 11, 31, 23, 59, 59, 999)).toISOString(),
         }
         await callServerFunction(() => changeStudyDates(payload), {
           onError: () => {

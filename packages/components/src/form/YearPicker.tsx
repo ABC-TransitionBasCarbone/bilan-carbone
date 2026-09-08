@@ -1,5 +1,4 @@
 import { DatePicker } from '@mui/x-date-pickers'
-import { PickerValue } from '@mui/x-date-pickers/internals'
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form'
@@ -22,11 +21,16 @@ const YearPicker = <T extends FieldValues, RuleName extends string = string>({
   return (<Controller
     control={control}
     name={name}
-    render={({ field: { value } }) => (
+    render={({ field: { onChange, value } }) => (
     <DatePicker
       label={label ?? ''}
       value={value ? dayjs(value, 'YYYY') : null}
-      onChange={(value) => handleChange(dayjs(value, 'YYYY').year().toString())}
+      onChange={(value) => {
+        onChange(value)
+        if (value && dayjs(value).isValid()) {
+          handleChange(dayjs(value, 'YYYY').year().toString())
+        }
+      }}
       views={['year']}
       openTo="year"
     />)}
