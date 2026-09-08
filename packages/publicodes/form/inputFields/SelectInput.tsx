@@ -34,6 +34,14 @@ const SelectInput = <RuleName extends string>({
 }: SelectInputProps<RuleName>) => {
   const { getOptionLabel } = usePublicodesRuleTranslation(formElement.id)
 
+  const getCurrentValueLabel = (): React.ReactNode => {
+    const value = formElement.value
+    if (value === undefined || value === null) return ''
+
+    const currentOption = formElement.options.find((option) => option.value === value)
+    return getOptionLabel(value, currentOption?.label)
+  }
+
   const handleChange = (event: SelectChangeEvent<string>) => {
     onChange(formElement.id, event.target.value)
   }
@@ -41,7 +49,7 @@ const SelectInput = <RuleName extends string>({
   if (disabled && formElement.value) {
     return (
       <StyledFormControl fullWidth error={!!errorMessage}>
-        <DisabledText variant="body1">{formElement.value}</DisabledText>
+        <DisabledText variant="body1">{getCurrentValueLabel()}</DisabledText>
         {errorMessage && <FormHelperText>{errorMessage}</FormHelperText>}
       </StyledFormControl>
     )
@@ -65,7 +73,7 @@ const SelectInput = <RuleName extends string>({
             value={typeof option.value === 'boolean' ? (option.value ? 'oui' : 'non') : option.value}
             className={styles.selectMenuItem}
           >
-            {getOptionLabel(option.value)}
+            {getOptionLabel(option.value, option.label)}
           </MenuItem>
         ))}
       </Select>

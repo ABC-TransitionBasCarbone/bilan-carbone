@@ -33,13 +33,13 @@ export function usePublicodesRuleTranslation(ruleName: string) {
     question: tRules.has(`${ruleKey}.question`) ? customRich(tRules, `${ruleKey}.question`) : undefined,
     titre: tRules.has(`${ruleKey}.titre`) ? customRich(tRules, `${ruleKey}.titre`) : undefined,
     description: tRules.has(`${ruleKey}.description`) ? customRich(tRules, `${ruleKey}.description`) : undefined,
-    getOptionLabel: (value: string | boolean | number) => {
+    getOptionLabel: (value: string | boolean | number, fallbackLabel?: string) => {
       if (typeof value === 'boolean') {
         return customRich(tCommon, value ? 'yes' : 'no')
       }
 
       const optionKey = String(value)
-      return tOptions.has(optionKey) ? customRich(tOptions, optionKey) : optionKey
+      return tOptions.has(optionKey) ? customRich(tOptions, optionKey) : (fallbackLabel ?? optionKey)
     },
   }
 }
