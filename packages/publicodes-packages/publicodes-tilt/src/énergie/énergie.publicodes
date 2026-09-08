@@ -98,6 +98,7 @@
 
 énergie . emissions . électricité:
   titre: Électricité
+  icônes: ⚡
   formule: consommation * FE
   unité: kgCO2e
   par défaut: 0
@@ -135,6 +136,7 @@
 
 énergie . emissions . gaz:
   titre: Gaz naturel
+  icônes: 🛢️
   formule: consommation * FE
   unité: kgCO2e
   par défaut: 0
@@ -165,6 +167,7 @@
 
 énergie . emissions . fioul:
   titre: Fioul domestique
+  icônes: 🛢️
   formule: consommation * FE
   unité: kgCO2e
   par défaut: 0
@@ -195,6 +198,7 @@
 
 énergie . emissions . bois:
   titre: Bois-bûches
+  icônes: 🪵
   formule: consommation * FE
   unité: kgCO2e
   par défaut: 0
@@ -218,6 +222,7 @@
 
 énergie . emissions . granulés:
   titre: Granulés de bois
+  icônes: 🪵
   formule: consommation * FE
   unité: kgCO2e
   par défaut: 0
@@ -242,6 +247,7 @@
 
 énergie . emissions . réseaux de chaleur:
   titre: Réseaux de chaleur
+  icônes: 🌡️
   formule: consommation * FE
   unité: kgCO2e
   par défaut: 0
@@ -265,6 +271,7 @@
 
 énergie . emissions . réseaux de froid:
   titre: Réseaux de froid
+  icônes: ❄️
   formule: consommation * FE
   unité: kgCO2e
   par défaut: 0
