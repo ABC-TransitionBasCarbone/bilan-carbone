@@ -74,9 +74,9 @@ const SuperAdminPage = ({ modelCampaigns }: Props) => {
         const updatedModelCampaigns = modelCampaigns.map((modelCampaign, index) =>
           index === rowIndex
             ? {
-                ...modelCampaign,
-                model: json,
-              }
+              ...modelCampaign,
+              model: json,
+            }
             : modelCampaign,
         )
 
