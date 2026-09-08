@@ -74,9 +74,9 @@ const SuperAdminPage = ({ modelCampaigns }: Props) => {
         const updatedModelCampaigns = modelCampaigns.map((modelCampaign, index) =>
           index === rowIndex
             ? {
-              ...modelCampaign,
-              model: json,
-            }
+                ...modelCampaign,
+                model: json,
+              }
             : modelCampaign,
         )
 
@@ -101,16 +101,7 @@ const SuperAdminPage = ({ modelCampaigns }: Props) => {
     )
   }
 
-  const onSubmit = async () => {
-    const command: UpdateModelCampaignCommand = {
-      modelCampaigns: getValues('modelCampaigns').map((modelCampaign) => ({
-        id: modelCampaign.id,
-        name: modelCampaign.name,
-        model: modelCampaign.model,
-        organizationVersionMip: modelCampaign.organizationVersionMip,
-      })),
-    }
-
+  const onSubmit = async (command: UpdateModelCampaignCommand) => {
     await callServerFunction(() => updateModelCampaignCommand(command), {
       onSuccess: () => {
         showSuccessToast(t('success'))
