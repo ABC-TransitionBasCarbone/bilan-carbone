@@ -12,6 +12,15 @@ export type OnFieldChange<RuleName extends string = string> = (
   value: string | number | boolean | undefined,
 ) => void
 
+export type SuggestionInputValue = string | number | boolean
+
+export type SuggestionEntry<Value = SuggestionInputValue> = {
+  label: string
+  value: Value
+}
+
+export type NumericSuggestionEntry = SuggestionEntry<number>
+
 export const FILTER_RULE_KEY = 'DT . filtrage'
 export const SURVEY_CATEGORY_KEYS = [
   'DT',
@@ -23,7 +32,7 @@ export const SURVEY_CATEGORY_KEYS = [
   'bureaux',
 ] as const
 const SURVEY_CATEGORY_ORDER: readonly string[] = SURVEY_CATEGORY_KEYS
-const RULE_NAME_SEPARATOR = ' . '
+export const RULE_NAME_SEPARATOR = ' . '
 
 export const getRuleNameParts = (ruleName: string): string[] => {
   if (!ruleName) {
@@ -33,6 +42,39 @@ export const getRuleNameParts = (ruleName: string): string[] => {
   return ruleName.split(RULE_NAME_SEPARATOR)
 }
 export const joinRuleNameParts = (parts: string[]): string => parts.join(RULE_NAME_SEPARATOR)
+
+export const getRelativeRuleName = (parentRuleName: string, ruleName: string): string | null => {
+  const parentPrefix = `${parentRuleName}${RULE_NAME_SEPARATOR}`
+  if (!ruleName.startsWith(parentPrefix)) {
+    return null
+  }
+
+  const parentParts = getRuleNameParts(parentRuleName)
+  const ruleParts = getRuleNameParts(ruleName)
+
+  if (ruleParts.length <= parentParts.length) {
+    return null
+  }
+
+  return joinRuleNameParts(ruleParts.slice(parentParts.length))
+}
+
+export const compareSuggestionEntries = (a: NumericSuggestionEntry, b: NumericSuggestionEntry): number => {
+  const diff = a.value - b.value
+  if (diff !== 0) {
+    return diff
+  }
+
+  return a.label.localeCompare(b.label)
+}
+
+export const isSuggestionInputValue = (value: unknown): value is SuggestionInputValue => {
+  if (typeof value === 'number') {
+    return Number.isFinite(value)
+  }
+
+  return typeof value === 'string' || typeof value === 'boolean'
+}
 
 export const getRuleParentName = (ruleName: string): string | null => {
   const parts = getRuleNameParts(ruleName)

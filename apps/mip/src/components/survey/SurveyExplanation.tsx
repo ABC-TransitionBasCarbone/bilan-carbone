@@ -22,7 +22,7 @@ const SurveyExplanation = ({ onStart }: Props) => {
         </Typography>
         <Typography className={styles.coverSubtitle}>{t('explanation.cover.subtitle')}</Typography>
         <div className={classNames('justify-center')}>
-          <Button variant="contained" onClick={onStart}>
+          <Button variant="contained" onClick={onStart} data-testid="survey-start-button">
             {t('explanation.start')}
           </Button>
         </div>
