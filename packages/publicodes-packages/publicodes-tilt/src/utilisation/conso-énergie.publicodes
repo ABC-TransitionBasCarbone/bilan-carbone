@@ -33,6 +33,7 @@ utilisation . conso energie . emissions:
 
 utilisation . conso energie . emissions . électricité:
   titre: Électricité
+  icônes: ⚡
   formule: consommation * FE
   unité: kgCO2e
   par défaut: 0
@@ -53,6 +54,7 @@ utilisation . conso energie . emissions . électricité . consommation:
 
 utilisation . conso energie . emissions . gaz:
   titre: Gaz naturel
+  icônes: 🛢️
   formule: consommation * FE
   unité: kgCO2e
   par défaut: 0
@@ -73,6 +75,7 @@ utilisation . conso energie . emissions . gaz . consommation:
 
 utilisation . conso energie . emissions . fioul:
   titre: Fioul domestique
+  icônes: 🛢️
   formule: consommation * FE
   unité: kgCO2e
   par défaut: 0
@@ -93,6 +96,7 @@ utilisation . conso energie . emissions . fioul . consommation:
 
 utilisation . conso energie . emissions . essence:
   titre: Essence E10
+  icônes: ⛽
   formule: consommation * FE
   unité: kgCO2e
   par défaut: 0
@@ -112,6 +116,7 @@ utilisation . conso energie . emissions . essence . consommation:
 
 utilisation . conso energie . emissions . diesel:
   titre: Diesel B7
+  icônes: ⛽
   formule: consommation * FE
   unité: kgCO2e
   par défaut: 0
