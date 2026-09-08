@@ -31,6 +31,7 @@ import { SiteCAUnit, StudyRole } from '@abc-transitionbascarbone/db-common/enums
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CircularProgress, Typography } from '@mui/material'
 import { getEvaluatedFormElement } from '@publicodes/forms'
+import dayjs from 'dayjs'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -94,7 +95,8 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
     reValidateMode: 'onChange',
     defaultValues: {
       studyId: study.id,
-      studyDate: study.startDate.getFullYear().toString(),
+      // Need to add 1 day for timezones to not impact the year displayed
+      studyDate: dayjs(study.startDate).add(1, 'day').year().toString(),
     },
   })
 
@@ -126,14 +128,18 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
 
   const handleDateChange = useCallback(
     async (studyDate: string) => {
+      if (!studyDate) {
+        return
+      }
+
       dateForm.setValue('studyDate', studyDate, { shouldValidate: true })
       const isValid = await dateForm.trigger('studyDate')
       if (isValid) {
         const values = dateForm.getValues()
         const payload = {
           studyId: values.studyId,
-          startDate: new Date(`${values.studyDate}-01-01`).toISOString(),
-          endDate: new Date(`${values.studyDate}-12-31`).toISOString(),
+          startDate: dayjs(values.studyDate, 'YYYY').startOf('year').toISOString(),
+          endDate: dayjs(values.studyDate, 'YYYY').endOf('year').toISOString(),
         }
         await callServerFunction(() => changeStudyDates(payload), {
           onError: () => {
@@ -228,7 +234,12 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
               )}
               <Typography className="bold">{t('dates')}</Typography>
               <div className={styles.dates}>
-                <YearPicker control={dateForm.control} label={tLabel('targetYear')} handleChange={handleDateChange} />
+                <YearPicker
+                  control={dateForm.control}
+                  label={tLabel('targetYear')}
+                  handleChange={handleDateChange}
+                  name="studyDate"
+                />
               </div>
             </div>
           </>

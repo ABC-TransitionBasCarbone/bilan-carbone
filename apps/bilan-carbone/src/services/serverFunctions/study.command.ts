@@ -144,7 +144,7 @@ export type ChangeStudyDatesCommand = z.infer<typeof ChangeStudyDatesCommandVali
 
 export const ChangeTiltStudyDatesCommandValidation = z.object({
   studyId: z.string(),
-  studyDate: z.string().refine((val) => /^\d{4}$/.test(val)),
+  studyDate: z.string().regex(/^\d{4}$/),
 })
 
 export type ChangeTiltStudyDatesCommand = z.infer<typeof ChangeTiltStudyDatesCommandValidation>
