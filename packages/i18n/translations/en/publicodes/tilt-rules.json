@@ -511,7 +511,7 @@
           "question": "[TO_TRANSLATE] Fournissez-vous des produits ou services qui entraînent des consommations d'énergie chez vos usagers ?"
         },
         "emissions": {
-          "titre": "[TO_TRANSLATE] Consommations énergétiques",
+          "titre": "[UPDATED] Consommations énergétiques",
           "description": "[UPDATED] À compléter uniquement si vous fournissez des produits ou services qui entraînent des consommations d'énergie chez vos usagers. On renseigne habituellement les kWh qui seront utilisés par tous les produits ou services fournis sur leur durée de vie. Par exemple, si une batterie rechargeable d'une durée de vie estimée de 5 ans est fournie, on prendra en compte les kWh consommés pour une utilisation moyenne durant 5 ans.",
           "question": "[UPDATED] Veuillez indiquer les consommations des usagers de vos produits ou services pour les types d'énergie suivants",
           "électricité": {
@@ -549,8 +549,17 @@
               "titre": "[TO_TRANSLATE] Consommation de diesel par les usagers",
               "question": "[TO_TRANSLATE] À combien de litres estimez-vous les consommations de diesel ?"
             }
+          },
+          "autoconsommation": {
+            "question": "[TO_TRANSLATE] Quelle est votre autoconsommation annuelle d'électricité ?"
+          },
+          "consommation": {
+            "question": "[TO_TRANSLATE] Quelle est votre autoconsommation annuelle d'électricité ?"
           }
         }
+      },
+      "conso energie présente": {
+        "question": "[TO_TRANSLATE] Fournissez-vous des produits ou services qui entraînent des consommations d'énergie chez vos usagers ?"
       }
     },
     "télétravail": {

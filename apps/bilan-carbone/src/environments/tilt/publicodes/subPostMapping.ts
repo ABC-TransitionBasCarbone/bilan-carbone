@@ -160,7 +160,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('fin de vie . pondération . reconditionné'),
   ],
   ConsommationsEnergieUtilisationProduits: [
-    input('utilisation . conso energie . présente'),
+    input('utilisation . conso energie présente'),
     mosaic('utilisation . conso energie . emissions', [
       'utilisation . conso energie . emissions . électricité . consommation',
       'utilisation . conso energie . emissions . gaz . consommation',
@@ -310,16 +310,31 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
       'IntrantsBiensEtMatieresTilt.tableautextile',
       ['IntrantsBiensEtMatieresTilt.typeBien', 'IntrantsBiensEtMatieresTilt.nombretextile'],
       [
-        ['intrants-biens-et-matières . textiles . t-shirt coton','intrants-biens-et-matières . textiles . t-shirt coton . nombre',],
-        ['intrants-biens-et-matières . textiles . t-shirt polyester','intrants-biens-et-matières . textiles . t-shirt polyester . nombre',],
-        ['intrants-biens-et-matières . textiles . polo','intrants-biens-et-matières . textiles . polo . nombre',],
-        ['intrants-biens-et-matières . textiles . sweat en coton','intrants-biens-et-matières . textiles . sweat en coton . nombre',],
-        ['intrants-biens-et-matières . textiles . chaussures de sport','intrants-biens-et-matières . textiles . chaussures de sport . nombre',],
-        ['intrants-biens-et-matières . textiles . chaussures en tissu','intrants-biens-et-matières . textiles . chaussures en tissu . nombre',],
-        ['intrants-biens-et-matières . textiles . manteau','intrants-biens-et-matières . textiles . manteau . nombre',],
+        [
+          'intrants-biens-et-matières . textiles . t-shirt coton',
+          'intrants-biens-et-matières . textiles . t-shirt coton . nombre',
+        ],
+        [
+          'intrants-biens-et-matières . textiles . t-shirt polyester',
+          'intrants-biens-et-matières . textiles . t-shirt polyester . nombre',
+        ],
+        ['intrants-biens-et-matières . textiles . polo', 'intrants-biens-et-matières . textiles . polo . nombre'],
+        [
+          'intrants-biens-et-matières . textiles . sweat en coton',
+          'intrants-biens-et-matières . textiles . sweat en coton . nombre',
+        ],
+        [
+          'intrants-biens-et-matières . textiles . chaussures de sport',
+          'intrants-biens-et-matières . textiles . chaussures de sport . nombre',
+        ],
+        [
+          'intrants-biens-et-matières . textiles . chaussures en tissu',
+          'intrants-biens-et-matières . textiles . chaussures en tissu . nombre',
+        ],
+        ['intrants-biens-et-matières . textiles . manteau', 'intrants-biens-et-matières . textiles . manteau . nombre'],
       ],
       'IntrantsBiensEtMatieresTilt.descriptiontextile',
-    ),  
+    ),
     input('intrants-biens-et-matières . ratios monétaires . existant'),
     input('intrants-biens-et-matières . ratios monétaires . ratio moyen . montant dépensé'),
     table(
@@ -531,8 +546,8 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
   DeplacementsFabricationDesVehicules: [input('déplacements . fabrication . voitures . nombre')],
   TeletravailSalariesBenevoles: [
     input('travail . bénévoles . h'),
-    input('télétravail . salariés . j'), 
-    input('télétravail . bénévoles . h')
+    input('télétravail . salariés . j'),
+    input('télétravail . bénévoles . h'),
   ],
   Evenement: [
     mosaic('événement . mosaic alimentation', [

@@ -2,14 +2,14 @@ utilisation . conso energie:
   formule: emissions
   unité: kgCO2e
 
-utilisation . conso energie . présente:
+utilisation . conso energie présente:
   question: Fournissez-vous des produits ou services qui entraînent des consommations d'énergie chez vos usagers ?
 
 utilisation . conso energie . emissions:
   applicable si:
     toutes ces conditions:
-      - est défini: utilisation . conso energie . présente
-      - utilisation . conso energie . présente = oui
+      - est défini: utilisation . conso energie présente
+      - utilisation . conso energie présente = oui
   icônes: 
   mosaique:
     type: nombre

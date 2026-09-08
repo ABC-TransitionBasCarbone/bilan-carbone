@@ -549,8 +549,17 @@
               "titre": "Consommation de diesel par les usagers",
               "question": "À combien de litres estimez-vous les consommations de diesel ?"
             }
+          },
+          "autoconsommation": {
+            "question": "Quelle est votre autoconsommation annuelle d'électricité ?"
+          },
+          "consommation": {
+            "question": "Quelle est votre autoconsommation annuelle d'électricité ?"
           }
         }
+      },
+      "conso energie présente": {
+        "question": "Fournissez-vous des produits ou services qui entraînent des consommations d'énergie chez vos usagers ?"
       }
     },
     "télétravail": {
