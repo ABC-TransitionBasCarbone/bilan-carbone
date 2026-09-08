@@ -408,6 +408,7 @@ const formatSimplifiedStudyResultsForExport = (
   tStudy: Translations,
   tExport: Translations,
   tUnits: Translations,
+  fileName: string,
 ) => {
   const dataForExport: (string | number)[][] = []
   const merges: Merge[] = []
@@ -423,7 +424,7 @@ const formatSimplifiedStudyResultsForExport = (
   dataForExport.push(...buildResultsTableRows(results, study.resultsUnit))
 
   return {
-    name: tExport(AdditionalResultTypes.ENV_SPECIFIC_EXPORT),
+    name: fileName,
     data: dataForExport,
     options: {
       '!cols': [{ wch: 30 }, { wch: 15 }, { wch: 20 }],
@@ -761,7 +762,15 @@ export const downloadStudyResults = async (
     }
 
     const siteLabel = getSiteLabelFromId(study, selectedSiteId, tOrga)
-    const sheet = formatSimplifiedStudyResultsForExport(study, siteLabel, resultsByPost, tStudy, tExport, tUnits)
+    const sheet = formatSimplifiedStudyResultsForExport(
+      study,
+      siteLabel,
+      resultsByPost,
+      tStudy,
+      tExport,
+      tUnits,
+      exportFilename,
+    )
     const buffer = await prepareExcel([sheet])
     download([buffer], exportFilename, 'xlsx')
     return
