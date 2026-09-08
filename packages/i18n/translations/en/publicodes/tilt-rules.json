@@ -43,6 +43,7 @@
     "kgCO2e/mail": "[TO_TRANSLATE] kgCO2e/mail",
     "Go": "[TO_TRANSLATE] Go",
     "kgCO2e/Go": "[TO_TRANSLATE] kgCO2e/Go",
+    "kgCO2e/unité": "[TO_TRANSLATE] kgCO2e/unité",
     "kgCO2e/climatiseur": "[TO_TRANSLATE] kgCO2e/climatiseur",
     "climatiseur": "[TO_TRANSLATE] climatiseur",
     "kW/m2": "[TO_TRANSLATE] kW/m2",
@@ -811,6 +812,50 @@
             "nombre": {
               "question": "[TO_TRANSLATE] Montant dépensé (k€) en autres produits manufacturés"
             }
+          }
+        }
+      },
+      "textiles": {
+        "t-shirt polyester": {
+          "titre": "[TO_TRANSLATE] T-shirts (polyester)",
+          "nombre": {
+            "question": "[UPDATED] T-shirts en polyester"
+          }
+        },
+        "t-shirt coton": {
+          "titre": "[TO_TRANSLATE] T-shirts (coton)",
+          "nombre": {
+            "question": "[UPDATED] T-shirts en coton"
+          }
+        },
+        "chaussures de sport": {
+          "titre": "[TO_TRANSLATE] Chaussures de sport",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Chaussures de sport"
+          }
+        },
+        "chaussures en tissu": {
+          "titre": "[TO_TRANSLATE] Chaussures en tissu",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Chaussures en tissu"
+          }
+        },
+        "sweat en coton": {
+          "titre": "[TO_TRANSLATE] Sweat en coton",
+          "nombre": {
+            "question": "[TO_TRANSLATE] T-shirts (coton)"
+          }
+        },
+        "polo": {
+          "titre": "[TO_TRANSLATE] Polo",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Polo"
+          }
+        },
+        "manteau": {
+          "titre": "[TO_TRANSLATE] Manteau",
+          "nombre": {
+            "question": "[TO_TRANSLATE] Manteau"
           }
         }
       }

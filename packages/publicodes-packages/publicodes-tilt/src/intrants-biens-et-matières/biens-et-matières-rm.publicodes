@@ -1,9 +1,126 @@
 intrants-biens-et-matières . ratios monétaires:
   formule: 
     somme: 
+      - textiles
       - ratio moyen
       - tableau détaillé
   par défaut: 0
+
+intrants-biens-et-matières . textiles:
+  formule: 
+    somme:
+      - t-shirt polyester
+      - t-shirt coton
+      - chaussures de sport
+      - chaussures en tissu
+      - sweat en coton
+      - polo
+      - manteau
+
+intrants-biens-et-matières . textiles . t-shirt polyester: 
+  titre: T-shirts (polyester)
+  formule: FE * nombre 
+  avec: 
+    FE:
+      valeur: 5.5
+      unité: kgCO2e/unité
+      meta: 
+        nom: T-shirt/en polyester
+        id: 27045
+        UUID: 4fd13508-7094-324f-af2c-042867796733
+    nombre:
+      question: T-shirts en polyester
+      par défaut: 0
+
+intrants-biens-et-matières . textiles . t-shirt coton: 
+  titre: T-shirts (coton)
+  formule: FE * nombre 
+  avec: 
+    FE:
+      valeur: 5.2
+      unité: kgCO2e/unité
+      meta: 
+        nom: T-shirt/en coton
+        id: 27044
+        UUID: 100e4d7d-69e9-3e51-a2d6-5235fd2c663a
+    nombre:
+      question: T-shirts en coton
+      par défaut: 0
+
+intrants-biens-et-matières . textiles . chaussures de sport: 
+  titre: Chaussures de sport
+  formule: FE * nombre 
+  avec: 
+    FE:
+      valeur: 18.7
+      unité: kgCO2e/unité
+      meta: 
+        nom: Chaussures/de sport
+        id: 27060
+        UUID: ba23daf8-0fd4-382a-b2d5-ceb0a0f76323
+    nombre:
+      question: Chaussures de sport
+      par défaut: 0
+
+intrants-biens-et-matières . textiles . chaussures en tissu: 
+  titre: Chaussures en tissu
+  formule: FE * nombre 
+  avec: 
+    FE:
+      valeur: 17.3
+      unité: kgCO2e/unité
+      meta: 
+        nom: Chaussures/en tissu
+        id: 27059
+        UUID: 802facd6-b456-335a-8d17-ce1262402965
+    nombre:
+      question: Chaussures en tissu
+      par défaut: 0
+
+intrants-biens-et-matières . textiles . sweat en coton: 
+  titre: Sweat en coton
+  formule: FE * nombre 
+  avec: 
+    FE:
+      valeur: 27.4
+      unité: kgCO2e/unité
+      meta: 
+        nom: Sweat/(CO)
+        id: 27049
+        UUID: 45f8b156-eaff-324d-a1ff-e72e43421e94
+    nombre:
+      question: T-shirts (coton)
+      par défaut: 0
+
+intrants-biens-et-matières . textiles . polo: 
+  titre: Polo
+  formule: FE * nombre 
+  avec: 
+    FE:
+      valeur: 8.20
+      unité: kgCO2e/unité
+      meta: 
+        nom: Polo
+        id: 27046
+        UUID: 4a6e1cc9-24c1-320d-9d05-d1aa1d48af54
+    nombre:
+      question: Polo
+      par défaut: 0
+
+intrants-biens-et-matières . textiles . manteau: 
+  titre: Manteau
+  formule: FE * nombre 
+  avec: 
+    FE:
+      valeur: 85.8
+      unité: kgCO2e/unité
+      meta: 
+        nom: Manteau/composition moyenne
+        id: 27052
+        UUID: 435557d5-a4a2-33b1-9348-7bb5a7fae8b7
+    nombre:
+      question: Manteau
+      par défaut: 0
 
 intrants-biens-et-matières . ratios monétaires . existant:
   titre: L'utilisateur a-t'il accès aux montants dépensés dans des biens matériels de manière détaillée ?

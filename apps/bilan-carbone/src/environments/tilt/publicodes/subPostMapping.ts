@@ -306,6 +306,20 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     ]),
   ],
   BienMatieres: [
+    table(
+      'IntrantsBiensEtMatieresTilt.tableautextile',
+      ['IntrantsBiensEtMatieresTilt.typeBien', 'IntrantsBiensEtMatieresTilt.nombretextile'],
+      [
+        ['intrants-biens-et-matières . textiles . t-shirt coton','intrants-biens-et-matières . textiles . t-shirt coton . nombre',],
+        ['intrants-biens-et-matières . textiles . t-shirt polyester','intrants-biens-et-matières . textiles . t-shirt polyester . nombre',],
+        ['intrants-biens-et-matières . textiles . polo','intrants-biens-et-matières . textiles . polo . nombre',],
+        ['intrants-biens-et-matières . textiles . sweat en coton','intrants-biens-et-matières . textiles . sweat en coton . nombre',],
+        ['intrants-biens-et-matières . textiles . chaussures de sport','intrants-biens-et-matières . textiles . chaussures de sport . nombre',],
+        ['intrants-biens-et-matières . textiles . chaussures en tissu','intrants-biens-et-matières . textiles . chaussures en tissu . nombre',],
+        ['intrants-biens-et-matières . textiles . manteau','intrants-biens-et-matières . textiles . manteau . nombre',],
+      ],
+      'IntrantsBiensEtMatieresTilt.descriptiontextile',
+    ),  
     input('intrants-biens-et-matières . ratios monétaires . existant'),
     input('intrants-biens-et-matières . ratios monétaires . ratio moyen . montant dépensé'),
     table(

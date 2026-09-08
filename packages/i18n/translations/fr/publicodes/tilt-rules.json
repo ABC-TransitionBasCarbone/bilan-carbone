@@ -43,6 +43,7 @@
     "kgCO2e/mail": "kgCO2e/mail",
     "Go": "Go",
     "kgCO2e/Go": "kgCO2e/Go",
+    "kgCO2e/unité": "kgCO2e/unité",
     "kgCO2e/climatiseur": "kgCO2e/climatiseur",
     "climatiseur": "climatiseur",
     "kW/m2": "kW/m2",
@@ -811,6 +812,50 @@
             "nombre": {
               "question": "Montant dépensé (k€) en autres produits manufacturés"
             }
+          }
+        }
+      },
+      "textiles": {
+        "t-shirt polyester": {
+          "titre": "T-shirts (polyester)",
+          "nombre": {
+            "question": "T-shirts en polyester"
+          }
+        },
+        "t-shirt coton": {
+          "titre": "T-shirts (coton)",
+          "nombre": {
+            "question": "T-shirts en coton"
+          }
+        },
+        "chaussures de sport": {
+          "titre": "Chaussures de sport",
+          "nombre": {
+            "question": "Chaussures de sport"
+          }
+        },
+        "chaussures en tissu": {
+          "titre": "Chaussures en tissu",
+          "nombre": {
+            "question": "Chaussures en tissu"
+          }
+        },
+        "sweat en coton": {
+          "titre": "Sweat en coton",
+          "nombre": {
+            "question": "T-shirts (coton)"
+          }
+        },
+        "polo": {
+          "titre": "Polo",
+          "nombre": {
+            "question": "Polo"
+          }
+        },
+        "manteau": {
+          "titre": "Manteau",
+          "nombre": {
+            "question": "Manteau"
           }
         }
       }
