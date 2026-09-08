@@ -24,7 +24,7 @@ interface MipSurveyProps {
   rootRule?: string
 }
 
-export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps) {
+const Survey = ({ surveyId, rootRule = 'bilan' }: MipSurveyProps) => {
   const t = useTranslations('survey')
   const tCommon = useTranslations('common')
   const { engine } = useMipPublicodes()
@@ -49,6 +49,10 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   const [interstitialCategoryKey, setInterstitialCategoryKey] = useState<string | null>(null)
   const [isFinalInterstitial, setIsFinalInterstitial] = useState(false)
   const updateState = setState
+  const openInterstitial = (key: string, isFinal: boolean) => {
+    setInterstitialCategoryKey(key)
+    setIsFinalInterstitial(isFinal)
+  }
 
   useEffect(() => {
     const saved = loadSurveyState<FormState<string>>(surveyId)
@@ -75,23 +79,31 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   }
 
   const handleNext = () => {
-    const newState = formBuilder.goToNextPage({ ...state, pages: [...state.pages] })
-    const { elements: newElements } = formBuilder.currentPage(newState)
-    const newGrouped = buildGroupedElements(engine, newElements)
-    const newCategoryKey = getCategoryKey(newGrouped)
-
-    if (categoryKey && newCategoryKey !== categoryKey) {
-      setInterstitialCategoryKey(categoryKey)
-      setIsFinalInterstitial(false)
+    if (!categoryKey) {
+      updateState(formBuilder.goToNextPage({ ...state, pages: [...state.pages] }))
       return
     }
+
+    if (!hasNextPage) {
+      openInterstitial(categoryKey, true)
+      return
+    }
+
+    const newState = formBuilder.goToNextPage({ ...state, pages: [...state.pages] })
+    const { elements: newElements } = formBuilder.currentPage(newState)
+    const newCategoryKey = getCategoryKey(buildGroupedElements(engine, newElements))
+
+    if (newCategoryKey !== categoryKey) {
+      openInterstitial(categoryKey, false)
+      return
+    }
+
     updateState(newState)
   }
 
   const handleCompleteButton = async () => {
     if (categoryKey) {
-      setInterstitialCategoryKey(categoryKey)
-      setIsFinalInterstitial(true)
+      openInterstitial(categoryKey, true)
       return
     }
 
@@ -123,6 +135,15 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
   const groupedElements = buildGroupedElements(engine, elements)
   const currentTitle = getCurrentSectionTitle(engine, groupedElements)
   const categoryKey = getCategoryKey(groupedElements)
+  const isQuestionLastPage = !hasNextPage && !categoryKey
+  const closeInterstitial = () => {
+    setInterstitialCategoryKey(null)
+    setIsFinalInterstitial(false)
+  }
+  const continueFromInterstitial = () => {
+    setInterstitialCategoryKey(null)
+    updateState(formBuilder.goToNextPage(state))
+  }
 
   if (isLoading) {
     return <Typography>{t('loading')}</Typography>
@@ -159,14 +180,8 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
                   previousLabel={tCommon('previous')}
                   nextLabel={tCommon('next')}
                   completeLabel={t('navigation.complete')}
-                  onPrevious={() => {
-                    setInterstitialCategoryKey(null)
-                    setIsFinalInterstitial(false)
-                  }}
-                  onNext={() => {
-                    setInterstitialCategoryKey(null)
-                    updateState(formBuilder.goToNextPage(state))
-                  }}
+                  onPrevious={closeInterstitial}
+                  onNext={continueFromInterstitial}
                   onComplete={completeSurvey}
                 />
               </>
@@ -193,7 +208,7 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
                 <SurveyNavigation
                   hasPreviousPage={hasPreviousPage}
                   canGoBackToExplanation={!hasPreviousPage}
-                  isLastPage={!hasNextPage}
+                  isLastPage={isQuestionLastPage}
                   isCompleting={isCompleting}
                   backToExplanationLabel={t('navigation.backToExplanation')}
                   previousLabel={tCommon('previous')}
@@ -216,3 +231,5 @@ export default function Survey({ surveyId, rootRule = 'bilan' }: MipSurveyProps)
     </div>
   )
 }
+
+export default Survey
