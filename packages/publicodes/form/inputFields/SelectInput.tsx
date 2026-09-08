@@ -46,7 +46,9 @@ const SelectInput = <RuleName extends string>({
     onChange(formElement.id, event.target.value)
   }
 
-  if (disabled && formElement.value) {
+  const hasSetValue = formElement.value !== undefined && formElement.value !== null && formElement.value !== ''
+
+  if (disabled && hasSetValue) {
     return (
       <StyledFormControl fullWidth error={!!errorMessage}>
         <DisabledText variant="body1">{getCurrentValueLabel()}</DisabledText>
