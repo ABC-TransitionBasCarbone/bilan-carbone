@@ -283,12 +283,7 @@ const AllResults = ({
             </TabPanel>
           ) : null}
           {environment && hasAccessToFeedbackButton(environment) && user && openFeedback && (
-            <FeedbackModal
-              user={user}
-              organizationName={study.organizationVersion.organization.name}
-              open={openFeedback}
-              setOpen={setOpenFeedback}
-            />
+            <FeedbackModal open={openFeedback} setOpen={setOpenFeedback} />
           )}
         </Box>
       </Box>
