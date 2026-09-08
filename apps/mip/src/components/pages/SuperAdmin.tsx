@@ -70,10 +70,21 @@ const SuperAdminPage = ({ modelCampaigns }: Props) => {
       try {
         const text = await file.text()
         const json = JSON.parse(text)
-        form.setValue(`modelCampaigns.${rowIndex}.model`, json, {
+        const modelCampaigns = getValues('modelCampaigns')
+        const updatedModelCampaigns = modelCampaigns.map((modelCampaign, index) =>
+          index === rowIndex
+            ? {
+                ...modelCampaign,
+                model: json,
+              }
+            : modelCampaign,
+        )
+
+        setValue('modelCampaigns', updatedModelCampaigns, {
           shouldDirty: true,
           shouldValidate: true,
         })
+        input.value = ''
       } catch (err) {
         console.error('Invalid JSON file', err)
         showErrorToast('Invalid JSON file')
@@ -90,7 +101,16 @@ const SuperAdminPage = ({ modelCampaigns }: Props) => {
     )
   }
 
-  const onSubmit = async (command: UpdateModelCampaignCommand) => {
+  const onSubmit = async () => {
+    const command: UpdateModelCampaignCommand = {
+      modelCampaigns: getValues('modelCampaigns').map((modelCampaign) => ({
+        id: modelCampaign.id,
+        name: modelCampaign.name,
+        model: modelCampaign.model,
+        organizationVersionMip: modelCampaign.organizationVersionMip,
+      })),
+    }
+
     await callServerFunction(() => updateModelCampaignCommand(command), {
       onSuccess: () => {
         showSuccessToast(t('success'))
@@ -131,7 +151,14 @@ const SuperAdminPage = ({ modelCampaigns }: Props) => {
           id: 'download',
           header: () => t('json'),
           cell: ({ row }) => (
-            <LinkButton onClick={() => handleDownloadJson(row.original.name, row.original.model)}>
+            <LinkButton
+              onClick={() =>
+                handleDownloadJson(
+                  getValues(`modelCampaigns.${row.index}.name`),
+                  getValues(`modelCampaigns.${row.index}.model`),
+                )
+              }
+            >
               <DownloadIcon />
             </LinkButton>
           ),
