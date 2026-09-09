@@ -1,17 +1,18 @@
-import { getStudyById } from '@/db/study'
+import { FullStudy, getStudyById } from '@/db/study'
 import { canReadStudy, canReadStudyDetail } from '@/services/permissions/study'
 import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 import { redirect } from 'next/navigation'
 import React from 'react'
 import { UserSessionProps } from './withAuth'
-import { StudyProps } from './withStudy'
 
 interface Props {
   params: Promise<{
     id: string
   }>
 }
-
+export type StudyProps = {
+  study: FullStudy
+}
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const WithStudyDetails = (WrappedComponent: React.ComponentType<any & UserSessionProps & StudyProps>) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
