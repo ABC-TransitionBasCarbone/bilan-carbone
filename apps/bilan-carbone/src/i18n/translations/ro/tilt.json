@@ -89,7 +89,9 @@
       "numberOfTTVolunteer": "Câte zile pe săptămână lucrează în regim de telemuncă voluntarii dvs.?",
       "glossary": {
         "postalCode": "Codul poștal al asociației",
-        "postalCodeGlossary": "CP-ul sediului dacă există mai multe site-uri, 5 cifre"
+        "postalCodeGlossary": "CP-ul sediului dacă există mai multe site-uri, 5 cifre",
+        "structureInfo": "Tipul de structură al asociației",
+        "structureInfoGlossary": "Această informație va fi utilizată de echipa noastră pentru a adapta chestionarul la asociațiile care folosesc instrumentul."
       }
     },
     "flow": {
@@ -185,7 +187,11 @@
         "Agriculturetilt": "Pentru a obține mai multe informații despre luarea în considerare a emisiilor legate de activitățile agricole, consultați <link>metoda asociativă</link>.",
         "AgriculturetiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
         "ActivitesIndustrielles": "Pentru a obține mai multe informații despre luarea în considerare a emisiilor legate de eventualele activități industriale, consultați <link>metoda asociativă</link>.",
-        "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux"
+        "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
+        "DeplacementsDePersonneSimplified": "Pentru Gabriel",
+        "AlimentationSimplified": "Pentru Gabriel",
+        "ServiceEtNumeriqueSimplified": "Pentru Gabriel",
+        "EquipementsEtImmobilisationsSimplified": "Pentru Gabriel"
       }
     }
   },

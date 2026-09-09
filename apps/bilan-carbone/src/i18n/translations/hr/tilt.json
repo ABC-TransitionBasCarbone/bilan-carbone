@@ -89,7 +89,9 @@
       "numberOfTTVolunteer": "Koliko se dana tjedno radi na daljinu za vaše volontere?",
       "glossary": {
         "postalCode": "Poštanski broj udruge",
-        "postalCodeGlossary": "Poštanski broj sjedišta ako postoji više lokacija, 5 znamenki"
+        "postalCodeGlossary": "Poštanski broj sjedišta ako postoji više lokacija, 5 znamenki",
+        "structureInfo": "Vrsta strukture udruge",
+        "structureInfoGlossary": "Naš tim će koristiti ovu informaciju kako bi prilagodio upitnik udrugama koje koriste alat."
       }
     },
     "flow": {
@@ -185,7 +187,11 @@
         "Agriculturetilt": "Za više informacija o uzimanju u obzir emisija povezanih s poljoprivrednim aktivnostima, molimo pogledajte <link>udruženu metodu</link>.",
         "AgriculturetiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
         "ActivitesIndustrielles": "Za više informacija o uzimanju u obzir emisija povezanih s eventualnim industrijskim aktivnostima, molimo pogledajte <link>udruženu metodu</link>.",
-        "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux"
+        "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
+        "DeplacementsDePersonneSimplified": "Za Gabriela",
+        "AlimentationSimplified": "Za Gabriela",
+        "ServiceEtNumeriqueSimplified": "Za Gabriela",
+        "EquipementsEtImmobilisationsSimplified": "Za Gabriela"
       }
     }
   },

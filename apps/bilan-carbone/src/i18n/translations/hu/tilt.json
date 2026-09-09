@@ -89,7 +89,9 @@
       "numberOfTTVolunteer": "Hány napot dolgoznak hetente távmunkában az önkéntesei?",
       "glossary": {
         "postalCode": "Az egyesület irányítószáma",
-        "postalCodeGlossary": "A székhely irányítószáma több telephely esetén, 5 számjegy"
+        "postalCodeGlossary": "A székhely irányítószáma több telephely esetén, 5 számjegy",
+        "structureInfo": "Az egyesület struktúrájának típusa",
+        "structureInfoGlossary": "Ezt az információt csapatunk arra használja fel, hogy a kérdőívet az eszközt használó egyesületekhez igazítsa."
       }
     },
     "flow": {
@@ -185,7 +187,11 @@
         "Agriculturetilt": "A mezőgazdasági tevékenységekhez kapcsolódó kibocsátások figyelembevételéről bővebb információért kérjük, tekintse meg az <link>egyesületi módszert</link>.",
         "AgriculturetiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
         "ActivitesIndustrielles": "Az esetleges ipari tevékenységekhez kapcsolódó kibocsátások figyelembevételéről bővebb információért kérjük, tekintse meg az <link>egyesületi módszert</link>.",
-        "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux"
+        "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
+        "DeplacementsDePersonneSimplified": "Gabriel számára",
+        "AlimentationSimplified": "Gabriel számára",
+        "ServiceEtNumeriqueSimplified": "Gabriel számára",
+        "EquipementsEtImmobilisationsSimplified": "Gabriel számára"
       }
     }
   },

@@ -89,7 +89,9 @@
       "numberOfTTVolunteer": "Πόσες ημέρες την εβδομάδα εργάζονται από απόσταση οι εθελοντές σας;",
       "glossary": {
         "postalCode": "Ταχυδρομικός κώδικας του συλλόγου",
-        "postalCodeGlossary": "ΤΚ της έδρας εάν υπάρχουν πολλές τοποθεσίες, 5 ψηφία"
+        "postalCodeGlossary": "ΤΚ της έδρας εάν υπάρχουν πολλές τοποθεσίες, 5 ψηφία",
+        "structureInfo": "Τύπος δομής του συλλόγου",
+        "structureInfoGlossary": "Αυτή η πληροφορία θα χρησιμοποιηθεί από την ομάδα μας για την προσαρμογή του ερωτηματολογίου στους συλλόγους που χρησιμοποιούν το εργαλείο."
       }
     },
     "flow": {
@@ -185,7 +187,11 @@
         "Agriculturetilt": "Για περισσότερες πληροφορίες σχετικά με τον συνυπολογισμό των εκπομπών που σχετίζονται με τις γεωργικές δραστηριότητες, ανατρέξτε στη <link>μέθοδο για συλλόγους</link>.",
         "AgriculturetiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
         "ActivitesIndustrielles": "Για περισσότερες πληροφορίες σχετικά με τον συνυπολογισμό των εκπομπών που σχετίζονται με ενδεχόμενες βιομηχανικές δραστηριότητες, ανατρέξτε στη <link>μέθοδο για συλλόγους</link>.",
-        "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux"
+        "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
+        "DeplacementsDePersonneSimplified": "Για τον Gabriel",
+        "AlimentationSimplified": "Για τον Gabriel",
+        "ServiceEtNumeriqueSimplified": "Για τον Gabriel",
+        "EquipementsEtImmobilisationsSimplified": "Για τον Gabriel"
       }
     }
   },

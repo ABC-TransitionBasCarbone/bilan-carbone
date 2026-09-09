@@ -89,7 +89,9 @@
       "numberOfTTVolunteer": "Quanti giorni a settimana lavorano in smart working i tuoi volontari?",
       "glossary": {
         "postalCode": "Codice postale dell'associazione",
-        "postalCodeGlossary": "CAP della sede se ci sono più siti, 5 cifre"
+        "postalCodeGlossary": "CAP della sede se ci sono più siti, 5 cifre",
+        "structureInfo": "Tipo di struttura dell'associazione",
+        "structureInfoGlossary": "Questa informazione sarà utilizzata dal nostro team per adattare il questionario alle associazioni che utilizzano lo strumento."
       }
     },
     "flow": {
@@ -185,7 +187,11 @@
         "Agriculturetilt": "Per ottenere maggiori informazioni sulla considerazione delle emissioni legate alle attività agricole, consulta il <link>metodo associativo</link>.",
         "AgriculturetiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
         "ActivitesIndustrielles": "Per ottenere maggiori informazioni sulla considerazione delle emissioni legate a eventuali attività industriali, consulta il <link>metodo associativo</link>.",
-        "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux"
+        "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
+        "DeplacementsDePersonneSimplified": "Per Gabriel",
+        "AlimentationSimplified": "Per Gabriel",
+        "ServiceEtNumeriqueSimplified": "Per Gabriel",
+        "EquipementsEtImmobilisationsSimplified": "Per Gabriel"
       }
     }
   },
