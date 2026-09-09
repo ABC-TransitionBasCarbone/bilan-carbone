@@ -60,7 +60,7 @@ export function getEvaluatedFormLayout<RuleName extends string>(
       return {
         ...layout,
         evaluatedParent: evaluateRule(layout.parent as RuleName),
-        evaluatedChildren: layout.children.map((c) => evaluateRule(c)).filter((c) => c.applicable)
+        evaluatedChildren: layout.children.map((c) => evaluateRule(c)).filter((c) => c.applicable),
       }
     case 'list': {
       const situations = listLayoutSituations?.[layout.targetRule] ?? []
