@@ -57,7 +57,11 @@ export function getEvaluatedFormLayout<RuleName extends string>(
     case 'input':
       return { ...layout, evaluatedElement: evaluateRule(layout.rule) }
     case 'mosaic':
-      return { ...layout, evaluatedParent: evaluateRule(layout.parent as RuleName), evaluatedChildren: layout.children.map((c) => evaluateRule(c)) }
+      return {
+        ...layout,
+        evaluatedParent: evaluateRule(layout.parent as RuleName),
+        evaluatedChildren: layout.children.map((c) => evaluateRule(c)).filter((c) => c.applicable)
+      }
     case 'list': {
       const situations = listLayoutSituations?.[layout.targetRule] ?? []
       return {

@@ -116,7 +116,7 @@ export const evaluatedLayoutIsApplicable = <RuleName extends string>(layout: Eva
     case 'input':
       return layout.evaluatedElement.applicable
     case 'mosaic':
-      return layout.evaluatedParent.applicable
+      return layout.evaluatedParent.applicable && layout.evaluatedChildren.some((el) => el.applicable)
     case 'group':
       return layout.evaluatedElements.some((el) => el.applicable)
     case 'table':
