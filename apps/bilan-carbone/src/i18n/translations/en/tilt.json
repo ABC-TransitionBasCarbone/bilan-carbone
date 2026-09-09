@@ -36,6 +36,7 @@
   },
   "exports": {
     "env_specific_export": "Simplified carbon footprint",
+    "exportFilename": "{studyName} - Bilan Carbone® - Associative sphere",
     "simplified": {
       "disclaimerExcel1": "Please note that the results shown here come solely from a simplified carbon footprint calculation performed by Cap Carbone. They must not under any circumstances be presented or used as Bilan Carbone® results,",
       "disclaimerExcel2": "as even though the results obtained may already help you understand how to reduce your impact, your approach remains an estimate.",

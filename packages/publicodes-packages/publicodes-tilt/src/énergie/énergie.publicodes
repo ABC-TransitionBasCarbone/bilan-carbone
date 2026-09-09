@@ -1,8 +1,341 @@
 énergie:
-  titre: Énergie
   formule:
     somme:
-      - énergie . combustibles organiques
+      - emissions
+      - autoconsommation électricité
+
+énergie . types:
+  titre: Types d'énergie
+  avec:
+    électricité présent:
+      type: booléen
+      question: Électricité
+      form:
+        saisie: case à cocher
+      par défaut: oui
+
+    gaz présent:
+      type: booléen
+      question: Gaz
+      form:
+        saisie: case à cocher
+      par défaut: non
+
+    fioul présent:
+      type: booléen
+      question: Fioul domestique
+      form:
+        saisie: case à cocher
+      par défaut: non
+
+    bois présent:
+      type: booléen
+      question: Bois-bûches
+      form:
+        saisie: case à cocher
+      par défaut: non
+
+    granulés présent:
+      type: booléen
+      question: Granulés de bois
+      form:
+        saisie: case à cocher
+      par défaut: non
+
+    réseaux de chaleur présent:
+      type: booléen
+      question: Réseau de chaleur
+      form:
+        saisie: case à cocher
+      par défaut: non
+
+    réseaux de froid présent:
+      type: booléen
+      question: Réseau de froid
+      form:
+        saisie: case à cocher
+      par défaut: non
+
+    # panneaux PV ou chauffe eau solaire présent:
+    #   type: booléen
+    #   question: Panneaux photovoltaïque ou chauffe-eau solaire
+    #   form:
+    #     saisie: case à cocher
+    #   par défaut: non
+
+énergie . types . chauffage électrique: 
+  question: Le chauffage de vos locaux est-il électrique ? 
+  description: Cette information sert à proposer des estimations de consommations pour l'électricité par la suite. Les estimations incluent le chauffage si celui-ci est électrique. 
+
+énergie . emissions:
+  ordre: 3
+  icônes:
+  mosaique:
+    type: nombre
+    options:
+      - électricité . consommation
+      - gaz . consommation
+      - fioul . consommation
+      - bois . consommation
+      - granulés . consommation
+      - réseaux de chaleur . consommation
+      - réseaux de froid . consommation
+      # - panneaux PV ou chauffe eau solaire . consommation
+  question: Veuillez indiquer vos consommations d'énergie pour les types d'énergie suivants
+  titre: Consommations énergétiques
+  description: Par défaut, des valeurs sont saisies en fonction des mètres-carrés que vous avez renseignés pour vos locaux, Ces valeurs sont issues de données statistiques de la Base Empreinte, Elles sont imprécises et datées, Si vous disposez de données plus précises via vos factures ou autres éléments de suivi, nous vous invitons à les renseigner à la place des données par défaut
+  formule: 
+    somme:
+      - électricité
+      - gaz
+      - fioul
+      - bois
+      - granulés
+      - réseaux de chaleur
+      - réseaux de froid
+      # - panneaux PV ou chauffe eau solaire
+  unité: kgCO2e
+
+énergie . emissions . électricité:
+  titre: Électricité
+  icônes: ⚡
+  formule: consommation * FE
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    FE:
+      valeur: 0.0461
+      unité: kgCO2e/kWh
+      meta:
+        nom: Electricité/2025 - mix moyen/consommation
+        id: 48788
+        source: Base Empreinte®
+
+énergie . emissions . électricité . consommation:
+  applicable si:
+    toutes ces conditions:
+      - est défini:  types . électricité présent
+      - types . électricité présent = oui
+  question: Quelle est votre consommation annuelle d'électricité ? 
+  titre: Consommation annuelle d'électricité
+  description: Cette consommation doit être issue de votre facture et ne pas inclure pas votre autoconsommation (panneaux solaires, etc), ni la consommation des véhicules électriques qui est prise en compte au sein d'autres catégories (Fret, Déplacements).
+  unité: kWh
+  par défaut: construction . bâtiment . surface finale * donnée statistique
+
+énergie . emissions . électricité . donnée statistique:
+  titre: Consommation moyenne d'électricité pour des bureaux à l'année, statistiques Base Carbone® (hors ou avec chauffage)
+  applicable si:
+    toutes ces conditions:
+      - est défini: énergie . types . chauffage électrique
+  valeur:
+    variations:
+      - si: énergie . types . chauffage électrique = oui
+        alors: 283
+      - sinon: 121
+  unité: kWh/m².an
+
+énergie . emissions . gaz:
+  titre: Gaz naturel
+  icônes: 🛢️
+  formule: consommation * FE
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    FE:
+      valeur: 2.32 
+      unité: kgCO2e/m³
+      meta:
+        nom: Gaz naturel - 2022/mix moyen/consommation
+        id: 37138
+        source: Base Carbone®
+
+énergie . emissions . gaz . consommation:
+  applicable si:
+    toutes ces conditions:
+      - est défini:  énergie . types . gaz présent
+      - énergie . types . gaz présent = oui
+  question: Quelle est votre consommation annuelle de gaz naturel ? 
+  titre: Consommation annuelle de gaz naturel
+  unité: m³
+  par défaut: construction . bâtiment . surface finale * donnée statistique
+  avec: 
+    donnée statistique:
+      valeur: 164
+      unité: m³/m².an
+      meta: 
+        nom: Consommation moyenne de gaz naturel pour des bureaux à l'année, statistiques Base Carbone® (la statistique originelle est en kWh PCI/m².an)
+
+énergie . emissions . fioul:
+  titre: Fioul domestique
+  icônes: 🛢️
+  formule: consommation * FE
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    FE:
+      valeur: 3.24
+      unité: kgCO2e/litre
+      meta:
+        nom: Fioul domestique
+        id: 14087
+        source: Base Carbone®
+
+énergie . emissions . fioul . consommation:
+  applicable si:
+    toutes ces conditions:
+      - est défini:  énergie . types . fioul présent
+      - énergie . types . fioul présent = oui
+  question: Quelle est votre consommation annuelle de fioul domestique ? 
+  titre: Consommation annuelle de fioul domestique
+  unité: litre
+  par défaut: construction . bâtiment . surface finale * donnée statistique
+  avec: 
+    donnée statistique:
+      valeur: 24.88 
+      unité: litre/m².an
+      meta: 
+        nom: Consommation moyenne de fioul domestique pour des bureaux à l'année, statistiques Base Carbone® (la statistique originelle est en kWh PCI/m².an)
+
+énergie . emissions . bois:
+  titre: Bois-bûches
+  icônes: 🪵
+  formule: consommation * FE
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    FE:
+      valeur: 74.06
+      note: 0,046 kgCO2e/kWh avec 1610 kWh pour un stère (cf Empreinte Carbone Personnelle)
+      unité: kgCO2e/stère
+      meta:
+        id: 25834
+
+énergie . emissions . bois . consommation:
+  applicable si:
+    toutes ces conditions:
+      - est défini:  énergie . types . bois présent
+      - énergie . types . bois présent = oui
+  question: Quelle est votre consommation annuelle de bûches de bois ? 
+  titre: Consommation annuelle de bûches de bois
+  unité: stère
   par défaut: 0
 
+énergie . emissions . granulés:
+  titre: Granulés de bois
+  icônes: 🪵
+  formule: consommation * FE
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    FE:
+      valeur: 0.5198
+      note: 0,0113 kgCO2e/kWh avec 4,6 kWh pour un kg (cf Empreinte Carbone Personnelle)
+      unité: kgCO2e/kg
+      meta:
+        id: 34942
+
+énergie . emissions . granulés . consommation:
+  applicable si:
+    toutes ces conditions:
+      - est défini:  énergie . types . granulés présent
+      - énergie . types . granulés présent = oui
+  question: Quelle est votre consommation annuelle de bûches de bois ? 
+  titre: Consommation annuelle de granulés de bois
+  unité: kg
+  par défaut: 0
+  note: Pas de consommation par défaut ici, faute de données fiables
+
+énergie . emissions . réseaux de chaleur:
+  titre: Réseaux de chaleur
+  icônes: 🌡️
+  formule: consommation * FE
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    FE:
+      valeur: 0.385
+      unité: kgCO2e/kWh
+      meta:
+        id: 47684
+
+énergie . emissions . réseaux de chaleur . consommation:
+  applicable si:
+    toutes ces conditions:
+      - est défini:  énergie . types . réseaux de chaleur présent
+      - énergie . types . réseaux de chaleur présent = oui
+  question: Quelle est votre consommation annuelle de kWh issus de réseaux de chaleur ?
+  titre: Consommation annuelle de kWh issus de réseaux de chaleur
+  unité: kWh
+  par défaut: 0
+  note: Pas de consommation par défaut ici, faute de données fiables
+
+énergie . emissions . réseaux de froid:
+  titre: Réseaux de froid
+  icônes: ❄️
+  formule: consommation * FE
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    FE:
+      valeur: 0.12
+      unité: kgCO2e/kWh
+      meta:
+        id: 46762
+
+énergie . emissions . réseaux de froid . consommation:
+  applicable si:
+    toutes ces conditions:
+      - est défini:  énergie . types . réseaux de froid présent
+      - énergie . types . réseaux de froid présent = oui
+  question: Quelle est votre consommation annuelle de kWh issus de réseaux de froid ?
+  titre: Consommation annuelle de kWh issus de réseaux de froid
+  unité: kWh
+  par défaut: 0
+  note: Pas de consommation par défaut ici, faute de données fiables
+
+# énergie . emissions . panneaux PV ou chauffe eau solaire:
+#   titre: Panneaux PV ou chauffe eau solaire
+#   formule: consommation * FE
+#   unité: kgCO2e
+#   par défaut: 0
+#   avec:
+#     FE:
+#       valeur: 0.12
+#       unité: kgCO2e/kWh
+#       meta:
+#         id: 46762
+
+# énergie . emissions . panneaux PV ou chauffe eau solaire . consommation:
+#   applicable si:
+#     toutes ces conditions:
+#       - est défini:  énergie . types . panneaux PV ou chauffe eau solaire présent
+#       - énergie . types . panneaux PV ou chauffe eau solaire présent = oui
+#   question: Quelle est votre consommation de kWh issus de panneaux PV ou chauffe eau solaire ?
+#   titre: Consommation annuelle de kWh issus de panneaux PV ou chauffe eau solaire
+#   unité: kWh
+#   par défaut: 0
+#   note: Pas de consommation par défaut ici, faute de données fiables
+
+énergie . autoproduction électricité présente:
+  question: Autoproduisez-vous de l'électricité, par exemple à l'aide de panneaux photovoltaïques ?
+  description: Si c'est le cas, vos autres consommations d'électricité ne doivent pas inclure une éventuelle autoconsommation
+
+énergie . autoconsommation électricité:
+  applicable si: 
+    toutes ces conditions: 
+      - est défini: énergie . autoproduction électricité présente
+      - énergie . autoproduction électricité présente = oui
+  titre: Autoconsommation d'électricité
+  formule: autoconsommation * FE
+  unité: kgCO2e
+  par défaut: 0
+  avec:
+    autoconsommation:
+      question: Quelle est votre autoconsommation annuelle d'électricité ?
+      unité: kWh
+    FE:
+      valeur: 0.00439
+      unité: kgCO2e/kWh
+      meta:
+        id: 34720
 

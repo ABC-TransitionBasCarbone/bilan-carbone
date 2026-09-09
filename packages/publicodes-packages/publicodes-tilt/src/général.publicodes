@@ -15,6 +15,7 @@ général . année:
 général . salariés:
   question: Combien de salariés compte l'association en [Année] ?
   unité: salariés
+  par défaut: 0 
 
 général . bénévoles:
   question: Combien de bénévoles compte l'association en [Année] ?

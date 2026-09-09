@@ -5,13 +5,16 @@
         "question": "Quel montant avez-vous dépensé dans les services immatériels suivants ?",
         "typeService": "Type de service",
         "montantDepense": "Montant dépensé",
-        "description": "Veuillez indiquer le montant dépensé pour chaque service immatériel. Si vous ne connaissez pas le montant exact, vous pouvez fournir une estimation. Vous devez bien inclure l'ensemble des services, <b>y compris ceux qui sont reçus gratuitement (mécénat de compétence, ...)</b>. Il faut donc bien prendre en compte les informations disponibles sur les contributions volontaires en nature, décrites dans le compte 870. Attention, ce compte intègre les biens et les services, il faut donc estimer la part de chacun. <br></br> Cette liste des catégories de service est non exhaustive. <b>Si vous n’avez pas comptabilisé l’ensemble de vos dépenses, c’est tout à fait normal</b>. Il peut s’agir de dépenses très faiblement émissives, ou d'activités dont les émissions sont déjà prises en compte dans d’autres postes ou via d’autres questions reposant sur des données plus précises (comptabiliser les dépenses associées ici reviendrait donc à faire un double-compte)."
+        "description": "Veuillez indiquer le montant dépensé pour chaque service immatériel. Si vous ne connaissez pas le montant exact, vous pouvez fournir une estimation. Vous devez bien inclure l'ensemble des services, <b>y compris ceux qui sont reçus gratuitement (mécénat de compétence, ...)</b>. Il faut donc bien prendre en compte les informations disponibles sur les contributions volontaires en nature, décrites dans le compte 870. Attention, ce compte intègre les biens et les services, il faut donc estimer la part de chacun. <br></br> Cette liste des catégories de service est non exhaustive. <b>Si vous n’avez pas comptabilisé l’ensemble de vos dépenses, c’est tout à fait normal</b>. Il peut s’agir de dépenses très faiblement émissives, ou d'activités dont les émissions sont déjà prises en compte dans d’autres postes ou via d’autres questions reposant sur des données plus précises (comptabiliser les dépenses associées ici reviendrait donc à faire un double-compte). Une partie importante des dépenses sera également prise en compte dans le poste dédié aux biens et matières."
       },
       "IntrantsBiensEtMatieresTilt": {
         "question": "Quel montant avez-vous dépensé dans les biens suivants ?",
         "typeBien": "Type de bien",
         "montantDepense": "Montant dépensé",
-        "description": "Veuillez indiquer le montant dépensé pour chaque type de bien. Si vous ne connaissez pas le montant exact, vous pouvez fournir une estimation. Vous devez bien inclure l'ensemble des biens, <b>y compris ceux qui sont reçus gratuitement (dons, ...)</b>. Il faut donc bien prendre en compte les informations disponibles sur les contributions volontaires en nature, décrites dans le compte 870. Attention, ce compte intègre les biens et les services, il faut donc estimer la part de chacun. <br></br> Cette liste des catégories de biens est non exhaustive. <b>Si vous n’avez pas comptabilisé l’ensemble de vos dépenses, c’est tout à fait normal</b>. Il peut s’agir de dépenses très faiblement émissives, ou d'activités dont les émissions sont déjà prises en compte dans d’autres postes ou via d’autres questions reposant sur des données plus précises (comptabiliser les dépenses associées ici reviendrait donc à faire un double-compte)."
+        "description": "Veuillez indiquer le montant dépensé pour chaque type de bien. Si vous ne connaissez pas le montant exact, vous pouvez fournir une estimation. Vous devez bien inclure l'ensemble des biens, <b>y compris ceux qui sont reçus gratuitement (dons, ...)</b>. Il faut donc bien prendre en compte les informations disponibles sur les contributions volontaires en nature, décrites dans le compte 870. Attention, ce compte intègre les biens et les services, il faut donc estimer la part de chacun. <br></br> Cette liste des catégories de biens est non exhaustive. <b>Si vous n’avez pas comptabilisé l’ensemble de vos dépenses, c’est tout à fait normal</b>. Il peut s’agir de dépenses très faiblement émissives, ou d'activités dont les émissions sont déjà prises en compte dans d’autres postes ou via d’autres questions reposant sur des données plus précises (comptabiliser les dépenses associées ici reviendrait donc à faire un double-compte). Une partie importante des dépenses sera également prise en compte dans le poste dédié aux services immatériels.",
+        "tableautextile": "Vous pouvez renseigner vos achats de vêtements dans le tableau suivant",
+        "nombretextile": "Nombre",
+        "descriptiontextile": "Si vous avez comptabilisé vos achats textiles dans ce tableau, attention à ne pas inclure les dépenses dans ces mêmes achats dans les questions suivantes, pour ne pas faire de double-compte."
       },
       "TransportDeMarchandises": {
         "question": "D'où proviennent vos livraisons ?",
@@ -39,12 +42,8 @@
       "DeplacementsDansLeCadreDUneMissionAssociativeSalaries": {
         "question": "Combien de km parcourt en moyenne un salarié se déplaçant dans le cadre d'une mission associative via les modes de transports suivants ?",
         "ModeTransport": "Mode de transport",
-        "DistanceMoyenne": "Distance moyenne parcourue par un salarié pour un déplacement dans le cadre d'une mission associative"
-      },
-      "DeplacementsDansLeCadreDUneMissionAssociativeBenevoles": {
-        "question": "Combien de km parcourt en moyenne un bénévole se déplaçant dans le cadre d'une mission associative via les modes de transports suivants ?",
-        "ModeTransport": "Mode de transport",
-        "DistanceMoyenne": "Distance moyenne parcourue par un bénévole pour un déplacement dans le cadre d'une mission associative"
+        "DistanceMoyenne": "Distance moyenne parcourue par un salarié pour un déplacement dans le cadre d'une mission associative",
+        "description": "Attention, les déplacements en avion doivent être renseignés sur l'année, tandis que les autres moyens de transport doivent l'être sur un mois. Si vous connaissez directement le nombre de kilomètres parcourus dans l'année par l'ensemble des salariés, vous pouvez simplement les diviser par le nombre de salariés et renseigner les résultats dans ce tableau."
       },
       "DeplacementsDesBeneficiaires": {
         "question": "Quel pourcentage des déplacements des bénéficiaires servant à accéder aux produits et services de l'association se font via les modes de transports suivants ?",
