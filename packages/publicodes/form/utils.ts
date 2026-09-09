@@ -54,6 +54,8 @@ export function getRuleNamesFromLayout<RuleName extends string>(layout: FormLayo
       return layout.rules
     case 'table':
       return layout.rows.flat()
+    case 'mosaic':
+      return [layout.parent]
   }
 }
 

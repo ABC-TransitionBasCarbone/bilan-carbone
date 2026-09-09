@@ -22,7 +22,11 @@ export const prepareExcel = async (
     options: object
   }[],
 ) => {
-  const buffer = xlsx.build(data)
+  const formattedData = data.map((d) => ({
+    ...d,
+    name: d.name.slice(0, 31),
+  }))
+  const buffer = xlsx.build(formattedData)
 
   const arrayBuffer = new ArrayBuffer(buffer.length)
   const view = new Uint8Array(arrayBuffer)

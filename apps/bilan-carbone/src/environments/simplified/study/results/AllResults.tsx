@@ -260,7 +260,7 @@ const AllResults = ({
               resultsUnit={study.resultsUnit}
               height={400}
               showTitle={false}
-              showLegend={true}
+              showLegend={false}
               showSubLevel={showSubLevel}
               showLabelsOnBars={!showSubLevel}
               type="post"
@@ -283,12 +283,7 @@ const AllResults = ({
             </TabPanel>
           ) : null}
           {environment && hasAccessToFeedbackButton(environment) && user && openFeedback && (
-            <FeedbackModal
-              user={user}
-              organizationName={study.organizationVersion.organization.name}
-              open={openFeedback}
-              setOpen={setOpenFeedback}
-            />
+            <FeedbackModal open={openFeedback} setOpen={setOpenFeedback} />
           )}
         </Box>
       </Box>
