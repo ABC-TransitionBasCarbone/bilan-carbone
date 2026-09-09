@@ -64,7 +64,6 @@ const withInfobulleList: (Post | SubPost)[] = [
   SubPost.ActivitesIndustrielles,
   Post.DeplacementsDePersonneSimplified,
   Post.AlimentationSimplified,
-  Post.Teletravail,
   Post.ServiceEtNumeriqueSimplified,
   Post.EquipementsEtImmobilisationsSimplified,
 ]
