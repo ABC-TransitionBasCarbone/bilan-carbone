@@ -164,6 +164,7 @@ import {
   canDeleteStudy,
   canDuplicateStudy,
   canEditStudyFlows,
+  canReadStudy,
   canUpgradeSourceVersion,
   getEnvironmentsForDuplication,
 } from '../permissions/study'
@@ -1890,13 +1891,27 @@ export const getCncByCncCode = async (cncCode: string) =>
   })
 
 export const prepareReport = async (
-  study: FullStudy,
+  studyId: string,
   results: {
     monetaryRatio: number
     nonSpecificMonetaryRatio: number
   },
 ) =>
   withServerResponse('prepareReport', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!canReadStudy(session.user, studyId)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    if (!study) {
+      throw new Error('Study not found')
+    }
+
     let template: Buffer
     const localTemplatePath = process.env.LOCAL_REPORT_TEMPLATE_PATH
     if (localTemplatePath) {
