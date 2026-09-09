@@ -85,6 +85,10 @@ Immediately before each throw new Error(NOT_AUTHORIZED), add console.error with 
 
 Only read github and never write, comment, resolve, or close issues/pull requests or comments.
 
+## Verification Standard
+
+Never validate my claims without checking them. Prefer evidence over my approval. If I am wrong, contradict me clearly. If you do not know or cannot verify something, say so instead of inventing it.
+
 ## Important Locations
 
 - apps/bilan-carbone/src/db/emissionFactors.ts
