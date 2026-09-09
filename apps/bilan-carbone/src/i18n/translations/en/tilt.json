@@ -91,7 +91,9 @@
       "numberOfTTVolunteer": "How many days per week are teleworked by your volunteers?",
       "glossary": {
         "postalCode": "Postal code of the non-profit organisation",
-        "postalCodeGlossary": "Postal code of headquarters if multiple sites, 5 digits"
+        "postalCodeGlossary": "Postal code of headquarters if multiple sites, 5 digits",
+        "structureInfo": "Type de structure de l'association",
+        "structureInfoGlossary": "Cette information sera utilisée par notre équipe afin d'adapter le questionnaire aux association qui utilisent l'outil."
       }
     },
     "flow": {
@@ -190,7 +192,11 @@
         "Agriculturetilt": "To obtain more info on how to handle this post, please see the <link>associative method</link>.",
         "AgriculturetiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
         "ActivitesIndustrielles": "To obtain more info on how to handle this post, please see the <link>associative method</link>.",
-        "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux"
+        "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
+        "DeplacementsDePersonneSimplified": "Pour Gabriel",
+        "AlimentationSimplified": "Pour Gabriel",
+        "ServiceEtNumeriqueSimplified": "Pour Gabriel",
+        "EquipementsEtImmobilisationsSimplified": "Pour Gabriel"
       }
     }
   },
