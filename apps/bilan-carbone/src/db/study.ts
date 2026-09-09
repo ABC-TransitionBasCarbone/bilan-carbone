@@ -1246,3 +1246,37 @@ export const removeSourceToAllStudies = async (source: Import) => {
     })
   })
 }
+
+export const getMinimalStudyForRights = (studyId: string) => {
+  return prismaClient.study.findFirst({
+    where: { id: studyId },
+    select: {
+      id: true,
+      level: true,
+      isPublic: true,
+      simplified: true,
+      organizationVersion: {
+        select: {
+          id: true,
+          parentId: true,
+          environment: true,
+          activatedLicence: true,
+          parent: { select: { activatedLicence: true } },
+        },
+      },
+      allowedUsers: {
+        select: {
+          role: true,
+          account: { select: { id: true, user: { select: { email: true } } } },
+        },
+      },
+      contributors: {
+        select: {
+          accountId: true,
+          subPost: true,
+        },
+      },
+    },
+  })
+}
+export type MinimalStudyForRights = Awaited<ReturnType<typeof getMinimalStudyForRights>>

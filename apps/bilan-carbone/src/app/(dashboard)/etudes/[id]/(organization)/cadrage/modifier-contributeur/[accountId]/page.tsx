@@ -1,10 +1,9 @@
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
-import { StudyProps } from '@/components/hoc/withStudy'
-import withStudyDetails from '@/components/hoc/withStudyDetails'
+import withStudyDetails, { StudyProps } from '@/components/hoc/withStudyDetails'
 import EditStudyContributorPage from '@/components/pages/EditStudyContributor'
 import { getAccountById } from '@/db/account'
 import { AccountWithUser } from '@/types/account.types'
-import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
+import { hasEditionRights, NEWGetAccountRoleOnStudy } from '@/utils/study'
 import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 import { redirect } from 'next/navigation'
 
@@ -14,10 +13,10 @@ interface Props {
   }>
 }
 
-const EditStudyContributor = async ({ study, user, params }: StudyProps & UserSessionProps & Props) => {
-  const userRoleOnStudy = await getAccountRoleOnStudy(user, study)
+const EditStudyContributor = async ({ study, user, params, studyId }: StudyProps & UserSessionProps & Props) => {
+  const userRoleOnStudy = await NEWGetAccountRoleOnStudy(user, studyId)
   if (!hasEditionRights(userRoleOnStudy)) {
-    redirect(`/etudes/${study.id}/cadrage`)
+    redirect(`/etudes/${studyId}/cadrage`)
   }
 
   const { accountId } = await params

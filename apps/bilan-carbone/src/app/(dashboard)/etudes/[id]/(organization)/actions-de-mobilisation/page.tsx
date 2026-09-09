@@ -1,6 +1,5 @@
 import withAuth from '@/components/hoc/withAuth'
-import { StudyProps } from '@/components/hoc/withStudy'
-import withStudyDetails from '@/components/hoc/withStudyDetails'
+import withStudyDetails, { StudyProps } from '@/components/hoc/withStudyDetails'
 import EngagementActionsPage from '@/components/pages/EngagementActionsPage'
 import { getEngagementActionsWithStudyId } from '@/services/serverFunctions/study'
 import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'

@@ -1,6 +1,5 @@
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
-import { StudyProps } from '@/components/hoc/withStudy'
-import withStudyDetails from '@/components/hoc/withStudyDetails'
+import withStudyDetails, { StudyProps } from '@/components/hoc/withStudyDetails'
 import ResultsPage from '@/components/pages/Results'
 import { getEmissionFactorsWithPartsInIds } from '@/db/emissionFactors'
 import { getExportRules } from '@/db/exportRule'
