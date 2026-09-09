@@ -11,7 +11,7 @@ model ModelCampaign {
   updatedAt DateTime @updatedAt @map("updated_at")
   name      String
 
-  model     Json
+  model     Json       @db.Json
   campaigns Campaign[]
 
   organizationVersionMip OrganizationVersionMip?
