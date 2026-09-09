@@ -12,6 +12,7 @@ interface Props {
 }
 export type StudyProps = {
   study: FullStudy
+  studyId: string
 }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const WithStudyDetails = (WrappedComponent: React.ComponentType<any & UserSessionProps & StudyProps>) => {
@@ -35,7 +36,7 @@ const WithStudyDetails = (WrappedComponent: React.ComponentType<any & UserSessio
       return redirect(`/etudes/${study.id}/contributeur`)
     }
 
-    return <WrappedComponent {...props} study={study} />
+    return <WrappedComponent {...props} study={study} studyId={study.id} />
   }
 
   Component.displayName = 'WithStudyDetails'

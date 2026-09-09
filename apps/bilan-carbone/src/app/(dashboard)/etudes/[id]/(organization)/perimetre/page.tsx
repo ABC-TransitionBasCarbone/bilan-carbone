@@ -1,6 +1,5 @@
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
-import { StudyProps } from '@/components/hoc/withStudy'
-import withStudyDetails from '@/components/hoc/withStudyDetails'
+import withStudyDetails, { StudyProps } from '@/components/hoc/withStudyDetails'
 import StudyPerimeterPage from '@/components/pages/StudyPerimeter'
 import { getOrganizationVersionWithSitesById } from '@/db/organization'
 

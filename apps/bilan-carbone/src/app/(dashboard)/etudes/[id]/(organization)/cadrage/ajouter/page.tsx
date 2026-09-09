@@ -1,14 +1,14 @@
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
-import { StudyProps } from '@/components/hoc/withStudy'
-import withStudyDetails from '@/components/hoc/withStudyDetails'
+import withStudyDetails, { StudyProps } from '@/components/hoc/withStudyDetails'
 import NewStudyRightPage from '@/components/pages/NewStudyRight'
-import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
+import { hasEditionRights, NEWGetAccountRoleOnStudy } from '@/utils/study'
 import { redirect } from 'next/navigation'
 
-const NewStudyRight = async ({ study, user }: StudyProps & UserSessionProps) => {
-  const userRoleOnStudy = await getAccountRoleOnStudy(user, study)
+const NewStudyRight = async ({ study, user, studyId }: StudyProps & UserSessionProps) => {
+  const userRoleOnStudy = await NEWGetAccountRoleOnStudy(user, studyId)
+
   if (!hasEditionRights(userRoleOnStudy)) {
-    redirect(`/etudes/${study.id}/cadrage`)
+    redirect(`/etudes/${studyId}/cadrage`)
   }
 
   return <NewStudyRightPage study={study} user={user} />

@@ -1,4 +1,4 @@
-import type { FullStudy } from '@/db/study'
+import { getMinimalStudyForRights, type FullStudy } from '@/db/study'
 import { mappedTiltSituationToCustomDataFields } from '@/services/customDataToSituation'
 import { getEmissionResults } from '@/services/emissionSource'
 import { hasAccessToStudyHomePage } from '@/services/permissions/environment'
@@ -59,6 +59,38 @@ export type StudyWithRoleFields = {
     parent: { activatedLicence: number[] } | null
   }
   allowedUsers: { role: StudyRole; account: { id: string; user: { email: string } } }[]
+}
+
+export const NEWGetAccountRoleOnStudy = async (user: UserSession, studyId: string) => {
+  const minimalStudy = await getMinimalStudyForRights(studyId)
+
+  if (!minimalStudy) {
+    throw new Error('Study not found')
+  }
+
+  if (isTiltSimplified(minimalStudy.organizationVersion.environment, minimalStudy.simplified)) {
+    return StudyRole.Editor
+  }
+  if (isAdminOnStudyOrga(user, minimalStudy.organizationVersion)) {
+    return hasSufficientLevel(user.level, minimalStudy.level) && hasActiveLicence(minimalStudy.organizationVersion)
+      ? StudyRole.Validator
+      : StudyRole.Reader
+  }
+
+  const right = minimalStudy.allowedUsers.find((right) => right.account.id === user.accountId)
+  if (right) {
+    return hasSufficientLevel(user.level, minimalStudy.level) && hasActiveLicence(minimalStudy.organizationVersion)
+      ? right.role
+      : StudyRole.Reader
+  }
+
+  if (minimalStudy.isPublic && isInOrgaOrParent(user.organizationVersionId, minimalStudy.organizationVersion)) {
+    return hasActiveLicence(minimalStudy.organizationVersion)
+      ? getUserRoleOnPublicStudy(user, minimalStudy.level)
+      : StudyRole.Reader
+  }
+
+  return null
 }
 
 export const getAccountRoleOnStudy = (user: UserSession, study: StudyWithRoleFields) => {
