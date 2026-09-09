@@ -254,12 +254,16 @@ const getQuestionText = (rule: ParsedRule | undefined): string | undefined => {
   return typeof question === 'string' ? question : undefined
 }
 
-const getChoiceOption = (rule: ParsedRule | undefined): unknown => {
-  if (!rule?.rawNode || typeof rule.rawNode !== 'object') {
+const getChoiceOption = (rawNode: ParsedRuleRawNode | undefined): unknown => {
+  if (!rawNode) {
     return undefined
   }
 
-  const formula = rule.rawNode.formule
+  if (Object.prototype.hasOwnProperty.call(rawNode, 'une possibilité')) {
+    return Object.getOwnPropertyDescriptor(rawNode, 'une possibilité')?.value
+  }
+
+  const formula = rawNode.formule
   return formula && typeof formula === 'object'
     ? Object.getOwnPropertyDescriptor(formula, 'une possibilité')?.value
     : undefined
@@ -354,7 +358,23 @@ type PatchedFormElement<RuleName extends string> = EvaluatedFormElement<RuleName
 
 export const patchFormElement = <RuleName extends string>(
   el: EvaluatedFormElement<RuleName> & FormPageElementProp,
-  _questionType: MipQuestionType,
+  questionType: MipQuestionType,
 ): PatchedFormElement<RuleName> => {
-  return el
+  if (el.element !== 'input') return el
+
+  switch (questionType) {
+    case 'boolean':
+      return {
+        ...el,
+        element: 'RadioGroup',
+        options: [
+          { label: 'Oui', value: true },
+          { label: 'Non', value: false },
+        ],
+      } as unknown as PatchedFormElement<RuleName>
+    case 'choices':
+      return { ...el, element: 'select' } as unknown as PatchedFormElement<RuleName>
+    default:
+      return el
+  }
 }
