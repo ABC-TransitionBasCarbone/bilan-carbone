@@ -125,8 +125,9 @@ export const isGroupLayoutAnswered = (layout: EvaluatedGroupLayout<string>): boo
 
 export const isListLayoutApplicable = (layout: EvaluatedListLayout<string>): boolean => {
   return (
-    layout.evaluatedListRows.length === 0 ||
-    layout.evaluatedListRows.some((el) => el.elements.every((e) => e.applicable))
+    layout.evaluatedTargetElement.applicable &&
+    (layout.evaluatedListRows.length === 0 ||
+    layout.evaluatedListRows.some((el) => el.elements.every((e) => e.applicable)))
   )
 }
 
