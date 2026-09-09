@@ -457,11 +457,12 @@
         "chauffage électrique": {
           "description": "[TO_TRANSLATE] Cette information sert à proposer des estimations de consommations pour l'électricité par la suite. Les estimations incluent le chauffage si celui-ci est électrique.",
           "question": "[UPDATED] Le chauffage de vos locaux est-il électrique ?"
-        }
+        },
+        "description": "[TO_TRANSLATE] Seules les consommations des types d'énergie cochés ici vous serons demandées par la suite."
       },
       "emissions": {
         "titre": "[TO_TRANSLATE] Consommations énergétiques",
-        "description": "[TO_TRANSLATE] Par défaut, des valeurs sont saisies en fonction des mètres-carrés que vous avez renseignés pour vos locaux, Ces valeurs sont issues de données statistiques de la Base Empreinte, Elles sont imprécises et datées, Si vous disposez de données plus précises via vos factures ou autres éléments de suivi, nous vous invitons à les renseigner à la place des données par défaut",
+        "description": "[UPDATED] Par défaut, des valeurs sont saisies pour certains types d'énergie en fonction des mètres-carrés que vous avez renseignés pour vos locaux. Ces valeurs sont issues de données statistiques de la Base Empreinte, mais sont imprécises et datées. Si vous disposez de données plus précises via vos factures ou autres éléments de suivi, nous vous invitons à les renseigner à la place des données par défaut.",
         "question": "[TO_TRANSLATE] Veuillez indiquer vos consommations d'énergie pour les types d'énergie suivants",
         "électricité": {
           "titre": "[TO_TRANSLATE] Électricité",
@@ -1269,14 +1270,14 @@
           "locaux seuls": {
             "titre": "[TO_TRANSLATE] J'utilise des locaux qui sont entièrement dédiés à mon association",
             "surface": {
-              "description": "[TO_TRANSLATE] Vous devez renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites, vous pouvez soit sommer l'ensemble des surfaces ici, soit créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans (on parle bien de leur construction), vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année.",
+              "description": "[UPDATED] Vous devez renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites, vous pouvez soit sommer l'ensemble des surfaces ici, soit créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans (on parle bien de leur construction), vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année. <br></br><br></br>La donnée renseignée ici sert également à calculer des consommations énergétiques par défaut, il est donc normal que des émissions apparaissent dans le poste Énergie. Vous pourrez évidemment modifier ces valeurs par défaut par la suite.",
               "question": "[TO_TRANSLATE] Quelle est la surface de ces locaux ?"
             }
           },
           "locaux partagés": {
             "titre": "[TO_TRANSLATE] Mes locaux sont partagés avec d'autres structures (co-working, open-space partagés, ...)",
             "surface": {
-              "description": "[TO_TRANSLATE] Vous devez renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites et que ces différents sites ont tous des locaux partagés, vous devez créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans (on parle bien de leur construction), vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année. Seule une partie de l'impact carbone sera pris en compte, en fonction du pourcentage des locaux utilisé par votre association à renseigner dans la question suivante.",
+              "description": "[UPDATED] Vous devez renseigner la surface totale de vos locaux. Si vous êtes implantés sur différents sites et que ces différents sites ont tous des locaux partagés, vous devez créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans (on parle bien de leur construction), vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année. Seule une partie de l'impact carbone sera pris en compte, en fonction du pourcentage des locaux utilisé par votre association à renseigner dans la question suivante. <br></br><br></br>La donnée renseignée ici sert également à calculer des consommations énergétiques par défaut, il est donc normal que des émissions apparaissent dans le poste Énergie. Vous pourrez évidemment modifier ces valeurs par défaut par la suite.",
               "question": "[TO_TRANSLATE] Quelle est la surface de ces locaux ?"
             },
             "pourcentage": {

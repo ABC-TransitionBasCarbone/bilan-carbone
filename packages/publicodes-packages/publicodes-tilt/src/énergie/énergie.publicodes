@@ -56,13 +56,6 @@
         saisie: case à cocher
       par défaut: non
 
-    # panneaux PV ou chauffe eau solaire présent:
-    #   type: booléen
-    #   question: Panneaux photovoltaïque ou chauffe-eau solaire
-    #   form:
-    #     saisie: case à cocher
-    #   par défaut: non
-
 énergie . types . chauffage électrique: 
   question: Le chauffage de vos locaux est-il électrique ?
   applicable si: énergie . types . électricité présent
@@ -82,10 +75,9 @@
       - granulés . consommation
       - réseaux de chaleur . consommation
       - réseaux de froid . consommation
-      # - panneaux PV ou chauffe eau solaire . consommation
   question: Veuillez indiquer vos consommations d'énergie pour les types d'énergie suivants
   titre: Consommations énergétiques
-  description: Par défaut, des valeurs sont saisies en fonction des mètres-carrés que vous avez renseignés pour vos locaux, Ces valeurs sont issues de données statistiques de la Base Empreinte, Elles sont imprécises et datées, Si vous disposez de données plus précises via vos factures ou autres éléments de suivi, nous vous invitons à les renseigner à la place des données par défaut
+  description: Par défaut, des valeurs sont saisies pour certains types d'énergie en fonction des mètres-carrés que vous avez renseignés pour vos locaux. Ces valeurs sont issues de données statistiques de la Base Empreinte, mais sont imprécises et datées. Si vous disposez de données plus précises via vos factures ou autres éléments de suivi, nous vous invitons à les renseigner à la place des données par défaut.
   formule: 
     somme:
       - électricité
@@ -95,7 +87,6 @@
       - granulés
       - réseaux de chaleur
       - réseaux de froid
-      # - panneaux PV ou chauffe eau solaire
   unité: kgCO2e
 
 énergie . emissions . électricité:
@@ -294,29 +285,6 @@
   unité: kWh
   par défaut: 0
   note: Pas de consommation par défaut ici, faute de données fiables
-
-# énergie . emissions . panneaux PV ou chauffe eau solaire:
-#   titre: Panneaux PV ou chauffe eau solaire
-#   formule: consommation * FE
-#   unité: kgCO2e
-#   par défaut: 0
-#   avec:
-#     FE:
-#       valeur: 0.12
-#       unité: kgCO2e/kWh
-#       meta:
-#         id: 46762
-
-# énergie . emissions . panneaux PV ou chauffe eau solaire . consommation:
-#   applicable si:
-#     toutes ces conditions:
-#       - est défini:  énergie . types . panneaux PV ou chauffe eau solaire présent
-#       - énergie . types . panneaux PV ou chauffe eau solaire présent = oui
-#   question: Quelle est votre consommation de kWh issus de panneaux PV ou chauffe eau solaire ?
-#   titre: Consommation annuelle de kWh issus de panneaux PV ou chauffe eau solaire
-#   unité: kWh
-#   par défaut: 0
-#   note: Pas de consommation par défaut ici, faute de données fiables
 
 énergie . autoproduction électricité présente:
   question: Autoproduisez-vous de l'électricité, par exemple à l'aide de panneaux photovoltaïques ?

@@ -113,7 +113,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
       'énergie . types . granulés présent',
       'énergie . types . réseaux de chaleur présent',
       'énergie . types . réseaux de froid présent',
-    ]),
+    ],'EnergieBooléen.description'),
     input('énergie . types . chauffage électrique'),
     mosaic('énergie . emissions', [
       'énergie . emissions . électricité . consommation',
