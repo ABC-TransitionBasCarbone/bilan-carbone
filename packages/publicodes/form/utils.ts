@@ -97,7 +97,7 @@ export const formatMassKilograms = (valueKg: number): string => {
   return `${formatNumber(Math.round(valueKg))} kg`
 }
 
-export const getRuleNamesFromLayout = <RuleName extends string>(layout: FormLayout<RuleName>): RuleName[] | undefined => {
+export const getRuleNamesFromLayout = <RuleName extends string>(layout: FormLayout<RuleName>): RuleName[] => {
   switch (layout.type) {
     case 'input':
       return [layout.rule]

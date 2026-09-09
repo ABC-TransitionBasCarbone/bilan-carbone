@@ -456,7 +456,7 @@
         },
         "chauffage électrique": {
           "description": "[TO_TRANSLATE] Cette information sert à proposer des estimations de consommations pour l'électricité par la suite. Les estimations incluent le chauffage si celui-ci est électrique.",
-          "question": "[TO_TRANSLATE] Le chauffage de vos locaux est-il électrique ?"
+          "question": "[UPDATED] Le chauffage de vos locaux est-il électrique ?"
         }
       },
       "emissions": {

@@ -22,7 +22,14 @@ export default function PublicodesForm<RuleName extends string>({ formLayouts }:
     return formLayouts.map((formLayout, index) => {
       const evaluatedFormLayout = getEvaluatedFormLayout(engine, formLayout, listLayoutSituations)
       const currentRuleNames = getRuleNamesFromLayout(formLayout)
-      const previousRuleNames = index > 0 ? getRuleNamesFromLayout(formLayouts[index - 1]) : undefined
+      const previousRuleNames =
+        index > 0
+          ? formLayouts
+              .slice(0, index)
+              .map((fl) => getRuleNamesFromLayout(fl))
+              .flat()
+          : undefined
+      console.log(currentRuleNames, previousRuleNames)
       const isLinkedToPreviousQuestion =
         currentRuleNames &&
         previousRuleNames &&
