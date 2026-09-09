@@ -64,12 +64,14 @@
     #   par défaut: non
 
 énergie . types . chauffage électrique: 
-  question: Le chauffage de vos locaux est-il électrique ? 
+  question: Le chauffage de vos locaux est-il électrique ?
+  applicable si: énergie . types . électricité présent
   description: Cette information sert à proposer des estimations de consommations pour l'électricité par la suite. Les estimations incluent le chauffage si celui-ci est électrique. 
 
 énergie . emissions:
   ordre: 3
   icônes:
+  applicable si: énergie . types . électricité présent
   mosaique:
     type: nombre
     options:

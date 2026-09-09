@@ -2,7 +2,7 @@ import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import { normalizeCategoryKey } from '@abc-transitionbascarbone/utils/parsing'
 import { EvaluatedFormElement, FormPageElementProp, FormPages } from '@publicodes/forms'
 import Engine, { reduceAST, RuleNode, utils } from 'publicodes'
-import { EvaluatedFormLayout } from './layouts/evaluatedFormLayout'
+import { EvaluatedFormLayout, EvaluatedGroupLayout, EvaluatedListLayout, EvaluatedMosaicLayout, EvaluatedTableLayout } from './layouts/evaluatedFormLayout'
 import { FormLayout } from './layouts/formLayout'
 
 export { getUpdatedSituationWithInputValue, situationsAreEqual } from '../utils'
@@ -97,7 +97,7 @@ export const formatMassKilograms = (valueKg: number): string => {
   return `${formatNumber(Math.round(valueKg))} kg`
 }
 
-export const getRuleNamesFromLayout = <RuleName extends string>(layout: FormLayout<RuleName>): RuleName[] | undefined => {
+export const getRuleNamesFromLayout = <RuleName extends string>(layout: FormLayout<RuleName>): RuleName[] => {
   switch (layout.type) {
     case 'input':
       return [layout.rule]
@@ -111,18 +111,67 @@ export const getRuleNamesFromLayout = <RuleName extends string>(layout: FormLayo
   }
 }
 
+export const hasDefaultValue = (el: EvaluatedFormElement<string>): boolean => {
+  return 'defaultValue' in el && el.defaultValue !== null && el.defaultValue !== undefined && el.defaultValue !== 0
+}
+
+export const isGroupLayoutApplicable = (layout: EvaluatedGroupLayout<string>): boolean => {
+  return layout.evaluatedElements.some((el) => el.applicable)
+}
+
+export const isGroupLayoutAnswered = (layout: EvaluatedGroupLayout<string>): boolean => {
+  return layout.evaluatedElements.some((el) => el.applicable && el.answered)
+}
+
+export const isListLayoutApplicable = (layout: EvaluatedListLayout<string>): boolean => {
+  return (
+    layout.evaluatedTargetElement.applicable &&
+    (layout.evaluatedListRows.length === 0 ||
+    layout.evaluatedListRows.some((el) => el.elements.every((e) => e.applicable)))
+  )
+}
+
+export const isListLayoutAnswered = (layout: EvaluatedListLayout<string>): boolean => {
+  return layout.evaluatedListRows.some((el) =>
+    el.elements.every((e) => !e.applicable || e.answered || hasDefaultValue(e)),
+  )
+}
+
+export const isTableLayoutApplicable = (layout: EvaluatedTableLayout<string>): boolean => {
+  return layout.evaluatedRows.flat().some((el) => el.applicable)
+}
+
+export const isTableLayoutAnswered = (layout: EvaluatedTableLayout<string>): boolean => {
+  return layout.evaluatedRows.some((row) =>
+    row.every(
+      (el, i) =>
+        // NOTE: the first column is the label, so we consider it answered
+        i === 0 || !el.applicable || el.answered || hasDefaultValue(el),
+    ),
+  )
+}
+
+export const isMosaicLayoutApplicable = (layout: EvaluatedMosaicLayout<string>): boolean => {
+  return layout.evaluatedParent.applicable && layout.evaluatedChildren.some((el) => el.applicable)
+}
+
+export const isMosaicLayoutAnswered = (layout: EvaluatedMosaicLayout<string>): boolean => {
+  return layout.evaluatedChildren.some((el) => el.applicable && (el.answered || hasDefaultValue(el)))
+}
+
+
 export const evaluatedLayoutIsApplicable = <RuleName extends string>(layout: EvaluatedFormLayout<RuleName>): boolean => {
   switch (layout.type) {
     case 'input':
       return layout.evaluatedElement.applicable
     case 'mosaic':
-      return layout.evaluatedParent.applicable
+      return isMosaicLayoutApplicable(layout)
     case 'group':
-      return layout.evaluatedElements.some((el) => el.applicable)
+      return isGroupLayoutApplicable(layout)
     case 'table':
-      return layout.evaluatedRows.flat().some((el) => el.applicable)
+      return isTableLayoutApplicable(layout)
     case 'list':
-      return layout.evaluatedTargetElement.applicable
+      return isListLayoutApplicable(layout)
   }
 }
 

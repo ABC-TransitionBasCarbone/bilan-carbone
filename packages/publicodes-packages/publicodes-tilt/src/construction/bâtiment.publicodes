@@ -10,9 +10,7 @@ construction . bâtiment . empreinte:
   unité: kgCO2e
 
 construction . bâtiment . surface finale:
-  applicable si:
-    toutes ces conditions:
-      - est défini: locaux
+  par défaut: 0
   formule:
     variations:
       - si: locaux = 'locaux seuls'
