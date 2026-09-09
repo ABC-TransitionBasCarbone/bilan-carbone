@@ -29,6 +29,7 @@ import { useServerFunction } from '@abc-transitionbascarbone/components/src/hook
 import GlossaryModal from '@abc-transitionbascarbone/components/src/modals/GlossaryModal'
 import { SiteCAUnit, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
 import { zodResolver } from '@hookform/resolvers/zod'
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import { CircularProgress, Typography } from '@mui/material'
 import { getEvaluatedFormElement } from '@publicodes/forms'
 import { UserSession } from 'next-auth'
@@ -214,7 +215,16 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
                 control={form.control}
                 translation={t}
                 name="structure"
-                label={t('structure')}
+                label={
+                  <span className="align-center text-center">
+                    {t('structure')}
+                    <HelpOutlineOutlinedIcon
+                      color="secondary"
+                      className={`ml-4 pointer`}
+                      onClick={() => setGlossary('structureInfo')}
+                    />
+                  </span>
+                }
                 data-testid="new-study-structure"
                 options={TiltStructureOptions.map((structure) => ({
                   label: tStructure(structure),

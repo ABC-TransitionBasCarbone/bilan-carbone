@@ -90,7 +90,9 @@
       "numberOfTTVolunteer": "Combien de jours sont télétravaillées par semaine pour vos bénévoles ?",
       "glossary": {
         "postalCode": "Code postal de l'association",
-        "postalCodeGlossary": "CP du siège si plusieurs sites, 5 chiffres"
+        "postalCodeGlossary": "CP du siège si plusieurs sites, 5 chiffres",
+        "structureInfo": "Type de structure de l'association",
+        "structureInfoGlossary": "Cette information sera utilisée par notre équipe afin d'adapter le questionnaire aux association qui utilisent l'outil."
       }
     },
     "flow": {
@@ -189,7 +191,11 @@
         "Agriculturetilt": "Pour obtenir plus d'informations sur la prise en compte des émissions liées aux activités agricoles, veuillez vous référez à la <link>méthode associative</link>.",
         "AgriculturetiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
         "ActivitesIndustrielles": "Pour obtenir plus d'informations sur la prise en compte des émissions liées aux éventuelles activités industrielles, veuillez vous référez à la <link>méthode associative</link>.",
-        "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux"
+        "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
+        "DeplacementsDePersonneSimplified": "Pour Gabriel",
+        "AlimentationSimplified": "Pour Gabriel",
+        "ServiceEtNumeriqueSimplified": "Pour Gabriel",
+        "EquipementsEtImmobilisationsSimplified": "Pour Gabriel"
       }
     }
   },
