@@ -13,7 +13,7 @@ type Props = {
 }
 
 export default function MosaicNumberInput({ title, icons, description, onChange, value, unit, ...props }: Props) {
-  const rounded = value != null ? Math.ceil(value) : 0
+  const rounded = value != null ? Math.ceil(value) : undefined
   const numLength = String(rounded ?? '').length || 1
 
   return (
