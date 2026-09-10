@@ -50,6 +50,7 @@ import ConsolidatedResults from './consolidated/ConsolidatedResults'
 import EmissionsAnalysis from './consolidated/EmissionsAnalysis'
 import ConsolatedBEGESDifference from './ConsolidatedBEGESDifference'
 import ConsolatedGHGPDifference from './ConsolidatedGHGPDifference'
+import { DownloadButton } from './DownloadButton'
 import GHGPResultsTable from './ghgp/GHGPResultsTable'
 import ResultFilters from './ResultFilters'
 import UncertaintyAnalytics from './uncertainty/UncertaintyAnalytics'
@@ -82,6 +83,10 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   const [isDownloadReportActive, setIsDownloadReportActive] = useState(false)
   const [selectedGHGPTable, setSelectedGHGPTable] = useState<EmissionFactorBase>(EmissionFactorBase.LocationBased)
   const router = useRouter()
+  const [loadingCSV, setLoadingCSV] = useState(false)
+  const [loadingXLSX, setLoadingXLSX] = useState(false)
+  const [loadingResults, setLoadingResults] = useState(false)
+  const [loadingReport, setLoadingReport] = useState(false)
 
   const { selectedSubPosts, selectedTagIds, setSelectedSubPosts, setSelectedTagIds } = useTransitionPlanFilters(
     study.id,
@@ -303,10 +308,13 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   )
 
   const downloadReport = useCallback(async () => {
-    callServerFunction(() => prepareReport(study, { monetaryRatio, nonSpecificMonetaryRatio }), {
+    setLoadingReport(true)
+    callServerFunction(() => prepareReport(study.id, { monetaryRatio, nonSpecificMonetaryRatio }), {
       onSuccess: (data) => {
         download([data.buffer as ArrayBuffer], `${t('reportName', { studyName: study.name })}.docx`, 'docx')
+        setLoadingReport(false)
       },
+      onError: () => setLoadingReport(false),
     })
   }, [study, monetaryRatio, nonSpecificMonetaryRatio, callServerFunction, t])
 
@@ -320,24 +328,35 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   }
   const downloadEmissionSourcesCsv = async (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
     preventClose(e)
+    setLoadingCSV(true)
     if (hasAccessToEmissionSourcesDownload) {
       await callServerFunction(() => exportEmissionSourcesToCSV(study.id), {
-        onSuccess: (csvContent) => download(['\ufeff', csvContent], tImport('exportFileNameCsv'), 'csv'),
+        onSuccess: (csvContent) => {
+          download(['\ufeff', csvContent], tImport('exportFileNameCsv'), 'csv')
+          setLoadingCSV(false)
+        },
+        onError: () => setLoadingCSV(false),
       })
     }
   }
 
   const downloadEmissionSourcesExcel = async (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
     preventClose(e)
+    setLoadingXLSX(true)
     if (hasAccessToEmissionSourcesDownload) {
       await callServerFunction(() => exportEmissionSourcesToExcel(study.id), {
-        onSuccess: (arrayBuffer) => download([arrayBuffer], tImport('exportFileName'), 'xlsx'),
+        onSuccess: (arrayBuffer) => {
+          download([arrayBuffer], tImport('exportFileName'), 'xlsx')
+          setLoadingXLSX(false)
+        },
+        onError: () => setLoadingXLSX(false),
       })
     }
   }
 
   const downloadResults = async (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
     preventClose(e)
+    setLoadingResults(true)
     await downloadStudyResults(
       study,
       begesRules,
@@ -354,6 +373,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
       tBase,
       environment as BCEnvironment,
     )
+    setLoadingResults(false)
   }
 
   const preventClose = (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
@@ -382,39 +402,26 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
             labelId="download-results-dropdown"
             value=""
             displayEmpty
+            disabled={study.emissionSources.length === 0}
             renderValue={() => (
               <div className="align-center">
                 <DownloadIcon className="mr-2" /> {t('download')}
               </div>
             )}
           >
-            <MenuItem disabled={study.emissionSources.length === 0}>
-              <div className="grow justify-start" onClick={downloadEmissionSourcesCsv}>
-                {tStudyExport('download')}
-              </div>
-            </MenuItem>
-            <MenuItem disabled={study.emissionSources.length === 0}>
-              <div className="grow justify-start" onClick={downloadEmissionSourcesExcel}>
-                {tStudyExport('downloadExcel')}
-              </div>
-            </MenuItem>
-            <MenuItem>
-              <div className="grow justify-start" onClick={downloadResults}>
-                {t('downloadResults')}
-              </div>
-            </MenuItem>
+            <DownloadButton
+              label={tStudyExport('download')}
+              download={downloadEmissionSourcesCsv}
+              loading={loadingCSV}
+            />
+            <DownloadButton
+              label={tStudyExport('downloadExcel')}
+              download={downloadEmissionSourcesExcel}
+              loading={loadingXLSX}
+            />
+            <DownloadButton label={t('downloadResults')} download={downloadResults} loading={loadingResults} />
             {isDownloadReportActive && (
-              <MenuItem>
-                <div
-                  className="grow justify-start"
-                  onClick={(e) => {
-                    preventClose(e)
-                    downloadReport()
-                  }}
-                >
-                  {t('resultsWord')}
-                </div>
-              </MenuItem>
+              <DownloadButton label={t('resultsWord')} download={downloadReport} loading={loadingReport} />
             )}
           </Select>
           <SelectStudySite sites={study.sites} defaultValue={siteId} setSite={setSite} />
