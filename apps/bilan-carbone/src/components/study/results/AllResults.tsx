@@ -314,6 +314,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
         download([data.buffer as ArrayBuffer], `${t('reportName', { studyName: study.name })}.docx`, 'docx')
         setLoadingReport(false)
       },
+      onError: () => setLoadingReport(false),
     })
   }, [study, monetaryRatio, nonSpecificMonetaryRatio, callServerFunction, t])
 
@@ -334,6 +335,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
           download(['\ufeff', csvContent], tImport('exportFileNameCsv'), 'csv')
           setLoadingCSV(false)
         },
+        onError: () => setLoadingCSV(false),
       })
     }
   }
@@ -347,6 +349,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
           download([arrayBuffer], tImport('exportFileName'), 'xlsx')
           setLoadingXLSX(false)
         },
+        onError: () => setLoadingXLSX(false),
       })
     }
   }

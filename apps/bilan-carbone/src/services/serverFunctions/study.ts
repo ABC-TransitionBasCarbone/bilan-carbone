@@ -1903,7 +1903,7 @@ export const prepareReport = async (
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (!canReadStudy(session.user, studyId)) {
+    if (!(await canReadStudy(session.user, studyId))) {
       throw new Error(NOT_AUTHORIZED)
     }
 

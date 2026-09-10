@@ -11,7 +11,7 @@ export const DownloadButton = ({ label, loading, download }: Props) => {
   const t = useTranslations('spinner')
 
   return (
-    <MenuItem>
+    <MenuItem disabled={loading}>
       {loading ? (
         <>
           <CircularProgress size="1rem" className="mr-2" />
