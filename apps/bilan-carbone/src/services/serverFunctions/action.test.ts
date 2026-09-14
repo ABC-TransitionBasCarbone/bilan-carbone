@@ -20,7 +20,10 @@ const makeSource = (
   getMockedFullStudyEmissionSource({
     subPost,
     validated,
-    studySite: { id: studySiteId, site: { id: siteId, name: siteId } },
+    studySite: {
+      id: studySiteId,
+      site: { id: siteId, name: siteId, postalCode: '78500', city: null, establishmentYear: '2000' },
+    },
     emissionFactor: { ...mockedEmissionSourceEmissionFactor, totalCo2: totalCo2Kg },
     emissionSourceTags: tagIds.map((id) => ({
       tag: { id, name: id, color: null, familyId: 'family-id', createdAt: new Date(), updatedAt: new Date() },
