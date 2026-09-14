@@ -3,12 +3,14 @@ import withStudyDetails, { StudyProps } from '@/components/hoc/withStudyDetails'
 import StudyDataEntryInfographyPage from '@/components/pages/StudyDataEntryInfographyPage'
 import { isOrganizationVersionCR } from '@/db/organization'
 import { canDeleteStudy, canDuplicateStudy, getEnvironmentsForDuplication } from '@/services/permissions/study'
-import { NEWGetAccountRoleOnStudy } from '@/utils/study'
+import { NEWGetAccountRoleOnStudy } from '@/services/serverFunctions/study'
 import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 
 const DataEntry = async ({ study, user, studyId }: StudyProps & UserSessionProps) => {
   const userRole = await NEWGetAccountRoleOnStudy(user, studyId)
-
+  if (!userRole.success || !userRole.data) {
+    return <NotFound />
+  }
   const [canDelete, canDuplicate, duplicableEnvironments, userOrgIsCR] = await Promise.all([
     canDeleteStudy(studyId),
     canDuplicateStudy(studyId),
@@ -22,7 +24,7 @@ const DataEntry = async ({ study, user, studyId }: StudyProps & UserSessionProps
   return (
     <StudyDataEntryInfographyPage
       study={study}
-      userRole={userRole}
+      userRole={userRole.data}
       user={user}
       canDeleteStudy={canDelete}
       canDuplicateStudy={canDuplicate}

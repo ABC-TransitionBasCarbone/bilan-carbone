@@ -49,6 +49,7 @@ import {
   FullStudy,
   getEngagementActionById,
   getEngagementActions,
+  getMinimalStudyForRights,
   getOrganizationStudiesBeforeDate,
   getPendingStudyCommentsCountFromAuthor,
   getStudiesSitesFromIds,
@@ -90,7 +91,7 @@ import { groupBy } from '@/utils/array'
 import { mapCncToStudySite } from '@/utils/cnc'
 import { calculateDistanceFromParis } from '@/utils/distance'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
-import { canEditOrganizationVersion } from '@/utils/organization'
+import { canEditOrganizationVersion, hasActiveLicence, isInOrgaOrParent } from '@/utils/organization'
 import { withServerResponse } from '@/utils/serverResponse'
 import {
   getAccountRoleOnStudy,
@@ -2580,4 +2581,37 @@ export const getStudyExports = async (studyId: string | undefined) =>
     }
 
     return study.exports?.types || []
+  })
+
+export const NEWGetAccountRoleOnStudy = async (user: UserSession, studyId: string) =>
+  withServerResponse('NEWGetAccountRoleOnStudy', async () => {
+    const minimalStudy = await getMinimalStudyForRights(studyId)
+
+    if (!minimalStudy) {
+      throw new Error('Study not found')
+    }
+
+    if (isTiltSimplified(minimalStudy.organizationVersion.environment, minimalStudy.simplified)) {
+      return StudyRole.Editor
+    }
+    if (isAdminOnStudyOrga(user, minimalStudy.organizationVersion)) {
+      return hasSufficientLevel(user.level, minimalStudy.level) && hasActiveLicence(minimalStudy.organizationVersion)
+        ? StudyRole.Validator
+        : StudyRole.Reader
+    }
+
+    const right = minimalStudy.allowedUsers.find((right) => right.account.id === user.accountId)
+    if (right) {
+      return hasSufficientLevel(user.level, minimalStudy.level) && hasActiveLicence(minimalStudy.organizationVersion)
+        ? right.role
+        : StudyRole.Reader
+    }
+
+    if (minimalStudy.isPublic && isInOrgaOrParent(user.organizationVersionId, minimalStudy.organizationVersion)) {
+      return hasActiveLicence(minimalStudy.organizationVersion)
+        ? getUserRoleOnPublicStudy(user, minimalStudy.level)
+        : StudyRole.Reader
+    }
+
+    return null
   })
