@@ -59,7 +59,7 @@ export const customRich = (
       </Link>
     ),
     exemplequestionnairetorefacto: (children) => (
-      <Link className="font-inherit" href="https://associationbilancarbone.sharepoint.com/:w:/s/AssociationBilanCarbone/IQA_D8lTKBOuRJ7m9LrdhRYlAQ2YptAX_iIqgjalKfYql0c?e=dAx3P7" target="_blank" rel="noreferrer noopener">
+      <Link className="font-inherit" href="https://associationbilancarbone.sharepoint.com/:b:/s/AssociationBilanCarbone/IQCERvlL3mYjRbebNaYQJIdmAV6OhR4Ghh8K_7RIem35gGQ?e=rg6oey" target="_blank" rel="noreferrer noopener">
         {children}
       </Link>
     ),
