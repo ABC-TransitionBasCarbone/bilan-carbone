@@ -292,12 +292,18 @@ describe('Study Service', () => {
           getMockedFullStudyEmissionSource({
             value: 1,
             validated: true,
-            studySite: { id: 'study-site-a', site: { id: 'site-a', name: 'Site A' } },
+            studySite: {
+              id: 'study-site-a',
+              site: { id: 'site-a', postalCode: '78500', city: null, establishmentYear: '2000', name: 'Site A' },
+            },
           }),
           getMockedFullStudyEmissionSource({
             value: 2,
             validated: true,
-            studySite: { id: 'study-site-b', site: { id: 'site-b', name: 'Site B' } },
+            studySite: {
+              id: 'study-site-b',
+              site: { id: 'site-b', postalCode: '78500', city: null, establishmentYear: '2000', name: 'Site B' },
+            },
           }),
         ],
       })

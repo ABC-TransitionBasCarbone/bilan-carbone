@@ -302,7 +302,7 @@ export const getMockeFullStudy = (overrides = {}): FullStudy => ({
       value: 100,
       studySite: {
         id: TEST_IDS.studySite,
-        site: { id: TEST_IDS.site, name: 'Test Site' },
+        site: { id: TEST_IDS.site, name: 'Test Site', postalCode: '78500', city: null, establishmentYear: '2000' },
       },
       emissionFactor: mockedEmissionSourceEmissionFactor,
       emissionSourceTags: [],
