@@ -206,7 +206,7 @@
   },
   "betaBanner": {
     "badge": "À lire avant de démarrer !",
-    "title": "Documents utiles pour le calcul d'une empreinte carbone simplifiée",
+    "title": "Documents utiles pour le calcul d'une empreinte carbone simplifiée via Cap Carbone",
     "description": "Vous êtes sur le point de créer une nouvelle empreinte simplifiée. Avant de commencer votre calcul et pouvoir répondre à l'ensemble des questions, nous vous conseillons de disposer des informations suivantes : <br></br>- La surface de vos locaux, parkings, etc (via plans, bails, etc)<br></br>- Le nombre de climatiseurs présents dans ceux-ci<br></br>- Le type de chauffage utilisé, les factures énergétiques (chauffage, électricité)<br></br>- Le poids de vos déchets pour une semaine classique, ou tout autre intervalle de temps<br></br>- Un inventaire de votre parc informatique<br></br>- Un inventaire de votre parc de véhicules <br></br>- Votre livre de comptes, parfois les dépenses sont également déclarées sur <compteassotilttorefacto>Lecompteasso</compteassotilttorefacto><br></br>- Des factures, bons de commandes, etc, permettant de retracer vos achats<br></br>- Un questionnaire complété par les salariés et bénévoles de votre association détaillant leurs habitudes en termes de déplacements, d'usages numériques et de télétravail. Nous vous proposons <exemplequestionnairetorefacto>quelques pistes</exemplequestionnairetorefacto> pour implémenter ce questionnaire dans l'outil de sondage de votre choix (typeforms, Googleforms, etc)<br></br><br></br>S'il vous manque une de ces informations, pas de panique ! Vous pouvez utiliser une estimation, ou utiliser les valeurs par défaut qui sont parfois proposées dans l'outil !"
   },
   "documentationUrlTilt": {
