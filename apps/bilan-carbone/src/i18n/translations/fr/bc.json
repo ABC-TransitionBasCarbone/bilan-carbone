@@ -459,7 +459,7 @@
         "type": "Niveau de maturité du Bilan Carbone®",
         "typeDescription": "La nouvelle version de la méthode Bilan Carbone® introduit trois niveaux de maturité pour les Bilan Carbone® des organisations. Pour plus de détails, nous vous invitons à consulter <link>cette page</link>.",
         "visibility": "Visibilité de l'étude",
-        "visibilityDescription": "Choisissez si votre étude doit être partagé à votre équipe, c'est à dire accessible à tous vos collègues renseigné sur la page Mon organisation > Mon equipe, ou confidentielle, c'est à dire uniquement accessible aux personnes que vous rajouterez dans la page cadrage de votre étude. Les administrateurs de votre organisation ont accès à toutes les études qu'elles soient partagées à l'équipe ou confidentielles.",
+        "visibilityDescription": "Choisissez si votre étude doit être partagé à votre équipe, c'est à dire accessible à tous vos collègues renseigné sur la page Mon organisation > Mon équipe, ou confidentielle, c'est à dire uniquement accessible aux personnes que vous rajouterez dans la page cadrage de votre étude. Les administrateurs de votre organisation ont accès à toutes les études qu'elles soient partagées à l'équipe ou confidentielles.",
         "exports": "Exports",
         "exportsDescription": "Les résultats sont par défaut restitués au format Bilan Carbone®, mais il est possible d'obtenir les résultats sous les formats demandés par plusieurs autres méthodes de comptabilité carbone, comme le Bilan GES règlementaire, qui est la méthode règlementaire française.",
         "control": "Mode de contrôle des exports",
