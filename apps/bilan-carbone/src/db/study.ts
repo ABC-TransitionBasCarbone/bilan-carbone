@@ -9,8 +9,10 @@ import { isAdminOnOrga } from '@/utils/organization'
 import { getAllowedLevels, getUserRoleOnPublicStudy, hasSufficientLevel, StudyWithRoleFields } from '@/utils/study'
 import { isAdmin } from '@/utils/user'
 import type {
+  Cnc,
   DuplicableStudy,
   Level,
+  OpeningHours,
   Prisma,
   StudyTag,
   StudyTagFamily,
@@ -1284,7 +1286,7 @@ export const getMinimalStudyForRights = (studyId: string) => {
 }
 export type MinimalStudyForRights = Exclude<Awaited<ReturnType<typeof getMinimalStudyForRights>>, null>
 
-export const getStudySitesWithName = (studyId: string) =>
+export const getStudySitesWithName = (studyId: string): Promise<StudySiteWithNameList> =>
   prismaClient.studySite.findMany({
     where: { studyId },
     select: {
@@ -1293,21 +1295,47 @@ export const getStudySitesWithName = (studyId: string) =>
       ca: true,
       volunteerNumber: true,
       beneficiaryNumber: true,
-      site: { select: { name: true, id: true, postalCode: true, city: true, establishmentYear: true } },
+      openingHours: true,
+      numberOfOpenDays: true,
+      numberOfSessions: true,
+      numberOfTickets: true,
+      cncVersion: {
+        select: {
+          id: true,
+          year: true,
+        },
+      },
+      site: {
+        select: {
+          name: true,
+          id: true,
+          cnc: true,
+          postalCode: true,
+          city: true,
+          establishmentYear: true,
+        },
+      },
     },
   })
+
 export type StudySiteWithNameList = {
   id: string
   etp: number
   ca: number
   volunteerNumber: number | null
   beneficiaryNumber: number | null
+  openingHours: OpeningHours[]
+  numberOfOpenDays: number | null
+  numberOfSessions: number | null
+  numberOfTickets: number | null
+  cncVersion: { id: string; year: number } | null
   site: {
     name: string
     id: string
     postalCode: string | null
     city: string | null
     establishmentYear: string | null
+    cnc: Cnc | null
   }
 }[]
 

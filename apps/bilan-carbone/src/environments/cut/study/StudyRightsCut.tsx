@@ -2,7 +2,7 @@
 
 import SelectStudySite from '@/components/study/site/SelectStudySite'
 import useStudySite from '@/components/study/site/useStudySite'
-import type { FullStudy } from '@/db/study'
+import type { MinimalStudyForRights, StudySiteWithNameList } from '@/db/study'
 import { changeStudyCinema, getStudySite } from '@/services/serverFunctions/study'
 import { ChangeStudyCinemaCommand, ChangeStudyCinemaValidation } from '@/services/serverFunctions/study.command'
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
@@ -21,15 +21,27 @@ import styles from './StudyRights.module.css'
 type PartialOpeningHours = Pick<OpeningHours, 'day' | 'openHour' | 'closeHour' | 'isHoliday'>
 
 interface Props {
-  study: FullStudy
+  study: MinimalStudyForRights
+  studySites: StudySiteWithNameList
 }
 
-const StudyRightsCut = ({ study }: Props) => {
+type StudySiteData = Pick<
+  StudySiteWithNameList[number],
+  'openingHours' | 'numberOfOpenDays' | 'numberOfSessions' | 'numberOfTickets' | 'cncVersion'
+> & {
+  site: {
+    cnc: {
+      id: string
+    } | null
+  }
+}
+
+const StudyRightsCut = ({ study, studySites }: Props) => {
   const t = useTranslations('study.new')
   const tRights = useTranslations('study.rights')
   const { callServerFunction } = useServerFunction()
-  const { siteId, studySiteId, setSite } = useStudySite(study)
-  const [siteData, setSiteData] = useState<FullStudy['sites'][0] | undefined>()
+  const { siteId, studySiteId, setSite } = useStudySite({ ...study, sites: studySites })
+  const [siteData, setSiteData] = useState<StudySiteData>()
   const [loading, setLoading] = useState(true)
 
   const openingHoursToObject = (openingHoursArr: PartialOpeningHours[], handleNormalDays: boolean) => {
@@ -133,7 +145,7 @@ const StudyRightsCut = ({ study }: Props) => {
       <Block
         title={tRights('general')}
         rightComponent={
-          <SelectStudySite sites={study.sites} defaultValue={siteId} setSite={setSite} showAllOption={false} />
+          <SelectStudySite sites={studySites} defaultValue={siteId} setSite={setSite} showAllOption={false} />
         }
       >
         {loading ? (
