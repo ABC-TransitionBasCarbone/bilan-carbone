@@ -66,6 +66,7 @@ const withInfobulleList: (Post | SubPost)[] = [
   Post.AlimentationSimplified,
   Post.ServiceEtNumeriqueSimplified,
   Post.EquipementsEtImmobilisationsSimplified,
+  Post.TeletravailSimplified,
 ]
 
 export const withInfobulle = (post: Post | SubPost) => withInfobulleList.includes(post)
