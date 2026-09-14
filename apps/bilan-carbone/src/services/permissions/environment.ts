@@ -1,5 +1,6 @@
 import { isFeatureActiveForEnvironment } from '@/db/deactivableFeatures'
 import { DeactivatableFeature, Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { Locale } from '@abc-transitionbascarbone/i18n/config'
 import { isAdvanced, isSimplified } from '@abc-transitionbascarbone/utils/environments'
 
 const { BC, CUT, TILT, CLICKSON } = Environment
@@ -8,6 +9,18 @@ export const isBC = (environment: Environment) => environment === BC
 export const isTilt = (environment: Environment) => environment === TILT
 export const isCut = (environment: Environment) => environment === CUT
 export const isClickson = (environment: Environment) => environment === CLICKSON
+
+export const localeForEnv = (environment: Environment) => {
+  switch (environment) {
+    case Environment.TILT:
+    case Environment.CUT:
+      return [Locale.FR]
+    case Environment.CLICKSON:
+      return Object.keys(Locale)
+    default:
+      return [Locale.EN, Locale.FR]
+  }
+}
 
 export const hasAccessToActualityCards = isBC
 

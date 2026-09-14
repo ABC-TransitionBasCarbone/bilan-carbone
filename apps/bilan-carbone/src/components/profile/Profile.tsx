@@ -115,17 +115,13 @@ const Profile = ({ version }: Props) => {
           )}
         </div>
         <div className="mb1">{session.user.email}</div>
+        <LocaleSelector />
         <div className="mb1">
           <Link data-testid="legal-notices-link" href="/mentions-legales">
             {t('legalNotices')}
           </Link>
         </div>
         {nameClick > 4 && <span className="mb1">{t('version') + version}</span>}
-      </div>
-      <div>
-        <div className="flex-col justify-end">
-          <LocaleSelector />
-        </div>
       </div>
     </div>
   )
