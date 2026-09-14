@@ -4,6 +4,7 @@ import {
   joinRuleNameParts,
   RULE_NAME_SEPARATOR,
 } from '@abc-transitionbascarbone/publicodes/form/utils'
+import { removeDiacritics } from '@abc-transitionbascarbone/utils/parsing'
 import { EvaluatedFormElement, FormPageElementProp, FormPages } from '@publicodes/forms'
 import Engine from 'publicodes'
 
@@ -86,8 +87,8 @@ const getRuleBranchKey = (ruleName: string): string => {
 }
 
 const compareRuleNames = (a: string, b: string, parsedRules: ParsedRules, initialIndexes: Map<string, number>) => {
-  const aRoot = getRuleCategoryKey(a)
-  const bRoot = getRuleCategoryKey(b)
+  const aRoot = removeDiacritics(getRuleCategoryKey(a))
+  const bRoot = removeDiacritics(getRuleCategoryKey(b))
   const categoryOrder = ['DT', 'transport', 'alimentation', 'divers', 'logement', 'numerique', 'bureaux']
   const aCategoryIndex = categoryOrder.indexOf(aRoot)
   const bCategoryIndex = categoryOrder.indexOf(bRoot)

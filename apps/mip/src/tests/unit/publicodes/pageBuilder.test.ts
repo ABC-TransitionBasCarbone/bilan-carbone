@@ -77,6 +77,17 @@ describe('buildPageBuilder', () => {
     ])
   })
 
+  it('sorts accented category names according to the survey category order', () => {
+    const engine = createMockEngine({
+      'bureaux . énergie': { rawNode: { question: 'Énergie' } },
+      'numérique . appareils': { rawNode: { question: 'Appareils' } },
+    })
+
+    const pages = buildPageBuilder(engine)(['bureaux . énergie', 'numérique . appareils'])
+
+    expect(pages.map((page) => page.elements[0])).toEqual(['numérique . appareils', 'bureaux . énergie'])
+  })
+
   it('detects choice questions from the raw node and patches the input rendering', () => {
     const engine = createMockEngine({
       'transport . voiture': {
