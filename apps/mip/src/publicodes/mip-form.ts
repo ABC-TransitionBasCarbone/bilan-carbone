@@ -1,3 +1,4 @@
+import { SURVEY_CATEGORY_KEYS } from '@/constants/survey'
 import {
   getRuleCategoryKey,
   getRuleNameParts,
@@ -89,9 +90,8 @@ const getRuleBranchKey = (ruleName: string): string => {
 const compareRuleNames = (a: string, b: string, parsedRules: ParsedRules, initialIndexes: Map<string, number>) => {
   const aRoot = removeDiacritics(getRuleCategoryKey(a))
   const bRoot = removeDiacritics(getRuleCategoryKey(b))
-  const categoryOrder = ['DT', 'transport', 'alimentation', 'divers', 'logement', 'numerique', 'bureaux']
-  const aCategoryIndex = categoryOrder.indexOf(aRoot)
-  const bCategoryIndex = categoryOrder.indexOf(bRoot)
+  const aCategoryIndex = SURVEY_CATEGORY_KEYS.indexOf(aRoot as (typeof SURVEY_CATEGORY_KEYS)[number])
+  const bCategoryIndex = SURVEY_CATEGORY_KEYS.indexOf(bRoot as (typeof SURVEY_CATEGORY_KEYS)[number])
   const categoryDiff = (aCategoryIndex === -1 ? MAX : aCategoryIndex) - (bCategoryIndex === -1 ? MAX : bCategoryIndex)
 
   if (categoryDiff !== 0) {
