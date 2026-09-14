@@ -1161,10 +1161,13 @@ const hasAccessToStudy = (user: UserSession, study: AsyncReturnType<typeof getSt
 }
 
 const NEWHasAccessToStudy = async (user: UserSession, study: MinimalStudyForRights) => {
-  return (
-    (await NEWGetAccountRoleOnStudy(user, study.id)) ||
-    study.contributors.some((contributor) => contributor.accountId === user.accountId)
-  )
+  const accountsRoleOnStudy = await NEWGetAccountRoleOnStudy(user, study.id)
+
+  if (!accountsRoleOnStudy.success) {
+    return false
+  }
+
+  return accountsRoleOnStudy.data || study.contributors.some((contributor) => contributor.accountId === user.accountId)
 }
 
 export const findStudiesWithSites = async (siteIds: string[]) =>
