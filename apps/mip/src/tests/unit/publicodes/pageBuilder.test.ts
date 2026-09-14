@@ -1,9 +1,4 @@
-import {
-  buildPageBuilder,
-  getQuestionType,
-  MipQuestionType,
-  patchFormElement,
-} from '@abc-transitionbascarbone/publicodes/form/utils'
+import { buildPageBuilder, getQuestionType, MipQuestionType, patchFormElement } from '@/publicodes/mip-form'
 import { describe, expect, it } from '@jest/globals'
 import Engine from 'publicodes'
 
