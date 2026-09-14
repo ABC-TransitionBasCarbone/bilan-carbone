@@ -11,7 +11,7 @@ export default getRequestConfig(async () => {
   const localesForEnv = getLocalesForEnv(environment)
   const locale = await getLocale()
 
-  const localForEnv = localesForEnv.includes(locale) ? locale : localesForEnv[0]
+  const localeForEnv = localesForEnv.includes(locale) ? locale : localesForEnv[0]
 
-  return getMessages(localForEnv, environment)
+  return getMessages(localeForEnv, environment)
 })

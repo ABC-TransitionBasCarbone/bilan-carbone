@@ -1,10 +1,14 @@
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { Locale } from '@abc-transitionbascarbone/i18n/config'
 import { getToken } from 'next-auth/jwt'
 import { NextRequest, NextResponse } from 'next/server'
+import { getLocalesForEnv } from './services/permissions/environment'
 
 const COUNT_ROUTE = '/count'
 const TILT_ROUTE = '/tilt'
 const CLICKSON_ROUTE = '/clickson'
+const ENVIRONMENT_COOKIE = 'ENVIRONMENT'
+const LOCALE_COOKIE = 'NEXT_LOCALE'
 const ENV_ROUTES = [COUNT_ROUTE, TILT_ROUTE, CLICKSON_ROUTE]
 const publicRoutes = ['/login', '/reset-password', '/activation', '/preview', ...ENV_ROUTES]
 const assetsRoutes = ['/_next', '/img']
@@ -17,6 +21,18 @@ const logos = ['https://base-empreinte.ademe.fr', 'https://www.legifrance.gouv.f
 
 const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
 
+const normalizeLocaleCookie = (req: NextRequest, response: NextResponse) => {
+  const environment = req.cookies.get(ENVIRONMENT_COOKIE)?.value as Environment | undefined
+  const locale = req.cookies.get(LOCALE_COOKIE)?.value
+  const locales = getLocalesForEnv(environment ?? Environment.BC)
+
+  if (!locales.includes(locale as Locale)) {
+    response.cookies.set(LOCALE_COOKIE, locales[0])
+  }
+
+  return response
+}
+
 export async function proxy(req: NextRequest) {
   const host = req.headers.get('host')?.toLowerCase()
   const redirectHosts = [
@@ -26,12 +42,12 @@ export async function proxy(req: NextRequest) {
     'www.bilancarbone-app.com',
   ]
   if (host && redirectHosts.includes(host)) {
-    return NextResponse.redirect('https://bilancarbone-app.com/clickson', 308)
+    return normalizeLocaleCookie(req, NextResponse.redirect('https://bilancarbone-app.com/clickson', 308))
   }
 
   if (ENV_ROUTES.includes(req.nextUrl.pathname)) {
     const countLoginUrl = new URL(`${req.nextUrl}/login`, req.url)
-    return NextResponse.redirect(countLoginUrl)
+    return normalizeLocaleCookie(req, NextResponse.redirect(countLoginUrl))
   }
 
   if (![...publicRoutes, ...assetsRoutes].find((route) => req.nextUrl.pathname.startsWith(route))) {
@@ -55,7 +71,7 @@ export async function proxy(req: NextRequest) {
       }
 
       const loginUrl = new URL(`${baseUrl}/login`, req.url)
-      return NextResponse.redirect(loginUrl)
+      return normalizeLocaleCookie(req, NextResponse.redirect(loginUrl))
     }
   }
 
@@ -86,7 +102,7 @@ export async function proxy(req: NextRequest) {
   response.headers.set('X-Content-Type-Options', 'nosniff')
   response.headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload')
 
-  return response
+  return normalizeLocaleCookie(req, response)
 }
 
 export const config = {
