@@ -3,7 +3,7 @@ import { NextRequest } from 'next/server'
 
 const schoolApi = process.env.SCHOOL_API_URL!
 
-export async function GET(_req: NextRequest, { params }: { params: Promise<{ postalCodeOrName: string }> }) {
+export const GET = async (_req: NextRequest, { params }: { params: Promise<{ postalCodeOrName: string }> }) => {
   const { postalCodeOrName } = await params
   const input = postalCodeOrName?.trim()
 
