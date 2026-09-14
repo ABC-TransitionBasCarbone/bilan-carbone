@@ -3,7 +3,7 @@ import { isFeatureTransitionPlanActive } from '@/services/permissions/transition
 import { redirect } from 'next/navigation'
 import React from 'react'
 import { UserSessionProps } from './withAuth'
-import { StudyProps } from './withStudy'
+import { StudyProps } from './withStudyDetails'
 
 export interface TransitionPlanProps {
   canEdit: boolean
