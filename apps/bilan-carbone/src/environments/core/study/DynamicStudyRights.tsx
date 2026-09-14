@@ -1,7 +1,7 @@
 'use client'
 
 import { OrganizationWithSites } from '@/db/account'
-import type { FullStudy } from '@/db/study'
+import type { FullStudy, MinimalStudyForRights, StudySiteWithName } from '@/db/study'
 import StudyRights from '@/environments/base/study/StudyRights'
 import StudyRightsClickson from '@/environments/clickson/study/StudyRightsClickson'
 import StudyRightsCut from '@/environments/cut/study/StudyRightsCut'
@@ -13,22 +13,26 @@ import DynamicComponent from '../utils/DynamicComponent'
 
 interface Props {
   user: UserSession
-  study: FullStudy
+  study: MinimalStudyForRights
+  fullStudy: FullStudy
   editionDisabled: boolean
   userRoleOnStudy: StudyRole
   emissionFactorSources: EmissionFactorImportVersion[]
   caUnit: SiteCAUnit
   organizationVersion: OrganizationWithSites | null
+  studySites: StudySiteWithName
 }
 
 const DynamicStudyRights = ({
   user,
   study,
+  fullStudy,
   editionDisabled,
   userRoleOnStudy,
   emissionFactorSources,
   caUnit,
   organizationVersion,
+  studySites,
 }: Props) => {
   return (
     <DynamicComponent
@@ -40,11 +44,12 @@ const DynamicStudyRights = ({
             user={user}
             organizationVersion={organizationVersion}
             userRoleOnStudy={userRoleOnStudy}
+            studySites={studySites}
           />
         ) : (
           <StudyRights
             user={user}
-            study={study}
+            study={fullStudy}
             editionDisabled={editionDisabled}
             userRoleOnStudy={userRoleOnStudy}
             emissionFactorSources={emissionFactorSources}
@@ -52,10 +57,10 @@ const DynamicStudyRights = ({
         )
       }
       environmentComponents={{
-        [Environment.CUT]: <StudyRightsCut study={study} />,
+        [Environment.CUT]: <StudyRightsCut study={fullStudy} />,
         [Environment.CLICKSON]: (
           <StudyRightsClickson
-            study={study}
+            study={fullStudy}
             editionDisabled={editionDisabled}
             emissionFactorSources={emissionFactorSources}
             user={user}

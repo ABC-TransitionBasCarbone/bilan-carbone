@@ -1255,13 +1255,16 @@ export const getMinimalStudyForRights = (studyId: string) => {
       level: true,
       isPublic: true,
       simplified: true,
+      name: true,
+      startDate: true,
       organizationVersion: {
         select: {
           id: true,
           parentId: true,
           environment: true,
           activatedLicence: true,
-          parent: { select: { activatedLicence: true } },
+          parent: { select: { activatedLicence: true, id: true } },
+          organization: { select: { name: true } },
         },
       },
       allowedUsers: {
@@ -1279,4 +1282,27 @@ export const getMinimalStudyForRights = (studyId: string) => {
     },
   })
 }
-export type MinimalStudyForRights = Awaited<ReturnType<typeof getMinimalStudyForRights>>
+export type MinimalStudyForRights = Exclude<Awaited<ReturnType<typeof getMinimalStudyForRights>>, null>
+
+export const getStudySitesWithName = (studyId: string) =>
+  prismaClient.studySite.findMany({
+    where: { studyId },
+    include: { site: { select: { name: true, id: true, postalCode: true, city: true, establishmentYear: true } } },
+  })
+export type StudySiteWithName = Exclude<Awaited<ReturnType<typeof getStudySitesWithName>>, null>
+
+export type StudyWithReadRights = {
+  id: string
+  name?: string
+  organizationVersion: {
+    id: string
+    parentId: string | null
+    environment: Environment
+    organization: { name: string }
+  }
+  isPublic: boolean
+  allowedUsers: FullStudy['allowedUsers']
+  contributors: { accountId: string }[]
+  level: Level
+  simplified: boolean
+}

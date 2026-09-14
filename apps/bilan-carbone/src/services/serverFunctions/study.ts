@@ -60,8 +60,10 @@ import {
   getStudyCommentsWithStudyIdAndSubPost,
   getStudyNameById,
   getStudySites,
+  getStudySitesWithName,
   getStudyTemplate,
   getUsersOnStudy,
+  MinimalStudyForRights,
   removeSourceToStudy,
   updateEmissionSourceEmissionFactor,
   updateEngagementAction,
@@ -1154,6 +1156,13 @@ const hasAccessToStudy = (user: UserSession, study: AsyncReturnType<typeof getSt
   const studyObject = { ...study, allowedUsers: allowedUsers }
   return (
     getAccountRoleOnStudy(user, studyObject as FullStudy) ||
+    study.contributors.some((contributor) => contributor.accountId === user.accountId)
+  )
+}
+
+const NEWHasAccessToStudy = async (user: UserSession, study: MinimalStudyForRights) => {
+  return (
+    (await NEWGetAccountRoleOnStudy(user, study.id)) ||
     study.contributors.some((contributor) => contributor.accountId === user.accountId)
   )
 }
@@ -2614,4 +2623,20 @@ export const NEWGetAccountRoleOnStudy = async (user: UserSession, studyId: strin
     }
 
     return null
+  })
+
+export const getStudySitesList = async (studyId: string) =>
+  withServerResponse('getStudySitesList', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user || !session.user.organizationVersionId) {
+      return null
+    }
+
+    const studySites = await getStudySitesWithName(studyId)
+    const studyRights = await getMinimalStudyForRights(studyId)
+    if (!studyRights || !(await NEWHasAccessToStudy(session.user, studyRights))) {
+      return null
+    }
+
+    return studySites
   })

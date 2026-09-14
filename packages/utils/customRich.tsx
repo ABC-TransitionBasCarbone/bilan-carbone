@@ -3,7 +3,6 @@ import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { Translations } from '@abc-transitionbascarbone/lib'
 import Link from 'next/link'
 import { ReactNode } from 'react'
-import classNames from 'classnames'
 
 type CustomRichParams = {
   [key: string]: ((children: ReactNode) => ReactNode) | ReactNode | string | number | undefined

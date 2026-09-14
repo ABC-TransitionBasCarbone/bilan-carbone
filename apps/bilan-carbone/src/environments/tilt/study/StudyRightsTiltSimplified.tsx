@@ -4,7 +4,7 @@ import { FormAutocomplete } from '@/components/form/Autocomplete'
 import StudySites from '@/components/study/perimeter/StudySites'
 import SelectStudySite from '@/components/study/site/SelectStudySite'
 import { OrganizationWithSites } from '@/db/account'
-import type { FullStudy } from '@/db/study'
+import type { MinimalStudyForRights, StudySiteWithName } from '@/db/study'
 import { getTiltEngine } from '@/environments/tilt/publicodes/tilt-engine'
 import {
   mappedTiltSituationToCustomDataFields,
@@ -40,14 +40,22 @@ import { useForm, useWatch } from 'react-hook-form'
 import styles from './StudyRightsTiltSimplified.module.css'
 
 interface Props {
-  study: FullStudy
+  study: MinimalStudyForRights
   caUnit: SiteCAUnit
   user: UserSession
   userRoleOnStudy: StudyRole
   organizationVersion: OrganizationWithSites | null
+  studySites: StudySiteWithName
 }
 
-const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organizationVersion }: Props) => {
+const StudyRightsTiltSimplified = ({
+  study,
+  caUnit,
+  user,
+  userRoleOnStudy,
+  organizationVersion,
+  studySites,
+}: Props) => {
   const router = useRouter()
   const t = useTranslations('study.new')
   const tRights = useTranslations('study.rights')
@@ -60,7 +68,7 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
   const [siteData, setSiteData] = useState<TiltCustomDataFields | undefined>()
   const [loading, setLoading] = useState(true)
 
-  const studySite = useMemo(() => study.sites.sort((a, b) => sortAlphabetically(a.id, b.id))[0], [study.sites])
+  const studySite = useMemo(() => studySites.sort((a, b) => sortAlphabetically(a.id, b.id))[0], [studySites])
 
   const form = useForm<ChangeStudySiteTiltSimplifiedCommand>({
     resolver: zodResolver(ChangeStudySiteTiltSimplifiedValidation),
@@ -177,7 +185,7 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
     <>
       <Block
         title={tRights('general')}
-        rightComponent={<SelectStudySite sites={study.sites} defaultValue="all" siteSelectionDisabled />}
+        rightComponent={<SelectStudySite sites={studySites} defaultValue="all" siteSelectionDisabled />}
       >
         {loading ? (
           <CircularProgress variant="indeterminate" color="primary" size={100} className="flex mt2" />
@@ -204,6 +212,7 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
               {!!organizationVersion && (
                 <StudySites
                   study={study}
+                  studySites={studySites}
                   caUnit={caUnit}
                   user={user}
                   userRoleOnStudy={userRoleOnStudy}
