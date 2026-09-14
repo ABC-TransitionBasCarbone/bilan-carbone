@@ -136,7 +136,7 @@ const StudyPostsPageContainer = ({ post, currentSubPost, study, userRole, user }
 
       {glossary && (
         <GlossaryModal glossary={glossary} label="post-glossary" t={tPost} onClose={() => setGlossary('')}>
-          {glossaryDescription}
+          <p>{glossaryDescription}</p>
         </GlossaryModal>
       )}
     </>

@@ -80,7 +80,7 @@ const StudyContributorPage = ({ study, userRole }: Props) => {
         )}
         {glossary && (
           <GlossaryModal glossary={glossary} label="post-glossary" t={tPost} onClose={() => setGlossary('')}>
-            {tPost(`glossaryDescription.${glossary}`)}
+            <p>{tPost(`glossaryDescription.${glossary}`)}</p>
           </GlossaryModal>
         )}
       </Block>
