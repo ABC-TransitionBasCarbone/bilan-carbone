@@ -151,7 +151,7 @@
   },
   "role": {
     "DEFAULT": "Collaborateur·rice",
-    "ADMIN_description": "Un administrateur·rice possède tous les droits sur le compte de l'organisation ainsi que sur l'ensemble des études pour son organisation (qu'elles soient publiques ou privées).",
+    "ADMIN_description": "Un administrateur·rice possède tous les droits sur le compte de l'organisation ainsi que sur l'ensemble des études pour son organisation (qu'elles soient partagées à l'équipe ou confidentielles).",
     "DEFAULT_description": "Un collaborateur·rice peut modifier des études. Il n'a pas accès aux paramètres de l'organisation."
   },
   "login": {
