@@ -77,6 +77,57 @@ describe('buildPageBuilder', () => {
     ])
   })
 
+  it('uses the survey order for dependent car questions without model metadata', () => {
+    const engine = createMockEngine({
+      'DT . voiture . motorisation': { rawNode: { question: 'Motorisation' } },
+      'DT . voiture . gabarit': { rawNode: { question: 'Gabarit' } },
+      'DT . voiture . thermique . consommation aux 100': {
+        rawNode: { question: 'Consommation' },
+      },
+      'DT . voiture . thermique . carburant': { rawNode: { question: 'Carburant' } },
+      'DT . voiture . voyageurs': { rawNode: { question: 'Voyageurs' } },
+      'DT . voiture . utilisateur': { rawNode: { question: 'Utilisateur' } },
+      'DT . voiture . km': { rawNode: { question: 'Distance' } },
+      'DT . train . heure': { rawNode: { question: 'Train' } },
+    })
+
+    const pages = buildPageBuilder(engine)([
+      'DT . voiture . motorisation',
+      'DT . voiture . gabarit',
+      'DT . voiture . thermique . consommation aux 100',
+      'DT . voiture . thermique . carburant',
+      'DT . voiture . voyageurs',
+      'DT . voiture . utilisateur',
+      'DT . voiture . km',
+      'DT . train . heure',
+    ])
+
+    expect(pages.map((page) => page.elements[0])).toEqual([
+      'DT . train . heure',
+      'DT . voiture . km',
+      'DT . voiture . utilisateur',
+      'DT . voiture . thermique . consommation aux 100',
+      'DT . voiture . gabarit',
+      'DT . voiture . motorisation',
+      'DT . voiture . thermique . carburant',
+      'DT . voiture . voyageurs',
+    ])
+  })
+
+  it('removes the fuel question when the car is electric', () => {
+    const engine = createMockEngine(
+      {
+        'DT . voiture . motorisation': { rawNode: { question: 'Motorisation' } },
+        'DT . voiture . thermique . carburant': { rawNode: { question: 'Carburant' } },
+      },
+      { 'DT . voiture . motorisation': 'électrique' },
+    )
+
+    const pages = buildPageBuilder(engine)(['DT . voiture . motorisation', 'DT . voiture . thermique . carburant'])
+
+    expect(pages.map((page) => page.elements[0])).toEqual(['DT . voiture . motorisation'])
+  })
+
   it('sorts accented category names according to the survey category order', () => {
     const engine = createMockEngine({
       'bureaux . énergie': { rawNode: { question: 'Énergie' } },
