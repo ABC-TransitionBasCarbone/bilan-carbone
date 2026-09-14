@@ -459,7 +459,7 @@
         "type": "Niveau de maturité du Bilan Carbone®",
         "typeDescription": "La nouvelle version de la méthode Bilan Carbone® introduit trois niveaux de maturité pour les Bilan Carbone® des organisations. Pour plus de détails, nous vous invitons à consulter <link>cette page</link>.",
         "visibility": "Visibilité de l'étude",
-        "visibilityDescription": "Choisissez si votre étude doit être partagé à votre équipe, c'est à dire accessible à tous vos collègues renseigné sur la page Mon organisation > Mon équipe, ou confidentielle, c'est à dire uniquement accessible aux personnes que vous rajouterez dans la page cadrage de votre étude. Les administrateurs de votre organisation ont accès à toutes les études qu'elles soient partagées à l'équipe ou confidentielles.",
+        "visibilityDescription": "Choisissez si votre étude doit être partagé à votre équipe, c'est à dire accessible à tous vos collègues renseigné sur la page Mon organisation > Mon équipe, ou confidentielle, c'est à dire uniquement accessible aux personnes que vous rajouterez dans la page cadrage de votre étude. Les administrateurs de votre organisation ont accès à toutes les études qu'elles soient partagées à votre équipe ou confidentielles.",
         "exports": "Exports",
         "exportsDescription": "Les résultats sont par défaut restitués au format Bilan Carbone®, mais il est possible d'obtenir les résultats sous les formats demandés par plusieurs autres méthodes de comptabilité carbone, comme le Bilan GES règlementaire, qui est la méthode règlementaire française.",
         "control": "Mode de contrôle des exports",
@@ -2019,7 +2019,7 @@
   "role": {
     "GESTIONNAIRE": "Gestionnaire",
     "DEFAULT": "Membre",
-    "ADMIN_description_CR": "Un·e administrateur·rice possède tous les droits sur le compte et les études (qu'elles soient partagées à l'équipe ou confidentielles) de l'organisation ou de ses clients. Il est impossible de changer le rôle d'un·e administrateur·rice sur une étude de son organisation ou d'un de ses clients.",
+    "ADMIN_description_CR": "Un·e administrateur·rice possède tous les droits sur le compte et les études (qu'elles soient partagées à votre équipe ou confidentielles) de l'organisation ou de ses clients. Il est impossible de changer le rôle d'un·e administrateur·rice sur une étude de son organisation ou d'un de ses clients.",
     "GESTIONNAIRE_description": "Un gestionnaire possède tous les droits sur le compte de l'organisation, il n'a aucun droit spécifique sur les études. Il est donc par défaut lecteur pour tous les Bilans Carbone® partagés avec l'équipe de son organisation.",
     "GESTIONNAIRE_description_CR": "Un gestionnaire possède tous les droits sur le compte de l'organisation, il n'a aucun droit spécifique sur les clients et les études. Il est donc par défaut lecteur pour tous les Bilans Carbone® partagés avec l'équipe de son organisation ou de ses clients.",
     "COLLABORATOR_description_CR": "Un·e collaborateur·rice est une personne formée à la méthode Bilan Carbone®. Il n'a aucun droit sur le compte de l'organisation mais peut créer des clients et des études pour son organisation et ses clients. Il est par défaut éditeur·rice sur tous les Bilans Carbone® publics de son organisation ou de ses clients.",
