@@ -207,6 +207,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
           'équipements et immobilisations . total sans reconditionné . autres écrans . quantité',
         ],
       ],
+      'EquipementsEtImmobilisations.description'
     ),
     input('équipements et immobilisations . pondération . reconditionné'),
   ],

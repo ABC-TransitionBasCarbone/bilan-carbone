@@ -63,7 +63,7 @@
         "question": "Combien des équipements informatiques suivants possédez-vous ou louez-vous à l'année ?",
         "typeEquipement": "Type d'équipement",
         "nombreEquipement": "Quantité",
-        "description": "Tous les équipements informatiques datant de plus de 3 ans sont considérés comme totalement amortis et ne sont donc pas à prendre en compte ici. <br></br> Que les équipements soient possédés ou loués ne fait aucune différence, dans la mesure ou ces équipements sont généralement loués à l'année. Si vous avez recours à des locations ponctuelles, nous vous invitons à ne pas en tenir compte ici."
+        "description": "Tous les équipements informatiques datant de plus de 3 ans sont considérés comme totalement amortis et ne sont donc pas à prendre en compte ici. Que les équipements soient possédés ou loués ne fait aucune différence, dans la mesure ou ces équipements sont généralement loués à l'année. Si vous avez recours à des locations ponctuelles, nous vous invitons à ne pas en tenir compte ici. <br></br><br></br>Les équipements informatiques utilisés par vos bénévoles dans le cadre de leur engagement sont également à prendre en compte <b>si ceux-ci sont indispensables aux missions de l'association.</b>"
       },
       "Evenement": {
         "Deplacements": "Combien de kilomètres (au total, en comptant les allers et les retours) ont étés parcourus pour accéder à l'événement via les modes de transports suivants ?",
