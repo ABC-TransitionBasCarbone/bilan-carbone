@@ -1,7 +1,7 @@
 'use client'
 
 import { MultiSelect } from '@/components/base/MultiSelect'
-import type { MinimalStudyForRights, StudySiteWithName } from '@/db/study'
+import type { MinimalStudyForRights, StudySiteWithNameList } from '@/db/study'
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
 import { SiteCAUnit } from '@abc-transitionbascarbone/db-common/enums'
@@ -15,10 +15,10 @@ import styles from './DuplicateSiteModal.module.css'
 interface Props {
   open: boolean
   onClose: () => void
-  sourceSite: StudySiteWithName[number]
+  sourceSite: StudySiteWithNameList[number]
   study: MinimalStudyForRights
   canEditOrganization: boolean
-  studySites: StudySiteWithName
+  studySites: StudySiteWithNameList
   caUnit: SiteCAUnit
   onDuplicate: (data: DuplicateFormData) => void
 }

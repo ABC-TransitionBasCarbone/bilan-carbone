@@ -122,7 +122,7 @@ const fullStudyInclude = {
         select: {
           id: true,
           site: {
-            select: { id: true, name: true },
+            select: { name: true, id: true, postalCode: true, city: true, establishmentYear: true },
           },
         },
       },
@@ -1287,9 +1287,29 @@ export type MinimalStudyForRights = Exclude<Awaited<ReturnType<typeof getMinimal
 export const getStudySitesWithName = (studyId: string) =>
   prismaClient.studySite.findMany({
     where: { studyId },
-    include: { site: { select: { name: true, id: true, postalCode: true, city: true, establishmentYear: true } } },
+    select: {
+      id: true,
+      etp: true,
+      ca: true,
+      volunteerNumber: true,
+      beneficiaryNumber: true,
+      site: { select: { name: true, id: true, postalCode: true, city: true, establishmentYear: true } },
+    },
   })
-export type StudySiteWithName = Exclude<Awaited<ReturnType<typeof getStudySitesWithName>>, null>
+export type StudySiteWithNameList = {
+  id: string
+  etp: number
+  ca: number
+  volunteerNumber: number | null
+  beneficiaryNumber: number | null
+  site: {
+    name: string
+    id: string
+    postalCode: string | null
+    city: string | null
+    establishmentYear: string | null
+  }
+}[]
 
 export type StudyWithReadRights = {
   id: string
