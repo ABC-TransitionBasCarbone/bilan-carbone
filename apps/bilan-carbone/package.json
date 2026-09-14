@@ -92,7 +92,7 @@
     "next-auth": "^4.24.15",
     "next-intl": "^4.14.1",
     "node-xlsx": "^0.24.0",
-    "nodemailer": "^9.0.6",
+    "nodemailer": "^9.1.1",
     "postcss": "^8.5.26",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-import": "^17.0.0",
