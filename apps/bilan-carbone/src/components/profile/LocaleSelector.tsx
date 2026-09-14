@@ -1,7 +1,7 @@
 'use client'
 
 import { getLocale, switchLocale } from '@/i18n/locale'
-import { localeForEnv } from '@/services/permissions/environment'
+import { getLocalesForEnv } from '@/services/permissions/environment'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { LocaleType, defaultLocale } from '@abc-transitionbascarbone/i18n/config'
 import { InputLabel, MenuItem, Select } from '@mui/material'
@@ -18,7 +18,7 @@ const LocaleSelector = () => {
     if (!environment) {
       return []
     }
-    return localeForEnv(environment)
+    return getLocalesForEnv(environment)
   }, [environment])
 
   useEffect(() => {

@@ -10,13 +10,13 @@ export const isTilt = (environment: Environment) => environment === TILT
 export const isCut = (environment: Environment) => environment === CUT
 export const isClickson = (environment: Environment) => environment === CLICKSON
 
-export const localeForEnv = (environment: Environment) => {
+export const getLocalesForEnv = (environment: Environment) => {
   switch (environment) {
     case Environment.TILT:
     case Environment.CUT:
       return [Locale.FR]
     case Environment.CLICKSON:
-      return Object.keys(Locale)
+      return Object.values(Locale)
     default:
       return [Locale.EN, Locale.FR]
   }
