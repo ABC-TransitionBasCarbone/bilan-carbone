@@ -27,7 +27,7 @@ const normalizeLocaleCookie = (req: NextRequest, response: NextResponse) => {
   const locales = getLocalesForEnv(environment ?? Environment.BC)
 
   if (!locales.includes(locale as Locale)) {
-    response.cookies.set(LOCALE_COOKIE, locales[0])
+    response.cookies.set(LOCALE_COOKIE, Locale.FR)
   }
 
   return response
