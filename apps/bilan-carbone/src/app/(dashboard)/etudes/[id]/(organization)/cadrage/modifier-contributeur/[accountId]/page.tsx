@@ -2,8 +2,9 @@ import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import withStudyDetails, { StudyProps } from '@/components/hoc/withStudyDetails'
 import EditStudyContributorPage from '@/components/pages/EditStudyContributor'
 import { getAccountById } from '@/db/account'
+import { NEWGetAccountRoleOnStudy } from '@/services/serverFunctions/study'
 import { AccountWithUser } from '@/types/account.types'
-import { hasEditionRights, NEWGetAccountRoleOnStudy } from '@/utils/study'
+import { hasEditionRights } from '@/utils/study'
 import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 import { redirect } from 'next/navigation'
 
@@ -15,7 +16,11 @@ interface Props {
 
 const EditStudyContributor = async ({ study, user, params, studyId }: StudyProps & UserSessionProps & Props) => {
   const userRoleOnStudy = await NEWGetAccountRoleOnStudy(user, studyId)
-  if (!hasEditionRights(userRoleOnStudy)) {
+  if (!userRoleOnStudy.success) {
+    return <NotFound />
+  }
+
+  if (!hasEditionRights(userRoleOnStudy.data)) {
     redirect(`/etudes/${studyId}/cadrage`)
   }
 
