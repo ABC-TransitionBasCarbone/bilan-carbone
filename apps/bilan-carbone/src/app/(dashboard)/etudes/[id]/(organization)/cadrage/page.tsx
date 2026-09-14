@@ -5,7 +5,7 @@ import StudyRightsPage from '@/components/pages/StudyRights'
 export const revalidate = 0
 
 const StudyRights = async (props: StudyProps & UserSessionProps) => {
-  return <StudyRightsPage study={props.study} user={props.user} />
+  return <StudyRightsPage study={props.study} user={props.user} minimalStudy={props.minimalStudy} />
 }
 
 export default withAuth(withStudyDetails(StudyRights))

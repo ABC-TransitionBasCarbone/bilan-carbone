@@ -1,6 +1,5 @@
 'use client'
 
-import type { FullStudy } from '@/db/study'
 import { hasAccessToStudySiteAddAndSelection } from '@/services/permissions/environment'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { FormControl, InputLabel, MenuItem, Select, Tooltip } from '@mui/material'
@@ -9,7 +8,7 @@ import styles from './SelectStudySite.module.css'
 import { getSelectStudySiteValue } from './selectStudySite.utils'
 
 interface Props {
-  sites: FullStudy['sites']
+  sites: { site: { id: string; name: string } }[]
   defaultValue?: string
   setSite?: (site: string) => void
   withLabel?: boolean
