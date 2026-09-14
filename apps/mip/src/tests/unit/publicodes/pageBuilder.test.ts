@@ -92,6 +92,7 @@ describe('buildPageBuilder', () => {
     })
 
     const pages = buildPageBuilder(engine)([
+      'DT . train . heure',
       'DT . voiture . motorisation',
       'DT . voiture . gabarit',
       'DT . voiture . thermique . consommation aux 100',
@@ -99,7 +100,6 @@ describe('buildPageBuilder', () => {
       'DT . voiture . voyageurs',
       'DT . voiture . utilisateur',
       'DT . voiture . km',
-      'DT . train . heure',
     ])
 
     expect(pages.map((page) => page.elements[0])).toEqual([
