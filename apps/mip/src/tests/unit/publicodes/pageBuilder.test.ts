@@ -54,6 +54,29 @@ describe('buildPageBuilder', () => {
     expect(pages.some((page) => page.elements.includes('bureaux . énergie . question rhétorique'))).toBe(true)
   })
 
+  it('keeps questions from the same category branch together', () => {
+    const engine = createMockEngine({
+      'DT . train . heure': { rawNode: { question: 'Train' } },
+      'DT . voiture . voyageurs': { rawNode: { question: 'Voyageurs' } },
+      'DT . train . vitesse': { rawNode: { question: 'Vitesse' } },
+      'DT . voiture . carburant': { rawNode: { question: 'Carburant' } },
+    })
+
+    const pages = buildPageBuilder(engine)([
+      'DT . train . heure',
+      'DT . voiture . voyageurs',
+      'DT . train . vitesse',
+      'DT . voiture . carburant',
+    ])
+
+    expect(pages.map((page) => page.elements[0])).toEqual([
+      'DT . train . heure',
+      'DT . train . vitesse',
+      'DT . voiture . voyageurs',
+      'DT . voiture . carburant',
+    ])
+  })
+
   it('detects choice questions from the raw node and patches the input rendering', () => {
     const engine = createMockEngine({
       'transport . voiture': {
