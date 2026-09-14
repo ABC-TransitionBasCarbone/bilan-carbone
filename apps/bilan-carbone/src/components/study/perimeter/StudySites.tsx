@@ -1,7 +1,7 @@
 'use client'
 
 import { OrganizationWithSites } from '@/db/account'
-import type { MinimalStudyForRights, StudySiteWithName } from '@/db/study'
+import type { MinimalStudyForRights, StudySiteWithNameList } from '@/db/study'
 import Sites from '@/environments/base/organization/Sites'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import {
@@ -40,7 +40,7 @@ const DuplicateSiteModal = dynamic(() => import('./DuplicateSiteModal'), { ssr: 
 
 interface Props {
   study: MinimalStudyForRights
-  studySites: StudySiteWithName
+  studySites: StudySiteWithNameList
   organizationVersion: OrganizationWithSites
   userRoleOnStudy: StudyRole
   caUnit: SiteCAUnit
@@ -79,7 +79,7 @@ const StudySites = ({
   const { callServerFunction } = useServerFunction()
 
   const duplicatingSite = useMemo(
-    () => (duplicatingSiteId ? studySites.find((site) => site.id === duplicatingSiteId) : null),
+    () => (duplicatingSiteId ? studySites.find((studySite) => studySite.id === duplicatingSiteId) : null),
     [duplicatingSiteId, studySites],
   )
 

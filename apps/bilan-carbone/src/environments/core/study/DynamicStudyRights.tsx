@@ -1,7 +1,7 @@
 'use client'
 
 import { OrganizationWithSites } from '@/db/account'
-import type { FullStudy, MinimalStudyForRights, StudySiteWithName } from '@/db/study'
+import type { FullStudy, MinimalStudyForRights, StudySiteWithNameList } from '@/db/study'
 import StudyRights from '@/environments/base/study/StudyRights'
 import StudyRightsClickson from '@/environments/clickson/study/StudyRightsClickson'
 import StudyRightsCut from '@/environments/cut/study/StudyRightsCut'
@@ -20,7 +20,7 @@ interface Props {
   emissionFactorSources: EmissionFactorImportVersion[]
   caUnit: SiteCAUnit
   organizationVersion: OrganizationWithSites | null
-  studySites: StudySiteWithName
+  studySites: StudySiteWithNameList
 }
 
 const DynamicStudyRights = ({

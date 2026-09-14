@@ -4,7 +4,7 @@ import { FormAutocomplete } from '@/components/form/Autocomplete'
 import StudySites from '@/components/study/perimeter/StudySites'
 import SelectStudySite from '@/components/study/site/SelectStudySite'
 import { OrganizationWithSites } from '@/db/account'
-import type { MinimalStudyForRights, StudySiteWithName } from '@/db/study'
+import type { MinimalStudyForRights, StudySiteWithNameList } from '@/db/study'
 import { getTiltEngine } from '@/environments/tilt/publicodes/tilt-engine'
 import {
   mappedTiltSituationToCustomDataFields,
@@ -45,7 +45,7 @@ interface Props {
   user: UserSession
   userRoleOnStudy: StudyRole
   organizationVersion: OrganizationWithSites | null
-  studySites: StudySiteWithName
+  studySites: StudySiteWithNameList
 }
 
 const StudyRightsTiltSimplified = ({
