@@ -1,7 +1,7 @@
 'use client'
 
 import { OrganizationWithSites } from '@/db/account'
-import type { MinimalStudyForRights, StudySiteWithNameList } from '@/db/study'
+import type { MinimalStudyForRights } from '@/db/study'
 import Sites from '@/environments/base/organization/Sites'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import {
@@ -14,6 +14,7 @@ import {
   ChangeStudySitesCommandValidation,
   SitesCommand,
 } from '@/services/serverFunctions/study.command'
+import type { StudySiteWithSite } from '@/types/study.types'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
 import { canEditOrganizationVersion, isInOrgaOrParent } from '@/utils/organization'
 import { hasEditionRights } from '@/utils/study'
@@ -40,7 +41,7 @@ const DuplicateSiteModal = dynamic(() => import('./DuplicateSiteModal'), { ssr: 
 
 interface Props {
   study: MinimalStudyForRights
-  studySites: StudySiteWithNameList
+  studySites: StudySiteWithSite[]
   organizationVersion: OrganizationWithSites
   userRoleOnStudy: StudyRole
   caUnit: SiteCAUnit
