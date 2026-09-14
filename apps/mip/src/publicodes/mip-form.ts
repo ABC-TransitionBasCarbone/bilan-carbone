@@ -1,11 +1,13 @@
 import { SURVEY_CATEGORY_KEYS } from '@/constants/survey'
+import { getEvaluatedFormLayout, mosaicLayout } from '@abc-transitionbascarbone/publicodes/form/layouts'
 import {
   getRuleCategoryKey,
   getRuleNameParts,
+  isMosaicLayoutAnswered,
   joinRuleNameParts,
   RULE_NAME_SEPARATOR,
 } from '@abc-transitionbascarbone/publicodes/form/utils'
-import { removeDiacritics } from '@abc-transitionbascarbone/utils/parsing'
+import { normalizeCategoryKey } from '@abc-transitionbascarbone/utils/parsing'
 import { EvaluatedFormElement, FormPageElementProp, FormPages } from '@publicodes/forms'
 import Engine from 'publicodes'
 
@@ -50,11 +52,8 @@ const isInfoQuestion = (rules: ParsedRules, ruleName: string): boolean => {
     return false
   }
 
-  return (
-    /question\s+rhé?torique|question\s+rhetorique|question\s+info/i.test(String(raw.question)) ||
-    ruleName.includes('question rhétorique') ||
-    ruleName.includes('question rhetorique')
-  )
+  const normalized = normalizeCategoryKey(`${ruleName} ${String(raw.question)}`)
+  return normalized.includes('question') && (normalized.includes('rhetorique') || normalized.includes('info'))
 }
 
 const getQuestionText = (rule: ParsedRule | undefined): string | undefined => {
@@ -62,11 +61,28 @@ const getQuestionText = (rule: ParsedRule | undefined): string | undefined => {
   return typeof question === 'string' ? question : undefined
 }
 
-const hasAnswerOrChildAnswer = (situation: SurveySituation, ruleName: string): boolean => {
-  return (
-    Object.prototype.hasOwnProperty.call(situation, ruleName) ||
-    Object.keys(situation).some((key) => key.startsWith(`${ruleName}${RULE_NAME_SEPARATOR}`))
+const hasAnswerOrChildAnswer = (engine: Engine, situation: SurveySituation, ruleName: string): boolean => {
+  if (Object.prototype.hasOwnProperty.call(situation, ruleName)) {
+    return true
+  }
+
+  const rawNode = (engine.getParsedRules() as ParsedRules)[ruleName]?.rawNode
+  const mosaicOptions = rawNode?.mosaique?.options
+
+  if (!Array.isArray(mosaicOptions) || mosaicOptions.length === 0) {
+    return false
+  }
+
+  const layout = getEvaluatedFormLayout(
+    engine,
+    mosaicLayout(
+      ruleName,
+      mosaicOptions.map((option) => `${ruleName}${RULE_NAME_SEPARATOR}${option}`),
+    ),
+    undefined,
   )
+
+  return layout.type === 'mosaic' && isMosaicLayoutAnswered(layout)
 }
 
 const isElectricCar = (situation: SurveySituation): boolean => {
@@ -115,10 +131,10 @@ const getRuleBranchKey = (ruleName: string): string => {
 }
 
 const compareRuleNames = (a: string, b: string, parsedRules: ParsedRules, initialIndexes: Map<string, number>) => {
-  const aRoot = removeDiacritics(getRuleCategoryKey(a))
-  const bRoot = removeDiacritics(getRuleCategoryKey(b))
-  const aCategoryIndex = SURVEY_CATEGORY_KEYS.indexOf(aRoot as (typeof SURVEY_CATEGORY_KEYS)[number])
-  const bCategoryIndex = SURVEY_CATEGORY_KEYS.indexOf(bRoot as (typeof SURVEY_CATEGORY_KEYS)[number])
+  const aRoot = normalizeCategoryKey(getRuleCategoryKey(a))
+  const bRoot = normalizeCategoryKey(getRuleCategoryKey(b))
+  const aCategoryIndex = SURVEY_CATEGORY_KEYS.findIndex((key) => normalizeCategoryKey(key) === aRoot)
+  const bCategoryIndex = SURVEY_CATEGORY_KEYS.findIndex((key) => normalizeCategoryKey(key) === bRoot)
   const categoryDiff = (aCategoryIndex === -1 ? MAX : aCategoryIndex) - (bCategoryIndex === -1 ? MAX : bCategoryIndex)
 
   if (categoryDiff !== 0) {
@@ -180,7 +196,7 @@ export const buildPageBuilder = (engine: Engine) => {
         return false
       }
 
-      return !hasAnswerOrChildAnswer(situation, ruleName)
+      return !hasAnswerOrChildAnswer(engine, situation, ruleName)
     })
 
     const allFields = [...new Set([...fields, ...extraInfoFields])]
