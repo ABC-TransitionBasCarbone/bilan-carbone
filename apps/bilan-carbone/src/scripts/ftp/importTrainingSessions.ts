@@ -7,6 +7,12 @@ type Worksheet = {
   data: unknown[][]
 }
 
+type TrainingSession = Record<string, unknown>
+
+type TrainingSessionWorksheet = Omit<Worksheet, 'data'> & {
+  data: TrainingSession[]
+}
+
 const IMPORT_FIELD_BY_HEADER: Record<string, string> = {
   'Date début session': 'formationStartDate',
   'Date fin session': 'formationEndDate',
@@ -55,11 +61,11 @@ const formatCellValue = (header: string, value: unknown) => {
   return typeof value === 'string' ? value : String(value)
 }
 
-const convertWorksheetRowsToObjects = (worksheet: Worksheet) => {
+const convertWorksheetRowsToObjects = (worksheet: Worksheet): TrainingSessionWorksheet => {
   const [headers, ...rows] = worksheet.data
 
   if (!headers) {
-    return worksheet
+    return { ...worksheet, data: [] }
   }
 
   return {
@@ -79,7 +85,7 @@ const convertWorksheetRowsToObjects = (worksheet: Worksheet) => {
   }
 }
 
-export const getTrainingSessionsFromFTP = async () => {
+export const getTrainingSessionsFromFTP = async (): Promise<TrainingSession[]> => {
   let client: Client | undefined
   try {
     client = await getFTPClient()
