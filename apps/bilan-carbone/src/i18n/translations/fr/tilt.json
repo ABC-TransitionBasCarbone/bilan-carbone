@@ -93,7 +93,7 @@
         "postalCode": "Code postal de l'association",
         "postalCodeGlossary": "CP du siège si plusieurs sites, 5 chiffres",
         "structureInfo": "Type de structure de l'association",
-        "structureInfoGlossary": "Cette information sera utilisée par notre équipe afin d'adapter le questionnaire aux association qui utilisent l'outil."
+        "structureInfoGlossary": "Cette information pourra être utilisée par notre équipe afin d'adapter le questionnaire aux association qui utilisent l'outil."
       }
     },
     "flow": {
@@ -105,7 +105,7 @@
     "firstSimplifiedStudyMessage": "Il est temps de vous lancer ! Nous vous invitons à créer votre première Empreinte.",
     "createFirstSimplifiedStudy": "Créer ma première Empreinte",
     "createSimplified": "Créer une Empreinte",
-    "mySimplifiedStudies": "Mes Empreintes",
+    "mySimplifiedStudies": "Cap Carbone - Mes Empreintes",
     "seeSimplified": "Voir mon Empreinte",
     "cannotCreateStudy": "Pour pouvoir faire des Bilans Carbone® il faut être formé à la méthode ! <link>En savoir plus</link>",
     "canCreateFootPrint": "Vous pouvez cependant faire <link>une empreinte carbone</link> vous permettant d'effectuer une estimation de votre impact",
@@ -122,7 +122,7 @@
         "button": "Faites-nous vos retours ! ✨",
         "title": "Faites-nous vos retours ! ✨"
       },
-      "simplifiedFeedback": "Bravo ! Vous venez de réaliser l'empreinte carbone simplifiée de votre association. C'est une excellente initiation à la comptabilité carbone ! Il vous faut maintenant agir en fonction de ces résultats, car le premier objectif de toute démarche de comptabilité carbone doit-être la réduction des émissions de GES. Gardez en tête que la réduction des émissions ne doit pas forcément passer par la contraction de l'activité, notamment si celle-ci permet d'éviter des émissions chez d'autres acteurs ou présente une utilité sociale importante. Cela est particulièrement important dans le cas d'associations.<br></br><br></br> Nous vous invitons à refaire cette empreinte carbone simplifiée l'année prochaine pour vérifier que vous êtes sur la bonne trajectoire, ou, mieux encore, à établir un véritable Bilan Carbone® afin de gagner en précision dans l'estimation de vos émissions et établir un véritable plan de transition ! Pour commencer, rien de plus simple, il vous suffit de vous former à la méthode, ou de vous inscrire au parcours Tilt Envol du Mouvement Tilt. Plus d'informations <link>ici</link> ! <br></br><br></br> Si vous avez des retours sur l'outil, n'hésitez pas à nous les partager par mail à l'adresse <support>support</support>.",
+      "simplifiedFeedback": "Bravo ! Vous venez de réaliser l'empreinte carbone simplifiée de votre association. C'est une excellente initiation à la comptabilité carbone ! Il vous faut maintenant <b>agir en fonction de ces résultats</b>, car le premier objectif de toute démarche de comptabilité carbone doit-être la <b>réduction des émissions de GES</b>. Gardez en tête que la réduction des émissions ne doit pas forcément passer par la contraction de l'activité, notamment si celle-ci permet d'éviter des émissions chez d'autres acteurs ou présente une utilité sociale importante. Cela est particulièrement important dans le cas d'associations.<br></br><br></br> Nous vous invitons à refaire cette empreinte carbone simplifiée l'année prochaine pour vérifier que vous êtes sur la bonne trajectoire, ou, mieux encore, <b>à établir un véritable Bilan Carbone®</b> afin de gagner en précision dans l'estimation de vos émissions et établir un véritable plan de transition ! Pour commencer, rien de plus simple, il vous suffit de vous former à la méthode, ou de vous inscrire au parcours Tilt Envol du Mouvement Tilt. Plus d'informations <link>ici</link> ! <br></br><br></br> Si vous avez des retours sur l'outil, n'hésitez pas à nous les partager via le questionnaire de retours disponible en haut de cette page, ou par mail à l'adresse <support>support</support>.",
       "resultsWord": "Rapport Bilan Carbone® - Sphère associative"
     },
     "structure": {
@@ -193,10 +193,10 @@
         "AgriculturetiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
         "ActivitesIndustrielles": "Pour obtenir plus d'informations sur la prise en compte des émissions liées aux éventuelles activités industrielles, veuillez vous référez à la <link>méthode associative</link>.",
         "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
-        "DeplacementsDePersonneSimplified": "Pour Gabriel",
-        "AlimentationSimplified": "Pour Gabriel",
-        "ServiceEtNumeriqueSimplified": "Pour Gabriel",
-        "EquipementsEtImmobilisationsSimplified": "Pour Gabriel"
+        "DeplacementsDePersonneSimplified": "Pour collecter les données nécessaires à la complétion de ce poste, nous vous invitons à faire circuler un questionnaire au sein de votre association. En voici <exemplequestionnairetorefacto>un exemple</exemplequestionnairetorefacto>, à implémenter dans l'outil de sondage de votre choix.",
+        "AlimentationSimplified": "Pour collecter les données nécessaires à la complétion de ce poste, nous vous invitons à faire circuler un questionnaire au sein de votre association. En voici <exemplequestionnairetorefacto>un exemple</exemplequestionnairetorefacto>, à implémenter dans l'outil de sondage de votre choix.",
+        "ServiceEtNumeriqueSimplified": "Pour collecter les données nécessaires à la complétion de ce poste, nous vous invitons à faire circuler un questionnaire au sein de votre association. En voici <exemplequestionnairetorefacto>un exemple</exemplequestionnairetorefacto>, à implémenter dans l'outil de sondage de votre choix.",
+        "EquipementsEtImmobilisationsSimplified": "Pour collecter les données nécessaires à la complétion de ce poste, nous vous invitons à faire circuler un questionnaire au sein de votre association. En voici <exemplequestionnairetorefacto>un exemple</exemplequestionnairetorefacto>, à implémenter dans l'outil de sondage de votre choix."
       }
     }
   },
@@ -206,7 +206,7 @@
   },
   "betaBanner": {
     "badge": "À lire avant de démarrer !",
-    "title": "Documents utiles pour le calcul d'une empreinte carbone simplifiée",
+    "title": "Documents utiles pour le calcul d'une empreinte carbone simplifiée via Cap Carbone",
     "description": "Vous êtes sur le point de créer une nouvelle empreinte simplifiée. Avant de commencer votre calcul et pouvoir répondre à l'ensemble des questions, nous vous conseillons de disposer des informations suivantes : <br></br>- La surface de vos locaux, parkings, etc (via plans, bails, etc)<br></br>- Le nombre de climatiseurs présents dans ceux-ci<br></br>- Le type de chauffage utilisé, les factures énergétiques (chauffage, électricité)<br></br>- Le poids de vos déchets pour une semaine classique, ou tout autre intervalle de temps<br></br>- Un inventaire de votre parc informatique<br></br>- Un inventaire de votre parc de véhicules <br></br>- Votre livre de comptes, parfois les dépenses sont également déclarées sur <compteassotilttorefacto>Lecompteasso</compteassotilttorefacto><br></br>- Des factures, bons de commandes, etc, permettant de retracer vos achats<br></br>- Un questionnaire complété par les salariés et bénévoles de votre association détaillant leurs habitudes en termes de déplacements, d'usages numériques et de télétravail. Nous vous proposons <exemplequestionnairetorefacto>quelques pistes</exemplequestionnairetorefacto> pour implémenter ce questionnaire dans l'outil de sondage de votre choix (typeforms, Googleforms, etc)<br></br><br></br>S'il vous manque une de ces informations, pas de panique ! Vous pouvez utiliser une estimation, ou utiliser les valeurs par défaut qui sont parfois proposées dans l'outil !"
   },
   "documentationUrlTilt": {

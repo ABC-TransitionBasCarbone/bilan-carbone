@@ -69,7 +69,7 @@ const StudyRightsTiltSimplified = ({ study, caUnit, user, userRoleOnStudy, organ
     defaultValues: {
       postalCode: siteData?.postalCode ?? '',
       structure: siteData?.structure ?? '',
-      structureOther: ((siteData?.structureOther as string) ?? '').replace(/^'|'$/g, ''),
+      structureOther: !siteData?.structureOther ? '' : siteData.structureOther.replace(/^'|'$/g, ''),
     },
   })
 

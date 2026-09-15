@@ -105,15 +105,19 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('construction . infrastructure . nombre de places'),
   ],
   EnergieSimplified: [
-    group('EnergieBooléen.question', [
-      'énergie . types . électricité présent',
-      'énergie . types . gaz présent',
-      'énergie . types . fioul présent',
-      'énergie . types . bois présent',
-      'énergie . types . granulés présent',
-      'énergie . types . réseaux de chaleur présent',
-      'énergie . types . réseaux de froid présent',
-    ]),
+    group(
+      'EnergieBooléen.question',
+      [
+        'énergie . types . électricité présent',
+        'énergie . types . gaz présent',
+        'énergie . types . fioul présent',
+        'énergie . types . bois présent',
+        'énergie . types . granulés présent',
+        'énergie . types . réseaux de chaleur présent',
+        'énergie . types . réseaux de froid présent',
+      ],
+      'EnergieBooléen.description',
+    ),
     input('énergie . types . chauffage électrique'),
     mosaic('énergie . emissions', [
       'énergie . emissions . électricité . consommation',
@@ -207,6 +211,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
           'équipements et immobilisations . total sans reconditionné . autres écrans . quantité',
         ],
       ],
+      'EquipementsEtImmobilisations.description',
     ),
     input('équipements et immobilisations . pondération . reconditionné'),
   ],
