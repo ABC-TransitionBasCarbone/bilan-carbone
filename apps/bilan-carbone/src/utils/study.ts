@@ -1,4 +1,4 @@
-import type { FullStudy } from '@/db/study'
+import { type FullStudy } from '@/db/study'
 import { mappedTiltSituationToCustomDataFields } from '@/services/customDataToSituation'
 import { getEmissionResults } from '@/services/emissionSource'
 import { hasAccessToStudyHomePage } from '@/services/permissions/environment'

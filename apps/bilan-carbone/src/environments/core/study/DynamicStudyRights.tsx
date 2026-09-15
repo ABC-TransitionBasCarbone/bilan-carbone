@@ -1,7 +1,7 @@
 'use client'
 
 import { OrganizationWithSites } from '@/db/account'
-import type { FullStudy } from '@/db/study'
+import type { MinimalStudyForRights, StudySiteWithNameList } from '@/db/study'
 import StudyRights from '@/environments/base/study/StudyRights'
 import StudyRightsClickson from '@/environments/clickson/study/StudyRightsClickson'
 import StudyRightsCut from '@/environments/cut/study/StudyRightsCut'
@@ -13,12 +13,13 @@ import DynamicComponent from '../utils/DynamicComponent'
 
 interface Props {
   user: UserSession
-  study: FullStudy
+  study: MinimalStudyForRights
   editionDisabled: boolean
   userRoleOnStudy: StudyRole
   emissionFactorSources: EmissionFactorImportVersion[]
   caUnit: SiteCAUnit
   organizationVersion: OrganizationWithSites | null
+  studySites: StudySiteWithNameList
 }
 
 const DynamicStudyRights = ({
@@ -29,6 +30,7 @@ const DynamicStudyRights = ({
   emissionFactorSources,
   caUnit,
   organizationVersion,
+  studySites,
 }: Props) => {
   return (
     <DynamicComponent
@@ -40,6 +42,7 @@ const DynamicStudyRights = ({
             user={user}
             organizationVersion={organizationVersion}
             userRoleOnStudy={userRoleOnStudy}
+            studySites={studySites}
           />
         ) : (
           <StudyRights
@@ -48,17 +51,19 @@ const DynamicStudyRights = ({
             editionDisabled={editionDisabled}
             userRoleOnStudy={userRoleOnStudy}
             emissionFactorSources={emissionFactorSources}
+            studySites={studySites}
           />
         )
       }
       environmentComponents={{
-        [Environment.CUT]: <StudyRightsCut study={study} />,
+        [Environment.CUT]: <StudyRightsCut study={study} studySites={studySites} />,
         [Environment.CLICKSON]: (
           <StudyRightsClickson
             study={study}
             editionDisabled={editionDisabled}
             emissionFactorSources={emissionFactorSources}
             user={user}
+            studySites={studySites}
           />
         ),
       }}

@@ -1,5 +1,5 @@
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
-import withStudy, { StudyProps } from '@/components/hoc/withStudy'
+import withStudyDetails, { StudyProps } from '@/components/hoc/withStudyDetails'
 import StudyPostsPageContainer from '@/components/pages/StudyPostsContainer'
 import { canReadStudyDetail } from '@/services/permissions/study'
 import { getAccountRoleOnStudy } from '@/utils/study'
@@ -49,4 +49,4 @@ const StudyPost = async (props: Props & StudyProps & UserSessionProps) => {
   )
 }
 
-export default withAuth(withStudy(StudyPost))
+export default withAuth(withStudyDetails(StudyPost))

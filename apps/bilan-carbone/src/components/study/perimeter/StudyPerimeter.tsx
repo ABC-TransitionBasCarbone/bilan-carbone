@@ -207,6 +207,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
         organizationVersion={organizationVersion}
         userRoleOnStudy={userRoleOnStudy}
         caUnit={caUnit}
+        studySites={study.sites}
         user={user}
       />
 

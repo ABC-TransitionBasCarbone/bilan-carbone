@@ -302,7 +302,7 @@ export const getMockeFullStudy = (overrides = {}): FullStudy => ({
       value: 100,
       studySite: {
         id: TEST_IDS.studySite,
-        site: { id: TEST_IDS.site, name: 'Test Site' },
+        site: { id: TEST_IDS.site, name: 'Test Site', postalCode: '78500', city: null, establishmentYear: '2000' },
       },
       emissionFactor: mockedEmissionSourceEmissionFactor,
       emissionSourceTags: [],
@@ -337,6 +337,8 @@ export const getMockeFullStudy = (overrides = {}): FullStudy => ({
     {
       account: {
         id: TEST_IDS.account,
+        organizationVersionId: undefined,
+        level: undefined,
         user: {
           email: TEST_EMAILS.teamMember,
           id: TEST_IDS.userStudy,
@@ -344,7 +346,6 @@ export const getMockeFullStudy = (overrides = {}): FullStudy => ({
           firstName: 'Team',
           lastName: 'Member',
         },
-        organizationVersionId: TEST_IDS.orgVersion,
         readerOnly: false,
       },
       role: StudyRole.Validator,

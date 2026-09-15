@@ -49,6 +49,7 @@ import {
   FullStudy,
   getEngagementActionById,
   getEngagementActions,
+  getMinimalStudyForRights,
   getOrganizationStudiesBeforeDate,
   getPendingStudyCommentsCountFromAuthor,
   getStudiesSitesFromIds,
@@ -59,8 +60,10 @@ import {
   getStudyCommentsWithStudyIdAndSubPost,
   getStudyNameById,
   getStudySites,
+  getStudySitesWithName,
   getStudyTemplate,
   getUsersOnStudy,
+  MinimalStudyForRights,
   removeSourceToStudy,
   updateEmissionSourceEmissionFactor,
   updateEngagementAction,
@@ -90,7 +93,7 @@ import { groupBy } from '@/utils/array'
 import { mapCncToStudySite } from '@/utils/cnc'
 import { calculateDistanceFromParis } from '@/utils/distance'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
-import { canEditOrganizationVersion } from '@/utils/organization'
+import { canEditOrganizationVersion, hasActiveLicence, isInOrgaOrParent } from '@/utils/organization'
 import { withServerResponse } from '@/utils/serverResponse'
 import {
   getAccountRoleOnStudy,
@@ -1157,6 +1160,16 @@ const hasAccessToStudy = (user: UserSession, study: AsyncReturnType<typeof getSt
   )
 }
 
+const NEWHasAccessToStudy = async (user: UserSession, study: MinimalStudyForRights) => {
+  const accountsRoleOnStudy = await NEWGetAccountRoleOnStudy(user, study.id)
+
+  if (!accountsRoleOnStudy.success) {
+    return false
+  }
+
+  return accountsRoleOnStudy.data || study.contributors.some((contributor) => contributor.accountId === user.accountId)
+}
+
 export const findStudiesWithSites = async (siteIds: string[]) =>
   withServerResponse('findStudiesWithSites', async () => {
     const [session, studySites] = await Promise.all([dbActualizedAuth(), getStudiesSitesFromIds(siteIds)])
@@ -1190,7 +1203,7 @@ export const findStudiesWithSites = async (siteIds: string[]) =>
     }
   })
 
-export const deleteStudyMember = async (member: FullStudy['allowedUsers'][0], studyId: string) =>
+export const deleteStudyMember = async (member: { accountId: string }, studyId: string) =>
   withServerResponse('deleteStudyMember', async () => {
     const [session, study] = await Promise.all([dbActualizedAuth(), getStudy(studyId)])
     if (
@@ -2580,4 +2593,53 @@ export const getStudyExports = async (studyId: string | undefined) =>
     }
 
     return study.exports?.types || []
+  })
+
+export const NEWGetAccountRoleOnStudy = async (user: UserSession, studyId: string) =>
+  withServerResponse('NEWGetAccountRoleOnStudy', async () => {
+    const minimalStudy = await getMinimalStudyForRights(studyId)
+
+    if (!minimalStudy) {
+      throw new Error('Study not found')
+    }
+
+    if (isTiltSimplified(minimalStudy.organizationVersion.environment, minimalStudy.simplified)) {
+      return StudyRole.Editor
+    }
+    if (isAdminOnStudyOrga(user, minimalStudy.organizationVersion)) {
+      return hasSufficientLevel(user.level, minimalStudy.level) && hasActiveLicence(minimalStudy.organizationVersion)
+        ? StudyRole.Validator
+        : StudyRole.Reader
+    }
+
+    const right = minimalStudy.allowedUsers.find((right) => right.account.id === user.accountId)
+    if (right) {
+      return hasSufficientLevel(user.level, minimalStudy.level) && hasActiveLicence(minimalStudy.organizationVersion)
+        ? right.role
+        : StudyRole.Reader
+    }
+
+    if (minimalStudy.isPublic && isInOrgaOrParent(user.organizationVersionId, minimalStudy.organizationVersion)) {
+      return hasActiveLicence(minimalStudy.organizationVersion)
+        ? getUserRoleOnPublicStudy(user, minimalStudy.level)
+        : StudyRole.Reader
+    }
+
+    return null
+  })
+
+export const getStudySitesList = async (studyId: string) =>
+  withServerResponse('getStudySitesList', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user || !session.user.organizationVersionId) {
+      return null
+    }
+
+    const studySites = await getStudySitesWithName(studyId)
+    const studyRights = await getMinimalStudyForRights(studyId)
+    if (!studyRights || !(await NEWHasAccessToStudy(session.user, studyRights))) {
+      return null
+    }
+
+    return studySites
   })
