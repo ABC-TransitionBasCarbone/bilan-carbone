@@ -299,7 +299,7 @@
     "ADMIN": "Amministratore",
     "COLLABORATOR": "Collaboratore",
     "ADMIN_description": "Un amministratore possiede tutti i diritti sull'account dell'organizzazione nonché sull'insieme degli studi della propria organizzazione (siano essi pubblici o privati). Non è possibile modificare il ruolo di un amministratore su uno studio della propria organizzazione.",
-    "COLLABORATOR_description": "Un collaboratore è una persona formata al metodo Bilan Carbone®. Non ha alcun diritto sull'account dell'organizzazione, ma può creare studi per la propria organizzazione. È per impostazione predefinita editor di tutti i Bilan Carbone® pubblici della propria organizzazione.",
+    "COLLABORATOR_description": "Un·a collaboratore·rice è una persona formata al metodo Bilan Carbone®. Non ha alcun diritto sull'account dell'organizzazione ma può creare studi per la propria organizzazione. È per impostazione predefinita editore·rice su tutti i Bilan Carbone® condivisi con il team della propria organizzazione.",
     "guide": "Guida dei ruoli",
     "saved": "Nuovo ruolo salvato",
     "Not authorized": "Non hai i permessi per eseguire questa azione",

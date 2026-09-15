@@ -299,7 +299,7 @@
     "ADMIN": "Administrator",
     "COLLABORATOR": "Colaborator",
     "ADMIN_description": "Un administrator deține toate drepturile asupra contului organizației, precum și asupra tuturor studiilor organizației sale (fie ele publice sau private). Nu este posibilă modificarea rolului unui administrator pe un studiu al organizației sale.",
-    "COLLABORATOR_description": "Un colaborator este o persoană formată în metoda Bilan Carbone®. Nu are niciun drept asupra contului organizației, dar poate crea studii pentru organizația sa. Este implicit editor al tuturor Bilan Carbone® publice ale organizației sale.",
+    "COLLABORATOR_description": "Un·o colaborator·oare este o persoană formată în metoda Bilan Carbone®. Nu are niciun drept asupra contului organizației, dar poate crea studii pentru organizația sa. În mod implicit, este editor·oare pentru toate Bilanurile Carbone® partajate cu echipa organizației sale.",
     "guide": "Ghidul rolurilor",
     "saved": "Rol nou salvat",
     "Not authorized": "Nu aveți permisiunea de a efectua această acțiune",

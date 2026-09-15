@@ -299,7 +299,7 @@
     "ADMIN": "Administrator",
     "COLLABORATOR": "Suradnik",
     "ADMIN_description": "Administrator ima sva prava nad računom organizacije te nad svim studijama svoje organizacije (bilo javnim ili privatnim). Nije moguće promijeniti ulogu administratora na studiji njegove organizacije.",
-    "COLLABORATOR_description": "Suradnik je osoba obučena za metodu Bilan Carbone®. Nema nikakva prava nad računom organizacije, ali može stvarati studije za svoju organizaciju. Prema zadanim postavkama je urednik svih javnih Bilan Carbone® svoje organizacije.",
+    "COLLABORATOR_description": "Suradnik·ca je osoba osposobljena za metodu Bilan Carbone®. Nema nikakva prava nad računom organizacije, ali može stvarati studije za svoju organizaciju. Prema zadanim postavkama uređivač·ica je svih Bilan Carbone® studija dijeljenih s timom njegove organizacije.",
     "guide": "Vodič za uloge",
     "saved": "Nova uloga spremljena",
     "Not authorized": "Nemate ovlasti za izvođenje ove radnje",

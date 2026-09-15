@@ -299,7 +299,7 @@
     "ADMIN": "Administrador/a",
     "COLLABORATOR": "Colaborador/a",
     "ADMIN_description": "Un administrador/a posee todos los derechos sobre la cuenta de la organización, así como sobre el conjunto de estudios de su organización (ya sean públicos o privados). No es posible cambiar el rol de un administrador/a en un estudio de su organización.",
-    "COLLABORATOR_description": "Un colaborador/a es una persona formada en el método Bilan Carbone®. No tiene ningún derecho sobre la cuenta de la organización, pero puede crear estudios para su organización. Es, por defecto, editor/a de todos los Bilan Carbone® públicos de su organización.",
+    "COLLABORATOR_description": "Un·a colaborador·a es una persona formada en el método Bilan Carbone®. No tiene ningún derecho sobre la cuenta de la organización, pero puede crear estudios para su organización. Por defecto es editor·a de todos los Bilan Carbone® compartidos con el equipo de su organización.",
     "guide": "Guía de roles",
     "saved": "Nuevo rol guardado",
     "Not authorized": "No tiene permisos para realizar esta acción",

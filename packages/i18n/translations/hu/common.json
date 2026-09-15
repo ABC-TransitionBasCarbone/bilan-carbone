@@ -299,7 +299,7 @@
     "ADMIN": "Adminisztrátor",
     "COLLABORATOR": "Közreműködő",
     "ADMIN_description": "Az adminisztrátor minden jogosultsággal rendelkezik a szervezet fiókja, valamint a szervezet összes tanulmánya felett (legyenek azok nyilvánosak vagy privátak). A szervezet tanulmányán belül nem lehet megváltoztatni egy adminisztrátor szerepkörét.",
-    "COLLABORATOR_description": "A közreműködő a Bilan Carbone® módszerben képzett személy. Nincs jogosultsága a szervezet fiókja felett, de létrehozhat tanulmányokat a szervezete számára. Alapértelmezés szerint szerkesztő a szervezete összes nyilvános Bilan Carbone®-ján.",
+    "COLLABORATOR_description": "A közreműködő olyan személy, aki képzésben részesült a Bilan Carbone® módszerben. Nem rendelkezik jogokkal a szervezet fiókja felett, de készíthet tanulmányokat a szervezete számára. Alapértelmezés szerint szerkesztő minden olyan Bilan Carbone® esetében, amelyet megosztottak a szervezete csapatával.",
     "guide": "Szerepkör-útmutató",
     "saved": "Új szerepkör elmentve",
     "Not authorized": "Nincs jogosultsága a művelet végrehajtásához",
