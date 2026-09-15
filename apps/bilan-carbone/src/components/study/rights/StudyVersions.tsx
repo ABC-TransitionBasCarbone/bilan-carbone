@@ -1,5 +1,5 @@
 import { wasteEmissionFactors } from '@/constants/wasteEmissionFactors'
-import type { FullStudy } from '@/db/study'
+import type { MinimalStudyForRights } from '@/db/study'
 import {
   simulateStudyEmissionFactorSourceUpgrade,
   upgradeStudyEmissionFactorSource,
@@ -18,7 +18,7 @@ import { useMemo, useState } from 'react'
 import styles from './StudyVersions.module.css'
 
 interface Props {
-  study: FullStudy
+  study: MinimalStudyForRights
   emissionFactorSources: EmissionFactorImportVersion[]
   canUpdate: boolean
 }

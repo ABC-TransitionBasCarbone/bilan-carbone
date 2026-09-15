@@ -1,6 +1,6 @@
 'use client'
 
-import type { FullStudy } from '@/db/study'
+import type { MinimalStudyForRights } from '@/db/study'
 import { changeStudyResultsUnit } from '@/services/serverFunctions/study'
 import {
   ChangeStudyResultsUnitCommand,
@@ -18,7 +18,7 @@ import { useForm } from 'react-hook-form'
 import styles from './StudyParams.module.css'
 
 interface Props {
-  study: FullStudy
+  study: MinimalStudyForRights
   disabled: boolean
 }
 

@@ -1,7 +1,7 @@
 'use client'
 
 import { OrganizationWithSites } from '@/db/account'
-import type { FullStudy, MinimalStudyForRights, StudySiteWithNameList } from '@/db/study'
+import type { MinimalStudyForRights, StudySiteWithNameList } from '@/db/study'
 import StudyRights from '@/environments/base/study/StudyRights'
 import StudyRightsClickson from '@/environments/clickson/study/StudyRightsClickson'
 import StudyRightsCut from '@/environments/cut/study/StudyRightsCut'
@@ -14,7 +14,6 @@ import DynamicComponent from '../utils/DynamicComponent'
 interface Props {
   user: UserSession
   study: MinimalStudyForRights
-  fullStudy: FullStudy
   editionDisabled: boolean
   userRoleOnStudy: StudyRole
   emissionFactorSources: EmissionFactorImportVersion[]
@@ -26,7 +25,6 @@ interface Props {
 const DynamicStudyRights = ({
   user,
   study,
-  fullStudy,
   editionDisabled,
   userRoleOnStudy,
   emissionFactorSources,
@@ -49,10 +47,11 @@ const DynamicStudyRights = ({
         ) : (
           <StudyRights
             user={user}
-            study={fullStudy}
+            study={study}
             editionDisabled={editionDisabled}
             userRoleOnStudy={userRoleOnStudy}
             emissionFactorSources={emissionFactorSources}
+            studySites={studySites}
           />
         )
       }
@@ -60,10 +59,11 @@ const DynamicStudyRights = ({
         [Environment.CUT]: <StudyRightsCut study={study} studySites={studySites} />,
         [Environment.CLICKSON]: (
           <StudyRightsClickson
-            study={fullStudy}
+            study={study}
             editionDisabled={editionDisabled}
             emissionFactorSources={emissionFactorSources}
             user={user}
+            studySites={studySites}
           />
         ),
       }}
