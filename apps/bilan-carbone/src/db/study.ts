@@ -33,7 +33,7 @@ import { cache } from 'react'
 import { getAccountOrganizationVersions } from './account'
 import { AccountWithUserSelect } from './account.select'
 import { prismaClient } from './client.server'
-import { getOrganizationVersionsByIds } from './organization'
+import { getOrganizationVersionsByIds } from './organizationVersions'
 
 export type StudyTagFamilyWithTags = Omit<StudyTagFamily, 'createdAt' | 'updatedAt'> & {
   tags: Omit<StudyTag, 'familyId' | 'createdAt' | 'updatedAt'>[]
