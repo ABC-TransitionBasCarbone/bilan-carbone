@@ -96,3 +96,6 @@ Never validate my claims without checking them. Prefer evidence over my approval
 - apps/*/src/components
 - apps/*/src/app/api
 - .env
+
+## PR
+- Do not comment on french text that are not translated. We have a script that translate it automatically after the PR is merged.
