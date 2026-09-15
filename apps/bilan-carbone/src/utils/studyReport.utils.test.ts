@@ -272,8 +272,7 @@ describe('mapStudyForReport', () => {
             createdAt: new Date('2024-01-01'),
             role: StudyRole.Validator,
             account: {
-              organizationVersionId: undefined,
-              level: undefined,
+              organizationVersionId: 'external-orga-id',
               id: externalAdminAccountId,
               readerOnly: false,
               user: { id: 'u1', email: 'ext@example.com', firstName: 'Ext', lastName: 'Admin', level: 'Initial' },
@@ -284,8 +283,7 @@ describe('mapStudyForReport', () => {
             createdAt: new Date('2024-01-02'),
             role: StudyRole.Editor,
             account: {
-              organizationVersionId: undefined,
-              level: undefined,
+              organizationVersionId: 'external-orga-id',
               id: 'internal-editor-id',
               readerOnly: false,
               user: { id: 'u2', email: 'int@example.com', firstName: 'Int', lastName: 'Editor', level: 'Initial' },
@@ -296,8 +294,7 @@ describe('mapStudyForReport', () => {
             createdAt: new Date('2024-01-03'),
             role: StudyRole.Reader,
             account: {
-              organizationVersionId: undefined,
-              level: undefined,
+              organizationVersionId: 'external-orga-id',
               id: 'external-reader-id',
               readerOnly: false,
               user: { id: 'u3', email: 'ext2@example.com', firstName: 'Ext', lastName: 'Reader', level: 'Initial' },
@@ -326,8 +323,7 @@ describe('mapStudyForReport', () => {
             createdAt: new Date('2024-01-01'),
             role: StudyRole.Validator,
             account: {
-              organizationVersionId: undefined,
-              level: undefined,
+              organizationVersionId: 'external-orga-id',
               id: 'internal-admin-id',
               readerOnly: false,
               user: { id: 'u1', email: 'int@example.com', firstName: 'Int', lastName: 'Admin', level: 'Initial' },

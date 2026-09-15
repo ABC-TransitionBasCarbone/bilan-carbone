@@ -5,7 +5,7 @@ import { filterAllowedStudies } from '@/services/permissions/study'
 import { subPostsByPost } from '@/services/posts'
 import { ChangeStudyCinemaCommand } from '@/services/serverFunctions/study.command'
 import { mapCncToStudySite } from '@/utils/cnc'
-import { isAdminOnOrga } from '@/utils/organization'
+import { hasActiveLicence, isAdminOnOrga } from '@/utils/organization'
 import { getAllowedLevels, getUserRoleOnPublicStudy, hasSufficientLevel, StudyWithRoleFields } from '@/utils/study'
 import { isAdmin } from '@/utils/user'
 import type {
@@ -33,6 +33,7 @@ import { cache } from 'react'
 import { getAccountOrganizationVersions } from './account'
 import { AccountWithUserSelect } from './account.select'
 import { prismaClient } from './client.server'
+import { getOrganizationVersionsByIds } from './organization'
 
 export type StudyTagFamilyWithTags = Omit<StudyTagFamily, 'createdAt' | 'updatedAt'> & {
   tags: Omit<StudyTag, 'familyId' | 'createdAt' | 'updatedAt'>[]
@@ -195,7 +196,7 @@ const fullStudyInclude = {
       account: {
         select: {
           id: true,
-          organizationVersionId: true,
+          organizationVersion: { select: { id: true, activatedLicence: true } },
           user: {
             select: {
               id: true,
@@ -334,32 +335,28 @@ const fullStudyInclude = {
   },
 } satisfies Prisma.StudyInclude
 
-type AllowedUserWithLevel = { account: { user: { level: Level | null } } }
+type AllowedUserWithLevel = { account: { user: { level: Level | null }; organizationVersionId: string | null } }
 
 type NormalizedAllowedUser<T extends AllowedUserWithLevel> = Omit<T, 'account'> & {
-  account: Omit<T['account'], 'organizationVersionId' | 'level'> & {
-    organizationVersionId: undefined
-    level: undefined
+  account: T['account'] & {
     readerOnly: boolean
   }
 }
 
-const normalizeAllowedUsers = <T extends AllowedUserWithLevel>(
+const normalizeAllowedUsers = async <T extends AllowedUserWithLevel>(
   allowedUsers: T[],
   studyLevel: Level,
-): NormalizedAllowedUser<T>[] =>
-  allowedUsers.map((allowedUser): NormalizedAllowedUser<T> => {
-    const readerOnly = !hasSufficientLevel(allowedUser.account.user.level, studyLevel)
-    return {
-      ...allowedUser,
-      account: {
-        ...allowedUser.account,
-        organizationVersionId: undefined,
-        level: undefined,
-        readerOnly,
-      },
-    } as NormalizedAllowedUser<T>
+): Promise<NormalizedAllowedUser<T>[]> => {
+  const organizationVersions = await getOrganizationVersionsByIds(
+    allowedUsers.map((allowedUser) => allowedUser.account.organizationVersionId).filter((id) => id !== null),
+  )
+  return allowedUsers.map((allowedUser) => {
+    const orgaVersion = organizationVersions.find((ov) => ov.id === allowedUser.account.organizationVersionId)
+    const readerOnly =
+      !(orgaVersion && hasActiveLicence(orgaVersion)) || !hasSufficientLevel(allowedUser.account.user.level, studyLevel)
+    return { ...allowedUser, account: { ...allowedUser.account, readerOnly } }
   })
+}
 
 export const getOrganizationVersionStudiesOrderedByStartDate = async (
   organizationVersionId: string,
@@ -373,9 +370,9 @@ export const getOrganizationVersionStudiesOrderedByStartDate = async (
     include: fullStudyInclude,
     orderBy: { startDate: 'desc' },
   })
-  return studies.map((study) => ({
+  return studies.map(async (study) => ({
     ...study,
-    allowedUsers: normalizeAllowedUsers(study.allowedUsers, study.level),
+    allowedUsers: await normalizeAllowedUsers(study.allowedUsers, study.level),
   }))
 }
 
@@ -534,16 +531,17 @@ export const getStudyAllowedUsersUnfiltered = async (studyId: string) => {
     where: { id: studyId },
     include: { allowedUsers: fullStudyInclude.allowedUsers },
   })
-  return study ? normalizeAllowedUsers(study.allowedUsers, study.level) : []
+  return study ? await normalizeAllowedUsers(study.allowedUsers, study.level) : []
 }
 
 // IMPORTANT: Do not use unless you need the full study with all its fields and relations.
+// Je ne gère pas pour le moment la suppresion de orgaVersionId qui n'est plus utile, car la méthode va être de moins en moins utilisée.
 export const getStudyById = async (id: string, organizationVersionId: string | null, tx?: Prisma.TransactionClient) => {
   const study = tx ? await tx.study.findUnique({ where: { id }, include: fullStudyInclude }) : await fetchStudyById(id)
   if (!study) {
     return null
   }
-  return { ...study, allowedUsers: normalizeAllowedUsers(study.allowedUsers, study.level) }
+  return { ...study, allowedUsers: await normalizeAllowedUsers(study.allowedUsers, study.level) }
 }
 
 type StudyForNavbar = StudyWithRoleFields & {
@@ -650,10 +648,12 @@ export const getStudyByIds = async (ids: string[]) => {
     where: { id: { in: ids } },
     include: fullStudyInclude,
   })
-  return studies.map((study) => ({
-    ...study,
-    allowedUsers: normalizeAllowedUsers(study.allowedUsers, study.level),
-  }))
+  return Promise.all(
+    studies.map(async (study) => ({
+      ...study,
+      allowedUsers: await normalizeAllowedUsers(study.allowedUsers, study.level),
+    })),
+  )
 }
 export type FullStudy = Exclude<AsyncReturnType<typeof getStudyById>, null>
 
@@ -1287,13 +1287,26 @@ export const getMinimalStudyForRights = async (studyId: string) => {
         select: {
           role: true,
           accountId: true,
-          account: { select: { id: true, user: { select: { email: true, level: true } } } },
+          account: {
+            select: {
+              id: true,
+              organizationVersionId: true,
+              organizationVersion: { select: { id: true, activatedLicence: true } },
+              user: { select: { email: true, level: true } },
+            },
+          },
         },
       },
       contributors: {
         select: {
           accountId: true,
-          account: { select: { id: true, user: { select: { email: true, level: true } } } },
+          account: {
+            select: {
+              id: true,
+              organizationVersion: { select: { id: true, activatedLicence: true } },
+              user: { select: { email: true, level: true } },
+            },
+          },
           subPost: true,
         },
       },
@@ -1304,9 +1317,10 @@ export const getMinimalStudyForRights = async (studyId: string) => {
     return null
   }
 
+  const allowedUsers = await normalizeAllowedUsers(studyFromDB.allowedUsers, studyFromDB.level)
   return {
     ...studyFromDB,
-    allowedUsers: normalizeAllowedUsers(studyFromDB.allowedUsers, studyFromDB.level),
+    allowedUsers,
   }
 }
 export type MinimalStudyForRights = Exclude<Awaited<ReturnType<typeof getMinimalStudyForRights>>, null>

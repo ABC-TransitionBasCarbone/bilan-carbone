@@ -149,6 +149,17 @@ export const getOrganizationVersionByOrganizationIdAndEnvironment = (
     },
   })
 
+export const getOrganizationVersionsByIds = (organizationVersionIds: string[]) =>
+  prismaClient.organizationVersion.findMany({
+    where: { id: { in: organizationVersionIds } },
+    select: {
+      id: true,
+      environment: true,
+      parent: { select: { id: true, activatedLicence: true } },
+      activatedLicence: true,
+    },
+  })
+
 export const getOrganizationVersionsByOrganizationId = (organizationId: string) =>
   prismaClient.organizationVersion.findMany({
     where: { organizationId },
