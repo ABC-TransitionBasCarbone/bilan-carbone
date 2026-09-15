@@ -8,11 +8,11 @@ import { FormTextField } from '@abc-transitionbascarbone/components/src/form/Tex
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { getEnvRoute } from '@abc-transitionbascarbone/services/email/utils'
 import { customRich } from '@abc-transitionbascarbone/utils/customRich'
-import { getEnvVarClient, getFaqLinkClient } from '@abc-transitionbascarbone/utils/environmentClient'
+import { getEnvVarClient } from '@abc-transitionbascarbone/utils/environmentClient'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl } from '@mui/material'
 import classNames from 'classnames'
-import { useLocale, useTranslations } from 'next-intl'
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -21,9 +21,6 @@ import authStyles from './Auth.module.css'
 
 const SignUpFormTilt = () => {
   const contactMail = getEnvVarClient('SUPPORT_EMAIL', Environment.TILT)
-  const locale = useLocale()
-  const faq = getFaqLinkClient(Environment.TILT, locale)
-
   const t = useTranslations('signup')
   const tForm = useTranslations('login.form')
   const [submitting, setSubmitting] = useState(false)
@@ -90,11 +87,7 @@ const SignUpFormTilt = () => {
           <p className={classNames(!success ? 'error' : '')} data-testid="activation-form-message">
             {customRich(t, message, {
               support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
-              link: (children) => (
-                <Link href={faq} target="_blank" rel="noreferrer noopener">
-                  {children}
-                </Link>
-              ),
+              link: (children) => children,
             })}
           </p>
         )}

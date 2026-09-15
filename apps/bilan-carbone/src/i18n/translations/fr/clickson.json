@@ -247,6 +247,7 @@
   "login": {
     "welcome": "Bienvenue sur Clickson PEBC",
     "explanation": "Mesurons les émissions de gaz à effet de serre de votre établissement!",
+    "question": "Une question ? <support>Contactez-nous</support> !",
     "form": {
       "activate": "Créer mon compte"
     }

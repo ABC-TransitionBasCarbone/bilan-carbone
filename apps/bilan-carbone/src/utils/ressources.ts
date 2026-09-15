@@ -4,13 +4,15 @@ import { Translations } from '@abc-transitionbascarbone/lib'
 import { getEnvVar } from '@abc-transitionbascarbone/lib/environment'
 import { getLocale } from 'next-intl/server'
 
-export const getEnvironnementRessources = async (env: Environment, t: Translations) => {
+export const getEnvironnementRessources = async (env: Environment, t: Translations, linksT: Translations) => {
   const locale = await getLocale()
 
-  const contactForm =
-    locale === Locale.EN ? await getEnvVar('EN_CONTACT_FORM_URL', env) : await getEnvVar('CONTACT_FORM_URL', env)
+  const translatedContactForm = linksT.has('contactFormUrl') ? linksT('contactFormUrl') : ''
+  const translatedFaq = linksT.has('faqUrl') ? linksT('faqUrl') : ''
 
-  const faq = locale === Locale.EN ? await getEnvVar('EN_FAQ_LINK', env) : await getEnvVar('FAQ_LINK', env)
+  const contactForm = translatedContactForm || (await getEnvVar('CONTACT_FORM_URL', env))
+
+  const faq = translatedFaq || (await getEnvVar('FAQ_LINK', env))
 
   const supportEmail = await getEnvVar('SUPPORT_EMAIL', env)
 

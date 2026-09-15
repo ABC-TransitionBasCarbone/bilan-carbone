@@ -1,6 +1,6 @@
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { Translations } from '@abc-transitionbascarbone/lib'
-import { getEnvVarClient, getFaqLinkClient } from '@abc-transitionbascarbone/utils/environmentClient'
+import { getEnvVarClient } from '@abc-transitionbascarbone/utils/environmentClient'
 import Link from 'next/link'
 import { ReactNode } from 'react'
 
@@ -12,37 +12,48 @@ export const customRich = (
   t: Translations,
   key: string,
   params: CustomRichParams = {},
-  env: Environment = Environment.BC,
-  locale?: string,
+  _env: Environment = Environment.BC,
+  _locale?: string,
 ) => {
-  const faq = getFaqLinkClient(env, locale)
+  const faq = t.has('faqUrl') ? t('faqUrl') : ''
   const support = getEnvVarClient('SUPPORT_EMAIL', Environment.BC)
-  const abc = getEnvVarClient('ABC_SITE', Environment.BC)
+  const abc = t.has('abcSiteUrl') ? t('abcSiteUrl') : ''
 
   return t.rich(key, {
     error: (children) => <span className="error">{children}</span>,
     b: (children) => <span className="bold">{children}</span>,
     i: (children) => <span className="italic">{children}</span>,
-    faq: (children) => (
-      <Link href={faq} target="_blank" rel="noreferrer noopener" className="font-inherit">
-        {children}
-      </Link>
-    ),
+    br: () => <br />,
+    link: (children) => children,
+    faq: (children) =>
+      faq ? (
+        <a href={faq} target="_blank" rel="noreferrer noopener" className="font-inherit">
+          {children}
+        </a>
+      ) : (
+        children
+      ),
     support: (children) => (
       <Link href={`mailto:${support}`} className="font-inherit">
         {children}
       </Link>
     ),
-    abc: (children) => (
-      <Link href={abc} target="_blank" rel="noreferrer noopener" className="font-inherit">
-        {children}
-      </Link>
-    ),
-    abcAssociation: (children) => (
-      <Link href={abc} target="_blank" rel="noreferrer noopener" className="font-inherit">
-        {children}
-      </Link>
-    ),
+    abc: (children) =>
+      abc ? (
+        <Link href={abc} target="_blank" rel="noreferrer noopener" className="font-inherit">
+          {children}
+        </Link>
+      ) : (
+        children
+      ),
+    abcAssociation: (children) =>
+      abc ? (
+        <Link href={abc} target="_blank" rel="noreferrer noopener" className="font-inherit">
+          {children}
+        </Link>
+      ) : (
+        children
+      ),
     guideecoresponsablebureautilttorefacto: (children) => (
       <Link
         className="font-inherit"
@@ -78,7 +89,6 @@ export const customRich = (
         {children}
       </Link>
     ),
-    br: () => <br />,
     underline: (children) => <span style={{ textDecoration: 'underline' }}>{children}</span>,
     green: (children) => <span className="font-inherit green-ghgp">{children}</span>,
     purple: (children) => <span className="font-inherit purple-ghgp">{children}</span>,

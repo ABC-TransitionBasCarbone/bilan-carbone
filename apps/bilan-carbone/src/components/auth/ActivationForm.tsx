@@ -7,11 +7,11 @@ import LoadingButton from '@abc-transitionbascarbone/components/src/base/Loading
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { customRich } from '@abc-transitionbascarbone/utils/customRich'
-import { getEnvVarClient, getFaqLinkClient } from '@abc-transitionbascarbone/utils/environmentClient'
+import { getEnvVarClient } from '@abc-transitionbascarbone/utils/environmentClient'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl } from '@mui/material'
 import classNames from 'classnames'
-import { useLocale, useTranslations } from 'next-intl'
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -24,8 +24,8 @@ interface Props {
 
 const ActivationForm = ({ environment = Environment.BC }: Props) => {
   const contactMail = getEnvVarClient('SUPPORT_EMAIL', environment)
-  const locale = useLocale()
-  const faq = getFaqLinkClient(environment, locale)
+  const tBc = useTranslations()
+  const faq = environment === Environment.BC ? tBc('faqUrl') : ''
 
   const t = useTranslations('activation')
   const [submitting, setSubmitting] = useState(false)
@@ -87,11 +87,14 @@ const ActivationForm = ({ environment = Environment.BC }: Props) => {
           <p className={classNames(!success ? 'error' : '')} data-testid="activation-form-message">
             {customRich(t, message, {
               support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
-              link: (children) => (
-                <Link href={faq} target="_blank" rel="noreferrer noopener">
-                  {children}
-                </Link>
-              ),
+              link: (children) =>
+                faq ? (
+                  <Link href={faq} target="_blank" rel="noreferrer noopener">
+                    {children}
+                  </Link>
+                ) : (
+                  children
+                ),
             })}
           </p>
         )}

@@ -32,10 +32,9 @@ const OrganizationToolbar = styled(Toolbar)<ToolbarProps>(({ theme }) => ({
   borderBottom: theme.custom.navbar.organizationToolbar?.border,
 }))
 
-const renewalLink = process.env.NEXT_PUBLIC_LICENSE_RENEWAL_LINK
-
 const OrganizationCard = ({ account, organizationVersions, shouldDisplayOrgaData, shouldRenewLicenseText }: Props) => {
   const t = useTranslations('organization.card')
+  const renewalLink = useTranslations()('licenseRenewalLink')
 
   const date = new Date()
 
