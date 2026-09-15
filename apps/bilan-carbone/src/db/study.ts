@@ -219,6 +219,7 @@ const fullStudyInclude = {
         select: {
           id: true,
           organizationVersionId: true,
+          organizationVersion: { select: { id: true, activatedLicence: true } },
           user: {
             select: {
               id: true,
