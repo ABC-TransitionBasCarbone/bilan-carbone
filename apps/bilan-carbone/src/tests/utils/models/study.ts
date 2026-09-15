@@ -337,8 +337,8 @@ export const getMockeFullStudy = (overrides = {}): FullStudy => ({
     {
       account: {
         id: TEST_IDS.account,
-        organizationVersionId: undefined,
-        level: undefined,
+        organizationVersionId: TEST_IDS.orgVersion,
+        organizationVersion: { id: TEST_IDS.orgVersion, activatedLicence: [new Date().getFullYear()] },
         user: {
           email: TEST_EMAILS.teamMember,
           id: TEST_IDS.userStudy,
@@ -364,7 +364,7 @@ export const getMockeFullStudy = (overrides = {}): FullStudy => ({
           firstName: 'Contributor',
           lastName: 'Contributor',
         },
-        organizationVersionId: TEST_IDS.orgVersion,
+        organizationVersion: { id: TEST_IDS.orgVersion, activatedLicence: [] },
       },
       subPost: SubPost.Achats,
     },

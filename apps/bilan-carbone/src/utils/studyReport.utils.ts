@@ -103,7 +103,7 @@ export const mapStudyForReport = async (
         accountId: contributor.accountId,
         name: `${firstName} ${lastName}`,
         isInternal: isParentCR
-          ? contributor.account.organizationVersionId !== study.organizationVersion.parentId
+          ? contributor.account.organizationVersion?.id !== study.organizationVersion.parentId
           : false,
         isExternal: false,
       })
