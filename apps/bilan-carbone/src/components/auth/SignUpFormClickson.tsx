@@ -27,8 +27,6 @@ import authStyles from './Auth.module.css'
 
 const SignUpFormClickson = () => {
   const contactMail = getEnvVarClient('SUPPORT_EMAIL', Environment.CLICKSON)
-  const faq = getEnvVarClient('FAQ_LINK', Environment.CLICKSON)
-
   const t = useTranslations('signup')
   const tForm = useTranslations('login.form')
   const tCountry = useTranslations('country')
@@ -214,11 +212,7 @@ const SignUpFormClickson = () => {
           <p className={classNames(!success ? 'error' : '')} data-testid="activation-form-message">
             {customRich(t, message, {
               support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
-              link: (children) => (
-                <Link href={faq} target="_blank" rel="noreferrer noopener">
-                  {children}
-                </Link>
-              ),
+              link: (children) => children,
             })}
           </p>
         )}

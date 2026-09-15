@@ -25,8 +25,6 @@ import authStyles from './Auth.module.css'
 
 const SignUpFormCut = () => {
   const contactMail = getEnvVarClient('SUPPORT_EMAIL', Environment.CUT)
-  const faq = getEnvVarClient('FAQ_LINK', Environment.CUT)
-
   const t = useTranslations('signup')
   const tForm = useTranslations('login.form')
   const [submitting, setSubmitting] = useState(false)
@@ -122,11 +120,7 @@ const SignUpFormCut = () => {
           <p className={classNames(!success ? 'error' : '')} data-testid="activation-form-message">
             {customRich(t, message, {
               support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
-              link: (children) => (
-                <Link href={faq} target="_blank" rel="noreferrer noopener">
-                  {children}
-                </Link>
-              ),
+              link: (children) => children,
             })}
           </p>
         )}

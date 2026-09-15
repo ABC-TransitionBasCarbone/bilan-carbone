@@ -10,8 +10,8 @@ interface Props {
 }
 
 const PublicLayout = async ({ children }: Props) => {
-  const t = await getTranslations('login')
-  const question = customRich(t, 'question')
+  const t = await getTranslations()
+  const question = customRich(t, 'login.question', {}, Environment.BC)
 
   return (
     <DynamicTheme environment={Environment.BC}>

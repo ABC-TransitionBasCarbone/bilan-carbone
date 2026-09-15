@@ -4,33 +4,35 @@ import { Translations } from '@abc-transitionbascarbone/lib'
 import { getEnvVar } from '@abc-transitionbascarbone/lib/environment'
 import { getLocale } from 'next-intl/server'
 
-export const getEnvironnementRessources = async (env: Environment, t: Translations) => {
+export const getEnvironnementRessources = async (env: Environment, t: Translations, linksT: Translations) => {
   const locale = await getLocale()
 
-  const contactForm = await getEnvVar('CONTACT_FORM_URL', env)
+  const translatedContactForm = linksT.has('contactFormUrl') ? linksT('contactFormUrl') : ''
+  const translatedFaq = linksT.has('faqUrl') ? linksT('faqUrl') : ''
 
-  const faq =
-    locale === Locale.EN
-      ? (await getEnvVar('EN_FAQ_LINK', env)) || (await getEnvVar('FAQ_LINK', env))
-      : await getEnvVar('FAQ_LINK', env)
+  const contactForm = translatedContactForm || (await getEnvVar('CONTACT_FORM_URL', env))
+
+  const faq = translatedFaq || (await getEnvVar('FAQ_LINK', env))
 
   const supportEmail = await getEnvVar('SUPPORT_EMAIL', env)
 
   const methodUrl =
-    locale === Locale.FR
-      ? 'https://www.bilancarbone-methode.com/'
-      : 'https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en'
+    locale === Locale.FR ? 'https://www.bilancarbone-methode.com/' : 'https://www.bilancarbone-methode.com/english'
 
   const commonRessources = [
     {
       title: t('questionMethodo'),
       links: [
         { title: t('openCarbonPractice'), link: 'https://www.opencarbonpractice.com/rejoindre-la-communaute' },
-        {
-          title: t('contacterViaFormulaire', { supportEmail }),
-          link: contactForm,
-          isTranslated: true,
-        },
+        ...(contactForm
+          ? [
+              {
+                title: t('contacterViaFormulaire', { supportEmail }),
+                link: contactForm,
+                isTranslated: true,
+              },
+            ]
+          : []),
       ],
     },
     {

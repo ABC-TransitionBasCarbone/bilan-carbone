@@ -29,6 +29,15 @@
       }
     }
   },
+  "abcSiteUrl": "https://abc-transitionbascarbone.fr/association-pour-la-transition-bas-carbone/",
+  "formationUrl": "https://abc-transitionbascarbone.fr/agir/se-former-au-bilan-carbone/",
+  "actorsUrl": "https://abc-transitionbascarbone.fr/les-acteurs/annuaire-des-prestataires/",
+  "abcTiltLink": "https://abc-transitionbascarbone.fr/transition-association-abc-tilt/",
+  "licenseRenewalLink": "https://abc-transitionbascarbone.fr/agir/adherer-a-labc",
+  "snbcUrl": "https://www.ecologie.gouv.fr/politiques-publiques/strategie-nationale-bas-carbone-snbc",
+  "sbtiUrl": "https://sciencebasedtargets.org/net-zero",
+  "contactFormUrl": "https://abc-transitionbascarbone.fr/contact-et-hotline",
+  "faqUrl": "https://association-pour-la-transition-1.gitbook.io/bc+",
   "exports": {
     "title": "Exports :",
     "exportFilename": "resultats_etude_{studyName}",

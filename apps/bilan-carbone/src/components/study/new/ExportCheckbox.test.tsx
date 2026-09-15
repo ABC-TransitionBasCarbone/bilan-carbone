@@ -12,6 +12,7 @@ import ExportCheckbox from './ExportCheckbox'
 jest.mock('next-intl', () => ({
   useTranslations: () => {
     const t = (key: string) => key
+    t.has = () => false
     t.rich = (key: string) => key
     return t
   },
