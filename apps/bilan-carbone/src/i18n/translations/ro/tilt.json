@@ -89,7 +89,8 @@
       "numberOfTTVolunteer": "Câte zile pe săptămână lucrează în regim de telemuncă voluntarii dvs.?",
       "glossary": {
         "postalCode": "Codul poștal al asociației",
-        "postalCodeGlossary": "CP-ul sediului dacă există mai multe site-uri, 5 cifre"
+        "postalCodeGlossary": "CP-ul sediului dacă există mai multe site-uri, 5 cifre",
+        "structureInfoGlossary": "Această informație va putea fi utilizată de echipa noastră pentru a adapta chestionarul la asociațiile care folosesc instrumentul."
       }
     },
     "flow": {
@@ -101,7 +102,7 @@
     "firstSimplifiedStudyMessage": "Este momentul să începeți! Vă invităm să creați prima dvs. Amprentă.",
     "createFirstSimplifiedStudy": "Creează prima mea Amprentă",
     "createSimplified": "Creează o Amprentă",
-    "mySimplifiedStudies": "Amprentele mele",
+    "mySimplifiedStudies": "Cap Carbone - Amprentele mele",
     "seeSimplified": "Vezi Amprenta mea",
     "cannotCreateStudy": "Pentru a putea realiza Bilan Carbone® trebuie să fiți format în metodă! <link>Află mai multe</link>",
     "canCreateFootPrint": "Puteți totuși realiza <link>o amprentă de carbon</link> care vă permite să estimați impactul dvs.",
@@ -116,7 +117,8 @@
       "feedback": {
         "button": "Trimiteți-ne feedback-ul dvs.! ✨",
         "title": "Trimiteți-ne feedback-ul dvs.! ✨"
-      }
+      },
+      "simplifiedFeedback": "Felicitări! Tocmai ați realizat amprenta de carbon simplificată a asociației dumneavoastră. Este o excelentă inițiere în comptabilizarea carbonului! Acum trebuie să <b>acționați în funcție de aceste rezultate</b>, deoarece primul obiectiv al oricărei demersuri de comptabilizare a carbonului trebuie să fie <b>reducerea emisiilor de GES</b>. Rețineți că reducerea emisiilor nu trebuie neapărat să treacă prin contractarea activității, mai ales dacă aceasta permite evitarea emisiilor la alți actori sau prezintă o utilitate socială importantă. Acest lucru este deosebit de important în cazul asociațiilor.<br></br><br></br> Vă invităm să refaceți această amprentă de carbon simplificată anul viitor pentru a verifica dacă sunteți pe traiectoria corectă sau, și mai bine, <b>să realizați un veritabil Bilan Carbone®</b> pentru a câștiga în precizia estimării emisiilor dumneavoastră și a stabili un veritabil plan de transiție! Pentru a începe, nimic mai simplu: este suficient să vă formați în metodă sau să vă înscrieți la parcursul Tilt Envol al Mișcării Tilt. Mai multe informații <link>aici</link>! <br></br><br></br> Dacă aveți sugestii despre instrument, nu ezitați să ni le împărtășiți prin chestionarul de feedback disponibil în partea de sus a acestei pagini sau prin e-mail la adresa <support>support</support>."
     },
     "structure": {
       "'Structure sportive'": "Structură sportivă",
@@ -185,7 +187,11 @@
         "Agriculturetilt": "Pentru a obține mai multe informații despre luarea în considerare a emisiilor legate de activitățile agricole, consultați <link>metoda asociativă</link>.",
         "AgriculturetiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
         "ActivitesIndustrielles": "Pentru a obține mai multe informații despre luarea în considerare a emisiilor legate de eventualele activități industriale, consultați <link>metoda asociativă</link>.",
-        "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux"
+        "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
+        "DeplacementsDePersonneSimplified": "Pentru a colecta datele necesare completării acestui post, vă invităm să distribuiți un chestionar în cadrul asociației dumneavoastră. Iată <exemplequestionnairetorefacto>un exemplu</exemplequestionnairetorefacto>, de implementat în instrumentul de sondaj la alegerea dumneavoastră.",
+        "AlimentationSimplified": "Pentru a colecta datele necesare completării acestui post, vă invităm să distribuiți un chestionar în cadrul asociației dumneavoastră. Iată <exemplequestionnairetorefacto>un exemplu</exemplequestionnairetorefacto>, de implementat în instrumentul de sondaj la alegerea dumneavoastră.",
+        "ServiceEtNumeriqueSimplified": "Pentru a colecta datele necesare completării acestui post, vă invităm să distribuiți un chestionar în cadrul asociației dumneavoastră. Iată <exemplequestionnairetorefacto>un exemplu</exemplequestionnairetorefacto>, de implementat în instrumentul de sondaj la alegerea dumneavoastră.",
+        "EquipementsEtImmobilisationsSimplified": "Pentru a colecta datele necesare completării acestui post, vă invităm să distribuiți un chestionar în cadrul asociației dumneavoastră. Iată <exemplequestionnairetorefacto>un exemplu</exemplequestionnairetorefacto>, de implementat în instrumentul de sondaj la alegerea dumneavoastră."
       }
     }
   },
@@ -195,7 +201,7 @@
   },
   "betaBanner": {
     "badge": "Beta",
-    "title": "Versiunea Beta a instrumentului Cap Carbone",
+    "title": "Documente utile pentru calculul unei amprente de carbon simplificate prin Cap Carbone",
     "description": "Cap Carbone este în prezent în versiune beta! Vă mulțumim că sunteți primii noștri utilizatori și testeri 🎉 Nu ezitați să ne contactați la adresa <support>support@abc-transitionbascarbone.fr</support> dacă aveți feedback! Deoarece aplicația este în beta, este posibil ca unele întrebări să se schimbe în formular și, prin urmare, ca răspunsurile la întrebările modificate să fie șterse în viitoarele actualizări. Nu uitați să verificați completarea categoriilor dvs. pe pagina de introducere a datelor înainte de a vă consulta rezultatele, pentru a verifica dacă toate răspunsurile dvs. sunt încă disponibile."
   },
   "documentationUrlTilt": {
