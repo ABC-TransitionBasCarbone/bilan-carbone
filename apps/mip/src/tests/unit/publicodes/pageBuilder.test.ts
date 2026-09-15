@@ -1,4 +1,6 @@
 import { buildPageBuilder, getQuestionType, MipQuestionType, patchFormElement } from '@/publicodes/mip-form'
+import { createMipEngine } from '@/publicodes/mip-engine'
+import mipModel from '@/publicodes/mip-model'
 import { describe, expect, it } from '@jest/globals'
 import Engine from 'publicodes'
 
@@ -14,7 +16,25 @@ const createMockEngine = (
 }
 
 describe('buildPageBuilder', () => {
-  it('preserves rhetorical info questions for the survey flow', () => {
+  it('builds pages from the current MIP model', () => {
+    const engine = createMipEngine(mipModel)
+
+    const pages = buildPageBuilder(engine)([
+      'DT . filtrage',
+      'DT . voiture . présent',
+      'DT . voiture . km',
+      'DT . voiture . utilisateur',
+    ])
+
+    expect(pages.map((page) => page.elements[0])).toEqual([
+      'DT . filtrage',
+      'DT . voiture . présent',
+      'DT . voiture . km',
+      'DT . voiture . utilisateur',
+    ])
+  })
+
+  it('does not inject rhetorical info questions from local text heuristics', () => {
     const engine = createMockEngine({
       bureaux: {
         rawNode: {
@@ -51,7 +71,7 @@ describe('buildPageBuilder', () => {
 
     const pages = buildPageBuilder(engine)(['bureaux . déchets . tri'])
 
-    expect(pages.some((page) => page.elements.includes('bureaux . énergie . question rhétorique'))).toBe(true)
+    expect(pages.some((page) => page.elements.includes('bureaux . énergie . question rhétorique'))).toBe(false)
   })
 
   it('keeps questions from the same category branch together', () => {
@@ -77,17 +97,17 @@ describe('buildPageBuilder', () => {
     ])
   })
 
-  it('uses the survey order for dependent car questions without model metadata', () => {
+  it('respects raw rule order metadata when it is present', () => {
     const engine = createMockEngine({
-      'DT . voiture . motorisation': { rawNode: { question: 'Motorisation' } },
-      'DT . voiture . gabarit': { rawNode: { question: 'Gabarit' } },
+      'DT . voiture . motorisation': { rawNode: { question: 'Motorisation', ordre: 5 } },
+      'DT . voiture . gabarit': { rawNode: { question: 'Gabarit', ordre: 4 } },
       'DT . voiture . thermique . consommation aux 100': {
-        rawNode: { question: 'Consommation' },
+        rawNode: { question: 'Consommation', ordre: 3 },
       },
-      'DT . voiture . thermique . carburant': { rawNode: { question: 'Carburant' } },
-      'DT . voiture . voyageurs': { rawNode: { question: 'Voyageurs' } },
-      'DT . voiture . utilisateur': { rawNode: { question: 'Utilisateur' } },
-      'DT . voiture . km': { rawNode: { question: 'Distance' } },
+      'DT . voiture . thermique . carburant': { rawNode: { question: 'Carburant', ordre: 6 } },
+      'DT . voiture . voyageurs': { rawNode: { question: 'Voyageurs', ordre: 7 } },
+      'DT . voiture . utilisateur': { rawNode: { question: 'Utilisateur', ordre: 2 } },
+      'DT . voiture . km': { rawNode: { question: 'Distance', ordre: 1 } },
       'DT . train . heure': { rawNode: { question: 'Train' } },
     })
 
@@ -114,7 +134,7 @@ describe('buildPageBuilder', () => {
     ])
   })
 
-  it('removes the fuel question when the car is electric', () => {
+  it('does not enforce electric-car fuel filtering in the form layer', () => {
     const engine = createMockEngine(
       {
         'DT . voiture . motorisation': { rawNode: { question: 'Motorisation' } },
@@ -125,7 +145,10 @@ describe('buildPageBuilder', () => {
 
     const pages = buildPageBuilder(engine)(['DT . voiture . motorisation', 'DT . voiture . thermique . carburant'])
 
-    expect(pages.map((page) => page.elements[0])).toEqual(['DT . voiture . motorisation'])
+    expect(pages.map((page) => page.elements[0])).toEqual([
+      'DT . voiture . motorisation',
+      'DT . voiture . thermique . carburant',
+    ])
   })
 
   it('sorts accented category names according to the survey category order', () => {
@@ -150,7 +173,7 @@ describe('buildPageBuilder', () => {
     expect(pages.map((page) => page.elements[0])).toEqual(['NUMÉRIQUE . appareils', 'bureaux . énergie'])
   })
 
-  it('keeps rhetorical mosaic children only when the real child is still unanswered', () => {
+  it('does not synthesize rhetorical mosaic children from local heuristics', () => {
     const mismatchedSituationEngine = createMockEngine(
       {
         'bureaux . énergie': {
@@ -171,9 +194,7 @@ describe('buildPageBuilder', () => {
     )
 
     const pagesWithUnrelatedAnswer = buildPageBuilder(mismatchedSituationEngine)([])
-    expect(
-      pagesWithUnrelatedAnswer.some((page) => page.elements.includes('bureaux . énergie . question rhétorique')),
-    ).toBe(true)
+    expect(pagesWithUnrelatedAnswer).toEqual([])
 
     const answeredMosaicEngine = createMockEngine(
       {

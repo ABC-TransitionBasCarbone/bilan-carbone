@@ -26,9 +26,6 @@ type ParsedRule = {
 type ParsedRules = Record<string, ParsedRule>
 type SurveySituation = Record<string, unknown>
 
-const CAR_FUEL_RULE = 'DT . voiture . thermique . carburant'
-const CAR_MOTORIZATION_RULE = 'DT . voiture . motorisation'
-
 export const getMosaicParent = (engine: Engine, ruleName: string): string | null => {
   const rules = engine.getParsedRules() as ParsedRules
   const parts = getRuleNameParts(ruleName)
@@ -46,14 +43,8 @@ export const getMosaicParent = (engine: Engine, ruleName: string): string | null
   return null
 }
 
-const isInfoQuestion = (rules: ParsedRules, ruleName: string): boolean => {
-  const raw = rules[ruleName]?.rawNode
-  if (!raw || raw.question === undefined) {
-    return false
-  }
-
-  const normalized = normalizeCategoryKey(`${ruleName} ${String(raw.question)}`)
-  return normalized.includes('question') && (normalized.includes('rhetorique') || normalized.includes('info'))
+const isInfoQuestion = (_rules: ParsedRules, _ruleName: string): boolean => {
+  return false
 }
 
 const getQuestionText = (rule: ParsedRule | undefined): string | undefined => {
@@ -85,27 +76,7 @@ const hasAnswerOrChildAnswer = (engine: Engine, situation: SurveySituation, rule
   return layout.type === 'mosaic' && isMosaicLayoutAnswered(layout)
 }
 
-const isElectricCar = (situation: SurveySituation): boolean => {
-  const motorisation = situation[CAR_MOTORIZATION_RULE]
-  return motorisation === 'électrique' || motorisation === "'électrique'"
-}
-
-const isApplicableSurveyQuestion = (ruleName: string, situation: SurveySituation): boolean => {
-  return ruleName !== CAR_FUEL_RULE || !isElectricCar(situation)
-}
-
 const MAX = Number.MAX_SAFE_INTEGER
-
-const SURVEY_RULE_ORDER_OVERRIDES: Record<string, number> = {
-  'DT . voiture . km': 1,
-  'DT . voiture . utilisateur': 2,
-  'DT . voiture . thermique . consommation aux 100': 3,
-  'DT . voiture . électrique . consommation aux 100': 3,
-  'DT . voiture . gabarit': 4,
-  'DT . voiture . motorisation': 5,
-  'DT . voiture . thermique . carburant': 6,
-  'DT . voiture . voyageurs': 7,
-}
 
 const getRuleOrder = (rawNode: ParsedRuleRawNode | undefined): number | null => {
   const ordre = rawNode?.ordre
@@ -119,10 +90,6 @@ const getRuleOrder = (rawNode: ParsedRuleRawNode | undefined): number | null => 
     }
   }
   return null
-}
-
-const getSurveyRuleOrder = (ruleName: string, rawNode: ParsedRuleRawNode | undefined): number | null => {
-  return SURVEY_RULE_ORDER_OVERRIDES[ruleName] ?? getRuleOrder(rawNode)
 }
 
 const getRuleBranchKey = (ruleName: string): string => {
@@ -161,7 +128,7 @@ const compareRuleNames = (a: string, b: string, parsedRules: ParsedRules, initia
   const aParts = getRuleNameParts(a)
   const bParts = getRuleNameParts(b)
   const directOrderDiff =
-    (getSurveyRuleOrder(a, parsedRules[a]?.rawNode) ?? MAX) - (getSurveyRuleOrder(b, parsedRules[b]?.rawNode) ?? MAX)
+    (getRuleOrder(parsedRules[a]?.rawNode) ?? MAX) - (getRuleOrder(parsedRules[b]?.rawNode) ?? MAX)
   if (directOrderDiff !== 0) {
     return directOrderDiff
   }
@@ -202,7 +169,7 @@ export const buildPageBuilder = (engine: Engine) => {
     const allFields = [...new Set([...fields, ...extraInfoFields])]
     const initialIndexes = new Map(allFields.map((field, index) => [field, index]))
     const sortedFields = allFields
-      .filter((field) => rules[field]?.rawNode?.question !== undefined && isApplicableSurveyQuestion(field, situation))
+      .filter((field) => rules[field]?.rawNode?.question !== undefined)
       .sort((a, b) => compareRuleNames(a, b, rules, initialIndexes))
 
     const pages: FormPages<string> = []
