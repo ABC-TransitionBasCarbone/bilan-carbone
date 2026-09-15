@@ -1,3 +1,4 @@
+import { convertExcelSerialDateToISODate } from '@abc-transitionbascarbone/utils/excel'
 import { AccessOptions, Client } from 'basic-ftp'
 import fs from 'fs'
 import xlsx from 'node-xlsx'
@@ -54,7 +55,7 @@ const formatCellValue = (header: string, value: unknown) => {
 
   if (header === 'Date début session' || header === 'Date fin session') {
     if (typeof value === 'number') {
-      return new Date(Date.UTC(1899, 11, 30) + value * 86400000).toISOString().slice(0, 10)
+      return convertExcelSerialDateToISODate(value)
     }
   }
 
