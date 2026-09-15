@@ -7,7 +7,7 @@ import StudyVersions from '@/components/study/rights/StudyVersions'
 import SelectStudySite from '@/components/study/site/SelectStudySite'
 import useStudySite from '@/components/study/site/useStudySite'
 import StudyComments from '@/components/study/StudyComments'
-import type { FullStudy } from '@/db/study'
+import type { FullStudy, MinimalStudyForRights, StudySiteWithNameList } from '@/db/study'
 import {
   changeStudyDates,
   changeStudyEstablishment,
@@ -41,20 +41,21 @@ import { useForm } from 'react-hook-form'
 import styles from './StudyRights.module.css'
 
 interface Props {
-  study: FullStudy
+  study: MinimalStudyForRights
   editionDisabled: boolean
   emissionFactorSources: EmissionFactorImportVersion[]
   user: UserSession
+  studySites: StudySiteWithNameList
 }
 
-const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, user }: Props) => {
+const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, user, studySites }: Props) => {
   const tLabel = useTranslations('common.label')
   const t = useTranslations('study.new')
   const tRights = useTranslations('study.rights')
   const tValidation = useTranslations('validation')
   const tCountry = useTranslations('country')
   const { callServerFunction } = useServerFunction()
-  const { siteId: studySite, studySiteId, setSite } = useStudySite(study)
+  const { siteId: studySite, studySiteId, setSite } = useStudySite({ ...study, sites: studySites })
   const [siteData, setSiteData] = useState<FullStudy['sites'][0] | undefined>()
   const [loading, setLoading] = useState(true)
   const [editTitle, setEditTitle] = useState(false)
@@ -203,7 +204,7 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, us
         }
         iconPosition="after"
         rightComponent={
-          <SelectStudySite sites={study.sites} defaultValue={studySite} setSite={setSite} showAllOption={false} />
+          <SelectStudySite sites={studySites} defaultValue={studySite} setSite={setSite} showAllOption={false} />
         }
       >
         {loading ? (

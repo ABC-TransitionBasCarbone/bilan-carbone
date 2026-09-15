@@ -1,5 +1,5 @@
 import { getOrganizationVersionWithSitesById } from '@/db/organization'
-import type { FullStudy, MinimalStudyForRights } from '@/db/study'
+import type { MinimalStudyForRights } from '@/db/study'
 import { getUserApplicationSettings } from '@/db/user'
 import DynamicStudyRights from '@/environments/core/study/DynamicStudyRights'
 import { getEmissionFactorImportVersions } from '@/services/serverFunctions/emissionFactor'
@@ -12,12 +12,11 @@ import { getTranslations } from 'next-intl/server'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 
 interface Props {
-  study: FullStudy
   user: UserSession
   minimalStudy: MinimalStudyForRights
 }
 
-const StudyRightsPage = async ({ study, user, minimalStudy }: Props) => {
+const StudyRightsPage = async ({ user, minimalStudy }: Props) => {
   const tNav = await getTranslations('nav')
 
   const userRoleOnStudy = await NEWGetAccountRoleOnStudy(user, minimalStudy.id)
@@ -65,7 +64,6 @@ const StudyRightsPage = async ({ study, user, minimalStudy }: Props) => {
       <DynamicStudyRights
         user={user}
         study={minimalStudy}
-        fullStudy={study}
         editionDisabled={editionDisabled}
         userRoleOnStudy={userRoleOnStudy.data}
         emissionFactorSources={emissionFactorImportVersionRes.data}

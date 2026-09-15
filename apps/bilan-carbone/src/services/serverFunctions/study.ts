@@ -1203,7 +1203,7 @@ export const findStudiesWithSites = async (siteIds: string[]) =>
     }
   })
 
-export const deleteStudyMember = async (member: FullStudy['allowedUsers'][0], studyId: string) =>
+export const deleteStudyMember = async (member: { accountId: string }, studyId: string) =>
   withServerResponse('deleteStudyMember', async () => {
     const [session, study] = await Promise.all([dbActualizedAuth(), getStudy(studyId)])
     if (

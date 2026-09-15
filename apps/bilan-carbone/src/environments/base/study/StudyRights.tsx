@@ -4,7 +4,7 @@ import StudyContributorsTable from '@/components/study/rights/StudyContributorsT
 import StudyParams from '@/components/study/rights/StudyParams'
 import StudyRightsTable from '@/components/study/rights/StudyRightsTable'
 import SelectStudySite from '@/components/study/site/SelectStudySite'
-import type { FullStudy } from '@/db/study'
+import type { MinimalStudyForRights, StudySiteWithNameList } from '@/db/study'
 import { changeStudyName } from '@/services/serverFunctions/study'
 import { ChangeStudyNameCommand, ChangeStudyNameValidation } from '@/services/serverFunctions/study.command'
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
@@ -24,13 +24,14 @@ import { useForm } from 'react-hook-form'
 
 interface Props {
   user: UserSession
-  study: FullStudy
+  study: MinimalStudyForRights
   editionDisabled: boolean
   userRoleOnStudy: StudyRole
   emissionFactorSources: EmissionFactorImportVersion[]
+  studySites: StudySiteWithNameList
 }
 
-const StudyRights = ({ user, study, editionDisabled, userRoleOnStudy, emissionFactorSources }: Props) => {
+const StudyRights = ({ user, study, editionDisabled, userRoleOnStudy, emissionFactorSources, studySites }: Props) => {
   const t = useTranslations('study.rights')
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
@@ -85,7 +86,7 @@ const StudyRights = ({ user, study, editionDisabled, userRoleOnStudy, emissionFa
         )
       }
       iconPosition="after"
-      rightComponent={<SelectStudySite sites={study.sites} siteSelectionDisabled />}
+      rightComponent={<SelectStudySite sites={studySites} siteSelectionDisabled />}
     >
       <StudyParams user={user} study={study} disabled={editionDisabled} emissionFactorSources={emissionFactorSources} />
       <StudyRightsTable study={study} user={user} canAddMember={!editionDisabled} userRoleOnStudy={userRoleOnStudy} />
