@@ -7,19 +7,15 @@ import { getLocale } from 'next-intl/server'
 export const getEnvironnementRessources = async (env: Environment, t: Translations) => {
   const locale = await getLocale()
 
-  const contactForm = await getEnvVar('CONTACT_FORM_URL', env)
+  const contactForm =
+    locale === Locale.EN ? await getEnvVar('EN_CONTACT_FORM_URL', env) : await getEnvVar('CONTACT_FORM_URL', env)
 
-  const faq =
-    locale === Locale.EN
-      ? (await getEnvVar('EN_FAQ_LINK', env)) || (await getEnvVar('FAQ_LINK', env))
-      : await getEnvVar('FAQ_LINK', env)
+  const faq = locale === Locale.EN ? await getEnvVar('EN_FAQ_LINK', env) : await getEnvVar('FAQ_LINK', env)
 
   const supportEmail = await getEnvVar('SUPPORT_EMAIL', env)
 
   const methodUrl =
-    locale === Locale.FR
-      ? 'https://www.bilancarbone-methode.com/'
-      : 'https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en'
+    locale === Locale.FR ? 'https://www.bilancarbone-methode.com/' : 'https://www.bilancarbone-methode.com/english'
 
   const commonRessources = [
     {

@@ -1,9 +1,9 @@
 import { getEnvVarClient } from '@abc-transitionbascarbone/utils/environmentClient'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { LocaleType } from '@abc-transitionbascarbone/i18n/config'
 import { Translations } from '@abc-transitionbascarbone/lib'
 import Link from 'next/link'
 import { ReactNode } from 'react'
-import classNames from 'classnames'
 
 type CustomRichParams = {
   [key: string]: ((children: ReactNode) => ReactNode) | ReactNode | string | number | undefined
@@ -14,8 +14,9 @@ export const customRich = (
   key: string,
   params: CustomRichParams = {},
   env: Environment = Environment.BC,
+  locale?: LocaleType,
 ) => {
-  const faq = getEnvVarClient('FAQ_LINK', env)
+  const faq = getEnvVarClient(locale === 'en' ? 'EN_FAQ_LINK' : 'FAQ_LINK', env)
   const support = getEnvVarClient('SUPPORT_EMAIL', Environment.BC)
   const abc = getEnvVarClient('ABC_SITE', Environment.BC)
 

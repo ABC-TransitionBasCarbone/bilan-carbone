@@ -1,10 +1,11 @@
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 
-type ClientEnvKey = 'SUPPORT_EMAIL' | 'FAQ_LINK' | 'ABC_SITE'
+type ClientEnvKey = 'SUPPORT_EMAIL' | 'FAQ_LINK' | 'EN_FAQ_LINK' | 'ABC_SITE'
 
 const CLIENT_ENV_DEFAULT: Record<ClientEnvKey, string> = {
   SUPPORT_EMAIL: process.env.NEXT_PUBLIC_SUPPORT_EMAIL ?? '',
   FAQ_LINK: process.env.NEXT_PUBLIC_FAQ_LINK ?? '',
+  EN_FAQ_LINK: process.env.NEXT_PUBLIC_EN_FAQ_LINK ?? '',
   ABC_SITE: process.env.NEXT_PUBLIC_ABC_SITE ?? '',
 }
 

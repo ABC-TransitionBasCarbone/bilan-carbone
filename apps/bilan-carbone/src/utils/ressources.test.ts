@@ -29,18 +29,34 @@ describe('getEnvironnementRessources', () => {
     jest.clearAllMocks()
   })
 
-  test('uses EN_FAQ_LINK when locale is EN and EN_FAQ_LINK is defined', async () => {
+  test('does not use fallback links when English links are not configured', async () => {
     jest.mocked(getLocale).mockResolvedValue(Locale.EN)
     jest.mocked(getEnvVar).mockImplementation(async (key) => {
-      if (key === 'CONTACT_FORM_URL') {
-        return 'https://contact.form'
+      if (key === 'SUPPORT_EMAIL') {
+        return 'support@example.com'
+      }
+      return ''
+    })
+
+    const resources = await getEnvironnementRessources(Environment.BC, t)
+    const faqLink = getFaqLinkFromResources(resources)
+    const contactLink = resources
+      .find((resource) => resource.title === 'questionMethodo')
+      ?.links.find((resourceLink) => resourceLink.title === 'contacterViaFormulaire' && 'link' in resourceLink)
+
+    expect(faqLink).toBeUndefined()
+    expect(contactLink && 'link' in contactLink ? contactLink.link : undefined).toBeUndefined()
+  })
+
+  test('uses configured English links when they are defined', async () => {
+    jest.mocked(getLocale).mockResolvedValue(Locale.EN)
+    jest.mocked(getEnvVar).mockImplementation(async (key) => {
+      if (key === 'EN_CONTACT_FORM_URL') {
+        return 'https://en.contact.form'
       }
       if (key === 'EN_FAQ_LINK') {
         return 'https://en.faq'
       }
-      if (key === 'FAQ_LINK') {
-        return 'https://fr.faq'
-      }
       if (key === 'SUPPORT_EMAIL') {
         return 'support@example.com'
       }
@@ -49,31 +65,11 @@ describe('getEnvironnementRessources', () => {
 
     const resources = await getEnvironnementRessources(Environment.BC, t)
     const faqLink = getFaqLinkFromResources(resources)
+    const contactLink = resources
+      .find((resource) => resource.title === 'questionMethodo')
+      ?.links.find((resourceLink) => resourceLink.title === 'contacterViaFormulaire' && 'link' in resourceLink)
 
     expect(faqLink).toBe('https://en.faq')
-  })
-
-  test('falls back to FAQ_LINK when locale is EN and EN_FAQ_LINK is empty', async () => {
-    jest.mocked(getLocale).mockResolvedValue(Locale.EN)
-    jest.mocked(getEnvVar).mockImplementation(async (key) => {
-      if (key === 'CONTACT_FORM_URL') {
-        return 'https://contact.form'
-      }
-      if (key === 'EN_FAQ_LINK') {
-        return ''
-      }
-      if (key === 'FAQ_LINK') {
-        return 'https://fr.faq'
-      }
-      if (key === 'SUPPORT_EMAIL') {
-        return 'support@example.com'
-      }
-      return ''
-    })
-
-    const resources = await getEnvironnementRessources(Environment.BC, t)
-    const faqLink = getFaqLinkFromResources(resources)
-
-    expect(faqLink).toBe('https://fr.faq')
+    expect(contactLink && 'link' in contactLink ? contactLink.link : undefined).toBe('https://en.contact.form')
   })
 })
