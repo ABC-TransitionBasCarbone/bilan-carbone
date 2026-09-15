@@ -2,7 +2,7 @@ import { checkCronRequest } from '@/app/api/cron/utils'
 import { getUsersFromFTP } from '@/scripts/ftp/importUsers'
 import { NextResponse, type NextRequest } from 'next/server'
 
-export async function POST(req: NextRequest): Promise<NextResponse> {
+export const POST = async (req: NextRequest): Promise<NextResponse> => {
   const error = checkCronRequest(req, 'import-users')
   if (error) {
     return error
