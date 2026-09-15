@@ -48,16 +48,38 @@ describe('getTrainingSessionsFromFTP', () => {
     jest.mocked(fs.promises.readFile).mockResolvedValue(Buffer.from('xlsx content'))
     jest.mocked(xlsx.parse).mockReturnValue([
       {
-        name: 'A REMPLIR',
+        name: 'Liste',
         data: [
-          ['Organisme de formation', 'Nom'],
-          ['IFC', 'IFC session'],
-          ['Other organisation', 'Ignored session'],
-          ['take[air]', 'take[air] session'],
-          ['Nepsen', 'Nepsen session'],
+          [
+            'Date début session',
+            'Date fin session',
+            'Organisme de formation',
+            'Organisation',
+            'Nom de Formation',
+            'Civilite',
+            'Nom',
+            'Prenom',
+            'Fonction',
+            'E-mail',
+            'Telephone fixe',
+            'Mobile',
+            'Adresse',
+            'Complement',
+            'Code Postal',
+            'Ville',
+            'Pays',
+            'SIRET',
+            'Numero Fiscal',
+            'TVA',
+            'Produits achetés',
+            'Code session',
+          ],
+          ['2026-09-15', '2026-09-16', 'IFC'],
+          ['2026-09-17', '2026-09-18', 'Nepsen'],
+          ['2026-09-19', '2026-09-20', 'Sami Academy'],
+          ['2026-09-21', '2026-09-22', 'take[air]'],
         ],
       },
-      { name: 'Liste', data: [['row 1'], ['row 2'], ['row 3'], ['row 4']] },
     ])
     process.env.FTP_TRAINING_SESSIONS_FILE_PATH = '/training/'
     process.env.FTP_TRAINING_SESSIONS_FILE_NAME = 'sessions.xlsx'
@@ -66,7 +88,7 @@ describe('getTrainingSessionsFromFTP', () => {
   it('reads the training sessions file and confirms success', async () => {
     jest.mocked(fs.createWriteStream).mockReturnValue('stream' as unknown as fs.WriteStream)
 
-    await getTrainingSessionsFromFTP()
+    const worksheets = await getTrainingSessionsFromFTP()
 
     expect(accessMock).toHaveBeenCalledWith({
       host: 'host',
@@ -78,18 +100,42 @@ describe('getTrainingSessionsFromFTP', () => {
     expect(fs.promises.readFile).toHaveBeenCalledWith('sessions.xlsx')
     expect(xlsx.parse).toHaveBeenCalledWith(Buffer.from('xlsx content'))
     expect(closeMock).toHaveBeenCalledTimes(1)
-    expect(consoleLogSpy).toHaveBeenCalledWith([
-      {
-        name: 'A REMPLIR',
-        data: [
-          ['Organisme de formation', 'Nom'],
-          ['IFC', 'IFC session'],
-          ['take[air]', 'take[air] session'],
-        ],
-      },
+    expect(worksheets).toEqual([
       {
         name: 'Liste',
-        data: [['row 1'], ['row 2'], ['row 3']],
+        data: [
+          { 'Date début session': '2026-09-15', 'Date fin session': '2026-09-16', 'Organisme de formation': 'IFC' },
+          { 'Date début session': '2026-09-17', 'Date fin session': '2026-09-18', 'Organisme de formation': 'Nepsen' },
+          {
+            'Date début session': '2026-09-19',
+            'Date fin session': '2026-09-20',
+            'Organisme de formation': 'Sami Academy',
+          },
+          {
+            'Date début session': '2026-09-21',
+            'Date fin session': '2026-09-22',
+            'Organisme de formation': 'take[air]',
+          },
+        ],
+      },
+    ])
+    expect(consoleLogSpy).toHaveBeenCalledWith([
+      {
+        name: 'Liste',
+        data: [
+          { 'Date début session': '2026-09-15', 'Date fin session': '2026-09-16', 'Organisme de formation': 'IFC' },
+          { 'Date début session': '2026-09-17', 'Date fin session': '2026-09-18', 'Organisme de formation': 'Nepsen' },
+          {
+            'Date début session': '2026-09-19',
+            'Date fin session': '2026-09-20',
+            'Organisme de formation': 'Sami Academy',
+          },
+          {
+            'Date début session': '2026-09-21',
+            'Date fin session': '2026-09-22',
+            'Organisme de formation': 'take[air]',
+          },
+        ],
       },
     ])
     expect(consoleLogSpy).toHaveBeenCalledWith('Training sessions file read successfully')

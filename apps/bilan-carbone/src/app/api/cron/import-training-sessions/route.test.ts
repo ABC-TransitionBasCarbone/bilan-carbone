@@ -52,14 +52,14 @@ describe('POST /api/cron/import-training-sessions', () => {
 
   it('returns 200 when import succeeds', async () => {
     jest.mocked(checkCronRequest).mockReturnValue(null)
-    const firstRows = [{ name: 'Sessions', data: [['row 1'], ['row 2'], ['row 3']] }]
-    jest.mocked(getTrainingSessionsFromFTP).mockResolvedValue(firstRows)
+    const worksheets = [{ name: 'Sessions', data: [['row 1'], ['row 2'], ['row 3'], ['row 4']] }]
+    jest.mocked(getTrainingSessionsFromFTP).mockResolvedValue(worksheets)
 
     const response = await POST(req)
 
     expect(getTrainingSessionsFromFTP).toHaveBeenCalledTimes(1)
     expect(response.status).toBe(200)
-    await expect(response.text()).resolves.toBe(JSON.stringify(firstRows))
+    await expect(response.text()).resolves.toBe(JSON.stringify(worksheets))
   })
 
   it('returns 500 when import fails', async () => {
