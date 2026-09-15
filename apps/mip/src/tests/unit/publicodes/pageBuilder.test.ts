@@ -1,5 +1,5 @@
-import { buildPageBuilder, getQuestionType, MipQuestionType, patchFormElement } from '@/publicodes/mip-form'
 import { createMipEngine } from '@/publicodes/mip-engine'
+import { buildPageBuilder, getQuestionType, MipQuestionType, patchFormElement } from '@/publicodes/mip-form'
 import mipModel from '@/publicodes/mip-model'
 import { describe, expect, it } from '@jest/globals'
 import Engine from 'publicodes'
