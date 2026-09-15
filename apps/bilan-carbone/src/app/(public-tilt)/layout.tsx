@@ -3,7 +3,7 @@ import DynamicTheme from '@/environments/core/providers/DynamicTheme'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import { Metadata } from 'next'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 import { ReactNode } from 'react'
 
 interface Props {
@@ -17,7 +17,8 @@ export const metadata: Metadata = {
 
 const PublicLayout = async ({ children }: Props) => {
   const t = await getTranslations('login')
-  const question = customRich(t, 'question', {}, Environment.TILT)
+  const locale = await getLocale()
+  const question = customRich(t, 'question', {}, Environment.TILT, locale)
   return (
     <DynamicTheme environment={Environment.TILT}>
       <main className="h100">

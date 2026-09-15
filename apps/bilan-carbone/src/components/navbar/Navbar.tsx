@@ -69,7 +69,7 @@ const Navbar = ({ user, environment, isFootprintsEnabled, hasTrainedUsers }: Pro
           ? 'https://www.bilancarbone-methode.com/'
           : 'https://www.bilancarbone-methode.com/english'
     }
-  }, [user.environment])
+  }, [locale, user.environment])
 
   return (
     <AppBar position="sticky" elevation={0}>

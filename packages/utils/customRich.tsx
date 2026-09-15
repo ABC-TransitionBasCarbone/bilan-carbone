@@ -1,7 +1,6 @@
-import { getEnvVarClient } from '@abc-transitionbascarbone/utils/environmentClient'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
-import { LocaleType } from '@abc-transitionbascarbone/i18n/config'
 import { Translations } from '@abc-transitionbascarbone/lib'
+import { getEnvVarClient, getFaqLinkClient } from '@abc-transitionbascarbone/utils/environmentClient'
 import Link from 'next/link'
 import { ReactNode } from 'react'
 
@@ -14,9 +13,9 @@ export const customRich = (
   key: string,
   params: CustomRichParams = {},
   env: Environment = Environment.BC,
-  locale?: LocaleType,
+  locale?: string,
 ) => {
-  const faq = getEnvVarClient(locale === 'en' ? 'EN_FAQ_LINK' : 'FAQ_LINK', env)
+  const faq = getFaqLinkClient(env, locale)
   const support = getEnvVarClient('SUPPORT_EMAIL', Environment.BC)
   const abc = getEnvVarClient('ABC_SITE', Environment.BC)
 
@@ -45,17 +44,32 @@ export const customRich = (
       </Link>
     ),
     guideecoresponsablebureautilttorefacto: (children) => (
-      <Link className="font-inherit" href="https://associationbilancarbone.sharepoint.com/:b:/s/AssociationBilanCarbone/IQDSk3R5vX9eQYAsjwE3LWPoASe80Sd7WvaOOcu_wE7Uhf8?e=EABlMq" target="_blank" rel="noreferrer noopener">
+      <Link
+        className="font-inherit"
+        href="https://associationbilancarbone.sharepoint.com/:b:/s/AssociationBilanCarbone/IQDSk3R5vX9eQYAsjwE3LWPoASe80Sd7WvaOOcu_wE7Uhf8?e=EABlMq"
+        target="_blank"
+        rel="noreferrer noopener"
+      >
         {children}
       </Link>
     ),
     compteassotilttorefacto: (children) => (
-      <Link className="font-inherit" href="https://lecompteasso.associations.gouv.fr/client/login" target="_blank" rel="noreferrer noopener">
+      <Link
+        className="font-inherit"
+        href="https://lecompteasso.associations.gouv.fr/client/login"
+        target="_blank"
+        rel="noreferrer noopener"
+      >
         {children}
       </Link>
     ),
     donneesdéplacementsdtINSEEetSDEStorefacto: (children) => (
-      <Link className="font-inherit" href="https://mobilites-durables.transports.gouv.fr/indicateurs/deplacements-domicile-travail/" target="_blank" rel="noreferrer noopener">
+      <Link
+        className="font-inherit"
+        href="https://mobilites-durables.transports.gouv.fr/indicateurs/deplacements-domicile-travail/"
+        target="_blank"
+        rel="noreferrer noopener"
+      >
         {children}
       </Link>
     ),
@@ -67,9 +81,7 @@ export const customRich = (
     br: () => <br />,
     underline: (children) => <span style={{ textDecoration: 'underline' }}>{children}</span>,
     green: (children) => <span className="font-inherit green-ghgp">{children}</span>,
-    purple: (children) => (
-      <span className="font-inherit purple-ghgp">{children}</span>
-    ),
+    purple: (children) => <span className="font-inherit purple-ghgp">{children}</span>,
     white: (children) => <span style={{ color: 'white !important', fontSize: 'font-inherit' }}>{children}</span>,
     ul: (children) => <ul>{children}</ul>,
     li: (children) => <li>{children}</li>,

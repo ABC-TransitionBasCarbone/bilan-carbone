@@ -11,11 +11,11 @@ import type { Cnc } from '@abc-transitionbascarbone/db-common'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { getEnvRoute } from '@abc-transitionbascarbone/services/email/utils'
 import { customRich } from '@abc-transitionbascarbone/utils/customRich'
-import { getEnvVarClient } from '@abc-transitionbascarbone/utils/environmentClient'
+import { getEnvVarClient, getFaqLinkClient } from '@abc-transitionbascarbone/utils/environmentClient'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl } from '@mui/material'
 import classNames from 'classnames'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -25,7 +25,8 @@ import authStyles from './Auth.module.css'
 
 const SignUpFormCut = () => {
   const contactMail = getEnvVarClient('SUPPORT_EMAIL', Environment.CUT)
-  const faq = getEnvVarClient('FAQ_LINK', Environment.CUT)
+  const locale = useLocale()
+  const faq = getFaqLinkClient(Environment.CUT, locale)
 
   const t = useTranslations('signup')
   const tForm = useTranslations('login.form')

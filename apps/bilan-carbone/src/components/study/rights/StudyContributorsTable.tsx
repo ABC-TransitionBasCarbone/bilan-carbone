@@ -12,12 +12,12 @@ import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { Post } from '@abc-transitionbascarbone/utils/charts'
 import { customRich } from '@abc-transitionbascarbone/utils/customRich'
-import { getEnvVarClient } from '@abc-transitionbascarbone/utils/environmentClient'
+import { getFaqLinkClient } from '@abc-transitionbascarbone/utils/environmentClient'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { IconButton } from '@mui/material'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useCallback, useMemo, useState } from 'react'
@@ -57,7 +57,8 @@ const PREVIEW_MAX_LINES = 2
 const SUBPOST_PREVIEW_LIMIT = 3
 
 const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
-  const faq = getEnvVarClient('FAQ_LINK', Environment.BC)
+  const locale = useLocale()
+  const faq = getFaqLinkClient(Environment.BC, locale)
   const tCommon = useTranslations('common')
   const t = useTranslations('study.rights.contributorsTable')
   const tDeleting = useTranslations('study.rights.contributorsTable.deleting')

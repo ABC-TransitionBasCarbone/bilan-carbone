@@ -12,12 +12,12 @@ import GlossaryModal from '@abc-transitionbascarbone/components/src/modals/Gloss
 import { Country, Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { getEnvRoute } from '@abc-transitionbascarbone/services/email/utils'
 import { customRich } from '@abc-transitionbascarbone/utils/customRich'
-import { getEnvVarClient } from '@abc-transitionbascarbone/utils/environmentClient'
+import { getEnvVarClient, getFaqLinkClient } from '@abc-transitionbascarbone/utils/environmentClient'
 import { zodResolver } from '@hookform/resolvers/zod'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import { FormControl } from '@mui/material'
 import classNames from 'classnames'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
@@ -27,7 +27,8 @@ import authStyles from './Auth.module.css'
 
 const SignUpFormClickson = () => {
   const contactMail = getEnvVarClient('SUPPORT_EMAIL', Environment.CLICKSON)
-  const faq = getEnvVarClient('FAQ_LINK', Environment.CLICKSON)
+  const locale = useLocale()
+  const faq = getFaqLinkClient(Environment.CLICKSON, locale)
 
   const t = useTranslations('signup')
   const tForm = useTranslations('login.form')

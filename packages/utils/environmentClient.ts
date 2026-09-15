@@ -35,3 +35,11 @@ const CLIENT_ENV_BY_ENV: Partial<Record<Environment, Partial<Record<ClientEnvKey
 export const getEnvVarClient = (key: ClientEnvKey, environment: Environment = Environment.BC) => {
   return CLIENT_ENV_BY_ENV[environment]?.[key] ?? CLIENT_ENV_DEFAULT[key] ?? ''
 }
+
+export const getFaqLinkClient = (environment: Environment, locale?: string) => {
+  if (locale === 'en' && (environment === Environment.BC || environment === Environment.TILT)) {
+    return getEnvVarClient('EN_FAQ_LINK', environment)
+  }
+
+  return getEnvVarClient('FAQ_LINK', environment)
+}
