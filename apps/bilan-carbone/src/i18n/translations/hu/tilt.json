@@ -89,7 +89,8 @@
       "numberOfTTVolunteer": "Hány napot dolgoznak hetente távmunkában az önkéntesei?",
       "glossary": {
         "postalCode": "Az egyesület irányítószáma",
-        "postalCodeGlossary": "A székhely irányítószáma több telephely esetén, 5 számjegy"
+        "postalCodeGlossary": "A székhely irányítószáma több telephely esetén, 5 számjegy",
+        "structureInfoGlossary": "Ezt az információt csapatunk felhasználhatja arra, hogy a kérdőívet az eszközt használó egyesületekhez igazítsa."
       }
     },
     "flow": {
@@ -101,7 +102,7 @@
     "firstSimplifiedStudyMessage": "Itt az ideje, hogy belevágjon! Meghívjuk, hogy hozza létre első Lenyomatát.",
     "createFirstSimplifiedStudy": "Első Lenyomatom létrehozása",
     "createSimplified": "Lenyomat létrehozása",
-    "mySimplifiedStudies": "Lenyomataim",
+    "mySimplifiedStudies": "Cap Carbone - Lábnyomaim",
     "seeSimplified": "Lenyomatom megtekintése",
     "cannotCreateStudy": "A Bilan Carbone®-ok elkészítéséhez képzettnek kell lenni a módszerben! <link>Tudjon meg többet</link>",
     "canCreateFootPrint": "Ugyanakkor készíthet egy <link>szénlábnyomot</link>, amely lehetővé teszi hatásának becslését",
@@ -116,7 +117,8 @@
       "feedback": {
         "button": "Küldje el visszajelzéseit! ✨",
         "title": "Küldje el visszajelzéseit! ✨"
-      }
+      },
+      "simplifiedFeedback": "Gratulálunk! Éppen elkészítette egyesülete egyszerűsített szénlábnyomát. Ez kiváló bevezetés a szén-elszámolásba! Most <b>a kapott eredmények alapján cselekednie kell</b>, mivel minden szén-elszámolási megközelítés elsődleges célja a <b>ÜHG-kibocsátás csökkentése</b> kell, hogy legyen. Tartsa szem előtt, hogy a kibocsátás csökkentése nem feltétlenül kell, hogy a tevékenység visszaszorításával járjon, különösen akkor, ha az lehetővé teszi mások kibocsátásának elkerülését, vagy jelentős társadalmi haszonnal jár. Ez különösen fontos az egyesületek esetében.<br></br><br></br> Arra biztatjuk, hogy jövőre ismételje meg ezt az egyszerűsített szénlábnyom-számítást, hogy ellenőrizze, jó úton halad-e, vagy még jobb, ha <b>egy valódi Bilan Carbone®-t készít</b>, hogy pontosabban becsülhesse meg kibocsátásait és valódi átállási tervet dolgozzon ki! Az induláshoz mi sem egyszerűbb: elég, ha elsajátítja a módszert, vagy beiratkozik a Mouvement Tilt Tilt Envol programjára. További információ <link>itt</link>! <br></br><br></br> Ha visszajelzése van az eszközzel kapcsolatban, ne habozzon megosztani velünk az oldal tetején elérhető visszajelzési kérdőíven keresztül, vagy e-mailben a <support>support</support> címen."
     },
     "structure": {
       "'Structure sportive'": "Sportszervezet",
@@ -185,7 +187,11 @@
         "Agriculturetilt": "A mezőgazdasági tevékenységekhez kapcsolódó kibocsátások figyelembevételéről bővebb információért kérjük, tekintse meg az <link>egyesületi módszert</link>.",
         "AgriculturetiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
         "ActivitesIndustrielles": "Az esetleges ipari tevékenységekhez kapcsolódó kibocsátások figyelembevételéről bővebb információért kérjük, tekintse meg az <link>egyesületi módszert</link>.",
-        "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux"
+        "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
+        "DeplacementsDePersonneSimplified": "Az e tétel kitöltéséhez szükséges adatok összegyűjtéséhez javasoljuk, hogy terjesszen egy kérdőívet az egyesületén belül. Íme <exemplequestionnairetorefacto>egy példa</exemplequestionnairetorefacto>, amelyet az Ön által választott felmérési eszközben valósíthat meg.",
+        "AlimentationSimplified": "Az e tétel kitöltéséhez szükséges adatok összegyűjtéséhez javasoljuk, hogy terjesszen egy kérdőívet az egyesületén belül. Íme <exemplequestionnairetorefacto>egy példa</exemplequestionnairetorefacto>, amelyet az Ön által választott felmérési eszközben valósíthat meg.",
+        "ServiceEtNumeriqueSimplified": "Az e tétel kitöltéséhez szükséges adatok összegyűjtéséhez javasoljuk, hogy terjesszen egy kérdőívet az egyesületén belül. Íme <exemplequestionnairetorefacto>egy példa</exemplequestionnairetorefacto>, amelyet az Ön által választott felmérési eszközben valósíthat meg.",
+        "EquipementsEtImmobilisationsSimplified": "Az e tétel kitöltéséhez szükséges adatok összegyűjtéséhez javasoljuk, hogy terjesszen egy kérdőívet az egyesületén belül. Íme <exemplequestionnairetorefacto>egy példa</exemplequestionnairetorefacto>, amelyet az Ön által választott felmérési eszközben valósíthat meg."
       }
     }
   },
@@ -195,7 +201,7 @@
   },
   "betaBanner": {
     "badge": "Béta",
-    "title": "A Cap Carbone eszköz béta verziója",
+    "title": "Hasznos dokumentumok az egyszerűsített szénlábnyom Cap Carbone-nal történő kiszámításához",
     "description": "A Cap Carbone jelenleg béta verzióban van! Köszönjük, hogy Ön az egyik első felhasználónk és tesztelőnk 🎉 Nyugodtan lépjen velünk kapcsolatba a <support>support@abc-transitionbascarbone.fr</support> címen, ha van visszajelzése! Mivel az alkalmazás béta fázisban van, előfordulhat, hogy egyes kérdések megváltoznak az űrlapon, és így a módosított kérdésekre adott válaszok törlődnek a jövőbeli frissítésekben. Ne felejtse el ellenőrizni kategóriái kitöltöttségét az adatbeviteli oldalon, mielőtt megnézné eredményeit, hogy ellenőrizze, minden válasza továbbra is elérhető-e."
   },
   "documentationUrlTilt": {

@@ -365,7 +365,7 @@
     "ADMIN": "Administrateur·rice",
     "COLLABORATOR": "Collaborateur·rice",
     "ADMIN_description": "Un·e administrateur·rice possède tous les droits sur le compte de l'organisation ainsi que sur l'ensemble des études pour son organisation (qu'elles soient partagées à l'équipe ou confidentielles). Il est impossible de changer le rôle d'un·e administrateur·rice sur une étude de son organisation.",
-    "COLLABORATOR_description": "Un·e collaborateur·rice est une personne formée à la méthode Bilan Carbone®. Il n'a aucun droit sur le compte de l'organisation mais peut créer des études pour son organisation. Il est par défaut éditeur·rice sur tous les Bilans Carbone® publics de son organisation.",
+    "COLLABORATOR_description": "Un·e collaborateur·rice est une personne formée à la méthode Bilan Carbone®. Il n'a aucun droit sur le compte de l'organisation mais peut créer des études pour son organisation. Il est par défaut éditeur·rice sur tous les Bilans Carbone® partagés avec l'équipe de son organisation.",
     "guide": "Guide des rôles",
     "saved": "Nouveau rôle sauvegardé",
     "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
