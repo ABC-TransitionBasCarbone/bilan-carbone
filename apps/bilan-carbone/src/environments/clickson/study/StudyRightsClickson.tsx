@@ -3,7 +3,6 @@
 import { FormAutocomplete } from '@/components/form/Autocomplete'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import StudyContributorsTable from '@/components/study/rights/StudyContributorsTable'
-import StudyVersions from '@/components/study/rights/StudyVersions'
 import SelectStudySite from '@/components/study/site/SelectStudySite'
 import useStudySite from '@/components/study/site/useStudySite'
 import StudyComments from '@/components/study/StudyComments'
@@ -211,7 +210,6 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, us
           <CircularProgress variant="indeterminate" color="primary" size={100} className="flex mt2" />
         ) : (
           <>
-            <StudyVersions study={study} emissionFactorSources={emissionFactorSources} canUpdate={false} />
             <div className="flex-col gapped1 mb1">
               <div className={styles.dates}>
                 <FormDatePicker
