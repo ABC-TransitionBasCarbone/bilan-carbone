@@ -45,7 +45,7 @@ describe('getEnvironnementRessources', () => {
       ?.links.find((resourceLink) => resourceLink.title === 'contacterViaFormulaire' && 'link' in resourceLink)
 
     expect(faqLink).toBeUndefined()
-    expect(contactLink && 'link' in contactLink ? contactLink.link : undefined).toBeUndefined()
+    expect(contactLink && 'link' in contactLink ? contactLink.link : undefined).toBe('')
   })
 
   test('uses configured English links when they are defined', async () => {
