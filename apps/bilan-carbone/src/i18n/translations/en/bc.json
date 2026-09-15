@@ -430,8 +430,8 @@
         "name": "Bilan Carbone® - {orga} {studyStartDate}",
         "yourOrga": "Your organisation"
       },
-      "private": "Private",
-      "public": "Public",
+      "private": "Confidential",
+      "public": "Shared with the team",
       "resultsUnit": "Displayed unit",
       "create": "Create study",
       "duplicate": "Duplicate",
@@ -459,7 +459,7 @@
         "type": "Bilan Carbone® maturity",
         "typeDescription": "The new version of the Bilan Carbone® method introduces three levels of maturity for the organisations. For more details, please consult <link>this page</link>.",
         "visibility": "Visibility of the Bilan Carbone®",
-        "visibilityDescription": "Choose whether your Bilan Carbone® should be public, i.e. accessible to all your colleagues that are registered in your team, or private, i.e. only accessible to the people you specifically add in this study (from the framework page). The administrators of your organisation have access to all Bilan Carbone®, regardless of their visibility.",
+        "visibilityDescription": "Choose whether your Bilan Carbone® should be shared with the team, i.e. accessible to all your colleagues that are registered in your team, or confidential, i.e. only accessible to the people you specifically add in this study (from the framework page). The administrators of your organisation have access to all Bilan Carbone®, regardless of their visibility.",
         "exports": "Exports",
         "exportsDescription": "By default, the results are returned in Bilan Carbone® format, but it is possible to obtain the results in the formats required by several other carbon accounting methods, such as the Regulatory GHG Assessment, which is the French regulation on GHG emissions, or the GHG Protocol.",
         "control": "Control approach",
@@ -523,7 +523,7 @@
       "Reader": "Reader",
       "Contributor": "Contributor",
       "guide": "Roles guide",
-      "introduction": "From this page, you can manage the members of your team involved in the Bilan Carbone®. In all cases, the administrators of your organisation have access to all your studies as validators. If your study is public, members of your organisation (employees, managers) automatically have read access to it. You can also add people from outside your organisation via this menu.",
+      "introduction": "From this page, you can manage the members of your team involved in the Bilan Carbone®. In all cases, the administrators of your organisation have access to all your studies as validators. If your study is shared with the team, members of your organisation (employees, managers) automatically have read access to it. You can also add people from outside your organisation via this menu.",
       "Validator_description": "Has full rights over the study and can validate the emission sources entered by validators, editors and contributors.",
       "Editor_description": "Has all rights to the study except for validation of emission sources.",
       "Reader_description": "Can only read the study and export its information.",
@@ -2018,12 +2018,12 @@
   "role": {
     "GESTIONNAIRE": "Manager",
     "DEFAULT": "Member",
-    "ADMIN_description_CR": "An administrator has full rights to the organisation's and the organisation clients' account and studies (whether public or private). It is impossible to change an administrator role on a study of his organisation or one of its clients.",
-    "GESTIONNAIRE_description": "A manager has full rights over the organisation's account, but no rights over studies. He is by default reader on public studies of his organisation.",
-    "GESTIONNAIRE_description_CR": "A manager has full rights over the organisation's account, but no rights over customers or studies. He is by default reader on its organisation's or its clients public studies.",
-    "COLLABORATOR_description_CR": "A collaborator is a person trained in the Bilan Carbone® method. They have no rights to the organisation's account but can create clients and studies. They only have access to their organisation's or their organisation clients public studies with the role editor by default.",
-    "DEFAULT_description": "A member of the organisation has no specific rights over the organisation, the team or studies. By default, they are readers of all their organisation's public Bilans Carbone®.",
-    "DEFAULT_description_CR": "A member of the organisation has no specific rights over the organisation, the team, their clients or studies. By default, they are readers of all their organisation's or their organisation's clients public Bilans Carbone®."
+    "ADMIN_description_CR": "An administrator has full rights to the organisation's and the organisation clients' account and studies (whether shared with the team or confidential). It is impossible to change an administrator role on a study of his organisation or one of its clients.",
+    "GESTIONNAIRE_description": "A manager has full rights over the organisation's account, but no rights over studies. He is by default reader on studies that are shared with the team of his organisation.",
+    "GESTIONNAIRE_description_CR": "A manager has full rights over the organisation's account, but no rights over customers or studies. He is by default reader on its organisation's or its clients studies shared with the team.",
+    "COLLABORATOR_description_CR": "A collaborator is a person trained in the Bilan Carbone® method. They have no rights to the organisation's account but can create clients and studies. They only have access to their organisation's or their organisation clients studies shared with the team with the role editor by default.",
+    "DEFAULT_description": "A member of the organisation has no specific rights over the organisation, the team or studies. By default, they are readers of all their organisation's Bilans Carbone® shared with the team.",
+    "DEFAULT_description_CR": "A member of the organisation has no specific rights over the organisation, the team, their clients or studies. By default, they are readers of all their organisation's or their organisation's clients Bilans Carbone® shared with the team."
   },
   "environment": {
     "BC": "BC+ 2.0",
