@@ -24,12 +24,12 @@ export const getEnvironnementRessources = async (env: Environment, t: Translatio
         { title: t('openCarbonPractice'), link: 'https://www.opencarbonpractice.com/rejoindre-la-communaute' },
         ...(contactForm
           ? [
-            {
-              title: t('contacterViaFormulaire', { supportEmail }),
-              link: contactForm,
-              isTranslated: true,
-            },
-          ]
+              {
+                title: t('contacterViaFormulaire', { supportEmail }),
+                link: contactForm,
+                isTranslated: true,
+              },
+            ]
           : []),
       ],
     },
