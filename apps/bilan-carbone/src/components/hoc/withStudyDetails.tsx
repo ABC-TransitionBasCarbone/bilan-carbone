@@ -1,4 +1,4 @@
-import { FullStudy, getMinimalStudyForRights, getStudyById, MinimalStudyForRights } from '@/db/study'
+import { FullStudy, getStudyById } from '@/db/study'
 import { canReadStudy, canReadStudyDetail } from '@/services/permissions/study'
 import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 import { redirect } from 'next/navigation'
@@ -12,7 +12,6 @@ interface Props {
 }
 export type StudyProps = {
   study: FullStudy
-  minimalStudy: MinimalStudyForRights
   studyId: string
 }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -26,8 +25,7 @@ const WithStudyDetails = (WrappedComponent: React.ComponentType<any & UserSessio
     }
 
     const study = await getStudyById(id, props.user.organizationVersionId)
-    const minimalStudy = await getMinimalStudyForRights(id)
-    if (!study || !minimalStudy) {
+    if (!study) {
       return <NotFound />
     }
 
@@ -38,7 +36,7 @@ const WithStudyDetails = (WrappedComponent: React.ComponentType<any & UserSessio
       return redirect(`/etudes/${study.id}/contributeur`)
     }
 
-    return <WrappedComponent {...props} study={study} studyId={study.id} minimalStudy={minimalStudy} />
+    return <WrappedComponent {...props} study={study} studyId={study.id} />
   }
 
   Component.displayName = 'WithStudyDetails'

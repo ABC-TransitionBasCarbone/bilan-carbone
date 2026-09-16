@@ -1,4 +1,4 @@
-import { FullStudy, getMinimalStudyForRights, getStudyById, MinimalStudyForRights } from '@/db/study'
+import { FullStudy, getMinimalStudyForRights, getStudyById } from '@/db/study'
 import { canReadStudy, canReadStudyDetail } from '@/services/permissions/study'
 import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 import React from 'react'
@@ -11,7 +11,6 @@ interface Props {
 }
 export type StudyProps = {
   study: FullStudy
-  minimalStudy: MinimalStudyForRights
   studyId: string
 }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -34,7 +33,7 @@ const WithStudyContributors = (WrappedComponent: React.ComponentType<any & UserS
       return <NotFound />
     }
 
-    return <WrappedComponent {...props} study={study} studyId={study.id} minimalStudy={minimalStudy} />
+    return <WrappedComponent {...props} study={study} studyId={study.id} />
   }
 
   Component.displayName = 'WithStudyContributors'

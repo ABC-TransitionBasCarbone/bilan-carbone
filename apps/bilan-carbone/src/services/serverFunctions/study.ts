@@ -1026,10 +1026,14 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
       throw new Error(NOT_AUTHORIZED)
     }
 
+    const userToChangeOrganizationVersion = existingAccountToChange?.organizationVersionId
+      ? await getOrganizationVersionById(existingAccountToChange?.organizationVersionId)
+      : null
+
     if (
-      existingAccountToChange &&
-      !hasSufficientLevel(existingUserToChange.level, studyWithRights.level) &&
-      studyRole !== StudyRole.Reader
+      !userToChangeOrganizationVersion ||
+      !hasActiveLicence(userToChangeOrganizationVersion) ||
+      (!hasSufficientLevel(existingUserToChange.level, studyWithRights.level) && studyRole !== StudyRole.Reader)
     ) {
       throw new Error(NOT_AUTHORIZED)
     }
@@ -1192,16 +1196,6 @@ const hasAccessToStudy = (user: UserSession, study: AsyncReturnType<typeof getSt
     getAccountRoleOnStudy(user, studyObject as FullStudy) ||
     study.contributors.some((contributor) => contributor.accountId === user.accountId)
   )
-}
-
-const NEWHasAccessToStudy = async (user: UserSession, study: MinimalStudyForRights) => {
-  const accountsRoleOnStudy = await NEWGetAccountRoleOnStudy(user, study)
-
-  if (!accountsRoleOnStudy) {
-    return false
-  }
-
-  return accountsRoleOnStudy || study.contributors.some((contributor) => contributor.accountId === user.accountId)
 }
 
 export const findStudiesWithSites = async (siteIds: string[]) =>
@@ -2631,13 +2625,18 @@ export const getStudyExports = async (studyId: string | undefined) =>
 
 export const NEWGetAccountRoleOnStudyWithId = async (user: UserSession, studyId: string) =>
   withServerResponse('NEWGetAccountRoleOnStudyWithId', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user || !session.user.organizationVersionId) {
+      return null
+    }
+
     const minimalStudy = await getMinimalStudyForRights(studyId)
 
     if (!minimalStudy) {
       throw new Error('Study not found')
     }
 
-    return NEWGetAccountRoleOnStudy(user, minimalStudy)
+    return NEWGetAccountRoleOnStudy(session.user, minimalStudy)
   })
 
 export const getStudySitesList = async (studyId: string) =>
@@ -2648,8 +2647,7 @@ export const getStudySitesList = async (studyId: string) =>
     }
 
     const studySites = await getStudySitesWithName(studyId)
-    const studyRights = await getMinimalStudyForRights(studyId)
-    if (!studyRights || !(await NEWHasAccessToStudy(session.user, studyRights))) {
+    if (!(await canReadStudy(session.user, studyId))) {
       return null
     }
 

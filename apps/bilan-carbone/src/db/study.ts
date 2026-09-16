@@ -371,10 +371,12 @@ export const getOrganizationVersionStudiesOrderedByStartDate = async (
     include: fullStudyInclude,
     orderBy: { startDate: 'desc' },
   })
-  return studies.map(async (study) => ({
-    ...study,
-    allowedUsers: await normalizeAllowedUsers(study.allowedUsers, study.level),
-  }))
+  return Promise.all(
+    studies.map(async (study) => ({
+      ...study,
+      allowedUsers: await normalizeAllowedUsers(study.allowedUsers, study.level),
+    })),
+  )
 }
 
 export const getAllowedStudiesByAccount = async (user: UserSession) => {
