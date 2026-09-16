@@ -1,18 +1,18 @@
 {
-  "name": "@abc-transitionbascarbone/utils",
-  "version": "0.0.1",
-  "private": true,
-  "main": "./index.ts",
-  "types": "./index.ts",
-  "exports": {
-    ".": "./index.ts",
-    "./customRich": "./customRich.tsx",
-    "./*": "./*.ts"
-  },
-  "dependencies": {
-    "@abc-transitionbascarbone/db-common": "*"
-  },
-  "devDependencies": {
-    "@types/node": "^24.13.3"
-  }
+    "name": "@abc-transitionbascarbone/utils",
+    "version": "0.0.1",
+    "private": true,
+    "main": "./index.ts",
+    "types": "./index.ts",
+    "exports": {
+        ".": "./index.ts",
+        "./customRich": "./customRich.tsx",
+        "./*": "./*.ts"
+    },
+    "dependencies": {
+        "@abc-transitionbascarbone/db-common": "*"
+    },
+    "devDependencies": {
+        "@types/node": "^24.13.3"
+    }
 }
