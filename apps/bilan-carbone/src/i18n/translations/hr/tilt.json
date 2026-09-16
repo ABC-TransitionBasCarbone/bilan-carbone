@@ -15,13 +15,14 @@
     "Not association SIRET": "Korištenje ovog alata rezervirano je za udruge. Molimo koristite klasičnu verziju Bilan Carbone®+.",
     "validation": {
       "siret": "Unesite Siret"
-    }
+    },
+    "emailPlaceholder": "Vaša e-adresa"
   },
   "home": {
     "navigation": {
       "collaborators": {
-        "title": "Moji suradnici",
-        "message": "Ovdje pronađite popis osoba ovlaštenih za rad na vašim različitim ugljičnim otiscima"
+        "title": "Moj tim",
+        "message": "Ovdje dodajte osobe koje će moći pristupiti vašim ugljičnim otiscima i pomoći vam odgovoriti na upitnik"
       },
       "footprints": {
         "title": "Moji otisci",
@@ -29,10 +30,15 @@
       },
       "sites": {
         "title": "Moja udruga",
-        "message": "Ovdje pronađite popis ustanova povezanih s vašim računom"
+        "message": "Ovdje unesite popis fizičkih lokacija vaše udruge."
       }
     },
-    "title": "Izračun vašeg pojednostavljenog ugljičnog otiska omogućit će vam da:"
+    "title": "Izračun vašeg pojednostavljenog ugljičnog otiska omogućit će vam da:",
+    "info": {
+      "0": "Procijenite emisije stakleničkih plinova vaše udruge odgovaranjem na različita pitanja",
+      "1": "Razumijte kako funkcionira ova procjena i temeljna načela bilance stakleničkih plinova",
+      "2": "Odredite prioritete djelovanja na temelju vaših emisija i započnite izgradnju putanje smanjenja"
+    }
   },
   "exports": {
     "env_specific_export": "Pojednostavljeni ugljični otisak",

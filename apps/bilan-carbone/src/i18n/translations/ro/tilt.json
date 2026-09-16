@@ -15,13 +15,14 @@
     "Not association SIRET": "Utilizarea acestui instrument este rezervată asociațiilor. Utilizați versiunea clasică a Bilan Carbone®+",
     "validation": {
       "siret": "Introduceți un Siret"
-    }
+    },
+    "emailPlaceholder": "Adresa dvs. de email"
   },
   "home": {
     "navigation": {
       "collaborators": {
-        "title": "Colaboratorii mei",
-        "message": "Găsiți aici lista persoanelor autorizate să intervină asupra diferitelor dvs. amprente de carbon"
+        "title": "Echipa mea",
+        "message": "Adăugați aici persoane care vor putea accesa amprentele dvs. de carbon și vă vor ajuta să răspundeți la chestionar"
       },
       "footprints": {
         "title": "Amprentele mele",
@@ -29,10 +30,15 @@
       },
       "sites": {
         "title": "Asociația mea",
-        "message": "Găsiți aici lista unităților asociate contului dvs."
+        "message": "Introduceți aici lista site-urilor fizice ale asociației dvs."
       }
     },
-    "title": "Calcularea amprentei dvs. de carbon simplificate vă va permite să:"
+    "title": "Calcularea amprentei dvs. de carbon simplificate vă va permite să:",
+    "info": {
+      "0": "Realizați o estimare a emisiilor de gaze cu efect de seră ale asociației dvs. răspunzând la diferite întrebări",
+      "1": "Înțelegeți cum funcționează această estimare și principiile fundamentale ale unui bilanț al gazelor cu efect de seră",
+      "2": "Identificați prioritățile de acțiune în funcție de emisiile dvs. și începeți să construiți o trajectoire de transition de reducere"
+    }
   },
   "exports": {
     "env_specific_export": "Amprentă de carbon simplificată",

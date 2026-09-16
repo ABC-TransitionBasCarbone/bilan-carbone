@@ -72,7 +72,8 @@
     "typeToConfirm": "Escriba \"{name}\" para confirmar",
     "perPerson": "per persona",
     "carbonIntensities": "Intensidades de carbono",
-    "unknown": "Desconocido"
+    "unknown": "Desconocido",
+    "noStudies": "No se ha encontrado ningún estudio. No tiene permisos para crear uno, póngase en contacto con uno de sus administradores."
   },
   "saveStatus": {
     "saving": "Guardando respuestas...",

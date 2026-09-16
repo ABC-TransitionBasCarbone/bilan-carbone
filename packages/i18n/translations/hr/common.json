@@ -72,7 +72,8 @@
     "Not authorized": "Nemate ovlasti za izvođenje ove radnje",
     "typeToConfirm": "Upišite \"{name}\" za potvrdu",
     "perPerson": "po osobi",
-    "carbonIntensities": "Intenziteti ugljika"
+    "carbonIntensities": "Intenziteti ugljika",
+    "noStudies": "Nije pronađena nijedna studija. Nemate prava za stvaranje studije, molimo kontaktirajte jednog od svojih administratora."
   },
   "saveStatus": {
     "saving": "Spremanje odgovora u tijeku...",

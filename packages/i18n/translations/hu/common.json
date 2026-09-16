@@ -72,7 +72,8 @@
     "Not authorized": "Nincs jogosultsága a művelet végrehajtásához",
     "typeToConfirm": "Írja be a(z) \"{name}\" szót a megerősítéshez",
     "perPerson": "személyenként",
-    "carbonIntensities": "Szénintenzitások"
+    "carbonIntensities": "Szénintenzitások",
+    "noStudies": "Nem található tanulmány. Nincs jogosultsága újat létrehozni, kérjük, forduljon valamelyik adminisztrátorához."
   },
   "saveStatus": {
     "saving": "Válaszok mentése folyamatban...",

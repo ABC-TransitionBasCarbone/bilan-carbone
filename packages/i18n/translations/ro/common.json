@@ -72,7 +72,8 @@
     "Not authorized": "Nu aveți permisiunea de a efectua această acțiune",
     "typeToConfirm": "Tastați \"{name}\" pentru a confirma",
     "perPerson": "pe persoană",
-    "carbonIntensities": "Intensități de carbon"
+    "carbonIntensities": "Intensități de carbon",
+    "noStudies": "Nu s-a găsit niciun studiu. Nu aveți drepturile necesare pentru a crea unul, vă rugăm să contactați unul dintre administratorii dumneavoastră."
   },
   "saveStatus": {
     "saving": "Se salvează răspunsurile...",

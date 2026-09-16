@@ -15,13 +15,14 @@
     "Not association SIRET": "Ennek az eszköznek a használata egyesületek számára van fenntartva. Kérjük, használja a Bilan Carbone®+ klasszikus verzióját.",
     "validation": {
       "siret": "Adjon meg egy Siret-számot"
-    }
+    },
+    "emailPlaceholder": "Az Ön e-mail-címe"
   },
   "home": {
     "navigation": {
       "collaborators": {
-        "title": "Munkatársaim",
-        "message": "Itt találja azoknak a személyeknek a listáját, akik jogosultak a különböző szénlábnyomain dolgozni"
+        "title": "A csapatom",
+        "message": "Adjon hozzá itt olyan személyeket, akik hozzáférhetnek a szénlábnyomaihoz, és segíthetnek Önnek a kérdőív kitöltésében"
       },
       "footprints": {
         "title": "Lenyomataim",
@@ -29,10 +30,15 @@
       },
       "sites": {
         "title": "Egyesületem",
-        "message": "Itt találja a fiókjához kapcsolódó létesítmények listáját"
+        "message": "Adja meg itt az egyesülete fizikai helyszíneinek listáját."
       }
     },
-    "title": "Egyszerűsített szénlábnyomának kiszámítása lehetővé teszi, hogy:"
+    "title": "Egyszerűsített szénlábnyomának kiszámítása lehetővé teszi, hogy:",
+    "info": {
+      "0": "Megbecsülni az egyesülete üvegházhatású gázkibocsátását különböző kérdések megválaszolásával",
+      "1": "Megérteni, hogyan működik ez a becslés, és egy üvegházhatásúgáz-mérleg alapelveit",
+      "2": "A kibocsátásai alapján meghatározni a cselekvési prioritásokat, és elkezdeni egy csökkentési pálya kiépítését"
+    }
   },
   "exports": {
     "env_specific_export": "Egyszerűsített szénlábnyom",
