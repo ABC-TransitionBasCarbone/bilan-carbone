@@ -80,8 +80,9 @@ import {
 import { EMAIL_SENT, MORE_THAN_ONE, NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
 import { updateUserResetToken } from '@abc-transitionbascarbone/services/serverFunctions/user'
 import { AddMemberCommand } from '@abc-transitionbascarbone/services/serverFunctions/user.command'
-import { DAY, generateResetToken, HOUR, MIN, TIME_IN_MS, YEAR } from '@abc-transitionbascarbone/utils'
+import { DAY, HOUR, MIN, TIME_IN_MS, YEAR } from '@abc-transitionbascarbone/utils'
 import { environmentsWithChecklist } from '@abc-transitionbascarbone/utils/environments'
+import { generateResetToken } from '@abc-transitionbascarbone/utils/user.server'
 import jwt from 'jsonwebtoken'
 import { UserSession } from 'next-auth'
 import { getCompanyName, getValidAssociationNameBySiret } from '../associationApi'
@@ -187,48 +188,48 @@ export const sendInvitation = async (
     if (existingAccount && existingAccount.status === UserStatus.ACTIVE) {
       return roleOnStudy
         ? sendUserOnStudyInvitationEmail(
-          email,
-          study.name,
-          study.id,
-          organization.name,
-          `${creator.firstName} ${creator.lastName}`,
-          existingAccount.user.firstName,
-          roleOnStudy,
-          env,
-        )
+            email,
+            study.name,
+            study.id,
+            organization.name,
+            `${creator.firstName} ${creator.lastName}`,
+            existingAccount.user.firstName,
+            roleOnStudy,
+            env,
+          )
         : sendContributorInvitationEmail(
-          email,
-          study.name,
-          study.id,
-          organization.name,
-          `${creator.firstName} ${creator.lastName}`,
-          existingAccount.user.firstName,
-          env,
-        )
+            email,
+            study.name,
+            study.id,
+            organization.name,
+            `${creator.firstName} ${creator.lastName}`,
+            existingAccount.user.firstName,
+            env,
+          )
     }
 
     const token = await updateUserResetToken(email, 1 * DAY)
 
     return roleOnStudy
       ? sendNewUserOnStudyInvitationEmail(
-        email,
-        token,
-        study.name,
-        study.id,
-        organization.name,
-        `${creator.firstName} ${creator.lastName}`,
-        roleOnStudy,
-        env,
-      )
+          email,
+          token,
+          study.name,
+          study.id,
+          organization.name,
+          `${creator.firstName} ${creator.lastName}`,
+          roleOnStudy,
+          env,
+        )
       : sendNewContributorInvitationEmail(
-        email,
-        token,
-        study.name,
-        study.id,
-        organization.name,
-        `${creator.firstName} ${creator.lastName}`,
-        env,
-      )
+          email,
+          token,
+          study.name,
+          study.id,
+          organization.name,
+          `${creator.firstName} ${creator.lastName}`,
+          env,
+        )
   })
 
 const sendActivation = async (email: string, fromReset: boolean, env: Environment) => {
@@ -719,9 +720,9 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
       organizationVersion = organization?.id
         ? await getOrganizationVersionByOrganizationIdAndEnvironment(organization.id, environment)
         : await createOrganizationWithVersion(
-          { wordpressId: siretOrCNC, name: companyName },
-          { environment: environment },
-        )
+            { wordpressId: siretOrCNC, name: companyName },
+            { environment: environment },
+          )
     }
 
     if (!organizationVersion) {

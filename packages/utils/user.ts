@@ -1,7 +1,6 @@
-import crypto from 'crypto'
 import { Environment, Role } from '@abc-transitionbascarbone/db-common/enums'
-import { RoleBcOrMip } from './types'
 import { isSimplified } from './environments'
+import { RoleBcOrMip } from './types'
 
 export const canBeUntrainedRole = (role: RoleBcOrMip, environment: Environment) => {
   if (isSimplified(environment) || environment === Environment.MIP) {
@@ -12,5 +11,3 @@ export const canBeUntrainedRole = (role: RoleBcOrMip, environment: Environment) 
 
   return untrainedRoles.includes(role)
 }
-
-export const generateResetToken = () => crypto.randomBytes(32).toString('hex')
