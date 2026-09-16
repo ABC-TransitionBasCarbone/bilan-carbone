@@ -513,6 +513,35 @@ export const mapEmissionFactors = (emissionFactor: ImportEmissionFactor, importe
   }
 }
 
+export const getEmissionFactorOverrideData = (
+  emissionFactor: ImportEmissionFactor,
+  importedFrom: Import,
+  emissionFactorId: string,
+): Prisma.EmissionFactorUpdateInput => {
+  const { importedFrom: _importedFrom, importedId: _importedId, metaData, ...mappedEmissionFactor } = mapEmissionFactors(
+    emissionFactor,
+    importedFrom,
+  )
+
+  return {
+    ...mappedEmissionFactor,
+    overrideRawCsv: serializeRowAsCsv(emissionFactor),
+    metaData: {
+      updateMany: metaData.createMany.data.map((meta) => ({
+        where: { emissionFactorId, language: meta.language },
+        data: {
+          title: meta.title,
+          attribute: meta.attribute,
+          frontiere: meta.frontiere,
+          tag: meta.tag,
+          location: meta.location,
+          comment: meta.comment,
+        },
+      })),
+    },
+  }
+}
+
 export const saveEmissionFactorsParts = async (
   transaction: Prisma.TransactionClient,
   importedIdToEfId: Map<string, string>,
