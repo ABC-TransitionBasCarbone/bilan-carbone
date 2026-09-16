@@ -1,5 +1,6 @@
-import { generateResetToken, TIME_IN_MS } from '@abc-transitionbascarbone/utils'
 import { updateUserResetTokenForEmail } from '@abc-transitionbascarbone/db-common/db'
+import { TIME_IN_MS } from '@abc-transitionbascarbone/utils'
+import { generateResetToken } from '@abc-transitionbascarbone/utils/user.server'
 import jwt from 'jsonwebtoken'
 
 export const updateUserResetToken = async (email: string, duration: number) => {

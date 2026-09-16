@@ -30,6 +30,7 @@ export const GET = async (req: NextRequest) => {
   }
 
   const response = await fetch(url, {
+    redirect: 'error',
     headers: { 'User-Agent': 'Mozilla/5.0' },
   })
 
