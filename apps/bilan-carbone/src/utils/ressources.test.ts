@@ -13,7 +13,9 @@ jest.mock('@abc-transitionbascarbone/lib/environment', () => ({
   getEnvVar: jest.fn(),
 }))
 
-const t = Object.assign(((key: string) => key) as Translations, { has: () => false })
+const t = ((key: string) => {
+  throw new Error(`Missing translation: ${key}`)
+}) as unknown as Translations
 
 const getFaqLinkFromResources = (resources: Awaited<ReturnType<typeof getEnvironnementRessources>>) => {
   const technicalSection = resources.find((resource) => resource.title === 'questionTechnique')
@@ -30,6 +32,8 @@ describe('getEnvironnementRessources', () => {
   })
 
   const englishTranslations = {
+    openCarbonPracticeUrl: 'https://en.open.carbon.practice',
+    methodologyUrl: 'https://en.methodology',
     contactFormUrl: 'https://en.contact.form',
     faqUrl: 'https://en.faq',
   } as const
@@ -62,7 +66,7 @@ describe('getEnvironnementRessources', () => {
     expect(contactLink && 'link' in contactLink ? contactLink.link : undefined).toBe('https://en.contact.form')
   })
 
-  test('does not expose English links when there is no locale-specific translation value', async () => {
+  test('throws when a required link translation is missing', async () => {
     jest.mocked(getLocale).mockResolvedValue(Locale.EN)
     jest.mocked(getEnvVar).mockImplementation(async (key) => {
       if (key === 'SUPPORT_EMAIL') {
@@ -71,13 +75,8 @@ describe('getEnvironnementRessources', () => {
       return ''
     })
 
-    const resources = await getEnvironnementRessources(Environment.BC, t, t)
-    const faqLink = getFaqLinkFromResources(resources)
-    const contactLink = resources
-      .find((resource) => resource.title === 'questionMethodo')
-      ?.links.find((resourceLink) => resourceLink.title === 'contacterViaFormulaire' && 'link' in resourceLink)
-
-    expect(faqLink).toBeUndefined()
-    expect(contactLink).toBeUndefined()
+    await expect(getEnvironnementRessources(Environment.BC, t, t)).rejects.toThrow(
+      'Missing translation: openCarbonPracticeUrl',
+    )
   })
 })

@@ -21,3 +21,6 @@ const CLIENT_ENV_BY_ENV: Partial<Record<Environment, Partial<Record<ClientEnvKey
 export const getEnvVarClient = (key: ClientEnvKey, environment: Environment = Environment.BC) => {
   return CLIENT_ENV_BY_ENV[environment]?.[key] ?? CLIENT_ENV_DEFAULT[key] ?? ''
 }
+
+export const useTranslatedLinks = (environment: Environment) =>
+  environment === Environment.BC || environment === Environment.TILT

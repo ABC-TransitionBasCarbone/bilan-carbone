@@ -25,6 +25,7 @@ import authStyles from './Auth.module.css'
 
 const SignUpFormCut = () => {
   const contactMail = getEnvVarClient('SUPPORT_EMAIL', Environment.CUT)
+  const tLinks = useTranslations()
   const t = useTranslations('signup')
   const tForm = useTranslations('login.form')
   const [submitting, setSubmitting] = useState(false)
@@ -118,10 +119,14 @@ const SignUpFormCut = () => {
         </LoadingButton>
         {message && (
           <p className={classNames(!success ? 'error' : '')} data-testid="activation-form-message">
-            {customRich(t, message, {
-              support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
-              link: (children) => children,
-            })}
+            {customRich(
+              tLinks,
+              `signup.${message}`,
+              {
+                support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
+              },
+              Environment.CUT,
+            )}
           </p>
         )}
         <div className={authStyles.bottomLink}>

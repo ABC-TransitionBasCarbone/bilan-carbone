@@ -1,6 +1,6 @@
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { Translations } from '@abc-transitionbascarbone/lib'
-import { getEnvVarClient } from '@abc-transitionbascarbone/utils/environmentClient'
+import { getEnvVarClient, useTranslatedLinks } from '@abc-transitionbascarbone/utils/environmentClient'
 import Link from 'next/link'
 import { ReactNode } from 'react'
 
@@ -12,22 +12,28 @@ export const customRich = (
   t: Translations,
   key: string,
   params: CustomRichParams = {},
-  _env: Environment = Environment.BC,
-  _locale?: string,
+  env: Environment = Environment.BC,
 ) => {
-  const faq = t.has('faqUrl') ? t('faqUrl') : ''
-  const support = getEnvVarClient('SUPPORT_EMAIL', Environment.BC)
-  const abc = t.has('abcSiteUrl') ? t('abcSiteUrl') : ''
+  const support = getEnvVarClient('SUPPORT_EMAIL', env)
+  const getFaqUrl = () => (useTranslatedLinks(env) ? t('faqUrl') : '')
+  const getAbcUrl = () => (useTranslatedLinks(env) ? t('abcSiteUrl') : '')
 
   return t.rich(key, {
     error: (children) => <span className="error">{children}</span>,
     b: (children) => <span className="bold">{children}</span>,
     i: (children) => <span className="italic">{children}</span>,
     br: () => <br />,
-    link: (children) => children,
+    link: (children) =>
+      getFaqUrl() ? (
+        <a href={getFaqUrl()} target="_blank" rel="noreferrer noopener" className="font-inherit">
+          {children}
+        </a>
+      ) : (
+        children
+      ),
     faq: (children) =>
-      faq ? (
-        <a href={faq} target="_blank" rel="noreferrer noopener" className="font-inherit">
+      getFaqUrl() ? (
+        <a href={getFaqUrl()} target="_blank" rel="noreferrer noopener" className="font-inherit">
           {children}
         </a>
       ) : (
@@ -39,16 +45,16 @@ export const customRich = (
       </Link>
     ),
     abc: (children) =>
-      abc ? (
-        <Link href={abc} target="_blank" rel="noreferrer noopener" className="font-inherit">
+      getAbcUrl() ? (
+        <Link href={getAbcUrl()} target="_blank" rel="noreferrer noopener" className="font-inherit">
           {children}
         </Link>
       ) : (
         children
       ),
     abcAssociation: (children) =>
-      abc ? (
-        <Link href={abc} target="_blank" rel="noreferrer noopener" className="font-inherit">
+      getAbcUrl() ? (
+        <Link href={getAbcUrl()} target="_blank" rel="noreferrer noopener" className="font-inherit">
           {children}
         </Link>
       ) : (
@@ -85,7 +91,12 @@ export const customRich = (
       </Link>
     ),
     exemplequestionnairetorefacto: (children) => (
-      <Link className="font-inherit" href="https://associationbilancarbone.sharepoint.com/:b:/s/AssociationBilanCarbone/IQCERvlL3mYjRbebNaYQJIdmAV6OhR4Ghh8K_7RIem35gGQ?e=rg6oey" target="_blank" rel="noreferrer noopener">
+      <Link
+        className="font-inherit"
+        href="https://associationbilancarbone.sharepoint.com/:b:/s/AssociationBilanCarbone/IQCERvlL3mYjRbebNaYQJIdmAV6OhR4Ghh8K_7RIem35gGQ?e=rg6oey"
+        target="_blank"
+        rel="noreferrer noopener"
+      >
         {children}
       </Link>
     ),
