@@ -57,7 +57,7 @@ const PublicCutPage = ({ children, question }: Props) => {
               height={400}
               className={classNames(styles.image, 'w100')}
             />
-            <Typography className="title-h6 bold">{t('subtext')}</Typography>
+            <Typography className="title-h6 bold">{customRich(t, 'subtext', {}, Environment.CUT)}</Typography>
             <div className="justify-center">
               <Divider sx={{ borderColor: 'primary.contrastText' }} className={styles.divider} />
             </div>

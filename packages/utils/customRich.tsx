@@ -13,10 +13,11 @@ export const customRich = (
   key: string,
   params: CustomRichParams = {},
   env: Environment = Environment.BC,
+  linksT: Translations = t,
 ) => {
   const support = getEnvVarClient('SUPPORT_EMAIL', env)
   const getFaqUrl = () => (hasTranslatedLinks(env) ? t('faqUrl') : '')
-  const getAbcUrl = () => (hasTranslatedLinks(env) ? t('abcSiteUrl') : '')
+  const getAbcUrl = () => (hasTranslatedLinks(env) ? linksT('abcSiteUrl') : '')
 
   return t.rich(key, {
     error: (children) => <span className="error">{children}</span>,

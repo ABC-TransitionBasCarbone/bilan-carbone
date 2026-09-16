@@ -19,6 +19,7 @@ interface Props {
 }
 const PublicTiltPage = ({ children, question }: Props) => {
   const t = useTranslations('login')
+  const linksT = useTranslations()
   const tLocale = useTranslations('locale')
   const tDocumentation = useTranslations('documentationUrlTilt')
   const [locale, setLocale] = useState<LocaleType>(defaultLocale)
@@ -38,18 +39,24 @@ const PublicTiltPage = ({ children, question }: Props) => {
           <p className="title-h6 bold">{customRich(t, 'subtext')}</p>
         </div>
         <p>
-          {customRich(t, 'explanation', {
-            link: (children) => (
-              <Link
-                href={tDocumentation('tiltABCPage')}
-                target="_blank"
-                rel="noreferrer noopener"
-                className={styles.info}
-              >
-                {children}
-              </Link>
-            ),
-          })}
+          {customRich(
+            t,
+            'explanation',
+            {
+              link: (children) => (
+                <Link
+                  href={tDocumentation('tiltABCPage')}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className={styles.info}
+                >
+                  {children}
+                </Link>
+              ),
+            },
+            Environment.TILT,
+            linksT,
+          )}
         </p>
         <div className="flex-cc gapped1 w100 p1">
           <Image src="/logos/abc/logo_abc.png" width="400" height="195" alt="ABC logo" className="w50 hauto" />
