@@ -80,7 +80,7 @@ import {
 import { EMAIL_SENT, MORE_THAN_ONE, NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
 import { updateUserResetToken } from '@abc-transitionbascarbone/services/serverFunctions/user'
 import { AddMemberCommand } from '@abc-transitionbascarbone/services/serverFunctions/user.command'
-import { DAY, HOUR, MIN, TIME_IN_MS, YEAR } from '@abc-transitionbascarbone/utils'
+import { DAY, generateResetToken, HOUR, MIN, TIME_IN_MS, YEAR } from '@abc-transitionbascarbone/utils'
 import { environmentsWithChecklist } from '@abc-transitionbascarbone/utils/environments'
 import jwt from 'jsonwebtoken'
 import { UserSession } from 'next-auth'
@@ -373,7 +373,7 @@ export const resetPassword = async (email: string, userEnv: Environment | undefi
       }
     } else {
       if (user) {
-        const resetToken = Math.random().toString(36)
+        const resetToken = generateResetToken()
         const payload = {
           email,
           resetToken,
