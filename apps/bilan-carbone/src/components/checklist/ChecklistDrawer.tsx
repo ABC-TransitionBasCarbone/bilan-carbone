@@ -31,7 +31,7 @@ const ChecklistDrawer = ({
   studyId,
 }: Props) => {
   const environment = accountOrganizationVersion.environment
-  const t = useTranslations()
+  const t = useTranslations('checklist')
   const steps = useMemo(
     () => getUserCheckList(userRole, accountOrganizationVersion.isCR, userLevel),
     [userRole, userLevel, accountOrganizationVersion],
@@ -69,7 +69,7 @@ const ChecklistDrawer = ({
             />
           ))}
       </div>
-      {finished && <p className="px-2">{customRich(t, 'checklist.finished', {}, environment)}</p>}
+      {finished && <p className="px-2">{customRich(t, 'finished', {}, environment)}</p>}
     </div>
   )
 }

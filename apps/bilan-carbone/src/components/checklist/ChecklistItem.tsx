@@ -37,7 +37,6 @@ const ChecklistItem = ({
   studyId,
 }: Props) => {
   const t = useTranslations('checklist')
-  const tRoot = useTranslations()
   const { callServerFunction } = useServerFunction()
   const [expanded, setExpanded] = useState(false)
   const link = useMemo(() => getLink(step, studyId), [step, studyId])
@@ -85,7 +84,7 @@ const ChecklistItem = ({
         </AccordionSummary>
         <AccordionDetails>
           <p>
-            {customRich(tRoot, `checklist.${step}Details`, {
+            {customRich(t, `${step}Details`, {
               orga: (children) => (
                 <Link href={`/organisations/${organizationVersionId}/modifier`} onClick={onClose}>
                   {children}

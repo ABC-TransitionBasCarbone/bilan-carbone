@@ -1,12 +1,11 @@
 import { getEnvironnementRessources } from '@/utils/ressources'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
-import { Locale } from '@abc-transitionbascarbone/i18n/config'
 import { Translations } from '@abc-transitionbascarbone/lib'
 import { getEnvVar } from '@abc-transitionbascarbone/lib/environment'
-import { getLocale } from 'next-intl/server'
+import { getTranslations } from 'next-intl/server'
 
 jest.mock('next-intl/server', () => ({
-  getLocale: jest.fn(),
+  getTranslations: jest.fn(),
 }))
 
 jest.mock('@abc-transitionbascarbone/lib/environment', () => ({
@@ -44,7 +43,7 @@ describe('getEnvironnementRessources', () => {
   )
 
   test('reads localised links from translations when locale is English', async () => {
-    jest.mocked(getLocale).mockResolvedValue(Locale.EN)
+    jest.mocked(getTranslations).mockResolvedValue(translationWithEnglishUrls)
     jest.mocked(getEnvVar).mockImplementation(async (key) => {
       if (key === 'SUPPORT_EMAIL') {
         return 'support@example.com'
@@ -52,11 +51,7 @@ describe('getEnvironnementRessources', () => {
       return ''
     })
 
-    const resources = await getEnvironnementRessources(
-      Environment.BC,
-      translationWithEnglishUrls,
-      translationWithEnglishUrls,
-    )
+    const resources = await getEnvironnementRessources(Environment.BC, translationWithEnglishUrls)
     const faqLink = getFaqLinkFromResources(resources)
     const contactLink = resources
       .find((resource) => resource.title === 'questionMethodo')
@@ -67,7 +62,7 @@ describe('getEnvironnementRessources', () => {
   })
 
   test('throws when a required link translation is missing', async () => {
-    jest.mocked(getLocale).mockResolvedValue(Locale.EN)
+    jest.mocked(getTranslations).mockResolvedValue(t)
     jest.mocked(getEnvVar).mockImplementation(async (key) => {
       if (key === 'SUPPORT_EMAIL') {
         return 'support@example.com'
@@ -75,7 +70,7 @@ describe('getEnvironnementRessources', () => {
       return ''
     })
 
-    await expect(getEnvironnementRessources(Environment.BC, t, t)).rejects.toThrow(
+    await expect(getEnvironnementRessources(Environment.BC, t)).rejects.toThrow(
       'Missing translation: openCarbonPracticeUrl',
     )
   })

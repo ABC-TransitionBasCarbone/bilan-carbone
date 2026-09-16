@@ -2,8 +2,10 @@ import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { Translations } from '@abc-transitionbascarbone/lib'
 import { getEnvVar } from '@abc-transitionbascarbone/lib/environment'
 import { hasTranslatedLinks } from '@abc-transitionbascarbone/utils/environmentClient'
+import { getTranslations } from 'next-intl/server'
 
-export const getEnvironnementRessources = async (env: Environment, t: Translations, linksT: Translations) => {
+export const getEnvironnementRessources = async (env: Environment, t: Translations) => {
+  const linksT = await getTranslations()
   const openCarbonPracticeUrl = linksT('openCarbonPracticeUrl')
   const contactFormUrl = hasTranslatedLinks(env) ? linksT('contactFormUrl') : ''
   const faqUrl = hasTranslatedLinks(env) ? linksT('faqUrl') : ''
