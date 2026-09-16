@@ -183,7 +183,7 @@ describe('processUsers', () => {
           User_Email: 'test@yopmail.com',
           Order_Date: '',
           Purchased_Products: 'adhesion_conseil',
-          Session_Code: 'BCM2',
+          Session_Code: 'BCM3',
           Session_Date: '',
           Company_Name: '',
           SIRET: '53817009300032',
