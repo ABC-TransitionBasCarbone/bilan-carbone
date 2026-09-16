@@ -9,6 +9,7 @@
   "signup": {
     "description": "Créez un compte sur Tilt en entrant votre email ainsi qu'un Siret",
     "siret": "Siret",
+    "emailPlaceholder": "Votre email",
     "siretPlaceholder": "Votre Siret",
     "siretRequired": "Veuillez entrer un Siret",
     "Not authorized": "Cet email est déjà inscrit avec un compte Tilt ou ce SIRET n'est pas valide. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
@@ -20,8 +21,8 @@
   "home": {
     "navigation": {
       "collaborators": {
-        "title": "Mes Collaborateur·rices",
-        "message": "Retrouvez ici la liste des personnes autorisées à intervenir sur vos différentes empreintes carbone"
+        "title": "Mon équipe",
+        "message": "Ajoutez ici des personnes qui pourront accéder à vos empreintes carbone et vous aider à répondre au questionnaire"
       },
       "footprints": {
         "title": "Mes Empreintes",
@@ -29,10 +30,15 @@
       },
       "sites": {
         "title": "Mon Association",
-        "message": "Retrouvez ici la liste des établissements rattachés à votre compte"
+        "message": "Renseignez ici la liste des sites physiques de votre association."
       }
     },
-    "title": "Calculer votre empreinte carbone simplifiée vous permettra de :"
+    "title": "Calculer votre empreinte carbone simplifiée vous permettra de :",
+    "info": {
+      "0": "Faire une estimation des émissions de gaz à effet de serre de votre association en répondant à différentes questions",
+      "1": "Comprendre comment fonctionne cette estimation et les principes fondamentaux d'un bilan de gaz à effet de serre",
+      "2": "Identifier des priorités d'action en fonction de vos émissions, et commencer à construire une trajectoire de réduction"
+    }
   },
   "exports": {
     "env_specific_export": "Bilan Carbone® - Sphère associative",

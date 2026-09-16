@@ -13,16 +13,11 @@ import { Alert, Box, Typography } from '@mui/material'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
-import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import CinemaOutlinedIcon from '../../cut/icons/CinemaOutlinedIcon'
 import DiagramOutlinedIcon from '../icons/DiagramOutlinedIcon'
 import LinkCard from './LinkCard'
 import styles from './UserView.module.css'
-
-const BetaBanner = dynamic(() => import('@/components/base/BetaBanner/BetaBanner'), {
-  ssr: true,
-})
 
 interface Props {
   account: UserSession
@@ -81,33 +76,32 @@ const UserView = async ({ account }: Props) => {
             </Box>
           )}
         </Box>
-        {isFootprintsEnabled && isTilt(account.environment) && <BetaBanner />}
         <Box className="flex gapped1 mt1">
           <LinkCard
             href={`/organisations/${account.organizationVersionId}/modifier`}
             icon={<DynamicComponent defaultComponent={<CinemaOutlinedIcon className={styles.icon} />} />}
-            title={navigation('sites.title')}
-            message={navigation('sites.message')}
+            title={customRich(navigation, 'sites.title')}
+            message={customRich(navigation, 'sites.message')}
           />
           <LinkCard
             href="/equipe"
             icon={<Groups2OutlinedIcon className={styles.icon} />}
-            title={navigation('collaborators.title')}
-            message={navigation('collaborators.message')}
+            title={customRich(navigation, 'collaborators.title')}
+            message={customRich(navigation, 'collaborators.message')}
           />
           {hasAccessToStudies(account.environment, account.level) ? (
             <LinkCard
               href="/organisations"
               icon={<DiagramOutlinedIcon className={styles.icon} />}
-              title={navigation('footprints.title')}
-              message={navigation('footprints.message')}
+              title={customRich(navigation, 'footprints.title')}
+              message={customRich(navigation, 'footprints.message')}
             />
           ) : isFootprintsEnabled ? (
             <LinkCard
               href="/mes-empreintes"
               icon={<DiagramOutlinedIcon className={styles.icon} />}
-              title={navigation('footprints.title')}
-              message={navigation('footprints.message')}
+              title={customRich(navigation, 'footprints.title')}
+              message={customRich(navigation, 'footprints.message')}
             />
           ) : null}
         </Box>
