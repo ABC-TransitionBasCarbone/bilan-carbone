@@ -55,7 +55,7 @@ const formatCellValue = (header: string, value: unknown) => {
 
   if (header === 'Date début session' || header === 'Date fin session') {
     if (typeof value === 'number') {
-      return getJsDateFromExcel(value).toISOString().slice(0, 10)
+      return getJsDateFromExcel(value).toISOString()
     }
   }
 
