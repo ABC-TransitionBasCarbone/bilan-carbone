@@ -14,6 +14,8 @@ export const AccountWithUserSelect = {
       id: true,
       organizationId: true,
       environment: true,
+      activatedLicence: true,
+      parent: true,
     },
   },
   role: true,

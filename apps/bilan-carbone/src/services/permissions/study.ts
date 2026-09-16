@@ -1,12 +1,13 @@
 import { getAccountById } from '@/db/account'
 import { getDocumentById } from '@/db/document'
 import { getOrganizationVersionForRightsCheck, getOrganizationVersionsByOrganizationId } from '@/db/organization'
-import { FullStudy, getStudyById } from '@/db/study'
+import { FullStudy, getStudyById, MinimalStudyForRights } from '@/db/study'
 import { getAccountByIdWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
 import { canEditOrganizationVersion, hasActiveLicence, isInOrgaOrParent } from '@/utils/organization'
 import {
   getAccountRoleOnStudy,
   getDuplicableEnvironments,
+  getUserRoleOnPublicStudy,
   hasEditionRights,
   hasSufficientLevel,
   StudyWithRoleFields,
@@ -23,7 +24,7 @@ import {
   isTilt,
   isTiltSimplifiedFeatureActive,
 } from './environment'
-import { hasAccessToDuplicateStudy } from './environmentAdvanced'
+import { hasAccessToDuplicateStudy, isTiltSimplified } from './environmentAdvanced'
 import { isInOrgaOrParentFromId } from './organization'
 import { isAdminOnStudyOrga } from './study.utils'
 
@@ -234,9 +235,35 @@ export const canChangeOpeningHours = async (user: UserSession, study: FullStudy)
   return canEditStudy(user, study)
 }
 
+export const NEWGetAccountRoleOnStudy = (user: UserSession, minimalStudy: MinimalStudyForRights) => {
+  if (isTiltSimplified(minimalStudy.organizationVersion.environment, minimalStudy.simplified)) {
+    return StudyRole.Editor
+  }
+  if (isAdminOnStudyOrga(user, minimalStudy.organizationVersion)) {
+    return hasSufficientLevel(user.level, minimalStudy.level) && hasActiveLicence(minimalStudy.organizationVersion)
+      ? StudyRole.Validator
+      : StudyRole.Reader
+  }
+
+  const right = minimalStudy.allowedUsers.find((right) => right.account.id === user.accountId)
+  if (right) {
+    return hasSufficientLevel(user.level, minimalStudy.level) && hasActiveLicence(minimalStudy.organizationVersion)
+      ? right.role
+      : StudyRole.Reader
+  }
+
+  if (minimalStudy.isPublic && isInOrgaOrParent(user.organizationVersionId, minimalStudy.organizationVersion)) {
+    return hasActiveLicence(minimalStudy.organizationVersion)
+      ? getUserRoleOnPublicStudy(user, minimalStudy.level)
+      : StudyRole.Reader
+  }
+
+  return null
+}
+
 export const canAddRightOnStudy = (
   user: UserSession,
-  study: FullStudy,
+  study: MinimalStudyForRights,
   userToAddOnStudy: User | null,
   role: StudyRole,
 ) => {
@@ -248,7 +275,7 @@ export const canAddRightOnStudy = (
     return false
   }
 
-  const userRoleOnStudy = getAccountRoleOnStudy(user, study)
+  const userRoleOnStudy = NEWGetAccountRoleOnStudy(user, study)
 
   if (!userRoleOnStudy || userRoleOnStudy === StudyRole.Reader) {
     return false

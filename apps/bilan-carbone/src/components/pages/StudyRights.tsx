@@ -3,7 +3,7 @@ import type { MinimalStudyForRights } from '@/db/study'
 import { getUserApplicationSettings } from '@/db/user'
 import DynamicStudyRights from '@/environments/core/study/DynamicStudyRights'
 import { getEmissionFactorImportVersions } from '@/services/serverFunctions/emissionFactor'
-import { getStudySitesList, NEWGetAccountRoleOnStudy } from '@/services/serverFunctions/study'
+import { getStudySitesList, NEWGetAccountRoleOnStudyWithId } from '@/services/serverFunctions/study'
 import { defaultCAUnit } from '@/utils/number'
 import { hasEditionRights } from '@/utils/study'
 import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
@@ -19,7 +19,7 @@ interface Props {
 const StudyRightsPage = async ({ user, minimalStudy }: Props) => {
   const tNav = await getTranslations('nav')
 
-  const userRoleOnStudy = await NEWGetAccountRoleOnStudy(user, minimalStudy.id)
+  const userRoleOnStudy = await NEWGetAccountRoleOnStudyWithId(user, minimalStudy.id)
   if (!userRoleOnStudy.success || !userRoleOnStudy.data) {
     return <NotFound />
   }

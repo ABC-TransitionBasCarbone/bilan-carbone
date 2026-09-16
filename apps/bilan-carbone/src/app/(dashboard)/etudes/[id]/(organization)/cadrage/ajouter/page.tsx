@@ -1,13 +1,13 @@
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import withStudyDetails, { StudyProps } from '@/components/hoc/withStudyDetails'
 import NewStudyRightPage from '@/components/pages/NewStudyRight'
-import { NEWGetAccountRoleOnStudy } from '@/services/serverFunctions/study'
+import { NEWGetAccountRoleOnStudyWithId } from '@/services/serverFunctions/study'
 import { hasEditionRights } from '@/utils/study'
 import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 import { redirect } from 'next/navigation'
 
 const NewStudyRight = async ({ study, user, studyId }: StudyProps & UserSessionProps) => {
-  const userRoleOnStudy = await NEWGetAccountRoleOnStudy(user, studyId)
+  const userRoleOnStudy = await NEWGetAccountRoleOnStudyWithId(user, studyId)
   if (!userRoleOnStudy.success) {
     return <NotFound />
   }

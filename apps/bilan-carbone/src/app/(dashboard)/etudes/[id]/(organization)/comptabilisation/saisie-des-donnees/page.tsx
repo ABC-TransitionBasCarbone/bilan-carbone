@@ -3,11 +3,11 @@ import withStudyDetails, { StudyProps } from '@/components/hoc/withStudyDetails'
 import StudyDataEntryInfographyPage from '@/components/pages/StudyDataEntryInfographyPage'
 import { isOrganizationVersionCR } from '@/db/organization'
 import { canDeleteStudy, canDuplicateStudy, getEnvironmentsForDuplication } from '@/services/permissions/study'
-import { NEWGetAccountRoleOnStudy } from '@/services/serverFunctions/study'
+import { NEWGetAccountRoleOnStudyWithId } from '@/services/serverFunctions/study'
 import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 
 const DataEntry = async ({ study, user, studyId }: StudyProps & UserSessionProps) => {
-  const userRole = await NEWGetAccountRoleOnStudy(user, studyId)
+  const userRole = await NEWGetAccountRoleOnStudyWithId(user, studyId)
   if (!userRole.success || !userRole.data) {
     return <NotFound />
   }

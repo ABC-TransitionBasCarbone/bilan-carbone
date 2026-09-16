@@ -2,7 +2,7 @@ import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import withStudyDetails, { StudyProps } from '@/components/hoc/withStudyDetails'
 import EditStudyContributorPage from '@/components/pages/EditStudyContributor'
 import { getAccountById } from '@/db/account'
-import { NEWGetAccountRoleOnStudy } from '@/services/serverFunctions/study'
+import { NEWGetAccountRoleOnStudyWithId } from '@/services/serverFunctions/study'
 import { AccountWithUser } from '@/types/account.types'
 import { hasEditionRights } from '@/utils/study'
 import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
@@ -15,7 +15,7 @@ interface Props {
 }
 
 const EditStudyContributor = async ({ study, user, params, studyId }: StudyProps & UserSessionProps & Props) => {
-  const userRoleOnStudy = await NEWGetAccountRoleOnStudy(user, studyId)
+  const userRoleOnStudy = await NEWGetAccountRoleOnStudyWithId(user, studyId)
   if (!userRoleOnStudy.success) {
     return <NotFound />
   }
