@@ -60,8 +60,8 @@ export class SitesETPsMapper extends SitesAdditionalDataMapper<SitesETPsWorkShee
     return sitesETPsWorkSheet
       .getRows()
       .map((row) => {
-        const startDate = row.startDate ? getJsDateFromExcel(row.startDate as number) : null
-        const endDate = row.endDate ? getJsDateFromExcel(row.endDate as number) : null
+        const startDate = row.startDate ? new Date(getJsDateFromExcel(row.startDate as number)) : null
+        const endDate = row.endDate ? new Date(getJsDateFromExcel(row.endDate as number)) : null
         if (!startDate || !endDate) {
           return null
         }
@@ -91,8 +91,8 @@ export class SitesCAsMapper extends SitesAdditionalDataMapper<SitesCAsWorkSheet,
     return sitesCAsWorksheet
       .getRows()
       .map((row) => {
-        const startDate = row.startDate ? getJsDateFromExcel(row.startDate as number) : null
-        const endDate = row.endDate ? getJsDateFromExcel(row.endDate as number) : null
+        const startDate = row.startDate ? new Date(getJsDateFromExcel(row.startDate as number)) : null
+        const endDate = row.endDate ? new Date(getJsDateFromExcel(row.endDate as number)) : null
         if (!startDate || !endDate) {
           return null
         }
