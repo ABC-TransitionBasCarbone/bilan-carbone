@@ -15,13 +15,14 @@
     "Not association SIRET": "L'uso di questo strumento è riservato alle associazioni. Utilizza la versione classica di Bilan Carbone®+",
     "validation": {
       "siret": "Inserisci un Siret"
-    }
+    },
+    "emailPlaceholder": "La tua email"
   },
   "home": {
     "navigation": {
       "collaborators": {
-        "title": "I miei collaboratori",
-        "message": "Qui trovi l'elenco delle persone autorizzate a intervenire sulle tue diverse impronte di carbonio"
+        "title": "Il mio team",
+        "message": "Aggiungi qui le persone che potranno accedere alle tue impronte di carbonio e aiutarti a rispondere al questionario"
       },
       "footprints": {
         "title": "Le mie Impronte",
@@ -29,10 +30,15 @@
       },
       "sites": {
         "title": "La mia Associazione",
-        "message": "Qui trovi l'elenco delle sedi collegate al tuo account"
+        "message": "Inserisci qui l'elenco delle sedi fisiche della tua associazione."
       }
     },
-    "title": "Calcolare la tua impronta di carbonio semplificata ti permetterà di:"
+    "title": "Calcolare la tua impronta di carbonio semplificata ti permetterà di:",
+    "info": {
+      "0": "Fare una stima delle emissioni di gas a effetto serra della tua associazione rispondendo a diverse domande",
+      "1": "Capire come funziona questa stima e i principi fondamentali di un bilancio di gas a effetto serra",
+      "2": "Identificare le priorità d'azione in funzione delle tue emissioni e iniziare a costruire una traiettoria di riduzione"
+    }
   },
   "exports": {
     "env_specific_export": "Impronta di carbonio semplificata",

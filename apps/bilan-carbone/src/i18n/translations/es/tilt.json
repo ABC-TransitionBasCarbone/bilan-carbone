@@ -15,13 +15,14 @@
     "Not association SIRET": "El uso de esta herramienta está reservado a las asociaciones. Utilice la versión clásica de Bilan Carbone®+",
     "validation": {
       "siret": "Introduzca un Siret"
-    }
+    },
+    "emailPlaceholder": "Su correo electrónico"
   },
   "home": {
     "navigation": {
       "collaborators": {
-        "title": "Mis Colaboradores/as",
-        "message": "Aquí encontrará la lista de personas autorizadas a intervenir en sus distintas huellas de carbono"
+        "title": "Mi equipo",
+        "message": "Añada aquí personas que podrán acceder a sus huellas de carbono y ayudarle a responder el cuestionario"
       },
       "footprints": {
         "title": "Mis Huellas",
@@ -29,10 +30,15 @@
       },
       "sites": {
         "title": "Mi Asociación",
-        "message": "Aquí encontrará la lista de establecimientos vinculados a su cuenta"
+        "message": "Indique aquí la lista de los sitios físicos de su asociación."
       }
     },
-    "title": "Calcular su huella de carbono simplificada le permitirá:"
+    "title": "Calcular su huella de carbono simplificada le permitirá:",
+    "info": {
+      "0": "Realizar una estimación de las emisiones de gases de efecto invernadero de su asociación respondiendo a distintas preguntas",
+      "1": "Comprender cómo funciona esta estimación y los principios fundamentales de un balance de gases de efecto invernadero",
+      "2": "Identificar prioridades de acción en función de sus emisiones y comenzar a construir una trayectoria de reducción"
+    }
   },
   "exports": {
     "env_specific_export": "Huella de carbono simplificada",

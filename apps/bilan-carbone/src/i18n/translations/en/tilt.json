@@ -21,8 +21,8 @@
   "home": {
     "navigation": {
       "collaborators": {
-        "title": "Pilot Team",
-        "message": "Find here the list of teachers, administrative staff and students authorized to modify the establishment's data"
+        "title": "My team",
+        "message": "Add here people who will be able to access your carbon footprints and help you complete the questionnaire"
       },
       "footprints": {
         "title": "My Footprints",
@@ -30,14 +30,14 @@
       },
       "sites": {
         "title": "My Non-profit Organisation",
-        "message": "Find here the list of establishments linked to your account"
+        "message": "Enter here the list of your association's physical sites."
       }
     },
     "title": "Calculating your simplified carbon footprint will allow you to:",
     "info": {
-      "0": "Faire une estimation des émissions de gaz à effet de serre de votre association en répondant à différentes questions",
-      "1": "Comprendre comment fonctionne cette estimation et les principes fondamentaux d'un bilan de gaz à effet de serre",
-      "2": "Identifier des priorités d'action en fonction de vos émissions, et commencer à construire une trajectoire de réduction"
+      "0": "Estimate your association's greenhouse gas emissions by answering various questions",
+      "1": "Understand how this estimate works and the fundamental principles of a greenhouse gas assessment",
+      "2": "Identify action priorities based on your emissions, and start building a reduction pathway"
     }
   },
   "exports": {
