@@ -29,6 +29,7 @@
     "mandatory": "* obligatoire",
     "and": "et",
     "year": "Année",
+    "noStudies": "Aucune étude trouvée. Vous n'avez pas les droits pour en créer une, veuillez contacter un de vos administrateurs.",
     "action": {
       "create": "Créer",
       "edit": "Modifier",

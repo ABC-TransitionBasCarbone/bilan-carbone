@@ -29,6 +29,7 @@
     "mandatory": "* mandatory",
     "and": "and",
     "year": "Year",
+    "noStudies": "No studies found. You do not have the rights to create one, please contact one of your administrators.",
     "action": {
       "create": "Create",
       "edit": "Edit",

@@ -164,7 +164,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
       </Alert>
     </Block>
   ) : (
-    <Block>{customRich(tCommon, 'error')}</Block>
+    <Block>{customRich(tCommon, 'noStudies')}</Block>
   )
 }
 
