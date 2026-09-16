@@ -222,7 +222,7 @@ const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user,
               form={isEditing ? (siteForm as unknown as UseFormReturn<SitesCommand>) : undefined}
               caUnit={caUnit}
               withSelection
-              onDuplicate={!isEditing && hasEditionRole ? setDuplicatingSiteId : undefined}
+              onDuplicate={!isEditing && hasEditionRole && !study.simplified ? setDuplicatingSiteId : undefined}
               organizationId={isFromStudyOrganizationOrParent ? study.organizationVersion.id : undefined}
             />
           ),

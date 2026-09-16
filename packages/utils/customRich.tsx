@@ -58,6 +58,11 @@ export const customRich = (
         {children}
       </Link>
     ),
+    exemplequestionnairetorefacto: (children) => (
+      <Link className="font-inherit" href="https://associationbilancarbone.sharepoint.com/:b:/s/AssociationBilanCarbone/IQCERvlL3mYjRbebNaYQJIdmAV6OhR4Ghh8K_7RIem35gGQ?e=rg6oey" target="_blank" rel="noreferrer noopener">
+        {children}
+      </Link>
+    ),
     br: () => <br />,
     underline: (children) => <span style={{ textDecoration: 'underline' }}>{children}</span>,
     green: (children) => <span className="font-inherit green-ghgp">{children}</span>,

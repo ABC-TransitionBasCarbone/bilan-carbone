@@ -15,13 +15,14 @@
     "Not association SIRET": "Korištenje ovog alata rezervirano je za udruge. Molimo koristite klasičnu verziju Bilan Carbone®+.",
     "validation": {
       "siret": "Unesite Siret"
-    }
+    },
+    "emailPlaceholder": "Vaša e-adresa"
   },
   "home": {
     "navigation": {
       "collaborators": {
-        "title": "Moji suradnici",
-        "message": "Ovdje pronađite popis osoba ovlaštenih za rad na vašim različitim ugljičnim otiscima"
+        "title": "Moj tim",
+        "message": "Ovdje dodajte osobe koje će moći pristupiti vašim ugljičnim otiscima i pomoći vam odgovoriti na upitnik"
       },
       "footprints": {
         "title": "Moji otisci",
@@ -29,10 +30,15 @@
       },
       "sites": {
         "title": "Moja udruga",
-        "message": "Ovdje pronađite popis ustanova povezanih s vašim računom"
+        "message": "Ovdje unesite popis fizičkih lokacija vaše udruge."
       }
     },
-    "title": "Izračun vašeg pojednostavljenog ugljičnog otiska omogućit će vam da:"
+    "title": "Izračun vašeg pojednostavljenog ugljičnog otiska omogućit će vam da:",
+    "info": {
+      "0": "Procijenite emisije stakleničkih plinova vaše udruge odgovaranjem na različita pitanja",
+      "1": "Razumijte kako funkcionira ova procjena i temeljna načela bilance stakleničkih plinova",
+      "2": "Odredite prioritete djelovanja na temelju vaših emisija i započnite izgradnju putanje smanjenja"
+    }
   },
   "exports": {
     "env_specific_export": "Pojednostavljeni ugljični otisak",
@@ -89,7 +95,8 @@
       "numberOfTTVolunteer": "Koliko se dana tjedno radi na daljinu za vaše volontere?",
       "glossary": {
         "postalCode": "Poštanski broj udruge",
-        "postalCodeGlossary": "Poštanski broj sjedišta ako postoji više lokacija, 5 znamenki"
+        "postalCodeGlossary": "Poštanski broj sjedišta ako postoji više lokacija, 5 znamenki",
+        "structureInfoGlossary": "Ovu informaciju može koristiti naš tim kako bi prilagodio upitnik udrugama koje koriste alat."
       }
     },
     "flow": {
@@ -101,7 +108,7 @@
     "firstSimplifiedStudyMessage": "Vrijeme je da započnete! Pozivamo vas da stvorite svoj prvi Otisak.",
     "createFirstSimplifiedStudy": "Stvori moj prvi Otisak",
     "createSimplified": "Stvori Otisak",
-    "mySimplifiedStudies": "Moji otisci",
+    "mySimplifiedStudies": "Cap Carbone - Moji otisci",
     "seeSimplified": "Pogledaj moj otisak",
     "cannotCreateStudy": "Za izradu Bilanci Carbone® potrebno je biti educiran u metodi! <link>Saznajte više</link>",
     "canCreateFootPrint": "Ipak možete izraditi <link>ugljični otisak</link> koji vam omogućuje procjenu vašeg utjecaja",
@@ -116,7 +123,8 @@
       "feedback": {
         "button": "Pošaljite nam svoje povratne informacije! ✨",
         "title": "Pošaljite nam svoje povratne informacije! ✨"
-      }
+      },
+      "simplifiedFeedback": "Čestitamo! Upravo ste izradili pojednostavljeni ugljični otisak svoje udruge. To je izvrstan uvod u ugljično računovodstvo! Sada morate <b>djelovati na temelju ovih rezultata</b>, jer prvi cilj svakog pristupa ugljičnom računovodstvu mora biti <b>smanjenje emisija GES-a</b>. Imajte na umu da smanjenje emisija ne mora nužno prolaziti kroz smanjenje aktivnosti, osobito ako ona omogućuje izbjegavanje emisija kod drugih aktera ili ima važnu društvenu korist. To je posebno važno u slučaju udruga.<br></br><br></br> Pozivamo vas da ponovno izradite ovaj pojednostavljeni ugljični otisak sljedeće godine kako biste provjerili nalazite li se na pravom putu, ili, još bolje, <b>da uspostavite pravi Bilan Carbone®</b> kako biste dobili preciznost u procjeni svojih emisija i uspostavili pravi plan tranzicije! Za početak, ništa jednostavnije, samo se trebate obučiti za metodu ili prijaviti na program Tilt Envol pokreta Tilt. Više informacija <link>ovdje</link>! <br></br><br></br> Ako imate povratne informacije o alatu, slobodno ih podijelite s nama putem upitnika za povratne informacije dostupnog na vrhu ove stranice ili putem e-pošte na adresu <support>support</support>."
     },
     "structure": {
       "'Structure sportive'": "Sportska organizacija",
@@ -185,7 +193,11 @@
         "Agriculturetilt": "Za više informacija o uzimanju u obzir emisija povezanih s poljoprivrednim aktivnostima, molimo pogledajte <link>udruženu metodu</link>.",
         "AgriculturetiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
         "ActivitesIndustrielles": "Za više informacija o uzimanju u obzir emisija povezanih s eventualnim industrijskim aktivnostima, molimo pogledajte <link>udruženu metodu</link>.",
-        "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux"
+        "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
+        "DeplacementsDePersonneSimplified": "Za prikupljanje podataka potrebnih za dovršetak ovog postavke, pozivamo vas da unutar svoje udruge proslijedite upitnik. Evo <exemplequestionnairetorefacto>jednog primjera</exemplequestionnairetorefacto>, za implementaciju u alat za ankete po vašem izboru.",
+        "AlimentationSimplified": "Za prikupljanje podataka potrebnih za dovršetak ovog postavke, pozivamo vas da unutar svoje udruge proslijedite upitnik. Evo <exemplequestionnairetorefacto>jednog primjera</exemplequestionnairetorefacto>, za implementaciju u alat za ankete po vašem izboru.",
+        "ServiceEtNumeriqueSimplified": "Za prikupljanje podataka potrebnih za dovršetak ovog postavke, pozivamo vas da unutar svoje udruge proslijedite upitnik. Evo <exemplequestionnairetorefacto>jednog primjera</exemplequestionnairetorefacto>, za implementaciju u alat za ankete po vašem izboru.",
+        "EquipementsEtImmobilisationsSimplified": "Za prikupljanje podataka potrebnih za dovršetak ovog postavke, pozivamo vas da unutar svoje udruge proslijedite upitnik. Evo <exemplequestionnairetorefacto>jednog primjera</exemplequestionnairetorefacto>, za implementaciju u alat za ankete po vašem izboru."
       }
     }
   },
@@ -195,7 +207,7 @@
   },
   "betaBanner": {
     "badge": "Beta",
-    "title": "Beta verzija alata Cap Carbone",
+    "title": "Korisni dokumenti za izračun pojednostavljenog ugljičnog otiska putem Cap Carbonea",
     "description": "Cap Carbone je danas u beta verziji! Hvala vam što ste naši prvi korisnici i testeri 🎉 Slobodno nas kontaktirajte na adresu <support>support@abc-transitionbascarbone.fr</support> ako imate povratne informacije! Budući da je aplikacija u beta fazi, moguće je da se neka pitanja u obrascu promijene te da se odgovori na izmijenjena pitanja izbrišu u budućim ažuriranjima. Ne zaboravite provjeriti popunjenost svojih kategorija na stranici za unos podataka prije nego što pogledate rezultate, kako biste provjerili jesu li svi vaši odgovori i dalje dostupni."
   },
   "documentationUrlTilt": {

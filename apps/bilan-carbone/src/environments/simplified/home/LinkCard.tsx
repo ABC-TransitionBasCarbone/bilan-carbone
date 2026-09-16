@@ -7,8 +7,8 @@ import styles from './UserView.module.css'
 interface LinkCardProps {
   href: string
   icon: ReactNode
-  title: string
-  message: string
+  title: string | ReactNode
+  message: string | ReactNode
 }
 
 const LinkCard = ({ href, icon, title, message }: LinkCardProps) => {

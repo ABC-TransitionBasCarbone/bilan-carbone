@@ -61,6 +61,7 @@ Run from repo root unless specified:
 - One component per file.
 - Group by feature folder.
 - Do not add app-local empty re-export files.
+- Do not declare functions inside other functions; move shared helpers to module scope.
 - follow eslint.config.base.mjs conventions for import order and grouping.
 - follow .prettierrc.json conventions for formatting.
 - Before creating app-local types/components, check if it belongs in shared packages.
@@ -84,6 +85,10 @@ Immediately before each throw new Error(NOT_AUTHORIZED), add console.error with 
 
 Only read github and never write, comment, resolve, or close issues/pull requests or comments.
 
+## Verification Standard
+
+Never validate my claims without checking them. Prefer evidence over my approval. If I am wrong, contradict me clearly. If you do not know or cannot verify something, say so instead of inventing it.
+
 ## Important Locations
 
 - apps/bilan-carbone/src/db/emissionFactors.ts
@@ -91,3 +96,6 @@ Only read github and never write, comment, resolve, or close issues/pull request
 - apps/*/src/components
 - apps/*/src/app/api
 - .env
+
+## PR
+- Do not comment on french text that are not translated. We have a script that translate it automatically after the PR is merged.

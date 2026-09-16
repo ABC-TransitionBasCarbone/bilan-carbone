@@ -386,7 +386,7 @@ describe('resolveEmissionFactorRows', () => {
       foundUnit: 'KG',
     })
 
-    const result = await resolveEmissionFactorRows([makeRow()], {}, Locale.FR, ORG_ID, VERSION_IDS)
+    const result = await resolveEmissionFactorRows([makeRow()], {}, Locale.FR, ORG_ID, VERSION_IDS, Environment.BC)
 
     expect(result.type).toBe('resolved')
     if (result.type === 'resolved') {
@@ -403,6 +403,7 @@ describe('resolveEmissionFactorRows', () => {
       Locale.FR,
       ORG_ID,
       VERSION_IDS,
+      Environment.BC,
     )
 
     expect(result.type).toBe('warnings')
@@ -414,7 +415,7 @@ describe('resolveEmissionFactorRows', () => {
   it('returns warnings with efMissingUnit when EF name present but no unit and no match', async () => {
     mockFindMatch.mockResolvedValue(null)
 
-    const result = await resolveEmissionFactorRows([makeRow()], {}, Locale.FR, ORG_ID, VERSION_IDS)
+    const result = await resolveEmissionFactorRows([makeRow()], {}, Locale.FR, ORG_ID, VERSION_IDS, Environment.BC)
 
     expect(result.type).toBe('warnings')
     if (result.type === 'warnings') {
@@ -431,6 +432,7 @@ describe('resolveEmissionFactorRows', () => {
       Locale.FR,
       ORG_ID,
       VERSION_IDS,
+      Environment.BC,
     )
 
     expect(result.type).toBe('warnings')
@@ -449,7 +451,7 @@ describe('resolveEmissionFactorRows', () => {
       foundUnit: 'KG',
     })
 
-    const result = await resolveEmissionFactorRows([makeRow()], {}, Locale.FR, ORG_ID, VERSION_IDS)
+    const result = await resolveEmissionFactorRows([makeRow()], {}, Locale.FR, ORG_ID, VERSION_IDS, Environment.BC)
 
     expect(result.type).toBe('warnings')
     if (result.type === 'warnings') {
@@ -467,7 +469,7 @@ describe('resolveEmissionFactorRows', () => {
       ],
     })
 
-    const result = await resolveEmissionFactorRows([makeRow()], {}, Locale.FR, ORG_ID, VERSION_IDS)
+    const result = await resolveEmissionFactorRows([makeRow()], {}, Locale.FR, ORG_ID, VERSION_IDS, Environment.BC)
 
     expect(result.type).toBe('ambiguous')
     if (result.type === 'ambiguous') {
@@ -487,7 +489,7 @@ describe('resolveEmissionFactorRows', () => {
       })),
     })
 
-    const result = await resolveEmissionFactorRows([makeRow()], {}, Locale.FR, ORG_ID, VERSION_IDS)
+    const result = await resolveEmissionFactorRows([makeRow()], {}, Locale.FR, ORG_ID, VERSION_IDS, Environment.BC)
 
     expect(result.type).toBe('ambiguous')
     if (result.type === 'ambiguous') {
@@ -511,6 +513,7 @@ describe('resolveEmissionFactorRows', () => {
       Locale.FR,
       ORG_ID,
       VERSION_IDS,
+      Environment.BC,
     )
 
     expect(result.type).toBe('warnings')
@@ -529,7 +532,14 @@ describe('resolveEmissionFactorRows', () => {
       metaData: [{ title: 'Acier choisi', attribute: null, frontiere: null, language: 'fr' }],
     })
 
-    const result = await resolveEmissionFactorRows([makeRow()], { 5: 'prisma-1' }, Locale.FR, ORG_ID, VERSION_IDS)
+    const result = await resolveEmissionFactorRows(
+      [makeRow()],
+      { 5: 'prisma-1' },
+      Locale.FR,
+      ORG_ID,
+      VERSION_IDS,
+      Environment.BC,
+    )
 
     expect(mockFindMatch).not.toHaveBeenCalled()
     expect(result.type).toBe('resolved')
@@ -547,6 +557,7 @@ describe('resolveEmissionFactorRows', () => {
       Locale.FR,
       ORG_ID,
       VERSION_IDS,
+      Environment.BC,
     )
 
     expect(result.type).toBe('resolved')

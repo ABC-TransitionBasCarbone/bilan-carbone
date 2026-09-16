@@ -161,9 +161,6 @@ describe('Team', () => {
     })
 
     cy.wait('@logout')
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input')
-      .should('be.visible')
-      .type('user-test-1@test.fr')
     cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input')
       .should('be.visible')
       .type('Password-1')

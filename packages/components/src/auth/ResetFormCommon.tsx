@@ -15,7 +15,7 @@ import authStyles from './Auth.module.css'
 
 interface Props {
   token: string
-  resetPassword: (email: string, password: string, token: string) => Promise<void>
+  resetPassword: (password: string, token: string) => Promise<void>
   submitting: boolean
   setSubmitting: (submitting: boolean) => void
 }
@@ -36,9 +36,6 @@ const ResetFormCommon = ({ resetPassword, token, setSubmitting, submitting }: Pr
     resolver: zodResolver(ResetPasswordCommandValidation),
     mode: 'onBlur',
     reValidateMode: 'onChange',
-    defaultValues: {
-      email: '',
-    },
   })
 
   useEffect(() => {
@@ -50,23 +47,14 @@ const ResetFormCommon = ({ resetPassword, token, setSubmitting, submitting }: Pr
   const onSubmit = async () => {
     setSubmitting(true)
 
-    const { email, password } = getValues()
-    await resetPassword(email.toLowerCase(), password, token)
+    const { password } = getValues()
+    await resetPassword(password, token)
   }
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)} className="mt1">
       <FormControl className={authStyles.form}>
         <p>{t('resetTitle')}</p>
-        <FormTextField
-          control={control}
-          name="email"
-          data-testid="input-email"
-          className={authStyles.input}
-          label={t('email')}
-          placeholder={t('emailPlaceholder')}
-          trim
-        />
         <FormTextField
           control={control}
           data-testid="input-password"

@@ -1,3 +1,8 @@
+export const countTrue = <T>(items: T[], predicate: (item: T) => boolean): number => items.filter(predicate).length
+
+export const numericValues = <T>(items: T[], accessor: (item: T) => number | null): number[] =>
+  items.map(accessor).filter((value): value is number => value !== null)
+
 export const formatNumber = (value?: number, dec = 0) =>
   (value || 0).toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: dec })
 

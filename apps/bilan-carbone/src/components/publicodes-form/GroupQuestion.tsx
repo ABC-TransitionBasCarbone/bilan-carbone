@@ -17,7 +17,7 @@ export default function GroupQuestion<RuleName extends string>({
   onChange,
 }: GroupQuestionProps<RuleName>) {
   return (
-    <FormControl className="flex-col m2">
+    <FormControl className="flex-row wrap m2">
       {evaluatedElements.map((element, index) => {
         if (element.element !== 'input' || element.type !== 'checkbox') {
           return null

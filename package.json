@@ -8,11 +8,7 @@
       "packages/*",
       "packages/publicodes-packages/*"
     ],
-    "nohoist": [
-      "@abc-transitionbascarbone/publicodes-mip/@incubateur-ademe/publicodes-commun",
-      "@abc-transitionbascarbone/publicodes-mip/@incubateur-ademe/publicodes-acv-numerique",
-      "@abc-transitionbascarbone/publicodes-mip/futureco-data"
-    ]
+    "nohoist": []
   },
   "engines": {
     "node": "24.x",
@@ -29,10 +25,13 @@
     "lint": "turbo run lint",
     "format": "turbo run format",
     "prisma": "yarn workspace @abc-transitionbascarbone/db-common run prisma",
-    "seed": "yarn workspace bilan-carbone prisma db seed",
-    "postinstall": "yarn compile:publicodes && yarn db:generate",
+    "seed": "yarn seed:all",
+    "seed:all": "yarn workspace @abc-transitionbascarbone/db-common tsx prisma/seed/index.ts --target all",
+    "seed:bc": "yarn workspace @abc-transitionbascarbone/db-common tsx prisma/seed/index.ts --target bc",
+    "seed:mip": "yarn workspace @abc-transitionbascarbone/db-common tsx prisma/seed/index.ts --target mip",
+    "postinstall": "yarn db:generate",
     "db:generate": "rm -rf packages/db-common/src/generated/prisma && yarn workspace @abc-transitionbascarbone/db-common run db:generate",
-    "compile:publicodes": "sh -c 'set -e; if [ \"$APP_TARGET\" = \"mip\" ]; then yarn install --production=false --non-interactive --cwd packages/publicodes-packages/publicodes-mip && (cd packages/publicodes-packages/publicodes-mip && yarn compile); else for dir in packages/publicodes-packages/publicodes-clickson packages/publicodes-packages/publicodes-count packages/publicodes-packages/publicodes-tilt; do (cd \"$dir\" && yarn compile); done; fi'",
+    "compile:publicodes": "sh -c 'if [ \"$APP_TARGET\" = \"mip\" ]; then echo \"Skipping Publicodes compilation for MIP\"; else set -e; for dir in packages/publicodes-packages/publicodes-clickson packages/publicodes-packages/publicodes-count packages/publicodes-packages/publicodes-tilt; do (cd \"$dir\" && yarn compile); done; fi'",
     "compile:publicodes-windows": "for /d %d in (\"packages\\publicodes-packages\\publicodes-*\") do (@cd /d \"%d\" && yarn install && yarn compile && cd ..\\..\\..)"
   },
   "dependencies": {
@@ -46,7 +45,7 @@
     "@publicodes/react-ui": "^1.10.0",
     "@hono/node-server": "^2.0.5",
     "@babel/core": "^7.29.6",
-    "qs": "6.15.2",
+    "qs": "6.16.0",
     "minimatch": "^10.2.5",
     "brace-expansion": "^5.0.8",
     "hono": "^4.12.18",
@@ -55,11 +54,13 @@
     "fast-xml-builder": "^1.1.6",
     "uuid": "^14.0.1",
     "js-yaml": "^4.3.0",
-    "sharp": "0.35.0",
+    "sharp": "0.35.4",
     "ws": "^8.21.0",
     "tmp": "^0.2.6",
     "systeminformation": "^5.31.7",
     "nanoid": "^3.3.18",
+    "vite": "^6.4.3",
+    "mysql2": "^3.22.0",
     "deepmerge-ts": "^8.0.0"
   }
 }

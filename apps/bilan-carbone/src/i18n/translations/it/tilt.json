@@ -15,13 +15,14 @@
     "Not association SIRET": "L'uso di questo strumento è riservato alle associazioni. Utilizza la versione classica di Bilan Carbone®+",
     "validation": {
       "siret": "Inserisci un Siret"
-    }
+    },
+    "emailPlaceholder": "La tua email"
   },
   "home": {
     "navigation": {
       "collaborators": {
-        "title": "I miei collaboratori",
-        "message": "Qui trovi l'elenco delle persone autorizzate a intervenire sulle tue diverse impronte di carbonio"
+        "title": "Il mio team",
+        "message": "Aggiungi qui le persone che potranno accedere alle tue impronte di carbonio e aiutarti a rispondere al questionario"
       },
       "footprints": {
         "title": "Le mie Impronte",
@@ -29,10 +30,15 @@
       },
       "sites": {
         "title": "La mia Associazione",
-        "message": "Qui trovi l'elenco delle sedi collegate al tuo account"
+        "message": "Inserisci qui l'elenco delle sedi fisiche della tua associazione."
       }
     },
-    "title": "Calcolare la tua impronta di carbonio semplificata ti permetterà di:"
+    "title": "Calcolare la tua impronta di carbonio semplificata ti permetterà di:",
+    "info": {
+      "0": "Fare una stima delle emissioni di gas a effetto serra della tua associazione rispondendo a diverse domande",
+      "1": "Capire come funziona questa stima e i principi fondamentali di un bilancio di gas a effetto serra",
+      "2": "Identificare le priorità d'azione in funzione delle tue emissioni e iniziare a costruire una traiettoria di riduzione"
+    }
   },
   "exports": {
     "env_specific_export": "Impronta di carbonio semplificata",
@@ -89,7 +95,8 @@
       "numberOfTTVolunteer": "Quanti giorni a settimana lavorano in smart working i tuoi volontari?",
       "glossary": {
         "postalCode": "Codice postale dell'associazione",
-        "postalCodeGlossary": "CAP della sede se ci sono più siti, 5 cifre"
+        "postalCodeGlossary": "CAP della sede se ci sono più siti, 5 cifre",
+        "structureInfoGlossary": "Questa informazione potrà essere utilizzata dal nostro team per adattare il questionario alle associazioni che utilizzano lo strumento."
       }
     },
     "flow": {
@@ -101,7 +108,7 @@
     "firstSimplifiedStudyMessage": "È ora di iniziare! Ti invitiamo a creare la tua prima Impronta.",
     "createFirstSimplifiedStudy": "Crea la mia prima Impronta",
     "createSimplified": "Crea un'Impronta",
-    "mySimplifiedStudies": "Le mie Impronte",
+    "mySimplifiedStudies": "Cap Carbone - Le mie Impronte",
     "seeSimplified": "Vedi la mia Impronta",
     "cannotCreateStudy": "Per poter realizzare dei Bilan Carbone® è necessario essere formati al metodo! <link>Scopri di più</link>",
     "canCreateFootPrint": "Puoi comunque realizzare <link>un'impronta di carbonio</link> che ti permette di effettuare una stima del tuo impatto",
@@ -116,7 +123,8 @@
       "feedback": {
         "button": "Inviaci i tuoi feedback! ✨",
         "title": "Inviaci i tuoi feedback! ✨"
-      }
+      },
+      "simplifiedFeedback": "Bravo! Hai appena realizzato l'impronta di carbonio semplificata della tua associazione. È un'ottima introduzione alla comptabilizzazione del carbonio! Ora devi <b>agire in base a questi risultati</b>, perché il primo obiettivo di qualsiasi processo di comptabilizzazione del carbonio deve essere la <b>riduzione delle emissioni di GES</b>. Tieni presente che la riduzione delle emissioni non deve necessariamente passare attraverso la contrazione dell'attività, in particolare se questa permette di evitare emissioni presso altri attori o presenta un'importante utilità sociale. Ciò è particolarmente importante nel caso delle associazioni.<br></br><br></br> Ti invitiamo a rifare questa impronta di carbonio semplificata l'anno prossimo per verificare di essere sulla buona traiettoria, o, meglio ancora, <b>a realizzare un vero Bilan Carbone®</b> per guadagnare in precisione nella stima delle tue emissioni e stabilire un vero e proprio Plan de transition! Per iniziare, niente di più semplice: ti basta formarti al metodo, o iscriverti al percorso Tilt Envol del Mouvement Tilt. Maggiori informazioni <link>qui</link>! <br></br><br></br> Se hai dei feedback sullo strumento, non esitare a condividerli con noi tramite il questionario di feedback disponibile in cima a questa pagina, o via e-mail all'indirizzo <support>support</support>."
     },
     "structure": {
       "'Structure sportive'": "Struttura sportiva",
@@ -185,7 +193,11 @@
         "Agriculturetilt": "Per ottenere maggiori informazioni sulla considerazione delle emissioni legate alle attività agricole, consulta il <link>metodo associativo</link>.",
         "AgriculturetiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
         "ActivitesIndustrielles": "Per ottenere maggiori informazioni sulla considerazione delle emissioni legate a eventuali attività industriali, consulta il <link>metodo associativo</link>.",
-        "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux"
+        "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
+        "DeplacementsDePersonneSimplified": "Per raccogliere i dati necessari al completamento di questo Poste, ti invitiamo a far circolare un questionario all'interno della tua associazione. Eccone <exemplequestionnairetorefacto>un esempio</exemplequestionnairetorefacto>, da implementare nello strumento di sondaggio di tua scelta.",
+        "AlimentationSimplified": "Per raccogliere i dati necessari al completamento di questo Poste, ti invitiamo a far circolare un questionario all'interno della tua associazione. Eccone <exemplequestionnairetorefacto>un esempio</exemplequestionnairetorefacto>, da implementare nello strumento di sondaggio di tua scelta.",
+        "ServiceEtNumeriqueSimplified": "Per raccogliere i dati necessari al completamento di questo Poste, ti invitiamo a far circolare un questionario all'interno della tua associazione. Eccone <exemplequestionnairetorefacto>un esempio</exemplequestionnairetorefacto>, da implementare nello strumento di sondaggio di tua scelta.",
+        "EquipementsEtImmobilisationsSimplified": "Per raccogliere i dati necessari al completamento di questo Poste, ti invitiamo a far circolare un questionario all'interno della tua associazione. Eccone <exemplequestionnairetorefacto>un esempio</exemplequestionnairetorefacto>, da implementare nello strumento di sondaggio di tua scelta."
       }
     }
   },
@@ -195,7 +207,7 @@
   },
   "betaBanner": {
     "badge": "Beta",
-    "title": "Versione Beta dello strumento Cap Carbone",
+    "title": "Documenti utili per il calcolo di un'impronta di carbonio semplificata tramite Cap Carbone",
     "description": "Cap Carbone è attualmente in versione beta! Grazie per essere i nostri primi utenti e tester 🎉 Non esitare a contattarci all'indirizzo <support>support@abc-transitionbascarbone.fr</support> se hai dei feedback! Essendo l'applicazione in beta, è possibile che alcune domande cambino nel modulo e che quindi le risposte alle domande modificate vengano eliminate in futuri aggiornamenti. Ricorda di controllare il completamento delle tue categorie nella pagina di inserimento dati prima di consultare i tuoi risultati, per verificare che tutte le tue risposte siano ancora disponibili."
   },
   "documentationUrlTilt": {

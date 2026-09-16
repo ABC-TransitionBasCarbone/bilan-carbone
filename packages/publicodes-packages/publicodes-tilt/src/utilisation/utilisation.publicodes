@@ -2,6 +2,6 @@ utilisation:
   titre: Utilisation
   formule:
     somme:
-      - responsabilite conso energie
+      - conso energie
   unité: kgCO2e
   par défaut: 0

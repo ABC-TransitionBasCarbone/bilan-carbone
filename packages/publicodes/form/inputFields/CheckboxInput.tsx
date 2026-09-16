@@ -15,7 +15,7 @@ export default function GroupCheckboxItem<RuleName extends string>({
   onChange,
 }: GroupCheckboxItemProps<RuleName>) {
   const { question } = usePublicodesRuleTranslation(evaluatedElement.id)
-  const isChecked = evaluatedElement.checked ?? false
+  const isChecked = evaluatedElement.checked ?? (!evaluatedElement.answered && evaluatedElement.defaultChecked) ?? false
   const isDisabled = !evaluatedElement.applicable
 
   return (

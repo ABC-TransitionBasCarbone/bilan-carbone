@@ -71,7 +71,7 @@
 
 équipements et immobilisations . total sans reconditionné . ordinateurs fixes:
   formule: FE * quantité
-  titre: Ordinateurs fixe de taille moyenne (2023-2025), Asie
+  titre: Ordinateurs fixe
   form:
     à traduire: oui
   avec:
@@ -98,7 +98,7 @@
       unité: kgCO2e/quantité
       meta:
         id: 29dcfe4c-28b2-47a3-9224-ad469daeb815
-        nom: Ordinateurs portables
+        nom: Ordinateur portable de taille moyenne (2023-2025), Asie
     quantité:
       question: Ordinateurs portables
       type: nombre
@@ -161,7 +161,7 @@
 
 équipements et immobilisations . total sans reconditionné . téléphones portables:
   formule: FE * quantité
-  titre: Smartphone de taille moyenne (2023-2025), Asie 
+  titre: Smartphone 
   form:
     à traduire: oui
   avec:
@@ -179,7 +179,7 @@
 
 équipements et immobilisations . total sans reconditionné . vidéoprojecteurs:
   formule: FE * quantité
-  titre: Vidéoprojecteurs (2020), Asie
+  titre: Vidéoprojecteurs
   form:
     à traduire: oui
   avec:

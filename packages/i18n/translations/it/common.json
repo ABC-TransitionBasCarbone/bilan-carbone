@@ -72,7 +72,8 @@
     "Not authorized": "Non hai i permessi per eseguire questa azione",
     "typeToConfirm": "Digita \"{name}\" per confermare",
     "perPerson": "per persona",
-    "carbonIntensities": "Intensità di carbonio"
+    "carbonIntensities": "Intensità di carbonio",
+    "noStudies": "Nessuno studio trovato. Non disponi dei diritti per crearne uno, contatta uno dei tuoi amministratori."
   },
   "saveStatus": {
     "saving": "Salvataggio delle risposte in corso...",

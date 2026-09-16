@@ -15,13 +15,14 @@
     "Not association SIRET": "El uso de esta herramienta está reservado a las asociaciones. Utilice la versión clásica de Bilan Carbone®+",
     "validation": {
       "siret": "Introduzca un Siret"
-    }
+    },
+    "emailPlaceholder": "Su correo electrónico"
   },
   "home": {
     "navigation": {
       "collaborators": {
-        "title": "Mis Colaboradores/as",
-        "message": "Aquí encontrará la lista de personas autorizadas a intervenir en sus distintas huellas de carbono"
+        "title": "Mi equipo",
+        "message": "Añada aquí personas que podrán acceder a sus huellas de carbono y ayudarle a responder el cuestionario"
       },
       "footprints": {
         "title": "Mis Huellas",
@@ -29,10 +30,15 @@
       },
       "sites": {
         "title": "Mi Asociación",
-        "message": "Aquí encontrará la lista de establecimientos vinculados a su cuenta"
+        "message": "Indique aquí la lista de los sitios físicos de su asociación."
       }
     },
-    "title": "Calcular su huella de carbono simplificada le permitirá:"
+    "title": "Calcular su huella de carbono simplificada le permitirá:",
+    "info": {
+      "0": "Realizar una estimación de las emisiones de gases de efecto invernadero de su asociación respondiendo a distintas preguntas",
+      "1": "Comprender cómo funciona esta estimación y los principios fundamentales de un balance de gases de efecto invernadero",
+      "2": "Identificar prioridades de acción en función de sus emisiones y comenzar a construir una trayectoria de reducción"
+    }
   },
   "exports": {
     "env_specific_export": "Huella de carbono simplificada",
@@ -89,7 +95,8 @@
       "numberOfTTVolunteer": "¿Cuántos días teletrabajan a la semana sus voluntarios?",
       "glossary": {
         "postalCode": "Código postal de la asociación",
-        "postalCodeGlossary": "CP de la sede si hay varios sitios, 5 cifras"
+        "postalCodeGlossary": "CP de la sede si hay varios sitios, 5 cifras",
+        "structureInfoGlossary": "Esta información podrá ser utilizada por nuestro equipo para adaptar el cuestionario a las asociaciones que utilizan la herramienta."
       }
     },
     "flow": {
@@ -101,7 +108,7 @@
     "firstSimplifiedStudyMessage": "¡Es hora de empezar! Le invitamos a crear su primera Huella.",
     "createFirstSimplifiedStudy": "Crear mi primera Huella",
     "createSimplified": "Crear una Huella",
-    "mySimplifiedStudies": "Mis Huellas",
+    "mySimplifiedStudies": "Cap Carbone - Mis Huellas",
     "seeSimplified": "Ver mi Huella",
     "cannotCreateStudy": "Para poder hacer Bilan Carbone® es necesario estar formado en el método. <link>Más información</link>",
     "canCreateFootPrint": "No obstante, puede realizar <link>una huella de carbono</link> que le permita estimar su impacto",
@@ -116,7 +123,8 @@
       "feedback": {
         "button": "¡Envíenos sus comentarios! ✨",
         "title": "¡Envíenos sus comentarios! ✨"
-      }
+      },
+      "simplifiedFeedback": "¡Enhorabuena! Acaba de realizar la huella de carbono simplificada de su asociación. ¡Es una excelente iniciación a la contabilidad de carbono! Ahora debe <b>actuar en función de estos resultados</b>, ya que el primer objetivo de toda iniciativa de contabilidad de carbono debe ser la <b>reducción de las emisiones de GEI</b>. Tenga en cuenta que la reducción de las emisiones no debe pasar necesariamente por la contracción de la actividad, especialmente si esta permite evitar emisiones en otros actores o presenta una utilidad social importante. Esto es particularmente importante en el caso de las asociaciones.<br></br><br></br> Le invitamos a rehacer esta huella de carbono simplificada el próximo año para verificar que está en la buena trayectoria, o, mejor aún, <b>a establecer un verdadero Bilan Carbone®</b> para ganar en precisión en la estimación de sus emisiones y establecer un verdadero plan de transición. Para empezar, nada más sencillo, basta con formarse en el método, o inscribirse en el recorrido Tilt Envol del Movimiento Tilt. ¡Más información <link>aquí</link>! <br></br><br></br> Si tiene comentarios sobre la herramienta, no dude en compartirlos con nosotros a través del cuestionario de opiniones disponible en la parte superior de esta página, o por correo electrónico a la dirección <support>support</support>."
     },
     "structure": {
       "'Structure sportive'": "Estructura deportiva",
@@ -185,7 +193,11 @@
         "Agriculturetilt": "Para obtener más información sobre la consideración de las emisiones vinculadas a las actividades agrícolas, consulte el <link>método asociativo</link>.",
         "AgriculturetiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
         "ActivitesIndustrielles": "Para obtener más información sobre la consideración de las emisiones vinculadas a posibles actividades industriales, consulte el <link>método asociativo</link>.",
-        "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux"
+        "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
+        "DeplacementsDePersonneSimplified": "Para recopilar los datos necesarios para completar esta categoría, le invitamos a difundir un cuestionario dentro de su asociación. Aquí tiene <exemplequestionnairetorefacto>un ejemplo</exemplequestionnairetorefacto>, para implementar en la herramienta de encuestas que prefiera.",
+        "AlimentationSimplified": "Para recopilar los datos necesarios para completar esta categoría, le invitamos a difundir un cuestionario dentro de su asociación. Aquí tiene <exemplequestionnairetorefacto>un ejemplo</exemplequestionnairetorefacto>, para implementar en la herramienta de encuestas que prefiera.",
+        "ServiceEtNumeriqueSimplified": "Para recopilar los datos necesarios para completar esta categoría, le invitamos a difundir un cuestionario dentro de su asociación. Aquí tiene <exemplequestionnairetorefacto>un ejemplo</exemplequestionnairetorefacto>, para implementar en la herramienta de encuestas que prefiera.",
+        "EquipementsEtImmobilisationsSimplified": "Para recopilar los datos necesarios para completar esta categoría, le invitamos a difundir un cuestionario dentro de su asociación. Aquí tiene <exemplequestionnairetorefacto>un ejemplo</exemplequestionnairetorefacto>, para implementar en la herramienta de encuestas que prefiera."
       }
     }
   },
@@ -195,7 +207,7 @@
   },
   "betaBanner": {
     "badge": "Beta",
-    "title": "Versión beta de la herramienta Cap Carbone",
+    "title": "Documentos útiles para el cálculo de una huella de carbono simplificada mediante Cap Carbone",
     "description": "¡Cap Carbone se encuentra actualmente en versión beta! Gracias por ser nuestros primeros usuarios y evaluadores 🎉 No dude en contactarnos en <support>support@abc-transitionbascarbone.fr</support> si tiene comentarios. Al estar la aplicación en beta, es posible que algunas preguntas cambien en el formulario y que, por tanto, las respuestas de las preguntas modificadas se eliminen en futuras actualizaciones. Recuerde revisar la completitud de sus categorías en la página de introducción de datos antes de consultar sus resultados, para comprobar que todas sus respuestas siguen disponibles."
   },
   "documentationUrlTilt": {

@@ -151,7 +151,7 @@
   },
   "role": {
     "DEFAULT": "Collaborator",
-    "ADMIN_description": "An administrator has all rights over the organisation's account as well as over all of its studies (whether public or private).",
+    "ADMIN_description": "An administrator has all rights over the organisation's account as well as over all of its studies (whether shared with the team or confidential).",
     "DEFAULT_description": "A collaborator can edit studies. They do not have access to the organisation's settings."
   },
   "login": {

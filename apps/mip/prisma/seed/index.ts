@@ -2,6 +2,7 @@ import { PrismaClient } from '@abc-transitionbascarbone/db-common'
 import { RoleMip, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { signPassword } from '@abc-transitionbascarbone/utils/auth'
 import { PrismaPg } from '@prisma/adapter-pg'
+import mipModel from './co2-model.FR-lang.fr-opti.json'
 
 const adapter = new PrismaPg({
   connectionString: process.env.POSTGRES_PRISMA_URL,
@@ -14,6 +15,7 @@ const main = async () => {
   const userIds = accountsMip.map((a) => a.userId)
 
   await prisma.accountOnCampaign.deleteMany()
+  await prisma.response.deleteMany()
   await prisma.campaign.deleteMany()
   await prisma.accountMip.deleteMany()
   await prisma.user.deleteMany({ where: { id: { in: userIds } } })
@@ -64,9 +66,7 @@ const main = async () => {
   const modelCampaign = await prisma.modelCampaign.create({
     data: {
       name: 'Test Model Campaign',
-      model: {
-        hello: 'Hello',
-      },
+      model: mipModel,
     },
   })
 

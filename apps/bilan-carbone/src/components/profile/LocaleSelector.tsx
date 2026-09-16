@@ -1,9 +1,9 @@
 'use client'
 
 import { getLocale, switchLocale } from '@/i18n/locale'
-import { hasAccessToAllLocales } from '@/services/permissions/environment'
+import { getLocalesForEnv } from '@/services/permissions/environment'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
-import { Locale, LocaleType, defaultLocale } from '@abc-transitionbascarbone/i18n/config'
+import { LocaleType, defaultLocale } from '@abc-transitionbascarbone/i18n/config'
 import { InputLabel, MenuItem, Select } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
@@ -15,10 +15,10 @@ const LocaleSelector = () => {
   const { environment } = useAppEnvironmentStore()
 
   const availableLocales = useMemo(() => {
-    if (environment && hasAccessToAllLocales(environment)) {
-      return Object.keys(Locale)
+    if (!environment) {
+      return []
     }
-    return [Locale.EN, Locale.FR]
+    return getLocalesForEnv(environment)
   }, [environment])
 
   useEffect(() => {

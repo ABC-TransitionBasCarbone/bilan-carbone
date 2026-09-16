@@ -43,7 +43,6 @@ describe('Campaign Model invitation', () => {
             .then((link) => cy.visit(link as string))
         })
     })
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type('new-mip@yopmail.com')
     cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('Password-0')
     cy.get('[data-testid="input-confirm-password"] > .MuiInputBase-root > .MuiInputBase-input').type('Password-0')
     cy.getByTestId('reset-button').click()

@@ -21,7 +21,7 @@ export const getYearFromDateStr = (date: string) => {
   return new Date(date).getUTCFullYear()
 }
 
-export function yearToDate(year: number): Date | null {
+export const yearToDate = (year: number): Date | null => {
   if (!YEAR_REGEX.test(String(year))) {
     return null
   }

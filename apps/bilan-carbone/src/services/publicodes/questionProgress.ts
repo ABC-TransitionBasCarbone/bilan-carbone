@@ -2,13 +2,17 @@ import { ListLayoutSituations } from '@/lib/publicodes/context'
 import { typedEntries } from '@/utils/object'
 import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import {
-  EvaluatedGroupLayout,
-  EvaluatedListLayout,
-  EvaluatedMosaicLayout,
-  EvaluatedTableLayout,
-  FormLayout,
-  getEvaluatedFormLayout,
-} from '@abc-transitionbascarbone/publicodes/form/layouts'
+  hasDefaultValue,
+  isGroupLayoutAnswered,
+  isGroupLayoutApplicable,
+  isListLayoutAnswered,
+  isListLayoutApplicable,
+  isMosaicLayoutAnswered,
+  isMosaicLayoutApplicable,
+  isTableLayoutAnswered,
+  isTableLayoutApplicable,
+} from '@abc-transitionbascarbone/publicodes/form'
+import { FormLayout, getEvaluatedFormLayout } from '@abc-transitionbascarbone/publicodes/form/layouts'
 import Engine from 'publicodes'
 import { SimplifiedPost } from '../posts'
 
@@ -37,7 +41,7 @@ export const getQuestionProgressBySubPost = <RuleName extends string = string>(
             case 'input':
               if (evaluatedLayout.evaluatedElement.applicable) {
                 acc.total += 1
-                if (evaluatedLayout.evaluatedElement.answered) {
+                if (evaluatedLayout.evaluatedElement.answered || hasDefaultValue(evaluatedLayout.evaluatedElement)) {
                   acc.answered += 1
                 }
               }
@@ -85,49 +89,4 @@ export const getQuestionProgressBySubPost = <RuleName extends string = string>(
     }, {})
     return postAcc
   }, {})
-}
-
-const isGroupLayoutApplicable = (layout: EvaluatedGroupLayout<string>): boolean => {
-  return layout.evaluatedElements.some((el) => el.applicable)
-}
-
-const isGroupLayoutAnswered = (layout: EvaluatedGroupLayout<string>): boolean => {
-  return layout.evaluatedElements.some((el) => el.applicable && el.answered)
-}
-
-const isListLayoutApplicable = (layout: EvaluatedListLayout<string>): boolean => {
-  return (
-    layout.evaluatedListRows.length === 0 ||
-    layout.evaluatedListRows.some((el) => el.elements.every((e) => e.applicable))
-  )
-}
-
-const isListLayoutAnswered = (layout: EvaluatedListLayout<string>): boolean => {
-  return layout.evaluatedListRows.some((el) => el.elements.every((e) => !e.applicable || e.answered))
-}
-
-const isTableLayoutApplicable = (layout: EvaluatedTableLayout<string>): boolean => {
-  return layout.evaluatedRows.flat().some((el) => el.applicable)
-}
-
-const isTableLayoutAnswered = (layout: EvaluatedTableLayout<string>): boolean => {
-  return layout.evaluatedRows.some((row) =>
-    row.every(
-      (el, i) =>
-        // NOTE: the first column is the label, so we consider it answered
-        i === 0 || !el.applicable || el.answered,
-    ),
-  )
-}
-
-const isMosaicLayoutApplicable = (layout: EvaluatedMosaicLayout<string>): boolean => {
-  return layout.evaluatedParent.applicable
-}
-
-const isMosaicLayoutAnswered = (layout: EvaluatedMosaicLayout<string>): boolean => {
-  return layout.evaluatedChildren.some((el) => el.applicable && (el.answered || hasDefaultValue(el)))
-}
-
-const hasDefaultValue = (el: EvaluatedMosaicLayout<string>['evaluatedChildren'][number]): boolean => {
-  return 'defaultValue' in el && el.defaultValue != null
 }

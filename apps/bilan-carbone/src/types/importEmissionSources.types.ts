@@ -17,6 +17,7 @@ export type PreviewEmissionSourceRow = {
   emissionFactorName: string
   emissionFactorValue: string
   emissionFactorUnit: string
+  emissionFactorIsWaste: boolean
 }
 
 export type ValidateEmissionSourcesResult =

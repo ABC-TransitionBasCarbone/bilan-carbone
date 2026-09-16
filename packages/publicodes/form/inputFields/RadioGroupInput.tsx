@@ -35,7 +35,7 @@ const RadioGroupInput = <RuleName extends string>({
         <StyledFormControlLabel
           key={`box-${index}`}
           className="p-2 pr1 flex-row align-center mb1"
-          label={getOptionLabel(option.value)}
+          label={getOptionLabel(option.value, option.label)}
           control={
             <Radio
               onBlur={onBlur}

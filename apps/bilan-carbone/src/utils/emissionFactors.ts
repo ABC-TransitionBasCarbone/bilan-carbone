@@ -17,11 +17,22 @@ export const isWasteEmissionFactor = (
   !!wasteEmissionFactors[emissionFactor.importedId]
 
 export const getEmissionFactorValue = (
-  emissionFactor: Pick<EmissionFactor, 'importedFrom' | 'importedId' | 'totalCo2'>,
+  emissionFactor: {
+    totalCo2: EmissionFactor['totalCo2']
+    importedFrom?: EmissionFactor['importedFrom']
+    importedId?: EmissionFactor['importedId']
+  },
   environment?: Environment,
 ) => {
-  if (isWasteEmissionFactor(emissionFactor, environment)) {
-    return wasteImpact
+  if (emissionFactor.importedFrom && emissionFactor.importedId) {
+    if (
+      isWasteEmissionFactor(
+        { ...emissionFactor, importedFrom: emissionFactor.importedFrom, importedId: emissionFactor.importedId },
+        environment,
+      )
+    ) {
+      return wasteImpact
+    }
   }
 
   return emissionFactor.totalCo2

@@ -17,13 +17,9 @@ const nextConfig = {
   },
   output: 'standalone', // we use the standalone output to be able to reduce bundle size by copying only the necessary assets in the standalone folder (see copy-assets.js)
   turbopack: {
-    resolveAlias: {
-      '@abc-transitionbascarbone/publicodes-mip': '../../packages/publicodes-packages/publicodes-mip/',
-    },
     resolveExtensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
     root: monorepoRoot,
   },
-  transpilePackages: ['mui-color-input', '@abc-transitionbascarbone/publicodes-mip'],
   reactStrictMode: true,
   headers: async () => [
     {

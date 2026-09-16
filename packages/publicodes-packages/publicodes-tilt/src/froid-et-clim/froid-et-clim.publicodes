@@ -10,11 +10,11 @@ froid et clim:
         id: 28325
         nom: Climatiseur mobile
     amortissement:
-      valeur: 6
+      valeur: 6 #Choix basé sur la méthode de calcul pour l'empreinte individuelle
 
 froid et clim . nombre:
   question: Combien de climatiseurs sont utilisés dans vos locaux ?
-  description: La consommation d'électricité de vos climatisations est incluse dans vos factures d'électricité. Cette question sert donc uniquement à prendre en compte l'impact de la construction de l'équipement de climatisation, et des fuites de gaz frigorigènes.
+  description: La consommation d'électricité de vos climatisations est incluse dans vos factures d'électricité. Cette question sert donc uniquement à prendre en compte l'impact de la construction de l'équipement de climatisation, et des fuites de gaz frigorigènes. Les locations ponctuelles de locaux sont ignorées par souci de simplicité.
   par défaut: 0
   unité: climatiseur
 
@@ -32,7 +32,7 @@ froid et clim . fuites . locaux partagés:
   unité: kgCO2e
   avec:
     PRG R410A:
-      valeur: 2260
+      valeur: 2177
       unité: kgCO2e/kg
       meta:
         id: 43632
@@ -47,12 +47,18 @@ froid et clim . fuites . locaux partagés:
 froid et clim . fuites . locaux seuls:
   titre: Fuites de fluides frigorigènes
   applicable si: nombre > 0
-  formule: 0.1 * 0.3 * 0.1 * construction . bâtiment . locaux . locaux seuls . surface * PRG R410A
+  formule: puissance frigorifique par surface * quantité de fluide par puissance * 0.1 * construction . bâtiment . locaux . locaux seuls . surface * PRG R410A
   note: méthode du PCG en fonction des m^2 renseignés plus haut 0.1 kW/m^2*0,3 kg de fluide par kW*10%*m^2*PRG R410a.
   avec:
     PRG R410A:
-      valeur: 2260
+      valeur: 2177
       unité: kgCO2e/kg
       meta:
-        id: 43632
+        id: 43632 #La valeur est celle donnée par l'errata du GIEC du 7 octobre 2025
         nom: R410A
+    puissance frigorifique par surface:
+      valeur: 0.1
+      unité: kW/m2
+    quantité de fluide par puissance:
+      valeur: 0.3
+      unité: kg/kW

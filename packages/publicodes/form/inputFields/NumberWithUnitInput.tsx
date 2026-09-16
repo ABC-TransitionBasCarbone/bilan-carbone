@@ -3,7 +3,9 @@ import { NumberField } from '@base-ui-components/react/number-field'
 import { InputAdornment, OutlinedInput } from '@mui/material'
 import { EvaluatedNumberInput } from '@publicodes/forms'
 import classNames from 'classnames'
-import { getCategoryClassSuffix, getRuleCategoryKey, OnFieldChange } from '../utils'
+import { SuggestionChipOption, SuggestionChips } from '../SuggestionChips'
+import { getNumericSuggestionEntries } from '../suggestions'
+import { OnFieldChange } from '../utils'
 import { useSimpleInputState } from './hooks/useSimpleInputState'
 import styles from './NumberWithUnitInput.module.css'
 import { BaseInputProps } from './utils'
@@ -11,63 +13,57 @@ import { BaseInputProps } from './utils'
 interface NumberWithUnitInputProps<RuleName extends string> extends BaseInputProps<RuleName> {
   formElement: EvaluatedNumberInput<RuleName>
   suggestions?: Record<string, string | number | Record<string, unknown>> | undefined
+  isFilteringQuestion?: boolean
 }
 
 const NumberWithUnitInput = <RuleName extends string>({
   formElement,
   onChange,
-  disabled,
   suggestions,
+  isFilteringQuestion = false,
 }: NumberWithUnitInputProps<RuleName>) => {
-  const categoryClassSuffix = getCategoryClassSuffix(getRuleCategoryKey(formElement.id))
-  const suggestionToneClass = categoryClassSuffix ? styles[`suggestionTone${categoryClassSuffix}`] : undefined
-
   const unit = usePublicodesUnitTranslation(formElement.unit)
-  const isDisabled = disabled || !formElement.applicable
   const { localValue, handleValueChange, handleValueCommitted, handleFocus } = useSimpleInputState<number>(
     formElement,
     onChange as OnFieldChange,
   )
 
-  const suggestionEntries = suggestions
-    ?
-    Object.entries(suggestions).filter((entry): entry is [string, number] => typeof entry[1] === 'number')
-    : []
+  const suggestionEntries: SuggestionChipOption<number>[] = getNumericSuggestionEntries(suggestions)
+  const hasSuggestions = suggestionEntries.length > 0
+  const isLockedSuggestion = hasSuggestions && isFilteringQuestion
 
   return (
     <div>
-      {suggestionEntries.length > 0 && (
-        <div className={classNames('flex', 'wrap', 'gapped-2', 'pb-2', styles.suggestions)}>
-          {suggestionEntries.map(([label, value]) => (
-            <button
-              key={label}
-              type="button"
-              className={classNames(styles.suggestionChip, suggestionToneClass, 'pointer')}
-              onClick={() => {
-                handleValueChange(value)
-                handleValueCommitted(value)
-              }}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-      )}
-      <NumberField.Root
-        className={classNames(styles.inputWrapper, 'wfit')}
-        value={localValue}
-        onFocus={handleFocus}
-        onValueChange={handleValueChange}
-        onValueCommitted={handleValueCommitted}
-        disabled={isDisabled}
-      >
-        <NumberField.Input
-          className={styles.input}
-          render={
-            <OutlinedInput endAdornment={unit ? <InputAdornment position="end">{unit}</InputAdornment> : undefined} />
-          }
+      {hasSuggestions && (
+        <SuggestionChips
+          ruleName={formElement.id}
+          suggestions={suggestionEntries}
+          isSelected={(suggestion) => localValue === suggestion.value}
+          onSelect={(value) => {
+            handleValueChange(value)
+            handleValueCommitted(value)
+          }}
         />
-      </NumberField.Root>
+      )}
+      {!isLockedSuggestion && (
+        <NumberField.Root
+          className={classNames(styles.inputWrapper, 'wfit')}
+          value={localValue}
+          onFocus={handleFocus}
+          onValueChange={handleValueChange}
+          onValueCommitted={handleValueCommitted}
+        >
+          <NumberField.Input
+            className={styles.input}
+            inputMode="decimal"
+            render={
+              <OutlinedInput
+                endAdornment={unit ? <InputAdornment position="end">{unit}</InputAdornment> : undefined}
+              />
+            }
+          />
+        </NumberField.Root>
+      )}
     </div>
   )
 }

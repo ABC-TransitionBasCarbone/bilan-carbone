@@ -142,6 +142,13 @@ export const ChangeStudyDatesCommandValidation = z
 
 export type ChangeStudyDatesCommand = z.infer<typeof ChangeStudyDatesCommandValidation>
 
+export const ChangeTiltStudyDatesCommandValidation = z.object({
+  studyId: z.string(),
+  studyDate: z.string().regex(/^\d{4}$/),
+})
+
+export type ChangeTiltStudyDatesCommand = z.infer<typeof ChangeTiltStudyDatesCommandValidation>
+
 export const ChangeStudyNameValidation = z.object({
   studyId: z.string(),
   name: z.string().trim().min(1),

@@ -1,0 +1,50 @@
+.suggestionChip {
+    --suggestion-bg: var(--primary-100);
+    --suggestion-text: var(--info);
+    --suggestion-bg-hover: var(--primary-200);
+    background-color: var(--suggestion-bg) !important;
+    border-radius: 1rem;
+    padding: 0.125rem 0.5rem;
+    font-size: 0.875rem;
+    color: var(--suggestion-text) !important;
+    transition: background-color 0.15s;
+}
+
+.suggestionChip:hover,
+.suggestionChip.MuiChip-clickable:hover {
+    background-color: var(--suggestion-bg-hover);
+}
+
+.selectedSuggestionChip {
+    background-color: var(--suggestion-bg-hover) !important;
+}
+
+.suggestionToneDt {
+    --suggestion-bg: color-mix(in srgb, var(--mui-palette-primary-light) 86%, var(--white));
+    --suggestion-text: var(--mui-palette-primary-main);
+    --suggestion-bg-hover: color-mix(in srgb, var(--mui-palette-primary-main) 16%, var(--white));
+}
+
+.suggestionToneTransport {
+    --suggestion-bg: color-mix(in srgb, var(--mui-palette-info-light) 14%, var(--white));
+    --suggestion-text: var(--mui-palette-info-main);
+    --suggestion-bg-hover: color-mix(in srgb, var(--mui-palette-info-main) 16%, var(--white));
+}
+
+.suggestionToneAlimentation {
+    --suggestion-bg: color-mix(in srgb, var(--mui-palette-warning-light) 22%, var(--white));
+    --suggestion-text: var(--mui-palette-warning-main);
+    --suggestion-bg-hover: color-mix(in srgb, var(--mui-palette-warning-main) 16%, var(--white));
+}
+
+.suggestionToneDivers {
+    --suggestion-bg: color-mix(in srgb, var(--mui-palette-error-light) 20%, var(--white));
+    --suggestion-text: var(--mui-palette-error-main);
+    --suggestion-bg-hover: color-mix(in srgb, var(--mui-palette-error-main) 16%, var(--white));
+}
+
+.suggestionToneLogement {
+    --suggestion-bg: color-mix(in srgb, var(--mui-palette-success-light) 30%, var(--white));
+    --suggestion-text: var(--mui-palette-success-main);
+    --suggestion-bg-hover: color-mix(in srgb, var(--mui-palette-success-main) 16%, var(--white));
+}

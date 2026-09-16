@@ -28,10 +28,7 @@ const PublicTiltPage = ({ children, question }: Props) => {
     switchEnvironment(Environment.TILT)
   }, [])
 
-  const languages = [
-    { name: tLocale('en'), code: 'GB', target: Locale.EN },
-    { name: tLocale('fr'), code: 'FR', target: Locale.FR },
-  ]
+  const languages = [{ name: tLocale('fr'), code: 'FR', target: Locale.FR }]
 
   return (
     <PublicContainer>

@@ -10,6 +10,7 @@
     "description": "Create a Tilt account with your email and a Siret",
     "siret": "Siret",
     "siretPlaceholder": "Your Siret",
+    "emailPlaceholder": "Your email",
     "siretRequired": "Please enter a Siret",
     "Not authorized": "This email is already used for Tilt or there's an issue with the account creation. Please see <link>the FAQ</link> or <support>contact support</support> if you think this is an error.",
     "Not association SIRET": "This tool is reserved for non-profit organisations. Please use the classic version of Bilan Carbone®+",
@@ -20,8 +21,8 @@
   "home": {
     "navigation": {
       "collaborators": {
-        "title": "Pilot Team",
-        "message": "Find here the list of teachers, administrative staff and students authorized to modify the establishment's data"
+        "title": "My team",
+        "message": "Add here people who will be able to access your carbon footprints and help you complete the questionnaire"
       },
       "footprints": {
         "title": "My Footprints",
@@ -29,13 +30,19 @@
       },
       "sites": {
         "title": "My Non-profit Organisation",
-        "message": "Find here the list of establishments linked to your account"
+        "message": "Enter here the list of your association's physical sites."
       }
     },
-    "title": "Calculating your simplified carbon footprint will allow you to:"
+    "title": "Calculating your simplified carbon footprint will allow you to:",
+    "info": {
+      "0": "Estimate your association's greenhouse gas emissions by answering various questions",
+      "1": "Understand how this estimate works and the fundamental principles of a greenhouse gas assessment",
+      "2": "Identify action priorities based on your emissions, and start building a reduction pathway"
+    }
   },
   "exports": {
     "env_specific_export": "Simplified carbon footprint",
+    "exportFilename": "{studyName} - Bilan Carbone® - Associative sphere",
     "simplified": {
       "disclaimerExcel1": "Please note that the results shown here come solely from a simplified carbon footprint calculation performed by Cap Carbone. They must not under any circumstances be presented or used as Bilan Carbone® results,",
       "disclaimerExcel2": "as even though the results obtained may already help you understand how to reduce your impact, your approach remains an estimate.",
@@ -90,7 +97,9 @@
       "numberOfTTVolunteer": "How many days per week are teleworked by your volunteers?",
       "glossary": {
         "postalCode": "Postal code of the non-profit organisation",
-        "postalCodeGlossary": "Postal code of headquarters if multiple sites, 5 digits"
+        "postalCodeGlossary": "Postal code of headquarters if multiple sites, 5 digits",
+        "structureInfo": "Type de structure de l'association",
+        "structureInfoGlossary": "This information may be used by our team to adapt the questionnaire for the associations that use the tool."
       }
     },
     "flow": {
@@ -101,7 +110,7 @@
     },
     "createFirstSimplifiedStudy": "Create",
     "firstSimplifiedStudyMessage": "It's time to get started! We invite you to create your first simplified carbon footprint.",
-    "mySimplifiedStudies": "My footprints",
+    "mySimplifiedStudies": "Cap Carbone - My Footprints",
     "createSimplified": "Create a footprint",
     "seeSimplified": "See my footprint",
     "cannotCreateStudy": "To create a Carbon Footprint® you must be trained in the method! <link>Learn more</link>",
@@ -119,7 +128,7 @@
         "button": "Give us your feedback ! ✨",
         "title": "Give us your feedback ! ✨"
       },
-      "simplifiedFeedback": "Congratulations! You've just completed a simplified carbon footprint assessment for your association. This is an excellent introduction to carbon accounting! Now, you need to take action based on these results, as the primary goal of any carbon accounting initiative must be to reduce greenhouse gas (GHG) emissions. Keep in mind that reducing emissions doesn't necessarily mean scaling back your activities—especially if those activities help others avoid emissions or have significant social value. This is particularly important for associations.<br></br><br></br>We encourage you to repeat this simplified carbon footprint assessment next year to ensure you're on the right track, or—even better—to create a full Bilan Carbone® to improve the accuracy of your emissions estimates and develop a genuine transition plan! To get started, it's simple: just train yourself in the method or sign up for the Tilt Envol program by the Tilt Movement. More information <link>here</link>!<br></br><br></br> If you have any feedback about the tool, feel free to share it with us by email at <support>support</support>.",
+      "simplifiedFeedback": "Congratulations! You have just completed the simplified carbon footprint of your association. This is an excellent introduction to carbon accounting! You must now <b>take action based on these results</b>, because the primary goal of any carbon accounting approach must be the <b>reduction of GHG emissions</b>. Keep in mind that reducing emissions does not necessarily require scaling back your activity, particularly if that activity helps avoid emissions among other actors or provides significant social value. This is especially important in the case of associations.<br></br><br></br> We encourage you to repeat this simplified carbon footprint next year to check that you are on the right track, or, even better, <b>to carry out a genuine Bilan Carbone®</b> in order to gain greater accuracy in estimating your emissions and to establish a real transition plan! To get started, nothing could be simpler: just get trained in the method, or sign up for the Tilt Envol programme of the Tilt Movement. More information <link>here</link>! <br></br><br></br> If you have any feedback about the tool, please feel free to share it with us via the feedback questionnaire available at the top of this page, or by email at <support>support</support>.",
       "resultsWord": "Bilan Carbone® report - Associative Sphere"
     },
     "structure": {
@@ -189,7 +198,11 @@
         "Agriculturetilt": "To obtain more info on how to handle this post, please see the <link>associative method</link>.",
         "AgriculturetiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
         "ActivitesIndustrielles": "To obtain more info on how to handle this post, please see the <link>associative method</link>.",
-        "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux"
+        "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
+        "DeplacementsDePersonneSimplified": "To collect the data required to complete this category, we encourage you to circulate a questionnaire within your association. Here is <exemplequestionnairetorefacto>an example</exemplequestionnairetorefacto>, to be implemented in the survey tool of your choice.",
+        "AlimentationSimplified": "To collect the data required to complete this category, we encourage you to circulate a questionnaire within your association. Here is <exemplequestionnairetorefacto>an example</exemplequestionnairetorefacto>, to be implemented in the survey tool of your choice.",
+        "ServiceEtNumeriqueSimplified": "To collect the data required to complete this category, we encourage you to circulate a questionnaire within your association. Here is <exemplequestionnairetorefacto>an example</exemplequestionnairetorefacto>, to be implemented in the survey tool of your choice.",
+        "EquipementsEtImmobilisationsSimplified": "To collect the data required to complete this category, we encourage you to circulate a questionnaire within your association. Here is <exemplequestionnairetorefacto>an example</exemplequestionnairetorefacto>, to be implemented in the survey tool of your choice."
       }
     }
   },
@@ -199,7 +212,7 @@
   },
   "betaBanner": {
     "badge": "Beta",
-    "title": "Beta Version of the Cap Carbone Tool",
+    "title": "Useful documents for calculating a simplified carbon footprint via Cap Carbone",
     "description": "Cap Carbone is currently in beta! Thank you for being our first users and testers 🎉 Feel free to reach out to us at <support>support@abc-transitionbascarbone.fr</support> if you have any feedback! As the application is in beta, some questions in the form may change, meaning that answers to modified questions could be deleted in future updates. Make sure to check the completion of your posts on the data entry page before viewing your results to verify that all your answers are still available."
   },
   "documentationUrlTilt": {

@@ -164,6 +164,7 @@ import {
   canDeleteStudy,
   canDuplicateStudy,
   canEditStudyFlows,
+  canReadStudy,
   canUpgradeSourceVersion,
   getEnvironmentsForDuplication,
 } from '../permissions/study'
@@ -1890,21 +1891,37 @@ export const getCncByCncCode = async (cncCode: string) =>
   })
 
 export const prepareReport = async (
-  study: FullStudy,
+  studyId: string,
   results: {
     monetaryRatio: number
     nonSpecificMonetaryRatio: number
   },
 ) =>
   withServerResponse('prepareReport', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!(await canReadStudy(session.user, studyId))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    if (!study) {
+      throw new Error('Study not found')
+    }
+
     let template: Buffer
     const localTemplatePath = process.env.LOCAL_REPORT_TEMPLATE_PATH
     if (localTemplatePath) {
       template = await fs.readFile(localTemplatePath)
     } else {
-      const templateKey = process.env.SCW_REPORT_TEMPLATE_KEY
+      const locale = await getLocale()
+      const templateKey = process.env[`SCW_${locale.toUpperCase()}_REPORT_TEMPLATE_KEY`]
+
       if (!templateKey) {
-        throw new Error('Report template key not configured')
+        throw new Error(`Report template key not configured for locale ${locale}`)
       }
       const contentResult = await getFileFromBucket(templateKey)
       if (!contentResult.success) {

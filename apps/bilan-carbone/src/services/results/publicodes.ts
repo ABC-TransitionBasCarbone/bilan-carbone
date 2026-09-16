@@ -2,32 +2,13 @@ import { TOTAL_RULE } from '@/constants/publicodes'
 import { customPostOrder } from '@/environments/clickson/utils/constant'
 import { sortByCustomOrder } from '@/utils/array'
 import { Environment, StudyResultUnit, SubPost } from '@abc-transitionbascarbone/db-common'
+import { safeEvaluate } from '@abc-transitionbascarbone/publicodes/utils'
 import { Post, STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/utils/charts'
 import Engine from 'publicodes'
 import { hasCustomPostOrder } from '../permissions/environment'
 import type { BaseResultsByPost } from '../posts'
 
-function safeEvaluate(engine: Engine, ruleName: string | undefined): number {
-  if (!ruleName) {
-    return 0
-  }
-
-  try {
-    const result = engine.evaluate(ruleName)
-    const value = result.nodeValue
-
-    if (!value) {
-      return 0
-    }
-
-    return typeof value === 'number' ? value : 0
-  } catch (e) {
-    console.error(`Error evaluating rule "${ruleName}":`, e)
-    return 0
-  }
-}
-
-export function computeBaseResultsByPostFromEngine<P extends Post>(
+export const computeBaseResultsByPostFromEngine = <P extends Post>(
   engine: Engine,
   posts: P[],
   subPostsByPost: Record<P, SubPost[]>,
@@ -35,7 +16,7 @@ export function computeBaseResultsByPostFromEngine<P extends Post>(
   getPostRuleName: (post: P) => string,
   getSubPostRuleName: (subPost: SubPost) => string | undefined,
   environment?: Environment,
-): BaseResultsByPost[] {
+) => {
   let postResults = posts
     .map((post) => {
       const postRuleName = getPostRuleName(post)
@@ -71,11 +52,11 @@ export function computeBaseResultsByPostFromEngine<P extends Post>(
   return [...postResults, computeTotalForBaseResults(engine, postResults, tPost)]
 }
 
-export function computeTotalForBaseResults(
+export const computeTotalForBaseResults = (
   engine: Engine,
   postResults: BaseResultsByPost[],
   tPost: (key: string) => string,
-): BaseResultsByPost {
+): BaseResultsByPost => {
   const value = engine.getRule(TOTAL_RULE)
     ? safeEvaluate(engine, TOTAL_RULE)
     : postResults.reduce((acc, post) => acc + post.value, 0)
@@ -88,7 +69,7 @@ export function computeTotalForBaseResults(
   }
 }
 
-export function aggregateBaseResultsByPost(resultsList: BaseResultsByPost[][]): BaseResultsByPost[] {
+export const aggregateBaseResultsByPost = (resultsList: BaseResultsByPost[][]) => {
   if (resultsList.length === 0) {
     return []
   }
@@ -105,7 +86,7 @@ export function aggregateBaseResultsByPost(resultsList: BaseResultsByPost[][]): 
   )
 }
 
-export function getTotalValueFromBaseResults(postResults: BaseResultsByPost[], studyUnit?: StudyResultUnit): number {
+export const getTotalValueFromBaseResults = (postResults: BaseResultsByPost[], studyUnit?: StudyResultUnit) => {
   const total = postResults.find((r) => r.post === 'total')?.value ?? 0
   return studyUnit ? total / STUDY_UNIT_VALUES[studyUnit] : total
 }

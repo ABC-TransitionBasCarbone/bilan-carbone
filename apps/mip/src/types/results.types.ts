@@ -10,6 +10,13 @@ export type EntityFilter = {
   name: string
 }
 
+export type EntityFilterResult = EntityFilter & {
+  totalRespondents: number
+  averageFootprint: number
+  categories: EmissionCategory[]
+  keyStats: KeyStatGroup[]
+}
+
 export type SurveyComment = {
   id: string
   category: string
@@ -34,7 +41,7 @@ export type SurveyResults = {
   totalRespondents: number
   averageFootprint: number
   categories: EmissionCategory[]
-  entities: EntityFilter[]
+  entities: EntityFilterResult[]
   comments: SurveyComment[]
   keyStats: KeyStatGroup[]
 }

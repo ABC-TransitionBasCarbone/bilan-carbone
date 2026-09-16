@@ -13,8 +13,8 @@ interface Props {
 const FootprintBanner = ({ totalKg }: Props) => {
   const t = useTranslations('survey.completion')
   const totalT = totalKg / STUDY_UNIT_VALUES['T']
-  // Dynamic scale to avoid fixed thresholds in the banner.
-  const rangeMaxT = Math.max(1, totalT * 1.2)
+  // Use a rounded ceiling with a small headroom so the marker remains readable.
+  const rangeMaxT = Math.max(10, Math.ceil((totalT * 1.2) / 10) * 10)
   const currentPercent = Math.max(0, Math.min(100, (totalT / rangeMaxT) * 100))
 
   return (
@@ -23,21 +23,23 @@ const FootprintBanner = ({ totalKg }: Props) => {
         {t('title')}
       </Typography>
 
-      <div className="relative pt1 pb2">
-        <div className="flex align-end gapped075">
-          <div className="relative grow">
-            <Typography className={styles.rangeCurrentValue} style={{ left: `${currentPercent}%` }}>
-              {formatNumber(totalT, 1)}
-            </Typography>
+      <div className="pt05 pb1">
+        <div className={`${styles.rangeBarTrack} relative`}>
+          <div className={`${styles.rangeBarSpectrum} absolute`} />
 
-            <div className={styles.rangeBarTrack}>
-              <div className={styles.rangeBarFill} style={{ width: `${currentPercent}%` }} />
-            </div>
-
-            <div className="justify-start pt025">
-              <Typography className={styles.rangeAxisLabel}>{t('range.minLabel')}</Typography>
-            </div>
+          <div
+            className={`${styles.rangeBarMarker} absolute flex-col align-center`}
+            style={{ left: `${currentPercent}%` }}
+          >
+            <div className={styles.rangeBarDot} />
+            <Typography className={styles.rangeCurrentValue}>{formatNumber(totalT, 1)}</Typography>
           </div>
+        </div>
+
+        <div className={`${styles.rangeAxis} justify-between align-center`}>
+          <Typography className={styles.rangeAxisLabel}>{t('range.minLabel')}</Typography>
+          <Typography className={styles.rangeLimitLabel}>{t('range.limitLabel')}</Typography>
+          <Typography className={styles.rangeAxisLabel}>{t('range.maxLabel')}</Typography>
         </div>
       </div>
     </section>

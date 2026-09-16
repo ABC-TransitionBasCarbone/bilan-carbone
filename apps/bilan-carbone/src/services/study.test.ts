@@ -395,7 +395,7 @@ describe('Study Service', () => {
       expect(exportedData).toHaveLength(1)
 
       const sheet = (exportedData as { name: string; data: (string | number)[][]; options: object }[])[0]
-      expect(sheet.name).toBe('env_specific_export')
+      expect(sheet.name).toBe('exportFilename.xlsx')
       expect(sheet.data[0][0]).toBe('simplified.disclaimerExcel1')
       expect(sheet.data[4][0]).toBe('simplified.disclaimerExcel5')
       expect(sheet.data[5]).toEqual([])
