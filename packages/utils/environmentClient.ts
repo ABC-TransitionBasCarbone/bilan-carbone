@@ -22,5 +22,5 @@ export const getEnvVarClient = (key: ClientEnvKey, environment: Environment = En
   return CLIENT_ENV_BY_ENV[environment]?.[key] ?? CLIENT_ENV_DEFAULT[key] ?? ''
 }
 
-export const useTranslatedLinks = (environment: Environment) =>
+export const hasTranslatedLinks = (environment: Environment) =>
   environment === Environment.BC || environment === Environment.TILT

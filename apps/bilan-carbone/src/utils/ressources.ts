@@ -1,12 +1,12 @@
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { Translations } from '@abc-transitionbascarbone/lib'
 import { getEnvVar } from '@abc-transitionbascarbone/lib/environment'
-import { useTranslatedLinks } from '@abc-transitionbascarbone/utils/environmentClient'
+import { hasTranslatedLinks } from '@abc-transitionbascarbone/utils/environmentClient'
 
 export const getEnvironnementRessources = async (env: Environment, t: Translations, linksT: Translations) => {
   const openCarbonPracticeUrl = linksT('openCarbonPracticeUrl')
-  const contactFormUrl = useTranslatedLinks(env) ? linksT('contactFormUrl') : ''
-  const faqUrl = useTranslatedLinks(env) ? linksT('faqUrl') : ''
+  const contactFormUrl = hasTranslatedLinks(env) ? linksT('contactFormUrl') : ''
+  const faqUrl = hasTranslatedLinks(env) ? linksT('faqUrl') : ''
   const methodologyUrl = linksT('methodologyUrl')
   const supportEmail = await getEnvVar('SUPPORT_EMAIL', env)
 

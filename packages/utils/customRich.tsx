@@ -1,6 +1,6 @@
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { Translations } from '@abc-transitionbascarbone/lib'
-import { getEnvVarClient, useTranslatedLinks } from '@abc-transitionbascarbone/utils/environmentClient'
+import { getEnvVarClient, hasTranslatedLinks } from '@abc-transitionbascarbone/utils/environmentClient'
 import Link from 'next/link'
 import { ReactNode } from 'react'
 
@@ -15,8 +15,8 @@ export const customRich = (
   env: Environment = Environment.BC,
 ) => {
   const support = getEnvVarClient('SUPPORT_EMAIL', env)
-  const getFaqUrl = () => (useTranslatedLinks(env) ? t('faqUrl') : '')
-  const getAbcUrl = () => (useTranslatedLinks(env) ? t('abcSiteUrl') : '')
+  const getFaqUrl = () => (hasTranslatedLinks(env) ? t('faqUrl') : '')
+  const getAbcUrl = () => (hasTranslatedLinks(env) ? t('abcSiteUrl') : '')
 
   return t.rich(key, {
     error: (children) => <span className="error">{children}</span>,
