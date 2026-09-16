@@ -128,22 +128,24 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
   ) : (await canCreateAStudy(user, simplified)) ? (
     !isCR && (
       <MUIBox component="section" className="mt1">
-        {isTilt(user.environment) && displaySimplifiedStudies && simplified && <BetaBanner />}
-        <div className="justify-center">
-          <Box className={classNames(styles.firstStudyCard, 'flex-col align-center')}>
-            <Image src="/img/orga.png" alt="orga.png" width={177} height={119} />
-            <h5>{t(simplified ? 'createFirstSimplifiedStudy' : 'createFirstStudy')}</h5>
-            <p>{t(simplified ? 'firstSimplifiedStudyMessage' : 'firstStudyMessage')}</p>
-            <LinkButton
-              data-testid="new-study"
-              className={classNames('w100 justify-center mb1')}
-              href={simplified ? creationUrlSimplified : creationUrl}
-            >
-              <AddIcon />
-              {t(simplified ? 'createFirstSimplifiedStudy' : 'createFirstStudy')}
-            </LinkButton>
-          </Box>
-        </div>
+        <Block>
+          {isTilt(user.environment) && displaySimplifiedStudies && simplified && <BetaBanner />}
+          <div className="justify-center">
+            <Box className={classNames(styles.firstStudyCard, 'flex-col align-center')}>
+              <Image src="/img/orga.png" alt="orga.png" width={177} height={119} />
+              <h5>{t(simplified ? 'createFirstSimplifiedStudy' : 'createFirstStudy')}</h5>
+              <p>{t(simplified ? 'firstSimplifiedStudyMessage' : 'firstStudyMessage')}</p>
+              <LinkButton
+                data-testid="new-study"
+                className={classNames('w100 justify-center mb1')}
+                href={simplified ? creationUrlSimplified : creationUrl}
+              >
+                <AddIcon />
+                {t(simplified ? 'createFirstSimplifiedStudy' : 'createFirstStudy')}
+              </LinkButton>
+            </Box>
+          </div>
+        </Block>
       </MUIBox>
     )
   ) : !canCreateStudyOnlyAsAdministrator(user.environment) && !simplified ? (
