@@ -1,5 +1,5 @@
-import { convertExcelSerialDateToISODate } from '@abc-transitionbascarbone/utils/excel'
 import { AccessOptions, Client } from 'basic-ftp'
+import { getJsDateFromExcel } from 'excel-date-to-js'
 import fs from 'fs'
 import xlsx from 'node-xlsx'
 
@@ -55,7 +55,7 @@ const formatCellValue = (header: string, value: unknown) => {
 
   if (header === 'Date début session' || header === 'Date fin session') {
     if (typeof value === 'number') {
-      return convertExcelSerialDateToISODate(value)
+      return getJsDateFromExcel(value).toISOString().slice(0, 10)
     }
   }
 
