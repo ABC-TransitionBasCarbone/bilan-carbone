@@ -6,10 +6,10 @@ import { getTranslations } from 'next-intl/server'
 
 export const getEnvironnementRessources = async (env: Environment, t: Translations) => {
   const linksT = await getTranslations()
-  const openCarbonPracticeUrl = linksT('openCarbonPracticeUrl')
-  const contactFormUrl = hasTranslatedLinks(env) ? linksT('contactFormUrl') : ''
-  const faqUrl = hasTranslatedLinks(env) ? linksT('faqUrl') : ''
-  const methodologyUrl = linksT('methodologyUrl')
+  const openCarbonPracticeUrl = linksT('links.openCarbonPracticeUrl')
+  const contactFormUrl = hasTranslatedLinks(env) ? linksT('links.contactFormUrl') : ''
+  const faqUrl = hasTranslatedLinks(env) ? linksT('links.faqUrl') : ''
+  const methodologyUrl = linksT('links.methodologyUrl')
   const supportEmail = await getEnvVar('SUPPORT_EMAIL', env)
 
   const commonRessources = [
@@ -66,9 +66,9 @@ export const getEnvironnementRessources = async (env: Environment, t: Translatio
         methodBC,
       ]
     case Environment.CLICKSON: {
-      const guideDataCollectUrl = linksT('guideDataCollectUrl')
-      const modelsDataCollectUrl = linksT('modelsDataCollectUrl')
-      const classEarthUrl = linksT('classEarthUrl')
+      const guideDataCollectUrl = linksT('links.guideDataCollectUrl')
+      const modelsDataCollectUrl = linksT('links.modelsDataCollectUrl')
+      const classEarthUrl = linksT('links.classEarthUrl')
 
       return [
         {
@@ -102,7 +102,7 @@ export const getEnvironnementRessources = async (env: Environment, t: Translatio
       ]
     }
     case Environment.TILT: {
-      const sphereAssociativeUrl = linksT('sphereAssociativeUrl')
+      const sphereAssociativeUrl = linksT('links.sphereAssociativeUrl')
 
       return [
         {

@@ -1,7 +1,9 @@
 {
-  "guideDataCollectUrl": "https://clickson.eu/wp-content/uploads/2021/11/Aide-recolte-de-donnees-.pdf",
-  "modelsDataCollectUrl": "https://clickson.eu/wp-content/uploads/2023/01/Exemple_collecte.zip",
-  "classEarthUrl": "https://www.materre-enclasse.org",
+  "links": {
+    "guideDataCollectUrl": "https://clickson.eu/wp-content/uploads/2021/11/Aide-recolte-de-donnees-.pdf",
+    "modelsDataCollectUrl": "https://clickson.eu/wp-content/uploads/2023/01/Exemple_collecte.zip",
+    "classEarthUrl": "https://www.materre-enclasse.org"
+  },
   "nav": {
     "newStudyContributor": "Diák hozzáadása",
     "home": "Kezdőlap",

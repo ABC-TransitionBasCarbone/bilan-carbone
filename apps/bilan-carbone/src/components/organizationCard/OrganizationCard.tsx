@@ -34,8 +34,7 @@ const OrganizationToolbar = styled(Toolbar)<ToolbarProps>(({ theme }) => ({
 
 const OrganizationCard = ({ account, organizationVersions, shouldDisplayOrgaData, shouldRenewLicenseText }: Props) => {
   const t = useTranslations('organization.card')
-  const renewalLink = useTranslations()('licenseRenewalLink')
-
+  const tLinks = useTranslations()
   const date = new Date()
 
   const defaultOrganizationVersion = organizationVersions.find(
@@ -117,7 +116,7 @@ const OrganizationCard = ({ account, organizationVersions, shouldDisplayOrgaData
               )}
             </div>
           )}
-          {!!shouldRenewLicenseText && renewalLink && (
+          {!!shouldRenewLicenseText && (
             <div className="align-center gapped grow justify-center">
               <Typography>
                 {t(shouldRenewLicenseText, {
@@ -125,7 +124,12 @@ const OrganizationCard = ({ account, organizationVersions, shouldDisplayOrgaData
                   nextYear: date.getFullYear() + 1,
                 })}
               </Typography>
-              <Link color="secondary" href={renewalLink} target="_blank" rel="noreferrer noopener">
+              <Link
+                color="secondary"
+                href={tLinks('links.licenseRenewalLink')}
+                target="_blank"
+                rel="noreferrer noopener"
+              >
                 {t('renewLink')}
               </Link>
             </div>

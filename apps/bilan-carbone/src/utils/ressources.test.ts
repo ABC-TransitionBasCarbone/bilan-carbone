@@ -31,10 +31,10 @@ describe('getEnvironnementRessources', () => {
   })
 
   const englishTranslations = {
-    openCarbonPracticeUrl: 'https://en.open.carbon.practice',
-    methodologyUrl: 'https://en.methodology',
-    contactFormUrl: 'https://en.contact.form',
-    faqUrl: 'https://en.faq',
+    'links.openCarbonPracticeUrl': 'https://en.open.carbon.practice',
+    'links.methodologyUrl': 'https://en.methodology',
+    'links.contactFormUrl': 'https://en.contact.form',
+    'links.faqUrl': 'https://en.faq',
   } as const
 
   const translationWithEnglishUrls = Object.assign(
@@ -71,7 +71,7 @@ describe('getEnvironnementRessources', () => {
     })
 
     await expect(getEnvironnementRessources(Environment.BC, t)).rejects.toThrow(
-      'Missing translation: openCarbonPracticeUrl',
+      'Missing translation: links.openCarbonPracticeUrl',
     )
   })
 })

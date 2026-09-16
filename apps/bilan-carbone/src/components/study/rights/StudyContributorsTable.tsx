@@ -56,7 +56,7 @@ const SUBPOST_PREVIEW_LIMIT = 3
 
 const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
   const tBc = useTranslations()
-  const faq = tBc('faqUrl')
+  const faq = tBc('links.faqUrl')
   const tCommon = useTranslations('common')
   const t = useTranslations('study.rights.contributorsTable')
   const tDeleting = useTranslations('study.rights.contributorsTable.deleting')
