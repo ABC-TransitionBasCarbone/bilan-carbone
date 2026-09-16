@@ -34,22 +34,22 @@ export interface StudyContributorDeleteParams {
 
 export type StudyContributorTableRow =
   | {
-      type: 'parent'
-      email: string
-      accountId: string
-      posts: {
-        post: string
-        subPosts: string[]
-      }[]
-      hasAllPosts?: boolean // Flag to indicate if user has access to all posts
-    }
-  | {
-      type: 'child'
-      email: string
-      accountId: string
+    type: 'parent'
+    email: string
+    accountId: string
+    posts: {
       post: string
       subPosts: string[]
-    }
+    }[]
+    hasAllPosts?: boolean // Flag to indicate if user has access to all posts
+  }
+  | {
+    type: 'child'
+    email: string
+    accountId: string
+    post: string
+    subPosts: string[]
+  }
 
 const PREVIEW_MAX_LINES = 2
 const SUBPOST_PREVIEW_LIMIT = 3
@@ -305,36 +305,36 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
 
     return canAddContributor
       ? columns.concat([
-          {
-            id: 'actions',
-            header: '',
-            cell: ({ row }) => {
-              const rowData = row.original
-              return (
-                <>
+        {
+          id: 'actions',
+          header: '',
+          cell: ({ row }) => {
+            const rowData = row.original
+            return (
+              <>
+                <TableActionButton
+                  type="delete"
+                  onClick={() => setToDelete(rowData)}
+                  data-testid={
+                    rowData.type === 'parent'
+                      ? 'delete-study-contributor-button'
+                      : 'delete-study-contributor-post-button'
+                  }
+                />
+                {rowData.type === 'parent' && (
                   <TableActionButton
-                    type="delete"
-                    onClick={() => setToDelete(rowData)}
-                    data-testid={
-                      rowData.type === 'parent'
-                        ? 'delete-study-contributor-button'
-                        : 'delete-study-contributor-post-button'
+                    type="edit"
+                    onClick={() =>
+                      router.push(`/etudes/${study.id}/cadrage/modifier-contributeur/${rowData.accountId}`)
                     }
+                    data-testid="edit-study-contributor-button"
                   />
-                  {rowData.type === 'parent' && (
-                    <TableActionButton
-                      type="edit"
-                      onClick={() =>
-                        router.push(`/etudes/${study.id}/cadrage/modifier-contributeur/${rowData.accountId}`)
-                      }
-                      data-testid="edit-study-contributor-button"
-                    />
-                  )}
-                </>
-              )
-            },
+                )}
+              </>
+            )
           },
-        ])
+        },
+      ])
       : columns
   }, [canAddContributor, t, renderExpandCell, renderEmailCell, renderPostCell, renderSubPostCell])
 
@@ -393,13 +393,13 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
         actions={
           canAddContributor
             ? [
-                {
-                  actionType: 'link',
-                  href: `/etudes/${study.id}/cadrage/ajouter-contributeur`,
-                  'data-testid': 'study-rights-add-contributor',
-                  children: t('newContributorLink'),
-                },
-              ]
+              {
+                actionType: 'link',
+                href: `/etudes/${study.id}/cadrage/ajouter-contributeur`,
+                'data-testid': 'study-rights-add-contributor',
+                children: t('newContributorLink'),
+              },
+            ]
             : undefined
         }
       >
@@ -450,9 +450,9 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
           {contributorToDelete.type === 'parent'
             ? tDeleting('confirmation', { email: contributorToDelete.email })
             : tDeleting('confirmationPost', {
-                email: contributorToDelete.email,
-                post: tPost(contributorToDelete.post),
-              })}
+              email: contributorToDelete.email,
+              post: tPost(contributorToDelete.post),
+            })}
         </Modal>
       )}
     </>
