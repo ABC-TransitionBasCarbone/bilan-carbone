@@ -10,6 +10,7 @@
     "description": "Create a Tilt account with your email and a Siret",
     "siret": "Siret",
     "siretPlaceholder": "Your Siret",
+    "emailPlaceholder": "Your email",
     "siretRequired": "Please enter a Siret",
     "Not authorized": "This email is already used for Tilt or there's an issue with the account creation. Please see <link>the FAQ</link> or <support>contact support</support> if you think this is an error.",
     "Not association SIRET": "This tool is reserved for non-profit organisations. Please use the classic version of Bilan Carbone®+",
@@ -32,7 +33,12 @@
         "message": "Find here the list of establishments linked to your account"
       }
     },
-    "title": "Calculating your simplified carbon footprint will allow you to:"
+    "title": "Calculating your simplified carbon footprint will allow you to:",
+    "info": {
+      "0": "Faire une estimation des émissions de gaz à effet de serre de votre association en répondant à différentes questions",
+      "1": "Comprendre comment fonctionne cette estimation et les principes fondamentaux d'un bilan de gaz à effet de serre",
+      "2": "Identifier des priorités d'action en fonction de vos émissions, et commencer à construire une trajectoire de réduction"
+    }
   },
   "exports": {
     "env_specific_export": "Simplified carbon footprint",

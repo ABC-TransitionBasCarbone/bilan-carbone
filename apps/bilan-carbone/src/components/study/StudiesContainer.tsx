@@ -25,6 +25,7 @@ import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Link from 'next/link'
+import BetaBanner from '../base/BetaBanner/BetaBanner'
 import Studies from './Studies'
 import styles from './StudiesContainer.module.css'
 
@@ -37,6 +38,7 @@ interface Props {
 
 const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified = false }: Props) => {
   const t = await getTranslations('study')
+  const tCommon = await getTranslations('common')
 
   const allowedStudies = organizationVersionId
     ? await getAllowedStudiesByUserAndOrganization(user, organizationVersionId, simplified)
@@ -126,6 +128,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
   ) : (await canCreateAStudy(user, simplified)) ? (
     !isCR && (
       <MUIBox component="section" className="mt1">
+        {isTilt(user.environment) && displaySimplifiedStudies && simplified && <BetaBanner />}
         <div className="justify-center">
           <Box className={classNames(styles.firstStudyCard, 'flex-col align-center')}>
             <Image src="/img/orga.png" alt="orga.png" width={177} height={119} />
@@ -143,23 +146,25 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
         </div>
       </MUIBox>
     )
+  ) : !canCreateStudyOnlyAsAdministrator(user.environment) && !simplified ? (
+    <Block>
+      <Alert className="p0" severity="info">
+        <p>
+          {customRich(t, 'cannotCreateStudy', {
+            link: (children) => (
+              <Link href="https://abc-transitionbascarbone.fr/agir/se-former-au-bilan-carbone/">{children}</Link>
+            ),
+          })}
+        </p>
+        <p>
+          {customRich(t, 'canCreateFootPrint', {
+            link: (children) => <Link href="/mes-empreintes">{children}</Link>,
+          })}
+        </p>
+      </Alert>
+    </Block>
   ) : (
-    !canCreateStudyOnlyAsAdministrator(user.environment) && (
-      <Block>
-        <Alert className="p0" severity="info">
-          <p>
-            {customRich(t, 'cannotCreateStudy', {
-              link: (children) => <Link href="/ressources">{children}</Link>,
-            })}
-          </p>
-          <p>
-            {customRich(t, 'canCreateFootPrint', {
-              link: (children) => <Link href="/mes-empreintes">{children}</Link>,
-            })}
-          </p>
-        </Alert>
-      </Block>
-    )
+    <Block>{customRich(tCommon, 'error')}</Block>
   )
 }
 
