@@ -15,7 +15,6 @@
   border-color: var(--mui-palette-primary-main);
   background-color: var(--mui-palette-secondary-light);
   color: var(--mui-palette-primary-contrastText);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 
   > p {
     font-family: 'Gilroy-Regular', sans-serif;
