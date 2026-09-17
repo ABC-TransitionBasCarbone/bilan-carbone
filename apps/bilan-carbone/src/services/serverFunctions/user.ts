@@ -6,8 +6,10 @@ import {
   getAccountByEmailAndEnvironment,
   getAccountByEmailAndOrganizationVersionId,
   getAccountById,
+  getAccountsFromOrganizationForActivation,
   getAccountFromUserOrganization,
   getAccountsFromUser,
+  handoffOrganizationActivationReservation,
 } from '@/db/account'
 import { findCncByCncCode } from '@/db/cnc'
 import { isFeatureActiveForEnvironment } from '@/db/deactivableFeatures'
@@ -25,7 +27,6 @@ import { addSite } from '@/db/site'
 import type { FullStudy } from '@/db/study'
 import {
   addUser,
-  changeStatus,
   createOrUpdateUserCheckedStep,
   deleteUserFromOrga,
   finalizeUserChecklist,
@@ -84,7 +85,13 @@ import { UserSession } from 'next-auth'
 import { getCompanyName, getValidAssociationNameBySiret } from '../associationApi'
 import { auth, dbActualizedAuth } from '../auth'
 import { getUserCheckList } from '../checklist'
-import { NOT_ASSOCIATION_SIRET, REQUEST_SENT, UNKNOWN_SCHOOL, UNKNOWN_SIRET_OR_CNC } from '../permissions/check'
+import {
+  NOT_ASSOCIATION_SIRET,
+  ORGANIZATION_ACTIVATION_IN_PROGRESS,
+  REQUEST_SENT,
+  UNKNOWN_SCHOOL,
+  UNKNOWN_SIRET_OR_CNC,
+} from '../permissions/check'
 import { isBC, isTilt } from '../permissions/environment'
 import { canAddMember, canChangeRole, canDeleteMember, canEditSelfRole } from '../permissions/user'
 import { establishmentTypeMap, School } from '../schoolApi'
@@ -117,6 +124,48 @@ export const sendEmailToAddedUser = async (
     const token = await updateUserResetToken(email, 1 * DAY)
     return sendNewUserEmail(email, token, `${user.firstName} ${user.lastName}`, newUserName, env)
   })
+
+const ACTIVATION_RESERVATION_WINDOW_IN_MS = DAY * TIME_IN_MS
+
+const activationOwnerRoles = [Role.ADMIN, Role.GESTIONNAIRE]
+
+const getOrganizationActivationReservation = async (organizationVersionId: string, currentAccountId: string) => {
+  const accounts = await getAccountsFromOrganizationForActivation(organizationVersionId)
+
+  return accounts.find(
+    (account) =>
+      account.id !== currentAccountId &&
+      activationOwnerRoles.includes(account.role) &&
+      account.status !== UserStatus.ACTIVE,
+  )
+}
+
+const handoffExpiredOrganizationActivation = async (account: AccountWithUser) => {
+  const activationReservation = await getOrganizationActivationReservation(account.organizationVersionId || '', account.id)
+
+  if (!activationReservation) {
+    return
+  }
+
+  const activationExpiresAt =
+    new Date(activationReservation.activationRequestedAt).getTime() + ACTIVATION_RESERVATION_WINDOW_IN_MS
+
+  if (activationExpiresAt > Date.now()) {
+    throw new Error(ORGANIZATION_ACTIVATION_IN_PROGRESS)
+  }
+
+  const handoffSucceeded = await handoffOrganizationActivationReservation(
+    account.id,
+    account.organizationVersionId || '',
+    activationReservation.id,
+    activationReservation.role,
+    activationReservation.activationRequestedAt,
+  )
+
+  if (!handoffSucceeded) {
+    throw new Error(ORGANIZATION_ACTIVATION_IN_PROGRESS)
+  }
+}
 
 export const sendInvitation = async (
   email: string,
@@ -362,11 +411,16 @@ export const activateEmail = async (email: string, userEnv: Environment, fromRes
         `${user.firstName} ${user.lastName}`,
       )
 
-      await changeStatus(account.id, UserStatus.PENDING_REQUEST)
+      await updateAccount(account.id, {
+        status: UserStatus.PENDING_REQUEST,
+        activationRequestedAt: null,
+      })
 
       return REQUEST_SENT
     } else {
+      await handoffExpiredOrganizationActivation(account)
       await validateUser(account.id)
+      await updateAccount(account.id, { activationRequestedAt: new Date() })
       await sendActivation(email, fromReset, env)
 
       return EMAIL_SENT
@@ -682,6 +736,7 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
       return REQUEST_SENT
     } else {
       await validateUser(account.id)
+      await updateAccount(account.id, { activationRequestedAt: new Date() })
       await sendActivation(trimmedEmail, false, environment)
     }
     return EMAIL_SENT
@@ -793,6 +848,7 @@ export const signUpWithSchool = async (email: string, country: Country, school: 
       return REQUEST_SENT
     } else {
       await validateUser(account.id)
+      await updateAccount(account.id, { activationRequestedAt: new Date() })
       await sendActivation(trimmedEmail, false, environment)
     }
     return EMAIL_SENT

@@ -5,7 +5,9 @@ import {
   addAccount,
   getAccountByEmailAndEnvironment,
   getAccountById,
+  getAccountsFromOrganizationForActivation,
   getAccountFromUserOrganization,
+  handoffOrganizationActivationReservation,
 } from '@/db/account'
 import { findCncByCncCode } from '@/db/cnc'
 import {
@@ -17,7 +19,12 @@ import {
 } from '@/db/organization'
 import { addSite } from '@/db/site'
 import { addUser, getUserByEmail, organizationVersionActiveAccountsCount, updateAccount, validateUser } from '@/db/user'
-import { NOT_ASSOCIATION_SIRET, REQUEST_SENT, UNKNOWN_SIRET_OR_CNC } from '@/services/permissions/check'
+import {
+  NOT_ASSOCIATION_SIRET,
+  ORGANIZATION_ACTIVATION_IN_PROGRESS,
+  REQUEST_SENT,
+  UNKNOWN_SIRET_OR_CNC,
+} from '@/services/permissions/check'
 import { mockedOrganizationVersionId } from '@/tests/utils/models/organization'
 import { mockedAccountId } from '@/tests/utils/models/user'
 import { sendActivationRequest } from '@abc-transitionbascarbone/services/email/email'
@@ -71,7 +78,9 @@ const mockAddUser = addUser as jest.Mock
 const mockAddAccount = addAccount as jest.Mock
 const mockUpdateAccount = updateAccount as jest.Mock
 const mockGetAccountById = getAccountById as jest.Mock
+const mockGetAccountsFromOrganizationForActivation = getAccountsFromOrganizationForActivation as jest.Mock
 const mockGetAccountFromUserOrganization = getAccountFromUserOrganization as jest.Mock
+const mockHandoffOrganizationActivationReservation = handoffOrganizationActivationReservation as jest.Mock
 const mockValidateUser = validateUser as jest.Mock
 const mockFindCncByCncCode = findCncByCncCode as jest.Mock
 const mockGetRawOrganizationBySiteCNC = getRawOrganizationBySiteCNC as jest.Mock
@@ -86,6 +95,7 @@ const mockSendActivationRequest = sendActivationRequest as jest.Mock
 const mockGetOrganizationVersionForRightsCheck = getOrganizationVersionForRightsCheck as jest.Mock
 const mockOrganizationVersionActiveAccountsCount = organizationVersionActiveAccountsCount as jest.Mock
 const mockActivateEmail = activateEmail as jest.Mock
+const actualActivateEmail = jest.requireActual('./user').activateEmail as typeof activateEmail
 
 const testEmail = 'test@example.com'
 const testSiret = '12345678901234'
@@ -133,6 +143,214 @@ describe('signUpWithSiretOrCNC', () => {
       const result = await signUpWithSiretOrCNC(testEmail, testSiret, Environment.TILT)
 
       expect(result.success).toBe(true)
+    })
+  })
+
+  describe('activateEmail', () => {
+    beforeEach(() => {
+      jest.clearAllMocks()
+    })
+
+    it('blocks self activation while another manager activation is still reserved', async () => {
+      mockGetUserByEmail.mockResolvedValue({
+        id: mockedUserId,
+        email: testEmail,
+        firstName: 'Test',
+        lastName: 'User',
+        accounts: [{ id: mockedAccountId, environment: Environment.CUT, status: UserStatus.PENDING_REQUEST }],
+      })
+      mockGetAccountById.mockResolvedValue({
+        id: mockedAccountId,
+        organizationVersionId: mockedOrganizationVersionId,
+        status: UserStatus.PENDING_REQUEST,
+        role: Role.DEFAULT,
+        user: {
+          id: mockedUserId,
+          email: testEmail,
+          firstName: 'Test',
+          lastName: 'User',
+        },
+      })
+      mockGetOrganizationVersionForRightsCheck.mockResolvedValue({
+        id: mockedOrganizationVersionId,
+        activatedLicence: [1],
+      })
+      mockOrganizationVersionActiveAccountsCount.mockResolvedValue(0)
+      mockGetAccountsFromOrganizationForActivation.mockResolvedValue([
+        {
+          id: 'reserved-account-id',
+          role: Role.GESTIONNAIRE,
+          status: UserStatus.VALIDATED,
+          activationRequestedAt: new Date(),
+          user: { email: 'reserved@example.com', firstName: 'Reserved', lastName: 'User' },
+        },
+      ])
+
+      const result = await actualActivateEmail(testEmail, Environment.CUT)
+
+      expect(result.success).toBe(false)
+      if (!result.success) {
+        expect(result.errorMessage).toBe(ORGANIZATION_ACTIVATION_IN_PROGRESS)
+      }
+      expect(mockValidateUser).not.toHaveBeenCalled()
+      expect(mockUpdateAccount).not.toHaveBeenCalled()
+    })
+
+    it('hands off expired manager activation to the new requester', async () => {
+      mockGetUserByEmail.mockResolvedValue({
+        id: mockedUserId,
+        email: testEmail,
+        firstName: 'Test',
+        lastName: 'User',
+        accounts: [{ id: mockedAccountId, environment: Environment.CUT, status: UserStatus.PENDING_REQUEST }],
+      })
+      mockGetAccountById.mockResolvedValue({
+        id: mockedAccountId,
+        organizationVersionId: mockedOrganizationVersionId,
+        status: UserStatus.PENDING_REQUEST,
+        role: Role.DEFAULT,
+        user: {
+          id: mockedUserId,
+          email: testEmail,
+          firstName: 'Test',
+          lastName: 'User',
+        },
+      })
+      mockGetOrganizationVersionForRightsCheck.mockResolvedValue({
+        id: mockedOrganizationVersionId,
+        activatedLicence: [1],
+      })
+      mockOrganizationVersionActiveAccountsCount.mockResolvedValue(0)
+      mockGetAccountsFromOrganizationForActivation.mockResolvedValue([
+        {
+          id: 'expired-account-id',
+          role: Role.GESTIONNAIRE,
+          status: UserStatus.VALIDATED,
+          activationRequestedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+          user: { email: 'expired@example.com', firstName: 'Expired', lastName: 'User' },
+        },
+      ])
+      mockHandoffOrganizationActivationReservation.mockResolvedValue(true)
+      mockValidateUser.mockResolvedValue(undefined)
+
+      const result = await actualActivateEmail(testEmail, Environment.CUT)
+
+      expect(result.success).toBe(true)
+      if (result.success) {
+        expect(result.data).toBe(EMAIL_SENT)
+      }
+      expect(mockHandoffOrganizationActivationReservation).toHaveBeenCalledWith(
+        mockedAccountId,
+        mockedOrganizationVersionId,
+        'expired-account-id',
+        Role.GESTIONNAIRE,
+        expect.any(Date),
+      )
+      expect(mockUpdateAccount).toHaveBeenCalledWith(mockedAccountId, {
+        activationRequestedAt: expect.any(Date),
+      })
+      expect(mockValidateUser).toHaveBeenCalledWith(mockedAccountId)
+    })
+
+    it('hands off an expired admin activation to the new requester', async () => {
+      mockGetUserByEmail.mockResolvedValue({
+        id: mockedUserId,
+        email: testEmail,
+        firstName: 'Test',
+        lastName: 'User',
+        accounts: [{ id: mockedAccountId, environment: Environment.CUT, status: UserStatus.PENDING_REQUEST }],
+      })
+      mockGetAccountById.mockResolvedValue({
+        id: mockedAccountId,
+        organizationVersionId: mockedOrganizationVersionId,
+        status: UserStatus.PENDING_REQUEST,
+        role: Role.DEFAULT,
+        user: {
+          id: mockedUserId,
+          email: testEmail,
+          firstName: 'Test',
+          lastName: 'User',
+        },
+      })
+      mockGetOrganizationVersionForRightsCheck.mockResolvedValue({
+        id: mockedOrganizationVersionId,
+        activatedLicence: [1],
+      })
+      mockOrganizationVersionActiveAccountsCount.mockResolvedValue(0)
+      mockGetAccountsFromOrganizationForActivation.mockResolvedValue([
+        {
+          id: 'expired-admin-account-id',
+          role: Role.ADMIN,
+          status: UserStatus.VALIDATED,
+          activationRequestedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+          user: { email: 'expired-admin@example.com', firstName: 'Expired', lastName: 'Admin' },
+        },
+      ])
+      mockHandoffOrganizationActivationReservation.mockResolvedValue(true)
+      mockValidateUser.mockResolvedValue(undefined)
+
+      const result = await actualActivateEmail(testEmail, Environment.CUT)
+
+      expect(result.success).toBe(true)
+      if (result.success) {
+        expect(result.data).toBe(EMAIL_SENT)
+      }
+      expect(mockHandoffOrganizationActivationReservation).toHaveBeenCalledWith(
+        mockedAccountId,
+        mockedOrganizationVersionId,
+        'expired-admin-account-id',
+        Role.ADMIN,
+        expect.any(Date),
+      )
+      expect(mockUpdateAccount).toHaveBeenCalledWith(mockedAccountId, {
+        activationRequestedAt: expect.any(Date),
+      })
+      expect(mockValidateUser).toHaveBeenCalledWith(mockedAccountId)
+    })
+
+    it('blocks activation when the transactional handoff loses the race', async () => {
+      mockGetUserByEmail.mockResolvedValue({
+        id: mockedUserId,
+        email: testEmail,
+        firstName: 'Test',
+        lastName: 'User',
+        accounts: [{ id: mockedAccountId, environment: Environment.CUT, status: UserStatus.PENDING_REQUEST }],
+      })
+      mockGetAccountById.mockResolvedValue({
+        id: mockedAccountId,
+        organizationVersionId: mockedOrganizationVersionId,
+        status: UserStatus.PENDING_REQUEST,
+        role: Role.DEFAULT,
+        user: {
+          id: mockedUserId,
+          email: testEmail,
+          firstName: 'Test',
+          lastName: 'User',
+        },
+      })
+      mockGetOrganizationVersionForRightsCheck.mockResolvedValue({
+        id: mockedOrganizationVersionId,
+        activatedLicence: [1],
+      })
+      mockOrganizationVersionActiveAccountsCount.mockResolvedValue(0)
+      mockGetAccountsFromOrganizationForActivation.mockResolvedValue([
+        {
+          id: 'expired-account-id',
+          role: Role.GESTIONNAIRE,
+          status: UserStatus.VALIDATED,
+          activationRequestedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+          user: { email: 'expired@example.com', firstName: 'Expired', lastName: 'User' },
+        },
+      ])
+      mockHandoffOrganizationActivationReservation.mockResolvedValue(false)
+
+      const result = await actualActivateEmail(testEmail, Environment.CUT)
+
+      expect(result.success).toBe(false)
+      if (!result.success) {
+        expect(result.errorMessage).toBe(ORGANIZATION_ACTIVATION_IN_PROGRESS)
+      }
+      expect(mockValidateUser).not.toHaveBeenCalled()
     })
   })
 

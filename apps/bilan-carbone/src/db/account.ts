@@ -1,7 +1,7 @@
 import { getDeactivableFeatureRestrictions } from '@/services/serverFunctions/deactivableFeatures'
 import { findUserInfo } from '@/utils/user'
 import type { Prisma } from '@abc-transitionbascarbone/db-common'
-import { DeactivatableFeature, Environment, Role } from '@abc-transitionbascarbone/db-common/enums'
+import { DeactivatableFeature, Environment, Role, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
 import { UserSession } from 'next-auth'
 import { AccountWithUserSelect } from './account.select'
@@ -73,6 +73,78 @@ export const getAccountsFromOrganization = (organizationVersionId: string) =>
     select: { user: { select: { email: true, firstName: true, lastName: true } } },
     where: { organizationVersionId },
     orderBy: { user: { email: 'asc' } },
+  })
+
+export const getAccountsFromOrganizationForActivation = (organizationVersionId: string) =>
+  prismaClient.account.findMany({
+    select: {
+      activationRequestedAt: true,
+      id: true,
+      role: true,
+      status: true,
+      user: { select: { email: true, firstName: true, lastName: true } },
+    },
+    where: { activationRequestedAt: { not: null }, organizationVersionId },
+    orderBy: { activationRequestedAt: 'desc' },
+  })
+
+export const handoffOrganizationActivationReservation = async (
+  currentAccountId: string,
+  organizationVersionId: string,
+  reservedAccountId: string,
+  reservedRole: Role,
+  reservedActivationRequestedAt: Date,
+) =>
+  prismaClient.$transaction(async (transaction) => {
+    const [currentAccount, reservedAccount, activeAccountsCount] = await Promise.all([
+      transaction.account.findUnique({
+        where: { id: currentAccountId },
+        select: { organizationVersionId: true },
+      }),
+      transaction.account.findUnique({
+        where: { id: reservedAccountId },
+        select: { activationRequestedAt: true, organizationVersionId: true, role: true, status: true },
+      }),
+      transaction.account.count({
+        where: { organizationVersionId, status: UserStatus.ACTIVE },
+      }),
+    ])
+
+    if (
+      !currentAccount ||
+      currentAccount.organizationVersionId !== organizationVersionId ||
+      !reservedAccount ||
+      !reservedAccount.activationRequestedAt ||
+      reservedAccount.organizationVersionId !== organizationVersionId ||
+      reservedAccount.status === UserStatus.ACTIVE ||
+      reservedAccount.role !== reservedRole ||
+      reservedAccount.activationRequestedAt.getTime() !== reservedActivationRequestedAt.getTime() ||
+      activeAccountsCount > 0
+    ) {
+      return false
+    }
+
+    await transaction.account.update({
+      where: { id: reservedAccountId },
+      data: {
+        feedbackDate: null,
+        formationEndDate: null,
+        formationName: null,
+        formationStartDate: null,
+        importedFileDate: null,
+        activationRequestedAt: null,
+        organizationVersion: { disconnect: true },
+        role: Role.DEFAULT,
+        status: UserStatus.IMPORTED,
+      },
+    })
+
+    await transaction.account.update({
+      where: { id: currentAccountId },
+      data: { role: reservedRole },
+    })
+
+    return true
   })
 
 export const addAccount = async (account: Prisma.AccountCreateInput & { role: Exclude<Role, 'SUPER_ADMIN'> }) => {
