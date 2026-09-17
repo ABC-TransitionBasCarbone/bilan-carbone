@@ -9,6 +9,7 @@ import {
   getAccountsFromOrganizationForActivation,
   getAccountFromUserOrganization,
   getAccountsFromUser,
+  handoffOrganizationActivationReservation,
 } from '@/db/account'
 import { findCncByCncCode } from '@/db/cnc'
 import { isFeatureActiveForEnvironment } from '@/db/deactivableFeatures'
@@ -154,16 +155,17 @@ const handoffExpiredOrganizationActivation = async (account: AccountWithUser) =>
     throw new Error(ORGANIZATION_ACTIVATION_IN_PROGRESS)
   }
 
-  await Promise.all([
-    updateAccount(activationReservation.id, {
-      organizationVersion: { disconnect: true },
-      role: Role.DEFAULT,
-      status: UserStatus.IMPORTED,
-    }),
-    updateAccount(account.id, {
-      role: activationReservation.role,
-    }),
-  ])
+  const handoffSucceeded = await handoffOrganizationActivationReservation(
+    account.id,
+    account.organizationVersionId || '',
+    activationReservation.id,
+    activationReservation.role,
+    activationReservation.updatedAt,
+  )
+
+  if (!handoffSucceeded) {
+    throw new Error(ORGANIZATION_ACTIVATION_IN_PROGRESS)
+  }
 }
 
 export const sendInvitation = async (

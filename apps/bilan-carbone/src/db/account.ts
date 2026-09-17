@@ -1,7 +1,7 @@
 import { getDeactivableFeatureRestrictions } from '@/services/serverFunctions/deactivableFeatures'
 import { findUserInfo } from '@/utils/user'
 import type { Prisma } from '@abc-transitionbascarbone/db-common'
-import { DeactivatableFeature, Environment, Role } from '@abc-transitionbascarbone/db-common/enums'
+import { DeactivatableFeature, Environment, Role, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
 import { UserSession } from 'next-auth'
 import { AccountWithUserSelect } from './account.select'
@@ -86,6 +86,58 @@ export const getAccountsFromOrganizationForActivation = (organizationVersionId: 
     },
     where: { organizationVersionId },
     orderBy: { updatedAt: 'desc' },
+  })
+
+export const handoffOrganizationActivationReservation = async (
+  currentAccountId: string,
+  organizationVersionId: string,
+  reservedAccountId: string,
+  reservedRole: Role,
+  reservedUpdatedAt: Date,
+) =>
+  prismaClient.$transaction(async (transaction) => {
+    const [currentAccount, reservedAccount, activeAccountsCount] = await Promise.all([
+      transaction.account.findUnique({
+        where: { id: currentAccountId },
+        select: { organizationVersionId: true },
+      }),
+      transaction.account.findUnique({
+        where: { id: reservedAccountId },
+        select: { organizationVersionId: true, role: true, status: true, updatedAt: true },
+      }),
+      transaction.account.count({
+        where: { organizationVersionId, status: UserStatus.ACTIVE },
+      }),
+    ])
+
+    if (
+      !currentAccount ||
+      currentAccount.organizationVersionId !== organizationVersionId ||
+      !reservedAccount ||
+      reservedAccount.organizationVersionId !== organizationVersionId ||
+      reservedAccount.status === UserStatus.ACTIVE ||
+      reservedAccount.role !== reservedRole ||
+      reservedAccount.updatedAt.getTime() !== reservedUpdatedAt.getTime() ||
+      activeAccountsCount > 0
+    ) {
+      return false
+    }
+
+    await transaction.account.update({
+      where: { id: reservedAccountId },
+      data: {
+        organizationVersion: { disconnect: true },
+        role: Role.DEFAULT,
+        status: UserStatus.IMPORTED,
+      },
+    })
+
+    await transaction.account.update({
+      where: { id: currentAccountId },
+      data: { role: reservedRole },
+    })
+
+    return true
   })
 
 export const addAccount = async (account: Prisma.AccountCreateInput & { role: Exclude<Role, 'SUPER_ADMIN'> }) => {
