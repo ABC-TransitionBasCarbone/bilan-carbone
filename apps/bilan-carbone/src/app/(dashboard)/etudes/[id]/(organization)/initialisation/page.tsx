@@ -1,6 +1,5 @@
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
-import { StudyProps } from '@/components/hoc/withStudy'
-import withStudyDetails from '@/components/hoc/withStudyDetails'
+import withStudyDetails, { StudyProps } from '@/components/hoc/withStudyDetails'
 import withTransitionPlan, { TransitionPlanProps } from '@/components/hoc/withTransitionPlan'
 import TransitionPlanInitPage from '@/components/pages/TransitionPlanInitPage'
 import { loadTransitionPlanPageData } from '@/components/study/transitionPlan/transitionPlanPageData'

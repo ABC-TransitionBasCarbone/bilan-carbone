@@ -1,6 +1,6 @@
 'use client'
 
-import type { FullStudy } from '@/db/study'
+import type { MinimalStudyForRights } from '@/db/study'
 import { deleteStudyMember } from '@/services/serverFunctions/study'
 import { Table as BaseTable, HelpIcon } from '@abc-transitionbascarbone/components'
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
@@ -18,12 +18,12 @@ import SelectStudyRole from './SelectStudyRole'
 
 interface Props {
   user: UserSession
-  study: FullStudy
+  study: MinimalStudyForRights
   canAddMember: boolean
   userRoleOnStudy: StudyRole
 }
 
-type AllowedUser = FullStudy['allowedUsers'][number]
+type AllowedUser = MinimalStudyForRights['allowedUsers'][number]
 
 const emptyToast = { text: '', color: 'error' } as const
 const toastPosition = { vertical: 'bottom', horizontal: 'left' } as const
@@ -80,7 +80,7 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
     } else {
       columns.push({
         header: t('role'),
-        accessorFn: (right: FullStudy['allowedUsers'][0]) => tStudyRole(right.role),
+        accessorFn: (right: MinimalStudyForRights['allowedUsers'][0]) => tStudyRole(right.role),
       })
     }
     return columns

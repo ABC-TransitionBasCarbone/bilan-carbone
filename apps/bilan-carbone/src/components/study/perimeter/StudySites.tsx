@@ -1,7 +1,7 @@
 'use client'
 
 import { OrganizationWithSites } from '@/db/account'
-import type { FullStudy } from '@/db/study'
+import type { MinimalStudyForRights } from '@/db/study'
 import Sites from '@/environments/base/organization/Sites'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import {
@@ -14,6 +14,7 @@ import {
   ChangeStudySitesCommandValidation,
   SitesCommand,
 } from '@/services/serverFunctions/study.command'
+import type { StudySiteWithSite } from '@/types/study.types'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
 import { canEditOrganizationVersion, isInOrgaOrParent } from '@/utils/organization'
 import { hasEditionRights } from '@/utils/study'
@@ -39,7 +40,8 @@ const SitesTilt = dynamic(() => import('@/environments/tilt/organization/Sites')
 const DuplicateSiteModal = dynamic(() => import('./DuplicateSiteModal'), { ssr: false })
 
 interface Props {
-  study: FullStudy
+  study: MinimalStudyForRights
+  studySites: StudySiteWithSite[]
   organizationVersion: OrganizationWithSites
   userRoleOnStudy: StudyRole
   caUnit: SiteCAUnit
@@ -47,7 +49,15 @@ interface Props {
   handleSpecificChange?: (sitesId: { id: string }[]) => Promise<void>
 }
 
-const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user, handleSpecificChange }: Props) => {
+const StudySites = ({
+  study,
+  studySites,
+  organizationVersion,
+  userRoleOnStudy,
+  caUnit,
+  user,
+  handleSpecificChange,
+}: Props) => {
   const tGlossary = useTranslations('study.new.glossary')
   const t = useTranslations('study.perimeter')
   const [open, setOpen] = useState(false)
@@ -60,25 +70,25 @@ const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user,
   const isFromStudyOrganizationOrParent = useMemo(
     () =>
       isInOrgaOrParent(user.organizationVersionId, {
-        id: study.organizationVersionId,
+        id: study.organizationVersion.id,
         parentId: study.organizationVersion.parent?.id || '',
       }),
-    [study.organizationVersion.parent?.id, study.organizationVersionId, user.organizationVersionId],
+    [study.organizationVersion.parent?.id, study.organizationVersion.id, user.organizationVersionId],
   )
   const canEditOrga = useMemo(() => canEditOrganizationVersion(user, organizationVersion), [user, organizationVersion])
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
 
   const duplicatingSite = useMemo(
-    () => (duplicatingSiteId ? study.sites.find((site) => site.id === duplicatingSiteId) : null),
-    [duplicatingSiteId, study.sites],
+    () => (duplicatingSiteId ? studySites.find((studySite) => studySite.id === duplicatingSiteId) : null),
+    [duplicatingSiteId, studySites],
   )
 
   const siteList = useMemo(
     () =>
       organizationVersion.organization.sites
         .map((site) => {
-          const existingStudySite = study.sites.find((studySite) => studySite.site.id === site.id)
+          const existingStudySite = studySites.find((studySite) => studySite.site.id === site.id)
           return existingStudySite
             ? {
                 ...existingStudySite,
@@ -104,7 +114,7 @@ const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user,
         })
         .sort((a, b) => a.name.localeCompare(b.name))
         .sort((a, b) => (b.selected ? 1 : 0) - (a.selected ? 1 : 0)) || [],
-    [organizationVersion.organization.sites, study.sites],
+    [organizationVersion.organization.sites, studySites],
   )
 
   const siteForm = useForm<ChangeStudySitesCommand>({
@@ -129,7 +139,7 @@ const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user,
 
   const onSitesSubmit = async () => {
     const deletedSites = sites.filter((site) => {
-      return !site.selected && study.sites.some((studySite) => studySite.site.id === site.id)
+      return !site.selected && studySites.some((studySite) => studySite.site.id === site.id)
     })
     const hasActivity = await hasActivityData(study.id, deletedSites, organizationVersion.id)
     if (hasActivity.success && hasActivity.data) {
@@ -146,7 +156,7 @@ const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user,
 
     await callServerFunction(() => changeStudySites(study.id, siteForm.getValues()), {
       onSuccess: async () => {
-        const canUpdateOrganization = await getUpdateOrganizationVersionPermission(study.organizationVersionId)
+        const canUpdateOrganization = await getUpdateOrganizationVersionPermission(study.organizationVersion.id)
         if (canUpdateOrganization.success && canUpdateOrganization.data) {
           setReplicateSitesChanges(true)
         } else {
@@ -162,7 +172,7 @@ const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user,
 
   const onReplicateSitesChanges = (replicate: boolean) => {
     if (replicate) {
-      updateOrganizationSitesCommand(siteForm.getValues(), study.organizationVersionId)
+      updateOrganizationSitesCommand(siteForm.getValues(), study.organizationVersion.id)
     }
     setReplicateSitesChanges(false)
     setIsEditing(false)
@@ -202,7 +212,7 @@ const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user,
               sites={
                 isEditing
                   ? sites
-                  : study.sites.map((site) => ({
+                  : studySites.map((site) => ({
                       ...site,
                       name: site.site.name,
                       selected: false,
@@ -216,9 +226,7 @@ const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user,
           ),
           [Environment.TILT]: (
             <SitesTilt
-              sites={
-                isEditing ? sites : study.sites.map((site) => ({ ...site, name: site.site.name, selected: false }))
-              }
+              sites={isEditing ? sites : studySites.map((site) => ({ ...site, name: site.site.name, selected: false }))}
               form={isEditing ? (siteForm as unknown as UseFormReturn<SitesCommand>) : undefined}
               caUnit={caUnit}
               withSelection
@@ -229,7 +237,7 @@ const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user,
         }}
         defaultComponent={
           <Sites
-            sites={isEditing ? sites : study.sites.map((site) => ({ ...site, name: site.site.name, selected: false }))}
+            sites={isEditing ? sites : studySites.map((site) => ({ ...site, name: site.site.name, selected: false }))}
             form={isEditing ? (siteForm as unknown as UseFormReturn<SitesCommand>) : undefined}
             caUnit={caUnit}
             withSelection
@@ -266,6 +274,7 @@ const StudySites = ({ study, organizationVersion, userRoleOnStudy, caUnit, user,
           onClose={() => setDuplicatingSiteId(null)}
           sourceSite={duplicatingSite}
           study={study}
+          studySites={studySites}
           canEditOrganization={canEditOrga}
           caUnit={caUnit}
           onDuplicate={handleDuplicateSite}

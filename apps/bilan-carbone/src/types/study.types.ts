@@ -13,6 +13,21 @@ export interface BaseResultsBySite {
   bySite: Record<string, BaseResultsByPost[]>
 }
 
+export interface StudySiteWithSite {
+  id: string
+  ca: number
+  etp: number
+  beneficiaryNumber: number | null
+  volunteerNumber: number | null
+  site: {
+    id: string
+    name: string
+    postalCode?: string | null
+    city?: string | null
+    establishmentYear?: string | null
+  }
+}
+
 export type ResultsByPost = Omit<BaseResultsByPost, 'children'> & {
   monetaryValue: number
   nonSpecificMonetaryValue: number

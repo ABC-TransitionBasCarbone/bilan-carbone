@@ -1,30 +1,34 @@
 import { getOrganizationVersionWithSitesById } from '@/db/organization'
-import type { FullStudy } from '@/db/study'
+import type { MinimalStudyForRights } from '@/db/study'
 import { getUserApplicationSettings } from '@/db/user'
 import DynamicStudyRights from '@/environments/core/study/DynamicStudyRights'
 import { getEmissionFactorImportVersions } from '@/services/serverFunctions/emissionFactor'
+import { getStudySitesList, NEWGetAccountRoleOnStudyWithId } from '@/services/serverFunctions/study'
 import { defaultCAUnit } from '@/utils/number'
-import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
+import { hasEditionRights } from '@/utils/study'
 import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 
 interface Props {
-  study: FullStudy
   user: UserSession
+  minimalStudy: MinimalStudyForRights
 }
 
-const StudyRightsPage = async ({ study, user }: Props) => {
+const StudyRightsPage = async ({ user, minimalStudy }: Props) => {
   const tNav = await getTranslations('nav')
 
-  const userRoleOnStudy = getAccountRoleOnStudy(user, study)
+  const userRoleOnStudy = await NEWGetAccountRoleOnStudyWithId(user, minimalStudy.id)
+  if (!userRoleOnStudy.success || !userRoleOnStudy.data) {
+    return <NotFound />
+  }
 
-  const editionDisabled = !hasEditionRights(userRoleOnStudy)
+  const editionDisabled = !hasEditionRights(userRoleOnStudy.data)
 
   const caUnit = (await getUserApplicationSettings(user.accountId))?.caUnit || defaultCAUnit
 
-  const organizationVersion = await getOrganizationVersionWithSitesById(study.organizationVersionId)
+  const organizationVersion = await getOrganizationVersionWithSitesById(minimalStudy.organizationVersion.id)
 
   const emissionFactorImportVersionRes = await getEmissionFactorImportVersions(true)
   if (!emissionFactorImportVersionRes.success) {
@@ -36,30 +40,36 @@ const StudyRightsPage = async ({ study, user }: Props) => {
     return <NotFound />
   }
 
+  const studySites = await getStudySitesList(minimalStudy.id)
+  if (!studySites.success || !studySites.data) {
+    return <NotFound />
+  }
+
   return (
     <>
       <Breadcrumbs
         current={tNav('studyRights')}
         links={[
           { label: tNav('home'), link: '/' },
-          study.organizationVersion.isCR
+          minimalStudy.organizationVersion.parentId
             ? {
-                label: study.organizationVersion.organization.name,
-                link: `/organisations/${study.organizationVersion.id}`,
+                label: minimalStudy.organizationVersion.organization.name,
+                link: `/organisations/${minimalStudy.organizationVersion.id}`,
               }
             : undefined,
-          { label: study.name, link: `/etudes/${study.id}` },
+          { label: minimalStudy.name, link: `/etudes/${minimalStudy.id}` },
         ].filter((link) => link !== undefined)}
       />
 
       <DynamicStudyRights
         user={user}
-        study={study}
+        study={minimalStudy}
         editionDisabled={editionDisabled}
-        userRoleOnStudy={userRoleOnStudy}
+        userRoleOnStudy={userRoleOnStudy.data}
         emissionFactorSources={emissionFactorImportVersionRes.data}
         caUnit={caUnit}
         organizationVersion={organizationVersion}
+        studySites={studySites.data}
       />
     </>
   )

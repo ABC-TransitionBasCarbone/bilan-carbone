@@ -1,7 +1,8 @@
 'use client'
 
 import { MultiSelect } from '@/components/base/MultiSelect'
-import type { FullStudy } from '@/db/study'
+import type { MinimalStudyForRights } from '@/db/study'
+import type { StudySiteWithSite } from '@/types/study.types'
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
 import { SiteCAUnit } from '@abc-transitionbascarbone/db-common/enums'
@@ -15,9 +16,10 @@ import styles from './DuplicateSiteModal.module.css'
 interface Props {
   open: boolean
   onClose: () => void
-  sourceSite: FullStudy['sites'][number]
-  study: FullStudy
+  sourceSite: StudySiteWithSite
+  study: MinimalStudyForRights
   canEditOrganization: boolean
+  studySites: StudySiteWithSite[]
   caUnit: SiteCAUnit
   onDuplicate: (data: DuplicateFormData) => void
 }
@@ -28,7 +30,16 @@ export interface DuplicateFormData {
   newSitesCount: number
 }
 
-const DuplicateSiteModal = ({ open, onClose, sourceSite, study, canEditOrganization, caUnit, onDuplicate }: Props) => {
+const DuplicateSiteModal = ({
+  open,
+  onClose,
+  sourceSite,
+  study,
+  canEditOrganization,
+  caUnit,
+  studySites,
+  onDuplicate,
+}: Props) => {
   const tAction = useTranslations('common.action')
   const tDuplicate = useTranslations('study.perimeter.duplicate')
   const tSites = useTranslations('organization.sites')
@@ -49,10 +60,7 @@ const DuplicateSiteModal = ({ open, onClose, sourceSite, study, canEditOrganizat
   const formValues = watch()
   const fieldsToDuplicate = useMemo(() => formValues.fieldsToDuplicate, [formValues.fieldsToDuplicate])
 
-  const availableSites = useMemo(
-    () => study.sites.filter((site) => site.id !== sourceSite.id),
-    [study.sites, sourceSite],
-  )
+  const availableSites = useMemo(() => studySites.filter((site) => site.id !== sourceSite.id), [studySites, sourceSite])
 
   const siteOptions = useMemo(
     () =>
@@ -61,11 +69,6 @@ const DuplicateSiteModal = ({ open, onClose, sourceSite, study, canEditOrganizat
         value: site.id,
       })),
     [availableSites],
-  )
-
-  const emissionSourcesCount = useMemo(
-    () => study.emissionSources.filter((es) => es.studySite.id === sourceSite.id).length,
-    [study.emissionSources, sourceSite],
   )
 
   const isValid = useMemo(() => {
@@ -138,9 +141,7 @@ const DuplicateSiteModal = ({ open, onClose, sourceSite, study, canEditOrganizat
                   />
                 )}
               />
-              <span>
-                {tDuplicate('emissionSources')} ({emissionSourcesCount})
-              </span>
+              <span>{tDuplicate('emissionSources')}</span>
             </label>
             <label className={classNames('align-center', 'pointer', 'gapped075')}>
               <Controller

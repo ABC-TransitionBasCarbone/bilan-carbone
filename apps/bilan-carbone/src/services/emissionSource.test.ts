@@ -47,7 +47,10 @@ const defaultEmissionSource = {
     ],
     emissionFactorParts: [],
   },
-  studySite: { id: 'siteId', site: { id: 'siteId', name: 'mocked-site' } },
+  studySite: {
+    id: 'siteId',
+    site: { id: 'siteId', name: 'mocked-site', postalCode: '78500', city: null, establishmentYear: '2000' },
+  },
   emissionFactorId: 'emissionFactor',
   name: 'name',
   source: null,

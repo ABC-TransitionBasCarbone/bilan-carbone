@@ -1,6 +1,6 @@
 'use client'
 
-import type { FullStudy } from '@/db/study'
+import type { MinimalStudyForRights } from '@/db/study'
 import { isAdminOnStudyOrga } from '@/services/permissions/study.utils'
 import { changeStudyRole } from '@/services/serverFunctions/study'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
@@ -17,9 +17,9 @@ const toastPosition = { vertical: 'bottom', horizontal: 'left' } as const
 interface Props {
   user: UserSession
   userRole?: StudyRole
-  rowUser: FullStudy['allowedUsers'][0]['account']
+  rowUser: MinimalStudyForRights['allowedUsers'][0]['account']
   currentRole: StudyRole
-  study: FullStudy
+  study: MinimalStudyForRights
 }
 
 const SelectStudyRole = ({ user, rowUser, study, currentRole, userRole }: Props) => {
