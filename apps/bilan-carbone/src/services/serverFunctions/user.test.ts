@@ -7,6 +7,7 @@ import {
   getAccountById,
   getAccountsFromOrganizationForActivation,
   getAccountFromUserOrganization,
+  handoffOrganizationActivationReservation,
 } from '@/db/account'
 import { findCncByCncCode } from '@/db/cnc'
 import {
@@ -79,6 +80,7 @@ const mockUpdateAccount = updateAccount as jest.Mock
 const mockGetAccountById = getAccountById as jest.Mock
 const mockGetAccountsFromOrganizationForActivation = getAccountsFromOrganizationForActivation as jest.Mock
 const mockGetAccountFromUserOrganization = getAccountFromUserOrganization as jest.Mock
+const mockHandoffOrganizationActivationReservation = handoffOrganizationActivationReservation as jest.Mock
 const mockValidateUser = validateUser as jest.Mock
 const mockFindCncByCncCode = findCncByCncCode as jest.Mock
 const mockGetRawOrganizationBySiteCNC = getRawOrganizationBySiteCNC as jest.Mock
@@ -228,6 +230,7 @@ describe('signUpWithSiretOrCNC', () => {
           user: { email: 'expired@example.com', firstName: 'Expired', lastName: 'User' },
         },
       ])
+      mockHandoffOrganizationActivationReservation.mockResolvedValue(true)
       mockValidateUser.mockResolvedValue(undefined)
 
       const result = await actualActivateEmail(testEmail, Environment.CUT)
@@ -236,14 +239,68 @@ describe('signUpWithSiretOrCNC', () => {
       if (result.success) {
         expect(result.data).toBe(EMAIL_SENT)
       }
-      expect(mockUpdateAccount).toHaveBeenNthCalledWith(1, 'expired-account-id', {
-        organizationVersion: { disconnect: true },
+      expect(mockHandoffOrganizationActivationReservation).toHaveBeenCalledWith(
+        mockedAccountId,
+        mockedOrganizationVersionId,
+        'expired-account-id',
+        Role.GESTIONNAIRE,
+        expect.any(Date),
+      )
+      expect(mockUpdateAccount).not.toHaveBeenCalled()
+      expect(mockValidateUser).toHaveBeenCalledWith(mockedAccountId)
+    })
+
+    it('hands off an expired admin activation to the new requester', async () => {
+      mockGetUserByEmail.mockResolvedValue({
+        id: mockedUserId,
+        email: testEmail,
+        firstName: 'Test',
+        lastName: 'User',
+        accounts: [{ id: mockedAccountId, environment: Environment.CUT, status: UserStatus.PENDING_REQUEST }],
+      })
+      mockGetAccountById.mockResolvedValue({
+        id: mockedAccountId,
+        organizationVersionId: mockedOrganizationVersionId,
+        status: UserStatus.PENDING_REQUEST,
         role: Role.DEFAULT,
-        status: UserStatus.IMPORTED,
+        user: {
+          id: mockedUserId,
+          email: testEmail,
+          firstName: 'Test',
+          lastName: 'User',
+        },
       })
-      expect(mockUpdateAccount).toHaveBeenNthCalledWith(2, mockedAccountId, {
-        role: Role.GESTIONNAIRE,
+      mockGetOrganizationVersionForRightsCheck.mockResolvedValue({
+        id: mockedOrganizationVersionId,
+        activatedLicence: [1],
       })
+      mockOrganizationVersionActiveAccountsCount.mockResolvedValue(0)
+      mockGetAccountsFromOrganizationForActivation.mockResolvedValue([
+        {
+          id: 'expired-admin-account-id',
+          role: Role.ADMIN,
+          status: UserStatus.VALIDATED,
+          updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+          user: { email: 'expired-admin@example.com', firstName: 'Expired', lastName: 'Admin' },
+        },
+      ])
+      mockHandoffOrganizationActivationReservation.mockResolvedValue(true)
+      mockValidateUser.mockResolvedValue(undefined)
+
+      const result = await actualActivateEmail(testEmail, Environment.CUT)
+
+      expect(result.success).toBe(true)
+      if (result.success) {
+        expect(result.data).toBe(EMAIL_SENT)
+      }
+      expect(mockHandoffOrganizationActivationReservation).toHaveBeenCalledWith(
+        mockedAccountId,
+        mockedOrganizationVersionId,
+        'expired-admin-account-id',
+        Role.ADMIN,
+        expect.any(Date),
+      )
+      expect(mockUpdateAccount).not.toHaveBeenCalled()
       expect(mockValidateUser).toHaveBeenCalledWith(mockedAccountId)
     })
   })
