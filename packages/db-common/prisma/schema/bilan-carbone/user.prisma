@@ -39,6 +39,7 @@ model Account {
   deactivatableFeatureStatus DeactivatableFeatureStatus[] @relation("deactivable_feature_updator")
 
   feedbackDate DateTime? @map("feedback_date")
+  activationRequestedAt DateTime? @map("activation_requested_at")
 
   role Role
 

@@ -78,14 +78,14 @@ export const getAccountsFromOrganization = (organizationVersionId: string) =>
 export const getAccountsFromOrganizationForActivation = (organizationVersionId: string) =>
   prismaClient.account.findMany({
     select: {
+      activationRequestedAt: true,
       id: true,
       role: true,
       status: true,
-      updatedAt: true,
       user: { select: { email: true, firstName: true, lastName: true } },
     },
-    where: { organizationVersionId },
-    orderBy: { updatedAt: 'desc' },
+    where: { activationRequestedAt: { not: null }, organizationVersionId },
+    orderBy: { activationRequestedAt: 'desc' },
   })
 
 export const handoffOrganizationActivationReservation = async (
@@ -93,7 +93,7 @@ export const handoffOrganizationActivationReservation = async (
   organizationVersionId: string,
   reservedAccountId: string,
   reservedRole: Role,
-  reservedUpdatedAt: Date,
+  reservedActivationRequestedAt: Date,
 ) =>
   prismaClient.$transaction(async (transaction) => {
     const [currentAccount, reservedAccount, activeAccountsCount] = await Promise.all([
@@ -103,7 +103,7 @@ export const handoffOrganizationActivationReservation = async (
       }),
       transaction.account.findUnique({
         where: { id: reservedAccountId },
-        select: { organizationVersionId: true, role: true, status: true, updatedAt: true },
+        select: { activationRequestedAt: true, organizationVersionId: true, role: true, status: true },
       }),
       transaction.account.count({
         where: { organizationVersionId, status: UserStatus.ACTIVE },
@@ -114,10 +114,11 @@ export const handoffOrganizationActivationReservation = async (
       !currentAccount ||
       currentAccount.organizationVersionId !== organizationVersionId ||
       !reservedAccount ||
+      !reservedAccount.activationRequestedAt ||
       reservedAccount.organizationVersionId !== organizationVersionId ||
       reservedAccount.status === UserStatus.ACTIVE ||
       reservedAccount.role !== reservedRole ||
-      reservedAccount.updatedAt.getTime() !== reservedUpdatedAt.getTime() ||
+      reservedAccount.activationRequestedAt.getTime() !== reservedActivationRequestedAt.getTime() ||
       activeAccountsCount > 0
     ) {
       return false
@@ -131,6 +132,7 @@ export const handoffOrganizationActivationReservation = async (
         formationName: null,
         formationStartDate: null,
         importedFileDate: null,
+        activationRequestedAt: null,
         organizationVersion: { disconnect: true },
         role: Role.DEFAULT,
         status: UserStatus.IMPORTED,

@@ -27,7 +27,6 @@ import { addSite } from '@/db/site'
 import type { FullStudy } from '@/db/study'
 import {
   addUser,
-  changeStatus,
   createOrUpdateUserCheckedStep,
   deleteUserFromOrga,
   finalizeUserChecklist,
@@ -149,7 +148,7 @@ const handoffExpiredOrganizationActivation = async (account: AccountWithUser) =>
   }
 
   const activationExpiresAt =
-    new Date(activationReservation.updatedAt).getTime() + ACTIVATION_RESERVATION_WINDOW_IN_MS
+    new Date(activationReservation.activationRequestedAt).getTime() + ACTIVATION_RESERVATION_WINDOW_IN_MS
 
   if (activationExpiresAt > Date.now()) {
     throw new Error(ORGANIZATION_ACTIVATION_IN_PROGRESS)
@@ -160,7 +159,7 @@ const handoffExpiredOrganizationActivation = async (account: AccountWithUser) =>
     account.organizationVersionId || '',
     activationReservation.id,
     activationReservation.role,
-    activationReservation.updatedAt,
+    activationReservation.activationRequestedAt,
   )
 
   if (!handoffSucceeded) {
@@ -412,12 +411,16 @@ export const activateEmail = async (email: string, userEnv: Environment, fromRes
         `${user.firstName} ${user.lastName}`,
       )
 
-      await changeStatus(account.id, UserStatus.PENDING_REQUEST)
+      await updateAccount(account.id, {
+        status: UserStatus.PENDING_REQUEST,
+        activationRequestedAt: null,
+      })
 
       return REQUEST_SENT
     } else {
       await handoffExpiredOrganizationActivation(account)
       await validateUser(account.id)
+      await updateAccount(account.id, { activationRequestedAt: new Date() })
       await sendActivation(email, fromReset, env)
 
       return EMAIL_SENT
@@ -733,6 +736,7 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
       return REQUEST_SENT
     } else {
       await validateUser(account.id)
+      await updateAccount(account.id, { activationRequestedAt: new Date() })
       await sendActivation(trimmedEmail, false, environment)
     }
     return EMAIL_SENT
@@ -844,6 +848,7 @@ export const signUpWithSchool = async (email: string, country: Country, school: 
       return REQUEST_SENT
     } else {
       await validateUser(account.id)
+      await updateAccount(account.id, { activationRequestedAt: new Date() })
       await sendActivation(trimmedEmail, false, environment)
     }
     return EMAIL_SENT
