@@ -235,27 +235,29 @@ export const canChangeOpeningHours = async (user: UserSession, study: FullStudy)
   return canEditStudy(user, study)
 }
 
-export const NEWGetAccountRoleOnStudy = (user: UserSession, minimalStudy: MinimalStudyForRights) => {
+// Do not export this method directly, should go through NEWGetAccountRoleOnStudy
+const getRoleIfHasAccess = (user: UserSession, minimalStudy: MinimalStudyForRights, overrideRole?: StudyRole) => {
   if (isTiltSimplified(minimalStudy.organizationVersion.environment, minimalStudy.simplified)) {
     return StudyRole.Editor
   }
+
+  return hasSufficientLevel(user.level, minimalStudy.level) && hasActiveLicence(minimalStudy.organizationVersion)
+    ? (overrideRole ?? StudyRole.Validator)
+    : StudyRole.Reader
+}
+
+export const NEWGetAccountRoleOnStudy = (user: UserSession, minimalStudy: MinimalStudyForRights): StudyRole | null => {
   if (isAdminOnStudyOrga(user, minimalStudy.organizationVersion)) {
-    return hasSufficientLevel(user.level, minimalStudy.level) && hasActiveLicence(minimalStudy.organizationVersion)
-      ? StudyRole.Validator
-      : StudyRole.Reader
+    return getRoleIfHasAccess(user, minimalStudy)
   }
 
   const right = minimalStudy.allowedUsers.find((right) => right.account.id === user.accountId)
   if (right) {
-    return hasSufficientLevel(user.level, minimalStudy.level) && hasActiveLicence(minimalStudy.organizationVersion)
-      ? right.role
-      : StudyRole.Reader
+    return getRoleIfHasAccess(user, minimalStudy, right.role)
   }
 
   if (minimalStudy.isPublic && isInOrgaOrParent(user.organizationVersionId, minimalStudy.organizationVersion)) {
-    return hasActiveLicence(minimalStudy.organizationVersion)
-      ? getUserRoleOnPublicStudy(user, minimalStudy.level)
-      : StudyRole.Reader
+    return getRoleIfHasAccess(user, minimalStudy, getUserRoleOnPublicStudy(user, minimalStudy.level))
   }
 
   return null

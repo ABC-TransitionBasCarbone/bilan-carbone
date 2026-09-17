@@ -55,6 +55,8 @@ jest.mock('../../db/study', () => ({
   updateStudyEmissionFactorVersion: jest.fn(),
   createContributorOnStudy: jest.fn(),
   createEmissionSourceTags: jest.fn(),
+  updateUserOnStudy: jest.fn(),
+  getMinimalStudyForRights: jest.fn(),
 }))
 const mockTransaction = {
   site: {
@@ -76,6 +78,7 @@ jest.mock('../../services/permissions/study', () => ({
   canDuplicateStudy: jest.fn(),
   canChangeSites: jest.fn(),
   canChangeDates: jest.fn(),
+  canAddRightOnStudy: jest.fn(),
 }))
 jest.mock('../../services/permissions/study.utils', () => ({
   isAdminOnStudyOrga: jest.fn(),
@@ -102,6 +105,8 @@ jest.mock('../../db/account', () => ({
 }))
 jest.mock('../../services/serverFunctions/user', () => ({
   addUserChecklistItem: jest.fn(),
+  sendInvitation: jest.fn(),
+  getUserActiveAccounts: jest.fn(),
 }))
 jest.mock('../../utils/serverResponse', () => ({
   withServerResponse: jest.fn(async (_name, fn) => {
@@ -128,6 +133,15 @@ jest.mock('../../utils/user', () => ({
 }))
 jest.mock('../../utils/organization', () => ({
   canEditOrganizationVersion: jest.fn(),
+  hasActiveLicence: jest.fn(() => true),
+  isInOrgaOrParent: jest.fn((userOrganizationVersionId, organizationVersion) => {
+    if (!userOrganizationVersionId || !organizationVersion) {
+      return false
+    }
+    return (
+      userOrganizationVersionId === organizationVersion.id || userOrganizationVersionId === organizationVersion.parentId
+    )
+  }),
 }))
 jest.mock('../../utils/number', () => ({
   CA_UNIT_VALUES: { K: 1000, M: 1000000 },
@@ -194,7 +208,10 @@ const mockCreateStudy = studyDbModule.createStudy as jest.Mock
 const mockUpdateStudyEmissionFactorVersion = studyDbModule.updateStudyEmissionFactorVersion as jest.Mock
 const mockCreateContributorOnStudy = studyDbModule.createContributorOnStudy as jest.Mock
 const mockCreateEmissionSourceTags = studyDbModule.createEmissionSourceTags as jest.Mock
+const mockUpdateUserOnStudy = studyDbModule.updateUserOnStudy as jest.Mock
+const mockGetMinimalStudyForRights = studyDbModule.getMinimalStudyForRights as jest.Mock
 const mockAddUserChecklistItem = userModule.addUserChecklistItem as jest.Mock
+const mockSendInvitation = userModule.sendInvitation as jest.Mock
 const mockGetOrganizationVersionById = organizationModule.getOrganizationVersionById as jest.Mock
 const mockGetOrgSitesWithCNCByOrgVersionId = organizationModule.getOrgSitesWithCNCByOrgVersionId as jest.Mock
 const mockGetUserByEmail = userDbModule.getUserByEmail as jest.Mock
@@ -207,6 +224,7 @@ const mockGetAccountRoleOnStudy = studyUtilsModule.getAccountRoleOnStudy as jest
 const mockHasSufficientLevel = studyUtilsModule.hasSufficientLevel as jest.Mock
 const mockCanCreateSpecificStudy = studyPermissionsModule.canCreateSpecificStudy as jest.Mock
 const mockCanDuplicateStudy = studyPermissionsModule.canDuplicateStudy as jest.Mock
+const mockCanAddRightOnStudy = studyPermissionsModule.canAddRightOnStudy as jest.Mock
 const mockGetEmissionFactorsImportActiveVersion =
   emissionFactorsModule.getEmissionFactorsImportActiveVersion as jest.Mock
 const mockIsAdmin = userUtilsModule.isAdmin as unknown as jest.Mock
