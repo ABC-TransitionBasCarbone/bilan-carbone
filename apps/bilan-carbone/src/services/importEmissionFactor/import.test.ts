@@ -1,6 +1,20 @@
-import { EmissionFactorBase, EmissionFactorStatus, Environment, Import, SubPost, Unit } from '@abc-transitionbascarbone/db-common/enums'
+import {
+  EmissionFactorBase,
+  EmissionFactorStatus,
+  Environment,
+  Import,
+  SubPost,
+  Unit,
+} from '@abc-transitionbascarbone/db-common/enums'
 import { expect } from '@jest/globals'
-import { getBaseFunc, getEmissionFactorOverrideData, getSubPosts, ImportEmissionFactor, isSourceForEnv } from './import'
+import {
+  getBaseFunc,
+  getEmissionFactorOverrideData,
+  getEmissionFactorPartOverrideData,
+  getSubPosts,
+  ImportEmissionFactor,
+  isSourceForEnv,
+} from './import'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('../file', () => ({ download: jest.fn() }))
@@ -241,6 +255,77 @@ describe('import Service', () => {
               location: 'Paris',
               comment: 'Comment EN',
             }),
+          }),
+        ]),
+      })
+    })
+  })
+
+  describe('getEmissionFactorPartOverrideData', () => {
+    it('should reuse the part import mapping for all non-identifier part fields', () => {
+      const partRow: ImportEmissionFactor = {
+        "Identifiant_de_l'élément": '48818',
+        "Statut_de_l'élément": 'Valide générique',
+        Type_Ligne: 'Poste',
+        Source: 'Source override',
+        Type_poste: 'Amont',
+        Localisation_géographique: 'France',
+        'Sous-localisation_géographique_français': '',
+        'Sous-localisation_géographique_anglais': '',
+        Commentaire_français: '',
+        Commentaire_anglais: '',
+        Nom_poste_français: 'Nom poste FR',
+        Nom_poste_anglais: 'Part name EN',
+        Unité_français: 'kg',
+        Unité_anglais: 'kg',
+        Tags_français: '',
+        Tags_anglais: '',
+        Nom_attribut_français: '',
+        Nom_attribut_anglais: '',
+        Nom_base_français: 'Nom FR',
+        Nom_base_anglais: 'Name EN',
+        Nom_frontière_français: '',
+        Nom_frontière_anglais: '',
+        Total_poste_non_décomposé: 20,
+        CO2b: 1,
+        CH4f: 2,
+        CH4b: 3,
+        Autres_GES: 4,
+        N2O: 5,
+        CO2f: 6,
+        Incertitude: 0,
+        Qualité: 0,
+        Qualité_TeR: 0,
+        Qualité_GR: 0,
+        Qualité_TiR: 0,
+        Qualité_C: 0,
+        Code_gaz_supplémentaire_1: 'SF6',
+        Valeur_gaz_supplémentaire_1: 7,
+        Code_gaz_supplémentaire_2: '',
+        Valeur_gaz_supplémentaire_2: 0,
+      }
+
+      const overrideData = getEmissionFactorPartOverrideData(partRow, 'part-id')
+
+      expect(overrideData).not.toHaveProperty('type')
+      expect(overrideData.totalCo2).toBe(24)
+      expect(overrideData.co2b).toBe(1)
+      expect(overrideData.ch4f).toBe(2)
+      expect(overrideData.ch4b).toBe(3)
+      expect(overrideData.n2o).toBe(5)
+      expect(overrideData.co2f).toBe(6)
+      expect(overrideData.sf6).toBe(7)
+      expect(overrideData.otherGES).toBe(4)
+      expect(overrideData.overrideRawCsv).toContain('Type_poste')
+      expect(overrideData.metaData).toEqual({
+        updateMany: expect.arrayContaining([
+          expect.objectContaining({
+            where: { emissionFactorPartId: 'part-id', language: 'fr' },
+            data: { title: 'Nom poste FR' },
+          }),
+          expect.objectContaining({
+            where: { emissionFactorPartId: 'part-id', language: 'en' },
+            data: { title: 'Part name EN' },
           }),
         ]),
       })

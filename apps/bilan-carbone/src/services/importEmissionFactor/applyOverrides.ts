@@ -1,7 +1,7 @@
 import { Import } from '@abc-transitionbascarbone/db-common/enums'
 import { MIN, TIME_IN_MS } from '@abc-transitionbascarbone/utils'
 import { prismaClient } from '../../db/client.server'
-import { getEmissionFactorOverrideData, getGases, getType, ImportEmissionFactor, serializeRowAsCsv } from './import'
+import { getEmissionFactorOverrideData, getEmissionFactorPartOverrideData, getType, ImportEmissionFactor } from './import'
 
 export const applyOverridesFromRows = async (source: Import, rows: ImportEmissionFactor[], dryRun = false) => {
   const efRows = rows.filter((r) => r.Type_Ligne !== 'Poste')
@@ -67,30 +67,9 @@ export const applyOverridesFromRows = async (source: Import, rows: ImportEmissio
           continue
         }
 
-        const gases = getGases(partRow)
-        const metaData: { title: string; language: string }[] = []
-        if (partRow.Nom_poste_français) {
-          metaData.push({ title: partRow.Nom_poste_français, language: 'fr' })
-        }
-        if (partRow.Nom_poste_anglais) {
-          metaData.push({ title: partRow.Nom_poste_anglais, language: 'en' })
-        }
-
         await transaction.emissionFactorPart.update({
           where: { id: existingPart.id },
-          data: {
-            ...gases,
-            overrideRawCsv: serializeRowAsCsv(partRow),
-            metaData:
-              metaData.length > 0
-                ? {
-                    updateMany: metaData.map((m) => ({
-                      where: { emissionFactorPartId: existingPart.id, language: m.language },
-                      data: { title: m.title },
-                    })),
-                  }
-                : undefined,
-          },
+          data: getEmissionFactorPartOverrideData(partRow, existingPart.id),
         })
       }
 

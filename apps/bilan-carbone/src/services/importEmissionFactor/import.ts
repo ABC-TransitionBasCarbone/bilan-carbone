@@ -542,6 +542,43 @@ export const getEmissionFactorOverrideData = (
   }
 }
 
+const mapEmissionFactorPart = (part: ImportEmissionFactor) => {
+  const metaData: { title: string; language: string }[] = []
+  if (part.Nom_poste_français) {
+    metaData.push({ title: part.Nom_poste_français, language: 'fr' })
+  }
+  if (part.Nom_poste_anglais) {
+    metaData.push({ title: part.Nom_poste_anglais, language: 'en' })
+  }
+
+  return {
+    ...getGases(part),
+    type: getType(part.Type_poste),
+    metaData,
+  }
+}
+
+export const getEmissionFactorPartOverrideData = (
+  part: ImportEmissionFactor,
+  emissionFactorPartId: string,
+): Prisma.EmissionFactorPartUpdateInput => {
+  const { type: _type, metaData, ...mappedPart } = mapEmissionFactorPart(part)
+
+  return {
+    ...mappedPart,
+    overrideRawCsv: serializeRowAsCsv(part),
+    metaData:
+      metaData.length > 0
+        ? {
+            updateMany: metaData.map((meta) => ({
+              where: { emissionFactorPartId, language: meta.language },
+              data: { title: meta.title },
+            })),
+          }
+        : undefined,
+  }
+}
+
 export const saveEmissionFactorsParts = async (
   transaction: Prisma.TransactionClient,
   importedIdToEfId: Map<string, string>,
@@ -573,20 +610,13 @@ export const saveEmissionFactorsParts = async (
       continue
     }
 
-    const metaData = []
-    if (part.Nom_poste_français) {
-      metaData.push({ title: part.Nom_poste_français, language: 'fr' })
-    }
-    if (part.Nom_poste_anglais) {
-      metaData.push({ title: part.Nom_poste_anglais, language: 'en' })
-    }
+    const mappedPart = mapEmissionFactorPart(part)
 
     const data = {
-      ...getGases(part),
+      ...mappedPart,
       emissionFactor: { connect: { id: emissionFactorId } },
-      type: getType(part.Type_poste),
       importedRawCsv: serializeRowAsCsv(part),
-      metaData: metaData.length > 0 ? { createMany: { data: metaData } } : undefined,
+      metaData: mappedPart.metaData.length > 0 ? { createMany: { data: mappedPart.metaData } } : undefined,
     } satisfies Prisma.EmissionFactorPartCreateInput
 
     await transaction.emissionFactorPart.create({ data })
