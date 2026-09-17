@@ -54,7 +54,7 @@ const GHGPResultsTable = ({ study, withDepValue, data, base }: Props) => {
         },
         { header: 'CO2', accessorKey: 'co2', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
         { header: 'CH4', accessorKey: 'ch4', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
-        { header: 'N20', accessorKey: 'n2o', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
+        { header: 'N2O', accessorKey: 'n2o', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
         { header: 'HFC', accessorKey: 'hfc', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
         { header: 'PFC', accessorKey: 'pfc', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
         { header: 'SF6', accessorKey: 'sf6', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
