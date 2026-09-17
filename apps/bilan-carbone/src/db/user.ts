@@ -123,7 +123,7 @@ export const updateUserPasswordForEmail = async (email: string, password: string
         ),
       prismaClient.account.update({
         where: { userId_environment: { userId: user.id, environment: env } },
-        data: { status: UserStatus.ACTIVE },
+        data: { activationRequestedAt: null, status: UserStatus.ACTIVE },
       }),
     ])
   }

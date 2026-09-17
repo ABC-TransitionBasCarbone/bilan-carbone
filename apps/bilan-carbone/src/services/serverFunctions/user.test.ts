@@ -181,7 +181,7 @@ describe('signUpWithSiretOrCNC', () => {
           id: 'reserved-account-id',
           role: Role.GESTIONNAIRE,
           status: UserStatus.VALIDATED,
-          updatedAt: new Date(),
+          activationRequestedAt: new Date(),
           user: { email: 'reserved@example.com', firstName: 'Reserved', lastName: 'User' },
         },
       ])
@@ -226,7 +226,7 @@ describe('signUpWithSiretOrCNC', () => {
           id: 'expired-account-id',
           role: Role.GESTIONNAIRE,
           status: UserStatus.VALIDATED,
-          updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+          activationRequestedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
           user: { email: 'expired@example.com', firstName: 'Expired', lastName: 'User' },
         },
       ])
@@ -246,7 +246,9 @@ describe('signUpWithSiretOrCNC', () => {
         Role.GESTIONNAIRE,
         expect.any(Date),
       )
-      expect(mockUpdateAccount).not.toHaveBeenCalled()
+      expect(mockUpdateAccount).toHaveBeenCalledWith(mockedAccountId, {
+        activationRequestedAt: expect.any(Date),
+      })
       expect(mockValidateUser).toHaveBeenCalledWith(mockedAccountId)
     })
 
@@ -280,7 +282,7 @@ describe('signUpWithSiretOrCNC', () => {
           id: 'expired-admin-account-id',
           role: Role.ADMIN,
           status: UserStatus.VALIDATED,
-          updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+          activationRequestedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
           user: { email: 'expired-admin@example.com', firstName: 'Expired', lastName: 'Admin' },
         },
       ])
@@ -300,7 +302,9 @@ describe('signUpWithSiretOrCNC', () => {
         Role.ADMIN,
         expect.any(Date),
       )
-      expect(mockUpdateAccount).not.toHaveBeenCalled()
+      expect(mockUpdateAccount).toHaveBeenCalledWith(mockedAccountId, {
+        activationRequestedAt: expect.any(Date),
+      })
       expect(mockValidateUser).toHaveBeenCalledWith(mockedAccountId)
     })
 
@@ -334,7 +338,7 @@ describe('signUpWithSiretOrCNC', () => {
           id: 'expired-account-id',
           role: Role.GESTIONNAIRE,
           status: UserStatus.VALIDATED,
-          updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+          activationRequestedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
           user: { email: 'expired@example.com', firstName: 'Expired', lastName: 'User' },
         },
       ])
