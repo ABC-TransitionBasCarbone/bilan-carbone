@@ -2,6 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "plugins": [],
+    "types": ["node", "jest"],
     "paths": {
       "@abc-transitionbascarbone/css": ["../../packages/css/index.ts"]
     }
