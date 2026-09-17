@@ -25,9 +25,7 @@ import authStyles from './Auth.module.css'
 
 const SignUpFormCut = () => {
   const contactMail = getEnvVarClient('SUPPORT_EMAIL', Environment.CUT)
-  const faq = getEnvVarClient('FAQ_LINK', Environment.CUT)
-
-  const t = useTranslations('signup')
+  const t = useTranslations()
   const tForm = useTranslations('login.form')
   const [submitting, setSubmitting] = useState(false)
   const [message, setMessage] = useState('')
@@ -93,21 +91,21 @@ const SignUpFormCut = () => {
           control={control}
           name="email"
           className={authStyles.input}
-          label={t('email')}
-          placeholder={t('emailPlaceholder')}
+          label={t('signup.email')}
+          placeholder={t('signup.emailPlaceholder')}
           data-testid="activation-email"
         />
         <FormAutocomplete
           data-testid="activation-siretOrCNC"
           control={control}
-          translation={t}
+          translation={(slug) => t(`signup.${slug}`)}
           options={cncs.map((cnc) => ({
             label: `${cnc.nom} (Dep : ${cnc.dep} | Numéro CNC : ${cnc.cncCode})`,
             value: cnc.cncCode ?? '',
           }))}
           name="siretOrCNC"
-          label={t('siretOrCNC')}
-          helperText={t('siretOrCNCPlaceholder')}
+          label={t('signup.siretOrCNC')}
+          helperText={t('signup.siretOrCNCPlaceholder')}
           freeSolo
           disableClearable
           onInputChange={(_, value) => {
@@ -116,18 +114,18 @@ const SignUpFormCut = () => {
           }}
         />
         <LoadingButton data-testid="activation-button" type="submit" loading={submitting} variant="contained" fullWidth>
-          {t('validate')}
+          {t('signup.validate')}
         </LoadingButton>
         {message && (
           <p className={classNames(!success ? 'error' : '')} data-testid="activation-form-message">
-            {customRich(t, message, {
-              support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
-              link: (children) => (
-                <Link href={faq} target="_blank" rel="noreferrer noopener">
-                  {children}
-                </Link>
-              ),
-            })}
+            {customRich(
+              t,
+              `signup.${message}`,
+              {
+                support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
+              },
+              Environment.CUT,
+            )}
           </p>
         )}
         <div className={authStyles.bottomLink}>

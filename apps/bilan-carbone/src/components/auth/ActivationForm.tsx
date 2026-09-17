@@ -24,9 +24,7 @@ interface Props {
 
 const ActivationForm = ({ environment = Environment.BC }: Props) => {
   const contactMail = getEnvVarClient('SUPPORT_EMAIL', environment)
-  const faq = getEnvVarClient('FAQ_LINK', environment)
-
-  const t = useTranslations('activation')
+  const t = useTranslations()
   const [submitting, setSubmitting] = useState(false)
   const [message, setMessage] = useState('')
   const [success, setSuccess] = useState(false)
@@ -69,29 +67,29 @@ const ActivationForm = ({ environment = Environment.BC }: Props) => {
   return (
     <Form onSubmit={handleSubmit(onSubmit)} className="grow justify-center">
       <FormControl className={authStyles.form}>
-        <p>{t('description')}</p>
+        <p>{t('activation.description')}</p>
         <FormTextField
           control={control}
           name="email"
           className={authStyles.input}
-          label={t('email')}
-          placeholder={t('emailPlaceholder')}
+          label={t('activation.email')}
+          placeholder={t('activation.emailPlaceholder')}
           data-testid="activation-email"
           trim
         />
         <LoadingButton data-testid="activation-button" type="submit" loading={submitting} fullWidth>
-          {t('validate')}
+          {t('activation.validate')}
         </LoadingButton>
         {message && (
           <p className={classNames(!success ? 'error' : '')} data-testid="activation-form-message">
-            {customRich(t, message, {
-              support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
-              link: (children) => (
-                <Link href={faq} target="_blank" rel="noreferrer noopener">
-                  {children}
-                </Link>
-              ),
-            })}
+            {customRich(
+              t,
+              `activation.${message}`,
+              {
+                support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
+              },
+              environment,
+            )}
           </p>
         )}
       </FormControl>

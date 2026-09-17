@@ -21,9 +21,7 @@ import authStyles from './Auth.module.css'
 
 const SignUpFormTilt = () => {
   const contactMail = getEnvVarClient('SUPPORT_EMAIL', Environment.TILT)
-  const faq = getEnvVarClient('FAQ_LINK', Environment.TILT)
-
-  const t = useTranslations('signup')
+  const t = useTranslations()
   const tForm = useTranslations('login.form')
   const [submitting, setSubmitting] = useState(false)
   const [message, setMessage] = useState('')
@@ -70,31 +68,31 @@ const SignUpFormTilt = () => {
           control={control}
           name="email"
           className={authStyles.input}
-          label={t('email')}
-          placeholder={t('emailPlaceholder')}
+          label={t('signup.email')}
+          placeholder={t('signup.emailPlaceholder')}
           data-testid="activation-email"
         />
         <FormTextField
           control={control}
           name="siret"
           className={authStyles.input}
-          label={t('siret')}
-          placeholder={t('siretPlaceholder')}
+          label={t('signup.siret')}
+          placeholder={t('signup.siretPlaceholder')}
           data-testid="activation-siret"
         />
         <LoadingButton data-testid="activation-button" type="submit" loading={submitting} variant="contained" fullWidth>
-          {t('validate')}
+          {t('signup.validate')}
         </LoadingButton>
         {message && (
           <p className={classNames(!success ? 'error' : '')} data-testid="activation-form-message">
-            {customRich(t, message, {
-              support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
-              link: (children) => (
-                <Link href={faq} target="_blank" rel="noreferrer noopener">
-                  {children}
-                </Link>
-              ),
-            })}
+            {customRich(
+              t,
+              `signup.${message}`,
+              {
+                support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
+              },
+              Environment.TILT,
+            )}
           </p>
         )}
         <div className={authStyles.bottomLink}>
