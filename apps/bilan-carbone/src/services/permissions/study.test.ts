@@ -777,7 +777,6 @@ describe('Study permissions service', () => {
     })
 
     it('should return reader if user is in allowedUser but does not have sufficient level', () => {
-      console.log('HEEEEEEERE')
       const minimalStudy = getMockedMinimalStudy({
         level: Level.Advanced,
         organizationVersion: { id: 'other-orga', environment: Environment.BC },

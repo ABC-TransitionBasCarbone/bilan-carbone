@@ -18,7 +18,7 @@ jest.mock('@/services/permissions/study', () => ({
   canReadStudyDetail: jest.fn(),
 }))
 
-function NotFoundComponent() {
+const NotFoundComponent = () => {
   return <div>not-found</div>
 }
 
