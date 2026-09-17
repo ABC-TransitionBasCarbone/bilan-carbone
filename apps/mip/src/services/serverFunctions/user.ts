@@ -35,6 +35,7 @@ import { EMAIL_SENT, MORE_THAN_ONE, NOT_AUTHORIZED } from '@abc-transitionbascar
 import { updateUserResetToken } from '@abc-transitionbascarbone/services/serverFunctions/user'
 import { AddMemberCommand } from '@abc-transitionbascarbone/services/serverFunctions/user.command'
 import { DAY, HOUR, TIME_IN_MS } from '@abc-transitionbascarbone/utils'
+import { generateResetToken, hashResetToken } from '@abc-transitionbascarbone/utils/user.server'
 import jwt from 'jsonwebtoken'
 import { dbActualizedAuth } from '../auth'
 import { canAddMember, canChangeRole, canDeleteMember } from '../permissions/user'
@@ -46,14 +47,14 @@ export const resetPassword = async (email: string) =>
       throw new Error(`No user found with email ${email}`)
     } else {
       if (user) {
-        const resetToken = Math.random().toString(36)
+        const resetToken = generateResetToken()
         const payload = {
           email,
           resetToken,
           exp: Math.round(Date.now() / TIME_IN_MS) + HOUR, // 1 hour expiration
         }
         const token = jwt.sign(payload, process.env.NEXTAUTH_SECRET as string)
-        await updateUserResetTokenForEmail(email, resetToken)
+        await updateUserResetTokenForEmail(email, hashResetToken(resetToken))
         await sendResetPassword(email, token)
       }
     }

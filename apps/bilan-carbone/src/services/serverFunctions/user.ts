@@ -79,6 +79,7 @@ import { updateUserResetToken } from '@abc-transitionbascarbone/services/serverF
 import { AddMemberCommand } from '@abc-transitionbascarbone/services/serverFunctions/user.command'
 import { DAY, HOUR, MIN, TIME_IN_MS, YEAR } from '@abc-transitionbascarbone/utils'
 import { environmentsWithChecklist } from '@abc-transitionbascarbone/utils/environments'
+import { generateResetToken, hashResetToken } from '@abc-transitionbascarbone/utils/user.server'
 import jwt from 'jsonwebtoken'
 import { UserSession } from 'next-auth'
 import { getCompanyName, getValidAssociationNameBySiret } from '../associationApi'
@@ -317,7 +318,7 @@ export const resetPassword = async (email: string, userEnv: Environment | undefi
       }
     } else {
       if (user) {
-        const resetToken = Math.random().toString(36)
+        const resetToken = generateResetToken()
         const payload = {
           email,
           resetToken,
@@ -325,7 +326,7 @@ export const resetPassword = async (email: string, userEnv: Environment | undefi
         }
 
         const token = jwt.sign(payload, process.env.NEXTAUTH_SECRET as string)
-        await updateUserResetTokenForEmail(email, resetToken)
+        await updateUserResetTokenForEmail(email, hashResetToken(resetToken))
         await sendResetPassword(email, token, env)
       }
     }
