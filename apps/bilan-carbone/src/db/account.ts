@@ -75,6 +75,19 @@ export const getAccountsFromOrganization = (organizationVersionId: string) =>
     orderBy: { user: { email: 'asc' } },
   })
 
+export const getAccountsFromOrganizationForActivation = (organizationVersionId: string) =>
+  prismaClient.account.findMany({
+    select: {
+      id: true,
+      role: true,
+      status: true,
+      updatedAt: true,
+      user: { select: { email: true, firstName: true, lastName: true } },
+    },
+    where: { organizationVersionId },
+    orderBy: { updatedAt: 'desc' },
+  })
+
 export const addAccount = async (account: Prisma.AccountCreateInput & { role: Exclude<Role, 'SUPER_ADMIN'> }) => {
   const deactivatedFeaturesRestrictions = await getDeactivableFeatureRestrictions(DeactivatableFeature.Creation)
   if (
