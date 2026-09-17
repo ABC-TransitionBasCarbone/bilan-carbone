@@ -1,6 +1,6 @@
 import { updateUserResetTokenForEmail } from '@abc-transitionbascarbone/db-common/db'
 import { TIME_IN_MS } from '@abc-transitionbascarbone/utils'
-import { generateResetToken } from '@abc-transitionbascarbone/utils/user.server'
+import { generateResetToken, hashResetToken } from '@abc-transitionbascarbone/utils/user.server'
 import jwt from 'jsonwebtoken'
 
 export const updateUserResetToken = async (email: string, duration: number) => {
@@ -10,6 +10,6 @@ export const updateUserResetToken = async (email: string, duration: number) => {
     resetToken,
     exp: Math.round(Date.now() / TIME_IN_MS) + duration,
   }
-  await updateUserResetTokenForEmail(email, resetToken)
+  await updateUserResetTokenForEmail(email, hashResetToken(resetToken))
   return jwt.sign(payload, process.env.NEXTAUTH_SECRET as string)
 }
