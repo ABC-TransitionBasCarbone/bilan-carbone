@@ -18,8 +18,7 @@ interface Props {
   question: ReactNode
 }
 const PublicTiltPage = ({ children, question }: Props) => {
-  const t = useTranslations('login')
-  const linksT = useTranslations()
+  const t = useTranslations()
   const tLocale = useTranslations('locale')
   const tDocumentation = useTranslations('documentationUrlTilt')
   const [locale, setLocale] = useState<LocaleType>(defaultLocale)
@@ -35,13 +34,13 @@ const PublicTiltPage = ({ children, question }: Props) => {
     <PublicContainer>
       <div className={classNames(styles.info, 'flex-col grow p2 text-center gapped1')}>
         <div>
-          <p className="title-h4 mb1">{t('welcome')}</p>
-          <p className="title-h6 bold">{customRich(t, 'subtext')}</p>
+          <p className="title-h4 mb1">{t('login.welcome')}</p>
+          <p className="title-h6 bold">{customRich(t, 'login.subtext')}</p>
         </div>
         <p>
           {customRich(
             t,
-            'explanation',
+            'login.explanation',
             {
               link: (children) => (
                 <Link
@@ -55,7 +54,6 @@ const PublicTiltPage = ({ children, question }: Props) => {
               ),
             },
             Environment.TILT,
-            linksT,
           )}
         </p>
         <div className="flex-cc gapped1 w100 p1">

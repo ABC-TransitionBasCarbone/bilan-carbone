@@ -5,23 +5,19 @@ import { hasTranslatedLinks } from '@abc-transitionbascarbone/utils/environmentC
 import { getTranslations } from 'next-intl/server'
 
 export const getEnvironnementRessources = async (env: Environment, t: Translations) => {
-  const linksT = await getTranslations()
-  const openCarbonPracticeUrl = linksT('links.openCarbonPracticeUrl')
-  const contactFormUrl = hasTranslatedLinks(env) ? linksT('links.contactFormUrl') : ''
-  const faqUrl = hasTranslatedLinks(env) ? linksT('links.faqUrl') : ''
-  const methodologyUrl = linksT('links.methodologyUrl')
+  const linksT = await getTranslations('links')
   const supportEmail = await getEnvVar('SUPPORT_EMAIL', env)
 
   const commonRessources = [
     {
       title: t('questionMethodo'),
       links: [
-        { title: t('openCarbonPractice'), link: openCarbonPracticeUrl },
-        ...(contactFormUrl
+        { title: t('openCarbonPractice'), link: linksT('openCarbonPracticeUrl') },
+        ...(hasTranslatedLinks(env)
           ? [
               {
                 title: t('contacterViaFormulaire', { supportEmail }),
-                link: contactFormUrl,
+                link: linksT('contactFormUrl'),
                 isTranslated: true,
               },
             ]
@@ -31,7 +27,7 @@ export const getEnvironnementRessources = async (env: Environment, t: Translatio
     {
       title: t('questionTechnique'),
       links: [
-        ...(faqUrl ? [{ title: t('lireLaFAQ'), link: faqUrl }] : []),
+        ...(hasTranslatedLinks(env) ? [{ title: t('lireLaFAQ'), link: linksT('faqUrl') }] : []),
         {
           title: t('ecrireMail', { supportEmail }),
           link: `mailto:${supportEmail}`,
@@ -43,7 +39,7 @@ export const getEnvironnementRessources = async (env: Environment, t: Translatio
 
   const methodBC = {
     title: t('enSavoirPlusBilan'),
-    links: [{ title: t('methodeBilanCarbone'), link: methodologyUrl }],
+    links: [{ title: t('methodeBilanCarbone'), link: linksT('methodologyUrl') }],
   }
 
   switch (env) {
@@ -66,17 +62,13 @@ export const getEnvironnementRessources = async (env: Environment, t: Translatio
         methodBC,
       ]
     case Environment.CLICKSON: {
-      const guideDataCollectUrl = linksT('links.guideDataCollectUrl')
-      const modelsDataCollectUrl = linksT('links.modelsDataCollectUrl')
-      const classEarthUrl = linksT('links.classEarthUrl')
-
       return [
         {
           title: t('knowMoreDataCollect'),
           links: [
             {
               title: t('guideDataCollect'),
-              link: guideDataCollectUrl,
+              link: linksT('guideDataCollectUrl'),
             },
           ],
         },
@@ -86,7 +78,7 @@ export const getEnvironnementRessources = async (env: Environment, t: Translatio
           links: [
             {
               title: t('modelsDataCollect'),
-              link: modelsDataCollectUrl,
+              link: linksT('modelsDataCollectUrl'),
             },
           ],
         },
@@ -95,22 +87,20 @@ export const getEnvironnementRessources = async (env: Environment, t: Translatio
           links: [
             {
               title: t('classEarth'),
-              link: classEarthUrl,
+              link: linksT('classEarthUrl'),
             },
           ],
         },
       ]
     }
     case Environment.TILT: {
-      const sphereAssociativeUrl = linksT('links.sphereAssociativeUrl')
-
       return [
         {
           title: t('methodeAssociative'),
           links: [
             {
               title: t('sphereAssociative'),
-              link: sphereAssociativeUrl,
+              link: linksT('sphereAssociativeUrl'),
             },
           ],
         },
