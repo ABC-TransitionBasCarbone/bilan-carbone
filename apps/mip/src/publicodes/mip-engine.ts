@@ -1,4 +1,5 @@
-import { RULE_NAME_SEPARATOR, SURVEY_CATEGORY_KEYS } from '@abc-transitionbascarbone/publicodes/form/utils'
+import { SURVEY_CATEGORY_KEYS } from '@/constants/survey'
+import { RULE_NAME_SEPARATOR } from '@abc-transitionbascarbone/publicodes/form/utils'
 import { Question, Survey, SurveyResponse } from '@abc-transitionbascarbone/typeguards'
 import { isObject } from '@abc-transitionbascarbone/utils/object'
 import { normalizeCategoryKey } from '@abc-transitionbascarbone/utils/parsing'
