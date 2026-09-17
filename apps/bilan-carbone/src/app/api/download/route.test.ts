@@ -1,3 +1,5 @@
+import type { NextRequest } from 'next/server'
+
 import { GET } from './route'
 
 class MockResponse {
@@ -63,7 +65,7 @@ describe('GET /api/download', () => {
       'http://localhost/api/download?url=https://evil.example.com/private.pdf&fileName=evil.pdf',
     )
 
-    const response = await GET(req as any)
+    const response = await GET(req as unknown as NextRequest)
 
     expect(response.status).toBe(400)
     expect(await response.text()).toContain('Forbidden download source')
@@ -87,7 +89,7 @@ describe('GET /api/download', () => {
       `http://localhost/api/download?url=${encodeURIComponent(signedUrl)}&fileName=report.pdf`,
     )
 
-    const response = await GET(req as any)
+    const response = await GET(req as unknown as NextRequest)
 
     expect(fetchMock).toHaveBeenCalledWith(signedUrl, {
       redirect: 'error',
