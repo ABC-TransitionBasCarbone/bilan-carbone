@@ -518,10 +518,14 @@ export const getEmissionFactorOverrideData = (
   importedFrom: Import,
   emissionFactorId: string,
 ): Prisma.EmissionFactorUpdateInput => {
-  const { importedFrom: _importedFrom, importedId: _importedId, metaData, ...mappedEmissionFactor } = mapEmissionFactors(
-    emissionFactor,
-    importedFrom,
-  )
+  const {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    importedFrom: _importedFrom,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    importedId: _importedId,
+    metaData,
+    ...mappedEmissionFactor
+  } = mapEmissionFactors(emissionFactor, importedFrom)
 
   return {
     ...mappedEmissionFactor,
@@ -562,6 +566,7 @@ export const getEmissionFactorPartOverrideData = (
   part: ImportEmissionFactor,
   emissionFactorPartId: string,
 ): Prisma.EmissionFactorPartUpdateInput => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { type: _type, metaData, ...mappedPart } = mapEmissionFactorPart(part)
 
   return {
