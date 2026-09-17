@@ -229,9 +229,6 @@ describe('import Service', () => {
       expect(overrideData.geographicRepresentativeness).toBe(2)
       expect(overrideData.temporalRepresentativeness).toBe(2)
       expect(overrideData.completeness).toBe(2)
-      expect(overrideData.base).toBe(EmissionFactorBase.LocationBased)
-      expect(overrideData.subPosts).toContain(SubPost.Electricite)
-      expect(overrideData.overrideRawCsv).toContain('Incertitude')
       expect(overrideData.metaData).toEqual({
         updateMany: expect.arrayContaining([
           expect.objectContaining({

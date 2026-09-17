@@ -7995,7 +7995,6 @@ export const elementsBySubPost: Record<SubPost, string[]> = {
     '39620',
     '39621',
     '41591',
-    '23100',
     '41126',
     '40387',
     '41987',
