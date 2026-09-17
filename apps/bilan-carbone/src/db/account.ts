@@ -126,6 +126,11 @@ export const handoffOrganizationActivationReservation = async (
     await transaction.account.update({
       where: { id: reservedAccountId },
       data: {
+        feedbackDate: null,
+        formationEndDate: null,
+        formationName: null,
+        formationStartDate: null,
+        importedFileDate: null,
         organizationVersion: { disconnect: true },
         role: Role.DEFAULT,
         status: UserStatus.IMPORTED,

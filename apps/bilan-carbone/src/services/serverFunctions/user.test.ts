@@ -303,6 +303,51 @@ describe('signUpWithSiretOrCNC', () => {
       expect(mockUpdateAccount).not.toHaveBeenCalled()
       expect(mockValidateUser).toHaveBeenCalledWith(mockedAccountId)
     })
+
+    it('blocks activation when the transactional handoff loses the race', async () => {
+      mockGetUserByEmail.mockResolvedValue({
+        id: mockedUserId,
+        email: testEmail,
+        firstName: 'Test',
+        lastName: 'User',
+        accounts: [{ id: mockedAccountId, environment: Environment.CUT, status: UserStatus.PENDING_REQUEST }],
+      })
+      mockGetAccountById.mockResolvedValue({
+        id: mockedAccountId,
+        organizationVersionId: mockedOrganizationVersionId,
+        status: UserStatus.PENDING_REQUEST,
+        role: Role.DEFAULT,
+        user: {
+          id: mockedUserId,
+          email: testEmail,
+          firstName: 'Test',
+          lastName: 'User',
+        },
+      })
+      mockGetOrganizationVersionForRightsCheck.mockResolvedValue({
+        id: mockedOrganizationVersionId,
+        activatedLicence: [1],
+      })
+      mockOrganizationVersionActiveAccountsCount.mockResolvedValue(0)
+      mockGetAccountsFromOrganizationForActivation.mockResolvedValue([
+        {
+          id: 'expired-account-id',
+          role: Role.GESTIONNAIRE,
+          status: UserStatus.VALIDATED,
+          updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+          user: { email: 'expired@example.com', firstName: 'Expired', lastName: 'User' },
+        },
+      ])
+      mockHandoffOrganizationActivationReservation.mockResolvedValue(false)
+
+      const result = await actualActivateEmail(testEmail, Environment.CUT)
+
+      expect(result.success).toBe(false)
+      if (!result.success) {
+        expect(result.errorMessage).toBe(ORGANIZATION_ACTIVATION_IN_PROGRESS)
+      }
+      expect(mockValidateUser).not.toHaveBeenCalled()
+    })
   })
 
   describe('Account already exists scenarios', () => {
