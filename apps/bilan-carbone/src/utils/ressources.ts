@@ -53,9 +53,9 @@ export const getEnvironnementRessources = async (env: Environment, t: Translatio
 
   const feedbackRessource = feedbackFormUrl
     ? {
-      title: t('feedbackTitle'),
-      links: [{ title: t('feedbackLink'), link: feedbackFormUrl, testId: 'feedback-form-link' }],
-    }
+        title: t('feedbackTitle'),
+        links: [{ title: t('feedbackLink'), link: feedbackFormUrl, testId: 'feedback-form-link' }],
+      }
     : undefined
   const feedbackResources = feedbackRessource ? [feedbackRessource] : []
 
