@@ -117,4 +117,24 @@ describe('getEnvironnementRessources', () => {
 
     await expect(getFeedbackFormUrl(Environment.BC)).resolves.toBe('')
   })
+
+  test('uses the feedback Typeform ID when the configured feedback URL is still a placeholder', async () => {
+    jest.mocked(getEnvVar).mockImplementation(async (key) => {
+      if (key === 'FEEDBACK_FORM_URL') {
+        return '<feedback_form_url>'
+      }
+      if (key === 'FEEDBACK_TYPEFORM_ID') {
+        return 'abc123'
+      }
+      return ''
+    })
+
+    await expect(getFeedbackFormUrl(Environment.BC)).resolves.toBe('https://form.typeform.com/to/abc123')
+  })
+
+  test('returns an empty feedback URL when both the URL and Typeform ID are placeholders', async () => {
+    jest.mocked(getEnvVar).mockResolvedValue('<placeholder>')
+
+    await expect(getFeedbackFormUrl(Environment.BC)).resolves.toBe('')
+  })
 })

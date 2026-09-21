@@ -4,12 +4,23 @@ import { getEnvVar } from '@abc-transitionbascarbone/lib/environment'
 import { hasTranslatedLinks } from '@abc-transitionbascarbone/utils/environmentClient'
 import { getTranslations } from 'next-intl/server'
 
+const getTypeformUrl = (typeformId: string) => `https://form.typeform.com/to/${typeformId}`
+
+const isPlaceholder = (value: string) => value.startsWith('<') && value.endsWith('>')
+
 export const getFeedbackFormUrl = async (env: Environment) => {
   if (env === Environment.MIP) {
     return ''
   }
 
-  return getEnvVar('FEEDBACK_FORM_URL', env)
+  const feedbackFormUrl = await getEnvVar('FEEDBACK_FORM_URL', env)
+  if (feedbackFormUrl && !isPlaceholder(feedbackFormUrl)) {
+    return feedbackFormUrl
+  }
+
+  const typeformId = await getEnvVar('FEEDBACK_TYPEFORM_ID', env)
+
+  return typeformId && !isPlaceholder(typeformId) ? getTypeformUrl(typeformId) : ''
 }
 
 export const getEnvironnementRessources = async (env: Environment, t: Translations) => {
