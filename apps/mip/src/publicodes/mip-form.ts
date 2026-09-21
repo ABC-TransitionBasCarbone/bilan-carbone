@@ -1,11 +1,9 @@
 import { SURVEY_CATEGORY_KEYS } from '@/constants/survey'
-import { getEvaluatedFormLayout, mosaicLayout } from '@abc-transitionbascarbone/publicodes/form/layouts'
 import {
   getRuleCategoryKey,
   getRuleNameParts,
-  isMosaicLayoutAnswered,
+  getRuleSubCategoryKey,
   joinRuleNameParts,
-  RULE_NAME_SEPARATOR,
 } from '@abc-transitionbascarbone/publicodes/form/utils'
 import { normalizeCategoryKey } from '@abc-transitionbascarbone/utils/parsing'
 import { EvaluatedFormElement, FormPageElementProp, FormPages } from '@publicodes/forms'
@@ -24,7 +22,6 @@ type ParsedRule = {
 }
 
 type ParsedRules = Record<string, ParsedRule>
-type SurveySituation = Record<string, unknown>
 
 export const getMosaicParent = (engine: Engine, ruleName: string): string | null => {
   const rules = engine.getParsedRules() as ParsedRules
@@ -43,37 +40,9 @@ export const getMosaicParent = (engine: Engine, ruleName: string): string | null
   return null
 }
 
-const isInfoQuestion = (_rules: ParsedRules, _ruleName: string): boolean => {
-  return false
-}
-
 const getQuestionText = (rule: ParsedRule | undefined): string | undefined => {
   const question = rule?.rawNode?.question
   return typeof question === 'string' ? question : undefined
-}
-
-const hasAnswerOrChildAnswer = (engine: Engine, situation: SurveySituation, ruleName: string): boolean => {
-  if (Object.prototype.hasOwnProperty.call(situation, ruleName)) {
-    return true
-  }
-
-  const rawNode = (engine.getParsedRules() as ParsedRules)[ruleName]?.rawNode
-  const mosaicOptions = rawNode?.mosaique?.options
-
-  if (!Array.isArray(mosaicOptions) || mosaicOptions.length === 0) {
-    return false
-  }
-
-  const layout = getEvaluatedFormLayout(
-    engine,
-    mosaicLayout(
-      ruleName,
-      mosaicOptions.map((option) => `${ruleName}${RULE_NAME_SEPARATOR}${option}`),
-    ),
-    undefined,
-  )
-
-  return layout.type === 'mosaic' && isMosaicLayoutAnswered(layout)
 }
 
 const MAX = Number.MAX_SAFE_INTEGER
@@ -92,11 +61,6 @@ const getRuleOrder = (rawNode: ParsedRuleRawNode | undefined): number | null => 
   return null
 }
 
-const getRuleBranchKey = (ruleName: string): string => {
-  const parts = getRuleNameParts(ruleName)
-  return parts.length > 1 ? joinRuleNameParts(parts.slice(0, 2)) : ruleName
-}
-
 const compareRuleNames = (a: string, b: string, parsedRules: ParsedRules, initialIndexes: Map<string, number>) => {
   const aRoot = normalizeCategoryKey(getRuleCategoryKey(a))
   const bRoot = normalizeCategoryKey(getRuleCategoryKey(b))
@@ -108,12 +72,12 @@ const compareRuleNames = (a: string, b: string, parsedRules: ParsedRules, initia
     return categoryDiff
   }
 
-  const aBranch = getRuleBranchKey(a)
-  const bBranch = getRuleBranchKey(b)
+  const aBranch = getRuleSubCategoryKey(a)
+  const bBranch = getRuleSubCategoryKey(b)
   if (aBranch !== bBranch) {
     const branchIndexes = new Map<string, number>()
     for (const [ruleName, index] of initialIndexes) {
-      const branch = getRuleBranchKey(ruleName)
+      const branch = getRuleSubCategoryKey(ruleName)
       if (!branchIndexes.has(branch)) {
         branchIndexes.set(branch, index)
       }
@@ -153,22 +117,8 @@ const compareRuleNames = (a: string, b: string, parsedRules: ParsedRules, initia
 export const buildPageBuilder = (engine: Engine) => {
   return (fields: string[]): FormPages<string> => {
     const rules = engine.getParsedRules() as ParsedRules
-    const situation = (engine.getSituation() ?? {}) as SurveySituation
-    const extraInfoFields = Object.keys(rules).filter((ruleName) => {
-      if (!isInfoQuestion(rules, ruleName)) {
-        return false
-      }
-
-      if (fields.includes(ruleName) || fields.some((field) => field.startsWith(`${ruleName}${RULE_NAME_SEPARATOR}`))) {
-        return false
-      }
-
-      return !hasAnswerOrChildAnswer(engine, situation, ruleName)
-    })
-
-    const allFields = [...new Set([...fields, ...extraInfoFields])]
-    const initialIndexes = new Map(allFields.map((field, index) => [field, index]))
-    const sortedFields = allFields
+    const initialIndexes = new Map(fields.map((field, index) => [field, index]))
+    const sortedFields = fields
       .filter((field) => rules[field]?.rawNode?.question !== undefined)
       .sort((a, b) => compareRuleNames(a, b, rules, initialIndexes))
 

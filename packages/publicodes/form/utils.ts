@@ -1,7 +1,13 @@
 import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import { EvaluatedFormElement } from '@publicodes/forms'
-import Engine, { reduceAST, RuleNode, utils } from 'publicodes'
-import { EvaluatedFormLayout, EvaluatedGroupLayout, EvaluatedListLayout, EvaluatedMosaicLayout, EvaluatedTableLayout } from './layouts/evaluatedFormLayout'
+import { reduceAST, RuleNode, utils } from 'publicodes'
+import {
+  EvaluatedFormLayout,
+  EvaluatedGroupLayout,
+  EvaluatedListLayout,
+  EvaluatedMosaicLayout,
+  EvaluatedTableLayout,
+} from './layouts/evaluatedFormLayout'
 import { FormLayout } from './layouts/formLayout'
 
 export { getUpdatedSituationWithInputValue, situationsAreEqual } from '../utils'
@@ -71,6 +77,12 @@ export const getRuleParentName = (ruleName: string): string | null => {
 }
 
 export const getRuleCategoryKey = (ruleName: string): string => getRuleNameParts(ruleName)[0]
+
+// second-level grouping key, used to keep sibling questions together (e.g. "DT . voiture . km" -> "DT . voiture")
+export const getRuleSubCategoryKey = (ruleName: string): string => {
+  const parts = getRuleNameParts(ruleName)
+  return parts.length > 1 ? joinRuleNameParts(parts.slice(0, 2)) : ruleName
+}
 
 export const getCategoryClassSuffix = (categoryKey?: string | null): string => {
   if (!categoryKey) {
@@ -147,8 +159,9 @@ export const isMosaicLayoutAnswered = (layout: EvaluatedMosaicLayout<string>): b
   return layout.evaluatedChildren.some((el) => el.applicable && (el.answered || hasDefaultValue(el)))
 }
 
-
-export const evaluatedLayoutIsApplicable = <RuleName extends string>(layout: EvaluatedFormLayout<RuleName>): boolean => {
+export const evaluatedLayoutIsApplicable = <RuleName extends string>(
+  layout: EvaluatedFormLayout<RuleName>,
+): boolean => {
   switch (layout.type) {
     case 'input':
       return layout.evaluatedElement.applicable
@@ -199,4 +212,3 @@ const areReferencedInApplicability = <RuleName extends string>(
     currentNode,
   )
 }
-
