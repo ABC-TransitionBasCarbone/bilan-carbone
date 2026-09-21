@@ -1,4 +1,4 @@
-import { getAccountById } from '@/db/account'
+import { getAccountById, getAccountsFromUser } from '@/db/account'
 import { getUserByEmailWithSensibleInformations } from '@/db/user'
 import { AccountWithUser } from '@/types/account.types'
 import { Environment, Level, Role, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
@@ -7,6 +7,28 @@ import bcrypt from 'bcryptjs'
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession, NextAuthOptions, Session } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
+
+const switchAccount = async (accountId: string) => {
+  const session = await auth()
+
+  if (!session) {
+    throw new Error('User is not authenticated')
+  }
+
+  const accounts = await getAccountsFromUser(session.user)
+  const allUserAccounts = accounts.filter((account) => account.status === UserStatus.ACTIVE)
+  if (!allUserAccounts || !allUserAccounts || allUserAccounts.length === 0) {
+    throw new Error('No active accounts found for the user')
+  }
+
+  const newAccount = allUserAccounts.find((account) => account.id === accountId)
+
+  if (!newAccount) {
+    throw new Error(`Account with ID ${accountId} not found`)
+  }
+
+  return getAccountById(newAccount.id)
+}
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -29,9 +51,9 @@ export const authOptions: NextAuthOptions = {
         }
 
         const accountId = user.accountId
-        const account = accountId ? ((await getAccountById(accountId)) as AccountWithUser) : null
+        const account = accountId ? await getAccountById(accountId) : null
 
-        if (account) {
+        if (account && account.status === UserStatus.ACTIVE) {
           return {
             ...token,
             id: account.user.id,
@@ -46,33 +68,41 @@ export const authOptions: NextAuthOptions = {
             environment: account.environment,
             needsAccountSelection: false,
           }
+        } else {
+          return { sessionInvalid: true }
         }
       }
 
       if (trigger === 'update') {
-        const dbAccount = (await getAccountById(token.accountId as string)) as AccountWithUser
-
-        return dbAccount
-          ? {
-              ...token,
-              id: dbAccount.user.id,
-              userId: dbAccount.user.id,
-              accountId: dbAccount.id,
-              firstName: dbAccount.user.firstName,
-              lastName: dbAccount.user.lastName,
-              role: dbAccount?.role,
-              organizationVersionId: dbAccount?.organizationVersionId,
-              organizationId: '',
-              level: dbAccount.user.level,
-              environment: dbAccount?.organizationVersion?.environment,
-              needsAccountSelection: false,
-            }
-          : token
+        const dbAccount = await getAccountById(token.accountId as string)
+        if (dbAccount && dbAccount.status === UserStatus.ACTIVE && token.id === dbAccount.user.id) {
+          return {
+            ...token,
+            id: dbAccount.user.id,
+            userId: dbAccount.user.id,
+            accountId: dbAccount.id,
+            firstName: dbAccount.user.firstName,
+            lastName: dbAccount.user.lastName,
+            role: dbAccount?.role,
+            organizationVersionId: dbAccount?.organizationVersionId,
+            organizationId: '',
+            level: dbAccount.user.level,
+            environment: dbAccount?.organizationVersion?.environment,
+            needsAccountSelection: false,
+          }
+        } else {
+          return { sessionInvalid: true }
+        }
       }
 
       return token
     },
     async session({ session, token }) {
+      if (token.sessionInvalid) {
+        session = { ...session, sessionInvalid: true }
+        return session
+      }
+
       if (token.needsAccountSelection) {
         session.user = { ...session.user, userId: token.id as string, needsAccountSelection: true }
         return session
@@ -94,6 +124,7 @@ export const authOptions: NextAuthOptions = {
           needsAccountSelection: false,
         }
       }
+
       return session
     },
   },
@@ -112,7 +143,7 @@ export const authOptions: NextAuthOptions = {
         }
 
         const buildSession = (account: AccountWithUser) => {
-          if (!account) {
+          if (!account || account.status !== UserStatus.ACTIVE) {
             return null
           }
           return {
@@ -132,8 +163,13 @@ export const authOptions: NextAuthOptions = {
         }
 
         if (credentials.accountId) {
-          const account = (await getAccountById(credentials.accountId)) as AccountWithUser
-          return buildSession(account)
+          const updatedAccount = await switchAccount(credentials.accountId)
+
+          if (!updatedAccount) {
+            return null
+          }
+
+          return buildSession(updatedAccount)
         }
 
         const user = await getUserByEmailWithSensibleInformations(credentials.email)
@@ -162,7 +198,11 @@ export const authOptions: NextAuthOptions = {
         }
 
         // L'utilisateur n'a qu'un seul compte donc on peut prendre le premier
-        const account = (await getAccountById(accounts[0].id)) as AccountWithUser
+        const account = await getAccountById(accounts[0].id)
+
+        if (!account) {
+          return null
+        }
         return buildSession(account)
       },
     }),
@@ -183,7 +223,7 @@ export async function dbActualizedAuth(
     return null
   }
   const account = await getAccountById(session.user.accountId)
-  if (!account) {
+  if (!account || account.status !== UserStatus.ACTIVE) {
     return null
   }
   return {
