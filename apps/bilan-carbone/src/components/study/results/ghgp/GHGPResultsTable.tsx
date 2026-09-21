@@ -52,18 +52,58 @@ const GHGPResultsTable = ({ study, withDepValue, data, base }: Props) => {
             return rule.includes('.total') ? t('subTotal') : `${prefix} ${t(`post.${rule}`)}`
           },
         },
-        { header: 'CO2', accessorKey: 'co2', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
-        { header: 'CH4', accessorKey: 'ch4', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
-        { header: 'N20', accessorKey: 'n2o', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
+        {
+          header: (
+            <>
+              CO<sub>2</sub>
+            </>
+          ),
+          accessorKey: 'co2',
+          cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit),
+        },
+        {
+          header: (
+            <>
+              CH<sub>4</sub>
+            </>
+          ),
+          accessorKey: 'ch4',
+          cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit),
+        },
+        {
+          header: (
+            <>
+              N<sub>2</sub>O
+            </>
+          ),
+          accessorKey: 'n2o',
+          cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit),
+        },
         { header: 'HFC', accessorKey: 'hfc', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
         { header: 'PFC', accessorKey: 'pfc', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
-        { header: 'SF6', accessorKey: 'sf6', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
+        {
+          header: (
+            <>
+              SF<sub>6</sub>
+            </>
+          ),
+          accessorKey: 'sf6',
+          cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit),
+        },
         {
           header: t('total'),
           accessorKey: 'total',
           cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit),
         },
-        { header: 'CO2b', accessorKey: 'co2b', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
+        {
+          header: (
+            <>
+              CO<sub>2</sub>b
+            </>
+          ),
+          accessorKey: 'co2b',
+          cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit),
+        },
         {
           id: 'confidenceInterval',
           header: tStudyResults('confidenceIntervalTitle'),

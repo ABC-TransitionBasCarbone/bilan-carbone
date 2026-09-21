@@ -50,9 +50,33 @@ const BegesResultsTable = ({ study, withDepValue, data }: Props) => {
             return rule.includes('.total') ? t('subTotal') : `${rule}. ${t(`post.${rule}`)}`
           },
         },
-        { header: 'CO2', accessorKey: 'co2', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
-        { header: 'CH4', accessorKey: 'ch4', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
-        { header: 'N20', accessorKey: 'n2o', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
+        {
+          header: (
+            <>
+              CO<sub>2</sub>
+            </>
+          ),
+          accessorKey: 'co2',
+          cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit),
+        },
+        {
+          header: (
+            <>
+              CH<sub>4</sub>
+            </>
+          ),
+          accessorKey: 'ch4',
+          cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit),
+        },
+        {
+          header: (
+            <>
+              N<sub>2</sub>O
+            </>
+          ),
+          accessorKey: 'n2o',
+          cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit),
+        },
         {
           header: t('other'),
           accessorKey: 'other',
@@ -63,7 +87,15 @@ const BegesResultsTable = ({ study, withDepValue, data }: Props) => {
           accessorKey: 'total',
           cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit),
         },
-        { header: 'CO2b', accessorKey: 'co2b', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
+        {
+          header: (
+            <>
+              CO<sub>2</sub>b
+            </>
+          ),
+          accessorKey: 'co2b',
+          cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit),
+        },
         {
           id: 'uncertainty',
           header: t('uncertainty'),
