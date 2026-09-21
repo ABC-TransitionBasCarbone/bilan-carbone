@@ -208,10 +208,12 @@ export const authOptions: NextAuthOptions = {
   ],
 }
 
-export function auth(
+export async function auth(
   ...args: [GetServerSidePropsContext['req'], GetServerSidePropsContext['res']] | [NextApiRequest, NextApiResponse] | []
 ) {
-  return getServerSession(...args, authOptions)
+  const session = await getServerSession(...args, authOptions)
+
+  return session?.sessionInvalid ? null : session
 }
 
 export async function dbActualizedAuth(
