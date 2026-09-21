@@ -2,15 +2,22 @@
 
 import withAuth from '@/components/hoc/withAuth'
 import ProfilePage from '@/components/pages/Profile'
+import { auth } from '@/services/auth'
+import { getFeedbackFormUrl } from '@/utils/ressources'
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
-import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
 import pakage from '../../../../package.json'
 
-const Profile = () => {
-  const t = useTranslations('profile')
+const Profile = async () => {
+  const t = await getTranslations('profile')
+  const session = await auth()
+
   return (
     <Block title={t('title')} as="h1">
-      <ProfilePage version={pakage.version} />
+      <ProfilePage
+        version={pakage.version}
+        feedbackFormUrl={session ? await getFeedbackFormUrl(session.user.environment) : ''}
+      />
     </Block>
   )
 }

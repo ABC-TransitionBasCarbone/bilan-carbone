@@ -231,7 +231,9 @@
     "contacterViaFormulaire": "Contacter directement l'ABC via le formulaire",
     "questionTechnique": "En cas de question technique ou de besoin d'un support informatique :",
     "lireLaFAQ": "Lire la FAQ",
-    "ecrireMail": "Écrire directement à {supportEmail}"
+    "ecrireMail": "Écrire directement à {supportEmail}",
+    "feedbackTitle": "Votre avis",
+    "feedbackLink": "Répondre au questionnaire"
   },
   "legalNotices": {
     "profile": "Retour au profil",
@@ -321,6 +323,7 @@
   "profile": {
     "title": "Mon profil",
     "legalNotices": "Mentions légales",
+    "feedbackLink": "Répondre au questionnaire",
     "firstName": "Prénom",
     "lastName": "Nom",
     "cancelUpdate": "Annuler",
