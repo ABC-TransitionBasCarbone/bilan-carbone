@@ -18,13 +18,13 @@ jest.mock('@/services/permissions/study', () => ({
   canReadStudyDetail: jest.fn(),
 }))
 
-const NotFoundComponent = () => {
+function mockNotFoundComponent() {
   return <div>not-found</div>
 }
 
 jest.mock('@abc-transitionbascarbone/components/src/pages/NotFound', () => ({
   __esModule: true,
-  default: NotFoundComponent,
+  default: mockNotFoundComponent,
 }))
 
 const mockedGetMinimalStudyForRights = jest.mocked(getMinimalStudyForRights)
@@ -50,7 +50,7 @@ describe('NEWWithStudyDetails', () => {
 
     const result = await Component({ params: Promise.resolve({ id: '' }), user: mockUser })
 
-    expect(result.type).toBe(NotFoundComponent)
+    expect(result.type).toBe(mockNotFoundComponent)
     expect(result.props).toEqual({})
   })
 
@@ -61,7 +61,7 @@ describe('NEWWithStudyDetails', () => {
 
     const result = await Component({ params: Promise.resolve({ id: 'study-1' }), user: mockUser })
 
-    expect(result.type).toBe(NotFoundComponent)
+    expect(result.type).toBe(mockNotFoundComponent)
     expect(result.props).toEqual({})
   })
 
