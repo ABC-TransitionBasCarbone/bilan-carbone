@@ -20,6 +20,8 @@ const isAllowedDownloadUrl = (value: string) => {
   }
 }
 
+const sanitizeFileName = (fileName: string) => fileName.replace(/[\\/"\u0000-\u001F\u007F]/g, '_')
+
 export const GET = async (req: NextRequest) => {
   const { searchParams } = new URL(req.url)
   const url = searchParams.get('url')
@@ -41,7 +43,7 @@ export const GET = async (req: NextRequest) => {
   return new Response(response.body, {
     headers: {
       'Content-Type': response.headers.get('content-type') || 'application/octet-stream',
-      'Content-Disposition': `attachment; filename="${fileName.replace(/[\\/]+/g, '_')}"`,
+      'Content-Disposition': `attachment; filename="${sanitizeFileName(fileName)}"`,
     },
   })
 }

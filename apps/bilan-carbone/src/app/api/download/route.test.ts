@@ -98,4 +98,26 @@ describe('GET /api/download', () => {
     expect(response.status).toBe(200)
     await expect(response.text()).resolves.toBe('pdf-content')
   })
+
+  it('sanitizes unsafe characters in the downloaded file name', async () => {
+    const signedUrl = 'https://my-bucket.s3.fr-par.scw.cloud/report.pdf?X-Amz-Signature=abc'
+    const fetchMock = jest
+      .fn()
+      .mockResolvedValue(
+        new MockResponse('pdf-content', { status: 200, headers: { 'content-type': 'application/pdf' } }),
+      )
+    Object.defineProperty(globalThis, 'fetch', {
+      value: fetchMock,
+      writable: true,
+      configurable: true,
+    })
+
+    const req = new MockRequest(
+      `http://localhost/api/download?url=${encodeURIComponent(signedUrl)}&fileName=${encodeURIComponent('report"\r\n.pdf')}`,
+    )
+
+    const response = await GET(req as unknown as NextRequest)
+
+    expect(response.headers.get('Content-Disposition')).toBe('attachment; filename="report___.pdf"')
+  })
 })
