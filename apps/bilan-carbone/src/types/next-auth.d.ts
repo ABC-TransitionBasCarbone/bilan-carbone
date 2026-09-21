@@ -3,6 +3,10 @@ import 'next-auth'
 import 'next-auth/jwt'
 
 declare module 'next-auth' {
+  interface DefaultSession {
+    sessionInvalid?: boolean
+  }
+
   interface Session {
     user: UserSession
     sessionInvalid?: boolean

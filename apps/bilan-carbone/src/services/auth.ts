@@ -17,7 +17,7 @@ const switchAccount = async (accountId: string) => {
 
   const accounts = await getAccountsFromUser(session.user)
   const allUserAccounts = accounts.filter((account) => account.status === UserStatus.ACTIVE)
-  if (!allUserAccounts || !allUserAccounts || allUserAccounts.length === 0) {
+  if (!allUserAccounts || allUserAccounts.length === 0) {
     throw new Error('No active accounts found for the user')
   }
 
@@ -99,8 +99,7 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       if (token.sessionInvalid) {
-        session = { ...session, sessionInvalid: true }
-        return session
+        return { sessionInvalid: true, expires: '' }
       }
 
       if (token.needsAccountSelection) {
