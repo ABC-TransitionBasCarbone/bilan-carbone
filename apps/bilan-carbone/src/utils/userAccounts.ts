@@ -1,8 +1,14 @@
 import { AccountWithUser } from '@/types/account.types'
+import type { OrganizationVersion, User } from '@abc-transitionbascarbone/db-common'
 import { UserSession } from 'next-auth'
 
+// Type predicate so checking `organizationVersion` narrows `account` itself, not just the property access
+export const hasOrganizationVersion = <T extends { organizationVersion: Partial<OrganizationVersion> | null }>(
+  account: T,
+): account is T & { organizationVersion: NonNullable<T['organizationVersion']> } => !!account.organizationVersion
+
 export const accountWithUserToUserSession = (
-  account: Pick<AccountWithUser, 'id' | 'role' | 'organizationVersionId'> & {
+  account: Pick<AccountWithUser, 'id' | 'role' | 'organizationVersionId' | 'organizationVersion'> & {
     user: Pick<AccountWithUser['user'], 'id' | 'email' | 'firstName' | 'lastName' | 'level'>
   },
 ) => ({
@@ -15,11 +21,14 @@ export const accountWithUserToUserSession = (
   firstName: account.user.firstName,
   lastName: account.user.lastName,
   level: account.user.level,
+  environment: account.organizationVersion.environment,
+  organizationId: account.organizationVersion.organizationId,
 })
 
-export const userSessionToDbUser = (userSession: UserSession) => ({
+export const userSessionToDbUser = (
+  userSession: UserSession,
+): Omit<User, 'createdAt' | 'updatedAt' | 'password' | 'resetToken' | 'source' | 'formationFormStartTime'> => ({
   id: userSession.userId,
-  organizationVersionId: userSession.organizationVersionId,
   email: userSession.email,
   firstName: userSession.firstName,
   lastName: userSession.lastName,

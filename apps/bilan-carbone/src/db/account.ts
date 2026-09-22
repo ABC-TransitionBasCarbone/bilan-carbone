@@ -99,7 +99,7 @@ export const removeOtherAccountActivation = async (
   reservedAccount: { id: string },
 ) =>
   prismaClient.$transaction(async (transaction) => {
-    const activeAccountsCount = await prismaClient.account.count({
+    const activeAccountsCount = await transaction.account.count({
       where: { organizationVersionId: currentAccount.organizationVersionId, status: UserStatus.ACTIVE },
     })
 

@@ -51,7 +51,7 @@ import { processUsers } from '@/scripts/ftp/userImport'
 import { AccountWithUser } from '@/types/account.types'
 import { withServerResponse } from '@/utils/serverResponse'
 import { getRoleToSetForUntrained } from '@/utils/user'
-import { accountWithUserToUserSession, userSessionToDbUser } from '@/utils/userAccounts'
+import { accountWithUserToUserSession, hasOrganizationVersion, userSessionToDbUser } from '@/utils/userAccounts'
 import { Organization } from '@abc-transitionbascarbone/db-common'
 import { updateUserResetTokenForEmail } from '@abc-transitionbascarbone/db-common/db'
 import {
@@ -392,6 +392,9 @@ export const activateEmail = async (email: string, userEnv: Environment, fromRes
       (await organizationVersionActiveAccountsCount(account.organizationVersionId)) &&
       account.status !== UserStatus.VALIDATED
     ) {
+      if (!hasOrganizationVersion(account)) {
+        throw new Error(NOT_AUTHORIZED)
+      }
       const accounts = await getAccountFromUserOrganization(accountWithUserToUserSession(account))
       await sendActivationRequest(
         accounts
