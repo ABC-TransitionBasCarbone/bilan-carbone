@@ -1,19 +1,22 @@
 import { getEnvironnementRessources } from '@/utils/ressources'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
-import { Locale } from '@abc-transitionbascarbone/i18n/config'
 import { Translations } from '@abc-transitionbascarbone/lib'
 import { getEnvVar } from '@abc-transitionbascarbone/lib/environment'
-import { getLocale } from 'next-intl/server'
+import { getTranslations } from 'next-intl/server'
 
 jest.mock('next-intl/server', () => ({
-  getLocale: jest.fn(),
+  getTranslations: jest.fn(),
 }))
 
 jest.mock('@abc-transitionbascarbone/lib/environment', () => ({
   getEnvVar: jest.fn(),
 }))
 
-const t = ((key: string) => key) as Translations
+const missingTranslation = ((key: string) => {
+  throw new Error(`Missing translation: ${key}`)
+}) as unknown as Translations
+
+const t = ((key: string) => key) as unknown as Translations
 
 const getFaqLinkFromResources = (resources: Awaited<ReturnType<typeof getEnvironnementRessources>>) => {
   const technicalSection = resources.find((resource) => resource.title === 'questionTechnique')
@@ -29,18 +32,21 @@ describe('getEnvironnementRessources', () => {
     jest.clearAllMocks()
   })
 
-  test('uses EN_FAQ_LINK when locale is EN and EN_FAQ_LINK is defined', async () => {
-    jest.mocked(getLocale).mockResolvedValue(Locale.EN)
+  const englishLinkTranslations = {
+    openCarbonPracticeUrl: 'https://en.open.carbon.practice',
+    methodologyUrl: 'https://en.methodology',
+    contactFormUrl: 'https://en.contact.form',
+    faqUrl: 'https://en.faq',
+  } as const
+
+  const linksT = Object.assign(
+    ((key: string) => englishLinkTranslations[key as keyof typeof englishLinkTranslations] ?? key) as Translations,
+    { has: (key: string) => key in englishLinkTranslations },
+  )
+
+  test('reads localised links from translations when locale is English', async () => {
+    jest.mocked(getTranslations).mockResolvedValue(linksT)
     jest.mocked(getEnvVar).mockImplementation(async (key) => {
-      if (key === 'CONTACT_FORM_URL') {
-        return 'https://contact.form'
-      }
-      if (key === 'EN_FAQ_LINK') {
-        return 'https://en.faq'
-      }
-      if (key === 'FAQ_LINK') {
-        return 'https://fr.faq'
-      }
       if (key === 'SUPPORT_EMAIL') {
         return 'support@example.com'
       }
@@ -49,31 +55,25 @@ describe('getEnvironnementRessources', () => {
 
     const resources = await getEnvironnementRessources(Environment.BC, t)
     const faqLink = getFaqLinkFromResources(resources)
+    const contactLink = resources
+      .find((resource) => resource.title === 'questionMethodo')
+      ?.links.find((resourceLink) => resourceLink.title === 'contacterViaFormulaire' && 'link' in resourceLink)
 
     expect(faqLink).toBe('https://en.faq')
+    expect(contactLink && 'link' in contactLink ? contactLink.link : undefined).toBe('https://en.contact.form')
   })
 
-  test('falls back to FAQ_LINK when locale is EN and EN_FAQ_LINK is empty', async () => {
-    jest.mocked(getLocale).mockResolvedValue(Locale.EN)
+  test('throws when a required link translation is missing', async () => {
+    jest.mocked(getTranslations).mockResolvedValue(missingTranslation)
     jest.mocked(getEnvVar).mockImplementation(async (key) => {
-      if (key === 'CONTACT_FORM_URL') {
-        return 'https://contact.form'
-      }
-      if (key === 'EN_FAQ_LINK') {
-        return ''
-      }
-      if (key === 'FAQ_LINK') {
-        return 'https://fr.faq'
-      }
       if (key === 'SUPPORT_EMAIL') {
         return 'support@example.com'
       }
       return ''
     })
 
-    const resources = await getEnvironnementRessources(Environment.BC, t)
-    const faqLink = getFaqLinkFromResources(resources)
-
-    expect(faqLink).toBe('https://fr.faq')
+    await expect(getEnvironnementRessources(Environment.BC, t)).rejects.toThrow(
+      'Missing translation: openCarbonPracticeUrl',
+    )
   })
 })

@@ -5,6 +5,7 @@ import PublicContainer from '@abc-transitionbascarbone/components/src/base/Publi
 import Image from '@abc-transitionbascarbone/components/src/document/Image'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { defaultLocale, Locale, LocaleType } from '@abc-transitionbascarbone/i18n/config'
+import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useEffect, useState } from 'react'
@@ -42,7 +43,7 @@ const PublicClicksonPage = ({ children, question }: Props) => {
           <p className="title-h4 mb1">{t('welcome')}</p>
           <p className="title-h6 bold">{t('subtext')}</p>
         </div>
-        <p>{t('explanation')}</p>
+        <p>{customRich(t, 'explanation', {}, Environment.CLICKSON)}</p>
         <div className="flex-cc gapped1 w100 p1">
           <Image
             src="/logos/clickson/logo_clickson.png"

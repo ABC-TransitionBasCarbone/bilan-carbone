@@ -2074,26 +2074,23 @@
   },
   "bureaux . énergie": {
     "titre": "énergie consommée dans les bureaux",
-    "applicable si": "question rhétorique",
     "icônes": "🏢",
     "description": "Dans le cadre de ce calculateur, nous allons prendre en compte les consommations d'énergie associées au chauffage et à l'electricité des bureaux dans lesquels vous travaillez et de votre logment lorsque vous êtes en télétravail, ces chiffres se basent sur des moyennes nationales, \n",
-    "valeur": "bureaux . énergie . empreinte"
+    "variations": [
+      {
+        "si": "question rhétorique",
+        "alors": "282 kgCO2e/an"
+      },
+      {
+        "sinon": "282 kgCO2e/an"
+      }
+    ]
   },
   "bureaux . énergie . question rhétorique": {
     "titre": "Question d'information sur les consommation d'énergie associée à la vie de bureau et au télétravail (Chauffage, climatisation, électricité)",
-    "question": "Nous attribuons à chaque employé l'empreinte de sa \"vie de bureau\" sur son lieu de travail et chez lui (chauffage, climatisation, électricité...). Cela représente autour de 280kg de CO2e par personne par an.",
+    "question": "Avez-vous pris connaissance de l'empreinte attribuée à chaque employé pour sa \"vie de bureau\" sur son lieu de travail et chez lui (chauffage, climatisation, électricité...), estimée à environ 280 kgCO2e par personne et par an ?",
     "description": "\nCette catégorie ne dépend pas de vos réponses. L'empreinte associée est une moyenne nationale, nous procédons ainsi car définir précisément votre consommation d'énergie liée à votre activité professionnelle est complexe et necessiterait de nombreuses informations que vous n'avez pas forcement à disposition.\n",
-    "par défaut": "'ok'",
-    "une possibilité": {
-      "choix obligatoire": "oui",
-      "possibilités": ["ok"]
-    }
-  },
-  "bureaux . énergie . question rhétorique . ok": {
-    "titre": "OK"
-  },
-  "bureaux . énergie . empreinte": {
-    "valeur": "282 kgCO2e/an"
+    "par défaut": "non"
   },
   "DT": {
     "applicable si": {
@@ -2160,7 +2157,6 @@
   },
   "DT . filtrage": {
     "titre": "Filtrage par entité",
-    "ordre": 0,
     "question": "Dans quel service travaillez-vous ?",
     "description": "Si vous ne trouvez pas votre service, répondez \"Autres\"\n",
     "suggestions": {
@@ -2296,6 +2292,7 @@
   },
   "DT . voiture . km": {
     "titre": "Km en voiture",
+    "ordre": 1,
     "applicable si": "DT . voiture . présent",
     "question": "Quelle distance (aller-retour) parcourez-vous en voiture par jour pour vos déplacements domicile-travail ?",
     "description": "Renseignez un nombre de km cohérent (en arrondissant à la dizaine ou centaine supérieure) avec les distances que vous parcourez quotidiennement en voiture pour vos déplacements domicile-travail.\n",
@@ -2338,6 +2335,7 @@
     "valeur": 6384963
   },
   "DT . voiture . utilisateur": {
+    "ordre": 2,
     "par défaut": "'propriétaire'",
     "question": "Utilisez-vous majoritairement la même voiture pour vous déplacer ?",
     "applicable si": "km > 0",
@@ -2444,6 +2442,7 @@
   },
   "DT . voiture . voyageurs": {
     "titre": "Nombre de voyageurs trajets DT",
+    "ordre": 7,
     "question": "Quel est le nombre moyen de voyageurs dans la voiture lors de vos déplacements domicile-travail ?",
     "applicable si": {
       "toutes ces conditions": ["DT . voiture . présent", "km > 0"]
@@ -2493,6 +2492,7 @@
     ]
   },
   "DT . voiture . motorisation": {
+    "ordre": 5,
     "question": "Quelle est la motorisation de la voiture que vous allez utiliser ?",
     "applicable si": {
       "toutes ces conditions": [
@@ -2529,6 +2529,7 @@
     "valeur": "consommation aux 100 / 100 km/centkm"
   },
   "DT . voiture . thermique . consommation aux 100": {
+    "ordre": 3,
     "question": "Connaissez-vous la consommation moyenne de la voiture ?",
     "applicable si": {
       "toutes ces conditions": [
@@ -2740,6 +2741,7 @@
     ]
   },
   "DT . voiture . thermique . carburant": {
+    "ordre": 6,
     "question": "Quel type de carburant la voiture consomme-t-elle ?",
     "applicable si": {
       "toutes ces conditions": [
@@ -2791,6 +2793,7 @@
   },
   "DT . voiture . électrique . consommation aux 100": {
     "titre": "Consommation électrique au km",
+    "ordre": 3,
     "question": "Connaissez-vous la consommation moyenne de la voiture ?",
     "description": "Si vous ne savez pas, cliquez sur _Passer la question_ et nous vous attribuerons une consommation en lien avec le gabarit\nde la voiture que vous avez renseigné.\n",
     "applicable si": {
@@ -2839,6 +2842,7 @@
     "unité": "kWh/centkm"
   },
   "DT . voiture . gabarit": {
+    "ordre": 4,
     "question": "Quel est le gabarit de la voiture ?",
     "applicable si": {
       "toutes ces conditions": [

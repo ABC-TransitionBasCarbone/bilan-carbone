@@ -1,42 +1,33 @@
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
-import { Locale } from '@abc-transitionbascarbone/i18n/config'
 import { Translations } from '@abc-transitionbascarbone/lib'
 import { getEnvVar } from '@abc-transitionbascarbone/lib/environment'
-import { getLocale } from 'next-intl/server'
+import { hasTranslatedLinks } from '@abc-transitionbascarbone/utils/environmentClient'
+import { getTranslations } from 'next-intl/server'
 
 export const getEnvironnementRessources = async (env: Environment, t: Translations) => {
-  const locale = await getLocale()
-
-  const contactForm = await getEnvVar('CONTACT_FORM_URL', env)
-
-  const faq =
-    locale === Locale.EN
-      ? (await getEnvVar('EN_FAQ_LINK', env)) || (await getEnvVar('FAQ_LINK', env))
-      : await getEnvVar('FAQ_LINK', env)
-
+  const linksT = await getTranslations('links')
   const supportEmail = await getEnvVar('SUPPORT_EMAIL', env)
-
-  const methodUrl =
-    locale === Locale.FR
-      ? 'https://www.bilancarbone-methode.com/'
-      : 'https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en'
 
   const commonRessources = [
     {
       title: t('questionMethodo'),
       links: [
-        { title: t('openCarbonPractice'), link: 'https://www.opencarbonpractice.com/rejoindre-la-communaute' },
-        {
-          title: t('contacterViaFormulaire', { supportEmail }),
-          link: contactForm,
-          isTranslated: true,
-        },
+        { title: t('openCarbonPractice'), link: linksT('openCarbonPracticeUrl') },
+        ...(hasTranslatedLinks(env)
+          ? [
+              {
+                title: t('contacterViaFormulaire', { supportEmail }),
+                link: linksT('contactFormUrl'),
+                isTranslated: true,
+              },
+            ]
+          : []),
       ],
     },
     {
       title: t('questionTechnique'),
       links: [
-        ...(faq ? [{ title: t('lireLaFAQ'), link: faq }] : []),
+        ...(hasTranslatedLinks(env) ? [{ title: t('lireLaFAQ'), link: linksT('faqUrl') }] : []),
         {
           title: t('ecrireMail', { supportEmail }),
           link: `mailto:${supportEmail}`,
@@ -48,7 +39,7 @@ export const getEnvironnementRessources = async (env: Environment, t: Translatio
 
   const methodBC = {
     title: t('enSavoirPlusBilan'),
-    links: [{ title: t('methodeBilanCarbone'), link: methodUrl }],
+    links: [{ title: t('methodeBilanCarbone'), link: linksT('methodologyUrl') }],
   }
 
   switch (env) {
@@ -70,14 +61,14 @@ export const getEnvironnementRessources = async (env: Environment, t: Translatio
         ...commonRessources,
         methodBC,
       ]
-    case Environment.CLICKSON:
+    case Environment.CLICKSON: {
       return [
         {
           title: t('knowMoreDataCollect'),
           links: [
             {
               title: t('guideDataCollect'),
-              link: 'https://clickson.eu/wp-content/uploads/2021/11/Aide-recolte-de-donnees-.pdf',
+              link: linksT('guideDataCollectUrl'),
             },
           ],
         },
@@ -87,7 +78,7 @@ export const getEnvironnementRessources = async (env: Environment, t: Translatio
           links: [
             {
               title: t('modelsDataCollect'),
-              link: 'https://clickson.eu/wp-content/uploads/2023/01/Exemple_collecte.zip',
+              link: linksT('modelsDataCollectUrl'),
             },
           ],
         },
@@ -96,25 +87,27 @@ export const getEnvironnementRessources = async (env: Environment, t: Translatio
           links: [
             {
               title: t('classEarth'),
-              link: 'https://www.materre-enclasse.org',
+              link: linksT('classEarthUrl'),
             },
           ],
         },
       ]
-    case Environment.TILT:
+    }
+    case Environment.TILT: {
       return [
         {
           title: t('methodeAssociative'),
           links: [
             {
               title: t('sphereAssociative'),
-              link: 'https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative',
+              link: linksT('sphereAssociativeUrl'),
             },
           ],
         },
         methodBC,
         ...commonRessources,
       ]
+    }
     default:
       return [methodBC, ...commonRessources]
   }

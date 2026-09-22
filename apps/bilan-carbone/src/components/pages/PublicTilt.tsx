@@ -18,7 +18,7 @@ interface Props {
   question: ReactNode
 }
 const PublicTiltPage = ({ children, question }: Props) => {
-  const t = useTranslations('login')
+  const t = useTranslations()
   const tLocale = useTranslations('locale')
   const tDocumentation = useTranslations('documentationUrlTilt')
   const [locale, setLocale] = useState<LocaleType>(defaultLocale)
@@ -34,22 +34,27 @@ const PublicTiltPage = ({ children, question }: Props) => {
     <PublicContainer>
       <div className={classNames(styles.info, 'flex-col grow p2 text-center gapped1')}>
         <div>
-          <p className="title-h4 mb1">{t('welcome')}</p>
-          <p className="title-h6 bold">{customRich(t, 'subtext')}</p>
+          <p className="title-h4 mb1">{t('login.welcome')}</p>
+          <p className="title-h6 bold">{customRich(t, 'login.subtext')}</p>
         </div>
         <p>
-          {customRich(t, 'explanation', {
-            link: (children) => (
-              <Link
-                href={tDocumentation('tiltABCPage')}
-                target="_blank"
-                rel="noreferrer noopener"
-                className={styles.info}
-              >
-                {children}
-              </Link>
-            ),
-          })}
+          {customRich(
+            t,
+            'login.explanation',
+            {
+              link: (children) => (
+                <Link
+                  href={tDocumentation('tiltABCPage')}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className={styles.info}
+                >
+                  {children}
+                </Link>
+              ),
+            },
+            Environment.TILT,
+          )}
         </p>
         <div className="flex-cc gapped1 w100 p1">
           <Image src="/logos/abc/logo_abc.png" width="400" height="195" alt="ABC logo" className="w50 hauto" />
