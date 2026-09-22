@@ -1,4 +1,10 @@
 {
+  "links": {
+    "openCarbonPracticeUrl": "https://www.opencarbonpractice.com/rejoindre-la-communaute",
+    "methodologyUrl": "https://www.bilancarbone-methode.com/english",
+    "contactFormUrl": "https://p5ogeftfbs2.typeform.com/to/iWAfdk7c",
+    "faqUrl": "https://association-pour-la-transition-1.gitbook.io/bc+/faq-bc+-2.0-en"
+  },
   "home": {
     "userToValidate": "Un utente è stato aggiunto alla tua organizzazione perché si è appena formato al metodo Bilan Carbone®. Vai alla <link>pagina del tuo team</link> per convalidare il suo account",
     "title": "Realizzare il tuo bilancio d'impatto ti permetterà di:",

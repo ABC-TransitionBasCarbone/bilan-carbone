@@ -24,8 +24,6 @@ interface Props {
 
 const ActivationForm = ({ environment = Environment.BC }: Props) => {
   const contactMail = getEnvVarClient('SUPPORT_EMAIL', environment)
-  const faq = getEnvVarClient('FAQ_LINK', environment)
-
   const t = useTranslations('activation')
   const [submitting, setSubmitting] = useState(false)
   const [message, setMessage] = useState('')
@@ -84,14 +82,14 @@ const ActivationForm = ({ environment = Environment.BC }: Props) => {
         </LoadingButton>
         {message && (
           <p className={classNames(!success ? 'error' : '')} data-testid="activation-form-message">
-            {customRich(t, message, {
-              support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
-              link: (children) => (
-                <Link href={faq} target="_blank" rel="noreferrer noopener">
-                  {children}
-                </Link>
-              ),
-            })}
+            {customRich(
+              t,
+              message,
+              {
+                support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
+              },
+              environment,
+            )}
           </p>
         )}
       </FormControl>

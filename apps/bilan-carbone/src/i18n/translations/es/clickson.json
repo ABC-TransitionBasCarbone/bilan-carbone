@@ -1,4 +1,9 @@
 {
+  "links": {
+    "guideDataCollectUrl": "https://clickson.eu/wp-content/uploads/2021/11/Aide-recolte-de-donnees-.pdf",
+    "modelsDataCollectUrl": "https://clickson.eu/wp-content/uploads/2023/01/Exemple_collecte.zip",
+    "classEarthUrl": "https://www.materre-enclasse.org"
+  },
   "nav": {
     "newStudyContributor": "Añadir un estudiante",
     "team": "Equipo Piloto",
@@ -247,6 +252,7 @@
   "login": {
     "welcome": "Bienvenido a Clickson PEBC",
     "explanation": "¡Midamos las emisiones de gases de efecto invernadero de su establecimiento!",
+    "question": "¿Tiene alguna pregunta? <support>Contáctenos</support>.",
     "form": {
       "activate": "Crear mi cuenta"
     }

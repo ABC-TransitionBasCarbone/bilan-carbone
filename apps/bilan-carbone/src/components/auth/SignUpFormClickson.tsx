@@ -27,8 +27,6 @@ import authStyles from './Auth.module.css'
 
 const SignUpFormClickson = () => {
   const contactMail = getEnvVarClient('SUPPORT_EMAIL', Environment.CLICKSON)
-  const faq = getEnvVarClient('FAQ_LINK', Environment.CLICKSON)
-
   const t = useTranslations('signup')
   const tForm = useTranslations('login.form')
   const tCountry = useTranslations('country')
@@ -142,7 +140,7 @@ const SignUpFormClickson = () => {
         />
         <FormAutocomplete
           control={control}
-          translation={t}
+          translation={(slug) => t(slug)}
           name="country"
           label={t('country')}
           data-testid="activation-country"
@@ -157,7 +155,7 @@ const SignUpFormClickson = () => {
             filterOptions={(x) => x}
             data-testid="activation-school"
             control={control}
-            translation={t}
+            translation={(slug) => t(slug)}
             options={options}
             renderOption={(props, option) => {
               const dataTestId = typeof option === 'string' ? undefined : (option as { testId?: string }).testId
@@ -212,14 +210,14 @@ const SignUpFormClickson = () => {
         </LoadingButton>
         {message && (
           <p className={classNames(!success ? 'error' : '')} data-testid="activation-form-message">
-            {customRich(t, message, {
-              support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
-              link: (children) => (
-                <Link href={faq} target="_blank" rel="noreferrer noopener">
-                  {children}
-                </Link>
-              ),
-            })}
+            {customRich(
+              t,
+              message,
+              {
+                support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
+              },
+              Environment.CLICKSON,
+            )}
           </p>
         )}
         <div className={authStyles.bottomLink}>

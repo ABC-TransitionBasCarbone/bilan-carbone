@@ -16,8 +16,8 @@ export const metadata: Metadata = {
 }
 
 const PublicLayout = async ({ children }: Props) => {
-  const t = await getTranslations('login')
-  const question = customRich(t, 'question', {}, Environment.CUT)
+  const t = await getTranslations()
+  const question = customRich(t, 'login.question', {}, Environment.CUT)
   return (
     <DynamicTheme environment={Environment.CUT}>
       <main className="h100">

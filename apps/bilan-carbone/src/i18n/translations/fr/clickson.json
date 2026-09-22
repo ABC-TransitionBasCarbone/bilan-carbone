@@ -1,4 +1,9 @@
 {
+  "links": {
+    "guideDataCollectUrl": "https://clickson.eu/wp-content/uploads/2021/11/Aide-recolte-de-donnees-.pdf",
+    "modelsDataCollectUrl": "https://clickson.eu/wp-content/uploads/2023/01/Exemple_collecte.zip",
+    "classEarthUrl": "https://www.materre-enclasse.org"
+  },
   "nav": {
     "newStudyContributor": "Ajouter un·e élève",
     "team": "Équipe pilote",
@@ -247,6 +252,7 @@
   "login": {
     "welcome": "Bienvenue sur Clickson PEBC",
     "explanation": "Mesurons les émissions de gaz à effet de serre de votre établissement!",
+    "question": "Une question ? <support>Contactez-nous</support> !",
     "form": {
       "activate": "Créer mon compte"
     }

@@ -21,8 +21,6 @@ import authStyles from './Auth.module.css'
 
 const SignUpFormTilt = () => {
   const contactMail = getEnvVarClient('SUPPORT_EMAIL', Environment.TILT)
-  const faq = getEnvVarClient('FAQ_LINK', Environment.TILT)
-
   const t = useTranslations('signup')
   const tForm = useTranslations('login.form')
   const [submitting, setSubmitting] = useState(false)
@@ -87,14 +85,14 @@ const SignUpFormTilt = () => {
         </LoadingButton>
         {message && (
           <p className={classNames(!success ? 'error' : '')} data-testid="activation-form-message">
-            {customRich(t, message, {
-              support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
-              link: (children) => (
-                <Link href={faq} target="_blank" rel="noreferrer noopener">
-                  {children}
-                </Link>
-              ),
-            })}
+            {customRich(
+              t,
+              message,
+              {
+                support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
+              },
+              Environment.TILT,
+            )}
           </p>
         )}
         <div className={authStyles.bottomLink}>

@@ -91,6 +91,10 @@ export async function importEmissionFactorsFromFile(
 ): Promise<ImportEmissionFactorsResult> {
   const account = await checkAuth()
 
+  if (!account.organizationVersion) {
+    return { success: false }
+  }
+
   const locale = await getLocale()
   const buffer = Buffer.from(await file.arrayBuffer())
   const result = parseImportFile(buffer, locale, account.environment as BCEnvironment)
@@ -120,6 +124,10 @@ export async function exportManualEmissionFactorsToFile(): Promise<ArrayBuffer> 
   const common = getCommonTranslations(locale).common
   const baseTranslations = bc.emissionFactors.base
   const qualityTranslations = bc.quality as Record<string, string>
+
+  if (!account.organizationVersion) {
+    throw Error('User does not have an active organization version')
+  }
 
   const organizationId = account.organizationVersion.organizationId
   const emissionFactors = await getManualEmissionFactorsByOrganization(organizationId)

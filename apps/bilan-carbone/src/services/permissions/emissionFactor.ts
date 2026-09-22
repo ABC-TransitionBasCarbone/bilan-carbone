@@ -11,6 +11,10 @@ export const canReadEmissionFactor = (
     return true
   }
 
+  if (!account.organizationVersion) {
+    return false
+  }
+
   return account.organizationVersion.organizationId === emissionFactor.organizationId
 }
 
