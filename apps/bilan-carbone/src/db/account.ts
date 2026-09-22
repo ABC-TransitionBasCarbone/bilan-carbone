@@ -101,17 +101,6 @@ export const getAccountsFromOrganizationForActivation = (
 export const removeOtherAccountActivation = async (
   currentAccount: { id: string; organizationVersionId: string },
   reservedAccount: { id: string },
-  transaction?: Prisma.TransactionClient,
-) =>
-  transaction
-    ? removeOtherAccountActivationInTransaction(currentAccount, reservedAccount, transaction)
-    : prismaClient.$transaction(async (transaction) =>
-        removeOtherAccountActivationInTransaction(currentAccount, reservedAccount, transaction),
-      )
-
-const removeOtherAccountActivationInTransaction = async (
-  currentAccount: { id: string; organizationVersionId: string },
-  reservedAccount: { id: string },
   transaction: Prisma.TransactionClient,
 ) => {
   const activeAccountsCount = await transaction.account.count({
