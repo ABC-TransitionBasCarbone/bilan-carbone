@@ -85,53 +85,49 @@ const compareRuleNames = (
   return fallbackDiff !== 0 ? fallbackDiff : a.localeCompare(b)
 }
 
-export const buildPageBuilder = (engine: Engine) => {
-  return (fields: string[]): FormPages<string> => {
-    const rules = engine.getParsedRules() as ParsedRules
-    const initialIndexes = new Map(fields.map((field, index) => [field, index]))
-    const branchIndexes = new Map<string, number>()
-    for (const [ruleName, index] of initialIndexes) {
-      const branch = getRuleSubCategoryKey(ruleName)
-      if (!branchIndexes.has(branch)) {
-        branchIndexes.set(branch, index)
-      }
+export const buildPageBuilder = (engine: Engine, fields: string[]): FormPages<string> => {
+  const rules = engine.getParsedRules() as ParsedRules
+  const initialIndexes = new Map(fields.map((field, index) => [field, index]))
+  const branchIndexes = new Map<string, number>()
+  for (const [ruleName, index] of initialIndexes) {
+    const branch = getRuleSubCategoryKey(ruleName)
+    if (!branchIndexes.has(branch)) {
+      branchIndexes.set(branch, index)
     }
-    const sortedFields = fields
-      .filter((field) => rules[field]?.rawNode?.question !== undefined)
-      .sort((a, b) => compareRuleNames(a, b, rules, initialIndexes, branchIndexes))
-
-    const pages: FormPages<string> = []
-    const mosaicPagesByParent = new Map<string, FormPages<string>[number]>()
-
-    for (const field of sortedFields) {
-      const mosaicParent = getMosaicParent(engine, field)
-      if (!mosaicParent) {
-        pages.push({ elements: [field] })
-        continue
-      }
-
-      const existingPage = mosaicPagesByParent.get(mosaicParent)
-      if (existingPage) {
-        existingPage.elements.push(field)
-      } else {
-        const newPage = {
-          elements: [field],
-          title:
-            typeof rules[mosaicParent]?.rawNode?.question === 'string'
-              ? rules[mosaicParent].rawNode.question
-              : undefined,
-        }
-        mosaicPagesByParent.set(mosaicParent, newPage)
-        pages.push(newPage)
-      }
-    }
-
-    return pages
   }
+  const sortedFields = fields
+    .filter((field) => rules[field]?.rawNode?.question !== undefined)
+    .sort((a, b) => compareRuleNames(a, b, rules, initialIndexes, branchIndexes))
+
+  const pages: FormPages<string> = []
+  const mosaicPagesByParent = new Map<string, FormPages<string>[number]>()
+
+  for (const field of sortedFields) {
+    const mosaicParent = getMosaicParent(engine, field)
+    if (!mosaicParent) {
+      pages.push({ elements: [field] })
+      continue
+    }
+
+    const existingPage = mosaicPagesByParent.get(mosaicParent)
+    if (existingPage) {
+      existingPage.elements.push(field)
+    } else {
+      const newPage = {
+        elements: [field],
+        title:
+          typeof rules[mosaicParent]?.rawNode?.question === 'string' ? rules[mosaicParent].rawNode.question : undefined,
+      }
+      mosaicPagesByParent.set(mosaicParent, newPage)
+      pages.push(newPage)
+    }
+  }
+
+  return pages
 }
 
 export enum MipQuestionType {
-  NoQuestion = 'noQuestion',
+  NoRenderableQuestion = 'noRenderableQuestion',
   Mosaic = 'mosaic',
   Choices = 'choices',
   Boolean = 'boolean',
@@ -151,12 +147,12 @@ export const getQuestionType = (engine: Engine, ruleName: string): MipQuestionTy
   const rule = rules[ruleName]
 
   if (!rule) {
-    return MipQuestionType.NoQuestion
+    return MipQuestionType.NoRenderableQuestion
   }
 
   const raw = rule.rawNode
   if (!raw?.question) {
-    return MipQuestionType.NoQuestion
+    return MipQuestionType.NoRenderableQuestion
   }
   if (raw.mosaique) {
     return MipQuestionType.Mosaic

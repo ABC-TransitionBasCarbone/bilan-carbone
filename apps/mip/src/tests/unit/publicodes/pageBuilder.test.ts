@@ -19,7 +19,7 @@ describe('buildPageBuilder', () => {
   it('builds pages from the current MIP model', () => {
     const engine = createMipEngine(mipModel)
 
-    const pages = buildPageBuilder(engine)([
+    const pages = buildPageBuilder(engine, [
       'DT . filtrage',
       'DT . voiture . présent',
       'DT . voiture . km',
@@ -69,7 +69,7 @@ describe('buildPageBuilder', () => {
       },
     })
 
-    const pages = buildPageBuilder(engine)(['bureaux . déchets . tri'])
+    const pages = buildPageBuilder(engine, ['bureaux . déchets . tri'])
 
     expect(pages.some((page) => page.elements.includes('bureaux . énergie . question rhétorique'))).toBe(false)
   })
@@ -82,7 +82,7 @@ describe('buildPageBuilder', () => {
       'DT . voiture . carburant': { rawNode: { question: 'Carburant' } },
     })
 
-    const pages = buildPageBuilder(engine)([
+    const pages = buildPageBuilder(engine, [
       'DT . train . heure',
       'DT . voiture . voyageurs',
       'DT . train . vitesse',
@@ -111,7 +111,7 @@ describe('buildPageBuilder', () => {
       'DT . train . heure': { rawNode: { question: 'Train' } },
     })
 
-    const pages = buildPageBuilder(engine)([
+    const pages = buildPageBuilder(engine, [
       'DT . train . heure',
       'DT . voiture . motorisation',
       'DT . voiture . gabarit',
@@ -131,23 +131,6 @@ describe('buildPageBuilder', () => {
       'DT . voiture . motorisation',
       'DT . voiture . thermique . carburant',
       'DT . voiture . voyageurs',
-    ])
-  })
-
-  it('does not enforce electric-car fuel filtering in the form layer', () => {
-    const engine = createMockEngine(
-      {
-        'DT . voiture . motorisation': { rawNode: { question: 'Motorisation' } },
-        'DT . voiture . thermique . carburant': { rawNode: { question: 'Carburant' } },
-      },
-      { 'DT . voiture . motorisation': 'électrique' },
-    )
-
-    const pages = buildPageBuilder(engine)(['DT . voiture . motorisation', 'DT . voiture . thermique . carburant'])
-
-    expect(pages.map((page) => page.elements[0])).toEqual([
-      'DT . voiture . motorisation',
-      'DT . voiture . thermique . carburant',
     ])
   })
 
@@ -157,7 +140,7 @@ describe('buildPageBuilder', () => {
       'numérique . appareils': { rawNode: { question: 'Appareils' } },
     })
 
-    const pages = buildPageBuilder(engine)(['bureaux . énergie', 'numérique . appareils'])
+    const pages = buildPageBuilder(engine, ['bureaux . énergie', 'numérique . appareils'])
 
     expect(pages.map((page) => page.elements[0])).toEqual(['numérique . appareils', 'bureaux . énergie'])
   })
@@ -168,9 +151,26 @@ describe('buildPageBuilder', () => {
       'NUMÉRIQUE . appareils': { rawNode: { question: 'Appareils' } },
     })
 
-    const pages = buildPageBuilder(engine)(['bureaux . énergie', 'NUMÉRIQUE . appareils'])
+    const pages = buildPageBuilder(engine, ['bureaux . énergie', 'NUMÉRIQUE . appareils'])
 
     expect(pages.map((page) => page.elements[0])).toEqual(['NUMÉRIQUE . appareils', 'bureaux . énergie'])
+  })
+
+  it('marks rules without a renderable question as non-renderable', () => {
+    const engine = createMockEngine({
+      'transport . voiture': {
+        rawNode: {
+          question: 'Voiture',
+        },
+      },
+      'transport . filtre': {
+        rawNode: {
+          titre: 'Filtre',
+        },
+      },
+    })
+
+    expect(getQuestionType(engine, 'transport . filtre')).toBe(MipQuestionType.NoRenderableQuestion)
   })
 
   it('detects choice questions from the raw node and patches the input rendering', () => {

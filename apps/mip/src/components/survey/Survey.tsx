@@ -34,7 +34,7 @@ const Survey = ({ surveyId, rootRule = 'bilan' }: MipSurveyProps) => {
     () =>
       new FormBuilder({
         engine,
-        pageBuilder: buildPageBuilder(engine),
+        pageBuilder: (fields) => buildPageBuilder(engine, fields),
       }),
     [engine],
   )
