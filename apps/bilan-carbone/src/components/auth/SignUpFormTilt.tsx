@@ -21,7 +21,7 @@ import authStyles from './Auth.module.css'
 
 const SignUpFormTilt = () => {
   const contactMail = getEnvVarClient('SUPPORT_EMAIL', Environment.TILT)
-  const t = useTranslations()
+  const t = useTranslations('signup')
   const tForm = useTranslations('login.form')
   const [submitting, setSubmitting] = useState(false)
   const [message, setMessage] = useState('')
@@ -68,26 +68,26 @@ const SignUpFormTilt = () => {
           control={control}
           name="email"
           className={authStyles.input}
-          label={t('signup.email')}
-          placeholder={t('signup.emailPlaceholder')}
+          label={t('email')}
+          placeholder={t('emailPlaceholder')}
           data-testid="activation-email"
         />
         <FormTextField
           control={control}
           name="siret"
           className={authStyles.input}
-          label={t('signup.siret')}
-          placeholder={t('signup.siretPlaceholder')}
+          label={t('siret')}
+          placeholder={t('siretPlaceholder')}
           data-testid="activation-siret"
         />
         <LoadingButton data-testid="activation-button" type="submit" loading={submitting} variant="contained" fullWidth>
-          {t('signup.validate')}
+          {t('validate')}
         </LoadingButton>
         {message && (
           <p className={classNames(!success ? 'error' : '')} data-testid="activation-form-message">
             {customRich(
               t,
-              `signup.${message}`,
+              message,
               {
                 support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
               },

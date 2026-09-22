@@ -27,7 +27,7 @@ import authStyles from './Auth.module.css'
 
 const SignUpFormClickson = () => {
   const contactMail = getEnvVarClient('SUPPORT_EMAIL', Environment.CLICKSON)
-  const t = useTranslations()
+  const t = useTranslations('signup')
   const tForm = useTranslations('login.form')
   const tCountry = useTranslations('country')
   const [submitting, setSubmitting] = useState(false)
@@ -134,15 +134,15 @@ const SignUpFormClickson = () => {
           control={control}
           name="email"
           className={authStyles.input}
-          label={t('signup.email')}
-          placeholder={t('signup.emailPlaceholder')}
+          label={t('email')}
+          placeholder={t('emailPlaceholder')}
           data-testid="activation-email"
         />
         <FormAutocomplete
           control={control}
-          translation={(slug) => t(`signup.${slug}`)}
+          translation={(slug) => t(slug)}
           name="country"
-          label={t('signup.country')}
+          label={t('country')}
           data-testid="activation-country"
           options={Object.keys(Country).map((country) => ({
             label: tCountry(country),
@@ -155,7 +155,7 @@ const SignUpFormClickson = () => {
             filterOptions={(x) => x}
             data-testid="activation-school"
             control={control}
-            translation={(slug) => t(`signup.${slug}`)}
+            translation={(slug) => t(slug)}
             options={options}
             renderOption={(props, option) => {
               const dataTestId = typeof option === 'string' ? undefined : (option as { testId?: string }).testId
@@ -169,15 +169,15 @@ const SignUpFormClickson = () => {
             name="schoolName"
             label={
               <span className="align-center text-center">
-                {t('signup.schoolPostalCodeOrName')}
+                {t('schoolPostalCodeOrName')}
                 <HelpOutlineOutlinedIcon
                   color="secondary"
                   className={`ml-4 pointer`}
-                  onClick={() => setGlossary('signup.schoolSearchGlossaryTitle')}
+                  onClick={() => setGlossary('schoolSearchGlossaryTitle')}
                 />
               </span>
             }
-            helperText={t('signup.schoolPostalCodeOrNamePlaceholder')}
+            helperText={t('schoolPostalCodeOrNamePlaceholder')}
             freeSolo
             disableClearable
             onInputChange={(_, value) => {
@@ -191,28 +191,28 @@ const SignUpFormClickson = () => {
               control={control}
               name="schoolName"
               className={authStyles.input}
-              label={t('signup.schoolName')}
-              placeholder={t('signup.schoolNamePlaceholder')}
+              label={t('schoolName')}
+              placeholder={t('schoolNamePlaceholder')}
               data-testid="activation-schoolName"
             />
             <FormTextField
               control={control}
               name="city"
               className={authStyles.input}
-              label={t('signup.city')}
-              placeholder={t('signup.cityPlaceholder')}
+              label={t('city')}
+              placeholder={t('cityPlaceholder')}
               data-testid="activation-city"
             />
           </>
         )}
         <LoadingButton data-testid="activation-button" type="submit" loading={submitting} variant="contained" fullWidth>
-          {t('signup.validate')}
+          {t('validate')}
         </LoadingButton>
         {message && (
           <p className={classNames(!success ? 'error' : '')} data-testid="activation-form-message">
             {customRich(
               t,
-              `signup.${message}`,
+              message,
               {
                 support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
               },
@@ -229,7 +229,7 @@ const SignUpFormClickson = () => {
       </FormControl>
       {glossary && (
         <GlossaryModal label="glossary-help-school-search" glossary={glossary} t={t} onClose={() => setGlossary('')}>
-          {t('signup.schoolSearchGlossary')}
+          {t('schoolSearchGlossary')}
         </GlossaryModal>
       )}
     </Form>

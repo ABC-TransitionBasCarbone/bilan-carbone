@@ -24,7 +24,7 @@ interface Props {
 
 const ActivationForm = ({ environment = Environment.BC }: Props) => {
   const contactMail = getEnvVarClient('SUPPORT_EMAIL', environment)
-  const t = useTranslations()
+  const t = useTranslations('activation')
   const [submitting, setSubmitting] = useState(false)
   const [message, setMessage] = useState('')
   const [success, setSuccess] = useState(false)
@@ -67,24 +67,24 @@ const ActivationForm = ({ environment = Environment.BC }: Props) => {
   return (
     <Form onSubmit={handleSubmit(onSubmit)} className="grow justify-center">
       <FormControl className={authStyles.form}>
-        <p>{t('activation.description')}</p>
+        <p>{t('description')}</p>
         <FormTextField
           control={control}
           name="email"
           className={authStyles.input}
-          label={t('activation.email')}
-          placeholder={t('activation.emailPlaceholder')}
+          label={t('email')}
+          placeholder={t('emailPlaceholder')}
           data-testid="activation-email"
           trim
         />
         <LoadingButton data-testid="activation-button" type="submit" loading={submitting} fullWidth>
-          {t('activation.validate')}
+          {t('validate')}
         </LoadingButton>
         {message && (
           <p className={classNames(!success ? 'error' : '')} data-testid="activation-form-message">
             {customRich(
               t,
-              `activation.${message}`,
+              message,
               {
                 support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
               },

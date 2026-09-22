@@ -17,7 +17,7 @@ interface Props {
 }
 
 const PublicPage = ({ question, children }: Props) => {
-  const t = useTranslations()
+  const t = useTranslations('login')
   const tLocale = useTranslations('locale')
   const [locale, setLocale] = useState<LocaleType>(defaultLocale)
 
@@ -35,7 +35,7 @@ const PublicPage = ({ question, children }: Props) => {
     <PublicContainer>
       <div className={classNames(styles.info, 'grow p2 text-center')}>
         <p className="title-h4 mb1">{t('welcome')}</p>
-        <p className={styles.richLinks}>{customRich(t, 'login.explanation', {}, Environment.BC)}</p>
+        <p className={styles.richLinks}>{customRich(t, 'explanation', {}, Environment.BC)}</p>
         <Image
           src="/logos/monogramme_BC_noir.png"
           alt="logo"
