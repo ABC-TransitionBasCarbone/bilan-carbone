@@ -143,8 +143,8 @@ export const deleteUserFromOrga = async (email: string, organizationVersionId: s
   })
 }
 
-export const validateUser = (accountId: string) =>
-  prismaClient.account.update({
+export const validateUser = (accountId: string, transaction: Prisma.TransactionClient = prismaClient) =>
+  transaction.account.update({
     where: { id: accountId },
     data: { status: UserStatus.VALIDATED },
   })
@@ -272,8 +272,9 @@ export const updateAccount = (
   accountId: string,
   data: Partial<Prisma.AccountUpdateInput & { role: Exclude<Role, 'SUPER_ADMIN'> | undefined }>,
   userData?: Partial<Prisma.UserUpdateInput>,
+  transaction: Prisma.TransactionClient = prismaClient,
 ) =>
-  prismaClient.account.update({
+  transaction.account.update({
     where: { id: accountId },
     data: {
       ...data,

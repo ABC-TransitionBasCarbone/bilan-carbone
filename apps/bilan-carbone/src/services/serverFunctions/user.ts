@@ -11,6 +11,7 @@ import {
   getAccountsFromUser,
   removeOtherAccountActivation,
 } from '@/db/account'
+import { prismaClient } from '@/db/client.server'
 import { findCncByCncCode } from '@/db/cnc'
 import { isFeatureActiveForEnvironment } from '@/db/deactivableFeatures'
 import {
@@ -52,6 +53,7 @@ import { AccountWithUser } from '@/types/account.types'
 import { withServerResponse } from '@/utils/serverResponse'
 import { getRoleToSetForUntrained } from '@/utils/user'
 import { accountWithUserToUserSession, hasOrganizationVersion, userSessionToDbUser } from '@/utils/userAccounts'
+import type { Prisma } from '@abc-transitionbascarbone/db-common'
 import { Organization } from '@abc-transitionbascarbone/db-common'
 import { updateUserResetTokenForEmail } from '@abc-transitionbascarbone/db-common/db'
 import {
@@ -127,17 +129,29 @@ export const sendEmailToAddedUser = async (
 
 const ACTIVATION_RESERVATION_WINDOW_IN_MS = DAY * TIME_IN_MS
 
-const getOrganizationActivationReservation = async (organizationVersionId: string, currentAccountId: string) => {
-  const accounts = await getAccountsFromOrganizationForActivation(organizationVersionId, currentAccountId)
+const getOrganizationActivationReservation = async (
+  organizationVersionId: string,
+  currentAccountId: string,
+  transaction: Prisma.TransactionClient,
+) => {
+  const accounts = await getAccountsFromOrganizationForActivation(organizationVersionId, currentAccountId, transaction)
 
   return accounts.length > 0 ? accounts[0] : null
 }
 
-const checkIfOtherAccountHasReservationActivation = async (accountId: string, accountOrganizationVersionId: string) => {
-  const activationReservation = await getOrganizationActivationReservation(accountOrganizationVersionId, accountId)
+const checkIfOtherAccountHasReservationActivation = async (
+  accountId: string,
+  accountOrganizationVersionId: string,
+  transaction: Prisma.TransactionClient,
+) => {
+  const activationReservation = await getOrganizationActivationReservation(
+    accountOrganizationVersionId,
+    accountId,
+    transaction,
+  )
 
   if (!activationReservation || !activationReservation.activationRequestedAt) {
-    return false
+    return
   }
 
   const activationExpiresAt =
@@ -150,13 +164,14 @@ const checkIfOtherAccountHasReservationActivation = async (accountId: string, ac
   const removeSucceeded = await removeOtherAccountActivation(
     { id: accountId, organizationVersionId: accountOrganizationVersionId },
     activationReservation,
+    transaction,
   )
 
   if (!removeSucceeded) {
     throw new Error(ORGANIZATION_ACTIVATION_IN_PROGRESS)
   }
 
-  return false
+  return
 }
 
 export const sendInvitation = async (
@@ -411,17 +426,14 @@ export const activateEmail = async (email: string, userEnv: Environment, fromRes
 
       return REQUEST_SENT
     } else {
-      const hasReservation = await checkIfOtherAccountHasReservationActivation(
-        account.id,
-        account.organizationVersionId,
-      )
-
-      if (hasReservation) {
-        throw new Error(ORGANIZATION_ACTIVATION_IN_PROGRESS)
-      }
-
-      await validateUser(account.id)
-      await updateAccount(account.id, { activationRequestedAt: new Date() })
+      await prismaClient.$transaction(async (transaction) => {
+        if (!account.organizationVersionId) {
+          throw new Error(NOT_AUTHORIZED)
+        }
+        await checkIfOtherAccountHasReservationActivation(account.id, account.organizationVersionId, transaction)
+        await validateUser(account.id, transaction)
+        await updateAccount(account.id, { activationRequestedAt: new Date() }, undefined, transaction)
+      })
       await sendActivation(email, fromReset, env)
 
       return EMAIL_SENT

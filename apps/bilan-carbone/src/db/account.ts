@@ -75,8 +75,12 @@ export const getAccountsFromOrganization = (organizationVersionId: string) =>
     orderBy: { user: { email: 'asc' } },
   })
 
-export const getAccountsFromOrganizationForActivation = (organizationVersionId: string, excludeAccountId: string) =>
-  prismaClient.account.findMany({
+export const getAccountsFromOrganizationForActivation = (
+  organizationVersionId: string,
+  excludeAccountId: string,
+  transaction: Prisma.TransactionClient = prismaClient,
+) =>
+  transaction.account.findMany({
     select: {
       activationRequestedAt: true,
       id: true,
@@ -97,33 +101,44 @@ export const getAccountsFromOrganizationForActivation = (organizationVersionId: 
 export const removeOtherAccountActivation = async (
   currentAccount: { id: string; organizationVersionId: string },
   reservedAccount: { id: string },
+  transaction?: Prisma.TransactionClient,
 ) =>
-  prismaClient.$transaction(async (transaction) => {
-    const activeAccountsCount = await transaction.account.count({
-      where: { organizationVersionId: currentAccount.organizationVersionId, status: UserStatus.ACTIVE },
-    })
+  transaction
+    ? removeOtherAccountActivationInTransaction(currentAccount, reservedAccount, transaction)
+    : prismaClient.$transaction(async (transaction) =>
+        removeOtherAccountActivationInTransaction(currentAccount, reservedAccount, transaction),
+      )
 
-    if (activeAccountsCount > 0) {
-      return false
-    }
-
-    await transaction.account.update({
-      where: { id: reservedAccount.id },
-      data: {
-        feedbackDate: null,
-        formationEndDate: null,
-        formationName: null,
-        formationStartDate: null,
-        importedFileDate: null,
-        activationRequestedAt: null,
-        organizationVersion: { disconnect: true },
-        role: Role.DEFAULT,
-        status: UserStatus.IMPORTED,
-      },
-    })
-
-    return true
+const removeOtherAccountActivationInTransaction = async (
+  currentAccount: { id: string; organizationVersionId: string },
+  reservedAccount: { id: string },
+  transaction: Prisma.TransactionClient,
+) => {
+  const activeAccountsCount = await transaction.account.count({
+    where: { organizationVersionId: currentAccount.organizationVersionId, status: UserStatus.ACTIVE },
   })
+
+  if (activeAccountsCount > 0) {
+    return false
+  }
+
+  await transaction.account.update({
+    where: { id: reservedAccount.id },
+    data: {
+      feedbackDate: null,
+      formationEndDate: null,
+      formationName: null,
+      formationStartDate: null,
+      importedFileDate: null,
+      activationRequestedAt: null,
+      organizationVersion: { disconnect: true },
+      role: Role.DEFAULT,
+      status: UserStatus.IMPORTED,
+    },
+  })
+
+  return true
+}
 
 export const addAccount = async (account: Prisma.AccountCreateInput & { role: Exclude<Role, 'SUPER_ADMIN'> }) => {
   const deactivatedFeaturesRestrictions = await getDeactivableFeatureRestrictions(DeactivatableFeature.Creation)

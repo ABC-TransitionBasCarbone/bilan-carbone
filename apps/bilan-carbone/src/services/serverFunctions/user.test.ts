@@ -51,6 +51,11 @@ jest.mock('@/services/checklist', () => ({}))
 jest.mock('@/db/account')
 jest.mock('@/db/cnc')
 jest.mock('@/db/deactivableFeatures')
+jest.mock('@/db/client.server', () => ({
+  prismaClient: {
+    $transaction: jest.fn((callback) => callback({})),
+  },
+}))
 jest.mock('@/db/organization')
 jest.mock('@/db/site')
 jest.mock('@/db/study', () => ({}))
@@ -241,11 +246,17 @@ describe('signUpWithSiretOrCNC', () => {
       expect(mockRemoveOtherAccountActivation).toHaveBeenCalledWith(
         { id: mockedAccountId, organizationVersionId: mockedOrganizationVersionId },
         expiredAccount,
+        expect.anything(),
       )
-      expect(mockUpdateAccount).toHaveBeenCalledWith(mockedAccountId, {
-        activationRequestedAt: expect.any(Date),
-      })
-      expect(mockValidateUser).toHaveBeenCalledWith(mockedAccountId)
+      expect(mockUpdateAccount).toHaveBeenCalledWith(
+        mockedAccountId,
+        {
+          activationRequestedAt: expect.any(Date),
+        },
+        undefined,
+        expect.anything(),
+      )
+      expect(mockValidateUser).toHaveBeenCalledWith(mockedAccountId, expect.anything())
     })
 
     it('hands off an expired admin activation to the new requester', async () => {
@@ -293,11 +304,17 @@ describe('signUpWithSiretOrCNC', () => {
       expect(mockRemoveOtherAccountActivation).toHaveBeenCalledWith(
         { id: mockedAccountId, organizationVersionId: mockedOrganizationVersionId },
         expiredAccount,
+        expect.anything(),
       )
-      expect(mockUpdateAccount).toHaveBeenCalledWith(mockedAccountId, {
-        activationRequestedAt: expect.any(Date),
-      })
-      expect(mockValidateUser).toHaveBeenCalledWith(mockedAccountId)
+      expect(mockUpdateAccount).toHaveBeenCalledWith(
+        mockedAccountId,
+        {
+          activationRequestedAt: expect.any(Date),
+        },
+        undefined,
+        expect.anything(),
+      )
+      expect(mockValidateUser).toHaveBeenCalledWith(mockedAccountId, expect.anything())
     })
 
     it('blocks activation when the transactional handoff loses the race', async () => {
@@ -379,6 +396,8 @@ describe('signUpWithSiretOrCNC', () => {
         id: mockedAccountId,
         organizationVersionId: mockedOrganizationVersionId,
         status: UserStatus.IMPORTED,
+        role: Role.DEFAULT,
+        organizationVersion: { environment: Environment.TILT, organizationId: mockedOrganizationId },
         user: {
           id: mockedUserId,
           email: testEmail,
@@ -555,6 +574,9 @@ describe('signUpWithSiretOrCNC', () => {
       })
       mockGetAccountById.mockResolvedValue({
         id: mockedAccountId,
+        role: Role.DEFAULT,
+        organizationVersionId: mockedOrganizationVersionId,
+        organizationVersion: { environment: Environment.CUT, organizationId: mockedOrganizationId },
         user: { email: testEmail, firstName: 'Test', lastName: 'User' },
       })
       mockGetAccountFromUserOrganization.mockResolvedValue([
@@ -703,6 +725,9 @@ describe('signUpWithSiretOrCNC', () => {
       })
       mockGetAccountById.mockResolvedValue({
         id: mockedAccountId,
+        role: Role.DEFAULT,
+        organizationVersionId: mockedOrganizationVersionId,
+        organizationVersion: { environment: Environment.CUT, organizationId: mockedOrganizationId },
         user: { email: testEmail },
       })
       mockGetAccountFromUserOrganization.mockResolvedValue([
@@ -742,6 +767,9 @@ describe('signUpWithSiretOrCNC', () => {
       })
       mockGetAccountById.mockResolvedValue({
         id: mockedAccountId,
+        role: Role.DEFAULT,
+        organizationVersionId: mockedOrganizationVersionId,
+        organizationVersion: { environment: Environment.CUT, organizationId: mockedOrganizationId },
         user: { email: testEmail, firstName: 'Test', lastName: 'User' },
       })
       mockGetAccountFromUserOrganization.mockResolvedValue([
