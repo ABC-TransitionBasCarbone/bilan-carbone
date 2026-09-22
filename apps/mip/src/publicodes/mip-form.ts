@@ -1,5 +1,6 @@
 import { SURVEY_CATEGORY_KEYS } from '@/constants/survey'
 import {
+  getMosaicParent,
   getRuleCategoryKey,
   getRuleNameParts,
   getRuleSubCategoryKey,
@@ -23,50 +24,28 @@ type ParsedRule = {
 
 type ParsedRules = Record<string, ParsedRule>
 
-export const getMosaicParent = (engine: Engine, ruleName: string): string | null => {
-  const rules = engine.getParsedRules() as ParsedRules
-  const parts = getRuleNameParts(ruleName)
-
-  for (let i = parts.length - 1; i > 0; i--) {
-    const parent = joinRuleNameParts(parts.slice(0, i))
-    const parentRule = rules[parent]?.rawNode
-    const mosaicOptions = parentRule?.mosaique?.options ?? []
-    const relativeRuleName = joinRuleNameParts(parts.slice(i))
-
-    if (parentRule?.mosaique && mosaicOptions.includes(relativeRuleName)) {
-      return parent
-    }
-  }
-  return null
-}
-
-const getQuestionText = (rule: ParsedRule | undefined): string | undefined => {
-  const question = rule?.rawNode?.question
-  return typeof question === 'string' ? question : undefined
+const getRuleOrder = (rawNode: ParsedRuleRawNode | undefined): number | null => {
+  const ordre = rawNode?.ordre
+  const value = typeof ordre === 'number' ? ordre : Number.parseFloat(ordre ?? '')
+  return Number.isFinite(value) ? value : null
 }
 
 const MAX = Number.MAX_SAFE_INTEGER
+const normalizedSurveyCategoryKeys = SURVEY_CATEGORY_KEYS.map(normalizeCategoryKey)
 
-const getRuleOrder = (rawNode: ParsedRuleRawNode | undefined): number | null => {
-  const ordre = rawNode?.ordre
-  if (typeof ordre === 'number' && Number.isFinite(ordre)) {
-    return ordre
-  }
-  if (typeof ordre === 'string') {
-    const n = Number.parseFloat(ordre)
-    if (Number.isFinite(n)) {
-      return n
-    }
-  }
-  return null
+const getCategoryOrder = (ruleName: string): number => {
+  const categoryIndex = normalizedSurveyCategoryKeys.indexOf(normalizeCategoryKey(getRuleCategoryKey(ruleName)))
+  return categoryIndex === -1 ? MAX : categoryIndex
 }
 
-const compareRuleNames = (a: string, b: string, parsedRules: ParsedRules, initialIndexes: Map<string, number>) => {
-  const aRoot = normalizeCategoryKey(getRuleCategoryKey(a))
-  const bRoot = normalizeCategoryKey(getRuleCategoryKey(b))
-  const aCategoryIndex = SURVEY_CATEGORY_KEYS.findIndex((key) => normalizeCategoryKey(key) === aRoot)
-  const bCategoryIndex = SURVEY_CATEGORY_KEYS.findIndex((key) => normalizeCategoryKey(key) === bRoot)
-  const categoryDiff = (aCategoryIndex === -1 ? MAX : aCategoryIndex) - (bCategoryIndex === -1 ? MAX : bCategoryIndex)
+const compareRuleNames = (
+  a: string,
+  b: string,
+  parsedRules: ParsedRules,
+  initialIndexes: Map<string, number>,
+  branchIndexes: Map<string, number>,
+) => {
+  const categoryDiff = getCategoryOrder(a) - getCategoryOrder(b)
 
   if (categoryDiff !== 0) {
     return categoryDiff
@@ -75,14 +54,6 @@ const compareRuleNames = (a: string, b: string, parsedRules: ParsedRules, initia
   const aBranch = getRuleSubCategoryKey(a)
   const bBranch = getRuleSubCategoryKey(b)
   if (aBranch !== bBranch) {
-    const branchIndexes = new Map<string, number>()
-    for (const [ruleName, index] of initialIndexes) {
-      const branch = getRuleSubCategoryKey(ruleName)
-      if (!branchIndexes.has(branch)) {
-        branchIndexes.set(branch, index)
-      }
-    }
-
     const branchDiff = (branchIndexes.get(aBranch) ?? MAX) - (branchIndexes.get(bBranch) ?? MAX)
     if (branchDiff !== 0) {
       return branchDiff
@@ -110,17 +81,24 @@ const compareRuleNames = (a: string, b: string, parsedRules: ParsedRules, initia
     }
   }
 
-  const initialDiff = (initialIndexes.get(a) ?? MAX) - (initialIndexes.get(b) ?? MAX)
-  return initialDiff !== 0 ? initialDiff : a.localeCompare(b)
+  const fallbackDiff = (initialIndexes.get(a) ?? MAX) - (initialIndexes.get(b) ?? MAX)
+  return fallbackDiff !== 0 ? fallbackDiff : a.localeCompare(b)
 }
 
 export const buildPageBuilder = (engine: Engine) => {
   return (fields: string[]): FormPages<string> => {
     const rules = engine.getParsedRules() as ParsedRules
     const initialIndexes = new Map(fields.map((field, index) => [field, index]))
+    const branchIndexes = new Map<string, number>()
+    for (const [ruleName, index] of initialIndexes) {
+      const branch = getRuleSubCategoryKey(ruleName)
+      if (!branchIndexes.has(branch)) {
+        branchIndexes.set(branch, index)
+      }
+    }
     const sortedFields = fields
       .filter((field) => rules[field]?.rawNode?.question !== undefined)
-      .sort((a, b) => compareRuleNames(a, b, rules, initialIndexes))
+      .sort((a, b) => compareRuleNames(a, b, rules, initialIndexes, branchIndexes))
 
     const pages: FormPages<string> = []
     const mosaicPagesByParent = new Map<string, FormPages<string>[number]>()
@@ -138,7 +116,10 @@ export const buildPageBuilder = (engine: Engine) => {
       } else {
         const newPage = {
           elements: [field],
-          title: getQuestionText(rules[mosaicParent]),
+          title:
+            typeof rules[mosaicParent]?.rawNode?.question === 'string'
+              ? rules[mosaicParent].rawNode.question
+              : undefined,
         }
         mosaicPagesByParent.set(mosaicParent, newPage)
         pages.push(newPage)
@@ -150,7 +131,7 @@ export const buildPageBuilder = (engine: Engine) => {
 }
 
 export enum MipQuestionType {
-  NotQuestion = 'notQuestion',
+  NoQuestion = 'noQuestion',
   Mosaic = 'mosaic',
   Choices = 'choices',
   Boolean = 'boolean',
@@ -160,18 +141,9 @@ export enum MipQuestionType {
 const booleanSecureTypes = ['présent', 'propriétaire']
 
 const getChoiceOption = (rawNode: ParsedRuleRawNode | undefined): unknown => {
-  if (!rawNode) {
-    return undefined
-  }
-
-  if (Object.prototype.hasOwnProperty.call(rawNode, 'une possibilité')) {
-    return Object.getOwnPropertyDescriptor(rawNode, 'une possibilité')?.value
-  }
-
-  const formula = rawNode.formule
-  return formula && typeof formula === 'object'
-    ? Object.getOwnPropertyDescriptor(formula, 'une possibilité')?.value
-    : undefined
+  const formula = rawNode?.formule
+  const source = formula && typeof formula === 'object' ? (formula as Record<string, unknown>) : rawNode
+  return source && Object.hasOwn(source, 'une possibilité') ? source['une possibilité'] : undefined
 }
 
 export const getQuestionType = (engine: Engine, ruleName: string): MipQuestionType => {
@@ -179,12 +151,12 @@ export const getQuestionType = (engine: Engine, ruleName: string): MipQuestionTy
   const rule = rules[ruleName]
 
   if (!rule) {
-    return MipQuestionType.NotQuestion
+    return MipQuestionType.NoQuestion
   }
 
   const raw = rule.rawNode
   if (!raw?.question) {
-    return MipQuestionType.NotQuestion
+    return MipQuestionType.NoQuestion
   }
   if (raw.mosaique) {
     return MipQuestionType.Mosaic

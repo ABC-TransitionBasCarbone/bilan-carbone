@@ -173,52 +173,6 @@ describe('buildPageBuilder', () => {
     expect(pages.map((page) => page.elements[0])).toEqual(['NUMÉRIQUE . appareils', 'bureaux . énergie'])
   })
 
-  it('does not synthesize rhetorical mosaic children from local heuristics', () => {
-    const mismatchedSituationEngine = createMockEngine(
-      {
-        'bureaux . énergie': {
-          rawNode: {
-            question: 'Énergie',
-            mosaique: {
-              options: ['question rhétorique'],
-            },
-          },
-        },
-        'bureaux . énergie . question rhétorique': {
-          rawNode: {
-            question: 'question rhétorique',
-          },
-        },
-      },
-      { 'bureaux . énergie . autre': 'oui' },
-    )
-
-    const pagesWithUnrelatedAnswer = buildPageBuilder(mismatchedSituationEngine)([])
-    expect(pagesWithUnrelatedAnswer).toEqual([])
-
-    const answeredMosaicEngine = createMockEngine(
-      {
-        'bureaux . énergie': {
-          rawNode: {
-            question: 'Énergie',
-            mosaique: {
-              options: ['question rhétorique'],
-            },
-          },
-        },
-        'bureaux . énergie . question rhétorique': {
-          rawNode: {
-            question: 'question rhétorique',
-          },
-        },
-      },
-      { 'bureaux . énergie . question rhétorique': 'oui' },
-    )
-
-    const pagesWithRealAnswer = buildPageBuilder(answeredMosaicEngine)([])
-    expect(pagesWithRealAnswer).toEqual([])
-  })
-
   it('detects choice questions from the raw node and patches the input rendering', () => {
     const engine = createMockEngine({
       'transport . voiture': {

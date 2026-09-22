@@ -21,7 +21,7 @@ export const withServerResponse = async <T>(functionName: string, fn: () => Prom
       success: false,
       errorMessage: error.message,
       start,
-      duration: duration,
+      duration,
     })
 
     return { success: false, errorMessage: error.message }

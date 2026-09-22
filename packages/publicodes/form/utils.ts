@@ -1,6 +1,6 @@
 import { formatNumber } from '@abc-transitionbascarbone/utils/number'
 import { EvaluatedFormElement } from '@publicodes/forms'
-import { reduceAST, RuleNode, utils } from 'publicodes'
+import Engine, { reduceAST, RuleNode, utils } from 'publicodes'
 import {
   EvaluatedFormLayout,
   EvaluatedGroupLayout,
@@ -77,6 +77,26 @@ export const getRuleParentName = (ruleName: string): string | null => {
 }
 
 export const getRuleCategoryKey = (ruleName: string): string => getRuleNameParts(ruleName)[0]
+
+export const getMosaicParent = (engine: Engine, ruleName: string): string | null => {
+  const rules = engine.getParsedRules() as Record<
+    string,
+    { rawNode?: { mosaique?: { options?: string[] } } }
+  >
+  const parts = getRuleNameParts(ruleName)
+
+  for (let i = parts.length - 1; i > 0; i--) {
+    const parent = joinRuleNameParts(parts.slice(0, i))
+    const parentRule = rules[parent]?.rawNode
+    const mosaicOptions = parentRule?.mosaique?.options ?? []
+    const relativeRuleName = joinRuleNameParts(parts.slice(i))
+
+    if (mosaicOptions.includes(relativeRuleName)) {
+      return parent
+    }
+  }
+  return null
+}
 
 // second-level grouping key, used to keep sibling questions together (e.g. "DT . voiture . km" -> "DT . voiture")
 export const getRuleSubCategoryKey = (ruleName: string): string => {

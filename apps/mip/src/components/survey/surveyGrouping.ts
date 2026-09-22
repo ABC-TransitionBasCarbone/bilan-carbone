@@ -1,6 +1,6 @@
 import { createMipEngine } from '@/publicodes/mip-engine'
-import { getMosaicParent, getQuestionType, MipQuestionType, patchFormElement } from '@/publicodes/mip-form'
-import { getRuleCategoryKey } from '@abc-transitionbascarbone/publicodes/form'
+import { getQuestionType, MipQuestionType, patchFormElement } from '@/publicodes/mip-form'
+import { getMosaicParent, getRuleCategoryKey } from '@abc-transitionbascarbone/publicodes/form'
 import { EvaluatedFormElement, FormPageElementProp } from '@publicodes/forms'
 
 type SurveyFormElement = EvaluatedFormElement<string> & FormPageElementProp
