@@ -199,5 +199,8 @@
   },
   "exports": {
     "env_specific_export": "Απλοποιημένο αποτύπωμα άνθρακα"
+  },
+  "links": {
+    "faqUrl": "https://association-pour-la-transition-1.gitbook.io/bc+/faq-count"
   }
 }

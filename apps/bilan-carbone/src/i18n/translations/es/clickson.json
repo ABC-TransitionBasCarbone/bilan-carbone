@@ -252,7 +252,7 @@
   "login": {
     "welcome": "Bienvenido a Clickson PEBC",
     "explanation": "¡Midamos las emisiones de gases de efecto invernadero de su establecimiento!",
-    "question": "¿Tiene alguna pregunta? <support>Contáctenos</support>.",
+    "question": "¿Una pregunta? <support>Contáctenos</support> !",
     "form": {
       "activate": "Crear mi cuenta"
     }

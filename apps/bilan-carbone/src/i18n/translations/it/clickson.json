@@ -242,7 +242,8 @@
     "explanation": "Misuriamo le emissioni di gas serra del tuo istituto!",
     "form": {
       "activate": "Crea il mio account"
-    }
+    },
+    "question": "Una domanda? <support>Contattaci</support>!"
   },
   "signup": {
     "description": "Crea un account Clickson con la tua email e un codice postale o nome della scuola",
