@@ -64,7 +64,7 @@ export const getAccountByEmailAndEnvironment = (email: string, environment: Envi
 
 export type OrganizationWithSites = AsyncReturnType<typeof getAccountOrganizationVersions>[0]
 
-export const getAccountFromUserOrganization = (user: UserSession) =>
+export const getAccountFromUserOrganization = (user: Pick<UserSession, 'role' | 'organizationVersionId'>) =>
   prismaClient.account.findMany({ ...findUserInfo(user), orderBy: { user: { email: 'asc' } } })
 export type TeamMember = AsyncReturnType<typeof getAccountFromUserOrganization>[number]
 
@@ -75,7 +75,7 @@ export const getAccountsFromOrganization = (organizationVersionId: string) =>
     orderBy: { user: { email: 'asc' } },
   })
 
-export const getAccountsFromOrganizationForActivation = (organizationVersionId: string) =>
+export const getAccountsFromOrganizationForActivation = (organizationVersionId: string, excludeAccountId: string) =>
   prismaClient.account.findMany({
     select: {
       activationRequestedAt: true,
@@ -83,49 +83,32 @@ export const getAccountsFromOrganizationForActivation = (organizationVersionId: 
       role: true,
       status: true,
       user: { select: { email: true, firstName: true, lastName: true } },
+      organizationVersionId: true,
     },
-    where: { activationRequestedAt: { not: null }, organizationVersionId },
+    where: {
+      activationRequestedAt: { not: null },
+      organizationVersionId,
+      status: { not: UserStatus.ACTIVE },
+      id: { not: excludeAccountId },
+    },
     orderBy: { activationRequestedAt: 'desc' },
   })
 
-export const handoffOrganizationActivationReservation = async (
-  currentAccountId: string,
-  organizationVersionId: string,
-  reservedAccountId: string,
-  reservedRole: Role,
-  reservedActivationRequestedAt: Date,
+export const removeOtherAccountActivation = async (
+  currentAccount: { id: string; organizationVersionId: string },
+  reservedAccount: { id: string },
 ) =>
   prismaClient.$transaction(async (transaction) => {
-    const [currentAccount, reservedAccount, activeAccountsCount] = await Promise.all([
-      transaction.account.findUnique({
-        where: { id: currentAccountId },
-        select: { organizationVersionId: true },
-      }),
-      transaction.account.findUnique({
-        where: { id: reservedAccountId },
-        select: { activationRequestedAt: true, organizationVersionId: true, role: true, status: true },
-      }),
-      transaction.account.count({
-        where: { organizationVersionId, status: UserStatus.ACTIVE },
-      }),
-    ])
+    const activeAccountsCount = await prismaClient.account.count({
+      where: { organizationVersionId: currentAccount.organizationVersionId, status: UserStatus.ACTIVE },
+    })
 
-    if (
-      !currentAccount ||
-      currentAccount.organizationVersionId !== organizationVersionId ||
-      !reservedAccount ||
-      !reservedAccount.activationRequestedAt ||
-      reservedAccount.organizationVersionId !== organizationVersionId ||
-      reservedAccount.status === UserStatus.ACTIVE ||
-      reservedAccount.role !== reservedRole ||
-      reservedAccount.activationRequestedAt.getTime() !== reservedActivationRequestedAt.getTime() ||
-      activeAccountsCount > 0
-    ) {
+    if (activeAccountsCount > 0) {
       return false
     }
 
     await transaction.account.update({
-      where: { id: reservedAccountId },
+      where: { id: reservedAccount.id },
       data: {
         feedbackDate: null,
         formationEndDate: null,
@@ -137,11 +120,6 @@ export const handoffOrganizationActivationReservation = async (
         role: Role.DEFAULT,
         status: UserStatus.IMPORTED,
       },
-    })
-
-    await transaction.account.update({
-      where: { id: currentAccountId },
-      data: { role: reservedRole },
     })
 
     return true

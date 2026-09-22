@@ -6,10 +6,10 @@ import {
   getAccountByEmailAndEnvironment,
   getAccountByEmailAndOrganizationVersionId,
   getAccountById,
-  getAccountsFromOrganizationForActivation,
   getAccountFromUserOrganization,
+  getAccountsFromOrganizationForActivation,
   getAccountsFromUser,
-  handoffOrganizationActivationReservation,
+  removeOtherAccountActivation,
 } from '@/db/account'
 import { findCncByCncCode } from '@/db/cnc'
 import { isFeatureActiveForEnvironment } from '@/db/deactivableFeatures'
@@ -52,7 +52,7 @@ import { AccountWithUser } from '@/types/account.types'
 import { withServerResponse } from '@/utils/serverResponse'
 import { getRoleToSetForUntrained } from '@/utils/user'
 import { accountWithUserToUserSession, userSessionToDbUser } from '@/utils/userAccounts'
-import { Organization, User } from '@abc-transitionbascarbone/db-common'
+import { Organization } from '@abc-transitionbascarbone/db-common'
 import { updateUserResetTokenForEmail } from '@abc-transitionbascarbone/db-common/db'
 import {
   Country,
@@ -100,7 +100,7 @@ import { EditProfileCommand, EditSettingsCommand } from './user.command'
 
 export const sendEmailToAddedUser = async (
   email: string,
-  user: User,
+  user: Pick<UserSession, 'firstName' | 'lastName'>,
   newUserName: string,
   env: Environment,
   orgaVersionId: string,
@@ -127,24 +127,17 @@ export const sendEmailToAddedUser = async (
 
 const ACTIVATION_RESERVATION_WINDOW_IN_MS = DAY * TIME_IN_MS
 
-const activationOwnerRoles = [Role.ADMIN, Role.GESTIONNAIRE]
-
 const getOrganizationActivationReservation = async (organizationVersionId: string, currentAccountId: string) => {
-  const accounts = await getAccountsFromOrganizationForActivation(organizationVersionId)
+  const accounts = await getAccountsFromOrganizationForActivation(organizationVersionId, currentAccountId)
 
-  return accounts.find(
-    (account) =>
-      account.id !== currentAccountId &&
-      activationOwnerRoles.includes(account.role) &&
-      account.status !== UserStatus.ACTIVE,
-  )
+  return accounts.length > 0 ? accounts[0] : null
 }
 
-const handoffExpiredOrganizationActivation = async (account: AccountWithUser) => {
-  const activationReservation = await getOrganizationActivationReservation(account.organizationVersionId || '', account.id)
+const checkIfOtherAccountHasReservationActivation = async (accountId: string, accountOrganizationVersionId: string) => {
+  const activationReservation = await getOrganizationActivationReservation(accountOrganizationVersionId, accountId)
 
-  if (!activationReservation) {
-    return
+  if (!activationReservation || !activationReservation.activationRequestedAt) {
+    return false
   }
 
   const activationExpiresAt =
@@ -154,17 +147,16 @@ const handoffExpiredOrganizationActivation = async (account: AccountWithUser) =>
     throw new Error(ORGANIZATION_ACTIVATION_IN_PROGRESS)
   }
 
-  const handoffSucceeded = await handoffOrganizationActivationReservation(
-    account.id,
-    account.organizationVersionId || '',
-    activationReservation.id,
-    activationReservation.role,
-    activationReservation.activationRequestedAt,
+  const removeSucceeded = await removeOtherAccountActivation(
+    { id: accountId, organizationVersionId: accountOrganizationVersionId },
+    activationReservation,
   )
 
-  if (!handoffSucceeded) {
+  if (!removeSucceeded) {
     throw new Error(ORGANIZATION_ACTIVATION_IN_PROGRESS)
   }
+
+  return false
 }
 
 export const sendInvitation = async (
@@ -385,9 +377,7 @@ export const activateEmail = async (email: string, userEnv: Environment, fromRes
     const env = userEnv
 
     const user = await getUserByEmail(email.toLowerCase())
-    const account = (await getAccountById(
-      user?.accounts.find((a) => a.environment === env)?.id || '',
-    )) as AccountWithUser
+    const account = await getAccountById(user?.accounts.find((a) => a.environment === env)?.id || '')
 
     if (!user || !account || !account.organizationVersionId || account.status === UserStatus.ACTIVE) {
       throw new Error(NOT_AUTHORIZED)
@@ -418,7 +408,15 @@ export const activateEmail = async (email: string, userEnv: Environment, fromRes
 
       return REQUEST_SENT
     } else {
-      await handoffExpiredOrganizationActivation(account)
+      const hasReservation = await checkIfOtherAccountHasReservationActivation(
+        account.id,
+        account.organizationVersionId,
+      )
+
+      if (hasReservation) {
+        throw new Error(ORGANIZATION_ACTIVATION_IN_PROGRESS)
+      }
+
       await validateUser(account.id)
       await updateAccount(account.id, { activationRequestedAt: new Date() })
       await sendActivation(email, fromReset, env)

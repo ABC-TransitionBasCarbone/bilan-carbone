@@ -161,9 +161,6 @@ export const organizationVersionActiveAccountsCount = async (organizationVersion
     where: { organizationVersionId, status: UserStatus.ACTIVE },
   })
 
-export const changeStatus = (accountId: string, newStatus: UserStatus) =>
-  prismaClient.account.update({ where: { id: accountId }, data: { status: newStatus } })
-
 export const getUserApplicationSettings = (accountId: string) =>
   prismaClient.userApplicationSettings.upsert({ where: { accountId }, update: {}, create: { accountId } })
 
