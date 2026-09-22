@@ -200,7 +200,7 @@ export const getUserByIdWithAccounts = (id: string) =>
 export type UserWithAccounts = AsyncReturnType<typeof getUserByIdWithAccounts>
 
 export const getUserByEmail = (email: string) =>
-  prismaClient.user.findUnique({ where: { email }, include: { accounts: true } })
+  prismaClient.user.findUnique({ where: { email }, include: { accounts: { include: { organizationVersion: true } } } })
 
 export const updateUser = (userId: string, data: Partial<Prisma.UserCreateInput>) =>
   prismaClient.user.update({

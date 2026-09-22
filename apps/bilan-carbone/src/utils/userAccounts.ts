@@ -21,8 +21,8 @@ export const accountWithUserToUserSession = (
   firstName: account.user.firstName,
   lastName: account.user.lastName,
   level: account.user.level,
-  environment: account.organizationVersion.environment,
-  organizationId: account.organizationVersion.organizationId,
+  environment: account.organizationVersion?.environment,
+  organizationId: account.organizationVersion?.organizationId ?? null,
 })
 
 export const userSessionToDbUser = (
