@@ -3,10 +3,10 @@ const environments = ['bc', 'tilt', 'cut', 'clickson'] as const
 const assertFeedbackLink = (testId: string) => {
   cy.getByTestId(testId)
     .should('be.visible')
-    .and('have.attr', 'href')
-    .and('match', /^https:\/\//)
     .and('have.attr', 'target', '_blank')
     .and('have.attr', 'rel', 'noreferrer noopener')
+    .invoke('attr', 'href')
+    .should('match', /^https:\/\//)
 }
 
 describe('Feedback questionnaire', () => {
