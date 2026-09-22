@@ -1,9 +1,15 @@
 import { OrganizationVersion, Account as PrismaAccount, User as PrismaUser } from '@abc-transitionbascarbone/db-common'
 import 'next-auth'
+import 'next-auth/jwt'
 
 declare module 'next-auth' {
+  interface DefaultSession {
+    sessionInvalid?: boolean
+  }
+
   interface Session {
     user: UserSession
+    sessionInvalid?: boolean
   }
 
   interface UserSession
@@ -22,5 +28,11 @@ declare module 'next-auth' {
     userId?: string
     accountId?: string
     needsAccountSelection?: boolean
+  }
+}
+
+declare module 'next-auth/jwt' {
+  interface JWT {
+    sessionInvalid?: boolean
   }
 }
