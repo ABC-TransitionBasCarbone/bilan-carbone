@@ -111,10 +111,13 @@ jobs:
         with:
           node-version: 24.18.0
           cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install --immutable --immutable-cache --check-cache
+        working-directory: ${{ github.workspace }}
       - name: Check circular dependencies (bilan-carbone)
-        run: npx madge --circular --extensions ts,tsx --exclude "packages/db-common/src/generated" apps/bilan-carbone
+        run: yarn madge --circular --extensions ts,tsx --exclude "packages/db-common/src/generated" apps/bilan-carbone
       - name: Check circular dependencies (mip)
-        run: npx madge --circular --extensions ts,tsx apps/mip
+        run: yarn madge --circular --extensions ts,tsx apps/mip
 
   bc-unit-tests:
     timeout-minutes: 10
