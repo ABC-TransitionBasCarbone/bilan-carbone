@@ -11,18 +11,11 @@ const assertFeedbackLink = (testId: string) => {
 
 describe('Feedback questionnaire', () => {
   environments.forEach((environment) => {
-    it(`is accessible from resources in ${environment}`, () => {
+    it(`is accessible from the home page in ${environment}`, () => {
       cy.loginForEnv(environment)
-      cy.visit('/ressources')
+      cy.visit('/')
 
-      assertFeedbackLink('feedback-form-link')
-    })
-
-    it(`is accessible from the profile in ${environment}`, () => {
-      cy.loginForEnv(environment)
-      cy.visit('/profil')
-
-      assertFeedbackLink('feedback-form-link-profile')
+      assertFeedbackLink('feedback-form-link-home')
     })
   })
 })

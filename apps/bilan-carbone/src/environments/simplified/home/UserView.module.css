@@ -1,8 +1,7 @@
 .block {
   min-height: 600px;
-  height: calc(
-    100vh - 48px - 150px - 48px - 32px
-  ); /* 48px top bar + 150px footer + 48px padding top + 32px padding bottom */
+  height: calc(100vh - 48px - 150px - 48px - 32px);
+  /* 48px top bar + 150px footer + 48px padding top + 32px padding bottom */
 }
 
 .styledBoxContainer {
@@ -21,6 +20,7 @@
     line-height: 1.2rem;
     letter-spacing: 0%;
   }
+
   > div:first-child {
     > div {
       > p {
@@ -60,6 +60,7 @@
   background-color: var(--mui-palette-primary-light);
   cursor: pointer;
   transition: all 0.2s ease;
+
   > div {
     > p {
       font-weight: 700;
@@ -68,6 +69,7 @@
       letter-spacing: 0%;
       text-align: center;
     }
+
     > .linkMessage {
       margin-top: 0.5rem;
       text-align: center;

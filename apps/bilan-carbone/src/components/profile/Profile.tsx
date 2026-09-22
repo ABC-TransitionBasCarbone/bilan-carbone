@@ -1,7 +1,6 @@
 import { updateUserProfile } from '@/services/serverFunctions/user'
 import { EditProfileCommand, EditProfileCommandValidation } from '@/services/serverFunctions/user.command'
 import Form from '@abc-transitionbascarbone/components/src/base/Form'
-import LinkButton from '@abc-transitionbascarbone/components/src/base/LinkButton'
 import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
@@ -21,10 +20,9 @@ import styles from './Profile.module.css'
 
 interface Props {
   version: string
-  feedbackFormUrl: string
 }
 
-const Profile = ({ version, feedbackFormUrl }: Props) => {
+const Profile = ({ version }: Props) => {
   const { data: session, update: updateSession } = useSession()
 
   const t = useTranslations('profile')
@@ -123,16 +121,6 @@ const Profile = ({ version, feedbackFormUrl }: Props) => {
             {t('legalNotices')}
           </Link>
         </div>
-        {feedbackFormUrl && (
-          <LinkButton
-            data-testid="feedback-form-link-profile"
-            href={feedbackFormUrl}
-            target="_blank"
-            rel="noreferrer noopener"
-          >
-            {t('feedbackLink')}
-          </LinkButton>
-        )}
         {nameClick > 4 && <span className="mb1">{t('version') + version}</span>}
       </div>
     </div>

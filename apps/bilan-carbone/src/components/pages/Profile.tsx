@@ -5,13 +5,12 @@ import Profile from '../profile/Profile'
 
 interface Props {
   version: string
-  feedbackFormUrl: string
 }
 
-const ProfilePage = ({ version, feedbackFormUrl }: Props) => {
+const ProfilePage = ({ version }: Props) => {
   return (
     <SessionProvider>
-      <Profile version={version} feedbackFormUrl={feedbackFormUrl} />
+      <Profile version={version} />
     </SessionProvider>
   )
 }

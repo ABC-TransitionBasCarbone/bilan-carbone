@@ -9,7 +9,7 @@ import styles from './RessourceLinks.module.css'
 
 interface Props {
   title: string
-  links: { title: string; link?: string; downloadKey?: string; testId?: string }[]
+  links: { title: string; link?: string; downloadKey?: string }[]
 }
 
 const RessourceLinks = ({ title, links }: Props) => {
@@ -29,10 +29,10 @@ const RessourceLinks = ({ title, links }: Props) => {
           <Typography className="mb-2 bold text-center">{title}</Typography>
         </div>
         <div className={classNames(styles.cardLinks, 'text-center', 'h100')}>
-          {links.map(({ title, link, downloadKey, testId }) => (
+          {links.map(({ title, link, downloadKey }) => (
             <div className="mt-2 mb-2" key={link || title}>
               {link ? (
-                <Link data-testid={testId} href={link} target="_blank" rel="noreferrer noopener">
+                <Link href={link} target="_blank" rel="noreferrer noopener">
                   {title}
                 </Link>
               ) : (

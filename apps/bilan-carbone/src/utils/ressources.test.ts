@@ -27,13 +27,6 @@ const getFaqLinkFromResources = (resources: Awaited<ReturnType<typeof getEnviron
   return faqLink && 'link' in faqLink ? faqLink.link : undefined
 }
 
-const getFeedbackLinkFromResources = (resources: Awaited<ReturnType<typeof getEnvironnementRessources>>) => {
-  const feedbackSection = resources.find((resource) => resource.title === 'feedbackTitle')
-  const feedbackLink = feedbackSection?.links[0]
-
-  return feedbackLink && 'link' in feedbackLink ? feedbackLink.link : undefined
-}
-
 describe('getEnvironnementRessources', () => {
   beforeEach(() => {
     jest.clearAllMocks()
@@ -82,34 +75,6 @@ describe('getEnvironnementRessources', () => {
     await expect(getEnvironnementRessources(Environment.BC, t)).rejects.toThrow(
       'Missing translation: openCarbonPracticeUrl',
     )
-  })
-
-  test.each([Environment.BC, Environment.CUT, Environment.TILT, Environment.CLICKSON])(
-    'uses the feedback URL for %s',
-    async (environment) => {
-      jest.mocked(getLocale).mockResolvedValue(Locale.FR)
-      jest.mocked(getEnvVar).mockImplementation(async (key, env) => {
-        if (key === 'FEEDBACK_FORM_URL') {
-          return `https://feedback.${env?.toLowerCase()}`
-        }
-        return key === 'SUPPORT_EMAIL' ? 'support@example.com' : ''
-      })
-
-      const resources = await getEnvironnementRessources(environment, t)
-
-      expect(getFeedbackLinkFromResources(resources)).toBe(`https://feedback.${environment.toLowerCase()}`)
-      expect(getEnvVar).toHaveBeenCalledWith('FEEDBACK_FORM_URL', environment)
-    },
-  )
-
-  test('does not expose a feedback URL for MIP', async () => {
-    jest.mocked(getLocale).mockResolvedValue(Locale.FR)
-    jest.mocked(getEnvVar).mockResolvedValue('https://feedback.example.com')
-
-    const resources = await getEnvironnementRessources(Environment.MIP, t)
-
-    expect(getFeedbackLinkFromResources(resources)).toBeUndefined()
-    expect(getEnvVar).not.toHaveBeenCalledWith('FEEDBACK_FORM_URL', Environment.MIP)
   })
 
   test('returns an empty feedback URL when it is not configured', async () => {

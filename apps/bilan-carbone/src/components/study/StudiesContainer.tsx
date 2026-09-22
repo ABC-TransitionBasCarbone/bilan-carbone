@@ -34,11 +34,29 @@ interface Props {
   organizationVersionId?: string
   isCR?: boolean
   simplified?: boolean
+  feedbackFormUrl?: string
 }
 
-const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified = false }: Props) => {
+const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified = false, feedbackFormUrl }: Props) => {
   const t = await getTranslations('study')
   const tCommon = await getTranslations('common')
+  const tResults = await getTranslations('study.results')
+  const tFeedback = await getTranslations('feedback')
+  const feedbackButtonLabel = tResults.has('feedback.button') ? tResults('feedback.button') : tFeedback('answer')
+  const feedbackLink = feedbackFormUrl ? (
+    <LinkButton
+      data-testid="feedback-form-link-home"
+      className={classNames('w100 justify-center')}
+      href={feedbackFormUrl}
+      color="primary"
+      variant="outlined"
+      size="large"
+      target="_blank"
+      rel="noreferrer noopener"
+    >
+      {feedbackButtonLabel}
+    </LinkButton>
+  ) : null
 
   const allowedStudies = organizationVersionId
     ? await getAllowedStudiesByUserAndOrganization(user, organizationVersionId, simplified)
@@ -106,6 +124,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
           canAddStudy={(await canCreateAStudy(user)) && !isCR && activeLicence}
           creationUrl={creationUrl}
           user={user}
+          feedbackFormUrl={feedbackFormUrl}
           collaborations={!organizationVersionId && isCR}
         />
       )}
@@ -116,6 +135,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
           canAddStudy={(await canCreateAStudy(user, true)) && !isCR && activeLicence}
           creationUrl={creationUrlSimplified}
           user={user}
+          feedbackFormUrl={feedbackFormUrl}
           collaborations={!organizationVersionId && isCR}
           simplified
           showBetaBanner={isTilt(user.environment) && displaySimplifiedStudies}
@@ -143,6 +163,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
                 <AddIcon />
                 {t(simplified ? 'createFirstSimplifiedStudy' : 'createFirstStudy')}
               </LinkButton>
+              {feedbackLink}
             </Box>
           </div>
         </Block>
@@ -163,10 +184,14 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
             link: (children) => <Link href="/mes-empreintes">{children}</Link>,
           })}
         </p>
+        {feedbackLink}
       </Alert>
     </Block>
   ) : (
-    <Block>{customRich(tCommon, 'noStudies')}</Block>
+    <Block>
+      {customRich(tCommon, 'noStudies')}
+      {feedbackLink}
+    </Block>
   )
 }
 

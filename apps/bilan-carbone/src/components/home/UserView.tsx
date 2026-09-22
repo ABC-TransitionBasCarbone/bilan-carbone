@@ -13,9 +13,10 @@ import UserToValidate from './UserToValidate'
 
 interface Props {
   account: UserSession
+  feedbackFormUrl: string
 }
 
-const UserView = async ({ account }: Props) => {
+const UserView = async ({ account, feedbackFormUrl }: Props) => {
   const [organizationVersions, hasUserToValidate, emissionFactorWarning] = await Promise.all([
     getAccountOrganizationVersions(account.accountId),
     hasAccountToValidateInOrganization(account.organizationVersionId),
@@ -44,7 +45,7 @@ const UserView = async ({ account }: Props) => {
           account={account}
         />
       )}
-      <StudiesContainer user={account} isCR={isCR} />
+      <StudiesContainer user={account} isCR={isCR} feedbackFormUrl={feedbackFormUrl} />
 
       {hasAccessToActualityCards(account.environment) && <ActualitiesCards />}
       {emissionFactorWarning.success && !!emissionFactorWarning.data.length && (
