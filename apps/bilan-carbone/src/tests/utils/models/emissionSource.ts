@@ -87,7 +87,7 @@ export const getMockedFullStudyEmissionSource = (
   },
   studySite: {
     id: 'mocked-study-site-id',
-    site: { name: 'Mocked Site', id: 'mocked-site-id' },
+    site: { name: 'Mocked Site', id: 'mocked-site-id', postalCode: '78500', city: null, establishmentYear: '2000' },
   },
   lastEditor: null,
   ...props,

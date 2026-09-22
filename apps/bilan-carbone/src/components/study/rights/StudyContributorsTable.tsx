@@ -1,6 +1,6 @@
 'use client'
 
-import type { FullStudy } from '@/db/study'
+import type { MinimalStudyForRights } from '@/db/study'
 import { environmentPostMapping, subPostsByPost } from '@/services/posts'
 import { deleteStudyContributor } from '@/services/serverFunctions/study'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
@@ -22,7 +22,7 @@ import { useCallback, useMemo, useState } from 'react'
 import styles from './StudyContributorsTable.module.css'
 
 interface Props {
-  study: FullStudy
+  study: MinimalStudyForRights
   canAddContributor: boolean
 }
 

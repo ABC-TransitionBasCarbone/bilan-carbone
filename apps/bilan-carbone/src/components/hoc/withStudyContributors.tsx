@@ -1,7 +1,6 @@
-import { FullStudy, getStudyById } from '@/db/study'
+import { FullStudy, getMinimalStudyForRights, getStudyById } from '@/db/study'
 import { canReadStudy, canReadStudyDetail } from '@/services/permissions/study'
 import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
-import { redirect } from 'next/navigation'
 import React from 'react'
 import { UserSessionProps } from './withAuth'
 
@@ -15,7 +14,7 @@ export type StudyProps = {
   studyId: string
 }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const WithStudyDetails = (WrappedComponent: React.ComponentType<any & UserSessionProps & StudyProps>) => {
+const WithStudyContributors = (WrappedComponent: React.ComponentType<any & UserSessionProps & StudyProps>) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Component = async (props: any & Props & UserSessionProps) => {
     const params = await props.params
@@ -25,22 +24,20 @@ const WithStudyDetails = (WrappedComponent: React.ComponentType<any & UserSessio
     }
 
     const study = await getStudyById(id, props.user.organizationVersionId)
-    if (!study) {
+    const minimalStudy = await getMinimalStudyForRights(id)
+    if (!study || !minimalStudy) {
       return <NotFound />
     }
 
-    if (!(await canReadStudyDetail(props.user, study))) {
-      if (!(await canReadStudy(props.user, study.id))) {
-        return <NotFound />
-      }
-      return redirect(`/etudes/${study.id}/contributeur`)
+    if (!(await canReadStudyDetail(props.user, study)) && !(await canReadStudy(props.user, study.id))) {
+      return <NotFound />
     }
 
     return <WrappedComponent {...props} study={study} studyId={study.id} />
   }
 
-  Component.displayName = 'WithStudyDetails'
+  Component.displayName = 'WithStudyContributors'
   return Component
 }
 
-export default WithStudyDetails
+export default WithStudyContributors

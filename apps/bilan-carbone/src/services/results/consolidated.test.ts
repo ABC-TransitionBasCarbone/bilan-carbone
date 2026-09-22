@@ -114,7 +114,10 @@ const tagFamilies = [
   { id: 'familyTag3', name: 'Family Tag 3', tags: [tags[8], tags[9], tags[10]] },
 ]
 
-const studySite = { id: 'mocked-study-site-id', site: { name: 'Mocked Site', id: 'mocked-site-id' } }
+const studySite = {
+  id: 'mocked-study-site-id',
+  site: { name: 'Mocked Site', id: 'mocked-site-id', postalCode: '78500', city: null, establishmentYear: '2000' },
+}
 
 describe('consolidated function', () => {
   describe('computeResultsByTag', () => {

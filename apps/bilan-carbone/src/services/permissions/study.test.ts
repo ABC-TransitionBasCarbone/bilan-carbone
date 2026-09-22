@@ -2,7 +2,12 @@ import * as dbAccountModule from '@/db/account'
 import * as dbOrganizationModule from '@/db/organization'
 import * as dbStudyModule from '@/db/study'
 import { mockedOrganizationVersionId } from '@/tests/utils/models/organization'
-import { getMockedFullStudy, getMockedStudyCreateInput } from '@/tests/utils/models/study'
+import {
+  getMockedAllowedUser,
+  getMockedFullStudy,
+  getMockedMinimalStudy,
+  getMockedStudyCreateInput,
+} from '@/tests/utils/models/study'
 import {
   getMockedDbAccount,
   getMockedDbActualizedAuth,
@@ -18,7 +23,13 @@ import * as authModule from '../auth'
 import * as userModule from '../serverFunctions/user'
 import * as environmentAdvancedModule from './environmentAdvanced'
 import * as organizationModule from './organization'
-import { canCreateSpecificStudy, canDeleteStudy, canDuplicateStudy, getEnvironmentsForDuplication } from './study'
+import {
+  canCreateSpecificStudy,
+  canDeleteStudy,
+  canDuplicateStudy,
+  getEnvironmentsForDuplication,
+  NEWGetAccountRoleOnStudy,
+} from './study'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('uuid', () => ({ v4: jest.fn() }))
@@ -36,10 +47,16 @@ jest.mock('@/utils/study', () => ({
   getAccountRoleOnStudy: jest.fn(),
   getDuplicableEnvironments: jest.fn(),
   hasSufficientLevel: jest.fn(),
+  getUserRoleOnPublicStudy: jest.fn(),
 }))
-jest.mock('@/utils/organization', () => ({ canEditOrganizationVersion: jest.fn(), hasActiveLicence: jest.fn() }))
+jest.mock('@/utils/organization', () => ({
+  canEditOrganizationVersion: jest.fn(),
+  hasActiveLicence: jest.fn(),
+  isAdminOnOrga: jest.fn(),
+  isInOrgaOrParent: jest.fn(),
+}))
 jest.mock('./organization', () => ({ isInOrgaOrParentFromId: jest.fn() }))
-jest.mock('./environmentAdvanced', () => ({ hasAccessToDuplicateStudy: jest.fn() }))
+jest.mock('./environmentAdvanced', () => ({ hasAccessToDuplicateStudy: jest.fn(), isTiltSimplified: jest.fn() }))
 jest.mock('../auth', () => ({ dbActualizedAuth: jest.fn() }))
 jest.mock('../serverFunctions/user', () => ({ getUserActiveAccounts: jest.fn() }))
 
@@ -58,6 +75,7 @@ const mockGetDuplicableEnvironments = studyUtils.getDuplicableEnvironments as je
 const mockHasSufficientLevel = studyUtils.hasSufficientLevel as jest.Mock
 const mockCanEditOrganizationVersion = organizationUtils.canEditOrganizationVersion as jest.Mock
 const mockHasActiveLicence = organizationUtils.hasActiveLicence as jest.Mock
+const mockIsAdminOnOrga = organizationUtils.isAdminOnOrga as jest.Mock
 const mockIsInOrgaOrParentFromId = organizationModule.isInOrgaOrParentFromId as jest.Mock
 const mockHasAccessToDuplicateStudy = environmentAdvancedModule.hasAccessToDuplicateStudy as jest.Mock
 const mockGetAccountById = dbAccountModule.getAccountById as jest.Mock
@@ -65,6 +83,9 @@ const mockGetOrganizationVersionsByOrganizationId =
   dbOrganizationModule.getOrganizationVersionsByOrganizationId as jest.Mock
 const mockGetOrganizationVersionById = dbOrganizationModule.getOrganizationVersionById as jest.Mock
 const mockGetOrganizationVersionForRightsCheck = dbOrganizationModule.getOrganizationVersionForRightsCheck as jest.Mock
+const mockIsTiltSimplified = environmentAdvancedModule.isTiltSimplified as jest.Mock
+const mockIsInOrgaOrParent = organizationUtils.isInOrgaOrParent as jest.Mock
+const mockGetUserRoleOnPublicStudy = studyUtils.getUserRoleOnPublicStudy as jest.Mock
 
 const advancedStudy = getMockedStudyCreateInput({ level: Level.Advanced })
 const standardStudy = getMockedStudyCreateInput({ level: Level.Standard })
@@ -581,6 +602,240 @@ describe('Study permissions service', () => {
       expect(mockGetUserActiveAccounts).toHaveBeenCalledTimes(1)
       expect(mockGetOrganizationVersionsByOrganizationId).toHaveBeenCalledTimes(1)
       expect(mockGetDuplicableEnvironments).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('NEWGetAccountRoleOnStudy', () => {
+    beforeEach(() => {
+      mockIsAdminOnOrga.mockReset()
+      mockIsTiltSimplified.mockReset()
+      mockIsInOrgaOrParent.mockReset()
+      mockGetUserRoleOnPublicStudy.mockReset()
+      mockHasSufficientLevel.mockReturnValue(true)
+    })
+
+    it('TILT SIMPLIFIED should return editor if user is admin on study orga', () => {
+      const minimalStudy = getMockedMinimalStudy({
+        simplified: true,
+        organizationVersion: { id: 'orga', environment: Environment.TILT },
+      })
+      const user = getMockedDbActualizedAuth({}, { organizationVersionId: 'orga', role: Role.ADMIN }).user
+      mockIsAdminOnOrga.mockReturnValue(true)
+      mockIsTiltSimplified.mockReturnValue(true)
+
+      const result = NEWGetAccountRoleOnStudy(user, minimalStudy)
+
+      expect(result).toBe(StudyRole.Editor)
+    })
+
+    it('TILT SIMPLIFIED should return editor if user is in allowedUser', () => {
+      const minimalStudy = getMockedMinimalStudy({
+        simplified: true,
+        organizationVersion: { id: 'other-orga', environment: Environment.TILT },
+        allowedUsers: [
+          getMockedAllowedUser({
+            account: { id: 'allowed-user@example.com', organizationVersion: { id: 'orga', activatedLicence: [] } },
+          }),
+        ],
+      })
+      const user = getMockedDbActualizedAuth(
+        {},
+        { organizationVersionId: 'orga', accountId: 'allowed-user@example.com' },
+      ).user
+      mockIsTiltSimplified.mockReturnValue(true)
+      mockIsAdminOnOrga.mockReturnValue(false)
+
+      const result = NEWGetAccountRoleOnStudy(user, minimalStudy)
+
+      expect(result).toBe(StudyRole.Editor)
+    })
+
+    it('TILT SIMPLIFIED should return editor if user is in orga and study is public', () => {
+      const minimalStudy = getMockedMinimalStudy({
+        simplified: true,
+        isPublic: true,
+        organizationVersion: { id: 'orga', environment: Environment.TILT },
+      })
+
+      const user = getMockedDbActualizedAuth({}, { organizationVersionId: 'orga', role: Role.DEFAULT }).user
+      mockIsAdminOnOrga.mockReturnValue(false)
+      mockIsTiltSimplified.mockReturnValue(true)
+      mockIsInOrgaOrParent.mockReturnValue(true)
+      mockGetUserRoleOnPublicStudy.mockReturnValue(StudyRole.Editor)
+
+      const result = NEWGetAccountRoleOnStudy(user, minimalStudy)
+
+      expect(result).toBe(StudyRole.Editor)
+    })
+
+    it('TILT SIMPLIFIED should return null if user is not in orga and study is public', () => {
+      const minimalStudy = getMockedMinimalStudy({
+        simplified: true,
+        isPublic: true,
+        organizationVersion: { id: 'orga', environment: Environment.TILT },
+      })
+
+      const user = getMockedDbActualizedAuth({}, { organizationVersionId: 'orga', role: Role.DEFAULT }).user
+      mockIsAdminOnOrga.mockReturnValue(false)
+      mockIsTiltSimplified.mockReturnValue(true)
+      mockIsInOrgaOrParent.mockReturnValue(false)
+
+      const result = NEWGetAccountRoleOnStudy(user, minimalStudy)
+
+      expect(result).toBe(null)
+    })
+
+    it('TILT SIMPLIFIED should return null if user is in orga but study is not public', () => {
+      const minimalStudy = getMockedMinimalStudy({
+        simplified: true,
+        organizationVersion: { id: 'orga', environment: Environment.TILT },
+      })
+
+      const user = getMockedDbActualizedAuth({}, { organizationVersionId: 'orga', role: Role.DEFAULT }).user
+      mockIsAdminOnOrga.mockReturnValue(false)
+      mockIsTiltSimplified.mockReturnValue(true)
+      mockIsInOrgaOrParent.mockReturnValue(true)
+
+      const result = NEWGetAccountRoleOnStudy(user, minimalStudy)
+
+      expect(result).toBe(null)
+    })
+
+    it('should return null if user is not in orga and study is not public', () => {
+      const minimalStudy = getMockedMinimalStudy({
+        organizationVersion: { id: 'orga', environment: Environment.BC },
+      })
+
+      const user = getMockedDbActualizedAuth({}, { organizationVersionId: 'not-orga', role: Role.ADMIN }).user
+      mockIsAdminOnOrga.mockReturnValue(false)
+      mockIsTiltSimplified.mockReturnValue(true)
+      mockIsInOrgaOrParent.mockReturnValue(false)
+
+      const result = NEWGetAccountRoleOnStudy(user, minimalStudy)
+
+      expect(result).toBe(null)
+    })
+
+    it('should return validator if admin in orga', () => {
+      const minimalStudy = getMockedMinimalStudy({
+        organizationVersion: { id: 'orga', environment: Environment.BC },
+      })
+
+      const user = getMockedDbActualizedAuth({}, { organizationVersionId: 'orga', role: Role.ADMIN }).user
+      mockIsAdminOnOrga.mockReturnValue(true)
+      mockIsTiltSimplified.mockReturnValue(false)
+      mockIsInOrgaOrParent.mockReturnValue(true)
+
+      const result = NEWGetAccountRoleOnStudy(user, minimalStudy)
+
+      expect(result).toBe(StudyRole.Validator)
+    })
+
+    it('should return reader if admin in orga but does not have the level', () => {
+      const minimalStudy = getMockedMinimalStudy({
+        level: Level.Advanced,
+        organizationVersion: { id: 'orga', environment: Environment.BC },
+      })
+
+      const user = getMockedDbActualizedAuth(
+        {},
+        { organizationVersionId: 'orga', role: Role.ADMIN, level: Level.Initial },
+      ).user
+      mockIsAdminOnOrga.mockReturnValue(true)
+      mockIsTiltSimplified.mockReturnValue(false)
+      mockIsInOrgaOrParent.mockReturnValue(true)
+      mockHasSufficientLevel.mockReturnValue(false)
+
+      const result = NEWGetAccountRoleOnStudy(user, minimalStudy)
+
+      expect(result).toBe(StudyRole.Reader)
+    })
+
+    it('should return editor if user is in allowedUser', () => {
+      const minimalStudy = getMockedMinimalStudy({
+        organizationVersion: { id: 'other-orga', environment: Environment.BC },
+        allowedUsers: [
+          getMockedAllowedUser({
+            role: StudyRole.Editor,
+            account: {
+              id: 'allowed-user@example.com',
+              organizationVersion: { id: 'orga', activatedLicence: [] },
+            },
+          }),
+        ],
+      })
+      const user = getMockedDbActualizedAuth(
+        {},
+        { organizationVersionId: 'orga', accountId: 'allowed-user@example.com' },
+      ).user
+      mockIsTiltSimplified.mockReturnValue(false)
+      mockIsAdminOnOrga.mockReturnValue(false)
+
+      const result = NEWGetAccountRoleOnStudy(user, minimalStudy)
+
+      expect(result).toBe(StudyRole.Editor)
+    })
+
+    it('should return reader if user is in allowedUser but does not have sufficient level', () => {
+      const minimalStudy = getMockedMinimalStudy({
+        level: Level.Advanced,
+        organizationVersion: { id: 'other-orga', environment: Environment.BC },
+        allowedUsers: [
+          getMockedAllowedUser({
+            account: { id: 'allowed-user@example.com', organizationVersion: { id: 'orga', activatedLicence: [] } },
+          }),
+        ],
+      })
+      const user = getMockedDbActualizedAuth(
+        {},
+        { organizationVersionId: 'orga', accountId: 'allowed-user@example.com', level: Level.Initial },
+      ).user
+      mockIsTiltSimplified.mockReturnValue(false)
+      mockIsAdminOnOrga.mockReturnValue(false)
+      mockHasSufficientLevel.mockReturnValue(false)
+
+      const result = NEWGetAccountRoleOnStudy(user, minimalStudy)
+
+      expect(result).toBe(StudyRole.Reader)
+    })
+
+    it('should return editor if study is public and user is in orga', () => {
+      const minimalStudy = getMockedMinimalStudy({
+        organizationVersion: { id: 'orga', environment: Environment.BC },
+        allowedUsers: [],
+        isPublic: true,
+      })
+      const user = getMockedDbActualizedAuth(
+        {},
+        { organizationVersionId: 'orga', accountId: 'allowed-user@example.com', role: Role.COLLABORATOR },
+      ).user
+      mockIsTiltSimplified.mockReturnValue(false)
+      mockIsInOrgaOrParent.mockReturnValue(true)
+      mockGetUserRoleOnPublicStudy.mockReturnValue(StudyRole.Editor)
+
+      const result = NEWGetAccountRoleOnStudy(user, minimalStudy)
+
+      expect(result).toBe(StudyRole.Editor)
+    })
+
+    it('should return reader if study is public and user is in orga but does not have sufficient level', () => {
+      const minimalStudy = getMockedMinimalStudy({
+        level: Level.Advanced,
+        organizationVersion: { id: 'orga', environment: Environment.BC },
+        allowedUsers: [],
+        isPublic: true,
+      })
+      const user = getMockedDbActualizedAuth(
+        {},
+        { organizationVersionId: 'orga', accountId: 'allowed-user@example.com', level: Level.Initial },
+      ).user
+      mockIsTiltSimplified.mockReturnValue(false)
+      mockIsInOrgaOrParent.mockReturnValue(true)
+      mockHasSufficientLevel.mockReturnValue(false)
+
+      const result = NEWGetAccountRoleOnStudy(user, minimalStudy)
+
+      expect(result).toBe(StudyRole.Reader)
     })
   })
 })

@@ -1,8 +1,9 @@
-import type { FullStudy } from '@/db/study'
+import type { FullStudy, MinimalStudyForRights } from '@/db/study'
 import type { Prisma, Study } from '@abc-transitionbascarbone/db-common'
 import {
   ControlMode,
   EmissionFactorBase,
+  Environment,
   Export,
   Import,
   Level,
@@ -12,6 +13,7 @@ import {
   Unit,
 } from '@abc-transitionbascarbone/db-common/enums'
 import { mockedUser } from '@abc-transitionbascarbone/services/tests/models/user'
+import { DeepPartial } from '@abc-transitionbascarbone/utils/types'
 import { mockedOrganizationVersion, mockedOrganizationVersionId } from './organization'
 import { mockedAccountId } from './user'
 
@@ -175,6 +177,81 @@ export const mockedEmissionSourceEmissionFactor = {
   emissionFactorParts: [],
 }
 
+export const getMockedAllowedUser = (user?: DeepPartial<MinimalStudyForRights['allowedUsers'][number]>) => ({
+  role: StudyRole.Validator,
+  accountId: TEST_IDS.account,
+  createdAt: new Date(),
+  ...user,
+  account: {
+    id: TEST_IDS.account,
+    organizationVersionId: TEST_IDS.orgVersion,
+    readerOnly: false,
+    ...user?.account,
+    organizationVersion: {
+      id: TEST_IDS.orgVersion,
+      activatedLicence: [new Date().getFullYear()],
+      ...user?.account?.organizationVersion,
+    },
+    user: {
+      email: TEST_EMAILS.teamMember,
+      id: TEST_IDS.userStudy,
+      level: Level.Initial,
+      firstName: 'Team',
+      lastName: 'Member',
+      ...user?.account?.user,
+    },
+  },
+})
+
+const mockMinimalStudy: MinimalStudyForRights = {
+  id: 'study-1',
+  name: 'Study 1',
+  organizationVersion: {
+    id: 'org-1',
+    parentId: null,
+    environment: Environment.BC,
+    activatedLicence: [2020],
+    parent: null,
+    organization: { name: 'Org' },
+  },
+  allowedUsers: [getMockedAllowedUser()],
+  contributors: [],
+  emissionFactorVersions: [],
+  level: Level.Initial,
+  isPublic: false,
+  simplified: false,
+  startDate: new Date('2025-12-01'),
+  endDate: new Date('2025-12-01'),
+  resultsUnit: StudyResultUnit.K,
+}
+
+const isMergeableObject = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value) && !(value instanceof Date)
+
+const mergeMock = <Value>(defaults: Value, overrides?: DeepPartial<Value>): Value => {
+  if (overrides === undefined) {
+    return defaults
+  }
+
+  if (Array.isArray(defaults) && Array.isArray(overrides)) {
+    return overrides.map((override, index) => mergeMock(defaults[index], override)) as Value
+  }
+
+  if (isMergeableObject(defaults) && isMergeableObject(overrides)) {
+    return Object.fromEntries(
+      Object.entries({ ...defaults, ...overrides }).map(([key, value]) => [
+        key,
+        mergeMock(defaults[key], overrides[key] ?? value),
+      ]),
+    ) as Value
+  }
+
+  return overrides as Value
+}
+
+export const getMockedMinimalStudy = (props?: DeepPartial<MinimalStudyForRights>): MinimalStudyForRights =>
+  mergeMock<MinimalStudyForRights>(mockMinimalStudy, props)
+
 export const getMockedStudy = (
   props?: Partial<Prisma.StudyCreateInput> & {
     createdAt?: Date
@@ -302,7 +379,7 @@ export const getMockeFullStudy = (overrides = {}): FullStudy => ({
       value: 100,
       studySite: {
         id: TEST_IDS.studySite,
-        site: { id: TEST_IDS.site, name: 'Test Site' },
+        site: { id: TEST_IDS.site, name: 'Test Site', postalCode: '78500', city: null, establishmentYear: '2000' },
       },
       emissionFactor: mockedEmissionSourceEmissionFactor,
       emissionSourceTags: [],
@@ -337,6 +414,8 @@ export const getMockeFullStudy = (overrides = {}): FullStudy => ({
     {
       account: {
         id: TEST_IDS.account,
+        organizationVersionId: TEST_IDS.orgVersion,
+        organizationVersion: { id: TEST_IDS.orgVersion, activatedLicence: [new Date().getFullYear()] },
         user: {
           email: TEST_EMAILS.teamMember,
           id: TEST_IDS.userStudy,
@@ -344,7 +423,6 @@ export const getMockeFullStudy = (overrides = {}): FullStudy => ({
           firstName: 'Team',
           lastName: 'Member',
         },
-        organizationVersionId: TEST_IDS.orgVersion,
         readerOnly: false,
       },
       role: StudyRole.Validator,
@@ -363,7 +441,7 @@ export const getMockeFullStudy = (overrides = {}): FullStudy => ({
           firstName: 'Contributor',
           lastName: 'Contributor',
         },
-        organizationVersionId: TEST_IDS.orgVersion,
+        organizationVersion: { id: TEST_IDS.orgVersion, activatedLicence: [] },
       },
       subPost: SubPost.Achats,
     },

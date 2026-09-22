@@ -1,6 +1,6 @@
 'use client'
 
-import type { FullStudy } from '@/db/study'
+import type { MinimalStudyForRights } from '@/db/study'
 import { EmissionFactorImportVersion } from '@abc-transitionbascarbone/db-common'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
@@ -11,7 +11,7 @@ import StudyVersions from './StudyVersions'
 
 interface Props {
   user: UserSession
-  study: FullStudy
+  study: MinimalStudyForRights
   disabled: boolean
   emissionFactorSources: EmissionFactorImportVersion[]
 }

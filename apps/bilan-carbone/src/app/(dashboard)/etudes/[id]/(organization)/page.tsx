@@ -1,6 +1,5 @@
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
-import { StudyProps } from '@/components/hoc/withStudy'
-import withStudyDetails from '@/components/hoc/withStudyDetails'
+import withStudyDetails, { StudyProps } from '@/components/hoc/withStudyDetails'
 import StudyPage from '@/components/pages/Study'
 import { hasAccessToStudyHomePage } from '@/services/permissions/environment'
 import { getStudyDefaultLandingPath } from '@/utils/study'

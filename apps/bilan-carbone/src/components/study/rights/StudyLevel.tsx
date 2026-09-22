@@ -1,6 +1,6 @@
 'use client'
 
-import type { FullStudy } from '@/db/study'
+import type { MinimalStudyForRights } from '@/db/study'
 import { changeStudyLevel } from '@/services/serverFunctions/study'
 import { ChangeStudyLevelCommand, ChangeStudyLevelCommandValidation } from '@/services/serverFunctions/study.command'
 import { getAllowedLevels } from '@/utils/study'
@@ -22,7 +22,7 @@ import styles from './StudyParams.module.css'
 
 interface Props {
   user: UserSession
-  study: FullStudy
+  study: MinimalStudyForRights
   disabled: boolean
 }
 

@@ -49,6 +49,7 @@ import {
   FullStudy,
   getEngagementActionById,
   getEngagementActions,
+  getMinimalStudyForRights,
   getOrganizationStudiesBeforeDate,
   getPendingStudyCommentsCountFromAuthor,
   getStudiesSitesFromIds,
@@ -59,8 +60,10 @@ import {
   getStudyCommentsWithStudyIdAndSubPost,
   getStudyNameById,
   getStudySites,
+  getStudySitesWithName,
   getStudyTemplate,
   getUsersOnStudy,
+  MinimalStudyForRights,
   removeSourceToStudy,
   updateEmissionSourceEmissionFactor,
   updateEngagementAction,
@@ -90,7 +93,7 @@ import { groupBy } from '@/utils/array'
 import { mapCncToStudySite } from '@/utils/cnc'
 import { calculateDistanceFromParis } from '@/utils/distance'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
-import { canEditOrganizationVersion } from '@/utils/organization'
+import { canEditOrganizationVersion, hasActiveLicence } from '@/utils/organization'
 import { withServerResponse } from '@/utils/serverResponse'
 import {
   getAccountRoleOnStudy,
@@ -167,6 +170,7 @@ import {
   canReadStudy,
   canUpgradeSourceVersion,
   getEnvironmentsForDuplication,
+  NEWGetAccountRoleOnStudy,
 } from '../permissions/study'
 import { isAdminOnStudyOrga } from '../permissions/study.utils'
 import { TILT_SIMPLIFIED_POSTS_CONFIG_VERSION } from '../publicodes/simplifiedPublicodesConfig'
@@ -802,7 +806,7 @@ export const updateStudySpecificExportFields = async (studyId: string, controlMo
 
 const getOrCreateUserAndSendStudyInvite = async (
   email: string,
-  study: FullStudy,
+  study: MinimalStudyForRights,
   organizationVersion: OrganizationVersionWithOrganization,
   creator: UserSession,
   existingUser: UserWithAccounts | null,
@@ -892,9 +896,8 @@ export const newStudyRight = async (right: NewStudyRightCommand) =>
 
     const lowerCasedEmail = right.email.toLowerCase()
 
-    const [studyWithRights, existingAccount, existingUser] = await Promise.all([
+    const [studyWithRights, existingUserToChange] = await Promise.all([
       getStudyById(right.studyId, session.user.organizationVersionId),
-      getAccountByEmailAndOrganizationVersionId(lowerCasedEmail, session.user.organizationVersionId),
       getUserByEmail(lowerCasedEmail),
     ])
 
@@ -902,45 +905,66 @@ export const newStudyRight = async (right: NewStudyRightCommand) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (!existingUser || !hasSufficientLevel(existingUser.level, studyWithRights.level)) {
+    const existingAccountToChange = existingUserToChange?.accounts.find(
+      (account) => account.environment === studyWithRights.organizationVersion.environment,
+    )
+
+    const userToChangeOrganizationVersion = existingAccountToChange?.organizationVersionId
+      ? await getOrganizationVersionById(existingAccountToChange?.organizationVersionId)
+      : null
+
+    if (
+      !existingUserToChange ||
+      !hasSufficientLevel(existingUserToChange.level, studyWithRights.level) ||
+      !userToChangeOrganizationVersion ||
+      !hasActiveLicence(userToChangeOrganizationVersion)
+    ) {
       right.role = StudyRole.Reader
     }
 
-    if (!canAddRightOnStudy(session.user, studyWithRights, existingUser, right.role)) {
+    if (!canAddRightOnStudy(session.user, studyWithRights, existingUserToChange, right.role)) {
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const organizationVersion = await getOrganizationVersionById(studyWithRights.organizationVersionId)
+    const organizationVersion = await getOrganizationVersionById(studyWithRights.organizationVersion.id)
     if (!organizationVersion) {
       throw new Error(NOT_AUTHORIZED)
     }
 
     if (
-      studyWithRights.allowedUsers.some((allowedUser) => allowedUser.accountId === existingAccount?.id) ||
-      studyWithRights.contributors.some((contributor) => contributor.accountId === existingAccount?.id)
+      studyWithRights.allowedUsers.some((allowedUser) => allowedUser.accountId === existingAccountToChange?.id) ||
+      studyWithRights.contributors.some((contributor) => contributor.accountId === existingAccountToChange?.id)
     ) {
       throw new Error(ALREADY_IN_STUDY)
     }
 
     if (
-      existingAccount &&
+      existingUserToChange &&
+      existingAccountToChange &&
       isAdminOnStudyOrga(
-        accountWithUserToUserSession(existingAccount as AccountWithUser),
+        accountWithUserToUserSession({ ...existingAccountToChange, user: existingUserToChange }),
         studyWithRights.organizationVersion,
       ) &&
-      hasSufficientLevel(existingAccount.user.level, studyWithRights.level)
+      hasSufficientLevel(existingUserToChange.level, studyWithRights.level)
     ) {
       right.role = StudyRole.Validator
     }
 
     if (
-      existingAccount &&
-      existingUser &&
+      existingAccountToChange &&
+      existingUserToChange &&
       studyWithRights.isPublic &&
-      (await isInOrgaOrParentFromId(existingAccount.organizationVersionId, studyWithRights.organizationVersionId))
+      (await isInOrgaOrParentFromId(
+        existingAccountToChange.organizationVersionId,
+        studyWithRights.organizationVersion.id,
+      ))
     ) {
       const defaultRole = getUserRoleOnPublicStudy(
-        { role: existingAccount.role, level: existingUser?.level, environment: existingAccount.environment },
+        {
+          role: existingAccountToChange.role,
+          level: existingUserToChange?.level,
+          environment: existingAccountToChange.environment,
+        },
         studyWithRights.level,
       )
       if (!getAllowedRolesFromDefaultRole(defaultRole).includes(right.role)) {
@@ -953,7 +977,7 @@ export const newStudyRight = async (right: NewStudyRightCommand) =>
       studyWithRights,
       organizationVersion as OrganizationVersionWithOrganization,
       session.user,
-      existingUser,
+      existingUserToChange,
       right.role,
     )
 
@@ -971,24 +995,30 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const [studyWithRights, existingAccount, existingUser] = await Promise.all([
+    const [studyWithRights, existingUserToChange] = await Promise.all([
       getStudyById(studyId, session.user.organizationVersionId),
-      getAccountByEmailAndOrganizationVersionId(email, session.user.organizationVersionId),
       getUserByEmail(email),
     ])
 
-    if (!studyWithRights || !existingAccount) {
+    if (!studyWithRights || !existingUserToChange) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    const existingAccountToChange = existingUserToChange.accounts.find(
+      (account) => account.environment === studyWithRights.organizationVersion.environment,
+    )
+
+    if (!existingAccountToChange) {
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (!canAddRightOnStudy(session.user, studyWithRights, existingUser, studyRole)) {
+    if (!canAddRightOnStudy(session.user, studyWithRights, existingUserToChange, studyRole)) {
       throw new Error(NOT_AUTHORIZED)
     }
 
     if (
-      existingAccount &&
+      existingAccountToChange &&
       isAdminOnStudyOrga(
-        accountWithUserToUserSession(existingAccount as AccountWithUser),
+        accountWithUserToUserSession({ ...existingAccountToChange, user: existingUserToChange }),
         studyWithRights.organizationVersion,
       ) &&
       studyRole !== StudyRole.Validator
@@ -996,22 +1026,33 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
       throw new Error(NOT_AUTHORIZED)
     }
 
+    const userToChangeOrganizationVersion = existingAccountToChange?.organizationVersionId
+      ? await getOrganizationVersionById(existingAccountToChange?.organizationVersionId)
+      : null
+
     if (
-      existingAccount &&
-      !hasSufficientLevel(existingAccount.user.level, studyWithRights.level) &&
-      studyRole !== StudyRole.Reader
+      !userToChangeOrganizationVersion ||
+      !hasActiveLicence(userToChangeOrganizationVersion) ||
+      (!hasSufficientLevel(existingUserToChange.level, studyWithRights.level) && studyRole !== StudyRole.Reader)
     ) {
       throw new Error(NOT_AUTHORIZED)
     }
 
     if (
-      existingAccount &&
-      existingUser &&
+      existingAccountToChange &&
+      existingUserToChange &&
       studyWithRights.isPublic &&
-      (await isInOrgaOrParentFromId(existingAccount.organizationVersionId, studyWithRights.organizationVersionId))
+      (await isInOrgaOrParentFromId(
+        existingAccountToChange.organizationVersionId,
+        studyWithRights.organizationVersionId,
+      ))
     ) {
       const defaultRole = getUserRoleOnPublicStudy(
-        { role: existingAccount.role, level: existingUser?.level, environment: existingAccount.environment },
+        {
+          role: existingAccountToChange.role,
+          level: existingUserToChange?.level,
+          environment: existingAccountToChange.environment,
+        },
         studyWithRights.level,
       )
       if (!getAllowedRolesFromDefaultRole(defaultRole).includes(studyRole)) {
@@ -1019,7 +1060,7 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
       }
     }
 
-    await updateUserOnStudy(existingAccount.id, studyWithRights.id, studyRole)
+    await updateUserOnStudy(existingAccountToChange.id, studyWithRights.id, studyRole)
   })
 
 export const newStudyContributor = async (
@@ -1190,7 +1231,7 @@ export const findStudiesWithSites = async (siteIds: string[]) =>
     }
   })
 
-export const deleteStudyMember = async (member: FullStudy['allowedUsers'][0], studyId: string) =>
+export const deleteStudyMember = async (member: { accountId: string }, studyId: string) =>
   withServerResponse('deleteStudyMember', async () => {
     const [session, study] = await Promise.all([dbActualizedAuth(), getStudy(studyId)])
     if (
@@ -2580,4 +2621,35 @@ export const getStudyExports = async (studyId: string | undefined) =>
     }
 
     return study.exports?.types || []
+  })
+
+export const NEWGetAccountRoleOnStudyWithId = async (user: UserSession, studyId: string) =>
+  withServerResponse('NEWGetAccountRoleOnStudyWithId', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user || !session.user.organizationVersionId) {
+      return null
+    }
+
+    const minimalStudy = await getMinimalStudyForRights(studyId)
+
+    if (!minimalStudy) {
+      throw new Error('Study not found')
+    }
+
+    return NEWGetAccountRoleOnStudy(session.user, minimalStudy)
+  })
+
+export const getStudySitesList = async (studyId: string) =>
+  withServerResponse('getStudySitesList', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user || !session.user.organizationVersionId) {
+      return null
+    }
+
+    const studySites = await getStudySitesWithName(studyId)
+    if (!(await canReadStudy(session.user, studyId))) {
+      return null
+    }
+
+    return studySites
   })

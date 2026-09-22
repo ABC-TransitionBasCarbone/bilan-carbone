@@ -5,12 +5,14 @@ import { filterAllowedStudies } from '@/services/permissions/study'
 import { subPostsByPost } from '@/services/posts'
 import { ChangeStudyCinemaCommand } from '@/services/serverFunctions/study.command'
 import { mapCncToStudySite } from '@/utils/cnc'
-import { isAdminOnOrga } from '@/utils/organization'
+import { hasActiveLicence, isAdminOnOrga } from '@/utils/organization'
 import { getAllowedLevels, getUserRoleOnPublicStudy, hasSufficientLevel, StudyWithRoleFields } from '@/utils/study'
 import { isAdmin } from '@/utils/user'
 import type {
+  Cnc,
   DuplicableStudy,
   Level,
+  OpeningHours,
   Prisma,
   StudyTag,
   StudyTagFamily,
@@ -31,6 +33,7 @@ import { cache } from 'react'
 import { getAccountOrganizationVersions } from './account'
 import { AccountWithUserSelect } from './account.select'
 import { prismaClient } from './client.server'
+import { getOrganizationVersionsByIds } from './organizationVersions'
 
 export type StudyTagFamilyWithTags = Omit<StudyTagFamily, 'createdAt' | 'updatedAt'> & {
   tags: Omit<StudyTag, 'familyId' | 'createdAt' | 'updatedAt'>[]
@@ -122,7 +125,7 @@ const fullStudyInclude = {
         select: {
           id: true,
           site: {
-            select: { id: true, name: true },
+            select: { name: true, id: true, postalCode: true, city: true, establishmentYear: true },
           },
         },
       },
@@ -193,7 +196,7 @@ const fullStudyInclude = {
       account: {
         select: {
           id: true,
-          organizationVersionId: true,
+          organizationVersion: { select: { id: true, activatedLicence: true } },
           user: {
             select: {
               id: true,
@@ -216,6 +219,7 @@ const fullStudyInclude = {
         select: {
           id: true,
           organizationVersionId: true,
+          organizationVersion: { select: { id: true, activatedLicence: true } },
           user: {
             select: {
               id: true,
@@ -332,26 +336,28 @@ const fullStudyInclude = {
   },
 } satisfies Prisma.StudyInclude
 
-const normalizeAllowedUsers = (
-  allowedUsers: Prisma.StudyGetPayload<{ include: typeof fullStudyInclude }>['allowedUsers'],
+type AllowedUserWithLevel = { account: { user: { level: Level | null }; organizationVersionId: string | null } }
+
+type NormalizedAllowedUser<T extends AllowedUserWithLevel> = Omit<T, 'account'> & {
+  account: T['account'] & {
+    readerOnly: boolean
+  }
+}
+
+const normalizeAllowedUsers = async <T extends AllowedUserWithLevel>(
+  allowedUsers: T[],
   studyLevel: Level,
-  organizationVersionId: string | null,
-) =>
-  allowedUsers.map((allowedUser) => {
+): Promise<NormalizedAllowedUser<T>[]> => {
+  const organizationVersions = await getOrganizationVersionsByIds(
+    allowedUsers.map((allowedUser) => allowedUser.account.organizationVersionId).filter((id) => id !== null),
+  )
+  return allowedUsers.map((allowedUser) => {
+    const orgaVersion = organizationVersions.find((ov) => ov.id === allowedUser.account.organizationVersionId)
     const readerOnly =
-      !allowedUser.account.organizationVersionId || !hasSufficientLevel(allowedUser.account.user.level, studyLevel)
-    return organizationVersionId && allowedUser.account.organizationVersionId === organizationVersionId
-      ? { ...allowedUser, account: { ...allowedUser.account, readerOnly } }
-      : {
-          ...allowedUser,
-          account: {
-            ...allowedUser.account,
-            organizationVersionId: undefined,
-            level: undefined,
-            readerOnly,
-          },
-        }
+      !(orgaVersion && hasActiveLicence(orgaVersion)) || !hasSufficientLevel(allowedUser.account.user.level, studyLevel)
+    return { ...allowedUser, account: { ...allowedUser.account, readerOnly } }
   })
+}
 
 export const getOrganizationVersionStudiesOrderedByStartDate = async (
   organizationVersionId: string,
@@ -365,10 +371,12 @@ export const getOrganizationVersionStudiesOrderedByStartDate = async (
     include: fullStudyInclude,
     orderBy: { startDate: 'desc' },
   })
-  return studies.map((study) => ({
-    ...study,
-    allowedUsers: normalizeAllowedUsers(study.allowedUsers, study.level, organizationVersionId),
-  }))
+  return Promise.all(
+    studies.map(async (study) => ({
+      ...study,
+      allowedUsers: await normalizeAllowedUsers(study.allowedUsers, study.level),
+    })),
+  )
 }
 
 export const getAllowedStudiesByAccount = async (user: UserSession) => {
@@ -526,16 +534,17 @@ export const getStudyAllowedUsersUnfiltered = async (studyId: string) => {
     where: { id: studyId },
     include: { allowedUsers: fullStudyInclude.allowedUsers },
   })
-  return study ? normalizeAllowedUsers(study.allowedUsers, study.level, study.organizationVersionId) : []
+  return study ? await normalizeAllowedUsers(study.allowedUsers, study.level) : []
 }
 
 // IMPORTANT: Do not use unless you need the full study with all its fields and relations.
+// Je ne gère pas pour le moment la suppresion de orgaVersionId qui n'est plus utile, car la méthode va être de moins en moins utilisée.
 export const getStudyById = async (id: string, organizationVersionId: string | null, tx?: Prisma.TransactionClient) => {
   const study = tx ? await tx.study.findUnique({ where: { id }, include: fullStudyInclude }) : await fetchStudyById(id)
   if (!study) {
     return null
   }
-  return { ...study, allowedUsers: normalizeAllowedUsers(study.allowedUsers, study.level, organizationVersionId) }
+  return { ...study, allowedUsers: await normalizeAllowedUsers(study.allowedUsers, study.level) }
 }
 
 type StudyForNavbar = StudyWithRoleFields & {
@@ -642,10 +651,12 @@ export const getStudyByIds = async (ids: string[]) => {
     where: { id: { in: ids } },
     include: fullStudyInclude,
   })
-  return studies.map((study) => ({
-    ...study,
-    allowedUsers: normalizeAllowedUsers(study.allowedUsers, study.level, null),
-  }))
+  return Promise.all(
+    studies.map(async (study) => ({
+      ...study,
+      allowedUsers: await normalizeAllowedUsers(study.allowedUsers, study.level),
+    })),
+  )
 }
 export type FullStudy = Exclude<AsyncReturnType<typeof getStudyById>, null>
 
@@ -1245,4 +1256,143 @@ export const removeSourceToAllStudies = async (source: Import) => {
       },
     })
   })
+}
+
+export const getMinimalStudyForRights = async (studyId: string) => {
+  const studyFromDB = await prismaClient.study.findFirst({
+    where: { id: studyId },
+    select: {
+      id: true,
+      level: true,
+      isPublic: true,
+      simplified: true,
+      name: true,
+      startDate: true,
+      endDate: true,
+      resultsUnit: true,
+      organizationVersion: {
+        select: {
+          id: true,
+          parentId: true,
+          environment: true,
+          activatedLicence: true,
+          parent: { select: { activatedLicence: true, id: true } },
+          organization: { select: { name: true } },
+        },
+      },
+      emissionFactorVersions: {
+        select: {
+          id: true,
+          importVersionId: true,
+        },
+      },
+      allowedUsers: {
+        select: {
+          role: true,
+          accountId: true,
+          account: {
+            select: {
+              id: true,
+              organizationVersionId: true,
+              organizationVersion: { select: { id: true, activatedLicence: true } },
+              user: { select: { email: true, level: true } },
+            },
+          },
+        },
+      },
+      contributors: {
+        select: {
+          accountId: true,
+          account: {
+            select: {
+              id: true,
+              organizationVersion: { select: { id: true, activatedLicence: true } },
+              user: { select: { email: true, level: true } },
+            },
+          },
+          subPost: true,
+        },
+      },
+    },
+  })
+
+  if (!studyFromDB) {
+    return null
+  }
+
+  const allowedUsers = await normalizeAllowedUsers(studyFromDB.allowedUsers, studyFromDB.level)
+  return {
+    ...studyFromDB,
+    allowedUsers,
+  }
+}
+export type MinimalStudyForRights = Exclude<Awaited<ReturnType<typeof getMinimalStudyForRights>>, null>
+
+export const getStudySitesWithName = (studyId: string): Promise<StudySiteWithNameList> =>
+  prismaClient.studySite.findMany({
+    where: { studyId },
+    select: {
+      id: true,
+      etp: true,
+      ca: true,
+      volunteerNumber: true,
+      beneficiaryNumber: true,
+      openingHours: true,
+      numberOfOpenDays: true,
+      numberOfSessions: true,
+      numberOfTickets: true,
+      cncVersion: {
+        select: {
+          id: true,
+          year: true,
+        },
+      },
+      site: {
+        select: {
+          name: true,
+          id: true,
+          cnc: true,
+          postalCode: true,
+          city: true,
+          establishmentYear: true,
+        },
+      },
+    },
+  })
+
+export type StudySiteWithNameList = {
+  id: string
+  etp: number
+  ca: number
+  volunteerNumber: number | null
+  beneficiaryNumber: number | null
+  openingHours: OpeningHours[]
+  numberOfOpenDays: number | null
+  numberOfSessions: number | null
+  numberOfTickets: number | null
+  cncVersion: { id: string; year: number } | null
+  site: {
+    name: string
+    id: string
+    postalCode: string | null
+    city: string | null
+    establishmentYear: string | null
+    cnc: Cnc | null
+  }
+}[]
+
+export type StudyWithReadRights = {
+  id: string
+  name?: string
+  organizationVersion: {
+    id: string
+    parentId: string | null
+    environment: Environment
+    organization: { name: string }
+  }
+  isPublic: boolean
+  allowedUsers: FullStudy['allowedUsers']
+  contributors: { accountId: string }[]
+  level: Level
+  simplified: boolean
 }

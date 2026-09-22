@@ -22,7 +22,7 @@ import {
   isOrganizationVersionCR,
 } from '@/db/organization'
 import { addSite } from '@/db/site'
-import type { FullStudy } from '@/db/study'
+import { MinimalStudyForRights } from '@/db/study'
 import {
   addUser,
   changeStatus,
@@ -120,7 +120,7 @@ export const sendEmailToAddedUser = async (
 
 export const sendInvitation = async (
   email: string,
-  study: FullStudy,
+  study: MinimalStudyForRights,
   organization: Organization,
   creator: UserSession,
   roleOnStudy: string,

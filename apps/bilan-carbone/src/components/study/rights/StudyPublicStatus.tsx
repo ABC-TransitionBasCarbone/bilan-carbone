@@ -1,7 +1,7 @@
 'use client'
 
 import { FormRadio } from '@/components/form/Radio'
-import type { FullStudy } from '@/db/study'
+import type { MinimalStudyForRights } from '@/db/study'
 import { changeStudyPublicStatus } from '@/services/serverFunctions/study'
 import {
   ChangeStudyPublicStatusCommand,
@@ -20,7 +20,7 @@ import { useForm } from 'react-hook-form'
 
 interface Props {
   user: UserSession
-  study: FullStudy
+  study: MinimalStudyForRights
   disabled: boolean
 }
 
