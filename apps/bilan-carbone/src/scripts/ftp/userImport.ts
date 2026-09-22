@@ -149,7 +149,7 @@ const processUser = async (value: UserImportRecord, importedFileDate: Date) => {
   }
 
   if (sessionCode) {
-    user.level = sessionCode.includes('BCM2') ? Level.Advanced : Level.Initial
+    user.level = sessionCode.includes('BCM2') || sessionCode.includes('BCM3') ? Level.Advanced : Level.Initial
   }
 
   if (trainings && Array.isArray(trainings) && trainings.length > 0) {

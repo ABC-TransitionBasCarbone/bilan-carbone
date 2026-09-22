@@ -12,13 +12,14 @@ assignees: ''
 
 Les environnements impactés sont : (Vérifier que la fonctionnalité fonctionne sur ceux cochés, vérifier que la fonctionnalité n'a pas d'impact sur ceux décochés)
 
-- [ ] le BC+,
-- [ ] TILT,
+- [ ] BC+
+- [ ] TILT
 - [ ] CUT
 - [ ] CLICKSON
+- [ ] MIP
 
 ## Information pour le déploiement sur staging
+- 
 
 ## Stratégie technique
-
-- [ ] Ajout de tests cypress
+- 

@@ -513,6 +513,77 @@ export const mapEmissionFactors = (emissionFactor: ImportEmissionFactor, importe
   }
 }
 
+export const getEmissionFactorOverrideData = (
+  emissionFactor: ImportEmissionFactor,
+  importedFrom: Import,
+  emissionFactorId: string,
+): Prisma.EmissionFactorUpdateInput => {
+  const {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    importedFrom: _importedFrom,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    importedId: _importedId,
+    metaData,
+    ...mappedEmissionFactor
+  } = mapEmissionFactors(emissionFactor, importedFrom)
+
+  return {
+    ...mappedEmissionFactor,
+    overrideRawCsv: serializeRowAsCsv(emissionFactor),
+    metaData: {
+      updateMany: metaData.createMany.data.map((meta) => ({
+        where: { emissionFactorId, language: meta.language },
+        data: {
+          title: meta.title,
+          attribute: meta.attribute,
+          frontiere: meta.frontiere,
+          tag: meta.tag,
+          location: meta.location,
+          comment: meta.comment,
+        },
+      })),
+    },
+  }
+}
+
+const mapEmissionFactorPart = (part: ImportEmissionFactor) => {
+  const metaData: { title: string; language: string }[] = []
+  if (part.Nom_poste_français) {
+    metaData.push({ title: part.Nom_poste_français, language: 'fr' })
+  }
+  if (part.Nom_poste_anglais) {
+    metaData.push({ title: part.Nom_poste_anglais, language: 'en' })
+  }
+
+  return {
+    ...getGases(part),
+    type: getType(part.Type_poste),
+    metaData,
+  }
+}
+
+export const getEmissionFactorPartOverrideData = (
+  part: ImportEmissionFactor,
+  emissionFactorPartId: string,
+): Prisma.EmissionFactorPartUpdateInput => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { type: _type, metaData, ...mappedPart } = mapEmissionFactorPart(part)
+
+  return {
+    ...mappedPart,
+    overrideRawCsv: serializeRowAsCsv(part),
+    metaData:
+      metaData.length > 0
+        ? {
+            updateMany: metaData.map((meta) => ({
+              where: { emissionFactorPartId, language: meta.language },
+              data: { title: meta.title },
+            })),
+          }
+        : undefined,
+  }
+}
+
 export const saveEmissionFactorsParts = async (
   transaction: Prisma.TransactionClient,
   importedIdToEfId: Map<string, string>,
@@ -544,20 +615,13 @@ export const saveEmissionFactorsParts = async (
       continue
     }
 
-    const metaData = []
-    if (part.Nom_poste_français) {
-      metaData.push({ title: part.Nom_poste_français, language: 'fr' })
-    }
-    if (part.Nom_poste_anglais) {
-      metaData.push({ title: part.Nom_poste_anglais, language: 'en' })
-    }
+    const mappedPart = mapEmissionFactorPart(part)
 
     const data = {
-      ...getGases(part),
+      ...mappedPart,
       emissionFactor: { connect: { id: emissionFactorId } },
-      type: getType(part.Type_poste),
       importedRawCsv: serializeRowAsCsv(part),
-      metaData: metaData.length > 0 ? { createMany: { data: metaData } } : undefined,
+      metaData: mappedPart.metaData.length > 0 ? { createMany: { data: mappedPart.metaData } } : undefined,
     } satisfies Prisma.EmissionFactorPartCreateInput
 
     await transaction.emissionFactorPart.create({ data })

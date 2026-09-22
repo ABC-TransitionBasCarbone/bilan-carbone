@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server'
 
-export async function GET(req: NextRequest) {
+export const GET = async (req: NextRequest) => {
   const { searchParams } = new URL(req.url)
   const url = searchParams.get('url')
   const fileName = searchParams.get('fileName')
