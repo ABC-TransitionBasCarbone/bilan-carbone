@@ -1,5 +1,11 @@
 import { createMipEngine } from '@/publicodes/mip-engine'
-import { buildPageBuilder, getQuestionType, MipQuestionType, patchFormElement } from '@/publicodes/mip-form'
+import {
+  buildPageBuilder,
+  getQuestionType,
+  MipQuestionType,
+  patchFormElement,
+  sortFieldsForPageBuilder,
+} from '@/publicodes/mip-form'
 import mipModel from '@/publicodes/mip-model-seed'
 import { describe, expect, it } from '@jest/globals'
 import Engine from 'publicodes'
@@ -159,6 +165,19 @@ describe('buildPageBuilder', () => {
     const pages = buildPageBuilder(engine, ['bureaux . énergie', 'NUMÉRIQUE . appareils'])
 
     expect(pages.map((page) => page.elements[0])).toEqual(['NUMÉRIQUE . appareils', 'bureaux . énergie'])
+  })
+
+  it('keeps field ordering stable through the shared ordering helper', () => {
+    const engine = createMockEngine({
+      'bureaux . énergie': { rawNode: { question: 'Énergie' } },
+      'numérique . appareils': { rawNode: { question: 'Appareils' } },
+      'transport . voiture . km': { rawNode: { question: 'Distance' } },
+      'transport . train . heure': { rawNode: { question: 'Heure' } },
+    })
+
+    expect(
+      sortFieldsForPageBuilder(engine, ['bureaux . énergie', 'transport . voiture . km', 'numérique . appareils']),
+    ).toEqual(['transport . voiture . km', 'numérique . appareils', 'bureaux . énergie'])
   })
 
   it('marks rules without a renderable question as non-renderable', () => {

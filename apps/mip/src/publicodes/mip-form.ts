@@ -85,19 +85,26 @@ const compareRuleNames = (
   return fallbackDiff !== 0 ? fallbackDiff : a.localeCompare(b)
 }
 
-export const buildPageBuilder = (engine: Engine, fields: string[]): FormPages<string> => {
+export const sortFieldsForPageBuilder = (engine: Engine, fields: string[]): string[] => {
   const rules = engine.getParsedRules() as ParsedRules
   const initialIndexes = new Map(fields.map((field, index) => [field, index]))
   const branchIndexes = new Map<string, number>()
+
   for (const [ruleName, index] of initialIndexes) {
     const branch = getRuleSubCategoryKey(ruleName)
     if (!branchIndexes.has(branch)) {
       branchIndexes.set(branch, index)
     }
   }
-  const sortedFields = fields
+
+  return fields
     .filter((field) => rules[field]?.rawNode?.question !== undefined)
     .sort((a, b) => compareRuleNames(a, b, rules, initialIndexes, branchIndexes))
+}
+
+export const buildPageBuilder = (engine: Engine, fields: string[]): FormPages<string> => {
+  const rules = engine.getParsedRules() as ParsedRules
+  const sortedFields = sortFieldsForPageBuilder(engine, fields)
 
   const pages: FormPages<string> = []
   const mosaicPagesByParent = new Map<string, FormPages<string>[number]>()
