@@ -11,7 +11,7 @@ export const accountWithUserToUserSession = (
   account: Pick<AccountWithUser, 'id' | 'role' | 'organizationVersionId' | 'organizationVersion'> & {
     user: Pick<AccountWithUser['user'], 'id' | 'email' | 'firstName' | 'lastName' | 'level'>
   },
-) => ({
+): UserSession => ({
   id: account.user.id,
   accountId: account.id,
   userId: account.user.id,
