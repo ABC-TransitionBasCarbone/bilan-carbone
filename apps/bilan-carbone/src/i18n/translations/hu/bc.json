@@ -62,5 +62,8 @@
   },
   "importFileModal": {
     "emptyHeader": "A fájl nem tartalmazza a megfelelő fejléceket. Kérjük, használja az importsablont."
+  },
+  "activation": {
+    "Organization activation in progress": "Egy kolléga már folyamatban van a szervezet aktiválásával. Kérjük, hagyjon számára akár 24 órát az aktiválás befejezéséhez, mielőtt újra próbálkozna."
   }
 }

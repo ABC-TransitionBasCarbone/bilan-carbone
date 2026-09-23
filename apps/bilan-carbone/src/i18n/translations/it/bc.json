@@ -240,7 +240,8 @@
     "Email sent": "Riceverai un'email per completare l'attivazione del tuo account.",
     "validation": {
       "email": "Inserisci un'email"
-    }
+    },
+    "Organization activation in progress": "Un·collega sta già attivando questa organizzazione. Ti preghiamo di concedergli fino a 24 ore per completare l'attivazione prima di riprovare."
   },
   "navigation": {
     "factors": "Fattori di emissione",

@@ -240,7 +240,8 @@
     "Email sent": "Recibirá un correo electrónico para finalizar la activación de su cuenta.",
     "validation": {
       "email": "Introduzca un correo electrónico"
-    }
+    },
+    "Organization activation in progress": "Un·a colega ya está activando esta organización. Por favor, concédale hasta 24 h para completar la activación antes de volver a intentarlo."
   },
   "study": {
     "new": {
