@@ -10,7 +10,7 @@ import {
 import { createUsersWithAccount, organizationVersionActiveAccountsCount, updateAccount } from '@/db/user'
 import { Prisma } from '@abc-transitionbascarbone/db-common'
 import { Environment, Level, Role, UserSource, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
-import { getCutRoleFromBase } from '../../../prisma/seed/utils'
+import { getEnvRoleFromBase } from '../../../prisma/seed/utils'
 
 type Training = {
   trainingTypeId: number
@@ -113,7 +113,7 @@ const processUser = async (value: UserImportRecord, importedFileDate: Date) => {
 
   const dbAccount = await getAccountByEmailAndEnvironment(email, environment)
 
-  let role = environment === Environment.CUT ? getCutRoleFromBase(Role.COLLABORATOR) : Role.COLLABORATOR
+  let role = environment === Environment.CUT ? getEnvRoleFromBase(Role.COLLABORATOR) : Role.COLLABORATOR
 
   // If the user already has an account but is not linked to an organization version, or if they are the last active account of their organization version, they should be set as admin to avoid locking themselves out of their organization
   if (

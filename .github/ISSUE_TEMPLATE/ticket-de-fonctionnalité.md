@@ -17,6 +17,7 @@ Les environnements impactés sont : (Vérifier que la fonctionnalité fonctionne
 - [ ] CUT
 - [ ] CLICKSON
 - [ ] MIP
+- [ ] Formation BC 
 
 ## Information pour le déploiement sur staging
 - 
