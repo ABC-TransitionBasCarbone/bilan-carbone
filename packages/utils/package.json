@@ -2,13 +2,8 @@
     "name": "@abc-transitionbascarbone/utils",
     "version": "0.0.1",
     "private": true,
-    "main": "./index.ts",
-    "types": "./index.ts",
-    "exports": {
-        ".": "./index.ts",
-        "./customRich": "./customRich.tsx",
-        "./*": "./*.ts"
-    },
+    "main": "time.ts",
+    "types": "time.ts",
     "dependencies": {
         "@abc-transitionbascarbone/db-common": "*"
     },
