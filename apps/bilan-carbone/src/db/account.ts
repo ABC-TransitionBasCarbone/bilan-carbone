@@ -126,6 +126,21 @@ export const removeOtherAccountActivation = async (
     },
   })
 
+  const account = await transaction.account.findUnique({
+    where: { id: reservedAccount.id },
+  })
+
+  if (!account) {
+    throw new Error('Account not found')
+  }
+
+  await transaction.user.update({
+    where: { id: account.userId },
+    data: {
+      resetToken: null,
+    },
+  })
+
   return true
 }
 
