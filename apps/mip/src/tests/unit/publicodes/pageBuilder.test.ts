@@ -1,9 +1,6 @@
-import {
-  buildPageBuilder,
-  getQuestionType,
-  MipQuestionType,
-  patchFormElement,
-} from '@abc-transitionbascarbone/publicodes/form/utils'
+import { createMipEngine } from '@/publicodes/mip-engine'
+import { buildPageBuilder, getQuestionType, MipQuestionType, patchFormElement } from '@/publicodes/mip-form'
+import mipModel from '@/publicodes/mip-model-seed'
 import { describe, expect, it } from '@jest/globals'
 import Engine from 'publicodes'
 
@@ -19,7 +16,30 @@ const createMockEngine = (
 }
 
 describe('buildPageBuilder', () => {
-  it('preserves rhetorical info questions for the survey flow', () => {
+  it('builds pages from the current MIP model', () => {
+    const engine = createMipEngine(mipModel)
+
+    const pages = buildPageBuilder(engine, [
+      'DT . filtrage',
+      'DT . voiture . présent',
+      'DT . voiture . km',
+      'DT . voiture . utilisateur',
+    ])
+
+    const pageElements = pages.map((page) => page.elements[0])
+
+    expect(pageElements).toHaveLength(4)
+    expect(pageElements).toEqual(
+      expect.arrayContaining([
+        'DT . filtrage',
+        'DT . voiture . présent',
+        'DT . voiture . km',
+        'DT . voiture . utilisateur',
+      ]),
+    )
+  })
+
+  it('does not inject rhetorical info questions from local text heuristics', () => {
     const engine = createMockEngine({
       bureaux: {
         rawNode: {
@@ -54,9 +74,108 @@ describe('buildPageBuilder', () => {
       },
     })
 
-    const pages = buildPageBuilder(engine)(['bureaux . déchets . tri'])
+    const pages = buildPageBuilder(engine, ['bureaux . déchets . tri'])
 
-    expect(pages.some((page) => page.elements.includes('bureaux . énergie . question rhétorique'))).toBe(true)
+    expect(pages.some((page) => page.elements.includes('bureaux . énergie . question rhétorique'))).toBe(false)
+  })
+
+  it('keeps questions from the same category branch together', () => {
+    const engine = createMockEngine({
+      'DT . train . heure': { rawNode: { question: 'Train' } },
+      'DT . voiture . voyageurs': { rawNode: { question: 'Voyageurs' } },
+      'DT . train . vitesse': { rawNode: { question: 'Vitesse' } },
+      'DT . voiture . carburant': { rawNode: { question: 'Carburant' } },
+    })
+
+    const pages = buildPageBuilder(engine, [
+      'DT . train . heure',
+      'DT . voiture . voyageurs',
+      'DT . train . vitesse',
+      'DT . voiture . carburant',
+    ])
+
+    expect(pages.map((page) => page.elements[0])).toEqual([
+      'DT . train . heure',
+      'DT . train . vitesse',
+      'DT . voiture . voyageurs',
+      'DT . voiture . carburant',
+    ])
+  })
+
+  it('respects raw rule order metadata when it is present', () => {
+    const engine = createMockEngine({
+      'DT . voiture . motorisation': { rawNode: { question: 'Motorisation', ordre: 5 } },
+      'DT . voiture . gabarit': { rawNode: { question: 'Gabarit', ordre: 4 } },
+      'DT . voiture . thermique . consommation aux 100': {
+        rawNode: { question: 'Consommation', ordre: 3 },
+      },
+      'DT . voiture . thermique . carburant': { rawNode: { question: 'Carburant', ordre: 6 } },
+      'DT . voiture . voyageurs': { rawNode: { question: 'Voyageurs', ordre: 7 } },
+      'DT . voiture . utilisateur': { rawNode: { question: 'Utilisateur', ordre: 2 } },
+      'DT . voiture . km': { rawNode: { question: 'Distance', ordre: 1 } },
+      'DT . train . heure': { rawNode: { question: 'Train' } },
+    })
+
+    const pages = buildPageBuilder(engine, [
+      'DT . train . heure',
+      'DT . voiture . motorisation',
+      'DT . voiture . gabarit',
+      'DT . voiture . thermique . consommation aux 100',
+      'DT . voiture . thermique . carburant',
+      'DT . voiture . voyageurs',
+      'DT . voiture . utilisateur',
+      'DT . voiture . km',
+    ])
+
+    expect(pages.map((page) => page.elements[0])).toEqual([
+      'DT . train . heure',
+      'DT . voiture . km',
+      'DT . voiture . utilisateur',
+      'DT . voiture . thermique . consommation aux 100',
+      'DT . voiture . gabarit',
+      'DT . voiture . motorisation',
+      'DT . voiture . thermique . carburant',
+      'DT . voiture . voyageurs',
+    ])
+  })
+
+  it('sorts accented category names according to the survey category order', () => {
+    const engine = createMockEngine({
+      'bureaux . énergie': { rawNode: { question: 'Énergie' } },
+      'numérique . appareils': { rawNode: { question: 'Appareils' } },
+    })
+
+    const pages = buildPageBuilder(engine, ['bureaux . énergie', 'numérique . appareils'])
+
+    expect(pages.map((page) => page.elements[0])).toEqual(['numérique . appareils', 'bureaux . énergie'])
+  })
+
+  it('normalizes category keys before using the survey order', () => {
+    const engine = createMockEngine({
+      'bureaux . énergie': { rawNode: { question: 'Énergie' } },
+      'NUMÉRIQUE . appareils': { rawNode: { question: 'Appareils' } },
+    })
+
+    const pages = buildPageBuilder(engine, ['bureaux . énergie', 'NUMÉRIQUE . appareils'])
+
+    expect(pages.map((page) => page.elements[0])).toEqual(['NUMÉRIQUE . appareils', 'bureaux . énergie'])
+  })
+
+  it('marks rules without a renderable question as non-renderable', () => {
+    const engine = createMockEngine({
+      'transport . voiture': {
+        rawNode: {
+          question: 'Voiture',
+        },
+      },
+      'transport . filtre': {
+        rawNode: {
+          titre: 'Filtre',
+        },
+      },
+    })
+
+    expect(getQuestionType(engine, 'transport . filtre')).toBe(MipQuestionType.NoRenderableQuestion)
   })
 
   it('detects choice questions from the raw node and patches the input rendering', () => {

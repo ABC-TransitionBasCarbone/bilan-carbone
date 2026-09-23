@@ -1,7 +1,7 @@
 'use client'
+import { buildPageBuilder } from '@/publicodes/mip-form'
 import { useMipPublicodes } from '@/publicodes/MipPublicodesProvider'
 import { createSurveyResponse } from '@/services/serverFunctions/survey'
-import { buildPageBuilder } from '@abc-transitionbascarbone/publicodes/form'
 import { Container, Typography } from '@mui/material'
 import { FormBuilder, FormState } from '@publicodes/forms'
 import classNames from 'classnames'
@@ -34,7 +34,7 @@ const Survey = ({ surveyId, rootRule = 'bilan' }: MipSurveyProps) => {
     () =>
       new FormBuilder({
         engine,
-        pageBuilder: buildPageBuilder(engine),
+        pageBuilder: (fields) => buildPageBuilder(engine, fields),
       }),
     [engine],
   )
