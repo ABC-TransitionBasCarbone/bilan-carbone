@@ -11,11 +11,22 @@ const WORKSPACES: Record<Exclude<SeedTarget, 'all'>, string> = {
 const runWorkspaceSeed = (workspace: string) => {
     console.log(`\n> yarn workspace ${workspace} tsx prisma/seed/index.ts`)
 
-    const result = spawnSync('yarn', ['workspace', workspace, 'tsx', 'prisma/seed/index.ts'], {
-        stdio: 'inherit',
-    })
+    const yarnPath = process.env.npm_execpath ?? 'yarn'
+    if (yarnPath.includes('yarn')) {
+        const result = spawnSync(process.env.npm_execpath ? process.execPath : yarnPath, [
+            ...(process.env.npm_execpath ? [yarnPath] : []),
+            'workspace',
+            workspace,
+            'tsx',
+            'prisma/seed/index.ts',
+        ], {
+            stdio: 'inherit',
+        })
 
-    return result.status === 0
+        return result.status === 0
+    }
+
+    return false
 }
 
 const main = async () => {
