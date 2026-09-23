@@ -1,15 +1,12 @@
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { Locale } from '@abc-transitionbascarbone/i18n/config'
+import { ENV_ROUTES, getEnvRoute } from '@abc-transitionbascarbone/utils/environments'
 import { getToken } from 'next-auth/jwt'
 import { NextRequest, NextResponse } from 'next/server'
 import { getLocalesForEnv } from './services/permissions/environment'
 
-const COUNT_ROUTE = '/count'
-const TILT_ROUTE = '/tilt'
-const CLICKSON_ROUTE = '/clickson'
 const ENVIRONMENT_COOKIE = 'ENVIRONMENT'
 const LOCALE_COOKIE = 'NEXT_LOCALE'
-const ENV_ROUTES = [COUNT_ROUTE, TILT_ROUTE, CLICKSON_ROUTE]
 const publicRoutes = ['/login', '/reset-password', '/activation', '/preview', ...ENV_ROUTES]
 const assetsRoutes = ['/_next', '/img']
 
@@ -55,22 +52,8 @@ export async function proxy(req: NextRequest) {
 
     if (!token) {
       const env = req.nextUrl.searchParams.get('env')
-      let baseUrl = ''
-      switch (env) {
-        case Environment.CUT:
-          baseUrl = `${COUNT_ROUTE}`
-          break
-        case Environment.TILT:
-          baseUrl = `${TILT_ROUTE}`
-          break
-        case Environment.CLICKSON:
-          baseUrl = `${CLICKSON_ROUTE}`
-          break
-        default:
-          break
-      }
-
-      const loginUrl = new URL(`${baseUrl}/login`, req.url)
+      const baseUrl = getEnvRoute('login', env as Environment)
+      const loginUrl = new URL(`${baseUrl}`, req.url)
       return normalizeLocaleCookie(req, NextResponse.redirect(loginUrl))
     }
   }

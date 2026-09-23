@@ -1,4 +1,5 @@
 import { Environment, Level } from '@abc-transitionbascarbone/db-common/enums'
+import { formationEnvironments, isAdvanced } from '@abc-transitionbascarbone/utils/environments'
 import { hasAccessToCarbonResponsibilityIntensities, isTilt } from './environment'
 
 const { BC, CUT, TILT, CLICKSON } = Environment
@@ -7,19 +8,21 @@ export const isTiltSimplified = (environment: Environment, simplified?: boolean 
   isTilt(environment) && simplified
 
 export const isAdvancedAndNotTiltSimplified = (environment: Environment, simplified?: boolean | null) =>
-  ([BC, TILT] as Environment[]).includes(environment) && !isTiltSimplified(environment, simplified)
+  isAdvanced(environment) && !isTiltSimplified(environment, simplified)
 
 export const hasAccessToEmissionFactors = (environment: Environment, userLevel: Level | null) =>
-  ([BC, CLICKSON] as Environment[]).includes(environment) || (environment === TILT && !!userLevel)
+  ([BC, CLICKSON, ...formationEnvironments] as Environment[]).includes(environment) ||
+  (environment === TILT && !!userLevel)
 
 export const hasAccessToStudies = (environment: Environment, userLevel: Level | null) =>
-  ([BC, CUT, CLICKSON] as Environment[]).includes(environment) || (environment === TILT && !!userLevel)
+  ([BC, CUT, CLICKSON, ...formationEnvironments] as Environment[]).includes(environment) ||
+  (environment === TILT && !!userLevel)
 
 export const hasAccessToSettings = (environment: Environment, userLevel: Level | null) =>
-  ([BC] as Environment[]).includes(environment) || (environment === TILT && !!userLevel)
+  ([BC, ...formationEnvironments] as Environment[]).includes(environment) || (environment === TILT && !!userLevel)
 
 export const hasAccessToMethodology = (environment: Environment, userLevel: Level | null) =>
-  ([BC] as Environment[]).includes(environment) || (environment === TILT && !!userLevel)
+  ([BC, ...formationEnvironments] as Environment[]).includes(environment) || (environment === TILT && !!userLevel)
 
 export const hasAccessToCarbonResponsibilityIntensitiesAdvanced = (
   environment: Environment,

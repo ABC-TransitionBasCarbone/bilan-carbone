@@ -5,7 +5,7 @@ import { useServerFunction } from '@abc-transitionbascarbone/components/src/hook
 import ResetLinkAlreadyUsed from '@abc-transitionbascarbone/components/src/pages/ResetLinkAlreadyUsed'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { signOutEnv } from '@abc-transitionbascarbone/services/auth/auth.utils'
-import { getEnvRoute } from '@abc-transitionbascarbone/services/email/utils'
+import { getEnvRoute } from '@abc-transitionbascarbone/utils/environments'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
