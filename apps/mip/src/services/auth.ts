@@ -45,16 +45,16 @@ export const authOptions: NextAuthOptions = {
 
         return dbAccountMip
           ? {
-            ...token,
-            id: dbAccountMip.user.id,
-            userId: dbAccountMip.user.id,
-            accountMipId: dbAccountMip.id,
-            firstName: dbAccountMip.user.firstName,
-            lastName: dbAccountMip.user.lastName,
-            role: dbAccountMip?.role,
-            organizationVersionMipId: dbAccountMip?.organizationVersionMipId,
-            organizationId: '',
-          }
+              ...token,
+              id: dbAccountMip.user.id,
+              userId: dbAccountMip.user.id,
+              accountMipId: dbAccountMip.id,
+              firstName: dbAccountMip.user.firstName,
+              lastName: dbAccountMip.user.lastName,
+              role: dbAccountMip?.role,
+              organizationVersionMipId: dbAccountMip?.organizationVersionMipId,
+              organizationId: '',
+            }
           : token
       }
 
