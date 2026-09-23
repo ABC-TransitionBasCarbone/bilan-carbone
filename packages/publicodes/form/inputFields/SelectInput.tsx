@@ -78,7 +78,10 @@ const SelectInput = <RuleName extends string>({
             value={typeof option.value === 'boolean' ? (option.value ? 'oui' : 'non') : option.value}
             className={styles.selectMenuItem}
           >
-            {getOptionLabel(option.value, option.label)}
+            <div>
+              <div>{getOptionLabel(option.value, option.label)}</div>
+              {option.description && <Typography variant="body2" color="text.secondary">{option.description}</Typography>}
+            </div>
           </MenuItem>
         ))}
       </Select>
