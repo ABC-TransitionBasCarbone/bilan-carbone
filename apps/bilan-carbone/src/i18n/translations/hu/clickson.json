@@ -242,7 +242,8 @@
     "explanation": "Mérjük az intézményed üvegházhatású gázkibocsátását!",
     "form": {
       "activate": "Fiókom létrehozása"
-    }
+    },
+    "question": "Kérdése van? <support>Lépjen kapcsolatba velünk</support>!"
   },
   "signup": {
     "description": "Hozz létre egy Clickson fiókot az e-mail címeddel és egy iskola irányítószámával vagy nevével",

@@ -242,7 +242,8 @@
     "explanation": "Să măsurăm emisiile de gaze cu efect de seră ale instituției tale!",
     "form": {
       "activate": "Creează-mi contul"
-    }
+    },
+    "question": "O întrebare ? <support>Contactați-ne</support> !"
   },
   "signup": {
     "description": "Creează un cont Clickson cu adresa ta de email și un cod poștal sau numele unei școli",

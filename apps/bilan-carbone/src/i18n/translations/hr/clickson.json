@@ -242,7 +242,8 @@
     "explanation": "Izmjerimo emisije stakleničkih plinova vaše ustanove!",
     "form": {
       "activate": "Kreiraj moj račun"
-    }
+    },
+    "question": "Imate pitanje? <support>Kontaktirajte nas</support>!"
   },
   "signup": {
     "description": "Kreirajte Clickson račun s vašim e-mailom i poštanskim brojem ili imenom škole",
