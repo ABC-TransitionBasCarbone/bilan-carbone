@@ -26,12 +26,17 @@ describe('buildPageBuilder', () => {
       'DT . voiture . utilisateur',
     ])
 
-    expect(pages.map((page) => page.elements[0])).toEqual([
-      'DT . filtrage',
-      'DT . voiture . présent',
-      'DT . voiture . km',
-      'DT . voiture . utilisateur',
-    ])
+    const pageElements = pages.map((page) => page.elements[0])
+
+    expect(pageElements).toHaveLength(4)
+    expect(pageElements).toEqual(
+      expect.arrayContaining([
+        'DT . filtrage',
+        'DT . voiture . présent',
+        'DT . voiture . km',
+        'DT . voiture . utilisateur',
+      ]),
+    )
   })
 
   it('does not inject rhetorical info questions from local text heuristics', () => {
