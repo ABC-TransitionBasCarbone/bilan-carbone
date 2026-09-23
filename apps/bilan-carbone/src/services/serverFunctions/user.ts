@@ -7,8 +7,11 @@ import {
   getAccountByEmailAndOrganizationVersionId,
   getAccountById,
   getAccountFromUserOrganization,
+  getAccountsFromOrganizationForActivation,
   getAccountsFromUser,
+  removeOtherAccountActivation,
 } from '@/db/account'
+import { prismaClient } from '@/db/client.server'
 import { findCncByCncCode } from '@/db/cnc'
 import { isFeatureActiveForEnvironment } from '@/db/deactivableFeatures'
 import {
@@ -25,7 +28,6 @@ import { addSite } from '@/db/site'
 import { MinimalStudyForRights } from '@/db/study'
 import {
   addUser,
-  changeStatus,
   createOrUpdateUserCheckedStep,
   deleteUserFromOrga,
   finalizeUserChecklist,
@@ -50,8 +52,9 @@ import { processUsers } from '@/scripts/ftp/userImport'
 import { AccountWithUser } from '@/types/account.types'
 import { withServerResponse } from '@/utils/serverResponse'
 import { getRoleToSetForUntrained } from '@/utils/user'
-import { accountWithUserToUserSession, userSessionToDbUser } from '@/utils/userAccounts'
-import { Organization, User } from '@abc-transitionbascarbone/db-common'
+import { accountWithUserToUserSession, hasOrganizationVersion, userSessionToDbUser } from '@/utils/userAccounts'
+import type { Prisma } from '@abc-transitionbascarbone/db-common'
+import { Organization } from '@abc-transitionbascarbone/db-common'
 import { updateUserResetTokenForEmail } from '@abc-transitionbascarbone/db-common/db'
 import {
   Country,
@@ -84,7 +87,13 @@ import { UserSession } from 'next-auth'
 import { getCompanyName, getValidAssociationNameBySiret } from '../associationApi'
 import { auth, dbActualizedAuth } from '../auth'
 import { getUserCheckList } from '../checklist'
-import { NOT_ASSOCIATION_SIRET, REQUEST_SENT, UNKNOWN_SCHOOL, UNKNOWN_SIRET_OR_CNC } from '../permissions/check'
+import {
+  NOT_ASSOCIATION_SIRET,
+  ORGANIZATION_ACTIVATION_IN_PROGRESS,
+  REQUEST_SENT,
+  UNKNOWN_SCHOOL,
+  UNKNOWN_SIRET_OR_CNC,
+} from '../permissions/check'
 import { isBC, isTilt } from '../permissions/environment'
 import { canAddMember, canChangeRole, canDeleteMember, canEditSelfRole } from '../permissions/user'
 import { establishmentTypeMap, School } from '../schoolApi'
@@ -93,7 +102,7 @@ import { EditProfileCommand, EditSettingsCommand } from './user.command'
 
 export const sendEmailToAddedUser = async (
   email: string,
-  user: User,
+  user: Pick<UserSession, 'firstName' | 'lastName'>,
   newUserName: string,
   env: Environment,
   orgaVersionId: string,
@@ -117,6 +126,53 @@ export const sendEmailToAddedUser = async (
     const token = await updateUserResetToken(email, 1 * DAY)
     return sendNewUserEmail(email, token, `${user.firstName} ${user.lastName}`, newUserName, env)
   })
+
+const ACTIVATION_RESERVATION_WINDOW_IN_MS = DAY * TIME_IN_MS
+
+const getOrganizationActivationReservation = async (
+  organizationVersionId: string,
+  currentAccountId: string,
+  transaction: Prisma.TransactionClient,
+) => {
+  const accounts = await getAccountsFromOrganizationForActivation(organizationVersionId, currentAccountId, transaction)
+
+  return accounts.length > 0 ? accounts[0] : null
+}
+
+const checkIfOtherAccountHasReservationActivation = async (
+  accountId: string,
+  accountOrganizationVersionId: string,
+  transaction: Prisma.TransactionClient,
+) => {
+  const activationReservation = await getOrganizationActivationReservation(
+    accountOrganizationVersionId,
+    accountId,
+    transaction,
+  )
+
+  if (!activationReservation || !activationReservation.activationRequestedAt) {
+    return
+  }
+
+  const activationExpiresAt =
+    new Date(activationReservation.activationRequestedAt).getTime() + ACTIVATION_RESERVATION_WINDOW_IN_MS
+
+  if (activationExpiresAt > Date.now()) {
+    throw new Error(ORGANIZATION_ACTIVATION_IN_PROGRESS)
+  }
+
+  const removeSucceeded = await removeOtherAccountActivation(
+    { id: accountId, organizationVersionId: accountOrganizationVersionId },
+    activationReservation,
+    transaction,
+  )
+
+  if (!removeSucceeded) {
+    throw new Error(ORGANIZATION_ACTIVATION_IN_PROGRESS)
+  }
+
+  return
+}
 
 export const sendInvitation = async (
   email: string,
@@ -336,9 +392,7 @@ export const activateEmail = async (email: string, userEnv: Environment, fromRes
     const env = userEnv
 
     const user = await getUserByEmail(email.toLowerCase())
-    const account = (await getAccountById(
-      user?.accounts.find((a) => a.environment === env)?.id || '',
-    )) as AccountWithUser
+    const account = await getAccountById(user?.accounts.find((a) => a.environment === env)?.id || '')
 
     if (!user || !account || !account.organizationVersionId || account.status === UserStatus.ACTIVE) {
       throw new Error(NOT_AUTHORIZED)
@@ -353,6 +407,9 @@ export const activateEmail = async (email: string, userEnv: Environment, fromRes
       (await organizationVersionActiveAccountsCount(account.organizationVersionId)) &&
       account.status !== UserStatus.VALIDATED
     ) {
+      if (!hasOrganizationVersion(account)) {
+        throw new Error(NOT_AUTHORIZED)
+      }
       const accounts = await getAccountFromUserOrganization(accountWithUserToUserSession(account))
       await sendActivationRequest(
         accounts
@@ -362,11 +419,21 @@ export const activateEmail = async (email: string, userEnv: Environment, fromRes
         `${user.firstName} ${user.lastName}`,
       )
 
-      await changeStatus(account.id, UserStatus.PENDING_REQUEST)
+      await updateAccount(account.id, {
+        status: UserStatus.PENDING_REQUEST,
+        activationRequestedAt: null,
+      })
 
       return REQUEST_SENT
     } else {
-      await validateUser(account.id)
+      await prismaClient.$transaction(async (transaction) => {
+        if (!account.organizationVersionId) {
+          throw new Error(NOT_AUTHORIZED)
+        }
+        await checkIfOtherAccountHasReservationActivation(account.id, account.organizationVersionId, transaction)
+        await validateUser(account.id, transaction)
+        await updateAccount(account.id, { activationRequestedAt: new Date() }, undefined, transaction)
+      })
       await sendActivation(email, fromReset, env)
 
       return EMAIL_SENT
@@ -682,6 +749,7 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
       return REQUEST_SENT
     } else {
       await validateUser(account.id)
+      await updateAccount(account.id, { activationRequestedAt: new Date() })
       await sendActivation(trimmedEmail, false, environment)
     }
     return EMAIL_SENT
@@ -793,6 +861,7 @@ export const signUpWithSchool = async (email: string, country: Country, school: 
       return REQUEST_SENT
     } else {
       await validateUser(account.id)
+      await updateAccount(account.id, { activationRequestedAt: new Date() })
       await sendActivation(trimmedEmail, false, environment)
     }
     return EMAIL_SENT

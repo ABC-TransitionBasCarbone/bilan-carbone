@@ -123,7 +123,7 @@ export const updateUserPasswordForEmail = async (email: string, password: string
         ),
       prismaClient.account.update({
         where: { userId_environment: { userId: user.id, environment: env } },
-        data: { status: UserStatus.ACTIVE },
+        data: { activationRequestedAt: null, status: UserStatus.ACTIVE },
       }),
     ])
   }
@@ -143,8 +143,8 @@ export const deleteUserFromOrga = async (email: string, organizationVersionId: s
   })
 }
 
-export const validateUser = (accountId: string) =>
-  prismaClient.account.update({
+export const validateUser = (accountId: string, transaction: Prisma.TransactionClient = prismaClient) =>
+  transaction.account.update({
     where: { id: accountId },
     data: { status: UserStatus.VALIDATED },
   })
@@ -160,9 +160,6 @@ export const organizationVersionActiveAccountsCount = async (organizationVersion
   prismaClient.account.count({
     where: { organizationVersionId, status: UserStatus.ACTIVE },
   })
-
-export const changeStatus = (accountId: string, newStatus: UserStatus) =>
-  prismaClient.account.update({ where: { id: accountId }, data: { status: newStatus } })
 
 export const getUserApplicationSettings = (accountId: string) =>
   prismaClient.userApplicationSettings.upsert({ where: { accountId }, update: {}, create: { accountId } })
@@ -203,7 +200,7 @@ export const getUserByIdWithAccounts = (id: string) =>
 export type UserWithAccounts = AsyncReturnType<typeof getUserByIdWithAccounts>
 
 export const getUserByEmail = (email: string) =>
-  prismaClient.user.findUnique({ where: { email }, include: { accounts: true } })
+  prismaClient.user.findUnique({ where: { email }, include: { accounts: { include: { organizationVersion: true } } } })
 
 export const updateUser = (userId: string, data: Partial<Prisma.UserCreateInput>) =>
   prismaClient.user.update({
@@ -275,8 +272,9 @@ export const updateAccount = (
   accountId: string,
   data: Partial<Prisma.AccountUpdateInput & { role: Exclude<Role, 'SUPER_ADMIN'> | undefined }>,
   userData?: Partial<Prisma.UserUpdateInput>,
+  transaction: Prisma.TransactionClient = prismaClient,
 ) =>
-  prismaClient.account.update({
+  transaction.account.update({
     where: { id: accountId },
     data: {
       ...data,

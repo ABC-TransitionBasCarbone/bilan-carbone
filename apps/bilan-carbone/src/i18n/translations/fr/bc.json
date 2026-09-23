@@ -289,6 +289,7 @@
     "Not authorized": "Vous n'êtes pas adhérent ou pas formé. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
     "Request sent": "Une demande d'activation de votre compte a été envoyé à vos collègues",
     "Email sent": "Vous allez recevoir un mail pour finaliser l'activation de votre compte.",
+    "Organization activation in progress": "Un·e collègue est déjà en train d'activer cette organisation. Merci de lui laisser jusqu'à 24h pour terminer son activation avant de réessayer.",
     "No recipient": "Problème lors de l'envoie du mail, merci de contacter le <support>support</support>",
     "validation": {
       "email": "Veuillez entrer un email"

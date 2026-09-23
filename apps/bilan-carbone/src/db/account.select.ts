@@ -22,6 +22,7 @@ export const AccountWithUserSelect = {
   formationName: true,
   formationStartDate: true,
   formationEndDate: true,
+  activationRequestedAt: true,
   user: {
     select: {
       id: true,

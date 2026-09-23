@@ -40,7 +40,7 @@ export const canReadStudy = async (user: UserSession | UserWithAllowedStudies, s
   }
 
   if (
-    isAdminOnStudyOrga(user as UserSession, study.organizationVersion) ||
+    isAdminOnStudyOrga(user, study.organizationVersion) ||
     (study.isPublic && isInOrgaOrParent(user.organizationVersionId, study.organizationVersion))
   ) {
     return true

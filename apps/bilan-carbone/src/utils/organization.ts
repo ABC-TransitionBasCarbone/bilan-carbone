@@ -5,7 +5,7 @@ import { Environment, Role } from '@abc-transitionbascarbone/db-common/enums'
 import { UserSession } from 'next-auth'
 
 export const isAdminOnOrga = (
-  account: UserSession,
+  account: Pick<UserSession, 'role' | 'organizationVersionId'>,
   organizationVersion: {
     id: string
     parentId: string | null

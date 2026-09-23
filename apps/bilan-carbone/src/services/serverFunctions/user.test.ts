@@ -6,6 +6,8 @@ import {
   getAccountByEmailAndEnvironment,
   getAccountById,
   getAccountFromUserOrganization,
+  getAccountsFromOrganizationForActivation,
+  removeOtherAccountActivation,
 } from '@/db/account'
 import { findCncByCncCode } from '@/db/cnc'
 import {
@@ -17,7 +19,12 @@ import {
 } from '@/db/organization'
 import { addSite } from '@/db/site'
 import { addUser, getUserByEmail, organizationVersionActiveAccountsCount, updateAccount, validateUser } from '@/db/user'
-import { NOT_ASSOCIATION_SIRET, REQUEST_SENT, UNKNOWN_SIRET_OR_CNC } from '@/services/permissions/check'
+import {
+  NOT_ASSOCIATION_SIRET,
+  ORGANIZATION_ACTIVATION_IN_PROGRESS,
+  REQUEST_SENT,
+  UNKNOWN_SIRET_OR_CNC,
+} from '@/services/permissions/check'
 import { mockedOrganizationVersionId } from '@/tests/utils/models/organization'
 import { mockedAccountId } from '@/tests/utils/models/user'
 import { sendActivationRequest } from '@abc-transitionbascarbone/services/email/email'
@@ -44,6 +51,11 @@ jest.mock('@/services/checklist', () => ({}))
 jest.mock('@/db/account')
 jest.mock('@/db/cnc')
 jest.mock('@/db/deactivableFeatures')
+jest.mock('@/db/client.server', () => ({
+  prismaClient: {
+    $transaction: jest.fn((callback) => callback({})),
+  },
+}))
 jest.mock('@/db/organization')
 jest.mock('@/db/site')
 jest.mock('@/db/study', () => ({}))
@@ -71,7 +83,9 @@ const mockAddUser = addUser as jest.Mock
 const mockAddAccount = addAccount as jest.Mock
 const mockUpdateAccount = updateAccount as jest.Mock
 const mockGetAccountById = getAccountById as jest.Mock
+const mockGetAccountsFromOrganizationForActivation = getAccountsFromOrganizationForActivation as jest.Mock
 const mockGetAccountFromUserOrganization = getAccountFromUserOrganization as jest.Mock
+const mockRemoveOtherAccountActivation = removeOtherAccountActivation as jest.Mock
 const mockValidateUser = validateUser as jest.Mock
 const mockFindCncByCncCode = findCncByCncCode as jest.Mock
 const mockGetRawOrganizationBySiteCNC = getRawOrganizationBySiteCNC as jest.Mock
@@ -86,6 +100,7 @@ const mockSendActivationRequest = sendActivationRequest as jest.Mock
 const mockGetOrganizationVersionForRightsCheck = getOrganizationVersionForRightsCheck as jest.Mock
 const mockOrganizationVersionActiveAccountsCount = organizationVersionActiveAccountsCount as jest.Mock
 const mockActivateEmail = activateEmail as jest.Mock
+const actualActivateEmail = jest.requireActual('./user').activateEmail as typeof activateEmail
 
 const testEmail = 'test@example.com'
 const testSiret = '12345678901234'
@@ -136,6 +151,218 @@ describe('signUpWithSiretOrCNC', () => {
     })
   })
 
+  describe('activateEmail', () => {
+    beforeEach(() => {
+      jest.clearAllMocks()
+    })
+
+    it('blocks self activation while another manager activation is still reserved', async () => {
+      mockGetUserByEmail.mockResolvedValue({
+        id: mockedUserId,
+        email: testEmail,
+        firstName: 'Test',
+        lastName: 'User',
+        accounts: [{ id: mockedAccountId, environment: Environment.CUT, status: UserStatus.PENDING_REQUEST }],
+      })
+      mockGetAccountById.mockResolvedValue({
+        id: mockedAccountId,
+        organizationVersionId: mockedOrganizationVersionId,
+        status: UserStatus.PENDING_REQUEST,
+        role: Role.DEFAULT,
+        user: {
+          id: mockedUserId,
+          email: testEmail,
+          firstName: 'Test',
+          lastName: 'User',
+        },
+      })
+      mockGetOrganizationVersionForRightsCheck.mockResolvedValue({
+        id: mockedOrganizationVersionId,
+        activatedLicence: [1],
+      })
+      mockOrganizationVersionActiveAccountsCount.mockResolvedValue(0)
+      mockGetAccountsFromOrganizationForActivation.mockResolvedValue([
+        {
+          id: 'reserved-account-id',
+          role: Role.GESTIONNAIRE,
+          status: UserStatus.VALIDATED,
+          activationRequestedAt: new Date(),
+          user: { email: 'reserved@example.com', firstName: 'Reserved', lastName: 'User' },
+        },
+      ])
+
+      const result = await actualActivateEmail(testEmail, Environment.CUT)
+
+      expect(result.success).toBe(false)
+      if (!result.success) {
+        expect(result.errorMessage).toBe(ORGANIZATION_ACTIVATION_IN_PROGRESS)
+      }
+      expect(mockValidateUser).not.toHaveBeenCalled()
+      expect(mockUpdateAccount).not.toHaveBeenCalled()
+    })
+
+    it('hands off expired manager activation to the new requester', async () => {
+      mockGetUserByEmail.mockResolvedValue({
+        id: mockedUserId,
+        email: testEmail,
+        firstName: 'Test',
+        lastName: 'User',
+        accounts: [{ id: mockedAccountId, environment: Environment.CUT, status: UserStatus.PENDING_REQUEST }],
+      })
+      mockGetAccountById.mockResolvedValue({
+        id: mockedAccountId,
+        organizationVersionId: mockedOrganizationVersionId,
+        status: UserStatus.PENDING_REQUEST,
+        role: Role.DEFAULT,
+        user: {
+          id: mockedUserId,
+          email: testEmail,
+          firstName: 'Test',
+          lastName: 'User',
+        },
+      })
+      mockGetOrganizationVersionForRightsCheck.mockResolvedValue({
+        id: mockedOrganizationVersionId,
+        activatedLicence: [1],
+      })
+      mockOrganizationVersionActiveAccountsCount.mockResolvedValue(0)
+      const expiredAccount = {
+        id: 'expired-account-id',
+        role: Role.GESTIONNAIRE,
+        status: UserStatus.VALIDATED,
+        activationRequestedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+        user: { email: 'expired@example.com', firstName: 'Expired', lastName: 'User' },
+      }
+      mockGetAccountsFromOrganizationForActivation.mockResolvedValue([expiredAccount])
+      mockRemoveOtherAccountActivation.mockResolvedValue(true)
+      mockValidateUser.mockResolvedValue(undefined)
+
+      const result = await actualActivateEmail(testEmail, Environment.CUT)
+
+      expect(result.success).toBe(true)
+      if (result.success) {
+        expect(result.data).toBe(EMAIL_SENT)
+      }
+      expect(mockRemoveOtherAccountActivation).toHaveBeenCalledWith(
+        { id: mockedAccountId, organizationVersionId: mockedOrganizationVersionId },
+        expiredAccount,
+        expect.anything(),
+      )
+      expect(mockUpdateAccount).toHaveBeenCalledWith(
+        mockedAccountId,
+        {
+          activationRequestedAt: expect.any(Date),
+        },
+        undefined,
+        expect.anything(),
+      )
+      expect(mockValidateUser).toHaveBeenCalledWith(mockedAccountId, expect.anything())
+    })
+
+    it('hands off an expired admin activation to the new requester', async () => {
+      mockGetUserByEmail.mockResolvedValue({
+        id: mockedUserId,
+        email: testEmail,
+        firstName: 'Test',
+        lastName: 'User',
+        accounts: [{ id: mockedAccountId, environment: Environment.CUT, status: UserStatus.PENDING_REQUEST }],
+      })
+      mockGetAccountById.mockResolvedValue({
+        id: mockedAccountId,
+        organizationVersionId: mockedOrganizationVersionId,
+        status: UserStatus.PENDING_REQUEST,
+        role: Role.DEFAULT,
+        user: {
+          id: mockedUserId,
+          email: testEmail,
+          firstName: 'Test',
+          lastName: 'User',
+        },
+      })
+      mockGetOrganizationVersionForRightsCheck.mockResolvedValue({
+        id: mockedOrganizationVersionId,
+        activatedLicence: [1],
+      })
+      mockOrganizationVersionActiveAccountsCount.mockResolvedValue(0)
+      const expiredAccount = {
+        id: 'expired-admin-account-id',
+        role: Role.ADMIN,
+        status: UserStatus.VALIDATED,
+        activationRequestedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+        user: { email: 'expired-admin@example.com', firstName: 'Expired', lastName: 'Admin' },
+      }
+      mockGetAccountsFromOrganizationForActivation.mockResolvedValue([expiredAccount])
+      mockRemoveOtherAccountActivation.mockResolvedValue(true)
+      mockValidateUser.mockResolvedValue(undefined)
+
+      const result = await actualActivateEmail(testEmail, Environment.CUT)
+
+      expect(result.success).toBe(true)
+      if (result.success) {
+        expect(result.data).toBe(EMAIL_SENT)
+      }
+      expect(mockRemoveOtherAccountActivation).toHaveBeenCalledWith(
+        { id: mockedAccountId, organizationVersionId: mockedOrganizationVersionId },
+        expiredAccount,
+        expect.anything(),
+      )
+      expect(mockUpdateAccount).toHaveBeenCalledWith(
+        mockedAccountId,
+        {
+          activationRequestedAt: expect.any(Date),
+        },
+        undefined,
+        expect.anything(),
+      )
+      expect(mockValidateUser).toHaveBeenCalledWith(mockedAccountId, expect.anything())
+    })
+
+    it('blocks activation when the transactional handoff loses the race', async () => {
+      mockGetUserByEmail.mockResolvedValue({
+        id: mockedUserId,
+        email: testEmail,
+        firstName: 'Test',
+        lastName: 'User',
+        accounts: [{ id: mockedAccountId, environment: Environment.CUT, status: UserStatus.PENDING_REQUEST }],
+      })
+      mockGetAccountById.mockResolvedValue({
+        id: mockedAccountId,
+        organizationVersionId: mockedOrganizationVersionId,
+        status: UserStatus.PENDING_REQUEST,
+        role: Role.DEFAULT,
+        user: {
+          id: mockedUserId,
+          email: testEmail,
+          firstName: 'Test',
+          lastName: 'User',
+        },
+      })
+      mockGetOrganizationVersionForRightsCheck.mockResolvedValue({
+        id: mockedOrganizationVersionId,
+        activatedLicence: [1],
+      })
+      mockOrganizationVersionActiveAccountsCount.mockResolvedValue(0)
+      mockGetAccountsFromOrganizationForActivation.mockResolvedValue([
+        {
+          id: 'expired-account-id',
+          role: Role.GESTIONNAIRE,
+          status: UserStatus.VALIDATED,
+          activationRequestedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+          user: { email: 'expired@example.com', firstName: 'Expired', lastName: 'User' },
+        },
+      ])
+      mockRemoveOtherAccountActivation.mockResolvedValue(false)
+
+      const result = await actualActivateEmail(testEmail, Environment.CUT)
+
+      expect(result.success).toBe(false)
+      if (!result.success) {
+        expect(result.errorMessage).toBe(ORGANIZATION_ACTIVATION_IN_PROGRESS)
+      }
+      expect(mockValidateUser).not.toHaveBeenCalled()
+    })
+  })
+
   describe('Account already exists scenarios', () => {
     it('returns NOT_AUTHORIZED when account exists for CUT environment', async () => {
       mockGetAccountByEmailAndEnvironment.mockResolvedValue({
@@ -169,6 +396,8 @@ describe('signUpWithSiretOrCNC', () => {
         id: mockedAccountId,
         organizationVersionId: mockedOrganizationVersionId,
         status: UserStatus.IMPORTED,
+        role: Role.DEFAULT,
+        organizationVersion: { environment: Environment.TILT, organizationId: mockedOrganizationId },
         user: {
           id: mockedUserId,
           email: testEmail,
@@ -345,6 +574,9 @@ describe('signUpWithSiretOrCNC', () => {
       })
       mockGetAccountById.mockResolvedValue({
         id: mockedAccountId,
+        role: Role.DEFAULT,
+        organizationVersionId: mockedOrganizationVersionId,
+        organizationVersion: { environment: Environment.CUT, organizationId: mockedOrganizationId },
         user: { email: testEmail, firstName: 'Test', lastName: 'User' },
       })
       mockGetAccountFromUserOrganization.mockResolvedValue([
@@ -493,6 +725,9 @@ describe('signUpWithSiretOrCNC', () => {
       })
       mockGetAccountById.mockResolvedValue({
         id: mockedAccountId,
+        role: Role.DEFAULT,
+        organizationVersionId: mockedOrganizationVersionId,
+        organizationVersion: { environment: Environment.CUT, organizationId: mockedOrganizationId },
         user: { email: testEmail },
       })
       mockGetAccountFromUserOrganization.mockResolvedValue([
@@ -532,6 +767,9 @@ describe('signUpWithSiretOrCNC', () => {
       })
       mockGetAccountById.mockResolvedValue({
         id: mockedAccountId,
+        role: Role.DEFAULT,
+        organizationVersionId: mockedOrganizationVersionId,
+        organizationVersion: { environment: Environment.CUT, organizationId: mockedOrganizationId },
         user: { email: testEmail, firstName: 'Test', lastName: 'User' },
       })
       mockGetAccountFromUserOrganization.mockResolvedValue([

@@ -7,7 +7,7 @@ import { UserSession } from 'next-auth'
 
 export const isAdmin = (userRole: Role) => userRole === Role.ADMIN || userRole === Role.SUPER_ADMIN
 
-export const findUserInfo = (user: UserSession) =>
+export const findUserInfo = (user: Pick<UserSession, 'role' | 'organizationVersionId'>) =>
   ({
     select: findAccountSelect({ formationName: true }),
     where: canEditMemberRole(user)
@@ -34,4 +34,5 @@ export const getRoleToSetForUntrained = (role: Exclude<Role, 'SUPER_ADMIN'>, env
   return role === Role.ADMIN || role === Role.GESTIONNAIRE ? Role.GESTIONNAIRE : Role.DEFAULT
 }
 
-export const canEditMemberRole = (account: UserSession) => isAdmin(account.role) || account.role === Role.GESTIONNAIRE
+export const canEditMemberRole = (account: Pick<UserSession, 'role'>) =>
+  isAdmin(account.role) || account.role === Role.GESTIONNAIRE
