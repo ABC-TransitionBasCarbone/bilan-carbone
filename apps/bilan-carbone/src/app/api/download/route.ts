@@ -1,3 +1,4 @@
+import { sanitizeFileName } from '@abc-transitionbascarbone/utils/csv'
 import { NextRequest } from 'next/server'
 
 const getAllowedDownloadHosts = () => {
@@ -19,8 +20,6 @@ const isAllowedDownloadUrl = (value: string) => {
     return false
   }
 }
-
-const sanitizeFileName = (fileName: string) => fileName.replace(/[\\/"\u0000-\u001F\u007F]/g, '_')
 
 export const GET = async (req: NextRequest) => {
   const { searchParams } = new URL(req.url)

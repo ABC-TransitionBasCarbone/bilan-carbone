@@ -33,7 +33,7 @@ const switchAccount = async (accountId: string) => {
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: 'jwt',
-    maxAge: DAY * 7,
+    maxAge: DAY,
   },
   pages: {
     signIn: '/login',

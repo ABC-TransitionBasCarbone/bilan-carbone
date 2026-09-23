@@ -118,6 +118,6 @@ describe('GET /api/download', () => {
 
     const response = await GET(req as unknown as NextRequest)
 
-    expect(response.headers.get('Content-Disposition')).toBe('attachment; filename="report___.pdf"')
+    expect(response.headers.get('Content-Disposition')).toBe('attachment; filename="report-pdf"')
   })
 })
