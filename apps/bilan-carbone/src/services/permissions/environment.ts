@@ -66,7 +66,8 @@ export const hasAccessToAllLocales = isClickson
 
 export const hasAccessToSimplifiedEmissionAnalysis = isClickson
 
-export const canCreateStudyWithoutSpecificRights = isCut
+export const canCreateStudyWithoutSpecificRights = (environment: Environment, simplified: boolean = false) =>
+  isCut(environment) || (isTilt(environment) && simplified)
 
 export const canCreateStudyOnlyAsAdministrator = isClickson
 

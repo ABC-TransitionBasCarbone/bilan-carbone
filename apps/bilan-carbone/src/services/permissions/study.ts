@@ -96,7 +96,7 @@ export const canCreateAStudy = async (user: UserSession, simplified: boolean = f
   return (
     !!user.organizationVersionId &&
     (canCreateAdvancedStudy ||
-      canCreateStudyWithoutSpecificRights(user.environment) ||
+      canCreateStudyWithoutSpecificRights(user.environment, simplified) ||
       studyIsSimplifiedAndCreationAuthorized)
   )
 }
