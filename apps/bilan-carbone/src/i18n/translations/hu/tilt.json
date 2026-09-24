@@ -57,7 +57,8 @@
         "startDate": "A tanulmány kezdő dátuma",
         "endDate": "A tanulmány záró dátuma"
       }
-    }
+    },
+    "exportFilenameSimplified": "Egyszerűsített karbonlábnyom - Civil szféra - {studyName}"
   },
   "email": {
     "subject": {

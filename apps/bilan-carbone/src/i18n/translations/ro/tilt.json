@@ -57,7 +57,8 @@
         "startDate": "Data de început a studiului",
         "endDate": "Data de sfârșit a studiului"
       }
-    }
+    },
+    "exportFilenameSimplified": "Amprentă de carbon simplificată - Sfera asociativă - {studyName}"
   },
   "email": {
     "subject": {

@@ -57,7 +57,8 @@
         "startDate": "Fecha de inicio del estudio",
         "endDate": "Fecha de fin del estudio"
       }
-    }
+    },
+    "exportFilenameSimplified": "Huella de carbono simplificada - Esfera asociativa - {studyName}"
   },
   "email": {
     "subject": {
