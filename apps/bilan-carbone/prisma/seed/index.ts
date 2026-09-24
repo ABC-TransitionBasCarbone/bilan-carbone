@@ -1043,12 +1043,20 @@ const users = async () => {
   const formationAdminWithAccount = usersWithAccounts.find(
     (userWithAccount) => userWithAccount.user.email === 'formation_bc-env-admin-0@yopmail.com',
   ) as userAndAccountsAndOrganizationVersion
+  const formationDefaultWithAccount = usersWithAccounts.find(
+    (userWithAccount) => userWithAccount.user.email === 'formation_bc-env-default-0@yopmail.com',
+  ) as userAndAccountsAndOrganizationVersion
   const formationAdminAccount = formationAdminWithAccount.accounts[0].account
   const formationOrganizationVersionId = formationAdminAccount.organizationVersionId
 
-  if (!formationOrganizationVersionId) {
-    throw new Error('Formation admin account must belong to an organization version')
+  if (!formationOrganizationVersionId || !formationDefaultWithAccount?.accounts[0]) {
+    throw new Error('Formation test accounts must belong to an organization version')
   }
+
+  await prisma.account.update({
+    where: { id: formationDefaultWithAccount.accounts[0].account.id },
+    data: { organizationVersionId: formationOrganizationVersionId },
+  })
 
   const formationOrganizationSites = sites.filter(
     (site) => site.organizationId === formationAdminWithAccount.accounts[0].organizationVersion.organizationId,

@@ -822,7 +822,7 @@ export const downloadStudyResults = async (
     }
   }
 
-  if (hasAccessToBcExport(environment) || environment === Environment.BC) {
+  if (hasAccessToBcExport(environment)) {
     const consolidatedResults = formatConsolidatedStudyResultsForExport(
       study,
       siteList,

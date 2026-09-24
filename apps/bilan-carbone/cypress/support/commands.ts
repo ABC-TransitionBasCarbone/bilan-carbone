@@ -1,4 +1,5 @@
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { AllBCEnvironments } from '@abc-transitionbascarbone/utils/types'
 
 Cypress.Commands.add(
   'getByTestId',
@@ -6,20 +7,20 @@ Cypress.Commands.add(
     cy.get(`[data-testid="${testId}"]`, params),
 )
 
-const ENV_LOGIN_DEFAULTS: Record<string, { email: string; password: string }> = {
-  bc: { email: 'bc-collaborator-0@yopmail.com', password: 'password-0' },
-  'formation-bc': { email: 'formation_bc-env-admin-0@yopmail.com', password: 'password-0' },
-  cut: { email: 'cut-env-admin-0@yopmail.com', password: 'password-0' },
-  tilt: { email: 'tilt-env-admin-0@yopmail.com', password: 'password-0' },
-  clickson: { email: 'clickson-env-admin-0@yopmail.com', password: 'password-0' },
+const ENV_LOGIN_DEFAULTS: Record<AllBCEnvironments, { email: string; password: string }> = {
+  [Environment.BC]: { email: 'bc-collaborator-0@yopmail.com', password: 'password-0' },
+  [Environment.FORMATION_BC]: { email: 'formation_bc-env-admin-0@yopmail.com', password: 'password-0' },
+  [Environment.CUT]: { email: 'cut-env-admin-0@yopmail.com', password: 'password-0' },
+  [Environment.TILT]: { email: 'tilt-env-admin-0@yopmail.com', password: 'password-0' },
+  [Environment.CLICKSON]: { email: 'clickson-env-admin-0@yopmail.com', password: 'password-0' },
 }
 
-const ENV_ENTRY_PATHS: Record<string, string> = {
-  bc: '/login',
-  'formation-bc': '/formation-bc',
-  cut: '/count',
-  tilt: '/tilt',
-  clickson: '/clickson',
+const ENV_ENTRY_PATHS: Record<AllBCEnvironments, string> = {
+  [Environment.BC]: '/login',
+  [Environment.FORMATION_BC]: '/formation-bc',
+  [Environment.CUT]: '/count',
+  [Environment.TILT]: '/tilt',
+  [Environment.CLICKSON]: '/clickson',
 }
 
 Cypress.Commands.add('login', (email = 'bc-collaborator-0@yopmail.com', password = 'password-0') => {
@@ -33,7 +34,7 @@ Cypress.Commands.add('login', (email = 'bc-collaborator-0@yopmail.com', password
   cy.wait(`@login`)
 })
 
-Cypress.Commands.add('loginForEnv', (env: Environment, email?: string, password?: string) => {
+Cypress.Commands.add('loginForEnv', (env: AllBCEnvironments, email?: string, password?: string) => {
   const defaults = ENV_LOGIN_DEFAULTS[env]
   const loginEmail = email ?? defaults.email
   const loginPassword = password ?? defaults.password

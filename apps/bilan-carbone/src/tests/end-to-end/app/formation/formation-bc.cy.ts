@@ -24,8 +24,8 @@ describe('BC Formation', () => {
 
     cy.visit('/etudes/creer')
     cy.getByTestId('new-study-organization-title').should('be.visible')
-    cy.getByTestId('organization-sites-checkbox').first().click({ force: true })
-    cy.getByTestId('new-study-organization-button').click()
+    cy.getByTestId('organization-sites-checkbox').first().find('input').check({ force: true }).should('be.checked')
+    cy.getByTestId('new-study-organization-button').should('be.enabled').click()
 
     cy.getByTestId('new-study-name').type('Formation BC study')
     cy.getByTestId('new-study-level').click()
@@ -72,12 +72,13 @@ describe('BC Formation', () => {
     cy.getByTestId('emission-source-Formation source').should('not.exist')
   })
 
-  it('gives formation administrators, but not default members, access to team role editing', () => {
+  it('gives formation administrators access to team role editing', () => {
     cy.loginForEnv(Environment.FORMATION_BC)
     cy.visit('/equipe')
     cy.getByTestId('team-table-row').first().find('input').should('exist')
+  })
 
-    cy.logout()
+  it('does not give formation default members access to team role editing', () => {
     cy.loginForEnv(Environment.FORMATION_BC, 'formation_bc-env-default-0@yopmail.com', 'password-0')
     cy.visit('/equipe')
     cy.getByTestId('team-table-row').first().find('input').should('not.exist')

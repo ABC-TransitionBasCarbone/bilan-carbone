@@ -1,12 +1,7 @@
 import { isFeatureActiveForEnvironment } from '@/db/deactivableFeatures'
 import { DeactivatableFeature, Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { Locale } from '@abc-transitionbascarbone/i18n/config'
-import {
-  advancedEnvironments,
-  isAdvanced,
-  isFormation,
-  isSimplified,
-} from '@abc-transitionbascarbone/utils/environments'
+import { advancedEnvironments, isAdvanced, isSimplified } from '@abc-transitionbascarbone/utils/environments'
 const { BC, CUT, TILT, CLICKSON } = Environment
 
 export const isBC = (environment: Environment) => environment === BC
@@ -38,9 +33,7 @@ export const hasAccessToStudyFlowExample = isAdvanced
 
 export const hasWasteImpact = isAdvanced
 
-export const hasAccessToBcExport = (environment: Environment) => {
-  return isTilt(environment) || isFormation(environment)
-}
+export const hasAccessToBcExport = isAdvanced
 
 export const hasAccessToDependencyMatrix = isTilt
 
