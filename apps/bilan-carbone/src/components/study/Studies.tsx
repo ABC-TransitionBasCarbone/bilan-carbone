@@ -51,23 +51,6 @@ const Studies = async ({
   }
 
   const actions: Action[] = [
-    ...(canAddStudy
-      ? [
-          {
-            actionType: 'link' as const,
-            href: creationUrl,
-            color: 'secondary' as const,
-            variant: 'outlined' as const,
-            ['data-testid']: 'new-study',
-            children: (
-              <>
-                <AddIcon />
-                {t(simplified ? 'createSimplified' : 'create')}
-              </>
-            ),
-          },
-        ]
-      : []),
     ...(feedbackFormUrl
       ? [
           {
@@ -84,6 +67,23 @@ const Studies = async ({
               >
                 {feedbackButtonLabel}
               </LinkButton>
+            ),
+          },
+        ]
+      : []),
+    ...(canAddStudy
+      ? [
+          {
+            actionType: 'link' as const,
+            href: creationUrl,
+            color: 'secondary' as const,
+            variant: 'outlined' as const,
+            ['data-testid']: 'new-study',
+            children: (
+              <>
+                <AddIcon />
+                {t(simplified ? 'createSimplified' : 'create')}
+              </>
             ),
           },
         ]

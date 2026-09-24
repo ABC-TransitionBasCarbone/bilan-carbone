@@ -66,20 +66,6 @@ const UserView = async ({ account, feedbackFormUrl }: Props) => {
               </Box>
             ))}
           </Box>
-          {isFootprintsEnabled && (
-            <Box className="flex align-center gapped1">
-              <Link
-                href={hasStartLinkOnFootprints(account.environment) ? 'mes-empreintes' : '/organisations'}
-                className={styles.startButtonLink}
-              >
-                <Box className={classNames('flex-cc px2 py1', styles.startButton)} component="button">
-                  <Typography variant="h6" className={styles.startButtonText}>
-                    {tAction('start')}
-                  </Typography>
-                </Box>
-              </Link>
-            </Box>
-          )}
           {feedbackFormUrl && (
             <LinkButton
               data-testid="feedback-form-link-home"
@@ -93,6 +79,20 @@ const UserView = async ({ account, feedbackFormUrl }: Props) => {
             >
               {feedbackButtonLabel}
             </LinkButton>
+          )}
+          {isFootprintsEnabled && (
+            <Box className="flex align-center gapped1">
+              <Link
+                href={hasStartLinkOnFootprints(account.environment) ? 'mes-empreintes' : '/organisations'}
+                className={styles.startButtonLink}
+              >
+                <Box className={classNames('flex-cc px2 py1', styles.startButton)} component="button">
+                  <Typography variant="h6" className={styles.startButtonText}>
+                    {tAction('start')}
+                  </Typography>
+                </Box>
+              </Link>
+            </Box>
           )}
         </Box>
         <Box className="flex gapped1 mt1">

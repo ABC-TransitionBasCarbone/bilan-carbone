@@ -44,18 +44,19 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
   const tFeedback = await getTranslations('feedback')
   const feedbackButtonLabel = tResults.has('feedback.button') ? tResults('feedback.button') : tFeedback('answer')
   const feedbackLink = feedbackFormUrl ? (
-    <LinkButton
-      data-testid="feedback-form-link-home"
-      className={classNames('w100 justify-center')}
-      href={feedbackFormUrl}
-      color="primary"
-      variant="outlined"
-      size="large"
-      target="_blank"
-      rel="noreferrer noopener"
-    >
-      {feedbackButtonLabel}
-    </LinkButton>
+    <div className="justify-end">
+      <LinkButton
+        data-testid="feedback-form-link-home"
+        href={feedbackFormUrl}
+        color="primary"
+        variant="outlined"
+        size="large"
+        target="_blank"
+        rel="noreferrer noopener"
+      >
+        {feedbackButtonLabel}
+      </LinkButton>
+    </div>
   ) : null
 
   const allowedStudies = organizationVersionId
@@ -171,19 +172,25 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
     )
   ) : !canCreateStudyOnlyAsAdministrator(user.environment) && !simplified ? (
     <Block>
-      <Alert className="p0" severity="info">
-        <p>
-          {customRich(t, 'cannotCreateStudy', {
-            link: (children) => (
-              <Link href="https://abc-transitionbascarbone.fr/agir/se-former-au-bilan-carbone/">{children}</Link>
-            ),
-          })}
-        </p>
-        <p>
-          {customRich(t, 'canCreateFootPrint', {
-            link: (children) => <Link href="/mes-empreintes">{children}</Link>,
-          })}
-        </p>
+      <Alert
+        className="p0"
+        severity="info"
+        slotProps={{ message: { className: 'grow flex align-center justify-between gapped' } }}
+      >
+        <div>
+          <p>
+            {customRich(t, 'cannotCreateStudy', {
+              link: (children) => (
+                <Link href="https://abc-transitionbascarbone.fr/agir/se-former-au-bilan-carbone/">{children}</Link>
+              ),
+            })}
+          </p>
+          <p>
+            {customRich(t, 'canCreateFootPrint', {
+              link: (children) => <Link href="/mes-empreintes">{children}</Link>,
+            })}
+          </p>
+        </div>
         {feedbackLink}
       </Alert>
     </Block>
