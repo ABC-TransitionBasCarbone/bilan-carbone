@@ -1,5 +1,6 @@
 import LoginForm from '@/components/auth/LoginForm'
 import { auth } from '@/services/auth'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { redirect } from 'next/navigation'
 
 const LoginPage = async () => {
@@ -8,7 +9,7 @@ const LoginPage = async () => {
     redirect('/')
   }
 
-  return <LoginForm />
+  return <LoginForm environment={Environment.FORMATION_BC} />
 }
 
 export default LoginPage

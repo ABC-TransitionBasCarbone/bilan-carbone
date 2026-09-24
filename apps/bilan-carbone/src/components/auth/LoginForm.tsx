@@ -18,9 +18,15 @@ const LoginForm = ({ environment = Environment.BC }: Props) => {
   const support = getEnvVarClient('SUPPORT_EMAIL', environment)
   const t = useTranslations('login.form')
 
-  const getResetLink = (email: string) => getEnvRoute(`reset-password?email=${email}`, environment)
+  const getResetLink = (email: string) =>
+    environment !== Environment.FORMATION_BC ? getEnvRoute(`reset-password?email=${email}`, environment) : ''
   const getActivationLink = (email: string) =>
-    getEnvRoute(environment === Environment.BC ? `activation?email=${email}` : `register?email=${email}`, environment)
+    environment !== Environment.FORMATION_BC
+      ? getEnvRoute(
+          environment === Environment.BC ? `activation?email=${email}` : `register?email=${email}`,
+          environment,
+        )
+      : ''
 
   return (
     <LoginFormCommon

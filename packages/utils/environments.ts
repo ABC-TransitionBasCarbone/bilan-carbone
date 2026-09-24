@@ -26,17 +26,24 @@ export enum EnvironmentMode {
   ADVANCED = 'ADVANCED',
 }
 
+const COUNT_ROUTE = '/count'
+const TILT_ROUTE = '/tilt'
+const CLICKSON_ROUTE = '/clickson'
+const FORMATION_BC_ROUTE = '/formation-bc'
 export const getEnvRoute = (path: string, env?: Environment) => {
   let base = ''
   switch (env) {
     case Environment.CUT:
-      base = '/count'
+      base = COUNT_ROUTE
       break
     case Environment.TILT:
-      base = '/tilt'
+      base = TILT_ROUTE
       break
     case Environment.CLICKSON:
-      base = '/clickson'
+      base = CLICKSON_ROUTE
+      break
+    case Environment.FORMATION_BC:
+      base = FORMATION_BC_ROUTE
       break
     default:
       break
@@ -45,8 +52,4 @@ export const getEnvRoute = (path: string, env?: Environment) => {
   return `${base}/${path}`
 }
 
-const COUNT_ROUTE = '/count'
-const TILT_ROUTE = '/tilt'
-const CLICKSON_ROUTE = '/clickson'
-const FORMATION_BC_ROUTE = '/formation-bc'
 export const ENV_ROUTES = [COUNT_ROUTE, TILT_ROUTE, CLICKSON_ROUTE, FORMATION_BC_ROUTE]

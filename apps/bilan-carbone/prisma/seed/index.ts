@@ -27,7 +27,7 @@ import { Command } from 'commander'
 import { ACTUALITIES } from '../legacy_data/actualities'
 import { SECTEN_SEED_DATA } from './sectenSeedData'
 import { createRealStudy } from './study'
-import { getEnvRoleFromBase, getRolesFromEnvironment } from './utils'
+import { getClicksonRoleFromBase, getEnvRoleFromBase, getRolesFromEnvironment } from './utils'
 
 import type { BCEnvironment } from '@/types/environment'
 import { getValidSubPostsForEnvironment } from '@/utils/importEmissionSources.utils'
@@ -593,7 +593,7 @@ const users = async () => {
           },
           {
             organizationVersionId: organizationVersionsClickson[index % organizationVersionsClickson.length].id,
-            role: getEnvRoleFromBase(role as Role),
+            role: getClicksonRoleFromBase(role as Role),
             userId: user.id,
             environment: Environment.CLICKSON,
             status: UserStatus.ACTIVE,
