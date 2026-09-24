@@ -1040,6 +1040,76 @@ const users = async () => {
     }),
   )
 
+  const formationAdminWithAccount = usersWithAccounts.find(
+    (userWithAccount) => userWithAccount.user.email === 'formation_bc-env-admin-0@yopmail.com',
+  ) as userAndAccountsAndOrganizationVersion
+  const formationAdminAccount = formationAdminWithAccount.accounts[0].account
+  const formationOrganizationVersionId = formationAdminAccount.organizationVersionId
+
+  if (!formationOrganizationVersionId) {
+    throw new Error('Formation admin account must belong to an organization version')
+  }
+
+  const formationOrganizationSites = sites.filter(
+    (site) => site.organizationId === formationAdminWithAccount.accounts[0].organizationVersion.organizationId,
+  )
+
+  studies.push(
+    await prisma.study.create({
+      include: { sites: true },
+      data: {
+        id: '88c93e88-7c80-4be4-905b-f0bbd2ccc841',
+        createdById: formationAdminAccount.id,
+        startDate: new Date(),
+        endDate: faker.date.future(),
+        isPublic: false,
+        level: Level.Initial,
+        name: 'Formation study source',
+        organizationVersionId: formationOrganizationVersionId,
+        sites: {
+          createMany: {
+            data: faker.helpers
+              .arrayElements(formationOrganizationSites, { min: 1, max: formationOrganizationSites.length })
+              .map((site) => ({ siteId: site.id, etp: site.etp, ca: site.ca })),
+          },
+        },
+        allowedUsers: {
+          createMany: {
+            data: [{ role: StudyRole.Validator, accountId: formationAdminAccount.id }],
+          },
+        },
+      },
+    }),
+  )
+
+  studies.push(
+    await prisma.study.create({
+      include: { sites: true },
+      data: {
+        id: '88c93e88-7c80-4be4-905b-f0bbd2ccc842',
+        createdById: formationAdminAccount.id,
+        startDate: new Date(),
+        endDate: faker.date.future(),
+        isPublic: false,
+        level: Level.Initial,
+        name: 'Formation study to delete',
+        organizationVersionId: formationOrganizationVersionId,
+        sites: {
+          createMany: {
+            data: faker.helpers
+              .arrayElements(formationOrganizationSites, { min: 1, max: formationOrganizationSites.length })
+              .map((site) => ({ siteId: site.id, etp: site.etp, ca: site.ca })),
+          },
+        },
+        allowedUsers: {
+          createMany: {
+            data: [{ role: StudyRole.Validator, accountId: formationAdminAccount.id }],
+          },
+        },
+      },
+    }),
+  )
+
   await Promise.all(
     studies.map(async (study) => {
       const organizationVersion = await prisma.organizationVersion.findFirst({
@@ -1057,7 +1127,10 @@ const users = async () => {
           .arrayElements(Array.from(validSubPosts), { min: 1, max: subPosts.length })
           .flatMap((subPost) => {
             // Keep this study clean for e2e tests to prevent flakiness
-            if (study.id === '88c93e88-7c80-4be4-905b-f0bbd2ccc779' && subPost === SubPost.MetauxPlastiquesEtVerre) {
+            if (
+              ['88c93e88-7c80-4be4-905b-f0bbd2ccc779', '88c93e88-7c80-4be4-905b-f0bbd2ccc841'].includes(study.id) &&
+              subPost === SubPost.MetauxPlastiquesEtVerre
+            ) {
               return []
             }
 

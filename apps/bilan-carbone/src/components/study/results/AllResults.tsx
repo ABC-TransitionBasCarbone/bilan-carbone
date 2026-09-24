@@ -4,7 +4,11 @@ import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import type { FullStudy } from '@/db/study'
 import { useTransitionPlanFilters } from '@/hooks/useTransitionPlanFilters'
 import { download } from '@/services/file'
-import { hasAccessToBcExport, hasAccessToDownloadStudyEmissionSourcesButton } from '@/services/permissions/environment'
+import {
+  hasAccessToBcExport,
+  hasAccessToDownloadStudyEmissionSourcesButton,
+  hasSpecificExport,
+} from '@/services/permissions/environment'
 import { environmentPostMapping } from '@/services/posts'
 import { computeBegesResult } from '@/services/results/beges'
 import { computeResultsByPostFromEmissionSources, computeResultsByTag } from '@/services/results/consolidated'
@@ -31,7 +35,6 @@ import {
   ControlMode,
   DeactivatableFeature,
   EmissionFactorBase,
-  Environment,
   Export,
   SiteCAUnit,
   StudyResultUnit,
@@ -95,10 +98,10 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
 
   const displayConsolidatedInfo =
     (type === AdditionalResultTypes.CONSOLIDATED || type === AdditionalResultTypes.ENV_SPECIFIC_EXPORT) &&
-    (environment === Environment.BC || environment === Environment.TILT)
+    hasAccessToBcExport(environment)
 
   useEffect(() => {
-    if (environment && environment !== Environment.BC) {
+    if (hasSpecificExport(environment)) {
       setType(AdditionalResultTypes.ENV_SPECIFIC_EXPORT)
     }
   }, [environment])
@@ -443,7 +446,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
               disabled={!allowTypeSelect}
             >
               <MenuItem value={AdditionalResultTypes.CONSOLIDATED}>{tExport('consolidated')}</MenuItem>
-              {environment && hasAccessToBcExport(environment) && (
+              {environment && hasAccessToBcExport(environment) && hasSpecificExport(environment) && (
                 <MenuItem value={AdditionalResultTypes.ENV_SPECIFIC_EXPORT}>{tExport('env_specific_export')}</MenuItem>
               )}
               {exports &&

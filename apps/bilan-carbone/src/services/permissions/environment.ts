@@ -38,7 +38,9 @@ export const hasAccessToStudyFlowExample = isAdvanced
 
 export const hasWasteImpact = isAdvanced
 
-export const hasAccessToBcExport = isTilt || isFormation
+export const hasAccessToBcExport = (environment: Environment) => {
+  return isTilt(environment) || isFormation(environment)
+}
 
 export const hasAccessToDependencyMatrix = isTilt
 
@@ -141,3 +143,6 @@ export const hasSimplifiedStudies = (env: Environment): env is EnvironmentWithSi
 }
 
 export const isRedirectedToCadrage = (environment: Environment) => isCut(environment) || isClickson(environment)
+
+export const hasSpecificExport = (environment: Environment) =>
+  ([CUT, CLICKSON, TILT] as Environment[]).includes(environment)
