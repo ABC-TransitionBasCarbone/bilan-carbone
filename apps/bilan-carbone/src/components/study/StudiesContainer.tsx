@@ -19,6 +19,7 @@ import Box from '@abc-transitionbascarbone/components/src/base/Box'
 import LinkButton from '@abc-transitionbascarbone/components/src/base/LinkButton'
 import Image from '@abc-transitionbascarbone/components/src/document/Image'
 import { customRich } from '@abc-transitionbascarbone/utils/customRich'
+import { getEnvVarClient } from '@abc-transitionbascarbone/utils/environmentClient'
 import AddIcon from '@mui/icons-material/Add'
 import { Alert, Box as MUIBox } from '@mui/material'
 import classNames from 'classnames'
@@ -39,6 +40,8 @@ interface Props {
 const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified = false }: Props) => {
   const t = await getTranslations('study')
   const tCommon = await getTranslations('common')
+  const tLinks = await getTranslations('links')
+  const supportEmail = getEnvVarClient('SUPPORT_EMAIL', user.environment)
 
   const allowedStudies = organizationVersionId
     ? await getAllowedStudiesByUserAndOrganization(user, organizationVersionId, simplified)
@@ -69,12 +72,12 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
   const isOrgaHomePage = !organizationVersionId && !isCR
   const [orgaStudies, otherStudies] = isOrgaHomePage
     ? studies.reduce(
-        (res, study) => {
-          res[study.organizationVersion.id === user.organizationVersionId ? 0 : 1].push(study)
-          return res
-        },
-        [[] as StudyCardItem[], [] as StudyCardItem[]],
-      )
+      (res, study) => {
+        res[study.organizationVersion.id === user.organizationVersionId ? 0 : 1].push(study)
+        return res
+      },
+      [[] as StudyCardItem[], [] as StudyCardItem[]],
+    )
     : [studies, [] as StudyCardItem[]]
 
   const mainStudies = isOrgaHomePage ? orgaStudies : studies
@@ -150,19 +153,27 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
     )
   ) : !canCreateStudyOnlyAsAdministrator(user.environment) && !simplified ? (
     <Block>
-      <Alert className="p0" severity="info">
-        <p>
-          {customRich(t, 'cannotCreateStudy', {
-            link: (children) => (
-              <Link href="https://abc-transitionbascarbone.fr/agir/se-former-au-bilan-carbone/">{children}</Link>
-            ),
-          })}
-        </p>
-        <p>
-          {customRich(t, 'canCreateFootPrint', {
-            link: (children) => <Link href="/mes-empreintes">{children}</Link>,
-          })}
-        </p>
+      <Alert
+        className="p0"
+        severity="info"
+        slotProps={{ message: { className: 'grow flex align-center justify-between gapped' } }}
+      >
+        <div>
+          <p>
+            {customRich(t, 'cannotCreateStudy', {
+              link: (children) => (
+                <Link href="https://abc-transitionbascarbone.fr/agir/se-former-au-bilan-carbone/">{children}</Link>
+              ),
+            })}
+          </p>
+          <p>
+            {customRich(t, 'canCreateFootPrint', {
+              link: (children) => <Link href="/mes-empreintes">{children}</Link>,
+              faq: (children) => <Link href={tLinks('faqUrl')}>{children}</Link>,
+              support: (children) => <Link href={`mailto:${supportEmail}`}>{children}</Link>,
+            })}
+          </p>
+        </div>
       </Alert>
     </Block>
   ) : (

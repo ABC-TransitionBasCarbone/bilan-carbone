@@ -1,7 +1,9 @@
 'use server'
 
 import { StudyCardItem } from '@/db/study'
-import Block from '@abc-transitionbascarbone/components/src/base/Block'
+import { getFeedbackFormUrl } from '@/utils/ressources'
+import Block, { Action } from '@abc-transitionbascarbone/components/src/base/Block'
+import LinkButton from '@abc-transitionbascarbone/components/src/base/LinkButton'
 import AddIcon from '@mui/icons-material/Add'
 import { Box } from '@mui/material'
 import { UserSession } from 'next-auth'
@@ -34,6 +36,10 @@ const Studies = async ({
   showBetaBanner,
 }: Props) => {
   const t = await getTranslations('study')
+  const tResults = await getTranslations('study.results')
+  const tFeedback = await getTranslations('feedback')
+  const feedbackButtonLabel = tResults.has('feedback.button') ? tResults('feedback.button') : tFeedback('answer')
+  const feedbackFormUrl = await getFeedbackFormUrl(user.environment)
 
   let title = ''
   if (collaborations) {
@@ -44,30 +50,48 @@ const Studies = async ({
     title = t('myStudies')
   }
 
+  const actions: Action[] = [
+    ...(feedbackFormUrl
+      ? [
+          {
+            actionType: 'node' as const,
+            node: (
+              <LinkButton
+                data-testid="feedback-form-link-home"
+                href={feedbackFormUrl}
+                color="primary"
+                variant="outlined"
+                size="large"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                {feedbackButtonLabel}
+              </LinkButton>
+            ),
+          },
+        ]
+      : []),
+    ...(canAddStudy
+      ? [
+          {
+            actionType: 'link' as const,
+            href: creationUrl,
+            color: 'secondary' as const,
+            variant: 'outlined' as const,
+            ['data-testid']: 'new-study',
+            children: (
+              <>
+                <AddIcon />
+                {t(simplified ? 'createSimplified' : 'create')}
+              </>
+            ),
+          },
+        ]
+      : []),
+  ]
+
   return (
-    <Block
-      title={title}
-      data-testid="home-studies"
-      actions={
-        canAddStudy
-          ? [
-              {
-                actionType: 'link',
-                href: creationUrl,
-                color: 'secondary',
-                variant: 'outlined',
-                ['data-testid']: 'new-study',
-                children: (
-                  <>
-                    <AddIcon />
-                    {t(simplified ? 'createSimplified' : 'create')}
-                  </>
-                ),
-              },
-            ]
-          : undefined
-      }
-    >
+    <Block title={title} data-testid="home-studies" actions={actions.length ? actions : undefined}>
       {showBetaBanner && <BetaBanner />}
       <Box className="flex-col grow">
         {studies.length && (

@@ -231,7 +231,9 @@
     "contacterViaFormulaire": "Contacter directement l'ABC via le formulaire",
     "questionTechnique": "En cas de question technique ou de besoin d'un support informatique :",
     "lireLaFAQ": "Lire la FAQ",
-    "ecrireMail": "Écrire directement à {supportEmail}"
+    "ecrireMail": "Écrire directement à {supportEmail}",
+    "feedbackTitle": "Votre avis",
+    "feedbackLink": "Répondre au questionnaire"
   },
   "legalNotices": {
     "profile": "Retour au profil",
@@ -322,6 +324,7 @@
   "profile": {
     "title": "Mon profil",
     "legalNotices": "Mentions légales",
+    "feedbackLink": "Répondre au questionnaire",
     "firstName": "Prénom",
     "lastName": "Nom",
     "cancelUpdate": "Annuler",
@@ -378,6 +381,8 @@
     "createFirstStudy": "Créer mon premier Bilan Carbone®",
     "seeResults": "Voir les résultats",
     "firstStudyMessage": "Il est temps de vous lancer ! Nous vous invitons à créer votre premier Bilan Carbone®.",
+    "cannotCreateStudy": "Pour pouvoir faire des Bilans Carbone® il faut être formé à la méthode ! <link>En savoir plus</link>",
+    "canCreateFootPrint": "Si vous êtes formé·e, demandez à un administrateur de votre organisation de modifier votre rôle. Plus d'informations sont disponibles dans <faq>la FAQ</faq>. Si le problème persiste, contactez <support>le support</support>.",
     "validatedSources": "<data>{validated} / {total}</data> Sources d'émission validées",
     "see": "Voir mon Bilan Carbone®",
     "information": "Informations",
@@ -2557,7 +2562,7 @@
     "body": " Si vous avez quelques minutes, nous serions ravis d'avoir vos retours sur le BC+ ! Ceux-ci nous permettront de répondre aux mieux à vos besoins avec nos prochains développements. Si ce n'est pas le bon moment, vous pouvez reportez votre réponse.",
     "reject": "Ne pas répondre",
     "delay": "Plus tard ({time} jours)",
-    "answer": "Je donne mon avis"
+    "answer": "Faites-nous vos retours ! ✨"
   },
   "form": {
     "validation": {

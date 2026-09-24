@@ -190,7 +190,7 @@ const AllResults = ({
             {customRich(tResults, 'simplifiedFeedback', {
               ...(isCut(environment) && {
                 questionnaire: (children) => (
-                  <Link href={process.env.NEXT_PUBLIC_CUT_FEEDBACK_TYPEFORM_LINK ?? ''} target="_blank">
+                  <Link href={process.env.NEXT_PUBLIC_CUT_FEEDBACK_TYPEFORM_URL ?? ''} target="_blank">
                     <strong>{children}</strong>
                   </Link>
                 ),

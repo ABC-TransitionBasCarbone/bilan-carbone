@@ -7,6 +7,8 @@ import {
   isTiltSimplifiedFeatureActive,
 } from '@/services/permissions/environment'
 import { hasAccessToStudies } from '@/services/permissions/environmentAdvanced'
+import { getFeedbackFormUrl } from '@/utils/ressources'
+import LinkButton from '@abc-transitionbascarbone/components/src/base/LinkButton'
 import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import Groups2OutlinedIcon from '@mui/icons-material/Groups2Outlined'
 import { Alert, Box, Typography } from '@mui/material'
@@ -26,8 +28,12 @@ interface Props {
 const infoLength = 3
 
 const UserView = async ({ account }: Props) => {
+  const feedbackFormUrl = await getFeedbackFormUrl(account.environment)
   const t = await getTranslations('home')
   const tAction = await getTranslations('common.action')
+  const tResults = await getTranslations('study.results')
+  const tFeedback = await getTranslations('feedback')
+  const feedbackButtonLabel = tResults.has('feedback.button') ? tResults('feedback.button') : tFeedback('answer')
 
   const title = t('title')
   const navigation = await getTranslations('home.navigation')
@@ -61,8 +67,22 @@ const UserView = async ({ account }: Props) => {
               </Box>
             ))}
           </Box>
+          {feedbackFormUrl && (
+            <LinkButton
+              data-testid="feedback-form-link-home"
+              href={feedbackFormUrl}
+              className={styles.feedbackButton}
+              color="primary"
+              variant="outlined"
+              size="large"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              {feedbackButtonLabel}
+            </LinkButton>
+          )}
           {isFootprintsEnabled && (
-            <Box className="flex align-center">
+            <Box className="flex align-center gapped1">
               <Link
                 href={hasStartLinkOnFootprints(account.environment) ? 'mes-empreintes' : '/organisations'}
                 className={styles.startButtonLink}
