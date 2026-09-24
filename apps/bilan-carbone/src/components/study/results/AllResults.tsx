@@ -132,7 +132,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     if (exports && exports.types.length > 0) {
       return true
     }
-    if (environment && hasAccessToBcExport(environment)) {
+    if (environment && hasAccessToBcExport(environment) && hasSpecificExport(environment)) {
       return true
     }
     return false

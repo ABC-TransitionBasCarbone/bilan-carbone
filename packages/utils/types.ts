@@ -1,6 +1,7 @@
 import {
   Role,
   RoleMip,
+  Environment,
 } from '@abc-transitionbascarbone/db-common/enums'
 
 export type RoleBcOrMip = Role | RoleMip
@@ -12,3 +13,5 @@ export type DeepPartial<T> = T extends Date
     : T extends object
       ? { [Property in keyof T]?: DeepPartial<T[Property]> }
       : T
+
+export type AllBCEnvironments = Exclude<Environment, typeof Environment.MIP>
