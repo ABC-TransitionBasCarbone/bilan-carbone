@@ -1,4 +1,4 @@
-import PublicTiltPage from '@/components/pages/PublicTilt'
+import PublicFormation from '@/components/pages/PublicFormation'
 import DynamicTheme from '@/environments/core/providers/DynamicTheme'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { customRich } from '@abc-transitionbascarbone/utils/customRich'
@@ -17,11 +17,11 @@ export const metadata: Metadata = {
 
 const PublicLayout = async ({ children }: Props) => {
   const t = await getTranslations()
-  const question = customRich(t, 'login.question', {}, Environment.TILT)
+  const question = customRich(t, 'login.question', {}, Environment.FORMATION_BC)
   return (
-    <DynamicTheme environment={Environment.TILT}>
+    <DynamicTheme environment={Environment.FORMATION_BC}>
       <main className="h100">
-        <PublicTiltPage question={question}>{children}</PublicTiltPage>
+        <PublicFormation question={question}>{children}</PublicFormation>
       </main>
     </DynamicTheme>
   )
