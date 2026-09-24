@@ -3,7 +3,6 @@ import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { hasAccountToValidateInOrganization } from '@/db/user'
 import { hasAccessToActualityCards } from '@/services/permissions/environment'
 import { hasQualitylessEmissionFactors } from '@/services/serverFunctions/organization'
-import { getFeedbackFormUrl } from '@/utils/ressources'
 import { canEditMemberRole } from '@/utils/user'
 import { UserSession } from 'next-auth'
 import ActualitiesCards from '../actuality/ActualitiesCards'
@@ -17,11 +16,10 @@ interface Props {
 }
 
 const UserView = async ({ account }: Props) => {
-  const [organizationVersions, hasUserToValidate, emissionFactorWarning, feedbackFormUrl] = await Promise.all([
+  const [organizationVersions, hasUserToValidate, emissionFactorWarning] = await Promise.all([
     getAccountOrganizationVersions(account.accountId),
     hasAccountToValidateInOrganization(account.organizationVersionId),
     hasQualitylessEmissionFactors(),
-    getFeedbackFormUrl(account.environment),
   ])
 
   const userOrganizationVersion = organizationVersions.find(

@@ -381,7 +381,7 @@
     "seeResults": "See results",
     "firstStudyMessage": "It's time to get started! We invite you to create your first bilan.",
     "cannotCreateStudy": "To create a Carbon Footprint® you must be trained in the method! <link>Learn more</link>",
-    "canCreateFootPrint": "You can however create a <link>carbon footprint</link> allowing you to estimate your impact",
+    "canCreateFootPrint": "",
     "validatedSources": "<data>{validated} / {total}</data> Validated emission sources",
     "information": "Information",
     "validatedOnly": "Validated emission sources",
