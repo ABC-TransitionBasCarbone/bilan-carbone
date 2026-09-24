@@ -11,13 +11,24 @@ export const getEnvRoleFromBase = (role: Role): Role => {
   }
 }
 
+export const getClicksonRoleFromBase = (role: Role): Role => {
+  switch (role) {
+    case Role.ADMIN:
+    case Role.GESTIONNAIRE:
+    case Role.SUPER_ADMIN:
+      return Role.ADMIN
+    default:
+      return Role.COLLABORATOR
+  }
+}
+
 export const getRolesFromEnvironment = (environment: Environment, role: Role) => {
   switch (environment) {
     case Environment.CUT:
-    case Environment.CLICKSON:
     case Environment.FORMATION_BC:
       return getEnvRoleFromBase(role)
-
+    case Environment.CLICKSON:
+      return getClicksonRoleFromBase(role)
     default:
       return role
   }
