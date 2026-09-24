@@ -200,10 +200,12 @@ describe('Study Service', () => {
 
   // TODO : i only test the export functions for the different environments and not the whole downloadStudyResults function
   describe('exports', () => {
-    const t = ((key: string) => key) as unknown as Translations
+    const t = Object.assign((key: string) => key, { has: () => true }) as unknown as Translations
     const tStudy = ((key: string, values?: { unit?: string }) =>
       key === 'value' ? `Valeur${values?.unit ? ` (${values.unit})` : ''}` : key) as unknown as Translations
-    const tExport = ((key: string) => (key === 'value' ? 'Valeur' : key)) as unknown as Translations
+    const tExport = Object.assign((key: string) => (key === 'value' ? 'Valeur' : key), {
+      has: () => true,
+    }) as unknown as Translations
     const tUnits = ((key: string) => (key === StudyResultUnit.T ? 'tCO2e' : key)) as unknown as Translations
     const tUnitsKg = ((key: string) => (key ? 'kgCO2e' : key)) as unknown as Translations
     const computedResults: BaseResultsBySite = {
@@ -308,7 +310,7 @@ describe('Study Service', () => {
         ],
       })
 
-      const t = ((key: string) => key) as unknown as Translations
+      const t = Object.assign((key: string) => key, { has: () => false }) as unknown as Translations
 
       const prepareExcelMock = jest.mocked(prepareExcel)
       prepareExcelMock.mockClear()
@@ -350,7 +352,7 @@ describe('Study Service', () => {
         sites: [getMockedDetailedFullStudySite('site-a', 'study-site-a', 'Site A')],
       })
 
-      const t = ((key: string) => key) as unknown as Translations
+      const t = Object.assign((key: string) => key, { has: () => false }) as unknown as Translations
       const mockResults = [
         {
           post: TiltSimplifiedPost.EnergieSimplified,

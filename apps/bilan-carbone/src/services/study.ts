@@ -358,9 +358,13 @@ type Merge = {
   e: { c: number; r: number }
 }
 
-const getStudyResultsExportFilename = (studyName: string, tExport: Translations) => {
+const getStudyResultsExportFilename = (studyName: string, tExport: Translations, simplified = false) => {
   const sanitized = sanitizeStudyName(studyName)
-  return `${tExport('exportFilename', { studyName: sanitized })}.xlsx`
+
+  const exportKey =
+    simplified && tExport.has('exportFilenameSimplified') ? 'exportFilenameSimplified' : 'exportFilename'
+
+  return `${tExport(exportKey, { studyName: sanitized })}.xlsx`
 }
 
 const buildResultsTableRows = (results: BaseResultsByPost[], resultsUnit: StudyResultUnit): (string | number)[][] => {
@@ -754,7 +758,7 @@ export const downloadStudyResults = async (
   resultsByPost?: BaseResultsByPost[],
   selectedSiteId?: string,
 ) => {
-  const exportFilename = getStudyResultsExportFilename(study.name, tExport)
+  const exportFilename = getStudyResultsExportFilename(study.name, tExport, study.simplified)
 
   if (isTiltSimplified(environment, study.simplified)) {
     if (!resultsBySite || !selectedSiteId || !resultsByPost) {
