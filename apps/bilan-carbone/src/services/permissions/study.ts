@@ -180,6 +180,7 @@ export const canCreateSpecificStudy = async (
     case Environment.TILT:
       return canCreateSpecificStudyTilt(user.accountId, study, organizationVersionId)
     case Environment.BC:
+    case Environment.FORMATION_BC:
       return canCreateSpecificStudyBC(user.accountId, study, organizationVersionId)
     default:
       return false

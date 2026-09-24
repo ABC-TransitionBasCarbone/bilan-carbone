@@ -4,7 +4,7 @@ import { AccountWithUser } from '@/types/account.types'
 import { getAccountRoleOnStudy, hasDeprecationPeriod } from '@/utils/study'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import type { StudyEmissionSource } from '@abc-transitionbascarbone/db-common'
-import { StudyRole } from '@abc-transitionbascarbone/db-common/enums'
+import { Environment, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
 import { canBeValidated } from '../emissionSource'
 import { canReadStudy } from './study'
 import { isAdminOnStudyOrga } from './study.utils'
@@ -66,12 +66,12 @@ const canCreateEmissionSourceSimplified = async (
 
 export const canCreateEmissionSource = async (account: AccountWithUser, emissionSource: PartialStudyEmissionSource) => {
   switch (account.environment) {
-    case 'BC':
+    case Environment.BC:
+    case Environment.FORMATION_BC:
+    case Environment.TILT:
       return canCreateEmissionSourceBC(account, emissionSource)
-    case 'TILT':
-      return canCreateEmissionSourceBC(account, emissionSource)
-    case 'CUT':
-    case 'CLICKSON':
+    case Environment.CUT:
+    case Environment.CLICKSON:
       return canCreateEmissionSourceSimplified(account, emissionSource)
     default:
       return false
@@ -152,13 +152,13 @@ export const canUpdateEmissionSource = async (
   study: FullStudy,
 ) => {
   switch (account.environment) {
-    case 'BC':
+    case Environment.BC:
+    case Environment.TILT:
+    case Environment.FORMATION_BC:
       return canUpdateEmissionSourceBC(account, emissionSource, change, study)
-    case 'TILT':
-      return canUpdateEmissionSourceBC(account, emissionSource, change, study)
-    case 'CUT':
+    case Environment.CUT:
       return canUpdateEmissionSourceCUT(account, emissionSource)
-    case 'CLICKSON':
+    case Environment.CLICKSON:
       return canUpdateEmissionSourceClickson(account, emissionSource, study)
     default:
       return false
