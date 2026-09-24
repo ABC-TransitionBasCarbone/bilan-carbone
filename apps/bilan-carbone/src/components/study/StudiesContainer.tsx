@@ -72,12 +72,12 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
   const isOrgaHomePage = !organizationVersionId && !isCR
   const [orgaStudies, otherStudies] = isOrgaHomePage
     ? studies.reduce(
-        (res, study) => {
-          res[study.organizationVersion.id === user.organizationVersionId ? 0 : 1].push(study)
-          return res
-        },
-        [[] as StudyCardItem[], [] as StudyCardItem[]],
-      )
+      (res, study) => {
+        res[study.organizationVersion.id === user.organizationVersionId ? 0 : 1].push(study)
+        return res
+      },
+      [[] as StudyCardItem[], [] as StudyCardItem[]],
+    )
     : [studies, [] as StudyCardItem[]]
 
   const mainStudies = isOrgaHomePage ? orgaStudies : studies
