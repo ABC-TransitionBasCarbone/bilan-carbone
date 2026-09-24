@@ -12,17 +12,25 @@ import Engine from 'publicodes'
 
 const createMockEngine = (
   rules: Record<string, { rawNode: Record<string, unknown> }>,
+  missingVariables: Record<string, number> = {},
+  applicability: Record<string, boolean> = {},
   situation: Record<string, unknown> = {},
 ) => {
   return {
     getParsedRules: () => rules,
     getSituation: () => situation,
-    evaluate: () => ({ nodeValue: 'mock' }),
+    evaluate: (rule: unknown) => {
+      if (rule && typeof rule === 'object' && 'est applicable' in rule) {
+        return { nodeValue: applicability[String(rule['est applicable'])] ?? 'mock' }
+      }
+
+      return { nodeValue: 'mock', missingVariables }
+    },
   } as unknown as Engine
 }
 
 describe('buildPageBuilder', () => {
-  it('builds pages from the current MIP model', () => {
+  it('keeps supplied fields that are applicable through their mosaic parent in the current MIP model', () => {
     const engine = createMipEngine(mipModel)
 
     const pages = buildPageBuilder(engine, [
@@ -34,15 +42,7 @@ describe('buildPageBuilder', () => {
 
     const pageElements = pages.map((page) => page.elements[0])
 
-    expect(pageElements).toHaveLength(4)
-    expect(pageElements).toEqual(
-      expect.arrayContaining([
-        'DT . filtrage',
-        'DT . voiture . présent',
-        'DT . voiture . km',
-        'DT . voiture . utilisateur',
-      ]),
-    )
+    expect(pageElements).toEqual(['DT . filtrage', 'DT . voiture . présent'])
   })
 
   it('does not inject rhetorical info questions from local text heuristics', () => {
@@ -85,8 +85,141 @@ describe('buildPageBuilder', () => {
     expect(pages.some((page) => page.elements.includes('bureaux . énergie . question rhétorique'))).toBe(false)
   })
 
+  it('does not build pages for explicitly non-applicable fields', () => {
+    const engine = createMockEngine(
+      {
+        bilan: { rawNode: { somme: ['DT'] } },
+        DT: { rawNode: { somme: ['filtrage', 'train'] } },
+        'DT . filtrage': { rawNode: { question: 'Service' } },
+        'DT . train . présent': { rawNode: { question: 'Train' } },
+      },
+      {},
+      {
+        'DT . train . présent': false,
+      },
+    )
+
+    const pages = buildPageBuilder(engine, ['DT . filtrage', 'DT . train . présent'])
+
+    expect(pages.map((page) => page.elements[0])).toEqual(['DT . filtrage'])
+  })
+
+  it('keeps mosaic child fields when their parent is applicable', () => {
+    const engine = createMockEngine(
+      {
+        bilan: { rawNode: { somme: ['DT'] } },
+        DT: {
+          rawNode: {
+            question: 'Transport choices',
+            mosaique: {
+              options: ['train . présent', 'voiture . présent'],
+            },
+            somme: ['train', 'voiture'],
+          },
+        },
+        'DT . train . présent': { rawNode: { question: 'Train' } },
+        'DT . voiture . présent': { rawNode: { question: 'Voiture' } },
+      },
+      {},
+      {
+        DT: true,
+        'DT . train . présent': false,
+        'DT . voiture . présent': false,
+      },
+    )
+
+    const pages = buildPageBuilder(engine, ['DT . train . présent', 'DT . voiture . présent'])
+
+    expect(pages).toEqual([
+      {
+        elements: ['DT . train . présent', 'DT . voiture . présent'],
+        title: 'Transport choices',
+      },
+    ])
+  })
+
+  it('orders DT pages by the static reference order', () => {
+    const engine = createMockEngine(
+      {
+        bilan: { rawNode: { somme: ['DT'] } },
+        DT: {
+          rawNode: {
+            question: 'Transport choices',
+            mosaique: {
+              options: ['train . présent'],
+            },
+            somme: ['train'],
+          },
+        },
+        'DT . filtrage': { rawNode: { question: 'Service' } },
+        'DT . congé': { rawNode: { question: 'Congé' } },
+        'DT . TT': { rawNode: { question: 'Télétravail' } },
+        'DT . train . présent': { rawNode: { question: 'Train' } },
+      },
+      {},
+      {
+        DT: true,
+      },
+    )
+
+    const pages = buildPageBuilder(engine, ['DT . train . présent', 'DT . TT', 'DT . filtrage', 'DT . congé'])
+
+    expect(pages.map((page) => page.elements[0])).toEqual([
+      'DT . filtrage',
+      'DT . congé',
+      'DT . train . présent',
+      'DT . TT',
+    ])
+  })
+
+  it('keeps the entity filter page first even when the engine returns it later', () => {
+    const engine = createMockEngine({
+      bilan: { rawNode: { somme: ['DT'] } },
+      DT: { rawNode: { somme: ['train', 'voiture', 'filtrage'] } },
+      'DT . voiture . présent': { rawNode: { question: 'Voiture' } },
+      'DT . filtrage': { rawNode: { question: 'Service', ordre: -1000 } },
+      'DT . train . présent': { rawNode: { question: 'Train' } },
+    })
+
+    const pages = buildPageBuilder(engine, ['DT . voiture . présent', 'DT . filtrage', 'DT . train . présent'])
+
+    expect(pages.map((page) => page.elements[0])).toEqual([
+      'DT . filtrage',
+      'DT . train . présent',
+      'DT . voiture . présent',
+    ])
+  })
+
+  it('orders two-wheel details before public transport details when both are applicable', () => {
+    const engine = createMockEngine({
+      bilan: { rawNode: { somme: ['DT'] } },
+      DT: { rawNode: { somme: ['deux roues', 'transports commun'] } },
+      'DT . deux roues': { rawNode: { question: 'Deux roues' } },
+      'DT . transports commun': { rawNode: { question: 'Transports commun' } },
+      'DT . transports commun . type': {
+        rawNode: {
+          question: 'Transports commun',
+          mosaique: {
+            options: ['bus . présent'],
+          },
+        },
+      },
+      'DT . transports commun . type . bus . présent': { rawNode: { question: 'Bus' } },
+      'DT . deux roues . type': { rawNode: { question: 'Deux roues' } },
+    })
+
+    const pages = buildPageBuilder(engine, ['DT . transports commun . type . bus . présent', 'DT . deux roues . type'])
+
+    expect(pages.map((page) => page.elements[0])).toEqual([
+      'DT . deux roues . type',
+      'DT . transports commun . type . bus . présent',
+    ])
+  })
+
   it('keeps questions from the same category branch together', () => {
     const engine = createMockEngine({
+      bilan: { rawNode: { somme: ['DT'] } },
+      DT: { rawNode: { somme: ['train', 'voiture'] } },
       'DT . train . heure': { rawNode: { question: 'Train' } },
       'DT . voiture . voyageurs': { rawNode: { question: 'Voyageurs' } },
       'DT . train . vitesse': { rawNode: { question: 'Vitesse' } },
@@ -103,13 +236,15 @@ describe('buildPageBuilder', () => {
     expect(pages.map((page) => page.elements[0])).toEqual([
       'DT . train . heure',
       'DT . train . vitesse',
-      'DT . voiture . voyageurs',
       'DT . voiture . carburant',
+      'DT . voiture . voyageurs',
     ])
   })
 
   it('respects raw rule order metadata when it is present', () => {
     const engine = createMockEngine({
+      bilan: { rawNode: { somme: ['DT'] } },
+      DT: { rawNode: { somme: ['train', 'voiture'] } },
       'DT . voiture . motorisation': { rawNode: { question: 'Motorisation', ordre: 5 } },
       'DT . voiture . gabarit': { rawNode: { question: 'Gabarit', ordre: 4 } },
       'DT . voiture . thermique . consommation aux 100': {
@@ -134,7 +269,6 @@ describe('buildPageBuilder', () => {
     ])
 
     expect(pages.map((page) => page.elements[0])).toEqual([
-      'DT . train . heure',
       'DT . voiture . km',
       'DT . voiture . utilisateur',
       'DT . voiture . thermique . consommation aux 100',
@@ -142,11 +276,13 @@ describe('buildPageBuilder', () => {
       'DT . voiture . motorisation',
       'DT . voiture . thermique . carburant',
       'DT . voiture . voyageurs',
+      'DT . train . heure',
     ])
   })
 
   it('sorts accented category names according to the survey category order', () => {
     const engine = createMockEngine({
+      bilan: { rawNode: { somme: ['numérique', 'bureaux'] } },
       'bureaux . énergie': { rawNode: { question: 'Énergie' } },
       'numérique . appareils': { rawNode: { question: 'Appareils' } },
     })
@@ -158,6 +294,7 @@ describe('buildPageBuilder', () => {
 
   it('normalizes category keys before using the survey order', () => {
     const engine = createMockEngine({
+      bilan: { rawNode: { somme: ['numérique', 'bureaux'] } },
       'bureaux . énergie': { rawNode: { question: 'Énergie' } },
       'NUMÉRIQUE . appareils': { rawNode: { question: 'Appareils' } },
     })
@@ -169,6 +306,7 @@ describe('buildPageBuilder', () => {
 
   it('keeps field ordering stable through the shared ordering helper', () => {
     const engine = createMockEngine({
+      bilan: { rawNode: { somme: ['transport', 'numérique', 'bureaux'] } },
       'bureaux . énergie': { rawNode: { question: 'Énergie' } },
       'numérique . appareils': { rawNode: { question: 'Appareils' } },
       'transport . voiture . km': { rawNode: { question: 'Distance' } },

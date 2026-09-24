@@ -1,12 +1,5 @@
-import { SURVEY_CATEGORY_KEYS } from '@/constants/survey'
-import {
-  getMosaicParent,
-  getRuleCategoryKey,
-  getRuleNameParts,
-  getRuleSubCategoryKey,
-  joinRuleNameParts,
-} from '@abc-transitionbascarbone/publicodes/form/utils'
-import { normalizeCategoryKey } from '@abc-transitionbascarbone/utils/parsing'
+import { sortFieldsByModelOrder } from '@/publicodes/mip-survey-order'
+import { getMosaicParent } from '@abc-transitionbascarbone/publicodes/form/utils'
 import { EvaluatedFormElement, FormPageElementProp, FormPages } from '@publicodes/forms'
 import Engine from 'publicodes'
 
@@ -24,82 +17,13 @@ type ParsedRule = {
 
 type ParsedRules = Record<string, ParsedRule>
 
-const getRuleOrder = (rawNode: ParsedRuleRawNode | undefined): number | null => {
-  const ordre = rawNode?.ordre
-  const value = typeof ordre === 'number' ? ordre : Number.parseFloat(ordre ?? '')
-  return Number.isFinite(value) ? value : null
-}
-
-const MAX = Number.MAX_SAFE_INTEGER
-const normalizedSurveyCategoryKeys = SURVEY_CATEGORY_KEYS.map(normalizeCategoryKey)
-
-const getCategoryOrder = (ruleName: string): number => {
-  const categoryIndex = normalizedSurveyCategoryKeys.indexOf(normalizeCategoryKey(getRuleCategoryKey(ruleName)))
-  return categoryIndex === -1 ? MAX : categoryIndex
-}
-
-const compareRuleNames = (
-  a: string,
-  b: string,
-  parsedRules: ParsedRules,
-  initialIndexes: Map<string, number>,
-  branchIndexes: Map<string, number>,
-) => {
-  const categoryDiff = getCategoryOrder(a) - getCategoryOrder(b)
-
-  if (categoryDiff !== 0) {
-    return categoryDiff
-  }
-
-  const aBranch = getRuleSubCategoryKey(a)
-  const bBranch = getRuleSubCategoryKey(b)
-  if (aBranch !== bBranch) {
-    const branchDiff = (branchIndexes.get(aBranch) ?? MAX) - (branchIndexes.get(bBranch) ?? MAX)
-    if (branchDiff !== 0) {
-      return branchDiff
-    }
-  }
-
-  const aParts = getRuleNameParts(a)
-  const bParts = getRuleNameParts(b)
-  const directOrderDiff =
-    (getRuleOrder(parsedRules[a]?.rawNode) ?? MAX) - (getRuleOrder(parsedRules[b]?.rawNode) ?? MAX)
-  if (directOrderDiff !== 0) {
-    return directOrderDiff
-  }
-
-  for (let depth = 1; depth <= Math.max(aParts.length, bParts.length); depth++) {
-    const aParent = joinRuleNameParts(aParts.slice(0, depth))
-    const bParent = joinRuleNameParts(bParts.slice(0, depth))
-    const aOrder = getRuleOrder(parsedRules[aParent]?.rawNode)
-    const bOrder = getRuleOrder(parsedRules[bParent]?.rawNode)
-    if (aOrder !== null || bOrder !== null) {
-      const diff = (aOrder ?? MAX) - (bOrder ?? MAX)
-      if (diff !== 0) {
-        return diff
-      }
-    }
-  }
-
-  const fallbackDiff = (initialIndexes.get(a) ?? MAX) - (initialIndexes.get(b) ?? MAX)
-  return fallbackDiff !== 0 ? fallbackDiff : a.localeCompare(b)
+const isRuleApplicable = (engine: Engine, ruleName: string): boolean => {
+  const mosaicParent = getMosaicParent(engine, ruleName)
+  return engine.evaluate({ 'est applicable': mosaicParent ?? ruleName }).nodeValue !== false
 }
 
 export const sortFieldsForPageBuilder = (engine: Engine, fields: string[]): string[] => {
-  const rules = engine.getParsedRules() as ParsedRules
-  const initialIndexes = new Map(fields.map((field, index) => [field, index]))
-  const branchIndexes = new Map<string, number>()
-
-  for (const [ruleName, index] of initialIndexes) {
-    const branch = getRuleSubCategoryKey(ruleName)
-    if (!branchIndexes.has(branch)) {
-      branchIndexes.set(branch, index)
-    }
-  }
-
-  return fields
-    .filter((field) => rules[field]?.rawNode?.question !== undefined)
-    .sort((a, b) => compareRuleNames(a, b, rules, initialIndexes, branchIndexes))
+  return sortFieldsByModelOrder(engine, fields).filter((field) => isRuleApplicable(engine, field))
 }
 
 export const buildPageBuilder = (engine: Engine, fields: string[]): FormPages<string> => {

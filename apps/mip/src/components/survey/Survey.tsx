@@ -41,6 +41,19 @@ const Survey = ({ surveyId, rootRule = 'bilan' }: MipSurveyProps) => {
 
   const initState = () => formBuilder.start(FormBuilder.newState(), rootRule)
 
+  const reorderFuturePages = (formState: FormState<string>): FormState<string> => {
+    const pagesUntilCurrent = formState.pages.slice(0, formState.currentPageIndex + 1)
+    const futureFields = [...formState.pages.slice(formState.currentPageIndex + 1), ...formState.nextPages].flatMap(
+      (page) => page.elements,
+    )
+
+    return {
+      ...formState,
+      pages: pagesUntilCurrent,
+      nextPages: buildPageBuilder(engine, futureFields),
+    }
+  }
+
   const [isResumed, setIsResumed] = useState(false)
   const [isExplanationVisible, setIsExplanationVisible] = useState(true)
   const [isLoading, setIsLoading] = useState(true)
@@ -79,8 +92,10 @@ const Survey = ({ surveyId, rootRule = 'bilan' }: MipSurveyProps) => {
   }
 
   const handleNext = () => {
+    const orderedState = reorderFuturePages({ ...state, pages: [...state.pages], nextPages: [...state.nextPages] })
+
     if (!categoryKey) {
-      updateState(formBuilder.goToNextPage({ ...state, pages: [...state.pages] }))
+      updateState(formBuilder.goToNextPage(orderedState))
       return
     }
 
@@ -89,7 +104,7 @@ const Survey = ({ surveyId, rootRule = 'bilan' }: MipSurveyProps) => {
       return
     }
 
-    const newState = formBuilder.goToNextPage({ ...state, pages: [...state.pages] })
+    const newState = formBuilder.goToNextPage(orderedState)
     const { elements: newElements } = formBuilder.currentPage(newState)
     const newCategoryKey = getCategoryKey(buildGroupedElements(engine, newElements))
 
