@@ -381,7 +381,7 @@
     "seeResults": "Voir les résultats",
     "firstStudyMessage": "Il est temps de vous lancer ! Nous vous invitons à créer votre premier Bilan Carbone®.",
     "cannotCreateStudy": "Pour pouvoir faire des Bilans Carbone® il faut être formé à la méthode ! <link>En savoir plus</link>",
-    "canCreateFootPrint": "",
+    "canCreateFootPrint": "Si vous êtes formé·e, demandez à un administrateur de votre organisation de modifier votre rôle. Plus d'informations sont disponibles dans <faq>la FAQ</faq>. Si le problème persiste, contactez <support>le support</support>.",
     "validatedSources": "<data>{validated} / {total}</data> Sources d'émission validées",
     "see": "Voir mon Bilan Carbone®",
     "information": "Informations",
