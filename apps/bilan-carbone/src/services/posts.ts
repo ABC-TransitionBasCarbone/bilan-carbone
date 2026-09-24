@@ -218,6 +218,7 @@ export const environmentPostMapping = {
   [Environment.FORMATION_BC]: BCPost,
   [Environment.CUT]: CutPost,
   [Environment.TILT]: TiltAdvancedPost,
+  [Environment.FORMATION_TILT]: TiltAdvancedPost,
   [Environment.CLICKSON]: ClicksonPost,
 }
 
@@ -234,6 +235,7 @@ export const environmentSubPostsMapping = {
   [Environment.FORMATION_BC]: subPostsByPostBC,
   [Environment.CUT]: subPostsByPostCUT,
   [Environment.TILT]: subPostsByPostTILT,
+  [Environment.FORMATION_TILT]: subPostsByPostTILT,
   [Environment.CLICKSON]: subPostsByPostClickson,
 }
 

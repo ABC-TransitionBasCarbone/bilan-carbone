@@ -14,16 +14,17 @@ import styles from './Public.module.css'
 interface Props {
   question: ReactNode
   children: ReactNode
+  environment: Environment
 }
 
-const PublicFormationPage = ({ question, children }: Props) => {
+const PublicFormationPage = ({ question, children, environment }: Props) => {
   const t = useTranslations('login')
   const tLocale = useTranslations('locale')
   const [locale, setLocale] = useState<LocaleType>(defaultLocale)
 
   useEffect(() => {
     getLocale().then(setLocale)
-    switchEnvironment(Environment.FORMATION_BC)
+    switchEnvironment(environment)
   }, [])
 
   const languages = [
@@ -35,7 +36,7 @@ const PublicFormationPage = ({ question, children }: Props) => {
     <PublicContainer>
       <div className={classNames(styles.info, 'grow p2 text-center')}>
         <p className="title-h4 mb1">{t('welcome')}</p>
-        <p className={styles.richLinks}>{customRich(t, 'explanation', {}, Environment.FORMATION_BC)}</p>
+        <p className={styles.richLinks}>{customRich(t, 'explanation', {}, environment)}</p>
         <Image
           src="/logos/monogramme_BC_noir.png"
           alt="logo"

@@ -68,6 +68,7 @@ export const canCreateEmissionSource = async (account: AccountWithUser, emission
   switch (account.environment) {
     case Environment.BC:
     case Environment.FORMATION_BC:
+    case Environment.FORMATION_TILT:
     case Environment.TILT:
       return canCreateEmissionSourceBC(account, emissionSource)
     case Environment.CUT:
@@ -155,6 +156,7 @@ export const canUpdateEmissionSource = async (
     case Environment.BC:
     case Environment.TILT:
     case Environment.FORMATION_BC:
+    case Environment.FORMATION_TILT:
       return canUpdateEmissionSourceBC(account, emissionSource, change, study)
     case Environment.CUT:
       return canUpdateEmissionSourceCUT(account, emissionSource)

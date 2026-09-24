@@ -178,6 +178,7 @@ export const canCreateSpecificStudy = async (
     case Environment.CUT:
       return canCreateSpecificStudySimplified(user.accountId, organizationVersionId)
     case Environment.TILT:
+    case Environment.FORMATION_TILT:
       return canCreateSpecificStudyTilt(user.accountId, study, organizationVersionId)
     case Environment.BC:
     case Environment.FORMATION_BC:

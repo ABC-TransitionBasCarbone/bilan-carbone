@@ -10,6 +10,7 @@ Cypress.Commands.add(
 const ENV_LOGIN_DEFAULTS: Record<AllBCEnvironments, { email: string; password: string }> = {
   [Environment.BC]: { email: 'bc-collaborator-0@yopmail.com', password: 'password-0' },
   [Environment.FORMATION_BC]: { email: 'formation_bc-env-admin-0@yopmail.com', password: 'password-0' },
+  [Environment.FORMATION_TILT]: { email: 'formation_tilt-env-admin-0@yopmail.com', password: 'password-0' },
   [Environment.CUT]: { email: 'cut-env-admin-0@yopmail.com', password: 'password-0' },
   [Environment.TILT]: { email: 'tilt-env-admin-0@yopmail.com', password: 'password-0' },
   [Environment.CLICKSON]: { email: 'clickson-env-admin-0@yopmail.com', password: 'password-0' },
@@ -18,6 +19,7 @@ const ENV_LOGIN_DEFAULTS: Record<AllBCEnvironments, { email: string; password: s
 const ENV_ENTRY_PATHS: Record<AllBCEnvironments, string> = {
   [Environment.BC]: '/login',
   [Environment.FORMATION_BC]: '/formation-bc',
+  [Environment.FORMATION_TILT]: '/formation-tilt',
   [Environment.CUT]: '/count',
   [Environment.TILT]: '/tilt',
   [Environment.CLICKSON]: '/clickson',

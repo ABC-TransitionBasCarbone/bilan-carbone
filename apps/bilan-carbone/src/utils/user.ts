@@ -22,6 +22,7 @@ export const getEnvironmentRoles = (environment: Environment) => {
     case Environment.CLICKSON:
       return ClicksonRoles
     case Environment.FORMATION_BC:
+    case Environment.FORMATION_TILT:
       return FormationRoles
     default:
       return Role
