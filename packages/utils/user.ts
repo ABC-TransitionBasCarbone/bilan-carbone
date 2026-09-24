@@ -1,6 +1,6 @@
 import { Environment, Role } from '@abc-transitionbascarbone/db-common/enums'
-import { RoleBcOrMip } from './types'
 import { isSimplified } from './environments'
+import { RoleBcOrMip } from './types'
 
 export const canBeUntrainedRole = (role: RoleBcOrMip, environment: Environment) => {
   if (isSimplified(environment) || environment === Environment.MIP) {

@@ -3,6 +3,7 @@
 import { getUserByEmailWithSensibleInformations, updateUserPasswordForEmail } from '@/db/user'
 import { withServerResponse } from '@/utils/serverResponse'
 import { computePasswordValidation } from '@abc-transitionbascarbone/utils/auth'
+import { hashResetToken } from '@abc-transitionbascarbone/utils/user.server'
 import jwt from 'jsonwebtoken'
 
 export const checkToken = async (token: string) => {
@@ -13,7 +14,7 @@ export const checkToken = async (token: string) => {
     }
 
     const user = await getUserByEmailWithSensibleInformations(tokenValues.email)
-    return !user?.resetToken || user.resetToken !== tokenValues.resetToken
+    return !user?.resetToken || user.resetToken !== hashResetToken(tokenValues.resetToken)
   } catch (error) {
     // The token has expired
     if (error instanceof jwt.TokenExpiredError) {
@@ -33,7 +34,7 @@ export const reset = async (password: string, token: string) =>
 
     if (tokenValues) {
       const user = await getUserByEmailWithSensibleInformations(tokenValues.email)
-      if (user && user.resetToken && user.resetToken === tokenValues.resetToken) {
+      if (user && user.resetToken && user.resetToken === hashResetToken(tokenValues.resetToken)) {
         const passwordValidation = computePasswordValidation(password)
         if (Object.values(passwordValidation).every((value) => value)) {
           await updateUserPasswordForEmail(user.email, password)

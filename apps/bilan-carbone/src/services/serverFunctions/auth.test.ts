@@ -1,5 +1,6 @@
 import { getUserByEmailWithSensibleInformations, updateUserPasswordForEmail } from '@/db/user'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { hashResetToken } from '@abc-transitionbascarbone/utils/user.server'
 import { expect } from '@jest/globals'
 import jwt from 'jsonwebtoken'
 import { checkToken, reset } from './auth'
@@ -37,7 +38,7 @@ describe('password reset server functions', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     process.env.NEXTAUTH_SECRET = 'test-secret'
-    mockGetUserByEmailWithSensibleInformations.mockResolvedValue({ email, resetToken })
+    mockGetUserByEmailWithSensibleInformations.mockResolvedValue({ email, resetToken: hashResetToken(resetToken) })
     mockUpdateUserPasswordForEmail.mockResolvedValue({ email })
   })
 
@@ -47,7 +48,7 @@ describe('password reset server functions', () => {
   })
 
   it('rejects a reset link when another reset token is stored for the user', async () => {
-    mockGetUserByEmailWithSensibleInformations.mockResolvedValue({ email, resetToken: 'new-token' })
+    mockGetUserByEmailWithSensibleInformations.mockResolvedValue({ email, resetToken: hashResetToken('new-token') })
 
     await expect(checkToken(getToken())).resolves.toBe(true)
   })
@@ -61,7 +62,7 @@ describe('password reset server functions', () => {
   })
 
   it('does not update the password when the stored reset token does not match the link token', async () => {
-    mockGetUserByEmailWithSensibleInformations.mockResolvedValue({ email, resetToken: 'new-token' })
+    mockGetUserByEmailWithSensibleInformations.mockResolvedValue({ email, resetToken: hashResetToken('new-token') })
 
     const result = await reset(password, getToken(), Environment.TILT)
 
