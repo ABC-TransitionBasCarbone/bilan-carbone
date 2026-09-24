@@ -4,14 +4,13 @@ import { UserSession } from 'next-auth'
 
 interface Props {
   account: UserSession
-  feedbackFormUrl?: string
 }
 
-const UserView = async ({ account, feedbackFormUrl }: Props) => {
+const UserView = async ({ account }: Props) => {
   if (!account.organizationVersionId) {
-    return <StudiesContainer user={account} feedbackFormUrl={feedbackFormUrl} />
+    return <StudiesContainer user={account} />
   }
-  return <SimplifiedUserView account={account} feedbackFormUrl={feedbackFormUrl} />
+  return <SimplifiedUserView account={account} />
 }
 
 export default UserView

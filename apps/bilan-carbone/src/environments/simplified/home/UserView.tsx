@@ -7,6 +7,7 @@ import {
   isTiltSimplifiedFeatureActive,
 } from '@/services/permissions/environment'
 import { hasAccessToStudies } from '@/services/permissions/environmentAdvanced'
+import { getFeedbackFormUrl } from '@/utils/ressources'
 import LinkButton from '@abc-transitionbascarbone/components/src/base/LinkButton'
 import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import Groups2OutlinedIcon from '@mui/icons-material/Groups2Outlined'
@@ -22,12 +23,12 @@ import styles from './UserView.module.css'
 
 interface Props {
   account: UserSession
-  feedbackFormUrl?: string
 }
 
 const infoLength = 3
 
-const UserView = async ({ account, feedbackFormUrl }: Props) => {
+const UserView = async ({ account }: Props) => {
+  const feedbackFormUrl = await getFeedbackFormUrl(account.environment)
   const t = await getTranslations('home')
   const tAction = await getTranslations('common.action')
   const tResults = await getTranslations('study.results')

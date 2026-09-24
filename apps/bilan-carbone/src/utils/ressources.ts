@@ -4,9 +4,7 @@ import { getEnvVar } from '@abc-transitionbascarbone/lib/environment'
 import { hasTranslatedLinks } from '@abc-transitionbascarbone/utils/environmentClient'
 import { getTranslations } from 'next-intl/server'
 
-const getTypeformUrl = (typeformId: string) => `https://form.typeform.com/to/${typeformId}`
-
-const isPlaceholder = (value: string) => value.startsWith('<') && value.endsWith('>')
+const getUrlFromId = (typeformId: string) => `https://form.typeform.com/to/${typeformId}`
 
 export const getFeedbackFormUrl = async (env: Environment) => {
   if (env === Environment.MIP) {
@@ -14,13 +12,13 @@ export const getFeedbackFormUrl = async (env: Environment) => {
   }
 
   const feedbackFormUrl = await getEnvVar('FEEDBACK_FORM_URL', env)
-  if (feedbackFormUrl && !isPlaceholder(feedbackFormUrl)) {
+  if (feedbackFormUrl) {
     return feedbackFormUrl
   }
 
   const typeformId = await getEnvVar('FEEDBACK_TYPEFORM_ID', env)
 
-  return typeformId && !isPlaceholder(typeformId) ? getTypeformUrl(typeformId) : ''
+  return typeformId ? getUrlFromId(typeformId) : ''
 }
 
 export const getEnvironnementRessources = async (env: Environment, t: Translations) => {
@@ -34,12 +32,12 @@ export const getEnvironnementRessources = async (env: Environment, t: Translatio
         { title: t('openCarbonPractice'), link: linksT('openCarbonPracticeUrl') },
         ...(hasTranslatedLinks(env)
           ? [
-              {
-                title: t('contacterViaFormulaire', { supportEmail }),
-                link: linksT('contactFormUrl'),
-                isTranslated: true,
-              },
-            ]
+            {
+              title: t('contacterViaFormulaire', { supportEmail }),
+              link: linksT('contactFormUrl'),
+              isTranslated: true,
+            },
+          ]
           : []),
       ],
     },

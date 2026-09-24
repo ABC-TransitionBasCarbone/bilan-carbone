@@ -3,6 +3,7 @@ import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { hasAccountToValidateInOrganization } from '@/db/user'
 import { hasAccessToActualityCards } from '@/services/permissions/environment'
 import { hasQualitylessEmissionFactors } from '@/services/serverFunctions/organization'
+import { getFeedbackFormUrl } from '@/utils/ressources'
 import { canEditMemberRole } from '@/utils/user'
 import { UserSession } from 'next-auth'
 import ActualitiesCards from '../actuality/ActualitiesCards'
@@ -13,14 +14,14 @@ import UserToValidate from './UserToValidate'
 
 interface Props {
   account: UserSession
-  feedbackFormUrl: string
 }
 
-const UserView = async ({ account, feedbackFormUrl }: Props) => {
-  const [organizationVersions, hasUserToValidate, emissionFactorWarning] = await Promise.all([
+const UserView = async ({ account }: Props) => {
+  const [organizationVersions, hasUserToValidate, emissionFactorWarning, feedbackFormUrl] = await Promise.all([
     getAccountOrganizationVersions(account.accountId),
     hasAccountToValidateInOrganization(account.organizationVersionId),
     hasQualitylessEmissionFactors(),
+    getFeedbackFormUrl(account.environment),
   ])
 
   const userOrganizationVersion = organizationVersions.find(
@@ -45,7 +46,7 @@ const UserView = async ({ account, feedbackFormUrl }: Props) => {
           account={account}
         />
       )}
-      <StudiesContainer user={account} isCR={isCR} feedbackFormUrl={feedbackFormUrl} />
+      <StudiesContainer user={account} isCR={isCR} />
 
       {hasAccessToActualityCards(account.environment) && <ActualitiesCards />}
       {emissionFactorWarning.success && !!emissionFactorWarning.data.length && (

@@ -1,6 +1,7 @@
 'use server'
 
 import { StudyCardItem } from '@/db/study'
+import { getFeedbackFormUrl } from '@/utils/ressources'
 import Block, { Action } from '@abc-transitionbascarbone/components/src/base/Block'
 import LinkButton from '@abc-transitionbascarbone/components/src/base/LinkButton'
 import AddIcon from '@mui/icons-material/Add'
@@ -20,7 +21,6 @@ interface Props {
   canAddStudy: boolean
   creationUrl?: string
   user: UserSession
-  feedbackFormUrl?: string
   collaborations?: boolean
   simplified?: boolean
   showBetaBanner?: boolean
@@ -31,7 +31,6 @@ const Studies = async ({
   canAddStudy,
   creationUrl,
   user,
-  feedbackFormUrl,
   collaborations,
   simplified,
   showBetaBanner,
@@ -40,6 +39,7 @@ const Studies = async ({
   const tResults = await getTranslations('study.results')
   const tFeedback = await getTranslations('feedback')
   const feedbackButtonLabel = tResults.has('feedback.button') ? tResults('feedback.button') : tFeedback('answer')
+  const feedbackFormUrl = await getFeedbackFormUrl(user.environment)
 
   let title = ''
   if (collaborations) {

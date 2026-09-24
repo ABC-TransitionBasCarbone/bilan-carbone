@@ -6,7 +6,6 @@ import { getOrganizationVersionById } from '@/db/organization'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import { default as CUTLogosHome } from '@/environments/cut/home/LogosHome'
 import { displayFeedBackForm } from '@/services/serverFunctions/user'
-import { getFeedbackFormUrl } from '@/utils/ressources'
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { environmentWithOnboarding } from '@abc-transitionbascarbone/utils/environments'
@@ -21,10 +20,9 @@ const SimplifiedUserView = dynamic(() => import('@/environments/simplified/home/
 export const revalidate = 0
 
 const Home = async ({ user: account }: UserSessionProps) => {
-  const [userOrganizationVersion, displayFeedback, feedbackFormUrl] = await Promise.all([
+  const [userOrganizationVersion, displayFeedback] = await Promise.all([
     getOrganizationVersionById(account.organizationVersionId),
     displayFeedBackForm(),
-    getFeedbackFormUrl(account.environment),
   ])
 
   const showOnboarding =
@@ -40,14 +38,14 @@ const Home = async ({ user: account }: UserSessionProps) => {
         <DynamicComponent
           environmentComponents={{
             [Environment.TILT]: isTrainedOrWithoutOrga(account) ? (
-              <UserView account={account} feedbackFormUrl={feedbackFormUrl} />
+              <UserView account={account} />
             ) : (
-              <SimplifiedUserView account={account} feedbackFormUrl={feedbackFormUrl} />
+              <SimplifiedUserView account={account} />
             ),
-            [Environment.CUT]: <SimplifiedUserView account={account} feedbackFormUrl={feedbackFormUrl} />,
-            [Environment.CLICKSON]: <ClicksonUserView account={account} feedbackFormUrl={feedbackFormUrl} />,
+            [Environment.CUT]: <SimplifiedUserView account={account} />,
+            [Environment.CLICKSON]: <ClicksonUserView account={account} />,
           }}
-          defaultComponent={<UserView account={account} feedbackFormUrl={feedbackFormUrl} />}
+          defaultComponent={<UserView account={account} />}
           forceEnvironment={account.environment}
         />
         <CUTLogosHome user={account} />
