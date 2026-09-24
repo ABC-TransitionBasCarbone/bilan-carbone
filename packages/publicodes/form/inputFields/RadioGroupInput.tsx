@@ -30,13 +30,13 @@ const RadioGroupInput = <RuleName extends string>({
   disabled,
 }: RadioGroupInputProps<RuleName>) => {
   const { getOptionLabel } = usePublicodesRuleTranslation(formElement.id)
-  const [openOptionIndex, setOpenOptionIndex] = useState<number | null>(null)
+  const [openOptionIndexes, setOpenOptionIndexes] = useState<Set<number>>(new Set())
   const flexDirection = formElement.orientation === 'horizontal' ? 'flex-row' : 'flex-col'
 
   return (
     <FormControl className={classNames(flexDirection, 'm2', 'gapped1')} error={!!errorMessage} disabled={disabled}>
       {formElement.options.map((option, index) => {
-        const isDescriptionOpen = openOptionIndex === index
+        const isDescriptionOpen = openOptionIndexes.has(index)
 
         return (
           <div key={`box-${index}`} className="flex-row align-center wrap gapped025 wfit">
@@ -56,7 +56,15 @@ const RadioGroupInput = <RuleName extends string>({
               <HelpIcon
                 onClick={(event) => {
                   event.stopPropagation()
-                  setOpenOptionIndex(isDescriptionOpen ? null : index)
+                  setOpenOptionIndexes((prev) => {
+                    const next = new Set(prev)
+                    if (next.has(index)) {
+                      next.delete(index)
+                    } else {
+                      next.add(index)
+                    }
+                    return next
+                  })
                 }}
                 label="Afficher l'aide"
                 fontSize="small"
