@@ -49,6 +49,9 @@ Les environnements impactés sont : (Vérifier que la fonctionnalité fonctionne
 - [x] TILT,
 - [x] CUT
 - [x] CLICKSON
+- [x] MIP
+- [x] Formation BC
+- [x] Formation Tilt 
 
 ## Information pour le déploiement sur staging
 

@@ -21,7 +21,7 @@ jest.mock('@/db/user', () => ({
 }))
 
 jest.mock('../../../prisma/seed/utils', () => ({
-  getCutRoleFromBase: jest.fn((role: Role) => role),
+  getEnvRoleFromBase: jest.fn((role: Role) => role),
 }))
 
 describe('processUsers', () => {

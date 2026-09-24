@@ -1,7 +1,7 @@
 import { isFeatureActiveForEnvironment } from '@/db/deactivableFeatures'
 import { DeactivatableFeature, Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { Locale } from '@abc-transitionbascarbone/i18n/config'
-import { isAdvanced, isSimplified } from '@abc-transitionbascarbone/utils/environments'
+import { advancedEnvironments, isAdvanced, isSimplified } from '@abc-transitionbascarbone/utils/environments'
 const { BC, CUT, TILT, CLICKSON } = Environment
 
 export const isBC = (environment: Environment) => environment === BC
@@ -33,7 +33,7 @@ export const hasAccessToStudyFlowExample = isAdvanced
 
 export const hasWasteImpact = isAdvanced
 
-export const hasAccessToBcExport = isTilt
+export const hasAccessToBcExport = isAdvanced
 
 export const hasAccessToDependencyMatrix = isTilt
 
@@ -52,7 +52,7 @@ export const hasRoleOnStudy = isAdvanced
 export const hasAccessToCarbonResponsibilityIntensities = isAdvanced
 
 export const hasAccessToMonetaryRatio = (environment: Environment) =>
-  ([BC, TILT, CUT] as Environment[]).includes(environment)
+  ([...advancedEnvironments, CUT] as Environment[]).includes(environment)
 
 export const hasAccessToCreateStudyWithEmissionFactorVersions = isSimplified
 
@@ -71,7 +71,7 @@ export const canCreateStudyWithoutSpecificRights = isCut
 export const canCreateStudyOnlyAsAdministrator = isClickson
 
 export const hasAccessToStudySiteAddAndSelection = (environment: Environment) =>
-  ([BC, TILT, CUT] as Environment[]).includes(environment)
+  ([...advancedEnvironments, CUT] as Environment[]).includes(environment)
 
 export const hasAccessToStudyHomePage = isAdvanced
 
@@ -84,7 +84,7 @@ export const hasReaderRoleOnStudyAsContributor = isClickson
 export const hasAccessToStudyComments = isClickson
 
 export const hasAccessToManualImport = (environment: Environment) =>
-  ([BC, TILT, CUT] as Environment[]).includes(environment)
+  ([...advancedEnvironments, CUT] as Environment[]).includes(environment)
 
 export const hasCustomGlossaryTextForEstablishment = isClickson
 
@@ -136,3 +136,6 @@ export const hasSimplifiedStudies = (env: Environment): env is EnvironmentWithSi
 }
 
 export const isRedirectedToCadrage = (environment: Environment) => isCut(environment) || isClickson(environment)
+
+export const hasSpecificExport = (environment: Environment) =>
+  ([CUT, CLICKSON, TILT] as Environment[]).includes(environment)

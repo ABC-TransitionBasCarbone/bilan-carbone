@@ -4,6 +4,7 @@ enum Environment {
   TILT
   CLICKSON
   MIP
+  FORMATION_BC
 
   @@schema("common")
 }

@@ -35,7 +35,7 @@ import type { ResultType } from '../types/study.types'
 import { AdditionalResultTypes, BaseResultsBySite, ResultsByPost } from '../types/study.types'
 import { getEmissionResults, getEmissionSourceEmission } from './emissionSource'
 import { download } from './file'
-import { hasAccessToBcExport, hasBCExportWithSimplifiedStudy } from './permissions/environment'
+import { hasAccessToBcExport, hasBCExportWithSimplifiedStudy, hasSpecificExport } from './permissions/environment'
 import { isTiltSimplified } from './permissions/environmentAdvanced'
 import {
   BaseResultsByPost,
@@ -788,7 +788,7 @@ export const downloadStudyResults = async (
     ? userSettings.data?.validatedEmissionSourcesOnly
     : undefined
 
-  if (environment !== Environment.BC) {
+  if (hasSpecificExport(environment)) {
     // Use precomputed results from publicodes if available (for simplified environments)
     if (resultsBySite !== undefined) {
       const environmentResults = formatComputedResultsForExport(
@@ -818,7 +818,7 @@ export const downloadStudyResults = async (
     }
   }
 
-  if (hasAccessToBcExport(environment) || environment === Environment.BC) {
+  if (hasAccessToBcExport(environment)) {
     const consolidatedResults = formatConsolidatedStudyResultsForExport(
       study,
       siteList,
