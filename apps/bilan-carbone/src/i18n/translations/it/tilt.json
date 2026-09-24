@@ -57,7 +57,8 @@
         "startDate": "Data di inizio dello studio",
         "endDate": "Data di fine dello studio"
       }
-    }
+    },
+    "exportFilenameSimplified": "Impronta di carbonio semplificata - Sfera associativa - {studyName}"
   },
   "email": {
     "subject": {

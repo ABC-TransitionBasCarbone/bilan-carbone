@@ -57,7 +57,8 @@
         "startDate": "Datum početka studije",
         "endDate": "Datum završetka studije"
       }
-    }
+    },
+    "exportFilenameSimplified": "Pojednostavljeni ugljični otisak - Udruženja - {studyName}"
   },
   "email": {
     "subject": {
