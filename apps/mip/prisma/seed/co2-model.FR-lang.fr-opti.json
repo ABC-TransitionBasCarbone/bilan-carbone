@@ -2156,6 +2156,7 @@
     "valeur": "DT . voiture . empreinte par défaut"
   },
   "DT . filtrage": {
+    "ordre": 1,
     "titre": "Filtrage par entité",
     "question": "Dans quel service travaillez-vous ?",
     "description": "Si vous ne trouvez pas votre service, répondez \"Autres\"\n",
@@ -2169,6 +2170,7 @@
     "par défaut": 99
   },
   "DT . congé": {
+    "ordre": 2,
     "applicable si": "DT . filtrage > 0",
     "titre": "Jours de congés pris par an",
     "question": "Combien de jours êtes vous absent du travail par an (congés, RTT, etc.)",
@@ -2184,6 +2186,7 @@
     "unité": "jour"
   },
   "DT . TT": {
+    "ordre": 3,
     "titre": "Jours de télétravail par semaine",
     "question": "Combien de jours de télétravail faites-vous en moyenne par semaine ?",
     "description": "Le télétravail modifie l’empreinte carbone professionnelle, car il réduit certains déplacements mais augmente les consommations liées au domicile.\n",

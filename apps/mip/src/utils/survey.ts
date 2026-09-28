@@ -11,8 +11,12 @@ const isRecord = (value: unknown): value is Record<string, unknown> => {
   return typeof value === 'object' && value !== null
 }
 
-export type StoredFormState = {
-  situation?: Situation<string>
+export type MipSimulationState = {
+  situation: Situation<string>
+  foldedSteps: string[]
+  actionChoices: Record<string, boolean>
+  progression: number
+  questionOrder: string[]
 }
 
 export type SurveyQuestionColumn = {
@@ -42,21 +46,35 @@ export type KeyStatsRules = {
   planePresent: string | null
 }
 
-export const parseStoredFormState = (answers: unknown): StoredFormState => {
+export const parseMipSimulationState = (answers: unknown): MipSimulationState => {
+  let parsed: unknown = answers
   if (typeof answers === 'string') {
     try {
-      const parsed = JSON.parse(answers) as StoredFormState
-      return parsed
+      parsed = JSON.parse(answers)
     } catch {
-      return {}
+      parsed = null
     }
   }
 
-  if (answers && typeof answers === 'object') {
-    return answers as StoredFormState
-  }
+  const state = isRecord(parsed) ? parsed : {}
+  const situation = isRecord(state.situation) ? (state.situation as Situation<string>) : {}
+  const foldedSteps = Array.isArray(state.foldedSteps)
+    ? state.foldedSteps.filter((step): step is string => typeof step === 'string')
+    : []
+  const actionChoices = isRecord(state.actionChoices)
+    ? Object.fromEntries(
+        Object.entries(state.actionChoices).filter(
+          (entry): entry is [string, boolean] => typeof entry[1] === 'boolean',
+        ),
+      )
+    : {}
+  const progression =
+    typeof state.progression === 'number' && Number.isFinite(state.progression) ? state.progression : 0
+  const questionOrder = Array.isArray(state.questionOrder)
+    ? state.questionOrder.filter((question): question is string => typeof question === 'string')
+    : []
 
-  return {}
+  return { situation, foldedSteps, actionChoices, progression, questionOrder }
 }
 
 export const getRuleValue = (engine: Engine, key: string | null): unknown => evaluateRuleValue(engine, key ?? undefined)

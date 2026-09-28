@@ -12,7 +12,7 @@ import {
   computeAggregatesForSituations,
   createEmptyCategories,
   getSurveyQuestionColumns,
-  parseStoredFormState,
+  parseMipSimulationState,
   resolveKeyStatsRules,
 } from '@/utils/survey'
 import { isAdmin } from '@/utils/user'
@@ -84,8 +84,7 @@ export const getSurveyResults = async (campaignId: string): Promise<SurveyResult
 
   const engine = createMipEngine(modelRules)
   const situations: Situation<string>[] = responses.map((response) => {
-    const formState = parseStoredFormState(response.answers)
-    return formState.situation ?? {}
+    return parseMipSimulationState(response.answers).situation
   })
 
   const { averageFootprint, categories, keyStats } = computeAggregatesForSituations(
@@ -135,8 +134,7 @@ export const exportSurveyResponsesToCSV = async (campaignId: string) =>
     const questionColumns = getSurveyQuestionColumns(model)
 
     const rows = campaign.responses.map((response, index) => {
-      const parsedAnswers = parseStoredFormState(response.answers)
-      const situation = (parsedAnswers.situation ?? {}) as Record<string, unknown>
+      const situation = parseMipSimulationState(response.answers).situation as Record<string, unknown>
 
       return [
         String(index + 1),
