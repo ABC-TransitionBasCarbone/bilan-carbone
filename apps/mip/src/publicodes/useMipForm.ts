@@ -55,8 +55,6 @@ export const useMipForm = () => {
     firstQuestionOfCategory: categoryQuestions[0] ?? null,
     lastQuestionOfCategory: categoryQuestions[categoryQuestions.length - 1] ?? null,
     isFirstQuestionOfCategory: activeQuestion !== null && activeQuestion === categoryQuestions[0],
-    isLastQuestionOfCategory:
-      activeQuestion !== null && activeQuestion === categoryQuestions[categoryQuestions.length - 1],
     goToNextQuestion,
     goToPreviousQuestion,
   }
