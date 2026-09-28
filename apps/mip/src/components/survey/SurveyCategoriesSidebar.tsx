@@ -5,6 +5,7 @@ import { getSurveyCategoryKeysFromParsedRules } from '@/publicodes/mip-engine'
 import { formatMassKilograms, getCategoryClassSuffix } from '@abc-transitionbascarbone/publicodes/form'
 import { getRuleCategoryKey } from '@abc-transitionbascarbone/publicodes/form/utils'
 import { getPositiveNodeValue } from '@abc-transitionbascarbone/utils/number'
+import { normalizeCategoryKey } from '@abc-transitionbascarbone/utils/parsing'
 import classNames from 'classnames'
 import { Situation } from 'publicodes'
 import { useMemo } from 'react'
@@ -69,7 +70,12 @@ const SurveyCategoriesSidebar = ({ activeCategoryKey, situation, relevantQuestio
 
   const categories: CategoryItem[] = categoryKeys.map((key) => {
     const raw = rules[key]?.rawNode as { titre?: string; icônes?: string } | undefined
-    const hasAnswers = Object.keys(situation).some((name) => name.startsWith(`${key} . `))
+    const categoryQuestions = relevantQuestions.filter((name) => getRuleCategoryKey(name) === key)
+    const isComplete =
+      categoryQuestions.length > 0 &&
+      categoryQuestions.every((question) =>
+        Object.keys(situation).some((name) => name === question || name.startsWith(`${question} . `)),
+      )
     const result = (() => {
       try {
         return previewEngine.evaluate(key)
@@ -77,10 +83,9 @@ const SurveyCategoriesSidebar = ({ activeCategoryKey, situation, relevantQuestio
         return { nodeValue: 0 }
       }
     })()
-    const valueKg = hasAnswers ? getPositiveNodeValue(result.nodeValue) : 0
+    const valueKg = isComplete ? getPositiveNodeValue(result.nodeValue) : 0
     const isActive = key === activeCategoryKey
-    const categoryClassSuffix = getCategoryClassSuffix(key)
-    const categoryQuestions = relevantQuestions.filter((name) => getRuleCategoryKey(name) === key)
+    const categoryClassSuffix = getCategoryClassSuffix(normalizeCategoryKey(key))
 
     return {
       key,

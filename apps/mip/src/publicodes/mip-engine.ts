@@ -43,12 +43,29 @@ const normalizeRulesWithMissingParents = (rules: RawRules): RawRules => {
   return normalizedRules as RawRules
 }
 
+const stripDefaultValues = (value: unknown): unknown => {
+  if (Array.isArray(value)) {
+    return value.map(stripDefaultValues)
+  }
+  if (!isObject(value)) {
+    return value
+  }
+  return Object.fromEntries(
+    Object.entries(value)
+      .filter(([key]) => key !== 'par défaut')
+      .map(([key, nestedValue]) => [key, stripDefaultValues(nestedValue)]),
+  )
+}
+
 export function createMipEngine(rules: RawRules): Engine {
   return new Engine(normalizeRulesWithMissingParents(rules), {
     flag: { filterNotApplicablePossibilities: true },
     strict: { situation: false },
   })
 }
+
+export const createMipEngineWithoutDefaults = (rules: RawRules): Engine =>
+  createMipEngine(stripDefaultValues(rules) as RawRules)
 
 const getSurveyCategoryKeysFromRules = (rules: Record<string, unknown>): string[] => {
   const bilanRule = rules.bilan

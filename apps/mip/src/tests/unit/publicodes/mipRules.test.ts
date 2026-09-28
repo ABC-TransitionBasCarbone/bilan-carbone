@@ -1,5 +1,5 @@
 import { buildGroupedElements } from '@/components/survey/surveyGrouping'
-import { createMipEngine } from '@/publicodes/mip-engine'
+import { createMipEngine, createMipEngineWithoutDefaults } from '@/publicodes/mip-engine'
 import {
   getActions,
   getFormQuestions,
@@ -46,6 +46,16 @@ const viande = 'alimentation . repas . viande'
 const legumes = 'alimentation . repas . légumes'
 
 describe('mip-rules', () => {
+  it('does not apply model defaults when evaluating submitted situations', () => {
+    const engine = createMipEngineWithoutDefaults(model)
+
+    engine.setSituation({})
+    expect(engine.evaluate('transport . voiture . km').nodeValue).not.toBe(1000)
+
+    engine.setSituation({ 'transport . voiture . km': 250 })
+    expect(engine.evaluate('transport . voiture . km').nodeValue).toBe(250)
+  })
+
   it('extracts rules metadata', () => {
     const meta = getRulesMeta(createMipEngine(model))
 
