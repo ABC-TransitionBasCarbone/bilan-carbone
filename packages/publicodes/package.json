@@ -9,6 +9,7 @@
     "./utils": "./utils.ts",
     "./hooks": "./hooks/index.ts",
     "./context": "./context/index.ts",
+    "./state": "./state/index.ts",
     "./form": "./form/index.ts",
     "./form/utils": "./form/utils.ts",
     "./form/inputFields": "./form/inputFields/index.ts",
@@ -19,6 +20,7 @@
     "@mui/material": "*"
   },
   "dependencies": {
-    "@abc-transitionbascarbone/utils": "*"
+    "@abc-transitionbascarbone/utils": "*",
+    "publicodes": "^1.10.1"
   }
 }

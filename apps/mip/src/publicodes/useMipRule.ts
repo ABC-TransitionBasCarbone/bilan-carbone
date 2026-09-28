@@ -3,14 +3,9 @@ import { useMipPublicodes } from './MipPublicodesProvider'
 import { getFormQuestions, getMosaicResetSituation, getPlancherWarning, getQuestionType } from './mip-rules'
 
 export const useMipRule = (ruleName: string) => {
-  const { engine, meta, simulation, updateSimulation } = useMipPublicodes()
-  const rule = engine.getParsedRules()[ruleName] as { rawNode?: { suggestions?: Record<string, unknown> } } | undefined
-  let value: unknown
-  try {
-    value = engine.evaluate(ruleName).nodeValue
-  } catch {
-    value = undefined
-  }
+  const { engine, meta, simulation, updateSimulation, safeEvaluate, safeGetRule } = useMipPublicodes()
+  const rule = safeGetRule(ruleName) as { rawNode?: { suggestions?: Record<string, unknown> } } | undefined
+  const value = safeEvaluate(ruleName)?.nodeValue
 
   const setValue = (inputValue: string | number | boolean | undefined, targetRuleName = ruleName) => {
     const situation = getUpdatedSituationWithInputValue(engine, simulation.situation, targetRuleName, inputValue)
