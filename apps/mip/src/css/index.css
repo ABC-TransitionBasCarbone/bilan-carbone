@@ -1,7 +1,7 @@
-@import '../../../../packages/css/style/reset.css';
-@import '../../../../packages/css/style/colors.css';
-@import '../../../../packages/css/style/variables.css';
-@import '../../../../packages/css/style/globals.css';
-@import '../../../../packages/css/style/flex.css';
-@import '../../../../packages/css/style/var.css';
-@import '../../../../packages/css/style/inputUnit.css';
+@import '../../../../packages/styles/css/style/reset.css';
+@import '../../../../packages/styles/css/style/colors.css';
+@import '../../../../packages/styles/css/style/variables.css';
+@import '../../../../packages/styles/css/style/globals.css';
+@import '../../../../packages/styles/css/style/flex.css';
+@import '../../../../packages/styles/css/style/var.css';
+@import '../../../../packages/styles/css/style/inputUnit.css';

@@ -29,7 +29,7 @@ Do the same in db-common folder.
 ```bash
 cp apps/bilan-carbone/.env.dist apps/bilan-carbone/.env
 cp apps/bilan-carbone/.env.dist.test apps/bilan-carbone/.env.test
-cp packages/db-common/.env.dist packages/db-common/.env
+cp packages/data/db-common/.env.dist packages/data/db-common/.env
 ```
 
 ### 3. Start the database

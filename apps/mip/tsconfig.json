@@ -9,7 +9,7 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@abc-transitionbascarbone/css": ["../../packages/css/index.ts"]
+      "@abc-transitionbascarbone/css": ["../../packages/styles/css/index.ts"]
     }
   },
   "include": [
@@ -18,7 +18,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "cypress/**/*.ts",
-    "../../packages/types/mui.d.ts"
+    "../../packages/shared/types/mui.d.ts"
   ],
   "exclude": ["node_modules"]
 }

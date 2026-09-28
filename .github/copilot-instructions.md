@@ -5,13 +5,13 @@
 Monorepo Next.js (Yarn workspaces + Turbo) for carbon accounting products:
 - apps/bilan-carbone
 - apps/mip
-- packages/* shared libs (db-common, i18n, components, services, typeguards, publicodes, ui, utils)
+- packages/application/*, packages/data/*, packages/shared/*, packages/styles/*, packages/tooling/*
 
 ## Architecture Essentials
 
 - UI routes/components: apps/*/src/app and apps/*/src/components
 - APIs: apps/*/src/app/api
-- DB schema: packages/db-common/prisma/schema
+- DB schema: packages/data/db-common/prisma/schema
 - DB access and business logic: apps/*/src/db and apps/*/src/services
 - Shared types/constants: src/types and src/constants (or shared packages when reusable)
 
@@ -51,7 +51,7 @@ Run from repo root unless specified:
 
 - No inline style and no MUI sx prop in app code.
 - Use CSS modules for local styles.
-- Prefer shared utility classes from packages/css/style first.
+- Prefer shared utility classes from packages/styles/css/style first.
 - Use classNames when composing global utilities with module classes.
 - Use shared color CSS variables (no hardcoded hex, no white/#fff literals).
 - Keep typography consistent with project theme conventions.
@@ -97,7 +97,7 @@ Never validate my claims without checking them. Prefer evidence over my approval
 ## Important Locations
 
 - apps/bilan-carbone/src/db/emissionFactors.ts
-- packages/db-common/prisma/schema
+- packages/data/db-common/prisma/schema
 - apps/*/src/components
 - apps/*/src/app/api
 - .env

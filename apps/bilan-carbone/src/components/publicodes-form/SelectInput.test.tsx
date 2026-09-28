@@ -8,7 +8,7 @@ jest.mock('@abc-transitionbascarbone/publicodes/hooks', () => ({
   }),
 }))
 
-const SelectInput = require('../../../../../packages/publicodes/form/inputFields/SelectInput').default
+const SelectInput = require('../../../../../packages/application/publicodes/form/inputFields/SelectInput').default
 
 describe('SelectInput', () => {
   it('does not display option descriptions inline in the dropdown', async () => {

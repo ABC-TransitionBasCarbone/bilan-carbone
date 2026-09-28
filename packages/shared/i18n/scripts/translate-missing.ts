@@ -2,7 +2,7 @@
  * Detects missing translation keys vs the FR source and fills them using Claude.
  * Glossary is fetched at runtime from the methode-bilan-carbone repo.
  *
- * Covers common (packages/i18n), bc/clickson/cut/tilt (apps/bilan-carbone) and mip (apps/mip).
+ * Covers common (packages/shared/i18n), bc/clickson/cut/tilt (apps/bilan-carbone) and mip (apps/mip).
  *
  * Modes:
  *   default        backfill — every key missing/empty in the target (use via subscription)
@@ -21,8 +21,8 @@ import { execSync } from 'child_process'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
 import { dirname, join, relative, sep } from 'path'
 
-// Repo root, resolved from packages/i18n/scripts → ../../..
-const REPO_ROOT = join(__dirname, '../../..')
+// Repo root, resolved from packages/shared/i18n/scripts → ../../../..
+const REPO_ROOT = join(__dirname, '../../../..')
 
 const GLOSSARY_URL =
   'https://raw.githubusercontent.com/ABC-TransitionBasCarbone/methode-bilan-carbone/main/glossaire.csv'
@@ -107,9 +107,7 @@ const getMissingKeys = (source: JsonObject, target: JsonObject, path = ''): Reco
       }
     } else if (value && typeof value === 'object' && !Array.isArray(value)) {
       const targetNested =
-        target[key] && typeof target[key] === 'object' && !Array.isArray(target[key])
-          ? (target[key] as JsonObject)
-          : {}
+        target[key] && typeof target[key] === 'object' && !Array.isArray(target[key]) ? (target[key] as JsonObject) : {}
       Object.assign(missing, getMissingKeys(value as JsonObject, targetNested, currentPath))
     }
   }

@@ -1,5 +1,4 @@
-import { AllBCEnvironments } from '@abc-transitionbascarbone/db-common/enums'
-import '../../../../packages/types/cypress-commands'
+import '../../../../packages/shared/types/cypress-commands'
 
 declare global {
   namespace Cypress {
