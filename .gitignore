@@ -1,5 +1,5 @@
 .turbo
-packages/db-common/src/generated/*
+packages/data/db-common/src/generated/*
 CLAUDE.md
 .claude/
 .vscode/

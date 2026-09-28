@@ -7,7 +7,10 @@ const shouldDeleteCron = (appTarget) => {
   return normalizedTarget === 'mip'
 }
 
-const writeCronConfig = (appTarget = process.env.APP_TARGET, cronPath = path.resolve(__dirname, '../../cron.json')) => {
+const writeCronConfig = (
+  appTarget = process.env.APP_TARGET,
+  cronPath = path.resolve(__dirname, '../../../cron.json'),
+) => {
   if (shouldDeleteCron(appTarget)) {
     if (fs.existsSync(cronPath)) {
       fs.unlinkSync(cronPath)

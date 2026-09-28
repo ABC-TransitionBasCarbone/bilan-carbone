@@ -10,7 +10,7 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@abc-transitionbascarbone/css": ["../../packages/css/index.ts"],
+      "@abc-transitionbascarbone/css": ["../../packages/styles/css/index.ts"],
       "@abc-transitionbascarbone/publicodes-count": ["../../packages/publicodes-packages/publicodes-count"],
       "@abc-transitionbascarbone/publicodes-clickson": ["../../packages/publicodes-packages/publicodes-clickson"],
       "@abc-transitionbascarbone/publicodes-tilt": ["../../packages/publicodes-packages/publicodes-tilt"]
@@ -30,10 +30,10 @@
     "cypress/**/*.ts",
     "**/*.cy.ts",
     "prisma/**/*.ts",
-    "../../packages/types/*",
-    "../../packages/services/src/results/posts.enums.ts",
-    "../../packages/tests/utils/models/translationsMock.tsx",
-    "../../packages/utils/environmentClient.ts"
+    "../../packages/shared/types/*",
+    "../../packages/application/services/src/results/posts.enums.ts",
+    "../../packages/tooling/tests/utils/models/translationsMock.tsx",
+    "../../packages/shared/utils/environmentClient.ts"
   ],
   "exclude": ["node_modules", "../../packages/publicodes-packages"]
 }
