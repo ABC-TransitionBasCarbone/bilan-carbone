@@ -5,8 +5,11 @@ import { OnFieldChange } from '../../utils'
 export function useSimpleInputState<T extends string | number>(
   formElement: EvaluatedNumberInput | EvaluatedStringInput,
   onChange: OnFieldChange,
+  defaultAsPlaceholder = false,
 ) {
-  const externalValue = (formElement.value ?? formElement.defaultValue ?? null) as T | null
+  const externalValue = (formElement.value ??
+    (defaultAsPlaceholder ? null : formElement.defaultValue) ??
+    null) as T | null
   const [localValue, setLocalValue] = useState<T | null>(externalValue)
   const lastCommittedValueRef = useRef<T | null>(externalValue)
   const [isEditing, setIsEditing] = useState(false)

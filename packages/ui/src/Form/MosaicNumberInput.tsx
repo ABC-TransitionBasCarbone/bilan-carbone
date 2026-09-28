@@ -10,9 +10,19 @@ type Props = {
   unit?: string
   onChange: (value: number) => void
   value?: number
+  placeholder?: string
 }
 
-export default function MosaicNumberInput({ title, icons, description, onChange, value, unit, ...props }: Props) {
+export default function MosaicNumberInput({
+  title,
+  icons,
+  description,
+  onChange,
+  value,
+  unit,
+  placeholder = '0',
+  ...props
+}: Props) {
   const rounded = value != null ? Math.ceil(value) : undefined
   const numLength = String(rounded ?? '').length || 1
 
@@ -24,11 +34,9 @@ export default function MosaicNumberInput({ title, icons, description, onChange,
             <span className={`${styles.title} block`}>
               {title}&nbsp;{icons}
             </span>
-          ) : (title ?
-            <span className={`${styles.title} block`}>
-              {title}
-            </span> : null
-          )}
+          ) : title ? (
+            <span className={`${styles.title} block`}>{title}</span>
+          ) : null}
           {description ? <p className={`${styles.description} m0`}>{description.split('\n')[0]}</p> : null}
         </div>
         <div className={`align-center ${styles.controls}`}>
@@ -40,10 +48,16 @@ export default function MosaicNumberInput({ title, icons, description, onChange,
               value={rounded ?? ''}
               className={styles.input}
               inputProps={{ className: styles.inputField, style: { '--num-len': numLength } as CSSProperties }}
-              placeholder="0"
+              placeholder={placeholder}
               onChange={(event) => onChange(Math.ceil(Number(event.target.value)))}
               {...props}
-              endAdornment={unit ? <InputAdornment position="end" className={styles.unit}>{unit}</InputAdornment> : undefined}
+              endAdornment={
+                unit ? (
+                  <InputAdornment position="end" className={styles.unit}>
+                    {unit}
+                  </InputAdornment>
+                ) : undefined
+              }
             />
           </div>
           <Button onClick={() => onChange((rounded ?? 0) + 1)} className={styles.button}>

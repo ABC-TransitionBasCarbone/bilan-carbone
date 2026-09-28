@@ -11,6 +11,7 @@ interface InputQuestionProps<RuleName extends string> {
   onChange: OnFieldChange<RuleName>
   engine?: Engine<RuleName>
   containerVariant?: 'default' | 'flat'
+  defaultAsPlaceholder?: boolean
 }
 
 export const InputQuestion = <RuleName extends string>({
@@ -18,6 +19,7 @@ export const InputQuestion = <RuleName extends string>({
   onChange,
   engine,
   containerVariant = 'default',
+  defaultAsPlaceholder = false,
 }: InputQuestionProps<RuleName>) => {
   const translation = usePublicodesRuleTranslation(formElement.id)
   const rawRule: Rule | undefined = engine?.getParsedRules()[formElement.id]?.rawNode
@@ -39,6 +41,7 @@ export const InputQuestion = <RuleName extends string>({
           onChange={onChange}
           suggestions={suggestions}
           isFilteringQuestion={isFilteringQuestion}
+          defaultAsPlaceholder={defaultAsPlaceholder}
         />
       </QuestionContainer>
     </Box>

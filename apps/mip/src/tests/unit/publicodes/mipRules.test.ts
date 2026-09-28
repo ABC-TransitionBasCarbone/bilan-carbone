@@ -8,7 +8,6 @@ import {
   getPlancherWarning,
   getQuestionType,
   getRulesMeta,
-  getSituationWithQuestionDefaults,
   getSomme,
   getStableQuestionOrder,
   MipQuestionType,
@@ -149,26 +148,6 @@ describe('mip-rules', () => {
     )
   })
 
-  it('persists evaluated defaults for questions when moving on', () => {
-    const engine = createMipEngine(model)
-
-    expect(getSituationWithQuestionDefaults(engine, 'transport . voiture . présent', {}, {})).toEqual({
-      'transport . voiture . présent': 'oui',
-    })
-  })
-
-  it('persists defaults for every child when moving on from an unanswered mosaic', () => {
-    const engine = createMipEngine(model)
-    const meta = getRulesMeta(engine)
-
-    expect(getSituationWithQuestionDefaults(engine, 'alimentation . repas', {}, meta.mosaicChildrenWithParent)).toEqual(
-      {
-        [viande]: 3,
-        [legumes]: 4,
-      },
-    )
-  })
-
   it('groups newly applicable mode questions after the active mosaic without replacing other questions', () => {
     const previousOrder = ['DT . filtrage', 'DT . congé', 'DT . TT', 'DT', 'transport', 'alimentation']
     const availableQuestions = [
@@ -232,6 +211,24 @@ describe('mip-rules', () => {
     expect(getEvaluatedFormElement(engine, 'DT . train . présent').applicable).toBe(false)
     expect(buildGroupedElements(engine, 'DT', children)).toMatchObject([
       { type: 'mosaic', elements: [{ id: 'DT . train . présent' }] },
+    ])
+  })
+
+  it('keeps model defaults separate from unanswered numeric fields and mosaics', () => {
+    const engine = createMipEngine(model)
+    const meta = getRulesMeta(engine)
+
+    expect(buildGroupedElements(engine, 'transport . voiture . km', meta.mosaicChildrenWithParent)).toMatchObject([
+      { type: 'single', el: { value: undefined, defaultValue: 1000 } },
+    ])
+    expect(buildGroupedElements(engine, 'alimentation . repas', meta.mosaicChildrenWithParent)).toMatchObject([
+      {
+        type: 'mosaic',
+        elements: [
+          { value: undefined, defaultValue: 3 },
+          { value: undefined, defaultValue: 4 },
+        ],
+      },
     ])
   })
 

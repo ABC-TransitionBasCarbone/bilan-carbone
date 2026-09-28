@@ -3,10 +3,10 @@ import MosaicBooleanInput from '@abc-transitionbascarbone/ui/Form/MosaicBooleanI
 import MosaicNumberInput from '@abc-transitionbascarbone/ui/Form/MosaicNumberInput'
 import classNames from 'classnames'
 import Engine from 'publicodes'
+import { usePublicodesRuleTranslation } from '../hooks'
+import styles from './MosaicQuestion.module.css'
 import { SuggestionChips } from './SuggestionChips'
 import { getMosaicSuggestionEntries, SuggestionsRecord } from './suggestions'
-import styles from './MosaicQuestion.module.css'
-import { usePublicodesRuleTranslation } from '../hooks'
 import { getRuleNameParts, getRuleParentName } from './utils'
 
 type Props<RuleName extends string> = {
@@ -21,13 +21,15 @@ type Props<RuleName extends string> = {
   engine: Engine
   onChange: (ruleName: RuleName, value: string | number | boolean | undefined) => void
   containerVariant?: 'default' | 'flat'
+  defaultAsPlaceholder?: boolean
 }
 
-export const MosaicQuestion = <RuleName extends string,>({
+export const MosaicQuestion = <RuleName extends string>({
   parent,
   elements,
   engine,
   onChange,
+  defaultAsPlaceholder = false,
 }: Props<RuleName>) => {
   const rules = engine.getParsedRules()
   const parentRaw = rules[parent]?.rawNode as any
@@ -55,7 +57,9 @@ export const MosaicQuestion = <RuleName extends string,>({
           const parts = getRuleNameParts(el.id)
           const lastSegment = parts.slice(-2, -1)[0]
           const directParentName = getRuleParentName(el.id)
-          const directParentRaw = directParentName ? ((rules[directParentName]?.rawNode as any) ?? undefined) : undefined
+          const directParentRaw = directParentName
+            ? ((rules[directParentName]?.rawNode as any) ?? undefined)
+            : undefined
           const nombreRaw = rules[el.id]?.rawNode as any
 
           const title = nombreRaw?.titre ?? directParentRaw?.titre ?? lastSegment
@@ -64,7 +68,10 @@ export const MosaicQuestion = <RuleName extends string,>({
           const unit = nombreRaw?.unité
 
           if (mosaicType === 'nombre') {
-            const value = el.element === 'input' && el.type === 'number' ? (el.value ?? el.defaultValue) : undefined
+            const value =
+              el.element === 'input' && el.type === 'number'
+                ? (el.value ?? (defaultAsPlaceholder ? undefined : el.defaultValue))
+                : undefined
             return (
               <MosaicNumberInput
                 key={el.id}
@@ -73,6 +80,7 @@ export const MosaicQuestion = <RuleName extends string,>({
                 unit={unit}
                 description={description}
                 value={value as number | undefined}
+                placeholder={defaultAsPlaceholder ? String(el.defaultValue ?? '0') : undefined}
                 onChange={(value) => onChange(el.id, value)}
               />
             )
