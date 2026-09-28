@@ -4,6 +4,7 @@ import { useMipForm } from '@/publicodes/useMipForm'
 import { useMipRule } from '@/publicodes/useMipRule'
 import { createSurveyResponse } from '@/services/serverFunctions/survey'
 import { parseMipSimulationState, type MipSimulationState } from '@/utils/survey'
+import { getRuleCategoryKey } from '@abc-transitionbascarbone/publicodes/form/utils'
 import { Container } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -106,6 +107,17 @@ const Survey = () => {
     setInterstitialCategoryKey(null)
     form.goToNextQuestion()
   }
+  const handlePrevious = () => {
+    const previousQuestion = form.relevantQuestions[currentIndex - 1]
+    form.goToPreviousQuestion()
+
+    if (previousQuestion) {
+      const previousCategory = getRuleCategoryKey(previousQuestion)
+      if (previousCategory !== form.currentCategory) {
+        openInterstitial(previousCategory, false)
+      }
+    }
+  }
 
   if (isResumed) {
     return (
@@ -168,7 +180,7 @@ const Survey = () => {
                   nextLabel={tCommon('next')}
                   completeLabel={t('navigation.complete')}
                   onBackToExplanation={() => setIsExplanationVisible(true)}
-                  onPrevious={form.goToPreviousQuestion}
+                  onPrevious={handlePrevious}
                   onNext={handleNext}
                   onComplete={handleCompleteButton}
                 />

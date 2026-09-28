@@ -25,9 +25,6 @@ export const useMipForm = () => {
   const categoryQuestions = currentCategory
     ? relevantQuestions.filter((question) => getRuleCategoryKey(question) === currentCategory)
     : []
-  const categoryRemainingQuestions = currentCategory
-    ? remainingQuestions.filter((question) => getRuleCategoryKey(question) === currentCategory)
-    : []
   const progression = currentIndex >= 0 ? Math.round(((currentIndex + 1) / relevantQuestions.length) * 100) : 0
 
   const goToNextQuestion = () => {
@@ -65,7 +62,7 @@ export const useMipForm = () => {
     lastQuestionOfCategory: categoryQuestions[categoryQuestions.length - 1] ?? null,
     isFirstQuestionOfCategory: activeQuestion !== null && activeQuestion === categoryQuestions[0],
     isLastQuestionOfCategory:
-      activeQuestion !== null && categoryRemainingQuestions.every((question) => question === activeQuestion),
+      activeQuestion !== null && activeQuestion === categoryQuestions[categoryQuestions.length - 1],
     goToNextQuestion,
     goToPreviousQuestion,
   }

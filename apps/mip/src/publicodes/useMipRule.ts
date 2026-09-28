@@ -25,7 +25,7 @@ export const useMipRule = (ruleName: string) => {
       ? Math.round((questions.relevantAnsweredQuestions.length / questions.relevantQuestions.length) * 100)
       : 0
 
-    updateSimulation({ situation: nextSituation, foldedSteps, progression })
+    updateSimulation({ situation: nextSituation, progression }, ruleName || targetRuleName)
   }
 
   return {

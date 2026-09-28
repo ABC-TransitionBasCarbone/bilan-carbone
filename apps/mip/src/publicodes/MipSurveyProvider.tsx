@@ -19,7 +19,7 @@ type MipSurveyContextValue = {
   simulation: MipSimulationState
   currentQuestion: string | null
   setCurrentQuestion: (question: string | null) => void
-  updateSimulation: (updates: Partial<MipSimulationState>) => void
+  updateSimulation: (updates: Partial<MipSimulationState>, questionOrderAnchor?: string) => void
   resetSimulation: () => void
 }
 
@@ -56,7 +56,7 @@ export function MipSurveyProvider({ children, surveyId }: { children: ReactNode;
   }, [engine, meta, setSituation, surveyId])
 
   const updateSimulation = useCallback(
-    (updates: Partial<MipSimulationState>) => {
+    (updates: Partial<MipSimulationState>, questionOrderAnchor?: string) => {
       const updatedState = { ...simulationRef.current, ...updates }
       setSituation(updatedState.situation)
       const questions = getFormQuestions(engine, meta, updatedState.foldedSteps)
@@ -64,7 +64,7 @@ export function MipSurveyProvider({ children, surveyId }: { children: ReactNode;
       const sortedQuestions = sortQuestions(engine, availableQuestions, meta, questions.missingVariables)
       const questionOrder = getStableQuestionOrder(
         simulationRef.current.questionOrder,
-        currentQuestion,
+        questionOrderAnchor ?? currentQuestion,
         availableQuestions,
         sortedQuestions,
         meta.mosaicChildrenWithParent,
