@@ -28,6 +28,12 @@
         "allEmissions": "Az összes mozi tevékenységéhez kapcsolódó kibocsátás, tCO₂e-ben",
         "siteEmissions": "A(z) {site} mozi tevékenységéhez kapcsolódó kibocsátás, tCO₂e-ben"
       }
+    },
+    "engagementActions": {
+      "phases": {
+        "AwarnessAndOutreach": "Tudatosítás és népszerűsítés",
+        "FeedbackAndCommunication": "Eredmények bemutatása és kommunikáció"
+      }
     }
   },
   "emissionFactors": {
@@ -39,7 +45,9 @@
       "ch4b": "CH₄b :",
       "n2o": "N₂O :",
       "co2b": "CO₂b :",
-      "sf6": "SF₆ :"
+      "sf6": "SF₆ :",
+      "displayFilters": "Szűrők megjelenítése",
+      "hideFilters": "Szűrők elrejtése"
     },
     "create": {
       "co2f": "CO₂f (kgCO₂e-ben)",

@@ -1502,10 +1502,10 @@
         "FOR_APPROACH_EVALUATION": "Per la valutazione del percorso"
       },
       "phases": {
-        "AwarnessAndOutreach": "Mobilitazione e sensibilizzazione",
+        "AwarnessAndOutreach": "Sensibilizzazione e divulgazione",
         "Empowerment": "Responsabilizzazione",
         "CoConstruction": "Co-costruzione",
-        "FeedbackAndCommunication": "Feedback e comunicazione"
+        "FeedbackAndCommunication": "Restituzione e comunicazione"
       }
     },
     "contributor": {

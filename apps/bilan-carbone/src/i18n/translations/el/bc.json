@@ -28,6 +28,12 @@
         "allEmissions": "Εκπομπές λόγω των δραστηριοτήτων του συνόλου των κινηματογράφων, σε tCO₂e",
         "siteEmissions": "Εκπομπές λόγω των δραστηριοτήτων του κινηματογράφου {site}, σε tCO₂e"
       }
+    },
+    "engagementActions": {
+      "phases": {
+        "AwarnessAndOutreach": "Ευαισθητοποίηση και εκλαΐκευση",
+        "FeedbackAndCommunication": "Απόδοση και επικοινωνία"
+      }
     }
   },
   "emissionFactors": {
@@ -39,7 +45,9 @@
       "ch4b": "CH₄b :",
       "n2o": "N₂O :",
       "co2b": "CO₂b :",
-      "sf6": "SF₆ :"
+      "sf6": "SF₆ :",
+      "displayFilters": "Εμφάνιση φίλτρων",
+      "hideFilters": "Απόκρυψη φίλτρων"
     },
     "create": {
       "co2f": "CO₂f (σε kgCO₂e)",

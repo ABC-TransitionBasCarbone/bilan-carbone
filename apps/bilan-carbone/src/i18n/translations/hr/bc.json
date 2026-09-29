@@ -28,6 +28,12 @@
         "allEmissions": "Emisije uslijed aktivnosti svih kinodvorana, u tCO₂e",
         "siteEmissions": "Emisije uslijed aktivnosti kinodvorane {site}, u tCO₂e"
       }
+    },
+    "engagementActions": {
+      "phases": {
+        "AwarnessAndOutreach": "Osvještavanje i popularizacija",
+        "FeedbackAndCommunication": "Prezentacija i komunikacija"
+      }
     }
   },
   "emissionFactors": {
@@ -39,7 +45,9 @@
       "ch4b": "CH₄b :",
       "n2o": "N₂O :",
       "co2b": "CO₂b :",
-      "sf6": "SF₆ :"
+      "sf6": "SF₆ :",
+      "displayFilters": "Prikaži filtere",
+      "hideFilters": "Sakrij filtere"
     },
     "create": {
       "co2f": "CO₂f (u kgCO₂e)",
