@@ -217,7 +217,9 @@
     "contacterViaFormulaire": "Contatta direttamente l'ABC tramite il modulo",
     "questionTechnique": "In caso di domanda tecnica o di necessità di assistenza informatica:",
     "lireLaFAQ": "Leggi le FAQ",
-    "ecrireMail": "Scrivi direttamente a {supportEmail}"
+    "ecrireMail": "Scrivi direttamente a {supportEmail}",
+    "feedbackTitle": "Il tuo parere",
+    "feedbackLink": "Rispondi al questionario"
   },
   "legalNotices": {
     "profile": "Torna al profilo"
@@ -271,7 +273,8 @@
     "validation": {
       "firstName": "Almeno 1 carattere",
       "lastName": "Almeno 1 carattere"
-    }
+    },
+    "feedbackLink": "Rispondi al questionario"
   },
   "settings": {
     "title": "Le mie impostazioni dell'applicazione",
@@ -1510,7 +1513,9 @@
     },
     "contributor": {
       "noData": "Nessuna fonte di emissione per il momento; è necessario che un editor dello studio ne aggiunga affinché tu possa completarle"
-    }
+    },
+    "cannotCreateStudy": "Per poter realizzare dei Bilan Carbone® è necessario essere formati al metodo! <link>Scopri di più</link>",
+    "canCreateFootPrint": "Se la tua formazione non compare sul tuo account, invia il tuo attestato al <support>supporto</support>. Se è correttamente riconosciuta e desideri creare dei Bilan Carbone®, chiedi a un amministratore della tua organizzazione di modificare il tuo ruolo in collaboratore·rice o amministratore·rice. Ulteriori informazioni sono disponibili nelle <faq>FAQ</faq>."
   },
   "importFileModal": {
     "downloadTemplate": "Scarica il modello di importazione",
@@ -2488,7 +2493,7 @@
     "body": " Se hai qualche minuto, saremmo lieti di ricevere i tuoi feedback su BC+! Questi ci permetteranno di rispondere al meglio alle tue esigenze con i nostri prossimi sviluppi. Se non è il momento giusto, puoi rimandare la tua risposta.",
     "reject": "Non rispondere",
     "delay": "Più tardi ({time} giorni)",
-    "answer": "Do la mia opinione"
+    "answer": "Inviaci i tuoi commenti! ✨"
   },
   "form": {
     "validation": {

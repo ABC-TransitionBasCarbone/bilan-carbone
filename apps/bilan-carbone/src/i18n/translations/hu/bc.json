@@ -34,7 +34,9 @@
         "AwarnessAndOutreach": "Tudatosítás és népszerűsítés",
         "FeedbackAndCommunication": "Eredmények bemutatása és kommunikáció"
       }
-    }
+    },
+    "cannotCreateStudy": "Bilan Carbone® készítéséhez el kell végezni a módszertani képzést! <link>Tudjon meg többet</link>",
+    "canCreateFootPrint": "Ha a képzése nem jelenik meg a fiókjában, küldje el az igazolását a <support>ügyfélszolgálatnak</support>. Ha az megfelelően fel van ismerve, és szeretne Bilan Carbone® értékeléseket létrehozni, kérje meg szervezete egyik adminisztrátorát, hogy módosítsa a szerepkörét munkatárssá vagy adminisztrátorrá. További információk a <faq>GYIK-ben</faq> érhetők el."
   },
   "emissionFactors": {
     "table": {
@@ -73,5 +75,15 @@
   },
   "activation": {
     "Organization activation in progress": "Egy kolléga már folyamatban van a szervezet aktiválásával. Kérjük, hagyjon számára akár 24 órát az aktiválás befejezéséhez, mielőtt újra próbálkozna."
+  },
+  "ressources": {
+    "feedbackTitle": "Az Ön véleménye",
+    "feedbackLink": "Kérdőív kitöltése"
+  },
+  "profile": {
+    "feedbackLink": "Kérdőív kitöltése"
+  },
+  "feedback": {
+    "answer": "Ossza meg velünk visszajelzését! ✨"
   }
 }

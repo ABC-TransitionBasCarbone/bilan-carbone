@@ -34,7 +34,9 @@
         "AwarnessAndOutreach": "Osvještavanje i popularizacija",
         "FeedbackAndCommunication": "Prezentacija i komunikacija"
       }
-    }
+    },
+    "cannotCreateStudy": "Da biste mogli izrađivati Bilan Carbone®, morate biti osposobljeni za tu metodu! <link>Saznajte više</link>",
+    "canCreateFootPrint": "Ako se vaše osposobljavanje ne prikazuje na vašem računu, pošaljite svoju potvrdu <support>podršci</support>. Ako je pravilno prepoznato i želite izrađivati Bilan Carbone®, zatražite od administratora vaše organizacije da vašu ulogu promijeni u suradnik·ca ili administrator·ica. Više informacija dostupno je u <faq>FAQ-u</faq>."
   },
   "emissionFactors": {
     "table": {
@@ -73,5 +75,15 @@
   },
   "activation": {
     "Organization activation in progress": "Kolega/kolegica već aktivira ovu organizaciju. Molimo pričekajte do 24 sata da dovrši aktivaciju prije ponovnog pokušaja."
+  },
+  "ressources": {
+    "feedbackTitle": "Vaše mišljenje",
+    "feedbackLink": "Ispunite upitnik"
+  },
+  "profile": {
+    "feedbackLink": "Ispunite upitnik"
+  },
+  "feedback": {
+    "answer": "Podijelite s nama svoje povratne informacije! ✨"
   }
 }
