@@ -25,7 +25,6 @@ export const getMessages = async (locale: LocaleType, environment?: Environment)
   }
   const baseMessages = mergeObjects({}, commonMessages, bcMessages)
 
-  console.log(environment)
   if (!environment || environment === Environment.BC) {
     return {
       locale,
@@ -62,7 +61,6 @@ export const getMessages = async (locale: LocaleType, environment?: Environment)
   }
 
   let formationMessages = {}
-  console.log(isFormation(environment))
   if (isFormation(environment)) {
     const formationFile = path.join(process.cwd(), 'src/i18n/translations', `${locale}/formation_common.json`)
     if (fs.existsSync(overrideFilePath)) {
