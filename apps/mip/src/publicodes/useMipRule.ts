@@ -3,7 +3,8 @@ import { useMipPublicodes } from './MipPublicodesProvider'
 import { getFormQuestions, getMosaicResetSituation, getPlancherWarning, getQuestionType } from './mip-rules'
 
 export const useMipRule = (ruleName: string) => {
-  const { engine, meta, simulation, updateSimulation, safeEvaluate, safeGetRule } = useMipPublicodes()
+  const { engine, meta, simulation, currentQuestion, setCurrentQuestion, updateSimulation, safeEvaluate, safeGetRule } =
+    useMipPublicodes()
   const rule = safeGetRule(ruleName) as { rawNode?: { suggestions?: Record<string, unknown> } } | undefined
   const value = safeEvaluate(ruleName)?.nodeValue
 
@@ -13,19 +14,21 @@ export const useMipRule = (ruleName: string) => {
       children.includes(targetRuleName),
     )
     const mosaicChildren = mosaicParent?.[1] ?? []
-    const foldedQuestion = mosaicParent?.[0] ?? targetRuleName
     const nextSituation = {
       ...situation,
       ...getMosaicResetSituation(engine, mosaicChildren, situation),
     }
-    const foldedSteps = [...new Set([...simulation.foldedSteps, foldedQuestion])]
     const nextEngine = engine.shallowCopy().setSituation(nextSituation)
-    const questions = getFormQuestions(nextEngine, meta, foldedSteps)
+    const questions = getFormQuestions(nextEngine, meta, simulation.foldedSteps)
     const progression = questions.relevantQuestions.length
       ? Math.round((questions.relevantAnsweredQuestions.length / questions.relevantQuestions.length) * 100)
       : 0
 
-    updateSimulation({ situation: nextSituation, progression }, ruleName || targetRuleName)
+    const activeQuestion = (currentQuestion ?? ruleName) || targetRuleName
+    if (!currentQuestion && activeQuestion) {
+      setCurrentQuestion(activeQuestion)
+    }
+    updateSimulation({ situation: nextSituation, progression }, activeQuestion)
   }
 
   return {
