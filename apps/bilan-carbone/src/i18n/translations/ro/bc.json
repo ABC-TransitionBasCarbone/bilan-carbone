@@ -34,7 +34,9 @@
         "AwarnessAndOutreach": "Sensibilizare și popularizare",
         "FeedbackAndCommunication": "Restituire și comunicare"
       }
-    }
+    },
+    "cannotCreateStudy": "Pentru a putea realiza Bilan Carbone® trebuie să fiți format în metodă! <link>Aflați mai multe</link>",
+    "canCreateFootPrint": "Dacă formarea dumneavoastră nu apare în contul dumneavoastră, trimiteți certificatul la <support>suport</support>. Dacă este recunoscut corect și doriți să creați Bilan Carbone®, cereți unui administrator al organizației dumneavoastră să vă modifice rolul în colaborator·oare sau administrator·oare. Mai multe informații sunt disponibile în <faq>secțiunea Întrebări frecvente</faq>."
   },
   "emissionFactors": {
     "table": {
@@ -73,5 +75,15 @@
   },
   "activation": {
     "Organization activation in progress": "Un·a coleg·ă este deja în curs de activare a acestei organizații. Vă rugăm să îi acordați până la 24 de ore pentru a finaliza activarea înainte de a încerca din nou."
+  },
+  "ressources": {
+    "feedbackTitle": "Părerea dumneavoastră",
+    "feedbackLink": "Răspundeți la chestionar"
+  },
+  "profile": {
+    "feedbackLink": "Răspundeți la chestionar"
+  },
+  "feedback": {
+    "answer": "Trimiteți-ne feedbackul dumneavoastră! ✨"
   }
 }

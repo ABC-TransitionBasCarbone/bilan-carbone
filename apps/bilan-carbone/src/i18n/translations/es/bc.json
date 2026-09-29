@@ -217,7 +217,9 @@
     "contacterViaFormulaire": "Contactar directamente con la ABC a través del formulario",
     "questionTechnique": "En caso de pregunta técnica o de necesidad de soporte informático:",
     "lireLaFAQ": "Leer las preguntas frecuentes",
-    "ecrireMail": "Escribir directamente a {supportEmail}"
+    "ecrireMail": "Escribir directamente a {supportEmail}",
+    "feedbackTitle": "Su opinión",
+    "feedbackLink": "Responder al cuestionario"
   },
   "legalNotices": {
     "profile": "Volver al perfil"
@@ -1455,7 +1457,9 @@
     },
     "contributor": {
       "noData": "No hay fuentes de emisión por el momento; un editor del estudio debe añadirlas para que usted pueda completarlas"
-    }
+    },
+    "cannotCreateStudy": "Para poder realizar Bilan Carbone® ¡hay que estar formado en el método! <link>Más información</link>",
+    "canCreateFootPrint": "Si su formación no aparece en su cuenta, envíe su certificado al <support>soporte</support>. Si está bien reconocida y desea crear Bilan Carbone®, pida a un administrador de su organización que modifique su rol a colaborador·a o administrador·a. Encontrará más información en <faq>las preguntas frecuentes</faq>."
   },
   "importFileModal": {
     "incompatibleSubPosts": "Subcategoría(s) incompatible(s) con su categoría: {value}",
@@ -2388,7 +2392,8 @@
     "validation": {
       "firstName": "1 carácter como mínimo",
       "lastName": "1 carácter como mínimo"
-    }
+    },
+    "feedbackLink": "Responder al cuestionario"
   },
   "settings": {
     "title": "Mi configuración de la aplicación",
@@ -2488,7 +2493,7 @@
     "body": " Si dispone de unos minutos, ¡nos encantaría conocer su opinión sobre BC+! Esto nos permitirá responder mejor a sus necesidades con nuestros próximos desarrollos. Si no es el momento adecuado, puede posponer su respuesta.",
     "reject": "No responder",
     "delay": "Más tarde ({time} días)",
-    "answer": "Doy mi opinión"
+    "answer": "¡Cuéntenos su opinión! ✨"
   },
   "form": {
     "validation": {
