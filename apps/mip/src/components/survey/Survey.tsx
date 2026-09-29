@@ -69,16 +69,6 @@ const Survey = () => {
     form.goToNextQuestion()
   }
 
-  const handlePrevious = () => {
-    const previousQuestion = form.relevantQuestions[currentIndex - 1]
-    if (previousQuestion && form.currentCategory && getRuleCategoryKey(previousQuestion) !== form.currentCategory) {
-      openInterstitial(getRuleCategoryKey(previousQuestion), false, 'previous')
-      return
-    }
-
-    form.goToPreviousQuestion()
-  }
-
   const handleCompleteButton = async () => {
     if (form.currentCategory) {
       openInterstitial(form.currentCategory, true)
