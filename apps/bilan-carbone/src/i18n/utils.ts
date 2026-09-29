@@ -63,10 +63,10 @@ export const getMessages = async (locale: LocaleType, environment?: Environment)
   let formationMessages = {}
   if (isFormation(environment)) {
     const formationFile = path.join(process.cwd(), 'src/i18n/translations', `${locale}/formation_common.json`)
-    if (fs.existsSync(overrideFilePath)) {
+    if (fs.existsSync(formationFile)) {
       formationMessages = JSON.parse(fs.readFileSync(formationFile, 'utf-8'))
     } else {
-      console.log(`No translation files at: ${overrideFilePath}`)
+      console.log(`No translation files at: ${formationFile}`)
     }
   }
 

@@ -18,7 +18,7 @@ import {
   UserStatus,
 } from '@abc-transitionbascarbone/db-common/enums'
 import { signPassword } from '@abc-transitionbascarbone/utils/auth'
-import { environmentsWithChecklist } from '@abc-transitionbascarbone/utils/environments'
+import { environmentsWithChecklist, formationEnvironments } from '@abc-transitionbascarbone/utils/environments'
 import { faker } from '@faker-js/faker'
 import { PrismaPg } from '@prisma/adapter-pg'
 
@@ -1050,7 +1050,12 @@ const users = async () => {
     }),
   )
 
-  for (const formationEnv of [Environment.FORMATION_TILT, Environment.FORMATION_BC]) {
+  if (formationEnvironments.length > 9) {
+    throw new Error('Too many formation environments defined needs to change seeds to handle ids')
+  }
+
+  for (let i = 0; i < formationEnvironments.length; i++) {
+    const formationEnv = formationEnvironments[i]
     const formationAdminWithAccount = usersWithAccounts.find(
       (userWithAccount) => userWithAccount.user.email === `${formationEnv.toLowerCase()}-env-admin-0@yopmail.com`,
     ) as userAndAccountsAndOrganizationVersion
@@ -1077,7 +1082,7 @@ const users = async () => {
       await prisma.study.create({
         include: { sites: true },
         data: {
-          id: '88c93e88-7c80-4be4-905b-f0bbd2ccc841',
+          id: `88c93e88-7c80-4be4-905b-f0bbd2ccc84${i}`,
           createdById: formationAdminAccount.id,
           startDate: new Date(),
           endDate: faker.date.future(),

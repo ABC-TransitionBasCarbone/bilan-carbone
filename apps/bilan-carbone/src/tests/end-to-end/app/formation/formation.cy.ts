@@ -1,7 +1,8 @@
 import { formationEnvironments } from '@abc-transitionbascarbone/utils/environments'
 import dayjs from 'dayjs'
 
-for (const env of formationEnvironments) {
+for (let i = 0; i < formationEnvironments.length; i++) {
+  const env = formationEnvironments[i]
   describe('BC Formation', () => {
     before(() => {
       cy.resetTestDatabase()
@@ -62,7 +63,7 @@ for (const env of formationEnvironments) {
       cy.loginForEnv(env)
 
       cy.visit(
-        '/etudes/88c93e88-7c80-4be4-905b-f0bbd2ccc841/comptabilisation/saisie-des-donnees/IntrantsBiensEtMatieres',
+        `/etudes/88c93e88-7c80-4be4-905b-f0bbd2ccc84${i}/comptabilisation/saisie-des-donnees/IntrantsBiensEtMatieres`,
       )
       cy.getByTestId('subpost-MetauxPlastiquesEtVerre').find('[data-testid="subpost"]').click({ force: true })
       cy.getByTestId('subpost-MetauxPlastiquesEtVerre')
