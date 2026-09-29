@@ -1,4 +1,4 @@
-import { getEnvironnementRessources } from '@/utils/ressources'
+import { getEnvironnementRessources, getFeedbackFormUrl } from '@/utils/ressources'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { Translations } from '@abc-transitionbascarbone/lib'
 import { getEnvVar } from '@abc-transitionbascarbone/lib/environment'
@@ -75,5 +75,31 @@ describe('getEnvironnementRessources', () => {
     await expect(getEnvironnementRessources(Environment.BC, t)).rejects.toThrow(
       'Missing translation: openCarbonPracticeUrl',
     )
+  })
+
+  test('returns an empty feedback URL when it is not configured', async () => {
+    jest.mocked(getEnvVar).mockResolvedValue('')
+
+    await expect(getFeedbackFormUrl(Environment.BC)).resolves.toBe('')
+  })
+
+  test('uses the feedback Typeform ID when no feedback URL is configured', async () => {
+    jest.mocked(getEnvVar).mockImplementation(async (key) => {
+      if (key === 'FEEDBACK_FORM_URL') {
+        return ''
+      }
+      if (key === 'FEEDBACK_TYPEFORM_ID') {
+        return 'abc123'
+      }
+      return ''
+    })
+
+    await expect(getFeedbackFormUrl(Environment.BC)).resolves.toBe('https://form.typeform.com/to/abc123')
+  })
+
+  test('returns an empty feedback URL when no URL or Typeform ID is configured', async () => {
+    jest.mocked(getEnvVar).mockResolvedValue('')
+
+    await expect(getFeedbackFormUrl(Environment.BC)).resolves.toBe('')
   })
 })
