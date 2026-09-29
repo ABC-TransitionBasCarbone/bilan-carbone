@@ -1,5 +1,3 @@
-'use server'
-
 import withAuth from '@/components/hoc/withAuth'
 import ProfilePage from '@/components/pages/Profile'
 import Block from '@abc-transitionbascarbone/components/src/base/Block'

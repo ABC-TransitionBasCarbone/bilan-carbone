@@ -1,5 +1,3 @@
-'use server'
-
 import { OrganizationWithSites } from '@/db/account'
 import { canDeleteOrganizationVersion, canUpdateOrganizationVersion } from '@/services/permissions/organization'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'

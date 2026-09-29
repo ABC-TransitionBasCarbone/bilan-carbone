@@ -1,5 +1,3 @@
-'use server'
-
 import { getMainActualitiesLocale } from '@/db/actuality.server'
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import classNames from 'classnames'

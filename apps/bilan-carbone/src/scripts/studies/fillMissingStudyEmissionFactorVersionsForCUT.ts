@@ -1,5 +1,3 @@
-'use server'
-
 import { prismaClient } from '@/db/client.server'
 import { getSourceCutImportVersionIds } from '@/db/study'
 import { Prisma } from '@abc-transitionbascarbone/db-common'
