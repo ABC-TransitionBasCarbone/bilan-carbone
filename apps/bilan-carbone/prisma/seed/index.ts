@@ -1082,7 +1082,7 @@ const users = async () => {
       await prisma.study.create({
         include: { sites: true },
         data: {
-          id: `88c93e88-7c80-4be4-905b-f0bbd2ccc84${i}`,
+          id: `88c93e88-7c80-4be4-905b-f0bbd2ccd95${i}`,
           createdById: formationAdminAccount.id,
           startDate: new Date(),
           endDate: faker.date.future(),
@@ -1110,7 +1110,7 @@ const users = async () => {
       await prisma.study.create({
         include: { sites: true },
         data: {
-          id: '88c93e88-7c80-4be4-905b-f0bbd2ccc842',
+          id: `88c93e88-7c80-4be4-905b-f0bbd2ccz8${i}2`,
           createdById: formationAdminAccount.id,
           startDate: new Date(),
           endDate: faker.date.future(),

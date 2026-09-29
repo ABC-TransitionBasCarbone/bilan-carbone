@@ -63,7 +63,7 @@ for (let i = 0; i < formationEnvironments.length; i++) {
       cy.loginForEnv(env)
 
       cy.visit(
-        `/etudes/88c93e88-7c80-4be4-905b-f0bbd2ccc84${i}/comptabilisation/saisie-des-donnees/IntrantsBiensEtMatieres`,
+        `/etudes/88c93e88-7c80-4be4-905b-f0bbd2ccd95${i}/comptabilisation/saisie-des-donnees/IntrantsBiensEtMatieres`,
       )
       cy.getByTestId('subpost-MetauxPlastiquesEtVerre').find('[data-testid="subpost"]').click({ force: true })
       cy.getByTestId('subpost-MetauxPlastiquesEtVerre')
