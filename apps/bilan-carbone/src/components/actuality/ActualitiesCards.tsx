@@ -1,6 +1,7 @@
 'use server'
 
 import { getMainActualitiesLocale } from '@/db/actuality.server'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import classNames from 'classnames'
 import { getTranslations } from 'next-intl/server'
@@ -8,8 +9,12 @@ import ActualityRow from './Actuality'
 import NoActualities from './NoActualities'
 import styles from './styles.module.css'
 
-const ActualitiesCards = async () => {
-  const actualities = await getMainActualitiesLocale()
+interface Props {
+  environment: Environment
+}
+
+const ActualitiesCards = async ({ environment }: Props) => {
+  const actualities = await getMainActualitiesLocale(environment)
   const t = await getTranslations('actuality')
   return (
     <Block

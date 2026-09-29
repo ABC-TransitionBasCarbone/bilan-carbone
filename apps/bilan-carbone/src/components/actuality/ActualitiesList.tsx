@@ -1,13 +1,18 @@
 'use server'
 
 import { getAllActualitiesLocale } from '@/db/actuality.server'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import classNames from 'classnames'
 import ActualityRow from './Actuality'
 import NoActualities from './NoActualities'
 import styles from './styles.module.css'
 
-const ActualitiesList = async () => {
-  const actualities = await getAllActualitiesLocale()
+interface Props {
+  environment: Environment
+}
+
+const ActualitiesList = async ({ environment }: Props) => {
+  const actualities = await getAllActualitiesLocale(environment)
   return (
     <ul className={classNames(styles.actualities, 'flex-col')}>
       {actualities.length ? (

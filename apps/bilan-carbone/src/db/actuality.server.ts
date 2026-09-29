@@ -1,15 +1,20 @@
 import { getLocale } from '@/i18n/locale'
 import type { Prisma } from '@abc-transitionbascarbone/db-common'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { prismaClient } from './client.server'
 
-export const getAllActualitiesLocale = async () => {
+export const getAllActualitiesLocale = async (environment: Environment) => {
   const locale = await getLocale()
-  return prismaClient.actuality.findMany({ where: { language: locale }, orderBy: { createdAt: 'desc' } })
+  return prismaClient.actuality.findMany({ where: { language: locale, environment }, orderBy: { createdAt: 'desc' } })
 }
 
-export const getMainActualitiesLocale = async () => {
+export const getMainActualitiesLocale = async (environment: Environment) => {
   const locale = await getLocale()
-  return prismaClient.actuality.findMany({ where: { language: locale }, orderBy: { createdAt: 'desc' }, take: 3 })
+  return prismaClient.actuality.findMany({
+    where: { language: locale, environment },
+    orderBy: { createdAt: 'desc' },
+    take: 3,
+  })
 }
 
 export const createActualities = async (data: Prisma.ActualityCreateInput[]) =>

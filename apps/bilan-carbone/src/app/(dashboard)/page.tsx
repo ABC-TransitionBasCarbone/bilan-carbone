@@ -1,4 +1,5 @@
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
+import ActualitiesCards from '@/components/actuality/ActualitiesCards'
 import UserFeedback from '@/components/home/UserFeedback'
 import UserView from '@/components/home/UserView'
 import Onboarding from '@/components/onboarding/Onboarding'
@@ -48,6 +49,7 @@ const Home = async ({ user: account }: UserSessionProps) => {
           defaultComponent={<UserView account={account} />}
           forceEnvironment={account.environment}
         />
+        <ActualitiesCards environment={account.environment} />
         <CUTLogosHome user={account} />
 
         {showOnboarding && <Onboarding user={account} organizationVersion={userOrganizationVersion!} />}

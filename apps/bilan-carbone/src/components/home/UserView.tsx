@@ -1,11 +1,9 @@
 import { getAccountOrganizationVersions } from '@/db/account'
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { hasAccountToValidateInOrganization } from '@/db/user'
-import { hasAccessToActualityCards } from '@/services/permissions/environment'
 import { hasQualitylessEmissionFactors } from '@/services/serverFunctions/organization'
 import { canEditMemberRole } from '@/utils/user'
 import { UserSession } from 'next-auth'
-import ActualitiesCards from '../actuality/ActualitiesCards'
 import StudiesContainer from '../study/StudiesContainer'
 import CRClientsList from './CRClientsList'
 import EmissionFactorsWarning from './EmissionFactorsWarning'
@@ -46,7 +44,6 @@ const UserView = async ({ account }: Props) => {
       )}
       <StudiesContainer user={account} isCR={isCR} />
 
-      {hasAccessToActualityCards(account.environment) && <ActualitiesCards />}
       {emissionFactorWarning.success && !!emissionFactorWarning.data.length && (
         <EmissionFactorsWarning emissionFactors={emissionFactorWarning.data} />
       )}

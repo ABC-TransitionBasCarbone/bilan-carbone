@@ -42,11 +42,38 @@ describe('Home page - ', () => {
       cy.login('cut-env-admin-0@yopmail.com')
     })
 
+    it('should display only actualities from the CUT environment', () => {
+      cy.getByTestId('home-actualities').scrollIntoView().should('be.visible')
+      cy.getByTestId('home-actualities').should('not.contain', 'Mises à jour estivales du BC+')
+    })
+
     it('should display the main title on the home page', () => {
       cy.getByTestId('title')
         .should('have.length', 1)
         .first()
         .should('contain.text', 'Faire votre bilan d’impact vous permettra de :')
+    })
+  })
+
+  describe('TILT environment', () => {
+    beforeEach(() => {
+      cy.login('tilt-env-admin-0@yopmail.com', 'password-0')
+    })
+
+    it('should display only actualities from the TILT environment', () => {
+      cy.getByTestId('home-actualities').scrollIntoView().should('be.visible')
+      cy.getByTestId('home-actualities').should('not.contain', 'Mises à jour estivales du BC+')
+    })
+  })
+
+  describe('Clickson environment', () => {
+    beforeEach(() => {
+      cy.login('clickson-env-admin-0@yopmail.com', 'password-0')
+    })
+
+    it('should display only actualities from the Clickson environment', () => {
+      cy.getByTestId('home-actualities').scrollIntoView().should('be.visible')
+      cy.getByTestId('home-actualities').should('not.contain', 'Mises à jour estivales du BC+')
     })
   })
 })
