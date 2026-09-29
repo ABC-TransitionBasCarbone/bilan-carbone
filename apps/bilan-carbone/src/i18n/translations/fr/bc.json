@@ -1566,10 +1566,10 @@
         "FOR_APPROACH_EVALUATION": "Pour l'évaluation de la démarche"
       },
       "phases": {
-        "AwarnessAndOutreach": "Mobilisation et sensibilisation",
+        "AwarnessAndOutreach": "Sensibilisation et vulgarisation",
         "Empowerment": "Responsabilisation",
         "CoConstruction": "Co-construction",
-        "FeedbackAndCommunication": "Retours et communication"
+        "FeedbackAndCommunication": "Restitution et communication"
       }
     },
     "contributor": {
@@ -1951,8 +1951,8 @@
       "status": "Statut",
       "value": "Valeur",
       "yes": "Oui",
-      "displayFilters": "Afficher les filters",
-      "hideFilters": "Cacher les filters",
+      "displayFilters": "Afficher les filtres",
+      "hideFilters": "Cacher les filtres",
       "importedFrom": {
         "baseEmpreinte": "Logo de la Base Empreinte",
         "legifrance": "Logo de Légifrance",

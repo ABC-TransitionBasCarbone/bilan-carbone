@@ -24,10 +24,10 @@ jest.mock('@/utils/translation.utils', () => ({
     study: {
       engagementActions: {
         phases: {
-          AwarnessAndOutreach: 'Mobilisation et sensibilisation',
+          AwarnessAndOutreach: 'Sensibilisation et vulgarisation',
           Empowerment: 'Responsabilisation',
           CoConstruction: 'Co-construction',
-          FeedbackAndCommunication: 'Retours et communication',
+          FeedbackAndCommunication: 'Restitution et communication',
         },
       },
       transitionPlan: {
