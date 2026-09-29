@@ -79,7 +79,10 @@ export const filterAllowedStudies = async (user: UserSession, studies: Study[]) 
   return allowedStudies.filter((study) => study !== null)
 }
 
-export const canCreateAStudy = async (user: UserSession, simplified: boolean = false) => {
+export const canCreateAStudy = async (
+  user: Pick<UserSession, 'level' | 'role' | 'organizationVersionId' | 'environment'>,
+  simplified: boolean = false,
+) => {
   if (simplified && !user.level && isTilt(user.environment)) {
     const isTiltSimplifiedActive = await isTiltSimplifiedFeatureActive(user.environment)
     if (!isTiltSimplifiedActive) {
@@ -87,7 +90,6 @@ export const canCreateAStudy = async (user: UserSession, simplified: boolean = f
     }
   }
 
-  const studyIsSimplifiedAndCreationAuthorized = simplified && user.role !== Role.DEFAULT && isTilt(user.environment)
   const canCreateAdvancedStudy =
     !!user.level &&
     user.role !== Role.DEFAULT &&
@@ -95,13 +97,15 @@ export const canCreateAStudy = async (user: UserSession, simplified: boolean = f
 
   return (
     !!user.organizationVersionId &&
-    (canCreateAdvancedStudy ||
-      canCreateStudyWithoutSpecificRights(user.environment) ||
-      studyIsSimplifiedAndCreationAuthorized)
+    (canCreateAdvancedStudy || canCreateStudyWithoutSpecificRights(user.environment, simplified))
   )
 }
 
-const canCreateSpecificStudyCommon = async (accountId: string, organizationVersionId: string) => {
+const canCreateSpecificStudyCommon = async (
+  accountId: string,
+  organizationVersionId: string,
+  simplified: boolean = false,
+) => {
   const dbAccount = await getAccountById(accountId)
 
   if (!dbAccount) {
@@ -117,11 +121,22 @@ const canCreateSpecificStudyCommon = async (accountId: string, organizationVersi
     return { allowed: false }
   }
 
-  return { allowed: true, account: dbAccount }
+  return {
+    allowed: canCreateAStudy(
+      {
+        level: dbAccount.user.level,
+        organizationVersionId: dbAccount.organizationVersionId,
+        role: dbAccount.role,
+        environment: dbAccount.environment,
+      },
+      simplified,
+    ),
+    account: dbAccount,
+  }
 }
 
 const canCreateSpecificStudySimplified = async (accountId: string, organizationVersionId: string) => {
-  const { allowed } = await canCreateSpecificStudyCommon(accountId, organizationVersionId)
+  const { allowed } = await canCreateSpecificStudyCommon(accountId, organizationVersionId, true)
   return allowed
 }
 
