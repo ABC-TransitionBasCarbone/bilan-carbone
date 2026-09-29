@@ -1447,10 +1447,10 @@
         "FOR_APPROACH_EVALUATION": "Para la evaluación del proceso"
       },
       "phases": {
-        "AwarnessAndOutreach": "Movilización y sensibilización",
+        "AwarnessAndOutreach": "Sensibilización y divulgación",
         "Empowerment": "Responsabilización",
         "CoConstruction": "Coconstrucción",
-        "FeedbackAndCommunication": "Retorno y comunicación"
+        "FeedbackAndCommunication": "Restitución y comunicación"
       }
     },
     "contributor": {
