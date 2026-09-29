@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 
 for (let i = 0; i < formationEnvironments.length; i++) {
   const env = formationEnvironments[i]
-  describe('BC Formation', () => {
+  describe(`BC Formation - ${env}`, () => {
     before(() => {
       cy.resetTestDatabase()
     })
@@ -46,17 +46,24 @@ for (let i = 0; i < formationEnvironments.length; i++) {
       cy.loginForEnv(env)
 
       cy.getByTestId('study-name-chip')
-        .contains('Formation study to delete')
+        .contains(`Formation study to delete ${env.toLowerCase()}`)
         .parents('[data-testid="study"]')
         .within(() => {
           cy.getByTestId('study-link').click()
         })
 
       cy.getByTestId('delete-study').click()
-      cy.getByTestId('delete-study-name-field').type('Formation study to delete')
-      cy.getByTestId('confirm-study-deletion').click()
-      cy.url().should('eq', `${Cypress.config().baseUrl}/`)
-      cy.getByTestId('study-name-chip').contains('Formation study to delete').should('not.exist')
+      cy.getByTestId('delete-study-name-field').type(`Formation study to delete ${env.toLowerCase()}`)
+      cy.url().then((savedUrl) => {
+        cy.getByTestId('confirm-study-deletion').click()
+        cy.getByTestId('alert-toaster').should('not.exist')
+
+        cy.url().should('eq', `${Cypress.config().baseUrl}/`)
+
+        cy.getByTestId('study-name-chip').contains(`Formation study to delete ${env.toLowerCase()}`).should('not.exist')
+        cy.visit(savedUrl)
+        cy.getByTestId('not-found-page').should('be.visible')
+      })
     })
 
     it('allows a formation administrator to add and delete an emission source', () => {
@@ -70,6 +77,7 @@ for (let i = 0; i < formationEnvironments.length; i++) {
         .find('[data-testid="new-emission-source"]')
         .type('Formation source')
       cy.getByTestId('subpost-MetauxPlastiquesEtVerre').find('[data-testid="new-emission-source-add"]').click()
+      cy.getByTestId('emission-source-Formation source').scrollIntoView()
       cy.getByTestId('emission-source-Formation source').should('be.visible').click()
       cy.getByTestId('emission-source-delete').click()
       cy.getByTestId('delete-emission-source-modal-accept').click()
