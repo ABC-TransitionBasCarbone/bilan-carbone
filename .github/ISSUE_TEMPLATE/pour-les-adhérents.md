@@ -1,12 +1,12 @@
 ---
 name: "[POUR LES ADHERENTS]"
-about: Si vous êtes adhérent à l'ABC merci de n'utiliser que ce modèle ! Il vous permet de remonter des bugs, des fonctionnalités, des besoins... N'hésitez pas aussi à passer par mail à support@abc-transitionbascarbone si votre besoin n'est pas encore bien défini pour que nous puissions en discuter avec vous. 
+about: Si vous êtes adhérent à l'ABC merci de n'utiliser que ce modèle ! Il vous permet de remonter des bugs, des fonctionnalités, des besoins... 
 title: ''
 labels: 'Remontée adhérent'
 assignees: ''
 ---
 
-_Merci de remplir un maximum d'informations ci-dessous pour que notre équipe puisse comprendre au mieux votre remontée_
+_Merci de remplir un maximum d'informations ci-dessous pour que notre équipe puisse comprendre au mieux votre remontée. N'hésitez pas aussi à passer par mail à support@abc-transitionbascarbone si votre besoin n'est pas encore bien défini pour que nous puissions en discuter avec vous._
 *NE PAS METTRE D'INFORMATIONS CONFIDENTIELLES, NOTRE GITHUB ETANT PUBLIC, N'IMPORTE QUI Y AURAIT ALORS ACCES. Si vous avez des informations confidentielles à nous indiquer, merci de le faire par mail à support@abc-transitionbascarbone.fr*
 
 @cmolle @RomainCrevecoeur @GChabahABC 
