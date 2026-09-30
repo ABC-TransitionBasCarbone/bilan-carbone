@@ -10,20 +10,18 @@ import { getEncoding } from '../../utils/csv'
 const addActualities = async (file: string) => {
   const actualities: Prisma.ActualityCreateManyInput[] = []
   await new Promise<void>((resolve, reject) => {
-    const stream = fs
-      .createReadStream(file)
-      .pipe(
-        parse({
-          columns: (headers: string[]) => {
-            if (!headers.includes('Titre') || !headers.includes('Texte')) {
-              throw new Error('Headers invalides, les colonnes Titre et Texte sont obligatoires')
-            }
-            return headers
-          },
-          delimiter: ';',
-          encoding: getEncoding(file),
-        }),
-      )
+    const stream = fs.createReadStream(file).pipe(
+      parse({
+        columns: (headers: string[]) => {
+          if (!headers.includes('Titre') || !headers.includes('Texte')) {
+            throw new Error('Headers invalides, les colonnes Titre et Texte sont obligatoires')
+          }
+          return headers
+        },
+        delimiter: ';',
+        encoding: getEncoding(file),
+      }),
+    )
     stream
       .on('data', (row: { Titre: string; Texte: string; Language?: string; Environment?: string }) => {
         const environment = row.Environment

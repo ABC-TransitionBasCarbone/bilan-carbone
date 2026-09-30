@@ -2,6 +2,9 @@
   "links": {
     "sphereAssociativeUrl": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative"
   },
+  "actuality": {
+    "title": "Les actualités du BC+ et Cap Carbone"
+  },
   "role": {
     "DEFAULT_description": "A member of the organisation has no specific rights over the organisation, the team or studies. By default, they are readers of all their organisation's Bilans Carbone® shared with the team. They can still create simplified studies."
   },

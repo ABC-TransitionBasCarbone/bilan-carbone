@@ -31,7 +31,9 @@ const ActualityRow = ({ actuality }: Props) => {
   return (
     <li data-testid="actuality" className="flex-col">
       <Box className={classNames(styles.card, 'grow')}>
-        <h3 className={classNames(styles.header, 'title-h5 flex')}>{actuality.title}</h3>
+        <h3 data-testid="actuality-title" className={classNames(styles.header, 'title-h5 flex')}>
+          {actuality.title}
+        </h3>
         <p className={classNames(styles.date, 'mb-2')}>
           {format.dateTime(actuality.updatedAt, {
             year: 'numeric',

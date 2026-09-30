@@ -1,5 +1,5 @@
-import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import ActualitiesCards from '@/components/actuality/ActualitiesCards'
+import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import UserFeedback from '@/components/home/UserFeedback'
 import UserView from '@/components/home/UserView'
 import Onboarding from '@/components/onboarding/Onboarding'
