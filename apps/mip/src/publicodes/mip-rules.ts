@@ -158,6 +158,21 @@ export const getRulesMeta = (engine: Engine, root = 'bilan'): MipRulesMeta => {
 export const getIsMissing = (ruleName: string, situation: Situation<string>, mosaicChildren: string[] = []): boolean =>
   [ruleName, ...mosaicChildren].every((name) => !situation[name] && situation[name] !== 0)
 
+export const hasRuleAnswer = (
+  ruleName: string,
+  situation: Situation<string>,
+  mosaicChildrenWithParent: Record<string, string[]> = {},
+): boolean => {
+  const relatedRules = [ruleName, ...(mosaicChildrenWithParent[ruleName] ?? [])]
+  return relatedRules.some((name) => {
+    if (!Object.prototype.hasOwnProperty.call(situation, name)) {
+      return false
+    }
+    const value = situation[name]
+    return value !== undefined && value !== null
+  })
+}
+
 // Mosaic children are replaced by their parent, scored with the max of its children.
 export const getMissingVariables = (engine: Engine, meta: MipRulesMeta): MissingVariables => {
   const missingVariables = Object.fromEntries(

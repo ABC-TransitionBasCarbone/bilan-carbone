@@ -2,6 +2,7 @@
 
 import { useMipPublicodes } from '@/publicodes/MipPublicodesProvider'
 import { getSurveyCategoryKeysFromParsedRules } from '@/publicodes/mip-engine'
+import { hasRuleAnswer } from '@/publicodes/mip-rules'
 import { formatMassKilograms, getCategoryClassSuffix } from '@abc-transitionbascarbone/publicodes/form'
 import { getRuleCategoryKey } from '@abc-transitionbascarbone/publicodes/form/utils'
 import { getPositiveNodeValue } from '@abc-transitionbascarbone/utils/number'
@@ -57,7 +58,7 @@ const SidebarItem = ({ item }: SidebarItemProps) => {
 }
 
 const SurveyCategoriesSidebar = ({ activeCategoryKey, situation, relevantQuestions }: Props) => {
-  const { engine, simulation } = useMipPublicodes()
+  const { engine, meta } = useMipPublicodes()
   const previewEngine = useMemo(() => {
     const localEngine = engine.shallowCopy()
     localEngine.setSituation({ ...situation })
@@ -66,16 +67,13 @@ const SurveyCategoriesSidebar = ({ activeCategoryKey, situation, relevantQuestio
 
   const rules = previewEngine.getParsedRules()
   const categoryKeys = getSurveyCategoryKeysFromParsedRules(rules)
-  const completedQuestions = new Set(simulation.foldedSteps)
 
   const categories: CategoryItem[] = categoryKeys.map((key) => {
     const raw = rules[key]?.rawNode as { titre?: string; icônes?: string } | undefined
     const categoryQuestions = relevantQuestions.filter((name) => getRuleCategoryKey(name) === key)
     const isComplete =
       categoryQuestions.length > 0 &&
-      categoryQuestions.every((question) =>
-        Object.keys(situation).some((name) => name === question || name.startsWith(`${question} . `)),
-      )
+      categoryQuestions.every((question) => hasRuleAnswer(question, situation, meta.mosaicChildrenWithParent))
     const result = (() => {
       try {
         return previewEngine.evaluate(key)
@@ -94,7 +92,9 @@ const SurveyCategoriesSidebar = ({ activeCategoryKey, situation, relevantQuestio
       valueKg,
       isActive,
       toneClassName: styles[`category${categoryClassSuffix}`] ?? styles.categoryDt,
-      completedQuestions: categoryQuestions.filter((name) => completedQuestions.has(name)).length,
+      completedQuestions: categoryQuestions.filter((question) =>
+        hasRuleAnswer(question, situation, meta.mosaicChildrenWithParent),
+      ).length,
       totalQuestions: categoryQuestions.length,
     }
   })

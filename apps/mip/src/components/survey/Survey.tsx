@@ -62,7 +62,7 @@ const Survey = () => {
 
     const nextQuestion = form.relevantQuestions[form.relevantQuestions.indexOf(form.currentQuestion) + 1]
     if (nextQuestion && form.currentCategory && getRuleCategoryKey(nextQuestion) !== form.currentCategory) {
-      openInterstitial(form.currentCategory, false)
+      openInterstitial(form.currentCategory, false, 'next')
       return
     }
 
@@ -71,7 +71,7 @@ const Survey = () => {
 
   const handleCompleteButton = async () => {
     if (form.currentCategory) {
-      openInterstitial(form.currentCategory, true)
+      openInterstitial(form.currentCategory, true, 'next')
       return
     }
 
@@ -120,14 +120,18 @@ const Survey = () => {
   }
   const handlePrevious = () => {
     const previousQuestion = form.relevantQuestions[currentIndex - 1]
-    form.goToPreviousQuestion()
-
-    if (previousQuestion) {
-      const previousCategory = getRuleCategoryKey(previousQuestion)
-      if (previousCategory !== form.currentCategory) {
-        openInterstitial(previousCategory, false)
-      }
+    if (!previousQuestion) {
+      form.goToPreviousQuestion()
+      return
     }
+
+    const previousCategory = getRuleCategoryKey(previousQuestion)
+    if (previousCategory !== form.currentCategory) {
+      openInterstitial(previousCategory, false, 'previous')
+      return
+    }
+
+    form.goToPreviousQuestion()
   }
 
   if (isResumed) {
