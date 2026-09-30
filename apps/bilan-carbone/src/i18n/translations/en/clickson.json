@@ -4,6 +4,9 @@
     "modelsDataCollectUrl": "https://clickson.eu/wp-content/uploads/2023/01/Exemple_collecte.zip",
     "classEarthUrl": "https://www.materre-enclasse.org"
   },
+  "actuality": {
+    "title": "Les actualités de clickson"
+  },
   "nav": {
     "newStudyContributor": "Add a student",
     "team": "Pilot Team",

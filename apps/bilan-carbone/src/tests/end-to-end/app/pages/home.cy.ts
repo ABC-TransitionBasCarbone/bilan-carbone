@@ -4,8 +4,8 @@ describe('Home page - ', () => {
       cy.login()
 
       cy.getByTestId('home-actualities').scrollIntoView()
-      cy.getByTestId('home-actualities').should('be.visible')
-      cy.getByTestId('home-actualities').contains('Les actualités du BC+')
+      cy.getByTestId('actuality-title').should('be.visible')
+      cy.getByTestId('actuality-title').contains('Mises à jour estivales du BC+')
 
       cy.getByTestId('actuality').should('have.length.gt', 0)
     })
@@ -22,8 +22,8 @@ describe('Home page - ', () => {
       cy.login('bc-cr-collaborator-1@yopmail.com', 'password-1')
 
       cy.getByTestId('home-actualities').scrollIntoView()
-      cy.getByTestId('home-actualities').should('be.visible')
-      cy.getByTestId('home-actualities').contains('Les actualités du BC+')
+      cy.getByTestId('actuality-title').should('be.visible')
+      cy.getByTestId('actuality-title').contains('Mises à jour estivales du BC+')
 
       cy.getByTestId('actuality').should('have.length', 3)
     })
@@ -42,11 +42,47 @@ describe('Home page - ', () => {
       cy.login('cut-env-admin-0@yopmail.com')
     })
 
+    it('should display only actualities from the CUT environment', () => {
+      cy.getByTestId('home-actualities').scrollIntoView().should('be.visible')
+      cy.getByTestId('actuality-title').should('not.contain', 'Mises à jour estivales du BC+')
+      cy.getByTestId('actuality-title').should('not.contain', 'ACTU TILT')
+      cy.getByTestId('actuality-title').should('not.contain', 'ACTU Clickson')
+      cy.getByTestId('actuality-title').should('contain', 'ACTU CUT')
+    })
+
     it('should display the main title on the home page', () => {
       cy.getByTestId('title')
         .should('have.length', 1)
         .first()
         .should('contain.text', 'Faire votre bilan d’impact vous permettra de :')
+    })
+  })
+
+  describe('TILT environment', () => {
+    beforeEach(() => {
+      cy.login('tilt-env-admin-0@yopmail.com', 'password-0')
+    })
+
+    it('should display only actualities from the TILT environment', () => {
+      cy.getByTestId('home-actualities').scrollIntoView().should('be.visible')
+      cy.getByTestId('actuality-title').should('not.contain', 'Mises à jour estivales du BC+')
+      cy.getByTestId('actuality-title').should('contain', 'ACTU TILT')
+      cy.getByTestId('actuality-title').should('not.contain', 'ACTU Clickson')
+      cy.getByTestId('actuality-title').should('not.contain', 'ACTU CUT')
+    })
+  })
+
+  describe('Clickson environment', () => {
+    beforeEach(() => {
+      cy.login('clickson-env-admin-0@yopmail.com', 'password-0')
+    })
+
+    it('should display only actualities from the Clickson environment', () => {
+      cy.getByTestId('home-actualities').scrollIntoView().should('be.visible')
+      cy.getByTestId('actuality-title').should('not.contain', 'Mises à jour estivales du BC+')
+      cy.getByTestId('actuality-title').should('not.contain', 'ACTU TILT')
+      cy.getByTestId('actuality-title').should('contain', 'ACTU Clickson')
+      cy.getByTestId('actuality-title').should('not.contain', 'ACTU CUT')
     })
   })
 })

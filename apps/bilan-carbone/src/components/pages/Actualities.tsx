@@ -1,9 +1,14 @@
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { getTranslations } from 'next-intl/server'
 import ActualitiesList from '../actuality/ActualitiesList'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 
-const ActualitiesPage = async () => {
+interface Props {
+  environment: Environment
+}
+
+const ActualitiesPage = async ({ environment }: Props) => {
   const tNav = await getTranslations('nav')
   const t = await getTranslations('actuality')
 
@@ -11,7 +16,7 @@ const ActualitiesPage = async () => {
     <>
       <Breadcrumbs current={tNav('actualities')} links={[{ label: tNav('home'), link: '/' }]} />
       <Block title={t('title')} as="h1">
-        <ActualitiesList />
+        <ActualitiesList environment={environment} />
       </Block>
     </>
   )

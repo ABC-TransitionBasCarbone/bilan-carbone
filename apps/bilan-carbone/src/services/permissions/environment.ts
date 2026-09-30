@@ -21,8 +21,6 @@ export const getLocalesForEnv = (environment: Environment) => {
   }
 }
 
-export const hasAccessToActualityCards = isBC
-
 export const hasAccessToDownloadStudyEmissionSourcesButton = isAdvanced
 
 export const hasAccessToCreateOrganization = isAdvanced
