@@ -1,4 +1,27 @@
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+
 export const ACTUALITIES = [
+  {
+    title: 'ACTU CUT',
+    text: 'Des actualités de la plateforme COUNT !',
+    environement: Environment.CUT,
+    createdAt: new Date('2022-03-15 12:00:00.000'),
+    updatedAt: new Date('2022-03-15 12:00:00.000'),
+  },
+  {
+    title: 'ACTU TILT',
+    text: 'Des actualités de la plateforme CAP CARBONE !',
+    environement: Environment.TILT,
+    createdAt: new Date('2022-03-15 12:00:00.000'),
+    updatedAt: new Date('2022-03-15 12:00:00.000'),
+  },
+  {
+    title: 'ACTU Clickson',
+    text: 'Des actualités de la plateforme Clickson !',
+    environement: Environment.CLICKSON,
+    createdAt: new Date('2022-03-15 12:00:00.000'),
+    updatedAt: new Date('2022-03-15 12:00:00.000'),
+  },
   {
     title: 'Plusieurs nouveautés et mises à jour 5/7 - Matrice R&O',
     text: "- Analyse : la matrice des risques et opportunités est désormais disponible. Cliquez sur le picto 'SWOT' avec le libellé 'R&O' dans la rubrique 'Analyse' et complétez la pour l'organisation pour laquelle vous intervenez. Vous allez plus loin dans l'analyse et la valeur ajoutée de votre intervention.",

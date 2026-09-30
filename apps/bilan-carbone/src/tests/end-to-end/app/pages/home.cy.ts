@@ -45,6 +45,9 @@ describe('Home page - ', () => {
     it('should display only actualities from the CUT environment', () => {
       cy.getByTestId('home-actualities').scrollIntoView().should('be.visible')
       cy.getByTestId('home-actualities').should('not.contain', 'Mises à jour estivales du BC+')
+      cy.getByTestId('home-actualities').should('not.contain', 'Des actualités de la plateforme CAP CARBONE !')
+      cy.getByTestId('home-actualities').should('not.contain', 'Des actualités de la plateforme Clickson !')
+      cy.getByTestId('home-actualities').should('contain', 'Des actualités de la plateforme COUNT !')
     })
 
     it('should display the main title on the home page', () => {
@@ -63,6 +66,9 @@ describe('Home page - ', () => {
     it('should display only actualities from the TILT environment', () => {
       cy.getByTestId('home-actualities').scrollIntoView().should('be.visible')
       cy.getByTestId('home-actualities').should('not.contain', 'Mises à jour estivales du BC+')
+      cy.getByTestId('home-actualities').should('contain', 'Des actualités de la plateforme CAP CARBONE !')
+      cy.getByTestId('home-actualities').should('not.contain', 'Des actualités de la plateforme Clickson !')
+      cy.getByTestId('home-actualities').should('not.contain', 'Des actualités de la plateforme COUNT !')
     })
   })
 
@@ -74,6 +80,9 @@ describe('Home page - ', () => {
     it('should display only actualities from the Clickson environment', () => {
       cy.getByTestId('home-actualities').scrollIntoView().should('be.visible')
       cy.getByTestId('home-actualities').should('not.contain', 'Mises à jour estivales du BC+')
+      cy.getByTestId('home-actualities').should('not.contain', 'Des actualités de la plateforme CAP CARBONE !')
+      cy.getByTestId('home-actualities').should('contain', 'Des actualités de la plateforme Clickson !')
+      cy.getByTestId('home-actualities').should('not.contain', 'Des actualités de la plateforme COUNT !')
     })
   })
 })

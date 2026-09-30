@@ -1,12 +1,11 @@
 'use server'
 
 import { getMainActualitiesLocale } from '@/db/actuality.server'
-import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import classNames from 'classnames'
 import { getTranslations } from 'next-intl/server'
 import ActualityRow from './Actuality'
-import NoActualities from './NoActualities'
 import styles from './styles.module.css'
 
 interface Props {
@@ -16,6 +15,11 @@ interface Props {
 const ActualitiesCards = async ({ environment }: Props) => {
   const actualities = await getMainActualitiesLocale(environment)
   const t = await getTranslations('actuality')
+
+  if (!actualities.length) {
+    return null
+  }
+
   return (
     <Block
       title={t('title')}
@@ -23,11 +27,9 @@ const ActualitiesCards = async ({ environment }: Props) => {
       actions={[{ actionType: 'link', href: '/actualites', children: t('allActualities') }]}
     >
       <ul className={classNames(styles.actualities, 'grid')}>
-        {actualities.length ? (
-          actualities.map((actuality) => <ActualityRow key={actuality.id} actuality={actuality} />)
-        ) : (
-          <NoActualities />
-        )}
+        {actualities.map((actuality) => (
+          <ActualityRow key={actuality.id} actuality={actuality} />
+        ))}
       </ul>
     </Block>
   )
