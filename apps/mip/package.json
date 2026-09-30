@@ -50,7 +50,7 @@
     "bcryptjs": "^3.0.3",
     "dayjs": "^1.11.23",
     "html-to-image": "^1.11.11",
-    "next": "16.3.3",
+    "next": "16.3.8",
     "next-auth": "^4.24.15",
     "next-intl": "^4.14.1",
     "publicodes": "^1.10.1",
