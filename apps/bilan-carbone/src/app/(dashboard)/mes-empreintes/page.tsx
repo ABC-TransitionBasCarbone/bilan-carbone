@@ -2,7 +2,8 @@ import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import SimplifiedStudies from '@/components/pages/SimplifiedStudies'
 import TiltSimplifiedComingSoon from '@/components/pages/TiltSimplifiedComingSoon'
 import { getOrgNameByOrgVersionId } from '@/db/organization'
-import { hasAccessToSimplifiedStudies, isTilt, isTiltSimplifiedFeatureActive } from '@/services/permissions/environment'
+import { hasAccessToSimplifiedStudies, isTilt } from '@/services/permissions/environment'
+import { isTiltSimplifiedFeatureActive } from '@/services/permissions/environment.server'
 import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 
 const MyFootprints = async ({ user }: UserSessionProps) => {

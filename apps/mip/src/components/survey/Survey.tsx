@@ -17,7 +17,7 @@ import SurveyNavigation from './SurveyNavigation'
 import SurveyProgressHeader from './SurveyProgressHeader'
 import SurveyQuestionList from './SurveyQuestionList'
 import SurveyResumeCard from './SurveyResumeCard'
-import { clearSurveyState, loadSurveyState, saveSurveyState } from './surveyStateStorage'
+import { clearSurveyState, isRestorableSurveyState, loadSurveyState, saveSurveyState } from './surveyStateStorage'
 
 interface MipSurveyProps {
   surveyId: string
@@ -55,14 +55,14 @@ const Survey = ({ surveyId, rootRule = 'bilan' }: MipSurveyProps) => {
   }
 
   useEffect(() => {
-    const saved = loadSurveyState<FormState<string>>(surveyId)
-    if (saved) {
+    const saved = loadSurveyState<unknown>(surveyId)
+    if (isRestorableSurveyState(saved, engine.getParsedRules())) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setState(saved)
       setIsResumed(true)
     }
     setIsLoading(false)
-  }, [surveyId])
+  }, [surveyId, engine])
 
   useEffect(() => {
     if (!isLoading) {

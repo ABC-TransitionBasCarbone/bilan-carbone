@@ -1,5 +1,3 @@
-'use server'
-
 import { StudyCardItem } from '@/db/study'
 import { getFeedbackFormUrl } from '@/utils/ressources'
 import Block, { Action } from '@abc-transitionbascarbone/components/src/base/Block'

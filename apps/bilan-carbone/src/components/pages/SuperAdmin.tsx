@@ -1,5 +1,3 @@
-'use server'
-
 import { getDeactivableFeaturesRestrictionValues } from '@/services/serverFunctions/deactivableFeatures'
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'

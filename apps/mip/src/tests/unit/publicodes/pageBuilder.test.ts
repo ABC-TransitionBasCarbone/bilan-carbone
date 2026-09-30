@@ -2,6 +2,7 @@ import { createMipEngine } from '@/publicodes/mip-engine'
 import { buildPageBuilder, getQuestionType, MipQuestionType, patchFormElement } from '@/publicodes/mip-form'
 import mipModel from '@/publicodes/mip-model-seed'
 import { describe, expect, it } from '@jest/globals'
+import { FormBuilder } from '@publicodes/forms'
 import Engine from 'publicodes'
 
 const createMockEngine = (
@@ -16,6 +17,14 @@ const createMockEngine = (
 }
 
 describe('buildPageBuilder', () => {
+  it('renders the first page of a fresh survey', () => {
+    const engine = createMipEngine(mipModel)
+    const formBuilder = new FormBuilder({ engine, pageBuilder: (fields) => buildPageBuilder(engine, fields) })
+    const state = formBuilder.start(FormBuilder.newState(), 'bilan')
+
+    expect(formBuilder.currentPage(state).elements.length).toBeGreaterThan(0)
+  })
+
   it('builds pages from the current MIP model', () => {
     const engine = createMipEngine(mipModel)
 

@@ -1,5 +1,3 @@
-'use server'
-
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import SettingsPage from '@/components/pages/Settings'
 import { hasAccessToSettings } from '@/services/permissions/environmentAdvanced'

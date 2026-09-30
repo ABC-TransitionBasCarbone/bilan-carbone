@@ -1,5 +1,3 @@
-'use server'
-
 import { getEnvironnementRessources } from '@/utils/ressources'
 import Block from '@abc-transitionbascarbone/components/src/base/Block'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'

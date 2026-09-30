@@ -1,5 +1,3 @@
-'use server'
-
 import { getAllActualitiesLocale } from '@/db/actuality.server'
 import classNames from 'classnames'
 import ActualityRow from './Actuality'

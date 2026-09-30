@@ -1,5 +1,3 @@
-'use server'
-
 import { getUserSettings } from '@/services/serverFunctions/user'
 import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 import Settings from '../settings/Settings'
