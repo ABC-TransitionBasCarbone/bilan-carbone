@@ -86,8 +86,6 @@ const SimplifiedStudyPostsPage = ({ environment, post, currentSubPost, study, st
       subPostsConfigVersion={study.subPostsConfigVersion}
     >
       <Block
-        title={tPost(post)}
-        as="h1"
         actions={[
           {
             actionType: 'link',
@@ -101,6 +99,7 @@ const SimplifiedStudyPostsPage = ({ environment, post, currentSubPost, study, st
         <TabsWithGreenStyling
           tabs={subPosts}
           t={tPost}
+          post={post}
           content={<PublicodesSubPostForm subPost={activeSubPost} />}
           activeTab={activeStep}
           setActiveTab={setSearchParamsAndReplaceRoute}
