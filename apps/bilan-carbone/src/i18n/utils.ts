@@ -1,7 +1,7 @@
 'use server'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { Locale, LocaleType } from '@abc-transitionbascarbone/i18n/config'
-import { isFormation } from '@abc-transitionbascarbone/utils/environments'
+import { isCourse } from '@abc-transitionbascarbone/utils/environments'
 import { mergeObjects } from '@abc-transitionbascarbone/utils/object'
 import fs from 'fs'
 import path from 'path'
@@ -60,18 +60,18 @@ export const getMessages = async (locale: LocaleType, environment?: Environment)
     console.log(`No publicodes layout translation file for locale: ${locale} and environment: ${environment}`)
   }
 
-  let formationMessages = {}
-  if (isFormation(environment)) {
-    const formationFile = path.join(process.cwd(), 'src/i18n/translations', `${locale}/formation_common.json`)
-    if (fs.existsSync(formationFile)) {
-      formationMessages = JSON.parse(fs.readFileSync(formationFile, 'utf-8'))
+  let courseMessages = {}
+  if (isCourse(environment)) {
+    const courseFile = path.join(process.cwd(), 'src/i18n/translations', `${locale}/course_common.json`)
+    if (fs.existsSync(courseFile)) {
+      courseMessages = JSON.parse(fs.readFileSync(courseFile, 'utf-8'))
     } else {
-      console.log(`No translation files at: ${formationFile}`)
+      console.log(`No translation files at: ${courseFile}`)
     }
   }
 
   return {
     locale,
-    messages: mergeObjects({}, baseMessages, overrideMessages, publicodesRules, publicodesLayout, formationMessages),
+    messages: mergeObjects({}, baseMessages, overrideMessages, publicodesRules, publicodesLayout, courseMessages),
   }
 }

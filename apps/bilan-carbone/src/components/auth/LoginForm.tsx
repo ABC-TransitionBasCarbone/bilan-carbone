@@ -4,7 +4,7 @@ import LoginFormCommon from '@abc-transitionbascarbone/components/src/auth/Login
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import { getEnvVarClient } from '@abc-transitionbascarbone/utils/environmentClient'
-import { getEnvRoute, isFormation } from '@abc-transitionbascarbone/utils/environments'
+import { getEnvRoute, isCourse } from '@abc-transitionbascarbone/utils/environments'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 
@@ -19,9 +19,9 @@ const LoginForm = ({ environment = Environment.BC }: Props) => {
   const t = useTranslations('login.form')
 
   const getResetLink = (email: string) =>
-    isFormation(environment) ? getEnvRoute(`reset-password?email=${email}`, environment) : ''
+    isCourse(environment) ? getEnvRoute(`reset-password?email=${email}`, environment) : ''
   const getActivationLink = (email: string) =>
-    isFormation(environment)
+    isCourse(environment)
       ? getEnvRoute(
           environment === Environment.BC ? `activation?email=${email}` : `register?email=${email}`,
           environment,

@@ -215,10 +215,10 @@ export const subPostsByPostClickson: Record<ClicksonPost, SubPost[]> = {
 
 export const environmentPostMapping = {
   [Environment.BC]: BCPost,
-  [Environment.FORMATION_BC]: BCPost,
+  [Environment.COURSE_BC]: BCPost,
   [Environment.CUT]: CutPost,
   [Environment.TILT]: TiltAdvancedPost,
-  [Environment.FORMATION_TILT]: TiltAdvancedPost,
+  [Environment.COURSE_TILT]: TiltAdvancedPost,
   [Environment.CLICKSON]: ClicksonPost,
 }
 
@@ -232,10 +232,10 @@ export const subPostsByPost: Record<Post, SubPost[]> = {
 
 export const environmentSubPostsMapping = {
   [Environment.BC]: subPostsByPostBC,
-  [Environment.FORMATION_BC]: subPostsByPostBC,
+  [Environment.COURSE_BC]: subPostsByPostBC,
   [Environment.CUT]: subPostsByPostCUT,
   [Environment.TILT]: subPostsByPostTILT,
-  [Environment.FORMATION_TILT]: subPostsByPostTILT,
+  [Environment.COURSE_TILT]: subPostsByPostTILT,
   [Environment.CLICKSON]: subPostsByPostClickson,
 }
 

@@ -25,8 +25,8 @@ export const getClicksonRoleFromBase = (role: Role): Role => {
 export const getRolesFromEnvironment = (environment: Environment, role: Role) => {
   switch (environment) {
     case Environment.CUT:
-    case Environment.FORMATION_BC:
-    case Environment.FORMATION_TILT:
+    case Environment.COURSE_BC:
+    case Environment.COURSE_TILT:
       return getEnvRoleFromBase(role)
     case Environment.CLICKSON:
       return getClicksonRoleFromBase(role)

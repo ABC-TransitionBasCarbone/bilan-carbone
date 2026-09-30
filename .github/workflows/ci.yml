@@ -247,7 +247,7 @@ jobs:
           - emission-sources
           - pages
           - real-use-case
-          - formation
+          - course
     defaults:
       run:
         working-directory: apps/bilan-carbone

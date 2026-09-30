@@ -5,7 +5,7 @@ model Actuality {
   title     String
   text      String
 
-  language String @default("fr")
+  language    String      @default("fr")
   environment Environment @default(BC)
 
   @@map("actualities")

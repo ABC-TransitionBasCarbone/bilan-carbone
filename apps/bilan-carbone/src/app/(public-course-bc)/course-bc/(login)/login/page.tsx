@@ -9,7 +9,7 @@ const LoginPage = async () => {
     redirect('/')
   }
 
-  return <LoginForm environment={Environment.FORMATION_BC} />
+  return <LoginForm environment={Environment.COURSE_BC} />
 }
 
 export default LoginPage

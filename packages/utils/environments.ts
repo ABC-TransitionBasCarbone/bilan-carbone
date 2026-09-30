@@ -1,13 +1,13 @@
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 
-const { BC, CUT, TILT, CLICKSON, MIP, FORMATION_BC, FORMATION_TILT } = Environment
-export const formationEnvironments = [FORMATION_BC, FORMATION_TILT] as Environment[]
-export const advancedEnvironments: Environment[] = [BC, TILT, ...formationEnvironments]
+const { BC, CUT, TILT, CLICKSON, MIP, COURSE_BC, COURSE_TILT } = Environment
+export const courseEnvironments = [COURSE_BC, COURSE_TILT] as Environment[]
+export const advancedEnvironments: Environment[] = [BC, TILT, ...courseEnvironments]
 const simplifiedEnvironments: Environment[] = [CUT, CLICKSON]
 
 export const isAdvanced = (environment: Environment) => advancedEnvironments.includes(environment)
 export const isSimplified = (environment: Environment) => simplifiedEnvironments.includes(environment)
-export const isFormation = (environment: Environment) => formationEnvironments.includes(environment)
+export const isCourse = (environment: Environment) => courseEnvironments.includes(environment)
 
 
 export const environmentWithOnboarding: Environment[] = [BC, CLICKSON]
@@ -18,8 +18,8 @@ export const EnvironmentNames = {
   [TILT]: 'Tilt',
   [CLICKSON]: 'ClicksOn',
   [MIP]: 'Mon Impact Pro',
-  [FORMATION_BC]: 'BC+ Formation',
-  [FORMATION_TILT]: 'BC+ Formation TILT',
+  [COURSE_BC]: 'BC+ Formation',
+  [COURSE_TILT]: 'BC+ Formation TILT',
 }
 
 export enum EnvironmentMode {
@@ -30,8 +30,8 @@ export enum EnvironmentMode {
 const COUNT_ROUTE = '/count'
 const TILT_ROUTE = '/tilt'
 const CLICKSON_ROUTE = '/clickson'
-const FORMATION_BC_ROUTE = '/formation-bc'
-const FORMATION_TILT_ROUTE = '/formation-tilt'
+const COURSE_BC_ROUTE = '/course-bc'
+const COURSE_TILT_ROUTE = '/course-tilt'
 export const getEnvRoute = (path: string, env?: Environment) => {
   let base = ''
   switch (env) {
@@ -44,11 +44,11 @@ export const getEnvRoute = (path: string, env?: Environment) => {
     case Environment.CLICKSON:
       base = CLICKSON_ROUTE
       break
-    case Environment.FORMATION_BC:
-      base = FORMATION_BC_ROUTE
+    case Environment.COURSE_BC:
+      base = COURSE_BC_ROUTE
       break
-    case Environment.FORMATION_TILT:
-      base = FORMATION_TILT_ROUTE
+    case Environment.COURSE_TILT:
+      base = COURSE_TILT_ROUTE
       break
     default:
       break
@@ -57,4 +57,4 @@ export const getEnvRoute = (path: string, env?: Environment) => {
   return `${base}/${path}`
 }
 
-export const ENV_ROUTES = [COUNT_ROUTE, TILT_ROUTE, CLICKSON_ROUTE, FORMATION_BC_ROUTE, FORMATION_TILT_ROUTE]
+export const ENV_ROUTES = [COUNT_ROUTE, TILT_ROUTE, CLICKSON_ROUTE, COURSE_BC_ROUTE, COURSE_TILT_ROUTE]
