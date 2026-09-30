@@ -4,6 +4,7 @@ about: Modèle pour créer de nouveaux tickets de fonctionnalités
 title: 'ETQ xx, '
 labels: ''
 assignees: ''
+
 ---
 
 ## Contexte
@@ -22,4 +23,4 @@ Les environnements impactés sont : (Vérifier que la fonctionnalité fonctionne
 - 
 
 ## Stratégie technique
-- 
+-

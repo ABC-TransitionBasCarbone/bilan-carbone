@@ -1,9 +1,10 @@
 ---
 name: Mise à jour des dépendances
 about: Modèle maj dépendances
-title: '[TECH] MAJ dépendances'
-labels: Tech
+title: "[TECH] MAJ dépendances"
+labels: Remontée adhérent, Tech
 assignees: ''
+
 ---
 
 - [ ] J'ai mis à jour les dépendances faciles

@@ -1,9 +1,10 @@
 ---
 name: Ticket de MEP
 about: Modèle pour préparer une mise en production
-title: '[MEP] '
+title: "[MEP] "
 labels: ''
 assignees: ''
+
 ---
 
 ## Contexte
