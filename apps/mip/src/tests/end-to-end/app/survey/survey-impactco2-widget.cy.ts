@@ -46,7 +46,7 @@ describe('Survey impactco2 widgets', () => {
         if ($body.find('[data-testid="survey-category-interstitial"]').length > 0) {
           cy.getByTestId('survey-category-interstitial').should('be.visible')
           cy.getByTestId('survey-categories-sidebar').should('be.visible')
-          cy.getByTestId('survey-interstitial-continue').should('be.visible')
+          cy.getByTestId('survey-next-button').should('be.visible')
           return
         }
 
@@ -72,7 +72,7 @@ describe('Survey impactco2 widgets', () => {
 
       cy.get('body').then(($body) => {
         if ($body.find('[data-testid="survey-category-interstitial"]').length > 0) {
-          cy.getByTestId('survey-interstitial-continue').click()
+          cy.getByTestId('survey-next-button').click()
           cy.getByTestId('survey-categories-sidebar').should('be.visible')
           cy.getByTestId('survey-category-interstitial').should('not.exist')
           return
@@ -90,5 +90,40 @@ describe('Survey impactco2 widgets', () => {
     }
 
     clickUntilInterstitial()
+  })
+
+  it('shows the previous category interstitial when navigating back across categories', () => {
+    const clickUntilInterstitial = (remainingSteps = 200): Cypress.Chainable<null> => {
+      if (remainingSteps <= 0) {
+        throw new Error('Could not reach a category interstitial')
+      }
+
+      return cy.get('body').then(($body): Cypress.Chainable<null> => {
+        if ($body.find('[data-testid="survey-category-interstitial"]').length > 0) {
+          return cy.wrap(null)
+        }
+
+        if ($body.find('[data-testid="survey-start-button"]').length > 0) {
+          return cy
+            .getByTestId('survey-start-button')
+            .click()
+            .then(() => clickUntilInterstitial(remainingSteps - 1))
+        }
+
+        if ($body.find('[data-testid="survey-next-button"]').length > 0) {
+          return cy
+            .getByTestId('survey-next-button')
+            .click()
+            .then(() => clickUntilInterstitial(remainingSteps - 1))
+        }
+
+        throw new Error('Survey navigation stopped before a category interstitial')
+      })
+    }
+
+    clickUntilInterstitial()
+    cy.getByTestId('survey-next-button').click()
+    cy.getByTestId('survey-previous-button').click()
+    cy.getByTestId('survey-category-interstitial').should('be.visible')
   })
 })

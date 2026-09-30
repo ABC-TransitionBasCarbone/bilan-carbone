@@ -10,14 +10,13 @@ import { ActionResult, CategoryResult } from '@/components/survey/completion/typ
 import { clearSurveyState, loadSurveyState } from '@/components/survey/surveyStateStorage'
 import { useMipPublicodes } from '@/publicodes/MipPublicodesProvider'
 import { getSurveyCategoryKeysFromRawRules, type RawRules } from '@/publicodes/mip-engine'
-import { normalizeSituation } from '@/utils/survey'
+import { normalizeSituation, type MipSimulationState } from '@/utils/survey'
 import { getRuleCategoryKey } from '@abc-transitionbascarbone/publicodes/form'
 import { getPositiveNodeValue } from '@abc-transitionbascarbone/utils/number'
 import { Refresh } from '@mui/icons-material'
 import { Button, Container } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { Situation } from 'publicodes'
 import { useEffect, useMemo } from 'react'
 import styles from './SurveyCompletion.module.css'
 
@@ -28,52 +27,45 @@ type ModelRule = {
 }
 
 interface Props {
-  surveyId: string
   model: RawRules
   restoreFromStorage?: boolean
 }
 
-type StoredSurveyState = {
-  situation?: Situation<string>
-}
-
-const SurveyCompletion = ({ surveyId, model, restoreFromStorage = false }: Props) => {
+const SurveyCompletion = ({ model, restoreFromStorage = false }: Props) => {
   const t = useTranslations('survey.completion')
-  const { engine, situation, setSituation } = useMipPublicodes()
+  const { surveyId, engine, simulation, updateSimulation } = useMipPublicodes()
+  const { situation } = simulation
   const router = useRouter()
 
   useEffect(() => {
     if (!restoreFromStorage) {
       return
     }
-    const savedSituation = normalizeSituation(loadSurveyState<StoredSurveyState>(surveyId)?.situation)
+    const savedSituation = normalizeSituation(loadSurveyState<MipSimulationState>(surveyId)?.situation)
     if (savedSituation) {
-      setSituation(savedSituation)
+      updateSimulation({ situation: savedSituation })
       return
     }
-  }, [restoreFromStorage, setSituation, surveyId])
+  }, [restoreFromStorage, updateSimulation, surveyId])
 
   const totalEval = engine.evaluate('bilan')
   const totalKgFromBilan = getPositiveNodeValue(totalEval.nodeValue)
   const categoryKeys = useMemo(() => getSurveyCategoryKeysFromRawRules(model), [model])
 
-  const evaluateCategoryValue = (ruleName: string): number => {
-    try {
-      return getPositiveNodeValue(engine.evaluate(ruleName).nodeValue)
-    } catch {
-      return 0
-    }
-  }
-
   const categories = useMemo<CategoryResult[]>(() => {
+    const categoryEngine = engine.shallowCopy().setSituation(situation)
     return categoryKeys
       .map((key) => {
         const rule = model?.[key] as ModelRule | undefined
+        let valueKg = 0
+        try {
+          valueKg = getPositiveNodeValue(categoryEngine.evaluate(key).nodeValue)
+        } catch {}
         return {
           key,
           titre: rule?.titre ?? key,
           icones: rule?.icônes ?? '',
-          valueKg: evaluateCategoryValue(key),
+          valueKg,
         }
       })
       .sort((a, b) => b.valueKg - a.valueKg)
@@ -83,13 +75,14 @@ const SurveyCompletion = ({ surveyId, model, restoreFromStorage = false }: Props
   const totalKg = totalKgFromBilan > 0 ? totalKgFromBilan : totalKgFromCategories
 
   const actions = useMemo<ActionResult[]>(() => {
+    const actionEngine = engine.shallowCopy().setSituation(situation)
     const actionsRule = model?.['actions'] as { somme?: Array<string | number> } | null | undefined
     const actionKeys = (actionsRule?.somme ?? []).filter((value): value is string => typeof value === 'string')
 
     return actionKeys
       .flatMap((key) => {
         try {
-          const result = engine.evaluate(key)
+          const result = actionEngine.evaluate(key)
           const savingsKg = getPositiveNodeValue(result.nodeValue)
           const rule = model?.[key] as ModelRule | undefined
           return [

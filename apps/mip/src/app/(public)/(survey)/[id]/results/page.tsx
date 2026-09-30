@@ -23,8 +23,8 @@ const SurveyEndPage = async ({ params }: { params: Promise<{ id: string }> }) =>
 
   return (
     <NextIntlClientProvider messages={messages}>
-      <MipPublicodesProvider model={model as RawRules}>
-        <SurveyCompletion surveyId={id} model={model as RawRules} restoreFromStorage />
+      <MipPublicodesProvider model={model as RawRules} surveyId={id}>
+        <SurveyCompletion model={model as RawRules} restoreFromStorage />
       </MipPublicodesProvider>
     </NextIntlClientProvider>
   )

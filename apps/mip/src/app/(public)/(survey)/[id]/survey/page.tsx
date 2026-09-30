@@ -23,8 +23,8 @@ export default async function SurveyPage({ params }: { params: Promise<{ id: str
 
   return (
     <NextIntlClientProvider messages={messages}>
-      <MipPublicodesProvider model={model as RawRules}>
-        <SurveyClient surveyId={id} />
+      <MipPublicodesProvider model={model as RawRules} surveyId={id}>
+        <SurveyClient />
       </MipPublicodesProvider>
     </NextIntlClientProvider>
   )
