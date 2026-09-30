@@ -6,8 +6,8 @@ import { PieChart as MuiPieChart, PieChartProps } from '@mui/x-charts'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
-import { formatNumber } from '@abc-transitionbascarbone/utils/number'
-import { BasicTypeCharts, formatValueAndUnit, processPieChartData } from '@abc-transitionbascarbone/utils/charts'
+import { formatNumber } from '@abc-transitionbascarbone/shared/utils/number'
+import { BasicTypeCharts, formatValueAndUnit, processPieChartData } from '@abc-transitionbascarbone/shared/utils/charts'
 import styles from './PieChart.module.css'
 
 const PIE_CHART_CONSTANTS = {

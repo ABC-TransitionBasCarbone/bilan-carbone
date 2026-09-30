@@ -4,7 +4,7 @@ import { hasWasteImpact } from '@/services/permissions/environment'
 import { convertTiltSubPostToBCSubPost, subPostsByPostBC } from '@/services/posts'
 import type { EmissionFactor, Prisma } from '@abc-transitionbascarbone/db-common'
 import { Environment, Import, SubPost, Unit } from '@abc-transitionbascarbone/db-common/enums'
-import { Post } from '@abc-transitionbascarbone/utils/charts'
+import { Post } from '@abc-transitionbascarbone/shared/utils/charts'
 import { unique } from './array'
 
 export const isWasteEmissionFactor = (

@@ -1,4 +1,4 @@
-import IconLabel from '@abc-transitionbascarbone/components/src/base/IconLabel'
+import IconLabel from '@abc-transitionbascarbone/application/components/base/IconLabel'
 import ClearIcon from '@mui/icons-material/Clear'
 import {
   Autocomplete,

@@ -2,8 +2,8 @@
 
 import { MultiSelect } from '@/components/base/MultiSelect'
 import { TrajectoryWithObjectives } from '@/types/trajectory.types'
-import Box from '@abc-transitionbascarbone/components/src/base/Box'
-import { Button } from '@abc-transitionbascarbone/ui'
+import Box from '@abc-transitionbascarbone/application/components/base/Box'
+import { Button } from '@abc-transitionbascarbone/application/ui'
 import { Typography } from '@mui/material'
 import classNames from 'classnames'
 import styles from '../../pages/TrajectoryReductionPage.module.css'

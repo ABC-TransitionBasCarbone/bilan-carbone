@@ -9,10 +9,10 @@ import {
   UpdateEmissionFactorCommandValidation,
 } from '@/services/serverFunctions/emissionFactor.command'
 import { getPost } from '@/utils/post'
-import Form from '@abc-transitionbascarbone/components/src/base/Form'
-import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
+import Form from '@abc-transitionbascarbone/application/components/base/Form'
+import { useServerFunction } from '@abc-transitionbascarbone/application/components/hooks/useServerFunction'
 import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
-import { Post } from '@abc-transitionbascarbone/utils/charts'
+import { Post } from '@abc-transitionbascarbone/shared/utils/charts'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { FormEvent, useMemo, useState } from 'react'

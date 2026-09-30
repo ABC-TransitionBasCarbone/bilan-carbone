@@ -1,5 +1,5 @@
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
-import { getEnvVar } from '@abc-transitionbascarbone/lib/environment'
+import { getEnvVar } from '@abc-transitionbascarbone/shared/utils/environment'
 import ejs from 'ejs'
 import fs from 'fs'
 import { getTranslations } from 'next-intl/server'

@@ -1,7 +1,7 @@
 'use client'
 
 import type { FullStudy } from '@/db/study'
-import Block from '@abc-transitionbascarbone/components/src/base/Block'
+import Block from '@abc-transitionbascarbone/application/components/base/Block'
 import { Environment, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'

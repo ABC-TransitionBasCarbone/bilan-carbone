@@ -23,11 +23,12 @@ import {
 } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
 import { formatEmissionFromNumber, hasDeprecationPeriod, hasEditionRights, isCAS } from '@/utils/study'
-import { HelpIcon } from '@abc-transitionbascarbone/components'
-import LinkButton from '@abc-transitionbascarbone/components/src/base/LinkButton'
-import { Select } from '@abc-transitionbascarbone/components/src/base/Select'
-import GlossaryModal from '@abc-transitionbascarbone/components/src/modals/GlossaryModal'
-import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
+import { HelpIcon } from '@abc-transitionbascarbone/application/components'
+import LinkButton from '@abc-transitionbascarbone/application/components/base/LinkButton'
+import { Select } from '@abc-transitionbascarbone/application/components/base/Select'
+import GlossaryModal from '@abc-transitionbascarbone/application/components/modals/GlossaryModal'
+import Modal from '@abc-transitionbascarbone/application/components/modals/Modal'
+import { Button } from '@abc-transitionbascarbone/application/ui'
 import type { StudyTag } from '@abc-transitionbascarbone/db-common'
 import {
   EmissionSourceCaracterisation,
@@ -38,9 +39,8 @@ import {
   SubPost,
   Unit,
 } from '@abc-transitionbascarbone/db-common/enums'
-import { Button } from '@abc-transitionbascarbone/ui'
-import { customRich } from '@abc-transitionbascarbone/utils/customRich'
-import { formatNumber } from '@abc-transitionbascarbone/utils/number'
+import { customRich } from '@abc-transitionbascarbone/shared/utils/customRich'
+import { formatNumber } from '@abc-transitionbascarbone/shared/utils/number'
 import AddIcon from '@mui/icons-material/Add'
 import CopyIcon from '@mui/icons-material/ContentCopy'
 import EditIcon from '@mui/icons-material/Edit'

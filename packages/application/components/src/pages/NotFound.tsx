@@ -1,6 +1,6 @@
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import Block from '@abc-transitionbascarbone/components/src/base/Block'
+import Block from '@abc-transitionbascarbone/application/components/base/Block'
 
 const NotFound = () => {
   const t = useTranslations('nav')

@@ -1,12 +1,12 @@
 import '@/css/index.css'
-import { Providers } from '@abc-transitionbascarbone/lib'
+import { MuiThemeProvider } from '@/lib/providers/MuiThemeProvider'
+import { Providers } from '@abc-transitionbascarbone/application/lib'
 import { CssBaseline } from '@mui/material'
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v16-appRouter'
 import type { Metadata } from 'next'
 import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
 import { headers } from 'next/headers'
-import { MuiThemeProvider } from './providers'
 
 export const metadata: Metadata = {
   title: 'MIP : Mon Impact Pro',

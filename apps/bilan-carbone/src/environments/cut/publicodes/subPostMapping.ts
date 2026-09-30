@@ -1,12 +1,12 @@
-import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import {
   FormLayout,
   groupLayout,
   inputLayout,
   listLayout,
   tableLayout,
-} from '@abc-transitionbascarbone/publicodes/form/layouts'
-import { CutPost } from '@abc-transitionbascarbone/services/results/posts.enums'
+} from '@abc-transitionbascarbone/application/lib/publicodes/form/layouts'
+import { CutPost } from '@abc-transitionbascarbone/application/services/results/posts.enums'
+import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { CutRuleName } from './types'
 
 export const getPostRuleNameCut = (post: CutPost): CutRuleName => {

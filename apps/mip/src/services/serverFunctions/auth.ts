@@ -2,8 +2,8 @@
 
 import { getUserByEmailWithSensibleInformations, updateUserPasswordForEmail } from '@/db/user'
 import { withServerResponse } from '@/utils/serverResponse'
-import { computePasswordValidation } from '@abc-transitionbascarbone/utils/auth'
-import { hashResetToken } from '@abc-transitionbascarbone/utils/user.server'
+import { computePasswordValidation } from '@abc-transitionbascarbone/shared/utils/auth'
+import { hashResetToken } from '@abc-transitionbascarbone/shared/utils/user.server'
 import jwt from 'jsonwebtoken'
 
 export const checkToken = async (token: string) => {

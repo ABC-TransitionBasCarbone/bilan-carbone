@@ -7,10 +7,10 @@ import {
   exportEmissionSourcesToExcel,
 } from '@/services/serverFunctions/importEmissionSources'
 import { hasEditionRights } from '@/utils/study'
-import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
-import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
+import LoadingButton from '@abc-transitionbascarbone/application/components/base/LoadingButton'
+import { useServerFunction } from '@abc-transitionbascarbone/application/components/hooks/useServerFunction'
 import { StudyRole } from '@abc-transitionbascarbone/db-common/enums'
-import { Post } from '@abc-transitionbascarbone/utils/charts'
+import { Post } from '@abc-transitionbascarbone/shared/utils/charts'
 import FileDownloadIcon from '@mui/icons-material/FileDownload'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import UploadFileIcon from '@mui/icons-material/UploadFile'

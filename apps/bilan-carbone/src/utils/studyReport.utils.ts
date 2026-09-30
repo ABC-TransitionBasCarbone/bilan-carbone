@@ -7,8 +7,8 @@ import { getActionReductionStats } from '@/utils/actionTrajectory.utils'
 import { getPostsFromSubPosts } from '@/utils/post'
 import { getBcTranslations } from '@/utils/translation.utils'
 import { Environment, Level, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
-import { formatDateFr } from '@abc-transitionbascarbone/utils'
-import { formatNumber } from '@abc-transitionbascarbone/utils/number'
+import { formatDateFr } from '@abc-transitionbascarbone/shared/utils'
+import { formatNumber } from '@abc-transitionbascarbone/shared/utils/number'
 import { getTranslations } from 'next-intl/server'
 
 const getActionDetails = (

@@ -18,7 +18,7 @@ jest.mock('next-intl', () => ({
   },
 }))
 
-jest.mock('@abc-transitionbascarbone/components/src/hooks/useServerFunction', () => ({
+jest.mock('@abc-transitionbascarbone/application/components/hooks/useServerFunction', () => ({
   useServerFunction: () => ({
     callServerFunction: jest.fn(async (fn, options) => {
       await fn()

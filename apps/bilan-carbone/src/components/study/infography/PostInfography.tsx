@@ -5,7 +5,7 @@ import { subPostsByPost } from '@/services/posts'
 import { ResultsByPost } from '@/types/study.types'
 import { getEmissionValueString, getValidationPercentage } from '@/utils/study'
 import { StudyResultUnit, SubPost } from '@abc-transitionbascarbone/db-common'
-import { Post } from '@abc-transitionbascarbone/utils/charts'
+import { Post } from '@abc-transitionbascarbone/shared/utils/charts'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 

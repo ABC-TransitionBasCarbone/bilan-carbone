@@ -26,7 +26,7 @@ jest.mock('next-intl/server', () => ({
   getTranslations: jest.fn(() => (key: string) => key),
 }))
 
-jest.mock('@abc-transitionbascarbone/components/src/hooks/useServerFunction', () => ({
+jest.mock('@abc-transitionbascarbone/application/components/hooks/useServerFunction', () => ({
   useServerFunction: () => ({
     callServerFunction: jest.fn(async (fn, options) => {
       await fn()

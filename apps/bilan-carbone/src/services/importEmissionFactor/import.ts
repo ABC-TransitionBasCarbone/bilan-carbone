@@ -11,8 +11,8 @@ import {
   SubPost,
   Unit,
 } from '@abc-transitionbascarbone/db-common/enums'
-import { getEnvVar } from '@abc-transitionbascarbone/lib/environment'
-import { serializeSimpleCsvRecord } from '@abc-transitionbascarbone/utils/csv'
+import { serializeSimpleCsvRecord } from '@abc-transitionbascarbone/shared/utils/csv'
+import { getEnvVar } from '@abc-transitionbascarbone/shared/utils/environment'
 import { unitsMatrix } from './historyUnits'
 import { additionalParts } from './parts.config'
 import { elementsBySubPost } from './posts.config'

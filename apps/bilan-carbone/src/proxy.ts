@@ -1,6 +1,5 @@
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
-import { Locale } from '@abc-transitionbascarbone/i18n/config'
-import { ENV_ROUTES, getEnvRoute } from '@abc-transitionbascarbone/utils/environments'
+import { Locale } from '@abc-transitionbascarbone/shared/i18n/config'
 import { getToken } from 'next-auth/jwt'
 import { NextRequest, NextResponse } from 'next/server'
 import { getLocalesForEnv } from './services/permissions/environment'

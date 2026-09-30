@@ -4,7 +4,7 @@ import withTransitionPlan, { TransitionPlanProps } from '@/components/hoc/withTr
 import ActionsPage from '@/components/pages/ActionsPage'
 import { loadTransitionPlanPageData } from '@/components/study/transitionPlan/transitionPlanPageData'
 import { hasTransitionPlan } from '@/db/transitionPlan'
-import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
+import NotFound from '@abc-transitionbascarbone/application/components/pages/NotFound'
 import { redirect } from 'next/navigation'
 
 const Actions = async ({ study, canEdit, user }: StudyProps & UserSessionProps & TransitionPlanProps) => {

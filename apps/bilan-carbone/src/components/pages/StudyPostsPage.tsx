@@ -11,14 +11,14 @@ import {
   getEmissionSourceStatus,
   getSortedEmissionSources,
 } from '@/utils/emissionSources'
+import { useToast } from '@abc-transitionbascarbone/application/ui'
 import {
   ControlMode,
   EmissionSourceCaracterisation,
   EmissionSourceType,
   StudyRole,
 } from '@abc-transitionbascarbone/db-common/enums'
-import { useToast } from '@abc-transitionbascarbone/ui'
-import { Post } from '@abc-transitionbascarbone/utils/charts'
+import { Post } from '@abc-transitionbascarbone/shared/utils/charts'
 import Fuse from 'fuse.js'
 import { UserSession } from 'next-auth'
 import { useLocale, useTranslations } from 'next-intl'

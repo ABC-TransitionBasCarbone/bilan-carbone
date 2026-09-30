@@ -1,6 +1,6 @@
 import { EmissionFactorWithMetaData, getFELocations } from '@/services/serverFunctions/emissionFactor'
 import { BCEnvironment } from '@/types/environment'
-import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
+import Modal from '@abc-transitionbascarbone/application/components/modals/Modal'
 import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'

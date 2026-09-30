@@ -2,7 +2,7 @@
 
 import GlobalNewStudyForm from '@/components/study/new/Form'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
-import Block from '@abc-transitionbascarbone/components/src/base/Block'
+import Block from '@abc-transitionbascarbone/application/components/base/Block'
 import { Level } from '@abc-transitionbascarbone/db-common/enums'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'

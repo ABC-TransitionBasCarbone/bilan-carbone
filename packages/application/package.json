@@ -1,0 +1,35 @@
+{
+  "name": "@abc-transitionbascarbone/application",
+  "version": "0.0.1",
+  "private": true,
+  "exports": {
+    "./components": "./components/src/index.ts",
+    "./components/auth/user.command": "./components/src/auth/user.command.ts",
+    "./components/hooks/useServerFunction": "./components/src/hooks/useServerFunction.ts",
+    "./components/*.module.css": "./components/src/*.module.css",
+    "./components/*": "./components/src/*.tsx",
+    "./lib": "./lib/providers/index.ts",
+    "./lib/publicodes/*": "./lib/publicodes/*.ts",
+    "./lib/publicodes/hooks": "./lib/publicodes/hooks/index.ts",
+    "./lib/publicodes/state": "./lib/publicodes/state/index.ts",
+    "./lib/publicodes/form": "./lib/publicodes/form/index.ts",
+    "./lib/publicodes/form/inputFields": "./lib/publicodes/form/inputFields/index.ts",
+    "./lib/publicodes/form/layouts": "./lib/publicodes/form/layouts/index.ts",
+    "./services": "./services/src/index.ts",
+    "./services/*": "./services/src/*.ts",
+    "./ui": "./ui/src/index.ts",
+    "./ui/*": "./ui/src/*.tsx"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "@mui/material": "*",
+    "@mui/x-date-pickers": "*",
+    "@mui/x-charts": "*",
+    "next-intl": "*"
+  },
+  "dependencies": {
+    "@abc-transitionbascarbone/shared": "*",
+    "publicodes": "^1.10.1",
+    "zod": "*"
+  }
+}

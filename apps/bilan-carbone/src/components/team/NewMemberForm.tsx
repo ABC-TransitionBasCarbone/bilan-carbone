@@ -2,7 +2,7 @@
 
 import { addMember } from '@/services/serverFunctions/user'
 import { getEnvironmentRoles } from '@/utils/user'
-import NewMemberFormCommon from '@abc-transitionbascarbone/components/src/team/NewMemberFormCommon'
+import NewMemberFormCommon from '@abc-transitionbascarbone/application/components/team/NewMemberFormCommon'
 import { Environment, Role } from '@abc-transitionbascarbone/db-common/enums'
 
 interface Props {

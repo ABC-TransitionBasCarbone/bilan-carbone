@@ -2,7 +2,7 @@
 
 import type { FullStudy } from '@/db/study'
 import { getAccountRoleOnStudy } from '@/utils/study'
-import Block from '@abc-transitionbascarbone/components/src/base/Block'
+import Block from '@abc-transitionbascarbone/application/components/base/Block'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import LockIcon from '@mui/icons-material/Lock'
 import LockOpenIcon from '@mui/icons-material/LockOpen'

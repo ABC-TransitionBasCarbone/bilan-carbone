@@ -1,7 +1,7 @@
 import { isFeatureActiveForEnvironment } from '@/db/deactivableFeatures'
 import { DeactivatableFeature, Environment } from '@abc-transitionbascarbone/db-common/enums'
-import { Locale } from '@abc-transitionbascarbone/i18n/config'
-import { advancedEnvironments, isAdvanced, isSimplified } from '@abc-transitionbascarbone/utils/environments'
+import { Locale } from '@abc-transitionbascarbone/shared/i18n/config'
+import { isAdvanced, isSimplified } from '@abc-transitionbascarbone/shared/utils/environments'
 const { BC, CUT, TILT, CLICKSON } = Environment
 
 export const isBC = (environment: Environment) => environment === BC

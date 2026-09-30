@@ -1,5 +1,5 @@
-import { NumberQuestion } from '@abc-transitionbascarbone/typeguards'
-import MosaicNumberInput from '@abc-transitionbascarbone/ui/Form/MosaicNumberInput'
+import { NumberQuestion } from '@abc-transitionbascarbone/shared/typeguards'
+import MosaicNumberInput from '@abc-transitionbascarbone/application/ui/Form/MosaicNumberInput'
 import { FormControl, FormHelperText } from '@mui/material'
 import { useTranslations } from 'next-intl'
 

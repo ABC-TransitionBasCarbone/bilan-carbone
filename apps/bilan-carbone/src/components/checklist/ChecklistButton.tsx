@@ -2,7 +2,7 @@
 
 import { getUserCheckList } from '@/services/checklist'
 import { getUserCheckedItems } from '@/services/serverFunctions/user'
-import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/application/components/hooks/useServerFunction'
 import type { OrganizationVersion } from '@abc-transitionbascarbone/db-common'
 import { Level, Role, UserChecklist } from '@abc-transitionbascarbone/db-common/enums'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'

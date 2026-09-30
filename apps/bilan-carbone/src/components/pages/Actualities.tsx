@@ -1,5 +1,4 @@
-import Block from '@abc-transitionbascarbone/components/src/base/Block'
-import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import Block from '@abc-transitionbascarbone/application/components/base/Block'
 import { getTranslations } from 'next-intl/server'
 import ActualitiesList from '../actuality/ActualitiesList'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'

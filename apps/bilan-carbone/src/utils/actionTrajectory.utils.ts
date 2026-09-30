@@ -3,7 +3,7 @@ import { BCPost, subPostsByPostBC } from '@/services/posts'
 import type { PastStudy, TrajectoryDataPoint } from '@/types/trajectory.types'
 import type { Action, ActionSubPost } from '@abc-transitionbascarbone/db-common'
 import { ActionPotentialDeduction, StudyResultUnit } from '@abc-transitionbascarbone/db-common/enums'
-import { getYearFromDateStr } from '@abc-transitionbascarbone/utils/time'
+import { getYearFromDateStr } from '@abc-transitionbascarbone/shared/utils/time'
 import { getEmissionSourcesTotalCo2 } from './emissionSources'
 import { convertValue } from './study'
 import {

@@ -1,10 +1,10 @@
 import { CATEGORY_COLORS } from '@/constants/style'
-import { RawRules } from '@/publicodes/mip-engine'
+import { RawRules } from '@/lib/publicodes/mip-engine'
 import { EmissionCategory, EntityFilterResult, KeyStatGroup, SurveyResults } from '@/types/results.types'
 import { EntityFilterDef, groupSituationsByEntityFilter, keepOnlyExistingRules } from '@/utils/entityFilter'
-import { evaluateRuleValue, safeEvaluate } from '@abc-transitionbascarbone/publicodes/utils'
-import { average, countTrue, numericValues, safePercent, toNumber } from '@abc-transitionbascarbone/utils/number'
-import { isYesValue } from '@abc-transitionbascarbone/utils/parsing'
+import { evaluateRuleValue, safeEvaluate } from '@abc-transitionbascarbone/application/lib/publicodes/utils'
+import { average, countTrue, numericValues, safePercent, toNumber } from '@abc-transitionbascarbone/shared/utils/number'
+import { isYesValue } from '@abc-transitionbascarbone/shared/utils/parsing'
 import Engine, { Situation } from 'publicodes'
 
 const isRecord = (value: unknown): value is Record<string, unknown> => {

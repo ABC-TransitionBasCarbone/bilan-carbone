@@ -1,6 +1,6 @@
 'use server'
 
-import { defaultLocale, LocaleType } from '@abc-transitionbascarbone/i18n/config'
+import { defaultLocale, LocaleType } from '@abc-transitionbascarbone/shared/i18n/config'
 import { cookies as getCookies } from 'next/headers'
 
 const COOKIE_NAME = 'NEXT_LOCALE'

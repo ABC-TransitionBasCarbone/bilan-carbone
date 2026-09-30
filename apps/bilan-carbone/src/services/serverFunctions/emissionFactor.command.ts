@@ -1,5 +1,5 @@
+import { setCustomIssue } from '@abc-transitionbascarbone/application/lib'
 import { EmissionFactorBase, EmissionFactorPartType, SubPost, Unit } from '@abc-transitionbascarbone/db-common/enums'
-import { setCustomIssue } from '@abc-transitionbascarbone/lib'
 import z from 'zod'
 
 export const maxParts = 5

@@ -3,8 +3,8 @@ import {
   areRulesReferencedInApplicability,
   evaluatedLayoutIsApplicable,
   getRuleNamesFromLayout,
-} from '@abc-transitionbascarbone/publicodes/form'
-import { FormLayout, getEvaluatedFormLayout } from '@abc-transitionbascarbone/publicodes/form/layouts'
+} from '@abc-transitionbascarbone/application/lib/publicodes/form'
+import { FormLayout, getEvaluatedFormLayout } from '@abc-transitionbascarbone/application/lib/publicodes/form/layouts'
 import { Box } from '@mui/material'
 import { useMemo } from 'react'
 import styles from './PublicodesForm.module.css'

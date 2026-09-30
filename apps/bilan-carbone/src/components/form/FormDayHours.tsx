@@ -1,4 +1,4 @@
-import { FormSelect } from '@abc-transitionbascarbone/components/src/form/Select'
+import { FormSelect } from '@abc-transitionbascarbone/application/components/form/Select'
 import { DayOfWeek } from '@abc-transitionbascarbone/db-common'
 import { Checkbox, FormControlLabel, MenuItem } from '@mui/material'
 import { useTranslations } from 'next-intl'

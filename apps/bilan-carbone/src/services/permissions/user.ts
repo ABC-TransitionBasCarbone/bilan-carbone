@@ -2,7 +2,7 @@ import { AccountWithUser } from '@/types/account.types'
 import { canEditMemberRole } from '@/utils/user'
 import type { Prisma } from '@abc-transitionbascarbone/db-common'
 import { Role, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
-import { canBeUntrainedRole } from '@abc-transitionbascarbone/utils/user'
+import { canBeUntrainedRole } from '@abc-transitionbascarbone/shared/utils/user'
 import { UserSession } from 'next-auth'
 
 export const canEditSelfRole = (userRole: Role) => userRole === Role.ADMIN || userRole === Role.GESTIONNAIRE

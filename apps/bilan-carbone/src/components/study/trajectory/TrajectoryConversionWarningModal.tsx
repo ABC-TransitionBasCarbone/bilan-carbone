@@ -1,7 +1,7 @@
 'use client'
 
 import { getTrajectoryTypeLabel, isTrajectorySNBC } from '@/utils/trajectory'
-import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
+import Modal from '@abc-transitionbascarbone/application/components/modals/Modal'
 import { TrajectoryType } from '@abc-transitionbascarbone/db-common'
 import { Typography } from '@mui/material'
 import classNames from 'classnames'

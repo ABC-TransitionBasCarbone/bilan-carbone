@@ -4,7 +4,7 @@ import ResultsPage from '@/components/pages/Results'
 import { getEmissionFactorsWithPartsInIds } from '@/db/emissionFactors'
 import { getExportRules } from '@/db/exportRule'
 import { getUserSettings } from '@/services/serverFunctions/user'
-import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
+import NotFound from '@abc-transitionbascarbone/application/components/pages/NotFound'
 
 const ResultatsPages = async ({ study, user }: StudyProps & UserSessionProps) => {
   const ids = study.emissionSources

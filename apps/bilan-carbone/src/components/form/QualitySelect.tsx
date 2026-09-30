@@ -1,5 +1,5 @@
 import { emissionFactorDefautQualityStar } from '@/utils/emissionFactors'
-import { Select } from '@abc-transitionbascarbone/components/src/base/Select'
+import { Select } from '@abc-transitionbascarbone/application/components/base/Select'
 import { FormControl, InputLabel, MenuItem, SelectProps } from '@mui/material'
 import { useTranslations } from 'next-intl'
 

@@ -1,4 +1,4 @@
-import { Post } from '@abc-transitionbascarbone/utils/charts'
+import { Post } from '@abc-transitionbascarbone/shared/utils/charts'
 import { StudyResultUnit, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import { expect } from '@jest/globals'
 import { Theme } from '@mui/material'

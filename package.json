@@ -5,9 +5,9 @@
   "workspaces": {
     "packages": [
       "apps/*",
-      "packages/application/*",
+      "packages/application",
       "packages/data/*",
-      "packages/shared/*",
+      "packages/shared",
       "packages/styles/*",
       "packages/tooling/*",
       "packages/publicodes-packages/*"

@@ -1,4 +1,4 @@
-import { SurveyResponse } from '@abc-transitionbascarbone/typeguards'
+import { SurveyResponse } from '@abc-transitionbascarbone/shared/typeguards'
 
 const STORAGE_PREFIX = 'mip_survey_'
 

@@ -1,4 +1,4 @@
-import { Post } from '@abc-transitionbascarbone/utils/charts'
+import { Post } from '@abc-transitionbascarbone/shared/utils/charts'
 
 export const customPostOrder = [
   Post.EnergiesClickson,

@@ -19,7 +19,7 @@ import {
   SubPost,
   Unit,
 } from '@abc-transitionbascarbone/db-common/enums'
-import { removeDiacritics } from '@abc-transitionbascarbone/utils/parsing'
+import { removeDiacritics } from '@abc-transitionbascarbone/shared/utils/parsing'
 import { getJsDateFromExcel } from 'excel-date-to-js'
 import { NewPostAndSubPosts, OldNewPostAndSubPostsMapping } from './newPostAndSubPosts'
 import {

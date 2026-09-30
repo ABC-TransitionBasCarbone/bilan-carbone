@@ -1,6 +1,6 @@
 'use client'
 import { UserSessionProps } from '@/components/hoc/withAuth'
-import Image from '@abc-transitionbascarbone/components/src/document/Image'
+import Image from '@abc-transitionbascarbone/application/components/document/Image'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { Box } from '@mui/material'
 import { useMemo } from 'react'

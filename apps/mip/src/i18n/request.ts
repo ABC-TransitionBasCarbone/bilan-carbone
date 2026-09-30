@@ -1,5 +1,5 @@
-import { Locale } from '@abc-transitionbascarbone/i18n/config'
-import { isObject, mergeObjects } from '@abc-transitionbascarbone/utils/object'
+import { Locale } from '@abc-transitionbascarbone/shared/i18n/config'
+import { isObject, mergeObjects } from '@abc-transitionbascarbone/shared/utils/object'
 import { getRequestConfig } from 'next-intl/server'
 import { getLocale } from './locale'
 

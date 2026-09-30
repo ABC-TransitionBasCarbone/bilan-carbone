@@ -2,7 +2,11 @@
 
 import { createResponse } from '@/db/campaign'
 import { getSurveyCampaignForCsvExport, getSurveyCampaignForResults } from '@/db/survey'
-import { createMipEngineWithoutDefaults, getSurveyCategoryKeysFromRawRules, RawRules } from '@/publicodes/mip-engine'
+import {
+  createMipEngineWithoutDefaults,
+  getSurveyCategoryKeysFromRawRules,
+  RawRules,
+} from '@/lib/publicodes/mip-engine'
 import { dbActualizedAuth } from '@/services/auth'
 import { EmissionCategory, EntityFilterResult, SurveyResults } from '@/types/results.types'
 import { getEntityFilterDefsFromModel as getEntityFilterDefsFromModelFromUtil } from '@/utils/entityFilter'
@@ -16,8 +20,8 @@ import {
   resolveKeyStatsRules,
 } from '@/utils/survey'
 import { isAdmin } from '@/utils/user'
-import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
-import { buildCsv, sanitizeFileName, serializeCsvValue } from '@abc-transitionbascarbone/utils/csv'
+import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/application/services/permissions/check'
+import { buildCsv, sanitizeFileName, serializeCsvValue } from '@abc-transitionbascarbone/shared/utils/csv'
 import { Situation } from 'publicodes'
 
 export const getEntityFilterDefsFromModel = async (rules: RawRules) => getEntityFilterDefsFromModelFromUtil(rules)

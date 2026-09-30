@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import { countTrue, getNumericNodeValue, getPositiveNodeValue, numericValues } from '@abc-transitionbascarbone/utils/number'
+import { countTrue, getNumericNodeValue, getPositiveNodeValue, numericValues } from '@abc-transitionbascarbone/shared/utils/number'
 
 test('countTrue counts matching values', () => {
     expect(countTrue([true, false, true], (value) => value)).toBe(2)

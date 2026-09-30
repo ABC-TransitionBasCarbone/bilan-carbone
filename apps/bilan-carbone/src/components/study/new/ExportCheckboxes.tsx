@@ -2,7 +2,7 @@ import type { FullStudy } from '@/db/study'
 import { updateStudySpecificExportFields } from '@/services/serverFunctions/study'
 import { sortAlphabetically } from '@/services/utils'
 import { exportSpecificFields, getAllSpecificFieldsForExports } from '@/utils/study'
-import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/application/components/hooks/useServerFunction'
 import {
   ControlMode,
   EmissionFactorBase,

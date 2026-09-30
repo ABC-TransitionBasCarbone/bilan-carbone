@@ -42,14 +42,11 @@
     "seed": "tsx prisma/seed/index.ts"
   },
   "dependencies": {
-    "@abc-transitionbascarbone/lib": "*",
-    "@abc-transitionbascarbone/publicodes": "*",
+    "@abc-transitionbascarbone/application": "*",
     "@abc-transitionbascarbone/publicodes-clickson": "*",
     "@abc-transitionbascarbone/publicodes-count": "*",
     "@abc-transitionbascarbone/publicodes-tilt": "*",
-    "@abc-transitionbascarbone/services": "*",
-    "@abc-transitionbascarbone/ui": "*",
-    "@abc-transitionbascarbone/utils": "*",
+    "@abc-transitionbascarbone/shared": "*",
     "@aws-sdk/client-s3": "^3.1124.0",
     "@aws-sdk/s3-request-presigner": "^3.1124.0",
     "@base-ui-components/react": "^1.0.0-rc.0",

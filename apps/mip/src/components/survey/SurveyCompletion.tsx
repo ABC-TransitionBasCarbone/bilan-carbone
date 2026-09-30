@@ -8,16 +8,16 @@ import TopCategoriesSection from '@/components/survey/completion/TopCategoriesSe
 import TransitionEncart from '@/components/survey/completion/TransitionEncart'
 import { ActionResult, CategoryResult } from '@/components/survey/completion/types'
 import { clearSurveyState, loadSurveyState } from '@/components/survey/surveyStateStorage'
-import { useMipPublicodes } from '@/publicodes/MipPublicodesProvider'
+import { useMipPublicodes } from '@/lib/publicodes/MipPublicodesProvider'
 import {
   createMipEngineWithoutDefaults,
   getSurveyCategoryKeysFromRawRules,
   type RawRules,
-} from '@/publicodes/mip-engine'
+} from '@/lib/publicodes/mip-engine'
 import { normalizeSituation, type MipSimulationState } from '@/utils/survey'
-import { getRuleCategoryKey } from '@abc-transitionbascarbone/publicodes/form'
-import { safeEvaluate } from '@abc-transitionbascarbone/publicodes/utils'
-import { getPositiveNodeValue } from '@abc-transitionbascarbone/utils/number'
+import { getRuleCategoryKey } from '@abc-transitionbascarbone/application/lib/publicodes/form'
+import { safeEvaluate } from '@abc-transitionbascarbone/application/lib/publicodes/utils'
+import { getPositiveNodeValue } from '@abc-transitionbascarbone/shared/utils/number'
 import { Refresh } from '@mui/icons-material'
 import { Button, Container } from '@mui/material'
 import { useTranslations } from 'next-intl'

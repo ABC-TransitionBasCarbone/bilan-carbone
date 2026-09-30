@@ -2,7 +2,7 @@
 
 import DebouncedInput from '@/components/base/DebouncedInput'
 import MultiSelectAll from '@/components/base/MultiSelectAll'
-import { Button } from '@abc-transitionbascarbone/ui'
+import { Button } from '@abc-transitionbascarbone/application/ui'
 import { FormControl, InputLabel } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import styles from './Actions.module.css'

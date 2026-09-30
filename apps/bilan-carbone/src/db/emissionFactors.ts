@@ -13,7 +13,7 @@ import {
   SubPost,
   Unit,
 } from '@abc-transitionbascarbone/db-common/enums'
-import { LocaleType } from '@abc-transitionbascarbone/i18n/config'
+import { LocaleType } from '@abc-transitionbascarbone/shared/i18n/config'
 import { Session } from 'next-auth'
 import { prismaClient } from './client.server'
 import { getOrgVersionWithOrgId } from './organization'

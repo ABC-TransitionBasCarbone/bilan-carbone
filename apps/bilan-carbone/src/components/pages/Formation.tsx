@@ -1,6 +1,6 @@
 'use server'
 
-import Block from '@abc-transitionbascarbone/components/src/base/Block'
+import Block from '@abc-transitionbascarbone/application/components/base/Block'
 import { Formation } from '@abc-transitionbascarbone/db-common'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'

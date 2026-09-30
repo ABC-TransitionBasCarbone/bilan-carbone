@@ -1,8 +1,8 @@
 import enBc from '@/i18n/translations/en/bc.json'
 import frBc from '@/i18n/translations/fr/bc.json'
-import { Locale, LocaleType } from '@abc-transitionbascarbone/i18n/config'
-import enCommon from '@abc-transitionbascarbone/i18n/translations/en/common.json'
-import frCommon from '@abc-transitionbascarbone/i18n/translations/fr/common.json'
+import { Locale, LocaleType } from '@abc-transitionbascarbone/shared/i18n/config'
+import enCommon from '@abc-transitionbascarbone/shared/i18n/translations/en/common.json'
+import frCommon from '@abc-transitionbascarbone/shared/i18n/translations/fr/common.json'
 
 export type CommonTranslations = typeof frCommon
 

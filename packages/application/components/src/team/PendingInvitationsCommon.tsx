@@ -1,10 +1,10 @@
-import Block from '@abc-transitionbascarbone/components/src/base/Block'
+import Block from '@abc-transitionbascarbone/application/components/base/Block'
 import classNames from 'classnames'
 import { useFormatter, useTranslations } from 'next-intl'
 import styles from './Invitations.module.css'
-import PendingInvitationsActions from '@abc-transitionbascarbone/components/src/team/PendingInvitationsActions'
+import PendingInvitationsActions from '@abc-transitionbascarbone/application/components/team/PendingInvitationsActions'
 import { TeamMemberCommon } from './TeamTableCommon'
-import { ApiResponse } from '@abc-transitionbascarbone/utils/serverResponse'
+import { ApiResponse } from '@abc-transitionbascarbone/shared/utils/serverResponse'
 
 interface Props {
   team: TeamMemberCommon[]

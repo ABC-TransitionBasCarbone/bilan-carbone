@@ -1,7 +1,7 @@
 'use client'
 
 import { KeyStatGroup, KeyStatUnit } from '@/types/results.types'
-import { formatNumber } from '@abc-transitionbascarbone/utils/number'
+import { formatNumber } from '@abc-transitionbascarbone/shared/utils/number'
 import { Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import styles from './KeyStatGroupItem.module.css'

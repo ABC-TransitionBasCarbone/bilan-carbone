@@ -2,7 +2,7 @@ import { ClicksonRoles, CourseRoles, CutRoles } from '@/services/roles'
 import type { Prisma } from '@abc-transitionbascarbone/db-common'
 import { findAccountSelect } from '@abc-transitionbascarbone/db-common/db/common.select'
 import { Environment, Role, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
-import { isSimplified } from '@abc-transitionbascarbone/utils/environments'
+import { isSimplified } from '@abc-transitionbascarbone/shared/utils/environments'
 import { UserSession } from 'next-auth'
 
 export const isAdmin = (userRole: Role) => userRole === Role.ADMIN || userRole === Role.SUPER_ADMIN

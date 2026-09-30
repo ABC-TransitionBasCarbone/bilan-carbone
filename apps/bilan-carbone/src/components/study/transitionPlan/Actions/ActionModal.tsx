@@ -15,14 +15,14 @@ import { calculatePriorityFromRelevance } from '@/utils/action'
 import { objectWithoutNullAttributes } from '@/utils/object'
 import { toScopedValues } from '@/utils/scope.utils'
 import { convertValue } from '@/utils/study'
-import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
-import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
+import LoadingButton from '@abc-transitionbascarbone/application/components/base/LoadingButton'
+import { useServerFunction } from '@abc-transitionbascarbone/application/components/hooks/useServerFunction'
+import { Toast, ToastColors } from '@abc-transitionbascarbone/application/ui'
 import {
   ActionIndicatorType,
   ActionPotentialDeduction,
   StudyResultUnit,
 } from '@abc-transitionbascarbone/db-common/enums'
-import { Toast, ToastColors } from '@abc-transitionbascarbone/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

@@ -1,7 +1,7 @@
 import PublicTiltPage from '@/components/pages/PublicTilt'
 import DynamicTheme from '@/environments/core/providers/DynamicTheme'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
-import { customRich } from '@abc-transitionbascarbone/utils/customRich'
+import { customRich } from '@abc-transitionbascarbone/shared/utils/customRich'
 import { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 import { ReactNode } from 'react'

@@ -1,6 +1,6 @@
 import { PrismaClient } from '@abc-transitionbascarbone/db-common'
 import { RoleMip, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
-import { signPassword } from '@abc-transitionbascarbone/utils/auth'
+import { signPassword } from '@abc-transitionbascarbone/shared/utils/auth'
 import { PrismaPg } from '@prisma/adapter-pg'
 import mipModel from './co2-model.FR-lang.fr-opti.json'
 

@@ -54,6 +54,25 @@ import { AccountWithUser } from '@/types/account.types'
 import { withServerResponse } from '@/utils/serverResponse'
 import { getRoleToSetForUntrained } from '@/utils/user'
 import { accountWithUserToUserSession, hasOrganizationVersion, userSessionToDbUser } from '@/utils/userAccounts'
+import {
+  sendActivationEmail,
+  sendActivationRequest,
+  sendAddedActiveUserEmail,
+  sendAddedUsersByFile,
+  sendContributorInvitationEmail,
+  sendNewContributorInvitationEmail,
+  sendNewUserEmail,
+  sendNewUserOnStudyInvitationEmail,
+  sendResetPassword,
+  sendUserOnStudyInvitationEmail,
+} from '@abc-transitionbascarbone/application/services/email/email'
+import {
+  EMAIL_SENT,
+  MORE_THAN_ONE,
+  NOT_AUTHORIZED,
+} from '@abc-transitionbascarbone/application/services/permissions/check'
+import { updateUserResetToken } from '@abc-transitionbascarbone/application/services/serverFunctions/user'
+import { AddMemberCommand } from '@abc-transitionbascarbone/application/services/serverFunctions/user.command'
 import type { Prisma } from '@abc-transitionbascarbone/db-common'
 import { Organization } from '@abc-transitionbascarbone/db-common'
 import { updateUserResetTokenForEmail } from '@abc-transitionbascarbone/db-common/db'
@@ -66,24 +85,9 @@ import {
   UserChecklist,
   UserStatus,
 } from '@abc-transitionbascarbone/db-common/enums'
-import {
-  sendActivationEmail,
-  sendActivationRequest,
-  sendAddedActiveUserEmail,
-  sendAddedUsersByFile,
-  sendContributorInvitationEmail,
-  sendNewContributorInvitationEmail,
-  sendNewUserEmail,
-  sendNewUserOnStudyInvitationEmail,
-  sendResetPassword,
-  sendUserOnStudyInvitationEmail,
-} from '@abc-transitionbascarbone/services/email/email'
-import { EMAIL_SENT, MORE_THAN_ONE, NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
-import { updateUserResetToken } from '@abc-transitionbascarbone/services/serverFunctions/user'
-import { AddMemberCommand } from '@abc-transitionbascarbone/services/serverFunctions/user.command'
-import { DAY, HOUR, MIN, TIME_IN_MS, YEAR } from '@abc-transitionbascarbone/utils'
-import { environmentsWithChecklist } from '@abc-transitionbascarbone/utils/environments'
-import { generateResetToken, hashResetToken } from '@abc-transitionbascarbone/utils/user.server'
+import { DAY, HOUR, MIN, TIME_IN_MS, YEAR } from '@abc-transitionbascarbone/shared/utils'
+import { environmentsWithChecklist } from '@abc-transitionbascarbone/shared/utils/environments'
+import { generateResetToken, hashResetToken } from '@abc-transitionbascarbone/shared/utils/user.server'
 import jwt from 'jsonwebtoken'
 import { UserSession } from 'next-auth'
 import { getCompanyName, getValidAssociationNameBySiret } from '../associationApi'

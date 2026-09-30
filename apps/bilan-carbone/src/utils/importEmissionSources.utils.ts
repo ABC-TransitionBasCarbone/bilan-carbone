@@ -12,7 +12,7 @@ import {
   SubPost,
   Unit,
 } from '@abc-transitionbascarbone/db-common/enums'
-import { Locale, LocaleType } from '@abc-transitionbascarbone/i18n/config'
+import { Locale, LocaleType } from '@abc-transitionbascarbone/shared/i18n/config'
 import { getEmissionFactorFullName, getEmissionFactorValue, isWasteEmissionFactor } from './emissionFactors'
 import { parseExcelSheet } from './excel.utils'
 import { EmissionFactorMatchType, findEmissionFactorMatch } from './findEmissionFactor.utils'

@@ -1,7 +1,7 @@
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { getUserApplicationSettings } from '@/db/user'
 import { defaultCAUnit } from '@/utils/number'
-import Block from '@abc-transitionbascarbone/components/src/base/Block'
+import Block from '@abc-transitionbascarbone/application/components/base/Block'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'

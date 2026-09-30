@@ -1,4 +1,4 @@
-import { Post } from '@abc-transitionbascarbone/utils/charts'
+import { Post } from '@abc-transitionbascarbone/shared/utils/charts'
 import AcUnitOutlinedIcon from '@mui/icons-material/AcUnitOutlined'
 import BoltOutlinedIcon from '@mui/icons-material/BoltOutlined'
 import ComputerOutlinedIcon from '@mui/icons-material/ComputerOutlined'

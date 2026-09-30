@@ -1,6 +1,6 @@
 import type { Prisma, PrismaClient } from '@abc-transitionbascarbone/db-common'
 import { Import } from '@abc-transitionbascarbone/db-common/enums'
-import { MIN, TIME_IN_MS } from '@abc-transitionbascarbone/utils'
+import { MIN, TIME_IN_MS } from '@abc-transitionbascarbone/shared/utils'
 import { parse } from 'csv-parse'
 import fs from 'fs'
 import { prismaClient } from '../../db/client.server'

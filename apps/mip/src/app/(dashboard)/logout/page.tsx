@@ -1,6 +1,6 @@
 'use client'
 
-import { signOutEnv } from '@abc-transitionbascarbone/services/auth/auth.utils'
+import { signOutEnv } from '@abc-transitionbascarbone/application/services/auth/auth.utils'
 import { useEffect } from 'react'
 
 const LogoutPage = () => {

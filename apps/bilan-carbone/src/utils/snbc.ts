@@ -17,7 +17,7 @@ import type {
 import { TrajectoryData } from '@/types/trajectory.types'
 import type { SectenInfo } from '@abc-transitionbascarbone/db-common'
 import { TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
-import { calculateRateForSegment, ReductionRates } from '@abc-transitionbascarbone/utils/trajectory'
+import { calculateRateForSegment, ReductionRates } from '@abc-transitionbascarbone/shared/utils/trajectory'
 import { isSectenSector } from './secten'
 import {
   computePastOrPresentValue,

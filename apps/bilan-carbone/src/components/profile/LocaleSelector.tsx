@@ -3,7 +3,7 @@
 import { getLocale, switchLocale } from '@/i18n/locale'
 import { getLocalesForEnv } from '@/services/permissions/environment'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
-import { LocaleType, defaultLocale } from '@abc-transitionbascarbone/i18n/config'
+import { LocaleType, defaultLocale } from '@abc-transitionbascarbone/shared/i18n/config'
 import { InputLabel, MenuItem, Select } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'

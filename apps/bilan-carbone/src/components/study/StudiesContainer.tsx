@@ -14,12 +14,11 @@ import {
 } from '@/services/permissions/environment'
 import { canCreateAStudy } from '@/services/permissions/study'
 import { hasActiveLicence } from '@/utils/organization'
-import Block from '@abc-transitionbascarbone/components/src/base/Block'
-import Box from '@abc-transitionbascarbone/components/src/base/Box'
-import LinkButton from '@abc-transitionbascarbone/components/src/base/LinkButton'
-import Image from '@abc-transitionbascarbone/components/src/document/Image'
-import { customRich } from '@abc-transitionbascarbone/utils/customRich'
-import { getEnvVarClient } from '@abc-transitionbascarbone/utils/environmentClient'
+import Block from '@abc-transitionbascarbone/application/components/base/Block'
+import Box from '@abc-transitionbascarbone/application/components/base/Box'
+import LinkButton from '@abc-transitionbascarbone/application/components/base/LinkButton'
+import Image from '@abc-transitionbascarbone/application/components/document/Image'
+import { customRich } from '@abc-transitionbascarbone/shared/utils/customRich'
 import AddIcon from '@mui/icons-material/Add'
 import { Alert, Box as MUIBox } from '@mui/material'
 import classNames from 'classnames'
@@ -72,12 +71,12 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
   const isOrgaHomePage = !organizationVersionId && !isCR
   const [orgaStudies, otherStudies] = isOrgaHomePage
     ? studies.reduce(
-        (res, study) => {
-          res[study.organizationVersion.id === user.organizationVersionId ? 0 : 1].push(study)
-          return res
-        },
-        [[] as StudyCardItem[], [] as StudyCardItem[]],
-      )
+      (res, study) => {
+        res[study.organizationVersion.id === user.organizationVersionId ? 0 : 1].push(study)
+        return res
+      },
+      [[] as StudyCardItem[], [] as StudyCardItem[]],
+    )
     : [studies, [] as StudyCardItem[]]
 
   const mainStudies = isOrgaHomePage ? orgaStudies : studies

@@ -6,7 +6,7 @@ import { getSiteEmissionSourcesWithoutMarketBase } from '@/services/results/util
 import { ResultsByPost } from '@/types/study.types'
 import { computeDifferenceForTableEmissions, formatDifferenceTableEmissions } from '@/utils/exports'
 import { Export, SubPost } from '@abc-transitionbascarbone/db-common/enums'
-import { Post, STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/utils/charts'
+import { Post, STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/shared/utils/charts'
 import WarningAmberIcon from '@mui/icons-material/WarningAmberOutlined'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'

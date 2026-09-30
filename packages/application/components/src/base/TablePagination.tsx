@@ -1,4 +1,4 @@
-import { Button } from '@abc-transitionbascarbone/ui'
+import { Button } from '@abc-transitionbascarbone/application/ui'
 import { FormControl, InputLabel, ListItemText, MenuItem, OutlinedInput, Select, TextField } from '@mui/material'
 import { Table } from '@tanstack/react-table'
 import classNames from 'classnames'

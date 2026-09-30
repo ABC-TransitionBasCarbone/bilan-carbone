@@ -1,6 +1,6 @@
 import PdfViewer from '@/components/document/PDFViewer'
 import { getDocumentUrl } from '@/services/serverFunctions/file'
-import Image from '@abc-transitionbascarbone/components/src/document/Image'
+import Image from '@abc-transitionbascarbone/application/components/document/Image'
 import { Document } from '@abc-transitionbascarbone/db-common'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'

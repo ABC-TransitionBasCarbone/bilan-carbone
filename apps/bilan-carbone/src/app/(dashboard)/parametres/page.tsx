@@ -3,8 +3,8 @@
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import SettingsPage from '@/components/pages/Settings'
 import { hasAccessToSettings } from '@/services/permissions/environmentAdvanced'
-import Block from '@abc-transitionbascarbone/components/src/base/Block'
-import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
+import Block from '@abc-transitionbascarbone/application/components/base/Block'
+import NotFound from '@abc-transitionbascarbone/application/components/pages/NotFound'
 import { useTranslations } from 'next-intl'
 
 const Settings = ({ user }: UserSessionProps) => {

@@ -1,13 +1,16 @@
 'use client'
 
 import { activateEmail } from '@/services/serverFunctions/user'
-import { EmailCommand, EmailCommandValidation } from '@abc-transitionbascarbone/components/src/auth/user.command'
-import Form from '@abc-transitionbascarbone/components/src/base/Form'
-import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
-import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
+import {
+  EmailCommand,
+  EmailCommandValidation,
+} from '@abc-transitionbascarbone/application/components/auth/user.command'
+import Form from '@abc-transitionbascarbone/application/components/base/Form'
+import LoadingButton from '@abc-transitionbascarbone/application/components/base/LoadingButton'
+import { FormTextField } from '@abc-transitionbascarbone/application/components/form/TextField'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
-import { customRich } from '@abc-transitionbascarbone/utils/customRich'
-import { getEnvVarClient } from '@abc-transitionbascarbone/utils/environmentClient'
+import { customRich } from '@abc-transitionbascarbone/shared/utils/customRich'
+import { getEnvVarClient } from '@abc-transitionbascarbone/shared/utils/environmentClient'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl } from '@mui/material'
 import classNames from 'classnames'

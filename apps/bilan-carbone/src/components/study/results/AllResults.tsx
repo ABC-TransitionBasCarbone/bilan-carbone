@@ -27,9 +27,9 @@ import { AdditionalResultTypes, ResultType } from '@/types/study.types'
 import { getPost } from '@/utils/post'
 import { calculateMonetaryRatio, convertValue } from '@/utils/study'
 import { getAllTagIds } from '@/utils/tag.utils'
-import Block from '@abc-transitionbascarbone/components/src/base/Block'
-import Box from '@abc-transitionbascarbone/components/src/base/Box'
-import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
+import Block from '@abc-transitionbascarbone/application/components/base/Block'
+import Box from '@abc-transitionbascarbone/application/components/base/Box'
+import { useServerFunction } from '@abc-transitionbascarbone/application/components/hooks/useServerFunction'
 import type { ExportRule } from '@abc-transitionbascarbone/db-common'
 import {
   ControlMode,

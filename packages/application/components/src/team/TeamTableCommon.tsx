@@ -1,17 +1,17 @@
 'use client'
 
-import { Table as BaseTable, HelpIcon } from '@abc-transitionbascarbone/components'
-import Block from '@abc-transitionbascarbone/components/src/base/Block'
-import { TableActionButton } from '@abc-transitionbascarbone/components/src/base/TableActionButton'
-import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
+import { Table as BaseTable, HelpIcon } from '@abc-transitionbascarbone/application/components'
+import Block from '@abc-transitionbascarbone/application/components/base/Block'
+import { TableActionButton } from '@abc-transitionbascarbone/application/components/base/TableActionButton'
+import Modal from '@abc-transitionbascarbone/application/components/modals/Modal'
 import { Environment, Level, Role } from '@abc-transitionbascarbone/db-common/enums'
-import { ApiResponse } from '@abc-transitionbascarbone/utils/serverResponse'
+import { ApiResponse } from '@abc-transitionbascarbone/shared/utils/serverResponse'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useCallback, useMemo, useState } from 'react'
 import SelectRoleCommon from './SelectRoleCommon'
 import styles from './TeamTableCommon.module.css'
-import { RoleBcOrMip } from '@abc-transitionbascarbone/utils/types'
+import { RoleBcOrMip } from '@abc-transitionbascarbone/shared/utils/types'
 
 export type TeamMemberCommon = {
   user: {

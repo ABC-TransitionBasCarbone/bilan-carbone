@@ -1,6 +1,6 @@
 import { StudyResultUnit } from '@abc-transitionbascarbone/db-common'
-import { STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/utils/charts'
-import { formatNumber } from '@abc-transitionbascarbone/utils/number'
+import { STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/shared/utils/charts'
+import { formatNumber } from '@abc-transitionbascarbone/shared/utils/number'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import progressStyles from '../../../base/ProgressBar.module.css'

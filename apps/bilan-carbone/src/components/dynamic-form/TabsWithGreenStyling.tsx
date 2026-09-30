@@ -1,5 +1,4 @@
-import { Translations } from '@abc-transitionbascarbone/lib'
-import { Post } from '@abc-transitionbascarbone/utils/charts'
+import { Translations } from '@abc-transitionbascarbone/application/lib'
 import { Box, Tabs as MuiTabs, Tab, styled } from '@mui/material'
 import { ReactNode, useMemo, useState } from 'react'
 

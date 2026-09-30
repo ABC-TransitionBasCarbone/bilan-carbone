@@ -1,6 +1,6 @@
 import PostIcon from '@/components/study/infography/icons/PostIcon'
 import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
-import { Post } from '@abc-transitionbascarbone/utils/charts'
+import { Post } from '@abc-transitionbascarbone/shared/utils/charts'
 import { useTranslations } from 'next-intl'
 import styles from './PostHeader.module.css'
 import {

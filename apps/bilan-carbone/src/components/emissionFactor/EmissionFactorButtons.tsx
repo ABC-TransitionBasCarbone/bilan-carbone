@@ -2,7 +2,7 @@
 
 import { download } from '@/services/file'
 import { exportManualEmissionFactorsToFile } from '@/services/serverFunctions/importEmissionFactors'
-import { Button, useToast } from '@abc-transitionbascarbone/ui'
+import { Button, useToast } from '@abc-transitionbascarbone/application/ui'
 import AddIcon from '@mui/icons-material/Add'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import FileDownloadIcon from '@mui/icons-material/FileDownload'

@@ -1,4 +1,4 @@
-import IconLabel from '@abc-transitionbascarbone/components/src/base/IconLabel'
+import IconLabel from '@abc-transitionbascarbone/application/components/base/IconLabel'
 import { FormControl, FormHelperText, FormLabel, RadioGroup, RadioGroupProps } from '@mui/material'
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form'
 import styles from './Form.module.css'

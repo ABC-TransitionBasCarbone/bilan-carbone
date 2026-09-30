@@ -1,7 +1,7 @@
 'use client'
 
-import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
-import { customRich } from '@abc-transitionbascarbone/utils/customRich'
+import Modal from '@abc-transitionbascarbone/application/components/modals/Modal'
+import { customRich } from '@abc-transitionbascarbone/shared/utils/customRich'
 import { useTranslations } from 'next-intl'
 
 interface Props {

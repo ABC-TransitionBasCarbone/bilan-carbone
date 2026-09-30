@@ -6,8 +6,8 @@ import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import styles from './BarChart.module.css'
 import { StudyResultUnit } from '@abc-transitionbascarbone/db-common'
-import { BasicTypeCharts, processBarChartData } from '@abc-transitionbascarbone/utils/charts'
-import { formatNumber } from '@abc-transitionbascarbone/utils/number'
+import { BasicTypeCharts, processBarChartData } from '@abc-transitionbascarbone/shared/utils/charts'
+import { formatNumber } from '@abc-transitionbascarbone/shared/utils/number'
 
 const BAR_CHART_CONSTANTS = {
   TICK_ANGLE: -20,

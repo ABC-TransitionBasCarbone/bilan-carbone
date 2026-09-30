@@ -1,13 +1,13 @@
 'use client'
 
-import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
-import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
+import LoadingButton from '@abc-transitionbascarbone/application/components/base/LoadingButton'
+import { useServerFunction } from '@abc-transitionbascarbone/application/components/hooks/useServerFunction'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import styles from './InvitationsActions.module.css'
-import { ApiResponse } from '@abc-transitionbascarbone/utils/serverResponse'
+import { ApiResponse } from '@abc-transitionbascarbone/shared/utils/serverResponse'
 
 interface Props {
   resendInvitation: () => Promise<ApiResponse>

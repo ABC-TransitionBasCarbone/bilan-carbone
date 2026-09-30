@@ -1,6 +1,6 @@
 'use client'
 
-import { HelpIcon } from '@abc-transitionbascarbone/components'
+import { HelpIcon } from '@abc-transitionbascarbone/application/components'
 import { Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
