@@ -1,4 +1,4 @@
-import { Export } from '@abc-transitionbascarbone/db-common/enums'
+import { Export } from '@abc-transitionbascarbone/db/enums'
 import { BaseResultsByPost } from '../services/posts'
 
 export enum AdditionalResultTypes {

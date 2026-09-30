@@ -8,15 +8,15 @@ import { ResultsByPost } from '@/types/study.types'
 import { getEmissionFactor } from '@/utils/emissionSources'
 import { computeDifferenceForTableEmissions, formatDifferenceTableEmissions } from '@/utils/exports'
 import { hasDeprecationPeriod, hasFabricationPart } from '@/utils/study'
-import { ExportRule } from '@abc-transitionbascarbone/db-common'
+import { ExportRule } from '@abc-transitionbascarbone/db'
 import {
   EmissionFactorBase,
   EmissionFactorPartType,
   EmissionSourceCaracterisation,
   Export,
   SubPost,
-} from '@abc-transitionbascarbone/db-common/enums'
-import { Post, STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/utils/charts'
+} from '@abc-transitionbascarbone/db/enums'
+import { Post, STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/shared/utils/charts'
 import WarningAmberIcon from '@mui/icons-material/WarningAmberOutlined'
 import { useTranslations } from 'next-intl'
 import { useCallback, useMemo } from 'react'
@@ -199,9 +199,9 @@ const ConsolatedGHGPDifference = ({
 
       const otherGasEmission = emissionFactor.emissionFactorParts.length
         ? emissionFactor.emissionFactorParts.reduce(
-            (res, emissionFactorPart) => res + (emissionFactorPart.otherGES || 0) * (emissionSource.value || 0),
-            0,
-          )
+          (res, emissionFactorPart) => res + (emissionFactorPart.otherGES || 0) * (emissionSource.value || 0),
+          0,
+        )
         : emissionSource.value * (emissionFactor.otherGES || 0)
 
       return total - otherGasEmission / unitValue

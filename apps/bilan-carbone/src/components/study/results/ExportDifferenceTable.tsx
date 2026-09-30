@@ -1,6 +1,6 @@
 import { formatDifferenceTableEmissions } from '@/utils/exports'
-import { StudyResultUnit, SubPost } from '@abc-transitionbascarbone/db-common'
-import { formatNumber } from '@abc-transitionbascarbone/utils/number'
+import { StudyResultUnit, SubPost } from '@abc-transitionbascarbone/db'
+import { formatNumber } from '@abc-transitionbascarbone/shared/utils/number'
 import TrendingUpIcon from '@mui/icons-material/TrendingUpOutlined'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

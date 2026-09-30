@@ -1,5 +1,6 @@
 import type { FullStudy, MinimalStudyForRights } from '@/db/study'
-import type { Prisma, Study } from '@abc-transitionbascarbone/db-common'
+import { mockedUser } from '@abc-transitionbascarbone/application/services/tests/models/user'
+import type { Prisma, Study } from '@abc-transitionbascarbone/db'
 import {
   ControlMode,
   EmissionFactorBase,
@@ -11,9 +12,8 @@ import {
   StudyRole,
   SubPost,
   Unit,
-} from '@abc-transitionbascarbone/db-common/enums'
-import { mockedUser } from '@abc-transitionbascarbone/services/tests/models/user'
-import { DeepPartial } from '@abc-transitionbascarbone/utils/types'
+} from '@abc-transitionbascarbone/db/enums'
+import { DeepPartial } from '@abc-transitionbascarbone/shared/utils/types'
 import { mockedOrganizationVersion, mockedOrganizationVersionId } from './organization'
 import { mockedAccountId } from './user'
 

@@ -1,7 +1,7 @@
-import { StudyResultUnit, SubPost } from '@abc-transitionbascarbone/db-common'
-import { Translations } from '@abc-transitionbascarbone/lib'
-import { BCPost, ClicksonPost, CutPost, TiltAdvancedPost, TiltSimplifiedPost, TiltPost } from '@abc-transitionbascarbone/services/results/posts.enums'
-import { formatNumber } from '@abc-transitionbascarbone/utils/number'
+import { StudyResultUnit, SubPost } from '@abc-transitionbascarbone/db'
+import { Translations } from '@abc-transitionbascarbone/application/lib'
+import { BCPost, ClicksonPost, CutPost, TiltAdvancedPost, TiltSimplifiedPost, TiltPost } from '@abc-transitionbascarbone/application/services/results/posts.enums'
+import { formatNumber } from '@abc-transitionbascarbone/shared/utils/number'
 import { Theme } from '@mui/material'
 
 export const STUDY_UNIT_VALUES: Record<StudyResultUnit, number> = {

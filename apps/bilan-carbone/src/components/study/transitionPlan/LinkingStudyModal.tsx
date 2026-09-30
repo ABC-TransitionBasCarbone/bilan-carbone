@@ -8,13 +8,13 @@ import {
 } from '@/services/serverFunctions/transitionPlan.command'
 import type { PastStudy } from '@/types/trajectory.types'
 import { convertValue } from '@/utils/study'
-import Form from '@abc-transitionbascarbone/components/src/base/Form'
-import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
-import { Select } from '@abc-transitionbascarbone/components/src/base/Select'
-import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
-import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
-import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
-import { StudyResultUnit } from '@abc-transitionbascarbone/db-common/enums'
+import Form from '@abc-transitionbascarbone/application/components/base/Form'
+import LoadingButton from '@abc-transitionbascarbone/application/components/base/LoadingButton'
+import { Select } from '@abc-transitionbascarbone/application/components/base/Select'
+import { FormTextField } from '@abc-transitionbascarbone/application/components/form/TextField'
+import { useServerFunction } from '@abc-transitionbascarbone/application/components/hooks/useServerFunction'
+import Modal from '@abc-transitionbascarbone/application/components/modals/Modal'
+import { StudyResultUnit } from '@abc-transitionbascarbone/db/enums'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
 import dayjs from 'dayjs'
@@ -66,15 +66,15 @@ const LinkingStudyModal = ({
     reValidateMode: 'onChange',
     defaultValues: pastStudyToUpdate
       ? {
-          transitionPlanId,
-          externalStudyId: pastStudyToUpdate.id,
-          name: pastStudyToUpdate.name,
-          date: new Date(pastStudyToUpdate.year, 0, 1),
-          totalCo2Value: pastStudyToUpdate.totalCo2,
-        }
+        transitionPlanId,
+        externalStudyId: pastStudyToUpdate.id,
+        name: pastStudyToUpdate.name,
+        date: new Date(pastStudyToUpdate.year, 0, 1),
+        totalCo2Value: pastStudyToUpdate.totalCo2,
+      }
       : {
-          transitionPlanId,
-        },
+        transitionPlanId,
+      },
   })
 
   useEffect(() => {

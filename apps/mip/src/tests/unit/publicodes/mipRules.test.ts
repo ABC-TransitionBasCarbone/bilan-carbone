@@ -1,5 +1,5 @@
 import { buildGroupedElements } from '@/components/survey/surveyGrouping'
-import { createMipEngine, createMipEngineWithoutDefaults } from '@/publicodes/mip-engine'
+import { createMipEngine, createMipEngineWithoutDefaults } from '@/lib/publicodes/mip-engine'
 import {
   getActions,
   getFormQuestions,
@@ -12,7 +12,7 @@ import {
   getStableQuestionOrder,
   MipQuestionType,
   sortQuestions,
-} from '@/publicodes/mip-rules'
+} from '@/lib/publicodes/mip-rules'
 import { describe, expect, it } from '@jest/globals'
 import { getEvaluatedFormElement } from '@publicodes/forms'
 

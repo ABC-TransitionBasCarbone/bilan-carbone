@@ -1,4 +1,4 @@
-import { Locale } from '@abc-transitionbascarbone/i18n/config'
+import { Locale } from '@abc-transitionbascarbone/shared/i18n/config'
 import { expect } from '@jest/globals'
 import fs from 'fs'
 import path from 'path'

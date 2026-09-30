@@ -1,5 +1,5 @@
 import * as studyUtilsModule from '@/utils/study'
-import { Environment, Import, StudyRole, SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { Environment, Import, StudyRole, SubPost } from '@abc-transitionbascarbone/db/enums'
 import { expect } from '@jest/globals'
 import { v4 as uuidv4 } from 'uuid'
 import * as accountModule from '../../db/account'
@@ -941,7 +941,7 @@ describe('study', () => {
 
     beforeEach(() => {
       jest.clearAllMocks()
-      ;(authModule.dbActualizedAuth as jest.Mock).mockResolvedValue(mockedSession)
+        ; (authModule.dbActualizedAuth as jest.Mock).mockResolvedValue(mockedSession)
       mockGetStudyById.mockResolvedValue(mockedStudy)
       mockCanChangeDates.mockResolvedValue(true)
       mockGetTransitionPlanByStudyId.mockResolvedValue(null)

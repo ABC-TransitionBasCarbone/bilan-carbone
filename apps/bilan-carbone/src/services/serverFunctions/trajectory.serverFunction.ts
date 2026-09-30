@@ -13,9 +13,9 @@ import {
 import { TrajectoryWithObjectivesAndScope } from '@/types/trajectory.types'
 import { withServerResponse } from '@/utils/serverResponse'
 import { getDefaultObjectivesForTrajectoryType } from '@/utils/trajectory'
-import { TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
-import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
-import type { ApiResponse } from '@abc-transitionbascarbone/utils/serverResponse'
+import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/application/services/permissions/check'
+import { TrajectoryType } from '@abc-transitionbascarbone/db/enums'
+import type { ApiResponse } from '@abc-transitionbascarbone/shared/utils/serverResponse'
 import { hasEditAccessOnStudy, hasReadAccessOnStudy } from '../permissions/study'
 import { SectorPercentages } from './trajectory.command'
 

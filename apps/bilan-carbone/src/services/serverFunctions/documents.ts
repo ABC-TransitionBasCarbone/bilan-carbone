@@ -1,7 +1,7 @@
 'use server'
 
 import { withServerResponse } from '@/utils/serverResponse'
-import { DocumentCategory } from '@abc-transitionbascarbone/db-common/enums'
+import { DocumentCategory } from '@abc-transitionbascarbone/db/enums'
 import { canAccessStudyFlows } from '../permissions/study'
 import { getFileUrlFromBucket } from './scaleway'
 

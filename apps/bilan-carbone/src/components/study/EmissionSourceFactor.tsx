@@ -8,9 +8,9 @@ import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { getEmissionFactorFullName, getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
 import { displayOnlyExistingDataWithDash } from '@/utils/string'
-import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
-import { EmissionFactorStatus, StudyResultUnit, SubPost, Unit } from '@abc-transitionbascarbone/db-common/enums'
-import { Button } from '@abc-transitionbascarbone/ui'
+import Modal from '@abc-transitionbascarbone/application/components/modals/Modal'
+import { Button } from '@abc-transitionbascarbone/application/ui'
+import { EmissionFactorStatus, StudyResultUnit, SubPost, Unit } from '@abc-transitionbascarbone/db/enums'
 import ClearIcon from '@mui/icons-material/Clear'
 import SearchIcon from '@mui/icons-material/Search'
 import classNames from 'classnames'
@@ -134,9 +134,9 @@ const EmissionSourceFactor = ({
     setResults(
       value
         ? fuse
-            .search(value)
-            .map(({ item }) => item)
-            .slice(0, 30)
+          .search(value)
+          .map(({ item }) => item)
+          .slice(0, 30)
         : [],
     )
   }, [fuse, value])

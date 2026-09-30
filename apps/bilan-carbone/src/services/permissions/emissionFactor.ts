@@ -1,6 +1,6 @@
 import type { AccountWithUser } from '@/types/account.types'
-import type { EmissionFactor } from '@abc-transitionbascarbone/db-common'
-import { Import } from '@abc-transitionbascarbone/db-common/enums'
+import type { EmissionFactor } from '@abc-transitionbascarbone/db'
+import { Import } from '@abc-transitionbascarbone/db/enums'
 import { isFromEmissionFactorOrganization } from '../serverFunctions/emissionFactor'
 
 export const canReadEmissionFactor = (

@@ -12,14 +12,14 @@ import { getDocumentSample } from '@/services/serverFunctions/documents'
 import { getDocumentUrl } from '@/services/serverFunctions/file'
 import { addDocumentToStudy, deleteDocumentFromStudy } from '@/services/serverFunctions/study'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
-import Block from '@abc-transitionbascarbone/components/src/base/Block'
-import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
-import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
-import type { Document } from '@abc-transitionbascarbone/db-common'
-import { DocumentCategory } from '@abc-transitionbascarbone/db-common/enums'
-import { Translations } from '@abc-transitionbascarbone/lib'
-import { Button, useToast } from '@abc-transitionbascarbone/ui'
-import { customRich } from '@abc-transitionbascarbone/utils/customRich'
+import Block from '@abc-transitionbascarbone/application/components/base/Block'
+import LoadingButton from '@abc-transitionbascarbone/application/components/base/LoadingButton'
+import { useServerFunction } from '@abc-transitionbascarbone/application/components/hooks/useServerFunction'
+import { Translations } from '@abc-transitionbascarbone/application/lib'
+import { Button, useToast } from '@abc-transitionbascarbone/application/ui'
+import type { Document } from '@abc-transitionbascarbone/db'
+import { DocumentCategory } from '@abc-transitionbascarbone/db/enums'
+import { customRich } from '@abc-transitionbascarbone/shared/utils/customRich'
 import DeleteIcon from '@mui/icons-material/Delete'
 import DownloadIcon from '@mui/icons-material/Download'
 import { Alert, InputLabel } from '@mui/material'
@@ -169,26 +169,26 @@ const StudyDocument = ({ title, t, study, documents, canUpload = true, documentC
       actions={
         canUpload
           ? [
-              {
-                actionType: 'loadingButton',
-                component: 'label',
-                variant: 'contained',
-                tabIndex: -1,
-                loading: uploading,
-                children: (
-                  <div className="align-center">
-                    {t('add')}
-                    <input
-                      className={styles.flowUploadButton}
-                      type="file"
-                      value=""
-                      accept={allowedFlowFileTypes.join(',')}
-                      onChange={handleUpload}
-                    />
-                  </div>
-                ),
-              },
-            ]
+            {
+              actionType: 'loadingButton',
+              component: 'label',
+              variant: 'contained',
+              tabIndex: -1,
+              loading: uploading,
+              children: (
+                <div className="align-center">
+                  {t('add')}
+                  <input
+                    className={styles.flowUploadButton}
+                    type="file"
+                    value=""
+                    accept={allowedFlowFileTypes.join(',')}
+                    onChange={handleUpload}
+                  />
+                </div>
+              ),
+            },
+          ]
           : undefined
       }
     >

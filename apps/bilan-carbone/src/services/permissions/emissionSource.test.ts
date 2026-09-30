@@ -2,7 +2,7 @@ import { getMockedFullStudy, getMockedFullStudySite } from '@/tests/utils/models
 import { getMockedDbAccount } from '@/tests/utils/models/user'
 import { AccountWithUser } from '@/types/account.types'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
-import { StudyRole } from '@abc-transitionbascarbone/db-common/enums'
+import { StudyRole } from '@abc-transitionbascarbone/db/enums'
 import { expect } from '@jest/globals'
 import * as studyUtilsModule from '../../utils/study'
 import { hasStudyBasicRights } from './emissionSource'

@@ -5,9 +5,9 @@
   "workspaces": {
     "packages": [
       "apps/*",
-      "packages/application/*",
+      "packages/application",
       "packages/data/*",
-      "packages/shared/*",
+      "packages/shared",
       "packages/styles/*",
       "packages/tooling/*",
       "packages/publicodes-packages/*"
@@ -28,13 +28,13 @@
     "ts": "turbo run ts",
     "lint": "turbo run lint",
     "format": "turbo run format",
-    "prisma": "yarn workspace @abc-transitionbascarbone/db-common run prisma",
+    "prisma": "yarn workspace @abc-transitionbascarbone/db run prisma",
     "seed": "yarn seed:all",
-    "seed:all": "yarn workspace @abc-transitionbascarbone/db-common tsx prisma/seed/index.ts --target all",
-    "seed:bc": "yarn workspace @abc-transitionbascarbone/db-common tsx prisma/seed/index.ts --target bc",
-    "seed:mip": "yarn workspace @abc-transitionbascarbone/db-common tsx prisma/seed/index.ts --target mip",
+    "seed:all": "yarn workspace @abc-transitionbascarbone/db tsx prisma/seed/index.ts --target all",
+    "seed:bc": "yarn workspace @abc-transitionbascarbone/db tsx prisma/seed/index.ts --target bc",
+    "seed:mip": "yarn workspace @abc-transitionbascarbone/db tsx prisma/seed/index.ts --target mip",
     "postinstall": "yarn db:generate",
-    "db:generate": "rm -rf packages/data/db-common/src/generated/prisma && yarn workspace @abc-transitionbascarbone/db-common run db:generate",
+    "db:generate": "rm -rf packages/data/db-common/src/generated/prisma && yarn workspace @abc-transitionbascarbone/db run db:generate",
     "compile:publicodes": "sh -c 'if [ \"$APP_TARGET\" = \"mip\" ]; then echo \"Skipping Publicodes compilation for MIP\"; else set -e; for dir in packages/publicodes-packages/publicodes-clickson packages/publicodes-packages/publicodes-count packages/publicodes-packages/publicodes-tilt; do (cd \"$dir\" && yarn compile); done; fi'",
     "compile:publicodes-windows": "for /d %d in (\"packages\\publicodes-packages\\publicodes-*\") do (@cd /d \"%d\" && yarn install && yarn compile && cd ..\\..\\..)"
   },

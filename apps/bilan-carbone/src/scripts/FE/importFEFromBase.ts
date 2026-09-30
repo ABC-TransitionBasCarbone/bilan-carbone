@@ -1,4 +1,4 @@
-import { Import } from '@abc-transitionbascarbone/db-common/enums'
+import { Import } from '@abc-transitionbascarbone/db/enums'
 import { Command } from 'commander'
 import { getEmissionFactorsFromCSV, OverrideMode } from '../../services/importEmissionFactor/getEmissionFactorsFromCSV'
 

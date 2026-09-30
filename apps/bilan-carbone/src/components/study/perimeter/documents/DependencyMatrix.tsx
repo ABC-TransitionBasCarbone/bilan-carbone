@@ -1,8 +1,8 @@
 'use client'
 
 import type { FullStudy } from '@/db/study'
-import { Document } from '@abc-transitionbascarbone/db-common'
-import { DocumentCategory } from '@abc-transitionbascarbone/db-common/enums'
+import { Document } from '@abc-transitionbascarbone/db'
+import { DocumentCategory } from '@abc-transitionbascarbone/db/enums'
 import { useTranslations } from 'next-intl'
 import StudyDocument from './StudyDocument'
 

@@ -9,8 +9,8 @@ import type {
   TrajectoryDataPoint,
   TrajectoryWithObjectives,
 } from '@/types/trajectory.types'
-import { SectenInfo } from '@abc-transitionbascarbone/db-common'
-import { TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
+import { SectenInfo } from '@abc-transitionbascarbone/db'
+import { TrajectoryType } from '@abc-transitionbascarbone/db/enums'
 import { calculateSBTiTrajectory, getDefaultSBTIReductionRate } from './sbti'
 import { calculateCustomSNBCSectoralTrajectory, calculateSNBCTrajectory } from './snbc'
 import {
@@ -369,9 +369,9 @@ const getTrajectoryCustomData = (
       overshootAdjustment: withinThreshold
         ? undefined
         : {
-            referenceTrajectory,
-            referenceStudyYear: referenceYear,
-          },
+          referenceTrajectory,
+          referenceStudyYear: referenceYear,
+        },
       trajectoryType: customTrajectory.type,
       minYear,
       maxYear,
@@ -414,17 +414,17 @@ export const getCustomData = (
   const defaultTrajectory = trajectories.find((t) => t.isDefault)
   const defaultTrajectoryData = defaultTrajectory
     ? getTrajectoryCustomData(
-        defaultTrajectory,
-        totalCo2,
-        studyStartYear,
-        pastStudies,
-        pastStudyReference,
-        minYear,
-        maxYear,
-        sectenData,
-        [],
-        objectiveGroupsByTrajectoryId?.get(defaultTrajectory.id),
-      )
+      defaultTrajectory,
+      totalCo2,
+      studyStartYear,
+      pastStudies,
+      pastStudyReference,
+      minYear,
+      maxYear,
+      sectenData,
+      [],
+      objectiveGroupsByTrajectoryId?.get(defaultTrajectory.id),
+    )
     : null
 
   const defaultTrajectoryForSBTI =

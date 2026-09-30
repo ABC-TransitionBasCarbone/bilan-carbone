@@ -1,4 +1,4 @@
-import type { Prisma } from '@abc-transitionbascarbone/db-common'
+import type { Prisma } from '@abc-transitionbascarbone/db'
 import { prismaClient } from './client.server'
 
 export const addSite = async (site: Prisma.SiteCreateInput) =>

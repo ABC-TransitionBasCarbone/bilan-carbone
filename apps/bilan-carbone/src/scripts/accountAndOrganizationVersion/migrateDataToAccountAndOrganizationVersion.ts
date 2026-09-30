@@ -1,8 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import { PrismaClient } from '@abc-transitionbascarbone/db-common'
-import { Environment, Role } from '@abc-transitionbascarbone/db-common/enums'
+import { PrismaClient } from '@abc-transitionbascarbone/db'
+import { Environment, Role } from '@abc-transitionbascarbone/db/enums'
 
 // One shot script to migrate users to accounts and organizations to organizationVersions
 

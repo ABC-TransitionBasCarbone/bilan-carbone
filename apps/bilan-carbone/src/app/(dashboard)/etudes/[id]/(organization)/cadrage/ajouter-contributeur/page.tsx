@@ -3,7 +3,7 @@ import withStudyDetails, { StudyProps } from '@/components/hoc/withStudyDetails'
 import NewStudyContributorPage from '@/components/pages/NewStudyContributor'
 import { NEWGetAccountRoleOnStudyWithId } from '@/services/serverFunctions/study'
 import { hasEditionRights } from '@/utils/study'
-import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
+import NotFound from '@abc-transitionbascarbone/application/components/pages/NotFound'
 import { redirect } from 'next/navigation'
 
 const NewStudyContributor = async ({ study, user, studyId }: StudyProps & UserSessionProps) => {

@@ -1,4 +1,4 @@
-import { Environment, SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { Environment, SubPost } from '@abc-transitionbascarbone/db/enums'
 
 export const OTHER_TAG_ID = 'other'
 

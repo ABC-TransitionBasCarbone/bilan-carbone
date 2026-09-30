@@ -1,8 +1,8 @@
 import { getOrganizationVersionForRightsCheck } from '@/db/organization'
 import { getUserById } from '@/db/user'
 import { hasActiveLicence } from '@/utils/organization'
-import { type Account } from '@abc-transitionbascarbone/db-common'
-import { Role } from '@abc-transitionbascarbone/db-common/enums'
+import { type Account } from '@abc-transitionbascarbone/db'
+import { Role } from '@abc-transitionbascarbone/db/enums'
 
 export const canCreateEmissionFactor = async (account: Pick<Account, 'role' | 'userId' | 'organizationVersionId'>) => {
   const hasRole = ([Role.ADMIN, Role.COLLABORATOR, Role.SUPER_ADMIN] as Role[]).includes(account.role)

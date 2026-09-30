@@ -1,14 +1,14 @@
 'use client'
 
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
-import { Environment } from '@abc-transitionbascarbone/db-common/enums'
-import { EnvironmentMode, isAdvanced, isSimplified } from '@abc-transitionbascarbone/utils/environments'
+import { Environment } from '@abc-transitionbascarbone/db/enums'
+import { EnvironmentMode, isAdvanced, isSimplified } from '@abc-transitionbascarbone/shared/utils/environments'
 import { ReactNode } from 'react'
 import EnvironmentLoader from './EnvironmentLoader'
 
 type EnvironmentMap = {
   [key in Environment]?: ReactNode
-} & { [EnvironmentMode.SIMPLIFIED]?: ReactNode; [EnvironmentMode.ADVANCED]?: ReactNode }
+} & { [EnvironmentMode.SIMPLIFIED]?: ReactNode;[EnvironmentMode.ADVANCED]?: ReactNode }
 
 interface Props {
   defaultComponent?: ReactNode

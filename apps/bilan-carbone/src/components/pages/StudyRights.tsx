@@ -6,7 +6,7 @@ import { getEmissionFactorImportVersions } from '@/services/serverFunctions/emis
 import { getStudySitesList, NEWGetAccountRoleOnStudyWithId } from '@/services/serverFunctions/study'
 import { defaultCAUnit } from '@/utils/number'
 import { hasEditionRights } from '@/utils/study'
-import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
+import NotFound from '@abc-transitionbascarbone/application/components/pages/NotFound'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'

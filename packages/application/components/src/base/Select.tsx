@@ -1,5 +1,5 @@
-import { CustomFormLabel } from '@abc-transitionbascarbone/components/src/form/CustomFormLabel'
-import { Translations } from '@abc-transitionbascarbone/lib'
+import { CustomFormLabel } from '@abc-transitionbascarbone/application/components/form/CustomFormLabel'
+import { Translations } from '@abc-transitionbascarbone/application/lib'
 import ClearIcon from '@mui/icons-material/Clear'
 import { IconButton, InputAdornment, Select as MUISelect, SelectChangeEvent, SelectProps } from '@mui/material'
 

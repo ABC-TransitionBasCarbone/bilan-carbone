@@ -1,8 +1,8 @@
 'use client'
 
 import type { PastStudy } from '@/types/trajectory.types'
-import type { StudyResultUnit } from '@abc-transitionbascarbone/db-common'
-import { customRich } from '@abc-transitionbascarbone/utils/customRich'
+import type { StudyResultUnit } from '@abc-transitionbascarbone/db'
+import { customRich } from '@abc-transitionbascarbone/shared/utils/customRich'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import { useState } from 'react'

@@ -8,7 +8,7 @@ import { useDuplicateStudy } from '@/hooks/useDuplicateStudy'
 import { hasAccessToDuplicateStudy } from '@/services/permissions/environmentAdvanced'
 import { CreateStudyCommand, CreateStudyCommandValidation } from '@/services/serverFunctions/study.command'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
-import { Environment, SiteCAUnit } from '@abc-transitionbascarbone/db-common/enums'
+import { Environment, SiteCAUnit } from '@abc-transitionbascarbone/db/enums'
 import { zodResolver } from '@hookform/resolvers/zod'
 import CircularProgress from '@mui/material/CircularProgress'
 import Typography from '@mui/material/Typography'
@@ -116,9 +116,9 @@ const NewStudyPage = ({
           { label: tNav('home'), link: '/' },
           defaultOrganizationVersion
             ? {
-                label: defaultOrganizationVersion.organization.name,
-                link: `/organisations/${defaultOrganizationVersion.id}`,
-              }
+              label: defaultOrganizationVersion.organization.name,
+              link: `/organisations/${defaultOrganizationVersion.id}`,
+            }
             : undefined,
         ].filter((link) => link !== undefined)}
       />

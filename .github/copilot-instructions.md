@@ -11,7 +11,7 @@ Monorepo Next.js (Yarn workspaces + Turbo) for carbon accounting products:
 
 - UI routes/components: apps/*/src/app and apps/*/src/components
 - APIs: apps/*/src/app/api
-- DB schema: packages/data/db-common/prisma/schema
+- DB schema: packages/data/db/prisma/schema
 - DB access and business logic: apps/*/src/db and apps/*/src/services
 - Shared types/constants: src/types and src/constants (or shared packages when reusable)
 
@@ -97,7 +97,7 @@ Never validate my claims without checking them. Prefer evidence over my approval
 ## Important Locations
 
 - apps/bilan-carbone/src/db/emissionFactors.ts
-- packages/data/db-common/prisma/schema
+- packages/data/db/prisma/schema
 - apps/*/src/components
 - apps/*/src/app/api
 - .env

@@ -1,4 +1,4 @@
-import { PrismaClient } from '@abc-transitionbascarbone/db-common'
+import { PrismaClient } from '@abc-transitionbascarbone/db'
 import { PrismaPg } from '@prisma/adapter-pg'
 
 const adapter = new PrismaPg({

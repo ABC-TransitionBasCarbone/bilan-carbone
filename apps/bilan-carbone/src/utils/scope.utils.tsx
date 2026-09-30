@@ -1,7 +1,7 @@
 import type { FullStudy } from '@/db/study'
 import type { BaseObjective, ObjectiveGroup, ObjectiveWithScope } from '@/types/trajectory.types'
 import { getUIFilteredEmissions } from '@/utils/study'
-import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { SubPost } from '@abc-transitionbascarbone/db/enums'
 import { isSubset } from './array'
 
 export const toScopedValues = <T,>(selected: T[], all: T[]) =>
@@ -25,7 +25,7 @@ const scopeKey = (siteIds: string[], subPosts: SubPost[], tagIds: string[]): str
 // Check if parentScope strictly contains childScope (wider but not identical).
 const isScopeWiderThan = (parentScope: ScopeGroup, childScope: ScopeGroup): boolean =>
   scopeKey(parentScope.siteIds, parentScope.subPosts, parentScope.tagIds) !==
-    scopeKey(childScope.siteIds, childScope.subPosts, childScope.tagIds) &&
+  scopeKey(childScope.siteIds, childScope.subPosts, childScope.tagIds) &&
   isSubset(parentScope.siteIds, childScope.siteIds) &&
   isSubset(parentScope.subPosts, childScope.subPosts) &&
   isSubset(parentScope.tagIds, childScope.tagIds)

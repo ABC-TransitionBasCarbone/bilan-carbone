@@ -27,18 +27,18 @@ import { withServerResponse } from '@/utils/serverResponse'
 import { formatEmissionValueForExport, isCASSubPost } from '@/utils/study'
 import { getBcTranslations, getSingularForm } from '@/utils/translation.utils'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
+import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/application/services/permissions/check'
 import {
   ControlMode,
   EmissionSourceCaracterisation,
   EmissionSourceType,
   SubPost,
   Unit,
-} from '@abc-transitionbascarbone/db-common/enums'
-import { LocaleType } from '@abc-transitionbascarbone/i18n/config'
-import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
-import { yearToDate } from '@abc-transitionbascarbone/utils'
-import { Post } from '@abc-transitionbascarbone/utils/charts'
-import { buildCsv } from '@abc-transitionbascarbone/utils/csv'
+} from '@abc-transitionbascarbone/db/enums'
+import { LocaleType } from '@abc-transitionbascarbone/shared/i18n/config'
+import { yearToDate } from '@abc-transitionbascarbone/shared/utils'
+import { Post } from '@abc-transitionbascarbone/shared/utils/charts'
+import { buildCsv } from '@abc-transitionbascarbone/shared/utils/csv'
 import xlsx from 'node-xlsx'
 import { canBeValidated, getCaracterisationsBySubPost, getEmissionSourceEmission } from '../emissionSource'
 import { getAuthenticatedAccount } from '../permissions/account.permissions'
@@ -349,9 +349,9 @@ export async function importEmissionSourcesFromFile(
     tagNamesByRowIndex.push(
       row.tag
         ? row.tag
-            .split(',')
-            .map((t) => t.trim())
-            .filter(Boolean)
+          .split(',')
+          .map((t) => t.trim())
+          .filter(Boolean)
         : [],
     )
   }

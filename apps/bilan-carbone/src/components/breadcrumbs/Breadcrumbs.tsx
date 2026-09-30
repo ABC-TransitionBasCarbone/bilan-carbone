@@ -1,6 +1,6 @@
 'use client'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
-import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { Environment } from '@abc-transitionbascarbone/db/enums'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { Box, BoxProps, Link, Breadcrumbs as MUIBreadcrumbs, styled, Typography } from '@mui/material'
 import { useMemo } from 'react'

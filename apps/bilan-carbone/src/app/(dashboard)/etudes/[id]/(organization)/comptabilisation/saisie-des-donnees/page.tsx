@@ -4,7 +4,7 @@ import StudyDataEntryInfographyPage from '@/components/pages/StudyDataEntryInfog
 import { isOrganizationVersionCR } from '@/db/organization'
 import { canDeleteStudy, canDuplicateStudy, getEnvironmentsForDuplication } from '@/services/permissions/study'
 import { NEWGetAccountRoleOnStudyWithId } from '@/services/serverFunctions/study'
-import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
+import NotFound from '@abc-transitionbascarbone/application/components/pages/NotFound'
 
 const DataEntry = async ({ study, user, studyId }: StudyProps & UserSessionProps) => {
   const userRole = await NEWGetAccountRoleOnStudyWithId(user, studyId)

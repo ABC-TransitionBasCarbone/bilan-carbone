@@ -8,9 +8,9 @@ import {
   editStudyComment,
   getStudyComments,
 } from '@/services/serverFunctions/study'
-import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
-import { CommentStatus, SubPost } from '@abc-transitionbascarbone/db-common/enums'
-import { Button } from '@abc-transitionbascarbone/ui'
+import { useServerFunction } from '@abc-transitionbascarbone/application/components/hooks/useServerFunction'
+import { Button } from '@abc-transitionbascarbone/application/ui'
+import { CommentStatus, SubPost } from '@abc-transitionbascarbone/db/enums'
 import { Card, CardContent, TextField } from '@mui/material'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'

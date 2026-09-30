@@ -24,12 +24,12 @@ yarn install
 ### 2. Variables d'environnement
 
 Create a `.env` copied from `apps/bilan-carbone/.env.dist` and create a `.env.test` copied from `apps/bilan-carbone/.env.test.dist`.
-Do the same in db-common folder.
+Do the same in db folder.
 
 ```bash
 cp apps/bilan-carbone/.env.dist apps/bilan-carbone/.env
 cp apps/bilan-carbone/.env.dist.test apps/bilan-carbone/.env.test
-cp packages/data/db-common/.env.dist packages/data/db-common/.env
+cp packages/data/db/.env.dist packages/data/db/.env
 ```
 
 ### 3. Start the database
@@ -97,7 +97,7 @@ yarn workspace bilan-carbone cypress
 yarn workspace bilan-carbone db:test:reset
 ```
 
-### Database (db-common)
+### Database (db)
 
 ````bash
 # Create a new migration

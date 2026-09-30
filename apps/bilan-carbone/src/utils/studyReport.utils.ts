@@ -6,9 +6,9 @@ import { getEmissionResults } from '@/services/emissionSource'
 import { getActionReductionStats } from '@/utils/actionTrajectory.utils'
 import { getPostsFromSubPosts } from '@/utils/post'
 import { getBcTranslations } from '@/utils/translation.utils'
-import { Environment, Level, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
-import { formatDateFr } from '@abc-transitionbascarbone/utils'
-import { formatNumber } from '@abc-transitionbascarbone/utils/number'
+import { Environment, Level, StudyRole } from '@abc-transitionbascarbone/db/enums'
+import { formatDateFr } from '@abc-transitionbascarbone/shared/utils'
+import { formatNumber } from '@abc-transitionbascarbone/shared/utils/number'
 import { getTranslations } from 'next-intl/server'
 
 const getActionDetails = (
@@ -43,8 +43,8 @@ const getActionDetails = (
       action.subPosts.length === 0
         ? bc.emissionFactors.post.allPost
         : getPostsFromSubPosts(action.subPosts.map((sp) => sp.subPost))
-            .map((p) => (bc.emissionFactors.post as unknown as Record<string, string>)[p] ?? p)
-            .join(', '),
+          .map((p) => (bc.emissionFactors.post as unknown as Record<string, string>)[p] ?? p)
+          .join(', '),
     category: action.category
       .map((c) => (bc.study.transitionPlan.actions.category as Record<string, string>)[c] ?? c)
       .join(', '),

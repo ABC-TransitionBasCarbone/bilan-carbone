@@ -1,7 +1,7 @@
 import type { FullStudy } from '@/db/study'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { hasDeprecationPeriod, isCASSubPost } from '@/utils/study'
-import type { StudyEmissionSource } from '@abc-transitionbascarbone/db-common'
+import type { StudyEmissionSource } from '@abc-transitionbascarbone/db'
 import {
   ControlMode,
   EmissionSourceCaracterisation,
@@ -9,7 +9,7 @@ import {
   Export,
   Import,
   SubPost,
-} from '@abc-transitionbascarbone/db-common/enums'
+} from '@abc-transitionbascarbone/db/enums'
 import { convertTiltSubPostToBCSubPost } from './posts'
 import { getConfidenceInterval, getSquaredStandardDeviationForEmissionSource } from './uncertainty'
 
@@ -40,11 +40,11 @@ const getEmissionSourceCompletion = (
 
   const caracterisations = study.exports?.types.length
     ? getCaracterisationsBySubPost(
-        emissionSource.subPost,
-        environment,
-        study.exports?.types || [],
-        study.exports?.control || ControlMode.Operational,
-      )
+      emissionSource.subPost,
+      environment,
+      study.exports?.types || [],
+      study.exports?.control || ControlMode.Operational,
+    )
     : []
 
   if (study.exports?.types && study.exports.types.length > 0 && caracterisations.length > 0) {

@@ -8,8 +8,8 @@ import { BCUnit } from '@/services/unit'
 import { BCEnvironment } from '@/types/environment'
 import { FeFilters } from '@/types/filters'
 import { convertFiltersToSearchParams, convertSearchParamsToFilters } from '@/utils/emissionFactorFIlters.utils'
-import { EmissionFactorBase, Export, SubPost } from '@abc-transitionbascarbone/db-common/enums'
-import { Post } from '@abc-transitionbascarbone/utils/charts'
+import { EmissionFactorBase, Export, SubPost } from '@abc-transitionbascarbone/db/enums'
+import { Post } from '@abc-transitionbascarbone/shared/utils/charts'
 import { PaginationState } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -67,13 +67,13 @@ const EmissionFactorsFiltersAndTable = ({
   const [filters, setFilters] = useState<FeFilters>(() => {
     const initialFilters = selectEmissionFactor
       ? {
-          archived: false,
-          search: '',
-          locations: [],
-          sources: initialImportVersions,
-          units: [],
-          subPosts: defaultSubPost ? [defaultSubPost] : (['all'] as FeFilters['subPosts']),
-        }
+        archived: false,
+        search: '',
+        locations: [],
+        sources: initialImportVersions,
+        units: [],
+        subPosts: defaultSubPost ? [defaultSubPost] : (['all'] as FeFilters['subPosts']),
+      }
       : convertSearchParamsToFilters(searchParams, initialImportVersions.length > 0 ? initialImportVersions : [])
     return {
       ...initialFilters,

@@ -3,10 +3,10 @@
 import { EngagementActionSteps, EngagementActionTargets } from '@/constants/engagementActions'
 import type { FullStudy } from '@/db/study'
 import { EngagementActionWithSites } from '@/services/serverFunctions/study'
-import { Table as BaseTable } from '@abc-transitionbascarbone/components'
-import { TableActionButton } from '@abc-transitionbascarbone/components/src/base/TableActionButton'
-import { EngagementPhase } from '@abc-transitionbascarbone/db-common/enums'
-import { formatDateFr } from '@abc-transitionbascarbone/utils'
+import { Table as BaseTable } from '@abc-transitionbascarbone/application/components'
+import { TableActionButton } from '@abc-transitionbascarbone/application/components/base/TableActionButton'
+import { EngagementPhase } from '@abc-transitionbascarbone/db/enums'
+import { formatDateFr } from '@abc-transitionbascarbone/shared/utils'
 import {
   ColumnDef,
   getCoreRowModel,

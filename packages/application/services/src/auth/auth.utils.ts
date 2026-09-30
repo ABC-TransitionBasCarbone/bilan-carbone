@@ -1,4 +1,4 @@
-import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { Environment } from '@abc-transitionbascarbone/db/enums'
 import { signIn, signOut, SignOutParams } from 'next-auth/react'
 
 export async function accountHandler(accountId: string) {

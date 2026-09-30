@@ -1,4 +1,4 @@
-import { SEC, TIME_IN_MS } from '@abc-transitionbascarbone/utils'
+import { SEC, TIME_IN_MS } from '@abc-transitionbascarbone/shared/utils'
 import { Snackbar, SnackbarOrigin } from '@mui/material'
 import Alert from '@mui/material/Alert'
 

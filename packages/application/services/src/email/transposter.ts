@@ -1,6 +1,6 @@
-import { Environment } from '@abc-transitionbascarbone/db-common/enums'
-import { getEnvVar } from '@abc-transitionbascarbone/lib/environment'
+import { Environment } from '@abc-transitionbascarbone/db/enums'
 import type { Transporter } from 'nodemailer'
+import { getEnvVar } from '@abc-transitionbascarbone/shared/utils/environment'
 import nodemailer from 'nodemailer'
 import SMTPTransport from 'nodemailer/lib/smtp-transport'
 

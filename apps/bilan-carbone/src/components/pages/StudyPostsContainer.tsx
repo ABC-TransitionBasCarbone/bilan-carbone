@@ -3,12 +3,12 @@ import type { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import { EnvironmentWithSimplifiedStudies } from '@/services/permissions/environment'
 import { subPostsByPost } from '@/services/posts'
-import Block from '@abc-transitionbascarbone/components/src/base/Block'
-import GlossaryModal from '@abc-transitionbascarbone/components/src/modals/GlossaryModal'
-import { StudyRole, SubPost } from '@abc-transitionbascarbone/db-common/enums'
-import { Post } from '@abc-transitionbascarbone/utils/charts'
-import { customRich } from '@abc-transitionbascarbone/utils/customRich'
-import { EnvironmentMode } from '@abc-transitionbascarbone/utils/environments'
+import Block from '@abc-transitionbascarbone/application/components/base/Block'
+import GlossaryModal from '@abc-transitionbascarbone/application/components/modals/GlossaryModal'
+import { StudyRole, SubPost } from '@abc-transitionbascarbone/db/enums'
+import { Post } from '@abc-transitionbascarbone/shared/utils/charts'
+import { customRich } from '@abc-transitionbascarbone/shared/utils/customRich'
+import { EnvironmentMode } from '@abc-transitionbascarbone/shared/utils/environments'
 import { CircularProgress } from '@mui/material'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
@@ -79,9 +79,9 @@ const StudyPostsPageContainer = ({ post, currentSubPost, study, userRole, user }
           { label: tNav('home'), link: '/' },
           study.organizationVersion.isCR
             ? {
-                label: study.organizationVersion.organization.name,
-                link: `/organisations/${study.organizationVersion.id}`,
-              }
+              label: study.organizationVersion.organization.name,
+              link: `/organisations/${study.organizationVersion.id}`,
+            }
             : undefined,
 
           { label: study.name, link: `/etudes/${study.id}` },

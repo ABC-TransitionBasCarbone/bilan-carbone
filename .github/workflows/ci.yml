@@ -22,14 +22,14 @@ jobs:
       - name: Copy .env
         run: cp .env.dist .env
         working-directory: apps/bilan-carbone
-      - name: Copy .env to db-common
-        run: cp apps/bilan-carbone/.env.dist packages/data/db-common/.env
+      - name: Copy .env to db
+        run: cp apps/bilan-carbone/.env.dist packages/data/db/.env
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
         working-directory: .
       - name: Generate prisma files
-        run: yarn workspace @abc-transitionbascarbone/db-common prisma generate
+        run: yarn workspace @abc-transitionbascarbone/db prisma generate
         working-directory: .
       - name: Linter
         run: yarn lint
@@ -56,8 +56,8 @@ jobs:
       - name: Copy .env for bilan-carbone (needed for postinstall)
         run: cp apps/bilan-carbone/.env.dist apps/bilan-carbone/.env
         working-directory: ${{ github.workspace }}
-      - name: Copy .env to db-common
-        run: cp apps/bilan-carbone/.env.dist packages/data/db-common/.env
+      - name: Copy .env to db
+        run: cp apps/bilan-carbone/.env.dist packages/data/db/.env
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
@@ -86,8 +86,8 @@ jobs:
       - name: Copy .env for bilan-carbone (needed for postinstall)
         run: cp apps/bilan-carbone/.env.dist apps/bilan-carbone/.env
         working-directory: ${{ github.workspace }}
-      - name: Copy .env to db-common
-        run: cp apps/bilan-carbone/.env.dist packages/data/db-common/.env
+      - name: Copy .env to db
+        run: cp apps/bilan-carbone/.env.dist packages/data/db/.env
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
@@ -112,7 +112,7 @@ jobs:
           node-version: 24.18.0
           cache: 'yarn'
       - name: Check circular dependencies (bilan-carbone)
-        run: npx madge --circular --extensions ts,tsx --exclude "packages/data/db-common/src/generated" apps/bilan-carbone
+        run: npx madge --circular --extensions ts,tsx --exclude "packages/data/db/src/generated" apps/bilan-carbone
       - name: Check circular dependencies (mip)
         run: npx madge --circular --extensions ts,tsx apps/mip
 
@@ -131,8 +131,8 @@ jobs:
       - name: Copy .env
         run: cp .env.dist .env
         working-directory: apps/bilan-carbone
-      - name: Copy .env to db-common
-        run: cp apps/bilan-carbone/.env.dist packages/data/db-common/.env
+      - name: Copy .env to db
+        run: cp apps/bilan-carbone/.env.dist packages/data/db/.env
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
@@ -140,7 +140,7 @@ jobs:
       - name: Prebuild application
         run: yarn prebuild
       - name: Generate prisma files
-        run: yarn workspace @abc-transitionbascarbone/db-common prisma generate
+        run: yarn workspace @abc-transitionbascarbone/db prisma generate
         working-directory: .
       - name: Launch unit tests
         run: yarn run test
@@ -160,9 +160,9 @@ jobs:
       - name: Copy .env
         run: cp .env.dist .env
         working-directory: apps/mip
-      - name: Copy .env to db-common
+      - name: Copy .env to db
         run: |
-          cp apps/mip/.env.dist packages/data/db-common/.env
+          cp apps/mip/.env.dist packages/data/db/.env
           cp apps/mip/.env.dist apps/bilan-carbone/.env
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
@@ -186,8 +186,8 @@ jobs:
       - name: Copy .env
         run: cp .env.dist .env
         working-directory: apps/bilan-carbone
-      - name: Copy .env to db-common
-        run: cp apps/bilan-carbone/.env.dist packages/data/db-common/.env
+      - name: Copy .env to db
+        run: cp apps/bilan-carbone/.env.dist packages/data/db/.env
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
@@ -212,15 +212,15 @@ jobs:
           cache: 'yarn'
       - name: Copy .env
         run: cp .env.dist .env
-      - name: Copy .env to db-common
-        run: cp .env.dist ../../packages/data/db-common/.env
+      - name: Copy .env to db
+        run: cp .env.dist ../../packages/data/db/.env
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
         working-directory: ${{ github.workspace }}
       - name: Prebuild application
         run: yarn prebuild
       - name: Generate prisma files
-        run: yarn workspace @abc-transitionbascarbone/db-common prisma generate
+        run: yarn workspace @abc-transitionbascarbone/db prisma generate
         working-directory: ${{ github.workspace }}
       - name: Build application
         run: yarn build
@@ -274,13 +274,13 @@ jobs:
         run: docker run -d -p 1080:1080 -p 1025:1025 maildev/maildev
       - name: Copy .env
         run: cp .env.dist .env
-      - name: Copy .env to db-common
-        run: cp apps/bilan-carbone/.env.dist packages/data/db-common/.env
+      - name: Copy .env to db
+        run: cp apps/bilan-carbone/.env.dist packages/data/db/.env
         working-directory: ${{ github.workspace }}
       - name: Copy .env.test
         run: cp .env.dist .env.test
-      - name: Copy .env.test to db-common
-        run: cp apps/bilan-carbone/.env.dist packages/data/db-common/.env
+      - name: Copy .env.test to db
+        run: cp apps/bilan-carbone/.env.dist packages/data/db/.env
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
@@ -288,10 +288,10 @@ jobs:
       - name: Prebuild application
         run: yarn prebuild
       - name: Generate prisma files
-        run: yarn workspace @abc-transitionbascarbone/db-common prisma generate
+        run: yarn workspace @abc-transitionbascarbone/db prisma generate
         working-directory: .
       - name: Migrate DB
-        run: yarn workspace @abc-transitionbascarbone/db-common prisma migrate deploy
+        run: yarn workspace @abc-transitionbascarbone/db prisma migrate deploy
         working-directory: .
       - name: Seed DB
         run: yarn workspace bilan-carbone prisma db seed
@@ -353,13 +353,13 @@ jobs:
           run: docker run -d -p 1080:1080 -p 1025:1025 maildev/maildev
         - name: Copy .env
           run: cp .env.dist .env
-        - name: Copy .env to db-common
-          run: cp apps/mip/.env.dist packages/data/db-common/.env
+        - name: Copy .env to db
+          run: cp apps/mip/.env.dist packages/data/db/.env
           working-directory: ${{ github.workspace }}
         - name: Copy .env.test
           run: cp .env.dist .env.test
-        - name: Copy .env.test to db-common
-          run: cp apps/mip/.env.dist packages/data/db-common/.env
+        - name: Copy .env.test to db
+          run: cp apps/mip/.env.dist packages/data/db/.env
           working-directory: ${{ github.workspace }}
         - name: Copy .env for bilan-carbone (needed for postinstall)
           run: cp apps/bilan-carbone/.env.dist apps/bilan-carbone/.env
@@ -368,10 +368,10 @@ jobs:
           run: yarn install --immutable --immutable-cache --check-cache
           working-directory: .
         - name: Generate prisma files
-          run: yarn workspace @abc-transitionbascarbone/db-common prisma generate
+          run: yarn workspace @abc-transitionbascarbone/db prisma generate
           working-directory: .
         - name: Migrate DB
-          run: yarn workspace @abc-transitionbascarbone/db-common prisma migrate deploy
+          run: yarn workspace @abc-transitionbascarbone/db prisma migrate deploy
           working-directory: .
         - name: Seed DB
           run: yarn workspace mip prisma db seed
@@ -428,8 +428,8 @@ jobs:
         run: docker run -d -p 1080:1080 -p 1025:1025 maildev/maildev
       - name: Copy .env
         run: cp .env.dist .env
-      - name: Copy .env to db-common
-        run: cp apps/bilan-carbone/.env.dist packages/data/db-common/.env
+      - name: Copy .env to db
+        run: cp apps/bilan-carbone/.env.dist packages/data/db/.env
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
@@ -437,10 +437,10 @@ jobs:
       - name: Prebuild application
         run: yarn prebuild
       - name: Generate prisma files
-        run: yarn workspace @abc-transitionbascarbone/db-common prisma generate
+        run: yarn workspace @abc-transitionbascarbone/db prisma generate
         working-directory: .
       - name: Migrate DB
-        run: yarn workspace @abc-transitionbascarbone/db-common prisma migrate deploy
+        run: yarn workspace @abc-transitionbascarbone/db prisma migrate deploy
         working-directory: .
       - name: Seed DB
         run: yarn workspace bilan-carbone prisma db seed

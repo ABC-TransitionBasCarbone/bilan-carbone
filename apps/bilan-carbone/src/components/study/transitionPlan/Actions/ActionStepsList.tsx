@@ -1,5 +1,5 @@
 import { AddActionFormCommand } from '@/services/serverFunctions/action.command'
-import { CustomFormLabel } from '@abc-transitionbascarbone/components/src/form/CustomFormLabel'
+import { CustomFormLabel } from '@abc-transitionbascarbone/application/components/form/CustomFormLabel'
 import { DndContext, DragEndEvent, closestCenter } from '@dnd-kit/core'
 import { SortableContext, rectSortingStrategy } from '@dnd-kit/sortable'
 import { Add } from '@mui/icons-material'

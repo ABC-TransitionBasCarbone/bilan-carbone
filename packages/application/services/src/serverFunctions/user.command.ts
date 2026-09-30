@@ -1,5 +1,5 @@
 import z from 'zod'
-import { Role } from '@abc-transitionbascarbone/db-common/enums'
+import { Role } from '@abc-transitionbascarbone/db/enums'
 
 export const AddMemberCommandValidation = z.object({
   email: z

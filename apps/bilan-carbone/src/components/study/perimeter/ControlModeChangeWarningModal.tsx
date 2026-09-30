@@ -1,8 +1,8 @@
 'use client'
 
-import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
-import { ControlMode } from '@abc-transitionbascarbone/db-common/enums'
-import { customRich } from '@abc-transitionbascarbone/utils/customRich'
+import Modal from '@abc-transitionbascarbone/application/components/modals/Modal'
+import { ControlMode } from '@abc-transitionbascarbone/db/enums'
+import { customRich } from '@abc-transitionbascarbone/shared/utils/customRich'
 import { useTranslations } from 'next-intl'
 
 interface Props {

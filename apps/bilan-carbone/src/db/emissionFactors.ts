@@ -4,7 +4,7 @@ import { FeFilters } from '@/types/filters'
 import { unique } from '@/utils/array'
 import { getEmissionFactorSubPostsMap, isMonetaryEmissionFactor } from '@/utils/emissionFactors'
 import { flattenSubposts } from '@/utils/post'
-import { Prisma } from '@abc-transitionbascarbone/db-common'
+import { Prisma } from '@abc-transitionbascarbone/db'
 import {
   EmissionFactorBase,
   EmissionFactorStatus,
@@ -12,8 +12,8 @@ import {
   Import,
   SubPost,
   Unit,
-} from '@abc-transitionbascarbone/db-common/enums'
-import { LocaleType } from '@abc-transitionbascarbone/i18n/config'
+} from '@abc-transitionbascarbone/db/enums'
+import { LocaleType } from '@abc-transitionbascarbone/shared/i18n/config'
 import { Session } from 'next-auth'
 import { prismaClient } from './client.server'
 import { getOrgVersionWithOrgId } from './organization'
@@ -204,8 +204,8 @@ const getBaseFilterForEmissionFactors = (
     ...(filters.archived ? {} : { status: { not: EmissionFactorStatus.Archived } }),
     ...(filters.units.length > 0
       ? {
-          OR: [{ unit: { in: filters.units as Unit[] } }, { customUnit: { in: filters.units as string[] } }],
-        }
+        OR: [{ unit: { in: filters.units as Unit[] } }, { customUnit: { in: filters.units as string[] } }],
+      }
       : {}),
     ...(filters.base && filters.base.length !== Object.values(EmissionFactorBase).length
       ? { base: { in: filters.base } }
@@ -226,12 +226,12 @@ const getBaseFilterForEmissionFactors = (
         },
         filters.search
           ? {
-              OR: [
-                { title: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
-                { attribute: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
-                { frontiere: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
-              ],
-            }
+            OR: [
+              { title: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
+              { attribute: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
+              { frontiere: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
+            ],
+          }
           : {},
         filters.locations.length > 0 ? { location: { in: filters.locations, mode: Prisma.QueryMode.insensitive } } : {},
       ],

@@ -2,8 +2,8 @@
 
 import { getConfidenceInterval, getQualitativeUncertaintyFromSquaredStandardDeviation } from '@/services/uncertainty'
 import { formatConfidenceInterval, formatEmissionFromNumber } from '@/utils/study'
-import { Table as BaseTable } from '@abc-transitionbascarbone/components'
-import { StudyResultUnit } from '@abc-transitionbascarbone/db-common'
+import { Table as BaseTable } from '@abc-transitionbascarbone/application/components'
+import { StudyResultUnit } from '@abc-transitionbascarbone/db'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { ColumnDef, getCoreRowModel, getExpandedRowModel, useReactTable } from '@tanstack/react-table'

@@ -1,14 +1,14 @@
 import { getEnvironnementRessources, getFeedbackFormUrl } from '@/utils/ressources'
-import { Environment } from '@abc-transitionbascarbone/db-common/enums'
-import { Translations } from '@abc-transitionbascarbone/lib'
-import { getEnvVar } from '@abc-transitionbascarbone/lib/environment'
+import { Translations } from '@abc-transitionbascarbone/application/lib'
+import { Environment } from '@abc-transitionbascarbone/db/enums'
+import { getEnvVar } from '@abc-transitionbascarbone/shared/utils/environment'
 import { getTranslations } from 'next-intl/server'
 
 jest.mock('next-intl/server', () => ({
   getTranslations: jest.fn(),
 }))
 
-jest.mock('@abc-transitionbascarbone/lib/environment', () => ({
+jest.mock('@abc-transitionbascarbone/shared/utils/environment', () => ({
   getEnvVar: jest.fn(),
 }))
 

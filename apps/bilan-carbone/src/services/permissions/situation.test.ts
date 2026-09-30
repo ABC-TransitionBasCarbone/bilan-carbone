@@ -1,4 +1,4 @@
-import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { Environment } from '@abc-transitionbascarbone/db/enums'
 import { canSaveSituationOnStudy, isSimplifiedContributor } from './situation'
 import * as studyPermissionsModule from './study'
 

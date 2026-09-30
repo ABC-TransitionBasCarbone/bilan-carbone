@@ -1,6 +1,6 @@
 import { getLocale } from '@/i18n/locale'
-import type { Prisma } from '@abc-transitionbascarbone/db-common'
-import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import type { Prisma } from '@abc-transitionbascarbone/db'
+import { Environment } from '@abc-transitionbascarbone/db/enums'
 import { prismaClient } from './client.server'
 
 export const getAllActualitiesLocale = async (environment: Environment) => {

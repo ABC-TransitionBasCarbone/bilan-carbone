@@ -1,4 +1,4 @@
-import { ActionRelevance } from '@abc-transitionbascarbone/db-common/enums'
+import { ActionRelevance } from '@abc-transitionbascarbone/db/enums'
 
 export const RELEVANCE_TO_PRIORITY: Record<ActionRelevance, number> = {
   [ActionRelevance.ReductionWithinOrganisationCoreBusiness]: 1,

@@ -2,7 +2,7 @@ import { mockedOrganizationVersionMipId } from '@/tests/utils/models/organizatio
 import { getMockedAuthUser, getMockedDbAccountMip, mockedAccountMipId } from '@/tests/utils/models/user'
 import { AccountMipWithUser } from '@/types/accountMip.types'
 import * as userUtils from '@/utils/user'
-import { RoleMip, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
+import { RoleMip, UserStatus } from '@abc-transitionbascarbone/db/enums'
 import { expect } from '@jest/globals'
 import { canAddMember, canChangeRole, canDeleteMember } from './user'
 

@@ -1,4 +1,4 @@
-import { ChoiceQuestion } from '@abc-transitionbascarbone/typeguards'
+import { ChoiceQuestion } from '@abc-transitionbascarbone/shared/typeguards'
 import { FormControl, FormControlLabel, FormHelperText, Radio, RadioGroup } from '@mui/material'
 
 interface ChoiceQuestionInputProps {

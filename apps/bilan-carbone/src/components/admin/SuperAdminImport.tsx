@@ -1,7 +1,7 @@
 'use client'
 
 import { sendAddedUsersAndProccess, verifyPasswordAndProcessUsers } from '@/services/serverFunctions/user'
-import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { Environment } from '@abc-transitionbascarbone/db/enums'
 import { useTranslations } from 'next-intl'
 import InputFileUpload from '../base/InputFileUpload'
 

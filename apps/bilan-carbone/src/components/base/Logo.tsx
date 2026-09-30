@@ -1,4 +1,4 @@
-import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { Environment } from '@abc-transitionbascarbone/db/enums'
 import { useMemo } from 'react'
 
 type LogoConfig = {

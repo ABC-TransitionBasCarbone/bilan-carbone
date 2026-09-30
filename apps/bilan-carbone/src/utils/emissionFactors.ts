@@ -2,9 +2,9 @@ import { wasteImpact } from '@/constants/emissions'
 import { wasteEmissionFactors } from '@/constants/wasteEmissionFactors'
 import { hasWasteImpact } from '@/services/permissions/environment'
 import { convertTiltSubPostToBCSubPost, subPostsByPostBC } from '@/services/posts'
-import type { EmissionFactor, Prisma } from '@abc-transitionbascarbone/db-common'
-import { Environment, Import, SubPost, Unit } from '@abc-transitionbascarbone/db-common/enums'
-import { Post } from '@abc-transitionbascarbone/utils/charts'
+import type { EmissionFactor, Prisma } from '@abc-transitionbascarbone/db'
+import { Environment, Import, SubPost, Unit } from '@abc-transitionbascarbone/db/enums'
+import { Post } from '@abc-transitionbascarbone/shared/utils/charts'
 import { unique } from './array'
 
 export const isWasteEmissionFactor = (

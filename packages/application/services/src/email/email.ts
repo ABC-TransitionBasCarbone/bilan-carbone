@@ -1,6 +1,6 @@
-import { Environment } from '@abc-transitionbascarbone/db-common/enums'
-import { getEnvVar } from '@abc-transitionbascarbone/lib/environment'
-import { EnvironmentNames } from '@abc-transitionbascarbone/utils/environments'
+import { Environment } from '@abc-transitionbascarbone/db/enums'
+import { getEnvVar } from '@abc-transitionbascarbone/shared/utils/environment'
+import { EnvironmentNames } from '@abc-transitionbascarbone/shared/utils/environments'
 import { getTranslations } from 'next-intl/server'
 import { sendEmail } from './send'
 import { getEnvResetLink } from './utils'
@@ -60,7 +60,9 @@ export const sendAddedActiveUserEmail = async (
   const envInfo = await getEnvInfo(newEnv)
   const oldEnvsText =
     oldEnvs.length > 1
-      ? await tBody('addedActiveUser.oldEnvsMultiple', { envNames: oldEnvs.map((env) => EnvironmentNames[env]).join(', ') })
+      ? await tBody('addedActiveUser.oldEnvsMultiple', {
+        envNames: oldEnvs.map((env) => EnvironmentNames[env]).join(', '),
+      })
       : await tBody('addedActiveUser.oldEnvsSingle', { envName: EnvironmentNames[oldEnvs[0]] })
   return sendEmail(newEnv, [toEmail], await tSubject('addedActiveUser'), 'added-active-user', {
     link: `${BASE_URL}/login`,
@@ -123,7 +125,12 @@ export const sendUserOnStudyInvitationEmail = async (
     creatorName,
     role: roleOnStudy,
     t_helloName: await tBody('helloName', { name: userName }),
-    t_added: await tBody('userOnStudyInvitation.added', { creatorName, role: roleOnStudy, studyName, organizationName }),
+    t_added: await tBody('userOnStudyInvitation.added', {
+      creatorName,
+      role: roleOnStudy,
+      studyName,
+      organizationName,
+    }),
     t_access: await tBody('userOnStudyInvitation.access'),
   })
 }
@@ -152,7 +159,12 @@ export const sendNewUserOnStudyInvitationEmail = async (
       creatorName,
       role: roleOnStudy,
       t_welcome: await tBody('newUserOnStudyInvitation.welcome'),
-      t_added: await tBody('newUserOnStudyInvitation.added', { creatorName, role: roleOnStudy, studyName, organizationName }),
+      t_added: await tBody('newUserOnStudyInvitation.added', {
+        creatorName,
+        role: roleOnStudy,
+        studyName,
+        organizationName,
+      }),
       t_access: await tBody('newUserOnStudyInvitation.access'),
     },
   )
@@ -230,7 +242,8 @@ export const sendCampaignCreatedByCollaboratorEmail = async (
     return null
   }
 
-  const resolvedOrganizationName = organizationName || (await tBody('campaignCreatedByCollaborator.organizationFallback'))
+  const resolvedOrganizationName =
+    organizationName || (await tBody('campaignCreatedByCollaborator.organizationFallback'))
 
   return sendEmail(
     Environment.MIP,

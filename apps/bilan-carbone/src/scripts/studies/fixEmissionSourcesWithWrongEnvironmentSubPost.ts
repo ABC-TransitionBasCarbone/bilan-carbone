@@ -1,6 +1,6 @@
 import { prismaClient } from '@/db/client.server'
 import { getValidSubPostsForEnvironment } from '@/utils/importEmissionSources.utils'
-import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { Environment } from '@abc-transitionbascarbone/db/enums'
 
 /**
  * Cleanup script for emission sources assigned to subposts that do not belong
@@ -55,7 +55,7 @@ const fixEmissionSourcesWithWrongEnvironmentSubPost = async (dryRun = true) => {
       for (const source of envInvalidSources) {
         console.log(
           `  Study "${source.study.name}" (${source.study.id}) [${environment}]: ` +
-            `source "${source.name}" (${source.id}) has subPost "${source.subPost}"`,
+          `source "${source.name}" (${source.id}) has subPost "${source.subPost}"`,
         )
       }
 

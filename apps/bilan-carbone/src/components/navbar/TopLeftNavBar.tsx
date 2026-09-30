@@ -2,9 +2,9 @@ import NavbarOrganizationMenu from '@/components/navbar/NavbarOrganizationMenu'
 import { hasAlwaysAccessToOrganizationVersion, hasHomeButtonHeader, isTilt } from '@/services/permissions/environment'
 import { hasAccessToEmissionFactors } from '@/services/permissions/environmentAdvanced'
 import { isAdmin } from '@/utils/user'
-import { Role } from '@abc-transitionbascarbone/db-common/enums'
-import NavbarButton from '@abc-transitionbascarbone/ui/navbar/NavbarButton'
-import NavbarLink from '@abc-transitionbascarbone/ui/navbar/NavbarLink'
+import NavbarButton from '@abc-transitionbascarbone/application/ui/navbar/NavbarButton'
+import NavbarLink from '@abc-transitionbascarbone/application/ui/navbar/NavbarLink'
+import { Role } from '@abc-transitionbascarbone/db/enums'
 import { Box, MenuItem } from '@mui/material'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
@@ -47,16 +47,16 @@ const TopLeftNavBar = ({ user, hasFormation, isFootprintsEnabled, hasTrainedUser
             {(isAdmin(user.role) ||
               user.role === Role.GESTIONNAIRE ||
               hasAlwaysAccessToOrganizationVersion(user.environment)) && (
-              <MenuItem>
-                <NavbarLink
-                  data-testid="link-edit-organisation"
-                  href={`/organisations/${user.organizationVersionId}/modifier`}
-                  onClick={handleClose}
-                >
-                  {t('information')}
-                </NavbarLink>
-              </MenuItem>
-            )}
+                <MenuItem>
+                  <NavbarLink
+                    data-testid="link-edit-organisation"
+                    href={`/organisations/${user.organizationVersionId}/modifier`}
+                    onClick={handleClose}
+                  >
+                    {t('information')}
+                  </NavbarLink>
+                </MenuItem>
+              )}
             <MenuItem>
               <NavbarLink data-testid="link-equipe" href="/equipe" onClick={handleClose}>
                 {t('team')}

@@ -10,7 +10,7 @@ import {
   validateEmissionSourcesFromFile,
 } from '@/services/serverFunctions/importEmissionSources'
 import { PreviewEmissionSourceRow } from '@/types/importEmissionSources.types'
-import { Post } from '@abc-transitionbascarbone/utils/charts'
+import { Post } from '@abc-transitionbascarbone/shared/utils/charts'
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

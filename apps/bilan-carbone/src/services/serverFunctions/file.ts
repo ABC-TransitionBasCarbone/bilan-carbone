@@ -1,7 +1,7 @@
 'use server'
 
 import { withServerResponse } from '@/utils/serverResponse'
-import { Document } from '@abc-transitionbascarbone/db-common'
+import { Document } from '@abc-transitionbascarbone/db'
 import xlsx from 'node-xlsx'
 import { canAccessFlowFromStudy } from '../permissions/study'
 import { getFileUrlFromBucket } from '../serverFunctions/scaleway'

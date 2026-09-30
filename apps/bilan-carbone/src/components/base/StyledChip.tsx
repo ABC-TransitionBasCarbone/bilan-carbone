@@ -1,4 +1,4 @@
-import { BaseStyledChip } from '@abc-transitionbascarbone/ui'
+import { BaseStyledChip } from '@abc-transitionbascarbone/application/ui'
 import { ChipProps, Tooltip } from '@mui/material'
 import classNames from 'classnames'
 import { useEffect, useRef, useState } from 'react'

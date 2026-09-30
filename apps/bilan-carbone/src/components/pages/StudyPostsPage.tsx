@@ -11,14 +11,14 @@ import {
   getEmissionSourceStatus,
   getSortedEmissionSources,
 } from '@/utils/emissionSources'
+import { useToast } from '@abc-transitionbascarbone/application/ui'
 import {
   ControlMode,
   EmissionSourceCaracterisation,
   EmissionSourceType,
   StudyRole,
-} from '@abc-transitionbascarbone/db-common/enums'
-import { useToast } from '@abc-transitionbascarbone/ui'
-import { Post } from '@abc-transitionbascarbone/utils/charts'
+} from '@abc-transitionbascarbone/db/enums'
+import { Post } from '@abc-transitionbascarbone/shared/utils/charts'
 import Fuse from 'fuse.js'
 import { UserSession } from 'next-auth'
 import { useLocale, useTranslations } from 'next-intl'
@@ -61,19 +61,19 @@ const StudyPostsPage = ({ post, study, userRole, emissionSources, siteId, studyS
     () =>
       study.exports && study.exports.types.length
         ? unique(
-            subPosts.reduce(
-              (res, subPost) => [
-                ...res,
-                ...getCaracterisationsBySubPost(
-                  subPost,
-                  study.organizationVersion.environment,
-                  study.exports?.types || [],
-                  study.exports?.control || ControlMode.Operational,
-                ),
-              ],
-              [] as EmissionSourceCaracterisation[],
-            ),
-          )
+          subPosts.reduce(
+            (res, subPost) => [
+              ...res,
+              ...getCaracterisationsBySubPost(
+                subPost,
+                study.organizationVersion.environment,
+                study.exports?.types || [],
+                study.exports?.control || ControlMode.Operational,
+              ),
+            ],
+            [] as EmissionSourceCaracterisation[],
+          ),
+        )
         : [],
 
     [study.exports, study.organizationVersion.environment, subPosts],

@@ -1,8 +1,8 @@
 'use client'
 
 import { OrganizationVersionWithOrganization } from '@/db/organization'
-import Block from '@abc-transitionbascarbone/components/src/base/Block'
-import { Button } from '@abc-transitionbascarbone/ui'
+import Block from '@abc-transitionbascarbone/application/components/base/Block'
+import { Button } from '@abc-transitionbascarbone/application/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useRef, useState } from 'react'

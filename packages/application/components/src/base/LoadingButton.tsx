@@ -1,4 +1,4 @@
-import { Button } from '@abc-transitionbascarbone/ui'
+import { Button } from '@abc-transitionbascarbone/application/ui'
 import { ButtonProps, CircularProgress } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

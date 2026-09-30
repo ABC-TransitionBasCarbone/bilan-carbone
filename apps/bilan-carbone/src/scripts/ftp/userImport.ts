@@ -8,8 +8,8 @@ import {
   getRawOrganizationBySiret,
 } from '@/db/organization'
 import { createUsersWithAccount, organizationVersionActiveAccountsCount, updateAccount } from '@/db/user'
-import { Prisma } from '@abc-transitionbascarbone/db-common'
-import { Environment, Level, Role, UserSource, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
+import { Prisma } from '@abc-transitionbascarbone/db'
+import { Environment, Level, Role, UserSource, UserStatus } from '@abc-transitionbascarbone/db/enums'
 import { getEnvRoleFromBase } from '../../../prisma/seed/utils'
 
 type Training = {
@@ -95,12 +95,12 @@ const processUser = async (value: UserImportRecord, importedFileDate: Date) => {
     ? rawTrainings
     : rawTrainings
       ? (() => {
-          try {
-            return JSON.parse(rawTrainings)
-          } catch {
-            return []
-          }
-        })()
+        try {
+          return JSON.parse(rawTrainings)
+        } catch {
+          return []
+        }
+      })()
       : []
 
   const environment = (dataEnvironment || Environment.BC) as Environment

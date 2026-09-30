@@ -1,4 +1,4 @@
-import { Environment, Role, RoleMip } from '@abc-transitionbascarbone/db-common/enums'
+import { Environment, Role, RoleMip } from '@abc-transitionbascarbone/db/enums'
 import { expect } from '@jest/globals'
 import { canBeUntrainedRole } from './user'
 import { generateResetToken } from './user.server'

@@ -2,7 +2,7 @@ import * as studyDbModule from '@/db/study'
 import * as transitionPlanDbModule from '@/db/transitionPlan'
 import * as authModule from '@/services/auth'
 import * as studyPermissionsModule from '@/services/permissions/study'
-import { TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
+import { TrajectoryType } from '@abc-transitionbascarbone/db/enums'
 import { expect } from '@jest/globals'
 import { CreateTrajectoryInput, createTrajectoryWithObjectives } from './trajectory.serverFunction'
 
@@ -30,7 +30,7 @@ jest.mock('../../db/study', () => ({
   getStudyStartDate: jest.fn(),
 }))
 
-jest.mock('@abc-transitionbascarbone/services/permissions/check', () => ({
+jest.mock('@abc-transitionbascarbone/application/services/permissions/check', () => ({
   NOT_AUTHORIZED: 'NOT_AUTHORIZED',
 }))
 

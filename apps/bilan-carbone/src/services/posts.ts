@@ -1,13 +1,13 @@
 import { BCEnvironment } from '@/types/environment'
-import { Environment, SubPost } from '@abc-transitionbascarbone/db-common/enums'
 import {
   BCPost,
   ClicksonPost,
   CutPost,
   TiltAdvancedPost,
   TiltSimplifiedPost,
-} from '@abc-transitionbascarbone/services/results/posts.enums'
-import { Post } from '@abc-transitionbascarbone/utils/charts'
+} from '@abc-transitionbascarbone/application/services/results/posts.enums'
+import { Environment, SubPost } from '@abc-transitionbascarbone/db/enums'
+import { Post } from '@abc-transitionbascarbone/shared/utils/charts'
 
 // Re-export enums for backward compatibility
 export { BCPost, ClicksonPost, CutPost, TiltAdvancedPost, TiltSimplifiedPost }

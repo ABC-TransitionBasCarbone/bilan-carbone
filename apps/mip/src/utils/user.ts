@@ -1,4 +1,4 @@
-import { RoleMip } from '@abc-transitionbascarbone/db-common/enums'
+import { RoleMip } from '@abc-transitionbascarbone/db/enums'
 import { UserSession } from 'next-auth'
 
 export const isAdmin = (userRole: RoleMip) => userRole === RoleMip.ADMIN || userRole === RoleMip.SUPER_ADMIN

@@ -1,4 +1,4 @@
-import { Prisma } from '@abc-transitionbascarbone/db-common'
+import { Prisma } from '@abc-transitionbascarbone/db'
 
 const baseUserInfoSelect = {
   user: {

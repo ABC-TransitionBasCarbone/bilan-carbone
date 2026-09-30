@@ -28,14 +28,14 @@ import { compareSectenVersions } from '@/utils/secten'
 import { calculateSectoralSNBCReductionRates, getDefaultSnbcSectoralTrajectory } from '@/utils/snbc'
 import { getAllTagIds } from '@/utils/tag.utils'
 import { getInitialCurrentStep, readStoredStringArray } from '@/utils/transitionPlan.utils'
-import Block from '@abc-transitionbascarbone/components/src/base/Block'
-import Box from '@abc-transitionbascarbone/components/src/base/Box'
-import Image from '@abc-transitionbascarbone/components/src/document/Image'
-import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
-import type { ExternalStudy, SectenInfo, SectenVersion, TransitionPlan } from '@abc-transitionbascarbone/db-common'
-import { TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
-import { Button } from '@abc-transitionbascarbone/ui'
-import { customRich } from '@abc-transitionbascarbone/utils/customRich'
+import Block from '@abc-transitionbascarbone/application/components/base/Block'
+import Box from '@abc-transitionbascarbone/application/components/base/Box'
+import Image from '@abc-transitionbascarbone/application/components/document/Image'
+import { useServerFunction } from '@abc-transitionbascarbone/application/components/hooks/useServerFunction'
+import { Button } from '@abc-transitionbascarbone/application/ui'
+import type { ExternalStudy, SectenInfo, SectenVersion, TransitionPlan } from '@abc-transitionbascarbone/db'
+import { TrajectoryType } from '@abc-transitionbascarbone/db/enums'
+import { customRich } from '@abc-transitionbascarbone/shared/utils/customRich'
 import DeleteIcon from '@mui/icons-material/Delete'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -350,9 +350,9 @@ const TransitionPlanInitPage = ({
           { label: tNav('home'), link: '/' },
           study.organizationVersion.isCR
             ? {
-                label: study.organizationVersion.organization.name,
-                link: `/organisations/${study.organizationVersion.id}`,
-              }
+              label: study.organizationVersion.organization.name,
+              link: `/organisations/${study.organizationVersion.id}`,
+            }
             : undefined,
           { label: study.name, link: `/etudes/${study.id}` },
         ].filter((link) => link !== undefined)}
@@ -363,15 +363,15 @@ const TransitionPlanInitPage = ({
         actions={
           canEdit && transitionPlan
             ? [
-                {
-                  actionType: 'button',
-                  variant: 'contained',
-                  color: 'error',
-                  onClick: () => setShowDeleteModal(true),
-                  title: t('trajectories.delete.title'),
-                  children: <DeleteIcon />,
-                },
-              ]
+              {
+                actionType: 'button',
+                variant: 'contained',
+                color: 'error',
+                onClick: () => setShowDeleteModal(true),
+                title: t('trajectories.delete.title'),
+                children: <DeleteIcon />,
+              },
+            ]
             : undefined
         }
       >
@@ -494,7 +494,7 @@ const TransitionPlanInitPage = ({
               selectedSbtiTrajectories={sanitizedSelectedSbtiTrajectories}
               selectedCustomTrajectories={
                 defaultSnbcSectoralTrajectory &&
-                sanitizedSelectedSnbcTrajectories.includes(defaultSnbcSectoralTrajectory.id)
+                  sanitizedSelectedSnbcTrajectories.includes(defaultSnbcSectoralTrajectory.id)
                   ? [defaultSnbcSectoralTrajectory.id]
                   : []
               }

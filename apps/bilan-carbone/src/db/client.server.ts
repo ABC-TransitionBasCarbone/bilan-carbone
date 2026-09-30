@@ -1,4 +1,4 @@
-import { PrismaClient } from '@abc-transitionbascarbone/db-common'
+import { PrismaClient } from '@abc-transitionbascarbone/db'
 import { PrismaPg } from '@prisma/adapter-pg'
 // Au lieu de : import 'server-only' pour pas casser la seed
 if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'test') {

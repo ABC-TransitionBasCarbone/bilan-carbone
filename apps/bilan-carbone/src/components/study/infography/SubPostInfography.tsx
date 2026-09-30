@@ -1,4 +1,4 @@
-import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { SubPost } from '@abc-transitionbascarbone/db/enums'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

@@ -1,4 +1,4 @@
-import { SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { SubPost } from '@abc-transitionbascarbone/db/enums'
 import { expect } from '@jest/globals'
 import { convertTiltSubPostToBCSubPost, subPostBCToSubPostTiltMapping } from './posts'
 

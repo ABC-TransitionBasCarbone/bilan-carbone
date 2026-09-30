@@ -2,8 +2,8 @@ import { DefaultStudyTags } from '@/constants/tag.constants'
 import { reCreateBegesRules, reCreateGHGPRules } from '@/db/exports'
 import { getSectenVersion, updateSectenVersion } from '@/scripts/secten/secten'
 import { getAllowedLevels } from '@/utils/study'
-import type { Account, User } from '@abc-transitionbascarbone/db-common'
-import { PrismaClient } from '@abc-transitionbascarbone/db-common'
+import type { Account, User } from '@abc-transitionbascarbone/db'
+import { PrismaClient } from '@abc-transitionbascarbone/db'
 import {
   EmissionFactorBase,
   EmissionFactorStatus,
@@ -16,9 +16,9 @@ import {
   Unit,
   UserChecklist,
   UserStatus,
-} from '@abc-transitionbascarbone/db-common/enums'
-import { signPassword } from '@abc-transitionbascarbone/utils/auth'
-import { courseEnvironments, environmentsWithChecklist } from '@abc-transitionbascarbone/utils/environments'
+} from '@abc-transitionbascarbone/db/enums'
+import { signPassword } from '@abc-transitionbascarbone/shared/utils/auth'
+import { courseEnvironments, environmentsWithChecklist } from '@abc-transitionbascarbone/shared/utils/environments'
 import { faker } from '@faker-js/faker'
 import { PrismaPg } from '@prisma/adapter-pg'
 
@@ -861,18 +861,18 @@ const users = async () => {
           },
           ...(DefaultStudyTags[Environment.TILT]?.length
             ? {
-                tagFamilies: {
-                  create: (DefaultStudyTags[Environment.TILT] ?? []).map((familyTag) => ({
-                    name: familyTag.name,
-                    tags: {
-                      create: familyTag.tags.map((tag) => ({
-                        name: tag.name,
-                        color: tag.color,
-                      })),
-                    },
-                  })),
-                },
-              }
+              tagFamilies: {
+                create: (DefaultStudyTags[Environment.TILT] ?? []).map((familyTag) => ({
+                  name: familyTag.name,
+                  tags: {
+                    create: familyTag.tags.map((tag) => ({
+                      name: tag.name,
+                      color: tag.color,
+                    })),
+                  },
+                })),
+              },
+            }
             : {}),
         },
       })

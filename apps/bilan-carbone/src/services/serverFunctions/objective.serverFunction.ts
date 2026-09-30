@@ -17,8 +17,8 @@ import {
 import { getOldestPastStudyYear, getTrajectoryTypeAndRefYear, updateTrajectoryType } from '@/db/trajectory'
 import { getTrajectoryWithTransitionPlan, getTransitionPlanById } from '@/db/transitionPlan'
 import { withServerResponse } from '@/utils/serverResponse'
-import { SubPost, TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
-import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
+import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/application/services/permissions/check'
+import { SubPost, TrajectoryType } from '@abc-transitionbascarbone/db/enums'
 import { hasEditAccessOnStudy } from '../permissions/study'
 
 export interface CreateObjectiveInput {

@@ -1,8 +1,8 @@
 'use client'
 
 import type { FullStudy } from '@/db/study'
-import Block from '@abc-transitionbascarbone/components/src/base/Block'
-import { Environment, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
+import Block from '@abc-transitionbascarbone/application/components/base/Block'
+import { Environment, StudyRole } from '@abc-transitionbascarbone/db/enums'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
@@ -41,9 +41,9 @@ const StudyDataEntryInfographyPage = ({
           { label: tNav('home'), link: '/' },
           study.organizationVersion.isCR
             ? {
-                label: study.organizationVersion.organization.name,
-                link: `/organisations/${study.organizationVersion.id}`,
-              }
+              label: study.organizationVersion.organization.name,
+              link: `/organisations/${study.organizationVersion.id}`,
+            }
             : undefined,
 
           { label: study.name, link: `/etudes/${study.id}` },

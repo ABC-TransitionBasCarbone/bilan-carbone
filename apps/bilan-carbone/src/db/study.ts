@@ -17,7 +17,7 @@ import type {
   StudyTag,
   StudyTagFamily,
   SubPost,
-} from '@abc-transitionbascarbone/db-common'
+} from '@abc-transitionbascarbone/db'
 import {
   CommentStatus,
   ControlMode,
@@ -25,9 +25,9 @@ import {
   Export,
   Import,
   StudyRole,
-} from '@abc-transitionbascarbone/db-common/enums'
-import { getEnvVar } from '@abc-transitionbascarbone/lib/environment'
-import { Post } from '@abc-transitionbascarbone/utils/charts'
+} from '@abc-transitionbascarbone/db/enums'
+import { Post } from '@abc-transitionbascarbone/shared/utils/charts'
+import { getEnvVar } from '@abc-transitionbascarbone/shared/utils/environment'
 import { UserSession } from 'next-auth'
 import { cache } from 'react'
 import { getAccountOrganizationVersions } from './account'
@@ -455,15 +455,15 @@ export const getAllowedStudyIdByAccount = async (account: UserSession) => {
         { allowedUsers: { some: { accountId: account.id, role: { notIn: [StudyRole.Reader] } } } },
         ...(isAllowedOnPublicStudies
           ? [
-              {
-                AND: [
-                  { organizationVersionId: { in: organizationVersionIds } },
-                  ...(isAdmin(account.role)
-                    ? []
-                    : [{ isPublic: true, level: { in: getAllowedLevels(account.level) } }]),
-                ],
-              },
-            ]
+            {
+              AND: [
+                { organizationVersionId: { in: organizationVersionIds } },
+                ...(isAdmin(account.role)
+                  ? []
+                  : [{ isPublic: true, level: { in: getAllowedLevels(account.level) } }]),
+              ],
+            },
+          ]
           : []),
       ],
     },
@@ -506,18 +506,18 @@ export const getAllowedStudiesByUserAndOrganization = async (
       ...(isAdminOnOrga(user, organizationVersion)
         ? {}
         : {
-            OR: [
-              { allowedUsers: { some: { accountId: user.accountId } } },
-              { contributors: { some: { accountId: user.accountId } } },
-              { isPublic: true, organizationVersionId: user.organizationVersionId as string },
-              {
-                isPublic: true,
-                organizationVersionId: {
-                  in: childOrganizations.map((organizationVersion) => organizationVersion.id),
-                },
+          OR: [
+            { allowedUsers: { some: { accountId: user.accountId } } },
+            { contributors: { some: { accountId: user.accountId } } },
+            { isPublic: true, organizationVersionId: user.organizationVersionId as string },
+            {
+              isPublic: true,
+              organizationVersionId: {
+                in: childOrganizations.map((organizationVersion) => organizationVersion.id),
               },
-            ],
-          }),
+            },
+          ],
+        }),
     },
   })
   return filterAllowedStudies(user, studies)

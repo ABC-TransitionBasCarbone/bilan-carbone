@@ -1,5 +1,5 @@
 import { AccountWithUser } from '@/types/account.types'
-import type { OrganizationVersion, User } from '@abc-transitionbascarbone/db-common'
+import type { OrganizationVersion, User } from '@abc-transitionbascarbone/db'
 import { UserSession } from 'next-auth'
 
 // Type predicate so checking `organizationVersion` narrows `account` itself, not just the property access

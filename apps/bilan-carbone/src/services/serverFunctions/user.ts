@@ -54,18 +54,6 @@ import { AccountWithUser } from '@/types/account.types'
 import { withServerResponse } from '@/utils/serverResponse'
 import { getRoleToSetForUntrained } from '@/utils/user'
 import { accountWithUserToUserSession, hasOrganizationVersion, userSessionToDbUser } from '@/utils/userAccounts'
-import type { Prisma } from '@abc-transitionbascarbone/db-common'
-import { Organization } from '@abc-transitionbascarbone/db-common'
-import { updateUserResetTokenForEmail } from '@abc-transitionbascarbone/db-common/db'
-import {
-  Country,
-  DeactivatableFeature,
-  Environment,
-  Level,
-  Role,
-  UserChecklist,
-  UserStatus,
-} from '@abc-transitionbascarbone/db-common/enums'
 import {
   sendActivationEmail,
   sendActivationRequest,
@@ -77,13 +65,29 @@ import {
   sendNewUserOnStudyInvitationEmail,
   sendResetPassword,
   sendUserOnStudyInvitationEmail,
-} from '@abc-transitionbascarbone/services/email/email'
-import { EMAIL_SENT, MORE_THAN_ONE, NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
-import { updateUserResetToken } from '@abc-transitionbascarbone/services/serverFunctions/user'
-import { AddMemberCommand } from '@abc-transitionbascarbone/services/serverFunctions/user.command'
-import { DAY, HOUR, MIN, TIME_IN_MS, YEAR } from '@abc-transitionbascarbone/utils'
-import { environmentsWithChecklist } from '@abc-transitionbascarbone/utils/environments'
-import { generateResetToken, hashResetToken } from '@abc-transitionbascarbone/utils/user.server'
+} from '@abc-transitionbascarbone/application/services/email/email'
+import {
+  EMAIL_SENT,
+  MORE_THAN_ONE,
+  NOT_AUTHORIZED,
+} from '@abc-transitionbascarbone/application/services/permissions/check'
+import { updateUserResetToken } from '@abc-transitionbascarbone/application/services/serverFunctions/user'
+import { AddMemberCommand } from '@abc-transitionbascarbone/application/services/serverFunctions/user.command'
+import type { Prisma } from '@abc-transitionbascarbone/db'
+import { Organization } from '@abc-transitionbascarbone/db'
+import { updateUserResetTokenForEmail } from '@abc-transitionbascarbone/db/db'
+import {
+  Country,
+  DeactivatableFeature,
+  Environment,
+  Level,
+  Role,
+  UserChecklist,
+  UserStatus,
+} from '@abc-transitionbascarbone/db/enums'
+import { DAY, HOUR, MIN, TIME_IN_MS, YEAR } from '@abc-transitionbascarbone/shared/utils'
+import { environmentsWithChecklist } from '@abc-transitionbascarbone/shared/utils/environments'
+import { generateResetToken, hashResetToken } from '@abc-transitionbascarbone/shared/utils/user.server'
 import jwt from 'jsonwebtoken'
 import { UserSession } from 'next-auth'
 import { getCompanyName, getValidAssociationNameBySiret } from '../associationApi'
@@ -189,48 +193,48 @@ export const sendInvitation = async (
     if (existingAccount && existingAccount.status === UserStatus.ACTIVE) {
       return roleOnStudy
         ? sendUserOnStudyInvitationEmail(
-            email,
-            study.name,
-            study.id,
-            organization.name,
-            `${creator.firstName} ${creator.lastName}`,
-            existingAccount.user.firstName,
-            roleOnStudy,
-            env,
-          )
+          email,
+          study.name,
+          study.id,
+          organization.name,
+          `${creator.firstName} ${creator.lastName}`,
+          existingAccount.user.firstName,
+          roleOnStudy,
+          env,
+        )
         : sendContributorInvitationEmail(
-            email,
-            study.name,
-            study.id,
-            organization.name,
-            `${creator.firstName} ${creator.lastName}`,
-            existingAccount.user.firstName,
-            env,
-          )
+          email,
+          study.name,
+          study.id,
+          organization.name,
+          `${creator.firstName} ${creator.lastName}`,
+          existingAccount.user.firstName,
+          env,
+        )
     }
 
     const token = await updateUserResetToken(email, 1 * DAY)
 
     return roleOnStudy
       ? sendNewUserOnStudyInvitationEmail(
-          email,
-          token,
-          study.name,
-          study.id,
-          organization.name,
-          `${creator.firstName} ${creator.lastName}`,
-          roleOnStudy,
-          env,
-        )
+        email,
+        token,
+        study.name,
+        study.id,
+        organization.name,
+        `${creator.firstName} ${creator.lastName}`,
+        roleOnStudy,
+        env,
+      )
       : sendNewContributorInvitationEmail(
-          email,
-          token,
-          study.name,
-          study.id,
-          organization.name,
-          `${creator.firstName} ${creator.lastName}`,
-          env,
-        )
+        email,
+        token,
+        study.name,
+        study.id,
+        organization.name,
+        `${creator.firstName} ${creator.lastName}`,
+        env,
+      )
   })
 
 const sendActivation = async (email: string, fromReset: boolean, env: Environment) => {
@@ -728,9 +732,9 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
       organizationVersion = organization?.id
         ? await getOrganizationVersionByOrganizationIdAndEnvironment(organization.id, environment)
         : await createOrganizationWithVersion(
-            { wordpressId: siretOrCNC, name: companyName },
-            { environment: environment },
-          )
+          { wordpressId: siretOrCNC, name: companyName },
+          { environment: environment },
+        )
     }
 
     if (!organizationVersion) {

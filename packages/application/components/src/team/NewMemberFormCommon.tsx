@@ -1,16 +1,16 @@
 'use client'
 
-import Form from '@abc-transitionbascarbone/components/src/base/Form'
-import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
-import { FormSelect } from '@abc-transitionbascarbone/components/src/form/Select'
-import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
-import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
-import { Role, RoleMip } from '@abc-transitionbascarbone/db-common/enums'
+import Form from '@abc-transitionbascarbone/application/components/base/Form'
+import LoadingButton from '@abc-transitionbascarbone/application/components/base/LoadingButton'
+import { FormSelect } from '@abc-transitionbascarbone/application/components/form/Select'
+import { FormTextField } from '@abc-transitionbascarbone/application/components/form/TextField'
+import { useServerFunction } from '@abc-transitionbascarbone/application/components/hooks/useServerFunction'
+import { Role, RoleMip } from '@abc-transitionbascarbone/db/enums'
 import {
   AddMemberCommand,
   AddMemberCommandValidation,
-} from '@abc-transitionbascarbone/services/serverFunctions/user.command'
-import { ApiResponse } from '@abc-transitionbascarbone/utils/serverResponse'
+} from '@abc-transitionbascarbone/application/services/serverFunctions/user.command'
+import { ApiResponse } from '@abc-transitionbascarbone/shared/utils/serverResponse'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
 import { useTranslations } from 'next-intl'

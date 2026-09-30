@@ -1,7 +1,7 @@
 import { studySiteToClicksonSituation } from '@/environments/clickson/publicodes/studySiteToSituation'
 import { studySiteToCutSituation } from '@/environments/cut/publicodes/studySiteToSituation'
 import { studySiteToTiltSituation } from '@/environments/tilt/publicodes/studySiteToSituation'
-import { Country, Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { Country, Environment } from '@abc-transitionbascarbone/db/enums'
 import { Situation } from 'publicodes'
 import { EnvironmentWithSimplifiedStudies } from './permissions/environment'
 
@@ -27,7 +27,7 @@ export interface TiltStudySiteFields {
   etp?: number
 }
 
-export interface StudySiteFields extends CutStudySiteFields, ClicksonStudySiteFields, TiltStudySiteFields {}
+export interface StudySiteFields extends CutStudySiteFields, ClicksonStudySiteFields, TiltStudySiteFields { }
 
 export type StudySiteToSituationFn = (studySite: StudySiteFields | undefined) => Situation<string>
 

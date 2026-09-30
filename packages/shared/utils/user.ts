@@ -1,4 +1,4 @@
-import { Environment, Role } from '@abc-transitionbascarbone/db-common/enums'
+import { Environment, Role } from '@abc-transitionbascarbone/db/enums'
 import { isSimplified } from './environments'
 import { RoleBcOrMip } from './types'
 

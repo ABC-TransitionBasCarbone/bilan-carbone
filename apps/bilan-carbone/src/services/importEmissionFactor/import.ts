@@ -1,7 +1,7 @@
 import { KG_CO2E_PREFIX } from '@/constants/import'
 import { getSourceLatestImportVersionId } from '@/db/study'
 import { isMonetaryEmissionFactor } from '@/utils/emissionFactors'
-import type { Prisma } from '@abc-transitionbascarbone/db-common'
+import type { Prisma } from '@abc-transitionbascarbone/db'
 import {
   EmissionFactorBase,
   EmissionFactorPartType,
@@ -10,9 +10,9 @@ import {
   Import,
   SubPost,
   Unit,
-} from '@abc-transitionbascarbone/db-common/enums'
-import { getEnvVar } from '@abc-transitionbascarbone/lib/environment'
-import { serializeSimpleCsvRecord } from '@abc-transitionbascarbone/utils/csv'
+} from '@abc-transitionbascarbone/db/enums'
+import { serializeSimpleCsvRecord } from '@abc-transitionbascarbone/shared/utils/csv'
+import { getEnvVar } from '@abc-transitionbascarbone/shared/utils/environment'
 import { unitsMatrix } from './historyUnits'
 import { additionalParts } from './parts.config'
 import { elementsBySubPost } from './posts.config'
@@ -156,7 +156,7 @@ export const mergeRowWithOverride = (
     if (normalizeValue(overrideVal) !== normalizeValue(oldVal)) {
       const key = col as keyof ImportEmissionFactor
       if (key in merged) {
-        ;(merged[key] as string | number) = numberColumns.includes(key) ? Number(overrideVal) : overrideVal
+        ; (merged[key] as string | number) = numberColumns.includes(key) ? Number(overrideVal) : overrideVal
       }
     }
   }
@@ -575,11 +575,11 @@ export const getEmissionFactorPartOverrideData = (
     metaData:
       metaData.length > 0
         ? {
-            updateMany: metaData.map((meta) => ({
-              where: { emissionFactorPartId, language: meta.language },
-              data: { title: meta.title },
-            })),
-          }
+          updateMany: metaData.map((meta) => ({
+            where: { emissionFactorPartId, language: meta.language },
+            data: { title: meta.title },
+          })),
+        }
         : undefined,
   }
 }

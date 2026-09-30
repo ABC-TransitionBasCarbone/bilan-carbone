@@ -1,8 +1,8 @@
 'use client'
 
 import { addMember } from '@/services/serverFunctions/user'
-import NewMemberFormCommon from '@abc-transitionbascarbone/components/src/team/NewMemberFormCommon'
-import { RoleMip } from '@abc-transitionbascarbone/db-common/enums'
+import NewMemberFormCommon from '@abc-transitionbascarbone/application/components/team/NewMemberFormCommon'
+import { RoleMip } from '@abc-transitionbascarbone/db/enums'
 
 const NewMemberForm = () => {
   return <NewMemberFormCommon environmentRoles={RoleMip} addMember={addMember} />

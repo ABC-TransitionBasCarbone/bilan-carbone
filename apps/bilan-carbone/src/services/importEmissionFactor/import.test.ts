@@ -5,7 +5,7 @@ import {
   Import,
   SubPost,
   Unit,
-} from '@abc-transitionbascarbone/db-common/enums'
+} from '@abc-transitionbascarbone/db/enums'
 import { expect } from '@jest/globals'
 import {
   getBaseFunc,

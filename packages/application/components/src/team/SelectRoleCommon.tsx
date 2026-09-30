@@ -1,16 +1,16 @@
 'use client'
 
-import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
-import { Environment, Level, Role } from '@abc-transitionbascarbone/db-common/enums'
-import { ApiResponse } from '@abc-transitionbascarbone/utils/serverResponse'
+import { useServerFunction } from '@abc-transitionbascarbone/application/components/hooks/useServerFunction'
+import { Environment, Level, Role } from '@abc-transitionbascarbone/db/enums'
+import { ApiResponse } from '@abc-transitionbascarbone/shared/utils/serverResponse'
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
-import { canBeUntrainedRole } from '@abc-transitionbascarbone/utils/user'
+import { canBeUntrainedRole } from '@abc-transitionbascarbone/shared/utils/user'
 import styles from './SelectRoleCommon.module.css'
-import { RoleBcOrMip } from '@abc-transitionbascarbone/utils/types'
+import { RoleBcOrMip } from '@abc-transitionbascarbone/shared/utils/types'
 
 interface Props {
   currentUserEmail: string

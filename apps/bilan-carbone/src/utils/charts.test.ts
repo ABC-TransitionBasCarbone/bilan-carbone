@@ -1,4 +1,4 @@
-import { StudyResultUnit, SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { StudyResultUnit, SubPost } from '@abc-transitionbascarbone/db/enums'
 import {
   BasicTypeCharts,
   formatValueAndUnit,
@@ -10,7 +10,7 @@ import {
   Post,
   processBarChartData,
   processPieChartData,
-} from '@abc-transitionbascarbone/utils/charts'
+} from '@abc-transitionbascarbone/shared/utils/charts'
 import { expect } from '@jest/globals'
 import { Theme } from '@mui/material'
 import { translationMock } from '../../../../packages/tooling/tests/utils/models/translationsMock'

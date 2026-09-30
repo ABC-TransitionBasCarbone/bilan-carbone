@@ -1,10 +1,10 @@
 'use client'
 
-import LoginFormCommon from '@abc-transitionbascarbone/components/src/auth/LoginFormCommon'
-import { Environment } from '@abc-transitionbascarbone/db-common/enums'
-import { customRich } from '@abc-transitionbascarbone/utils/customRich'
-import { getEnvVarClient } from '@abc-transitionbascarbone/utils/environmentClient'
-import { getEnvRoute, isCourse } from '@abc-transitionbascarbone/utils/environments'
+import LoginFormCommon from '@abc-transitionbascarbone/application/components/auth/LoginFormCommon'
+import { Environment } from '@abc-transitionbascarbone/db/enums'
+import { customRich } from '@abc-transitionbascarbone/shared/utils/customRich'
+import { getEnvVarClient } from '@abc-transitionbascarbone/shared/utils/environmentClient'
+import { getEnvRoute, isCourse } from '@abc-transitionbascarbone/shared/utils/environments'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 

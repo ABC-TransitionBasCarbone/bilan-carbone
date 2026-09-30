@@ -1,9 +1,9 @@
 import { BCUnit, useUnitLabel } from '@/services/unit'
 import { FeFilters } from '@/types/filters'
-import type { EmissionFactorImportVersion } from '@abc-transitionbascarbone/db-common'
-import { EmissionFactorBase, SubPost } from '@abc-transitionbascarbone/db-common/enums'
-import { Button } from '@abc-transitionbascarbone/ui'
-import { Post } from '@abc-transitionbascarbone/utils/charts'
+import { Button } from '@abc-transitionbascarbone/application/ui'
+import type { EmissionFactorImportVersion } from '@abc-transitionbascarbone/db'
+import { EmissionFactorBase, SubPost } from '@abc-transitionbascarbone/db/enums'
+import { Post } from '@abc-transitionbascarbone/shared/utils/charts'
 import {
   Autocomplete,
   Checkbox,
@@ -86,8 +86,8 @@ export const EmissionFactorsFilters = ({
     filters.sources.length === importVersions.length
       ? t('all')
       : filters.sources
-          .map((source) => getEmissionVersionLabel(importVersions.find((importVersion) => importVersion.id === source)))
-          .join(', ')
+        .map((source) => getEmissionVersionLabel(importVersions.find((importVersion) => importVersion.id === source)))
+        .join(', ')
 
   return (
     <div ref={filtersRef} className={classNames(styles.filters, 'align-center wrap mt-2 mb1')}>

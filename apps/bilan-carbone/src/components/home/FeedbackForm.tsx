@@ -1,6 +1,6 @@
 import { BCEnvironment } from '@/types/environment'
 import { appendForm } from '@/utils/form'
-import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { Environment } from '@abc-transitionbascarbone/db/enums'
 import { useEffect } from 'react'
 
 const typeformId = process.env.NEXT_PUBLIC_FEEDBACK_TYPEFORM_ID

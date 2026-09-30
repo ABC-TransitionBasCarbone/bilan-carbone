@@ -1,9 +1,9 @@
 'use client'
 
-import { EmailCommand, EmailCommandValidation } from '@abc-transitionbascarbone/components/src/auth/user.command'
-import Form from '@abc-transitionbascarbone/components/src/base/Form'
-import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
-import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
+import { EmailCommand, EmailCommandValidation } from '@abc-transitionbascarbone/application/components/auth/user.command'
+import Form from '@abc-transitionbascarbone/application/components/base/Form'
+import LoadingButton from '@abc-transitionbascarbone/application/components/base/LoadingButton'
+import { FormTextField } from '@abc-transitionbascarbone/application/components/form/TextField'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl } from '@mui/material'
 import { useTranslations } from 'next-intl'

@@ -1,8 +1,8 @@
 'use client'
 
-import Box from '@abc-transitionbascarbone/components/src/base/Box'
-import type { Actuality } from '@abc-transitionbascarbone/db-common'
-import { Button } from '@abc-transitionbascarbone/ui'
+import Box from '@abc-transitionbascarbone/application/components/base/Box'
+import { Button } from '@abc-transitionbascarbone/application/ui'
+import type { Actuality } from '@abc-transitionbascarbone/db'
 import classNames from 'classnames'
 import DOMPurify from 'dompurify'
 import { useFormatter, useTranslations } from 'next-intl'

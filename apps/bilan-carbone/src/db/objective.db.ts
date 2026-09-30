@@ -1,4 +1,4 @@
-import { Prisma, SubPost } from '@abc-transitionbascarbone/db-common'
+import { Prisma, SubPost } from '@abc-transitionbascarbone/db'
 import { prismaClient } from './client.server'
 
 export const getSubObjectives = async (trajectoryId: string, targetYear: number, excludeObjectiveId?: string) => {

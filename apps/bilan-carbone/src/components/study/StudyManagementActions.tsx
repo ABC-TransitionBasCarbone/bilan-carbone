@@ -4,10 +4,10 @@ import { FullStudy } from '@/db/study'
 import { hasAccessToDownloadStudyEmissionSourcesButton } from '@/services/permissions/environment'
 import { deleteStudyCommand } from '@/services/serverFunctions/study'
 import { DeleteCommand, DeleteCommandValidation } from '@/services/serverFunctions/study.command'
-import { Props as BlockProps } from '@abc-transitionbascarbone/components/src/base/Block'
-import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
-import { Environment, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
-import { useToast } from '@abc-transitionbascarbone/ui'
+import { Props as BlockProps } from '@abc-transitionbascarbone/application/components/base/Block'
+import { useServerFunction } from '@abc-transitionbascarbone/application/components/hooks/useServerFunction'
+import { useToast } from '@abc-transitionbascarbone/application/ui'
+import { Environment, StudyRole } from '@abc-transitionbascarbone/db/enums'
 import { zodResolver } from '@hookform/resolvers/zod'
 import DeleteIcon from '@mui/icons-material/Delete'
 import CopyIcon from '@mui/icons-material/FileCopy'
@@ -71,51 +71,51 @@ const StudyManagementActions = ({
 
   const deleteAction: BlockProps['actions'] = canDeleteStudy
     ? [
-        {
-          actionType: 'button',
-          'data-testid': 'delete-study',
-          onClick: () => setDeleting(true),
-          children: <DeleteIcon />,
-          title: t('deleteStudy'),
-          variant: 'contained',
-          color: 'error',
-        },
-      ]
+      {
+        actionType: 'button',
+        'data-testid': 'delete-study',
+        onClick: () => setDeleting(true),
+        children: <DeleteIcon />,
+        title: t('deleteStudy'),
+        variant: 'contained',
+        color: 'error',
+      },
+    ]
     : []
 
   const duplicateAction: BlockProps['actions'] = canDuplicateStudy
     ? [
-        {
-          actionType: 'button',
-          'data-testid': 'duplicate-study',
-          onClick: () => setDuplicating(true),
-          children: <CopyIcon />,
-          color: 'secondary',
-          variant: 'outlined',
-          title: t('duplicate'),
-        },
-      ]
+      {
+        actionType: 'button',
+        'data-testid': 'duplicate-study',
+        onClick: () => setDuplicating(true),
+        children: <CopyIcon />,
+        color: 'secondary',
+        variant: 'outlined',
+        title: t('duplicate'),
+      },
+    ]
     : []
 
   const downloadEmissionSourceAction: BlockProps['actions'] =
     hasAccessToDownloadStudyEmissionSourcesButton(study.organizationVersion.environment) && !study.simplified
       ? [
-          {
-            actionType: 'node',
-            node: (
-              <EmissionSourceButtons
-                studyId={study.id}
-                userRole={userRole}
-                siteId={siteId}
-                hasEmissionSources={study.emissionSources.length > 0}
-                onSuccess={() => {
-                  showSuccessToast(tImport('success'))
-                  router.refresh()
-                }}
-              />
-            ),
-          },
-        ]
+        {
+          actionType: 'node',
+          node: (
+            <EmissionSourceButtons
+              studyId={study.id}
+              userRole={userRole}
+              siteId={siteId}
+              hasEmissionSources={study.emissionSources.length > 0}
+              onSuccess={() => {
+                showSuccessToast(tImport('success'))
+                router.refresh()
+              }}
+            />
+          ),
+        },
+      ]
       : []
 
   return (

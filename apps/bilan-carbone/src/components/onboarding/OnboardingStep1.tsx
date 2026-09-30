@@ -1,6 +1,6 @@
 import { OnboardingCommand } from '@/services/serverFunctions/user.command'
-import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
-import { Role } from '@abc-transitionbascarbone/db-common/enums'
+import { FormTextField } from '@abc-transitionbascarbone/application/components/form/TextField'
+import { Role } from '@abc-transitionbascarbone/db/enums'
 import HomeIcon from '@mui/icons-material/Home'
 import PersonIcon from '@mui/icons-material/Person'
 import classNames from 'classnames'

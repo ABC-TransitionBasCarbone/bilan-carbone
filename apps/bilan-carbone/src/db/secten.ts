@@ -1,4 +1,4 @@
-import type { SectenInfo, SectenVersion } from '@abc-transitionbascarbone/db-common'
+import type { SectenInfo, SectenVersion } from '@abc-transitionbascarbone/db'
 import { prismaClient } from './client.server'
 
 export const getLatestSectenVersion = async (): Promise<(SectenVersion & { sectenInfos: SectenInfo[] }) | null> => {

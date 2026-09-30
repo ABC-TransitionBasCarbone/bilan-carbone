@@ -6,8 +6,8 @@ import {
   Environment,
   SubPost,
   Unit,
-} from '@abc-transitionbascarbone/db-common/enums'
-import { Locale } from '@abc-transitionbascarbone/i18n/config'
+} from '@abc-transitionbascarbone/db/enums'
+import { Locale } from '@abc-transitionbascarbone/shared/i18n/config'
 import xlsx from 'node-xlsx'
 import { EmissionFactorMatchType, findEmissionFactorMatch } from './findEmissionFactor.utils'
 import { parseEmissionSourcesFile, resolveEmissionFactorRows } from './importEmissionSources.utils'

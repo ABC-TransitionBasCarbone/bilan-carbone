@@ -1,4 +1,4 @@
-import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { Environment } from '@abc-transitionbascarbone/db/enums'
 
 const { BC, CUT, TILT, CLICKSON, MIP, COURSE_BC, COURSE_TILT } = Environment
 export const courseEnvironments = [COURSE_BC, COURSE_TILT] as Environment[]

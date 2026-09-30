@@ -9,7 +9,7 @@ import {
 import { aggregateBaseResultsByPost, computeBaseResultsByPostFromEngine } from '@/services/results/publicodes'
 import { loadSituations } from '@/services/serverFunctions/situation'
 import type { BaseResultsBySite } from '@/types/study.types'
-import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { Environment } from '@abc-transitionbascarbone/db/enums'
 import { useTranslations } from 'next-intl'
 import Engine, { Situation } from 'publicodes'
 import { useCallback, useEffect, useMemo, useState } from 'react'

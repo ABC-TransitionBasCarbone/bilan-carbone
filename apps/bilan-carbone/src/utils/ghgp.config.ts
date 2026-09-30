@@ -1,5 +1,5 @@
-import type { ExportRule } from '@abc-transitionbascarbone/db-common'
-import { EmissionFactorPartType, SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import type { ExportRule } from '@abc-transitionbascarbone/db'
+import { EmissionFactorPartType, SubPost } from '@abc-transitionbascarbone/db/enums'
 
 export const ghgpRules = [
   {

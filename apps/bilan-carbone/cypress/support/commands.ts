@@ -1,5 +1,5 @@
-import { Environment } from '@abc-transitionbascarbone/db-common/enums'
-import { AllBCEnvironments } from '@abc-transitionbascarbone/utils/types'
+import { Environment } from '@abc-transitionbascarbone/db/enums'
+import { AllBCEnvironments } from '@abc-transitionbascarbone/shared/utils/types'
 
 Cypress.Commands.add(
   'getByTestId',

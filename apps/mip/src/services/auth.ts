@@ -1,8 +1,8 @@
 import { getAccountMipById } from '@/db/accountMip'
 import { getUserByEmailWithSensibleInformations } from '@/db/user'
 import { AccountMipWithUser } from '@/types/accountMip.types'
-import { RoleMip, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
-import { DAY } from '@abc-transitionbascarbone/utils'
+import { RoleMip, UserStatus } from '@abc-transitionbascarbone/db/enums'
+import { DAY } from '@abc-transitionbascarbone/shared/utils'
 import bcrypt from 'bcryptjs'
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession, NextAuthOptions, Session } from 'next-auth'
@@ -45,16 +45,16 @@ export const authOptions: NextAuthOptions = {
 
         return dbAccountMip
           ? {
-              ...token,
-              id: dbAccountMip.user.id,
-              userId: dbAccountMip.user.id,
-              accountMipId: dbAccountMip.id,
-              firstName: dbAccountMip.user.firstName,
-              lastName: dbAccountMip.user.lastName,
-              role: dbAccountMip?.role,
-              organizationVersionMipId: dbAccountMip?.organizationVersionMipId,
-              organizationId: '',
-            }
+            ...token,
+            id: dbAccountMip.user.id,
+            userId: dbAccountMip.user.id,
+            accountMipId: dbAccountMip.id,
+            firstName: dbAccountMip.user.firstName,
+            lastName: dbAccountMip.user.lastName,
+            role: dbAccountMip?.role,
+            organizationVersionMipId: dbAccountMip?.organizationVersionMipId,
+            organizationId: '',
+          }
           : token
       }
 

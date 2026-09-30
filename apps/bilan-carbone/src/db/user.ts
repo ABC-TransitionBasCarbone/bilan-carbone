@@ -3,18 +3,18 @@ import { addUserChecklistItem, sendEmailToAddedUser } from '@/services/serverFun
 import { AuthorizedInOrgaUserStatus } from '@/services/users'
 import { getRoleToSetForUntrained } from '@/utils/user'
 import { userSessionToDbUser } from '@/utils/userAccounts'
-import { Prisma } from '@abc-transitionbascarbone/db-common'
+import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/application/services/permissions/check'
+import { AddMemberCommand } from '@abc-transitionbascarbone/application/services/serverFunctions/user.command'
+import { Prisma } from '@abc-transitionbascarbone/db'
 import {
   DeactivatableFeature,
   Environment,
   Role,
   UserChecklist,
   UserStatus,
-} from '@abc-transitionbascarbone/db-common/enums'
-import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
-import { AddMemberCommand } from '@abc-transitionbascarbone/services/serverFunctions/user.command'
-import { signPassword } from '@abc-transitionbascarbone/utils/auth'
-import { environmentsWithChecklist } from '@abc-transitionbascarbone/utils/environments'
+} from '@abc-transitionbascarbone/db/enums'
+import { signPassword } from '@abc-transitionbascarbone/shared/utils/auth'
+import { environmentsWithChecklist } from '@abc-transitionbascarbone/shared/utils/environments'
 import { UserSession } from 'next-auth'
 import { addAccount, getAccountByEmailAndEnvironment, getAccountByEmailAndOrganizationVersionId } from './account'
 import { prismaClient } from './client.server'
@@ -152,8 +152,8 @@ export const validateUser = (accountId: string, transaction: Prisma.TransactionC
 export const hasAccountToValidateInOrganization = async (organizationVersionId: string | null) =>
   organizationVersionId
     ? prismaClient.account.count({
-        where: { organizationVersionId, status: UserStatus.PENDING_REQUEST },
-      })
+      where: { organizationVersionId, status: UserStatus.PENDING_REQUEST },
+    })
     : 0
 
 export const organizationVersionActiveAccountsCount = async (organizationVersionId: string) =>

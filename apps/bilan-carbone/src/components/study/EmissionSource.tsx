@@ -19,7 +19,7 @@ import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { getEmissionSourceStatus } from '@/utils/emissionSources'
 import { formatEmissionFactorNumber } from '@/utils/number'
 import { hasEditionRights } from '@/utils/study'
-import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/application/components/hooks/useServerFunction'
 import {
   EmissionSourceCaracterisation,
   Export,
@@ -29,11 +29,11 @@ import {
   StudyRole,
   SubPost,
   Unit,
-} from '@abc-transitionbascarbone/db-common/enums'
-import { Locale } from '@abc-transitionbascarbone/i18n/config'
-import { formatDateFr } from '@abc-transitionbascarbone/utils'
-import { STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/utils/charts'
-import { formatNumber } from '@abc-transitionbascarbone/utils/number'
+} from '@abc-transitionbascarbone/db/enums'
+import { Locale } from '@abc-transitionbascarbone/shared/i18n/config'
+import { formatDateFr } from '@abc-transitionbascarbone/shared/utils'
+import { STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/shared/utils/charts'
+import { formatNumber } from '@abc-transitionbascarbone/shared/utils/number'
 import SavedIcon from '@mui/icons-material/CloudUpload'
 import { Alert, CircularProgress, FormLabel, TextField } from '@mui/material'
 import classNames from 'classnames'
@@ -203,8 +203,8 @@ const EmissionSource = ({
   const currentBEVersion = useMemo(() => {
     const version = isFromOldImport
       ? study.emissionFactorVersions.find(
-          (emissionFactorVersion) => emissionFactorVersion.source === Import.BaseEmpreinte,
-        )?.importVersion.name
+        (emissionFactorVersion) => emissionFactorVersion.source === Import.BaseEmpreinte,
+      )?.importVersion.name
       : ''
     return version ?? ''
   }, [study.emissionFactorVersions, isFromOldImport])

@@ -1,9 +1,9 @@
 import { TARGET_YEAR } from '@/constants/trajectory.constants'
 import { BCPost, subPostsByPostBC } from '@/services/posts'
 import type { PastStudy, TrajectoryDataPoint } from '@/types/trajectory.types'
-import type { Action, ActionSubPost } from '@abc-transitionbascarbone/db-common'
-import { ActionPotentialDeduction, StudyResultUnit } from '@abc-transitionbascarbone/db-common/enums'
-import { getYearFromDateStr } from '@abc-transitionbascarbone/utils/time'
+import type { Action, ActionSubPost } from '@abc-transitionbascarbone/db'
+import { ActionPotentialDeduction, StudyResultUnit } from '@abc-transitionbascarbone/db/enums'
+import { getYearFromDateStr } from '@abc-transitionbascarbone/shared/utils/time'
 import { getEmissionSourcesTotalCo2 } from './emissionSources'
 import { convertValue } from './study'
 import {
@@ -143,10 +143,10 @@ export const calculateActionBasedTrajectory = ({
   const maxActionsEndYear =
     quantitativeActions.length > 0
       ? Math.max(
-          ...quantitativeActions.map((action) =>
-            action.reductionEndYear ? getYearFromDateStr(action.reductionEndYear) : 0,
-          ),
-        )
+        ...quantitativeActions.map((action) =>
+          action.reductionEndYear ? getYearFromDateStr(action.reductionEndYear) : 0,
+        ),
+      )
       : 0
 
   const maxDefaultEndYear = Math.max(maxYear ?? TARGET_YEAR, TARGET_YEAR)

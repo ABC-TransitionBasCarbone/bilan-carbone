@@ -1,3 +1,4 @@
+import { setCustomIssue, setCustomMessage } from '@abc-transitionbascarbone/application/lib'
 import {
   ControlMode,
   Country,
@@ -8,8 +9,7 @@ import {
   Level,
   StudyResultUnit,
   StudyRole,
-} from '@abc-transitionbascarbone/db-common/enums'
-import { setCustomIssue, setCustomMessage } from '@abc-transitionbascarbone/lib'
+} from '@abc-transitionbascarbone/db/enums'
 import dayjs from 'dayjs'
 import z from 'zod'
 import { HolidayOpeningHoursValidation, OpeningHoursValidation } from '../hours'

@@ -4,8 +4,8 @@ import { EmissionFactorCommandValidation } from '@/services/serverFunctions/emis
 import { BCEnvironment } from '@/types/environment'
 import { ImportWarning } from '@/types/import.types'
 import { COLUMNS, ImportError, ParsedRow, ParseResult } from '@/types/importEmissionFactors.types'
-import { EmissionFactorBase, SubPost, Unit } from '@abc-transitionbascarbone/db-common/enums'
-import { LocaleType } from '@abc-transitionbascarbone/i18n/config'
+import { EmissionFactorBase, SubPost, Unit } from '@abc-transitionbascarbone/db/enums'
+import { LocaleType } from '@abc-transitionbascarbone/shared/i18n/config'
 import { ManualEmissionFactorUnitList } from './emissionFactors'
 import { parseExcelSheet } from './excel.utils'
 import {

@@ -2,13 +2,13 @@
 
 import type { MinimalStudyForRights } from '@/db/study'
 import { deleteStudyMember } from '@/services/serverFunctions/study'
-import { Table as BaseTable, HelpIcon } from '@abc-transitionbascarbone/components'
-import Block from '@abc-transitionbascarbone/components/src/base/Block'
-import { TableActionButton } from '@abc-transitionbascarbone/components/src/base/TableActionButton'
-import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
-import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
-import { StudyRole } from '@abc-transitionbascarbone/db-common/enums'
-import { Toast, ToastColors } from '@abc-transitionbascarbone/ui'
+import { Table as BaseTable, HelpIcon } from '@abc-transitionbascarbone/application/components'
+import Block from '@abc-transitionbascarbone/application/components/base/Block'
+import { TableActionButton } from '@abc-transitionbascarbone/application/components/base/TableActionButton'
+import { useServerFunction } from '@abc-transitionbascarbone/application/components/hooks/useServerFunction'
+import Modal from '@abc-transitionbascarbone/application/components/modals/Modal'
+import { Toast, ToastColors } from '@abc-transitionbascarbone/application/ui'
+import { StudyRole } from '@abc-transitionbascarbone/db/enums'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
@@ -115,13 +115,13 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
         actions={
           canAddMember
             ? [
-                {
-                  actionType: 'link',
-                  href: `/etudes/${study.id}/cadrage/ajouter`,
-                  'data-testid': 'study-rights-change-button',
-                  children: t('newRightLink'),
-                },
-              ]
+              {
+                actionType: 'link',
+                href: `/etudes/${study.id}/cadrage/ajouter`,
+                'data-testid': 'study-rights-change-button',
+                children: t('newRightLink'),
+              },
+            ]
             : undefined
         }
       >

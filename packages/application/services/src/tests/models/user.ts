@@ -1,5 +1,5 @@
-import type { User } from '@abc-transitionbascarbone/db-common'
-import { UserSource, Level } from '@abc-transitionbascarbone/db-common/enums'
+import type { User } from '@abc-transitionbascarbone/db'
+import { UserSource, Level } from '@abc-transitionbascarbone/db/enums'
 
 export const mockedUserId = 'mocked-user-id'
 

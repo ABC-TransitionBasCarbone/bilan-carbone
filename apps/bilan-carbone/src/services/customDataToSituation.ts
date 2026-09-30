@@ -1,4 +1,4 @@
-import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { Environment } from '@abc-transitionbascarbone/db/enums'
 import { EnvironmentWithSimplifiedStudies } from './permissions/environment'
 export interface TiltCustomDataFields {
   postalCode?: string | undefined

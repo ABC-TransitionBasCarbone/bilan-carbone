@@ -3,17 +3,17 @@ import {
   MosaicQuestion,
   OnFieldChange,
   QuestionContainer,
-} from '@abc-transitionbascarbone/publicodes/form'
+} from '@abc-transitionbascarbone/application/lib/publicodes/form'
 import {
   EvaluatedFormLayout,
   EvaluatedGroupLayout,
   EvaluatedListLayout,
   EvaluatedTableLayout,
-} from '@abc-transitionbascarbone/publicodes/form/layouts'
+} from '@abc-transitionbascarbone/application/lib/publicodes/form/layouts'
 import {
   usePublicodesLayoutTranslation,
   usePublicodesRuleTranslation,
-} from '@abc-transitionbascarbone/publicodes/hooks'
+} from '@abc-transitionbascarbone/application/lib/publicodes/hooks'
 import Engine from 'publicodes'
 import GroupQuestion from './GroupQuestion'
 import ListQuestion from './ListQuestion'

@@ -15,14 +15,14 @@ import { calculatePriorityFromRelevance } from '@/utils/action'
 import { objectWithoutNullAttributes } from '@/utils/object'
 import { toScopedValues } from '@/utils/scope.utils'
 import { convertValue } from '@/utils/study'
-import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
-import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
+import LoadingButton from '@abc-transitionbascarbone/application/components/base/LoadingButton'
+import { useServerFunction } from '@abc-transitionbascarbone/application/components/hooks/useServerFunction'
+import { Toast, ToastColors } from '@abc-transitionbascarbone/application/ui'
 import {
   ActionIndicatorType,
   ActionPotentialDeduction,
   StudyResultUnit,
-} from '@abc-transitionbascarbone/db-common/enums'
-import { Toast, ToastColors } from '@abc-transitionbascarbone/ui'
+} from '@abc-transitionbascarbone/db/enums'
 import { zodResolver } from '@hookform/resolvers/zod'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -113,20 +113,20 @@ const ActionModal = ({
     () =>
       action
         ? {
-            ...objectWithoutNullAttributes(action),
-            reductionValue: Math.round(
-              action.reductionValueKg ? convertValue(action.reductionValueKg, StudyResultUnit.K, studyUnit) : 0,
-            ),
-            siteIds: action.sites.length > 0 ? action.sites.map((s) => s.studySiteId) : allSiteIds,
-            tagIds: action.tags.length > 0 ? action.tags.map((t) => t.studyTagId) : allTagIds,
-            subPosts: action.subPosts.length > 0 ? action.subPosts.map((sp) => sp.subPost) : allEnvSubPosts,
-          }
+          ...objectWithoutNullAttributes(action),
+          reductionValue: Math.round(
+            action.reductionValueKg ? convertValue(action.reductionValueKg, StudyResultUnit.K, studyUnit) : 0,
+          ),
+          siteIds: action.sites.length > 0 ? action.sites.map((s) => s.studySiteId) : allSiteIds,
+          tagIds: action.tags.length > 0 ? action.tags.map((t) => t.studyTagId) : allTagIds,
+          subPosts: action.subPosts.length > 0 ? action.subPosts.map((sp) => sp.subPost) : allEnvSubPosts,
+        }
         : {
-            reductionStartYear: studyRealizationStartDate,
-            siteIds: allSiteIds,
-            tagIds: allTagIds,
-            subPosts: allEnvSubPosts,
-          },
+          reductionStartYear: studyRealizationStartDate,
+          siteIds: allSiteIds,
+          tagIds: allTagIds,
+          subPosts: allEnvSubPosts,
+        },
     [action, studyUnit, studyRealizationStartDate, allSiteIds, allTagIds, allEnvSubPosts],
   )
 

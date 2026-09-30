@@ -1,6 +1,6 @@
 'use client'
 
-import { Environment, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
+import { Environment, StudyRole } from '@abc-transitionbascarbone/db/enums'
 import MenuIcon from '@mui/icons-material/Menu'
 import MenuOpenIcon from '@mui/icons-material/MenuOpen'
 import { Drawer, Fab } from '@mui/material'

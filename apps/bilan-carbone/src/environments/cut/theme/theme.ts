@@ -1,5 +1,5 @@
 import { globalTheme } from '@abc-transitionbascarbone/css'
-import { Post } from '@abc-transitionbascarbone/utils/charts'
+import { Post } from '@abc-transitionbascarbone/shared/utils/charts'
 import { createTheme } from '@mui/material/styles'
 
 const base = createTheme({

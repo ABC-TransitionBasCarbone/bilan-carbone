@@ -1,5 +1,5 @@
-import { getI18nUnitKey } from '@abc-transitionbascarbone/publicodes/utils'
-import { isObject } from '@abc-transitionbascarbone/utils/object'
+import { getI18nUnitKey } from '@abc-transitionbascarbone/application/lib/publicodes/utils'
+import { isObject } from '@abc-transitionbascarbone/shared/utils/object'
 import Engine, { Rule } from 'publicodes'
 import {
   getArgs,

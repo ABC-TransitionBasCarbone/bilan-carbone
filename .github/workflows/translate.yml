@@ -45,8 +45,8 @@ jobs:
       - name: Copy .env (needed for postinstall scripts)
         run: cp apps/bilan-carbone/.env.dist apps/bilan-carbone/.env
 
-      - name: Copy .env to db-common
-        run: cp apps/bilan-carbone/.env.dist packages/data/db-common/.env
+      - name: Copy .env to db
+        run: cp apps/bilan-carbone/.env.dist packages/data/db/.env
 
       - name: Install dependencies
         run: yarn install --immutable

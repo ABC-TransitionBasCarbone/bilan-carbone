@@ -3,7 +3,7 @@ import EditOrganizationPage from '@/components/pages/EditOrganization'
 import { getOrganizationVersionWithSitesById, OrganizationVersionWithOrganization } from '@/db/organization'
 import { hasAlwaysAccessToOrganizationVersion } from '@/services/permissions/environment'
 import { canEditOrganizationVersion } from '@/utils/organization'
-import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
+import NotFound from '@abc-transitionbascarbone/application/components/pages/NotFound'
 import { UUID } from 'crypto'
 
 interface Props {

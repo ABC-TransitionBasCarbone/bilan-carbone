@@ -5,8 +5,8 @@ import {
   changeDeactivableFeatureRestriction,
   changeDeactivableFeatureStatus,
 } from '@/services/serverFunctions/deactivableFeatures'
-import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
-import { DeactivatableFeature, Environment, UserSource } from '@abc-transitionbascarbone/db-common/enums'
+import { useServerFunction } from '@abc-transitionbascarbone/application/components/hooks/useServerFunction'
+import { DeactivatableFeature, Environment, UserSource } from '@abc-transitionbascarbone/db/enums'
 import { FormControl, FormControlLabel, FormLabel, Switch } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -50,13 +50,13 @@ const DeactivableFeature = ({ restrictions }: Props) => {
   const featureDeactivationCriterias: Array<DeactivationCriteria<UserSource> | DeactivationCriteria<Environment>> = [
     ...(showSourcesRow
       ? [
-          {
-            title: 'source',
-            criterias: restrictions.deactivatedSources,
-            t: tSource,
-            values: Object.values(UserSource),
-          },
-        ]
+        {
+          title: 'source',
+          criterias: restrictions.deactivatedSources,
+          t: tSource,
+          values: Object.values(UserSource),
+        },
+      ]
       : []),
     {
       title: 'environment',

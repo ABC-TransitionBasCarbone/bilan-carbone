@@ -1,6 +1,6 @@
 import { getOrCreateCncVersion, upsertCNC } from '@/db/cnc'
-import type { Prisma } from '@abc-transitionbascarbone/db-common'
-import { removeDiacritics } from '@abc-transitionbascarbone/utils/parsing'
+import type { Prisma } from '@abc-transitionbascarbone/db'
+import { removeDiacritics } from '@abc-transitionbascarbone/shared/utils/parsing'
 import { Command } from 'commander'
 import { parse } from 'csv-parse'
 import fs from 'fs'

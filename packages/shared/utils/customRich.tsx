@@ -1,6 +1,6 @@
-import { Environment } from '@abc-transitionbascarbone/db-common/enums'
-import { Translations } from '@abc-transitionbascarbone/lib'
-import { getEnvVarClient, hasTranslatedLinks } from '@abc-transitionbascarbone/utils/environmentClient'
+import { Environment } from '@abc-transitionbascarbone/db/enums'
+import { Translations } from '@abc-transitionbascarbone/application/lib'
+import { getEnvVarClient, hasTranslatedLinks } from '@abc-transitionbascarbone/shared/utils/environmentClient'
 import Link from 'next/link'
 import { ReactNode } from 'react'
 

@@ -24,12 +24,12 @@ import {
   getDefaultObjectivesForTrajectoryType,
   getDisplayedReferenceYearForTrajectoryType,
 } from '@/utils/trajectory'
-import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
-import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
-import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
-import type { SectenInfo } from '@abc-transitionbascarbone/db-common'
-import { TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
-import { getYearFromDateStr } from '@abc-transitionbascarbone/utils/time'
+import LoadingButton from '@abc-transitionbascarbone/application/components/base/LoadingButton'
+import { useServerFunction } from '@abc-transitionbascarbone/application/components/hooks/useServerFunction'
+import Modal from '@abc-transitionbascarbone/application/components/modals/Modal'
+import type { SectenInfo } from '@abc-transitionbascarbone/db'
+import { TrajectoryType } from '@abc-transitionbascarbone/db/enums'
+import { getYearFromDateStr } from '@abc-transitionbascarbone/shared/utils/time'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Alert } from '@mui/material'
 import { useTranslations } from 'next-intl'
@@ -171,13 +171,13 @@ const TrajectoryCreationModal = ({
         sectorPercentages: trajectory.sectorPercentages
           ? (trajectory.sectorPercentages as SectorPercentages)
           : {
-              energy: 0,
-              industry: 0,
-              waste: 0,
-              buildings: 0,
-              agriculture: 0,
-              transportation: 0,
-            },
+            energy: 0,
+            industry: 0,
+            waste: 0,
+            buildings: 0,
+            agriculture: 0,
+            transportation: 0,
+          },
       })
     }
   }, [trajectory, reset])

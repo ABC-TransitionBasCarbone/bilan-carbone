@@ -107,9 +107,10 @@ import {
 import { mapStudyForReport } from '@/utils/studyReport.utils'
 import { isAdmin } from '@/utils/user'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
-import { LocaleType } from '@abc-transitionbascarbone/i18n/config'
-import type { IsSuccess } from '@abc-transitionbascarbone/utils/serverResponse'
+import { LocaleType } from '@abc-transitionbascarbone/shared/i18n/config'
+import type { IsSuccess } from '@abc-transitionbascarbone/shared/utils/serverResponse'
 
+import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/application/services/permissions/check'
 import type {
   Account,
   Document,
@@ -117,7 +118,7 @@ import type {
   EmissionFactorImportVersion,
   Prisma,
   StudyEmissionSource,
-} from '@abc-transitionbascarbone/db-common'
+} from '@abc-transitionbascarbone/db'
 import {
   CommentStatus,
   ControlMode,
@@ -133,8 +134,7 @@ import {
   SubPost,
   UserChecklist,
   UserStatus,
-} from '@abc-transitionbascarbone/db-common/enums'
-import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
+} from '@abc-transitionbascarbone/db/enums'
 import createReport from 'docx-templates'
 import fs from 'fs/promises'
 import { UserSession } from 'next-auth'
@@ -1559,11 +1559,11 @@ export const duplicateStudyCommand = async (
       const allowedSourcesForNewStudy =
         session.user.environment === Environment.BC
           ? (() => {
-              const hasGHGP = studyCommand.exports?.includes(Export.GHGP)
-              return Object.values(Import).filter(
-                (source) => source !== Import.Manual && source !== Import.CUT && (source !== Import.AIB || hasGHGP),
-              )
-            })()
+            const hasGHGP = studyCommand.exports?.includes(Export.GHGP)
+            return Object.values(Import).filter(
+              (source) => source !== Import.Manual && source !== Import.CUT && (source !== Import.AIB || hasGHGP),
+            )
+          })()
           : undefined
 
       for (const sourceVersion of sourceStudy.emissionFactorVersions) {

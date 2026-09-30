@@ -15,9 +15,9 @@ import type {
   TrajectoryWithObjectivesAndScope,
 } from '@/types/trajectory.types'
 import { TrajectoryData } from '@/types/trajectory.types'
-import type { SectenInfo } from '@abc-transitionbascarbone/db-common'
-import { TrajectoryType } from '@abc-transitionbascarbone/db-common/enums'
-import { calculateRateForSegment, ReductionRates } from '@abc-transitionbascarbone/utils/trajectory'
+import type { SectenInfo } from '@abc-transitionbascarbone/db'
+import { TrajectoryType } from '@abc-transitionbascarbone/db/enums'
+import { calculateRateForSegment, ReductionRates } from '@abc-transitionbascarbone/shared/utils/trajectory'
 import { isSectenSector } from './secten'
 import {
   computePastOrPresentValue,

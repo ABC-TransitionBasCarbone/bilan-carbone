@@ -2,14 +2,14 @@ import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { unitsMatrix } from '@/services/importEmissionFactor/historyUnits'
 import { getEmissionQuality } from '@/services/importEmissionFactor/import'
 import { isMonetaryEmissionFactor } from '@/utils/emissionFactors'
-import type { Prisma } from '@abc-transitionbascarbone/db-common'
+import type { Prisma } from '@abc-transitionbascarbone/db'
 import {
   EmissionFactorPartType,
   EmissionFactorStatus,
   Import,
   SubPost,
-} from '@abc-transitionbascarbone/db-common/enums'
-import { removeDiacritics } from '@abc-transitionbascarbone/utils/parsing'
+} from '@abc-transitionbascarbone/db/enums'
+import { removeDiacritics } from '@abc-transitionbascarbone/shared/utils/parsing'
 import { v4 } from 'uuid'
 import { OldNewPostAndSubPostsMapping } from './newPostAndSubPosts'
 import { EmissionFactorRow, EmissionFactorsWorkSheet } from './oldBCWorkSheetsReader'

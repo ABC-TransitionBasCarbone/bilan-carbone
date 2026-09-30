@@ -9,7 +9,7 @@ import { hasAccessToPerimeterPage } from '@/services/permissions/environmentAdva
 import { canEditStudyFlows } from '@/services/permissions/study'
 import { defaultCAUnit } from '@/utils/number'
 import { getAccountRoleOnStudy } from '@/utils/study'
-import { DocumentCategory } from '@abc-transitionbascarbone/db-common/enums'
+import { DocumentCategory } from '@abc-transitionbascarbone/db/enums'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import { redirect } from 'next/navigation'
@@ -55,9 +55,9 @@ const StudyPerimeterPage = async ({ study, organizationVersion, user }: Props) =
           { label: tNav('home'), link: '/' },
           study.organizationVersion.isCR
             ? {
-                label: study.organizationVersion.organization.name,
-                link: `/organisations/${study.organizationVersion.id}`,
-              }
+              label: study.organizationVersion.organization.name,
+              link: `/organisations/${study.organizationVersion.id}`,
+            }
             : undefined,
           { label: study.name, link: `/etudes/${study.id}` },
         ].filter((link) => link !== undefined)}

@@ -3,7 +3,7 @@ import fs from 'fs'
 import path from 'path'
 
 describe('Clickson publicodes transport labels', () => {
-  const i18nPackagePath = path.dirname(require.resolve('@abc-transitionbascarbone/i18n/package.json'))
+  const i18nPackagePath = path.dirname(require.resolve('@abc-transitionbascarbone/shared/i18n/config'))
 
   const filePath = path.join(i18nPackagePath, 'translations', 'fr', 'publicodes', 'clickson-rules.json')
 

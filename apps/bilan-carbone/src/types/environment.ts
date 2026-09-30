@@ -1,3 +1,3 @@
-import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { Environment } from '@abc-transitionbascarbone/db/enums'
 
 export type BCEnvironment = Exclude<Environment, 'MIP'>

@@ -1,4 +1,4 @@
-import { TextQuestion } from '@abc-transitionbascarbone/typeguards'
+import { TextQuestion } from '@abc-transitionbascarbone/shared/typeguards'
 import { FormControl, FormHelperText, TextField } from '@mui/material'
 import { useTranslations } from 'next-intl'
 

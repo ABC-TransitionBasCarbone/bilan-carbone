@@ -8,7 +8,7 @@ import type {
   EmissionFactor as EmissionFactorPrismaModel,
   ExportRule,
   Prisma,
-} from '@abc-transitionbascarbone/db-common'
+} from '@abc-transitionbascarbone/db'
 import {
   ControlMode,
   EmissionSourceCaracterisation,
@@ -18,8 +18,8 @@ import {
   Export as StudyExport,
   SubPost,
   Unit,
-} from '@abc-transitionbascarbone/db-common/enums'
-import { removeDiacritics } from '@abc-transitionbascarbone/utils/parsing'
+} from '@abc-transitionbascarbone/db/enums'
+import { removeDiacritics } from '@abc-transitionbascarbone/shared/utils/parsing'
 import { getJsDateFromExcel } from 'excel-date-to-js'
 import { NewPostAndSubPosts, OldNewPostAndSubPostsMapping } from './newPostAndSubPosts'
 import {
@@ -571,10 +571,10 @@ class EmissionFactorsByImportedIdMap {
           unit: emissionFactor.unit,
           version: firstVersion
             ? {
-                id: firstVersion.id,
-                source: firstVersion.source,
-                createdAt: firstVersion.createdAt,
-              }
+              id: firstVersion.id,
+              source: firstVersion.source,
+              createdAt: firstVersion.createdAt,
+            }
             : null,
           importedId: emissionFactor.importedId,
           emissionFactorConsoValue: emissionFactor.totalCo2,

@@ -1,3 +1,4 @@
+import { setCustomMessage } from '@abc-transitionbascarbone/application/lib'
 import {
   ActionCategory,
   ActionIndicatorType,
@@ -5,8 +6,7 @@ import {
   ActionPotentialDeduction,
   ActionRelevance,
   SubPost,
-} from '@abc-transitionbascarbone/db-common/enums'
-import { setCustomMessage } from '@abc-transitionbascarbone/lib'
+} from '@abc-transitionbascarbone/db/enums'
 import { z } from 'zod'
 
 const ActionIndicatorSchema = z.object({

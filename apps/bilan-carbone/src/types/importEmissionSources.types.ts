@@ -3,7 +3,7 @@ import {
   EmissionSourceType,
   SubPost,
   Unit,
-} from '@abc-transitionbascarbone/db-common/enums'
+} from '@abc-transitionbascarbone/db/enums'
 import { AmbiguousRow, ImportError, ImportWarning } from './import.types'
 
 export type PreviewEmissionSourceRow = {

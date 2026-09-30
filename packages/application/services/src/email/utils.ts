@@ -1,5 +1,5 @@
-import { Environment } from '@abc-transitionbascarbone/db-common/enums'
-import { getEnvRoute } from '@abc-transitionbascarbone/utils/environments'
+import { Environment } from '@abc-transitionbascarbone/db/enums'
+import { getEnvRoute } from '@abc-transitionbascarbone/shared/utils/environments'
 
 
 export const getEnvResetLink = (path: string, token: string, env?: Environment) => {

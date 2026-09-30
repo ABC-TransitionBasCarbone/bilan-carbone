@@ -1,7 +1,7 @@
 import type { FullStudy } from '@/db/study'
 import { mockedOrganizationVersion } from '@/tests/utils/models/organization'
 import { getMockedFullStudy, getMockedFullStudySite, getMockeFullStudy, TEST_IDS } from '@/tests/utils/models/study'
-import { ControlMode, Export, Level, StudyRole } from '@abc-transitionbascarbone/db-common/enums'
+import { ControlMode, Export, Level, StudyRole } from '@abc-transitionbascarbone/db/enums'
 import * as organizationModule from '../db/organization'
 import { mapStudyForReport } from './studyReport.utils'
 

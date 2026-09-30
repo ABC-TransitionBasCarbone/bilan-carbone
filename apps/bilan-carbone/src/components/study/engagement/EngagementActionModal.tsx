@@ -8,13 +8,13 @@ import {
   AddEngagementActionCommandValidation,
 } from '@/services/serverFunctions/study.command'
 import { objectWithoutNullAttributes } from '@/utils/object'
-import Form from '@abc-transitionbascarbone/components/src/base/Form'
-import { FormSelect } from '@abc-transitionbascarbone/components/src/form/Select'
-import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
-import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
-import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
-import { EngagementPhase } from '@abc-transitionbascarbone/db-common/enums'
-import { Toast, ToastColors } from '@abc-transitionbascarbone/ui'
+import Form from '@abc-transitionbascarbone/application/components/base/Form'
+import { FormSelect } from '@abc-transitionbascarbone/application/components/form/Select'
+import { FormTextField } from '@abc-transitionbascarbone/application/components/form/TextField'
+import { useServerFunction } from '@abc-transitionbascarbone/application/components/hooks/useServerFunction'
+import Modal from '@abc-transitionbascarbone/application/components/modals/Modal'
+import { Toast, ToastColors } from '@abc-transitionbascarbone/application/ui'
+import { EngagementPhase } from '@abc-transitionbascarbone/db/enums'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ListItemText, MenuItem, TextField } from '@mui/material'
 import { useTranslations } from 'next-intl'
@@ -49,10 +49,10 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
     () =>
       action
         ? {
-            ...objectWithoutNullAttributes(action),
-            date: action.date.toISOString(),
-            sites: action?.sites?.map((site) => site.id) || [],
-          }
+          ...objectWithoutNullAttributes(action),
+          date: action.date.toISOString(),
+          sites: action?.sites?.map((site) => site.id) || [],
+        }
         : {},
     [action],
   )

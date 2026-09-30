@@ -3,8 +3,8 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import type { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import type { ExportRule } from '@abc-transitionbascarbone/db-common'
-import { Environment, SiteCAUnit } from '@abc-transitionbascarbone/db-common/enums'
+import type { ExportRule } from '@abc-transitionbascarbone/db'
+import { Environment, SiteCAUnit } from '@abc-transitionbascarbone/db/enums'
 import { UserSession } from 'next-auth'
 import dynamic from 'next/dynamic'
 

@@ -2,8 +2,8 @@
 
 import { StudyCardItem } from '@/db/study'
 import { getFeedbackFormUrl } from '@/utils/ressources'
-import Block, { Action } from '@abc-transitionbascarbone/components/src/base/Block'
-import LinkButton from '@abc-transitionbascarbone/components/src/base/LinkButton'
+import Block, { type Action } from '@abc-transitionbascarbone/application/components/base/Block'
+import LinkButton from '@abc-transitionbascarbone/application/components/base/LinkButton'
 import AddIcon from '@mui/icons-material/Add'
 import { Box } from '@mui/material'
 import { UserSession } from 'next-auth'

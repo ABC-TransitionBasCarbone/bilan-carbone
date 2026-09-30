@@ -1,6 +1,6 @@
 import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
 import * as studyUtilsModule from '@/utils/study'
-import { EmissionFactorBase, Import, SubPost } from '@abc-transitionbascarbone/db-common/enums'
+import { EmissionFactorBase, Import, SubPost } from '@abc-transitionbascarbone/db/enums'
 import { expect } from '@jest/globals'
 import { getGHGPEmissionValue, getGHGPLineAndPost } from './ghgp'
 
