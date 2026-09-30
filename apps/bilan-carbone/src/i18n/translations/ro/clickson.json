@@ -321,5 +321,8 @@
   },
   "exports": {
     "env_specific_export": "Amprentă de carbon simplificată"
+  },
+  "actuality": {
+    "title": "Noutățile clickson"
   }
 }

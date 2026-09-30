@@ -321,5 +321,8 @@
   },
   "exports": {
     "env_specific_export": "Egyszerűsített szénlábnyom"
+  },
+  "actuality": {
+    "title": "A clickson hírei"
   }
 }

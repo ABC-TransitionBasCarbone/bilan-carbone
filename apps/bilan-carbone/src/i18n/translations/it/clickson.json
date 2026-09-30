@@ -321,5 +321,8 @@
   },
   "exports": {
     "env_specific_export": "Impronta di carbonio semplificata"
+  },
+  "actuality": {
+    "title": "Le novità di clickson"
   }
 }

@@ -321,5 +321,8 @@
   },
   "exports": {
     "env_specific_export": "Απλοποιημένο αποτύπωμα άνθρακα"
+  },
+  "actuality": {
+    "title": "Τα νέα του clickson"
   }
 }
