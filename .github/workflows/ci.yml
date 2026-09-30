@@ -166,7 +166,17 @@ jobs:
           cp apps/mip/.env.dist apps/bilan-carbone/.env
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
-        run: yarn install --immutable --immutable-cache --check-cache
+        run: |
+          for attempt in 1 2 3; do
+            if yarn install --immutable --immutable-cache --check-cache; then
+              exit 0
+            fi
+            if [ "$attempt" -lt 3 ]; then
+              echo "Dependency installation failed; retrying in $((attempt * 5)) seconds."
+              sleep "$((attempt * 5))"
+            fi
+          done
+          exit 1
         working-directory: .
       - name: Launch unit tests
         run: yarn run test
