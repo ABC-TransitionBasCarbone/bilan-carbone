@@ -1,7 +1,7 @@
 /**
  * Shared trajectory calculation utilities for simple linear reduction trajectories.
  * Used by MIP (individual footprint) and potentially other apps.
- * For full SNBC trajectory logic (with sectenData), see apps/bilan-carbone/src/utils/snbc.ts.
+ * For full SNBC trajectory logic (with sectenData), see apps/bc/src/utils/snbc.ts.
  */
 
 /**

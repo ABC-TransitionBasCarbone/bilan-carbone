@@ -2,7 +2,7 @@
  * Detects missing translation keys vs the FR source and fills them using Claude.
  * Glossary is fetched at runtime from the methode-bilan-carbone repo.
  *
- * Covers common (packages/shared/i18n), bc/clickson/cut/tilt (apps/bilan-carbone) and mip (apps/mip).
+ * Covers common (packages/shared/i18n), bc/clickson/cut/tilt (apps/bc) and mip (apps/mip).
  *
  * Modes:
  *   default        backfill — every key missing/empty in the target (use via subscription)
@@ -33,10 +33,10 @@ type Target = { dir: string; file: string }
 
 const TRANSLATION_TARGETS: Target[] = [
   { dir: join(__dirname, '../translations'), file: 'common' },
-  { dir: join(REPO_ROOT, 'apps/bilan-carbone/src/i18n/translations'), file: 'bc' },
-  { dir: join(REPO_ROOT, 'apps/bilan-carbone/src/i18n/translations'), file: 'clickson' },
-  { dir: join(REPO_ROOT, 'apps/bilan-carbone/src/i18n/translations'), file: 'cut' },
-  { dir: join(REPO_ROOT, 'apps/bilan-carbone/src/i18n/translations'), file: 'tilt' },
+  { dir: join(REPO_ROOT, 'apps/bc/src/i18n/translations'), file: 'bc' },
+  { dir: join(REPO_ROOT, 'apps/bc/src/i18n/translations'), file: 'clickson' },
+  { dir: join(REPO_ROOT, 'apps/bc/src/i18n/translations'), file: 'cut' },
+  { dir: join(REPO_ROOT, 'apps/bc/src/i18n/translations'), file: 'tilt' },
   { dir: join(REPO_ROOT, 'apps/mip/src/i18n/translations'), file: 'mip' },
 ]
 
