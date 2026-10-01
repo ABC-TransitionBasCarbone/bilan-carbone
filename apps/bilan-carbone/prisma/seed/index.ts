@@ -861,18 +861,18 @@ const users = async () => {
           },
           ...(DefaultStudyTags[Environment.TILT]?.length
             ? {
-              tagFamilies: {
-                create: (DefaultStudyTags[Environment.TILT] ?? []).map((familyTag) => ({
-                  name: familyTag.name,
-                  tags: {
-                    create: familyTag.tags.map((tag) => ({
-                      name: tag.name,
-                      color: tag.color,
-                    })),
-                  },
-                })),
-              },
-            }
+                tagFamilies: {
+                  create: (DefaultStudyTags[Environment.TILT] ?? []).map((familyTag) => ({
+                    name: familyTag.name,
+                    tags: {
+                      create: familyTag.tags.map((tag) => ({
+                        name: tag.name,
+                        color: tag.color,
+                      })),
+                    },
+                  })),
+                },
+              }
             : {}),
         },
       })
