@@ -1228,7 +1228,6 @@
         "title": "I choose my pathway",
         "addTitle": "Add a pathway",
         "editTitle": "Edit my pathway",
-        "siret": "SIRET",
         "submit": "Confirm",
         "save": "Save",
         "cancel": "Cancel",
@@ -2267,6 +2266,7 @@
       "create": "Create organisation",
       "editTitle": "Edit my organisation",
       "edit": "Save changes",
+      "siret": "SIRET",
       "name": "Organisation name",
       "title": "Information about the new organisation",
       "Unknown error": "An unknwon error happened. Please contact the support"
