@@ -26,3 +26,8 @@
     list-style-type: circle;
   }
 }
+
+.bcExport {
+  padding-right: 0.5rem;
+  color: var(--mui-palette-text-disabled);
+}
