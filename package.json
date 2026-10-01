@@ -38,7 +38,7 @@
     "next": "16.3.8"
   },
   "devDependencies": {
-    "turbo": "^2.10.12"
+    "turbo": "^2.11.6"
   },
   "resolutions": {
     "deepmerge-ts": "^8.0.0",

@@ -13,11 +13,11 @@
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.0",
     "@prisma/client": "7.10.0",
-    "pg": "^8.23.0"
+    "pg": "^8.23.1"
   },
   "devDependencies": {
-    "@types/node": "^24.13.3",
-    "tsx": "^4.22.4"
+    "@types/node": "^26.6.3",
+    "tsx": "^4.23.15"
   },
   "prisma": {
     "schema": "prisma/schema"

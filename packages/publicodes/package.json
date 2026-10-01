@@ -16,11 +16,11 @@
     "./form/layouts": "./form/layouts/index.ts"
   },
   "peerDependencies": {
-    "react": "*",
-    "@mui/material": "*"
+    "@mui/material": "*",
+    "react": "*"
   },
   "dependencies": {
     "@abc-transitionbascarbone/utils": "*",
-    "publicodes": "^1.10.1"
+    "publicodes": "^1.10.3"
   }
 }

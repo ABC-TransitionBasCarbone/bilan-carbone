@@ -7,14 +7,14 @@
   "dependencies": {
     "@abc-transitionbascarbone/publicodes": "*",
     "@abc-transitionbascarbone/utils": "*",
-    "@anthropic-ai/sdk": "^0.36.0",
-    "prettier": "^3.8.4",
-    "publicodes": "^1.10.1",
-    "yargs": "^17.7.2"
+    "@anthropic-ai/sdk": "^0.131.0",
+    "prettier": "^3.9.9",
+    "publicodes": "^1.10.3",
+    "yargs": "^18.2.0"
   },
   "devDependencies": {
-    "@types/node": "^24.13.3",
-    "tsx": "^4.23.13",
+    "@types/node": "^26.6.3",
+    "tsx": "^4.23.15",
     "typescript": "^6.0.2"
   }
 }
