@@ -7,6 +7,8 @@ import {
   isTiltSimplifiedFeatureActive,
 } from '@/services/permissions/environment'
 import { hasAccessToStudies } from '@/services/permissions/environmentAdvanced'
+import { getFeedbackFormUrl } from '@/utils/ressources'
+import LinkButton from '@abc-transitionbascarbone/application/components/base/LinkButton'
 import { customRich } from '@abc-transitionbascarbone/shared/utils/customRich'
 import Groups2OutlinedIcon from '@mui/icons-material/Groups2Outlined'
 import { Alert, Box, Typography } from '@mui/material'

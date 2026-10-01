@@ -3,8 +3,8 @@
 import { resetPassword } from '@/services/serverFunctions/user'
 import NewPasswordFormCommon from '@abc-transitionbascarbone/application/components/auth/NewPasswordFormCommon'
 import { useServerFunction } from '@abc-transitionbascarbone/application/components/hooks/useServerFunction'
-import { getEnvRoute } from '@abc-transitionbascarbone/application/services/email/utils'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { getEnvRoute } from '@abc-transitionbascarbone/shared/utils/environments'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 

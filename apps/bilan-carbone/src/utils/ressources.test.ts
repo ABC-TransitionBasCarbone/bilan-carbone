@@ -1,4 +1,4 @@
-import { getEnvironnementRessources } from '@/utils/ressources'
+import { getEnvironnementRessources, getFeedbackFormUrl } from '@/utils/ressources'
 import { Translations } from '@abc-transitionbascarbone/application/lib'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { getEnvVar } from '@abc-transitionbascarbone/shared/utils/environment'

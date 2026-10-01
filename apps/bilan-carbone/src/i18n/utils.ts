@@ -1,6 +1,7 @@
 'use server'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { Locale, LocaleType } from '@abc-transitionbascarbone/shared/i18n/config'
+import { isCourse } from '@abc-transitionbascarbone/shared/utils/environments'
 import { mergeObjects } from '@abc-transitionbascarbone/shared/utils/object'
 import fs from 'fs'
 import path from 'path'

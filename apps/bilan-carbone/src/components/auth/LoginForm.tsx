@@ -1,10 +1,10 @@
 'use client'
 
 import LoginFormCommon from '@abc-transitionbascarbone/application/components/auth/LoginFormCommon'
-import { getEnvRoute } from '@abc-transitionbascarbone/application/services/email/utils'
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { customRich } from '@abc-transitionbascarbone/shared/utils/customRich'
 import { getEnvVarClient } from '@abc-transitionbascarbone/shared/utils/environmentClient'
+import { getEnvRoute, isCourse } from '@abc-transitionbascarbone/shared/utils/environments'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 
@@ -24,9 +24,9 @@ const LoginForm = ({ environment = Environment.BC }: Props) => {
     isCourse(environment)
       ? ''
       : getEnvRoute(
-        environment === Environment.BC ? `activation?email=${email}` : `register?email=${email}`,
-        environment,
-      )
+          environment === Environment.BC ? `activation?email=${email}` : `register?email=${email}`,
+          environment,
+        )
 
   return (
     <LoginFormCommon
