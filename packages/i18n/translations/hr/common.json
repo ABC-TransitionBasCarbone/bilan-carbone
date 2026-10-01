@@ -84,7 +84,7 @@
     "syncedFromOtherUser": "Podaci ažurirani od strane drugog korisnika"
   },
   "signup": {
-    "Organization activation in progress": "Un·e collègue est déjà en train d'activer cette organisation. Merci de lui laisser jusqu'à 24h pour terminer son activation avant de réessayer.",
+    "Organization activation in progress": "Kolega/kolegica već aktivira ovu organizaciju. Molimo pričekajte do 24 sata da dovrši aktivaciju prije nego što pokušate ponovno.",
     "email": "Email",
     "emailPlaceholder": "Email korišten tijekom vaše obuke",
     "emailRequired": "Unesite email",
