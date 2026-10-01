@@ -110,6 +110,8 @@ describe('signUpWithSiretOrCNC', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     mockGetDeactivableFeatureRestrictions.mockResolvedValue({ active: false })
+    mockGetAccountsFromOrganizationForActivation.mockResolvedValue([])
+    mockRemoveOtherAccountActivation.mockResolvedValue(true)
     mockActivateEmail.mockResolvedValue({ success: true, data: EMAIL_SENT })
   })
 
@@ -594,6 +596,45 @@ describe('signUpWithSiretOrCNC', () => {
       if (result.success) {
         expect(result.data).toBe(REQUEST_SENT)
       }
+    })
+
+    it('returns ORGANIZATION_ACTIVATION_IN_PROGRESS when another user started activating the organization recently', async () => {
+      mockGetAccountByEmailAndEnvironment.mockResolvedValue(null)
+      mockGetUserByEmail.mockResolvedValue(null)
+      mockAddUser.mockResolvedValue({
+        id: mockedUserId,
+        email: testEmail,
+        firstName: 'Test',
+        lastName: 'User',
+        accounts: [{ id: mockedAccountId }],
+      })
+      mockGetRawOrganizationBySiret.mockResolvedValue({ id: mockedOrganizationId })
+      mockGetOrganizationVersionByOrganizationIdAndEnvironment.mockResolvedValue({
+        id: mockedOrganizationVersionId,
+      })
+      mockGetAccountById.mockResolvedValue({
+        id: mockedAccountId,
+        organizationVersionId: mockedOrganizationVersionId,
+        organizationVersion: { environment: Environment.CUT, organizationId: mockedOrganizationId },
+        user: { email: testEmail, firstName: 'Test', lastName: 'User' },
+      })
+      mockGetAccountsFromOrganizationForActivation.mockResolvedValue([
+        {
+          id: 'reserved-account-id',
+          role: Role.GESTIONNAIRE,
+          status: UserStatus.VALIDATED,
+          activationRequestedAt: new Date(),
+          user: { email: 'reserved@example.com', firstName: 'Reserved', lastName: 'User' },
+        },
+      ])
+
+      const result = await signUpWithSiretOrCNC(testEmail, testSiret, Environment.TILT)
+
+      expect(result.success).toBe(false)
+      if (!result.success) {
+        expect(result.errorMessage).toBe(ORGANIZATION_ACTIVATION_IN_PROGRESS)
+      }
+      expect(mockSendActivationRequest).not.toHaveBeenCalled()
     })
   })
 
