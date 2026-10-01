@@ -11,6 +11,7 @@ export interface PublicodesInputFieldProps<RuleName extends string> {
   onChange: OnFieldChange<RuleName>
   suggestions?: Record<string, string | number | Record<string, unknown>> | undefined
   isFilteringQuestion?: boolean
+  defaultAsPlaceholder?: boolean
 }
 
 export function InputField<RuleName extends string>({
@@ -18,6 +19,7 @@ export function InputField<RuleName extends string>({
   onChange,
   suggestions,
   isFilteringQuestion = false,
+  defaultAsPlaceholder = false,
 }: PublicodesInputFieldProps<RuleName>) {
   /*
    * TODO: to check if we want to support more input types in the future
@@ -33,22 +35,31 @@ export function InputField<RuleName extends string>({
               onChange={onChange}
               suggestions={suggestions}
               isFilteringQuestion={isFilteringQuestion}
+              defaultAsPlaceholder={defaultAsPlaceholder}
             />
           )
         // TODO: handle month type properly
         // case 'month':
         case 'date':
-          return <YearPickerInput formElement={formElement} onChange={onChange} />
+          return (
+            <YearPickerInput
+              formElement={formElement}
+              onChange={onChange}
+              defaultAsPlaceholder={defaultAsPlaceholder}
+            />
+          )
         case 'text':
-          return <TextInput formElement={formElement} onChange={onChange} />
+          return <TextInput formElement={formElement} onChange={onChange} defaultAsPlaceholder={defaultAsPlaceholder} />
         case 'checkbox':
         default:
           return <p>Unsupported input type: {formElement.type}</p>
       }
     case 'RadioGroup':
-      return <RadioGroupInput formElement={formElement} onChange={onChange} />
+      return (
+        <RadioGroupInput formElement={formElement} onChange={onChange} defaultAsPlaceholder={defaultAsPlaceholder} />
+      )
     case 'select':
-      return <SelectInput formElement={formElement} onChange={onChange} />
+      return <SelectInput formElement={formElement} onChange={onChange} defaultAsPlaceholder={defaultAsPlaceholder} />
     case 'textarea':
       // NOTE: we assume textarea is only used for displaying static text as
       // they have no utility in a publicodes form.

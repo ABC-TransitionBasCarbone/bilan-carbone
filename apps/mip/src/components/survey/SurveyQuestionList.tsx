@@ -29,6 +29,7 @@ const SurveyQuestionList = ({ groupedElements, engine, setValue }: Props) => {
               elements={group.elements}
               engine={engine}
               containerVariant="flat"
+              defaultAsPlaceholder
               onChange={(ruleName, value) => setValue(ruleName, value)}
             />
           </Fragment>
@@ -41,6 +42,7 @@ const SurveyQuestionList = ({ groupedElements, engine, setValue }: Props) => {
               formElement={group.el}
               engine={engine}
               containerVariant="flat"
+              defaultAsPlaceholder
               onChange={(ruleName, value) => setValue(ruleName, value)}
             />
           </Fragment>

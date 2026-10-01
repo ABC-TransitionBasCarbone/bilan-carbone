@@ -1,9 +1,5 @@
 import { getSurveyCategoryKeysFromParsedRules } from '@/publicodes/mip-engine'
-import {
-  getRuleCategoryKey,
-  getRuleSubCategoryKey,
-  getUpdatedSituationWithInputValue,
-} from '@abc-transitionbascarbone/publicodes/form/utils'
+import { getRuleCategoryKey, getRuleSubCategoryKey } from '@abc-transitionbascarbone/publicodes/form/utils'
 import { safeEvaluate } from '@abc-transitionbascarbone/publicodes/utils'
 import Engine, { Situation, utils } from 'publicodes'
 
@@ -161,6 +157,18 @@ export const getRulesMeta = (engine: Engine, root = 'bilan'): MipRulesMeta => {
 
 export const getIsMissing = (ruleName: string, situation: Situation<string>, mosaicChildren: string[] = []): boolean =>
   [ruleName, ...mosaicChildren].every((name) => !situation[name] && situation[name] !== 0)
+
+export const hasRuleAnswer = (
+  ruleName: string,
+  situation: Situation<string>,
+  mosaicChildrenWithParent: Record<string, string[]> = {},
+): boolean => {
+  const relatedRules = [ruleName, ...(mosaicChildrenWithParent[ruleName] ?? [])]
+  return relatedRules.some((name) => {
+    const value = situation[name]
+    return value !== undefined && value !== null
+  })
+}
 
 // Mosaic children are replaced by their parent, scored with the max of its children.
 export const getMissingVariables = (engine: Engine, meta: MipRulesMeta): MissingVariables => {
@@ -336,34 +344,6 @@ export const getStableQuestionOrder = (
 export const getNextQuestion = (currentQuestion: string | null, orderedQuestions: string[]): string | null => {
   const currentIndex = currentQuestion ? orderedQuestions.indexOf(currentQuestion) : -1
   return orderedQuestions[currentIndex + 1] ?? null
-}
-
-export const getSituationWithQuestionDefaults = (
-  engine: Engine,
-  ruleName: string,
-  situation: Situation<string>,
-  mosaicChildrenWithParent: Record<string, string[]>,
-): Situation<string> => {
-  const questionRules = mosaicChildrenWithParent[ruleName] ?? [ruleName]
-  return questionRules.reduce((nextSituation, questionRule) => {
-    if (questionRule in nextSituation) {
-      return nextSituation
-    }
-
-    try {
-      const defaultValue = engine.evaluate(questionRule).nodeValue
-      return defaultValue === undefined
-        ? nextSituation
-        : getUpdatedSituationWithInputValue(
-            engine,
-            nextSituation,
-            questionRule,
-            defaultValue as string | number | boolean,
-          )
-    } catch {
-      return nextSituation
-    }
-  }, situation)
 }
 
 // Unanswered mosaic siblings are set to a neutral value so the mosaic stops being missing.

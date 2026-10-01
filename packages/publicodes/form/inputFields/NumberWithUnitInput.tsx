@@ -14,6 +14,7 @@ interface NumberWithUnitInputProps<RuleName extends string> extends BaseInputPro
   formElement: EvaluatedNumberInput<RuleName>
   suggestions?: Record<string, string | number | Record<string, unknown>> | undefined
   isFilteringQuestion?: boolean
+  defaultAsPlaceholder?: boolean
 }
 
 const NumberWithUnitInput = <RuleName extends string>({
@@ -21,11 +22,13 @@ const NumberWithUnitInput = <RuleName extends string>({
   onChange,
   suggestions,
   isFilteringQuestion = false,
+  defaultAsPlaceholder = false,
 }: NumberWithUnitInputProps<RuleName>) => {
   const unit = usePublicodesUnitTranslation(formElement.unit)
   const { localValue, handleValueChange, handleValueCommitted, handleFocus } = useSimpleInputState<number>(
     formElement,
     onChange as OnFieldChange,
+    defaultAsPlaceholder,
   )
 
   const suggestionEntries: SuggestionChipOption<number>[] = getNumericSuggestionEntries(suggestions)
@@ -58,6 +61,7 @@ const NumberWithUnitInput = <RuleName extends string>({
             inputMode="decimal"
             render={
               <OutlinedInput
+                placeholder={defaultAsPlaceholder ? String(formElement.defaultValue ?? '') : undefined}
                 endAdornment={unit ? <InputAdornment position="end">{unit}</InputAdornment> : undefined}
               />
             }

@@ -2,7 +2,7 @@
 
 import { createResponse } from '@/db/campaign'
 import { getSurveyCampaignForCsvExport, getSurveyCampaignForResults } from '@/db/survey'
-import { createMipEngine, getSurveyCategoryKeysFromRawRules, RawRules } from '@/publicodes/mip-engine'
+import { createMipEngineWithoutDefaults, getSurveyCategoryKeysFromRawRules, RawRules } from '@/publicodes/mip-engine'
 import { dbActualizedAuth } from '@/services/auth'
 import { EmissionCategory, EntityFilterResult, SurveyResults } from '@/types/results.types'
 import { getEntityFilterDefsFromModel as getEntityFilterDefsFromModelFromUtil } from '@/utils/entityFilter'
@@ -82,7 +82,7 @@ export const getSurveyResults = async (campaignId: string): Promise<SurveyResult
     }
   }
 
-  const engine = createMipEngine(modelRules)
+  const engine = createMipEngineWithoutDefaults(modelRules)
   const situations: Situation<string>[] = responses.map((response) => {
     return parseMipSimulationState(response.answers).situation
   })

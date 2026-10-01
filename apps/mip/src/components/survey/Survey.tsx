@@ -41,9 +41,11 @@ const Survey = () => {
   const [isCompleting, setIsCompleting] = useState(false)
   const [interstitialCategoryKey, setInterstitialCategoryKey] = useState<string | null>(null)
   const [isFinalInterstitial, setIsFinalInterstitial] = useState(false)
-  const openInterstitial = (key: string, isFinal: boolean) => {
+  const [interstitialDirection, setInterstitialDirection] = useState<'next' | 'previous'>('next')
+  const openInterstitial = (key: string, isFinal: boolean, direction: 'next' | 'previous' = 'next') => {
     setInterstitialCategoryKey(key)
     setIsFinalInterstitial(isFinal)
+    setInterstitialDirection(direction)
   }
 
   const handleRestart = () => {
@@ -58,8 +60,9 @@ const Survey = () => {
       return
     }
 
-    if (form.isLastQuestionOfCategory && form.currentCategory) {
-      openInterstitial(form.currentCategory, isLastQuestion)
+    const nextQuestion = form.relevantQuestions[form.relevantQuestions.indexOf(form.currentQuestion) + 1]
+    if (nextQuestion && form.currentCategory && getRuleCategoryKey(nextQuestion) !== form.currentCategory) {
+      openInterstitial(form.currentCategory, false, 'next')
       return
     }
 
@@ -68,7 +71,7 @@ const Survey = () => {
 
   const handleCompleteButton = async () => {
     if (form.currentCategory) {
-      openInterstitial(form.currentCategory, true)
+      openInterstitial(form.currentCategory, true, 'next')
       return
     }
 
@@ -103,20 +106,31 @@ const Survey = () => {
     setInterstitialCategoryKey(null)
     setIsFinalInterstitial(false)
   }
+  const goBackFromInterstitial = () => {
+    closeInterstitial()
+    if (interstitialDirection === 'previous') {
+      form.goToPreviousQuestion()
+    }
+  }
   const continueFromInterstitial = () => {
-    setInterstitialCategoryKey(null)
-    form.goToNextQuestion()
+    closeInterstitial()
+    if (interstitialDirection === 'next') {
+      form.goToNextQuestion()
+    }
   }
   const handlePrevious = () => {
     const previousQuestion = form.relevantQuestions[currentIndex - 1]
-    form.goToPreviousQuestion()
-
-    if (previousQuestion) {
-      const previousCategory = getRuleCategoryKey(previousQuestion)
-      if (previousCategory !== form.currentCategory) {
-        openInterstitial(previousCategory, false)
-      }
+    if (!previousQuestion) {
+      return
     }
+
+    const previousCategory = getRuleCategoryKey(previousQuestion)
+    if (previousCategory !== form.currentCategory) {
+      openInterstitial(previousCategory, false, 'previous')
+      return
+    }
+
+    form.goToPreviousQuestion()
   }
 
   if (isResumed) {
@@ -150,7 +164,7 @@ const Survey = () => {
                   previousLabel={tCommon('previous')}
                   nextLabel={tCommon('next')}
                   completeLabel={t('navigation.complete')}
-                  onPrevious={closeInterstitial}
+                  onPrevious={goBackFromInterstitial}
                   onNext={continueFromInterstitial}
                   onComplete={completeSurvey}
                 />
@@ -190,6 +204,7 @@ const Survey = () => {
           <SurveyCategoriesSidebar
             activeCategoryKey={interstitialCategoryKey ?? categoryKey}
             situation={simulation.situation}
+            relevantQuestions={form.relevantQuestions}
           />
         </div>
       </Container>

@@ -47,6 +47,9 @@ describe('Survey impactco2 widgets', () => {
           cy.getByTestId('survey-category-interstitial').should('be.visible')
           cy.getByTestId('survey-categories-sidebar').should('be.visible')
           cy.getByTestId('survey-next-button').should('be.visible')
+          cy.getByTestId('survey-previous-button').click()
+          cy.getByTestId('survey-next-button').click()
+          cy.getByTestId('survey-category-interstitial').should('be.visible')
           return
         }
 
@@ -61,6 +64,8 @@ describe('Survey impactco2 widgets', () => {
       })
     }
 
+    cy.getByTestId('survey-next-button').click()
+    cy.getByTestId('survey-category-interstitial').should('not.exist')
     findInterstitialOrNext()
   })
 
@@ -75,6 +80,16 @@ describe('Survey impactco2 widgets', () => {
           cy.getByTestId('survey-next-button').click()
           cy.getByTestId('survey-categories-sidebar').should('be.visible')
           cy.getByTestId('survey-category-interstitial').should('not.exist')
+          cy.getByTestId('survey-previous-button').click()
+          cy.getByTestId('survey-category-interstitial').should('be.visible')
+          cy.getByTestId('survey-next-button').click()
+          cy.getByTestId('survey-category-interstitial').should('not.exist')
+          cy.getByTestId('survey-previous-button').click()
+          cy.getByTestId('survey-category-interstitial').should('be.visible')
+          cy.getByTestId('survey-previous-button').click()
+          cy.getByTestId('survey-category-interstitial').should('not.exist')
+          cy.getByTestId('survey-next-button').click()
+          cy.getByTestId('survey-category-interstitial').should('be.visible')
           return
         }
 

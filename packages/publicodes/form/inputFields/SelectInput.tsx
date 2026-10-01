@@ -21,6 +21,7 @@ const StyledFormControl = styled(FormControl, {
 
 interface SelectInputProps<RuleName extends string> extends BaseInputProps<RuleName> {
   formElement: EvaluatedSelect<RuleName>
+  defaultAsPlaceholder?: boolean
 }
 
 const SelectInput = <RuleName extends string>({
@@ -29,6 +30,7 @@ const SelectInput = <RuleName extends string>({
   onBlur,
   errorMessage,
   disabled,
+  defaultAsPlaceholder = false,
   // TODO: handle table
   // table,
 }: SelectInputProps<RuleName>) => {
@@ -63,7 +65,22 @@ const SelectInput = <RuleName extends string>({
   return (
     <StyledFormControl fullWidth error={!!errorMessage} disabled={disabled}>
       <Select
-        value={formElement.value ?? formElement.defaultValue ?? ''}
+        value={formElement.value ?? (defaultAsPlaceholder ? '' : formElement.defaultValue) ?? ''}
+        displayEmpty={defaultAsPlaceholder}
+        renderValue={
+          defaultAsPlaceholder
+            ? (value) =>
+                value ? (
+                  getOptionLabel(value, formElement.options.find((option) => option.value === value)?.label)
+                ) : formElement.defaultValue != null ? (
+                  <Typography component="span" color="text.secondary">
+                    {getOptionLabel(formElement.defaultValue)}
+                  </Typography>
+                ) : (
+                  ''
+                )
+            : undefined
+        }
         onChange={handleChange}
         onBlur={onBlur}
         MenuProps={{

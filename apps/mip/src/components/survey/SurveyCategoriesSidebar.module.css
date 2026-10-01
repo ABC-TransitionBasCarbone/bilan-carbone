@@ -4,60 +4,85 @@
 }
 
 .categoryItem {
+  position: relative;
+  overflow: hidden;
   padding: 0.625rem 0.75rem;
   border-radius: 0.5rem;
   border: 1px solid var(--neutral-200);
   background-color: var(--white);
 }
 
+.progress {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  appearance: none;
+  background: transparent;
+}
+
+.progress::-webkit-progress-bar {
+  background: transparent;
+}
+
+.progress::-webkit-progress-value {
+  background: var(--category-progress-color);
+  transition: width 0.2s ease;
+}
+
+.progress::-moz-progress-bar {
+  background: var(--category-progress-color);
+}
+
 .categoryDt {
-  background-color: color-mix(in srgb, var(--mui-palette-primary-light) 86%, var(--white));
+  --category-progress-color: color-mix(in srgb, var(--mui-palette-primary-light) 86%, var(--white));
   color: var(--mui-palette-primary-main);
   border-color: var(--mui-palette-primary-main);
 }
 
 .categoryTransport {
-  background-color: color-mix(in srgb, var(--mui-palette-info-light) 14%, var(--white));
+  --category-progress-color: color-mix(in srgb, var(--mui-palette-info-light) 14%, var(--white));
   color: var(--mui-palette-info-main);
   border-color: var(--mui-palette-info-main);
 }
 
 .categoryAlimentation {
-  background-color: color-mix(in srgb, var(--mui-palette-warning-light) 22%, var(--white));
+  --category-progress-color: color-mix(in srgb, var(--mui-palette-warning-light) 22%, var(--white));
   color: var(--mui-palette-warning-main);
   border-color: var(--mui-palette-warning-main);
 }
 
 .categoryDivers {
-  background-color: color-mix(in srgb, var(--mui-palette-error-light) 20%, var(--white));
+  --category-progress-color: color-mix(in srgb, var(--mui-palette-error-light) 20%, var(--white));
   color: var(--mui-palette-error-main);
   border-color: var(--mui-palette-error-main);
 }
 
 .categoryLogement {
-  background-color: color-mix(in srgb, var(--mui-palette-success-light) 30%, var(--white));
+  --category-progress-color: color-mix(in srgb, var(--mui-palette-success-light) 30%, var(--white));
   color: var(--mui-palette-success-main);
   border-color: var(--mui-palette-success-main);
 }
 
 .categoryNumerique {
-  background-color: color-mix(in srgb, var(--mui-palette-info-light) 14%, var(--white));
+  --category-progress-color: color-mix(in srgb, var(--mui-palette-info-light) 14%, var(--white));
   color: var(--mui-palette-info-main);
   border-color: var(--mui-palette-info-main);
 }
 
 .categoryBureaux {
-  background-color: color-mix(in srgb, var(--mui-palette-success-light) 30%, var(--white));
+  --category-progress-color: color-mix(in srgb, var(--mui-palette-success-light) 30%, var(--white));
   color: var(--mui-palette-success-main);
   border-color: var(--mui-palette-success-main);
 }
 
 .categoryItem.active {
   font-weight: 600;
-  border-color: var(--neutral-300);
 }
 
 .categoryLabel {
+  position: relative;
   min-width: 0;
 }
 
@@ -68,6 +93,7 @@
 }
 
 .value {
+  position: relative;
   font-size: 0.8125rem;
   font-weight: 600;
   white-space: nowrap;

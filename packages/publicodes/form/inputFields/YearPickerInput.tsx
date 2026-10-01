@@ -10,11 +10,13 @@ dayjs.extend(customParseFormat)
 interface YearPickerInputProps<RuleName extends string = string> {
   formElement: EvaluatedStringInput<RuleName>
   onChange: (rule: RuleName, value: string) => void
+  defaultAsPlaceholder?: boolean
 }
 
 const YearPickerInput = <RuleName extends string = string>({
   formElement,
   onChange,
+  defaultAsPlaceholder = false,
 }: YearPickerInputProps<RuleName>) => {
   const handleYearChange = useCallback(
     (newValue: PickerValue) => {
@@ -27,7 +29,7 @@ const YearPickerInput = <RuleName extends string = string>({
   )
 
   const convertedValue = useMemo(() => {
-    const val = formElement.value ?? formElement.defaultValue
+    const val = formElement.value ?? (defaultAsPlaceholder ? undefined : formElement.defaultValue)
     if (val && typeof val === 'string') {
       // DD/MM/YYYY (Publicodes date format)
       const parsed = dayjs(val, 'DD/MM/YYYY', true)
@@ -39,7 +41,7 @@ const YearPickerInput = <RuleName extends string = string>({
       }
     }
     return null
-  }, [formElement.value, formElement.defaultValue])
+  }, [formElement.value, formElement.defaultValue, defaultAsPlaceholder])
 
   return (
     <DatePicker
@@ -51,6 +53,7 @@ const YearPickerInput = <RuleName extends string = string>({
       openTo="year"
       slotProps={{
         textField: {
+          placeholder: defaultAsPlaceholder ? String(formElement.defaultValue ?? '') : undefined,
           sx: {
             backgroundColor: 'white',
             width: '6.5rem',

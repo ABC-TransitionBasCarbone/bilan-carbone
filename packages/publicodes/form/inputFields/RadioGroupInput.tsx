@@ -4,8 +4,8 @@ import { FormControl, FormControlLabel, Radio, styled } from '@mui/material'
 import { EvaluatedRadioGroup } from '@publicodes/forms'
 import classNames from 'classnames'
 import { useState } from 'react'
-import { BaseInputProps } from './utils'
 import styles from './RadioGroupInput.module.css'
+import { BaseInputProps } from './utils'
 
 const StyledFormControlLabel = styled(FormControlLabel)(({ theme }: { theme: any }) => {
   const borderColor = theme.custom?.box?.borderColor
@@ -20,6 +20,7 @@ const StyledFormControlLabel = styled(FormControlLabel)(({ theme }: { theme: any
 
 interface RadioGroupInputProps<RuleName extends string> extends BaseInputProps<RuleName> {
   formElement: EvaluatedRadioGroup<RuleName>
+  defaultAsPlaceholder?: boolean
 }
 
 const RadioGroupInput = <RuleName extends string>({
@@ -28,6 +29,7 @@ const RadioGroupInput = <RuleName extends string>({
   onBlur,
   errorMessage,
   disabled,
+  defaultAsPlaceholder = false,
 }: RadioGroupInputProps<RuleName>) => {
   const { getOptionLabel } = usePublicodesRuleTranslation(formElement.id)
   const [openOptionIndexes, setOpenOptionIndexes] = useState<Set<number>>(new Set())
@@ -47,7 +49,10 @@ const RadioGroupInput = <RuleName extends string>({
                 <Radio
                   onBlur={onBlur}
                   name={option.label}
-                  checked={(formElement.value ?? formElement.defaultValue) === option.value}
+                  checked={
+                    (formElement.value ?? (defaultAsPlaceholder ? undefined : formElement.defaultValue)) ===
+                    option.value
+                  }
                   onChange={(e) => onChange(formElement.id, e.target.checked ? option.value : undefined)}
                 />
               }

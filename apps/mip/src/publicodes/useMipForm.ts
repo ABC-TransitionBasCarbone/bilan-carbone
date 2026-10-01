@@ -1,5 +1,5 @@
 import { getRuleCategoryKey } from '@abc-transitionbascarbone/publicodes/form/utils'
-import { getFormQuestions, getNextQuestion, getSituationWithQuestionDefaults } from './mip-rules'
+import { getFormQuestions, getNextQuestion } from './mip-rules'
 import { useMipPublicodes } from './MipPublicodesProvider'
 
 export const useMipForm = () => {
@@ -32,14 +32,8 @@ export const useMipForm = () => {
     if (nextQuestion) {
       setCurrentQuestion(nextQuestion)
       if (activeQuestion) {
-        const situation = getSituationWithQuestionDefaults(
-          engine,
-          activeQuestion,
-          simulation.situation,
-          meta.mosaicChildrenWithParent,
-        )
         const foldedSteps = [...new Set([...simulation.foldedSteps, activeQuestion])]
-        updateSimulation({ situation, foldedSteps, progression })
+        updateSimulation({ foldedSteps, progression })
       }
     }
   }
