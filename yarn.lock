@@ -3813,12 +3813,19 @@
   resolved "https://registry.yarnpkg.com/@types/ms/-/ms-2.1.0.tgz#052aa67a48eccc4309d7f0191b7e41434b90bb78"
   integrity sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==
 
-"@types/node@*", "@types/node@^26.6.3":
+"@types/node@*":
   version "26.6.3"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-26.6.3.tgz#411dccb5fc25687c958fe35b6ca3741d48a8d13c"
   integrity sha512-dsqMQQoeTLqu9wynDD00q573mNzso3IdQOAfHRJqLCcmCFPoGo9A1bDpUcv/9tnKpErQWv9uKeGfl37EIS02Yg==
   dependencies:
     undici-types "~8.9.0"
+
+"@types/node@^24.13.3":
+  version "24.13.3"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-24.13.3.tgz#49f18bd3c647866dcda51a0756c145e14590ce16"
+  integrity sha512-Dh8vAsV36ig5wa9OX4pXvMc9D3Veibfw2wix0CUwYODLD8nkj9UsLjASr49nPg+2eKzxhBV+v7L8pXvT4e639Q==
+  dependencies:
+    undici-types "~7.18.0"
 
 "@types/node@^25.6.0":
   version "25.9.8"
@@ -9618,15 +9625,10 @@ proxy-from-env@^2.1.0:
   resolved "https://registry.yarnpkg.com/proxy-from-env/-/proxy-from-env-2.1.0.tgz#a7487568adad577cfaaa7e88c49cab3ab3081aba"
   integrity sha512-cJ+oHTW1VAEa8cJslgmUZrc+sjRKgAKl3Zyse6+PV38hZe/V6Z14TbCuXcan9F9ghlz4QrFr2c92TNF82UkYHA==
 
-publicodes@^1.10.3:
+"publicodes@^1.10.3", "publicodes@workspace:^":
   version "1.10.3"
   resolved "https://registry.yarnpkg.com/publicodes/-/publicodes-1.10.3.tgz#561fb9aef5dde35f13772017286d908c30eb0423"
   integrity sha512-25rohaG6HmB2oQsQL1JxvjdFPdVrupyxGLBsmQg3obpBHkoPx+vZDUZ1hn+SctH9cRYmk8YbO+bMPU79lDWSqA==
-
-"publicodes@workspace:^":
-  version "1.9.1"
-  resolved "https://registry.yarnpkg.com/publicodes/-/publicodes-1.9.1.tgz#0c5031337e4515af81e5079fae29d34fbc8c0768"
-  integrity sha512-sXBgGuAH/bIehF8waXm4Pp/EnqjFmxZJb6FNSAZ9FRO1neACHRYKv34lxFM3qZNyJ2RaI5jwtOupGlozMW0fcA==
 
 pump@^3.0.0:
   version "3.0.4"
@@ -10901,6 +10903,11 @@ undici-types@~8.9.0:
   resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-8.9.0.tgz#e240d97c8b5d85e5347ce73d25865c7906c1ec9f"
   integrity sha512-KTDyRTYX8sWmKXAikPHHSyc63CRPETMctyjKFupcC6OBLXT3xsN0e9aF7m+mIXutFWpUXuedtowG7iLOzp0kQg==
 
+undici-types@~7.18.0:
+  version "7.18.0"
+  resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-7.18.0.tgz#ae33c630050db5c53ff2433c74115bf428e71096"
+  integrity sha512-aLO7B+pYKuqcpapWdzhvzrjfm+qeiQNK3OILZAmlXJxgMfCsltOINMvNonA7nMMKiEjY1vAMA02O7u+eWym43w==
+
 universalify@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-2.0.1.tgz#168efc2180964e6386d061e094df61afe239b18d"
@@ -11029,10 +11036,10 @@ vimeo-video-element@^1.6.1:
     "@vimeo/player" "2.29.0"
     media-played-ranges-mixin "^0.1.0"
 
-vite@6.4.2:
-  version "6.4.2"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-6.4.2.tgz#a4e548ca3a90ca9f3724582cab35e1ba15efc6f2"
-  integrity sha512-2N/55r4JDJ4gdrCvGgINMy+HH3iRpNIz8K6SFwVsA+JbQScLiC+clmAxBgwiSPgcG9U15QmvqCGWzMbqda5zGQ==
+vite@6.4.2, "vite@^6.0.0 || ^7.0.0 || ^8.0.0", vite@^6.4.3:
+  version "6.4.3"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-6.4.3.tgz#85a164db7ce706f2a776812efa2b340f1721858e"
+  integrity sha512-NTKlcQjlAK7MlQoyb6LgaqHc8sso/pVyUJYWMws3jg21uTJw/LddqIFPcPqP6PzpgbIcZyKI85sFE4HBrQDA8A==
   dependencies:
     esbuild "^0.25.0"
     fdir "^6.4.4"

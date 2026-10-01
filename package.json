@@ -42,6 +42,8 @@
   },
   "resolutions": {
     "deepmerge-ts": "^8.0.0",
-    "mysql2": "^3.23.1"
+    "mysql2": "^3.23.1",
+    "publicodes": "^1.10.3",
+    "vite": "^6.4.3"
   }
 }
