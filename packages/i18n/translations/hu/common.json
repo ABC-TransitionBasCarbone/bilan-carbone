@@ -84,7 +84,7 @@
     "syncedFromOtherUser": "Az adatokat egy másik felhasználó frissítette"
   },
   "signup": {
-    "Organization activation in progress": "Un·e collègue est déjà en train d'activer cette organisation. Merci de lui laisser jusqu'à 24h pour terminer son activation avant de réessayer.",
+    "Organization activation in progress": "Egy kollégája már aktiválja ezt a szervezetet. Kérjük, hagyjon neki legfeljebb 24 órát az aktiválás befejezésére, mielőtt újra próbálkozna.",
     "email": "E-mail",
     "emailPlaceholder": "A képzése során használt e-mail-cím",
     "emailRequired": "Adjon meg egy e-mail-címet",
