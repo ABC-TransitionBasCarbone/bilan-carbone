@@ -102,11 +102,17 @@ const PieChart = <T extends BasicTypeCharts>({
 
   const legendData = useMemo(() => {
     const maxLabelLength = type === 'tag' ? 20 : 50
-    return innerRingData.map((item) => ({
-      label: item.label.length > maxLabelLength ? item.label.substring(0, 20) + '...' : item.label,
+    return innerRingData.flatMap((parent) => {
+      const children = outerRingData
+        .filter((child) => child.parentIndex === parent.parentIndex)
+        .map((child) => ({ ...child, indented: true }))
+      return [{ ...parent, indented: false }, ...children]
+    }).map((item) => ({
+      label: item.label.length > maxLabelLength ? item.label.substring(0, maxLabelLength) + '...' : item.label,
       color: item.color,
+      indented: item.indented,
     }))
-  }, [innerRingData, type])
+  }, [innerRingData, outerRingData, type])
 
   return (
     <div className={styles.pieChart}>
@@ -115,7 +121,7 @@ const PieChart = <T extends BasicTypeCharts>({
         {legendData.length > 0 && !noSpaceForLegend && (
           <div className={classNames('flex-col', 'pr2')}>
             {legendData.map((item, index) => (
-              <div key={index} className={classNames('align-center', 'gapped1', 'py025')}>
+              <div key={index} className={classNames('align-center', 'gapped1', 'py025', { pl2: item.indented })}>
                 <div className={styles.legendColor} style={{ backgroundColor: item.color }} />
                 <Typography variant="body2" className={styles.legendLabel}>
                   {item.label}
