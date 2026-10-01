@@ -252,6 +252,10 @@
       "title": "Hébergeur",
       "details": "Scalingo - 9 Rue de la Krutenau, 67000 Strasbourg"
     },
+    "fileStorage": {
+      "title": "Stockage des fichiers",
+      "details": "Scaleway - 8, rue de la Ville-l'Évêque, 75008 Paris, France"
+    },
     "websiteOwner": {
       "title": "Propriétaire du site",
       "description": "Le présent site est la propriété de l'Association pour la transition bas carbone. Le contenu éditorial, textes, images composant le site web sont la propriété de l'Association pour la transition bas carbone. Toute représentation totale ou partielle de ce site, par quelques procédés que ce soient, sans autorisation préalable de l'Association pour la transition bas carbone, est interdite et constituerait une contrefaçon sanctionnée par les articles L335-2 et suivants du Code de la propriété intellectuelle. Tous les noms de produits ou de sociétés mentionnés dans le site web sont les marques de leurs titulaires.",

@@ -252,6 +252,10 @@
       "title": "Provider",
       "details": "Scalingo - 9 Rue de la Krutenau, 67000 Strasbourg"
     },
+    "fileStorage": {
+      "title": "File storage",
+      "details": "Scaleway - 8, rue de la Ville-l'Évêque, 75008 Paris, France"
+    },
     "websiteOwner": {
       "title": "Website Owner",
       "description": "This website is owned by the Association pour la transition bas carbone (Association for Low-Carbon Transition). All editorial content, texts, and images on this website are the property of the Association pour la transition bas carbone. Any full or partial reproduction of this site by any means without prior written permission from the Association pour la transition bas carbone is strictly prohibited and constitutes an infringement punishable under Articles L335-2 and following of the French Intellectual Property Code. All product or company names mentioned on this website are trademarks of their respective owners.",

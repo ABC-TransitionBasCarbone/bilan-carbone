@@ -37,6 +37,9 @@ const LegalNotices = async () => {
         <div className={styles.section}>{t('provider.title')}</div>
         <p>{t('provider.details')}</p>
 
+        <div className={styles.section}>{t('fileStorage.title')}</div>
+        <p>{t('fileStorage.details')}</p>
+
         <div className={styles.section}>{t('websiteOwner.title')}</div>
         <p>{t('websiteOwner.description')}</p>
         <p>{t('websiteOwner.editorInChief')}</p>
