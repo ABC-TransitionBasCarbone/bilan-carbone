@@ -861,18 +861,18 @@ const users = async () => {
           },
           ...(DefaultStudyTags[Environment.TILT]?.length
             ? {
-                tagFamilies: {
-                  create: (DefaultStudyTags[Environment.TILT] ?? []).map((familyTag) => ({
-                    name: familyTag.name,
-                    tags: {
-                      create: familyTag.tags.map((tag) => ({
-                        name: tag.name,
-                        color: tag.color,
-                      })),
-                    },
-                  })),
-                },
-              }
+              tagFamilies: {
+                create: (DefaultStudyTags[Environment.TILT] ?? []).map((familyTag) => ({
+                  name: familyTag.name,
+                  tags: {
+                    create: familyTag.tags.map((tag) => ({
+                      name: tag.name,
+                      color: tag.color,
+                    })),
+                  },
+                })),
+              },
+            }
             : {}),
         },
       })
@@ -1049,6 +1049,8 @@ const users = async () => {
       },
     }),
   )
+
+  const courseEnvironments = [Environment.COURSE_BC, Environment.COURSE_TILT]
 
   if (courseEnvironments.length > 9) {
     throw new Error('Too many course environments defined needs to change seeds to handle ids')

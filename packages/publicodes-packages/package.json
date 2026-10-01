@@ -1,52 +1,50 @@
 {
-  "name": "@abc-transitionbascarbone/publicodes-packages",
-  "version": "0.1.0",
-  "private": true,
-  "type": "module",
-  "exports": {
-    "./count": {
-      "types": "./publicodes-count/publicodes-build/index.d.ts",
-      "default": "./publicodes-count/publicodes-build/index.js"
+    "name": "@abc-transitionbascarbone/publicodes-packages",
+    "version": "0.1.0",
+    "private": true,
+    "type": "module",
+    "exports": {
+        "./package.json": "./package.json",
+        "./count": {
+            "types": "./publicodes-count/publicodes-build/index.d.ts",
+            "default": "./publicodes-count/publicodes-build/index.js"
+        },
+        "./count/model": "./publicodes-count/publicodes-build/publicodes-count.model.json",
+        "./clickson": {
+            "types": "./publicodes-clickson/publicodes-build/index.d.ts",
+            "default": "./publicodes-clickson/publicodes-build/index.js"
+        },
+        "./clickson/model": "./publicodes-clickson/publicodes-build/publicodes-clickson.model.json",
+        "./tilt": {
+            "types": "./publicodes-tilt/publicodes-build/index.d.ts",
+            "default": "./publicodes-tilt/publicodes-build/index.js"
+        },
+        "./tilt/model": "./publicodes-tilt/publicodes-build/publicodes-tilt.model.json"
     },
-    "./count/package.json": "./publicodes-count/package.json",
-    "./count/model": "./publicodes-count/publicodes-build/publicodes-count.model.json",
-    "./clickson": {
-      "types": "./publicodes-clickson/publicodes-build/index.d.ts",
-      "default": "./publicodes-clickson/publicodes-build/index.js"
+    "scripts": {
+        "compile": "yarn compile:count && yarn compile:clickson && yarn compile:tilt",
+        "compile:count": "cd publicodes-count && publicodes compile",
+        "compile:clickson": "cd publicodes-clickson && publicodes compile",
+        "compile:tilt": "cd publicodes-tilt && publicodes compile",
+        "watch:count": "cd publicodes-count && publicodes compile --watch",
+        "watch:clickson": "cd publicodes-clickson && publicodes compile --watch",
+        "watch:tilt": "cd publicodes-tilt && publicodes compile --watch",
+        "test": "vitest run publicodes-count/test publicodes-clickson/test publicodes-tilt/test --reporter=tree",
+        "test:count": "vitest run publicodes-count/test --reporter=tree",
+        "test:clickson": "vitest run publicodes-clickson/test --reporter=tree",
+        "test:tilt": "vitest run publicodes-tilt/test --reporter=tree"
     },
-    "./clickson/package.json": "./publicodes-clickson/package.json",
-    "./clickson/model": "./publicodes-clickson/publicodes-build/publicodes-clickson.model.json",
-    "./tilt": {
-      "types": "./publicodes-tilt/publicodes-build/index.d.ts",
-      "default": "./publicodes-tilt/publicodes-build/index.js"
+    "dependencies": {
+        "publicodes": "^1.10.1"
     },
-    "./tilt/package.json": "./publicodes-tilt/package.json",
-    "./tilt/model": "./publicodes-tilt/publicodes-build/publicodes-tilt.model.json"
-  },
-  "scripts": {
-    "compile": "yarn compile:count && yarn compile:clickson && yarn compile:tilt",
-    "compile:count": "cd publicodes-count && publicodes compile",
-    "compile:clickson": "cd publicodes-clickson && publicodes compile",
-    "compile:tilt": "cd publicodes-tilt && publicodes compile",
-    "watch:count": "cd publicodes-count && publicodes compile --watch",
-    "watch:clickson": "cd publicodes-clickson && publicodes compile --watch",
-    "watch:tilt": "cd publicodes-tilt && publicodes compile --watch",
-    "test": "vitest run publicodes-count/test publicodes-clickson/test publicodes-tilt/test --reporter=tree",
-    "test:count": "vitest run publicodes-count/test --reporter=tree",
-    "test:clickson": "vitest run publicodes-clickson/test --reporter=tree",
-    "test:tilt": "vitest run publicodes-tilt/test --reporter=tree"
-  },
-  "dependencies": {
-    "publicodes": "^1.10.1"
-  },
-  "devDependencies": {
-    "@publicodes/tools": "^1.10.2",
-    "vitest": "^4.1.11"
-  },
-  "resolutions": {
-    "esbuild": "^0.28.1",
-    "brace-expansion": "^5.0.8",
-    "postcss": "^8.5.25",
-    "vite": "^6.4.3"
-  }
+    "devDependencies": {
+        "@publicodes/tools": "^1.10.2",
+        "vitest": "^4.1.11"
+    },
+    "resolutions": {
+        "esbuild": "^0.28.1",
+        "brace-expansion": "^5.0.8",
+        "postcss": "^8.5.25",
+        "vite": "^6.4.3"
+    }
 }
