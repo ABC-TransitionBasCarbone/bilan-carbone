@@ -1,9 +1,7 @@
-import clicksonPackage from '@abc-transitionbascarbone/publicodes-packages/clickson/package.json'
-import countPackage from '@abc-transitionbascarbone/publicodes-packages/count/package.json'
-import tiltPackage from '@abc-transitionbascarbone/publicodes-packages/tilt/package.json'
+import publicodesPackage from '@abc-transitionbascarbone/publicodes-packages/package.json'
 import mainPackage from '../../package.json'
 
-export const PUBLICODES_COUNT_VERSION = `${countPackage.name}@${countPackage.version}`
-export const PUBLICODES_CLICKSON_VERSION = `${clicksonPackage.name}@${clicksonPackage.version}`
-export const PUBLICODES_TILT_VERSION = `${tiltPackage.name}@${tiltPackage.version}`
+export const PUBLICODES_COUNT_VERSION = `@abc-transitionbascarbone/publicodes-count@${publicodesPackage.version}`
+export const PUBLICODES_CLICKSON_VERSION = `@abc-transitionbascarbone/publicodes-clickson@${publicodesPackage.version}`
+export const PUBLICODES_TILT_VERSION = `@abc-transitionbascarbone/publicodes-tilt@${publicodesPackage.version}`
 export const PUBLICODES_ENGINE_VERSION = mainPackage.dependencies.publicodes.replace('^', '') // "1.9.1"
