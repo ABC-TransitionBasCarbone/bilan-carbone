@@ -1,12 +1,12 @@
 'use client'
 
 import { SurveyResults } from '@/types/results.types'
-import { STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/utils/charts'
-import { formatNumber } from '@abc-transitionbascarbone/utils/number'
+import { STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/shared/utils/charts'
+import { formatNumber } from '@abc-transitionbascarbone/shared/utils/number'
 import { Card, CardContent, Typography } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { StudyResultUnit } from '../../../../../packages/db-common/src/generated/prisma/client'
+import { StudyResultUnit } from '../../../../../packages/db/src/generated/prisma/client'
 import styles from './StatsSection.module.css'
 
 interface Props {

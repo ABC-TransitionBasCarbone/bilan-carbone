@@ -1,0 +1,17 @@
+'use server'
+
+import withAuth from '@/components/hoc/withAuth'
+import SuperAdminPage from '@/components/pages/SuperAdmin'
+import { auth } from '@/services/auth'
+import NotFound from '@abc-transitionbascarbone/application/components/pages/NotFound'
+import { Role } from '@abc-transitionbascarbone/db-common/enums'
+
+const SuperAdmin = async () => {
+  const session = await auth()
+  if (session?.user?.role !== Role.SUPER_ADMIN) {
+    return <NotFound />
+  }
+  return <SuperAdminPage environment={session.user.environment} />
+}
+
+export default withAuth(SuperAdmin)

@@ -10,8 +10,8 @@
     "dev": "next dev --port 3002",
     "test": "jest",
     "test:watch": "jest --watch",
-    "postbuild": "node ../../packages/config/copy-assets.js apps/mip",
-    "build": "next build && node ../../packages/config/copy-assets.js apps/mip",
+    "postbuild": "node ../../packages/tooling/config/copy-assets.js apps/mip",
+    "build": "next build && node ../../packages/tooling/config/copy-assets.js apps/mip",
     "start": "node -r dotenv/config .next/standalone/apps/mip/server.js dotenv_config_path=.env",
     "lint": "prettier --check . && eslint .",
     "format": "prettier --write .",
@@ -20,21 +20,16 @@
     "tsx": "dotenv -e .env -- tsx",
     "cypress": "cypress run",
     "cypress:gui": "cypress open",
-    "db:test:reset": "dotenv -e .env.test -- prisma migrate reset --force --schema=../../packages/db-common/prisma/schema/schema.prisma && dotenv -e .env.test -- tsx prisma/seed/index.ts",
+    "db:test:reset": "dotenv -e .env.test -- prisma migrate reset --force --schema=../../packages/db/prisma/schema/schema.prisma && dotenv -e .env.test -- tsx prisma/seed/index.ts",
     "dev:test": "dotenv -e .env.test -- next dev --port 3001",
-    "start:test": "dotenv -e .env.test -- env PORT=3001 node .next/standalone/apps/bilan-carbone/server.js"
+    "start:test": "dotenv -e .env.test -- env PORT=3001 node .next/standalone/apps/mip/server.js"
   },
   "prisma": {
     "seed": "tsx prisma/seed/index.ts"
   },
   "dependencies": {
-    "@abc-transitionbascarbone/components": "*",
-    "@abc-transitionbascarbone/lib": "*",
-    "@abc-transitionbascarbone/publicodes": "*",
-    "@abc-transitionbascarbone/services": "*",
-    "@abc-transitionbascarbone/typeguards": "*",
-    "@abc-transitionbascarbone/ui": "*",
-    "@abc-transitionbascarbone/utils": "*",
+    "@abc-transitionbascarbone/application": "*",
+    "@abc-transitionbascarbone/shared": "*",
     "@base-ui-components/react": "^1.0.0-rc.0",
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",

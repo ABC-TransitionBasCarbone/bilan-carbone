@@ -1,14 +1,16 @@
-import { Locale } from '@abc-transitionbascarbone/i18n/config'
-import { isObject, mergeObjects } from '@abc-transitionbascarbone/utils/object'
+import { Locale } from '@abc-transitionbascarbone/shared/i18n/config'
+import { isObject, mergeObjects } from '@abc-transitionbascarbone/shared/utils/object'
 import { getRequestConfig } from 'next-intl/server'
 import { getLocale } from './locale'
 
 export default getRequestConfig(async () => {
   const locale = await getLocale()
 
-  const commonMessages = await import(`../../../../packages/i18n/translations/${locale}/common.json`)
+  const commonMessages = await import(`../../../../packages/shared/i18n/translations/${locale}/common.json`)
     .then((m) => m.default)
-    .catch(() => import(`../../../../packages/i18n/translations/${Locale.FR}/common.json`).then((m) => m.default))
+    .catch(() =>
+      import(`../../../../packages/shared/i18n/translations/${Locale.FR}/common.json`).then((m) => m.default),
+    )
 
   const mipMessages = await import(`./translations/${locale}/mip.json`)
     .then((m) => m.default)

@@ -23,19 +23,19 @@ yarn install
 
 ### 2. Variables d'environnement
 
-Create a `.env` copied from `apps/bilan-carbone/.env.dist` and create a `.env.test` copied from `apps/bilan-carbone/.env.test.dist`.
+Create a `.env` copied from `apps/bc/.env.dist` and create a `.env.test` copied from `apps/bc/.env.test.dist`.
 Do the same in db-common folder.
 
 ```bash
-cp apps/bilan-carbone/.env.dist apps/bilan-carbone/.env
-cp apps/bilan-carbone/.env.dist.test apps/bilan-carbone/.env.test
-cp packages/db-common/.env.dist packages/db-common/.env
+cp apps/bc/.env.dist apps/bc/.env
+cp apps/bc/.env.test.dist apps/bc/.env.test
+cp packages/db/.env.dist packages/db/.env
 ```
 
 ### 3. Start the database
 
 ```bash
-cd apps/bilan-carbone && docker-compose up -d && cd ../..
+cd apps/bc && docker-compose up -d && cd ../..
 ```
 
 ### 4. Set up the database with Prisma
@@ -122,10 +122,10 @@ yarn prisma studio
 
 ## Import scripts
 
-These scripts must be run from apps/bilan-carbone:
+These scripts must be run from apps/bc:
 
 ```bash
-cd apps/bilan-carbone
+cd apps/bc
 
 # Importer les facteurs d'émissions NegaOctet
 npx tsx src/scripts/negaOctet/getEmissionFactors.ts -n ${versionNumber} -f ${pathToCSVFile}

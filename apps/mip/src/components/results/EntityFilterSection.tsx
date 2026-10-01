@@ -1,7 +1,7 @@
 'use client'
 
 import { EntityFilter } from '@/types/results.types'
-import { BaseStyledChip } from '@abc-transitionbascarbone/ui'
+import { BaseStyledChip } from '@abc-transitionbascarbone/application/ui'
 import { Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
 

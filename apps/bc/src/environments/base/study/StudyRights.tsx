@@ -1,0 +1,114 @@
+'use client'
+
+import StudyContributorsTable from '@/components/study/rights/StudyContributorsTable'
+import StudyParams from '@/components/study/rights/StudyParams'
+import StudyRightsTable from '@/components/study/rights/StudyRightsTable'
+import SelectStudySite from '@/components/study/site/SelectStudySite'
+import type { MinimalStudyForRights, StudySiteWithNameList } from '@/db/study'
+import { changeStudyName } from '@/services/serverFunctions/study'
+import { ChangeStudyNameCommand, ChangeStudyNameValidation } from '@/services/serverFunctions/study.command'
+import Block from '@abc-transitionbascarbone/application/components/base/Block'
+import { FormTextField } from '@abc-transitionbascarbone/application/components/form/TextField'
+import { useServerFunction } from '@abc-transitionbascarbone/application/components/hooks/useServerFunction'
+import Modal from '@abc-transitionbascarbone/application/components/modals/Modal'
+import { Button } from '@abc-transitionbascarbone/application/ui'
+import type { EmissionFactorImportVersion } from '@abc-transitionbascarbone/db-common'
+import { StudyRole } from '@abc-transitionbascarbone/db-common/enums'
+import { zodResolver } from '@hookform/resolvers/zod'
+import EditIcon from '@mui/icons-material/Edit'
+import { UserSession } from 'next-auth'
+import { useTranslations } from 'next-intl'
+import { useRouter } from 'next/navigation'
+import { useCallback, useState } from 'react'
+import { useForm } from 'react-hook-form'
+
+interface Props {
+  user: UserSession
+  study: MinimalStudyForRights
+  editionDisabled: boolean
+  userRoleOnStudy: StudyRole
+  emissionFactorSources: EmissionFactorImportVersion[]
+  studySites: StudySiteWithNameList
+}
+
+const StudyRights = ({ user, study, editionDisabled, userRoleOnStudy, emissionFactorSources, studySites }: Props) => {
+  const t = useTranslations('study.rights')
+  const router = useRouter()
+  const { callServerFunction } = useServerFunction()
+
+  const [editTitle, setEditTitle] = useState(false)
+  const [loading, setLoading] = useState(false)
+
+  const form = useForm<ChangeStudyNameCommand>({
+    resolver: zodResolver(ChangeStudyNameValidation),
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
+    defaultValues: {
+      studyId: study.id,
+      name: study.name,
+    },
+  })
+
+  const resetInput = useCallback(() => {
+    form.setValue('name', study.name)
+    setEditTitle(false)
+  }, [form, study])
+
+  const handleSubmit = useCallback(async () => {
+    setLoading(true)
+
+    await form.handleSubmit(async (data) => {
+      if (data.name === study.name) {
+        resetInput()
+        return
+      }
+
+      await callServerFunction(() => changeStudyName(data), {
+        onSuccess: () => {
+          setEditTitle(false)
+          router.refresh()
+        },
+      })
+    })()
+
+    setLoading(false)
+  }, [form, study.name, callServerFunction, resetInput, router])
+
+  return (
+    <Block
+      title={t('title', { name: study.name })}
+      as="h2"
+      icon={
+        editionDisabled ? null : (
+          <Button aria-label={t('edit')} title={t('edit')} onClick={() => setEditTitle(true)}>
+            <EditIcon />
+          </Button>
+        )
+      }
+      iconPosition="after"
+      rightComponent={<SelectStudySite sites={studySites} siteSelectionDisabled />}
+    >
+      <StudyParams user={user} study={study} disabled={editionDisabled} emissionFactorSources={emissionFactorSources} />
+      <StudyRightsTable study={study} user={user} canAddMember={!editionDisabled} userRoleOnStudy={userRoleOnStudy} />
+      <StudyContributorsTable study={study} canAddContributor={!editionDisabled} />
+      <Modal
+        open={editTitle}
+        label={'edit-study-title'}
+        title={t('edit')}
+        onClose={resetInput}
+        actions={[
+          {
+            actionType: 'loadingButton',
+            onClick: () => handleSubmit(),
+            loading,
+            children: t('edit'),
+          },
+        ]}
+      >
+        <FormTextField name="name" control={form.control} required />
+      </Modal>
+    </Block>
+  )
+}
+
+export default StudyRights

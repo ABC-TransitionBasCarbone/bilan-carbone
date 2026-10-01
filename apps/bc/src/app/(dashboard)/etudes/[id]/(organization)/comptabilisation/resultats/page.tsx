@@ -1,0 +1,36 @@
+import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
+import withStudyDetails, { StudyProps } from '@/components/hoc/withStudyDetails'
+import ResultsPage from '@/components/pages/Results'
+import { getEmissionFactorsWithPartsInIds } from '@/db/emissionFactors'
+import { getExportRules } from '@/db/exportRule'
+import { getUserSettings } from '@/services/serverFunctions/user'
+import NotFound from '@abc-transitionbascarbone/application/components/pages/NotFound'
+
+const ResultatsPages = async ({ study, user }: StudyProps & UserSessionProps) => {
+  const ids = study.emissionSources
+    .map((emissionSource) => emissionSource.emissionFactor?.id)
+    .filter((id) => id !== undefined)
+
+  const [rules, emissionFactorsWithParts, userSettings] = await Promise.all([
+    getExportRules(),
+    getEmissionFactorsWithPartsInIds(ids),
+    getUserSettings(),
+  ])
+
+  if (!userSettings.success) {
+    return <NotFound />
+  }
+
+  return (
+    <ResultsPage
+      study={study}
+      rules={rules}
+      user={user}
+      emissionFactorsWithParts={emissionFactorsWithParts}
+      validatedOnly={!!userSettings?.data?.validatedEmissionSourcesOnly}
+      caUnit={userSettings.data?.caUnit}
+    />
+  )
+}
+
+export default withAuth(withStudyDetails(ResultatsPages))

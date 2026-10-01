@@ -1,0 +1,100 @@
+'use client'
+import { switchEnvironment } from '@/i18n/environment'
+import { getLocale, switchLocale } from '@/i18n/locale'
+import PublicContainer from '@abc-transitionbascarbone/application/components/base/PublicContainer'
+import Image from '@abc-transitionbascarbone/application/components/document/Image'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { defaultLocale, Locale, LocaleType } from '@abc-transitionbascarbone/shared/i18n/config'
+import { customRich } from '@abc-transitionbascarbone/shared/utils/customRich'
+import CloseIcon from '@mui/icons-material/Close'
+import classNames from 'classnames'
+import { useTranslations } from 'next-intl'
+import Link from 'next/link'
+import { ReactNode, useEffect, useState } from 'react'
+import styles from './Public.module.css'
+
+interface Props {
+  children: ReactNode
+  question: ReactNode
+}
+const PublicTiltPage = ({ children, question }: Props) => {
+  const t = useTranslations()
+  const tLocale = useTranslations('locale')
+  const tDocumentation = useTranslations('documentationUrlTilt')
+  const [locale, setLocale] = useState<LocaleType>(defaultLocale)
+
+  useEffect(() => {
+    getLocale().then(setLocale)
+    switchEnvironment(Environment.TILT)
+  }, [])
+
+  const languages = [{ name: tLocale('fr'), code: 'FR', target: Locale.FR }]
+
+  return (
+    <PublicContainer>
+      <div className={classNames(styles.info, 'flex-col grow p2 text-center gapped1')}>
+        <div>
+          <p className="title-h4 mb1">{t('login.welcome')}</p>
+          <p className="title-h6 bold">{customRich(t, 'login.subtext')}</p>
+        </div>
+        <p>
+          {customRich(
+            t,
+            'login.explanation',
+            {
+              link: (children) => (
+                <Link
+                  href={tDocumentation('tiltABCPage')}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className={styles.info}
+                >
+                  {children}
+                </Link>
+              ),
+            },
+            Environment.TILT,
+          )}
+        </p>
+        <div className="flex-cc gapped1 w100 p1">
+          <Image src="/logos/abc/logo_abc.png" width="400" height="195" alt="ABC logo" className="w50 hauto" />
+          <CloseIcon />
+          <Image src="/logos/tilt/logo_tilt.svg" width="2511" height="857" alt="TILT logo" className="w50 hauto" />
+        </div>
+        <p className={styles.richLinks}>{question}</p>
+      </div>
+      <div className={classNames(styles.loginForm, 'grow flex-col')}>
+        <div className={classNames(styles.header, 'justify-between')}>
+          <div className={classNames(styles.locales, 'flex')}>
+            {languages.map((language) => (
+              <button
+                key={language.target}
+                title={language.name}
+                aria-label={language.name}
+                className={classNames(styles.flag, 'flex', {
+                  [styles.selected]: language.target === locale,
+                })}
+                onClick={() => {
+                  switchLocale(language.target)
+                  setLocale(language.target)
+                }}
+              >
+                <Image alt={language.name} src={`/logos/${language.code}.svg`} width={30} height={20} />
+              </button>
+            ))}
+          </div>
+          <Image
+            className={classNames(styles.welcomeLogo, 'align-end')}
+            src="/logos/logo_BC_noir.png"
+            alt="logo"
+            width={278}
+            height={136}
+          />
+        </div>
+        {children}
+      </div>
+    </PublicContainer>
+  )
+}
+
+export default PublicTiltPage
