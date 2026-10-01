@@ -379,6 +379,8 @@ describe('charts utils function', () => {
       expect(result.outerRingData).toHaveLength(4)
       expect(result.innerRingData.map((item) => item.label)).toEqual(['Alimentation', 'Transport'])
       expect(result.outerRingData.map((item) => item.label)).toEqual(['Fossile', 'Organic', 'Car', 'Plane'])
+      expect(result.innerRingData.map((item) => item.parentIndex)).toEqual([0, 1])
+      expect(result.outerRingData.map((item) => item.parentIndex)).toEqual([0, 0, 1, 1])
     })
   })
 
