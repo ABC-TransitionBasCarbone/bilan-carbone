@@ -121,7 +121,6 @@ const Survey = () => {
   const handlePrevious = () => {
     const previousQuestion = form.relevantQuestions[currentIndex - 1]
     if (!previousQuestion) {
-      form.goToPreviousQuestion()
       return
     }
 

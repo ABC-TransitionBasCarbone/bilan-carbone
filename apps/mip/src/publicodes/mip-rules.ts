@@ -165,9 +165,6 @@ export const hasRuleAnswer = (
 ): boolean => {
   const relatedRules = [ruleName, ...(mosaicChildrenWithParent[ruleName] ?? [])]
   return relatedRules.some((name) => {
-    if (!Object.prototype.hasOwnProperty.call(situation, name)) {
-      return false
-    }
     const value = situation[name]
     return value !== undefined && value !== null
   })
