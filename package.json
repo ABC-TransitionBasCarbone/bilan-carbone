@@ -6,11 +6,11 @@
     "packages": [
       "apps/*",
       "packages/application",
-      "packages/data/*",
+      "packages/db",
       "packages/shared",
       "packages/styles/*",
       "packages/tooling/*",
-      "packages/publicodes-packages/*"
+      "packages/publicodes-packages"
     ],
     "nohoist": []
   },
@@ -20,8 +20,17 @@
   },
   "scripts": {
     "dev": "turbo run dev",
-    "dev:bc": "turbo run dev --filter=bilan-carbone",
+    "dev:bc": "yarn --cwd apps/bc dev",
     "dev:mip": "turbo run dev --filter=mip",
+    "bc": "yarn --cwd apps/bc dev",
+    "bc:build": "yarn --cwd apps/bc build",
+    "bc:test": "yarn --cwd apps/bc test",
+    "bc:lint": "yarn --cwd apps/bc lint",
+    "bc:ts": "yarn --cwd apps/bc ts",
+    "mip:build": "yarn --cwd apps/mip build",
+    "mip:test": "yarn --cwd apps/mip test",
+    "mip:lint": "yarn --cwd apps/mip lint",
+    "mip:ts": "yarn --cwd apps/mip ts",
     "build": "node packages/tooling/config/config-or-delete-cron.js && sh -c 'if [ \"$APP_TARGET\" = \"mip\" ]; then turbo run build --filter=mip; else turbo run build --filter=bilan-carbone; fi'",
     "test": "turbo run test",
     "start": "turbo run start",
@@ -33,10 +42,14 @@
     "seed:all": "yarn workspace @abc-transitionbascarbone/db-common tsx prisma/seed/index.ts --target all",
     "seed:bc": "yarn workspace @abc-transitionbascarbone/db-common tsx prisma/seed/index.ts --target bc",
     "seed:mip": "yarn workspace @abc-transitionbascarbone/db-common tsx prisma/seed/index.ts --target mip",
-    "postinstall": "yarn db:generate",
-    "db:generate": "rm -rf packages/data/db-common/src/generated/prisma && yarn workspace @abc-transitionbascarbone/db-common run db:generate",
-    "compile:publicodes": "sh -c 'if [ \"$APP_TARGET\" = \"mip\" ]; then echo \"Skipping Publicodes compilation for MIP\"; else set -e; for dir in packages/publicodes-packages/publicodes-clickson packages/publicodes-packages/publicodes-count packages/publicodes-packages/publicodes-tilt; do (cd \"$dir\" && yarn compile); done; fi'",
-    "compile:publicodes-windows": "for /d %d in (\"packages\\publicodes-packages\\publicodes-*\") do (@cd /d \"%d\" && yarn install && yarn compile && cd ..\\..\\..)"
+    "postinstall": "yarn db:generate && yarn publicodes:compile",
+    "db:generate": "rm -rf packages/db/src/generated/prisma && yarn workspace @abc-transitionbascarbone/db-common run db:generate",
+    "publicodes:compile": "yarn workspace @abc-transitionbascarbone/publicodes-packages compile",
+    "publicodes:test": "yarn workspace @abc-transitionbascarbone/publicodes-packages test",
+    "publicodes:test:count": "yarn workspace @abc-transitionbascarbone/publicodes-packages test:count",
+    "publicodes:test:clickson": "yarn workspace @abc-transitionbascarbone/publicodes-packages test:clickson",
+    "publicodes:test:tilt": "yarn workspace @abc-transitionbascarbone/publicodes-packages test:tilt",
+    "publicodes:compile-windows": "yarn workspace @abc-transitionbascarbone/publicodes-packages compile"
   },
   "dependencies": {
     "next": "16.3.3"

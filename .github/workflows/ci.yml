@@ -205,7 +205,7 @@ jobs:
       - name: Prebuild application
         run: yarn prebuild
       - name: Launch unit tests
-        run: yarn run publicodes-count:test
+        run: yarn publicodes:test:count
 
   bc-build-app:
     timeout-minutes: 15

@@ -6,7 +6,7 @@ import { formatNumber } from '@abc-transitionbascarbone/shared/utils/number'
 import { Card, CardContent, Typography } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { StudyResultUnit } from '../../../../../packages/data/db-common/src/generated/prisma/client'
+import { StudyResultUnit } from '../../../../../packages/db/src/generated/prisma/client'
 import styles from './StatsSection.module.css'
 
 interface Props {

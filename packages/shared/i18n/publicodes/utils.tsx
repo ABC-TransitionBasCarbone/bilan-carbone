@@ -38,9 +38,9 @@ export const AVAILABLE_MODELS = ['cut', 'clickson', 'tilt'] as const
 export type Model = (typeof AVAILABLE_MODELS)[number]
 
 const MODEL_PACKAGES: Record<Model, string> = {
-  cut: '@abc-transitionbascarbone/publicodes-count/publicodes-build/publicodes-count.model.json',
-  clickson: '@abc-transitionbascarbone/publicodes-clickson/publicodes-build/publicodes-clickson.model.json',
-  tilt: '@abc-transitionbascarbone/publicodes-tilt/publicodes-build/publicodes-tilt.model.json'
+  cut: '@abc-transitionbascarbone/publicodes-packages/count/model',
+  clickson: '@abc-transitionbascarbone/publicodes-packages/clickson/model',
+  tilt: '@abc-transitionbascarbone/publicodes-packages/tilt/model',
 }
 
 // Helper to load publicodes rules from a given model

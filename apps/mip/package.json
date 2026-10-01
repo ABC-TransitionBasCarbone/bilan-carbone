@@ -20,9 +20,9 @@
     "tsx": "dotenv -e .env -- tsx",
     "cypress": "cypress run",
     "cypress:gui": "cypress open",
-    "db:test:reset": "dotenv -e .env.test -- prisma migrate reset --force --schema=../../packages/data/db-common/prisma/schema/schema.prisma && dotenv -e .env.test -- tsx prisma/seed/index.ts",
+    "db:test:reset": "dotenv -e .env.test -- prisma migrate reset --force --schema=../../packages/db/prisma/schema/schema.prisma && dotenv -e .env.test -- tsx prisma/seed/index.ts",
     "dev:test": "dotenv -e .env.test -- next dev --port 3001",
-    "start:test": "dotenv -e .env.test -- env PORT=3001 node .next/standalone/apps/bilan-carbone/server.js"
+    "start:test": "dotenv -e .env.test -- env PORT=3001 node .next/standalone/apps/mip/server.js"
   },
   "prisma": {
     "seed": "tsx prisma/seed/index.ts"
