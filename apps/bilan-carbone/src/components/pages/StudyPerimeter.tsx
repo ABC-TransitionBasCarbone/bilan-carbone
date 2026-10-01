@@ -69,7 +69,7 @@ const StudyPerimeterPage = async ({ study, organizationVersion, user }: Props) =
         caUnit={caUnit}
         user={user}
       />
-      <StudyTags studyId={study.id} />
+      <StudyTags studyId={study.id} userRoleOnStudy={userRoleOnStudy} />
       <StudyFlow canAddFlow={canAddFlow} documents={studyFlowDocuments} study={study} />
       {hasAccessToDependencyMatrix(user.environment) && (
         <DependencyMatrix documents={dependencyMatrixDocuments} study={study} />

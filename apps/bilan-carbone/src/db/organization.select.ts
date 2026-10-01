@@ -21,6 +21,7 @@ export const OrganizationVersionWithOrganizationSelect = {
       oldBCId: true,
       id: true,
       name: true,
+      siret: true,
       createdAt: true,
       updatedAt: true,
       importedFileDate: true,

@@ -29,7 +29,7 @@ async function checkAuth(requireCreatePermission = true): Promise<AccountWithUse
   const account = await getAuthenticatedAccount()
 
   if (requireCreatePermission) {
-    if (!(await canCreateEmissionFactor(account.organizationVersionId))) {
+    if (!(await canCreateEmissionFactor(account))) {
       throw new Error(NOT_AUTHORIZED)
     }
   } else {

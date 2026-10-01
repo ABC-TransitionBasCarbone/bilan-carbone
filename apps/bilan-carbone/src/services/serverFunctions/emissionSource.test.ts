@@ -1,8 +1,8 @@
 import { expect } from '@jest/globals'
 import * as accountModule from '../../db/account'
 import * as emissionSourceModule from '../../db/emissionSource'
+import * as studySourceModule from '../../db/study'
 import * as authModule from '../auth'
-import * as environmentPermissionModule from '../permissions/environment'
 
 // TODO: ESM module issue with Jest. Remove these mocks when moving to Vitest
 jest.mock('../file', () => ({ download: jest.fn() }))
@@ -18,10 +18,12 @@ jest.mock('../../db/account', () => ({
 
 jest.mock('../../db/emissionSource', () => ({
   updateStudyTag: jest.fn(),
+  getTagById: jest.fn(),
+  getTagFamilyById: jest.fn(),
 }))
 
-jest.mock('../permissions/environment', () => ({
-  hasAccessToCreateStudyTag: jest.fn(),
+jest.mock('../../db/study', () => ({
+  getStudyById: jest.fn(),
 }))
 
 jest.mock('@abc-transitionbascarbone/services/permissions/check', () => ({
@@ -49,17 +51,25 @@ const { updateTag } = jest.requireActual('./emissionSource')
 const mockAuth = authModule.auth as jest.Mock
 const mockGetAccountById = accountModule.getAccountById as jest.Mock
 const mockUpdateStudyTag = emissionSourceModule.updateStudyTag as jest.Mock
-const mockHasAccessToCreateStudyTag = environmentPermissionModule.hasAccessToCreateStudyTag as jest.Mock
+const mockGetTagById = emissionSourceModule.getTagById as jest.Mock
+const mockGetTagFamilyById = emissionSourceModule.getTagFamilyById as jest.Mock
+const mockGetStudyById = studySourceModule.getStudyById as jest.Mock
 
 const mockSession = {
   user: {
     accountId: 'account-id',
+    environment: 'BC',
+    role: 'ADMIN',
+    organizationVersionId: 'org-version-id',
+    level: 'Advanced',
   },
 }
 
 const mockAccount = {
   id: 'account-id',
   environment: 'BC',
+  role: 'ADMIN',
+  organizationVersionId: 'org-version-id',
 }
 
 describe('updateTag', () => {
@@ -67,8 +77,15 @@ describe('updateTag', () => {
     jest.clearAllMocks()
     mockAuth.mockResolvedValue(mockSession)
     mockGetAccountById.mockResolvedValue(mockAccount)
-    mockHasAccessToCreateStudyTag.mockReturnValue(true)
     mockUpdateStudyTag.mockResolvedValue({ id: 'tag-id' })
+    mockGetTagById.mockResolvedValue({ id: 'tag-id', familyId: 'family-id' })
+    mockGetTagFamilyById.mockResolvedValue({ studyId: 'study-id' })
+    mockGetStudyById.mockResolvedValue({
+      id: 'study-id',
+      allowedUsers: [],
+      level: 'Initial',
+      organizationVersion: { environment: 'BC', id: 'org-version-id', activatedLicence: [new Date().getFullYear()] },
+    })
   })
 
   describe('Authentication and Authorization', () => {
@@ -109,7 +126,17 @@ describe('updateTag', () => {
     })
 
     it('should return error when user has no access to create emission source tag', async () => {
-      mockHasAccessToCreateStudyTag.mockReturnValue(false)
+      mockAuth.mockReturnValue({
+        user: {
+          accountId: 'account-id',
+          environment: 'CUT',
+        },
+      })
+      mockGetAccountById.mockResolvedValue({
+        id: 'account-id',
+        environment: 'CUT',
+        organizationVersionId: 'org-version-id',
+      })
 
       const result = await updateTag('tag-id', 'New Name', '#ff0000', 'family-id')
 

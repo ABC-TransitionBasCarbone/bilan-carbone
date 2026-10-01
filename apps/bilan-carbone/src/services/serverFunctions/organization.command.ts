@@ -3,6 +3,7 @@ import { SitesCommandValidation } from './study.command'
 
 export const CreateOrganizationCommandValidation = z.object({
   name: z.string().trim().min(1),
+  siret: z.string().trim().optional(),
 })
 
 export type CreateOrganizationCommand = z.infer<typeof CreateOrganizationCommandValidation>

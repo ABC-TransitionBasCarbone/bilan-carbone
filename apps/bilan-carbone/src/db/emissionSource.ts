@@ -40,6 +40,8 @@ export const updateEmissionSourceOnStudy = (
 
 export const deleteEmissionSourceOnStudy = (id: string) => prismaClient.studyEmissionSource.delete({ where: { id } })
 
+export const getTagById = (tagId: string) => prismaClient.studyTag.findUnique({ where: { id: tagId } })
+
 export const createStudyTag = (tag: Prisma.StudyTagCreateInput) =>
   prismaClient.studyTag.create({
     data: tag,

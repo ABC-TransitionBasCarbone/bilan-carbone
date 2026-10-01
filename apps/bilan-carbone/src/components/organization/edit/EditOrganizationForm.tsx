@@ -17,6 +17,7 @@ import { useServerFunction } from '@abc-transitionbascarbone/components/src/hook
 import Modal from '@abc-transitionbascarbone/components/src/modals/Modal'
 import { SiteCAUnit } from '@abc-transitionbascarbone/db-common/enums'
 import { customRich } from '@abc-transitionbascarbone/utils/customRich'
+import { isAdvanced } from '@abc-transitionbascarbone/utils/environments'
 import type { IsSuccess } from '@abc-transitionbascarbone/utils/serverResponse'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'
@@ -52,6 +53,7 @@ const EditOrganizationForm = ({ organizationVersion, caUnit, isCut = false, disa
     defaultValues: {
       organizationVersionId: organizationVersion.id,
       name: organizationVersion.organization.name,
+      siret: organizationVersion.organization.siret ?? '',
       sites: organizationVersion.organization.sites.map((site) => ({
         ...site,
         ca: site.ca ? displayCA(site.ca, CA_UNIT_VALUES[caUnit]) : 0,
@@ -93,15 +95,28 @@ const EditOrganizationForm = ({ organizationVersion, caUnit, isCut = false, disa
   const sites = form.watch('sites')
   return (
     <Form onSubmit={form.handleSubmit(onSubmit)}>
-      {!isCut && (
-        <FormTextField
-          disabled={disabled}
-          data-testid="edit-organization-name"
-          control={form.control}
-          name="name"
-          label={t('name')}
-        />
-      )}
+      <div className="flex-row justify-between">
+        {!isCut && (
+          <FormTextField
+            className="grow"
+            disabled={disabled}
+            data-testid="edit-organization-name"
+            control={form.control}
+            name="name"
+            label={t('name')}
+          />
+        )}
+        {isAdvanced(organizationVersion.environment) && (
+          <FormTextField
+            className="pl2"
+            disabled={disabled}
+            data-testid="edit-organization-siret"
+            control={form.control}
+            name="siret"
+            label={t('siret')}
+          />
+        )}
+      </div>
       <DynamicSites disabled={disabled} sites={sites} form={form} caUnit={caUnit} />
       {!disabled && (
         <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="edit-organization-button">
