@@ -68,9 +68,12 @@ export const getAccountFromUserOrganization = (user: Pick<UserSession, 'role' | 
   prismaClient.account.findMany({ ...findUserInfo(user), orderBy: { user: { email: 'asc' } } })
 export type TeamMember = AsyncReturnType<typeof getAccountFromUserOrganization>[number]
 
-export const getAccountsFromOrganization = (organizationVersionId: string) =>
-  prismaClient.account.findMany({
-    select: { user: { select: { email: true, firstName: true, lastName: true } } },
+export const getAccountsFromOrganization = (
+  organizationVersionId: string,
+  transaction: Prisma.TransactionClient = prismaClient,
+) =>
+  transaction.account.findMany({
+    select: { user: { select: { email: true, firstName: true, lastName: true } }, status: true, role: true },
     where: { organizationVersionId },
     orderBy: { user: { email: 'asc' } },
   })
